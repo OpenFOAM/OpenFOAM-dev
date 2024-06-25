@@ -18,6 +18,8 @@ airToPorous
 {
     type            interRegionHeatTransfer;
 
+    libs            ("libinterRegionFvModels.so");
+
     nbrRegion       porous;
     master          false;
 
@@ -29,6 +31,8 @@ airToPorous
 porosity
 {
     type            interRegionPorosityForce;
+
+    libs            ("libinterRegionFvModels.so");
 
     interRegionPorosityForceCoeffs
     {

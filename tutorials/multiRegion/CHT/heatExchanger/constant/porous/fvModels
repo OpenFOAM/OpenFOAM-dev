@@ -18,6 +18,8 @@ porousToAir
 {
     type            interRegionHeatTransfer;
 
+    libs            ("libinterRegionFvModels.so");
+
     nbrRegion       air;
     master          true;
 

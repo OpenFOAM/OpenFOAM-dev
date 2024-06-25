@@ -1,0 +1,12 @@
+rotorDisk.C
+bladeModel/bladeModel.C
+profileModel/profileModel.C
+profileModel/profileModelList.C
+profileModel/lookup/lookupProfile.C
+profileModel/series/seriesProfile.C
+trimModel/trimModel/trimModel.C
+trimModel/trimModel/trimModelNew.C
+trimModel/fixed/fixedTrim.C
+trimModel/targetCoeff/targetCoeffTrim.C
+
+LIB = $(FOAM_LIBBIN)/librotorDisk

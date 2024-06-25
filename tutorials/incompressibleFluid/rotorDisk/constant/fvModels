@@ -17,6 +17,8 @@ disk
 {
     type            rotorDisk;
 
+    libs            ("librotorDisk.so");
+
     cellZone        rotatingZone;
 
     nBlades         3;      // Number of blades

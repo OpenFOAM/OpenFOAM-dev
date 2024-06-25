@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,61 +22,45 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::interRegionHeatTransfer
+    Foam::fv::acceleration
 
 Description
-    Model for inter-region heat exchange. Requires specification of a model for
-    the heat transfer coefficient (htc) and the area per unit volume (Av).
-    These are then used to apply the following source to the energy equation:
-
-    \f[
-        -htc*Av*(T_{nbr,mapped} - T)
-    \f]
-
-    If the semiImplicit option is set, then this becomes:
-
-    \f[
-        -htc*Av*(T_{nbr,mapped} - T) + htc*Av/Cp*h - Sp(htc*Av/Cp, h);
-    \f]
+    This fvModel applies an explicit acceleration force to components of the
+    velocity field.
 
 Usage
     Example usage:
     \verbatim
-    interRegionHeatTransfer
+    acceleration1
     {
-        type            interRegionHeatTransfer;
+        type            acceleration;
 
-        libs            ("libinterRegionFvModels.so");
+        select          all;
 
-        nbrRegion       other;
+        U               U;
 
-        interpolationMethod intersection;
-        master          true;
-
-        semiImplicit    no;
-
-        Av              200;
-
-        heatTransferCoefficientModel constant;
-
-        htc             10;
+        velocity        scale;
+        value           (-2.572 0 0);
+        scale
+        {
+            type            halfCosineRamp;
+            start           0;
+            duration        10;
+        }
     }
     \endverbatim
 
-See also
-    Foam::fv::heatTransferCoefficientModel
-
 SourceFiles
-    interRegionHeatTransfer.C
+    acceleration.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef interRegionHeatTransfer_H
-#define interRegionHeatTransfer_H
+#ifndef acceleration_H
+#define acceleration_H
 
-#include "interRegionModel.H"
-#include "heatTransferCoefficientModel.H"
-#include "heatTransferAv.H"
+#include "fvModel.H"
+#include "fvCellSet.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -86,50 +70,49 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                Class interRegionHeatTransfer Declaration
+                        Class acceleration Declaration
 \*---------------------------------------------------------------------------*/
 
-class interRegionHeatTransfer
+class acceleration
 :
-    public interRegionModel
+    public fvModel
 {
-    // Private data
+    // Private Data
 
-        //- Flag to activate semi-implicit coupling
-        bool semiImplicit_;
+        //- The set of cells the fvConstraint applies to
+        fvCellSet set_;
 
-        //- Name of temperature field; default = "T"
-        word TName_;
+        //- Name of the velocity field
+        word UName_;
 
-        //- Name of neighbour temperature field; default = "T"
-        word TNbrName_;
-
-        //- The heat transfer area per unit volume
-        autoPtr<heatTransferAv> heatTransferAv_;
-
-        //- The heat transfer model
-        autoPtr<heatTransferCoefficientModel> heatTransferCoefficientModel_;
+        //- Time-varying velocity
+        autoPtr<Function1<vector>> velocity_;
 
 
-    // Private member functions
+    // Private Member Functions
 
-        //- Non-virtual readalpha*
+        //- Non-virtual read
         void readCoeffs();
 
-        //- Get the neighbour heat transfer
-        const interRegionHeatTransfer& nbrHeatTransfer() const;
+        //- Source term to momentum equation
+        template<class AlphaRhoFieldType>
+        inline void add
+        (
+            const AlphaRhoFieldType& rho,
+            fvMatrix<vector>& eqn
+        ) const;
 
 
 public:
 
     //- Runtime type information
-    TypeName("interRegionHeatTransfer");
+    TypeName("acceleration");
 
 
     // Constructors
 
-        //- Construct from dictionary
-        interRegionHeatTransfer
+        //- Construct from components
+        acceleration
         (
             const word& name,
             const word& modelType,
@@ -139,16 +122,11 @@ public:
 
 
     //- Destructor
-    virtual ~interRegionHeatTransfer();
+    virtual ~acceleration()
+    {}
 
 
     // Member Functions
-
-        // Access
-
-            //- Return the heat transfer coefficient
-            inline const volScalarField& htc() const;
-
 
         // Checks
 
@@ -157,28 +135,31 @@ public:
             virtual wordList addSupFields() const;
 
 
-        // Sources
+         // Add explicit and implicit contributions
 
-            //- Source term to energy equation
+            //- Source term to momentum equation
             virtual void addSup
             (
-                const volScalarField& he,
-                fvMatrix<scalar>& eqn
+                const volVectorField& U,
+                fvMatrix<vector>& eqn
             ) const;
 
-            //- Source term to compressible energy equation
+            //- Source term to compressible momentum equation
             virtual void addSup
             (
                 const volScalarField& rho,
-                const volScalarField& he,
-                fvMatrix<scalar>& eqn
+                const volVectorField& U,
+                fvMatrix<vector>& eqn
             ) const;
 
-
-        // Correction
-
-            //- Correct the model
-            virtual void correct();
+            //- Source term to phase momentum equation
+            virtual void addSup
+            (
+                const volScalarField& alpha,
+                const volScalarField& rho,
+                const volVectorField& U,
+                fvMatrix<vector>& eqn
+            ) const;
 
 
         // Mesh changes

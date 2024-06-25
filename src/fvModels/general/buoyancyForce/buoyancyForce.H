@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,61 +22,33 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::interRegionHeatTransfer
+    Foam::fv::buoyancyForce
 
 Description
-    Model for inter-region heat exchange. Requires specification of a model for
-    the heat transfer coefficient (htc) and the area per unit volume (Av).
-    These are then used to apply the following source to the energy equation:
-
-    \f[
-        -htc*Av*(T_{nbr,mapped} - T)
-    \f]
-
-    If the semiImplicit option is set, then this becomes:
-
-    \f[
-        -htc*Av*(T_{nbr,mapped} - T) + htc*Av/Cp*h - Sp(htc*Av/Cp, h);
-    \f]
+    Calculates and applies the buoyancy force rho*g to the momentum equation
+    corresponding to the specified velocity field.
 
 Usage
     Example usage:
     \verbatim
-    interRegionHeatTransfer
+    buoyancyForce1
     {
-        type            interRegionHeatTransfer;
+        type        buoyancyForce;
 
-        libs            ("libinterRegionFvModels.so");
-
-        nbrRegion       other;
-
-        interpolationMethod intersection;
-        master          true;
-
-        semiImplicit    no;
-
-        Av              200;
-
-        heatTransferCoefficientModel constant;
-
-        htc             10;
+        U           U;  // Name of the velocity field
     }
     \endverbatim
 
-See also
-    Foam::fv::heatTransferCoefficientModel
-
 SourceFiles
-    interRegionHeatTransfer.C
+    buoyancyForce.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef interRegionHeatTransfer_H
-#define interRegionHeatTransfer_H
+#ifndef buoyancyForce_H
+#define buoyancyForce_H
 
-#include "interRegionModel.H"
-#include "heatTransferCoefficientModel.H"
-#include "heatTransferAv.H"
+#include "fvModel.H"
+#include "uniformDimensionedFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -86,50 +58,41 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                Class interRegionHeatTransfer Declaration
+                        Class buoyancyForce Declaration
 \*---------------------------------------------------------------------------*/
 
-class interRegionHeatTransfer
+class buoyancyForce
 :
-    public interRegionModel
+    public fvModel
 {
-    // Private data
+    // Private Data
 
-        //- Flag to activate semi-implicit coupling
-        bool semiImplicit_;
+        //- Optional phase name
+        word phaseName_;
 
-        //- Name of temperature field; default = "T"
-        word TName_;
+        //- Name of the velocity field
+        word UName_;
 
-        //- Name of neighbour temperature field; default = "T"
-        word TNbrName_;
-
-        //- The heat transfer area per unit volume
-        autoPtr<heatTransferAv> heatTransferAv_;
-
-        //- The heat transfer model
-        autoPtr<heatTransferCoefficientModel> heatTransferCoefficientModel_;
+        //- Gravitational acceleration
+        uniformDimensionedVectorField g_;
 
 
-    // Private member functions
+    // Private Member Functions
 
-        //- Non-virtual readalpha*
+        //- Non-virtual read
         void readCoeffs();
-
-        //- Get the neighbour heat transfer
-        const interRegionHeatTransfer& nbrHeatTransfer() const;
 
 
 public:
 
     //- Runtime type information
-    TypeName("interRegionHeatTransfer");
+    TypeName("buoyancyForce");
 
 
     // Constructors
 
-        //- Construct from dictionary
-        interRegionHeatTransfer
+        //- Construct from explicit source name and mesh
+        buoyancyForce
         (
             const word& name,
             const word& modelType,
@@ -137,18 +100,11 @@ public:
             const dictionary& dict
         );
 
-
-    //- Destructor
-    virtual ~interRegionHeatTransfer();
+        //- Disallow default bitwise copy construction
+        buoyancyForce(const buoyancyForce&) = delete;
 
 
     // Member Functions
-
-        // Access
-
-            //- Return the heat transfer coefficient
-            inline const volScalarField& htc() const;
-
 
         // Checks
 
@@ -157,28 +113,31 @@ public:
             virtual wordList addSupFields() const;
 
 
-        // Sources
+        // Evaluate
 
-            //- Source term to energy equation
+            //- Add explicit contribution to incompressible momentum equation
             virtual void addSup
             (
-                const volScalarField& he,
-                fvMatrix<scalar>& eqn
+                const volVectorField& U,
+                fvMatrix<vector>& eqn
             ) const;
 
-            //- Source term to compressible energy equation
+            //- Add explicit contribution to compressible momentum equation
             virtual void addSup
             (
                 const volScalarField& rho,
-                const volScalarField& he,
-                fvMatrix<scalar>& eqn
+                const volVectorField& U,
+                fvMatrix<vector>& eqn
             ) const;
 
-
-        // Correction
-
-            //- Correct the model
-            virtual void correct();
+            //- Add explicit contribution to phase momentum equation
+            virtual void addSup
+            (
+                const volScalarField& alpha,
+                const volScalarField& rho,
+                const volVectorField& U,
+                fvMatrix<vector>& eqn
+            ) const;
 
 
         // Mesh changes
@@ -198,8 +157,14 @@ public:
 
         // IO
 
-            //- Read dictionary
+            //- Read source dictionary
             virtual bool read(const dictionary& dict);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const buoyancyForce&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,61 +22,34 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::interRegionHeatTransfer
+    Foam::fv::heatSource
 
 Description
-    Model for inter-region heat exchange. Requires specification of a model for
-    the heat transfer coefficient (htc) and the area per unit volume (Av).
-    These are then used to apply the following source to the energy equation:
-
-    \f[
-        -htc*Av*(T_{nbr,mapped} - T)
-    \f]
-
-    If the semiImplicit option is set, then this becomes:
-
-    \f[
-        -htc*Av*(T_{nbr,mapped} - T) + htc*Av/Cp*h - Sp(htc*Av/Cp, h);
-    \f]
+    Model for applying a heat source. Requires either the power, Q, or the
+    power per unit volume, q, to be specified.
 
 Usage
     Example usage:
     \verbatim
-    interRegionHeatTransfer
+    heatSource
     {
-        type            interRegionHeatTransfer;
+        type            heatSource;
 
-        libs            ("libinterRegionFvModels.so");
+        select          cellSet;
+        cellSet         heater;
 
-        nbrRegion       other;
-
-        interpolationMethod intersection;
-        master          true;
-
-        semiImplicit    no;
-
-        Av              200;
-
-        heatTransferCoefficientModel constant;
-
-        htc             10;
+        Q               1e6;
     }
     \endverbatim
 
-See also
-    Foam::fv::heatTransferCoefficientModel
-
-SourceFiles
-    interRegionHeatTransfer.C
-
 \*---------------------------------------------------------------------------*/
 
-#ifndef interRegionHeatTransfer_H
-#define interRegionHeatTransfer_H
+#ifndef heatSource_H
+#define heatSource_H
 
-#include "interRegionModel.H"
-#include "heatTransferCoefficientModel.H"
-#include "heatTransferAv.H"
+#include "fvModel.H"
+#include "fvCellSet.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -86,50 +59,38 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                Class interRegionHeatTransfer Declaration
+                Class heatSource Declaration
 \*---------------------------------------------------------------------------*/
 
-class interRegionHeatTransfer
+class heatSource
 :
-    public interRegionModel
+    public fvModel
 {
     // Private data
 
-        //- Flag to activate semi-implicit coupling
-        bool semiImplicit_;
+        //- The set of cells the model applies to
+        fvCellSet set_;
 
-        //- Name of temperature field; default = "T"
-        word TName_;
-
-        //- Name of neighbour temperature field; default = "T"
-        word TNbrName_;
-
-        //- The heat transfer area per unit volume
-        autoPtr<heatTransferAv> heatTransferAv_;
-
-        //- The heat transfer model
-        autoPtr<heatTransferCoefficientModel> heatTransferCoefficientModel_;
+        //- The heat source
+        autoPtr<Function1<scalar>> q_;
 
 
     // Private member functions
 
-        //- Non-virtual readalpha*
+        //- Non-virtual read
         void readCoeffs();
-
-        //- Get the neighbour heat transfer
-        const interRegionHeatTransfer& nbrHeatTransfer() const;
 
 
 public:
 
     //- Runtime type information
-    TypeName("interRegionHeatTransfer");
+    TypeName("heatSource");
 
 
     // Constructors
 
         //- Construct from dictionary
-        interRegionHeatTransfer
+        heatSource
         (
             const word& name,
             const word& modelType,
@@ -139,16 +100,10 @@ public:
 
 
     //- Destructor
-    virtual ~interRegionHeatTransfer();
+    virtual ~heatSource();
 
 
     // Member Functions
-
-        // Access
-
-            //- Return the heat transfer coefficient
-            inline const volScalarField& htc() const;
-
 
         // Checks
 
@@ -173,12 +128,6 @@ public:
                 const volScalarField& he,
                 fvMatrix<scalar>& eqn
             ) const;
-
-
-        // Correction
-
-            //- Correct the model
-            virtual void correct();
 
 
         // Mesh changes

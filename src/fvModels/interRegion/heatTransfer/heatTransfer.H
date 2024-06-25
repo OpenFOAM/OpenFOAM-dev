@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,38 +22,37 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::interRegionHeatTransfer
+    Foam::fv::heatTransfer
 
 Description
-    Model for inter-region heat exchange. Requires specification of a model for
-    the heat transfer coefficient (htc) and the area per unit volume (Av).
-    These are then used to apply the following source to the energy equation:
+    Model for heat exchange. Requires specification of an ambient temperature
+    with which to exchange heat, and a model for the heat transfer coefficient
+    (htc) and the area per unit volume (Av). These are then used to apply the
+    following source to the energy equation:
 
     \f[
-        -htc*Av*(T_{nbr,mapped} - T)
+        -htc*Av*(T_a - T)
     \f]
 
     If the semiImplicit option is set, then this becomes:
 
     \f[
-        -htc*Av*(T_{nbr,mapped} - T) + htc*Av/Cp*h - Sp(htc*Av/Cp, h);
+        -htc*Av*(T_a - T) + htc*Av/Cp*h - Sp(htc*Av/Cp, h);
     \f]
 
 Usage
     Example usage:
     \verbatim
-    interRegionHeatTransfer
+    heatTransfer
     {
-        type            interRegionHeatTransfer;
+        type            heatTransfer;
 
-        libs            ("libinterRegionFvModels.so");
-
-        nbrRegion       other;
-
-        interpolationMethod intersection;
-        master          true;
+        select          cellSet;
+        cellSet         c0;
 
         semiImplicit    no;
+
+        Ta              300;
 
         Av              200;
 
@@ -67,14 +66,15 @@ See also
     Foam::fv::heatTransferCoefficientModel
 
 SourceFiles
-    interRegionHeatTransfer.C
+    heatTransfer.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef interRegionHeatTransfer_H
-#define interRegionHeatTransfer_H
+#ifndef heatTransfer_H
+#define heatTransfer_H
 
-#include "interRegionModel.H"
+#include "fvModel.H"
+#include "fvCellSet.H"
 #include "heatTransferCoefficientModel.H"
 #include "heatTransferAv.H"
 
@@ -86,14 +86,20 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                Class interRegionHeatTransfer Declaration
+                Class heatTransfer Declaration
 \*---------------------------------------------------------------------------*/
 
-class interRegionHeatTransfer
+class heatTransfer
 :
-    public interRegionModel
+    public fvModel
 {
     // Private data
+
+        //- The set of cells the model applies to
+        fvCellSet set_;
+
+        //- Name of the phase
+        word phaseName_;
 
         //- Flag to activate semi-implicit coupling
         bool semiImplicit_;
@@ -101,8 +107,8 @@ class interRegionHeatTransfer
         //- Name of temperature field; default = "T"
         word TName_;
 
-        //- Name of neighbour temperature field; default = "T"
-        word TNbrName_;
+        //- Ambient temperature
+        dimensionedScalar Ta_;
 
         //- The heat transfer area per unit volume
         autoPtr<heatTransferAv> heatTransferAv_;
@@ -113,23 +119,28 @@ class interRegionHeatTransfer
 
     // Private member functions
 
-        //- Non-virtual readalpha*
+        //- Non-virtual read
         void readCoeffs();
 
-        //- Get the neighbour heat transfer
-        const interRegionHeatTransfer& nbrHeatTransfer() const;
+        //- Source term to energy equation
+        template<class AlphaFieldType>
+        inline void add
+        (
+            const AlphaFieldType& alpha,
+            fvMatrix<scalar>& eqn
+        ) const;
 
 
 public:
 
     //- Runtime type information
-    TypeName("interRegionHeatTransfer");
+    TypeName("heatTransfer");
 
 
     // Constructors
 
         //- Construct from dictionary
-        interRegionHeatTransfer
+        heatTransfer
         (
             const word& name,
             const word& modelType,
@@ -139,16 +150,10 @@ public:
 
 
     //- Destructor
-    virtual ~interRegionHeatTransfer();
+    virtual ~heatTransfer();
 
 
     // Member Functions
-
-        // Access
-
-            //- Return the heat transfer coefficient
-            inline const volScalarField& htc() const;
-
 
         // Checks
 
@@ -169,6 +174,15 @@ public:
             //- Source term to compressible energy equation
             virtual void addSup
             (
+                const volScalarField& rho,
+                const volScalarField& he,
+                fvMatrix<scalar>& eqn
+            ) const;
+
+            //- Source term to phase energy equation
+            virtual void addSup
+            (
+                const volScalarField& alpha,
                 const volScalarField& rho,
                 const volScalarField& he,
                 fvMatrix<scalar>& eqn

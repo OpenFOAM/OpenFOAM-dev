@@ -75,10 +75,11 @@ renumber/Allwmake $targetType $*
 fvAgglomerationMethods/Allwmake $targetType $*
 wmake $targetType fvMotionSolver
 
-wmake $targetType fvModels
 wmake $targetType fvConstraints
 
+fvModels/Allwmake $targetType $*
 functionObjects/Allwmake $targetType $*
+wmake $targetType fvModels/propellerDisk
 
 lagrangian/Allwmake $targetType $*
 rigidBodyMotion/Allwmake $targetType $*

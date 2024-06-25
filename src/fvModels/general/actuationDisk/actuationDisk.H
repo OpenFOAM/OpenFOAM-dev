@@ -22,61 +22,55 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::interRegionHeatTransfer
+    Foam::fv::actuationDisk
 
 Description
-    Model for inter-region heat exchange. Requires specification of a model for
-    the heat transfer coefficient (htc) and the area per unit volume (Av).
-    These are then used to apply the following source to the energy equation:
+    Actuation disk source
 
+    Constant values for momentum source for actuation disk
     \f[
-        -htc*Av*(T_{nbr,mapped} - T)
+        T = 2 \rho A (\hat{d}\dot U_{o})^2 a (1-a) \hat{d}
     \f]
 
-    If the semiImplicit option is set, then this becomes:
-
-    \f[
-        -htc*Av*(T_{nbr,mapped} - T) + htc*Av/Cp*h - Sp(htc*Av/Cp, h);
-    \f]
+    where:
+    \vartable
+        A    | Disk area
+        dHat | Unit disk direction
+        U_o  | Upstream velocity
+        a    | 1 - Cp/Ct
+        Cp   | Power coefficient
+        Ct   | Thrust coefficient
+    \endvartable
 
 Usage
     Example usage:
     \verbatim
-    interRegionHeatTransfer
+    actuationDisk1
     {
-        type            interRegionHeatTransfer;
+        type            actuationDisk;
 
-        libs            ("libinterRegionFvModels.so");
+        select          cellSet;
+        cellSet         actuationDisk1;
 
-        nbrRegion       other;
-
-        interpolationMethod intersection;
-        master          true;
-
-        semiImplicit    no;
-
-        Av              200;
-
-        heatTransferCoefficientModel constant;
-
-        htc             10;
+        diskDir         (-1 0 0);   // Disk direction
+        Cp              0.1;        // Power coefficient
+        Ct              0.5;        // Thrust coefficient
+        diskArea        5.0;        // Disk area
+        upstreamPoint   (0 0 0);    // Upstream point
     }
     \endverbatim
 
-See also
-    Foam::fv::heatTransferCoefficientModel
-
 SourceFiles
-    interRegionHeatTransfer.C
+    actuationDisk.C
+    actuationDiskTemplates.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef interRegionHeatTransfer_H
-#define interRegionHeatTransfer_H
+#ifndef actuationDisk_H
+#define actuationDisk_H
 
-#include "interRegionModel.H"
-#include "heatTransferCoefficientModel.H"
-#include "heatTransferAv.H"
+#include "fvModel.H"
+#include "fvCellSet.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -86,50 +80,75 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                Class interRegionHeatTransfer Declaration
+                     Class actuationDisk Declaration
 \*---------------------------------------------------------------------------*/
 
-class interRegionHeatTransfer
+class actuationDisk
 :
-    public interRegionModel
+    public fvModel
 {
-    // Private data
+protected:
 
-        //- Flag to activate semi-implicit coupling
-        bool semiImplicit_;
+    // Protected Data
 
-        //- Name of temperature field; default = "T"
-        word TName_;
+        //- The set of cells the fvConstraint applies to
+        fvCellSet set_;
 
-        //- Name of neighbour temperature field; default = "T"
-        word TNbrName_;
+        //- The name of the phase to which this fvModel applies
+        word phaseName_;
 
-        //- The heat transfer area per unit volume
-        autoPtr<heatTransferAv> heatTransferAv_;
+        //- Name of the velocity field
+        word UName_;
 
-        //- The heat transfer model
-        autoPtr<heatTransferCoefficientModel> heatTransferCoefficientModel_;
+        //- Disk area normal
+        vector diskDir_;
+
+        //- Power coefficient
+        scalar Cp_;
+
+        //- Thrust coefficient
+        scalar Ct_;
+
+        //- Disk area
+        scalar diskArea_;
+
+        //- Upstream point sample
+        point upstreamPoint_;
+
+        //- Upstream cell ID
+        label upstreamCellId_;
 
 
-    // Private member functions
+private:
 
-        //- Non-virtual readalpha*
+    // Private Member Functions
+
+        //- Non-virtual read
         void readCoeffs();
 
-        //- Get the neighbour heat transfer
-        const interRegionHeatTransfer& nbrHeatTransfer() const;
+        //- Add resistance to the UEqn
+        template<class AlphaFieldType, class RhoFieldType>
+        inline void addActuationDiskAxialInertialResistance
+        (
+            vectorField& Usource,
+            const labelList& cells,
+            const scalarField& V,
+            const AlphaFieldType& alpha,
+            const RhoFieldType& rho,
+            const vectorField& U
+        ) const;
 
 
 public:
 
     //- Runtime type information
-    TypeName("interRegionHeatTransfer");
+    TypeName("actuationDisk");
 
 
     // Constructors
 
-        //- Construct from dictionary
-        interRegionHeatTransfer
+        //- Construct from components
+        actuationDisk
         (
             const word& name,
             const word& modelType,
@@ -137,18 +156,16 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        actuationDisk(const actuationDisk&) = delete;
+
 
     //- Destructor
-    virtual ~interRegionHeatTransfer();
+    virtual ~actuationDisk()
+    {}
 
 
     // Member Functions
-
-        // Access
-
-            //- Return the heat transfer coefficient
-            inline const volScalarField& htc() const;
-
 
         // Checks
 
@@ -157,28 +174,31 @@ public:
             virtual wordList addSupFields() const;
 
 
-        // Sources
+         // Add explicit and implicit contributions
 
-            //- Source term to energy equation
+            //- Source term to momentum equation
             virtual void addSup
             (
-                const volScalarField& he,
-                fvMatrix<scalar>& eqn
+                const volVectorField& U,
+                fvMatrix<vector>& eqn
             ) const;
 
-            //- Source term to compressible energy equation
+            //- Source term to compressible momentum equation
             virtual void addSup
             (
                 const volScalarField& rho,
-                const volScalarField& he,
-                fvMatrix<scalar>& eqn
+                const volVectorField& U,
+                fvMatrix<vector>& eqn
             ) const;
 
-
-        // Correction
-
-            //- Correct the model
-            virtual void correct();
+            //- Explicit and implicit sources for phase equations
+            virtual void addSup
+            (
+                const volScalarField& alpha,
+                const volScalarField& rho,
+                const volVectorField& U,
+                fvMatrix<vector>& eqn
+            ) const;
 
 
         // Mesh changes
@@ -200,6 +220,12 @@ public:
 
             //- Read dictionary
             virtual bool read(const dictionary& dict);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const actuationDisk&) = delete;
 };
 
 

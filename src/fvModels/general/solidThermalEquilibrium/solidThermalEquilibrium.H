@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,61 +22,43 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::interRegionHeatTransfer
+    Foam::fv::solidThermalEquilibrium
 
 Description
-    Model for inter-region heat exchange. Requires specification of a model for
-    the heat transfer coefficient (htc) and the area per unit volume (Av).
-    These are then used to apply the following source to the energy equation:
+    This fvModel adds the thermal inertia of a solid phase into the energy
+    equation. It assumes that the solid is in thermal equilibrium with the
+    surrounding fluid phase.
 
-    \f[
-        -htc*Av*(T_{nbr,mapped} - T)
-    \f]
-
-    If the semiImplicit option is set, then this becomes:
-
-    \f[
-        -htc*Av*(T_{nbr,mapped} - T) + htc*Av/Cp*h - Sp(htc*Av/Cp, h);
-    \f]
+    The volume fraction of the solid phase is read from
+    constant/alpha.<solidPhase>, and the associated thermophysical properties
+    are specified in constant/thermophysicalProperties.<solidPhase>.
 
 Usage
-    Example usage:
+    \table
+        Property    | Description                            | Req'd? | Default
+        phase       | Name of the phase to which this fvModel applies \\
+                                                             | no     | none
+        solidPhase  | Name of the solid phase                | yes    |
+    \endtable
+
+    Example specification:
     \verbatim
-    interRegionHeatTransfer
+    <fvModelName>
     {
-        type            interRegionHeatTransfer;
+        type        solidThermalEquilibrium;
 
-        libs            ("libinterRegionFvModels.so");
-
-        nbrRegion       other;
-
-        interpolationMethod intersection;
-        master          true;
-
-        semiImplicit    no;
-
-        Av              200;
-
-        heatTransferCoefficientModel constant;
-
-        htc             10;
+        solidPhase  solid;
     }
     \endverbatim
 
-See also
-    Foam::fv::heatTransferCoefficientModel
-
-SourceFiles
-    interRegionHeatTransfer.C
-
 \*---------------------------------------------------------------------------*/
 
-#ifndef interRegionHeatTransfer_H
-#define interRegionHeatTransfer_H
+#ifndef solidThermalEquilibrium_H
+#define solidThermalEquilibrium_H
 
-#include "interRegionModel.H"
-#include "heatTransferCoefficientModel.H"
-#include "heatTransferAv.H"
+#include "fvModel.H"
+#include "volFields.H"
+#include "solidThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -86,50 +68,44 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                Class interRegionHeatTransfer Declaration
+                Class solidThermalEquilibrium Declaration
 \*---------------------------------------------------------------------------*/
 
-class interRegionHeatTransfer
+class solidThermalEquilibrium
 :
-    public interRegionModel
+    public fvModel
 {
-    // Private data
+    // Private Member Data
 
-        //- Flag to activate semi-implicit coupling
-        bool semiImplicit_;
+        //- The name of the phase to which this fvModel applies
+        word phaseName_;
 
-        //- Name of temperature field; default = "T"
-        word TName_;
-
-        //- Name of neighbour temperature field; default = "T"
-        word TNbrName_;
-
-        //- The heat transfer area per unit volume
-        autoPtr<heatTransferAv> heatTransferAv_;
-
-        //- The heat transfer model
-        autoPtr<heatTransferCoefficientModel> heatTransferCoefficientModel_;
+        //- The name of the solid phase
+        word solidPhaseName_;
 
 
-    // Private member functions
+    // Private Member Functions
 
-        //- Non-virtual readalpha*
+        //- Non-virtual read
         void readCoeffs();
 
-        //- Get the neighbour heat transfer
-        const interRegionHeatTransfer& nbrHeatTransfer() const;
+        //- Get the solid volume fraction field
+        const volScalarField& solidAlpha() const;
+
+        //- Get the solid thermo
+        const Foam::solidThermo& solidThermo() const;
 
 
 public:
 
     //- Runtime type information
-    TypeName("interRegionHeatTransfer");
+    TypeName("solidThermalEquilibrium");
 
 
     // Constructors
 
-        //- Construct from dictionary
-        interRegionHeatTransfer
+        //- Construct from components
+        solidThermalEquilibrium
         (
             const word& name,
             const word& modelType,
@@ -137,18 +113,18 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        solidThermalEquilibrium
+        (
+            const solidThermalEquilibrium&
+        ) = delete;
+
 
     //- Destructor
-    virtual ~interRegionHeatTransfer();
+    virtual ~solidThermalEquilibrium();
 
 
     // Member Functions
-
-        // Access
-
-            //- Return the heat transfer coefficient
-            inline const volScalarField& htc() const;
-
 
         // Checks
 
@@ -157,16 +133,9 @@ public:
             virtual wordList addSupFields() const;
 
 
-        // Sources
+        // Evaluation
 
-            //- Source term to energy equation
-            virtual void addSup
-            (
-                const volScalarField& he,
-                fvMatrix<scalar>& eqn
-            ) const;
-
-            //- Source term to compressible energy equation
+            //- Explicit and implicit sources for compressible equations
             virtual void addSup
             (
                 const volScalarField& rho,
@@ -174,11 +143,14 @@ public:
                 fvMatrix<scalar>& eqn
             ) const;
 
-
-        // Correction
-
-            //- Correct the model
-            virtual void correct();
+            //- Explicit and implicit sources for phase equations
+            virtual void addSup
+            (
+                const volScalarField& alpha,
+                const volScalarField& rho,
+                const volScalarField& he,
+                fvMatrix<scalar>& eqn
+            ) const;
 
 
         // Mesh changes
@@ -200,6 +172,12 @@ public:
 
             //- Read dictionary
             virtual bool read(const dictionary& dict);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const solidThermalEquilibrium&) = delete;
 };
 
 

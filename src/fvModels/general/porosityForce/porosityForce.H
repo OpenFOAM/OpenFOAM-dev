@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,114 +22,98 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::interRegionHeatTransfer
+    Foam::fv::porosityForce
 
 Description
-    Model for inter-region heat exchange. Requires specification of a model for
-    the heat transfer coefficient (htc) and the area per unit volume (Av).
-    These are then used to apply the following source to the energy equation:
-
-    \f[
-        -htc*Av*(T_{nbr,mapped} - T)
-    \f]
-
-    If the semiImplicit option is set, then this becomes:
-
-    \f[
-        -htc*Av*(T_{nbr,mapped} - T) + htc*Av/Cp*h - Sp(htc*Av/Cp, h);
-    \f]
+    This model applies the force exerted on the fluid by a porous media
 
 Usage
-    Example usage:
+    Example usage, here employing the Darcy-Forchheimer model:
     \verbatim
-    interRegionHeatTransfer
+    porosityForceCoeffs
     {
-        type            interRegionHeatTransfer;
+        type            DarcyForchheimer;
 
-        libs            ("libinterRegionFvModels.so");
+        DarcyForchheimerCoeffs
+        {
+            d   d [0 -2 0 0 0 0 0] (5e7 -1000 -1000);
+            f   f [0 -1 0 0 0 0 0] (0 0 0);
 
-        nbrRegion       other;
-
-        interpolationMethod intersection;
-        master          true;
-
-        semiImplicit    no;
-
-        Av              200;
-
-        heatTransferCoefficientModel constant;
-
-        htc             10;
+            coordinateSystem
+            {
+                type    cartesian;
+                origin  (0 0 0);
+                coordinateRotation
+                {
+                    type    axesRotation;
+                    e1  (0.70710678 0.70710678 0);
+                    e2  (0 0 1);
+                }
+            }
+        }
     }
     \endverbatim
 
-See also
-    Foam::fv::heatTransferCoefficientModel
+    Note:
+        The porous region must be selected as a cellZone.
 
 SourceFiles
-    interRegionHeatTransfer.C
+    porosityForce.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef interRegionHeatTransfer_H
-#define interRegionHeatTransfer_H
+#ifndef porosityForce_H
+#define porosityForce_H
 
-#include "interRegionModel.H"
-#include "heatTransferCoefficientModel.H"
-#include "heatTransferAv.H"
+#include "fvModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+
+class porosityModel;
+
 namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                Class interRegionHeatTransfer Declaration
+                   Class porosityForce Declaration
 \*---------------------------------------------------------------------------*/
 
-class interRegionHeatTransfer
+class porosityForce
 :
-    public interRegionModel
+    public fvModel
 {
     // Private data
 
-        //- Flag to activate semi-implicit coupling
-        bool semiImplicit_;
+        //- Names of the velocity fields
+        wordList UNames_;
 
-        //- Name of temperature field; default = "T"
-        word TName_;
-
-        //- Name of neighbour temperature field; default = "T"
-        word TNbrName_;
-
-        //- The heat transfer area per unit volume
-        autoPtr<heatTransferAv> heatTransferAv_;
-
-        //- The heat transfer model
-        autoPtr<heatTransferCoefficientModel> heatTransferCoefficientModel_;
+        //- Run-time selectable porosity model
+        mutable autoPtr<porosityModel> porosityPtr_;
 
 
-    // Private member functions
+    // Private Member Functions
 
-        //- Non-virtual readalpha*
+        //- Reset the porosity model
+        //  during construction, re-reading and mesh-change
+        void reset();
+
+        //- Non-virtual read
         void readCoeffs();
-
-        //- Get the neighbour heat transfer
-        const interRegionHeatTransfer& nbrHeatTransfer() const;
 
 
 public:
 
     //- Runtime type information
-    TypeName("interRegionHeatTransfer");
+    TypeName("porosityForce");
 
 
     // Constructors
 
-        //- Construct from dictionary
-        interRegionHeatTransfer
+        //- Construct from components
+        porosityForce
         (
             const word& name,
             const word& modelType,
@@ -137,17 +121,24 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        porosityForce(const porosityForce&) = delete;
+
 
     //- Destructor
-    virtual ~interRegionHeatTransfer();
+    virtual ~porosityForce()
+    {}
 
 
     // Member Functions
 
         // Access
 
-            //- Return the heat transfer coefficient
-            inline const volScalarField& htc() const;
+            //- Return the porosity model
+            const porosityModel& model() const
+            {
+                return porosityPtr_();
+            }
 
 
         // Checks
@@ -157,28 +148,31 @@ public:
             virtual wordList addSupFields() const;
 
 
-        // Sources
+        // Add explicit and implicit contributions
 
-            //- Source term to energy equation
+            //- Add implicit contribution to momentum equation
             virtual void addSup
             (
-                const volScalarField& he,
-                fvMatrix<scalar>& eqn
+                const volVectorField& U,
+                fvMatrix<vector>& eqn
             ) const;
 
-            //- Source term to compressible energy equation
+            //- Add implicit contribution to compressible momentum equation
             virtual void addSup
             (
                 const volScalarField& rho,
-                const volScalarField& he,
-                fvMatrix<scalar>& eqn
+                const volVectorField& U,
+                fvMatrix<vector>& eqn
             ) const;
 
-
-        // Correction
-
-            //- Correct the model
-            virtual void correct();
+            //- Add implicit contribution to phase momentum equation
+            virtual void addSup
+            (
+                const volScalarField& alpha,
+                const volScalarField& rho,
+                const volVectorField& U,
+                fvMatrix<vector>& eqn
+            ) const;
 
 
         // Mesh changes
@@ -200,6 +194,12 @@ public:
 
             //- Read dictionary
             virtual bool read(const dictionary& dict);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const porosityForce&) = delete;
 };
 
 
