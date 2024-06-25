@@ -55,7 +55,7 @@ Foam::autoPtr<Foam::Function1<Foam::scalar>> Foam::Function1s::omega::init
         Function1<scalar>::New
         (
             foundOmega ? "omega" : "rpm",
-            time.userUnits(),
+            tUnits_,
             foundOmega ? unitRadians/dimTime : units()["rpm"],
             dict
         );
@@ -66,12 +66,14 @@ Foam::autoPtr<Foam::Function1<Foam::scalar>> Foam::Function1s::omega::init
 
 Foam::Function1s::omega::omega(const Time& time, const dictionary& dict)
 :
+    tUnits_(time.userUnits()),
     omega_(init(time, dict))
 {}
 
 
 Foam::Function1s::omega::omega(const omega& o)
 :
+    tUnits_(o.tUnits_),
     omega_(o.omega_, false)
 {}
 
@@ -83,7 +85,7 @@ void Foam::Function1s::omega::write(Ostream& os) const
     writeEntry
     (
         os,
-        dimTime,
+        tUnits_,
         omega_->name() == "omega" ? unitRadians/dimTime : units()["rpm"],
         omega_()
     );
