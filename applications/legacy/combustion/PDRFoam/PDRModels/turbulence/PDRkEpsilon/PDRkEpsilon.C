@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,16 +46,16 @@ addToRunTimeSelectionTable(RASModel, PDRkEpsilon, dictionary);
 tmp<volScalarField> PDRkEpsilon::boundEpsilon()
 {
     tmp<volScalarField> tCmuk2(Cmu_*sqr(k_));
-    epsilon_ = max(epsilon_, tCmuk2()/(this->nutMaxCoeff_*this->nu()));
+    epsilon_ = max(epsilon_, tCmuk2()/(nutMaxCoeff_*nu()));
     return tCmuk2;
 }
 
 
 void PDRkEpsilon::correctNut()
 {
-    this->nut_ = boundEpsilon()/epsilon_;
-    this->nut_.correctBoundaryConditions();
-    fvConstraints::New(this->mesh_).constrain(this->nut_);
+    nut_ = Cmu_*sqr(k_)/epsilon_;
+    nut_.correctBoundaryConditions();
+    fvConstraints::New(mesh_).constrain(nut_);
 }
 
 
