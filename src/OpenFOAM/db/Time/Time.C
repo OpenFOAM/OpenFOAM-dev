@@ -1342,14 +1342,14 @@ Foam::Time& Foam::Time::operator++()
                         )
                     )
                     {
-                        FatalErrorInFunction
+                        WarningInFunction
                             << "Current time name " << dimensionedScalar::name()
                             << " is set to an instance prior to the "
                                "previous one "
                             << oldTimeName << nl
                             << "    This might result in temporal "
                                "discontinuities."
-                            << exit(FatalError);
+                            << endl;
                     }
                 }
             }
