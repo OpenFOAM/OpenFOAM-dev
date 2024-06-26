@@ -110,7 +110,7 @@ int main(int argc, char *argv[])
     const word oldInstance = mesh.pointsInstance();
 
     // Search for list of objects for this time
-    IOobjectList objects(mesh, runTime.timeName());
+    IOobjectList objects(mesh, runTime.name());
 
     if (fields) Info<< "Reading geometric fields" << nl << endl;
 

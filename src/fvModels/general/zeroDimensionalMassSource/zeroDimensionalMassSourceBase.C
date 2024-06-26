@@ -108,7 +108,7 @@ const Foam::volScalarField& Foam::fv::zeroDimensionalMassSourceBase::m() const
         typeIOobject<volScalarField> mIo
         (
             typedName("m"),
-            mesh().time().timeName(),
+            mesh().time().name(),
             mesh(),
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
@@ -135,7 +135,7 @@ const Foam::volScalarField& Foam::fv::zeroDimensionalMassSourceBase::m() const
                 IOobject
                 (
                     typedName("factor"),
-                    mesh().time().timeName(),
+                    mesh().time().name(),
                     mesh(),
                     IOobject::NO_READ,
                     IOobject::AUTO_WRITE
@@ -265,7 +265,7 @@ void Foam::fv::zeroDimensionalMassSourceBase::correct()
                 IOobject
                 (
                     typedName("deltaM"),
-                    mesh().time().timeName(),
+                    mesh().time().name(),
                     mesh()
                 ),
                 mesh(),

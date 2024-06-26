@@ -308,7 +308,7 @@ Foam::fvMeshMovers::multiValveEngine::movingObject::movingObject
         IOobject
         (
             "motionScale_" + name,
-            meshMover_.mesh().time().timeName(),
+            meshMover_.mesh().time().name(),
             meshMover_.mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE

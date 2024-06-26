@@ -113,7 +113,7 @@ Foam::fv::homogeneousLiquidPhaseSeparation::homogeneousLiquidPhaseSeparation
         IOobject
         (
             typedName(IOobject::groupName("d", interface_.name())),
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh,
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
@@ -126,7 +126,7 @@ Foam::fv::homogeneousLiquidPhaseSeparation::homogeneousLiquidPhaseSeparation
         IOobject
         (
             typedName(IOobject::groupName("mDotByAlpha", interface_.name())),
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh,
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE

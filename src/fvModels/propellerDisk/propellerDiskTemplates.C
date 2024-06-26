@@ -49,7 +49,7 @@ void Foam::fv::propellerDisk::addActuationDiskAxialInertialResistance
         IOobject
         (
             typedName("force"),
-            mesh().time().timeName(),
+            mesh().time().name(),
             mesh(),
             IOobject::NO_READ,
             IOobject::AUTO_WRITE

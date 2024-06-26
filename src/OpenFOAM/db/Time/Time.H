@@ -380,12 +380,6 @@ public:
                 const int precision = curPrecision_
             );
 
-            //- Return current time name (for backwards-compatibility)
-            const word& timeName() const
-            {
-                return dimensionedScalar::name();
-            }
-
             //- Search a given directory for valid time directories
             static instantList findTimes
             (

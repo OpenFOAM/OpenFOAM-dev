@@ -85,7 +85,7 @@ Foam::fv::homogeneousCondensation::homogeneousCondensation
         IOobject
         (
             typedName(IOobject::groupName("d", interface_.name())),
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh,
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
@@ -98,7 +98,7 @@ Foam::fv::homogeneousCondensation::homogeneousCondensation
         IOobject
         (
             typedName(IOobject::groupName("mDotByAlpha", interface_.name())),
-            mesh.time().timeName(),
+            mesh.time().name(),
             mesh,
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE

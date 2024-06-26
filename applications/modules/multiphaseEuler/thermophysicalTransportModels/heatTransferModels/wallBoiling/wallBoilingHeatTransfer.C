@@ -89,7 +89,7 @@ Foam::heatTransferModels::wallBoilingHeatTransfer::wallBoilingHeatTransfer
         IOobject
         (
             IOobject::groupName("fWallBoiling", interface_.name()),
-            interface_.mesh().time().timeName(),
+            interface_.mesh().time().name(),
             interface_.mesh(),
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
@@ -102,7 +102,7 @@ Foam::heatTransferModels::wallBoilingHeatTransfer::wallBoilingHeatTransfer
         IOobject
         (
             IOobject::groupName("departureDiameter", interface_.name()),
-            interface_.mesh().time().timeName(),
+            interface_.mesh().time().name(),
             interface_.mesh(),
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
@@ -115,7 +115,7 @@ Foam::heatTransferModels::wallBoilingHeatTransfer::wallBoilingHeatTransfer
         IOobject
         (
             IOobject::groupName("departureFrequency", interface_.name()),
-            interface_.mesh().time().timeName(),
+            interface_.mesh().time().name(),
             interface_.mesh(),
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
@@ -128,7 +128,7 @@ Foam::heatTransferModels::wallBoilingHeatTransfer::wallBoilingHeatTransfer
         IOobject
         (
             IOobject::groupName("nucleationSites", interface_.name()),
-            interface_.mesh().time().timeName(),
+            interface_.mesh().time().name(),
             interface_.mesh(),
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
@@ -141,7 +141,7 @@ Foam::heatTransferModels::wallBoilingHeatTransfer::wallBoilingHeatTransfer
         IOobject
         (
             IOobject::groupName(typedName("dmdtf"), interface_.name()),
-            interface_.mesh().time().timeName(),
+            interface_.mesh().time().name(),
             interface_.mesh(),
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
@@ -154,7 +154,7 @@ Foam::heatTransferModels::wallBoilingHeatTransfer::wallBoilingHeatTransfer
         IOobject
         (
             IOobject::groupName("qq", interface_.name()),
-            interface_.mesh().time().timeName(),
+            interface_.mesh().time().name(),
             interface_.mesh(),
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
@@ -167,7 +167,7 @@ Foam::heatTransferModels::wallBoilingHeatTransfer::wallBoilingHeatTransfer
         IOobject
         (
             IOobject::groupName("Tsurface", interface_.name()),
-            interface_.mesh().time().timeName(),
+            interface_.mesh().time().name(),
             interface_.mesh(),
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
@@ -180,7 +180,7 @@ Foam::heatTransferModels::wallBoilingHeatTransfer::wallBoilingHeatTransfer
         IOobject
         (
             IOobject::groupName(typedName("K"), interface_.name()),
-            interface_.mesh().time().timeName(),
+            interface_.mesh().time().name(),
             interface_.mesh(),
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE

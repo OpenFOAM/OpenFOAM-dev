@@ -79,7 +79,7 @@ Foam::chemistryModel<ThermoType>::chemistryModel
                 IOobject
                 (
                     "RR." + Yvf_[fieldi].name(),
-                    this->mesh().time().timeName(),
+                    this->mesh().time().name(),
                     this->mesh(),
                     IOobject::NO_READ,
                     IOobject::NO_WRITE
@@ -102,7 +102,7 @@ Foam::chemistryModel<ThermoType>::chemistryModel
             typeIOobject<volScalarField> header
             (
                 Yvf_[i].name(),
-                this->mesh().time().timeName(),
+                this->mesh().time().name(),
                 this->mesh(),
                 IOobject::NO_READ
             );

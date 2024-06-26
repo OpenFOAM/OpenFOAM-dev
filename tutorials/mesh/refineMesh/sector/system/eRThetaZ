@@ -29,19 +29,19 @@ codeWrite
 
     vectorIOField
     (
-        IOobject("eR", mesh().time().timeName(), mesh()),
+        IOobject("eR", mesh().time().name(), mesh()),
         xy/mag(xy)
     ).write();
 
     vectorIOField
     (
-        IOobject("eTheta", mesh().time().timeName(), mesh()),
+        IOobject("eTheta", mesh().time().name(), mesh()),
         (zStar ^ xy)/mag(zStar ^ xy)
     ).write();
 
     vectorIOField
     (
-        IOobject("eZ", mesh().time().timeName(), mesh()),
+        IOobject("eZ", mesh().time().name(), mesh()),
         zStar/mag(zStar)
     ).write();
 #};

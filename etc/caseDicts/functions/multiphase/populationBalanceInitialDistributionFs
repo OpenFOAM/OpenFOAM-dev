@@ -73,7 +73,7 @@ codeRead
         IOobject
         (
             IOobject::groupName("fDefault", phaseName),
-            mesh().time().timeName(),
+            mesh().time().name(),
             mesh(),
             IOobject::MUST_READ
         ),
@@ -87,7 +87,7 @@ codeRead
             IOobject
             (
                 IOobject::groupName("f" + Foam::name(i), phaseName),
-                mesh().time().timeName(),
+                mesh().time().name(),
                 mesh(),
                 IOobject::READ_IF_PRESENT
             ),

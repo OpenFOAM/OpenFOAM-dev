@@ -257,7 +257,7 @@ bool Foam::fv::zeroDimensionalFixedPressureConstraint::constrain
                 IOobject
                 (
                     typedName("source"),
-                    mesh().time().timeName(),
+                    mesh().time().name(),
                     mesh(),
                     IOobject::READ_IF_PRESENT,
                     IOobject::AUTO_WRITE
