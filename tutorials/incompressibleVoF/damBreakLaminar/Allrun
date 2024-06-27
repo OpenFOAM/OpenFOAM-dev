@@ -4,12 +4,6 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Source tutorial run functions
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
-# Copy the case
-isTest "$@" && path=.. || path=$FOAM_TUTORIALS/incompressibleVoF
-cp -rn $path/damBreak/0 $path/damBreak/constant $path/damBreak/system .
-rm -f 0/alpha.water
-
-# Run
 runApplication blockMesh
 runApplication setFields
 runApplication $(getApplication)
