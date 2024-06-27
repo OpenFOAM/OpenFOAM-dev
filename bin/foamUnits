@@ -1,0 +1,326 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     | Website:  https://openfoam.org
+#   \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamUnits
+#
+# Description
+#     Describes units and their conversions for input parameters in OpenFOAM
+#
+#------------------------------------------------------------------------------
+usage () {
+    cat <<USAGE
+
+Usage: ${0##*/} [OPTIONS] [unit/dimension]
+options:
+  -a | -all              write output for all units or dimensions
+  -d | -dimension        interrogate dimensional units
+  -h | -help             help
+  -l | -list             lists available units
+
+Describes units and their conversions for input parameters in OpenFOAM, e.g.
++ to list available units:
+  foamUnits -list
++ to provide information about the [mm] unit:
+  foamUnits mm
++ to provide information about the [thermalConductivity] dimensions:
+  foamUnits -dimension thermalConductivity
++ to provide information about all units:
+  foamUnits -all
++ to provide information about all dimensions:
+  foamUnits -all -dimension
+
+USAGE
+}
+
+error() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    usage
+    exit 1
+}
+
+# Remove leading and trailing [ ] and spaces
+cleanArg() {
+    echo "$1" | grep -qE "^\[[^\]*\]$" && \
+        echo "$1" | tr -d '\[\] ' && \
+        return 0
+
+    echo "$1"
+}
+
+### DIMENSIONS
+
+# Global
+dimDir="/opt/openfoam-dev/src/OpenFOAM/dimensionSet"
+
+setFile="$dimDir/dimensionSet.C"
+BASE_DIMS="$(sed -n "/names\[\]/,/}/p" "$setFile" | awk -F\" '{print $2}')"
+
+SETS_FILE="$dimDir/dimensionSets.C"
+DRVD_DIMS="$(grep "dimensionsPtr_->insert(\"" "$SETS_FILE" | awk -F\" '{print $2}')"
+
+# Sort in reverse so longer names appear first
+extFile="$dimDir/dimensionSets.H"
+EXT_DIMS="$(grep extern "$extFile"| awk -F'[ ;]' '{print $4}' | sort -r)"
+
+# Conversions from dimension names to arrays
+#shellcheck disable=SC2086
+baseArrayToDim() {
+    _array="$1"
+
+    echo "$_array" | grep -q "[[:alpha:]]" && echo "$1" && return 0
+
+    set -- $BASE_DIMS
+
+    for _i in $_array
+    do
+        [ "$_i" -eq "1" ] && echo "$1" && return 0
+        shift
+    done
+}
+
+baseDimToArray() {
+    _array=
+
+    for _d in $BASE_DIMS
+    do
+        [ "$_d" = "$1" ] && _i=1 || _i=0
+        _array="$_array $(printf "%i" "$_i")"
+    done
+
+    echo "$_array"
+}
+
+# Listing dimension names
+# shellcheck disable=SC2086
+listDims() {
+    printf "\nBase dimensions: "
+    echo $BASE_DIMS | awk '{for(i=1;i<=NF;i++) {printf "[%s] ", $i}}'
+
+    printf "\nDerived dimensions:\n"
+    echo $DRVD_DIMS | awk \
+    '{
+        for(i=1;i<=NF;i++)
+        {
+            if (i%5 == 1) printf "  "
+            printf "[%s] ", $i
+            if (i%5 == 0) printf "\n"
+            if (i == NF) printf "\n"
+        }
+    }'
+}
+
+# Conversions between dimension names and extern variables in the code
+# Conversion from derived name to variable, e.g. lookupDimVar area -> dimArea
+lookupDimVar() {
+    grep "$1" "$SETS_FILE" | sed 's/.*,[\t ]*\([^)]*\).*/\1/' | head -1
+}
+
+# Looks up an external variable and finds its definitions
+lookupExtDim() {
+    sed -n "/Foam::$1/,/)/p" "$SETS_FILE" | \
+        xargs | sed 's/[^(]*(\([^;]*\));.*/\1/'
+}
+
+# Looks up a dimension name from the extern variable, e.g.
+# lookupDimName dimDensity -> density
+lookupDimName() {
+    case "$1" in
+        dimMass|\
+        dimLength|\
+        dimTime|\
+        dimTemperature|\
+        dimMoles|\
+        dimCurrent|\
+        dimLuminousIntensity)
+            echo "${1#dim*}" | tr '[:upper:]' '[:lower:]'
+            return 0
+        ;;
+    esac
+
+    grep "dimensionsPtr_->insert(\".*$1" "$SETS_FILE" | \
+        awk -F\" '{print $2}' | head -1
+}
+
+# Replaces extern dimensions with dimension names in expressions, e.g.
+# writeDim "pow3(dimTime*dimPower/sqr(dimDynamicViscosity))" ->
+#           pow3(time*power/sqr(dynamicViscosity))
+# shellcheck disable=SC1003,SC2086
+writeDim() {
+    _dim="$1"
+
+    for _e in $EXT_DIMS
+    do
+        echo "$_dim" | grep -q "$_e" || continue
+        _d="$(lookupDimName "$_e")"
+        _dim="$(echo "$_dim" | sed "s/$_e/$_d/")"
+    done
+
+    echo "$_dim" | head -1 | xargs
+}
+
+# Takes a dimension name, looks up the extern variables, then convers back, e.g.
+# getDim area -> sqr(length)
+getDim() {
+    _dim="$1"
+
+    # Special cases
+    echo "$BASE_DIMS" | grep -q "$_dim" && \
+        case "$_dim" in
+            mass|length|time|temperature|moles|current|luminousIntensity)
+                echo "[$(baseDimToArray "$_dim")]"
+                return 0
+                ;;
+        esac
+
+    echo "$DRVD_DIMS" | grep -q "$_dim" || return 1
+
+    _dim="$(lookupExtDim "$(lookupDimVar "$_dim")")"
+
+    writeDim "$_dim"
+
+    return 0
+}
+
+printDim() {
+    _dim="$1"
+    _entry="$(getDim "$_dim")" || return 1
+
+    printf "Dimension [%s]\n+ Base dimensions = [%s]\n" \
+           "$_dim" \
+           "$(echo "$_entry" | \
+              sed -e "s/\[[\t ]*\([^\]*\)\].*/\1/" -e "s/[\t ]*$//")"
+}
+
+### UNITS
+
+DIMLESS_UNITS="% rad rot deg"
+
+### Functions for reporting units
+listUnits() {
+    _start=
+
+    sed -n '/UnitConversions/,/^}/p' "$FOAM_ETC/controlDict" | \
+        sed -n '/SICoeffs/,/}/p' | \
+        while read -r line
+        do
+            echo "$line" | grep -q "//" && \
+                echo "$line" | awk -F"// " '{printf "\n%s: ", $2}' && \
+                _start=on && continue
+            echo "$line" | grep -q "\[" && \
+                echo "$line" | awk '{printf "[%s] ", $1}'
+        done
+    printf "\nDimensionless units: "
+    echo "$DIMLESS_UNITS" | awk '{for(i=1;i<=NF;i++) {printf "[%s] ", $i}}'
+    printf "\n\n"
+}
+
+getUnit() {
+    _unit="$1"
+
+    # Special cases
+    case "$_unit" in
+        rad) echo "[] 1" ; return 0 ;;
+        rot) echo "[rad] 2*pi" ; return 0 ;;
+        deg) echo "[rad] pi/180" ; return 0 ;;
+        %) echo "[] 0.01" ; return 0 ;;
+        #kg|m|s|K|kmol|A|Cd) echo "[$_unit] 1" ; return 0 ;;
+    esac
+
+    _entry="UnitConversions/SICoeffs"
+
+    [ "$#" -eq 1 ] && _entry="$_entry/$_unit"
+
+    foamDictionary \
+        -entry "$_entry" \
+        -value \
+        -case "$FOAM_ETC" \
+        controlDict 2> /dev/null
+}
+
+printUnit() {
+    _unit="$1"
+    _entry="$(getUnit "$_unit")" || return 1
+
+    _base="$(echo "$_entry" | sed -e "s/\[[\t ]*\([^\]*\)\].*/\1/" -e "s/[\t ]*$//")"
+
+    printf "Unit [%s]\n+ Base unit = [%s]\n+ Conversion factor = %s\n" \
+       "$_unit" \
+       "$(baseArrayToDim "$_base")" \
+       "$(echo "$_entry" | awk -F" " '{print $NF}')"
+}
+
+### Run recursively with -a | -all option
+args=""
+echo "$@" | grep -q -- "-d" && args="-d"
+echo "$@" | grep -q -- "-a" && \
+    for u in $($0 -l $args | xargs -n 1 | grep '\[' | tr -d '\[\]')
+    do
+        $0 $args "$u"
+    done && exit
+
+dimension=
+list=
+while [ "$#" -gt 0 ]
+do
+   case "$1" in
+   -d | -dimension)
+       dimension="yes"
+       shift
+       ;;
+   -h | -help)
+       usage
+       exit
+       ;;
+   -l | -list)
+       list="yes"
+       shift
+       ;;
+   -*)
+       error "Invalid option '$1'"
+       ;;
+   *)
+       break
+       ;;
+    esac
+done
+
+if [ "$list" ]
+then
+    [ "$dimension" ] && listDims && exit
+    listUnits
+    exit
+fi
+
+# Check number of arguments
+[ "$#" -eq 1 ] || error "Arguments specified =/= 1 (optional)"
+
+if [ "$dimension" ]
+then
+    printDim "$(cleanArg "$1")" || error "dimension '$1' does not exist"
+else
+    printUnit "$(cleanArg "$1")" || error "unit '$1' does not exist"
+fi
+printf "\n"
