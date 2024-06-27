@@ -105,6 +105,12 @@ public:
         //- Construct given size.
         explicit inline DynamicField(const label);
 
+        //- Construct given size and initial value
+        inline DynamicField(const label, const T&);
+
+        //- Construct given size and initialised to zero
+        inline DynamicField(const label, const zero);
+
         //- Construct from UList. Size set to UList size.
         //  Also constructs from DynamicField with different sizing parameters.
         explicit inline DynamicField(const UList<T>&);

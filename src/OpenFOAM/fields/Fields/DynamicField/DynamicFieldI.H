@@ -50,6 +50,30 @@ inline Foam::DynamicField<T, SizeInc, SizeMult, SizeDiv>::DynamicField
 template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
 inline Foam::DynamicField<T, SizeInc, SizeMult, SizeDiv>::DynamicField
 (
+    const label nElem,
+    const T& t
+)
+:
+    Field<T>(nElem, t),
+    capacity_(Field<T>::size())
+{}
+
+
+template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
+inline Foam::DynamicField<T, SizeInc, SizeMult, SizeDiv>::DynamicField
+(
+    const label nElem,
+    const zero
+)
+:
+    Field<T>(nElem, Zero),
+    capacity_(Field<T>::size())
+{}
+
+
+template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
+inline Foam::DynamicField<T, SizeInc, SizeMult, SizeDiv>::DynamicField
+(
     const UList<T>& lst
 )
 :
