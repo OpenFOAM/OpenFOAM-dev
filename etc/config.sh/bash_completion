@@ -98,6 +98,24 @@ _findArgs () {
         xargs
 }
 
+_unitArgs ()
+{
+    _opts="-help"
+
+    # If '-dimension' is not selected, it is always an option
+    echo "$@" | grep -q -- "-d" || _opts="$_opts -dimension"
+
+    # If '-all' or '-list' is selected, the only other possible option is '-dimension'
+    echo "$@" | grep -q -- "-[al]" && echo "$_opts" | xargs -n 1 | sort && return 0
+
+    # If '-all' or '-list' are not selected, they are options
+    _opts="$_opts -all -list"
+
+    echo "$@" | grep -q -- "-d" && _args="-d"
+    _opts="$_opts $(foamUnits -list $_args | xargs -n 1 | grep '\[' | tr -d '\[\]')"
+    echo "$_opts" | xargs -n 1 | sort
+}
+
 _adiabaticFlameT_ ()
 {
     local cur="${COMP_WORDS[COMP_CWORD]}"
@@ -547,7 +565,7 @@ _createEngineZones_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -cylinderHead -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -pistonBowl -region -roots -srcDoc"
+    opts="-case -cylinderHead -doc -fileHandler -help -libs -noFunctionObjects -pistonBowl -region -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -557,7 +575,7 @@ _createEngineZones_ ()
             opts="" ; extra="-d" ;;
         -fileHandler)
             opts="uncollated collated masterUncollated" ; extra="" ;;
-        -hostRoots|-libs|-region|-roots)
+        -libs|-region)
             opts="" ; extra="" ;;
        *) ;;
     esac
@@ -1961,7 +1979,7 @@ _mergeMeshes_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-addCaseRegions -addCases -addRegions -case -doc -fileHandler -help -libs -noFunctionObjects -overwrite -region -srcDoc"
+    opts="-addCaseRegions -addCases -addRegions -case -constant -doc -fileHandler -help -latestTime -libs -noFunctionObjects -noZero -overwrite -region -srcDoc -time"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -1971,6 +1989,8 @@ _mergeMeshes_ ()
             opts="" ; extra="-d" ;;
         -fileHandler)
             opts="uncollated collated masterUncollated" ; extra="" ;;
+        -time)
+            opts="$(foamListTimes -withZero 2> /dev/null)" ; extra="" ;;
         -libs|-region)
             opts="" ; extra="" ;;
        *) ;;
@@ -2428,7 +2448,7 @@ _reconstructPar_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="- -allRegions -case -cellProc -constant -doc -fields -fileHandler -help -lagrangianFields -latestTime -libs -newTimes -noFields -noFunctionObjects -noLagrangian -noSets -noZero -region -srcDoc -time -withZero"
+    opts="- -allRegions -case -cellProc -constant -doc -fields -fileHandler -help -lagrangianFields -latestTime -libs -newTimes -noFields -noFunctionObjects -noLagrangian -noSets -noZero -region -rm -srcDoc -time -withZero"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -4815,6 +4835,25 @@ _foamTags_ ()
 }
 complete -o filenames -o nospace -F _foamTags_ foamTags
 
+_foamUnits_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
+
+    opts="$(_unitArgs "$used")"
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -*) ;;
+        *) opts="" ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o filenames -o nospace -F _foamUnits_ foamUnits
+
 _interFoam_ ()
 {
     local cur="${COMP_WORDS[COMP_CWORD]}"
@@ -5269,7 +5308,7 @@ _wclean_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-help -silent"
+    opts="-help -noLnInclude -silent"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra="-d"
 
