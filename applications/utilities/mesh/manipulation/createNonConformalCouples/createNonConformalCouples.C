@@ -242,6 +242,51 @@ struct nonConformalCouple
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+template<class Type>
+void evaluateNonConformalProcessorCyclics(const fvMesh& mesh)
+{
+    UPtrList<VolField<Type>> fields(mesh.fields<VolField<Type>>());
+
+    forAll(fields, i)
+    {
+        const label nReq = Pstream::nRequests();
+
+        forAll(mesh.boundary(), patchi)
+        {
+            typename VolField<Type>::Patch& pf =
+                fields[i].boundaryFieldRef()[patchi];
+
+            if (isA<nonConformalProcessorCyclicPolyPatch>(pf.patch().patch()))
+            {
+                pf.initEvaluate(Pstream::defaultCommsType);
+            }
+        }
+
+        if
+        (
+            Pstream::parRun()
+         && Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking
+        )
+        {
+            Pstream::waitRequests(nReq);
+        }
+
+        forAll(mesh.boundary(), patchi)
+        {
+            typename VolField<Type>::Patch& pf =
+                fields[i].boundaryFieldRef()[patchi];
+
+            if (isA<nonConformalProcessorCyclicPolyPatch>(pf.patch().patch()))
+            {
+                pf.evaluate(Pstream::defaultCommsType);
+            }
+        }
+    }
+}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
 int main(int argc, char *argv[])
 {
     #include "addOverwriteOption.H"
@@ -751,6 +796,21 @@ int main(int argc, char *argv[])
                     newPatchFieldDicts[regioni][newPatchi]
                 );
             }
+        }
+    }
+
+    // Communicate values across non-conformal processor cyclics so that they
+    // contain valid values that can be written to disk
+    if (Pstream::parRun())
+    {
+        forAll(regionMeshes, regioni)
+        {
+            const fvMesh& mesh = regionMeshes[regioni];
+
+            #define EVALUATE_NON_CONFORMAL_PROCESSOR_CYCLICS(Type, nullArg) \
+                evaluateNonConformalProcessorCyclics<Type>(mesh);
+            FOR_ALL_FIELD_TYPES(EVALUATE_NON_CONFORMAL_PROCESSOR_CYCLICS)
+            #undef EVALUATE_NON_CONFORMAL_PROCESSOR_CYCLICS
         }
     }
 

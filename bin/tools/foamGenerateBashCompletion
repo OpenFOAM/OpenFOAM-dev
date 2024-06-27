@@ -168,6 +168,24 @@ _findArgs () {
         xargs
 }
 
+_unitArgs ()
+{
+    _opts="-help"
+
+    # If '-dimension' is not selected, it is always an option
+    echo "\$@" | grep -q -- "-d" || _opts="\$_opts -dimension"
+
+    # If '-all' or '-list' is selected, the only other possible option is '-dimension'
+    echo "\$@" | grep -q -- "-[al]" && echo "\$_opts" | xargs -n 1 | sort && return 0
+
+    # If '-all' or '-list' are not selected, they are options
+    _opts="\$_opts -all -list"
+
+    echo "\$@" | grep -q -- "-d" && _args="-d"
+    _opts="\$_opts \$(foamUnits -list \$_args | xargs -n 1 | grep '\\[' | tr -d '\\[\\]')"
+    echo "\$_opts" | xargs -n 1 | sort
+}
+
 EOF
 }
 
@@ -370,13 +388,39 @@ complete -o filenames -o nospace -F _foamInfo_ foamInfo
 EOF
 }
 
+# shellcheck disable=SC2154
+_foamUnits () {
+    cat<<EOF
+_foamUnits_ ()
+{
+$(declareLocals)
+
+    opts="\$(_unitArgs "\$used")"
+    extra=""
+
+$(caseStart)
+        -*) ;;
+        *) opts="" ;;
+$(caseEnd)
+}
+complete -o filenames -o nospace -F _foamUnits_ foamUnits
+
+EOF
+}
+
 #------------------------------------------------------------------------------
 
 apps="$(ls "$FOAM_APPBIN") \
       $(find "$WM_PROJECT_DIR/bin" -maxdepth 1 -type f | sort) \
       $(find "$WM_PROJECT_DIR/wmake" -maxdepth 1 -type f | sort)"
 
-specialApps="foamFind foamGet foamCloneCase foamInfo surfaceTransformPoints"
+specialApps="\
+    foamFind \
+    foamGet \
+    foamCloneCase \
+    foamInfo \
+    foamUnits \
+    surfaceTransformPoints"
 
 banner > "$file"
 optionFunctions >> "$file"
