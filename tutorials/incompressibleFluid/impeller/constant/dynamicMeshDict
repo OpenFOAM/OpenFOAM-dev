@@ -29,7 +29,7 @@ mover
     origin        (0 0 0);
     axis          (1 0 0);
 
-    rpm           60;
+    omega         60 [rpm];
 }
 
 

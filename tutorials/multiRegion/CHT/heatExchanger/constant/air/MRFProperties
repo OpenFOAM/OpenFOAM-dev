@@ -21,7 +21,7 @@ MRF
     origin      (0.25 0.25 0.25);
     axis        (0 0 1);
 
-    rpm         500;
+    omega       500 [rpm];
 }
 
 

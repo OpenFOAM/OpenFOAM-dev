@@ -50,8 +50,7 @@ Usage
         rho          | Density field name      | no          | rho
         rhoInlet     | Inlet density           | no          |
         radialVelocity | Radial velocity [m/s] | yes         |
-        omega        | Angular velocity of the frame [rad/s] | no |
-        rpm          | Angular velocity of the frame [rpm]   | no |
+        omega        | Angular velocity of the frame | no |
         tangentialVelocity | Tangential velocity [m/s] | no  |
     \endtable
 
@@ -64,14 +63,14 @@ Usage
         axis            (0 0 1);
         volumetricFlowRate constant 0.2;
         radialVelocity  constant 10;
-        rpm             constant 100;
+        omega           constant 100 [rpm];
     }
     \endverbatim
 
-    The \c volumetricFlowRate or \c massFlowRate and the \omega or \c rpm
-    entries are \c Function1 of time, see Foam::Function1s. The \c
-    radialVelocity and \c tangentialVelocity entries are \c Function2 of time
-    and radius, see Foam::Function2s.
+    The \c volumetricFlowRate or \c massFlowRate and the \omega entries are
+    \c Function1 of time, see Foam::Function1s. The \c radialVelocity and
+    \c tangentialVelocity entries are \c Function2 of time and radius,
+    see Foam::Function2s.
 
     Note:
       - \c rhoInlet is required for the case of a mass flow rate, where the

@@ -81,7 +81,7 @@ class MRFZone
         //- Axis vector
         vector axis_;
 
-        //- Angular velocity (rad/sec or rpm)
+        //- Angular velocity
         Function1s::omega omega_;
 
 

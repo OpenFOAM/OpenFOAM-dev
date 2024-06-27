@@ -34,7 +34,7 @@ disk
 
     refDirection    (0 0 1);  // Reference direction
                               // - used as reference for psi angle
-    rpm             1000;
+    omega           1000 [rpm];
     // pointAbove    (0 0 0.25);
 
     trimModel       fixedTrim;  // fixed || targetForce

@@ -36,8 +36,7 @@ Usage
         axis         | Axis of rotation        | no          | patch normal
         axialVelocity| Axial velocity [m/s]    | yes         |
         radialVelocity | Radial velocity [m/s] | yes         |
-        omega        | Angular velocity of the frame [rad/s] | no |
-        rpm          | Angular velocity of the frame [rpm]   | no |
+        omega        | Angular velocity of the frame | no |
         tangentialVelocity | Tangential velocity [m/s] | no  |
     \endtable
 
@@ -56,7 +55,7 @@ Usage
 
     The \c axialVelocity, \c radialVelocity and \c tangentialVelocity
     entries are Function2 of time and radius, see see Foam::Function2s. The \c
-    omega or \rpm is a Function1 of time, see Foam::Function1s.
+    omega is a Function1 of time, see Foam::Function1s.
 
 See also
     Foam::fixedValueFvPatchField
@@ -101,7 +100,7 @@ class swirlInletVelocityFvPatchVectorField
         //- Radial velocity
         autoPtr<Function2<scalar>> radialVelocity_;
 
-        //- Angular velocity of the frame (rad/sec)
+        //- Angular velocity of the frame
         autoPtr<Function1s::omega> omega_;
 
         //- Tangential velocity

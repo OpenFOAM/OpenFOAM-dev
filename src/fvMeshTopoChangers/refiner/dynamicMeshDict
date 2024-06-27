@@ -26,7 +26,7 @@ mixerFvMeshCoeffs
         direction       (1 0 0);
     }
 
-    rpm             10;
+    omega           10 [rpm];
 
     slider
     {

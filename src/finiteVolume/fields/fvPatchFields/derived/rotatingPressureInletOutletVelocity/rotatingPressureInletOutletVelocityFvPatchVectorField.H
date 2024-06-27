@@ -37,8 +37,7 @@ Usage
         tangentialVelocity | tangential velocity field | no  |
         origin       | origin of rotation in Cartesian co-ordinates | yes|
         axis         | axis of rotation        | yes         |
-        omega        | angular velocity of the frame [rad/s] | no |
-        rpm          | angular velocity of the frame [rpm]   | no |
+        omega        | angular velocity of the frame    | no |
     \endtable
 
     Example of the boundary condition specification:
@@ -50,11 +49,11 @@ Usage
         tangentialVelocity uniform (0 0 0);
         origin          (0 0 0);
         axis            (0 0 1);
-        rpm             100;
+        omega           100 [rpm];
     }
     \endverbatim
 
-    The \c omega or \c rpm entries are Function1 of time, see Foam::Function1s.
+    The \c omega entry is a Function1 of time, see Foam::Function1s.
 
     Note:
         Sign conventions:
@@ -100,7 +99,7 @@ class rotatingPressureInletOutletVelocityFvPatchVectorField
         //- Axis of the rotation
         vector axis_;
 
-        //- Angular velocity of the frame (rad/sec)
+        //- Angular velocity of the frame
         Function1s::omega omega_;
 
 

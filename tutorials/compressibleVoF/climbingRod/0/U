@@ -25,7 +25,7 @@ boundaryField
         type            rotatingWallVelocity;
         axis            (0 1 0);
         origin          (0 0 0);
-        rpm             126;
+        omega           126 [rpm];
         value           uniform (0 0 0);
     }
 
