@@ -46,7 +46,7 @@ forcing
     }
 
     lambdaCoeff         5;
-    lambdaBoundaryCoeff 10;
+    lambdaBoundaryCoeff 25;
 
     // Write the forcing fields: forcing:scale, forcing:forceCoeff
     writeForceFields true;
