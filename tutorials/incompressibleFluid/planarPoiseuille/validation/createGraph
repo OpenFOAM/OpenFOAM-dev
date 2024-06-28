@@ -1,13 +1,13 @@
 #!/bin/sh
 
-tail -n +4 ../postProcessing/probes/0/U  | \
-    tr -s " " | tr -d '(' | cut -d " " -f1-2 > ../Numerical.dat
-
 if ! which gnuplot > /dev/null 2>&1
 then
     echo "gnuplot not found - skipping graph creation" >&2
     exit 1
 fi
+
+tail -n +4 ../postProcessing/probes/0/U  | \
+    tr -s " " | tr -d '(' | cut -d " " -f1-2 > ../Numerical.dat
 
 gnuplot<<EOF
     set terminal postscript eps color enhanced "Helvetica,20"

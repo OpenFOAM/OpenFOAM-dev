@@ -1,5 +1,4 @@
 #!/bin/sh
-
 cd ${0%/*} || exit 1    # Run from this directory
 
 # Extract Chemkin II data into a friendlier format
@@ -10,5 +9,3 @@ grep '^ Time (sec)' ../chemkin/senk.out | awk '{print $4 "    " $8 }' \
 ./createGraph
 
 #------------------------------------------------------------------------------
-
-

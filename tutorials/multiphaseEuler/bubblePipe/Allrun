@@ -1,12 +1,9 @@
 #!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
 
-# Run from this directory
-cd "${0%/*}" || exit 1
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
 
-# Source run functions
-. "$WM_PROJECT_DIR/bin/tools/RunFunctions"
-
-# Run case
 runApplication blockMesh
 runApplication topoSet
 runApplication decomposePar

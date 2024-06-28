@@ -1,5 +1,4 @@
 #!/bin/sh
-
 cd ${0%/*} || exit 1    # Run from this directory
 
 # Source tutorial run functions
@@ -14,3 +13,5 @@ runParallel $(getApplication)
 
 runApplication -s air    reconstructPar -latestTime -region air
 runApplication -s porous reconstructPar -latestTime -region porous
+
+#------------------------------------------------------------------------------

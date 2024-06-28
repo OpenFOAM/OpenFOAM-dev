@@ -1,7 +1,7 @@
 #!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
 
-cd ${0%/*} || exit 1
-
+# Source tutorial run functions
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
 # Create the initial block mesh and decompose
@@ -27,3 +27,5 @@ runParallel -a snappyHexMesh -overwrite
 
 # Split the mesh into regions
 runParallel splitMeshRegions -cellZones -defaultRegionName solid -overwrite
+
+#------------------------------------------------------------------------------

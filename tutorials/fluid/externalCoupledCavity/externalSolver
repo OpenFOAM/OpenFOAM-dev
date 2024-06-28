@@ -6,7 +6,7 @@
 # Functionality is hard-coded for this particular test case
 # - patch temperatures increased by 1K on each step
 #
-cd ${0%/*} || exit 1    # run from this directory
+cd ${0%/*} || exit 1    # Run from this directory
 
 echo "Executing dummy external solver"
 
