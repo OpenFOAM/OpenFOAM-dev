@@ -197,7 +197,7 @@ addLayersControls
 
     // When not to extrude surface. 0 is flat surface, 90 is when two faces
     // are perpendicular
-    featureAngle 100;
+    featureAngle 180;
 
     // At non-patched sides allow mesh to slip if extrusion direction makes
     // angle larger than slipFeatureAngle. Default is 0.5*featureAngle.
