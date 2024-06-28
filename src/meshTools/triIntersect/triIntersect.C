@@ -1813,15 +1813,52 @@ Foam::barycentric2D Foam::triIntersect::srcPointTgtTriIntersection
     const tensor T(- T0 - T1, T0, T1);
 
     const vector detAY = (T & (srcP - tgtPs[0])) + vector(detA, 0, 0);
-
     const scalar maxMagDetAY = mag(detAY[findMax(cmptMag(detAY))]);
 
-    vector y =
-        maxMagDetAY/vGreat < mag(detA)
-      ? detAY/detA
-      : detAY/maxMagDetAY*vGreat;
+    // Usual case. The source normal is not parallel to the target triangle.
+    // The intersection is a single unambiguous point.
+    if (maxMagDetAY/vGreat < mag(detA))
+    {
+        const vector y = detAY/detA;
+        return barycentric2D(y.x(), y.y(), y.z());
+    }
 
-    return barycentric2D(y.x(), y.y(), y.z());
+    // Degenerate case. The source normal is parallel to, and the source point
+    // is out of the plane of, the target triangle. Really, there is no
+    // intersection, but for the purposes of this function we can say there is
+    // an intersection and it is arbitrarily far away.
+    if (maxMagDetAY > 0)
+    {
+        const vector y = detAY/maxMagDetAY*vGreat;
+        return barycentric2D(y.x(), y.y(), y.z());
+    }
+
+    const tensor2D A2
+    (
+        A.x() & A.x(), A.x() & A.y(),
+        A.y() & A.x(), A.y() & A.y()
+    );
+    const scalar detA2(det(A2));
+
+    const tensor2D T2(cof(A2));
+
+    const vector2D detAY2 =
+        T2 & vector2D(A.x() & (srcP - tgtPs[0]), A.y() & (srcP - tgtPs[0]));
+    const scalar maxMagDetAY2 = mag(detAY[findMax(cmptMag(detAY2))]);
+
+    // Very degenerate case. The source normal is parallel to, and the source
+    // point is on the plane of, the target triangle. The intersection is a
+    // line. Choose the point on the line corresponding to the source point.
+    if (maxMagDetAY2/vGreat < mag(detA2))
+    {
+        const vector2D y2 = detAY2/detA2;
+        return barycentric2D(1 - cmptSum(y2), y2.x(), y2.y());
+    }
+
+    // Most degenerate case. The target triangle has collapsed to a line.
+    // Choose an arbitrary point a long way away. It's possible there's more we
+    // could do here, but a need has yet to present itself.
+    return barycentric2D(-vGreat, vGreat, vGreat);
 }
 
 
