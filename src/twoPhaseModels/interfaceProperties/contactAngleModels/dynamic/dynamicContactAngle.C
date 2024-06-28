@@ -81,8 +81,8 @@ Foam::contactAngleModels::dynamic::cosTheta
     return cos
     (
         theta0_
-      + thetaRec_ - theta0_*max(uCoeff, scalar(0))
-      - thetaAdv_ - theta0_*min(uCoeff, scalar(0))
+      + (thetaRec_ - theta0_)*max(uCoeff, scalar(0))
+      - (thetaAdv_ - theta0_)*min(uCoeff, scalar(0))
     );
 }
 
