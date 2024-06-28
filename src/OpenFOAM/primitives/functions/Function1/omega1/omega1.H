@@ -25,11 +25,13 @@ Class
     Foam::Function1s::omega
 
 Description
-    User convenience class to handle the input of time-varying rotational speed
-    in rad/s if \c omega is specified or rpm if \c rpm is specified.
+    Convenience class to handle the input of time-varying rotational speed.
+    Reads an \c omega Function1 entry with default units of [rad/s]. For
+    backwards compatibility this will also alternatively read an \c rpm entry
+    with default units of [rpm].
 
 Usage
-    For specifying the rotational speed in rpm of an MRF zone:
+    For specifying a constant rotational speed of an MRF zone:
     \verbatim
         MRF
         {
@@ -38,19 +40,14 @@ Usage
             origin     (0 0 0);
             axis       (0 0 1);
 
-            rpm        60;
-        }
-    \endverbatim
-    or the equivalent specified in rad/s:
-    \verbatim
-        MRF
-        {
-            cellZone    rotor;
+            omega      6.28319;  // <-- Basic specification in [rad/s]
 
-            origin     (0 0 0);
-            axis       (0 0 1);
+        //  omega      60 [rpm]; // <-- Equivalent specification with unit
+                                 //     conversion from [rpm]
 
-            omega      6.28319;
+        //  rpm        60;       // <-- Equivalent backwards compatible
+                                 //     specification for rpm. May be
+                                 //     removed in future.
         }
     \endverbatim
     or for a tabulated ramped rotational speed of a solid body:
@@ -70,14 +67,37 @@ Usage
             origin      (0 0 0);
             axis        (0 1 0);
 
-            rpm         table
+            omega       table            // <-- Basic specification in [rad/s]
             (
-                (0    0)
-                (0.01  6000)
-                (0.022  6000)
-                (0.03  4000)
-                (100   4000)
+                (0      0)
+                (0.01   628.319)
+                (0.022  628.319)
+                (0.03   418.879)
+                (100    418.879)
             );
+
+        //  omega                        // <-- Equivalent specification with
+        //  {                            //     unit conversion from [rpm].
+        //      type        table;       //     Note that the dictionary form
+        //      units       ([s] [rpm]); //     is needed for the units entry.
+        //      values
+        //      (
+        //          (0      0)
+        //          (0.01   6000)
+        //          (0.022  6000)
+        //          (0.03   4000)
+        //          (100    4000)
+        //      );
+        //  }
+
+        //  rpm         table            // <-- Equivalent backwards compatible
+        //  (                            //     specification for rpm. May be
+        //      (0      0)               //     removed in future.
+        //      (0.01   6000)
+        //      (0.022  6000)
+        //      (0.03   4000)
+        //      (100    4000)
+        //  );
         }
     \endverbatim
 

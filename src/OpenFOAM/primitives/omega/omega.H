@@ -25,8 +25,10 @@ Class
     Foam::omega
 
 Description
-    User convenience class to handle the input of time-varying rotational speed
-    in rad/s if \c omega is specified or rpm if \c rpm is specified.
+    Convenience class to handle the input of constant rotational speed. Reads
+    an \c omega entry with default units of [rad/s]. For backwards
+    compatibility this will also alternatively read an \c rpm entry with
+    default units of [rpm].
 
 SourceFiles
     omega.C
