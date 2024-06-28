@@ -305,6 +305,7 @@ do
        ;;
    -h | -help)
        usage
+       exit
        ;;
    -i | -isearch)
        [ "$#" -ge 2 ] || error "'$1' option requires an argument"
