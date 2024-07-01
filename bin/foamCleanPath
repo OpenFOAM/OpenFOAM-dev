@@ -26,57 +26,42 @@
 #     foamCleanPath
 #
 # Description
-#     Usage: foamCleanPath [-strip] path [wildcard] .. [wildcard]
+#     Usage: foamCleanPath [-strip] path [exp1] .. [expN]
 #
-#     Prints its argument (which should be a ':' separated path)
-#     without all
-#         - duplicate elements
-#         - elements whose start matches a wildcard
-#         - inaccessible directories (with the -strip (at your option)
+#     Returns the <path> with individual paths removed which match partially or
+#     fully any expressions [exp1] ... [expN] provided.
 #
-# Note
-#     - this routine will fail when directories have embedded spaces
-#     - false matches possible if a wildcard contains '.' (sed regex)
-#     - the wildcards can themselves can be written together and separated
-#       by colons or whitespace
 #------------------------------------------------------------------------------
 usage() {
     cat <<USAGE
-Usage: ${0##*/} [OPTION] path [wildcard1] .. [wildcardN]
+Usage: ${0##*/} [OPTION] "<path>" [exp1] .. [expN]
 options:
-  -strip            remove inaccessible directories
   -help             print the usage
 
-  Prints its argument (which should be a ':' separated list) cleansed from
-    - duplicate elements
-    - elements whose start matches one of the wildcard(s)
-    - inaccessible directories (with the -strip option)
+Returns the <path> with individual paths removed which match partially or fully
+any expressions [exp1] ... [expN] provided.
 
-  Exit status
-      0  on success
-      1  for miscellaneous errors.
-      2  initial value of 'path' is empty
++ The <path> must be a single quoted "" string with directory paths, separated
+  by colons.
++ Each [exp1] ... [expN] may be a single expression or a colon-separated set of
+  expressions.
 
 USAGE
 }
 
 error() {
-    usage 1>&2
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1" >&2; shift; done
+    usage
     exit 1
 }
 
-
-unset strip
-# parse options
+strip=
 while [ "$#" -gt 0 ]
 do
     case "$1" in
     -h | -help)
         usage && exit 0
-        ;;
-    -strip)
-        strip=true
-        shift
         ;;
     -*)
         error
@@ -86,83 +71,45 @@ do
         ;;
     esac
 done
+[ "$#" -ge 1 ] || error "No arguments provided"
 
+oldPath="$1" ; shift
 
-[ "$#" -ge 1 ] || error
+# Quick exit if oldPath is not set, needed for LD_LIBRARY_PATH
+[ -n "$oldPath" ] || exit
 
-dirList="$1"
-shift
-
-[ -n "$dirList" ] || exit 2    # quick exit on empty 'dirList'
-
-
-##DEBUG echo "input>$dirList<" 1>&2
-
-# preserve current IFS and split on colon or whitespace
-oldIFS="$IFS"
-IFS=': '
-
-# "wildcard1 ... wildcardN" may have been passed as a single parameter
-# or may contain ':' separators
-set -- $*
+exps="$(echo "$*" | awk -F '[: ]' '{for(i=1;i<=NF;i++) print $i}')"
 
 # standard directories on PATH, e.g. /bin, /usr/bin
 stdPaths="$(getconf PATH)"
 
-# strip out wildcards via sed
-while [ "$#" -ge 1 ]
+for exp in $exps
 do
-    wildcard=$1
-    shift
-
     # do not remove standard directories
-    echo "$stdPaths" | grep -qE "(^|:)$wildcard(:|$)" && continue
+    echo "$stdPaths" | grep -qE "(^|:)$exp(:|$)" && continue
 
-
-    ##DEBUG echo "remove>$wildcard<" 1>&2
-    if [ -n "$wildcard" ]
-    then
-        dirList=$(echo "$dirList:" | sed -e "s|${wildcard}[^:]*:||g")
-    fi
+    oldPath=$(echo "$oldPath" | \
+        sed -e "s|${exp}[^:]*:||g" | \
+        sed -e "s|:${exp}[^:]*$||g" )
 done
 
-# split on ':' (and on space as well to avoid any surprises)
-IFS=': '
-set -- $dirList
-
-##DEBUG echo "intermediate>$dirList<" 1>&2
-
-# rebuild the list from scratch
-unset dirList
-for dir
+oldIFS=$IFS
+IFS=:
+newPath=
+for dir in $oldPath
 do
-    ##DEBUG echo "check>$dir<" 1>&2
-    #- dirs must exist
-    if [ -e "$dir" ]
-    then
-        # straighten out paths
-    dir="$(cd "$dir" && pwd)"
-        # do not add duplicate dirs
-        echo "$dirList" | grep -qE "(^| )$dir( |$)" || dirList="$dirList $dir"
-    elif [ "$strip" != true ]
-    then
-        # Print non-existing directories if not in 'strip' mode.
-        dirList="$dirList $dir"
-    fi
+    # Ignore duplicates
+    echo "$newPath" | grep -qE "(^|:)$dir(:|$)" && continue
+
+    # Clean the dir if it exists
+    [ -d "$dir" ] && dir="$(cd "$dir" && pwd)"
+
+    # Add an entry, without a colon for first time
+    [ "$newPath" ] && newPath="$newPath:$dir" && continue
+    newPath="$dir"
 done
+IFS=$oldIFS
 
-# split on whitespace
-IFS=' '
-set -- $dirList
-
-# rejoin on ':'
-IFS=':'
-dirList="$*"
-
-# restore IFS
-IFS="$oldIFS"
-
-##DEBUG echo "output>$dirList<" 1>&2
-echo "$dirList"
+echo "$newPath"
 
 #------------------------------------------------------------------------------
