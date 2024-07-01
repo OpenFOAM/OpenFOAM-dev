@@ -34,7 +34,6 @@ do
     rm -rf logs
 done
 
-
 # create validation plot
 # test if gnuplot exists on the system
 if ! which gnuplot > /dev/null 2>&1

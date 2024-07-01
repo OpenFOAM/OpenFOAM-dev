@@ -2,7 +2,7 @@
 
 if ! which gnuplot > /dev/null 2>&1
 then
-    echo 'gnuplot not found - skipping graph creation' >&2
+    echo "gnuplot not found - skipping graph creation" >&2
     exit 1
 fi
 

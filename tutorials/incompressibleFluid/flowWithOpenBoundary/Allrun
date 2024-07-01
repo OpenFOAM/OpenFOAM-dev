@@ -1,4 +1,8 @@
 #!/bin/sh
+cd "${0%/*}" || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. "$WM_PROJECT_DIR/bin/tools/RunFunctions"
 
 usage () {
     exec 1>&2
@@ -95,12 +99,6 @@ case "$UBC" in
             "Valid options: 'pressureInletOutletVelocity', 'zeroGradient'."
       ;;
 esac
-
-# Run from this directory
-cd "${0%/*}" || exit 1
-
-# Source tutorial run functions
-. "$WM_PROJECT_DIR/bin/tools/RunFunctions"
 
 runApplication blockMesh
 [ "$distort" ] && distort

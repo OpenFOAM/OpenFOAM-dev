@@ -1,4 +1,8 @@
 #!/bin/sh
+cd "${0%/*}" || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. "$WM_PROJECT_DIR/bin/tools/RunFunctions"
 
 usage () {
     exec 1>&2
@@ -47,13 +51,6 @@ do
         ;;
     esac
 done
-
-
-# Run from this directory
-cd "${0%/*}" || exit 1
-
-# Source tutorial run functions
-. "$WM_PROJECT_DIR/bin/tools/RunFunctions"
 
 if [ $meshType -eq 0 ] || [ $meshType -eq 1 ]; then
 {

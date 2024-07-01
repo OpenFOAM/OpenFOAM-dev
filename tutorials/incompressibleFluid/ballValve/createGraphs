@@ -1,6 +1,10 @@
 #!/bin/sh
 
-cd ${0%/*} || exit 1
+if ! which gnuplot > /dev/null 2>&1
+then
+    echo "gnuplot not found - skipping graph creation" >&2
+    exit 1
+fi
 
 inletFlowRate=postProcessing/inletFlowRate/0/surfaceFieldValue.dat
 lowerOutletFlowRate=postProcessing/lowerOutletFlowRate/0/surfaceFieldValue.dat
@@ -28,3 +32,5 @@ plot \
     "< paste $inletFlowRate $lowerOutletFlowRate $upperOutletFlowRate" \
     us 1:(100*(\$2+\$4+\$6)/\$2) w l t ''
 EOF
+
+#------------------------------------------------------------------------------

@@ -2,6 +2,7 @@
 cd ${0%/*} || exit 1    # Run from this directory
 
 foamCleanTutorials cases
+
 rm -rf 0/alpha.water 0/alpha.water.gz 0/T.air.gz 0/T.water.gz \
     probes wallPressure pRefProbe
 

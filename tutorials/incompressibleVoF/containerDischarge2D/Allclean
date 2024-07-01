@@ -7,3 +7,5 @@ cd ${0%/*} || exit 1    # Run from this directory
 rm -f 0/alpha.liquid.gz 0/alpha.liquid
 
 cleanCase
+
+#------------------------------------------------------------------------------

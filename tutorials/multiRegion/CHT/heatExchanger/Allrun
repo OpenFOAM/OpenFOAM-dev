@@ -1,5 +1,4 @@
 #!/bin/sh
-
 cd ${0%/*} || exit 1    # Run from this directory
 
 # Source tutorial run functions
@@ -8,3 +7,5 @@ cd ${0%/*} || exit 1    # Run from this directory
 ./Allmesh
 
 runApplication $(getApplication)
+
+#------------------------------------------------------------------------------
