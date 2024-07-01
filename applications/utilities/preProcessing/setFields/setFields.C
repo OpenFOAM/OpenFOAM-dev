@@ -241,11 +241,11 @@ bool setFaceFieldType
         label nNonProcPatches = 0;
         forAll(fieldBf, patchi)
         {
-            nNonProcPatches = patchi;
             if (isA<processorFvPatch>(mesh.boundary()[patchi]))
             {
                 break;
             }
+            nNonProcPatches = patchi + 1;
         }
 
         // Create a copy of the boundary field
