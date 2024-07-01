@@ -50,15 +50,15 @@ solvers
 
 PIMPLE
 {
-    momentumPredictor yes;
-    nOuterCorrectors  1;
-    nCorrectors       1;
+    momentumPredictor   yes;
+    nOuterCorrectors    1;
+    nCorrectors         1;
     nNonOrthogonalCorrectors 0;
 
-    maxCo             0.2;
+    maxCo               0.35;
     rDeltaTSmoothingCoeff 0.1;
     rDeltaTDampingCoeff 1;
-    maxDeltaT         1;
+    maxDeltaT           1;
 }
 
 
