@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,7 +81,7 @@ Foam::functionObjects::stopAtTimeStep::~stopAtTimeStep()
 bool Foam::functionObjects::stopAtTimeStep::read(const dictionary& dict)
 {
     stopAt::read(dict);
-    dict.lookup("minDeltaT") >> minDeltaT_;
+    minDeltaT_ = dict.lookup<scalar>("minDeltaT", time_.userUnits());
 
     return true;
 }
