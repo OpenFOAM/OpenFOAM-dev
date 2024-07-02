@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,29 +25,8 @@ Class
     Foam::functionObjects::turbulenceFields
 
 Description
-    Stores turbulence fields on the mesh database for further manipulation.
-
-    Fields are stored as copies of the original, with the prefix
-    "momentumTransportModel:", e.g.:
-
-    \verbatim
-    momentumTransportModel:R
-    \endverbatim
-
-    Example of function object specification:
-    \verbatim
-    turbulenceFields1
-    {
-        type        turbulenceFields;
-        libs        ("libfieldFunctionObjects.so");
-        ...
-        fields
-        (
-            R
-            devTau
-        );
-    }
-    \endverbatim
+    Stores derived turbulence fields on the mesh database for further
+    manipulation.
 
 Usage
     \table
@@ -73,6 +52,27 @@ Usage
                    (incompressible)
         devTau  | Divergence of the Reynolds stress (compressible)
     \endplaintable
+
+    If the optional \c prefix entry is set true the turbulence fields are stored
+    with the prefix "momentumTransportModel:", e.g.:
+    \verbatim
+    momentumTransportModel:R
+    \endverbatim
+
+    Example of function object specification:
+    \verbatim
+    turbulenceFields1
+    {
+        type        turbulenceFields;
+        libs        ("libfieldFunctionObjects.so");
+        ...
+        fields
+        (
+            R
+            devTau
+        );
+    }
+    \endverbatim
 
 See also
     Foam::functionObjects::fvMeshFunctionObject
