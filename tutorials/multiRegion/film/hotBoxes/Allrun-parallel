@@ -19,12 +19,12 @@ runParallel extrudeToRegionMesh -region fluid -overwrite
 
 runApplication -s fields decomposePar -fields -copyZero
 
+runParallel $(getApplication)
+
+runApplication reconstructPar -allRegions
+
 printf "\n%s\n" "Creating files for paraview post-processing"
 paraFoam -touchAll
 echo
-
-runParallel $(getApplication);
-
-runApplication reconstructPar -allRegions
 
 #------------------------------------------------------------------------------
