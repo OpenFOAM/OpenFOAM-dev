@@ -4,18 +4,11 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Source tutorial run functions
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
-runApplication -s fluid blockMesh -region fluid
+runApplication -s VoF blockMesh -region VoF
 
-runApplication decomposePar -region fluid -noFields
+runApplication decomposePar -region VoF -noFields
 
-# Create a set for the bits of the mesh that are not boxes
-runParallel topoSet -region fluid
-
-# Create the boxes and add their surfaces to the boxes patch
-runParallel subsetMesh notBoxes -region fluid -patch film -overwrite -noFields
-
-# Create the film mesh
-runParallel extrudeToRegionMesh -region fluid -overwrite
+runParallel extrudeToRegionMesh -region VoF -overwrite
 
 runApplication -s fields decomposePar -fields -copyZero
 

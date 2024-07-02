@@ -20,6 +20,8 @@ internalField   uniform 300;
 
 boundaryField
 {
+    #includeEtc "caseDicts/setConstraintTypes"
+
     surface
     {
         type            coupledTemperature;

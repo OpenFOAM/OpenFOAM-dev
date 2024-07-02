@@ -9,7 +9,7 @@ FoamFile
 {
     format      ascii;
     class       volScalarField;
-    location    "0";
+    location    "0/fluid";
     object      O2;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -20,6 +20,8 @@ internalField   uniform 0.23;
 
 boundaryField
 {
+    #includeEtc "caseDicts/setConstraintTypes"
+
     film
     {
         type            zeroGradient;

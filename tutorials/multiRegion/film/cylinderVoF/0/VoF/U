@@ -9,7 +9,7 @@ FoamFile
 {
     format      ascii;
     class       volVectorField;
-    location    "0";
+    location    "0/VoF";
     object      U;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -20,6 +20,8 @@ internalField   uniform (0 0 0);
 
 boundaryField
 {
+    #includeEtc "caseDicts/setConstraintTypes"
+
     film
     {
         type            mappedValue;
