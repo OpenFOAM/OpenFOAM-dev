@@ -172,7 +172,7 @@ if [ -n "$regionName" ]
 then
     case $extension in
     blockMesh)
-        echo "FATAL ERROR: The builtin reader does not support blockMesh"
+        echo "FATAL ERROR: The blockMesh reader does not support regions"
         exit 1
         ;;
     foam)
