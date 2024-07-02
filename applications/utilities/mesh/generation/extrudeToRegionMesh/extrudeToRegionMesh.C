@@ -1855,7 +1855,7 @@ int main(int argc, char *argv[])
             }
         }
 
-        meshMod.changeMesh(regionMesh, false);
+        meshMod.changeMesh(regionMesh);
     }
 
     // Remove any unused patches
@@ -1985,7 +1985,7 @@ int main(int argc, char *argv[])
         }
 
         // Change the mesh. Change points directly (without keeping old points).
-        addBafflesMap = meshMod.changeMesh(mesh, false);
+        addBafflesMap = meshMod.changeMesh(mesh);
 
         // Update fields
         mesh.topoChange(addBafflesMap);

@@ -437,7 +437,7 @@ int main(int argc, char *argv[])
             }
 
             // Change the mesh. without keeping old points.
-            autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh, false);
+            autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh);
 
             // Update fields
             mesh.topoChange(map);
@@ -892,7 +892,7 @@ int main(int argc, char *argv[])
         if (anyChange)
         {
             // Construct new mesh from polyTopoChange.
-            autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh, false);
+            autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh);
 
             // Update fields
             mesh.topoChange(map);
@@ -994,7 +994,7 @@ int main(int argc, char *argv[])
         );
 
         // Construct new mesh from polyTopoChange.
-        autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh, false);
+        autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh);
 
         // Update fields
         mesh.topoChange(map);
