@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -156,8 +156,8 @@ protected:
         {
             return
                !incompressible()
-             || fvModels().addsSupToField(alpha1.name())
-             || fvModels().addsSupToField(alpha2.name());
+             || fvModels().addsSupToField(mixture_.rho1().name())
+             || fvModels().addsSupToField(mixture_.rho2().name());
         }
 
         //- Return the mixture compressibility/density
