@@ -54,6 +54,7 @@ yPlus/yPlus.C
 turbulenceIntensity/turbulenceIntensity.C
 wallShearStress/wallShearStress.C
 wallHeatFlux/wallHeatFlux.C
+specieFlux/specieFlux.C
 
 wallHeatTransferCoeff/wallHeatTransferCoeff.C
 wallHeatTransferCoeff/wallHeatTransferCoeffModels/wallHeatTransferCoeffModel/wallHeatTransferCoeffModel.C

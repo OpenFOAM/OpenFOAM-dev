@@ -1,0 +1,41 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      functions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#includeFunc specieFlux(O2, schemesField=Yi_h, executeControl=timeStep)
+
+#includeFunc specieFlux(CH4, schemesField=Yi_h, executeControl=timeStep)
+
+#includeFunc specieFlux(N2, schemesField=Yi_h, executeControl=timeStep)
+
+#includeFunc patchIntegrate
+(
+    name=membraneSleeveSpecieFluxes,
+    patch=membraneSleeve,
+    specieFlux(O2),
+    specieFlux(CH4),
+    specieFlux(N2)
+)
+
+#includeFunc patchIntegrate
+(
+    name=membranePipeSpecieFluxes,
+    patch=membranePipe,
+    specieFlux(O2),
+    specieFlux(CH4),
+    specieFlux(N2)
+)
+
+// ************************************************************************* //
