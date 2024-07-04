@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,11 +96,9 @@ public:
             //- Access the species mass fractions
             virtual PtrList<volScalarField>& YRef();
 
-            //- Return the active species mass fractions
-            virtual const UPtrList<volScalarField>& YActive() const;
-
-            //- Access the active species mass fractions
-            virtual UPtrList<volScalarField>& YActiveRef();
+            //- Should the given specie be solved for? I.e., is it active and
+            //  not the default specie?
+            virtual bool solveSpecie(const label speciei) const;
 };
 
 

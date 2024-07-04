@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,19 +47,7 @@ Foam::MulticomponentPhaseModel<BasePhaseModel>::MulticomponentPhaseModel
 )
 :
     BasePhaseModel(fluid, phaseName, referencePhase, index)
-{
-    PtrList<volScalarField>& Y = this->thermo_->Y();
-
-    forAll(Y, i)
-    {
-        if (this->thermo_->solveSpecie(i))
-        {
-            const label j = YActive_.size();
-            YActive_.resize(j + 1);
-            YActive_.set(j, &Y[i]);
-        }
-    }
-}
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -142,18 +130,12 @@ Foam::MulticomponentPhaseModel<BasePhaseModel>::YRef()
 
 
 template<class BasePhaseModel>
-const Foam::UPtrList<Foam::volScalarField>&
-Foam::MulticomponentPhaseModel<BasePhaseModel>::YActive() const
+bool Foam::MulticomponentPhaseModel<BasePhaseModel>::solveSpecie
+(
+    const label speciei
+) const
 {
-    return YActive_;
-}
-
-
-template<class BasePhaseModel>
-Foam::UPtrList<Foam::volScalarField>&
-Foam::MulticomponentPhaseModel<BasePhaseModel>::YActiveRef()
-{
-    return YActive_;
+    return this->thermo_->solveSpecie(speciei);
 }
 
 

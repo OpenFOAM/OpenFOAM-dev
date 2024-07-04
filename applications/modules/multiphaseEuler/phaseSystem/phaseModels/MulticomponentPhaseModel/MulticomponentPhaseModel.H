@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,14 +52,6 @@ class MulticomponentPhaseModel
 :
     public BasePhaseModel
 {
-protected:
-
-    // Protected data
-
-        //- Pointer list to active species
-        UPtrList<volScalarField> YActive_;
-
-
 public:
 
     // Constructors
@@ -82,6 +74,7 @@ public:
         //- Correct the species fractions
         virtual void correctSpecies();
 
+
         // Species
 
             //- Return whether the phase is pure (i.e., not multi-component)
@@ -99,11 +92,9 @@ public:
             //- Access the species mass fractions
             virtual PtrList<volScalarField>& YRef();
 
-            //- Return the active species mass fractions
-            virtual const UPtrList<volScalarField>& YActive() const;
-
-            //- Access the active species mass fractions
-            virtual UPtrList<volScalarField>& YActiveRef();
+            //- Should the given specie be solved for? I.e., is it active and
+            //  not the default specie?
+            virtual bool solveSpecie(const label speciei) const;
 };
 
 

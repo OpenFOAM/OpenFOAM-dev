@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,10 +45,10 @@ void Foam::solvers::multicomponentFluid::thermophysicalPredictor()
 
     forAll(Y, i)
     {
+        volScalarField& Yi = Y_[i];
+
         if (thermo_.solveSpecie(i))
         {
-            volScalarField& Yi = Y_[i];
-
             fvScalarMatrix YiEqn
             (
                 fvm::ddt(rho, Yi)
@@ -66,6 +66,10 @@ void Foam::solvers::multicomponentFluid::thermophysicalPredictor()
             YiEqn.solve("Yi");
 
             fvConstraints().constrain(Yi);
+        }
+        else
+        {
+            Yi.correctBoundaryConditions();
         }
     }
 

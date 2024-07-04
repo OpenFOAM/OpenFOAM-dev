@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,24 +47,34 @@ void Foam::solvers::multiphaseEuler::compositionPredictor()
     {
         phaseModel& phase = fluid_.multicomponentPhases()[multicomponentPhasei];
 
-        UPtrList<volScalarField>& Y = phase.YActiveRef();
+        UPtrList<volScalarField>& Y = phase.YRef();
         const volScalarField& alpha = phase;
         const volScalarField& rho = phase.rho();
 
         forAll(Y, i)
         {
-            fvScalarMatrix YiEqn
-            (
-                phase.YiEqn(Y[i])
-             ==
-               *specieTransfer[Y[i].name()]
-              + fvModels().source(alpha, rho, Y[i])
-            );
+            if (phase.solveSpecie(i))
+            {
+                fvScalarMatrix YiEqn
+                (
+                    phase.YiEqn(Y[i])
+                 ==
+                   *specieTransfer[Y[i].name()]
+                  + fvModels().source(alpha, rho, Y[i])
+                );
 
-            YiEqn.relax();
-            fvConstraints().constrain(YiEqn);
-            YiEqn.solve("Yi");
-            fvConstraints().constrain(Y[i]);
+                YiEqn.relax();
+
+                fvConstraints().constrain(YiEqn);
+
+                YiEqn.solve("Yi");
+
+                fvConstraints().constrain(Y[i]);
+            }
+            else
+            {
+                Y[i].correctBoundaryConditions();
+            }
         }
     }
 
