@@ -106,10 +106,10 @@ export WM_OSTYPE=POSIX
 export SCOTCH_TYPE=ThirdParty
 export METIS_TYPE=none
 export PARMETIS_TYPE=none
-export ZOLTAN_TYPE=none
+export ZOLTAN_TYPE=ThirdParty
 
 #    ParaView_TYPE = none | system | paraviewopenfoam | ThirdParty (OpenFOAM)
-export ParaView_TYPE=ThirdParty
+export ParaView_TYPE=system
 
 #- Floating-point signal handling:
 #    set or unset

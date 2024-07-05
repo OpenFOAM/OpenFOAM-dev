@@ -103,11 +103,11 @@ setenv WM_OSTYPE POSIX
 setenv SCOTCH_TYPE ThirdParty
 setenv METIS_TYPE none
 setenv PARMETIS_TYPE none
-setenv ZOLTAN_TYPE none
+setenv ZOLTAN_TYPE ThirdParty
 
 #- ParaView installation:
 #    ParaView_TYPE = none | system | paraviewopenfoam | ThirdParty (OpenFOAM)
-setenv ParaView_TYPE ThirdParty
+setenv ParaView_TYPE system
 
 #- Floating-point signal handling:
 #    set or unset
