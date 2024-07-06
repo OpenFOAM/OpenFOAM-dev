@@ -92,7 +92,7 @@ Usage
         otherwise to standard output
 
       - \par -includes
-        List the \c #include and \c #includeIfPresent files to standard output
+        List the \c \#include and \c \#includeIfPresent files to standard output
 
       - \par -output
         Path name of the output dictionary, defaults to the input dictionary

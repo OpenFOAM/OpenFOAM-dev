@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,7 @@ namespace Foam
     //  \param[in] length - the number of values (not bytes)
     //  \param[in] hash1 - the previous hash, or an arbitrary value
     //    on output, the primary hash value
-    //  \param[in] hash1 - the previous hash, or an arbitrary value
+    //  \param[in] hash2 - the previous hash, or an arbitrary value
     //    on output, the secondary hash value
     unsigned HasherDual
     (

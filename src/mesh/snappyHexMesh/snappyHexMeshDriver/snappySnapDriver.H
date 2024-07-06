@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -598,9 +598,9 @@ public:
             );
 
             //- Repatch faces according to surface nearest the face centre
-            //  - calculate face-wise snap distance as max of point-wise
-            //  - calculate face-wise nearest surface point
-            //  - repatch face according to patch for surface point.
+            //  + calculate face-wise snap distance as max of point-wise
+            //  + calculate face-wise nearest surface point
+            //  + repatch face according to patch for surface point.
             autoPtr<polyTopoChangeMap> repatchToSurface
             (
                 const snapParameters& snapParams,

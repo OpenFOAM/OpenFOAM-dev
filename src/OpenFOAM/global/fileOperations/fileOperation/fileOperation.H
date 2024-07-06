@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,10 +80,10 @@ public:
         static const NamedEnum<pathType, 12> pathTypeNames_;
 
         //- Description of processor directory naming:
-        //  - processor directory naming
-        //  - whether directory contains a range
+        //  + processor directory naming
+        //  + whether directory contains a range
         //    (so differs on different processors)
-        //  - index in range
+        //  + index in range
         typedef Tuple2<fileName, Tuple2<pathType, label>> dirIndex;
 
         typedef List<dirIndex> dirIndexList;

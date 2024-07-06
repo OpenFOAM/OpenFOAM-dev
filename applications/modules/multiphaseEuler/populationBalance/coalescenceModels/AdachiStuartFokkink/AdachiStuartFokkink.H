@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ Description
     Applicable when particles are smaller than the Kolmogorov length scale.
     The coalescence rate is calculated by
 
-    f\[
+    \f[
         \frac{4}{3}\left(\frac{3\pi}{10}\right)^{0.5}
         \left(\frac{\epsilon}{\nu}\right)^{0.5}(d_i+d_j)^3
     \f]

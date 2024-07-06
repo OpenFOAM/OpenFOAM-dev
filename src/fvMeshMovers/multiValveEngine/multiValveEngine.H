@@ -95,7 +95,7 @@ Description
     Some of the above parameters are highlighted in a given schematic
     piston-valve configuration w.r.t entries used to control piston motion.
     Furthermore, an example dictionary entries are provided below.
-
+    \verbatim
                       |             |         |             |
                       |             |         |             |
                       |             |    S    |             |
@@ -121,6 +121,7 @@ Description
     |        :                         || movingFrozenLayerThickness :        |
     |________:_________________________\/____________________________:________|
                                        PISTON
+    \endverbatim
 
     \verbatim
     mover

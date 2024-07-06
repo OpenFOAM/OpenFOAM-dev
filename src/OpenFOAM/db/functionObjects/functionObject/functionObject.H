@@ -32,8 +32,6 @@ Description
     field and derived quantities.  Alternatively, the same actions can be
     executed after the simulation using the \c -postProcess command-line option.
 
-    \subsection secFunctionObjects Using functionObjects
-
     functionObjects are selected by entries in the $FOAM_CASE/system/functions
     dictionary e.g. to select the \c functionObjectType functionObject the
     following entry would be specified:

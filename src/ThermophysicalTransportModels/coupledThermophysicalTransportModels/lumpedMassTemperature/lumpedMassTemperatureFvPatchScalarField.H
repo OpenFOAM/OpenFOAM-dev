@@ -32,7 +32,7 @@ Description
     the patch describes a closed volume (including in 2D meshes). Starting from
     an initial, specified \c T, the change in temperature is calculated over
     time according to an applied power source \c Q and the heat transferred
-    across the boundary \Q_{b} (positive into the lumped mass):
+    across the boundary \f$Q_{b}\f$ (positive into the lumped mass):
 
         \f[
              dT/dt = frac{Q + Q_{b}}{\rho C_{v} V}
@@ -75,8 +75,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef BC_H
-#define BC_H
+#ifndef lumpedMassTemperatureFvPatchScalarField_H
+#define lumpedMassTemperatureFvPatchScalarField_H
 
 #include "fixedValueFvPatchFields.H"
 #include "UniformDimensionedField.H"

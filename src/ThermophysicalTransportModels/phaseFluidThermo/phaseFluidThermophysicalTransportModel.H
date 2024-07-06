@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,16 +22,16 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Typedef
-    Foam::phaseCompressible::thermophysicalTransportModel
+    Foam::phaseFluidThermophysicalTransportModel
 
 Typedef
-    Foam::phaseCompressible::laminarThermophysicalTransportModel
+    Foam::laminarPhaseFluidThermophysicalTransportModel
 
 Typedef
-    Foam::phaseCompressible::RASThermophysicalTransportModel
+    Foam::RASPhaseFluidThermophysicalTransportModel
 
 Typedef
-    Foam::phaseCompressible::LESThermophysicalTransportModel
+    Foam::LESPhaseFluidThermophysicalTransportModel
 
 Description
     Typedefs for laminar, RAS and LES thermophysical transport models

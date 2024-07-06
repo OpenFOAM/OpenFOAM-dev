@@ -826,17 +826,9 @@ Foam::labelList Foam::decompositionMethod::decompose
 (
     const polyMesh& mesh,
     const scalarField& cellWeights,
-
-    //- Whether owner and neighbour should be on same processor
-    //  (takes priority over explicitConnections)
     const boolList& blockedFace,
-
-    //- Whether whole sets of faces (and point neighbours) need to be kept
-    //  on single processor
     const PtrList<labelList>& specifiedProcessorFaces,
     const labelList& specifiedProcessor,
-
-    //- Additional connections between boundary faces
     const List<labelPair>& explicitConnections
 )
 {

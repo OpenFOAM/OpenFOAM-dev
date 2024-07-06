@@ -67,7 +67,7 @@ Usage
     }
     \endverbatim
 
-    The \c volumetricFlowRate or \c massFlowRate and the \omega entries are
+    The \c volumetricFlowRate or \c massFlowRate and the \c omega entries are
     \c Function1 of time, see Foam::Function1s. The \c radialVelocity and
     \c tangentialVelocity entries are \c Function2 of time and radius,
     see Foam::Function2s.

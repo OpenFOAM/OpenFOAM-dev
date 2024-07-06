@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,7 @@ Description
     - the comparison is a string comparison for any word/string/variable,
       integer comparison for two integers and floating point comparison for
       any floating point number.
-    - parsing of (non)matching \c #else, \c #endif is not very sophisticated
+    - parsing of (non)matching \c \#else, \c \#endif is not very sophisticated
 
 See also
     Foam::functionEntries::ifEntry

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,9 +25,9 @@ Class
     Foam::functionEntries::calcIncludeEntry
 
 Description
-    Specify an include file for #calc, expects a single string to follow.
+    Specify an include file for \#calc, expects a single string to follow.
 
-    For example if functions from transform.H are used in the #calc expression
+    For example if functions from transform.H are used in the \#calc expression
     \verbatim
     angleOfAttack   5; // degs
 
@@ -92,7 +92,7 @@ public:
         //- Execute the functionEntry in a sub-dict context
         static bool execute(dictionary& parentDict, Istream&);
 
-        //- Reset the cache of #calc include file names
+        //- Reset the cache of \#calc include file names
         static void clear();
 
         //- Add the cached include file names to the codeInclude entry

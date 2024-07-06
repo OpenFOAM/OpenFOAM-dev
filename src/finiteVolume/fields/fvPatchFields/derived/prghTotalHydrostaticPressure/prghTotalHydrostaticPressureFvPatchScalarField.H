@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,11 +34,11 @@ Description
 
     where
     \vartable
-        p_rgh   | Pressure - \rho g.(h - hRef) [Pa]
-        ph_rgh  | Hydrostatic pressure - \rho g.(h - hRef) [Pa]
+        p_rgh   | Pressure - rho g.(h - hRef) [Pa]
+        ph_rgh  | Hydrostatic pressure - rho g.(h - hRef) [Pa]
         h       | Height in the opposite direction to gravity
         hRef    | Reference height in the opposite direction to gravity
-        \rho    | Density
+        rho     | Density
         g       | Acceleration due to gravity [m/s^2]
     \endtable
 
