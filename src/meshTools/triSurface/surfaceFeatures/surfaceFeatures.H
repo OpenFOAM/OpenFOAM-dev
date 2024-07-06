@@ -439,9 +439,9 @@ void selectCutEdges
 );
 
 //- Divide into multiple normal bins
-//  + return REGION if != 2 normals
-//  + return REGION if 2 normals that make feature angle
-//  + otherwise return NONE and set normals,bins
+//  - return REGION if != 2 normals
+//  - return REGION if 2 normals that make feature angle
+//  - otherwise return NONE and set normals,bins
 surfaceFeatures::edgeStatus checkNonManifoldEdge
 (
     const triSurface& surf,
