@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -211,7 +211,7 @@ int main(int argc, char *argv[])
             runTime.name(),
             runTime
         ),
-        clone(mesh.points()),   // could we safely re-use the data?
+        clone(mesh.points()),   // could we safely reuse the data?
         clone(mesh.faces()),
         clone(mesh.cells())
     );

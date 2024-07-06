@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -41,7 +41,7 @@ executed by the foamRun application:
     foamRun -solver incompressibleFluid
 
 The random OU process force is applied using the OUForce fvModel specified in the
-contant/fvModels dictionary, e.g.:
+constant/fvModels dictionary, e.g.:
 
 OUForce
 {

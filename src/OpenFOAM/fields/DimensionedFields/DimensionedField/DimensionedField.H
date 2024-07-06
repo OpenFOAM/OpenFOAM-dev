@@ -176,7 +176,7 @@ public:
             const DimensionedField<Type, GeoMesh>&
         );
 
-        //- Copy constructor or re-use as specified.
+        //- Copy constructor or reuse as specified.
         DimensionedField
         (
             DimensionedField<Type, GeoMesh>&,
@@ -203,7 +203,7 @@ public:
             const bool checkIOFlags = true
         );
 
-        //- Copy constructor resetting IO parameters and re-use as specified.
+        //- Copy constructor resetting IO parameters and reuse as specified.
         DimensionedField
         (
             const IOobject&,
@@ -227,7 +227,7 @@ public:
             const DimensionedField<Type, GeoMesh>&
         );
 
-        //- Copy constructor resetting name and re-use as specified.
+        //- Copy constructor resetting name and reuse as specified.
         DimensionedField
         (
             const word& newName,

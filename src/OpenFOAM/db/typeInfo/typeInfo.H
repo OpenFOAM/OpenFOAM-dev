@@ -171,7 +171,7 @@ inline bool isA(const Type& t)
 
 
 //- Return the name of the object within the given type
-//  as <typeName>:<name>
+//  as \<typeName\>:\<name\>
 template<class TypeName, class Name>
 inline word typedName(Name name)
 {

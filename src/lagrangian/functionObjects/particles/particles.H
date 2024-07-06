@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ Description
     constant/phaseProperties dictionary and the acceleration due to gravity
     which is read from the constant/g file if present or defaults to zero.
 
-    The cloud properties are read from the constant/<cloudName>Properties
+    The cloud properties are read from the constant/\<cloudName\>Properties
     dictionary in the usual manner.
 
     Example of function object specification:

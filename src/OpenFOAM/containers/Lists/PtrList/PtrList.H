@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,7 +104,7 @@ public:
         //- Move constructor
         PtrList(PtrList<T>&&);
 
-        //- Construct as copy or re-use as specified
+        //- Construct as copy or reuse as specified
         PtrList(PtrList<T>&, bool reuse);
 
         //- Construct as copy of SLPtrList<T>

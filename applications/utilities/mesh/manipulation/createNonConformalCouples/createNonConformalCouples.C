@@ -28,7 +28,7 @@ Description
     Utility to create non-conformal couples between non-coupled patches.
 
 Usage
-    \b createNonConformalCouples <patch1> <patch2>
+    \b createNonConformalCouples \<patch1\> \<patch2\>
 
     Options:
       - \par -overwrite \n

@@ -355,7 +355,7 @@ public:
             //   0 : none of the above.
             label distanceCmp(const point&, const treeBoundBox& other) const;
 
-            //- Return asymetrically extended bounding box, with guaranteed
+            //- Return asymmetrically extended bounding box, with guaranteed
             //  minimum width of s*mag(span) in any direction
             inline treeBoundBox extend(const scalar s) const;
 

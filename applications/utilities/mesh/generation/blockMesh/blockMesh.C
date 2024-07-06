@@ -216,7 +216,7 @@ int main(int argc, char *argv[])
             runTime.constant(),
             runTime
         ),
-        clone(blocks.points()),           // could we re-use space?
+        clone(blocks.points()),           // could we reuse space?
         blocks.cells(),
         blocks.patches(),
         blocks.patchNames(),

@@ -37,7 +37,7 @@ usage() {
 Usage: ${0##*/} [OPTION] <file>
 options:
   -ascii    | -a         show the graph by printing ascii in the terminal
-  -columns  | -c <cols>  display specfied columns, comma-separated, e.g. "2,4"
+  -columns  | -c <cols>  display specified columns, comma-separated, e.g. "2,4"
   -flip     | -f         plot data on x-axis, independent variable on y-axis
   -help     | -h         print the usage
   -idle     | -i <time>  stops if <file> unchanging for <time> sec (default 60s)
@@ -124,7 +124,7 @@ flip() {
     echo "$1" | awk -F: '{print $2 ":" $1}'
 }
 
-# Check gnuplot is insalled
+# Check gnuplot is installed
 command -v gnuplot >/dev/null 2>&1 || error "Gnuplot not installed"
 
 # Variables used globally

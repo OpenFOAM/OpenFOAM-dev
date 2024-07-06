@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ Description
     If present, the field is read from the start time directory, e.g. during
     restart. Otherwise, it is constructed as a uniform field using the size
     class fraction value provided by the user. In the latter case, the boundary
-    condition types are taken from the 'f.<phaseName>' field, which represents
+    condition types are taken from the 'f.\<phaseName\>' field, which represents
     the sum of all size group fractions of a phase. The user specified value is
     also applied at fixed value boundary conditions and used as inlet value for
     mixed boundary conditions.

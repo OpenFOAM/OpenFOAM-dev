@@ -27,10 +27,10 @@ Class
 Description
     This fvModel adds transport terms into the equations to account for the
     presence of a constant volume fraction. The volume fraction is read from
-    constant/alpha.<volumePhase>, where <volumePhase> is given as a parameter
-    to the fvModel. Both advective and diffusive terms are added, and the
-    resulting solution is time-accurate. The flux and velocity are treated as
-    superficial.
+    constant/alpha.\<volumePhase\>, where \<volumePhase\> is given as a
+    parameter to the fvModel. Both advective and diffusive terms are added, and
+    the resulting solution is time-accurate. The flux and velocity are treated
+    as superficial.
 
     This can be used to represent the effect of porous media that are caused
     purely by the reduction in volume of the fluid phase; i.e., additional

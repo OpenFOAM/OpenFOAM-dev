@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ Class
 
 Description
     Evaluates and outputs turbulence y+ for models. Values written to
-    time directories as field 'yPlus' or 'yPlus.<phase>'.
+    time directories as field 'yPlus' or 'yPlus.\<phase\>'.
 
     Example of function object specification:
     \verbatim

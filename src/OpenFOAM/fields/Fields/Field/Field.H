@@ -144,7 +144,7 @@ public:
         //- Copy constructor
         Field(const Field<Type>&);
 
-        //- Copy constructor or re-use as specified.
+        //- Copy constructor or reuse as specified.
         Field(Field<Type>&, bool reuse);
 
         //- Move constructor transferring the Field contents

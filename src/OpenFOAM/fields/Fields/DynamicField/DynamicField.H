@@ -136,7 +136,7 @@ public:
         //- Copy constructor
         inline DynamicField(const DynamicField<T, SizeInc, SizeMult, SizeDiv>&);
 
-        //- Copy constructor or re-use as specified
+        //- Copy constructor or reuse as specified
         inline DynamicField
         (
             DynamicField<T, SizeInc, SizeMult, SizeDiv>&,

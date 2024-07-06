@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,12 +40,12 @@ Description
     - different path on all processors (processor0/0/p)
 
     system/controlDict:
-    filePath worldmaster: <globalRoot>/system/controlDict
+    filePath worldmaster: \<globalRoot\>/system/controlDict
              localmaster:           ,,
              slave      :           ,,
 
     processor0/uniform/time
-    filePath worldmaster: <globalRoot>/processorXXX/uniform/time
+    filePath worldmaster: \<globalRoot\>/processorXXX/uniform/time
              localmaster:           ,,
              slave      :           ,,
 

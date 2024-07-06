@@ -181,7 +181,7 @@ writeDim() {
     echo "$_dim" | head -1 | xargs
 }
 
-# Takes a dimension name, looks up the extern variables, then convers back, e.g.
+# Takes a dimension name, looks up the extern variables, then converts back, e.g.
 # getDim area -> sqr(length)
 getDim() {
     _dim="$1"

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -111,7 +111,7 @@ cellShape extrudedQuadCellShape
 
     // Create a label list for the model
     // This is done by finding two edges that do not share any vertices.
-    // Knowing the opposite pair of edges (with normals poining outward
+    // Knowing the opposite pair of edges (with normals pointing outward
     // is enough to make a cell
     if
     (

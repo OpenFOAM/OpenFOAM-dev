@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,7 @@ bool Foam::fileFormats::extendedEdgeMeshFormat::read
         false       // enableFunctionObjects
     );
 
-    // Construct IOobject to re-use the headerOk & readHeader
+    // Construct IOobject to reuse the headerOk & readHeader
     // (so we can read ascii and binary)
     typeIOobject<extendedFeatureEdgeMesh> io
     (

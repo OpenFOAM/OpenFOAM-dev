@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,7 +104,7 @@ public:
         //- Move constructor
         FieldField(FieldField<Field, Type>&&);
 
-        //- Construct as copy or re-use as specified.
+        //- Construct as copy or reuse as specified.
         FieldField(FieldField<Field, Type>&, bool reuse);
 
         //- Construct as copy of a PtrList<Field, Type>

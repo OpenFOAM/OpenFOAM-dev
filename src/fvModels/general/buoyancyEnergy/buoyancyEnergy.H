@@ -70,7 +70,7 @@ class buoyancyEnergy
         //- Optional phase name
         word phaseName_;
 
-        //- Name of velocity field; default = U.<phase>
+        //- Name of velocity field; default = U.\<phase\>
         word UName_;
 
 

@@ -82,7 +82,7 @@ private:
         //- Flag to indicate whether this region is ready to be stitched
         bool ready_;
 
-        //- Cache of leaded region poly face IO objects
+        //- Cache of loaded region poly face IO objects
         HashPtrTable<IOobject> regionPolyFacesBfIOs_;
 
         //- Cache of loaded region poly face boundary fields

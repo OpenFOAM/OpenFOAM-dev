@@ -287,7 +287,7 @@ const Foam::labelUList& Foam::cellMapper::directAddressing() const
 
     if (!insertedObjects())
     {
-        // No inserted cells.  Re-use cellMap
+        // No inserted cells.  Reuse cellMap
         return mpm_.cellMap();
     }
     else

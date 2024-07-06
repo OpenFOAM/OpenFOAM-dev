@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,14 +36,14 @@ Description
     to force for 5 time-scales, then \f$\lambda\f$ should be set to equal 5/(4
     [s]) = 1.2 [1/s].  If more aggressive forcing is required adjacent to the
     boundaries, which is often the case if wave boundary conditions are
-    specified at outflow boundaries, the optional \f$\lambdaBoundary\f$
+    specified at outflow boundaries, the optional \c lambdaBoundary
     coefficient can be specified higher than the value of \f$\lambda\f$.
 
-    Alternatively the forcing force coefficient \f$\lambdaCoeff\f$ can be
+    Alternatively the forcing force coefficient \c lambdaCoeff can be
     specified in which case \f$\lambda\f$ is evaluated by multiplying the
-    maximum wave speed by \f$\lambdaCoeff\f$ and dividing by the forcing region
-    length.  \f$\lambdaBoundary\f$ is similarly evaluated from
-    \f$\lambdaBoundaryCoeff\f$ if specified.
+    maximum wave speed by \c lambdaCoeff and dividing by the forcing region
+    length.  \c lambdaBoundary is similarly evaluated from
+    \c lambdaBoundaryCoeff if specified.
 
 Usage
     Example usage:

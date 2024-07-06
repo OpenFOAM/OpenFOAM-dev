@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,7 +28,7 @@ Description
     timeIOdictionary derived from IOdictionary with globalFile set false to
     enable writing to processor time directories.
 
-    Used for time-dependent global data written to the <time>/uniform
+    Used for time-dependent global data written to the \<time\>/uniform
     directories.
 
 SourceFiles

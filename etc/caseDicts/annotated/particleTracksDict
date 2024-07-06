@@ -17,7 +17,7 @@ FoamFile
 cloudName       cloud;
 
 // Frequency with which tracks are added. E.g., if set to 5, then tracks will
-// be created for every 5th paricle in the cloud. If set to 1 (as below), then
+// be created for every 5th particle in the cloud. If set to 1 (as below), then
 // tracks will be created for every particle in the cloud.
 sampleFrequency 1;
 

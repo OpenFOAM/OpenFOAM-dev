@@ -26,7 +26,7 @@ Class
 
 Description
     Calculates and write the shear-stress at wall patches as
-    the volVectorField field 'wallShearStress' or 'wallShearStress.<phase>'.
+    the volVectorField field 'wallShearStress' or 'wallShearStress.\<phase\>'.
 
         \f[
             Stress = R \dot n

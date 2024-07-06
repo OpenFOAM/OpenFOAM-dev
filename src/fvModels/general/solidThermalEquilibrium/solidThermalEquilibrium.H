@@ -30,8 +30,8 @@ Description
     surrounding fluid phase.
 
     The volume fraction of the solid phase is read from
-    constant/alpha.<solidPhase>, and the associated thermophysical properties
-    are specified in constant/thermophysicalProperties.<solidPhase>.
+    constant/alpha.\<solidPhase\>, and the associated thermophysical properties
+    are specified in constant/thermophysicalProperties.\<solidPhase\>.
 
 Usage
     \table

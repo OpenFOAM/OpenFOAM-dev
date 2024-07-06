@@ -49,7 +49,7 @@ Description
         }
     \endverbatim
 
-    Note that only one type specification (the <vector>/<scalar>/... part)
+    Note that only one type specification (the \<vector\>/\<scalar\>/... part)
     is needed in general for the value entries, and no type specifications
     are needed if the function is scalar.
 

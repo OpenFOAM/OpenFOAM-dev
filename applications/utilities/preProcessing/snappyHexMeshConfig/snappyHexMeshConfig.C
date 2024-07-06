@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -117,19 +117,21 @@ Usage
         Refinement level at specified surfaces, e.g. '((pipe 2) (baffles 1))'
 
       - \par -refinementRegions \<entry\>
-        Refinement regions specified by '( (<surface> <level>) (...) )'
+        Refinement regions specified by '( (\<surface\> \<level\>) (...) )'
 
       - \par -refinementBoxes \<entry\>
-        Refinement boxes specified by '( (<min> <max> <level>) (...) )'
+        Refinement boxes specified by '( (\<min\> \<max\> \<level\>) (...) )'
 
       - \par -refinementDists \<entry\>
-        Refinement distance specified by '( (<surface> <dist> <level>) (...) )'
+        Refinement distance specified by
+        '( (\<surface\> \<dist\> \<level\>) (...) )'
 
       - \par -defaultPatch \<entry\>
-        Name and type of default patch, '(<name> <type>)'
+        Name and type of default patch, '(\<name\> \<type\>)'
 
       - \par -xMinPatch (-xMaxPatch, -yMinPatch, etc...) \<entry\>
-        Name and type of the xMin (xMax, yMin, etc...) patch, '(<name> <type>)'
+        Name and type of the xMin (xMax, yMin, etc...) patch,
+        '(\<name\> \<type\>)'
 
       - \par -clearBoundary,
         Do not set default patch entries, i.e. xMin, xMax, yMin, etc...

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,8 +28,8 @@ Description
     Stops the run when the specified file is created in the case directory
     and optionally write results before stopping.
 
-    The default name of the trigger file is \c $FOAM_CASE/<name> where \c
-    <name> is the name of the functionObject entry.
+    The default name of the trigger file is \c $FOAM_CASE/\<name\> where \c
+    \<name\> is the name of the functionObject entry.
 
     Currently the following action types are supported:
     - noWriteNow
@@ -64,7 +64,7 @@ Usage
     \table
         Property | Description            | Required | Default value
         type     | type name: stopAtFile  | yes      |
-        file     | Trigger file path name | no       | $FOAM_CASE/<name>
+        file     | Trigger file path name | no       | $FOAM_CASE/\<name\>
         action   | Action executed        | no       | nextWrite
     \endtable
 

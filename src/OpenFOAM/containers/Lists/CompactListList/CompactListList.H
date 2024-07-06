@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,7 +94,7 @@ public:
         //- Construct from components
         inline CompactListList(const UList<label>& offsets, const UList<T>& m);
 
-        //- Construct as copy or re-use as specified.
+        //- Construct as copy or reuse as specified.
         inline CompactListList(CompactListList<T>&, bool reuse);
 
         //- Move constructor

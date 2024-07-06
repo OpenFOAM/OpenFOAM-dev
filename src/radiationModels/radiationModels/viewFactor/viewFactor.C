@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -558,7 +558,7 @@ void Foam::radiationModels::viewFactor::calculate()
         }
         else // Constant emissivity
         {
-            // Initial iter calculates CLU and chaches it
+            // Initial iter calculates CLU and caches it
             if (iterCounter_ == 0)
             {
                 for (label i=0; i<totalNCoarseFaces_; i++)

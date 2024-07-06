@@ -226,7 +226,7 @@ const Foam::labelUList& Foam::faceMapper::directAddressing() const
 
     if (!insertedObjects())
     {
-        // No inserted faces.  Re-use faceMap
+        // No inserted faces.  Reuse faceMap
         return mpm_.faceMap();
     }
     else

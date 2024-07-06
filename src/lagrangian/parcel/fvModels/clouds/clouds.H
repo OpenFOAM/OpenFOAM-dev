@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ Description
     cloud. For a single cloud, these should be provided in the
     constant/cloudProperties file. For multiple clouds, the list of cloud names
     must first be provided in the constant/clouds file. Then, each named cloud
-    has its properties specified in its constant/<cloudName>Properties file.
+    has its properties specified in its constant/\<cloudName\>Properties file.
 
     The application of sources to the Eulerian fields is controlled by the
     solution/coupled switch in each cloud's properties file. If set to "true"

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ Foam::labelList Foam::cell::labels(const faceUList& f) const
         p[pointi] = first[pointi];
     }
 
-    // re-use maxVert to count the real vertices
+    // reuse maxVert to count the real vertices
     maxVert = first.size();
 
     // go through the rest of the faces. For each vertex, check if the point is

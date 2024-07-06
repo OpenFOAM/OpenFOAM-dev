@@ -78,7 +78,7 @@ Usage
     - For incompressible cases, set \c rho to \c rhoInf and provide
       a \c rhoInf value corresponding to the free-stream constant density.
     - If the \c phase name is specified the corresponding phase-fraction field
-      \c alpha.<phase> is used to filter the surface force field
+      \c alpha.\<phase\> is used to filter the surface force field
       before integration.
     - If the force density is supplied directly, set the \c directForceDensity
       flag to 'yes', and supply the force density field using the \c

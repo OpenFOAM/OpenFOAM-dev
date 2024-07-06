@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,7 @@ Foam::dimensionedScalar Foam::functionObjects::comfort::Trad() const
     // The mean radiation is calculated by the mean wall temperatures
     // which are summed and divided by the area | only walls are taken into
     // account. This approach might be correct for a squared room but will
-    // defintely be inconsistent for complex room geometries. The norm does
+    // definitely be inconsistent for complex room geometries. The norm does
     // not provide any information about the calculation of this quantity.
     if (!TradSet_)
     {

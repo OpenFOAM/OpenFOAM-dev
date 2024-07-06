@@ -237,7 +237,7 @@ const Foam::labelUList& Foam::pointMapper::directAddressing() const
 
     if (!insertedObjects())
     {
-        // No inserted points.  Re-use pointMap
+        // No inserted points.  Reuse pointMap
         return map_.pointMap();
     }
     else
