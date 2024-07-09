@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,65 +23,75 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "FoamTableReader.H"
 #include "tokenTupleN.H"
-
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-template<class Type>
-void Foam::TableReaders::Foam<Type>::read
-(
-    ISstream& is,
-    List<Tuple2<scalar, Type>>& data
-) const
-{
-    List<tokenTupleN> dataStr(is);
-
-    data.resize(dataStr.size());
-
-    for (label i = 0; i < dataStr.size(); ++ i)
-    {
-        data[i].first() = dataStr[i].get<scalar>(is, columns_.first());
-        data[i].second() = dataStr[i].get<Type>(is, columns_.second());
-    }
-}
-
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class Type>
-Foam::TableReaders::Foam<Type>::Foam
-(
-    const word& name,
-    const Function1s::unitConversions& units,
-    const dictionary& dict
-)
+Foam::tokenTupleN::tokenTupleN()
 :
-    TableFileReader<Type>(units, dict),
-    columns_(dict.lookupOrDefault<labelPair>("columns", labelPair(0, 1)))
+    tokens_(),
+    offsets_()
 {}
+
+
+Foam::tokenTupleN::tokenTupleN(Istream& is)
+:
+    tokens_(4),
+    offsets_(2)
+{
+    is >> *this;
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class Type>
-Foam::TableReaders::Foam<Type>::~Foam()
+Foam::tokenTupleN::~tokenTupleN()
 {}
 
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * IOStream Operators * * * * * * * * * * * * * //
 
-template<class Type>
-void Foam::TableReaders::Foam<Type>::write
-(
-    Ostream& os,
-    const Function1s::unitConversions& units,
-    const List<Tuple2<scalar, Type>>& table
-) const
+Foam::Istream& Foam::operator>>(Istream& is, tokenTupleN& ttn)
 {
-    TableFileReader<Type>::write(os, units, table);
+    is.readBegin("StringTupleN");
 
-    writeEntry(os, "columns", columns_);
+    label level = 0;
+
+    while (is.good())
+    {
+        if (level == 0)
+        {
+            ttn.offsets_.append(ttn.tokens_.size());
+        }
+
+        const token t(is);
+
+        if (t == token::BEGIN_LIST)
+        {
+            level ++;
+        }
+
+        if (t == token::END_LIST)
+        {
+            if (level != 0)
+            {
+                level --;
+            }
+            else
+            {
+                is.putBack(t);
+                is.readEnd("StringTupleN");
+                break;
+            }
+        }
+
+        ttn.tokens_.append(t);
+    }
+
+    // Check state of Istream
+    is.check("operator>>(Istream& is, tokenTupleN&)");
+
+    return is;
 }
 
 

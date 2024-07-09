@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
 
     Info<< "Constructing the function\n" << endl;
     const autoPtr<Function1<scalar>> functionPtr =
-        Function1<scalar>::New("function", dict);
+        Function1<scalar>::New("function", unitNone, unitNone, dict);
     const Function1<scalar>& function = functionPtr();
 
     const scalar x0 = dict.lookup<scalar>("x0");

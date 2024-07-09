@@ -106,6 +106,7 @@ primitives/functions/Function1/Table/tableBase.C
 primitives/functions/Function1/Table/TableReader/makeTableReaders.C
 primitives/functions/Function1/unknownTypeFunction1/unknownTypeFunction1.C
 primitives/functions/Function1/omega1/omega1.C
+primitives/functions/Function1/Table/TableReader/Foam/tokenTupleN.C
 
 primitives/functions/Function2/Function2/Function2UnitConversions.C
 primitives/functions/Function2/makeFunction2s.C
