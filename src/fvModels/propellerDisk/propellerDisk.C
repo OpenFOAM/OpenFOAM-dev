@@ -24,15 +24,12 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "propellerDisk.H"
-#include "makeFunction1s.H"
-#include "makeTableReaders.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
 namespace fv
 {
     defineTypeNameAndDebug(propellerDisk, 0);
@@ -43,10 +40,6 @@ namespace fv
         dictionary
     );
 }
-
-makeFunction1s(vector2D, nullArg);
-makeFoamTableReaders(vector2D, nullArg);
-
 }
 
 

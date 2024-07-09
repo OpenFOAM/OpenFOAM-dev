@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,8 +31,7 @@ Description
 
 #include "List.H"
 #include "vector.H"
-#include "Vector2D.H"
-#include "Tuple2.H"
+#include "Tuple3.H"
 #include "OFstream.H"
 
 using namespace Foam;
@@ -60,21 +59,21 @@ int main(int argc, char *argv[])
     // Frequency of the rotation [rad/s]
     const vector rotOmega(0.4, 0.7, 0.5);
 
-    List<Tuple2<scalar,  Vector2D<vector>>> timeValues(nTimes);
+    List<Tuple3<scalar, vector, vector>> timeValues(nTimes);
 
     forAll(timeValues, i)
     {
         scalar t = (endTime*i)/(nTimes - 1);
         timeValues[i].first() = t;
 
-        timeValues[i].second()[0] = vector
+        timeValues[i].second() = vector
         (
             transAmp.x()*Foam::sin(transOmega.x()*t),
             transAmp.y()*Foam::sin(transOmega.y()*t),
             transAmp.z()*Foam::sin(transOmega.z()*t)
         );
 
-        timeValues[i].second()[1] = vector
+        timeValues[i].third() = vector
         (
             rotAmp.x()*Foam::sin(rotOmega.x()*t),
             rotAmp.y()*Foam::sin(rotOmega.y()*t),

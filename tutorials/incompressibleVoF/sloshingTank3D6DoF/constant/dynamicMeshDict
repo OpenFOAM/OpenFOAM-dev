@@ -28,9 +28,19 @@ mover
 
     CofG            (0 0 0);
 
-    translationRotation table;
-    // interpolationScheme spline;
-    file            "$FOAM_CASE/constant/6DoF.dat";
+    translation
+    {
+        type            table;
+        file            "$FOAM_CASE/constant/6DoF.dat";
+        columns         (0 1);
+    }
+
+    rotation
+    {
+        type            table;
+        file            "$FOAM_CASE/constant/6DoF.dat";
+        columns         (0 2);
+    }
 }
 
 

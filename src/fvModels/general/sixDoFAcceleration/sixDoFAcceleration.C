@@ -27,8 +27,6 @@ License
 #include "fvMatrices.H"
 #include "geometricOneField.H"
 #include "uniformDimensionedFields.H"
-#include "makeFunction1s.H"
-#include "makeTableReaders.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -51,63 +49,41 @@ namespace fv
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-typedef Foam::fv::sixDoFAcceleration::accelerationVectors avType;
-
-template<>
-const char* const avType::vsType::typeName = "vectorVector";
-
-template<>
-const char* const avType::vsType::componentNames[] = {"x", "y", "z"};
-
-template<>
-const avType avType::vsType::vsType::zero(avType::uniform(vector::uniform(0)));
-
-template<>
-const avType avType::vsType::one(avType::uniform(vector::uniform(1)));
-
-template<>
-const avType avType::vsType::max(avType::uniform(vector::uniform(vGreat)));
-
-template<>
-const avType avType::vsType::min(avType::uniform(vector::uniform(-vGreat)));
-
-template<>
-const avType avType::vsType::rootMax
-(
-    avType::uniform(vector::uniform(rootVGreat))
-);
-
-template<>
-const avType avType::vsType::rootMin
-(
-    avType::uniform(vector::uniform(-rootVGreat))
-);
-
-template<>
-const avType avType::vsType::nan(avType::uniform(vector::uniform(NaN)));
-
-namespace Foam
-{
-    makeFunction1s(avType, nullArg);
-    makeFoamTableReaders(avType, nullArg);
-}
-
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 void Foam::fv::sixDoFAcceleration::readCoeffs()
 {
     UName_ = coeffs().lookupOrDefault<word>("U", "U");
 
-    accelerations_.reset
+    acceleration_.reset
     (
-        Function1<accelerationVectors>::New
+        Function1<vector>::New
         (
-            "accelerations",
+            "acceleration",
             mesh().time().userUnits(),
-            unitNone,
+            dimAcceleration,
+            coeffs()
+        ).ptr()
+    );
+
+    angularVelocity_.reset
+    (
+        Function1<vector>::New
+        (
+            "angularVelocity",
+            mesh().time().userUnits(),
+            unitRadians/dimTime,
+            coeffs()
+        ).ptr()
+    );
+
+    angularAcceleration_.reset
+    (
+        Function1<vector>::New
+        (
+            "angularAcceleration",
+            mesh().time().userUnits(),
+            unitRadians/sqr(dimTime),
             coeffs()
         ).ptr()
     );
@@ -123,10 +99,12 @@ void Foam::fv::sixDoFAcceleration::addForce
     fvMatrix<vector>& eqn
 ) const
 {
-    const Vector<vector> accelerations
-    (
-        accelerations_->value(mesh().time().value())
-    );
+    const dimensionedVector a
+   (
+       "a",
+       dimAcceleration,
+       acceleration_->value(mesh().time().value())
+   );
 
     // If gravitational force is present combine with the linear acceleration
     if (mesh().foundObject<uniformDimensionedVectorField>("g"))
@@ -137,7 +115,7 @@ void Foam::fv::sixDoFAcceleration::addForce
         const uniformDimensionedScalarField& hRef =
             mesh().lookupObject<uniformDimensionedScalarField>("hRef");
 
-        g = g_ - dimensionedVector("a", dimAcceleration, accelerations.x());
+        g = g_ - a;
 
         dimensionedScalar ghRef(- mag(g)*hRef);
 
@@ -149,22 +127,21 @@ void Foam::fv::sixDoFAcceleration::addForce
     // ... otherwise include explicitly in the momentum equation
     else
     {
-        const dimensionedVector a("a", dimAcceleration, accelerations.x());
         eqn -= alpha*rho*a;
     }
 
-    dimensionedVector Omega
+    const dimensionedVector Omega
     (
         "Omega",
-        dimensionSet(0, 0, -1, 0, 0),
-        accelerations.y()
+        dimless/dimTime,
+        angularVelocity_->value(mesh().time().value())
     );
 
-    dimensionedVector dOmegaDT
+    const dimensionedVector dOmegaDT
     (
         "dOmegaDT",
-        dimensionSet(0, 0, -2, 0, 0),
-        accelerations.z()
+        dimless/sqr(dimTime),
+        angularAcceleration_->value(mesh().time().value())
     );
 
     eqn -=
@@ -188,7 +165,9 @@ Foam::fv::sixDoFAcceleration::sixDoFAcceleration
 :
     fvModel(name, modelType, mesh, dict),
     UName_(coeffs().lookupOrDefault<word>("U", "U")),
-    accelerations_(nullptr),
+    acceleration_(nullptr),
+    angularVelocity_(nullptr),
+    angularAcceleration_(nullptr),
     g_
     (
         mesh.foundObject<uniformDimensionedVectorField>("g")

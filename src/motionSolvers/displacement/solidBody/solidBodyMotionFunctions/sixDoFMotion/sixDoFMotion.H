@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,12 +59,6 @@ class sixDoFMotion
 :
     public solidBodyMotionFunction
 {
-public:
-
-        //- Type used to read in the translation and rotation "vectors"
-        typedef Vector2D<vector> translationRotationVectors;
-
-
 private:
 
     // Private Data
@@ -72,8 +66,11 @@ private:
         //- Center of gravity read from dictionary
         vector CofG_;
 
-        //- Translation and rotation function
-        autoPtr<Function1<translationRotationVectors>> translationRotation_;
+        //- Translation function
+        autoPtr<Function1<vector>> translation_;
+
+        //- Rotation function
+        autoPtr<Function1<vector>> rotation_;
 
 
 public:

@@ -24,9 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "sixDoFMotion.H"
-#include "mathematicalConstants.H"
-#include "makeFunction1s.H"
-#include "makeTableReaders.H"
 #include "addToRunTimeSelectionTable.H"
 
 using namespace Foam::constant::mathematical;
@@ -45,54 +42,6 @@ namespace solidBodyMotionFunctions
         dictionary
     );
 }
-}
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-typedef Foam::solidBodyMotionFunctions::sixDoFMotion::translationRotationVectors
-trvType;
-
-template<>
-const char* const trvType::vsType::typeName = "vector2Vector";
-
-template<>
-const char* const trvType::vsType::componentNames[] = {"x", "y"};
-
-template<>
-const trvType trvType::vsType::vsType::zero
-(
-    trvType::uniform(vector::uniform(0))
-);
-
-template<>
-const trvType trvType::vsType::one(trvType::uniform(vector::uniform(1)));
-
-template<>
-const trvType trvType::vsType::max(trvType::uniform(vector::uniform(vGreat)));
-
-template<>
-const trvType trvType::vsType::min(trvType::uniform(vector::uniform(-vGreat)));
-
-template<>
-const trvType trvType::vsType::rootMax
-(
-    trvType::uniform(vector::uniform(rootVGreat))
-);
-
-template<>
-const trvType trvType::vsType::rootMin
-(
-    trvType::uniform(vector::uniform(-rootVGreat))
-);
-
-template<>
-const trvType trvType::vsType::nan(trvType::uniform(vector::uniform(NaN)));
-
-namespace Foam
-{
-    makeFunction1s(trvType, nullArg);
-    makeFoamTableReaders(trvType, nullArg);
 }
 
 
@@ -123,13 +72,11 @@ Foam::solidBodyMotionFunctions::sixDoFMotion::transformation() const
 {
     const scalar t = time_.value();
 
-    translationRotationVectors TRV = translationRotation_->value(t);
+    const vector translation = translation_->value(t);
+    const vector rotation = rotation_->value(t);
 
-    // Convert the rotational motion from deg to rad
-    TRV[1] *= pi/180.0;
-
-    quaternion R(quaternion::XYZ, TRV[1]);
-    septernion TR(septernion(-CofG_ + -TRV[0])*R*septernion(CofG_));
+    const quaternion R(quaternion::XYZ, rotation);
+    const septernion TR(septernion(-CofG_ - translation)*R*septernion(CofG_));
 
     DebugInFunction << "Time = " << t << " transformation: " << TR << endl;
 
@@ -144,13 +91,24 @@ bool Foam::solidBodyMotionFunctions::sixDoFMotion::read
 {
     solidBodyMotionFunction::read(SBMFCoeffs);
 
-    translationRotation_.reset
+    translation_.reset
     (
-        Function1<translationRotationVectors>::New
+        Function1<vector>::New
         (
-            "translationRotation",
+            "translation",
             time_.userUnits(),
-            unitNone,
+            dimLength,
+            SBMFCoeffs_
+        ).ptr()
+    );
+
+    rotation_.reset
+    (
+        Function1<vector>::New
+        (
+            "rotation",
+            time_.userUnits(),
+            unitDegrees,
             SBMFCoeffs_
         ).ptr()
     );
