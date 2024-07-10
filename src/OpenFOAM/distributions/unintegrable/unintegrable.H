@@ -213,7 +213,7 @@ public:
     // Member Functions
 
         //- Sample the distribution
-        scalar sample() const;
+        virtual scalar sample() const;
 
         //- Sample the distribution
         using distribution::sample;
@@ -232,36 +232,6 @@ public:
 
         //- Return values to plot the probability density function
         virtual tmp<scalarField> plotPDF(const scalarField& x) const;
-};
-
-
-/*---------------------------------------------------------------------------*\
-                        Class unintegrable Declaration
-\*---------------------------------------------------------------------------*/
-
-class unintegrableForNonZeroQ
-:
-    public unintegrable
-{
-protected:
-
-    // Protected Member Functions
-
-        //- Return values of the un-normalised CDF at the minimum and maximum
-        //  x-coordinates for the given size exponent.
-        virtual Pair<scalar> Phi01(const label q) const;
-
-        //- Access cached values of the un-normalised CDF at the minimum and
-        //  maximum x-coordinates.
-        using unintegrable::Phi01;
-
-
-public:
-
-    // Constructors
-
-        //- Inherit constructors
-        using unintegrable::unintegrable;
 };
 
 

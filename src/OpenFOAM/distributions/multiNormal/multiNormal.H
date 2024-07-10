@@ -90,21 +90,17 @@ class multiNormal
         //- Normalise the strengths
         static scalarList readCumulativeStrengths(const dictionary& dict);
 
-        //- Return values of the un-multiNormalised PDF for the given size
-        //  exponent and x-coordinates.
+        //- Return values of the un-normalised PDF for the given size exponent
+        //  and x-coordinates.
         virtual tmp<scalarField> phi
         (
             const label q,
             const scalarField& x
         ) const;
 
-        //- Return values of the un-multiNormalised CDF for the given size
-        //  exponent and x-coordinates.
-        virtual tmp<scalarField> Phi
-        (
-            const label q,
-            const scalarField& x
-        ) const;
+        //- Return values of the un-normalised CDF for zero effective size
+        //  exponent and given x-coordinates
+        virtual tmp<scalarField> PhiForZeroQ(const scalarField& x) const;
 
 
 public:
@@ -140,8 +136,8 @@ public:
 
     // Member Functions
 
-        //- Sample the distribution
-        virtual scalar sample() const;
+        //- Sample the distribution for zero effective size exponent
+        virtual scalar sampleForZeroQ() const;
 
         //- Sample the distribution
         using FieldDistribution<unintegrableForNonZeroQ, multiNormal>::sample;

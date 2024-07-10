@@ -727,6 +727,7 @@ algorithms/solutionControl/solutionControl.C
 distributions/distribution/distribution.C
 distributions/distribution/distributionNew.C
 distributions/unintegrable/unintegrable.C
+distributions/unintegrable/unintegrableForNonZeroQ.C
 distributions/exponential/exponential.C
 distributions/fixedValue/fixedValue.C
 distributions/multiNormal/multiNormal.C

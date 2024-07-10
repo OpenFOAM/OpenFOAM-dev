@@ -266,26 +266,7 @@ Foam::Pair<Foam::scalar> Foam::distributions::unintegrable::Phi01
 ) const
 {
     const scalarField Phi(this->Phi(this->q(), x()));
-
     return Pair<scalar>(Phi.first(), Phi.last());
-}
-
-
-Foam::Pair<Foam::scalar> Foam::distributions::unintegrableForNonZeroQ::Phi01
-(
-    const label q
-) const
-{
-    if (q == 0)
-    {
-        const scalarField x(scalarList({min(), max()}));
-        const scalarField Phi(this->Phi(q, x));
-        return Pair<scalar>(Phi.first(), Phi.last());
-    }
-    else
-    {
-        return unintegrable::Phi01(q);
-    }
 }
 
 
@@ -354,6 +335,7 @@ Foam::scalar Foam::distributions::unintegrable::sample() const
 
     const scalar dCDF = scalar(1)/(n_ - 1);
     const label samplei = floor(s/dCDF);
+
     return
         sampleInterval
         (
