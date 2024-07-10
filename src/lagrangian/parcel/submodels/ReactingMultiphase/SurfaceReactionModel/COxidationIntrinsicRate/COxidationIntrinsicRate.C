@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -182,7 +182,7 @@ Foam::scalar Foam::COxidationIntrinsicRate<CloudType>::calculate
         max(0.5*d*sqrt(Sb_*rhop*Ag_*ki*ppO2/(De*rhoO2)), rootVSmall);
 
     // Effectiveness factor []
-    const scalar eta = max(3.0*sqr(phi)*(phi/tanh(phi) - 1.0), 0.0);
+    const scalar eta = max(3.0/sqr(phi)*(phi/tanh(phi) - 1.0), 0.0);
 
     // Chemical rate [kmol/m2/s]
     const scalar R = eta*d/6.0*rhop*Ag_*ki;
