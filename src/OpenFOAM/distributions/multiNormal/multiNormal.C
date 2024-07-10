@@ -282,9 +282,9 @@ void Foam::distributions::multiNormal::write
 
 
 Foam::tmp<Foam::scalarField>
-Foam::distributions::multiNormal::x(const label n) const
+Foam::distributions::multiNormal::plotX(const label n) const
 {
-    return distributions_[0].x(n);
+    return distributions_[0].plotX(n);
 }
 
 

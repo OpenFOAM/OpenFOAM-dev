@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
     );
 
     // Get the X-coordinates for the plots
-    const scalarField xAnalytic(distribution00Ptr->x(nAnalytic));
+    const scalarField xAnalytic(distribution00Ptr->plotX(nAnalytic));
 
     const scalar xSampled0 = distribution00Ptr->min();
     const scalar xSampled1 = distribution00Ptr->max();
@@ -118,9 +118,9 @@ int main(int argc, char *argv[])
         scalarYAnalytic.set
         (
             Q0i,
-            distributionQ0Ptr->PDF
+            distributionQ0Ptr->plotPDF
             (
-                distributionQ0Ptr->x(nAnalytic)
+                distributionQ0Ptr->plotX(nAnalytic)
             ).ptr()
         );
 
@@ -177,9 +177,9 @@ int main(int argc, char *argv[])
             scalarYAnalytic.set
             (
                 QSampleQi,
-                distributionQSampleQPtr->PDF
+                distributionQSampleQPtr->plotPDF
                 (
-                    distributionQSampleQPtr->x(nAnalytic)
+                    distributionQSampleQPtr->plotX(nAnalytic)
                 ).ptr()
             );
             scalarYAnalytic.set

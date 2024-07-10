@@ -84,8 +84,9 @@ class uniform
 
     // Private Member Functions
 
-        //- Calculate the indefinite integral of the PDF at the given value
-        scalar Phi(const scalar x) const;
+        //- Calculate the indefinite integral of the PDF at the given values
+        template<class Type>
+        auto Phi(const Type& x) const;
 
 
 public:
@@ -136,11 +137,14 @@ public:
         //- Return the mean value
         virtual scalar mean() const;
 
+        //- Return the cumulative density function at the given coordinates
+        virtual tmp<scalarField> CDF(const scalarField& x) const;
+
         //- Write to a stream
         virtual void write(Ostream& os, const unitConversion& units) const;
 
-        //- Return the distribution probability density function
-        virtual tmp<scalarField> PDF(const scalarField& x) const;
+        //- Return values to plot the probability density function
+        virtual tmp<scalarField> plotPDF(const scalarField& x) const;
 };
 
 

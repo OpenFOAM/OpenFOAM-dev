@@ -127,11 +127,14 @@ public:
         //- Return the mean value
         virtual scalar mean() const;
 
-        //- Return coordinates to plot across the range of the distribution
-        virtual tmp<scalarField> x(const label n) const;
+        //- Return the cumulative density function at the given coordinates
+        virtual tmp<scalarField> CDF(const scalarField& x) const;
 
-        //- Return the distribution probability density function
-        virtual tmp<scalarField> PDF(const scalarField& x) const;
+        //- Return coordinates to plot across the range of the distribution
+        virtual tmp<scalarField> plotX(const label n) const;
+
+        //- Return values to plot the probability density function
+        virtual tmp<scalarField> plotPDF(const scalarField& x) const;
 };
 
 

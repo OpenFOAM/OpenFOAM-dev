@@ -374,6 +374,51 @@ Foam::scalar Foam::distributions::unintegrable::mean() const
 }
 
 
+Foam::tmp<Foam::scalarField>
+Foam::distributions::unintegrable::CDF(const scalarField& x) const
+{
+    tmp<scalarField> tResult(new scalarField(x.size()));
+    scalarField& result = tResult.ref();
+
+    const scalar dCDF = scalar(1)/(n_ - 1);
+
+    const scalarField& xStar = this->x();
+    const scalarField& PDFStar = this->PDF();
+
+    label i = 0;
+
+    while (i < x.size() && x[i] < xStar[0])
+    {
+        result[i] = 0;
+        i ++;
+    }
+
+    for (label iStar = 0; iStar < n_ - 1; ++ iStar)
+    {
+        while (i < x.size() && x[i] < xStar[iStar + 1])
+        {
+            result[i] =
+                iStar*dCDF
+              + PDFStar[iStar]
+               *(x[i] - xStar[iStar])
+              + (PDFStar[iStar + 1] - PDFStar[iStar])
+               /(xStar[iStar + 1] - xStar[iStar])
+               /2
+               *sqr(x[i] - xStar[iStar]);
+            i ++;
+        }
+    }
+
+    while (i < x.size())
+    {
+        result[i] = 1;
+        i ++;
+    }
+
+    return tResult;
+}
+
+
 void Foam::distributions::unintegrable::write
 (
     Ostream& os,
@@ -390,10 +435,8 @@ void Foam::distributions::unintegrable::write
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::distributions::unintegrable::PDF
-(
-    const scalarField& x
-) const
+Foam::tmp<Foam::scalarField>
+Foam::distributions::unintegrable::plotPDF(const scalarField& x) const
 {
     const scalarField phi(this->phi(this->q(), x));
     const Pair<scalar> Phi01 = this->Phi01();

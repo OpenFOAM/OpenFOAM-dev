@@ -152,7 +152,7 @@ public:
         virtual void write(Ostream& os, const unitConversion& units) const;
 
         //- Return coordinates to plot across the range of the distribution
-        virtual tmp<scalarField> x(const label n) const;
+        virtual tmp<scalarField> plotX(const label n) const;
 };
 
 

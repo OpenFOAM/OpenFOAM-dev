@@ -144,7 +144,7 @@ void Foam::distribution::writeState(Ostream& os) const
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::distribution::x(const label n) const
+Foam::tmp<Foam::scalarField> Foam::distribution::plotX(const label n) const
 {
     const scalar x0 = min(), x1 = max(), d = 0.1*(x1 - x0);
 

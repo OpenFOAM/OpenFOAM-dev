@@ -228,6 +228,9 @@ public:
         //- Return the mean value
         virtual scalar mean() const = 0;
 
+        //- Return the cumulative density function at the given coordinates
+        virtual tmp<scalarField> CDF(const scalarField& x) const = 0;
+
         //- Write to a stream
         virtual void write(Ostream& os, const unitConversion& units) const;
 
@@ -235,10 +238,10 @@ public:
         virtual void writeState(Ostream& os) const;
 
         //- Return coordinates to plot across the range of the distribution
-        virtual tmp<scalarField> x(const label n) const;
+        virtual tmp<scalarField> plotX(const label n) const;
 
-        //- Return the distribution probability density function
-        virtual tmp<scalarField> PDF(const scalarField& x) const = 0;
+        //- Return values to plot the probability density function
+        virtual tmp<scalarField> plotPDF(const scalarField& x) const = 0;
 };
 
 

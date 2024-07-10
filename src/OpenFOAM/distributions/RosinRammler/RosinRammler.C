@@ -164,9 +164,9 @@ void Foam::distributions::RosinRammler::write
 
 
 Foam::tmp<Foam::scalarField>
-Foam::distributions::RosinRammler::x(const label n) const
+Foam::distributions::RosinRammler::plotX(const label n) const
 {
-    tmp<scalarField> tx(distribution::x(n));
+    tmp<scalarField> tx(distribution::plotX(n));
     tx.ref()[0] = Foam::max(tx.ref()[0], q() < 0 ? min_/2 : rootVSmall);
     return tx;
 }

@@ -101,6 +101,13 @@ Foam::scalar Foam::distributions::fixedValue::mean() const
 }
 
 
+Foam::tmp<Foam::scalarField>
+Foam::distributions::fixedValue::CDF(const scalarField& x) const
+{
+    return pos(x - value_);
+}
+
+
 void Foam::distributions::fixedValue::write
 (
     Ostream& os,
@@ -114,7 +121,7 @@ void Foam::distributions::fixedValue::write
 
 
 Foam::tmp<Foam::scalarField>
-Foam::distributions::fixedValue::x(const label n) const
+Foam::distributions::fixedValue::plotX(const label n) const
 {
     const scalar d = 0.1*mag(value_);
 
@@ -132,7 +139,7 @@ Foam::distributions::fixedValue::x(const label n) const
 
 
 Foam::tmp<Foam::scalarField>
-Foam::distributions::fixedValue::PDF(const scalarField& x) const
+Foam::distributions::fixedValue::plotPDF(const scalarField& x) const
 {
     tmp<scalarField> tResult(new scalarField(5, 0));
     scalarField& result = tResult.ref();

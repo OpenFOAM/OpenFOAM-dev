@@ -218,9 +218,9 @@ void Foam::distributions::normal::write
 
 
 Foam::tmp<Foam::scalarField>
-Foam::distributions::normal::x(const label n) const
+Foam::distributions::normal::plotX(const label n) const
 {
-    tmp<scalarField> tx(distribution::x(n));
+    tmp<scalarField> tx(distribution::plotX(n));
     tx.ref()[0] = Foam::max(tx.ref()[0], q() < 0 ? min_/2 : -vGreat);
     return tx;
 }
