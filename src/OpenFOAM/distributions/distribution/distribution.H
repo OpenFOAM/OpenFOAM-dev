@@ -258,7 +258,8 @@ FOR_ALL_FIELD_TYPES(DISTRIBUTION_TEMPLATED_SAMPLE_TYPE);
 void writeEntry
 (
     Ostream& os,
-    const unitConversion&,
+    const word&entryName,
+    const unitConversion& units,
     const distribution& d,
     const bool write = true,
     const bool writeState = true

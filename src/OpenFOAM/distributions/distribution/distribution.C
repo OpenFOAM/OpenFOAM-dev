@@ -175,12 +175,15 @@ Foam::tmp<Foam::scalarField> Foam::distribution::plotX(const label n) const
 void Foam::writeEntry
 (
     Ostream& os,
+    const word& entryName,
     const unitConversion& units,
     const distribution& d,
     const bool write,
     const bool writeState
 )
 {
+    writeKeyword(os, entryName);
+
     os  << nl << indent << token::BEGIN_BLOCK << nl << incrIndent;
 
     if (write) d.write(os, units);
