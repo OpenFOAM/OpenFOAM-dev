@@ -40,7 +40,8 @@ namespace distributions
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::scalar Foam::distributions::uniform::Phi(const scalar x) const
+template<class Type>
+auto Foam::distributions::uniform::Phi(const Type& x) const
 {
     if (q() == -1)
     {
@@ -144,6 +145,14 @@ Foam::scalar Foam::distributions::uniform::mean() const
 }
 
 
+Foam::tmp<Foam::scalarField>
+Foam::distributions::uniform::CDF(const scalarField& x) const
+{
+    const scalarField xClip(Foam::min(Foam::max(x, min()), max()));
+    return (Phi(xClip) - Phi0_)/(Phi1_ - Phi0_);
+}
+
+
 void Foam::distributions::uniform::write
 (
     Ostream& os,
@@ -158,7 +167,7 @@ void Foam::distributions::uniform::write
 
 
 Foam::tmp<Foam::scalarField>
-Foam::distributions::uniform::PDF(const scalarField& x) const
+Foam::distributions::uniform::plotPDF(const scalarField& x) const
 {
     if (q() == -1)
     {

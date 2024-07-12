@@ -144,7 +144,7 @@ void Foam::distribution::writeState(Ostream& os) const
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::distribution::x(const label n) const
+Foam::tmp<Foam::scalarField> Foam::distribution::plotX(const label n) const
 {
     const scalar x0 = min(), x1 = max(), d = 0.1*(x1 - x0);
 
@@ -175,12 +175,15 @@ Foam::tmp<Foam::scalarField> Foam::distribution::x(const label n) const
 void Foam::writeEntry
 (
     Ostream& os,
+    const word& entryName,
     const unitConversion& units,
     const distribution& d,
     const bool write,
     const bool writeState
 )
 {
+    writeKeyword(os, entryName);
+
     os  << nl << indent << token::BEGIN_BLOCK << nl << incrIndent;
 
     if (write) d.write(os, units);

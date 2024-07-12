@@ -81,30 +81,22 @@ Foam::tmp<Foam::scalarField> Foam::distributions::multiNormal::phi
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::distributions::multiNormal::Phi
+Foam::tmp<Foam::scalarField> Foam::distributions::multiNormal::PhiForZeroQ
 (
-    const label q,
     const scalarField& x
 ) const
 {
-    if (q == 0)
-    {
-        tmp<scalarField> tPhiQ0(new scalarField(x.size(), 0));
-        scalarField& PhiQ0 = tPhiQ0.ref();
+    tmp<scalarField> tPhiQ0(new scalarField(x.size(), 0));
+    scalarField& PhiQ0 = tPhiQ0.ref();
 
-        forAll(distributions_, i)
-        {
-            PhiQ0 +=
-                (cumulativeStrengths_[i + 1] - cumulativeStrengths_[i])
-               *distributions_[i].Phi(0, x);
-        }
-
-        return tPhiQ0;
-    }
-    else
+    forAll(distributions_, i)
     {
-        return unintegrableForNonZeroQ::Phi(q, x);
+        PhiQ0 +=
+            (cumulativeStrengths_[i + 1] - cumulativeStrengths_[i])
+           *distributions_[i].Phi(0, x);
     }
+
+    return tPhiQ0;
 }
 
 
@@ -223,26 +215,19 @@ Foam::distributions::multiNormal::~multiNormal()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::scalar Foam::distributions::multiNormal::sample() const
+Foam::scalar Foam::distributions::multiNormal::sampleForZeroQ() const
 {
-    if (q() == 0)
-    {
-        const scalar S = rndGen_.sample01<scalar>();
+    const scalar S = rndGen_.sample01<scalar>();
 
-        const label n = cumulativeStrengths_.size() - 1;
-        label i = 0;
-        for (; i < n && cumulativeStrengths_[i + 1] < S; ++ i);
+    const label n = cumulativeStrengths_.size() - 1;
+    label i = 0;
+    for (; i < n && cumulativeStrengths_[i + 1] < S; ++ i);
 
-        const scalar s =
-            (S - cumulativeStrengths_[i])
-           /(cumulativeStrengths_[i + 1] - cumulativeStrengths_[i]);
+    const scalar s =
+        (S - cumulativeStrengths_[i])
+       /(cumulativeStrengths_[i + 1] - cumulativeStrengths_[i]);
 
-        return distributions_[i].sampleForZeroQ(s);
-    }
-    else
-    {
-        return unintegrableForNonZeroQ::sample();
-    }
+    return distributions_[i].sampleForZeroQ(s);
 }
 
 
@@ -282,9 +267,9 @@ void Foam::distributions::multiNormal::write
 
 
 Foam::tmp<Foam::scalarField>
-Foam::distributions::multiNormal::x(const label n) const
+Foam::distributions::multiNormal::plotX(const label n) const
 {
-    return distributions_[0].x(n);
+    return distributions_[0].plotX(n);
 }
 
 

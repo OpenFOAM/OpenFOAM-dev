@@ -121,7 +121,15 @@ Foam::scalar Foam::distributions::standardNormal::mean() const
 
 
 Foam::tmp<Foam::scalarField>
-Foam::distributions::standardNormal::x(const label n) const
+Foam::distributions::standardNormal::CDF(const scalarField& x) const
+{
+    static const scalar sqrt2 = sqrt(scalar(2));
+    return (1 + approxErf(x/sqrt2))/2;
+}
+
+
+Foam::tmp<Foam::scalarField>
+Foam::distributions::standardNormal::plotX(const label n) const
 {
     const scalar x0 = approxErfInv(1 - rootSmall);
     const scalar x1 = approxErfInv(rootSmall - 1);
@@ -139,7 +147,7 @@ Foam::distributions::standardNormal::x(const label n) const
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::distributions::standardNormal::PDF
+Foam::tmp<Foam::scalarField> Foam::distributions::standardNormal::plotPDF
 (
     const scalarField& x
 ) const

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,15 +23,36 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "makeTableReaders.H"
-#include "fieldTypes.H"
+#include "tokenTupleN.H"
+#include "ITstream.H"
+#include "SubList.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-namespace Foam
+inline Foam::label Foam::tokenTupleN::size() const
 {
-    FOR_ALL_FIELD_TYPES(makeTableReaders);
-    makeTableReaders(vector2D, );
+    return offsets_.size() - 1;
 }
+
+
+template<class Type>
+inline Type Foam::tokenTupleN::get(const IOstream& s, const label i)
+{
+    if (i < 0 || i > size() - 1)
+    {
+        FatalIOErrorInFunction(s)
+            << "index " << i << " out of range 0 ... " << size() - 1
+            << exit(FatalIOError);
+    }
+
+    ITstream its
+    (
+        s.name(),
+        SubList<token>(tokens_, offsets_[i + 1] - offsets_[i], offsets_[i])
+    );
+
+    return pTraits<Type>(its);
+}
+
 
 // ************************************************************************* //

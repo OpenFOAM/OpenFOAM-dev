@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,32 +22,25 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::distributions::fixedValue
+    Foam::distributions::unintegrableForNonZeroQ
 
 Description
-    Distribution which always takes a specified fixed value
-
-Usage
-    Example usage:
-    \verbatim
-    {
-        type    fixedValue;
-        value   1e-6;
-    }
-    \endverbatim
+    Base class for distributions that have a closed integral form for the
+    cumulative density function (CDF) when the effective size exponent is zero,
+    but not otherwise.
 
 SourceFiles
-    fixedValue.C
+    unintegrableForNonZeroQ.C
 
 See also
     Foam::distribution
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef fixedValue_H
-#define fixedValue_H
+#ifndef unintegrableForNonZeroQ_H
+#define unintegrableForNonZeroQ_H
 
-#include "distribution.H"
+#include "unintegrable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -57,48 +50,44 @@ namespace distributions
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class fixedValue Declaration
+                        Class unintegrableForNonZeroQ Declaration
 \*---------------------------------------------------------------------------*/
 
-class fixedValue
+class unintegrableForNonZeroQ
 :
-    public FieldDistribution<distribution, fixedValue>
+    public unintegrable
 {
-    // Private Data
+protected:
 
-        //- Fixed value
-        const scalar value_;
+    // Protected Member Functions
+
+        //- Return values of the un-normalised CDF for the given size exponent
+        //  and x-coordinates.
+        virtual tmp<scalarField> Phi
+        (
+            const label q,
+            const scalarField& x
+        ) const;
+
+        //- Return values of the un-normalised CDF for zero effective size
+        //  exponent and given x-coordinates
+        virtual tmp<scalarField> PhiForZeroQ(const scalarField& x) const = 0;
+
+        //- Return values of the un-normalised CDF at the minimum and maximum
+        //  x-coordinates for the given size exponent.
+        virtual Pair<scalar> Phi01(const label q) const;
+
+        //- Access cached values of the un-normalised CDF at the minimum and
+        //  maximum x-coordinates.
+        using unintegrable::Phi01;
 
 
 public:
 
-    //- Runtime type information
-    TypeName("fixedValue");
-
-
     // Constructors
 
-        //- Construct from a dictionary
-        fixedValue
-        (
-            const unitConversion& units,
-            const dictionary& dict,
-            const label sampleQ,
-            randomGenerator&& rndGen
-        );
-
-        //- Construct copy
-        fixedValue(const fixedValue& d, const label sampleQ);
-
-        //- Construct and return a clone
-        virtual autoPtr<distribution> clone(const label sampleQ) const
-        {
-            return autoPtr<distribution>(new fixedValue(*this, sampleQ));
-        }
-
-
-    //- Destructor
-    virtual ~fixedValue();
+        //- Inherit constructors
+        using unintegrable::unintegrable;
 
 
     // Member Functions
@@ -107,28 +96,10 @@ public:
         virtual scalar sample() const;
 
         //- Sample the distribution
-        using FieldDistribution<distribution, fixedValue>::sample;
-
-        //- Return the minimum value
-        virtual scalar min() const;
-
-        //- Return the maximum value
-        virtual scalar max() const;
-
-        //- Return the mean value
-        virtual scalar mean() const;
+        virtual scalar sampleForZeroQ() const = 0;
 
         //- Return the cumulative density function at the given coordinates
         virtual tmp<scalarField> CDF(const scalarField& x) const;
-
-        //- Write to a stream
-        virtual void write(Ostream& os, const unitConversion& units) const;
-
-        //- Return coordinates to plot across the range of the distribution
-        virtual tmp<scalarField> plotX(const label n) const;
-
-        //- Return values to plot the probability density function
-        virtual tmp<scalarField> plotPDF(const scalarField& x) const;
 };
 
 

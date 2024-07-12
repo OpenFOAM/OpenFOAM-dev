@@ -185,8 +185,41 @@ Foam::scalar Foam::distributions::tabulatedCumulative::max() const
 
 Foam::scalar Foam::distributions::tabulatedCumulative::mean() const
 {
-    const scalarField x(this->x(-1));
-    return unintegrable::integrate(x, x*PDF(x))->last();
+    const scalarField x(this->plotX(-1));
+    return unintegrable::integrate(x, x*plotPDF(x))->last();
+}
+
+
+Foam::tmp<Foam::scalarField>
+Foam::distributions::tabulatedCumulative::CDF(const scalarField& x) const
+{
+    tmp<scalarField> tResult(new scalarField(x.size()));
+    scalarField& result = tResult.ref();
+
+    label i = 0;
+
+    while (i < x.size() && x[i] < x_[0])
+    {
+        result[i] = 0;
+        i ++;
+    }
+
+    for (label j = 0; j < x_.size() - 1; ++ j)
+    {
+        while (i < x.size() && x[i] < x_[j + 1])
+        {
+            result[i] = CDF_[j] + PDF_[j]*(x[i] - x_[j]);
+            i ++;
+        }
+    }
+
+    while (i < x.size())
+    {
+        result[i] = 1;
+        i ++;
+    }
+
+    return tResult;
 }
 
 
@@ -223,7 +256,7 @@ void Foam::distributions::tabulatedCumulative::write
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::distributions::tabulatedCumulative::x
+Foam::tmp<Foam::scalarField> Foam::distributions::tabulatedCumulative::plotX
 (
     const label
 ) const
@@ -247,7 +280,7 @@ Foam::tmp<Foam::scalarField> Foam::distributions::tabulatedCumulative::x
 
 
 Foam::tmp<Foam::scalarField>
-Foam::distributions::tabulatedCumulative::PDF(const scalarField& x) const
+Foam::distributions::tabulatedCumulative::plotPDF(const scalarField& x) const
 {
     tmp<scalarField> tResult(new scalarField(2*PDF_.size() + 4));
     scalarField& result = tResult.ref();

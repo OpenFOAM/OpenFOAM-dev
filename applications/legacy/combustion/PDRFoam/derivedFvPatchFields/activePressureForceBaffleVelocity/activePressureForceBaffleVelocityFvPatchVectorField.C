@@ -211,36 +211,26 @@ void Foam::activePressureForceBaffleVelocityFvPatchVectorField::updateCoeffs()
 
         scalar valueDiff = 0;
 
-        if (fBased_)
+        // Add this side
+        forAll(cyclicFaceCells, facei)
         {
-             // Add this side
-            forAll(cyclicFaceCells, facei)
-            {
-                valueDiff +=p[cyclicFaceCells[facei]]*mag(initCyclicSf_[facei]);
-            }
-
-            // Remove other side
-            forAll(nbrFaceCells, facei)
-            {
-                valueDiff -=p[nbrFaceCells[facei]]*mag(initCyclicSf_[facei]);
-            }
-
-            Info<< "Force difference = " << valueDiff << endl;
+            valueDiff += p[cyclicFaceCells[facei]]*mag(initCyclicSf_[facei]);
         }
-        else // pressure based
+
+        // Remove other side
+        forAll(nbrFaceCells, facei)
         {
-            forAll(cyclicFaceCells, facei)
-            {
-                valueDiff += p[cyclicFaceCells[facei]];
-            }
-
-            forAll(nbrFaceCells, facei)
-            {
-                valueDiff -= p[nbrFaceCells[facei]];
-            }
-
-            Info<< "Pressure difference = " << valueDiff << endl;
+            valueDiff -= p[nbrFaceCells[facei]]*mag(initCyclicSf_[facei]);
         }
+
+        // Divide by the area if pressure-based
+        if (!fBased_)
+        {
+            valueDiff /= gSum(patch().magSf());
+        }
+
+        Info<< (fBased_ ? "Force" : "Average pressure")
+            << " difference = " << valueDiff << endl;
 
         if ((mag(valueDiff) > mag(minThresholdValue_)) || baffleActivated_)
         {

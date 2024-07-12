@@ -50,20 +50,12 @@ Foam::tmp<Foam::scalarField> Foam::distributions::exponential::phi
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::distributions::exponential::Phi
+Foam::tmp<Foam::scalarField> Foam::distributions::exponential::PhiForZeroQ
 (
-    const label q,
     const scalarField& x
 ) const
 {
-    if (q == 0)
-    {
-        return - exp(- lambda_*x);
-    }
-    else
-    {
-        return unintegrableForNonZeroQ::Phi(q, x);
-    }
+    return - exp(- lambda_*x);
 }
 
 
@@ -116,19 +108,12 @@ Foam::distributions::exponential::~exponential()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::scalar Foam::distributions::exponential::sample() const
+Foam::scalar Foam::distributions::exponential::sampleForZeroQ() const
 {
-    if (q() == 0)
-    {
-        const scalar s = rndGen_.sample01<scalar>();
-        const Pair<scalar>& Phi01 = this->Phi01();
-        const scalar PhiS = (1 - s)*Phi01[0] + s*Phi01[1];
-        return - 1/lambda_*log(- PhiS);
-    }
-    else
-    {
-        return unintegrableForNonZeroQ::sample();
-    }
+    const scalar s = rndGen_.sample01<scalar>();
+    const Pair<scalar>& Phi01 = this->Phi01();
+    const scalar PhiS = (1 - s)*Phi01[0] + s*Phi01[1];
+    return - 1/lambda_*log(- PhiS);
 }
 
 
@@ -159,9 +144,9 @@ void Foam::distributions::exponential::write
 
 
 Foam::tmp<Foam::scalarField>
-Foam::distributions::exponential::x(const label n) const
+Foam::distributions::exponential::plotX(const label n) const
 {
-    tmp<scalarField> tx(distribution::x(n));
+    tmp<scalarField> tx(distribution::plotX(n));
     tx.ref()[0] = Foam::max(tx.ref()[0], q() < 0 ? min_/2 : rootVSmall);
     return tx;
 }

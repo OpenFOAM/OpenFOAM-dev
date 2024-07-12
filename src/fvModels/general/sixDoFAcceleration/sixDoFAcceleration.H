@@ -65,15 +65,6 @@ class sixDoFAcceleration
 :
     public fvModel
 {
-public:
-
-        //- Accelerations type comprising
-        //      linear acceleration vector
-        //      angular velocity vector
-        //      angular acceleration vector
-        typedef Vector<vector> accelerationVectors;
-
-
 private:
 
     // Private data
@@ -81,11 +72,14 @@ private:
         //- Velocity field name, default = U
         word UName_;
 
-        //- Accelerations function returning a vector containing
-        //      linear acceleration vector
-        //      angular velocity vector
-        //      angular acceleration vector
-        autoPtr<Function1<accelerationVectors>> accelerations_;
+        //- Linear acceleration function
+        autoPtr<Function1<vector>> acceleration_;
+
+        //- Angular velocity function
+        autoPtr<Function1<vector>> angularVelocity_;
+
+        //- Angular acceleration function
+        autoPtr<Function1<vector>> angularAcceleration_;
 
         //- Optional gravitational acceleration
         dimensionedVector g_;

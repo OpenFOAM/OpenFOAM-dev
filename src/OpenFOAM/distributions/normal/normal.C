@@ -56,30 +56,13 @@ Foam::tmp<Foam::scalarField> Foam::distributions::normal::phi
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::distributions::normal::Phi
+Foam::tmp<Foam::scalarField> Foam::distributions::normal::PhiForZeroQ
 (
-    const label q,
     const scalarField& x
 ) const
 {
-    if (q == 0)
-    {
-        static const scalar sqrt2 = sqrt(scalar(2));
-        return (1 + standardNormal::approxErf((x - mu_)/(sigma_*sqrt2)))/2;
-    }
-    else
-    {
-        return unintegrableForNonZeroQ::Phi(q, x);
-    }
-}
-
-
-Foam::scalar Foam::distributions::normal::sampleForZeroQ(const scalar s) const
-{
     static const scalar sqrt2 = sqrt(scalar(2));
-    const Pair<scalar>& Phi01 = this->Phi01();
-    const scalar PhiS = (1 - s)*Phi01[0] + s*Phi01[1];
-    return standardNormal::approxErfInv(2*PhiS - 1)*sigma_*sqrt2 + mu_;
+    return (1 + standardNormal::approxErf((x - mu_)/(sigma_*sqrt2)))/2;
 }
 
 
@@ -156,16 +139,18 @@ Foam::distributions::normal::~normal()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::scalar Foam::distributions::normal::sample() const
+Foam::scalar Foam::distributions::normal::sampleForZeroQ() const
 {
-    if (q() == 0)
-    {
-        return sampleForZeroQ(rndGen_.sample01<scalar>());
-    }
-    else
-    {
-        return unintegrableForNonZeroQ::sample();
-    }
+    return sampleForZeroQ(rndGen_.sample01<scalar>());
+}
+
+
+Foam::scalar Foam::distributions::normal::sampleForZeroQ(const scalar s) const
+{
+    static const scalar sqrt2 = sqrt(scalar(2));
+    const Pair<scalar>& Phi01 = this->Phi01();
+    const scalar PhiS = (1 - s)*Phi01[0] + s*Phi01[1];
+    return standardNormal::approxErfInv(2*PhiS - 1)*sigma_*sqrt2 + mu_;
 }
 
 
@@ -218,9 +203,9 @@ void Foam::distributions::normal::write
 
 
 Foam::tmp<Foam::scalarField>
-Foam::distributions::normal::x(const label n) const
+Foam::distributions::normal::plotX(const label n) const
 {
-    tmp<scalarField> tx(distribution::x(n));
+    tmp<scalarField> tx(distribution::plotX(n));
     tx.ref()[0] = Foam::max(tx.ref()[0], q() < 0 ? min_/2 : -vGreat);
     return tx;
 }

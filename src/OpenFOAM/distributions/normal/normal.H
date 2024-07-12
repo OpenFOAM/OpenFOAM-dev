@@ -57,7 +57,7 @@ See also
 #ifndef normal_H
 #define normal_H
 
-#include "unintegrable.H"
+#include "unintegrableForNonZeroQ.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -99,16 +99,9 @@ class normal
             const scalarField& x
         ) const;
 
-        //- Return values of the un-normalised CDF for the given size exponent
-        //  and x-coordinates.
-        virtual tmp<scalarField> Phi
-        (
-            const label q,
-            const scalarField& x
-        ) const;
-
-        //- Sample the distribution for zero effective size exponent
-        scalar sampleForZeroQ(const scalar s) const;
+        //- Return values of the un-normalised CDF for zero effective size
+        //  exponent and given x-coordinates
+        virtual tmp<scalarField> PhiForZeroQ(const scalarField& x) const;
 
 
 public:
@@ -161,8 +154,11 @@ public:
 
     // Member Functions
 
-        //- Sample the distribution
-        virtual scalar sample() const;
+        //- Sample the distribution for zero effective size exponent
+        virtual scalar sampleForZeroQ() const;
+
+        //- Sample the distribution for zero effective size exponent
+        scalar sampleForZeroQ(const scalar s) const;
 
         //- Sample the distribution
         using FieldDistribution<unintegrableForNonZeroQ, normal>::sample;
@@ -192,7 +188,7 @@ public:
         virtual void write(Ostream& os, const unitConversion& units) const;
 
         //- Return coordinates to plot across the range of the distribution
-        virtual tmp<scalarField> x(const label n) const;
+        virtual tmp<scalarField> plotX(const label n) const;
 };
 
 

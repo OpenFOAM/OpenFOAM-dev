@@ -47,25 +47,16 @@ Foam::tmp<Foam::scalarField> Foam::distributions::RosinRammler::phi
 ) const
 {
     const scalarField xByDPowNm1(pow(x/d_, n_ - 1));
-
     return integerPow(x, q)*(n_/d_)*xByDPowNm1*exp(- xByDPowNm1*x/d_);
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::distributions::RosinRammler::Phi
+Foam::tmp<Foam::scalarField> Foam::distributions::RosinRammler::PhiForZeroQ
 (
-    const label q,
     const scalarField& x
 ) const
 {
-    if (q == 0)
-    {
-        return - exp(- pow(x/d_, n_));
-    }
-    else
-    {
-        return unintegrableForNonZeroQ::Phi(q, x);
-    }
+    return - exp(- pow(x/d_, n_));
 }
 
 
@@ -120,19 +111,12 @@ Foam::distributions::RosinRammler::~RosinRammler()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::scalar Foam::distributions::RosinRammler::sample() const
+Foam::scalar Foam::distributions::RosinRammler::sampleForZeroQ() const
 {
-    if (q() == 0)
-    {
-        const scalar s = rndGen_.sample01<scalar>();
-        const Pair<scalar>& Phi01 = this->Phi01();
-        const scalar PhiS = (1 - s)*Phi01[0] + s*Phi01[1];
-        return d_*pow(- log(- PhiS), 1/n_);
-    }
-    else
-    {
-        return unintegrableForNonZeroQ::sample();
-    }
+    const scalar s = rndGen_.sample01<scalar>();
+    const Pair<scalar>& Phi01 = this->Phi01();
+    const scalar PhiS = (1 - s)*Phi01[0] + s*Phi01[1];
+    return d_*pow(- log(- PhiS), 1/n_);
 }
 
 
@@ -164,9 +148,9 @@ void Foam::distributions::RosinRammler::write
 
 
 Foam::tmp<Foam::scalarField>
-Foam::distributions::RosinRammler::x(const label n) const
+Foam::distributions::RosinRammler::plotX(const label n) const
 {
-    tmp<scalarField> tx(distribution::x(n));
+    tmp<scalarField> tx(distribution::plotX(n));
     tx.ref()[0] = Foam::max(tx.ref()[0], q() < 0 ? min_/2 : rootVSmall);
     return tx;
 }

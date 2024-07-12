@@ -26,15 +26,35 @@ Class
 
 Description
     Reads an interpolation table from a file in OpenFOAM-format. This is a list
-    of Tuple2's where the first (x) column is scalar, and the second (y) column
-    is the type to be interpolated.
+    of Tuples in which complex types are delimited by parentheses. By default,
+    a Tuple2 is assumed in which the first column is the (scalar) x-axis and
+    the second column is the y-axis. But finer control over a n-component Tuple
+    can be achieved by specifying the column indices.
 
 Usage
+    A file containing the following will be read with the first element in each
+    tuple as the x-coordinate and the second as the y-values:
     \verbatim
         (
             (0.0 (1 2 3))
             (1.0 (4 5 6))
-        );
+        )
+    \endverbatim
+
+    A more complex table file might look as follows:
+    \verbatim
+        (
+            (0 (1 2 3) 4 (5 6 7 8 9 10))
+            (1 (2 3 4) 5 (6 7 8 9 10 11))
+            (2 (3 4 5) 6 (7 8 9 10 11 12))
+        )
+    \endverbatim
+
+    In this case, the columns to be used can be specified using the \c columns
+    entry. In this example, the second scalar column is taken as the x-axis,
+    and the six-component symmTensor-s are used as the values:
+    \verbatim
+        columns     (2 3);
     \endverbatim
 
 SourceFiles
@@ -46,6 +66,7 @@ SourceFiles
 #define FoamTableReader_H
 
 #include "TableFileReader.H"
+#include "labelPair.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -63,6 +84,12 @@ class Foam
 :
     public TableFileReader<Type>
 {
+    // Private Data
+
+        //- Column indices
+        const labelPair columns_;
+
+
     // Private Member Functions
 
         //- Read a 1D table
@@ -94,6 +121,17 @@ public:
 
     //- Destructor
     virtual ~Foam();
+
+
+    // Member Functions
+
+        //- Write settings and values
+        virtual void write
+        (
+            Ostream& os,
+            const Function1s::unitConversions& units,
+            const List<Tuple2<scalar, Type>>& table
+        ) const;
 };
 
 
