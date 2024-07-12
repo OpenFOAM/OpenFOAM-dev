@@ -58,16 +58,12 @@ SourceFiles
 #ifndef cubicEquilibrium_H
 #define cubicEquilibrium_H
 
-#include "XiModel.H"
+#include "equilibrium.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-class XiEqModel;
-class XiGModel;
-
 namespace XiModels
 {
 
@@ -77,13 +73,11 @@ namespace XiModels
 
 class cubicEquilibrium
 :
-    public XiModel
+    public equilibrium
 {
     // Private Data
 
         scalar XiShapeCoeff_;
-
-        autoPtr<XiEqModel> XiEqModel_;
 
 
 protected:
@@ -118,9 +112,6 @@ public:
 
 
     // Member Functions
-
-        //- Return the flame diffusivity
-        virtual tmp<volScalarField> Db() const;
 
         //- Correct the flame-wrinkling Xi
         virtual void correct();

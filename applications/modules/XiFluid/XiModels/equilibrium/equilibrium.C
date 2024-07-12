@@ -25,7 +25,6 @@ License
 
 #include "equilibrium.H"
 #include "XiEqModel.H"
-#include "XiGModel.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //

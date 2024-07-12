@@ -25,7 +25,6 @@ License
 
 #include "cubicEquilibrium.H"
 #include "XiEqModel.H"
-#include "XiGModel.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -62,9 +61,8 @@ Foam::XiModels::cubicEquilibrium::cubicEquilibrium
     const volScalarField& Su
 )
 :
-    XiModel(thermo, turbulence, Su),
-    XiShapeCoeff_(dict.lookupOrDefault<scalar>("XiShapeCoeff", 1)),
-    XiEqModel_(XiEqModel::New(dict, thermo, turbulence, Su))
+    equilibrium(dict, thermo, turbulence, Su),
+    XiShapeCoeff_(dict.lookupOrDefault<scalar>("XiShapeCoeff", 1))
 {}
 
 
@@ -75,12 +73,6 @@ Foam::XiModels::cubicEquilibrium::~cubicEquilibrium()
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
-
-Foam::tmp<Foam::volScalarField> Foam::XiModels::cubicEquilibrium::Db() const
-{
-    return XiEqModel_->Db();
-}
-
 
 void Foam::XiModels::cubicEquilibrium::correct()
 {
