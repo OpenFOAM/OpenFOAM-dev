@@ -22,10 +22,10 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::XiModels::uniformEquilibrium
+    Foam::XiModels::uniformConstant
 
 Description
-    Simple uniform equilibrium model for flame wrinkling \c Xi
+    Simple uniform constant flame wrinkling \c Xi model
 
     See Foam::XiModel for more details on flame wrinkling modelling.
 
@@ -38,12 +38,12 @@ Description
     \endverbatim
 
 SourceFiles
-    uniformEquilibrium.C
+    uniformConstant.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef uniformEquilibrium_H
-#define uniformEquilibrium_H
+#ifndef uniformConstant_H
+#define uniformConstant_H
 
 #include "XiModel.H"
 
@@ -55,17 +55,17 @@ namespace XiModels
 {
 
 /*---------------------------------------------------------------------------*\
-                            Class uniformEquilibrium Declaration
+                            Class uniformConstant Declaration
 \*---------------------------------------------------------------------------*/
 
-class uniformEquilibrium
+class uniformConstant
 :
     public XiModel
 {
     // Private Data
 
-        //- Equilibrium flame-wrinkling
-        scalar XiEq_;
+        //- Specified flame-wrinkling value
+        scalar Xi_;
 
 
 protected:
@@ -77,13 +77,13 @@ protected:
 public:
 
     //- Runtime type information
-    TypeName("uniformEquilibrium");
+    TypeName("uniformConstant");
 
 
     // Constructors
 
         //- Construct from components
-        uniformEquilibrium
+        uniformConstant
         (
             const dictionary& dict,
             const psiuMulticomponentThermo& thermo,
@@ -92,11 +92,11 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        uniformEquilibrium(const uniformEquilibrium&) = delete;
+        uniformConstant(const uniformConstant&) = delete;
 
 
     //- Destructor
-    virtual ~uniformEquilibrium();
+    virtual ~uniformConstant();
 
 
     // Member Functions
@@ -109,7 +109,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const uniformEquilibrium&) = delete;
+        void operator=(const uniformConstant&) = delete;
 };
 
 

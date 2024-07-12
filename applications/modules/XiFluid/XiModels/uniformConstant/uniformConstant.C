@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "uniformEquilibrium.H"
+#include "uniformConstant.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -32,20 +32,20 @@ namespace Foam
 {
 namespace XiModels
 {
-    defineTypeNameAndDebug(uniformEquilibrium, 0);
-    addToRunTimeSelectionTable(XiModel, uniformEquilibrium, dictionary);
+    defineTypeNameAndDebug(uniformConstant, 0);
+    addToRunTimeSelectionTable(XiModel, uniformConstant, dictionary);
 }
 }
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-bool Foam::XiModels::uniformEquilibrium::readCoeffs(const dictionary& dict)
+bool Foam::XiModels::uniformConstant::readCoeffs(const dictionary& dict)
 {
     XiModel::readCoeffs(dict);
 
-    dict.lookup("XiEq") >> XiEq_;
-    Xi_ == XiEq_;
+    dict.lookup("Xi") >> Xi_;
+    XiModel::Xi_ == Xi_;
 
     return true;
 }
@@ -53,7 +53,7 @@ bool Foam::XiModels::uniformEquilibrium::readCoeffs(const dictionary& dict)
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::XiModels::uniformEquilibrium::uniformEquilibrium
+Foam::XiModels::uniformConstant::uniformConstant
 (
     const dictionary& dict,
     const psiuMulticomponentThermo& thermo,
@@ -62,15 +62,15 @@ Foam::XiModels::uniformEquilibrium::uniformEquilibrium
 )
 :
     XiModel(thermo, turbulence, Su),
-    XiEq_(readScalar(dict.lookup("XiEq")))
+    Xi_(readScalar(dict.lookup("Xi")))
 {
-    Xi_ == XiEq_;
+    XiModel::Xi_ == Xi_;
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::XiModels::uniformEquilibrium::~uniformEquilibrium()
+Foam::XiModels::uniformConstant::~uniformConstant()
 {}
 
 
