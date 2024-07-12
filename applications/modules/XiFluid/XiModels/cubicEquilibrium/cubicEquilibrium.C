@@ -64,8 +64,7 @@ Foam::XiModels::cubicEquilibrium::cubicEquilibrium
 :
     XiModel(thermo, turbulence, Su),
     XiShapeCoeff_(dict.lookupOrDefault<scalar>("XiShapeCoeff", 1)),
-    XiEqModel_(XiEqModel::New(dict, thermo, turbulence, Su)),
-    XiGModel_(XiGModel::New(dict, thermo, turbulence, Su))
+    XiEqModel_(XiEqModel::New(dict, thermo, turbulence, Su))
 {}
 
 
@@ -79,7 +78,7 @@ Foam::XiModels::cubicEquilibrium::~cubicEquilibrium()
 
 Foam::tmp<Foam::volScalarField> Foam::XiModels::cubicEquilibrium::Db() const
 {
-    return XiGModel_->Db();
+    return XiEqModel_->Db();
 }
 
 

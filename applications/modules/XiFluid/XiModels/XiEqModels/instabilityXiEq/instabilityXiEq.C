@@ -45,6 +45,7 @@ bool Foam::XiEqModels::instability::readCoeffs(const dictionary& dict)
     XiEqModel::readCoeffs(dict);
 
     dict.lookup("XiEqIn") >> XiEqIn;
+    dict.lookup("lambdaIn") >> lambdaIn_;
 
     return XiEqModel_->read(dict);
 }
@@ -62,6 +63,7 @@ Foam::XiEqModels::instability::instability
 :
     XiEqModel(thermo, turbulence, Su),
     XiEqIn(dict.lookup<scalar>("XiEqIn")),
+    lambdaIn_(dict.lookup("lambdaIn")),
     XiEqModel_(XiEqModel::New(dict, thermo, turbulence, Su))
 {}
 
@@ -78,6 +80,19 @@ Foam::tmp<Foam::volScalarField> Foam::XiEqModels::instability::XiEq() const
 {
     const volScalarField turbXiEq(XiEqModel_->XiEq());
     return XiEqIn/turbXiEq + turbXiEq;
+}
+
+
+Foam::tmp<Foam::volScalarField> Foam::XiEqModels::instability::Db() const
+{
+    const volScalarField& rho = turbulence_.rho();
+
+    const objectRegistry& db = Su_.db();
+    const volScalarField& Xi = db.lookupObject<volScalarField>("Xi");
+    const volScalarField& mgb = db.lookupObject<volScalarField>("mgb");
+
+    return XiEqModel_->Db()
+        + rho*Su_*(Xi - 1.0)*mgb*(0.5*lambdaIn_)/(mgb + 1.0/lambdaIn_);
 }
 
 

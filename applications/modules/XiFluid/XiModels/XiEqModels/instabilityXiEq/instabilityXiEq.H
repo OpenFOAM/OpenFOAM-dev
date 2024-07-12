@@ -58,6 +58,10 @@ class instability
         //- Equilibrium Xi due to instability only
         scalar XiEqIn;
 
+        //- Instability length-scale
+        dimensionedScalar lambdaIn_;
+
+
         //- Equilibrium Xi model due to all other effects
         autoPtr<XiEqModel> XiEqModel_;
 
@@ -97,6 +101,9 @@ public:
 
         //- Return the flame-wrinkling XiEq
         virtual tmp<volScalarField> XiEq() const;
+
+        //- Return the flame diffusivity
+        virtual tmp<volScalarField> Db() const;
 
 
     // Member Operators

@@ -84,7 +84,7 @@ Foam::XiModels::transport::~transport()
 
 Foam::tmp<Foam::volScalarField> Foam::XiModels::transport::Db() const
 {
-    return XiGModel_->Db();
+    return XiEqModel_->Db();
 }
 
 

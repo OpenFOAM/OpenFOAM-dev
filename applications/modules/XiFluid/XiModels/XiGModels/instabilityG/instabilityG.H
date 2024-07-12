@@ -57,9 +57,6 @@ class instabilityG
         //- Flame instabilityG wrinkling generation rate coefficient
         dimensionedScalar Gin_;
 
-        //- InstabilityG length-scale
-        dimensionedScalar lambdaIn_;
-
         //- Xi generation rate model due to all other processes
         autoPtr<XiGModel> XiGModel_;
 
@@ -99,9 +96,6 @@ public:
 
         //- Return the flame-wrinkling generation rate
         virtual tmp<volScalarField> G() const;
-
-        //- Return the flame diffusivity
-        virtual tmp<volScalarField> Db() const;
 
 
     // Member Operators

@@ -150,16 +150,6 @@ public:
         //- Return the flame-wrinkling generation rate
         virtual tmp<volScalarField> G() const = 0;
 
-        //- Return the flame diffusivity
-        virtual tmp<volScalarField> Db() const
-        {
-            return volScalarField::New
-            (
-                "Db",
-                thermoTransport_.DEff(thermo_.Y("b"))
-            );
-        }
-
         //- Update properties from the given XiProperties dictionary
         bool read(const dictionary& XiProperties);
 

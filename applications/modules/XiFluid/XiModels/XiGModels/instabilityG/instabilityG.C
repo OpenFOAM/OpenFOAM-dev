@@ -45,7 +45,6 @@ bool Foam::XiGModels::instabilityG::readCoeffs(const dictionary& dict)
     XiGModel::readCoeffs(dict);
 
     dict.lookup("Gin") >> Gin_;
-    dict.lookup("lambdaIn") >> lambdaIn_;
 
     return true;
 }
@@ -63,7 +62,6 @@ Foam::XiGModels::instabilityG::instabilityG
 :
     XiGModel(thermo, thermoTransport, Su),
     Gin_(dict.lookup("Gin")),
-    lambdaIn_(dict.lookup("lambdaIn")),
     XiGModel_(XiGModel::New(dict, thermo, thermoTransport, Su))
 {}
 
@@ -80,19 +78,6 @@ Foam::tmp<Foam::volScalarField> Foam::XiGModels::instabilityG::G() const
 {
     volScalarField turbXiG(XiGModel_->G());
     return (Gin_*Gin_/(Gin_ + turbXiG) + turbXiG);
-}
-
-
-Foam::tmp<Foam::volScalarField> Foam::XiGModels::instabilityG::Db() const
-{
-    const volScalarField& rho = turbulence_.rho();
-
-    const objectRegistry& db = Su_.db();
-    const volScalarField& Xi = db.lookupObject<volScalarField>("Xi");
-    const volScalarField& mgb = db.lookupObject<volScalarField>("mgb");
-
-    return XiGModel_->Db()
-        + rho*Su_*(Xi - 1.0)*mgb*(0.5*lambdaIn_)/(mgb + 1.0/lambdaIn_);
 }
 
 

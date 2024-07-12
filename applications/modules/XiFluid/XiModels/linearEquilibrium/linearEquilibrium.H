@@ -85,7 +85,6 @@ class linearEquilibrium
         scalar XiShapeCoeff_;
 
         autoPtr<XiEqModel> XiEqModel_;
-        autoPtr<XiGModel> XiGModel_;
 
 
 protected:

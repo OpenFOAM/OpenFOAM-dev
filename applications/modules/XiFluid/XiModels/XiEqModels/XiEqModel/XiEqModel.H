@@ -135,6 +135,16 @@ public:
         //- Return the flame-wrinkling XiEq
         virtual tmp<volScalarField> XiEq() const = 0;
 
+        //- Return the flame diffusivity
+        virtual tmp<volScalarField> Db() const
+        {
+            return volScalarField::New
+            (
+                "Db",
+                thermoTransport_.DEff(thermo_.Y("b"))
+            );
+        }
+
         //- Update properties from the given XiProperties dictionary
         bool read(const dictionary& XiProperties);
 
