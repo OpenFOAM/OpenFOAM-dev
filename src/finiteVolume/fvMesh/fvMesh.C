@@ -654,15 +654,6 @@ bool Foam::fvMesh::move()
 {
     if (!conformal()) stitcher_->disconnect(true, true);
 
-    if (curTimeIndex_ < time().timeIndex() && stitcher_->stitches())
-    {
-        // Store all old-time fields. If we don't do this then we risk
-        // triggering a store in the middle of mapping and potentially
-        // overwriting a mapped old-time field with a not-yet-mapped new-time
-        // field.
-        storeOldTimeFields();
-    }
-
     // Do not set moving false
     // Once the mesh starts moving it is considered to be moving
     // for the rest of the run
