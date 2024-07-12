@@ -16,21 +16,11 @@ FoamFile
 
 #include        "combustionPropertiesInclude"
 
-Su              0.434;
-
 SuModel         unstrained;
 
 equivalenceRatio 1;
 
 sigmaExt        100000;
-
-XiModel         transport;
-
-XiCoef          0.62;
-
-XiShapeCoef     1;
-
-uPrimeCoef      1;
 
 GuldersCoeffs
 {
@@ -92,6 +82,21 @@ RaviPetersenCoeffs
                           (  1.64   -0.03    0.07     0    )
                           (  0.84    0.56    0        0    )
                           (  0.81    0.64    0        0    )));
+    }
+}
+
+flameWrinkling
+{
+    model           transport;
+
+    equilibrium
+    {
+        model           Gulder;
+    }
+
+    generationRate
+    {
+        model           KTS;
     }
 }
 

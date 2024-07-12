@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,10 +30,28 @@ Description
 
     Combusting RANS code using the b-Xi two-equation model.
     Xi may be obtained by either the solution of the Xi transport
-    equation or from an algebraic expression.  Both approaches are
-    based on Gulder's flame speed correlation which has been shown
-    to be appropriate by comparison with the results from the
-    spectral model.
+    equation or from an algebraic expression.
+
+    Reference:
+    \verbatim
+        Weller, H. G. (1993).
+        The development of a new flame area combustion model
+        using conditional averaging.
+        Thermo-fluids section report TF 9307.
+    \endverbatim
+
+    Both approaches are based on Gulder's flame speed correlation which has been
+    shown to be appropriate by comparison with the results from the spectral
+    model.
+
+    Reference:
+    \verbatim
+        Weller, H. G., Marooney, C. J., & Gosman, A. D. (1991, January).
+        A new spectral method for calculation of the time-varying area
+        of a laminar flame in homogeneous turbulence.
+        In Symposium (International) on Combustion
+        (Vol. 23, No. 1, pp. 629-636). Elsevier.
+    \endverbatim
 
     Strain effects are incorporated directly into the Xi equation
     but not in the algebraic approximation.  Further work need to be
@@ -47,13 +65,17 @@ Description
     involving the strain time scale and the strain-rate at extinction.
     the transport velocity is the same as that for the Xi equation.
 
+    Reference:
+    \verbatim
+        Weller, H. G., Tabor, G., Gosman, A. D., & Fureby, C. (1998, January).
+        Application of a flame-wrinkling LES combustion model
+        to a turbulent mixing layer.
+        In Symposium (International) on combustion
+        (Vol. 27, No. 1, pp. 899-907). Elsevier.
+    \endverbatim
+
     Uses the flexible PIMPLE (PISO-SIMPLE) solution for time-resolved and
     pseudo-transient and steady simulations.
-
-    Optional fvModels and fvConstraints are provided to enhance the simulation
-    in many ways including adding various sources, chemical reactions,
-    combustion, Lagrangian particles, radiation, surface film etc. and
-    constraining or limiting the solution.
 
     Reference:
     \verbatim
@@ -61,6 +83,11 @@ Description
         Notes on Computational Fluid Dynamics: General Principles.
         CFD Direct Ltd.: Reading, UK.
     \endverbatim
+
+    Optional fvModels and fvConstraints are provided to enhance the simulation
+    in many ways including adding various sources, chemical reactions,
+    combustion, Lagrangian particles, radiation, surface film etc. and
+    constraining or limiting the solution.
 
 SourceFiles
     XiFluid.C
@@ -79,6 +106,7 @@ See also
 #include "RASThermophysicalTransportModel.H"
 #include "unityLewisEddyDiffusivity.H"
 #include "laminarFlameSpeed.H"
+#include "XiModel.H"
 #include "ignition.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -113,51 +141,6 @@ protected:
         multivariateSurfaceInterpolationScheme<scalar>::fieldTable fields;
 
 
-    // Reactions
-
-        //- Laminar flame-speed model
-        autoPtr<laminarFlameSpeed> unstrainedLaminarFlameSpeed;
-
-        //- Laminar flame-speed field
-        volScalarField Su;
-
-        //- Minimum laminar flame-speed allowed for numerical stability
-        dimensionedScalar SuMin;
-
-        //- Maximum laminar flame-speed allowed for numerical stability
-        dimensionedScalar SuMax;
-
-        //- Flame wrinkling coefficient field
-        volScalarField Xi_;
-
-        //- Turbulent flame-speed field
-        volScalarField St;
-
-        //- Dictionary of combustion model coefficients
-        IOdictionary combustionProperties;
-
-        //- Name of the strained laminar flame-speed model
-        word SuModel;
-
-        //- Laminar flame extinction strain-rate
-        dimensionedScalar sigmaExt;
-
-        //- Name of the flame wrinkling model
-        word XiModel;
-
-        //- Flame wrinkling model coefficient
-        dimensionedScalar XiCoef;
-
-        //- Flame wrinkling model shape coefficient
-        dimensionedScalar XiShapeCoef;
-
-        //- Flame wrinkling model u' coefficient
-        dimensionedScalar uPrimeCoef;
-
-        //- Ignition model
-        ignition ign;
-
-
     // Thermophysical transport
 
         turbulenceThermophysicalTransportModels::unityLewisEddyDiffusivity
@@ -173,12 +156,43 @@ protected:
         > thermophysicalTransport;
 
 
+    // Reactions
+
+        //- Laminar flame-speed model
+        autoPtr<laminarFlameSpeed> unstrainedLaminarFlameSpeed;
+
+        //- Laminar flame-speed field
+        volScalarField Su;
+
+        //- Minimum laminar flame-speed allowed for numerical stability
+        dimensionedScalar SuMin;
+
+        //- Maximum laminar flame-speed allowed for numerical stability
+        dimensionedScalar SuMax;
+
+        //- Dictionary of combustion model coefficients
+        IOdictionary combustionProperties;
+
+        //- Name of the strained laminar flame-speed model
+        word SuModel;
+
+        //- Laminar flame extinction strain-rate
+        dimensionedScalar sigmaExt;
+
+        //- Laminar flame-speed model
+        autoPtr<XiModel> XiModel_;
+
+        //- Ignition model
+        ignition ign;
+
+
     // Protected member functions
 
         //- Solve the ft equation for partially-premixed mixtures
         void ftSolve
         (
-            const fv::convectionScheme<scalar>& mvConvection
+            const fv::convectionScheme<scalar>& mvConvection,
+            const volScalarField& Db
         );
 
         //- Calculate and return the turbulent flame-speed kernel correction
@@ -192,19 +206,22 @@ protected:
         //- Solve the Xi and regress variable equations
         void bSolve
         (
-            const fv::convectionScheme<scalar>& mvConvection
+            const fv::convectionScheme<scalar>& mvConvection,
+            const volScalarField& Db
         );
 
         //- Solve the unburnt energy equation
         void EauSolve
         (
-            const fv::convectionScheme<scalar>& mvConvection
+            const fv::convectionScheme<scalar>& mvConvection,
+            const volScalarField& Db
         );
 
         //- Solve the energy equation
         void EaSolve
         (
-            const fv::convectionScheme<scalar>& mvConvection
+            const fv::convectionScheme<scalar>& mvConvection,
+            const volScalarField& Db
         );
 
 

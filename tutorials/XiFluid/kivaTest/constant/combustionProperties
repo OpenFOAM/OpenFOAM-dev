@@ -14,8 +14,6 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-laminarFlameSpeedCorrelation Gulders;
-
 fuel            IsoOctane;
 
 Su              0;
@@ -26,13 +24,22 @@ equivalenceRatio 1;
 
 sigmaExt        100000;
 
-XiModel         transport;
+flameWrinkling
+{
+    model           transport;
 
-XiCoef          0.62;
+    equilibrium
+    {
+        model           Gulder;
+    }
 
-XiShapeCoef     1;
+    generationRate
+    {
+        model           KTS;
+    }
+}
 
-uPrimeCoef      1;
+laminarFlameSpeedCorrelation Gulders;
 
 GuldersCoeffs
 {

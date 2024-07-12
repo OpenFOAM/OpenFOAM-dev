@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,6 +53,13 @@ Foam::solvers::XiFluid::XiFluid(fvMesh& mesh)
 
     b_(thermo_.Y("b")),
 
+    thermophysicalTransport
+    (
+        momentumTransport(),
+        thermo_,
+        true
+    ),
+
     unstrainedLaminarFlameSpeed(laminarFlameSpeed::New(thermo_)),
 
     Su
@@ -70,32 +77,6 @@ Foam::solvers::XiFluid::XiFluid(fvMesh& mesh)
 
     SuMin(0.01*Su.average()),
     SuMax(4*Su.average()),
-
-    Xi_
-    (
-        IOobject
-        (
-            "Xi",
-            runTime.name(),
-            mesh,
-            IOobject::MUST_READ,
-            IOobject::AUTO_WRITE
-        ),
-        mesh
-    ),
-
-    St
-    (
-        IOobject
-        (
-            "St",
-            runTime.name(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::AUTO_WRITE
-        ),
-        Xi_*Su
-    ),
 
     combustionProperties
     (
@@ -116,29 +97,22 @@ Foam::solvers::XiFluid::XiFluid(fvMesh& mesh)
 
     sigmaExt("sigmaExt", dimless/dimTime, combustionProperties),
 
-    XiModel
+    XiModel_
     (
-        combustionProperties.lookup("XiModel")
+        XiModel::New
+        (
+            combustionProperties,
+            thermo_,
+            thermophysicalTransport,
+            Su
+        )
     ),
-
-    XiCoef("XiCoef", dimless, combustionProperties),
-
-    XiShapeCoef("XiShapeCoef", dimless, combustionProperties),
-
-    uPrimeCoef("uPrimeCoef", dimless, combustionProperties),
 
     ign(combustionProperties, runTime, mesh),
 
-    thermophysicalTransport
-    (
-        momentumTransport(),
-        thermo_,
-        true
-    ),
-
     thermo(thermo_),
     b(b_),
-    Xi(Xi_)
+    Xi(XiModel_->Xi())
 {
     thermo.validate(type(), "ha", "ea");
 
