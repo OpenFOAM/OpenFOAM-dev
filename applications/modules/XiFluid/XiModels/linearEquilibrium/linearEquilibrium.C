@@ -23,7 +23,9 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "algebraic.H"
+#include "linearEquilibrium.H"
+#include "XiEqModel.H"
+#include "XiGModel.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -32,15 +34,15 @@ namespace Foam
 {
 namespace XiModels
 {
-    defineTypeNameAndDebug(algebraic, 0);
-    addToRunTimeSelectionTable(XiModel, algebraic, dictionary);
+    defineTypeNameAndDebug(linearEquilibrium, 0);
+    addToRunTimeSelectionTable(XiModel, linearEquilibrium, dictionary);
 }
 }
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-bool Foam::XiModels::algebraic::readCoeffs(const dictionary& dict)
+bool Foam::XiModels::linearEquilibrium::readCoeffs(const dictionary& dict)
 {
     XiModel::readCoeffs(dict);
 
@@ -52,7 +54,7 @@ bool Foam::XiModels::algebraic::readCoeffs(const dictionary& dict)
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::XiModels::algebraic::algebraic
+Foam::XiModels::linearEquilibrium::linearEquilibrium
 (
     const dictionary& dict,
     const psiuMulticomponentThermo& thermo,
@@ -69,19 +71,19 @@ Foam::XiModels::algebraic::algebraic
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::XiModels::algebraic::~algebraic()
+Foam::XiModels::linearEquilibrium::~linearEquilibrium()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField> Foam::XiModels::algebraic::Db() const
+Foam::tmp<Foam::volScalarField> Foam::XiModels::linearEquilibrium::Db() const
 {
     return XiGModel_->Db();
 }
 
 
-void Foam::XiModels::algebraic::correct()
+void Foam::XiModels::linearEquilibrium::correct()
 {
     Xi_ == 1 + (1 + (2*XiShapeCoeff_)*(0.5 - b_))*(XiEqModel_->XiEq() - 1);
 }

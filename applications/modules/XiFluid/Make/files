@@ -1,7 +1,7 @@
 XiModels/XiModel/XiModel.C
 XiModels/XiModel/XiModelNew.C
-XiModels/fixed/fixed.C
-XiModels/algebraic/algebraic.C
+XiModels/uniformEquilibrium/uniformEquilibrium.C
+XiModels/linearEquilibrium/linearEquilibrium.C
 XiModels/transport/transport.C
 
 XiModels/XiEqModels/XiEqModel/XiEqModel.C

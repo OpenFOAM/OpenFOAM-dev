@@ -64,10 +64,11 @@ Foam::XiModel::XiModel
             "Xi",
             b_.time().name(),
             b_.db(),
-            IOobject::MUST_READ,
-            IOobject::AUTO_WRITE
+            IOobject::READ_IF_PRESENT,
+            IOobject::NO_WRITE
         ),
-        b_.mesh()
+        b_.mesh(),
+        dimensionedScalar("1", dimless, 1)
     )
 {}
 

@@ -69,7 +69,9 @@ Foam::XiModels::transport::transport
     XiShapeCoeff_(dict.lookupOrDefault<scalar>("XiShapeCoeff", 1)),
     XiEqModel_(XiEqModel::New(dict, thermo, turbulence, Su)),
     XiGModel_(XiGModel::New(dict, thermo, turbulence, Su))
-{}
+{
+    Xi_.writeOpt() = IOobject::AUTO_WRITE;
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,39 +22,30 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::XiModels::algebraic
+    Foam::XiModels::uniformEquilibrium
 
 Description
-    Simple algebraic model for flame wrinkling \c Xi
-    with a linear correction function to give a plausible profile.
+    Simple uniform equilibrium model for flame wrinkling \c Xi
 
     See Foam::XiModel for more details on flame wrinkling modelling.
 
-    References:
+    Reference:
     \verbatim
         Weller, H. G. (1993).
         The development of a new flame area combustion model
         using conditional averaging.
         Thermo-fluids section report TF 9307.
-
-        Weller, H. G., Tabor, G., Gosman, A. D., & Fureby, C. (1998, January).
-        Application of a flame-wrinkling LES combustion model
-        to a turbulent mixing layer.
-        In Symposium (International) on combustion
-        (Vol. 27, No. 1, pp. 899-907). Elsevier.
     \endverbatim
 
 SourceFiles
-    algebraic.C
+    uniformEquilibrium.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef algebraic_H
-#define algebraic_H
+#ifndef uniformEquilibrium_H
+#define uniformEquilibrium_H
 
 #include "XiModel.H"
-#include "XiEqModel.H"
-#include "XiGModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -64,19 +55,17 @@ namespace XiModels
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class algebraic Declaration
+                            Class uniformEquilibrium Declaration
 \*---------------------------------------------------------------------------*/
 
-class algebraic
+class uniformEquilibrium
 :
     public XiModel
 {
     // Private Data
 
-        scalar XiShapeCoeff_;
-
-        autoPtr<XiEqModel> XiEqModel_;
-        autoPtr<XiGModel> XiGModel_;
+        //- Equilibrium flame-wrinkling
+        scalar XiEq_;
 
 
 protected:
@@ -88,13 +77,13 @@ protected:
 public:
 
     //- Runtime type information
-    TypeName("algebraic");
+    TypeName("uniformEquilibrium");
 
 
     // Constructors
 
         //- Construct from components
-        algebraic
+        uniformEquilibrium
         (
             const dictionary& dict,
             const psiuMulticomponentThermo& thermo,
@@ -103,26 +92,24 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        algebraic(const algebraic&) = delete;
+        uniformEquilibrium(const uniformEquilibrium&) = delete;
 
 
     //- Destructor
-    virtual ~algebraic();
+    virtual ~uniformEquilibrium();
 
 
     // Member Functions
 
-        //- Return the flame diffusivity
-        virtual tmp<volScalarField> Db() const;
-
         //- Correct the flame-wrinkling Xi
-        virtual void correct();
+        virtual void correct()
+        {}
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const algebraic&) = delete;
+        void operator=(const uniformEquilibrium&) = delete;
 };
 
 

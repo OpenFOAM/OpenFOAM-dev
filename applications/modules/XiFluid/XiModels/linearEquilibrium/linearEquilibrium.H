@@ -22,28 +22,42 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::XiModels::fixed
+    Foam::XiModels::linearEquilibrium
 
 Description
-    Fixed value model for flame wrinkling \c Xi
+    Simple equilibrium model for flame wrinkling \c Xi
+    with a linear profile function to give a plausible distribution.
+
+    Note that this model does not guarantee that the effective turbulent flame
+    speed will correspond exactly to the equilibrium \c Xi because \c Xi will
+    only equal the equilibrium value where \c b = 0.5.  It would be simple to
+    implement alternative profiles where \c Xi equals the equilibrium value over
+    a wider range of \c b within the flame-brush which should ensure the
+    effective flame-speed corresponds to the equilibrium \c Xi more closely.
 
     See Foam::XiModel for more details on flame wrinkling modelling.
 
-    Reference:
+    References:
     \verbatim
         Weller, H. G. (1993).
         The development of a new flame area combustion model
         using conditional averaging.
         Thermo-fluids section report TF 9307.
+
+        Weller, H. G., Tabor, G., Gosman, A. D., & Fureby, C. (1998, January).
+        Application of a flame-wrinkling LES combustion model
+        to a turbulent mixing layer.
+        In Symposium (International) on combustion
+        (Vol. 27, No. 1, pp. 899-907). Elsevier.
     \endverbatim
 
 SourceFiles
-    fixed.C
+    linearEquilibrium.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef fixed_H
-#define fixed_H
+#ifndef linearEquilibrium_H
+#define linearEquilibrium_H
 
 #include "XiModel.H"
 
@@ -51,17 +65,29 @@ SourceFiles
 
 namespace Foam
 {
+
+class XiEqModel;
+class XiGModel;
+
 namespace XiModels
 {
 
 /*---------------------------------------------------------------------------*\
-                            Class fixed Declaration
+                          Class linearEquilibrium Declaration
 \*---------------------------------------------------------------------------*/
 
-class fixed
+class linearEquilibrium
 :
     public XiModel
 {
+    // Private Data
+
+        scalar XiShapeCoeff_;
+
+        autoPtr<XiEqModel> XiEqModel_;
+        autoPtr<XiGModel> XiGModel_;
+
+
 protected:
 
         //- Update coefficients from given dictionary
@@ -71,13 +97,13 @@ protected:
 public:
 
     //- Runtime type information
-    TypeName("fixed");
+    TypeName("linearEquilibrium");
 
 
     // Constructors
 
         //- Construct from components
-        fixed
+        linearEquilibrium
         (
             const dictionary& dict,
             const psiuMulticomponentThermo& thermo,
@@ -86,24 +112,26 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        fixed(const fixed&) = delete;
+        linearEquilibrium(const linearEquilibrium&) = delete;
 
 
     //- Destructor
-    virtual ~fixed();
+    virtual ~linearEquilibrium();
 
 
     // Member Functions
 
+        //- Return the flame diffusivity
+        virtual tmp<volScalarField> Db() const;
+
         //- Correct the flame-wrinkling Xi
-        virtual void correct()
-        {}
+        virtual void correct();
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const fixed&) = delete;
+        void operator=(const linearEquilibrium&) = delete;
 };
 
 

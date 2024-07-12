@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "fixed.H"
+#include "uniformEquilibrium.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -32,37 +32,45 @@ namespace Foam
 {
 namespace XiModels
 {
-    defineTypeNameAndDebug(fixed, 0);
-    addToRunTimeSelectionTable(XiModel, fixed, dictionary);
+    defineTypeNameAndDebug(uniformEquilibrium, 0);
+    addToRunTimeSelectionTable(XiModel, uniformEquilibrium, dictionary);
 }
 }
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-bool Foam::XiModels::fixed::readCoeffs(const dictionary& dict)
+bool Foam::XiModels::uniformEquilibrium::readCoeffs(const dictionary& dict)
 {
-    return XiModel::readCoeffs(dict);
+    XiModel::readCoeffs(dict);
+
+    dict.lookup("XiEq") >> XiEq_;
+    Xi_ == XiEq_;
+
+    return true;
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::XiModels::fixed::fixed
+Foam::XiModels::uniformEquilibrium::uniformEquilibrium
 (
-    const dictionary& XiProperties,
+    const dictionary& dict,
     const psiuMulticomponentThermo& thermo,
     const fluidThermoThermophysicalTransportModel& turbulence,
     const volScalarField& Su
 )
 :
-    XiModel(thermo, turbulence, Su)
-{}
+    XiModel(thermo, turbulence, Su),
+    XiEq_(readScalar(dict.lookup("XiEq")))
+{
+    Xi_ == XiEq_;
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::XiModels::fixed::~fixed()
+Foam::XiModels::uniformEquilibrium::~uniformEquilibrium()
 {}
 
 
