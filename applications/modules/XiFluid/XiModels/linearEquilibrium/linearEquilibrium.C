@@ -63,7 +63,9 @@ Foam::XiModels::linearEquilibrium::linearEquilibrium
 :
     equilibrium(dict, thermo, turbulence, Su),
     XiShapeCoeff_(dict.lookupOrDefault<scalar>("XiShapeCoeff", 1))
-{}
+{
+    correct();
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

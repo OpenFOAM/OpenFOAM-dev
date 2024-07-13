@@ -59,7 +59,9 @@ Foam::XiModels::equilibrium::equilibrium
 :
     XiModel(thermo, turbulence, Su),
     XiEqModel_(XiEqModel::New(dict, thermo, turbulence, Su))
-{}
+{
+    correct();
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
