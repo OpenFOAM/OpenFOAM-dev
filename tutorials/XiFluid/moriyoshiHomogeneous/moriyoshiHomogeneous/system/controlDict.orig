@@ -18,7 +18,7 @@ application     foamRun;
 
 solver          XiFluid;
 
-startFrom       startTime;
+startFrom       latestTime;
 
 startTime       0;
 

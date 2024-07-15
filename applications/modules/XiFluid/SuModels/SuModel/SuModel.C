@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,20 +23,20 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "XiModel.H"
+#include "SuModel.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(XiModel, 0);
-    defineRunTimeSelectionTable(XiModel, dictionary);
+    defineTypeNameAndDebug(SuModel, 0);
+    defineRunTimeSelectionTable(SuModel, dictionary);
 }
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-bool Foam::XiModel::readCoeffs(const dictionary&)
+bool Foam::SuModel::readCoeffs(const dictionary&)
 {
     return true;
 }
@@ -44,48 +44,44 @@ bool Foam::XiModel::readCoeffs(const dictionary&)
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::XiModel::XiModel
+Foam::SuModel::SuModel
 (
     const psiuMulticomponentThermo& thermo,
-    const fluidThermoThermophysicalTransportModel& thermoTransport,
-    const volScalarField& Su
+    const fluidThermoThermophysicalTransportModel& thermoTransport
 )
 :
     thermo_(thermo),
     thermoTransport_(thermoTransport),
     turbulence_(thermoTransport.momentumTransport()),
-    Su_(Su),
-    rho_(turbulence_.rho()),
-    b_(thermo_.Y("b")),
-    Xi_
+    Su_
     (
         IOobject
         (
-            "Xi",
+            "Su",
             thermo_.mesh().time().name(),
             thermo_.mesh(),
             IOobject::READ_IF_PRESENT,
             IOobject::NO_WRITE
         ),
         thermo_.mesh(),
-        dimensionedScalar("1", dimless, 1)
+        dimensionedScalar("0", dimVelocity, 0)
     )
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::XiModel::~XiModel()
+Foam::SuModel::~SuModel()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-bool Foam::XiModel::read(const dictionary& combustionProperties)
+bool Foam::SuModel::read(const dictionary& combustionProperties)
 {
     return readCoeffs
     (
-        combustionProperties.subDict("Xi").optionalSubDict(type() + "Coeffs")
+        combustionProperties.subDict("Su").optionalSubDict(type() + "Coeffs")
     );
 }
 

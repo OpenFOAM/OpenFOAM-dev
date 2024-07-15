@@ -24,12 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "XiFluid.H"
-#include "fvcSnGrad.H"
-#include "fvcLaplacian.H"
 #include "fvcDdt.H"
-#include "fvcMeshPhi.H"
 #include "fvmDiv.H"
-#include "fvmSup.H"
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
@@ -208,14 +204,6 @@ void Foam::solvers::XiFluid::bSolve
         fvc::interpolate(rhou*StCorr(c, nf, dMgb)*Su*Xi)*nf
     );
 
-    const scalar StCoNum = max
-    (
-        mesh.surfaceInterpolation::deltaCoeffs()
-       *mag(phiSt)/(fvc::interpolate(rho)*mesh.magSf())
-    ).value()*runTime.deltaTValue();
-
-    Info<< "Max St-Courant Number = " << StCoNum << endl;
-
     // Create b equation
     fvScalarMatrix bEqn
     (
@@ -257,104 +245,17 @@ void Foam::solvers::XiFluid::bSolve
         }
     }
 
-
-    // Solve for b
+    // Solve for and constrain b
     bEqn.relax();
     fvConstraints().constrain(bEqn);
     bEqn.solve();
     fvConstraints().constrain(b);
 
-    Info<< "min(b) = " << min(b).value() << endl;
-
-    Info<< "Combustion progress = "
-        << 100*(scalar(1) - b)().weightedAverage(mesh.V()).value() << "%"
-        << endl;
-
-    // Calculate Xi flux
-    const surfaceScalarField phiXi
-    (
-        phiSt
-      - fvc::interpolate
-        (
-            fvc::laplacian(thermophysicalTransport.DEff(b), b)/mgb
-        )*nf
-      + fvc::interpolate(rho)*fvc::interpolate(Su*(1.0/Xi - Xi))*nf
-    );
-
-    const volScalarField sigmas
-    (
-        ((n & n)*fvc::div(U) - (n & fvc::grad(U) & n))/Xi
-      + (
-            (n & n)*fvc::div(Su*n)
-          - (n & fvc::grad(Su*n) & n)
-        )*(Xi + scalar(1))/(2*Xi)
-    );
-
-
-    // Calculate the unstrained laminar flame speed
-    const volScalarField Su0(unstrainedLaminarFlameSpeed()());
-
-
-    // Calculate the laminar flame speed in equilibrium with the applied strain
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    const volScalarField SuInf
-    (
-        Su0*max(scalar(1) - sigmas/sigmaExt, scalar(0.01))
-    );
-
-    if (SuModel == "unstrained")
-    {
-        Su == Su0;
-    }
-    else if (SuModel == "equilibrium")
-    {
-        Su == SuInf;
-    }
-    else if (SuModel == "transport")
-    {
-        // Solve for the strained laminar flame speed
-        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        const volScalarField Rc
-        (
-            (sigmas*SuInf*(Su0 - SuInf) + sqr(SuMin)*sigmaExt)
-            /(sqr(Su0 - SuInf) + sqr(SuMin))
-        );
-
-        fvScalarMatrix SuEqn
-        (
-            fvm::ddt(rho, Su)
-          + fvm::div(phi + phiXi, Su, "div(phiXi,Su)")
-          - fvm::Sp(fvc::div(phiXi), Su)
-          ==
-          - fvm::SuSp(-rho*Rc*Su0/Su, Su)
-          - fvm::SuSp(rho*(sigmas + Rc), Su)
-          + fvModels().source(rho, Su)
-        );
-
-        SuEqn.relax();
-
-        fvConstraints().constrain(SuEqn);
-
-        SuEqn.solve();
-
-        fvConstraints().constrain(Su);
-
-        // Limit the maximum Su
-        // ~~~~~~~~~~~~~~~~~~~~
-        Su.min(SuMax);
-        Su.max(SuMin);
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "Unknown Su model " << SuModel
-            << abort(FatalError);
-    }
-
-
     // Correct the flame wrinkling
     XiModel_->correct();
+
+    // Correct the laminar flame speed
+    SuModel_->correct();
 }
 
 

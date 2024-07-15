@@ -64,6 +64,7 @@ wallHeatTransferCoeff/wallHeatTransferCoeffModels/ReynoldsAnalogy/ReynoldsAnalog
 writeCellCentres/writeCellCentres.C
 writeCellVolumes/writeCellVolumes.C
 
+bXiProgress/bXiProgress.C
 XiReactionRate/XiReactionRate.C
 streamFunction/streamFunction.C
 

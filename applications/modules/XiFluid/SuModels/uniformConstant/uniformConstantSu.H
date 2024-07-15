@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,115 +21,90 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Namespace
-    Foam::laminarFlameSpeedModels
-
-Description
-    Namespace for laminar flame speed models
-
-
 Class
-    Foam::laminarFlameSpeed
+    Foam::SuModels::uniformConstant
 
 Description
-    Abstract class for laminar flame speed
+    Simple uniform constant laminar flame speed \c Su model
 
 SourceFiles
-    laminarFlameSpeed.C
-    laminarFlameSpeedNew.C
+    uniformConstant.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef laminarFlameSpeed_H
-#define laminarFlameSpeed_H
+#ifndef uniformConstantSu_H
+#define uniformConstantSu_H
 
-#include "psiuMulticomponentThermo.H"
-#include "autoPtr.H"
-#include "runTimeSelectionTables.H"
+#include "SuModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+namespace SuModels
+{
 
 /*---------------------------------------------------------------------------*\
-                      Class laminarFlameSpeed Declaration
+                            Class uniformConstant Declaration
 \*---------------------------------------------------------------------------*/
 
-class laminarFlameSpeed
+class uniformConstant
+:
+    public SuModel
 {
+    // Private Data
+
+        //- Specified laminar flame speed
+        dimensionedScalar Su_;
+
+
 protected:
 
-    // Protected data
-
-        const psiuMulticomponentThermo& psiuMulticomponentThermo_;
-
-        //- Fuel
-        word fuel_;
-
-        //- Equivalence ratio of a homogeneous mixture
-        scalar equivalenceRatio_;
+        //- Update coefficients from given dictionary
+        virtual bool readCoeffs(const dictionary& dict);
 
 
 public:
 
     //- Runtime type information
-    TypeName("laminarFlameSpeed");
-
-
-    // Declare run-time constructor selection table
-
-        declareRunTimeSelectionTable
-        (
-            autoPtr,
-            laminarFlameSpeed,
-            dictionary,
-            (
-                const dictionary& dict,
-                const psiuMulticomponentThermo& ct
-            ),
-            (dict, ct)
-        );
+    TypeName("uniformConstant");
 
 
     // Constructors
 
-        //- Construct from dictionary and psiuMulticomponentThermo
-        laminarFlameSpeed
+        //- Construct from components
+        uniformConstant
         (
-            const dictionary&,
-            const psiuMulticomponentThermo&
+            const dictionary& dict,
+            const psiuMulticomponentThermo& thermo,
+            const fluidThermoThermophysicalTransportModel& turbulence
         );
 
         //- Disallow default bitwise copy construction
-        laminarFlameSpeed(const laminarFlameSpeed&) = delete;
-
-
-    // Selector
-
-        static autoPtr<laminarFlameSpeed> New
-        (
-            const dictionary&,
-            const psiuMulticomponentThermo&
-        );
+        uniformConstant(const uniformConstant&) = delete;
 
 
     //- Destructor
-    virtual ~laminarFlameSpeed();
+    virtual ~uniformConstant();
+
+
+    // Member Functions
+
+        //- Correct the laminar flame speed
+        virtual void correct()
+        {}
 
 
     // Member Operators
 
-        //- Return the laminar flame speed [m/s]
-        virtual tmp<volScalarField> operator()() const = 0;
-
         //- Disallow default bitwise assignment
-        void operator=(const laminarFlameSpeed&) = delete;
+        void operator=(const uniformConstant&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace SuModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

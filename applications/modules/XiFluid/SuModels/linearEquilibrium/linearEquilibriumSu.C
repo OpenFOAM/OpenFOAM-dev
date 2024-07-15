@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,70 +23,74 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "XiModel.H"
+#include "linearEquilibriumSu.H"
+#include "laminarFlameSpeed.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(XiModel, 0);
-    defineRunTimeSelectionTable(XiModel, dictionary);
+namespace SuModels
+{
+    defineTypeNameAndDebug(linearEquilibrium, 0);
+    addToRunTimeSelectionTable(SuModel, linearEquilibrium, dictionary);
+}
 }
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-bool Foam::XiModel::readCoeffs(const dictionary&)
+bool Foam::SuModels::linearEquilibrium::readCoeffs(const dictionary& dict)
 {
-    return true;
+    return SuModel::readCoeffs(dict);
+
+    sigmaExt_.read(dict);
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::XiModel::XiModel
+Foam::SuModels::linearEquilibrium::linearEquilibrium
 (
+    const dictionary& dict,
     const psiuMulticomponentThermo& thermo,
-    const fluidThermoThermophysicalTransportModel& thermoTransport,
-    const volScalarField& Su
+    const fluidThermoThermophysicalTransportModel& turbulence
 )
 :
-    thermo_(thermo),
-    thermoTransport_(thermoTransport),
-    turbulence_(thermoTransport.momentumTransport()),
-    Su_(Su),
-    rho_(turbulence_.rho()),
-    b_(thermo_.Y("b")),
-    Xi_
-    (
-        IOobject
-        (
-            "Xi",
-            thermo_.mesh().time().name(),
-            thermo_.mesh(),
-            IOobject::READ_IF_PRESENT,
-            IOobject::NO_WRITE
-        ),
-        thermo_.mesh(),
-        dimensionedScalar("1", dimless, 1)
-    )
-{}
+    unstrained(dict, thermo, turbulence),
+    sigmaExt_("sigmaExt", dimless/dimTime, dict)
+{
+    Su_.writeOpt() = IOobject::AUTO_WRITE;
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::XiModel::~XiModel()
+Foam::SuModels::linearEquilibrium::~linearEquilibrium()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-bool Foam::XiModel::read(const dictionary& combustionProperties)
+void Foam::SuModels::linearEquilibrium::correct()
 {
-    return readCoeffs
+    const fvMesh& mesh(thermo_.mesh());
+
+    const volVectorField& U(turbulence_.U());
+    const volVectorField& n = mesh.lookupObject<volVectorField>("n");
+    const volScalarField& Xi = mesh.lookupObject<volScalarField>("Xi");
+
+    const volScalarField sigmas
     (
-        combustionProperties.subDict("Xi").optionalSubDict(type() + "Coeffs")
+        ((n & n)*fvc::div(U) - (n & fvc::grad(U) & n))/Xi
+      + (
+            (n & n)*fvc::div(Su_*n)
+          - (n & fvc::grad(Su_*n) & n)
+        )*(Xi + scalar(1))/(2*Xi)
     );
+
+    Su_ == Su0_()()*max(scalar(1) - sigmas/sigmaExt_, scalar(0.01));
 }
 
 

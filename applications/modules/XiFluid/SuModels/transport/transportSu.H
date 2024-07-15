@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,115 +21,104 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Namespace
-    Foam::laminarFlameSpeedModels
-
-Description
-    Namespace for laminar flame speed models
-
-
 Class
-    Foam::laminarFlameSpeed
+    Foam::SuModels::transport
 
 Description
-    Abstract class for laminar flame speed
+    Transport model for the strained laminar flame speed
+
+    References:
+    \verbatim
+        Weller, H. G., Tabor, G., Gosman, A. D., & Fureby, C. (1998, January).
+        Application of a flame-wrinkling LES combustion model
+        to a turbulent mixing layer.
+        In Symposium (International) on combustion
+        (Vol. 27, No. 1, pp. 899-907). Elsevier.
+    \endverbatim
 
 SourceFiles
-    laminarFlameSpeed.C
-    laminarFlameSpeedNew.C
+    transport.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef laminarFlameSpeed_H
-#define laminarFlameSpeed_H
+#ifndef transportSu_H
+#define transportSu_H
 
-#include "psiuMulticomponentThermo.H"
-#include "autoPtr.H"
-#include "runTimeSelectionTables.H"
+#include "unstrained.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+namespace SuModels
+{
 
 /*---------------------------------------------------------------------------*\
-                      Class laminarFlameSpeed Declaration
+                          Class transport Declaration
 \*---------------------------------------------------------------------------*/
 
-class laminarFlameSpeed
+class transport
+:
+    public unstrained
 {
+    // Private Data
+
+        //- Laminar flame extinction strain-rate
+        dimensionedScalar sigmaExt_;
+
+        //- Minimum laminar flame-speed allowed for numerical stability
+        dimensionedScalar SuMin_;
+
+        //- Maximum laminar flame-speed allowed for numerical stability
+        dimensionedScalar SuMax_;
+
+
 protected:
 
-    // Protected data
-
-        const psiuMulticomponentThermo& psiuMulticomponentThermo_;
-
-        //- Fuel
-        word fuel_;
-
-        //- Equivalence ratio of a homogeneous mixture
-        scalar equivalenceRatio_;
+        //- Update coefficients from given dictionary
+        virtual bool readCoeffs(const dictionary& dict);
 
 
 public:
 
     //- Runtime type information
-    TypeName("laminarFlameSpeed");
-
-
-    // Declare run-time constructor selection table
-
-        declareRunTimeSelectionTable
-        (
-            autoPtr,
-            laminarFlameSpeed,
-            dictionary,
-            (
-                const dictionary& dict,
-                const psiuMulticomponentThermo& ct
-            ),
-            (dict, ct)
-        );
+    TypeName("transport");
 
 
     // Constructors
 
-        //- Construct from dictionary and psiuMulticomponentThermo
-        laminarFlameSpeed
+        //- Construct from components
+        transport
         (
-            const dictionary&,
-            const psiuMulticomponentThermo&
+            const dictionary& dict,
+            const psiuMulticomponentThermo& thermo,
+            const fluidThermoThermophysicalTransportModel& turbulence
         );
 
         //- Disallow default bitwise copy construction
-        laminarFlameSpeed(const laminarFlameSpeed&) = delete;
-
-
-    // Selector
-
-        static autoPtr<laminarFlameSpeed> New
-        (
-            const dictionary&,
-            const psiuMulticomponentThermo&
-        );
+        transport(const transport&) = delete;
 
 
     //- Destructor
-    virtual ~laminarFlameSpeed();
+    virtual ~transport();
+
+
+    // Member Functions
+
+        //- Correct the laminar flame speed
+        virtual void correct();
 
 
     // Member Operators
 
-        //- Return the laminar flame speed [m/s]
-        virtual tmp<volScalarField> operator()() const = 0;
-
         //- Disallow default bitwise assignment
-        void operator=(const laminarFlameSpeed&) = delete;
+        void operator=(const transport&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace SuModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,37 +23,54 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "laminarFlameSpeed.H"
+#include "uniformConstantSu.H"
+#include "addToRunTimeSelectionTable.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-Foam::autoPtr<Foam::laminarFlameSpeed> Foam::laminarFlameSpeed::New
+namespace Foam
+{
+namespace SuModels
+{
+    defineTypeNameAndDebug(uniformConstant, 0);
+    addToRunTimeSelectionTable(SuModel, uniformConstant, dictionary);
+}
+}
+
+
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+bool Foam::SuModels::uniformConstant::readCoeffs(const dictionary& dict)
+{
+    SuModel::readCoeffs(dict);
+
+    Su_.read(dict);
+    SuModel::Su_ == Su_;
+
+    return true;
+}
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::SuModels::uniformConstant::uniformConstant
 (
     const dictionary& dict,
-    const psiuMulticomponentThermo& ct
+    const psiuMulticomponentThermo& thermo,
+    const fluidThermoThermophysicalTransportModel& turbulence
 )
+:
+    SuModel(thermo, turbulence),
+    Su_("Su", dimVelocity, dict)
 {
-    const word model(dict.lookup("model"));
-
-    Info<< "Selecting laminar flame speed model " << model << endl;
-
-    dictionaryConstructorTable::iterator cstrIter =
-        dictionaryConstructorTablePtr_->find(model);
-
-    if (cstrIter == dictionaryConstructorTablePtr_->end())
-    {
-        FatalIOErrorInFunction
-        (
-            dict
-        )   << "Unknown laminarFlameSpeed model "
-            << model << nl << nl
-            << "Valid laminarFlameSpeed types are :" << endl
-            << dictionaryConstructorTablePtr_->sortedToc()
-            << exit(FatalIOError);
-    }
-
-    return autoPtr<laminarFlameSpeed>(cstrIter()(dict, ct));
+    SuModel::Su_ == Su_;
 }
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::SuModels::uniformConstant::~uniformConstant()
+{}
 
 
 // ************************************************************************* //

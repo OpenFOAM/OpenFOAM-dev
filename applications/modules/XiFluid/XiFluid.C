@@ -60,24 +60,6 @@ Foam::solvers::XiFluid::XiFluid(fvMesh& mesh)
         true
     ),
 
-    unstrainedLaminarFlameSpeed(laminarFlameSpeed::New(thermo_)),
-
-    Su
-    (
-        IOobject
-        (
-            "Su",
-            runTime.name(),
-            mesh,
-            IOobject::MUST_READ,
-            IOobject::AUTO_WRITE
-        ),
-        mesh
-    ),
-
-    SuMin(0.01*Su.average()),
-    SuMax(4*Su.average()),
-
     combustionProperties
     (
         IOobject
@@ -90,12 +72,15 @@ Foam::solvers::XiFluid::XiFluid(fvMesh& mesh)
         )
     ),
 
-    SuModel
+    SuModel_
     (
-        combustionProperties.lookup("SuModel")
+        SuModel::New
+        (
+            combustionProperties,
+            thermo_,
+            thermophysicalTransport
+        )
     ),
-
-    sigmaExt("sigmaExt", dimless/dimTime, combustionProperties),
 
     XiModel_
     (
@@ -104,7 +89,7 @@ Foam::solvers::XiFluid::XiFluid(fvMesh& mesh)
             combustionProperties,
             thermo_,
             thermophysicalTransport,
-            Su
+            SuModel_->Su()
         )
     ),
 
@@ -112,6 +97,7 @@ Foam::solvers::XiFluid::XiFluid(fvMesh& mesh)
 
     thermo(thermo_),
     b(b_),
+    Su(SuModel_->Su()),
     Xi(XiModel_->Xi())
 {
     thermo.validate(type(), "ha", "ea");

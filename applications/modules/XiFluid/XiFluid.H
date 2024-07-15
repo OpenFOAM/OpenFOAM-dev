@@ -105,7 +105,7 @@ See also
 #include "psiuMulticomponentThermo.H"
 #include "RASThermophysicalTransportModel.H"
 #include "unityLewisEddyDiffusivity.H"
-#include "laminarFlameSpeed.H"
+#include "SuModel.H"
 #include "XiModel.H"
 #include "ignition.H"
 
@@ -158,28 +158,13 @@ protected:
 
     // Reactions
 
-        //- Laminar flame-speed model
-        autoPtr<laminarFlameSpeed> unstrainedLaminarFlameSpeed;
-
-        //- Laminar flame-speed field
-        volScalarField Su;
-
-        //- Minimum laminar flame-speed allowed for numerical stability
-        dimensionedScalar SuMin;
-
-        //- Maximum laminar flame-speed allowed for numerical stability
-        dimensionedScalar SuMax;
-
         //- Dictionary of combustion model coefficients
         IOdictionary combustionProperties;
 
-        //- Name of the strained laminar flame-speed model
-        word SuModel;
+        //- Strained laminar flame-speed model
+        autoPtr<SuModel> SuModel_;
 
-        //- Laminar flame extinction strain-rate
-        dimensionedScalar sigmaExt;
-
-        //- Laminar flame-speed model
+        //- Flame wrinkling model
         autoPtr<XiModel> XiModel_;
 
         //- Ignition model
@@ -234,7 +219,10 @@ public:
         //  obtained from the combustion mixture
         const volScalarField& b;
 
-        //- Flame wrinkling coefficient field
+        //- Laminar flame speed
+        const volScalarField& Su;
+
+        //- Flame wrinkling
         const volScalarField& Xi;
 
 

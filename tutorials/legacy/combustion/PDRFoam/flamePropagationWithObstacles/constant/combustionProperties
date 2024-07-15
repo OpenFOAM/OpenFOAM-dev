@@ -14,10 +14,15 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-laminarFlameSpeedCorrelation SCOPE;
+laminarFlameSpeed
+{
+    model       SCOPE;
+
+    fuel        Propane;
+    fuelFile    "fuels/propane.dat";
+}
 
 fuel        Propane;
-
 fuelFile    "fuels/propane.dat";
 
 ignite      yes;

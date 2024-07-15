@@ -1,3 +1,10 @@
+SuModels/SuModel/SuModel.C
+SuModels/SuModel/SuModelNew.C
+SuModels/uniformConstant/uniformConstantSu.C
+SuModels/unstrained/unstrained.C
+SuModels/linearEquilibrium/linearEquilibriumSu.C
+SuModels/transport/transportSu.C
+
 XiModels/XiModel/XiModel.C
 XiModels/XiModel/XiModelNew.C
 XiModels/uniformConstant/uniformConstant.C

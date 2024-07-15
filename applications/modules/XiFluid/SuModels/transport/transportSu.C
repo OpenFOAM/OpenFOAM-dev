@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "transport.H"
+#include "transportSu.H"
+#include "laminarFlameSpeed.H"
 #include "fvmDiv.H"
 #include "fvcLaplacian.H"
 #include "fvModels.H"
@@ -34,21 +35,21 @@ License
 
 namespace Foam
 {
-namespace XiModels
+namespace SuModels
 {
     defineTypeNameAndDebug(transport, 0);
-    addToRunTimeSelectionTable(XiModel, transport, dictionary);
+    addToRunTimeSelectionTable(SuModel, transport, dictionary);
 }
 }
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-bool Foam::XiModels::transport::readCoeffs(const dictionary& dict)
+bool Foam::SuModels::transport::readCoeffs(const dictionary& dict)
 {
-    XiModel::readCoeffs(dict);
+    SuModel::readCoeffs(dict);
 
-    XiShapeCoeff_ = dict.lookupOrDefault<scalar>("XiShapeCoeff", 1);
+    sigmaExt_.read(dict);
 
     return true;
 }
@@ -56,59 +57,41 @@ bool Foam::XiModels::transport::readCoeffs(const dictionary& dict)
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::XiModels::transport::transport
+Foam::SuModels::transport::transport
 (
     const dictionary& dict,
     const psiuMulticomponentThermo& thermo,
-    const fluidThermoThermophysicalTransportModel& turbulence,
-    const volScalarField& Su
+    const fluidThermoThermophysicalTransportModel& turbulence
 )
 :
-    XiModel(thermo, turbulence, Su),
-    XiShapeCoeff_(dict.lookupOrDefault<scalar>("XiShapeCoeff", 1)),
-    XiEqModel_(XiEqModel::New(dict, thermo, turbulence, Su)),
-    XiGModel_(XiGModel::New(dict, thermo, turbulence, Su))
+    unstrained(dict, thermo, turbulence),
+    sigmaExt_("sigmaExt", dimless/dimTime, dict),
+    SuMin_(0.01*Su_.average()),
+    SuMax_(4*Su_.average())
 {
-    Xi_.writeOpt() = IOobject::AUTO_WRITE;
+    Su_.writeOpt() = IOobject::AUTO_WRITE;
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::XiModels::transport::~transport()
+Foam::SuModels::transport::~transport()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField> Foam::XiModels::transport::Db() const
-{
-    return XiEqModel_->Db();
-}
-
-
-void Foam::XiModels::transport::correct()
+void Foam::SuModels::transport::correct()
 {
     const fvMesh& mesh(thermo_.mesh());
 
     const Foam::fvModels& fvModels(Foam::fvModels::New(mesh));
     const Foam::fvConstraints& fvConstraints(Foam::fvConstraints::New(mesh));
 
-    const volScalarField XiEqEta(XiEqModel_->XiEq());
-    const volScalarField GEta(XiGModel_->G());
-
-    const volScalarField R(GEta*XiEqEta/(XiEqEta - 0.999));
-
-    const volScalarField XiEqStar(R/(R - GEta));
-
-    const volScalarField XiEq
-    (
-        1 + (1 + (2*XiShapeCoeff_)*(0.5 - b_))*(XiEqStar - 1)
-    );
-
-    const volScalarField G(R*(XiEq - 1)/XiEq);
-
+    const volScalarField& rho = turbulence_.rho();
+    const volScalarField& b = thermo_.Y("b");
     const volScalarField& mgb = mesh.lookupObject<volScalarField>("mgb");
+    const volScalarField& Xi = mesh.lookupObject<volScalarField>("Xi");
     const surfaceScalarField& phiSt =
         mesh.lookupObject<surfaceScalarField>("phiSt");
     const volScalarField& Db = mesh.lookupObject<volScalarField>("Db");
@@ -120,58 +103,58 @@ void Foam::XiModels::transport::correct()
         "phiXi",
         phiSt
       + (
-          - fvc::interpolate(fvc::laplacian(Db, b_)/mgb)*nf
-          + fvc::interpolate(rho_)*fvc::interpolate(Su_*(1/Xi_ - Xi_))*nf
+          - fvc::interpolate(fvc::laplacian(Db, b)/mgb)*nf
+          + fvc::interpolate(rho)*fvc::interpolate(Su_*(1/Xi - Xi))*nf
         )
     );
 
     const surfaceScalarField& phi = turbulence_.alphaRhoPhi();
-
     const volVectorField& U(turbulence_.U());
-
-    const volVectorField Ut(U + Su_*Xi_*n);
-    const volScalarField sigmat((n & n)*fvc::div(Ut) - (n & fvc::grad(Ut) & n));
 
     const volScalarField sigmas
     (
-        ((n & n)*fvc::div(U) - (n & fvc::grad(U) & n))/Xi_
+        ((n & n)*fvc::div(U) - (n & fvc::grad(U) & n))/Xi
       + (
             (n & n)*fvc::div(Su_*n)
           - (n & fvc::grad(Su_*n) & n)
-        )*(Xi_ + scalar(1))/(2*Xi_)
+        )*(Xi + scalar(1))/(2*Xi)
     );
 
-    fvScalarMatrix XiEqn
+    const volScalarField Su0(Su0_()());
+
+    const volScalarField SuInf
     (
-        fvm::ddt(rho_, Xi_)
-      + fvm::div(phi + phiXi, Xi_, "div(phiXi,Xi)")
-      - fvm::Sp(fvc::div(phiXi), Xi_)
-     ==
-        rho_*R
-      - fvm::Sp(rho_*(R - G), Xi_)
-      - fvm::Sp
-        (
-            rho_*max
-            (
-                sigmat - sigmas,
-                dimensionedScalar(sigmat.dimensions(), 0)
-            ),
-            Xi_
-        )
-      + fvModels.source(rho_, Xi_)
+        Su0*max(scalar(1) - sigmas/sigmaExt_, scalar(0.01))
     );
 
-    XiEqn.relax();
+    const volScalarField Rc
+    (
+        (sigmas*SuInf*(Su0 - SuInf) + sqr(SuMin_)*sigmaExt_)
+        /(sqr(Su0 - SuInf) + sqr(SuMin_))
+    );
 
-    fvConstraints.constrain(XiEqn);
+    fvScalarMatrix SuEqn
+    (
+        fvm::ddt(rho, Su_)
+      + fvm::div(phi + phiXi, Su_, "div(phiXi,Su)")
+      - fvm::Sp(fvc::div(phiXi), Su_)
+      ==
+      - fvm::SuSp(-rho*Rc*Su0/Su_, Su_)
+      - fvm::SuSp(rho*(sigmas + Rc), Su_)
+      + fvModels.source(rho, Su_)
+    );
 
-    XiEqn.solve();
+    SuEqn.relax();
 
-    fvConstraints.constrain(Xi_);
+    fvConstraints.constrain(SuEqn);
 
-    // Limit range of Xi for realisability and stability
-    Xi_.max(1);
-    Xi_ = min(Xi_, 2*XiEq);
+    SuEqn.solve();
+
+    fvConstraints.constrain(Su_);
+
+    // Limit the maximum and minimum Su
+    Su_.min(SuMax_);
+    Su_.max(SuMin_);
 }
 
 

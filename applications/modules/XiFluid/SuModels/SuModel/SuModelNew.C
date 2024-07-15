@@ -23,36 +23,46 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "laminarFlameSpeed.H"
+#include "SuModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-Foam::autoPtr<Foam::laminarFlameSpeed> Foam::laminarFlameSpeed::New
+Foam::autoPtr<Foam::SuModel> Foam::SuModel::New
 (
-    const dictionary& dict,
-    const psiuMulticomponentThermo& ct
+    const dictionary& combustionProperties,
+    const psiuMulticomponentThermo& thermo,
+    const fluidThermoThermophysicalTransportModel& turbulence
 )
 {
-    const word model(dict.lookup("model"));
+    const dictionary& SuDict =
+        combustionProperties.subDict("laminarFlameSpeed");
 
-    Info<< "Selecting laminar flame speed model " << model << endl;
+    const word modelType(SuDict.lookup("model"));
+
+    Info<< "Selecting flame-wrinkling Su model " << modelType << endl;
 
     dictionaryConstructorTable::iterator cstrIter =
-        dictionaryConstructorTablePtr_->find(model);
+        dictionaryConstructorTablePtr_->find(modelType);
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalIOErrorInFunction
-        (
-            dict
-        )   << "Unknown laminarFlameSpeed model "
-            << model << nl << nl
-            << "Valid laminarFlameSpeed types are :" << endl
+        FatalErrorInFunction
+            << "Unknown Su model "
+            << modelType << nl << nl
+            << "Valid Su models are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()
-            << exit(FatalIOError);
+            << exit(FatalError);
     }
 
-    return autoPtr<laminarFlameSpeed>(cstrIter()(dict, ct));
+    return autoPtr<SuModel>
+    (
+        cstrIter()
+        (
+            SuDict.optionalSubDict(modelType + "Coeffs"),
+            thermo,
+            turbulence
+        )
+    );
 }
 
 
