@@ -92,23 +92,6 @@ if (ign.ignited())
 
     fvConstraints.constrain(b);
 
-    Info<< "min(b) = " << min(b).value() << endl;
-
-    if (thermo.containsSpecie("ft"))
-    {
-        volScalarField& ft = thermo.Y("ft");
-
-        Info<< "Combustion progress = "
-            << 100*(1.0 - b)().weightedAverage(mesh.V()*ft).value() << "%"
-            << endl;
-    }
-    else
-    {
-        Info<< "Combustion progress = "
-            << 100*(1.0 - b)().weightedAverage(mesh.V()).value() << "%"
-            << endl;
-    }
-
     // Correct the flame-wrinkling
     flameWrinkling->correct(mvConvection);
 
