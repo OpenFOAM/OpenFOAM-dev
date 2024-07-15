@@ -47,6 +47,11 @@ bool Foam::XiEqModels::Gulder::readCoeffs(const dictionary& dict)
     XiEqCoeff_ = dict.lookupOrDefault<scalar>("XiEqCoeff", 0.62);
     uPrimeCoeff_ = dict.lookupOrDefault<scalar>("uPrimeCoeff", 1);
 
+    if (dict.found("SuMin"))
+    {
+        SuMin_.read(dict);
+    }
+
     return true;
 }
 
@@ -61,10 +66,10 @@ Foam::XiEqModels::Gulder::Gulder
 )
 :
     XiEqModel(thermo, turbulence, Su),
-    XiEqCoeff_(dict.lookupOrDefault<scalar>("XiEqCoeff", 0.62)),
-    uPrimeCoeff_(dict.lookupOrDefault<scalar>("uPrimeCoeff", 1)),
-    SuMin_(0.01*Su.average())
-{}
+    SuMin_("SuMin", 0.01*Su.average())
+{
+    readCoeffs(dict);
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -96,7 +101,7 @@ Foam::tmp<Foam::volScalarField> Foam::XiEqModels::Gulder::XiEq() const
         )
     );
 
-    return (1 + XiEqCoeff_*sqrt(up/(Su_ + SuMin_))*Reta);
+    return (1 + XiEqCoeff_*sqrt(up/max(Su_, SuMin_))*Reta);
 }
 
 

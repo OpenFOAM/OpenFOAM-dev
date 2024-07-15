@@ -82,7 +82,7 @@ class Gulder
         scalar uPrimeCoeff_;
 
         //- Minimum laminar burning velocity
-        const dimensionedScalar SuMin_;
+        dimensionedScalar SuMin_;
 
 
 protected:
