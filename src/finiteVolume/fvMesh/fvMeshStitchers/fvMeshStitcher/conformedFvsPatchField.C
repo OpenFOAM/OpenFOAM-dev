@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -116,6 +116,27 @@ void Foam::conformedFvsPatchField<Type>::unconform
 
     const labelList origPatchIndices =
         nonConformalBoundary::New(iF.mesh()).allOrigPatchIndices();
+
+    // If this field does not contain conformed patch fields then it was
+    // created during the mesh change process, between un-stitch and stitch.
+    // The only field known for which this can happen is the Crank-Nicolson
+    // mesh flux. What we create here doesn't really matter all that much as
+    // subsequent steps will update this flux with the actual mesh flux, and
+    // there's plenty of handling elsewhere that maps that correctly. So,
+    // to get something vaguely sensible for the first time-step in which this
+    // flux exists, transfer values from the original faces to the
+    // non-conformal faces in proportion with their area ratios. This, at
+    // least, ensures that the total flux is preserved.
+    forAll(origPatchIndices, i)
+    {
+        const label origPatchi = origPatchIndices[i];
+
+        if (!isA<conformedFvsPatchField<Type>>(bF[origPatchi]))
+        {
+            bF = fvMeshStitcherTools::unconformedBoundaryField(bF, bF);
+            return;
+        }
+    }
 
     // Extract the conformed orig and non-conformal boundary fields from
     // the stored conformed patch fields

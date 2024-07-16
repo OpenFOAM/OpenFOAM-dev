@@ -1618,8 +1618,8 @@ bool Foam::fvMeshStitcher::disconnectThis
     // of the non-conformal patches being removed
     if (changing)
     {
-        preConformVolFields();
         preConformSurfaceFields();
+        preConformVolFields();
     }
 
     // Conform the mesh
@@ -1639,8 +1639,8 @@ bool Foam::fvMeshStitcher::disconnectThis
     }
 
     // Resize all the affected patch fields
-    resizePatchFields<VolField>();
     resizePatchFields<SurfaceField>();
+    resizePatchFields<VolField>();
 
     // Prevent hangs caused by processor cyclic patches using mesh geometry
     mesh_.deltaCoeffs();
@@ -1791,15 +1791,15 @@ bool Foam::fvMeshStitcher::connectThis
     }
 
     // Resize all the affected patch fields
-    resizePatchFields<VolField>();
     resizePatchFields<SurfaceField>();
+    resizePatchFields<VolField>();
 
     // Map the non-conformal patch field data back from the conformal faces and
     // into the new non-conformal patches
     if (changing)
     {
-        postUnconformVolFields();
         postUnconformSurfaceFields();
+        postUnconformVolFields();
     }
 
     // Prevent hangs caused by processor cyclic patches using mesh geometry
@@ -1827,7 +1827,7 @@ bool Foam::fvMeshStitcher::connectThis
         if (mesh_.moving())
         {
             // Create a boundary field of the imbalance between the mesh fluxes
-            // on either side of interfaces (like phiErrorb above)
+            // on either side of interfaces
             surfaceScalarField::Boundary mfe
             (
                 surfaceScalarField::Internal::null(),
@@ -1925,6 +1925,15 @@ bool Foam::fvMeshStitcher::connectThis
 }
 
 
+void Foam::fvMeshStitcher::preConformSurfaceFields()
+{
+    #define PreConformSurfaceFields(Type, nullArg) \
+        preConformSurfaceFields<Type>();
+    FOR_ALL_FIELD_TYPES(PreConformSurfaceFields);
+    #undef PreConformSurfaceFields
+}
+
+
 void Foam::fvMeshStitcher::preConformVolFields()
 {
     #define PreConformVolFields(Type, nullArg) \
@@ -1934,12 +1943,12 @@ void Foam::fvMeshStitcher::preConformVolFields()
 }
 
 
-void Foam::fvMeshStitcher::preConformSurfaceFields()
+void Foam::fvMeshStitcher::postUnconformSurfaceFields()
 {
-    #define PreConformSurfaceFields(Type, nullArg) \
-        preConformSurfaceFields<Type>();
-    FOR_ALL_FIELD_TYPES(PreConformSurfaceFields);
-    #undef PreConformSurfaceFields
+    #define PostUnconformSurfaceFields(Type, nullArg) \
+        postUnconformSurfaceFields<Type>();
+    FOR_ALL_FIELD_TYPES(PostUnconformSurfaceFields);
+    #undef PostUnconformSurfaceFields
 }
 
 
@@ -1993,15 +2002,6 @@ void Foam::fvMeshStitcher::postUnconformVolFields()
         postUnconformEvaluateVolFields<Type>();
     FOR_ALL_FIELD_TYPES(PostUnconformEvaluateVolFields);
     #undef PostUnconformEvaluateVolFields
-}
-
-
-void Foam::fvMeshStitcher::postUnconformSurfaceFields()
-{
-    #define PostUnconformSurfaceFields(Type, nullArg) \
-        postUnconformSurfaceFields<Type>();
-    FOR_ALL_FIELD_TYPES(PostUnconformSurfaceFields);
-    #undef PostUnconformSurfaceFields
 
     // Special handling for velocities. Recompute the surface velocity using an
     // interpolation of the volume velocity.

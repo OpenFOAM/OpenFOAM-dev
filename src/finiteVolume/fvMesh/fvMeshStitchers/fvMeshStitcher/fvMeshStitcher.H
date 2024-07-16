@@ -318,6 +318,16 @@ private:
             template<template<class> class GeoField>
             void resizePatchFields();
 
+            //- Pre-conform surface fields of a given type. This maps all the
+            //  non-conformal values to the original patch faces so that they
+            //  can be mapped across subsequent mesh changes. See
+            //  conformedFvsPatchField::conform for details.
+            template<class Type>
+            void preConformSurfaceFields();
+
+            //- Calls pre-conform surface field functions for all types
+            void preConformSurfaceFields();
+
             //- Pre-conform the volume fields of a given type. This maps all the
             //  non-conformal values to the original patch faces so that they
             //  can be mapped across subsequent mesh changes. See
@@ -328,15 +338,16 @@ private:
             //- Calls pre-conform volume field functions for all types
             void preConformVolFields();
 
-            //- Pre-conform surface fields of a given type. This maps all the
-            //  non-conformal values to the original patch faces so that they
-            //  can be mapped across subsequent mesh changes. See
-            //  conformedFvsPatchField::conform for details.
+            //- Post-unconform surface fields of a given type. This takes all
+            //  the non-conformal values which were mapped onto the conformal
+            //  faces by the pre-conform call and maps them back into the new
+            //  non-conformal faces. See conformedFvsPatchField::unconform for
+            //  details.
             template<class Type>
-            void preConformSurfaceFields();
+            void postUnconformSurfaceFields();
 
-            //- Calls pre-conform surface field functions for all types
-            void preConformSurfaceFields();
+            //- Calls post-unconform surface field functions for all types
+            void postUnconformSurfaceFields();
 
             //- Post-unconform volume fields of a given type. This takes all
             //  the non-conformal values which were mapped onto the conformal
@@ -352,17 +363,6 @@ private:
 
             //- Calls post-unconform volume field functions for all types
             void postUnconformVolFields();
-
-            //- Post-unconform surface fields of a given type. This takes all
-            //  the non-conformal values which were mapped onto the conformal
-            //  faces by the pre-conform call and maps them back into the new
-            //  non-conformal faces. See conformedFvsPatchField::unconform for
-            //  details.
-            template<class Type>
-            void postUnconformSurfaceFields();
-
-            //- Calls post-unconform surface field functions for all types
-            void postUnconformSurfaceFields();
 
 
 protected:

@@ -68,6 +68,26 @@ void Foam::fvMeshStitcher::resizePatchFields()
 
 
 template<class Type>
+void Foam::fvMeshStitcher::preConformSurfaceFields()
+{
+    UPtrList<SurfaceField<Type>> fields(mesh_.curFields<SurfaceField<Type>>());
+
+    forAll(fields, i)
+    {
+        SurfaceField<Type>& field = fields[i];
+
+        for (label ti=0; ti<=field.nOldTimes(false); ti++)
+        {
+            conformedFvsPatchField<Type>::conform
+            (
+                boundaryFieldRefNoUpdate(field.oldTime(ti))
+            );
+        }
+    }
+}
+
+
+template<class Type>
 void Foam::fvMeshStitcher::preConformVolFields()
 {
     UPtrList<VolField<Type>> fields(mesh_.curFields<VolField<Type>>());
@@ -88,7 +108,7 @@ void Foam::fvMeshStitcher::preConformVolFields()
 
 
 template<class Type>
-void Foam::fvMeshStitcher::preConformSurfaceFields()
+void Foam::fvMeshStitcher::postUnconformSurfaceFields()
 {
     UPtrList<SurfaceField<Type>> fields(mesh_.curFields<SurfaceField<Type>>());
 
@@ -98,7 +118,7 @@ void Foam::fvMeshStitcher::preConformSurfaceFields()
 
         for (label ti=0; ti<=field.nOldTimes(false); ti++)
         {
-            conformedFvsPatchField<Type>::conform
+            conformedFvsPatchField<Type>::unconform
             (
                 boundaryFieldRefNoUpdate(field.oldTime(ti))
             );
@@ -176,26 +196,6 @@ void Foam::fvMeshStitcher::postUnconformEvaluateVolFields()
             {
                 pf.evaluate(Pstream::defaultCommsType);
             }
-        }
-    }
-}
-
-
-template<class Type>
-void Foam::fvMeshStitcher::postUnconformSurfaceFields()
-{
-    UPtrList<SurfaceField<Type>> fields(mesh_.curFields<SurfaceField<Type>>());
-
-    forAll(fields, i)
-    {
-        SurfaceField<Type>& field = fields[i];
-
-        for (label ti=0; ti<=field.nOldTimes(false); ti++)
-        {
-            conformedFvsPatchField<Type>::unconform
-            (
-                boundaryFieldRefNoUpdate(field.oldTime(ti))
-            );
         }
     }
 }
