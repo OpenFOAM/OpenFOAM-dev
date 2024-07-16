@@ -14,15 +14,49 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-fuel            IsoOctane;
 
-Su              0;
+laminarFlameSpeed
+{
+    model           unstrained;
 
-SuModel         unstrained;
+    unstrainedLaminarFlameSpeed
+    {
+        model           Gulders;
 
-equivalenceRatio 1;
+        fuel            IsoOctane;
+        equivalenceRatio 1;
 
-sigmaExt        100000;
+        Methane
+        {
+            W               0.422;
+            eta             0.15;
+            xi              5.18;
+            alpha           2;
+            beta            -0.5;
+            f               2.3;
+        }
+
+        Propane
+        {
+            W               0.446;
+            eta             0.12;
+            xi              4.95;
+            alpha           1.77;
+            beta            -0.2;
+            f               2.3;
+        }
+
+        IsoOctane
+        {
+            W               0.4658;
+            eta             -0.326;
+            xi              4.48;
+            alpha           1.56;
+            beta            -0.22;
+            f               2.3;
+        }
+    }
+}
 
 flameWrinkling
 {
@@ -36,41 +70,6 @@ flameWrinkling
     generationRate
     {
         model           KTS;
-    }
-}
-
-laminarFlameSpeedCorrelation Gulders;
-
-GuldersCoeffs
-{
-    Methane
-    {
-        W               0.422;
-        eta             0.15;
-        xi              5.18;
-        alpha           2;
-        beta            -0.5;
-        f               2.3;
-    }
-
-    Propane
-    {
-        W               0.446;
-        eta             0.12;
-        xi              4.95;
-        alpha           1.77;
-        beta            -0.2;
-        f               2.3;
-    }
-
-    IsoOctane
-    {
-        W               0.4658;
-        eta             -0.326;
-        xi              4.48;
-        alpha           1.56;
-        beta            -0.22;
-        f               2.3;
     }
 }
 
