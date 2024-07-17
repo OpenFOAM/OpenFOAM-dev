@@ -182,12 +182,16 @@ protected:
             const volScalarField& Db
         );
 
-        //- Calculate and return the turbulent flame-speed kernel correction
-        dimensionedScalar StCorr
+        //- Apply the early kernel growth correction to the flame-wrinkling Xi
+        //  to compensate for the inaccurate flame surface area estimate
+        //  when the kernel is not fully-developed,
+        //  i.e. does not have a completely burnt side
+        tmp<volScalarField> XiCorr
         (
             const volScalarField& c,
             const surfaceScalarField& nf,
-            const dimensionedScalar& dMgb
+            const dimensionedScalar& dMgb,
+            const volScalarField& Xi
         ) const;
 
         //- Solve the Xi and regress variable equations

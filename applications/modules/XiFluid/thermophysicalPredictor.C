@@ -54,132 +54,129 @@ void Foam::solvers::XiFluid::ftSolve
 }
 
 
-Foam::dimensionedScalar Foam::solvers::XiFluid::StCorr
+Foam::tmp<Foam::volScalarField> Foam::solvers::XiFluid::XiCorr
 (
     const volScalarField& c,
     const surfaceScalarField& nf,
-    const dimensionedScalar& dMgb
+    const dimensionedScalar& dMgb,
+    const volScalarField& Xi
 ) const
 {
-    dimensionedScalar StCorr("StCorr", dimless, 1.0);
+    // Calculate volume of ignition kernel
+    const dimensionedScalar Vk
+    (
+        "Vk",
+        dimVolume,
+        gSum(c*mesh.V().primitiveField())
+    );
 
-    // if (ign.igniting())
+    // Radius of the ignition kernel
+    dimensionedScalar rk("rk", dimLength, 0.0);
+
+    // Area of the ignition kernel
+    dimensionedScalar Ak("Ak", dimArea, 0.0);
+
+    if (Vk.value() > small)
     {
-        // Calculate volume of ignition kernel
-        const dimensionedScalar Vk
+        // Calculate kernel area from its volume
+        // and the dimensionality of the case
+
+        switch(mesh.nGeometricD())
+        {
+            case 3:
+            {
+                // Assume it is part-spherical
+                const dimensionedScalar sphereFraction
+                (
+                    "ignitionSphereFraction",
+                    dimless,
+                    combustionProperties
+                );
+
+                rk = pow
+                    (
+                        (3.0/4.0)*Vk
+                       /(sphereFraction*constant::mathematical::pi),
+                        1.0/3.0
+                    );
+
+                Ak = sphereFraction*4*constant::mathematical::pi*sqr(rk);
+            }
+            break;
+
+            case 2:
+            {
+                // Assume it is part-cylindrical
+                const dimensionedScalar thickness
+                (
+                    "ignitionThickness",
+                    dimLength,
+                    combustionProperties
+                );
+
+                const dimensionedScalar circleFraction
+                (
+                    "ignitionCircleFraction",
+                    dimless,
+                    combustionProperties
+                );
+
+                rk = sqrt
+                (
+                    Vk
+                   /(
+                       circleFraction
+                      *constant::mathematical::pi
+                      *thickness
+                    )
+                );
+
+                Ak = circleFraction*2*constant::mathematical::pi*rk
+                    *thickness;
+            }
+            break;
+
+            case 1:
+                // Assume it is planar with given area
+                Ak = dimensionedScalar
+                (
+                    "ignitionKernelArea",
+                    dimArea,
+                    combustionProperties
+                );
+
+                rk = Vk/Ak;
+            break;
+        }
+
+        const dimensionedScalar maxXiCorrRadius
         (
-            "Vk",
-            dimVolume,
-            gSum(c*mesh.V().primitiveField())
+            "maxKernelCorrRadius",
+            dimLength,
+            combustionProperties
         );
 
-        // Radius of the ignition kernel
-        dimensionedScalar rk("rk", dimLength, 0.0);
-
-        // Area of the ignition kernel
-        dimensionedScalar Ak("Ak", dimArea, 0.0);
-
-        if (Vk.value() > small)
+        if (rk.value() < maxXiCorrRadius.value())
         {
-            // Calculate kernel area from its volume
-            // and the dimensionality of the case
-
-            switch(mesh.nGeometricD())
-            {
-                case 3:
-                {
-                    // Assume it is part-spherical
-                    const dimensionedScalar sphereFraction
-                    (
-                        "ignitionSphereFraction",
-                        dimless,
-                        combustionProperties
-                    );
-
-                    rk = pow
-                        (
-                            (3.0/4.0)*Vk
-                           /(sphereFraction*constant::mathematical::pi),
-                            1.0/3.0
-                        );
-
-                    Ak = sphereFraction*4*constant::mathematical::pi*sqr(rk);
-                }
-                break;
-
-                case 2:
-                {
-                    // Assume it is part-circular
-                    const dimensionedScalar thickness
-                    (
-                        "ignitionThickness",
-                        dimLength,
-                        combustionProperties
-                    );
-
-                    const dimensionedScalar circleFraction
-                    (
-                        "ignitionCircleFraction",
-                        dimless,
-                        combustionProperties
-                    );
-
-                    rk = sqrt
-                    (
-                        Vk
-                       /(
-                           circleFraction
-                          *constant::mathematical::pi
-                          *thickness
-                        )
-                    );
-
-                    Ak = circleFraction*2*constant::mathematical::pi*rk
-                        *thickness;
-                }
-                break;
-
-                case 1:
-                    // Assume it is plane or two planes
-                    Ak = dimensionedScalar
-                    (
-                        "ignitionKernelArea",
-                        dimArea,
-                        combustionProperties
-                    );
-
-                    rk = Vk/Ak;
-                break;
-            }
-
-            const dimensionedScalar maxStCorrRadius
+            // Calculate kernel area from b field consistent with the
+            // discretisation of the b equation.
+            const volScalarField mgb
             (
-                "maxStCorrRadius",
-                dimLength,
-                combustionProperties
+                fvc::div(nf, b, "div(phiSt,b)") - b*fvc::div(nf) + dMgb
+            );
+            const dimensionedScalar AkEst
+            (
+                gSum(mgb*mesh.V().primitiveField())
             );
 
-            if (rk.value() < maxStCorrRadius.value())
-            {
-                // Calculate kernel area from b field consistent with the
-                // discretisation of the b equation.
-                const volScalarField mgb
-                (
-                    fvc::div(nf, b, "div(phiSt,b)") - b*fvc::div(nf) + dMgb
-                );
-                const dimensionedScalar AkEst
-                (
-                    gSum(mgb*mesh.V().primitiveField())
-                );
+            const scalar XiCorr = max(min((Ak/AkEst).value(), 10.0), 1.0);
+            Info<< "XiCorr = " << XiCorr << endl;
 
-                StCorr.value() = max(min((Ak/AkEst).value(), 10.0), 1.0);
-
-                Info<< "StCorr = " << StCorr.value() << endl;
-            }
+            return XiCorr*Xi;
         }
     }
 
-    return StCorr;
+    return Xi;
 }
 
 
@@ -226,7 +223,7 @@ void Foam::solvers::XiFluid::bSolve
     const surfaceScalarField phiSt
     (
         "phiSt",
-        fvc::interpolate(rhou*StCorr(c, nf, dMgb)*Su*Xi)*nf
+        fvc::interpolate(rhou*Su*XiCorr(c, nf, dMgb, Xi))*nf
     );
 
     // Create b equation
