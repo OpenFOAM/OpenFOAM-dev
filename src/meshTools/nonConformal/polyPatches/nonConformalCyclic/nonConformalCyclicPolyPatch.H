@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,6 +73,10 @@ protected:
 
         //- Patch-to-patch rays engine
         mutable patchToPatches::rays rays_;
+
+        //- Do we need to re-calculate the mapping if mesh motion takes place?
+        //  Defaults to true.
+        const bool reMapAfterMove_;
 
 
     // Protected Member Functions

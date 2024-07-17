@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,7 +73,8 @@ Foam::nonConformalMappedPatchBase::nonConformalMappedPatchBase
     patch_(ncPp),
     owner_(calcOwner()),
     intersectionIsValid_(false),
-    intersection_(false)
+    intersection_(false),
+    reMapAfterMove_(true)
 {}
 
 
@@ -89,7 +90,8 @@ Foam::nonConformalMappedPatchBase::nonConformalMappedPatchBase
     patch_(ncPp),
     owner_(calcOwner()),
     intersectionIsValid_(false),
-    intersection_(false)
+    intersection_(false),
+    reMapAfterMove_(true)
 {}
 
 
@@ -104,7 +106,8 @@ Foam::nonConformalMappedPatchBase::nonConformalMappedPatchBase
     patch_(ncPp),
     owner_(calcOwner()),
     intersectionIsValid_(false),
-    intersection_(false)
+    intersection_(false),
+    reMapAfterMove_(dict.lookupOrDefault<bool>("reMapAfterMove", true))
 {}
 
 
@@ -118,7 +121,8 @@ Foam::nonConformalMappedPatchBase::nonConformalMappedPatchBase
     patch_(ncPp),
     owner_(calcOwner()),
     intersectionIsValid_(false),
-    intersection_(false)
+    intersection_(false),
+    reMapAfterMove_(mpb.reMapAfterMove_)
 {}
 
 
@@ -171,13 +175,17 @@ Foam::nonConformalMappedPatchBase::intersection() const
 
 void Foam::nonConformalMappedPatchBase::clearOut()
 {
-    intersectionIsValid_ = false;
+    if (reMapAfterMove_)
+    {
+        intersectionIsValid_ = false;
+    }
 }
 
 
 void Foam::nonConformalMappedPatchBase::write(Ostream& os) const
 {
     mappedPatchBaseBase::write(os);
+    writeEntryIfDifferent<bool>(os, "reMapAfterMove", true, reMapAfterMove_);
 }
 
 
