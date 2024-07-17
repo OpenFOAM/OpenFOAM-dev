@@ -162,6 +162,7 @@ $(faceZoneSources)/faceZoneToFaceZone/faceZoneToFaceZone.C
 $(faceZoneSources)/setsToFaceZone/setsToFaceZone.C
 $(faceZoneSources)/setToFaceZone/setToFaceZone.C
 $(faceZoneSources)/setAndNormalToFaceZone/setAndNormalToFaceZone.C
+$(faceZoneSources)/setAndPointToFaceZone/setAndPointToFaceZone.C
 $(faceZoneSources)/searchableSurfaceToFaceZone/searchableSurfaceToFaceZone.C
 $(faceZoneSources)/planeToFaceZone/planeToFaceZone.C
 

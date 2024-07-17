@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,8 +52,11 @@ namespace Foam
 void Foam::nonConformalCyclicPolyPatch::initCalcGeometry(PstreamBuffers& pBufs)
 {
     cyclicPolyPatch::initCalcGeometry(pBufs);
-    intersectionIsValid_ = false;
-    raysIsValid_ = false;
+    if (reMapAfterMove_)
+    {
+        intersectionIsValid_ = false;
+        raysIsValid_ = false;
+    }
 }
 
 
@@ -79,8 +82,11 @@ void Foam::nonConformalCyclicPolyPatch::initMovePoints
 )
 {
     cyclicPolyPatch::initMovePoints(pBufs, p);
-    intersectionIsValid_ = false;
-    raysIsValid_ = false;
+    if (reMapAfterMove_)
+    {
+        intersectionIsValid_ = false;
+        raysIsValid_ = false;
+    }
 }
 
 
@@ -131,7 +137,8 @@ Foam::nonConformalCyclicPolyPatch::nonConformalCyclicPolyPatch
     intersectionIsValid_(false),
     intersection_(false),
     raysIsValid_(false),
-    rays_(false)
+    rays_(false),
+    reMapAfterMove_(true)
 {}
 
 
@@ -163,7 +170,8 @@ Foam::nonConformalCyclicPolyPatch::nonConformalCyclicPolyPatch
     intersectionIsValid_(false),
     intersection_(false),
     raysIsValid_(false),
-    rays_(false)
+    rays_(false),
+    reMapAfterMove_(true)
 {}
 
 
@@ -181,7 +189,8 @@ Foam::nonConformalCyclicPolyPatch::nonConformalCyclicPolyPatch
     intersectionIsValid_(false),
     intersection_(false),
     raysIsValid_(false),
-    rays_(false)
+    rays_(false),
+    reMapAfterMove_(dict.lookupOrDefault<bool>("reMapAfterMove", true))
 {}
 
 
@@ -196,7 +205,8 @@ Foam::nonConformalCyclicPolyPatch::nonConformalCyclicPolyPatch
     intersectionIsValid_(false),
     intersection_(false),
     raysIsValid_(false),
-    rays_(false)
+    rays_(false),
+    reMapAfterMove_(pp.reMapAfterMove_)
 {}
 
 
@@ -216,7 +226,8 @@ Foam::nonConformalCyclicPolyPatch::nonConformalCyclicPolyPatch
     intersectionIsValid_(false),
     intersection_(false),
     raysIsValid_(false),
-    rays_(false)
+    rays_(false),
+    reMapAfterMove_(pp.reMapAfterMove_)
 {}
 
 
@@ -359,6 +370,7 @@ void Foam::nonConformalCyclicPolyPatch::write(Ostream& os) const
 {
     cyclicPolyPatch::write(os);
     nonConformalCoupledPolyPatch::write(os);
+    writeEntryIfDifferent<bool>(os, "reMapAfterMove", true, reMapAfterMove_);
 }
 
 

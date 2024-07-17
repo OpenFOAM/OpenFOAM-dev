@@ -22,7 +22,7 @@ mover
 
     motionSolver    solidBody;
 
-    cellZone        rotating;
+    select          all;
 
     solidBodyMotionFunction  rotatingMotion;
 

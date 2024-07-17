@@ -14,15 +14,13 @@ runApplication splitMeshRegions -cellZonesOnly -overwrite
 rm -f 0/cellToRegion 0/*/cellToRegion constant/cellToRegion
 
 runApplication -s fluid topoSet -dict system/topoSetDict -region fluid
-runApplication -s solid topoSet -dict system/topoSetDict -region solid
-runApplication -s roller topoSet -dict system/topoSetDict -region roller
 
 ! isTest "$@" && [ -n "$1" ] && mode=$1 || mode=parallel
 
 case $mode in
     serial)
         runApplication createNonConformalCouples -overwrite
-        runApplication foamRun
+        runApplication foamMultiRun
         ;;
     parallel | stitchSerial)
         runApplication createNonConformalCouples -overwrite

@@ -69,6 +69,10 @@ protected:
         //- Patch-to-patch intersection engine
         mutable patchToPatches::intersection intersection_;
 
+        //- Do we need to re-calculate the mapping if mesh motion takes place?
+        //  Defaults to true.
+        const bool reMapAfterMove_;
+
 
     // Protected Member Functions
 
