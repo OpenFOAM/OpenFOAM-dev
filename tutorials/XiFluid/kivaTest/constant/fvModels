@@ -21,8 +21,7 @@ ignition
     select          cellZone;
     cellZone        ignition;
 
-    start           -15 [CAD];
-    duration        20 [CAD];
+    duration        20;
     strength        2;
 }
 

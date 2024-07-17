@@ -37,7 +37,6 @@ Usage
         select          cellZone;
         cellZone        ignition;
 
-        start           0;
         duration        0.003;
         strength        2;
     }
@@ -46,7 +45,6 @@ Usage
     Where:
     \table
         Property     | Description             | Required    | Default value
-        start        | Ignition start time     | yes         |
         duration     | Ignition duration       | yes         |
         strength     | Ignition strength [1/s] | yes         |
     \endtable
