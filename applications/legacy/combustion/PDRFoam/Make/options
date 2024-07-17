@@ -19,12 +19,12 @@ EXE_INC = \
     -IPDRModels/XiGModels/basicXiSubG \
     -IPDRModels/turbulence/PDRkEpsilon \
     -IlaminarFlameSpeed/SCOPE \
+    -Iignition \
     -I$(LIB_SRC)/physicalProperties/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/multicomponentThermo/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/laminarFlameSpeed/lnInclude \
-    -I$(LIB_SRC)/thermophysicalModels/ignition/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/compressible/lnInclude \
     -I$(LIB_SRC)/ThermophysicalTransportModels/thermophysicalTransportModel/lnInclude \
@@ -43,7 +43,6 @@ EXE_LIBS = \
     -lcompressibleMomentumTransportModels \
     -lcoupledThermophysicalTransportModels \
     -llaminarFlameSpeedModels \
-    -lXiIgnition \
     -lfiniteVolume \
     -lfvModels \
     -lfvConstraints

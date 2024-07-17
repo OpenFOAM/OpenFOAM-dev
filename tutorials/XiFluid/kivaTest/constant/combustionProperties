@@ -73,26 +73,10 @@ flameWrinkling
     }
 }
 
-ignite          yes;
-
-ignitionSites
-(
-    {
-        location        (0.03 0 0.091);
-        diameter        0.002;
-        start           -15;
-        duration        20;
-        strength        4;
-    }
-);
+ignitionStart       -15;
 
 ignitionSphereFraction 1;
 
-ignitionThickness ignitionThickness [0 1 0 0 0 0 0] 0;
-
-ignitionCircleFraction 1;
-
-ignitionKernelArea ignitionKernelArea [0 2 0 0 0 0 0] 0;
-
+maxStCorrRadius     0.006;
 
 // ************************************************************************* //

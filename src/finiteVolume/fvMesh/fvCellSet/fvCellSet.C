@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,8 +30,6 @@ License
 
 void Foam::fvCellSet::setV()
 {
-    Info<< incrIndent;
-
     const labelUList cells(this->cells());
 
     V_ = 0;
@@ -40,12 +38,6 @@ void Foam::fvCellSet::setV()
         V_ += mesh_.V()[cells[i]];
     }
     reduce(V_, sumOp<scalar>());
-
-    Info<< indent
-        << "- selected " << returnReduce(cells.size(), sumOp<label>())
-        << " cell(s) with volume " << V_ << endl;
-
-    Info<< decrIndent;
 }
 
 

@@ -9,6 +9,8 @@ cloneCase moriyoshiHomogeneous moriyoshiHomogeneousHydrogen
 (
     cd moriyoshiHomogeneousHydrogen || exit 1
 
+    cp ../moriyoshiHomogeneous/Allrun .
+
     mv constant/physicalProperties \
         constant/physicalProperties.propane
     mv constant/physicalProperties.hydrogen \

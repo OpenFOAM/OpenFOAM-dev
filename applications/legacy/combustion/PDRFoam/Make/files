@@ -30,6 +30,11 @@ laminarFlameSpeed/SCOPE/SCOPELaminarFlameSpeed.C
 derivedFvPatchFields/activeBaffleVelocity/activeBaffleVelocityFvPatchVectorField.C
 derivedFvPatchFields/activePressureForceBaffleVelocity/activePressureForceBaffleVelocityFvPatchVectorField.C
 
+ignition/ignition.C
+ignition/ignitionIO.C
+ignition/ignitionSite.C
+ignition/ignitionSiteIO.C
+
 PDRFoam.C
 
 EXE = $(FOAM_APPBIN)/PDRFoam

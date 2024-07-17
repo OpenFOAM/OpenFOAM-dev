@@ -9,33 +9,28 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    location    "system";
-    object      functions;
+    object      topoSetDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-setDeltaT
-{
-    libs            ("libutilityFunctionObjects.so");
-
-    type            setTimeStep;
-
-    deltaT
+actions
+(
     {
-        type            table;
-        values
-        (
-            (-180 0.25)
-            (-15 0.025)
-        );
-        interpolationScheme step;
-        outOfBounds     clamp;
+        name    ignition;
+        type    cellSet;
+        action  new;
+        source  sphereToCell;
+        centre  (0.03 0.002 0.091);
+        radius  0.001;
     }
-}
 
-#includeFunc multiValveEngineState
-
-#includeFunc bXiProgress
-#includeFunc cellMin(b)
+    {
+        name    ignition;
+        type    cellZoneSet;
+        action  new;
+        source  setToCellZone;
+        set     ignition;
+    }
+);
 
 // ************************************************************************* //
