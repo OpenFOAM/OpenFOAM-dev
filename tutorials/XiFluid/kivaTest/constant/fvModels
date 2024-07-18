@@ -25,7 +25,11 @@ ignition
     duration        20;
     strength        2;
 
-    sphereFraction  1;
+    XiCorr
+    {
+        select          all;
+        sphereFraction  1;
+    }
 }
 
 
