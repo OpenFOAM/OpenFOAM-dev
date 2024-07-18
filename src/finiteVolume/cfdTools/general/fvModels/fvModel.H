@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -246,6 +246,9 @@ public:
 
             //- Return const access to the source name
             inline const word& name() const;
+
+            //- Return name as the keyword
+            inline const word& keyword() const;
 
             //- Return const access to the mesh database
             inline const fvMesh& mesh() const;

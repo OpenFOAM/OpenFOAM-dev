@@ -277,4 +277,58 @@ Foam::UPtrListDictionary<T2> Foam::PtrListDictionary<T>::convert()
 }
 
 
+template<class T>
+template<class T2>
+Foam::UPtrListDictionary<T2>
+Foam::PtrListDictionary<T>::lookupType()
+{
+    UPtrListDictionary<T2> result(this->size());
+
+    label n = 0;
+    forAll(*this, i)
+    {
+        if (isA<T2>(*this->operator()(i)))
+        {
+            result.set
+            (
+                n++,
+                this->operator()(i)->keyword(),
+                dynamic_cast<T2*>(this->operator()(i))
+            );
+        }
+    }
+
+    result.setSize(n);
+
+    return result;
+}
+
+
+template<class T>
+template<class T2>
+Foam::UPtrListDictionary<const T2>
+Foam::PtrListDictionary<T>::lookupType() const
+{
+    UPtrListDictionary<const T2> result(this->size());
+
+    label n = 0;
+    forAll(*this, i)
+    {
+        if (isA<T2>(*this->operator()(i)))
+        {
+            result.set
+            (
+                n++,
+                this->operator()(i)->keyword(),
+                dynamic_cast<const T2*>(this->operator()(i))
+            );
+        }
+    }
+
+    result.setSize(n);
+
+    return result;
+}
+
+
 // ************************************************************************* //

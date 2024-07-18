@@ -146,9 +146,17 @@ public:
 
         // Conversion
 
-            //- Convert to list of different pointer type
+            //- Convert to list of different type
             template<class T2>
             UPtrListDictionary<T2> convert();
+
+            //- Lookup and return the sub-list of the given type
+            template<class T2>
+            UPtrListDictionary<T2> lookupType();
+
+            //- Lookup and return the sub-list of the given type
+            template<class T2>
+            UPtrListDictionary<const T2> lookupType() const;
 
 
     // Member Operators
