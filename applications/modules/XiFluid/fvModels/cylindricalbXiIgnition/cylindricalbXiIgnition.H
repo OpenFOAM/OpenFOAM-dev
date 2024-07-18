@@ -41,8 +41,12 @@ Usage
         duration        0.003;
         strength        2;
 
-        thickness       0.001;
-        cylinderFraction 0.25;
+        XiCorr
+        {
+            select          all;
+            thickness       0.001;
+            cylinderFraction 0.25;
+        }
     }
     \endverbatim
 

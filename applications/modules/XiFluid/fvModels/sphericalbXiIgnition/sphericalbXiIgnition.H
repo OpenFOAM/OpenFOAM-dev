@@ -40,6 +40,12 @@ Usage
         start           0;
         duration        0.003;
         strength        2;
+
+        XiCorr
+        {
+            select          all;
+            sphereFraction  1;
+        }
     }
     \endverbatim
 
