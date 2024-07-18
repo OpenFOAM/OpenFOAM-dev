@@ -160,12 +160,6 @@ protected:
         //- Dictionary of combustion model coefficients
         IOdictionary combustionProperties;
 
-        //- Ignition start time
-        scalar ignitionStart_;
-
-        //- Ignition state
-        bool ignited_;
-
         //- Strained laminar flame-speed model
         autoPtr<SuModel> SuModel_;
 
@@ -188,10 +182,9 @@ protected:
         //  i.e. does not have a completely burnt side
         tmp<volScalarField> XiCorr
         (
-            const volScalarField& c,
+            const volScalarField& Xi,
             const surfaceScalarField& nf,
-            const dimensionedScalar& dMgb,
-            const volScalarField& Xi
+            const dimensionedScalar& dMgb
         ) const;
 
         //- Solve the Xi and regress variable equations
@@ -220,12 +213,6 @@ public:
 
         //- Reference to the fluid thermophysical properties
         const psiuMulticomponentThermo& thermo;
-
-        //- Reference to the ignition start time
-        const scalar& ignitionStart;
-
-        //- Reference to the ignition state
-        const bool& ignited;
 
         //- Reference to the combustion regress variable
         //  obtained from the combustion mixture

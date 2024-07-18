@@ -31,12 +31,5 @@ flameWrinkling
     }
 }
 
-ignitionStart       0;
-
-ignitionThickness   0.001;
-ignitionCircleFraction 0.5;
-
-maxKernelCorrRadius 0.015;
-
 
 // ************************************************************************* //

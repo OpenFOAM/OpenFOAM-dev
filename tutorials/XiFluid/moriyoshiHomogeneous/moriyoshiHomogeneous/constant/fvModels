@@ -16,13 +16,17 @@ FoamFile
 
 ignition
 {
-    type            constantIgnition;
+    type            cylindricalbXiIgnition;
 
     select          cellZone;
     cellZone        ignition;
 
+    start           0;
     duration        0.003;
     strength        2;
+
+    thickness       0.001;
+    cylinderFraction 0.25;
 }
 
 

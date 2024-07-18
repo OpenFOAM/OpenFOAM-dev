@@ -16,13 +16,16 @@ FoamFile
 
 ignition
 {
-    type            constantIgnition;
+    type            sphericalbXiIgnition;
 
     select          cellZone;
     cellZone        ignition;
 
+    start           -15;
     duration        20;
     strength        2;
+
+    sphereFraction  1;
 }
 
 

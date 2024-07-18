@@ -72,20 +72,6 @@ Foam::solvers::XiFluid::XiFluid(fvMesh& mesh)
         )
     ),
 
-    ignitionStart_
-    (
-        combustionProperties.lookup<scalar>
-        (
-            "ignitionStart",
-            mesh().time().userUnits()
-        )
-    ),
-
-    ignited_
-    (
-        mesh().time().value() - mesh().time().deltaTValue() >= ignitionStart_
-    ),
-
     SuModel_
     (
         SuModel::New
@@ -108,8 +94,6 @@ Foam::solvers::XiFluid::XiFluid(fvMesh& mesh)
     ),
 
     thermo(thermo_),
-    ignitionStart(ignitionStart_),
-    ignited(ignited_),
     b(b_),
     Su(SuModel_->Su()),
     Xi(XiModel_->Xi())
