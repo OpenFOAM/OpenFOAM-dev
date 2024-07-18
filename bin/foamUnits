@@ -73,7 +73,7 @@ cleanArg() {
 ### DIMENSIONS
 
 # Global
-dimDir="/opt/openfoam-dev/src/OpenFOAM/dimensionSet"
+dimDir="$FOAM_SRC/OpenFOAM/dimensionSet"
 
 setFile="$dimDir/dimensionSet.C"
 BASE_DIMS="$(sed -n "/names\[\]/,/}/p" "$setFile" | awk -F\" '{print $2}')"
