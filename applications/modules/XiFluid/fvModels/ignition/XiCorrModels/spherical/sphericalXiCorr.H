@@ -25,7 +25,7 @@ Class
     Foam::XiCorrModels::spherical
 
 Description
-    Planar ignition kernel flame-wrinkling correction model
+    Spherical ignition kernel flame-wrinkling correction model
 
 Usage
     Example usage:

@@ -25,7 +25,7 @@ Class
     Foam::XiCorrModels::cylindrical
 
 Description
-    Planar ignition kernel flame-wrinkling correction model
+    Cylindrical ignition kernel flame-wrinkling correction model
 
 Usage
     Example usage:
