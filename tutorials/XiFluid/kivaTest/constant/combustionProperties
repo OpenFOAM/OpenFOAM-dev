@@ -60,7 +60,7 @@ laminarFlameSpeed
 
 flameWrinkling
 {
-    model           transport;
+    model           linearEquilibrium;
 
     equilibrium
     {

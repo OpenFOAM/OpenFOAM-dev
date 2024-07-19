@@ -23,17 +23,17 @@ boundaryField
     piston
     {
         type            kqRWallFunction;
-        value           uniform 4;
+        value           $internalField;
     }
     liner
     {
         type            kqRWallFunction;
-        value           uniform 4;
+        value           $internalField;
     }
     cylinderHead
     {
         type            kqRWallFunction;
-        value           uniform 4;
+        value           $internalField;
     }
 }
 

@@ -26,7 +26,7 @@ boundaryField
         Cmu             0.09;
         kappa           0.41;
         E               9.8;
-        value           uniform 450;
+        value           $internalField;
     }
     liner
     {
@@ -34,7 +34,7 @@ boundaryField
         Cmu             0.09;
         kappa           0.41;
         E               9.8;
-        value           uniform 450;
+        value           $internalField;
     }
     cylinderHead
     {
@@ -42,7 +42,7 @@ boundaryField
         Cmu             0.09;
         kappa           0.41;
         E               9.8;
-        value           uniform 450;
+        value           $internalField;
     }
 }
 
