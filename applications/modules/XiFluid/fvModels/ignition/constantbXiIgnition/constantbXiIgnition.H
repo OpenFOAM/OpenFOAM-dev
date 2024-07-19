@@ -37,24 +37,33 @@ Usage
         select          cellZone;
         cellZone        ignition;
 
-        XiCorr
-        {
-            select          all;
-        }
-
         start           0;
         duration        0.003;
         strength        2;
+
+        XiCorr
+        {
+            type            spherical;
+            select          all;
+        }
     }
     \endverbatim
 
     Where:
     \table
-        Property     | Description             | Required    | Default value
-        start        | Ignition start time     | yes         |
-        duration     | Ignition duration       | yes         |
-        strength     | Ignition strength [1/s] | yes         |
+        Property     | Description                 | Required   | Default value
+        select       | Ignition cell set selection | yes        |
+        start        | Ignition start time         | yes        |
+        duration     | Ignition duration           | yes        |
+        strength     | Ignition strength [1/s]     | yes        |
+        XiCorr       | Flame-wrinkling correction  | yes        |
     \endtable
+
+See also
+    Foam::XiCorrModel
+    Foam::XiCorrModels::planar
+    Foam::XiCorrModels::cylindrical
+    Foam::XiCorrModels::spherical
 
 SourceFiles
     constantbXiIgnition.C
@@ -65,7 +74,7 @@ SourceFiles
 #define constantbXiIgnition_H
 
 #include "bXiIgnition.H"
-#include "fvCellSet.H"
+#include "XiCorrModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -87,8 +96,7 @@ class constantbXiIgnition
         //- The set of ignition cells
         fvCellSet set_;
 
-        //- The set of Xi correction cells
-        fvCellSet XiCorrSet_;
+        autoPtr<XiCorrModel> XiCorrModel_;
 
         //- Ignition start time
         scalar start_;
@@ -104,10 +112,6 @@ class constantbXiIgnition
 
         //- Non-virtual read
         void readCoeffs();
-
-        //- Return the area of the ignition kernel
-        //  calculated from the given kernel volume
-        virtual dimensionedScalar Ak(const dimensionedScalar& Vk) const = 0;
 
 
 public:

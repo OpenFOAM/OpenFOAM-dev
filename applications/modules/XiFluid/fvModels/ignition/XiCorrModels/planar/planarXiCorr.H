@@ -22,125 +22,100 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::planarbXiIgnition
+    Foam::XiCorrModels::planar
 
 Description
-    Simple constant rate ignition model for the Weller b-Xi combustion models
+    Planar ignition kernel flame-wrinkling correction model
 
 Usage
     Example usage:
     \verbatim
-    planarbXiIgnition1
+    XiCorr
     {
-        type            planarbXiIgnition;
-
-        select          cellZone;
-        cellZone        ignition;
-
-        start           0;
-        duration        0.003;
-        strength        2;
-
-        XiCorr
-        {
-            select          all;
-            area            1e-4;
-        }
+        type            planar;
+        select          all;
+        area            1e-4;
     }
     \endverbatim
 
     Where:
     \table
-        Property     | Description             | Required    | Default value
-        start        | Ignition start time     | yes         |
-        duration     | Ignition duration       | yes         |
-        strength     | Ignition strength [1/s] | yes         |
-        area         | Cross-sectional area of the 1D mesh | yes       |
+        Property   | Description                   | Required   | Default value
+        select     | Correction cell set selection | yes        |
+        area       | Cross-sectional area of the 1D mesh | yes  |
     \endtable
 
 SourceFiles
-    planarbXiIgnition.C
+    planar.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef planarbXiIgnition_H
-#define planarbXiIgnition_H
+#ifndef planarXiCorr_H
+#define planarXiCorr_H
 
-#include "constantbXiIgnition.H"
+#include "XiCorrModel.H"
+#include "dimensionedTypes.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace fv
+namespace XiCorrModels
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class planarbXiIgnition Declaration
+                           Class planar Declaration
 \*---------------------------------------------------------------------------*/
 
-class planarbXiIgnition
+class planar
 :
-    public constantbXiIgnition
+    public XiCorrModel
 {
     // Private Data
 
         //- Cross-sectional area of the 1D mesh
         dimensionedScalar area_;
 
+        //- Update coefficients from given dictionary
+        virtual bool readCoeffs(const dictionary& dict);
 
-    // Private Member Functions
 
-        //- Non-virtual read
-        void readCoeffs();
+public:
+
+    //- Runtime type information
+    TypeName("planar");
+
+
+    // Constructors
+
+        //- Construct from mesh and dictionary
+        planar(const fvMesh& mesh, const dictionary& dict);
+
+        //- Disallow default bitwise copy construction
+        planar(const planar&) = delete;
+
+
+    //- Destructor
+    virtual ~planar();
+
+
+    // Member Functions
 
         //- Return the area of the ignition kernel
         //  calculated from the given kernel volume
         virtual dimensionedScalar Ak(const dimensionedScalar& Vk) const;
 
 
-public:
-
-    //- Runtime type information
-    TypeName("planarbXiIgnition");
-
-
-    // Constructors
-
-        //- Construct from explicit source name and mesh
-        planarbXiIgnition
-        (
-            const word& name,
-            const word& modelType,
-            const fvMesh& mesh,
-            const dictionary& dict
-        );
-
-        //- Disallow default bitwise copy construction
-        planarbXiIgnition
-        (
-            const planarbXiIgnition&
-        ) = delete;
-
-
-    // Member Functions
-
-        // IO
-
-            //- Read source dictionary
-            virtual bool read(const dictionary& dict);
-
-
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const planarbXiIgnition&) = delete;
+        void operator=(const planar&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace fv
+} // End namespace XiCorrModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

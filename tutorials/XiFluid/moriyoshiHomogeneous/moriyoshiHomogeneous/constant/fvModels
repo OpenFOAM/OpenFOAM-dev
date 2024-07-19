@@ -16,7 +16,7 @@ FoamFile
 
 ignition
 {
-    type            cylindricalbXiIgnition;
+    type            constantbXiIgnition;
 
     select          cellZone;
     cellZone        ignition;
@@ -27,6 +27,7 @@ ignition
 
     XiCorr
     {
+        type            cylindrical;
         select          all;
         thickness       0.001;
         cylinderFraction 0.25;

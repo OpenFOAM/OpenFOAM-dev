@@ -23,59 +23,56 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "cylindricalbXiIgnition.H"
+#include "cylindricalXiCorr.H"
 #include "addToRunTimeSelectionTable.H"
 
-// * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    namespace fv
-    {
-        defineTypeNameAndDebug(cylindricalbXiIgnition, 0);
-
-        addToRunTimeSelectionTable
-        (
-            fvModel,
-            cylindricalbXiIgnition,
-            dictionary
-        );
-    }
+namespace XiCorrModels
+{
+    defineTypeNameAndDebug(cylindrical, 0);
+    addToRunTimeSelectionTable(XiCorrModel, cylindrical, dictionary);
+}
 }
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::cylindricalbXiIgnition::readCoeffs()
+bool Foam::XiCorrModels::cylindrical::readCoeffs(const dictionary& dict)
 {
-    const dictionary& XiCorrCoeffs(coeffs().subDict("XiCorr"));
-
-    thickness_.read(XiCorrCoeffs);
-    cylinderFraction_.readIfPresent(XiCorrCoeffs);
+    thickness_.read(dict);
+    cylinderFraction_.readIfPresent(dict);
+    return true;
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fv::cylindricalbXiIgnition::cylindricalbXiIgnition
+Foam::XiCorrModels::cylindrical::cylindrical
 (
-    const word& name,
-    const word& modelType,
     const fvMesh& mesh,
     const dictionary& dict
 )
 :
-    constantbXiIgnition(name, modelType, mesh, dict),
+    XiCorrModel(mesh, dict),
     thickness_("thickness", dimLength, 0),
     cylinderFraction_("cylinderFraction", dimless, 1)
 {
-    readCoeffs();
+    readCoeffs(dict);
 }
 
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::dimensionedScalar Foam::fv::cylindricalbXiIgnition::Ak
+Foam::XiCorrModels::cylindrical::~cylindrical()
+{}
+
+
+// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
+Foam::dimensionedScalar Foam::XiCorrModels::cylindrical::Ak
 (
     const dimensionedScalar& Vk
 ) const
@@ -88,22 +85,6 @@ Foam::dimensionedScalar Foam::fv::cylindricalbXiIgnition::Ak
 
     // Return area of the ignition kernel
     return cylinderFraction_*2*constant::mathematical::pi*rk*thickness_;
-}
-
-
-bool Foam::fv::cylindricalbXiIgnition::read(const dictionary& dict)
-{
-    if (constantbXiIgnition::read(dict))
-    {
-        readCoeffs();
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-
-    return false;
 }
 
 

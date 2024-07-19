@@ -32,6 +32,13 @@ namespace Foam
     namespace fv
     {
         defineTypeNameAndDebug(constantbXiIgnition, 0);
+
+        addToRunTimeSelectionTable
+        (
+            fvModel,
+            constantbXiIgnition,
+            dictionary
+        );
     }
 }
 
@@ -58,7 +65,7 @@ Foam::fv::constantbXiIgnition::constantbXiIgnition
 :
     bXiIgnition(name, modelType, mesh, dict),
     set_(mesh, coeffs()),
-    XiCorrSet_(mesh, coeffs().subDict("XiCorr"))
+    XiCorrModel_(XiCorrModel::New(mesh, coeffs()))
 {
     readCoeffs();
 }
@@ -125,31 +132,9 @@ void Foam::fv::constantbXiIgnition::XiCorr
     const volScalarField& mgb
 ) const
 {
-    if (!igniting()) return;
-
-    // Calculate volume of ignition kernel
-    const dimensionedScalar Vk
-    (
-        "Vk",
-        dimVolume,
-        gSum((1.0 - b)*mesh().V().primitiveField())
-    );
-
-    if (Vk.value() > small)
+    if (igniting())
     {
-        // Calculate kernel area from its volume
-        const dimensionedScalar Ak(this->Ak(Vk));
-
-        // Calculate kernel area from b field
-        const dimensionedScalar AkEst
-        (
-            gSum(mgb*mesh().V().primitiveField())
-        );
-
-        const scalar XiCorr = max(min((Ak/AkEst).value(), 10.0), 1.0);
-        Info<< "XiCorr = " << XiCorr << endl;
-
-        Xi *= XiCorr;
+        XiCorrModel_->XiCorr(Xi, b, mgb);
     }
 }
 
@@ -160,12 +145,14 @@ void Foam::fv::constantbXiIgnition::topoChange
 )
 {
     set_.topoChange(map);
+    XiCorrModel_->topoChange(map);
 }
 
 
 void Foam::fv::constantbXiIgnition::mapMesh(const polyMeshMap& map)
 {
     set_.mapMesh(map);
+    XiCorrModel_->mapMesh(map);
 }
 
 
@@ -175,12 +162,14 @@ void Foam::fv::constantbXiIgnition::distribute
 )
 {
     set_.distribute(map);
+    XiCorrModel_->distribute(map);
 }
 
 
 bool Foam::fv::constantbXiIgnition::movePoints()
 {
     set_.movePoints();
+    XiCorrModel_->movePoints();
     return true;
 }
 
@@ -190,7 +179,7 @@ bool Foam::fv::constantbXiIgnition::read(const dictionary& dict)
     if (fvModel::read(dict))
     {
         set_.read(coeffs());
-        XiCorrSet_.read(coeffs().subDict("XiCorr"));
+        XiCorrModel_->read(coeffs());
         readCoeffs();
         return true;
     }

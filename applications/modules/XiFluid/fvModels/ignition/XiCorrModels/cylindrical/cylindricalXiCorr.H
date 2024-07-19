@@ -22,68 +22,56 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::cylindricalbXiIgnition
+    Foam::XiCorrModels::cylindrical
 
 Description
-    Simple constant rate ignition model for the Weller b-Xi combustion models
+    Planar ignition kernel flame-wrinkling correction model
 
 Usage
     Example usage:
     \verbatim
-    cylindricalbXiIgnition1
+    XiCorr
     {
-        type            cylindricalbXiIgnition;
-
-        select          cellZone;
-        cellZone        ignition;
-
-        start           0;
-        duration        0.003;
-        strength        2;
-
-        XiCorr
-        {
-            select          all;
-            thickness       0.001;
-            cylinderFraction 0.25;
-        }
+        type            cylindrical;
+        select          all;
+        thickness       0.001;
+        cylinderFraction 0.25;
     }
     \endverbatim
 
     Where:
     \table
         Property         | Description              | Required  | Default value
-        start            | Ignition start time      | yes       |
-        duration         | Ignition duration        | yes       |
-        strength         | Ignition strength [1/s]  | yes       |
+        select           | Correction cell set selection | yes        |
         thickness        | Thickness of the 2D mesh | yes       |
         cylinderFraction | Kernel cylinder fraction | no        | 1
     \endtable
 
 SourceFiles
-    cylindricalbXiIgnition.C
+    cylindrical.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef cylindricalbXiIgnition_H
-#define cylindricalbXiIgnition_H
+#ifndef cylindricalXiCorr_H
+#define cylindricalXiCorr_H
 
-#include "constantbXiIgnition.H"
+#include "XiCorrModel.H"
+#include "dimensionedTypes.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace fv
+namespace XiCorrModels
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class cylindricalbXiIgnition Declaration
+                           Class cylindrical Declaration
 \*---------------------------------------------------------------------------*/
 
-class cylindricalbXiIgnition
+class cylindrical
 :
-    public constantbXiIgnition
+    public XiCorrModel
 {
     // Private Data
 
@@ -94,59 +82,46 @@ class cylindricalbXiIgnition
         //  If the ignition is adjacent to n symmetry planes: 1/2^n
         dimensionedScalar cylinderFraction_;
 
+        //- Update coefficients from given dictionary
+        virtual bool readCoeffs(const dictionary& dict);
 
-    // Private Member Functions
 
-        //- Non-virtual read
-        void readCoeffs();
+public:
+
+    //- Runtime type information
+    TypeName("cylindrical");
+
+
+    // Constructors
+
+        //- Construct from mesh and dictionary
+        cylindrical(const fvMesh& mesh, const dictionary& dict);
+
+        //- Disallow default bitwise copy construction
+        cylindrical(const cylindrical&) = delete;
+
+
+    //- Destructor
+    virtual ~cylindrical();
+
+
+    // Member Functions
 
         //- Return the area of the ignition kernel
         //  calculated from the given kernel volume
         virtual dimensionedScalar Ak(const dimensionedScalar& Vk) const;
 
 
-public:
-
-    //- Runtime type information
-    TypeName("cylindricalbXiIgnition");
-
-
-    // Constructors
-
-        //- Construct from explicit source name and mesh
-        cylindricalbXiIgnition
-        (
-            const word& name,
-            const word& modelType,
-            const fvMesh& mesh,
-            const dictionary& dict
-        );
-
-        //- Disallow default bitwise copy construction
-        cylindricalbXiIgnition
-        (
-            const cylindricalbXiIgnition&
-        ) = delete;
-
-
-    // Member Functions
-
-        // IO
-
-            //- Read source dictionary
-            virtual bool read(const dictionary& dict);
-
-
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const cylindricalbXiIgnition&) = delete;
+        void operator=(const cylindrical&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace fv
+} // End namespace XiCorrModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

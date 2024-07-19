@@ -23,11 +23,14 @@ XiModels/XiGModels/XiGModel/XiGModelNew.C
 XiModels/XiGModels/KTS/KTS.C
 XiModels/XiGModels/instabilityG/instabilityG.C
 
-fvModels/bXiIgnition/bXiIgnition.C
-fvModels/constantbXiIgnition/constantbXiIgnition.C
-fvModels/planarbXiIgnition/planarbXiIgnition.C
-fvModels/cylindricalbXiIgnition/cylindricalbXiIgnition.C
-fvModels/sphericalbXiIgnition/sphericalbXiIgnition.C
+fvModels/ignition/XiCorrModels/XiCorrModel/XiCorrModel.C
+fvModels/ignition/XiCorrModels/XiCorrModel/XiCorrModelNew.C
+fvModels/ignition/XiCorrModels/planar/planarXiCorr.C
+fvModels/ignition/XiCorrModels/cylindrical/cylindricalXiCorr.C
+fvModels/ignition/XiCorrModels/spherical/sphericalXiCorr.C
+
+fvModels/ignition/bXiIgnition/bXiIgnition.C
+fvModels/ignition/constantbXiIgnition/constantbXiIgnition.C
 
 XiFluid.C
 thermophysicalPredictor.C

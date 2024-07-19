@@ -22,100 +22,101 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::bXiIgnition
+    Foam::XiCorrModels::spherical
 
 Description
-    Abstract base-class for ignition model for the Weller b-Xi combustion models
+    Planar ignition kernel flame-wrinkling correction model
+
+Usage
+    Example usage:
+    \verbatim
+    XiCorr
+    {
+        type            spherical;
+        select          all;
+        sphereFraction  1;
+    }
+    \endverbatim
+
+    Where:
+    \table
+        Property       | Description             | Required  | Default value
+        select         | Correction cell set selection | yes      |
+        sphereFraction | Kernel sphere fraction  | no        | 1
+    \endtable
 
 SourceFiles
-    bXiIgnition.C
+    spherical.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef bXiIgnition_H
-#define bXiIgnition_H
+#ifndef sphericalXiCorr_H
+#define sphericalXiCorr_H
 
-#include "fvModel.H"
-#include "XiFluid.H"
+#include "XiCorrModel.H"
+#include "dimensionedTypes.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace fv
+namespace XiCorrModels
 {
 
 /*---------------------------------------------------------------------------*\
-               Class bXiIgnition Declaration
+                           Class spherical Declaration
 \*---------------------------------------------------------------------------*/
 
-class bXiIgnition
+class spherical
 :
-    public fvModel
+    public XiCorrModel
 {
     // Private Data
 
-        //- The XiFluid solver
-        const solvers::XiFluid& XiFluid_;
+        //- Kernel sphere fraction
+        //  If the ignition is adjacent to n symmetry planes: 1/2^n
+        dimensionedScalar sphereFraction_;
+
+        //- Update coefficients from given dictionary
+        virtual bool readCoeffs(const dictionary& dict);
 
 
 public:
 
     //- Runtime type information
-    TypeName("bXiIgnition");
+    TypeName("spherical");
 
 
     // Constructors
 
-        //- Construct from explicit source name and mesh
-        bXiIgnition
-        (
-            const word& name,
-            const word& modelType,
-            const fvMesh& mesh,
-            const dictionary& dict
-        );
+        //- Construct from mesh and dictionary
+        spherical(const fvMesh& mesh, const dictionary& dict);
 
         //- Disallow default bitwise copy construction
-        bXiIgnition
-        (
-            const bXiIgnition&
-        ) = delete;
+        spherical(const spherical&) = delete;
+
+
+    //- Destructor
+    virtual ~spherical();
 
 
     // Member Functions
 
-        // Checks
-
-            //- Return the list of fields for which the option adds source term
-            //  to the transport equation
-            virtual wordList addSupFields() const;
-
-            virtual bool igniting() const = 0;
-
-            virtual bool ignited() const = 0;
-
-
-        // Add explicit and implicit contributions to compressible equation
-
-            virtual void XiCorr
-            (
-                volScalarField& Xi,
-                const volScalarField& b,
-                const volScalarField& mgb
-            ) const = 0;
+        //- Return the area of the ignition kernel
+        //  calculated from the given kernel volume
+        virtual dimensionedScalar Ak(const dimensionedScalar& Vk) const;
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const bXiIgnition&) = delete;
+        void operator=(const spherical&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace fv
+} // End namespace XiCorrModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

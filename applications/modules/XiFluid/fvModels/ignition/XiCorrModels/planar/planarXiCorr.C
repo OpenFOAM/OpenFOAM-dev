@@ -23,78 +23,58 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "planarbXiIgnition.H"
+#include "planarXiCorr.H"
 #include "addToRunTimeSelectionTable.H"
 
-// * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    namespace fv
-    {
-        defineTypeNameAndDebug(planarbXiIgnition, 0);
-
-        addToRunTimeSelectionTable
-        (
-            fvModel,
-            planarbXiIgnition,
-            dictionary
-        );
-    }
+namespace XiCorrModels
+{
+    defineTypeNameAndDebug(planar, 0);
+    addToRunTimeSelectionTable(XiCorrModel, planar, dictionary);
+}
 }
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::planarbXiIgnition::readCoeffs()
+bool Foam::XiCorrModels::planar::readCoeffs(const dictionary& dict)
 {
-    const dictionary& XiCorrCoeffs(coeffs().subDict("XiCorr"));
-
-    area_.read(XiCorrCoeffs);
+    area_.read(dict);
+    return true;
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fv::planarbXiIgnition::planarbXiIgnition
+Foam::XiCorrModels::planar::planar
 (
-    const word& name,
-    const word& modelType,
     const fvMesh& mesh,
     const dictionary& dict
 )
 :
-    constantbXiIgnition(name, modelType, mesh, dict),
-    area_("area", dimLength, 0)
+    XiCorrModel(mesh, dict)
 {
-    readCoeffs();
+    readCoeffs(dict);
 }
 
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::dimensionedScalar Foam::fv::planarbXiIgnition::Ak
+Foam::XiCorrModels::planar::~planar()
+{}
+
+
+// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
+Foam::dimensionedScalar Foam::XiCorrModels::planar::Ak
 (
     const dimensionedScalar& Vk
 ) const
 {
     return area_;
-}
-
-
-bool Foam::fv::planarbXiIgnition::read(const dictionary& dict)
-{
-    if (constantbXiIgnition::read(dict))
-    {
-        readCoeffs();
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-
-    return false;
 }
 
 

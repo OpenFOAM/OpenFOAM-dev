@@ -16,7 +16,7 @@ FoamFile
 
 ignition
 {
-    type            sphericalbXiIgnition;
+    type            constantbXiIgnition;
 
     select          cellZone;
     cellZone        ignition;
@@ -27,8 +27,8 @@ ignition
 
     XiCorr
     {
+        type            spherical;
         select          all;
-        sphereFraction  1;
     }
 }
 
