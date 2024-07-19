@@ -42,6 +42,7 @@ namespace XiCorrModels
 
 bool Foam::XiCorrModels::cylindrical::readCoeffs(const dictionary& dict)
 {
+    XiCorrModel::readCoeffs(dict);
     thickness_.read(dict);
     cylinderFraction_.readIfPresent(dict);
     return true;

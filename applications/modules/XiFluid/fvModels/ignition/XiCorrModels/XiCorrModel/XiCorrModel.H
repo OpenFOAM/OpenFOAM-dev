@@ -27,6 +27,24 @@ Class
 Description
     Base class for ignition kernel flame wrinkling \c Xi correction
 
+Usage
+    Example usage:
+    \verbatim
+    XiCorr
+    {
+        type            <type>;
+        select          all;
+        bMin            0.05;
+    }
+    \endverbatim
+
+    Where:
+    \table
+        Property         | Description              | Required  | Default value
+        select           | Correction cell set selection | yes  |
+        bMin             | Min b below which no correction | no | 0.01
+    \endtable
+
 SourceFiles
     XiCorrModel.C
 
@@ -55,8 +73,15 @@ class XiCorrModel
         //- The set of Xi correction cells
         fvCellSet set_;
 
+        //- Minimum b below which the Xi correction is not applied
+        //  Defaults to 0.01
+        scalar bMin_;
+
+
+protected:
+
         //- Update coefficients from given dictionary
-        virtual bool readCoeffs(const dictionary& dict) = 0;
+        virtual bool readCoeffs(const dictionary& dict);
 
 
 public:

@@ -43,6 +43,7 @@ Usage
         Property   | Description                   | Required   | Default value
         select     | Correction cell set selection | yes        |
         area       | Cross-sectional area of the 1D mesh | yes  |
+        bMin       | Min b below which no correction | no | 0.01
     \endtable
 
 SourceFiles

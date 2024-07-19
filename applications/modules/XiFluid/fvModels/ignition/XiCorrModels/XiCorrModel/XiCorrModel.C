@@ -39,6 +39,7 @@ namespace Foam
 
 bool Foam::XiCorrModel::readCoeffs(const dictionary& dict)
 {
+    bMin_ = dict.lookupOrDefault<scalar>("bMin", 0.01);
     return true;
 }
 
@@ -52,7 +53,9 @@ Foam::XiCorrModel::XiCorrModel
 )
 :
     set_(mesh, dict)
-{}
+{
+    readCoeffs(dict);
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -70,29 +73,40 @@ void Foam::XiCorrModel::XiCorr
     const volScalarField& mgb
 ) const
 {
-    // Calculate volume of ignition kernel
-    const dimensionedScalar Vk
-    (
-        "Vk",
-        dimVolume,
-        gSum((1.0 - b)*b.mesh().V().primitiveField())
-    );
+    const labelUList cells = set_.cells();
+    const scalarField bCells(b, cells);
 
-    if (Vk.value() > small)
+    scalar bMin = min(bCells);
+    reduce(bMin, minOp<scalar>());
+
+    if (bMin > bMin_)
     {
-        // Calculate kernel area from its volume
-        const dimensionedScalar Ak(this->Ak(Vk));
+        const scalarField Vcells(b.mesh().V(), cells);
 
-        // Calculate kernel area from b field
-        const dimensionedScalar AkEst
+        // Calculate volume of ignition kernel
+        const dimensionedScalar Vk
         (
-            gSum(mgb*b.mesh().V().primitiveField())
+            "Vk",
+            dimVolume,
+            gSum((1 - bCells)*Vcells)
         );
 
-        const scalar XiCorr = max(min((Ak/AkEst).value(), 10.0), 1.0);
-        Info<< "XiCorr = " << XiCorr << endl;
+        if (Vk.value() > small)
+        {
+            // Calculate kernel area from its volume
+            const dimensionedScalar Ak(this->Ak(Vk));
 
-        Xi *= XiCorr;
+            const scalarField mgbCells(mgb, cells);
+
+            // Calculate kernel area from b field
+            const dimensionedScalar AkEst(gSum(mgbCells*Vcells));
+
+            const scalar XiCorr = max(min((Ak/AkEst).value(), 10.0), 1.0);
+
+            Info<< "XiCorr = " << XiCorr << ", bMin = " << bMin << endl;
+
+            Xi *= XiCorr;
+        }
     }
 }
 

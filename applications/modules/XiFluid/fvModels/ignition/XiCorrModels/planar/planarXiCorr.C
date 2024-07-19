@@ -42,6 +42,7 @@ namespace XiCorrModels
 
 bool Foam::XiCorrModels::planar::readCoeffs(const dictionary& dict)
 {
+    XiCorrModel::readCoeffs(dict);
     area_.read(dict);
     return true;
 }

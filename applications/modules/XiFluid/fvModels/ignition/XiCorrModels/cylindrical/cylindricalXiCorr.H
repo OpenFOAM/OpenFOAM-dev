@@ -45,6 +45,7 @@ Usage
         select           | Correction cell set selection | yes        |
         thickness        | Thickness of the 2D mesh | yes       |
         cylinderFraction | Kernel cylinder fraction | no        | 1
+        bMin             | Min b below which no correction | no | 0.01
     \endtable
 
 SourceFiles
@@ -81,6 +82,9 @@ class cylindrical
         //- Kernel cylinder fraction
         //  If the ignition is adjacent to n symmetry planes: 1/2^n
         dimensionedScalar cylinderFraction_;
+
+
+protected:
 
         //- Update coefficients from given dictionary
         virtual bool readCoeffs(const dictionary& dict);

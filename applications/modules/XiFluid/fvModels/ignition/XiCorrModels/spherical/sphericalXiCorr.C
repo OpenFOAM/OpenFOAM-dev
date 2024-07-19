@@ -42,6 +42,7 @@ namespace XiCorrModels
 
 bool Foam::XiCorrModels::spherical::readCoeffs(const dictionary& dict)
 {
+    XiCorrModel::readCoeffs(dict);
     sphereFraction_.readIfPresent(dict);
     return true;
 }

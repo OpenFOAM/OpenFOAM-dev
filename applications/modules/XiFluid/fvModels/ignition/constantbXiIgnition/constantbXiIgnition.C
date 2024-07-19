@@ -75,23 +75,23 @@ Foam::fv::constantbXiIgnition::constantbXiIgnition
 
 bool Foam::fv::constantbXiIgnition::igniting() const
 {
-    scalar curTime = mesh().time().value();
-    scalar deltaT = mesh().time().deltaTValue();
+    const scalar curTime = mesh().time().value();
+    const scalar deltaT = mesh().time().deltaTValue();
 
     return
     (
-        (curTime - deltaT >= start_)
-     && (curTime - deltaT < start_ + max(duration_, deltaT) + small)
+        (curTime > start_ - 0.5*deltaT)
+     && (curTime < start_ + max(duration_, deltaT))
     );
 }
 
 
 bool Foam::fv::constantbXiIgnition::ignited() const
 {
-    scalar curTime = mesh().time().value();
-    scalar deltaT = mesh().time().deltaTValue();
+    const scalar curTime = mesh().time().value();
+    const scalar deltaT = mesh().time().deltaTValue();
 
-    return (curTime - deltaT >= start_);
+    return (curTime > start_ - 0.5*deltaT);
 }
 
 
