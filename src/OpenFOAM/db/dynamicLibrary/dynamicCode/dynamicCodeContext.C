@@ -84,7 +84,7 @@ Foam::dynamicCodeContext::dynamicCodeContext
     if (optionsPtr)
     {
         options_ = stringOps::trim(verbatimString(optionsPtr->stream()));
-        stringOps::inplaceExpandCodeString(options_, dict, word::null);
+        stringOps::inplaceExpandCodeString(options_, dict.parent(), word::null);
     }
 
     // Libs
@@ -92,7 +92,7 @@ Foam::dynamicCodeContext::dynamicCodeContext
     if (libsPtr)
     {
         libs_ = stringOps::trim(verbatimString(libsPtr->stream()));
-        stringOps::inplaceExpandCodeString(libs_, dict, word::null);
+        stringOps::inplaceExpandCodeString(libs_, dict.parent(), word::null);
     }
 
     // Calculate SHA1 digest from all entries
