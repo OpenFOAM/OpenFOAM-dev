@@ -36,6 +36,12 @@ d
 }
 e   #calc "$a / $d/b";
 
+// Access to higher-level sub-entries using the "../" operators, e.g.
+f
+{
+    g #calc "$a / $../d/b";
+}
+
 s   "field";
 fieldName #calc "$<string>s + \"Name\"";
 
