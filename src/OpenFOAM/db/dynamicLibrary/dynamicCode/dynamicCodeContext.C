@@ -65,7 +65,12 @@ Foam::dynamicCodeContext::dynamicCodeContext
         if (codePtrs[i])
         {
             string s(stringOps::trim(verbatimString(codePtrs[i]->stream())));
-            stringOps::inplaceExpandCodeString(s, dict, codeDictVars[i]);
+            stringOps::inplaceExpandCodeString
+            (
+                s,
+                dict.parent(), // Lookup variables in the code parent dictionary
+                codeDictVars[i]
+            );
             code_.insert(key, s);
         }
         else
