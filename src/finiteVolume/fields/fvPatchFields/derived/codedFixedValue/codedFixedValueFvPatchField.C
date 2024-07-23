@@ -24,11 +24,9 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "codedFixedValueFvPatchField.H"
-#include "addToRunTimeSelectionTable.H"
-#include "fieldMapper.H"
-#include "volFields.H"
 #include "dynamicCode.H"
 #include "dynamicCodeContext.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -115,9 +113,7 @@ Foam::codedFixedValueFvPatchField<Type>::codedFixedValueFvPatchField
     fixedValueFvPatchField<Type>(p, iF, dict),
     codedBase(dict),
     redirectPatchFieldPtr_()
-{
-    updateLibrary();
-}
+{}
 
 
 template<class Type>
@@ -156,6 +152,9 @@ Foam::codedFixedValueFvPatchField<Type>::redirectPatchField() const
 {
     if (!redirectPatchFieldPtr_.valid())
     {
+        // Make sure library containing user-defined fvPatchField is up-to-date
+        updateLibrary();
+
         OStringStream os;
         writeEntry(os, "type", codeName());
 
@@ -192,9 +191,6 @@ void Foam::codedFixedValueFvPatchField<Type>::updateCoeffs()
         return;
     }
 
-    // Make sure library containing user-defined fvPatchField is up-to-date
-    updateLibrary();
-
     const fvPatchField<Type>& fvp = redirectPatchField();
 
     const_cast<fvPatchField<Type>&>(fvp).updateCoeffs();
@@ -212,9 +208,6 @@ void Foam::codedFixedValueFvPatchField<Type>::evaluate
     const Pstream::commsTypes commsType
 )
 {
-    // Make sure library containing user-defined fvPatchField is up-to-date
-    updateLibrary();
-
     const fvPatchField<Type>& fvp = redirectPatchField();
 
     const_cast<fvPatchField<Type>&>(fvp).evaluate(commsType);

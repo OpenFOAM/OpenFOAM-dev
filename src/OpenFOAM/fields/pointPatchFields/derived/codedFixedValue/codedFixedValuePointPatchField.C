@@ -131,9 +131,7 @@ Foam::codedFixedValuePointPatchField<Type>::codedFixedValuePointPatchField
     fixedValuePointPatchField<Type>(p, iF, dict),
     codedBase(dict),
     redirectPatchFieldPtr_()
-{
-    updateLibrary();
-}
+{}
 
 
 template<class Type>
@@ -157,6 +155,10 @@ Foam::codedFixedValuePointPatchField<Type>::redirectPatchField() const
 {
     if (!redirectPatchFieldPtr_.valid())
     {
+        // Make sure library containing user-defined pointPatchField
+        // is up-to-date
+        updateLibrary();
+
         OStringStream os;
         writeEntry(os, "type", codeName());
         writeEntry(os, "value", static_cast<const Field<Type>&>(*this));
@@ -186,9 +188,6 @@ void Foam::codedFixedValuePointPatchField<Type>::updateCoeffs()
         return;
     }
 
-    // Make sure library containing user-defined pointPatchField is up-to-date
-    updateLibrary();
-
     const pointPatchField<Type>& fvp = redirectPatchField();
 
     const_cast<pointPatchField<Type>&>(fvp).updateCoeffs();
@@ -206,9 +205,6 @@ void Foam::codedFixedValuePointPatchField<Type>::evaluate
     const Pstream::commsTypes commsType
 )
 {
-    // Make sure library containing user-defined pointPatchField is up-to-date
-    updateLibrary();
-
     const pointPatchField<Type>& fvp = redirectPatchField();
 
     const_cast<pointPatchField<Type>&>(fvp).evaluate(commsType);

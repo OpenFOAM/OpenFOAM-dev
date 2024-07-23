@@ -24,8 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "codedMixedFvPatchField.H"
-#include "fieldMapper.H"
-#include "volFields.H"
 #include "dynamicCode.H"
 #include "dynamicCodeContext.H"
 #include "addToRunTimeSelectionTable.H"
@@ -115,9 +113,7 @@ Foam::codedMixedFvPatchField<Type>::codedMixedFvPatchField
     mixedFvPatchField<Type>(p, iF, dict),
     codedBase(dict),
     redirectPatchFieldPtr_()
-{
-    updateLibrary();
-}
+{}
 
 
 template<class Type>
@@ -156,6 +152,9 @@ Foam::codedMixedFvPatchField<Type>::redirectPatchField() const
 {
     if (!redirectPatchFieldPtr_.valid())
     {
+        // Make sure library containing user-defined fvPatchField is up-to-date
+        updateLibrary();
+
         OStringStream os;
         mixedFvPatchField<Type>::write(os);
         IStringStream is(os.str());
@@ -191,9 +190,6 @@ void Foam::codedMixedFvPatchField<Type>::updateCoeffs()
         return;
     }
 
-    // Make sure library containing user-defined fvPatchField is up-to-date
-    updateLibrary();
-
     const mixedFvPatchField<Type>& fvp = redirectPatchField();
 
     const_cast<mixedFvPatchField<Type>&>(fvp).updateCoeffs();
@@ -213,9 +209,6 @@ void Foam::codedMixedFvPatchField<Type>::evaluate
     const Pstream::commsTypes commsType
 )
 {
-    // Make sure library containing user-defined fvPatchField is up-to-date
-    updateLibrary();
-
     const mixedFvPatchField<Type>& fvp = redirectPatchField();
 
     // - updates the value of fvp (though not used)
