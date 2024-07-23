@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "codedFvModel.H"
-#include "fvMesh.H"
 #include "fvMatrices.H"
 #include "dynamicCode.H"
 #include "dynamicCodeContext.H"
@@ -102,27 +101,9 @@ void Foam::fv::codedFvModel::prepare
 }
 
 
-const Foam::word& Foam::fv::codedFvModel::codeName() const
-{
-    return name();
-}
-
-
-Foam::string Foam::fv::codedFvModel::description() const
-{
-    return "fvModel:: " + name();
-}
-
-
 void Foam::fv::codedFvModel::clearRedirect() const
 {
     redirectFvModelPtr_.clear();
-}
-
-
-const Foam::dictionary& Foam::fv::codedFvModel::codeDict() const
-{
-    return coeffs();
 }
 
 

@@ -97,20 +97,20 @@ protected:
 
     // Protected Member Functions
 
+        //- Name of the dynamically generated CodedType
+        const word& codeName() const;
+
+        //- Return a description (type + name) for the output
+        string description() const;
+
+        //- Get the dictionary to initialise the codeContext
+        const dictionary& codeDict() const;
+
         //- Update library as required
         void updateLibrary() const;
 
         //- Update library from given updated dictionary as required
         void updateLibrary(const dictionary& dict) const;
-
-        //- Name of the dynamically generated CodedType
-        virtual const word& codeName() const;
-
-        //- Return a description (type + name) for the output
-        virtual string description() const;
-
-        //- Get the dictionary to initialise the codeContext
-        virtual const dictionary& codeDict() const;
 
         //- Get the keywords associated with source code
         virtual wordList codeKeys() const = 0;

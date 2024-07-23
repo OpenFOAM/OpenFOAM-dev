@@ -191,12 +191,6 @@ void Foam::codedBase::unloadLibrary
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::string Foam::codedBase::description() const
-{
-    return this->type() + " " + codeName();
-}
-
-
 void Foam::codedBase::createLibrary
 (
     dynamicCode& dynCode,
@@ -308,6 +302,24 @@ void Foam::codedBase::createLibrary
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
+const Foam::word& Foam::codedBase::codeName() const
+{
+    return codeName_;
+}
+
+
+Foam::string Foam::codedBase::description() const
+{
+    return this->type() + " " + codeName();
+}
+
+
+const Foam::dictionary& Foam::codedBase::codeDict() const
+{
+    return dict_;
+}
+
+
 void Foam::codedBase::updateLibrary() const
 {
     const word& name = codeName();
@@ -374,18 +386,6 @@ void Foam::codedBase::updateLibrary(const dictionary& dict) const
 {
     dict_ = dict;
     updateLibrary();
-}
-
-
-const Foam::word& Foam::codedBase::codeName() const
-{
-    return codeName_;
-}
-
-
-const Foam::dictionary& Foam::codedBase::codeDict() const
-{
-    return dict_;
 }
 
 
