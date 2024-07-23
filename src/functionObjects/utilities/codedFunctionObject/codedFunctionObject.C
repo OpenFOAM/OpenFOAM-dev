@@ -170,36 +170,39 @@ Foam::functionObject& Foam::codedFunctionObject::redirectFunctionObject() const
 
 Foam::wordList Foam::codedFunctionObject::fields() const
 {
-    updateLibrary();
     return redirectFunctionObject().fields();
 }
 
 
 bool Foam::codedFunctionObject::execute()
 {
-    updateLibrary();
     return redirectFunctionObject().execute();
 }
 
 
 bool Foam::codedFunctionObject::write()
 {
-    updateLibrary();
     return redirectFunctionObject().write();
 }
 
 
 bool Foam::codedFunctionObject::end()
 {
-    updateLibrary();
     return redirectFunctionObject().end();
 }
 
 
 bool Foam::codedFunctionObject::read(const dictionary& dict)
 {
-    updateLibrary();
-    return functionObject::read(dict) && redirectFunctionObject().read(dict);
+    if (functionObject::read(dict))
+    {
+        updateLibrary(dict);
+        return redirectFunctionObject().read(dict);
+    }
+    else
+    {
+        return false;
+    }
 }
 
 

@@ -47,11 +47,6 @@ namespace fv
 void Foam::fv::codedFvModel::readCoeffs()
 {
     fieldName_ = coeffs().lookup<word>("field");
-
-    if (fieldPrimitiveTypeName() != word::null)
-    {
-        updateLibrary();
-    }
 }
 
 
@@ -188,7 +183,6 @@ void Foam::fv::codedFvModel::addSupType
             Info<< "codedFvModel::addSup for source " << name() << endl;
         }
 
-        updateLibrary();
         redirectFvModel().addSup(field, eqn);
     }
 }
@@ -209,7 +203,6 @@ void Foam::fv::codedFvModel::addSupType
             Info<< "codedFvModel::addSup for source " << name() << endl;
         }
 
-        updateLibrary();
         redirectFvModel().addSup(rho, field, eqn);
     }
 }
@@ -231,7 +224,6 @@ void Foam::fv::codedFvModel::addSupType
             Info<< "codedFvModel::addSup for source " << name() << endl;
         }
 
-        updateLibrary();
         redirectFvModel().addSup(alpha, rho, field, eqn);
     }
 }
@@ -248,9 +240,14 @@ Foam::fv::codedFvModel::codedFvModel
 )
 :
     fvModel(name, modelType, mesh, dict),
+    codedBase(name, coeffs()),
     fieldName_(word::null)
 {
     readCoeffs();
+    if (fieldPrimitiveTypeName() != word::null)
+    {
+        updateLibrary(coeffs());
+    }
 }
 
 
@@ -304,6 +301,10 @@ bool Foam::fv::codedFvModel::read(const dictionary& dict)
     if (fvModel::read(dict))
     {
         readCoeffs();
+        if (fieldPrimitiveTypeName() != word::null)
+        {
+            updateLibrary(coeffs());
+        }
         return true;
     }
     else

@@ -370,6 +370,13 @@ void Foam::codedBase::updateLibrary() const
 }
 
 
+void Foam::codedBase::updateLibrary(const dictionary& dict) const
+{
+    dict_ = dict;
+    updateLibrary();
+}
+
+
 const Foam::word& Foam::codedBase::codeName() const
 {
     return codeName_;
@@ -383,10 +390,6 @@ const Foam::dictionary& Foam::codedBase::codeDict() const
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::codedBase::codedBase()
-{}
-
 
 Foam::codedBase::codedBase(const word& name, const dictionary& dict)
 :
