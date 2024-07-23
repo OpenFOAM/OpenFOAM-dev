@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -135,16 +135,30 @@ public:
             //  this tet. The normal of the tri points out of the cell.
             inline triFace faceTriIs(const polyMesh& mesh) const;
 
+            //- Return the geometry corresponding to this tet and the given
+            //  mesh-points and cell-centre fields
+            inline tetPointRef tet
+            (
+                const polyMesh& mesh,
+                const pointField& meshPoints,
+                const pointField& cellCentres
+            ) const;
+
             //- Return the geometry corresponding to this tet
             inline tetPointRef tet(const polyMesh& mesh) const;
 
             //- Return the geometry corresponding to the tri on the face for
-            //  this tet. The normal of the tri points out of the cell.
-            inline triPointRef faceTri(const polyMesh& mesh) const;
+            //  this tet and a given mesh-points field. The normal of the tri
+            //  points out of the cell.
+            inline triPointRef faceTri
+            (
+                const polyMesh& mesh,
+                const pointField& meshPoints
+            ) const;
 
             //- Return the geometry corresponding to the tri on the face for
-            //  this tet using the old positions.
-            inline triPointRef oldFaceTri(const polyMesh& mesh) const;
+            //  this tet. The normal of the tri points out of the cell.
+            inline triPointRef faceTri(const polyMesh& mesh) const;
 
 
     // Member Operators

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -105,14 +105,41 @@ inline Foam::triFace Foam::tetIndices::faceTriIs(const polyMesh& mesh) const
 }
 
 
-inline Foam::tetPointRef Foam::tetIndices::tet(const polyMesh& mesh) const
+inline Foam::tetPointRef Foam::tetIndices::tet
+(
+    const polyMesh& mesh,
+    const pointField& meshPoints,
+    const pointField& cellCentres
+) const
 {
-    const pointField& meshPoints = mesh.points();
     const triFace tri = faceTriIs(mesh);
 
     return tetPointRef
     (
-        mesh.cellCentres()[cell()],
+        cellCentres[cell()],
+        meshPoints[tri[0]],
+        meshPoints[tri[1]],
+        meshPoints[tri[2]]
+    );
+}
+
+
+inline Foam::tetPointRef Foam::tetIndices::tet(const polyMesh& mesh) const
+{
+    return tet(mesh, mesh.points(), mesh.cellCentres());
+}
+
+
+inline Foam::triPointRef Foam::tetIndices::faceTri
+(
+    const polyMesh& mesh,
+    const pointField& meshPoints
+) const
+{
+    const triFace tri = faceTriIs(mesh);
+
+    return triPointRef
+    (
         meshPoints[tri[0]],
         meshPoints[tri[1]],
         meshPoints[tri[2]]
@@ -122,32 +149,7 @@ inline Foam::tetPointRef Foam::tetIndices::tet(const polyMesh& mesh) const
 
 inline Foam::triPointRef Foam::tetIndices::faceTri(const polyMesh& mesh) const
 {
-    const pointField& meshPoints = mesh.points();
-    const triFace tri = faceTriIs(mesh);
-
-    return triPointRef
-    (
-        meshPoints[tri[0]],
-        meshPoints[tri[1]],
-        meshPoints[tri[2]]
-    );
-}
-
-
-inline Foam::triPointRef Foam::tetIndices::oldFaceTri
-(
-    const polyMesh& mesh
-) const
-{
-    const pointField& meshOldPoints = mesh.oldPoints();
-    const triFace tri = faceTriIs(mesh);
-
-    return triPointRef
-    (
-        meshOldPoints[tri[0]],
-        meshOldPoints[tri[1]],
-        meshOldPoints[tri[2]]
-    );
+    return faceTri(mesh, mesh.points());
 }
 
 
