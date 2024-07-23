@@ -85,13 +85,14 @@ bool Foam::functionEntries::codeStream::masterOnlyRead
 Foam::functionEntries::codeStream::streamingFunctionType
 Foam::functionEntries::codeStream::getFunction
 (
-    const dictionary& parentDict,
+    const dictionary& contextDict,
     const dictionary& codeDict
 )
 {
     // Get code, codeInclude, ...
     const dynamicCodeContext context
     (
+        contextDict,
         codeDict,
         {"code", "codeInclude", "localCode"},
         {"dict", word::null, word::null}
@@ -162,7 +163,7 @@ Foam::functionEntries::codeStream::getFunction
                 {
                     FatalIOErrorInFunction
                     (
-                        parentDict
+                        contextDict
                     )   << "Failed writing files for" << nl
                         << dynCode.libRelPath() << nl
                         << exit(FatalIOError);
@@ -173,7 +174,7 @@ Foam::functionEntries::codeStream::getFunction
             {
                 FatalIOErrorInFunction
                 (
-                    parentDict
+                    contextDict
                 )   << "Failed wmake " << dynCode.libRelPath() << nl
                     << exit(FatalIOError);
             }
@@ -182,7 +183,7 @@ Foam::functionEntries::codeStream::getFunction
         // Only block if not master only reading of a global dictionary
         if
         (
-           !masterOnlyRead(parentDict)
+           !masterOnlyRead(contextDict)
          && regIOobject::fileModificationSkew > 0
         )
         {
@@ -224,7 +225,7 @@ Foam::functionEntries::codeStream::getFunction
                 {
                     FatalIOErrorInFunction
                     (
-                        parentDict
+                        contextDict
                     )   << "Cannot read (NFS mounted) library " << nl
                         << libPath << nl
                         << "on processor " << Pstream::myProcNo()
@@ -272,7 +273,7 @@ Foam::functionEntries::codeStream::getFunction
     {
         FatalIOErrorInFunction
         (
-            parentDict
+            contextDict
         )   << "Failed loading library " << libPath << nl
             << "Did you add all libraries to the 'libs' entry"
             << " in system/controlDict?"
@@ -280,7 +281,7 @@ Foam::functionEntries::codeStream::getFunction
     }
 
     bool haveLib = lib;
-    if (!masterOnlyRead(parentDict))
+    if (!masterOnlyRead(contextDict))
     {
         reduce(haveLib, andOp<bool>());
     }
@@ -289,7 +290,7 @@ Foam::functionEntries::codeStream::getFunction
     {
         FatalIOErrorInFunction
         (
-            parentDict
+            contextDict
         )   << "Failed loading library " << libPath
             << " on some processors."
             << exit(FatalIOError);
@@ -308,7 +309,7 @@ Foam::functionEntries::codeStream::getFunction
     {
         FatalIOErrorInFunction
         (
-            parentDict
+            contextDict
         )   << "Failed looking up symbol " << dynCode.codeName()
             << " in library " << lib << exit(FatalIOError);
     }
@@ -319,31 +320,31 @@ Foam::functionEntries::codeStream::getFunction
 
 Foam::string Foam::functionEntries::codeStream::run
 (
-    const dictionary& parentDict,
+    const dictionary& contextDict,
     Istream& is
 )
 {
     if (debug)
     {
         Info<< "Using #codeStream at line " << is.lineNumber()
-            << " in file " <<  parentDict.name() << endl;
+            << " in file " <<  contextDict.name() << endl;
     }
 
     dynamicCode::checkSecurity
     (
         "functionEntries::codeStream::execute(..)",
-        parentDict
+        contextDict
     );
 
     // Construct codeDict for codeStream
     // Parent dictionary provided for string expansion and variable substitution
-    const dictionary codeDict("#codeStream", parentDict, is);
+    const dictionary codeDict("#codeStream", contextDict, is);
 
-    const streamingFunctionType function = getFunction(parentDict, codeDict);
+    const streamingFunctionType function = getFunction(contextDict, codeDict);
 
     // Use function to write stream
     OStringStream os(is.format());
-    (*function)(os, parentDict);
+    (*function)(os, contextDict);
 
     // Return the string containing the results of the code execution
     return os.str();
@@ -354,22 +355,22 @@ Foam::string Foam::functionEntries::codeStream::run
 
 bool Foam::functionEntries::codeStream::execute
 (
-    dictionary& parentDict,
+    dictionary& contextDict,
     Istream& is
 )
 {
-    return insert(parentDict, run(parentDict, is));
+    return insert(contextDict, run(contextDict, is));
 }
 
 
 bool Foam::functionEntries::codeStream::execute
 (
-    const dictionary& parentDict,
+    const dictionary& contextDict,
     primitiveEntry& thisEntry,
     Istream& is
 )
 {
-    return insert(parentDict, thisEntry, run(parentDict, is));
+    return insert(contextDict, thisEntry, run(contextDict, is));
 }
 
 

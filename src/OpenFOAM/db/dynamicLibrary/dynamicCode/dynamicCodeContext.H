@@ -52,8 +52,8 @@ class dynamicCodeContext
 {
     // Private Data
 
-        //- The parent dictionary context
-        const dictionary& dict_;
+        //- The context dictionary
+        const dictionary& contextDict_;
 
         //- Code entries
         HashTable<string> code_;
@@ -84,11 +84,21 @@ public:
 
     // Constructors
 
-        //- Construct from a dictionary and lists of which entries correspond
-        //  to code
+        //- Construct from the context and code dictionaries
+        //  and lists of which entries correspond to code
         dynamicCodeContext
         (
-            const dictionary& dict,
+            const dictionary& contextDict,
+            const dictionary& codeDict,
+            const wordList& codeKeys,
+            const wordList& codeDictVars
+        );
+
+        //- Construct from the context dictionary also containing the code
+        //  and lists of which entries correspond
+        dynamicCodeContext
+        (
+            const dictionary& contextDict,
             const wordList& codeKeys,
             const wordList& codeDictVars
         );
@@ -96,10 +106,10 @@ public:
 
     // Member Functions
 
-        //- Return the parent dictionary context
+        //- Return the context dictionary
         const dictionary& dict() const
         {
-            return dict_;
+            return contextDict_;
         }
 
         //- Return the code table

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,8 +75,7 @@ Foam::string Foam::functionEntries::calcEntry::calc
     );
 
     // Construct codeDict for codeStream
-    // with dict as parent dictionary for string expansion
-    // and variable substitution
+    // Parent dictionary provided for string expansion and variable substitution
     dictionary codeDict(dict, dictionary());
 
     // Read the code expression string delimited by either '"..."' or '#{...#}'

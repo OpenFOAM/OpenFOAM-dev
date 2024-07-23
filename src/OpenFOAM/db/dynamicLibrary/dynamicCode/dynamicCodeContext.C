@@ -44,12 +44,13 @@ void Foam::dynamicCodeContext::addLineDirective
 
 Foam::dynamicCodeContext::dynamicCodeContext
 (
-    const dictionary& dict,
+    const dictionary& contextDict,
+    const dictionary& codeDict,
     const wordList& codeKeys,
     const wordList& codeDictVars
 )
 :
-    dict_(dict),
+    contextDict_(contextDict),
     code_(),
     options_(),
     libs_()
@@ -61,14 +62,14 @@ Foam::dynamicCodeContext::dynamicCodeContext
     forAll(codeKeys, i)
     {
         const word& key = codeKeys[i];
-        codePtrs[i] = dict.lookupEntryPtr(key, false, false);
+        codePtrs[i] = codeDict.lookupEntryPtr(key, false, false);
         if (codePtrs[i])
         {
             string s(stringOps::trim(verbatimString(codePtrs[i]->stream())));
             stringOps::inplaceExpandCodeString
             (
                 s,
-                dict.parent(), // Lookup variables in the code parent dictionary
+                contextDict, // Lookup variables from the context dictionary
                 codeDictVars[i]
             );
             code_.insert(key, s);
@@ -80,19 +81,20 @@ Foam::dynamicCodeContext::dynamicCodeContext
     }
 
     // Options
-    const entry* optionsPtr = dict.lookupEntryPtr("codeOptions", false, false);
+    const entry* optionsPtr =
+        codeDict.lookupEntryPtr("codeOptions", false, false);
     if (optionsPtr)
     {
         options_ = stringOps::trim(verbatimString(optionsPtr->stream()));
-        stringOps::inplaceExpandCodeString(options_, dict.parent(), word::null);
+        stringOps::inplaceExpandCodeString(options_, contextDict, word::null);
     }
 
     // Libs
-    const entry* libsPtr = dict.lookupEntryPtr("codeLibs", false, false);
+    const entry* libsPtr = codeDict.lookupEntryPtr("codeLibs", false, false);
     if (libsPtr)
     {
         libs_ = stringOps::trim(verbatimString(libsPtr->stream()));
-        stringOps::inplaceExpandCodeString(libs_, dict.parent(), word::null);
+        stringOps::inplaceExpandCodeString(libs_, contextDict, word::null);
     }
 
     // Calculate SHA1 digest from all entries
@@ -115,11 +117,22 @@ Foam::dynamicCodeContext::dynamicCodeContext
             (
                 code_[key],
                 codePtrs[i]->startLineNumber(),
-                dict.name()
+                codeDict.name()
             );
         }
     }
 }
+
+
+Foam::dynamicCodeContext::dynamicCodeContext
+(
+    const dictionary& contextDict,
+    const wordList& codeKeys,
+    const wordList& codeDictVars
+)
+:
+    dynamicCodeContext(contextDict, contextDict, codeKeys, codeDictVars)
+{}
 
 
 // ************************************************************************* //

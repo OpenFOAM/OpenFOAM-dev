@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -222,14 +222,14 @@ class codeStream
         //- Construct, compile, load and return streaming function
         static streamingFunctionType getFunction
         (
-            const dictionary& parentDict,
+            const dictionary& contextDict,
             const dictionary& codeDict
         );
 
         //- Compile and execute the code and return the resulting string
         static string run
         (
-            const dictionary& parentDict,
+            const dictionary& contextDict,
             Istream& is
         );
 
@@ -260,12 +260,12 @@ public:
     // Member Functions
 
         //- Execute the functionEntry in a sub-dict context
-        static bool execute(dictionary& parentDict, Istream&);
+        static bool execute(dictionary& contextDict, Istream&);
 
         //- Execute the functionEntry in a primitiveEntry context
         static bool execute
         (
-            const dictionary& parentDict,
+            const dictionary& contextDict,
             primitiveEntry&,
             Istream&
         );
