@@ -68,7 +68,7 @@ bool Foam::unitConversion::compare
     if (a.dimensions_ != b.dimensions_) return false;
 
     // Check the dimensionless units are the same
-    for (int i = unitConversion::nDimlessUnits; i < 0; ++ i)
+    for (int i = 0; i < unitConversion::nDimlessUnits; ++ i)
     {
         if
         (
