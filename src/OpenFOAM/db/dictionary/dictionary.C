@@ -1279,7 +1279,7 @@ bool Foam::dictionary::changeKeyword
 
     // Change name and HashTable, but leave DL-List untouched
     iter()->keyword() = newKeyword;
-    iter()->name() = name() + '/' + newKeyword;
+    iter()->name() = name() + '/' + string::validate<word>(newKeyword);
     hashedEntries_.erase(oldKeyword);
     hashedEntries_.insert(newKeyword, iter());
 
