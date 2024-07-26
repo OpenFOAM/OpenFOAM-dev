@@ -52,9 +52,6 @@ class dynamicCodeContext
 {
     // Private Data
 
-        //- The context dictionary
-        const dictionary& contextDict_;
-
         //- Code entries
         HashTable<string> code_;
 
@@ -105,12 +102,6 @@ public:
 
 
     // Member Functions
-
-        //- Return the context dictionary
-        const dictionary& dict() const
-        {
-            return contextDict_;
-        }
 
         //- Return the code table
         const HashTable<string>& code() const

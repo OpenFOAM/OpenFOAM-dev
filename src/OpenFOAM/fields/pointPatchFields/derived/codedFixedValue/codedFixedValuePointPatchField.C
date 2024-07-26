@@ -30,21 +30,22 @@ License
 #include "dynamicCode.H"
 #include "dynamicCodeContext.H"
 
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+template<class Type>
+const Foam::wordList Foam::codedFixedValuePointPatchField<Type>::codeKeys
+(
+    {"code", "codeInclude", "localCode"}
+);
+
+template<class Type>
+const Foam::wordList Foam::codedFixedValuePointPatchField<Type>::codeDictVars
+(
+    {word::null, word::null, word::null}
+);
+
+
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-template<class Type>
-Foam::wordList Foam::codedFixedValuePointPatchField<Type>::codeKeys() const
-{
-    return {"code", "codeInclude", "localCode"};
-}
-
-
-template<class Type>
-Foam::wordList Foam::codedFixedValuePointPatchField<Type>::codeDictVars() const
-{
-    return {word::null, word::null, word::null};
-}
-
 
 template<class Type>
 void Foam::codedFixedValuePointPatchField<Type>::prepare
@@ -121,7 +122,7 @@ Foam::codedFixedValuePointPatchField<Type>::codedFixedValuePointPatchField
 )
 :
     fixedValuePointPatchField<Type>(p, iF, dict),
-    codedBase(dict),
+    codedBase(dict, codeKeys, codeDictVars),
     redirectPatchFieldPtr_()
 {}
 

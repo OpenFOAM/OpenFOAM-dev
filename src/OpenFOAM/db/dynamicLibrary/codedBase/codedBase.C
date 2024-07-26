@@ -215,7 +215,7 @@ void Foam::codedBase::createLibrary
             {
                 FatalIOErrorInFunction
                 (
-                    context.dict()
+                    dict_
                 )   << "Failed writing files for" << nl
                     << dynCode.libRelPath() << nl
                     << exit(FatalIOError);
@@ -226,7 +226,7 @@ void Foam::codedBase::createLibrary
         {
             FatalIOErrorInFunction
             (
-                context.dict()
+                dict_
             )   << "Failed wmake " << dynCode.libRelPath() << nl
                 << exit(FatalIOError);
         }
@@ -275,7 +275,7 @@ void Foam::codedBase::createLibrary
             {
                 FatalIOErrorInFunction
                 (
-                    context.dict()
+                    dict_
                 )   << "Cannot read (NFS mounted) library " << nl
                     << libPath << nl
                     << "on processor " << Pstream::myProcNo()
@@ -300,7 +300,53 @@ void Foam::codedBase::createLibrary
 }
 
 
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::codedBase::codedBase
+(
+    const word& name,
+    const dictionary& dict,
+    const wordList& codeKeys,
+    const wordList& codeDictVars
+)
+:
+    codeName_(codeName(name)),
+    dict_(dict),
+    codeKeys_(codeKeys),
+    codeDictVars_(codeDictVars)
+{}
+
+
+Foam::codedBase::codedBase
+(
+    const dictionary& dict,
+    const wordList& codeKeys,
+    const wordList& codeDictVars
+)
+:
+    codeName_(codeName(dict.lookup("name"))),
+    dict_(dict),
+    codeKeys_(codeKeys),
+    codeDictVars_(codeDictVars)
+{}
+
+
+Foam::codedBase::codedBase(const codedBase& cb)
+:
+    codeName_(cb.codeName_),
+    dict_(cb.dict_),
+    codeKeys_(cb.codeKeys_),
+    codeDictVars_(cb.codeDictVars_)
+{}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::codedBase::~codedBase()
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 const Foam::word& Foam::codedBase::codeName() const
 {
@@ -314,9 +360,15 @@ Foam::string Foam::codedBase::description() const
 }
 
 
-const Foam::dictionary& Foam::codedBase::codeDict() const
+Foam::word Foam::codedBase::codeTemplateC(const word& baseTypeName) const
 {
-    return dict_;
+    return baseTypeName + "Template.C";
+}
+
+
+Foam::word Foam::codedBase::codeTemplateH(const word& baseTypeName) const
+{
+    return baseTypeName + "Template.H";
 }
 
 
@@ -330,7 +382,7 @@ bool Foam::codedBase::updateLibrary() const
         dict_
     );
 
-    const dynamicCodeContext context(dict_, codeKeys(), codeDictVars());
+    const dynamicCodeContext context(dict_, codeKeys_, codeDictVars_);
 
     // codeName: name + _<sha1>
     // codeDir : name
@@ -357,17 +409,17 @@ bool Foam::codedBase::updateLibrary() const
     (
         oldLibPath_,
         dynamicCode::libraryBaseName(oldLibPath_),
-        context.dict()
+        dict_
     );
 
     // Try loading an existing library (avoid compilation when possible)
-    if (!loadLibrary(libPath, dynCode.codeName(), context.dict()))
+    if (!loadLibrary(libPath, dynCode.codeName(), dict_))
     {
         createLibrary(dynCode, context);
 
-        if (!loadLibrary(libPath, dynCode.codeName(), context.dict()))
+        if (!loadLibrary(libPath, dynCode.codeName(), dict_))
         {
-            FatalIOErrorInFunction(context.dict())
+            FatalIOErrorInFunction(dict_)
                 << "Failed to load " << libPath << exit(FatalIOError);
         }
     }
@@ -386,49 +438,6 @@ bool Foam::codedBase::updateLibrary(const dictionary& dict) const
 }
 
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::codedBase::codedBase(const word& name, const dictionary& dict)
-:
-    codeName_(codeName(name)),
-    dict_(dict)
-{}
-
-
-Foam::codedBase::codedBase(const dictionary& dict)
-:
-    codeName_(codeName(dict.lookup("name"))),
-    dict_(dict)
-{}
-
-
-Foam::codedBase::codedBase(const codedBase& cb)
-:
-    codeName_(cb.codeName_),
-    dict_(cb.dict_)
-{}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::codedBase::~codedBase()
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-Foam::word Foam::codedBase::codeTemplateC(const word& baseTypeName) const
-{
-    return baseTypeName + "Template.C";
-}
-
-
-Foam::word Foam::codedBase::codeTemplateH(const word& baseTypeName) const
-{
-    return baseTypeName + "Template.H";
-}
-
-
 void Foam::codedBase::write(Ostream& os) const
 {
     if (codeName().size())
@@ -436,7 +445,7 @@ void Foam::codedBase::write(Ostream& os) const
         writeEntry(os, "name", codeName());
     }
 
-    wordList codeAndBuildKeys(codeKeys());
+    wordList codeAndBuildKeys(codeKeys_);
     codeAndBuildKeys.append("codeOptions");
     codeAndBuildKeys.append("codeLibs");
 

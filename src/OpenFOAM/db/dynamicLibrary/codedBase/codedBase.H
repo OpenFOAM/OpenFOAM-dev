@@ -61,6 +61,12 @@ class codedBase
         //- Dictionary contents for the CodedType
         mutable dictionary dict_;
 
+        //- Keywords associated with source code
+        const wordList& codeKeys_;
+
+        //- Name of the dictionary variables in the source code
+        const wordList& codeDictVars_;
+
         //- Previously loaded library
         mutable fileName oldLibPath_;
 
@@ -92,33 +98,6 @@ class codedBase
         //- Create library based on the dynamicCodeContext
         void createLibrary(dynamicCode&, const dynamicCodeContext&) const;
 
-
-protected:
-
-    // Protected Member Functions
-
-        //- Name of the dynamically generated CodedType
-        const word& codeName() const;
-
-        //- Return a description (type + name) for the output
-        string description() const;
-
-        //- Get the dictionary to initialise the codeContext
-        const dictionary& codeDict() const;
-
-        //- Update library as required
-        bool updateLibrary() const;
-
-        //- Update library from given updated dictionary as required
-        //  Returns true if the library was updated, otherwise false
-        bool updateLibrary(const dictionary& dict) const;
-
-        //- Get the keywords associated with source code
-        virtual wordList codeKeys() const = 0;
-
-        //- Get the name of the dictionary variables in the source code
-        virtual wordList codeDictVars() const = 0;
-
         //- Adapt the context for the current object
         virtual void prepare(dynamicCode&, const dynamicCodeContext&) const = 0;
 
@@ -132,10 +111,21 @@ public:
     // Constructors
 
         //- Construct from name and dictionary
-        codedBase(const word& name, const dictionary& dict);
+        codedBase
+        (
+            const word& name,
+            const dictionary& dict,
+            const wordList& codeKeys,
+            const wordList& codeDictVars
+        );
 
         //- Construct from dictionary
-        codedBase(const dictionary& dict);
+        codedBase
+        (
+            const dictionary& dict,
+            const wordList& codeKeys,
+            const wordList& codeDictVars
+        );
 
         //- Copy constructor
         codedBase(const codedBase& cb);
@@ -145,19 +135,38 @@ public:
     virtual ~codedBase();
 
 
-    // Member Operators
-
-        //- Disallow default bitwise assignment
-        void operator=(const codedBase&) = delete;
-
-
     // Member Functions
+
+        //- Name of the dynamically generated CodedType
+        const word& codeName() const;
+
+        //- Return a description (type + name) for the output
+        string description() const;
+
+        //- Get the dictionary to initialise the codeContext
+        const dictionary& dict() const
+        {
+            return dict_;
+        }
 
         word codeTemplateC(const word& baseTypeName) const;
 
         word codeTemplateH(const word& baseTypeName) const;
 
+        //- Update library as required
+        bool updateLibrary() const;
+
+        //- Update library from given updated dictionary as required
+        //  Returns true if the library was updated, otherwise false
+        bool updateLibrary(const dictionary& dict) const;
+
         void write(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const codedBase&) = delete;
 };
 
 

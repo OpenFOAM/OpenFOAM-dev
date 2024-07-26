@@ -27,21 +27,22 @@ License
 #include "dynamicCode.H"
 #include "dynamicCodeContext.H"
 
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+template<class Type>
+const Foam::wordList Foam::Function2s::Coded<Type>::codeKeys
+(
+    {"code", "codeInclude"}
+);
+
+template<class Type>
+const Foam::wordList Foam::Function2s::Coded<Type>::codeDictVars
+(
+    {word::null, word::null}
+);
+
+
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-template<class Type>
-Foam::wordList Foam::Function2s::Coded<Type>::codeKeys() const
-{
-    return {"code", "codeInclude"};
-}
-
-
-template<class Type>
-Foam::wordList Foam::Function2s::Coded<Type>::codeDictVars() const
-{
-    return {word::null, word::null};
-}
-
 
 template<class Type>
 void Foam::Function2s::Coded<Type>::prepare
@@ -87,7 +88,7 @@ Foam::Function2s::Coded<Type>::compile()
 {
     this->updateLibrary();
 
-    dictionary redirectDict(codeDict());
+    dictionary redirectDict(dict());
     redirectDict.set(codeName(), codeName());
 
     return Function2<Type>::New(codeName(), this->units_, redirectDict);
@@ -105,7 +106,7 @@ Foam::Function2s::Coded<Type>::Coded
 )
 :
     Function2<Type>(name),
-    codedBase(name, dict),
+    codedBase(name, dict, codeKeys, codeDictVars),
     units_(units),
     redirectFunction2Ptr_(compile())
 {}

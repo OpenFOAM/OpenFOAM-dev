@@ -102,16 +102,16 @@ class codedFixedValuePointPatchField
 {
     // Private Data
 
+        //- Keywords associated with source code
+        static const wordList codeKeys;
+
+        //- Name of the dictionary variables in the source code
+        static const wordList codeDictVars;
+
         mutable autoPtr<pointPatchField<Type>> redirectPatchFieldPtr_;
 
 
     // Private Member Functions
-
-        //- Get the keywords associated with source code
-        virtual wordList codeKeys() const;
-
-        //- Get the name of the dictionary variables in the source code
-        virtual wordList codeDictVars() const;
 
         //- Adapt the context for the current object
         virtual void prepare(dynamicCode&, const dynamicCodeContext&) const;

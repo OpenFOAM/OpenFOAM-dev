@@ -50,7 +50,6 @@ Foam::dynamicCodeContext::dynamicCodeContext
     const wordList& codeDictVars
 )
 :
-    contextDict_(contextDict),
     code_(),
     options_(),
     libs_()

@@ -28,21 +28,22 @@ License
 #include "dynamicCodeContext.H"
 #include "addToRunTimeSelectionTable.H"
 
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+template<class Type>
+const Foam::wordList Foam::codedMixedFvPatchField<Type>::codeKeys
+(
+    {"code", "codeInclude", "localCode"}
+);
+
+template<class Type>
+const Foam::wordList Foam::codedMixedFvPatchField<Type>::codeDictVars
+(
+    {word::null, word::null, word::null}
+);
+
+
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-template<class Type>
-Foam::wordList Foam::codedMixedFvPatchField<Type>::codeKeys() const
-{
-    return {"code", "codeInclude", "localCode"};
-}
-
-
-template<class Type>
-Foam::wordList Foam::codedMixedFvPatchField<Type>::codeDictVars() const
-{
-    return {word::null, word::null, word::null};
-}
-
 
 template<class Type>
 void Foam::codedMixedFvPatchField<Type>::prepare
@@ -103,7 +104,7 @@ Foam::codedMixedFvPatchField<Type>::codedMixedFvPatchField
 )
 :
     mixedFvPatchField<Type>(p, iF, dict),
-    codedBase(dict),
+    codedBase(dict, codeKeys, codeDictVars),
     redirectPatchFieldPtr_()
 {}
 

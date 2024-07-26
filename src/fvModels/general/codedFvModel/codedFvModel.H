@@ -93,6 +93,12 @@ class codedFvModel
 {
     // Private data
 
+        //- Keywords associated with source code
+        static const wordList codeKeys;
+
+        //- Name of the dictionary variables in the source code
+        static const wordList codeDictVars;
+
         //- The name of the field that this fvModel applies to
         word fieldName_;
 
@@ -110,12 +116,6 @@ class codedFvModel
 
         //- Adapt the context for the current object
         virtual void prepare(dynamicCode&, const dynamicCodeContext&) const;
-
-        //- Get the keywords associated with source code
-        virtual wordList codeKeys() const;
-
-        //- Get the name of the dictionary variables in the source code
-        virtual wordList codeDictVars() const;
 
         //- Dynamically compiled fvModel
         fvModel& redirectFvModel() const;

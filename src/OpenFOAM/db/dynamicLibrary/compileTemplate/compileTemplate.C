@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,6 +28,13 @@ License
 #include "Time.H"
 #include "IFstream.H"
 #include "OSspecific.H"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+const Foam::wordList Foam::compileTemplate::codeKeys(wordList::null());
+
+const Foam::wordList Foam::compileTemplate::codeDictVars(wordList::null());
+
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -73,23 +80,23 @@ void Foam::compileTemplate::setFilterVariable
     word type(substitution.second());
     const word typeRenameMapName(name + "Renamed");
 
-    if (context.dict().found(name))
+    if (dict().found(name))
     {
-        const HashSet<word> types(context.dict().lookup(name));
+        const HashSet<word> types(dict().lookup(name));
         if (!types.found(type))
         {
-            FatalIOErrorInFunction(context.dict())
+            FatalIOErrorInFunction(dict())
                 << "Unknown " << name << " type " << type << nl
                 << "Supported " << name << " types: " << types
                 << exit(FatalIOError);
         }
     }
 
-    if (context.dict().found(typeRenameMapName))
+    if (dict().found(typeRenameMapName))
     {
         const HashTable<word> renameMap
         (
-            context.dict().lookup(typeRenameMapName)
+            dict().lookup(typeRenameMapName)
         );
 
         if (renameMap.found(type))
@@ -140,7 +147,13 @@ Foam::compileTemplate::compileTemplate
     const List<Pair<word>>& substitutions
 )
 :
-    codedBase(name(instantiatedName), optionsDict(templateName)),
+    codedBase
+    (
+        name(instantiatedName),
+        optionsDict(templateName),
+        codeKeys,
+        codeDictVars
+    ),
     templateName_(templateName),
     substitutions_(substitutions)
 {
