@@ -92,14 +92,6 @@ void Foam::codedMixedFvPatchField<Type>::prepare
 }
 
 
-template<class Type>
-void Foam::codedMixedFvPatchField<Type>::clearRedirect() const
-{
-    // Remove instantiation of fvPatchField provided by library
-    redirectPatchFieldPtr_.clear();
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
@@ -224,7 +216,7 @@ template<class Type>
 void Foam::codedMixedFvPatchField<Type>::write(Ostream& os) const
 {
     mixedFvPatchField<Type>::write(os);
-    writeCode(os);
+    codedBase::write(os);
 }
 
 

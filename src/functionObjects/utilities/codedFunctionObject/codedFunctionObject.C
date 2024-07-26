@@ -120,12 +120,6 @@ void Foam::codedFunctionObject::prepare
 }
 
 
-void Foam::codedFunctionObject::clearRedirect() const
-{
-    redirectFunctionObjectPtr_.clear();
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::codedFunctionObject::codedFunctionObject
@@ -196,6 +190,7 @@ bool Foam::codedFunctionObject::read(const dictionary& dict)
 {
     if (functionObject::read(dict))
     {
+        redirectFunctionObjectPtr_.clear();
         updateLibrary(dict);
         return redirectFunctionObject().read(dict);
     }

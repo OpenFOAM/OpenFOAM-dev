@@ -320,18 +320,17 @@ const Foam::dictionary& Foam::codedBase::codeDict() const
 }
 
 
-void Foam::codedBase::updateLibrary() const
+bool Foam::codedBase::updateLibrary() const
 {
     const word& name = codeName();
-    const dictionary& dict = codeDict();
 
     dynamicCode::checkSecurity
     (
         "codedBase::updateLibrary()",
-        dict
+        dict_
     );
 
-    const dynamicCodeContext context(dict, codeKeys(), codeDictVars());
+    const dynamicCodeContext context(dict_, codeKeys(), codeDictVars());
 
     // codeName: name + _<sha1>
     // codeDir : name
@@ -346,16 +345,12 @@ void Foam::codedBase::updateLibrary() const
     // The correct library was already loaded => we are done
     if (libs.findLibrary(libPath))
     {
-        return;
+        return false;
     }
 
     Info<< "Using dynamicCode for " << this->description().c_str()
-        << " at line " << dict.startLineNumber()
-        << " in " << dict.name() << endl;
-
-
-    // Remove instantiation of fvPatchField provided by library
-    this->clearRedirect();
+        << " at line " << dict_.startLineNumber()
+        << " in " << dict_.name() << endl;
 
     // May need to unload old library
     unloadLibrary
@@ -379,13 +374,15 @@ void Foam::codedBase::updateLibrary() const
 
     // Retain for future reference
     oldLibPath_ = libPath;
+
+    return true;
 }
 
 
-void Foam::codedBase::updateLibrary(const dictionary& dict) const
+bool Foam::codedBase::updateLibrary(const dictionary& dict) const
 {
     dict_ = dict;
-    updateLibrary();
+    return updateLibrary();
 }
 
 
@@ -432,7 +429,7 @@ Foam::word Foam::codedBase::codeTemplateH(const word& baseTypeName) const
 }
 
 
-void Foam::codedBase::writeCode(Ostream& os) const
+void Foam::codedBase::write(Ostream& os) const
 {
     if (codeName().size())
     {
@@ -445,10 +442,10 @@ void Foam::codedBase::writeCode(Ostream& os) const
 
     forAll(codeAndBuildKeys, i)
     {
-        if (codeDict().found(codeAndBuildKeys[i]))
+        if (dict_.found(codeAndBuildKeys[i]))
         {
             writeKeyword(os, codeAndBuildKeys[i]);
-            os.write(verbatimString(codeDict()[codeAndBuildKeys[i]]))
+            os.write(verbatimString(dict_[codeAndBuildKeys[i]]))
                 << token::END_STATEMENT << nl;
         }
     }

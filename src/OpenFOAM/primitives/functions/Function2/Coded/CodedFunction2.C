@@ -82,16 +82,8 @@ void Foam::Function2s::Coded<Type>::prepare
 
 
 template<class Type>
-void Foam::Function2s::Coded<Type>::clearRedirect() const
-{
-    // Remove instantiation of Function2 provided by library
-    redirectFunction2Ptr_.clear();
-}
-
-
-template<class Type>
 Foam::autoPtr<Foam::Function2<Type>>
-Foam::Function2s::Coded<Type>::compileNew()
+Foam::Function2s::Coded<Type>::compile()
 {
     this->updateLibrary();
 
@@ -114,10 +106,9 @@ Foam::Function2s::Coded<Type>::Coded
 :
     Function2<Type>(name),
     codedBase(name, dict),
-    units_(units)
-{
-    redirectFunction2Ptr_ = compileNew();
-}
+    units_(units),
+    redirectFunction2Ptr_(compile())
+{}
 
 
 
@@ -126,10 +117,9 @@ Foam::Function2s::Coded<Type>::Coded(const Coded<Type>& cf2)
 :
     Function2<Type>(cf2),
     codedBase(cf2),
-    units_(cf2.units_)
-{
-    redirectFunction2Ptr_ = compileNew();
-}
+    units_(cf2.units_),
+    redirectFunction2Ptr_(compile())
+{}
 
 
 template<class Type>
@@ -174,7 +164,7 @@ void Foam::Function2s::Coded<Type>::write
     const unitConversions& units
 ) const
 {
-    writeCode(os);
+    codedBase::write(os);
 }
 
 

@@ -92,14 +92,6 @@ void Foam::codedFixedValueFvPatchField<Type>::prepare
 }
 
 
-template<class Type>
-void Foam::codedFixedValueFvPatchField<Type>::clearRedirect() const
-{
-    // Remove instantiation of fvPatchField provided by library
-    redirectPatchFieldPtr_.clear();
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
@@ -220,7 +212,7 @@ template<class Type>
 void Foam::codedFixedValueFvPatchField<Type>::write(Ostream& os) const
 {
     fixedValueFvPatchField<Type>::write(os);
-    writeCode(os);
+    codedBase::write(os);
 }
 
 

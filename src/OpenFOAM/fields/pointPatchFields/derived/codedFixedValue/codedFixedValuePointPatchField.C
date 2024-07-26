@@ -95,14 +95,6 @@ void Foam::codedFixedValuePointPatchField<Type>::prepare
 }
 
 
-template<class Type>
-void Foam::codedFixedValuePointPatchField<Type>::clearRedirect() const
-{
-    // Remove instantiation of pointPatchField provided by library
-    redirectPatchFieldPtr_.clear();
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
@@ -217,7 +209,7 @@ template<class Type>
 void Foam::codedFixedValuePointPatchField<Type>::write(Ostream& os) const
 {
     fixedValuePointPatchField<Type>::write(os);
-    writeCode(os);
+    codedBase::write(os);
 }
 
 

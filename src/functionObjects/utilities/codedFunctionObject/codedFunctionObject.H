@@ -105,9 +105,6 @@ class codedFunctionObject
         //- Adapt the context for the current object
         virtual void prepare(dynamicCode&, const dynamicCodeContext&) const;
 
-        //- Clear any redirected objects
-        virtual void clearRedirect() const;
-
         //- Compile, link and return the now coded functionObject
         functionObject& redirectFunctionObject() const;
 

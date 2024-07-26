@@ -114,9 +114,6 @@ class codedFixedValueFvPatchField
         //- Adapt the context for the current object
         virtual void prepare(dynamicCode&, const dynamicCodeContext&) const;
 
-        //- Clear the ptr to the redirected object
-        virtual void clearRedirect() const;
-
 
 public:
 

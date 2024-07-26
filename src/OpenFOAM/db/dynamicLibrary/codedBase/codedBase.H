@@ -107,10 +107,11 @@ protected:
         const dictionary& codeDict() const;
 
         //- Update library as required
-        void updateLibrary() const;
+        bool updateLibrary() const;
 
         //- Update library from given updated dictionary as required
-        void updateLibrary(const dictionary& dict) const;
+        //  Returns true if the library was updated, otherwise false
+        bool updateLibrary(const dictionary& dict) const;
 
         //- Get the keywords associated with source code
         virtual wordList codeKeys() const = 0;
@@ -120,9 +121,6 @@ protected:
 
         //- Adapt the context for the current object
         virtual void prepare(dynamicCode&, const dynamicCodeContext&) const = 0;
-
-        //- Clear any redirected objects
-        virtual void clearRedirect() const = 0;
 
 
 public:
@@ -159,7 +157,7 @@ public:
 
         word codeTemplateH(const word& baseTypeName) const;
 
-        virtual void writeCode(Ostream& os) const;
+        void write(Ostream& os) const;
 };
 
 

@@ -111,9 +111,6 @@ class codedFvModel
         //- Adapt the context for the current object
         virtual void prepare(dynamicCode&, const dynamicCodeContext&) const;
 
-        //- Clear any redirected objects
-        virtual void clearRedirect() const;
-
         //- Get the keywords associated with source code
         virtual wordList codeKeys() const;
 

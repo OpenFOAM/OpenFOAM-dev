@@ -101,12 +101,6 @@ void Foam::fv::codedFvModel::prepare
 }
 
 
-void Foam::fv::codedFvModel::clearRedirect() const
-{
-    redirectFvModelPtr_.clear();
-}
-
-
 Foam::wordList Foam::fv::codedFvModel::codeKeys() const
 {
     return
@@ -284,6 +278,7 @@ bool Foam::fv::codedFvModel::read(const dictionary& dict)
         readCoeffs();
         if (fieldPrimitiveTypeName() != word::null)
         {
+            redirectFvModelPtr_.clear();
             updateLibrary(coeffs());
         }
         return true;
