@@ -55,7 +55,8 @@ bool Foam::blockMeshCylindricalConfiguration::isBoundBoxOnZaxis()
 
 void Foam::blockMeshCylindricalConfiguration::calcBlockMeshDict
 (
-    const bool& boundsOpt
+    const bool& boundsOpt,
+    const bool& rotatingZonesOpt
 )
 {
     // Set nCells as a vector: (boxCells radialCells zCells)
@@ -78,19 +79,24 @@ void Foam::blockMeshCylindricalConfiguration::calcBlockMeshDict
     // Size the bounding box
     const scalar roundFactor = roundingScale(0.01*bb_.minDim());
 
-    if(!boundsOpt)
+    // If '-bounds' is not specified, or '-rotatingZones' is specified
+    // inflate the respective bounding box(es) in radial direction,
+    // followed by rounding
+    if(!boundsOpt || rotatingZonesOpt)
     {
         const scalar expansion = 1.0/(Foam::cos(degToRad(45.0/nCells_.x())));
-
         const vector scaling(expansion, expansion, 1);
 
-        // Inflate the bounding box in radial direction
-        bbInflate(bb_, scaling);
-        bbInflate(rzbb_, scaling);
-
-        // Round the bounding box
-        roundBoundingBox(bb_, roundFactor);
-        roundBoundingBox(rzbb_, roundFactor);
+        if(!boundsOpt)
+        {
+            bbInflate(bb_, scaling);
+            roundBoundingBox(bb_, roundFactor);
+        }
+        if(rotatingZonesOpt)
+        {
+            bbInflate(rzbb_, scaling);
+            roundBoundingBox(rzbb_, roundFactor);
+        }
     }
 
     radBox_ = ceil(0.3*rzbb_.max().x()/roundFactor)*roundFactor;
@@ -430,8 +436,12 @@ Foam::blockMeshCylindricalConfiguration::blockMeshCylindricalConfiguration
             << exit(FatalError);
     }
 
+    bool rotatingZonesOpt(true);
+
     if (rzbb_.volume() == 0)
     {
+        rotatingZonesOpt = false;
+
         WarningInFunction
             << "Creating a cylindrical background mesh without a "
             << "rotatingZone specified by the '-rotatingZones' option."
@@ -445,7 +455,7 @@ Foam::blockMeshCylindricalConfiguration::blockMeshCylindricalConfiguration
         rzbb_.max() = factor*bb_.max();
     }
 
-    calcBlockMeshDict(boundsOpt);
+    calcBlockMeshDict(boundsOpt, rotatingZonesOpt);
 }
 
 

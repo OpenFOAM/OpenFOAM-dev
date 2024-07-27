@@ -81,7 +81,11 @@ class blockMeshCylindricalConfiguration
         bool isBoundBoxOnZaxis();
 
         //- Calculate the parameters for the blockMeshDict file
-        void calcBlockMeshDict(const bool& boundsOpt);
+        void calcBlockMeshDict
+        (
+            const bool& boundsOpt,
+            const bool& rotatingZonesOpt
+        );
 
         //- Write backgroundMesh sub-dictionary
         void writeBackgroundMesh();
