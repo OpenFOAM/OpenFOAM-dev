@@ -521,6 +521,7 @@ int main(int argc, char *argv[])
             runTime.system(),
             runTime,
             surfaces,
+            args.optionFound("bounds"),
             nCells,
             refineFactor,
             patchOpts,

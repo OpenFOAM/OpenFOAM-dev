@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,7 +81,7 @@ class blockMeshCylindricalConfiguration
         bool isBoundBoxOnZaxis();
 
         //- Calculate the parameters for the blockMeshDict file
-        void calcBlockMeshDict();
+        void calcBlockMeshDict(const bool& boundsOpt);
 
         //- Write backgroundMesh sub-dictionary
         void writeBackgroundMesh();
@@ -142,6 +142,7 @@ public:
             const fileName& dir,
             const Time& time,
             const meshingSurfaceList& surfaces,
+            const bool& boundsOpt,
             const Vector<label>& nCells,
             const label refineFactor,
             const HashTable<Pair<word>>& patchOpts,

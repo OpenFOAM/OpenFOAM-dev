@@ -53,7 +53,10 @@ bool Foam::blockMeshCylindricalConfiguration::isBoundBoxOnZaxis()
     return mag(bbMidNorm.x()) < rootSmall && mag(bbMidNorm.y()) < rootSmall;
 }
 
-void Foam::blockMeshCylindricalConfiguration::calcBlockMeshDict()
+void Foam::blockMeshCylindricalConfiguration::calcBlockMeshDict
+(
+    const bool& boundsOpt
+)
 {
     // Set nCells as a vector: (boxCells radialCells zCells)
     label boxCells = nCells_.x();
@@ -74,20 +77,23 @@ void Foam::blockMeshCylindricalConfiguration::calcBlockMeshDict()
 
     // Size the bounding box
     const scalar roundFactor = roundingScale(0.01*bb_.minDim());
-    const scalar expansion = 1.0/(Foam::cos(degToRad(45.0/nCells_.x())));
 
-    const vector scaling(expansion, expansion, 1);
+    if(!boundsOpt)
+    {
+        const scalar expansion = 1.0/(Foam::cos(degToRad(45.0/nCells_.x())));
 
-    // Inflate the bounding box in radial direction
-    bbInflate(bb_, scaling);
-    bbInflate(rzbb_, scaling);
+        const vector scaling(expansion, expansion, 1);
 
-    // Round the bounding box
-    roundBoundingBox(bb_, roundFactor);
-    roundBoundingBox(rzbb_, roundFactor);
+        // Inflate the bounding box in radial direction
+        bbInflate(bb_, scaling);
+        bbInflate(rzbb_, scaling);
+
+        // Round the bounding box
+        roundBoundingBox(bb_, roundFactor);
+        roundBoundingBox(rzbb_, roundFactor);
+    }
 
     radBox_ = ceil(0.3*rzbb_.max().x()/roundFactor)*roundFactor;
-
     nCells_ *= refineFactor_;
 }
 
@@ -403,6 +409,7 @@ Foam::blockMeshCylindricalConfiguration::blockMeshCylindricalConfiguration
     const fileName& dir,
     const Time& time,
     const meshingSurfaceList& surfaces,
+    const bool& boundsOpt,
     const Vector<label>& nCells,
     const label refineFactor,
     const HashTable<Pair<word>>& patchOpts,
@@ -438,7 +445,7 @@ Foam::blockMeshCylindricalConfiguration::blockMeshCylindricalConfiguration
         rzbb_.max() = factor*bb_.max();
     }
 
-    calcBlockMeshDict();
+    calcBlockMeshDict(boundsOpt);
 }
 
 
