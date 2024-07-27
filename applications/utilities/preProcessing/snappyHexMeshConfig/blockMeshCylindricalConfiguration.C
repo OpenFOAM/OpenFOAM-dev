@@ -264,8 +264,13 @@ void Foam::blockMeshCylindricalConfiguration::writeGeometry()
     List<word> geometries {"rotatingZone", "outer"};
     List<word> dims {"radIn", "radOut"};
 
-    const scalar zMin = roundDown(bb_.min().z(), 10);
-    const scalar zMax = roundUp(bb_.max().z(), 10);
+    scalar zMin = roundDown(bb_.min().z(), 10);
+    scalar zMax = roundUp(bb_.max().z(), 10);
+
+    // Extend the bounds to avoid bad projections
+    const scalar span = zMax - zMin;
+    zMax += span;
+    zMin -= span;
 
     forAll(geometries, i)
     {
