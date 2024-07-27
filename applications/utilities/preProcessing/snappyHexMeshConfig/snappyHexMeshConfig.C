@@ -107,6 +107,9 @@ Usage
       - \par -cylindricalBackground
         Generate a cylindrical background mesh aligned with the z-axis
 
+      - \par -noBackground
+        Do not write a blockMeshDict file
+
       - \par -refineBackground \<int\>
         Integer multiplier for the number of cells (>= 1)
 
@@ -243,6 +246,12 @@ int main(int argc, char *argv[])
     (
         "cylindricalBackground",
         "generate a cylindrical background mesh aligned with the z-axis"
+    );
+
+    argList::addBoolOption
+    (
+        "noBackground",
+        "do not write a blockMeshDict file"
     );
 
     argList::addOption
@@ -513,39 +522,42 @@ int main(int argc, char *argv[])
 
     const bool clearBoundary(args.optionFound("clearBoundary"));
 
-    if (args.optionFound("cylindricalBackground"))
+    if (!args.optionFound("noBackground"))
     {
-        blockMeshCylindricalConfiguration blockMeshConfig
-        (
-            "blockMeshDict",
-            runTime.system(),
-            runTime,
-            surfaces,
-            args.optionFound("bounds"),
-            nCells,
-            refineFactor,
-            patchOpts,
-            clearBoundary
-        );
+        if (args.optionFound("cylindricalBackground"))
+        {
+            blockMeshCylindricalConfiguration blockMeshConfig
+            (
+                "blockMeshDict",
+                runTime.system(),
+                runTime,
+                surfaces,
+                args.optionFound("bounds"),
+                nCells,
+                refineFactor,
+                patchOpts,
+                clearBoundary
+            );
 
-        blockMeshConfig.write();
-    }
-    else
-    {
-        blockMeshCartesianConfiguration blockMeshConfig
-        (
-            "blockMeshDict",
-            runTime.system(),
-            runTime,
-            surfaces,
-            args.optionFound("bounds"),
-            nCells,
-            refineFactor,
-            patchOpts,
-            clearBoundary
-        );
+            blockMeshConfig.write();
+        }
+        else
+        {
+            blockMeshCartesianConfiguration blockMeshConfig
+            (
+                "blockMeshDict",
+                runTime.system(),
+                runTime,
+                surfaces,
+                args.optionFound("bounds"),
+                nCells,
+                refineFactor,
+                patchOpts,
+                clearBoundary
+            );
 
-        blockMeshConfig.write();
+            blockMeshConfig.write();
+        }
     }
 
     // snappyHexMeshDict options
