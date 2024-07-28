@@ -67,6 +67,12 @@ class codedBase
         //- Name of the dictionary variables in the source code
         const wordList& codeDictVars_;
 
+        mutable List<verbatimString> codeStrings_;
+
+        mutable verbatimString codeOptions_;
+
+        mutable verbatimString codeLibs_;
+
         //- Previously loaded library
         mutable fileName oldLibPath_;
 
@@ -94,6 +100,8 @@ class codedBase
             const string& globalFuncName,
             const dictionary& contextDict
         ) const;
+
+        void read(const dictionary& dict) const;
 
         //- Create library based on the dynamicCodeContext
         void createLibrary(dynamicCode&, const dynamicCodeContext&) const;

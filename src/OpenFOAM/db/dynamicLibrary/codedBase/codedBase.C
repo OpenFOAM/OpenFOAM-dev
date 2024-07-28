@@ -191,6 +191,33 @@ void Foam::codedBase::unloadLibrary
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
+void Foam::codedBase::read(const dictionary& dict) const
+{
+    codeOptions_ =
+        dict_.lookupOrDefault<verbatimString>
+        (
+            "codeOptions",
+            verbatimString::null
+        );
+
+    codeLibs_ =
+        dict_.lookupOrDefault<verbatimString>
+        (
+            "codeLibs",
+            verbatimString::null
+        );
+
+    forAll(codeKeys_, i)
+    {
+        codeStrings_[i] = dict_.lookupOrDefault<verbatimString>
+        (
+            codeKeys_[i],
+            verbatimString::null
+        );
+    }
+}
+
+
 void Foam::codedBase::createLibrary
 (
     dynamicCode& dynCode,
@@ -313,8 +340,11 @@ Foam::codedBase::codedBase
     codeName_(codeName(name)),
     dict_(dict),
     codeKeys_(codeKeys),
-    codeDictVars_(codeDictVars)
-{}
+    codeDictVars_(codeDictVars),
+    codeStrings_(codeKeys.size())
+{
+    read(dict);
+}
 
 
 Foam::codedBase::codedBase
@@ -324,10 +354,7 @@ Foam::codedBase::codedBase
     const wordList& codeDictVars
 )
 :
-    codeName_(codeName(dict.lookup("name"))),
-    dict_(dict),
-    codeKeys_(codeKeys),
-    codeDictVars_(codeDictVars)
+    codedBase(codeName(dict.lookup("name")), dict, codeKeys, codeDictVars)
 {}
 
 
@@ -336,7 +363,8 @@ Foam::codedBase::codedBase(const codedBase& cb)
     codeName_(cb.codeName_),
     dict_(cb.dict_),
     codeKeys_(cb.codeKeys_),
-    codeDictVars_(cb.codeDictVars_)
+    codeDictVars_(cb.codeDictVars_),
+    codeStrings_(cb.codeStrings_)
 {}
 
 
@@ -434,6 +462,7 @@ bool Foam::codedBase::updateLibrary() const
 bool Foam::codedBase::updateLibrary(const dictionary& dict) const
 {
     dict_ = dict;
+    read(dict);
     return updateLibrary();
 }
 
@@ -445,18 +474,22 @@ void Foam::codedBase::write(Ostream& os) const
         writeEntry(os, "name", codeName());
     }
 
-    wordList codeAndBuildKeys(codeKeys_);
-    codeAndBuildKeys.append("codeOptions");
-    codeAndBuildKeys.append("codeLibs");
-
-    forAll(codeAndBuildKeys, i)
+    forAll(codeStrings_, i)
     {
-        if (dict_.found(codeAndBuildKeys[i]))
+        if (codeStrings_[i] != verbatimString::null)
         {
-            writeKeyword(os, codeAndBuildKeys[i]);
-            os.write(verbatimString(dict_[codeAndBuildKeys[i]]))
-                << token::END_STATEMENT << nl;
+            writeEntry(os, codeKeys_[i], codeStrings_[i]);
         }
+    }
+
+    if (codeOptions_ != verbatimString::null)
+    {
+        writeEntry(os, "codeOptions", codeOptions_);
+    }
+
+    if (codeLibs_ != verbatimString::null)
+    {
+        writeEntry(os, "codeLibs", codeLibs_);
     }
 }
 
