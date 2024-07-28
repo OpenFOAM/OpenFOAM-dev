@@ -2984,7 +2984,7 @@ _snappyHexMeshConfig_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-baffles -bounds -cellZones -clearBoundary -cylindricalBackground -defaultPatch -doc -explicitFeatures -firstLayerThickness -help -inletRegions -insidePoint -layerExpansionRatio -layers -nCells -nCellsBetweenLevels -outletRegions -refineBackground -refinementBoxes -refinementDists -refinementLevel -refinementRegions -rotatingZones -srcDoc -surface -surfaceLevels -xMaxPatch -xMinPatch -yMaxPatch -yMinPatch -zMaxPatch -zMinPatch"
+    opts="-baffles -bounds -cellZones -clearBoundary -cylindricalBackground -defaultPatch -doc -explicitFeatures -firstLayerThickness -help -inletRegions -insidePoint -layerExpansionRatio -layers -nCells -nCellsBetweenLevels -noBackground -outletRegions -refineBackground -refinementBoxes -refinementDists -refinementLevel -refinementRegions -rotatingZones -srcDoc -surface -surfaceLevels -xMaxPatch -xMinPatch -yMaxPatch -yMinPatch -zMaxPatch -zMinPatch"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -4362,7 +4362,7 @@ _foamCleanPath_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-help -strip"
+    opts="-help"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
