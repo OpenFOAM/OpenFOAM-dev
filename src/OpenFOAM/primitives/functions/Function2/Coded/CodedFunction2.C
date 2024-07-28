@@ -82,19 +82,6 @@ void Foam::Function2s::Coded<Type>::prepare
 }
 
 
-template<class Type>
-Foam::autoPtr<Foam::Function2<Type>>
-Foam::Function2s::Coded<Type>::compile()
-{
-    this->updateLibrary();
-
-    dictionary redirectDict(dict());
-    redirectDict.set(codeName(), codeName());
-
-    return Function2<Type>::New(codeName(), this->units_, redirectDict);
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
@@ -107,9 +94,16 @@ Foam::Function2s::Coded<Type>::Coded
 :
     Function2<Type>(name),
     codedBase(name, dict, codeKeys, codeDictVars),
-    units_(units),
-    redirectFunction2Ptr_(compile())
-{}
+    units_(units)
+{
+    this->updateLibrary(dict);
+
+    dictionary redirectDict(dict);
+    redirectDict.set(codeName(), codeName());
+
+    redirectFunction2Ptr_ =
+        Function2<Type>::New(codeName(), this->units_, redirectDict);
+}
 
 
 
@@ -119,7 +113,7 @@ Foam::Function2s::Coded<Type>::Coded(const Coded<Type>& cf2)
     Function2<Type>(cf2),
     codedBase(cf2),
     units_(cf2.units_),
-    redirectFunction2Ptr_(compile())
+    redirectFunction2Ptr_(cf2.redirectFunction2Ptr_, false)
 {}
 
 

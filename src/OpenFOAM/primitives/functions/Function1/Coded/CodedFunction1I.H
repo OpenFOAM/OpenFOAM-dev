@@ -30,9 +30,6 @@ License
 template<class Type>
 inline Type Foam::Function1s::Coded<Type>::value(const scalar x) const
 {
-    // Make sure library containing user-defined Function1 is up-to-date
-    this->updateLibrary();
-
     return
         units_.value.toStandard
         (

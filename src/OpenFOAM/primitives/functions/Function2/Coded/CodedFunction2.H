@@ -92,9 +92,6 @@ class Coded
         //- Adapt the context for the current object
         virtual void prepare(dynamicCode&, const dynamicCodeContext&) const;
 
-        //- Compile, link, load and return the coded Function2
-        autoPtr<Function2<Type>> compile();
-
 
 public:
 

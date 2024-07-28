@@ -34,9 +34,6 @@ inline Type Foam::Function2s::Coded<Type>::value
     const scalar y
 ) const
 {
-    // Make sure library containing user-defined Function2 is up-to-date
-    this->updateLibrary();
-
     return
         units_.value.toStandard
         (
