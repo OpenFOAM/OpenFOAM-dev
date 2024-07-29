@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -314,105 +314,49 @@ Foam::fvSchemes::fvSchemes(const objectRegistry& obr)
             IOobject::NO_WRITE
         )
     ),
-    ddtSchemes_
-    (
-        ITstream
-        (
-            objectPath() + ".ddtSchemes",
-            tokenList()
-        )()
-    ),
+    ddtSchemes_("ddtSchemes", dict()),
     defaultDdtScheme_
     (
         ddtSchemes_.name() + ".default",
         tokenList()
     ),
-    d2dt2Schemes_
-    (
-        ITstream
-        (
-            objectPath() + ".d2dt2Schemes",
-            tokenList()
-        )()
-    ),
+    d2dt2Schemes_("d2dt2Schemes", dict()),
     defaultD2dt2Scheme_
     (
         d2dt2Schemes_.name() + ".default",
         tokenList()
     ),
-    interpolationSchemes_
-    (
-        ITstream
-        (
-            objectPath() + ".interpolationSchemes",
-            tokenList()
-        )()
-    ),
+    interpolationSchemes_("interpolationSchemes", dict()),
     defaultInterpolationScheme_
     (
         interpolationSchemes_.name() + ".default",
         tokenList()
     ),
-    divSchemes_
-    (
-        ITstream
-        (
-            objectPath() + ".divSchemes",
-            tokenList()
-        )()
-    ),
+    divSchemes_("divSchemes", dict()),
     defaultDivScheme_
     (
         divSchemes_.name() + ".default",
         tokenList()
     ),
-    gradSchemes_
-    (
-        ITstream
-        (
-            objectPath() + ".gradSchemes",
-            tokenList()
-        )()
-    ),
+    gradSchemes_("snGradSchemes", dict()),
     defaultGradScheme_
     (
         gradSchemes_.name() + ".default",
         tokenList()
     ),
-    snGradSchemes_
-    (
-        ITstream
-        (
-            objectPath() + ".snGradSchemes",
-            tokenList()
-        )()
-    ),
+    snGradSchemes_("snGradSchemes", dict()),
     defaultSnGradScheme_
     (
         snGradSchemes_.name() + ".default",
         tokenList()
     ),
-    laplacianSchemes_
-    (
-        ITstream
-        (
-            objectPath() + ".laplacianSchemes",
-            tokenList()
-        )()
-    ),
+    laplacianSchemes_("fluxRequired", dict()),
     defaultLaplacianScheme_
     (
         laplacianSchemes_.name() + ".default",
         tokenList()
     ),
-    fluxRequired_
-    (
-        ITstream
-        (
-            objectPath() + ".fluxRequired",
-            tokenList()
-        )()
-    ),
+    fluxRequired_("fluxRequired", dict()),
     defaultFluxRequired_(false),
     steady_(false)
 {

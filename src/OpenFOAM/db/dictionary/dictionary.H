@@ -271,6 +271,9 @@ public:
         //- Construct top-level empty dictionary with given name
         dictionary(const fileName& name);
 
+        //- Construct an empty sub-dictionary with given name and parent
+        dictionary(const word& name, const dictionary& parentDict);
+
         //- Construct given the entry name, parent dictionary and Istream,
         //  reading entries until lastEntry or EOF
         dictionary

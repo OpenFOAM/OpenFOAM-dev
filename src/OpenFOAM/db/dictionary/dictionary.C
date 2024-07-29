@@ -332,6 +332,17 @@ Foam::dictionary::dictionary(const fileName& name)
 
 Foam::dictionary::dictionary
 (
+    const word& name,
+    const dictionary& parentDict
+)
+:
+    dictionaryName(name),
+    parent_(parentDict)
+{}
+
+
+Foam::dictionary::dictionary
+(
     const dictionary& parentDict,
     const dictionary& dict
 )
@@ -356,10 +367,7 @@ Foam::dictionary::dictionary
 }
 
 
-Foam::dictionary::dictionary
-(
-    const dictionary& dict
-)
+Foam::dictionary::dictionary(const dictionary& dict)
 :
     dictionaryName(dict.name()),
     IDLList<entry>(dict, *this),
@@ -381,10 +389,7 @@ Foam::dictionary::dictionary
 }
 
 
-Foam::dictionary::dictionary
-(
-    const dictionary* dictPtr
-)
+Foam::dictionary::dictionary(const dictionary* dictPtr)
 :
     parent_(dictionary::null)
 {

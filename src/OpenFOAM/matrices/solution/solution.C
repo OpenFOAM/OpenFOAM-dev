@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -135,13 +135,13 @@ Foam::solution::solution
             IOobject::NO_WRITE
         )
     ),
-    cache_(dictionary::null),
+    cache_("cache", dict()),
     caching_(false),
-    fieldRelaxDict_(dictionary::null),
-    eqnRelaxDict_(dictionary::null),
+    fieldRelaxDict_("fields", dict()),
+    eqnRelaxDict_("equations", dict()),
     fieldRelaxDefault_(0),
     eqnRelaxDefault_(0),
-    solvers_(dictionary::null)
+    solvers_("solvers", dict())
 {
     read(dict());
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ Foam::functionObjects::fieldValue::fieldValue
     logFiles(obr_, name),
     dict_(dict),
     valueType_(valueType),
-    resultDict_(fileName("result"), dictionary::null)
+    resultDict_("result")
 {
     read(dict);
 }
@@ -71,7 +71,7 @@ Foam::functionObjects::fieldValue::fieldValue
     logFiles(obr_, name),
     dict_(dict),
     valueType_(valueType),
-    resultDict_(fileName("result"), dictionary::null)
+    resultDict_("result")
 {
     read(dict);
 }
