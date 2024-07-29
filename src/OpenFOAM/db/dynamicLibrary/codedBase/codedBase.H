@@ -101,6 +101,13 @@ class codedBase
             const dictionary& contextDict
         ) const;
 
+        verbatimString expandCodeString
+        (
+            const word& codeKey,
+            const word& codeDictVar,
+            const dictionary& dict
+        ) const;
+
         void read(const dictionary& dict) const;
 
         //- Create library based on the dynamicCodeContext

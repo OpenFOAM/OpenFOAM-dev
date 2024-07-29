@@ -29,6 +29,7 @@ License
 #include "dlLibraryTable.H"
 #include "regIOobject.H"
 #include "OSspecific.H"
+#include "stringOps.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -191,29 +192,44 @@ void Foam::codedBase::unloadLibrary
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::codedBase::read(const dictionary& dict) const
+Foam::verbatimString Foam::codedBase::expandCodeString
+(
+    const word& codeKey,
+    const word& codeDictVar,
+    const dictionary& dict
+) const
 {
-    codeOptions_ =
-        dict_.lookupOrDefault<verbatimString>
+    verbatimString codeString;
+
+    if (dict.found(codeKey))
+    {
+        codeString = dict.lookupOrDefault<verbatimString>
         (
-            "codeOptions",
+            codeKey,
             verbatimString::null
         );
 
-    codeLibs_ =
-        dict_.lookupOrDefault<verbatimString>
+        stringOps::inplaceExpandCodeString
         (
-            "codeLibs",
-            verbatimString::null
+            codeString,
+            dict,
+            codeDictVar
         );
+    }
+
+    return codeString;
+}
+
+
+void Foam::codedBase::read(const dictionary& dict) const
+{
+    codeOptions_ = expandCodeString("codeOptions", word::null, dict);
+    codeLibs_ = expandCodeString("codeLibs", word::null, dict);
 
     forAll(codeKeys_, i)
     {
-        codeStrings_[i] = dict_.lookupOrDefault<verbatimString>
-        (
-            codeKeys_[i],
-            verbatimString::null
-        );
+        codeStrings_[i] =
+            expandCodeString(codeKeys_[i], codeDictVars_[i], dict);
     }
 }
 
