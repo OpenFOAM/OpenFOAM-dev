@@ -104,9 +104,11 @@ Foam::codedFixedValueFvPatchField<Type>::codedFixedValueFvPatchField
 )
 :
     fixedValueFvPatchField<Type>(p, iF, dict),
-    codedBase(dict, codeKeys, codeDictVars),
-    redirectPatchFieldPtr_()
-{}
+    codedBase(dict, codeKeys, codeDictVars)
+{
+    // Compile the library containing user-defined fvPatchField
+    updateLibrary(dict);
+}
 
 
 template<class Type>
@@ -119,8 +121,7 @@ Foam::codedFixedValueFvPatchField<Type>::codedFixedValueFvPatchField
 )
 :
     fixedValueFvPatchField<Type>(ptf, p, iF, mapper),
-    codedBase(ptf),
-    redirectPatchFieldPtr_()
+    codedBase(ptf)
 {}
 
 
@@ -132,8 +133,7 @@ Foam::codedFixedValueFvPatchField<Type>::codedFixedValueFvPatchField
 )
 :
     fixedValueFvPatchField<Type>(ptf, iF),
-    codedBase(ptf),
-    redirectPatchFieldPtr_()
+    codedBase(ptf)
 {}
 
 
@@ -145,9 +145,6 @@ Foam::codedFixedValueFvPatchField<Type>::redirectPatchField() const
 {
     if (!redirectPatchFieldPtr_.valid())
     {
-        // Make sure library containing user-defined fvPatchField is up-to-date
-        updateLibrary();
-
         OStringStream os;
         writeEntry(os, "type", codeName());
 

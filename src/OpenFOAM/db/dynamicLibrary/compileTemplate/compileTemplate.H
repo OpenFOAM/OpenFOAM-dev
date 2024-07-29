@@ -56,6 +56,8 @@ class compileTemplate
         //- List of template argument substitutions
         const List<Pair<word>> substitutions_;
 
+        const dictionary dict_;
+
 
     // Private Member Functions
 

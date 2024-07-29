@@ -141,16 +141,10 @@ Foam::functionObject& Foam::codedFunctionObject::redirectFunctionObject() const
 {
     if (!redirectFunctionObjectPtr_.valid())
     {
-        dictionary constructDict(dict());
-        constructDict.set("type", codeName());
-
-        redirectFunctionObjectPtr_ = functionObject::New
-        (
-            codeName(),
-            time_,
-            constructDict
-        );
+        FatalErrorInFunction
+            << "redirectFunctionObject not allocated" << exit(FatalError);
     }
+
     return redirectFunctionObjectPtr_();
 }
 
@@ -185,6 +179,17 @@ bool Foam::codedFunctionObject::read(const dictionary& dict)
     {
         redirectFunctionObjectPtr_.clear();
         updateLibrary(dict);
+
+        dictionary constructDict(dict);
+        constructDict.set("type", codeName());
+
+        redirectFunctionObjectPtr_ = functionObject::New
+        (
+            codeName(),
+            time_,
+            constructDict
+        );
+
         return redirectFunctionObject().read(dict);
     }
     else

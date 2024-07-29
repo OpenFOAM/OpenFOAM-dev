@@ -181,7 +181,7 @@ public:
         autoPtr<pointPatchField<Type>> clone() const
         {
             NotImplemented;
-            return tmp<pointPatchField<Type>>(nullptr);
+            return autoPtr<pointPatchField<Type>>(nullptr);
         }
 
         //- Construct as copy setting internal field reference

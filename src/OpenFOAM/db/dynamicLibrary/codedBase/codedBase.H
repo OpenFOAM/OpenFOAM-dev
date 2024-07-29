@@ -58,9 +58,6 @@ class codedBase
         //- Name of the dynamically generated CodedType
         const word codeName_;
 
-        //- Dictionary contents for the CodedType
-        mutable dictionary dict_;
-
         //- Keywords associated with source code
         const wordList& codeKeys_;
 
@@ -111,7 +108,12 @@ class codedBase
         void read(const dictionary& dict) const;
 
         //- Create library based on the dynamicCodeContext
-        void createLibrary(dynamicCode&, const dynamicCodeContext&) const;
+        void createLibrary
+        (
+            const dictionary& dict,
+            dynamicCode&,
+            const dynamicCodeContext&
+        ) const;
 
         //- Adapt the context for the current object
         virtual void prepare(dynamicCode&, const dynamicCodeContext&) const = 0;
@@ -158,18 +160,9 @@ public:
         //- Return a description (type + name) for the output
         string description() const;
 
-        //- Get the dictionary to initialise the codeContext
-        const dictionary& dict() const
-        {
-            return dict_;
-        }
-
         word codeTemplateC(const word& baseTypeName) const;
 
         word codeTemplateH(const word& baseTypeName) const;
-
-        //- Update library as required
-        bool updateLibrary() const;
 
         //- Update library from given updated dictionary as required
         //  Returns true if the library was updated, otherwise false

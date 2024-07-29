@@ -101,6 +101,22 @@ void Foam::codedFixedValuePointPatchField<Type>::prepare
 template<class Type>
 Foam::codedFixedValuePointPatchField<Type>::codedFixedValuePointPatchField
 (
+    const pointPatch& p,
+    const DimensionedField<Type, pointMesh>& iF,
+    const dictionary& dict
+)
+:
+    fixedValuePointPatchField<Type>(p, iF, dict),
+    codedBase(dict, codeKeys, codeDictVars)
+{
+    // Compile the library containing user-defined pointPatchField
+    updateLibrary(dict);
+}
+
+
+template<class Type>
+Foam::codedFixedValuePointPatchField<Type>::codedFixedValuePointPatchField
+(
     const codedFixedValuePointPatchField<Type>& ptf,
     const pointPatch& p,
     const DimensionedField<Type, pointMesh>& iF,
@@ -108,22 +124,7 @@ Foam::codedFixedValuePointPatchField<Type>::codedFixedValuePointPatchField
 )
 :
     fixedValuePointPatchField<Type>(ptf, p, iF, mapper),
-    codedBase(ptf),
-    redirectPatchFieldPtr_()
-{}
-
-
-template<class Type>
-Foam::codedFixedValuePointPatchField<Type>::codedFixedValuePointPatchField
-(
-    const pointPatch& p,
-    const DimensionedField<Type, pointMesh>& iF,
-    const dictionary& dict
-)
-:
-    fixedValuePointPatchField<Type>(p, iF, dict),
-    codedBase(dict, codeKeys, codeDictVars),
-    redirectPatchFieldPtr_()
+    codedBase(ptf)
 {}
 
 
@@ -135,8 +136,7 @@ Foam::codedFixedValuePointPatchField<Type>::codedFixedValuePointPatchField
 )
 :
     fixedValuePointPatchField<Type>(ptf, iF),
-    codedBase(ptf),
-    redirectPatchFieldPtr_()
+    codedBase(ptf)
 {}
 
 
@@ -148,10 +148,6 @@ Foam::codedFixedValuePointPatchField<Type>::redirectPatchField() const
 {
     if (!redirectPatchFieldPtr_.valid())
     {
-        // Make sure library containing user-defined pointPatchField
-        // is up-to-date
-        updateLibrary();
-
         OStringStream os;
         writeEntry(os, "type", codeName());
         writeEntry(os, "value", static_cast<const Field<Type>&>(*this));

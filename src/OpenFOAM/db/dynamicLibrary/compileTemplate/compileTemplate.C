@@ -80,23 +80,23 @@ void Foam::compileTemplate::setFilterVariable
     word type(substitution.second());
     const word typeRenameMapName(name + "Renamed");
 
-    if (dict().found(name))
+    if (dict_.found(name))
     {
-        const HashSet<word> types(dict().lookup(name));
+        const HashSet<word> types(dict_.lookup(name));
         if (!types.found(type))
         {
-            FatalIOErrorInFunction(dict())
+            FatalIOErrorInFunction(dict_)
                 << "Unknown " << name << " type " << type << nl
                 << "Supported " << name << " types: " << types
                 << exit(FatalIOError);
         }
     }
 
-    if (dict().found(typeRenameMapName))
+    if (dict_.found(typeRenameMapName))
     {
         const HashTable<word> renameMap
         (
-            dict().lookup(typeRenameMapName)
+            dict_.lookup(typeRenameMapName)
         );
 
         if (renameMap.found(type))
@@ -155,9 +155,10 @@ Foam::compileTemplate::compileTemplate
         codeDictVars
     ),
     templateName_(templateName),
-    substitutions_(substitutions)
+    substitutions_(substitutions),
+    dict_(optionsDict(templateName))
 {
-    this->updateLibrary();
+    this->updateLibrary(dict_);
 }
 
 
