@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -90,6 +90,22 @@ multipleSeries () {
     echo "$_dirs"
 }
 
+seriesFileHead () {
+    cat<<EOF
+{
+    "file-series-version": "1.0",
+    "files": [
+EOF
+}
+
+seriesFileFoot () {
+    cat<<EOF
+
+    ]
+}
+EOF
+}
+
 dir=postProcessing
 out=sequencedVTK
 
@@ -158,18 +174,32 @@ do
         # Image index
         i=0
 
+        [ "$d" = SINGLE ] && unset s
+
+        series_file="$out/$n$s.vtk.series"
+        seriesFileHead > "$series_file"
+
         for f in $file_list
         do
             ! [ "$d" = SINGLE ] && \
                 ! echo "$f" | grep -q "$d" && \
                 continue
 
-            [ "$d" = SINGLE ] && unset s
-
             link=$(printf "${n}${s}.%04d.vtk" $i)
             ln -s "../$f" "$out/$link"
+
+            # Write series file
+            [ "$i" -eq 0 ] || printf ",\n" >> "$series_file"
+            time="$(dirname "$f" | awk -F/ '{print $NF}')"
+            printf "%17s\"%s\", \"time\": %s }" \
+                   '{"name": ' \
+                   "$link" \
+                   "$time" >> "$series_file"
+
             i=$(( i + 1 )) # Relies on ordered list of files
         done
+
+        seriesFileFoot >> "$series_file"
 
         s=$(( s + 1 ))
     done
