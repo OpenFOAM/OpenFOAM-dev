@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,8 +74,7 @@ Foam::wallDist::wallDist(const fvMesh& mesh, const word& patchTypeName)
     (
         patchDistMethod::New
         (
-            static_cast<const fvSchemes&>(mesh)
-           .subDict(patchTypeName_ & "Dist"),
+            mesh.schemes().subDict(patchTypeName_ & "Dist"),
             mesh,
             patchIndices_
         )
@@ -94,7 +93,9 @@ Foam::wallDist::wallDist(const fvMesh& mesh, const word& patchTypeName)
     ),
     nRequired_
     (
-        static_cast<const fvSchemes&>(mesh).subDict(patchTypeName_ & "Dist")
+        mesh
+       .schemes()
+       .subDict(patchTypeName_ & "Dist")
        .lookupOrDefault<Switch>("nRequired", false)
     )
 {
@@ -124,8 +125,7 @@ Foam::wallDist::wallDist
     (
         patchDistMethod::New
         (
-            static_cast<const fvSchemes&>(mesh)
-           .subDict(patchTypeName_ & "Dist"),
+            mesh.schemes().subDict(patchTypeName_ & "Dist"),
             mesh,
             patchIndices_
         )
@@ -144,7 +144,9 @@ Foam::wallDist::wallDist
     ),
     nRequired_
     (
-        static_cast<const fvSchemes&>(mesh).subDict(patchTypeName_ & "Dist")
+        mesh
+       .schemes()
+       .subDict(patchTypeName_ & "Dist")
        .lookupOrDefault<Switch>("nRequired", false)
     )
 {

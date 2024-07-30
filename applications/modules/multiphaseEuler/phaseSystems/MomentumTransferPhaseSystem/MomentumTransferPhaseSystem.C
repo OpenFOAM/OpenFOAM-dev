@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -708,7 +708,7 @@ void Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::invADVs
                     addField
                     (
                         i,
-                        "HVm",
+                        IOobject::groupName("HVm", phase.name()),
                         VmPhase*HDUDts[i],
                         HVms
                     );
@@ -726,7 +726,7 @@ void Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::invADVs
                     addField
                     (
                         i,
-                        "HVm",
+                        IOobject::groupName("HVm", phase.name()),
                         -VmPhase*HDUDts[j],
                         HVms
                     );
@@ -887,7 +887,7 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::invADVfs
                 addField
                 (
                     i,
-                    "HVmf",
+                    IOobject::groupName("HVmf", phase.name()),
                     VmPhasef
                    *byDt
                     (
@@ -911,7 +911,7 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::invADVfs
                     addField
                     (
                         i,
-                        "HVmf",
+                        IOobject::groupName("HVmf", phase.name()),
                        -VmPhasef
                        *byDt
                         (
@@ -1174,7 +1174,7 @@ void Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::dragCorrs
                 addField
                 (
                     i,
-                    "dragCorr",
+                    IOobject::groupName("dragCorr", phase.name()),
                     K1*(j == -1 ? -Uphis[i] : (Uphis[j] - Uphis[i])),
                     dragCorrs
                 );
@@ -1182,7 +1182,7 @@ void Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::dragCorrs
                 addField
                 (
                     i,
-                    "dragCorrf",
+                    IOobject::groupName("dragCorrf", phase.name()),
                     fvc::interpolate(K1)
                    *(j == -1 ? -phase.phi() : (otherPhase.phi() - phase.phi())),
                     dragCorrfs

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -154,7 +154,7 @@ void Foam::phaseSystem::solve(const PtrList<volScalarField>& rAs)
                 (
                     IOobject
                     (
-                        "Sp",
+                        IOobject::groupName("Sp", phase.name()),
                         mesh_.time().name(),
                         mesh_
                     ),
@@ -168,7 +168,7 @@ void Foam::phaseSystem::solve(const PtrList<volScalarField>& rAs)
                 phasei,
                 new volScalarField::Internal
                 (
-                    "Su",
+                    IOobject::groupName("Su", phase.name()),
                     min(alpha.v(), scalar(1))
                    *fvc::div(fvc::absolute(phi_, phase.U()))->v()
                 )
