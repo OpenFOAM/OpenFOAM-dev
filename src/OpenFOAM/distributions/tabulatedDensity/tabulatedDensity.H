@@ -34,7 +34,7 @@ Usage
     {
         type    tabulatedDensity;
         Q       0;
-        values
+        distribution
         (
             (10e-6 0.0025)
             (12e-6 0.2795)

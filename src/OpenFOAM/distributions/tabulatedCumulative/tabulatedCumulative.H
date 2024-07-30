@@ -34,7 +34,7 @@ Usage
     {
         type    tabulatedCumulative;
         Q       0;
-        values
+        distribution
         (
             (10e-6 0)
             (12e-6 0.1972235)
