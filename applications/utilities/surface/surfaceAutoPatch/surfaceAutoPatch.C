@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
 
     const fileName inFileName  = args[1];
     const fileName outFileName = args[2];
-    const scalar includedAngle = args.argRead<scalar>(3);
+    const scalar includedAngle = degToRad(args.argRead<scalar>(3));
 
     Info<< "Surface        : " << inFileName << nl << endl;
 
