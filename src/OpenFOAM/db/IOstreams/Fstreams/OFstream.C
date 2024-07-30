@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ namespace Foam
 Foam::OFstreamAllocator::OFstreamAllocator
 (
     const fileName& filePath,
-    IOstream::compressionType compression,
+    const IOstream::compressionType compression,
     const bool append
 )
 :
@@ -114,9 +114,9 @@ Foam::OFstreamAllocator::~OFstreamAllocator()
 Foam::OFstream::OFstream
 (
     const fileName& filePath,
-    streamFormat format,
-    versionNumber version,
-    compressionType compression,
+    const streamFormat format,
+    const versionNumber version,
+    const compressionType compression,
     const bool append
 )
 :

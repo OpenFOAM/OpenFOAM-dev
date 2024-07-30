@@ -97,8 +97,9 @@ public:
             const int tag = UPstream::msgType(),
             const label comm = UPstream::worldComm,
             const bool sendAtDestruct = true,
-            streamFormat format=BINARY,
-            versionNumber version=currentVersion
+            const streamFormat format = BINARY,
+            const versionNumber version = currentVersion,
+            const bool global = false
         );
 
         //- Construct given buffers

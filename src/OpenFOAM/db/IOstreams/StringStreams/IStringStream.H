@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,8 +60,8 @@ public:
         IStringStream
         (
             const string& buffer,
-            streamFormat format=ASCII,
-            versionNumber version=currentVersion
+            const streamFormat format = ASCII,
+            const versionNumber version = currentVersion
         )
         :
             ISstream
@@ -79,8 +79,8 @@ public:
         (
             const string& name,
             const string& buffer,
-            streamFormat format=ASCII,
-            versionNumber version=currentVersion
+            const streamFormat format = ASCII,
+            const versionNumber version = currentVersion
         )
         :
             ISstream
@@ -97,8 +97,8 @@ public:
         IStringStream
         (
             const char* buffer,
-            streamFormat format=ASCII,
-            versionNumber version=currentVersion
+            const streamFormat format = ASCII,
+            const versionNumber version = currentVersion
         )
         :
             ISstream

@@ -101,8 +101,9 @@ public:
             const int tag = UPstream::msgType(),
             const label comm = UPstream::worldComm,
             const bool clearAtEnd = false,   // destroy externalBuf if at end
-            streamFormat format=BINARY,
-            versionNumber version=currentVersion
+            const streamFormat format = BINARY,
+            const versionNumber version = currentVersion,
+            const bool global = false
         );
 
         //- Construct given buffers

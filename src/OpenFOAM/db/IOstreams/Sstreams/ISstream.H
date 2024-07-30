@@ -102,9 +102,9 @@ public:
         (
             istream& is,
             const string& name,
-            streamFormat format=ASCII,
-            versionNumber version=currentVersion,
-            compressionType compression=UNCOMPRESSED
+            const streamFormat format = ASCII,
+            const versionNumber version = currentVersion,
+            const compressionType compression = UNCOMPRESSED
         );
 
 

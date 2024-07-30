@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,9 +59,9 @@ void Foam::OBJstream::writeAndCheck(const char c)
 Foam::OBJstream::OBJstream
 (
     const fileName& filePath,
-    streamFormat format,
-    versionNumber version,
-    compressionType compression
+    const streamFormat format,
+    const versionNumber version,
+    const compressionType compression
 )
 :
     OFstream(filePath, format, version, compression),

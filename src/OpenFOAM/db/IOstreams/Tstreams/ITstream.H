@@ -70,11 +70,12 @@ public:
         (
             const string& name,
             const UList<token>& tokens,
-            streamFormat format=ASCII,
-            versionNumber version=currentVersion
+            const streamFormat format = ASCII,
+            const versionNumber version = currentVersion,
+            const bool global = false
         )
         :
-            Istream(format, version),
+            Istream(format, version, UNCOMPRESSED, global),
             tokenList(tokens),
             name_(name),
             tokenIndex_(0)
@@ -89,11 +90,12 @@ public:
         (
             const string& name,
             List<token>&& tokens,
-            streamFormat format=ASCII,
-            versionNumber version=currentVersion
+            const streamFormat format = ASCII,
+            const versionNumber version = currentVersion,
+            const bool global = false
         )
         :
-            Istream(format, version),
+            Istream(format, version, UNCOMPRESSED, global),
             tokenList(move(tokens)),
             name_(name),
             tokenIndex_(0)

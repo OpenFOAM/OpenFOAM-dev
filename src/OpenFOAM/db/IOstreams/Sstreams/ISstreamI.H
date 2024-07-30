@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,9 +31,9 @@ inline Foam::ISstream::ISstream
 (
     istream& is,
     const string& name,
-    streamFormat format,
-    versionNumber version,
-    compressionType compression
+    const streamFormat format,
+    const versionNumber version,
+    const compressionType compression
 )
 :
     Istream(format, version, compression),

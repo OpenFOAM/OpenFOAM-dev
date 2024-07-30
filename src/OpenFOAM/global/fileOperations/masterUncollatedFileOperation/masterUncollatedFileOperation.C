@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1888,6 +1888,7 @@ Foam::fileOperations::masterUncollatedFileOperation::readStream
             // the fName is already rewritten to processors/.
 
             isPtr.reset(new IFstream(fName));
+            isPtr->global() = io.global();
 
             if (isPtr().good())
             {
@@ -2185,8 +2186,11 @@ bool Foam::fileOperations::masterUncollatedFileOperation::read
                 0,
                 Pstream::msgType(),
                 Pstream::worldComm,
-                format
+                format,
+                IOstream::currentVersion,
+                io.global()
             );
+
             ok = io.readData(fromAbove);
         }
 
@@ -2200,8 +2204,11 @@ bool Foam::fileOperations::masterUncollatedFileOperation::read
                 0,
                 Pstream::msgType(),
                 Pstream::worldComm,
-                format
+                format,
+                IOstream::currentVersion,
+                io.global()
             );
+
             bool okWrite = io.writeData(toBelow);
             ok = ok && okWrite;
         }

@@ -61,7 +61,7 @@ Foam::IOerrorLocation::IOerrorLocation(const IOstream& ios)
     ioFileName_(ios.name()),
     ioStartLineNumber_(ios.lineNumber()),
     ioEndLineNumber_(-1),
-    ioGlobal_(false)
+    ioGlobal_(ios.global())
 {}
 
 
@@ -196,7 +196,7 @@ void Foam::IOerror::exit(const int)
         }
         else
         {
-            Perr<< endl << *this << endl
+            Serr<< endl << *this << endl
                 << "\nFOAM exiting\n" << endl;
             ::exit(1);
         }
@@ -254,9 +254,9 @@ void Foam::IOerror::abort()
         }
         else
         {
-            Perr<< endl << *this << endl
+            Serr<< endl << *this << endl
                 << "\nFOAM aborting\n" << endl;
-            printStack(Perr);
+            printStack(Serr);
             ::abort();
         }
     }

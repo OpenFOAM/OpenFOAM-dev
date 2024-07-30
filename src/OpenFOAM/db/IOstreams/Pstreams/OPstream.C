@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,12 +34,24 @@ Foam::OPstream::OPstream
     const label bufSize,
     const int tag,
     const label comm,
-    streamFormat format,
-    versionNumber version
+    const streamFormat format,
+    const versionNumber version,
+    const bool global
 )
 :
     Pstream(commsType, bufSize),
-    UOPstream(commsType, toProcNo, buf_, tag, comm, true, format, version)
+    UOPstream
+    (
+        commsType,
+        toProcNo,
+        buf_,
+        tag,
+        comm,
+        true,
+        format,
+        version,
+        global
+    )
 {}
 
 

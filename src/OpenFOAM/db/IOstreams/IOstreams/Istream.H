@@ -75,12 +75,13 @@ public:
         //- Set stream status
         Istream
         (
-            streamFormat format=ASCII,
-            versionNumber version=currentVersion,
-            compressionType compression=UNCOMPRESSED
+            const streamFormat format = ASCII,
+            const versionNumber version = currentVersion,
+            const compressionType compression = UNCOMPRESSED,
+            const bool global = false
         )
         :
-            IOstream(format, version, compression),
+            IOstream(format, version, compression, global),
             putBack_(false)
         {}
 

@@ -88,12 +88,13 @@ Foam::UOPstream::UOPstream
     const int tag,
     const label comm,
     const bool sendAtDestruct,
-    streamFormat format,
-    versionNumber version
+    const streamFormat format,
+    const versionNumber version,
+    const bool global
 )
 :
     UPstream(commsType),
-    Ostream(format, version),
+    Ostream(format, version, UNCOMPRESSED, global),
     toProcNo_(toProcNo),
     sendBuf_(sendBuf),
     tag_(tag),

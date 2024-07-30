@@ -45,9 +45,9 @@ Foam::prefixOSstream::prefixOSstream
 (
     ostream& os,
     const string& name,
-    streamFormat format,
-    versionNumber version,
-    compressionType compression
+    const streamFormat format,
+    const versionNumber version,
+    const compressionType compression
 )
 :
     OSstream(os, name, format, version, compression),
