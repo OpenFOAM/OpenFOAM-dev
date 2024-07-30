@@ -105,8 +105,7 @@ Foam::dynamicCodeContext::dynamicCodeContext
     os << options_ << libs_;
     sha1_ = os.digest();
 
-    // Add line directive after calculating SHA1 since this includes
-    // "processor..." in the path which differs between cores
+    // Add line directives after calculating SHA1
     forAll(codeKeys, i)
     {
         if (codePtrs[i])

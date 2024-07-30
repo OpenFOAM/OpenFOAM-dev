@@ -58,6 +58,16 @@ namespace functionEntries
 }
 
 
+const Foam::wordList Foam::functionEntries::codeStream::codeKeys
+(
+    {"code", "codeInclude", "localCode"}
+);
+
+const Foam::wordList Foam::functionEntries::codeStream::codeDictVars
+(
+    {"dict", word::null, word::null}
+);
+
 const Foam::word Foam::functionEntries::codeStream::codeTemplateC =
     "codeStreamTemplate.C";
 
@@ -94,8 +104,8 @@ Foam::functionEntries::codeStream::getFunction
     (
         contextDict,
         codeDict,
-        {"code", "codeInclude", "localCode"},
-        {"dict", word::null, word::null}
+        codeKeys,
+        codeDictVars
     );
 
     // codeName: codeStream + _<sha1>

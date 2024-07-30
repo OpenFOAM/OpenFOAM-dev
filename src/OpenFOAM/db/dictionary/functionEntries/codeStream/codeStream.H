@@ -238,8 +238,15 @@ public:
 
     // Static Data Members
 
+        //- Keywords associated with source code
+        static const wordList codeKeys;
+
+        //- Name of the dictionary variables in the source code
+        static const wordList codeDictVars;
+
         //- Name of the C code template to be used
         static const word codeTemplateC;
+
 
     // Related types
 
