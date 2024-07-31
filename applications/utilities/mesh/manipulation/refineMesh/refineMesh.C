@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -290,10 +290,10 @@ int main(int argc, char *argv[])
 
         refineDict.add("coordinateSystem", "global");
 
-        dictionary coeffsDict;
-        coeffsDict.add("e1", vector(1, 0, 0));
-        coeffsDict.add("e2", vector(0, 1, 0));
-        refineDict.add("globalCoeffs", coeffsDict);
+        dictionary coeffDict;
+        coeffDict.add("e1", vector(1, 0, 0));
+        coeffDict.add("e2", vector(0, 1, 0));
+        refineDict.add("globalCoeffs", coeffDict);
 
         refineDict.add("geometricCut", "false");
         refineDict.add("writeMesh", "false");

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,9 +56,9 @@ Foam::radiationModels::scatterModels::constant::constant
 )
 :
     scatterModel(dict, mesh),
-    coeffsDict_(dict.optionalSubDict(typeName + "Coeffs")),
-    sigma_("sigma", dimless/dimLength, coeffsDict_),
-    C_("C", dimless, coeffsDict_)
+    coeffDict_(dict.optionalSubDict(typeName + "Coeffs")),
+    sigma_("sigma", dimless/dimLength, coeffDict_),
+    C_("C", dimless, coeffDict_)
 {}
 
 

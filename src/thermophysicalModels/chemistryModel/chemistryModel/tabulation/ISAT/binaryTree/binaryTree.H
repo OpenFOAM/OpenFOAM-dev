@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,7 +77,7 @@ class binaryTree
         //- Secondary retrieve search variables
         label max2ndSearch_;
 
-        dictionary coeffsDict_;
+        dictionary coeffDict_;
 
 
     // Private Member Functions
@@ -122,7 +122,7 @@ public:
         binaryTree
         (
             chemistryTabulationMethods::ISAT& table,
-            dictionary coeffsDict
+            dictionary coeffDict
         );
 
 

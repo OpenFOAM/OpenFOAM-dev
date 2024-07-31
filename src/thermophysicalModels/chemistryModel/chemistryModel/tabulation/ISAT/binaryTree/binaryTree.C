@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -137,16 +137,16 @@ bool Foam::binaryTree::inSubTree
 Foam::binaryTree::binaryTree
 (
     chemistryTabulationMethods::ISAT& table,
-    dictionary coeffsDict
+    dictionary coeffDict
 )
 :
     table_(table),
     root_(nullptr),
-    maxNLeafs_(coeffsDict.lookup<label>("maxNLeafs")),
+    maxNLeafs_(coeffDict.lookup<label>("maxNLeafs")),
     size_(0),
     n2ndSearch_(0),
-    max2ndSearch_(coeffsDict.lookupOrDefault("max2ndSearch",0)),
-    coeffsDict_(coeffsDict)
+    max2ndSearch_(coeffDict.lookupOrDefault("max2ndSearch",0)),
+    coeffDict_(coeffDict)
 {}
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -180,7 +180,7 @@ void Foam::binaryTree::insertNewLeaf
                 epsTol,
                 nCols,
                 nActive,
-                coeffsDict_,
+                coeffDict_,
                 root_
             );
         root_->leafLeft() = newChemPoint;
@@ -208,7 +208,7 @@ void Foam::binaryTree::insertNewLeaf
                 epsTol,
                 nCols,
                 nActive,
-                coeffsDict_
+                coeffDict_
             );
         // insert new node on the parent node in the position of the
         // previously stored leaf (phi0)

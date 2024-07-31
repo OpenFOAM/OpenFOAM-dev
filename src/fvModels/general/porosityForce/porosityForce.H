@@ -90,7 +90,7 @@ class porosityForce
         //- Names of the velocity fields
         wordList UNames_;
 
-        dictionary coeffsDict_;
+        dictionary coeffDict_;
 
         //- Run-time selectable porosity model
         mutable autoPtr<porosityModel> porosityPtr_;

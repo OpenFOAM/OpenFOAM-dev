@@ -308,12 +308,12 @@ Foam::label Foam::decompositionMethods::zoltan::decompose
 
     if (decompositionDict_.found("zoltanCoeffs"))
     {
-        const dictionary& coeffsDict_ =
+        const dictionary& coeffDict_ =
             decompositionDict_.subDict("zoltanCoeffs");
 
-        coeffsDict_.readIfPresent("lb_method", lb_method);
+        coeffDict_.readIfPresent("lb_method", lb_method);
 
-        forAllConstIter(IDLList<entry>, coeffsDict_, iter)
+        forAllConstIter(IDLList<entry>, coeffDict_, iter)
         {
             if (!iter().isDict())
             {

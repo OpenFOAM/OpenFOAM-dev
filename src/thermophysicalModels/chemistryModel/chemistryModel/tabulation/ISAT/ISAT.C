@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,26 +54,26 @@ Foam::chemistryTabulationMethods::ISAT::ISAT
         chemistryProperties,
         chemistry
     ),
-    coeffsDict_(chemistryProperties.subDict("tabulation")),
+    coeffDict_(chemistryProperties.subDict("tabulation")),
     chemistry_(chemistry),
-    log_(coeffsDict_.lookupOrDefault<Switch>("log", false)),
+    log_(coeffDict_.lookupOrDefault<Switch>("log", false)),
     reduction_(chemistry_.reduction()),
-    chemisTree_(*this, coeffsDict_),
+    chemisTree_(*this, coeffDict_),
     scaleFactor_(chemistry.nEqns() + 1, 1),
     runTime_(chemistry.time()),
     timeSteps_(0),
     chPMaxLifeTime_
     (
-        coeffsDict_.lookupOrDefault("chPMaxLifeTime", INT_MAX)
+        coeffDict_.lookupOrDefault("chPMaxLifeTime", INT_MAX)
     ),
-    maxGrowth_(coeffsDict_.lookupOrDefault("maxGrowth", INT_MAX)),
+    maxGrowth_(coeffDict_.lookupOrDefault("maxGrowth", INT_MAX)),
     checkEntireTreeInterval_
     (
-        coeffsDict_.lookupOrDefault("checkEntireTreeInterval", INT_MAX)
+        coeffDict_.lookupOrDefault("checkEntireTreeInterval", INT_MAX)
     ),
     maxDepthFactor_
     (
-        coeffsDict_.lookupOrDefault
+        coeffDict_.lookupOrDefault
         (
             "maxDepthFactor",
             (chemisTree_.maxNLeafs() - 1)
@@ -82,16 +82,16 @@ Foam::chemistryTabulationMethods::ISAT::ISAT
     ),
     minBalanceThreshold_
     (
-        coeffsDict_.lookupOrDefault
+        coeffDict_.lookupOrDefault
         (
             "minBalanceThreshold", 0.1*chemisTree_.maxNLeafs()
         )
     ),
-    MRURetrieve_(coeffsDict_.lookupOrDefault("MRURetrieve", false)),
-    maxMRUSize_(coeffsDict_.lookupOrDefault("maxMRUSize", 0)),
+    MRURetrieve_(coeffDict_.lookupOrDefault("MRURetrieve", false)),
+    maxMRUSize_(coeffDict_.lookupOrDefault("maxMRUSize", 0)),
     lastSearch_(nullptr),
-    growPoints_(coeffsDict_.lookupOrDefault("growPoints", true)),
-    tolerance_(coeffsDict_.lookupOrDefault("tolerance", 1e-4)),
+    growPoints_(coeffDict_.lookupOrDefault("growPoints", true)),
+    tolerance_(coeffDict_.lookupOrDefault("tolerance", 1e-4)),
     nRetrieved_(0),
     nGrowth_(0),
     nAdd_(0),
@@ -114,7 +114,7 @@ Foam::chemistryTabulationMethods::ISAT::ISAT
 
     cleaningRequired_(false)
 {
-    dictionary scaleDict(coeffsDict_.subDict("scaleFactor"));
+    dictionary scaleDict(coeffDict_.subDict("scaleFactor"));
     label Ysize = chemistry_.Y().size();
     scalar otherScaleFactor = scaleDict.lookup<scalar>("otherSpecies");
     for (label i=0; i<Ysize; i++)

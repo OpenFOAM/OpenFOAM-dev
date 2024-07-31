@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,12 +53,12 @@ Foam::laminarFlameSpeedModels::RaviPetersen::RaviPetersen
 )
 :
     laminarFlameSpeed(dict, ct),
-    coeffsDict_(dict.optionalSubDict(typeName + "Coeffs").subDict(fuel_)),
-    pPoints_(coeffsDict_.lookup("pPoints")),
-    EqRPoints_(coeffsDict_.lookup("EqRPoints")),
-    alpha_(coeffsDict_.lookup("alpha")),
-    beta_(coeffsDict_.lookup("beta")),
-    TRef_(coeffsDict_.lookup<scalar>("TRef"))
+    coeffDict_(dict.optionalSubDict(typeName + "Coeffs").subDict(fuel_)),
+    pPoints_(coeffDict_.lookup("pPoints")),
+    EqRPoints_(coeffDict_.lookup("EqRPoints")),
+    alpha_(coeffDict_.lookup("alpha")),
+    beta_(coeffDict_.lookup("beta")),
+    TRef_(coeffDict_.lookup<scalar>("TRef"))
 {
     checkPointsMonotonicity("equivalenceRatio", EqRPoints_);
     checkPointsMonotonicity("pressure", pPoints_);
@@ -87,7 +87,7 @@ void Foam::laminarFlameSpeedModels::RaviPetersen::checkPointsMonotonicity
         {
             FatalIOErrorInFunction
             (
-                coeffsDict_
+                coeffDict_
             )   << "Data points for the " << name
                 << " do not increase monotonically" << endl
                 << exit(FatalIOError);
@@ -120,7 +120,7 @@ void Foam::laminarFlameSpeedModels::RaviPetersen::checkCoefficientArrayShape
     {
         FatalIOErrorInFunction
         (
-            coeffsDict_
+            coeffDict_
         )   << "Inconsistent size of " << name << " coefficients array" << endl
             << exit(FatalIOError);
     }

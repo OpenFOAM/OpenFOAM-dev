@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,7 @@ Foam::laminarFlameSpeedModels::SCOPE::SCOPE
 :
     laminarFlameSpeed(dict, ct),
 
-    coeffsDict_
+    coeffDict_
     (
         dictionary
         (
@@ -82,14 +82,14 @@ Foam::laminarFlameSpeedModels::SCOPE::SCOPE
           )()
         ).optionalSubDict(typeName + "Coeffs")
     ),
-    LFL_(coeffsDict_.lookup<scalar>("lowerFlamabilityLimit")),
-    UFL_(coeffsDict_.lookup<scalar>("upperFlamabilityLimit")),
-    SuPolyL_(coeffsDict_.subDict("lowerSuPolynomial")),
-    SuPolyU_(coeffsDict_.subDict("upperSuPolynomial")),
-    Texp_(coeffsDict_.lookup<scalar>("Texp")),
-    pexp_(coeffsDict_.lookup<scalar>("pexp")),
-    MaPolyL_(coeffsDict_.subDict("lowerMaPolynomial")),
-    MaPolyU_(coeffsDict_.subDict("upperMaPolynomial"))
+    LFL_(coeffDict_.lookup<scalar>("lowerFlamabilityLimit")),
+    UFL_(coeffDict_.lookup<scalar>("upperFlamabilityLimit")),
+    SuPolyL_(coeffDict_.subDict("lowerSuPolynomial")),
+    SuPolyU_(coeffDict_.subDict("upperSuPolynomial")),
+    Texp_(coeffDict_.lookup<scalar>("Texp")),
+    pexp_(coeffDict_.lookup<scalar>("pexp")),
+    MaPolyL_(coeffDict_.subDict("lowerMaPolynomial")),
+    MaPolyU_(coeffDict_.subDict("upperMaPolynomial"))
 {
     SuPolyL_.ll = max(SuPolyL_.ll, LFL_) + small;
     SuPolyU_.ul = min(SuPolyU_.ul, UFL_) - small;

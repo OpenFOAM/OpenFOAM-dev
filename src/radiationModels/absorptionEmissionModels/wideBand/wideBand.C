@@ -58,7 +58,7 @@ Foam::radiationModels::absorptionEmissionModels::wideBand::wideBand
 )
 :
     absorptionEmissionModel(dict, mesh),
-    coeffsDict_(dict.subDict(modelName + "Coeffs")),
+    coeffDict_(dict.subDict(modelName + "Coeffs")),
     speciesNames_(0),
     specieIndex_(label(0)),
     lookUpTablePtr_(),
@@ -74,7 +74,7 @@ Foam::radiationModels::absorptionEmissionModels::wideBand::wideBand
     }
 
     label nBand = 0;
-    forAllConstIter(dictionary, coeffsDict_, iter)
+    forAllConstIter(dictionary, coeffDict_, iter)
     {
         if (!iter().isDict()) continue;
 
@@ -108,16 +108,16 @@ Foam::radiationModels::absorptionEmissionModels::wideBand::wideBand
     }
     nBands_ = nBand;
 
-    if (coeffsDict_.found("lookUpTableFileName"))
+    if (coeffDict_.found("lookUpTableFileName"))
     {
-        const word name = coeffsDict_.lookup("lookUpTableFileName");
+        const word name = coeffDict_.lookup("lookUpTableFileName");
         if (name != "none")
         {
             lookUpTablePtr_.set
             (
                 new interpolationLookUpTable
                 (
-                    fileName(coeffsDict_.lookup("lookUpTableFileName")),
+                    fileName(coeffDict_.lookup("lookUpTableFileName")),
                     mesh.time().constant(),
                     mesh
                 )

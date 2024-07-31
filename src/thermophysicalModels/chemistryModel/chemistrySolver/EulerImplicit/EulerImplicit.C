@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,8 +36,8 @@ Foam::EulerImplicit<ChemistryModel>::EulerImplicit
 )
 :
     chemistrySolver<ChemistryModel>(thermo),
-    coeffsDict_(this->subDict("EulerImplicitCoeffs")),
-    cTauChem_(coeffsDict_.lookup<scalar>("cTauChem")),
+    coeffDict_(this->subDict("EulerImplicitCoeffs")),
+    cTauChem_(coeffDict_.lookup<scalar>("cTauChem")),
     cTp_(this->nEqns()),
     R_(this->nEqns()),
     J_(this->nEqns()),

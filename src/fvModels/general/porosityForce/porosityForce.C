@@ -91,7 +91,7 @@ Foam::fv::porosityForce::porosityForce
 :
     fvModel(name, modelType, mesh, dict),
     UNames_(),
-    coeffsDict_(coeffs(dict)),
+    coeffDict_(coeffs(dict)),
     porosityPtr_(nullptr)
 {
     readCoeffs(coeffs(dict));
@@ -154,13 +154,13 @@ bool Foam::fv::porosityForce::movePoints()
 
 void Foam::fv::porosityForce::topoChange(const polyTopoChangeMap& map)
 {
-    reset(coeffsDict_);
+    reset(coeffDict_);
 }
 
 
 void Foam::fv::porosityForce::mapMesh(const polyMeshMap& map)
 {
-    reset(coeffsDict_);
+    reset(coeffDict_);
 }
 
 
@@ -169,7 +169,7 @@ void Foam::fv::porosityForce::distribute
     const polyDistributionMap& map
 )
 {
-    reset(coeffsDict_);
+    reset(coeffDict_);
 }
 
 
@@ -178,7 +178,7 @@ bool Foam::fv::porosityForce::read(const dictionary& dict)
     if (fvModel::read(dict))
     {
         readCoeffs(coeffs(dict));
-        coeffsDict_ = coeffs(dict);
+        coeffDict_ = coeffs(dict);
         return true;
     }
     else

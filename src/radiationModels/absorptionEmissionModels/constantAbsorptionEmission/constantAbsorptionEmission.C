@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,10 +56,10 @@ Foam::radiationModels::absorptionEmissionModels::constant::constant
 )
 :
     absorptionEmissionModel(dict, mesh),
-    coeffsDict_(dict.optionalSubDict(typeName + "Coeffs")),
-    a_("absorptivity", dimless/dimLength, coeffsDict_),
-    e_("emissivity", dimless/dimLength, coeffsDict_),
-    E_("E", dimMass/dimLength/pow3(dimTime), coeffsDict_)
+    coeffDict_(dict.optionalSubDict(typeName + "Coeffs")),
+    a_("absorptivity", dimless/dimLength, coeffDict_),
+    e_("emissivity", dimless/dimLength, coeffDict_),
+    E_("E", dimMass/dimLength/pow3(dimTime), coeffDict_)
 {}
 
 

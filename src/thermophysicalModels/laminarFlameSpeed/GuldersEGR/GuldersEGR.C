@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,13 +53,13 @@ Foam::laminarFlameSpeedModels::GuldersEGR::GuldersEGR
 :
     laminarFlameSpeed(dict, ct),
 
-    coeffsDict_(dict.optionalSubDict(typeName + "Coeffs").subDict(fuel_)),
-    W_(coeffsDict_.lookup<scalar>("W")),
-    eta_(coeffsDict_.lookup<scalar>("eta")),
-    xi_(coeffsDict_.lookup<scalar>("xi")),
-    f_(coeffsDict_.lookup<scalar>("f")),
-    alpha_(coeffsDict_.lookup<scalar>("alpha")),
-    beta_(coeffsDict_.lookup<scalar>("beta"))
+    coeffDict_(dict.optionalSubDict(typeName + "Coeffs").subDict(fuel_)),
+    W_(coeffDict_.lookup<scalar>("W")),
+    eta_(coeffDict_.lookup<scalar>("eta")),
+    xi_(coeffDict_.lookup<scalar>("xi")),
+    f_(coeffDict_.lookup<scalar>("f")),
+    alpha_(coeffDict_.lookup<scalar>("alpha")),
+    beta_(coeffDict_.lookup<scalar>("beta"))
 {}
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,7 +64,7 @@ protected:
     // Protected Data
 
         //- Dictionary that store the algorithm data
-        const dictionary coeffsDict_;
+        const dictionary coeffDict_;
 
         //- Reference to the chemistry model
         chemistryModel<ThermoType>& chemistry_;

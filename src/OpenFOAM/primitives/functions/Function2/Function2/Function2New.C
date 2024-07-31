@@ -38,9 +38,9 @@ Foam::autoPtr<Foam::Function2<Type>> Foam::Function2<Type>::New
     // If the function is a dictionary (preferred) then read straightforwardly
     if (dict.isDict(name))
     {
-        const dictionary& coeffsDict(dict.subDict(name));
+        const dictionary& coeffDict(dict.subDict(name));
 
-        const word Function2Type(coeffsDict.lookup("type"));
+        const word Function2Type(coeffDict.lookup("type"));
 
         typename dictionaryConstructorTable::iterator cstrIter =
             dictionaryConstructorTablePtr_->find(Function2Type);
@@ -56,7 +56,7 @@ Foam::autoPtr<Foam::Function2<Type>> Foam::Function2<Type>::New
                 << exit(FatalError);
         }
 
-        return cstrIter()(name, units, coeffsDict);
+        return cstrIter()(name, units, coeffDict);
     }
 
     // Find the entry

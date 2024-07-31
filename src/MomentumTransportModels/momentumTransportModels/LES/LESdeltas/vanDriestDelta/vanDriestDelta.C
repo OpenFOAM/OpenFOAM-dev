@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -175,13 +175,13 @@ Foam::LESModels::vanDriestDelta::vanDriestDelta
 
 void Foam::LESModels::vanDriestDelta::read(const dictionary& dict)
 {
-    const dictionary& coeffsDict(dict.subDict(type() + "Coeffs"));
+    const dictionary& coeffDict(dict.subDict(type() + "Coeffs"));
 
-    geometricDelta_().read(coeffsDict);
+    geometricDelta_().read(coeffDict);
     dict.readIfPresent<scalar>("kappa", kappa_);
-    coeffsDict.readIfPresent<scalar>("Aplus", Aplus_);
-    coeffsDict.readIfPresent<scalar>("Cdelta", Cdelta_);
-    coeffsDict.readIfPresent<label>("calcInterval", calcInterval_);
+    coeffDict.readIfPresent<scalar>("Aplus", Aplus_);
+    coeffDict.readIfPresent<scalar>("Cdelta", Cdelta_);
+    coeffDict.readIfPresent<label>("calcInterval", calcInterval_);
 
     calcDelta();
 }

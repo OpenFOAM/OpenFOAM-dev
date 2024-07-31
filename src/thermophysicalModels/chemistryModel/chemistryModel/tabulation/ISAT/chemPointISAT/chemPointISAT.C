@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -206,7 +206,7 @@ Foam::chemPointISAT::chemPointISAT
     const scalar tolerance,
     const label completeSpaceSize,
     const label nActive,
-    const dictionary& coeffsDict,
+    const dictionary& coeffDict,
     binaryNode* node
 )
 :
@@ -222,8 +222,8 @@ Foam::chemPointISAT::chemPointISAT
     timeTag_(table.timeSteps()),
     lastTimeUsed_(table.timeSteps()),
     toRemove_(false),
-    maxNumNewDim_(coeffsDict.lookupOrDefault("maxNumNewDim",0)),
-    printProportion_(coeffsDict.lookupOrDefault("printProportion",false)),
+    maxNumNewDim_(coeffDict.lookupOrDefault("maxNumNewDim",0)),
+    printProportion_(coeffDict.lookupOrDefault("printProportion",false)),
     numRetrieve_(0),
     nLifeTime_(0)
 {

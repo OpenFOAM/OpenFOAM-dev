@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -173,10 +173,10 @@ Foam::LESModels::smoothDelta::smoothDelta
 
 void Foam::LESModels::smoothDelta::read(const dictionary& dict)
 {
-    const dictionary& coeffsDict(dict.subDict(type() + "Coeffs"));
+    const dictionary& coeffDict(dict.subDict(type() + "Coeffs"));
 
-    geometricDelta_().read(coeffsDict);
-    coeffsDict.lookup("maxDeltaRatio") >> maxDeltaRatio_;
+    geometricDelta_().read(coeffDict);
+    coeffDict.lookup("maxDeltaRatio") >> maxDeltaRatio_;
     calcDelta();
 }
 

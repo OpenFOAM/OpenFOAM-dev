@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ Foam::chemistryReductionMethods::DRG<ThermoType>::DRG
     chemistryReductionMethod<ThermoType>(dict, chemistry),
     searchInitSet_()
 {
-    const wordHashSet initSet(this->coeffsDict_.lookup("initialSet"));
+    const wordHashSet initSet(this->coeffDict_.lookup("initialSet"));
     forAllConstIter(wordHashSet, initSet, iter)
     {
         searchInitSet_.append(chemistry.thermo().species()[iter.key()]);
