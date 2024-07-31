@@ -51,9 +51,9 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::sixDoFAcceleration::readCoeffs()
+void Foam::fv::sixDoFAcceleration::readCoeffs(const dictionary& dict)
 {
-    UName_ = coeffs().lookupOrDefault<word>("U", "U");
+    UName_ = dict.lookupOrDefault<word>("U", "U");
 
     acceleration_.reset
     (
@@ -62,7 +62,7 @@ void Foam::fv::sixDoFAcceleration::readCoeffs()
             "acceleration",
             mesh().time().userUnits(),
             dimAcceleration,
-            coeffs()
+            dict
         ).ptr()
     );
 
@@ -73,7 +73,7 @@ void Foam::fv::sixDoFAcceleration::readCoeffs()
             "angularVelocity",
             mesh().time().userUnits(),
             unitRadians/dimTime,
-            coeffs()
+            dict
         ).ptr()
     );
 
@@ -84,7 +84,7 @@ void Foam::fv::sixDoFAcceleration::readCoeffs()
             "angularAcceleration",
             mesh().time().userUnits(),
             unitRadians/sqr(dimTime),
-            coeffs()
+            dict
         ).ptr()
     );
 }
@@ -164,7 +164,7 @@ Foam::fv::sixDoFAcceleration::sixDoFAcceleration
 )
 :
     fvModel(name, modelType, mesh, dict),
-    UName_(coeffs().lookupOrDefault<word>("U", "U")),
+    UName_(dict.lookupOrDefault<word>("U", "U")),
     acceleration_(nullptr),
     angularVelocity_(nullptr),
     angularAcceleration_(nullptr),
@@ -175,7 +175,7 @@ Foam::fv::sixDoFAcceleration::sixDoFAcceleration
       : dimensionedVector("g", dimAcceleration, Zero)
     )
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
 }
 
 
@@ -242,7 +242,7 @@ bool Foam::fv::sixDoFAcceleration::read(const dictionary& dict)
 {
     if (fvModel::read(dict))
     {
-        readCoeffs();
+        readCoeffs(coeffs(dict));
         return true;
     }
     else

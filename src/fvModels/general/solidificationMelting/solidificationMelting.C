@@ -67,27 +67,37 @@ const Foam::NamedEnum<Foam::fv::solidificationMelting::thermoMode, 2>
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::solidificationMelting::readCoeffs()
+void Foam::fv::solidificationMelting::readCoeffs(const dictionary& dict)
 {
-    Tsol_ = coeffs().lookup<scalar>("Tsol");
-    Tliq_ = coeffs().lookupOrDefault<scalar>("Tliq", Tsol_);
-    alpha1e_ = coeffs().lookupOrDefault<scalar>("alpha1e", 0.0);
-    L_ = coeffs().lookup<scalar>("L");
+    Tsol_ = dict.lookup<scalar>("Tsol");
+    Tliq_ = dict.lookupOrDefault<scalar>("Tliq", Tsol_);
+    alpha1e_ = dict.lookupOrDefault<scalar>("alpha1e", 0.0);
+    L_ = dict.lookup<scalar>("L");
 
-    relax_ = coeffs().lookupOrDefault("relax", 0.9);
+    relax_ = dict.lookupOrDefault("relax", 0.9);
 
-    mode_ = thermoModeTypeNames_.read(coeffs().lookup("thermoMode"));
+    mode_ = thermoModeTypeNames_.read(dict.lookup("thermoMode"));
 
-    rhoRef_ = coeffs().lookup<scalar>("rhoRef");
-    TName_ = coeffs().lookupOrDefault<word>("T", "T");
-    CpName_ = coeffs().lookupOrDefault<word>("Cp", "Cp");
-    UName_ = coeffs().lookupOrDefault<word>("U", "U");
-    phiName_ = coeffs().lookupOrDefault<word>("phi", "phi");
+    rhoRef_ = dict.lookup<scalar>("rhoRef");
+    TName_ = dict.lookupOrDefault<word>("T", "T");
+    CpName_ = dict.lookupOrDefault<word>("Cp", "Cp");
+    UName_ = dict.lookupOrDefault<word>("U", "U");
+    phiName_ = dict.lookupOrDefault<word>("phi", "phi");
 
-    Cu_ = coeffs().lookupOrDefault<scalar>("Cu", 100000);
-    q_ = coeffs().lookupOrDefault("q", 0.001);
+    Cu_ = dict.lookupOrDefault<scalar>("Cu", 100000);
+    q_ = dict.lookupOrDefault("q", 0.001);
 
-    beta_ = coeffs().lookup<scalar>("beta");
+    beta_ = dict.lookup<scalar>("beta");
+
+    if (mode_ == thermoMode::lookup)
+    {
+        CpRef_ = dict.lookup<scalar>("CpRef");
+    }
+
+    if (!mesh().foundObject<uniformDimensionedVectorField>("g"))
+    {
+        g_ = dict.lookup("g");
+    }
 }
 
 
@@ -108,8 +118,6 @@ Foam::fv::solidificationMelting::Cp() const
         {
             if (CpName_ == "CpRef")
             {
-                scalar CpRef = coeffs().lookup<scalar>("CpRef");
-
                 return volScalarField::New
                 (
                     name() + ":Cp",
@@ -117,7 +125,7 @@ Foam::fv::solidificationMelting::Cp() const
                     dimensionedScalar
                     (
                         dimEnergy/dimMass/dimTemperature,
-                        CpRef
+                        CpRef_
                     ),
                     extrapolatedCalculatedFvPatchScalarField::typeName
                 );
@@ -151,7 +159,7 @@ Foam::vector Foam::fv::solidificationMelting::g() const
     }
     else
     {
-        return coeffs().lookup("g");
+        return g_;
     }
 }
 
@@ -256,7 +264,7 @@ Foam::fv::solidificationMelting::solidificationMelting
 )
 :
     fvModel(name, modelType, mesh, dict),
-    set_(mesh, coeffs()),
+    set_(mesh, coeffs(dict)),
     Tsol_(NaN),
     Tliq_(NaN),
     alpha1e_(NaN),
@@ -288,7 +296,7 @@ Foam::fv::solidificationMelting::solidificationMelting
     curTimeIndex_(-1),
     deltaT_(set_.nCells(), 0)
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
 }
 
 
@@ -351,7 +359,7 @@ void Foam::fv::solidificationMelting::addSup
 
     update(Cp);
 
-    vector g = this->g();
+    const vector g = this->g();
 
     scalarField& Sp = eqn.diag();
     vectorField& Su = eqn.source();
@@ -421,8 +429,8 @@ bool Foam::fv::solidificationMelting::read(const dictionary& dict)
 {
     if (fvModel::read(dict))
     {
-        set_.read(coeffs());
-        readCoeffs();
+        set_.read(coeffs(dict));
+        readCoeffs(coeffs(dict));
         return true;
     }
     else

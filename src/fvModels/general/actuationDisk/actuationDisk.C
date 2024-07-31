@@ -51,47 +51,47 @@ namespace fv
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::actuationDisk::readCoeffs()
+void Foam::fv::actuationDisk::readCoeffs(const dictionary& dict)
 {
-    phaseName_ = coeffs().lookupOrDefault<word>("phase", word::null);
+    phaseName_ = dict.lookupOrDefault<word>("phase", word::null);
 
     UName_ =
-        coeffs().lookupOrDefault<word>
+        dict.lookupOrDefault<word>
         (
             "U",
             IOobject::groupName("U", phaseName_)
         );
 
-    diskDir_ = coeffs().lookup<vector>("diskDir");
+    diskDir_ = dict.lookup<vector>("diskDir");
     if (mag(diskDir_) < vSmall)
     {
-        FatalIOErrorInFunction(coeffs())
+        FatalIOErrorInFunction(coeffs(dict))
            << "disk direction vector is approximately zero"
            << exit(FatalIOError);
     }
 
-    Cp_ = coeffs().lookup<scalar>("Cp");
-    Ct_ = coeffs().lookup<scalar>("Ct");
+    Cp_ = dict.lookup<scalar>("Cp");
+    Ct_ = dict.lookup<scalar>("Ct");
     if (Cp_ <= vSmall || Ct_ <= vSmall)
     {
-        FatalIOErrorInFunction(coeffs())
+        FatalIOErrorInFunction(coeffs(dict))
            << "Cp and Ct must be greater than zero"
            << exit(FatalIOError);
     }
 
-    diskArea_ = coeffs().lookup<scalar>("diskArea");
+    diskArea_ = dict.lookup<scalar>("diskArea");
     if (magSqr(diskArea_) <= vSmall)
     {
-        FatalIOErrorInFunction(coeffs())
+        FatalIOErrorInFunction(coeffs(dict))
            << "diskArea is approximately zero"
            << exit(FatalIOError);
     }
 
-    upstreamPoint_ = coeffs().lookup<point>("upstreamPoint");
+    upstreamPoint_ = dict.lookup<point>("upstreamPoint");
     upstreamCellId_ = mesh().findCell(upstreamPoint_);
     if (returnReduce(upstreamCellId_, maxOp<label>()) == -1)
     {
-        FatalIOErrorInFunction(coeffs())
+        FatalIOErrorInFunction(coeffs(dict))
            << "upstream location " << upstreamPoint_  << " not found in mesh"
            << exit(FatalIOError);
     }
@@ -140,7 +140,7 @@ Foam::fv::actuationDisk::actuationDisk
 )
 :
     fvModel(name, modelType, mesh, dict),
-    set_(mesh, coeffs()),
+    set_(mesh, coeffs(dict)),
     phaseName_(word::null),
     UName_(word::null),
     diskDir_(vector::uniform(NaN)),
@@ -150,7 +150,7 @@ Foam::fv::actuationDisk::actuationDisk
     upstreamPoint_(vector::uniform(NaN)),
     upstreamCellId_(-1)
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
 }
 
 
@@ -248,8 +248,8 @@ bool Foam::fv::actuationDisk::read(const dictionary& dict)
 {
     if (fvModel::read(dict))
     {
-        set_.read(coeffs());
-        readCoeffs();
+        set_.read(coeffs(dict));
+        readCoeffs(coeffs(dict));
         return true;
     }
     else

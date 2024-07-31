@@ -42,14 +42,14 @@ namespace fv
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
-void Foam::fv::forcing::readLambda()
+void Foam::fv::forcing::readLambda(const dictionary& dict)
 {
     lambda_ =
         dimensionedScalar
         (
             lambda_.name(),
             lambda_.dimensions(),
-            coeffs().lookup(lambda_.name())
+            dict.lookup(lambda_.name())
         );
 
     lambdaBoundary_ =
@@ -57,20 +57,20 @@ void Foam::fv::forcing::readLambda()
         (
             lambdaBoundary_.name(),
             lambdaBoundary_.dimensions(),
-            coeffs().lookupOrDefault(lambdaBoundary_.name(), 0.0)
+            dict.lookupOrDefault(lambdaBoundary_.name(), 0.0)
         );
 }
 
 
-void Foam::fv::forcing::readCoeffs()
+void Foam::fv::forcing::readCoeffs(const dictionary& dict)
 {
-    writeForceFields_ = coeffs().lookupOrDefault("writeForceFields", false);
+    writeForceFields_ = dict.lookupOrDefault("writeForceFields", false);
 
-    const bool foundScale = coeffs().found("scale");
-    const bool foundOgn = coeffs().found("origin");
-    const bool foundDir = coeffs().found("direction");
-    const bool foundOgns = coeffs().found("origins");
-    const bool foundDirs = coeffs().found("directions");
+    const bool foundScale = dict.found("scale");
+    const bool foundOgn = dict.found("origin");
+    const bool foundDir = dict.found("direction");
+    const bool foundOgns = dict.found("origins");
+    const bool foundDirs = dict.found("directions");
     const bool foundAll =
         foundScale
      && (
@@ -89,18 +89,18 @@ void Foam::fv::forcing::readCoeffs()
 
     if (foundAll)
     {
-        scale_ = Function1<scalar>::New("scale", dimLength, dimless, coeffs());
+        scale_ = Function1<scalar>::New("scale", dimLength, dimless, dict);
         if (foundOgn)
         {
             origins_.setSize(1);
             directions_.setSize(1);
-            coeffs().lookup("origin") >> origins_.last();
-            coeffs().lookup("direction") >> directions_.last();
+            dict.lookup("origin") >> origins_.last();
+            dict.lookup("direction") >> directions_.last();
         }
         else
         {
-            coeffs().lookup("origins") >> origins_;
-            coeffs().lookup("directions") >> directions_;
+            dict.lookup("origins") >> origins_;
+            dict.lookup("directions") >> directions_;
 
             if
             (
@@ -242,7 +242,7 @@ Foam::fv::forcing::forcing
     origins_(),
     directions_()
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
 }
 
 
@@ -252,7 +252,7 @@ bool Foam::fv::forcing::read(const dictionary& dict)
 {
     if (fvModel::read(dict))
     {
-        readCoeffs();
+        readCoeffs(coeffs(dict));
         return true;
     }
     else

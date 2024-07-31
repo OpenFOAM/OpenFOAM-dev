@@ -221,16 +221,16 @@ private:
     // Protected Member Functions
 
         //- Non-virtual read
-        void readCoeffs();
+        void readCoeffs(const dictionary& dict);
 
         //- Check data
-        void checkData();
+        void checkData(const dictionary& dict);
 
         //- Set the face areas per cell, and optionally correct the rotor axis
         void setFaceArea(vector& axis, const bool correct);
 
         //- Create the co-ordinate system
-        void createCoordinateSystem();
+        void createCoordinateSystem(const dictionary& dict);
 
         //- Construct geometry
         void constructGeometry();

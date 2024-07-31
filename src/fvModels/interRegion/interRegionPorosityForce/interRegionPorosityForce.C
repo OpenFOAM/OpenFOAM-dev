@@ -51,9 +51,9 @@ namespace fv
 
 // * * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * //
 
-void Foam::fv::interRegionPorosityForce::readCoeffs()
+void Foam::fv::interRegionPorosityForce::readCoeffs(const dictionary& dict)
 {
-    UName_ = coeffs().lookupOrDefault<word>("U", "U");
+    UName_ = dict.lookupOrDefault<word>("U", "U");
 }
 
 
@@ -80,7 +80,7 @@ Foam::fv::interRegionPorosityForce::interRegionPorosityForce
     ),
     porosityPtr_(nullptr)
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
 
     const fvMesh& nbrMesh = mesh.time().lookupObject<fvMesh>(nbrRegionName());
 
@@ -125,7 +125,7 @@ Foam::fv::interRegionPorosityForce::interRegionPorosityForce
     (
         name,
         mesh,
-        coeffs(),
+        coeffs(dict),
         zoneName
     );
 }
@@ -207,7 +207,7 @@ bool Foam::fv::interRegionPorosityForce::read(const dictionary& dict)
 {
     if (interRegionModel::read(dict))
     {
-        readCoeffs();
+        readCoeffs(coeffs(dict));
         return true;
     }
     else

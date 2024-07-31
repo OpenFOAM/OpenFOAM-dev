@@ -49,24 +49,24 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::heatSource::readCoeffs()
+void Foam::fv::heatSource::readCoeffs(const dictionary& dict)
 {
-    if (!coeffs().found("q") && !coeffs().found("Q"))
+    if (!dict.found("q") && !dict.found("Q"))
     {
-        FatalIOErrorInFunction(coeffs())
+        FatalIOErrorInFunction(coeffs(dict))
             << "Neither heat source per unit volume, q, or total heat source, "
             << "Q, has been specified. One is required." << exit(FatalIOError);
     }
 
-    if (coeffs().found("q") && coeffs().found("Q"))
+    if (dict.found("q") && dict.found("Q"))
     {
-        FatalIOErrorInFunction(coeffs())
+        FatalIOErrorInFunction(coeffs(dict))
             << "Both heat source per unit volume, q, and total heat source, "
             << "Q, have been specified. One is required."
             << exit(FatalIOError);
     }
 
-    if (coeffs().found("q"))
+    if (dict.found("q"))
     {
         q_.reset
         (
@@ -75,7 +75,7 @@ void Foam::fv::heatSource::readCoeffs()
                 "q",
                 mesh().time().userUnits(),
                 dimPower/dimVolume,
-                coeffs()
+                dict
             ).ptr()
         );
     }
@@ -93,7 +93,7 @@ void Foam::fv::heatSource::readCoeffs()
                     "Q",
                     mesh().time().userUnits(),
                     dimPower,
-                    coeffs()
+                    dict
                 )()
             )
         );
@@ -112,10 +112,10 @@ Foam::fv::heatSource::heatSource
 )
 :
     fvModel(name, modelType, mesh, dict),
-    set_(mesh, coeffs()),
+    set_(mesh, coeffs(dict)),
     q_(nullptr)
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
 }
 
 
@@ -194,7 +194,7 @@ bool Foam::fv::heatSource::read(const dictionary& dict)
 {
     if (fvModel::read(dict))
     {
-        readCoeffs();
+        readCoeffs(coeffs(dict));
         return true;
     }
     else

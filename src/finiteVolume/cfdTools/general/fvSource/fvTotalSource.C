@@ -37,9 +37,9 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fvTotalSource::readCoeffs()
+void Foam::fvTotalSource::readCoeffs(const dictionary& dict)
 {
-    phaseName_ = coeffs().lookupOrDefault<word>("phase", word::null);
+    phaseName_ = dict.lookupOrDefault<word>("phase", word::null);
 }
 
 
@@ -80,7 +80,7 @@ Foam::fvTotalSource::fvTotalSource
     fvSource(name, modelType, mesh, dict),
     phaseName_()
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
 }
 
 
@@ -121,7 +121,7 @@ bool Foam::fvTotalSource::read(const dictionary& dict)
 {
     if (fvModel::read(dict))
     {
-        readCoeffs();
+        readCoeffs(coeffs(dict));
         return true;
     }
     else

@@ -41,21 +41,21 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::singleComponentPhaseChange::readCoeffs()
+void Foam::fv::singleComponentPhaseChange::readCoeffs(const dictionary& dict)
 {
     if
     (
         (specieThermos().valid().first() || specieThermos().valid().second())
-     && specie_ != coeffs().lookup<word>("specie")
+     && specie_ != dict.lookup<word>("specie")
     )
     {
-        FatalIOErrorInFunction(coeffs())
+        FatalIOErrorInFunction(coeffs(dict))
             << "Cannot change the specie of a " << typeName << " model "
             << "at run time" << exit(FatalIOError);
     }
 
     energySemiImplicit_ =
-        coeffs().lookup<bool>("energySemiImplicit");
+        dict.lookup<bool>("energySemiImplicit");
 }
 
 
@@ -83,7 +83,7 @@ Foam::fv::singleComponentPhaseChange::singleComponentPhaseChange
     specie_
     (
         specieThermos().valid().first() || specieThermos().valid().second()
-      ? coeffs().lookup<word>("specie")
+      ? dict.lookup<word>("specie")
       : word::null
     ),
     specieis_
@@ -97,7 +97,7 @@ Foam::fv::singleComponentPhaseChange::singleComponentPhaseChange
     ),
     energySemiImplicit_(false)
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
 }
 
 
@@ -179,7 +179,7 @@ bool Foam::fv::singleComponentPhaseChange::read(const dictionary& dict)
 {
     if (phaseChange::read(dict))
     {
-        readCoeffs();
+        readCoeffs(coeffs(dict));
         return true;
     }
     else

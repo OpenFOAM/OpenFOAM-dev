@@ -57,7 +57,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::VoFSolidificationMelting::readCoeffs()
+void Foam::fv::VoFSolidificationMelting::readCoeffs(const dictionary& dict)
 {
     alphaSolidT_.reset
     (
@@ -66,13 +66,13 @@ void Foam::fv::VoFSolidificationMelting::readCoeffs()
             "alphaSolidT",
             dimTemperature,
             unitFraction,
-            coeffs()
+            dict
         ).ptr()
     );
-    L_ = dimensionedScalar("L", dimEnergy/dimMass, coeffs());
-    relax_ = coeffs().lookupOrDefault<scalar>("relax", dimless, 0.9);
-    Cu_ = coeffs().lookupOrDefault<scalar>("Cu", dimless/dimTime, 100000);
-    q_ = coeffs().lookupOrDefault<scalar>("q", dimless, 0.001);
+    L_ = dimensionedScalar("L", dimEnergy/dimMass, dict);
+    relax_ = dict.lookupOrDefault<scalar>("relax", dimless, 0.9);
+    Cu_ = dict.lookupOrDefault<scalar>("Cu", dimless/dimTime, 100000);
+    q_ = dict.lookupOrDefault<scalar>("q", dimless, 0.001);
 }
 
 
@@ -103,7 +103,7 @@ Foam::fv::VoFSolidificationMelting::VoFSolidificationMelting
 )
 :
     fvModel(name, modelType, mesh, dict),
-    set_(mesh, coeffs()),
+    set_(mesh, coeffs(dict)),
     alphaSolidT_(),
     L_("L", dimEnergy/dimMass, NaN),
     relax_(NaN),
@@ -133,7 +133,7 @@ Foam::fv::VoFSolidificationMelting::VoFSolidificationMelting
         zeroGradientFvPatchScalarField::typeName
     )
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
 }
 
 
@@ -266,8 +266,8 @@ bool Foam::fv::VoFSolidificationMelting::read(const dictionary& dict)
 {
     if (fvModel::read(dict))
     {
-        set_.read(coeffs());
-        readCoeffs();
+        set_.read(coeffs(dict));
+        readCoeffs(coeffs(dict));
         return true;
     }
     else

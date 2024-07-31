@@ -204,6 +204,12 @@ private:
         //- Thermal expansion coefficient [1/K]
         scalar beta_;
 
+        //- Reference heat capacity for thermoMode::lookup
+        scalar CpRef_;
+
+        //- Gravitational acceleration
+        vector g_;
+
         //- Phase fraction indicator field
         mutable volScalarField alpha1_;
 
@@ -217,7 +223,7 @@ private:
     // Private Member Functions
 
         //- Non-virtual read
-        void readCoeffs();
+        void readCoeffs(const dictionary& dict);
 
         //- Return the specific heat capacity field
         tmp<volScalarField> Cp() const;

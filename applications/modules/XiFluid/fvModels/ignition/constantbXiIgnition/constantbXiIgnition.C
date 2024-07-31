@@ -45,11 +45,11 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::constantbXiIgnition::readCoeffs()
+void Foam::fv::constantbXiIgnition::readCoeffs(const dictionary& dict)
 {
-    start_ = coeffs().lookup<scalar>("start", mesh().time().userUnits());
-    duration_ = coeffs().lookup<scalar>("duration", mesh().time().userUnits());
-    strength_ = coeffs().lookup<scalar>("strength", dimless);
+    start_ = dict.lookup<scalar>("start", mesh().time().userUnits());
+    duration_ = dict.lookup<scalar>("duration", mesh().time().userUnits());
+    strength_ = dict.lookup<scalar>("strength", dimless);
 }
 
 
@@ -64,10 +64,10 @@ Foam::fv::constantbXiIgnition::constantbXiIgnition
 )
 :
     bXiIgnition(name, modelType, mesh, dict),
-    set_(mesh, coeffs()),
-    XiCorrModel_(XiCorrModel::New(mesh, coeffs()))
+    set_(mesh, dict),
+    XiCorrModel_(XiCorrModel::New(mesh, dict))
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
 }
 
 
@@ -178,9 +178,9 @@ bool Foam::fv::constantbXiIgnition::read(const dictionary& dict)
 {
     if (fvModel::read(dict))
     {
-        set_.read(coeffs());
-        XiCorrModel_->read(coeffs());
-        readCoeffs();
+        set_.read(coeffs(dict));
+        XiCorrModel_->read(coeffs(dict));
+        readCoeffs(coeffs(dict));
         return true;
     }
     else

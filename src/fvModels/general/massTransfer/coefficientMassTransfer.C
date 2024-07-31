@@ -40,9 +40,9 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::coefficientMassTransfer::readCoeffs()
+void Foam::fv::coefficientMassTransfer::readCoeffs(const dictionary& dict)
 {
-    C_.read(coeffs());
+    C_.read(coeffs(dict));
 }
 
 
@@ -59,7 +59,7 @@ Foam::fv::coefficientMassTransfer::coefficientMassTransfer
     massTransfer(name, modelType, mesh, dict),
     C_("C", dimMass/dimArea/dimTime, NaN)
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
 }
 
 
@@ -145,7 +145,7 @@ bool Foam::fv::coefficientMassTransfer::read(const dictionary& dict)
 {
     if (massTransfer::read(dict))
     {
-        readCoeffs();
+        readCoeffs(coeffs(dict));
         return true;
     }
     else

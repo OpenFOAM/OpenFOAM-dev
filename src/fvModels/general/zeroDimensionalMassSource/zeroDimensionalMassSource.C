@@ -42,7 +42,7 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::zeroDimensionalMassSource::readCoeffs()
+void Foam::fv::zeroDimensionalMassSource::readCoeffs(const dictionary& dict)
 {
     zeroDimensionalMassFlowRate_.reset
     (
@@ -51,7 +51,7 @@ void Foam::fv::zeroDimensionalMassSource::readCoeffs()
             "massFlowRate",
             mesh().time().userUnits(),
             dimMass/dimTime,
-            coeffs()
+            dict
         ).ptr()
     );
 }
@@ -76,7 +76,7 @@ Foam::fv::zeroDimensionalMassSource::zeroDimensionalMassSource
     zeroDimensionalMassSourceBase(name, modelType, mesh, dict),
     zeroDimensionalMassFlowRate_()
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
 }
 
 
@@ -86,7 +86,7 @@ bool Foam::fv::zeroDimensionalMassSource::read(const dictionary& dict)
 {
     if (zeroDimensionalMassSourceBase::read(dict))
     {
-        readCoeffs();
+        readCoeffs(coeffs(dict));
         return true;
     }
     else

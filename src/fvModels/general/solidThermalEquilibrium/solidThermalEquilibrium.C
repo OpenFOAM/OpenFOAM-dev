@@ -50,11 +50,11 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::solidThermalEquilibrium::readCoeffs()
+void Foam::fv::solidThermalEquilibrium::readCoeffs(const dictionary& dict)
 {
-    phaseName_ = coeffs().lookupOrDefault<word>("phase", word::null);
+    phaseName_ = dict.lookupOrDefault<word>("phase", word::null);
 
-    solidPhaseName_ = coeffs().lookup<word>("solidPhase");
+    solidPhaseName_ = dict.lookup<word>("solidPhase");
 }
 
 
@@ -227,7 +227,7 @@ bool Foam::fv::solidThermalEquilibrium::read(const dictionary& dict)
 {
     if (fvModel::read(dict))
     {
-        readCoeffs();
+        readCoeffs(coeffs(dict));
         return true;
     }
     else

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,16 +42,16 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::isotropicDamping::readCoeffs()
+void Foam::fv::isotropicDamping::readCoeffs(const dictionary& dict)
 {
-    readLambda();
+    readLambda(dict);
 
     value_ =
         dimensionedVector
         (
             value_.name(),
             value_.dimensions(),
-            coeffs().lookup(value_.name())
+            dict.lookup(value_.name())
         );
 }
 
@@ -78,10 +78,10 @@ Foam::fv::isotropicDamping::isotropicDamping
 )
 :
     forcing(name, modelType, mesh, dict),
-    UName_(coeffs().lookupOrDefault<word>("U", "U")),
+    UName_(dict.lookupOrDefault<word>("U", "U")),
     value_("value", dimVelocity, vector::uniform(NaN))
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
     writeForceFields();
 }
 
@@ -149,7 +149,7 @@ bool Foam::fv::isotropicDamping::read(const dictionary& dict)
 {
     if (forcing::read(dict))
     {
-        readCoeffs();
+        readCoeffs(coeffs(dict));
         return true;
     }
     else

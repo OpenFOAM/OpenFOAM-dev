@@ -40,10 +40,10 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::massSourceBase::readCoeffs()
+void Foam::fv::massSourceBase::readCoeffs(const dictionary& dict)
 {
     rhoName_ =
-        coeffs().lookupOrDefault<word>
+        dict.lookupOrDefault<word>
         (
             "rho",
             IOobject::groupName("rho", phaseName())
@@ -188,7 +188,7 @@ Foam::fv::massSourceBase::massSourceBase
     fvTotalSource(name, modelType, mesh, dict),
     rhoName_()
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
 }
 
 
@@ -222,7 +222,7 @@ bool Foam::fv::massSourceBase::read(const dictionary& dict)
 {
     if (fvTotalSource::read(dict))
     {
-        readCoeffs();
+        readCoeffs(coeffs(dict));
         return true;
     }
     else

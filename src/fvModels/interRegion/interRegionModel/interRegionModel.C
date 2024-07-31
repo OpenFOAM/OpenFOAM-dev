@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,18 +40,18 @@ namespace fv
 
 // * * * * * * * * * * * * *  Private Member Functions * * * * * * * * * * * //
 
-void Foam::fv::interRegionModel::readCoeffs()
+void Foam::fv::interRegionModel::readCoeffs(const dictionary& dict)
 {
-    master_ = coeffs().lookupOrDefault<bool>("master", true);
+    master_ = dict.lookupOrDefault<bool>("master", true);
 
     nbrRegionName_ =
-        coeffs().lookupBackwardsCompatible<word>
+        dict.lookupBackwardsCompatible<word>
         ({
             "nbrRegion",
             "nbrRegionName"
         });
 
-    coeffs().lookup("interpolationMethod") >> interpolationMethod_;
+    dict.lookup("interpolationMethod") >> interpolationMethod_;
 }
 
 
@@ -140,7 +140,7 @@ Foam::fv::interRegionModel::interRegionModel
     interpolationMethod_(cellsToCellss::matching::typeName),
     interpolationPtr_()
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
 }
 
 
@@ -156,7 +156,7 @@ bool Foam::fv::interRegionModel::read(const dictionary& dict)
 {
     if (fvModel::read(dict))
     {
-        readCoeffs();
+        readCoeffs(coeffs(dict));
         interpolationPtr_.clear();
         return true;
     }

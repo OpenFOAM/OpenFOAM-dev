@@ -62,9 +62,12 @@ inline const Foam::fvMesh& Foam::fvModel::mesh() const
 }
 
 
-inline const Foam::dictionary& Foam::fvModel::coeffs() const
+inline const Foam::dictionary& Foam::fvModel::coeffs
+(
+    const dictionary& dict
+) const
 {
-    return coeffs_;
+    return dict.optionalSubDict(modelType_ + "Coeffs");
 }
 
 

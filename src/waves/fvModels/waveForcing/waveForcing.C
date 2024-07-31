@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,14 +46,14 @@ namespace fv
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
-void Foam::fv::waveForcing::readCoeffs()
+void Foam::fv::waveForcing::readCoeffs(const dictionary& dict)
 {
-    if (coeffs().found("lambdaCoeff"))
+    if (dict.found("lambdaCoeff"))
     {
-        lambdaCoeff_ = coeffs().lookup<scalar>("lambdaCoeff");
+        lambdaCoeff_ = dict.lookup<scalar>("lambdaCoeff");
 
         lambdaBoundaryCoeff_ =
-            coeffs().lookupOrDefault<scalar>("lambdaBoundaryCoeff", 0);
+            dict.lookupOrDefault<scalar>("lambdaBoundaryCoeff", 0);
 
         regionLength_ = this->regionLength();
 
@@ -62,7 +62,7 @@ void Foam::fv::waveForcing::readCoeffs()
     }
     else
     {
-        readLambda();
+        readLambda(dict);
     }
 }
 
@@ -107,12 +107,12 @@ Foam::fv::waveForcing::waveForcing
     lambdaBoundaryCoeff_(0),
     regionLength_("regionLength", dimLength, 0),
     waves_(waveSuperposition::New(mesh)),
-    liquidPhaseName_(coeffs().lookup<word>("liquidPhase")),
+    liquidPhaseName_(dict.lookup<word>("liquidPhase")),
     alphaName_(IOobject::groupName("alpha", liquidPhaseName_)),
-    UName_(coeffs().lookupOrDefault<word>("U", "U")),
+    UName_(dict.lookupOrDefault<word>("U", "U")),
     scale_(forcing::scale().ptr())
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
     writeForceFields();
 }
 
@@ -233,7 +233,7 @@ bool Foam::fv::waveForcing::read(const dictionary& dict)
 {
     if (forcing::read(dict))
     {
-        readCoeffs();
+        readCoeffs(coeffs(dict));
         return true;
     }
     else

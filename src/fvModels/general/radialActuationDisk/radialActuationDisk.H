@@ -111,7 +111,7 @@ class radialActuationDisk
     // Private Member Functions
 
         //- Non-virtual read
-        void readCoeffs();
+        void readCoeffs(const dictionary& dict);
 
         //- Add resistance to the UEqn
         template<class RhoFieldType>

@@ -88,7 +88,7 @@ private:
     // Private Member Functions
 
         //- Non-virtual read
-        void readCoeffs();
+        void readCoeffs(const dictionary& dict);
 
         //- Add force to a momentum equation
         template<class AlphaFieldType, class RhoFieldType>

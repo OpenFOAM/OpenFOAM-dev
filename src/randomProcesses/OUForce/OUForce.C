@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,9 +49,9 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::OUForce::readCoeffs()
+void Foam::fv::OUForce::readCoeffs(const dictionary& dict)
 {
-    UName_ = coeffs().lookupOrDefault<word>("U", "U");
+    UName_ = dict.lookupOrDefault<word>("U", "U");
 }
 
 
@@ -70,7 +70,7 @@ Foam::fv::OUForce::OUForce
     K_(mesh),
     forceGen_(K_, mesh.time().deltaTValue(), dict)
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
 }
 
 
@@ -132,7 +132,7 @@ bool Foam::fv::OUForce::read(const dictionary& dict)
 {
     if (fvModel::read(dict))
     {
-        readCoeffs();
+        readCoeffs(coeffs(dict));
         return true;
     }
     else

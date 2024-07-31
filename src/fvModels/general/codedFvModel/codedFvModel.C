@@ -62,9 +62,9 @@ const Foam::wordList Foam::fv::codedFvModel::codeDictVars
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::codedFvModel::readCoeffs()
+void Foam::fv::codedFvModel::readCoeffs(const dictionary& dict)
 {
-    fieldName_ = coeffs().lookup<word>("field");
+    fieldName_ = dict.lookup<word>("field");
 }
 
 
@@ -124,15 +124,10 @@ Foam::fvModel& Foam::fv::codedFvModel::redirectFvModel() const
 {
     if (!redirectFvModelPtr_.valid())
     {
-        dictionary constructDict(coeffs());
-        constructDict.set("type", name());
-        redirectFvModelPtr_ = fvModel::New
-        (
-            name(),
-            mesh(),
-            constructDict
-        );
+        FatalErrorInFunction
+            << "redirectFvModelPtr not allocated" << exit(FatalError);
     }
+
     return redirectFvModelPtr_();
 }
 
@@ -208,13 +203,22 @@ Foam::fv::codedFvModel::codedFvModel
 )
 :
     fvModel(name, modelType, mesh, dict),
-    codedBase(name, coeffs(), codeKeys, codeDictVars),
+    codedBase(name, coeffs(dict), codeKeys, codeDictVars),
     fieldName_(word::null)
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
     if (fieldPrimitiveTypeName() != word::null)
     {
-        updateLibrary(coeffs());
+        updateLibrary(coeffs(dict));
+
+        dictionary constructDict(coeffs(dict));
+        constructDict.set("type", name);
+        redirectFvModelPtr_ = fvModel::New
+        (
+            name,
+            mesh,
+            constructDict
+        );
     }
 }
 
@@ -268,11 +272,11 @@ bool Foam::fv::codedFvModel::read(const dictionary& dict)
 {
     if (fvModel::read(dict))
     {
-        readCoeffs();
+        readCoeffs(coeffs(dict));
         if (fieldPrimitiveTypeName() != word::null)
         {
             redirectFvModelPtr_.clear();
-            updateLibrary(coeffs());
+            updateLibrary(coeffs(dict));
         }
         return true;
     }

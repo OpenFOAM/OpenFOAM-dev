@@ -114,7 +114,7 @@ class interRegionHeatTransfer
     // Private member functions
 
         //- Non-virtual readalpha*
-        void readCoeffs();
+        void readCoeffs(const dictionary& dict);
 
         //- Get the neighbour heat transfer
         const interRegionHeatTransfer& nbrHeatTransfer() const;

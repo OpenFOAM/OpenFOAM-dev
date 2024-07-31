@@ -49,11 +49,11 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::phaseLimitStabilisation::readCoeffs()
+void Foam::fv::phaseLimitStabilisation::readCoeffs(const dictionary& dict)
 {
-    fieldName_ = coeffs().lookup<word>("field");
-    rateName_ = coeffs().lookup<word>("rate");
-    residualAlpha_ = coeffs().lookup<scalar>("residualAlpha");
+    fieldName_ = dict.lookup<word>("field");
+    rateName_ = dict.lookup<word>("rate");
+    residualAlpha_ = dict.lookup<scalar>("residualAlpha");
 }
 
 
@@ -103,7 +103,7 @@ Foam::fv::phaseLimitStabilisation::phaseLimitStabilisation
     rateName_(word::null),
     residualAlpha_(NaN)
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
 }
 
 
@@ -154,7 +154,7 @@ bool Foam::fv::phaseLimitStabilisation::read(const dictionary& dict)
 {
     if (fvModel::read(dict))
     {
-        readCoeffs();
+        readCoeffs(coeffs(dict));
         return true;
     }
     else

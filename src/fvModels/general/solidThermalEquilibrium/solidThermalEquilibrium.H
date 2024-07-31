@@ -87,7 +87,7 @@ class solidThermalEquilibrium
     // Private Member Functions
 
         //- Non-virtual read
-        void readCoeffs();
+        void readCoeffs(const dictionary& dict);
 
         //- Get the solid volume fraction field
         const volScalarField& solidAlpha() const;

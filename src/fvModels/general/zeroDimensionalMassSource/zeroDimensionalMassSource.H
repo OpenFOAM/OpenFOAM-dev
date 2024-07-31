@@ -90,7 +90,7 @@ private:
     // Private Member Functions
 
         //- Non-virtual read
-        void readCoeffs();
+        void readCoeffs(const dictionary& dict);
 
         //- Return the mass flow rate
         virtual scalar massFlowRate() const;

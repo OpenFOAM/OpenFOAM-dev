@@ -43,11 +43,11 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::homogeneousCondensation::readCoeffs()
+void Foam::fv::homogeneousCondensation::readCoeffs(const dictionary& dict)
 {
     saturationModel_.reset
     (
-        saturationPressureModel::New("pSat", coeffs()).ptr()
+        saturationPressureModel::New("pSat", dict).ptr()
     );
 }
 
@@ -108,7 +108,7 @@ Foam::fv::homogeneousCondensation::homogeneousCondensation
     ),
     saturationModel_(nullptr)
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
 }
 
 
@@ -317,7 +317,7 @@ bool Foam::fv::homogeneousCondensation::read(const dictionary& dict)
 {
     if (singleComponentPhaseChange::read(dict))
     {
-        readCoeffs();
+        readCoeffs(coeffs(dict));
         return true;
     }
     else

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,19 +50,19 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::interRegionHeatTransfer::readCoeffs()
+void Foam::fv::interRegionHeatTransfer::readCoeffs(const dictionary& dict)
 {
-    semiImplicit_ = coeffs().lookup<bool>("semiImplicit");
+    semiImplicit_ = dict.lookup<bool>("semiImplicit");
 
-    TName_ = coeffs().lookupOrDefault<word>("T", "T");
-    TNbrName_ = coeffs().lookupOrDefault<word>("TNbr", "T");
+    TName_ = dict.lookupOrDefault<word>("T", "T");
+    TNbrName_ = dict.lookupOrDefault<word>("TNbr", "T");
 
     if (master())
     {
-        heatTransferAv_.reset(new heatTransferAv(coeffs(), mesh()));
+        heatTransferAv_.reset(new heatTransferAv(dict, mesh()));
 
         heatTransferCoefficientModel_ =
-            heatTransferCoefficientModel::New(coeffs(), *this);
+            heatTransferCoefficientModel::New(dict, *this);
     }
 }
 
@@ -91,7 +91,7 @@ Foam::fv::interRegionHeatTransfer::interRegionHeatTransfer
     heatTransferAv_(nullptr),
     heatTransferCoefficientModel_(nullptr)
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
 }
 
 
@@ -246,7 +246,7 @@ bool Foam::fv::interRegionHeatTransfer::read(const dictionary& dict)
 {
     if (interRegionModel::read(dict))
     {
-        readCoeffs();
+        readCoeffs(coeffs(dict));
         return true;
     }
     else

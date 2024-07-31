@@ -143,7 +143,7 @@ class waveForcing
     // Private Member Functions
 
         //- Non-virtual read
-        void readCoeffs();
+        void readCoeffs(const dictionary& dict);
 
         //- Return the scale distribution
         virtual tmp<volScalarField::Internal> scale() const;

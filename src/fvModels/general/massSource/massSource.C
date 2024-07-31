@@ -41,9 +41,9 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::massSource::readCoeffs()
+void Foam::fv::massSource::readCoeffs(const dictionary& dict)
 {
-    setPtr_->read(coeffs());
+    setPtr_->read(coeffs(dict));
 
     massFlowRate_.reset
     (
@@ -52,7 +52,7 @@ void Foam::fv::massSource::readCoeffs()
             "massFlowRate",
             mesh().time().userUnits(),
             dimMass/dimTime,
-            coeffs()
+            dict
         ).ptr()
     );
 }
@@ -72,7 +72,7 @@ Foam::fv::massSource::massSource
     setPtr_(new fvCellSet(mesh)),
     massFlowRate_()
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
 }
 
 
@@ -136,7 +136,7 @@ bool Foam::fv::massSource::read(const dictionary& dict)
 {
     if (massSourceBase::read(dict))
     {
-        readCoeffs();
+        readCoeffs(coeffs(dict));
         return true;
     }
     else

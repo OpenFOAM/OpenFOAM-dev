@@ -103,7 +103,7 @@ private:
     // Private Member Functions
 
         //- Non-virtual read
-        void readCoeffs();
+        void readCoeffs(const dictionary& dict);
 
         //- Evaluate the solubility curve at the given temperature to return
         //  the saturated mass fraction of solute

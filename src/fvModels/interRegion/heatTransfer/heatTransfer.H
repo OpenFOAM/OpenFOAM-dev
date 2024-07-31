@@ -120,7 +120,7 @@ class heatTransfer
     // Private member functions
 
         //- Non-virtual read
-        void readCoeffs();
+        void readCoeffs(const dictionary& dict);
 
         //- Source term to energy equation
         template<class AlphaFieldType>

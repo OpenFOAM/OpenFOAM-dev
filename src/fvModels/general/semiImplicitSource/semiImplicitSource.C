@@ -59,15 +59,15 @@ const Foam::NamedEnum<Foam::fv::semiImplicitSource::volumeMode, 2>
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::semiImplicitSource::readCoeffs()
+void Foam::fv::semiImplicitSource::readCoeffs(const dictionary& dict)
 {
     // Get the volume mode
-    volumeMode_ = volumeModeNames_.read(coeffs().lookup("volumeMode"));
+    volumeMode_ = volumeModeNames_.read(dict.lookup("volumeMode"));
 
     // Set field source terms
     fieldSu_.clear();
     fieldSp_.clear();
-    forAllConstIter(dictionary, coeffs().subDict("sources"), iter)
+    forAllConstIter(dictionary, dict.subDict("sources"), iter)
     {
         fieldSu_.set
         (
@@ -214,10 +214,10 @@ Foam::fv::semiImplicitSource::semiImplicitSource
 )
 :
     fvModel(name, modelType, mesh, dict),
-    set_(mesh, coeffs()),
+    set_(mesh, coeffs(dict)),
     volumeMode_(volumeMode::absolute)
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
 }
 
 
@@ -288,8 +288,8 @@ bool Foam::fv::semiImplicitSource::read(const dictionary& dict)
 {
     if (fvModel::read(dict))
     {
-        set_.read(coeffs());
-        readCoeffs();
+        set_.read(coeffs(dict));
+        readCoeffs(coeffs(dict));
         return true;
     }
     else

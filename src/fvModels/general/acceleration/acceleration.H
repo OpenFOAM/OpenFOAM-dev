@@ -92,7 +92,7 @@ class acceleration
     // Private Member Functions
 
         //- Non-virtual read
-        void readCoeffs();
+        void readCoeffs(const dictionary& dict);
 
         //- Source term to momentum equation
         template<class AlphaRhoFieldType>

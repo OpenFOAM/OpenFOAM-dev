@@ -53,13 +53,13 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::volumeBlockage::readCoeffs()
+void Foam::fv::volumeBlockage::readCoeffs(const dictionary& dict)
 {
-    phiName_ = coeffs().lookupOrDefault<word>("phi", "phi");
-    rhoName_ = coeffs().lookupOrDefault<word>("rho", "rho");
-    UName_ = coeffs().lookupOrDefault<word>("U", "U");
+    phiName_ = dict.lookupOrDefault<word>("phi", "phi");
+    rhoName_ = dict.lookupOrDefault<word>("rho", "rho");
+    UName_ = dict.lookupOrDefault<word>("U", "U");
 
-    volumePhaseName_ = coeffs().lookup<word>("volumePhase");
+    volumePhaseName_ = dict.lookup<word>("volumePhase");
 }
 
 
@@ -277,7 +277,7 @@ Foam::fv::volumeBlockage::volumeBlockage
     UName_(word::null),
     volumePhaseName_(word::null)
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
     volumeAlpha();
 }
 
@@ -337,7 +337,7 @@ bool Foam::fv::volumeBlockage::read(const dictionary& dict)
 {
     if (fvModel::read(dict))
     {
-        readCoeffs();
+        readCoeffs(coeffs(dict));
         return true;
     }
     else

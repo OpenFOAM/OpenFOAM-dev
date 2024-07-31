@@ -51,9 +51,9 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::acceleration::readCoeffs()
+void Foam::fv::acceleration::readCoeffs(const dictionary& dict)
 {
-    UName_ = coeffs().lookupOrDefault<word>("U", "U");
+    UName_ = dict.lookupOrDefault<word>("U", "U");
 
     velocity_ =
         Function1<vector>::New
@@ -61,7 +61,7 @@ void Foam::fv::acceleration::readCoeffs()
             "velocity",
             mesh().time().userUnits(),
             dimVelocity,
-            coeffs()
+            dict
         );
 }
 
@@ -101,11 +101,11 @@ Foam::fv::acceleration::acceleration
 )
 :
     fvModel(name, modelType, mesh, dict),
-    set_(mesh, coeffs()),
+    set_(mesh, coeffs(dict)),
     UName_(word::null),
     velocity_(nullptr)
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
 }
 
 
@@ -179,8 +179,8 @@ bool Foam::fv::acceleration::read(const dictionary& dict)
 {
     if (fvModel::read(dict))
     {
-        set_.read(coeffs());
-        readCoeffs();
+        set_.read(coeffs(dict));
+        readCoeffs(coeffs(dict));
         return true;
     }
     else

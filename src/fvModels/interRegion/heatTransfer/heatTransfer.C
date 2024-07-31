@@ -50,20 +50,20 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::heatTransfer::readCoeffs()
+void Foam::fv::heatTransfer::readCoeffs(const dictionary& dict)
 {
-    phaseName_ = coeffs().lookupOrDefault<word>("phase", word::null);
+    phaseName_ = dict.lookupOrDefault<word>("phase", word::null);
 
-    semiImplicit_ = coeffs().lookup<bool>("semiImplicit");
+    semiImplicit_ = dict.lookup<bool>("semiImplicit");
 
-    TName_ = coeffs().lookupOrDefault<word>("T", "T");
+    TName_ = dict.lookupOrDefault<word>("T", "T");
 
-    Ta_ = dimensionedScalar("Ta", dimTemperature, coeffs());
+    Ta_ = dimensionedScalar("Ta", dimTemperature, dict);
 
-    heatTransferAv_.reset(new heatTransferAv(coeffs(), mesh()));
+    heatTransferAv_.reset(new heatTransferAv(dict, mesh()));
 
     heatTransferCoefficientModel_ =
-        heatTransferCoefficientModel::New(coeffs(), mesh());
+        heatTransferCoefficientModel::New(dict, mesh());
 }
 
 
@@ -127,7 +127,7 @@ Foam::fv::heatTransfer::heatTransfer
 )
 :
     fvModel(name, modelType, mesh, dict),
-    set_(mesh, coeffs()),
+    set_(mesh, dict),
     phaseName_(word::null),
     semiImplicit_(false),
     TName_(word::null),
@@ -135,7 +135,7 @@ Foam::fv::heatTransfer::heatTransfer
     heatTransferAv_(nullptr),
     heatTransferCoefficientModel_(nullptr)
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
 }
 
 
@@ -227,7 +227,7 @@ bool Foam::fv::heatTransfer::read(const dictionary& dict)
 {
     if (fvModel::read(dict))
     {
-        readCoeffs();
+        readCoeffs(coeffs(dict));
         return true;
     }
     else

@@ -41,16 +41,16 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::massTransfer::readCoeffs()
+void Foam::fv::massTransfer::readCoeffs(const dictionary& dict)
 {
     if
     (
-        phaseNames_ != lookupPhaseNames()
-     || alphaNames_ != lookupPhaseFieldNames("alpha")
-     || rhoNames_ != lookupPhaseFieldNames("rho")
+        phaseNames_ != lookupPhaseNames(dict)
+     || alphaNames_ != lookupPhaseFieldNames(dict, "alpha")
+     || rhoNames_ != lookupPhaseFieldNames(dict, "rho")
     )
     {
-        FatalIOErrorInFunction(coeffs())
+        FatalIOErrorInFunction(coeffs(dict))
             << "Cannot change the phases of a " << typeName << " model "
             << "at run time" << exit(FatalIOError);
     }
@@ -59,17 +59,24 @@ void Foam::fv::massTransfer::readCoeffs()
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-const Foam::Pair<Foam::word> Foam::fv::massTransfer::lookupPhaseNames() const
+const Foam::Pair<Foam::word> Foam::fv::massTransfer::lookupPhaseNames
+(
+    const dictionary& dict
+) const
 {
-    return coeffs().lookup<Pair<word>>("phases");
+    return dict.lookup<Pair<word>>("phases");
 }
 
 
 const Foam::Pair<Foam::word>
-Foam::fv::massTransfer::lookupPhaseFieldNames(const word& name) const
+Foam::fv::massTransfer::lookupPhaseFieldNames
+(
+    const dictionary& dict,
+    const word& name
+) const
 {
     return
-        coeffs().lookupOrDefault<Pair<word>>
+        dict.lookupOrDefault<Pair<word>>
         (
             name + "s",
             Pair<word>
@@ -187,11 +194,11 @@ Foam::fv::massTransfer::massTransfer
 )
 :
     fvSpecificSource(name, modelType, mesh, dict),
-    phaseNames_(lookupPhaseNames()),
-    alphaNames_(lookupPhaseFieldNames("alpha")),
-    rhoNames_(lookupPhaseFieldNames("rho"))
+    phaseNames_(lookupPhaseNames(dict)),
+    alphaNames_(lookupPhaseFieldNames(dict, "alpha")),
+    rhoNames_(lookupPhaseFieldNames(dict, "rho"))
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
 }
 
 
@@ -243,7 +250,7 @@ bool Foam::fv::massTransfer::read(const dictionary& dict)
 {
     if (fvSpecificSource::read(dict))
     {
-        readCoeffs();
+        readCoeffs(coeffs(dict));
         return true;
     }
     else

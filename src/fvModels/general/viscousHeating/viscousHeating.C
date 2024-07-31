@@ -50,9 +50,9 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::viscousHeating::readCoeffs()
+void Foam::fv::viscousHeating::readCoeffs(const dictionary& dict)
 {
-    phaseName_ = coeffs().lookupOrDefault<word>("phase", word::null);
+    phaseName_ = dict.lookupOrDefault<word>("phase", word::null);
 }
 
 
@@ -69,7 +69,7 @@ Foam::fv::viscousHeating::viscousHeating
     fvModel(name, modelType, mesh, dict),
     phaseName_(word::null)
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
 }
 
 
@@ -152,7 +152,7 @@ bool Foam::fv::viscousHeating::read(const dictionary& dict)
 {
     if (fvModel::read(dict))
     {
-        readCoeffs();
+        readCoeffs(coeffs(dict));
         return true;
     }
     else

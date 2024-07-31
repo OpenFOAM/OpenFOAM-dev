@@ -41,9 +41,9 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::coefficientPhaseChange::readCoeffs()
+void Foam::fv::coefficientPhaseChange::readCoeffs(const dictionary& dict)
 {
-    C_.read(coeffs());
+    C_.read(coeffs(dict));
 }
 
 
@@ -68,7 +68,7 @@ Foam::fv::coefficientPhaseChange::coefficientPhaseChange
     ),
     C_("C", dimMass/dimArea/dimTime, NaN)
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
 }
 
 
@@ -156,7 +156,7 @@ bool Foam::fv::coefficientPhaseChange::read(const dictionary& dict)
 {
     if (singleComponentPhaseChange::read(dict))
     {
-        readCoeffs();
+        readCoeffs(coeffs(dict));
         return true;
     }
     else

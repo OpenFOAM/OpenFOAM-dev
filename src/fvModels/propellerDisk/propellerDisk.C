@@ -139,12 +139,12 @@ Foam::fv::propellerDisk::propellerDisk
 )
 :
     fvModel(name, modelType, mesh, dict),
-    set_(mesh, coeffs()),
+    set_(mesh, dict),
     phaseName_(word::null),
     UName_(word::null),
     log_(false)
 {
-    readCoeffs(coeffs());
+    readCoeffs(coeffs(dict));
 }
 
 
@@ -154,8 +154,8 @@ bool Foam::fv::propellerDisk::read(const dictionary& dict)
 {
     if (fvModel::read(dict))
     {
-        set_.read(coeffs());
-        readCoeffs(coeffs());
+        set_.read(coeffs(dict));
+        readCoeffs(coeffs(dict));
         return true;
     }
     else

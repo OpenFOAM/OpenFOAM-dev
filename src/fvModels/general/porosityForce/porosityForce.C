@@ -50,7 +50,7 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::porosityForce::reset()
+void Foam::fv::porosityForce::reset(const dictionary& dict)
 {
     porosityPtr_.reset
     (
@@ -58,24 +58,24 @@ void Foam::fv::porosityForce::reset()
         (
             name(),
             mesh(),
-            coeffs()
+            dict
         ).ptr()
     );
 }
 
 
-void Foam::fv::porosityForce::readCoeffs()
+void Foam::fv::porosityForce::readCoeffs(const dictionary& dict)
 {
-    if (coeffs().found("UNames"))
+    if (dict.found("UNames"))
     {
-        UNames_ = wordList(coeffs().lookup("UNames"));
+        UNames_ = wordList(dict.lookup("UNames"));
     }
     else
     {
-        UNames_ = wordList(1, coeffs().lookupOrDefault<word>("U", "U"));
+        UNames_ = wordList(1, dict.lookupOrDefault<word>("U", "U"));
     }
 
-    reset();
+    reset(dict);
 }
 
 
@@ -91,9 +91,10 @@ Foam::fv::porosityForce::porosityForce
 :
     fvModel(name, modelType, mesh, dict),
     UNames_(),
+    coeffsDict_(coeffs(dict)),
     porosityPtr_(nullptr)
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
 }
 
 
@@ -153,13 +154,13 @@ bool Foam::fv::porosityForce::movePoints()
 
 void Foam::fv::porosityForce::topoChange(const polyTopoChangeMap& map)
 {
-    reset();
+    reset(coeffsDict_);
 }
 
 
 void Foam::fv::porosityForce::mapMesh(const polyMeshMap& map)
 {
-    reset();
+    reset(coeffsDict_);
 }
 
 
@@ -168,7 +169,7 @@ void Foam::fv::porosityForce::distribute
     const polyDistributionMap& map
 )
 {
-    reset();
+    reset(coeffsDict_);
 }
 
 
@@ -176,7 +177,8 @@ bool Foam::fv::porosityForce::read(const dictionary& dict)
 {
     if (fvModel::read(dict))
     {
-        readCoeffs();
+        readCoeffs(coeffs(dict));
+        coeffsDict_ = coeffs(dict);
         return true;
     }
     else

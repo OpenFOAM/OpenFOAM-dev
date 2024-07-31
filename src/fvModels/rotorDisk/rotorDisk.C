@@ -73,42 +73,48 @@ const Foam::NamedEnum<Foam::fv::rotorDisk::inletFlowType, 3>
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::rotorDisk::readCoeffs()
+void Foam::fv::rotorDisk::readCoeffs(const dictionary& dict)
 {
-    UName_ = coeffs().lookupOrDefault<word>("U", "U");
+    UName_ = dict.lookupOrDefault<word>("U", "U");
 
-    omega_ = Foam::omega(coeffs()).value();
+    omega_ = Foam::omega(coeffs(dict)).value();
 
-    coeffs().lookup("nBlades") >> nBlades_;
+    dict.lookup("nBlades") >> nBlades_;
 
-    inletFlow_ = inletFlowTypeNames_.read(coeffs().lookup("inletFlowType"));
+    inletFlow_ = inletFlowTypeNames_.read(dict.lookup("inletFlowType"));
 
-    coeffs().lookup("tipEffect") >> tipEffect_;
+    dict.lookup("tipEffect") >> tipEffect_;
 
-    const dictionary& flapCoeffs(coeffs().subDict("flapCoeffs"));
+    const dictionary& flapCoeffs(dict.subDict("flapCoeffs"));
     flap_.beta0 = flapCoeffs.lookup<scalar>("beta0", unitDegrees);
     flap_.beta1c = flapCoeffs.lookup<scalar>("beta1c", unitDegrees);
     flap_.beta2s = flapCoeffs.lookup<scalar>("beta2s", unitDegrees);
 
     // Create co-ordinate system
-    createCoordinateSystem();
+    createCoordinateSystem(dict);
 
     // Read co-odinate system dependent properties
-    checkData();
+    checkData(dict);
 
     constructGeometry();
 
-    trim_->read(coeffs());
+    trim_->read(coeffs(dict));
 
     if (debug)
     {
         writeField("thetag", trim_->thetag()());
         writeField("faceArea", area_);
     }
+
+    // Optionally read the reference density for incompressible flow
+    if (dict.found("rhoRef"))
+    {
+        dict.lookup("rhoRef") >> rhoRef_;
+    }
 }
 
 
-void Foam::fv::rotorDisk::checkData()
+void Foam::fv::rotorDisk::checkData(const dictionary& dict)
 {
     // Set inflow type
     switch (set_.selectionType())
@@ -127,14 +133,14 @@ void Foam::fv::rotorDisk::checkData()
             {
                 case inletFlowType::fixed:
                 {
-                    coeffs().lookup("inletVelocity") >> inletVelocity_;
+                    dict.lookup("inletVelocity") >> inletVelocity_;
                     break;
                 }
                 case inletFlowType::surfaceNormal:
                 {
                     scalar UIn
                     (
-                        coeffs().lookup<scalar>("inletNormalVelocity")
+                        dict.lookup<scalar>("inletNormalVelocity")
                     );
                     inletVelocity_ = -coordSys_.R().e3()*UIn;
                     break;
@@ -306,7 +312,7 @@ void Foam::fv::rotorDisk::setFaceArea(vector& axis, const bool correct)
 }
 
 
-void Foam::fv::rotorDisk::createCoordinateSystem()
+void Foam::fv::rotorDisk::createCoordinateSystem(const dictionary& dict)
 {
     // Construct the local rotor co-prdinate system
     vector origin(Zero);
@@ -314,7 +320,7 @@ void Foam::fv::rotorDisk::createCoordinateSystem()
     vector refDir(Zero);
 
     geometryModeType gm =
-        geometryModeTypeNames_.read(coeffs().lookup("geometryMode"));
+        geometryModeTypeNames_.read(dict.lookup("geometryMode"));
 
     switch (gm)
     {
@@ -372,7 +378,7 @@ void Foam::fv::rotorDisk::createCoordinateSystem()
 
             // Correct the axis direction using a point above the rotor
             {
-                vector pointAbove(coeffs().lookup("pointAbove"));
+                vector pointAbove(dict.lookup("pointAbove"));
                 vector dir = pointAbove - origin;
                 dir /= mag(dir);
                 if ((dir & axis) < 0)
@@ -381,7 +387,7 @@ void Foam::fv::rotorDisk::createCoordinateSystem()
                 }
             }
 
-            coeffs().lookup("refDirection") >> refDir;
+            dict.lookup("refDirection") >> refDir;
 
             cylindrical_.reset
             (
@@ -396,9 +402,9 @@ void Foam::fv::rotorDisk::createCoordinateSystem()
         }
         case geometryModeType::specified:
         {
-            coeffs().lookup("origin") >> origin;
-            coeffs().lookup("axis") >> axis;
-            coeffs().lookup("refDirection") >> refDir;
+            dict.lookup("origin") >> origin;
+            dict.lookup("axis") >> axis;
+            dict.lookup("refDirection") >> refDir;
 
             cylindrical_.reset
             (
@@ -512,7 +518,7 @@ Foam::fv::rotorDisk::rotorDisk
 )
 :
     fvModel(name, modelType, mesh, dict),
-    set_(mesh, coeffs()),
+    set_(mesh, dict),
     UName_(word::null),
     omega_(0),
     nBlades_(0),
@@ -527,12 +533,12 @@ Foam::fv::rotorDisk::rotorDisk
     coordSys_("rotorCoordSys", vector::zero, axesRotation(sphericalTensor::I)),
     cylindrical_(),
     rMax_(0),
-    trim_(trimModel::New(*this, coeffs())),
-    blade_(coeffs().subDict("blade")),
-    profiles_(coeffs().subDict("profiles")),
-    rhoRef_(1)
+    trim_(trimModel::New(*this, dict)),
+    blade_(dict.subDict("blade")),
+    profiles_(dict.subDict("profiles")),
+    rhoRef_(-1)
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
 }
 
 
@@ -573,8 +579,12 @@ void Foam::fv::rotorDisk::addSup
         )
     );
 
-    // Read the reference density for incompressible flow
-    coeffs().lookup("rhoRef") >> rhoRef_;
+    if (rhoRef_ < 0)
+    {
+        FatalError
+            << "rhoRef not set, required for incompressible flow"
+            << exit(FatalError);
+    }
 
     const vectorField Uin(inflowVelocity(U));
     trim_->correct(Uin, force);
@@ -657,8 +667,8 @@ bool Foam::fv::rotorDisk::read(const dictionary& dict)
 {
     if (fvModel::read(dict))
     {
-        set_.read(coeffs());
-        readCoeffs();
+        set_.read(coeffs(dict));
+        readCoeffs(coeffs(dict));
         return true;
     }
     else

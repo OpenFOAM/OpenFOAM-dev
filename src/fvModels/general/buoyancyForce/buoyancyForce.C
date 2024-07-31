@@ -47,12 +47,12 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::buoyancyForce::readCoeffs()
+void Foam::fv::buoyancyForce::readCoeffs(const dictionary& dict)
 {
-    phaseName_ = coeffs().lookupOrDefault<word>("phase", word::null);
+    phaseName_ = dict.lookupOrDefault<word>("phase", word::null);
 
     UName_ =
-        coeffs().lookupOrDefault<word>
+        dict.lookupOrDefault<word>
         (
             "U",
             IOobject::groupName("U", phaseName_)
@@ -85,7 +85,7 @@ Foam::fv::buoyancyForce::buoyancyForce
         )
     )
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
 }
 
 
@@ -152,7 +152,7 @@ bool Foam::fv::buoyancyForce::read(const dictionary& dict)
 {
     if (fvModel::read(dict))
     {
-        readCoeffs();
+        readCoeffs(coeffs(dict));
         return true;
     }
     else

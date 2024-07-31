@@ -42,18 +42,18 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::volumeSource::readCoeffs()
+void Foam::fv::volumeSource::readCoeffs(const dictionary& dict)
 {
     alphaName_ =
         phaseName() == word::null
       ? word::null
-      : coeffs().lookupOrDefault<word>
+      : dict.lookupOrDefault<word>
         (
             "alpha",
             IOobject::groupName("alpha", phaseName())
         );
 
-    setPtr_->read(coeffs());
+    setPtr_->read(coeffs(dict));
 
     volumetricFlowRate_.reset
     (
@@ -62,7 +62,7 @@ void Foam::fv::volumeSource::readCoeffs()
             "volumetricFlowRate",
             mesh().time().userUnits(),
             dimVolume/dimTime,
-            coeffs()
+            dict
         ).ptr()
     );
 }
@@ -224,7 +224,7 @@ Foam::fv::volumeSource::volumeSource
     setPtr_(new fvCellSet(mesh)),
     volumetricFlowRate_()
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
 }
 
 
@@ -311,7 +311,7 @@ bool Foam::fv::volumeSource::read(const dictionary& dict)
 {
     if (fvTotalSource::read(dict))
     {
-        readCoeffs();
+        readCoeffs(coeffs(dict));
         return true;
     }
     else

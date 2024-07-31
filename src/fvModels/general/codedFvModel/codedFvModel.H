@@ -109,7 +109,7 @@ class codedFvModel
     // Private Member Functions
 
         //- Non-virtual read
-        void readCoeffs();
+        void readCoeffs(const dictionary& dict);
 
         //- Return the name of the field's primitive type
         word fieldPrimitiveTypeName() const;

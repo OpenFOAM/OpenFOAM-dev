@@ -50,9 +50,9 @@ namespace fv
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::radialActuationDisk::readCoeffs()
+void Foam::fv::radialActuationDisk::readCoeffs(const dictionary& dict)
 {
-    coeffs().lookup("coeffs") >> radialCoeffs_;
+    dict.lookup("coeffs") >> radialCoeffs_;
 }
 
 
@@ -133,7 +133,7 @@ Foam::fv::radialActuationDisk::radialActuationDisk
     actuationDisk(name, modelType, mesh, dict),
     radialCoeffs_()
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
 }
 
 
@@ -178,7 +178,7 @@ bool Foam::fv::radialActuationDisk::read(const dictionary& dict)
 {
     if (actuationDisk::read(dict))
     {
-        readCoeffs();
+        readCoeffs(coeffs(dict));
         return true;
     }
     else

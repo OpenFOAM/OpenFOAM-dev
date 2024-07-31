@@ -41,17 +41,17 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::multicomponentPhaseChange::readCoeffs()
+void Foam::fv::multicomponentPhaseChange::readCoeffs(const dictionary& dict)
 {
-    if (species_ != coeffs().lookup<wordList>("species"))
+    if (species_ != dict.lookup<wordList>("species"))
     {
-        FatalIOErrorInFunction(coeffs())
+        FatalIOErrorInFunction(coeffs(dict))
             << "Cannot change the species of a " << typeName << " model "
             << "at run time" << exit(FatalIOError);
     }
 
     energySemiImplicit_ =
-        coeffs().lookup<bool>("energySemiImplicit");
+        dict.lookup<bool>("energySemiImplicit");
 }
 
 
@@ -75,10 +75,10 @@ Foam::fv::multicomponentPhaseChange::multicomponentPhaseChange
         fluidThermosRequired,
         {true, true}
     ),
-    species_(coeffs().lookup<wordList>("species")),
+    species_(dict.lookup<wordList>("species")),
     energySemiImplicit_(false)
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
 }
 
 
@@ -181,7 +181,7 @@ bool Foam::fv::multicomponentPhaseChange::read(const dictionary& dict)
 {
     if (phaseChange::read(dict))
     {
-        readCoeffs();
+        readCoeffs(coeffs(dict));
         return true;
     }
     else

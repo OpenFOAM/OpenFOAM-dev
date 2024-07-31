@@ -71,7 +71,7 @@ private:
     // Private Member Functions
 
         //- Non-virtual read
-        void readCoeffs();
+        void readCoeffs(const dictionary& dict);
 
 
 protected:
@@ -79,10 +79,14 @@ protected:
     // Protected Member Functions
 
         //- Lookup the phase names
-        const Pair<word> lookupPhaseNames() const;
+        const Pair<word> lookupPhaseNames(const dictionary& dict) const;
 
         //- Lookup the phase field names
-        const Pair<word> lookupPhaseFieldNames(const word& name) const;
+        const Pair<word> lookupPhaseFieldNames
+        (
+            const dictionary& dict,
+            const word& name
+        ) const;
 
         //- Get the index of the name in the given pair, or -1
         static inline label index(const Pair<word>& names, const word& name);

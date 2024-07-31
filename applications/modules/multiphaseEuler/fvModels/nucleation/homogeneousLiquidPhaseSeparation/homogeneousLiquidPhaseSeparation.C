@@ -48,7 +48,10 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::homogeneousLiquidPhaseSeparation::readCoeffs()
+void Foam::fv::homogeneousLiquidPhaseSeparation::readCoeffs
+(
+    const dictionary& dict
+)
 {
     solubilityCurve_.reset
     (
@@ -57,7 +60,7 @@ void Foam::fv::homogeneousLiquidPhaseSeparation::readCoeffs()
             "solubility",
             dimTemperature,
             unitFraction,
-            coeffs()
+            dict
         ).ptr()
     );
 }
@@ -136,7 +139,7 @@ Foam::fv::homogeneousLiquidPhaseSeparation::homogeneousLiquidPhaseSeparation
     ),
     solubilityCurve_(nullptr)
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
 }
 
 
@@ -347,7 +350,7 @@ bool Foam::fv::homogeneousLiquidPhaseSeparation::read(const dictionary& dict)
 {
     if (singleComponentPhaseChange::read(dict))
     {
-        readCoeffs();
+        readCoeffs(coeffs(dict));
         return true;
     }
     else

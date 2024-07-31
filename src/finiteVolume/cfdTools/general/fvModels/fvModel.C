@@ -79,8 +79,7 @@ Foam::fvModel::fvModel
 :
     name_(name),
     modelType_(modelType),
-    mesh_(mesh),
-    coeffs_(dict.optionalSubDict(modelType + "Coeffs"))
+    mesh_(mesh)
 {
     Info<< incrIndent << indent << "Name: " << name_
         << endl << decrIndent;
@@ -197,8 +196,6 @@ void Foam::fvModel::correct()
 
 bool Foam::fvModel::read(const dictionary& dict)
 {
-    coeffs_ = dict.optionalSubDict(modelType_ + "Coeffs");
-
     return true;
 }
 

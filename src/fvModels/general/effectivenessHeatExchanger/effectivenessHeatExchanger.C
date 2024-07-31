@@ -51,14 +51,14 @@ namespace fv
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::effectivenessHeatExchanger::readCoeffs()
+void Foam::fv::effectivenessHeatExchanger::readCoeffs(const dictionary& dict)
 {
     secondaryMassFlowRate_ =
-        coeffs().lookup<scalar>("secondaryMassFlowRate", dimMass/dimTime);
+        dict.lookup<scalar>("secondaryMassFlowRate", dimMass/dimTime);
     secondaryInletT_ =
-        coeffs().lookup<scalar>("secondaryInletT", dimTemperature);
+        dict.lookup<scalar>("secondaryInletT", dimTemperature);
     primaryInletT_ =
-        coeffs().lookup<scalar>("primaryInletT", dimTemperature);
+        dict.lookup<scalar>("primaryInletT", dimTemperature);
 
     eTable_.reset
     (
@@ -68,15 +68,15 @@ void Foam::fv::effectivenessHeatExchanger::readCoeffs()
             dimMass/dimTime,
             dimMass/dimTime,
             dimless,
-            coeffs()
+            dict
         ).ptr()
     );
 
-    UName_ = coeffs().lookupOrDefault<word>("U", "U");
-    TName_ = coeffs().lookupOrDefault<word>("T", "T");
-    phiName_ = coeffs().lookupOrDefault<word>("phi", "phi");
+    UName_ = dict.lookupOrDefault<word>("U", "U");
+    TName_ = dict.lookupOrDefault<word>("T", "T");
+    phiName_ = dict.lookupOrDefault<word>("phi", "phi");
 
-    faceZoneName_ = coeffs().lookup<word>("faceZone");
+    faceZoneName_ = dict.lookup<word>("faceZone");
 }
 
 
@@ -192,7 +192,7 @@ Foam::fv::effectivenessHeatExchanger::effectivenessHeatExchanger
 )
 :
     fvModel(name, modelType, mesh, dict),
-    set_(mesh, coeffs()),
+    set_(mesh, coeffs(dict)),
     secondaryMassFlowRate_(NaN),
     secondaryInletT_(NaN),
     primaryInletT_(NaN),
@@ -207,7 +207,7 @@ Foam::fv::effectivenessHeatExchanger::effectivenessHeatExchanger
     faceSign_(),
     faceZoneArea_(NaN)
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
     setZone();
 }
 
@@ -362,8 +362,8 @@ bool Foam::fv::effectivenessHeatExchanger::read(const dictionary& dict)
 {
     if (fvModel::read(dict))
     {
-        set_.read(coeffs());
-        readCoeffs();
+        set_.read(coeffs(dict));
+        readCoeffs(coeffs(dict));
         setZone();
         return true;
     }
