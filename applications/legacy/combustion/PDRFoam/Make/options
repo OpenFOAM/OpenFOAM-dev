@@ -4,15 +4,13 @@ EXE_INC = \
     -IXiModels/algebraic \
     -IXiModels/XiModel \
     -IXiModels/XiEqModels/XiEqModel \
-    -IXiModels/XiGModels/XiGModel \
     -IXiModels/XiEqModels/Gulder \
     -IXiModels/XiEqModels/instabilityXiEq \
     -IXiModels/XiEqModels/SCOPEBlendXiEq \
     -IXiModels/XiEqModels/SCOPEXiEq \
-    -IXiModels/XiEqModels/XiEqModel \
+    -IXiModels/XiGModels/XiGModel \
     -IXiModels/XiGModels/instabilityG \
     -IXiModels/XiGModels/KTS \
-    -IXiModels/XiGModels/XiGModel \
     -IPDRModels/dragModels/basic \
     -IPDRModels/dragModels/PDRDragModel \
     -IPDRModels/XiEqModels/basicXiSubXiEq \

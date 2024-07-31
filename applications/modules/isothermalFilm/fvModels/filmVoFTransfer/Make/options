@@ -3,9 +3,6 @@ EXE_INC = \
     -I$(FOAM_MODULES)/isothermalFilm/filmCompressibleMomentumTransportModels/lnInclude \
     -I$(LIB_SRC)/physicalProperties/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
-    -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
-    -I$(LIB_SRC)/MomentumTransportModels/compressible/lnInclude \
-    -I$(LIB_SRC)/twoPhaseModels/interfaceProperties/lnInclude \
     \
     -I$(FOAM_MODULES)/compressibleVoF/lnInclude \
     -I$(FOAM_MODULES)/twoPhaseVoFSolver/lnInclude \
