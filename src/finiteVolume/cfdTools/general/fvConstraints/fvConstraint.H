@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,12 +66,6 @@ class fvConstraint
 
         //- Reference to the mesh database
         const fvMesh& mesh_;
-
-        //- Top level source dictionary
-        dictionary dict_;
-
-        //- Dictionary containing source coefficients
-        dictionary coeffs_;
 
 
     // Private Member Functions
@@ -189,8 +183,8 @@ public:
             //- Return const access to the mesh database
             inline const fvMesh& mesh() const;
 
-            //- Return dictionary
-            inline const dictionary& coeffs() const;
+            //- Return the coefficients sub-dictionary
+            inline const dictionary& coeffs(const dictionary&) const;
 
 
         // Checks

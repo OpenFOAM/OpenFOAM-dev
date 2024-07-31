@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,10 +46,8 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::limitPressure::readCoeffs()
+void Foam::fv::limitPressure::readCoeffs(const dictionary& dict)
 {
-    const dictionary& dict(coeffs());
-
     pName_ = dict.lookupOrDefault<word>("p", "p");
 
     if (dict.found("min") && dict.found("max"))
@@ -170,7 +168,7 @@ Foam::fv::limitPressure::limitPressure
     limitMinP_(false),
     limitMaxP_(false)
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
 }
 
 
@@ -241,7 +239,7 @@ bool Foam::fv::limitPressure::read(const dictionary& dict)
 {
     if (fvConstraint::read(dict))
     {
-        readCoeffs();
+        readCoeffs(coeffs(dict));
         return true;
     }
     else

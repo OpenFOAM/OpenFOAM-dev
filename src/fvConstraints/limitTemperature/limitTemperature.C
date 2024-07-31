@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,12 +46,12 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::limitTemperature::readCoeffs()
+void Foam::fv::limitTemperature::readCoeffs(const dictionary& dict)
 {
-    Tmin_ = coeffs().lookup<scalar>("min");
-    Tmax_ = coeffs().lookup<scalar>("max");
-    fieldName_ = coeffs().lookupOrDefault<word>("field", word::null);
-    phaseName_ = coeffs().lookupOrDefault<word>("phase", word::null);
+    Tmin_ = dict.lookup<scalar>("min");
+    Tmax_ = dict.lookup<scalar>("max");
+    fieldName_ = dict.lookupOrDefault<word>("field", word::null);
+    phaseName_ = dict.lookupOrDefault<word>("phase", word::null);
 }
 
 
@@ -66,13 +66,13 @@ Foam::fv::limitTemperature::limitTemperature
 )
 :
     fvConstraint(name, modelType, mesh, dict),
-    set_(mesh, coeffs()),
+    set_(mesh, coeffs(dict)),
     Tmin_(-vGreat),
     Tmax_(vGreat),
     fieldName_(word::null),
     phaseName_(word::null)
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
 }
 
 
@@ -212,8 +212,8 @@ bool Foam::fv::limitTemperature::read(const dictionary& dict)
 {
     if (fvConstraint::read(dict))
     {
-        set_.read(coeffs());
-        readCoeffs();
+        set_.read(coeffs(dict));
+        readCoeffs(coeffs(dict));
         return true;
     }
     else

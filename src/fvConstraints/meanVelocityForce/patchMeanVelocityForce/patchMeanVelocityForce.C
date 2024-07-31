@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,9 +48,9 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::patchMeanVelocityForce::readCoeffs()
+void Foam::fv::patchMeanVelocityForce::readCoeffs(const dictionary& dict)
 {
-    patch_ = coeffs().lookup<word>("patch");
+    patch_ = dict.lookup<word>("patch");
 
     if (mesh().boundaryMesh().findIndex(patch_) < 0)
     {
@@ -74,7 +74,7 @@ Foam::fv::patchMeanVelocityForce::patchMeanVelocityForce
     meanVelocityForce(sourceName, modelType, mesh, dict),
     patch_(word::null)
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
 }
 
 
@@ -131,7 +131,7 @@ bool Foam::fv::patchMeanVelocityForce::read(const dictionary& dict)
 {
     if (meanVelocityForce::read(dict))
     {
-        readCoeffs();
+        readCoeffs(coeffs(dict));
         return true;
     }
     else

@@ -57,10 +57,10 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::fixedValueConstraint::readCoeffs()
+void Foam::fv::fixedValueConstraint::readCoeffs(const dictionary& dict)
 {
     fieldValues_.clear();
-    forAllConstIter(dictionary, coeffs().subDict("fieldValues"), iter)
+    forAllConstIter(dictionary, dict.subDict("fieldValues"), iter)
     {
         fieldValues_.set
         (
@@ -69,19 +69,19 @@ void Foam::fv::fixedValueConstraint::readCoeffs()
             (
                 iter().keyword(),
                 mesh().time().userUnits(),
-                coeffs().subDict("fieldValues")
+                dict.subDict("fieldValues")
             )
         );
     }
 
     fraction_ =
-        coeffs().found("fraction")
+        dict.found("fraction")
       ? Function1<scalar>::New
         (
             "fraction",
             mesh().time().userUnits(),
             unitFraction,
-            coeffs()
+            dict
         )
       : autoPtr<Function1<scalar>>();
 }
@@ -137,9 +137,9 @@ Foam::fv::fixedValueConstraint::fixedValueConstraint
 )
 :
     fvConstraint(name, modelType, mesh, dict),
-    set_(mesh, coeffs())
+    set_(mesh, coeffs(dict))
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
 }
 
 
@@ -190,8 +190,8 @@ bool Foam::fv::fixedValueConstraint::read(const dictionary& dict)
 {
     if (fvConstraint::read(dict))
     {
-        set_.read(coeffs());
-        readCoeffs();
+        set_.read(coeffs(dict));
+        readCoeffs(coeffs(dict));
         return true;
     }
     else

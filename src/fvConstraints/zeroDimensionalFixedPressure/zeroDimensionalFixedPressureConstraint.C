@@ -113,11 +113,14 @@ Foam::fv::zeroDimensionalFixedPressureConstraint::massSource
 }
 
 
-void Foam::fv::zeroDimensionalFixedPressureConstraint::readCoeffs()
+void Foam::fv::zeroDimensionalFixedPressureConstraint::readCoeffs
+(
+    const dictionary& dict
+)
 {
-    pName_ = coeffs().lookupOrDefault<word>("p", "p");
+    pName_ = dict.lookupOrDefault<word>("p", "p");
 
-    rhoName_ = coeffs().lookupOrDefault<word>("rho", "rho");
+    rhoName_ = dict.lookupOrDefault<word>("rho", "rho");
 
     p_.reset
     (
@@ -126,7 +129,7 @@ void Foam::fv::zeroDimensionalFixedPressureConstraint::readCoeffs()
             "pressure",
             mesh().time().userUnits(),
             dimPressure,
-            coeffs()
+            dict
         ).ptr()
     );
 }
@@ -157,7 +160,7 @@ zeroDimensionalFixedPressureConstraint
             << exit(FatalIOError);
     }
 
-    readCoeffs();
+    readCoeffs(coeffs(dict));
 }
 
 
@@ -328,7 +331,7 @@ bool Foam::fv::zeroDimensionalFixedPressureConstraint::read
 {
     if (fvConstraint::read(dict))
     {
-        readCoeffs();
+        readCoeffs(coeffs(dict));
         return true;
     }
     else

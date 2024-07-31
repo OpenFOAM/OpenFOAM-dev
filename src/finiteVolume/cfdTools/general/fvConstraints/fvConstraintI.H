@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,9 +37,12 @@ inline const Foam::fvMesh& Foam::fvConstraint::mesh() const
 }
 
 
-inline const Foam::dictionary& Foam::fvConstraint::coeffs() const
+inline const Foam::dictionary& Foam::fvConstraint::coeffs
+(
+    const dictionary& dict
+) const
 {
-    return coeffs_;
+    return dict.optionalSubDict(constraintType_ + "Coeffs");
 }
 
 

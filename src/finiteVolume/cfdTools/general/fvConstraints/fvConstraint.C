@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,9 +67,7 @@ Foam::fvConstraint::fvConstraint
 :
     name_(name),
     constraintType_(constraintType),
-    mesh_(mesh),
-    dict_(dict),
-    coeffs_(dict.optionalSubDict(constraintType + "Coeffs"))
+    mesh_(mesh)
 {
     Info<< incrIndent << indent << "Name: " << name_
         << endl << decrIndent;
@@ -165,8 +163,6 @@ FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_CONSTRAINT_CONSTRAIN_FIELD, fvConstraint);
 
 bool Foam::fvConstraint::read(const dictionary& dict)
 {
-    coeffs_ = dict.optionalSubDict(constraintType_ + "Coeffs");
-
     return true;
 }
 

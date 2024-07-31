@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,10 +47,10 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::bound::readCoeffs()
+void Foam::fv::bound::readCoeffs(const dictionary& dict)
 {
-    fieldName_ = coeffs().lookup<word>("field");
-    min_ = coeffs().lookup<scalar>("min");
+    fieldName_ = dict.lookup<word>("field");
+    min_ = dict.lookup<scalar>("min");
 }
 
 
@@ -68,7 +68,7 @@ Foam::fv::bound::bound
     fieldName_(word::null),
     min_(0)
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
 }
 
 
@@ -108,7 +108,7 @@ bool Foam::fv::bound::read(const dictionary& dict)
 {
     if (fvConstraint::read(dict))
     {
-        readCoeffs();
+        readCoeffs(coeffs(dict));
         return true;
     }
     else

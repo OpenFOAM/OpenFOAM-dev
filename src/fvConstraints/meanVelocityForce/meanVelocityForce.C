@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,11 +50,11 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::meanVelocityForce::readCoeffs()
+void Foam::fv::meanVelocityForce::readCoeffs(const dictionary& dict)
 {
-    UName_ = coeffs().lookupOrDefault<word>("U", "U");
-    Ubar_ = coeffs().lookup<vector>("Ubar");
-    relaxation_ = coeffs().lookupOrDefault<scalar>("relaxation", 1);
+    UName_ = dict.lookupOrDefault<word>("U", "U");
+    Ubar_ = dict.lookup<vector>("Ubar");
+    relaxation_ = dict.lookupOrDefault<scalar>("relaxation", 1);
 }
 
 
@@ -95,7 +95,7 @@ Foam::fv::meanVelocityForce::meanVelocityForce
 )
 :
     fvConstraint(name, modelType, mesh, dict),
-    set_(mesh, coeffs()),
+    set_(mesh, coeffs(dict)),
     UName_(word::null),
     Ubar_(vector::uniform(NaN)),
     relaxation_(NaN),
@@ -103,7 +103,7 @@ Foam::fv::meanVelocityForce::meanVelocityForce
     dGradP_(0),
     rAPtr_(nullptr)
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
 
     // Read the initial pressure gradient from file if it exists
     IFstream propsFile
@@ -277,7 +277,7 @@ bool Foam::fv::meanVelocityForce::read(const dictionary& dict)
 {
     if (fvConstraint::read(dict))
     {
-        set_.read(coeffs());
+        set_.read(coeffs(dict));
         return true;
     }
     else

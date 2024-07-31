@@ -67,9 +67,9 @@ const Foam::NamedEnum<Foam::fv::fixedTemperature::temperatureMode, 2>
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::fixedTemperature::readCoeffs()
+void Foam::fv::fixedTemperature::readCoeffs(const dictionary& dict)
 {
-    mode_ = modeNames_.read(coeffs().lookup("mode"));
+    mode_ = modeNames_.read(dict.lookup("mode"));
 
     switch (mode_)
     {
@@ -82,28 +82,28 @@ void Foam::fv::fixedTemperature::readCoeffs()
                     "temperature",
                     mesh().time().userUnits(),
                     dimTemperature,
-                    coeffs()
+                    dict
                 ).ptr()
             );
             break;
         }
         case temperatureMode::lookup:
         {
-            TName_ = coeffs().lookupOrDefault<word>("T", "T");
+            TName_ = dict.lookupOrDefault<word>("T", "T");
             break;
         }
     }
 
-    phaseName_ = coeffs().lookupOrDefault<word>("phase", word::null);
+    phaseName_ = dict.lookupOrDefault<word>("phase", word::null);
 
     fraction_ =
-        coeffs().found("fraction")
+        dict.found("fraction")
       ? Function1<scalar>::New
         (
             "fraction",
             mesh().time().userUnits(),
             unitFraction,
-            coeffs()
+            dict
         )
       : autoPtr<Function1<scalar>>();
 }
@@ -120,13 +120,13 @@ Foam::fv::fixedTemperature::fixedTemperature
 )
 :
     fvConstraint(name, modelType, mesh, dict),
-    set_(mesh, coeffs()),
+    set_(mesh, coeffs(dict)),
     mode_(temperatureMode::uniform),
     TValue_(nullptr),
     TName_(word::null),
     phaseName_(word::null)
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
 }
 
 
@@ -241,8 +241,8 @@ bool Foam::fv::fixedTemperature::read(const dictionary& dict)
 {
     if (fvConstraint::read(dict))
     {
-        set_.read(coeffs());
-        readCoeffs();
+        set_.read(coeffs(dict));
+        readCoeffs(coeffs(dict));
         return true;
     }
     else

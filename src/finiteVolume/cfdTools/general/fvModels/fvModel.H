@@ -69,9 +69,6 @@ class fvModel
         //- Reference to the mesh database
         const fvMesh& mesh_;
 
-        //- Top level source dictionary
-        dictionary dict_;
-
         //- Dictionary containing source coefficients
         dictionary coeffs_;
 

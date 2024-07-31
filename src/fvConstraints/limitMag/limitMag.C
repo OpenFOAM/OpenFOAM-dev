@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,10 +46,10 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::limitMag::readCoeffs()
+void Foam::fv::limitMag::readCoeffs(const dictionary& dict)
 {
-    fieldName_ = coeffs().lookup<word>("field");
-    max_ = coeffs().lookup<scalar>("max");
+    fieldName_ = dict.lookup<word>("field");
+    max_ = dict.lookup<scalar>("max");
 }
 
 
@@ -117,11 +117,11 @@ Foam::fv::limitMag::limitMag
 )
 :
     fvConstraint(name, modelType, mesh, dict),
-    set_(mesh, coeffs()),
+    set_(mesh, coeffs(dict)),
     fieldName_(word::null),
     max_(vGreat)
 {
-    readCoeffs();
+    readCoeffs(coeffs(dict));
 }
 
 
@@ -169,8 +169,8 @@ bool Foam::fv::limitMag::read(const dictionary& dict)
 {
     if (fvConstraint::read(dict))
     {
-        set_.read(coeffs());
-        readCoeffs();
+        set_.read(coeffs(dict));
+        readCoeffs(coeffs(dict));
         return true;
     }
     else
