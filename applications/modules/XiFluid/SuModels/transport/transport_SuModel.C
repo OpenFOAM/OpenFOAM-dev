@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "transportSu.H"
+#include "transport_SuModel.H"
 #include "laminarFlameSpeed.H"
 #include "fvmDiv.H"
 #include "fvcLaplacian.H"

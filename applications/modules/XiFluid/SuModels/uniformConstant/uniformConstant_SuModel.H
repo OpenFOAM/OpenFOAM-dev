@@ -22,29 +22,20 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::SuModels::transport
+    Foam::SuModels::uniformConstant
 
 Description
-    Transport model for the strained laminar flame speed
-
-    References:
-    \verbatim
-        Weller, H. G., Tabor, G., Gosman, A. D., & Fureby, C. (1998, January).
-        Application of a flame-wrinkling LES combustion model
-        to a turbulent mixing layer.
-        In Symposium (International) on combustion
-        (Vol. 27, No. 1, pp. 899-907). Elsevier.
-    \endverbatim
+    Simple uniform constant laminar flame speed \c Su model
 
 SourceFiles
-    transport.C
+    uniformConstant_SuModel.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef transportSu_H
-#define transportSu_H
+#ifndef uniformConstant_SuModel_H
+#define uniformConstant_SuModel_H
 
-#include "unstrained.H"
+#include "SuModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -54,23 +45,17 @@ namespace SuModels
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class transport Declaration
+                            Class uniformConstant Declaration
 \*---------------------------------------------------------------------------*/
 
-class transport
+class uniformConstant
 :
-    public unstrained
+    public SuModel
 {
     // Private Data
 
-        //- Laminar flame extinction strain-rate
-        dimensionedScalar sigmaExt_;
-
-        //- Minimum laminar flame-speed allowed for numerical stability
-        dimensionedScalar SuMin_;
-
-        //- Maximum laminar flame-speed allowed for numerical stability
-        dimensionedScalar SuMax_;
+        //- Specified laminar flame speed
+        dimensionedScalar Su_;
 
 
 protected:
@@ -82,13 +67,13 @@ protected:
 public:
 
     //- Runtime type information
-    TypeName("transport");
+    TypeName("uniformConstant");
 
 
     // Constructors
 
         //- Construct from components
-        transport
+        uniformConstant
         (
             const dictionary& dict,
             const psiuMulticomponentThermo& thermo,
@@ -96,23 +81,24 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        transport(const transport&) = delete;
+        uniformConstant(const uniformConstant&) = delete;
 
 
     //- Destructor
-    virtual ~transport();
+    virtual ~uniformConstant();
 
 
     // Member Functions
 
         //- Correct the laminar flame speed
-        virtual void correct();
+        virtual void correct()
+        {}
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const transport&) = delete;
+        void operator=(const uniformConstant&) = delete;
 };
 
 

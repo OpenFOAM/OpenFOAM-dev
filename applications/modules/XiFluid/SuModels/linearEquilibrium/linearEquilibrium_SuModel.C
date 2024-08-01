@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "linearEquilibriumSu.H"
+#include "linearEquilibrium_SuModel.H"
 #include "laminarFlameSpeed.H"
 #include "addToRunTimeSelectionTable.H"
 

@@ -38,12 +38,12 @@ Description
     \endverbatim
 
 SourceFiles
-    linearEquilibrium.C
+    linearEquilibrium_SuModel.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef linearEquilibriumSu_H
-#define linearEquilibriumSu_H
+#ifndef linearEquilibrium_SuModel_H
+#define linearEquilibrium_SuModel_H
 
 #include "unstrained.H"
 
