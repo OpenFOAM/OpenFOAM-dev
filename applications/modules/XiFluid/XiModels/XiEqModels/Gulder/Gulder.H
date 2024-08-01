@@ -76,10 +76,7 @@ class Gulder
     // Private Data
 
         //- Model constant
-        scalar XiEqCoeff_;
-
-        //- Schelkin effect Model constant
-        scalar uPrimeCoeff_;
+        dimensionedScalar XiEqCoeff_;
 
         //- Minimum laminar burning velocity
         dimensionedScalar SuMin_;

@@ -44,13 +44,8 @@ bool Foam::XiEqModels::Gulder::readCoeffs(const dictionary& dict)
 {
     XiEqModel::readCoeffs(dict);
 
-    XiEqCoeff_ = dict.lookupOrDefault<scalar>("XiEqCoeff", 0.62);
-    uPrimeCoeff_ = dict.lookupOrDefault<scalar>("uPrimeCoeff", 1);
-
-    if (dict.found("SuMin"))
-    {
-        SuMin_.read(dict);
-    }
+    XiEqCoeff_.readIfPresent(dict);
+    SuMin_.readIfPresent(dict);
 
     return true;
 }
@@ -66,6 +61,7 @@ Foam::XiEqModels::Gulder::Gulder
 )
 :
     XiEqModel(thermo, turbulence, Su),
+    XiEqCoeff_("XiEqCoeff", dimless, 0.62),
     SuMin_("SuMin", 0.01*Su.average())
 {
     readCoeffs(dict);
