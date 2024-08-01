@@ -102,6 +102,10 @@ class codedFvModel
         //- The name of the field that this fvModel applies to
         word fieldName_;
 
+        //- Cached coefficients dictionary
+        //  Required for the delayed
+        dictionary coeffsDict_;
+
         //- Underlying functionObject
         mutable autoPtr<fvModel> redirectFvModelPtr_;
 
