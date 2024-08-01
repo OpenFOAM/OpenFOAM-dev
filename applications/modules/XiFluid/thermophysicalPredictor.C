@@ -47,10 +47,9 @@ void Foam::solvers::XiFluid::ftSolve
         fvModels().source(rho, ft)
     );
 
+    ftEqn.relax();
     fvConstraints().constrain(ftEqn);
-
     ftEqn.solve();
-
     fvConstraints().constrain(ft);
 }
 
@@ -185,7 +184,7 @@ void Foam::solvers::XiFluid::EauSolve
 
     const volScalarField::Internal rhoByRhou(rho()/thermo.rhou()());
 
-    fvScalarMatrix heauEqn
+    fvScalarMatrix EauEqn
     (
         fvm::ddt(rho, heau) + mvConvection.fvmDiv(phi, heau)
       + rhoByRhou
@@ -210,10 +209,9 @@ void Foam::solvers::XiFluid::EauSolve
         fvModels().source(rho, heau)
     );
 
-    fvConstraints().constrain(heauEqn);
-
-    heauEqn.solve();
-
+    EauEqn.relax();
+    fvConstraints().constrain(EauEqn);
+    EauEqn.solve();
     fvConstraints().constrain(heau);
 }
 
@@ -246,11 +244,8 @@ void Foam::solvers::XiFluid::EaSolve
     );
 
     EaEqn.relax();
-
     fvConstraints().constrain(EaEqn);
-
     EaEqn.solve();
-
     fvConstraints().constrain(hea);
 }
 
