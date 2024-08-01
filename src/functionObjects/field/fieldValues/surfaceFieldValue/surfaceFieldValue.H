@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -191,11 +191,12 @@ public:
         {
             faceZone,
             patch,
+            patches,
             sampledSurface
         };
 
         //- Selection type names
-        static const NamedEnum<selectionTypes, 3> selectionTypeNames;
+        static const NamedEnum<selectionTypes, 4> selectionTypeNames;
 
 
         //- Operation type enumeration
@@ -226,13 +227,19 @@ private:
     // Private Member Functions
 
         //- Set faces to evaluate based on a face zone
-        void setFaceZoneFaces();
+        void setFaceZoneFaces(const word&);
 
-        //- Set faces to evaluate based on a patch
-        void setPatchFaces();
+        //- Set faces to evaluate based on a list of patch indices
+        void setPatchesFaces(const labelList&);
+
+        //- Set faces to evaluate based on a list of patch names
+        void setPatchesFaces(const wordReList&);
+
+        //- Set faces to evaluate based on a patch name
+        void setPatchFaces(const wordRe&);
 
         //- Set faces according to sampledSurface
-        void sampledSurfaceFaces(const dictionary&);
+        void setSampledSurfaceFaces(const dictionary&);
 
         //- Combine mesh faces and points from multiple processors
         void combineMeshGeometry
@@ -266,7 +273,7 @@ protected:
         selectionTypes selectionType_;
 
         //- Name of face selection (patch, faceZone, etc.)
-        word selectionName_;
+        string selectionName_;
 
         //- Operation to apply to values
         operationType operation_;
@@ -424,37 +431,9 @@ public:
 
     // Public Member Functions
 
-        //- Return the selection type
-        inline const selectionTypes& selectionType() const;
-
-        //- Return the selection name
-        inline const word& selectionName() const;
-
-        //- Return the local list of face IDs
-        inline const labelList& faceId() const;
-
-        //- Return the local list of patch ID per face
-        inline const labelList& facePatch() const;
-
-        //- Return the list of +1/-1 representing face flip map
-        inline const labelList& faceSign() const;
-
-        //- Return the output directory
-        inline fileName outputDir() const;
-
         //- Templated helper function to output field values
         template<class Type>
-        bool writeValues
-        (
-            const word& fieldName,
-            const scalarField& signs,
-            const scalarField& weights,
-            const vectorField& Sf
-        );
-
-        //- Templated helper function to output field values
-        template<class Type, class ResultType>
-        bool writeValues
+        void writeValues
         (
             const word& fieldName,
             const Field<Type>& values,
@@ -502,10 +481,6 @@ public:
 } // End namespace fieldValues
 } // End namespace functionObjects
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "surfaceFieldValueI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

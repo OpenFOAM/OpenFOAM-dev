@@ -55,11 +55,12 @@ template<>
 const char* Foam::NamedEnum
 <
     Foam::functionObjects::fieldValues::surfaceFieldValue::selectionTypes,
-    3
+    4
 >::names[] =
 {
     "faceZone",
     "patch",
+    "patches",
     "sampledSurface"
 };
 
@@ -89,7 +90,7 @@ const char* Foam::NamedEnum
 const Foam::NamedEnum
 <
     Foam::functionObjects::fieldValues::surfaceFieldValue::selectionTypes,
-    3
+    4
 > Foam::functionObjects::fieldValues::surfaceFieldValue::selectionTypeNames;
 
 const Foam::NamedEnum
@@ -101,20 +102,25 @@ const Foam::NamedEnum
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-void Foam::functionObjects::fieldValues::surfaceFieldValue::setFaceZoneFaces()
+void Foam::functionObjects::fieldValues::surfaceFieldValue::setFaceZoneFaces
+(
+    const word& zoneName
+)
 {
-    label zoneId = mesh_.faceZones().findIndex(selectionName_);
+    const label zoneId = mesh_.faceZones().findIndex(zoneName);
 
     if (zoneId < 0)
     {
         FatalErrorInFunction
             << type() << " " << name() << ": "
             << selectionTypeNames[selectionType_]
-            << "(" << selectionName_ << "):" << nl
-            << "    Unknown face zone name: " << selectionName_
+            << "(" << zoneName << "):" << nl
+            << "    Unknown face zone name: " << zoneName
             << ". Valid face zones are: " << mesh_.faceZones().toc()
             << nl << exit(FatalError);
     }
+
+    selectionName_ = zoneName;
 
     // Ensure addressing is built on all processes
     mesh_.polyBFacePatches();
@@ -172,44 +178,45 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::setFaceZoneFaces()
 }
 
 
-void Foam::functionObjects::fieldValues::surfaceFieldValue::setPatchFaces()
+void Foam::functionObjects::fieldValues::surfaceFieldValue::setPatchesFaces
+(
+    const labelList& patchis
+)
 {
-    const label patchId = mesh_.boundaryMesh().findIndex(selectionName_);
+    selectionName_.clear();
 
-    if (patchId < 0)
+    faceId_.clear();
+    facePatchId_.clear();
+    faceSign_.clear();
+
+    forAll(patchis, i)
     {
-        FatalErrorInFunction
-            << type() << " " << name() << ": "
-            << selectionTypeNames[selectionType_]
-            << "(" << selectionName_ << "):" << nl
-            << "    Unknown patch name: " << selectionName_
-            << ". Valid patch names are: "
-            << mesh_.boundaryMesh().names() << nl
-            << exit(FatalError);
-    }
-
-    const fvPatch& fvp = mesh_.boundary()[patchId];
-
-    faceId_ = identityMap(fvp.size());
-    facePatchId_ = labelList(fvp.size(), patchId);
-    faceSign_ = labelList(fvp.size(), 1);
-
-    // If we have selected a cyclic, also include any associated processor
-    // cyclic faces
-    forAll(mesh_.boundary(), patchi)
-    {
+        const label patchi = patchis[i];
         const fvPatch& fvp = mesh_.boundary()[patchi];
 
-        if
-        (
-            isA<processorCyclicFvPatch>(fvp)
-         && refCast<const processorCyclicFvPatch>(fvp).referPatchIndex()
-           == patchId
-        )
+        selectionName_.append((i ? " " : "") + fvp.name());
+
+        faceId_.append(identityMap(fvp.size()));
+        facePatchId_.append(labelList(fvp.size(), patchi));
+        faceSign_.append(labelList(fvp.size(), 1));
+
+        // If we have selected a cyclic, also include any associated processor
+        // cyclic faces
+        forAll(mesh_.boundary(), pcPatchj)
         {
-            faceId_.append(identityMap(fvp.size()));
-            facePatchId_.append(labelList(fvp.size(), patchi));
-            faceSign_.append(labelList(fvp.size(), 1));
+            const fvPatch& pcFvp = mesh_.boundary()[pcPatchj];
+
+            if
+            (
+                isA<processorCyclicFvPatch>(pcFvp)
+             && refCast<const processorCyclicFvPatch>(pcFvp).referPatchIndex()
+             == patchi
+            )
+            {
+                faceId_.append(identityMap(pcFvp.size()));
+                facePatchId_.append(labelList(pcFvp.size(), pcPatchj));
+                faceSign_.append(labelList(pcFvp.size(), 1));
+            }
         }
     }
 
@@ -217,18 +224,61 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::setPatchFaces()
 }
 
 
-void Foam::functionObjects::fieldValues::surfaceFieldValue::sampledSurfaceFaces
+void Foam::functionObjects::fieldValues::surfaceFieldValue::setPatchesFaces
+(
+    const wordReList& patchNames
+)
+{
+    labelList patchis;
+
+    forAll(patchNames, i)
+    {
+        const labelList patchiis =
+            mesh_.boundaryMesh().findIndices(patchNames[i]);
+
+        if (patchiis.empty())
+        {
+            FatalErrorInFunction
+                << type() << " " << this->name() << ": "
+                << selectionTypeNames[selectionType_]
+                << "(" << patchNames[i] << "):" << nl
+                << "    Unknown patch name: " << patchNames[i]
+                << ". Valid patch names are: "
+                << mesh_.boundaryMesh().names() << nl
+                << exit(FatalError);
+        }
+
+        patchis.append(patchiis);
+    }
+
+    setPatchesFaces(patchis);
+}
+
+
+void Foam::functionObjects::fieldValues::surfaceFieldValue::setPatchFaces
+(
+    const wordRe& patchName
+)
+{
+    setPatchesFaces(wordReList(1, patchName));
+
+    selectionName_ =
+        patchName.isPattern() ? '"' + patchName + '"' : string(patchName);
+}
+
+
+void
+Foam::functionObjects::fieldValues::surfaceFieldValue::setSampledSurfaceFaces
 (
     const dictionary& dict
 )
 {
-    surfacePtr_ = sampledSurface::New
-    (
-        name(),
-        mesh_,
-        dict.subDict("sampledSurfaceDict")
-    );
+    surfacePtr_ = sampledSurface::New(name(), mesh_, dict);
+
     surfacePtr_().update();
+
+    selectionName_ = surfacePtr_().name();
+
     nFaces_ = returnReduce(surfacePtr_().faces().size(), sumOp<label>());
 }
 
@@ -419,21 +469,28 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::initialise
     {
         case selectionTypes::faceZone:
         {
-            dict.lookupBackwardsCompatible({"faceZone", "name"})
-                >> selectionName_;
-            setFaceZoneFaces();
+            setFaceZoneFaces
+            (
+                dict.lookupBackwardsCompatible<word>({"faceZone", "name"})
+            );
             break;
         }
         case selectionTypes::patch:
         {
-            dict.lookupBackwardsCompatible({"patch", "name"}) >> selectionName_;
-            setPatchFaces();
+            setPatchFaces
+            (
+                dict.lookupBackwardsCompatible<wordRe>({"patch", "name"})
+            );
+            break;
+        }
+        case selectionTypes::patches:
+        {
+            setPatchesFaces(dict.lookup<wordReList>("patches"));
             break;
         }
         case selectionTypes::sampledSurface:
         {
-            sampledSurfaceFaces(dict);
-            selectionName_ = surfacePtr_().name();
+            setSampledSurfaceFaces(dict.subDict("sampledSurfaceDict"));
             break;
         }
         default:
@@ -441,7 +498,6 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::initialise
             FatalErrorInFunction
                 << type() << " " << name() << ": "
                 << selectionTypeNames[selectionType_]
-                << "(" << selectionName_ << "):" << nl
                 << "    Unknown selection type. Valid selection types are:"
                 << selectionTypeNames.sortedToc() << nl << exit(FatalError);
         }
@@ -452,7 +508,7 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::initialise
         FatalErrorInFunction
             << type() << " " << name() << ": "
             << selectionTypeNames[selectionType_]
-            << "(" << selectionName_ << "):" << nl
+            << "(" << selectionName_.c_str() << "):" << nl
             << " selection has no faces" << exit(FatalError);
     }
 
@@ -509,10 +565,10 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::writeFileHeader
 {
     if (operation_ != operationType::none)
     {
-        writeCommented(file(), "Selection type : ");
+        writeCommented(file(), "Selection : ");
         file()
-            << selectionTypeNames[selectionType_] << " "
-            << selectionName_ << endl;
+            << selectionTypeNames[selectionType_] << "("
+            << selectionName_.c_str() << ")" << endl;
         writeCommented(file(), "Faces  : ");
         file() << nFaces_ << endl;
         writeCommented(file(), "Area   : ");
@@ -612,7 +668,7 @@ Foam::functionObjects::fieldValues::surfaceFieldValue::surfaceFieldValue
             dict.lookupBackwardsCompatible({"select", "regionType"})
         )
     ),
-    selectionName_(word::null),
+    selectionName_(string::null),
     operation_(operationTypeNames_.read(dict.lookup("operation"))),
     weightFieldNames_(),
     scaleFactor_(1),
@@ -642,7 +698,7 @@ Foam::functionObjects::fieldValues::surfaceFieldValue::surfaceFieldValue
             dict.lookupBackwardsCompatible({"select", "regionType"})
         )
     ),
-    selectionName_(word::null),
+    selectionName_(string::null),
     operation_(operationTypeNames_.read(dict.lookup("operation"))),
     weightFieldNames_(),
     scaleFactor_(1),
@@ -721,33 +777,6 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::write()
         Log << "    total area = " << totalArea_ << endl;
     }
 
-    // Write the surface geometry
-    if (writeFields_)
-    {
-        faceList faces;
-        pointField points;
-
-        if (selectionType_ == selectionTypes::sampledSurface)
-        {
-            combineSurfaceGeometry(faces, points);
-        }
-        else
-        {
-            combineMeshGeometry(faces, points);
-        }
-
-        if (Pstream::master())
-        {
-            surfaceWriterPtr_->write
-            (
-                outputDir(),
-                selectionTypeNames[selectionType_] + ("_" + selectionName_),
-                points,
-                faces
-            );
-        }
-    }
-
     // Construct the sign and weight fields and the surface normals
     const scalarField signs
     (
@@ -767,14 +796,49 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::write()
       : (signs*filterField(mesh_.Sf()))()
     );
 
-    // Process the fields
+    // Create storage for the values
+    #define DeclareValues(fieldType, nullArg) \
+        PtrList<Field<fieldType>> fieldType##Values(fields_.size());
+    FOR_ALL_FIELD_TYPES(DeclareValues);
+    #undef DeclareValues
+
+    // Process the fields in turn. Get the values and store if necessary.
+    // Compute the operation and write into the file and the log.
     forAll(fields_, i)
     {
         const word& fieldName = fields_[i];
         bool ok = false;
 
         #define writeValuesFieldType(fieldType, none)                          \
-            ok = ok || writeValues<fieldType>(fieldName, signs, weights, Sf);
+        {                                                                      \
+            const bool typeOk = validField<fieldType>(fieldName);              \
+                                                                               \
+            if (typeOk)                                                        \
+            {                                                                  \
+                tmp<Field<fieldType>> values =                                 \
+                    getFieldValues<fieldType>(fieldName);                      \
+                                                                               \
+                writeValues<fieldType>                                         \
+                (                                                              \
+                    fieldName,                                                 \
+                    values(),                                                  \
+                    signs,                                                     \
+                    weights,                                                   \
+                    Sf                                                         \
+                );                                                             \
+                                                                               \
+                if (writeFields_)                                              \
+                {                                                              \
+                    fieldType##Values.set                                      \
+                    (                                                          \
+                        i,                                                     \
+                        getFieldValues<fieldType>(fieldName).ptr()             \
+                    );                                                         \
+                }                                                              \
+            }                                                                  \
+                                                                               \
+            ok = ok || typeOk;                                                 \
+        }
         FOR_ALL_FIELD_TYPES(writeValuesFieldType);
         #undef writeValuesFieldType
 
@@ -784,12 +848,52 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::write()
         }
     }
 
-    // Finalise
+    // Finalise the file and the log
     if (anyFields && operation_ != operationType::none && Pstream::master())
     {
         file() << endl;
     }
     Log << endl;
+
+    // Write a surface file with the values if specified
+    if (writeFields_)
+    {
+        faceList faces;
+        pointField points;
+
+        if (selectionType_ == selectionTypes::sampledSurface)
+        {
+            combineSurfaceGeometry(faces, points);
+        }
+        else
+        {
+            combineMeshGeometry(faces, points);
+        }
+
+        if (Pstream::master())
+        {
+            surfaceWriterPtr_->write
+            (
+                baseFileDir()/name()/time_.name(),
+                word(selectionTypeNames[selectionType_])
+              + "("
+              + (
+                    selectionType_ == selectionTypes::patches
+                  ? selectionName_.replace(" ", ",").c_str()
+                  : selectionName_
+                )
+              + ")",
+                points,
+                faces,
+                fields_,
+                false
+                #define ValuesParameter(fieldType, nullArg) \
+                    , fieldType##Values
+                FOR_ALL_FIELD_TYPES(ValuesParameter)
+                #undef ValuesParameter
+            );
+        }
+    }
 
     return true;
 }

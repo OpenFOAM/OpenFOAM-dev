@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -282,95 +282,7 @@ processValuesTypeType
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-bool Foam::functionObjects::fieldValues::surfaceFieldValue::writeValues
-(
-    const word& fieldName,
-    const scalarField& signs,
-    const scalarField& weights,
-    const vectorField& Sf
-)
-{
-    const bool ok = validField<Type>(fieldName);
-
-    if (ok)
-    {
-        // Get the values
-        Field<Type> values(getFieldValues<Type>(fieldName));
-
-        // Write raw values on surface if specified
-        if (writeFields_)
-        {
-            faceList faces;
-            pointField points;
-
-            if (selectionType_ == selectionTypes::sampledSurface)
-            {
-                combineSurfaceGeometry(faces, points);
-            }
-            else
-            {
-                combineMeshGeometry(faces, points);
-            }
-
-            Field<Type> writeValues(weights*values);
-            combineFields(writeValues);
-
-            if (Pstream::master())
-            {
-                surfaceWriterPtr_->write
-                (
-                    outputDir(),
-                    fieldName
-                  + '_' + selectionTypeNames[selectionType_]
-                  + '_' + selectionName_,
-                    points,
-                    faces,
-                    false,
-                    fieldName,
-                    writeValues
-                );
-            }
-        }
-
-        // Do the operation
-        if (operation_ != operationType::none)
-        {
-            // Apply scale factor
-            values *= scaleFactor_;
-
-            bool ok = false;
-
-            #define writeValuesFieldType(fieldType, none)                      \
-                ok =                                                           \
-                    ok                                                         \
-                 || writeValues<Type, fieldType>                               \
-                    (                                                          \
-                        fieldName,                                             \
-                        values,                                                \
-                        signs,                                                 \
-                        weights,                                               \
-                        Sf                                                     \
-                    );
-            FOR_ALL_FIELD_TYPES(writeValuesFieldType);
-            #undef writeValuesFieldType
-
-            if (!ok)
-            {
-                FatalErrorInFunction
-                    << "Operation " << operationTypeNames_[operation_]
-                    << " not available for values of type "
-                    << pTraits<Type>::typeName
-                    << exit(FatalError);
-            }
-        }
-    }
-
-    return ok;
-}
-
-
-template<class Type, class ResultType>
-bool Foam::functionObjects::fieldValues::surfaceFieldValue::writeValues
+void Foam::functionObjects::fieldValues::surfaceFieldValue::writeValues
 (
     const word& fieldName,
     const Field<Type>& values,
@@ -379,26 +291,48 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::writeValues
     const vectorField& Sf
 )
 {
-    ResultType result;
-
-    if (processValues(values, signs, weights, Sf, result))
+    // Do the operation
+    if (operation_ != operationType::none)
     {
-        // Add to result dictionary, over-writing any previous entry
-        resultDict_.add(fieldName, result, true);
+        bool ok = false;
 
-        if (Pstream::master())
-        {
-            file() << tab << result;
-
-            Log << "    " << operationTypeNames_[operation_]
-                << "(" << selectionName_ << ") of " << fieldName
-                <<  " = " << result << endl;
+        #define writeValuesFieldType(fieldType, none)                          \
+        {                                                                      \
+            fieldType result;                                                  \
+                                                                               \
+            const bool typeOk =                                                \
+                processValues(values, signs, weights, Sf, result);             \
+                                                                               \
+            if (typeOk)                                                        \
+            {                                                                  \
+                /* Add to result dictionary, over-writing any previous entry */\
+                resultDict_.add(fieldName, result, true);                      \
+                                                                               \
+                /* Write into the file and the log */                          \
+                if (Pstream::master())                                         \
+                {                                                              \
+                    file() << tab << result;                                   \
+                                                                               \
+                    Log << "    " << operationTypeNames_[operation_]           \
+                        << "(" << selectionName_ << ") of " << fieldName       \
+                        <<  " = " << result << endl;                           \
+                }                                                              \
+            }                                                                  \
+                                                                               \
+            ok = ok || typeOk;                                                 \
         }
+        FOR_ALL_FIELD_TYPES(writeValuesFieldType);
+        #undef writeValuesFieldType
 
-        return true;
+        if (!ok)
+        {
+            FatalErrorInFunction
+                << "Operation " << operationTypeNames_[operation_]
+                << " not available for values of type "
+                << pTraits<Type>::typeName
+                << exit(FatalError);
+        }
     }
-
-    return false;
 }
 
 
