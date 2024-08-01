@@ -54,7 +54,7 @@ class instability
 {
     // Private Data
 
-        //- Flame instability wrinkling generation rate coefficient
+        //- Flame instability wrinkling generation rate
         dimensionedScalar Gin_;
 
         //- Xi generation rate model due to all other processes
