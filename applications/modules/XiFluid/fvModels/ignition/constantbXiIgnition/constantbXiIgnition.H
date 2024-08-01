@@ -99,13 +99,13 @@ class constantbXiIgnition
         autoPtr<XiCorrModel> XiCorrModel_;
 
         //- Ignition start time
-        scalar start_;
+        dimensionedScalar start_;
 
         //- Ignition duration
-        scalar duration_;
+        dimensionedScalar duration_;
 
         //- Ignition strength
-        scalar strength_;
+        dimensionedScalar strength_;
 
 
     // Private Member Functions

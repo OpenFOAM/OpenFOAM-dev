@@ -65,7 +65,7 @@ class uniformConstant
     // Private Data
 
         //- Specified flame-wrinkling value
-        scalar Xi_;
+        dimensionedScalar Xi_;
 
 
 protected:

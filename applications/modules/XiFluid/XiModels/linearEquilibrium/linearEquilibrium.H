@@ -78,7 +78,7 @@ class linearEquilibrium
 {
     // Private Data
 
-        scalar XiShapeCoeff_;
+        dimensionedScalar XiShapeCoeff_;
 
 
 protected:

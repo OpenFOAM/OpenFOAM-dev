@@ -45,7 +45,7 @@ bool Foam::XiModels::cubicEquilibrium::readCoeffs(const dictionary& dict)
 {
     XiModel::readCoeffs(dict);
 
-    XiShapeCoeff_ = dict.lookupOrDefault<scalar>("XiShapeCoeff", 1);
+    XiShapeCoeff_.readIfPresent(dict);
 
     return true;
 }
@@ -62,8 +62,9 @@ Foam::XiModels::cubicEquilibrium::cubicEquilibrium
 )
 :
     equilibrium(dict, thermo, turbulence, Su),
-    XiShapeCoeff_(dict.lookupOrDefault<scalar>("XiShapeCoeff", 1))
+    XiShapeCoeff_("XiShapeCoeff", dimless, 1)
 {
+    readCoeffs(dict);
     correct();
 }
 

@@ -47,9 +47,9 @@ namespace Foam
 
 void Foam::fv::constantbXiIgnition::readCoeffs(const dictionary& dict)
 {
-    start_ = dict.lookup<scalar>("start", mesh().time().userUnits());
-    duration_ = dict.lookup<scalar>("duration", mesh().time().userUnits());
-    strength_ = dict.lookup<scalar>("strength", dimless);
+    start_.read(dict);
+    duration_.read(dict);
+    strength_.read(dict);
 }
 
 
@@ -65,18 +65,19 @@ Foam::fv::constantbXiIgnition::constantbXiIgnition
 :
     bXiIgnition(name, modelType, mesh, dict),
     set_(mesh, dict),
-    XiCorrModel_(XiCorrModel::New(mesh, dict))
-{
-    readCoeffs(coeffs(dict));
-}
+    XiCorrModel_(XiCorrModel::New(mesh, dict)),
+    start_("start", dimTime, dict),
+    duration_("duration", dimTime, dict),
+    strength_("strength", dimless, dict)
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 bool Foam::fv::constantbXiIgnition::igniting() const
 {
-    const scalar curTime = mesh().time().value();
-    const scalar deltaT = mesh().time().deltaTValue();
+    const dimensionedScalar curTime = mesh().time();
+    const dimensionedScalar deltaT = mesh().time().deltaT();
 
     return
     (
@@ -88,8 +89,8 @@ bool Foam::fv::constantbXiIgnition::igniting() const
 
 bool Foam::fv::constantbXiIgnition::ignited() const
 {
-    const scalar curTime = mesh().time().value();
-    const scalar deltaT = mesh().time().deltaTValue();
+    const dimensionedScalar curTime = mesh().time();
+    const dimensionedScalar deltaT = mesh().time().deltaT();
 
     return (curTime > start_ - 0.5*deltaT);
 }
@@ -116,11 +117,14 @@ void Foam::fv::constantbXiIgnition::addSup
 
     const labelUList cells = set_.cells();
 
+    const scalar strength = strength_.value();
+    const scalar duration = duration_.value();
+
     forAll(cells, i)
     {
         const label celli = cells[i];
         const scalar Vc = V[celli];
-        Sp[celli] -= Vc*rhou[celli]*strength_/(duration_*(b[celli] + 0.001));
+        Sp[celli] -= Vc*rhou[celli]*strength/(duration*(b[celli] + 0.001));
     }
 }
 

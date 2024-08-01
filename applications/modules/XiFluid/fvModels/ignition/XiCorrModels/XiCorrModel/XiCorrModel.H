@@ -55,6 +55,7 @@ SourceFiles
 
 #include "fvCellSet.H"
 #include "volFieldsFwd.H"
+#include "dimensionedTypes.H"
 #include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -75,7 +76,7 @@ class XiCorrModel
 
         //- Minimum b below which the Xi correction is not applied
         //  Defaults to 0.01
-        scalar bMin_;
+        dimensionedScalar bMin_;
 
 
 protected:

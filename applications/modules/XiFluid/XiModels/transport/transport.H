@@ -72,7 +72,7 @@ class transport
 {
     // Private Data
 
-        scalar XiShapeCoeff_;
+        dimensionedScalar XiShapeCoeff_;
 
         autoPtr<XiEqModel> XiEqModel_;
         autoPtr<XiGModel> XiGModel_;

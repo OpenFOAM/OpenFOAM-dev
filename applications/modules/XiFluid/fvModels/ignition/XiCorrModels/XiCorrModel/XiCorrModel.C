@@ -39,7 +39,7 @@ namespace Foam
 
 bool Foam::XiCorrModel::readCoeffs(const dictionary& dict)
 {
-    bMin_ = dict.lookupOrDefault<scalar>("bMin", 0.01);
+    bMin_.readIfPresent(dict);
     return true;
 }
 
@@ -52,7 +52,8 @@ Foam::XiCorrModel::XiCorrModel
     const dictionary& dict
 )
 :
-    set_(mesh, dict)
+    set_(mesh, dict),
+    bMin_("bMin", dimless, 0.001)
 {
     readCoeffs(dict);
 }
@@ -79,7 +80,7 @@ void Foam::XiCorrModel::XiCorr
     scalar bMin = min(bCells);
     reduce(bMin, minOp<scalar>());
 
-    if (bMin > bMin_)
+    if (bMin > bMin_.value())
     {
         const scalarField Vcells(b.mesh().V(), cells);
 

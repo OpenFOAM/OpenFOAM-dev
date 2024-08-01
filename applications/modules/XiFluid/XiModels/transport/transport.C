@@ -48,7 +48,7 @@ bool Foam::XiModels::transport::readCoeffs(const dictionary& dict)
 {
     XiModel::readCoeffs(dict);
 
-    XiShapeCoeff_ = dict.lookupOrDefault<scalar>("XiShapeCoeff", 1);
+    XiShapeCoeff_.readIfPresent(dict);
 
     return true;
 }
@@ -65,10 +65,11 @@ Foam::XiModels::transport::transport
 )
 :
     XiModel(thermo, turbulence, Su),
-    XiShapeCoeff_(dict.lookupOrDefault<scalar>("XiShapeCoeff", 1)),
+    XiShapeCoeff_("XiShapeCoeff", dimless, 1),
     XiEqModel_(XiEqModel::New(dict, thermo, turbulence, Su)),
     XiGModel_(XiGModel::New(dict, thermo, turbulence, Su))
 {
+    readCoeffs(dict);
     Xi_.writeOpt() = IOobject::AUTO_WRITE;
 }
 

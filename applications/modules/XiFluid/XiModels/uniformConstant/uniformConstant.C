@@ -44,7 +44,7 @@ bool Foam::XiModels::uniformConstant::readCoeffs(const dictionary& dict)
 {
     XiModel::readCoeffs(dict);
 
-    dict.lookup("Xi") >> Xi_;
+    Xi_.read(dict);
     XiModel::Xi_ == Xi_;
 
     return true;
@@ -62,7 +62,7 @@ Foam::XiModels::uniformConstant::uniformConstant
 )
 :
     XiModel(thermo, turbulence, Su),
-    Xi_(readScalar(dict.lookup("Xi")))
+    Xi_("Xi", dimless, dict)
 {
     XiModel::Xi_ == Xi_;
 }
