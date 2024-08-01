@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "instabilityG.H"
+#include "instability.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -32,19 +32,19 @@ namespace Foam
 {
 namespace XiGModels
 {
-    defineTypeNameAndDebug(instabilityG, 0);
-    addToRunTimeSelectionTable(XiGModel, instabilityG, dictionary);
+    defineTypeNameAndDebug(instability, 0);
+    addToRunTimeSelectionTable(XiGModel, instability, dictionary);
 }
 }
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-bool Foam::XiGModels::instabilityG::readCoeffs(const dictionary& dict)
+bool Foam::XiGModels::instability::readCoeffs(const dictionary& dict)
 {
     XiGModel::readCoeffs(dict);
 
-    dict.lookup("Gin") >> Gin_;
+    Gin_.read(dict);
 
     return true;
 }
@@ -52,7 +52,7 @@ bool Foam::XiGModels::instabilityG::readCoeffs(const dictionary& dict)
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::XiGModels::instabilityG::instabilityG
+Foam::XiGModels::instability::instability
 (
     const dictionary& dict,
     const psiuMulticomponentThermo& thermo,
@@ -61,22 +61,22 @@ Foam::XiGModels::instabilityG::instabilityG
 )
 :
     XiGModel(thermo, thermoTransport, Su),
-    Gin_(dict.lookup("Gin")),
+    Gin_("Gin", dimless, dict),
     XiGModel_(XiGModel::New(dict, thermo, thermoTransport, Su))
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::XiGModels::instabilityG::~instabilityG()
+Foam::XiGModels::instability::~instability()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField> Foam::XiGModels::instabilityG::G() const
+Foam::tmp<Foam::volScalarField> Foam::XiGModels::instability::G() const
 {
-    volScalarField turbXiG(XiGModel_->G());
+    const volScalarField turbXiG(XiGModel_->G());
     return (Gin_*Gin_/(Gin_ + turbXiG) + turbXiG);
 }
 

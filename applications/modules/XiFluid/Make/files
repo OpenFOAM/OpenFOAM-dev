@@ -21,7 +21,7 @@ XiModels/XiEqModels/instabilityXiEq/instabilityXiEq.C
 XiModels/XiGModels/XiGModel/XiGModel.C
 XiModels/XiGModels/XiGModel/XiGModelNew.C
 XiModels/XiGModels/KTS/KTS.C
-XiModels/XiGModels/instabilityG/instabilityG.C
+XiModels/XiGModels/instability/instability.C
 
 fvModels/ignition/XiCorrModels/XiCorrModel/XiCorrModel.C
 fvModels/ignition/XiCorrModels/XiCorrModel/XiCorrModelNew.C

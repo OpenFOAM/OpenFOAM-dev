@@ -22,18 +22,18 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::XiGModels::instabilityG
+    Foam::XiGModels::instability
 
 Description
     Flame instability flame wrinkling generation rate model
 
 SourceFiles
-    instabilityG.C
+    instability.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef instabilityG_H
-#define instabilityG_H
+#ifndef XiGModels_instability_H
+#define XiGModels_instability_H
 
 #include "XiGModel.H"
 
@@ -45,16 +45,16 @@ namespace XiGModels
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class instabilityG Declaration
+                        Class instability Declaration
 \*---------------------------------------------------------------------------*/
 
-class instabilityG
+class instability
 :
     public XiGModel
 {
     // Private Data
 
-        //- Flame instabilityG wrinkling generation rate coefficient
+        //- Flame instability wrinkling generation rate coefficient
         dimensionedScalar Gin_;
 
         //- Xi generation rate model due to all other processes
@@ -70,13 +70,13 @@ protected:
 public:
 
     //- Runtime type information
-    TypeName("instabilityG");
+    TypeName("instability");
 
 
     // Constructors
 
         //- Construct from components
-        instabilityG
+        instability
         (
             const dictionary& dict,
             const psiuMulticomponentThermo& thermo,
@@ -85,11 +85,11 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        instabilityG(const instabilityG&) = delete;
+        instability(const instability&) = delete;
 
 
     //- Destructor
-    virtual ~instabilityG();
+    virtual ~instability();
 
 
     // Member Functions
@@ -101,7 +101,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const instabilityG&) = delete;
+        void operator=(const instability&) = delete;
 };
 
 
