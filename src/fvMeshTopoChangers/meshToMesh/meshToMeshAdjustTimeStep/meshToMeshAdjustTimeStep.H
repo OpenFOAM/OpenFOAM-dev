@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,21 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::functionObjects::meshToMeshAdjustTimeStepFunctionObject
+    Foam::functionObjects::meshToMeshAdjustTimeStep
 
 Description
     Adjusts time-step for meshToMesh mapping.
 
 SourceFiles
-    meshToMeshAdjustTimeStepFunctionObject.C
+    meshToMeshAdjustTimeStep.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_meshToMeshAdjustTimeStepFunctionObject_H
-#define functionObjects_meshToMeshAdjustTimeStepFunctionObject_H
+#ifndef meshToMeshAdjustTimeStep_H
+#define meshToMeshAdjustTimeStep_H
 
 #include "fvMeshFunctionObject.H"
-#include "fvMeshTopoChangersMeshToMesh.H"
+#include "meshToMesh_fvMeshTopoChanger.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -46,10 +46,10 @@ namespace functionObjects
 {
 
 /*---------------------------------------------------------------------------*\
-                  Class meshToMeshAdjustTimeStepFunctionObject Declaration
+           Class meshToMeshAdjustTimeStep Declaration
 \*---------------------------------------------------------------------------*/
 
-class meshToMeshAdjustTimeStepFunctionObject
+class meshToMeshAdjustTimeStep
 :
     public fvMeshFunctionObject
 {
@@ -68,7 +68,7 @@ public:
     // Constructors
 
         //- Construct from components
-        meshToMeshAdjustTimeStepFunctionObject
+        meshToMeshAdjustTimeStep
         (
             const word& name,
             const Time& runTime,
@@ -76,14 +76,14 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        meshToMeshAdjustTimeStepFunctionObject
+        meshToMeshAdjustTimeStep
         (
-            const meshToMeshAdjustTimeStepFunctionObject&
+            const meshToMeshAdjustTimeStep&
         ) = delete;
 
 
     // Destructor
-    virtual ~meshToMeshAdjustTimeStepFunctionObject();
+    virtual ~meshToMeshAdjustTimeStep();
 
 
     // Member Functions
@@ -110,7 +110,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const meshToMeshAdjustTimeStepFunctionObject&) = delete;
+        void operator=(const meshToMeshAdjustTimeStep&) = delete;
 };
 
 

@@ -1,4 +1,4 @@
-fvMeshTopoChangersMeshToMesh.C
-meshToMeshAdjustTimeStep/meshToMeshAdjustTimeStepFunctionObject.C
+meshToMesh_fvMeshTopoChanger.C
+meshToMeshAdjustTimeStep/meshToMeshAdjustTimeStep.C
 
 LIB = $(FOAM_LIBBIN)/libmeshToMeshTopoChanger

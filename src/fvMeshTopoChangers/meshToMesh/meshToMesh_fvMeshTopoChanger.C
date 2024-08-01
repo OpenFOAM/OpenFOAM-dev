@@ -23,12 +23,12 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "fvMeshTopoChangersMeshToMesh.H"
+#include "meshToMesh_fvMeshTopoChanger.H"
 #include "polyTopoChangeMap.H"
 #include "volFields.H"
 #include "surfaceInterpolate.H"
 #include "pointFields.H"
-#include "meshToMeshAdjustTimeStepFunctionObject.H"
+#include "meshToMeshAdjustTimeStep.H"
 #include "fvMeshToFvMesh.H"
 #include "intersectionCellsToCells.H"
 #include "surfaceToVolVelocity.H"
@@ -209,7 +209,7 @@ bool Foam::fvMeshTopoChangers::meshToMesh::update()
     {
         const_cast<Time&>(time).functionObjects().append
         (
-            new functionObjects::meshToMeshAdjustTimeStepFunctionObject
+            new functionObjects::meshToMeshAdjustTimeStep
             (
                 "meshToMeshAdjustTimeStep",
                 time,

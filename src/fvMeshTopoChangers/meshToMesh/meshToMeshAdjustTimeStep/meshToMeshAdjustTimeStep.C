@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "meshToMeshAdjustTimeStepFunctionObject.H"
+#include "meshToMeshAdjustTimeStep.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -32,12 +32,12 @@ namespace Foam
 {
 namespace functionObjects
 {
-    defineTypeNameAndDebug(meshToMeshAdjustTimeStepFunctionObject, 0);
+    defineTypeNameAndDebug(meshToMeshAdjustTimeStep, 0);
 
     addToRunTimeSelectionTable
     (
         functionObject,
-        meshToMeshAdjustTimeStepFunctionObject,
+        meshToMeshAdjustTimeStep,
         dictionary
     );
 }
@@ -46,8 +46,7 @@ namespace functionObjects
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::functionObjects::meshToMeshAdjustTimeStepFunctionObject::
-meshToMeshAdjustTimeStepFunctionObject
+Foam::functionObjects::meshToMeshAdjustTimeStep::meshToMeshAdjustTimeStep
 (
     const word& name,
     const Time& runTime,
@@ -64,14 +63,13 @@ meshToMeshAdjustTimeStepFunctionObject
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::functionObjects::meshToMeshAdjustTimeStepFunctionObject::
-~meshToMeshAdjustTimeStepFunctionObject()
+Foam::functionObjects::meshToMeshAdjustTimeStep::~meshToMeshAdjustTimeStep()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::functionObjects::meshToMeshAdjustTimeStepFunctionObject::read
+bool Foam::functionObjects::meshToMeshAdjustTimeStep::read
 (
     const dictionary& dict
 )
@@ -82,21 +80,19 @@ bool Foam::functionObjects::meshToMeshAdjustTimeStepFunctionObject::read
 }
 
 
-Foam::scalar
-Foam::functionObjects::meshToMeshAdjustTimeStepFunctionObject::
-timeToNextAction()
+Foam::scalar Foam::functionObjects::meshToMeshAdjustTimeStep::timeToNextAction()
 {
     return meshToMesh_.timeToNextMesh();
 }
 
 
-bool Foam::functionObjects::meshToMeshAdjustTimeStepFunctionObject::execute()
+bool Foam::functionObjects::meshToMeshAdjustTimeStep::execute()
 {
     return true;
 }
 
 
-bool Foam::functionObjects::meshToMeshAdjustTimeStepFunctionObject::write()
+bool Foam::functionObjects::meshToMeshAdjustTimeStep::write()
 {
     return true;
 }

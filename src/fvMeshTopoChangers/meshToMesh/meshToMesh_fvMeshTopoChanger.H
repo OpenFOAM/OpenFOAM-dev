@@ -60,12 +60,12 @@ Usage
     \endverbatim
 
 SourceFiles
-    fvMeshTopoChangersMeshToMesh.C
+    meshToMesh_fvMeshTopoChanger.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef fvMeshTopoChangersMeshToMesh_H
-#define fvMeshTopoChangersMeshToMesh_H
+#ifndef meshToMesh_fvMeshTopoChanger_H
+#define meshToMesh_fvMeshTopoChanger_H
 
 #include "fvMeshTopoChanger.H"
 
