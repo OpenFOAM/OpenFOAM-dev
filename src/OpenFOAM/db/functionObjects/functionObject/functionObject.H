@@ -165,7 +165,7 @@ public:
     //- Switch write log to Info
     Switch log;
 
-    //- Switch write log to Info
+    //- Switch execute at start time
     Switch executeAtStart_;
 
 
