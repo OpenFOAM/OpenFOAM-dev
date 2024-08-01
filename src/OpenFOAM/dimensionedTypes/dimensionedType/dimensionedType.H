@@ -129,8 +129,14 @@ public:
         //- Construct from an Istream with a given name and dimensions
         dimensioned(const word&, const dimensionSet&, Istream&);
 
+        //- Construct from an Istream with a given name and units
+        dimensioned(const word&, const unitConversion&, Istream&);
+
         //- Construct from dictionary lookup with a given name and dimensions
         dimensioned(const word&, const dimensionSet&, const dictionary&);
+
+        //- Construct from dictionary lookup with a given name and units
+        dimensioned(const word&, const unitConversion&, const dictionary&);
 
 
     // Static member functions
@@ -202,10 +208,18 @@ public:
         dimensioned<Type> T() const;
 
         //- Update the value of dimensioned<Type>
-        void read(const dictionary&);
+        void read
+        (
+            const dictionary&,
+            const unitConversion& defaultUnits = NullObjectRef<unitConversion>()
+        );
 
         //- Update the value of dimensioned<Type> if found in the dictionary.
-        bool readIfPresent(const dictionary&);
+        bool readIfPresent
+        (
+            const dictionary&,
+            const unitConversion& defaultUnits = NullObjectRef<unitConversion>()
+        );
 
 
     // Member Operators

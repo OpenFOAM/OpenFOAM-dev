@@ -47,8 +47,8 @@ namespace Foam
 
 void Foam::fv::constantbXiIgnition::readCoeffs(const dictionary& dict)
 {
-    start_.read(dict);
-    duration_.read(dict);
+    start_.read(dict, mesh().time().userUnits());
+    duration_.read(dict, mesh().time().userUnits());
     strength_.read(dict);
 }
 
@@ -66,8 +66,8 @@ Foam::fv::constantbXiIgnition::constantbXiIgnition
     bXiIgnition(name, modelType, mesh, dict),
     set_(mesh, dict),
     XiCorrModel_(XiCorrModel::New(mesh, dict)),
-    start_("start", dimTime, dict),
-    duration_("duration", dimTime, dict),
+    start_("start", mesh().time().userUnits(), dict),
+    duration_("duration", mesh().time().userUnits(), dict),
     strength_("strength", dimless, dict)
 {}
 

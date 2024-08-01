@@ -183,6 +183,22 @@ template<class Type>
 Foam::dimensioned<Type>::dimensioned
 (
     const word& name,
+    const unitConversion& units,
+    Istream& is
+)
+:
+    name_(name),
+    dimensions_(units.dimensions()),
+    value_(Zero)
+{
+    initialise(name, units, is);
+}
+
+
+template<class Type>
+Foam::dimensioned<Type>::dimensioned
+(
+    const word& name,
     const dimensionSet& dims,
     const dictionary& dict
 )
@@ -192,6 +208,22 @@ Foam::dimensioned<Type>::dimensioned
     value_(Zero)
 {
     initialise(name, dims, dict.lookup(name));
+}
+
+
+template<class Type>
+Foam::dimensioned<Type>::dimensioned
+(
+    const word& name,
+    const unitConversion& units,
+    const dictionary& dict
+)
+:
+    name_(name),
+    dimensions_(units.dimensions()),
+    value_(Zero)
+{
+    initialise(name, units, dict.lookup(name));
 }
 
 
@@ -325,20 +357,38 @@ void Foam::dimensioned<Type>::replace
 
 
 template<class Type>
-void Foam::dimensioned<Type>::read(const dictionary& dict)
+void Foam::dimensioned<Type>::read
+(
+    const dictionary& dict,
+    const unitConversion& defaultUnits
+)
 {
-    initialise(name_, dimensions_, dict.lookup(name_));
+    initialise
+    (
+        name_,
+        isNull(defaultUnits) ? dimensions_ : defaultUnits,
+        dict.lookup(name_)
+    );
 }
 
 
 template<class Type>
-bool Foam::dimensioned<Type>::readIfPresent(const dictionary& dict)
+bool Foam::dimensioned<Type>::readIfPresent
+(
+    const dictionary& dict,
+    const unitConversion& defaultUnits
+)
 {
     const entry* entryPtr = dict.lookupEntryPtr(name_, false, true);
 
     if (entryPtr)
     {
-        initialise(name_, dimensions_, entryPtr->stream());
+        initialise
+        (
+            name_,
+            isNull(defaultUnits) ? dimensions_ : defaultUnits,
+            entryPtr->stream()
+        );
         return true;
     }
     else
