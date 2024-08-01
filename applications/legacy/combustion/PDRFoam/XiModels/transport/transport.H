@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::XiModels::transport
 
 Description
-    Simple transport model for Xi based on Gulders correlation
+    Simple transport model for Xi based on Gulder's correlation
     with a linear correction function to give a plausible profile for Xi.
     See report TR/HGW/10 for details on the Weller two equations model.
     See \link XiModel.H \endlink for more details on flame wrinkling modelling.

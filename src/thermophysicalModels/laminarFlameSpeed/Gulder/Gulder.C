@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "GuldersEGR.H"
+#include "Gulder.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -32,20 +32,21 @@ namespace Foam
 {
 namespace laminarFlameSpeedModels
 {
-    defineTypeNameAndDebug(GuldersEGR, 0);
+    defineTypeNameAndDebug(Gulder, 0);
 
     addToRunTimeSelectionTable
     (
         laminarFlameSpeed,
-        GuldersEGR,
+        Gulder,
         dictionary
     );
 }
 }
 
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::laminarFlameSpeedModels::GuldersEGR::GuldersEGR
+Foam::laminarFlameSpeedModels::Gulder::Gulder
 (
     const dictionary& dict,
     const psiuMulticomponentThermo& ct
@@ -65,13 +66,13 @@ Foam::laminarFlameSpeedModels::GuldersEGR::GuldersEGR
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::laminarFlameSpeedModels::GuldersEGR::~GuldersEGR()
+Foam::laminarFlameSpeedModels::Gulder::~Gulder()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-inline Foam::scalar Foam::laminarFlameSpeedModels::GuldersEGR::SuRef
+inline Foam::scalar Foam::laminarFlameSpeedModels::Gulder::SuRef
 (
     scalar phi
 ) const
@@ -87,7 +88,7 @@ inline Foam::scalar Foam::laminarFlameSpeedModels::GuldersEGR::SuRef
 }
 
 
-inline Foam::scalar Foam::laminarFlameSpeedModels::GuldersEGR::Su0pTphi
+inline Foam::scalar Foam::laminarFlameSpeedModels::Gulder::Su0pTphi
 (
     scalar p,
     scalar Tu,
@@ -102,8 +103,7 @@ inline Foam::scalar Foam::laminarFlameSpeedModels::GuldersEGR::Su0pTphi
 }
 
 
-Foam::tmp<Foam::volScalarField>
-Foam::laminarFlameSpeedModels::GuldersEGR::Su0pTphi
+Foam::tmp<Foam::volScalarField> Foam::laminarFlameSpeedModels::Gulder::Su0pTphi
 (
     const volScalarField& p,
     const volScalarField& Tu,
@@ -148,13 +148,11 @@ Foam::laminarFlameSpeedModels::GuldersEGR::Su0pTphi
 }
 
 
-Foam::tmp<Foam::volScalarField>
-Foam::laminarFlameSpeedModels::GuldersEGR::Su0pTphi
+Foam::tmp<Foam::volScalarField> Foam::laminarFlameSpeedModels::Gulder::Su0pTphi
 (
     const volScalarField& p,
     const volScalarField& Tu,
-    const volScalarField& phi,
-    const volScalarField& egr
+    const volScalarField& phi
 ) const
 {
     tmp<volScalarField> tSu0
@@ -171,7 +169,7 @@ Foam::laminarFlameSpeedModels::GuldersEGR::Su0pTphi
 
     forAll(Su0, celli)
     {
-        Su0[celli] = Su0pTphi(p[celli], Tu[celli], phi[celli], egr[celli]);
+        Su0[celli] = Su0pTphi(p[celli], Tu[celli], phi[celli], 0.0);
     }
 
     volScalarField::Boundary& Su0Bf = Su0.boundaryFieldRef();
@@ -186,7 +184,7 @@ Foam::laminarFlameSpeedModels::GuldersEGR::Su0pTphi
                     p.boundaryField()[patchi][facei],
                     Tu.boundaryField()[patchi][facei],
                     phi.boundaryField()[patchi][facei],
-                    egr.boundaryField()[patchi][facei]
+                    0.0
                 );
         }
     }
@@ -196,14 +194,12 @@ Foam::laminarFlameSpeedModels::GuldersEGR::Su0pTphi
 
 
 Foam::tmp<Foam::volScalarField>
-Foam::laminarFlameSpeedModels::GuldersEGR::operator()() const
+Foam::laminarFlameSpeedModels::Gulder::operator()() const
 {
-    if
-    (
-        psiuMulticomponentThermo_.containsSpecie("ft")
-     && psiuMulticomponentThermo_.containsSpecie("egr")
-    )
+    if (psiuMulticomponentThermo_.containsSpecie("ft"))
     {
+        const volScalarField& ft = psiuMulticomponentThermo_.Y("ft");
+
         return Su0pTphi
         (
             psiuMulticomponentThermo_.p(),
@@ -213,12 +209,7 @@ Foam::laminarFlameSpeedModels::GuldersEGR::operator()() const
                 "stoichiometricAirFuelMassRatio",
                 dimless,
                 psiuMulticomponentThermo_.properties()
-            )
-           /(
-                scalar(1)/psiuMulticomponentThermo_.Y("ft")
-              - scalar(1)
-            ),
-            psiuMulticomponentThermo_.Y("egr")
+            )*ft/max(1 - ft, small)
         );
     }
     else

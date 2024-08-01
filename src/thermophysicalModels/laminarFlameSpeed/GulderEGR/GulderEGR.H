@@ -22,18 +22,18 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::laminarFlameSpeedModels::GuldersEGR
+    Foam::laminarFlameSpeedModels::GulderEGR
 
 Description
     Laminar flame speed obtained from Gulder's correlation with EGR modelling.
 
 SourceFiles
-    GuldersEGR.C
+    GulderEGR.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef GuldersEGR_H
-#define GuldersEGR_H
+#ifndef GulderEGR_H
+#define GulderEGR_H
 
 #include "laminarFlameSpeed.H"
 
@@ -45,10 +45,10 @@ namespace laminarFlameSpeedModels
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class GuldersEGR Declaration
+                         Class GulderEGR Declaration
 \*---------------------------------------------------------------------------*/
 
-class GuldersEGR
+class GulderEGR
 :
     public laminarFlameSpeed
 {
@@ -98,24 +98,24 @@ class GuldersEGR
 public:
 
     //- Runtime type information
-    TypeName("GuldersEGR");
+    TypeName("GulderEGR");
 
 
     // Constructors
 
         //- Construct from dictionary and psiuMulticomponentThermo
-        GuldersEGR
+        GulderEGR
         (
             const dictionary&,
             const psiuMulticomponentThermo&
         );
 
         //- Disallow default bitwise copy construction
-        GuldersEGR(const GuldersEGR&) = delete;
+        GulderEGR(const GulderEGR&) = delete;
 
 
     //- Destructor
-    virtual ~GuldersEGR();
+    virtual ~GulderEGR();
 
 
     // Member Operators
@@ -124,7 +124,7 @@ public:
         tmp<volScalarField> operator()() const;
 
         //- Disallow default bitwise assignment
-        void operator=(const GuldersEGR&) = delete;
+        void operator=(const GulderEGR&) = delete;
 };
 
 

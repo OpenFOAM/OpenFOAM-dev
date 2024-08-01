@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "Gulders.H"
+#include "GulderEGR.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -32,21 +32,20 @@ namespace Foam
 {
 namespace laminarFlameSpeedModels
 {
-    defineTypeNameAndDebug(Gulders, 0);
+    defineTypeNameAndDebug(GulderEGR, 0);
 
     addToRunTimeSelectionTable
     (
         laminarFlameSpeed,
-        Gulders,
+        GulderEGR,
         dictionary
     );
 }
 }
 
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::laminarFlameSpeedModels::Gulders::Gulders
+Foam::laminarFlameSpeedModels::GulderEGR::GulderEGR
 (
     const dictionary& dict,
     const psiuMulticomponentThermo& ct
@@ -66,13 +65,13 @@ Foam::laminarFlameSpeedModels::Gulders::Gulders
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::laminarFlameSpeedModels::Gulders::~Gulders()
+Foam::laminarFlameSpeedModels::GulderEGR::~GulderEGR()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-inline Foam::scalar Foam::laminarFlameSpeedModels::Gulders::SuRef
+inline Foam::scalar Foam::laminarFlameSpeedModels::GulderEGR::SuRef
 (
     scalar phi
 ) const
@@ -88,7 +87,7 @@ inline Foam::scalar Foam::laminarFlameSpeedModels::Gulders::SuRef
 }
 
 
-inline Foam::scalar Foam::laminarFlameSpeedModels::Gulders::Su0pTphi
+inline Foam::scalar Foam::laminarFlameSpeedModels::GulderEGR::Su0pTphi
 (
     scalar p,
     scalar Tu,
@@ -103,7 +102,8 @@ inline Foam::scalar Foam::laminarFlameSpeedModels::Gulders::Su0pTphi
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::laminarFlameSpeedModels::Gulders::Su0pTphi
+Foam::tmp<Foam::volScalarField>
+Foam::laminarFlameSpeedModels::GulderEGR::Su0pTphi
 (
     const volScalarField& p,
     const volScalarField& Tu,
@@ -148,11 +148,13 @@ Foam::tmp<Foam::volScalarField> Foam::laminarFlameSpeedModels::Gulders::Su0pTphi
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::laminarFlameSpeedModels::Gulders::Su0pTphi
+Foam::tmp<Foam::volScalarField>
+Foam::laminarFlameSpeedModels::GulderEGR::Su0pTphi
 (
     const volScalarField& p,
     const volScalarField& Tu,
-    const volScalarField& phi
+    const volScalarField& phi,
+    const volScalarField& egr
 ) const
 {
     tmp<volScalarField> tSu0
@@ -169,7 +171,7 @@ Foam::tmp<Foam::volScalarField> Foam::laminarFlameSpeedModels::Gulders::Su0pTphi
 
     forAll(Su0, celli)
     {
-        Su0[celli] = Su0pTphi(p[celli], Tu[celli], phi[celli], 0.0);
+        Su0[celli] = Su0pTphi(p[celli], Tu[celli], phi[celli], egr[celli]);
     }
 
     volScalarField::Boundary& Su0Bf = Su0.boundaryFieldRef();
@@ -184,7 +186,7 @@ Foam::tmp<Foam::volScalarField> Foam::laminarFlameSpeedModels::Gulders::Su0pTphi
                     p.boundaryField()[patchi][facei],
                     Tu.boundaryField()[patchi][facei],
                     phi.boundaryField()[patchi][facei],
-                    0.0
+                    egr.boundaryField()[patchi][facei]
                 );
         }
     }
@@ -194,12 +196,14 @@ Foam::tmp<Foam::volScalarField> Foam::laminarFlameSpeedModels::Gulders::Su0pTphi
 
 
 Foam::tmp<Foam::volScalarField>
-Foam::laminarFlameSpeedModels::Gulders::operator()() const
+Foam::laminarFlameSpeedModels::GulderEGR::operator()() const
 {
-    if (psiuMulticomponentThermo_.containsSpecie("ft"))
+    if
+    (
+        psiuMulticomponentThermo_.containsSpecie("ft")
+     && psiuMulticomponentThermo_.containsSpecie("egr")
+    )
     {
-        const volScalarField& ft = psiuMulticomponentThermo_.Y("ft");
-
         return Su0pTphi
         (
             psiuMulticomponentThermo_.p(),
@@ -209,7 +213,12 @@ Foam::laminarFlameSpeedModels::Gulders::operator()() const
                 "stoichiometricAirFuelMassRatio",
                 dimless,
                 psiuMulticomponentThermo_.properties()
-            )*ft/max(1 - ft, small)
+            )
+           /(
+                scalar(1)/psiuMulticomponentThermo_.Y("ft")
+              - scalar(1)
+            ),
+            psiuMulticomponentThermo_.Y("egr")
         );
     }
     else

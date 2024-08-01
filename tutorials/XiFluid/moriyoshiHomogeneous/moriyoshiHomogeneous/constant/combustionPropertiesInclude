@@ -20,7 +20,7 @@ laminarFlameSpeed
 
     unstrainedLaminarFlameSpeed
     {
-        model           Gulders;
+        model           Gulder;
 
         fuel            Propane;
         equivalenceRatio 1;

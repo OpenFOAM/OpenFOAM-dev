@@ -22,18 +22,18 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::laminarFlameSpeedModels::Gulders
+    Foam::laminarFlameSpeedModels::Gulder
 
 Description
     Laminar flame speed obtained from Gulder's correlation.
 
 SourceFiles
-    Gulders.C
+    Gulder.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef Gulders_H
-#define Gulders_H
+#ifndef Gulder_H
+#define Gulder_H
 
 #include "laminarFlameSpeed.H"
 
@@ -45,10 +45,10 @@ namespace laminarFlameSpeedModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class Gulders Declaration
+                           Class Gulder Declaration
 \*---------------------------------------------------------------------------*/
 
-class Gulders
+class Gulder
 :
     public laminarFlameSpeed
 {
@@ -97,24 +97,24 @@ class Gulders
 public:
 
     //- Runtime type information
-    TypeName("Gulders");
+    TypeName("Gulder");
 
 
     // Constructors
 
         //- Construct from dictionary and psiuMulticomponentThermo
-        Gulders
+        Gulder
         (
             const dictionary&,
             const psiuMulticomponentThermo&
         );
 
         //- Disallow default bitwise copy construction
-        Gulders(const Gulders&) = delete;
+        Gulder(const Gulder&) = delete;
 
 
     //- Destructor
-    virtual ~Gulders();
+    virtual ~Gulder();
 
 
     // Member Operators
@@ -123,7 +123,7 @@ public:
         tmp<volScalarField> operator()() const;
 
         //- Disallow default bitwise assignment
-        void operator=(const Gulders&) = delete;
+        void operator=(const Gulder&) = delete;
 };
 
 

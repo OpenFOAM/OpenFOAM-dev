@@ -21,7 +21,7 @@ laminarFlameSpeed
 
     unstrainedLaminarFlameSpeed
     {
-        model           Gulders;
+        model           Gulder;
 
         fuel            IsoOctane;
         equivalenceRatio 1;
