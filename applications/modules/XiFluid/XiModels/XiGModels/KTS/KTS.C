@@ -44,7 +44,7 @@ bool Foam::XiGModels::KTS::readCoeffs(const dictionary& dict)
 {
     XiGModel::readCoeffs(dict);
 
-    Geta_ = dict.lookupOrDefault<scalar>("Geta", 0.28);
+    Geta_.readIfPresent(dict);
 
     return true;
 }
@@ -61,8 +61,10 @@ Foam::XiGModels::KTS::KTS
 )
 :
     XiGModel(thermo, turbulence, Su),
-    Geta_(dict.lookupOrDefault<scalar>("etaCoeff", 0.28))
-{}
+    Geta_("Geta", dimless, 0.28)
+{
+    readCoeffs(dict);
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

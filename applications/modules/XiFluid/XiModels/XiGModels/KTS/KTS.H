@@ -48,8 +48,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef KTS_H
-#define KTS_H
+#ifndef XiGModels_KTS_H
+#define XiGModels_KTS_H
 
 #include "XiGModel.H"
 
@@ -71,7 +71,7 @@ class KTS
     // Private Data
 
         //- Generation rate coefficient, default: 0.28
-        scalar Geta_;
+        dimensionedScalar Geta_;
 
 
 protected:
