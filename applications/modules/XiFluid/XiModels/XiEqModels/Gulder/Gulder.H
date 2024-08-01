@@ -53,8 +53,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef XiEqModels_Gulder_H
-#define XiEqModels_Gulder_H
+#ifndef Gulder_H
+#define Gulder_H
 
 #include "XiEqModel.H"
 

@@ -16,12 +16,12 @@ XiModels/transport/transport.C
 XiModels/XiEqModels/XiEqModel/XiEqModel.C
 XiModels/XiEqModels/XiEqModel/XiEqModelNew.C
 XiModels/XiEqModels/Gulder/Gulder.C
-XiModels/XiEqModels/instability/instabilityXiEq.C
+XiModels/XiEqModels/instability/instability.C
 
 XiModels/XiGModels/XiGModel/XiGModel.C
 XiModels/XiGModels/XiGModel/XiGModelNew.C
 XiModels/XiGModels/KTS/KTS.C
-XiModels/XiGModels/instability/instability.C
+XiModels/XiGModels/instability/instability_XiGModel.C
 
 fvModels/ignition/XiCorrModels/XiCorrModel/XiCorrModel.C
 fvModels/ignition/XiCorrModels/XiCorrModel/XiCorrModelNew.C

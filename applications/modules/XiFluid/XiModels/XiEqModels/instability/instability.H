@@ -33,8 +33,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef instabilityXiEq_H
-#define instabilityXiEq_H
+#ifndef instability_H
+#define instability_H
 
 #include "XiEqModel.H"
 

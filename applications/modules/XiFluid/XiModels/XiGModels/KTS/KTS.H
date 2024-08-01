@@ -48,8 +48,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef XiGModels_KTS_H
-#define XiGModels_KTS_H
+#ifndef KTS_H
+#define KTS_H
 
 #include "XiGModel.H"
 

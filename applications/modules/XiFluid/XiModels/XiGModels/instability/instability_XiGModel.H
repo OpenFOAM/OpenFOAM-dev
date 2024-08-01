@@ -32,8 +32,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef XiGModels_instability_H
-#define XiGModels_instability_H
+#ifndef instability_XiGModel_H
+#define instability_XiGModel_H
 
 #include "XiGModel.H"
 
