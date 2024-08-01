@@ -16,7 +16,7 @@ XiModels/transport/transport.C
 XiModels/XiEqModels/XiEqModel/XiEqModel.C
 XiModels/XiEqModels/XiEqModel/XiEqModelNew.C
 XiModels/XiEqModels/Gulder/Gulder.C
-XiModels/XiEqModels/instabilityXiEq/instabilityXiEq.C
+XiModels/XiEqModels/instability/instabilityXiEq.C
 
 XiModels/XiGModels/XiGModel/XiGModel.C
 XiModels/XiGModels/XiGModel/XiGModelNew.C
