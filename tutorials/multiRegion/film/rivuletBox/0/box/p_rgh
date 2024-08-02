@@ -22,14 +22,12 @@ boundaryField
     inlet
     {
         type            prghTotalHydrostaticPressure;
-        p0              $internalField;
         value           $internalField;
     }
 
     outlet
     {
         type            prghTotalHydrostaticPressure;
-        p0              $internalField;
         value           $internalField;
     }
 
