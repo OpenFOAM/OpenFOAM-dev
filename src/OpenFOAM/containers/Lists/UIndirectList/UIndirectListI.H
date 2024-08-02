@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -184,6 +184,33 @@ inline void Foam::UIndirectList<T>::operator=(const T& t)
     {
         completeList_[addressing_[i]] = t;
     }
+}
+
+
+template<class T>
+inline bool Foam::UIndirectList<T>::operator==(const UIndirectList<T>& ae) const
+{
+    if (addressing_.size() != ae.size())
+    {
+        return false;
+    }
+
+    forAll(addressing_, i)
+    {
+        if (completeList_[addressing_[i]] != ae[i])
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+
+template<class T>
+inline bool Foam::UIndirectList<T>::operator!=(const UIndirectList<T>& ae) const
+{
+    return !(*this == ae);
 }
 
 
