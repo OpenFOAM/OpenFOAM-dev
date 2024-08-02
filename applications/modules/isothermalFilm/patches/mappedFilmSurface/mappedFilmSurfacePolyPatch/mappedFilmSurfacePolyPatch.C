@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,6 +40,33 @@ namespace Foam
         mappedFilmSurfacePolyPatch,
         dictionary
     );
+}
+
+
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+void Foam::mappedFilmSurfacePolyPatch::calcGeometry(PstreamBuffers& pBufs)
+{
+    filmSurfacePolyPatch::calcGeometry(pBufs);
+    mappedPatchBase::clearOut(false);
+}
+
+
+void Foam::mappedFilmSurfacePolyPatch::movePoints
+(
+    PstreamBuffers& pBufs,
+    const pointField& p
+)
+{
+    filmSurfacePolyPatch::movePoints(pBufs, p);
+    mappedPatchBase::clearOut(true);
+}
+
+
+void Foam::mappedFilmSurfacePolyPatch::topoChange(PstreamBuffers& pBufs)
+{
+    filmSurfacePolyPatch::topoChange(pBufs);
+    mappedPatchBase::clearOut(false);
 }
 
 
@@ -142,31 +169,6 @@ Foam::mappedFilmSurfacePolyPatch::~mappedFilmSurfacePolyPatch()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-void Foam::mappedFilmSurfacePolyPatch::calcGeometry(PstreamBuffers& pBufs)
-{
-    filmSurfacePolyPatch::calcGeometry(pBufs);
-    mappedExtrudedPatchBase::clearOut();
-}
-
-
-void Foam::mappedFilmSurfacePolyPatch::movePoints
-(
-    PstreamBuffers& pBufs,
-    const pointField& p
-)
-{
-    filmSurfacePolyPatch::movePoints(pBufs, p);
-    mappedExtrudedPatchBase::clearOut();
-}
-
-
-void Foam::mappedFilmSurfacePolyPatch::topoChange(PstreamBuffers& pBufs)
-{
-    filmSurfacePolyPatch::topoChange(pBufs);
-    mappedExtrudedPatchBase::clearOut();
-}
-
 
 void Foam::mappedFilmSurfacePolyPatch::write(Ostream& os) const
 {

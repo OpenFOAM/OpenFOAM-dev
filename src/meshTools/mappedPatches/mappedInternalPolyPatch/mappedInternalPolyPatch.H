@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,20 +58,13 @@ class mappedInternalPolyPatch
 
 protected:
 
-        //- Initialise the calculation of the patch geometry
-        virtual void initCalcGeometry(PstreamBuffers&);
+    // Protected Member Functions
 
         //- Calculate the patch geometry
         virtual void calcGeometry(PstreamBuffers&);
 
-        //- Initialise the patches for moving points
-        virtual void initMovePoints(PstreamBuffers&, const pointField&);
-
         //- Correct patches after moving points
         virtual void movePoints(PstreamBuffers&, const pointField&);
-
-        //- Initialise the update of the patch topology
-        virtual void initTopoChange(PstreamBuffers&);
 
         //- Update of the patch topology
         virtual void topoChange(PstreamBuffers&);

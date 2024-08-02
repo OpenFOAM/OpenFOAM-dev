@@ -63,15 +63,13 @@ protected:
         //- Does this side own the patch?
         const bool owner_;
 
-        //- Is the intersection engine up to date?
-        mutable bool intersectionIsValid_;
+        //- Is the intersection engine up to date? Zero if out of date. One if
+        //  out of date (or potentially not out of date) because of motion. Two
+        //  if up to date.
+        mutable label intersectionIsValid_;
 
         //- Patch-to-patch intersection engine
         mutable patchToPatches::intersection intersection_;
-
-        //- Do we need to re-calculate the mapping if mesh motion takes place?
-        //  Defaults to true.
-        const bool reMapAfterMove_;
 
 
     // Protected Member Functions
@@ -132,7 +130,7 @@ public:
         const patchToPatches::intersection& intersection() const;
 
         //- Clear out data on mesh change
-        void clearOut();
+        void clearOut(const bool move);
 
         //- Write as a dictionary
         virtual void write(Ostream&) const;

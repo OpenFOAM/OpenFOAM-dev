@@ -41,6 +41,13 @@ Description
         // alternative to specifying neighbourRegion and neighbourPatch
         // directly, as shown above.
         coupleGroup baffleGroup;
+
+        // The condition that triggers re-calculation following motion. Setting
+        // 'always' will re-calculate the mapping, 'never' will not, and
+        // 'detect' will compare the new and old points and re-calculate if
+        // there is any difference.
+        moveUpdate always;
+
     \endverbatim
 
 SourceFiles
@@ -66,6 +73,36 @@ namespace Foam
 
 class mappedPatchBaseBase
 {
+public:
+
+    // Public types
+
+        //- Enumeration for the condition that triggers re-calculation of the
+        //  mapping following mesh motion.
+        //
+        //  'always' will re-calculate the mapping, 'never' will not, and
+        //  'detect' will compare the new and old points and re-calculate if
+        //  there is any difference.
+        //
+        //  The comparison that 'detect' does has an expense associated with it,
+        //  so it should only really be used if the patch is both moving and
+        //  static at different times. If the patch is always in motion or is
+        //  fully stationary, then it is more efficient to specify 'always' or
+        //  'never'.
+        //
+        //  'always' is the default, as it is safest to assume that motion
+        //  always affects the mapping.
+        enum class moveUpdate
+        {
+            always,
+            detect,
+            never
+        };
+
+        //- Names of the move-update conditions
+        static const NamedEnum<moveUpdate, 3> moveUpdateNames_;
+
+
 protected:
 
     // Protected data
@@ -84,6 +121,9 @@ protected:
 
         //- The transformation between the patches
         mutable cyclicTransform transform_;
+
+        //- The condition that triggers re-calculation following motion
+        const moveUpdate moveUpdate_;
 
 
 public:
@@ -186,6 +226,14 @@ public:
                 const dictionary& context,
                 const label froms = from::any
             ) const;
+
+
+        //- Return whether or not the patches have moved
+        static bool moving
+        (
+            const polyPatch& patch,
+            const polyPatch& nbrPatch
+        );
 
 
         // I/O

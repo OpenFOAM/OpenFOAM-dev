@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -342,6 +342,15 @@ Foam::mappedExtrudedPatchBase::patchLocalPoints() const
 }
 
 
+void Foam::mappedExtrudedPatchBase::clearOut() const
+{
+    mappedPatchBase::clearOut();
+    bottomFaceAreasPtr_.clear();
+    bottomFaceCentresPtr_.clear();
+    bottomFaceCentresPtr_.clear();
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::mappedExtrudedPatchBase::mappedExtrudedPatchBase(const polyPatch& pp)
@@ -395,16 +404,6 @@ Foam::mappedExtrudedPatchBase::~mappedExtrudedPatchBase()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-void Foam::mappedExtrudedPatchBase::clearOut()
-{
-    mappedPatchBase::clearOut();
-    if (reMapAfterMove_)
-    {
-        bottomFaceCentresPtr_.clear();
-    }
-}
-
 
 void Foam::mappedExtrudedPatchBase::write(Ostream& os) const
 {

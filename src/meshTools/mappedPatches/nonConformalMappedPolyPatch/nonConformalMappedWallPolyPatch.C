@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ void Foam::nonConformalMappedWallPolyPatch::initCalcGeometry
 )
 {
     wallPolyPatch::initCalcGeometry(pBufs);
-    nonConformalMappedPatchBase::clearOut();
+    nonConformalMappedPatchBase::clearOut(false);
 }
 
 
@@ -64,10 +64,9 @@ void Foam::nonConformalMappedWallPolyPatch::initMovePoints
     PstreamBuffers& pBufs,
     const pointField& p
 )
-
 {
     wallPolyPatch::initMovePoints(pBufs, p);
-    nonConformalMappedPatchBase::clearOut();
+    nonConformalMappedPatchBase::clearOut(true);
 }
 
 
@@ -77,14 +76,14 @@ void Foam::nonConformalMappedWallPolyPatch::initTopoChange
 )
 {
     wallPolyPatch::initTopoChange(pBufs);
-    nonConformalMappedPatchBase::clearOut();
+    nonConformalMappedPatchBase::clearOut(false);
 }
 
 
 void Foam::nonConformalMappedWallPolyPatch::clearGeom()
 {
     wallPolyPatch::clearGeom();
-    nonConformalMappedPatchBase::clearOut();
+    nonConformalMappedPatchBase::clearOut(false);
 }
 
 

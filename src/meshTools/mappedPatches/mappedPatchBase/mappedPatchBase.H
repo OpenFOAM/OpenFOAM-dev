@@ -45,13 +45,10 @@ Description
         // conformance of the patches' entire surfaces, not of each pair of
         // faces). Optional. Defaults to a small value.
         matchTol 1e-4;
-
-        // Switch to control whether the mapping is re-calculated after mesh
-        // motion. Optional. Defaults to true, which is the safest option. This
-        // should only be set to false if it is known that the patches do not
-        // move, or that they move consistently.
-        reMapAfterMove true;
     \endverbatim
+
+See also
+    Foam::mappedPatchBaseBase
 
 SourceFiles
     mappedPatchBase.C
@@ -95,10 +92,6 @@ protected:
         //  have to be supplied to the distribution map (if using tree)
         mutable labelList treeNbrPatchFaceIndices_;
 
-        //- Is the patch-to-patch intersection engine up to date? (if using
-        //  patch-to-patch)
-        mutable bool patchToPatchIsValid_;
-
         //- Patch-to-patch intersection engine (if using patch-to-patch)
         mutable autoPtr<patchToPatch> patchToPatchPtr_;
 
@@ -108,12 +101,13 @@ protected:
         //- Matching tolerance
         const scalar matchTol_;
 
-        //- Do we need to re-calculate the mapping if mesh motion takes place?
-        //  Defaults to true.
-        const bool reMapAfterMove_;
+        //- Is the mapping engine up to date? Zero if out of date. One if out
+        //  of date (or potentially not out of date) because of motion. Two if
+        //  up to date.
+        mutable label mappingIsValid_;
 
-        //- Do we need to re-map the neighbour because this patch moved?
-        mutable bool reMapNbr_;
+        //- If the neighbour's mapping engine (if there is one) up to date?
+        mutable label nbrMappingIsValid_;
 
 
     // Protected Member Functions
@@ -136,8 +130,14 @@ protected:
         //- Get the local points for the neighbour patch
         tmp<pointField> nbrPatchLocalPoints() const;
 
+        //- Return whether or not the mapping is valid
+        bool mappingIsValid() const;
+
         //- Calculate mapping
         void calcMapping() const;
+
+        //- Clear out data on mesh change
+        virtual void clearOut() const;
 
         //- Return whether or not the neighbour patch is of mapped type
         inline bool nbrPatchIsMapped() const;
@@ -197,7 +197,7 @@ public:
         // Edit
 
             //- Clear out data on mesh change
-            virtual void clearOut();
+            void clearOut(const bool move);
 
 
         // Distribute

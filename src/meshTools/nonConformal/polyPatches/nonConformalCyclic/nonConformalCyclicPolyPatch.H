@@ -58,25 +58,61 @@ class nonConformalCyclicPolyPatch
     public cyclicPolyPatch,
     public nonConformalCoupledPolyPatch
 {
+public:
+
+    // Public types
+
+        //- Enumeration for the condition that triggers re-calculation of the
+        //  intersection following mesh motion.
+        //
+        //  'always' will re-calculate the intersection, 'never' will not, and
+        //  'detect' will compare the new and old points and re-calculate if
+        //  there is any difference.
+        //
+        //  The comparison that 'detect' does has an expense associated with it,
+        //  so it should only really be used if the patch is both moving and
+        //  static at different times. If the patch is always in motion or is
+        //  fully stationary, then it is more efficient to specify 'always' or
+        //  'never'.
+        //
+        //  'always' is the default, as it is safest to assume that motion
+        //  always affects the intersection. Most non-conformal interfaces are
+        //  used for sliding interfaces that are in motion for the entirety of
+        //  the simulation, so 'always' is also typically more efficient than
+        //  'detect'.
+        enum class moveUpdate
+        {
+            always,
+            detect,
+            never
+        };
+
+        //- Names of the move-update conditions
+        static const NamedEnum<moveUpdate, 3> moveUpdateNames_;
+
+
 protected:
 
     // Protected data
 
-        //- Is the intersection engine up to date?
-        mutable bool intersectionIsValid_;
+        //- Is the intersection engine up to date? Zero if out of date. One if
+        //  out of date (or potentially not out of date) because of motion. Two
+        //  if up to date.
+        mutable label intersectionIsValid_;
 
         //- Patch-to-patch intersection engine
         mutable patchToPatches::intersection intersection_;
 
-        //- Is the rays engine up to date?
-        mutable bool raysIsValid_;
+        //- Is the rays engine up to date? Zero if out of date. One if out of
+        //  date (or potentially not out of date) because of motion. Two if up
+        //  to date.
+        mutable label raysIsValid_;
 
         //- Patch-to-patch rays engine
         mutable patchToPatches::rays rays_;
 
-        //- Do we need to re-calculate the mapping if mesh motion takes place?
-        //  Defaults to true.
-        const bool reMapAfterMove_;
+        //- The condition that triggers re-calculation following motion
+        const moveUpdate moveUpdate_;
 
 
     // Protected Member Functions

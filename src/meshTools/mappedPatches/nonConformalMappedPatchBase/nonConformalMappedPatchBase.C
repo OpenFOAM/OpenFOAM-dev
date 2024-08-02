@@ -72,9 +72,8 @@ Foam::nonConformalMappedPatchBase::nonConformalMappedPatchBase
     mappedPatchBaseBase(ncPp.patch()),
     patch_(ncPp),
     owner_(calcOwner()),
-    intersectionIsValid_(false),
-    intersection_(false),
-    reMapAfterMove_(true)
+    intersectionIsValid_(0),
+    intersection_(false)
 {}
 
 
@@ -89,9 +88,8 @@ Foam::nonConformalMappedPatchBase::nonConformalMappedPatchBase
     mappedPatchBaseBase(ncPp.patch(), nbrRegionName, nbrPatchName, transform),
     patch_(ncPp),
     owner_(calcOwner()),
-    intersectionIsValid_(false),
-    intersection_(false),
-    reMapAfterMove_(true)
+    intersectionIsValid_(0),
+    intersection_(false)
 {}
 
 
@@ -105,9 +103,8 @@ Foam::nonConformalMappedPatchBase::nonConformalMappedPatchBase
     mappedPatchBaseBase(ncPp.patch(), dict, defaultTransformIsNone),
     patch_(ncPp),
     owner_(calcOwner()),
-    intersectionIsValid_(false),
-    intersection_(false),
-    reMapAfterMove_(dict.lookupOrDefault<bool>("reMapAfterMove", true))
+    intersectionIsValid_(0),
+    intersection_(false)
 {}
 
 
@@ -120,9 +117,8 @@ Foam::nonConformalMappedPatchBase::nonConformalMappedPatchBase
     mappedPatchBaseBase(ncPp.patch(), mpb),
     patch_(ncPp),
     owner_(calcOwner()),
-    intersectionIsValid_(false),
-    intersection_(false),
-    reMapAfterMove_(mpb.reMapAfterMove_)
+    intersectionIsValid_(0),
+    intersection_(false)
 {}
 
 
@@ -150,7 +146,21 @@ Foam::nonConformalMappedPatchBase::intersection() const
             << "the owner patch" << abort(FatalError);
     }
 
-    if (!intersectionIsValid_ || !nbrMappedPatch().intersectionIsValid_)
+    const label bothIntersectionIsValid =
+        min(intersectionIsValid_, nbrMappedPatch().intersectionIsValid_);
+
+    const bool intersectionIsValid =
+        (bothIntersectionIsValid == 2)
+     || (
+            bothIntersectionIsValid == 1
+         && !mappedPatchBaseBase::moving
+            (
+                patch_.origPatch(),
+                nbrMappedPatch().patch_.origPatch()
+            )
+        );
+
+    if (!intersectionIsValid)
     {
         const polyMesh& mesh =
             mappedPatchBaseBase::patch_.boundaryMesh().mesh();
@@ -165,19 +175,28 @@ Foam::nonConformalMappedPatchBase::intersection() const
             transform_.transform()
         );
 
-        intersectionIsValid_ = true;
-        nbrMappedPatch().intersectionIsValid_ = true;
+        intersectionIsValid_ = 2;
+
+        nbrMappedPatch().intersectionIsValid_ = 2;
     }
 
     return intersection_;
 }
 
 
-void Foam::nonConformalMappedPatchBase::clearOut()
+void Foam::nonConformalMappedPatchBase::clearOut(const bool move)
 {
-    if (reMapAfterMove_)
+    if (move && moveUpdate_ == moveUpdate::never)
     {
-        intersectionIsValid_ = false;
+        // Do nothing
+    }
+    else if (move && moveUpdate_ == moveUpdate::detect)
+    {
+        intersectionIsValid_ = min(intersectionIsValid_, 1);
+    }
+    else
+    {
+        intersectionIsValid_ = 0;
     }
 }
 
@@ -185,7 +204,6 @@ void Foam::nonConformalMappedPatchBase::clearOut()
 void Foam::nonConformalMappedPatchBase::write(Ostream& os) const
 {
     mappedPatchBaseBase::write(os);
-    writeEntryIfDifferent<bool>(os, "reMapAfterMove", true, reMapAfterMove_);
 }
 
 

@@ -26,6 +26,7 @@ License
 #include "nonConformalCyclicPolyPatch.H"
 #include "nonConformalErrorPolyPatch.H"
 #include "addToRunTimeSelectionTable.H"
+#include "mappedPatchBaseBase.H"
 #include "polyBoundaryMesh.H"
 #include "polyMesh.H"
 #include "SubField.H"
@@ -47,16 +48,25 @@ namespace Foam
 }
 
 
+namespace Foam
+{
+    template<>
+    const char*
+        NamedEnum<nonConformalCyclicPolyPatch::moveUpdate, 3>::names[] =
+        {"always", "detect", "never"};
+}
+
+const Foam::NamedEnum<Foam::nonConformalCyclicPolyPatch::moveUpdate, 3>
+    Foam::nonConformalCyclicPolyPatch::moveUpdateNames_;
+
+
 // * * * * * * * * * * * *  Protected Member Functions * * * * * * * * * * * //
 
 void Foam::nonConformalCyclicPolyPatch::initCalcGeometry(PstreamBuffers& pBufs)
 {
     cyclicPolyPatch::initCalcGeometry(pBufs);
-    if (reMapAfterMove_)
-    {
-        intersectionIsValid_ = false;
-        raysIsValid_ = false;
-    }
+    intersectionIsValid_ = false;
+    raysIsValid_ = false;
 }
 
 
@@ -82,10 +92,20 @@ void Foam::nonConformalCyclicPolyPatch::initMovePoints
 )
 {
     cyclicPolyPatch::initMovePoints(pBufs, p);
-    if (reMapAfterMove_)
+
+    if (moveUpdate_ == moveUpdate::never)
     {
-        intersectionIsValid_ = false;
-        raysIsValid_ = false;
+        // Do nothing
+    }
+    else if (moveUpdate_ == moveUpdate::detect)
+    {
+        intersectionIsValid_ = min(intersectionIsValid_, 1);
+        raysIsValid_ = min(raysIsValid_, 1);
+    }
+    else
+    {
+        intersectionIsValid_ = 0;
+        raysIsValid_ = 0;
     }
 }
 
@@ -93,16 +113,16 @@ void Foam::nonConformalCyclicPolyPatch::initMovePoints
 void Foam::nonConformalCyclicPolyPatch::initTopoChange(PstreamBuffers& pBufs)
 {
     cyclicPolyPatch::initTopoChange(pBufs);
-    intersectionIsValid_ = false;
-    raysIsValid_ = false;
+    intersectionIsValid_ = 0;
+    raysIsValid_ = 0;
 }
 
 
 void Foam::nonConformalCyclicPolyPatch::clearGeom()
 {
     cyclicPolyPatch::clearGeom();
-    intersectionIsValid_ = false;
-    raysIsValid_ = false;
+    intersectionIsValid_ = 0;
+    raysIsValid_ = 0;
 }
 
 
@@ -134,11 +154,11 @@ Foam::nonConformalCyclicPolyPatch::nonConformalCyclicPolyPatch
 :
     cyclicPolyPatch(name, size, start, index, bm, patchType),
     nonConformalCoupledPolyPatch(static_cast<const polyPatch&>(*this)),
-    intersectionIsValid_(false),
+    intersectionIsValid_(0),
     intersection_(false),
-    raysIsValid_(false),
+    raysIsValid_(0),
     rays_(false),
-    reMapAfterMove_(true)
+    moveUpdate_(moveUpdate::always)
 {}
 
 
@@ -167,11 +187,11 @@ Foam::nonConformalCyclicPolyPatch::nonConformalCyclicPolyPatch
         transform
     ),
     nonConformalCoupledPolyPatch(*this, origPatchName),
-    intersectionIsValid_(false),
+    intersectionIsValid_(0),
     intersection_(false),
-    raysIsValid_(false),
+    raysIsValid_(0),
     rays_(false),
-    reMapAfterMove_(true)
+    moveUpdate_(moveUpdate::always)
 {}
 
 
@@ -186,11 +206,22 @@ Foam::nonConformalCyclicPolyPatch::nonConformalCyclicPolyPatch
 :
     cyclicPolyPatch(name, dict, index, bm, patchType, true),
     nonConformalCoupledPolyPatch(*this, dict),
-    intersectionIsValid_(false),
+    intersectionIsValid_(0),
     intersection_(false),
-    raysIsValid_(false),
+    raysIsValid_(0),
     rays_(false),
-    reMapAfterMove_(dict.lookupOrDefault<bool>("reMapAfterMove", true))
+    moveUpdate_
+    (
+        dict.found("moveUpdate")
+      ? moveUpdateNames_.read(dict.lookup("moveUpdate"))
+      : dict.found("reMapAfterMove") // <-- backwards compatibility
+      ? (
+            dict.lookup<bool>("reMapAfterMove")
+          ? moveUpdate::always
+          : moveUpdate::never
+        )
+      : moveUpdate::always
+    )
 {}
 
 
@@ -202,11 +233,11 @@ Foam::nonConformalCyclicPolyPatch::nonConformalCyclicPolyPatch
 :
     cyclicPolyPatch(pp, bm),
     nonConformalCoupledPolyPatch(*this, pp),
-    intersectionIsValid_(false),
+    intersectionIsValid_(0),
     intersection_(false),
-    raysIsValid_(false),
+    raysIsValid_(0),
     rays_(false),
-    reMapAfterMove_(pp.reMapAfterMove_)
+    moveUpdate_(pp.moveUpdate_)
 {}
 
 
@@ -223,11 +254,11 @@ Foam::nonConformalCyclicPolyPatch::nonConformalCyclicPolyPatch
 :
     cyclicPolyPatch(pp, bm, index, newSize, newStart, nbrPatchName),
     nonConformalCoupledPolyPatch(*this, origPatchName),
-    intersectionIsValid_(false),
+    intersectionIsValid_(0),
     intersection_(false),
-    raysIsValid_(false),
+    raysIsValid_(0),
     rays_(false),
-    reMapAfterMove_(pp.reMapAfterMove_)
+    moveUpdate_(pp.moveUpdate_)
 {}
 
 
@@ -266,7 +297,18 @@ Foam::nonConformalCyclicPolyPatch::intersection() const
             << "the owner patch" << abort(FatalError);
     }
 
-    if (!intersectionIsValid_)
+    const bool intersectionIsValid =
+        (intersectionIsValid_ == 2)
+     || (
+            intersectionIsValid_ == 1
+         && !mappedPatchBaseBase::moving
+            (
+                origPatch(),
+                nbrPatch().origPatch()
+            )
+        );
+
+    if (!intersectionIsValid)
     {
         const polyMesh& mesh = boundaryMesh().mesh();
 
@@ -280,7 +322,7 @@ Foam::nonConformalCyclicPolyPatch::intersection() const
             transform()
         );
 
-        intersectionIsValid_ = true;
+        intersectionIsValid_ = 2;
     }
 
     return intersection_;
@@ -297,7 +339,18 @@ Foam::nonConformalCyclicPolyPatch::rays() const
             << "the owner patch" << abort(FatalError);
     }
 
-    if (!raysIsValid_)
+    const bool raysIsValid =
+        (raysIsValid_ == 2)
+     || (
+            raysIsValid_ == 1
+         && !mappedPatchBaseBase::moving
+            (
+                origPatch(),
+                nbrPatch().origPatch()
+            )
+        );
+
+    if (!raysIsValid)
     {
         const polyMesh& mesh = boundaryMesh().mesh();
 
@@ -322,7 +375,7 @@ Foam::nonConformalCyclicPolyPatch::rays() const
             transform()
         );
 
-        raysIsValid_ = true;
+        raysIsValid_ = 2;
     }
 
     return rays_;
@@ -370,7 +423,13 @@ void Foam::nonConformalCyclicPolyPatch::write(Ostream& os) const
 {
     cyclicPolyPatch::write(os);
     nonConformalCoupledPolyPatch::write(os);
-    writeEntryIfDifferent<bool>(os, "reMapAfterMove", true, reMapAfterMove_);
+    writeEntryIfDifferent<word>
+    (
+        os,
+        "moveUpdate",
+        moveUpdateNames_[moveUpdate::always],
+        moveUpdateNames_[moveUpdate_]
+    );
 }
 
 

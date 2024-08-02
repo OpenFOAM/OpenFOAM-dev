@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,26 +39,10 @@ namespace Foam
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-void Foam::mappedInternalPolyPatch::initCalcGeometry(PstreamBuffers& pBufs)
-{
-    polyPatch::initCalcGeometry(pBufs);
-}
-
-
 void Foam::mappedInternalPolyPatch::calcGeometry(PstreamBuffers& pBufs)
 {
     polyPatch::calcGeometry(pBufs);
     mappedInternalPatchBase::clearOut();
-}
-
-
-void Foam::mappedInternalPolyPatch::initMovePoints
-(
-    PstreamBuffers& pBufs,
-    const pointField& p
-)
-{
-    polyPatch::initMovePoints(pBufs, p);
 }
 
 
@@ -73,18 +57,11 @@ void Foam::mappedInternalPolyPatch::movePoints
 }
 
 
-void Foam::mappedInternalPolyPatch::initTopoChange(PstreamBuffers& pBufs)
-{
-    polyPatch::initTopoChange(pBufs);
-}
-
-
 void Foam::mappedInternalPolyPatch::topoChange(PstreamBuffers& pBufs)
 {
     polyPatch::topoChange(pBufs);
     mappedInternalPatchBase::clearOut();
 }
-
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //

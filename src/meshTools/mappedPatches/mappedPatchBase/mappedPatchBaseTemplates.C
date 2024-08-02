@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "mappedPatchBase.H"
-#include "stringOps.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
@@ -37,17 +36,9 @@ Foam::mappedPatchBase::fromNeighbour(const Field<Type>& nbrFld) const
         return nbrFld;
     }
 
-   if (nbrPatchIsMapped() && nbrMappedPatch().reMapNbr_)
-    {
-        treeMapPtr_.clear();
-        treeNbrPatchFaceIndices_.clear();
-        patchToPatchIsValid_ = false;
-        nbrMappedPatch().reMapNbr_ = false;
-    }
-
     if (usingTree_)
     {
-        if (treeMapPtr_.empty())
+        if (!mappingIsValid())
         {
             calcMapping();
         }
@@ -63,8 +54,8 @@ Foam::mappedPatchBase::fromNeighbour(const Field<Type>& nbrFld) const
     {
         if
         (
-            !patchToPatchIsValid_
-         && !(symmetric() && nbrMappedPatch().patchToPatchIsValid_)
+            !mappingIsValid()
+         && !(symmetric() && nbrMappedPatch().mappingIsValid())
         )
         {
             calcMapping();
@@ -73,7 +64,7 @@ Foam::mappedPatchBase::fromNeighbour(const Field<Type>& nbrFld) const
         return
             transform_.transform().transform
             (
-                patchToPatchIsValid_
+                mappingIsValid()
               ? patchToPatchPtr_->tgtToSrc(nbrFld)
               : nbrMappedPatch().patchToPatchPtr_->srcToTgt(nbrFld)
             );
@@ -100,17 +91,9 @@ Foam::mappedPatchBase::toNeighbour(const Field<Type>& fld) const
         return fld;
     }
 
-    if (nbrPatchIsMapped() && nbrMappedPatch().reMapNbr_)
-    {
-        treeMapPtr_.clear();
-        treeNbrPatchFaceIndices_.clear();
-        patchToPatchIsValid_ = false;
-        nbrMappedPatch().reMapNbr_ = false;
-    }
-
     if (usingTree_)
     {
-        if (treeMapPtr_.empty())
+        if (!mappingIsValid())
         {
             calcMapping();
         }
@@ -125,8 +108,8 @@ Foam::mappedPatchBase::toNeighbour(const Field<Type>& fld) const
     {
         if
         (
-            !patchToPatchIsValid_
-         && !(symmetric() && nbrMappedPatch().patchToPatchIsValid_)
+            !mappingIsValid()
+         && !(symmetric() && nbrMappedPatch().mappingIsValid())
         )
         {
             calcMapping();
@@ -135,7 +118,7 @@ Foam::mappedPatchBase::toNeighbour(const Field<Type>& fld) const
         return
             transform_.transform().invTransform
             (
-                patchToPatchIsValid_
+                mappingIsValid()
               ? patchToPatchPtr_->srcToTgt(fld)
               : nbrMappedPatch().patchToPatchPtr_->tgtToSrc(fld)
             );

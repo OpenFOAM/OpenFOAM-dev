@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,6 +79,9 @@ protected:
         //- Get the local points for the patch
         virtual tmp<pointField> patchLocalPoints() const;
 
+        //- Clear out data on mesh change
+        virtual void clearOut() const;
+
 
 public:
 
@@ -123,16 +126,8 @@ public:
 
     // Member Functions
 
-        // Edit
-
-            //- Clear out data on mesh change
-            virtual void clearOut();
-
-
-        // I/O
-
-            //- Write the polyPatch data as a dictionary
-            virtual void write(Ostream&) const;
+        //- Write the polyPatch data as a dictionary
+        virtual void write(Ostream&) const;
 };
 
 

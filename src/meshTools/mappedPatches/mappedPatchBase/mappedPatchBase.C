@@ -89,13 +89,29 @@ Foam::tmp<Foam::pointField> Foam::mappedPatchBase::nbrPatchLocalPoints() const
 }
 
 
+bool Foam::mappedPatchBase::mappingIsValid() const
+{
+    const label bothMappingIsValid =
+        nbrPatchIsMapped()
+      ? min(mappingIsValid_, nbrMappedPatch().nbrMappingIsValid_)
+      : mappingIsValid_;
+
+    return
+        (bothMappingIsValid == 2)
+     || (
+            bothMappingIsValid == 1
+         && !mappedPatchBase::moving
+            (
+                patch_,
+                nbrPolyPatch()
+            )
+        );
+}
+
+
 void Foam::mappedPatchBase::calcMapping() const
 {
-    if (treeMapPtr_.valid())
-    {
-        FatalErrorInFunction
-            << "Mapping already calculated" << exit(FatalError);
-    }
+    clearOut();
 
     if (sameUntransformedPatch())
     {
@@ -285,12 +301,6 @@ void Foam::mappedPatchBase::calcMapping() const
     }
     else
     {
-        if (patchToPatchIsValid_)
-        {
-            FatalErrorInFunction
-                << "Patch-to-patch already calculated" << exit(FatalError);
-        }
-
         const pointField patchLocalPoints(this->patchLocalPoints());
         const pointField nbrPatchLocalPoints(this->nbrPatchLocalPoints());
 
@@ -312,9 +322,18 @@ void Foam::mappedPatchBase::calcMapping() const
             nbrPatch,
             transform_.transform()
         );
-
-        patchToPatchIsValid_ = true;
     }
+
+    mappingIsValid_ = 2;
+
+    if (nbrPatchIsMapped()) nbrMappedPatch().mappingIsValid_ = 2;
+}
+
+
+void Foam::mappedPatchBase::clearOut() const
+{
+    treeMapPtr_.clear();
+    treeNbrPatchFaceIndices_.clear();
 }
 
 
@@ -326,11 +345,10 @@ Foam::mappedPatchBase::mappedPatchBase(const polyPatch& pp)
     usingTree_(true),
     treeMapPtr_(nullptr),
     treeNbrPatchFaceIndices_(),
-    patchToPatchIsValid_(false),
     patchToPatchPtr_(nullptr),
     matchTol_(defaultMatchTol_),
-    reMapAfterMove_(true),
-    reMapNbr_(false)
+    mappingIsValid_(0),
+    nbrMappingIsValid_(0)
 {}
 
 
@@ -346,11 +364,10 @@ Foam::mappedPatchBase::mappedPatchBase
     usingTree_(true),
     treeMapPtr_(nullptr),
     treeNbrPatchFaceIndices_(),
-    patchToPatchIsValid_(false),
     patchToPatchPtr_(nullptr),
     matchTol_(defaultMatchTol_),
-    reMapAfterMove_(true),
-    reMapNbr_(false)
+    mappingIsValid_(0),
+    nbrMappingIsValid_(0)
 {}
 
 
@@ -365,7 +382,6 @@ Foam::mappedPatchBase::mappedPatchBase
     usingTree_(!dict.found("method") && !dict.found("sampleMode")),
     treeMapPtr_(nullptr),
     treeNbrPatchFaceIndices_(),
-    patchToPatchIsValid_(false),
     patchToPatchPtr_
     (
         !usingTree_
@@ -377,8 +393,8 @@ Foam::mappedPatchBase::mappedPatchBase
       : nullptr
     ),
     matchTol_(dict.lookupOrDefault("matchTolerance", defaultMatchTol_)),
-    reMapAfterMove_(dict.lookupOrDefault<bool>("reMapAfterMove", true)),
-    reMapNbr_(false)
+    mappingIsValid_(0),
+    nbrMappingIsValid_(0)
 {}
 
 
@@ -392,7 +408,6 @@ Foam::mappedPatchBase::mappedPatchBase
     usingTree_(mpb.usingTree_),
     treeMapPtr_(nullptr),
     treeNbrPatchFaceIndices_(),
-    patchToPatchIsValid_(false),
     patchToPatchPtr_
     (
         !usingTree_
@@ -400,8 +415,8 @@ Foam::mappedPatchBase::mappedPatchBase
       : nullptr
     ),
     matchTol_(mpb.matchTol_),
-    reMapAfterMove_(mpb.reMapAfterMove_),
-    reMapNbr_(false)
+    mappingIsValid_(0),
+    nbrMappingIsValid_(0)
 {}
 
 
@@ -429,14 +444,22 @@ const Foam::mappedPatchBase& Foam::mappedPatchBase::getMap
 }
 
 
-void Foam::mappedPatchBase::clearOut()
+void Foam::mappedPatchBase::clearOut(const bool move)
 {
-    if (reMapAfterMove_)
+    if (move && moveUpdate_ == moveUpdate::never)
     {
-        treeMapPtr_.clear();
-        treeNbrPatchFaceIndices_.clear();
-        patchToPatchIsValid_ = false;
-        reMapNbr_ = true;
+        // Do nothing
+    }
+    else if (move && moveUpdate_ == moveUpdate::detect)
+    {
+        mappingIsValid_ = min(mappingIsValid_, 1);
+        nbrMappingIsValid_ = min(nbrMappingIsValid_, 1);
+    }
+    else
+    {
+        clearOut();
+        mappingIsValid_ = 0;
+        nbrMappingIsValid_ = 0;
     }
 }
 
@@ -451,8 +474,6 @@ void Foam::mappedPatchBase::write(Ostream& os) const
     }
 
     writeEntryIfDifferent(os, "matchTolerance", defaultMatchTol_, matchTol_);
-
-    writeEntryIfDifferent<bool>(os, "reMapAfterMove", true, reMapAfterMove_);
 }
 
 

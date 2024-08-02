@@ -1,0 +1,32 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      createNonConformalCouplesDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+nonConformalCouples
+{
+    nonConformal
+    {
+        patches         (pipeNonCouple ballNonCouple);
+
+        // Detect whether or not the coupling has moved, and only re-calculate
+        // the intersection when it has. This case spends 40% of its time
+        // stationary, so preventing re-calculation of the intersection
+        // provides significant benefit. In a case where the interface is
+        // continually sliding this is not recommended.
+        moveUpdate      detect;
+    }
+}
+
+// ************************************************************************* //

@@ -224,7 +224,7 @@ void Foam::mappedValueFvPatchField<Type>::map
 
     if (mapperPtr_.valid())
     {
-        mapperPtr_->clearOut();
+        mapperPtr_->clearOut(false);
     }
 }
 
@@ -239,7 +239,7 @@ void Foam::mappedValueFvPatchField<Type>::reset
 
     if (mapperPtr_.valid())
     {
-        mapperPtr_->clearOut();
+        mapperPtr_->clearOut(false);
     }
 }
 
