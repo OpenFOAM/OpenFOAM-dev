@@ -25,7 +25,6 @@ License
 
 #include "codedBase.H"
 #include "dynamicCode.H"
-#include "dynamicCodeContext.H"
 #include "dlLibraryTable.H"
 #include "regIOobject.H"
 #include "OSspecific.H"
@@ -221,19 +220,6 @@ Foam::verbatimString Foam::codedBase::expandCodeString
 }
 
 
-void Foam::codedBase::read(const dictionary& dict) const
-{
-    codeOptions_ = expandCodeString("codeOptions", word::null, dict);
-    codeLibs_ = expandCodeString("codeLibs", word::null, dict);
-
-    forAll(codeKeys_, i)
-    {
-        codeStrings_[i] =
-            expandCodeString(codeKeys_[i], codeDictVars_[i], dict);
-    }
-}
-
-
 void Foam::codedBase::createLibrary
 (
     const dictionary& dict,
@@ -355,12 +341,8 @@ Foam::codedBase::codedBase
 )
 :
     codeName_(codeName(name)),
-    codeKeys_(codeKeys),
-    codeDictVars_(codeDictVars),
-    codeStrings_(codeKeys.size())
-{
-    read(dict);
-}
+    codeContext_(dict, codeKeys, codeDictVars)
+{}
 
 
 Foam::codedBase::codedBase
@@ -377,9 +359,7 @@ Foam::codedBase::codedBase
 Foam::codedBase::codedBase(const codedBase& cb)
 :
     codeName_(cb.codeName_),
-    codeKeys_(cb.codeKeys_),
-    codeDictVars_(cb.codeDictVars_),
-    codeStrings_(cb.codeStrings_)
+    codeContext_(cb.codeContext_)
 {}
 
 
@@ -417,8 +397,6 @@ Foam::word Foam::codedBase::codeTemplateH(const word& baseTypeName) const
 
 bool Foam::codedBase::updateLibrary(const dictionary& dict) const
 {
-    read(dict);
-
     const word& name = codeName();
 
     dynamicCode::checkSecurity
@@ -427,13 +405,11 @@ bool Foam::codedBase::updateLibrary(const dictionary& dict) const
         dict
     );
 
-    const dynamicCodeContext context(dict, codeKeys_, codeDictVars_);
-
     // codeName: name + _<sha1>
     // codeDir : name
     dynamicCode dynCode
     (
-        name + context.sha1().str(true),
+        name + codeContext_.sha1().str(true),
         name
     );
     const fileName libPath = dynCode.libPath();
@@ -460,7 +436,7 @@ bool Foam::codedBase::updateLibrary(const dictionary& dict) const
     // Try loading an existing library (avoid compilation when possible)
     if (!loadLibrary(libPath, dynCode.codeName(), dict))
     {
-        createLibrary(dict, dynCode, context);
+        createLibrary(dict, dynCode, codeContext_);
 
         if (!loadLibrary(libPath, dynCode.codeName(), dict))
         {
@@ -476,6 +452,12 @@ bool Foam::codedBase::updateLibrary(const dictionary& dict) const
 }
 
 
+void Foam::codedBase::read(const dictionary& dict)
+{
+    codeContext_.read(dict);
+}
+
+
 void Foam::codedBase::write(Ostream& os) const
 {
     if (codeName().size())
@@ -483,23 +465,7 @@ void Foam::codedBase::write(Ostream& os) const
         writeEntry(os, "name", codeName());
     }
 
-    forAll(codeStrings_, i)
-    {
-        if (codeStrings_[i] != verbatimString::null)
-        {
-            writeEntry(os, codeKeys_[i], codeStrings_[i]);
-        }
-    }
-
-    if (codeOptions_ != verbatimString::null)
-    {
-        writeEntry(os, "codeOptions", codeOptions_);
-    }
-
-    if (codeLibs_ != verbatimString::null)
-    {
-        writeEntry(os, "codeLibs", codeLibs_);
-    }
+    codeContext_.write(os);
 }
 
 

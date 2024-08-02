@@ -268,9 +268,11 @@ bool Foam::fv::codedFvModel::read(const dictionary& dict)
 {
     if (fvModel::read(dict))
     {
+        redirectFvModelPtr_.clear();
         coeffsDict_ = coeffs(dict);
         readCoeffs(coeffsDict_);
-        redirectFvModelPtr_.clear();
+        codedBase::read(coeffsDict_);
+        updateLibrary(coeffsDict_);
         return true;
     }
     else

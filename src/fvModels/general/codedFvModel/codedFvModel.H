@@ -121,7 +121,8 @@ class codedFvModel
         //- Adapt the context for the current object
         virtual void prepare(dynamicCode&, const dynamicCodeContext&) const;
 
-        //- Dynamically compiled fvModel
+        //- Compile, link and load the coded fvModel if not already loaded
+        //  and return it
         fvModel& redirectFvModel() const;
 
 

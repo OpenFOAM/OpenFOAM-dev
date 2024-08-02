@@ -35,7 +35,7 @@ SourceFiles
 #ifndef codedBase_H
 #define codedBase_H
 
-#include "dictionary.H"
+#include "dynamicCodeContext.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -44,8 +44,6 @@ namespace Foam
 
 // Forward declaration of classes
 class dynamicCode;
-class dynamicCodeContext;
-class dlLibraryTable;
 
 /*---------------------------------------------------------------------------*\
                           Class codedBase Declaration
@@ -58,17 +56,7 @@ class codedBase
         //- Name of the dynamically generated CodedType
         const word codeName_;
 
-        //- Keywords associated with source code
-        const wordList& codeKeys_;
-
-        //- Name of the dictionary variables in the source code
-        const wordList& codeDictVars_;
-
-        mutable List<verbatimString> codeStrings_;
-
-        mutable verbatimString codeOptions_;
-
-        mutable verbatimString codeLibs_;
+        dynamicCodeContext codeContext_;
 
         //- Previously loaded library
         mutable fileName oldLibPath_;
@@ -104,8 +92,6 @@ class codedBase
             const word& codeDictVar,
             const dictionary& dict
         ) const;
-
-        void read(const dictionary& dict) const;
 
         //- Create library based on the dynamicCodeContext
         void createLibrary
@@ -168,6 +154,10 @@ public:
         //  Returns true if the library was updated, otherwise false
         bool updateLibrary(const dictionary& dict) const;
 
+        //- Read the dictionary and update the code
+        void read(const dictionary& dict);
+
+        //- Write the code for restart
         void write(Ostream& os) const;
 
 

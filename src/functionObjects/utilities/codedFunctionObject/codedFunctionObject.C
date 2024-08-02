@@ -113,6 +113,24 @@ void Foam::codedFunctionObject::prepare
 }
 
 
+void Foam::codedFunctionObject::updateLibrary(const dictionary& dict)
+{
+    redirectFunctionObjectPtr_.clear();
+
+    codedBase::updateLibrary(dict);
+
+    dictionary constructDict(dict);
+    constructDict.set("type", codeName());
+
+    redirectFunctionObjectPtr_ = functionObject::New
+    (
+        codeName(),
+        time_,
+        constructDict
+    );
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::codedFunctionObject::codedFunctionObject
@@ -125,7 +143,7 @@ Foam::codedFunctionObject::codedFunctionObject
     functionObject(name, time),
     codedBase(name, dict, codeKeys, codeDictVars)
 {
-    read(dict);
+    updateLibrary(dict);
 }
 
 
@@ -177,20 +195,9 @@ bool Foam::codedFunctionObject::read(const dictionary& dict)
 {
     if (functionObject::read(dict))
     {
-        redirectFunctionObjectPtr_.clear();
+        codedBase::read(dict);
         updateLibrary(dict);
-
-        dictionary constructDict(dict);
-        constructDict.set("type", codeName());
-
-        redirectFunctionObjectPtr_ = functionObject::New
-        (
-            codeName(),
-            time_,
-            constructDict
-        );
-
-        return redirectFunctionObject().read(dict);
+        return true;
     }
     else
     {

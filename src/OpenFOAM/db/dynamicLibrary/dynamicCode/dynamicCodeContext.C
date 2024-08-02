@@ -40,38 +40,31 @@ void Foam::dynamicCodeContext::addLineDirective
 }
 
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::dynamicCodeContext::dynamicCodeContext
+void Foam::dynamicCodeContext::read
 (
     const dictionary& contextDict,
-    const dictionary& codeDict,
-    const wordList& codeKeys,
-    const wordList& codeDictVars
+    const dictionary& codeDict
 )
-:
-    code_(),
-    options_(),
-    libs_()
 {
     // Expand all dictionary entries. Note that this removes any leading or
     // trailing whitespace, which is necessary for compilation options, and
     // doesn't hurt for everything else
-    List<const entry*> codePtrs(codeKeys.size(), nullptr);
-    forAll(codeKeys, i)
+    List<const entry*> codePtrs(codeKeys_.size(), nullptr);
+    code_.clear();
+    forAll(codeKeys_, i)
     {
-        const word& key = codeKeys[i];
+        const word& key = codeKeys_[i];
         codePtrs[i] = codeDict.lookupEntryPtr(key, false, false);
         if (codePtrs[i])
         {
-            string s(stringOps::trim(verbatimString(codePtrs[i]->stream())));
+            codeStrings_[i] = verbatimString(codePtrs[i]->stream());
             stringOps::inplaceExpandCodeString
             (
-                s,
+                codeStrings_[i],
                 contextDict, // Lookup variables from the context dictionary
-                codeDictVars[i]
+                codeDictVars_[i]
             );
-            code_.insert(key, s);
+            code_.insert(key, codeStrings_[i]);
         }
         else
         {
@@ -84,16 +77,28 @@ Foam::dynamicCodeContext::dynamicCodeContext
         codeDict.lookupEntryPtr("codeOptions", false, false);
     if (optionsPtr)
     {
-        options_ = stringOps::trim(verbatimString(optionsPtr->stream()));
-        stringOps::inplaceExpandCodeString(options_, contextDict, word::null);
+        optionsString_ = verbatimString(optionsPtr->stream());
+        stringOps::inplaceExpandCodeString
+        (
+            optionsString_,
+            contextDict,
+            word::null
+        );
+        options_ = stringOps::trim(optionsString_);
     }
 
     // Libs
     const entry* libsPtr = codeDict.lookupEntryPtr("codeLibs", false, false);
     if (libsPtr)
     {
-        libs_ = stringOps::trim(verbatimString(libsPtr->stream()));
-        stringOps::inplaceExpandCodeString(libs_, contextDict, word::null);
+        libsString_ = verbatimString(libsPtr->stream());
+        stringOps::inplaceExpandCodeString
+        (
+            libsString_,
+            contextDict,
+            word::null
+        );
+        libs_ = stringOps::trim(libsString_);
     }
 
     // Calculate SHA1 digest from all entries
@@ -106,11 +111,11 @@ Foam::dynamicCodeContext::dynamicCodeContext
     sha1_ = os.digest();
 
     // Add line directives after calculating SHA1
-    forAll(codeKeys, i)
+    forAll(codeKeys_, i)
     {
         if (codePtrs[i])
         {
-            const word& key = codeKeys[i];
+            const word& key = codeKeys_[i];
             addLineDirective
             (
                 code_[key],
@@ -119,6 +124,30 @@ Foam::dynamicCodeContext::dynamicCodeContext
             );
         }
     }
+}
+
+
+void Foam::dynamicCodeContext::read(const dictionary& contextDict)
+{
+    read(contextDict, contextDict);
+}
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::dynamicCodeContext::dynamicCodeContext
+(
+    const dictionary& contextDict,
+    const dictionary& codeDict,
+    const wordList& codeKeys,
+    const wordList& codeDictVars
+)
+:
+    codeKeys_(codeKeys),
+    codeDictVars_(codeDictVars),
+    codeStrings_(codeKeys.size())
+{
+    read(contextDict, codeDict);
 }
 
 
@@ -131,6 +160,30 @@ Foam::dynamicCodeContext::dynamicCodeContext
 :
     dynamicCodeContext(contextDict, contextDict, codeKeys, codeDictVars)
 {}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void Foam::dynamicCodeContext::write(Ostream& os) const
+{
+    forAll(codeStrings_, i)
+    {
+        if (codeStrings_[i] != verbatimString::null)
+        {
+            writeEntry(os, codeKeys_[i], codeStrings_[i]);
+        }
+    }
+
+    if (optionsString_ != verbatimString::null)
+    {
+        writeEntry(os, "codeOptions", optionsString_);
+    }
+
+    if (libsString_ != verbatimString::null)
+    {
+        writeEntry(os, "codeLibs", libsString_);
+    }
+}
 
 
 // ************************************************************************* //
