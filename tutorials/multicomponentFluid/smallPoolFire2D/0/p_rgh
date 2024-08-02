@@ -23,7 +23,6 @@ boundaryField
     "(outlet|sides)"
     {
         type            prghTotalHydrostaticPressure;
-        p0              $internalField;
         value           $internalField;
     }
 
