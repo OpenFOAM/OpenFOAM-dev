@@ -760,6 +760,9 @@ public:
             //- Remove an entry specified by keyword
             bool remove(const word&);
 
+            //- Remove entries specified by keywords
+            void remove(const wordList&);
+
             //- Change the keyword for an entry,
             //  optionally forcing overwrite of an existing entry
             bool changeKeyword

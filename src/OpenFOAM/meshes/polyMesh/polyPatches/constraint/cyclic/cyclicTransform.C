@@ -72,6 +72,17 @@ namespace Foam
     const NamedEnum<cyclicTransform::transformTypes, 4>
         cyclicTransform::transformTypeNames;
 
+    const wordList cyclicTransform::keywords =
+    {
+        "transformType",
+        "transform",
+        "rotationAxis",
+        "rotationCentre",
+        "rotationAngle",
+        "separation",
+        "separationVector"
+    };
+
     defineTypeNameAndDebug(cyclicTransform, 0);
 }
 

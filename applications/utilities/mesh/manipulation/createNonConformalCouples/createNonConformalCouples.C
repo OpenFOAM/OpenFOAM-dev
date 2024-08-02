@@ -90,6 +90,8 @@ struct nonConformalCouple
 
         Pair<word> ncPatchNames;
 
+        Pair<dictionary> ncPatchDicts;
+
         Pair<dictionary> ncPatchFieldDicts;
 
         cyclicTransform transform;
@@ -116,6 +118,7 @@ struct nonConformalCouple
                 ncPatchType + "_on_" + args[1],
                 ncPatchType + "_on_" + args[2]
             ),
+            ncPatchDicts(),
             ncPatchFieldDicts(),
             transform(true)
         {}
@@ -173,11 +176,25 @@ struct nonConformalCouple
                       : nonConformalMappedWallPolyPatch::typeName
                     );
                 ncPatchNames =
-                    Pair<word>
+                    dict.lookupOrDefault<Pair<word>>
                     (
-                        dict.dictName() + "_on_" + origPatchNames[0],
-                        dict.dictName() + "_on_" + origPatchNames[1]
+                        "names",
+                        Pair<word>
+                        (
+                            dict.dictName() + "_on_" + origPatchNames[0],
+                            dict.dictName() + "_on_" + origPatchNames[1]
+                        )
                     );
+                forAll(ncPatchDicts, i)
+                {
+                    ncPatchDicts[i] = dict;
+                    ncPatchDicts[i].remove("region");
+                    ncPatchDicts[i].remove("regions");
+                    ncPatchDicts[i].remove("patches");
+                    ncPatchDicts[i].remove("type");
+                    ncPatchDicts[i].remove("names");
+                    ncPatchDicts[i].remove(cyclicTransform::keywords);
+                }
                 ncPatchFieldDicts = Pair<dictionary>();
                 transform = cyclicTransform(dict, true);
             }
@@ -228,6 +245,15 @@ struct nonConformalCouple
                             dict.dictName() + "_on_" + origPatchNames[1]
                         )
                     );
+                ncPatchDicts[0] = ownerDict;
+                ncPatchDicts[1] = neighbourDict;
+                forAll(ncPatchDicts, i)
+                {
+                    ncPatchDicts[i].remove("region");
+                    ncPatchDicts[i].remove("patch");
+                    ncPatchDicts[i].remove("name");
+                    ncPatchDicts[i].remove("patchFields");
+                }
                 ncPatchFieldDicts =
                     Pair<dictionary>
                     (
@@ -555,6 +581,8 @@ int main(int argc, char *argv[])
                 (owner ? couple.transform : inv(couple.transform)).write(oss);
                 patchDict.merge(IStringStream(oss.str())());
             }
+
+            patchDict.merge(couple.ncPatchDicts[!owner]);
 
             newPatches[regioni].append
             (

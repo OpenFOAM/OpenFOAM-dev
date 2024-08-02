@@ -1211,6 +1211,15 @@ bool Foam::dictionary::remove(const word& Keyword)
 }
 
 
+void Foam::dictionary::remove(const wordList& Keywords)
+{
+    forAll(Keywords, i)
+    {
+        remove(Keywords[i]);
+    }
+}
+
+
 bool Foam::dictionary::changeKeyword
 (
     const keyType& oldKeyword,
