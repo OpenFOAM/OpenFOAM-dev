@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,12 +52,10 @@ Foam::wallDampingModel::wallDampingModel
     Cd_("Cd", dimless, dict),
     zeroWallDist_
     (
-        dimensionedScalar::lookupOrDefault
+        dict.lookupOrDefault
         (
             "zeroWallDist",
-            dict,
-            dimLength,
-            0
+            dimensionedScalar(dimLength, 0)
         )
     ),
     zeroInNearWallCells_

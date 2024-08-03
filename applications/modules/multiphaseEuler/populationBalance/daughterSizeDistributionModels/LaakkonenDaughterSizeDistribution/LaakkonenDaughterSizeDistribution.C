@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ LaakkonenDaughterSizeDistribution::LaakkonenDaughterSizeDistribution
 )
 :
     daughterSizeDistributionModel(breakup, dict),
-    C4_(dimensionedScalar::lookupOrDefault("C4", dict, dimless, 18.25))
+    C4_(dict.lookupOrDefault("C4", dimensionedScalar(dimless, 18.25)))
 {}
 
 

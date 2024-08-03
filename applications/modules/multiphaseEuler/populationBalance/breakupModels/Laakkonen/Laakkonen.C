@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,16 +59,14 @@ Laakkonen
     breakupModel(popBal, dict),
     C1_
     (
-        dimensionedScalar::lookupOrDefault
+        dict.lookupOrDefault
         (
             "C1",
-            dict,
-            dimensionSet(0, -2.0/3.0, 0, 0, 0),
-            2.25
+            dimensionedScalar(dimensionSet(0, -2.0/3.0, 0, 0, 0), 2.25)
         )
     ),
-    C2_(dimensionedScalar::lookupOrDefault("C2", dict, dimless, 0.04)),
-    C3_(dimensionedScalar::lookupOrDefault("C3", dict, dimless, 0.01))
+    C2_(dict.lookupOrDefault("C2", dimensionedScalar(dimless, 0.04))),
+    C3_(dict.lookupOrDefault("C3", dimensionedScalar(dimless, 0.01)))
 {}
 
 

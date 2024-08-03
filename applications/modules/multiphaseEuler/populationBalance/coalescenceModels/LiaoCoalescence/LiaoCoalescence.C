@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,14 +63,14 @@ LiaoCoalescence
 :
     coalescenceModel(popBal, dict),
     LiaoBase(popBal, dict),
-    PMax_(dimensionedScalar::lookupOrDefault("PMax", dict, dimless, 0.8)),
-    AH_(dimensionedScalar::lookupOrDefault("AH", dict, dimEnergy, 3.7e-20)),
-    CEff_(dimensionedScalar::lookupOrDefault("CEff", dict, dimless, 2.5)),
-    CTurb_(dimensionedScalar::lookupOrDefault("CTurb", dict, dimless, 1)),
-    CBuoy_(dimensionedScalar::lookupOrDefault("CBuoy", dict, dimless, 1)),
-    CShear_(dimensionedScalar::lookupOrDefault("CShear", dict, dimless, 1)),
-    CEddy_(dimensionedScalar::lookupOrDefault("CEddy", dict, dimless, 1)),
-    CWake_(dimensionedScalar::lookupOrDefault("CWake", dict, dimless, 1)),
+    PMax_(dict.lookupOrDefault("PMax", dimensionedScalar(dimless, 0.8))),
+    AH_(dict.lookupOrDefault("AH", dimensionedScalar(dimEnergy, 3.7e-20))),
+    CEff_(dict.lookupOrDefault("CEff", dimensionedScalar(dimless, 2.5))),
+    CTurb_(dict.lookupOrDefault("CTurb", dimensionedScalar(dimless, 1))),
+    CBuoy_(dict.lookupOrDefault("CBuoy", dimensionedScalar(dimless, 1))),
+    CShear_(dict.lookupOrDefault("CShear", dimensionedScalar(dimless, 1))),
+    CEddy_(dict.lookupOrDefault("CEddy", dimensionedScalar(dimless, 1))),
+    CWake_(dict.lookupOrDefault("CWake", dimensionedScalar(dimless, 1))),
     turbulence_(dict.lookup("turbulence")),
     buoyancy_(dict.lookup("buoyancy")),
     laminarShear_(dict.lookup("laminarShear")),
@@ -94,7 +94,7 @@ LiaoCoalescence
     ),
     CPackMax_
     (
-        dimensionedScalar::lookupOrDefault("CPackMax", dict, dimless, 1e5)
+        dict.lookupOrDefault("CPackMax", dimensionedScalar(dimless, 1e5))
     ),
     dCrit_
     (

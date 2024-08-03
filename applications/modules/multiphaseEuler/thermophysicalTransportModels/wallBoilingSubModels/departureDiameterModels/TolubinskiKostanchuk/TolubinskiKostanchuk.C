@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,9 +79,9 @@ TolubinskiKostanchuk
 )
 :
     departureDiameterModel(),
-    dRef_(dimensionedScalar::lookupOrDefault("dRef", dict, dimLength, 6e-4)),
-    dMax_(dimensionedScalar::lookupOrDefault("dMax", dict, dimLength, 0.0014)),
-    dMin_(dimensionedScalar::lookupOrDefault("dMin", dict, dimLength, 1e-6))
+    dRef_(dict.lookupOrDefault("dRef", dimensionedScalar(dimLength, 6e-4))),
+    dMax_(dict.lookupOrDefault("dMax", dimensionedScalar(dimLength, 0.0014))),
+    dMin_(dict.lookupOrDefault("dMin", dimensionedScalar(dimLength, 1e-6)))
 {}
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,8 +60,8 @@ Luo
 )
 :
     coalescenceModel(popBal, dict),
-    beta_(dimensionedScalar::lookupOrDefault("beta", dict, dimless, 2.05)),
-    C1_(dimensionedScalar::lookupOrDefault("C1", dict, dimless, 1))
+    beta_(dict.lookupOrDefault("beta", dimensionedScalar(dimless, 2.05))),
+    C1_(dict.lookupOrDefault("C1", dimensionedScalar(dimless, 1)))
 {}
 
 

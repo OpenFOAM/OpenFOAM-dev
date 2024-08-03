@@ -230,38 +230,6 @@ Foam::dimensioned<Type>::dimensioned
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
 
 template<class Type>
-Foam::dimensioned<Type> Foam::dimensioned<Type>::lookupOrDefault
-(
-    const word& name,
-    const dictionary& dict,
-    const dimensionSet& dims,
-    const Type& defaultValue
-)
-{
-    if (dict.found(name))
-    {
-        return dimensioned<Type>(name, dims, dict.lookup(name));
-    }
-    else
-    {
-        return dimensioned<Type>(name, dims, defaultValue);
-    }
-}
-
-
-template<class Type>
-Foam::dimensioned<Type> Foam::dimensioned<Type>::lookupOrDefault
-(
-    const word& name,
-    const dictionary& dict,
-    const Type& defaultValue
-)
-{
-    return lookupOrDefault(name, dict, dimless, defaultValue);
-}
-
-
-template<class Type>
 Foam::dimensioned<Type> Foam::dimensioned<Type>::lookupOrAddToDict
 (
     const word& name,
@@ -581,7 +549,13 @@ Foam::dimensioned<Type> Foam::min
 template<class Type>
 void Foam::writeEntry(Ostream& os, const dimensioned<Type>& dt)
 {
-    os << dt;
+    // Write the dimensions
+    dt.dimensions().write(os);
+
+    os << token::SPACE;
+
+    // Write the value
+    os << dt.value();
 }
 
 

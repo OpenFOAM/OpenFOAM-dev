@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,10 +60,10 @@ Foam::diameterModels::binaryBreakupModels::Liao::Liao
 :
     binaryBreakupModel(popBal, dict),
     LiaoBase(popBal, dict),
-    BTurb_(dimensionedScalar::lookupOrDefault("BTurb", dict, dimless, 1)),
-    BShear_(dimensionedScalar::lookupOrDefault("BShear", dict, dimless, 1)),
-    BEddy_(dimensionedScalar::lookupOrDefault("BEddy", dict, dimless, 1)),
-    BFric_(dimensionedScalar::lookupOrDefault("BFric", dict, dimless, 0.25)),
+    BTurb_(dict.lookupOrDefault("BTurb", dimensionedScalar(dimless, 1))),
+    BShear_(dict.lookupOrDefault("BShear", dimensionedScalar(dimless, 1))),
+    BEddy_(dict.lookupOrDefault("BEddy", dimensionedScalar(dimless, 1))),
+    BFric_(dict.lookupOrDefault("BFric", dimensionedScalar(dimless, 0.25))),
     turbulence_(dict.lookup("turbulence")),
     laminarShear_(dict.lookup("laminarShear")),
     turbulentShear_(dict.lookup("turbulentShear")),

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,25 +60,21 @@ PrinceBlanch
 )
 :
     coalescenceModel(popBal, dict),
-    C1_(dimensionedScalar::lookupOrDefault("C1", dict, dimless, 0.356)),
+    C1_(dict.lookupOrDefault("C1", dimensionedScalar(dimless, 0.356))),
     h0_
     (
-        dimensionedScalar::lookupOrDefault
+        dict.lookupOrDefault
         (
             "h0",
-            dict,
-            dimLength,
-            1e-4
+            dimensionedScalar(dimLength, 1e-4)
         )
     ),
     hf_
     (
-        dimensionedScalar::lookupOrDefault
+        dict.lookupOrDefault
         (
             "hf",
-            dict,
-            dimLength,
-            1e-8
+            dimensionedScalar(dimLength, 1e-8)
         )
     ),
     turbulence_(dict.lookup("turbulence")),

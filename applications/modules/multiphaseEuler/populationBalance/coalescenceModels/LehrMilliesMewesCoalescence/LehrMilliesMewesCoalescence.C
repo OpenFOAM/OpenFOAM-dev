@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,11 +60,11 @@ LehrMilliesMewesCoalescence
     coalescenceModel(popBal, dict),
     uCrit_
     (
-        dimensionedScalar::lookupOrDefault("uCrit", dict, dimVelocity, 0.08)
+        dict.lookupOrDefault("uCrit", dimensionedScalar(dimVelocity, 0.08))
     ),
     alphaMax_
     (
-        dimensionedScalar::lookupOrDefault("alphaMax", dict, dimless, 0.6)
+        dict.lookupOrDefault("alphaMax", dimensionedScalar(dimless, 0.6))
     )
 {}
 

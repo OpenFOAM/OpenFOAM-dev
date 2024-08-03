@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,7 @@ Foam::diameterModels::breakupModels::Kusters::Kusters
     breakupModel(popBal, dict),
     B_("B", dimensionSet(0, 3, -3, 0, 0), dict),
     dP_("dP", dimLength, dict),
-    kc_(dimensionedScalar::lookupOrDefault("kc", dict, dimless, 1)),
+    kc_(dict.lookupOrDefault("kc", dimensionedScalar(dimless, 1))),
     Df_("Df", dimless, dict)
 {}
 

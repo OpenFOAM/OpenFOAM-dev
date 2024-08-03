@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,7 +84,7 @@ KocamustafaogullariIshiiDepartureFrequency
 )
 :
     departureFrequencyModel(),
-    Cf_(dimensionedScalar::lookupOrDefault("Cf", dict, dimless, 1.18))
+    Cf_(dict.lookupOrDefault("Cf", dimensionedScalar(dimless, 1.18)))
 {}
 
 
