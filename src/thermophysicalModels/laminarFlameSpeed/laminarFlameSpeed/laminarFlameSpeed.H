@@ -64,9 +64,6 @@ protected:
 
         const psiuMulticomponentThermo& psiuMulticomponentThermo_;
 
-        //- Fuel
-        word fuel_;
-
         //- Equivalence ratio of a homogeneous mixture
         scalar equivalenceRatio_;
 

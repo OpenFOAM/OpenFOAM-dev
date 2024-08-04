@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,12 @@ Foam::XiEqModels::SCOPEXiEq::SCOPEXiEq
     ),
     MaModel
     (
-        Su.mesh().lookupObject<IOdictionary>("combustionProperties"),
+        Su.mesh().lookupObject<IOdictionary>("combustionProperties")
+       .subDict("laminarFlameSpeed").subDict
+        (
+            Su.mesh().lookupObject<IOdictionary>("combustionProperties")
+           .subDict("laminarFlameSpeed").lookup("fuel")
+        ),
         thermo
     )
 {}

@@ -54,8 +54,6 @@ class GulderEGR
 {
     // Private Data
 
-        dictionary coeffDict_;
-
         scalar W_;
         scalar eta_;
         scalar xi_;
@@ -106,7 +104,7 @@ public:
         //- Construct from dictionary and psiuMulticomponentThermo
         GulderEGR
         (
-            const dictionary&,
+            const dictionary& coeffDict,
             const psiuMulticomponentThermo&
         );
 

@@ -63,33 +63,20 @@ Foam::laminarFlameSpeedModels::SCOPE::polynomial::polynomial
 
 Foam::laminarFlameSpeedModels::SCOPE::SCOPE
 (
-    const dictionary& dict,
+    const dictionary& coeffDict,
     const psiuMulticomponentThermo& ct
 )
 :
-    laminarFlameSpeed(dict, ct),
+    laminarFlameSpeed(coeffDict.parent(), ct),
 
-    coeffDict_
-    (
-        dictionary
-        (
-          IFstream
-          (
-              fileName
-              (
-                  dict.lookup("fuelFile")
-              )
-          )()
-        ).optionalSubDict(typeName + "Coeffs")
-    ),
-    LFL_(coeffDict_.lookup<scalar>("lowerFlamabilityLimit")),
-    UFL_(coeffDict_.lookup<scalar>("upperFlamabilityLimit")),
-    SuPolyL_(coeffDict_.subDict("lowerSuPolynomial")),
-    SuPolyU_(coeffDict_.subDict("upperSuPolynomial")),
-    Texp_(coeffDict_.lookup<scalar>("Texp")),
-    pexp_(coeffDict_.lookup<scalar>("pexp")),
-    MaPolyL_(coeffDict_.subDict("lowerMaPolynomial")),
-    MaPolyU_(coeffDict_.subDict("upperMaPolynomial"))
+    LFL_(coeffDict.lookup<scalar>("lowerFlamabilityLimit")),
+    UFL_(coeffDict.lookup<scalar>("upperFlamabilityLimit")),
+    SuPolyL_(coeffDict.subDict("lowerSuPolynomial")),
+    SuPolyU_(coeffDict.subDict("upperSuPolynomial")),
+    Texp_(coeffDict.lookup<scalar>("Texp")),
+    pexp_(coeffDict.lookup<scalar>("pexp")),
+    MaPolyL_(coeffDict.subDict("lowerMaPolynomial")),
+    MaPolyU_(coeffDict.subDict("upperMaPolynomial"))
 {
     SuPolyL_.ll = max(SuPolyL_.ll, LFL_) + small;
     SuPolyU_.ul = min(SuPolyU_.ul, UFL_) - small;

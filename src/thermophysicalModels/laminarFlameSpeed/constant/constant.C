@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,13 +48,13 @@ namespace laminarFlameSpeedModels
 
 Foam::laminarFlameSpeedModels::constant::constant
 (
-    const dictionary& dict,
+    const dictionary& coeffDict,
     const psiuMulticomponentThermo& ct
 )
 :
-    laminarFlameSpeed(dict, ct),
+    laminarFlameSpeed(coeffDict.parent(), ct),
 
-    Su_(dict.lookup("Su"))
+    Su_(coeffDict.lookup("Su"))
 {}
 
 

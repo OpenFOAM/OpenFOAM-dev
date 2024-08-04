@@ -52,7 +52,12 @@ Foam::autoPtr<Foam::laminarFlameSpeed> Foam::laminarFlameSpeed::New
             << exit(FatalIOError);
     }
 
-    return autoPtr<laminarFlameSpeed>(cstrIter()(dict, ct));
+    const dictionary& coeffDict
+    (
+        dict.optionalSubDict(typeName + "Coeffs").subDict(dict.lookup("fuel"))
+    );
+
+    return autoPtr<laminarFlameSpeed>(cstrIter()(coeffDict, ct));
 }
 
 

@@ -65,8 +65,6 @@ class RaviPetersen
 {
     // Private Data
 
-        dictionary coeffDict_;
-
         //- Correlation pressure values
         List<scalar> pPoints_;
 
@@ -88,6 +86,7 @@ class RaviPetersen
         //- Check that input points are ordered
         void checkPointsMonotonicity
         (
+            const dictionary& coeffDict,
             const word& name,
             const List<scalar>& x
         ) const;
@@ -95,6 +94,7 @@ class RaviPetersen
         //- Check that the coefficient arrays are of the correct shape
         void checkCoefficientArrayShape
         (
+            const dictionary& coeffDict,
             const word& name,
             const List<List<List<scalar>>>& x
         ) const;
@@ -171,7 +171,7 @@ public:
         //- Construct from dictionary and psiuMulticomponentThermo
         RaviPetersen
         (
-            const dictionary&,
+            const dictionary& coeffDict,
             const psiuMulticomponentThermo&
         );
 
