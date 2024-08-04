@@ -62,7 +62,6 @@ Foam::extrude2DMesh::extrude2DMesh
 )
 :
     mesh_(mesh),
-    dict_(dict),
     model_(model),
     modelType_(dict.lookup("extrudeModel")),
     patchType_(dict.lookup("patchType")),

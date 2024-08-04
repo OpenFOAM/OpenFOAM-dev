@@ -66,8 +66,6 @@ class extrude2DMesh
         //- Reference to 2D mesh
         polyMesh& mesh_;
 
-        const dictionary dict_;
-
         const extrudeModel& model_;
 
         const word modelType_;
