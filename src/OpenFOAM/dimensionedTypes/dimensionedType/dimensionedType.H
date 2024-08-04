@@ -138,6 +138,26 @@ public:
         //- Construct from dictionary lookup with a given name and units
         dimensioned(const word&, const unitConversion&, const dictionary&);
 
+        //- Construct from dictionary lookup with a given name and dimensions
+        //  or if not found set to the given default value
+        dimensioned
+        (
+            const word&,
+            const dimensionSet&,
+            const dictionary&,
+            const Type&
+        );
+
+        //- Construct from dictionary lookup with a given name and units
+        //  or if not found set to the given default value
+        dimensioned
+        (
+            const word&,
+            const unitConversion&,
+            const dictionary&,
+            const Type&
+        );
+
 
     // Static member functions
 

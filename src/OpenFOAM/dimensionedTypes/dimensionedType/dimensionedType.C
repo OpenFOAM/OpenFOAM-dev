@@ -227,6 +227,46 @@ Foam::dimensioned<Type>::dimensioned
 }
 
 
+template<class Type>
+Foam::dimensioned<Type>::dimensioned
+(
+    const word& name,
+    const dimensionSet& dims,
+    const dictionary& dict,
+    const Type& defaultValue
+)
+:
+    name_(name),
+    dimensions_(dims),
+    value_(defaultValue)
+{
+    if (dict.found(name))
+    {
+        initialise(name, dims, dict.lookup(name));
+    }
+}
+
+
+template<class Type>
+Foam::dimensioned<Type>::dimensioned
+(
+    const word& name,
+    const unitConversion& units,
+    const dictionary& dict,
+    const Type& defaultValue
+)
+:
+    name_(name),
+    dimensions_(units.dimensions()),
+    value_(defaultValue)
+{
+    if (dict.found(name))
+    {
+        initialise(name, units, dict.lookup(name));
+    }
+}
+
+
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
 
 template<class Type>
