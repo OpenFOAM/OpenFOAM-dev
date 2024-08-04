@@ -90,11 +90,6 @@ public:
 
     // Member Functions
 
-        const dictionary& coeffDict() const
-        {
-            return optionalSubDict(typeName + "Coeffs");
-        }
-
         //- Return the mixture viscosity
         //  given the viscosity of the continuous phase
         virtual tmp<volScalarField> mu
