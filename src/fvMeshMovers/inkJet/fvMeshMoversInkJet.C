@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,10 +45,9 @@ namespace fvMeshMovers
 Foam::fvMeshMovers::inkJet::inkJet(fvMesh& mesh)
 :
     fvMeshMover(mesh),
-    meshCoeffs_(dict()),
-    amplitude_(meshCoeffs_.lookup<scalar>("amplitude")),
-    frequency_(meshCoeffs_.lookup<scalar>("frequency")),
-    refPlaneX_(meshCoeffs_.lookup<scalar>("refPlaneX")),
+    amplitude_(dict().lookup<scalar>("amplitude")),
+    frequency_(dict().lookup<scalar>("frequency")),
+    refPlaneX_(dict().lookup<scalar>("refPlaneX")),
     stationaryPoints_
     (
         IOobject

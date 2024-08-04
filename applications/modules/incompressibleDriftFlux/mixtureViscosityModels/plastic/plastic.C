@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,20 +53,24 @@ Foam::mixtureViscosityModels::plastic::plastic
 )
 :
     mixtureViscosityModel(mixture),
-    plasticCoeffs_(optionalSubDict(typeName + "Coeffs")),
     plasticViscosityCoeff_
     (
         "coeff",
         dimDynamicViscosity,
-        plasticCoeffs_.lookup("coeff")
+        coeffDict()
     ),
     plasticViscosityExponent_
     (
         "exponent",
         dimless,
-        plasticCoeffs_.lookup("exponent")
+        coeffDict()
     ),
-    muMax_("muMax", dimDynamicViscosity, plasticCoeffs_.lookup("muMax"))
+    muMax_
+    (
+        "muMax",
+        dimDynamicViscosity,
+        coeffDict()
+    )
 {}
 
 
@@ -99,11 +103,11 @@ bool Foam::mixtureViscosityModels::plastic::read()
 {
     if (mixtureViscosityModel::read())
     {
-        plasticCoeffs_ = optionalSubDict(typeName + "Coeffs");
+        const dictionary& plasticCoeffs = coeffDict();
 
-        plasticCoeffs_.lookup("k") >> plasticViscosityCoeff_;
-        plasticCoeffs_.lookup("n") >> plasticViscosityExponent_;
-        plasticCoeffs_.lookup("muMax") >> muMax_;
+        plasticViscosityCoeff_.read(plasticCoeffs);
+        plasticViscosityExponent_.read(plasticCoeffs);
+        muMax_.read(plasticCoeffs);
 
         return true;
     }

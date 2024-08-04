@@ -674,8 +674,7 @@ int main(int argc, char *argv[])
     else
     {
         Info<< "Using default renumberMethod." << nl << endl;
-        dictionary renumberDict;
-        renumberPtr.reset(new CuthillMcKeeRenumber(renumberDict));
+        renumberPtr.reset(new CuthillMcKeeRenumber(dictionary::null));
     }
 
     Info<< "Selecting renumberMethod " << renumberPtr().type() << nl << endl;

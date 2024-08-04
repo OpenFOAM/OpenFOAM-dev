@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,19 +58,19 @@ Foam::mixtureViscosityModels::BinghamPlastic::BinghamPlastic
     (
         "BinghamCoeff",
         dimensionSet(1, -1, -2, 0, 0),
-        plasticCoeffs_
+        coeffDict()
     ),
     yieldStressExponent_
     (
         "BinghamExponent",
         dimless,
-        plasticCoeffs_
+        coeffDict()
     ),
     yieldStressOffset_
     (
         "BinghamOffset",
         dimless,
-        plasticCoeffs_
+        coeffDict()
     )
 {}
 
@@ -127,9 +127,11 @@ bool Foam::mixtureViscosityModels::BinghamPlastic::read()
 {
     if (plastic::read())
     {
-        plasticCoeffs_.lookup("yieldStressCoeff") >> yieldStressCoeff_;
-        plasticCoeffs_.lookup("yieldStressExponent") >> yieldStressExponent_;
-        plasticCoeffs_.lookup("yieldStressOffset") >> yieldStressOffset_;
+        const dictionary& plasticCoeffs = coeffDict();
+
+        yieldStressCoeff_.read(plasticCoeffs);
+        yieldStressExponent_.read(plasticCoeffs);
+        yieldStressOffset_.read(plasticCoeffs);
 
         return true;
     }

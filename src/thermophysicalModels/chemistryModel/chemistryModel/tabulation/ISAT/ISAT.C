@@ -114,7 +114,7 @@ Foam::chemistryTabulationMethods::ISAT::ISAT
 
     cleaningRequired_(false)
 {
-    dictionary scaleDict(coeffDict_.subDict("scaleFactor"));
+    const dictionary& scaleDict(coeffDict_.subDict("scaleFactor"));
     label Ysize = chemistry_.Y().size();
     scalar otherScaleFactor = scaleDict.lookup<scalar>("otherSpecies");
     for (label i=0; i<Ysize; i++)
