@@ -48,7 +48,7 @@ Foam::faceSelections::faceZoneSelection::faceZoneSelection
 )
 :
     faceSelection(name, mesh, dict),
-    zoneName_(dict_.lookup("zoneName"))
+    zoneName_(dict.lookup("zoneName"))
 {}
 
 
