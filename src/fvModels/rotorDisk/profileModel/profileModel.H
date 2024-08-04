@@ -55,9 +55,6 @@ protected:
 
     // Protected data
 
-        //- Coefficients dictionary
-        const dictionary dict_;
-
         //- Name of profile model
         const word name_;
 

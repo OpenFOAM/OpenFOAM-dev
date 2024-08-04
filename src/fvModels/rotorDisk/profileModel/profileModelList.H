@@ -52,14 +52,6 @@ class profileModelList
     public PtrList<profileModel>
 {
 
-protected:
-
-    // Protected data
-
-        //- Dictionary
-        const dictionary dict_;
-
-
 public:
 
     //- Constructor

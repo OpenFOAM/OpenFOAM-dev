@@ -47,7 +47,6 @@ bool Foam::profileModel::readFromFile() const
 
 Foam::profileModel::profileModel(const dictionary& dict, const word& name)
 :
-    dict_(dict),
     name_(name),
     fName_(fileName::null)
 {

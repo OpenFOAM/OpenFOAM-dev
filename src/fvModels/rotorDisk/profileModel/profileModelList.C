@@ -33,8 +33,7 @@ Foam::profileModelList::profileModelList
     const bool readFields
 )
 :
-    PtrList<profileModel>(),
-    dict_(dict)
+    PtrList<profileModel>()
 {
     if (readFields)
     {
