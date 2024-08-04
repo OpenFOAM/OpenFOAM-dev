@@ -51,7 +51,6 @@ Foam::functionObjects::fieldValue::fieldValue
 :
     fvMeshFunctionObject(name, runTime, dict),
     logFiles(obr_, name),
-    dict_(dict),
     valueType_(valueType),
     resultDict_("result")
 {
@@ -69,7 +68,6 @@ Foam::functionObjects::fieldValue::fieldValue
 :
     fvMeshFunctionObject(name, obr, dict),
     logFiles(obr_, name),
-    dict_(dict),
     valueType_(valueType),
     resultDict_("result")
 {
@@ -87,11 +85,6 @@ Foam::functionObjects::fieldValue::~fieldValue()
 
 bool Foam::functionObjects::fieldValue::read(const dictionary& dict)
 {
-    if (dict != dict_)
-    {
-        dict_ = dict;
-    }
-
     fvMeshFunctionObject::read(dict);
 
     dict.lookup("fields") >> fields_;
