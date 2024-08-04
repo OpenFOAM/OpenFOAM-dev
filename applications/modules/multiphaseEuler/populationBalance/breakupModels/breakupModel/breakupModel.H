@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,9 +61,6 @@ protected:
 
         //- Reference to the populationBalanceModel
         const populationBalanceModel& popBal_;
-
-        //- Dictionary
-        dictionary dict_;
 
         //- Daughter size distribution model
         autoPtr<daughterSizeDistributionModel> dsd_;

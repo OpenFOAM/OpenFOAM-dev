@@ -58,14 +58,8 @@ LehrMilliesMewesCoalescence
 )
 :
     coalescenceModel(popBal, dict),
-    uCrit_
-    (
-        dict.lookupOrDefault("uCrit", dimensionedScalar(dimVelocity, 0.08))
-    ),
-    alphaMax_
-    (
-        dict.lookupOrDefault("alphaMax", dimensionedScalar(dimless, 0.6))
-    )
+    uCrit_("uCrit", dimVelocity, dict, 0.08),
+    alphaMax_("alphaMax", dimless, dict, 0.6)
 {}
 
 

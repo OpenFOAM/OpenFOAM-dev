@@ -57,8 +57,8 @@ CoulaloglouTavlarides
 )
 :
     coalescenceModel(popBal, dict),
-    C1_(dict.lookupOrDefault("C1", dimensionedScalar(dimless, 2.8))),
-    C2_(dict.lookupOrDefault("C2", dimensionedScalar(inv(dimArea), 1.83e9)))
+    C1_("C1", dimless, dict, 2.8),
+    C2_("C2", inv(dimArea), dict, 1.83e9)
 {}
 
 

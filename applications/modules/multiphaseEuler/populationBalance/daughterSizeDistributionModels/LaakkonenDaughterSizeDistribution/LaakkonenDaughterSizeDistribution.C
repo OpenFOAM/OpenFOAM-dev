@@ -57,7 +57,7 @@ LaakkonenDaughterSizeDistribution::LaakkonenDaughterSizeDistribution
 )
 :
     daughterSizeDistributionModel(breakup, dict),
-    C4_(dict.lookupOrDefault("C4", dimensionedScalar(dimless, 18.25)))
+    C4_("C4", dimless, dict, 18.25)
 {}
 
 

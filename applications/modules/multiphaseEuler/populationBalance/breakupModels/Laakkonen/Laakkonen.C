@@ -57,16 +57,9 @@ Laakkonen
 )
 :
     breakupModel(popBal, dict),
-    C1_
-    (
-        dict.lookupOrDefault
-        (
-            "C1",
-            dimensionedScalar(dimensionSet(0, -2.0/3.0, 0, 0, 0), 2.25)
-        )
-    ),
-    C2_(dict.lookupOrDefault("C2", dimensionedScalar(dimless, 0.04))),
-    C3_(dict.lookupOrDefault("C3", dimensionedScalar(dimless, 0.01)))
+    C1_("C1", dimensionSet(0, -2.0/3.0, 0, 0, 0), dict, 2.25),
+    C2_("C2", dimless, dict, 0.04),
+    C3_("C3", dimless, dict, 0.01)
 {}
 
 

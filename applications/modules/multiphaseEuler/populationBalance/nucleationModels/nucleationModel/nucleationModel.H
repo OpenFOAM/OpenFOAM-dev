@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,9 +59,6 @@ protected:
 
         //- Reference to the populationBalanceModel
         const populationBalanceModel& popBal_;
-
-        //- Model dictionary
-        const dictionary dict_;
 
         //- Velocity group in which the nucleation occurs
         const velocityGroup& velGroup_;
@@ -147,13 +144,6 @@ public:
         {
             return popBal_;
         }
-
-        //- Return reference to model dictionary
-        const dictionary& dict() const
-        {
-            return dict_;
-        }
-
 
         //- Precompute diameter independent expressions
         virtual void precompute();

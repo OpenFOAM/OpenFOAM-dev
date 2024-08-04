@@ -43,6 +43,8 @@ particles
                 m  1.0;
                 Ta 3700.0;
             }
+
+            surfaceGrowthType   ParkRogak;
         }
 
         sizeGroups
@@ -122,7 +124,6 @@ populationBalanceCoeffs
                 interfaces          (particles_vapour);
                 dmdtf               phaseTransfer:dmidtf;
                 specie              TiO2_s;
-                surfaceGrowthType   ParkRogak;
             }
         );
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,10 +55,14 @@ class Schaeffer
 {
     // Private Data
 
-        dictionary coeffDict_;
-
         //- Angle of internal friction
         dimensionedScalar phi_;
+
+
+    // Private member functions
+
+        //- Read the coefficients from coeffDict
+        virtual bool readCoeffs(const dictionary& coeffDict);
 
 
 public:
@@ -69,8 +73,8 @@ public:
 
     // Constructors
 
-        //- Construct from components
-        Schaeffer(const dictionary& dict);
+        //- Construct from the coefficients dictionary
+        Schaeffer(const dictionary& coeffDict);
 
 
     //- Destructor
@@ -101,8 +105,6 @@ public:
             const volScalarField& pf,
             const volSymmTensorField& D
         ) const;
-
-        virtual bool read();
 };
 
 

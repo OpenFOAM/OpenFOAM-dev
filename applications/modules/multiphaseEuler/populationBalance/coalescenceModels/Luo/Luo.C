@@ -60,8 +60,8 @@ Luo
 )
 :
     coalescenceModel(popBal, dict),
-    beta_(dict.lookupOrDefault("beta", dimensionedScalar(dimless, 2.05))),
-    C1_(dict.lookupOrDefault("C1", dimensionedScalar(dimless, 1)))
+    beta_("beta", dimless, dict, 2.05),
+    C1_("C1", dimless, dict, 1)
 {}
 
 

@@ -96,7 +96,7 @@ KocamustafaogullariIshiiNucleationSite::KocamustafaogullariIshiiNucleationSite
 )
 :
     nucleationSiteModel(),
-    Cn_(dict.lookupOrDefault("Cn", dimensionedScalar(dimless, 1)))
+    Cn_("Cn", dimless, dict, 1)
 {}
 
 

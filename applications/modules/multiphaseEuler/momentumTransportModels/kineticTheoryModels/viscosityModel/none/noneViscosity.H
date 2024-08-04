@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::kineticTheoryModels::noneViscosity
+    Foam::kineticTheoryModels::none
 
 Description
 
@@ -42,12 +42,14 @@ namespace Foam
 {
 namespace kineticTheoryModels
 {
+namespace viscosityModels
+{
 
 /*---------------------------------------------------------------------------*\
-                        Class noneViscosity Declaration
+                        Class none Declaration
 \*---------------------------------------------------------------------------*/
 
-class noneViscosity
+class none
 :
     public viscosityModel
 {
@@ -60,12 +62,12 @@ public:
 
     // Constructors
 
-        //- Construct from components
-        noneViscosity(const dictionary& dict);
+        //- Construct from the coefficients dictionary
+        none(const dictionary& coeffDict);
 
 
     //- Destructor
-    virtual ~noneViscosity();
+    virtual ~none();
 
 
     // Member Functions
@@ -84,6 +86,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace viscosityModels
 } // End namespace kineticTheoryModels
 } // End namespace Foam
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,21 +48,42 @@ namespace frictionalStressModels
 }
 
 
+
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+bool Foam::kineticTheoryModels::frictionalStressModels::
+JohnsonJacksonSchaeffer::readCoeffs
+(
+    const dictionary& coeffDict
+)
+{
+    Fr_.read(coeffDict);
+    eta_.read(coeffDict);
+    p_.read(coeffDict);
+
+    phi_.read(coeffDict);
+    phi_ *= constant::mathematical::pi/180.0;
+
+    alphaDeltaMin_.read(coeffDict);
+
+    return true;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::kineticTheoryModels::frictionalStressModels::
 JohnsonJacksonSchaeffer::JohnsonJacksonSchaeffer
 (
-    const dictionary& dict
+    const dictionary& coeffDict
 )
 :
-    frictionalStressModel(dict),
-    coeffDict_(dict.optionalSubDict(typeName + "Coeffs")),
-    Fr_("Fr", dimensionSet(1, -1, -2, 0, 0), coeffDict_),
-    eta_("eta", dimless, coeffDict_),
-    p_("p", dimless, coeffDict_),
-    phi_("phi", dimless, coeffDict_),
-    alphaDeltaMin_("alphaDeltaMin", dimless, coeffDict_)
+    frictionalStressModel(coeffDict),
+    Fr_("Fr", dimensionSet(1, -1, -2, 0, 0), coeffDict),
+    eta_("eta", dimless, coeffDict),
+    p_("p", dimless, coeffDict),
+    phi_("phi", dimless, coeffDict),
+    alphaDeltaMin_("alphaDeltaMin", dimless, coeffDict)
 {
     phi_ *= constant::mathematical::pi/180.0;
 }
@@ -178,24 +199,6 @@ JohnsonJacksonSchaeffer::nu
     nuf.correctBoundaryConditions();
 
     return tnu;
-}
-
-
-bool Foam::kineticTheoryModels::frictionalStressModels::
-JohnsonJacksonSchaeffer::read()
-{
-    coeffDict_ <<= dict_.optionalSubDict(typeName + "Coeffs");
-
-    Fr_.read(coeffDict_);
-    eta_.read(coeffDict_);
-    p_.read(coeffDict_);
-
-    phi_.read(coeffDict_);
-    phi_ *= constant::mathematical::pi/180.0;
-
-    alphaDeltaMin_.read(coeffDict_);
-
-    return true;
 }
 
 

@@ -50,14 +50,7 @@ Foam::wallDampingModel::wallDampingModel
         interface.modelCast<wallDampingModel, dispersedPhaseInterface>()
     ),
     Cd_("Cd", dimless, dict),
-    zeroWallDist_
-    (
-        dict.lookupOrDefault
-        (
-            "zeroWallDist",
-            dimensionedScalar(dimLength, 0)
-        )
-    ),
+    zeroWallDist_("zeroWallDist", dimLength, dict, 0),
     zeroInNearWallCells_
     (
         dict.lookupOrDefault<Switch>("zeroInNearWallCells", false)

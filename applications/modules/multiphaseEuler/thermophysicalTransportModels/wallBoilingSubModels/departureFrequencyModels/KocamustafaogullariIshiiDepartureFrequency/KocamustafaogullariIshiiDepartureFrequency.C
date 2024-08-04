@@ -84,7 +84,7 @@ KocamustafaogullariIshiiDepartureFrequency
 )
 :
     departureFrequencyModel(),
-    Cf_(dict.lookupOrDefault("Cf", dimensionedScalar(dimless, 1.18)))
+    Cf_("Cf", dimless, dict, 1.18)
 {}
 
 

@@ -79,9 +79,9 @@ TolubinskiKostanchuk
 )
 :
     departureDiameterModel(),
-    dRef_(dict.lookupOrDefault("dRef", dimensionedScalar(dimLength, 6e-4))),
-    dMax_(dict.lookupOrDefault("dMax", dimensionedScalar(dimLength, 0.0014))),
-    dMin_(dict.lookupOrDefault("dMin", dimensionedScalar(dimLength, 1e-6)))
+    dRef_("dRef", dimLength, dict, 6e-4),
+    dMax_("dMax", dimLength, dict, 0.0014),
+    dMin_("dMin", dimLength, dict, 1e-6)
 {}
 
 

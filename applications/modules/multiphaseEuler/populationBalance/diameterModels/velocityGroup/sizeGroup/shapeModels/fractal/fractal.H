@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,13 +93,14 @@ public:
         //- Surface growth type enumeration
         enum surfaceGrowthTypes
         {
+            sgUnknown,
             sgHardSphere,
             sgParkRogak,
             sgConserved
         };
 
         //- Surface growth type names
-        static const NamedEnum<surfaceGrowthTypes, 3> sgTypeNames_;
+        static const NamedEnum<surfaceGrowthTypes, 4> sgTypeNames_;
 
 
 private:
@@ -123,6 +124,8 @@ private:
 
         //- Sintering model
         autoPtr<sinteringModel> sinteringModel_;
+
+        surfaceGrowthTypes sgType_;
 
 
     // Private Member Functions

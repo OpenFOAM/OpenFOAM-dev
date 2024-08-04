@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,11 +52,13 @@ namespace kineticTheoryModels
 
 class viscosityModel
 {
-protected:
+    // Private member functions
 
-    // Protected data
-
-        const dictionary& dict_;
+        //- Read the coefficients from coeffDict
+        virtual bool readCoeffs(const dictionary& coeffDict)
+        {
+            return true;
+        }
 
 
 public:
@@ -79,8 +81,8 @@ public:
 
     // Constructors
 
-        //- Construct from components
-        viscosityModel(const dictionary& dict);
+        //- Construct from the coefficients dictionary
+        viscosityModel(const dictionary& coeffDict);
 
         //- Disallow default bitwise copy construction
         viscosityModel(const viscosityModel&) = delete;
@@ -100,6 +102,10 @@ public:
 
     // Member Functions
 
+        //- Read the coefficients from the optional ".*Coeffs" sub-dictionary
+        //  of the given dictionary
+        bool read(const dictionary& dict);
+
         virtual tmp<volScalarField> nu
         (
             const volScalarField& alpha1,
@@ -109,11 +115,6 @@ public:
             const volScalarField& da,
             const dimensionedScalar& e
         ) const = 0;
-
-        virtual bool read()
-        {
-            return true;
-        }
 
 
     // Member Operators

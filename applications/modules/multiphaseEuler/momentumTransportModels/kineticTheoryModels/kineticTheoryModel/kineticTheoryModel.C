@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -244,15 +244,16 @@ bool Foam::RASModels::kineticTheoryModel::read()
         read()
     )
     {
-        coeffDict().lookup("equilibrium") >> equilibrium_;
-        e_.readIfPresent(coeffDict());
-        alphaMinFriction_.readIfPresent(coeffDict());
+        const dictionary& coeffDict = this->coeffDict();
+        coeffDict.lookup("equilibrium") >> equilibrium_;
+        e_.readIfPresent(coeffDict);
+        alphaMinFriction_.readIfPresent(coeffDict);
 
-        viscosityModel_->read();
-        conductivityModel_->read();
-        radialModel_->read();
-        granularPressureModel_->read();
-        frictionalStressModel_->read();
+        viscosityModel_->read(coeffDict);
+        conductivityModel_->read(coeffDict);
+        radialModel_->read(coeffDict);
+        granularPressureModel_->read(coeffDict);
+        frictionalStressModel_->read(coeffDict);
 
         return true;
     }

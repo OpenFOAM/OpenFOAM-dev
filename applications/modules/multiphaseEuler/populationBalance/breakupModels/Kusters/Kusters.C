@@ -59,7 +59,7 @@ Foam::diameterModels::breakupModels::Kusters::Kusters
     breakupModel(popBal, dict),
     B_("B", dimensionSet(0, 3, -3, 0, 0), dict),
     dP_("dP", dimLength, dict),
-    kc_(dict.lookupOrDefault("kc", dimensionedScalar(dimless, 1))),
+    kc_("kc", dimless, dict, 1),
     Df_("Df", dimless, dict)
 {}
 

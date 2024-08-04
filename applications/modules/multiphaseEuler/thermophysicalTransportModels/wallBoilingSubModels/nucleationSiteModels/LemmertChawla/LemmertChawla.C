@@ -73,23 +73,9 @@ Foam::wallBoilingModels::nucleationSiteModels::LemmertChawla::LemmertChawla
 )
 :
     nucleationSiteModel(),
-    Cn_(dict.lookupOrDefault("Cn", dimensionedScalar(dimless, 1))),
-    NRef_
-    (
-        dict.lookupOrDefault
-        (
-            "NRef",
-            dimensionedScalar(dimless/dimArea, 9.922e5)
-        )
-    ),
-    deltaTRef_
-    (
-        dict.lookupOrDefault
-        (
-            "deltaTRef",
-            dimensionedScalar(dimTemperature, 10)
-        )
-    )
+    Cn_("Cn", dimless, dict, 1),
+    NRef_("NRef", dimless/dimArea, dict, 9.922e5),
+    deltaTRef_("deltaTRef", dimTemperature, dict, 10)
 {}
 
 

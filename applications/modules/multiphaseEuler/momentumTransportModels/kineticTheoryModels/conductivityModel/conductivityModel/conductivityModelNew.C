@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ Foam::kineticTheoryModels::conductivityModel::New
     const dictionary& dict
 )
 {
-    word conductivityModelType(dict.lookup("granularConductivityModel"));
+    const word conductivityModelType(dict.lookup("granularConductivityModel"));
 
     Info<< "Selecting granularConductivityModel "
         << conductivityModelType << endl;
@@ -51,7 +51,10 @@ Foam::kineticTheoryModels::conductivityModel::New
             << exit(FatalError);
     }
 
-    return autoPtr<conductivityModel>(cstrIter()(dict));
+    const dictionary& coeffDict =
+        dict.optionalSubDict(conductivityModelType + "Coeffs");
+
+    return autoPtr<conductivityModel>(cstrIter()(coeffDict));
 }
 
 

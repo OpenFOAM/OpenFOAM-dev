@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,8 +55,6 @@ class JohnsonJacksonSchaeffer
 {
     // Private Data
 
-        dictionary coeffDict_;
-
         //- Material constant for frictional normal stress
         dimensionedScalar Fr_;
 
@@ -73,6 +71,12 @@ class JohnsonJacksonSchaeffer
         dimensionedScalar alphaDeltaMin_;
 
 
+    // Private member functions
+
+        //- Read the coefficients from coeffDict
+        virtual bool readCoeffs(const dictionary& coeffDict);
+
+
 public:
 
     //- Runtime type information
@@ -81,8 +85,8 @@ public:
 
     // Constructors
 
-        //- Construct from components
-        JohnsonJacksonSchaeffer(const dictionary& dict);
+        //- Construct from the coefficients dictionary
+        JohnsonJacksonSchaeffer(const dictionary& coeffDict);
 
 
     //- Destructor
@@ -113,8 +117,6 @@ public:
             const volScalarField& pf,
             const volSymmTensorField& D
         ) const;
-
-        virtual bool read();
 };
 
 

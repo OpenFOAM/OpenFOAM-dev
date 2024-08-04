@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,16 +48,28 @@ namespace conductivityModels
 }
 
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+bool Foam::kineticTheoryModels::conductivityModels::HrenyaSinclair::readCoeffs
+(
+    const dictionary& coeffDict
+)
+{
+    L_.readIfPresent(coeffDict);
+
+    return true;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::kineticTheoryModels::conductivityModels::HrenyaSinclair::HrenyaSinclair
 (
-    const dictionary& dict
+    const dictionary& coeffDict
 )
 :
-    conductivityModel(dict),
-    coeffDict_(dict.optionalSubDict(typeName + "Coeffs")),
-    L_("L", dimensionSet(0, 1, 0, 0, 0), coeffDict_)
+    conductivityModel(coeffDict),
+    L_("L", dimensionSet(0, 1, 0, 0, 0), coeffDict)
 {}
 
 
@@ -98,16 +110,6 @@ Foam::kineticTheoryModels::conductivityModels::HrenyaSinclair::kappa
       + (25.0/64.0)*sqrtPi
        /((1 + e)*(49.0/16.0 - 33*e/16.0)*lambda*g0)
     );
-}
-
-
-bool Foam::kineticTheoryModels::conductivityModels::HrenyaSinclair::read()
-{
-    coeffDict_ <<= dict_.optionalSubDict(typeName + "Coeffs");
-
-    L_.readIfPresent(coeffDict_);
-
-    return true;
 }
 
 

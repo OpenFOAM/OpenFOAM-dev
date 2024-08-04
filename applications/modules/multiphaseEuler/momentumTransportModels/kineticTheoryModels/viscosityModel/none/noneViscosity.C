@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,28 +32,36 @@ namespace Foam
 {
 namespace kineticTheoryModels
 {
-    defineTypeNameAndDebug(noneViscosity, 0);
-    addToRunTimeSelectionTable(viscosityModel, noneViscosity, dictionary);
+namespace viscosityModels
+{
+    defineTypeNameAndDebug(none, 0);
+    addToRunTimeSelectionTable(viscosityModel, none, dictionary);
 }
 }
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::kineticTheoryModels::noneViscosity::noneViscosity(const dictionary& dict)
+Foam::kineticTheoryModels::viscosityModels::none::none
+(
+    const dictionary& coeffDict
+)
 :
-    viscosityModel(dict)
+    viscosityModel(coeffDict)
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::kineticTheoryModels::noneViscosity::~noneViscosity()
+Foam::kineticTheoryModels::viscosityModels::none::~none()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField> Foam::kineticTheoryModels::noneViscosity::nu
+Foam::tmp<Foam::volScalarField>
+Foam::kineticTheoryModels::viscosityModels::none::nu
 (
     const volScalarField& alpha1,
     const volScalarField& Theta,

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ Foam::kineticTheoryModels::viscosityModel::New
     const dictionary& dict
 )
 {
-    word viscosityModelType(dict.lookup("granularViscosityModel"));
+    const word viscosityModelType(dict.lookup("granularViscosityModel"));
 
     Info<< "Selecting granularViscosityModel "
         << viscosityModelType << endl;
@@ -51,7 +51,10 @@ Foam::kineticTheoryModels::viscosityModel::New
             << exit(FatalError);
     }
 
-    return autoPtr<viscosityModel>(cstrIter()(dict));
+    const dictionary& coeffDict =
+        dict.optionalSubDict(viscosityModelType + "Coeffs");
+
+    return autoPtr<viscosityModel>(cstrIter()(coeffDict));
 }
 
 

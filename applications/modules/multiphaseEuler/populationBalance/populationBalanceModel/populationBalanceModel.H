@@ -388,9 +388,6 @@ private:
         //- Name of the populationBalance
         word name_;
 
-        //- Dictionary
-        dictionary dict_;
-
         //- Continuous phase
         const phaseModel& continuousPhase_;
 
@@ -468,6 +465,8 @@ private:
 
 
     // Private Member Functions
+
+        const dictionary& coeffDict() const;
 
         void registerVelocityGroups();
 

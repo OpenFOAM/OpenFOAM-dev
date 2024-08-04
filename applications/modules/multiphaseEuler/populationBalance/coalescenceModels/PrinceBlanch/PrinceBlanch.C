@@ -60,23 +60,9 @@ PrinceBlanch
 )
 :
     coalescenceModel(popBal, dict),
-    C1_(dict.lookupOrDefault("C1", dimensionedScalar(dimless, 0.356))),
-    h0_
-    (
-        dict.lookupOrDefault
-        (
-            "h0",
-            dimensionedScalar(dimLength, 1e-4)
-        )
-    ),
-    hf_
-    (
-        dict.lookupOrDefault
-        (
-            "hf",
-            dimensionedScalar(dimLength, 1e-8)
-        )
-    ),
+    C1_("C1", dimless, dict, 0.356),
+    h0_("h0", dimLength, dict, 1e-4),
+    hf_("hf", dimLength, dict, 1e-8),
     turbulence_(dict.lookup("turbulence")),
     buoyancy_(dict.lookup("buoyancy")),
     laminarShear_(dict.lookup("laminarShear"))

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,13 +52,13 @@ const char*
 Foam::NamedEnum
 <
     Foam::diameterModels::shapeModels::fractal::surfaceGrowthTypes,
-    3
->::names[] = {"hardSphere", "ParkRogak", "conserved"};
+    4
+>::names[] = {"unknown", "hardSphere", "ParkRogak", "conserved"};
 
 const Foam::NamedEnum
 <
     Foam::diameterModels::shapeModels::fractal::surfaceGrowthTypes,
-    3
+    4
 > Foam::diameterModels::shapeModels::fractal::sgTypeNames_;
 
 
@@ -125,7 +125,18 @@ Foam::diameterModels::shapeModels::fractal::fractal
         group.mesh(),
         dimensionedScalar(kappa_.dimensions()/dimTime, Zero)
     ),
-    sinteringModel_(sinteringModel::New(dict.subDict(type() + "Coeffs"), *this))
+    sinteringModel_
+    (
+        sinteringModel::New(dict.subDict(type() + "Coeffs"), *this)
+    ),
+    sgType_
+    (
+        sgTypeNames_
+        [
+            dict.subDict(type() + "Coeffs")
+           .lookupOrDefault<word>("surfaceGrowthType", sgTypeNames_.names[0])
+        ]
+    )
 {
     // Check and filter for old syntax (remove in due course)
     if (groupDict.found("kappa"))
@@ -236,18 +247,10 @@ void Foam::diameterModels::shapeModels::fractal::addDrift
     const driftModel &model
 )
 {
-    surfaceGrowthTypes sgType
-    (
-        sgTypeNames_.read
-        (
-            model.dict().lookup("surfaceGrowthType")
-        )
-    );
-
     const volScalarField& sourceKappa =
         SecondaryPropertyModelTable()[SecondaryPropertyName(fu)]->fld();
 
-    switch (sgType)
+    switch (sgType_)
     {
         case sgHardSphere:
         {

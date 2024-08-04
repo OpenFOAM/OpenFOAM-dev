@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,12 +51,13 @@ namespace kineticTheoryModels
 
 class frictionalStressModel
 {
-protected:
+    // Private member functions
 
-    // Protected data
-
-        //- Reference to higher-level dictionary for re-read
-        const dictionary& dict_;
+        //- Read the coefficients from coeffDict
+        virtual bool readCoeffs(const dictionary& coeffDict)
+        {
+            return true;
+        }
 
 
 public:
@@ -79,8 +80,8 @@ public:
 
     // Constructors
 
-        //- Construct from components
-        frictionalStressModel(const dictionary& dict);
+        //- Construct from the coefficients dictionary
+        frictionalStressModel(const dictionary& coeffDict);
 
         //- Disallow default bitwise copy construction
         frictionalStressModel(const frictionalStressModel&) = delete;
@@ -99,6 +100,10 @@ public:
 
 
     // Member Functions
+
+        //- Read the coefficients from the optional ".*Coeffs" sub-dictionary
+        //  of the given dictionary
+        bool read(const dictionary& dict);
 
         virtual tmp<volScalarField> frictionalPressure
         (
@@ -122,8 +127,6 @@ public:
             const volScalarField& pf,
             const volSymmTensorField& D
         ) const = 0;
-
-        virtual bool read() = 0;
 
 
     // Member Operators

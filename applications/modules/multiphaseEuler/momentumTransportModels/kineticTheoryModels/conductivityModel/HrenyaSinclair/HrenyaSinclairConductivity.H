@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,10 +53,16 @@ class HrenyaSinclair
 :
     public conductivityModel
 {
-        dictionary coeffDict_;
+    // Private Data
 
         //- Characteristic length of geometry
         dimensionedScalar L_;
+
+
+    // Private member functions
+
+        //- Read the coefficients from coeffDict
+        virtual bool readCoeffs(const dictionary& coeffDict);
 
 
 public:
@@ -67,8 +73,8 @@ public:
 
     // Constructors
 
-        //- Construct from components
-        HrenyaSinclair(const dictionary& dict);
+        //- Construct from the coefficients dictionary
+        HrenyaSinclair(const dictionary& coeffDict);
 
 
     //- Destructor
@@ -86,8 +92,6 @@ public:
             const volScalarField& da,
             const dimensionedScalar& e
         ) const;
-
-        virtual bool read();
 };
 
 

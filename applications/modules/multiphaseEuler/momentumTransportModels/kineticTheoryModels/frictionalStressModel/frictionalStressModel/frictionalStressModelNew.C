@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ Foam::kineticTheoryModels::frictionalStressModel::New
     const dictionary& dict
 )
 {
-    word frictionalStressModelType(dict.lookup("frictionalStressModel"));
+    const word frictionalStressModelType(dict.lookup("frictionalStressModel"));
 
     Info<< "Selecting frictionalStressModel "
         << frictionalStressModelType << endl;
@@ -51,7 +51,10 @@ Foam::kineticTheoryModels::frictionalStressModel::New
             << exit(FatalError);
     }
 
-    return autoPtr<frictionalStressModel>(cstrIter()(dict));
+    const dictionary& coeffDict =
+        dict.optionalSubDict(frictionalStressModelType + "Coeffs");
+
+    return autoPtr<frictionalStressModel>(cstrIter()(coeffDict));
 }
 
 

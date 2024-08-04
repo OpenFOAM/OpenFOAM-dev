@@ -60,12 +60,9 @@ Foam::diameterModels::binaryBreakupModels::LuoSvendsen::LuoSvendsen
     gammaUpperReg2by11_(),
     gammaUpperReg5by11_(),
     gammaUpperReg8by11_(),
-    C4_(dict.lookupOrDefault("C4", dimensionedScalar(dimless, 0.923))),
-    beta_(dict.lookupOrDefault("beta", dimensionedScalar(dimless, 2.05))),
-    minEddyRatio_
-    (
-        dict.lookupOrDefault("minEddyRatio", dimensionedScalar(dimless, 11.4))
-    ),
+    C4_("C4", dimless, dict, 0.923),
+    beta_("beta", dimless, dict, 2.05),
+    minEddyRatio_("minEddyRatio", dimless, dict, 11.4),
     kolmogorovLengthScale_
     (
         IOobject

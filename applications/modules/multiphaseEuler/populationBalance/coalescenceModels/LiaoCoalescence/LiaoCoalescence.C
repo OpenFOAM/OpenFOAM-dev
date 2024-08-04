@@ -63,14 +63,14 @@ LiaoCoalescence
 :
     coalescenceModel(popBal, dict),
     LiaoBase(popBal, dict),
-    PMax_(dict.lookupOrDefault("PMax", dimensionedScalar(dimless, 0.8))),
-    AH_(dict.lookupOrDefault("AH", dimensionedScalar(dimEnergy, 3.7e-20))),
-    CEff_(dict.lookupOrDefault("CEff", dimensionedScalar(dimless, 2.5))),
-    CTurb_(dict.lookupOrDefault("CTurb", dimensionedScalar(dimless, 1))),
-    CBuoy_(dict.lookupOrDefault("CBuoy", dimensionedScalar(dimless, 1))),
-    CShear_(dict.lookupOrDefault("CShear", dimensionedScalar(dimless, 1))),
-    CEddy_(dict.lookupOrDefault("CEddy", dimensionedScalar(dimless, 1))),
-    CWake_(dict.lookupOrDefault("CWake", dimensionedScalar(dimless, 1))),
+    PMax_("PMax", dimless, dict, 0.8),
+    AH_("AH", dimEnergy, dict, 3.7e-20),
+    CEff_("CEff", dimless, dict, 2.5),
+    CTurb_("CTurb", dimless, dict, 1),
+    CBuoy_("CBuoy", dimless, dict, 1),
+    CShear_("CShear", dimless, dict, 1),
+    CEddy_("CEddy", dimless, dict, 1),
+    CWake_("CWake", dimless, dict, 1),
     turbulence_(dict.lookup("turbulence")),
     buoyancy_(dict.lookup("buoyancy")),
     laminarShear_(dict.lookup("laminarShear")),
@@ -92,10 +92,7 @@ LiaoCoalescence
             Zero
         )
     ),
-    CPackMax_
-    (
-        dict.lookupOrDefault("CPackMax", dimensionedScalar(dimless, 1e5))
-    ),
+    CPackMax_("CPackMax", dimless, dict, 1e5),
     dCrit_
     (
         IOobject
