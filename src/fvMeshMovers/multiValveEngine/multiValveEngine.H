@@ -255,14 +255,9 @@ public:
 
         // Protected member data
 
-            //- Coefficients dictionary
-            dictionary dict_;
-
-
-        // Protected Data
-
             //- Reference to engine mesh mover
             const multiValveEngine& meshMover_;
+
 
     public:
 
@@ -279,6 +274,9 @@ public:
 
             //- Piston motion function
             autoPtr<Function1<scalar>> motion_;
+
+            //- Object patchNames
+            wordReList patchNames_;
 
             //- Object patchSet
             labelHashSet patchSet_;

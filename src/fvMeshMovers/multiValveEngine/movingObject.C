@@ -163,18 +163,7 @@ void Foam::fvMeshMovers::multiValveEngine::movingObject::createStaticPatchSet()
 void Foam::fvMeshMovers::multiValveEngine::movingObject::initPatchSets()
 {
     // Set patch-sets
-    patchSet_ = meshMover_.mesh().boundaryMesh().patchSet
-    (
-        wordReList(dict_.lookup("patches"))
-    );
-
-    if (patchSet_.empty())
-    {
-        FatalErrorInFunction
-            << "Empty patchSet in " << dict_.name()
-            << exit(FatalError);
-    }
-
+    patchSet_ = meshMover_.mesh().boundaryMesh().patchSet(patchNames_);
     createStaticPatchSet();
 }
 
@@ -278,11 +267,11 @@ Foam::fvMeshMovers::multiValveEngine::movingObject::movingObject
     const dictionary& dict
 )
 :
-    dict_(dict),
     meshMover_(engine),
     name(objectName),
     axis(dict.lookup<vector>("axis", dimless)),
     motion_(Function1<scalar>::New("motion", unitNone, dimLength, dict)),
+    patchNames_(dict.lookup("patches")),
     maxMotionDistance_
     (
         dict.lookupOrDefault<scalar>("maxMotionDistance", dimLength, great)
@@ -328,6 +317,12 @@ Foam::fvMeshMovers::multiValveEngine::movingObject::movingObject
     Info << indent << "Setting motion for " << name << endl;
 
     initPatchSets();
+
+    if (patchSet_.empty())
+    {
+        FatalIOErrorInFunction(dict)
+            << "Empty patchSet" << exit(FatalIOError);
+    }
 }
 
 
