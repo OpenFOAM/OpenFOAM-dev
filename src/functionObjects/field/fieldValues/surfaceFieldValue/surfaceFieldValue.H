@@ -264,6 +264,7 @@ protected:
     // Protected data
 
         //- Input dictionary
+        //  Cached for mesh changes
         dictionary dict_;
 
         //- Surface writer

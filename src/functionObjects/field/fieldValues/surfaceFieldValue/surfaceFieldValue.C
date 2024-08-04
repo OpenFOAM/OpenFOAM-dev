@@ -725,6 +725,11 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::read
     const dictionary& dict
 )
 {
+    if (dict != dict_)
+    {
+        dict_ = dict;
+    }
+
     fieldValue::read(dict);
     initialise(dict);
 
