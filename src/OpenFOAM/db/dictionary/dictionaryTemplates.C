@@ -178,7 +178,7 @@ template<class T>
 T Foam::dictionary::lookupOrDefault
 (
     const word& keyword,
-    const T& deflt,
+    const T& defaultValue,
     bool recursive,
     bool patternMatch
 ) const
@@ -195,11 +195,11 @@ T Foam::dictionary::lookupOrDefault
         {
             IOInfoInFunction(*this)
                 << "Optional entry '" << keyword << "' is not present,"
-                << " returning the default value '" << deflt << "'"
+                << " returning the default value '" << defaultValue << "'"
                 << endl;
         }
 
-        return deflt;
+        return defaultValue;
     }
 }
 
@@ -209,7 +209,7 @@ T Foam::dictionary::lookupOrDefault
 (
     const word& keyword,
     const unitConversion& defaultUnits,
-    const T& deflt,
+    const T& defaultValue,
     bool recursive,
     bool patternMatch
 ) const
@@ -226,11 +226,11 @@ T Foam::dictionary::lookupOrDefault
         {
             IOInfoInFunction(*this)
                 << "Optional entry '" << keyword << "' is not present,"
-                << " returning the default value '" << deflt << "'"
+                << " returning the default value '" << defaultValue << "'"
                 << endl;
         }
 
-        return deflt;
+        return defaultValue;
     }
 }
 
@@ -239,7 +239,7 @@ template<class T>
 T Foam::dictionary::lookupOrDefaultBackwardsCompatible
 (
     const wordList& keywords,
-    const T& deflt,
+    const T& defaultValue,
     bool recursive,
     bool patternMatch
 ) const
@@ -254,7 +254,13 @@ T Foam::dictionary::lookupOrDefaultBackwardsCompatible
     else
     {
         // Generate debugging messages using the first keyword
-        return lookupOrDefault<T>(keywords[0], deflt, recursive, patternMatch);
+        return lookupOrDefault<T>
+        (
+            keywords[0],
+            defaultValue,
+            recursive,
+            patternMatch
+        );
     }
 }
 
@@ -264,7 +270,7 @@ T Foam::dictionary::lookupOrDefaultBackwardsCompatible
 (
     const wordList& keywords,
     const unitConversion& defaultUnits,
-    const T& deflt,
+    const T& defaultValue,
     bool recursive,
     bool patternMatch
 ) const
@@ -280,7 +286,13 @@ T Foam::dictionary::lookupOrDefaultBackwardsCompatible
     else
     {
         // Generate debugging messages using the first keyword
-        return lookupOrDefault<T>(keywords[0], deflt, recursive, patternMatch);
+        return lookupOrDefault<T>
+        (
+            keywords[0],
+            defaultValue,
+            recursive,
+            patternMatch
+        );
     }
 }
 
@@ -289,7 +301,7 @@ template<class T>
 T Foam::dictionary::lookupOrAddDefault
 (
     const word& keyword,
-    const T& deflt,
+    const T& defaultValue,
     bool recursive,
     bool patternMatch
 )
@@ -306,12 +318,37 @@ T Foam::dictionary::lookupOrAddDefault
         {
             IOInfoInFunction(*this)
                 << "Optional entry '" << keyword << "' is not present,"
-                << " adding and returning the default value '" << deflt << "'"
+                << " adding and returning the default value '"
+                    << defaultValue << "'"
                 << endl;
         }
 
-        add(new primitiveEntry(keyword, deflt));
-        return deflt;
+        add(new primitiveEntry(keyword, defaultValue));
+        return defaultValue;
+    }
+}
+
+
+template<class T>
+T Foam::dictionary::lookupOrPrintDefault
+(
+    const word& keyword,
+    const T& defaultValue,
+    bool recursive,
+    bool patternMatch
+) const
+{
+    const entry* entryPtr = lookupEntryPtr(keyword, recursive, patternMatch);
+
+    if (entryPtr)
+    {
+        return readType<T>(keyword, entryPtr->stream());
+    }
+    else
+    {
+        writeEntry(Info, keyword, defaultValue);
+
+        return defaultValue;
     }
 }
 

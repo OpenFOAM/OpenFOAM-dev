@@ -895,7 +895,7 @@ const Foam::dictionary& Foam::dictionary::subDictBackwardsCompatible
 }
 
 
-Foam::dictionary Foam::dictionary::subOrEmptyDict
+const Foam::dictionary& Foam::dictionary::subOrEmptyDict
 (
     const word& keyword,
     const bool mustRead
@@ -913,7 +913,7 @@ Foam::dictionary Foam::dictionary::subOrEmptyDict
                 << exit(FatalIOError);
         }
 
-        return dictionary(*this, dictionary(name() + '/' + keyword));
+        return null;
     }
     else
     {

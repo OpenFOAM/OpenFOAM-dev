@@ -571,6 +571,19 @@ public:
                 bool patternMatch=true
             );
 
+            //- Find and return a T, if not found return the given default
+            //  value.
+            //  If recursive, search parent dictionaries.
+            //  If patternMatch, use regular expressions.
+            template<class T>
+            T lookupOrPrintDefault
+            (
+                const word&,
+                const T&,
+                bool recursive=false,
+                bool patternMatch=true
+            ) const;
+
             //- Find an entry if present, and assign to T.
             //  Returns true if the entry was found.
             //  If recursive, search parent dictionaries.
@@ -658,9 +671,9 @@ public:
             //  sequence, otherwise error.
             const dictionary& subDictBackwardsCompatible(const wordList&) const;
 
-            //- Find and return a sub-dictionary as a copy, or
-            //  return an empty dictionary if the sub-dictionary does not exist
-            dictionary subOrEmptyDict
+            //- Find and return a sub-dictionary
+            //  or empty dictionary if the sub-dictionary does not exist
+            const dictionary& subOrEmptyDict
             (
                 const word&,
                 const bool mustRead = false
