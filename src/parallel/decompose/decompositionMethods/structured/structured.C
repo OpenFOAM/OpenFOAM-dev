@@ -61,12 +61,18 @@ Foam::decompositionMethods::structured::structured
     const dictionary& decompositionDict
 )
 :
-    decompositionMethod(decompositionDict),
-    methodDict_(decompositionDict_.optionalSubDict(typeName + "Coeffs")),
-    patches_(methodDict_.lookup("patches"))
+    decompositionMethod(decompositionDict)
 {
-    methodDict_.set("numberOfSubdomains", nDomains());
-    method_ = decompositionMethod::NewDecomposer(methodDict_);
+    dictionary methodDict
+    (
+        decompositionDict,
+        decompositionDict_.optionalSubDict(typeName + "Coeffs")
+    );
+
+    methodDict.lookup("patches") >> patches_;
+
+    methodDict.set("numberOfSubdomains", nDomains());
+    method_ = decompositionMethod::NewDecomposer(methodDict);
 }
 
 

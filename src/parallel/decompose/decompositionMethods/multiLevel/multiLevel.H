@@ -52,8 +52,6 @@ class multiLevel
 {
     // Private Data
 
-        dictionary methodsDict_;
-
         PtrList<decompositionMethod> methods_;
 
 

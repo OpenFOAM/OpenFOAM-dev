@@ -52,8 +52,6 @@ class structured
 {
     // Private Data
 
-        dictionary methodDict_;
-
         wordReList patches_;
 
         autoPtr<decompositionMethod> method_;
