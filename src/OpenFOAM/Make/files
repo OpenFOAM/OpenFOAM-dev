@@ -111,8 +111,6 @@ primitives/functions/Function1/Table/TableReader/Foam/tokenTupleN.C
 primitives/functions/Function2/Function2/Function2UnitConversions.C
 primitives/functions/Function2/makeFunction2s.C
 
-primitives/subModelBase/subModelBase.C
-
 strings = primitives/strings
 $(strings)/string/string.C
 $(strings)/string/stringIO.C

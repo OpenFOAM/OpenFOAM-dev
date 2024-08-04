@@ -44,6 +44,7 @@ $(PARCELS)/Templates/SprayParcel/SprayParcelName.C
 $(PARCELS)/Templates/ThermoParcel/ThermoParcelName.C
 
 # sub-models
+submodels/subModelBase/subModelBase.C
 $(DERIVEDPARCELS)/momentumParcel/makeMomentumParcelSubmodels.C
 $(DERIVEDPARCELS)/collidingParcel/makeCollidingParcelSubmodels.C
 $(DERIVEDPARCELS)/mppicParcel/makeMppicParcelSubmodels.C
