@@ -68,6 +68,7 @@ public:
         //- Construct from dictionary and psiuMulticomponentThermo
         constant
         (
+            const dictionary& dict,
             const dictionary& coeffDict,
             const psiuMulticomponentThermo&
         );

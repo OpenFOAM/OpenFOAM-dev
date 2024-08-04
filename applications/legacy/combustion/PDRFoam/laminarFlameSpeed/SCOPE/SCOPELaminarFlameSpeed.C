@@ -63,11 +63,12 @@ Foam::laminarFlameSpeedModels::SCOPE::polynomial::polynomial
 
 Foam::laminarFlameSpeedModels::SCOPE::SCOPE
 (
+    const dictionary& dict,
     const dictionary& coeffDict,
     const psiuMulticomponentThermo& ct
 )
 :
-    laminarFlameSpeed(coeffDict.parent(), ct),
+    laminarFlameSpeed(dict, ct),
 
     LFL_(coeffDict.lookup<scalar>("lowerFlamabilityLimit")),
     UFL_(coeffDict.lookup<scalar>("upperFlamabilityLimit")),

@@ -61,6 +61,8 @@ Foam::XiEqModels::SCOPEXiEq::SCOPEXiEq
     MaModel
     (
         Su.mesh().lookupObject<IOdictionary>("combustionProperties")
+       .subDict("laminarFlameSpeed"),
+        Su.mesh().lookupObject<IOdictionary>("combustionProperties")
        .subDict("laminarFlameSpeed").subDict
         (
             Su.mesh().lookupObject<IOdictionary>("combustionProperties")

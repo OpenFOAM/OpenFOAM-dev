@@ -44,7 +44,6 @@ SourceFiles
 #define laminarFlameSpeed_H
 
 #include "psiuMulticomponentThermo.H"
-#include "autoPtr.H"
 #include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -83,9 +82,10 @@ public:
             dictionary,
             (
                 const dictionary& dict,
+                const dictionary& coeffDict,
                 const psiuMulticomponentThermo& ct
             ),
-            (dict, ct)
+            (dict, coeffDict, ct)
         );
 
 

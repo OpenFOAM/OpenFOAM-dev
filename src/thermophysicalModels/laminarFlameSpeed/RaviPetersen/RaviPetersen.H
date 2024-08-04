@@ -171,6 +171,7 @@ public:
         //- Construct from dictionary and psiuMulticomponentThermo
         RaviPetersen
         (
+            const dictionary& dict,
             const dictionary& coeffDict,
             const psiuMulticomponentThermo&
         );

@@ -103,6 +103,7 @@ public:
         //- Construct from dictionary and psiuMulticomponentThermo
         Gulder
         (
+            const dictionary& dict,
             const dictionary& coeffDict,
             const psiuMulticomponentThermo&
         );

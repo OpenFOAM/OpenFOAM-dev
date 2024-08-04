@@ -48,11 +48,12 @@ namespace laminarFlameSpeedModels
 
 Foam::laminarFlameSpeedModels::constant::constant
 (
+    const dictionary& dict,
     const dictionary& coeffDict,
     const psiuMulticomponentThermo& ct
 )
 :
-    laminarFlameSpeed(coeffDict.parent(), ct),
+    laminarFlameSpeed(dict, ct),
 
     Su_(coeffDict.lookup("Su"))
 {}

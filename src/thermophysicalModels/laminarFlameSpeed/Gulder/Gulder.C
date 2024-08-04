@@ -48,11 +48,12 @@ namespace laminarFlameSpeedModels
 
 Foam::laminarFlameSpeedModels::Gulder::Gulder
 (
+    const dictionary& dict,
     const dictionary& coeffDict,
     const psiuMulticomponentThermo& ct
 )
 :
-    laminarFlameSpeed(coeffDict.parent(), ct),
+    laminarFlameSpeed(dict, ct),
 
     W_(coeffDict.lookup<scalar>("W")),
     eta_(coeffDict.lookup<scalar>("eta")),

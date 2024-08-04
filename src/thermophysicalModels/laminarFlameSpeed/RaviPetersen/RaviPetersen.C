@@ -48,11 +48,12 @@ namespace laminarFlameSpeedModels
 
 Foam::laminarFlameSpeedModels::RaviPetersen::RaviPetersen
 (
+    const dictionary& dict,
     const dictionary& coeffDict,
     const psiuMulticomponentThermo& ct
 )
 :
-    laminarFlameSpeed(coeffDict.parent(), ct),
+    laminarFlameSpeed(dict, ct),
     pPoints_(coeffDict.lookup("pPoints")),
     EqRPoints_(coeffDict.lookup("EqRPoints")),
     alpha_(coeffDict.lookup("alpha")),

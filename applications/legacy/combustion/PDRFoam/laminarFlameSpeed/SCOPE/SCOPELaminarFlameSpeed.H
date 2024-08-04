@@ -181,6 +181,7 @@ public:
         //- Construct from dictionary and psiuMulticomponentThermo
         SCOPE
         (
+            const dictionary& dict,
             const dictionary& coeffDict,
             const psiuMulticomponentThermo&
         );
