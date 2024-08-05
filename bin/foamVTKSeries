@@ -123,8 +123,6 @@ do
     # Get the names of VTK files in this category
     names=$(for f in $subDir_files; do basename "$f" .vtk; done | sort -u)
 
-    unset comma
-
     for n in $names
     do
         # Create list of VTK files of a given name, ordered by time step
@@ -136,6 +134,8 @@ do
 
         series_file="$s/$n.vtk.series"
         seriesFileHead > "$series_file"
+
+        unset comma
 
         for f in $files
         do
