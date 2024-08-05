@@ -1,0 +1,154 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     | Website:  https://openfoam.org
+#   \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamVTKSeries
+#
+# Description
+#     For post-processed VTK files that form a series, foamVTKSeries writes a
+#     '.vtk.series' file with filenames and corresponding times, which can be
+#     opened in ParaView.
+#
+#     ParaView then interprets the files as a sequence which can be played with
+#     video controls.
+#------------------------------------------------------------------------------
+error() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    usage
+    exit 1
+}
+
+usage() {
+        cat <<USAGE
+
+Usage: ${0##*/} [OPTIONS] ...
+options:
+  -case | -c <dir>   specify case directory (default = local dir)
+  -dir  | -d <dir>   post-processing directory <dir> (default = postProcessing)
+  -help | -h         print the usage
+
+For post-processed VTK files that form a series, foamVTKSeries writes a
+'.vtk.series' file with filenames and corresponding times, which can be opened
+in ParaView.  ParaView then interprets the files as a sequence which can be
+played with video controls.
+
+VTK files are typically written into time directories within a named "function"
+sub-directory of the case 'postProcessing' directory, e.g.
+'postProcessing/patchSurface/0.1/patch.vtk', where 'patchSurface' is the
+function sub-directory and '0.1' is the time directory.
+
+Series files use the same prefix as the VTK files and are written into the
+function sub-directory, i.e. 'postProcessing/patchSurface/patch.vtk.series' in
+our example.
+USAGE
+}
+
+seriesFileHead () {
+    cat<<EOF
+{
+    "file-series-version": "1.0",
+    "files": [
+EOF
+}
+
+seriesFileFoot () {
+    cat<<EOF
+
+    ]
+}
+EOF
+}
+
+dir=postProcessing
+
+while [ "$#" -gt 0 ]
+do
+   case "$1" in
+   -c | -case)
+      [ "$#" -ge 2 ] || error "'$1' option requires an argument"
+      cd "$2" 2>/dev/null || error "directory does not exist:  '$2'"
+      shift 2
+      ;;
+   -d | -dir)
+      [ "$#" -ge 2 ] || error "'$1' option requires an argument"
+      dir=$2
+      shift 2
+      ;;
+   -h | -help)
+      usage && exit 0
+      ;;
+   -*)
+      error "invalid option '$1'"
+      ;;
+   *)
+      break
+      ;;
+    esac
+done
+
+[ ! -d "$dir" ] && error "Cannot find postProcessing directory, exiting."
+
+all_files=$(find "$dir" -type f -name "*vtk" -print0 | xargs -0 -n 1)
+subDirs=$(for f in $all_files; do dirname "$(dirname "$f")"; done | sort -u)
+
+for s in $subDirs
+do
+    printf "Sequencing all VTK files in %s\n" "$s"
+
+    # Create list of subdirectories containining VTK files
+    subDir_files=$(echo "$all_files" | grep -w "${s}[^ ]*")
+
+    # Get the names of VTK files in this category
+    names=$(for f in $subDir_files; do basename "$f" .vtk; done | sort -u)
+
+    unset comma
+
+    for n in $names
+    do
+        # Create list of VTK files of a given name, ordered by time step
+        files=$(echo "$subDir_files" | \
+            grep -w "$n\.vtk" | \
+            awk -F'/' '{print($(NF-1)" "$0)}' | \
+            LC_ALL=C  sort -k 1 -g | \
+            cut -d' ' -f2)
+
+        series_file="$s/$n.vtk.series"
+        seriesFileHead > "$series_file"
+
+        for f in $files
+        do
+            # Write series file
+            [ "$comma" ] && printf ",\n" >> "$series_file"
+            [ "$comma" ] || comma=yes
+            time="$(dirname "$f" | awk -F/ '{print $NF}')"
+            printf "%17s\"%s\", \"time\": %s }" \
+                   '{"name": ' \
+                   "$time/$n.vtk" \
+                   "$time" >> "$series_file"
+        done
+
+        seriesFileFoot >> "$series_file"
+    done
+done
