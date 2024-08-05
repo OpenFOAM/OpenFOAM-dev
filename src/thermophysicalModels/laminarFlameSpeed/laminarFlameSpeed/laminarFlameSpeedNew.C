@@ -55,7 +55,7 @@ Foam::autoPtr<Foam::laminarFlameSpeed> Foam::laminarFlameSpeed::New
     const dictionary& coeffDict
     (
         dict
-       .optionalSubDict(typeName + "Coeffs")
+       .optionalSubDict(model + "Coeffs")
        .optionalSubDict(dict.lookupOrDefault<word>("fuel", "unknown"))
     );
 
