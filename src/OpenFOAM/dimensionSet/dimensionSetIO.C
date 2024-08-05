@@ -35,13 +35,13 @@ void Foam::dimensionSet::round(const scalar tol)
         scalar integralPart;
         scalar fractionalPart = std::modf(exponents_[i], &integralPart);
 
-        if (mag(fractionalPart-1.0) <= tol)
+        if (mag(fractionalPart - 1.0) <= tol)
         {
-            exponents_[i] = 1.0+integralPart;
+            exponents_[i] = 1.0 + integralPart;
         }
-        else if (mag(fractionalPart+1.0) <= tol)
+        else if (mag(fractionalPart + 1.0) <= tol)
         {
-            exponents_[i] = -1.0+integralPart;
+            exponents_[i] = -1.0 + integralPart;
         }
         else if (mag(fractionalPart) <= tol)
         {
@@ -137,14 +137,21 @@ Foam::Istream& Foam::dimensionSet::read(Istream& is)
 
 Foam::Ostream& Foam::dimensionSet::write(Ostream& os) const
 {
-    os << token::BEGIN_SQR;
-
-    for (int d=0; d<dimensionSet::nDimensions-1; d++)
+    if (dimensionless())
     {
-        os << exponents_[d] << token::SPACE;
+        os << token::BEGIN_SQR << token::END_SQR;
     }
+    else
+    {
+        os << token::BEGIN_SQR;
 
-    os << exponents_[dimensionSet::nDimensions-1] << token::END_SQR;
+        for (int d=0; d<dimensionSet::nDimensions-1; d++)
+        {
+            os << exponents_[d] << token::SPACE;
+        }
+
+        os << exponents_[dimensionSet::nDimensions-1] << token::END_SQR;
+    }
 
     // Check state of Ostream
     os.check("Ostream& operator<<(Ostream&, const dimensionSet&)");
