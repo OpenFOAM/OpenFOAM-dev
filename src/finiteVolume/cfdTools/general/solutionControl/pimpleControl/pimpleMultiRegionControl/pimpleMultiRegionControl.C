@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,12 +39,6 @@ namespace Foam
 bool Foam::pimpleMultiRegionControl::read()
 {
     multiRegionSolutionControl::read();
-    pimpleLoop::read();
-
-    forAll(pimpleControls_, i)
-    {
-        pimpleControls_[i].read();
-    }
 
     nEcorr_ = dict().lookupOrDefault<label>("nEnergyCorrectors", 1);
 
