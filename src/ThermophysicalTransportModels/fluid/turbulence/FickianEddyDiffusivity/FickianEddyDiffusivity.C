@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,10 +49,9 @@ FickianEddyDiffusivity
         thermo
     ),
 
-    Sct_("Sct", dimless, this->coeffDict_)
+    Sct_("Sct", dimless, this->coeffDict())
 {
     read();
-    this->printCoeffs(typeName);
 }
 
 

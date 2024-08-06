@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,23 +26,6 @@ License
 #include "LESThermophysicalTransportModel.H"
 #include "unityLewisEddyDiffusivity.H"
 
-// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
-
-template<class BasicThermophysicalTransportModel>
-void Foam::LESThermophysicalTransportModel
-<
-    BasicThermophysicalTransportModel
->::printCoeffs
-(
-    const word& type)
-{
-    if (printCoeffs_)
-    {
-        Info<< coeffDict_.dictName() << coeffDict_ << endl;
-    }
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class BasicThermophysicalTransportModel>
@@ -56,10 +39,7 @@ Foam::LESThermophysicalTransportModel
     const thermoModel& thermo
 )
 :
-    BasicThermophysicalTransportModel(momentumTransport, thermo),
-    LESDict_(this->subOrEmptyDict("LES")),
-    printCoeffs_(LESDict_.lookupOrDefault<Switch>("printCoeffs", false)),
-    coeffDict_(LESDict_.optionalSubDict(type + "Coeffs"))
+    BasicThermophysicalTransportModel(momentumTransport, thermo)
 {}
 
 
@@ -154,23 +134,22 @@ Foam::LESThermophysicalTransportModel
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class BasicThermophysicalTransportModel>
+const Foam::dictionary& Foam::LESThermophysicalTransportModel
+<
+    BasicThermophysicalTransportModel
+>::coeffDict() const
+{
+    return this->subOrEmptyDict("LES").optionalSubDict(type() + "Coeffs");
+}
+
+
+template<class BasicThermophysicalTransportModel>
 bool Foam::LESThermophysicalTransportModel
 <
     BasicThermophysicalTransportModel
 >::read()
 {
-    if (BasicThermophysicalTransportModel::read())
-    {
-        LESDict_ <<= this->subDict("LES");
-
-        coeffDict_ <<= LESDict_.optionalSubDict(type() + "Coeffs");
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return BasicThermophysicalTransportModel::read();
 }
 
 

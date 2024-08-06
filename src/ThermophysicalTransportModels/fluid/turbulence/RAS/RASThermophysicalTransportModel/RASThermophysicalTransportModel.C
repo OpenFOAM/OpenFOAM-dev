@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,23 +26,6 @@ License
 #include "RASThermophysicalTransportModel.H"
 #include "unityLewisEddyDiffusivity.H"
 
-// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
-
-template<class BasicThermophysicalTransportModel>
-void Foam::RASThermophysicalTransportModel
-<
-    BasicThermophysicalTransportModel
->::printCoeffs
-(
-    const word& type)
-{
-    if (printCoeffs_)
-    {
-        Info<< coeffDict_.dictName() << coeffDict_ << endl;
-    }
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class BasicThermophysicalTransportModel>
@@ -56,10 +39,7 @@ Foam::RASThermophysicalTransportModel
     const thermoModel& thermo
 )
 :
-    BasicThermophysicalTransportModel(momentumTransport, thermo),
-    RASDict_(this->subOrEmptyDict("RAS")),
-    printCoeffs_(RASDict_.lookupOrDefault<Switch>("printCoeffs", false)),
-    coeffDict_(RASDict_.optionalSubDict(type + "Coeffs"))
+    BasicThermophysicalTransportModel(momentumTransport, thermo)
 {}
 
 
@@ -118,10 +98,16 @@ Foam::RASThermophysicalTransportModel
                 << exit(FatalError);
         }
 
-        return autoPtr<RASThermophysicalTransportModel>
+        Info << incrIndent;
+
+        autoPtr<RASThermophysicalTransportModel> modelPtr
         (
             cstrIter()(momentumTransport, thermo)
         );
+
+        Info << decrIndent;
+
+        return modelPtr;
     }
     else
     {
@@ -137,7 +123,9 @@ Foam::RASThermophysicalTransportModel
         Info<< "Selecting default RAS thermophysical transport model "
             <<  RASunityLewisEddyDiffusivity::typeName << endl;
 
-        return autoPtr<RASThermophysicalTransportModel>
+        Info << incrIndent;
+
+        autoPtr<RASThermophysicalTransportModel> modelPtr
         (
             new RASunityLewisEddyDiffusivity
             (
@@ -147,6 +135,10 @@ Foam::RASThermophysicalTransportModel
                 true
             )
         );
+
+        Info << decrIndent;
+
+        return modelPtr;
     }
 }
 
@@ -154,23 +146,22 @@ Foam::RASThermophysicalTransportModel
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class BasicThermophysicalTransportModel>
+const Foam::dictionary& Foam::RASThermophysicalTransportModel
+<
+    BasicThermophysicalTransportModel
+>::coeffDict() const
+{
+    return this->subOrEmptyDict("RAS").optionalSubDict(type() + "Coeffs");
+}
+
+
+template<class BasicThermophysicalTransportModel>
 bool Foam::RASThermophysicalTransportModel
 <
     BasicThermophysicalTransportModel
 >::read()
 {
-    if (BasicThermophysicalTransportModel::read())
-    {
-        RASDict_ <<= this->subDict("RAS");
-
-        coeffDict_ <<= RASDict_.optionalSubDict(type() + "Coeffs");
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return BasicThermophysicalTransportModel::read();
 }
 
 

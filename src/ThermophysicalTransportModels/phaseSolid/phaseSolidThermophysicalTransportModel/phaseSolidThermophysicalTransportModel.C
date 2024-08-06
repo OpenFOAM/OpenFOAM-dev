@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,18 +38,6 @@ namespace Foam
 }
 
 
-// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
-
-void Foam::phaseSolidThermophysicalTransportModel::printCoeffs
-(const word& type)
-{
-    if (printCoeffs_)
-    {
-        Info<< coeffDict_.dictName() << coeffDict_ << endl;
-    }
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::phaseSolidThermophysicalTransportModel::
@@ -62,9 +50,7 @@ phaseSolidThermophysicalTransportModel
 :
     thermophysicalTransportModel(thermo.mesh(), alpha.group()),
     alpha_(alpha),
-    thermo_(thermo),
-    printCoeffs_(lookupOrDefault<Switch>("printCoeffs", false)),
-    coeffDict_(optionalSubDict(type + "Coeffs"))
+    thermo_(thermo)
 {}
 
 
@@ -134,6 +120,13 @@ Foam::phaseSolidThermophysicalTransportModel::New
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+const Foam::dictionary&
+Foam::phaseSolidThermophysicalTransportModel::coeffDict() const
+{
+    return optionalSubDict(type() + "Coeffs");
+}
+
+
 Foam::tmp<Foam::volScalarField>
 Foam::phaseSolidThermophysicalTransportModel::kappa() const
 {
@@ -153,15 +146,7 @@ Foam::phaseSolidThermophysicalTransportModel::kappa
 
 bool Foam::phaseSolidThermophysicalTransportModel::read()
 {
-    if (regIOobject::read())
-    {
-        coeffDict_ <<= optionalSubDict(type() + "Coeffs");
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return regIOobject::read();
 }
 
 

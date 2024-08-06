@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,15 +52,6 @@ isotropic<SolidThermophysicalTransportModel>::isotropic
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class SolidThermophysicalTransportModel>
-const Foam::dictionary&
-Foam::solidThermophysicalTransportModels::
-isotropic<SolidThermophysicalTransportModel>::coeffDict() const
-{
-    return dictionary::null;
-}
-
 
 template<class SolidThermophysicalTransportModel>
 bool Foam::solidThermophysicalTransportModels::

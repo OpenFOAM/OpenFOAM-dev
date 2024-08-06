@@ -151,7 +151,7 @@ Fickian<BasicThermophysicalTransportModel>::Fickian
 
     DTFuncs_
     (
-        this->coeffDict_.found("DT")
+        this->coeffDict().found("DT")
       ? this->thermo().species().size()
       : 0
     )
@@ -167,12 +167,14 @@ bool Fickian<BasicThermophysicalTransportModel>::read()
     {
         const speciesTable& species = this->thermo().species();
 
-        this->coeffDict_.lookup("mixtureDiffusionCoefficients")
+        const dictionary& coeffDict = this->coeffDict();
+
+        coeffDict.lookup("mixtureDiffusionCoefficients")
             >> mixtureDiffusionCoefficients_;
 
         if (mixtureDiffusionCoefficients_)
         {
-            const dictionary& Ddict = this->coeffDict_.subDict("Dm");
+            const dictionary& Ddict = coeffDict.subDict("Dm");
 
             forAll(species, i)
             {
@@ -192,7 +194,7 @@ bool Fickian<BasicThermophysicalTransportModel>::read()
         }
         else
         {
-            const dictionary& Ddict = this->coeffDict_.subDict("D");
+            const dictionary& Ddict = coeffDict.subDict("D");
 
             // Read the array of specie binary mass diffusion coefficient
             // functions
@@ -257,9 +259,9 @@ bool Fickian<BasicThermophysicalTransportModel>::read()
 
         // Optionally read the List of specie Soret thermal diffusion
         // coefficient functions
-        if (this->coeffDict_.found("DT"))
+        if (coeffDict.found("DT"))
         {
-            const dictionary& DTdict = this->coeffDict_.subDict("DT");
+            const dictionary& DTdict = coeffDict.subDict("DT");
 
             forAll(species, i)
             {

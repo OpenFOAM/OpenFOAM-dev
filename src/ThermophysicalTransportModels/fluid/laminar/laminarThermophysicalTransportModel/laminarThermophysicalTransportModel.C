@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,21 +26,6 @@ License
 #include "laminarThermophysicalTransportModel.H"
 #include "unityLewisFourier.H"
 
-// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
-
-template<class BasicThermophysicalTransportModel>
-void Foam::laminarThermophysicalTransportModel
-<
-    BasicThermophysicalTransportModel
->::printCoeffs(const word& type)
-{
-    if (printCoeffs_)
-    {
-        Info<< coeffDict_.dictName() << coeffDict_ << endl;
-    }
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class BasicThermophysicalTransportModel>
@@ -54,10 +39,7 @@ Foam::laminarThermophysicalTransportModel
     const thermoModel& thermo
 )
 :
-    BasicThermophysicalTransportModel(momentumTransport, thermo),
-    laminarDict_(this->subOrEmptyDict("laminar")),
-    printCoeffs_(laminarDict_.lookupOrDefault<Switch>("printCoeffs", false)),
-    coeffDict_(laminarDict_.optionalSubDict(type + "Coeffs"))
+    BasicThermophysicalTransportModel(momentumTransport, thermo)
 {}
 
 
@@ -141,23 +123,22 @@ Foam::laminarThermophysicalTransportModel
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class BasicThermophysicalTransportModel>
+const Foam::dictionary& Foam::laminarThermophysicalTransportModel
+<
+    BasicThermophysicalTransportModel
+>::coeffDict() const
+{
+    return this->subOrEmptyDict("laminar").optionalSubDict(type() + "Coeffs");
+}
+
+
+template<class BasicThermophysicalTransportModel>
 bool Foam::laminarThermophysicalTransportModel
 <
     BasicThermophysicalTransportModel
 >::read()
 {
-    if (BasicThermophysicalTransportModel::read())
-    {
-        laminarDict_ <<= this->subDict("laminar");
-
-        coeffDict_ <<= laminarDict_.optionalSubDict(type() + "Coeffs");
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return BasicThermophysicalTransportModel::read();
 }
 
 

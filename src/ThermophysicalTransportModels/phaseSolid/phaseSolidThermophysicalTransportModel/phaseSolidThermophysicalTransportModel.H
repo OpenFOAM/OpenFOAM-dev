@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,18 +65,6 @@ protected:
         //- Reference to the solid thermophysical properties
         const solidThermo& thermo_;
 
-        //- Flag to print the model coeffs at run-time
-        Switch printCoeffs_;
-
-        //- Model coefficients dictionary
-        dictionary coeffDict_;
-
-
-    // Protected Member Functions
-
-        //- Print model coefficients
-        virtual void printCoeffs(const word& type);
-
 
 public:
 
@@ -123,6 +111,9 @@ public:
 
     // Member Functions
 
+        //- Const access to the coefficients dictionary
+        virtual const dictionary& coeffDict() const;
+
         //- Read model coefficients if they have changed
         virtual bool read() = 0;
 
@@ -136,12 +127,6 @@ public:
         virtual const solidThermo& thermo() const
         {
             return thermo_;
-        }
-
-        //- Const access to the coefficients dictionary
-        virtual const dictionary& coeffDict() const
-        {
-            return coeffDict_;
         }
 
         //- Thermal conductivity [W/m/K]

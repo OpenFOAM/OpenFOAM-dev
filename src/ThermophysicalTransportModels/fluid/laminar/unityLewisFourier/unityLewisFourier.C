@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,14 +71,6 @@ unityLewisFourier<BasicThermophysicalTransportModel>::unityLewisFourier
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class BasicThermophysicalTransportModel>
-const dictionary&
-unityLewisFourier<BasicThermophysicalTransportModel>::coeffDict() const
-{
-    return dictionary::null;
-}
-
 
 template<class BasicThermophysicalTransportModel>
 bool unityLewisFourier<BasicThermophysicalTransportModel>::read()

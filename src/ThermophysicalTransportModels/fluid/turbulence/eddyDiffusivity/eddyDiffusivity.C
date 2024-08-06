@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ eddyDiffusivity<TurbulenceThermophysicalTransportModel>::eddyDiffusivity
         thermo
     ),
 
-    Prt_("Prt", dimless, this->coeffDict_),
+    Prt_("Prt", dimless, this->coeffDict()),
 
     alphat_
     (

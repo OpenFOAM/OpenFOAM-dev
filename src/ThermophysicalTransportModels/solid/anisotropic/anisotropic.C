@@ -201,8 +201,6 @@ anisotropic<SolidThermophysicalTransportModel>::anisotropic
     Info << endl;
 
     mesh.schemes().setFluxRequired(thermo.T().name());
-
-    this->printCoeffs(typeName);
 }
 
 
