@@ -193,10 +193,9 @@ T Foam::dictionary::lookupOrDefault
     {
         if (writeOptionalEntries)
         {
-            IOInfoInFunction(*this)
-                << "Optional entry '" << keyword << "' is not present,"
-                << " returning the default value '" << defaultValue << "'"
-                << endl;
+            Info<< indent << "Default: " << keyword
+                << " " << defaultValue
+                << " in " << name().relativePath() << endl;
         }
 
         return defaultValue;
@@ -224,10 +223,9 @@ T Foam::dictionary::lookupOrDefault
     {
         if (writeOptionalEntries)
         {
-            IOInfoInFunction(*this)
-                << "Optional entry '" << keyword << "' is not present,"
-                << " returning the default value '" << defaultValue << "'"
-                << endl;
+            Info<< indent << "Default: " << keyword
+                << " " << defaultValue
+                << " in " << name().relativePath() << endl;
         }
 
         return defaultValue;
@@ -314,13 +312,11 @@ T Foam::dictionary::lookupOrAddDefault
     }
     else
     {
-        if (writeOptionalEntries)
+        if (writeOptionalEntries > 1)
         {
-            IOInfoInFunction(*this)
-                << "Optional entry '" << keyword << "' is not present,"
-                << " adding and returning the default value '"
-                    << defaultValue << "'"
-                << endl;
+            Info<< indent << "Added default: " << keyword
+                << " " << defaultValue
+                << " to " << name().relativePath() << endl;
         }
 
         add(new primitiveEntry(keyword, defaultValue));
@@ -371,12 +367,11 @@ bool Foam::dictionary::readIfPresent
     }
     else
     {
-        if (writeOptionalEntries)
+        if (writeOptionalEntries > 1)
         {
-            IOInfoInFunction(*this)
-                << "Optional entry '" << keyword << "' is not present,"
-                << " the default value '" << val << "' will be used."
-                << endl;
+            Info<< indent << "Default: " << keyword
+                << " " << val
+                << " in " << name().relativePath() << endl;
         }
 
         return false;
@@ -403,12 +398,11 @@ bool Foam::dictionary::readIfPresent
     }
     else
     {
-        if (writeOptionalEntries)
+        if (writeOptionalEntries > 1)
         {
-            IOInfoInFunction(*this)
-                << "Optional entry '" << keyword << "' is not present,"
-                << " the default value '" << val << "' will be used."
-                << endl;
+            Info<< indent << "Default: " << keyword
+                << " " << val
+                << " in " << name().relativePath() << endl;
         }
 
         return false;

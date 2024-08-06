@@ -38,7 +38,7 @@ namespace Foam
 
 const Foam::dictionary Foam::dictionary::null;
 
-bool Foam::dictionary::writeOptionalEntries
+int Foam::dictionary::writeOptionalEntries
 (
     Foam::debug::infoSwitch("writeOptionalEntries", 0)
 );

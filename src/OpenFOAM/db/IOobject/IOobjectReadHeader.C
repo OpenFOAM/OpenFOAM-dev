@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,11 +73,12 @@ bool Foam::IOobject::readHeader(Istream& is)
     {
         dictionary headerDict(is);
 
-        is.version
-        (
-            headerDict.lookupOrDefault("version", IOstream::currentVersion)
-        );
+        IOstream::versionNumber ver = IOstream::currentVersion;
+        headerDict.readIfPresent("version", ver);
+        is.version(ver);
+
         is.format(headerDict.lookup("format"));
+
         headerClassName_ = word(headerDict.lookup("class"));
 
         const word headerObject(headerDict.lookup("object"));

@@ -244,6 +244,23 @@ Foam::dimensioned<Type>::dimensioned
     {
         initialise(name, dims, dict.lookup(name));
     }
+    else if (dictionary::writeOptionalEntries)
+    {
+        Info<< indent << "Default: " << name;
+
+        if (!dims.dimensionless())
+        {
+            Info<< " " << dims.info();
+        }
+
+        Info<< " " << defaultValue;
+
+        if (dict.name() != fileName::null)
+        {
+            Info<< " in " << dict.name();
+        }
+        Info<< endl;
+    }
 }
 
 

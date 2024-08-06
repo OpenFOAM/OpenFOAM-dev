@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -197,6 +197,9 @@ public:
 
             //- Return file name (part beyond last /), substitute for FOAM_CASE
             string caseName() const;
+
+            //- Return file name part relative to FOAM_CASE
+            string relativePath() const;
 
             //- Return file name, optionally without extension
             word name(const bool noExt) const;

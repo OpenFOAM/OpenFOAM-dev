@@ -260,7 +260,7 @@ public:
 
         //- If true write optional keywords and values
         //  if not present in dictionary
-        static bool writeOptionalEntries;
+        static int writeOptionalEntries;
 
 
     // Constructors
