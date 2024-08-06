@@ -24,7 +24,6 @@ LES
 
     turbulence      on;
 
-    printCoeffs     on;
 
 
     kEqnCoeffs

@@ -50,4 +50,10 @@ adjustTimeStep  no;
 
 maxCo           0.5;
 
+InfoSwitches
+{
+    writeOptionalEntries 1;
+}
+
+
 // ************************************************************************* //

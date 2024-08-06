@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -183,11 +183,6 @@ dynamicKEqn<BasicMomentumTransportModel>::dynamicKEqn
     filter_(filterPtr_())
 {
     bound(k_, this->kMin_);
-
-    if (type == typeName)
-    {
-        this->printCoeffs(type);
-    }
 }
 
 

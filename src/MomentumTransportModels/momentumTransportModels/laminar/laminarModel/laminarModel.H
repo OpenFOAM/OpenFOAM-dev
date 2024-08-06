@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,17 +59,8 @@ protected:
         //- laminar coefficients dictionary
         dictionary laminarDict_;
 
-        //- Flag to print the model coeffs at run-time
-        Switch printCoeffs_;
-
         //- Model coefficients dictionary
         dictionary coeffDict_;
-
-
-    // Protected Member Functions
-
-        //- Print model coefficients
-        virtual void printCoeffs(const word& type);
 
 
 public:

@@ -21,7 +21,6 @@ LES
     model    NicenoKEqn; // SmagorinskyZhang;
 
     turbulence      on;
-    printCoeffs     on;
 
     delta           cubeRootVol;
 

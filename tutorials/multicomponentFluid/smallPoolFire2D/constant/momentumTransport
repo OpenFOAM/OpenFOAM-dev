@@ -25,7 +25,6 @@ LES
 
     turbulence      on;
 
-    printCoeffs     on;
 
 
     cubeRootVolCoeffs

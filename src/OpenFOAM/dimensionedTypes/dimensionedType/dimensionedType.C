@@ -268,6 +268,18 @@ template<class Type>
 Foam::dimensioned<Type>::dimensioned
 (
     const word& name,
+    const dictionary& dict,
+    const Type& defaultValue
+)
+:
+    dimensioned(name, dimless, dict, defaultValue)
+{}
+
+
+template<class Type>
+Foam::dimensioned<Type>::dimensioned
+(
+    const word& name,
     const unitConversion& units,
     const dictionary& dict,
     const Type& defaultValue

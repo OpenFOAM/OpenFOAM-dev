@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -194,11 +194,6 @@ mixtureKEpsilon<BasicMomentumTransportModel>::mixtureKEpsilon
     )
 {
     bound(k_, this->kMin_);
-
-    if (type == typeName)
-    {
-        this->printCoeffs(type);
-    }
 
     const phaseModel& phase = refCast<const phaseModel>(this->properties());
 

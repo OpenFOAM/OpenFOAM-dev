@@ -211,11 +211,6 @@ Maxwell<BasicMomentumTransportModel>::Maxwell
             }
         }
     }
-
-    if (type == typeName)
-    {
-        this->printCoeffs(type);
-    }
 }
 
 

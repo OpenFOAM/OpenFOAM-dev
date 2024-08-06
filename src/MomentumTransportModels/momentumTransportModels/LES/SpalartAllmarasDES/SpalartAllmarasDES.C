@@ -345,12 +345,7 @@ SpalartAllmarasDES<BasicMomentumTransportModel>::SpalartAllmarasDES
         ),
         this->mesh_
     )
-{
-    if (type == typeName)
-    {
-        this->printCoeffs(type);
-    }
-}
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //

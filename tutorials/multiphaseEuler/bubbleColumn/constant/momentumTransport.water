@@ -21,7 +21,6 @@ RAS
     model    mixtureKEpsilon; // LaheyKEpsilon;
 
     turbulence      on;
-    printCoeffs     on;
 }
 
 // ************************************************************************* //

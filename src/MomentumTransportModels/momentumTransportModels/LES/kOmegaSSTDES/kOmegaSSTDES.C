@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -117,12 +117,7 @@ kOmegaSSTDES<BasicMomentumTransportModel>::kOmegaSSTDES
         )
     ),
     FSST_(this->coeffDict_.lookupOrDefault("FSST", 2))
-{
-    if (type == typeName)
-    {
-        this->printCoeffs(type);
-    }
-}
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //

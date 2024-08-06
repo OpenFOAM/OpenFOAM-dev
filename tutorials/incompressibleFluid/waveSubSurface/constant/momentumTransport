@@ -20,7 +20,6 @@ RAS
 {
     RASModel        kEpsilon;
     turbulence      on;
-    printCoeffs     on;
 }
 
 

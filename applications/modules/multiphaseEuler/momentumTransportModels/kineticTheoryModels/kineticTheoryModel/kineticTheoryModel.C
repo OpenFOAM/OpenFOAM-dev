@@ -220,12 +220,7 @@ Foam::RASModels::kineticTheoryModel::kineticTheoryModel
         U.mesh(),
         dimensionedScalar(dimensionSet(0, 2, -1, 0, 0), 0)
     )
-{
-    if (type == typeName)
-    {
-        printCoeffs(type);
-    }
-}
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

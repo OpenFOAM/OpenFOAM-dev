@@ -139,23 +139,32 @@ public:
         dimensioned(const word&, const unitConversion&, const dictionary&);
 
         //- Construct from dictionary lookup with a given name and dimensions
-        //  or if not found set to the given default value
+        //  and if not found set to the given default value
         dimensioned
         (
-            const word&,
-            const dimensionSet&,
-            const dictionary&,
-            const Type&
+            const word& name,
+            const dimensionSet& dimensions,
+            const dictionary& dict,
+            const Type& defaultValue
         );
 
-        //- Construct from dictionary lookup with a given name and units
-        //  or if not found set to the given default value
+        //- Construct from dictionary lookup with the given name, dimensionless,
+        //  and if not found set to the given default value
         dimensioned
         (
-            const word&,
+            const word& name,
+            const dictionary& dict,
+            const Type& defaultValue
+        );
+
+        //- Construct from dictionary lookup with the given name and units
+        //  and if not found set to the given default value
+        dimensioned
+        (
+            const word& name,
             const unitConversion&,
             const dictionary&,
-            const Type&
+            const Type& defaultValue
         );
 
 

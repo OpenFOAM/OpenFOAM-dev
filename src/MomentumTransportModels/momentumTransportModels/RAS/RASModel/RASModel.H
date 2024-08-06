@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,9 +66,6 @@ protected:
         //- Turbulence on/off flag
         Switch turbulence_;
 
-        //- Flag to print the model coeffs at run-time
-        Switch printCoeffs_;
-
         //- Model coefficients dictionary
         dictionary coeffDict_;
 
@@ -81,12 +78,6 @@ protected:
         //- Run-time selectable generalised Newtonian viscosity model
         autoPtr<laminarModels::generalisedNewtonianViscosityModel>
             viscosityModel_;
-
-
-    // Protected Member Functions
-
-        //- Print model coefficients
-        virtual void printCoeffs(const word& type);
 
 
 public:

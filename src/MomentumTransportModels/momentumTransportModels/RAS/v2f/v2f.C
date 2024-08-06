@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -243,11 +243,6 @@ v2f<BasicMomentumTransportModel>::v2f
     boundEpsilon();
     bound(v2_, v2Min_);
     bound(f_, fMin_);
-
-    if (type == typeName)
-    {
-        this->printCoeffs(type);
-    }
 }
 
 

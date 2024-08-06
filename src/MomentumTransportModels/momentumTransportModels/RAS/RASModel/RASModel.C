@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,18 +25,6 @@ License
 
 #include "RASModel.H"
 #include "NewtonianViscosityModel.H"
-
-// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
-
-template<class BasicMomentumTransportModel>
-void Foam::RASModel<BasicMomentumTransportModel>::printCoeffs(const word& type)
-{
-    if (printCoeffs_)
-    {
-        Info<< coeffDict_.dictName() << coeffDict_ << endl;
-    }
-}
-
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -65,7 +53,6 @@ Foam::RASModel<BasicMomentumTransportModel>::RASModel
 
     RASDict_(this->subOrEmptyDict("RAS")),
     turbulence_(RASDict_.lookup("turbulence")),
-    printCoeffs_(RASDict_.lookupOrDefault<Switch>("printCoeffs", false)),
     coeffDict_(RASDict_.optionalSubDict(type + "Coeffs")),
 
     kMin_

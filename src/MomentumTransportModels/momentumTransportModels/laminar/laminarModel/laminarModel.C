@@ -26,21 +26,6 @@ License
 #include "laminarModel.H"
 #include "Stokes.H"
 
-// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
-
-template<class BasicMomentumTransportModel>
-void Foam::laminarModel<BasicMomentumTransportModel>::printCoeffs
-(
-    const word& type
-)
-{
-    if (printCoeffs_)
-    {
-        Info<< coeffDict_.dictName() << coeffDict_ << endl;
-    }
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class BasicMomentumTransportModel>
@@ -67,7 +52,6 @@ Foam::laminarModel<BasicMomentumTransportModel>::laminarModel
     ),
 
     laminarDict_(this->subOrEmptyDict("laminar")),
-    printCoeffs_(laminarDict_.lookupOrDefault<Switch>("printCoeffs", false)),
     coeffDict_(laminarDict_.optionalSubDict(type + "Coeffs"))
 {
     // Force the construction of the mesh deltaCoeffs which may be needed

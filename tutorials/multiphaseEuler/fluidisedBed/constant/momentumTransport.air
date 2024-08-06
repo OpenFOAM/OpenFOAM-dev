@@ -21,7 +21,6 @@ RAS
     model    kEpsilon;
 
     turbulence      on;
-    printCoeffs     on;
 }
 
 LES
@@ -29,7 +28,6 @@ LES
     model    Smagorinsky;
 
     turbulence      on;
-    printCoeffs     on;
 
     delta cubeRootVol;
 

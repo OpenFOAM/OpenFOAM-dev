@@ -21,7 +21,6 @@ LES
     model    continuousGasKEqn; // Smagorinsky;
 
     turbulence      on;
-    printCoeffs     on;
 
     delta           cubeRootVol;
 

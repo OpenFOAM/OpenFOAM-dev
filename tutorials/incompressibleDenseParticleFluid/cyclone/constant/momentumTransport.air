@@ -21,7 +21,6 @@ LES
     model    kEqn;
 
     turbulence      on;
-    printCoeffs     on;
 
     delta           cubeRootVol;
 

@@ -21,7 +21,6 @@ RAS
     model    buoyantKEpsilon;
 
     turbulence      on;
-    printCoeffs     on;
 
     buoyantKEpsilonCoeffs
     {

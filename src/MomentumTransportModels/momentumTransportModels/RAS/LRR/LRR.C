@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -222,8 +222,6 @@ LRR<BasicMomentumTransportModel>::LRR
 {
     if (type == typeName)
     {
-        this->printCoeffs(type);
-
         this->boundNormalStress(this->R_);
         boundEpsilon();
         k_ = 0.5*tr(this->R_);

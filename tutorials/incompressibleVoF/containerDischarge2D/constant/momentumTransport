@@ -25,7 +25,6 @@ RAS
 
     turbulence      on;
 
-    printCoeffs     on;
 }
 */
 
