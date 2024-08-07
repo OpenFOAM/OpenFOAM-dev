@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,9 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "fvMeshTopoChangersNone.H"
+#include "list_fvMeshTopoChanger.H"
+#include "polyTopoChangeMap.H"
+#include "volFields.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -32,37 +34,86 @@ namespace Foam
 {
 namespace fvMeshTopoChangers
 {
-    defineTypeNameAndDebug(none, 0);
-    addToRunTimeSelectionTable(fvMeshTopoChanger, none, fvMesh);
+    defineTypeNameAndDebug(list, 0);
+    addToRunTimeSelectionTable(fvMeshTopoChanger, list, fvMesh);
 }
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fvMeshTopoChangers::none::none(fvMesh& mesh)
+Foam::fvMeshTopoChangers::list::list(fvMesh& mesh, const dictionary& dict)
 :
     fvMeshTopoChanger(mesh)
-{}
+{
+    const dictionary& solversDict = dict.subDict("topoChangers");
 
+    forAllConstIter(dictionary, solversDict, iter)
+    {
+        if (iter().isDict())
+        {
+            const word& name = iter().keyword();
+            const dictionary& dict = iter().dict();
 
-Foam::fvMeshTopoChangers::none::none(fvMesh& mesh, const dictionary& dict)
-:
-    fvMeshTopoChanger(mesh)
-{}
+            list_.insert
+            (
+                name,
+                fvMeshTopoChanger::New(mesh, dict).ptr()
+            );
+        }
+    }
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::fvMeshTopoChangers::none::~none()
+Foam::fvMeshTopoChangers::list::~list()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::fvMeshTopoChangers::none::update()
+bool Foam::fvMeshTopoChangers::list::update()
 {
-    return false;
+    bool updated = false;
+
+    forAllIter(PtrDictionary<fvMeshTopoChanger>, list_, iter)
+    {
+        updated = iter().update() || updated;
+        mesh().topoChanged_ = updated;
+    }
+
+    return updated;
+}
+
+
+void Foam::fvMeshTopoChangers::list::topoChange(const polyTopoChangeMap& map)
+{
+    forAllIter(PtrDictionary<fvMeshTopoChanger>, list_, iter)
+    {
+        iter().topoChange(map);
+    }
+}
+
+
+void Foam::fvMeshTopoChangers::list::mapMesh(const polyMeshMap& map)
+{
+    forAllIter(PtrDictionary<fvMeshTopoChanger>, list_, iter)
+    {
+        iter().mapMesh(map);
+    }
+}
+
+
+void Foam::fvMeshTopoChangers::list::distribute
+(
+    const polyDistributionMap& map
+)
+{
+    forAllIter(PtrDictionary<fvMeshTopoChanger>, list_, iter)
+    {
+        iter().distribute(map);
+    }
 }
 
 

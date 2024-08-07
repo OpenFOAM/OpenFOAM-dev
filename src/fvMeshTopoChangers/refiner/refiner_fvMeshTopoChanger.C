@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "fvMeshTopoChangersRefiner.H"
+#include "refiner_fvMeshTopoChanger.H"
 #include "surfaceInterpolate.H"
 #include "polyTopoChange.H"
 #include "syncTools.H"

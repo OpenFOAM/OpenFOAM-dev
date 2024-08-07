@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "fvMeshTopoChangersNone.H"
+#include "none_fvMeshTopoChanger.H"
 
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
@@ -50,9 +50,9 @@ Foam::autoPtr<Foam::fvMeshTopoChanger> Foam::fvMeshTopoChanger::New
 
     if (!fvMeshConstructorTablePtr_)
     {
-        FatalErrorInFunction
+        FatalIOErrorInFunction(dict)
             << "fvMeshTopoChangers table is empty"
-            << exit(FatalError);
+            << exit(FatalIOError);
     }
 
     fvMeshConstructorTable::iterator cstrIter =
@@ -60,18 +60,15 @@ Foam::autoPtr<Foam::fvMeshTopoChanger> Foam::fvMeshTopoChanger::New
 
     if (cstrIter == fvMeshConstructorTablePtr_->end())
     {
-        FatalErrorInFunction
+        FatalIOErrorInFunction(dict)
             << "Unknown fvMeshTopoChanger type "
             << fvMeshTopoChangerTypeName << nl << nl
             << "Valid fvMeshTopoChangers are :" << endl
             << fvMeshConstructorTablePtr_->sortedToc()
-            << exit(FatalError);
+            << exit(FatalIOError);
     }
 
-    return autoPtr<fvMeshTopoChanger>
-    (
-        cstrIter()(mesh, dict)
-    );
+    return autoPtr<fvMeshTopoChanger>(cstrIter()(mesh, dict));
 }
 
 

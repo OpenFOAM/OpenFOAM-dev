@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,9 +57,6 @@ class fvMeshTopoChanger
 
         //- Non-const fvMesh reference to allow update
         fvMesh& mesh_;
-
-        //- The dynamicMeshDict
-        dictionary dynamicMeshDict_;
 
 
 public:

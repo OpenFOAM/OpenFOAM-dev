@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,12 +28,12 @@ Description
     Sequence of mesh topology changes applied in order.
 
 SourceFiles
-    fvMeshTopoChangersList.C
+    list_fvMeshTopoChanger.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef fvMeshTopoChangersList_H
-#define fvMeshTopoChangersList_H
+#ifndef list_fvMeshTopoChanger_H
+#define list_fvMeshTopoChanger_H
 
 #include "fvMeshTopoChanger.H"
 #include "PtrDictionary.H"
