@@ -43,12 +43,12 @@ Foam::kineticTheoryModels::granularPressureModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorInFunction
+        FatalIOErrorInFunction(dict)
             << "Unknown granularPressureModel type "
             << granularPressureModelType << endl << endl
             << "Valid granularPressureModel types are :" << endl
             << dictionaryConstructorTablePtr_->sortedToc()
-            << exit(FatalError);
+            << exit(FatalIOError);
     }
 
     const dictionary& coeffDict =

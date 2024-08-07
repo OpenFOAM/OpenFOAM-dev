@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,12 +42,12 @@ Foam::autoPtr<Foam::ejectionModel> Foam::ejectionModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorInFunction
+        FatalIOErrorInFunction(dict)
             << "Unknown film ejection model "
             << modelType << nl << nl
             << "Valid film ejection models are:" << nl
             << dictionaryConstructorTablePtr_->toc()
-            << exit(FatalError);
+            << exit(FatalIOError);
     }
 
     return autoPtr<ejectionModel>

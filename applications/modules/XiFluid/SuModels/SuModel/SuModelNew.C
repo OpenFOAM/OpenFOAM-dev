@@ -46,12 +46,12 @@ Foam::autoPtr<Foam::SuModel> Foam::SuModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorInFunction
+        FatalIOErrorInFunction(SuDict)
             << "Unknown Su model "
             << modelType << nl << nl
             << "Valid Su models are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()
-            << exit(FatalError);
+            << exit(FatalIOError);
     }
 
     return autoPtr<SuModel>

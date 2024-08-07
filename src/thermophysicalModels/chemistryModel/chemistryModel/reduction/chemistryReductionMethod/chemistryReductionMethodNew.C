@@ -53,7 +53,7 @@ Foam::chemistryReductionMethod<ThermoType>::New
 
         if (cstrIter == dictionaryConstructorTablePtr_->end())
         {
-            FatalErrorInFunction
+            FatalIOErrorInFunction(dict)
                 << "Unknown " << typeName_() << " type " << methodName << endl
                 << endl;
 
@@ -80,10 +80,10 @@ Foam::chemistryReductionMethod<ThermoType>::New
                 }
             }
 
-            FatalErrorInFunction
+            FatalIOErrorInFunction(dict)
                 << "Valid " << typeName_()
                 << " types are:" << validNames << endl
-                << exit(FatalError);
+                << exit(FatalIOError);
         }
 
         autoPtr<chemistryReductionMethod<ThermoType>> crmPtr

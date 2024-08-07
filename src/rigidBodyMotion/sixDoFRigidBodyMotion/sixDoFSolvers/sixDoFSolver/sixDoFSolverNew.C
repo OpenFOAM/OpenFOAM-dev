@@ -42,12 +42,12 @@ Foam::autoPtr<Foam::sixDoFSolver> Foam::sixDoFSolver::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorInFunction
+        FatalIOErrorInFunction(dict)
             << "Unknown sixDoFSolver type "
             << sixDoFSolverType << endl << endl
             << "Valid sixDoFSolver types are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()
-            << exit(FatalError);
+            << exit(FatalIOError);
     }
 
     return cstrIter()(dict, body);

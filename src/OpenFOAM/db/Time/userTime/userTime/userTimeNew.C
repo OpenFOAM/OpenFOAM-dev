@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,11 +44,11 @@ Foam::userTimes::userTime::New
 
         if (cstrIter == dictionaryConstructorTablePtr_->end())
         {
-            FatalErrorInFunction
+            FatalIOErrorInFunction(controlDict)
                 << "Unknown userTime " << type << nl << nl
                 << "Valid userTime types are :" << nl
                 << dictionaryConstructorTablePtr_->sortedToc()
-                << exit(FatalError);
+                << exit(FatalIOError);
         }
 
         return autoPtr<userTime>(cstrIter()(controlDict));

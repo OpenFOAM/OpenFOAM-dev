@@ -48,11 +48,11 @@ Foam::autoPtr<Foam::distribution> Foam::distribution::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorInFunction
+        FatalIOErrorInFunction(dict)
             << "Unknown " << typeName << " type " << distributionType
             << nl << nl << "Valid " << typeName << " types are:" << nl
             << dictionaryConstructorTablePtr_->sortedToc()
-            << exit(FatalError);
+            << exit(FatalIOError);
     }
 
     autoPtr<distribution> distributionPtr

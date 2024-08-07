@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,10 +55,10 @@ Foam::autoPtr<Foam::coordinateSystem> Foam::coordinateSystem::New
         }
         else
         {
-            FatalErrorInFunction
+            FatalIOErrorInFunction(dict)
                 << "could not find coordinate system: " << name << nl
                 << "available coordinate systems: " << css.toc() << nl << nl
-                << exit(FatalError);
+                << exit(FatalIOError);
 
             return autoPtr<coordinateSystem>(nullptr);
         }

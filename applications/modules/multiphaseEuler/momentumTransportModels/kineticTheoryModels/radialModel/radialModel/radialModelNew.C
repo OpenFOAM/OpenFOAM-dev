@@ -43,12 +43,12 @@ Foam::kineticTheoryModels::radialModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorInFunction
+        FatalIOErrorInFunction(dict)
             << "Unknown radialModel type "
             << radialModelType << endl << endl
             << "Valid radialModel types are :" << endl
             << dictionaryConstructorTablePtr_->sortedToc()
-            << exit(FatalError);
+            << exit(FatalIOError);
     }
 
     const dictionary& coeffDict =

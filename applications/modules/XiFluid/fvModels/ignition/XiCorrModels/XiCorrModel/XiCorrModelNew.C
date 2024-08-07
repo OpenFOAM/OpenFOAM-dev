@@ -45,12 +45,12 @@ Foam::autoPtr<Foam::XiCorrModel> Foam::XiCorrModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorInFunction
+        FatalIOErrorInFunction(XiCorrDict)
             << "Unknown XiCorrModel "
             << type << nl << nl
             << "Valid XiCorrModels are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()
-            << exit(FatalError);
+            << exit(FatalIOError);
     }
 
     return autoPtr<XiCorrModel>

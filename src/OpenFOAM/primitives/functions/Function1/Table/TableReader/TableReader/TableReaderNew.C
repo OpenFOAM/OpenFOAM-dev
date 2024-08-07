@@ -45,12 +45,12 @@ Foam::autoPtr<Foam::TableReader<Type>> Foam::TableReader<Type>::New
 
         if (cstrIter == dictionaryConstructorTablePtr_->end())
         {
-            FatalErrorInFunction
+            FatalIOErrorInFunction(dict)
                 << "Unknown reader type " << readerType
                 << nl << nl
                 << "Valid reader types : " << nl
                 << dictionaryConstructorTablePtr_->sortedToc()
-                << exit(FatalError);
+                << exit(FatalIOError);
         }
 
         return autoPtr<TableReader<Type>>(cstrIter()(name, units, dict));

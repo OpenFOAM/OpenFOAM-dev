@@ -42,12 +42,12 @@ Foam::RBD::restraint::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorInFunction
+        FatalIOErrorInFunction(dict)
             << "Unknown restraint type "
             << restraintType << nl << nl
             << "Valid restraint types are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()
-            << exit(FatalError);
+            << exit(FatalIOError);
     }
 
     return autoPtr<restraint>(cstrIter()(name, dict, model));

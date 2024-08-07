@@ -47,13 +47,13 @@ Foam::autoPtr<Foam::Function2<Type>> Foam::Function2<Type>::New
 
         if (cstrIter == dictionaryConstructorTablePtr_->end())
         {
-            FatalErrorInFunction
+            FatalIOErrorInFunction(dict)
                 << "Unknown Function2 type "
                 << Function2Type << " for Function2 "
                 << name << nl << nl
                 << "Valid Function2 types are:" << nl
                 << dictionaryConstructorTablePtr_->sortedToc() << nl
-                << exit(FatalError);
+                << exit(FatalIOError);
         }
 
         return cstrIter()(name, units, coeffDict);
@@ -83,13 +83,13 @@ Foam::autoPtr<Foam::Function2<Type>> Foam::Function2<Type>::New
 
     if (dictCstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorInFunction
+        FatalIOErrorInFunction(dict)
             << "Unknown Function2 type "
             << Function2Type << " for Function2 "
             << name << nl << nl
             << "Valid Function2 types are:" << nl
             << dictionaryConstructorTablePtr_->sortedToc() << nl
-            << exit(FatalError);
+            << exit(FatalIOError);
     }
 
     return dictCstrIter()(name, units, dict);

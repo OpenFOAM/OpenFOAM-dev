@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,17 +33,16 @@ Foam::autoPtr<Foam::mixtureViscosityModel> Foam::mixtureViscosityModel::New
     const incompressibleDriftFluxMixture& mixture
 )
 {
-    const word modelType
+    IOdictionary dict
     (
-        IOdictionary
+        viscosityModel::findModelDict
         (
-            viscosityModel::findModelDict
-            (
-                mixture.mesh(),
-                mixture.phase1Name()
-            )
-        ).lookup("viscosityModel")
+            mixture.mesh(),
+            mixture.phase1Name()
+        )
     );
+
+    const word modelType(dict.lookup("viscosityModel"));
 
     Info<< "Selecting mixture viscosity model " << modelType << endl;
 
@@ -52,12 +51,12 @@ Foam::autoPtr<Foam::mixtureViscosityModel> Foam::mixtureViscosityModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorInFunction
+        FatalIOErrorInFunction(dict)
             << "Unknown mixtureViscosityModel type "
             << modelType << nl << nl
             << "Valid mixtureViscosityModels are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()
-            << exit(FatalError);
+            << exit(FatalIOError);
     }
 
     return autoPtr<mixtureViscosityModel>(cstrIter()(mixture));

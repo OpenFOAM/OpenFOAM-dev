@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,21 +32,20 @@ Foam::autoPtr<Foam::phaseSystem> Foam::phaseSystem::New
     const fvMesh& mesh
 )
 {
-    const word phaseSystemType
+    IOdictionary dict
     (
-        IOdictionary
+        IOobject
         (
-            IOobject
-            (
-                propertiesName,
-                mesh.time().constant(),
-                mesh,
-                IOobject::MUST_READ_IF_MODIFIED,
-                IOobject::NO_WRITE,
-                false
-            )
-        ).lookup("type")
+            propertiesName,
+            mesh.time().constant(),
+            mesh,
+            IOobject::MUST_READ_IF_MODIFIED,
+            IOobject::NO_WRITE,
+            false
+        )
     );
+
+    const word phaseSystemType(dict.lookup("type"));
 
     Info<< "Selecting phaseSystem "
         << phaseSystemType << endl;
@@ -56,12 +55,12 @@ Foam::autoPtr<Foam::phaseSystem> Foam::phaseSystem::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorInFunction
+        FatalIOErrorInFunction(dict)
             << "Unknown phaseSystem type "
             << phaseSystemType << endl << endl
             << "Valid phaseSystem types are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()
-            << exit(FatalError);
+            << exit(FatalIOError);
     }
 
     return cstrIter()(mesh);

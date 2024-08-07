@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,11 +49,11 @@ Foam::chemistryTabulationMethod::New
 
         if (cstrIter == dictionaryConstructorTablePtr_->end())
         {
-            FatalErrorInFunction
+            FatalIOErrorInFunction(dict)
                 << "Unknown " << typeName_() << " type " << methodName << endl
                 << "Valid " << typeName_() << " types are:"
                 << dictionaryConstructorTablePtr_->sortedToc() << endl
-                << exit(FatalError);
+                << exit(FatalIOError);
         }
 
         return autoPtr<chemistryTabulationMethod>

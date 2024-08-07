@@ -47,12 +47,12 @@ Foam::autoPtr<Foam::XiEqModel> Foam::XiEqModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorInFunction
+        FatalIOErrorInFunction(XiEqDict)
             << "Unknown XiEq model "
             << modelType << nl << nl
             << "Valid XiEq models are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()
-            << exit(FatalError);
+            << exit(FatalIOError);
     }
 
     return autoPtr<XiEqModel>

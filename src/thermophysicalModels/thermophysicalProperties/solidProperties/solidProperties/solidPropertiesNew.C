@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,12 +89,12 @@ Foam::autoPtr<Foam::solidProperties> Foam::solidProperties::New
 
         if (cstrIter == dictionaryConstructorTablePtr_->end())
         {
-            FatalErrorInFunction
+            FatalIOErrorInFunction(dict)
                 << "Unknown solidProperties type "
                 << solidType << nl << nl
                 << "Valid solidProperties types are:" << nl
                 << dictionaryConstructorTablePtr_->sortedToc()
-                << exit(FatalError);
+                << exit(FatalIOError);
         }
 
         return autoPtr<solidProperties>(cstrIter()(dict));

@@ -47,13 +47,13 @@ Foam::autoPtr<Foam::Function1<Type>> Foam::Function1<Type>::New
 
         if (cstrIter == dictionaryConstructorTablePtr_->end())
         {
-            FatalErrorInFunction
+            FatalIOErrorInFunction(dict)
                 << "Unknown Function1 type "
                 << Function1Type << " for Function1 "
                 << name << nl << nl
                 << "Valid Function1 types are:" << nl
                 << dictionaryConstructorTablePtr_->sortedToc() << nl
-                << exit(FatalError);
+                << exit(FatalIOError);
         }
 
         return cstrIter()(name, units, coeffDict);
@@ -83,13 +83,13 @@ Foam::autoPtr<Foam::Function1<Type>> Foam::Function1<Type>::New
 
     if (dictCstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorInFunction
+        FatalIOErrorInFunction(dict)
             << "Unknown Function1 type "
             << Function1Type << " for Function1 "
             << name << nl << nl
             << "Valid Function1 types are:" << nl
             << dictionaryConstructorTablePtr_->sortedToc() << nl
-            << exit(FatalError);
+            << exit(FatalIOError);
     }
 
     const bool haveCoeffsDict = dict.found(name + "Coeffs");

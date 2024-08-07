@@ -46,12 +46,12 @@ Foam::autoPtr<Foam::XiModel> Foam::XiModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorInFunction
+        FatalIOErrorInFunction(XiDict)
             << "Unknown Xi model "
             << modelType << nl << nl
             << "Valid Xi models are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()
-            << exit(FatalError);
+            << exit(FatalIOError);
     }
 
     return autoPtr<XiModel>

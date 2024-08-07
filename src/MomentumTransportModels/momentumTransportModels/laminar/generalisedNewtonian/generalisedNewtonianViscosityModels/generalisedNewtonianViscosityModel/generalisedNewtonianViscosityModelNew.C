@@ -46,12 +46,12 @@ Foam::laminarModels::generalisedNewtonianViscosityModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorInFunction
+        FatalIOErrorInFunction(viscosityProperties)
             << "Unknown generalisedNewtonianViscosityModel type "
             << modelType << nl << nl
             << "Valid generalisedNewtonianViscosityModels are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()
-            << exit(FatalError);
+            << exit(FatalIOError);
     }
 
     Info<< incrIndent;

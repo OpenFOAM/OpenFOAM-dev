@@ -44,12 +44,12 @@ Foam::sixDoFRigidBodyMotionRestraint::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorInFunction
+        FatalIOErrorInFunction(sDoFRBMRDict)
             << "Unknown sixDoFRigidBodyMotionRestraint type "
             << restraintType << nl << nl
             << "Valid sixDoFRigidBodyMotionRestraint types are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()
-            << exit(FatalError);
+            << exit(FatalIOError);
     }
 
     return autoPtr<sixDoFRigidBodyMotionRestraint>

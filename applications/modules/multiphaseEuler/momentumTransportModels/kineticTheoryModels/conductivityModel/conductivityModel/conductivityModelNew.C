@@ -43,12 +43,12 @@ Foam::kineticTheoryModels::conductivityModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorInFunction
+        FatalIOErrorInFunction(dict)
             << "Unknown granularConductivityModel type "
             << conductivityModelType << endl << endl
             << "Valid granularConductivityModel types are :" << endl
             << dictionaryConstructorTablePtr_->sortedToc()
-            << exit(FatalError);
+            << exit(FatalIOError);
     }
 
     const dictionary& coeffDict =

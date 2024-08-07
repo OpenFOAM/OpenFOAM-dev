@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,12 +45,12 @@ Foam::autoPtr<Foam::contactAngleModel> Foam::contactAngleModel::New
 
         if (cstrIter == dictionaryConstructorTablePtr_->end())
         {
-            FatalErrorInFunction
+            FatalIOErrorInFunction(dict)
                 << "Unknown contactAngleModel type "
                 << contactAngleModelType << endl << endl
                 << "Valid contactAngleModel types are : " << endl
                 << dictionaryConstructorTablePtr_->sortedToc()
-                << exit(FatalError);
+                << exit(FatalIOError);
         }
 
         return cstrIter()(contactAngleDict);

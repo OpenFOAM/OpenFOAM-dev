@@ -45,12 +45,12 @@ Foam::sixDoFRigidBodyMotionConstraint::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorInFunction
+        FatalIOErrorInFunction(sDoFRBMCDict)
             << "Unknown sixDoFRigidBodyMotionConstraint type "
             << constraintType << nl << nl
             << "Valid sixDoFRigidBodyMotionConstraints are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()
-            << exit(FatalError);
+            << exit(FatalIOError);
     }
 
     return autoPtr<sixDoFRigidBodyMotionConstraint>

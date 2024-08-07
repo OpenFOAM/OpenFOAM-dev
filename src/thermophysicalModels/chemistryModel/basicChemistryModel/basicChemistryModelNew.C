@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ Foam::autoPtr<Foam::basicChemistryModel> Foam::basicChemistryModel::New
 
     if (!chemistryDict.isDict("chemistryType"))
     {
-        FatalErrorInFunction
+        FatalIOErrorInFunction(chemistryDict)
             << "Template parameter based chemistry solver selection is no "
             << "longer supported. Please create a chemistryType dictionary"
             << "instead." << endl << endl << "For example, the entry:" << endl
@@ -57,7 +57,7 @@ Foam::autoPtr<Foam::basicChemistryModel> Foam::basicChemistryModel::New
             << "rhoChemistryModel,sutherland<specie<janaf<perfectGas>,"
             << "sensibleInternalEnergy>>>>" << endl << endl << "becomes:"
             << endl << "    chemistryType" << endl << "    {" << endl
-            << "        solver ode;" << endl << "    }" << exit(FatalError);
+            << "        solver ode;" << endl << "    }" << exit(FatalIOError);
     }
 
     const dictionary& chemistryTypeDict =
@@ -112,16 +112,16 @@ Foam::autoPtr<Foam::basicChemistryModel> Foam::basicChemistryModel::New
 
             if (cstrIter == thermoConstructorTablePtr_->end())
             {
-                FatalErrorInFunction
+                FatalIOErrorInFunction(chemistryTypeDict)
                     << "Compilation and linkage of "
                     << basicChemistryModel::typeName << " type " << nl
                     << "chemistryType" << chemistryTypeDict << nl << nl
-                    << "failed." << exit(FatalError);
+                    << "failed." << exit(FatalIOError);
             }
         }
         else
         {
-            FatalErrorInFunction
+            FatalIOErrorInFunction(chemistryTypeDict)
                 << "Unknown " << typeName_() << " type " << chemistryTypeDictNew
                 << endl;
 
@@ -153,13 +153,13 @@ Foam::autoPtr<Foam::basicChemistryModel> Foam::basicChemistryModel::New
                 }
             }
 
-            FatalErrorInFunction
+            FatalIOErrorInFunction(chemistryTypeDict)
                 << "Valid " << validNames[0][0] << '/' << validNames[0][1]
                 << " combinations for this thermodynamic model are:"
                 << endl << endl;
-            printTable(validNames, FatalErrorInFunction);
+            printTable(validNames, FatalIOErrorInFunction(chemistryTypeDict));
 
-            FatalErrorInFunction << endl;
+            FatalIOErrorInFunction(chemistryTypeDict) << endl;
 
             List<wordList> validCmpts;
             validCmpts.append(wordList(7, word::null));
@@ -175,13 +175,13 @@ Foam::autoPtr<Foam::basicChemistryModel> Foam::basicChemistryModel::New
                 validCmpts.append(basicThermo::splitThermoName(names[i], 7));
             }
 
-            FatalErrorInFunction
+            FatalIOErrorInFunction(chemistryTypeDict)
                 << "All " << validCmpts[0][0] << '/' << validCmpts[0][1]
                 << "/thermodynamics combinations are:"
                 << endl << endl;
-            printTable(validCmpts, FatalErrorInFunction);
+            printTable(validCmpts, FatalIOErrorInFunction(chemistryTypeDict));
 
-            FatalErrorInFunction << exit(FatalError);
+            FatalIOErrorInFunction(chemistryTypeDict) << exit(FatalIOError);
         }
     }
 

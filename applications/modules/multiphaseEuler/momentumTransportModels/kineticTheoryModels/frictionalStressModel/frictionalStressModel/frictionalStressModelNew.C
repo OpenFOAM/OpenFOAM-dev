@@ -43,12 +43,12 @@ Foam::kineticTheoryModels::frictionalStressModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorInFunction
+        FatalIOErrorInFunction(dict)
             << "Unknown frictionalStressModel type "
             << frictionalStressModelType << endl << endl
             << "Valid frictionalStressModel types are :" << endl
             << dictionaryConstructorTablePtr_->sortedToc()
-            << exit(FatalError);
+            << exit(FatalIOError);
     }
 
     const dictionary& coeffDict =

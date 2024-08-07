@@ -43,12 +43,12 @@ Foam::kineticTheoryModels::viscosityModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorInFunction
+        FatalIOErrorInFunction(dict)
             << "Unknown granularViscosityModel type "
             << viscosityModelType << endl << endl
             << "Valid granularViscosityModel types are :" << endl
             << dictionaryConstructorTablePtr_->sortedToc()
-            << exit(FatalError);
+            << exit(FatalIOError);
     }
 
     const dictionary& coeffDict =

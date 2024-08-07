@@ -42,12 +42,12 @@ Foam::autoPtr<Foam::trimModel> Foam::trimModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorInFunction
+        FatalIOErrorInFunction(dict)
             << "Unknown " << typeName << " type "
             << modelType << nl << nl
             << "Valid " << typeName << " types are:" << nl
             << dictionaryConstructorTablePtr_->sortedToc()
-            << exit(FatalError);
+            << exit(FatalIOError);
     }
 
     return autoPtr<trimModel>(cstrIter()(rotor, dict));

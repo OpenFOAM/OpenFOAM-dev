@@ -78,12 +78,12 @@ Foam::saturationTemperatureModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorInFunction
+        FatalIOErrorInFunction(dict)
             << "Unknown " << typeName << " << type "
             << modelTypeName << endl << endl
             << "Valid " << typeName << " types are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()
-            << exit(FatalError);
+            << exit(FatalIOError);
     }
 
     return cstrIter()(coeffDict);
