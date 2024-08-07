@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,8 @@ SourceFiles
 
 #include "renumberMethod.H"
 #include "topoDistanceData.H"
-#include "Switch.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
@@ -55,6 +56,16 @@ class structuredRenumber
 :
     public renumberMethod
 {
+    // Private constructors
+
+        //- Construct given the renumber dictionary
+        structuredRenumber
+        (
+            const dictionary& renumberDict,
+            const dictionary& methodDict
+        );
+
+
 public:
 
     // Public classes
@@ -86,8 +97,6 @@ public:
 
 
     // Private Data
-
-        const dictionary methodDict_;
 
         const wordReList patches_;
 

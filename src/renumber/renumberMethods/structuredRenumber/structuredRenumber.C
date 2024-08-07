@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,11 +24,10 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "structuredRenumber.H"
-#include "addToRunTimeSelectionTable.H"
-#include "topoDistanceData.H"
 #include "fvMeshSubset.H"
 #include "OppositeFaceCellWave.H"
 #include "globalIndex.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -49,16 +48,29 @@ namespace Foam
 
 Foam::structuredRenumber::structuredRenumber
 (
-    const dictionary& renumberDict
+    const dictionary& renumberDict,
+    const dictionary& methodDict
 )
 :
     renumberMethod(renumberDict),
-    methodDict_(renumberDict.optionalSubDict(typeName + "Coeffs")),
-    patches_(methodDict_.lookup("patches")),
-    nLayers_(methodDict_.lookupOrDefault<label>("nLayers", labelMax)),
-    depthFirst_(methodDict_.lookup("depthFirst")),
-    method_(renumberMethod::New(methodDict_)),
-    reverse_(methodDict_.lookup("reverse"))
+    patches_(methodDict.lookup("patches")),
+    nLayers_(methodDict.lookupOrDefault<label>("nLayers", labelMax)),
+    depthFirst_(methodDict.lookup("depthFirst")),
+    method_(renumberMethod::New(methodDict)),
+    reverse_(methodDict.lookup("reverse"))
+{}
+
+
+Foam::structuredRenumber::structuredRenumber
+(
+    const dictionary& renumberDict
+)
+:
+    structuredRenumber
+    (
+        renumberDict,
+        renumberDict.optionalSubDict(typeName + "Coeffs")
+    )
 {}
 
 
