@@ -120,7 +120,7 @@ fvMeshMovers = fvMesh/fvMeshMovers
 
 $(fvMeshMovers)/fvMeshMover/fvMeshMover.C
 $(fvMeshMovers)/fvMeshMover/fvMeshMoverNew.C
-$(fvMeshMovers)/none/fvMeshMoversNone.C
+$(fvMeshMovers)/none/none_fvMeshMover.C
 
 fvMeshStitchers = fvMesh/fvMeshStitchers
 
