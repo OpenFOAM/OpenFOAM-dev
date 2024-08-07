@@ -11,6 +11,6 @@ LIB_LIBS = \
     -ltriSurface \
     -lmeshTools \
     -lmotionSolvers \
-    -lfvMeshMoversMotionSolver \
+    -lmotionSolver_fvMeshMover \
     -lfiniteVolume \
     -lfileFormats

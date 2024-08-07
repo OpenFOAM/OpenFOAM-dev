@@ -7,5 +7,5 @@ EXE_INC = \
 LIB_LIBS = \
     -lfiniteVolume \
     -lmotionSolvers \
-    -lfvMeshMoversMotionSolver \
+    -lmotionSolver_fvMeshMover \
     -lrigidBodyDynamics

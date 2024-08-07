@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,8 +23,10 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "fvMeshMoversMotionSolver.H"
-#include "motionSolver.H"
+#include "interpolator_fvMeshMover.H"
+#include "volFields.H"
+#include "pointFields.H"
+#include "points0MotionSolver.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -33,82 +35,80 @@ namespace Foam
 {
 namespace fvMeshMovers
 {
-    defineTypeNameAndDebug(motionSolver, 0);
-    addToRunTimeSelectionTable(fvMeshMover, motionSolver, fvMesh);
+    defineTypeNameAndDebug(interpolator, 0);
+    addToRunTimeSelectionTable(fvMeshMover, interpolator, fvMesh);
 }
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fvMeshMovers::motionSolver::motionSolver(fvMesh& mesh)
+Foam::fvMeshMovers::interpolator::interpolator
+(
+    fvMesh& mesh,
+    const dictionary& dict
+)
 :
     fvMeshMover(mesh),
-    motionPtr_(Foam::motionSolver::New("motionSolver", mesh, dict())),
-    velocityMotionCorrection_(mesh, dict())
+    pointInterpolator_(mesh, dict),
+    displacement_(dict.lookup("displacement")),
+    points0_
+    (
+        displacement_
+      ? new pointVectorField(points0MotionSolver::readPoints0(mesh))
+      : nullptr
+    ),
+    velocityMotionCorrection_(mesh, dict)
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::fvMeshMovers::motionSolver::~motionSolver()
+Foam::fvMeshMovers::interpolator::~interpolator()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::motionSolver& Foam::fvMeshMovers::motionSolver::motion() const
+
+bool Foam::fvMeshMovers::interpolator::update()
 {
-    return motionPtr_();
-}
+    if (displacement_)
+    {
+        mesh().movePoints(points0_() + pointInterpolator_.curPointField()());
+    }
+    else
+    {
+        mesh().movePoints(pointInterpolator_.curPointField());
+    }
 
-
-bool Foam::fvMeshMovers::motionSolver::solidBody() const
-{
-    return motion().solidBody();
-}
-
-
-bool Foam::fvMeshMovers::motionSolver::update()
-{
-    mesh().movePoints(motionPtr_->newPoints());
     velocityMotionCorrection_.update();
 
     return true;
 }
 
 
-void Foam::fvMeshMovers::motionSolver::topoChange(const polyTopoChangeMap& map)
+void Foam::fvMeshMovers::interpolator::topoChange(const polyTopoChangeMap&)
 {
-    motionPtr_->topoChange(map);
+    NotImplemented;
 }
 
 
-void Foam::fvMeshMovers::motionSolver::mapMesh(const polyMeshMap& map)
+void Foam::fvMeshMovers::interpolator::mapMesh(const polyMeshMap& map)
 {
-    motionPtr_->mapMesh(map);
+    if (displacement_)
+    {
+        points0_().primitiveFieldRef() = mesh().points();
+    }
 }
 
 
-void Foam::fvMeshMovers::motionSolver::distribute
+void Foam::fvMeshMovers::interpolator::distribute
 (
-    const polyDistributionMap& map
+    const polyDistributionMap&
 )
 {
-    motionPtr_->distribute(map);
-}
-
-
-bool Foam::fvMeshMovers::motionSolver::write(const bool write) const
-{
-    if (write)
-    {
-        return motionPtr_->write();
-    }
-    else
-    {
-        return true;
-    }
+    NotImplemented;
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,6 +62,9 @@ public:
 
         //- Construct from fvMesh
         none(fvMesh& mesh);
+
+        //- Construct from fvMesh and dictionary
+        none(fvMesh& mesh, const dictionary& dict);
 
         //- Disallow default bitwise copy construction
         none(const none&) = delete;

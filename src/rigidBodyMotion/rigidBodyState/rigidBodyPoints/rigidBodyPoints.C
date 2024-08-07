@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "rigidBodyPoints.H"
-#include "fvMeshMoversMotionSolver.H"
+#include "motionSolver_fvMeshMover.H"
 #include "motionSolver.H"
 #include "addToRunTimeSelectionTable.H"
 

@@ -42,12 +42,12 @@ Foam::autoPtr<Foam::RBD::rigidBodySolver> Foam::RBD::rigidBodySolver::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorInFunction
+        FatalIOErrorInFunction(dict)
             << "Unknown rigidBodySolver type "
             << rigidBodySolverType << endl << endl
             << "Valid rigidBodySolver types are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()
-            << exit(FatalError);
+            << exit(FatalIOError);
     }
 
     return cstrIter()(body, dict);

@@ -22,27 +22,44 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fvMeshMovers::inkJet
+    Foam::fvMeshMovers::interpolator
 
 Description
-    Mesh motion specifically for the "pumping" system of an ink-jet
-    injector.
+    Interpolates pre-specified motion specified as a set of pointVectorFields.
 
-    The set of points in the "pumping" region are compressed and expanded
-    sinusoidally to impose a sinusoidal variation of the flow at the
-    nozzle exit.
+    The motion can be provided either as a set of displacement or position
+    fields and the entry \c displacement specified accordingly.
+
+Usage
+    Example:
+    \verbatim
+    mover   interpolator;
+
+    displacementLaplacianCoeffs
+    {
+        field               wantedDisplacement;
+        displacement        yes;
+        interpolationScheme linear;
+    }
+    \endverbatim
+
+    This will scan the case for \c wantedDisplacement \c pointVectorFields in
+    the time directories and interpolate those in time (using \c linear
+    interpolation) to obtain the current displacement.  The advantage of
+    specifying displacement in this way is that it automatically works in
+    parallel using \c decomposePar to decompose the set of \c pointVectorFields
+    provided.
 
 SourceFiles
-    inkJetFvMesh.C
+    interpolator.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef fvMeshMoversInkJet_H
-#define fvMeshMoversInkJet_H
+#ifndef interpolator_fvMeshMover_H
+#define interpolator_fvMeshMover_H
 
 #include "fvMeshMover.H"
-#include "dictionary.H"
-#include "pointIOField.H"
+#include "dynamicMeshPointInterpolator.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -52,20 +69,21 @@ namespace fvMeshMovers
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class inkJet Declaration
+                  Class interpolator Declaration
 \*---------------------------------------------------------------------------*/
 
-class inkJet
+class interpolator
 :
     public fvMeshMover
 {
     // Private Data
 
-        scalar amplitude_;
-        scalar frequency_;
-        scalar refPlaneX_;
+        dynamicMeshPointInterpolator pointInterpolator_;
 
-        pointIOField stationaryPoints_;
+        const Switch displacement_;
+
+        //- Starting points
+        autoPtr<pointVectorField> points0_;
 
         //- Optional list of vectorFields to update for mesh motion
         //  For modern solvers using Uf and correctPhi to update the flux
@@ -76,20 +94,20 @@ class inkJet
 public:
 
     //- Runtime type information
-    TypeName("inkJet");
+    TypeName("interpolator");
 
 
     // Constructors
 
-        //- Construct from fvMesh
-        inkJet(fvMesh& mesh);
+        //- Construct from fvMesh and dictionary
+        interpolator(fvMesh& mesh, const dictionary& dict);
 
         //- Disallow default bitwise copy construction
-        inkJet(const inkJet&) = delete;
+        interpolator(const interpolator&) = delete;
 
 
     //- Destructor
-    ~inkJet();
+    ~interpolator();
 
 
     // Member Functions
@@ -110,7 +128,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const inkJet&) = delete;
+        void operator=(const interpolator&) = delete;
 };
 
 

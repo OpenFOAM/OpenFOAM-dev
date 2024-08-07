@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "sixDoFRigidBodyState.H"
-#include "fvMeshMoversMotionSolver.H"
+#include "motionSolver_fvMeshMover.H"
 #include "motionSolver.H"
 #include "sixDoFRigidBodyMotion.H"
 #include "quaternion.H"

@@ -27,7 +27,7 @@ License
 #include "addToRunTimeSelectionTable.H"
 #include "Time.H"
 #include "transformField.H"
-#include "fvMeshMoversMotionSolver.H"
+#include "motionSolver_fvMeshMover.H"
 #include "displacementMotionSolver.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

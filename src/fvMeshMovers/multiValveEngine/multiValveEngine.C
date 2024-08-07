@@ -48,19 +48,13 @@ Foam::word Foam::fvMeshMovers::multiValveEngine::cylinderHeadName
 Foam::labelHashSet
 Foam::fvMeshMovers::multiValveEngine::findLinerPatchSet() const
 {
-    return mesh().boundaryMesh().patchSet
-    (
-        wordReList(dict().lookup("linerPatches"))
-    );
+    return mesh().boundaryMesh().patchSet(linerPatches_);
 }
 
 
 Foam::labelHashSet Foam::fvMeshMovers::multiValveEngine::findSlidingPatchSet()
 {
-    return mesh().boundaryMesh().patchSet
-    (
-        wordReList(dict().lookup("slidingPatches"))
-    );
+    return mesh().boundaryMesh().patchSet(slidingPatches_);
 }
 
 
@@ -97,17 +91,23 @@ Foam::labelHashSet Foam::fvMeshMovers::multiValveEngine::findStaticPatchSet()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fvMeshMovers::multiValveEngine::multiValveEngine(fvMesh& mesh)
+Foam::fvMeshMovers::multiValveEngine::multiValveEngine
+(
+    fvMesh& mesh,
+    const dictionary& dict
+)
 :
     fvMeshMover(mesh),
+    linerPatches_(dict.lookup("linerPatches")),
     linerPatchSet_(findLinerPatchSet()),
+    slidingPatches_(dict.lookup("slidingPatches")),
     slidingPatchSet_(findSlidingPatchSet()),
-    piston_("piston", *this, dict().subDict("piston")),
-    valves_(*this, dict().subOrEmptyDict("valves")),
+    piston_("piston", *this, dict.subDict("piston")),
+    valves_(*this, dict.subOrEmptyDict("valves")),
     staticPatchSet_(findStaticPatchSet()),
     frozenPointZones_
     (
-        dict().lookupOrDefault("frozenZones", wordReList::null())
+        dict.lookupOrDefault("frozenZones", wordReList::null())
     ),
     linerPatchSet(linerPatchSet_),
     slidingPatchSet(slidingPatchSet_),

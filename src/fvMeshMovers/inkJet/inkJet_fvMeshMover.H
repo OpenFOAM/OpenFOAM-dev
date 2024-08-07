@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,44 +22,27 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fvMeshMovers::interpolator
+    Foam::fvMeshMovers::inkJet
 
 Description
-    Interpolates pre-specified motion specified as a set of pointVectorFields.
+    Mesh motion specifically for the "pumping" system of an ink-jet
+    injector.
 
-    The motion can be provided either as a set of displacement or position
-    fields and the entry \c displacement specified accordingly.
-
-Usage
-    Example:
-    \verbatim
-    mover   interpolator;
-
-    displacementLaplacianCoeffs
-    {
-        field               wantedDisplacement;
-        displacement        yes;
-        interpolationScheme linear;
-    }
-    \endverbatim
-
-    This will scan the case for \c wantedDisplacement \c pointVectorFields in
-    the time directories and interpolate those in time (using \c linear
-    interpolation) to obtain the current displacement.  The advantage of
-    specifying displacement in this way is that it automatically works in
-    parallel using \c decomposePar to decompose the set of \c pointVectorFields
-    provided.
+    The set of points in the "pumping" region are compressed and expanded
+    sinusoidally to impose a sinusoidal variation of the flow at the
+    nozzle exit.
 
 SourceFiles
-    interpolator.C
+    inkJetFvMesh.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef fvMeshMoversInterpolator_H
-#define fvMeshMoversInterpolator_H
+#ifndef inkJet_fvMeshMover_H
+#define inkJet_fvMeshMover_H
 
 #include "fvMeshMover.H"
-#include "dynamicMeshPointInterpolator.H"
+#include "dictionary.H"
+#include "pointIOField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -69,23 +52,20 @@ namespace fvMeshMovers
 {
 
 /*---------------------------------------------------------------------------*\
-                  Class interpolator Declaration
+                         Class inkJet Declaration
 \*---------------------------------------------------------------------------*/
 
-class interpolator
+class inkJet
 :
     public fvMeshMover
 {
     // Private Data
 
-        dictionary meshCoeffs_;
+        scalar amplitude_;
+        scalar frequency_;
+        scalar refPlaneX_;
 
-        dynamicMeshPointInterpolator pointInterpolator_;
-
-        const Switch displacement_;
-
-        //- Starting points
-        autoPtr<pointVectorField> points0_;
+        pointIOField stationaryPoints_;
 
         //- Optional list of vectorFields to update for mesh motion
         //  For modern solvers using Uf and correctPhi to update the flux
@@ -96,20 +76,20 @@ class interpolator
 public:
 
     //- Runtime type information
-    TypeName("interpolator");
+    TypeName("inkJet");
 
 
     // Constructors
 
-        //- Construct from fvMesh
-        interpolator(fvMesh& mesh);
+        //- Construct from fvMesh and dictionary
+        inkJet(fvMesh& mesh, const dictionary& dict);
 
         //- Disallow default bitwise copy construction
-        interpolator(const interpolator&) = delete;
+        inkJet(const inkJet&) = delete;
 
 
     //- Destructor
-    ~interpolator();
+    ~inkJet();
 
 
     // Member Functions
@@ -130,7 +110,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const interpolator&) = delete;
+        void operator=(const inkJet&) = delete;
 };
 
 

@@ -9,5 +9,5 @@ LIB_LIBS = \
     -lforces \
     -lfiniteVolume \
     -lmotionSolvers \
-    -lfvMeshMoversMotionSolver \
+    -lmotionSolver_fvMeshMover \
     -lrigidBodyDynamics

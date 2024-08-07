@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,9 +63,9 @@ Foam::autoPtr<Foam::fvMeshMover> Foam::fvMeshMover::New(fvMesh& mesh)
 
             if (!fvMeshConstructorTablePtr_)
             {
-                FatalErrorInFunction
+                FatalIOErrorInFunction(dict)
                     << "fvMeshMovers table is empty"
-                    << exit(FatalError);
+                    << exit(FatalIOError);
             }
 
             fvMeshConstructorTable::iterator cstrIter =
@@ -73,15 +73,15 @@ Foam::autoPtr<Foam::fvMeshMover> Foam::fvMeshMover::New(fvMesh& mesh)
 
             if (cstrIter == fvMeshConstructorTablePtr_->end())
             {
-                FatalErrorInFunction
+                FatalIOErrorInFunction(dict)
                     << "Unknown fvMeshMover type "
                     << fvMeshMoverTypeName << nl << nl
                     << "Valid fvMeshMovers are :" << endl
                     << fvMeshConstructorTablePtr_->sortedToc()
-                    << exit(FatalError);
+                    << exit(FatalIOError);
             }
 
-            return autoPtr<fvMeshMover>(cstrIter()(mesh));
+            return autoPtr<fvMeshMover>(cstrIter()(mesh, moverDict));
         }
     }
 

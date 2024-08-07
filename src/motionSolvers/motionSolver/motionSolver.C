@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,9 +82,9 @@ Foam::autoPtr<Foam::motionSolver> Foam::motionSolver::New
 
     if (!dictionaryConstructorTablePtr_)
     {
-        FatalErrorInFunction
+        FatalIOErrorInFunction(solverDict)
             << "solver table is empty"
-            << exit(FatalError);
+            << exit(FatalIOError);
     }
 
     dictionaryConstructorTable::iterator cstrIter =
@@ -92,12 +92,12 @@ Foam::autoPtr<Foam::motionSolver> Foam::motionSolver::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalErrorInFunction
+        FatalIOErrorInFunction(solverDict)
             << "Unknown solver type "
             << solverTypeName << nl << nl
             << "Valid solver types are:" << endl
             << dictionaryConstructorTablePtr_->sortedToc()
-            << exit(FatalError);
+            << exit(FatalIOError);
     }
 
     return autoPtr<motionSolver>(cstrIter()(name, mesh, solverDict));

@@ -31,8 +31,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef fvMeshMoversMotionSolver_H
-#define fvMeshMoversMotionSolver_H
+#ifndef motionSolver_fvMeshMover_H
+#define motionSolver_fvMeshMover_H
 
 #include "fvMeshMover.H"
 
@@ -73,7 +73,7 @@ public:
     // Constructors
 
         //- Construct from fvMesh
-        motionSolver(fvMesh& mesh);
+        motionSolver(fvMesh& mesh, const dictionary& dict);
 
         //- Disallow default bitwise copy construction
         motionSolver(const motionSolver&) = delete;

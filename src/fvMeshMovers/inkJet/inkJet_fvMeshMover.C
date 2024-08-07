@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "fvMeshMoversInkJet.H"
+#include "inkJet_fvMeshMover.H"
 #include "volFields.H"
 #include "mathematicalConstants.H"
 #include "addToRunTimeSelectionTable.H"
@@ -42,12 +42,12 @@ namespace fvMeshMovers
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fvMeshMovers::inkJet::inkJet(fvMesh& mesh)
+Foam::fvMeshMovers::inkJet::inkJet(fvMesh& mesh, const dictionary& dict)
 :
     fvMeshMover(mesh),
-    amplitude_(dict().lookup<scalar>("amplitude")),
-    frequency_(dict().lookup<scalar>("frequency")),
-    refPlaneX_(dict().lookup<scalar>("refPlaneX")),
+    amplitude_(dict.lookup<scalar>("amplitude")),
+    frequency_(dict.lookup<scalar>("frequency")),
+    refPlaneX_(dict.lookup<scalar>("refPlaneX")),
     stationaryPoints_
     (
         IOobject
@@ -60,7 +60,7 @@ Foam::fvMeshMovers::inkJet::inkJet(fvMesh& mesh)
             IOobject::NO_WRITE
         )
     ),
-    velocityMotionCorrection_(mesh, dict())
+    velocityMotionCorrection_(mesh, dict)
 {
     Info<< "Performing a dynamic mesh calculation: " << endl
         << "amplitude: " << amplitude_

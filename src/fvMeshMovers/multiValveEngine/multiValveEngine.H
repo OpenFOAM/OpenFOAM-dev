@@ -528,9 +528,15 @@ private:
     // Private member data
 
         //- User-defined liner patches
+        wordReList linerPatches_;
+
+        //- User-defined liner patch set
         labelHashSet linerPatchSet_;
 
         //- User-defined patches which the mesh can slide along
+        wordReList slidingPatches_;
+
+        //- User-defined patch set which the mesh can slide along
         labelHashSet slidingPatchSet_;
 
         //- Piston object
@@ -586,7 +592,7 @@ public:
     // Constructors
 
         //- Construct from fvMesh
-        multiValveEngine(fvMesh& mesh);
+        multiValveEngine(fvMesh& mesh, const dictionary& dict);
 
         //- Disallow default bitwise copy construction
         multiValveEngine(const multiValveEngine&) = delete;
