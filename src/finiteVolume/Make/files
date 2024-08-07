@@ -114,7 +114,7 @@ fvMeshDistributors = fvMesh/fvMeshDistributors
 
 $(fvMeshDistributors)/fvMeshDistributor/fvMeshDistributor.C
 $(fvMeshDistributors)/fvMeshDistributor/fvMeshDistributorNew.C
-$(fvMeshDistributors)/none/fvMeshDistributorsNone.C
+$(fvMeshDistributors)/none/none_fvMeshDistributor.C
 
 fvMeshMovers = fvMesh/fvMeshMovers
 

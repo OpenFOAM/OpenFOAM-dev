@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fvMeshDistributors::distributor
+    Foam::fvMeshDistributors::loadBalancer
 
 Description
     Dynamic mesh redistribution using the distributor specified in
@@ -33,7 +33,7 @@ Usage
     \verbatim
     distributor
     {
-        type            distributor;
+        type            loadBalancer;
 
         libs            ("libfvMeshDistributors.so");
 
@@ -47,103 +47,64 @@ Usage
     \endverbatim
 
 SourceFiles
-    fvMeshDistributorsDistributor.C
+    fvMeshDistributorsloadBalancer.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef fvMeshDistributorsDistributor_H
-#define fvMeshDistributorsDistributor_H
+#ifndef loadBalancer_fvMeshDistributor_H
+#define loadBalancer_fvMeshDistributor_H
 
-#include "fvMeshDistributor.H"
+#include "distributor_fvMeshDistributor.H"
+#include "cpuTime.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    class decompositionMethod;
-
 namespace fvMeshDistributors
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class distributor Declaration
+                          Class loadBalancer Declaration
 \*---------------------------------------------------------------------------*/
 
-class distributor
+class loadBalancer
 :
-    public fvMeshDistributor
+    public distributor
 {
-protected:
+    // Private Member Data
 
-    // Protected Member Data
+        //- CPU time consumed during the time-step
+        cpuTime cpuTime_;
 
-        //- Cache the decomposer/distributor
-        autoPtr<decompositionMethod> distributor_;
-
-        //- Time-step interval between redistribution calls
-        label redistributionInterval_;
-
-        //- Maximum imbalance between the ideal number of cells per processor
-        //  and the maximum or minimum as a ratio mag(1 - nCells/idealNcells)
-        scalar maxImbalance_;
-
-        //- The time index used for updating
-        label timeIndex_;
-
-
-    // Protected Member Functions
-
-        //- Read the projection parameters from dictionary
-        void readDict();
-
-        //- Distribute the mesh and mesh data
-        void distribute(const labelList& distribution);
+        //- Enable multi-constraint load-balancing in which separate weights
+        //  are provided to the distributor for each of the CPU loads.
+        //  When disabled the CPU loads are summed and a single weight per cell
+        //  is provided to the distributor.
+        //  Defaults to true.
+        Switch multiConstraint_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("distributor");
+    TypeName("loadBalancer");
 
 
     // Constructors
 
-        //- Construct from fvMesh
-        explicit distributor(fvMesh& mesh);
-
-        //- Disallow default bitwise copy construction
-        distributor(const distributor&) = delete;
+        //- Construct from fvMesh and dictionary
+        loadBalancer(fvMesh& mesh, const dictionary& dict);
 
 
     //- Destructor
-    virtual ~distributor();
+    virtual ~loadBalancer();
 
 
     // Member Functions
 
         //- Distribute the
         virtual bool update();
-
-        //- Update corresponding to the given map
-        virtual void topoChange(const polyTopoChangeMap&);
-
-        //- Update from another mesh using the given map
-        virtual void mapMesh(const polyMeshMap&);
-
-        //- Update corresponding to the given distribution map
-        virtual void distribute(const polyDistributionMap&);
-
-
-    // Writing
-
-        //- Write using given format, version and compression
-        virtual bool write(const bool write = true) const;
-
-
-    // Member Operators
-
-        //- Disallow default bitwise assignment
-        void operator=(const distributor&) = delete;
 };
 
 

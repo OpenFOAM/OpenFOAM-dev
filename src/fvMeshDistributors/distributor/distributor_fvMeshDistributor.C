@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "fvMeshDistributorsDistributor.H"
+#include "distributor_fvMeshDistributor.H"
 #include "decompositionMethod.H"
 #include "fvMeshDistribute.H"
 #include "polyDistributionMap.H"
@@ -48,18 +48,6 @@ namespace fvMeshDistributors
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-void Foam::fvMeshDistributors::distributor::readDict()
-{
-    const dictionary& distributorDict(dict());
-
-    redistributionInterval_ =
-        distributorDict.lookupOrDefault("redistributionInterval", 10);
-
-    maxImbalance_ =
-        distributorDict.lookupOrDefault<scalar>("maxImbalance", 0.1);
-}
-
-
 void Foam::fvMeshDistributors::distributor::distribute
 (
     const labelList& distribution
@@ -83,7 +71,11 @@ void Foam::fvMeshDistributors::distributor::distribute
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fvMeshDistributors::distributor::distributor(fvMesh& mesh)
+Foam::fvMeshDistributors::distributor::distributor
+(
+    fvMesh& mesh,
+    const dictionary& dict
+)
 :
     fvMeshDistributor(mesh),
     distributor_
@@ -93,12 +85,10 @@ Foam::fvMeshDistributors::distributor::distributor(fvMesh& mesh)
             decompositionMethod::decomposeParDict(mesh.time())
         )
     ),
-    redistributionInterval_(1),
-    maxImbalance_(0.1),
+    redistributionInterval_(dict.lookupOrDefault("redistributionInterval", 10)),
+    maxImbalance_(dict.lookupOrDefault<scalar>("maxImbalance", 0.1)),
     timeIndex_(-1)
-{
-    readDict();
-}
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

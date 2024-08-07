@@ -1,4 +1,4 @@
-distributor/fvMeshDistributorsDistributor.C
-loadBalancer/fvMeshDistributorsLoadBalancer.C
+distributor/distributor_fvMeshDistributor.C
+loadBalancer/loadBalancer_fvMeshDistributor.C
 
 LIB = $(FOAM_LIBBIN)/libfvMeshDistributors

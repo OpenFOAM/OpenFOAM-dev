@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,40 +22,20 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fvMeshDistributors::loadBalancer
+    Foam::fvMeshDistributors::none
 
 Description
-    Dynamic mesh redistribution using the distributor specified in
-    decomposeParDict
-
-Usage
-    Example of single field based refinement in all cells:
-    \verbatim
-    distributor
-    {
-        type            loadBalancer;
-
-        libs            ("libfvMeshDistributors.so");
-
-        // How often to redistribute
-        redistributionInterval  10;
-
-        // Maximum fractional cell distribution imbalance
-        // before rebalancing
-        maxImbalance    0.1;
-    }
-    \endverbatim
+    Dummy fvMeshDistributor which does not move the mesh points
 
 SourceFiles
-    fvMeshDistributorsloadBalancer.C
+    none.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef fvMeshDistributorsLoadBalancer_H
-#define fvMeshDistributorsLoadBalancer_H
+#ifndef none_fvMeshDistributor_H
+#define none_fvMeshDistributor_H
 
-#include "fvMeshDistributorsDistributor.H"
-#include "cpuTime.H"
+#include "fvMeshDistributor.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -65,52 +45,63 @@ namespace fvMeshDistributors
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class loadBalancer Declaration
+                        Class none Declaration
 \*---------------------------------------------------------------------------*/
 
-class loadBalancer
+class none
 :
-    public distributor
+    public fvMeshDistributor
 {
-    // Private Member Data
-
-        //- CPU time consumed during the time-step
-        cpuTime cpuTime_;
-
-        //- Enable multi-constraint load-balancing in which separate weights
-        //  are provided to the distributor for each of the CPU loads.
-        //  When disabled the CPU loads are summed and a single weight per cell
-        //  is provided to the distributor.
-        //  Defaults to true.
-        Switch multiConstraint_;
-
-
-    // Private Member Functions
-
-        //- Read the projection parameters from dictionary
-        void readDict();
-
-
 public:
 
     //- Runtime type information
-    TypeName("loadBalancer");
+    TypeName("none");
 
 
     // Constructors
 
         //- Construct from fvMesh
-        explicit loadBalancer(fvMesh& mesh);
+        none(fvMesh& mesh);
+
+        //- Construct from fvMesh and dictionary
+        none(fvMesh& mesh, const dictionary& dict);
+
+        //- Disallow default bitwise copy construction
+        none(const none&) = delete;
 
 
     //- Destructor
-    virtual ~loadBalancer();
+    ~none();
 
 
     // Member Functions
 
-        //- Distribute the
+        //- The mesh is static and does not change so return false
+        virtual bool dynamic() const
+        {
+            return false;
+        }
+
+        //- Dummy update function which does not change the mesh
         virtual bool update();
+
+        //- Update corresponding to the given map
+        virtual void topoChange(const polyTopoChangeMap&)
+        {}
+
+        //- Update from another mesh using the given map
+        virtual void mapMesh(const polyMeshMap&)
+        {}
+
+        //- Update corresponding to the given distribution map
+        virtual void distribute(const polyDistributionMap&)
+        {}
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const none&) = delete;
 };
 
 

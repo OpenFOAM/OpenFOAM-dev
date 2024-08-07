@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,18 +22,37 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fvMeshDistributors::none
+    Foam::fvMeshDistributors::distributor
 
 Description
-    Dummy fvMeshDistributor which does not move the mesh points
+    Dynamic mesh redistribution using the distributor specified in
+    decomposeParDict
+
+Usage
+    Example of single field based refinement in all cells:
+    \verbatim
+    distributor
+    {
+        type            distributor;
+
+        libs            ("libfvMeshDistributors.so");
+
+        // How often to redistribute
+        redistributionInterval  10;
+
+        // Maximum fractional cell distribution imbalance
+        // before rebalancing
+        maxImbalance    0.1;
+    }
+    \endverbatim
 
 SourceFiles
-    none.C
+    distributor_fvMeshDistributor.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef fvMeshDistributorsNone_H
-#define fvMeshDistributorsNone_H
+#ifndef distributor_fvMeshDistributor_H
+#define distributor_fvMeshDistributor_H
 
 #include "fvMeshDistributor.H"
 
@@ -41,64 +60,87 @@ SourceFiles
 
 namespace Foam
 {
+    class decompositionMethod;
+
 namespace fvMeshDistributors
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class none Declaration
+                          Class distributor Declaration
 \*---------------------------------------------------------------------------*/
 
-class none
+class distributor
 :
     public fvMeshDistributor
 {
+protected:
+
+    // Protected Member Data
+
+        //- Cache the decomposer/distributor
+        autoPtr<decompositionMethod> distributor_;
+
+        //- Time-step interval between redistribution calls
+        label redistributionInterval_;
+
+        //- Maximum imbalance between the ideal number of cells per processor
+        //  and the maximum or minimum as a ratio mag(1 - nCells/idealNcells)
+        scalar maxImbalance_;
+
+        //- The time index used for updating
+        label timeIndex_;
+
+
+    // Protected Member Functions
+
+        //- Distribute the mesh and mesh data
+        void distribute(const labelList& distribution);
+
+
 public:
 
     //- Runtime type information
-    TypeName("none");
+    TypeName("distributor");
 
 
     // Constructors
 
-        //- Construct from fvMesh
-        none(fvMesh& mesh);
+        //- Construct from fvMesh and dictionary
+        distributor(fvMesh& mesh, const dictionary& dict);
 
         //- Disallow default bitwise copy construction
-        none(const none&) = delete;
+        distributor(const distributor&) = delete;
 
 
     //- Destructor
-    ~none();
+    virtual ~distributor();
 
 
     // Member Functions
 
-        //- The mesh is static and does not change so return false
-        virtual bool dynamic() const
-        {
-            return false;
-        }
-
-        //- Dummy update function which does not change the mesh
+        //- Distribute the
         virtual bool update();
 
         //- Update corresponding to the given map
-        virtual void topoChange(const polyTopoChangeMap&)
-        {}
+        virtual void topoChange(const polyTopoChangeMap&);
 
         //- Update from another mesh using the given map
-        virtual void mapMesh(const polyMeshMap&)
-        {}
+        virtual void mapMesh(const polyMeshMap&);
 
         //- Update corresponding to the given distribution map
-        virtual void distribute(const polyDistributionMap&)
-        {}
+        virtual void distribute(const polyDistributionMap&);
+
+
+    // Writing
+
+        //- Write using given format, version and compression
+        virtual bool write(const bool write = true) const;
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const none&) = delete;
+        void operator=(const distributor&) = delete;
 };
 
 

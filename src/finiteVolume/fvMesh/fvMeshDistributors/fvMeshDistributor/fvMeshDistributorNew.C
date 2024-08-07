@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "fvMeshDistributorsNone.H"
+#include "none_fvMeshDistributor.H"
 
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
@@ -74,9 +74,9 @@ Foam::autoPtr<Foam::fvMeshDistributor> Foam::fvMeshDistributor::New
 
                 if (!fvMeshConstructorTablePtr_)
                 {
-                    FatalErrorInFunction
+                    FatalIOErrorInFunction(dict)
                         << "fvMeshDistributors table is empty"
-                        << exit(FatalError);
+                        << exit(FatalIOError);
                 }
 
                 fvMeshConstructorTable::iterator cstrIter =
@@ -84,15 +84,18 @@ Foam::autoPtr<Foam::fvMeshDistributor> Foam::fvMeshDistributor::New
 
                 if (cstrIter == fvMeshConstructorTablePtr_->end())
                 {
-                    FatalErrorInFunction
+                    FatalIOErrorInFunction(dict)
                         << "Unknown fvMeshDistributor type "
                         << fvMeshDistributorTypeName << nl << nl
                         << "Valid fvMeshDistributors are :" << endl
                         << fvMeshConstructorTablePtr_->sortedToc()
-                        << exit(FatalError);
+                        << exit(FatalIOError);
                 }
 
-                return autoPtr<fvMeshDistributor>(cstrIter()(mesh));
+                return autoPtr<fvMeshDistributor>
+                (
+                    cstrIter()(mesh, distributorDict)
+                );
             }
         }
     }

@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "fvMeshDistributorsLoadBalancer.H"
+#include "loadBalancer_fvMeshDistributor.H"
 #include "decompositionMethod.H"
 #include "cpuLoad.H"
 #include "globalMeshData.H"
@@ -46,27 +46,17 @@ namespace fvMeshDistributors
 }
 
 
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-void Foam::fvMeshDistributors::loadBalancer::readDict()
-{
-    distributor::readDict();
-
-    const dictionary& distributorDict(dict());
-
-    multiConstraint_ =
-        distributorDict.lookupOrDefault<Switch>("multiConstraint", true);
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fvMeshDistributors::loadBalancer::loadBalancer(fvMesh& mesh)
+Foam::fvMeshDistributors::loadBalancer::loadBalancer
+(
+    fvMesh& mesh,
+    const dictionary& dict
+)
 :
-    distributor(mesh)
-{
-    readDict();
-}
+    distributor(mesh, dict),
+    multiConstraint_(dict.lookupOrDefault<Switch>("multiConstraint", true))
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,9 +57,6 @@ class fvMeshDistributor
         //- Non-const fvMesh reference to allow update
         fvMesh& mesh_;
 
-        //- The dynamicMeshDict
-        dictionary dynamicMeshDict_;
-
 
 public:
 
@@ -74,8 +71,8 @@ public:
             autoPtr,
             fvMeshDistributor,
             fvMesh,
-            (fvMesh& mesh),
-            (mesh)
+            (fvMesh& mesh, const dictionary& dict),
+            (mesh, dict)
         );
 
 
@@ -139,12 +136,6 @@ public:
         const fvMesh& mesh() const
         {
             return mesh_;
-        }
-
-        //- Return the dynamicMeshDict/distributor sub-dict
-        const dictionary& dict() const
-        {
-            return dynamicMeshDict_.subDict("distributor");
         }
 
         //- Is mesh dynamic, i.e. might it change?
