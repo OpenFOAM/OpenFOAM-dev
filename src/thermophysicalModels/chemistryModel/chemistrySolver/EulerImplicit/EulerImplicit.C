@@ -36,8 +36,10 @@ Foam::EulerImplicit<ChemistryModel>::EulerImplicit
 )
 :
     chemistrySolver<ChemistryModel>(thermo),
-    coeffDict_(this->subDict("EulerImplicitCoeffs")),
-    cTauChem_(coeffDict_.lookup<scalar>("cTauChem")),
+    cTauChem_
+    (
+        this->subDict("EulerImplicitCoeffs").template lookup<scalar>("cTauChem")
+    ),
     cTp_(this->nEqns()),
     R_(this->nEqns()),
     J_(this->nEqns()),

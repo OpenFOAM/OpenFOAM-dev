@@ -34,7 +34,6 @@ Foam::chemistryReductionMethod<ThermoType>::chemistryReductionMethod
     Foam::chemistryModel<ThermoType>& chemistry
 )
 :
-    coeffDict_(),
     chemistry_(chemistry),
     nSpecie_(chemistry.nSpecie()),
     nActiveSpecies_(chemistry.nSpecie()),
@@ -51,18 +50,23 @@ Foam::chemistryReductionMethod<ThermoType>::chemistryReductionMethod
 template<class ThermoType>
 Foam::chemistryReductionMethod<ThermoType>::chemistryReductionMethod
 (
-    const Foam::IOdictionary& dict,
+    const Foam::dictionary& dict,
     Foam::chemistryModel<ThermoType>& chemistry
 )
 :
-    coeffDict_(dict.subDict("reduction")),
     chemistry_(chemistry),
     nSpecie_(chemistry.nSpecie()),
     nActiveSpecies_(chemistry.nSpecie()),
     reactionsDisabled_(chemistry.nReaction(), false),
     activeSpecies_(chemistry.nSpecie(), false),
-    log_(coeffDict_.lookupOrDefault<Switch>("log", false)),
-    tolerance_(coeffDict_.lookupOrDefault<scalar>("tolerance", 1e-4)),
+    log_
+    (
+        coeffDict(dict).template lookupOrDefault<Switch>("log", false)
+    ),
+    tolerance_
+    (
+        coeffDict(dict).template lookupOrDefault<scalar>("tolerance", 1e-4)
+    ),
     sumnActiveSpecies_(0),
     sumn_(0),
     reduceMechCpuTime_(0)

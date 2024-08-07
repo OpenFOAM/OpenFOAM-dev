@@ -54,8 +54,6 @@ class ode
 {
     // Private Data
 
-        dictionary coeffDict_;
-
         mutable autoPtr<ODESolver> odeSolver_;
 
         // Solver data

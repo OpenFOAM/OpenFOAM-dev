@@ -30,14 +30,14 @@ License
 template<class ThermoType>
 Foam::chemistryReductionMethods::PFA<ThermoType>::PFA
 (
-    const IOdictionary& dict,
+    const dictionary& dict,
     chemistryModel<ThermoType>& chemistry
 )
 :
     chemistryReductionMethod<ThermoType>(dict, chemistry),
     searchInitSet_()
 {
-    const wordHashSet initSet(this->coeffDict_.lookup("initialSet"));
+    const wordHashSet initSet(this->coeffDict(dict).lookup("initialSet"));
     forAllConstIter(wordHashSet, initSet, iter)
     {
         searchInitSet_.append(chemistry.thermo().species()[iter.key()]);

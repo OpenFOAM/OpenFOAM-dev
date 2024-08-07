@@ -64,8 +64,6 @@ class ISAT
 {
     // Private Data
 
-        const dictionary coeffDict_;
-
         const odeChemistryModel& chemistry_;
 
         //- Switch to select performance logging
@@ -204,6 +202,17 @@ class ISAT
             const scalarField& Rphiq,
             const label li,
             const scalar dt
+        );
+
+
+    // Private constructors
+
+        //- Construct from dictionary and coefficient dictionary
+        ISAT
+        (
+            const dictionary& chemistryProperties,
+            const dictionary& coeffDict,
+            const odeChemistryModel& chemistry
         );
 
 

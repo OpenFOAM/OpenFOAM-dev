@@ -59,9 +59,6 @@ class EulerImplicit
 {
     // Private Data
 
-        //- Coefficients dictionary
-        dictionary coeffDict_;
-
         //- Chemistry timescale coefficient
         scalar cTauChem_;
 

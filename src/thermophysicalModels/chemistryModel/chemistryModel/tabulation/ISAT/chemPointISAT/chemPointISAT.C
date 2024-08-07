@@ -206,7 +206,8 @@ Foam::chemPointISAT::chemPointISAT
     const scalar tolerance,
     const label completeSpaceSize,
     const label nActive,
-    const dictionary& coeffDict,
+    const label maxNumNewDim,
+    const Switch printProportion,
     binaryNode* node
 )
 :
@@ -222,8 +223,8 @@ Foam::chemPointISAT::chemPointISAT
     timeTag_(table.timeSteps()),
     lastTimeUsed_(table.timeSteps()),
     toRemove_(false),
-    maxNumNewDim_(coeffDict.lookupOrDefault("maxNumNewDim",0)),
-    printProportion_(coeffDict.lookupOrDefault("printProportion",false)),
+    maxNumNewDim_(maxNumNewDim),
+    printProportion_(printProportion),
     numRetrieve_(0),
     nLifeTime_(0)
 {

@@ -31,8 +31,7 @@ template<class ChemistryModel>
 Foam::ode<ChemistryModel>::ode(const fluidMulticomponentThermo& thermo)
 :
     chemistrySolver<ChemistryModel>(thermo),
-    coeffDict_(this->subDict("odeCoeffs")),
-    odeSolver_(ODESolver::New(*this, coeffDict_)),
+    odeSolver_(ODESolver::New(*this, this->subDict("odeCoeffs"))),
     cTp_(this->nEqns())
 {}
 

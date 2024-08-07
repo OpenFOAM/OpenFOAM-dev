@@ -31,7 +31,7 @@ License
 template<class ThermoType>
 Foam::chemistryReductionMethods::EFA<ThermoType>::EFA
 (
-    const IOdictionary& dict,
+    const dictionary& dict,
     chemistryModel<ThermoType>& chemistry
 )
 :
@@ -74,9 +74,9 @@ Foam::chemistryReductionMethods::EFA<ThermoType>::EFA
             }
         }
     }
-    if (this->coeffDict_.found("sortPart"))
+    if (this->coeffDict(dict).found("sortPart"))
     {
-        sortPart_ = this->coeffDict_.template lookup<scalar>("sortPart");
+        sortPart_ = this->coeffDict(dict).template lookup<scalar>("sortPart");
     }
 }
 

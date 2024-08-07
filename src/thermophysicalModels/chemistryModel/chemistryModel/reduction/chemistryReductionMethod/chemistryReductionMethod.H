@@ -38,7 +38,7 @@ SourceFiles
 #ifndef chemistryReductionMethod_H
 #define chemistryReductionMethod_H
 
-#include "IOdictionary.H"
+#include "dictionary.H"
 #include "DynamicField.H"
 #include "Switch.H"
 #include "cpuTime.H"
@@ -63,9 +63,6 @@ protected:
 
     // Protected Data
 
-        //- Dictionary that store the algorithm data
-        const dictionary coeffDict_;
-
         //- Reference to the chemistry model
         chemistryModel<ThermoType>& chemistry_;
 
@@ -83,6 +80,11 @@ protected:
 
 
     //- Protected Member Functions
+
+        const dictionary& coeffDict(const dictionary& dict) const
+        {
+            return dict.subDict("reduction");
+        }
 
         //- Initialise reduction of the mechanism
         void initReduceMechanism();
@@ -133,7 +135,7 @@ public:
         chemistryReductionMethod,
         dictionary,
         (
-            const IOdictionary& dict,
+            const dictionary& dict,
             chemistryModel<ThermoType>& chemistry
         ),
         (dict, chemistry)
@@ -151,7 +153,7 @@ public:
         //- Construct from components
         chemistryReductionMethod
         (
-            const IOdictionary& dict,
+            const dictionary& dict,
             chemistryModel<ThermoType>& chemistry
         );
 
@@ -160,7 +162,7 @@ public:
 
         static autoPtr<chemistryReductionMethod<ThermoType>> New
         (
-            const IOdictionary& dict,
+            const dictionary& dict,
             chemistryModel<ThermoType>& chemistry
         );
 

@@ -137,7 +137,7 @@ bool Foam::binaryTree::inSubTree
 Foam::binaryTree::binaryTree
 (
     chemistryTabulationMethods::ISAT& table,
-    dictionary coeffDict
+    const dictionary& coeffDict
 )
 :
     table_(table),
@@ -146,7 +146,8 @@ Foam::binaryTree::binaryTree
     size_(0),
     n2ndSearch_(0),
     max2ndSearch_(coeffDict.lookupOrDefault("max2ndSearch",0)),
-    coeffDict_(coeffDict)
+    maxNumNewDim_(coeffDict.lookupOrDefault("maxNumNewDim",0)),
+    printProportion_(coeffDict.lookupOrDefault("printProportion",false))
 {}
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -180,7 +181,8 @@ void Foam::binaryTree::insertNewLeaf
                 epsTol,
                 nCols,
                 nActive,
-                coeffDict_,
+                maxNumNewDim_,
+                printProportion_,
                 root_
             );
         root_->leafLeft() = newChemPoint;
@@ -208,7 +210,8 @@ void Foam::binaryTree::insertNewLeaf
                 epsTol,
                 nCols,
                 nActive,
-                coeffDict_
+                maxNumNewDim_,
+                printProportion_
             );
         // insert new node on the parent node in the position of the
         // previously stored leaf (phi0)

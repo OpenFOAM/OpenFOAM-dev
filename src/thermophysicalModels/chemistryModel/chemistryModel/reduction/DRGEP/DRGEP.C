@@ -31,7 +31,7 @@ License
 template<class ThermoType>
 Foam::chemistryReductionMethods::DRGEP<ThermoType>::DRGEP
 (
-    const IOdictionary& dict,
+    const dictionary& dict,
     chemistryModel<ThermoType>& chemistry
 )
 :
@@ -45,15 +45,16 @@ Foam::chemistryReductionMethods::DRGEP<ThermoType>::DRGEP
 {
     chemistryReductionMethod<ThermoType>::initReduceMechanism();
 
-    const wordHashSet initSet(this->coeffDict_.lookup("initialSet"));
+    const wordHashSet initSet(this->coeffDict(dict).lookup("initialSet"));
     forAllConstIter(wordHashSet, initSet, iter)
     {
         searchInitSet_.append(chemistry.thermo().species()[iter.key()]);
     }
 
-    if (this->coeffDict_.found("NGroupBased"))
+    if (this->coeffDict(dict).found("NGroupBased"))
     {
-        NGroupBased_ = this->coeffDict_.template lookup<label>("NGroupBased");
+        NGroupBased_ =
+            this->coeffDict(dict).template lookup<label>("NGroupBased");
     }
 
     for (label i=0; i<this->nSpecie(); i++)

@@ -257,7 +257,8 @@ public:
             const scalar tolerance,
             const label completeSpaceSize,
             const label nActive,
-            const dictionary& coeffDict,
+            const label maxNumNewDim,
+            const Switch printProportion,
             binaryNode* node = nullptr
         );
 

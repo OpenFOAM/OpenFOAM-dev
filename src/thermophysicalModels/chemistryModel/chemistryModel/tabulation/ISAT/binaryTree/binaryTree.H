@@ -77,7 +77,9 @@ class binaryTree
         //- Secondary retrieve search variables
         label max2ndSearch_;
 
-        dictionary coeffDict_;
+        label maxNumNewDim_;
+
+        Switch printProportion_;
 
 
     // Private Member Functions
@@ -122,7 +124,7 @@ public:
         binaryTree
         (
             chemistryTabulationMethods::ISAT& table,
-            dictionary coeffDict
+            const dictionary& coeffDict
         );
 
 
