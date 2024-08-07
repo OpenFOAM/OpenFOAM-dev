@@ -111,78 +111,14 @@ RNGkEpsilon<BasicMomentumTransportModel>::RNGkEpsilon
         viscosity
     ),
 
-    Cmu_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Cmu",
-            this->coeffDict_,
-            0.0845
-        )
-    ),
-    C1_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "C1",
-            this->coeffDict_,
-            1.42
-        )
-    ),
-    C2_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "C2",
-            this->coeffDict_,
-            1.68
-        )
-    ),
-    C3_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "C3",
-            this->coeffDict_,
-            0
-        )
-    ),
-    sigmak_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "sigmak",
-            this->coeffDict_,
-            0.71942
-        )
-    ),
-    sigmaEps_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "sigmaEps",
-            this->coeffDict_,
-            0.71942
-        )
-    ),
-    eta0_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "eta0",
-            this->coeffDict_,
-            4.38
-        )
-    ),
-    beta_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "beta",
-            this->coeffDict_,
-            0.012
-        )
-    ),
+    Cmu_("Cmu", this->coeffDict(), 0.0845),
+    C1_("C1", this->coeffDict(), 1.42),
+    C2_("C2", this->coeffDict(), 1.68),
+    C3_("C3", this->coeffDict(), 0),
+    sigmak_("sigmak", this->coeffDict(), 0.71942),
+    sigmaEps_("sigmaEps", this->coeffDict(), 0.71942),
+    eta0_("eta0", this->coeffDict(), 4.38),
+    beta_("beta", this->coeffDict(), 0.012),
 
     k_
     (

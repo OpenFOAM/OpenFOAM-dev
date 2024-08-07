@@ -157,69 +157,13 @@ kOmega2006<BasicMomentumTransportModel>::kOmega2006
         viscosity
     ),
 
-    betaStar_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "betaStar",
-            this->coeffDict_,
-            0.09
-        )
-    ),
-    beta0_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "beta0",
-            this->coeffDict_,
-            0.0708
-        )
-    ),
-    gamma_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "gamma",
-            this->coeffDict_,
-            0.52
-        )
-    ),
-    Clim_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Clim",
-            this->coeffDict_,
-            0.875
-        )
-    ),
-    sigmaDo_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "sigmaDo",
-            this->coeffDict_,
-            0.125
-        )
-    ),
-    alphaK_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "alphaK",
-            this->coeffDict_,
-            0.6
-        )
-    ),
-    alphaOmega_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "alphaOmega",
-            this->coeffDict_,
-            0.5
-        )
-    ),
+    betaStar_("betaStar", this->coeffDict(), 0.09),
+    beta0_("beta0", this->coeffDict(), 0.0708),
+    gamma_("gamma", this->coeffDict(), 0.52),
+    Clim_("Clim", this->coeffDict(), 0.875),
+    sigmaDo_("sigmaDo", this->coeffDict(), 0.125),
+    alphaK_("alphaK", this->coeffDict(), 0.6),
+    alphaOmega_("alphaOmega", this->coeffDict(), 0.5),
 
     k_
     (

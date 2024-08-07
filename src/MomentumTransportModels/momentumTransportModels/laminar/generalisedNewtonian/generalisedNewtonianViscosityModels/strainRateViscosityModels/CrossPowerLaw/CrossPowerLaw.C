@@ -60,7 +60,7 @@ CrossPowerLaw
     strainRateViscosityModel(viscosityProperties, viscosity, U),
     nuInf_("nuInf", dimKinematicViscosity, 0),
     m_("m", dimTime, 0),
-    tauStar_( "tauStar", dimKinematicViscosity/dimTime, 0),
+    tauStar_("tauStar", dimKinematicViscosity/dimTime, 0),
     n_("n", dimless, 0)
 {
     read(viscosityProperties);

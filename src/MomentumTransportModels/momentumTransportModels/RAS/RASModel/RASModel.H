@@ -60,14 +60,8 @@ protected:
 
     // Protected data
 
-        //- RAS coefficients dictionary
-        dictionary RASDict_;
-
         //- Turbulence on/off flag
         Switch turbulence_;
-
-        //- Model coefficients dictionary
-        dictionary coeffDict_;
 
         //- Lower limit of k
         dimensionedScalar kMin_;
@@ -78,6 +72,15 @@ protected:
         //- Run-time selectable generalised Newtonian viscosity model
         autoPtr<laminarModels::generalisedNewtonianViscosityModel>
             viscosityModel_;
+
+
+    // Protected member functions
+
+        //- Const access to the RAS dictionary
+        const dictionary& RASDict() const;
+
+        //- Const access to the coefficients dictionary
+        const dictionary& coeffDict() const;
 
 
 public:
@@ -150,12 +153,6 @@ public:
 
         //- Read model coefficients if they have changed
         virtual bool read();
-
-        //- Const access to the coefficients dictionary
-        virtual const dictionary& coeffDict() const
-        {
-            return coeffDict_;
-        }
 
         //- Return the laminar viscosity
         virtual tmp<volScalarField> nu() const

@@ -241,97 +241,17 @@ SpalartAllmarasDES<BasicMomentumTransportModel>::SpalartAllmarasDES
         viscosity
     ),
 
-    sigmaNut_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "sigmaNut",
-            this->coeffDict_,
-            0.66666
-        )
-    ),
-    kappa_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "kappa",
-            this->coeffDict_,
-            0.41
-        )
-    ),
-    Cb1_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Cb1",
-            this->coeffDict_,
-            0.1355
-        )
-    ),
-    Cb2_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Cb2",
-            this->coeffDict_,
-            0.622
-        )
-    ),
+    sigmaNut_("sigmaNut", this->coeffDict(), 0.66666),
+    kappa_("kappa", this->coeffDict(), 0.41),
+    Cb1_("Cb1", this->coeffDict(), 0.1355),
+    Cb2_("Cb2", this->coeffDict(), 0.622),
     Cw1_(Cb1_/sqr(kappa_) + (1.0 + Cb2_)/sigmaNut_),
-    Cw2_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Cw2",
-            this->coeffDict_,
-            0.3
-        )
-    ),
-    Cw3_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Cw3",
-            this->coeffDict_,
-            2.0
-        )
-    ),
-    Cv1_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Cv1",
-            this->coeffDict_,
-            7.1
-        )
-    ),
-    Cs_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Cs",
-            this->coeffDict_,
-            0.3
-        )
-    ),
-    CDES_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "CDES",
-            this->coeffDict_,
-            0.65
-        )
-    ),
-    ck_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "ck",
-            this->coeffDict_,
-            0.07
-        )
-    ),
+    Cw2_("Cw2", this->coeffDict(), 0.3),
+    Cw3_("Cw3", this->coeffDict(), 2.0),
+    Cv1_("Cv1", this->coeffDict(), 7.1),
+    Cs_("Cs", this->coeffDict(), 0.3),
+    CDES_("CDES", this->coeffDict(), 0.65),
+    ck_("ck", this->coeffDict(), 0.07),
 
     nuTilda_
     (

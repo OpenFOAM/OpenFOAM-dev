@@ -82,7 +82,8 @@ Foam::RASThermophysicalTransportModel
 
         const word modelType(modelDict.subDict("RAS").lookup( "model"));
 
-        Info<< "Selecting RAS thermophysical transport model "
+        Info<< indent
+            << "Selecting RAS thermophysical transport model "
             << modelType << endl;
 
         typename dictionaryConstructorTable::iterator cstrIter =
@@ -98,14 +99,14 @@ Foam::RASThermophysicalTransportModel
                 << exit(FatalError);
         }
 
-        Info << incrIndent;
+        Info<< incrIndent;
 
         autoPtr<RASThermophysicalTransportModel> modelPtr
         (
             cstrIter()(momentumTransport, thermo)
         );
 
-        Info << decrIndent;
+        Info<< decrIndent;
 
         return modelPtr;
     }
@@ -120,10 +121,11 @@ Foam::RASThermophysicalTransportModel
                 >
             > RASunityLewisEddyDiffusivity;
 
-        Info<< "Selecting default RAS thermophysical transport model "
+        Info<< indent
+            << "Selecting default RAS thermophysical transport model "
             <<  RASunityLewisEddyDiffusivity::typeName << endl;
 
-        Info << incrIndent;
+        Info<< incrIndent;
 
         autoPtr<RASThermophysicalTransportModel> modelPtr
         (
@@ -136,7 +138,7 @@ Foam::RASThermophysicalTransportModel
             )
         );
 
-        Info << decrIndent;
+        Info<< decrIndent;
 
         return modelPtr;
     }

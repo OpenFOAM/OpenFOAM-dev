@@ -179,11 +179,10 @@ T Foam::dictionary::lookupOrDefault
 (
     const word& keyword,
     const T& defaultValue,
-    bool recursive,
-    bool patternMatch
+    const bool writeDefault
 ) const
 {
-    const entry* entryPtr = lookupEntryPtr(keyword, recursive, patternMatch);
+    const entry* entryPtr = lookupEntryPtr(keyword, false, false);
 
     if (entryPtr)
     {
@@ -191,7 +190,7 @@ T Foam::dictionary::lookupOrDefault
     }
     else
     {
-        if (writeOptionalEntries)
+        if (writeDefault)
         {
             Info<< indent << "Default: " << keyword
                 << " " << defaultValue
@@ -209,11 +208,10 @@ T Foam::dictionary::lookupOrDefault
     const word& keyword,
     const unitConversion& defaultUnits,
     const T& defaultValue,
-    bool recursive,
-    bool patternMatch
+    const bool writeDefault
 ) const
 {
-    const entry* entryPtr = lookupEntryPtr(keyword, recursive, patternMatch);
+    const entry* entryPtr = lookupEntryPtr(keyword, false, false);
 
     if (entryPtr)
     {
@@ -221,7 +219,7 @@ T Foam::dictionary::lookupOrDefault
     }
     else
     {
-        if (writeOptionalEntries)
+        if (writeDefault)
         {
             Info<< indent << "Default: " << keyword
                 << " " << defaultValue
@@ -237,13 +235,11 @@ template<class T>
 T Foam::dictionary::lookupOrDefaultBackwardsCompatible
 (
     const wordList& keywords,
-    const T& defaultValue,
-    bool recursive,
-    bool patternMatch
+    const T& defaultValue
 ) const
 {
     const entry* entryPtr =
-        lookupEntryPtrBackwardsCompatible(keywords, recursive, patternMatch);
+        lookupEntryPtrBackwardsCompatible(keywords, false, false);
 
     if (entryPtr)
     {
@@ -252,13 +248,7 @@ T Foam::dictionary::lookupOrDefaultBackwardsCompatible
     else
     {
         // Generate debugging messages using the first keyword
-        return lookupOrDefault<T>
-        (
-            keywords[0],
-            defaultValue,
-            recursive,
-            patternMatch
-        );
+        return lookupOrDefault<T>(keywords[0], defaultValue);
     }
 }
 
@@ -268,13 +258,11 @@ T Foam::dictionary::lookupOrDefaultBackwardsCompatible
 (
     const wordList& keywords,
     const unitConversion& defaultUnits,
-    const T& defaultValue,
-    bool recursive,
-    bool patternMatch
+    const T& defaultValue
 ) const
 {
     const entry* entryPtr =
-        lookupEntryPtrBackwardsCompatible(keywords, recursive, patternMatch);
+        lookupEntryPtrBackwardsCompatible(keywords, false, false);
 
     if (entryPtr)
     {
@@ -284,13 +272,7 @@ T Foam::dictionary::lookupOrDefaultBackwardsCompatible
     else
     {
         // Generate debugging messages using the first keyword
-        return lookupOrDefault<T>
-        (
-            keywords[0],
-            defaultValue,
-            recursive,
-            patternMatch
-        );
+        return lookupOrDefault<T>(keywords[0], defaultValue);
     }
 }
 
@@ -299,12 +281,10 @@ template<class T>
 T Foam::dictionary::lookupOrAddDefault
 (
     const word& keyword,
-    const T& defaultValue,
-    bool recursive,
-    bool patternMatch
+    const T& defaultValue
 )
 {
-    const entry* entryPtr = lookupEntryPtr(keyword, recursive, patternMatch);
+    const entry* entryPtr = lookupEntryPtr(keyword, false, false);
 
     if (entryPtr)
     {
@@ -320,30 +300,6 @@ T Foam::dictionary::lookupOrAddDefault
         }
 
         add(new primitiveEntry(keyword, defaultValue));
-        return defaultValue;
-    }
-}
-
-
-template<class T>
-T Foam::dictionary::lookupOrPrintDefault
-(
-    const word& keyword,
-    const T& defaultValue,
-    bool recursive,
-    bool patternMatch
-) const
-{
-    const entry* entryPtr = lookupEntryPtr(keyword, recursive, patternMatch);
-
-    if (entryPtr)
-    {
-        return readType<T>(keyword, entryPtr->stream());
-    }
-    else
-    {
-        writeEntry(Info, keyword, defaultValue);
-
         return defaultValue;
     }
 }

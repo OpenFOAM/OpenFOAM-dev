@@ -67,14 +67,8 @@ protected:
 
     // Protected data
 
-        //- LES coefficients dictionary
-        dictionary LESDict_;
-
         //- Turbulence on/off flag
         Switch turbulence_;
-
-        //- Model coefficients dictionary
-        dictionary coeffDict_;
 
         //- Lower limit of k
         dimensionedScalar kMin_;
@@ -88,6 +82,15 @@ protected:
 
         //- Run-time selectable delta model
         autoPtr<Foam::LESdelta> delta_;
+
+
+    // Protected member functions
+
+        //- Const access to the LES dictionary
+        const dictionary& LESDict() const;
+
+        //- Const access to the coefficients dictionary
+        const dictionary& coeffDict() const;
 
 
 public:
@@ -160,12 +163,6 @@ public:
 
         //- Read model coefficients if they have changed
         virtual bool read();
-
-        //- Const access to the coefficients dictionary
-        virtual const dictionary& coeffDict() const
-        {
-            return coeffDict_;
-        }
 
         //- Access function to filter width
         inline const volScalarField& delta() const

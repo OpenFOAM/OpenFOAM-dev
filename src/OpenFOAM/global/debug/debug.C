@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -223,10 +223,7 @@ int Foam::debug::debugSwitch(const char* name, const int defaultValue)
 
     debugDefaultSwitches().set(name, defaultValue);
 
-    return debugSwitches().lookupOrAddDefault
-    (
-        name, defaultValue, false, false
-    );
+    return debugSwitches().lookupOrAddDefault(name, defaultValue);
 }
 
 
@@ -245,10 +242,7 @@ int Foam::debug::infoSwitch(const char* name, const int defaultValue)
 
     infoDefaultSwitches().set(name, defaultValue);
 
-    return infoSwitches().lookupOrAddDefault
-    (
-        name, defaultValue, false, false
-    );
+    return infoSwitches().lookupOrAddDefault(name, defaultValue);
 }
 
 
@@ -267,10 +261,7 @@ int Foam::debug::optimisationSwitch(const char* name, const int defaultValue)
 
     optimisationDefaultSwitches().set(name, defaultValue);
 
-    return optimisationSwitches().lookupOrAddDefault
-    (
-        name, defaultValue, false, false
-    );
+    return optimisationSwitches().lookupOrAddDefault(name, defaultValue);
 }
 
 
@@ -292,10 +283,7 @@ float Foam::debug::floatOptimisationSwitch
 
     optimisationDefaultSwitches().set(name, defaultValue);
 
-    return optimisationSwitches().lookupOrAddDefault
-    (
-        name, defaultValue, false, false
-    );
+    return optimisationSwitches().lookupOrAddDefault(name, defaultValue);
 }
 
 
@@ -317,10 +305,7 @@ const Foam::word Foam::debug::wordOptimisationSwitch
 
     optimisationDefaultSwitches().set(name, defaultValue);
 
-    return optimisationSwitches().lookupOrAddDefault
-    (
-        name, defaultValue, false, false
-    );
+    return optimisationSwitches().lookupOrAddDefault(name, defaultValue);
 }
 
 

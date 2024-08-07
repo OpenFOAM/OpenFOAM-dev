@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -355,68 +355,14 @@ kOmegaSSTLM<BasicMomentumTransportModel>::kOmegaSSTLM
         viscosity
     ),
 
-    ca1_
-    (
-        dimensionedScalar::lookupOrAddToDict
-        (
-            "ca1",
-            this->coeffDict_,
-            2
-        )
-    ),
-    ca2_
-    (
-        dimensionedScalar::lookupOrAddToDict
-        (
-            "ca2",
-            this->coeffDict_,
-            0.06
-        )
-    ),
-    ce1_
-    (
-        dimensionedScalar::lookupOrAddToDict
-        (
-            "ce1",
-            this->coeffDict_,
-            1
-        )
-    ),
-    ce2_
-    (
-        dimensionedScalar::lookupOrAddToDict
-        (
-            "ce2",
-            this->coeffDict_,
-            50
-        )
-    ),
-    cThetat_
-    (
-        dimensionedScalar::lookupOrAddToDict
-        (
-            "cThetat",
-            this->coeffDict_,
-            0.03
-        )
-    ),
-    sigmaThetat_
-    (
-        dimensionedScalar::lookupOrAddToDict
-        (
-            "sigmaThetat",
-            this->coeffDict_,
-            2
-        )
-    ),
-    lambdaErr_
-    (
-        this->coeffDict_.lookupOrDefault("lambdaErr", 1e-6)
-    ),
-    maxLambdaIter_
-    (
-        this->coeffDict_.lookupOrDefault("maxLambdaIter", 10)
-    ),
+    ca1_("ca1", this->coeffDict(), 2),
+    ca2_("ca2", this->coeffDict(), 0.06),
+    ce1_("ce1", this->coeffDict(), 1),
+    ce2_("ce2", this->coeffDict(), 50),
+    cThetat_("cThetat", this->coeffDict(), 0.03),
+    sigmaThetat_("sigmaThetat", this->coeffDict(), 2),
+    lambdaErr_(this->coeffDict().lookupOrDefault("lambdaErr", 1e-6)),
+    maxLambdaIter_(this->coeffDict().lookupOrDefault("maxLambdaIter", 10)),
     deltaU_("deltaU", dimVelocity, small),
 
     ReThetat_

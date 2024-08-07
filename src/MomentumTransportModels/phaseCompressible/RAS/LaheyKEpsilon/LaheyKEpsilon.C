@@ -63,45 +63,10 @@ LaheyKEpsilon<BasicMomentumTransportModel>::LaheyKEpsilon
 
     gasTurbulencePtr_(nullptr),
 
-    alphaInversion_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "alphaInversion",
-            this->coeffDict_,
-            0.3
-        )
-    ),
-
-    Cp_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Cp",
-            this->coeffDict_,
-            0.25
-        )
-    ),
-
-    C4_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "C4",
-            this->coeffDict_,
-            this->C2_.value()
-        )
-    ),
-
-    Cmub_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Cmub",
-            this->coeffDict_,
-            0.6
-        )
-    )
+    alphaInversion_("alphaInversion", this->coeffDict(), 0.3),
+    Cp_("Cp", this->coeffDict(), 0.25),
+    C4_("C4", this->coeffDict(), this->C2_.value()),
+    Cmub_("Cmub", this->coeffDict(), 0.6)
 {}
 
 

@@ -127,87 +127,15 @@ LienLeschziner::LienLeschziner
         viscosity
     ),
 
-    Ceps1_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Ceps1",
-            coeffDict_,
-            1.44
-        )
-    ),
-    Ceps2_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Ceps2",
-            coeffDict_,
-            1.92
-        )
-    ),
-    sigmak_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "sigmak",
-            coeffDict_,
-            1.0
-        )
-    ),
-    sigmaEps_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "sigmaEps",
-            coeffDict_,
-            1.3
-        )
-    ),
-    Cmu_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Cmu",
-            coeffDict_,
-            0.09
-        )
-    ),
-    kappa_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "kappa",
-            coeffDict_,
-            0.41
-        )
-    ),
-    Anu_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Anu",
-            coeffDict_,
-            0.016
-        )
-    ),
-    Aeps_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Aeps",
-            coeffDict_,
-            0.263
-        )
-    ),
-    AE_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "AE",
-            coeffDict_,
-            0.00222
-        )
-    ),
+    Ceps1_("Ceps1", coeffDict(), 1.44),
+    Ceps2_("Ceps2", coeffDict(), 1.92),
+    sigmak_("sigmak", coeffDict(), 1.0),
+    sigmaEps_("sigmaEps", coeffDict(), 1.3),
+    Cmu_("Cmu", coeffDict(), 0.09),
+    kappa_("kappa", coeffDict(), 0.41),
+    Anu_("Anu", coeffDict(), 0.016),
+    Aeps_("Aeps", coeffDict(), 0.263),
+    AE_("AE", coeffDict(), 0.00222),
 
     k_
     (

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,9 +71,9 @@ Foam::fv::VoFTurbulenceDamping::VoFTurbulenceDamping
     (
         mesh.lookupType<incompressibleMomentumTransportModel>(phaseName_)
     ),
-    C2_("C2", dimless, 0),
-    betaStar_("betaStar", dimless, 0),
-    beta_("beta", dimless, 0)
+    C2_("C2", dimless, dict, 1.92),
+    betaStar_("betaStar", dimless, dict, 0.09),
+    beta_("beta", dimless, dict, 0.072)
 {
     const word epsilonName(IOobject::groupName("epsilon", phaseName_));
     const word omegaName(IOobject::groupName("omega", phaseName_));
@@ -81,23 +81,10 @@ Foam::fv::VoFTurbulenceDamping::VoFTurbulenceDamping
     if (mesh.foundObject<volScalarField>(epsilonName))
     {
         fieldName_ = epsilonName;
-        C2_.read(turbulence_.coeffDict());
     }
     else if (mesh.foundObject<volScalarField>(omegaName))
     {
         fieldName_ = omegaName;
-        betaStar_.read(turbulence_.coeffDict());
-
-        // Read beta for k-omega models or beta1 for k-omega SST
-        if (turbulence_.coeffDict().found("beta"))
-        {
-            beta_.read(turbulence_.coeffDict());
-        }
-        else
-        {
-            beta_ =
-                dimensionedScalar("beta1", dimless, turbulence_.coeffDict());
-        }
     }
     else
     {

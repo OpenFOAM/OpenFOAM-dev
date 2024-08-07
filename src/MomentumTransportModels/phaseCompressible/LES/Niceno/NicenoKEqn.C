@@ -63,35 +63,9 @@ NicenoKEqn<BasicMomentumTransportModel>::NicenoKEqn
 
     gasTurbulencePtr_(nullptr),
 
-    alphaInversion_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "alphaInversion",
-            this->coeffDict_,
-            0.3
-        )
-    ),
-
-    Cp_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Cp",
-            this->coeffDict_,
-            this->Ck_.value()
-        )
-    ),
-
-    Cmub_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Cmub",
-            this->coeffDict_,
-            0.6
-        )
-    )
+    alphaInversion_("alphaInversion", this->coeffDict(), 0.3),
+    Cp_("Cp", this->coeffDict(), this->Ck_.value()),
+    Cmub_("Cmub", this->coeffDict(), 0.6)
 {}
 
 

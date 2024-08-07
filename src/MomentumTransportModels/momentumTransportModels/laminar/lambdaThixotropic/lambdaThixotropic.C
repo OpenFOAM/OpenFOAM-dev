@@ -61,30 +61,21 @@ lambdaThixotropic<BasicMomentumTransportModel>::lambdaThixotropic
         viscosity
     ),
 
-    a_("a", dimless/dimTime, this->coeffDict_),
-    b_("b", dimless, this->coeffDict_),
-    d_("d", dimless, this->coeffDict_),
-    c_("c", pow(dimTime, d_.value() - scalar(1)), this->coeffDict_),
-    nu0_("nu0", dimKinematicViscosity, this->coeffDict_),
-    nuInf_("nuInf", dimKinematicViscosity, this->coeffDict_),
+    a_("a", dimless/dimTime, this->coeffDict()),
+    b_("b", dimless, this->coeffDict()),
+    d_("d", dimless, this->coeffDict()),
+    c_("c", pow(dimTime, d_.value() - scalar(1)), this->coeffDict()),
+    nu0_("nu0", dimKinematicViscosity, this->coeffDict()),
+    nuInf_("nuInf", dimKinematicViscosity, this->coeffDict()),
     K_(1 - sqrt(nuInf_/nu0_)),
-    BinghamPlastic_(this->coeffDict_.found("sigmay")),
+    BinghamPlastic_(this->coeffDict().found("sigmay")),
     sigmay_
     (
         BinghamPlastic_
-      ? dimensionedScalar("sigmay", dimPressure/dimDensity, this->coeffDict_)
+      ? dimensionedScalar("sigmay", dimPressure/dimDensity, this->coeffDict())
       : dimensionedScalar("sigmay", dimPressure/dimDensity, 0)
     ),
-    residualAlpha_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "residualAlpha",
-            this->coeffDict_,
-            dimless,
-            1e-6
-        )
-    ),
+    residualAlpha_("residualAlpha", dimless, this->coeffDict(), 1e-6),
     lambda_
     (
         IOobject
@@ -175,7 +166,7 @@ bool lambdaThixotropic<BasicMomentumTransportModel>::read()
         (
             "c",
             pow(dimTime, d_.value() - scalar(1)),
-            this->coeffDict_
+            this->coeffDict()
         );
 
         nu0_.read(this->coeffDict());

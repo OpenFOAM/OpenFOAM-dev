@@ -249,259 +249,34 @@ kkLOmega::kkLOmega
         viscosity
     ),
 
-    A0_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "A0",
-            coeffDict_,
-            4.04
-        )
-    ),
-    As_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "As",
-            coeffDict_,
-            2.12
-        )
-    ),
-    Av_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Av",
-            coeffDict_,
-            6.75
-        )
-    ),
-    Abp_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Abp",
-            coeffDict_,
-            0.6
-        )
-    ),
-    Anat_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Anat",
-            coeffDict_,
-            200
-        )
-    ),
-    Ats_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Ats",
-            coeffDict_,
-            200
-        )
-    ),
-    CbpCrit_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "CbpCrit",
-            coeffDict_,
-            1.2
-        )
-    ),
-    Cnc_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Cnc",
-            coeffDict_,
-            0.1
-        )
-    ),
-    CnatCrit_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "CnatCrit",
-            coeffDict_,
-            1250
-        )
-    ),
-    Cint_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Cint",
-            coeffDict_,
-            0.75
-        )
-    ),
-    CtsCrit_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "CtsCrit",
-            coeffDict_,
-            1000
-        )
-    ),
-    CrNat_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "CrNat",
-            coeffDict_,
-            0.02
-        )
-    ),
-    C11_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "C11",
-            coeffDict_,
-            3.4e-6
-        )
-    ),
-    C12_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "C12",
-            coeffDict_,
-            1.0e-10
-        )
-    ),
-    CR_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "CR",
-            coeffDict_,
-            0.12
-        )
-    ),
-    CalphaTheta_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "CalphaTheta",
-            coeffDict_,
-            0.035
-        )
-    ),
-    Css_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Css",
-            coeffDict_,
-            1.5
-        )
-    ),
-    CtauL_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "CtauL",
-            coeffDict_,
-            4360
-        )
-    ),
-    Cw1_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Cw1",
-            coeffDict_,
-            0.44
-        )
-    ),
-    Cw2_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Cw2",
-            coeffDict_,
-            0.92
-        )
-    ),
-    Cw3_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Cw3",
-            coeffDict_,
-            0.3
-        )
-    ),
-    CwR_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "CwR",
-            coeffDict_,
-            1.5
-        )
-    ),
-    Clambda_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Clambda",
-            coeffDict_,
-            2.495
-        )
-    ),
-    CmuStd_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "CmuStd",
-            coeffDict_,
-            0.09
-        )
-    ),
-    Prtheta_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Prtheta",
-            coeffDict_,
-            0.85
-        )
-    ),
-    Sigmak_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Sigmak",
-            coeffDict_,
-            1
-        )
-    ),
-    Sigmaw_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Sigmaw",
-            coeffDict_,
-            1.17
-        )
-    ),
-    omegaMin_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "omegaMin",
-            coeffDict_,
-            dimless/dimTime,
-            small
-        )
-    ),
+    A0_("A0", coeffDict(), 4.04),
+    As_("As", coeffDict(), 2.12),
+    Av_("Av", coeffDict(), 6.75),
+    Abp_("Abp", coeffDict(), 0.6),
+    Anat_("Anat", coeffDict(), 200),
+    Ats_("Ats", coeffDict(), 200),
+    CbpCrit_("CbpCrit", coeffDict(), 1.2),
+    Cnc_("Cnc", coeffDict(), 0.1),
+    CnatCrit_("CnatCrit", coeffDict(), 1250),
+    Cint_("Cint", coeffDict(), 0.75),
+    CtsCrit_("CtsCrit", coeffDict(), 1000),
+    CrNat_("CrNat", coeffDict(), 0.02),
+    C11_("C11", coeffDict(), 3.4e-6),
+    C12_("C12", coeffDict(), 1.0e-10),
+    CR_("CR", coeffDict(), 0.12),
+    CalphaTheta_("CalphaTheta", coeffDict(), 0.035),
+    Css_("Css", coeffDict(), 1.5),
+    CtauL_("CtauL", coeffDict(), 4360),
+    Cw1_("Cw1", coeffDict(), 0.44),
+    Cw2_("Cw2", coeffDict(), 0.92),
+    Cw3_("Cw3", coeffDict(), 0.3),
+    CwR_("CwR", coeffDict(), 1.5),
+    Clambda_("Clambda", coeffDict(), 2.495),
+    CmuStd_("CmuStd", coeffDict(), 0.09),
+    Prtheta_("Prtheta", coeffDict(), 0.85),
+    Sigmak_("Sigmak", coeffDict(), 1),
+    Sigmaw_("Sigmaw", coeffDict(), 1.17),
+    omegaMin_("omegaMin", dimless/dimTime, coeffDict(), small),
     kt_
     (
         IOobject

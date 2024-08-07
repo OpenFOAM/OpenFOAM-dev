@@ -60,15 +60,7 @@ buoyantKEpsilon<BasicMomentumTransportModel>::buoyantKEpsilon
         type
     ),
 
-    Cg_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Cg",
-            this->coeffDict_,
-            1.0
-        )
-    )
+    Cg_("Cg", this->coeffDict(), 1.0)
 {}
 
 

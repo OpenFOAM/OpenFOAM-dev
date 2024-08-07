@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -239,123 +239,19 @@ kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::kOmegaSST
         viscosity
     ),
 
-    alphaK1_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "alphaK1",
-            this->coeffDict_,
-            0.85
-        )
-    ),
-    alphaK2_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "alphaK2",
-            this->coeffDict_,
-            1.0
-        )
-    ),
-    alphaOmega1_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "alphaOmega1",
-            this->coeffDict_,
-            0.5
-        )
-    ),
-    alphaOmega2_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "alphaOmega2",
-            this->coeffDict_,
-            0.856
-        )
-    ),
-    gamma1_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "gamma1",
-            this->coeffDict_,
-            5.0/9.0
-        )
-    ),
-    gamma2_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "gamma2",
-            this->coeffDict_,
-            0.44
-        )
-    ),
-    beta1_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "beta1",
-            this->coeffDict_,
-            0.075
-        )
-    ),
-    beta2_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "beta2",
-            this->coeffDict_,
-            0.0828
-        )
-    ),
-    betaStar_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "betaStar",
-            this->coeffDict_,
-            0.09
-        )
-    ),
-    a1_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "a1",
-            this->coeffDict_,
-            0.31
-        )
-    ),
-    b1_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "b1",
-            this->coeffDict_,
-            1.0
-        )
-    ),
-    c1_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "c1",
-            this->coeffDict_,
-            10.0
-        )
-    ),
-    F3_
-    (
-        Switch::lookupOrAddToDict
-        (
-            "F3",
-            this->coeffDict_,
-            false
-        )
-    ),
+    alphaK1_("alphaK1", this->coeffDict(), 0.85),
+    alphaK2_("alphaK2", this->coeffDict(), 1.0),
+    alphaOmega1_("alphaOmega1", this->coeffDict(), 0.5),
+    alphaOmega2_("alphaOmega2", this->coeffDict(), 0.856),
+    gamma1_("gamma1", this->coeffDict(), 5.0/9.0),
+    gamma2_("gamma2", this->coeffDict(), 0.44),
+    beta1_("beta1", this->coeffDict(), 0.075),
+    beta2_("beta2", this->coeffDict(), 0.0828),
+    betaStar_("betaStar", this->coeffDict(), 0.09),
+    a1_("a1", this->coeffDict(), 0.31),
+    b1_("b1", this->coeffDict(), 1.0),
+    c1_("c1", this->coeffDict(), 10.0),
+    F3_(this->coeffDict().template lookupOrDefault<Switch>("F3", false)),
 
     k_
     (

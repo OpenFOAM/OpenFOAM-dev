@@ -51,38 +51,16 @@ Foam::RASModel<BasicMomentumTransportModel>::RASModel
         viscosity
     ),
 
-    RASDict_(this->subOrEmptyDict("RAS")),
-    turbulence_(RASDict_.lookup("turbulence")),
-    coeffDict_(RASDict_.optionalSubDict(type + "Coeffs")),
-
-    kMin_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "kMin",
-            RASDict_,
-            sqr(dimVelocity),
-            small
-        )
-    ),
-
-    nutMaxCoeff_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "nutMaxCoeff",
-            RASDict_,
-            dimless,
-            1e5
-        )
-    ),
+    turbulence_(RASDict().lookup("turbulence")),
+    kMin_("kMin", sqr(dimVelocity), RASDict(), small),
+    nutMaxCoeff_("nutMaxCoeff", dimless, RASDict(), 1e5),
 
     viscosityModel_
     (
-        coeffDict_.found("viscosityModel")
+        coeffDict().found("viscosityModel")
       ? laminarModels::generalisedNewtonianViscosityModel::New
         (
-            coeffDict_,
+            coeffDict(),
             viscosity,
             U
         )
@@ -90,7 +68,7 @@ Foam::RASModel<BasicMomentumTransportModel>::RASModel
         (
             new laminarModels::generalisedNewtonianViscosityModels::Newtonian
             (
-                coeffDict_,
+                coeffDict(),
                 viscosity,
                 U
             )
@@ -132,7 +110,8 @@ Foam::RASModel<BasicMomentumTransportModel>::New
             {"model", "RASModel"}
         );
 
-    Info<< "Selecting RAS turbulence model " << modelType << endl;
+    Info<< indent
+        << "Selecting RAS turbulence model " << modelType << endl;
 
     typename dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(modelType);
@@ -147,27 +126,45 @@ Foam::RASModel<BasicMomentumTransportModel>::New
             << exit(FatalError);
     }
 
-    return autoPtr<RASModel>
+    Info<< incrIndent;
+
+    autoPtr<RASModel> modelPtr
     (
         cstrIter()(alpha, rho, U, alphaRhoPhi, phi, viscosity)
     );
+
+    Info<< decrIndent;
+
+    return modelPtr;
 }
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class BasicMomentumTransportModel>
+const Foam::dictionary&
+Foam::RASModel<BasicMomentumTransportModel>::RASDict() const
+{
+    return this->subDict("RAS");
+}
+
+
+template<class BasicMomentumTransportModel>
+const Foam::dictionary&
+Foam::RASModel<BasicMomentumTransportModel>::coeffDict() const
+{
+    return this->RASDict().optionalSubDict(type() + "Coeffs");
+}
+
+
+template<class BasicMomentumTransportModel>
 bool Foam::RASModel<BasicMomentumTransportModel>::read()
 {
     if (BasicMomentumTransportModel::read())
     {
-        RASDict_ <<= this->subDict("RAS");
-        RASDict_.lookup("turbulence") >> turbulence_;
-
-        coeffDict_ <<= RASDict_.optionalSubDict(type() + "Coeffs");
-
-        kMin_.readIfPresent(RASDict_);
-        nutMaxCoeff_.readIfPresent(RASDict_);
+        RASDict().lookup("turbulence") >> turbulence_;
+        kMin_.readIfPresent(RASDict());
+        nutMaxCoeff_.readIfPresent(RASDict());
 
         return true;
     }

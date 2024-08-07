@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,25 +57,8 @@ LESeddyViscosity<BasicMomentumTransportModel>::LESeddyViscosity
         viscosity
     ),
 
-    Ck_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Ck",
-            this->coeffDict_,
-            0.094
-        )
-    ),
-
-    Ce_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Ce",
-            this->coeffDict_,
-            1.048
-        )
-    )
+    Ck_("Ck", this->coeffDict(), 0.094),
+    Ce_("Ce", this->coeffDict(), 1.048)
 {}
 
 

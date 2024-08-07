@@ -206,12 +206,7 @@ kEpsilonLopesdaCosta<BasicMomentumTransportModel>::kEpsilonLopesdaCosta
             this->mesh_
         ),
         this->mesh_,
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Cmu",
-            this->coeffDict_,
-            0.09
-        )
+        dimensioned<scalar>("Cmu", this->coeffDict(), 0.09)
     ),
     C1_
     (
@@ -222,12 +217,7 @@ kEpsilonLopesdaCosta<BasicMomentumTransportModel>::kEpsilonLopesdaCosta
             this->mesh_
         ),
         this->mesh_,
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "C1",
-            this->coeffDict_,
-            1.44
-        )
+        dimensioned<scalar>("C1", this->coeffDict(), 1.44)
     ),
     C2_
     (
@@ -238,12 +228,7 @@ kEpsilonLopesdaCosta<BasicMomentumTransportModel>::kEpsilonLopesdaCosta
             this->mesh_
         ),
         this->mesh_,
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "C2",
-            this->coeffDict_,
-            1.92
-        )
+        dimensioned<scalar>("C2", this->coeffDict(), 1.92)
     ),
     sigmak_
     (
@@ -254,12 +239,7 @@ kEpsilonLopesdaCosta<BasicMomentumTransportModel>::kEpsilonLopesdaCosta
             this->mesh_
         ),
         this->mesh_,
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "sigmak",
-            this->coeffDict_,
-            1.0
-        )
+        dimensioned<scalar>("sigmak", this->coeffDict(), 1.0)
     ),
     sigmaEps_
     (
@@ -270,12 +250,7 @@ kEpsilonLopesdaCosta<BasicMomentumTransportModel>::kEpsilonLopesdaCosta
             this->mesh_
         ),
         this->mesh_,
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "sigmaEps",
-            this->coeffDict_,
-            1.3
-        )
+        dimensioned<scalar>("sigmaEps", this->coeffDict(), 1.3)
     ),
 
     CdAv_

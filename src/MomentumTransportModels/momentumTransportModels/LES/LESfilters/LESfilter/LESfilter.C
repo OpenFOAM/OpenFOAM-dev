@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,7 +58,10 @@ Foam::autoPtr<Foam::LESfilter> Foam::LESfilter::New
             << exit(FatalError);
     }
 
-    return autoPtr<LESfilter>(cstrIter()(mesh, dict));
+    Info << incrIndent;
+    autoPtr<LESfilter> modelPtr(cstrIter()(mesh, dict));
+    Info << decrIndent;
+    return modelPtr;
 }
 
 

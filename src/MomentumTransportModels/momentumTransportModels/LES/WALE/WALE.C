@@ -112,25 +112,8 @@ WALE<BasicMomentumTransportModel>::WALE
         viscosity
     ),
 
-    Ck_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Ck",
-            this->coeffDict_,
-            0.094
-        )
-    ),
-
-    Cw_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Cw",
-            this->coeffDict_,
-            0.325
-        )
-    )
+    Ck_("Ck", this->coeffDict(), 0.094),
+    Cw_("Cw", this->coeffDict(), 0.325)
 {}
 
 

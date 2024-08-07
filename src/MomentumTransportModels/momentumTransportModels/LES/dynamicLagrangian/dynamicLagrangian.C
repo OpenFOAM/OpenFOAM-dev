@@ -104,15 +104,7 @@ dynamicLagrangian<BasicMomentumTransportModel>::dynamicLagrangian
         ),
         this->mesh_
     ),
-    theta_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "theta",
-            this->coeffDict_,
-            1.5
-        )
-    ),
+    theta_("theta", this->coeffDict(), 1.5),
 
     simpleFilter_(U.mesh()),
     filterPtr_(LESfilter::New(U.mesh(), this->coeffDict())),

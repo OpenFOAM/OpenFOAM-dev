@@ -61,15 +61,7 @@ SmagorinskyZhang<BasicMomentumTransportModel>::SmagorinskyZhang
 
     gasTurbulencePtr_(nullptr),
 
-    Cmub_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Cmub",
-            this->coeffDict_,
-            0.6
-        )
-    )
+    Cmub_("Cmub", this->coeffDict(), 0.6)
 {}
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -140,15 +140,7 @@ Foam::ReynoldsStress<BasicMomentumTransportModel>::ReynoldsStress
         viscosity
     ),
 
-    couplingFactor_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "couplingFactor",
-            this->coeffDict_,
-            1
-        )
-    ),
+    couplingFactor_("couplingFactor", this->coeffDict(), 1),
 
     R_
     (

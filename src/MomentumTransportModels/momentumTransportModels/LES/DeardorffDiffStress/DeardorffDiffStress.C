@@ -70,42 +70,10 @@ DeardorffDiffStress<BasicMomentumTransportModel>::DeardorffDiffStress
         viscosity
     ),
 
-    Ck_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Ck",
-            this->coeffDict_,
-            0.094
-        )
-    ),
-    Cm_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Cm",
-            this->coeffDict_,
-            4.13
-        )
-    ),
-    Ce_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Ce",
-            this->coeffDict_,
-            1.05
-        )
-    ),
-    Cs_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Cs",
-            this->coeffDict_,
-            0.25
-        )
-    )
+    Ck_("Ck", this->coeffDict(), 0.094),
+    Cm_("Cm", this->coeffDict(), 4.13),
+    Ce_("Ce", this->coeffDict(), 1.05),
+    Cs_("Cs", this->coeffDict(), 0.25)
 {
     if (type == typeName)
     {

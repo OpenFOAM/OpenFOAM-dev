@@ -98,15 +98,7 @@ kEqn<BasicMomentumTransportModel>::kEqn
         this->mesh_
     ),
 
-    Ck_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Ck",
-            this->coeffDict_,
-            0.094
-        )
-    )
+    Ck_("Ck", this->coeffDict(), 0.094)
 {
     bound(k_, this->kMin_);
 }

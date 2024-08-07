@@ -49,10 +49,7 @@ Foam::laminarModel<BasicMomentumTransportModel>::laminarModel
         alphaRhoPhi,
         phi,
         viscosity
-    ),
-
-    laminarDict_(this->subOrEmptyDict("laminar")),
-    coeffDict_(laminarDict_.optionalSubDict(type + "Coeffs"))
+    )
 {
     // Force the construction of the mesh deltaCoeffs which may be needed
     // for the construction of the derived models and BCs
@@ -91,7 +88,8 @@ Foam::laminarModel<BasicMomentumTransportModel>::New
                 {"model", "laminarModel"}
             );
 
-        Info<< "Selecting laminar stress model " << modelType << endl;
+        Info<< indent
+            << "Selecting laminar stress model " << modelType << endl;
 
         typename dictionaryConstructorTable::iterator cstrIter =
             dictionaryConstructorTablePtr_->find(modelType);
@@ -106,7 +104,9 @@ Foam::laminarModel<BasicMomentumTransportModel>::New
                 << exit(FatalError);
         }
 
-        return autoPtr<laminarModel>
+        Info<< incrIndent;
+
+        autoPtr<laminarModel> modelPtr
         (
             cstrIter()
             (
@@ -118,14 +118,21 @@ Foam::laminarModel<BasicMomentumTransportModel>::New
                 viscosity
             )
         );
+
+        Info<< decrIndent;
+
+        return modelPtr;
     }
     else
     {
-        Info<< "Selecting laminar stress model "
+        Info<< indent
+            << "Selecting laminar stress model "
             << laminarModels::Stokes<BasicMomentumTransportModel>::typeName
             << endl;
 
-        return autoPtr<laminarModel>
+        Info<< incrIndent;
+
+        autoPtr<laminarModel> modelPtr
         (
             new laminarModels::Stokes<BasicMomentumTransportModel>
             (
@@ -137,6 +144,10 @@ Foam::laminarModel<BasicMomentumTransportModel>::New
                 viscosity
             )
         );
+
+        Info<< decrIndent;
+
+        return modelPtr;
     }
 }
 
@@ -144,14 +155,26 @@ Foam::laminarModel<BasicMomentumTransportModel>::New
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class BasicMomentumTransportModel>
+const Foam::dictionary&
+Foam::laminarModel<BasicMomentumTransportModel>::laminarDict() const
+{
+    return this->subDict("laminar");
+}
+
+
+template<class BasicMomentumTransportModel>
+const Foam::dictionary&
+Foam::laminarModel<BasicMomentumTransportModel>::coeffDict() const
+{
+    return this->laminarDict().optionalSubDict(type() + "Coeffs");
+}
+
+
+template<class BasicMomentumTransportModel>
 bool Foam::laminarModel<BasicMomentumTransportModel>::read()
 {
     if (BasicMomentumTransportModel::read())
     {
-        laminarDict_ <<= this->subDict("laminar");
-
-        coeffDict_ <<= laminarDict_.optionalSubDict(type() + "Coeffs");
-
         return true;
     }
     else

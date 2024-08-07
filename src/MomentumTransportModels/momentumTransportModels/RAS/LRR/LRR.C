@@ -94,106 +94,25 @@ LRR<BasicMomentumTransportModel>::LRR
         viscosity
     ),
 
-    Cmu_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Cmu",
-            this->coeffDict_,
-            0.09
-        )
-    ),
-    C1_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "C1",
-            this->coeffDict_,
-            1.8
-        )
-    ),
-    C2_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "C2",
-            this->coeffDict_,
-            0.6
-        )
-    ),
-    Ceps1_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Ceps1",
-            this->coeffDict_,
-            1.44
-        )
-    ),
-    Ceps2_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Ceps2",
-            this->coeffDict_,
-            1.92
-        )
-    ),
-    Cs_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Cs",
-            this->coeffDict_,
-            0.25
-        )
-    ),
-    Ceps_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Ceps",
-            this->coeffDict_,
-            0.15
-        )
-    ),
+    Cmu_("Cmu", this->coeffDict(), 0.09),
+    C1_("C1", this->coeffDict(), 1.8),
+    C2_("C2", this->coeffDict(), 0.6),
+    Ceps1_("Ceps1", this->coeffDict(), 1.44),
+    Ceps2_("Ceps2", this->coeffDict(), 1.92),
+    Cs_("Cs", this->coeffDict(), 0.25),
+    Ceps_("Ceps", this->coeffDict(), 0.15),
 
     wallReflection_
     (
-        Switch::lookupOrAddToDict
+        this->coeffDict().template lookupOrDefault<Switch>
         (
             "wallReflection",
-            this->coeffDict_,
             true
         )
     ),
-    kappa_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "kappa",
-            this->coeffDict_,
-            0.41
-        )
-    ),
-    Cref1_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Cref1",
-            this->coeffDict_,
-            0.5
-        )
-    ),
-    Cref2_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Cref2",
-            this->coeffDict_,
-            0.3
-        )
-    ),
+    kappa_("kappa", this->coeffDict(), 0.41),
+    Cref1_("Cref1", this->coeffDict(), 0.5),
+    Cref2_("Cref2", this->coeffDict(), 0.3),
 
     k_
     (

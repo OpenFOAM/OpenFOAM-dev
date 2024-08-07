@@ -117,96 +117,16 @@ ShihQuadraticKE::ShihQuadraticKE
         viscosity
     ),
 
-    Ceps1_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Ceps1",
-            coeffDict_,
-            1.44
-        )
-    ),
-    Ceps2_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Ceps2",
-            coeffDict_,
-            1.92
-        )
-    ),
-    sigmak_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "sigmak",
-            coeffDict_,
-            1.0
-        )
-    ),
-    sigmaEps_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "sigmaEps",
-            coeffDict_,
-            1.3
-        )
-    ),
-    Cmu1_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Cmu1",
-            coeffDict_,
-            1.25
-        )
-    ),
-    Cmu2_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Cmu2",
-            coeffDict_,
-            0.9
-        )
-    ),
-    Cbeta_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Cbeta",
-            coeffDict_,
-            1000.0
-        )
-    ),
-    Cbeta1_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Cbeta1",
-            coeffDict_,
-            3.0
-        )
-    ),
-    Cbeta2_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Cbeta2",
-            coeffDict_,
-            15.0
-        )
-    ),
-    Cbeta3_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Cbeta3",
-            coeffDict_,
-            -19.0
-        )
-    ),
+    Ceps1_("Ceps1", coeffDict(), 1.44),
+    Ceps2_("Ceps2", coeffDict(), 1.92),
+    sigmak_("sigmak", coeffDict(), 1.0),
+    sigmaEps_("sigmaEps", coeffDict(), 1.3),
+    Cmu1_("Cmu1", coeffDict(), 1.25),
+    Cmu2_("Cmu2", coeffDict(), 0.9),
+    Cbeta_("Cbeta", coeffDict(), 1000.0),
+    Cbeta1_("Cbeta1", coeffDict(), 3.0),
+    Cbeta2_("Cbeta2", coeffDict(), 15.0),
+    Cbeta3_("Cbeta3", coeffDict(), -19.0),
 
     k_
     (

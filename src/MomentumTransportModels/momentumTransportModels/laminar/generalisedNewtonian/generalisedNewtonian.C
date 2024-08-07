@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,7 +65,7 @@ generalisedNewtonian<BasicMomentumTransportModel>::generalisedNewtonian
     (
         generalisedNewtonianViscosityModel::New
         (
-            this->coeffDict_,
+            this->coeffDict(),
             viscosity,
             U
         )
@@ -78,7 +78,7 @@ generalisedNewtonian<BasicMomentumTransportModel>::generalisedNewtonian
 template<class BasicMomentumTransportModel>
 bool generalisedNewtonian<BasicMomentumTransportModel>::read()
 {
-    viscosityModel_->read(this->coeffDict_);
+    viscosityModel_->read(this->coeffDict());
 
     return true;
 }

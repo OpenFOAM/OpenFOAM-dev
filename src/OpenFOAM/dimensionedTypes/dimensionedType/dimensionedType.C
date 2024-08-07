@@ -233,7 +233,8 @@ Foam::dimensioned<Type>::dimensioned
     const word& name,
     const dimensionSet& dims,
     const dictionary& dict,
-    const Type& defaultValue
+    const Type& defaultValue,
+    const bool writeDefault
 )
 :
     name_(name),
@@ -244,7 +245,7 @@ Foam::dimensioned<Type>::dimensioned
     {
         initialise(name, dims, dict.lookup(name));
     }
-    else if (dictionary::writeOptionalEntries)
+    else if (writeDefault)
     {
         Info<< indent << "Default: " << name;
 
@@ -257,7 +258,7 @@ Foam::dimensioned<Type>::dimensioned
 
         if (dict.name() != fileName::null)
         {
-            Info<< " in " << dict.name();
+            Info<< " in " << dict.name().relativePath();
         }
         Info<< endl;
     }
@@ -269,10 +270,11 @@ Foam::dimensioned<Type>::dimensioned
 (
     const word& name,
     const dictionary& dict,
-    const Type& defaultValue
+    const Type& defaultValue,
+    const bool writeDefault
 )
 :
-    dimensioned(name, dimless, dict, defaultValue)
+    dimensioned(name, dimless, dict, defaultValue, writeDefault)
 {}
 
 
@@ -282,7 +284,8 @@ Foam::dimensioned<Type>::dimensioned
     const word& name,
     const unitConversion& units,
     const dictionary& dict,
-    const Type& defaultValue
+    const Type& defaultValue,
+    const bool writeDefault
 )
 :
     name_(name),
@@ -293,34 +296,23 @@ Foam::dimensioned<Type>::dimensioned
     {
         initialise(name, units, dict.lookup(name));
     }
-}
+    else if (writeDefault)
+    {
+        Info<< indent << "Default: " << name;
 
+        if (!units.dimensions().dimensionless())
+        {
+            Info<< " " << units.info();
+        }
 
-// * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
+        Info<< " " << defaultValue;
 
-template<class Type>
-Foam::dimensioned<Type> Foam::dimensioned<Type>::lookupOrAddToDict
-(
-    const word& name,
-    dictionary& dict,
-    const dimensionSet& dims,
-    const Type& defaultValue
-)
-{
-    Type value = dict.lookupOrAddDefault<Type>(name, defaultValue);
-    return dimensioned<Type>(name, dims, value);
-}
-
-
-template<class Type>
-Foam::dimensioned<Type> Foam::dimensioned<Type>::lookupOrAddToDict
-(
-    const word& name,
-    dictionary& dict,
-    const Type& defaultValue
-)
-{
-    return lookupOrAddToDict(name, dict, dimless, defaultValue);
+        if (dict.name() != fileName::null)
+        {
+            Info<< " in " << dict.name().relativePath();
+        }
+        Info<< endl;
+    }
 }
 
 

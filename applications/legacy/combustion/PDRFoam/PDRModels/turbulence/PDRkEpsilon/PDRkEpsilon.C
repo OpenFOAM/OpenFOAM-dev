@@ -83,15 +83,7 @@ PDRkEpsilon::PDRkEpsilon
         modelName
     ),
 
-    C4_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "C4",
-            coeffDict_,
-            0.1
-        )
-    )
+    C4_("C4", coeffDict(), 0.1)
 {}
 
 
@@ -107,7 +99,7 @@ bool PDRkEpsilon::read()
 {
     if (RASModel::read())
     {
-        C4_.readIfPresent(coeffDict_);
+        C4_.readIfPresent(coeffDict());
         return true;
     }
     else

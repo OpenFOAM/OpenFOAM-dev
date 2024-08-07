@@ -42,7 +42,7 @@ Foam::RASModels::kineticTheoryModel::continuousPhase() const
     {
         if (fluid.movingPhases().size() != 2)
         {
-            FatalIOErrorInFunction(coeffDict_)
+            FatalIOErrorInFunction(coeffDict())
                 << "Continuous phase name must be specified "
                 << "when there are more than two moving phases."
                 << exit(FatalIOError);
@@ -91,65 +91,65 @@ Foam::RASModels::kineticTheoryModel::kineticTheoryModel
 
     continuousPhaseName_
     (
-        coeffDict_.lookupOrDefault("continuousPhase", word::null)
+        coeffDict().lookupOrDefault("continuousPhase", word::null)
     ),
 
     viscosityModel_
     (
         kineticTheoryModels::viscosityModel::New
         (
-            coeffDict_
+            coeffDict()
         )
     ),
     conductivityModel_
     (
         kineticTheoryModels::conductivityModel::New
         (
-            coeffDict_
+            coeffDict()
         )
     ),
     radialModel_
     (
         kineticTheoryModels::radialModel::New
         (
-            coeffDict_
+            coeffDict()
         )
     ),
     granularPressureModel_
     (
         kineticTheoryModels::granularPressureModel::New
         (
-            coeffDict_
+            coeffDict()
         )
     ),
     frictionalStressModel_
     (
         kineticTheoryModels::frictionalStressModel::New
         (
-            coeffDict_
+            coeffDict()
         )
     ),
 
-    equilibrium_(coeffDict_.lookup("equilibrium")),
-    e_("e", dimless, coeffDict_),
+    equilibrium_(coeffDict().lookup("equilibrium")),
+    e_("e", dimless, coeffDict()),
     alphaMinFriction_
     (
         "alphaMinFriction",
         dimless,
-        coeffDict_
+        coeffDict()
     ),
     residualAlpha_
     (
         "residualAlpha",
         dimless,
-        coeffDict_
+        coeffDict()
     ),
 
     maxNut_
     (
         "maxNut",
         dimensionSet(0, 2, -1, 0, 0),
-        coeffDict_.lookupOrDefault<scalar>("maxNut", 1000)
+        coeffDict().lookupOrDefault<scalar>("maxNut", 1000)
     ),
 
     Theta_

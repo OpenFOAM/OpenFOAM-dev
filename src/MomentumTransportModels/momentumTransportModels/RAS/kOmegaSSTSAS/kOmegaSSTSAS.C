@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -115,51 +115,11 @@ kOmegaSSTSAS<BasicMomentumTransportModel>::kOmegaSSTSAS
         viscosity
     ),
 
-    Cs_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Cs",
-            this->coeffDict_,
-            0.11
-        )
-    ),
-    kappa_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "kappa",
-            this->coeffDict_,
-            0.41
-        )
-    ),
-    zeta2_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "zeta2",
-            this->coeffDict_,
-            3.51
-        )
-    ),
-    sigmaPhi_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "sigmaPhi",
-            this->coeffDict_,
-            2.0/3.0
-        )
-    ),
-    C_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "C",
-            this->coeffDict_,
-            2
-        )
-    ),
+    Cs_("Cs", this->coeffDict(), 0.11),
+    kappa_("kappa", this->coeffDict(), 0.41),
+    zeta2_("zeta2", this->coeffDict(), 3.51),
+    sigmaPhi_("sigmaPhi", this->coeffDict(), 2.0/3.0),
+    C_("C", this->coeffDict(), 2),
 
     delta_
     (
@@ -167,7 +127,7 @@ kOmegaSSTSAS<BasicMomentumTransportModel>::kOmegaSSTSAS
         (
             this->groupName("delta"),
             *this,
-            this->coeffDict_
+            this->coeffDict()
         )
     )
 {}

@@ -77,7 +77,9 @@ bool Foam::meshCheck::checkMesh
     );
     const scalar minFaceFlatness
     (
-        dict.lookupOrDefault("minFaceFlatness", -1.0, true)
+        dict.found("minFaceFlatness")
+      ? dict.lookup<scalar>("minFaceFlatness", true)
+      : -1.0
     );
     const scalar minDet
     (

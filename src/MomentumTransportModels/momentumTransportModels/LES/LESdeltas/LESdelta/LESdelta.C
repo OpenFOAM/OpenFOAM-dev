@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,7 +71,8 @@ Foam::autoPtr<Foam::LESdelta> Foam::LESdelta::New
 {
     const word deltaType(dict.lookup("delta"));
 
-    Info<< "Selecting LES delta type " << deltaType << endl;
+    Info<< indent
+        << "Selecting LES delta type " << deltaType << endl;
 
     dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(deltaType);
@@ -86,7 +87,10 @@ Foam::autoPtr<Foam::LESdelta> Foam::LESdelta::New
             << exit(FatalError);
     }
 
-    return autoPtr<LESdelta>(cstrIter()(name, turbulence, dict));
+    Info<< incrIndent;
+    autoPtr<LESdelta> modelPtr(cstrIter()(name, turbulence, dict));
+    Info<< decrIndent;
+    return modelPtr;
 }
 
 
@@ -100,7 +104,8 @@ Foam::autoPtr<Foam::LESdelta> Foam::LESdelta::New
 {
     const word deltaType(dict.lookup("delta"));
 
-    Info<< "Selecting LES delta type " << deltaType << endl;
+    Info<< indent
+        << "Selecting LES delta type " << deltaType << endl;
 
     // First on additional ones
     dictionaryConstructorTable::const_iterator cstrIter =
@@ -108,7 +113,10 @@ Foam::autoPtr<Foam::LESdelta> Foam::LESdelta::New
 
     if (cstrIter != additionalConstructors.end())
     {
-        return autoPtr<LESdelta>(cstrIter()(name, turbulence, dict));
+        Info<< incrIndent;
+        autoPtr<LESdelta> modelPtr(cstrIter()(name, turbulence, dict));
+        Info<< decrIndent;
+        return modelPtr;
     }
     else
     {
@@ -129,7 +137,10 @@ Foam::autoPtr<Foam::LESdelta> Foam::LESdelta::New
         }
         else
         {
-            return autoPtr<LESdelta>(cstrIter()(name, turbulence, dict));
+            Info<< incrIndent;
+            autoPtr<LESdelta> modelPtr(cstrIter()(name, turbulence, dict));
+            Info<< decrIndent;
+            return modelPtr;
         }
     }
 }

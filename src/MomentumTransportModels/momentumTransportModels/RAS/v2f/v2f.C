@@ -97,96 +97,16 @@ v2f<BasicMomentumTransportModel>::v2f
     ),
     v2fBase(),
 
-    Cmu_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Cmu",
-            this->coeffDict_,
-            0.22
-        )
-    ),
-    CmuKEps_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "CmuKEps",
-            this->coeffDict_,
-            0.09
-        )
-    ),
-    C1_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "C1",
-            this->coeffDict_,
-            1.4
-        )
-    ),
-    C2_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "C2",
-            this->coeffDict_,
-            0.3
-        )
-    ),
-    CL_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "CL",
-            this->coeffDict_,
-            0.23
-        )
-    ),
-    Ceta_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Ceta",
-            this->coeffDict_,
-            70.0
-        )
-    ),
-    Ceps2_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Ceps2",
-            this->coeffDict_,
-            1.9
-        )
-    ),
-    Ceps3_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Ceps3",
-            this->coeffDict_,
-            -0.33
-        )
-    ),
-    sigmaK_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "sigmaK",
-            this->coeffDict_,
-            1.0
-        )
-    ),
-    sigmaEps_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "sigmaEps",
-            this->coeffDict_,
-            1.3
-        )
-    ),
+    Cmu_("Cmu", this->coeffDict(), 0.22),
+    CmuKEps_("CmuKEps", this->coeffDict(), 0.09),
+    C1_("C1", this->coeffDict(), 1.4),
+    C2_("C2", this->coeffDict(), 0.3),
+    CL_("CL", this->coeffDict(), 0.23),
+    Ceta_("Ceta", this->coeffDict(), 70.0),
+    Ceps2_("Ceps2", this->coeffDict(), 1.9),
+    Ceps3_("Ceps3", this->coeffDict(), -0.33),
+    sigmaK_("sigmaK", this->coeffDict(), 1.0),
+    sigmaEps_("sigmaEps", this->coeffDict(), 1.3),
 
     k_
     (

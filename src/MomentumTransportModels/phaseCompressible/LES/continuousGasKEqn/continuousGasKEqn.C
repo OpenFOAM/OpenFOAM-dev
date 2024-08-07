@@ -60,15 +60,7 @@ continuousGasKEqn<BasicMomentumTransportModel>::continuousGasKEqn
 
     liquidTurbulencePtr_(nullptr),
 
-    alphaInversion_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "alphaInversion",
-            this->coeffDict_,
-            0.7
-        )
-    )
+    alphaInversion_("alphaInversion", this->coeffDict(), 0.7)
 {}
 
 

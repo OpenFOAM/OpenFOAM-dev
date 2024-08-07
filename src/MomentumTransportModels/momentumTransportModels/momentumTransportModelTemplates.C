@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,8 @@ inline Foam::autoPtr<MomentumTransportModel> Foam::momentumTransportModel::New
         ).lookup("simulationType")
     );
 
-    Info<< "Selecting turbulence model type " << modelType << endl;
+    Info<< indent
+        << "Selecting turbulence model type " << modelType << endl;
 
     typename MomentumTransportModel::dictionaryConstructorTable::iterator
         cstrIter =
@@ -71,10 +72,16 @@ inline Foam::autoPtr<MomentumTransportModel> Foam::momentumTransportModel::New
             << exit(FatalError);
     }
 
-    return autoPtr<MomentumTransportModel>
+    Info<< incrIndent;
+
+    autoPtr<MomentumTransportModel> modelPtr
     (
         cstrIter()(alpha, rho, U, alphaRhoPhi, phi, viscosity)
     );
+
+    Info<< decrIndent;
+
+    return modelPtr;
 }
 
 

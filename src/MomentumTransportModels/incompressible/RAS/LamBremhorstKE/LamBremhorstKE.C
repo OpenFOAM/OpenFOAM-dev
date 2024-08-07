@@ -128,42 +128,10 @@ LamBremhorstKE::LamBremhorstKE
         viscosity
     ),
 
-    Cmu_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Cmu",
-            coeffDict_,
-            0.09
-        )
-    ),
-    Ceps1_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Ceps1",
-            coeffDict_,
-            1.44
-        )
-    ),
-    Ceps2_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Ceps2",
-            coeffDict_,
-            1.92
-        )
-    ),
-    sigmaEps_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "alphaEps",
-            coeffDict_,
-            1.3
-        )
-    ),
+    Cmu_("Cmu", coeffDict(), 0.09),
+    Ceps1_("Ceps1", coeffDict(), 1.44),
+    Ceps2_("Ceps2", coeffDict(), 1.92),
+    sigmaEps_("alphaEps", coeffDict(), 1.3),
 
     k_
     (

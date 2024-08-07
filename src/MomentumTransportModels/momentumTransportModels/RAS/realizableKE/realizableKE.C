@@ -158,42 +158,12 @@ realizableKE<BasicMomentumTransportModel>::realizableKE
         phi,
         viscosity
     ),
-    A0_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "A0",
-            this->coeffDict_,
-            4.0
-        )
-    ),
+
+    A0_("A0", this->coeffDict(), 4.0),
     C2_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "C2",
-            this->coeffDict_,
-            1.9
-        )
-    ),
-    sigmak_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "sigmak",
-            this->coeffDict_,
-            1.0
-        )
-    ),
-    sigmaEps_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "sigmaEps",
-            this->coeffDict_,
-            1.2
-        )
-    ),
+    ("C2", this->coeffDict(), 1.9),
+    sigmak_("sigmak", this->coeffDict(), 1.0),
+    sigmaEps_("sigmaEps", this->coeffDict(), 1.2),
 
     k_
     (

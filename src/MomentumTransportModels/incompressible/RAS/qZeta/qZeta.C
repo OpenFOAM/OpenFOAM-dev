@@ -118,52 +118,11 @@ qZeta::qZeta
         viscosity
     ),
 
-    Cmu_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "Cmu",
-            coeffDict_,
-            0.09
-        )
-    ),
-    C1_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "C1",
-            coeffDict_,
-            1.44
-        )
-    ),
-    C2_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "C2",
-            coeffDict_,
-            1.92
-        )
-    ),
-    sigmaZeta_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "sigmaZeta",
-            coeffDict_,
-            1.3
-        )
-    ),
-    anisotropic_
-    (
-        Switch::lookupOrAddToDict
-        (
-            "anisotropic",
-            coeffDict_,
-            false
-        )
-    ),
-
+    Cmu_("Cmu", coeffDict(), 0.09),
+    C1_("C1", coeffDict(), 1.44),
+    C2_("C2", coeffDict(), 1.92),
+    sigmaZeta_("sigmaZeta", coeffDict(), 1.3),
+    anisotropic_(coeffDict().lookupOrDefault<Switch>("anisotropic", false)),
     qMin_("qMin", sqrt(kMin_)),
 
     k_

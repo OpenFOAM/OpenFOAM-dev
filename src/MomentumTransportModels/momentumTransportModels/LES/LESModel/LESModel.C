@@ -51,38 +51,16 @@ Foam::LESModel<BasicMomentumTransportModel>::LESModel
         viscosity
     ),
 
-    LESDict_(this->subOrEmptyDict("LES")),
-    turbulence_(LESDict_.lookup("turbulence")),
-    coeffDict_(LESDict_.optionalSubDict(type + "Coeffs")),
-
-    kMin_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "kMin",
-            LESDict_,
-            sqr(dimVelocity),
-            small
-        )
-    ),
-
-    nutMaxCoeff_
-    (
-        dimensioned<scalar>::lookupOrAddToDict
-        (
-            "nutMaxCoeff",
-            LESDict_,
-            dimless,
-            1e5
-        )
-    ),
+    turbulence_(LESDict().lookup("turbulence")),
+    kMin_("kMin", sqr(dimVelocity), LESDict(), small),
+    nutMaxCoeff_("nutMaxCoeff", dimless, LESDict(), 1e5),
 
     viscosityModel_
     (
-        coeffDict_.found("viscosityModel")
+        coeffDict().found("viscosityModel")
       ? laminarModels::generalisedNewtonianViscosityModel::New
         (
-            coeffDict_,
+            coeffDict(),
             viscosity,
             U
         )
@@ -90,7 +68,7 @@ Foam::LESModel<BasicMomentumTransportModel>::LESModel
         (
             new laminarModels::generalisedNewtonianViscosityModels::Newtonian
             (
-                coeffDict_,
+                coeffDict(),
                 viscosity,
                 U
             )
@@ -103,7 +81,7 @@ Foam::LESModel<BasicMomentumTransportModel>::LESModel
         (
             this->groupName("delta"),
             *this,
-            LESDict_
+            LESDict()
         )
     )
 {
@@ -142,7 +120,8 @@ Foam::LESModel<BasicMomentumTransportModel>::New
             {"model", "LESModel"}
         );
 
-    Info<< "Selecting LES turbulence model " << modelType << endl;
+    Info<< indent
+        << "Selecting LES turbulence model " << modelType << endl;
 
     typename dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(modelType);
@@ -157,29 +136,47 @@ Foam::LESModel<BasicMomentumTransportModel>::New
             << exit(FatalError);
     }
 
-    return autoPtr<LESModel>
+    Info<< incrIndent;
+
+    autoPtr<LESModel> modelPtr
     (
         cstrIter()(alpha, rho, U, alphaRhoPhi, phi, viscosity)
     );
+
+    Info<< decrIndent;
+
+    return modelPtr;
 }
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class BasicMomentumTransportModel>
+const Foam::dictionary&
+Foam::LESModel<BasicMomentumTransportModel>::LESDict() const
+{
+    return this->subDict("LES");
+}
+
+
+template<class BasicMomentumTransportModel>
+const Foam::dictionary&
+Foam::LESModel<BasicMomentumTransportModel>::coeffDict() const
+{
+    return this->LESDict().optionalSubDict(type() + "Coeffs");
+}
+
+
+template<class BasicMomentumTransportModel>
 bool Foam::LESModel<BasicMomentumTransportModel>::read()
 {
     if (BasicMomentumTransportModel::read())
     {
-        LESDict_ <<= this->subDict("LES");
-        LESDict_.lookup("turbulence") >> turbulence_;
+        LESDict().lookup("turbulence") >> turbulence_;
+        delta_().read(LESDict());
 
-        coeffDict_ <<= LESDict_.optionalSubDict(type() + "Coeffs");
-
-        delta_().read(LESDict_);
-
-        kMin_.readIfPresent(LESDict_);
-        nutMaxCoeff_.readIfPresent(LESDict_);
+        kMin_.readIfPresent(LESDict());
+        nutMaxCoeff_.readIfPresent(LESDict());
 
         return true;
     }

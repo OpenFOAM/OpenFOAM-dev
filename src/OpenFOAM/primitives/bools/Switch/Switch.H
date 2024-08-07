@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -165,15 +165,6 @@ public:
 
         //- Construct from Istream
         Switch(Istream& is);
-
-        //- Construct from dictionary, supplying default value so that if the
-        //  value is not found, it is added into the dictionary.
-        static Switch lookupOrAddToDict
-        (
-            const word&,
-            dictionary&,
-            const Switch& defaultValue = false
-        );
 
 
     // Member Functions

@@ -79,7 +79,7 @@ Maxwell<BasicMomentumTransportModel>::readModeCoefficients
             (
                 name,
                 dims,
-                this->coeffDict_.lookup(name)
+                this->coeffDict().lookup(name)
             )
         );
     }
@@ -136,7 +136,7 @@ Maxwell<BasicMomentumTransportModel>::Maxwell
 
     nModes_(modeCoefficients_.size() ? modeCoefficients_.size() : 1),
 
-    nuM_("nuM", dimKinematicViscosity, this->coeffDict_.lookup("nuM")),
+    nuM_("nuM", dimKinematicViscosity, this->coeffDict().lookup("nuM")),
 
     lambdas_(readModeCoefficients("lambda", dimTime)),
 
