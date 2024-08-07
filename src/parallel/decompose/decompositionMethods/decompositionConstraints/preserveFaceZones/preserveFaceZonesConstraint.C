@@ -55,7 +55,7 @@ preserveFaceZonesConstraint
 )
 :
     decompositionConstraint(constraintsDict, typeName),
-    zones_(coeffDict_.lookup("zones"))
+    zones_(constraintsDict.lookup("zones"))
 {
     if (decompositionConstraint::debug)
     {

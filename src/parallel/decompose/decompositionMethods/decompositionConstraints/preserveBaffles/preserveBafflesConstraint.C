@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -133,7 +133,7 @@ void Foam::decompositionConstraints::preserveBafflesConstraint::add
             {
                 label p0Slave = faceToFace[p[0]];
                 label p1Slave = faceToFace[p[1]];
-                IOWarningInFunction(coeffDict_)
+                WarningInFunction
                     << "When adding baffle between faces "
                     << p[0] << " at " << mesh.faceCentres()[p[0]]
                     << " and "

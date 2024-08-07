@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,7 @@ singleProcessorFaceSetsConstraint
 )
 :
     decompositionConstraint(constraintsDict, typeName),
-    setNameAndProcs_(coeffDict_.lookup("singleProcessorFaceSets"))
+    setNameAndProcs_(constraintsDict.lookup("singleProcessorFaceSets"))
 {
     if (decompositionConstraint::debug)
     {
