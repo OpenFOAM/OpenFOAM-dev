@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -137,6 +137,12 @@ public:
         virtual wordList fields() const
         {
             return wordList::null();
+        }
+
+        //- There are no residuals to report at the start of a run
+        virtual bool executeAtStart() const
+        {
+            return false;
         }
 
         //- Execute, currently does nothing
