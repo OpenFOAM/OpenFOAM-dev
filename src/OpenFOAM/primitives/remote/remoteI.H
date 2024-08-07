@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "remote.H"
+#include "Pstream.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -37,6 +38,13 @@ inline Foam::remote::remote()
 inline Foam::remote::remote(const label p, const label e)
 :
     proci(p),
+    elementi(e)
+{}
+
+
+inline Foam::remote::remote(const label e)
+:
+    proci(Pstream::myProcNo()),
     elementi(e)
 {}
 

@@ -49,6 +49,14 @@ inline Foam::RemoteData<Type>::RemoteData
 
 
 template<class Type>
+inline Foam::RemoteData<Type>::RemoteData(const label e, const Type& d)
+:
+    remote(e),
+    data(d)
+{}
+
+
+template<class Type>
 inline Foam::RemoteData<Type>::RemoteData(Istream& is)
 {
     is >> *this;
@@ -72,6 +80,20 @@ inline void Foam::RemoteData<Type>::smallestEqOp::operator()
 
 
 template<class Type>
+inline void Foam::RemoteData<Type>::greatestEqOp::operator()
+(
+    RemoteData<Type>& a,
+    const RemoteData<Type>& b
+) const
+{
+    if (b.proci != -1 && (a.proci == -1 || b.data > a.data))
+    {
+        a = b;
+    }
+}
+
+
+template<class Type>
 inline void Foam::RemoteData<Type>::smallestFirstEqOp::operator()
 (
     RemoteData<Type>& a,
@@ -79,6 +101,20 @@ inline void Foam::RemoteData<Type>::smallestFirstEqOp::operator()
 ) const
 {
     if (b.proci != -1 && (a.proci == -1 || b.data.first() < a.data.first()))
+    {
+        a = b;
+    }
+}
+
+
+template<class Type>
+inline void Foam::RemoteData<Type>::greatestFirstEqOp::operator()
+(
+    RemoteData<Type>& a,
+    const RemoteData<Type>& b
+) const
+{
+    if (b.proci != -1 && (a.proci == -1 || b.data.first() > a.data.first()))
     {
         a = b;
     }
