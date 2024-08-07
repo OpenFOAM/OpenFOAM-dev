@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,9 @@ License
 
 #include "wedgePolyPatch.H"
 #include "addToRunTimeSelectionTable.H"
+#include "RemoteData.H"
 #include "SubField.H"
+#include "Tuple3.H"
 #include "transform.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -48,82 +50,100 @@ void Foam::wedgePolyPatch::calcGeometry(PstreamBuffers&)
         return;
     }
 
-    if (returnReduce(size(), sumOp<label>()))
+    if (!returnReduce(size(), sumOp<label>()))
     {
-        const vectorField& nf(faceNormals());
-        n_ = gAverage(nf);
-
-        if (debug)
-        {
-            Info<< "Patch " << name() << " calculated average normal "
-                << n_ << endl;
-        }
-
-
-        // Check the wedge is planar
-        forAll(nf, facei)
-        {
-            if (magSqr(n_ - nf[facei]) > small)
-            {
-                // only issue warning instead of error so that the case can
-                // still be read for post-processing
-                WarningInFunction
-                    << "Wedge patch '" << name() << "' is not planar." << nl
-                    << "At local face at "
-                    << primitivePatch::faceCentres()[facei]
-                    << " the normal " << nf[facei]
-                    << " differs from the average normal " << n_
-                    << " by " << magSqr(n_ - nf[facei]) << nl
-                    << "Either correct the patch or split it into planar parts"
-                    << endl;
-            }
-        }
-
-        centreNormal_ =
-            vector
-            (
-                sign(n_.x())*(max(mag(n_.x()), 0.5) - 0.5),
-                sign(n_.y())*(max(mag(n_.y()), 0.5) - 0.5),
-                sign(n_.z())*(max(mag(n_.z()), 0.5) - 0.5)
-            );
-        centreNormal_ /= mag(centreNormal_);
-
-        cosAngle_ = centreNormal_ & n_;
-
-        const scalar cnCmptSum =
-            centreNormal_.x() + centreNormal_.y() + centreNormal_.z();
-
-        if (mag(cnCmptSum) < (1 - small))
-        {
-            FatalErrorInFunction
-                << "wedge " << name()
-                << " centre plane does not align with a coordinate plane by "
-                << 1 - mag(cnCmptSum)
-                << exit(FatalError);
-        }
-
-        axis_ = centreNormal_ ^ n_;
-        scalar magAxis = mag(axis_);
-
-        if (magAxis < small)
-        {
-            FatalErrorInFunction
-                << "wedge " << name()
-                << " plane aligns with a coordinate plane." << nl
-                << "    The wedge plane should make a small angle (~2.5deg)"
-                   " with the coordinate plane" << nl
-                << "    and the pair of wedge planes should be symmetric"
-                << " about the coordinate plane." << nl
-                << "    Normal of wedge plane is " << n_
-                << " , implied coordinate plane direction is " << centreNormal_
-                << exit(FatalError);
-        }
-
-        axis_ /= magAxis;
-
-        faceT_ = rotationTensor(centreNormal_, n_);
-        cellT_ = faceT_ & faceT_;
+        return;
     }
+
+    const pointField& cf(primitivePatch::faceCentres());
+    const vectorField& nf(faceNormals());
+    n_ = gAverage(nf);
+
+    if (debug)
+    {
+        Info<< "Patch " << name() << " calculated average normal "
+            << n_ << endl;
+    }
+
+    // Get the largest variation from the average normal
+    RemoteData<Tuple3<scalar, vector, vector>> maxDeltaN;
+    if (size())
+    {
+        const scalarField deltaNSqr(magSqr(n_ - nf));
+        const label i = findMax(deltaNSqr);
+        maxDeltaN = {Pstream::myProcNo(), i, {deltaNSqr[i], cf[i], nf[i]}};
+    }
+    combineReduce
+    (
+        maxDeltaN,
+        RemoteData<Tuple3<scalar, vector, vector>>::greatestFirstEqOp()
+    );
+
+    // Warn if the wedge is not planar
+    if (maxDeltaN.data.first() > small)
+    {
+        Ostream& wos =
+            WarningInFunction
+                << "Wedge patch '" << name()
+                << "' may not be sufficiently planar" << nl;
+
+        wos << "At patch face #" << maxDeltaN.elementi;
+
+        if (Pstream::parRun())
+        {
+            wos << " on processor #" << maxDeltaN.proci;
+        }
+
+        wos << " with centre " << maxDeltaN.data.second()
+            << " the normal " << maxDeltaN.data.third()
+            << " differs from the average normal " << n_
+            << " by " << maxDeltaN.data.first() << nl << endl;
+    }
+
+    centreNormal_ =
+        vector
+        (
+            sign(n_.x())*(max(mag(n_.x()), 0.5) - 0.5),
+            sign(n_.y())*(max(mag(n_.y()), 0.5) - 0.5),
+            sign(n_.z())*(max(mag(n_.z()), 0.5) - 0.5)
+        );
+    centreNormal_ /= mag(centreNormal_);
+
+    cosAngle_ = centreNormal_ & n_;
+
+    const scalar cnCmptSum =
+        centreNormal_.x() + centreNormal_.y() + centreNormal_.z();
+
+    if (mag(cnCmptSum) < (1 - small))
+    {
+        FatalErrorInFunction
+            << "wedge " << name()
+            << " centre plane does not align with a coordinate plane by "
+            << 1 - mag(cnCmptSum)
+            << exit(FatalError);
+    }
+
+    axis_ = centreNormal_ ^ n_;
+    scalar magAxis = mag(axis_);
+
+    if (magAxis < small)
+    {
+        FatalErrorInFunction
+            << "wedge " << name()
+            << " plane aligns with a coordinate plane." << nl
+            << "    The wedge plane should make a small angle (~2.5deg)"
+               " with the coordinate plane" << nl
+            << "    and the pair of wedge planes should be symmetric"
+            << " about the coordinate plane." << nl
+            << "    Normal of wedge plane is " << n_
+            << " , implied coordinate plane direction is " << centreNormal_
+            << exit(FatalError);
+    }
+
+    axis_ /= magAxis;
+
+    faceT_ = rotationTensor(centreNormal_, n_);
+    cellT_ = faceT_ & faceT_;
 }
 
 

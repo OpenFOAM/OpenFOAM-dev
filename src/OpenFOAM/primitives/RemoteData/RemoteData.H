@@ -84,6 +84,10 @@ public:
         //- Construct from components
         inline RemoteData(const label, const label, const Type&);
 
+        //- Construct from element index and data. Pstream will be used to
+        //  determine the processor index.
+        inline RemoteData(const label, const Type&);
+
         //- Construct from stream
         inline RemoteData(Istream& is);
 
@@ -100,8 +104,28 @@ public:
             ) const;
         };
 
+        //- Operator to take greatest valid value
+        struct greatestEqOp
+        {
+            inline void operator()
+            (
+                RemoteData<Type>& a,
+                const RemoteData<Type>& b
+            ) const;
+        };
+
         //- Operator to take smallest first valid value
         struct smallestFirstEqOp
+        {
+            inline void operator()
+            (
+                RemoteData<Type>& a,
+                const RemoteData<Type>& b
+            ) const;
+        };
+
+        //- Operator to take greatest first valid value
+        struct greatestFirstEqOp
         {
             inline void operator()
             (

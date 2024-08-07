@@ -79,6 +79,10 @@ public:
         //- Construct from components
         inline remote(const label, const label);
 
+        //- Construct from element index. Pstream will be used to determine the
+        //  processor index.
+        inline remote(const label);
+
         //- Construct from stream
         inline remote(Istream& is);
 
