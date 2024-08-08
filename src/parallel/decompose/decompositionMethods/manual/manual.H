@@ -64,7 +64,11 @@ public:
     // Constructors
 
         //- Construct given the decomposition dictionary
-        manual(const dictionary& decompositionDict);
+        manual
+        (
+            const dictionary& decompositionDict,
+            const dictionary& methodDict
+        );
 
         //- Disallow default bitwise copy construction
         manual(const manual&) = delete;

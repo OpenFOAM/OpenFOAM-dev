@@ -227,6 +227,9 @@ class scotch
 :
     public decompositionMethod
 {
+    dictionary methodDict_;
+
+
     // Private Member Functions
 
         //- Check and print error message
@@ -261,7 +264,11 @@ public:
     // Constructors
 
         //- Construct given the decomposition dictionary and mesh
-        scotch(const dictionary& decompositionDict);
+        scotch
+        (
+            const dictionary& decompositionDict,
+            const dictionary& methodDict
+        );
 
         //- Disallow default bitwise copy construction
         scotch(const scotch&) = delete;

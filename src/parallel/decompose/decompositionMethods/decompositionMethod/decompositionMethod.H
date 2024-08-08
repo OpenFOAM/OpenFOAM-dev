@@ -53,8 +53,6 @@ protected:
 
     // Protected data
 
-        dictionary decompositionDict_;
-
         label nProcessors_;
 
         //- Optional constraints
@@ -93,9 +91,10 @@ public:
             decompositionMethod,
             decomposer,
             (
-                const dictionary& decompositionDict
+                const dictionary& decompositionDict,
+                const dictionary& methodDict
             ),
-            (decompositionDict)
+            (decompositionDict, methodDict)
         );
 
         declareRunTimeSelectionTable
@@ -104,9 +103,10 @@ public:
             decompositionMethod,
             distributor,
             (
-                const dictionary& decompositionDict
+                const dictionary& decompositionDict,
+                const dictionary& methodDict
             ),
-            (decompositionDict)
+            (decompositionDict, methodDict)
         );
 
 

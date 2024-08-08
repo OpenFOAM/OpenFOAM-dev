@@ -280,10 +280,12 @@ Foam::label Foam::decompositionMethods::parMetis::decompose
 
 Foam::decompositionMethods::parMetis::parMetis
 (
-    const dictionary& decompositionDict
+    const dictionary& decompositionDict,
+    const dictionary& methodDict
 )
 :
     decompositionMethod(decompositionDict),
+    methodDict_(methodDict),
     method_("geomKway"),
     options_(4, label(0)),
     itr_(1000)

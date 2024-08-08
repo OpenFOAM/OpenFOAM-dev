@@ -41,7 +41,11 @@ namespace decompositionMethods
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::decompositionMethods::none::none(const dictionary& decompositionDict)
+Foam::decompositionMethods::none::none
+(
+    const dictionary& decompositionDict,
+    const dictionary& methodDict
+)
 :
     decompositionMethod(decompositionDict)
 {}

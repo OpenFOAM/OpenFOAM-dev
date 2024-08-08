@@ -80,7 +80,11 @@ public:
     // Constructors
 
         //- Construct given the decomposition dictionary
-        simple(const dictionary& decompositionDict);
+        simple
+        (
+            const dictionary& decompositionDict,
+            const dictionary& methodDict
+        );
 
         //- Disallow default bitwise copy construction
         simple(const simple&) = delete;

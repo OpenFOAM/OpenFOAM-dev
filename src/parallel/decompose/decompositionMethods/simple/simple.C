@@ -308,9 +308,13 @@ Foam::labelList Foam::decompositionMethods::simple::decomposeOneProc
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::decompositionMethods::simple::simple(const dictionary& decompositionDict)
+Foam::decompositionMethods::simple::simple
+(
+    const dictionary& decompositionDict,
+    const dictionary& methodDict
+)
 :
-    geometric(decompositionDict, typeName)
+    geometric(decompositionDict, methodDict)
 {}
 
 

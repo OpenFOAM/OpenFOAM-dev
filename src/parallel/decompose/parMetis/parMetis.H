@@ -94,6 +94,8 @@ class parMetis
 {
     // Private Member Data
 
+        dictionary methodDict_;
+
         //- Method of decomposition
         word method_;
 
@@ -131,7 +133,11 @@ public:
     // Constructors
 
         //- Construct given the decomposition dictionary
-        parMetis(const dictionary& decompositionDict);
+        parMetis
+        (
+            const dictionary& decompositionDict,
+            const dictionary& methodDict
+        );
 
         //- Disallow default bitwise copy construction
         parMetis(const parMetis&) = delete;

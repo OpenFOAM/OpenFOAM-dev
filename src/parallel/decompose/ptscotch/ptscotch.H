@@ -66,6 +66,8 @@ class ptscotch
 :
     public decompositionMethod
 {
+    dictionary methodDict_;
+
     // Private Member Functions
 
         //- Check and print error message
@@ -103,7 +105,11 @@ public:
     // Constructors
 
         //- Construct given the decomposition dictionary
-        ptscotch(const dictionary& decompositionDict);
+        ptscotch
+        (
+            const dictionary& decompositionDict,
+            const dictionary& methodDict
+        );
 
         //- Disallow default bitwise copy construction
         ptscotch(const ptscotch&) = delete;

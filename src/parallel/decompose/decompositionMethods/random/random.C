@@ -55,16 +55,14 @@ namespace decompositionMethods
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::decompositionMethods::random::random(const dictionary& decompositionDict)
+Foam::decompositionMethods::random::random
+(
+    const dictionary& decompositionDict,
+    const dictionary& methodDict
+)
 :
     decompositionMethod(decompositionDict),
-    seed_
-    (
-        decompositionDict.optionalSubDict
-        (
-            word(decompositionDict.lookup("method")) + "Coeffs"
-        ).lookupOrDefault<label>("seed", clock::getTime())
-    )
+    seed_(methodDict.lookupOrDefault<label>("seed", clock::getTime()))
 {}
 
 

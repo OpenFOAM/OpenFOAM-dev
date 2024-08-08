@@ -50,6 +50,8 @@ class metis
 :
     public decompositionMethod
 {
+    dictionary methodDict_;
+
     // Private Member Functions
 
         //- Call Metis with options from dictionary.
@@ -71,7 +73,11 @@ public:
     // Constructors
 
         //- Construct given the decomposition dictionary
-        metis(const dictionary&);
+        metis
+        (
+            const dictionary& decompositionDict,
+            const dictionary& methodDict
+        );
 
         //- Disallow default bitwise copy construction
         metis(const metis&) = delete;

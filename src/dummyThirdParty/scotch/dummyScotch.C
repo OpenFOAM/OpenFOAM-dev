@@ -93,7 +93,8 @@ Foam::label Foam::decompositionMethods::scotch::decompose
 
 Foam::decompositionMethods::scotch::scotch
 (
-    const dictionary& decompositionDict
+    const dictionary& decompositionDict,
+    const dictionary& methodDict
 )
 :
     decompositionMethod(decompositionDict)

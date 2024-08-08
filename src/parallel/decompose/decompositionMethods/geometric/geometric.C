@@ -30,13 +30,12 @@ License
 Foam::decompositionMethods::geometric::geometric
 (
     const dictionary& decompositionDict,
-    const word& derivedType
+    const dictionary& methodDict
 )
 :
     decompositionMethod(decompositionDict),
-    geometricDict_(decompositionDict.optionalSubDict(derivedType + "Coeffs")),
-    n_(geometricDict_.lookup("n")),
-    delta_(geometricDict_.lookupOrDefault<scalar>("delta", 0.001)),
+    n_(methodDict.lookup("n")),
+    delta_(methodDict.lookupOrDefault<scalar>("delta", 0.001)),
     rotDelta_(I)
 {
     // Check that the decomposition specification makes sense:

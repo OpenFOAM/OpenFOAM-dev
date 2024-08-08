@@ -78,7 +78,7 @@ class hierarchical
     // Private Member Functions
 
         //- Convert ordering string ("xyz") into list of components.
-        void setDecompOrder();
+        void setDecompOrder(const dictionary& methodDict);
 
         //- Evaluates the weighted sizes for each sorted point.
         static void calculateSortedWeightedSizes
@@ -165,7 +165,11 @@ public:
     // Constructors
 
         //- Construct given the decomposition dictionary
-        hierarchical(const dictionary& decompositionDict);
+        hierarchical
+        (
+            const dictionary& decompositionDict,
+            const dictionary& methodDict
+        );
 
         //- Disallow default bitwise copy construction
         hierarchical(const hierarchical&) = delete;

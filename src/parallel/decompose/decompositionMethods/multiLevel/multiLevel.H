@@ -93,7 +93,11 @@ public:
     // Constructors
 
         //- Construct given the decomposition dictionary
-        multiLevel(const dictionary& decompositionDict);
+        multiLevel
+        (
+            const dictionary& decompositionDict,
+            const dictionary& methodDict
+        );
 
         //- Disallow default bitwise copy construction
         multiLevel(const multiLevel&) = delete;

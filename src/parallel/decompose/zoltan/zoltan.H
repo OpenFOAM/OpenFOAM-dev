@@ -96,6 +96,8 @@ class zoltan
 :
     public decompositionMethod
 {
+    dictionary methodDict_;
+
     // Private Member Functions
 
         //- Low level decompose
@@ -117,7 +119,11 @@ public:
     // Constructors
 
         //- Construct given the decomposition dictionary and mesh
-        zoltan(const dictionary& decompositionDict);
+        zoltan
+        (
+            const dictionary& decompositionDict,
+            const dictionary& methodDict
+        );
 
         //- Disallow default bitwise copy construction
         zoltan(const zoltan&) = delete;

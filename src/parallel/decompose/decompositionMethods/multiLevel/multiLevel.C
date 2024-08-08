@@ -240,96 +240,6 @@ void Foam::decompositionMethods::multiLevel::decompose
                 Pout.prefix() = oldPrefix;
             }
         }
-
-
-        if (debug)
-        {
-            // Do straight decompose of two levels
-            label nNext = methods_[levelI+1].nDomains();
-            label nTotal = n*nNext;
-
-            // Retrieve original level0 dictionary and modify number of domains
-            dictionary::const_iterator iter =
-                decompositionDict_.optionalSubDict(typeName + "Coeffs").begin();
-            dictionary myDict = iter().dict();
-            myDict.set("numberOfSubdomains", nTotal);
-
-            if (debug && Pstream::master())
-            {
-                Pout<< "Reference decomposition with " << myDict << " :"
-                    << endl;
-            }
-
-            autoPtr<decompositionMethod> method0 =
-                decompositionMethod::NewDecomposer
-                (
-                    myDict
-                );
-
-            labelList dist
-            (
-                method0().decompose
-                (
-                    pointPoints,
-                    points,
-                    pointWeights
-                )
-            );
-
-            for (label blockI = 0; blockI < n; blockI++)
-            {
-                // Count the number in between blocks of nNext size
-
-                label nPoints = 0;
-                labelList nOutsideConnections(n, 0);
-                forAll(pointPoints, pointi)
-                {
-                    if ((dist[pointi] / nNext) == blockI)
-                    {
-                        nPoints++;
-
-                        const labelList& pPoints = pointPoints[pointi];
-
-                        forAll(pPoints, i)
-                        {
-                            label distBlockI = dist[pPoints[i]] / nNext;
-                            if (distBlockI != blockI)
-                            {
-                                nOutsideConnections[distBlockI]++;
-                            }
-                        }
-                    }
-                }
-
-                reduce(nPoints, plusOp<label>());
-                Pstream::listCombineGather
-                (
-                    nOutsideConnections,
-                    plusEqOp<label>()
-                );
-                Pstream::listCombineScatter(nOutsideConnections);
-                label nPatches = 0;
-                label nFaces = 0;
-                forAll(nOutsideConnections, i)
-                {
-                    if (nOutsideConnections[i] > 0)
-                    {
-                        nPatches++;
-                        nFaces += nOutsideConnections[i];
-                    }
-                }
-
-                if (debug && Pstream::master())
-                {
-                    Pout<< "    Domain " << blockI << nl
-                        << "        Number of cells = " << nPoints << nl
-                        << "        Number of inter-domain patches = "
-                        << nPatches << nl
-                        << "        Number of inter-domain faces = " << nFaces
-                        << nl << endl;
-                }
-            }
-        }
     }
 }
 
@@ -338,17 +248,15 @@ void Foam::decompositionMethods::multiLevel::decompose
 
 Foam::decompositionMethods::multiLevel::multiLevel
 (
-    const dictionary& decompositionDict
+    const dictionary& decompositionDict,
+    const dictionary& methodDict
 )
 :
     decompositionMethod(decompositionDict)
 {
-    const dictionary methodsDict =
-        decompositionDict_.optionalSubDict(typeName + "Coeffs");
-
-    methods_.setSize(methodsDict.size());
+    methods_.setSize(methodDict.size());
     label i = 0;
-    forAllConstIter(dictionary, methodsDict, iter)
+    forAllConstIter(dictionary, methodDict, iter)
     {
         methods_.set(i++, decompositionMethod::NewDecomposer(iter().dict()));
     }

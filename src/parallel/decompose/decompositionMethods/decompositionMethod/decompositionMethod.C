@@ -101,18 +101,14 @@ Foam::decompositionMethod::decompositionMethod
     const dictionary& decompositionDict
 )
 :
-    decompositionDict_(decompositionDict),
-    nProcessors_
-    (
-        decompositionDict.lookup<label>("numberOfSubdomains")
-    )
+    nProcessors_(decompositionDict.lookup<label>("numberOfSubdomains"))
 {
     // Read any constraints
     wordList constraintTypes_;
 
-    if (decompositionDict_.found("constraints"))
+    if (decompositionDict.found("constraints"))
     {
-        const dictionary& constraintsList = decompositionDict_.subDict
+        const dictionary& constraintsList = decompositionDict.subDict
         (
             "constraints"
         );
@@ -173,7 +169,20 @@ Foam::decompositionMethod::NewDecomposer
             << exit(FatalError);
     }
 
-    return autoPtr<decompositionMethod>(cstrIter()(decompositionDict));
+    Info<< incrIndent;
+
+    autoPtr<decompositionMethod> methodPtr
+    (
+        cstrIter()
+        (
+            decompositionDict,
+            decompositionDict.subOrEmptyDict(methodType + "Coeffs")
+        )
+    );
+
+    Info<< decrIndent;
+
+    return methodPtr;
 }
 
 
@@ -213,7 +222,20 @@ Foam::decompositionMethod::NewDistributor
             << exit(FatalError);
     }
 
-    return autoPtr<decompositionMethod>(cstrIter()(distributionDict));
+    Info<< incrIndent;
+
+    autoPtr<decompositionMethod> methodPtr
+    (
+        cstrIter()
+        (
+            distributionDict,
+            distributionDict.subOrEmptyDict(methodType + "Coeffs")
+        )
+    );
+
+    Info<< decrIndent;
+
+    return methodPtr;
 }
 
 

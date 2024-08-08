@@ -55,15 +55,18 @@ namespace decompositionMethods
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-void Foam::decompositionMethods::hierarchical::setDecompOrder()
+void Foam::decompositionMethods::hierarchical::setDecompOrder
+(
+    const dictionary& methodDict
+)
 {
-    const word order(geometricDict_.lookup("order"));
+    const word order(methodDict.lookup("order"));
 
     if (order.size() != 3)
     {
         FatalIOErrorInFunction
         (
-            decompositionDict_
+            methodDict
         )   << "number of characters in order (" << order << ") != 3"
             << exit(FatalIOError);
     }
@@ -86,7 +89,7 @@ void Foam::decompositionMethods::hierarchical::setDecompOrder()
         {
             FatalIOErrorInFunction
             (
-                decompositionDict_
+                methodDict
             )   << "Illegal decomposition order " << order << endl
                 << "It should only contain x, y or z" << exit(FatalError);
         }
@@ -773,13 +776,14 @@ Foam::labelList Foam::decompositionMethods::hierarchical::decompose
 
 Foam::decompositionMethods::hierarchical::hierarchical
 (
-    const dictionary& decompositionDict
+    const dictionary& decompositionDict,
+    const dictionary& methodDict
 )
 :
-    geometric(decompositionDict, typeName),
+    geometric(decompositionDict, methodDict),
     decompOrder_()
 {
-    setDecompOrder();
+    setDecompOrder(methodDict);
 }
 
 

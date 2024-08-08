@@ -56,8 +56,6 @@ protected:
 
     // Protected data
 
-        const dictionary& geometricDict_;
-
         Vector<label> n_;
         scalar delta_;
         tensor rotDelta_;
@@ -71,7 +69,7 @@ public:
         geometric
         (
             const dictionary& decompositionDict,
-            const word& derivedType
+            const dictionary& methodDict
         );
 
         //- Return for every coordinate the wanted processor number.

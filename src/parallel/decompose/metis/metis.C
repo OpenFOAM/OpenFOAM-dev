@@ -89,18 +89,14 @@ Foam::label Foam::decompositionMethods::metis::decompose
 
 
     // Check for user supplied weights and decomp options
-    if (decompositionDict_.found("metisCoeffs"))
+    if (!methodDict_.empty())
     {
-        const dictionary& metisCoeffs =
-            decompositionDict_.subDict("metisCoeffs");
-
-        if (metisCoeffs.readIfPresent("method", method))
+        if (methodDict_.readIfPresent("method", method))
         {
             if (method != "recursive" && method != "kWay")
             {
-                FatalIOErrorInFunction(metisCoeffs)
-                    << "Method " << method << " in metisCoeffs in dictionary : "
-                    << decompositionDict_.name()
+                FatalIOErrorInFunction(methodDict_)
+                    << "Method " << method
                     << " should be 'recursive' or 'kWay'"
                     << exit(FatalIOError);
             }
@@ -109,27 +105,26 @@ Foam::label Foam::decompositionMethods::metis::decompose
                 << nl << endl;
         }
 
-        if (metisCoeffs.readIfPresent("options", options))
+        if (methodDict_.readIfPresent("options", options))
         {
             if (options.size() != METIS_NOPTIONS)
             {
-                FatalIOErrorInFunction(metisCoeffs)
-                    << "Number of options in metisCoeffs dictionary : "
-                    << decompositionDict_.name()
-                    << " should be " << METIS_NOPTIONS << " found " << options
+                FatalIOErrorInFunction(methodDict_)
+                    << "Number of options should be " << METIS_NOPTIONS
+                    << " found " << options
                     << exit(FatalIOError);
             }
 
             Info<< "Using Metis options     " << options << nl << endl;
         }
 
-        if (metisCoeffs.readIfPresent("processorWeights", processorWeights))
+        if (methodDict_.readIfPresent("processorWeights", processorWeights))
         {
             processorWeights /= sum(processorWeights);
 
             if (processorWeights.size() != nProcessors_)
             {
-                FatalIOErrorInFunction(metisCoeffs)
+                FatalIOErrorInFunction(methodDict_)
                     << "Number of processor weights "
                     << processorWeights.size()
                     << " does not equal number of domains " << nProcessors_
@@ -192,9 +187,14 @@ Foam::label Foam::decompositionMethods::metis::decompose
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::decompositionMethods::metis::metis(const dictionary& decompositionDict)
+Foam::decompositionMethods::metis::metis
+(
+    const dictionary& decompositionDict,
+    const dictionary& methodDict
+)
 :
-    decompositionMethod(decompositionDict)
+    decompositionMethod(decompositionDict),
+    methodDict_(methodDict)
 {}
 
 

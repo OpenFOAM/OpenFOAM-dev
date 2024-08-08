@@ -67,7 +67,11 @@ public:
     // Constructors
 
         //- Construct given the decomposition dictionary
-        random(const dictionary& decompositionDict);
+        random
+        (
+            const dictionary& decompositionDict,
+            const dictionary& methodDict
+        );
 
         //- Disallow default bitwise copy construction
         random(const random&) = delete;

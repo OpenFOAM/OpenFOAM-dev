@@ -306,14 +306,11 @@ Foam::label Foam::decompositionMethods::zoltan::decompose
     Zoltan_Set_Param(zz, "lb_method", lb_method.c_str());
     Zoltan_Set_Param(zz, "lb_approach", "repartition");
 
-    if (decompositionDict_.found("zoltanCoeffs"))
+    if (!methodDict_.empty())
     {
-        const dictionary& coeffDict_ =
-            decompositionDict_.subDict("zoltanCoeffs");
+        methodDict_.readIfPresent("lb_method", lb_method);
 
-        coeffDict_.readIfPresent("lb_method", lb_method);
-
-        forAllConstIter(IDLList<entry>, coeffDict_, iter)
+        forAllConstIter(IDLList<entry>, methodDict_, iter)
         {
             if (!iter().isDict())
             {
@@ -333,7 +330,7 @@ Foam::label Foam::decompositionMethods::zoltan::decompose
 
     if (nWeights > 1 && lb_method != "rcb")
     {
-        FatalIOErrorInFunction(decompositionDict_)
+        FatalIOErrorInFunction(methodDict_)
             << "Multiple constraints specified for lb_method " << lb_method
             << " but is only supported by the rcb method"
             << exit(FatalIOError);
@@ -476,9 +473,14 @@ Foam::label Foam::decompositionMethods::zoltan::decompose
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::decompositionMethods::zoltan::zoltan(const dictionary& decompositionDict)
+Foam::decompositionMethods::zoltan::zoltan
+(
+    const dictionary& decompositionDict,
+    const dictionary& methodDict
+)
 :
-    decompositionMethod(decompositionDict)
+    decompositionMethod(decompositionDict),
+    methodDict_(methodDict)
 {}
 
 

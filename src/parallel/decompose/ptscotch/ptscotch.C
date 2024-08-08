@@ -126,12 +126,9 @@ Foam::label Foam::decompositionMethods::ptscotch::decompose
     }
 
     // Dump graph
-    if (decompositionDict_.found("scotchCoeffs"))
+    if (!methodDict_.empty())
     {
-        const dictionary& scotchCoeffs =
-            decompositionDict_.subDict("scotchCoeffs");
-
-        if (scotchCoeffs.lookupOrDefault("writeGraph", false))
+        if (methodDict_.lookupOrDefault("writeGraph", false))
         {
             OFstream str
             (
@@ -186,13 +183,10 @@ Foam::label Foam::decompositionMethods::ptscotch::decompose
     SCOTCH_Strat stradat;
     check(SCOTCH_stratInit(&stradat), "SCOTCH_stratInit");
 
-    if (decompositionDict_.found("scotchCoeffs"))
+    if (!methodDict_.empty())
     {
-        const dictionary& scotchCoeffs =
-            decompositionDict_.subDict("scotchCoeffs");
-
         string strategy;
-        if (scotchCoeffs.readIfPresent("strategy", strategy))
+        if (methodDict_.readIfPresent("strategy", strategy))
         {
             if (debug)
             {
@@ -302,12 +296,9 @@ Foam::label Foam::decompositionMethods::ptscotch::decompose
     check(SCOTCH_archInit(&archdat), "SCOTCH_archInit");
 
     labelList processorWeights;
-    if (decompositionDict_.found("scotchCoeffs"))
+    if (!methodDict_.empty())
     {
-        const dictionary& scotchCoeffs =
-            decompositionDict_.subDict("scotchCoeffs");
-
-        scotchCoeffs.readIfPresent("processorWeights", processorWeights);
+        methodDict_.readIfPresent("processorWeights", processorWeights);
     }
     if (processorWeights.size())
     {
@@ -394,10 +385,12 @@ Foam::label Foam::decompositionMethods::ptscotch::decompose
 
 Foam::decompositionMethods::ptscotch::ptscotch
 (
-    const dictionary& decompositionDict
+    const dictionary& decompositionDict,
+    const dictionary& methodDict
 )
 :
-    decompositionMethod(decompositionDict)
+    decompositionMethod(decompositionDict),
+    methodDict_(methodDict)
 {}
 
 

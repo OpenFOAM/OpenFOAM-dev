@@ -55,16 +55,14 @@ namespace decompositionMethods
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::decompositionMethods::manual::manual(const dictionary& decompositionDict)
+Foam::decompositionMethods::manual::manual
+(
+    const dictionary& decompositionDict,
+    const dictionary& methodDict
+)
 :
     decompositionMethod(decompositionDict),
-    decompDataFile_
-    (
-        decompositionDict.optionalSubDict
-        (
-            word(decompositionDict.lookup("method")) + "Coeffs"
-        ).lookup("dataFile")
-    )
+    decompDataFile_(methodDict.lookup("dataFile"))
 {}
 
 

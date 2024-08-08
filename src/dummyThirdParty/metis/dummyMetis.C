@@ -71,7 +71,8 @@ Foam::label Foam::decompositionMethods::metis::decompose
 
 Foam::decompositionMethods::metis::metis
 (
-    const dictionary& decompositionDict
+    const dictionary& decompositionDict,
+    const dictionary& methodDict
 )
 :
     decompositionMethod(decompositionDict)
