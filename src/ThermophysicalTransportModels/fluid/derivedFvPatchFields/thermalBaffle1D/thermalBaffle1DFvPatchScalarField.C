@@ -52,8 +52,12 @@ thermalBaffle1DFvPatchScalarField
     baffleActivated_(dict.lookupOrDefault<bool>("baffleActivated", true)),
     thickness_(),
     qs_(p.size(), 0),
-    solidDict_(dict),
-    solidPtr_(),
+    solidPtr_
+    (
+        this->owner()
+      ? new solidType("solid", dict)
+      : nullptr
+    ),
     qrPrevious_(p.size(), 0.0),
     qrRelaxation_(dict.lookupOrDefault<scalar>("qrRelaxation", dimless, 1)),
     qrName_(dict.lookupOrDefault<word>("qr", "none"))
@@ -128,7 +132,6 @@ thermalBaffle1DFvPatchScalarField
     baffleActivated_(ptf.baffleActivated_),
     thickness_(mapper(ptf.thickness_)),
     qs_(mapper(ptf.qs_)),
-    solidDict_(ptf.solidDict_),
     solidPtr_(ptf.solidPtr_),
     qrPrevious_(mapper(ptf.qrPrevious_)),
     qrRelaxation_(ptf.qrRelaxation_),
@@ -149,7 +152,6 @@ thermalBaffle1DFvPatchScalarField
     baffleActivated_(ptf.baffleActivated_),
     thickness_(ptf.thickness_),
     qs_(ptf.qs_),
-    solidDict_(ptf.solidDict_),
     solidPtr_(ptf.solidPtr_),
     qrPrevious_(ptf.qrPrevious_),
     qrRelaxation_(ptf.qrRelaxation_),
@@ -197,7 +199,8 @@ const solidType& thermalBaffle1DFvPatchScalarField<solidType>::solid() const
     {
         if (solidPtr_.empty())
         {
-            solidPtr_.reset(new solidType("solid", solidDict_));
+            FatalErrorInFunction
+                << "solid not allocated" << exit(FatalError);
         }
 
         return solidPtr_();
@@ -217,10 +220,10 @@ baffleThickness() const
     {
         if (thickness_.size() != patch().size())
         {
-            FatalIOErrorInFunction(solidDict_)
+            FatalErrorInFunction
                 << " Field thickness has not been specified "
                 << " for patch " << this->patch().name()
-                << exit(FatalIOError);
+                << exit(FatalError);
         }
 
         return thickness_;
