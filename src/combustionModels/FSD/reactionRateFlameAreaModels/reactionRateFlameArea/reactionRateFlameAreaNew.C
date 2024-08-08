@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,7 @@ Foam::autoPtr<Foam::reactionRateFlameArea> Foam::reactionRateFlameArea::New
     const combustionModel& combModel
 )
 {
-    word reactionRateFlameAreaType
+    const word reactionRateFlameAreaType
     (
         dict.lookup("reactionRateFlameArea")
     );
@@ -59,10 +59,25 @@ Foam::autoPtr<Foam::reactionRateFlameArea> Foam::reactionRateFlameArea::New
 
     const label tempOpen = reactionRateFlameAreaType.find('<');
 
-    const word className = reactionRateFlameAreaType(0, tempOpen);
+    const word modelType = reactionRateFlameAreaType(0, tempOpen);
 
-    return autoPtr<reactionRateFlameArea>
-        (cstrIter()(className, dict, mesh, combModel));
+    Info<< incrIndent;
+
+    autoPtr<reactionRateFlameArea> modelPtr
+    (
+        cstrIter()
+        (
+            modelType,
+            dict,
+            dict.optionalSubDict(modelType + "Coeffs"),
+            mesh,
+            combModel
+        )
+    );
+
+    Info<< decrIndent;
+
+    return modelPtr;
 }
 
 

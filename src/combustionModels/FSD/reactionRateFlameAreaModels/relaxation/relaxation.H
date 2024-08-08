@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,8 +55,8 @@ class relaxation
 {
     // Private Data
 
-        //- Correlation
-        consumptionSpeed correlation_;
+        //- Consumption speed correlation
+        consumptionSpeed consumptionSpeed_;
 
         //- Proportionality constant for time scale in the relaxation Eq.
         scalar C_;
@@ -77,7 +77,8 @@ public:
         relaxation
         (
             const word modelType,
-            const dictionary& dictCoeffs,
+            const dictionary& dict,
+            const dictionary& coeffDict,
             const fvMesh& mesh,
             const combustionModel& combModel
         );
@@ -100,7 +101,7 @@ public:
     // IO
 
         //- Update properties from given dictionary
-        virtual bool read(const dictionary& dictProperties);
+        virtual bool read(const dictionary& dict);
 
 
     // Member Operators

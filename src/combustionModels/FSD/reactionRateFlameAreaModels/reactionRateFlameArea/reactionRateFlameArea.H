@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,9 +59,6 @@ protected:
 
     // Protected data
 
-        //- Dictionary
-        dictionary coeffDict_;
-
         //- Mesh reference
         const fvMesh& mesh_;
 
@@ -91,10 +88,11 @@ public:
             (
                 const word modelType,
                 const dictionary& dict,
+                const dictionary& coeffDict,
                 const fvMesh& mesh,
                 const combustionModel& combModel
             ),
-            (modelType, dict, mesh, combModel)
+            (modelType, dict, coeffDict, mesh, combModel)
         );
 
 

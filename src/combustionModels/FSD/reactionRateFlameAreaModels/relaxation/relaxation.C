@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,17 +51,15 @@ Foam::reactionRateFlameAreaModels::relaxation::relaxation
 (
     const word modelType,
     const dictionary& dict,
+    const dictionary& coeffDict,
     const fvMesh& mesh,
     const combustionModel& combModel
 )
 :
     reactionRateFlameArea(modelType, dict, mesh, combModel),
-    correlation_(dict.optionalSubDict(typeName + "Coeffs").subDict(fuel_)),
-    C_(dict.optionalSubDict(typeName + "Coeffs").lookup<scalar>("C")),
-    alpha_
-    (
-        dict.optionalSubDict(typeName + "Coeffs").lookup<scalar>("alpha")
-    )
+    consumptionSpeed_(coeffDict.subDict(fuel_)),
+    C_(coeffDict.lookup<scalar>("C")),
+    alpha_(coeffDict.lookup<scalar>("alpha"))
 {}
 
 
@@ -82,14 +80,14 @@ void Foam::reactionRateFlameAreaModels::relaxation::correct
     (
         "omega0",
         dimensionSet(1, -2, -1, 0, 0, 0, 0),
-        correlation_.omega0()
+        consumptionSpeed_.omega0()
     );
 
     dimensionedScalar sigmaExt
     (
         "sigmaExt",
         dimensionSet(0, 0, -1, 0, 0, 0, 0),
-        correlation_.sigmaExt()
+        consumptionSpeed_.sigmaExt()
     );
 
     dimensionedScalar omegaMin
@@ -115,7 +113,7 @@ void Foam::reactionRateFlameAreaModels::relaxation::correct
         sigma + alpha_*turbulence.epsilon()/(turbulence.k() + kMin)
     );
 
-    const volScalarField omegaInf(correlation_.omega0Sigma(sigmaTotal));
+    const volScalarField omegaInf(consumptionSpeed_.omega0Sigma(sigmaTotal));
 
     dimensionedScalar sigma0("sigma0", sigma.dimensions(), 0.0);
 
@@ -152,13 +150,10 @@ bool  Foam::reactionRateFlameAreaModels::relaxation::read
 {
     if (reactionRateFlameArea::read(dict))
     {
-        coeffDict_ = dict.optionalSubDict(typeName + "Coeffs");
-        coeffDict_.lookup("C") >> C_;
-        coeffDict_.lookup("alpha") >> alpha_;
-        correlation_.read
-        (
-            coeffDict_.subDict(fuel_)
-        );
+        const dictionary& coeffDict = dict.optionalSubDict(typeName + "Coeffs");
+        coeffDict.lookup("C") >> C_;
+        coeffDict.lookup("alpha") >> alpha_;
+        consumptionSpeed_.read(coeffDict.subDict(fuel_));
         return true;
     }
     else
