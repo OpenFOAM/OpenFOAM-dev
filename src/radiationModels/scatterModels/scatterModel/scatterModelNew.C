@@ -52,7 +52,10 @@ Foam::radiationModels::scatterModel::New
             << exit(FatalIOError);
     }
 
-    return autoPtr<scatterModel>(cstrIter()(dict, mesh));
+    return autoPtr<scatterModel>
+    (
+        cstrIter()(dict.optionalSubDict(modelType + "Coeffs"), mesh)
+    );
 }
 
 

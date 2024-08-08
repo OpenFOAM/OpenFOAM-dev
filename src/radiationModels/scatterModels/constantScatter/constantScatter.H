@@ -56,9 +56,6 @@ class constant
 {
     // Private Data
 
-        //- Coefficients dictionary
-        dictionary coeffDict_;
-
         //- Scattering coefficient / [1/m]
         dimensionedScalar sigma_;
 

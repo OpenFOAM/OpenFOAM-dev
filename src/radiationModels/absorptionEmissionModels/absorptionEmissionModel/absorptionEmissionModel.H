@@ -83,12 +83,8 @@ public:
 
     // Constructors
 
-        //- Construct from components
-        absorptionEmissionModel
-        (
-            const dictionary& dict,
-            const fvMesh& mesh
-        );
+        //- Construct from mesh
+        absorptionEmissionModel(const fvMesh& mesh);
 
 
     //- Selector

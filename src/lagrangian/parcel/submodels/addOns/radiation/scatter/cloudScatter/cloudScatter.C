@@ -56,9 +56,8 @@ Foam::radiationModels::scatterModels::cloud::cloud
     const fvMesh& mesh
 )
 :
-    scatterModel(dict, mesh),
-    coeffDict_(dict.subDict(typeName + "Coeffs")),
-    cloudNames_(coeffDict_.lookup("cloudNames"))
+    scatterModel(mesh),
+    cloudNames_(dict.lookup("cloudNames"))
 {}
 
 

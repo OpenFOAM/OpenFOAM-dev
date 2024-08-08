@@ -40,7 +40,6 @@ namespace Foam
 
 Foam::radiationModels::absorptionEmissionModel::absorptionEmissionModel
 (
-    const dictionary& dict,
     const fvMesh& mesh
 )
 :

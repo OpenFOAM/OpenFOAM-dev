@@ -58,7 +58,7 @@ Foam::radiationModels::sootModels::mixtureFraction::mixtureFraction
     const word& modelType
 )
 :
-    sootModel(dict, mesh, modelType),
+    sootModel(mesh, modelType),
     soot_
     (
         IOobject
@@ -71,13 +71,12 @@ Foam::radiationModels::sootModels::mixtureFraction::mixtureFraction
         ),
         mesh_
     ),
-    coeffDict_(dict.subOrEmptyDict(modelType + "Coeffs")),
-    nuSoot_(coeffDict_.lookup<scalar>("nuSoot")),
-    Wsoot_(coeffDict_.lookup<scalar>("Wsoot")),
+    nuSoot_(dict.lookup<scalar>("nuSoot")),
+    Wsoot_(dict.lookup<scalar>("Wsoot")),
     sootMax_(-1),
     mappingFieldName_
     (
-        coeffDict_.lookupOrDefault<word>("mappingField", "none")
+        dict.lookupOrDefault<word>("mappingField", "none")
     ),
     mapFieldMax_(1)
 {

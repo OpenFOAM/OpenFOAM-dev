@@ -57,9 +57,6 @@ class constant
 {
     // Private Data
 
-        //- Absorption model dictionary
-        dictionary coeffDict_;
-
         //- Absorption coefficient / [1/m]
         dimensionedScalar a_;
 

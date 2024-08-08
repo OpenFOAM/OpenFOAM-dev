@@ -58,7 +58,7 @@ greyMeanCombustion
 )
 :
     greyMean(dict, mesh, typeName),
-    EhrrCoeff_(coeffDict_.lookup<scalar>("EhrrCoeff"))
+    EhrrCoeff_(dict.lookup<scalar>("EhrrCoeff"))
 {}
 
 

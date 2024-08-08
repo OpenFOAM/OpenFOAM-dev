@@ -56,9 +56,8 @@ Foam::radiationModels::absorptionEmissionModels::cloud::cloud
     const fvMesh& mesh
 )
 :
-    absorptionEmissionModel(dict, mesh),
-    coeffDict_(dict.subDict(typeName + "Coeffs")),
-    cloudNames_(coeffDict_.lookup("cloudNames"))
+    absorptionEmissionModel(mesh),
+    cloudNames_(dict.lookup("cloudNames"))
 {}
 
 

@@ -56,9 +56,6 @@ class cloud
 {
     // Private Data
 
-        //- Absorption model dictionary
-        dictionary coeffDict_;
-
         //- Cloud names
         wordList cloudNames_;
 

@@ -55,10 +55,9 @@ Foam::radiationModels::scatterModels::constant::constant
     const fvMesh& mesh
 )
 :
-    scatterModel(dict, mesh),
-    coeffDict_(dict.optionalSubDict(typeName + "Coeffs")),
-    sigma_("sigma", dimless/dimLength, coeffDict_),
-    C_("C", dimless, coeffDict_)
+    scatterModel(mesh),
+    sigma_("sigma", dimless/dimLength, dict),
+    C_("C", dimless, dict)
 {}
 
 

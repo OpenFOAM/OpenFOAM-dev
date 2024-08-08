@@ -142,9 +142,6 @@ protected:
 
     // Protected data
 
-        //- Absorption model dictionary
-        dictionary coeffDict_;
-
         //- Hash table with species names
         HashTable<label> speciesNames_;
 

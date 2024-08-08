@@ -55,11 +55,10 @@ Foam::radiationModels::absorptionEmissionModels::constant::constant
     const fvMesh& mesh
 )
 :
-    absorptionEmissionModel(dict, mesh),
-    coeffDict_(dict.optionalSubDict(typeName + "Coeffs")),
-    a_("absorptivity", dimless/dimLength, coeffDict_),
-    e_("emissivity", dimless/dimLength, coeffDict_),
-    E_("E", dimMass/dimLength/pow3(dimTime), coeffDict_)
+    absorptionEmissionModel(mesh),
+    a_("absorptivity", dimless/dimLength, dict),
+    e_("emissivity", dimless/dimLength, dict),
+    E_("E", dimMass/dimLength/pow3(dimTime), dict)
 {}
 
 

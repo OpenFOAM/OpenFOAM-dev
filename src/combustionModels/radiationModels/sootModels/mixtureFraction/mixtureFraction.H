@@ -82,9 +82,6 @@ class mixtureFraction
          //- Soot mass fraction
         volScalarField soot_;
 
-        //- Soot model dictionary
-        dictionary coeffDict_;
-
         //- Soot yield
         scalar nuSoot_;
 

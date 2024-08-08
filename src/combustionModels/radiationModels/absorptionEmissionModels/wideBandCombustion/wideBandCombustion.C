@@ -60,7 +60,7 @@ wideBandCombustion
     wideBand(dict, mesh, typeName)
 {
     label bandi = 0;
-    forAllConstIter(dictionary, coeffDict_, iter)
+    forAllConstIter(dictionary, dict, iter)
     {
         if (!iter().isDict()) continue;
 

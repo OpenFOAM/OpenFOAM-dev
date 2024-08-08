@@ -55,15 +55,14 @@ Foam::radiationModels::absorptionEmissionModels::binary::binary
     const fvMesh& mesh
 )
 :
-    absorptionEmissionModel(dict, mesh),
-    coeffDict_(dict.optionalSubDict(typeName + "Coeffs")),
+    absorptionEmissionModel(mesh),
     model1_
     (
-        absorptionEmissionModel::New(coeffDict_.subDict("model1"), mesh)
+        absorptionEmissionModel::New(dict.subDict("model1"), mesh)
     ),
     model2_
     (
-        absorptionEmissionModel::New(coeffDict_.subDict("model2"), mesh)
+        absorptionEmissionModel::New(dict.subDict("model2"), mesh)
     )
 {}
 

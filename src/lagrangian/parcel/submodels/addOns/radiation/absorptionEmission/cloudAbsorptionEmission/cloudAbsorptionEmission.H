@@ -56,9 +56,6 @@ class cloud
 {
     // Private Data
 
-        //- Coefficients dictionary
-        dictionary coeffDict_;
-
         //- Cloud name(s)
         const wordList cloudNames_;
 

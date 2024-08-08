@@ -56,9 +56,6 @@ class binary
 {
     // Private Data
 
-        //- Coefficients dictionary
-        dictionary coeffDict_;
-
         //- First absorption model
         autoPtr<absorptionEmissionModel> model1_;
 

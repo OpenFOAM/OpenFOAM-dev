@@ -52,7 +52,10 @@ Foam::radiationModels::absorptionEmissionModel::New
             << exit(FatalIOError);
     }
 
-    return autoPtr<absorptionEmissionModel>(cstrIter()(dict, mesh));
+    return autoPtr<absorptionEmissionModel>
+    (
+        cstrIter()(dict.optionalSubDict(modelType + "Coeffs"), mesh)
+    );
 }
 
 

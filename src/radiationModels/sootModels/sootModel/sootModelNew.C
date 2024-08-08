@@ -71,7 +71,10 @@ Foam::radiationModels::sootModel::New
             << exit(FatalIOError);
     }
 
-    return autoPtr<sootModel>(cstrIter()(dict, mesh, modelType));
+    return autoPtr<sootModel>
+    (
+        cstrIter()(dict.optionalSubDict(modelType + "Coeffs"), mesh, modelType)
+    );
 }
 
 

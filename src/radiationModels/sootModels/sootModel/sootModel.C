@@ -40,7 +40,6 @@ namespace radiationModels
 
 Foam::radiationModels::sootModel::sootModel
 (
-    const dictionary& dict,
     const fvMesh& mesh,
     const word& modelType
 )
