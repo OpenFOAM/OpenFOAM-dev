@@ -73,10 +73,10 @@ Foam::rigidBodyMeshMotionSolver::rigidBodyMeshMotionSolver
     const dictionary& dict
 )
 :
-    motionSolver(name, mesh, dict, typeName),
+    motionSolver(name, mesh, typeName),
     RBD::rigidBodyMotion
     (
-        coeffDict(),
+        dict,
         typeIOobject<timeIOdictionary>
         (
             "rigidBodyMotionState",
@@ -97,11 +97,12 @@ Foam::rigidBodyMeshMotionSolver::rigidBodyMeshMotionSolver
                 false
             )
         )
-      : coeffDict()
+      : dict
     ),
-    test_(coeffDict().lookupOrDefault<Switch>("test", false)),
+    test_(dict.lookupOrDefault<Switch>("test", false)),
+    nIter_(test_ ? dict.lookup<label>("nIter") : 0),
     rhoInf_(1.0),
-    rhoName_(coeffDict().lookupOrDefault<word>("rho", "rho")),
+    rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
     ramp_(nullptr),
     curTimeIndex_(-1),
     meshSolverPtr_
@@ -118,7 +119,7 @@ Foam::rigidBodyMeshMotionSolver::rigidBodyMeshMotionSolver
                     mesh.time().constant(),
                     mesh
                 ),
-                coeffDict().subDict("meshSolver")
+                dict.subDict("meshSolver")
             )
         )
     ),
@@ -126,19 +127,19 @@ Foam::rigidBodyMeshMotionSolver::rigidBodyMeshMotionSolver
 {
     if (rhoName_ == "rhoInf")
     {
-        rhoInf_ = coeffDict().lookup<scalar>("rhoInf");
+        rhoInf_ = dict.lookup<scalar>("rhoInf");
     }
 
-    if (coeffDict().found("ramp"))
+    if (dict.found("ramp"))
     {
-        ramp_ = Function1<scalar>::New("ramp", dimTime, dimless, coeffDict());
+        ramp_ = Function1<scalar>::New("ramp", dimTime, dimless, dict);
     }
     else
     {
         ramp_ = new Function1s::OneConstant<scalar>("ramp");
     }
 
-    const dictionary& bodiesDict = coeffDict().subDict("bodies");
+    const dictionary& bodiesDict = dict.subDict("bodies");
 
     forAllConstIter(IDLList<entry>, bodiesDict, iter)
     {
@@ -218,9 +219,7 @@ void Foam::rigidBodyMeshMotionSolver::solve()
 
     if (test_)
     {
-        label nIter(coeffDict().lookup<label>("nIter"));
-
-        for (label i=0; i<nIter; i++)
+        for (label i=0; i<nIter_; i++)
         {
             RBD::rigidBodyMotion::solve
             (

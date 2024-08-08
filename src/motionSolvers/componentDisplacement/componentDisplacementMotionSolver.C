@@ -74,8 +74,8 @@ Foam::componentDisplacementMotionSolver::componentDisplacementMotionSolver
     const word& type
 )
 :
-    motionSolver(name, mesh, dict, type),
-    cmptName_(coeffDict().lookup("component")),
+    motionSolver(name, mesh, type),
+    cmptName_(dict.lookup("component")),
     cmpt_(cmpt(cmptName_)),
     points0_
     (

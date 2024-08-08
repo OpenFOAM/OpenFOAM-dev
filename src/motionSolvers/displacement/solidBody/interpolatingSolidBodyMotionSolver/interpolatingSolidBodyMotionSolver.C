@@ -93,12 +93,12 @@ Foam::interpolatingSolidBodyMotionSolver::interpolatingSolidBodyMotionSolver
 )
 :
     points0MotionSolver(name, mesh, dict, typeName),
-    SBMFPtr_(solidBodyMotionFunction::New(coeffDict(), mesh.time())),
-    patches_(wordReList(coeffDict().lookup("patches"))),
+    SBMFPtr_(solidBodyMotionFunction::New(dict, mesh.time())),
+    patches_(wordReList(dict.lookup("patches"))),
     patchSet_(mesh.boundaryMesh().patchSet(patches_)),
-    CofG_(coeffDict().lookup("CofG")),
-    di_(coeffDict().lookup<scalar>("innerDistance")),
-    do_(coeffDict().lookup<scalar>("outerDistance")),
+    CofG_(dict.lookup("CofG")),
+    di_(dict.lookup<scalar>("innerDistance")),
+    do_(dict.lookup<scalar>("outerDistance")),
     scale_
     (
         IOobject

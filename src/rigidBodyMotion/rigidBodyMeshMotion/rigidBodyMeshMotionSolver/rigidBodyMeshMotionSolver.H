@@ -96,6 +96,9 @@ class rigidBodyMeshMotionSolver
         //  gravitational body-force is applied
         Switch test_;
 
+        //- Number of iterations in test-mode
+        label nIter_;
+
         //- Reference density required by the forces object for
         //  incompressible calculations, required if rho == rhoInf
         scalar rhoInf_;

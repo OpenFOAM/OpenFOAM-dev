@@ -94,7 +94,7 @@ Foam::solidBodyMotionSolver::solidBodyMotionSolver
 )
 :
     points0MotionSolver(name, mesh, dict, typeName),
-    SBMFPtr_(solidBodyMotionFunction::New(coeffDict(), mesh.time())),
+    SBMFPtr_(solidBodyMotionFunction::New(dict, mesh.time())),
     set_(mesh, dict),
     setPointIndices_(),
     transform_(SBMFPtr_().transformation())

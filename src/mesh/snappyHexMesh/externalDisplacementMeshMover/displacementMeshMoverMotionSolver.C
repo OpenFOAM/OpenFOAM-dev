@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,8 @@ Foam::displacementMeshMoverMotionSolver::displacementMeshMoverMotionSolver
     const dictionary& dict
 )
 :
-    displacementMotionSolver(name, mesh, dict, typeName)
+    displacementMotionSolver(name, mesh, dict, typeName),
+    dict_(dict)
 {}
 
 
@@ -69,12 +70,12 @@ Foam::displacementMeshMoverMotionSolver::meshMover() const
 {
     if (!meshMoverPtr_.valid())
     {
-        const word moverType(coeffDict().lookup("meshMover"));
+        const word moverType(dict_.lookup("meshMover"));
 
         meshMoverPtr_ = externalDisplacementMeshMover::New
         (
             moverType,
-            coeffDict().optionalSubDict(moverType + "Coeffs"),
+            dict_,
             localPointRegion::findDuplicateFacePairs(mesh()),
             pointDisplacement_
         );
@@ -105,7 +106,7 @@ void Foam::displacementMeshMoverMotionSolver::solve()
     labelList checkFaces(identityMap(mesh().nFaces()));
     meshMover().move
     (
-        coeffDict().optionalSubDict(meshMover().type() + "Coeffs"),
+        dict_,
         nAllowableErrors,
         checkFaces
     );

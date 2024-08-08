@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,14 +78,15 @@ Foam::displacementLaplacianFvMotionSolver::displacementLaplacianFvMotionSolver
         cellMotionBoundaryTypes<vector>(pointDisplacement_.boundaryField())
     ),
     pointLocation_(nullptr),
+    diffusivityType_(dict.lookup("diffusivity")),
     diffusivityPtr_
     (
-        motionDiffusivity::New(fvMesh_, coeffDict().lookup("diffusivity"))
+        motionDiffusivity::New(fvMesh_, diffusivityType_)
     ),
     frozenPointsZone_
     (
-        coeffDict().found("frozenPointsZone")
-      ? fvMesh_.pointZones().findIndex(coeffDict().lookup("frozenPointsZone"))
+        dict.found("frozenPointsZone")
+      ? fvMesh_.pointZones().findIndex(dict.lookup("frozenPointsZone"))
       : -1
     )
 {
@@ -144,10 +145,11 @@ Foam::displacementLaplacianFvMotionSolver::diffusivity()
 {
     if (!diffusivityPtr_.valid())
     {
+        diffusivityType_.rewind();
         diffusivityPtr_ = motionDiffusivity::New
         (
             fvMesh_,
-            coeffDict().lookup("diffusivity")
+            diffusivityType_
         );
     }
     return diffusivityPtr_();

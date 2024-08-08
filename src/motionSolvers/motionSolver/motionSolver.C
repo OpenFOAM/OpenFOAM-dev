@@ -43,13 +43,11 @@ Foam::motionSolver::motionSolver
 (
     const word& name,
     const polyMesh& mesh,
-    const dictionary& dict,
     const word& type
 )
 :
     name_(name),
-    mesh_(mesh),
-    coeffDict_(dict.optionalSubDict(type + "Coeffs"))
+    mesh_(mesh)
 {}
 
 
@@ -100,7 +98,15 @@ Foam::autoPtr<Foam::motionSolver> Foam::motionSolver::New
             << exit(FatalIOError);
     }
 
-    return autoPtr<motionSolver>(cstrIter()(name, mesh, solverDict));
+    return autoPtr<motionSolver>
+    (
+        cstrIter()
+        (
+            name,
+            mesh,
+            solverDict.optionalSubDict(solverTypeName + "Coeffs")
+        )
+    );
 }
 
 

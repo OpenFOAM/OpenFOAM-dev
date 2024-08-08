@@ -81,6 +81,9 @@ class sixDoFRigidBodyMotionSolver
         //  as rhoInf
         word rhoName_;
 
+        //- Optional acceleration due to gravity
+        dimensionedVector g_;
+
         //- Current interpolation scale (1 at patches, 0 at distance_)
         pointScalarField scale_;
 

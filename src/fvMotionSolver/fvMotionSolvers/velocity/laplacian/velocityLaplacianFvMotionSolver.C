@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,9 +74,10 @@ Foam::velocityLaplacianFvMotionSolver::velocityLaplacianFvMotionSolver
         ),
         cellMotionBoundaryTypes<vector>(pointMotionU_.boundaryField())
     ),
+    diffusivityType_(dict.lookup("diffusivity")),
     diffusivityPtr_
     (
-        motionDiffusivity::New(fvMesh_, coeffDict().lookup("diffusivity"))
+        motionDiffusivity::New(fvMesh_, diffusivityType_)
     )
 {}
 
@@ -148,10 +149,11 @@ void Foam::velocityLaplacianFvMotionSolver::topoChange
     // Update diffusivity. Note two stage to make sure old one is de-registered
     // before creating/registering new one.
     diffusivityPtr_.reset(nullptr);
+    diffusivityType_.rewind();
     diffusivityPtr_ = motionDiffusivity::New
     (
         fvMesh_,
-        coeffDict().lookup("diffusivity")
+        diffusivityType_
     );
 }
 
@@ -166,10 +168,11 @@ void Foam::velocityLaplacianFvMotionSolver::mapMesh
     // Update diffusivity. Note two stage to make sure old one is de-registered
     // before creating/registering new one.
     diffusivityPtr_.reset(nullptr);
+    diffusivityType_.rewind();
     diffusivityPtr_ = motionDiffusivity::New
     (
         fvMesh_,
-        coeffDict().lookup("diffusivity")
+        diffusivityType_
     );
 }
 

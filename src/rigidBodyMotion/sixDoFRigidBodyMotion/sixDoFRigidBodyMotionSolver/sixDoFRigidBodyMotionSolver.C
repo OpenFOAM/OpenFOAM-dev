@@ -60,7 +60,7 @@ Foam::sixDoFRigidBodyMotionSolver::sixDoFRigidBodyMotionSolver
     displacementMotionSolver(name, mesh, dict, typeName),
     sixDoFRigidBodyMotion
     (
-        coeffDict(),
+        dict,
         typeIOobject<timeIOdictionary>
         (
             "sixDoFRigidBodyMotionState",
@@ -81,15 +81,16 @@ Foam::sixDoFRigidBodyMotionSolver::sixDoFRigidBodyMotionSolver
                 false
             )
         )
-      : coeffDict()
+      : dict
     ),
-    patches_(wordReList(coeffDict().lookup("patches"))),
+    patches_(wordReList(dict.lookup("patches"))),
     patchSet_(mesh.boundaryMesh().patchSet(patches_)),
-    di_(coeffDict().lookup<scalar>("innerDistance")),
-    do_(coeffDict().lookup<scalar>("outerDistance")),
-    test_(coeffDict().lookupOrDefault<Switch>("test", false)),
+    di_(dict.lookup<scalar>("innerDistance")),
+    do_(dict.lookup<scalar>("outerDistance")),
+    test_(dict.lookupOrDefault<Switch>("test", false)),
     rhoInf_(1.0),
-    rhoName_(coeffDict().lookupOrDefault<word>("rho", "rho")),
+    rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
+    g_("g", dimAcceleration, dict, vector::zero),
     scale_
     (
         IOobject
@@ -108,7 +109,7 @@ Foam::sixDoFRigidBodyMotionSolver::sixDoFRigidBodyMotionSolver
 {
     if (rhoName_ == "rhoInf")
     {
-        rhoInf_ = coeffDict().lookup<scalar>("rhoInf");
+        rhoInf_ = dict.lookup<scalar>("rhoInf");
     }
 
     // Calculate scaling factor everywhere
@@ -189,15 +190,11 @@ void Foam::sixDoFRigidBodyMotionSolver::solve()
         firstIter = true;
     }
 
-    dimensionedVector g("g", dimAcceleration, Zero);
+    dimensionedVector g(g_);
 
     if (mesh().foundObject<uniformDimensionedVectorField>("g"))
     {
         g = mesh().lookupObject<uniformDimensionedVectorField>("g");
-    }
-    else if (coeffDict().found("g"))
-    {
-        coeffDict().lookup("g") >> g;
     }
 
     // scalar ramp = min(max((t.value() - 5)/10, 0), 1);

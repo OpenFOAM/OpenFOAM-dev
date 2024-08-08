@@ -52,9 +52,9 @@ displacementLinearMotionMotionSolver
 )
 :
     points0MotionSolver(name, mesh, dict, typeName),
-    axis_(normalised(coeffDict().lookup<vector>("axis", dimless))),
-    xFixed_(coeffDict().lookup<scalar>("xFixed", dimLength)),
-    xMoving_(coeffDict().lookup<scalar>("xMoving", dimLength)),
+    axis_(normalised(dict.lookup<vector>("axis", dimless))),
+    xFixed_(dict.lookup<scalar>("xFixed", dimLength)),
+    xMoving_(dict.lookup<scalar>("xMoving", dimLength)),
     displacement_
     (
         Function1<scalar>::New
@@ -62,7 +62,7 @@ displacementLinearMotionMotionSolver
             "displacement",
             mesh.time().userUnits(),
             dimLength,
-            coeffDict()
+            dict
         )
     )
 {}

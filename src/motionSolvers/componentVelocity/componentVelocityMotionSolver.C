@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,8 +74,8 @@ Foam::componentVelocityMotionSolver::componentVelocityMotionSolver
     const word& type
 )
 :
-    motionSolver(name, mesh, dict, type),
-    cmptName_(coeffDict().lookup("component")),
+    motionSolver(name, mesh, type),
+    cmptName_(dict.lookup("component")),
     cmpt_(cmpt(cmptName_)),
     pointMotionU_
     (

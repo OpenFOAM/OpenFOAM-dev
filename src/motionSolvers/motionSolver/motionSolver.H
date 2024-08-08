@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,9 +64,6 @@ class motionSolver
         //- Reference to mesh
         const polyMesh& mesh_;
 
-        //- Model coefficients dictionary
-        dictionary coeffDict_;
-
 
 public:
 
@@ -108,7 +105,6 @@ public:
         (
             const word& name,
             const polyMesh& mesh,
-            const dictionary&,
             const word& type
         );
 
@@ -138,12 +134,6 @@ public:
         const polyMesh& mesh() const
         {
             return mesh_;
-        }
-
-        //- Const access to the coefficients dictionary
-        const dictionary& coeffDict() const
-        {
-            return coeffDict_;
         }
 
         //- Provide new points for motion.  Solves for motion

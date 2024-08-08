@@ -55,12 +55,12 @@ Foam::multiSolidBodyMotionSolver::multiSolidBodyMotionSolver
 :
     points0MotionSolver(name, mesh, dict, typeName)
 {
-    zoneIndices_.setSize(coeffDict().size());
-    SBMFs_.setSize(coeffDict().size());
-    pointIndices_.setSize(coeffDict().size());
+    zoneIndices_.setSize(dict.size());
+    SBMFs_.setSize(dict.size());
+    pointIndices_.setSize(dict.size());
     label zonei = 0;
 
-    forAllConstIter(dictionary, coeffDict(), iter)
+    forAllConstIter(dictionary, dict, iter)
     {
         if (iter().isDict())
         {
@@ -70,7 +70,7 @@ Foam::multiSolidBodyMotionSolver::multiSolidBodyMotionSolver
             {
                 FatalIOErrorInFunction
                 (
-                    coeffDict()
+                    dict
                 )   << "Cannot find cellZone named " << iter().keyword()
                     << ". Valid zones are " << mesh.cellZones().toc()
                     << exit(FatalIOError);

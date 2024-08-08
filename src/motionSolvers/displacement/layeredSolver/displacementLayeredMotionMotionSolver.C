@@ -501,7 +501,8 @@ displacementLayeredMotionMotionSolver
     const dictionary& dict
 )
 :
-    displacementMotionSolver(name, mesh, dict, typeName)
+    displacementMotionSolver(name, mesh, dict, typeName),
+    regionDicts_(dict.subDict("regions"))
 {}
 
 
@@ -535,8 +536,7 @@ void Foam::displacementLayeredMotionMotionSolver::solve()
     pointDisplacement_.boundaryFieldRef().updateCoeffs();
 
     // Solve motion on all regions (=cellZones)
-    const dictionary& regionDicts = coeffDict().subDict("regions");
-    forAllConstIter(dictionary, regionDicts, regionIter)
+    forAllConstIter(dictionary, regionDicts_, regionIter)
     {
         const word& cellZoneName = regionIter().keyword();
         const dictionary& regionDict = regionIter().dict();
