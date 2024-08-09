@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,18 +92,6 @@ bool Foam::porosityModelList::read(const dictionary& dict)
 }
 
 
-bool Foam::porosityModelList::writeData(Ostream& os) const
-{
-    forAll(*this, i)
-    {
-        os  << nl;
-        this->operator[](i).writeData(os);
-    }
-
-    return os.good();
-}
-
-
 void Foam::porosityModelList::addResistance
 (
     fvVectorMatrix& UEqn
@@ -127,19 +115,6 @@ void Foam::porosityModelList::addResistance
     {
         this->operator[](i).addResistance(UEqn, AU, correctAUprocBC);
     }
-}
-
-
-// * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
-
-Foam::Ostream& Foam::operator<<
-(
-    Ostream& os,
-    const porosityModelList& models
-)
-{
-    models.writeData(os);
-    return os;
 }
 
 

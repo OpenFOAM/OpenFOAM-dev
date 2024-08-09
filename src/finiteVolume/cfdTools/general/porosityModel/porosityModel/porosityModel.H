@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,12 +75,6 @@ protected:
         //- Reference to the mesh database
         const fvMesh& mesh_;
 
-        //- Dictionary used for model construction
-        const dictionary dict_;
-
-        //- Model coefficients dictionary
-        dictionary coeffs_;
-
         //- Name of cellZone
         word zoneName_;
 
@@ -129,60 +123,25 @@ public:
         porosityModel,
         mesh,
         (
-            const word& modelName,
             const word& name,
             const fvMesh& mesh,
             const dictionary& dict,
+            const dictionary& coeffDict,
             const word& cellZoneName
         ),
-        (modelName, name, mesh, dict, cellZoneName)
+        (name, mesh, dict, coeffDict, cellZoneName)
     );
 
     //- Constructor
     porosityModel
     (
         const word& name,
-        const word& modelType,
         const fvMesh& mesh,
         const dictionary& dict,
+        const dictionary& coeffDict,
         const word& cellZoneName = word::null
     );
 
-    //- Return pointer to new porosityModel object created on the freestore
-    //  from an Istream
-    class iNew
-    {
-        //- Reference to the mesh database
-        const fvMesh& mesh_;
-        const word& name_;
-
-    public:
-
-        iNew
-        (
-            const fvMesh& mesh,
-            const word& name
-        )
-        :
-            mesh_(mesh),
-            name_(name)
-        {}
-
-        autoPtr<porosityModel> operator()(Istream& is) const
-        {
-            const dictionary dict(is);
-
-            return autoPtr<porosityModel>
-            (
-                porosityModel::New
-                (
-                    name_,
-                    mesh_,
-                    dict
-                )
-            );
-        }
-    };
 
     //- Selector
     static autoPtr<porosityModel> New
@@ -234,7 +193,10 @@ public:
     // I-O
 
         //- Write
-        virtual bool writeData(Ostream& os) const;
+        virtual bool writeData(Ostream& os) const
+        {
+            return true;
+        }
 
         //- Inherit read from regIOobject
         using regIOobject::read;

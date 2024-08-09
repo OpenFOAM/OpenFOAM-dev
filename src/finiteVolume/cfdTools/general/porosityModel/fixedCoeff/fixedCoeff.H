@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,6 +74,10 @@ class fixedCoeff
         //- Model beta coefficient - converted from betaXYZ [1/m]
         tensorField beta_;
 
+        bool rhoRefFound_;
+
+        scalar rhoRef_;
+
 
     // Private Member Functions
 
@@ -106,9 +110,9 @@ public:
         fixedCoeff
         (
             const word& name,
-            const word& modelType,
             const fvMesh& mesh,
             const dictionary& dict,
+            const dictionary& coeffDict,
             const word& cellZoneName
         );
 
@@ -143,12 +147,6 @@ public:
             const fvVectorMatrix& UEqn,
             volTensorField& AU
         ) const;
-
-
-    // I-O
-
-        //- Write
-        bool writeData(Ostream& os) const;
 
 
     // Member Operators

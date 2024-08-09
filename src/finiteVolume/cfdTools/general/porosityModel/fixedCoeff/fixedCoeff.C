@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,15 +91,17 @@ void Foam::porosityModels::fixedCoeff::apply
 Foam::porosityModels::fixedCoeff::fixedCoeff
 (
     const word& name,
-    const word& modelType,
     const fvMesh& mesh,
     const dictionary& dict,
+    const dictionary& coeffDict,
     const word& cellZoneName
 )
 :
-    porosityModel(name, modelType, mesh, dict, cellZoneName),
-    alphaXYZ_("alpha", dimless/dimTime, coeffs_),
-    betaXYZ_("beta", dimless/dimLength, coeffs_)
+    porosityModel(name, mesh, dict, coeffDict, cellZoneName),
+    alphaXYZ_("alpha", dimless/dimTime, coeffDict),
+    betaXYZ_("beta", dimless/dimLength, coeffDict),
+    rhoRefFound_(coeffDict.found("rhoRef")),
+    rhoRef_(coeffDict.lookupOrDefault<scalar>("rhoRef", 1.0))
 {
     adjustNegativeResistance(alphaXYZ_);
     adjustNegativeResistance(betaXYZ_);
@@ -177,9 +179,14 @@ void Foam::porosityModels::fixedCoeff::calcForce
     scalarField Udiag(U.size(), 0.0);
     vectorField Usource(U.size(), Zero);
     const scalarField& V = mesh_.V();
-    scalar rhoRef = coeffs_.lookup<scalar>("rhoRef");
 
-    apply(Udiag, Usource, V, U, rhoRef);
+    if (!rhoRefFound_)
+    {
+        FatalErrorInFunction
+            << "rhoRef not specified" << exit(FatalError);
+    }
+
+    apply(Udiag, Usource, V, U, rhoRef_);
 
     force = Udiag*U - Usource;
 }
@@ -195,13 +202,13 @@ void Foam::porosityModels::fixedCoeff::correct
     scalarField& Udiag = UEqn.diag();
     vectorField& Usource = UEqn.source();
 
-    scalar rho = 1.0;
-    if (UEqn.dimensions() == dimForce)
+    if (UEqn.dimensions() == dimForce && !rhoRefFound_)
     {
-        coeffs_.lookup("rhoRef") >> rho;
+        FatalErrorInFunction
+            << "rhoRef not specified" << exit(FatalError);
     }
 
-    apply(Udiag, Usource, V, U, rho);
+    apply(Udiag, Usource, V, U, rhoRef_);
 }
 
 
@@ -213,22 +220,13 @@ void Foam::porosityModels::fixedCoeff::correct
 {
     const vectorField& U = UEqn.psi();
 
-    scalar rho = 1.0;
-    if (UEqn.dimensions() == dimForce)
+    if (UEqn.dimensions() == dimForce && !rhoRefFound_)
     {
-        coeffs_.lookup("rhoRef") >> rho;
+        FatalErrorInFunction
+            << "rhoRef not specified" << exit(FatalError);
     }
 
-    apply(AU, U, rho);
-}
-
-
-bool Foam::porosityModels::fixedCoeff::writeData(Ostream& os) const
-{
-    os  << indent << name_ << endl;
-    dict_.write(os);
-
-    return true;
+    apply(AU, U, rhoRef_);
 }
 
 

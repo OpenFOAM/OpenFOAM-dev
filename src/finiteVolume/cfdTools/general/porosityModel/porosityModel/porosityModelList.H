@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,10 +44,6 @@ SourceFiles
 
 namespace Foam
 {
-
-// Forward declaration of friend functions and operators
-class porosityModelList;
-Ostream& operator<<(Ostream& os, const porosityModelList& models);
 
 /*---------------------------------------------------------------------------*\
                       Class porosityModelList Declaration
@@ -100,16 +96,6 @@ public:
 
             //- Read dictionary
             bool read(const dictionary& dict);
-
-            //- Write data to Ostream
-            bool writeData(Ostream& os) const;
-
-            //- Ostream operator
-            friend Ostream& operator<<
-            (
-                Ostream& os,
-                const porosityModelList& models
-            );
 
 
     // Member Operators

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,18 +45,18 @@ namespace Foam
 Foam::porosityModels::DarcyForchheimer::DarcyForchheimer
 (
     const word& name,
-    const word& modelType,
     const fvMesh& mesh,
     const dictionary& dict,
+    const dictionary& coeffDict,
     const word& cellZoneName
 )
 :
-    porosityModel(name, modelType, mesh, dict, cellZoneName),
-    dXYZ_("d", dimless/sqr(dimLength), coeffs_),
-    fXYZ_("f", dimless/dimLength, coeffs_),
-    rhoName_(coeffs_.lookupOrDefault<word>("rho", "rho")),
-    muName_(coeffs_.lookupOrDefault<word>("mu", "mu")),
-    nuName_(coeffs_.lookupOrDefault<word>("nu", "nu"))
+    porosityModel(name, mesh, dict, coeffDict, cellZoneName),
+    dXYZ_("d", dimless/sqr(dimLength), coeffDict),
+    fXYZ_("f", dimless/dimLength, coeffDict),
+    rhoName_(coeffDict.lookupOrDefault<word>("rho", "rho")),
+    muName_(coeffDict.lookupOrDefault<word>("mu", "mu")),
+    nuName_(coeffDict.lookupOrDefault<word>("nu", "nu"))
 {
     adjustNegativeResistance(dXYZ_);
     adjustNegativeResistance(fXYZ_);
@@ -274,15 +274,6 @@ void Foam::porosityModels::DarcyForchheimer::correct
             apply(AU, geometricOneField(), mu/rho, U);
         }
     }
-}
-
-
-bool Foam::porosityModels::DarcyForchheimer::writeData(Ostream& os) const
-{
-    os  << indent << name_ << endl;
-    dict_.write(os);
-
-    return true;
 }
 
 

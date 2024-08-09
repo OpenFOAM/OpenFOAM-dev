@@ -47,27 +47,25 @@ namespace Foam
 Foam::porosityModels::powerLawLopesdaCostaZone::powerLawLopesdaCostaZone
 (
     const word& name,
-    const word& modelType,
     const fvMesh& mesh,
-    const dictionary& dict
+    const dictionary& dict,
+    const dictionary& coeffDict
 )
 :
     zoneName_(name + ":porousZone")
 {
-    dictionary coeffs(dict.optionalSubDict(modelType + "Coeffs"));
-
     // Vertical direction within porous region
-    vector zDir(coeffs.lookup("zDir"));
+    vector zDir(coeffDict.lookup("zDir"));
 
     // Span of the search for the cells in the porous region
-    scalar searchSpan(coeffs.lookup<scalar>("searchSpan"));
+    scalar searchSpan(coeffDict.lookup<scalar>("searchSpan"));
 
     // Top surface file name defining the extent of the porous region
-    word topSurfaceFileName(coeffs.lookup("topSurface"));
+    word topSurfaceFileName(coeffDict.lookup("topSurface"));
 
     // List of the ground patches defining the lower surface
     // of the porous region
-    List<wordRe> groundPatches(coeffs.lookup("groundPatches"));
+    List<wordRe> groundPatches(coeffDict.lookup("groundPatches"));
 
     // Functional form of the porosity surface area per unit volume as a
     // function of the normalised vertical position
@@ -291,24 +289,24 @@ Foam::porosityModels::powerLawLopesdaCostaZone::powerLawLopesdaCostaZone
 Foam::porosityModels::powerLawLopesdaCosta::powerLawLopesdaCosta
 (
     const word& name,
-    const word& modelType,
     const fvMesh& mesh,
     const dictionary& dict,
+    const dictionary& coeffDict,
     const word& dummyCellZoneName
 )
 :
-    powerLawLopesdaCostaZone(name, modelType, mesh, dict),
+    powerLawLopesdaCostaZone(name, mesh, dict, coeffDict),
     porosityModel
     (
         name,
-        modelType,
         mesh,
         dict,
+        coeffDict,
         powerLawLopesdaCostaZone::zoneName_
     ),
-    Cd_(coeffs_.lookup<scalar>("Cd")),
-    C1_(coeffs_.lookup<scalar>("C1")),
-    rhoName_(coeffs_.lookupOrDefault<word>("rho", "rho"))
+    Cd_(coeffDict.lookup<scalar>("Cd")),
+    C1_(coeffDict.lookup<scalar>("C1")),
+    rhoName_(coeffDict.lookupOrDefault<word>("rho", "rho"))
 {}
 
 
@@ -405,15 +403,6 @@ void Foam::porosityModels::powerLawLopesdaCosta::correct
     {
         apply(AU, geometricOneField(), U);
     }
-}
-
-
-bool Foam::porosityModels::powerLawLopesdaCosta::writeData(Ostream& os) const
-{
-    os  << indent << name_ << endl;
-    dict_.write(os);
-
-    return true;
 }
 
 

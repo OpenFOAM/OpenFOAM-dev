@@ -57,9 +57,9 @@ Foam::autoPtr<Foam::porosityModel> Foam::porosityModel::New
         cstrIter()
         (
             name,
-            modelType,
             mesh,
             dict,
+            dict.optionalSubDict(modelType + "Coeffs"),
             cellZoneName
         )
     );
