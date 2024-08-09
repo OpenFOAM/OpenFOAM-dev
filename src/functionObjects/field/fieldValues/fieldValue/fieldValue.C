@@ -66,7 +66,7 @@ Foam::functionObjects::fieldValue::fieldValue
     const word& valueType
 )
 :
-    fvMeshFunctionObject(name, obr, dict),
+    fvMeshFunctionObject(name, obr),
     logFiles(obr_, name),
     valueType_(valueType),
     resultDict_("result")

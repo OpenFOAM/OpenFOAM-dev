@@ -100,12 +100,11 @@ public:
             const dictionary& dict
         );
 
-        //- Construct from the region objectRegistry and dictionary
+        //- Construct from the region objectRegistry
         fvMeshFunctionObject
         (
             const word& name,
-            const objectRegistry& obr,
-            const dictionary& dict
+            const objectRegistry& obr
         );
 
         //- Disallow default bitwise copy construction

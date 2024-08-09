@@ -71,6 +71,13 @@ public:
         meshToMeshAdjustTimeStep
         (
             const word& name,
+            const objectRegistry& obr
+        );
+
+        //- Construct from components
+        meshToMeshAdjustTimeStep
+        (
+            const word& name,
             const Time& runTime,
             const dictionary& dict
         );

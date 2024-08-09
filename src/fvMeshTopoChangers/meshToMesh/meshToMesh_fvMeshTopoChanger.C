@@ -118,7 +118,6 @@ Foam::fvMeshTopoChangers::meshToMesh::meshToMesh
 )
 :
     fvMeshTopoChanger(mesh),
-    dict_(dict),
     times_(dict.lookup<scalarList>("times", unitNone)),
     timeDelta_(dict.lookup<scalar>("timeDelta", unitNone)),
     begin_
@@ -212,8 +211,7 @@ bool Foam::fvMeshTopoChangers::meshToMesh::update()
             new functionObjects::meshToMeshAdjustTimeStep
             (
                 "meshToMeshAdjustTimeStep",
-                time,
-                dict_
+                mesh()
             )
         );
     }

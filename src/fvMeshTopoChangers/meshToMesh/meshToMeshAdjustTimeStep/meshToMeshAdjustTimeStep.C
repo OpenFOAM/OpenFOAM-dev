@@ -49,6 +49,20 @@ namespace functionObjects
 Foam::functionObjects::meshToMeshAdjustTimeStep::meshToMeshAdjustTimeStep
 (
     const word& name,
+    const objectRegistry& obr
+)
+:
+    fvMeshFunctionObject(name, obr),
+    meshToMesh_
+    (
+        refCast<const fvMeshTopoChangers::meshToMesh>(mesh_.topoChanger())
+    )
+{}
+
+
+Foam::functionObjects::meshToMeshAdjustTimeStep::meshToMeshAdjustTimeStep
+(
+    const word& name,
     const Time& runTime,
     const dictionary& dict
 )

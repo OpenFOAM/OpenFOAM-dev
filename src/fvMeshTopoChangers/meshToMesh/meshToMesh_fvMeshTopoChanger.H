@@ -86,9 +86,6 @@ class meshToMesh
 {
     // Private Data
 
-        //- Mesh-to-mesh control dictionary
-        dictionary dict_;
-
         //- List of mesh mapping times
         scalarList times_;
 

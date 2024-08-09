@@ -616,7 +616,7 @@ Foam::functionObjects::forcesBase::forcesBase
     const dictionary& dict
 )
 :
-    fvMeshFunctionObject(name, obr, dict),
+    fvMeshFunctionObject(name, obr),
     logFiles(obr_, name),
     force_(3),
     moment_(3),

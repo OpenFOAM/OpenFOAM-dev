@@ -133,8 +133,7 @@ Foam::functionObjects::regionFunctionObject::regionFunctionObject
 Foam::functionObjects::regionFunctionObject::regionFunctionObject
 (
     const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict
+    const objectRegistry& obr
 )
 :
     functionObject(name, obr.time()),

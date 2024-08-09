@@ -99,11 +99,10 @@ Foam::functionObjects::fvMeshFunctionObject::fvMeshFunctionObject
 Foam::functionObjects::fvMeshFunctionObject::fvMeshFunctionObject
 (
     const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict
+    const objectRegistry& obr
 )
 :
-    regionFunctionObject(name, obr, dict),
+    regionFunctionObject(name, obr),
     mesh_(refCast<const fvMesh>(obr_))
 {}
 
