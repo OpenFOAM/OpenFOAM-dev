@@ -79,19 +79,6 @@ void Foam::porosityModelList::reset(const dictionary& dict)
 }
 
 
-bool Foam::porosityModelList::read(const dictionary& dict)
-{
-    bool allOk = true;
-    forAll(*this, i)
-    {
-        porosityModel& pm = this->operator[](i);
-        bool ok = pm.read(dict.subDict(pm.name()));
-        allOk = (allOk && ok);
-    }
-    return allOk;
-}
-
-
 void Foam::porosityModelList::addResistance
 (
     fvVectorMatrix& UEqn
@@ -115,6 +102,60 @@ void Foam::porosityModelList::addResistance
     {
         this->operator[](i).addResistance(UEqn, AU, correctAUprocBC);
     }
+}
+
+
+bool Foam::porosityModelList::movePoints()
+{
+    forAll(*this, i)
+    {
+        this->operator[](i).movePoints();
+    }
+
+    return true;
+}
+
+
+void Foam::porosityModelList::topoChange(const polyTopoChangeMap& map)
+{
+    forAll(*this, i)
+    {
+        this->operator[](i).topoChange(map);
+    }
+}
+
+
+void Foam::porosityModelList::mapMesh(const polyMeshMap& map)
+{
+    forAll(*this, i)
+    {
+        this->operator[](i).mapMesh(map);
+    }
+}
+
+
+void Foam::porosityModelList::distribute
+(
+    const polyDistributionMap& map
+)
+{
+    forAll(*this, i)
+    {
+        this->operator[](i).distribute(map);
+    }
+}
+
+
+bool Foam::porosityModelList::read(const dictionary& dict)
+{
+    bool allOk = true;
+    forAll(*this, i)
+    {
+        porosityModel& pm = this->operator[](i);
+        bool ok = pm.read(dict.subDict(pm.name()));
+        allOk = (allOk && ok);
+    }
+    return allOk;
 }
 
 

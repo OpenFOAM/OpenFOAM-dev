@@ -164,12 +164,6 @@ public:
         //- Return const access to the cell zone name
         inline const word& zoneName() const;
 
-        //- Return dictionary used for model construction
-        const dictionary& dict() const;
-
-        //- Transform the model data wrt mesh changes
-        virtual void transformModelData();
-
         //- Return the force over the cell zone(s)
         virtual tmp<vectorField> force
         (
@@ -188,6 +182,21 @@ public:
             volTensorField& AU,
             bool correctAUprocBC
         );
+
+
+        // Mesh changes
+
+            //- Update for mesh motion
+            virtual bool movePoints();
+
+            //- Update topology using the given map
+            virtual void topoChange(const polyTopoChangeMap&);
+
+            //- Update from another mesh using the given map
+            virtual void mapMesh(const polyMeshMap&);
+
+            //- Redistribute or update using the given distribution map
+            virtual void distribute(const polyDistributionMap&);
 
 
     // I-O

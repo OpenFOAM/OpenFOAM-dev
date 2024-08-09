@@ -1386,18 +1386,6 @@ const Foam::pointField& Foam::polyMesh::oldCellCentres() const
 }
 
 
-bool Foam::polyMesh::upToDatePoints(const regIOobject& io) const
-{
-    return io.upToDate(points_);
-}
-
-
-void Foam::polyMesh::setUpToDatePoints(regIOobject& io) const
-{
-    io.eventNo() = points_.eventNo()+1;
-}
-
-
 void Foam::polyMesh::setPoints(const pointField& newPoints)
 {
     if (debug)

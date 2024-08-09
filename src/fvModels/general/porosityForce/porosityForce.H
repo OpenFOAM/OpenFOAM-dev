@@ -90,17 +90,11 @@ class porosityForce
         //- Names of the velocity fields
         wordList UNames_;
 
-        dictionary coeffDict_;
-
         //- Run-time selectable porosity model
         mutable autoPtr<porosityModel> porosityPtr_;
 
 
     // Private Member Functions
-
-        //- Reset the porosity model
-        //  during construction, re-reading and mesh-change
-        void reset(const dictionary& dict);
 
         //- Non-virtual read
         void readCoeffs(const dictionary& dict);

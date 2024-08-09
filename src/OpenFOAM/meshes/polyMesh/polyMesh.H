@@ -394,13 +394,6 @@ public:
                 //- Return old cell centres for mesh motion
                 virtual const pointField& oldCellCentres() const;
 
-
-            //- Return true if io is up-to-date with points
-            bool upToDatePoints(const regIOobject& io) const;
-
-            //- Set io to be up-to-date with points
-            void setUpToDatePoints(regIOobject& io) const;
-
             //- Return boundary mesh
             const polyBoundaryMesh& boundaryMesh() const
             {

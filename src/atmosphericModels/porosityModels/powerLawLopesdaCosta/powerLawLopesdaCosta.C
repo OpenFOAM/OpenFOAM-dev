@@ -304,6 +304,7 @@ Foam::porosityModels::powerLawLopesdaCosta::powerLawLopesdaCosta
         coeffDict,
         powerLawLopesdaCostaZone::zoneName_
     ),
+    coeffDict_(coeffDict),
     Cd_(coeffDict.lookup<scalar>("Cd")),
     C1_(coeffDict.lookup<scalar>("C1")),
     rhoName_(coeffDict.lookupOrDefault<word>("rho", "rho"))

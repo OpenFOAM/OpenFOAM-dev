@@ -115,6 +115,9 @@ class powerLawLopesdaCosta
 {
     // Private Data
 
+        //- Coefficients dictionary cached for kEpsilonLopesdaCosta
+        dictionary coeffDict_;
+
         //- Cd coefficient
         scalar Cd_;
 
@@ -172,6 +175,11 @@ public:
 
 
     // Member Functions
+
+        const dictionary& dict() const
+        {
+            return coeffDict_;
+        }
 
         //- Transform the model data wrt mesh changes
         virtual void calcTransformModelData();

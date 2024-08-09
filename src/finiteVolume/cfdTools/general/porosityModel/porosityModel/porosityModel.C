@@ -125,18 +125,6 @@ Foam::porosityModel::~porosityModel()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::porosityModel::transformModelData()
-{
-    if (!mesh_.upToDatePoints(*this))
-    {
-        calcTransformModelData();
-
-        // set model up-to-date wrt points
-        mesh_.setUpToDatePoints(*this);
-    }
-}
-
-
 Foam::tmp<Foam::vectorField> Foam::porosityModel::porosityModel::force
 (
     const volVectorField& U,
@@ -144,8 +132,6 @@ Foam::tmp<Foam::vectorField> Foam::porosityModel::porosityModel::force
     const volScalarField& mu
 ) const
 {
-    const_cast<porosityModel&>(*this).transformModelData();
-
     tmp<vectorField> tforce(new vectorField(U.size(), Zero));
     this->calcForce(U, rho, mu, tforce.ref());
 
@@ -155,7 +141,6 @@ Foam::tmp<Foam::vectorField> Foam::porosityModel::porosityModel::force
 
 void Foam::porosityModel::addResistance(fvVectorMatrix& UEqn)
 {
-    transformModelData();
     this->correct(UEqn);
 }
 
@@ -167,7 +152,6 @@ void Foam::porosityModel::addResistance
     bool correctAUprocBC
 )
 {
-    transformModelData();
     this->correct(UEqn, AU);
 
     if (correctAUprocBC)
@@ -177,6 +161,35 @@ void Foam::porosityModel::addResistance
         // interpolated for the pressure equation.
         AU.correctBoundaryConditions();
     }
+}
+
+
+bool Foam::porosityModel::movePoints()
+{
+    calcTransformModelData();
+
+    return true;
+}
+
+
+void Foam::porosityModel::topoChange(const polyTopoChangeMap& map)
+{
+    calcTransformModelData();
+}
+
+
+void Foam::porosityModel::mapMesh(const polyMeshMap& map)
+{
+    calcTransformModelData();
+}
+
+
+void Foam::porosityModel::distribute
+(
+    const polyDistributionMap& map
+)
+{
+    calcTransformModelData();
 }
 
 
