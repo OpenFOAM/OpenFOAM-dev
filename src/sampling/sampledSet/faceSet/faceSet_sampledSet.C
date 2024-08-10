@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "faceSetSampledSet.H"
+#include "faceSet_sampledSet.H"
 #include "faceSet.H"
 #include "polyMesh.H"
 #include "addToRunTimeSelectionTable.H"
@@ -34,17 +34,17 @@ namespace Foam
 {
 namespace sampledSets
 {
-    defineTypeNameAndDebug(faceSetSampledSet, 0);
-    addToRunTimeSelectionTable(sampledSet, faceSetSampledSet, word);
+    defineTypeNameAndDebug(faceSet, 0);
+    addToRunTimeSelectionTable(sampledSet, faceSet, word);
 }
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::sampledSets::faceSetSampledSet::genSamples()
+void Foam::sampledSets::faceSet::genSamples()
 {
-    const labelList faces(faceSet(mesh(), setName_).toc());
+    const labelList faces(Foam::faceSet(mesh(), setName_).toc());
 
     setSamples
     (
@@ -58,7 +58,7 @@ void Foam::sampledSets::faceSetSampledSet::genSamples()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::sampledSets::faceSetSampledSet::faceSetSampledSet
+Foam::sampledSets::faceSet::faceSet
 (
     const word& name,
     const polyMesh& mesh,
@@ -75,7 +75,7 @@ Foam::sampledSets::faceSetSampledSet::faceSetSampledSet
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::sampledSets::faceSetSampledSet::~faceSetSampledSet()
+Foam::sampledSets::faceSet::~faceSet()
 {}
 
 

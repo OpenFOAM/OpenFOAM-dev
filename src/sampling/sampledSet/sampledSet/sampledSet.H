@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,6 +54,9 @@ namespace Foam
 // Forward declaration of classes
 class polyMesh;
 class meshSearch;
+class polyTopoChangeMap;
+class polyMeshMap;
+class polyDistributionMap;
 
 /*---------------------------------------------------------------------------*\
                          Class sampledSet Declaration
@@ -106,6 +109,9 @@ protected:
             const labelList& samplingCells,
             const labelList& samplingFaces
         );
+
+        //- Generate the samples
+        virtual void genSamples() = 0;
 
 
 public:
@@ -236,6 +242,18 @@ public:
         {
             return faces_;
         }
+
+        //- Update for mesh point-motion
+        virtual void movePoints();
+
+        //- Update topology using the given map
+        virtual void topoChange(const polyTopoChangeMap&);
+
+        //- Update from another mesh using the given map
+        virtual void mapMesh(const polyMeshMap&);
+
+        //- Redistribute or update using the given distribution map
+        virtual void distribute(const polyDistributionMap&);
 };
 
 

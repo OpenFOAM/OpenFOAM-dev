@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,7 +70,10 @@ void Foam::sampledSets::lineCellFace::calcSamples
 }
 
 
-void Foam::sampledSets::lineCellFace::genSamples(const label storeFaces)
+void Foam::sampledSets::lineCellFace::genSamplesStoreFaces
+(
+    const label storeFaces
+)
 {
     DynamicList<point> samplingPositions;
     DynamicList<scalar> samplingDistances;
@@ -105,6 +108,12 @@ void Foam::sampledSets::lineCellFace::genSamples(const label storeFaces)
 }
 
 
+void Foam::sampledSets::lineCellFace::genSamples()
+{
+    genSamplesStoreFaces(1);
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::sampledSets::lineCellFace::lineCellFace
@@ -119,7 +128,7 @@ Foam::sampledSets::lineCellFace::lineCellFace
     start_(dict.lookup("start")),
     end_(dict.lookup("end"))
 {
-    genSamples(1);
+    genSamples();
 }
 
 
@@ -137,7 +146,7 @@ Foam::sampledSets::lineCellFace::lineCellFace
     start_(start),
     end_(end)
 {
-    genSamples(2);
+    genSamplesStoreFaces(2);
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,13 +23,12 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "triSurfaceMeshSampledSet.H"
+#include "triSurfaceMesh_sampledSet.H"
 #include "meshSearch.H"
-#include "DynamicList.H"
 #include "polyMesh.H"
-#include "addToRunTimeSelectionTable.H"
 #include "triSurfaceMesh.H"
 #include "Time.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -37,15 +36,15 @@ namespace Foam
 {
 namespace sampledSets
 {
-    defineTypeNameAndDebug(triSurfaceMeshSampledSet, 0);
-    addToRunTimeSelectionTable(sampledSet, triSurfaceMeshSampledSet, word);
+    defineTypeNameAndDebug(triSurfaceMesh, 0);
+    addToRunTimeSelectionTable(sampledSet, triSurfaceMesh, word);
 }
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::sampledSets::triSurfaceMeshSampledSet::calcSamples
+void Foam::sampledSets::triSurfaceMesh::calcSamples
 (
     DynamicList<point>& samplingPositions,
     DynamicList<label>& samplingSegments,
@@ -69,7 +68,7 @@ void Foam::sampledSets::triSurfaceMeshSampledSet::calcSamples
 }
 
 
-void Foam::sampledSets::triSurfaceMeshSampledSet::genSamples()
+void Foam::sampledSets::triSurfaceMesh::genSamples()
 {
     DynamicList<point> samplingPositions;
     DynamicList<label> samplingSegments;
@@ -101,7 +100,7 @@ void Foam::sampledSets::triSurfaceMeshSampledSet::genSamples()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::sampledSets::triSurfaceMeshSampledSet::triSurfaceMeshSampledSet
+Foam::sampledSets::triSurfaceMesh::triSurfaceMesh
 (
     const word& name,
     const polyMesh& mesh,
@@ -113,9 +112,9 @@ Foam::sampledSets::triSurfaceMeshSampledSet::triSurfaceMeshSampledSet
     surface_(dict.lookup("surface")),
     points_
     (
-        mesh.time().foundObject<triSurfaceMesh>(surface_)
-      ? mesh.time().lookupObject<triSurfaceMesh>(surface_).points()
-      : triSurfaceMesh
+        mesh.time().foundObject<Foam::triSurfaceMesh>(surface_)
+      ? mesh.time().lookupObject<Foam::triSurfaceMesh>(surface_).points()
+      : Foam::triSurfaceMesh
         (
             IOobject
             (
@@ -136,7 +135,7 @@ Foam::sampledSets::triSurfaceMeshSampledSet::triSurfaceMeshSampledSet
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::sampledSets::triSurfaceMeshSampledSet::~triSurfaceMeshSampledSet()
+Foam::sampledSets::triSurfaceMesh::~triSurfaceMesh()
 {}
 
 

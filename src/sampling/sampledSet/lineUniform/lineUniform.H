@@ -99,7 +99,7 @@ class lineUniform
         ) const;
 
         //- Uses calcSamples to obtain samples. Copies them into *this.
-        void genSamples();
+        virtual void genSamples();
 
 
 public:

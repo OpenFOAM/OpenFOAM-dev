@@ -20,9 +20,9 @@ sampledSet/boundaryPoints/boundaryPoints.C
 sampledSet/boundaryRandom/boundaryRandom.C
 sampledSet/points/points.C
 sampledSet/sphereRandom/sphereRandom.C
-sampledSet/triSurfaceMeshSampledSet/triSurfaceMeshSampledSet.C
-sampledSet/cellSetSampledSet/cellSetSampledSet.C
-sampledSet/faceSetSampledSet/faceSetSampledSet.C
+sampledSet/triSurfaceMesh/triSurfaceMesh_sampledSet.C
+sampledSet/cellSet/cellSet_sampledSet.C
+sampledSet/faceSet/faceSet_sampledSet.C
 
 setWriters = sampledSet/writers
 

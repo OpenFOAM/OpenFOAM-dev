@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::sampledSets::triSurfaceMeshSampledSet
+    Foam::sampledSets::triSurfaceMesh
 
 Description
     Samples from all the points of a triSurfaceMesh. Surface files are read
@@ -45,12 +45,12 @@ Usage
     \endverbatim
 
 SourceFiles
-    triSurfaceMeshSampledSet.C
+    triSurfaceMesh.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef triSurfaceMeshSampledSet_H
-#define triSurfaceMeshSampledSet_H
+#ifndef triSurfaceMesh_sampledSet_H
+#define triSurfaceMesh_sampledSet_H
 
 #include "sampledSet.H"
 
@@ -62,10 +62,10 @@ namespace sampledSets
 {
 
 /*---------------------------------------------------------------------------*\
-                  Class triSurfaceMeshSampledSet Declaration
+                  Class triSurfaceMesh Declaration
 \*---------------------------------------------------------------------------*/
 
-class triSurfaceMeshSampledSet
+class triSurfaceMesh
 :
     public sampledSet
 {
@@ -90,7 +90,7 @@ class triSurfaceMeshSampledSet
         ) const;
 
         //- Uses calcSamples to obtain samples. Copies them into *this.
-        void genSamples();
+        virtual void genSamples();
 
 
 public:
@@ -102,7 +102,7 @@ public:
     // Constructors
 
         //- Construct from dictionary
-        triSurfaceMeshSampledSet
+        triSurfaceMesh
         (
             const word& name,
             const polyMesh& mesh,
@@ -112,7 +112,7 @@ public:
 
 
     //- Destructor
-    virtual ~triSurfaceMeshSampledSet();
+    virtual ~triSurfaceMesh();
 };
 
 

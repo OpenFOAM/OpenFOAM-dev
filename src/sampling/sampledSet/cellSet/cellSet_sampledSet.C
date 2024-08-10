@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "cellSetSampledSet.H"
+#include "cellSet_sampledSet.H"
 #include "cellSet.H"
 #include "polyMesh.H"
 #include "addToRunTimeSelectionTable.H"
@@ -34,17 +34,17 @@ namespace Foam
 {
 namespace sampledSets
 {
-    defineTypeNameAndDebug(cellSetSampledSet, 0);
-    addToRunTimeSelectionTable(sampledSet, cellSetSampledSet, word);
+    defineTypeNameAndDebug(cellSet, 0);
+    addToRunTimeSelectionTable(sampledSet, cellSet, word);
 }
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::sampledSets::cellSetSampledSet::genSamples()
+void Foam::sampledSets::cellSet::genSamples()
 {
-    const labelList cells(cellSet(mesh(), setName_).toc());
+    const labelList cells(Foam::cellSet(mesh(), setName_).toc());
 
     setSamples
     (
@@ -58,7 +58,7 @@ void Foam::sampledSets::cellSetSampledSet::genSamples()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::sampledSets::cellSetSampledSet::cellSetSampledSet
+Foam::sampledSets::cellSet::cellSet
 (
     const word& name,
     const polyMesh& mesh,
@@ -75,7 +75,7 @@ Foam::sampledSets::cellSetSampledSet::cellSetSampledSet
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::sampledSets::cellSetSampledSet::~cellSetSampledSet()
+Foam::sampledSets::cellSet::~cellSet()
 {}
 
 

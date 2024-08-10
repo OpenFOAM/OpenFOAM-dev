@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,9 +71,6 @@ class sampledSets
 {
     // Private Data
 
-        //- Keep the dictionary to recreate sets for moving mesh cases
-        dictionary dict_;
-
         //- Output path
         fileName outputPath_;
 
@@ -110,9 +107,6 @@ class sampledSets
         //- Combine sets on all processors. Sort by curveDist and produce
         //  index list. Valid result only on master processor.
         void combineSampledSets();
-
-        //- Correct for mesh changes
-        void correct();
 
         //- Sample all fields of a type on a given set
         template<class Type>

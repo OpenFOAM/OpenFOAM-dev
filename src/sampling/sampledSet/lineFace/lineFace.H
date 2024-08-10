@@ -93,7 +93,7 @@ class lineFace
         ) const;
 
         //- Uses calcSamples to obtain samples and copies them into *this
-        void genSamples();
+        virtual void genSamples();
 
 
 public:

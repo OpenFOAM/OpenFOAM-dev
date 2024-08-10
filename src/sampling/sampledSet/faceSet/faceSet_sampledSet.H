@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::sampledSets::faceSetSampledSet
+    Foam::sampledSets::faceSet
 
 Description
     Samples at the face-centres of a given face set
@@ -42,12 +42,12 @@ Usage
     \endverbatim
 
 SourceFiles
-    faceSetSampledSet.C
+    faceSet.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef faceSetSampledSet_H
-#define faceSetSampledSet_H
+#ifndef faceSet_sampledSet_H
+#define faceSet_sampledSet_H
 
 #include "sampledSet.H"
 #include "DynamicList.H"
@@ -60,10 +60,10 @@ namespace sampledSets
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class faceSetSampledSet Declaration
+                      Class faceSet Declaration
 \*---------------------------------------------------------------------------*/
 
-class faceSetSampledSet
+class faceSet
 :
     public sampledSet
 {
@@ -76,7 +76,7 @@ class faceSetSampledSet
     // Private Member Functions
 
         //- Generate the samples
-        void genSamples();
+        virtual void genSamples();
 
 
 public:
@@ -88,7 +88,7 @@ public:
     // Constructors
 
         //- Construct from dictionary
-        faceSetSampledSet
+        faceSet
         (
             const word& name,
             const polyMesh& mesh,
@@ -98,7 +98,7 @@ public:
 
 
     //- Destructor
-    virtual ~faceSetSampledSet();
+    virtual ~faceSet();
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::sampledSets::cellSetSampledSet
+    Foam::sampledSets::cellSet
 
 Description
     Samples at the cell-centres of a given cell set
@@ -42,12 +42,12 @@ Usage
     \endverbatim
 
 SourceFiles
-    cellSetSampledSet.C
+    cellSet.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef cellSetSampledSet_H
-#define cellSetSampledSet_H
+#ifndef cellSet_sampledSet_H
+#define cellSet_sampledSet_H
 
 #include "sampledSet.H"
 #include "DynamicList.H"
@@ -60,10 +60,10 @@ namespace sampledSets
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class cellSetSampledSet Declaration
+                      Class cellSet Declaration
 \*---------------------------------------------------------------------------*/
 
-class cellSetSampledSet
+class cellSet
 :
     public sampledSet
 {
@@ -76,7 +76,7 @@ class cellSetSampledSet
     // Private Member Functions
 
         //- Generate the samples
-        void genSamples();
+        virtual void genSamples();
 
 
 public:
@@ -88,7 +88,7 @@ public:
     // Constructors
 
         //- Construct from dictionary
-        cellSetSampledSet
+        cellSet
         (
             const word& name,
             const polyMesh& mesh,
@@ -98,7 +98,7 @@ public:
 
 
     //- Destructor
-    virtual ~cellSetSampledSet();
+    virtual ~cellSet();
 };
 
 

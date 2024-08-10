@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -245,6 +245,35 @@ Foam::autoPtr<Foam::sampledSet> Foam::sampledSet::New
             dict.optionalSubDict(sampleType + "Coeffs")
         )
     );
+}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void Foam::sampledSet::movePoints()
+{
+    genSamples();
+}
+
+
+void Foam::sampledSet::topoChange(const polyTopoChangeMap& map)
+{
+    genSamples();
+}
+
+
+void Foam::sampledSet::mapMesh(const polyMeshMap& map)
+{
+    genSamples();
+}
+
+
+void Foam::sampledSet::distribute
+(
+    const polyDistributionMap& map
+)
+{
+    genSamples();
 }
 
 

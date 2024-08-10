@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,24 +82,6 @@ void Foam::functionObjects::sampledSets::combineSampledSets()
 }
 
 
-void Foam::functionObjects::sampledSets::correct()
-{
-    bool setsFound = dict_.found("sets");
-    if (setsFound)
-    {
-        searchEngine_.correct();
-
-        PtrList<sampledSet> newList
-        (
-            dict_.lookup("sets"),
-            sampledSet::iNew(mesh_, searchEngine_)
-        );
-        transfer(newList);
-        combineSampledSets();
-    }
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::functionObjects::sampledSets::sampledSets
@@ -136,12 +118,10 @@ Foam::functionObjects::sampledSets::~sampledSets()
 
 bool Foam::functionObjects::sampledSets::read(const dictionary& dict)
 {
-    dict_ = dict;
-
-    bool setsFound = dict_.found("sets");
+    bool setsFound = dict.found("sets");
     if (setsFound)
     {
-        dict_.lookup("fields") >> fields_;
+        dict.lookup("fields") >> fields_;
 
         dict.lookup("interpolationScheme") >> interpolationScheme_;
 
@@ -152,7 +132,7 @@ bool Foam::functionObjects::sampledSets::read(const dictionary& dict)
 
         PtrList<sampledSet> newList
         (
-            dict_.lookup("sets"),
+            dict.lookup("sets"),
             sampledSet::iNew(mesh_, searchEngine_)
         );
         transfer(newList);
@@ -279,10 +259,22 @@ void Foam::functionObjects::sampledSets::movePoints(const polyMesh& mesh)
 {
     if (&mesh == &mesh_)
     {
-        correct();
+        if (this->size())
+        {
+            searchEngine_.correct();
+        }
+
+        forAll(*this, seti)
+        {
+            operator[](seti).movePoints();
+        }
+
+        if (this->size())
+        {
+            combineSampledSets();
+        }
     }
 }
-
 
 
 void Foam::functionObjects::sampledSets::topoChange
@@ -292,7 +284,20 @@ void Foam::functionObjects::sampledSets::topoChange
 {
     if (&map.mesh() == &mesh_)
     {
-        correct();
+        if (this->size())
+        {
+            searchEngine_.correct();
+        }
+
+        forAll(*this, seti)
+        {
+            operator[](seti).topoChange(map);
+        }
+
+        if (this->size())
+        {
+            combineSampledSets();
+        }
     }
 }
 
@@ -301,7 +306,20 @@ void Foam::functionObjects::sampledSets::mapMesh(const polyMeshMap& map)
 {
     if (&map.mesh() == &mesh_)
     {
-        correct();
+        if (this->size())
+        {
+            searchEngine_.correct();
+        }
+
+        forAll(*this, seti)
+        {
+            operator[](seti).mapMesh(map);
+        }
+
+        if (this->size())
+        {
+            combineSampledSets();
+        }
     }
 }
 
@@ -313,7 +331,20 @@ void Foam::functionObjects::sampledSets::distribute
 {
     if (&map.mesh() == &mesh_)
     {
-        correct();
+        if (this->size())
+        {
+            searchEngine_.correct();
+        }
+
+        forAll(*this, seti)
+        {
+            operator[](seti).distribute(map);
+        }
+
+        if (this->size())
+        {
+            combineSampledSets();
+        }
     }
 }
 
