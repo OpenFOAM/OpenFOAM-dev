@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,6 +107,8 @@ Foam::VolField<Type> Foam::constSolidThermo::readProperty
             Info << endl;
         }
 
+        vtf.correctBoundaryConditions();
+
         return vtf;
     }
     else if (propType == "file")
@@ -127,7 +129,8 @@ Foam::VolField<Type> Foam::constSolidThermo::readProperty
     else
     {
         FatalErrorInFunction
-            << "Valid type entries are 'uniform' or 'file' for " << name
+            << "Valid type entries are "
+            << "'uniform', 'zonal' or 'file' for " << name
             << abort(FatalError);
 
         return VolField<Type>::null();
