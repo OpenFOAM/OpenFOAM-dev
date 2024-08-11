@@ -83,17 +83,6 @@ protected:
         dictionary resultDict_;
 
 
-    // Protected Member Functions
-
-        //- Combine fields from all processor domains into single field
-        template<class Type>
-        void combineFields(Field<Type>& field);
-
-        //- Combine fields from all processor domains into single field
-        template<class Type>
-        void combineFields(tmp<Field<Type>>&);
-
-
 public:
 
     //- Run-time type information
@@ -182,12 +171,6 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "fieldValueI.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "fieldValueTemplates.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
