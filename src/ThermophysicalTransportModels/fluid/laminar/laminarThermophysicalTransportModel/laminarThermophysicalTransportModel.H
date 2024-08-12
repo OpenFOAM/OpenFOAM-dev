@@ -52,6 +52,14 @@ class laminarThermophysicalTransportModel
     public BasicThermophysicalTransportModel
 {
 
+protected:
+
+    // Protected member functions
+
+        //- Const access to the coefficients dictionary
+        const dictionary& coeffDict() const;
+
+
 public:
 
     typedef typename BasicThermophysicalTransportModel::alphaField
@@ -116,9 +124,6 @@ public:
 
 
     // Member Functions
-
-        //- Const access to the coefficients dictionary
-        virtual const dictionary& coeffDict() const;
 
         //- Read model coefficients if they have changed
         virtual bool read();

@@ -47,7 +47,8 @@ turbulentMixingLengthFrequencyInletFvPatchScalarField
 :
     inletOutletFvPatchScalarField(p, iF),
     mixingLength_(dict.lookup<scalar>("mixingLength", dimLength)),
-    kName_(dict.lookupOrDefault<word>("k", "k"))
+    kName_(dict.lookupOrDefault<word>("k", "k")),
+    Cmu_(dict.lookupOrDefault<scalar>("Cmu", 0.09))
 {
     this->phiName_ = dict.lookupOrDefault<word>("phi", "phi");
 
@@ -73,7 +74,8 @@ turbulentMixingLengthFrequencyInletFvPatchScalarField
 :
     inletOutletFvPatchScalarField(ptf, p, iF, mapper),
     mixingLength_(ptf.mixingLength_),
-    kName_(ptf.kName_)
+    kName_(ptf.kName_),
+    Cmu_(ptf.Cmu_)
 {}
 
 
@@ -86,7 +88,8 @@ turbulentMixingLengthFrequencyInletFvPatchScalarField
 :
     inletOutletFvPatchScalarField(ptf, iF),
     mixingLength_(ptf.mixingLength_),
-    kName_(ptf.kName_)
+    kName_(ptf.kName_),
+    Cmu_(ptf.Cmu_)
 {}
 
 
@@ -99,15 +102,7 @@ void turbulentMixingLengthFrequencyInletFvPatchScalarField::updateCoeffs()
         return;
     }
 
-    // Lookup Cmu corresponding to the turbulence model selected
-
-    const momentumTransportModel& turbModel =
-        db().lookupType<momentumTransportModel>(internalField().group());
-
-    const scalar Cmu =
-        turbModel.coeffDict().lookupOrDefault<scalar>("Cmu", 0.09);
-
-    const scalar Cmu25 = pow(Cmu, 0.25);
+    const scalar Cmu25 = pow(Cmu_, 0.25);
 
     const fvPatchScalarField& kp =
         patch().lookupPatchField<volScalarField, scalar>(kName_);

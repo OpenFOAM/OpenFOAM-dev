@@ -40,7 +40,8 @@ turbulentMixingLengthDissipationRateFvScalarFieldSource
 :
     fvScalarFieldSource(iF, dict),
     mixingLength_(dict.lookup<scalar>("mixingLength", dimLength)),
-    kName_(dict.lookupOrDefault<word>("k", "k"))
+    kName_(dict.lookupOrDefault<word>("k", "k")),
+    Cmu_(dict.lookupOrDefault<scalar>("Cmu", 0.09))
 {}
 
 
@@ -53,7 +54,8 @@ turbulentMixingLengthDissipationRateFvScalarFieldSource
 :
     fvScalarFieldSource(field, iF),
     mixingLength_(field.mixingLength_),
-    kName_(field.kName_)
+    kName_(field.kName_),
+    Cmu_(field.Cmu_)
 {}
 
 
@@ -74,13 +76,7 @@ Foam::turbulentMixingLengthDissipationRateFvScalarFieldSource::sourceValue
 {
     const scalarField ks(this->value<scalar>(kName_, source));
 
-    const momentumTransportModel& turbModel =
-        db().lookupType<momentumTransportModel>(internalField().group());
-
-    const scalar Cmu =
-        turbModel.coeffDict().lookupOrDefault<scalar>("Cmu", 0.09);
-
-    const scalar Cmu75 = pow(Cmu, 0.75);
+    const scalar Cmu75 = pow(Cmu_, 0.75);
 
     return Cmu75*ks*sqrt(ks)/mixingLength_;
 }

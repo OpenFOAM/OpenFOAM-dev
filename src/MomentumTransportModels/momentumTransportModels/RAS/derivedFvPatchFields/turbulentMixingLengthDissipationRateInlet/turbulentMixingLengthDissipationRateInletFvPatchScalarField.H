@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,6 +48,7 @@ Usage
         mixingLength | Length scale [m]        | yes         |
         phi          | flux field name         | no          | phi
         k            | turbulence kinetic energy field name | no | k
+        Cmu          | Turbulence model coefficient | no | 0.09
     \endtable
 
     Example of the boundary condition specification:
@@ -96,6 +97,9 @@ class turbulentMixingLengthDissipationRateInletFvPatchScalarField
 
         //- Name of the turbulent kinetic energy field
         word kName_;
+
+        //- Turbulence model coefficient
+        scalar Cmu_;
 
 
 public:
