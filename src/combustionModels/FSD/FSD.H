@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,6 @@ Class
     Foam::combustionModels::FSD
 
 Description
-
     Flame Surface Density (FDS) combustion model.
 
     The fuel source term is given by mgft*pc*omegaFuelBar.
@@ -110,7 +109,7 @@ class FSD
         //- Dimension of the ft space. Used to integrate the beta-pdf
         scalar ftDim_;
 
-        //- Minimum mixture freaction variance to calculate pdf
+        //- Minimum mixture fraction variance to calculate pdf
         scalar ftVarMin_;
 
 
