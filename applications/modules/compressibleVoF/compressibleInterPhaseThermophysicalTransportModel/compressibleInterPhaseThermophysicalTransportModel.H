@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,9 +82,6 @@ public:
 
         //- Read model coefficients if they have changed
         virtual bool read();
-
-        //- Const access to the coefficients dictionary
-        virtual const dictionary& coeffDict() const;
 
         //- Effective thermal turbulent conductivity
         //  of mixture [W/m/K]
