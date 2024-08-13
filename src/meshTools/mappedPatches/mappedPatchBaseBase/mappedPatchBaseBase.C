@@ -211,7 +211,7 @@ bool Foam::mappedPatchBaseBase::moving
     const polyMesh& mesh = patch.boundaryMesh().mesh();
     const polyMesh& nbrMesh = nbrPatch.boundaryMesh().mesh();
 
-    if (!mesh.moving() && nbrMesh.moving()) return false;
+    if (!mesh.moving() && !nbrMesh.moving()) return false;
 
     auto localPatchMoving = [](const polyPatch& patch)
     {
