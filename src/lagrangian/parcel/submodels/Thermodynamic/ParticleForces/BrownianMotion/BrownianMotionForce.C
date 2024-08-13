@@ -32,33 +32,6 @@ License
 
 using namespace Foam::constant;
 
-// * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
-
-template<class CloudType>
-Foam::tmp<Foam::volScalarField>
-Foam::BrownianMotionForce<CloudType>::kModel() const
-{
-    const objectRegistry& obr = this->owner().mesh();
-
-    if (obr.foundType<momentumTransportModel>(this->owner().U().group()))
-    {
-        const momentumTransportModel& model =
-            obr.lookupType<momentumTransportModel>(this->owner().U().group());
-
-        return model.k();
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "Turbulence model not found in mesh database" << nl
-            << "Database objects include: " << obr.sortedToc()
-            << abort(FatalError);
-
-        return tmp<volScalarField>(nullptr);
-    }
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class CloudType>
@@ -70,10 +43,7 @@ Foam::BrownianMotionForce<CloudType>::BrownianMotionForce
 )
 :
     ParticleForce<CloudType>(owner, mesh, dict, typeName, true),
-    lambda_(this->coeffs().template lookup<scalar>("lambda")),
-    turbulence_(readBool(this->coeffs().lookup("turbulence"))),
-    kPtr_(nullptr),
-    ownK_(false)
+    lambda_(this->coeffs().template lookup<scalar>("lambda"))
 {}
 
 
@@ -84,10 +54,7 @@ Foam::BrownianMotionForce<CloudType>::BrownianMotionForce
 )
 :
     ParticleForce<CloudType>(bmf),
-    lambda_(bmf.lambda_),
-    turbulence_(bmf.turbulence_),
-    kPtr_(nullptr),
-    ownK_(false)
+    lambda_(bmf.lambda_)
 {}
 
 
@@ -99,37 +66,6 @@ Foam::BrownianMotionForce<CloudType>::~BrownianMotionForce()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class CloudType>
-void Foam::BrownianMotionForce<CloudType>::cacheFields(const bool store)
-{
-    if (turbulence_)
-    {
-        if (store)
-        {
-            tmp<volScalarField> tk = kModel();
-            if (tk.isTmp())
-            {
-                kPtr_ = tk.ptr();
-                ownK_ = true;
-            }
-            else
-            {
-                kPtr_ = &tk();
-                ownK_ = false;
-            }
-        }
-        else
-        {
-            if (ownK_ && kPtr_)
-            {
-                deleteDemandDrivenData(kPtr_);
-                ownK_ = false;
-            }
-        }
-    }
-}
-
 
 template<class CloudType>
 Foam::forceSuSp Foam::BrownianMotionForce<CloudType>::calcCoupled
@@ -153,21 +89,12 @@ Foam::forceSuSp Foam::BrownianMotionForce<CloudType>::calcCoupled
     // Boltzmann constant
     const scalar kb = physicoChemical::k.value();
 
-    scalar f = 0;
-    if (turbulence_)
-    {
-        const label celli = p.cell();
-        const volScalarField& k = *kPtr_;
-        const scalar kc = k[celli];
-        const scalar Dp = kb*Tc*cc/(3*mathematical::pi*muc*dp);
-        f = sqrt(2.0*sqr(kc)*sqr(Tc)/(Dp*dt));
-    }
-    else
-    {
-        const scalar s0 =
-            216*muc*kb*Tc/(sqr(mathematical::pi)*pow5(dp)*sqr(p.rho())*cc);
-        f = mass*sqrt(mathematical::pi*s0/dt);
-    }
+    // Equation 25
+    const scalar s0 =
+        216*muc*kb*Tc/(sqr(mathematical::pi)*pow5(dp)*sqr(p.rho())*cc);
+
+    // Equation 26
+    const scalar f = mass*sqrt(mathematical::pi*s0/dt);
 
     randomGenerator& rndGen = this->owner().rndGen();
     distributions::standardNormal& stdNormal = this->owner().stdNormal();
@@ -176,7 +103,7 @@ Foam::forceSuSp Foam::BrownianMotionForce<CloudType>::calcCoupled
     // value.Su() = f*stdNormal.sample<vector>();
 
     // To generate a spherical distribution:
-    const scalar theta = rndGen.scalar01()*twoPi;
+    const scalar theta = rndGen.scalar01()*mathematical::twoPi;
     const scalar u = 2*rndGen.scalar01() - 1;
     const scalar a = sqrt(1 - sqr(u));
     const vector dir(a*cos(theta), a*sin(theta), u);

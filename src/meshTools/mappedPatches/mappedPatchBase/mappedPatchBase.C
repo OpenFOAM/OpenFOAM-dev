@@ -326,7 +326,7 @@ void Foam::mappedPatchBase::calcMapping() const
 
     mappingIsValid_ = 2;
 
-    if (nbrPatchIsMapped()) nbrMappedPatch().mappingIsValid_ = 2;
+    if (nbrPatchIsMapped()) nbrMappedPatch().nbrMappingIsValid_ = 2;
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,13 +29,6 @@ template<class CloudType>
 inline Foam::scalar Foam::BrownianMotionForce<CloudType>::lambda() const
 {
     return lambda_;
-}
-
-
-template<class CloudType>
-inline bool Foam::BrownianMotionForce<CloudType>::turbulence() const
-{
-    return turbulence_;
 }
 
 
