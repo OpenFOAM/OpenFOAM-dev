@@ -67,21 +67,6 @@ class BrownianMotionForce
         //- Molecular free path length [m]
         const scalar lambda_;
 
-        //- Turbulence flag
-        bool turbulence_;
-
-        //- Pointer to the turbulence kinetic energy field
-        const volScalarField* kPtr_;
-
-        //- Flag that indicates ownership of turbulence k field
-        bool ownK_;
-
-
-    // Private Member Functions
-
-        //- Return the k field from the turbulence model
-        tmp<volScalarField> kModel() const;
-
 
 public:
 
@@ -123,14 +108,8 @@ public:
             //- Return const access to the molecular free path length [m]
             inline scalar lambda() const;
 
-            //- Return const access to the turbulence flag
-            inline bool turbulence() const;
-
 
         // Evaluation
-
-            //- Cache fields
-            virtual void cacheFields(const bool store);
 
             //- Calculate the coupled force
             virtual forceSuSp calcCoupled
