@@ -16,9 +16,10 @@ Description
 type            coded;
 libs            ("libutilityFunctionObjects.so");
 
-phase           <phaseName>;                            // The phase to write
-                                                        // size-group fractions
-                                                        // for
+phase           <phaseName>;                           // The phase to write
+                                                       // size-group fractions
+                                                       // for
+
 
 initialDistributionFile <initialDistributionFileName>; // The file containing
                                                        // the distribution. In
@@ -33,29 +34,7 @@ codeInclude
 
 codeRead
 #{
-    const word phaseName = dict.lookup<word>("phase");
-
-    const fileName initialDistributionFileName =
-        dict.lookup<fileName>("initialDistributionFile");
-
-    const List<dictionary> sizeGroupDicts
-    (
-        IOdictionary
-        (
-            IOobject
-            (
-                "phaseProperties",
-                mesh().time().constant(),
-                mesh(),
-                IOobject::MUST_READ,
-                IOobject::NO_WRITE
-            )
-        )
-       .subDict(phaseName)
-       .subDict("velocityGroupCoeffs")
-       .lookup("sizeGroups")
-    );
-
+    // Read the initial distribution table
     const Function1s::Table<scalar> initialDistribution
     (
         "initialDistribution",
@@ -64,10 +43,72 @@ codeRead
         dictionary
         (
             "format", "foam",
-            "file", initialDistributionFileName
+            "file", dict.lookup<fileName>("initialDistributionFile")
         )
     );
 
+    // Read the phase properties dictionary
+    const IOdictionary phasePropertiesDict
+    (
+        IOobject
+        (
+            "phaseProperties",
+            mesh().time().constant(),
+            mesh(),
+            IOobject::MUST_READ,
+            IOobject::NO_WRITE
+        )
+    );
+
+    // Read the phase name
+    const word phaseName = dict.lookup<word>("phase");
+
+    // Get the diameter model dictionary
+    const dictionary& diameterModelDict =
+        phasePropertiesDict
+       .subDict(phaseName)
+       .optionalSubDict("velocityGroupCoeffs");
+
+    // Determine the population balance name
+    const word popBalName =
+        diameterModelDict.lookup<word>("populationBalance");
+
+    // Determine the index of the first size-group of this phase
+    label sizeGroupi0 = 0;
+    {
+        const wordList phaseNames =
+            phasePropertiesDict.lookup<wordList>("phases");
+
+        forAll(phaseNames, phasei)
+        {
+            if (phaseNames[phasei] == phaseName) break;
+
+            const dictionary& phaseDict =
+                phasePropertiesDict.subDict(phaseNames[phasei]);
+
+            const word phaseDiameterModelType =
+                phaseDict.lookup("diameterModel");
+
+            if (phaseDiameterModelType != "velocityGroup") continue;
+
+            const dictionary& phaseDiameterModelDict =
+                phaseDict.optionalSubDict("velocityGroupCoeffs");
+
+            const word phasePopBalName =
+                phaseDiameterModelDict.lookup<word>("populationBalance");
+
+            if (phasePopBalName != popBalName) continue;
+
+            const List<dictionary> phaseSizeGroupDicts
+            (
+                phaseDiameterModelDict.lookup("sizeGroups")
+            );
+
+            sizeGroupi0 += phaseSizeGroupDicts.size();
+        }
+    }
+
+    // Load the default fraction field
     const volScalarField fDefault
     (
         IOobject
@@ -80,33 +121,55 @@ codeRead
         mesh()
     );
 
-    forAll(sizeGroupDicts, i)
+    // Read the individual size group dictionaries
+    const List<dictionary> sizeGroupDicts
+    (
+        diameterModelDict.lookup("sizeGroups")
+    );
+
+    // Evaluate the initial distribution at the size-groups' representative
+    // spherical diameters
+    scalarField fs(sizeGroupDicts.size());
+    forAll(sizeGroupDicts, sizeGroupi)
     {
-        volScalarField
+        fs[sizeGroupi] =
+            initialDistribution.value
+            (
+                dimensionedScalar
+                (
+                    "dSph",
+                    dimLength,
+                    sizeGroupDicts[sizeGroupi]
+                ).value()
+            );
+    }
+
+    // Normalise within the phase
+    fs = (fs + rootVSmall)/sum(fs + rootVSmall);
+
+    // Construct numbered fraction fields with the values set to that of the
+    // evaluated distribution
+    forAll(sizeGroupDicts, sizeGroupi)
+    {
+        volScalarField fi
         (
             IOobject
             (
-                IOobject::groupName("f" + Foam::name(i), phaseName),
+                IOobject::groupName
+                (
+                    "f" + Foam::name(sizeGroupi + sizeGroupi0),
+                    phaseName
+                ),
                 mesh().time().name(),
                 mesh(),
                 IOobject::READ_IF_PRESENT
             ),
-            mesh(),
-            dimensionedScalar
-            (
-                dimless,
-                initialDistribution.value
-                (
-                    dimensionedScalar
-                    (
-                        "dSph",
-                        dimLength,
-                        sizeGroupDicts[i]
-                    ).value()
-                )
-            ),
-            fDefault.boundaryField().types()
-        ).write();
+            fDefault
+        );
+
+        fi == dimensionedScalar(dimless, fs[sizeGroupi]);
+
+        fi.write();
     }
 #};
 
