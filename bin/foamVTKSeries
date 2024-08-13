@@ -110,30 +110,31 @@ done
 
 [ ! -d "$dir" ] && error "Cannot find postProcessing directory, exiting."
 
-all_files=$(find "$dir" -type f -name "*vtk" -print0 | xargs -0 -n 1)
-subDirs=$(for f in $all_files; do dirname "$(dirname "$f")"; done | sort -u)
+subDirs=$(find "$dir" -maxdepth 1 -mindepth 1 -type d)
 
 for s in $subDirs
 do
-    printf "Sequencing all VTK files in %s\n" "$s"
-
     # Create list of subdirectories containining VTK files
-    subDir_files=$(echo "$all_files" | grep -w "${s}[^ ]*")
+    subDir_files=$(find "$s" -type f -name "*vtk")
+
+    [ "$subDir_files" ] || continue
+
+    printf "Sequencing all VTK files in %s\n" "$s"
 
     # Get the names of VTK files in this category
     names=$(for f in $subDir_files; do basename "$f" .vtk; done | sort -u)
 
     for n in $names
     do
+        series_file="$s/$n.vtk.series"
+        seriesFileHead > "$series_file"
+
         # Create list of VTK files of a given name, ordered by time step
         files=$(echo "$subDir_files" | \
-            grep -w "$n\.vtk" | \
+            grep "$n\.vtk" | \
             awk -F'/' '{print($(NF-1)" "$0)}' | \
             LC_ALL=C  sort -k 1 -g | \
             cut -d' ' -f2)
-
-        series_file="$s/$n.vtk.series"
-        seriesFileHead > "$series_file"
 
         unset comma
 
