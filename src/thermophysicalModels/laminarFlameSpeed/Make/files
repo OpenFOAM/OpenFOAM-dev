@@ -2,7 +2,6 @@ laminarFlameSpeed/laminarFlameSpeed.C
 laminarFlameSpeed/laminarFlameSpeedNew.C
 constant/constant.C
 Gulder/Gulder.C
-GulderEGR/GulderEGR.C
 RaviPetersen/RaviPetersen.C
 
 LIB = $(FOAM_LIBBIN)/liblaminarFlameSpeedModels

@@ -25,7 +25,20 @@ Class
     Foam::laminarFlameSpeedModels::Gulder
 
 Description
-    Laminar flame speed obtained from Gulder's correlation.
+    Laminar flame speed obtained from Gulder's correlation
+
+    with optional support for EGR (exhaust gas recirculation) if the \c egr
+    mass-fraction field is available.
+
+    Reference:
+    \verbatim
+        Gülder, Ö. L. (1984).
+        Correlations of laminar combustion data for alternative SI engine fuels
+        (No. 841000). SAE technical paper.
+    \endverbatim
+
+    Note: the EGR \c f coefficient multiplies the \c egr mass-fraction, not the
+    mole-fraction as stated in the paper so must be set accordingly.
 
 SourceFiles
     Gulder.C
@@ -89,6 +102,14 @@ class Gulder
             const volScalarField& p,
             const volScalarField& Tu,
             const volScalarField& phi
+        ) const;
+
+        tmp<volScalarField> Su0pTphi
+        (
+            const volScalarField& p,
+            const volScalarField& Tu,
+            const volScalarField& phi,
+            const volScalarField& egr
         ) const;
 
 
