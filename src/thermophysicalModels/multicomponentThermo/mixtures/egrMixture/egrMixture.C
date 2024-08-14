@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,6 +39,23 @@ Foam::egrMixture<ThermoType>::egrMixture(const dictionary& dict)
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class ThermoType>
+Foam::scalar Foam::egrMixture<ThermoType>::fres(const scalar ft) const
+{
+     return max(ft - (scalar(1) - ft)/stoicRatio_.value(), scalar(0));
+}
+
+
+template<class ThermoType>
+Foam::scalar Foam::egrMixture<ThermoType>::fres
+(
+    const scalarFieldListSlice& Y
+) const
+{
+    return fres(Y[FT]);
+}
+
 
 template<class ThermoType>
 const ThermoType& Foam::egrMixture<ThermoType>::mixture

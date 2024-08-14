@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,6 +42,16 @@ Foam::veryInhomogeneousMixture<ThermoType>::veryInhomogeneousMixture
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class ThermoType>
+Foam::scalar Foam::veryInhomogeneousMixture<ThermoType>::fres
+(
+    const scalarFieldListSlice& Y
+) const
+{
+    return max(Y[FT] - (scalar(1) - Y[FT])/stoicRatio_.value(), scalar(0));
+}
+
 
 template<class ThermoType>
 const ThermoType& Foam::veryInhomogeneousMixture<ThermoType>::mixture
@@ -120,7 +130,7 @@ Foam::veryInhomogeneousMixture<ThermoType>::products
     const scalarFieldListSlice& Y
 ) const
 {
-    return mixture(Y[FT], fres(Y[FT]));
+    return mixture(Y[FT], fres(Y));
 }
 
 

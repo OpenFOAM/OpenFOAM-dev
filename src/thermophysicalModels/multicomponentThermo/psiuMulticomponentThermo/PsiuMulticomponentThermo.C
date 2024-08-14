@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "PsiuMulticomponentThermo.H"
-#include "fvMesh.H"
 #include "fixedValueFvPatchFields.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -80,52 +79,33 @@ void Foam::PsiuMulticomponentThermo<BaseThermo>::calculate()
         );
     }
 
-    volScalarField::Boundary& pBf =
-        this->p_.boundaryFieldRef();
+    volScalarField::Boundary& pBf = this->p_.boundaryFieldRef();
+    volScalarField::Boundary& TBf = this->T_.boundaryFieldRef();
+    volScalarField::Boundary& TuBf = this->Tu_.boundaryFieldRef();
+    volScalarField::Boundary& CpBf = this->Cp_.boundaryFieldRef();
+    volScalarField::Boundary& CvBf = this->Cv_.boundaryFieldRef();
+    volScalarField::Boundary& psiBf = this->psi_.boundaryFieldRef();
+    volScalarField::Boundary& heBf = this->he().boundaryFieldRef();
+    volScalarField::Boundary& heuBf = this->heu().boundaryFieldRef();
+    volScalarField::Boundary& muBf = this->mu_.boundaryFieldRef();
+    volScalarField::Boundary& kappaBf = this->kappa_.boundaryFieldRef();
 
-    volScalarField::Boundary& TBf =
-        this->T_.boundaryFieldRef();
-
-    volScalarField::Boundary& TuBf =
-        this->Tu_.boundaryFieldRef();
-
-    volScalarField::Boundary& CpBf =
-        this->Cp_.boundaryFieldRef();
-
-    volScalarField::Boundary& CvBf =
-        this->Cv_.boundaryFieldRef();
-
-    volScalarField::Boundary& psiBf =
-        this->psi_.boundaryFieldRef();
-
-    volScalarField::Boundary& heBf =
-        this->he().boundaryFieldRef();
-
-    volScalarField::Boundary& heuBf =
-        this->heu().boundaryFieldRef();
-
-    volScalarField::Boundary& muBf =
-        this->mu_.boundaryFieldRef();
-
-    volScalarField::Boundary& kappaBf =
-        this->kappa_.boundaryFieldRef();
-
-    forAll(this->T_.boundaryField(), patchi)
+    forAll(TBf, patchi)
     {
-        fvPatchScalarField& pp = pBf[patchi];
-        fvPatchScalarField& pT = TBf[patchi];
-        fvPatchScalarField& pTu = TuBf[patchi];
-        fvPatchScalarField& pCp = CpBf[patchi];
-        fvPatchScalarField& pCv = CvBf[patchi];
-        fvPatchScalarField& ppsi = psiBf[patchi];
-        fvPatchScalarField& phe = heBf[patchi];
-        fvPatchScalarField& pheu = heuBf[patchi];
-        fvPatchScalarField& pmu = muBf[patchi];
-        fvPatchScalarField& pkappa = kappaBf[patchi];
+        fvPatchScalarField& pPf = pBf[patchi];
+        fvPatchScalarField& TPf = TBf[patchi];
+        fvPatchScalarField& TuPf = TuBf[patchi];
+        fvPatchScalarField& CpPf = CpBf[patchi];
+        fvPatchScalarField& CvPf = CvBf[patchi];
+        fvPatchScalarField& psiPf = psiBf[patchi];
+        fvPatchScalarField& hePf = heBf[patchi];
+        fvPatchScalarField& heuPf = heuBf[patchi];
+        fvPatchScalarField& muPf = muBf[patchi];
+        fvPatchScalarField& kappaPf = kappaBf[patchi];
 
-        if (pT.fixesValue())
+        if (TPf.fixesValue())
         {
-            forAll(pT, facei)
+            forAll(TPf, facei)
             {
                 auto composition =
                     this->patchFaceComposition(Yslicer, patchi, facei);
@@ -137,18 +117,18 @@ void Foam::PsiuMulticomponentThermo<BaseThermo>::calculate()
                     transportMixture =
                     this->transportMixture(composition, thermoMixture);
 
-                phe[facei] = thermoMixture.he(pp[facei], pT[facei]);
+                hePf[facei] = thermoMixture.he(pPf[facei], TPf[facei]);
 
-                pCp[facei] = thermoMixture.Cp(pp[facei], pT[facei]);
-                pCv[facei] = thermoMixture.Cv(pp[facei], pT[facei]);
-                ppsi[facei] = thermoMixture.psi(pp[facei], pT[facei]);
-                pmu[facei] = transportMixture.mu(pp[facei], pT[facei]);
-                pkappa[facei] = transportMixture.kappa(pp[facei], pT[facei]);
+                CpPf[facei] = thermoMixture.Cp(pPf[facei], TPf[facei]);
+                CvPf[facei] = thermoMixture.Cv(pPf[facei], TPf[facei]);
+                psiPf[facei] = thermoMixture.psi(pPf[facei], TPf[facei]);
+                muPf[facei] = transportMixture.mu(pPf[facei], TPf[facei]);
+                kappaPf[facei] = transportMixture.kappa(pPf[facei], TPf[facei]);
             }
         }
         else
         {
-            forAll(pT, facei)
+            forAll(TPf, facei)
             {
                 auto composition =
                     this->patchFaceComposition(Yslicer, patchi, facei);
@@ -160,17 +140,18 @@ void Foam::PsiuMulticomponentThermo<BaseThermo>::calculate()
                     transportMixture =
                     this->transportMixture(composition, thermoMixture);
 
-                pT[facei] = thermoMixture.The(phe[facei], pp[facei], pT[facei]);
+                TPf[facei] =
+                    thermoMixture.The(hePf[facei], pPf[facei], TPf[facei]);
 
-                pCp[facei] = thermoMixture.Cp(pp[facei], pT[facei]);
-                pCv[facei] = thermoMixture.Cv(pp[facei], pT[facei]);
-                ppsi[facei] = thermoMixture.psi(pp[facei], pT[facei]);
-                pmu[facei] = transportMixture.mu(pp[facei], pT[facei]);
-                pkappa[facei] = transportMixture.kappa(pp[facei], pT[facei]);
+                CpPf[facei] = thermoMixture.Cp(pPf[facei], TPf[facei]);
+                CvPf[facei] = thermoMixture.Cv(pPf[facei], TPf[facei]);
+                psiPf[facei] = thermoMixture.psi(pPf[facei], TPf[facei]);
+                muPf[facei] = transportMixture.mu(pPf[facei], TPf[facei]);
+                kappaPf[facei] = transportMixture.kappa(pPf[facei], TPf[facei]);
 
-                pTu[facei] =
+                TuPf[facei] =
                     this->reactants(composition)
-                   .The(pheu[facei], pp[facei], pTu[facei]);
+                   .The(heuPf[facei], pPf[facei], TuPf[facei]);
             }
         }
     }
@@ -255,6 +236,51 @@ void Foam::PsiuMulticomponentThermo<BaseThermo>::correct()
     {
         Info<< "    Finished" << endl;
     }
+}
+
+
+template<class BaseThermo>
+Foam::tmp<Foam::volScalarField>
+Foam::PsiuMulticomponentThermo<BaseThermo>::fres() const
+{
+    tmp<volScalarField> tfres
+    (
+        volScalarField::New
+        (
+            "fres",
+            this->mesh(),
+            dimless
+        )
+    );
+
+    auto Yslicer = this->Yslicer();
+
+    scalarField& fresCells = tfres.ref().primitiveFieldRef();
+
+    forAll(fresCells, celli)
+    {
+        fresCells[celli] = BaseThermo::mixtureType::fres
+        (
+            this->cellComposition(Yslicer, celli)
+        );
+    }
+
+    volScalarField::Boundary& fresBf = tfres.ref().boundaryFieldRef();
+
+    forAll(fresBf, patchi)
+    {
+        fvPatchScalarField& fresPf = fresBf[patchi];
+
+        forAll(fresPf, facei)
+        {
+            fresPf[facei] = BaseThermo::mixtureType::fres
+            (
+                this->patchFaceComposition(Yslicer, patchi, facei)
+            );
+        }
+    }
+
+    return tfres;
 }
 
 

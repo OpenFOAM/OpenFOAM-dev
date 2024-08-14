@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -145,6 +145,9 @@ public:
 
             //- Return the const mass-fraction field for a specie given by name
             inline const volScalarField& Y(const word& specieName) const;
+
+            //- Return the residual fraction of fuel in the burnt mixture
+            virtual tmp<volScalarField> fres() const = 0;
 
 
         // Thermodynamic state

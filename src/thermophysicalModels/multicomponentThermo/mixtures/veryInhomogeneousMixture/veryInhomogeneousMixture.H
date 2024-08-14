@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -124,10 +124,7 @@ public:
         }
 
         //- Return the residual fraction of fuel in the burnt mixture
-        scalar fres(const scalar ft) const
-        {
-            return max(ft - (scalar(1) - ft)/stoicRatio_.value(), scalar(0));
-        }
+        scalar fres(const scalarFieldListSlice& Y) const;
 
         //- Return the mixture for the given composition
         const thermoType& mixture(const scalar ft, const scalar fu) const;
@@ -135,19 +132,19 @@ public:
         //- Return the mixture for thermodynamic properties
         const thermoMixtureType& thermoMixture
         (
-            const scalarFieldListSlice&
+            const scalarFieldListSlice& Y
         ) const;
 
         //- Return the mixture for transport properties
         const transportMixtureType& transportMixture
         (
-            const scalarFieldListSlice&
+            const scalarFieldListSlice& Y
         ) const;
 
         //- Return the mixture for transport properties
         const transportMixtureType& transportMixture
         (
-            const scalarFieldListSlice&,
+            const scalarFieldListSlice& Y,
             const thermoMixtureType&
         ) const;
 
