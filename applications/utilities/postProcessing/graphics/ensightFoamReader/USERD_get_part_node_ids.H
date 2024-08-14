@@ -36,7 +36,7 @@ int USERD_get_part_node_ids
     {
         label indx = 0;
 
-        forAllConstIter(Cloud<passiveParticle>, *sprayPtr, iter)
+        forAllConstIter(lagrangian::Cloud<passiveParticle>, *sprayPtr, iter)
         {
             nodeid_array[indx] = indx + 1;
             indx++;

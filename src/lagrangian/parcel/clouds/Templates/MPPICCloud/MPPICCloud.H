@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -172,18 +172,21 @@ public:
         MPPICCloud(const MPPICCloud&) = delete;
 
         //- Construct and return clone based on (this) with new name
-        virtual autoPtr<Cloud<parcelType>> clone(const word& name)
+        virtual autoPtr<lagrangian::Cloud<parcelType>> clone(const word& name)
         {
-            return autoPtr<Cloud<parcelType>>
+            return autoPtr<lagrangian::Cloud<parcelType>>
             (
                 new MPPICCloud(*this, name)
             );
         }
 
         //- Construct and return bare clone based on (this) with new name
-        virtual autoPtr<Cloud<parcelType>> cloneBare(const word& name) const
+        virtual autoPtr<lagrangian::Cloud<parcelType>> cloneBare
+        (
+            const word& name
+        ) const
         {
-            return autoPtr<Cloud<parcelType>>
+            return autoPtr<lagrangian::Cloud<parcelType>>
             (
                 new MPPICCloud(this->mesh(), name, *this)
             );

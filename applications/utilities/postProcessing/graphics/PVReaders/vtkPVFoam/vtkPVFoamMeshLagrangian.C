@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,8 +49,10 @@ vtkPolyData* Foam::vtkPVFoam::lagrangianVTKMesh
 
     if (debug)
     {
-        InfoInFunction<< "timePath "
-            << mesh.time().timePath()/cloud::prefix/cloudName << endl;
+        InfoInFunction
+            << "timePath "
+            << mesh.time().timePath()/lagrangian::cloud::prefix/cloudName
+            << endl;
         printMemory();
     }
 
@@ -60,13 +62,13 @@ vtkPolyData* Foam::vtkPVFoam::lagrangianVTKMesh
     (
         mesh,
         mesh.time().name(),
-        cloud::prefix/cloudName
+        lagrangian::cloud::prefix/cloudName
     );
 
     IOobject* positionsPtr = sprayObjs.lookup(word("positions"));
     if (positionsPtr)
     {
-        Cloud<passiveParticle> parcels(mesh, cloudName, false);
+        lagrangian::Cloud<passiveParticle> parcels(mesh, cloudName, false);
 
         if (debug)
         {
@@ -82,7 +84,7 @@ vtkPolyData* Foam::vtkPVFoam::lagrangianVTKMesh
         vtkcells->Allocate(parcels.size());
 
         vtkIdType particleId = 0;
-        forAllConstIter(Cloud<passiveParticle>, parcels, iter)
+        forAllConstIter(lagrangian::Cloud<passiveParticle>, parcels, iter)
         {
             vtkInsertNextOpenFOAMPoint(vtkpoints, iter().position(mesh));
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -441,7 +441,10 @@ void Foam::streamlinesParticle::transformProperties
 }
 
 
-void Foam::streamlinesParticle::readFields(Cloud<streamlinesParticle>& c)
+void Foam::streamlinesParticle::readFields
+(
+    lagrangian::Cloud<streamlinesParticle>& c
+)
 {
     bool valid = c.size();
 
@@ -497,7 +500,7 @@ void Foam::streamlinesParticle::readFields(Cloud<streamlinesParticle>& c)
     c.checkFieldIOobject(c, sampledAges);
 
     label i = 0;
-    forAllIter(Cloud<streamlinesParticle>, c, iter)
+    forAllIter(lagrangian::Cloud<streamlinesParticle>, c, iter)
     {
         iter().lifeTime_ = lifeTime[i];
         iter().trackIndex_ = trackIndex[i];
@@ -511,7 +514,10 @@ void Foam::streamlinesParticle::readFields(Cloud<streamlinesParticle>& c)
 }
 
 
-void Foam::streamlinesParticle::writeFields(const Cloud<streamlinesParticle>& c)
+void Foam::streamlinesParticle::writeFields
+(
+    const lagrangian::Cloud<streamlinesParticle>& c
+)
 {
     particle::writeFields(c);
 
@@ -560,7 +566,7 @@ void Foam::streamlinesParticle::writeFields(const Cloud<streamlinesParticle>& c)
     );
 
     label i = 0;
-    forAllConstIter(Cloud<streamlinesParticle>, c, iter)
+    forAllConstIter(lagrangian::Cloud<streamlinesParticle>, c, iter)
     {
         lifeTime[i] = iter().lifeTime_;
         trackIndex[i] = iter().trackIndex_;

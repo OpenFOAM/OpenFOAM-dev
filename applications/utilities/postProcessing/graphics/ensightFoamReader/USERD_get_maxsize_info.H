@@ -73,7 +73,11 @@ int USERD_get_maxsize_info
         {
             // Get the maximum number of spray parcels
             // and store it
-            Cloud<passiveParticle> lagrangian(*meshPtr, cloud::defaultName);
+            lagrangian::Cloud<passiveParticle> lagrangian
+            (
+                *meshPtr,
+                lagrangian::cloud::defaultName
+            );
 
             if (lagrangian.size() > nMaxParcels)
             {

@@ -76,7 +76,7 @@ TemplateName(DSMCCloud);
 template<class ParcelType>
 class DSMCCloud
 :
-    public Cloud<ParcelType>,
+    public lagrangian::Cloud<ParcelType>,
     public DSMCCloudName
 {
     // Private Data

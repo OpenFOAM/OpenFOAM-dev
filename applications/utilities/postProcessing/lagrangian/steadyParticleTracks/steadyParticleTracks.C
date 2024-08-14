@@ -218,7 +218,7 @@ int main(int argc, char *argv[])
             (
                 mesh,
                 runTime.name(),
-                cloud::prefix/cloudName
+                lagrangian::cloud::prefix/cloudName
             );
 
             // TODO: gather age across all procs

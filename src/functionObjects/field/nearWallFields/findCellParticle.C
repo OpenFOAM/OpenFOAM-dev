@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,7 +77,7 @@ Foam::findCellParticle::findCellParticle(Istream& is, bool readFields)
 
 bool Foam::findCellParticle::move
 (
-    Cloud<findCellParticle>& cloud,
+    lagrangian::Cloud<findCellParticle>& cloud,
     trackingData& td
 )
 {
@@ -104,7 +104,7 @@ bool Foam::findCellParticle::move
 
 void Foam::findCellParticle::hitWedgePatch
 (
-    Cloud<findCellParticle>&,
+    lagrangian::Cloud<findCellParticle>&,
     trackingData& td
 )
 {
@@ -115,7 +115,7 @@ void Foam::findCellParticle::hitWedgePatch
 
 void Foam::findCellParticle::hitSymmetryPlanePatch
 (
-    Cloud<findCellParticle>&,
+    lagrangian::Cloud<findCellParticle>&,
     trackingData& td
 )
 {
@@ -126,7 +126,7 @@ void Foam::findCellParticle::hitSymmetryPlanePatch
 
 void Foam::findCellParticle::hitSymmetryPatch
 (
-    Cloud<findCellParticle>&,
+    lagrangian::Cloud<findCellParticle>&,
     trackingData& td
 )
 {
@@ -137,7 +137,7 @@ void Foam::findCellParticle::hitSymmetryPatch
 
 void Foam::findCellParticle::hitCyclicPatch
 (
-    Cloud<findCellParticle>&,
+    lagrangian::Cloud<findCellParticle>&,
     trackingData& td
 )
 {
@@ -148,7 +148,7 @@ void Foam::findCellParticle::hitCyclicPatch
 
 void Foam::findCellParticle::hitProcessorPatch
 (
-    Cloud<findCellParticle>& cloud,
+    lagrangian::Cloud<findCellParticle>& cloud,
     trackingData& td
 )
 {
@@ -171,7 +171,7 @@ void Foam::findCellParticle::hitProcessorPatch
 
 void Foam::findCellParticle::hitWallPatch
 (
-    Cloud<findCellParticle>&,
+    lagrangian::Cloud<findCellParticle>&,
     trackingData& td
 )
 {

@@ -60,10 +60,10 @@ void Foam::functionObjects::nearWallFields::calcAddressing()
     DebugInFunction << "nPatchFaces: " << globalWalls.size() << endl;
 
     // Construct cloud
-    Cloud<findCellParticle> cloud
+    lagrangian::Cloud<findCellParticle> cloud
     (
         mesh_,
-        cloud::defaultName,
+        lagrangian::cloud::defaultName,
         IDLList<findCellParticle>()
     );
 
@@ -110,7 +110,7 @@ void Foam::functionObjects::nearWallFields::calcAddressing()
         );
         InfoInFunction << "Dumping tracks to " << str.name() << endl;
 
-        forAllConstIter(Cloud<findCellParticle>, cloud, iter)
+        forAllConstIter(lagrangian::Cloud<findCellParticle>, cloud, iter)
         {
             const vector p = iter().position(mesh_);
             str.write(linePointRef(p, p + iter().displacement()));
@@ -132,7 +132,7 @@ void Foam::functionObjects::nearWallFields::calcAddressing()
     {
         start.setSize(nPatchFaces);
         nPatchFaces = 0;
-        forAllConstIter(Cloud<findCellParticle>, cloud, iter)
+        forAllConstIter(lagrangian::Cloud<findCellParticle>, cloud, iter)
         {
             const findCellParticle& tp = iter();
             start[nPatchFaces++] = tp.position(mesh_);

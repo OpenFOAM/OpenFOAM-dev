@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -174,18 +174,21 @@ public:
         ReactingCloud(const ReactingCloud&) = delete;
 
         //- Construct and return clone based on (this) with new name
-        virtual autoPtr<Cloud<parcelType>> clone(const word& name)
+        virtual autoPtr<lagrangian::Cloud<parcelType>> clone(const word& name)
         {
-            return autoPtr<Cloud<parcelType>>
+            return autoPtr<lagrangian::Cloud<parcelType>>
             (
                 new ReactingCloud(*this, name)
             );
         }
 
         //- Construct and return bare clone based on (this) with new name
-        virtual autoPtr<Cloud<parcelType>> cloneBare(const word& name) const
+        virtual autoPtr<lagrangian::Cloud<parcelType>> cloneBare
+        (
+            const word& name
+        ) const
         {
-            return autoPtr<Cloud<parcelType>>
+            return autoPtr<lagrangian::Cloud<parcelType>>
             (
                 new ReactingCloud(this->mesh(), name, *this)
             );

@@ -28,7 +28,6 @@ License
 #include "surfaceWriter.H"
 #include "randomGenerator.H"
 #include "triangle.H"
-#include "cloud.H"
 #include "axesRotation.H"
 #include "OSspecific.H"
 

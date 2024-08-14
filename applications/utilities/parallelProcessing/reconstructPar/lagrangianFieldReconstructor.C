@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ Foam::lagrangianFieldReconstructor::lagrangianFieldReconstructor
     forAll(procMeshes_, proci)
     {
         // Read the processor positions
-        Cloud<passiveParticle> procPositions
+        lagrangian::Cloud<passiveParticle> procPositions
         (
             procMeshes_[proci],
             cloudName_,
@@ -60,7 +60,7 @@ Foam::lagrangianFieldReconstructor::lagrangianFieldReconstructor
         );
 
         // Combine the processor's positions into the complete cloud
-        forAllConstIter(Cloud<passiveParticle>, procPositions, iter)
+        forAllConstIter(lagrangian::Cloud<passiveParticle>, procPositions, iter)
         {
             const passiveParticle& p = iter();
             const label completeCelli = cellProcAddressing[proci][p.cell()];
@@ -88,7 +88,7 @@ Foam::lagrangianFieldReconstructor::lagrangianFieldReconstructor
     }
 
     // Write
-    IOPosition<Cloud<passiveParticle>>(completePositions).write();
+    IOPosition<lagrangian::Cloud<passiveParticle>>(completePositions).write();
 }
 
 

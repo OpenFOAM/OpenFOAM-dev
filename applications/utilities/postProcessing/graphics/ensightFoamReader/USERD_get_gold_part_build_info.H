@@ -138,7 +138,7 @@ int USERD_get_gold_part_build_info
         strncpy
         (
             part_descriptions[nPatches+1],
-            cloud::prefix.c_str(),
+            lagrangian::cloud::prefix.c_str(),
             Z_BUFL
         );
         number_of_elements[nPatches+1][Z_POINT] = sprayPtr->size();

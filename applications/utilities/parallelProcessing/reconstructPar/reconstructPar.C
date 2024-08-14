@@ -476,7 +476,7 @@ int main(int argc, char *argv[])
                                 (
                                     runTimes.procTimes()[proci].timePath()
                                    /regionDir
-                                   /cloud::prefix
+                                   /lagrangian::cloud::prefix
                                 ),
                                 fileType::directory
                             )
@@ -495,7 +495,7 @@ int main(int argc, char *argv[])
                             (
                                 meshes().procMeshes()[proci],
                                 runTimes.procTimes()[proci].name(),
-                                cloud::prefix/cloudDirs[i],
+                                lagrangian::cloud::prefix/cloudDirs[i],
                                 IOobject::MUST_READ,
                                 IOobject::NO_WRITE,
                                 false

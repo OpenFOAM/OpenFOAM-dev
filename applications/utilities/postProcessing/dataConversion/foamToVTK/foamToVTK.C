@@ -456,7 +456,7 @@ int main(int argc, char *argv[])
         (
             readDir
             (
-                runTime.timePath()/regionPrefix/cloud::prefix,
+                runTime.timePath()/regionPrefix/lagrangian::cloud::prefix,
                 fileType::directory
             )
         );
@@ -466,7 +466,7 @@ int main(int argc, char *argv[])
             (
                 mesh,
                 runTime.name(),
-                cloud::prefix/cloudDirs[i]
+                lagrangian::cloud::prefix/cloudDirs[i]
             );
 
             IOobject* positionsPtr = sprayObjs.lookup(word("positions"));
@@ -1143,11 +1143,11 @@ int main(int argc, char *argv[])
             const fileName& cloudName = iter.key();
 
             // Always create the cloud directory.
-            mkDir(fvPath/cloud::prefix/cloudName);
+            mkDir(fvPath/lagrangian::cloud::prefix/cloudName);
 
             fileName lagrFileName
             (
-                fvPath/cloud::prefix/cloudName/cloudName
+                fvPath/lagrangian::cloud::prefix/cloudName/cloudName
               + "_" + timeDesc + ".vtk"
             );
 
@@ -1158,7 +1158,7 @@ int main(int argc, char *argv[])
             (
                 mesh,
                 runTime.name(),
-                cloud::prefix/cloudName
+                lagrangian::cloud::prefix/cloudName
             );
 
             IOobject* positionsPtr = sprayObjs.lookup(word("positions"));

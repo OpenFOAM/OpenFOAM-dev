@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,13 +31,16 @@ License
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 template<class ParticleType>
-Foam::word Foam::Cloud<ParticleType>::cloudPropertiesName("cloudProperties");
+Foam::word Foam::lagrangian::Cloud<ParticleType>::cloudPropertiesName
+(
+    "cloudProperties"
+);
 
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
 template<class ParticleType>
-void Foam::Cloud<ParticleType>::readCloudUniformProperties()
+void Foam::lagrangian::Cloud<ParticleType>::readCloudUniformProperties()
 {
     typeIOobject<timeIOdictionary> dictObj
     (
@@ -69,7 +72,7 @@ void Foam::Cloud<ParticleType>::readCloudUniformProperties()
 
 
 template<class ParticleType>
-void Foam::Cloud<ParticleType>::writeCloudUniformProperties() const
+void Foam::lagrangian::Cloud<ParticleType>::writeCloudUniformProperties() const
 {
     timeIOdictionary uniformPropsDict
     (
@@ -109,7 +112,7 @@ void Foam::Cloud<ParticleType>::writeCloudUniformProperties() const
 
 
 template<class ParticleType>
-void Foam::Cloud<ParticleType>::initCloud(const bool checkClass)
+void Foam::lagrangian::Cloud<ParticleType>::initCloud(const bool checkClass)
 {
     readCloudUniformProperties();
 
@@ -140,7 +143,7 @@ void Foam::Cloud<ParticleType>::initCloud(const bool checkClass)
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class ParticleType>
-Foam::Cloud<ParticleType>::Cloud
+Foam::lagrangian::Cloud<ParticleType>::Cloud
 (
     const polyMesh& pMesh,
     const word& cloudName,
@@ -164,7 +167,7 @@ Foam::Cloud<ParticleType>::Cloud
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class ParticleType>
-Foam::IOobject Foam::Cloud<ParticleType>::fieldIOobject
+Foam::IOobject Foam::lagrangian::Cloud<ParticleType>::fieldIOobject
 (
     const word& fieldName,
     const IOobject::readOption r
@@ -184,7 +187,7 @@ Foam::IOobject Foam::Cloud<ParticleType>::fieldIOobject
 
 template<class ParticleType>
 template<class DataType>
-void Foam::Cloud<ParticleType>::checkFieldIOobject
+void Foam::lagrangian::Cloud<ParticleType>::checkFieldIOobject
 (
     const Cloud<ParticleType>& c,
     const IOField<DataType>& data
@@ -203,7 +206,7 @@ void Foam::Cloud<ParticleType>::checkFieldIOobject
 
 template<class ParticleType>
 template<class DataType>
-void Foam::Cloud<ParticleType>::checkFieldFieldIOobject
+void Foam::lagrangian::Cloud<ParticleType>::checkFieldFieldIOobject
 (
     const Cloud<ParticleType>& c,
     const CompactIOField<Field<DataType>>& data
@@ -221,14 +224,14 @@ void Foam::Cloud<ParticleType>::checkFieldFieldIOobject
 
 
 template<class ParticleType>
-void Foam::Cloud<ParticleType>::writeFields() const
+void Foam::lagrangian::Cloud<ParticleType>::writeFields() const
 {
     ParticleType::writeFields(*this);
 }
 
 
 template<class ParticleType>
-bool Foam::Cloud<ParticleType>::writeObject
+bool Foam::lagrangian::Cloud<ParticleType>::writeObject
 (
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
@@ -246,7 +249,11 @@ bool Foam::Cloud<ParticleType>::writeObject
 // * * * * * * * * * * * * * * * Ostream Operators * * * * * * * * * * * * * //
 
 template<class ParticleType>
-Foam::Ostream& Foam::operator<<(Ostream& os, const Cloud<ParticleType>& pc)
+Foam::Ostream& Foam::operator<<
+(
+    Ostream& os,
+    const lagrangian::Cloud<ParticleType>& pc
+)
 {
     pc.writeData(os);
 

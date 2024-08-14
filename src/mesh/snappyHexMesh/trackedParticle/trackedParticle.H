@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,7 +83,7 @@ class trackedParticle
 
 public:
 
-    friend class Cloud<trackedParticle>;
+    friend class lagrangian::Cloud<trackedParticle>;
 
     //- Class used to pass tracking data to the trackToFace function
     class trackingData
@@ -103,7 +103,7 @@ public:
 
             trackingData
             (
-                Cloud<trackedParticle>& cloud,
+                lagrangian::Cloud<trackedParticle>& cloud,
                 const scalar maxTrackLen,
                 labelList& maxLevel,
                 List<PackedBoolList>& featureEdgeVisited
@@ -206,30 +206,50 @@ public:
         // Tracking
 
             //- Track all particles to their end point
-            bool move(Cloud<trackedParticle>&, trackingData&);
+            bool move(lagrangian::Cloud<trackedParticle>&, trackingData&);
 
             //- Overridable function to handle the particle hitting a wedge
-            void hitWedgePatch(Cloud<trackedParticle>&, trackingData&);
+            void hitWedgePatch
+            (
+                lagrangian::Cloud<trackedParticle>&,
+                trackingData&
+            );
 
             //- Overridable function to handle the particle hitting a
             //  symmetry plane
-            void hitSymmetryPlanePatch(Cloud<trackedParticle>&, trackingData&);
+            void hitSymmetryPlanePatch
+            (
+                lagrangian::Cloud<trackedParticle>&,
+                trackingData&
+            );
 
             //- Overridable function to handle the particle hitting a
             //  symmetry patch
-            void hitSymmetryPatch(Cloud<trackedParticle>&, trackingData&);
+            void hitSymmetryPatch
+            (
+                lagrangian::Cloud<trackedParticle>&,
+                trackingData&
+            );
 
             //- Overridable function to handle the particle hitting a cyclic
-            void hitCyclicPatch(Cloud<trackedParticle>&, trackingData&);
+            void hitCyclicPatch
+            (
+                lagrangian::Cloud<trackedParticle>&,
+                trackingData&
+            );
 
             //- Overridable function to handle the particle hitting a wallPatch
-            void hitWallPatch(Cloud<trackedParticle>&, trackingData&);
+            void hitWallPatch
+            (
+                lagrangian::Cloud<trackedParticle>&,
+                trackingData&
+            );
 
             //- Do corrections to the particle and tracking data following a
             //  transfer between processors
             void correctAfterParallelTransfer
             (
-                Cloud<trackedParticle>&,
+                lagrangian::Cloud<trackedParticle>&,
                 trackingData&
             );
 
@@ -245,12 +265,6 @@ inline bool contiguous<trackedParticle>()
 {
     return true;
 }
-
-//template<>
-//void Cloud<trackedParticle>::readFields();
-//
-//template<>
-//void Cloud<trackedParticle>::writeFields() const;
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

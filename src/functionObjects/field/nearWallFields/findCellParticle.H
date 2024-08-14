@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,7 +73,7 @@ class findCellParticle
 
 public:
 
-    friend class Cloud<findCellParticle>;
+    friend class lagrangian::Cloud<findCellParticle>;
 
     //- Class used to pass tracking data to the trackToFace function
     class trackingData
@@ -89,7 +89,7 @@ public:
 
             trackingData
             (
-                Cloud<findCellParticle>& cloud,
+                lagrangian::Cloud<findCellParticle>& cloud,
                 labelListList& cellToData,
                 List<List<point>>& cellToEnd
             )
@@ -174,28 +174,52 @@ public:
         // Tracking
 
             //- Track all particles to their end point
-            bool move(Cloud<findCellParticle>&, trackingData&);
+            bool move(lagrangian::Cloud<findCellParticle>&, trackingData&);
 
             //- Overridable function to handle the particle hitting a wedge
-            void hitWedgePatch(Cloud<findCellParticle>&, trackingData&);
+            void hitWedgePatch
+            (
+                lagrangian::Cloud<findCellParticle>&,
+                trackingData&
+            );
 
             //- Overridable function to handle the particle hitting a
             //  symmetry plane
-            void hitSymmetryPlanePatch(Cloud<findCellParticle>&, trackingData&);
+            void hitSymmetryPlanePatch
+            (
+                lagrangian::Cloud<findCellParticle>&,
+                trackingData&
+            );
 
             //- Overridable function to handle the particle hitting a
             //  symmetry patch
-            void hitSymmetryPatch(Cloud<findCellParticle>&, trackingData&);
+            void hitSymmetryPatch
+            (
+                lagrangian::Cloud<findCellParticle>&,
+                trackingData&
+            );
 
             //- Overridable function to handle the particle hitting a cyclic
-            void hitCyclicPatch(Cloud<findCellParticle>&, trackingData&);
+            void hitCyclicPatch
+            (
+                lagrangian::Cloud<findCellParticle>&,
+                trackingData&
+            );
 
             //- Overridable function to handle the particle hitting a
             //- processorPatch
-            void hitProcessorPatch(Cloud<findCellParticle>&, trackingData&);
+            void hitProcessorPatch
+            (
+                lagrangian::Cloud<findCellParticle>&,
+                trackingData&
+            );
 
             //- Overridable function to handle the particle hitting a wallPatch
-            void hitWallPatch(Cloud<findCellParticle>&, trackingData&);
+            void hitWallPatch
+            (
+                lagrangian::Cloud<findCellParticle>&,
+                trackingData&
+            );
 
 
     // Ostream Operator
