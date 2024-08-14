@@ -145,11 +145,22 @@ bool Foam::functionObjects::timeControl::end()
 
 Foam::scalar Foam::functionObjects::timeControl::timeToNextAction()
 {
-    return min
-    (
-        executeControl_.timeToNextAction(),
-        writeControl_.timeToNextAction()
-    );
+    if (time_.value() < startTime_)
+    {
+        return startTime_ - time_.value();
+    }
+    else if (active())
+    {
+        return min
+        (
+            executeControl_.timeToNextAction(),
+            writeControl_.timeToNextAction()
+        );
+    }
+    else
+    {
+        return vGreat;
+    }
 }
 
 
