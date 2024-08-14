@@ -25,7 +25,9 @@ Class
     Foam::homogeneousMixture
 
 Description
-    Foam::homogeneousMixture
+    Combustion mixture for homogeneous lean, stoichiometric or rich conditions
+
+    in which the regress variable \c b defines the composition.
 
 SourceFiles
     homogeneousMixture.C

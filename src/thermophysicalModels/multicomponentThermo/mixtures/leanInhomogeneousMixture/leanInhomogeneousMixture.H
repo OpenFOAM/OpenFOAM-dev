@@ -22,18 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::veryInhomogeneousMixture
+    Foam::leanInhomogeneousMixture
 
 Description
-    Foam::veryInhomogeneousMixture
+    Combustion mixture for inhomogeneous lean or stoichiometric conditions
+
+    in which the mixture-fraction \c ft and regress variable \c b define the
+    composition.
 
 SourceFiles
-    veryInhomogeneousMixture.C
+    leanInhomogeneousMixture.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef veryInhomogeneousMixture_H
-#define veryInhomogeneousMixture_H
+#ifndef leanInhomogeneousMixture_H
+#define leanInhomogeneousMixture_H
 
 #include "dimensionedTypes.H"
 #include "FieldListSlice.H"
@@ -44,11 +47,11 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                  Class veryInhomogeneousMixture Declaration
+                    Class leanInhomogeneousMixture Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ThermoType>
-class veryInhomogeneousMixture
+class leanInhomogeneousMixture
 {
 public:
 
@@ -69,7 +72,7 @@ private:
     // Private Enumerations
 
         //- Specie indices
-        enum species { FT, FU, B };
+        enum species { FT, B };
 
 
     // Private Data
@@ -95,17 +98,17 @@ public:
     // Constructors
 
         //- Construct from a dictionary
-        veryInhomogeneousMixture(const dictionary&);
+        leanInhomogeneousMixture(const dictionary&);
 
         //- Disallow default bitwise copy construction
-        veryInhomogeneousMixture
+        leanInhomogeneousMixture
         (
-            const veryInhomogeneousMixture<ThermoType>&
+            const leanInhomogeneousMixture<ThermoType>&
         ) = delete;
 
 
     //- Destructor
-    virtual ~veryInhomogeneousMixture()
+    virtual ~leanInhomogeneousMixture()
     {}
 
 
@@ -114,37 +117,40 @@ public:
         //- Return the instantiated type name
         static word typeName()
         {
-            return "veryInhomogeneousMixture<" + ThermoType::typeName() + '>';
+            return "leanInhomogeneousMixture<" + ThermoType::typeName() + '>';
         }
 
         //- Return the specie names
         static wordList specieNames()
         {
-            return {"ft", "fu", "b"};
+            return {"ft", "b"};
         }
+
+        //- Return the residual fraction of fuel in the burnt mixture
+        scalar fres(const scalar ft) const;
 
         //- Return the residual fraction of fuel in the burnt mixture
         scalar fres(const scalarFieldListSlice& Y) const;
 
         //- Return the mixture for the given composition
-        const thermoType& mixture(const scalar ft, const scalar fu) const;
+        const thermoType& mixture(const scalar ft, const scalar b) const;
 
         //- Return the mixture for thermodynamic properties
         const thermoMixtureType& thermoMixture
         (
-            const scalarFieldListSlice& Y
+            const scalarFieldListSlice&
         ) const;
 
         //- Return the mixture for transport properties
         const transportMixtureType& transportMixture
         (
-            const scalarFieldListSlice& Y
+            const scalarFieldListSlice&
         ) const;
 
         //- Return the mixture for transport properties
         const transportMixtureType& transportMixture
         (
-            const scalarFieldListSlice& Y,
+            const scalarFieldListSlice&,
             const thermoMixtureType&
         ) const;
 
@@ -161,7 +167,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const veryInhomogeneousMixture<ThermoType>&) = delete;
+        void operator=(const leanInhomogeneousMixture<ThermoType>&) = delete;
 };
 
 
@@ -172,7 +178,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 #ifdef NoRepository
-    #include "veryInhomogeneousMixture.C"
+    #include "leanInhomogeneousMixture.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

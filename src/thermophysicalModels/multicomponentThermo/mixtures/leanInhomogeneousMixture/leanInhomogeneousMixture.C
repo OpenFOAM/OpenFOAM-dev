@@ -23,12 +23,12 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "veryInhomogeneousMixture.H"
+#include "leanInhomogeneousMixture.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class ThermoType>
-Foam::veryInhomogeneousMixture<ThermoType>::veryInhomogeneousMixture
+Foam::leanInhomogeneousMixture<ThermoType>::leanInhomogeneousMixture
 (
     const dictionary& dict
 )
@@ -44,20 +44,30 @@ Foam::veryInhomogeneousMixture<ThermoType>::veryInhomogeneousMixture
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class ThermoType>
-Foam::scalar Foam::veryInhomogeneousMixture<ThermoType>::fres
+Foam::scalar Foam::leanInhomogeneousMixture<ThermoType>::fres
 (
-    const scalarFieldListSlice& Y
+    const scalar ft
 ) const
 {
-    return max(Y[FT] - (scalar(1) - Y[FT])/stoicRatio_.value(), scalar(0));
+     return max(ft - (scalar(1) - ft)/stoicRatio_.value(), scalar(0));
 }
 
 
 template<class ThermoType>
-const ThermoType& Foam::veryInhomogeneousMixture<ThermoType>::mixture
+Foam::scalar Foam::leanInhomogeneousMixture<ThermoType>::fres
+(
+    const scalarFieldListSlice& Y
+) const
+{
+    return fres(Y[FT]);
+}
+
+
+template<class ThermoType>
+const ThermoType& Foam::leanInhomogeneousMixture<ThermoType>::mixture
 (
     const scalar ft,
-    const scalar fu
+    const scalar b
 ) const
 {
     if (ft < 0.0001)
@@ -66,6 +76,7 @@ const ThermoType& Foam::veryInhomogeneousMixture<ThermoType>::mixture
     }
     else
     {
+        const scalar fu = b*ft + (1 - b)*fres(ft);
         const scalar ox = 1 - ft - (ft - fu)*stoicRatio_.value();
         const scalar pr = 1 - fu - ox;
 
@@ -79,30 +90,30 @@ const ThermoType& Foam::veryInhomogeneousMixture<ThermoType>::mixture
 
 
 template<class ThermoType>
-const typename Foam::veryInhomogeneousMixture<ThermoType>::thermoMixtureType&
-Foam::veryInhomogeneousMixture<ThermoType>::thermoMixture
+const typename Foam::leanInhomogeneousMixture<ThermoType>::thermoMixtureType&
+Foam::leanInhomogeneousMixture<ThermoType>::thermoMixture
 (
     const scalarFieldListSlice& Y
 ) const
 {
-    return mixture(Y[FT], Y[FU]);
+    return mixture(Y[FT], Y[B]);
 }
 
 
 template<class ThermoType>
-const typename Foam::veryInhomogeneousMixture<ThermoType>::transportMixtureType&
-Foam::veryInhomogeneousMixture<ThermoType>::transportMixture
+const typename Foam::leanInhomogeneousMixture<ThermoType>::transportMixtureType&
+Foam::leanInhomogeneousMixture<ThermoType>::transportMixture
 (
     const scalarFieldListSlice& Y
 ) const
 {
-    return mixture(Y[FT], Y[FU]);
+    return mixture(Y[FT], Y[B]);
 }
 
 
 template<class ThermoType>
-const typename Foam::veryInhomogeneousMixture<ThermoType>::transportMixtureType&
-Foam::veryInhomogeneousMixture<ThermoType>::transportMixture
+const typename Foam::leanInhomogeneousMixture<ThermoType>::transportMixtureType&
+Foam::leanInhomogeneousMixture<ThermoType>::transportMixture
 (
     const scalarFieldListSlice&,
     const thermoMixtureType& mixture
@@ -113,32 +124,29 @@ Foam::veryInhomogeneousMixture<ThermoType>::transportMixture
 
 
 template<class ThermoType>
-const typename Foam::veryInhomogeneousMixture<ThermoType>::thermoType&
-Foam::veryInhomogeneousMixture<ThermoType>::reactants
+const typename Foam::leanInhomogeneousMixture<ThermoType>::thermoType&
+Foam::leanInhomogeneousMixture<ThermoType>::reactants
 (
     const scalarFieldListSlice& Y
 ) const
 {
-    return mixture(Y[FT], Y[FT]);
+    return mixture(Y[FT], 1);
 }
 
 
 template<class ThermoType>
-const typename Foam::veryInhomogeneousMixture<ThermoType>::thermoType&
-Foam::veryInhomogeneousMixture<ThermoType>::products
+const typename Foam::leanInhomogeneousMixture<ThermoType>::thermoType&
+Foam::leanInhomogeneousMixture<ThermoType>::products
 (
     const scalarFieldListSlice& Y
 ) const
 {
-    return mixture(Y[FT], fres(Y));
+    return mixture(Y[FT], 0);
 }
 
 
 template<class ThermoType>
-void Foam::veryInhomogeneousMixture<ThermoType>::read
-(
-    const dictionary& dict
-)
+void Foam::leanInhomogeneousMixture<ThermoType>::read(const dictionary& dict)
 {
     stoicRatio_ =
         dimensionedScalar("stoichiometricAirFuelMassRatio", dimless, dict);

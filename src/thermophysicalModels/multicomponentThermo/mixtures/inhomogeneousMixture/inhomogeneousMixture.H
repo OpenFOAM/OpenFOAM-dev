@@ -25,7 +25,10 @@ Class
     Foam::inhomogeneousMixture
 
 Description
-    Foam::inhomogeneousMixture
+    Combustion mixture for inhomogeneous lean, stoichiometric or rich conditions
+
+    in which the mixture-fraction \c ft and fuel mass-fraction \c fu define the
+    composition.
 
 SourceFiles
     inhomogeneousMixture.C
@@ -44,7 +47,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class inhomogeneousMixture Declaration
+                  Class inhomogeneousMixture Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ThermoType>
@@ -69,7 +72,7 @@ private:
     // Private Enumerations
 
         //- Specie indices
-        enum species { FT, B };
+        enum species { FT, FU, B };
 
 
     // Private Data
@@ -98,7 +101,10 @@ public:
         inhomogeneousMixture(const dictionary&);
 
         //- Disallow default bitwise copy construction
-        inhomogeneousMixture(const inhomogeneousMixture<ThermoType>&) = delete;
+        inhomogeneousMixture
+        (
+            const inhomogeneousMixture<ThermoType>&
+        ) = delete;
 
 
     //- Destructor
@@ -117,34 +123,31 @@ public:
         //- Return the specie names
         static wordList specieNames()
         {
-            return {"ft", "b"};
+            return {"ft", "fu", "b"};
         }
-
-        //- Return the residual fraction of fuel in the burnt mixture
-        scalar fres(const scalar ft) const;
 
         //- Return the residual fraction of fuel in the burnt mixture
         scalar fres(const scalarFieldListSlice& Y) const;
 
         //- Return the mixture for the given composition
-        const thermoType& mixture(const scalar ft, const scalar b) const;
+        const thermoType& mixture(const scalar ft, const scalar fu) const;
 
         //- Return the mixture for thermodynamic properties
         const thermoMixtureType& thermoMixture
         (
-            const scalarFieldListSlice&
+            const scalarFieldListSlice& Y
         ) const;
 
         //- Return the mixture for transport properties
         const transportMixtureType& transportMixture
         (
-            const scalarFieldListSlice&
+            const scalarFieldListSlice& Y
         ) const;
 
         //- Return the mixture for transport properties
         const transportMixtureType& transportMixture
         (
-            const scalarFieldListSlice&,
+            const scalarFieldListSlice& Y,
             const thermoMixtureType&
         ) const;
 

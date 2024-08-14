@@ -44,19 +44,12 @@ Foam::inhomogeneousMixture<ThermoType>::inhomogeneousMixture
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class ThermoType>
-Foam::scalar Foam::inhomogeneousMixture<ThermoType>::fres(const scalar ft) const
-{
-     return max(ft - (scalar(1) - ft)/stoicRatio_.value(), scalar(0));
-}
-
-
-template<class ThermoType>
 Foam::scalar Foam::inhomogeneousMixture<ThermoType>::fres
 (
     const scalarFieldListSlice& Y
 ) const
 {
-    return fres(Y[FT]);
+    return max(Y[FT] - (scalar(1) - Y[FT])/stoicRatio_.value(), scalar(0));
 }
 
 
@@ -64,7 +57,7 @@ template<class ThermoType>
 const ThermoType& Foam::inhomogeneousMixture<ThermoType>::mixture
 (
     const scalar ft,
-    const scalar b
+    const scalar fu
 ) const
 {
     if (ft < 0.0001)
@@ -73,7 +66,6 @@ const ThermoType& Foam::inhomogeneousMixture<ThermoType>::mixture
     }
     else
     {
-        const scalar fu = b*ft + (1 - b)*fres(ft);
         const scalar ox = 1 - ft - (ft - fu)*stoicRatio_.value();
         const scalar pr = 1 - fu - ox;
 
@@ -93,7 +85,7 @@ Foam::inhomogeneousMixture<ThermoType>::thermoMixture
     const scalarFieldListSlice& Y
 ) const
 {
-    return mixture(Y[FT], Y[B]);
+    return mixture(Y[FT], Y[FU]);
 }
 
 
@@ -104,7 +96,7 @@ Foam::inhomogeneousMixture<ThermoType>::transportMixture
     const scalarFieldListSlice& Y
 ) const
 {
-    return mixture(Y[FT], Y[B]);
+    return mixture(Y[FT], Y[FU]);
 }
 
 
@@ -127,7 +119,7 @@ Foam::inhomogeneousMixture<ThermoType>::reactants
     const scalarFieldListSlice& Y
 ) const
 {
-    return mixture(Y[FT], 1);
+    return mixture(Y[FT], Y[FT]);
 }
 
 
@@ -138,12 +130,15 @@ Foam::inhomogeneousMixture<ThermoType>::products
     const scalarFieldListSlice& Y
 ) const
 {
-    return mixture(Y[FT], 0);
+    return mixture(Y[FT], fres(Y));
 }
 
 
 template<class ThermoType>
-void Foam::inhomogeneousMixture<ThermoType>::read(const dictionary& dict)
+void Foam::inhomogeneousMixture<ThermoType>::read
+(
+    const dictionary& dict
+)
 {
     stoicRatio_ =
         dimensionedScalar("stoichiometricAirFuelMassRatio", dimless, dict);
