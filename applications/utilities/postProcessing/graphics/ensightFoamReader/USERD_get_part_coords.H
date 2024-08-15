@@ -42,7 +42,7 @@ int USERD_get_part_coords
     {
         label indx = 1;
 
-        forAllConstIter(Cloud<passiveParticle>, *sprayPtr, iter)
+        forAllConstIter(lagrangian::Cloud<passiveParticle>, *sprayPtr, iter)
         {
             const point p = iter().position(*meshPtr);
             coord_array[0][indx] = float(p.x());

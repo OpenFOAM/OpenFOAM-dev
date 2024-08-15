@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ class fluidThermo;
 template<class ParticleType>
 class ParcelCloudBase
 :
-    public Cloud<ParticleType>,
+    public lagrangian::Cloud<ParticleType>,
     virtual public parcelCloudBase
 {
 protected:
@@ -76,7 +76,7 @@ public:
             const bool readFields = true
         )
         :
-            Cloud<ParticleType>(rho.mesh(), cloudName, false),
+            lagrangian::Cloud<ParticleType>(rho.mesh(), cloudName, false),
             mesh_(rho.mesh())
         {}
 
@@ -91,7 +91,7 @@ public:
             const bool readFields = true
         )
         :
-            Cloud<ParticleType>(rho.mesh(), cloudName, false),
+            lagrangian::Cloud<ParticleType>(rho.mesh(), cloudName, false),
             mesh_(rho.mesh())
         {}
 
@@ -102,7 +102,7 @@ public:
             const word& name
         )
         :
-            Cloud<ParticleType>(c.mesh_, name, c),
+            lagrangian::Cloud<ParticleType>(c.mesh_, name, c),
             mesh_(c.mesh_)
         {}
 
@@ -114,7 +114,12 @@ public:
             const ParcelCloudBase<ParticleType>& c
         )
         :
-            Cloud<ParticleType>(mesh, name, IDLList<ParticleType>()),
+            lagrangian::Cloud<ParticleType>
+            (
+                mesh,
+                name,
+                IDLList<ParticleType>()
+            ),
             mesh_(mesh)
         {}
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,9 +95,9 @@ void Foam::ensightParticlePositions
     IOstream::streamFormat format
 )
 {
-    Cloud<passiveParticle> parcels(mesh, cloudName, false);
+    lagrangian::Cloud<passiveParticle> parcels(mesh, cloudName, false);
 
-    fileName cloudDir = subDir/cloud::prefix/cloudName;
+    fileName cloudDir = subDir/lagrangian::cloud::prefix/cloudName;
     fileName postFileName = cloudDir/"positions";
 
     // the ITER/lagrangian subdirectory must exist
@@ -121,7 +121,7 @@ void Foam::ensightParticlePositions
             os.write(i+1);
         }
 
-        forAllConstIter(Cloud<passiveParticle>, parcels, elmnt)
+        forAllConstIter(lagrangian::Cloud<passiveParticle>, parcels, elmnt)
         {
             const vector& p = elmnt().position(mesh);
 
@@ -134,7 +134,7 @@ void Foam::ensightParticlePositions
     {
         label nParcels = 0;
 
-        forAllConstIter(Cloud<passiveParticle>, parcels, elmnt)
+        forAllConstIter(lagrangian::Cloud<passiveParticle>, parcels, elmnt)
         {
             const vector& p = elmnt().position(mesh);
 
@@ -161,7 +161,7 @@ void Foam::ensightLagrangianField
 {
     Info<< " " << fieldObject.name() << flush;
 
-    fileName cloudDir = subDir/cloud::prefix/cloudName;
+    fileName cloudDir = subDir/lagrangian::cloud::prefix/cloudName;
     fileName postFileName = cloudDir/fieldObject.name();
 
     string title =

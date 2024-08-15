@@ -335,7 +335,7 @@ void Foam::meshRefinement::markFeatureCellLevel
 
     // Find all start cells of features.
     // Is done by tracking from insidePoint.
-    Cloud<trackedParticle> startPointCloud
+    lagrangian::Cloud<trackedParticle> startPointCloud
     (
         mesh_,
         "startPointCloud",
@@ -498,7 +498,7 @@ void Foam::meshRefinement::markFeatureCellLevel
     }
 
 
-    Cloud<trackedParticle> cloud
+    lagrangian::Cloud<trackedParticle> cloud
     (
         mesh_,
         "featureCloud",
@@ -510,7 +510,7 @@ void Foam::meshRefinement::markFeatureCellLevel
         Pout<< "Constructing cloud for cell marking" << endl;
     }
 
-    forAllIter(Cloud<trackedParticle>, startPointCloud, iter)
+    forAllIter(lagrangian::Cloud<trackedParticle>, startPointCloud, iter)
     {
         const trackedParticle& startTp = iter();
 
@@ -568,7 +568,7 @@ void Foam::meshRefinement::markFeatureCellLevel
         cloud.move(cloud, td);
 
         // Make particle follow edge.
-        forAllIter(Cloud<trackedParticle>, cloud, iter)
+        forAllIter(lagrangian::Cloud<trackedParticle>, cloud, iter)
         {
             trackedParticle& tp = iter();
 

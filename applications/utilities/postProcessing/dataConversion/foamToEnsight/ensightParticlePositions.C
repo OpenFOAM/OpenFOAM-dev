@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,7 +71,7 @@ void ensightParticlePositions
 
     if (dataExists)
     {
-        Cloud<passiveParticle> parcels(mesh, cloudName, false);
+        lagrangian::Cloud<passiveParticle> parcels(mesh, cloudName, false);
 
         // Set Format
         ensightFile.setf(ios_base::scientific, ios_base::floatfield);
@@ -82,7 +82,7 @@ void ensightParticlePositions
         label nParcels = 0;
 
         // Output positions
-        forAllConstIter(Cloud<passiveParticle>, parcels, elmnt)
+        forAllConstIter(lagrangian::Cloud<passiveParticle>, parcels, elmnt)
         {
             const vector& p = elmnt().position(mesh);
 

@@ -255,7 +255,7 @@ private:
 
 public:
 
-    friend class Cloud<molecule>;
+    friend class lagrangian::Cloud<molecule>;
 
     // Constructors
 
@@ -358,9 +358,9 @@ public:
 
     // I-O
 
-        static void readFields(Cloud<molecule>& mC);
+        static void readFields(lagrangian::Cloud<molecule>& mC);
 
-        static void writeFields(const Cloud<molecule>& mC);
+        static void writeFields(const lagrangian::Cloud<molecule>& mC);
 
 
     // IOstream Operators

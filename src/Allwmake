@@ -41,6 +41,7 @@ wmake $targetType ODE
 wmake $targetType physicalProperties
 thermophysicalModels/Allwmake $targetType $*
 
+wmake $targetType tracking
 wmake $targetType lagrangian/basic
 
 generic/Allwmake $targetType $*

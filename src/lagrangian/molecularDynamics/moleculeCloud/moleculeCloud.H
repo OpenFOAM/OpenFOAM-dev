@@ -57,7 +57,7 @@ namespace Foam
 
 class moleculeCloud
 :
-    public Cloud<molecule>
+    public lagrangian::Cloud<molecule>
 {
     // Private Data
 

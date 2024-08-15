@@ -1074,7 +1074,7 @@ Foam::moleculeCloud::moleculeCloud
     bool readFields
 )
 :
-    Cloud<molecule>(mesh, "moleculeCloud", false),
+    lagrangian::Cloud<molecule>(mesh, "moleculeCloud", false),
     mesh_(mesh),
     pot_(pot),
     cellOccupancy_(mesh_.nCells()),
@@ -1106,7 +1106,7 @@ Foam::moleculeCloud::moleculeCloud
     bool readFields
 )
 :
-    Cloud<molecule>(mesh, "moleculeCloud", false),
+    lagrangian::Cloud<molecule>(mesh, "moleculeCloud", false),
     mesh_(mesh),
     pot_(pot),
     il_(mesh_, 0.0, false),
@@ -1134,18 +1134,18 @@ void Foam::moleculeCloud::evolve()
     molecule::trackingData td(*this);
 
     td.part() = molecule::trackingData::tpVelocityHalfStep0;
-    Cloud<molecule>::move(*this, td);
+    lagrangian::Cloud<molecule>::move(*this, td);
 
     td.part() = molecule::trackingData::tpLinearTrack;
-    Cloud<molecule>::move(*this, td);
+    lagrangian::Cloud<molecule>::move(*this, td);
 
     td.part() = molecule::trackingData::tpRotationalTrack;
-    Cloud<molecule>::move(*this, td);
+    lagrangian::Cloud<molecule>::move(*this, td);
 
     calculateForce();
 
     td.part() = molecule::trackingData::tpVelocityHalfStep1;
-    Cloud<molecule>::move(*this, td);
+    lagrangian::Cloud<molecule>::move(*this, td);
 }
 
 

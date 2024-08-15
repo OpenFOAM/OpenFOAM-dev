@@ -12,7 +12,7 @@ if (nVar >= 0)
         (
             name,
             runTime.name(),
-            cloud::prefix,
+            lagrangian::cloud::prefix,
             mesh,
             IOobject::MUST_READ,
             IOobject::NO_WRITE

@@ -49,7 +49,12 @@ void USERD_set_time_set_and_step
         if (Numparts_available > nPatches+1)
         {
             delete sprayPtr;
-            sprayPtr = new Cloud<passiveParticle>(*meshPtr, cloud::defaultName);
+            sprayPtr =
+                new lagrangian::Cloud<passiveParticle>
+                (
+                    *meshPtr,
+                    lagrangian::cloud::defaultName
+                );
         }
     }
 }

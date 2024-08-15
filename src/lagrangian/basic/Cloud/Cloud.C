@@ -63,7 +63,7 @@ struct IDLListAppendEqOp
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
 template<class ParticleType>
-Foam::labelList Foam::Cloud<ParticleType>::patchNbrProc
+Foam::labelList Foam::lagrangian::Cloud<ParticleType>::patchNbrProc
 (
     const polyMesh& pMesh
 )
@@ -91,7 +91,7 @@ Foam::labelList Foam::Cloud<ParticleType>::patchNbrProc
 
 
 template<class ParticleType>
-Foam::labelList Foam::Cloud<ParticleType>::patchNbrProcPatch
+Foam::labelList Foam::lagrangian::Cloud<ParticleType>::patchNbrProcPatch
 (
     const polyMesh& pMesh
 )
@@ -136,7 +136,8 @@ Foam::labelList Foam::Cloud<ParticleType>::patchNbrProcPatch
 
 
 template<class ParticleType>
-Foam::labelListList Foam::Cloud<ParticleType>::patchNonConformalCyclicPatches
+Foam::labelListList
+Foam::lagrangian::Cloud<ParticleType>::patchNonConformalCyclicPatches
 (
     const polyMesh& pMesh
 )
@@ -161,7 +162,7 @@ Foam::labelListList Foam::Cloud<ParticleType>::patchNonConformalCyclicPatches
 
 
 template<class ParticleType>
-void Foam::Cloud<ParticleType>::storeRays() const
+void Foam::lagrangian::Cloud<ParticleType>::storeRays() const
 {
     const polyBoundaryMesh& pbm = pMesh_.boundaryMesh();
 
@@ -184,7 +185,7 @@ void Foam::Cloud<ParticleType>::storeRays() const
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class ParticleType>
-Foam::Cloud<ParticleType>::Cloud
+Foam::lagrangian::Cloud<ParticleType>::Cloud
 (
     const polyMesh& pMesh,
     const word& cloudName,
@@ -216,21 +217,21 @@ Foam::Cloud<ParticleType>::Cloud
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class ParticleType>
-void Foam::Cloud<ParticleType>::addParticle(ParticleType* pPtr)
+void Foam::lagrangian::Cloud<ParticleType>::addParticle(ParticleType* pPtr)
 {
     this->append(pPtr);
 }
 
 
 template<class ParticleType>
-void Foam::Cloud<ParticleType>::deleteParticle(ParticleType& p)
+void Foam::lagrangian::Cloud<ParticleType>::deleteParticle(ParticleType& p)
 {
     delete(this->remove(&p));
 }
 
 
 template<class ParticleType>
-void Foam::Cloud<ParticleType>::deleteLostParticles()
+void Foam::lagrangian::Cloud<ParticleType>::deleteLostParticles()
 {
     label lostCount = 0;
 
@@ -254,7 +255,10 @@ void Foam::Cloud<ParticleType>::deleteLostParticles()
 
 
 template<class ParticleType>
-void Foam::Cloud<ParticleType>::cloudReset(const Cloud<ParticleType>& c)
+void Foam::lagrangian::Cloud<ParticleType>::cloudReset
+(
+    const Cloud<ParticleType>& c
+)
 {
     // Reset particle count and particles only
     // - not changing the cloud object registry or reference to the polyMesh
@@ -264,7 +268,7 @@ void Foam::Cloud<ParticleType>::cloudReset(const Cloud<ParticleType>& c)
 
 
 template<class ParticleType>
-void Foam::Cloud<ParticleType>::changeTimeStep()
+void Foam::lagrangian::Cloud<ParticleType>::changeTimeStep()
 {
     forAllIter(typename Cloud<ParticleType>, *this, pIter)
     {
@@ -277,7 +281,7 @@ void Foam::Cloud<ParticleType>::changeTimeStep()
 
 template<class ParticleType>
 template<class TrackCloudType>
-void Foam::Cloud<ParticleType>::move
+void Foam::lagrangian::Cloud<ParticleType>::move
 (
     TrackCloudType& cloud,
     typename ParticleType::trackingData& td
@@ -454,7 +458,10 @@ void Foam::Cloud<ParticleType>::move
 
 
 template<class ParticleType>
-void Foam::Cloud<ParticleType>::topoChange(const polyTopoChangeMap& map)
+void Foam::lagrangian::Cloud<ParticleType>::topoChange
+(
+    const polyTopoChangeMap& map
+)
 {
     if (map.reverseCellMap().empty()) return;
 
@@ -501,7 +508,7 @@ void Foam::Cloud<ParticleType>::topoChange(const polyTopoChangeMap& map)
 
 
 template<class ParticleType>
-void Foam::Cloud<ParticleType>::mapMesh(const polyMeshMap& map)
+void Foam::lagrangian::Cloud<ParticleType>::mapMesh(const polyMeshMap& map)
 {
     // Ask for the tetBasePtIs to trigger all processors to build
     // them, otherwise, if some processors have no particles then
@@ -631,7 +638,10 @@ void Foam::Cloud<ParticleType>::mapMesh(const polyMeshMap& map)
 
 
 template<class ParticleType>
-void Foam::Cloud<ParticleType>::distribute(const polyDistributionMap& map)
+void Foam::lagrangian::Cloud<ParticleType>::distribute
+(
+    const polyDistributionMap& map
+)
 {
     // Ask for the tetBasePtIs to trigger all processors to build
     // them, otherwise, if some processors have no particles then
@@ -747,7 +757,7 @@ void Foam::Cloud<ParticleType>::distribute(const polyDistributionMap& map)
 
 
 template<class ParticleType>
-void Foam::Cloud<ParticleType>::writePositions() const
+void Foam::lagrangian::Cloud<ParticleType>::writePositions() const
 {
     OFstream pObj
     (
@@ -766,7 +776,7 @@ void Foam::Cloud<ParticleType>::writePositions() const
 
 
 template<class ParticleType>
-void Foam::Cloud<ParticleType>::storeGlobalPositions() const
+void Foam::lagrangian::Cloud<ParticleType>::storeGlobalPositions() const
 {
     // Store the global positions for later use by mapping functions. It would
     // be preferable not to need this. If the objects passed to had a copy of

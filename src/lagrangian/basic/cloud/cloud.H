@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,6 +46,9 @@ class polyTopoChangeMap;
 class polyMeshMap;
 class polyDistributionMap;
 
+namespace lagrangian
+{
+
 /*---------------------------------------------------------------------------*\
                             Class cloud Declaration
 \*---------------------------------------------------------------------------*/
@@ -60,11 +63,14 @@ public:
     //- Runtime type information
     TypeName("cloud");
 
+
+    // Static Data
+
         //- The prefix to local: %lagrangian
         static const word prefix;
 
         //- The default cloud name: %defaultCloud
-        static word defaultName;
+        static const word defaultName;
 
 
     // Constructors
@@ -101,6 +107,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace lagrangian
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

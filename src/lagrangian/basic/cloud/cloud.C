@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,16 +30,19 @@ License
 
 namespace Foam
 {
+namespace lagrangian
+{
     defineTypeNameAndDebug(cloud, 0);
 
     const word cloud::prefix("lagrangian");
-    word cloud::defaultName("defaultCloud");
+    const word cloud::defaultName("defaultCloud");
+}
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::cloud::cloud(const objectRegistry& obr, const word& cloudName)
+Foam::lagrangian::cloud::cloud(const objectRegistry& obr, const word& cloudName)
 :
     objectRegistry
     (
@@ -58,25 +61,25 @@ Foam::cloud::cloud(const objectRegistry& obr, const word& cloudName)
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::cloud::~cloud()
+Foam::lagrangian::cloud::~cloud()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::cloud::topoChange(const polyTopoChangeMap&)
+void Foam::lagrangian::cloud::topoChange(const polyTopoChangeMap&)
 {
     NotImplemented;
 }
 
 
-void Foam::cloud::mapMesh(const polyMeshMap&)
+void Foam::lagrangian::cloud::mapMesh(const polyMeshMap&)
 {
     NotImplemented;
 }
 
 
-void Foam::cloud::distribute(const polyDistributionMap&)
+void Foam::lagrangian::cloud::distribute(const polyDistributionMap&)
 {
     NotImplemented;
 }

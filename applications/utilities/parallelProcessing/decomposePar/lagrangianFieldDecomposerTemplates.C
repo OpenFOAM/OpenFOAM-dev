@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ Foam::lagrangianFieldDecomposer::decomposeField
                 (
                     field.name(),
                     procMeshes_[proci].time().name(),
-                    cloud::prefix/cloudName_,
+                    lagrangian::cloud::prefix/cloudName_,
                     procMeshes_[proci],
                     IOobject::NO_READ,
                     IOobject::NO_WRITE,

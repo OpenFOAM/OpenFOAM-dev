@@ -354,7 +354,7 @@ int main(int argc, char *argv[])
         (
             fileHandler().filePath
             (
-                runTime.timePath()/regionPrefix/cloud::prefix
+                runTime.timePath()/regionPrefix/lagrangian::cloud::prefix
             )
         );
         stringList lagrangianDirs
@@ -404,9 +404,14 @@ int main(int argc, char *argv[])
 
             forAll(cloudDirs, i)
             {
-                const fileName dir(cloud::prefix/cloudDirs[i]);
+                const fileName dir(lagrangian::cloud::prefix/cloudDirs[i]);
 
-                Cloud<passiveParticle> parcels(meshPtr(), cloudDirs[i], false);
+                lagrangian::Cloud<passiveParticle> parcels
+                (
+                    meshPtr(),
+                    cloudDirs[i],
+                    false
+                );
 
                 parcels.writeObject
                 (

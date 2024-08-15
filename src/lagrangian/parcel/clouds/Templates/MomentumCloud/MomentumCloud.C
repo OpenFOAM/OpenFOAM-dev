@@ -286,7 +286,7 @@ Foam::MomentumCloud<CloudType>::MomentumCloud
         (
             cloudName + "OutputProperties",
             this->mesh().time().name(),
-            "uniform"/cloud::prefix/cloudName,
+            "uniform"/lagrangian::cloud::prefix/cloudName,
             this->mesh(),
             IOobject::READ_IF_PRESENT,
             IOobject::NO_WRITE
@@ -492,7 +492,7 @@ Foam::MomentumCloud<CloudType>::MomentumCloud
         (
             name + "OutputProperties",
             this->mesh().time().name(),
-            "uniform"/cloud::prefix/name,
+            "uniform"/lagrangian::cloud::prefix/name,
             this->mesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE,
@@ -724,7 +724,7 @@ void Foam::MomentumCloud<CloudType>::patchData
 template<class CloudType>
 void Foam::MomentumCloud<CloudType>::topoChange(const polyTopoChangeMap& map)
 {
-    Cloud<parcelType>::topoChange(map);
+    lagrangian::Cloud<parcelType>::topoChange(map);
 
     updateCellOccupancy();
 
@@ -737,7 +737,7 @@ void Foam::MomentumCloud<CloudType>::topoChange(const polyTopoChangeMap& map)
 template<class CloudType>
 void Foam::MomentumCloud<CloudType>::mapMesh(const polyMeshMap& map)
 {
-    Cloud<parcelType>::mapMesh(map);
+    lagrangian::Cloud<parcelType>::mapMesh(map);
 
     updateCellOccupancy();
 
@@ -750,7 +750,7 @@ void Foam::MomentumCloud<CloudType>::mapMesh(const polyMeshMap& map)
 template<class CloudType>
 void Foam::MomentumCloud<CloudType>::distribute(const polyDistributionMap& map)
 {
-    Cloud<parcelType>::distribute(map);
+    lagrangian::Cloud<parcelType>::distribute(map);
 
     updateCellOccupancy();
 

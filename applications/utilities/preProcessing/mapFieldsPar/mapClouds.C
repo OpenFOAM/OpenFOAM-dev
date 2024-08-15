@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,7 +86,7 @@ void mapCloudTypeFields
             (
                 fieldName,
                 srcMesh.time().name(),
-                cloud::prefix/cloudDir,
+                lagrangian::cloud::prefix/cloudDir,
                 srcMesh,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
@@ -106,7 +106,7 @@ void mapCloudTypeFields
                 (
                     fieldName,
                     tgtMesh.time().name(),
-                    cloud::prefix/cloudDir,
+                    lagrangian::cloud::prefix/cloudDir,
                     tgtMesh,
                     IOobject::NO_READ,
                     IOobject::NO_WRITE,
@@ -185,7 +185,7 @@ void Foam::mapClouds(const fvMeshToFvMesh& interp)
         (
             readDir
             (
-                srcMesh.time().timePath()/cloud::prefix,
+                srcMesh.time().timePath()/lagrangian::cloud::prefix,
                 fileType::directory
             )
         );
@@ -207,7 +207,7 @@ void Foam::mapClouds(const fvMeshToFvMesh& interp)
         List<DynamicList<label>> sendsDyn(Pstream::nProcs());
         {
             label srcParticlei = 0;
-            forAllConstIter(Cloud<passiveParticle>, srcCloud, iter)
+            forAllConstIter(lagrangian::Cloud<passiveParticle>, srcCloud, iter)
             {
                 const point pos = iter().position(srcMesh);
 
@@ -271,7 +271,7 @@ void Foam::mapClouds(const fvMeshToFvMesh& interp)
         (
             srcMesh,
             srcMesh.time().name(),
-            cloud::prefix/cloudDirs[cloudi]
+            lagrangian::cloud::prefix/cloudDirs[cloudi]
         );
 
         // Map and write the fields

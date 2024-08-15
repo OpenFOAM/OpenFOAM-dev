@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,7 +89,7 @@ Foam::trackedParticle::trackedParticle(Istream& is, bool readFields)
 
 bool Foam::trackedParticle::move
 (
-    Cloud<trackedParticle>& cloud,
+    lagrangian::Cloud<trackedParticle>& cloud,
     trackingData& td
 )
 {
@@ -125,7 +125,7 @@ bool Foam::trackedParticle::move
 
 void Foam::trackedParticle::hitWedgePatch
 (
-    Cloud<trackedParticle>&,
+    lagrangian::Cloud<trackedParticle>&,
     trackingData& td
 )
 {
@@ -136,7 +136,7 @@ void Foam::trackedParticle::hitWedgePatch
 
 void Foam::trackedParticle::hitSymmetryPlanePatch
 (
-    Cloud<trackedParticle>&,
+    lagrangian::Cloud<trackedParticle>&,
     trackingData& td
 )
 {
@@ -147,7 +147,7 @@ void Foam::trackedParticle::hitSymmetryPlanePatch
 
 void Foam::trackedParticle::hitSymmetryPatch
 (
-    Cloud<trackedParticle>&,
+    lagrangian::Cloud<trackedParticle>&,
     trackingData& td
 )
 {
@@ -158,7 +158,7 @@ void Foam::trackedParticle::hitSymmetryPatch
 
 void Foam::trackedParticle::hitCyclicPatch
 (
-    Cloud<trackedParticle>&,
+    lagrangian::Cloud<trackedParticle>&,
     trackingData& td
 )
 {
@@ -169,7 +169,7 @@ void Foam::trackedParticle::hitCyclicPatch
 
 void Foam::trackedParticle::hitWallPatch
 (
-    Cloud<trackedParticle>&,
+    lagrangian::Cloud<trackedParticle>&,
     trackingData& td
 )
 {
@@ -180,7 +180,7 @@ void Foam::trackedParticle::hitWallPatch
 
 void Foam::trackedParticle::correctAfterParallelTransfer
 (
-    Cloud<trackedParticle>& cloud,
+    lagrangian::Cloud<trackedParticle>& cloud,
     trackingData& td
 )
 {

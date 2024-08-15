@@ -4,7 +4,7 @@ gmvFile << "tracers " << particles.size() << nl;
     pointField positions(particles.size());
 
     label particlei = 0;
-    forAllConstIter(Cloud<passiveParticle>, particles, iter)
+    forAllConstIter(lagrangian::Cloud<passiveParticle>, particles, iter)
     {
         positions[particlei ++] = iter().position(mesh);
     }
@@ -29,7 +29,7 @@ forAll(lagrangianScalarNames, i)
         (
             name,
             runTime.name(),
-            cloud::prefix,
+            lagrangian::cloud::prefix,
             mesh,
             IOobject::MUST_READ,
             IOobject::NO_WRITE
@@ -58,7 +58,7 @@ forAll(lagrangianVectorNames, i)
         (
             name,
             runTime.name(),
-            cloud::prefix,
+            lagrangian::cloud::prefix,
             mesh,
             IOobject::MUST_READ,
             IOobject::NO_WRITE

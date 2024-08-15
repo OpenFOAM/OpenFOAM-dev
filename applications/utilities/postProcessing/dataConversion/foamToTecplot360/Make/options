@@ -1,6 +1,7 @@
 EXE_INC = \
     -I$(WM_THIRD_PARTY_DIR)/tecio/tecsrc/lnInclude \
     -I../foamToVTK/foamToVTK/lnInclude \
+    -I$(LIB_SRC)/tracking/lnInclude \
     -I$(LIB_SRC)/lagrangian/basic/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/polyTopoChange/lnInclude \

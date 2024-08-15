@@ -86,7 +86,7 @@ Foam::molecule::molecule(Istream& is, bool readFields)
 }
 
 
-void Foam::molecule::readFields(Cloud<molecule>& mC)
+void Foam::molecule::readFields(lagrangian::Cloud<molecule>& mC)
 {
     bool write = mC.size();
 
@@ -142,7 +142,7 @@ void Foam::molecule::readFields(Cloud<molecule>& mC)
 }
 
 
-void Foam::molecule::writeFields(const Cloud<molecule>& mC)
+void Foam::molecule::writeFields(const lagrangian::Cloud<molecule>& mC)
 {
     particle::writeFields(mC);
 
@@ -243,7 +243,9 @@ void Foam::molecule::writeFields(const Cloud<molecule>& mC)
 
         m.writeXYZ
         (
-            m.mesh().time().timePath()/cloud::prefix/"moleculeCloud.xmol"
+            m.mesh().time().timePath()
+           /lagrangian::cloud::prefix
+           /"moleculeCloud.xmol"
         );
     }
 }

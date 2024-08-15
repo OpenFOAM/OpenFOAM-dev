@@ -48,20 +48,20 @@ SourceFiles
 namespace Foam
 {
 
-// Forward declaration of functions
-template<class ParticleType>
-class Cloud;
-
 template<class ParticleType>
 class IOPosition;
 
-template<class ParticleType>
-Ostream& operator<<
-(
-    Ostream&,
-    const Cloud<ParticleType>&
-);
+namespace lagrangian
+{
+    template<class ParticleType>
+    class Cloud;
+}
 
+template<class ParticleType>
+Ostream& operator<<(Ostream&, const lagrangian::Cloud<ParticleType>&);
+
+namespace lagrangian
+{
 
 /*---------------------------------------------------------------------------*\
                             Class Cloud Declaration
@@ -341,6 +341,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace lagrangian
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

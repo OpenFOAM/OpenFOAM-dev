@@ -173,16 +173,16 @@ void Foam::vtkPVFoam::updateInfoLagrangian
     if (debug)
     {
         InfoInFunction << nl
-            << "    " << dbPtr_->timePath()/cloud::prefix << endl;
+            << "    " << dbPtr_->timePath()/lagrangian::cloud::prefix << endl;
     }
 
 
     // Use the db directly since this might be called without a mesh,
     // but the region must get added back in
-    fileName lagrangianPrefix(cloud::prefix);
+    fileName lagrangianPrefix(lagrangian::cloud::prefix);
     if (meshRegion_ != polyMesh::defaultRegion)
     {
-        lagrangianPrefix = meshRegion_/cloud::prefix;
+        lagrangianPrefix = meshRegion_/lagrangian::cloud::prefix;
     }
 
     arrayRangeLagrangian_.reset(arraySelection->GetNumberOfArrays());
@@ -777,10 +777,10 @@ void Foam::vtkPVFoam::updateInfoLagrangianFields()
 
     // Use the db directly since this might be called without a mesh,
     // but the region must get added back in
-    fileName lagrangianPrefix(cloud::prefix);
+    fileName lagrangianPrefix(lagrangian::cloud::prefix);
     if (meshRegion_ != polyMesh::defaultRegion)
     {
-        lagrangianPrefix = meshRegion_/cloud::prefix;
+        lagrangianPrefix = meshRegion_/lagrangian::cloud::prefix;
     }
 
     // Add the available fields from all clouds and all time directories.

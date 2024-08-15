@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,7 +82,7 @@ class solidParticle
 
 public:
 
-    friend class Cloud<solidParticle>;
+    friend class lagrangian::Cloud<solidParticle>;
 
 
     //- Class used to pass tracking data to the trackToFace function
@@ -177,9 +177,9 @@ public:
 
     // I-O
 
-        static void readFields(Cloud<solidParticle>& c);
+        static void readFields(lagrangian::Cloud<solidParticle>& c);
 
-        static void writeFields(const Cloud<solidParticle>& c);
+        static void writeFields(const lagrangian::Cloud<solidParticle>& c);
 
 
     // Ostream Operator

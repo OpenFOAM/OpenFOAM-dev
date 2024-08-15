@@ -50,4 +50,4 @@ static label var2field[maxNames];
 
 static Time *runTimePtr = 0;
 static fvMesh *meshPtr = 0;
-static Cloud<passiveParticle> *sprayPtr = 0;
+static lagrangian::Cloud<passiveParticle> *sprayPtr = 0;

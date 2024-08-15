@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,7 +85,7 @@ class InteractionLists
         const polyMesh& mesh_;
 
         //- Dummy cloud to give to particles
-        Cloud<ParticleType> cloud_;
+        lagrangian::Cloud<ParticleType> cloud_;
 
         //- Switch controlling whether or not the cloud gets populated
         //  with the referred particles, hence gets written out

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1046,7 +1046,7 @@ void Foam::InteractionLists<ParticleType>::writeReferredWallFaces() const
         return;
     }
 
-    fileName objDir = mesh_.time().timePath()/cloud::prefix;
+    fileName objDir = mesh_.time().timePath()/lagrangian::cloud::prefix;
 
     mkDir(objDir);
 
@@ -1055,7 +1055,7 @@ void Foam::InteractionLists<ParticleType>::writeReferredWallFaces() const
     OFstream str(objDir/objFileName);
 
     Info<< "    Writing "
-        << mesh_.time().name()/cloud::prefix/objFileName
+        << mesh_.time().name()/lagrangian::cloud::prefix/objFileName
         << endl;
 
     label offset = 1;

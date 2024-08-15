@@ -7,6 +7,7 @@ EXE_INC = \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/twoPhaseModels/twoPhaseMixture/lnInclude \
     -I$(LIB_SRC)/twoPhaseModels/compressibleTwoPhases/lnInclude \
+    -I$(LIB_SRC)/tracking/lnInclude \
     -I$(LIB_SRC)/lagrangian/basic/lnInclude \
     -I$(LIB_SRC)/lagrangian/parcel/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude

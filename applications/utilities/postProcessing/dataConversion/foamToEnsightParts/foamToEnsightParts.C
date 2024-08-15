@@ -365,7 +365,7 @@ int main(int argc, char *argv[])
                 !isDir
                 (
                     runTime.timePath()/regionPrefix/
-                    cloud::prefix/cloudName
+                    lagrangian::cloud::prefix/cloudName
                 )
             )
             {
@@ -376,7 +376,7 @@ int main(int argc, char *argv[])
             (
                 mesh,
                 runTime.name(),
-                cloud::prefix/cloudName
+                lagrangian::cloud::prefix/cloudName
             );
 
             // check that the positions field is present for this time
@@ -409,7 +409,7 @@ int main(int argc, char *argv[])
                 if (!fieldObject)
                 {
                     Info<< "missing "
-                        << runTime.name()/cloud::prefix/cloudName
+                        << runTime.name()/lagrangian::cloud::prefix/cloudName
                         / fieldName
                         << endl;
                     continue;

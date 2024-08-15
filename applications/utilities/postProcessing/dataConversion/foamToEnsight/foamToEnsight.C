@@ -307,7 +307,7 @@ int main(int argc, char *argv[])
 
         fileNameList cloudDirs = readDir
         (
-            runTime.timePath()/regionPrefix/cloud::prefix,
+            runTime.timePath()/regionPrefix/lagrangian::cloud::prefix,
             fileType::directory
         );
 
@@ -317,7 +317,7 @@ int main(int argc, char *argv[])
             (
                 mesh,
                 runTime.name(),
-                cloud::prefix/cloudDirs[cloudI]
+                lagrangian::cloud::prefix/cloudDirs[cloudI]
             );
 
             IOobject* positionsPtr = cloudObjs.lookup(word("positions"));
@@ -362,7 +362,7 @@ int main(int argc, char *argv[])
             (
                 mesh,
                 runTime.name(),
-                cloud::prefix/cloudIter.key()
+                lagrangian::cloud::prefix/cloudIter.key()
             );
 
             forAllConstIter(IOobjectList, cloudObjs, fieldIter)
@@ -557,7 +557,7 @@ int main(int argc, char *argv[])
 
             fileNameList currentCloudDirs = readDir
             (
-                runTime.timePath()/regionPrefix/cloud::prefix,
+                runTime.timePath()/regionPrefix/lagrangian::cloud::prefix,
                 fileType::directory
             );
 
@@ -580,7 +580,7 @@ int main(int argc, char *argv[])
                 (
                     fieldName,
                     mesh.time().name(),
-                    cloud::prefix/cloudName,
+                    lagrangian::cloud::prefix/cloudName,
                     mesh,
                     IOobject::MUST_READ
                 );

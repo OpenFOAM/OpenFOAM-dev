@@ -497,7 +497,7 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
     bool readFields
 )
 :
-    Cloud<ParcelType>(mesh, cloudName, false),
+    lagrangian::Cloud<ParcelType>(mesh, cloudName, false),
     cloudName_(cloudName),
     mesh_(mesh),
     particleProperties_
@@ -731,7 +731,7 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
     const IOdictionary& dsmcInitialiseDict
 )
 :
-    Cloud<ParcelType>(mesh, cloudName, false),
+    lagrangian::Cloud<ParcelType>(mesh, cloudName, false),
     cloudName_(cloudName),
     mesh_(mesh),
     particleProperties_
@@ -979,7 +979,7 @@ void Foam::DSMCCloud<ParcelType>::evolve()
     this->inflowBoundary().inflow();
 
     // Move the particles ballistically with their current velocities
-    Cloud<ParcelType>::move(*this, td);
+    lagrangian::Cloud<ParcelType>::move(*this, td);
 
     // Update cell occupancy
     buildCellOccupancy();
@@ -1109,7 +1109,7 @@ void Foam::DSMCCloud<ParcelType>::dumpParticlePositions() const
 template<class ParcelType>
 void Foam::DSMCCloud<ParcelType>::topoChange(const polyTopoChangeMap& map)
 {
-    Cloud<ParcelType>::topoChange(map);
+    lagrangian::Cloud<ParcelType>::topoChange(map);
 
     // Update the cell occupancy field
     cellOccupancy_.setSize(mesh_.nCells());
@@ -1123,7 +1123,7 @@ void Foam::DSMCCloud<ParcelType>::topoChange(const polyTopoChangeMap& map)
 template<class ParcelType>
 void Foam::DSMCCloud<ParcelType>::mapMesh(const polyMeshMap& map)
 {
-    Cloud<ParcelType>::mapMesh(map);
+    lagrangian::Cloud<ParcelType>::mapMesh(map);
 
     // Update the cell occupancy field
     cellOccupancy_.setSize(mesh_.nCells());
@@ -1137,7 +1137,7 @@ void Foam::DSMCCloud<ParcelType>::mapMesh(const polyMeshMap& map)
 template<class ParcelType>
 void Foam::DSMCCloud<ParcelType>::distribute(const polyDistributionMap& map)
 {
-    Cloud<ParcelType>::distribute(map);
+    lagrangian::Cloud<ParcelType>::distribute(map);
 
     // Update the cell occupancy field
     cellOccupancy_.setSize(mesh_.nCells());

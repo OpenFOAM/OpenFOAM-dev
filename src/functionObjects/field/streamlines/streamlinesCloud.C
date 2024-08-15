@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,7 @@ Foam::streamlinesCloud::streamlinesCloud
     bool readFields
 )
 :
-    Cloud<streamlinesParticle>(mesh, cloudName, false)
+    lagrangian::Cloud<streamlinesParticle>(mesh, cloudName, false)
 {
     if (readFields)
     {
@@ -57,7 +57,7 @@ Foam::streamlinesCloud::streamlinesCloud
     const IDLList<streamlinesParticle>& particles
 )
 :
-    Cloud<streamlinesParticle>(mesh, cloudName, particles)
+    lagrangian::Cloud<streamlinesParticle>(mesh, cloudName, particles)
 {}
 
 

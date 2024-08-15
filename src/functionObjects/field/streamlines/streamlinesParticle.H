@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -282,10 +282,16 @@ public:
         // I-O
 
             //- Read
-            static void readFields(Cloud<streamlinesParticle>&);
+            static void readFields
+            (
+                lagrangian::Cloud<streamlinesParticle>&
+            );
 
             //- Write
-            static void writeFields(const Cloud<streamlinesParticle>&);
+            static void writeFields
+            (
+                const lagrangian::Cloud<streamlinesParticle>&
+            );
 
 
     // Ostream Operator

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,7 @@ Foam::sampledSetCloud::sampledSetCloud
     bool readFields
 )
 :
-    Cloud<sampledSetParticle>(mesh, cloudName, false)
+    lagrangian::Cloud<sampledSetParticle>(mesh, cloudName, false)
 {
     if (readFields)
     {
@@ -57,7 +57,7 @@ Foam::sampledSetCloud::sampledSetCloud
     const IDLList<sampledSetParticle>& particles
 )
 :
-    Cloud<sampledSetParticle>(mesh, cloudName, particles)
+    lagrangian::Cloud<sampledSetParticle>(mesh, cloudName, particles)
 {}
 
 
