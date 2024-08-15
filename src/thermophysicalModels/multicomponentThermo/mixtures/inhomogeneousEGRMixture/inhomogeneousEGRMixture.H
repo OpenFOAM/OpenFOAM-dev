@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,18 +22,22 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::egrMixture
+    Foam::inhomogeneousEGRMixture
 
 Description
-    Foam::egrMixture
+    Combustion mixture for inhomogeneous lean, stoichiometric or rich conditions
+    with exhaust gas recirculation
+
+    in which the mixture-fraction \c ft, fuel mass-fraction \c fu and exhaust
+    gas recirculation mass-fraction \c egr define the composition.
 
 SourceFiles
-    egrMixture.C
+    inhomogeneousEGRMixture.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef egrMixture_H
-#define egrMixture_H
+#ifndef inhomogeneousEGRMixture_H
+#define inhomogeneousEGRMixture_H
 
 #include "dimensionedTypes.H"
 #include "FieldListSlice.H"
@@ -44,11 +48,11 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class egrMixture Declaration
+                     Class inhomogeneousEGRMixture Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ThermoType>
-class egrMixture
+class inhomogeneousEGRMixture
 {
 public:
 
@@ -69,7 +73,7 @@ private:
     // Private Enumerations
 
         //- Specie indices
-        enum species { FT, B, EGR };
+        enum species { FT, FU, B, EGR };
 
 
     // Private Data
@@ -95,14 +99,17 @@ public:
     // Constructors
 
         //- Construct from a dictionary
-        egrMixture(const dictionary&);
+        inhomogeneousEGRMixture(const dictionary&);
 
         //- Disallow default bitwise copy construction
-        egrMixture(const egrMixture<ThermoType>&) = delete;
+        inhomogeneousEGRMixture
+        (
+            const inhomogeneousEGRMixture<ThermoType>&
+        ) = delete;
 
 
     //- Destructor
-    virtual ~egrMixture()
+    virtual ~inhomogeneousEGRMixture()
     {}
 
 
@@ -111,17 +118,14 @@ public:
         //- Return the instantiated type name
         static word typeName()
         {
-            return "egrMixture<" + ThermoType::typeName() + '>';
+            return "inhomogeneousEGRMixture<" + ThermoType::typeName() + '>';
         }
 
         //- Return the specie names
         static wordList specieNames()
         {
-            return {"ft", "b", "egr"};
+            return {"ft", "fu", "b", "egr"};
         }
-
-        //- Return the residual fraction of fuel in the burnt mixture
-        scalar fres(const scalar ft) const;
 
         //- Return the residual fraction of fuel in the burnt mixture
         scalar fres(const scalarFieldListSlice& Y) const;
@@ -130,7 +134,7 @@ public:
         const thermoType& mixture
         (
             const scalar ft,
-            const scalar b,
+            const scalar fu,
             const scalar egr
         ) const;
 
@@ -166,7 +170,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const egrMixture<ThermoType>&) = delete;
+        void operator=(const inhomogeneousEGRMixture<ThermoType>&) = delete;
 };
 
 
@@ -177,7 +181,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 #ifdef NoRepository
-    #include "egrMixture.C"
+    #include "inhomogeneousEGRMixture.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

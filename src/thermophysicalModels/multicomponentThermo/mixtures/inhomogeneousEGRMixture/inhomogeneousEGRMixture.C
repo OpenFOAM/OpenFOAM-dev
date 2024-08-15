@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,12 +23,15 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "egrMixture.H"
+#include "inhomogeneousEGRMixture.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class ThermoType>
-Foam::egrMixture<ThermoType>::egrMixture(const dictionary& dict)
+Foam::inhomogeneousEGRMixture<ThermoType>::inhomogeneousEGRMixture
+(
+    const dictionary& dict
+)
 :
     stoicRatio_("stoichiometricAirFuelMassRatio", dimless, dict),
     fuel_("fuel", dict.subDict("fuel")),
@@ -41,27 +44,20 @@ Foam::egrMixture<ThermoType>::egrMixture(const dictionary& dict)
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class ThermoType>
-Foam::scalar Foam::egrMixture<ThermoType>::fres(const scalar ft) const
-{
-     return max(ft - (scalar(1) - ft)/stoicRatio_.value(), scalar(0));
-}
-
-
-template<class ThermoType>
-Foam::scalar Foam::egrMixture<ThermoType>::fres
+Foam::scalar Foam::inhomogeneousEGRMixture<ThermoType>::fres
 (
     const scalarFieldListSlice& Y
 ) const
 {
-    return fres(Y[FT]);
+    return max(Y[FT] - (1 - Y[FT] - Y[EGR])/stoicRatio_.value(), 0);
 }
 
 
 template<class ThermoType>
-const ThermoType& Foam::egrMixture<ThermoType>::mixture
+const ThermoType& Foam::inhomogeneousEGRMixture<ThermoType>::mixture
 (
     const scalar ft,
-    const scalar b,
+    const scalar fu,
     const scalar egr
 ) const
 {
@@ -71,12 +67,7 @@ const ThermoType& Foam::egrMixture<ThermoType>::mixture
     }
     else
     {
-        scalar fu = b*ft + (1 - b)*fres(ft);
-        scalar ox = 1 - ft - (ft - fu)*stoicRatio_.value();
-
-        fu *= 1 - egr;
-        ox *= 1 - egr;
-
+        const scalar ox = 1 - ft - egr - (ft - fu)*stoicRatio_.value();
         const scalar pr = 1 - fu - ox;
 
         mixture_ = fu*fuel_;
@@ -89,30 +80,30 @@ const ThermoType& Foam::egrMixture<ThermoType>::mixture
 
 
 template<class ThermoType>
-const typename Foam::egrMixture<ThermoType>::thermoMixtureType&
-Foam::egrMixture<ThermoType>::thermoMixture
+const typename Foam::inhomogeneousEGRMixture<ThermoType>::thermoMixtureType&
+Foam::inhomogeneousEGRMixture<ThermoType>::thermoMixture
 (
     const scalarFieldListSlice& Y
 ) const
 {
-    return mixture(Y[FT], Y[B], Y[EGR]);
+    return mixture(Y[FT], Y[FU], Y[EGR]);
 }
 
 
 template<class ThermoType>
-const typename Foam::egrMixture<ThermoType>::transportMixtureType&
-Foam::egrMixture<ThermoType>::transportMixture
+const typename Foam::inhomogeneousEGRMixture<ThermoType>::transportMixtureType&
+Foam::inhomogeneousEGRMixture<ThermoType>::transportMixture
 (
     const scalarFieldListSlice& Y
 ) const
 {
-    return mixture(Y[FT], Y[B], Y[EGR]);
+    return mixture(Y[FT], Y[FU], Y[EGR]);
 }
 
 
 template<class ThermoType>
-const typename Foam::egrMixture<ThermoType>::transportMixtureType&
-Foam::egrMixture<ThermoType>::transportMixture
+const typename Foam::inhomogeneousEGRMixture<ThermoType>::transportMixtureType&
+Foam::inhomogeneousEGRMixture<ThermoType>::transportMixture
 (
     const scalarFieldListSlice&,
     const thermoMixtureType& mixture
@@ -123,23 +114,29 @@ Foam::egrMixture<ThermoType>::transportMixture
 
 
 template<class ThermoType>
-const typename Foam::egrMixture<ThermoType>::thermoType&
-Foam::egrMixture<ThermoType>::reactants(const scalarFieldListSlice& Y) const
+const typename Foam::inhomogeneousEGRMixture<ThermoType>::thermoType&
+Foam::inhomogeneousEGRMixture<ThermoType>::reactants
+(
+    const scalarFieldListSlice& Y
+) const
 {
-    return mixture(Y[FT], 1, Y[EGR]);
+    return mixture(Y[FT], Y[FT], Y[EGR]);
 }
 
 
 template<class ThermoType>
-const typename Foam::egrMixture<ThermoType>::thermoType&
-Foam::egrMixture<ThermoType>::products(const scalarFieldListSlice& Y) const
+const typename Foam::inhomogeneousEGRMixture<ThermoType>::thermoType&
+Foam::inhomogeneousEGRMixture<ThermoType>::products
+(
+    const scalarFieldListSlice& Y
+) const
 {
-    return mixture(Y[FT], 0, 0);
+    return mixture(Y[FT], fres(Y), Y[EGR]);
 }
 
 
 template<class ThermoType>
-void Foam::egrMixture<ThermoType>::read(const dictionary& dict)
+void Foam::inhomogeneousEGRMixture<ThermoType>::read(const dictionary& dict)
 {
     stoicRatio_ =
         dimensionedScalar("stoichiometricAirFuelMassRatio", dimless, dict);
