@@ -28,9 +28,9 @@ Description
     Solver module for compressible premixed/partially-premixed combustion with
     turbulence modelling.
 
-    Combusting RANS code using the b-Xi two-equation model.
-    Xi may be obtained by either the solution of the Xi transport
-    equation or from an algebraic expression.
+    Combusting RANS code using the Weller b-Xi two-equation combustion model.
+    Xi may be obtained by either the solution of the Xi transport equation or
+    from an algebraic expression.
 
     Reference:
     \verbatim
@@ -73,6 +73,25 @@ Description
         In Symposium (International) on combustion
         (Vol. 27, No. 1, pp. 899-907). Elsevier.
     \endverbatim
+
+    For inhomogeneous mixtures, in addition to the regress variable \c b, it is
+    necessary to solve for the mixture-fraction \c ft provided by the \c
+    leanInhomogeneousMixture and also the fuel mass-fraction \fu if there are
+    rich regions in the mixture, provided by the \c inhomogeneousMixture.
+    Details of the extention of the Weller b-Xi combustion model to non-premixed
+    combustion can be found in the Technical Report TR/HGW/03.
+
+    Reference:
+    \verbatim
+        Weller, H. G. (2002, August).
+        The Application of the Weller Combustion Models to
+        Non-Premixed Combustion.
+        (Technical Report TR/HGW/03)
+    \endverbatim
+
+    For inhomogeneous mixtures with exhaust gas re-circulation it is necessary
+    to additionally solve for the recirculated exhaust gas mass-fraction \c
+    egr which is provided by the \c inhomogeneousEGRMixture mixture.
 
     Uses the flexible PIMPLE (PISO-SIMPLE) solution for time-resolved and
     pseudo-transient and steady simulations.
@@ -171,6 +190,22 @@ protected:
 
         //- Solve the ft equation for partially-premixed mixtures
         void ftSolve
+        (
+            const fv::convectionScheme<scalar>& mvConvection,
+            const volScalarField& Db
+        );
+
+        //- Solve the fu equation for partially- and non- premixed mixtures
+        void fuSolve
+        (
+            const fv::convectionScheme<scalar>& mvConvection,
+            const volScalarField& Db,
+            const volScalarField& bSource
+        );
+
+        //- Solve the egr mass-fraction equation
+        //  for mixtures with exhaust gas recirculation
+        void egrSolve
         (
             const fv::convectionScheme<scalar>& mvConvection,
             const volScalarField& Db

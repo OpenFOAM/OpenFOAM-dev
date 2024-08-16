@@ -148,7 +148,7 @@ void Foam::timeControl::read(const dictionary& dict)
         {
             const word timesName(prefix_ + "Times");
             const word frequenciesName(prefix_ + "Frequencies");
-            const bool repeat = dict.lookupOrDefault("writeRepeat", false);
+            const bool repeat = dict.lookupOrDefault(prefix_ + "Repeat", false);
 
             timeDelta_ =
                 dict.lookupOrDefault

@@ -27,6 +27,7 @@ License
 #include "bXiIgnition.H"
 #include "fvcDdt.H"
 #include "fvmDiv.H"
+#include "fvcSup.H"
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
@@ -52,6 +53,75 @@ void Foam::solvers::XiFluid::ftSolve
     ftEqn.solve();
     fvConstraints().constrain(ft);
 }
+
+
+void Foam::solvers::XiFluid::fuSolve
+(
+    const fv::convectionScheme<scalar>& mvConvection,
+    const volScalarField& Db,
+    const volScalarField& bSource
+)
+{
+    volScalarField& fu = thermo_.Y("fu");
+    const volScalarField& ft = thermo_.Y("ft");
+    const volScalarField& b(b_);
+
+    // Progress variable
+    const volScalarField c("c", scalar(1) - b);
+
+    // Unburnt gas density
+    const volScalarField rhou("rhou", thermo.rhou());
+
+    const volScalarField fres(thermo_.fres());
+    const volScalarField fuFres(max(fu - fres, scalar(0)));
+
+    const volScalarField fuDot =
+        bSource/(b + 0.001)
+      - 2*Db*c
+       *mag(fvc::grad(ft))/max(ft, 1e-6)
+       *mag(fvc::grad(fuFres))/max(fuFres, 1e-6);
+
+    fvScalarMatrix fuEqn
+    (
+        fvm::ddt(rho, fu)
+      + mvConvection.fvmDiv(phi, fu)
+      - fvm::laplacian(Db, fu)
+     ==
+        fvm::Sp(fuDot, fu)
+      - fuDot*fres
+      + fvModels().source(rho, fu)
+    );
+
+    fuEqn.relax();
+    fvConstraints().constrain(fuEqn);
+    fuEqn.solve();
+    fvConstraints().constrain(fu);
+}
+
+
+void Foam::solvers::XiFluid::egrSolve
+(
+    const fv::convectionScheme<scalar>& mvConvection,
+    const volScalarField& Db
+)
+{
+    volScalarField& egr = thermo_.Y("egr");
+
+    fvScalarMatrix egrEqn
+    (
+        fvm::ddt(rho, egr)
+      + mvConvection.fvmDiv(phi, egr)
+      - fvm::laplacian(Db, egr)
+     ==
+        fvModels().source(rho, egr)
+    );
+
+    egrEqn.relax();
+    fvConstraints().constrain(egrEqn);
+    egrEqn.solve();
+    fvConstraints().constrain(egr);
+}
+
 
 
 Foam::tmp<Foam::volScalarField> Foam::solvers::XiFluid::XiCorr
@@ -148,16 +218,21 @@ void Foam::solvers::XiFluid::bSolve
         fvc::interpolate(rhou*Su*XiCorr(Xi, nf, dMgb))*nf
     );
 
+    fvScalarMatrix bSourceEqn
+    (
+        fvModels().source(rho, b)
+      - fvm::div(phiSt, b)
+      + fvm::Sp(fvc::div(phiSt), b)
+    );
+
     // Create b equation
     fvScalarMatrix bEqn
     (
         fvm::ddt(rho, b)
       + mvConvection.fvmDiv(phi, b)
-      + fvm::div(phiSt, b)
-      - fvm::Sp(fvc::div(phiSt), b)
       - fvm::laplacian(Db, b)
      ==
-        fvModels().source(rho, b)
+        bSourceEqn
     );
 
     // Solve for b and constrain
@@ -171,6 +246,11 @@ void Foam::solvers::XiFluid::bSolve
 
     // Correct the laminar flame speed
     SuModel_->correct();
+
+    if (thermo_.containsSpecie("fu"))
+    {
+        fuSolve(mvConvection, Db, (bSourceEqn & b));
+    }
 }
 
 
@@ -294,6 +374,20 @@ void Foam::solvers::XiFluid::thermophysicalPredictor()
     {
         bSolve(mvConvection(), Db);
         EauSolve(mvConvection(), Db);
+    }
+    else
+    {
+        if (thermo_.containsSpecie("fu"))
+        {
+            volScalarField& fu = thermo_.Y("fu");
+            const volScalarField& ft = thermo_.Y("ft");
+            fu = ft;
+        }
+    }
+
+    if (thermo_.containsSpecie("egr"))
+    {
+        egrSolve(mvConvection(), Db);
     }
 
     EaSolve(mvConvection(), Db);

@@ -105,6 +105,16 @@ Foam::solvers::XiFluid::XiFluid(fvMesh& mesh)
         fields.add(thermo_.Y("ft"));
     }
 
+    if (thermo_.containsSpecie("fu"))
+    {
+        fields.add(thermo_.Y("fu"));
+    }
+
+    if (thermo_.containsSpecie("egr"))
+    {
+        fields.add(thermo_.Y("egr"));
+    }
+
     fields.add(b);
     fields.add(thermo.he());
     fields.add(thermo.heu());

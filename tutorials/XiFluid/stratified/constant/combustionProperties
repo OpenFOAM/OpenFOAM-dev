@@ -1,0 +1,57 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      combustionProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+laminarFlameSpeed
+{
+    model           unstrained;
+
+    unstrainedLaminarFlameSpeed
+    {
+        model           Gulder;
+
+        equivalenceRatio 1;
+
+        fuel            Propane;
+
+        Propane
+        {
+            W               0.446;
+            eta             0.12;
+            xi              4.95;
+            alpha           1.77;
+            beta            -0.2;
+            f               2.3;
+        }
+    }
+}
+
+flameWrinkling
+{
+    model           transport;
+
+    equilibrium
+    {
+        model           Gulder;
+    }
+
+    generationRate
+    {
+        model           KTS;
+    }
+}
+
+
+// ************************************************************************* //
