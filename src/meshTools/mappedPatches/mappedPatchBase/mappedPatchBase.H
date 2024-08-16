@@ -175,7 +175,7 @@ public:
         (
             const polyPatch& pp,
             const dictionary& dict,
-            const bool defaultTransformIsNone
+            const transformType tt
         );
 
         //- Construct as copy, resetting patch

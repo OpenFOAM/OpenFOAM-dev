@@ -106,7 +106,7 @@ public:
         (
             const nonConformalPolyPatch& ncPp,
             const dictionary& dict,
-            const bool defaultTransformIsNone
+            const transformType tt
         );
 
         //- Construct as copy, resetting patch

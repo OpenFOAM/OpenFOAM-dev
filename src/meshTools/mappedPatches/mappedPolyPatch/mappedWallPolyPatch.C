@@ -124,7 +124,7 @@ Foam::mappedWallPolyPatch::mappedWallPolyPatch
 )
 :
     wallPolyPatch(name, dict, index, bm, patchType),
-    mappedPatchBase(*this, dict, true)
+    mappedPatchBase(*this, dict, transformType::defaultNone)
 {
     //  mapped is not constraint type so add mapped group explicitly
     if (findIndex(inGroups(), mappedPolyPatch::typeName) == -1)

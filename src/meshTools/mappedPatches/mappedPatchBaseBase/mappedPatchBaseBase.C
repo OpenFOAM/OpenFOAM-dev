@@ -80,7 +80,7 @@ Foam::mappedPatchBaseBase::mappedPatchBaseBase
 (
     const polyPatch& pp,
     const dictionary& dict,
-    const bool transformIsNone
+    const transformType tt
 )
 :
     patch_(pp),
@@ -102,9 +102,10 @@ Foam::mappedPatchBaseBase::mappedPatchBaseBase
     ),
     transform_
     (
-        transformIsNone
-      ? cyclicTransform(true)
-      : cyclicTransform(dict, false)
+        tt == transformType::none ? cyclicTransform(true)
+      : tt == transformType::defaultNone ? cyclicTransform(dict, true)
+      : tt == transformType::specified ? cyclicTransform(dict, false)
+      : cyclicTransform()
     ),
     moveUpdate_
     (
@@ -140,6 +141,22 @@ Foam::mappedPatchBaseBase::mappedPatchBaseBase
         FatalIOErrorInFunction(dict)
             << "Either a neighbourPatch should be specified, or samePatch "
             << "should be set to true, not both" << exit(FatalIOError);
+    }
+
+    if (tt == transformType::none)
+    {
+        const cyclicTransform::transformTypes cttt =
+            cyclicTransform(dict, true).transformType();
+
+        if (cttt != cyclicTransform::NONE)
+        {
+            FatalIOErrorInFunction(dict)
+                << word(cyclicTransform::transformTypeNames[cttt]).capitalise()
+                << " transform specified for patch '" << patch_.name()
+                << "' in region '" << patch_.boundaryMesh().mesh().name()
+                << "'. This patch does not support transformed mapping."
+                << exit(FatalIOError);
+        }
     }
 }
 

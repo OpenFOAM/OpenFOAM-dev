@@ -108,8 +108,7 @@ public:
         mappedExtrudedPatchBase
         (
             const polyPatch& pp,
-            const dictionary& dict,
-            const bool defaultTransformIsNone
+            const dictionary& dict
         );
 
         //- Construct as copy, resetting the boundary mesh
