@@ -239,18 +239,26 @@ void Foam::mappedPatchBase::calcMapping() const
                 }
             }
 
-            // If any points were not found within cells then re-search for
-            // them using a nearest test, which should not fail. Warn that this
-            // is happening. If any points were not found for some other
-            // method, then fail.
+            // If any points were not found then fail
             if (nNotFound)
             {
                 FatalErrorInFunction
-                    << "Mapping failed for " << nl
-                    << "    patch: " << patch_.name() << nl
-                    << "    neighbourRegion: " << nbrRegionName() << nl
-                    << "    neighbourPatch: " << nbrPatchName() << nl
-                    << exit(FatalError);
+                    << "Mapping to patch '" << patch_.name();
+                if (!sameRegion())
+                {
+                    FatalErrorInFunction
+                        << "' in region '"
+                        << patch_.boundaryMesh().mesh().name();
+                }
+                FatalErrorInFunction
+                    << "' from patch '" << nbrPatchName();
+                if (!sameRegion())
+                {
+                    FatalErrorInFunction
+                        << "' in region '" << nbrRegionName();
+                }
+                FatalErrorInFunction
+                    << "' failed " << exit(FatalError);
             }
 
             // Build lists of samples
@@ -322,6 +330,60 @@ void Foam::mappedPatchBase::calcMapping() const
             nbrPatch,
             transform_.transform()
         );
+
+        // Check the validity of the mapping. Every face must be coupled.
+        auto checkPatchToPatch = [&]
+        (
+            const polyPatch& patch,
+            const polyPatch& nbrPatch,
+            const bool isSrc
+        )
+        {
+            const PackedBoolList coupled =
+                isSrc
+              ? patchToPatchPtr_->srcCoupled()
+              : patchToPatchPtr_->tgtCoupled();
+
+            DynamicList<point> nonCoupledCfs;
+            forAll(coupled, patchFacei)
+            {
+                if (!coupled[patchFacei])
+                {
+                    nonCoupledCfs.append(patch.faceCentres()[patchFacei]);
+                }
+            }
+
+            if (nonCoupledCfs.size())
+            {
+                FatalErrorInFunction
+                    << "Mapping to patch '" << patch.name();
+                if (!sameRegion())
+                {
+                    FatalErrorInFunction
+                        << "' in region '"
+                        << patch.boundaryMesh().mesh().name();
+                }
+                FatalErrorInFunction
+                    << "' from patch '" << nbrPatch.name();
+                if (!sameRegion())
+                {
+                    FatalErrorInFunction
+                        << "' in region '"
+                        << nbrPatch.boundaryMesh().mesh().name();
+                }
+                FatalErrorInFunction
+                    << "' failed because faces at the following locations "
+                    << "were not coupled: " << nonCoupledCfs
+                    << exit(FatalError);
+            }
+        };
+
+        checkPatchToPatch(patch_, nbrPolyPatch(), true);
+
+        if (symmetric())
+        {
+            checkPatchToPatch(nbrPolyPatch(), patch_, false);
+        }
     }
 
     mappingIsValid_ = 2;
@@ -375,10 +437,10 @@ Foam::mappedPatchBase::mappedPatchBase
 (
     const polyPatch& pp,
     const dictionary& dict,
-    const bool defaultTransformIsNone
+    const transformType tt
 )
 :
-    mappedPatchBaseBase(pp, dict, defaultTransformIsNone),
+    mappedPatchBaseBase(pp, dict, tt),
     usingTree_(!dict.found("method") && !dict.found("sampleMode")),
     treeMapPtr_(nullptr),
     treeNbrPatchFaceIndices_(),

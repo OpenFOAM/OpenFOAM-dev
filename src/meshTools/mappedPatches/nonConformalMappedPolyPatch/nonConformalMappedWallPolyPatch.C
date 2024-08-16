@@ -160,7 +160,7 @@ Foam::nonConformalMappedWallPolyPatch::nonConformalMappedWallPolyPatch
 :
     wallPolyPatch(name, dict, index, bm, patchType),
     nonConformalPolyPatch(*this, dict),
-    nonConformalMappedPatchBase(*this, dict, true)
+    nonConformalMappedPatchBase(*this, dict, transformType::defaultNone)
 {}
 
 

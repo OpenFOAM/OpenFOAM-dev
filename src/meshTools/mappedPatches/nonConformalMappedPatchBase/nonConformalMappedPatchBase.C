@@ -97,10 +97,10 @@ Foam::nonConformalMappedPatchBase::nonConformalMappedPatchBase
 (
     const nonConformalPolyPatch& ncPp,
     const dictionary& dict,
-    const bool defaultTransformIsNone
+    const transformType tt
 )
 :
-    mappedPatchBaseBase(ncPp.patch(), dict, defaultTransformIsNone),
+    mappedPatchBaseBase(ncPp.patch(), dict, tt),
     patch_(ncPp),
     owner_(calcOwner()),
     intersectionIsValid_(0),

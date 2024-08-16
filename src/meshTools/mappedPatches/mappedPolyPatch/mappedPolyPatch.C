@@ -97,7 +97,7 @@ Foam::mappedPolyPatch::mappedPolyPatch
 )
 :
     polyPatch(name, dict, index, bm, patchType),
-    mappedPatchBase(*this, dict, false)
+    mappedPatchBase(*this, dict, transformType::specified)
 {
     //  mapped is not constraint type so add mapped group explicitly
     if (findIndex(inGroups(), typeName) == -1)

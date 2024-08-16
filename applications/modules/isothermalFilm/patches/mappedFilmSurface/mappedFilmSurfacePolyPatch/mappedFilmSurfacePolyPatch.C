@@ -127,7 +127,7 @@ Foam::mappedFilmSurfacePolyPatch::mappedFilmSurfacePolyPatch
 )
 :
     filmSurfacePolyPatch(name, dict, index, bm, patchType),
-    mappedExtrudedPatchBase(*this, dict, true)
+    mappedExtrudedPatchBase(*this, dict)
 {
     //  mapped is not constraint type so add mapped group explicitly
     if (findIndex(inGroups(), mappedPolyPatch::typeName) == -1)

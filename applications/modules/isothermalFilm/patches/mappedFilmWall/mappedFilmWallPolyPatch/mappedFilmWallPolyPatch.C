@@ -124,7 +124,7 @@ Foam::mappedFilmWallPolyPatch::mappedFilmWallPolyPatch
 )
 :
     filmWallPolyPatch(name, dict, index, bm, patchType),
-    mappedPatchBase(*this, dict, true)
+    mappedPatchBase(*this, dict, transformType::none)
 {
     //  mapped is not constraint type so add mapped group explicitly
     if (findIndex(inGroups(), mappedPolyPatch::typeName) == -1)

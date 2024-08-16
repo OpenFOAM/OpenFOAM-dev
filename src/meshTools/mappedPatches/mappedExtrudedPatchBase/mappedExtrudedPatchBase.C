@@ -377,11 +377,10 @@ Foam::mappedExtrudedPatchBase::mappedExtrudedPatchBase
 Foam::mappedExtrudedPatchBase::mappedExtrudedPatchBase
 (
     const polyPatch& pp,
-    const dictionary& dict,
-    const bool defaultTransformIsNone
+    const dictionary& dict
 )
 :
-    mappedPatchBase(pp, dict, defaultTransformIsNone),
+    mappedPatchBase(pp, dict, transformType::none),
     isExtrudedRegion_(dict.lookup<bool>("isExtrudedRegion"))
 {}
 

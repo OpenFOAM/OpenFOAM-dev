@@ -77,6 +77,14 @@ public:
 
     // Public types
 
+        //- The type of the transformation permitted/required by this patch
+        enum class transformType
+        {
+            none,
+            defaultNone,
+            specified
+        };
+
         //- Enumeration for the condition that triggers re-calculation of the
         //  mapping following mesh motion.
         //
@@ -151,7 +159,7 @@ public:
         (
             const polyPatch& pp,
             const dictionary& dict,
-            const bool transformisNone
+            const transformType tt
         );
 
         //- Construct as copy, resetting patch
