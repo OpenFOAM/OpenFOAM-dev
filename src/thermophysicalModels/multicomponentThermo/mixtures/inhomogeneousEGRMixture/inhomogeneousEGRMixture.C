@@ -136,6 +136,26 @@ Foam::inhomogeneousEGRMixture<ThermoType>::products
 
 
 template<class ThermoType>
+void Foam::inhomogeneousEGRMixture<ThermoType>::reset
+(
+    PtrList<volScalarField>& Y
+) const
+{
+    const volScalarField& fu = Y[FU];
+    volScalarField& ft = Y[FT];
+    volScalarField& b = Y[B];
+    volScalarField& egr = Y[EGR];
+
+    for (label i=0; i<=fu.nOldTimes(); i++)
+    {
+        egr.oldTimeRef(i) += (ft.oldTime(i) - fu.oldTime(i))*(1 + stoicRatio_);
+        ft.oldTimeRef(i) = fu.oldTime(i);
+        b.oldTimeRef(i) = 1;
+    }
+}
+
+
+template<class ThermoType>
 void Foam::inhomogeneousEGRMixture<ThermoType>::read(const dictionary& dict)
 {
     stoicRatio_ =

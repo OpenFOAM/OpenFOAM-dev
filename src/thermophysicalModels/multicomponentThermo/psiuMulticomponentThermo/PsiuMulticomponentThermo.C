@@ -285,6 +285,13 @@ Foam::PsiuMulticomponentThermo<BaseThermo>::fres() const
 
 
 template<class BaseThermo>
+void Foam::PsiuMulticomponentThermo<BaseThermo>::reset()
+{
+    BaseThermo::mixtureType::reset(this->Y());
+}
+
+
+template<class BaseThermo>
 Foam::tmp<Foam::scalarField>
 Foam::PsiuMulticomponentThermo<BaseThermo>::heu
 (

@@ -163,6 +163,9 @@ public:
         //- Return the product mixture
         const thermoType& products(const scalarFieldListSlice&) const;
 
+        //- Reset the mixture to an unburnt state and update EGR
+        void reset(PtrList<volScalarField>& Y) const;
+
         //- Read dictionary
         void read(const dictionary&);
 
