@@ -31,10 +31,10 @@ energy
 
 mixture
 (
-   egrMixture
    homogeneousMixture
    leanInhomogeneousMixture
    inhomogeneousMixture
+   inhomogeneousEGRMixture
 );
 
 transport
