@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::constantbXiIgnition
+    Foam::fv::multiCycleConstantbXiIgnition
 
 Description
     Simple constant rate ignition model for the Weller b-Xi combustion models
@@ -30,9 +30,9 @@ Description
 Usage
     Example usage:
     \verbatim
-    constantbXiIgnition1
+    multiCycleConstantbXiIgnition1
     {
-        type            constantbXiIgnition;
+        type            multiCycleConstantbXiIgnition;
 
         select          cellZone;
         cellZone        ignition;
@@ -66,14 +66,14 @@ See also
     Foam::XiCorrModels::spherical
 
 SourceFiles
-    constantbXiIgnition.C
+    multiCycleConstantbXiIgnition.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef constantbXiIgnition_H
-#define constantbXiIgnition_H
+#ifndef multiCycleConstantbXiIgnition_H
+#define multiCycleConstantbXiIgnition_H
 
-#include "bXiIgnition.H"
+#include "constantbXiIgnition.H"
 #include "XiCorrModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -84,51 +84,49 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class constantbXiIgnition Declaration
+                     Class multiCycleConstantbXiIgnition Declaration
 \*---------------------------------------------------------------------------*/
 
-class constantbXiIgnition
+class multiCycleConstantbXiIgnition
 :
-    public bXiIgnition
+    public constantbXiIgnition
 {
+    // Private Data
 
-protected:
+        //- Ignition repeat period
+        dimensionedScalar period_;
 
-    // Protected Data
+        //- Combustion duration
+        //  after which ignited is set false and the composition reset
+        dimensionedScalar combustionDuration_;
 
-        //- The set of ignition cells
-        fvCellSet set_;
+        //- Set true during the combustion duration
+        mutable bool ignited_;
 
-        autoPtr<XiCorrModel> XiCorrModel_;
+        //- Set true when the composition is reset
+        //  at the end of the combustion duration
+        //  and reset false at the beginning of ignition
+        mutable bool reset_;
 
-        //- Ignition start time
-        dimensionedScalar start_;
-
-        //- Ignition duration
-        dimensionedScalar duration_;
-
-        //- Ignition strength
-        dimensionedScalar strength_;
-
-
-private:
 
     // Private Member Functions
 
         //- Non-virtual read
         void readCoeffs(const dictionary& dict);
 
+        scalar repeatTime(const scalar t) const;
+
 
 public:
 
     //- Runtime type information
-    TypeName("constantbXiIgnition");
+    TypeName("multiCycleConstantbXiIgnition");
 
 
     // Constructors
 
         //- Construct from explicit source name and mesh
-        constantbXiIgnition
+        multiCycleConstantbXiIgnition
         (
             const word& name,
             const word& modelType,
@@ -137,9 +135,9 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        constantbXiIgnition
+        multiCycleConstantbXiIgnition
         (
-            const constantbXiIgnition&
+            const multiCycleConstantbXiIgnition&
         ) = delete;
 
 
@@ -151,40 +149,6 @@ public:
 
             virtual bool ignited() const;
 
-
-        // Add explicit and implicit contributions to compressible equation
-
-            //- Add ignition contribution to b equation
-            virtual void addSup
-            (
-                const volScalarField& rho,
-                const volScalarField& b,
-                fvMatrix<scalar>& eqn
-            ) const;
-
-            virtual void XiCorr
-            (
-                volScalarField& Xi,
-                const volScalarField& b,
-                const volScalarField& mgb
-            ) const;
-
-
-        // Mesh motion
-
-            //- Update topology using the given map
-            virtual void topoChange(const polyTopoChangeMap&);
-
-            //- Update from another mesh using the given map
-            virtual void mapMesh(const polyMeshMap&);
-
-            //- Redistribute or update using the given distribution map
-            virtual void distribute(const polyDistributionMap&);
-
-            //- Update for mesh motion
-            virtual bool movePoints();
-
-
         // IO
 
             //- Read source dictionary
@@ -194,7 +158,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const constantbXiIgnition&) = delete;
+        void operator=(const multiCycleConstantbXiIgnition&) = delete;
 };
 
 

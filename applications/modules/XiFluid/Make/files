@@ -31,6 +31,7 @@ fvModels/ignition/XiCorrModels/spherical/sphericalXiCorr.C
 
 fvModels/ignition/bXiIgnition/bXiIgnition.C
 fvModels/ignition/constantbXiIgnition/constantbXiIgnition.C
+fvModels/ignition/multiCycleConstantbXiIgnition/multiCycleConstantbXiIgnition.C
 
 XiFluid.C
 thermophysicalPredictor.C
