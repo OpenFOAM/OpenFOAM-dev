@@ -181,6 +181,7 @@ void Foam::diameterModels::shapeModels::fractal::correct()
     const sizeGroup& fi = group();
     const phaseModel& phase = fi.phase();
     const volScalarField& alpha = phase;
+    const volScalarField& rho = phase.rho();
 
     const populationBalanceModel& popBal =
         group().mesh().lookupObject<populationBalanceModel>
@@ -188,20 +189,34 @@ void Foam::diameterModels::shapeModels::fractal::correct()
             group().group().popBalName()
         );
 
-    surfaceScalarField fAlphaPhi
+    const volScalarField alphaFi
     (
-        "fAlphaPhi",
+        IOobject::groupName
+        (
+            alpha.member() + fi.member().capitalise(),
+            alpha.group()
+        ),
+        alpha*fi
+    );
+
+    const surfaceScalarField alphaFiPhi
+    (
+        IOobject::groupName
+        (
+            alpha.member() + fi.member().capitalise() + "Phi",alpha.group()
+        ),
         max(fvc::interpolate(fi, "fi"), small)*phase.alphaPhi()
     );
 
     fvScalarMatrix kappaEqn
     (
         fvm::ddt(alpha, fi, kappa_)
-      + fvm::div(fAlphaPhi, kappa_)
+      + fvm::div(alphaFiPhi, kappa_)
       ==
       - sinteringModel_->R()
       + Su_
       - fvm::Sp(popBal.Sp(fi.i())*fi, kappa_)
+      + popBal.fluid().fvModels().source(alphaFi, rho, kappa_)/rho
       - correction
         (
             fvm::Sp
@@ -215,7 +230,11 @@ void Foam::diameterModels::shapeModels::fractal::correct()
 
     kappaEqn.relax();
 
+    popBal.fluid().fvConstraints().constrain(kappaEqn);
+
     kappaEqn.solve();
+
+    popBal.fluid().fvConstraints().constrain(kappa_);
 
     // Bounding of kappa assuming first sizeGroup to represent one primary
     // particle

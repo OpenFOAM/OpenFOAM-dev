@@ -1215,19 +1215,19 @@ void Foam::diameterModels::populationBalanceModel::solve()
             }
         }
 
-        volScalarField fAlpha0
+        const volScalarField alphaF0
         (
-            sizeGroups().first()*sizeGroups().first().phase()
+            sizeGroups().first().phase()*sizeGroups().first()
         );
 
-        volScalarField fAlphaN
+        const volScalarField alphaFNm1
         (
-            sizeGroups().last()*sizeGroups().last().phase()
+            sizeGroups().last().phase()*sizeGroups().last()
         );
 
         Info<< this->name() << " sizeGroup phase fraction first, last = "
-            << fAlpha0.weightedAverage(this->mesh().V()).value()
-            << ' ' << fAlphaN.weightedAverage(this->mesh().V()).value()
+            << alphaF0.weightedAverage(this->mesh().V()).value()
+            << ' ' << alphaFNm1.weightedAverage(this->mesh().V()).value()
             << endl;
     }
 }

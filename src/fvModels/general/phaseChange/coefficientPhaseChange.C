@@ -139,7 +139,7 @@ void Foam::fv::coefficientPhaseChange::addSup
     fvMatrix<scalar>& eqn
 ) const
 {
-    const label i = index(alphaNames(), eqn.psi().name());
+    const label i = index(phaseNames(), eqn.psi().group());
 
     if (i == 0 && specieis().first() != -1 && Yi.member() == specie())
     {

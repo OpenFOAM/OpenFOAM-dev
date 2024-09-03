@@ -41,7 +41,7 @@ divSchemes
     div(alphaRhoPhi,(p|rho))    Gauss limitedLinear 1;
 
     "div\(alphaPhi,f.*\)"       Gauss upwind;
-    "div\(fAlphaPhi,kappa.*\)"  Gauss linearUpwind limited;
+    "div\(alphaF.*Phi,kappa.*\)" Gauss linearUpwind limited;
 
     div((((alpha*rho)*nuEff)*dev2(T(grad(U))))) Gauss linear;
 }
