@@ -147,8 +147,10 @@ public:
 
         // Checks
 
+            //- Return true during the ignition duration
             virtual bool igniting() const;
 
+            //- Return true during the combustion duration
             virtual bool ignited() const;
 
 

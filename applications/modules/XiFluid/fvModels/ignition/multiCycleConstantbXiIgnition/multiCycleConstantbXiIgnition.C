@@ -65,14 +65,13 @@ Foam::fv::multiCycleConstantbXiIgnition::multiCycleConstantbXiIgnition
     constantbXiIgnition(name, modelType, mesh, dict),
     period_("period", mesh().time().userUnits(), dict),
     combustionDuration_("combustionDuration", mesh().time().userUnits(), dict),
-    ignited_(false),
-    reset_(true)
+    reset_(!ignited())
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::scalar Foam::fv::multiCycleConstantbXiIgnition::repeatTime
+Foam::scalar Foam::fv::multiCycleConstantbXiIgnition::ignRelTime
 (
     const scalar t
 ) const
@@ -88,13 +87,12 @@ bool Foam::fv::multiCycleConstantbXiIgnition::igniting() const
 
     const bool igniting
     (
-        repeatTime(curTime) > -0.5*deltaT
-     && repeatTime(curTime) < max(duration_.value(), 0.5*deltaT)
+        ignRelTime(curTime) > -0.5*deltaT
+     && ignRelTime(curTime) < max(duration_.value(), 0.5*deltaT)
     );
 
     if (igniting)
     {
-        ignited_ = true;
         reset_ = false;
     }
 
@@ -107,16 +105,18 @@ bool Foam::fv::multiCycleConstantbXiIgnition::ignited() const
     const scalar curTime = mesh().time().value();
     const scalar deltaT = mesh().time().deltaTValue();
 
-    igniting();
+    const bool ignited
+    (
+        ignRelTime(curTime) > -0.5*deltaT
+     && ignRelTime(curTime) < combustionDuration_.value() + 0.5*deltaT
+    );
 
     if
     (
-        ignited_
-     && !reset_
-     && repeatTime(curTime) > combustionDuration_.value() - 0.5*deltaT
+        !reset_
+     && ignRelTime(curTime) > combustionDuration_.value() - 0.5*deltaT
     )
     {
-        ignited_ = false;
         reset_ = true;
 
         psiuMulticomponentThermo& thermo
@@ -130,7 +130,7 @@ bool Foam::fv::multiCycleConstantbXiIgnition::ignited() const
         thermo.reset();
     }
 
-    return ignited_;
+    return ignited;
 }
 
 

@@ -100,9 +100,6 @@ class multiCycleConstantbXiIgnition
         //  after which ignited is set false and the composition reset
         dimensionedScalar combustionDuration_;
 
-        //- Set true during the combustion duration
-        mutable bool ignited_;
-
         //- Set true when the composition is reset
         //  at the end of the combustion duration
         //  and reset false at the beginning of ignition
@@ -114,7 +111,9 @@ class multiCycleConstantbXiIgnition
         //- Non-virtual read
         void readCoeffs(const dictionary& dict);
 
-        scalar repeatTime(const scalar t) const;
+        //- Return the time relative to the ignition time
+        //  for the current period
+        scalar ignRelTime(const scalar t) const;
 
 
 public:
@@ -145,9 +144,12 @@ public:
 
         // Checks
 
+            //- Return true during the ignition duration
             virtual bool igniting() const;
 
+            //- Return true during the combustion duration
             virtual bool ignited() const;
+
 
         // IO
 

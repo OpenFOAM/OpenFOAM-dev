@@ -92,8 +92,10 @@ public:
             //  to the transport equation
             virtual wordList addSupFields() const;
 
+            //- Return true during the ignition duration
             virtual bool igniting() const = 0;
 
+            //- Return true during the combustion duration
             virtual bool ignited() const = 0;
 
 
