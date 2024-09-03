@@ -89,7 +89,7 @@ void Foam::fv::massTransfer::addSupType
         << ", field=" << field.name()
         << ", eqnField=" << eqn.psi().name() << endl;
 
-    const label i = index(alphaNames(), alphaOrRho.name());
+    const label i = index(phaseNames(), alphaOrRho.group());
 
     // Incompressible property equation
     if
@@ -164,7 +164,7 @@ void Foam::fv::massTransfer::addSupType
         << ", field=" << field.name()
         << ", eqnField=" << eqn.psi().name() << endl;
 
-    const label i = index(alphaNames(), alpha.name());
+    const label i = index(phaseNames(), alpha.group());
 
     // Compressible property equation
     if
