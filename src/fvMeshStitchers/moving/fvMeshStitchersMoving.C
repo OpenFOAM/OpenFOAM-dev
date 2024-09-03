@@ -727,9 +727,9 @@ void Foam::fvMeshStitchers::moving::unconformInternalFaceCorrectMeshPhi
         subDeltaPhi.primitiveFieldRef()[subFacei] +=
             subInternalFaceCi[subFacei].deltaPhi();
     }
-    forAll(subPatchFacePci, subPatchi)
+    forAll(subPatchFaceCi, subPatchi)
     {
-        forAll(subPatchFacePci[subPatchi], subPatchFacei)
+        forAll(subPatchFaceCi[subPatchi], subPatchFacei)
         {
             subDeltaPhi.boundaryFieldRef()[subPatchi][subPatchFacei] +=
                 subPatchFaceCi[subPatchi][subPatchFacei].deltaPhi();

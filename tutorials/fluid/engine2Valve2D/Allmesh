@@ -125,6 +125,8 @@ mergeMeshModules()
     # Separate ports to mimic complicated engine assembly
     runApplication -a createBaffles -region $region \
                    -dict system/createBafflesDict -overwrite
+    runApplication -a splitBaffles -region $region \
+                   -overwrite
 
     # Use NCC to enable sliding interface near the valve
     runApplication -a createNonConformalCouples -region $region \
