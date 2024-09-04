@@ -113,7 +113,13 @@ Foam::mappedExtrudedWallPolyPatch::mappedExtrudedWallPolyPatch
         isExtrudedRegion,
         cyclicTransform(true)
     )
-{}
+{
+    //  mapped is not constraint type so add mapped group explicitly
+    if (findIndex(inGroups(), mappedPolyPatch::typeName) == -1)
+    {
+        inGroups().append(mappedPolyPatch::typeName);
+    }
+}
 
 
 Foam::mappedExtrudedWallPolyPatch::mappedExtrudedWallPolyPatch

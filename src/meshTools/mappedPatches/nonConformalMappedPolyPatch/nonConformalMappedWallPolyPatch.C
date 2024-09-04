@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "nonConformalMappedWallPolyPatch.H"
+#include "mappedPolyPatch.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -122,7 +123,13 @@ Foam::nonConformalMappedWallPolyPatch::nonConformalMappedWallPolyPatch
     (
         static_cast<const nonConformalPolyPatch&>(*this)
     )
-{}
+{
+    //  mapped is not constraint type so add mapped group explicitly
+    if (findIndex(inGroups(), mappedPolyPatch::typeName) == -1)
+    {
+        inGroups().append(mappedPolyPatch::typeName);
+    }
+}
 
 
 Foam::nonConformalMappedWallPolyPatch::nonConformalMappedWallPolyPatch
@@ -146,7 +153,13 @@ Foam::nonConformalMappedWallPolyPatch::nonConformalMappedWallPolyPatch
         nbrPatchName,
         cyclicTransform(true)
     )
-{}
+{
+    //  mapped is not constraint type so add mapped group explicitly
+    if (findIndex(inGroups(), mappedPolyPatch::typeName) == -1)
+    {
+        inGroups().append(mappedPolyPatch::typeName);
+    }
+}
 
 
 Foam::nonConformalMappedWallPolyPatch::nonConformalMappedWallPolyPatch
@@ -161,7 +174,13 @@ Foam::nonConformalMappedWallPolyPatch::nonConformalMappedWallPolyPatch
     wallPolyPatch(name, dict, index, bm, patchType),
     nonConformalPolyPatch(*this, dict),
     nonConformalMappedPatchBase(*this, dict, transformType::defaultNone)
-{}
+{
+    //  mapped is not constraint type so add mapped group explicitly
+    if (findIndex(inGroups(), mappedPolyPatch::typeName) == -1)
+    {
+        inGroups().append(mappedPolyPatch::typeName);
+    }
+}
 
 
 Foam::nonConformalMappedWallPolyPatch::nonConformalMappedWallPolyPatch
