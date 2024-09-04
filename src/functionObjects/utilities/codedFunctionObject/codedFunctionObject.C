@@ -140,7 +140,7 @@ Foam::codedFunctionObject::codedFunctionObject
     const dictionary& dict
 )
 :
-    functionObject(name, time),
+    functionObject(name, time, dict),
     codedBase(name, dict, codeKeys, codeDictVars)
 {
     updateLibrary(dict);

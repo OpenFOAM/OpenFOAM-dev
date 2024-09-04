@@ -186,6 +186,14 @@ public:
         //- Construct from components
         functionObject(const word& name, const Time& runTime);
 
+        //- Construct from dictionary
+        functionObject
+        (
+            const word& name,
+            const Time& runTime,
+            const dictionary& dict
+        );
+
         //- Return clone
         autoPtr<functionObject> clone() const
         {
