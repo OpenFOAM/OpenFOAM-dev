@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,11 +92,10 @@ void Foam::functionObjects::residuals::writeFileHeader(const label i)
         {
             const word& fieldName = fieldSet_[fieldi];
 
-            writeFileHeader<scalar>(fieldName);
-            writeFileHeader<vector>(fieldName);
-            writeFileHeader<sphericalTensor>(fieldName);
-            writeFileHeader<symmTensor>(fieldName);
-            writeFileHeader<tensor>(fieldName);
+            #define WRITE_FILE_HEADER(Type, nullArg) \
+                writeFileHeader<Type>(fieldName);
+            FOR_ALL_FIELD_TYPES(WRITE_FILE_HEADER);
+            #undef WRITE_FILE_HEADER
         }
 
         file() << endl;
@@ -122,11 +121,10 @@ bool Foam::functionObjects::residuals::write()
         {
             const word& fieldName = fieldSet_[fieldi];
 
-            writeResidual<scalar>(fieldName);
-            writeResidual<vector>(fieldName);
-            writeResidual<sphericalTensor>(fieldName);
-            writeResidual<symmTensor>(fieldName);
-            writeResidual<tensor>(fieldName);
+            #define WRITE_RESIDUAL(Type, nullArg) \
+                writeResidual<Type>(fieldName);
+            FOR_ALL_FIELD_TYPES(WRITE_RESIDUAL);
+            #undef WRITE_RESIDUAL
         }
 
         file() << endl;

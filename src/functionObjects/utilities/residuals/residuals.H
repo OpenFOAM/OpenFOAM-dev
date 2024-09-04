@@ -139,12 +139,6 @@ public:
             return wordList::null();
         }
 
-        //- There are no residuals to report at the start of a run
-        virtual bool executeAtStart() const
-        {
-            return false;
-        }
-
         //- Execute, currently does nothing
         virtual bool execute();
 
