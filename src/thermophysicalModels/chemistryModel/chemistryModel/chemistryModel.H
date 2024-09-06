@@ -230,8 +230,20 @@ public:
             //- Return reaction rates of the species [kg/m^3/s]
             virtual inline const PtrList<volScalarField::Internal>& RR() const;
 
+            //- Return the name of reactioni
+            virtual inline const word& reactionName
+            (
+                const label reactioni
+            ) const;
+
+            //- Return the rate of reactioni [kmol/m^3/s]
+            virtual tmp<volScalarField::Internal> reactionRR
+            (
+                const label reactioni
+            ) const;
+
             //- Return reaction rates of the species in reactioni [kg/m^3/s]
-            virtual PtrList<volScalarField::Internal> reactionRR
+            virtual PtrList<volScalarField::Internal> specieReactionRR
             (
                 const label reactioni
             ) const;

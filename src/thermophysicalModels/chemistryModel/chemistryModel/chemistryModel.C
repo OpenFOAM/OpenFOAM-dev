@@ -443,8 +443,69 @@ void Foam::chemistryModel<ThermoType>::jacobian
 
 
 template<class ThermoType>
-Foam::PtrList<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
 Foam::chemistryModel<ThermoType>::reactionRR
+(
+    const label reactioni
+) const
+{
+    tmp<volScalarField::Internal> tRR =
+        volScalarField::Internal::New
+        (
+            "RR:" + reactions_[reactioni].name(),
+            this->mesh(),
+            dimensionedScalar(dimMass/dimVolume/dimTime, 0)
+        );
+    volScalarField::Internal& RR = tRR.ref();
+
+    if (!this->chemistry_ || mechRed_.reactionDisabled(reactioni))
+    {
+        return tRR;
+    }
+
+    tmp<volScalarField> trhovf(this->thermo().rho());
+    const volScalarField& rhovf = trhovf();
+
+    const volScalarField& Tvf = this->thermo().T();
+    const volScalarField& pvf = this->thermo().p();
+
+    reactionEvaluationScope scope(*this);
+
+    const Reaction<ThermoType>& R = reactions_[reactioni];
+
+    forAll(rhovf, celli)
+    {
+        const scalar rho = rhovf[celli];
+        const scalar T = Tvf[celli];
+        const scalar p = pvf[celli];
+
+        for (label i=0; i<nSpecie_; i++)
+        {
+            const scalar Yi = Yvf_[i][celli];
+            c_[i] = rho*Yi/specieThermos_[i].W();
+        }
+
+        scalar omegaf, omegar;
+
+        RR[celli] =
+            R.omega
+            (
+                p,
+                T,
+                c_,
+                celli,
+                omegaf,
+                omegar
+            );
+    }
+
+    return tRR;
+}
+
+
+template<class ThermoType>
+Foam::PtrList<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::chemistryModel<ThermoType>::specieReactionRR
 (
     const label reactioni
 ) const
@@ -457,7 +518,7 @@ Foam::chemistryModel<ThermoType>::reactionRR
             i,
             volScalarField::Internal::New
             (
-                "RR." + Yvf_[i].name(),
+                "RR:" + reactions_[reactioni].name() + ":" + Yvf_[i].name(),
                 this->mesh(),
                 dimensionedScalar(dimMass/dimVolume/dimTime, 0)
             ).ptr()

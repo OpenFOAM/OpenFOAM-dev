@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,17 +22,17 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::functionObjects::specieReactionRates
+    Foam::functionObjects::reactionRates
 
 Description
-    Writes volume averaged reaction rates in [kg/m^3/s] for each specie and
+    Writes volume averaged reaction rates in [kmol/m^3/s] for
     each reaction into the file \<timeDir\>/specieReactionRates.dat
 
     Example of function object specification:
     \verbatim
-    specieReactionRates1
+    reactionRates1
     {
-        type            specieReactionRates;
+        type            reactionRates;
         libs            ("libchemistryModel.so");
 
         select          all; // Or points, cellSet, cellZone
@@ -47,12 +47,12 @@ See also
     Foam::functionObjects::logFiles
 
 SourceFiles
-    specieReactionRates.C
+    reactionRates.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_specieReactionRates_H
-#define functionObjects_specieReactionRates_H
+#ifndef functionObjects_reactionRates_H
+#define functionObjects_reactionRates_H
 
 #include "fvMeshFunctionObject.H"
 #include "fvCellSet.H"
@@ -67,10 +67,10 @@ namespace functionObjects
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class specieReactionRates Declaration
+                     Class reactionRates Declaration
 \*---------------------------------------------------------------------------*/
 
-class specieReactionRates
+class reactionRates
 :
     public fvMeshFunctionObject,
     public fvCellSet,
@@ -94,13 +94,13 @@ class specieReactionRates
 public:
 
     //- Runtime type information
-    TypeName("specieReactionRates");
+    TypeName("reactionRates");
 
 
     // Constructors
 
         //- Construct from Time and dictionary
-        specieReactionRates
+        reactionRates
         (
             const word& name,
             const Time& runTime,
@@ -108,16 +108,16 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        specieReactionRates(const specieReactionRates&) = delete;
+        reactionRates(const reactionRates&) = delete;
 
 
     //- Destructor
-    virtual ~specieReactionRates();
+    virtual ~reactionRates();
 
 
     // Member Functions
 
-        //- Read the specieReactionRates data
+        //- Read the reactionRates data
         virtual bool read(const dictionary&);
 
         //- Return the list of fields required
@@ -136,7 +136,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const specieReactionRates&) = delete;
+        void operator=(const reactionRates&) = delete;
 };
 
 
