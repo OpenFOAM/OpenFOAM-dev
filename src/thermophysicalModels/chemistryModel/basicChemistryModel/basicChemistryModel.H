@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -155,8 +155,20 @@ public:
         //- Return reaction rates of the species [kg/m^3/s]
         virtual const PtrList<volScalarField::Internal>& RR() const = 0;
 
+        //- Return the name of reactioni
+        virtual inline const word& reactionName
+        (
+            const label reactioni
+        ) const = 0;
+
+        //- Return the rate of reactioni [kmol/m^3/s]
+        virtual tmp<volScalarField::Internal> reactionRR
+        (
+            const label reactioni
+        ) const = 0;
+
         //- Return reaction rates of the species in reactioni [kg/m^3/s]
-        virtual PtrList<volScalarField::Internal> reactionRR
+        virtual PtrList<volScalarField::Internal> specieReactionRR
         (
             const label reactioni
         ) const = 0;

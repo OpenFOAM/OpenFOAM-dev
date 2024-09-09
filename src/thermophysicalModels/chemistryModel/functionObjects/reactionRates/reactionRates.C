@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "specieReactionRates.H"
+#include "reactionRates.H"
 #include "fvcVolumeIntegrate.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -33,12 +33,12 @@ namespace Foam
 {
 namespace functionObjects
 {
-    defineTypeNameAndDebug(specieReactionRates, 0);
+    defineTypeNameAndDebug(reactionRates, 0);
 
     addToRunTimeSelectionTable
     (
         functionObject,
-        specieReactionRates,
+        reactionRates,
         dictionary
     );
 }
@@ -47,24 +47,20 @@ namespace functionObjects
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::functionObjects::specieReactionRates::writeFileHeader(const label i)
+void Foam::functionObjects::reactionRates::writeFileHeader(const label i)
 {
-    writeHeader(file(), "Specie reaction rates");
+    const label nReaction = chemistryModel_.nReaction();
+
+    writeHeader(file(), "Reaction rates");
 
     fvCellSet::writeFileHeader(*this, file());
 
-    writeHeaderValue(file(), "nSpecie", chemistryModel_.nSpecie());
-    writeHeaderValue(file(), "nReaction", chemistryModel_.nReaction());
-
+    writeHeaderValue(file(), "nReaction", nReaction);
     writeCommented(file(), "Time");
-    writeTabbed(file(), "Reaction");
 
-    const wordList& speciesNames =
-        chemistryModel_.thermo().species();
-
-    forAll (speciesNames, si)
+    for (label reactioni = 0; reactioni < nReaction; ++ reactioni)
     {
-        writeTabbed(file(), speciesNames[si]);
+        writeTabbed(file(), chemistryModel_.reactionName(reactioni));
     }
 
     file() << endl;
@@ -73,7 +69,7 @@ void Foam::functionObjects::specieReactionRates::writeFileHeader(const label i)
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::functionObjects::specieReactionRates::specieReactionRates
+Foam::functionObjects::reactionRates::reactionRates
 (
     const word& name,
     const Time& runTime,
@@ -98,81 +94,61 @@ Foam::functionObjects::specieReactionRates::specieReactionRates
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::functionObjects::specieReactionRates::~specieReactionRates()
+Foam::functionObjects::reactionRates::~reactionRates()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::functionObjects::specieReactionRates::read(const dictionary& dict)
+bool Foam::functionObjects::reactionRates::read(const dictionary& dict)
 {
     fvMeshFunctionObject::read(dict);
 
-    resetName("specieReactionRates");
+    resetName("reactionRates");
 
     return true;
 }
 
 
-bool Foam::functionObjects::specieReactionRates::execute()
+bool Foam::functionObjects::reactionRates::execute()
 {
     return true;
 }
 
 
-bool Foam::functionObjects::specieReactionRates::write()
+bool Foam::functionObjects::reactionRates::write()
 {
     logFiles::write();
 
-    const label nSpecie = chemistryModel_.nSpecie();
     const label nReaction = chemistryModel_.nReaction();
 
-    // Region volume
-    const scalar V = this->V();
-
-    for (label reactioni=0; reactioni<nReaction; reactioni++)
+    if (Pstream::master())
     {
-        if (Pstream::master())
-        {
-            writeTime(file());
-            file() << token::TAB << reactioni;
-        }
+        writeTime(file());
+    }
 
-        const PtrList<volScalarField::Internal> RR
+    for (label reactioni = 0; reactioni < nReaction; reactioni ++)
+    {
+        const volScalarField::Internal RR
         (
-            chemistryModel_.specieReactionRR(reactioni)
+            chemistryModel_.reactionRR(reactioni)
         );
 
-        for (label speciei=0; speciei<nSpecie; speciei++)
-        {
-            scalar sumVRRi = 0;
-
-            if (all())
-            {
-                sumVRRi = fvc::domainIntegrate(RR[speciei]).value();
-            }
-            else
-            {
-                sumVRRi =
-                    gSum
-                    (
-                        scalarField
-                        (
-                            fvMeshFunctionObject::mesh_.V()*RR[speciei],
-                            cells()
-                        )
-                    );
-            }
-
-            if (Pstream::master())
-            {
-                file() << token::TAB << sumVRRi/V;
-            }
-        }
+        const scalar sumVRR =
+            all()
+          ? fvc::domainIntegrate(RR).value()
+          : gSum
+            (
+                scalarField
+                (
+                    fvMeshFunctionObject::mesh_.V()*RR,
+                    cells()
+                )
+            );
 
         if (Pstream::master())
         {
-            file() << nl;
+            file() << token::TAB << sumVRR/V();
         }
     }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,6 +22,8 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 \*---------------------------------------------------------------------------*/
+
+#include "chemistryModel.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
@@ -53,6 +55,16 @@ template<class ThermoType>
 inline Foam::label Foam::chemistryModel<ThermoType>::nReaction() const
 {
     return reactions_.size();
+}
+
+
+template<class ThermoType>
+inline const Foam::word& Foam::chemistryModel<ThermoType>::reactionName
+(
+    const label reactioni
+) const
+{
+    return reactions_[reactioni].name();
 }
 
 

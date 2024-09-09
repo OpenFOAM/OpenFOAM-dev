@@ -256,10 +256,8 @@ void Foam::distributions::tabulatedCumulative::write
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::distributions::tabulatedCumulative::plotX
-(
-    const label
-) const
+Foam::tmp<Foam::scalarField>
+Foam::distributions::tabulatedCumulative::plotX(const label) const
 {
     const scalar x0 = min(), x1 = max(), d = 0.1*(x1 - x0);
 

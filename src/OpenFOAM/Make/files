@@ -728,6 +728,7 @@ distributions/unintegrable/unintegrable.C
 distributions/unintegrable/unintegrableForNonZeroQ.C
 distributions/exponential/exponential.C
 distributions/fixedValue/fixedValue.C
+distributions/multiFixedValue/multiFixedValue.C
 distributions/multiNormal/multiNormal.C
 distributions/normal/normal.C
 distributions/RosinRammler/RosinRammler.C

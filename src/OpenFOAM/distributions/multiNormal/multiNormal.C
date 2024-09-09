@@ -219,9 +219,14 @@ Foam::scalar Foam::distributions::multiNormal::sampleForZeroQ() const
 {
     const scalar S = rndGen_.sample01<scalar>();
 
-    const label n = cumulativeStrengths_.size() - 1;
     label i = 0;
-    for (; i < n && cumulativeStrengths_[i + 1] < S; ++ i);
+    for
+    (
+        ;
+        i < cumulativeStrengths_.size() - 1
+     && cumulativeStrengths_[i + 1] < S;
+     ++ i
+    );
 
     const scalar s =
         (S - cumulativeStrengths_[i])

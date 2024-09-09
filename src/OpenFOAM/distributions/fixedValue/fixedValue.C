@@ -114,8 +114,7 @@ void Foam::distributions::fixedValue::write
     const unitConversion& units
 ) const
 {
-    FieldDistribution<distribution, fixedValue>::write(os, units);
-
+    writeEntry(os, "type", type());
     writeEntry(os, "value", units, value_);
 }
 

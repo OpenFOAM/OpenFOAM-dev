@@ -23,9 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "tabulatedDensity.H"
-#include "unintegrable.H"
-#include "SubField.H"
+#include "multiFixedValue.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -34,15 +32,15 @@ namespace Foam
 {
 namespace distributions
 {
-    defineTypeNameAndDebug(tabulatedDensity, 0);
-    addToRunTimeSelectionTable(distribution, tabulatedDensity, dictionary);
+    defineTypeNameAndDebug(multiFixedValue, 0);
+    addToRunTimeSelectionTable(distribution, multiFixedValue, dictionary);
 }
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::distributions::tabulatedDensity::tabulatedDensity
+Foam::distributions::multiFixedValue::multiFixedValue
 (
     const unitConversion& defaultUnits,
     const dictionary& dict,
@@ -50,7 +48,7 @@ Foam::distributions::tabulatedDensity::tabulatedDensity
     randomGenerator&& rndGen
 )
 :
-    FieldDistribution<distribution, tabulatedDensity>
+    FieldDistribution<distribution, multiFixedValue>
     (
         typeName,
         defaultUnits,
@@ -59,23 +57,26 @@ Foam::distributions::tabulatedDensity::tabulatedDensity
         std::move(rndGen)
     )
 {
-    List<Tuple2<scalar, scalar>> values(dict.lookup("distribution"));
+    List<Tuple2<scalar, scalar>> values(dict.lookup("values"));
+
+    // Sort
+    Foam::sort
+    (
+        values,
+        [](const Tuple2<scalar, scalar>& a, const Tuple2<scalar, scalar>& b)
+        {
+            return a.first() < b.first();
+        }
+    );
 
     // Checks
-    forAll(values, i)
+    for (label i = 1; i < values.size(); ++ i)
     {
-        if (i && values[i].first() - values[i - 1].first() < 0)
-        {
-            FatalIOErrorInFunction(dict)
-                << typeName << ": The probability density function is not "
-                << "in order" << abort(FatalIOError);
-        }
-
         if (values[i].second() < 0)
         {
             FatalIOErrorInFunction(dict)
-                << typeName << ": The probability density function is not "
-                << "positive" << abort(FatalIOError);
+                << typeName << ": The probabilities are not all positive "
+                << abort(FatalIOError);
         }
     }
 
@@ -90,86 +91,96 @@ Foam::distributions::tabulatedDensity::tabulatedDensity
         x_[i] = units.toStandard(values[i].first());
     }
 
-    // Copy the PDF. Scale if q != 0.
-    PDF_.resize(values.size());
+    // Copy the probabilities. Scale if q != 0.
+    P_.resize(values.size());
     forAll(values, i)
     {
-        PDF_[i] = integerPow(x_[i], q())*values[i].second();
+        P_[i] = integerPow(x_[i], q())*values[i].second();
     }
 
-    // Compute the CDF
-    CDF_.resize(values.size());
-    CDF_ = unintegrable::integrate(x_, PDF_);
+    // Compute the cumulative sum of the probabilities
+    sumP_.resize(values.size() + 1);
+    sumP_[0] = 0;
+    forAll(values, i)
+    {
+        sumP_[i + 1] = sumP_[i] + P_[i];
+    }
 
-    // Normalise the PDF and the CDF
-    PDF_ /= CDF_.last();
-    CDF_ /= CDF_.last();
-
-    // More checks
-    validateBounds(dict);
-    if (q() != 0) validatePositive(dict);
+    // Normalise
+    P_ /= sumP_.last();
+    sumP_ /= sumP_.last();
 }
 
 
-Foam::distributions::tabulatedDensity::tabulatedDensity
+Foam::distributions::multiFixedValue::multiFixedValue
 (
-    const tabulatedDensity& d,
+    const multiFixedValue& d,
     const label sampleQ
 )
 :
-    FieldDistribution<distribution, tabulatedDensity>(d, sampleQ),
+    FieldDistribution<distribution, multiFixedValue>(d, sampleQ),
     x_(d.x_),
-    PDF_(d.PDF_),
-    CDF_(d.CDF_)
+    P_(d.P_),
+    sumP_(d.sumP_)
 {
     if (q() == d.q()) return;
 
-    // Scale the PDF
-    PDF_ = integerPow(x_, q() - d.q())*d.PDF_;
+    // Scale the probabilities
+    P_ = integerPow(x_, q() - d.q())*d.P_;
 
-    // Compute the CDF
-    CDF_ = unintegrable::integrate(x_, PDF_);
+    // Compute the cumulative sum of the probabilities
+    sumP_.resize(x_.size() + 1);
+    sumP_[0] = 0;
+    forAll(x_, i)
+    {
+        sumP_[i + 1] = sumP_[i] + P_[i];
+    }
 
-    // Normalise the PDF and the CDF
-    PDF_ /= CDF_.last();
-    CDF_ /= CDF_.last();
+    // Normalise
+    P_ /= sumP_.last();
+    sumP_ /= sumP_.last();
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::distributions::tabulatedDensity::~tabulatedDensity()
+Foam::distributions::multiFixedValue::~multiFixedValue()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::scalar Foam::distributions::tabulatedDensity::sample() const
+Foam::scalar Foam::distributions::multiFixedValue::sample() const
 {
-    return unintegrable::sample(x_, PDF_, CDF_, rndGen_.sample01<scalar>());
+    const scalar S = rndGen_.sample01<scalar>();
+
+    label i = 0;
+    for (; i < sumP_.size() - 1 && sumP_[i + 1] < S; ++ i);
+
+    return x_[i];
 }
 
 
-Foam::scalar Foam::distributions::tabulatedDensity::min() const
+Foam::scalar Foam::distributions::multiFixedValue::min() const
 {
     return x_.first();
 }
 
 
-Foam::scalar Foam::distributions::tabulatedDensity::max() const
+Foam::scalar Foam::distributions::multiFixedValue::max() const
 {
     return x_.last();
 }
 
 
-Foam::scalar Foam::distributions::tabulatedDensity::mean() const
+Foam::scalar Foam::distributions::multiFixedValue::mean() const
 {
-    return unintegrable::integrateX(x_, PDF_)->last();
+    return sum(x_*P_);
 }
 
 
 Foam::tmp<Foam::scalarField>
-Foam::distributions::tabulatedDensity::CDF(const scalarField& x) const
+Foam::distributions::multiFixedValue::CDF(const scalarField& x) const
 {
     tmp<scalarField> tResult(new scalarField(x.size()));
     scalarField& result = tResult.ref();
@@ -186,10 +197,7 @@ Foam::distributions::tabulatedDensity::CDF(const scalarField& x) const
     {
         while (i < x.size() && x[i] < x_[j + 1])
         {
-            result[i] =
-                CDF_[j]
-              + PDF_[j]*(x[i] - x_[j])
-              + (PDF_[j + 1] - PDF_[j])/(x_[j + 1] - x_[j])/2*sqr(x[i] - x_[j]);
+            result[i] = sumP_[j + 1];
             i ++;
         }
     }
@@ -204,58 +212,57 @@ Foam::distributions::tabulatedDensity::CDF(const scalarField& x) const
 }
 
 
-void Foam::distributions::tabulatedDensity::write
+void Foam::distributions::multiFixedValue::write
 (
     Ostream& os,
     const unitConversion& units
 ) const
 {
-    FieldDistribution<distribution, tabulatedDensity>::write(os, units);
+    FieldDistribution<distribution, multiFixedValue>::write(os, units);
 
-    // Recover the PDF
-    scalarField PDF(integerPow(x_, -q())*PDF_);
+    // Recover the probabilities
+    scalarField P(integerPow(x_, -q())*P_);
 
-    // Normalise the PDF
-    PDF /= unintegrable::integrate(x_, PDF)->last();
+    // Normalise the probabilities
+    P /= sum(P);
 
     // Construct and write the values
-    List<Tuple2<scalar, scalar>> values(PDF_.size());
+    List<Tuple2<scalar, scalar>> values(P_.size());
     forAll(values, i)
     {
         values[i].first() = units.toUser(x_[i]);
-        values[i].second() = PDF[i];
+        values[i].second() = P[i];
     }
-    writeEntry(os, "distribution", values);
+    writeEntry(os, "values", values);
 }
 
 
 Foam::tmp<Foam::scalarField>
-Foam::distributions::tabulatedDensity::plotX(const label) const
+Foam::distributions::multiFixedValue::plotX(const label) const
 {
-    const scalar x0 = min(), x1 = max(), d = 0.1*(x1 - x0);
-
-    tmp<scalarField> tResult(new scalarField(x_.size() + 4));
+    tmp<scalarField> tResult(new scalarField(3*x_.size()));
     scalarField& result = tResult.ref();
 
-    result[0] = Foam::max(x0 - d, q() < 0 ? x0/2 : rootVSmall);
-    result[1] = x0;
-
-    SubField<scalar>(result, x_.size(), 2) = x_;
-
-    result[x_.size() + 2] = x1;
-    result[x_.size() + 3] = x1 + d;
+    forAll(x_, i)
+    {
+        result[3*i] = result[3*i + 1] = result[3*i + 2] = x_[i];
+    }
 
     return tResult;
 }
 
 
 Foam::tmp<Foam::scalarField>
-Foam::distributions::tabulatedDensity::plotPDF(const scalarField& x) const
+Foam::distributions::multiFixedValue::plotPDF(const scalarField& x) const
 {
-    tmp<scalarField> tResult(new scalarField(PDF_.size() + 4, 0));
+    tmp<scalarField> tResult(new scalarField(3*x_.size()));
     scalarField& result = tResult.ref();
 
-    SubField<scalar>(result, PDF_.size(), 2) = PDF_;
+    forAll(x_, i)
+    {
+        result[3*i] = result[3*i + 2] = 0;
+        result[3*i + 1] = P_[i]/rootVSmall;
+    }
 
     return tResult;
 }

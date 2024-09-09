@@ -1,0 +1,20 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Writes volume averaged reaction rates in [kmol/m^3/s] for each reaction
+
+\*---------------------------------------------------------------------------*/
+
+type            reactionRates;
+libs            ("libchemistryModel.so");
+
+select          all; // Or points, cellSet, cellZone
+
+//phase         <phaseName>; // Optional name of the phase
+
+// ************************************************************************* //
