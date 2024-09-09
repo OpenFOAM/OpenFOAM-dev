@@ -73,7 +73,7 @@ Usage
     }
     \endverbatim
 
-    Example of the boundary condition specification for a volumetric flow rate:
+    Example of the boundary condition specification for a mean velocity:
     \verbatim
     <patchName>
     {
