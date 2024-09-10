@@ -126,7 +126,8 @@ public:
         virtual List<Tuple2<scalar, Type>> read
         (
             const Function1s::unitConversions& units,
-            const dictionary& dict
+            const dictionary& dict,
+            const word& valuesKeyword="values"
         ) const = 0;
 
         //- Write settings and values
@@ -134,8 +135,9 @@ public:
         (
             Ostream& os,
             const Function1s::unitConversions& units,
-            const List<Tuple2<scalar, Type>>& table
-        ) const;
+            const List<Tuple2<scalar, Type>>& table,
+            const word& valuesKeyword="values"
+        ) const = 0;
 };
 
 

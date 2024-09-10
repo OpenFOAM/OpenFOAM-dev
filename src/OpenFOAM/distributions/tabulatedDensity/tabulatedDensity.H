@@ -62,6 +62,7 @@ See also
 #define tabulatedDensity_H
 
 #include "distribution.H"
+#include "TableReader.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -81,6 +82,9 @@ class tabulatedDensity
 private:
 
     // Private Data
+
+        //- Table reader
+        const autoPtr<TableReader<scalar>> reader_;
 
         //- X-coordinates
         scalarField x_;

@@ -90,16 +90,4 @@ Foam::TableReader<Type>::~TableReader()
 {}
 
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class Type>
-void Foam::TableReader<Type>::write
-(
-    Ostream& os,
-    const Function1s::unitConversions& units,
-    const List<Tuple2<scalar, Type>>& table
-) const
-{}
-
-
 // ************************************************************************* //

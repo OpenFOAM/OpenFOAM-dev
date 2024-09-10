@@ -55,9 +55,14 @@ Foam::distributions::multiFixedValue::multiFixedValue
         dict,
         sampleQ,
         std::move(rndGen)
+    ),
+    reader_
+    (
+        TableReader<scalar>::New(word::null, {defaultUnits, unitNone}, dict)
     )
 {
-    List<Tuple2<scalar, scalar>> values(dict.lookup("values"));
+    List<Tuple2<scalar, scalar>> values =
+        reader_->read({defaultUnits, unitNone}, dict, "values");
 
     // Sort
     Foam::sort
@@ -80,15 +85,11 @@ Foam::distributions::multiFixedValue::multiFixedValue
         }
     }
 
-    // Optionally read units
-    unitConversion units(defaultUnits);
-    units.readIfPresent("units", dict);
-
     // Copy the coordinates
     x_.resize(values.size());
     forAll(values, i)
     {
-        x_[i] = units.toStandard(values[i].first());
+        x_[i] = values[i].first();
     }
 
     // Copy the probabilities. Scale if q != 0.
@@ -119,6 +120,7 @@ Foam::distributions::multiFixedValue::multiFixedValue
 )
 :
     FieldDistribution<distribution, multiFixedValue>(d, sampleQ),
+    reader_(d.reader_, false),
     x_(d.x_),
     P_(d.P_),
     sumP_(d.sumP_)
@@ -239,10 +241,10 @@ void Foam::distributions::multiFixedValue::write
     List<Tuple2<scalar, scalar>> values(P_.size());
     forAll(values, i)
     {
-        values[i].first() = units.toUser(x_[i]);
+        values[i].first() = x_[i];
         values[i].second() = P[i];
     }
-    writeEntry(os, "values", values);
+    reader_->write(os, {units, unitNone}, values, "values");
 }
 
 

@@ -245,7 +245,8 @@ void Foam::TableReaders::Csv<Type>::write
 (
     Ostream& os,
     const Function1s::unitConversions& units,
-    const List<Tuple2<scalar, Type>>& table
+    const List<Tuple2<scalar, Type>>& table,
+    const word&
 ) const
 {
     TableFileReader<Type>::write(os, units, table);

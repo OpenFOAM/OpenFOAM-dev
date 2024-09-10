@@ -57,9 +57,14 @@ Foam::distributions::tabulatedCumulative::tabulatedCumulative
         dict,
         sampleQ,
         std::move(rndGen)
+    ),
+    reader_
+    (
+        TableReader<scalar>::New(word::null, {defaultUnits, unitNone}, dict)
     )
 {
-    List<Tuple2<scalar, scalar>> values(dict.lookup("distribution"));
+    List<Tuple2<scalar, scalar>> values =
+        reader_->read({defaultUnits, unitNone}, dict, "distribution");
 
     // Checks
     if (values.first().second() != 0)
@@ -86,15 +91,11 @@ Foam::distributions::tabulatedCumulative::tabulatedCumulative
         }
     }
 
-    // Optionally read units
-    unitConversion units(defaultUnits);
-    units.readIfPresent("units", dict);
-
     // Copy the coordinates
     x_.resize(values.size());
     forAll(values, i)
     {
-        x_[i] = units.toStandard(values[i].first());
+        x_[i] = values[i].first();
     }
 
     // Set the CDF. Copy if q == 0. Re-integrated if q != 0.
@@ -131,6 +132,7 @@ Foam::distributions::tabulatedCumulative::tabulatedCumulative
 )
 :
     FieldDistribution<distribution, tabulatedCumulative>(d, sampleQ),
+    reader_(d.reader_, false),
     x_(d.x_),
     PDF_(d.PDF_),
     CDF_(d.CDF_)
@@ -277,10 +279,10 @@ void Foam::distributions::tabulatedCumulative::write
     List<Tuple2<scalar, scalar>> values(CDF_.size());
     forAll(values, i)
     {
-        values[i].first() = units.toUser(x_[i]);
+        values[i].first() = x_[i];
         values[i].second() = CDF[i];
     }
-    writeEntry(os, "distribution", values);
+    reader_->write(os, {units, unitNone}, values, "distribution");
 }
 
 

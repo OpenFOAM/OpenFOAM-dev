@@ -57,9 +57,14 @@ Foam::distributions::tabulatedDensity::tabulatedDensity
         dict,
         sampleQ,
         std::move(rndGen)
+    ),
+    reader_
+    (
+        TableReader<scalar>::New(word::null, {defaultUnits, unitNone}, dict)
     )
 {
-    List<Tuple2<scalar, scalar>> values(dict.lookup("distribution"));
+    List<Tuple2<scalar, scalar>> values =
+        reader_->read({defaultUnits, unitNone}, dict, "distribution");
 
     // Checks
     forAll(values, i)
@@ -79,15 +84,11 @@ Foam::distributions::tabulatedDensity::tabulatedDensity
         }
     }
 
-    // Optionally read units
-    unitConversion units(defaultUnits);
-    units.readIfPresent("units", dict);
-
     // Copy the coordinates
     x_.resize(values.size());
     forAll(values, i)
     {
-        x_[i] = units.toStandard(values[i].first());
+        x_[i] = values[i].first();
     }
 
     // Copy the PDF. Scale if q != 0.
@@ -118,6 +119,7 @@ Foam::distributions::tabulatedDensity::tabulatedDensity
 )
 :
     FieldDistribution<distribution, tabulatedDensity>(d, sampleQ),
+    reader_(d.reader_, false),
     x_(d.x_),
     PDF_(d.PDF_),
     CDF_(d.CDF_)
@@ -198,10 +200,10 @@ void Foam::distributions::tabulatedDensity::write
     List<Tuple2<scalar, scalar>> values(PDF_.size());
     forAll(values, i)
     {
-        values[i].first() = units.toUser(x_[i]);
+        values[i].first() = x_[i];
         values[i].second() = PDF[i];
     }
-    writeEntry(os, "distribution", values);
+    reader_->write(os, {units, unitNone}, values, "distribution");
 }
 
 

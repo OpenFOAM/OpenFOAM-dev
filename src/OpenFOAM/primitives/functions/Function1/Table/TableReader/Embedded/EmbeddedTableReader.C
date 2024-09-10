@@ -60,12 +60,13 @@ Foam::List<Foam::Tuple2<Foam::scalar, Type>>
 Foam::TableReaders::Embedded<Type>::read
 (
     const Function1s::unitConversions& defaultUnits,
-    const dictionary& dict
+    const dictionary& dict,
+    const word& valuesKeyword
 ) const
 {
     Function1s::unitConversions units(defaultUnits);
     units.readIfPresent("units", dict);
-    return TableReader<Type>::convertRead(units, dict.lookup("values"));
+    return TableReader<Type>::convertRead(units, dict.lookup(valuesKeyword));
 }
 
 
@@ -86,12 +87,16 @@ void Foam::TableReaders::Embedded<Type>::write
 (
     Ostream& os,
     const Function1s::unitConversions& units,
-    const List<Tuple2<scalar, Type>>& table
+    const List<Tuple2<scalar, Type>>& table,
+    const word& valuesKeyword
 ) const
 {
-    TableReader<Type>::write(os, units, table);
-
-    writeEntry(os, "values", TableReader<Type>::convertWrite(units, table));
+    writeEntry
+    (
+        os,
+        valuesKeyword,
+        TableReader<Type>::convertWrite(units, table)
+    );
 }
 
 

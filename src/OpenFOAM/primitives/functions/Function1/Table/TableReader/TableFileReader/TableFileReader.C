@@ -135,7 +135,8 @@ Foam::List<Foam::Tuple2<Foam::scalar, Type>>
 Foam::TableFileReader<Type>::read
 (
     const Function1s::unitConversions& units,
-    const dictionary& dict
+    const dictionary& dict,
+    const word&
 ) const
 {
     List<Tuple2<scalar, Type>> data;
@@ -149,11 +150,10 @@ void Foam::TableFileReader<Type>::write
 (
     Ostream& os,
     const Function1s::unitConversions& units,
-    const List<Tuple2<scalar, Type>>& table
+    const List<Tuple2<scalar, Type>>& table,
+    const word&
 ) const
 {
-    TableReader<Type>::write(os, units, table);
-
     writeEntry(os, "format", this->type());
     writeEntry(os, "file", fName_);
 

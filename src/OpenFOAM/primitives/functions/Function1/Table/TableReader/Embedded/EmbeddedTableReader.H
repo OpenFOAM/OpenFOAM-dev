@@ -65,7 +65,6 @@ class Embedded
 :
     public TableReader<Type>
 {
-
 public:
 
     //- Runtime type information
@@ -102,7 +101,8 @@ public:
         virtual List<Tuple2<scalar, Type>> read
         (
             const Function1s::unitConversions& units,
-            const dictionary& dict
+            const dictionary& dict,
+            const word& valuesKeyword="values"
         ) const;
 
         //- Read values
@@ -117,7 +117,8 @@ public:
         (
             Ostream& os,
             const Function1s::unitConversions& units,
-            const List<Tuple2<scalar, Type>>& table
+            const List<Tuple2<scalar, Type>>& table,
+            const word& valuesKeyword="values"
         ) const;
 };
 

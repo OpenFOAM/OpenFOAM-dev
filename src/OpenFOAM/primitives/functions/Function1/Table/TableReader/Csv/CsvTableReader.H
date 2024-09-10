@@ -176,7 +176,8 @@ public:
         (
             Ostream& os,
             const Function1s::unitConversions& units,
-            const List<Tuple2<scalar, Type>>& table
+            const List<Tuple2<scalar, Type>>& table,
+            const word& valuesKeyword=word::null
         ) const;
 };
 
