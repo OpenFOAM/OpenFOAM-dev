@@ -207,13 +207,14 @@ SourceFiles
 #include "sizeGroup.H"
 #include "phaseSystem.H"
 #include "HashPtrTable.H"
-#include "Pair.H"
+#include "dimensionedScalarPair.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
+class distribution;
 class phaseCompressibleMomentumTransportModel;
 
 namespace diameterModels
@@ -510,13 +511,29 @@ private:
         //- Return the interval at which the sources are updated
         inline label sourceUpdateInterval() const;
 
-        //- Calculate and return the number allocation coefficient
-        template<class EtaType, class VType>
-        EtaType eta(const label i, const VType& v) const;
+        //- Return the coefficients of the lower half of the number allocation
+        //  coefficient function. This spans the range from group i-1 to group
+        //  i. The first coefficient is a constant, and the second is
+        //  multiplied by v.
+        dimensionedScalarPair etaCoeffs0(const label i) const;
 
-        //- Calculate and return the volume allocation coefficient
-        template<class EtaType, class VType>
-        EtaType etaV(const label i, const VType& v) const;
+        //- Return the coefficients of the lower half of the number allocation
+        //  coefficient function. This spans the range from group i to group
+        //  i+1. The first coefficient is a constant, and the second is
+        //  multiplied by v.
+        dimensionedScalarPair etaCoeffs1(const label i) const;
+
+        //- Return the coefficients of the lower half of the volume allocation
+        //  coefficient function. This spans the range from group i-1 to group
+        //  i. The first coefficient is a constant, and the second is
+        //  multiplied by 1/v.
+        dimensionedScalarPair etaVCoeffs0(const label i) const;
+
+        //- Return the coefficients of the lower half of the volume allocation
+        //  coefficient function. This spans the range from group i to group
+        //  i+1. The first coefficient is a constant, and the second is
+        //  multiplied by 1/v.
+        dimensionedScalarPair etaVCoeffs1(const label i) const;
 
 
 public:
@@ -611,25 +628,30 @@ public:
         //- Return average velocity
         inline const volVectorField& U() const;
 
-        //- Return the number allocation coefficient
+        //- Return the number allocation coefficient for a single volume
         dimensionedScalar eta(const label i, const dimensionedScalar& v) const;
 
-        //- Return the number allocation coefficient
+        //- Return the number allocation coefficient for a field of volumes
         tmp<volScalarField::Internal> eta
         (
             const label i,
             const volScalarField::Internal& v
         ) const;
 
-        //- Return the volume allocation coefficient
+        //- Return the volume allocation coefficient for a single volume
         dimensionedScalar etaV(const label i, const dimensionedScalar& v) const;
 
-        //- Return the volume allocation coefficient
+        //- Return the volume allocation coefficient for a field of volumes
         tmp<volScalarField::Internal> etaV
         (
             const label i,
             const volScalarField::Internal& v
         ) const;
+
+        //- Return the volume allocation coefficient for a given distribution
+        //  of diameters. The diameter distribution should be volumetrically
+        //  sampled (i.e., sampleQ should equal 3).
+        dimensionedScalar etaV(const label i, const distribution& d) const;
 
         //- Return the surface tension coefficient between a given dispersed
         //  and the continuous phase

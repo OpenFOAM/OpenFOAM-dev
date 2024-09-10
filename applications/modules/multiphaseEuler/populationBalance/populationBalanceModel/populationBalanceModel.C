@@ -31,7 +31,6 @@ License
 #include "binaryBreakupModel.H"
 #include "driftModel.H"
 #include "nucleationModel.H"
-#include "interfaceSurfaceTensionModel.H"
 #include "fvmDdt.H"
 #include "fvmDiv.H"
 #include "fvmSup.H"
@@ -39,6 +38,7 @@ License
 #include "fvcDiv.H"
 #include "fvcSup.H"
 #include "shapeModel.H"
+#include "distribution.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -640,53 +640,65 @@ bool Foam::diameterModels::populationBalanceModel::updateSources()
 }
 
 
-template<class EtaType, class VType>
-EtaType Foam::diameterModels::populationBalanceModel::eta
-(
-    const label i,
-    const VType& v
-) const
+Foam::dimensionedScalarPair
+Foam::diameterModels::populationBalanceModel::etaCoeffs0(const label i) const
 {
-    const label n = sizeGroups().size();
-
-    static const dimensionedScalar rootVSmallV(dimVolume, rootVSmall);
     static const dimensionedScalar z(dimless, scalar(0));
 
-    const dimensionedScalar& x0 =
-        i > 0 ? sizeGroups()[i - 1].x() : rootVSmallV;
     const dimensionedScalar& xi = sizeGroups()[i].x();
-    const dimensionedScalar& x1 =
-        i < n - 1 ? sizeGroups()[i + 1].x() : rootVSmallV;
 
-    return max(min((v - x0)/(xi - x0), (x1 - v)/(x1 - xi)), z);
+    if (i == 0) return dimensionedScalarPair(z, 1/xi);
+
+    const dimensionedScalar& x0 = sizeGroups()[i - 1].x();
+
+    return dimensionedScalarPair(- x0/(xi - x0), 1/(xi - x0));
 }
 
 
-template<class EtaType, class VType>
-EtaType Foam::diameterModels::populationBalanceModel::etaV
-(
-    const label i,
-    const VType& v
-) const
+Foam::dimensionedScalarPair
+Foam::diameterModels::populationBalanceModel::etaCoeffs1(const label i) const
 {
-    const label n = sizeGroups().size();
-
-    static const dimensionedScalar rootVSmallInvV(inv(dimVolume), rootVSmall);
-    static const dimensionedScalar rootVGreatInvV(inv(dimVolume), rootVGreat);
     static const dimensionedScalar z(dimless, scalar(0));
 
-    const dimensionedScalar x0 =
-        i > 0 ? 1/sizeGroups()[i - 1].x() : rootVGreatInvV;
-    const dimensionedScalar xi = 1/sizeGroups()[i].x();
-    const dimensionedScalar x1 =
-        i < n - 1 ? 1/sizeGroups()[i + 1].x() : rootVSmallInvV;
+    const label n = sizeGroups().size();
 
-    const VType invV
-    (
-        1/min(max(v, sizeGroups().first().x()), sizeGroups().last().x())
-    );
+    const dimensionedScalar& xi = sizeGroups()[i].x();
 
-    return max(min((invV - x0)/(xi - x0), (x1 - invV)/(x1 - xi)), z);
+    if (i == n - 1) return dimensionedScalarPair(z, 1/xi);
+
+    const dimensionedScalar& x1 = sizeGroups()[i + 1].x();
+
+    return dimensionedScalarPair(x1/(x1 - xi), - 1/(x1 - xi));
+}
+
+
+Foam::dimensionedScalarPair
+Foam::diameterModels::populationBalanceModel::etaVCoeffs0(const label i) const
+{
+    static const dimensionedScalar o(scalar(1)), zV(dimVolume, scalar(0));
+
+    if (i == 0) return dimensionedScalarPair(o, zV);
+
+    const dimensionedScalar& x0 = 1/sizeGroups()[i - 1].x();
+    const dimensionedScalar& xi = 1/sizeGroups()[i].x();
+
+    return dimensionedScalarPair(- x0/(xi - x0), 1/(xi - x0));
+}
+
+
+Foam::dimensionedScalarPair
+Foam::diameterModels::populationBalanceModel::etaVCoeffs1(const label i) const
+{
+    static const dimensionedScalar o(scalar(1)), zV(dimVolume, scalar(0));
+
+    const label n = sizeGroups().size();
+
+    if (i == n - 1) return dimensionedScalarPair(o, zV);
+
+    const dimensionedScalar& xi = 1/sizeGroups()[i].x();
+    const dimensionedScalar& x1 = 1/sizeGroups()[i + 1].x();
+
+    return dimensionedScalarPair(x1/(x1 - xi), - 1/(x1 - xi));
 }
 
 
@@ -1052,10 +1064,12 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
     }
 }
 
+
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::diameterModels::populationBalanceModel::~populationBalanceModel()
 {}
+
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
@@ -1079,7 +1093,19 @@ Foam::dimensionedScalar Foam::diameterModels::populationBalanceModel::eta
     const dimensionedScalar& v
 ) const
 {
-    return eta<dimensionedScalar>(i, v);
+    const dimensionedScalarPair coeffs0 = etaCoeffs0(i);
+    const dimensionedScalarPair coeffs1 = etaCoeffs1(i);
+
+    return
+        max
+        (
+            min
+            (
+                coeffs0.first() + coeffs0.second()*v,
+                coeffs1.first() + coeffs1.second()*v
+            ),
+            dimensionedScalar(dimless, scalar(0))
+        );
 }
 
 
@@ -1090,7 +1116,19 @@ Foam::diameterModels::populationBalanceModel::eta
     const volScalarField::Internal& v
 ) const
 {
-    return eta<tmp<volScalarField::Internal>>(i, v);
+    const dimensionedScalarPair coeffs0 = etaCoeffs0(i);
+    const dimensionedScalarPair coeffs1 = etaCoeffs1(i);
+
+    return
+        max
+        (
+            min
+            (
+                coeffs0.first() + coeffs0.second()*v,
+                coeffs1.first() + coeffs1.second()*v
+            ),
+            dimensionedScalar(dimless, scalar(0))
+        );
 }
 
 
@@ -1100,7 +1138,19 @@ Foam::dimensionedScalar Foam::diameterModels::populationBalanceModel::etaV
     const dimensionedScalar& v
 ) const
 {
-    return etaV<dimensionedScalar>(i, v);
+    const dimensionedScalarPair coeffs0 = etaVCoeffs0(i);
+    const dimensionedScalarPair coeffs1 = etaVCoeffs1(i);
+
+    return
+        max
+        (
+            min
+            (
+                coeffs0.first() + coeffs0.second()/v,
+                coeffs1.first() + coeffs1.second()/v
+            ),
+            dimensionedScalar(dimless, scalar(0))
+        );
 }
 
 
@@ -1111,7 +1161,118 @@ Foam::diameterModels::populationBalanceModel::etaV
     const volScalarField::Internal& v
 ) const
 {
-    return etaV<tmp<volScalarField::Internal>>(i, v);
+    const dimensionedScalarPair coeffs0 = etaVCoeffs0(i);
+    const dimensionedScalarPair coeffs1 = etaVCoeffs1(i);
+
+    return
+        max
+        (
+            min
+            (
+                coeffs0.first() + coeffs0.second()/v,
+                coeffs1.first() + coeffs1.second()/v
+            ),
+            dimensionedScalar(dimless, scalar(0))
+        );
+}
+
+
+Foam::dimensionedScalar Foam::diameterModels::populationBalanceModel::etaV
+(
+    const label i,
+    const distribution& d
+) const
+{
+    const sizeGroup& fi = sizeGroups()[i];
+
+    // Check that the distribution is generating volumes
+    if (d.sampleQ() != 3)
+    {
+        FatalErrorInFunction
+            << "The volumetric allocation coefficient should be evaluated "
+            << "with a volumetrically sampled distribution (i.e., sampleQ "
+            << "should equal 3)"
+            << exit(FatalError);
+    }
+
+    // Get the diameters that bound the range of the velocity group. If either
+    // is at the end of the population balance then replace this by the bounds
+    // of the distribution. This ensures that the group includes everything
+    // from the distribution that is out of the range of the population
+    // balance.
+    const scalarField vgDSphs
+    (
+        scalarList
+        ({
+            fi.group().sizeGroups().first().i() == 0
+          ? d.min()*(1 - small)
+          : fi.group().sizeGroups().first().dSph().value(),
+            fi.group().sizeGroups().last().i() < sizeGroups().size() - 1
+          ? fi.group().sizeGroups().last().dSph().value()
+          : d.max()*(1 + small)
+        })
+    );
+
+    // Integrate the distribution across the range of the velocity group. This
+    // gives us the proportion of the distribution that is assigned to this
+    // velocity group.
+    const scalarField vgIntegralPDFs
+    (
+        d.integralPDFxPow(vgDSphs, 0, true)
+    );
+
+    // Get the diameters that bound the range of the basis function of this
+    // size group, as well as that of this group. The bounding diameters are
+    // those of the adjacent groups. If this group is at the end of the
+    // population balance then there will only be an adjacent group on one
+    // side. The other group's diameter is replaced by the bounds of the
+    // distribution. This ensures that the end groups include everything from
+    // the distribution that is out of the range of the population balance.
+    const scalarField sgDSphs
+    (
+        scalarList
+        ({
+            fi.i() == 0
+          ? d.min()*(1 - small)
+          : sizeGroups()[fi.i() - 1].dSph().value(),
+            fi.dSph().value(),
+            fi.i() < sizeGroups().size() - 1
+          ? sizeGroups()[fi.i() + 1].dSph().value()
+          : d.max()*(1 + small)
+        })
+    );
+
+    // Integrate the distribution, and the distribution divided by volume,
+    // across the range of the size group basis function
+    const scalarField sgIntegralPDFs
+    (
+        d.integralPDFxPow(sgDSphs, 0, true)
+    );
+    const scalarField sgIntegralPDFByVs
+    (
+        d.integralPDFxPow(sgDSphs, -3, true)
+       *6/constant::mathematical::pi
+    );
+
+    // Evaluate the allocation coefficient, scaling by the proportion assigned
+    // to this velocity group so that the assigned fractions sum to one even if
+    // the distribution extends outside of this velocity group
+    const dimensionedScalarPair etaVCoeffs0 =
+        fi.group().popBal().etaVCoeffs0(fi.i());
+    const dimensionedScalarPair etaVCoeffs1 =
+        fi.group().popBal().etaVCoeffs1(fi.i());
+    return
+        (
+            etaVCoeffs0.first().value()
+           *(sgIntegralPDFs[1] - sgIntegralPDFs[0])
+          + etaVCoeffs0.second().value()
+           *(sgIntegralPDFByVs[1] - sgIntegralPDFByVs[0])
+          + etaVCoeffs1.first().value()
+           *(sgIntegralPDFs[2] - sgIntegralPDFs[1])
+          + etaVCoeffs1.second().value()
+           *(sgIntegralPDFByVs[2] - sgIntegralPDFByVs[1])
+        )
+       /(vgIntegralPDFs[1] - vgIntegralPDFs[0]);
 }
 
 

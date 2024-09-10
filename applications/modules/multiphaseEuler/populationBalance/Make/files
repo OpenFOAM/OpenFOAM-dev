@@ -13,50 +13,50 @@ $(shapeModels)/fractal/sinteringModels/sinteringModel/sinteringModel.C
 $(shapeModels)/fractal/sinteringModels/KochFriedlander/KochFriedlander.C
 $(shapeModels)/fractal/sinteringModels/noSintering/noSintering.C
 
-coalescenceModels = coalescenceModels
-$(coalescenceModels)/coalescenceModel/coalescenceModel.C
-$(coalescenceModels)/AdachiStuartFokkink/AdachiStuartFokkink.C
-$(coalescenceModels)/ballisticCollisions/ballisticCollisions.C
-$(coalescenceModels)/BrownianCollisions/BrownianCollisions.C
-$(coalescenceModels)/constantCoalescence/constantCoalescence.C
-$(coalescenceModels)/CoulaloglouTavlarides/CoulaloglouTavlarides.C
-$(coalescenceModels)/DahnekeInterpolation/DahnekeInterpolation.C
-$(coalescenceModels)/hydrodynamic/hydrodynamic.C
-$(coalescenceModels)/LehrMilliesMewesCoalescence/LehrMilliesMewesCoalescence.C
-$(coalescenceModels)/LiaoCoalescence/LiaoCoalescence.C
-$(coalescenceModels)/Luo/Luo.C
-$(coalescenceModels)/PrinceBlanch/PrinceBlanch.C
-$(coalescenceModels)/turbulentShear/turbulentShear.C
+coalescenceModels/coalescenceModel/coalescenceModel.C
+coalescenceModels/AdachiStuartFokkink/AdachiStuartFokkink.C
+coalescenceModels/ballisticCollisions/ballisticCollisions.C
+coalescenceModels/BrownianCollisions/BrownianCollisions.C
+coalescenceModels/constantCoalescence/constantCoalescence.C
+coalescenceModels/CoulaloglouTavlarides/CoulaloglouTavlarides.C
+coalescenceModels/DahnekeInterpolation/DahnekeInterpolation.C
+coalescenceModels/hydrodynamic/hydrodynamic.C
+coalescenceModels/LehrMilliesMewesCoalescence/LehrMilliesMewesCoalescence.C
+coalescenceModels/LiaoCoalescence/LiaoCoalescence.C
+coalescenceModels/Luo/Luo.C
+coalescenceModels/PrinceBlanch/PrinceBlanch.C
+coalescenceModels/turbulentShear/turbulentShear.C
 
-binaryBreakupModels = binaryBreakupModels
-$(binaryBreakupModels)/binaryBreakupModel/binaryBreakupModel.C
-$(binaryBreakupModels)/LehrMilliesMewes/LehrMilliesMewes.C
-$(binaryBreakupModels)/Liao/LiaoBase.C
-$(binaryBreakupModels)/Liao/Liao.C
-$(binaryBreakupModels)/LuoSvendsen/LuoSvendsen.C
-$(binaryBreakupModels)/powerLawUniformBinary/powerLawUniformBinary.C
+binaryBreakupModels/binaryBreakupModel/binaryBreakupModel.C
+binaryBreakupModels/LehrMilliesMewes/LehrMilliesMewes.C
+binaryBreakupModels/Liao/LiaoBase.C
+binaryBreakupModels/Liao/Liao.C
+binaryBreakupModels/LuoSvendsen/LuoSvendsen.C
+binaryBreakupModels/powerLawUniformBinary/powerLawUniformBinary.C
 
-breakupModels = breakupModels
-$(breakupModels)/breakupModel/breakupModel.C
-$(breakupModels)/exponential/exponential.C
-$(breakupModels)/Kusters/Kusters.C
-$(breakupModels)/Laakkonen/Laakkonen.C
-$(breakupModels)/powerLaw/powerLaw.C
+breakupModels/breakupModel/breakupModel.C
+breakupModels/exponential/exponential.C
+breakupModels/Kusters/Kusters.C
+breakupModels/Laakkonen/Laakkonen.C
+breakupModels/powerLaw/powerLaw.C
 
-daughterSizeDistributionModels = daughterSizeDistributionModels
-$(daughterSizeDistributionModels)/daughterSizeDistributionModel/daughterSizeDistributionModel.C
-$(daughterSizeDistributionModels)/LaakkonenDaughterSizeDistribution/LaakkonenDaughterSizeDistribution.C
-$(daughterSizeDistributionModels)/uniformBinary/uniformBinary.C
+daughterSizeDistributionModels/daughterSizeDistributionModel/daughterSizeDistributionModel.C
+daughterSizeDistributionModels/LaakkonenDaughterSizeDistribution/LaakkonenDaughterSizeDistribution.C
+daughterSizeDistributionModels/uniformBinary/uniformBinary.C
 
-driftModels = driftModels
-$(driftModels)/driftModel/driftModel.C
-$(driftModels)/constantDrift/constantDrift.C
-$(driftModels)/densityChange/densityChange.C
-$(driftModels)/phaseChange/phaseChange.C
+driftModels/driftModel/driftModel.C
+driftModels/constantDrift/constantDrift.C
+driftModels/densityChange/densityChange.C
+driftModels/phaseChange/phaseChange.C
 
-nucleationModels = nucleationModels
-$(nucleationModels)/nucleationModel/nucleationModel.C
-$(nucleationModels)/reactionDriven/reactionDriven.C
+nucleationModels/nucleationModel/nucleationModel.C
+nucleationModels/reactionDriven/reactionDriven.C
+
+derivedFvPatchFields/singleSizeGroup/singleSizeGroupFvPatchScalarField.C
+derivedFvPatchFields/distributionSizeGroup/distributionSizeGroupFvPatchScalarField.C
+
+derivedFvFieldSources/singleSizeGroup/singleSizeGroupFvScalarFieldSource.C
+derivedFvFieldSources/distributionSizeGroup/distributionSizeGroupFvScalarFieldSource.C
 
 
 LIB = $(FOAM_LIBBIN)/libpopulationBalance
