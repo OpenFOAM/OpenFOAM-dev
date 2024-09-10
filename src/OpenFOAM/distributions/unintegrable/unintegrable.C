@@ -74,6 +74,72 @@ Foam::tmp<Foam::scalarField> Foam::distributions::unintegrable::integrateX
 }
 
 
+Foam::tmp<Foam::scalarField>
+Foam::distributions::unintegrable::interpolateIntegrateXPow
+(
+    const scalarField& xStar,
+    const label e,
+    const scalarField& yStar,
+    const scalarField& x
+)
+{
+    tmp<scalarField> tResult(new scalarField(x.size()));
+    scalarField& result = tResult.ref();
+
+    label i = 0;
+
+    while (i < x.size() && x[i] < xStar[0])
+    {
+        result[i] = 0;
+        i ++;
+    }
+
+    scalar integral_PDFxPowE_0_j = 0;
+
+    for (label iStar = 0; iStar < xStar.size() - 1; ++ iStar)
+    {
+        const scalar xPowE1_j = integerPow(xStar[iStar], e + 1);
+
+        auto integral_xPowE1_j_x = [&](const scalar x)
+        {
+            const scalar xPowE1_i = integerPow(x, e + 1);
+
+            const scalar integral_xPowE_j_x =
+                e + 1 == 0
+              ? log(x/xStar[iStar])
+              : (xPowE1_i - xPowE1_j)/(e + 1);
+            const scalar integral_xPowE1_j_x =
+                e + 2 == 0
+              ? log(x/xStar[iStar])
+              : (xPowE1_i*x - xPowE1_j*xStar[iStar])/(e + 2);
+
+            return
+                yStar[iStar]*integral_xPowE_j_x
+              + (yStar[iStar + 1] - yStar[iStar])
+               /(xStar[iStar + 1] - xStar[iStar])
+               *(integral_xPowE1_j_x - xStar[iStar]*integral_xPowE_j_x);
+        };
+
+        while (i < x.size() && x[i] < xStar[iStar + 1])
+        {
+            result[i] = integral_PDFxPowE_0_j + integral_xPowE1_j_x(x[i]);
+
+            i ++;
+        }
+
+        integral_PDFxPowE_0_j += integral_xPowE1_j_x(xStar[iStar + 1]);
+    }
+
+    while (i < x.size())
+    {
+        result[i] = integral_PDFxPowE_0_j;
+        i ++;
+    }
+
+    return tResult;
+}
+
+
 Foam::scalar Foam::distributions::unintegrable::sampleInterval
 (
     const Pair<scalar>& x,
@@ -242,7 +308,7 @@ const Foam::scalarField& Foam::distributions::unintegrable::PDF() const
 
     const Pair<scalar> Phi01 = this->Phi01();
 
-    PDFPtr_.set((phi(this->q(), xPtr_)/(Phi01[1] - Phi01[0])).ptr());
+    PDFPtr_.set((phi(this->q(), x())/(Phi01[1] - Phi01[0])).ptr());
 
     return PDFPtr_();
 }
@@ -318,7 +384,25 @@ Foam::distributions::unintegrable::unintegrable
 :
     distribution(d, sampleQ),
     n_(d.n_)
-{}
+{
+    // Copy the data over if it exists and if the sampling moment is the same,
+    // otherwise leave it to be re-generated
+    if (q() == d.q())
+    {
+        if (d.xPtr_.valid())
+        {
+            xPtr_.set(new scalarField(d.xPtr_()));
+        }
+        if (d.Phi01Ptr_.valid())
+        {
+            Phi01Ptr_.set(new Pair<scalar>(d.Phi01Ptr_()));
+        }
+        if (d.PDFPtr_.valid())
+        {
+            PDFPtr_.set(new scalarField(d.PDFPtr_()));
+        }
+    }
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -357,47 +441,14 @@ Foam::scalar Foam::distributions::unintegrable::mean() const
 
 
 Foam::tmp<Foam::scalarField>
-Foam::distributions::unintegrable::CDF(const scalarField& x) const
+Foam::distributions::unintegrable::integralPDFxPow
+(
+    const scalarField& x,
+    const label e,
+    const bool
+) const
 {
-    tmp<scalarField> tResult(new scalarField(x.size()));
-    scalarField& result = tResult.ref();
-
-    const scalar dCDF = scalar(1)/(n_ - 1);
-
-    const scalarField& xStar = this->x();
-    const scalarField& PDFStar = this->PDF();
-
-    label i = 0;
-
-    while (i < x.size() && x[i] < xStar[0])
-    {
-        result[i] = 0;
-        i ++;
-    }
-
-    for (label iStar = 0; iStar < n_ - 1; ++ iStar)
-    {
-        while (i < x.size() && x[i] < xStar[iStar + 1])
-        {
-            result[i] =
-                iStar*dCDF
-              + PDFStar[iStar]
-               *(x[i] - xStar[iStar])
-              + (PDFStar[iStar + 1] - PDFStar[iStar])
-               /(xStar[iStar + 1] - xStar[iStar])
-               /2
-               *sqr(x[i] - xStar[iStar]);
-            i ++;
-        }
-    }
-
-    while (i < x.size())
-    {
-        result[i] = 1;
-        i ++;
-    }
-
-    return tResult;
+    return interpolateIntegrateXPow(this->x(), e, this->PDF(), x);
 }
 
 

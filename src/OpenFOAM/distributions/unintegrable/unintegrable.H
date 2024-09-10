@@ -138,6 +138,16 @@ public:
             const scalarField& y
         );
 
+        //- Integrate the values x^e*y with respect to the coordinates x,
+        //  and interpolating onto a separate set of x coordinates
+        static tmp<scalarField> interpolateIntegrateXPow
+        (
+            const scalarField& xStar,
+            const label e,
+            const scalarField& yStar,
+            const scalarField& x
+        );
+
         //- Sample an interval, given the interval's bounding x-coordinates,
         //  values Phi (the un-normalised CDF), and a random sample. First
         //  order interpolation.
@@ -221,8 +231,13 @@ public:
         //- Return the mean value
         virtual scalar mean() const;
 
-        //- Return the cumulative density function at the given coordinates
-        virtual tmp<scalarField> CDF(const scalarField& x) const;
+        //- Return the integral of the PDF multiplied by an integer power of x
+        virtual tmp<scalarField> integralPDFxPow
+        (
+            const scalarField& x,
+            const label e,
+            const bool consistent = false
+        ) const;
 
         //- Write to a stream
         virtual void write(Ostream& os, const unitConversion& units) const;

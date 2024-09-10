@@ -78,9 +78,14 @@ Foam::scalar Foam::distributions::unintegrableForNonZeroQ::sample() const
 
 
 Foam::tmp<Foam::scalarField>
-Foam::distributions::unintegrableForNonZeroQ::CDF(const scalarField& x) const
+Foam::distributions::unintegrableForNonZeroQ::integralPDFxPow
+(
+    const scalarField& x,
+    const label e,
+    const bool consistent
+) const
 {
-    if (q() == 0)
+    if (!consistent && q() + e == 0)
     {
         const Pair<scalar>& Phi01 = this->Phi01();
         const scalarField xClip(Foam::min(Foam::max(x, min()), max()));
@@ -88,7 +93,7 @@ Foam::distributions::unintegrableForNonZeroQ::CDF(const scalarField& x) const
     }
     else
     {
-        return unintegrable::CDF(x);
+        return unintegrable::integralPDFxPow(x, e);
     }
 }
 

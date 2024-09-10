@@ -121,8 +121,15 @@ Foam::scalar Foam::distributions::standardNormal::mean() const
 
 
 Foam::tmp<Foam::scalarField>
-Foam::distributions::standardNormal::CDF(const scalarField& x) const
+Foam::distributions::standardNormal::integralPDFxPow
+(
+    const scalarField& x,
+    const label e,
+    const bool
+) const
 {
+    if (e != 0) NotImplemented;
+
     static const scalar sqrt2 = sqrt(scalar(2));
     return (1 + approxErf(x/sqrt2))/2;
 }

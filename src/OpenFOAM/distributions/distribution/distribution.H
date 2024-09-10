@@ -209,6 +209,9 @@ public:
 
     // Member Functions
 
+        //- Access the sample size exponent
+        label sampleQ() const;
+
         //- Sample the distribution
         virtual scalar sample() const = 0;
 
@@ -229,7 +232,21 @@ public:
         virtual scalar mean() const = 0;
 
         //- Return the cumulative density function at the given coordinates
-        virtual tmp<scalarField> CDF(const scalarField& x) const = 0;
+        virtual tmp<scalarField> CDF(const scalarField& x) const;
+
+        //- Return the integral of the PDF multiplied by an integer power of x.
+        //  If the power given is zero then this generates the CDF. The
+        //  consistent flag disables analytical overrides to ensure that
+        //  numerical evaluations with different x or e arguments are evaluated
+        //  by the same process and are therefore consistent with each other.
+        //  This should be used if multiple evaluations are being made and the
+        //  results combined.
+        virtual tmp<scalarField> integralPDFxPow
+        (
+            const scalarField& x,
+            const label e,
+            const bool consistent = false
+        ) const = 0;
 
         //- Write to a stream
         virtual void write(Ostream& os, const unitConversion& units) const;

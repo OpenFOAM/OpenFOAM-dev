@@ -101,10 +101,14 @@ Foam::scalar Foam::distributions::fixedValue::mean() const
 }
 
 
-Foam::tmp<Foam::scalarField>
-Foam::distributions::fixedValue::CDF(const scalarField& x) const
+Foam::tmp<Foam::scalarField> Foam::distributions::fixedValue::integralPDFxPow
+(
+    const scalarField& x,
+    const label e,
+    const bool
+) const
 {
-    return pos(x - value_);
+    return pos(x - value_)*integerPow(value_, e);
 }
 
 

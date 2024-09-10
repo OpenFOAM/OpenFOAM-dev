@@ -86,7 +86,7 @@ class uniform
 
         //- Calculate the indefinite integral of the PDF at the given values
         template<class Type>
-        auto Phi(const Type& x) const;
+        static auto Phi(const Type& x, const label q);
 
 
 public:
@@ -137,8 +137,13 @@ public:
         //- Return the mean value
         virtual scalar mean() const;
 
-        //- Return the cumulative density function at the given coordinates
-        virtual tmp<scalarField> CDF(const scalarField& x) const;
+        //- Return the integral of the PDF multiplied by an integer power of x
+        virtual tmp<scalarField> integralPDFxPow
+        (
+            const scalarField& x,
+            const label e,
+            const bool consistent = false
+        ) const;
 
         //- Write to a stream
         virtual void write(Ostream& os, const unitConversion& units) const;

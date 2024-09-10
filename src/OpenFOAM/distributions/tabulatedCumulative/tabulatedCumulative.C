@@ -191,35 +191,63 @@ Foam::scalar Foam::distributions::tabulatedCumulative::mean() const
 
 
 Foam::tmp<Foam::scalarField>
-Foam::distributions::tabulatedCumulative::CDF(const scalarField& x) const
+Foam::distributions::tabulatedCumulative::integralPDFxPow
+(
+    const scalarField& x,
+    const label e,
+    const bool
+) const
 {
+    const scalarField& xStar = x_;
+    const scalarField& yStar = PDF_;
+
     tmp<scalarField> tResult(new scalarField(x.size()));
     scalarField& result = tResult.ref();
 
     label i = 0;
 
-    while (i < x.size() && x[i] < x_[0])
+    while (i < x.size() && x[i] < xStar[0])
     {
         result[i] = 0;
         i ++;
     }
 
-    for (label j = 0; j < x_.size() - 1; ++ j)
+    scalar integral_PDFxPowE_0_j = 0;
+
+    for (label iStar = 0; iStar < xStar.size() - 1; ++ iStar)
     {
-        while (i < x.size() && x[i] < x_[j + 1])
+        const scalar xPowE1_j = integerPow(xStar[iStar], e + 1);
+
+        auto integral_xPowE1_j_x = [&](const scalar x)
         {
-            result[i] = CDF_[j] + PDF_[j]*(x[i] - x_[j]);
+            const scalar xPowE1_i = integerPow(x, e + 1);
+
+            const scalar integral_xPowE_j_x =
+                e + 1 == 0
+              ? log(x/xStar[iStar])
+              : (xPowE1_i - xPowE1_j)/(e + 1);
+
+            return yStar[iStar]*integral_xPowE_j_x;
+        };
+
+        while (i < x.size() && x[i] < xStar[iStar + 1])
+        {
+            result[i] = integral_PDFxPowE_0_j + integral_xPowE1_j_x(x[i]);
+
             i ++;
         }
+
+        integral_PDFxPowE_0_j += integral_xPowE1_j_x(xStar[iStar + 1]);
     }
 
     while (i < x.size())
     {
-        result[i] = 1;
+        result[i] = integral_PDFxPowE_0_j;
         i ++;
     }
 
     return tResult;
+
 }
 
 

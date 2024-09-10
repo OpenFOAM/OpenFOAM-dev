@@ -169,38 +169,14 @@ Foam::scalar Foam::distributions::tabulatedDensity::mean() const
 
 
 Foam::tmp<Foam::scalarField>
-Foam::distributions::tabulatedDensity::CDF(const scalarField& x) const
+Foam::distributions::tabulatedDensity::integralPDFxPow
+(
+    const scalarField& x,
+    const label e,
+    const bool
+) const
 {
-    tmp<scalarField> tResult(new scalarField(x.size()));
-    scalarField& result = tResult.ref();
-
-    label i = 0;
-
-    while (i < x.size() && x[i] < x_[0])
-    {
-        result[i] = 0;
-        i ++;
-    }
-
-    for (label j = 0; j < x_.size() - 1; ++ j)
-    {
-        while (i < x.size() && x[i] < x_[j + 1])
-        {
-            result[i] =
-                CDF_[j]
-              + PDF_[j]*(x[i] - x_[j])
-              + (PDF_[j + 1] - PDF_[j])/(x_[j + 1] - x_[j])/2*sqr(x[i] - x_[j]);
-            i ++;
-        }
-    }
-
-    while (i < x.size())
-    {
-        result[i] = 1;
-        i ++;
-    }
-
-    return tResult;
+    return unintegrable::interpolateIntegrateXPow(x_, e, PDF_, x);
 }
 
 

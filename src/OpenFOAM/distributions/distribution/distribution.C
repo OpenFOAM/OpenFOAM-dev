@@ -131,6 +131,19 @@ Foam::distribution::~distribution()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+Foam::label Foam::distribution::sampleQ() const
+{
+    return sampleQ_;
+}
+
+
+Foam::tmp<Foam::scalarField>
+Foam::distribution::CDF(const scalarField& x) const
+{
+    return integralPDFxPow(x, 0);
+}
+
+
 void Foam::distribution::write(Ostream& os, const unitConversion& units) const
 {
     writeEntry(os, "type", type());

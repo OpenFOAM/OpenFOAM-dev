@@ -98,8 +98,13 @@ public:
         //- Sample the distribution
         virtual scalar sampleForZeroQ() const = 0;
 
-        //- Return the cumulative density function at the given coordinates
-        virtual tmp<scalarField> CDF(const scalarField& x) const;
+        //- Return the integral of the PDF multiplied by an integer power of x
+        virtual tmp<scalarField> integralPDFxPow
+        (
+            const scalarField& x,
+            const label e,
+            const bool consistent = false
+        ) const;
 };
 
 

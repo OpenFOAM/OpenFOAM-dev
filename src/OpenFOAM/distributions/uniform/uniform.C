@@ -41,15 +41,15 @@ namespace distributions
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-auto Foam::distributions::uniform::Phi(const Type& x) const
+auto Foam::distributions::uniform::Phi(const Type& x, const label q)
 {
-    if (q() == -1)
+    if (q == -1)
     {
         return log(x);
     }
     else
     {
-        return integerPow(x, 1 + q())/(1 + q());
+        return integerPow(x, 1 + q)/(1 + q);
     }
 }
 
@@ -74,8 +74,8 @@ Foam::distributions::uniform::uniform
     ),
     min_(dict.lookupBackwardsCompatible<scalar>({"min", "minValue"}, units)),
     max_(dict.lookupBackwardsCompatible<scalar>({"max", "maxValue"}, units)),
-    Phi0_(Phi(min_)),
-    Phi1_(Phi(max_))
+    Phi0_(Phi(min_, q())),
+    Phi1_(Phi(max_, q()))
 {
     validateBounds(dict);
     if (q() != 0) validatePositive(dict);
@@ -87,8 +87,8 @@ Foam::distributions::uniform::uniform(const uniform& d, const label sampleQ)
     FieldDistribution<distribution, uniform>(d, sampleQ),
     min_(d.min_),
     max_(d.max_),
-    Phi0_(Phi(min_)),
-    Phi1_(Phi(max_))
+    Phi0_(Phi(min_, q())),
+    Phi1_(Phi(max_, q()))
 {}
 
 
@@ -111,7 +111,6 @@ Foam::scalar Foam::distributions::uniform::sample() const
     else
     {
         const scalar PhiS = (1 - s)*Phi0_ + s*Phi1_;
-
         return integerRoot((1 + q())*PhiS, 1 + q());
     }
 }
@@ -131,25 +130,20 @@ Foam::scalar Foam::distributions::uniform::max() const
 
 Foam::scalar Foam::distributions::uniform::mean() const
 {
-    if (q() == -2)
-    {
-        return Foam::log(max_/min_)/(Phi1_ - Phi0_);
-    }
-    else
-    {
-        const scalar Mu0 = integerPow(min_, 2 + q())/(2 + q());
-        const scalar Mu1 = integerPow(max_, 2 + q())/(2 + q());
-
-        return (Mu1 - Mu0)/(Phi1_ - Phi0_);
-    }
+    return (Phi(max_, q() + 1) - Phi(min_, q() + 1))/(Phi1_ - Phi0_);
 }
 
 
 Foam::tmp<Foam::scalarField>
-Foam::distributions::uniform::CDF(const scalarField& x) const
+Foam::distributions::uniform::integralPDFxPow
+(
+    const scalarField& x,
+    const label e,
+    const bool
+) const
 {
     const scalarField xClip(Foam::min(Foam::max(x, min()), max()));
-    return (Phi(xClip) - Phi0_)/(Phi1_ - Phi0_);
+    return (Phi(xClip, q() + e) - Phi(min_, q() + e))/(Phi1_ - Phi0_);
 }
 
 
@@ -171,7 +165,7 @@ Foam::distributions::uniform::plotPDF(const scalarField& x) const
 {
     if (q() == -1)
     {
-        return clipPDF(x, 1/x/Foam::log(max_/min_));
+        return clipPDF(x, 1/x/log(max_/min_));
     }
     else
     {

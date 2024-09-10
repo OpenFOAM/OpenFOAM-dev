@@ -180,7 +180,12 @@ Foam::scalar Foam::distributions::multiFixedValue::mean() const
 
 
 Foam::tmp<Foam::scalarField>
-Foam::distributions::multiFixedValue::CDF(const scalarField& x) const
+Foam::distributions::multiFixedValue::integralPDFxPow
+(
+    const scalarField& x,
+    const label e,
+    const bool
+) const
 {
     tmp<scalarField> tResult(new scalarField(x.size()));
     scalarField& result = tResult.ref();
@@ -193,18 +198,22 @@ Foam::distributions::multiFixedValue::CDF(const scalarField& x) const
         i ++;
     }
 
+    scalar integral_PDFxPowE_0_j = P_[0]*integerPow(x_[0], e);
+
     for (label j = 0; j < x_.size() - 1; ++ j)
     {
         while (i < x.size() && x[i] < x_[j + 1])
         {
-            result[i] = sumP_[j + 1];
+            result[i] = integral_PDFxPowE_0_j;
             i ++;
         }
+
+        integral_PDFxPowE_0_j += P_[j + 1]*integerPow(x_[j + 1], e);
     }
 
     while (i < x.size())
     {
-        result[i] = 1;
+        result[i] = integral_PDFxPowE_0_j;
         i ++;
     }
 
