@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,6 +76,11 @@ Foam::fv::VoFClouds::VoFClouds
     ),
     clouds_
     (
+        dict.lookupOrDefault<wordList>
+        (
+            "clouds",
+            parcelCloudList::defaultCloudNames
+        ),
         carrierThermo_.rho(),
         mesh.lookupObject<volVectorField>("U"),
         mesh.lookupObject<uniformDimensionedVectorField>("g"),
