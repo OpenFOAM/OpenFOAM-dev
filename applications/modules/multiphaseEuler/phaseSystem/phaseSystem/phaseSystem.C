@@ -36,6 +36,7 @@ License
 #include "correctContactAngle.H"
 #include "fixedValueFvsPatchFields.H"
 #include "movingWallVelocityFvPatchVectorField.H"
+#include "movingWallSlipVelocityFvPatchVectorField.H"
 #include "pressureReference.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -709,6 +710,7 @@ void Foam::phaseSystem::correctBoundaryFlux()
             (
                 isA<fixedValueFvsPatchScalarField>(phiBf[patchi])
              && !isA<movingWallVelocityFvPatchVectorField>(UBf[patchi])
+             && !isA<movingWallSlipVelocityFvPatchVectorField>(UBf[patchi])
             )
             {
                 phiBf[patchi] == phiRelBf[patchi];
