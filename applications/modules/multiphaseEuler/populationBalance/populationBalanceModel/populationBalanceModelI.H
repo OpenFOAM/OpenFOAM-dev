@@ -23,6 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "populationBalanceModel.H"
+
 // * * * * * * * * * * * * Private Member Functions * * * * * * * * * * * * //
 
 inline Foam::label
@@ -84,6 +86,13 @@ Foam::diameterModels::populationBalanceModel::continuousPhase() const
 
 inline const Foam::UPtrList<Foam::diameterModels::sizeGroup>&
 Foam::diameterModels::populationBalanceModel::sizeGroups() const
+{
+    return sizeGroups_;
+}
+
+
+inline Foam::UPtrList<Foam::diameterModels::sizeGroup>&
+Foam::diameterModels::populationBalanceModel::sizeGroups()
 {
     return sizeGroups_;
 }

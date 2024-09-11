@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,11 +43,11 @@ Usage
 
         sizeGroups
         (
-            f1 {dSph  1e-3; value 1.0;}
-            f2 {dSph  2e-3; value 0.0;}
-            f3 {dSph  3e-3; value 0.0;}
-            f4 {dSph  4e-3; value 0.0;}
-            f5 {dSph  5e-3; value 0.0;}
+            f1 {dSph 1e-3; }
+            f2 {dSph 2e-3; }
+            f3 {dSph 3e-3; }
+            f4 {dSph 4e-3; }
+            f5 {dSph 5e-3; }
             ...
         );
     }
@@ -106,8 +106,6 @@ class velocityGroup
         tmp<volScalarField> dsm() const;
 
         tmp<volScalarField> fSum() const;
-
-        tmp<volScalarField> N() const;
 
         void scale();
 

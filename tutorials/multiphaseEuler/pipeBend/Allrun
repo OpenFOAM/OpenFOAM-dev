@@ -10,13 +10,8 @@ runApplication topoSet
 
 # Run
 runApplication decomposePar
-runParallel -s populationBalanceInitialDistributionFs foamPostProcess -func "
-    populationBalanceInitialDistributionFs
-    (
-        phase=particles,
-        initialDistributionFile=\"constant/initialDistribution.particles\"
-    )
-    "
+runParallel -s populationBalanceInitialDistributionFs foamPostProcess \
+    -solver multiphaseEuler -func populationBalanceSetPhaseSizeDistribution
 runParallel $(getApplication)
 runApplication reconstructPar -latestTime
 

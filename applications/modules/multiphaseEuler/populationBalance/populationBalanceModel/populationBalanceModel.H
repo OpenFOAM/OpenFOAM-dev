@@ -610,6 +610,9 @@ public:
         //- Return the size groups belonging to this populationBalance
         inline const UPtrList<sizeGroup>& sizeGroups() const;
 
+        //- Access the size groups belonging to this populationBalance
+        inline UPtrList<sizeGroup>& sizeGroups();
+
         //- Return implicit source terms
         inline const volScalarField& Sp(const label i) const;
 

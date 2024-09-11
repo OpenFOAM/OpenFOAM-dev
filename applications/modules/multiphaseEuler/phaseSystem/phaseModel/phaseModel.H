@@ -197,6 +197,9 @@ public:
         //- Return a reference to the diameterModel of the phase
         const diameterModel& diameter() const;
 
+        //- Return a reference to the diameterModel of the phase
+        diameterModel& diameter();
+
         //- Correct the phase properties
         virtual void correct();
 

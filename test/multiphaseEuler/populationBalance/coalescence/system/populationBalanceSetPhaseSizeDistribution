@@ -1,0 +1,23 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+
+type                populationBalanceSetSizeDistribution;
+libs                ("libmultiphaseEulerFunctionObjects.so");
+
+phase               air1;
+
+distribution
+{
+    type                multiFixedValue;
+    Q                   3;
+    file                "constant/initialDistribution.air1";
+}
+
+writeControl        writeTime;
+
+// ************************************************************************* //

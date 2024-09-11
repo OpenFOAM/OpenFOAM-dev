@@ -5,13 +5,9 @@ cd ${0%/*} || exit 1    # Run from this directory
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
 runApplication zeroDimensionalMesh
-runApplication foamPostProcess -func "
-    populationBalanceInitialDistributionFs
-    (
-        phase=air1,
-        initialDistributionFile=\"constant/initialDistribution.air1\"
-    )
-    "
+runApplication foamPostProcess \
+    -solver multiphaseEuler \
+    -func populationBalanceSetPhaseSizeDistribution
 runApplication $(getApplication)
 
 ( cd validation && ./createGraphs )

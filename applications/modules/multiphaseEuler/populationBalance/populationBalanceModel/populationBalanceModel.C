@@ -1262,6 +1262,7 @@ Foam::dimensionedScalar Foam::diameterModels::populationBalanceModel::etaV
     const dimensionedScalarPair etaVCoeffs1 =
         fi.group().popBal().etaVCoeffs1(fi.i());
     return
+        max
         (
             etaVCoeffs0.first().value()
            *(sgIntegralPDFs[1] - sgIntegralPDFs[0])
@@ -1270,9 +1271,10 @@ Foam::dimensionedScalar Foam::diameterModels::populationBalanceModel::etaV
           + etaVCoeffs1.first().value()
            *(sgIntegralPDFs[2] - sgIntegralPDFs[1])
           + etaVCoeffs1.second().value()
-           *(sgIntegralPDFByVs[2] - sgIntegralPDFByVs[1])
+           *(sgIntegralPDFByVs[2] - sgIntegralPDFByVs[1]),
+            rootVSmall/fi.group().sizeGroups().size()
         )
-       /(vgIntegralPDFs[1] - vgIntegralPDFs[0]);
+       /max(vgIntegralPDFs[1] - vgIntegralPDFs[0], rootVSmall);
 }
 
 

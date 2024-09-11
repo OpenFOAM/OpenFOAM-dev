@@ -190,6 +190,12 @@ const Foam::diameterModel& Foam::phaseModel::diameter() const
 }
 
 
+Foam::diameterModel& Foam::phaseModel::diameter()
+{
+    return diameterModel_();
+}
+
+
 void Foam::phaseModel::correct()
 {
     diameterModel_->correct();

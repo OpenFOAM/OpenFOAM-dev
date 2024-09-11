@@ -1,0 +1,43 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Sets the population balance size distribution for a single phase by
+    overwriting the values in the size-group fraction fields with values
+    obtained by integrating a given distribution
+
+\*---------------------------------------------------------------------------*/
+
+type                populationBalanceSetSizeDistribution;
+libs                ("libmultiphaseEulerFunctionObjects.so");
+
+phase               <phaseName>;
+
+file                <file>; // Distribution file, in OpenFOAM format. A list of
+                            // tuples of diameter and probability. E.g.:
+                            //
+                            // (
+                            //     (1e-3 0.2)
+                            //     (2e-3 0.4)
+                            //     (3e-3 0.3)
+                            //     (4e-3 0.1)
+                            // )
+
+Q                   0;      // Distribution size exponent. 0 is a number
+                            // distribution. 3 is a volume distribution.
+
+distribution
+{
+    type                tabulatedDensity;
+    Q                   $Q;
+    file                $file;
+}
+
+writeControl        writeTime;
+
+
+// ************************************************************************* //

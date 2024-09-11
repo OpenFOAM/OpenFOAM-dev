@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,51 +41,40 @@ namespace diameterModels
 
 // * * * * * * * * * * * * Private Member Functions * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField> Foam::diameterModels::velocityGroup::dsm() const
+Foam::tmp<Foam::volScalarField>
+Foam::diameterModels::velocityGroup::dsm() const
 {
-    tmp<volScalarField> tInvDsm
+    tmp<volScalarField> tsumFi
     (
         volScalarField::New
         (
-            "invDsm",
+            "sumFi",
+            phase().mesh(),
+            dimensionedScalar(dimless, Zero)
+        )
+    );
+    tmp<volScalarField> tsumFiAbyV
+    (
+        volScalarField::New
+        (
+            "sumFiAbyV",
             phase().mesh(),
             dimensionedScalar(inv(dimLength), Zero)
         )
     );
 
-    volScalarField& invDsm = tInvDsm.ref();
+    volScalarField& sumFi = tsumFi.ref();
+    volScalarField& sumFiAbyV = tsumFiAbyV.ref();
 
     forAll(sizeGroups_, i)
     {
         const sizeGroup& fi = sizeGroups_[i];
 
-        invDsm += fi.a()*fi/fi.x();
+        sumFi += max(fi, rootVSmall);
+        sumFiAbyV += max(fi, rootVSmall)*fi.a()/fi.x();
     }
 
-    return 6/tInvDsm;
-}
-
-
-Foam::tmp<Foam::volScalarField> Foam::diameterModels::velocityGroup::N() const
-{
-    tmp<volScalarField> tN
-    (
-        volScalarField::New
-        (
-            "N",
-            phase().mesh(),
-            dimensionedScalar(inv(dimVolume), 0)
-        )
-    );
-
-    volScalarField& N = tN.ref();
-
-    forAll(sizeGroups_, i)
-    {
-        N += phase()*sizeGroups_[i]/sizeGroups_[i].x();
-    }
-
-    return tN;
+    return 6*sumFi/tsumFiAbyV;
 }
 
 
@@ -196,26 +185,25 @@ Foam::tmp<Foam::volScalarField> Foam::diameterModels::velocityGroup::d() const
 
 Foam::tmp<Foam::volScalarField> Foam::diameterModels::velocityGroup::Av() const
 {
-    tmp<volScalarField> tA
+    tmp<volScalarField> tsumFiAbyV
     (
         volScalarField::New
         (
-            "a",
+            "sumFiAbyV",
             phase().mesh(),
             dimensionedScalar(inv(dimLength), Zero)
         )
     );
-
-    volScalarField& a = tA.ref();
+    volScalarField& sumFiAbyV = tsumFiAbyV.ref();
 
     forAll(sizeGroups_, i)
     {
         const sizeGroup& fi = sizeGroups_[i];
 
-        a += fi.a()*fi/fi.x();
+        sumFiAbyV += fi*fi.a()/fi.x();
     }
 
-    return phase()*a;
+    return phase()*tsumFiAbyV;
 }
 
 
@@ -232,7 +220,10 @@ void Foam::diameterModels::velocityGroup::correct()
 
         if
         (
-            phase().mesh().solution().solverDict(popBalName_)
+            phase()
+           .mesh()
+           .solution()
+           .solverDict(popBalName_)
            .lookupOrDefault<Switch>
             (
                 "scale",
