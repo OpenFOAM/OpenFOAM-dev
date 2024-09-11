@@ -107,18 +107,19 @@ void Foam::movingMappedWallVelocityFvPatchVectorField::updateCoeffs()
           : tmp<scalarField>(new scalarField(fvp.size(), Zero));
 
         // Calculate and map the mesh velocity from the neighbour
-        vectorField nbrCf0(nbrFvp.size());
+        vectorField nbrCf(nbrFvp.size()), nbrCf0(nbrFvp.size());
         forAll(nbrCf0, nbrPatchFacei)
         {
+            const label nbrPolyFacei =
+                nbrMesh.polyFacesBf()[nbrFvp.index()][nbrPatchFacei];
+            nbrCf[nbrPatchFacei] =
+                nbrMesh.faceCentres()[nbrPolyFacei];
             nbrCf0[nbrPatchFacei] =
-                nbrMesh.faces()
-                [
-                    nbrMesh.polyFacesBf()[nbrFvp.index()][nbrPatchFacei]
-                ].centre(nbrMesh.oldPoints());
+                nbrMesh.faces()[nbrPolyFacei].centre(nbrMesh.oldPoints());
         }
         const vectorField nbrUp
         (
-            (nbrFvp.Cf() - nbrCf0)/db().time().deltaTValue()
+            (nbrCf - nbrCf0)/db().time().deltaTValue()
         );
         const vectorField Up(mapper.fromNeighbour(nbrUp));
 
