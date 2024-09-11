@@ -37,6 +37,7 @@ Usage
         distribution
         {
             type        RosinRammler;
+            Q           0;
             min         1 [mm];
             max         15 [mm];
             d           14 [mm];
