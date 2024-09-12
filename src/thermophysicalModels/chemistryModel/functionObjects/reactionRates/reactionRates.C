@@ -86,7 +86,8 @@ Foam::functionObjects::reactionRates::reactionRates
         (
             IOobject::groupName("chemistryProperties", phaseName_)
         )
-    )
+    ),
+    writeFields_(false)
 {
     read(dict);
 }
@@ -103,6 +104,8 @@ Foam::functionObjects::reactionRates::~reactionRates()
 bool Foam::functionObjects::reactionRates::read(const dictionary& dict)
 {
     fvMeshFunctionObject::read(dict);
+
+    writeFields_ = dict.lookupOrDefault<bool>("writeFields", false);
 
     resetName("reactionRates");
 
@@ -134,6 +137,7 @@ bool Foam::functionObjects::reactionRates::write()
             chemistryModel_.reactionRR(reactioni)
         );
 
+        // Compute the average rate and write it into the log file
         const scalar sumVRR =
             all()
           ? fvc::domainIntegrate(RR).value()
@@ -149,6 +153,12 @@ bool Foam::functionObjects::reactionRates::write()
         if (Pstream::master())
         {
             file() << token::TAB << sumVRR/V();
+        }
+
+        // Write the rate field, if necessary
+        if (writeFields_)
+        {
+            RR.write();
         }
     }
 

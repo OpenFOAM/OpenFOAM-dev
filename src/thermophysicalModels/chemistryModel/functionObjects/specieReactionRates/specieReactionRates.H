@@ -38,6 +38,9 @@ Description
         select          all; // Or points, cellSet, cellZone
 
         //phase         <phaseName>; // Optional name of the phase
+
+        //writeFields   false; // Optionally also write the rate fields. Note
+                               // that this can create a lot of data.
     }
     \endverbatim
 
@@ -83,6 +86,9 @@ class specieReactionRates
 
         //- Reference to the chemistry model
         const basicChemistryModel& chemistryModel_;
+
+        //- Whether or not to write the specie reaction rate fields
+        bool writeFields_;
 
 
     // Private Member Functions

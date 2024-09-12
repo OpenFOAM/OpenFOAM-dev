@@ -90,7 +90,8 @@ Foam::functionObjects::specieReactionRates::specieReactionRates
         (
             IOobject::groupName("chemistryProperties", phaseName_)
         )
-    )
+    ),
+    writeFields_(false)
 {
     read(dict);
 }
@@ -107,6 +108,8 @@ Foam::functionObjects::specieReactionRates::~specieReactionRates()
 bool Foam::functionObjects::specieReactionRates::read(const dictionary& dict)
 {
     fvMeshFunctionObject::read(dict);
+
+    writeFields_ = dict.lookupOrDefault<bool>("writeFields", false);
 
     resetName("specieReactionRates");
 
@@ -143,6 +146,7 @@ bool Foam::functionObjects::specieReactionRates::write()
             chemistryModel_.specieReactionRR(reactioni)
         );
 
+        // Compute the average rates and write them into the log file
         for (label speciei=0; speciei<nSpecie; speciei++)
         {
             scalar sumVRRi = 0;
@@ -173,6 +177,15 @@ bool Foam::functionObjects::specieReactionRates::write()
         if (Pstream::master())
         {
             file() << nl;
+        }
+
+        // Write the rate fields, if necessary
+        if (writeFields_)
+        {
+            for (label speciei=0; speciei<nSpecie; speciei++)
+            {
+                RR[speciei].write();
+            }
         }
     }
 
