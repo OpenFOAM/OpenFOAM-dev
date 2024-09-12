@@ -101,6 +101,7 @@ primitives/functions/Function1/quarterSineRamp/quarterSineRamp.C
 primitives/functions/Function1/quarterCosineRamp/quarterCosineRamp.C
 primitives/functions/Function1/halfCosineRamp/halfCosineRamp.C
 primitives/functions/Function1/exponentialSqrRamp/exponentialSqrRamp.C
+primitives/functions/Function1/normalise/normalise.C
 primitives/functions/Function1/squarePulse/squarePulse.C
 primitives/functions/Function1/Table/tableBase.C
 primitives/functions/Function1/Table/TableReader/makeTableReaders.C

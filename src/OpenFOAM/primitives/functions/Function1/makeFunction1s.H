@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,9 @@ Description
 #include "ZeroConstant.H"
 #include "OneConstant.H"
 #include "Polynomial1.H"
+#include "Repeat.H"
 #include "Scale.H"
+#include "Shift.H"
 #include "Sine.H"
 #include "Square.H"
 #include "Table.H"
@@ -66,7 +68,9 @@ Description
         addFunction1(ZeroConstant, Type);                                      \
         addFunction1(OneConstant, Type);                                       \
         addStreamConstructableFunction1(Polynomial, Type);                     \
+        addFunction1(Repeat, Type);                                            \
         addFunction1(Scale, Type);                                             \
+        addFunction1(Shift, Type);                                             \
         addFunction1(Sine, Type);                                              \
         addFunction1(Square, Type);                                            \
         addStreamConstructableFunction1(Table, Type);                          \

@@ -69,7 +69,7 @@ populationBalanceSetSizeDistribution
         FatalIOErrorInFunction(dict)
             << (havePopBal ? "both" : "neither") << " of keywords "
             << "populationBalance " << (havePopBal ? "and" : "or")
-            << " phase defined in dictionary" << dict.name()
+            << " phase defined in dictionary " << dict.name()
             << exit(FatalIOError);
     }
 
