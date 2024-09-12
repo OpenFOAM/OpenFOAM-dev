@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,12 @@ Foam::Switch Foam::blockMesh::checkBlockFaceOrientation(true);
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::blockMesh::blockMesh(const IOdictionary& dict, const word& regionName)
+Foam::blockMesh::blockMesh
+(
+    const IOdictionary& dict,
+    const fileName& meshPath,
+    const word& regionName
+)
 :
     meshDict_(dict),
     verboseOutput(meshDict_.lookupOrDefault<Switch>("verbose", true)),
@@ -70,7 +75,7 @@ Foam::blockMesh::blockMesh(const IOdictionary& dict, const word& regionName)
         blockVertex::iNew(meshDict_, geometry_)
     ),
     vertices_(Foam::vertices(blockVertices_)),
-    topologyPtr_(createTopology(meshDict_, regionName))
+    topologyPtr_(createTopology(meshDict_, meshPath, regionName))
 {
     Switch fastMerge(meshDict_.lookupOrDefault<Switch>("fastMerge", false));
 

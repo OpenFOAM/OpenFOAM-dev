@@ -447,6 +447,7 @@ void syncPoints
 int main(int argc, char *argv[])
 {
     #include "addOverwriteOption.H"
+    #include "addMeshOption.H"
     #include "addRegionOption.H"
     #include "addDictOption.H"
     #include "setRootCase.H"
@@ -457,7 +458,7 @@ int main(int argc, char *argv[])
 
     const bool overwrite = args.optionFound("overwrite");
 
-    #include "createNamedPolyMesh.H"
+    #include "createSpecifiedPolyMesh.H"
 
     const word oldInstance = mesh.pointsInstance();
 

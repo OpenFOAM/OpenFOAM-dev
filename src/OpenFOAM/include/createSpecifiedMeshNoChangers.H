@@ -1,3 +1,4 @@
+#include "setMeshPath.H"
 #include "setRegionName.H"
 
 Foam::fvMesh mesh
@@ -6,6 +7,7 @@ Foam::fvMesh mesh
     (
         regionName,
         runTime.name(),
+        meshPath,
         runTime,
         Foam::IOobject::MUST_READ
     ),

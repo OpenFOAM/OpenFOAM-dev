@@ -1031,12 +1031,13 @@ int main(int argc, char *argv[])
 {
     argList::addNote("Create region mesh by extruding a faceZone or faceSet");
 
+    #include "addMeshOption.H"
     #include "addRegionOption.H"
     #include "addOverwriteOption.H"
     #include "addDictOption.H"
     #include "setRootCase.H"
     #include "createTime.H"
-    #include "createRegionMeshNoChangers.H"
+    #include "createSpecifiedMeshNoChangers.H"
 
     if (mesh.boundaryMesh().checkParallelSync(true))
     {
@@ -1792,6 +1793,7 @@ int main(int argc, char *argv[])
         (
             shellRegionName,
             meshInstance,
+            meshPath,
             runTime,
             IOobject::NO_READ,
             IOobject::AUTO_WRITE,

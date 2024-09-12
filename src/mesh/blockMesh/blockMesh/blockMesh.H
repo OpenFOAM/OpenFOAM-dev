@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -150,7 +150,12 @@ class blockMesh
             const dictionary& meshDescription
         ) const;
 
-        polyMesh* createTopology(const IOdictionary&, const word& regionName);
+        polyMesh* createTopology
+        (
+            const IOdictionary&,
+            const fileName& meshPath,
+            const word& regionName
+        );
 
         void check(const polyMesh&, const dictionary&) const;
 
@@ -214,8 +219,13 @@ public:
 
     // Constructors
 
-        //- Construct from IOdictionary
-        blockMesh(const IOdictionary&, const word& regionName);
+        //- Construct from IOdictionary, path and region name
+        blockMesh
+        (
+            const IOdictionary&,
+            const fileName& meshPath,
+            const word& regionName
+        );
 
         //- Disallow default bitwise copy construction
         blockMesh(const blockMesh&) = delete;

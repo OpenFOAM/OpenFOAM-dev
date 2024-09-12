@@ -237,17 +237,17 @@ bool Foam::fvMeshTopoChangers::meshToMesh::update()
         // to avoid round-off errors at start of cyclic or repeat sequences
         meshTime = timeIndex*timeDelta_;
 
-        const word otherMeshDir = "meshToMesh_" + time.timeName(meshTime);
+        const word meshTimeName(time.timeName(meshTime));
 
-        Info << "Mapping to mesh " << otherMeshDir << endl;
+        Info<< "Mapping to mesh time " << meshTimeName << endl;
 
         fvMesh otherMesh
         (
             IOobject
             (
-                otherMeshDir,
-                time.constant(),
                 mesh().dbDir(),
+                time.constant(),
+                "meshes"/meshTimeName,
                 time,
                 IOobject::MUST_READ
             ),

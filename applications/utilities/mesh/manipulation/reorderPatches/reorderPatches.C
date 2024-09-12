@@ -77,6 +77,7 @@ int main(int argc, char *argv[])
     );
 
     #include "addOverwriteOption.H"
+    #include "addMeshOption.H"
     #include "addRegionOption.H"
 
     argList::addOption
@@ -142,7 +143,12 @@ int main(int argc, char *argv[])
             Info<< "Reference region: " << referenceRegion << endl;
         }
 
-        const fileName referenceMeshDir(referenceRegion/polyMesh::meshSubDir);
+        #include "setMeshPath.H"
+
+        const fileName referenceMeshDir
+        (
+            meshPath/referenceRegion/polyMesh::meshSubDir
+        );
 
         typeIOobject<polyBoundaryMesh> ioObj
         (
@@ -188,7 +194,7 @@ int main(int argc, char *argv[])
     }
 
     #include "createTimeNoFunctionObjects.H"
-    #include "createRegionMeshNoChangers.H"
+    #include "createSpecifiedMeshNoChangers.H"
 
     // Select time if specified
     timeSelector::selectIfPresent(runTime, args);

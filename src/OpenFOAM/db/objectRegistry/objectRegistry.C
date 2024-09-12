@@ -116,7 +116,7 @@ Foam::objectRegistry::objectRegistry
     HashTable<regIOobject*>(nIoObjects),
     time_(t),
     parent_(t),
-    dbDir_(name()),
+    dbDir_(fileName::null),
     event_(1),
     cacheTemporaryObjectsSet_(false)
 {}
@@ -125,6 +125,7 @@ Foam::objectRegistry::objectRegistry
 Foam::objectRegistry::objectRegistry
 (
     const IOobject& io,
+    const fileName& dbDir,
     const label nIoObjects
 )
 :
@@ -132,12 +133,22 @@ Foam::objectRegistry::objectRegistry
     HashTable<regIOobject*>(nIoObjects),
     time_(io.time()),
     parent_(io.db()),
-    dbDir_(parent_.dbDir()/local()/name()),
+    dbDir_(dbDir),
     event_(1),
     cacheTemporaryObjectsSet_(false)
 {
     writeOpt() = IOobject::AUTO_WRITE;
 }
+
+
+Foam::objectRegistry::objectRegistry
+(
+    const IOobject& io,
+    const label nIoObjects
+)
+:
+    objectRegistry(io, io.db().dbDir()/io.local()/io.name(), nIoObjects)
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

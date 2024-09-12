@@ -57,11 +57,12 @@ using namespace Foam;
 
 int main(int argc, char *argv[])
 {
+    #include "addMeshOption.H"
     #include "addRegionOption.H"
     argList::validArgs.append("fieldName");
     #include "setRootCase.H"
     #include "createTime.H"
-    #include "createRegionMeshNoChangers.H"
+    #include "createSpecifiedMeshNoChangers.H"
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

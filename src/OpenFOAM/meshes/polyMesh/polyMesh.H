@@ -189,6 +189,9 @@ private:
 
     // Private Member Functions
 
+        //- Return the region directory
+        fileName regionDir(const IOobject& io) const;
+
         //- Initialise the polyMesh from the primitive data
         void initMesh();
 
@@ -344,9 +347,6 @@ public:
     // Member Functions
 
         // Database
-
-            //- Override the objectRegistry dbDir for a single-region case
-            virtual const fileName& dbDir() const;
 
             //- Return the local mesh directory (dbDir()/meshSubDir)
             fileName meshDir() const;

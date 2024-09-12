@@ -773,6 +773,7 @@ void Foam::domainDecomposition::decompose()
                 (
                     regionName_,
                     completeMesh().facesInstance(),
+                    meshPath_,
                     runTimes_.procTimes()[proci]
                 ),
                 move(procPoints),

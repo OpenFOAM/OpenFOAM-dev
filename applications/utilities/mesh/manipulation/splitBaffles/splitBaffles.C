@@ -54,6 +54,7 @@ int main(int argc, char *argv[])
     );
 
     #include "addOverwriteOption.H"
+    #include "addMeshOption.H"
     #include "addRegionOption.H"
     argList::addBoolOption
     (
@@ -63,7 +64,7 @@ int main(int argc, char *argv[])
 
     #include "setRootCase.H"
     #include "createTimeNoFunctionObjects.H"
-    #include "createRegionMeshNoChangers.H"
+    #include "createSpecifiedMeshNoChangers.H"
 
     const bool overwrite  = args.optionFound("overwrite");
     const bool fields     = args.optionFound("fields");

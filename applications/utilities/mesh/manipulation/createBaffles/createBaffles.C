@@ -330,11 +330,12 @@ int main(int argc, char *argv[])
     );
     #include "addDictOption.H"
     #include "addOverwriteOption.H"
+    #include "addMeshOption.H"
     #include "addRegionOption.H"
 
     #include "setRootCase.H"
     #include "createTimeNoFunctionObjects.H"
-    #include "createRegionMeshNoChangers.H"
+    #include "createSpecifiedMeshNoChangers.H"
 
     const polyBoundaryMesh& bMesh = mesh.boundaryMesh();
 

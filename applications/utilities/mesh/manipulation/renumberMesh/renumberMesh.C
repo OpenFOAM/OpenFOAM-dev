@@ -540,6 +540,7 @@ int main(int argc, char *argv[])
         "Renumber mesh to minimise bandwidth"
     );
 
+    #include "addMeshOption.H"
     #include "addRegionOption.H"
     #include "addOverwriteOption.H"
     timeSelector::addOptions();
@@ -561,7 +562,7 @@ int main(int argc, char *argv[])
     // Get times list
     const instantList Times = timeSelector::select0(runTime, args);
 
-    #include "createRegionMeshNoChangers.H"
+    #include "createSpecifiedMeshNoChangers.H"
     const word oldInstance = mesh.pointsInstance();
 
     const bool readDict = args.optionFound("dict");

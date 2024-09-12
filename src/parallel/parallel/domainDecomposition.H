@@ -75,6 +75,9 @@ class domainDecomposition
         //- Run times
         const processorRunTimes& runTimes_;
 
+        //- Mesh path
+        const fileName meshPath_;
+
         //- Region name
         const word regionName_;
 
@@ -365,6 +368,7 @@ public:
         domainDecomposition
         (
             const processorRunTimes& procRunTimes,
+            const fileName& meshPath,
             const word& regionName,
             const multiDomainDecomposition& regionMeshes =
                 NullObjectRef<multiDomainDecomposition>()
@@ -381,6 +385,12 @@ public:
         inline const processorRunTimes& procRunTimes() const
         {
             return runTimes_;
+        }
+
+        //- Access the mesh path
+        inline const fileName& meshPath() const
+        {
+            return meshPath_;
         }
 
         //- Access the region name

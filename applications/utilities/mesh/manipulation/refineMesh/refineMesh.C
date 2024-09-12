@@ -159,6 +159,7 @@ int main(int argc, char *argv[])
     );
 
     #include "addOverwriteOption.H"
+    #include "addMeshOption.H"
     #include "addRegionOption.H"
     #include "addDictOption.H"
 
@@ -170,7 +171,7 @@ int main(int argc, char *argv[])
 
     #include "setRootCase.H"
     #include "createTimeNoFunctionObjects.H"
-    #include "createNamedPolyMesh.H"
+    #include "createSpecifiedPolyMesh.H"
     const word oldInstance = mesh.pointsInstance();
 
     printEdgeStats(mesh);

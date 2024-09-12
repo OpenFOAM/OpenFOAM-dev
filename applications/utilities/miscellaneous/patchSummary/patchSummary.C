@@ -50,6 +50,7 @@ int main(int argc, char *argv[])
 {
     timeSelector::addOptions();
 
+    #include "addMeshOption.H"
     #include "addRegionOption.H"
     argList::addBoolOption
     (
@@ -63,10 +64,8 @@ int main(int argc, char *argv[])
 
     const bool expand = args.optionFound("expand");
 
-
-    #include "createRegionMeshNoChangers.H"
+    #include "createSpecifiedMeshNoChangers.H"
     const polyBoundaryMesh& bm = mesh.boundaryMesh();
-
 
     forAll(timeDirs, timeI)
     {

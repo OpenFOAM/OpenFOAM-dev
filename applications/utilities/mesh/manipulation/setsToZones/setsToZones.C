@@ -57,7 +57,6 @@ using namespace Foam;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-
 int main(int argc, char *argv[])
 {
     timeSelector::addOptions(true, false);
@@ -72,6 +71,7 @@ int main(int argc, char *argv[])
         "ignore orientation of faceSet"
     );
 
+    #include "addMeshOption.H"
     #include "addRegionOption.H"
     #include "setRootCase.H"
     #include "createTime.H"
@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
     // Get times list
     timeSelector::selectIfPresent(runTime, args);
 
-    #include "createNamedPolyMesh.H"
+    #include "createSpecifiedPolyMesh.H"
 
     const fileName setsSubPath(mesh.dbDir()/polyMesh::meshSubDir/"sets");
 

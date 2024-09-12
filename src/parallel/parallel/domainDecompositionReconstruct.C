@@ -154,6 +154,7 @@ void Foam::domainDecomposition::reconstruct()
                 (
                     regionName_,
                     procMeshes()[0].facesInstance(),
+                    meshPath_,
                     runTimes_.completeTime()
                 ),
                 pointField(),

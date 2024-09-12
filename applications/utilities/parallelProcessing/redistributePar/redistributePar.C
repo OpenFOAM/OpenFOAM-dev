@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -312,6 +312,7 @@ void readFields
 
 int main(int argc, char *argv[])
 {
+    #include "addMeshOption.H"
     #include "addRegionOption.H"
     #include "addOverwriteOption.H"
 
@@ -319,6 +320,7 @@ int main(int argc, char *argv[])
     timeSelector::addOptions();
 
     #include "setRootCase.H"
+    #include "setMeshPath.H"
 
     if (env("FOAM_SIGFPE"))
     {
@@ -372,13 +374,13 @@ int main(int argc, char *argv[])
     Pstream::scatter(masterInstDir);
 
     // Check who has a mesh
-    const fileName meshPath = runTime.path()/masterInstDir/meshSubDir;
+    const fileName meshAbsolutePath = runTime.path()/masterInstDir/meshSubDir;
 
-    Info<< "Found points in " << meshPath << nl << endl;
+    Info<< "Found points in " << meshAbsolutePath << nl << endl;
 
 
     boolList haveMesh(Pstream::nProcs(), false);
-    haveMesh[Pstream::myProcNo()] = isDir(meshPath);
+    haveMesh[Pstream::myProcNo()] = isDir(meshAbsolutePath);
     Pstream::gatherList(haveMesh);
     Pstream::scatterList(haveMesh);
     Info<< "Per processor mesh availability : " << haveMesh << endl;
@@ -390,6 +392,7 @@ int main(int argc, char *argv[])
         (
             regionName,
             masterInstDir,
+            meshPath,
             runTime,
             Foam::IOobject::MUST_READ
         )

@@ -43,10 +43,12 @@ using namespace Foam;
 int main(int argc, char *argv[])
 {
     #include "addOverwriteOption.H"
+    #include "addMeshOption.H"
     #include "addRegionOption.H"
     #include "addDictOption.H"
 
     #include "setRootCase.H"
+    #include "setMeshPath.H"
     #include "createTime.H"
 
     const word regionName =
@@ -60,6 +62,7 @@ int main(int argc, char *argv[])
         (
             regionName,
             runTime.constant(),
+            meshPath,
             runTime
         ),
         systemDictIO("mirrorMeshDict", args, runTime)

@@ -316,6 +316,7 @@ void evaluateNonConformalProcessorCyclics(const fvMesh& mesh)
 int main(int argc, char *argv[])
 {
     #include "addOverwriteOption.H"
+    #include "addMeshOption.H"
     #include "addRegionOption.H"
     #include "addDictOption.H"
 
@@ -332,6 +333,7 @@ int main(int argc, char *argv[])
     }
 
     #include "setRootCase.H"
+    #include "setMeshPath.H"
     #include "createTimeNoFunctionObjects.H"
 
     const Foam::word primaryRegionName =
@@ -409,6 +411,7 @@ int main(int argc, char *argv[])
                     (
                         regionName,
                         runTime.name(),
+                        meshPath,
                         runTime,
                         Foam::IOobject::MUST_READ
                     ),

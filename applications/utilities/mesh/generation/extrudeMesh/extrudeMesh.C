@@ -271,6 +271,7 @@ void changeFrontBackPatches
 int main(int argc, char *argv[])
 {
     #include "addRegionOption.H"
+    #include "addMeshOption.H"
     #include "addDictOption.H"
 
     #include "setRootCase.H"
@@ -380,7 +381,7 @@ int main(int argc, char *argv[])
             sourceCaseDir
         );
 
-        #include "createRegionMeshNoChangers.H"
+        #include "createSpecifiedMeshNoChangers.H"
 
         const polyBoundaryMesh& patches = mesh.boundaryMesh();
 

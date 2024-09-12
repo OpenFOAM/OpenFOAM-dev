@@ -193,6 +193,7 @@ int main(int argc, char *argv[])
 {
     timeSelector::addOptions(true, false);
     #include "addDictOption.H"
+    #include "addMeshOption.H"
     #include "addRegionOption.H"
     argList::addBoolOption
     (
@@ -205,7 +206,7 @@ int main(int argc, char *argv[])
 
     const instantList timeDirs = timeSelector::selectIfPresent(runTime, args);
 
-    #include "createNamedPolyMesh.H"
+    #include "createSpecifiedPolyMesh.H"
 
     const bool noSync = args.optionFound("noSync");
 

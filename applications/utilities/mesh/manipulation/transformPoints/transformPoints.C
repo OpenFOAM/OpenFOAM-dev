@@ -99,9 +99,14 @@ void readAndRotateFields
 }
 
 
-void rotateFields(const argList& args, const Time& runTime, const tensor& T)
+void rotateFields
+(
+    const argList& args,
+    const Time& runTime,
+    const tensor& T
+)
 {
-    #include "createRegionMeshNoChangers.H"
+    #include "createSpecifiedMeshNoChangers.H"
 
     // Read objects in time directory
     IOobjectList objects(mesh, runTime.name());
@@ -180,9 +185,11 @@ int main(int argc, char *argv[])
         "Point set to limit the transformation to"
     );
 
+    #include "addMeshOption.H"
     #include "addRegionOption.H"
     #include "addAllRegionsOption.H"
     #include "setRootCase.H"
+    #include "setMeshPath.H"
     #include "createTime.H"
 
     const string transformationString(args[1]);
@@ -213,7 +220,7 @@ int main(int argc, char *argv[])
           ? word::null
           : regionName;
 
-        const fileName meshDir(regionDir/polyMesh::meshSubDir);
+        const fileName meshDir(meshPath/regionDir/polyMesh::meshSubDir);
 
         pointIOField points
         (

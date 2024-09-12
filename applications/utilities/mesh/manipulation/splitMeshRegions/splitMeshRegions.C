@@ -1373,6 +1373,7 @@ int main(int argc, char *argv[])
     (
         "splits mesh into multiple regions (detected by walking across faces)"
     );
+    #include "addMeshOption.H"
     #include "addRegionOption.H"
     #include "addOverwriteOption.H"
     argList::addBoolOption
@@ -1447,7 +1448,7 @@ int main(int argc, char *argv[])
 
     #include "setRootCase.H"
     #include "createTimeNoFunctionObjects.H"
-    #include "createRegionMeshNoChangers.H"
+    #include "createSpecifiedMeshNoChangers.H"
 
     const word oldInstance = mesh.pointsInstance();
 

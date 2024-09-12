@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,8 @@ IOobject systemDictIO
     const word& dictName,
     const argList& args,
     const objectRegistry& ob,
-    const word& regionName = polyMesh::defaultRegion
+    const word& regionName = polyMesh::defaultRegion,
+    const fileName& path = fileName::null
 );
 
 IOdictionary systemDict
@@ -60,7 +61,8 @@ IOdictionary systemDict
     const word& dictName,
     const argList& args,
     const objectRegistry& ob,
-    const word& regionName = polyMesh::defaultRegion
+    const word& regionName = polyMesh::defaultRegion,
+    const fileName& path = fileName::null
 );
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

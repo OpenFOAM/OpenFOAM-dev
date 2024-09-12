@@ -61,6 +61,7 @@ int main(int argc, char *argv[])
         "extract surface from a polyMesh"
     );
     argList::validArgs.append("output surface file");
+    #include "addMeshOption.H"
     #include "addRegionOption.H"
     argList::addBoolOption
     (
@@ -105,7 +106,7 @@ int main(int argc, char *argv[])
 
     Info<< "Reading mesh from time " << runTime.userTimeName() << endl;
 
-    #include "createNamedPolyMesh.H"
+    #include "createSpecifiedPolyMesh.H"
 
 
     // Create local surface from:

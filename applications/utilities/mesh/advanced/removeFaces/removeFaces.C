@@ -50,6 +50,8 @@ using namespace Foam;
 int main(int argc, char *argv[])
 {
     #include "addOverwriteOption.H"
+    #include "addRegionOption.H"
+    #include "addMeshOption.H"
     argList::validArgs.append("faceSet");
     argList::addBoolOption
     (
@@ -57,14 +59,13 @@ int main(int argc, char *argv[])
         "do not update fields"
     );
 
-
     #include "setRootCase.H"
     #include "createTimeNoFunctionObjects.H"
 
     const bool overwrite = args.optionFound("overwrite");
     const bool fields = !args.optionFound("noFields");
 
-    #include "createMeshNoChangers.H"
+    #include "createSpecifiedMeshNoChangers.H"
     const word oldInstance = mesh.pointsInstance();
 
     const word setName = args[1];

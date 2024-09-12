@@ -400,7 +400,7 @@ Foam::polyMesh::polyMesh
     const bool syncPar
 )
 :
-    objectRegistry(io),
+    objectRegistry(io, regionDir(io)),
     primitiveMesh(),
     points_
     (
@@ -678,7 +678,7 @@ Foam::polyMesh::polyMesh
     const bool syncPar
 )
 :
-    objectRegistry(io),
+    objectRegistry(io, regionDir(io)),
     primitiveMesh(),
     points_
     (

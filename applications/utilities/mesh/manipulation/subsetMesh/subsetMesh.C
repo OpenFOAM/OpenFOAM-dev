@@ -46,7 +46,6 @@ using namespace Foam;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-
 template<class Type>
 void subsetVolFields
 (
@@ -193,6 +192,7 @@ int main(int argc, char *argv[])
     );
 
     #include "addOverwriteOption.H"
+    #include "addMeshOption.H"
     #include "addRegionOption.H"
     argList::validArgs.append("cellSet");
     argList::addOption
@@ -220,7 +220,7 @@ int main(int argc, char *argv[])
     Foam::word meshRegionName = polyMesh::defaultRegion;
     args.optionReadIfPresent("region", meshRegionName);
 
-    #include "createRegionMeshNoChangers.H"
+    #include "createSpecifiedMeshNoChangers.H"
 
 
     const word setName = args[1];

@@ -78,6 +78,7 @@ int main(int argc, char *argv[])
 
     argList::noParallel();
     #include "addOverwriteOption.H"
+    #include "addMeshOption.H"
     #include "addRegionOption.H"
     argList::addBoolOption
     (
@@ -99,7 +100,7 @@ int main(int argc, char *argv[])
     // Select time if specified
     timeSelector::selectIfPresent(runTime, args);
 
-    #include "createRegionMeshNoChangers.H"
+    #include "createSpecifiedMeshNoChangers.H"
 
     const scalar snapTol = args.optionLookupOrDefault("tol", 1e-4);
     const bool overwrite = args.optionFound("overwrite");

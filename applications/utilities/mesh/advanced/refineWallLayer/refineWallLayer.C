@@ -62,6 +62,7 @@ using namespace Foam;
 int main(int argc, char *argv[])
 {
     #include "addOverwriteOption.H"
+    #include "addOverwriteOption.H"
     #include "addRegionOption.H"
     argList::noParallel();
     argList::validArgs.append("patches");
@@ -80,7 +81,7 @@ int main(int argc, char *argv[])
     Foam::word meshRegionName = polyMesh::defaultRegion;
     args.optionReadIfPresent("region", meshRegionName);
 
-    #include "createNamedPolyMesh.H"
+    #include "createSpecifiedPolyMesh.H"
     const word oldInstance = mesh.pointsInstance();
 
     // Find set of patches from the list of regular expressions provided

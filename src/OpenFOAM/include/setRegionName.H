@@ -8,19 +8,8 @@ if (args.optionReadIfPresent("region", regionName))
 }
 else
 {
-    regionName = Foam::fvMesh::defaultRegion;
+    regionName = Foam::polyMesh::defaultRegion;
     Foam::Info
         << "Create mesh for time = "
         << runTime.name() << Foam::nl << Foam::endl;
 }
-
-Foam::fvMesh mesh
-(
-    Foam::IOobject
-    (
-        regionName,
-        runTime.name(),
-        runTime,
-        Foam::IOobject::MUST_READ
-    )
-);

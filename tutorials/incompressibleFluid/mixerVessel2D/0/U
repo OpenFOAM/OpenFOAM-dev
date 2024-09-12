@@ -24,7 +24,7 @@ boundaryField
 
     rotor
     {
-        type            movingWallVelocity;
+        type            movingWallSlipVelocity;
         value           $internalField;
     }
 

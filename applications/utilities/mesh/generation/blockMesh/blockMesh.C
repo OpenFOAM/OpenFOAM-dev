@@ -102,11 +102,20 @@ int main(int argc, char *argv[])
         "       O --- X\n"
     );
 
+    #include "addMeshOption.H"
     #include "addRegionOption.H"
     #include "setRootCase.H"
+    #include "setMeshPath.H"
     #include "createTime.H"
 
     const word dictName("blockMeshDict");
+
+
+    // Check if the mesh is specified otherwise mesh the default mesh
+    if (!meshPath.empty())
+    {
+        Info<< nl << "Generating mesh " << meshPath << endl;
+    }
 
     word regionName;
     word regionPath;
@@ -120,9 +129,10 @@ int main(int argc, char *argv[])
 
     if (!args.optionFound("noClean"))
     {
-        fileName polyMeshPath
+        const fileName polyMeshPath
         (
-            runTime.path()/runTime.constant()/regionPath/polyMesh::meshSubDir
+            runTime.path()/runTime.constant()
+           /meshPath/regionPath/polyMesh::meshSubDir
         );
 
         if (exists(polyMeshPath))
@@ -144,7 +154,7 @@ int main(int argc, char *argv[])
 
     typeIOobject<IOdictionary> meshDictIO
     (
-        systemDictIO(dictName, args, runTime, regionName)
+        systemDictIO(dictName, args, runTime, regionName, meshPath)
     );
 
     if (!meshDictIO.headerOk())
@@ -159,7 +169,7 @@ int main(int argc, char *argv[])
         << meshDictIO.relativeObjectPath() << endl;
 
     IOdictionary meshDict(meshDictIO);
-    blockMesh blocks(meshDict, regionName);
+    blockMesh blocks(meshDict, runTime.constant()/meshPath, regionName);
 
 
     if (args.optionFound("blockTopology"))
@@ -214,6 +224,7 @@ int main(int argc, char *argv[])
         (
             regionName,
             runTime.constant(),
+            meshPath,
             runTime
         ),
         clone(blocks.points()),           // could we reuse space?

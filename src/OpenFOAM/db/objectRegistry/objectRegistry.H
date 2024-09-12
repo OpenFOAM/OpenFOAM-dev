@@ -106,7 +106,7 @@ public:
 
         //- Construct the time objectRegistry given an initial estimate
         //  for the number of entries
-        explicit objectRegistry
+        objectRegistry
         (
             const Time& db,
             const label nIoObjects = 128
@@ -114,7 +114,16 @@ public:
 
         //- Construct a sub-registry given an IObject to describe the registry
         //  and an initial estimate for the number of entries
-        explicit objectRegistry
+        objectRegistry
+        (
+            const IOobject& io,
+            const fileName& dbDir,
+            const label nIoObjects = 128
+        );
+
+        //- Construct a sub-registry given an IObject to describe the registry
+        //  and an initial estimate for the number of entries
+        objectRegistry
         (
             const IOobject& io,
             const label nIoObjects = 128
@@ -148,7 +157,7 @@ public:
             }
 
             //- Local directory path of this objectRegistry relative to the time
-            virtual const fileName& dbDir() const
+            const fileName& dbDir() const
             {
                 return dbDir_;
             }

@@ -70,6 +70,7 @@ void interpolateFields
 
 int main(int argc, char *argv[])
 {
+    #include "addMeshOption.H"
     // constant, not false
     timeSelector::addOptions(true, false);
     argList::addBoolOption
@@ -85,7 +86,7 @@ int main(int argc, char *argv[])
 
     const instantList timeDirs = timeSelector::select0(runTime, args);
 
-    #include "createRegionMeshNoChangers.H"
+    #include "createSpecifiedMeshNoChangers.H"
 
     if (regionName == singleCellName)
     {

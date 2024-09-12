@@ -8,7 +8,7 @@ runApplication blockMesh
 
 for mapTime in 1e-05 2e-05
 do
-    runApplication -s $mapTime blockMesh -region meshToMesh_$mapTime
+    runApplication -s $mapTime blockMesh -mesh $mapTime
 done
 
 runApplication $(getApplication)

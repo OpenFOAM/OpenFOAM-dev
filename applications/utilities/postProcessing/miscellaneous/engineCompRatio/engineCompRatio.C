@@ -51,6 +51,7 @@ using namespace Foam;
 
 int main(int argc, char *argv[])
 {
+    #include "addMeshOption.H"
     #include "addRegionOption.H"
 
     argList::addOption
@@ -69,7 +70,7 @@ int main(int argc, char *argv[])
 
     #include "setRootCase.H"
     #include "createTime.H"
-    #include "createRegionMesh.H"
+    #include "createSpecifiedMesh.H"
 
     // Cell labels of the cells in the combustion chamber
     // Defaults to all cells

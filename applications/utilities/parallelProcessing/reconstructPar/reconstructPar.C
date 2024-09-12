@@ -145,6 +145,7 @@ int main(int argc, char *argv[])
     );
 
     argList::noParallel();
+    #include "addMeshOption.H"
     #include "addRegionOption.H"
     #include "addAllRegionsOption.H"
     argList::addBoolOption
@@ -199,6 +200,7 @@ int main(int argc, char *argv[])
     timeSelector::addOptions(true, true);
 
     #include "setRootCase.H"
+    #include "setMeshPath.H"
 
     const bool writeCellProc = args.optionFound("cellProc");
 
@@ -317,7 +319,7 @@ int main(int argc, char *argv[])
     }
 
     // Create meshes
-    multiDomainDecomposition regionMeshes(runTimes, regionNames);
+    multiDomainDecomposition regionMeshes(runTimes, meshPath, regionNames);
     if (regionMeshes.readReconstruct(!noReconstructSets))
     {
         Info<< endl;

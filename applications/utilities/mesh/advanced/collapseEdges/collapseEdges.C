@@ -83,11 +83,13 @@ int main(int argc, char *argv[])
 
     #include "addDictOption.H"
     #include "addOverwriteOption.H"
+    #include "addMeshOption.H"
+    #include "addRegionOption.H"
     #include "setRootCase.H"
     #include "createTimeNoFunctionObjects.H"
     const instantList timeDirs = timeSelector::selectIfPresent(runTime, args);
 
-    #include "createMeshNoChangers.H"
+    #include "createSpecifiedMeshNoChangers.H"
 
     const word oldInstance = mesh.pointsInstance();
 

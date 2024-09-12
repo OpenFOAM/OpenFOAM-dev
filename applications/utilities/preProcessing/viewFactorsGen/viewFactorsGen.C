@@ -254,10 +254,11 @@ void insertMatrixElements
 
 int main(int argc, char *argv[])
 {
+    #include "addMeshOption.H"
     #include "addRegionOption.H"
     #include "setRootCase.H"
     #include "createTime.H"
-    #include "createRegionMeshNoChangers.H"
+    #include "createSpecifiedMeshNoChangers.H"
 
     const polyBoundaryMesh& patches = mesh.boundaryMesh();
 

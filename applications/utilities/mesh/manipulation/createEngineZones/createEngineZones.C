@@ -212,6 +212,7 @@ int main(int argc, char *argv[])
 {
     argList::noParallel();
 
+    #include "addMeshOption.H"
     #include "addRegionOption.H"
 
     argList::addBoolOption
@@ -239,7 +240,7 @@ int main(int argc, char *argv[])
             << exit(FatalError);
     }
 
-    #include "createRegionMesh.H"
+    #include "createSpecifiedMesh.H"
 
     const fvMeshMovers::multiValveEngine& mve
     (

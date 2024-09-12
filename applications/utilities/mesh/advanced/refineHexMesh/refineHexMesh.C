@@ -51,6 +51,7 @@ using namespace Foam;
 int main(int argc, char *argv[])
 {
     #include "addOverwriteOption.H"
+    #include "addMeshOption.H"
     #include "addRegionOption.H"
     argList::validArgs.append("cellSet");
     argList::addBoolOption
@@ -72,7 +73,7 @@ int main(int argc, char *argv[])
     const bool minSet = args.optionFound("minSet");
     const bool fields = !args.optionFound("noFields");
 
-    #include "createRegionMeshNoChangers.H"
+    #include "createSpecifiedMeshNoChangers.H"
     const word oldInstance = mesh.pointsInstance();
 
     word cellSetName(args.args()[1]);

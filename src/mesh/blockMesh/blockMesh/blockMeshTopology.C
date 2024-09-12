@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -369,6 +369,7 @@ void Foam::blockMesh::defaultPatchError
 Foam::polyMesh* Foam::blockMesh::createTopology
 (
     const IOdictionary& meshDescription,
+    const fileName& meshPath,
     const word& regionName
 )
 {
@@ -505,7 +506,7 @@ Foam::polyMesh* Foam::blockMesh::createTopology
         preservePatchTypes
         (
             meshDescription.time(),
-            meshDescription.time().constant(),
+            meshPath,
             polyMesh::meshSubDir,
             patchNames,
             patchDicts,
@@ -550,7 +551,7 @@ Foam::polyMesh* Foam::blockMesh::createTopology
             IOobject
             (
                 regionName,
-                meshDescription.time().constant(),
+                meshPath,
                 meshDescription.time(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
@@ -598,7 +599,7 @@ Foam::polyMesh* Foam::blockMesh::createTopology
             IOobject
             (
                 regionName,
-                meshDescription.time().constant(),
+                meshPath,
                 meshDescription.time(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,

@@ -372,9 +372,12 @@ int main(int argc, char *argv[])
         " multiple faces in between cells"
     );
 
+    #include "addRegionOption.H"
+    #include "addMeshOption.H"
+
     #include "setRootCase.H"
     #include "createTime.H"
-    #include "createMeshNoChangers.H"
+    #include "createSpecifiedMeshNoChangers.H"
 
     const word oldInstance = mesh.pointsInstance();
 

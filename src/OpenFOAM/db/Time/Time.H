@@ -272,12 +272,6 @@ public:
                 return controlDict_;
             }
 
-            //- Local directory path of this objectRegistry relative to time
-            virtual const fileName& dbDir() const
-            {
-                return fileName::null;
-            }
-
             //- Return current time path
             fileName timePath() const
             {

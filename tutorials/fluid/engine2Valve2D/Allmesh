@@ -27,9 +27,9 @@ createSingleValveBaseMesh()
         nXLeft=4, \
         pistonPos=$pistonPos, \
         nPiston=$nClearance"
-    runApplication -a blockMesh -region $valveRegion \
+    runApplication -a blockMesh -mesh $mesh -region $valveRegion \
                    -dict system/blockMeshDict
-    runApplication -a mirrorMesh -region $valveRegion \
+    runApplication -a mirrorMesh -mesh $mesh -region $valveRegion \
                    -dict system/mirrorMeshDict -overwrite
 }
 
@@ -37,9 +37,9 @@ createExhaustValveMesh()
 {
     createSingleValveBaseMesh $1 $2 $3 $4 _tmp_exhaust
 
-    runApplication -a transformPoints -region _tmp_exhaust "translate=(-6 0 0)"
+    runApplication -a transformPoints -mesh $mesh -region _tmp_exhaust "translate=(-6 0 0)"
 
-    foamDictionary constant/_tmp_exhaust/polyMesh/boundary -rename " \
+    foamDictionary constant/meshes/$mesh/_tmp_exhaust/polyMesh/boundary -rename " \
         entry0/valveHead=evHead, \
         entry0/valveStem=evStem, \
         entry0/liner=nonCouple_ev_cyl, \
@@ -50,9 +50,9 @@ createIntakeValveMesh()
 {
     createSingleValveBaseMesh $1 $2 $3 $4 _tmp_intake
 
-    runApplication -a transformPoints -region _tmp_intake "translate=(6 0 0)"
+    runApplication -a transformPoints -mesh $mesh -region _tmp_intake "translate=(6 0 0)"
 
-    foamDictionary constant/_tmp_intake/polyMesh/boundary -rename " \
+    foamDictionary constant/meshes/$mesh/_tmp_intake/polyMesh/boundary -rename " \
         entry0/valveHead=ivHead, \
         entry0/valveStem=ivStem, \
         entry0/liner=nonCouple_iv_cyl"
@@ -68,7 +68,7 @@ createCylinderMesh()
     foamDictionary system/blockMeshDict -set " \
         pistonPos=$pistonPos,
         nPiston=$nClearance"
-    runApplication -a blockMesh -region $region -dict system/blockMeshDict
+    runApplication -a blockMesh -mesh $mesh -dict system/blockMeshDict
 }
 
 pistonPositionFromTDC()
@@ -116,23 +116,23 @@ setMeshResolution()
 
 mergeMeshModules()
 {
-    runApplication -a mergeMeshes -overwrite -region $region \
+    runApplication -a mergeMeshes -overwrite -mesh $mesh \
                    -addRegions '(_tmp_exhaust _tmp_intake)'
 
     # Delete temporary valve meshes
-    rm -rf constant/_tmp*
+    rm -rf constant/meshes/$mesh/_tmp*
 
     # Separate ports to mimic complicated engine assembly
-    runApplication -a createBaffles -region $region \
+    runApplication -a createBaffles -mesh $mesh \
                    -dict system/createBafflesDict -overwrite
-    runApplication -a splitBaffles -region $region \
+    runApplication -a splitBaffles -mesh $mesh \
                    -overwrite
 
     # Use NCC to enable sliding interface near the valve
-    runApplication -a createNonConformalCouples -region $region \
+    runApplication -a createNonConformalCouples -mesh $mesh \
                    -dict system/createNonConformalCouplesDict -overwrite
 
-    runApplication -a transformPoints -region $region \
+    runApplication -a transformPoints -mesh $mesh \
                    "Rx=90, scale=($SCALE_INV $SCALE_INV $SCALE_INV)"
 
     # Delete temporary fvMesh
@@ -141,7 +141,7 @@ mergeMeshModules()
 
 createMesh()
 {
-    region=meshToMesh_$CAD
+    mesh=$CAD
 
     POS0=$(pistonPositionFromTDC $CAD)
     POS=$(echo "$POS0 + $TDC_CLEARANCE" | bc --mathlib)
@@ -296,7 +296,6 @@ LIFT_IV=0
 LIFT_EV=0
 createMesh
 
-ls -d constant/meshToMesh_* | sed 's/.*meshToMesh_//' \
-    | sort -n > constant/meshTimes
+ls constant/meshes | sort -n > constant/meshTimes
 
 #------------------------------------------------------------------------------

@@ -102,6 +102,7 @@ void Foam::domainDecomposition::readComplete()
             (
                 regionName_,
                 runTimes_.completeTime().name(),
+                meshPath_,
                 runTimes_.completeTime(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
@@ -127,6 +128,7 @@ void Foam::domainDecomposition::readProcs()
                 (
                     regionName_,
                     runTimes_.procTimes()[proci].name(),
+                    meshPath_,
                     runTimes_.procTimes()[proci],
                     IOobject::NO_READ,
                     IOobject::NO_WRITE
@@ -414,11 +416,13 @@ void Foam::domainDecomposition::writeCompletePoints(const fileName& inst)
 Foam::domainDecomposition::domainDecomposition
 (
     const processorRunTimes& runTimes,
+    const fileName& meshPath,
     const word& regionName,
     const multiDomainDecomposition& regionMeshes
 )
 :
     runTimes_(runTimes),
+    meshPath_(meshPath),
     regionName_(regionName),
     completeMesh_(nullptr),
     procMeshes_(nProcs()),

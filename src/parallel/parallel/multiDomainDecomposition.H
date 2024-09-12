@@ -63,6 +63,7 @@ class multiDomainDecomposition
         Foam::PtrList<domainDecomposition> init
         (
             const processorRunTimes& runTimes,
+            const fileName& meshPath,
             const wordList& regionNames
         );
 
@@ -79,6 +80,7 @@ public:
         multiDomainDecomposition
         (
             const processorRunTimes& procRunTimes,
+            const fileName& meshPath,
             const wordList& regionNames
         );
 

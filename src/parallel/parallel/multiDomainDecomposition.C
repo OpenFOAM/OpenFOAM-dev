@@ -38,6 +38,7 @@ namespace Foam
 Foam::PtrList<Foam::domainDecomposition> Foam::multiDomainDecomposition::init
 (
     const processorRunTimes& runTimes,
+    const fileName& meshPath,
     const wordList& regionNames
 )
 {
@@ -48,7 +49,13 @@ Foam::PtrList<Foam::domainDecomposition> Foam::multiDomainDecomposition::init
         result.set
         (
             regioni,
-            new domainDecomposition(runTimes, regionNames[regioni], *this)
+            new domainDecomposition
+            (
+                runTimes,
+                meshPath,
+                regionNames[regioni],
+                *this
+            )
         );
     }
 
@@ -61,10 +68,11 @@ Foam::PtrList<Foam::domainDecomposition> Foam::multiDomainDecomposition::init
 Foam::multiDomainDecomposition::multiDomainDecomposition
 (
     const processorRunTimes& runTimes,
+    const fileName& meshPath,
     const wordList& regionNames
 )
 :
-    MultiRegionList<domainDecomposition>(init(runTimes, regionNames)),
+    MultiRegionList<domainDecomposition>(init(runTimes, meshPath, regionNames)),
     runTimes_(runTimes)
 {}
 

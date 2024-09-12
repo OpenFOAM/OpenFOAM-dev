@@ -25,8 +25,8 @@ Application
     faceAgglomerate
 
 Description
-
     Agglomerate boundary faces using the pairPatchAgglomeration algorithm.
+
     It writes a map from the fine to coarse grid.
 
 \*---------------------------------------------------------------------------*/
@@ -48,11 +48,12 @@ using namespace Foam;
 
 int main(int argc, char *argv[])
 {
+    #include "addMeshOption.H"
     #include "addRegionOption.H"
     #include "addDictOption.H"
     #include "setRootCase.H"
     #include "createTime.H"
-    #include "createRegionMeshNoChangers.H"
+    #include "createSpecifiedMeshNoChangers.H"
 
     const word dictName("viewFactorsDict");
 

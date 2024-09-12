@@ -9,9 +9,9 @@ runApplication decomposePar -cellProc
 
 for mapTime in 0.0015 0.003
 do
-    runApplication -s $mapTime blockMesh -region meshToMesh_$mapTime
-    ln -s meshToMesh_$mapTime/decomposeParDict system/decomposeParDict
-    runApplication -s $mapTime decomposePar -region meshToMesh_$mapTime
+    runApplication -s $mapTime blockMesh -mesh $mapTime
+    ln -s meshes/$mapTime/decomposeParDict system/decomposeParDict
+    runApplication -s $mapTime decomposePar -mesh $mapTime
     rm -f system/decomposeParDict
 done
 

@@ -72,6 +72,7 @@ int main(int argc, char *argv[])
 
     argList::noParallel();
 
+    #include "addMeshOption.H"
     #include "addRegionOption.H"
     #include "addOverwriteOption.H"
 
@@ -134,7 +135,7 @@ int main(int argc, char *argv[])
     // Select time if specified
     timeSelector::selectIfPresent(runTime, args);
 
-    #include "createNamedPolyMesh.H"
+    #include "createSpecifiedPolyMesh.H"
 
     const bool overwrite = args.optionFound("overwrite");
     const word oldInstance = mesh.pointsInstance();
@@ -158,6 +159,7 @@ int main(int argc, char *argv[])
             (
                 regions[i],
                 runTime.name(),
+                meshPath,
                 runTime
             )
         );
@@ -191,6 +193,7 @@ int main(int argc, char *argv[])
             (
                 addRegion,
                 runTimeToAdd.name(),
+                meshPath,
                 runTimeToAdd
             )
         );

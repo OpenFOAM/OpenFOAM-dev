@@ -421,6 +421,7 @@ int main(int argc, char *argv[])
         "disable matching keys to patch groups"
     );
 
+    #include "addMeshOption.H"
     #include "addRegionOption.H"
 
     #include "setRootCase.H"
@@ -460,7 +461,7 @@ int main(int argc, char *argv[])
             instance = runTime.name();
         }
 
-        #include "createRegionMeshNoChangers.H"
+        #include "createSpecifiedMeshNoChangers.H"
 
         const bool literalRE = args.optionFound("literalRE");
         if (literalRE)

@@ -761,9 +761,11 @@ int main(int argc, char *argv[])
         "retain raw orientation for prisms/hexs"
     );
 
+    #include "addMeshOption.H"
     #include "addRegionOption.H"
 
     #include "setRootCase.H"
+    #include "setMeshPath.H"
     #include "createTime.H"
 
     Foam::word regionName;
@@ -914,6 +916,7 @@ int main(int argc, char *argv[])
         (
             regionName,
             runTime.constant(),
+            meshPath,
             runTime
         ),
         move(points),
