@@ -44,14 +44,14 @@ Foam::distributions::fixedValue::fixedValue
 (
     const unitConversion& units,
     const dictionary& dict,
-    const label,
+    const label sampleQ,
     randomGenerator&& rndGen
 )
 :
     FieldDistribution<distribution, fixedValue>
     (
         -labelMax,
-        -labelMax,
+        sampleQ,
         std::move(rndGen)
     ),
     value_(dict.lookup<scalar>("value", units))
