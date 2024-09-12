@@ -35,6 +35,13 @@ T Foam::unitConversion::toStandard(const T& t) const
 
 
 template<class T>
+Foam::Pair<T> Foam::unitConversion::toStandard(const Pair<T>& p) const
+{
+    return Pair<T>(toStandard(p.first(), p.second()));
+}
+
+
+template<class T>
 Foam::List<T> Foam::unitConversion::toStandard(const List<T>& l) const
 {
     List<T> result(l.size());
@@ -73,6 +80,17 @@ void Foam::unitConversion::makeStandard(T& t) const
 
 
 template<class T>
+void Foam::unitConversion::makeStandard(Pair<T>& p) const
+{
+    if (!standard())
+    {
+        makeStandard(p.first());
+        makeStandard(p.second());
+    }
+}
+
+
+template<class T>
 void Foam::unitConversion::makeStandard(List<T>& l) const
 {
     if (!standard())
@@ -89,6 +107,13 @@ template<class T>
 T Foam::unitConversion::toUser(const T& t) const
 {
     return standard() ? t : t/multiplier_;
+}
+
+
+template<class T>
+Foam::Pair<T> Foam::unitConversion::toUser(const Pair<T>& p) const
+{
+    return Pair<T>(toUser(p.first()), toUser(p.second()));
 }
 
 

@@ -306,13 +306,19 @@ T Foam::dictionary::readTypeAndConvertUnits
         return readTypeAndConvertUnits<T>(keyword, unitAny, is);               \
     }
 
+#define IMPLEMENT_SPECIALISED_READ_PAIR_TYPE(T, nullArg)                       \
+    IMPLEMENT_SPECIALISED_READ_TYPE(Pair<Foam::T>, nullArg)
+
 #define IMPLEMENT_SPECIALISED_READ_LIST_TYPE(T, nullArg)                       \
     IMPLEMENT_SPECIALISED_READ_TYPE(List<Foam::T>, nullArg)
 
 FOR_ALL_FIELD_TYPES(IMPLEMENT_SPECIALISED_READ_TYPE)
+FOR_ALL_FIELD_TYPES(IMPLEMENT_SPECIALISED_READ_PAIR_TYPE)
 FOR_ALL_FIELD_TYPES(IMPLEMENT_SPECIALISED_READ_LIST_TYPE)
 
 #undef IMPLEMENT_SPECIALISED_READ_TYPE
+#undef IMPLEMENT_SPECIALISED_READ_PAIR_TYPE
+#undef IMPLEMENT_SPECIALISED_READ_LIST_TYPE
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //

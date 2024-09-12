@@ -165,6 +165,10 @@ public:
         template<class T>
         T toStandard(const T&) const;
 
+        //- Convert a pair of values to standard units
+        template<class T>
+        Pair<T> toStandard(const Pair<T>&) const;
+
         //- Convert a list of values to standard units
         template<class T>
         List<T> toStandard(const List<T>&) const;
@@ -181,6 +185,10 @@ public:
         template<class T>
         void makeStandard(T&) const;
 
+        //- Convert a pair of values to standard units
+        template<class T>
+        void makeStandard(Pair<T>&) const;
+
         //- Convert a list of values to standard units
         template<class T>
         void makeStandard(List<T>&) const;
@@ -188,6 +196,10 @@ public:
         //- Convert a value to user units
         template<class T>
         T toUser(const T&) const;
+
+        //- Convert a pair of values to user units
+        template<class T>
+        Pair<T> toUser(const Pair<T>&) const;
 
         //- Convert a list of values to user units
         template<class T>
