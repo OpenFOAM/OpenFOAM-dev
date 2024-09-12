@@ -54,14 +54,14 @@ Foam::Function1s::Scale<Type>::Scale
 )
 :
     FieldFunction1<Type, Scale<Type>>(name),
-    scale_(Function1<scalar>::New("scale", units.x, unitless, dict)),
+    scale_(Function1<scalar>::New("scale", units.x, unitAny, dict)),
     xScale_
     (
         dict.found("xScale")
-      ? Function1<scalar>::New("xScale", units.x, units.x, dict)
+      ? Function1<scalar>::New("xScale", units.x, unitless, dict)
       : autoPtr<Function1<scalar>>(new Constant<scalar>("xScale", 1))
     ),
-    value_(Function1<Type>::New("value", units, dict)),
+    value_(Function1<Type>::New("value", units.x, unitAny, dict)),
     integrableScale_(xScale_->constant() && scale_->constant()),
     integrableValue_(xScale_->constant() && value_->constant())
 {}

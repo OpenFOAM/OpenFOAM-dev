@@ -36,11 +36,11 @@ Foam::Function2s::Scale<Type>::Scale
 )
 :
     FieldFunction2<Type, Scale<Type>>(name),
-    scale_(Function2<scalar>::New("scale", units.x, units.y, unitless, dict)),
+    scale_(Function2<scalar>::New("scale", units.x, units.y, unitAny, dict)),
     xScale_
     (
         dict.found("xScale")
-      ? Function1<scalar>::New("xScale", units.x, units.x, dict)
+      ? Function1<scalar>::New("xScale", units.x, unitless, dict)
       : autoPtr<Function1<scalar>>
         (
             new Function1s::Constant<scalar>("xScale", 1)
@@ -49,13 +49,13 @@ Foam::Function2s::Scale<Type>::Scale
     yScale_
     (
         dict.found("yScale")
-      ? Function1<scalar>::New("yScale", units.y, units.y, dict)
+      ? Function1<scalar>::New("yScale", units.y, unitless, dict)
       : autoPtr<Function1<scalar>>
         (
             new Function1s::Constant<scalar>("yScale", 1)
         )
     ),
-    value_(Function2<Type>::New("value", units, dict))
+    value_(Function2<Type>::New("value", units.x, units.y, unitAny, dict))
 {}
 
 
