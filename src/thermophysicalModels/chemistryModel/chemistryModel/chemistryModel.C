@@ -454,7 +454,7 @@ Foam::chemistryModel<ThermoType>::reactionRR
         (
             "RR:" + reactions_[reactioni].name(),
             this->mesh(),
-            dimensionedScalar(dimMass/dimVolume/dimTime, 0)
+            dimensionedScalar(dimMoles/dimVolume/dimTime, 0)
         );
     volScalarField::Internal& RR = tRR.ref();
 
