@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,11 +31,11 @@ namespace Foam
 {
     template<>
     const char*
-        NamedEnum<Function1s::tableBase::boundsHandling, 4>::names[] =
-        {"error", "warn", "clamp", "repeat"};
+        NamedEnum<Function1s::tableBase::boundsHandling, 5>::names[] =
+        {"error", "warn", "clamp", "zero", "repeat"};
 }
 
-const Foam::NamedEnum<Foam::Function1s::tableBase::boundsHandling, 4>
+const Foam::NamedEnum<Foam::Function1s::tableBase::boundsHandling, 5>
     Foam::Function1s::tableBase::boundsHandlingNames_;
 
 

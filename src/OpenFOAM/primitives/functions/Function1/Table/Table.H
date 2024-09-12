@@ -156,10 +156,8 @@ class Table
         //- Check the table for size and consistency
         void check() const;
 
-        //- Bound the argument to the table. Errors or warns, or shifts the
-        //  value if the table repeats. Does not clamp to the ends of the table
-        //  as the interpolator already performs that function.
-        scalar bound(const scalar x) const;
+        //- Check the validity of a given argument value
+        void checkX(const scalar x) const;
 
 
 public:
@@ -237,7 +235,7 @@ public:
         virtual Type value(const scalar x) const;
 
         //- Integrate between two scalars
-        virtual Type integral(const scalar x1, const scalar x2) const;
+        virtual Type integral(const scalar xA, const scalar xB) const;
 
         //- Return the reference values
         virtual tmp<scalarField> x() const;

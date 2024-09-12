@@ -82,10 +82,7 @@ void Foam::Function1s::Table<Type>::check() const
 
 
 template<class Type>
-Foam::scalar Foam::Function1s::Table<Type>::bound
-(
-    const scalar x
-) const
+void Foam::Function1s::Table<Type>::checkX(const scalar x) const
 {
     const bool under = x < values_.first().first();
     const bool over = x > values_.last().first();
@@ -111,22 +108,12 @@ Foam::scalar Foam::Function1s::Table<Type>::bound
                     << errorMessage() << nl << endl;
                 break;
             }
-            case tableBase::boundsHandling::clamp:
+            default:
             {
                 break;
             }
-            case tableBase::boundsHandling::repeat:
-            {
-                const scalar t0 = values_.first().first();
-                const scalar t1 = values_.last().first();
-                const scalar dt = t1 - t0;
-                const label n = floor((x - t0)/dt);
-                return x - n*dt;
-            }
         }
     }
-
-    return x;
 }
 
 
@@ -236,14 +223,47 @@ Foam::Function1s::Table<Type>::~Table()
 template<class Type>
 Type Foam::Function1s::Table<Type>::value
 (
-    const scalar x
+    scalar x
 ) const
 {
-    const scalar bx = bound(x);
+    checkX(x);
+
+    const scalar x0 = values_.first().first();
+    const scalar x1 = values_.last().first();
 
     Type y = Zero;
 
-    interpolator().valueWeights(bx, indices_, weights_);
+    switch (boundsHandling_)
+    {
+        case boundsHandling::clamp:
+        {
+            // Integration weights clamp by default, so do nothing
+            break;
+        }
+        case boundsHandling::zero:
+        {
+            // Return zero if outside the range
+            if (x <= x0 || x >= x1)
+            {
+                return Zero;
+            }
+            break;
+        }
+        case boundsHandling::repeat:
+        {
+            // Shift the value into the range of the table
+            const scalar n = floor((x - x0)/(x1 - x0));
+            x -= n*(x1 - x0);
+            break;
+        }
+        default:
+        {
+            break;
+        }
+    }
+
+    // Evaluate
+    interpolator().valueWeights(x, indices_, weights_);
     forAll(indices_, i)
     {
         y += weights_[i]*values_[indices_[i]].second();
@@ -256,40 +276,61 @@ Type Foam::Function1s::Table<Type>::value
 template<class Type>
 Type Foam::Function1s::Table<Type>::integral
 (
-    const scalar x1,
-    const scalar x2
+    scalar xA,
+    scalar xB
 ) const
 {
-    const scalar bx1 = bound(x1);
-    const scalar bx2 = bound(x2);
+    checkX(xA);
+    checkX(xB);
+
+    const scalar x0 = values_.first().first();
+    const scalar x1 = values_.last().first();
 
     Type sumY = Zero;
 
-    interpolator().integrationWeights(bx1, bx2, indices_, weights_);
+    switch (boundsHandling_)
+    {
+        case boundsHandling::clamp:
+        {
+            // Integration weights clamp by default, so do nothing
+            break;
+        }
+        case boundsHandling::zero:
+        {
+            // Actually clamp to remove any integral components from the ends
+            xA = min(max(xA, x0), x1);
+            xB = min(max(xB, x0), x1);
+            break;
+        }
+        case boundsHandling::repeat:
+        {
+            // Shift the values into the range of the table and add any
+            // repetitions necessary to the integral
+            const scalar nA = floor((xA - x0)/(x1 - x0));
+            const scalar nB = floor((xB - x0)/(x1 - x0));
+            if (nA != nB)
+            {
+                interpolator().integrationWeights(x0, x1, indices_, weights_);
+                forAll(indices_, i)
+                {
+                    sumY += (nB - nA)*weights_[i]*values_[indices_[i]].second();
+                }
+            }
+            xA -= nA*(x1 - x0);
+            xB -= nB*(x1 - x0);
+            break;
+        }
+        default:
+        {
+            break;
+        }
+    }
+
+    // Integrate between the bounds
+    interpolator().integrationWeights(xA, xB, indices_, weights_);
     forAll(indices_, i)
     {
        sumY += weights_[i]*values_[indices_[i]].second();
-    }
-
-    if (boundsHandling_ == tableBase::boundsHandling::repeat)
-    {
-        const scalar t0 = values_.first().first();
-        const scalar t1 = values_.last().first();
-        const label n = floor(((x2 - x1) - (bx2 - bx1))/(t1 - t0) + 0.5);
-
-        if (n != 0)
-        {
-            Type sumY01 = Zero;
-
-            interpolator().integrationWeights(t0, t1, indices_, weights_);
-
-            forAll(indices_, i)
-            {
-                sumY01 += weights_[i]*values_[indices_[i]].second();
-            }
-
-            sumY += n*sumY01;
-        }
     }
 
     return sumY;
