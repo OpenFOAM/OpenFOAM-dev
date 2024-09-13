@@ -41,7 +41,6 @@ nonConformalCouples
         patches         (nonCouple_ep_ev nonCouple_ev_ep);
         transform       none;
     }
-
 }
 
 // ************************************************************************* //
