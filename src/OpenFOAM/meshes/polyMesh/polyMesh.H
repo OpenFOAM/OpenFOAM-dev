@@ -190,7 +190,7 @@ private:
     // Private Member Functions
 
         //- Return the region directory
-        fileName regionDir(const IOobject& io) const;
+        static fileName regionDir(const IOobject& io);
 
         //- Initialise the polyMesh from the primitive data
         void initMesh();
@@ -275,6 +275,9 @@ public:
 
 
     // Constructors
+
+        //- Return whether the given IOobject relates to a mesh on disk
+        static bool found(const IOobject& io);
 
         //- Construct from IOobject
         explicit polyMesh(const IOobject& io);
@@ -393,6 +396,7 @@ public:
 
                 //- Return old cell centres for mesh motion
                 virtual const pointField& oldCellCentres() const;
+
 
             //- Return boundary mesh
             const polyBoundaryMesh& boundaryMesh() const

@@ -48,7 +48,7 @@ Foam::word Foam::polyMesh::meshSubDir = "polyMesh";
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::fileName Foam::polyMesh::regionDir(const IOobject& io) const
+Foam::fileName Foam::polyMesh::regionDir(const IOobject& io)
 {
     if (io.name() == defaultRegion)
     {
@@ -955,6 +955,29 @@ Foam::polyMesh::~polyMesh()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+bool Foam::polyMesh::found(const IOobject& io)
+{
+    // Create an IO object for the current-time polyMesh directory
+    const IOobject curDirIo
+    (
+        word::null,
+        io.time().name(),
+        io.name() == polyMesh::defaultRegion
+      ? fileName(io.local()/meshSubDir)
+      : fileName(io.local()/io.name()/meshSubDir),
+        io.time(),
+        Foam::IOobject::NO_READ
+    );
+
+    // Search back to find the latest-time polyMesh directory
+    const IOobject latestDirIo =
+        fileHandler().findInstance(curDirIo, io.time().value(), word::null);
+
+    // Return whether or not this latest-time polyMesh directory exists
+    return fileHandler().isDir(latestDirIo.path(false));
+}
+
 
 Foam::fileName Foam::polyMesh::meshDir() const
 {

@@ -391,6 +391,9 @@ int main(int argc, char *argv[])
         }
     }
 
+    // Determine if operating on meshes within a sub-path
+    const bool haveMeshPath = meshPath != word::null;
+
     // Create all the meshes needed
     hashedWordList regionNames;
     PtrList<fvMesh> regionMeshes;
@@ -402,23 +405,32 @@ int main(int argc, char *argv[])
 
             if (regionNames.found(regionName)) continue;
 
-            regionNames.append(regionName);
-            regionMeshes.append
+            const IOobject regionMeshIo
             (
-                new fvMesh
-                (
-                    IOobject
-                    (
-                        regionName,
-                        runTime.name(),
-                        meshPath,
-                        runTime,
-                        Foam::IOobject::MUST_READ
-                    ),
-                    false
-                )
+                regionName,
+                runTime.name(),
+                meshPath,
+                runTime,
+                Foam::IOobject::MUST_READ
             );
+
+            // If we are creating couples on a mesh within a mesh path
+            // sub-directory then these couples will not be stitched so loading
+            // the neighbouring regions is optional
+            if (haveMeshPath && !polyMesh::found(regionMeshIo)) continue;
+
+            regionNames.append(regionName);
+            regionMeshes.append(new fvMesh(regionMeshIo, false));
         }
+    }
+
+    // Early exit if there is nothing to do
+    if (regionMeshes.empty())
+    {
+        Info<< "Nothing to be done" << nl << endl
+            << "End" << nl << endl;
+
+        return 0;
     }
 
     const bool overwrite = args.optionFound("overwrite");
@@ -566,6 +578,8 @@ int main(int argc, char *argv[])
 
         auto appendPatch = [&](const bool owner)
         {
+            if (!regionNames.found(couple.regionNames[!owner])) return;
+
             const label regioni =
                 regionNames[couple.regionNames[!owner]];
 
@@ -640,6 +654,9 @@ int main(int argc, char *argv[])
         forAll(regionOrigPatches, i)
         {
             const word& regionName = regionOrigPatches[i].first();
+
+            if (!regionNames.found(regionName)) continue;
+
             const label regioni = regionNames[regionName];
             const word& origPatchName = regionOrigPatches[i].second();
 
@@ -697,6 +714,9 @@ int main(int argc, char *argv[])
             const nonConformalCouple& couple = couples[couplei];
 
             if (couple.ncPatchType != nonConformalCyclicPolyPatch::typeName)
+                continue;
+
+            if (!regionNames.found(couples[couplei].regionNames[0]))
                 continue;
 
             const label regioni = regionNames[couples[couplei].regionNames[0]];
@@ -807,6 +827,8 @@ int main(int argc, char *argv[])
             RegionRef<fvMesh> mesh = multiRegionMeshes[regioni];
             fvMeshStitchers::stationary(mesh).connect(false, false, false);
         }
+
+        if (!haveMeshPath) Info<< endl;
     }
 
     // Set the fields on the new patches. This allows constraint types (e.g.,
@@ -857,13 +879,13 @@ int main(int argc, char *argv[])
     }
 
     // Write resulting mesh
-    Info<< nl << "Writing mesh to " << runTime.name() << nl << endl;
+    Info<< "Writing mesh to " << runTime.name() << nl << endl;
     forAll(regionMeshes, regioni)
     {
         regionMeshes[regioni].write();
     }
 
-    Info<< "End\n" << endl;
+    Info<< "End" << nl << endl;
 
     return 0;
 }

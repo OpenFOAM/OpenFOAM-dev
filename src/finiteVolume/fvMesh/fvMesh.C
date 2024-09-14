@@ -1361,7 +1361,7 @@ void Foam::fvMesh::setPolyFacesBfInstance(const fileName& inst)
 {
     if (!polyFacesBfPtr_)
     {
-        polyFacesBf();
+        return;
     }
 
     polyFacesBfIOPtr_->instance() = inst;

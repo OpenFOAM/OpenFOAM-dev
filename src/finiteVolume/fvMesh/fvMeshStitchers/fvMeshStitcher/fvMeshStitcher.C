@@ -2172,6 +2172,13 @@ Foam::fvMeshStitcher::~fvMeshStitcher()
 
 bool Foam::fvMeshStitcher::stitches() const
 {
+    // Meshes in a local sub-directory are not stitched
+    if (!mesh_.local().empty())
+    {
+        return false;
+    }
+
+    // Other meshes with non-conformal patches are stitched
     forAll(mesh_.boundary(), patchi)
     {
         if (isA<nonConformalFvPatch>(mesh_.boundary()[patchi]))
