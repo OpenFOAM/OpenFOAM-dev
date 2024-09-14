@@ -235,12 +235,12 @@ Type Foam::Function1s::Table<Type>::value
 
     switch (boundsHandling_)
     {
-        case boundsHandling::clamp:
+        case tableBase::boundsHandling::clamp:
         {
             // Integration weights clamp by default, so do nothing
             break;
         }
-        case boundsHandling::zero:
+        case tableBase::boundsHandling::zero:
         {
             // Return zero if outside the range
             if (x <= x0 || x >= x1)
@@ -249,7 +249,7 @@ Type Foam::Function1s::Table<Type>::value
             }
             break;
         }
-        case boundsHandling::repeat:
+        case tableBase::boundsHandling::repeat:
         {
             // Shift the value into the range of the table
             const scalar n = floor((x - x0)/(x1 - x0));
@@ -290,19 +290,19 @@ Type Foam::Function1s::Table<Type>::integral
 
     switch (boundsHandling_)
     {
-        case boundsHandling::clamp:
+        case tableBase::boundsHandling::clamp:
         {
             // Integration weights clamp by default, so do nothing
             break;
         }
-        case boundsHandling::zero:
+        case tableBase::boundsHandling::zero:
         {
             // Actually clamp to remove any integral components from the ends
             xA = min(max(xA, x0), x1);
             xB = min(max(xB, x0), x1);
             break;
         }
-        case boundsHandling::repeat:
+        case tableBase::boundsHandling::repeat:
         {
             // Shift the values into the range of the table and add any
             // repetitions necessary to the integral
