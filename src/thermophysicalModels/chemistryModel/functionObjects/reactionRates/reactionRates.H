@@ -26,7 +26,7 @@ Class
 
 Description
     Writes volume averaged reaction rates in [kmol/m^3/s] for
-    each reaction into the file \<timeDir\>/specieReactionRates.dat
+    each reaction into the file \<timeDir\>/reactionRates.dat
 
     Example of function object specification:
     \verbatim
@@ -135,7 +135,7 @@ public:
         //- Do nothing
         virtual bool execute();
 
-        //- Write the specie reaction rates
+        //- Write the reaction rates
         virtual bool write();
 
 
