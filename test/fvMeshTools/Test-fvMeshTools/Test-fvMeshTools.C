@@ -47,10 +47,11 @@ int main(int argc, char *argv[])
 {
     argList::addNote("Test patch manipulation");
 
+    #include "addMeshOption.H"
     #include "addRegionOption.H"
     #include "setRootCase.H"
     #include "createTimeNoFunctionObjects.H"
-    #include "createRegionMesh.H"
+    #include "createSpecifiedMesh.H"
 
     // Read objects in time directory
     IOobjectList objects(mesh, runTime.name());
