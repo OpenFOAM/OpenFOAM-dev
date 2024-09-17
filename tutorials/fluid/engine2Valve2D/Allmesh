@@ -27,9 +27,9 @@ createSingleValveBaseMesh()
         nXLeft=4, \
         pistonPos=$pistonPos, \
         nPiston=$nClearance"
-    runApplication -a blockMesh -mesh $mesh -region $valveRegion \
+    runApplication -a blockMesh -region $valveRegion \
                    -dict system/blockMeshDict
-    runApplication -a mirrorMesh -mesh $mesh -region $valveRegion \
+    runApplication -a mirrorMesh -region $valveRegion \
                    -dict system/mirrorMeshDict -overwrite
 }
 
@@ -37,9 +37,9 @@ createExhaustValveMesh()
 {
     createSingleValveBaseMesh $1 $2 $3 $4 _tmp_exhaust
 
-    runApplication -a transformPoints -mesh $mesh -region _tmp_exhaust "translate=(-6 0 0)"
+    runApplication -a transformPoints -region _tmp_exhaust "translate=(-6 0 0)"
 
-    foamDictionary constant/meshes/$mesh/_tmp_exhaust/polyMesh/boundary -rename " \
+    foamDictionary constant/_tmp_exhaust/polyMesh/boundary -rename " \
         entry0/valveHead=evHead, \
         entry0/valveStem=evStem, \
         entry0/liner=nonCouple_ev_cyl, \
@@ -50,9 +50,9 @@ createIntakeValveMesh()
 {
     createSingleValveBaseMesh $1 $2 $3 $4 _tmp_intake
 
-    runApplication -a transformPoints -mesh $mesh -region _tmp_intake "translate=(6 0 0)"
+    runApplication -a transformPoints -region _tmp_intake "translate=(6 0 0)"
 
-    foamDictionary constant/meshes/$mesh/_tmp_intake/polyMesh/boundary -rename " \
+    foamDictionary constant/_tmp_intake/polyMesh/boundary -rename " \
         entry0/valveHead=ivHead, \
         entry0/valveStem=ivStem, \
         entry0/liner=nonCouple_iv_cyl"
@@ -120,7 +120,7 @@ mergeMeshModules()
                    -addRegions '(_tmp_exhaust _tmp_intake)'
 
     # Delete temporary valve meshes
-    rm -rf constant/meshes/$mesh/_tmp*
+    rm -rf constant/_tmp*
 
     # Separate ports to mimic complicated engine assembly
     runApplication -a createBaffles -mesh $mesh \
