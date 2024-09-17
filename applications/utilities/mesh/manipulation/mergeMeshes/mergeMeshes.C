@@ -93,21 +93,21 @@ int main(int argc, char *argv[])
     argList::addOption
     (
         "addMeshes",
-        "'(mesh1 mesh2 ... meshN)'"
+        "'(mesh1 mesh2 ... meshN)'",
         "list of meshes to merge"
     );
 
     argList::addOption
     (
         "addRegions",
-        "'(region1 region2 ... regionN)'"
+        "'(region1 region2 ... regionN)'",
         "list of regions to merge"
     );
 
     argList::addOption
     (
         "addMeshRegions",
-        "'((mesh1 region1) (mesh2 region2) ... (mesh3 regionN))'"
+        "'((mesh1 region1) (mesh2 region2) ... (mesh3 regionN))'",
         "list of mesh regions to merge"
     );
 
