@@ -184,6 +184,19 @@ void Foam::mappedPatchBase::calcMapping() const
                     allNearest[alli].data = Foam::sqr(great);
                 }
             }
+            else if (nbrPolyPatch().size() == 1)
+            {
+                const pointField nbrPoints(nbrPatchFaceCentres());
+
+                forAll(allPoints, alli)
+                {
+                    const point& p = allPoints[alli];
+
+                    allNearest[alli].proci = Pstream::myProcNo();
+                    allNearest[alli].elementi = 0;
+                    allNearest[alli].data = magSqr(nbrPoints[0] - p);
+                }
+            }
             else
             {
                 const pointField nbrPoints(nbrPatchFaceCentres());
