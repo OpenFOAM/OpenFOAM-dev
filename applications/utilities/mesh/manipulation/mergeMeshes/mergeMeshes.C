@@ -267,17 +267,17 @@ int main(int argc, char *argv[])
     // Add all the specified mesh regions
     forAll(meshRegions, i)
     {
-        const word& addMesh = meshRegions[i].first();
+        const fileName addLocal = "meshes"/meshRegions[i].first();
         const word& addRegion = meshRegions[i].second();
 
-        Info<< "Reading polyMesh " << addMesh/addRegion << endl;
+        Info<< "Reading polyMesh " << addLocal/addRegion << endl;
         polyMesh meshToAdd
         (
             IOobject
             (
                 addRegion,
                 runTime.name(),
-                addMesh,
+                addLocal,
                 runTime
             )
         );
@@ -290,7 +290,7 @@ int main(int argc, char *argv[])
     forAll(caseMeshRegions, i)
     {
         const fileName& addCase = caseMeshRegions[i].first();
-        const word& addMesh = caseMeshRegions[i].second();
+        const fileName addLocal = "meshes"/caseMeshRegions[i].second();
         const word& addRegion = caseMeshRegions[i].third();
 
         const fileName addCasePath(addCase.path());
@@ -306,14 +306,14 @@ int main(int argc, char *argv[])
         );
 
         Info<< "Reading polyMesh for case "
-            << runTimeToAdd.path()/"constant"/addMesh/addRegion << endl;
+            << runTimeToAdd.path()/"constant"/addLocal/addRegion << endl;
         polyMesh meshToAdd
         (
             IOobject
             (
                 addRegion,
                 runTimeToAdd.name(),
-                addMesh,
+                addLocal,
                 runTimeToAdd
             )
         );
