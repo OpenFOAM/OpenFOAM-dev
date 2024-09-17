@@ -46,19 +46,31 @@ Usage
       - \par -region \<name\>
         Specify an alternative mesh region.
 
+      - \par -addMeshes "'(mesh1 mesh2 ... meshN)'"
+        Specify list of meshes to merge.
+
       - \par -addRegions "'(region1 region2 ... regionN)'"
         Specify list of region meshes to merge.
 
       - \par -addCases "'(\"casePath1\" \"casePath2\" ... \"casePathN\")'"
         Specify list of case meshes to merge.
 
+      - \par -addCaseMeshes "'((\"casePath1\" mesh1) (\"casePath2\" mesh2) ... \
+        (\"casePathN\" meshN))'"
+        Specify list of case meshes to merge.
+
       - \par -addCaseRegions "'((\"casePath1\" region1) (\"casePath2\" region2)"
         Specify list of case region meshes to merge.
+
+      - \par -addCaseMeshRegions  "'((\"casePath1\" mesh1 region1) \
+        (\"casePath2\" mesh2 region2) ... (\"casePathN\" meshN regionN))'"
+        Specify list of case mesh regions to merge.
 
 \*---------------------------------------------------------------------------*/
 
 #include "argList.H"
 #include "Time.H"
+#include "Tuple3.H"
 #include "timeSelector.H"
 #include "mergePolyMesh.H"
 
@@ -80,9 +92,23 @@ int main(int argc, char *argv[])
 
     argList::addOption
     (
+        "addMeshes",
+        "'(mesh1 mesh2 ... meshN)'"
+        "list of meshes to merge"
+    );
+
+    argList::addOption
+    (
         "addRegions",
         "'(region1 region2 ... regionN)'"
         "list of regions to merge"
+    );
+
+    argList::addOption
+    (
+        "addMeshRegions",
+        "'((mesh1 region1) (mesh2 region2) ... (mesh3 regionN))'"
+        "list of mesh regions to merge"
     );
 
     argList::addOption
@@ -94,17 +120,55 @@ int main(int argc, char *argv[])
 
     argList::addOption
     (
+        "addCaseMeshes",
+        "'((\"casePath1\" mesh1) (\"casePath2\" mesh2)"
+        "... (\"casePathN\" meshN))'",
+        "list of case meshes to merge"
+    );
+
+    argList::addOption
+    (
         "addCaseRegions",
         "'((\"casePath1\" region1) (\"casePath2\" region2)"
         "... (\"casePathN\" regionN))'",
         "list of case regions to merge"
     );
 
+    argList::addOption
+    (
+        "addCaseMeshRegions",
+        "'((\"casePath1\" mesh1 region1) (\"casePath2\" mesh2 region2)"
+        "... (\"casePathN\" meshN regionN))'",
+        "list of case mesh regions to merge"
+    );
+
     #include "setRootCase.H"
+
+    const wordList meshes
+    (
+        args.optionLookupOrDefault<wordList>
+        (
+            "addMeshes",
+            wordList::null()
+        )
+    );
 
     const wordList regions
     (
-        args.optionLookupOrDefault<wordList>("addRegions", wordList::null())
+        args.optionLookupOrDefault<wordList>
+        (
+            "addRegions",
+            wordList::null()
+        )
+    );
+
+    List<Tuple2<word, word>> meshRegions
+    (
+        args.optionLookupOrDefault<List<Tuple2<word, word>>>
+        (
+            "addMeshRegions",
+            List<Tuple2<word, word>>::null()
+        )
     );
 
     const fileNameList cases
@@ -116,7 +180,16 @@ int main(int argc, char *argv[])
         )
     );
 
-    List<Tuple2<fileName, word>> caseRegions
+    const List<Tuple2<fileName, word>> caseMeshes
+    (
+        args.optionLookupOrDefault<List<Tuple2<fileName, word>>>
+        (
+            "addCaseMeshes",
+            List<Tuple2<fileName, word>>::null()
+        )
+    );
+
+    const List<Tuple2<fileName, word>> caseRegions
     (
         args.optionLookupOrDefault<List<Tuple2<fileName, word>>>
         (
@@ -125,9 +198,52 @@ int main(int argc, char *argv[])
         )
     );
 
+    List<Tuple3<fileName, word, word>> caseMeshRegions
+    (
+        args.optionLookupOrDefault<List<Tuple3<fileName, word, word>>>
+        (
+            "addCaseMeshRegions",
+            List<Tuple3<fileName, word, word>>::null()
+        )
+    );
+
+    forAll(meshes, i)
+    {
+        meshRegions.append({meshes[i], polyMesh::defaultRegion});
+    }
+
+    forAll(regions, i)
+    {
+        meshRegions.append({word::null, regions[i]});
+    }
+
     forAll(cases, i)
     {
-        caseRegions.append({cases[i], polyMesh::defaultRegion});
+        caseMeshRegions.append({cases[i], word::null, polyMesh::defaultRegion});
+    }
+
+    forAll(caseMeshes, i)
+    {
+        caseMeshRegions.append
+        (
+            {
+                caseMeshes[i].first(),
+                caseMeshes[i].second(),
+                polyMesh::defaultRegion
+            }
+        );
+    }
+
+    forAll(caseRegions, i)
+    {
+        caseMeshRegions.append
+        (
+            {
+                caseRegions[i].first(),
+                word::null,
+                caseRegions[i].second()
+            }
+        );
     }
 
     #include "createTimeNoFunctionObjects.H"
@@ -148,18 +264,20 @@ int main(int argc, char *argv[])
     // Construct the mergePolyMesh class for the current mesh
     mergePolyMesh mergeMeshes(mesh);
 
-
-    // Add all the specified region meshes
-    forAll(regions, i)
+    // Add all the specified mesh regions
+    forAll(meshRegions, i)
     {
-        Info<< "Create polyMesh for region " << regions[i] << endl;
+        const word& addMesh = meshRegions[i].first();
+        const word& addRegion = meshRegions[i].second();
+
+        Info<< "Reading polyMesh " << addMesh/addRegion << endl;
         polyMesh meshToAdd
         (
             IOobject
             (
-                regions[i],
+                addRegion,
                 runTime.name(),
-                meshPath,
+                addMesh,
                 runTime
             )
         );
@@ -169,10 +287,11 @@ int main(int argc, char *argv[])
     }
 
     // Add all the specified case meshes
-    forAll(caseRegions, i)
+    forAll(caseMeshRegions, i)
     {
-        const fileName& addCase = caseRegions[i].first();
-        const word& addRegion = caseRegions[i].second();
+        const fileName& addCase = caseMeshRegions[i].first();
+        const word& addMesh = caseMeshRegions[i].second();
+        const word& addRegion = caseMeshRegions[i].third();
 
         const fileName addCasePath(addCase.path());
         const fileName addCaseName(addCase.name());
@@ -186,14 +305,15 @@ int main(int argc, char *argv[])
             false
         );
 
-        Info<< "Create polyMesh for case " << runTimeToAdd.path() << endl;
+        Info<< "Reading polyMesh for case "
+            << runTimeToAdd.path()/"constant"/addMesh/addRegion << endl;
         polyMesh meshToAdd
         (
             IOobject
             (
                 addRegion,
                 runTimeToAdd.name(),
-                meshPath,
+                addMesh,
                 runTimeToAdd
             )
         );
