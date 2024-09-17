@@ -38,6 +38,7 @@ options:
   -builtin          use VTK builtin OpenFOAM reader  (uses .foam extension)
   -case <dir>       specify alternative case directory, default is the cwd
   -empty            launch ParaView without opening any data files
+  -mesh <name>      specify alternative mesh
   -region <name>    specify alternative mesh region
   -touch            only create the file  (eg, .blockMesh, .OpenFOAM, etc)
   -touchAll         create .blockMesh, .OpenFOAM files (and for all regions)
@@ -98,7 +99,7 @@ noPV
 # to clean up
 unset FOAM_ABORT
 
-unset regionName optTouch
+unset meshName regionName optTouch
 
 # Hack: change all locale to 'C' i.e. using '.' for decimal point. This is
 # only needed temporarily until paraview is locale aware. (git version is
@@ -137,6 +138,11 @@ do
         echo "Launching ParaView without opening any files."
         pvExec && exit 0
         ;;
+    -mesh)
+        [ "$#" -ge 2 ] || error "'$1' option requires an argument"
+        meshName=$2
+        shift 2
+        ;;
     -region)
         [ "$#" -ge 2 ] || error "'$1' option requires an argument"
         regionName=$2
@@ -168,15 +174,29 @@ do
 done
 
 # Check for incompatibility of options
+if [ -n "$meshName" ]
+then
+    case $extension in
+    blockMesh)
+        echo "FATAL ERROR: The blockMesh reader does not support the -mesh option"
+        exit 1
+        ;;
+    foam)
+        echo "FATAL ERROR: The builtin reader does not support the -mesh option"
+        exit 1
+        ;;
+    esac
+fi
+
 if [ -n "$regionName" ]
 then
     case $extension in
     blockMesh)
-        echo "FATAL ERROR: The blockMesh reader does not support regions"
+        echo "FATAL ERROR: The blockMesh reader does not support the -region option"
         exit 1
         ;;
     foam)
-        echo "FATAL ERROR: The builtin reader does not support regions"
+        echo "FATAL ERROR: The builtin reader does not support the -region option"
         exit 1
         ;;
     esac
@@ -209,17 +229,28 @@ hasDataArg "$@"
 
 # Construct a case name from the directory name
 caseName=${PWD##*/}
-caseFile="$caseName.$extension"
+meshDir=constant
+meshOptions=
+
+if [ -n "$meshName" ]
+then
+    meshDir="$meshDir"/meshes/"$meshName"
+    meshOptions="$meshOptions($meshName)"
+fi
+
 if [ -n "$regionName" ]
 then
-    if [ ! -d constant/"$regionName" ]
-    then
-        echo "FATAL ERROR: Region $regionName does not exist"
-        exit 1
-    else
-        caseFile="$caseName{$regionName}.$extension"
-    fi
+    meshDir="$meshDir"/$regionName
+    meshOptions="$meshOptions{$regionName}"
 fi
+
+if [ ! -d "$meshDir" ]
+then
+    echo "FATAL ERROR: Mesh $meshDir does not exist"
+    exit 1
+fi
+
+caseFile="$caseName$meshOptions.$extension"
 
 # If the touch option is set, then create files and exit
 case "${optTouch:-false}" in
@@ -240,8 +271,8 @@ all)
     do
         [ -d "$region/polyMesh" ] && \
             regionName=${region##*/} && \
-            touch "$caseName{$regionName}.OpenFOAM" && \
-            echo "Created '$caseName{$regionName}.OpenFOAM'"
+            touch "$caseName(region=$regionName).OpenFOAM" && \
+            echo "Created '$caseName(region=$regionName).OpenFOAM'"
     done
     exit 0
     ;;
@@ -312,7 +343,7 @@ esac
 
 # Only create/remove the caseFile if it didn't already exist
 [ -e "$caseFile" ] || {
-    trap "rm -f $caseFile 2>/dev/null; exit 0" EXIT TERM INT
+    trap "rm -f '$caseFile' 2>/dev/null; exit 0" EXIT TERM INT
     touch "$caseFile"
     echo "Created temporary '$caseFile'"
 }

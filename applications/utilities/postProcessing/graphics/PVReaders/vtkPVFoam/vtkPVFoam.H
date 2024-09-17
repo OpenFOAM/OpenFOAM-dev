@@ -254,10 +254,16 @@ class vtkPVFoam
         //- OpenFOAM mesh
         fvMesh* meshPtr_;
 
+        //- The mesh in the optional meshes sub-directory
+        word meshMesh_;
+
+        //- Path to the mesh in the optional meshes sub-directory
+        word meshPath_;
+
         //- The mesh region
         word meshRegion_;
 
-        //- The mesh directory for the region
+        //- The mesh directory
         fileName meshDir_;
 
         //- The time index

@@ -292,31 +292,26 @@ Foam::vtkPVFoam::vtkPVFoam
         setEnv("FOAM_CASENAME", fullCasePath.name(), true);
     }
 
-    // Look for 'case{region}.OpenFOAM'
-    // could be stringent and insist the prefix match the directory name...
-    // Note: cannot use fileName::name() due to the embedded '{}'
-    string caseName(FileName.lessExt());
-    string::size_type beg = caseName.find_last_of("/{");
-    string::size_type end = caseName.find('}', beg);
+    // Parse the mesh and region names from 'case(mesh){region}' in FileName
+    string caseName(FileName.name(true));
 
-    if
-    (
-        beg != string::npos && caseName[beg] == '{'
-     && end != string::npos && end == caseName.size()-1
-    )
+    string::size_type beg = caseName.find_last_of('(');
+    string::size_type end = caseName.find(')', beg);
+
+    if (beg != string::npos && end != string::npos)
+    {
+        meshMesh_ = caseName.substr(beg+1, end-beg-1);
+        meshPath_ = "meshes"/meshMesh_;
+        meshDir_ = meshPath_/polyMesh::meshSubDir;
+    }
+
+    beg = caseName.find_last_of('{');
+    end = caseName.find('}', beg);
+
+    if (beg != string::npos && end != string::npos)
     {
         meshRegion_ = caseName.substr(beg+1, end-beg-1);
-
-        // Some safety
-        if (meshRegion_.empty())
-        {
-            meshRegion_ = polyMesh::defaultRegion;
-        }
-
-        if (meshRegion_ != polyMesh::defaultRegion)
-        {
-            meshDir_ = meshRegion_/polyMesh::meshSubDir;
-        }
+        meshDir_ = meshPath_/meshRegion_/polyMesh::meshSubDir;
     }
 
     if (debug)
@@ -324,6 +319,7 @@ Foam::vtkPVFoam::vtkPVFoam
         Info<< "    fullCasePath=" << fullCasePath << nl
             << "    FOAM_CASE=" << getEnv("FOAM_CASE") << nl
             << "    FOAM_CASENAME=" << getEnv("FOAM_CASENAME") << nl
+            << "    mesh=" << meshMesh_ << nl
             << "    region=" << meshRegion_ << endl;
     }
 
@@ -464,7 +460,7 @@ void Foam::vtkPVFoam::updateFoamMesh()
         if (debug)
         {
             InfoInFunction << endl
-                << "    Creating OpenFOAM mesh for region " << meshRegion_
+                << "    Creating OpenFOAM mesh for mesh and region " << meshDir_
                 << " at time=" << dbPtr_().name() << endl;
         }
 
@@ -474,6 +470,7 @@ void Foam::vtkPVFoam::updateFoamMesh()
             (
                 meshRegion_,
                 dbPtr_().name(),
+                meshPath_,
                 dbPtr_(),
                 IOobject::MUST_READ
             ),
@@ -872,6 +869,8 @@ void Foam::vtkPVFoam::PrintSelf(ostream& os, vtkIndent indent) const
 
     os  << indent << "Number of available time steps: "
         << (dbPtr_.valid() ? dbPtr_().times().size() : 0) << "\n";
+
+    os  << indent << "mesh: " << meshMesh_ << "\n";
 
     os  << indent << "mesh region: " << meshRegion_ << "\n";
 }
