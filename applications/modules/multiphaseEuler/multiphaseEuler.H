@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,7 +90,7 @@ protected:
         Switch dragCorrection;
 
         //- Number of energy correctors
-        //  Used to improve stability of phase-change sibulations
+        //  Used to improve stability of phase-change simulations
         //  Defaults to 1
         int nEnergyCorrectors;
 
