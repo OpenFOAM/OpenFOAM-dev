@@ -26,7 +26,7 @@
 #     paraFoam
 #
 # Description
-#     start paraview with the OpenFOAM libraries
+#     start ParaView with the OpenFOAM libraries
 #
 #------------------------------------------------------------------------------
 usage() {
@@ -40,13 +40,14 @@ options:
   -empty            launch ParaView without opening any data files
   -mesh <name>      specify alternative mesh
   -region <name>    specify alternative mesh region
-  -touch            only create the file  (eg, .blockMesh, .OpenFOAM, etc)
-  -touchAll         create .blockMesh, .OpenFOAM files (and for all regions)
+  -touch            create the .blockMesh or .OpenFOAM file
+  -touchAll         create .blockMesh and .OpenFOAM files for all meshes and \
+regions
   -help             print the usage
 
-paraview options start with a double dashes
+ParaView options start with a double dashes
 
-* start paraview $ParaView_VERSION with the OpenFOAM libraries
+* Start ParaView $ParaView_VERSION with the OpenFOAM libraries
 
 USAGE
 }
@@ -263,17 +264,50 @@ all)
     fi
 
     # Default region
-    touch "$caseName.OpenFOAM"
-    echo "Created '$caseName.OpenFOAM'"
+    if [ -d constant/polyMesh ]
+    then
+        touch "$caseName.OpenFOAM"
+        echo "Created '$caseName.OpenFOAM'"
+    fi
 
-    # Find other probable regions
-    for region in constant/*
+    # Other meshes
+    for meshPolyMeshDir in constant/meshes/*/polyMesh
     do
-        [ -d "$region/polyMesh" ] && \
-            regionName=${region##*/} && \
-            touch "$caseName(region=$regionName).OpenFOAM" && \
-            echo "Created '$caseName(region=$regionName).OpenFOAM'"
+        if [ -d $meshPolyMeshDir ]
+        then
+            meshDir=${meshPolyMeshDir%/polyMesh}
+            meshName=${meshDir#constant/meshes/}
+            touch "$caseName($meshName).OpenFOAM"
+            echo "Created '$caseName($meshName).OpenFOAM'"
+        fi
     done
+
+    # Other regions
+    for regionPolyMeshDir in constant/*/polyMesh
+    do
+        if [ -d $regionPolyMeshDir ]
+        then
+            regionDir=${regionPolyMeshDir%/polyMesh}
+            regionName=${regionDir#constant/}
+            touch "$caseName{$regionName}.OpenFOAM"
+            echo "Created '$caseName{$regionName}.OpenFOAM'"
+        fi
+    done
+
+    # Other meshes and regions
+    for meshRegionPolyMeshDir in constant/meshes/*/*/polyMesh
+    do
+        if [ -d $meshRegionPolyMeshDir ]
+        then
+            meshRegionDir=${meshRegionPolyMeshDir%/polyMesh}
+            meshRegionName=${meshRegionDir#constant/meshes/}
+            meshName=${meshRegionName%/*}
+            regionName=${meshRegionName#*/}
+            touch "$caseName($meshName){$regionName}.OpenFOAM"
+            echo "Created '$caseName($meshName){$regionName}.OpenFOAM'"
+        fi
+    done
+
     exit 0
     ;;
 
