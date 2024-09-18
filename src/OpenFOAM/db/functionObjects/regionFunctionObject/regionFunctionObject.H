@@ -25,11 +25,11 @@ Class
     Foam::functionObjects::regionFunctionObject
 
 Description
-    Specialisation of Foam::functionObject for a region and providing a
-    reference to the region Foam::objectRegistry.
+    Specialisation of Foam::functionObject for a region
 
 See also
     Foam::functionObject
+    Foam::functionObjects::objectRegistryFunctionObject
 
 SourceFiles
     regionFunctionObject.C
@@ -39,16 +39,12 @@ SourceFiles
 #ifndef functionObjects_regionFunctionObject_H
 #define functionObjects_regionFunctionObject_H
 
-#include "functionObject.H"
+#include "objectRegistryFunctionObject.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// Forward declaration of classes
-class objectRegistry;
-
 namespace functionObjects
 {
 
@@ -58,61 +54,8 @@ namespace functionObjects
 
 class regionFunctionObject
 :
-    public functionObject
+    public objectRegistryFunctionObject
 {
-
-protected:
-
-    // Protected member data
-
-        //- Reference to the region objectRegistry
-        const objectRegistry& obr_;
-
-
-    // Protected member functions
-
-        //- Find field in the objectRegistry
-        template<class ObjectType>
-        bool foundObject(const word& fieldName) const;
-
-        //- Prints a warning message that fieldName cannot be found
-        template<class ObjectType>
-        void cannotFindObject(const word& fieldName);
-
-        //- Prints a warning message that fieldName cannot be found
-        void cannotFindObject(const word& fieldName);
-
-        //- Prints a warning message that fieldNames cannot be found
-        void cannotFindObjects(const wordList& fieldNames);
-
-        //- Lookup object from the objectRegistry
-        template<class ObjectType>
-        const ObjectType& lookupObject(const word& fieldName) const;
-
-        //- Lookup non-const object reference from the objectRegistry
-        template<class ObjectType>
-        ObjectType& lookupObjectRef(const word& fieldName);
-
-        //- Store the given field in the objectRegistry
-        template<class ObjectType>
-        bool store(const tmp<ObjectType>& tfield);
-
-        //- Store the given field in the objectRegistry under the given name
-        template<class ObjectType>
-        bool store
-        (
-            const word& fieldName,
-            const tmp<ObjectType>& tfield,
-            bool cacheable = false
-        );
-
-        //- Write field if present in objectRegistry
-        bool writeObject(const word& fieldName);
-
-        //- Clear field from the objectRegistry if present
-        bool clearObject(const word& fieldName);
-
-
 public:
 
     //- Runtime type information
@@ -146,12 +89,6 @@ public:
     virtual ~regionFunctionObject();
 
 
-    // Member Functions
-
-        //- Read optional controls
-        virtual bool read(const dictionary&);
-
-
     // Member Operators
 
         //- Disallow default bitwise assignment
@@ -163,12 +100,6 @@ public:
 
 } // End namespace functionObjects
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "regionFunctionObjectTemplates.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
