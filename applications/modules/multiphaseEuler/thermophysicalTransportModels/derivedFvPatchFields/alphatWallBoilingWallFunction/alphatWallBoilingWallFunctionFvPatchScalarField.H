@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,7 +84,7 @@ Usage
         partitioningModel |                       | yes         |
         nucleationSiteModel |                     | yes         |
         departureDiameterModel |                  | yes         |
-        departureFrequenctModel |                 | yes         |
+        departureFrequencyModel |                 | yes         |
         bubbleWaitingTimeRatio |                  | no          | 0.8
     \endtable
 

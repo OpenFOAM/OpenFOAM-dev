@@ -151,7 +151,7 @@ class wallBoilingHeatTransfer
         //- Bubble departure diameter
         mutable volScalarField dDep_;
 
-        //- Bubble departre frequency
+        //- Bubble departure frequency
         mutable volScalarField fDep_;
 
         //- Nucleation site density
