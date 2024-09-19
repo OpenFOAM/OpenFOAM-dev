@@ -41,39 +41,6 @@ namespace solvers
 }
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-void Foam::solvers::solid::correctDiNum()
-{
-    const volScalarField kappa
-    (
-        thermo.isotropic()
-      ? thermo.kappa()
-      : mag(thermo.Kappa())()
-    );
-
-    const volScalarField::Internal DiNumvf
-    (
-        fvc::surfaceSum
-        (
-            mesh.magSf()
-           *fvc::interpolate(kappa)
-           *mesh.surfaceInterpolation::deltaCoeffs()
-        )()()
-       /(mesh.V()*thermo.rho()()*thermo.Cp()())
-       *runTime.deltaT()
-    );
-
-    const scalar meanDiNum = gAverage(DiNumvf);
-    const scalar maxDiNum = gMax(DiNumvf);
-
-    Info<< "Diffusion Number mean: " << meanDiNum
-        << " max: " << maxDiNum << endl;
-
-    DiNum = maxDiNum;
-}
-
-
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
 bool Foam::solvers::solid::dependenciesModified() const
@@ -85,9 +52,6 @@ bool Foam::solvers::solid::dependenciesModified() const
 bool Foam::solvers::solid::read()
 {
     solver::read();
-
-    maxDi =
-        runTime.controlDict().lookupOrDefault<scalar>("maxDi", 1.0);
 
     maxDeltaT_ =
         runTime.controlDict().found("maxDeltaT")
@@ -115,18 +79,12 @@ Foam::solvers::solid::solid
 
     thermophysicalTransport(solidThermophysicalTransportModel::New(thermo_)),
 
-    DiNum(0),
-
     thermo(thermo_),
     T(T_)
 {
     thermo.validate("solid", "h", "e");
 
-    if (transient())
-    {
-        correctDiNum();
-    }
-    else if (LTS)
+    if (LTS)
     {
         FatalError
             << type()
@@ -156,25 +114,13 @@ Foam::solvers::solid::~solid()
 
 Foam::scalar Foam::solvers::solid::maxDeltaT() const
 {
-    scalar deltaT = min(fvModels().maxDeltaT(), maxDeltaT_);
-
-    if (DiNum > small)
-    {
-        deltaT = min(deltaT, maxDi/DiNum*runTime.deltaTValue());
-    }
-
-    return deltaT;
+    return min(fvModels().maxDeltaT(), maxDeltaT_);
 }
 
 
 void Foam::solvers::solid::preSolve()
 {
     fvModels().preUpdateMesh();
-
-    if (transient())
-    {
-        correctDiNum();
-    }
 
     // Update the mesh for topology change, mesh to mesh mapping
     mesh_.update();

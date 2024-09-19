@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,8 +60,6 @@ protected:
 
     // Control parameters
 
-        scalar maxDi;
-
         scalar maxDeltaT_;
 
 
@@ -80,11 +78,6 @@ protected:
         autoPtr<solidThermophysicalTransportModel> thermophysicalTransport;
 
 
-    // Time-step controls
-
-        scalar DiNum;
-
-
     // Protected Member Functions
 
         //- Return true if the solver's dependencies have been modified
@@ -92,14 +85,6 @@ protected:
 
         //- Read controls
         virtual bool read();
-
-
-private:
-
-    // Private Member Functions
-
-        //- Correct the cached Courant numbers
-        void correctDiNum();
 
 
 public:
