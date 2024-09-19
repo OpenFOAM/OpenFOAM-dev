@@ -285,6 +285,7 @@ db/functionObjects/writeObjectsBase/writeObjectsBase.C
 db/functionObjects/writeLocalObjects/writeLocalObjects.C
 db/functionObjects/timeControl/timeControl.C
 db/functionObjects/timeControl/timeControlFunctionObject.C
+db/functionObjects/objectRegistryFunctionObject/objectRegistryFunctionObject.C
 db/functionObjects/regionFunctionObject/regionFunctionObject.C
 
 Time = db/Time

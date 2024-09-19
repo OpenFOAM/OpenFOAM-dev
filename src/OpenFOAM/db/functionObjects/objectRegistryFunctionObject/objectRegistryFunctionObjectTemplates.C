@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,13 +23,13 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "regionFunctionObject.H"
+#include "objectRegistryFunctionObject.H"
 #include "objectRegistry.H"
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
 template<class ObjectType>
-bool Foam::functionObjects::regionFunctionObject::foundObject
+bool Foam::functionObjects::objectRegistryFunctionObject::foundObject
 (
     const word& fieldName
 ) const
@@ -39,7 +39,7 @@ bool Foam::functionObjects::regionFunctionObject::foundObject
 
 
 template<class Type>
-void Foam::functionObjects::regionFunctionObject::cannotFindObject
+void Foam::functionObjects::objectRegistryFunctionObject::cannotFindObject
 (
     const word& fieldName
 )
@@ -52,7 +52,8 @@ void Foam::functionObjects::regionFunctionObject::cannotFindObject
 
 
 template<class ObjectType>
-const ObjectType& Foam::functionObjects::regionFunctionObject::lookupObject
+const ObjectType&
+Foam::functionObjects::objectRegistryFunctionObject::lookupObject
 (
     const word& fieldName
 ) const
@@ -62,7 +63,8 @@ const ObjectType& Foam::functionObjects::regionFunctionObject::lookupObject
 
 
 template<class ObjectType>
-ObjectType& Foam::functionObjects::regionFunctionObject::lookupObjectRef
+ObjectType&
+Foam::functionObjects::objectRegistryFunctionObject::lookupObjectRef
 (
     const word& fieldName
 )
@@ -72,7 +74,7 @@ ObjectType& Foam::functionObjects::regionFunctionObject::lookupObjectRef
 
 
 template<class ObjectType>
-bool Foam::functionObjects::regionFunctionObject::store
+bool Foam::functionObjects::objectRegistryFunctionObject::store
 (
     const tmp<ObjectType>& tfield
 )
@@ -103,7 +105,7 @@ bool Foam::functionObjects::regionFunctionObject::store
 
 
 template<class ObjectType>
-bool Foam::functionObjects::regionFunctionObject::store
+bool Foam::functionObjects::objectRegistryFunctionObject::store
 (
     const word& fieldName,
     const tmp<ObjectType>& tfield,

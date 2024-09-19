@@ -32,8 +32,9 @@ Description
     generated.
 
 See also
-    Foam::regionFunctionObject
     Foam::functionObject
+    Foam::functionObjects::objectRegistryFunctionObject
+    Foam::functionObjects::regionFunctionObject
 
 SourceFiles
     fvMeshFunctionObject.C
