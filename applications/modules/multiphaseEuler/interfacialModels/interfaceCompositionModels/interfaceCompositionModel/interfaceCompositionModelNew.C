@@ -51,7 +51,7 @@ Foam::interfaceCompositionModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalIOErrorInFunction(dict)
+        FatalIOErrorInFunction(modelDict)
             << "Unknown interfaceCompositionModel type "
             << interfaceCompositionModelType << endl << endl
             << "Valid interfaceCompositionModel types are : " << endl

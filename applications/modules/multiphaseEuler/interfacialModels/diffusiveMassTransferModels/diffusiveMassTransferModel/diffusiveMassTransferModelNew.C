@@ -47,7 +47,7 @@ Foam::diffusiveMassTransferModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalIOErrorInFunction(dict)
+        FatalIOErrorInFunction(modelDict)
             << "Unknown diffusiveMassTransferModel type "
             << diffusiveMassTransferModelType << endl << endl
             << "Valid diffusiveMassTransferModel types are : " << endl

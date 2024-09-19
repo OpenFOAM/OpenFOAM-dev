@@ -48,7 +48,7 @@ Foam::autoPtr<Foam::virtualMassModel> Foam::virtualMassModel::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalIOErrorInFunction(dict)
+        FatalIOErrorInFunction(modelDict)
             << "Unknown virtualMassModel type "
             << virtualMassModelType << endl << endl
             << "Valid virtualMassModel types are : " << endl
