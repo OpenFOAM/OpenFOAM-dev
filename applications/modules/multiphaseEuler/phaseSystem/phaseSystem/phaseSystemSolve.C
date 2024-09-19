@@ -50,20 +50,6 @@ void Foam::phaseSystem::solve(const PtrList<volScalarField>& rAs)
 
     const bool LTS = fv::localEulerDdt::enabled(mesh_);
 
-    // Temporary switch for testing and comparing the standard split
-    // and the new un-split phase flux discretisation
-    const bool splitPhaseFlux
-    (
-        alphaControls.lookupOrDefault<Switch>("splitPhaseFlux", false)
-    );
-
-    // Temporary switch for testing and comparing the standard mean flux
-    // and the new phase flux reference for the phase flux correction
-    const bool meanFluxReference
-    (
-        alphaControls.lookupOrDefault<Switch>("meanFluxReference", false)
-    );
-
     const scalar vDotResidualAlpha
     (
         alphaControls.lookupOrDefault("vDotResidualAlpha", 1e-4)
@@ -276,7 +262,7 @@ void Foam::phaseSystem::solve(const PtrList<volScalarField>& rAs)
                         IOobject::groupName("alphaPhiCorr", phase.name()),
                         fvc::flux
                         (
-                            splitPhaseFlux ? phi_ : phase.phi()(),
+                            phase.phi()(),
                             alpha,
                             "div(phi," + alpha.name() + ')'
                         )
@@ -285,50 +271,7 @@ void Foam::phaseSystem::solve(const PtrList<volScalarField>& rAs)
 
                 surfaceScalarField& alphaPhi = alphaPhis[phase.index()];
 
-                if (splitPhaseFlux)
-                {
-                    forAll(phases(), phasei)
-                    {
-                        const phaseModel& phase2 = phases()[phasei];
-                        const volScalarField& alpha2 = phase2;
-
-                        if (&phase2 == &phase) continue;
-
-                        surfaceScalarField phir(phase.phi() - phase2.phi());
-
-                        cAlphaTable::const_iterator cAlpha
-                        (
-                            cAlphas_.find(phaseInterface(phase, phase2))
-                        );
-
-                        if (cAlpha != cAlphas_.end())
-                        {
-                            surfaceScalarField phic
-                            (
-                                (mag(phi_) + mag(phir))/mesh_.magSf()
-                            );
-
-                            phir +=
-                                min(cAlpha()*phic, max(phic))
-                               *nHatf(alpha, alpha2);
-                        }
-
-                        const word phirScheme
-                        (
-                            "div(phir,"
-                          + alpha2.name() + ',' + alpha.name()
-                          + ')'
-                        );
-
-                        alphaPhi += fvc::flux
-                        (
-                           -fvc::flux(-phir, alpha2, phirScheme),
-                            alpha,
-                            phirScheme
-                        );
-                    }
-                }
-                else if (!cAlphas_.empty())
+                if (!cAlphas_.empty())
                 {
                     forAll(phases(), phasei)
                     {
@@ -390,9 +333,7 @@ void Foam::phaseSystem::solve(const PtrList<volScalarField>& rAs)
                 (
                     geometricOneField(),
                     alpha,
-                    meanFluxReference
-                      ? phiMoving    // Guarantees boundedness but less accurate
-                      : phase.phi()(), // Less robust but more accurate
+                    phase.phi()(),
                     alphaPhi,
                     Sps[phase.index()],
                     Sus[phase.index()],
