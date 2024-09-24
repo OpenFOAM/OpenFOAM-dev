@@ -44,8 +44,6 @@ Usage
     \table
         Property     | Description                | Required    | Default value
         dSph         | Sphere equivalent diameter | yes         | none
-        value        | Initial and boundary condition value of\\
-                       size class fraction        | yes         | none
         shapeModel   | Shape model providing an alternative diameter field\\
                                                   | yes         | none
     \endtable

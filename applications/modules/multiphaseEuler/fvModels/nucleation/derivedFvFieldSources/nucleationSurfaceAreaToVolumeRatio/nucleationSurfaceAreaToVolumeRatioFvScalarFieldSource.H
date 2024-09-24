@@ -22,30 +22,31 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::nucleationSizeGroupFvScalarFieldSource
+    Foam::nucleationSurfaceAreaToVolumeRatioFvScalarFieldSource
 
 Description
-    This source condition creates a nucleation source term in the size group
-    equations of a population balance. The fvSource it relates to should be a
-    nucleation model.
+    This source condition creates a nucleation source term in the
+    surface-area-to-volume-ratio (kappa) equations of the fractal shape model
+    of population balance. The fvSource it relates to should be a nucleation
+    model.
 
 Usage
     Example of the source condition specification:
     \verbatim
     <sourceName>
     {
-        type            nucleationSizeGroup;
+        type            nucleationSurfaceAreaToVolumeRatio;
         libs            ("libmultiphaseEulerFvModels.so");
     }
     \endverbatim
 
 SourceFiles
-    nucleationSizeGroupFvScalarFieldSource.C
+    nucleationSurfaceAreaToVolumeRatioFvScalarFieldSource.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef nucleationSizeGroupFvScalarFieldSource_H
-#define nucleationSizeGroupFvScalarFieldSource_H
+#ifndef nucleationSurfaceAreaToVolumeRatioFvScalarFieldSource_H
+#define nucleationSurfaceAreaToVolumeRatioFvScalarFieldSource_H
 
 #include "fvFieldSources.H"
 
@@ -55,32 +56,32 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-          Class nucleationSizeGroupFvScalarFieldSource Declaration
+    Class nucleationSurfaceAreaToVolumeRatioFvScalarFieldSource Declaration
 \*---------------------------------------------------------------------------*/
 
-class nucleationSizeGroupFvScalarFieldSource
+class nucleationSurfaceAreaToVolumeRatioFvScalarFieldSource
 :
     public fvScalarFieldSource
 {
 public:
 
     //- Runtime type information
-    TypeName("nucleationSizeGroup");
+    TypeName("nucleationSurfaceAreaToVolumeRatio");
 
 
     // Constructors
 
         //- Construct from internal field and dictionary
-        nucleationSizeGroupFvScalarFieldSource
+        nucleationSurfaceAreaToVolumeRatioFvScalarFieldSource
         (
             const DimensionedField<scalar, volMesh>&,
             const dictionary& dict
         );
 
         //- Copy constructor setting internal field reference
-        nucleationSizeGroupFvScalarFieldSource
+        nucleationSurfaceAreaToVolumeRatioFvScalarFieldSource
         (
-            const nucleationSizeGroupFvScalarFieldSource&,
+            const nucleationSurfaceAreaToVolumeRatioFvScalarFieldSource&,
             const DimensionedField<scalar, volMesh>&
         );
 
@@ -92,7 +93,7 @@ public:
         {
             return autoPtr<fvScalarFieldSource>
             (
-                new nucleationSizeGroupFvScalarFieldSource
+                new nucleationSurfaceAreaToVolumeRatioFvScalarFieldSource
                 (
                     *this,
                     iF
@@ -102,7 +103,7 @@ public:
 
 
     //- Destructor
-    virtual ~nucleationSizeGroupFvScalarFieldSource();
+    virtual ~nucleationSurfaceAreaToVolumeRatioFvScalarFieldSource();
 
 
     // Member Functions
