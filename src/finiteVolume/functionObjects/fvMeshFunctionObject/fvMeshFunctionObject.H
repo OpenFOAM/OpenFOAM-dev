@@ -116,6 +116,15 @@ public:
     virtual ~fvMeshFunctionObject();
 
 
+    // Member Functions
+
+        //- Return a reference to the mesh
+        const fvMesh& mesh() const
+        {
+            return mesh_;
+        }
+
+
     // Member Operators
 
         //- Disallow default bitwise assignment
