@@ -992,6 +992,17 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::boundaryFieldRef()
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
+typename
+Foam::GeometricField<Type, PatchField, GeoMesh>::Boundary&
+Foam::GeometricField<Type, PatchField, GeoMesh>::
+boundaryFieldRefNoStoreOldTimes()
+{
+    this->setUpToDate();
+    return boundaryField_;
+}
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
 void Foam::GeometricField<Type, PatchField, GeoMesh>::storePrevIter() const
 {
     if (!fieldPrevIterPtr_)

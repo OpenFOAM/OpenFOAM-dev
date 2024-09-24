@@ -1030,7 +1030,7 @@ void Foam::fvMeshStitchers::moving::unconformCorrectMeshPhi
     for (label i = 0; i <= phi.nOldTimes(false); ++ i)
     {
         surfaceScalarField::Boundary& phi0Bf =
-            boundaryFieldRefNoUpdate(phi.oldTime(i));
+            phi.oldTimeRef(i).boundaryFieldRefNoStoreOldTimes();
 
         forAll(polyFacesBf, ncPatchi)
         {

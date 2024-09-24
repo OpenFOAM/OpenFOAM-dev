@@ -369,15 +369,6 @@ protected:
 
     // Protected Member Functions
 
-        //- Access the boundary field reference of a field, without updating
-        //  the time index, storing old time fields, etc...
-        template<class GeoField>
-        static typename GeoField::Boundary& boundaryFieldRefNoUpdate
-        (
-            GeoField& fld
-        );
-
-
         // Checking
 
             //- Determine which patches are coupled; i.e., for which
