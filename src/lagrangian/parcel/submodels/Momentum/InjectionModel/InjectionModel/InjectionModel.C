@@ -486,7 +486,7 @@ Foam::InjectionModel<CloudType>::InjectionModel(CloudType& owner)
     nParticleFixed_(-vGreat),
     uniformParcelSize_(uniformParcelSize::nParticle),
     time0_(0),
-    timeStep0_(this->template getModelProperty<scalar>("timeStep0"))
+    timeStep0_(this->template getModelProperty<scalar>("timeStep0", scalar(0)))
 {}
 
 
@@ -522,7 +522,14 @@ Foam::InjectionModel<CloudType>::InjectionModel
         ]
     ),
     time0_(owner.db().time().value()),
-    timeStep0_(this->template getModelProperty<scalar>("timeStep0"))
+    timeStep0_
+    (
+        this->template getModelProperty<scalar>
+        (
+            "timeStep0",
+            owner.db().time().value()
+        )
+    )
 {
     // Provide some info. Also serves to initialise mesh dimensions. This may
     // be needed for parallel runs due to lazy evaluation of valid mesh
