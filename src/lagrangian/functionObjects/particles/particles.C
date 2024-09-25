@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "particles.H"
+#include "parcelCloudList.H"
 #include "viscosityModel.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -94,7 +95,7 @@ Foam::functionObjects::particles::particles
     ),
     cloudName_
     (
-        dict.lookupOrDefault<word>("cloud", "cloud")
+        dict.lookupOrDefault<word>("cloud", parcelCloudList::defaultCloudName)
     ),
     cloudPtr_
     (
