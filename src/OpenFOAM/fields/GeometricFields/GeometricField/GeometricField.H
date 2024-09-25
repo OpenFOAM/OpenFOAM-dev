@@ -404,6 +404,10 @@ public:
         //  old-time fields; avoid in loops.
         Boundary& boundaryFieldRef();
 
+        //- Return a reference to the boundary field without storing old times
+        //  Note: this increments the event counter; avoid in loops.
+        Boundary& boundaryFieldRefNoStoreOldTimes();
+
         //- Return const-reference to the boundary field
         inline const Boundary& boundaryField() const;
 

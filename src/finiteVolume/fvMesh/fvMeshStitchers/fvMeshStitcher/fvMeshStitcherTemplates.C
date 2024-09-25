@@ -46,7 +46,7 @@ void Foam::fvMeshStitcher::resizePatchFields()
         forAll(mesh_.boundary(), patchi)
         {
             typename GeoField<Type>::Patch& pf =
-                boundaryFieldRefNoUpdate(fields[i])[patchi];
+                fields[i].boundaryFieldRefNoStoreOldTimes()[patchi];
 
             if (isA<nonConformalFvPatch>(pf.patch()))
             {
@@ -80,7 +80,7 @@ void Foam::fvMeshStitcher::preConformSurfaceFields()
         {
             conformedFvsPatchField<Type>::conform
             (
-                boundaryFieldRefNoUpdate(field.oldTime(ti))
+                field.oldTimeRef(ti).boundaryFieldRefNoStoreOldTimes()
             );
         }
     }
@@ -100,7 +100,7 @@ void Foam::fvMeshStitcher::preConformVolFields()
         {
             conformedFvPatchField<Type>::conform
             (
-                boundaryFieldRefNoUpdate(field.oldTime(ti))
+                field.oldTimeRef(ti).boundaryFieldRefNoStoreOldTimes()
             );
         }
     }
@@ -120,7 +120,7 @@ void Foam::fvMeshStitcher::postUnconformSurfaceFields()
         {
             conformedFvsPatchField<Type>::unconform
             (
-                boundaryFieldRefNoUpdate(field.oldTime(ti))
+                field.oldTimeRef(ti).boundaryFieldRefNoStoreOldTimes()
             );
         }
     }
@@ -140,7 +140,7 @@ void Foam::fvMeshStitcher::postUnconformVolFields()
         {
             conformedFvPatchField<Type>::unconform
             (
-                boundaryFieldRefNoUpdate(field.oldTime(ti))
+                field.oldTimeRef(ti).boundaryFieldRefNoStoreOldTimes()
             );
         }
     }
@@ -170,7 +170,7 @@ void Foam::fvMeshStitcher::postUnconformEvaluateVolFields()
         forAll(mesh_.boundary(), patchi)
         {
             typename VolField<Type>::Patch& pf =
-                boundaryFieldRefNoUpdate(fields[i])[patchi];
+                fields[i].boundaryFieldRefNoStoreOldTimes()[patchi];
 
             if (evaluate(pf))
             {
@@ -190,7 +190,7 @@ void Foam::fvMeshStitcher::postUnconformEvaluateVolFields()
         forAll(mesh_.boundary(), patchi)
         {
             typename VolField<Type>::Patch& pf =
-                boundaryFieldRefNoUpdate(fields[i])[patchi];
+                fields[i].boundaryFieldRefNoStoreOldTimes()[patchi];
 
             if (evaluate(pf))
             {
@@ -198,18 +198,6 @@ void Foam::fvMeshStitcher::postUnconformEvaluateVolFields()
             }
         }
     }
-}
-
-
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-template<class GeoField>
-typename GeoField::Boundary& Foam::fvMeshStitcher::boundaryFieldRefNoUpdate
-(
-    GeoField& fld
-)
-{
-    return const_cast<typename GeoField::Boundary&>(fld.boundaryField());
 }
 
 

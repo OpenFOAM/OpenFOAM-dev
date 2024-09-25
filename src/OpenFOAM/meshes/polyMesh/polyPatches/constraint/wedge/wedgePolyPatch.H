@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,6 +69,21 @@ class wedgePolyPatch
 
         //- Neighbour-cell transformation tensor
         tensor cellT_;
+
+        //- Index of the opposite wedge patch
+        mutable label oppositePatchIndex_;
+
+
+    // Private Member Functions
+
+        //- Return whether the given face is a (non-degenerate) quad
+        bool isQuadFace(const label) const;
+
+        //- Return whether the given face is part of a wedge patch
+        bool isWedgeFace(const label) const;
+
+        //- Return the wedge face opposite the given wedge face
+        label oppositeWedgeFace(const label) const;
 
 
 protected:
@@ -184,6 +199,12 @@ public:
             {
                 return cellT_;
             }
+
+            //- Return the index of the opposite wedge patch
+            label oppositePatchIndex() const;
+
+            //- Return a reference to the opposite wedge patch
+            const wedgePolyPatch& oppositePatch() const;
 };
 
 

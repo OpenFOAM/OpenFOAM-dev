@@ -1977,7 +1977,7 @@ void Foam::fvMeshStitcher::postUnconformVolFields()
             const label origPatchi = origPatchIndices[i];
 
             typename volVectorField::Patch& origUp =
-                boundaryFieldRefNoUpdate(U)[origPatchi];
+                U.boundaryFieldRefNoStoreOldTimes()[origPatchi];
 
             if
             (
@@ -1985,7 +1985,7 @@ void Foam::fvMeshStitcher::postUnconformVolFields()
              || isA<movingWallSlipVelocityFvPatchVectorField>(origUp)
             )
             {
-                boundaryFieldRefNoUpdate(U).set
+                U.boundaryFieldRefNoStoreOldTimes().set
                 (
                     errorPatchi,
                     new movingWallSlipVelocityFvPatchVectorField
@@ -2020,7 +2020,7 @@ void Foam::fvMeshStitcher::postUnconformVolFields()
         {
             if (isA<nonConformalFvPatch>(mesh_.boundary()[patchi]))
             {
-                boundaryFieldRefNoUpdate(Uf)[patchi] ==
+                Uf.boundaryFieldRefNoStoreOldTimes()[patchi] ==
                     UfInterpolated.boundaryField()[patchi];
             }
         }

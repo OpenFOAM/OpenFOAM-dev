@@ -47,8 +47,6 @@ Description
 Usage
     \table
         Property     | Description             | Required    | Default value
-        kappa        | Initial and boundary condition value\\
-                                               | yes         |
         Df           | Fractal dimension       | yes         |
         alphaC       | Scaling prefactor       | yes         |
     \endtable

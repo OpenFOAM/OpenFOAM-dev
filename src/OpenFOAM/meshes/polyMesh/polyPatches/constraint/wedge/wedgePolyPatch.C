@@ -25,6 +25,8 @@ License
 
 #include "wedgePolyPatch.H"
 #include "addToRunTimeSelectionTable.H"
+#include "polyMesh.H"
+#include "polyBoundaryMesh.H"
 #include "RemoteData.H"
 #include "SubField.H"
 #include "Tuple3.H"
@@ -38,6 +40,149 @@ namespace Foam
 
     addToRunTimeSelectionTable(polyPatch, wedgePolyPatch, word);
     addToRunTimeSelectionTable(polyPatch, wedgePolyPatch, dictionary);
+}
+
+
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+bool Foam::wedgePolyPatch::isQuadFace(const label facei) const
+{
+    const polyMesh& mesh = boundaryMesh().mesh();
+
+    const face& f = mesh.faces()[facei];
+
+    // Face must be of size 4
+    if (f.size() != 4) return false;
+
+    // Face must not have any repeated points
+    forAll(f, fpi)
+    {
+        for (label fpj = fpi + 1; fpj < f.size(); ++ fpj)
+        {
+            if (f[fpi] == f[fpj]) return false;
+        }
+    }
+
+    return true;
+}
+
+
+bool Foam::wedgePolyPatch::isWedgeFace(const label facei) const
+{
+    return
+        facei >= boundaryMesh().mesh().nInternalFaces()
+     && isA<wedgePolyPatch>
+        (
+            boundaryMesh()
+            [
+                boundaryMesh().patchIndices()
+                [
+                    facei - boundaryMesh().mesh().nInternalFaces()
+                ]
+            ]
+        );
+}
+
+
+Foam::label Foam::wedgePolyPatch::oppositeWedgeFace(const label thisFacei) const
+{
+    const polyMesh& mesh = boundaryMesh().mesh();
+
+    // Function to generate a generic error that the search for the opposite
+    // wedge face has failed
+    auto error = [&]()
+    {
+        FatalErrorInFunction
+            << "Wedge face not found opposite face " << thisFacei;
+
+        if (Pstream::parRun())
+        {
+            FatalErrorInFunction
+                << " on processor " << Pstream::myProcNo();
+        }
+
+        FatalErrorInFunction
+            << " at " << mesh.faceCentres()[thisFacei]
+            << exit(FatalError);
+    };
+
+    const face& thisF = mesh.faces()[thisFacei];
+
+    const cell& c = mesh.cells()[mesh.faceOwner()[thisFacei]];
+
+    // Look for a "mid" face. This is any a quad face in the cell that is not
+    // on a wedge patch and is edge-connected to this face.
+    label midFacei = -1, midThisFaceEdgei = -1;
+    for (label cfi = 0; cfi < c.size() && midFacei == -1; ++ cfi)
+    {
+        const label facei = c[cfi];
+        const face& f = mesh.faces()[facei];
+
+        if
+        (
+            thisFacei == facei
+         || !isQuadFace(facei)
+         || isWedgeFace(facei)
+        ) continue;
+
+        for
+        (
+            label thisFei = 0;
+            thisFei < thisF.size() && midFacei == -1;
+            ++ thisFei
+        )
+        {
+            const edge thisE = thisF.faceEdge(thisFei);
+
+            for (label fei = 0; fei < f.size() && midFacei == -1; ++ fei)
+            {
+                const edge e = f.faceEdge(fei);
+
+                if (edge::compare(thisE, e) != 0)
+                {
+                    midFacei = facei;
+                    midThisFaceEdgei = fei;
+                }
+            }
+        }
+    }
+
+    if (midFacei == -1) error();
+
+    // Get the edge on the opposite side of the "mid" face
+    const label midOppFaceEdgei = (midThisFaceEdgei + 2) % 4;
+    const edge midOppE = mesh.faces()[midFacei].faceEdge(midOppFaceEdgei);
+
+    // Look for the opposite face. This is a face in the cell that is on a
+    // wedge patch and is edge connected to the edge of the "mid" face opposite
+    // the provided face.
+    label oppFacei = -1;
+    for (label cfi = 0; cfi < c.size() && oppFacei == -1; ++ cfi)
+    {
+        const label facei = c[cfi];
+        const face& f = mesh.faces()[facei];
+
+        if
+        (
+            facei == thisFacei
+         || facei == midFacei
+         || !isWedgeFace(facei)
+        ) continue;
+
+        for (label fei = 0; fei < f.size() && oppFacei == -1; ++ fei)
+        {
+            const edge e = f.faceEdge(fei);
+
+            if (edge::compare(midOppE, e) != 0)
+            {
+                oppFacei = facei;
+            }
+        }
+    }
+
+    if (oppFacei == -1) error();
+
+    return oppFacei;
 }
 
 
@@ -165,7 +310,8 @@ Foam::wedgePolyPatch::wedgePolyPatch
     n_(vector::rootMax),
     cosAngle_(0.0),
     faceT_(Zero),
-    cellT_(Zero)
+    cellT_(Zero),
+    oppositePatchIndex_(-1)
 {}
 
 
@@ -184,7 +330,8 @@ Foam::wedgePolyPatch::wedgePolyPatch
     n_(vector::rootMax),
     cosAngle_(0.0),
     faceT_(Zero),
-    cellT_(Zero)
+    cellT_(Zero),
+    oppositePatchIndex_(-1)
 {}
 
 
@@ -200,7 +347,8 @@ Foam::wedgePolyPatch::wedgePolyPatch
     n_(pp.n_),
     cosAngle_(pp.cosAngle_),
     faceT_(pp.faceT_),
-    cellT_(pp.cellT_)
+    cellT_(pp.cellT_),
+    oppositePatchIndex_(-1)
 {}
 
 
@@ -219,8 +367,39 @@ Foam::wedgePolyPatch::wedgePolyPatch
     n_(pp.n_),
     cosAngle_(pp.cosAngle_),
     faceT_(pp.faceT_),
-    cellT_(pp.cellT_)
+    cellT_(pp.cellT_),
+    oppositePatchIndex_(-1)
 {}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+Foam::label Foam::wedgePolyPatch::oppositePatchIndex() const
+{
+    if (oppositePatchIndex_ == -1)
+    {
+        if (size())
+        {
+            oppositePatchIndex_ =
+                boundaryMesh().patchIndices()
+                [
+                    oppositeWedgeFace(start())
+                  - boundaryMesh().mesh().nInternalFaces()
+                ];
+        }
+
+        reduce(oppositePatchIndex_, maxOp<label>());
+    }
+
+    return oppositePatchIndex_;
+}
+
+
+const Foam::wedgePolyPatch& Foam::wedgePolyPatch::oppositePatch() const
+{
+    const polyPatch& pp = boundaryMesh()[oppositePatchIndex()];
+    return refCast<const wedgePolyPatch>(pp);
+}
 
 
 // ************************************************************************* //
