@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,38 +22,41 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::mixtureViscosityModels::Quemada
+    Foam::mixtureViscosityModels::HerschelBulkley
 
 Description
-    Quemada viscosity model for colloidal dispersions.
+    HerschelBulkley viscosity model
 
-    Reference:
-    \verbatim
-        Quemada, D. (1998).
-        Rheological modelling of complex fluids. I.
-        The concept of effective volume fraction revisited.
-        The European Physical Journal-Applied Physics, 1(1), 119-127.
-    \endverbatim
+    The Herschel-Bulkley model combines the effects of a Bingham plastic
+    and power-law behaviour of a fluid. At a low strain rate \f$\gamma\f$
+    the fluid adopts a viscosity \f$\mu_0\f$. Beyond a threshold stress
+    \f$\tau_0\f$, the viscosity is described as a power law.
+
+    Kinematic viscosity [m^2/s]
+
+    \f[
+        \mu = \min(\mu_0, (\tau_0 + k\gamma^{n})/\gamma)
+    \f]
 
 Usage
     Example usage:
     \verbatim
-        viscosityModel  Quemada;
+        viscosityModel HerschelBulkley;
 
-        rho         1996; // Dispersed phase density
+        rho        1996; // Dispersed phase density
 
-        q           2;    // Exponent, defaults to 2
-        muMax       1e-2; // Maximum viscosity (for numerical stability)
-
+        tau0       10.0;
+        k          0.001;
+        n          0.2;
     \endverbatim
 
 SourceFiles
-    Quemada.C
+    HerschelBulkley.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef Quemada_H
-#define Quemada_H
+#ifndef HerschelBulkley_H
+#define HerschelBulkley_H
 
 #include "mixtureViscosityModel.H"
 #include "dimensionedScalar.H"
@@ -66,36 +69,34 @@ namespace mixtureViscosityModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class Quemada Declaration
+                           Class HerschelBulkley Declaration
 \*---------------------------------------------------------------------------*/
 
-class Quemada
+class HerschelBulkley
 :
     public mixtureViscosityModel
 {
     // Private data
 
-        //- Exponent (defaults to 2)
-        scalar q_;
-
-        //- Maximum viscosity
-        dimensionedScalar muMax_;
+        dimensionedScalar n_;
+        dimensionedScalar k_;
+        dimensionedScalar tau0_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("Quemada");
+    TypeName("HerschelBulkley");
 
 
     // Constructors
 
         //- Construct from mixture
-        Quemada(const incompressibleDriftFluxMixture& mixture);
+        HerschelBulkley(const incompressibleDriftFluxMixture& mixture);
 
 
     //- Destructor
-    virtual ~Quemada()
+    virtual ~HerschelBulkley()
     {}
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,91 +24,78 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "HerschelBulkley.H"
+#include "incompressibleDriftFluxMixture.H"
+#include "fvcGrad.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace laminarModels
-{
-namespace generalisedNewtonianViscosityModels
+namespace mixtureViscosityModels
 {
     defineTypeNameAndDebug(HerschelBulkley, 0);
 
     addToRunTimeSelectionTable
     (
-        generalisedNewtonianViscosityModel,
+        mixtureViscosityModel,
         HerschelBulkley,
         dictionary
     );
-}
 }
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::laminarModels::generalisedNewtonianViscosityModels::HerschelBulkley::
-HerschelBulkley
+Foam::mixtureViscosityModels::HerschelBulkley::HerschelBulkley
 (
-    const dictionary& viscosityProperties,
-    const Foam::viscosity& viscosity,
-    const volVectorField& U
+    const incompressibleDriftFluxMixture& mixture
 )
 :
-    strainRateViscosityModel(viscosityProperties, viscosity, U),
-    n_("n", dimless, 0),
-    k_("k", dimKinematicViscosity*pow(dimTime, n_ - 1), 0),
-    tau0_("tau0", dimKinematicViscosity/dimTime, 0)
-{
-    read(viscosityProperties);
-    correct();
-}
+    mixtureViscosityModel(mixture),
+    n_("n", dimless, coeffDict()),
+    k_("k", dimDynamicViscosity*pow(dimTime, n_ - 1), coeffDict()),
+    tau0_("tau0", dimDynamicViscosity/dimTime, coeffDict())
+{}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-bool Foam::laminarModels::generalisedNewtonianViscosityModels::
-HerschelBulkley::read
+Foam::tmp<Foam::volScalarField>
+Foam::mixtureViscosityModels::HerschelBulkley::mu
 (
-    const dictionary& viscosityProperties
-)
+    const volScalarField& muc,
+    const volVectorField& U
+) const
 {
-    strainRateViscosityModel::read(viscosityProperties);
+    const volScalarField strainRate(sqrt(2.0)*mag(symm(fvc::grad(U))));
 
-    const dictionary& coeffs =
-        viscosityProperties.optionalSubDict(typeName + "Coeffs");
-
-    k_.read(coeffs);
-    n_.read(coeffs);
-    tau0_.read(coeffs);
-
-    return true;
+    return min
+    (
+        muc,
+        (tau0_ + k_*pow(strainRate, n_))
+       /max(strainRate, dimensionedScalar(dimless/dimTime, rootVSmall))
+    );
 }
 
 
-Foam::tmp<Foam::volScalarField>
-Foam::laminarModels::generalisedNewtonianViscosityModels::HerschelBulkley::
-nu
-(
-    const volScalarField& nu0,
-    const volScalarField& strainRate
-) const
+bool Foam::mixtureViscosityModels::HerschelBulkley::read()
 {
-    return
-    (
-        min
-        (
-            nu0,
-            (tau0_ + k_*pow(strainRate, n_))
-           /max
-            (
-                strainRate,
-                dimensionedScalar("vSmall", dimless/dimTime, vSmall)
-            )
-        )
-    );
+    if (mixtureViscosityModel::read())
+    {
+        const dictionary& dict = coeffDict();
+
+        n_.read(dict);
+        k_.read(dict);
+        tau0_.read(dict);
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 

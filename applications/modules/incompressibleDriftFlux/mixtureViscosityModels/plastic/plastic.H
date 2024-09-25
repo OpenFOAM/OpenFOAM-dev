@@ -37,7 +37,6 @@ SourceFiles
 
 #include "mixtureViscosityModel.H"
 #include "dimensionedScalar.H"
-#include "volFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

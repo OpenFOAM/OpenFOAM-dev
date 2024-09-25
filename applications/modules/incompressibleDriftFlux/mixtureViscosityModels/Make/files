@@ -4,5 +4,6 @@ plastic/plastic.C
 BinghamPlastic/BinghamPlastic.C
 slurry/slurry.C
 Quemada/Quemada.C
+HerschelBulkley/HerschelBulkley.C
 
 LIB = $(FOAM_LIBBIN)/libincompressibleDriftFluxViscosityModel

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,8 +79,8 @@ class HerschelBulkley
 {
     // Private Data
 
-        dimensionedScalar k_;
         dimensionedScalar n_;
+        dimensionedScalar k_;
         dimensionedScalar tau0_;
 
 
