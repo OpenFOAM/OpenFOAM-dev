@@ -58,11 +58,22 @@ Usage
     }
     \endverbatim
 
+    Example usage, for multiple clouds:
+    \verbatim
+    clouds
+    {
+        libs        ("liblagrangianParcel.so");
+        type        clouds;
+        clouds      (cloud1 cloud2 cloud3);
+    }
+    \endverbatim
+
     \table
         Property | Description                     | Required   | Default value
         type     | Type name: clouds               | yes        |
         rho      | Name of the density field       | no         | rho
         U        | Name of the velocity field      | no         | U
+        clouds   | Names of the clouds             | no         | (cloud)
     \endtable
 
 SourceFiles
