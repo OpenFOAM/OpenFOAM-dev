@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,77 +22,82 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::relativeVelocityModels::simple
+    Foam::packingDispersionModels::none
 
 Description
-    Simple relative velocity model
+    Dummy packing dispersion model
+
+Usage
+    Example usage:
+    \verbatim
+        packingDispersionModel none;
+    \endverbatim
 
 SourceFiles
-    simple.C
+    none.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef simple_H
-#define simple_H
+#ifndef none_packingDispersionModel_H
+#define none_packingDispersionModel_H
 
-#include "relativeVelocityModel.H"
+#include "packingDispersionModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace relativeVelocityModels
+namespace packingDispersionModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class simple Declaration
+                           Class none Declaration
 \*---------------------------------------------------------------------------*/
 
-class simple
+class none
 :
-    public relativeVelocityModel
+    public packingDispersionModel
 {
-    // Private Data
-
-        //- A coefficient
-        dimensionedScalar a_;
-
-        //- Drift velocity coefficient
-        dimensionedScalar Vc_;
-
 
 public:
 
     //- Runtime type information
-    TypeName("simple");
+    TypeName("none");
 
 
     // Constructors
 
+        //- Construct from relativeVelocity
+        none
+        (
+            const relativeVelocityModel& relativeVelocity
+        );
+
         //- Construct from components
-        simple
+        none
         (
             const dictionary& dict,
-            const incompressibleDriftFluxMixture& mixture,
-            const uniformDimensionedVectorField& g
+            const relativeVelocityModel& relativeVelocity
         );
 
 
     //- Destructor
-    ~simple();
+    ~none();
 
 
     // Member Functions
 
-        //- Return the diffusion velocity coefficient
-        //  Udm = UdmCoeff*acceleration
-        virtual tmp<volScalarField> UdmCoeff() const;
+        //- Return the derivative of the packing stress w.r.t. phase-fraction
+        virtual tmp<volScalarField> sigmaPrime() const;
+
+        //- Return the diffusion coefficient of the dispersed phase
+        virtual tmp<volScalarField> Dd() const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace relativeVelocityModels
+} // End namespace packingDispersionModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

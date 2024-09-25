@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -130,6 +130,10 @@ public:
             return Udm_;
         }
 
+        //- Return the diffusion velocity coefficient
+        //  Udm = UdmCoeff*acceleration
+        virtual tmp<volScalarField> UdmCoeff() const = 0;
+
         //- Return the dispersed phase acceleration
         //  Including buoyancy and flow curvature
         tmp<volVectorField> acceleration() const;
@@ -141,7 +145,7 @@ public:
         tmp<volVectorField> divDevTau() const;
 
         //- Update the diffusion velocity
-        virtual void correct() = 0;
+        virtual void correct();
 
 
     // Member Operators

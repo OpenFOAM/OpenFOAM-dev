@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -117,6 +117,11 @@ Foam::solvers::incompressibleDriftFlux::incompressibleDriftFlux(fvMesh& mesh)
         relativeVelocityModel::New(mixture, mixture, buoyancy.g)
     ),
 
+    packingDispersion
+    (
+        packingDispersionModel::New(mixture, relativeVelocity)
+    ),
+
     momentumTransport
     (
         compressible::momentumTransportModel::New(rho, U, rhoPhi, mixture)
@@ -184,10 +189,13 @@ void Foam::solvers::incompressibleDriftFlux::prePredictor()
     // Apply the diffusion term separately to allow implicit solution
     // and boundedness of the explicit advection
     {
+        volScalarField nuEff(momentumTransport->nut());
+        nuEff += packingDispersion->Dd();
+
         fvScalarMatrix alpha1Eqn
         (
             fvm::ddt(alpha1) - fvc::ddt(alpha1)
-          - fvm::laplacian(momentumTransport->nut(), alpha1)
+          - fvm::laplacian(nuEff, alpha1)
         );
 
         alpha1Eqn.solve(alpha1.name() + "Diffusion");

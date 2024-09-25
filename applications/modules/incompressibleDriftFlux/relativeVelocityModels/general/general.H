@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,8 +90,9 @@ public:
 
     // Member Functions
 
-        //- Update the diffusion velocity
-        virtual void correct();
+        //- Return the diffusion velocity coefficient
+        //  Udm = UdmCoeff*acceleration
+        virtual tmp<volScalarField> UdmCoeff() const;
 };
 
 

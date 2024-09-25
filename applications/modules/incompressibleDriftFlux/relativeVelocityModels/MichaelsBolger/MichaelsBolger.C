@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,14 +67,15 @@ Foam::relativeVelocityModels::MichaelsBolger::~MichaelsBolger()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::relativeVelocityModels::MichaelsBolger::correct()
+Foam::tmp<Foam::volScalarField>
+Foam::relativeVelocityModels::MichaelsBolger::UdmCoeff() const
 {
-    Udm_ =
+    return
         (mixture_.rhoc()/mixture_.rho())*Vc_
        *(
            a0_
          + pow(max(1 - mixture_.alphad()/mixture().alphaMax(), scalar(0)), a1_)
-        )*acceleration();
+        );
 }
 
 

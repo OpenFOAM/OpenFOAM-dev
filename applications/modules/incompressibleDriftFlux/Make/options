@@ -4,6 +4,7 @@ EXE_INC = \
     -I$(FOAM_MODULES)/fluidSolver/lnInclude \
     -ImixtureViscosityModels/lnInclude \
     -IrelativeVelocityModels/lnInclude \
+    -IpackingDispersionModels/lnInclude \
     -I$(LIB_SRC)/physicalProperties/lnInclude \
     -I$(LIB_SRC)/twoPhaseModels/VoF \
     -I$(LIB_SRC)/twoPhaseModels/interfaceCompression/lnInclude \
@@ -19,6 +20,7 @@ EXE_INC = \
 LIB_LIBS = \
     -lincompressibleDriftFluxViscosityModel \
     -lincompressibleDriftFluxRelativeVelocityModels \
+    -lincompressibleDriftFluxPackingDispersionModels \
     -ltwoPhaseSolver \
     -lphysicalProperties \
     -linterfaceCompression \

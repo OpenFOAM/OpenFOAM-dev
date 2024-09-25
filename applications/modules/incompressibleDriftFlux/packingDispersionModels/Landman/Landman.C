@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,50 +23,56 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "simple.H"
+#include "Landman.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace relativeVelocityModels
+namespace packingDispersionModels
 {
-    defineTypeNameAndDebug(simple, 0);
-    addToRunTimeSelectionTable(relativeVelocityModel, simple, dictionary);
+    defineTypeNameAndDebug(Landman, 0);
+    addToRunTimeSelectionTable
+    (
+        packingDispersionModel,
+        Landman,
+        dictionary
+    );
 }
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::relativeVelocityModels::simple::simple
+Foam::packingDispersionModels::Landman::Landman
 (
     const dictionary& dict,
-    const incompressibleDriftFluxMixture& mixture,
-    const uniformDimensionedVectorField& g
+    const relativeVelocityModel& relativeVelocity
 )
 :
-    relativeVelocityModel(dict, mixture, g),
-    a_("a", dimless, dict),
-    Vc_("Vc", dimTime, dict)
+    packingDispersionModel(relativeVelocity),
+    sigma0_("sigma0", sqr(dimVelocity), dict),
+    n_("n", dimless, dict),
+    alphaGel_("alphaGel", dimless, dict)
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::relativeVelocityModels::simple::~simple()
+Foam::packingDispersionModels::Landman::~Landman()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField>
-Foam::relativeVelocityModels::simple::UdmCoeff() const
+Foam::packingDispersionModels::Landman::sigmaPrime() const
 {
     return
-        (mixture_.rhoc()/mixture_.rho())*Vc_
-       *pow(scalar(10), -a_*max(mixture_.alphad(), scalar(0)));
+        pos(mixture_.alphad() - alphaGel_)
+       *(n_*sigma0_/alphaGel_)
+       *pow(mixture_.alphad()/alphaGel_ - 1, n_ - 1);
 }
 
 

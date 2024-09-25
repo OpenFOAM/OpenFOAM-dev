@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,77 +22,94 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::relativeVelocityModels::simple
+    Foam::packingDispersionModels::Green
 
 Description
-    Simple relative velocity model
+    Green packing dispersion model for industrial separations
+
+    Reference:
+    \verbatim
+        Green, M. D., Eberl, M., & Landman, K. A. (1996).
+        Compressive yield stress of flocculated suspensions:
+        determination via experiment.
+        AIChE journal, 42(8), 2308-2318.
+   \endverbatim
+
+Usage
+    Example usage:
+    \verbatim
+        packingDispersionModel Green;
+
+        GreenCoeffs
+        {
+            sigma0          2.11e-3;
+            n               9;
+            alphaGel        0.1;
+        }
+    \endverbatim
 
 SourceFiles
-    simple.C
+    Green.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef simple_H
-#define simple_H
+#ifndef Green_H
+#define Green_H
 
-#include "relativeVelocityModel.H"
+#include "packingDispersionModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace relativeVelocityModels
+namespace packingDispersionModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class simple Declaration
+                           Class Green Declaration
 \*---------------------------------------------------------------------------*/
 
-class simple
+class Green
 :
-    public relativeVelocityModel
+    public packingDispersionModel
 {
     // Private Data
 
-        //- A coefficient
-        dimensionedScalar a_;
-
-        //- Drift velocity coefficient
-        dimensionedScalar Vc_;
+        dimensionedScalar sigma0_;
+        dimensionedScalar n_;
+        dimensionedScalar alphaGel_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("simple");
+    TypeName("Green");
 
 
     // Constructors
 
         //- Construct from components
-        simple
+        Green
         (
             const dictionary& dict,
-            const incompressibleDriftFluxMixture& mixture,
-            const uniformDimensionedVectorField& g
+            const relativeVelocityModel& relativeVelocity
         );
 
 
     //- Destructor
-    ~simple();
+    ~Green();
 
 
     // Member Functions
 
-        //- Return the diffusion velocity coefficient
-        //  Udm = UdmCoeff*acceleration
-        virtual tmp<volScalarField> UdmCoeff() const;
+        //- Return the derivative of the packing stress w.r.t. phase-fraction
+        virtual tmp<volScalarField> sigmaPrime() const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace relativeVelocityModels
+} // End namespace packingDispersionModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

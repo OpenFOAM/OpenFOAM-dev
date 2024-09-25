@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,6 +57,7 @@ See also
 #include "twoPhaseSolver.H"
 #include "incompressibleDriftFluxMixture.H"
 #include "relativeVelocityModel.H"
+#include "packingDispersionModel.H"
 #include "momentumTransportModel.H"
 #include "compressibleMomentumTransportModels.H"
 
@@ -100,6 +101,9 @@ protected:
 
         //- Pointer to the dispersed phase relative velocity model
         autoPtr<relativeVelocityModel> relativeVelocity;
+
+        //- Pointer to the dispersed phase packing dispersion model
+        autoPtr<packingDispersionModel> packingDispersion;
 
         //- Pointer to the momentum transport model
         autoPtr<compressible::momentumTransportModel> momentumTransport;

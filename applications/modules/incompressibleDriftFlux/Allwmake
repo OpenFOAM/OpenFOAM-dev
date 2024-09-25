@@ -6,6 +6,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 wmake $targetType mixtureViscosityModels
 wmake $targetType relativeVelocityModels
+wmake $targetType packingDispersionModels
 
 wmake $targetType
 

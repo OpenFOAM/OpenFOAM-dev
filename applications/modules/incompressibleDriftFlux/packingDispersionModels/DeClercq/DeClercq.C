@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,50 +23,54 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "simple.H"
+#include "DeClercq.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace relativeVelocityModels
+namespace packingDispersionModels
 {
-    defineTypeNameAndDebug(simple, 0);
-    addToRunTimeSelectionTable(relativeVelocityModel, simple, dictionary);
+    defineTypeNameAndDebug(DeClercq, 0);
+    addToRunTimeSelectionTable
+    (
+        packingDispersionModel,
+        DeClercq,
+        dictionary
+    );
 }
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::relativeVelocityModels::simple::simple
+Foam::packingDispersionModels::DeClercq::DeClercq
 (
     const dictionary& dict,
-    const incompressibleDriftFluxMixture& mixture,
-    const uniformDimensionedVectorField& g
+    const relativeVelocityModel& relativeVelocity
 )
 :
-    relativeVelocityModel(dict, mixture, g),
-    a_("a", dimless, dict),
-    Vc_("Vc", dimTime, dict)
+    packingDispersionModel(relativeVelocity),
+    sigma0_("sigma0", sqr(dimVelocity), dict),
+    beta_("beta", dimless, dict),
+    alphaGel_("alphaGel", dimless, dict)
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::relativeVelocityModels::simple::~simple()
+Foam::packingDispersionModels::DeClercq::~DeClercq()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField>
-Foam::relativeVelocityModels::simple::UdmCoeff() const
+Foam::packingDispersionModels::DeClercq::sigmaPrime() const
 {
-    return
-        (mixture_.rhoc()/mixture_.rho())*Vc_
-       *pow(scalar(10), -a_*max(mixture_.alphad(), scalar(0)));
+    const volScalarField alphadmGel(mixture_.alphad() - alphaGel_);
+    return pos(alphadmGel)*sigma0_/(beta_ + alphadmGel);
 }
 
 

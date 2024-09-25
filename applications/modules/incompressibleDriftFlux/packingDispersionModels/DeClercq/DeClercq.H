@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,77 +22,86 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::relativeVelocityModels::simple
+    Foam::packingDispersionModels::DeClercq
 
 Description
-    Simple relative velocity model
+    De Clercq packing dispersion model for waste water sludge
+
+Usage
+    Example usage:
+    \verbatim
+        packingDispersionModel DeClercq;
+
+        DeClercqCoeffs
+        {
+            sigma0          8.022e-4;
+            beta            2.3429e-3;
+            alphaGel        4.5857e-3;
+        }
+    \endverbatim
 
 SourceFiles
-    simple.C
+    DeClercq.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef simple_H
-#define simple_H
+#ifndef DeClercq_H
+#define DeClercq_H
 
-#include "relativeVelocityModel.H"
+#include "packingDispersionModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace relativeVelocityModels
+namespace packingDispersionModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class simple Declaration
+                           Class DeClercq Declaration
 \*---------------------------------------------------------------------------*/
 
-class simple
+class DeClercq
 :
-    public relativeVelocityModel
+    public packingDispersionModel
 {
     // Private Data
 
-        //- A coefficient
-        dimensionedScalar a_;
-
-        //- Drift velocity coefficient
-        dimensionedScalar Vc_;
+        dimensionedScalar sigma0_;
+        dimensionedScalar beta_;
+        dimensionedScalar alphaGel_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("simple");
+    TypeName("DeClercq");
 
 
     // Constructors
 
         //- Construct from components
-        simple
+        DeClercq
         (
             const dictionary& dict,
-            const incompressibleDriftFluxMixture& mixture,
-            const uniformDimensionedVectorField& g
+            const relativeVelocityModel& relativeVelocity
         );
 
 
     //- Destructor
-    ~simple();
+    ~DeClercq();
 
 
     // Member Functions
 
-        //- Return the diffusion velocity coefficient
-        //  Udm = UdmCoeff*acceleration
-        virtual tmp<volScalarField> UdmCoeff() const;
+        //- Return the derivative of the packing stress w.r.t. phase-fraction
+        virtual tmp<volScalarField> sigmaPrime() const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace relativeVelocityModels
+} // End namespace packingDispersionModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

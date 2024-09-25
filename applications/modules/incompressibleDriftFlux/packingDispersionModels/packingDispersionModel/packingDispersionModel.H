@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,77 +22,106 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::relativeVelocityModels::simple
+    Foam::packingDispersionModel
 
 Description
-    Simple relative velocity model
+    Packing dispersion model
 
 SourceFiles
-    simple.C
+    packingDispersionModel.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef simple_H
-#define simple_H
+#ifndef packingDispersionModel_H
+#define packingDispersionModel_H
 
 #include "relativeVelocityModel.H"
+#include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace relativeVelocityModels
-{
 
 /*---------------------------------------------------------------------------*\
-                           Class simple Declaration
+                    Class packingDispersionModel Declaration
 \*---------------------------------------------------------------------------*/
 
-class simple
-:
-    public relativeVelocityModel
+class packingDispersionModel
 {
-    // Private Data
 
-        //- A coefficient
-        dimensionedScalar a_;
+protected:
 
-        //- Drift velocity coefficient
-        dimensionedScalar Vc_;
+    // Protected data
+
+        //- Relative velocity model
+        const relativeVelocityModel& relativeVelocity_;
+
+        //- Mixture properties
+        const incompressibleDriftFluxMixture& mixture_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("simple");
+    TypeName("packingDispersionModel");
+
+    //- Declare runtime constructor selection table
+    declareRunTimeSelectionTable
+    (
+        autoPtr,
+        packingDispersionModel,
+        dictionary,
+        (
+            const dictionary& dict,
+            const relativeVelocityModel& relativeVelocity
+        ),
+        (dict, relativeVelocity)
+    );
 
 
     // Constructors
 
         //- Construct from components
-        simple
+        packingDispersionModel
         (
-            const dictionary& dict,
-            const incompressibleDriftFluxMixture& mixture,
-            const uniformDimensionedVectorField& g
+            const relativeVelocityModel& relativeVelocity
         );
+
+        //- Disallow default bitwise copy construction
+        packingDispersionModel(const packingDispersionModel&) = delete;
+
+
+    // Selector
+    static autoPtr<packingDispersionModel> New
+    (
+        const dictionary& dict,
+        const relativeVelocityModel& relativeVelocity
+    );
 
 
     //- Destructor
-    ~simple();
+    virtual ~packingDispersionModel();
 
 
     // Member Functions
 
-        //- Return the diffusion velocity coefficient
-        //  Udm = UdmCoeff*acceleration
-        virtual tmp<volScalarField> UdmCoeff() const;
+        //- Return the derivative of the packing stress w.r.t. phase-fraction
+        virtual tmp<volScalarField> sigmaPrime() const = 0;
+
+        //- Return the diffusion coefficient of the dispersed phase
+        virtual tmp<volScalarField> Dd() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const packingDispersionModel&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace relativeVelocityModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

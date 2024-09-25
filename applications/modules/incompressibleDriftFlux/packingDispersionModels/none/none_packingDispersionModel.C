@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,50 +23,72 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "simple.H"
+#include "none_packingDispersionModel.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace relativeVelocityModels
+namespace packingDispersionModels
 {
-    defineTypeNameAndDebug(simple, 0);
-    addToRunTimeSelectionTable(relativeVelocityModel, simple, dictionary);
+    defineTypeNameAndDebug(none, 0);
+    addToRunTimeSelectionTable
+    (
+        packingDispersionModel,
+        none,
+        dictionary
+    );
 }
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::relativeVelocityModels::simple::simple
+Foam::packingDispersionModels::none::none
 (
-    const dictionary& dict,
-    const incompressibleDriftFluxMixture& mixture,
-    const uniformDimensionedVectorField& g
+    const relativeVelocityModel& relativeVelocity
 )
 :
-    relativeVelocityModel(dict, mixture, g),
-    a_("a", dimless, dict),
-    Vc_("Vc", dimTime, dict)
+    packingDispersionModel(relativeVelocity)
+{}
+
+
+Foam::packingDispersionModels::none::none
+(
+    const dictionary& dict,
+    const relativeVelocityModel& relativeVelocity
+)
+:
+    none(relativeVelocity)
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::relativeVelocityModels::simple::~simple()
+Foam::packingDispersionModels::none::~none()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField>
-Foam::relativeVelocityModels::simple::UdmCoeff() const
+Foam::packingDispersionModels::none::sigmaPrime() const
 {
-    return
-        (mixture_.rhoc()/mixture_.rho())*Vc_
-       *pow(scalar(10), -a_*max(mixture_.alphad(), scalar(0)));
+    NotImplemented;
+    return tmp<volScalarField>(nullptr);
+}
+
+
+Foam::tmp<Foam::volScalarField>
+Foam::packingDispersionModels::none::Dd() const
+{
+    return volScalarField::New
+    (
+        typedName("Dd"),
+        relativeVelocity_.mixture().mesh(),
+        dimensionedScalar(dimKinematicViscosity, 0)
+    );
 }
 
 

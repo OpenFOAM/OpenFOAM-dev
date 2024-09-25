@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,15 +25,15 @@ Class
     Foam::mixtureViscosityModels::slurry
 
 Description
-     Thomas' viscosity correction for slurry.
+    Thomas' viscosity correction for slurry.
 
-     References:
-     \verbatim
-         "Transport characteristics of suspension:
-          VIII. A note on the viscosity of Newtonian suspensions
-          of uniform spherical particles".
-          D.G. Thomas,
-          J. Colloid Sci. 20 (3), 1965, p267.
+    Reference:
+    \verbatim
+        "Transport characteristics of suspension:
+         VIII. A note on the viscosity of Newtonian suspensions
+         of uniform spherical particles".
+         D.G. Thomas,
+         J. Colloid Sci. 20 (3), 1965, p267.
     \endverbatim
 
 SourceFiles

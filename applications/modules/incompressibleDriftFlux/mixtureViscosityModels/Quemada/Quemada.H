@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,14 +25,14 @@ Class
     Foam::mixtureViscosityModels::Quemada
 
 Description
-     Quemada viscosity model for colloidal dispersions.
+    Quemada viscosity model for colloidal dispersions.
 
-     References:
-     \verbatim
-         Quemada, D. (1998).
-         Rheological modelling of complex fluids. I.
-         The concept of effective volume fraction revisited.
-         The European Physical Journal-Applied Physics, 1(1), 119-127.
+    Reference:
+    \verbatim
+        Quemada, D. (1998).
+        Rheological modelling of complex fluids. I.
+        The concept of effective volume fraction revisited.
+        The European Physical Journal-Applied Physics, 1(1), 119-127.
     \endverbatim
 
 Usage

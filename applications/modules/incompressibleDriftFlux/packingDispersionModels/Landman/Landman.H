@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,77 +22,86 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::relativeVelocityModels::simple
+    Foam::packingDispersionModels::Landman
 
 Description
-    Simple relative velocity model
+    Landman packing dispersion model for industrial separations
+
+Usage
+    Example usage:
+    \verbatim
+        packingDispersionModel Landman;
+
+        LandmanCoeffs
+        {
+            sigma0          2.11e-3;
+            n               5;
+            alphaGel        0.14;
+        }
+    \endverbatim
 
 SourceFiles
-    simple.C
+    Landman.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef simple_H
-#define simple_H
+#ifndef Landman_H
+#define Landman_H
 
-#include "relativeVelocityModel.H"
+#include "packingDispersionModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace relativeVelocityModels
+namespace packingDispersionModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class simple Declaration
+                           Class Landman Declaration
 \*---------------------------------------------------------------------------*/
 
-class simple
+class Landman
 :
-    public relativeVelocityModel
+    public packingDispersionModel
 {
     // Private Data
 
-        //- A coefficient
-        dimensionedScalar a_;
-
-        //- Drift velocity coefficient
-        dimensionedScalar Vc_;
+        dimensionedScalar sigma0_;
+        dimensionedScalar n_;
+        dimensionedScalar alphaGel_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("simple");
+    TypeName("Landman");
 
 
     // Constructors
 
         //- Construct from components
-        simple
+        Landman
         (
             const dictionary& dict,
-            const incompressibleDriftFluxMixture& mixture,
-            const uniformDimensionedVectorField& g
+            const relativeVelocityModel& relativeVelocity
         );
 
 
     //- Destructor
-    ~simple();
+    ~Landman();
 
 
     // Member Functions
 
-        //- Return the diffusion velocity coefficient
-        //  Udm = UdmCoeff*acceleration
-        virtual tmp<volScalarField> UdmCoeff() const;
+        //- Return the derivative of the packing stress w.r.t. phase-fraction
+        virtual tmp<volScalarField> sigmaPrime() const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace relativeVelocityModels
+} // End namespace packingDispersionModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

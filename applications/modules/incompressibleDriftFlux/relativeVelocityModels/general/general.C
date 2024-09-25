@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,12 +63,13 @@ Foam::relativeVelocityModels::general::~general()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::relativeVelocityModels::general::correct()
+Foam::tmp<Foam::volScalarField>
+Foam::relativeVelocityModels::general::UdmCoeff() const
 {
     const volScalarField& alphad = mixture_.alphad();
 
-    Udm_ =
-        (mixture_.rhoc()/mixture_.rho())*Vc_*acceleration()
+    return
+        (mixture_.rhoc()/mixture_.rho())*Vc_
        *(
             exp(-a_*max(alphad - residualAlpha_, scalar(0)))
           - exp(-a1_*max(alphad - residualAlpha_, scalar(0)))
