@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ Description
 
     The patch pressure is evaluated from the external conditions using one of
     the following expressions depending on the flow conditions and
-    specification of compressibility:
+    specification of ratio of specific heats \c gamma:
 
     1. incompressible subsonic:
         \f[
@@ -84,7 +84,7 @@ Description
     4. compressible supersonic (\f$\gamma > 1\f$):
         \f[
             p_p = \frac{p_0}
-                  {(1 +  G \psi (0.5 |U|^2 - 0.5 |U_0|^2))^{\frac{1}{G}}}
+                  {(1 - G \psi (0.5 |U|^2 - 0.5 |U_0|^2))^{\frac{1}{G}}}
         \f]
         where
         \vartable
@@ -92,7 +92,7 @@ Description
             p_0     | external static pressure [Pa]
             \psi    | compressibility [m^2/s^2]
             \rho    | density [kg/m^3]
-            G       | coefficient given by \f$\frac{\gamma}{1-\gamma}\f$ []
+            G       | coefficient given by \f$\frac{\gamma - 1}{\gamma}\f$ []
             \gamma  | ratio of specific heats (Cp/Cv) []
             U       | velocity [m/s]
             U_0     | external velocity [m/s]
