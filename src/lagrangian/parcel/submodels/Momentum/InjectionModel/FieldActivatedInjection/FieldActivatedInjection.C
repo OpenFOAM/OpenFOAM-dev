@@ -155,15 +155,15 @@ void Foam::FieldActivatedInjection<CloudType>::topoChange()
 template<class CloudType>
 Foam::scalar Foam::FieldActivatedInjection<CloudType>::timeEnd() const
 {
-    return great;
+    return vGreat;
 }
 
 
 template<class CloudType>
 Foam::scalar Foam::FieldActivatedInjection<CloudType>::nParcelsToInject
 (
-    const scalar time0,
-    const scalar time1
+    const scalar,
+    const scalar
 )
 {
     if (sum(nParcelsInjected_) < nParcelsPerInjector_*positions_.size())
@@ -180,8 +180,8 @@ Foam::scalar Foam::FieldActivatedInjection<CloudType>::nParcelsToInject
 template<class CloudType>
 Foam::scalar Foam::FieldActivatedInjection<CloudType>::massToInject
 (
-    const scalar time0,
-    const scalar time1
+    const scalar,
+    const scalar
 )
 {
     if (sum(nParcelsInjected_) < nParcelsPerInjector_*positions_.size())

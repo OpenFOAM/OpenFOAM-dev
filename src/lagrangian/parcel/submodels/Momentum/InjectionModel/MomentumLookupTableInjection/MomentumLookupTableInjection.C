@@ -122,13 +122,15 @@ Foam::scalar Foam::MomentumLookupTableInjection<CloudType>::timeEnd() const
 template<class CloudType>
 Foam::scalar Foam::MomentumLookupTableInjection<CloudType>::nParcelsToInject
 (
-    const scalar time0,
-    const scalar time1
+    const scalar t0,
+    const scalar t1
 )
 {
-    if (time0 >= 0 && time0 < duration_)
+    if (t1 >= 0 && t0 < duration_)
     {
-        return injectorCells_.size()*parcelsPerSecond_->integral(time0, time1);
+        return
+            injectorCells_.size()
+           *parcelsPerSecond_->integral(max(t0, 0), min(t1, duration_));
     }
     else
     {
@@ -140,17 +142,17 @@ Foam::scalar Foam::MomentumLookupTableInjection<CloudType>::nParcelsToInject
 template<class CloudType>
 Foam::scalar Foam::MomentumLookupTableInjection<CloudType>::massToInject
 (
-    const scalar time0,
-    const scalar time1
+    const scalar t0,
+    const scalar t1
 )
 {
     scalar mass = 0;
 
-    if (time0 >= 0 && time0 < duration_)
+    if (t1 >= 0 && t0 < duration_)
     {
         forAll(injectors_, i)
         {
-            mass += injectors_[i].mDot()*(time1 - time0);
+            mass += injectors_[i].mDot()*(min(t1, duration_) - max(t0, 0));
         }
     }
 

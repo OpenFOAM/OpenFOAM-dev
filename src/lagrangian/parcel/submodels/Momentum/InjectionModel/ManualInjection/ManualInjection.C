@@ -159,21 +159,20 @@ void Foam::ManualInjection<CloudType>::topoChange()
 template<class CloudType>
 Foam::scalar Foam::ManualInjection<CloudType>::timeEnd() const
 {
-    // Injection is instantaneous - but allow for a finite interval to
-    // avoid numerical issues when interval is zero
-    return rootVSmall;
+    // Not used
+    return this->SOI_;
 }
 
 
 template<class CloudType>
 Foam::scalar Foam::ManualInjection<CloudType>::nParcelsToInject
 (
-    const scalar time0,
-    const scalar time1
+    const scalar t0,
+    const scalar t1
 )
 {
     // All parcels introduced at SOI
-    if (0 >= time0 && 0 < time1)
+    if (0 >= t0 && 0 < t1)
     {
         return positions_.size();
     }
@@ -187,12 +186,12 @@ Foam::scalar Foam::ManualInjection<CloudType>::nParcelsToInject
 template<class CloudType>
 Foam::scalar Foam::ManualInjection<CloudType>::massToInject
 (
-    const scalar time0,
-    const scalar time1
+    const scalar t0,
+    const scalar t1
 )
 {
     // All parcels introduced at SOI
-    if (0 >= time0 && 0 < time1)
+    if (0 >= t0 && 0 < t1)
     {
         return massTotal_;
     }

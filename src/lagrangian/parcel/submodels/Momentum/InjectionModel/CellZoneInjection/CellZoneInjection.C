@@ -271,12 +271,12 @@ Foam::scalar Foam::CellZoneInjection<CloudType>::timeEnd() const
 template<class CloudType>
 Foam::scalar Foam::CellZoneInjection<CloudType>::nParcelsToInject
 (
-    const scalar time0,
-    const scalar time1
+    const scalar t0,
+    const scalar t1
 )
 {
     // All parcels introduced at SOI
-    if (0 >= time0 && 0 < time1)
+    if (0 >= t0 && 0 < t1)
     {
         return injectorCoordinates_.size();
     }
@@ -290,12 +290,12 @@ Foam::scalar Foam::CellZoneInjection<CloudType>::nParcelsToInject
 template<class CloudType>
 Foam::scalar Foam::CellZoneInjection<CloudType>::massToInject
 (
-    const scalar time0,
-    const scalar time1
+    const scalar t0,
+    const scalar t1
 )
 {
     // All parcels introduced at SOI
-    if (0 >= time0 && 0 < time1)
+    if (0 >= t0 && 0 < t1)
     {
         return massTotal_;
     }

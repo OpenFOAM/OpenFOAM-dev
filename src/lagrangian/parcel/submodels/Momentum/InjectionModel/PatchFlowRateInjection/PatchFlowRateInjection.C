@@ -143,15 +143,17 @@ Foam::scalar Foam::PatchFlowRateInjection<CloudType>::flowRate() const
 template<class CloudType>
 Foam::scalar Foam::PatchFlowRateInjection<CloudType>::nParcelsToInject
 (
-    const scalar time0,
-    const scalar time1
+    const scalar t0,
+    const scalar t1
 )
 {
-    if (time0 >= 0 && time0 < duration_)
+    if (t1 >= 0 && t0 < duration_)
     {
-        const scalar c = concentration_->value(0.5*(time0 + time1));
-
-        return parcelConcentration_*c*flowRate()*(time1 - time0);
+        return
+            parcelConcentration_
+           *concentration_->value(0.5*(t0 + t1))
+           *flowRate()
+           *(min(t1, duration_) - max(t0, 0));
     }
     else
     {
@@ -163,20 +165,22 @@ Foam::scalar Foam::PatchFlowRateInjection<CloudType>::nParcelsToInject
 template<class CloudType>
 Foam::scalar Foam::PatchFlowRateInjection<CloudType>::massToInject
 (
-    const scalar time0,
-    const scalar time1
+    const scalar t0,
+    const scalar t1
 )
 {
-    scalar volume = 0;
-
-    if (time0 >= 0 && time0 < duration_)
+    if (t1 >= 0 && t0 < duration_)
     {
-        scalar c = concentration_->value(0.5*(time0 + time1));
-
-        volume = c*(time1 - time0)*flowRate();
+        return
+            this->owner().constProps().rho0()
+           *concentration_->value(0.5*(t0 + t1))
+           *flowRate()
+           *(min(t1, duration_) - max(t0, 0));
     }
-
-    return volume*this->owner().constProps().rho0();
+    else
+    {
+        return 0;
+    }
 }
 
 

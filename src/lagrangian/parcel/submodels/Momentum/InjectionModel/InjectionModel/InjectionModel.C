@@ -618,12 +618,6 @@ void Foam::InjectionModel<CloudType>::inject
     // Get amounts to inject
     label nParcels;
     scalar mass = NaN;
-    if (time1 < SOI_)
-    {
-        // Injection has not started yet
-        nParcels = 0;
-    }
-    else
     {
         // Injection has started. Get amounts between times.
         const scalar t0 = time0 - SOI_, t1 = time1 - SOI_;
@@ -635,21 +629,20 @@ void Foam::InjectionModel<CloudType>::inject
         nParcels = floor(nParcelsNoRound);
         nParcelsDeferred_ = nParcelsNoRound - nParcels;
 
-        if (nParticleFixed_ < 0 && nParcelsNoRound > 0)
+        // If we need mass...
+        if (nParticleFixed_ < 0)
         {
-            // Get the mass to inject and scale it so that the same proportion
-            // is deferred as for the number of parcels
-            const scalar massNoRound =
-                massToInject(t0, t1) + massDeferred_;
-            mass = massNoRound*nParcels/nParcelsNoRound;
-            massDeferred_ = massNoRound - mass;
+            // Get the mass to inject, and if there are no parcels then store
+            // this to apply at a later time
+            mass = massToInject(t0, t1) + massDeferred_;
+            massDeferred_ = nParcels > 0 ? 0 : mass;
 
             // Special case. If there is no mass, then don't create anything.
             // This is a hack so that mass flow rates that switch on and off
             // still work tolerably with a constant number rate. Really,
             // though, cases like these should be specified with a
             // correspondingly varying number rate.
-            if (massNoRound == 0)
+            if (mass == 0)
             {
                 nParcels = 0;
                 nParcelsDeferred_ = 0;

@@ -165,13 +165,13 @@ Foam::scalar Foam::PatchInjection<CloudType>::timeEnd() const
 template<class CloudType>
 Foam::scalar Foam::PatchInjection<CloudType>::nParcelsToInject
 (
-    const scalar time0,
-    const scalar time1
+    const scalar t0,
+    const scalar t1
 )
 {
-    if (time0 >= 0 && time0 < duration_)
+    if (t1 >= 0 && t0 < duration_)
     {
-        return parcelsPerSecond_->integral(time0, time1);
+        return parcelsPerSecond_->integral(max(t0, 0), min(t1, duration_));
     }
     else
     {
@@ -183,13 +183,13 @@ Foam::scalar Foam::PatchInjection<CloudType>::nParcelsToInject
 template<class CloudType>
 Foam::scalar Foam::PatchInjection<CloudType>::massToInject
 (
-    const scalar time0,
-    const scalar time1
+    const scalar t0,
+    const scalar t1
 )
 {
-    if (time0 >= 0 && time0 < duration_)
+    if (t1 >= 0 && t0 < duration_)
     {
-        return massFlowRate_->integral(time0, time1);
+        return massFlowRate_->integral(max(t0, 0), min(t1, duration_));
     }
     else
     {
