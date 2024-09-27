@@ -269,7 +269,7 @@ Foam::scalar Foam::CellZoneInjection<CloudType>::timeEnd() const
 
 
 template<class CloudType>
-Foam::label Foam::CellZoneInjection<CloudType>::nParcelsToInject
+Foam::scalar Foam::CellZoneInjection<CloudType>::nParcelsToInject
 (
     const scalar time0,
     const scalar time1

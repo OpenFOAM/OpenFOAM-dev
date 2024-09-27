@@ -160,7 +160,7 @@ Foam::scalar Foam::FieldActivatedInjection<CloudType>::timeEnd() const
 
 
 template<class CloudType>
-Foam::label Foam::FieldActivatedInjection<CloudType>::nParcelsToInject
+Foam::scalar Foam::FieldActivatedInjection<CloudType>::nParcelsToInject
 (
     const scalar time0,
     const scalar time1

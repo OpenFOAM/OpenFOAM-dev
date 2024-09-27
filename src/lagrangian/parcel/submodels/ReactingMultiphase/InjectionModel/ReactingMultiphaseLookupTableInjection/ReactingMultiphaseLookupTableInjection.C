@@ -124,7 +124,7 @@ Foam::ReactingMultiphaseLookupTableInjection<CloudType>::timeEnd() const
 
 
 template<class CloudType>
-Foam::label
+Foam::scalar
 Foam::ReactingMultiphaseLookupTableInjection<CloudType>::nParcelsToInject
 (
     const scalar time0,
@@ -133,12 +133,7 @@ Foam::ReactingMultiphaseLookupTableInjection<CloudType>::nParcelsToInject
 {
     if (time0 >= 0 && time0 < duration_)
     {
-        return
-            floor
-            (
-                injectorCells_.size()
-               *parcelsPerSecond_->integral(time0, time1)
-            );
+        return injectorCells_.size()*parcelsPerSecond_->integral(time0, time1);
     }
     else
     {

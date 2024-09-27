@@ -166,7 +166,7 @@ Foam::scalar Foam::ManualInjection<CloudType>::timeEnd() const
 
 
 template<class CloudType>
-Foam::label Foam::ManualInjection<CloudType>::nParcelsToInject
+Foam::scalar Foam::ManualInjection<CloudType>::nParcelsToInject
 (
     const scalar time0,
     const scalar time1

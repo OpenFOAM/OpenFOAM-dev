@@ -283,7 +283,7 @@ Foam::scalar Foam::ConeInjection<CloudType>::timeEnd() const
 
 
 template<class CloudType>
-Foam::label Foam::ConeInjection<CloudType>::nParcelsToInject
+Foam::scalar Foam::ConeInjection<CloudType>::nParcelsToInject
 (
     const scalar time0,
     const scalar time1
@@ -291,16 +291,7 @@ Foam::label Foam::ConeInjection<CloudType>::nParcelsToInject
 {
     if (time0 >= 0 && time0 < duration_)
     {
-        //// Standard calculation
-        //return floor(parcelsPerSecond_->integral(time0, time1));
-
-        // Modified calculation to make numbers exact
-        return
-            floor
-            (
-                parcelsPerSecond_->integral(0, time1)
-              - this->parcelsAddedTotal()
-            );
+        return parcelsPerSecond_->integral(time0, time1);
     }
     else
     {

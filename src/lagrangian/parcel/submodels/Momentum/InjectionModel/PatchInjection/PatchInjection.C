@@ -163,7 +163,7 @@ Foam::scalar Foam::PatchInjection<CloudType>::timeEnd() const
 
 
 template<class CloudType>
-Foam::label Foam::PatchInjection<CloudType>::nParcelsToInject
+Foam::scalar Foam::PatchInjection<CloudType>::nParcelsToInject
 (
     const scalar time0,
     const scalar time1
@@ -171,20 +171,7 @@ Foam::label Foam::PatchInjection<CloudType>::nParcelsToInject
 {
     if (time0 >= 0 && time0 < duration_)
     {
-        scalar nParcels = parcelsPerSecond_->integral(time0, time1);
-
-        randomGenerator& rndGen = this->owner().rndGen();
-
-        label nParcelsToInject = floor(nParcels);
-
-        // Inject an additional parcel with a probability based on the
-        // remainder after the floor function
-        if (nParcels - scalar(nParcelsToInject) > this->globalScalar01(rndGen))
-        {
-            ++nParcelsToInject;
-        }
-
-        return nParcelsToInject;
+        return parcelsPerSecond_->integral(time0, time1);
     }
     else
     {

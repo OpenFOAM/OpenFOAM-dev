@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -160,7 +160,7 @@ public:
         virtual scalar timeEnd() const;
 
         //- Number of parcels to introduce relative to SOI
-        virtual label nParcelsToInject(const scalar time0, const scalar time1);
+        virtual scalar nParcelsToInject(const scalar time0, const scalar time1);
 
         //- Parcel mass to introduce relative to SOI
         virtual scalar massToInject(const scalar time0, const scalar time1);

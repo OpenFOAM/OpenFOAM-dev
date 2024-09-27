@@ -141,7 +141,7 @@ Foam::scalar Foam::PatchFlowRateInjection<CloudType>::flowRate() const
 
 
 template<class CloudType>
-Foam::label Foam::PatchFlowRateInjection<CloudType>::nParcelsToInject
+Foam::scalar Foam::PatchFlowRateInjection<CloudType>::nParcelsToInject
 (
     const scalar time0,
     const scalar time1
@@ -149,24 +149,9 @@ Foam::label Foam::PatchFlowRateInjection<CloudType>::nParcelsToInject
 {
     if (time0 >= 0 && time0 < duration_)
     {
-        scalar dt = time1 - time0;
+        const scalar c = concentration_->value(0.5*(time0 + time1));
 
-        scalar c = concentration_->value(0.5*(time0 + time1));
-
-        scalar nParcels = parcelConcentration_*c*flowRate()*dt;
-
-        randomGenerator& rndGen = this->owner().rndGen();
-
-        label nParcelsToInject = floor(nParcels);
-
-        // Inject an additional parcel with a probability based on the
-        // remainder after the floor function
-        if (nParcels - scalar(nParcelsToInject) > this->globalScalar01(rndGen))
-        {
-            ++nParcelsToInject;
-        }
-
-        return nParcelsToInject;
+        return parcelConcentration_*c*flowRate()*(time1 - time0);
     }
     else
     {

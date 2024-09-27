@@ -457,16 +457,10 @@ void Foam::InjectionModel<CloudType>::postInject
     }
 
     // Increment total number of parcels added
-    parcelsAddedTotal_ += allNParcelsAdded;
+    nParcelsInjected_ += allNParcelsAdded;
 
     // Increment total mass injected
     massInjected_ += returnReduce(massAdded, sumOp<scalar>());
-
-    // Update time for start of next injection
-    time0_ = this->owner().db().time().value();
-
-    // Increment number of injections
-    nInjections_++;
 }
 
 
@@ -478,15 +472,20 @@ Foam::InjectionModel<CloudType>::InjectionModel(CloudType& owner)
     CloudSubModelBase<CloudType>(owner),
     SOI_(0),
     massInjected_(this->template getModelProperty<scalar>("massInjected")),
-    nInjections_(this->template getModelProperty<label>("nInjections")),
-    parcelsAddedTotal_
+    nParcelsInjected_
     (
-        this->template getModelProperty<scalar>("parcelsAddedTotal")
+        this->template getModelProperty<scalar>("nParcelsInjected")
+    ),
+    massDeferred_
+    (
+        this->template getModelProperty<scalar>("massDeferred")
+    ),
+    nParcelsDeferred_
+    (
+        this->template getModelProperty<scalar>("nParcelsDeferred")
     ),
     nParticleFixed_(-vGreat),
-    uniformParcelSize_(uniformParcelSize::nParticle),
-    time0_(0),
-    timeStep0_(this->template getModelProperty<scalar>("timeStep0", scalar(0)))
+    uniformParcelSize_(uniformParcelSize::nParticle)
 {}
 
 
@@ -502,10 +501,17 @@ Foam::InjectionModel<CloudType>::InjectionModel
     CloudSubModelBase<CloudType>(modelName, owner, dict, typeName, modelType),
     SOI_(0),
     massInjected_(this->template getModelProperty<scalar>("massInjected")),
-    nInjections_(this->template getModelProperty<scalar>("nInjections")),
-    parcelsAddedTotal_
+    nParcelsInjected_
     (
-        this->template getModelProperty<scalar>("parcelsAddedTotal")
+        this->template getModelProperty<scalar>("nParcelsInjected")
+    ),
+    massDeferred_
+    (
+        this->template getModelProperty<scalar>("massDeferred")
+    ),
+    nParcelsDeferred_
+    (
+        this->template getModelProperty<scalar>("nParcelsDeferred")
     ),
     nParticleFixed_(dict.lookupOrDefault<scalar>("nParticle", -vGreat)),
     uniformParcelSize_
@@ -520,15 +526,6 @@ Foam::InjectionModel<CloudType>::InjectionModel
             )
           : dict.lookup<word>("uniformParcelSize")
         ]
-    ),
-    time0_(owner.db().time().value()),
-    timeStep0_
-    (
-        this->template getModelProperty<scalar>
-        (
-            "timeStep0",
-            owner.db().time().value()
-        )
     )
 {
     // Provide some info. Also serves to initialise mesh dimensions. This may
@@ -565,12 +562,11 @@ Foam::InjectionModel<CloudType>::InjectionModel
     CloudSubModelBase<CloudType>(im),
     SOI_(im.SOI_),
     massInjected_(im.massInjected_),
-    nInjections_(im.nInjections_),
-    parcelsAddedTotal_(im.parcelsAddedTotal_),
+    nParcelsInjected_(im.nParcelsInjected_),
+    massDeferred_(im.massDeferred_),
+    nParcelsDeferred_(im.nParcelsDeferred_),
     nParticleFixed_(im.nParticleFixed_),
-    uniformParcelSize_(im.uniformParcelSize_),
-    time0_(im.time0_),
-    timeStep0_(im.timeStep0_)
+    uniformParcelSize_(im.uniformParcelSize_)
 {}
 
 
@@ -608,7 +604,10 @@ void Foam::InjectionModel<CloudType>::inject
 {
     const polyMesh& mesh = this->owner().mesh();
 
-    const scalar time = this->owner().db().time().value();
+    const scalar time1 = this->owner().db().time().value();
+    const scalar time0 =
+        this->owner().db().time().value()
+      - this->owner().db().time().deltaTValue();
 
     preInject(td);
 
@@ -618,47 +617,48 @@ void Foam::InjectionModel<CloudType>::inject
 
     // Get amounts to inject
     label nParcels;
-    scalar mass;
-    bool inject;
-    if (time < SOI_)
+    scalar mass = NaN;
+    if (time1 < SOI_)
     {
         // Injection has not started yet
         nParcels = 0;
-        mass = 0;
-        inject = false;
-        timeStep0_ = time;
     }
     else
     {
         // Injection has started. Get amounts between times.
-        const scalar t0 = timeStep0_ - SOI_, t1 = time - SOI_;
-        nParcels = nParcelsToInject(t0, t1);
-        mass = nParticleFixed_ < 0 ? massToInject(t0, t1) : NaN;
+        const scalar t0 = time0 - SOI_, t1 = time1 - SOI_;
 
-        if (nParcels > 0 && (nParticleFixed_ > 0 || mass > 0))
+        // Get the number of parcels to inject, round it down to the nearest
+        // integer, and then store the excess to apply at a later time
+        const scalar nParcelsNoRound =
+            nParcelsToInject(t0, t1) + nParcelsDeferred_;
+        nParcels = floor(nParcelsNoRound);
+        nParcelsDeferred_ = nParcelsNoRound - nParcels;
+
+        if (nParticleFixed_ < 0 && nParcelsNoRound > 0)
         {
-            // Injection is valid
-            inject = true;
-            timeStep0_ = time;
-        }
-        else if (nParcels == 0 && (nParticleFixed_ < 0 && mass > 0))
-        {
-            // Injection should have started, but there is not a sufficient
-            // amount to inject a single parcel. Do not inject, but hold
-            // advancement of the old-time so that the mass gets added to a
-            // subsequent injection.
-            inject = false;
-        }
-        else
-        {
-            // Nothing to inject
-            inject = false;
-            timeStep0_ = time;
+            // Get the mass to inject and scale it so that the same proportion
+            // is deferred as for the number of parcels
+            const scalar massNoRound =
+                massToInject(t0, t1) + massDeferred_;
+            mass = massNoRound*nParcels/nParcelsNoRound;
+            massDeferred_ = massNoRound - mass;
+
+            // Special case. If there is no mass, then don't create anything.
+            // This is a hack so that mass flow rates that switch on and off
+            // still work tolerably with a constant number rate. Really,
+            // though, cases like these should be specified with a
+            // correspondingly varying number rate.
+            if (massNoRound == 0)
+            {
+                nParcels = 0;
+                nParcelsDeferred_ = 0;
+            }
         }
     }
 
     // Do injection
-    if (inject)
+    if (nParcels > 0)
     {
         // Duration of injection period during this timestep
         const scalar deltaT =
@@ -670,21 +670,21 @@ void Foam::InjectionModel<CloudType>::inject
                     td.trackTime(),
                     min
                     (
-                        time - SOI_,
-                        timeEnd() - time0_
+                        time1 - SOI_,
+                        timeEnd() - time0
                     )
                 )
             );
 
         // Pad injection time if injection starts during this timestep
-        const scalar padTime = max(scalar(0), SOI_ - time0_);
+        const scalar padTime = max(scalar(0), SOI_ - time0);
 
         // Create new parcels linearly across carrier phase timestep
         PtrList<parcelType> parcelPtrs(nParcels);
         forAll(parcelPtrs, parceli)
         {
             // Calculate the pseudo time of injection for parcel 'parceli'
-            scalar timeInj = time0_ + padTime + deltaT*parceli/nParcels;
+            scalar timeInj = time0 + padTime + deltaT*parceli/nParcels;
 
             // Determine the injection coordinates and owner cell,
             // tetFace and tetPt
@@ -705,7 +705,7 @@ void Foam::InjectionModel<CloudType>::inject
             if (celli > -1)
             {
                 // Lagrangian timestep
-                const scalar dt = timeInj - time0_;
+                const scalar dt = timeInj - time0;
 
                 // Create a new parcel
                 parcelPtrs.set
@@ -794,7 +794,7 @@ void Foam::InjectionModel<CloudType>::injectSteadyState
     scalar massAdded = 0;
 
     // Get amounts to inject based on first second of injection
-    const label nParcels = nParcelsToInject(0, 1);
+    const label nParcels = floor(nParcelsToInject(0, 1));
     const scalar mass = nParticleFixed_ < 0 ? massToInject(0, 1) : NaN;
 
     // Do injection
@@ -889,15 +889,15 @@ template<class CloudType>
 void Foam::InjectionModel<CloudType>::info(Ostream& os)
 {
     os  << "    " << this->modelName() << ":" << nl
-        << "        number of parcels added     = " << parcelsAddedTotal_ << nl
+        << "        number of parcels added     = " << nParcelsInjected_ << nl
         << "        mass introduced             = " << massInjected_ << nl;
 
     if (this->writeTime())
     {
         this->setModelProperty("massInjected", massInjected_);
-        this->setModelProperty("nInjections", nInjections_);
-        this->setModelProperty("parcelsAddedTotal", parcelsAddedTotal_);
-        this->setModelProperty("timeStep0", timeStep0_);
+        this->setModelProperty("nParcelsInjected", nParcelsInjected_);
+        this->setModelProperty("massDeferred", massDeferred_);
+        this->setModelProperty("nParcelsDeferred", nParcelsDeferred_);
     }
 }
 

@@ -121,7 +121,7 @@ Foam::scalar Foam::ThermoLookupTableInjection<CloudType>::timeEnd() const
 
 
 template<class CloudType>
-Foam::label Foam::ThermoLookupTableInjection<CloudType>::nParcelsToInject
+Foam::scalar Foam::ThermoLookupTableInjection<CloudType>::nParcelsToInject
 (
     const scalar time0,
     const scalar time1
@@ -129,12 +129,7 @@ Foam::label Foam::ThermoLookupTableInjection<CloudType>::nParcelsToInject
 {
     if (time0 >= 0 && time0 < duration_)
     {
-        return
-            floor
-            (
-                injectorCells_.size()
-               *parcelsPerSecond_->integral(time0, time1)
-            );
+        return injectorCells_.size()*parcelsPerSecond_->integral(time0, time1);
     }
     else
     {

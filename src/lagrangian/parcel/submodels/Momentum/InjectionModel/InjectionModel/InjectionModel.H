@@ -86,14 +86,14 @@ protected:
             //- Total mass injected to date [kg]
             scalar massInjected_;
 
+            //- Total number of parcels injected to date
+            label nParcelsInjected_;
 
-        // Counters
+            //- Mass deferred to be injected at a later time step
+            scalar massDeferred_;
 
-            //- Number of injections counter
-            label nInjections_;
-
-            //- Running counter of total number of parcels added
-            label parcelsAddedTotal_;
+            //- Number of parcels deferred to be injected at a later time step
+            scalar nParcelsDeferred_;
 
 
         // Injection properties per Lagrangian time step
@@ -104,12 +104,6 @@ protected:
 
             //- Size uniform to all parcels
             uniformParcelSize uniformParcelSize_;
-
-            //- Continuous phase time at start of injection time step [s]
-            scalar time0_;
-
-            //- Time at start of injection time step [s]
-            scalar timeStep0_;
 
 
     // Protected Member Functions
@@ -270,14 +264,17 @@ public:
             //- Return the start-of-injection time
             inline scalar timeStart() const;
 
-            //- Return mass of particles injected (cumulative)
+            //- Return mass of parcels injected (cumulative)
             inline scalar massInjected() const;
+
+            //- Return number of parcels injected (cumulative)
+            inline label nParcelsInjected() const;
 
             //- Return the end-of-injection time
             virtual scalar timeEnd() const = 0;
 
             //- Number of parcels to introduce relative to SOI
-            virtual label nParcelsToInject
+            virtual scalar nParcelsToInject
             (
                 const scalar time0,
                 const scalar time1
@@ -292,15 +289,6 @@ public:
 
             //- Return the average injected parcel mass
             scalar averageParcelMass();
-
-
-            // Counters
-
-                //- Return the number of injections
-                inline label nInjections() const;
-
-                //- Return the total number parcels added
-                inline label parcelsAddedTotal() const;
 
 
         // Per-injection event functions
