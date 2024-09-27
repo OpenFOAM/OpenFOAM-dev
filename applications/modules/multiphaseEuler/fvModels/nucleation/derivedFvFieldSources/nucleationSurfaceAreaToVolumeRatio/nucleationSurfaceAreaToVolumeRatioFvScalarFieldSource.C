@@ -68,8 +68,21 @@ Foam::nucleationSurfaceAreaToVolumeRatioFvScalarFieldSource::sourceValue
     const fvSource& source
 ) const
 {
+    // Determine the size-group index from the end of the field name
+    const word member = this->internalField().member();
+    string::size_type memberChari = member.size();
+    while (memberChari && isdigit(member[memberChari - 1])) memberChari --;
+    const label i = atoi(member(memberChari, member.size()).c_str());
+
+    // Access the size-group
     const diameterModels::sizeGroup& fi =
-        refCast<const diameterModels::sizeGroup>(this->internalField());
+        refCast<const diameterModels::velocityGroup>
+        (
+            db()
+           .lookupObject<phaseSystem>(phaseSystem::propertiesName)
+           .phases()[this->internalField().group()]
+           .diameter()
+        ).popBal().sizeGroups()[i];
 
     tmp<volScalarField::Internal> d =
         refCast<const fv::nucleation>(source).d();
