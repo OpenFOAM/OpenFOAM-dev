@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,6 +47,9 @@ namespace Foam
 
 template<class Type>
 class Pair;
+
+template<class Type>
+void writeEntry(Ostream& os, const Pair<Type>&);
 
 template<class Type>
 inline Istream& operator>>(Istream&, Pair<Type>&);
@@ -248,6 +251,13 @@ inline Ostream& operator<<(Ostream& os, const Pair<Type>& p)
         << token::END_LIST;
 
     return os;
+}
+
+
+template<class Type>
+void writeEntry(Ostream& os, const Pair<Type>& p)
+{
+    os << p;
 }
 
 
