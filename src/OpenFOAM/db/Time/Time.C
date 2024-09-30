@@ -95,12 +95,12 @@ void Foam::Time::adjustDeltaT()
 
     const scalar nSteps = timeToNextAction/deltaT_;
 
-    // Ensure nStepsToNextWrite does not overflow
-    if (nSteps < labelMax)
+    // Ensure nSteps larger than 0 and nStepsToNextWrite does not overflow
+    if (label(nSteps) > 0 && nSteps < labelMax)
     {
         // Allow the time-step to increase by up to 1%
         // to accommodate the next write time before splitting
-        const label nStepsToNextWrite = label(max(nSteps, 1) + 0.99);
+        const label nStepsToNextWrite = label(nSteps + 0.99);
 
         deltaT_ = timeToNextAction/nStepsToNextWrite;
     }
