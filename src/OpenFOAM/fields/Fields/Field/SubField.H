@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,20 +72,16 @@ public:
     // Constructors
 
         //- Construct from a SubList
-        inline SubField(const SubList<Type>&);
+        SubField(const SubList<Type>&);
 
         //- Construct from a UList\<Type\>, using the entire size
-        explicit inline SubField(const UList<Type>&);
+        explicit SubField(const UList<Type>&);
 
         //- Construct from a UList\<Type\> with a given size
-        inline SubField
-        (
-            const UList<Type>& list,
-            const label subSize
-        );
+        SubField(const UList<Type>& list, const label subSize);
 
         //- Construct from a UList\<Type\> with a given size and start index
-        inline SubField
+        SubField
         (
             const UList<Type>& list,
             const label subSize,
@@ -93,19 +89,25 @@ public:
         );
 
         //- Copy constructor
-        inline SubField(const SubField<Type>&);
+        SubField(const SubField<Type>&);
 
         //- Copy constructor or reuse as specified
-        inline SubField(SubField<Type>&, bool reuse);
+        SubField(SubField<Type>&, bool reuse);
+
+
+    // Static Member Functions
+
+        //- Return a null SubField
+        static inline const SubField<Type>& null()
+        {
+            return NullObjectRef<SubField<Type>>();
+        }
 
 
     // Member Functions
 
-        //- Return a null SubField
-        static inline const SubField<Type>& null();
-
         //- Return a component field of the field
-        inline tmp<Field<cmptType>> component(const direction) const;
+        tmp<Field<cmptType>> component(const direction) const;
 
         //- Return the field transpose (only defined for second rank tensors)
         tmp<Field<Type>> T() const;
@@ -113,21 +115,38 @@ public:
 
     // Member Operators
 
-        //- Assignment via UList operator. Takes linear time.
-        inline void operator=(const SubField<Type>&);
+        void operator=(const SubField<Type>&);
+        void operator=(const UList<Type>&);
+        void operator=(const tmp<Field<Type>>&);
+        void operator=(const Type&);
+        void operator=(const zero);
 
-        //- Assignment via UList operator. Takes linear time.
-        inline void operator=(const Field<Type>&);
-
-        //- Assignment via UList operator. Takes linear time.
-        inline void operator=(const Type&);
-
-        //- Assignment via UList operator. Takes linear time.
         template<class Form, direction Ncmpts>
-        inline void operator=(const VectorSpace<Form, Type, Ncmpts>&);
+        void operator=(const VectorSpace<Form, Type, Ncmpts>&);
+
+        void operator+=(const UList<Type>&);
+        void operator+=(const tmp<Field<Type>>&);
+
+        void operator-=(const UList<Type>&);
+        void operator-=(const tmp<Field<Type>>&);
+
+        void operator*=(const UList<scalar>&);
+        void operator*=(const tmp<Field<scalar>>&);
+
+        void operator/=(const UList<scalar>&);
+        void operator/=(const tmp<Field<scalar>>&);
+
+        void operator+=(const Type&);
+        void operator-=(const Type&);
+
+        void operator*=(const scalar&);
+        void operator/=(const scalar&);
 
         //- Allow cast to a const Field\<Type\>&
-        inline operator const Field<Type>&() const;
+        inline operator const Field<Type>&() const
+        {
+            return *reinterpret_cast<const Field<Type>*>(this);
+        }
 };
 
 
@@ -137,7 +156,9 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "SubFieldI.H"
+#ifdef NoRepository
+    #include "SubField.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

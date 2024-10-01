@@ -575,13 +575,6 @@ void Foam::Field<Type>::operator=(Field<Type>&& rhs)
 
 
 template<class Type>
-void Foam::Field<Type>::operator=(const SubField<Type>& rhs)
-{
-    List<Type>::operator=(rhs);
-}
-
-
-template<class Type>
 void Foam::Field<Type>::operator=(const UList<Type>& rhs)
 {
     List<Type>::operator=(rhs);

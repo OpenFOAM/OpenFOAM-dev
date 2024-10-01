@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,6 +22,8 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 \*---------------------------------------------------------------------------*/
+
+#include "SubField.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -94,13 +96,6 @@ inline Foam::SubField<Type>::SubField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-inline const Foam::SubField<Type>& Foam::SubField<Type>::null()
-{
-    return NullObjectRef<SubField<Type>>();
-}
-
-
-template<class Type>
 inline Foam::tmp<Foam::Field<typename Foam::SubField<Type>::cmptType>>
 Foam::SubField<Type>::component
 (
@@ -128,9 +123,16 @@ inline void Foam::SubField<Type>::operator=(const SubField<Type>& rhs)
 
 
 template<class Type>
-inline void Foam::SubField<Type>::operator=(const Field<Type>& rhs)
+inline void Foam::SubField<Type>::operator=(const UList<Type>& rhs)
 {
     SubList<Type>::operator=(rhs);
+}
+
+
+template<class Type>
+inline void Foam::SubField<Type>::operator=(const tmp<Field<Type>>& rhs)
+{
+    SubList<Type>::operator=(rhs());
 }
 
 
@@ -139,6 +141,42 @@ inline void Foam::SubField<Type>::operator=(const Type& rhs)
 {
     SubList<Type>::operator=(rhs);
 }
+
+
+template<class Type>
+inline void Foam::SubField<Type>::operator=(const zero)
+{
+    SubList<Type>::operator=(Zero);
+}
+
+
+#define COMPUTED_ASSIGNMENT(TYPE, op)                                          \
+                                                                               \
+template<class Type>                                                           \
+void Foam::SubField<Type>::operator op(const UList<TYPE>& f)                   \
+{                                                                              \
+    TFOR_ALL_F_OP_F(Type, *this, op, TYPE, f)                                  \
+}                                                                              \
+                                                                               \
+template<class Type>                                                           \
+void Foam::SubField<Type>::operator op(const tmp<Field<TYPE>>& tf)             \
+{                                                                              \
+    operator op(tf());                                                         \
+    tf.clear();                                                                \
+}                                                                              \
+                                                                               \
+template<class Type>                                                           \
+void Foam::SubField<Type>::operator op(const TYPE& t)                          \
+{                                                                              \
+    TFOR_ALL_F_OP_S(Type, *this, op, TYPE, t)                                  \
+}
+
+COMPUTED_ASSIGNMENT(Type, +=)
+COMPUTED_ASSIGNMENT(Type, -=)
+COMPUTED_ASSIGNMENT(scalar, *=)
+COMPUTED_ASSIGNMENT(scalar, /=)
+
+#undef COMPUTED_ASSIGNMENT
 
 
 template<class Type>
@@ -152,13 +190,6 @@ inline void Foam::SubField<Type>::operator=
     {
         this->operator[](i) = rhs[i];
     }
-}
-
-
-template<class Type>
-inline Foam::SubField<Type>::operator const Foam::Field<Type>&() const
-{
-    return *reinterpret_cast<const Field<Type>* >(this);
 }
 
 
