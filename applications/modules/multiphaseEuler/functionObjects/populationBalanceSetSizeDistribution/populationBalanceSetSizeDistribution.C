@@ -135,9 +135,11 @@ bool Foam::functionObjects::populationBalanceSetSizeDistribution::write()
                 ).phases()[phaseName_].diameter()
             );
 
-        forAll(velGrp.sizeGroups(), sizeGroupi)
+        forAll(velGrp.sizeGroups(), i)
         {
-            volScalarField& fi = velGrp.sizeGroups()[sizeGroupi];
+            volScalarField& fi = velGrp.sizeGroups()[i];
+
+            const label sizeGroupi = velGrp.sizeGroups().first().i() + i;
 
             fi == velGrp.popBal().etaV(sizeGroupi, distribution_());
 

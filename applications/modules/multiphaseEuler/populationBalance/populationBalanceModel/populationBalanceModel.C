@@ -1206,9 +1206,9 @@ Foam::dimensionedScalar Foam::diameterModels::populationBalanceModel::etaV
         ({
             fi.group().sizeGroups().first().i() == 0
           ? d.min()*(1 - small)
-          : fi.group().sizeGroups().first().dSph().value(),
+          : fi.group().sizeGroups().first().dSph().value()*(1 - small),
             fi.group().sizeGroups().last().i() < sizeGroups().size() - 1
-          ? fi.group().sizeGroups().last().dSph().value()
+          ? fi.group().sizeGroups().last().dSph().value()*(1 + small)
           : d.max()*(1 + small)
         })
     );
