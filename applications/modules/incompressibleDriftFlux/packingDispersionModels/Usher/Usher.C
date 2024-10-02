@@ -46,7 +46,7 @@ namespace packingDispersionModels
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
 template<class T>
-inline T Foam::packingDispersionModels::Usher::sigma1(const T& alphad) const
+inline auto Foam::packingDispersionModels::Usher::sigma1(const T& alphad) const
 {
     return sigma01_*pow
     (
@@ -58,7 +58,7 @@ inline T Foam::packingDispersionModels::Usher::sigma1(const T& alphad) const
 
 
 template<class T>
-inline T Foam::packingDispersionModels::Usher::sigmaPrime1
+inline auto Foam::packingDispersionModels::Usher::sigmaPrime1
 (
     const T& alphad
 ) const
@@ -74,7 +74,7 @@ inline T Foam::packingDispersionModels::Usher::sigmaPrime1
 
 
 template<class T>
-inline T Foam::packingDispersionModels::Usher::sigma2(const T& alphad) const
+inline auto Foam::packingDispersionModels::Usher::sigma2(const T& alphad) const
 {
     return sigma02_*pow
     (
@@ -86,7 +86,7 @@ inline T Foam::packingDispersionModels::Usher::sigma2(const T& alphad) const
 
 
 template<class T>
-inline T Foam::packingDispersionModels::Usher::sigmaPrime2
+inline auto Foam::packingDispersionModels::Usher::sigmaPrime2
 (
     const T& alphad
 ) const

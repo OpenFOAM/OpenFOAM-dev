@@ -116,16 +116,16 @@ class Usher
     // Private member functions
 
         template<class T>
-        inline T sigma1(const T& alphad) const;
+        inline auto sigma1(const T& alphad) const;
 
         template<class T>
-        inline T sigmaPrime1(const T& alphad) const;
+        inline auto sigmaPrime1(const T& alphad) const;
 
         template<class T>
-        inline T sigma2(const T& alphad) const;
+        inline auto sigma2(const T& alphad) const;
 
         template<class T>
-        inline T sigmaPrime2(const T& alphad) const;
+        inline auto sigmaPrime2(const T& alphad) const;
 
 
 public:

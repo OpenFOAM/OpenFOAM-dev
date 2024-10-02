@@ -75,11 +75,13 @@ void Foam::solvers::XiFluid::fuSolve
     const volScalarField fres(thermo_.fres());
     const volScalarField fuFres(max(fu - fres, scalar(0)));
 
-    const volScalarField fuDot =
+    const volScalarField fuDot
+    (
         bSource/(b + 0.001)
       - 2*Db*c
        *mag(fvc::grad(ft))/max(ft, 1e-6)
-       *mag(fvc::grad(fuFres))/max(fuFres, 1e-6);
+       *mag(fvc::grad(fuFres))/max(fuFres, 1e-6)
+    );
 
     fvScalarMatrix fuEqn
     (

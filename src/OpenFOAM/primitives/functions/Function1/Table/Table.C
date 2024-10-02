@@ -223,9 +223,11 @@ Foam::Function1s::Table<Type>::~Table()
 template<class Type>
 Type Foam::Function1s::Table<Type>::value
 (
-    scalar x
+    const scalar xArg
 ) const
 {
+    scalar x(xArg);
+
     checkX(x);
 
     const scalar x0 = values_.first().first();
@@ -276,10 +278,12 @@ Type Foam::Function1s::Table<Type>::value
 template<class Type>
 Type Foam::Function1s::Table<Type>::integral
 (
-    scalar xA,
-    scalar xB
+    const scalar xAarg,
+    const scalar xBarg
 ) const
 {
+    scalar xA(xAarg), xB(xBarg);
+
     checkX(xA);
     checkX(xB);
 
