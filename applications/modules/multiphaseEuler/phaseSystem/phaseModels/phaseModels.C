@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -198,6 +198,34 @@ namespace Foam
         multicomponentPhaseModel,
         phaseSystem,
         multiComponentPhaseModel
+    );
+
+    typedef
+        MulticomponentPhaseModel
+        <
+            IsothermalPhaseModel
+            <
+                InertPhaseModel
+                <
+                    MovingPhaseModel
+                    <
+                        ThermoPhaseModel
+                        <
+                            phaseModel,
+                            rhoFluidMulticomponentThermo
+                        >
+                    >
+                >
+            >
+        >
+        multicomponentIsothermalPhaseModel;
+
+    addNamedToRunTimeSelectionTable
+    (
+        phaseModel,
+        multicomponentIsothermalPhaseModel,
+        phaseSystem,
+        multicomponentIsothermalPhaseModel
     );
 
     typedef

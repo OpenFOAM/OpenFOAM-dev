@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,6 +84,14 @@ Foam::IsothermalPhaseModel<BasePhaseModel>::kappaEff(const label patchi) const
 {
     NotImplemented;
     return this->thermo().kappa().boundaryField()[patchi];
+}
+
+
+template<class BasePhaseModel>
+Foam::tmp<Foam::fvScalarMatrix>
+Foam::IsothermalPhaseModel<BasePhaseModel>::divj(volScalarField& Yi) const
+{
+    return tmp<fvScalarMatrix>(new fvScalarMatrix(Yi, dimMass/dimTime));
 }
 
 
