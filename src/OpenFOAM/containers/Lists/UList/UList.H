@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -180,7 +180,6 @@ public:
             //  i.e. contiguous<T>() == true.
             //  Note that is of type streamsize since used in stream ops
             std::streamsize byteSize() const;
-
 
             //- Return a const pointer to the first data element,
             //  similar to the STL front() method and the string::data() method

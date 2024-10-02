@@ -85,6 +85,12 @@ public:
         inline SubList(const SubList<T>& sl) = default;
 
 
+    // Member Functions
+
+        //- Transfer the contents of the argument List into this list
+        inline void transfer(UList<T>&);
+
+
     // Member Operators
 
         //- Allow cast to a const List<T>&

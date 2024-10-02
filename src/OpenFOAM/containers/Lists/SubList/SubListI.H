@@ -23,6 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "SubList.H"
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class T>
@@ -75,6 +77,13 @@ template<class T>
 inline const Foam::SubList<T>& Foam::SubList<T>::null()
 {
     return NullObjectRef<SubList<T>>();
+}
+
+
+template<class T>
+inline void Foam::SubList<T>::transfer(UList<T>& l)
+{
+    UList<T>::deepCopy(l);
 }
 
 
