@@ -227,14 +227,20 @@ public:
 
     // I/O
 
-        //- Read, assuming the '[' has already been read
-        Istream& readNoBegin(Istream& is);
+        //- Read without the square brackets
+        Istream& readNoBeginOrEnd(Istream& is);
 
         //- Read
         Istream& read(Istream& is);
 
+        //- Write without the square brackets
+        Ostream& writeNoBeginOrEnd(Ostream& os) const;
+
         //- Write
         Ostream& write(Ostream& os) const;
+
+        //- Write info without the square brackets
+        Ostream& writeInfoNoBeginOrEnd(Ostream& os) const;
 
         //- Return info proxy
         inline InfoProxy<dimensionSet> info() const

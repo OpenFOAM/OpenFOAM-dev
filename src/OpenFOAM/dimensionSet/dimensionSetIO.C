@@ -30,7 +30,7 @@ License
 
 void Foam::dimensionSet::round(const scalar tol)
 {
-    for (int i=0; i < dimensionSet::nDimensions; ++i)
+    for (int i=0; i<dimensionSet::nDimensions; ++i)
     {
         scalar integralPart;
         scalar fractionalPart = std::modf(exponents_[i], &integralPart);
@@ -61,58 +61,46 @@ Foam::dimensionSet::dimensionSet(Istream& is)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::Istream& Foam::dimensionSet::readNoBegin(Istream& is)
+Foam::Istream& Foam::dimensionSet::readNoBeginOrEnd(Istream& is)
 {
-    // Read next token
-    token nextToken(is);
+    token nextToken;
 
+    // Peek at the next token
+    is >> nextToken;
+    is.putBack(nextToken);
+
+    // If not a number, then these are named dimensions. Parse.
     if (!nextToken.isNumber())
     {
-        // Named dimensions. Parse.
-        is.putBack(nextToken);
-        reset(symbols::parseNoBegin(is, dimless, dimensions()));
+        reset(symbols::parseNoBeginOrEnd(is, dimless, dimensions()));
+
+        return is;
+    }
+
+    // Otherwise these are numbered dimensions. Read directly...
+
+    // Read first five dimensions
+    for (int i=0; i<dimensionSet::CURRENT; i++)
+    {
+        is >> exponents_[i];
+    }
+
+    // Peek at the next token
+    is >> nextToken;
+    is.putBack(nextToken);
+
+    // If next token is another number then read the last two dimensions
+    // and then read another token for the end of the dimensionSet
+    if (nextToken.isNumber())
+    {
+        is >> exponents_[dimensionSet::CURRENT];
+        is >> exponents_[dimensionSet::LUMINOUS_INTENSITY];
     }
     else
     {
-        // Numbered dimensions. Read directly.
-
-        // Read first five dimensions
-        exponents_[dimensionSet::MASS] = nextToken.number();
-        for (int Dimension=1; Dimension<dimensionSet::CURRENT; Dimension++)
-        {
-            is >> exponents_[Dimension];
-        }
-
-        // Read next token
-        token nextToken(is);
-
-        // If next token is another number then read the last two dimensions
-        // and then read another token for the end of the dimensionSet
-        if (nextToken.isNumber())
-        {
-            exponents_[dimensionSet::CURRENT] = nextToken.number();
-            is >> nextToken;
-            exponents_[dimensionSet::LUMINOUS_INTENSITY] = nextToken.number();
-            is >> nextToken;
-        }
-        else
-        {
-            exponents_[dimensionSet::CURRENT] = 0;
-            exponents_[dimensionSet::LUMINOUS_INTENSITY] = 0;
-        }
-
-        // Check end of dimensionSet
-        if (nextToken != token::END_SQR)
-        {
-            FatalIOErrorInFunction(is)
-                << "expected a " << token::END_SQR << " in dimensionSet "
-                << endl << "in stream " << is.info()
-                << exit(FatalIOError);
-        }
+        exponents_[dimensionSet::CURRENT] = 0;
+        exponents_[dimensionSet::LUMINOUS_INTENSITY] = 0;
     }
-
-    // Check state of Istream
-    is.check("Istream& operator>>(Istream&, dimensionSet&)");
 
     return is;
 }
@@ -122,7 +110,6 @@ Foam::Istream& Foam::dimensionSet::read(Istream& is)
 {
     // Read beginning of dimensionSet
     token startToken(is);
-
     if (startToken != token::BEGIN_SQR)
     {
         FatalIOErrorInFunction(is)
@@ -131,30 +118,82 @@ Foam::Istream& Foam::dimensionSet::read(Istream& is)
             << exit(FatalIOError);
     }
 
-    return readNoBegin(is);
+    readNoBeginOrEnd(is);
+
+    // Read end of dimensionSet
+    token endToken(is);
+    if (endToken != token::END_SQR)
+    {
+        FatalIOErrorInFunction(is)
+            << "expected a " << token::END_SQR << " in dimensionSet "
+            << endl << "in stream " << is.info()
+            << exit(FatalIOError);
+    }
+
+    // Check state of Istream
+    is.check("Istream& operator>>(Istream&, dimensionSet&)");
+
+    return is;
+}
+
+
+Foam::Ostream& Foam::dimensionSet::writeNoBeginOrEnd(Ostream& os) const
+{
+    if (dimensionless())
+    {
+        // Do nothing
+    }
+    else
+    {
+        for (int i=0; i<dimensionSet::nDimensions-1; i++)
+        {
+            os << exponents_[i] << token::SPACE;
+        }
+
+        os << exponents_[dimensionSet::nDimensions-1];
+    }
+
+    return os;
 }
 
 
 Foam::Ostream& Foam::dimensionSet::write(Ostream& os) const
 {
-    if (dimensionless())
-    {
-        os << token::BEGIN_SQR << token::END_SQR;
-    }
-    else
-    {
-        os << token::BEGIN_SQR;
+    os << token::BEGIN_SQR;
 
-        for (int d=0; d<dimensionSet::nDimensions-1; d++)
-        {
-            os << exponents_[d] << token::SPACE;
-        }
+    writeNoBeginOrEnd(os);
 
-        os << exponents_[dimensionSet::nDimensions-1] << token::END_SQR;
-    }
+    os << token::END_SQR;
 
     // Check state of Ostream
     os.check("Ostream& operator<<(Ostream&, const dimensionSet&)");
+
+    return os;
+}
+
+
+Foam::Ostream& Foam::dimensionSet::writeInfoNoBeginOrEnd(Ostream& os) const
+{
+    for (int first=true, i=0; i<dimensionSet::nDimensions; i++)
+    {
+        if (mag(exponents_[i]) > dimensionSet::smallExponent)
+        {
+            if (!first)
+            {
+                os << token::SPACE;
+            }
+
+            os << dimensionSet::dimensionTypeNames_
+                  [static_cast<dimensionSet::dimensionType>(i)];
+
+            if (exponents_[i] != 1)
+            {
+                os << '^' << exponents_[i];
+            }
+
+            first = false;
+        }
+    }
 
     return os;
 }
@@ -192,30 +231,9 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const dimensionSet& dims)
 
 Foam::Ostream& Foam::operator<<(Ostream& os, const InfoProxy<dimensionSet>& ip)
 {
-    const dimensionSet& dims = ip.t_;
-
     os << token::BEGIN_SQR;
 
-    for (int first=true, i=0; i<dimensionSet::nDimensions; i++)
-    {
-        if (mag(dims.exponents_[i]) > dimensionSet::smallExponent)
-        {
-            if (!first)
-            {
-                os << token::SPACE;
-            }
-
-            os << dimensionSet::dimensionTypeNames_
-                  [static_cast<dimensionSet::dimensionType>(i)];
-
-            if (dims.exponents_[i] != 1)
-            {
-                os << '^' << dims.exponents_[i];
-            }
-
-            first = false;
-        }
-    }
+    ip.t_.writeInfoNoBeginOrEnd(os);
 
     os << token::END_SQR;
 

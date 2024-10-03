@@ -76,12 +76,19 @@ Type Foam::symbols::parseNoBegin
                 tis.putBack(nextToken);
                 return result;
             }
+            else if (nextToken.pToken() == token::COLON)
+            {
+                // End the units
+                tis.putBack(nextToken);
+                return result;
+            }
             else if (nextToken.pToken() == token::BEGIN_LIST)
             {
                 // Parenthesis. Evaluate the sub-units and multiply.
                 result.reset
                 (
-                    result*parseNoBegin(nextPrior, tis, identity, table)
+                    result
+                   *parseNoBegin(nextPrior, tis, identity, table)
                 );
 
                 // Check that the parentheses end
@@ -108,7 +115,8 @@ Type Foam::symbols::parseNoBegin
                     // This has priority. Evaluate the next units and multiply.
                     result.reset
                     (
-                        result*parseNoBegin(nextPrior, tis, identity, table)
+                        result
+                       *parseNoBegin(nextPrior, tis, identity, table)
                     );
                 }
                 else
@@ -127,7 +135,8 @@ Type Foam::symbols::parseNoBegin
                 {
                     result.reset
                     (
-                        result/parseNoBegin(nextPrior, tis, identity, table)
+                        result
+                       /parseNoBegin(nextPrior, tis, identity, table)
                     );
                 }
                 else
@@ -177,6 +186,7 @@ Type Foam::symbols::parseNoBegin
         }
 
         nextToken = tis.nextToken();
+
         if (nextToken.error())
         {
             break;
@@ -195,7 +205,7 @@ Type Foam::symbols::parseNoBegin
 
 
 template<class Type>
-Type Foam::symbols::parseNoBegin
+Type Foam::symbols::parseNoBeginOrEnd
 (
     Istream& is,
     const Type& identity,
@@ -204,7 +214,11 @@ Type Foam::symbols::parseNoBegin
 {
     symbols::tokeniser tis(is);
 
-    return parseNoBegin(0, tis, identity, table);
+    Type result = parseNoBegin(0, tis, identity, table);
+
+    is.putBack(tis.nextToken());
+
+    return result;
 }
 
 
