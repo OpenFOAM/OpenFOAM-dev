@@ -250,6 +250,9 @@ public:
             void operator=(const std::string&);
             void operator=(const char*);
 
+            //- Add a string to the fileName with a '/' separator
+            void operator/=(const string&);
+
 
     // IOstream Operators
 
@@ -258,7 +261,7 @@ public:
 };
 
 
-//- Assemble words and fileNames as filePaths by adding a '/' separator
+//- Return a fileName created by concatenating two strings with '/' separator
 fileName operator/(const string&, const string&);
 
 

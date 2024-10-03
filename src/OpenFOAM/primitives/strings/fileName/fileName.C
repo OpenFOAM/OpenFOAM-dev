@@ -408,6 +408,12 @@ void Foam::fileName::operator=(const char* str)
 }
 
 
+void Foam::fileName::operator/=(const string& str)
+{
+    operator=(operator/(*this, str));
+}
+
+
 // * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
 
 Foam::fileName Foam::operator/(const string& a, const string& b)
