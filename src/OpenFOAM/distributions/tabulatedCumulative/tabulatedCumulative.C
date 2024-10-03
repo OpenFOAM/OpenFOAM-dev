@@ -60,11 +60,11 @@ Foam::distributions::tabulatedCumulative::tabulatedCumulative
     ),
     reader_
     (
-        TableReader<scalar>::New(word::null, {defaultUnits, unitNone}, dict)
+        TableReader<scalar>::New(word::null, {defaultUnits, unitAny}, dict)
     )
 {
     List<Tuple2<scalar, scalar>> values =
-        reader_->read({defaultUnits, unitNone}, dict, "distribution");
+        reader_->read({defaultUnits, unitAny}, dict, "distribution");
 
     // Checks
     if (values.first().second() != 0)
@@ -282,7 +282,7 @@ void Foam::distributions::tabulatedCumulative::write
         values[i].first() = x_[i];
         values[i].second() = CDF[i];
     }
-    reader_->write(os, {units, unitNone}, values, "distribution");
+    reader_->write(os, {units, unitAny}, values, "distribution");
 }
 
 
