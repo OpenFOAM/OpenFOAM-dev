@@ -58,11 +58,11 @@ Foam::distributions::multiFixedValue::multiFixedValue
     ),
     reader_
     (
-        TableReader<scalar>::New(word::null, {defaultUnits, unitNone}, dict)
+        TableReader<scalar>::New(word::null, {defaultUnits, unitAny}, dict)
     )
 {
     List<Tuple2<scalar, scalar>> values =
-        reader_->read({defaultUnits, unitNone}, dict, "values");
+        reader_->read({defaultUnits, unitAny}, dict, "values");
 
     // Sort
     Foam::sort
@@ -244,7 +244,7 @@ void Foam::distributions::multiFixedValue::write
         values[i].first() = x_[i];
         values[i].second() = P[i];
     }
-    reader_->write(os, {units, unitNone}, values, "values");
+    reader_->write(os, {units, unitAny}, values, "values");
 }
 
 

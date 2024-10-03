@@ -72,8 +72,8 @@ bool Foam::Function1s::unitConversions::readIfPresent
         ITstream& is = entryPtr->stream();
 
         is.readBegin("unitConversions");
-        x.readIfPresent(keyword, dict, is);
-        value.readIfPresent(keyword, dict, is);
+        x.read(keyword, dict, is);
+        value.read(keyword, dict, is);
         is.readEnd("unitConversions");
 
         return true;

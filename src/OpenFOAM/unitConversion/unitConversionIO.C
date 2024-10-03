@@ -47,7 +47,46 @@ void Foam::unitConversion::read(const word& keyword, const dictionary& dict)
     if (!compare(*this, units, false))
     {
         FatalIOErrorInFunction(dict)
+            << "The units " << units.info() << " of " << keyword
+            << " in dictionary " << dict.name() << " do not match "
+            << "the required units " << info()
+            << abort(FatalIOError);
+    }
+
+    reset(units);
+}
+
+
+void Foam::unitConversion::read(Istream& is)
+{
+    const unitConversion units(is);
+
+    if (!compare(*this, units, false))
+    {
+        FatalIOErrorInFunction(is)
             << "The units " << units.info() << " provided do not match "
+            << "the required units " << info()
+            << abort(FatalIOError);
+    }
+
+    reset(units);
+}
+
+
+void Foam::unitConversion::read
+(
+    const word& keyword,
+    const dictionary& dict,
+    Istream& is
+)
+{
+    const unitConversion units(is);
+
+    if (!compare(*this, units, false))
+    {
+        FatalIOErrorInFunction(dict)
+            << "The units " << units.info() << " of " << keyword
+            << " in dictionary " << dict.name() << " do not match "
             << "the required units " << info()
             << abort(FatalIOError);
     }
@@ -71,7 +110,8 @@ bool Foam::unitConversion::readIfPresent
         if (!compare(*this, units, false))
         {
             FatalIOErrorInFunction(dict)
-                << "The units " << units.info() << " provided do not match "
+                << "The units " << units.info() << " of " << keyword
+                << " in dictionary " << dict.name() << " do not match "
                 << "the required units " << info()
                 << abort(FatalIOError);
         }
@@ -102,24 +142,24 @@ bool Foam::unitConversion::readIfPresent(Istream& is)
 
     if (nextToken != token::BEGIN_SQR) return false;
 
-    unitConversion u(is);
+    const unitConversion units(is);
 
-    if (!unitConversion::compare(u, *this, false))
+    if (!unitConversion::compare(units, *this, false))
     {
         FatalIOErrorInFunction(is)
-            << "The units " << u.info() << " provided do not match "
+            << "The units " << units.info() << " provided do not match "
             << "the required units " << info()
             << abort(FatalIOError);
     }
 
-    if (debug && (any() || !unitConversion::compare(u, *this, true)))
+    if (debug && (any() || !unitConversion::compare(units, *this, true)))
     {
         Info<< "Unit conversion at line " << is.lineNumber()
             << " of file " << is.name()
-            << " with factor " << u.multiplier_ << endl;
+            << " with factor " << units.multiplier_ << endl;
     }
 
-    reset(u);
+    reset(units);
 
     return true;
 }
@@ -137,25 +177,25 @@ bool Foam::unitConversion::readIfPresent
 
     if (nextToken != token::BEGIN_SQR) return false;
 
-    unitConversion u(is);
+    const unitConversion units(is);
 
-    if (!unitConversion::compare(u, *this, false))
+    if (!unitConversion::compare(units, *this, false))
     {
-        FatalIOErrorInFunction(is)
-            << "The units " << u.info() << " of " << keyword
+        FatalIOErrorInFunction(dict)
+            << "The units " << units.info() << " of " << keyword
             << " in dictionary " << dict.name() << " do not match "
             << "the required units " << info()
             << abort(FatalIOError);
     }
 
-    if (debug && (any() || !unitConversion::compare(u, *this, true)))
+    if (debug && (any() || !unitConversion::compare(units, *this, true)))
     {
         Info<< "Unit conversion of " << keyword
             << " in dictionary " << dict.name()
-            << " with factor " << u.multiplier_ << endl;
+            << " with factor " << units.multiplier_ << endl;
     }
 
-    reset(u);
+    reset(units);
 
     return true;
 }
@@ -165,95 +205,133 @@ bool Foam::unitConversion::readIfPresent
 
 Foam::Istream& Foam::operator>>(Istream& is, unitConversion& units)
 {
-    // Read beginning of unitConversion
-    token startToken(is);
+    token nextToken;
 
-    if (startToken != token::BEGIN_SQR)
+    // Read the next delimiting token. This must be the start bracket.
+    is >> nextToken;
+    if (nextToken != token::BEGIN_SQR)
     {
         FatalIOErrorInFunction(is)
             << "expected a " << token::BEGIN_SQR << " in unitConversion"
-            << endl << "in stream " << is.info()
-            << exit(FatalIOError);
+            << endl << "in stream " << is.info() << ", got a "
+            << nextToken << exit(FatalIOError);
     }
 
     // Peek at the next token
-    token nextToken(is);
+    is >> nextToken;
     is.putBack(nextToken);
 
-    if (!nextToken.isNumber())
+    // If not a number or separator, then these are named units. Parse.
+    if (!nextToken.isNumber() && nextToken != token::COLON)
     {
         // Named units. Parse.
-        units.reset(symbols::parseNoBegin(is, unitless, Foam::units()));
+        units.reset(symbols::parseNoBeginOrEnd(is, unitless, Foam::units()));
+
+        // Read the next delimiting token. This must be the end bracket.
+        is >> nextToken;
+        if (nextToken != token::END_SQR)
+        {
+            FatalIOErrorInFunction(is)
+                << "expected a " << token::END_SQR << " in unitConversion "
+                << endl << "in stream " << is.info() << ", got a "
+                << nextToken << exit(FatalIOError);
+        }
+
+        // Check state of Istream
+        is.check("Istream& operator>>(Istream&, unitConversion&)");
+
+        return is;
     }
-    else
+
+    // Otherwise these are numbered units. Read directly...
+
+    // Read the dimensions
+    units.dimensions_.readNoBeginOrEnd(is);
+
+    // Read the next delimiting token. If a separator, then there are
+    // dimensionless units and a multiplier to read. If it is an end bracket,
+    // then the dimensionless units are zero and the multiplier is one and the
+    // parsing is finished. Otherwise the parsing has failed.
+    is >> nextToken;
+    if (nextToken == token::COLON)
     {
-        // Read the dimensions
-        units.dimensions_.readNoBegin(is);
+        // Peek at the next token
+        is >> nextToken;
+        is.putBack(nextToken);
 
         // Read the dimensionless units if present, or set to zero
-        token nextToken;
-        if (!is.eof())
-        {
-            is  >> nextToken;
-        }
-        if (nextToken == token::BEGIN_SQR)
+        if (!nextToken.isNumber())
         {
             for (int i = 0; i < unitConversion::nDimlessUnits; ++ i)
             {
-                is  >> units.exponents_[i];
-            }
-
-            // Check end of dimensionless units
-            token endToken(is);
-            if (endToken != token::END_SQR)
-            {
-                FatalIOErrorInFunction(is)
-                    << "expected a " << token::END_SQR
-                    << " in unitConversion " << endl << "in stream "
-                    << is.info() << exit(FatalIOError);
-            }
-
-            // Read the multiplier if present, or set to unity
-            token nextToken;
-            if (!is.eof())
-            {
-                is  >> nextToken;
-            }
-            if (nextToken == token::BEGIN_SQR)
-            {
-                is  >> units.multiplier_;
-
-                // Check end of multiplier
-                token endToken(is);
-                if (endToken != token::END_SQR)
-                {
-                    FatalIOErrorInFunction(is)
-                        << "expected a " << token::END_SQR
-                        << " in unitConversion " << endl << "in stream "
-                        << is.info() << exit(FatalIOError);
-                }
-            }
-            else
-            {
-                units.multiplier_ = 1;
-                if (!nextToken.undefined())
-                {
-                    is.putBack(nextToken);
-                }
+                units.exponents_[i] = 0;
             }
         }
         else
         {
             for (int i = 0; i < unitConversion::nDimlessUnits; ++ i)
             {
-                units.exponents_[i] = 0;
-            }
-            units.multiplier_ = 1;
-            if (!nextToken.undefined())
-            {
-                is.putBack(nextToken);
+                is  >> units.exponents_[i];
             }
         }
+
+        // Read the next delimiting token. If a separator then there is a
+        // multiplier to read. If it is an end bracket then the multiplier is
+        // one and the parsing is finished. Otherwise the parsing has failed.
+        is >> nextToken;
+        if (nextToken == token::COLON)
+        {
+            // Peek at the next token
+            is >> nextToken;
+            is.putBack(nextToken);
+
+            // Read the multiplier if present, or set to unity
+            if (!nextToken.isNumber())
+            {
+                units.multiplier_ = 1;
+            }
+            else
+            {
+                is >> units.multiplier_;
+            }
+
+            // Read the next delimiting token. This must be the end bracket.
+            is >> nextToken;
+            if (nextToken != token::END_SQR)
+            {
+                FatalIOErrorInFunction(is)
+                    << "expected a " << token::END_SQR << " in unitConversion "
+                    << endl << "in stream " << is.info() << ", got a "
+                    << nextToken << exit(FatalIOError);
+            }
+        }
+        else if (nextToken == token::END_SQR)
+        {
+            units.multiplier_ = 1;
+        }
+        else
+        {
+            FatalIOErrorInFunction(is)
+                << "expected a " << token::END_SQR << " or a " << token::COLON
+                << " in unitConversion " << endl << "in stream " << is.info()
+                << ", got a " << nextToken << exit(FatalIOError);
+        }
+    }
+    else if (nextToken == token::END_SQR)
+    {
+        for (int i = 0; i < unitConversion::nDimlessUnits; ++ i)
+        {
+            units.exponents_[i] = 0;
+        }
+
+        units.multiplier_ = 1;
+    }
+    else
+    {
+        FatalIOErrorInFunction(is)
+            << "expected a " << token::END_SQR << " or a " << token::COLON
+            << " in unitConversion " << endl << "in stream " << is.info()
+            << ", got a " << nextToken << exit(FatalIOError);
     }
 
     // Check state of Istream
@@ -265,8 +343,11 @@ Foam::Istream& Foam::operator>>(Istream& is, unitConversion& units)
 
 Foam::Ostream& Foam::operator<<(Ostream& os, const unitConversion& units)
 {
+    // Write the start
+    os << token::BEGIN_SQR;
+
     // Write the dimensions
-    os  << units.dimensions_;
+    units.dimensions_.writeNoBeginOrEnd(os);
 
     // Determine if any dimensionless units are non-zero
     bool nonZeroDimlessUnits = false;
@@ -280,24 +361,35 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const unitConversion& units)
     // Determine if the multiplier is non-unity
     bool nonUnityMultiplier = units.multiplier_ != 1;
 
-    // Write the dimensionless units if any are non-zero or we have a
-    // multiplier to write out afterwards
+    // Write a separator if there is anything to follow
     if (nonZeroDimlessUnits || nonUnityMultiplier)
     {
-        os  << token::BEGIN_SQR;
+        os  << token::SPACE << token::COLON;
+    }
+
+    // Write the dimensionless units if any are non-zero
+    if (nonZeroDimlessUnits)
+    {
         for (int i = 0; i < unitConversion::nDimlessUnits; ++ i)
         {
-            if (i) os  << token::SPACE;
-            os  << units.exponents_[i];
+            os  << token::SPACE << units.exponents_[i];
         }
-        os  << token::END_SQR;
+    }
+
+    // Write a separator if there is anything to follow
+    if (nonUnityMultiplier)
+    {
+        os  << token::SPACE << token::COLON;
     }
 
     // Write the multiplier if it is non-unity
     if (nonUnityMultiplier)
     {
-        os  << token::BEGIN_SQR << units.multiplier_ << token::END_SQR;
+        os  << token::SPACE << units.multiplier_;
     }
+
+    // Write the end
+    os  << token::END_SQR;
 
     // Check state of Ostream
     os.check("Ostream& operator<<(Ostream&, const unitConversion&)");
@@ -324,8 +416,11 @@ Foam::Ostream& Foam::operator<<
         return os << token::BEGIN_SQR << "<none>" << token::END_SQR;
     }
 
+    // Write the start
+    os << token::BEGIN_SQR;
+
     // Write the dimensions
-    os << units.dimensions_.info();
+    units.dimensions_.writeInfoNoBeginOrEnd(os);
 
     // Determine if any dimensionless units are non-zero
     bool nonZeroDimlessUnits = false;
@@ -339,42 +434,44 @@ Foam::Ostream& Foam::operator<<
     // Determine if the multiplier is non-unity
     bool nonUnityMultiplier = units.multiplier_ != 1;
 
-    // Write the dimensionless units if any are non-zero or we have a
-    // multiplier to write out afterwards
+    // Write a separator if there is anything to follow
     if (nonZeroDimlessUnits || nonUnityMultiplier)
     {
-        // Write the dimensionless units
-        os << token::BEGIN_SQR;
+        os  << token::SPACE << token::COLON;
+    }
 
-        for (int first=true, i=0; i<unitConversion::nDimlessUnits; i++)
+    // Write the dimensionless units if any are non-zero
+    if (nonZeroDimlessUnits)
+    {
+        for (int i=0; i<unitConversion::nDimlessUnits; i++)
         {
             if (mag(units.exponents_[i]) > unitConversion::smallExponent)
             {
-                if (!first)
-                {
-                    os << token::SPACE;
-                }
-
-                os << unitConversion::dimlessUnitTypeNames_
+                os << token::SPACE << unitConversion::dimlessUnitTypeNames_
                       [static_cast<unitConversion::dimlessUnitType>(i)];
 
                 if (units.exponents_[i] != 1)
                 {
                     os << '^' << units.exponents_[i];
                 }
-
-                first = false;
             }
         }
+    }
 
-        os << token::END_SQR;
+    // Write a separator if there is anything to follow
+    if (nonUnityMultiplier)
+    {
+        os  << token::SPACE << token::COLON;
     }
 
     // Write the multiplier if it is non-unity
     if (nonUnityMultiplier)
     {
-        os  << token::BEGIN_SQR << units.multiplier_ << token::END_SQR;
+        os  << token::SPACE << units.multiplier_;
     }
+
+    // Write the end
+    os  << token::END_SQR;
 
     // Check state of Ostream
     os.check("Ostream& operator<<(Ostream&, const InfoProxy<unitConversion>&)");

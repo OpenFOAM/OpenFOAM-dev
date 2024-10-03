@@ -124,10 +124,11 @@ Type parseNoBegin
     const HashTable<Type>& table
 );
 
-//- Parse a dimension set or unit conversion, assuming that the '[' has already
-//  been read
+//- Parse tokens into a dimension set or unit conversion, assuming that the '['
+//  has already been read, and ending before the '[' or ':'. Note that this
+//  will leave the stream with a pushed back token.
 template<class Type>
-Type parseNoBegin
+Type parseNoBeginOrEnd
 (
     Istream& is,
     const Type& identity,

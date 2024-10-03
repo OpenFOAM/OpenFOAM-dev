@@ -90,6 +90,7 @@ Foam::token Foam::symbols::tokeniser::nextToken()
     if (size_ == 0)
     {
         token t(is_);
+
         if (t.isWord())
         {
             splitWord(t.wordToken());
@@ -175,16 +176,17 @@ bool Foam::symbols::tokeniser::valid(char c)
         !isspace(c)
      && c != '"'   // string quote
      && c != '\''  // string quote
-     && c != '/'   // div
+     && c != '/'   // divide
      && c != ';'   // end statement
-     && c != '{'   // beg subdict
-     && c != '}'   // end subdict
-     && c != '('   // beg expr
-     && c != ')'   // end expr
-     && c != '['   // beg dim
-     && c != ']'   // end dim
+     && c != '{'   // begin sub-dictionary
+     && c != '}'   // end sub-dictionary
+     && c != '('   // begin expression
+     && c != ')'   // end expression
+     && c != '['   // begin dimensions/units
+     && c != ']'   // end dimensions/units
+     && c != ':'   // separate dimensions/units
      && c != '^'   // power
-     && c != '*'   // mult
+     && c != '*'   // multiply
     );
 }
 

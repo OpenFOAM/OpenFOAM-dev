@@ -53,8 +53,6 @@ runTimeModifiable true;
 
 maxCo           1.0;
 
-maxDi           10.0;
-
 adjustTimeStep  yes;
 
 // ************************************************************************* //
