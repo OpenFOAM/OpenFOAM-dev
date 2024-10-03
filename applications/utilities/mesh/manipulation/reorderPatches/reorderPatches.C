@@ -30,7 +30,7 @@ Description
     The new patch order may be specified directly as a list of patch names
     following the -patchOrder option or from the boundary file of a reference
     case specified using the -referenceCase option with or without the
-    -referenceRegion option.
+    -referenceMesh or -referenceRegion options.
 
     This utility run either serial or parallel but either way the reference
     case boundary file is read from the constant directory.
@@ -43,11 +43,14 @@ Usage
         Specify the list of patch names in the new order.
 
       - \par -referenceCase \<case path\>
-        Specify the reference case path
+        Specify the reference case path, if not specified the current case
+        is used.
+
+      - \par -referenceMesh \<name\>
+        Specify the mesh in the meshes directory of the reference case.
 
       - \par -referenceRegion \<name\>
-        Specify an alternative mesh region for the reference case.
-        If -referenceCase is not specified the current case is used.
+        Specify the mesh region for the reference case or reference case mesh
 
       - \par -overwrite \n
         Replace the old mesh with the new one, rather than writing the new one
@@ -96,9 +99,16 @@ int main(int argc, char *argv[])
 
     argList::addOption
     (
+        "referenceMesh",
+        "word",
+        "specify the reference case mesh in the meshes directory"
+    );
+
+    argList::addOption
+    (
         "referenceRegion",
         "word",
-        "specify the reference region"
+        "specify the reference mesh region"
     );
 
     #include "setRootCase.H"
@@ -112,6 +122,7 @@ int main(int argc, char *argv[])
     else if
     (
         args.optionFound("referenceCase")
+     || args.optionFound("referenceMesh")
      || args.optionFound("referenceRegion")
     )
     {
@@ -136,29 +147,30 @@ int main(int argc, char *argv[])
         setEnv("FOAM_CASE", caseDirOrig, true);
         setEnv("FOAM_CASENAME", caseNameOrig, true);
 
-        word referenceRegion;
-        if (args.optionFound("referenceRegion"))
-        {
-            referenceRegion = args["referenceRegion"];
-            Info<< "Reference region: " << referenceRegion << endl;
-        }
-
         #include "setMeshPath.H"
 
-        const fileName referenceMeshDir
-        (
-            meshPath/referenceRegion/polyMesh::meshSubDir
-        );
+        // Initialise the reference mesh path to the current mesh path
+        fileName referenceMeshDir(meshPath);
+
+        // Optionally set the reference mesh path to that specified
+        if (args.optionFound("referenceMesh"))
+        {
+            referenceMeshDir = "meshes"/args["referenceMesh"];
+        }
+
+        // Add the optional region to the reference mesh path
+        if (args.optionFound("referenceRegion"))
+        {
+            referenceMeshDir /= args["referenceRegion"];
+        }
+
+        // Add polyMesh to the reference mesh path
+        referenceMeshDir /= polyMesh::meshSubDir;
 
         typeIOobject<polyBoundaryMesh> ioObj
         (
             "boundary",
-            referenceRunTime.findInstance
-            (
-                referenceMeshDir,
-                "boundary",
-                IOobject::MUST_READ
-            ),
+            referenceRunTime.constant(),
             referenceMeshDir,
             referenceRunTime,
             IOobject::MUST_READ,
@@ -180,9 +192,9 @@ int main(int argc, char *argv[])
         else
         {
             FatalErrorInFunction
-                << "Cannot find or read the boundary file for reference case "
+                << "Cannot find or read the boundary file for reference mesh "
                 << nl
-                << "    " << referenceCasePath
+                << "    " << referenceCasePath/referenceMeshDir
                 << exit(FatalError);
         }
     }
