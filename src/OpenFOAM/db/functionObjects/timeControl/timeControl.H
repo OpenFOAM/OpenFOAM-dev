@@ -83,6 +83,12 @@ private:
         //- Type of time control
         timeControls timeControl_;
 
+        //- Start time for execution - defaults to beginTime
+        scalar startTime_;
+
+        //- End time for execution - defaults to vGreat
+        scalar endTime_;
+
         //- Execution interval steps for timeStep mode
         //  a value <= 1 means execute at every time step
         label intervalSteps_;
@@ -130,6 +136,9 @@ public:
 
         //- Return Time
         inline const Time& time() const;
+
+        //- Returns true the time is within the start to end period
+        bool active() const;
 
         //- Flag to indicate whether to execute
         bool execute();

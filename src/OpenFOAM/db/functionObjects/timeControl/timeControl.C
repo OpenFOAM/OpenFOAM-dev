@@ -50,6 +50,16 @@ const Foam::NamedEnum<Foam::timeControl::timeControls, 9>
     Foam::timeControl::timeControlNames_;
 
 
+// * * * * * * * * * * * * * * * Private Members * * * * * * * * * * * * * * //
+
+bool Foam::timeControl::active() const
+{
+    return
+        time_.value() >= startTime_ - 0.5*time_.deltaTValue()
+     && time_.value() <= endTime_;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::timeControl::timeControl
@@ -62,6 +72,8 @@ Foam::timeControl::timeControl
     time_(t),
     prefix_(prefix),
     timeControl_(timeControls::timeStep),
+    startTime_(time_.beginTime().value()),
+    endTime_(vGreat),
     intervalSteps_(0),
     interval_(-1),
     timeDelta_(0),
@@ -81,6 +93,9 @@ Foam::timeControl::~timeControl()
 
 void Foam::timeControl::read(const dictionary& dict)
 {
+    dict.readIfPresent("startTime", time().userUnits(), startTime_);
+    dict.readIfPresent("endTime", time().userUnits(), endTime_);
+
     word controlName(prefix_ + "Control");
     word intervalName(prefix_ + "Interval");
 
@@ -131,14 +146,24 @@ void Foam::timeControl::read(const dictionary& dict)
 
             if (timeControl_ == timeControls::adjustableRunTime)
             {
-                executionIndex_ = label
+                executionIndex_ = max
                 (
+                    label
                     (
-                        (time_.value() - time_.beginTime().value())
-                      + 0.5*time_.deltaTValue()
-                    )
-                    /interval_
+                        ((time_.value() - startTime_) + 0.5*time_.deltaTValue())
+                       /interval_
+                    ),
+                    0
                 );
+
+                if
+                (
+                    executionIndex_ == 0
+                 && startTime_ != time_.beginTime().value()
+                )
+                {
+                    executionIndex_ = -1;
+                }
             }
 
             break;
@@ -234,6 +259,11 @@ void Foam::timeControl::read(const dictionary& dict)
 
 bool Foam::timeControl::execute()
 {
+    if (!active())
+    {
+        return false;
+    }
+
     switch (timeControl_)
     {
         case timeControls::timeStep:
@@ -262,10 +292,7 @@ bool Foam::timeControl::execute()
         {
             const label executionIndex = label
             (
-                (
-                    (time_.value() - time_.beginTime().value())
-                  + 0.5*time_.deltaTValue()
-                )
+                ((time_.value() - startTime_) + 0.5*time_.deltaTValue())
                /interval_
             );
 
@@ -355,11 +382,13 @@ Foam::scalar Foam::timeControl::timeToNextAction()
         case timeControls::adjustableRunTime:
         {
             return
-                max
+                (time_.value() < startTime_)
+              ? startTime_ - time_.value()
+              : max
                 (
-                    0.0,
+                    0,
                     (executionIndex_ + 1)*interval_
-                  - (time_.value() - time_.beginTime().value())
+                  - (time_.value() - startTime_)
                 );
             break;
         }

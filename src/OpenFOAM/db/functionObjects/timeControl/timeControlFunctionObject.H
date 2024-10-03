@@ -59,16 +59,6 @@ class timeControl
         //- Reference to the time database
         const Time& time_;
 
-
-        // Optional user inputs
-
-            //- Activation time - defaults to -vGreat
-            scalar startTime_;
-
-            //- De-activation time - defaults to vGreat
-            scalar endTime_;
-
-
         //- Execute controls
         Foam::timeControl executeControl_;
 
@@ -80,9 +70,6 @@ class timeControl
 
 
     // Private Member Functions
-
-        //- Read relevant dictionary entries
-        void readControls(const dictionary& dict);
 
         //- Returns true if within time bounds
         bool active() const;

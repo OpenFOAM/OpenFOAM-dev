@@ -42,18 +42,9 @@ namespace functionObjects
 
 // * * * * * * * * * * * * * * * Private Members * * * * * * * * * * * * * * //
 
-void Foam::functionObjects::timeControl::readControls(const dictionary& dict)
-{
-    dict.readIfPresent("startTime", time().userUnits(), startTime_);
-    dict.readIfPresent("endTime", time().userUnits(), endTime_);
-}
-
-
 bool Foam::functionObjects::timeControl::active() const
 {
-    return
-        time_.value() >= startTime_
-     && time_.value() <= endTime_;
+    return executeControl_.active() || writeControl_.active();
 }
 
 
@@ -68,13 +59,10 @@ Foam::functionObjects::timeControl::timeControl
 :
     functionObject(name, t),
     time_(t),
-    startTime_(-vGreat),
-    endTime_(vGreat),
     executeControl_(t, dict, "execute"),
     writeControl_(t, dict, "write"),
     foPtr_(functionObject::New(name, t, dict))
 {
-    readControls(dict);
     writeControl_.read(dict);
     executeControl_.read(dict);
 }
@@ -98,7 +86,7 @@ bool Foam::functionObjects::timeControl::execute()
 {
     if
     (
-        active()
+        executeControl_.active()
      && (
             postProcess
          || executeControl_.execute()
@@ -117,7 +105,7 @@ bool Foam::functionObjects::timeControl::write()
 {
     if
     (
-        active()
+        writeControl_.active()
      && (
             postProcess
          || writeControl_.execute()
@@ -134,7 +122,7 @@ bool Foam::functionObjects::timeControl::write()
 
 bool Foam::functionObjects::timeControl::end()
 {
-    if (active() && (executeControl_.execute() || writeControl_.execute()))
+    if (executeControl_.execute() || writeControl_.execute())
     {
         foPtr_->end();
     }
@@ -145,22 +133,11 @@ bool Foam::functionObjects::timeControl::end()
 
 Foam::scalar Foam::functionObjects::timeControl::timeToNextAction()
 {
-    if (time_.value() < startTime_)
-    {
-        return startTime_ - time_.value();
-    }
-    else if (active())
-    {
-        return min
-        (
-            executeControl_.timeToNextAction(),
-            writeControl_.timeToNextAction()
-        );
-    }
-    else
-    {
-        return vGreat;
-    }
+    return min
+    (
+        executeControl_.timeToNextAction(),
+        writeControl_.timeToNextAction()
+    );
 }
 
 
@@ -168,8 +145,6 @@ bool Foam::functionObjects::timeControl::read(const dictionary& dict)
 {
     writeControl_.read(dict);
     executeControl_.read(dict);
-
-    readControls(dict);
 
     if (active())
     {
