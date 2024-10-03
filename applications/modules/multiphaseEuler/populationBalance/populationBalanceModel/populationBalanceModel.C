@@ -1195,55 +1195,54 @@ Foam::dimensionedScalar Foam::diameterModels::populationBalanceModel::etaV
             << exit(FatalError);
     }
 
-    // Get the diameters that bound the range of the velocity group. If either
-    // is at the end of the population balance then replace this by the bounds
-    // of the distribution. This ensures that the group includes everything
-    // from the distribution that is out of the range of the population
-    // balance.
-    const scalarField vgDSphs
-    (
-        scalarList
-        ({
-            fi.group().sizeGroups().first().i() == 0
-          ? d.min()*(1 - small)
-          : fi.group().sizeGroups().first().dSph().value()*(1 - small),
-            fi.group().sizeGroups().last().i() < sizeGroups().size() - 1
-          ? fi.group().sizeGroups().last().dSph().value()*(1 + small)
-          : d.max()*(1 + small)
-        })
-    );
+    const UPtrList<sizeGroup>& pbSizeGroups = sizeGroups();
+    const PtrList<sizeGroup>& vgSizeGroups = fi.group().sizeGroups();
 
-    // Integrate the distribution across the range of the velocity group. This
-    // gives us the proportion of the distribution that is assigned to this
-    // velocity group.
-    const scalarField vgIntegralPDFs
-    (
-        d.integralPDFxPow(vgDSphs, 0, true)
-    );
-
-    // Get the diameters that bound the range of the basis function of this
-    // size group, as well as that of this group. The bounding diameters are
-    // those of the adjacent groups. If this group is at the end of the
-    // population balance then there will only be an adjacent group on one
-    // side. The other group's diameter is replaced by the bounds of the
-    // distribution. This ensures that the end groups include everything from
-    // the distribution that is out of the range of the population balance.
+    // Get the three diameters that bound the sections of the size group's
+    // basis function. Diameter #1 is the representative diameter of this
+    // group. Diameters #0 and #2 are the diameters of the adjacent size
+    // groups, or if at an end, the upper or lower bounding diameter of the
+    // distribution.
+    //
+    //            ^                                                    .
+    //            |    o - o                                           .
+    //  sgF_first |    .   .\                                          .
+    //            |    .   . \                                         .
+    //            +----+---+--o----------------------------------------+---->
+    //                 0   1  2                                        .
+    //            ^    .                                               .
+    //            |    .                   o                           .
+    // sgF_middle |    .                  /.\                          .
+    //            |    .                 / . \                         .
+    //            +----+----------------o--+--o------------------------+---->
+    //                 .                0  1  2                        .
+    //            ^    .                                               .
+    //            |    .                                       o - - - o
+    //   sgF_last |    .                                      /.       .
+    //            |    .                                     / .       .
+    //            +----+------------------------------------o--+-------+---->
+    //                 .                                    0  1       2
+    //                 .                                               .
+    //                dMin                                            dMax
+    //
+    const bool sgIsFirst = fi.i() == 0;
+    const bool sgIsLast = fi.i() == pbSizeGroups.size() - 1;
     const scalarField sgDSphs
     (
         scalarList
         ({
-            fi.i() == 0
+            sgIsFirst
           ? d.min()*(1 - small)
-          : sizeGroups()[fi.i() - 1].dSph().value(),
+          : pbSizeGroups[fi.i() - 1].dSph().value(),
             fi.dSph().value(),
-            fi.i() < sizeGroups().size() - 1
-          ? sizeGroups()[fi.i() + 1].dSph().value()
-          : d.max()*(1 + small)
+            sgIsLast
+          ? d.max()*(1 + small)
+          : pbSizeGroups[fi.i() + 1].dSph().value()
         })
     );
 
     // Integrate the distribution, and the distribution divided by volume,
-    // across the range of the size group basis function
+    // across the range of the size group's basis function
     const scalarField sgIntegralPDFs
     (
         d.integralPDFxPow(sgDSphs, 0, true)
@@ -1254,27 +1253,115 @@ Foam::dimensionedScalar Foam::diameterModels::populationBalanceModel::etaV
        *6/constant::mathematical::pi
     );
 
-    // Evaluate the allocation coefficient, scaling by the proportion assigned
-    // to this velocity group so that the assigned fractions sum to one even if
-    // the distribution extends outside of this velocity group
+    // Compute the integral of the size group's basis function multiplied
+    // by the PDF.
+    //
+    // The basis function is given by 'C0 + C1/v', where C0 and C1 are the
+    // coefficients given by etaVCoeffs0 and etaVCoeffs1. So, the integral is
+    // 'Integral(C0*PDF + C1/v*PDF)'. C0 and C1 are constants, so this can be
+    // rearranged to 'C0*Integral(PDF) + C1*Integral(PDF/v)'. The integrals in
+    // this expression are those calculated above.
     const dimensionedScalarPair etaVCoeffs0 =
         fi.group().popBal().etaVCoeffs0(fi.i());
     const dimensionedScalarPair etaVCoeffs1 =
         fi.group().popBal().etaVCoeffs1(fi.i());
+    const scalar sgIntegralPDFetaV =
+        etaVCoeffs0.first().value()
+       *(sgIntegralPDFs[1] - sgIntegralPDFs[0])
+      + etaVCoeffs0.second().value()
+       *(sgIntegralPDFByVs[1] - sgIntegralPDFByVs[0])
+      + etaVCoeffs1.first().value()
+       *(sgIntegralPDFs[2] - sgIntegralPDFs[1])
+      + etaVCoeffs1.second().value()
+       *(sgIntegralPDFByVs[2] - sgIntegralPDFByVs[1]);
+
+    // Get the four diameters that bound the sections of the velocity group's
+    // basis function. Diameters #1 and #2 are the representative diameters of
+    // the first and last size groups of this velocity group. Diameters #0 and
+    // #3 are the diameters of the adjacent size groups, or if at an end (or
+    // ends), the upper or lower bounding diameter (or diameters) of the
+    // distribution.
+    //
+    //            ^                                                    .
+    //            |    o - o - - - - o                                 .
+    //  vgF_first |    .   .         .\                                .
+    //            |    .   .         . \                               .
+    //            +----+---+---------+--o------------------------------+---->
+    //                 0   1         2  3                              .
+    //            ^    .                                               .
+    //            |    .                o - - - - o                    .
+    // vgF_middle |    .               /.         .\                   .
+    //            |    .              / .         . \                  .
+    //            +----+-------------o--+---------+--o-----------------+---->
+    //                 .             0  1         2  3                 .
+    //            ^    .                                               .
+    //            |    .                             o - - - - o - - - o
+    //   vgF_last |    .                            /.         .       .
+    //            |    .                           / .         .       .
+    //            +----+--------------------------o--+---------+-------+---->
+    //                 .                          0  1         2       3
+    //                 .                                               .
+    //                dMin                                            dMax
+    //
+    const bool vgIsFirst = vgSizeGroups.first().i() == 0;
+    const bool vgIsLast = vgSizeGroups.last().i() == pbSizeGroups.size() - 1;
+    const scalarField vgDSphs
+    (
+        scalarList
+        ({
+            vgIsFirst
+          ? d.min()*(1 - small)
+          : pbSizeGroups[vgSizeGroups.first().i() - 1].dSph().value(),
+            vgSizeGroups.first().dSph().value(),
+            vgSizeGroups.last().dSph().value(),
+            vgIsLast
+          ? d.max()*(1 + small)
+          : pbSizeGroups[vgSizeGroups.last().i() + 1].dSph().value()
+        })
+    );
+
+    // Integrate the distribution, and the distribution divided by volume,
+    // across the range of the velocity group's basis function
+    const scalarField vgIntegralPDFs
+    (
+        d.integralPDFxPow(vgDSphs, 0, true)
+    );
+    const scalarField vgIntegralPDFByVs
+    (
+        d.integralPDFxPow(vgDSphs, -3, true)
+       *6/constant::mathematical::pi
+    );
+
+    // Compute the integral of the velocity group's basis function multiplied
+    // by the PDF.
+    //
+    // Between diameters #1 and #2 the basis function is a constant value of
+    // one, so the integral is just the same as that of the distribution.
+    //
+    // Between diameters #0 and #1, and between #2 and #3, the integration
+    // follows the same logic as for the size group.
+    const dimensionedScalarPair vgEtaVCoeffs0 =
+        fi.group().popBal().etaVCoeffs0(vgSizeGroups.first().i());
+    const dimensionedScalarPair vgEtaVCoeffs1 =
+        fi.group().popBal().etaVCoeffs1(vgSizeGroups.last().i());
+    const scalar vgIntegralPDFetaV =
+        vgEtaVCoeffs0.first().value()
+       *(vgIntegralPDFs[1] - vgIntegralPDFs[0])
+      + vgEtaVCoeffs0.second().value()
+       *(vgIntegralPDFByVs[1] - vgIntegralPDFByVs[0])
+      + vgIntegralPDFs[2] - vgIntegralPDFs[1]
+      + vgEtaVCoeffs1.first().value()
+       *(vgIntegralPDFs[3] - vgIntegralPDFs[2])
+      + vgEtaVCoeffs1.second().value()
+       *(vgIntegralPDFByVs[3] - vgIntegralPDFByVs[2]);
+
+    // The allocation coefficient for this size group is the ratio between the
+    // two computed integrals. Protection is added to produce a uniform
+    // distribution in the event that the distribution does not intersect the
+    // velocity group's basis function at all.
     return
-        max
-        (
-            etaVCoeffs0.first().value()
-           *(sgIntegralPDFs[1] - sgIntegralPDFs[0])
-          + etaVCoeffs0.second().value()
-           *(sgIntegralPDFByVs[1] - sgIntegralPDFByVs[0])
-          + etaVCoeffs1.first().value()
-           *(sgIntegralPDFs[2] - sgIntegralPDFs[1])
-          + etaVCoeffs1.second().value()
-           *(sgIntegralPDFByVs[2] - sgIntegralPDFByVs[1]),
-            rootVSmall/fi.group().sizeGroups().size()
-        )
-       /max(vgIntegralPDFs[1] - vgIntegralPDFs[0], rootVSmall);
+        max(sgIntegralPDFetaV, rootVSmall/fi.group().sizeGroups().size())
+       /max(vgIntegralPDFetaV, rootVSmall);
 }
 
 
