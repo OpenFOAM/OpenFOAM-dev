@@ -16,7 +16,6 @@ FoamFile
 
 mover
 {
-
     type            multiValveEngine;
 
     libs            ("libfvMeshMoversMultiValveEngine.so");
@@ -37,12 +36,12 @@ mover
     piston
     {
         patches             (piston);
+
         axis                (0 0 1);
 
         motion
         {
             type            crankConnectingRodMotion;
-
             conRodLength    1000; // To mimic pure sinusoidal motion
             stroke          1;
         }
@@ -55,9 +54,9 @@ mover
 
     valves
     {
-        iv
+        ev
         {
-            patches         (ivHead);
+            patches         (evHead);
 
             axis            (0 0 1);
 
@@ -73,24 +72,22 @@ mover
                 type    table;
                 values
                 (
-                    // lift: 0.002 / CAD
                     (0      0.0)
-                    (340    0.01) // IVO + meshToMesh map
-                    (480    0.29)
-                    (620    0.01) // IVC + meshToMesh map
+                    (100    0.01) // EVO + meshToMesh map
+                    (240    0.29)
+                    (380    0.01) // EVC + meshToMesh map
                     (720    0.0)
                 );
-
-                // For multi-cycle simulations, use repeat
-                outOfBounds     repeat;
+                outOfBounds     repeat; // For multi-cycle simulations, use repeat
                 interpolationScheme linear;
             }
         }
 
-        ev
+        iv
         {
-            $iv;
-            patches         (evHead);
+            $ev;
+
+            patches         (ivHead);
 
             motion
             {
@@ -98,17 +95,16 @@ mover
                 values
                 (
                     (0      0.0)
-                    (100    0.01) // EVO + meshToMesh map
-                    (240    0.29)
-                    (380    0.01) // EVC + meshToMesh map
+                    (340    0.01) // IVO + meshToMesh map
+                    (480    0.29)
+                    (620    0.01) // IVC + meshToMesh map
                     (720    0.0)
                 );
-                // For multi-cycle simulations, use repeat
-                outOfBounds     repeat;
+                outOfBounds     repeat; // For multi-cycle simulations, use repeat
                 interpolationScheme linear;
             }
         }
-    };
+    }
 }
 
 topoChanger
