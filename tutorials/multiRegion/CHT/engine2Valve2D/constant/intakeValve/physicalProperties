@@ -1,0 +1,37 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant/intakeValve";
+    object      physicalProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+thermoType  constSolidThermo;
+
+rho
+{
+    type        uniform;
+    value       89.40; // div by 10
+}
+
+Cv
+{
+    type        uniform;
+    value       385;
+}
+
+kappa
+{
+    type        uniform;
+    value       380;
+}
+
+// ************************************************************************* //

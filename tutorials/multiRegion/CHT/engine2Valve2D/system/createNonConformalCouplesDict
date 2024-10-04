@@ -1,0 +1,108 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      createNonConformalCouplesDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+fields no;
+
+nonConformalCouples
+{
+    // Intra-region cyclic couplings
+
+    NCC_iv
+    {
+        region          fluid;
+        patches         (nonCouple_iv_cyl nonCouple_cyl_iv);
+        transform       none;
+    }
+
+    NCC_ev
+    {
+        region          fluid;
+        patches         (nonCouple_ev_cyl nonCouple_cyl_ev);
+        transform       none;
+    }
+
+    NCC_iv_port
+    {
+        region          fluid;
+        patches         (nonCouple_ip_iv nonCouple_iv_ip);
+        transform       none;
+    }
+
+    NCC_ev_port
+    {
+        region          fluid;
+        patches         (nonCouple_ep_ev nonCouple_ev_ep);
+        transform       none;
+    }
+
+    // Inter-region mapped-wall couplings
+
+    fluidLiner
+    {
+        regions         (fluid liner);
+        patches         (nonCoupleFluidLiner nonCoupleLiner);
+    }
+
+    linerPiston
+    {
+        regions         (liner piston);
+        patches         (nonCoupleLiner nonCouplePiston);
+    }
+
+    cylinderHeadFluid
+    {
+        regions         (cylinderHead fluid);
+        patches         (nonCoupleCylinderHead nonCoupleFluidCylinderHead);
+    }
+
+    fluidValve1
+    {
+        regions         (fluid exhaustValve);
+        patches         (evStem nonCoupleExhaustValve);
+    }
+
+    fluidValve2
+    {
+        regions         (fluid intakeValve);
+        patches         (ivStem nonCoupleIntakeValve);
+    }
+
+    fluidValve3
+    {
+        regions         (fluid exhaustValve);
+        patches         (evHead nonCoupleExhaustValve);
+    }
+
+    fluidValve4
+    {
+        regions         (fluid intakeValve);
+        patches         (ivHead nonCoupleIntakeValve);
+    }
+
+    cylinderHeadValve1
+    {
+        regions         (cylinderHead exhaustValve);
+        patches         (nonCoupleCylinderHead nonCoupleExhaustValve);
+    }
+
+    cylinderHeadValve2
+    {
+        regions         (cylinderHead intakeValve);
+        patches         (nonCoupleCylinderHead nonCoupleIntakeValve);
+    }
+}
+
+// ************************************************************************* //

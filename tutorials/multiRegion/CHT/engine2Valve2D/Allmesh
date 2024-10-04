@@ -1,0 +1,305 @@
+#!/bin/bash
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+# Get the serial/parallel mode
+! isTest "$@" && [ -n "$1" ] && mode=$1 || mode=serial
+
+# Set global geometric variables using values in constant/fluid/dynamicMeshDict
+SCALE=10
+SCALE_INV=$(echo "1.0 / $SCALE" | bc -l)
+
+STROKE0=$(foamDictionary constant/fluid/dynamicMeshDict -writePrecision 12 \
+    -entry mover/piston/motion/stroke -value)
+STROKE=$(echo "$SCALE * $STROKE0" | bc -l)
+
+CONROD_LENGTH0=$(foamDictionary constant/fluid/dynamicMeshDict -writePrecision 12 \
+    -entry mover/piston/motion/conRodLength -value)
+CONROD_LENGTH=$(echo "$SCALE * $CONROD_LENGTH0" | bc -l)
+
+TDC_CLEARANCE=10
+
+# Define mesh generation functions...
+
+createSingleValveBaseMesh()
+{
+    local mesh=$1
+    local valveLift=-$2
+    local nGap=$3
+    local pistonPos=-$4
+    local nClearance=$5
+
+    [ $2 == "0" ] && valveState=valveClosed || valveState=valveOpen
+
+    foamDictionary system/blockMeshDict.$valveState -set " \
+        valveLift=$valveLift, \
+        nValve=$nGap, \
+        x0=-5, \
+        nXLeft=4, \
+        pistonPos=$pistonPos, \
+        nPiston=$nClearance"
+
+    runApplication -a blockMesh ${mesh:+-mesh} $mesh \
+                   -dict system/blockMeshDict.$valveState
+
+    runApplication -a mirrorMesh ${mesh:+-mesh} $mesh \
+                   -dict system/mirrorMeshDict -overwrite
+}
+
+createExhaustValveMesh()
+{
+    local mesh=$1
+
+    createSingleValveBaseMesh "$mesh" $2 $3 $4 $5
+
+    runApplication -a transformPoints ${mesh:+-mesh} $mesh "translate=(-6 0 0)"
+
+    foamDictionary constant/${mesh:+meshes/}$mesh/polyMesh/boundary -rename " \
+        entry0/valveHead=evHead, \
+        entry0/valveStem=evStem, \
+        entry0/liner=nonCouple_ev_cyl, \
+        entry0/inlet=outlet"
+}
+
+createIntakeValveMesh()
+{
+    local mesh=$1
+
+    createSingleValveBaseMesh "$mesh" $2 $3 $4 $5
+
+    runApplication -a transformPoints ${mesh:+-mesh} $mesh "translate=(6 0 0)"
+
+    foamDictionary constant/${mesh:+meshes/}$mesh/polyMesh/boundary -rename " \
+        entry0/valveHead=ivHead, \
+        entry0/valveStem=ivStem, \
+        entry0/liner=nonCouple_iv_cyl"
+}
+
+createCylinderMesh()
+{
+    local region=fluid
+
+    local mesh=$1
+    local pistonPos=-$2
+    local nClearance=$3
+
+    foamDictionary system/blockMeshDict.cylinder -set " \
+        pistonPos=$pistonPos,
+        nPiston=$nClearance"
+
+    runApplication -a blockMesh ${mesh:+-mesh} $mesh -region $region \
+        -dict system/blockMeshDict.cylinder
+}
+
+createLinerMesh()
+{
+    local region=liner
+
+    local linerTop=$1
+    local linerBottom=$2
+    local linerRadius=$3
+    local linerThickness=$4
+
+    foamDictionary system/blockMeshDict.$region -set " \
+        linerTop=$linerTop,
+        linerBottom=$linerBottom,
+        linerRadius=$linerRadius,
+        linerThickness=$linerThickness"
+
+    runApplication -a blockMesh -region $region \
+        -dict system/blockMeshDict.$region
+
+    runApplication -a transformPoints -region $region \
+        "Rx=90, scale=($SCALE_INV $SCALE_INV $SCALE_INV)"
+}
+
+createCylinderHeadMesh()
+{
+    local region=cylinderHead
+
+    runApplication -a blockMesh -region $region \
+        -dict system/blockMeshDict.$region
+
+    runApplication -a transformPoints -region $region \
+        "Rx=90, scale=($SCALE_INV $SCALE_INV $SCALE_INV)"
+}
+
+createValveMeshes()
+{
+    local region=exhaustValve
+
+    runApplication -a blockMesh -region $region \
+        -dict system/blockMeshDict.$region
+
+    runApplication -a transformPoints -region $region \
+        "Rx=90, scale=($SCALE_INV $SCALE_INV $SCALE_INV)"
+
+    local region=intakeValve
+
+    runApplication -a blockMesh -region $region \
+        -dict system/blockMeshDict.$region
+
+    runApplication -a transformPoints -region $region \
+        "Rx=90, scale=($SCALE_INV $SCALE_INV $SCALE_INV)"
+}
+
+createPistonMesh()
+{
+    local region=piston
+
+    local pistonPos=-$1
+    local pistonOppositePos=-$2
+    local nPistonBase=$3
+
+    foamDictionary system/blockMeshDict.$region -set " \
+        pPos=$pistonPos,
+        pPos2=$pistonOppositePos,
+        pRes=$nPistonBase"
+
+    runApplication -a blockMesh -region $region \
+        -dict system/blockMeshDict.$region
+
+    runApplication -a transformPoints -region $region \
+        "Rx=90, scale=($SCALE_INV $SCALE_INV $SCALE_INV)"
+}
+
+pistonPositionFromTDC()
+{
+    local cad=$1
+
+    local pi=$(echo "scale=10; 4*a(1)" | bc -l)
+    local theta=$(echo "$cad*($pi/180)" | bc -l)
+
+    # - r: position from the crank center
+    local term1="$CONROD_LENGTH * $CONROD_LENGTH"
+    local term2="($STROKE * s($theta) / 2.0) * ($STROKE * s($theta) / 2.0)"
+    local r=$(echo "$STROKE * c($theta) / 2.0 + sqrt( $term1 - $term2 )" | bc -l)
+
+    # - pos: position from tdc
+    local pos=$(echo "$CONROD_LENGTH + $STROKE / 2.0 - $r" | bc -l)
+
+    echo $pos
+}
+
+round()
+{
+    printf %.$2f $(echo "scale=$2;(((10^$2)*$1)+0.5)/(10^$2)" | bc)
+}
+
+createFluidMesh()
+{
+    local region=fluid
+
+    local mesh=$1
+    local ivLift=$2
+    local evLift=$3
+
+    local pistonPos=$(echo "$(pistonPositionFromTDC ${mesh:-0}) + $TDC_CLEARANCE" | bc -l)
+
+    local nCyl0=3
+    local nV0=3
+    local oneByDx=3
+    local nIV=$(( $nV0 + $oneByDx*$(round $ivLift 0) ))
+    local nEV=$(( $nV0 + $oneByDx*$(round $evLift 0) ))
+    local nCyl=$(( $nCyl0 + $oneByDx*$(round $pistonPos 0) ))
+    local nCylIV=$(( $nCyl0 + $oneByDx*$(round "($pistonPos - $ivLift)" 0) ))
+    local nCylEV=$(( $nCyl0 + $oneByDx*$(round "($pistonPos - $evLift)" 0) ))
+
+    # Create the fluid mesh modules
+    createCylinderMesh "$mesh" $pistonPos $nCyl
+    createExhaustValveMesh _tmp_exhaust $evLift $nEV $pistonPos $nCylEV
+    createIntakeValveMesh _tmp_intake $ivLift $nIV $pistonPos $nCylIV
+
+    # Combine the fluid mesh modules
+    runApplication -a mergeMeshes -overwrite ${mesh:+-mesh} $mesh -region $region \
+                   -addMeshes '(_tmp_exhaust _tmp_intake)'
+
+    # Delete temporary valve meshes
+    rm -rf constant/meshes/_tmp*
+
+    # Separate ports to mimic complicated engine assembly
+    runApplication -a createBaffles ${mesh:+-mesh} $mesh -region $region \
+                   -dict system/createBafflesDict -overwrite
+    runApplication -a splitBaffles ${mesh:+-mesh} $mesh -region $region -overwrite
+
+    runApplication -a transformPoints ${mesh:+-mesh} $mesh -region $region \
+                   "Rx=90, scale=($SCALE_INV $SCALE_INV $SCALE_INV)"
+
+    # Decompose (if necessary) and construct the non-conformal couplings that
+    # connect the ports and enable the sliding interfaces and thermally couple
+    # the fluid and solid regions
+    case $mode in
+        serial)
+            runApplication -a createNonConformalCouples ${mesh:+-mesh} $mesh \
+                           -dict system/createNonConformalCouplesDict -overwrite
+            ;;
+        parallel)
+            [ -z $mesh ] && regions=-allRegions || regions="-region fluid"
+
+            runApplication -a decomposePar ${mesh:+-mesh} $mesh $regions -noFields
+
+            runParallel -a createNonConformalCouples ${mesh:+-mesh} $mesh \
+                        -dict system/createNonConformalCouplesDict -overwrite
+            ;;
+                *)
+        echo "Error: mode $mode not recognised"
+        exit 1
+        ;;
+    esac
+}
+
+# Generate the solid meshes
+createLinerMesh 0 -30 13 1
+
+createCylinderHeadMesh
+
+nPistonBase=18
+pistonThickness=5.0
+
+pistonPos=$(echo "$(pistonPositionFromTDC ${mesh:-0}) + $TDC_CLEARANCE" | bc -l)
+pistonOppositePos=$(echo "$pistonPos + $pistonThickness" | bc --mathlib)
+
+createPistonMesh $pistonPos $pistonOppositePos $nPistonBase
+
+createValveMeshes
+
+# Generate the fluid mesh
+createFluidMesh "" 0 0
+
+# Generate the fluid meshes. Valve lift values are chosen to align with the
+# lift profile values defined in the constant/fluid/dynamicMeshDict.
+createFluidMesh 0 0 0
+# (EV opens)
+createFluidMesh 100 0 0.1
+createFluidMesh 120 0 0.5
+createFluidMesh 140 0 0.9
+createFluidMesh 180 0 1.7
+createFluidMesh 200 0 2.1
+createFluidMesh 220 0 2.5
+createFluidMesh 300 0 1.7
+# (IV opens)
+createFluidMesh 340 0.1 0.9
+createFluidMesh 345 0.2 0.8
+createFluidMesh 350 0.3 0.7
+createFluidMesh 360 0.5 0.5
+createFluidMesh 370 0.7 0.3
+# (EV closes)
+createFluidMesh 380 0.9 0
+createFluidMesh 390 1.1 0
+createFluidMesh 410 1.5 0
+createFluidMesh 440 2.1 0
+createFluidMesh 460 2.5 0
+createFluidMesh 520 2.1 0
+createFluidMesh 550 1.5 0
+createFluidMesh 580 0.9 0
+createFluidMesh 600 0.5 0
+createFluidMesh 610 0.3 0
+# (IV closes)
+createFluidMesh 620 0 0
+
+# Create the list of mesh times
+ls constant/meshes | sort -n > constant/fluid/meshTimes
+
+#------------------------------------------------------------------------------

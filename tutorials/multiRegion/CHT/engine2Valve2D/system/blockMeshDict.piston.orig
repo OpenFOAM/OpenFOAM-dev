@@ -1,0 +1,117 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMeters 1;
+
+// This is a rectangular piston mesh below the cylinder mesh
+
+// 0 _  _  _  _  _ 1 _  _  _  _  _  _ 2
+// |               |                  |
+// |               |                  |
+// 3 _  _  _  _  _ 4 _  _  _  _  _  _ 5
+
+pPos -4;
+pRes 8;
+pPos2 -17;
+pRes3 #calc "2*$pRes";
+
+x0a -13;
+x1a 0;
+x2a 13;
+
+z0 0.0;
+z1 0.5;
+
+y0 $pPos;
+y1 $pPos2;
+
+vertices
+(
+    ($x0a $y0 $z0) //0
+    ($x1a $y0 $z0) //1
+    ($x2a $y0 $z0) //2
+
+    ($x0a $y1 $z0) //3
+    ($x1a $y1 $z0) //4
+    ($x2a $y1 $z0) //5
+
+    // + 6
+    ($x0a $y0 $z1) //6
+    ($x1a $y0 $z1) //7
+    ($x2a $y0 $z1) //8
+
+    ($x0a $y1 $z1) //9
+    ($x1a $y1 $z1) //10
+    ($x2a $y1 $z1) //11
+);
+
+blocks
+(
+    hex (0 3 4 1 6 9 10 7) ($pRes $pRes3 1) simpleGrading (10 5 1)
+    hex (1 4 5 2 7 10 11 8) ($pRes $pRes3 1) simpleGrading (10 0.2 1)
+);
+
+edges
+(
+);
+
+defaultPatch
+{
+    name    frontAndBack;
+    type    empty;
+}
+
+boundary
+(
+
+    piston_TO_fluid
+    {
+        type    mappedWall;
+        inGroups    (mappedWalls);
+        neighbourRegion fluid;
+        neighbourPatch  fluid_TO_piston;
+        method  intersection;
+        faces
+        (
+            (0 1 7 6)
+            (1 2 8 7)
+        );
+    }
+
+    nonCouplePiston
+    {
+        type    wall;
+        inGroups    (NCMWbase);
+        faces
+        (
+            (3 0 6 9)
+            (5 11 8 2)
+        );
+    }
+
+    piston_bottom
+    {
+        type    wall;
+        inGroups    (externalWalls);
+        faces
+        (
+            (4 3 9 10)
+            (5 4 10 11)
+        );
+    }
+);
+
+// ************************************************************************* //

@@ -1,0 +1,133 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant/fluid";
+    object      dynamicMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+mover
+{
+    type            multiValveEngine;
+
+    libs            ("libfvMeshMoversMultiValveEngine.so");
+
+    slidingPatches
+    (
+        nonCoupleFluidLiner
+        evStem
+        ivStem
+        nonCouple_cyl_ev
+        nonCouple_ev_cyl
+        nonCouple_cyl_iv
+        nonCouple_iv_cyl
+    );
+
+    linerPatches        (nonCoupleFluidLiner);
+
+    piston
+    {
+        patches             (fluid_TO_piston);
+
+        axis                (0 0 1);
+
+        motion
+        {
+            type            crankConnectingRodMotion;
+            conRodLength    1000; // To mimic pure sinusoidal motion
+            stroke          1;
+        }
+
+        movingFrozenLayerThickness  0;
+
+        travelInterval              0.1;
+        cosineScaling               yes;
+    }
+
+    valves
+    {
+        ev
+        {
+            patches         (evHead);
+
+            axis            (0 0 1);
+
+            movingFrozenLayerThickness  0;
+
+            travelInterval              5.8e-3;
+            cosineScaling               yes;
+
+            minLift                     0.01;
+
+            motion
+            {
+                type    repeat;
+                period  720;
+                start   0;
+                value
+                {
+                    type    table;
+                    values
+                    (
+                        (0      0)
+                        (100    0.01) // EVO + meshToMesh map
+                        (240    0.29)
+                        (380    0.01) // EVC + meshToMesh map
+                        (480    0)
+                    );
+                }
+
+                // !!! Boolean function to define when the valve is open. This
+                // is not needed here, but it is used in the corresponding
+                // solid motion functions.
+                isOpen
+                {
+                    type    squarePulse;
+                    start   100;      // EVO + meshToMesh map
+                    duration 280;     // EVC - EVO
+                }
+            }
+        }
+
+        iv
+        {
+            $ev;
+
+            patches         (ivHead);
+
+            motion
+            {
+                $ev/motion;
+
+                start   240;          // IVO - EVO
+            }
+        }
+    }
+}
+
+topoChanger
+{
+    type    meshToMesh;
+
+    region  fluid;
+
+    libs    ("libmeshToMeshTopoChanger.so");
+
+    times
+    (
+        #include "$FOAM_CASE/constant/fluid/meshTimes"
+    );
+
+    repeat          720;
+    timeDelta       1e-6;
+}
+
+// ************************************************************************* //

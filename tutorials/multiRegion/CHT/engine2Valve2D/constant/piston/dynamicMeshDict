@@ -1,0 +1,52 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant/piston";
+    object      dynamicMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+mover
+{
+    type            motionSolver;
+
+    libs            ("libfvMotionSolvers.so");
+
+    motionSolver    solidBody;
+
+    select          all;
+
+    solidBodyMotionFunction sixDoFMotion;
+
+    CofG            (0 0 0);
+
+    translation
+    {
+        type            scale;
+
+        // !!! The fluid piston motion function is a crank-con-rod function
+        // which is hard-coded for engines to use non-standard argument units
+        // of CAD. In order to use this in a generic non-engine-specific motion
+        // solver we have to scale the x coordinates by the user time
+        // conversion factor.
+
+        xScale          constant 1 [s/CAD];
+        scale
+        {
+            $../fluid/dynamicMeshDict!mover/piston/motion;
+        }
+        value           constant (0 0 -1);
+    }
+
+    rotation        zero;
+}
+
+// ************************************************************************* //

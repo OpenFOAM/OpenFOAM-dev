@@ -1,0 +1,120 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMeters 1;
+
+// base coordinates on the cylinder and valve dictionaries
+
+//          0 _ _1                 _ y1
+//          |    |
+//          |    |
+//      2_ _3_ _ 4 _ 5             _ y2
+//     /    |    |    \
+//    6_ _ _7_ _ 8 _ _ 9           _ y3
+//
+
+//   x0 x1  x2  x3   x4 x5
+// backside = frontside + 10
+
+// mesh resolutions
+res1 16;
+res2 6;
+res3 12;
+
+x0 2;
+x1 3;
+x2 5;
+x3 7;
+x4 9;
+x5 10;
+
+y1 8;
+y2 1;
+y3 0;
+
+z0 0.0;
+z1 0.5;
+
+vertices
+(
+    ($x2 $y1 $z0) //0
+    ($x3 $y1 $z0) //1
+    ($x1 $y2 $z0) //2
+    ($x2 $y2 $z0) //3
+    ($x3 $y2 $z0) //4
+    ($x4 $y2 $z0) //5
+    ($x0 $y3 $z0) //6
+    ($x2 $y3 $z0) //7
+    ($x3 $y3 $z0) //8
+    ($x5 $y3 $z0) //9
+
+    ($x2 $y1 $z1) //10
+    ($x3 $y1 $z1) //11
+    ($x1 $y2 $z1) //12
+    ($x2 $y2 $z1) //13
+    ($x3 $y2 $z1) //14
+    ($x4 $y2 $z1) //15
+    ($x0 $y3 $z1) //16
+    ($x2 $y3 $z1) //17
+    ($x3 $y3 $z1) //18
+    ($x5 $y3 $z1) //19
+);
+
+blocks
+(
+    hex (0 3 4 1 10 13 14 11) ($res1 $res2 1) simpleGrading (1 1 1)
+    hex (2 6 7 3 12 16 17 13) ($res2 $res3 1) simpleGrading (1 1 1)
+    hex (3 7 8 4 13 17 18 14) ($res2 $res2 1) simpleGrading (1 1 1)
+    hex (4 8 9 5 14 18 19 15) ($res2 $res3 1) simpleGrading (1 1 1)
+);
+
+defaultPatch
+{
+    name    frontAndBack;
+    type    empty;
+}
+
+boundary
+(
+    intakeValve_top
+    {
+        type wall;
+        inGroups    (externalWalls);
+        faces
+        (
+            (0 1 11 10)
+        );
+    }
+
+    nonCoupleIntakeValve
+    {
+        type    wall;
+        faces
+        (
+            (6 2 12 16)
+            (3 0 10 13)
+            (9 19 15 5)
+            (4 14 11 1)
+            (2 3 13 12)
+            (5 15 14 4)
+            (7 17 18 8)
+            (8 18 19 9)
+            (6 16 17 7)
+        );
+    }
+);
+
+// ************************************************************************* //
