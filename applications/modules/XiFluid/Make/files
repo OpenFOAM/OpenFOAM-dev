@@ -15,6 +15,7 @@ XiModels/transport/transport.C
 
 XiModels/XiEqModels/XiEqModel/XiEqModel.C
 XiModels/XiEqModels/XiEqModel/XiEqModelNew.C
+XiModels/XiEqModels/constant/constant.C
 XiModels/XiEqModels/Gulder/Gulder.C
 XiModels/XiEqModels/instability/instability.C
 
@@ -30,6 +31,7 @@ fvModels/ignition/XiCorrModels/cylindrical/cylindricalXiCorr.C
 fvModels/ignition/XiCorrModels/spherical/sphericalXiCorr.C
 
 fvModels/ignition/bXiIgnition/bXiIgnition.C
+fvModels/ignition/bXiIgnited/bXiIgnited.C
 fvModels/ignition/constantbXiIgnition/constantbXiIgnition.C
 fvModels/ignition/multiCycleConstantbXiIgnition/multiCycleConstantbXiIgnition.C
 
