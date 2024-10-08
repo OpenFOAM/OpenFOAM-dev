@@ -20,8 +20,8 @@ convertToMeters 1;
 //           |        |  |
 //           |        |  |
 //          7. _ _ _ _10 .
-//           /           |
-// 2 _  _ 3 /_ _ _ _ _ _12
+//                       |
+// 2 _  _ 3   _ _ _ _ _12
 // |       |             |
 // 4 _  _  5 _ _ _ _ _ _ |13
 
@@ -96,13 +96,28 @@ defaultPatch
 
 boundary
 (
-    piston
+    fluid_TO_piston
     {
-        type    wall;
+        type    mappedWall;
+        neighbourPatch  piston_TO_fluid;
+        neighbourRegion piston;
+        method  intersection;
         faces
         (
             (4 5 18 19)
             (5 13 19 27)
+        );
+    }
+
+    fluid_TO_cylinderHead
+    {
+        type    mappedWall;
+        neighbourPatch  piston_TO_fluid;
+        neighbourRegion piston;
+        method  intersection;
+        faces
+        (
+            (2 3 17 16)
         );
     }
 
@@ -115,12 +130,12 @@ boundary
         );
     }
 
-    cylinderHead
+    nonCoupleFluidCylinderHead
     {
         type    wall;
+        inGroups    (NCMWbase);
         faces
         (
-            (2 3 17 16)
             (7 6 20 21)
         );
     }
@@ -137,6 +152,7 @@ boundary
     valveHead
     {
         type    wall;
+        inGroups    (NCMWbase);
         faces
         (
             (7 21 24 10)
@@ -147,6 +163,7 @@ boundary
     valveStem
     {
         type    wall;
+        inGroups    (NCMWbase);
         faces
         (
             (9 10 24 23)

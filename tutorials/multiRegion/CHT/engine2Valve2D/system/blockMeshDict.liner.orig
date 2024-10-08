@@ -1,0 +1,119 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMeters 1;
+
+// The liner blocks are designed to surround the cylinder blocks
+// modules generated separately.
+
+// x0a   x1a              x0b    x1b
+//
+// 0 _  _ 1   CYLINDER    8 _  _ 9  _ _ _ linerTop      y1
+// |      |   CYLINDER    |      |
+// |      |   CYLINDER    |      |
+// 2 _  _ 3               10 __ 11  _ _ _ linerBottom   y0
+//
+//                |--------------| linerRadius
+
+// Placeholder values, can be given by foamDictionary
+//---------------------------------------------------
+linerTop 0;
+linerBottom -4;
+linerRadius 13;
+linerThickness 2;
+//---------------------------------------------------
+
+x0a #calc "-1.0*$linerRadius - $linerThickness";
+x1a #calc "-1.0*$linerRadius";
+
+x0b #calc "1.0*$linerRadius";
+x1b #calc "1.0*$linerRadius + $linerThickness";
+
+x0c 11;
+x1c 13;
+
+y0 $linerBottom;
+y1 $linerTop;
+
+z0 0.0;
+z1 0.5;
+
+vertices
+(
+    ($x0a $y1 $z0) //0
+    ($x1a $y1 $z0) //1
+    ($x0a $y0 $z0) //2
+    ($x1a $y0 $z0) //3
+
+    // + 4
+    ($x0a $y1 $z1) //0
+    ($x1a $y1 $z1) //1
+    ($x0a $y0 $z1) //2
+    ($x1a $y0 $z1) //3
+
+    // + 8
+    ($x0b $y1 $z0) //0
+    ($x1b $y1 $z0) //1
+    ($x0b $y0 $z0) //2
+    ($x1b $y0 $z0) //3
+
+    // + 12
+    ($x0b $y1 $z1) //0
+    ($x1b $y1 $z1) //1
+    ($x0b $y0 $z1) //2
+    ($x1b $y0 $z1) //3
+);
+
+blocks
+(
+    hex (2 3 1 0 6 7 5 4) (8 30 1) simpleGrading (0.25 1 1)
+    hex (10 11 9 8 14 15 13 12) (8 30 1) simpleGrading (4 1 1)
+);
+
+defaultPatch
+{
+    name    frontAndBack;
+    type    empty;
+}
+
+boundary
+(
+
+    liner_TO_cylinderHead
+    {
+        type mappedWall;
+        inGroups    (mappedWalls);
+        neighbourPatch cylinderHead_TO_liner;
+        neighbourRegion cylinderHead;
+        faces
+        (
+            (0 1 5 4)
+            (8 9 13 12)
+        );
+    }
+
+    nonCoupleLiner
+    {
+        type    wall;
+        faces
+        (
+            (1 3 7 5)
+            (10 8 12 14)
+        );
+    }
+);
+
+// ************************************************************************* //

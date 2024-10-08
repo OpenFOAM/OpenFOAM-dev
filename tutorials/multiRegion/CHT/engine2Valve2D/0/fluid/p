@@ -1,0 +1,100 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       volScalarField;
+    location    "0/fluid";
+    object      p;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [1 -1 -2 0 0 0 0];
+
+internalField   uniform 1 [bar];
+
+boundaryField
+{
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    inlet
+    {
+        type            uniformTotalPressure;
+        p0
+        {
+            type            table;
+            format          csv;
+            file            "constant/expData/pInlet";
+            nHeaderLine     2;          // Number of header lines
+            units           ([CAD] [bar]);
+            columns         (0 1);      // Column indices
+            separator       " ";        // Optional (defaults to ",")
+            mergeSeparators yes;        // Merge multiple separators
+            outOfBounds     repeat;     // For multi-cycle simulations, use repeat
+            interpolationScheme linear;
+        }
+        value           $internalField;
+        psi             psi;
+        rho             rho;
+        gamma           1.4;
+    }
+
+    outlet
+    {
+        type            uniformTotalPressure;
+        p0
+        {
+            type            table;
+            units           ([CAD] [bar]);
+            values
+            (
+                (0      1.0)
+                (100    1.0)
+                (240    1.7)
+                (380    1.0)
+                (720    1.0)
+            );
+            outOfBounds     repeat;     // For multi-cycle simulations, use repeat
+            interpolationScheme linear;
+        }
+        value           $internalField;
+        psi             psi;
+        rho             rho;
+        gamma           1.4;
+    }
+
+    mappedWalls
+    {
+        type            fixedFluxPressure;
+        value           $internalField;
+    }
+
+    NCMWbase
+    {
+        type            zeroGradient;
+    }
+
+    "nonCouple.*"
+    {
+        type            zeroGradient;
+    }
+
+    ".*_on_.*"
+    {
+        type            fixedFluxPressure;
+        value           $internalField;
+    }
+
+    "NonConformalError.*"
+    {
+        type            nonConformalError;
+    }
+}
+
+
+// ************************************************************************* //

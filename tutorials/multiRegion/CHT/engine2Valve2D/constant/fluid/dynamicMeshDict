@@ -9,7 +9,7 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    location    "constant";
+    location    "constant/fluid";
     object      dynamicMeshDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -22,7 +22,7 @@ mover
 
     slidingPatches
     (
-        liner
+        nonCoupleFluidLiner
         evStem
         ivStem
         nonCouple_cyl_ev
@@ -31,11 +31,11 @@ mover
         nonCouple_iv_cyl
     );
 
-    linerPatches        (liner);
+    linerPatches        (nonCoupleFluidLiner);
 
     piston
     {
-        patches             (piston);
+        patches             (fluid_TO_piston);
 
         axis                (0 0 1);
 
@@ -69,17 +69,31 @@ mover
 
             motion
             {
-                type    table;
-                values
-                (
-                    (0      0.0)
-                    (100    0.01) // EVO + meshToMesh map
-                    (240    0.29)
-                    (380    0.01) // EVC + meshToMesh map
-                    (720    0.0)
-                );
-                outOfBounds     repeat; // For multi-cycle simulations, use repeat
-                interpolationScheme linear;
+                type    repeat;
+                period  720;
+                start   0;
+                value
+                {
+                    type    table;
+                    values
+                    (
+                        (0      0)
+                        (100    0.01) // EVO + meshToMesh map
+                        (240    0.29)
+                        (380    0.01) // EVC + meshToMesh map
+                        (480    0)
+                    );
+                }
+
+                // !!! Boolean function to define when the valve is open. This
+                // is not needed here, but it is used in the corresponding
+                // solid motion functions.
+                isOpen
+                {
+                    type    squarePulse;
+                    start   100;      // EVO + meshToMesh map
+                    duration 280;     // EVC - EVO
+                }
             }
         }
 
@@ -91,17 +105,9 @@ mover
 
             motion
             {
-                type    table;
-                values
-                (
-                    (0      0.0)
-                    (340    0.01) // IVO + meshToMesh map
-                    (480    0.29)
-                    (620    0.01) // IVC + meshToMesh map
-                    (720    0.0)
-                );
-                outOfBounds     repeat; // For multi-cycle simulations, use repeat
-                interpolationScheme linear;
+                $ev/motion;
+
+                start   240;          // IVO - EVO
             }
         }
     }
@@ -111,11 +117,13 @@ topoChanger
 {
     type    meshToMesh;
 
+    region  fluid;
+
     libs    ("libmeshToMeshTopoChanger.so");
 
     times
     (
-        #include "$FOAM_CASE/constant/meshTimes"
+        #include "$FOAM_CASE/constant/fluid/meshTimes"
     );
 
     repeat          720;

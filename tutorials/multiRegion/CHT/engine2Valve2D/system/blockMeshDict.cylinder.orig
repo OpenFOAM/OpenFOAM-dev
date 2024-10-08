@@ -96,9 +96,25 @@ defaultPatch
 boundary
 (
 
-    piston
+    nonCoupleFluidLiner
     {
         type    wall;
+        inGroups    (NCMWbase);
+        faces
+        (
+            (2 0 4 6)
+            (19 23 21 17)
+        );
+    }
+
+    fluid_TO_piston
+    {
+        type    mappedWall;
+        inGroups    (mappedWalls);
+        neighbourPatch  piston_TO_fluid;
+        neighbourRegion piston;
+        matchTolerance  0.01;
+        method  intersection;
         faces
         (
             (3 2 6 7)
@@ -107,19 +123,13 @@ boundary
         );
     }
 
-    liner
+    fluid_TO_cylinderHead
     {
-        type    wall;
-        faces
-        (
-            (2 0 4 6)
-            (19 23 21 17)
-        );
-    }
-
-    cylinderHead
-    {
-        type    wall;
+        type    mappedWall;
+        inGroups    (mappedWalls);
+        neighbourPatch cylinderHead_TO_fluid;
+        neighbourRegion cylinderHead;
+        method  intersection;
         faces
         (
             (0 1 5 4)

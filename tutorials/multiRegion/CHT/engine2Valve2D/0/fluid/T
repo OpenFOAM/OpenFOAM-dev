@@ -1,0 +1,68 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       volScalarField;
+    location    "0/fluid";
+    object      T;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 0 0 1 0 0 0];
+
+internalField   uniform 473.15;
+
+boundaryField
+{
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    mappedWalls
+    {
+        type            coupledTemperature;
+        value           $internalField;
+    }
+
+    NCMWbase
+    {
+        type            zeroGradient;
+    }
+
+    "nonCouple.*"
+    {
+        type            zeroGradient;
+    }
+
+    ".*_on_.*"
+    {
+        type            coupledTemperature;
+        value           $internalField;
+    }
+
+    "NonConformalError.*"
+    {
+        type            nonConformalError;
+    }
+
+    inlet
+    {
+        type            inletOutlet;
+        inletValue      $internalField;
+        value           $internalField;
+    }
+
+    outlet
+    {
+        type            inletOutlet;
+        inletValue      $internalField;
+        value           $internalField;
+    }
+}
+
+
+// ************************************************************************* //

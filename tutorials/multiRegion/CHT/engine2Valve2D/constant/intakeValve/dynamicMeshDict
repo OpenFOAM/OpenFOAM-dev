@@ -1,0 +1,62 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant/intakeValve";
+    object      dynamicMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+mover
+{
+    type            motionSolver;
+
+    libs            ("libfvMotionSolvers.so");
+
+    motionSolver    solidBody;
+
+    select          all;
+
+    solidBodyMotionFunction sixDoFMotion;
+
+    CofG            (0 0 0);
+
+    translation
+    {
+        type            scale;
+        scale
+        {
+            $../fluid/dynamicMeshDict!mover/valves/iv/motion;
+
+            // !!! The fluid engine mover snaps the motion to zero when below
+            // the minLift threshold. This generic mover does not do this. So,
+            // we need to replicate this manually by multiplying the motion
+            // function with the boolean "is-open" function.
+
+            value
+            {
+                type        scale;
+                scale
+                {
+                    $../fluid/dynamicMeshDict!mover/valves/iv/motion/isOpen;
+                }
+                value
+                {
+                    $../fluid/dynamicMeshDict!mover/valves/iv/motion/value;
+                }
+            }
+        }
+        value           constant (0 0 -1);
+    }
+
+    rotation        zero;
+}
+
+// ************************************************************************* //

@@ -10,52 +10,13 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "system";
-    object      controlDict;
+    object      decomposeParDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     foamRun;
+numberOfSubdomains 4;
 
-solver          fluid;
+method      scotch;
 
-startFrom       latestTime;
-
-startTime       0;
-
-stopAt          endTime;
-
-endTime         1440;
-
-deltaT          0.1;
-
-writeControl    adjustableRunTime;
-
-writeInterval   5;
-
-purgeWrite      0;
-
-writeFormat     binary;
-
-writePrecision  10;
-
-writeCompression off;
-
-timeFormat      general;
-
-timePrecision   6;
-
-runTimeModifiable true;
-
-adjustTimeStep  no;
-
-maxCo           5;
-
-maxDeltaT       1;
-
-userTime
-{
-    type            engine;
-    omega           60 [rpm];
-}
 
 // ************************************************************************* //

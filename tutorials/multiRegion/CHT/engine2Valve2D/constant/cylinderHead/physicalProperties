@@ -9,53 +9,29 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    location    "system";
-    object      controlDict;
+    location    "constant/cylinderHead";
+    object      physicalProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     foamRun;
+thermoType  constSolidThermo;
 
-solver          fluid;
-
-startFrom       latestTime;
-
-startTime       0;
-
-stopAt          endTime;
-
-endTime         1440;
-
-deltaT          0.1;
-
-writeControl    adjustableRunTime;
-
-writeInterval   5;
-
-purgeWrite      0;
-
-writeFormat     binary;
-
-writePrecision  10;
-
-writeCompression off;
-
-timeFormat      general;
-
-timePrecision   6;
-
-runTimeModifiable true;
-
-adjustTimeStep  no;
-
-maxCo           5;
-
-maxDeltaT       1;
-
-userTime
+rho
 {
-    type            engine;
-    omega           60 [rpm];
+    type        uniform;
+    value       89.40; // div by 10
+}
+
+Cv
+{
+    type        uniform;
+    value       385;
+}
+
+kappa
+{
+    type        uniform;
+    value       380;
 }
 
 // ************************************************************************* //

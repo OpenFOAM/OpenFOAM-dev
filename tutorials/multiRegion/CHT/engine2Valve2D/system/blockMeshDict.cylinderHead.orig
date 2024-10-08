@@ -1,0 +1,215 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMeters 1;
+
+// base coordinates on the cylinder and valve dictionaries
+
+// 0_ _6 _ _ _12       18_ _ _ _ _ _ _ _24      30_ _ _ _36 _ 42     _ y1
+// |   |      |        |                |        |        |   |
+// |  HEAD    |  FLUID |      HEAD      | FLUID  |      HEAD  |
+// 1 _ 7_ _ _ 13       19_ _ _ _ _ _ _ 25       31 _ _ _ 37 _ 43     _ y2
+// |   |     /          \              /          \       |   |
+// 2 _ 8 _ _14 EV/FLUID  20_ _ _ _ _ 26  IV/FLUID  32_ _ 38_ _44     _ y3
+// LINER                                                  LINER
+
+// x0  x1  x2 x3       x4 x5         x6 x7       x8 x9    x10 x11
+// backside = frontside + 3
+
+// mesh resolutions
+res1 16;
+res2 6;
+res3 12;
+
+x0 -14;
+x1 -13;
+x2 -10;
+x3 -9;
+x4 -3;
+x5 -2;
+x6 2;
+x7 3;
+x8 9;
+x9 10;
+x10 13;
+x11 14;
+
+y1 8;
+y2 1;
+y3 0;
+
+z0 0.0;
+z1 0.5;
+
+vertices
+(
+    ($x0 $y1 $z0) //0
+    ($x0 $y2 $z0) //1
+    ($x0 $y3 $z0) //2
+    ($x0 $y1 $z1) //3
+    ($x0 $y2 $z1) //4
+    ($x0 $y3 $z1) //5
+
+    ($x1 $y1 $z0) //6
+    ($x1 $y2 $z0) //7
+    ($x1 $y3 $z0) //8
+    ($x1 $y1 $z1) //9
+    ($x1 $y2 $z1) //10
+    ($x1 $y3 $z1) //11
+
+    ($x3 $y1 $z0) //12
+    ($x3 $y2 $z0) //13
+    ($x2 $y3 $z0) //14
+    ($x3 $y1 $z1) //15
+    ($x3 $y2 $z1) //16
+    ($x2 $y3 $z1) //17
+
+    ($x4 $y1 $z0) //18
+    ($x4 $y2 $z0) //19
+    ($x5 $y3 $z0) //20
+    ($x4 $y1 $z1) //21
+    ($x4 $y2 $z1) //22
+    ($x5 $y3 $z1) //23
+
+    ($x7 $y1 $z0) //24
+    ($x7 $y2 $z0) //25
+    ($x6 $y3 $z0) //26
+    ($x7 $y1 $z1) //27
+    ($x7 $y2 $z1) //28
+    ($x6 $y3 $z1) //29
+
+    ($x8 $y1 $z0) //30
+    ($x8 $y2 $z0) //31
+    ($x9 $y3 $z0) //32
+    ($x8 $y1 $z1) //33
+    ($x8 $y2 $z1) //34
+    ($x9 $y3 $z1) //35
+
+    ($x10 $y1 $z0) //36
+    ($x10 $y2 $z0) //37
+    ($x10 $y3 $z0) //38
+    ($x10 $y1 $z1) //39
+    ($x10 $y2 $z1) //40
+    ($x10 $y3 $z1) //41
+
+    ($x11 $y1 $z0) //42
+    ($x11 $y2 $z0) //43
+    ($x11 $y3 $z0) //44
+    ($x11 $y1 $z1) //45
+    ($x11 $y2 $z1) //46
+    ($x11 $y3 $z1) //47
+);
+
+blocks
+(
+    hex (0 1 7 6 3 4 10 9) ($res1 $res2 1) simpleGrading (1 1 1)
+    hex (1 2 8 7 4 5 11 10) ($res2 $res2 1) simpleGrading (1 1 1)
+    hex (6 7 13 12 9 10 16 15) ($res1 $res3 1) simpleGrading (1 1 1)
+    hex (7 8 14 13 10 11 17 16) ($res2 $res3 1) simpleGrading (1 1 1)
+
+    hex (18 19 25 24 21 22 28 27) ($res1 $res3 1) simpleGrading (1 1 1)
+    hex (19 20 26 25 22 23 29 28) ($res2 $res3 1) simpleGrading (1 1 1)
+
+    hex (30 31 37 36 33 34 40 39) ($res1 $res3 1) simpleGrading (1 1 1)
+    hex (31 32 38 37 34 35 41 40) ($res2 $res3 1) simpleGrading (1 1 1)
+    hex (36 37 43 42 39 40 46 45) ($res1 $res2 1) simpleGrading (1 1 1)
+    hex (37 38 44 43 40 41 47 46) ($res2 $res2 1) simpleGrading (1 1 1)
+);
+
+defaultPatch
+{
+    name    frontAndBack;
+    type    empty;
+}
+
+boundary
+(
+
+    cylinderHead_sides
+    {
+        type wall;
+        inGroups    (externalWalls);
+        faces
+        (
+            (1 0 3 4)
+            (2 1 4 5)
+            (42 43 46 45)
+            (43 44 47 46)
+        );
+    }
+
+    cylinderHead_top
+    {
+        type wall;
+        inGroups    (externalWalls);
+        faces
+        (
+            (0 6 9 3)
+            (6 12 15 9)
+            (18 24 27 21)
+            (30 36 39 33)
+            (36 42 45 39)
+        );
+    }
+
+    cylinderHead_TO_liner
+    {
+        type    mappedWall;
+        inGroups    (mappedWalls);
+        neighbourPatch  liner_TO_cylinderHead;
+        neighbourRegion liner;
+        method  intersection;
+        faces
+        (
+            (2 5 11 8)
+            (38 41 47 44)
+        );
+    }
+
+    cylinderHead_TO_fluid
+    {
+        type    mappedWall;
+        inGroups    (mappedWalls);
+        neighbourPatch  fluid_TO_cylinderHead;
+        neighbourRegion fluid;
+        method  intersection;
+        faces
+        (
+            (8 11 17 14)
+            (20 23 29 26)
+            (32 35 41 38)
+        );
+    }
+
+    nonCoupleCylinderHead
+    {
+        type    wall;
+        inGroups    (NCMWbase);
+        faces
+        (
+            (13 16 15 12) // intakeValve
+            (18 21 22 19)
+            (13 14 17 16)
+            (19 22 23 20)
+            (25 28 27 24) // exhaustValve
+            (31 30 33 34)
+            (26 29 28 25)
+            (32 31 34 35)
+        );
+    }
+);
+
+// ************************************************************************* //

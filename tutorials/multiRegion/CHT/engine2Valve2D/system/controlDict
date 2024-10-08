@@ -14,9 +14,17 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     foamRun;
+application     foamMultiRun;
 
-solver          fluid;
+regionSolvers
+{
+    fluid           fluid;
+    liner           solid;
+    piston          solid;
+    cylinderHead    solid;
+    exhaustValve    solid;
+    intakeValve     solid;
+}
 
 startFrom       latestTime;
 
@@ -26,7 +34,7 @@ stopAt          endTime;
 
 endTime         1440;
 
-deltaT          0.1;
+deltaT          0.05;
 
 writeControl    adjustableRunTime;
 
@@ -48,7 +56,7 @@ runTimeModifiable true;
 
 adjustTimeStep  no;
 
-maxCo           5;
+maxCo           2;
 
 maxDeltaT       1;
 
