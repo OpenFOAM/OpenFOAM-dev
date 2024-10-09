@@ -582,6 +582,7 @@ Foam::label Foam::polyTopoChange::getCellOrder
     // Work arrays. Kept outside of loop to minimise allocations.
     // - neighbour cells
     DynamicList<label> nbrs;
+
     // - corresponding weights
     DynamicList<label> weights;
 
@@ -749,14 +750,6 @@ void Foam::polyTopoChange::getFaceOrder
         order.setSize(nFaces);
         sortedOrder(nbr, order);
 
-        // forAll(nbr, i)
-        //{
-        //    if (nbr[i] != -1)
-        //    {
-        //        oldToNew[cellFaces[startOfCell + nbr.indices()[i]]] =
-        //            newFacei++;
-        //    }
-        //}
         forAll(order, i)
         {
             label index = order[i];
@@ -1622,10 +1615,10 @@ Foam::polyTopoChange::polyTopoChange
         flipFaceFlux_.setCapacity(faces_.size() + nAllFaces);
 
 
-        // Add faces in mesh order
+        // Add faces in order
 
-        // 1. Internal faces
-        for (label facei = 0; facei < mesh.nInternalFaces(); facei++)
+        // 1. Add internal faces in increasing face order
+        for (label facei=0; facei<mesh.nInternalFaces(); facei++)
         {
             addFace
             (
@@ -1638,24 +1631,23 @@ Foam::polyTopoChange::polyTopoChange
             );
         }
 
-        // 2. Patch faces
+        // Find patch order with increasing face order
+        SortableList<label> patchStartOrder(patches.size());
         forAll(patches, patchi)
         {
+            patchStartOrder[patchi] = patches[patchi].start();
+        }
+        patchStartOrder.sort();
+
+        // 2. Add patch faces in increasing face order
+        forAll(patchStartOrder, i)
+        {
+            const label patchi = patchStartOrder.indices()[i];
             const polyPatch& pp = patches[patchi];
 
-            if (pp.start() != faces_.size())
-            {
-                FatalErrorInFunction
-                    << "Problem : "
-                    << "Patch " << pp.name() << " starts at " << pp.start()
-                    << endl
-                    << "Current face counter at " << faces_.size() << endl
-                    << "Are patches in incremental order?"
-                    << abort(FatalError);
-            }
             forAll(pp, patchFacei)
             {
-                label facei = pp.start() + patchFacei;
+                const label facei = pp.start() + patchFacei;
 
                 addFace
                 (

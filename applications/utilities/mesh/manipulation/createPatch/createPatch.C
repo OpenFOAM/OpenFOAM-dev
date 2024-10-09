@@ -516,7 +516,7 @@ int main(int argc, char *argv[])
                         patches,
                         patchi,
                         pp.size(),
-                        startFacei
+                        pp.start()
                     ).ptr()
                 );
                 startFacei += pp.size();
@@ -577,7 +577,7 @@ int main(int argc, char *argv[])
                         patches,
                         patchi,
                         pp.size(),
-                        startFacei
+                        pp.start()
                     ).ptr()
                 );
                 startFacei += pp.size();
