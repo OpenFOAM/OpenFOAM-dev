@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -142,7 +142,7 @@ bool Foam::momentumTransportModel::read()
 Foam::tmp<Foam::fvVectorMatrix>
 Foam::momentumTransportModel::divDevTauCorr
 (
-    const tmp<volTensorField>& devTauCorr,
+    const tmp<surfaceVectorField>& devTauCorr,
     volVectorField& U
 ) const
 {
@@ -153,7 +153,7 @@ Foam::momentumTransportModel::divDevTauCorr
             new surfaceVectorField
             (
                 groupName("devTauCorrFlux"),
-                fvc::flux(devTauCorr)
+                devTauCorr
             )
         ),
         U

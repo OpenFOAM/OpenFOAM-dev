@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,8 +87,8 @@ Foam::wallHeatTransferCoeffModels::ReynoldsAnalogy::htcByRhoCp
     const labelHashSet& patches
 ) const
 {
-    tmp<volSymmTensorField> ttau(this->tau(mmtm, mesh_));
-    const volSymmTensorField::Boundary& tauBf = ttau.ref().boundaryField();
+    tmp<surfaceVectorField> ttau(this->tau(mmtm, mesh_));
+    const surfaceVectorField::Boundary& tauBf = ttau.ref().boundaryField();
 
     // Create temporary field for heat transfer coefficient
     tmp<volScalarField> thtcByRhoCp
@@ -108,10 +108,8 @@ Foam::wallHeatTransferCoeffModels::ReynoldsAnalogy::htcByRhoCp
     {
         if (!thtcByRhoCpBf[patchi].coupled())
         {
-            const vectorField nf(tauBf[patchi].patch().nf());
-
             // Wall shear stress in [m^2/s^2]
-            tmp<vectorField> tauwp(-nf&tauBf[patchi]);
+            tmp<vectorField> tauwp(-tauBf[patchi]);
 
             // Non-dimensional skin friction coefficient [-]
             const scalarField Cf(2*mag(tauwp)/sqr(Uref_.value()));

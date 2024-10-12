@@ -531,6 +531,9 @@ public:
             //- Return cell face area magnitudes
             const surfaceScalarField& magSf() const;
 
+            //- Return cell face normal vectors
+            tmp<surfaceVectorField> nf() const;
+
             //- Return cell centres
             const volVectorField& C() const;
 

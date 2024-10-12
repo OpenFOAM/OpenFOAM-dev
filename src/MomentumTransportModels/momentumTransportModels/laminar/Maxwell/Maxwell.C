@@ -268,14 +268,48 @@ tmp<volSymmTensorField> Maxwell<BasicMomentumTransportModel>::sigma() const
 
 
 template<class BasicMomentumTransportModel>
-tmp<volSymmTensorField> Maxwell<BasicMomentumTransportModel>::devTau() const
+tmp<surfaceVectorField> Maxwell<BasicMomentumTransportModel>::devTau() const
 {
-    return volSymmTensorField::New
+    const surfaceVectorField nf(this->mesh().nf());
+
+    return surfaceVectorField::New
     (
         this->groupName("devTau"),
-        this->alpha_*this->rho_*sigma_
-      - (this->alpha_*this->rho_*this->nu())
-       *dev(twoSymm(fvc::grad(this->U_)))
+        fvc::dotInterpolate
+        (
+            nf,
+            this->alpha_*this->rho_*this->nuM_*fvc::grad(this->U_)
+        )
+      + fvc::dotInterpolate
+        (
+            nf,
+            this->alpha_*this->rho_*sigma_
+        )
+      - fvc::dotInterpolate
+        (
+            nf,
+            this->alpha_*this->rho_*this->nu()*dev2(T(fvc::grad(this->U_)))
+        )
+      - fvc::interpolate(this->alpha_*this->rho_*nu0())*fvc::snGrad(this->U_)
+    );
+}
+
+
+template<class BasicMomentumTransportModel>
+template<class RhoFieldType>
+tmp<fvVectorMatrix>
+Maxwell<BasicMomentumTransportModel>::DivDevTau
+(
+    const RhoFieldType& rho,
+    volVectorField& U
+) const
+{
+    return
+    (
+        fvc::div(this->alpha_*rho*this->nuM_*fvc::grad(U))
+      + fvc::div(this->alpha_*rho*sigma_)
+      - fvc::div(this->alpha_*rho*this->nu()*dev2(T(fvc::grad(U))))
+      - fvm::laplacian(this->alpha_*rho*nu0(), U)
     );
 }
 
@@ -286,16 +320,7 @@ tmp<fvVectorMatrix> Maxwell<BasicMomentumTransportModel>::divDevTau
     volVectorField& U
 ) const
 {
-    return
-    (
-        fvc::div
-        (
-            this->alpha_*this->rho_*this->nuM_*fvc::grad(U)
-        )
-      + fvc::div(this->alpha_*this->rho_*sigma_)
-      - fvc::div(this->alpha_*this->rho_*this->nu()*dev2(T(fvc::grad(U))))
-      - fvm::laplacian(this->alpha_*this->rho_*nu0(), U)
-    );
+    return DivDevTau(this->rho_, U);
 }
 
 
@@ -307,16 +332,7 @@ Maxwell<BasicMomentumTransportModel>::divDevTau
     volVectorField& U
 ) const
 {
-    return
-    (
-        fvc::div
-        (
-            this->alpha_*rho*this->nuM_*fvc::grad(U)
-        )
-      + fvc::div(this->alpha_*rho*sigma_)
-      - fvc::div(this->alpha_*rho*this->nu()*dev2(T(fvc::grad(U))))
-      - fvm::laplacian(this->alpha_*rho*nu0(), U)
-    );
+    return DivDevTau(rho, U);
 }
 
 

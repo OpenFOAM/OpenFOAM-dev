@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -135,8 +135,8 @@ public:
         //- Return the volumetric flux field
         virtual tmp<surfaceScalarField> phi() const;
 
-        //- Return the effective stress tensor including the laminar stress
-        virtual tmp<volSymmTensorField> devTau() const = 0;
+        //- Return the effective surface stress
+        virtual tmp<surfaceVectorField> devTau() const = 0;
 
         //- Return the stress matrix for the momentum equation
         virtual tmp<fvVectorMatrix> divDevTau(volVectorField& U) const = 0;

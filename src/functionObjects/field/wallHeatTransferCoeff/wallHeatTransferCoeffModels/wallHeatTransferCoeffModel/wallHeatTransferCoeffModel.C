@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ License
 
 #include "wallHeatTransferCoeffModel.H"
 #include "compressibleMomentumTransportModel.H"
+#include "surfaceInterpolate.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -73,7 +74,7 @@ Foam::wallHeatTransferCoeffModel::New
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volSymmTensorField> Foam::wallHeatTransferCoeffModel::tau
+Foam::tmp<Foam::surfaceVectorField> Foam::wallHeatTransferCoeffModel::tau
 (
     const momentumTransportModel& mmtm,
     const fvMesh& mesh
@@ -91,7 +92,10 @@ Foam::tmp<Foam::volSymmTensorField> Foam::wallHeatTransferCoeffModel::tau
     {
         return
             refCast<const compressible::momentumTransportModel>(mmtm).devTau()
-           /refCast<const compressible::momentumTransportModel>(mmtm).rho();
+           /fvc::interpolate
+            (
+                refCast<const compressible::momentumTransportModel>(mmtm).rho()
+            );
     }
     else
     {
@@ -100,7 +104,7 @@ Foam::tmp<Foam::volSymmTensorField> Foam::wallHeatTransferCoeffModel::tau
             << exit(FatalError);
     }
 
-    return tmp<Foam::volSymmTensorField>();
+    return tmp<Foam::surfaceVectorField>();
 }
 
 // ************************************************************************* //

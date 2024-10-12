@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -211,8 +211,8 @@ public:
         // (derivative of phase-pressure w.r.t. phase-fraction)
         virtual tmp<surfaceScalarField> pPrimef() const;
 
-        //- Return the effective stress tensor
-        virtual tmp<volSymmTensorField> devTau() const;
+        //- Return the effective stress
+        virtual tmp<surfaceVectorField> devTau() const;
 
         //- Return the source term for the momentum equation
         virtual tmp<fvVectorMatrix> divDevTau(volVectorField& U) const;

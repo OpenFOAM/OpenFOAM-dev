@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ template<>
 const char* Foam::NamedEnum
 <
     Foam::functionObjects::turbulenceFields::compressibleField,
-    8
+    7
 >::names[] =
 {
     "k",
@@ -58,21 +58,20 @@ const char* Foam::NamedEnum
     "nut",
     "nuEff",
     "kappaEff",
-    "R",
-    "devTau"
+    "R"
 };
 
 const Foam::NamedEnum
 <
     Foam::functionObjects::turbulenceFields::compressibleField,
-    8
+    7
 > Foam::functionObjects::turbulenceFields::compressibleFieldNames_;
 
 template<>
 const char* Foam::NamedEnum
 <
     Foam::functionObjects::turbulenceFields::incompressibleField,
-    7
+    6
 >::names[] =
 {
     "k",
@@ -80,14 +79,13 @@ const char* Foam::NamedEnum
     "omega",
     "nut",
     "nuEff",
-    "R",
-    "devSigma"
+    "R"
 };
 
 const Foam::NamedEnum
 <
     Foam::functionObjects::turbulenceFields::incompressibleField,
-    7
+    6
 > Foam::functionObjects::turbulenceFields::incompressibleFieldNames_;
 
 
@@ -206,11 +204,6 @@ bool Foam::functionObjects::turbulenceFields::execute()
                     processField<symmTensor>(f, model.sigma());
                     break;
                 }
-                case compressibleField::devTau:
-                {
-                    processField<symmTensor>(f, model.devTau());
-                    break;
-                }
                 default:
                 {
                     FatalErrorInFunction
@@ -257,11 +250,6 @@ bool Foam::functionObjects::turbulenceFields::execute()
                 case compressibleField::R:
                 {
                     processField<symmTensor>(f, model.sigma());
-                    break;
-                }
-                case compressibleField::devTau:
-                {
-                    processField<symmTensor>(f, model.devTau());
                     break;
                 }
                 default:
@@ -313,11 +301,6 @@ bool Foam::functionObjects::turbulenceFields::execute()
                 case incompressibleField::R:
                 {
                     processField<symmTensor>(f, model.sigma());
-                    break;
-                }
-                case incompressibleField::devSigma:
-                {
-                    processField<symmTensor>(f, model.devSigma());
                     break;
                 }
                 default:

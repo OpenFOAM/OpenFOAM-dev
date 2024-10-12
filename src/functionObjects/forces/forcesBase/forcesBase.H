@@ -158,8 +158,8 @@ protected:
         //- Initialise the fields
         void initialise();
 
-        //- Return the effective viscous stress (laminar + turbulent).
-        tmp<volSymmTensorField> devTau() const;
+        //- Return the effective surface stress
+        tmp<surfaceVectorField> devTau() const;
 
         //- Dynamic viscosity field
         tmp<volScalarField> mu() const;

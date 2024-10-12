@@ -213,18 +213,18 @@ Foam::RASModels::phasePressureModel::pPrimef() const
 }
 
 
-Foam::tmp<Foam::volSymmTensorField>
+Foam::tmp<Foam::surfaceVectorField>
 Foam::RASModels::phasePressureModel::devTau() const
 {
-    return tmp<volSymmTensorField>
+    return tmp<surfaceVectorField>
     (
-        volSymmTensorField::New
+        surfaceVectorField::New
         (
             IOobject::groupName("devTau", U_.group()),
             mesh_,
-            dimensioned<symmTensor>
+            dimensioned<vector>
             (
-                "R",
+                "devTau",
                 rho_.dimensions()*dimensionSet(0, 2, -2, 0, 0),
                 Zero
             )

@@ -206,26 +206,10 @@ Foam::ReynoldsStress<BasicMomentumTransportModel>::k() const
 
 
 template<class BasicMomentumTransportModel>
-Foam::tmp<Foam::volSymmTensorField>
-Foam::ReynoldsStress<BasicMomentumTransportModel>::devTau() const
-{
-    return volSymmTensorField::New
-    (
-        this->groupName("devTau"),
-        this->alpha_*this->rho_*R_
-      - (this->alpha_*this->rho_*this->nu())
-       *dev(twoSymm(fvc::grad(this->U_)))
-    );
-}
-
-
-template<class BasicMomentumTransportModel>
-template<class RhoFieldType>
-Foam::tmp<Foam::fvVectorMatrix>
-Foam::ReynoldsStress<BasicMomentumTransportModel>::DivDevRhoReff
+Foam::tmp<Foam::surfaceVectorField>
+Foam::ReynoldsStress<BasicMomentumTransportModel>::Refff
 (
-    const RhoFieldType& rho,
-    volVectorField& U
+    const volVectorField& U
 ) const
 {
     tmp<volTensorField> tgradU = fvc::grad(U);
@@ -234,7 +218,7 @@ Foam::ReynoldsStress<BasicMomentumTransportModel>::DivDevRhoReff
 
     // Interpolate Reynolds stress to the faces
     // with either a stress or velocity coupling correction
-    const surfaceVectorField Refff
+    return
     (
         (this->mesh().Sf() & fvc::interpolate(R_))
 
@@ -250,10 +234,34 @@ Foam::ReynoldsStress<BasicMomentumTransportModel>::DivDevRhoReff
        *this->mesh().magSf()*fvc::snGrad(U)
       - fvc::interpolate(this->nu())*(this->mesh().Sf() & dev2(gradUf.T()))
     );
+}
 
+
+template<class BasicMomentumTransportModel>
+Foam::tmp<Foam::surfaceVectorField>
+Foam::ReynoldsStress<BasicMomentumTransportModel>::devTau() const
+{
+    return surfaceVectorField::New
+    (
+        this->groupName("devTau"),
+        fvc::interpolate(this->alpha_*this->rho_)*Refff(this->U_)
+       /this->mesh().magSf()
+    );
+}
+
+
+template<class BasicMomentumTransportModel>
+template<class RhoFieldType>
+Foam::tmp<Foam::fvVectorMatrix>
+Foam::ReynoldsStress<BasicMomentumTransportModel>::DivDevTau
+(
+    const RhoFieldType& rho,
+    volVectorField& U
+) const
+{
     return
     (
-        fvc::div(fvc::interpolate(this->alpha_*rho)*Refff)
+        fvc::div(fvc::interpolate(this->alpha_*rho)*Refff(U))
       - correction(fvm::laplacian(this->alpha_*rho*this->nuEff(), U))
     );
 }
@@ -266,7 +274,7 @@ Foam::ReynoldsStress<BasicMomentumTransportModel>::divDevTau
     volVectorField& U
 ) const
 {
-    return DivDevRhoReff(this->rho_, U);
+    return DivDevTau(this->rho_, U);
 }
 
 
@@ -278,7 +286,7 @@ Foam::ReynoldsStress<BasicMomentumTransportModel>::divDevTau
     volVectorField& U
 ) const
 {
-    return DivDevRhoReff(rho, U);
+    return DivDevTau(rho, U);
 }
 
 

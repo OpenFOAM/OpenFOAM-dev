@@ -48,9 +48,6 @@ Usage
         nuEff       | effective turbulence viscosity (compressible)
         kappaEff    | effective turbulence thermal diffusivity (compressible)
         R           | Reynolds stress tensor
-        devSigma | Deviatoric part of the effective Reynolds stress \
-                   (incompressible)
-        devTau  | Divergence of the Reynolds stress (compressible)
     \endplaintable
 
     If the optional \c prefix entry is set true the turbulence fields are stored
@@ -116,10 +113,9 @@ public:
         nut,
         nuEff,
         kappaEff,
-        R,
-        devTau
+        R
     };
-    static const NamedEnum<compressibleField, 8> compressibleFieldNames_;
+    static const NamedEnum<compressibleField, 7> compressibleFieldNames_;
 
     enum class incompressibleField
     {
@@ -128,10 +124,9 @@ public:
         omega,
         nut,
         nuEff,
-        R,
-        devSigma
+        R
     };
-    static const NamedEnum<incompressibleField, 7> incompressibleFieldNames_;
+    static const NamedEnum<incompressibleField, 6> incompressibleFieldNames_;
 
 
 protected:

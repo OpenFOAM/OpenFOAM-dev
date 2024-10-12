@@ -60,7 +60,7 @@ void Foam::functionObjects::wallShearStress::writeFileHeader(const label i)
 Foam::tmp<Foam::volVectorField>
 Foam::functionObjects::wallShearStress::calcShearStress
 (
-    const volSymmTensorField& tau
+    const surfaceVectorField& tau
 )
 {
     tmp<volVectorField> twallShearStress
@@ -83,7 +83,7 @@ Foam::functionObjects::wallShearStress::calcShearStress
         const vectorField& Sfp = mesh_.Sf().boundaryField()[patchi];
         const scalarField& magSfp = mesh_.magSf().boundaryField()[patchi];
 
-        wallShearStressBf[patchi] = (-Sfp/magSfp) & tau.boundaryField()[patchi];
+        wallShearStressBf[patchi] = -tau.boundaryField()[patchi];
     }
 
     return twallShearStress;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,6 +27,7 @@ License
 #include "fvcGrad.H"
 #include "fvcDiv.H"
 #include "fvmLaplacian.H"
+#include "fvcSnGrad.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -65,15 +66,51 @@ bool Foam::linearViscousStress<BasicMomentumTransportModel>::read()
 
 
 template<class BasicMomentumTransportModel>
-Foam::tmp<Foam::volSymmTensorField>
+Foam::tmp<Foam::surfaceVectorField>
 Foam::linearViscousStress<BasicMomentumTransportModel>::devTau() const
 {
-    return volSymmTensorField::New
+    const surfaceScalarField alphaRhoNuEff
+    (
+        fvc::interpolate(this->alpha_*this->rho_*this->nuEff())
+    );
+
+    return surfaceVectorField::New
     (
         this->groupName("devTau"),
-        (-(this->alpha_*this->rho_*this->nuEff()))
-       *dev(twoSymm(fvc::grad(this->U_)))
+       -alphaRhoNuEff
+       *(
+           fvc::dotInterpolate(this->mesh().nf(), dev2(T(fvc::grad(this->U_))))
+         + fvc::snGrad(this->U_)
+        )
     );
+}
+
+
+template<class BasicMomentumTransportModel>
+template<class RhoFieldType>
+Foam::tmp<Foam::fvVectorMatrix>
+Foam::linearViscousStress<BasicMomentumTransportModel>::DivDevTau
+(
+    const RhoFieldType& rho,
+    volVectorField& U
+) const
+{
+    const surfaceScalarField alphaRhoNuEff
+    (
+        fvc::interpolate(this->alpha_*rho*this->nuEff())
+    );
+
+    const fvVectorMatrix divDevTauCorr
+    (
+        this->divDevTauCorr
+        (
+           -alphaRhoNuEff
+           *fvc::dotInterpolate(this->mesh().Sf(), dev2(T(fvc::grad(U)))),
+            U
+        )
+    );
+
+    return divDevTauCorr - fvm::laplacian(alphaRhoNuEff, U);
 }
 
 
@@ -84,20 +121,7 @@ Foam::linearViscousStress<BasicMomentumTransportModel>::divDevTau
     volVectorField& U
 ) const
 {
-    const fvVectorMatrix divDevTauCorr
-    (
-        this->divDevTauCorr
-        (
-            -(this->alpha_*this->rho_*this->nuEff())*dev2(T(fvc::grad(U))),
-            U
-        )
-    );
-
-    return
-    (
-        divDevTauCorr
-      - fvm::laplacian(this->alpha_*this->rho_*this->nuEff(), U)
-    );
+    return DivDevTau(this->rho_, U);
 }
 
 
@@ -109,15 +133,7 @@ Foam::linearViscousStress<BasicMomentumTransportModel>::divDevTau
     volVectorField& U
 ) const
 {
-    return
-    (
-      - fvm::laplacian(this->alpha_*rho*this->nuEff(), U)
-      + this->divDevTauCorr
-        (
-            -(this->alpha_*rho*this->nuEff())*dev2(T(fvc::grad(U))),
-            U
-        )
-    );
+    return DivDevTau(rho, U);
 }
 
 

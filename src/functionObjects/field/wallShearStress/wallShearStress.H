@@ -86,6 +86,7 @@ SourceFiles
 #include "logFiles.H"
 #include "writeLocalObjects.H"
 #include "volFieldsFwd.H"
+#include "surfaceFieldsFwd.H"
 #include "HashSet.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -122,7 +123,7 @@ class wallShearStress
         //- Calculate the shear-stress
         tmp<volVectorField> calcShearStress
         (
-            const volSymmTensorField& tau
+            const surfaceVectorField& tau
         );
 
 

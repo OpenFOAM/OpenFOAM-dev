@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,7 +107,7 @@ Foam::phaseIncompressibleMomentumTransportModel::pPrimef() const
 }
 
 
-Foam::tmp<Foam::volSymmTensorField>
+Foam::tmp<Foam::surfaceVectorField>
 Foam::phaseIncompressibleMomentumTransportModel::devSigma() const
 {
     return devTau();
@@ -121,28 +121,6 @@ Foam::phaseIncompressibleMomentumTransportModel::divDevSigma
 ) const
 {
     return divDevTau(U);
-}
-
-
-Foam::tmp<Foam::volSymmTensorField>
-Foam::phaseIncompressibleMomentumTransportModel::
-devTau() const
-{
-    NotImplemented;
-
-    return devSigma();
-}
-
-
-Foam::tmp<Foam::fvVectorMatrix>
-Foam::phaseIncompressibleMomentumTransportModel::divDevTau
-(
-    volVectorField& U
-) const
-{
-    NotImplemented;
-
-    return divDevSigma(U);
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,7 @@ Foam::incompressibleMomentumTransportModel::New
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volSymmTensorField>
+Foam::tmp<Foam::surfaceVectorField>
 Foam::incompressibleMomentumTransportModel::devSigma() const
 {
     return devTau();
@@ -80,37 +80,6 @@ Foam::tmp<Foam::fvVectorMatrix>
 Foam::incompressibleMomentumTransportModel::divDevSigma(volVectorField& U) const
 {
     return divDevTau(U);
-}
-
-
-Foam::tmp<Foam::volSymmTensorField>
-Foam::incompressibleMomentumTransportModel::devTau() const
-{
-    NotImplemented;
-    return devSigma();
-}
-
-
-Foam::tmp<Foam::fvVectorMatrix>
-Foam::incompressibleMomentumTransportModel::divDevTau
-(
-    volVectorField& U
-) const
-{
-    NotImplemented;
-    return divDevSigma(U);
-}
-
-
-Foam::tmp<Foam::fvVectorMatrix>
-Foam::incompressibleMomentumTransportModel::divDevTau
-(
-    const volScalarField& rho,
-    volVectorField& U
-) const
-{
-    NotImplemented;
-    return divDevSigma(U);
 }
 
 

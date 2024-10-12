@@ -217,7 +217,7 @@ public:
         //  which is cached in the matrix if fluxRequired.
         virtual tmp<fvVectorMatrix> divDevTauCorr
         (
-            const tmp<volTensorField>& devTauCorr,
+            const tmp<surfaceVectorField>& devTauCorr,
             volVectorField& U
         ) const;
 

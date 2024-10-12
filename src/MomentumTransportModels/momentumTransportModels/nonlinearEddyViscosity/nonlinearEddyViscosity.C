@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,15 +86,38 @@ Foam::nonlinearEddyViscosity<BasicMomentumTransportModel>::sigma() const
 
 
 template<class BasicMomentumTransportModel>
-Foam::tmp<Foam::volSymmTensorField>
+Foam::tmp<Foam::surfaceVectorField>
 Foam::nonlinearEddyViscosity<BasicMomentumTransportModel>::devTau() const
 {
-    tmp<volSymmTensorField> tdevTau
+    tmp<surfaceVectorField> tdevTau
     (
         eddyViscosity<BasicMomentumTransportModel>::devTau()
     );
-    tdevTau.ref() += this->rho_*nonlinearStress_;
+
+    tdevTau.ref() += fvc::dotInterpolate
+    (
+        this->mesh().nf(),
+        this->rho_*nonlinearStress_
+    );
+
     return tdevTau;
+}
+
+
+template<class BasicMomentumTransportModel>
+template<class RhoFieldType>
+Foam::tmp<Foam::fvVectorMatrix>
+Foam::nonlinearEddyViscosity<BasicMomentumTransportModel>::DivDevTau
+(
+    const RhoFieldType& rho,
+    volVectorField& U
+) const
+{
+    return
+    (
+        fvc::div(rho*nonlinearStress_)
+      + eddyViscosity<BasicMomentumTransportModel>::DivDevTau(rho, U)
+    );
 }
 
 
@@ -105,11 +128,7 @@ Foam::nonlinearEddyViscosity<BasicMomentumTransportModel>::divDevTau
     volVectorField& U
 ) const
 {
-    return
-    (
-        fvc::div(this->rho_*nonlinearStress_)
-      + eddyViscosity<BasicMomentumTransportModel>::divDevTau(U)
-    );
+    return DivDevTau(this->rho_, U);
 }
 
 
@@ -121,11 +140,7 @@ Foam::nonlinearEddyViscosity<BasicMomentumTransportModel>::divDevTau
     volVectorField& U
 ) const
 {
-    return
-    (
-        fvc::div(rho*nonlinearStress_)
-      + eddyViscosity<BasicMomentumTransportModel>::divDevTau(rho, U)
-    );
+    return DivDevTau(rho, U);
 }
 
 

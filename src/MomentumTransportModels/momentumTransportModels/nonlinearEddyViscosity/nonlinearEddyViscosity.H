@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,6 +51,16 @@ class nonlinearEddyViscosity
 :
     public eddyViscosity<BasicMomentumTransportModel>
 {
+    // Private member functions
+
+        //- Return the source term for the momentum equation
+        template<class RhoFieldType>
+        tmp<fvVectorMatrix> DivDevTau
+        (
+            const RhoFieldType& rho,
+            volVectorField& U
+        ) const;
+
 
 protected:
 
@@ -97,8 +107,8 @@ public:
         //- Return the Reynolds stress tensor [m^2/s^2]
         virtual tmp<volSymmTensorField> sigma() const;
 
-        //- Return the effective stress tensor
-        virtual tmp<volSymmTensorField> devTau() const;
+        //- Return the effective surface stress
+        virtual tmp<surfaceVectorField> devTau() const;
 
         //- Return the source term for the momentum equation
         virtual tmp<fvVectorMatrix> divDevTau(volVectorField& U) const;

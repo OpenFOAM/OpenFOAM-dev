@@ -31,6 +31,7 @@ License
 #include "phaseIncompressibleMomentumTransportModel.H"
 #include "phaseCompressibleMomentumTransportModel.H"
 #include "fluidThermo.H"
+#include "surfaceInterpolate.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -204,7 +205,7 @@ void Foam::functionObjects::forcesBase::initialise()
 }
 
 
-Foam::tmp<Foam::volSymmTensorField>
+Foam::tmp<Foam::surfaceVectorField>
 Foam::functionObjects::forcesBase::devTau() const
 {
     typedef incompressible::momentumTransportModel icoModel;
@@ -223,21 +224,21 @@ Foam::functionObjects::forcesBase::devTau() const
         const incompressible::momentumTransportModel& model =
             obr_.lookupObject<icoModel>(modelName);
 
-        return alpha()*rho()*model.devSigma();
+        return fvc::interpolate(alpha()*rho())*model.devSigma();
     }
     else if (obr_.foundObject<cmpModel>(modelName))
     {
         const cmpModel& model =
             obr_.lookupObject<cmpModel>(modelName);
 
-        return alpha()*model.devTau();
+        return fvc::interpolate(alpha())*model.devTau();
     }
     else if (obr_.foundObject<phaseIcoModel>(phaseModelName))
     {
         const phaseIcoModel& model =
             obr_.lookupObject<phaseIcoModel>(phaseModelName);
 
-        return rho()*model.devSigma();
+        return fvc::interpolate(rho())*model.devSigma();
     }
     else if (obr_.foundObject<phaseCmpModel>(phaseModelName))
     {
@@ -246,31 +247,13 @@ Foam::functionObjects::forcesBase::devTau() const
 
         return model.devTau();
     }
-    else if (obr_.foundObject<dictionary>("physicalProperties"))
-    {
-        // Legacy support for icoFoam
-
-        const dictionary& physicalProperties =
-             obr_.lookupObject<dictionary>("physicalProperties");
-
-        const dimensionedScalar nu
-        (
-            "nu",
-            dimKinematicViscosity,
-            physicalProperties.lookup("nu")
-        );
-
-        const volVectorField& U = obr_.lookupObject<volVectorField>(UName_);
-
-        return -rho()*nu*dev(twoSymm(fvc::grad(U)));
-    }
     else
     {
         FatalErrorInFunction
             << "No valid model for viscous stress calculation"
             << exit(FatalError);
 
-        return volSymmTensorField::null();
+        return surfaceVectorField::null();
     }
 }
 
@@ -849,9 +832,11 @@ void Foam::functionObjects::forcesBase::calcForcesMoments(const vector& CofR)
         const surfaceVectorField::Boundary& Sfb =
             mesh_.Sf().boundaryField();
 
-        tmp<volSymmTensorField> tdevTau = devTau();
-        const volSymmTensorField::Boundary& devTaub =
-            tdevTau().boundaryField();
+        const surfaceScalarField::Boundary& magSfb =
+            mesh_.magSf().boundaryField();
+
+        tmp<surfaceVectorField> tdevTau = devTau();
+        const surfaceVectorField::Boundary& devTaub = tdevTau().boundaryField();
 
         // Scale pRef by density for incompressible simulations
         const scalar pRef = pRef_/rho(p);
@@ -873,7 +858,7 @@ void Foam::functionObjects::forcesBase::calcForcesMoments(const vector& CofR)
                *(p.boundaryField()[patchi] - pRef)
             );
 
-            const vectorField fT(Sfb[patchi] & devTaub[patchi]);
+            const vectorField fT(magSfb[patchi] * devTaub[patchi]);
 
             const vectorField fP(Md.size(), Zero);
 

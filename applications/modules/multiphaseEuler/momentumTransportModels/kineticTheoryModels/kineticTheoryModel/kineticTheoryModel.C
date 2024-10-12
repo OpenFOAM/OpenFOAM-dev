@@ -361,17 +361,22 @@ Foam::RASModels::kineticTheoryModel::pPrimef() const
 }
 
 
-Foam::tmp<Foam::volSymmTensorField>
+Foam::tmp<Foam::surfaceVectorField>
 Foam::RASModels::kineticTheoryModel::devTau() const
 {
-    return tmp<volSymmTensorField>
+    const surfaceScalarField rhoNuEff(fvc::interpolate(rho_*(nut_ + nuFric_)));
+
+    return tmp<surfaceVectorField>
     (
-        volSymmTensorField::New
+        surfaceVectorField::New
         (
             IOobject::groupName("devTau", U_.group()),
-          - (rho_*(nut_ + nuFric_))
-           *dev(twoSymm(fvc::grad(U_)))
-          - ((rho_*lambda_)*fvc::div(phi_))*symmTensor::I
+          - rhoNuEff
+           *(
+               fvc::dotInterpolate(mesh().nf(), dev2(T(fvc::grad(U_))))
+             + fvc::snGrad(U_)
+            )
+          - fvc::interpolate((rho_*lambda_)*fvc::div(phi_))*mesh().Sf()
         )
     );
 }
@@ -383,16 +388,17 @@ Foam::RASModels::kineticTheoryModel::divDevTau
     volVectorField& U
 ) const
 {
+    const surfaceScalarField rhoNuEff(fvc::interpolate(rho_*(nut_ + nuFric_)));
+
     return
     (
-      - fvm::laplacian(rho_*(nut_ + nuFric_), U)
       - fvc::div
         (
-            (rho_*(nut_ + nuFric_))*dev2(T(fvc::grad(U)))
-          + ((rho_*lambda_)*fvc::div(phi_))
-           *dimensioned<symmTensor>("I", dimless, symmTensor::I),
-            "divDevTau(" + U_.name() + ')'
+            rhoNuEff
+           *fvc::dotInterpolate(mesh().Sf(), dev2(T(fvc::grad(U))))
+          + fvc::interpolate((rho_*lambda_)*fvc::div(phi_))*mesh().Sf()
         )
+      - fvm::laplacian(rhoNuEff, U)
     );
 }
 
