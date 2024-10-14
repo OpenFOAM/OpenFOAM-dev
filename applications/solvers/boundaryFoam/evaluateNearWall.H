@@ -4,7 +4,7 @@
     const scalar nu = turbulence->nu()().boundaryField()[patchId][faceId];
     const scalar nut = turbulence->nut()().boundaryField()[patchId][faceId];
     const scalar nuEff = turbulence->nuEff()().boundaryField()[patchId][faceId];
-    const symmTensor R = turbulence->sigma()().boundaryField()[patchId][faceId];
+    const symmTensor R = turbulence->R()().boundaryField()[patchId][faceId];
     const scalar epsilon = turbulence->epsilon()()[cellId];
     const scalar omega = turbulence->omega()()[cellId];
     const scalar k = turbulence->k()()[cellId];

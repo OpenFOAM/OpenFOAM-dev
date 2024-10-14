@@ -105,7 +105,7 @@ public:
     // Member Functions
 
         //- Return the Reynolds stress tensor [m^2/s^2]
-        virtual tmp<volSymmTensorField> sigma() const;
+        virtual tmp<volSymmTensorField> R() const;
 
         //- Return the effective surface stress
         virtual tmp<surfaceVectorField> devTau() const;

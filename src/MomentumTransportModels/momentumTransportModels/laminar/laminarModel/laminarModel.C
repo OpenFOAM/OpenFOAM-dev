@@ -252,7 +252,7 @@ Foam::laminarModel<BasicMomentumTransportModel>::omega() const
 
 template<class BasicMomentumTransportModel>
 Foam::tmp<Foam::volSymmTensorField>
-Foam::laminarModel<BasicMomentumTransportModel>::sigma() const
+Foam::laminarModel<BasicMomentumTransportModel>::R() const
 {
     return volSymmTensorField::New
     (

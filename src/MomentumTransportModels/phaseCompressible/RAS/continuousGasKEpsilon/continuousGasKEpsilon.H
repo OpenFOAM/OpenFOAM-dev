@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -148,8 +148,8 @@ public:
         //- Return the effective density for the stress
         virtual tmp<volScalarField> rhoEff() const;
 
-        //- Return the stress tensor [m^2/s^2]
-        virtual tmp<volSymmTensorField> sigma() const;
+        //- Return the Reynolds stress tensor [m^2/s^2]
+        virtual tmp<volSymmTensorField> R() const;
 
 
     // Member Operators

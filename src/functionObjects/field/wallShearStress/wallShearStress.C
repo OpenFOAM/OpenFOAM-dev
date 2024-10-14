@@ -78,11 +78,7 @@ Foam::functionObjects::wallShearStress::calcShearStress
 
     forAllConstIter(labelHashSet, patchSet_, iter)
     {
-        label patchi = iter.key();
-
-        const vectorField& Sfp = mesh_.Sf().boundaryField()[patchi];
-        const scalarField& magSfp = mesh_.magSf().boundaryField()[patchi];
-
+        const label patchi = iter.key();
         wallShearStressBf[patchi] = -tau.boundaryField()[patchi];
     }
 

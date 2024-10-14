@@ -74,11 +74,11 @@ nonlinearEddyViscosity
 
 template<class BasicMomentumTransportModel>
 Foam::tmp<Foam::volSymmTensorField>
-Foam::nonlinearEddyViscosity<BasicMomentumTransportModel>::sigma() const
+Foam::nonlinearEddyViscosity<BasicMomentumTransportModel>::R() const
 {
     tmp<volSymmTensorField> tR
     (
-        eddyViscosity<BasicMomentumTransportModel>::sigma()
+        eddyViscosity<BasicMomentumTransportModel>::R()
     );
     tR.ref() += nonlinearStress_;
     return tR;

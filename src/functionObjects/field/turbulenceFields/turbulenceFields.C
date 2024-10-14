@@ -201,7 +201,7 @@ bool Foam::functionObjects::turbulenceFields::execute()
                 }
                 case compressibleField::R:
                 {
-                    processField<symmTensor>(f, model.sigma());
+                    processField<symmTensor>(f, model.R());
                     break;
                 }
                 default:
@@ -249,7 +249,7 @@ bool Foam::functionObjects::turbulenceFields::execute()
                 }
                 case compressibleField::R:
                 {
-                    processField<symmTensor>(f, model.sigma());
+                    processField<symmTensor>(f, model.R());
                     break;
                 }
                 default:
@@ -300,7 +300,7 @@ bool Foam::functionObjects::turbulenceFields::execute()
                 }
                 case incompressibleField::R:
                 {
-                    processField<symmTensor>(f, model.sigma());
+                    processField<symmTensor>(f, model.R());
                     break;
                 }
                 default:

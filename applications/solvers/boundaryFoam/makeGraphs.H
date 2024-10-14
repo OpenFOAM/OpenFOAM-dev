@@ -8,7 +8,7 @@ const volSymmTensorField R
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
     ),
-    turbulence->sigma()
+    turbulence->R()
 );
 
 runTime.write();

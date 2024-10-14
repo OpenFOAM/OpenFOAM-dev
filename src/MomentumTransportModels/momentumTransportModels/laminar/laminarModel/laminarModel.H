@@ -146,6 +146,9 @@ public:
         //- Return the effective viscosity on patch
         virtual tmp<scalarField> nuEff(const label patchi) const = 0;
 
+        //- Return the Reynolds stress tensor [m^2/s^2], i.e. 0 for laminar flow
+        virtual tmp<volSymmTensorField> R() const;
+
         //- Return the turbulence kinetic energy, i.e. 0 for laminar flow
         virtual tmp<volScalarField> k() const;
 
@@ -156,9 +159,6 @@ public:
         //- Return the turbulence specific dissipation rate,
         //  i.e. 0 for laminar flow
         virtual tmp<volScalarField> omega() const;
-
-        //- Return the stress tensor [m^2/s^2], i.e. 0 for laminar flow
-        virtual tmp<volSymmTensorField> sigma() const;
 
         //- Predict the laminar viscosity
         virtual void predict();

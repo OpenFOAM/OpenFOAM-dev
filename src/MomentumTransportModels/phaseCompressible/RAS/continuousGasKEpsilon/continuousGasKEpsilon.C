@@ -255,7 +255,7 @@ continuousGasKEpsilon<BasicMomentumTransportModel>::epsilonSource() const
 
 template<class BasicMomentumTransportModel>
 tmp<volSymmTensorField>
-continuousGasKEpsilon<BasicMomentumTransportModel>::sigma() const
+continuousGasKEpsilon<BasicMomentumTransportModel>::R() const
 {
     tmp<volScalarField> tk(this->k());
 

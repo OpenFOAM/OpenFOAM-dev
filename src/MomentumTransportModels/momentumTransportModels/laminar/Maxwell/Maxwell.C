@@ -261,13 +261,6 @@ tmp<scalarField> Maxwell<BasicMomentumTransportModel>::nuEff
 
 
 template<class BasicMomentumTransportModel>
-tmp<volSymmTensorField> Maxwell<BasicMomentumTransportModel>::sigma() const
-{
-    return sigma_;
-}
-
-
-template<class BasicMomentumTransportModel>
 tmp<surfaceVectorField> Maxwell<BasicMomentumTransportModel>::devTau() const
 {
     const surfaceVectorField nf(this->mesh().nf());

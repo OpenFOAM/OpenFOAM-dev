@@ -189,7 +189,7 @@ bool Foam::ReynoldsStress<BasicMomentumTransportModel>::read()
 
 template<class BasicMomentumTransportModel>
 Foam::tmp<Foam::volSymmTensorField>
-Foam::ReynoldsStress<BasicMomentumTransportModel>::sigma() const
+Foam::ReynoldsStress<BasicMomentumTransportModel>::R() const
 {
     return R_;
 }

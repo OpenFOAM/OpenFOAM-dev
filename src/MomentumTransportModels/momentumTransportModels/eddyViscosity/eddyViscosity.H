@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -109,11 +109,11 @@ public:
             return nut_.boundaryField()[patchi];
         }
 
+        //- Return the Reynolds stress tensor [m^2/s^2]
+        virtual tmp<volSymmTensorField> R() const;
+
         //- Return the turbulence kinetic energy
         virtual tmp<volScalarField> k() const = 0;
-
-        //- Return the Reynolds stress tensor [m^2/s^2]
-        virtual tmp<volSymmTensorField> sigma() const;
 
         //- Validate the turbulence fields after construction
         //  Update turbulence viscosity and other derived fields as requires

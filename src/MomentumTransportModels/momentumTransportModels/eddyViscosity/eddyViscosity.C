@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,7 +79,7 @@ bool Foam::eddyViscosity<BasicMomentumTransportModel>::read()
 
 template<class BasicMomentumTransportModel>
 Foam::tmp<Foam::volSymmTensorField>
-Foam::eddyViscosity<BasicMomentumTransportModel>::sigma() const
+Foam::eddyViscosity<BasicMomentumTransportModel>::R() const
 {
     return volSymmTensorField::New
     (

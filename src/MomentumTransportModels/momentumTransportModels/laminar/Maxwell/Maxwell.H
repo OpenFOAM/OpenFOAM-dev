@@ -175,9 +175,6 @@ public:
         //- Return the effective viscosity on patch
         virtual tmp<scalarField> nuEff(const label patchi) const;
 
-        //- Return the stress tensor [m^2/s^2]
-        virtual tmp<volSymmTensorField> sigma() const;
-
         //- Return the effective surface stress
         virtual tmp<surfaceVectorField> devTau() const;
 
