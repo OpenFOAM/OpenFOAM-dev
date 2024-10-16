@@ -134,12 +134,6 @@ public:
 
         //- Return the volumetric flux field
         virtual tmp<surfaceScalarField> phi() const;
-
-        //- Return the effective surface stress
-        virtual tmp<surfaceVectorField> devTau() const = 0;
-
-        //- Return the stress matrix for the momentum equation
-        virtual tmp<fvVectorMatrix> divDevTau(volVectorField& U) const = 0;
 };
 
 

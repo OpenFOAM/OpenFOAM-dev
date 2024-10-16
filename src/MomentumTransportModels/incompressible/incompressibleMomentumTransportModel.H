@@ -137,11 +137,7 @@ public:
         //- Return the source term for the momentum equation
         virtual tmp<fvVectorMatrix> divDevSigma(volVectorField& U) const;
 
-        //- Return the effective surface stress
-        virtual tmp<surfaceVectorField> devTau() const = 0;
-
-        //- Return the source term for the momentum equation
-        virtual tmp<fvVectorMatrix> divDevTau(volVectorField& U) const = 0;
+        using momentumTransportModel::divDevTau;
 
         //- Return the source term for the momentum equation
         virtual tmp<fvVectorMatrix> divDevTau
