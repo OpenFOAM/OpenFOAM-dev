@@ -29,6 +29,15 @@ License
 #include "volFields.H"
 #include "surfaceFields.H"
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+template<class Type>
+Foam::scalar Foam::CLASS::t() const
+{
+    return this->db().time().value();
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
@@ -162,7 +171,7 @@ void Foam::CLASS::updateCoeffs()
     (
         data_
       + fieldData_
-      + scalarData_*timeVsData_->value(this->db().time().value())
+      + scalarData_*timeVsData_->value(t())
     );
 
     const scalarField& phip =
