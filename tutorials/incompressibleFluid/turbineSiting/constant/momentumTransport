@@ -21,6 +21,7 @@ RAS
 
     turbulence          on;
 
+    nutMaxCoeff         1e8;
 
     kEpsilonCoeffs
     {
