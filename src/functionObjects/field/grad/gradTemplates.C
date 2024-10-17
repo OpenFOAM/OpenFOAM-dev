@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,21 +32,25 @@ bool Foam::functionObjects::grad::calcGrad()
 {
     if (foundObject<VolField<Type>>(fieldName_))
     {
-        return store
+        store
         (
             resultName_,
             fvc::grad(lookupObject<VolField<Type>>(fieldName_)),
             mesh_.changing() && mesh_.solution().cache(resultName_)
         );
+
+        return true;
     }
     else if (foundObject<SurfaceField<Type>>(fieldName_))
     {
-        return store
+        store
         (
             resultName_,
             fvc::grad(lookupObject<SurfaceField<Type>>(fieldName_)),
             mesh_.changing() && mesh_.solution().cache(resultName_)
         );
+
+        return true;
     }
     else
     {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,14 +99,18 @@ bool Foam::functionObjects::shearStress::execute()
         const cmpModel& model =
             mesh_.lookupObject<cmpModel>(momentumTransportModelName);
 
-        return store(fieldName, model.devTau());
+        store(fieldName, model.devTau());
+
+        return true;
     }
     else if (mesh_.foundObject<icoModel>(momentumTransportModelName))
     {
         const icoModel& model =
             mesh_.lookupObject<icoModel>(momentumTransportModelName);
 
-        return store(fieldName, model.devSigma());
+        store(fieldName, model.devSigma());
+
+        return true;
     }
     else
     {

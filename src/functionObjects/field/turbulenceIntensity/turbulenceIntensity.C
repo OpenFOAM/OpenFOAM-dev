@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,35 +97,23 @@ bool Foam::functionObjects::turbulenceIntensity::read(const dictionary& dict)
 
 bool Foam::functionObjects::turbulenceIntensity::execute()
 {
-    if (mesh_.foundType<momentumTransportModel>())
-    {
-        const momentumTransportModel& turbModel =
-            mesh_.lookupType<momentumTransportModel>();
+    const momentumTransportModel& transport =
+        mesh_.lookupType<momentumTransportModel>();
 
-        volScalarField uPrime(sqrt((2.0/3.0)*turbModel.k()));
+    const volScalarField uPrime(sqrt((2.0/3.0)*transport.k()));
 
-        word name("I");
+    store
+    (
+        "I",
+        uPrime
+       /max
+        (
+            max(uPrime, mag(transport.U())),
+            dimensionedScalar(dimVelocity, small)
+        )
+    );
 
-        return
-            store
-            (
-                name,
-                uPrime
-               /max
-                (
-                    max(uPrime, mag(turbModel.U())),
-                    dimensionedScalar(dimVelocity, small)
-                )
-            );
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "Unable to find turbulence model in the "
-            << "database" << exit(FatalError);
-
-        return false;
-    }
+    return true;
 }
 
 

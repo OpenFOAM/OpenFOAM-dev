@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,11 +60,13 @@ bool Foam::functionObjects::MachNo::calc()
 
         const volVectorField& U = lookupObject<volVectorField>(fieldName_);
 
-        return store
+        store
         (
             resultName_,
             mag(U)/sqrt(thermo.gamma()*thermo.p()/thermo.rho())
         );
+
+        return true;
     }
     else
     {

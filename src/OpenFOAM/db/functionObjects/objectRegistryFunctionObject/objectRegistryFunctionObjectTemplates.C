@@ -74,7 +74,7 @@ Foam::functionObjects::objectRegistryFunctionObject::lookupObjectRef
 
 
 template<class ObjectType>
-bool Foam::functionObjects::objectRegistryFunctionObject::store
+ObjectType& Foam::functionObjects::objectRegistryFunctionObject::store
 (
     const tmp<ObjectType>& tfield
 )
@@ -89,23 +89,26 @@ bool Foam::functionObjects::objectRegistryFunctionObject::store
         if (&field != &tfield())
         {
             field = tfield;
+            return field;
         }
         else
         {
-            obr_.objectRegistry::store(tfield.ptr());
+            ObjectType* fieldPtr = tfield.ptr();
+            obr_.objectRegistry::store(fieldPtr);
+            return *fieldPtr;
         }
     }
     else
     {
-        obr_.objectRegistry::store(tfield.ptr());
+        ObjectType* fieldPtr = tfield.ptr();
+        obr_.objectRegistry::store(fieldPtr);
+        return *fieldPtr;
     }
-
-    return true;
 }
 
 
 template<class ObjectType>
-bool Foam::functionObjects::objectRegistryFunctionObject::store
+ObjectType& Foam::functionObjects::objectRegistryFunctionObject::store
 (
     const word& fieldName,
     const tmp<ObjectType>& tfield,
@@ -121,7 +124,7 @@ bool Foam::functionObjects::objectRegistryFunctionObject::store
             << "    and use the 'writeObjects' functionObject."
             << endl;
 
-        return false;
+        return tfield.ref();
     }
 
     if
@@ -143,6 +146,8 @@ bool Foam::functionObjects::objectRegistryFunctionObject::store
         {
             obr_.objectRegistry::store(tfield.ptr());
         }
+
+        return field;
     }
     else
     {
@@ -151,10 +156,10 @@ bool Foam::functionObjects::objectRegistryFunctionObject::store
             tfield.ref().rename(fieldName);
         }
 
-        obr_.objectRegistry::store(tfield.ptr());
+        ObjectType* fieldPtr = tfield.ptr();
+        obr_.objectRegistry::store(fieldPtr);
+        return *fieldPtr;
     }
-
-    return true;
 }
 
 

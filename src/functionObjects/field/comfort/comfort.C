@@ -472,10 +472,11 @@ bool Foam::functionObjects::comfort::execute()
         )
     );
 
-    return
-        store(PMV)
-     && store(PPD)
-     && store(DR);
+    store(PMV);
+    store(PPD);
+    store(DR);
+
+    return true;
 }
 
 

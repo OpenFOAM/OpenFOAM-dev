@@ -94,7 +94,9 @@ bool Foam::functionObjects::CourantNo::calc()
 
         tCo->correctBoundaryConditions();
 
-        return store(resultName_, tCo);
+        store(resultName_, tCo);
+
+        return true;
     }
     else
     {

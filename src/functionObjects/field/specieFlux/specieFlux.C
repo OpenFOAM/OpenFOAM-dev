@@ -82,7 +82,9 @@ bool Foam::functionObjects::specieFluxBase::calc()
 
     const volScalarField& Yi = thermo.Y(fieldName_);
 
-    return store(resultName_, calc(ttm, Yi));
+    store(resultName_, calc(ttm, Yi));
+
+    return true;
 }
 
 

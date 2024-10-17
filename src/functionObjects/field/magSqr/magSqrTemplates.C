@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,19 +33,23 @@ bool Foam::functionObjects::magSqr::calcMagSqr()
 {
     if (foundObject<VolField<Type>>(fieldName_))
     {
-        return store
+        store
         (
             resultName_,
             Foam::magSqr(lookupObject<VolField<Type>>(fieldName_))
         );
+
+        return true;
     }
     else if (foundObject<SurfaceField<Type>>(fieldName_))
     {
-        return store
+        store
         (
             resultName_,
             Foam::magSqr(lookupObject<SurfaceField<Type>>(fieldName_))
         );
+
+        return true;
     }
     else
     {

@@ -212,7 +212,9 @@ bool Foam::functionObjects::wallHeatFlux::execute()
                 thermophysicalTransportModelName
             );
 
-        return store(fieldName, calcWallHeatFlux(ttm.q()));
+        store(fieldName, calcWallHeatFlux(ttm.q()));
+
+        return true;
     }
     else
     {

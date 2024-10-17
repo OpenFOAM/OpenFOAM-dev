@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -166,11 +166,13 @@ bool Foam::functionObjects::pressure::calc()
     {
         const volScalarField& p = lookupObject<volScalarField>(fieldName_);
 
-        return store
+        store
         (
             resultName_,
             volScalarField::New(resultName_, coeff(pRef(pDyn(p, rhoScale(p)))))
         );
+
+        return true;
     }
     else
     {

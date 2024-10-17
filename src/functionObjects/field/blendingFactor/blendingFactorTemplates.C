@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,11 +66,13 @@ bool Foam::functionObjects::blendingFactor::calcBF()
     tmp<surfaceScalarField> factorf(blendedScheme.blendingFactor(field));
 
     // Convert into vol field whose values represent the local face maxima
-    return store
+    store
     (
         resultName_,
         fvc::cellReduce(factorf, maxEqOp<scalar>())
     );
+
+    return true;
 }
 
 

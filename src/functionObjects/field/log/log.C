@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ bool Foam::functionObjects::log::calc()
             dimensionSet::debug = 0;
         }
 
-        bool stored = store
+        store
         (
             resultName_,
             clip_ ? Foam::log(max(x, clipValue_)) : Foam::log(x)
@@ -74,7 +74,7 @@ bool Foam::functionObjects::log::calc()
             dimensionSet::debug = dimensionSetDebug;
         }
 
-        return stored;
+        return true;
     }
     else
     {

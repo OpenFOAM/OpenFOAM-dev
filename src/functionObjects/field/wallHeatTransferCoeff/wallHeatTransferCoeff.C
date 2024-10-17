@@ -161,14 +161,13 @@ bool Foam::functionObjects::wallHeatTransferCoeff::read(const dictionary& dict)
 
 bool Foam::functionObjects::wallHeatTransferCoeff::execute()
 {
-    const momentumTransportModel& mmtm =
-        lookupObject<momentumTransportModel>
-        (
-            momentumTransportModel::typeName
-        );
+    const momentumTransportModel& transport =
+        mesh_.lookupType<momentumTransportModel>();
 
-    tmp<volScalarField> thtc;
-    thtc = coeffModel_->htcByRhoCp(mmtm, patchSet_);
+    tmp<volScalarField> thtc
+    (
+        coeffModel_->htcByRhoCp(transport, patchSet_)
+    );
 
     if (!foundObject<basicThermo>(physicalProperties::typeName))
     {

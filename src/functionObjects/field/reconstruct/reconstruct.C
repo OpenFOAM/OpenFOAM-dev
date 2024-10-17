@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,12 +46,14 @@ bool Foam::functionObjects::reconstruct::calcReconstruction()
 {
     if (foundObject<SurfaceField<Type>>(fieldName_))
     {
-        return store
+        store
         (
             resultName_,
             fvc::reconstruct(lookupObject<SurfaceField<Type>>(fieldName_)),
             mesh_.changing() && mesh_.solution().cache(resultName_)
         );
+
+        return true;
     }
     else
     {

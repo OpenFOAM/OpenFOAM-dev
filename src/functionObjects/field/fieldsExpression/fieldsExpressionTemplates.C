@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,9 @@ bool Foam::functionObjects::fieldsExpression::opAndStore
     const GeoField<TypeB>& b
 )
 {
-    return store(resultName_, Op<GeoField<TypeA>, GeoField<TypeB>>()(a, b));
+    store(resultName_, Op<GeoField<TypeA>, GeoField<TypeB>>()(a, b));
+
+    return true;
 }
 
 
@@ -78,11 +80,13 @@ bool Foam::functionObjects::fieldsExpression::foldAB(const label i)
     )
     {
         clearObject(resultName_);
-        return store
+        store
         (
             resultName_,
             lookupObject<GeoField<TypeA>>(fieldNames_[0]).clone()
         );
+
+        return true;
     }
 
     if

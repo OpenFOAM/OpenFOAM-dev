@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,11 +61,13 @@ bool Foam::functionObjects::Lambda2::calc()
           + (skew(gradU) & skew(gradU))
         );
 
-        return store
+        store
         (
             resultName_,
            -eigenValues(SSplusWW)().component(vector::Y)
         );
+
+        return true;
     }
     else
     {

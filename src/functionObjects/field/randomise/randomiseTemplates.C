@@ -48,7 +48,9 @@ bool Foam::functionObjects::randomise::calcRandomised()
             rfield[celli] += magPerturbation_*rndPert;
         }
 
-        return store(resultName_, rfieldt);
+        store(resultName_, rfieldt);
+
+        return true;
     }
     else
     {

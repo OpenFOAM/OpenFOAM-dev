@@ -96,11 +96,11 @@ protected:
 
         //- Store the given field in the objectRegistry
         template<class ObjectType>
-        bool store(const tmp<ObjectType>& tfield);
+        ObjectType& store(const tmp<ObjectType>& tfield);
 
         //- Store the given field in the objectRegistry under the given name
         template<class ObjectType>
-        bool store
+        ObjectType& store
         (
             const word& fieldName,
             const tmp<ObjectType>& tfield,

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,11 +32,13 @@ bool Foam::functionObjects::div::calcDiv()
 {
     if (foundObject<FieldType>(fieldName_))
     {
-        return store
+        store
         (
             resultName_,
             fvc::div(lookupObject<FieldType>(fieldName_))
         );
+
+        return true;
     }
     else
     {

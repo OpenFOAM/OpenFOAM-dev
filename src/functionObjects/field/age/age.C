@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -249,7 +249,9 @@ bool Foam::functionObjects::age::execute()
     Info<< "Min/max age:" << min(age).value()
         << ' ' << max(age).value() << endl;
 
-    return store(tage);
+    store(tage);
+
+    return true;
 }
 
 

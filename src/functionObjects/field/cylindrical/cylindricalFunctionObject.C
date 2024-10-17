@@ -102,7 +102,9 @@ bool Foam::functionObjects::cylindrical::calc()
             );
         }
 
-        return store(resultName_, tcvf);
+        store(resultName_, tcvf);
+
+        return true;
     }
     else
     {

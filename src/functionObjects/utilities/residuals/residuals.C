@@ -83,23 +83,20 @@ bool Foam::functionObjects::residuals::read(const dictionary& dict)
 
 void Foam::functionObjects::residuals::writeFileHeader(const label i)
 {
-    if (Pstream::master())
+    writeHeader(file(), "Residuals");
+    writeCommented(file(), "Time");
+
+    forAll(fieldSet_, fieldi)
     {
-        writeHeader(file(), "Residuals");
-        writeCommented(file(), "Time");
+        const word& fieldName = fieldSet_[fieldi];
 
-        forAll(fieldSet_, fieldi)
-        {
-            const word& fieldName = fieldSet_[fieldi];
-
-            #define WRITE_FILE_HEADER(Type, nullArg) \
-                writeFileHeader<Type>(fieldName);
-            FOR_ALL_FIELD_TYPES(WRITE_FILE_HEADER);
-            #undef WRITE_FILE_HEADER
-        }
-
-        file() << endl;
+        #define WRITE_FILE_HEADER(Type, nullArg)                               \
+            writeFileHeader<Type>(fieldName);
+        FOR_ALL_FIELD_TYPES(WRITE_FILE_HEADER);
+        #undef WRITE_FILE_HEADER
     }
+
+    file() << endl;
 }
 
 

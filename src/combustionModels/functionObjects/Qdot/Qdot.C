@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,12 +99,13 @@ bool Foam::functionObjects::Qdot::execute()
         )
     );
 
-    return
-        store
-        (
-            fieldName,
-            mesh_.lookupObject<combustionModel>(modelName).Qdot()
-        );
+    store
+    (
+        fieldName,
+        mesh_.lookupObject<combustionModel>(modelName).Qdot()
+    );
+
+    return true;
 }
 
 
