@@ -527,6 +527,25 @@ int main(int argc, char *argv[])
                 );
                 polyPatch& pp = ppPtr();
 
+                // Check the validity of the patch type
+                if (isA<cyclicPolyPatch>(pp) && Pstream::parRun())
+                {
+                    FatalErrorInFunction
+                        << "Patches of type '" << pp.type() << "' cannot be "
+                        << "created in parallel. They must be created in "
+                        << "serial and then decomposed." << exit(FatalError);
+                }
+                if
+                (
+                    isA<processorPolyPatch>(pp)
+                 || isA<nonConformalPolyPatch>(pp)
+                )
+                {
+                    FatalErrorInFunction
+                        << "Patches of type '" << pp.type() << "' cannot be "
+                        << "created by createBaffles" << exit(FatalError);
+                }
+
                 // Add it to the group
                 if (!groupName.empty() && !pp.inGroup(groupName))
                 {
