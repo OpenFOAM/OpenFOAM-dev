@@ -1980,14 +1980,7 @@ Foam::label Foam::meshRefinement::addMeshedPatch
                     pbm
                 )
             );
-            mesh_.addPatch
-            (
-                patchi,
-                ppPtr(),
-                dictionary(),       // optional field values
-                fvPatchField<scalar>::calculatedType(),
-                true                // validBoundary
-            );
+            mesh_.addPatch(patchi, ppPtr());
         }
 
         // Store
@@ -1995,6 +1988,12 @@ Foam::label Foam::meshRefinement::addMeshedPatch
 
         return patchi;
     }
+}
+
+
+void Foam::meshRefinement::addedMeshedPatches()
+{
+    mesh_.addedPatches();
 }
 
 

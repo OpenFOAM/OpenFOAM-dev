@@ -38,6 +38,7 @@ Description
 #include "fvMeshTools.H"
 #include "wallPolyPatch.H"
 #include "processorFvPatchField.H"
+#include "processorFvsPatchField.H"
 
 using namespace Foam;
 
@@ -77,14 +78,7 @@ int main(int argc, char *argv[])
             wallPolyPatch::typeName
         );
 
-        label newPatchi = fvMeshTools::addPatch
-        (
-            mesh,
-            pp,
-            dictionary(),   // no specialised patch fields
-            calculatedFvPatchField<scalar>::typeName,
-            true            // parallel sync'ed addition
-        );
+        label newPatchi = fvMeshTools::addPatch(mesh, pp);
 
         Info<< "Inserted patch " << mesh.boundaryMesh()[newPatchi].name()
             << " type " << mesh.boundaryMesh()[newPatchi].type()
@@ -149,14 +143,7 @@ int main(int argc, char *argv[])
                 processorPolyPatch::typeName
             );
 
-            label newPatchi = fvMeshTools::addPatch
-            (
-                mesh,
-                pp,
-                dictionary(),   // no specialised patch fields
-                processorFvPatchField<scalar>::typeName,
-                false            // parallel sync'ed addition
-            );
+            label newPatchi = fvMeshTools::addPatch(mesh, pp);
 
             Pout<< "Inserted patch " << mesh.boundaryMesh()[newPatchi].name()
                 << " type " << mesh.boundaryMesh()[newPatchi].type()

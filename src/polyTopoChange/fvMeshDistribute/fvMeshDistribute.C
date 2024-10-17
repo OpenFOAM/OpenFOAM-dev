@@ -26,7 +26,9 @@ License
 #include "fvMeshDistribute.H"
 #include "fvMeshAdder.H"
 #include "processorCyclicFvPatchField.H"
+#include "processorCyclicFvsPatchField.H"
 #include "nonConformalProcessorCyclicFvPatchField.H"
+#include "nonConformalProcessorCyclicFvsPatchField.H"
 #include "polyTopoChange.H"
 #include "removeCells.H"
 #include "polyDistributionMap.H"
@@ -1337,14 +1339,7 @@ void Foam::fvMeshDistribute::addProcPatches
                     procPatchID[proci].insert
                     (
                         referPatchID[bFacei],
-                        fvMeshTools::addPatch
-                        (
-                            mesh_,
-                            pp,
-                            dictionary(),   // optional per field patchField
-                            processorFvPatchField<scalar>::typeName,
-                            false           // not parallel sync
-                        )
+                        fvMeshTools::addPatch(mesh_, pp)
                     );
                 }
                 else
@@ -1354,6 +1349,7 @@ void Foam::fvMeshDistribute::addProcPatches
                           (
                               mesh_.boundaryMesh()[referPatchID[bFacei]]
                           );
+
                     processorCyclicPolyPatch pp
                     (
                         0,              // size
@@ -1368,14 +1364,7 @@ void Foam::fvMeshDistribute::addProcPatches
                     procPatchID[proci].insert
                     (
                         referPatchID[bFacei],
-                        fvMeshTools::addPatch
-                        (
-                            mesh_,
-                            pp,
-                            dictionary(),   // optional per field patchField
-                            processorCyclicFvPatchField<scalar>::typeName,
-                            false           // not parallel sync
-                        )
+                        fvMeshTools::addPatch(mesh_, pp)
                     );
                 }
             }
@@ -1444,11 +1433,7 @@ void Foam::fvMeshDistribute::addNccProcPatches()
                                 proci,
                                 owner ? nccPp.name() : nbrNccPp.name(),
                                 owner ? origPp.name() : nbrOrigPp.name()
-                            ),
-                            dictionary(),   // optional per field patchField
-                            nonConformalProcessorCyclicFvPatchField<scalar>::
-                                typeName,
-                            false           // not parallel sync
+                            )
                         );
                     }
                 }

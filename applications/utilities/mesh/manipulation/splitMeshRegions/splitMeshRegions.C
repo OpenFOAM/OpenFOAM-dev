@@ -1020,14 +1020,7 @@ labelList addRegionPatches
             mesh.boundaryMesh()
         );
 
-        interfacePatches[interI] = fvMeshTools::addPatch
-        (
-            mesh,
-            patch1,
-            dictionary(),   // optional per field value
-            calculatedFvPatchField<scalar>::typeName,
-            true            // validBoundary
-        );
+        interfacePatches[interI] = fvMeshTools::addPatch(mesh, patch1);
 
         mappedWallPolyPatch patch2
         (
@@ -1040,14 +1033,7 @@ labelList addRegionPatches
             mesh.boundaryMesh()
         );
 
-        fvMeshTools::addPatch
-        (
-            mesh,
-            patch2,
-            dictionary(),   // optional per field value
-            calculatedFvPatchField<scalar>::typeName,
-            true            // validBoundary
-        );
+        fvMeshTools::addPatch(mesh, patch2);
 
         Info<< "For interface between region " << regionNames[e[0]]
             << " and " << regionNames[e[1]] << " added patches" << endl
@@ -1058,6 +1044,9 @@ labelList addRegionPatches
             << "\t" << mesh.boundaryMesh()[interfacePatches[interI]+1].name()
             << endl;
     }
+
+    fvMeshTools::addedPatches(mesh);
+
     return interfacePatches;
 }
 

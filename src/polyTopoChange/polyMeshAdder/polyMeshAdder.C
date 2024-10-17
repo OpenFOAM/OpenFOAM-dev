@@ -1369,14 +1369,7 @@ Foam::autoPtr<Foam::mapAddedPolyMesh> Foam::polyMeshAdder::add
                 // Clone. Note dummy size and start. Gets overwritten later in
                 // resetPrimitives. This avoids getting temporarily illegal
                 // SubList construction in polyPatch.
-                mesh0.addPatch
-                (
-                    allPatchi,
-                    patches1[patch1],
-                    dictionary(),
-                    "calculated",
-                    false
-                );
+                mesh0.addPatch(allPatchi, patches1[patch1]);
 
                 // Record new index in allPatches
                 from1ToAllPatches[patch1] = allPatchi;

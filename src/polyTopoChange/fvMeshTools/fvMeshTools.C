@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,30 +29,27 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// Adds patch if not yet there. Returns patchID.
 Foam::label Foam::fvMeshTools::addPatch
 (
     fvMesh& mesh,
-    const polyPatch& patch,
-    const dictionary& patchFieldDict,
-    const word& defaultPatchFieldType,
-    const bool validBoundary
+    const polyPatch& patch
 )
 {
     polyBoundaryMesh& polyPatches =
         const_cast<polyBoundaryMesh&>(mesh.boundaryMesh());
 
+    // Check if it is already there
     label patchi = polyPatches.findIndex(patch.name());
     if (patchi != -1)
     {
-        // Already there
         return patchi;
     }
 
-
-    // Append at end unless there are processor patches
+    // Append at the end ...
     label insertPatchi = polyPatches.size();
 
+    // ... unless there are processor patches, in which case append after the
+    // last global patch
     if (!isA<processorPolyPatch>(patch))
     {
         forAll(polyPatches, patchi)
@@ -67,16 +64,15 @@ Foam::label Foam::fvMeshTools::addPatch
         }
     }
 
-    mesh.addPatch
-    (
-        insertPatchi,
-        patch,
-        patchFieldDict,
-        defaultPatchFieldType,
-        validBoundary
-    );
+    mesh.addPatch(insertPatchi, patch);
 
     return insertPatchi;
+}
+
+
+void Foam::fvMeshTools::addedPatches(fvMesh& mesh)
+{
+    mesh.addedPatches();
 }
 
 
@@ -87,53 +83,20 @@ void Foam::fvMeshTools::setPatchFields
     const dictionary& patchFieldDict
 )
 {
-    setPatchFields<volScalarField>(mesh, patchi, patchFieldDict);
-    setPatchFields<volVectorField>(mesh, patchi, patchFieldDict);
-    setPatchFields<volSphericalTensorField>(mesh, patchi, patchFieldDict);
-    setPatchFields<volSymmTensorField>(mesh, patchi, patchFieldDict);
-    setPatchFields<volTensorField>(mesh, patchi, patchFieldDict);
-
-    setPatchFields<surfaceScalarField>(mesh, patchi, patchFieldDict);
-    setPatchFields<surfaceVectorField>(mesh, patchi, patchFieldDict);
-    setPatchFields<surfaceSphericalTensorField>(mesh, patchi, patchFieldDict);
-    setPatchFields<surfaceSymmTensorField>(mesh, patchi, patchFieldDict);
-    setPatchFields<surfaceTensorField>(mesh, patchi, patchFieldDict);
-
+    #define SetPatchFieldsType(Type, FieldType, Mesh) \
+        setPatchFields<FieldType<Type>>(Mesh, patchi, patchFieldDict);
+    FOR_ALL_FIELD_TYPES(SetPatchFieldsType, VolField, mesh);
+    FOR_ALL_FIELD_TYPES(SetPatchFieldsType, SurfaceField, mesh);
     if (mesh.foundObject<pointMesh>(pointMesh::typeName))
     {
-        pointMesh& pm = const_cast<pointMesh&>(pointMesh::New(mesh));
-        setPatchFields<pointScalarField>(pm, patchi, patchFieldDict);
-        setPatchFields<pointVectorField>(pm, patchi, patchFieldDict);
-        setPatchFields<pointSphericalTensorField>(pm, patchi, patchFieldDict);
-        setPatchFields<pointSymmTensorField>(pm, patchi, patchFieldDict);
-        setPatchFields<pointTensorField>(pm, patchi, patchFieldDict);
+        FOR_ALL_FIELD_TYPES
+        (
+            SetPatchFieldsType,
+            PointField,
+            pointMesh::New(mesh)
+        );
     }
-}
-
-
-void Foam::fvMeshTools::zeroPatchFields(fvMesh& mesh, const label patchi)
-{
-    setPatchFields<volScalarField>(mesh, patchi, Zero);
-    setPatchFields<volVectorField>(mesh, patchi, Zero);
-    setPatchFields<volSphericalTensorField>(mesh, patchi, Zero);
-    setPatchFields<volSymmTensorField>(mesh, patchi, Zero);
-    setPatchFields<volTensorField>(mesh, patchi, Zero);
-
-    setPatchFields<surfaceScalarField>(mesh, patchi, Zero);
-    setPatchFields<surfaceVectorField>(mesh, patchi, Zero);
-    setPatchFields<surfaceSphericalTensorField>(mesh, patchi, Zero);
-    setPatchFields<surfaceSymmTensorField>(mesh, patchi, Zero);
-    setPatchFields<surfaceTensorField>(mesh, patchi, Zero);
-
-    if (mesh.foundObject<pointMesh>(pointMesh::typeName))
-    {
-        pointMesh& pm = const_cast<pointMesh&>(pointMesh::New(mesh));
-        setPatchFields<pointScalarField>(pm, patchi, Zero);
-        setPatchFields<pointVectorField>(pm, patchi, Zero);
-        setPatchFields<pointSphericalTensorField>(pm, patchi, Zero);
-        setPatchFields<pointSymmTensorField>(pm, patchi, Zero);
-        setPatchFields<pointTensorField>(pm, patchi, Zero);
-    }
+    #undef SetPatchFieldsType
 }
 
 
@@ -146,18 +109,18 @@ void Foam::fvMeshTools::reorderPatches
 )
 {
     // Note: oldToNew might have entries beyond nNewPatches so
-    // cannot use invert
-    //const labelList newToOld(invert(nNewPatches, oldToNew));
+    // cannot use `invert(nNewPatches, oldToNew)`
+
     labelList newToOld(nNewPatches, -1);
     forAll(oldToNew, i)
     {
         label newi = oldToNew[i];
-
         if (newi >= 0 && newi < nNewPatches)
         {
             newToOld[newi] = i;
         }
     }
+
     mesh.reorderPatches(newToOld, validBoundary);
 }
 

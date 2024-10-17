@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,7 +94,6 @@ void Foam::pointMesh::topoChange(const polyTopoChangeMap& map)
     {
         Pout<< "pointMesh::topoChange(const polyTopoChangeMap&): "
             << "Topology change." << endl;
-        Pout<< endl;
     }
     boundary_.topoChange();
 }
@@ -106,7 +105,6 @@ void Foam::pointMesh::mapMesh(const polyMeshMap& map)
     {
         Pout<< "pointMesh::mapMesh(const polyMeshMap&): "
             << "Mesh mapping." << endl;
-        Pout<< endl;
     }
     boundary_.topoChange();
 }
@@ -118,7 +116,6 @@ void Foam::pointMesh::distribute(const polyDistributionMap& map)
     {
         Pout<< "pointMesh::distribute(const polyDistributionMap&): "
             << "Distribute." << endl;
-        Pout<< endl;
     }
     boundary_.topoChange();
 }
@@ -134,17 +131,18 @@ void Foam::pointMesh::reorderPatches
     {
         Pout<< "pointMesh::reorderPatches( const labelUList&, const bool): "
             << "Updating for reordered patches." << endl;
-        Pout<< endl;
     }
 
     boundary_.shuffle(newToOld, validBoundary);
 
-    objectRegistry& db = const_cast<objectRegistry&>(thisDb());
-    ReorderPatchFields<pointScalarField>(db, newToOld);
-    ReorderPatchFields<pointVectorField>(db, newToOld);
-    ReorderPatchFields<pointSphericalTensorField>(db, newToOld);
-    ReorderPatchFields<pointSymmTensorField>(db, newToOld);
-    ReorderPatchFields<pointTensorField>(db, newToOld);
+    #define ReorderPatchFieldsType(Type, nullArg)                              \
+        ReorderPatchFields<PointField<Type>>                                   \
+        (                                                                      \
+            const_cast<objectRegistry&>(thisDb()),                             \
+            newToOld                                                           \
+        );
+    FOR_ALL_FIELD_TYPES(ReorderPatchFieldsType);
+    #undef ReorderPatchFieldsType
 }
 
 
@@ -154,10 +152,10 @@ void Foam::pointMesh::addPatch(const label patchi)
     {
         Pout<< "pointMesh::addPatch(const label): "
             << "Adding patch at " << patchi << endl;
-        Pout<< endl;
     }
 
     const polyBoundaryMesh& pbm = mesh().boundaryMesh();
+
     if (pbm.size() != boundary_.size())
     {
         FatalErrorInFunction << "Problem :"
@@ -168,22 +166,15 @@ void Foam::pointMesh::addPatch(const label patchi)
 
     boundary_.set(patchi, facePointPatch::New(pbm[patchi], boundary_).ptr());
 
-    objectRegistry& db = const_cast<objectRegistry&>(thisDb());
-    const dictionary d;
-    const word patchFieldType("calculated");
-
-    AddPatchFields<pointScalarField>(db, patchi, d, patchFieldType, Zero);
-    AddPatchFields<pointVectorField>(db, patchi, d, patchFieldType, Zero);
-    AddPatchFields<pointSphericalTensorField>
-    (
-        db,
-        patchi,
-        d,
-        patchFieldType,
-        Zero
-    );
-    AddPatchFields<pointSymmTensorField>(db, patchi, d, patchFieldType, Zero);
-    AddPatchFields<pointTensorField>(db, patchi, d, patchFieldType, Zero);
+    #define AddPatchFieldsType(Type, nullArg)                                  \
+        AddPatchFields<PointField<Type>>                                       \
+        (                                                                      \
+            const_cast<objectRegistry&>(thisDb()),                             \
+            patchi,                                                            \
+            calculatedPointPatchField<scalar>::typeName                        \
+        );
+    FOR_ALL_FIELD_TYPES(AddPatchFieldsType);
+    #undef ReorderPatchFieldsType
 }
 
 
@@ -193,7 +184,6 @@ void Foam::pointMesh::reset()
     {
         Pout<< "pointMesh::reset(): "
             << "Mesh reset." << endl;
-        Pout<< endl;
     }
     boundary_.reset();
 }

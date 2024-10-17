@@ -812,10 +812,7 @@ int main(int argc, char *argv[])
             fvMeshTools::addPatch
             (
                 regionMeshes[regioni],
-                *newPatches[regioni][newPatchi],
-                dictionary(),
-                calculatedFvPatchField<scalar>::typeName,
-                false
+                *newPatches[regioni][newPatchi]
             );
         }
     }
