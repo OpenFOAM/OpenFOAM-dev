@@ -91,7 +91,7 @@ fieldsFunctions
 
     #includeFunc totalEnthalpy
 
-    #includeFunc turbulenceFields(nuEff, R, devTau)
+    #includeFunc turbulenceFields(nuEff, R)
 
     #includeFunc turbulenceIntensity
 
