@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,6 @@ License
 
 #include "wedgePointPatchField.H"
 #include "transformField.H"
-
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -52,10 +51,8 @@ Foam::wedgePointPatchField<Type>::wedgePointPatchField
 {
     if (!isType<wedgePointPatch>(p))
     {
-        FatalIOErrorInFunction
-        (
-            dict
-        )   << "patch " << this->patch().index() << " not wedge type. "
+        FatalIOErrorInFunction(dict)
+            << "patch " << this->patch().index() << " not wedge type. "
             << "Patch type = " << p.type()
             << exit(FatalIOError);
     }
@@ -101,6 +98,8 @@ Foam::wedgePointPatchField<Type>::wedgePointPatchField
 template<class Type>
 void Foam::wedgePointPatchField<Type>::evaluate(const Pstream::commsTypes)
 {
+    if (!this->patch().size()) return;
+
     // In order to ensure that the wedge patch is always flat, take the
     // normal vector from the first point
     const vector& nHat = this->patch().pointNormals()[0];
