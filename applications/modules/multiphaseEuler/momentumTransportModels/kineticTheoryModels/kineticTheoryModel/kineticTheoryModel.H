@@ -205,7 +205,7 @@ public:
         virtual tmp<volScalarField> omega() const;
 
         //- Return the stress tensor [m^2/s^2]
-        virtual tmp<volSymmTensorField> sigma() const;
+        virtual tmp<volSymmTensorField> R() const;
 
         //- Return the face-phase-pressure'
         // (derivative of phase-pressure w.r.t. phase-fraction)

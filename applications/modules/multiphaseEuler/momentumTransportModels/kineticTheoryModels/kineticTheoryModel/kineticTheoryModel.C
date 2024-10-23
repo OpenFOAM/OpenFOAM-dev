@@ -284,7 +284,7 @@ Foam::RASModels::kineticTheoryModel::omega() const
 
 
 Foam::tmp<Foam::volSymmTensorField>
-Foam::RASModels::kineticTheoryModel::sigma() const
+Foam::RASModels::kineticTheoryModel::R() const
 {
     return tmp<volSymmTensorField>
     (
