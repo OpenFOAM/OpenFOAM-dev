@@ -30,13 +30,20 @@ laminarFlameSpeed
 
 flameWrinkling
 {
-    model           linearEquilibrium;
-    // model           cubicEquilibrium;
+    model           equilibrium;
 
     equilibrium
     {
         model      constant;
         XiEq       5;
+    }
+
+    profile
+    {
+        // model      uniform;
+        model      linear;
+        // model      cubic;
+        // XiShapeCoeff  0.5;
     }
 }
 

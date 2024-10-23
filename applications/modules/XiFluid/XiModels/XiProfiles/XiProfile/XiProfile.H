@@ -22,111 +22,112 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::XiModels::cubicEquilibrium
+    Foam::XiProfile
 
 Description
-    Simple equilibrium model for flame wrinkling \c Xi
-    with a cubic profile function to give a plausible distribution.
-
-    Note that this model does not guarantee that the effective turbulent flame
-    speed will correspond exactly to the equilibrium \c Xi because \c Xi will
-    only equal the equilibrium value where \c b = 0.5 but it is likely to much
-    closer than the simpler Foam::XiModels::linearEquilibrium model because \c
-    Xi will be closer to the equilibrium value over a wider range of \c b.
-
-    See Foam::XiModel for more details on flame wrinkling modelling.
-
-    References:
-    \verbatim
-        Weller, H. G. (1993).
-        The development of a new flame area combustion model
-        using conditional averaging.
-        Thermo-fluids section report TF 9307.
-
-        Weller, H. G., Tabor, G., Gosman, A. D., & Fureby, C. (1998, January).
-        Application of a flame-wrinkling LES combustion model
-        to a turbulent mixing layer.
-        In Symposium (International) on combustion
-        (Vol. 27, No. 1, pp. 899-907). Elsevier.
-    \endverbatim
+    Base class for flame wrinkling profiles
 
 SourceFiles
-    cubicEquilibrium.C
+    XiProfile.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef cubicEquilibrium_H
-#define cubicEquilibrium_H
+#ifndef XiProfile_H
+#define XiProfile_H
 
-#include "equilibrium.H"
+#include "volFields.H"
+#include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace XiModels
-{
 
 /*---------------------------------------------------------------------------*\
-                          Class cubicEquilibrium Declaration
+                          Class XiProfile Declaration
 \*---------------------------------------------------------------------------*/
 
-class cubicEquilibrium
-:
-    public equilibrium
+class XiProfile
 {
-    // Private Data
-
-        dimensionedScalar XiShapeCoeff_;
-
 
 protected:
 
+    // Protected data
+
+        const volScalarField& b_;
+
+
+    // Protected member functions
+
         //- Update coefficients from given dictionary
-        virtual bool readCoeffs(const dictionary& dict);
+        virtual bool readCoeffs(const dictionary& dict) = 0;
 
 
 public:
 
     //- Runtime type information
-    TypeName("cubicEquilibrium");
+    TypeName("XiProfile");
+
+
+    // Declare run-time constructor selection table
+
+        declareRunTimeSelectionTable
+        (
+            autoPtr,
+            XiProfile,
+            dictionary,
+            (
+                const dictionary& dict,
+                const volScalarField& b
+            ),
+            (
+                dict,
+                b
+            )
+        );
 
 
     // Constructors
 
         //- Construct from components
-        cubicEquilibrium
-        (
-            const dictionary& dict,
-            const psiuMulticomponentThermo& thermo,
-            const fluidThermoThermophysicalTransportModel& turbulence,
-            const volScalarField& Su
-        );
+        XiProfile(const volScalarField& b);
 
         //- Disallow default bitwise copy construction
-        cubicEquilibrium(const cubicEquilibrium&) = delete;
+        XiProfile(const XiProfile&) = delete;
+
+
+    // Selectors
+
+        //- Return a reference to the selected XiEq model
+        static autoPtr<XiProfile> New
+        (
+            const dictionary& XiProperties,
+            const volScalarField& b
+        );
 
 
     //- Destructor
-    virtual ~cubicEquilibrium();
+    virtual ~XiProfile();
 
 
     // Member Functions
 
-        //- Correct the flame-wrinkling Xi
-        virtual void correct();
+        //- Return the flame-wrinkling profile
+        virtual tmp<volScalarField> profile() const = 0;
+
+        //- Update properties from the given XiProperties dictionary
+        bool read(const dictionary& XiProperties);
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const cubicEquilibrium&) = delete;
+        void operator=(const XiProfile&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace XiModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

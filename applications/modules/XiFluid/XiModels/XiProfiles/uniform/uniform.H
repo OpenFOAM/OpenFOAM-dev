@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,12 +22,10 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::XiModels::transport
+    Foam::XiProfiles::uniform
 
 Description
-    Transport model for flame wrinkling \c Xi
-
-    See Foam::XiModel for more details on flame wrinkling modelling.
+    Simple uniform profile for the equilibrium flame wrinkling \c XiEq.
 
     References:
     \verbatim
@@ -44,41 +42,30 @@ Description
     \endverbatim
 
 SourceFiles
-    transport.C
+    uniform.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef transport_H
-#define transport_H
+#ifndef uniform_H
+#define uniform_H
 
-#include "XiModel.H"
+#include "XiProfile.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-class XiEqModel;
-class XiProfile;
-class XiGModel;
-
-namespace XiModels
+namespace XiProfiles
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class transport Declaration
+                           Class uniform Declaration
 \*---------------------------------------------------------------------------*/
 
-class transport
+class uniform
 :
-    public XiModel
+    public XiProfile
 {
-    // Private Data
-
-        autoPtr<XiEqModel> XiEqModel_;
-        autoPtr<XiProfile> XiProfile_;
-        autoPtr<XiGModel> XiGModel_;
-
 
 protected:
 
@@ -89,56 +76,42 @@ protected:
 public:
 
     //- Runtime type information
-    TypeName("transport");
+    TypeName("uniform");
 
 
     // Constructors
 
         //- Construct from components
-        transport
+        uniform
         (
             const dictionary& dict,
-            const psiuMulticomponentThermo& thermo,
-            const fluidThermoThermophysicalTransportModel& turbulence,
-            const volScalarField& Su
+            const volScalarField& b
         );
 
         //- Disallow default bitwise copy construction
-        transport(const transport&) = delete;
+        uniform(const uniform&) = delete;
 
 
     //- Destructor
-    virtual ~transport();
+    virtual ~uniform();
 
 
     // Member Functions
 
-        //- Return the flame diffusivity
-        virtual tmp<volScalarField> Db() const;
-
-        //- Add Xi to the multivariateSurfaceInterpolationScheme table
-        virtual void addXi
-        (
-            multivariateSurfaceInterpolationScheme<scalar>::fieldTable& fields
-        )
-        {
-            fields.add(Xi_);
-        }
-
-        //- Correct the flame-wrinkling Xi
-        virtual void correct();
+        //- Return the flame-wrinkling profile
+        virtual tmp<volScalarField> profile() const;
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const transport&) = delete;
+        void operator=(const uniform&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace XiModels
+} // End namespace XiProfiles
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

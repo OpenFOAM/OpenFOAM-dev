@@ -133,10 +133,14 @@ protected:
         const volScalarField& Su_;
 
         const volScalarField& rho_;
+
         const volScalarField& b_;
 
         //- Flame wrinkling field
         volScalarField Xi_;
+
+
+    // Protected member functions
 
         //- Update coefficients from given dictionary
         virtual bool readCoeffs(const dictionary& dict) = 0;

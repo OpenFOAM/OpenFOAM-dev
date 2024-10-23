@@ -24,6 +24,9 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "transport.H"
+#include "XiEqModel.H"
+#include "XiProfile.H"
+#include "XiGModel.H"
 #include "fvmDiv.H"
 #include "fvcLaplacian.H"
 #include "fvModels.H"
@@ -48,8 +51,6 @@ bool Foam::XiModels::transport::readCoeffs(const dictionary& dict)
 {
     XiModel::readCoeffs(dict);
 
-    XiShapeCoeff_.readIfPresent(dict);
-
     return true;
 }
 
@@ -65,8 +66,8 @@ Foam::XiModels::transport::transport
 )
 :
     XiModel(thermo, turbulence, Su),
-    XiShapeCoeff_("XiShapeCoeff", dimless, 1),
     XiEqModel_(XiEqModel::New(dict, thermo, turbulence, Su)),
+    XiProfile_(XiProfile::New(dict, b_)),
     XiGModel_(XiGModel::New(dict, thermo, turbulence, Su))
 {
     readCoeffs(dict);
@@ -102,10 +103,7 @@ void Foam::XiModels::transport::correct()
 
     const volScalarField XiEqStar(R/(R - GEta));
 
-    const volScalarField XiEq
-    (
-        1 + (1 + (2*XiShapeCoeff_)*(0.5 - b_))*(XiEqStar - 1)
-    );
+    const volScalarField XiEq(1 + XiProfile_->profile()*(XiEqStar - 1));
 
     const volScalarField G(R*(XiEq - 1)/XiEq);
 

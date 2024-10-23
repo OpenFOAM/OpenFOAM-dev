@@ -23,66 +23,59 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "equilibrium.H"
-#include "XiEqModel.H"
-#include "XiProfile.H"
+#include "linear.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace XiModels
+namespace XiProfiles
 {
-    defineTypeNameAndDebug(equilibrium, 0);
-    addToRunTimeSelectionTable(XiModel, equilibrium, dictionary);
+    defineTypeNameAndDebug(linear, 0);
+    addToRunTimeSelectionTable(XiProfile, linear, dictionary);
 }
 }
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-bool Foam::XiModels::equilibrium::readCoeffs(const dictionary& dict)
+bool Foam::XiProfiles::linear::readCoeffs(const dictionary& dict)
 {
-    return XiModel::readCoeffs(dict);
+    XiProfile::readCoeffs(dict);
+
+    XiShapeCoeff_.readIfPresent(dict);
+
+    return true;
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::XiModels::equilibrium::equilibrium
+Foam::XiProfiles::linear::linear
 (
     const dictionary& dict,
-    const psiuMulticomponentThermo& thermo,
-    const fluidThermoThermophysicalTransportModel& turbulence,
-    const volScalarField& Su
+    const volScalarField& b
 )
 :
-    XiModel(thermo, turbulence, Su),
-    XiEqModel_(XiEqModel::New(dict, thermo, turbulence, Su)),
-    XiProfile_(XiProfile::New(dict, b_))
+    XiProfile(b),
+    XiShapeCoeff_("XiShapeCoeff", dimless, 1)
 {
-    correct();
+    readCoeffs(dict);
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::XiModels::equilibrium::~equilibrium()
+Foam::XiProfiles::linear::~linear()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField> Foam::XiModels::equilibrium::Db() const
+Foam::tmp<Foam::volScalarField> Foam::XiProfiles::linear::profile() const
 {
-    return XiEqModel_->Db();
-}
-
-
-void Foam::XiModels::equilibrium::correct()
-{
-    Xi_ == 1 + XiProfile_->profile()*(XiEqModel_->XiEq() - 1);
+    return 1 + XiShapeCoeff_*2*(0.5 - b_);
 }
 
 

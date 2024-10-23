@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,27 +23,26 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "linearEquilibrium.H"
-#include "XiEqModel.H"
+#include "cubic.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace XiModels
+namespace XiProfiles
 {
-    defineTypeNameAndDebug(linearEquilibrium, 0);
-    addToRunTimeSelectionTable(XiModel, linearEquilibrium, dictionary);
+    defineTypeNameAndDebug(cubic, 0);
+    addToRunTimeSelectionTable(XiProfile, cubic, dictionary);
 }
 }
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-bool Foam::XiModels::linearEquilibrium::readCoeffs(const dictionary& dict)
+bool Foam::XiProfiles::cubic::readCoeffs(const dictionary& dict)
 {
-    XiModel::readCoeffs(dict);
+    XiProfile::readCoeffs(dict);
 
     XiShapeCoeff_.readIfPresent(dict);
 
@@ -53,33 +52,30 @@ bool Foam::XiModels::linearEquilibrium::readCoeffs(const dictionary& dict)
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::XiModels::linearEquilibrium::linearEquilibrium
+Foam::XiProfiles::cubic::cubic
 (
     const dictionary& dict,
-    const psiuMulticomponentThermo& thermo,
-    const fluidThermoThermophysicalTransportModel& turbulence,
-    const volScalarField& Su
+    const volScalarField& b
 )
 :
-    equilibrium(dict, thermo, turbulence, Su),
+    XiProfile(b),
     XiShapeCoeff_("XiShapeCoeff", dimless, 1)
 {
     readCoeffs(dict);
-    correct();
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::XiModels::linearEquilibrium::~linearEquilibrium()
+Foam::XiProfiles::cubic::~cubic()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::XiModels::linearEquilibrium::correct()
+Foam::tmp<Foam::volScalarField> Foam::XiProfiles::cubic::profile() const
 {
-    Xi_ == 1 + (1 + XiShapeCoeff_*2*(0.5 - b_))*(XiEqModel_->XiEq() - 1);
+    return 1 + XiShapeCoeff_*pow3(2*(0.5 - b_));
 }
 
 

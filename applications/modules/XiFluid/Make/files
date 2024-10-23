@@ -9,8 +9,6 @@ XiModels/XiModel/XiModel.C
 XiModels/XiModel/XiModelNew.C
 XiModels/uniformConstant/uniformConstant.C
 XiModels/equilibrium/equilibrium.C
-XiModels/linearEquilibrium/linearEquilibrium.C
-XiModels/cubicEquilibrium/cubicEquilibrium.C
 XiModels/transport/transport.C
 
 XiModels/XiEqModels/XiEqModel/XiEqModel.C
@@ -18,6 +16,12 @@ XiModels/XiEqModels/XiEqModel/XiEqModelNew.C
 XiModels/XiEqModels/constant/constant.C
 XiModels/XiEqModels/Gulder/Gulder.C
 XiModels/XiEqModels/instability/instability.C
+
+XiModels/XiProfiles/XiProfile/XiProfile.C
+XiModels/XiProfiles/XiProfile/XiProfileNew.C
+XiModels/XiProfiles/uniform/uniform.C
+XiModels/XiProfiles/linear/linear.C
+XiModels/XiProfiles/cubic/cubic.C
 
 XiModels/XiGModels/XiGModel/XiGModel.C
 XiModels/XiGModels/XiGModel/XiGModelNew.C

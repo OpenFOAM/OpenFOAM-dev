@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,20 +22,11 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::XiModels::linearEquilibrium
+    Foam::XiProfiles::linear
 
 Description
-    Simple equilibrium model for flame wrinkling \c Xi
-    with a linear profile function to give a plausible distribution.
-
-    Note that this model does not guarantee that the effective turbulent flame
-    speed will correspond exactly to the equilibrium \c Xi because \c Xi will
-    only equal the equilibrium value where \c b = 0.5.  It would be simple to
-    implement alternative profiles where \c Xi equals the equilibrium value over
-    a wider range of \c b within the flame-brush which should ensure the
-    effective flame-speed corresponds to the equilibrium \c Xi more closely.
-
-    See Foam::XiModel for more details on flame wrinkling modelling.
+    Simple linear profile for the equilibrium flame wrinkling \c XiEq
+    to give a plausible distribution.
 
     References:
     \verbatim
@@ -52,29 +43,29 @@ Description
     \endverbatim
 
 SourceFiles
-    linearEquilibrium.C
+    linear.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef linearEquilibrium_H
-#define linearEquilibrium_H
+#ifndef linear_H
+#define linear_H
 
-#include "equilibrium.H"
+#include "XiProfile.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace XiModels
+namespace XiProfiles
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class linearEquilibrium Declaration
+                           Class linear Declaration
 \*---------------------------------------------------------------------------*/
 
-class linearEquilibrium
+class linear
 :
-    public equilibrium
+    public XiProfile
 {
     // Private Data
 
@@ -90,44 +81,42 @@ protected:
 public:
 
     //- Runtime type information
-    TypeName("linearEquilibrium");
+    TypeName("linear");
 
 
     // Constructors
 
         //- Construct from components
-        linearEquilibrium
+        linear
         (
             const dictionary& dict,
-            const psiuMulticomponentThermo& thermo,
-            const fluidThermoThermophysicalTransportModel& turbulence,
-            const volScalarField& Su
+            const volScalarField& b
         );
 
         //- Disallow default bitwise copy construction
-        linearEquilibrium(const linearEquilibrium&) = delete;
+        linear(const linear&) = delete;
 
 
     //- Destructor
-    virtual ~linearEquilibrium();
+    virtual ~linear();
 
 
     // Member Functions
 
-        //- Correct the flame-wrinkling Xi
-        virtual void correct();
+        //- Return the flame-wrinkling profile
+        virtual tmp<volScalarField> profile() const;
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const linearEquilibrium&) = delete;
+        void operator=(const linear&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace XiModels
+} // End namespace XiProfiles
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

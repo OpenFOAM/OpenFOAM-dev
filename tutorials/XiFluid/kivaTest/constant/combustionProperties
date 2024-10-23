@@ -60,11 +60,16 @@ laminarFlameSpeed
 
 flameWrinkling
 {
-    model           linearEquilibrium;
+    model           equilibrium;
 
     equilibrium
     {
         model           Gulder;
+    }
+
+    profile
+    {
+        model      linear;
     }
 
     generationRate

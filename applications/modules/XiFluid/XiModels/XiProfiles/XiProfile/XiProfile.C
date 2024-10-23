@@ -23,63 +23,47 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "cubicEquilibrium.H"
-#include "XiEqModel.H"
-#include "addToRunTimeSelectionTable.H"
+#include "XiProfile.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace XiModels
-{
-    defineTypeNameAndDebug(cubicEquilibrium, 0);
-    addToRunTimeSelectionTable(XiModel, cubicEquilibrium, dictionary);
-}
+    defineTypeNameAndDebug(XiProfile, 0);
+    defineRunTimeSelectionTable(XiProfile, dictionary);
 }
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-bool Foam::XiModels::cubicEquilibrium::readCoeffs(const dictionary& dict)
+bool Foam::XiProfile::readCoeffs(const dictionary&)
 {
-    XiModel::readCoeffs(dict);
-
-    XiShapeCoeff_.readIfPresent(dict);
-
     return true;
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::XiModels::cubicEquilibrium::cubicEquilibrium
-(
-    const dictionary& dict,
-    const psiuMulticomponentThermo& thermo,
-    const fluidThermoThermophysicalTransportModel& turbulence,
-    const volScalarField& Su
-)
+Foam::XiProfile::XiProfile(const volScalarField& b)
 :
-    equilibrium(dict, thermo, turbulence, Su),
-    XiShapeCoeff_("XiShapeCoeff", dimless, 1)
-{
-    readCoeffs(dict);
-    correct();
-}
+    b_(b)
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::XiModels::cubicEquilibrium::~cubicEquilibrium()
+Foam::XiProfile::~XiProfile()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::XiModels::cubicEquilibrium::correct()
+bool Foam::XiProfile::read(const dictionary& XiProperties)
 {
-    Xi_ == 1 + (1 + XiShapeCoeff_*pow3(2*(0.5 - b_)))*(XiEqModel_->XiEq() - 1);
+    return readCoeffs
+    (
+        XiProperties.subDict("XiProfile").optionalSubDict(type() + "Coeffs")
+    );
 }
 
 

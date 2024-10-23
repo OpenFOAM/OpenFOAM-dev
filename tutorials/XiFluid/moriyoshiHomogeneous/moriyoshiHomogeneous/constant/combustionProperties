@@ -25,6 +25,11 @@ flameWrinkling
         model           Gulder;
     }
 
+    profile
+    {
+        model      linear;
+    }
+
     generationRate
     {
         model           KTS;

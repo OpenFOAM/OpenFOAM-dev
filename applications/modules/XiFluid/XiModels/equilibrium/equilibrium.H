@@ -65,6 +65,7 @@ namespace Foam
 {
 
 class XiEqModel;
+class XiProfile;
 
 namespace XiModels
 {
@@ -80,6 +81,7 @@ class equilibrium
 protected:
 
         autoPtr<XiEqModel> XiEqModel_;
+        autoPtr<XiProfile> XiProfile_;
 
         //- Update coefficients from given dictionary
         virtual bool readCoeffs(const dictionary& dict);
