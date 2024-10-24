@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -179,28 +179,6 @@ void Foam::nonConformalBoundary::nonConformalOtherPatchIndices
 {}
 
 
-const Foam::labelList&
-Foam::nonConformalBoundary::meshPointOwnerOrigBoundaryPoint() const
-{
-    if (!meshPointOwnerOrigBoundaryPointPtr_.valid())
-    {
-        meshPointOwnerOrigBoundaryPointPtr_.set
-        (
-            new labelList(mesh().nPoints(), -1)
-        );
-
-        forAll(ownerOrigBoundary_.meshPoints(), ownerOrigBoundaryPointi)
-        {
-            meshPointOwnerOrigBoundaryPointPtr_()
-                [ownerOrigBoundary_.meshPoints()[ownerOrigBoundaryPointi]] =
-                ownerOrigBoundaryPointi;
-        }
-    }
-
-    return meshPointOwnerOrigBoundaryPointPtr_();
-}
-
-
 const Foam::vectorField&
 Foam::nonConformalBoundary::ownerOrigBoundaryPointNormals() const
 {
@@ -373,20 +351,30 @@ Foam::nonConformalBoundary::ownerOrigBoundaryPointMeshPoint() const
 {
     if (!ownerOrigBoundaryPointMeshPointPtr_.valid())
     {
+        // Construct the local maps using the owner-orig primitive patch
         ownerOrigBoundaryPointMeshPointPtr_.set
         (
             new labelList(ownerOrigBoundary_.meshPoints())
         );
 
-        // ...
-        meshPointOwnerOrigBoundaryPoint();
-        labelList& map = meshPointOwnerOrigBoundaryPointPtr_();
+        meshPointOwnerOrigBoundaryPointPtr_.set
+        (
+            new labelList(mesh().nPoints(), -1)
+        );
 
-        // ...
+        labelList& meshPointOwnerOrigBoundaryPoint =
+            meshPointOwnerOrigBoundaryPointPtr_();
+
+        forAll(ownerOrigBoundary_.meshPoints(), ownerOrigBoundaryPointi)
+        {
+            meshPointOwnerOrigBoundaryPoint
+                [ownerOrigBoundary_.meshPoints()[ownerOrigBoundaryPointi]] =
+                ownerOrigBoundaryPointi;
+        }
+
+        // Construct the remote map by enumerating newly identified points
         label ownerOrigBoundaryPointi = ownerOrigBoundary_.nPoints();
-        DynamicList<label> remotePoints;
-
-        // ...
+        DynamicList<label> remoteMeshPoints;
         for
         (
             label ownerOrigBoundaryEdgei = ownerOrigBoundary_.nEdges();
@@ -403,16 +391,17 @@ Foam::nonConformalBoundary::ownerOrigBoundaryPointMeshPoint() const
             {
                 const label meshPointi = e[i];
 
-                if (map[meshPointi] == -1)
+                if (meshPointOwnerOrigBoundaryPoint[meshPointi] == -1)
                 {
-                    map[meshPointi] = ownerOrigBoundaryPointi ++;
-                    remotePoints.append(meshPointi);
+                    meshPointOwnerOrigBoundaryPoint[meshPointi] =
+                        ownerOrigBoundaryPointi ++;
+                    remoteMeshPoints.append(meshPointi);
                 }
             }
         }
 
-        // ...
-        ownerOrigBoundaryPointMeshPointPtr_->append(remotePoints);
+        // Append to the point-mesh-point map
+        ownerOrigBoundaryPointMeshPointPtr_->append(remoteMeshPoints);
     }
 
     return ownerOrigBoundaryPointMeshPointPtr_();
@@ -528,10 +517,11 @@ Foam::nonConformalBoundary::ownerOrigBoundaryEdges() const
             new edgeList(ownerOrigBoundary_.edges())
         );
 
-        const labelList& map = meshPointOwnerOrigBoundaryPoint();
+        ownerOrigBoundaryPointMeshPoint();
+        const labelList& meshPointOwnerOrigBoundaryPoint =
+            meshPointOwnerOrigBoundaryPointPtr_();
 
         DynamicList<edge> remoteEdges;
-
         for
         (
             label ownerOrigBoundaryEdgei = ownerOrigBoundary_.nEdges();
@@ -544,7 +534,14 @@ Foam::nonConformalBoundary::ownerOrigBoundaryEdges() const
 
             const edge& e = mesh().edges()[meshEdgei];
 
-            remoteEdges.append(edge(map[e.start()], map[e.end()]));
+            remoteEdges.append
+            (
+                edge
+                (
+                    meshPointOwnerOrigBoundaryPoint[e.start()],
+                    meshPointOwnerOrigBoundaryPoint[e.end()]
+                )
+            );
         }
 
         ownerOrigBoundaryEdgesPtr_->append(remoteEdges);
@@ -594,11 +591,15 @@ Foam::nonConformalBoundary::patchPointOwnerOrigBoundaryPoints
     {
         const polyPatch& pp = mesh().boundaryMesh()[patchi];
 
+        ownerOrigBoundaryPointMeshPoint();
+        const labelList& meshPointOwnerOrigBoundaryPoint =
+            meshPointOwnerOrigBoundaryPointPtr_();
+
         const faceList patchOwnerOrigBoundaryLocalFaces
         (
             renumber
             (
-                meshPointOwnerOrigBoundaryPoint(),
+                meshPointOwnerOrigBoundaryPoint,
                 static_cast<const faceList&>(pp)
             )
         );
