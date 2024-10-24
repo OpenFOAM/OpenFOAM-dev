@@ -376,7 +376,7 @@ Foam::RASModels::kineticTheoryModel::devTau() const
                fvc::dotInterpolate(mesh().nf(), dev2(T(fvc::grad(U_))))
              + fvc::snGrad(U_)
             )
-          - fvc::interpolate((rho_*lambda_)*fvc::div(phi_))*mesh().Sf()
+          - fvc::interpolate((rho_*lambda_)*fvc::div(phi_))*mesh().nf()
         )
     );
 }
