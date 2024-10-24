@@ -25,7 +25,8 @@ License
 
 #include "processorFvPatch.H"
 #include "addToRunTimeSelectionTable.H"
-#include "transformField.H"
+#include "volFields.H"
+#include "surfaceFields.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -42,13 +43,26 @@ void Foam::processorFvPatch::makeWeights(scalarField& w) const
 {
     if (Pstream::parRun())
     {
-        coupledFvPatch::makeWeights
-        (
-            w,
-            procPolyPatch_.neighbFaceAreas(),
-            procPolyPatch_.neighbFaceCentres()
-          - procPolyPatch_.neighbFaceCellCentres()
-        );
+        if (!boundaryMesh().mesh().conformal())
+        {
+            coupledFvPatch::makeWeights
+            (
+                w,
+              - boundaryMesh().mesh().Sf().boundaryField()[index()],
+                boundaryMesh().mesh().Cf().boundaryField()[index()]
+              - boundaryMesh().mesh().C().boundaryField()[index()]
+            );
+        }
+        else
+        {
+            coupledFvPatch::makeWeights
+            (
+                w,
+                procPolyPatch_.neighbFaceAreas(),
+                procPolyPatch_.neighbFaceCentres()
+              - procPolyPatch_.neighbFaceCellCentres()
+            );
+        }
     }
     else
     {
@@ -61,12 +75,24 @@ Foam::tmp<Foam::vectorField> Foam::processorFvPatch::delta() const
 {
     if (Pstream::parRun())
     {
-        return
-            coupledFvPatch::delta
-            (
-                procPolyPatch_.neighbFaceCentres()
-              - procPolyPatch_.neighbFaceCellCentres()
-            );
+        if (!boundaryMesh().mesh().conformal())
+        {
+            return
+                coupledFvPatch::delta
+                (
+                    boundaryMesh().mesh().Cf().boundaryField()[index()]
+                  - boundaryMesh().mesh().C().boundaryField()[index()]
+                );
+        }
+        else
+        {
+            return
+                coupledFvPatch::delta
+                (
+                    procPolyPatch_.neighbFaceCentres()
+                  - procPolyPatch_.neighbFaceCellCentres()
+                );
+        }
     }
     else
     {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,7 +65,7 @@ class nonConformalBoundary
         //- Primitive patch of the owner-orig boundary
         indirectPrimitivePatch ownerOrigBoundary_;
 
-        //- A map from owner-orig boundary point to mesh point
+        //- A map from mesh point to owner-orig boundary point
         mutable autoPtr<labelList> meshPointOwnerOrigBoundaryPointPtr_;
 
         //- A map from owner-orig boundary point to mesh point
@@ -134,10 +134,6 @@ class nonConformalBoundary
             DynamicList<label>& nonCoupledPatchIndices,
             const label side
         ) const;
-
-        //- Get a map from mesh point to owner-orig boundary points. Non
-        //  owner-orig boundary points are indicated by the value -1.
-        const labelList& meshPointOwnerOrigBoundaryPoint() const;
 
         //- Get point normals for the owner-orig boundary
         const vectorField& ownerOrigBoundaryPointNormals() const;

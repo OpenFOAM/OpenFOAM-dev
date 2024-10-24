@@ -1122,7 +1122,6 @@ Foam::fvMeshStitcher::calculateOwnerOrigBoundaryEdgeParts
 }
 
 
-
 void Foam::fvMeshStitcher::applyOwnerOrigBoundaryEdgeParts
 (
     surfaceVectorField& SfSf,
@@ -1159,7 +1158,8 @@ void Foam::fvMeshStitcher::applyOwnerOrigBoundaryEdgeParts
 
             const label patchi =
                 mesh_.isInternalFace(facei)
-              ? -1 : pbMesh.patchIndices()[facei - mesh_.nInternalFaces()];
+              ? -1
+              : pbMesh.patchIndices()[facei - mesh_.nInternalFaces()];
 
             if (patchi != -1 && patchIsOwnerOrig[patchi])
             {
@@ -1428,6 +1428,8 @@ void Foam::fvMeshStitcher::intersect
 
     const nonConformalBoundary& ncb = nonConformalBoundary::New(mesh_);
     const labelList ownerOrigPatchIndices = ncb.ownerOrigPatchIndices();
+    const edgeList& ownerOrigBoundaryMeshEdges =
+        ncb.ownerOrigBoundaryMeshEdges();
 
     // Alias the boundary geometry fields
     surfaceVectorField::Boundary& SfBf = SfSf.boundaryFieldRef();
@@ -1562,21 +1564,37 @@ void Foam::fvMeshStitcher::intersect
             const label ownerOrigBoundaryEdgei =
                 origPatchEdgeOwnerOrigBoundaryEdges[origPatchEdgei];
 
+            const label sign =
+                edge::compare
+                (
+                    meshEdge(origPatch, origPatchEdgei),
+                    ownerOrigBoundaryMeshEdges[ownerOrigBoundaryEdgei]
+                );
+
             part errorP =
                 patchEdgeParts[origPatchi][origPatchEdgei];
-            errorP -= ownerOrigBoundaryEdgeParts[ownerOrigBoundaryEdgei];
+            errorP -=
+                sign > 0
+              ? ownerOrigBoundaryEdgeParts[ownerOrigBoundaryEdgei]
+              : -ownerOrigBoundaryEdgeParts[ownerOrigBoundaryEdgei];
 
             forAll(origPatch.edgeFaces()[origPatchEdgei], patchEdgeFacei)
             {
                 const label patchFacei =
                     origPatch.edgeFaces()[origPatchEdgei][patchEdgeFacei];
 
+                const label sign =
+                    origPatch.localFaces()[patchFacei].edgeDirection
+                    (
+                        origPatch.edges()[origPatchEdgei]
+                    );
+
                 part p
                 (
                     SfBf[origPatchi][patchFacei],
                     CfBf[origPatchi][patchFacei]
                 );
-                p += errorP;
+                p += sign > 0 ? errorP : -errorP;
 
                 SfBf[origPatchi][patchFacei] = p.area;
                 CfBf[origPatchi][patchFacei] = p.centre;
