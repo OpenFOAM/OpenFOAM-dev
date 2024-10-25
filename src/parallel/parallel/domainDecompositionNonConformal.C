@@ -159,31 +159,40 @@ void checkCompleteMeshOrdering
         }
 
         // Mapped patches
-        if
-        (
-            isA<nonConformalMappedWallFvPatch>(fvp)
-         && refCast<const nonConformalMappedWallFvPatch>(fvp).owner()
-        )
+        if (isA<nonConformalMappedWallFvPatch>(fvp))
         {
+            const label ncmwPatchi = patchi;
+
             const nonConformalMappedWallFvPatch& ncmwFvp =
                 refCast<const nonConformalMappedWallFvPatch>(fvp);
+
+            const fvsPatchLabelField& polyFacesPf =
+                completeMesh.polyFacesBf()[ncmwPatchi];
 
             const domainDecomposition& nbrDecomposition =
                 regionMeshes[ncmwFvp.nbrRegionName()]();
 
             const fvMesh& nbrCompleteMesh = nbrDecomposition.completeMesh();
 
-            const label ncmwPatchi = patchi;
+            if (nbrCompleteMesh.conformal()) continue;
+
             const label nbrNcmwPatchi =
                 nbrCompleteMesh.boundary()[ncmwFvp.nbrPatchName()].index();
+
+            const nonConformalMappedWallFvPatch& nbrNcmwFvp =
+                refCast<const nonConformalMappedWallFvPatch>
+                (nbrCompleteMesh.boundary()[nbrNcmwPatchi]);
+
+            const fvsPatchLabelField& nbrPolyFacesPf =
+                nbrCompleteMesh.polyFacesBf()[nbrNcmwPatchi];
 
             checkNonConformalCoupledPatchOrdering
             (
                 {-labelMax, labelMax},
-                completeMesh.boundary()[ncmwPatchi],
-                nbrCompleteMesh.boundary()[nbrNcmwPatchi],
-                completeMesh.polyFacesBf()[ncmwPatchi],
-                nbrCompleteMesh.polyFacesBf()[ncmwPatchi]
+                ncmwFvp.owner() ? ncmwFvp : nbrNcmwFvp,
+                ncmwFvp.owner() ? nbrNcmwFvp : ncmwFvp,
+                ncmwFvp.owner() ? polyFacesPf : nbrPolyFacesPf,
+                ncmwFvp.owner() ? nbrPolyFacesPf : polyFacesPf
             );
         }
 
@@ -294,11 +303,7 @@ void checkProcMeshesOrdering
             }
 
             // Mapped patches
-            if
-            (
-                isA<nonConformalMappedWallFvPatch>(fvp)
-             && refCast<const nonConformalMappedWallFvPatch>(fvp).owner()
-            )
+            if (isA<nonConformalMappedWallFvPatch>(fvp))
             {
                 const label ncmwPatchi = patchi;
 
@@ -334,23 +339,30 @@ void checkProcMeshesOrdering
                         refCast<const NcmpfFvsplf>
                         (nbrProcMesh.polyFacesBf()[nbrNcmwPatchi]);
 
+                    const SubList<label> subPolyFacesPf
+                    (
+                        procMeshes[proci].polyFacesBf()[ncmwPatchi],
+                        polyFacesPf.procSizes()[nbrProci],
+                        polyFacesPf.procOffsets()[nbrProci]
+                    );
+
+                    const SubList<label> nbrSubPolyFacesPf
+                    (
+                        nbrProcMesh.polyFacesBf()[nbrNcmwPatchi],
+                        nbrPolyFacesPf.procSizes()[proci],
+                        nbrPolyFacesPf.procOffsets()[proci]
+                    );
+
                     checkNonConformalCoupledPatchOrdering
                     (
-                        {proci, nbrProci},
-                        ncmwFvp,
-                        nbrNcmwFvp,
-                        SubList<label>
-                        (
-                            procMeshes[proci].polyFacesBf()[ncmwPatchi],
-                            polyFacesPf.procSizes()[nbrProci],
-                            polyFacesPf.procOffsets()[nbrProci]
-                        ),
-                        SubList<label>
-                        (
-                            nbrProcMesh.polyFacesBf()[nbrNcmwPatchi],
-                            nbrPolyFacesPf.procSizes()[proci],
-                            nbrPolyFacesPf.procOffsets()[proci]
-                        )
+                        {
+                            ncmwFvp.owner() ? proci : nbrProci,
+                            ncmwFvp.owner() ? nbrProci : proci
+                        },
+                        ncmwFvp.owner() ? ncmwFvp : nbrNcmwFvp,
+                        ncmwFvp.owner() ? nbrNcmwFvp : ncmwFvp,
+                        ncmwFvp.owner() ? subPolyFacesPf : nbrSubPolyFacesPf,
+                        ncmwFvp.owner() ? nbrSubPolyFacesPf : subPolyFacesPf
                     );
                 }
             }
@@ -682,6 +694,7 @@ void Foam::domainDecomposition::reconstructNonConformalCyclicAddressing
 
     const label nbrNccPatchi = nccFvp.nbrPatchIndex();
 
+    // Initialise counters
     label nccPatchFacei = 0;
     labelPairLabelTable procNccPatchFaceis;
     forAllConstIter
@@ -694,6 +707,9 @@ void Foam::domainDecomposition::reconstructNonConformalCyclicAddressing
         procNccPatchFaceis.insert(iter.key(), 0);
     }
 
+    // Create each complete face in turn. For each complete face, loop all the
+    // processor interfaces and find the "next" face; i.e., that with the
+    // smallest owner-neighbour face indices.
     while (true)
     {
         labelPair procNbrProc(labelMax, labelMax);
@@ -913,6 +929,17 @@ void Foam::domainDecomposition::reconstructNonConformalMappedWallAddressing
        .boundary()[ncmwFvp.nbrPatchName()]
        .index();
 
+    // Allocate space for the addressing
+    forAll(procMeshes(), proci)
+    {
+        nonConformalProcFaceAddressingBf[proci][ncmwPatchi].resize
+        (
+            procMeshes()[proci].polyFacesBf()[ncmwPatchi].size()
+        );
+    }
+
+    // Get the processor offsets from the non-conformal mapped wall patches,
+    // and append an additional final value for the total size
     auto calcProcOffsets = []
     (
         const domainDecomposition& meshes,
@@ -942,9 +969,13 @@ void Foam::domainDecomposition::reconstructNonConformalMappedWallAddressing
     const labelListList nbrProcOffsets =
         calcProcOffsets(nbrDecomposition, nbrNcmwPatchi);
 
+    // Initialise counters
     label ncmwPatchFacei = 0;
     labelListList procNcmwPatchFaceis(nProcs(), labelList(nProcs(), 0));
 
+    // Create each complete face in turn. For each complete face, loop all the
+    // processor interfaces and find the "next" face; i.e., that with the
+    // smallest owner-neighbour face indices.
     while (true)
     {
         labelPair procNbrProc(labelMax, labelMax);
@@ -1002,8 +1033,13 @@ void Foam::domainDecomposition::reconstructNonConformalMappedWallAddressing
             const label proci = procNbrProc.first();
             const label nbrProci = procNbrProc.second();
 
-            nonConformalProcFaceAddressingBf[proci][ncmwPatchi]
-                .append(ncmwPatchFacei + 1);
+            nonConformalProcFaceAddressingBf
+                [proci]
+                [ncmwPatchi]
+                [
+                    procOffsets[proci][nbrProci]
+                  + procNcmwPatchFaceis[proci][nbrProci]
+                ] = ncmwPatchFacei + 1;
 
             ncmwPatchFacei ++;
             procNcmwPatchFaceis[proci][nbrProci] ++;
@@ -1018,9 +1054,13 @@ void Foam::domainDecomposition::reconstructNonConformalErrorAddressing
     List<List<DynamicList<label>>>& nonConformalProcFaceAddressingBf
 ) const
 {
+    // Initialise counters
     label ncePatchFacei = 0;
     labelList procNcePatchFaceis(nProcs(), 0);
 
+    // Create each complete face in turn. For each complete face, loop all the
+    // processor patches and find the "next" face; i.e., that with the smallest
+    // face index.
     while (true)
     {
         label facei = labelMax, proci = labelMax;
@@ -1237,6 +1277,7 @@ void Foam::domainDecomposition::unconformComplete()
 
     completeMesh_->setPolyFacesBfInstance(procMeshes_[0].polyFacesBfInstance());
 
+    // Check ordering
     if (debug)
     {
         checkCompleteMeshOrdering(completeMesh(), regionMeshes_);
