@@ -90,4 +90,10 @@ bool Foam::XiModel::read(const dictionary& combustionProperties)
 }
 
 
+void Foam::XiModel::reset()
+{
+    Xi_ = 1;
+}
+
+
 // ************************************************************************* //

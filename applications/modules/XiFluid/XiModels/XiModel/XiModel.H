@@ -230,6 +230,9 @@ public:
         )
         {}
 
+        //- Reset Xi to an unburnt state
+        virtual void reset();
+
         //- Correct the flame-wrinkling Xi
         virtual void correct() = 0;
 

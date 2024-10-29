@@ -120,15 +120,12 @@ bool Foam::fv::multiCycleConstantbXiIgnition::ignited() const
     {
         reset_ = true;
 
-        psiuMulticomponentThermo& thermo
+        mesh().lookupObjectRef<psiuMulticomponentThermo>
         (
-            mesh().lookupObjectRef<psiuMulticomponentThermo>
-            (
-                physicalProperties::typeName
-            )
-        );
+            physicalProperties::typeName
+        ).reset();
 
-        thermo.reset();
+        mesh().lookupObjectRef<XiModel>(XiModel::typeName).reset();
     }
 
     return ignited;
