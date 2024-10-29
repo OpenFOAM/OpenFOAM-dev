@@ -49,6 +49,7 @@ namespace Foam
 void Foam::fv::multiCycleConstantbXiIgnition::readCoeffs(const dictionary& dict)
 {
     period_.read(dict, mesh().time().userUnits());
+    combustionDuration_.read(dict, mesh().time().userUnits());
 }
 
 
