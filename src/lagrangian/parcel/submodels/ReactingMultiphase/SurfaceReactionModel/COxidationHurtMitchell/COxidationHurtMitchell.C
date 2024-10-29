@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -120,8 +120,8 @@ Foam::scalar Foam::COxidationHurtMitchell<CloudType>::calculate
     scalarField& dMassSRCarrier
 ) const
 {
-    const label idGas = CloudType::parcelType::GAS;
-    const label idSolid = CloudType::parcelType::SLD;
+    const label idGas = this->owner().composition().idGas();
+    const label idSolid = this->owner().composition().idSolid();
     const scalar Ychar = YMixture[idSolid]*YSolid[CsLocalId_];
 
     // Surface combustion until combustible fraction is consumed

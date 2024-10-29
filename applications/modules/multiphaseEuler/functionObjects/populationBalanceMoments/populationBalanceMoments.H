@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -145,8 +145,8 @@ private:
 
     // Private Data
 
-        //- Reference to population balance
-        const Foam::diameterModels::populationBalanceModel& popBal_;
+        //- Name of the population balance
+        const word popBalName_;
 
         //- Moment type
         momentType momentType_;
@@ -185,16 +185,28 @@ private:
         void setDimensions(volScalarField& fld, momentType momType);
 
         //- Total concentration
-        tmp<volScalarField> totalConcentration();
+        tmp<volScalarField> totalConcentration
+        (
+            const diameterModels::populationBalanceModel& popBal
+        );
 
         //- Mean value
-        tmp<volScalarField> mean();
+        tmp<volScalarField> mean
+        (
+            const diameterModels::populationBalanceModel& popBal
+        );
 
         //- Variance
-        tmp<volScalarField> variance();
+        tmp<volScalarField> variance
+        (
+            const diameterModels::populationBalanceModel& popBal
+        );
 
         //- Standard deviation
-        tmp<volScalarField> stdDev();
+        tmp<volScalarField> stdDev
+        (
+            const diameterModels::populationBalanceModel& popBal
+        );
 
 
 public:

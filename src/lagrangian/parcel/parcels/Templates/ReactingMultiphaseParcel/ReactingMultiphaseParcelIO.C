@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,12 +74,6 @@ Foam::ReactingMultiphaseParcel<ParcelType>::ReactingMultiphaseParcel
         YGas_.transfer(Yg);
         YLiquid_.transfer(Yl);
         YSolid_.transfer(Ys);
-
-        // scale the mass fractions
-        const scalarField& YMix = this->Y_;
-        YGas_ /= YMix[GAS] + rootVSmall;
-        YLiquid_ /= YMix[LIQ] + rootVSmall;
-        YSolid_ /= YMix[SLD] + rootVSmall;
     }
 
     // Check state of Istream
@@ -164,7 +158,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::readFields
         forAllIter(typename CloudType, c, iter)
         {
             ReactingMultiphaseParcel<ParcelType>& p = iter();
-            p.YGas_[j] = YGas[i++]/(p.Y()[GAS] + rootVSmall);
+            p.YGas_[j] = YGas[i++]/(p.Y()[idGas] + rootVSmall);
         }
     }
     // Populate YLiquid for each parcel
@@ -184,7 +178,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::readFields
         forAllIter(typename CloudType, c, iter)
         {
             ReactingMultiphaseParcel<ParcelType>& p = iter();
-            p.YLiquid_[j] = YLiquid[i++]/(p.Y()[LIQ] + rootVSmall);
+            p.YLiquid_[j] = YLiquid[i++]/(p.Y()[idLiquid] + rootVSmall);
         }
     }
     // Populate YSolid for each parcel
@@ -204,7 +198,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::readFields
         forAllIter(typename CloudType, c, iter)
         {
             ReactingMultiphaseParcel<ParcelType>& p = iter();
-            p.YSolid_[j] = YSolid[i++]/(p.Y()[SLD] + rootVSmall);
+            p.YSolid_[j] = YSolid[i++]/(p.Y()[idSolid] + rootVSmall);
         }
     }
 }
@@ -262,7 +256,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::writeFields
             forAllConstIter(typename CloudType, c, iter)
             {
                 const ReactingMultiphaseParcel<ParcelType>& p0 = iter();
-                YGas[i++] = p0.YGas()[j]*p0.Y()[GAS];
+                YGas[i++] = p0.YGas()[j]*p0.Y()[idGas];
             }
 
             YGas.write(np > 0);
@@ -286,7 +280,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::writeFields
             forAllConstIter(typename CloudType, c, iter)
             {
                 const ReactingMultiphaseParcel<ParcelType>& p0 = iter();
-                YLiquid[i++] = p0.YLiquid()[j]*p0.Y()[LIQ];
+                YLiquid[i++] = p0.YLiquid()[j]*p0.Y()[idLiquid];
             }
 
             YLiquid.write(np > 0);
@@ -310,7 +304,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::writeFields
             forAllConstIter(typename CloudType, c, iter)
             {
                 const ReactingMultiphaseParcel<ParcelType>& p0 = iter();
-                YSolid[i++] = p0.YSolid()[j]*p0.Y()[SLD];
+                YSolid[i++] = p0.YSolid()[j]*p0.Y()[idSolid];
             }
 
             YSolid.write(np > 0);
@@ -328,16 +322,13 @@ Foam::Ostream& Foam::operator<<
     const ReactingMultiphaseParcel<ParcelType>& p
 )
 {
-    scalarField YGasLoc(p.YGas()*p.Y()[0]);
-    scalarField YLiquidLoc(p.YLiquid()*p.Y()[1]);
-    scalarField YSolidLoc(p.YSolid()*p.Y()[2]);
     if (os.format() == IOstream::ASCII)
     {
         os  << static_cast<const ParcelType&>(p)
             << token::SPACE << p.mass0()
-            << token::SPACE << YGasLoc
-            << token::SPACE << YLiquidLoc
-            << token::SPACE << YSolidLoc;
+            << token::SPACE << p.YGas()
+            << token::SPACE << p.YLiquid()
+            << token::SPACE << p.YSolid();
     }
     else
     {
@@ -347,7 +338,7 @@ Foam::Ostream& Foam::operator<<
             reinterpret_cast<const char*>(&p.mass0_),
             ReactingMultiphaseParcel<ParcelType>::sizeofFields_
         );
-        os  << YGasLoc << YLiquidLoc << YSolidLoc;
+        os  << p.YGas() << p.YLiquid() << p.YSolid();
     }
 
     // Check state of Ostream

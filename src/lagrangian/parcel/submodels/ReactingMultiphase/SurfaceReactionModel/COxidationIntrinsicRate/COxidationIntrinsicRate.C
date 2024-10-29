@@ -134,7 +134,7 @@ Foam::scalar Foam::COxidationIntrinsicRate<CloudType>::calculate
 ) const
 {
     // Fraction of remaining combustible material
-    const label idSolid = CloudType::parcelType::SLD;
+    const label idSolid = this->owner().composition().idSolid();
     const scalar Ychar = YMixture[idSolid]*YSolid[CsLocalId_];
 
     // Surface combustion until combustible fraction is consumed

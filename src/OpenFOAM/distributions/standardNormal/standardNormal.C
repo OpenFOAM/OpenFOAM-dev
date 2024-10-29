@@ -57,7 +57,7 @@ Foam::tmp<Foam::scalarField> Foam::distributions::standardNormal::approxErf
 
 Foam::scalar Foam::distributions::standardNormal::approxErfInv(const scalar y)
 {
-    const scalar l = log(1 - y*y), b = 2/(pi*a_) + l/2;
+    const scalar l = log(Foam::max(1 - y*y, small/2)), b = 2/(pi*a_) + l/2;
     return sign(y)*sqrt(-b + sqrt(b*b - l/a_));
 }
 

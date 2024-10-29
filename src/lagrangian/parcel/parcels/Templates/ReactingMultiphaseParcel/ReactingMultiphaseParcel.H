@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,13 +81,6 @@ class ReactingMultiphaseParcel
 
 
 public:
-
-    // IDs of phases in ReactingParcel phase list (Y)
-
-        static const label GAS;
-        static const label LIQ;
-        static const label SLD;
-
 
     //- Class to hold reacting multiphase particle constant properties
     class constantProperties
@@ -188,7 +181,10 @@ private:
             const scalar mass0,
             const scalarField& dMassGas,
             const scalarField& dMassLiquid,
-            const scalarField& dMassSolid
+            const scalarField& dMassSolid,
+            const label idG,
+            const label idL,
+            const label idS
         );
 
 

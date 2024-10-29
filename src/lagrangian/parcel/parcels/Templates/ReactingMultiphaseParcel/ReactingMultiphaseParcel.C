@@ -31,17 +31,6 @@ License
 
 using namespace Foam::constant::mathematical;
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-template<class ParcelType>
-const Foam::label Foam::ReactingMultiphaseParcel<ParcelType>::GAS(0);
-
-template<class ParcelType>
-const Foam::label Foam::ReactingMultiphaseParcel<ParcelType>::LIQ(1);
-
-template<class ParcelType>
-const Foam::label Foam::ReactingMultiphaseParcel<ParcelType>::SLD(2);
-
 
 // * * * * * * * * * * * *  Private Member Functions * * * * * * * * * * * * //
 
@@ -59,9 +48,9 @@ Foam::scalar Foam::ReactingMultiphaseParcel<ParcelType>::CpEff
 ) const
 {
     return
-        this->Y_[GAS]*cloud.composition().Cp(idG, YGas_, p, T)
-      + this->Y_[LIQ]*cloud.composition().Cp(idL, YLiquid_, p, T)
-      + this->Y_[SLD]*cloud.composition().Cp(idS, YSolid_, p, T);
+        this->Y_[idG]*cloud.composition().Cp(idG, YGas_, p, T)
+      + this->Y_[idL]*cloud.composition().Cp(idL, YLiquid_, p, T)
+      + this->Y_[idS]*cloud.composition().Cp(idS, YSolid_, p, T);
 }
 
 
@@ -79,9 +68,9 @@ Foam::scalar Foam::ReactingMultiphaseParcel<ParcelType>::hsEff
 ) const
 {
     return
-        this->Y_[GAS]*cloud.composition().hs(idG, YGas_, p, T)
-      + this->Y_[LIQ]*cloud.composition().hs(idL, YLiquid_, p, T)
-      + this->Y_[SLD]*cloud.composition().hs(idS, YSolid_, p, T);
+        this->Y_[idG]*cloud.composition().hs(idG, YGas_, p, T)
+      + this->Y_[idL]*cloud.composition().hs(idL, YLiquid_, p, T)
+      + this->Y_[idS]*cloud.composition().hs(idS, YSolid_, p, T);
 }
 
 
@@ -99,9 +88,9 @@ Foam::scalar Foam::ReactingMultiphaseParcel<ParcelType>::LEff
 ) const
 {
     return
-        this->Y_[GAS]*cloud.composition().L(idG, YGas_, p, T)
-      + this->Y_[LIQ]*cloud.composition().L(idL, YLiquid_, p, T)
-      + this->Y_[SLD]*cloud.composition().L(idS, YSolid_, p, T);
+        this->Y_[idG]*cloud.composition().L(idG, YGas_, p, T)
+      + this->Y_[idL]*cloud.composition().L(idL, YLiquid_, p, T)
+      + this->Y_[idS]*cloud.composition().L(idS, YSolid_, p, T);
 }
 
 
@@ -111,23 +100,26 @@ Foam::scalar Foam::ReactingMultiphaseParcel<ParcelType>::updateMassFractions
     const scalar mass0,
     const scalarField& dMassGas,
     const scalarField& dMassLiquid,
-    const scalarField& dMassSolid
+    const scalarField& dMassSolid,
+    const label idG,
+    const label idL,
+    const label idS
 )
 {
     scalarField& YMix = this->Y_;
 
     scalar massGas =
-        this->updateMassFraction(mass0*YMix[GAS], dMassGas, YGas_);
+        this->updateMassFraction(mass0*YMix[idG], dMassGas, YGas_);
     scalar massLiquid =
-        this->updateMassFraction(mass0*YMix[LIQ], dMassLiquid, YLiquid_);
+        this->updateMassFraction(mass0*YMix[idL], dMassLiquid, YLiquid_);
     scalar massSolid =
-        this->updateMassFraction(mass0*YMix[SLD], dMassSolid, YSolid_);
+        this->updateMassFraction(mass0*YMix[idS], dMassSolid, YSolid_);
 
     scalar massNew = max(massGas + massLiquid + massSolid, rootVSmall);
 
-    YMix[GAS] = massGas/massNew;
-    YMix[LIQ] = massLiquid/massNew;
-    YMix[SLD] = 1.0 - YMix[GAS] - YMix[LIQ];
+    YMix[idG] = massGas/massNew;
+    YMix[idL] = massLiquid/massNew;
+    YMix[idS] = 1.0 - YMix[idG] - YMix[idL];
 
     return massNew;
 }
@@ -252,7 +244,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calc
         T0,
         mass0,
         idL,
-        YMix[LIQ],
+        YMix[idL],
         YLiquid_,
         dMassPC,
         Sh,
@@ -279,9 +271,9 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calc
         T0,
         mass0,
         mass0_,
-        YMix[GAS]*YGas_,
-        YMix[LIQ]*YLiquid_,
-        YMix[SLD]*YSolid_,
+        YMix[idG]*YGas_,
+        YMix[idL]*YLiquid_,
+        YMix[idS]*YSolid_,
         canCombust_,
         dMassDV,
         Sh,
@@ -331,7 +323,16 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calc
     scalarField dMassLiquid(dMassPC + dMassSRLiquid);
     scalarField dMassSolid(dMassSRSolid);
     scalar mass1 =
-        updateMassFractions(mass0, dMassGas, dMassLiquid, dMassSolid);
+        updateMassFractions
+        (
+            mass0,
+            dMassGas,
+            dMassLiquid,
+            dMassSolid,
+            idG,
+            idL,
+            idS
+        );
 
     this->Cp_ = CpEff(cloud, td, pc, T0, idG, idL, idS);
 
@@ -357,21 +358,21 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calc
             // Absorb parcel into carrier phase
             forAll(YGas_, i)
             {
-                label gid = composition.localToCarrierId(GAS, i);
-                cloud.rhoTrans(gid)[this->cell()] += dm*YMix[GAS]*YGas_[i];
+                label gid = composition.localToCarrierId(idG, i);
+                cloud.rhoTrans(gid)[this->cell()] += dm*YMix[idG]*YGas_[i];
             }
             forAll(YLiquid_, i)
             {
-                label gid = composition.localToCarrierId(LIQ, i);
-                cloud.rhoTrans(gid)[this->cell()] += dm*YMix[LIQ]*YLiquid_[i];
+                label gid = composition.localToCarrierId(idL, i);
+                cloud.rhoTrans(gid)[this->cell()] += dm*YMix[idL]*YLiquid_[i];
             }
 
             // No mapping between solid components and carrier phase
             /*
             forAll(YSolid_, i)
             {
-                label gid = composition.localToCarrierId(SLD, i);
-                cloud.rhoTrans(gid)[this->cell()] += dm*YMix[SLD]*YSolid_[i];
+                label gid = composition.localToCarrierId(idS, i);
+                cloud.rhoTrans(gid)[this->cell()] += dm*YMix[idS]*YSolid_[i];
             }
             */
 
@@ -434,7 +435,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calc
         forAll(YGas_, i)
         {
             scalar dm = np0*dMassGas[i];
-            label gid = composition.localToCarrierId(GAS, i);
+            label gid = composition.localToCarrierId(idG, i);
             scalar hs = composition.carrier().hsi(gid, pc, T0);
             cloud.rhoTrans(gid)[this->cell()] += dm;
             cloud.UTransRef()[this->cell()] += dm*U0;
@@ -443,7 +444,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calc
         forAll(YLiquid_, i)
         {
             scalar dm = np0*dMassLiquid[i];
-            label gid = composition.localToCarrierId(LIQ, i);
+            label gid = composition.localToCarrierId(idL, i);
             scalar hs = composition.carrier().hsi(gid, pc, T0);
             cloud.rhoTrans(gid)[this->cell()] += dm;
             cloud.UTransRef()[this->cell()] += dm*U0;
@@ -455,7 +456,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calc
         forAll(YSolid_, i)
         {
             scalar dm = np0*dMassSolid[i];
-            label gid = composition.localToCarrierId(SLD, i);
+            label gid = composition.localToCarrierId(idS, i);
             scalar hs = composition.carrier().hsi(gid, pc, T0);
             cloud.rhoTrans(gid)[this->cell()] += dm;
             cloud.UTransRef()[this->cell()] += dm*U0;
@@ -555,6 +556,8 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calcDevolatilisation
     const CompositionModel<thermoCloudType>& composition =
         cloud.composition();
 
+    const label idG = composition.idGas();
+
     const typename TrackCloudType::parcelType& p =
         static_cast<const typename TrackCloudType::parcelType&>(*this);
     typename TrackCloudType::parcelType::trackingData& ttd =
@@ -597,7 +600,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calcDevolatilisation
 
         forAll(dMassDV, i)
         {
-            const label id = composition.localToCarrierId(GAS, i);
+            const label id = composition.localToCarrierId(idG, i);
             const scalar Cp = composition.carrier().Cpi(id, td.pc(), Ts);
             const scalar W = composition.carrier().WiValue(id);
             const scalar Ni = dMassDV[i]/(this->areaS(d)*dt*W);
