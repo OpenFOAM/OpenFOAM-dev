@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -210,7 +210,7 @@ Foam::word Foam::functionObjects::populationBalanceMoments::defaultFldName()
               + ","
               + coordinateTypeSymbolicName()
               + ")",
-                popBal_.name()
+                popBalName_
             )
         );
 }
@@ -231,7 +231,7 @@ Foam::functionObjects::populationBalanceMoments::integerMomentFldName()
               + ","
               + coordinateTypeSymbolicName()
               + ")",
-                popBal_.name()
+                popBalName_
             )
         );
 }
@@ -393,7 +393,10 @@ void Foam::functionObjects::populationBalanceMoments::setDimensions
 
 
 Foam::tmp<Foam::volScalarField>
-Foam::functionObjects::populationBalanceMoments::totalConcentration()
+Foam::functionObjects::populationBalanceMoments::totalConcentration
+(
+    const diameterModels::populationBalanceModel& popBal
+)
 {
     tmp<volScalarField> tTotalConcentration
     (
@@ -433,9 +436,9 @@ Foam::functionObjects::populationBalanceMoments::totalConcentration()
         }
     }
 
-    forAll(popBal_.sizeGroups(), i)
+    forAll(popBal.sizeGroups(), i)
     {
-        const Foam::diameterModels::sizeGroup& fi = popBal_.sizeGroups()[i];
+        const Foam::diameterModels::sizeGroup& fi = popBal.sizeGroups()[i];
 
         switch (weightType_)
         {
@@ -465,7 +468,10 @@ Foam::functionObjects::populationBalanceMoments::totalConcentration()
 
 
 Foam::tmp<Foam::volScalarField>
-Foam::functionObjects::populationBalanceMoments::mean()
+Foam::functionObjects::populationBalanceMoments::mean
+(
+    const diameterModels::populationBalanceModel& popBal
+)
 {
     tmp<volScalarField> tMean
     (
@@ -481,11 +487,11 @@ Foam::functionObjects::populationBalanceMoments::mean()
 
     setDimensions(mean, momentType::mean);
 
-    volScalarField totalConcentration(this->totalConcentration());
+    volScalarField totalConcentration(this->totalConcentration(popBal));
 
-    forAll(popBal_.sizeGroups(), i)
+    forAll(popBal.sizeGroups(), i)
     {
-        const Foam::diameterModels::sizeGroup& fi = popBal_.sizeGroups()[i];
+        const Foam::diameterModels::sizeGroup& fi = popBal.sizeGroups()[i];
 
         volScalarField concentration(fi*fi.phase()/fi.x());
 
@@ -592,7 +598,10 @@ Foam::functionObjects::populationBalanceMoments::mean()
 
 
 Foam::tmp<Foam::volScalarField>
-Foam::functionObjects::populationBalanceMoments::variance()
+Foam::functionObjects::populationBalanceMoments::variance
+(
+    const diameterModels::populationBalanceModel& popBal
+)
 {
     tmp<volScalarField> tVariance
     (
@@ -608,12 +617,12 @@ Foam::functionObjects::populationBalanceMoments::variance()
 
     setDimensions(variance, momentType::variance);
 
-    volScalarField totalConcentration(this->totalConcentration());
-    volScalarField mean(this->mean());
+    volScalarField totalConcentration(this->totalConcentration(popBal));
+    volScalarField mean(this->mean(popBal));
 
-    forAll(popBal_.sizeGroups(), i)
+    forAll(popBal.sizeGroups(), i)
     {
-        const Foam::diameterModels::sizeGroup& fi = popBal_.sizeGroups()[i];
+        const Foam::diameterModels::sizeGroup& fi = popBal.sizeGroups()[i];
 
         volScalarField concentration(fi*fi.phase()/fi.x());
 
@@ -708,17 +717,20 @@ Foam::functionObjects::populationBalanceMoments::variance()
 
 
 Foam::tmp<Foam::volScalarField>
-Foam::functionObjects::populationBalanceMoments::stdDev()
+Foam::functionObjects::populationBalanceMoments::stdDev
+(
+    const diameterModels::populationBalanceModel& popBal
+)
 {
     switch (meanType_)
     {
         case meanType::geometric:
         {
-            return exp(sqrt(this->variance()));
+            return exp(sqrt(this->variance(popBal)));
         }
         default:
         {
-            return sqrt(this->variance());
+            return sqrt(this->variance(popBal));
         }
     }
 }
@@ -734,13 +746,7 @@ Foam::functionObjects::populationBalanceMoments::populationBalanceMoments
 )
 :
     fvMeshFunctionObject(name, runTime, dict),
-    popBal_
-    (
-        obr_.lookupObject<Foam::diameterModels::populationBalanceModel>
-        (
-            dict.lookup("populationBalance")
-        )
-    ),
+    popBalName_(dict.lookup("populationBalance")),
     momentType_(momentTypeNames_.read(dict.lookup("momentType"))),
     coordinateType_(coordinateTypeNames_.read(dict.lookup("coordinateType"))),
     weightType_
@@ -830,9 +836,12 @@ Foam::functionObjects::populationBalanceMoments::read(const dictionary& dict)
                         IOobject::NO_READ,
                         IOobject::NO_WRITE
                     ),
-                    this->mean()
+                    mesh_,
+                    dimensionedScalar(dimless, Zero)
                 )
             );
+
+            setDimensions(fldPtr_(), momentType::mean);
 
             break;
         }
@@ -850,9 +859,12 @@ Foam::functionObjects::populationBalanceMoments::read(const dictionary& dict)
                         IOobject::NO_READ,
                         IOobject::NO_WRITE
                     ),
-                    this->variance()
+                    mesh_,
+                    dimensionedScalar(dimless, Zero)
                 )
             );
+
+            setDimensions(fldPtr_(), momentType::variance);
 
             break;
         }
@@ -870,9 +882,12 @@ Foam::functionObjects::populationBalanceMoments::read(const dictionary& dict)
                         IOobject::NO_READ,
                         IOobject::NO_WRITE
                     ),
-                    this->stdDev()
+                    mesh_,
+                    dimensionedScalar(dimless, Zero)
                 )
             );
+
+            setDimensions(fldPtr_(), momentType::stdDev);
 
             break;
         }
@@ -884,6 +899,12 @@ Foam::functionObjects::populationBalanceMoments::read(const dictionary& dict)
 
 bool Foam::functionObjects::populationBalanceMoments::execute()
 {
+    const diameterModels::populationBalanceModel& popBal =
+        obr_.lookupObject<diameterModels::populationBalanceModel>
+        (
+            popBalName_
+        );
+
     switch (momentType_)
     {
         case momentType::integerMoment:
@@ -892,10 +913,10 @@ bool Foam::functionObjects::populationBalanceMoments::execute()
 
             integerMoment = Zero;
 
-            forAll(popBal_.sizeGroups(), i)
+            forAll(popBal.sizeGroups(), i)
             {
                 const Foam::diameterModels::sizeGroup& fi =
-                    popBal_.sizeGroups()[i];
+                    popBal.sizeGroups()[i];
 
                 volScalarField concentration(fi*fi.phase()/fi.x());
 
@@ -949,19 +970,19 @@ bool Foam::functionObjects::populationBalanceMoments::execute()
         }
         case momentType::mean:
         {
-            fldPtr_() = this->mean();
+            fldPtr_() = this->mean(popBal);
 
             break;
         }
         case momentType::variance:
         {
-            fldPtr_() = this->variance();
+            fldPtr_() = this->variance(popBal);
 
             break;
         }
         case momentType::stdDev:
         {
-            fldPtr_() = sqrt(this->variance());
+            fldPtr_() = sqrt(this->variance(popBal));
 
             break;
         }

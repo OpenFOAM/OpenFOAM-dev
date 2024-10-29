@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -356,13 +356,7 @@ populationBalanceSizeDistribution
     fvCellSet(fvMeshFunctionObject::mesh_, dict),
     file_(obr_, name),
     mesh_(fvMeshFunctionObject::mesh_),
-    popBal_
-    (
-        obr_.lookupObject<Foam::diameterModels::populationBalanceModel>
-        (
-            dict.lookup("populationBalance")
-        )
-    ),
+    popBalName_(dict.lookup("populationBalance")),
     functionType_(functionTypeNames_.read(dict.lookup("functionType"))),
     coordinateType_(coordinateTypeNames_.read(dict.lookup("coordinateType"))),
     allCoordinates_
@@ -424,8 +418,14 @@ bool Foam::functionObjects::populationBalanceSizeDistribution::write()
 {
     Log << type() << " " << name() << " write:" << nl;
 
+    const diameterModels::populationBalanceModel& popBal =
+        obr_.lookupObject<diameterModels::populationBalanceModel>
+        (
+            popBalName_
+        );
+
     const UPtrList<diameterModels::sizeGroup>& sizeGroups =
-        popBal_.sizeGroups();
+        popBal.sizeGroups();
 
     scalarField coordinateValues(sizeGroups.size());
     scalarField boundaryValues(sizeGroups.size() + 1);
@@ -606,7 +606,7 @@ bool Foam::functionObjects::populationBalanceSizeDistribution::write()
             otherCoordinateValues.set
             (
                 cType,
-                new scalarField(popBal_.sizeGroups().size())
+                new scalarField(popBal.sizeGroups().size())
             );
 
             forAll(sizeGroups, i)
