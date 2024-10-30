@@ -37,9 +37,11 @@ Usage
         select          cellZone;
         cellZone        ignition;
 
-        start           0;
-        duration        0.003;
-        strength        2;
+        // Timings are defined in crank angles for a multi-cycle engine case
+        start           700;
+        duration        5;
+        combustionDuration 200;
+        period          720;
 
         XiCorr
         {
@@ -51,12 +53,14 @@ Usage
 
     Where:
     \table
-        Property     | Description                 | Required   | Default value
-        select       | Ignition cell set selection | yes        |
-        start        | Ignition start time         | yes        |
-        duration     | Ignition duration           | yes        |
-        strength     | Ignition strength [1/s]     | yes        |
-        XiCorr       | Flame-wrinkling correction  | yes        |
+        Property          | Description              | Required | Default value
+        select            | Ignition cell set selection | yes      |
+        start             | Ignition start time         | yes      |
+        duration          | Ignition duration           | yes      |
+        combustionDuration| Combustion duration         | yes      |
+        period            | Ignition repeat period      | yes      |
+        strength          | Ignition strength [1/s]     | yes      |
+        XiCorr            | Flame-wrinkling correction  | yes      |
     \endtable
 
 See also
