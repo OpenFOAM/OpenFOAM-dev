@@ -348,6 +348,20 @@ Foam::PsiuMulticomponentThermo<BaseThermo>::Tb() const
 
 template<class BaseThermo>
 Foam::tmp<Foam::volScalarField>
+Foam::PsiuMulticomponentThermo<BaseThermo>::hf() const
+{
+    return this->volScalarFieldProperty
+    (
+        "hf",
+        dimEnergy/dimMass,
+        &BaseThermo::mixtureType::reactants,
+        &BaseThermo::mixtureType::thermoMixtureType::hf
+    );
+}
+
+
+template<class BaseThermo>
+Foam::tmp<Foam::volScalarField>
 Foam::PsiuMulticomponentThermo<BaseThermo>::psiu() const
 {
     return this->volScalarFieldProperty
