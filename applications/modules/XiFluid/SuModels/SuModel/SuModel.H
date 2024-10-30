@@ -147,6 +147,10 @@ public:
             return Su_;
         }
 
+        //- Reset Su to the unburnt state
+        virtual void reset()
+        {}
+
         //- Correct the laminar flame speed
         virtual void correct() = 0;
 

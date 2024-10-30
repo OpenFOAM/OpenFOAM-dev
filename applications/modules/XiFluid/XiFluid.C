@@ -151,4 +151,11 @@ void Foam::solvers::XiFluid::postCorrector()
 }
 
 
+void Foam::solvers::XiFluid::reset()
+{
+    thermo_.reset();
+    SuModel_->reset();
+    XiModel_->reset();
+}
+
 // ************************************************************************* //

@@ -230,7 +230,7 @@ public:
         )
         {}
 
-        //- Reset Xi to an unburnt state
+        //- Reset Xi to the unburnt state (1)
         virtual void reset();
 
         //- Correct the flame-wrinkling Xi

@@ -290,6 +290,10 @@ public:
         //- Correct the momentum and thermophysical transport modelling
         virtual void postCorrector();
 
+        //- Reset b-Xi and thermodynamics to the unburnt state
+        //  for multi-cycle simulations
+        virtual void reset();
+
 
     // Member Operators
 

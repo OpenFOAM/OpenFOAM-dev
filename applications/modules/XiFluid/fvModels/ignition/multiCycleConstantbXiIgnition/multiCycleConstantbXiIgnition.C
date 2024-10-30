@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "multiCycleConstantbXiIgnition.H"
-#include "psiuMulticomponentThermo.H"
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
 
@@ -120,12 +119,7 @@ bool Foam::fv::multiCycleConstantbXiIgnition::ignited() const
     {
         reset_ = true;
 
-        mesh().lookupObjectRef<psiuMulticomponentThermo>
-        (
-            physicalProperties::typeName
-        ).reset();
-
-        mesh().lookupObjectRef<XiModel>(XiModel::typeName).reset();
+        mesh().lookupObjectRef<solvers::XiFluid>(solver::typeName).reset();
     }
 
     return ignited;

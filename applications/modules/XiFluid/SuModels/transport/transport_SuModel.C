@@ -81,6 +81,12 @@ Foam::SuModels::transport::~transport()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
+void Foam::SuModels::transport::reset()
+{
+    Su_ = Su0_()();
+}
+
+
 void Foam::SuModels::transport::correct()
 {
     const fvMesh& mesh(thermo_.mesh());

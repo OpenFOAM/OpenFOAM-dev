@@ -105,6 +105,10 @@ public:
 
     // Member Functions
 
+        //- Reset Su to the unburnt state
+        //  assumed to be the unstrained state
+        virtual void reset();
+
         //- Correct the laminar flame speed
         virtual void correct();
 
