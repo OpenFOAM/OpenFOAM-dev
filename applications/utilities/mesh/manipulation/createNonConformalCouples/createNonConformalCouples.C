@@ -590,7 +590,8 @@ int main(int argc, char *argv[])
                 "startFace", regionFirstProcFaceis[regioni],
                 "originalPatch", couple.origPatchNames[!owner],
                 "neighbourRegion", couple.regionNames[owner],
-                "neighbourPatch", couple.ncPatchNames[owner]
+                "neighbourPatch", couple.ncPatchNames[owner],
+                "owner", owner
             );
 
             {

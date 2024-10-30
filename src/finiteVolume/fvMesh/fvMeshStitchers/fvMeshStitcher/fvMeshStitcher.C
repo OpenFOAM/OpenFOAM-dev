@@ -1681,6 +1681,10 @@ bool Foam::fvMeshStitcher::disconnectThis
                     << endl;
             }
         }
+
+        const volScalarField::Internal pvf(projectedVolumeFraction());
+        Info<< indent << "Cell min/avg/max projected volume fraction = "
+            << gMin(pvf) << '/' << gAverage(pvf) << '/' << gMax(pvf) << endl;
     }
 
     if (any(patchCoupleds))
@@ -1924,6 +1928,10 @@ bool Foam::fvMeshStitcher::connectThis
                 }
             }
         }
+
+        const volScalarField::Internal pvf(projectedVolumeFraction());
+        Info<< indent << "Cell min/avg/max projected volume fraction = "
+            << gMin(pvf) << '/' << gAverage(pvf) << '/' << gMax(pvf) << endl;
     }
 
     if (any(patchCoupleds))
@@ -2166,6 +2174,20 @@ Foam::fvMeshStitcher::volumeConservationError(const label n) const
     const volScalarField::Internal& V0 = n == 0 ? mesh_.V0() : mesh_.V00();
 
     return fvc::surfaceIntegrate(phi*deltaT)() - (V - V0)/mesh_.V();
+}
+
+
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::fvMeshStitcher::projectedVolumeFraction() const
+{
+    return
+        mag
+        (
+            fvc::surfaceIntegrate
+            (
+                mesh_.Sf() & mesh_.Cf()
+            )().internalField()/mesh_.nSolutionD() - 1
+        );
 }
 
 

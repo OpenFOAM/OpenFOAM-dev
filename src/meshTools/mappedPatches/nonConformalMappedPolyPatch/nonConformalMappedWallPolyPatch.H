@@ -107,8 +107,9 @@ public:
             const label start,
             const label index,
             const word& origPatchName,
-            const word& neighbourRegion,
-            const word& neighbourPatch,
+            const word& neighbourRegionName,
+            const word& neighbourPatchName,
+            const bool owner,
             const polyBoundaryMesh& bm
         );
 

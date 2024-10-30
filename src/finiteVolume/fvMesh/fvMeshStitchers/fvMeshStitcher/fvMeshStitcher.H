@@ -385,10 +385,12 @@ protected:
 
             //- Return the non-dimensional old-time volume conservation error
             //  for a specified old-time index for debugging/checking
-            tmp<DimensionedField<scalar, volMesh>> volumeConservationError
-            (
-                const label n
-            ) const;
+            tmp<DimensionedField<scalar, volMesh>>
+                volumeConservationError(const label n) const;
+
+            //- Return the projected volume fraction for debugging/checking
+            tmp<DimensionedField<scalar, volMesh>>
+                projectedVolumeFraction() const;
 
 
 public:

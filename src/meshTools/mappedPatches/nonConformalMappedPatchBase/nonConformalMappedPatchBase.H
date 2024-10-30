@@ -98,7 +98,8 @@ public:
             const nonConformalPolyPatch& ncPp,
             const word& nbrRegionName,
             const word& nbrPatchName,
-            const cyclicTransform& transform
+            const cyclicTransform& transform,
+            const bool owner
         );
 
         //- Construct from dictionary

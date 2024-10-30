@@ -82,12 +82,13 @@ Foam::nonConformalMappedPatchBase::nonConformalMappedPatchBase
     const nonConformalPolyPatch& ncPp,
     const word& nbrRegionName,
     const word& nbrPatchName,
-    const cyclicTransform& transform
+    const cyclicTransform& transform,
+    const bool owner
 )
 :
     mappedPatchBaseBase(ncPp.patch(), nbrRegionName, nbrPatchName, transform),
     patch_(ncPp),
-    owner_(calcOwner()),
+    owner_(owner),
     intersectionIsValid_(0),
     intersection_(false)
 {}
@@ -102,7 +103,7 @@ Foam::nonConformalMappedPatchBase::nonConformalMappedPatchBase
 :
     mappedPatchBaseBase(ncPp.patch(), dict, tt),
     patch_(ncPp),
-    owner_(calcOwner()),
+    owner_(dict.lookupOrDefault<bool>("owner", calcOwner())),
     intersectionIsValid_(0),
     intersection_(false)
 {}
@@ -116,7 +117,7 @@ Foam::nonConformalMappedPatchBase::nonConformalMappedPatchBase
 :
     mappedPatchBaseBase(ncPp.patch(), mpb),
     patch_(ncPp),
-    owner_(calcOwner()),
+    owner_(mpb.owner_),
     intersectionIsValid_(0),
     intersection_(false)
 {}
@@ -204,6 +205,7 @@ void Foam::nonConformalMappedPatchBase::clearOut(const bool move)
 void Foam::nonConformalMappedPatchBase::write(Ostream& os) const
 {
     mappedPatchBaseBase::write(os);
+    writeEntry(os, "owner", owner_);
 }
 
 

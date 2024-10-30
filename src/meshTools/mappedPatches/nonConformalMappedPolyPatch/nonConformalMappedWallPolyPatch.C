@@ -141,6 +141,7 @@ Foam::nonConformalMappedWallPolyPatch::nonConformalMappedWallPolyPatch
     const word& origPatchName,
     const word& nbrRegionName,
     const word& nbrPatchName,
+    const bool owner,
     const polyBoundaryMesh& bm
 )
 :
@@ -151,7 +152,8 @@ Foam::nonConformalMappedWallPolyPatch::nonConformalMappedWallPolyPatch
         *this,
         nbrRegionName,
         nbrPatchName,
-        cyclicTransform(true)
+        cyclicTransform(true),
+        owner
     )
 {
     //  mapped is not constraint type so add mapped group explicitly
