@@ -189,7 +189,10 @@ int main(int argc, char *argv[])
 
     // Dictionary to control refinement
     const word dictName("refineMeshDict");
-    typeIOobject<IOdictionary> dictIO(systemDictIO(dictName, args, runTime));
+    typeIOobject<IOdictionary> dictIO
+    (
+        systemDictIO(dictName, args, runTime, regionName)
+    );
     dictionary refineDict;
     if (readDict)
     {

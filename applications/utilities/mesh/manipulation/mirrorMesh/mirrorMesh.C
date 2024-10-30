@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
             meshPath,
             runTime
         ),
-        systemDictIO("mirrorMeshDict", args, runTime)
+        systemDictIO("mirrorMeshDict", args, runTime, regionName)
     );
 
     hexRef8Data refData
