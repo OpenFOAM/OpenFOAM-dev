@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::displacementLayeredMotionMotionSolver
+    Foam::displacementLayeredMotionSolver
 
 Description
     Mesh motion solver for an (multi-block) extruded fvMesh. Gets given the
@@ -50,12 +50,12 @@ Description
           specified by the first faceZone. (= removes the normal component).
 
 SourceFiles
-    displacementLayeredMotionMotionSolver.C
+    displacementLayeredMotionSolver.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef displacementLayeredMotionMotionSolver_H
-#define displacementLayeredMotionMotionSolver_H
+#ifndef displacementLayeredMotionSolver_H
+#define displacementLayeredMotionSolver_H
 
 #include "displacementMotionSolver.H"
 #include "PackedBoolList.H"
@@ -68,10 +68,10 @@ namespace Foam
 // Forward class declarations
 
 /*---------------------------------------------------------------------------*\
-            Class displacementLayeredMotionMotionSolver Declaration
+            Class displacementLayeredMotionSolver Declaration
 \*---------------------------------------------------------------------------*/
 
-class displacementLayeredMotionMotionSolver
+class displacementLayeredMotionSolver
 :
     public displacementMotionSolver
 {
@@ -122,7 +122,7 @@ public:
     // Constructors
 
         //- Construct from polyMesh and dictionary
-        displacementLayeredMotionMotionSolver
+        displacementLayeredMotionSolver
         (
             const word& name,
             const polyMesh&,
@@ -130,14 +130,14 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        displacementLayeredMotionMotionSolver
+        displacementLayeredMotionSolver
         (
-            const displacementLayeredMotionMotionSolver&
+            const displacementLayeredMotionSolver&
         ) = delete;
 
 
     //- Destructor
-    ~displacementLayeredMotionMotionSolver();
+    ~displacementLayeredMotionSolver();
 
 
     // Member Functions
@@ -155,7 +155,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const displacementLayeredMotionMotionSolver&) = delete;
+        void operator=(const displacementLayeredMotionSolver&) = delete;
 };
 
 

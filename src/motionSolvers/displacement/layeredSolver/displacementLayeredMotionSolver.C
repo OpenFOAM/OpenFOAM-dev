@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "displacementLayeredMotionMotionSolver.H"
+#include "displacementLayeredMotionSolver.H"
 #include "addToRunTimeSelectionTable.H"
 #include "pointEdgeStructuredWalk.H"
 #include "pointFields.H"
@@ -37,12 +37,12 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(displacementLayeredMotionMotionSolver, 0);
+    defineTypeNameAndDebug(displacementLayeredMotionSolver, 0);
 
     addToRunTimeSelectionTable
     (
         motionSolver,
-        displacementLayeredMotionMotionSolver,
+        displacementLayeredMotionSolver,
         dictionary
     );
 }
@@ -50,7 +50,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::displacementLayeredMotionMotionSolver::calcZoneMask
+void Foam::displacementLayeredMotionSolver::calcZoneMask
 (
     const label cellZoneI,
     PackedBoolList& isZonePoint,
@@ -125,7 +125,7 @@ void Foam::displacementLayeredMotionMotionSolver::calcZoneMask
 
 
 // Find distance to starting point
-void Foam::displacementLayeredMotionMotionSolver::walkStructured
+void Foam::displacementLayeredMotionSolver::walkStructured
 (
     const label cellZoneI,
     const PackedBoolList& isZonePoint,
@@ -213,7 +213,7 @@ void Foam::displacementLayeredMotionMotionSolver::walkStructured
 
 // Evaluate faceZone patch
 Foam::tmp<Foam::vectorField>
-Foam::displacementLayeredMotionMotionSolver::faceZoneEvaluate
+Foam::displacementLayeredMotionSolver::faceZoneEvaluate
 (
     const faceZone& fz,
     const labelList& meshPoints,
@@ -281,7 +281,7 @@ Foam::displacementLayeredMotionMotionSolver::faceZoneEvaluate
 }
 
 
-void Foam::displacementLayeredMotionMotionSolver::cellZoneSolve
+void Foam::displacementLayeredMotionSolver::cellZoneSolve
 (
     const label cellZoneI,
     const dictionary& zoneDict
@@ -493,8 +493,8 @@ void Foam::displacementLayeredMotionMotionSolver::cellZoneSolve
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::displacementLayeredMotionMotionSolver::
-displacementLayeredMotionMotionSolver
+Foam::displacementLayeredMotionSolver::
+displacementLayeredMotionSolver
 (
     const word& name,
     const polyMesh& mesh,
@@ -508,15 +508,15 @@ displacementLayeredMotionMotionSolver
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::displacementLayeredMotionMotionSolver::
-~displacementLayeredMotionMotionSolver()
+Foam::displacementLayeredMotionSolver::
+~displacementLayeredMotionSolver()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::pointField>
-Foam::displacementLayeredMotionMotionSolver::curPoints() const
+Foam::displacementLayeredMotionSolver::curPoints() const
 {
     tmp<pointField> tcurPoints
     (
@@ -527,7 +527,7 @@ Foam::displacementLayeredMotionMotionSolver::curPoints() const
 }
 
 
-void Foam::displacementLayeredMotionMotionSolver::solve()
+void Foam::displacementLayeredMotionSolver::solve()
 {
     // The points have moved so before interpolation update the motionSolver
     movePoints(mesh().points());
@@ -563,7 +563,7 @@ void Foam::displacementLayeredMotionMotionSolver::solve()
 }
 
 
-void Foam::displacementLayeredMotionMotionSolver::topoChange
+void Foam::displacementLayeredMotionSolver::topoChange
 (
     const polyTopoChangeMap& map
 )

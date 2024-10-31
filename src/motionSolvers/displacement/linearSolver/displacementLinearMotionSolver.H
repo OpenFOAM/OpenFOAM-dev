@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::displacementLinearMotionMotionSolver
+    Foam::displacementLinearMotionSolver
 
 Description
     Mesh motion solver simple linear expansion and contraction of a mesh
@@ -52,12 +52,12 @@ Description
     displacement.
 
 SourceFiles
-    displacementLinearMotionMotionSolver.C
+    displacementLinearMotionSolver.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef displacementLinearMotionMotionSolver_H
-#define displacementLinearMotionMotionSolver_H
+#ifndef displacementLinearMotionSolver_H
+#define displacementLinearMotionSolver_H
 
 #include "points0MotionSolver.H"
 #include "Function1.H"
@@ -68,10 +68,10 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-            Class displacementLinearMotionMotionSolver Declaration
+            Class displacementLinearMotionSolver Declaration
 \*---------------------------------------------------------------------------*/
 
-class displacementLinearMotionMotionSolver
+class displacementLinearMotionSolver
 :
     public points0MotionSolver
 {
@@ -99,7 +99,7 @@ public:
     // Constructors
 
         //- Construct from polyMesh and dictionary
-        displacementLinearMotionMotionSolver
+        displacementLinearMotionSolver
         (
             const word& name,
             const polyMesh&,
@@ -107,14 +107,14 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        displacementLinearMotionMotionSolver
+        displacementLinearMotionSolver
         (
-            const displacementLinearMotionMotionSolver&
+            const displacementLinearMotionSolver&
         ) = delete;
 
 
     //- Destructor
-    ~displacementLinearMotionMotionSolver();
+    ~displacementLinearMotionSolver();
 
 
     // Member Functions
@@ -130,7 +130,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const displacementLinearMotionMotionSolver&) = delete;
+        void operator=(const displacementLinearMotionSolver&) = delete;
 };
 
 

@@ -1,9 +1,9 @@
 motionSolver/motionSolver.C
 displacement/points0/points0MotionSolver.C
 displacement/displacement/displacementMotionSolver.C
-displacement/layeredSolver/displacementLayeredMotionMotionSolver.C
+displacement/layeredSolver/displacementLayeredMotionSolver.C
 displacement/layeredSolver/pointEdgeStructuredWalk.C
-displacement/linearSolver/displacementLinearMotionMotionSolver.C
+displacement/linearSolver/displacementLinearMotionSolver.C
 componentDisplacement/componentDisplacementMotionSolver.C
 velocity/velocityMotionSolver.C
 componentVelocity/componentVelocityMotionSolver.C

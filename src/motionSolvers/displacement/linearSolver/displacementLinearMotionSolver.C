@@ -23,19 +23,19 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "displacementLinearMotionMotionSolver.H"
+#include "displacementLinearMotionSolver.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(displacementLinearMotionMotionSolver, 0);
+    defineTypeNameAndDebug(displacementLinearMotionSolver, 0);
 
     addToRunTimeSelectionTable
     (
         motionSolver,
-        displacementLinearMotionMotionSolver,
+        displacementLinearMotionSolver,
         dictionary
     );
 }
@@ -43,8 +43,8 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::displacementLinearMotionMotionSolver::
-displacementLinearMotionMotionSolver
+Foam::displacementLinearMotionSolver::
+displacementLinearMotionSolver
 (
     const word& name,
     const polyMesh& mesh,
@@ -70,15 +70,15 @@ displacementLinearMotionMotionSolver
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::displacementLinearMotionMotionSolver::
-~displacementLinearMotionMotionSolver()
+Foam::displacementLinearMotionSolver::
+~displacementLinearMotionSolver()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::pointField>
-Foam::displacementLinearMotionMotionSolver::curPoints() const
+Foam::displacementLinearMotionSolver::curPoints() const
 {
     tmp<pointField> tcurPoints(new pointField(points0()));
     pointField& curPoints = tcurPoints.ref();
