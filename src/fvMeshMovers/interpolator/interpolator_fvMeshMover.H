@@ -35,7 +35,7 @@ Usage
     \verbatim
     mover   interpolator;
 
-    displacementLaplacianCoeffs
+    interpolatorCoeffs
     {
         field               wantedDisplacement;
         displacement        yes;
