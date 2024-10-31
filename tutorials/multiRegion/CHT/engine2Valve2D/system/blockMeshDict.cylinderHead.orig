@@ -137,7 +137,6 @@ defaultPatch
 
 boundary
 (
-
     cylinderHead_sides
     {
         type wall;

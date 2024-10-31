@@ -95,7 +95,6 @@ defaultPatch
 
 boundary
 (
-
     nonCoupleFluidLiner
     {
         type    wall;

@@ -91,6 +91,18 @@ defaultPatch
 
 boundary
 (
+    liner_sides
+    {
+        type wall;
+        inGroups    (externalWalls);
+        faces
+        (
+            (0 2 6 4)
+            (2 3 7 6)
+            (9 11 15 13)
+            (10 11 15 14)
+        );
+    }
 
     liner_TO_cylinderHead
     {
