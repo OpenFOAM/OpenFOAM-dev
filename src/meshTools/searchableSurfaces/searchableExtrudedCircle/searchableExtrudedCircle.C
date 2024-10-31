@@ -24,13 +24,13 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "searchableExtrudedCircle.H"
-#include "addToRunTimeSelectionTable.H"
 #include "Time.H"
 #include "edgeMesh.H"
 #include "indexedOctree.H"
 #include "treeDataEdge.H"
 #include "linearInterpolationWeights.H"
 #include "quaternion.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -68,7 +68,7 @@ Foam::searchableExtrudedCircle::searchableExtrudedCircle
                 IOobject::MUST_READ,
                 IOobject::NO_WRITE,
                 false
-            ).objectPath(global())
+            ).objectPath(true)
         )
     ),
     radius_(dict.lookup<scalar>("radius", dimLength))
