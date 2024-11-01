@@ -312,7 +312,13 @@ Foam::laminarFlameSpeedModels::RaviPetersen::operator()() const
         dimensionedScalar(dimless, 0)
     );
 
-    if (psiuMulticomponentThermo_.containsSpecie("ft"))
+    if (psiuMulticomponentThermo_.containsSpecie("egr"))
+    {
+        FatalErrorInFunction
+            << "The " << type() << " model does not support EGR"
+            << exit(FatalError);
+    }
+    else if (psiuMulticomponentThermo_.containsSpecie("ft"))
     {
         const volScalarField& ft = psiuMulticomponentThermo_.Y("ft");
 
