@@ -93,7 +93,7 @@ class displacementLinearMotionSolver
 public:
 
     //- Runtime type information
-    TypeName("displacementLinearMotion");
+    TypeName("displacementLinear");
 
 
     // Constructors

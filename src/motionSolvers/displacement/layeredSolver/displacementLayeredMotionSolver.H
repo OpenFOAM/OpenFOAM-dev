@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,29 +25,30 @@ Class
     Foam::displacementLayeredMotionSolver
 
 Description
-    Mesh motion solver for an (multi-block) extruded fvMesh. Gets given the
-    structure of the mesh blocks and boundary conditions on these blocks.
+    Interpolating motion solver for extruded/layered meshes
 
-    The displacementLayeredMotionCoeffs subdict of dynamicMeshDict specifies
-    per region (=cellZone) the boundary conditions on two opposing patches
-    (=faceZones). It then interpolates the boundary values using topological
-    walking so requires the cellZone to be a layered mesh.
+    Uses a topological walk from points along edges to points from one patch to
+    the opposite, accumulating distance and propagating displacement and then
+    again in the return direction and uses the distances from each point to the
+    two opposite patches to linearly interpolate the displacements of
+    these two patches to the each point.
 
-    The boundary conditions on faceZones are currently:
+    This motion solver is very simple to configure, only the two opposite
+    patches between which the mesh is layered need be specified as a pair of
+    patch names following the \c oppositePatches keyword, e.g.
 
-    follow: the faceZone follows the overall mesh displacement.
-            Use this for faceZones on boundary faces (so it uses the
-            proper boundary conditions on the pointDisplacement).
+    \verbatim
+        mover
+        {
+            type            motionSolver;
 
-    uniformFollow: like 'follow' but takes the average value of
-            a specified 'patch' (which is not necessarily colocated)
+            libs            ("libfvMotionSolvers.so");
 
-    fixedValue: fixed value.
+            motionSolver    displacementLayered;
 
-    timeVaryingUniformFixedValue: table-driven fixed value.
-
-    slip: the second of a pair of faceZones follows the tangential movement
-          specified by the first faceZone. (= removes the normal component).
+            oppositePatches (top bottom);
+        }
+    \endverbatim
 
 SourceFiles
     displacementLayeredMotionSolver.C
@@ -58,65 +59,45 @@ SourceFiles
 #define displacementLayeredMotionSolver_H
 
 #include "displacementMotionSolver.H"
-#include "PackedBoolList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-// Forward class declarations
-
 /*---------------------------------------------------------------------------*\
-            Class displacementLayeredMotionSolver Declaration
+               Class displacementLayeredMotionSolver Declaration
 \*---------------------------------------------------------------------------*/
 
 class displacementLayeredMotionSolver
 :
     public displacementMotionSolver
 {
-    dictionary regionDicts_;
+    // Private Member Data
+
+        //- Names of the opposite patches of the layered mesh
+        Pair<word> oppositePatchNames_;
+
+        //- Indices of the opposite patches of the layered mesh
+        Pair<label> oppositePatches_;
+
 
     // Private Member Functions
 
-        void calcZoneMask
+        //- Walk across the layers from the startPatch to the opposite patch
+        //  accumulating the distance and setting the displacement
+        void walkLayers
         (
-            const label cellZoneI,
-            PackedBoolList& isZonePoint,
-            PackedBoolList& isZoneEdge
-        ) const;
-
-        void walkStructured
-        (
-            const label cellZoneI,
-            const PackedBoolList& isZonePoint,
-            const PackedBoolList& isZoneEdge,
-            const labelList& seedPoints,
-            const vectorField& seedData,
+            const polyPatch& startPatch,
             scalarField& distance,
-            vectorField& data
+            vectorField& displacement
         ) const;
-
-        tmp<vectorField> faceZoneEvaluate
-        (
-            const faceZone& fz,
-            const labelList& meshPoints,
-            const dictionary& dict,
-            const PtrList<pointVectorField>& patchDisp,
-            const label patchi
-        ) const;
-
-        void cellZoneSolve
-        (
-            const label cellZoneI,
-            const dictionary& zoneDict
-        );
 
 
 public:
 
     //- Runtime type information
-    TypeName("displacementLayeredMotion");
+    TypeName("displacementLayered");
 
 
     // Constructors
@@ -148,7 +129,7 @@ public:
         //- Solve for motion
         virtual void solve();
 
-        //- Update topology
+        //- Update topology (not implemented)
         virtual void topoChange(const polyTopoChangeMap&);
 
 

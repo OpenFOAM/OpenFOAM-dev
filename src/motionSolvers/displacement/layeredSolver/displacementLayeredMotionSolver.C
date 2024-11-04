@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,14 +24,11 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "displacementLayeredMotionSolver.H"
-#include "addToRunTimeSelectionTable.H"
 #include "pointEdgeStructuredWalk.H"
-#include "pointFields.H"
 #include "PointEdgeWave.H"
-#include "syncTools.H"
-#include "Table.H"
 #include "pointConstraints.H"
 #include "polyTopoChangeMap.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -50,451 +47,85 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::displacementLayeredMotionSolver::calcZoneMask
+void Foam::displacementLayeredMotionSolver::walkLayers
 (
-    const label cellZoneI,
-    PackedBoolList& isZonePoint,
-    PackedBoolList& isZoneEdge
-) const
-{
-    if (cellZoneI == -1)
-    {
-        isZonePoint.setSize(mesh().nPoints());
-        isZonePoint = 1;
-
-        isZoneEdge.setSize(mesh().nEdges());
-        isZoneEdge = 1;
-    }
-    else
-    {
-        const cellZone& cz = mesh().cellZones()[cellZoneI];
-
-        label nPoints = 0;
-        forAll(cz, i)
-        {
-            const labelList& cPoints = mesh().cellPoints(cz[i]);
-            forAll(cPoints, cPointi)
-            {
-                if (!isZonePoint[cPoints[cPointi]])
-                {
-                    isZonePoint[cPoints[cPointi]] = 1;
-                    nPoints++;
-                }
-            }
-        }
-        syncTools::syncPointList
-        (
-            mesh(),
-            isZonePoint,
-            orEqOp<unsigned int>(),
-            0
-        );
-
-
-        // Mark edge inside cellZone
-        label nEdges = 0;
-        forAll(cz, i)
-        {
-            const labelList& cEdges = mesh().cellEdges(cz[i]);
-            forAll(cEdges, cEdgeI)
-            {
-                if (!isZoneEdge[cEdges[cEdgeI]])
-                {
-                    isZoneEdge[cEdges[cEdgeI]] = 1;
-                    nEdges++;
-                }
-            }
-        }
-        syncTools::syncEdgeList
-        (
-            mesh(),
-            isZoneEdge,
-            orEqOp<unsigned int>(),
-            0
-        );
-
-        if (debug)
-        {
-            Info<< "On cellZone " << cz.name()
-                << " marked " << returnReduce(nPoints, sumOp<label>())
-                << " points and " << returnReduce(nEdges, sumOp<label>())
-                << " edges." << endl;
-        }
-    }
-}
-
-
-// Find distance to starting point
-void Foam::displacementLayeredMotionSolver::walkStructured
-(
-    const label cellZoneI,
-    const PackedBoolList& isZonePoint,
-    const PackedBoolList& isZoneEdge,
-    const labelList& seedPoints,
-    const vectorField& seedData,
+    const polyPatch& startPatch,
     scalarField& distance,
-    vectorField& data
+    vectorField& displacement
 ) const
 {
-    List<pointEdgeStructuredWalk> seedInfo(seedPoints.size());
+    // Get the start mesh points from the start patch
+    const labelList& startMeshPoints = startPatch.meshPoints();
 
-    forAll(seedPoints, i)
-    {
-        seedInfo[i] = pointEdgeStructuredWalk
-        (
-            points0()[seedPoints[i]],  // location of data
-            points0()[seedPoints[i]],  // previous location
-            0.0,
-            seedData[i]
-        );
-    }
-
-    // Current info on points
-    List<pointEdgeStructuredWalk> allPointInfo(mesh().nPoints());
-
-    // Mark points inside cellZone.
-    // Note that we use points0, not mesh.points()
-    // so as not to accumulate errors.
-    forAll(isZonePoint, pointi)
-    {
-        if (isZonePoint[pointi])
-        {
-            allPointInfo[pointi] = pointEdgeStructuredWalk
-            (
-                points0()[pointi],  // location of data
-                vector::max,        // not valid
-                0.0,
-                Zero        // passive data
-            );
-        }
-    }
-
-    // Current info on edges
-    List<pointEdgeStructuredWalk> allEdgeInfo(mesh().nEdges());
-
-    // Mark edges inside cellZone
-    forAll(isZoneEdge, edgeI)
-    {
-        if (isZoneEdge[edgeI])
-        {
-            allEdgeInfo[edgeI] = pointEdgeStructuredWalk
-            (
-                mesh().edges()[edgeI].centre(points0()),    // location of data
-                vector::max,                                // not valid
-                0.0,
-                Zero
-            );
-        }
-    }
-
-    // Walk
-    PointEdgeWave<pointEdgeStructuredWalk> wallCalc
+    // Set the displacement of the start points
+    const vectorField startDisplacement
     (
-        mesh(),
-        seedPoints,
-        seedInfo,
-
-        allPointInfo,
-        allEdgeInfo,
-        mesh().globalData().nTotalPoints()  // max iterations
+        pointDisplacement_.boundaryField()[startPatch.index()]
+       .patchInternalField()
     );
 
-    // Extract distance and passive data
+    // Set the wave info for the start patch
+    List<pointEdgeStructuredWalk> startInfo(startMeshPoints.size());
+    forAll(startMeshPoints, i)
+    {
+        startInfo[i] = pointEdgeStructuredWalk
+        (
+            points0()[startMeshPoints[i]],  // Location of start point
+            points0()[startMeshPoints[i]],  // Previous location
+            0,
+            startDisplacement[i]            // Displacement of the start point
+        );
+    }
+
+    // Initialise the wave info for all the points
+    List<pointEdgeStructuredWalk> allPointInfo(mesh().nPoints());
     forAll(allPointInfo, pointi)
     {
-        if (isZonePoint[pointi])
-        {
-            distance[pointi] = allPointInfo[pointi].dist();
-            data[pointi] = allPointInfo[pointi].data();
-        }
-    }
-}
-
-
-// Evaluate faceZone patch
-Foam::tmp<Foam::vectorField>
-Foam::displacementLayeredMotionSolver::faceZoneEvaluate
-(
-    const faceZone& fz,
-    const labelList& meshPoints,
-    const dictionary& dict,
-    const PtrList<pointVectorField>& patchDisp,
-    const label patchi
-) const
-{
-    tmp<vectorField> tfld(new vectorField(meshPoints.size()));
-    vectorField& fld = tfld.ref();
-
-    const word type(dict.lookup("type"));
-
-    if (type == "fixedValue")
-    {
-        fld = vectorField("value", dimLength, dict, meshPoints.size());
-    }
-    else if (type == "timeVaryingUniformFixedValue")
-    {
-        fld =
-            Function1s::Table<vector>
-            (
-                word::null,
-                mesh().time().userUnits(),
-                dimLength,
-                dict
-            ).value(mesh().time().value());
-    }
-    else if (type == "slip")
-    {
-        if ((patchi % 2) != 1)
-        {
-            FatalErrorInFunction
-                << "FaceZone:" << fz.name()
-                << exit(FatalError);
-        }
-
-        // Use field set by previous bc
-        fld = vectorField(patchDisp[patchi - 1], meshPoints);
-    }
-    else if (type == "follow")
-    {
-        // Only on boundary faces - follow boundary conditions
-        fld = vectorField(pointDisplacement_, meshPoints);
-    }
-    else if (type == "uniformFollow")
-    {
-        // Reads name of name of patch. Then get average point displacement on
-        // patch. That becomes the value of fld.
-        const word patchName(dict.lookup("patch"));
-        label patchID = mesh().boundaryMesh().findIndex(patchName);
-        pointField pdf
+        allPointInfo[pointi] = pointEdgeStructuredWalk
         (
-            pointDisplacement_.boundaryField()[patchID].patchInternalField()
+            points0()[pointi],  // Mesh point location
+            vector::max,        // No valid previous location
+            0,
+            Zero                // Initial displacement = 0
         );
-        fld = gAverage(pdf);
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "Unknown faceZonePatch type " << type << " for faceZone "
-            << fz.name() << exit(FatalError);
-    }
-    return tfld;
-}
-
-
-void Foam::displacementLayeredMotionSolver::cellZoneSolve
-(
-    const label cellZoneI,
-    const dictionary& zoneDict
-)
-{
-    PackedBoolList isZonePoint(mesh().nPoints());
-    PackedBoolList isZoneEdge(mesh().nEdges());
-    calcZoneMask(cellZoneI, isZonePoint, isZoneEdge);
-
-    const dictionary& patchesDict = zoneDict.subDict("boundaryField");
-
-    if (patchesDict.size() != 2)
-    {
-        FatalErrorInFunction
-            << "Two faceZones (patches) must be specified per cellZone. "
-            << " cellZone:" << cellZoneI
-            << " patches:" << patchesDict.toc()
-            << exit(FatalError);
     }
 
-    PtrList<scalarField> patchDist(patchesDict.size());
-    PtrList<pointVectorField> patchDisp(patchesDict.size());
-
-    // Allocate the fields
-    label patchi = 0;
-    forAllConstIter(dictionary, patchesDict, patchiter)
+    // Initialise the wave info for all edges
+    List<pointEdgeStructuredWalk> allEdgeInfo(mesh().nEdges());
+    forAll(allEdgeInfo, edgei)
     {
-        const word& faceZoneName = patchiter().keyword();
-        label zoneI = mesh().faceZones().findIndex(faceZoneName);
-        if (zoneI == -1)
-        {
-            FatalErrorInFunction
-                << "Cannot find faceZone " << faceZoneName
-                << endl << "Valid zones are " << mesh().faceZones().toc()
-                << exit(FatalError);
-        }
-
-        // Determine the points of the faceZone within the cellZone
-        const faceZone& fz = mesh().faceZones()[zoneI];
-
-        patchDist.set(patchi, new scalarField(mesh().nPoints()));
-        patchDisp.set
+        allEdgeInfo[edgei] = pointEdgeStructuredWalk
         (
-            patchi,
-            new pointVectorField
-            (
-                IOobject
-                (
-                    mesh().cellZones()[cellZoneI].name() + "_" + fz.name(),
-                    mesh().time().name(),
-                    mesh(),
-                    IOobject::NO_READ,
-                    IOobject::NO_WRITE,
-                    false
-                ),
-                pointDisplacement_  // to inherit the boundary conditions
-            )
+            mesh().edges()[edgei].centre(points0()), // Edge centre location
+            vector::max,        // No valid previous location
+            0,
+            Zero                // Initial displacement = 0
         );
-
-        patchi++;
     }
 
+    // Walk the distance and displacement from the startPatch
+    PointEdgeWave<pointEdgeStructuredWalk> walk
+    (
+        mesh(),
+        startMeshPoints,
+        startInfo,
+        allPointInfo,
+        allEdgeInfo,
+        mesh().globalData().nTotalPoints()  // Max number of iterations
+    );
 
-
-    // 'correctBoundaryConditions'
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // Loops over all the faceZones and walks their boundary values
-
-    // Make sure we can pick up bc values from field
-    pointDisplacement_.correctBoundaryConditions();
-
-    patchi = 0;
-    forAllConstIter(dictionary, patchesDict, patchiter)
+    // Extract distance and displacement from the wave info
+    forAll(allPointInfo, pointi)
     {
-        const word& faceZoneName = patchiter().keyword();
-        const dictionary& faceZoneDict = patchiter().dict();
-
-        // Determine the points of the faceZone within the cellZone
-        const faceZone& fz = mesh().faceZones()[faceZoneName];
-        const labelList& fzMeshPoints = fz.patch().meshPoints();
-        DynamicList<label> meshPoints(fzMeshPoints.size());
-        forAll(fzMeshPoints, i)
-        {
-            if (isZonePoint[fzMeshPoints[i]])
-            {
-                meshPoints.append(fzMeshPoints[i]);
-            }
-        }
-
-        // Get initial value for all the faceZone points
-        tmp<vectorField> tseed = faceZoneEvaluate
-        (
-            fz,
-            meshPoints,
-            faceZoneDict,
-            patchDisp,
-            patchi
-        );
-
-        if (debug)
-        {
-            Info<< "For cellZone:" << cellZoneI
-                << " for faceZone:" << fz.name()
-                << " nPoints:" << tseed().size()
-                << " have patchField:"
-                << " max:" << gMax(tseed())
-                << " min:" << gMin(tseed())
-                << " avg:" << gAverage(tseed())
-                << endl;
-        }
-
-        // Set distance and transported value
-        walkStructured
-        (
-            cellZoneI,
-            isZonePoint,
-            isZoneEdge,
-
-            meshPoints,
-            tseed,
-            patchDist[patchi],
-            patchDisp[patchi]
-        );
-
-        // Implement real bc.
-        patchDisp[patchi].correctBoundaryConditions();
-
-        patchi++;
-    }
-
-
-    // Solve
-    // ~~~~~
-
-    if (debug)
-    {
-        // Normalised distance
-        pointScalarField distance
-        (
-            IOobject
-            (
-                mesh().cellZones()[cellZoneI].name() + ":distance",
-                mesh().time().name(),
-                mesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            pointMesh::New(mesh()),
-            dimensionedScalar(dimLength, 0)
-        );
-
-        forAll(distance, pointi)
-        {
-            scalar d1 = patchDist[0][pointi];
-            scalar d2 = patchDist[1][pointi];
-            if (d1 + d2 > small)
-            {
-                scalar s = d1/(d1 + d2);
-                distance[pointi] = s;
-            }
-        }
-
-        Info<< "Writing " << pointScalarField::typeName
-            << distance.name() << " to "
-            << mesh().time().name() << endl;
-        distance.write();
-    }
-
-
-    const word interpolationScheme = zoneDict.lookup("interpolationScheme");
-
-    if (interpolationScheme == "oneSided")
-    {
-        forAll(pointDisplacement_, pointi)
-        {
-            if (isZonePoint[pointi])
-            {
-                pointDisplacement_[pointi] = patchDisp[0][pointi];
-            }
-        }
-    }
-    else if (interpolationScheme == "linear")
-    {
-        forAll(pointDisplacement_, pointi)
-        {
-            if (isZonePoint[pointi])
-            {
-                scalar d1 = patchDist[0][pointi];
-                scalar d2 = patchDist[1][pointi];
-                scalar s = d1/(d1 + d2 + vSmall);
-
-                const vector& pd1 = patchDisp[0][pointi];
-                const vector& pd2 = patchDisp[1][pointi];
-
-                pointDisplacement_[pointi] = (1 - s)*pd1 + s*pd2;
-            }
-        }
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "Invalid interpolationScheme: " << interpolationScheme
-            << ". Valid schemes are 'oneSided' and 'linear'"
-            << exit(FatalError);
+        distance[pointi] = allPointInfo[pointi].dist();
+        displacement[pointi] = allPointInfo[pointi].data();
     }
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::displacementLayeredMotionSolver::
-displacementLayeredMotionSolver
+Foam::displacementLayeredMotionSolver::displacementLayeredMotionSolver
 (
     const word& name,
     const polyMesh& mesh,
@@ -502,14 +133,18 @@ displacementLayeredMotionSolver
 )
 :
     displacementMotionSolver(name, mesh, dict, typeName),
-    regionDicts_(dict.subDict("regions"))
+    oppositePatchNames_(dict.lookup("oppositePatches")),
+    oppositePatches_
+    (
+        mesh.boundaryMesh().findIndex(oppositePatchNames_.first()),
+        mesh.boundaryMesh().findIndex(oppositePatchNames_.second())
+    )
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::displacementLayeredMotionSolver::
-~displacementLayeredMotionSolver()
+Foam::displacementLayeredMotionSolver::~displacementLayeredMotionSolver()
 {}
 
 
@@ -532,34 +167,31 @@ void Foam::displacementLayeredMotionSolver::solve()
     // The points have moved so before interpolation update the motionSolver
     movePoints(mesh().points());
 
-    // Apply boundary conditions
+    // Update the displacement boundary conditions
     pointDisplacement_.boundaryFieldRef().updateCoeffs();
 
-    // Solve motion on all regions (=cellZones)
-    forAllConstIter(dictionary, regionDicts_, regionIter)
-    {
-        const word& cellZoneName = regionIter().keyword();
-        const dictionary& regionDict = regionIter().dict();
+    // Walk the layers from patch0 to patch1
+    const polyPatch& patch0 = mesh().boundaryMesh()[oppositePatches_.first()];
+    scalarField patchDist0(mesh().nPoints());
+    vectorField patchDisp0(pointDisplacement_);
+    walkLayers(patch0, patchDist0, patchDisp0);
 
-        label zoneI = mesh().cellZones().findIndex(cellZoneName);
+    // Walk the layers from patch1 to patch0
+    const polyPatch& patch1 = mesh().boundaryMesh()[oppositePatches_.second()];
+    scalarField patchDist1(mesh().nPoints());
+    vectorField patchDisp1(pointDisplacement_);
+    walkLayers(patch1, patchDist1, patchDisp1);
 
-        Info<< "solving for zone: " << cellZoneName << endl;
+    // Calculate the interpolation factor from the distance to the
+    // opposite patches
+    const scalarField w(patchDist0/(patchDist0 + patchDist1 + small));
 
-        if (zoneI == -1)
-        {
-            FatalErrorInFunction
-                << "Cannot find cellZone " << cellZoneName
-                << endl << "Valid zones are " << mesh().cellZones().toc()
-                << exit(FatalError);
-        }
+    // Linearly interpolate the displacements of the opposite patches
+    pointDisplacement_.primitiveFieldRef() = (1 - w)*patchDisp0 + w*patchDisp1;
 
-        cellZoneSolve(zoneI, regionDict);
-    }
-
-    // Update pointDisplacement for solved values
-    const pointConstraints& pcs =
-        pointConstraints::New(pointDisplacement_.mesh());
-    pcs.constrainDisplacement(pointDisplacement_, false);
+    // Constrain the pointDisplacement field
+    pointConstraints::New(pointDisplacement_.mesh())
+        .constrainDisplacement(pointDisplacement_, false);
 }
 
 
@@ -568,33 +200,12 @@ void Foam::displacementLayeredMotionSolver::topoChange
     const polyTopoChangeMap& map
 )
 {
-    FatalErrorInFunction
-        << "Probably inconsistent with points0MotionSolver" << nl
-        << "    Needs to be updated and tested."
-        << exit(FatalError);
+    // Pending implementation of the inverse transformation of points0
+    NotImplemented;
 
-    displacementMotionSolver::topoChange(map);
-
-    const vectorField displacement(this->newPoints() - points0_);
-
-    forAll(points0_, pointi)
-    {
-        const label oldPointi = map.pointMap()[pointi];
-
-        if (oldPointi >= 0)
-        {
-            label masterPointi = map.reversePointMap()[oldPointi];
-
-            if ((masterPointi != pointi))
-            {
-                // newly inserted point in this cellZone
-
-                // need to set point0 so that it represents the position that
-                // it would have had if it had existed for all time
-                points0_[pointi] -= displacement[pointi];
-            }
-        }
-    }
+    // Alternatively using the current points instead of points0
+    // would support topology change but the motion might be less robust
+    // and potentially accumulate error
 }
 
 
