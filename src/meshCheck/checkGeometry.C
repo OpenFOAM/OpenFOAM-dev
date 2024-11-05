@@ -650,10 +650,11 @@ Foam::label Foam::meshCheck::checkGeometry
                         << " non closed cells to set " << cells.name() << endl;
                     cells.instance() = mesh.pointsInstance();
                     cells.write();
-                    if (surfWriter.valid())
-                    {
-                        meshCheck::mergeAndWrite(surfWriter(), cells);
-                    }
+                }
+
+                if (surfWriter.valid())
+                {
+                    meshCheck::mergeAndWrite(surfWriter(), cells);
                 }
             }
         }
@@ -669,10 +670,11 @@ Foam::label Foam::meshCheck::checkGeometry
                     << aspectCells.name() << endl;
                 aspectCells.instance() = mesh.pointsInstance();
                 aspectCells.write();
-                if (surfWriter.valid())
-                {
-                    meshCheck::mergeAndWrite(surfWriter(), aspectCells);
-                }
+            }
+
+            if (surfWriter.valid())
+            {
+                meshCheck::mergeAndWrite(surfWriter(), aspectCells);
             }
         }
     }
@@ -693,10 +695,11 @@ Foam::label Foam::meshCheck::checkGeometry
                         << " zero area faces to set " << faces.name() << endl;
                     faces.instance() = mesh.pointsInstance();
                     faces.write();
-                    if (surfWriter.valid())
-                    {
-                        meshCheck::mergeAndWrite(surfWriter(), faces);
-                    }
+                }
+
+                if (surfWriter.valid())
+                {
+                    meshCheck::mergeAndWrite(surfWriter(), faces);
                 }
             }
         }
@@ -718,10 +721,11 @@ Foam::label Foam::meshCheck::checkGeometry
                         << " zero volume cells to set " << cells.name() << endl;
                     cells.instance() = mesh.pointsInstance();
                     cells.write();
-                    if (surfWriter.valid())
-                    {
-                        meshCheck::mergeAndWrite(surfWriter(), cells);
-                    }
+                }
+
+                if (surfWriter.valid())
+                {
+                    meshCheck::mergeAndWrite(surfWriter(), cells);
                 }
             }
         }
@@ -753,10 +757,11 @@ Foam::label Foam::meshCheck::checkGeometry
                     << " non-orthogonal faces to set " << faces.name() << endl;
                 faces.instance() = mesh.pointsInstance();
                 faces.write();
-                if (surfWriter.valid())
-                {
-                    meshCheck::mergeAndWrite(surfWriter(), faces);
-                }
+            }
+
+            if (surfWriter.valid())
+            {
+                meshCheck::mergeAndWrite(surfWriter(), faces);
             }
         }
     }
@@ -778,10 +783,11 @@ Foam::label Foam::meshCheck::checkGeometry
                         << faces.name() << endl;
                     faces.instance() = mesh.pointsInstance();
                     faces.write();
-                    if (surfWriter.valid())
-                    {
-                        meshCheck::mergeAndWrite(surfWriter(), faces);
-                    }
+                }
+
+                if (surfWriter.valid())
+                {
+                    meshCheck::mergeAndWrite(surfWriter(), faces);
                 }
             }
         }
@@ -812,10 +818,11 @@ Foam::label Foam::meshCheck::checkGeometry
                         << " skew faces to set " << faces.name() << endl;
                     faces.instance() = mesh.pointsInstance();
                     faces.write();
-                    if (surfWriter.valid())
-                    {
-                        meshCheck::mergeAndWrite(surfWriter(), faces);
-                    }
+                }
+
+                if (surfWriter.valid())
+                {
+                    meshCheck::mergeAndWrite(surfWriter(), faces);
                 }
             }
         }
@@ -839,10 +846,11 @@ Foam::label Foam::meshCheck::checkGeometry
                         << faces.name() << endl;
                     faces.instance() = mesh.pointsInstance();
                     faces.write();
-                    if (surfWriter.valid())
-                    {
-                        meshCheck::mergeAndWrite(surfWriter(), faces);
-                    }
+                }
+
+                if (surfWriter.valid())
+                {
+                    meshCheck::mergeAndWrite(surfWriter(), faces);
                 }
             }
         }
@@ -875,10 +883,11 @@ Foam::label Foam::meshCheck::checkGeometry
                         << "decomposition tets to set " << faces.name() << endl;
                     faces.instance() = mesh.pointsInstance();
                     faces.write();
-                    if (surfWriter.valid())
-                    {
-                        meshCheck::mergeAndWrite(surfWriter(), faces);
-                    }
+                }
+
+                if (surfWriter.valid())
+                {
+                    meshCheck::mergeAndWrite(surfWriter(), faces);
                 }
             }
         }
@@ -951,10 +960,11 @@ Foam::label Foam::meshCheck::checkGeometry
                         << endl;
                     faces.instance() = mesh.pointsInstance();
                     faces.write();
-                    if (surfWriter.valid())
-                    {
-                        meshCheck::mergeAndWrite(surfWriter(), faces);
-                    }
+                }
+
+                if (surfWriter.valid())
+                {
+                    meshCheck::mergeAndWrite(surfWriter(), faces);
                 }
             }
         }
@@ -977,10 +987,11 @@ Foam::label Foam::meshCheck::checkGeometry
                         << " warped faces to set " << faces.name() << endl;
                     faces.instance() = mesh.pointsInstance();
                     faces.write();
-                    if (surfWriter.valid())
-                    {
-                        meshCheck::mergeAndWrite(surfWriter(), faces);
-                    }
+                }
+
+                if (surfWriter.valid())
+                {
+                    meshCheck::mergeAndWrite(surfWriter(), faces);
                 }
             }
         }
@@ -1002,10 +1013,11 @@ Foam::label Foam::meshCheck::checkGeometry
                     << endl;
                 cells.instance() = mesh.pointsInstance();
                 cells.write();
-                if (surfWriter.valid())
-                {
-                    meshCheck::mergeAndWrite(surfWriter(), cells);
-                }
+            }
+
+            if (surfWriter.valid())
+            {
+                meshCheck::mergeAndWrite(surfWriter(), cells);
             }
         }
     }
@@ -1025,10 +1037,11 @@ Foam::label Foam::meshCheck::checkGeometry
                     << " concave cells to set " << cells.name() << endl;
                 cells.instance() = mesh.pointsInstance();
                 cells.write();
-                if (surfWriter.valid())
-                {
-                    meshCheck::mergeAndWrite(surfWriter(), cells);
-                }
+            }
+
+            if (surfWriter.valid())
+            {
+                meshCheck::mergeAndWrite(surfWriter(), cells);
             }
         }
     }
@@ -1049,10 +1062,11 @@ Foam::label Foam::meshCheck::checkGeometry
                     << faces.name() << endl;
                 faces.instance() = mesh.pointsInstance();
                 faces.write();
-                if (surfWriter.valid())
-                {
-                    meshCheck::mergeAndWrite(surfWriter(), faces);
-                }
+            }
+
+            if (surfWriter.valid())
+            {
+                meshCheck::mergeAndWrite(surfWriter(), faces);
             }
         }
     }
@@ -1073,10 +1087,11 @@ Foam::label Foam::meshCheck::checkGeometry
                     << faces.name() << endl;
                 faces.instance() = mesh.pointsInstance();
                 faces.write();
-                if (surfWriter.valid())
-                {
-                    meshCheck::mergeAndWrite(surfWriter(), faces);
-                }
+            }
+
+            if (surfWriter.valid())
+            {
+                meshCheck::mergeAndWrite(surfWriter(), faces);
             }
         }
     }

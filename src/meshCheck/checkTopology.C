@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -131,10 +131,11 @@ Foam::label Foam::meshCheck::checkTopology
                     << " illegal cells to set " << cells.name() << endl;
                 cells.instance() = mesh.pointsInstance();
                 cells.write();
-                if (surfWriter.valid())
-                {
-                    meshCheck::mergeAndWrite(surfWriter(), cells);
-                }
+            }
+
+            if (surfWriter.valid())
+            {
+                meshCheck::mergeAndWrite(surfWriter(), cells);
             }
         }
         else
@@ -183,10 +184,11 @@ Foam::label Foam::meshCheck::checkTopology
                     << " unordered faces to set " << faces.name() << endl;
                 faces.instance() = mesh.pointsInstance();
                 faces.write();
-                if (surfWriter.valid())
-                {
-                    meshCheck::mergeAndWrite(surfWriter(), faces);
-                }
+            }
+
+            if (surfWriter.valid())
+            {
+                meshCheck::mergeAndWrite(surfWriter(), faces);
             }
         }
     }
@@ -206,10 +208,11 @@ Foam::label Foam::meshCheck::checkTopology
                     << faces.name() << endl;
                 faces.instance() = mesh.pointsInstance();
                 faces.write();
-                if (surfWriter.valid())
-                {
-                    meshCheck::mergeAndWrite(surfWriter(), faces);
-                }
+            }
+
+            if (surfWriter.valid())
+            {
+                meshCheck::mergeAndWrite(surfWriter(), faces);
             }
         }
     }
@@ -230,10 +233,11 @@ Foam::label Foam::meshCheck::checkTopology
                     << endl;
                 cells.instance() = mesh.pointsInstance();
                 cells.write();
-                if (surfWriter.valid())
-                {
-                    meshCheck::mergeAndWrite(surfWriter(), cells);
-                }
+            }
+
+            if (surfWriter.valid())
+            {
+                meshCheck::mergeAndWrite(surfWriter(), cells);
             }
         }
     }
@@ -256,10 +260,11 @@ Foam::label Foam::meshCheck::checkTopology
                     << faces.name() << endl;
                 faces.instance() = mesh.pointsInstance();
                 faces.write();
-                if (surfWriter.valid())
-                {
-                    meshCheck::mergeAndWrite(surfWriter(), faces);
-                }
+            }
+
+            if (surfWriter.valid())
+            {
+                meshCheck::mergeAndWrite(surfWriter(), faces);
             }
         }
     }
@@ -314,10 +319,11 @@ Foam::label Foam::meshCheck::checkTopology
                     << endl;
                 oneCells.instance() = mesh.pointsInstance();
                 oneCells.write();
-                if (surfWriter.valid())
-                {
-                    meshCheck::mergeAndWrite(surfWriter(), oneCells);
-                }
+            }
+
+            if (surfWriter.valid())
+            {
+                meshCheck::mergeAndWrite(surfWriter(), oneCells);
             }
         }
 
@@ -333,10 +339,11 @@ Foam::label Foam::meshCheck::checkTopology
                     << endl;
                 twoCells.instance() = mesh.pointsInstance();
                 twoCells.write();
-                if (surfWriter.valid())
-                {
-                    meshCheck::mergeAndWrite(surfWriter(), twoCells);
-                }
+            }
+
+            if (surfWriter.valid())
+            {
+                meshCheck::mergeAndWrite(surfWriter(), twoCells);
             }
         }
     }
