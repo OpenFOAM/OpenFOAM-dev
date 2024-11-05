@@ -1136,13 +1136,7 @@ void Foam::polyMesh::addPatches
 
     if (validBoundary)
     {
-        // Calculate topology for the patches (processor-processor comms etc.)
-        boundary_.topoChange();
-
-        // Calculate the geometry for the patches (transformation tensors etc.)
-        boundary_.calcGeometry();
-
-        boundary_.checkDefinition();
+        addedPatches();
     }
 }
 
@@ -1211,10 +1205,8 @@ void Foam::polyMesh::reorderPatches
     const bool validBoundary
 )
 {
-    // Clear local fields and e.g. polyMesh parallelInfo.
-    // Do not clearGeom to keep RepatchableMeshObjects intact.
+    // Clear local fields and e.g. polyMesh parallelInfo
     boundary_.clearGeom();
-
     clearAddressing(true);
 
     // Clear all but RepatchableMeshObjects
@@ -1253,10 +1245,7 @@ void Foam::polyMesh::reorderPatches
 void Foam::polyMesh::addPatch
 (
     const label insertPatchi,
-    const polyPatch& patch,
-    const dictionary& patchFieldDict,
-    const word& defaultPatchFieldType,
-    const bool validBoundary
+    const polyPatch& patch
 )
 {
     const label sz = boundary_.size();
@@ -1281,10 +1270,10 @@ void Foam::polyMesh::addPatch
     }
     newToOld[insertPatchi] = -1;
 
+    // Reorder
     reorderPatches(newToOld, false);
 
-    // Clear local fields and e.g. polyMesh parallelInfo.
-    //clearGeom();  // would clear out pointMesh as well
+    // Clear local fields and e.g. polyMesh parallelInfo
     boundary_.clearGeom();
     clearAddressing(true);
 
@@ -1308,7 +1297,6 @@ void Foam::polyMesh::addPatch
         *this
     );
 
-
     // Insert polyPatch
     boundary_.set
     (
@@ -1322,14 +1310,21 @@ void Foam::polyMesh::addPatch
         )
     );
 
-    if (validBoundary)
-    {
-        boundary_.topoChange();
-    }
-
     // Warn mesh objects
     meshObjects::addPatch<polyMesh>(*this, insertPatchi);
     meshObjects::addPatch<pointMesh>(*this, insertPatchi);
+}
+
+
+void Foam::polyMesh::addedPatches()
+{
+    // Calculate topology for the patches (processor-processor comms etc.)
+    boundary_.topoChange();
+
+    // Calculate the geometry for the patches (transformation tensors etc.)
+    boundary_.calcGeometry();
+
+    boundary_.checkDefinition();
 }
 
 

@@ -1061,6 +1061,8 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
                 dimensionedVector(dimVelocity, Zero)
             )
         );
+
+        this->correct();
     }
 }
 

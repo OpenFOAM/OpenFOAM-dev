@@ -1509,10 +1509,7 @@ void Foam::fvMesh::unconform
 void Foam::fvMesh::addPatch
 (
     const label insertPatchi,
-    const polyPatch& patch,
-    const dictionary& patchFieldDict,
-    const word& defaultPatchFieldType,
-    const bool validBoundary
+    const polyPatch& patch
 )
 {
     // Remove my local data (see topoChange)
@@ -1528,19 +1525,11 @@ void Foam::fvMesh::addPatch
     // Clear any non-updateable addressing
     clearAddressing(true);
 
+    const label boundarySize0 = boundary_.size();
 
-    const label sz = boundary_.size();
+    polyMesh::addPatch(insertPatchi, patch);
 
-    polyMesh::addPatch
-    (
-        insertPatchi,
-        patch,
-        patchFieldDict,
-        defaultPatchFieldType,
-        validBoundary
-    );
-
-    boundary_.setSize(sz+1);
+    boundary_.setSize(boundarySize0 + 1);
     boundary_.set
     (
         insertPatchi,
@@ -1551,90 +1540,26 @@ void Foam::fvMesh::addPatch
         )
     );
 
-    objectRegistry& db = const_cast<objectRegistry&>(thisDb());
-    AddPatchFields<volScalarField>
+    #define AddPatchFieldsType(Type, FieldType, DefaultPatchFieldType)         \
+        AddPatchFields<FieldType<Type>>                                        \
+        (                                                                      \
+            const_cast<objectRegistry&>(thisDb()),                             \
+            insertPatchi,                                                      \
+            DefaultPatchFieldType                                              \
+        );
+    FOR_ALL_FIELD_TYPES
     (
-        db,
-        insertPatchi,
-        patchFieldDict,
-        defaultPatchFieldType,
-        Zero
+        AddPatchFieldsType,
+        VolField,
+        extrapolatedCalculatedFvPatchField<scalar>::typeName
     );
-    AddPatchFields<volVectorField>
+    FOR_ALL_FIELD_TYPES
     (
-        db,
-        insertPatchi,
-        patchFieldDict,
-        defaultPatchFieldType,
-        Zero
+        AddPatchFieldsType,
+        SurfaceField,
+        calculatedFvsPatchField<scalar>::typeName
     );
-    AddPatchFields<volSphericalTensorField>
-    (
-        db,
-        insertPatchi,
-        patchFieldDict,
-        defaultPatchFieldType,
-        Zero
-    );
-    AddPatchFields<volSymmTensorField>
-    (
-        db,
-        insertPatchi,
-        patchFieldDict,
-        defaultPatchFieldType,
-        Zero
-    );
-    AddPatchFields<volTensorField>
-    (
-        db,
-        insertPatchi,
-        patchFieldDict,
-        defaultPatchFieldType,
-        Zero
-    );
-
-    // Surface fields
-
-    AddPatchFields<surfaceScalarField>
-    (
-        db,
-        insertPatchi,
-        patchFieldDict,
-        defaultPatchFieldType,
-        Zero
-    );
-    AddPatchFields<surfaceVectorField>
-    (
-        db,
-        insertPatchi,
-        patchFieldDict,
-        defaultPatchFieldType,
-        Zero
-    );
-    AddPatchFields<surfaceSphericalTensorField>
-    (
-        db,
-        insertPatchi,
-        patchFieldDict,
-        defaultPatchFieldType,
-        Zero
-    );
-    AddPatchFields<surfaceSymmTensorField>
-    (
-        db,
-        insertPatchi,
-        patchFieldDict,
-        defaultPatchFieldType,
-        Zero
-    );
-    AddPatchFields<surfaceTensorField>
-    (
-        db,
-        insertPatchi,
-        patchFieldDict,
-        defaultPatchFieldType,
-        Zero
-    );
+    #undef AddPatchFieldsType
 }
 
 
@@ -1648,18 +1573,15 @@ void Foam::fvMesh::reorderPatches
 
     boundary_.shuffle(newToOld, validBoundary);
 
-    objectRegistry& db = const_cast<objectRegistry&>(thisDb());
-    ReorderPatchFields<volScalarField>(db, newToOld);
-    ReorderPatchFields<volVectorField>(db, newToOld);
-    ReorderPatchFields<volSphericalTensorField>(db, newToOld);
-    ReorderPatchFields<volSymmTensorField>(db, newToOld);
-    ReorderPatchFields<volTensorField>(db, newToOld);
-
-    ReorderPatchFields<surfaceScalarField>(db, newToOld);
-    ReorderPatchFields<surfaceVectorField>(db, newToOld);
-    ReorderPatchFields<surfaceSphericalTensorField>(db, newToOld);
-    ReorderPatchFields<surfaceSymmTensorField>(db, newToOld);
-    ReorderPatchFields<surfaceTensorField>(db, newToOld);
+    #define ReorderPatchFieldsType(Type, FieldType)                            \
+        ReorderPatchFields<FieldType<Type>>                                    \
+        (                                                                      \
+            const_cast<objectRegistry&>(thisDb()),                             \
+            newToOld                                                           \
+        );
+    FOR_ALL_FIELD_TYPES(ReorderPatchFieldsType, VolField);
+    FOR_ALL_FIELD_TYPES(ReorderPatchFieldsType, SurfaceField);
+    #undef ReorderPatchFieldsType
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,60 +48,46 @@ namespace Foam
 
 class fvMeshTools
 {
-    //- Set patchFields according to dictionary
-    template<class GeoField>
-    static void setPatchFields
-    (
-        typename  GeoField::Mesh& mesh,
-        const label patchi,
-        const dictionary& patchFieldDict
-    );
+    // Private Static Member Functions
 
-    //- Set patchFields to value
-    template<class GeoField>
-    static void setPatchFields
-    (
-        typename  GeoField::Mesh& mesh,
-        const label patchi,
-        const typename GeoField::value_type& value
-    );
+        //- Set patchFields according to dictionary
+        template<class GeoField>
+        static void setPatchFields
+        (
+            typename GeoField::Mesh& mesh,
+            const label patchi,
+            const dictionary& patchFieldDict
+        );
 
 
 public:
 
-    //- Add patch. Inserts patch before all processor patches.
-    //  Supply per field the new patchField per field as a
-    //  subdictionary or a default type. If validBoundary call is parallel
-    //  synced and all add the same patch with same settings.
-    static label addPatch
-    (
-        fvMesh& mesh,
-        const polyPatch& patch,
-        const dictionary& patchFieldDict,
-        const word& defaultPatchFieldType,
-        const bool validBoundary
-    );
+    // Static Member Functions
 
-    //- Change patchField on registered fields according to dictionary
-    static void setPatchFields
-    (
-        fvMesh& mesh,
-        const label patchi,
-        const dictionary& patchFieldDict
-    );
+        //- Add patch. Inserts patch before all processor patches. Returns the
+        //  index of the added patch.
+        static label addPatch(fvMesh& mesh, const polyPatch& patch);
 
-    //- Change patchField to zero on registered fields
-    static void zeroPatchFields(fvMesh& mesh, const label patchi);
+        //- Complete adding patches
+        static void addedPatches(fvMesh& mesh);
 
-    //- Reorder and remove trailing patches. If validBoundary call is parallel
-    //  synced and all add the same patch with same settings
-    static void reorderPatches
-    (
-        fvMesh&,
-        const labelList& oldToNew,
-        const label nPatches,
-        const bool validBoundary
-    );
+        //- Change patchField on registered fields according to dictionary
+        static void setPatchFields
+        (
+            fvMesh& mesh,
+            const label patchi,
+            const dictionary& patchFieldDict
+        );
+
+        //- Reorder and remove trailing patches. If validBoundary call is
+        //  parallel synced and all add the same patch with same settings
+        static void reorderPatches
+        (
+            fvMesh&,
+            const labelList& oldToNew,
+            const label nPatches,
+            const bool validBoundary
+        );
 };
 
 

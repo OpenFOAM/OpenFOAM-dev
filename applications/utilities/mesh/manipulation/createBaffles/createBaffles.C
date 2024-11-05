@@ -554,14 +554,7 @@ int main(int argc, char *argv[])
 
                 // Add the patch to the mesh, creating calculated boundary
                 // conditions everywhere. These will be changed later.
-                fvMeshTools::addPatch
-                (
-                    mesh,
-                    pp,
-                    dictionary(),   // do not set specialised patchFields
-                    calculatedFvPatchField<scalar>::typeName,
-                    true            // parallel sync'ed addition
-                );
+                fvMeshTools::addPatch(mesh, pp);
             }
             else
             {
@@ -584,6 +577,9 @@ int main(int argc, char *argv[])
             bafflePatches.insert(patchName);
         }
     }
+
+    // Finish adding the patches to the mesh
+    fvMeshTools::addedPatches(mesh);
 
     Info<< endl;
 

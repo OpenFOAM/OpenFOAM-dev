@@ -15,8 +15,6 @@ FoamFile
 
 #includeFunc    residuals(p_rgh, k.water, omega.water)
 #includeFunc    timeStep
-#includeFunc    writeObjects(d.air1)
-#includeFunc    writeObjects(d.air2)
 #includeFunc    phaseForces(phase=water)
 #includeFunc    graphUniform
 (

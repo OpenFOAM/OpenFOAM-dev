@@ -13,8 +13,6 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#includeFunc writeObjects(d.particles)
-
 #includeFunc populationBalanceSizeDistribution
 (
     name=probabilityDensity.afterBend_1d,

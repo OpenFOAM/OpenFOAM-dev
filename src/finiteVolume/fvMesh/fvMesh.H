@@ -634,15 +634,11 @@ public:
             //- Map all fields in time using given map.
             void mapFields(const polyTopoChangeMap& map);
 
-            //- Add/insert single patch. If validBoundary the new situation
-            //  is consistent across processors.
+            //- Add/insert single patch
             virtual void addPatch
             (
                 const label insertPatchi,
-                const polyPatch& patch,
-                const dictionary& patchFieldDict,
-                const word& defaultPatchFieldType,
-                const bool validBoundary
+                const polyPatch& patch
             );
 
             //- Reorder and trim existing patches. If validBoundary the new

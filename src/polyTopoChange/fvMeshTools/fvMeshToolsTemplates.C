@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,31 +66,6 @@ void Foam::fvMeshTools::setPatchFields
                 )
             );
         }
-    }
-}
-
-
-template<class GeoField>
-void Foam::fvMeshTools::setPatchFields
-(
-    typename GeoField::Mesh& mesh,
-    const label patchi,
-    const typename GeoField::value_type& value
-)
-{
-    objectRegistry& obr = const_cast<objectRegistry&>(mesh.thisDb());
-
-    HashTable<GeoField*> fields(obr.lookupClass<GeoField>());
-
-    forAllIter(typename HashTable<GeoField*>, fields, iter)
-    {
-        GeoField& field = *iter();
-
-        if (GeoField::Mesh::geometryFields.found(field.name())) continue;
-
-        typename GeoField::Boundary& bfield = field.boundaryFieldRef();
-
-        bfield[patchi] == value;
     }
 }
 

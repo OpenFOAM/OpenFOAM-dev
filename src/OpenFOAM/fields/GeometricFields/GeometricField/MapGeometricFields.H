@@ -90,7 +90,9 @@ void MapGeometricFields
 
         GeometricField<Type, PatchField, GeoMesh>& field =
             const_cast<GeometricField<Type, PatchField, GeoMesh>&>
-            (*fieldIter());
+            (
+                *fieldIter()
+            );
 
         if (&field.mesh() == &mapper.mesh())
         {
@@ -108,8 +110,8 @@ void MapGeometricFields
             );
 
             // Map the patch fields
-            typename GeometricField<Type, PatchField, GeoMesh>
-            ::Boundary& bfield = field.boundaryFieldRef();
+            typename GeometricField<Type, PatchField, GeoMesh>::Boundary&
+                bfield = field.boundaryFieldRef();
             forAll(bfield, patchi)
             {
                 // Cannot check sizes for patch fields because of
@@ -141,9 +143,7 @@ void AddPatchFields
 (
     objectRegistry& obr,
     const label insertPatchi,
-    const dictionary& patchFieldDict,
-    const word& defaultPatchFieldType,
-    const typename GeoField::value_type& defaultPatchValue
+    const word& defaultPatchFieldType
 )
 {
     HashTable<GeoField*> flds(obr.lookupClass<GeoField>());
@@ -163,33 +163,16 @@ void AddPatchFields
                 << exit(FatalError);
         }
 
-        if (patchFieldDict.found(fld.name()))
-        {
-            bfld.set
+        bfld.set
+        (
+            insertPatchi,
+            GeoField::Patch::New
             (
-                insertPatchi,
-                GeoField::Patch::New
-                (
-                    fld.mesh().boundary()[insertPatchi],
-                    fld(),
-                    patchFieldDict.subDict(fld.name())
-                )
-            );
-        }
-        else
-        {
-            bfld.set
-            (
-                insertPatchi,
-                GeoField::Patch::New
-                (
-                    defaultPatchFieldType,
-                    fld.mesh().boundary()[insertPatchi],
-                    fld()
-                )
-            );
-            bfld[insertPatchi] == defaultPatchValue;
-        }
+                defaultPatchFieldType,
+                fld.mesh().boundary()[insertPatchi],
+                fld()
+            )
+        );
     }
 }
 
@@ -202,10 +185,13 @@ void ReorderPatchFields
 )
 {
     HashTable<GeoField*> flds(obr.lookupClass<GeoField>());
+
     const wordList fldNames(flds.sortedToc());
+
     forAll(fldNames, i)
     {
         GeoField& fld = *flds[fldNames[i]];
+
         typename GeoField::Boundary& bfld = fld.boundaryFieldRef();
 
         bfld.shuffle(newToOld);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -903,6 +903,9 @@ public:
 
             //- Add patch originating from meshing. Update meshedPatches_.
             label addMeshedPatch(const word& name, const dictionary&);
+
+            //- Complete adding patches originating from meshing
+            void addedMeshedPatches();
 
             //- Get patchIDs for patches added in addMeshedPatch.
             labelList meshedPatches() const;

@@ -133,6 +133,5 @@ inletLiquid
     weightField     alphaRhoPhi.liquid;
     fields          ( h.liquid );
 }
-#includeFunc writeObjects(d.gas)
 
 // ************************************************************************* //

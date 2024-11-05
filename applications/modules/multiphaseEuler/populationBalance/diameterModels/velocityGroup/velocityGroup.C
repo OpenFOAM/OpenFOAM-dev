@@ -146,7 +146,18 @@ Foam::diameterModels::velocityGroup::velocityGroup
             ).nSizeGroups()
         )
     ),
-    d_(IOobject::groupName("d", phase.name()), dsm())
+    d_
+    (
+        IOobject
+        (
+            IOobject::groupName("d", phase.name()),
+            phase.time().name(),
+            phase.mesh(),
+            IOobject::NO_READ,
+            IOobject::AUTO_WRITE
+        ),
+        dsm()
+    )
 {
     populationBalanceModel::groups::New
     (

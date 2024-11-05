@@ -35,8 +35,5 @@ FoamFile
     alpha.bubbles
 )
 #includeFunc cellZoneAverage
-#includeFunc writeObjects(d.air1)
-#includeFunc writeObjects(d.air2)
-#includeFunc writeObjects(d.air3)
 
 // ************************************************************************* //

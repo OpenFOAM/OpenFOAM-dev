@@ -1019,14 +1019,7 @@ void Foam::snappyLayerDriver::determineSidePatches
                 Pstream::myProcNo(),
                 nbrProci
             );
-            mesh.addPatch
-            (
-                procPatchi, // new patch index
-                pp,
-                dictionary(),   // patchField dict
-                fvPatchField<scalar>::calculatedType(),
-                false
-            );
+            mesh.addPatch(procPatchi, pp);
             wantedToAddedPatch.insert(patchi, procPatchi);
         }
 
