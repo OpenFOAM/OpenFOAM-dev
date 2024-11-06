@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,20 +74,20 @@ public:
         inline static const UCompactListList<T>& null();
 
         //- Set the sizes to match that of the given list-list
-        template<class ListType, class ListListType>
+        template<class OffsetsType, class MType, class ListListType>
         static void setSizeToListList
         (
-            ListType& offsets,
-            ListType& m,
+            OffsetsType& offsets,
+            MType& m,
             const ListListType& ll
         );
 
         //- Set the sizes and values to match that of the given list-list
-        template<class ListType, class ListListType>
+        template<class OffsetsType, class MType, class ListListType>
         static void setSizeAndValuesToListList
         (
-            ListType& offsets,
-            ListType& m,
+            OffsetsType& offsets,
+            MType& m,
             const ListListType& ll
         );
 

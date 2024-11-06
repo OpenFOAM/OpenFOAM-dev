@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,11 +28,11 @@ License
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
 
 template<class T>
-template<class ListType, class ListListType>
+template<class OffsetsType, class MType, class ListListType>
 void Foam::UCompactListList<T>::setSizeToListList
 (
-    ListType& offsets,
-    ListType& m,
+    OffsetsType& offsets,
+    MType& m,
     const ListListType& ll
 )
 {
@@ -51,11 +51,11 @@ void Foam::UCompactListList<T>::setSizeToListList
 
 
 template<class T>
-template<class ListType, class ListListType>
+template<class OffsetsType, class MType, class ListListType>
 void Foam::UCompactListList<T>::setSizeAndValuesToListList
 (
-    ListType& offsets,
-    ListType& m,
+    OffsetsType& offsets,
+    MType& m,
     const ListListType& ll
 )
 {
