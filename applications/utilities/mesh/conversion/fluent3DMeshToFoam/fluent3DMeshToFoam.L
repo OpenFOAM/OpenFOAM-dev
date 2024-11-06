@@ -1250,13 +1250,13 @@ int main(int argc, char *argv[])
     // Add all cells
     for (label celli = 0; celli < nCells; celli++)
     {
-        meshMod.addCell
-        (
-            celli       // masterCellID
-        );
+        meshMod.addCell(celli);
     }
 
     bool doneWarning = false;
+
+    // Store the face indices of the faces added to the faceZones
+    labelListList faceZones(faceZoneIDs.size());
 
     // Add faceZone faces
     forAll(faceZoneIDs, faceZonei)
@@ -1265,6 +1265,8 @@ int main(int argc, char *argv[])
         label start = faceGroupStartIndex[fgi];
         label end = faceGroupEndIndex[fgi];
         label zoneID = faceGroupZoneID[fgi];
+
+        faceZones[faceZonei].setSize(end - start + 1, -1);
 
         Info<< "faceZone from Fluent indices: " << start
             << " to: " << end
@@ -1289,7 +1291,7 @@ int main(int argc, char *argv[])
             }
             else
             {
-                meshMod.addFace
+                faceZones[faceZonei][facei - start] = meshMod.addFace
                 (
                     faces[facei],
                     owner[facei],
@@ -1455,18 +1457,21 @@ int main(int argc, char *argv[])
         );
     }
 
+    const labelList& reverseFaceMap = map().reverseFaceMap();
+    const labelHashSet& flipFaceFlux = map().flipFaceFlux();
+
     // Add the face zones as required
+    // Renumbering the faces in the zones
     forAll(faceZoneIDs, faceZonei)
     {
         const label cgi = faceZoneIDs[faceZonei];
 
-        mesh.faceZones()[faceZonei].resetAddressing
+        // Original faceZone face labels
+        labelList& fzFaces = faceZones[faceZonei];
+
+        // Original faceZone flipMap
+        boolList fzfm
         (
-            identityMap
-            (
-                faceGroupStartIndex[cgi],
-                faceGroupEndIndex[cgi] + 1 - faceGroupStartIndex[cgi]
-            ),
             boolList::subList
             (
                 fm,
@@ -1474,6 +1479,25 @@ int main(int argc, char *argv[])
                 faceGroupStartIndex[cgi]
             )
         );
+
+        // Renumber faces and update flipMap for the faceZone
+        forAll(fzFaces, fi)
+        {
+            // Current face index for the face in the faceZone
+            const label facei = fzFaces[fi];
+
+            // Renumbered face
+            fzFaces[fi] = reverseFaceMap[facei];
+
+            // Updated flipMap
+            fzfm[fi] =
+                flipFaceFlux.found(reverseFaceMap[facei])
+              ? !fzfm[fi]
+              : fzfm[fi];
+        }
+
+        // Reset the faceZone
+        mesh.faceZones()[faceZonei].resetAddressing(fzFaces, fzfm);
     }
 
     mesh.setInstance(runTime.constant());
