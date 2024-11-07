@@ -204,19 +204,27 @@ void Foam::specieTransferMassFractionFvPatchScalarField::updateCoeffs()
     const fluidThermophysicalTransportModel& ttm =
         db().lookupType<fluidThermophysicalTransportModel>();
 
+    const volScalarField& Yi = refCast<const volScalarField>(internalField());
+
     // Get the diffusivity
-    const scalarField AAlphaEffp
+    const scalarField ADEffp
     (
-        patch().magSf()
-       *ttm.kappaEff(patch().index())
-       /ttm.thermo().Cp().boundaryField()[patch().index()]
+        patch().magSf()*ttm.DEff(Yi, patch().index())
+    );
+
+    // Compute the flux that we need to recover
+    const scalarField phiYp
+    (
+        this->phiYp()
+      - ADEffp*snGrad()
+      - patch().magSf()*ttm.j(Yi, patch().index())
     );
 
     // Set the gradient and value so that the transport and diffusion combined
     // result in the desired specie flux
-    valueFraction() = phip/(phip - patch().deltaCoeffs()*AAlphaEffp);
+    valueFraction() = phip/(phip - patch().deltaCoeffs()*ADEffp);
     refValue() = *this;
-    refGrad() = phip*(*this - phiYp()/uPhip)/AAlphaEffp;
+    refGrad() = phip*(*this - phiYp/uPhip)/ADEffp;
 
     mixedFvPatchScalarField::updateCoeffs();
 }

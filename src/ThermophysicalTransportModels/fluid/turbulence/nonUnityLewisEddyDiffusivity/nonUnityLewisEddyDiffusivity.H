@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -146,6 +146,9 @@ public:
 
         //- Return the heat flux [W/m^2]
         virtual tmp<surfaceScalarField> q() const;
+
+        //- Return the patch heat flux [W/m^2]
+        virtual tmp<scalarField> q(const label patchi) const;
 
         //- Return the source term for the energy equation
         virtual tmp<fvScalarMatrix> divq(volScalarField& he) const;

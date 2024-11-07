@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,6 +87,10 @@ public:
         //- Access function to fluid thermophysical properties
         virtual const fluidThermo& thermo() const = 0;
 
+        //- Effective thermal turbulent diffusivity
+        //  of mixture for a patch [kg/m/s]
+        virtual tmp<scalarField> alphaEff(const label patchi) const = 0;
+
         //- Effective mass diffusion coefficient
         //  for a given specie mass-fraction [kg/m/s]
         virtual tmp<volScalarField> DEff(const volScalarField& Yi) const = 0;
@@ -105,6 +109,14 @@ public:
 
         //- Return the specie flux for the given specie mass-fraction [kg/m^2/s]
         virtual tmp<surfaceScalarField> j(const volScalarField& Yi) const = 0;
+
+        //- Return the specie flux
+        //  for the given specie mass-fraction for patch [kg/m^2/s]
+        virtual tmp<scalarField> j
+        (
+            const volScalarField& Yi,
+            const label patchi
+        ) const = 0;
 
         //- Return the source term for the given specie mass-fraction equation
         virtual tmp<fvScalarMatrix> divj(volScalarField& Yi) const = 0;

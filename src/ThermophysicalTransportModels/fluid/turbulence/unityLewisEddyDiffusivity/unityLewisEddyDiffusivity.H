@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,9 +82,8 @@ protected:
 
         virtual void correctAlphat();
 
-        //- Effective thermal turbulent diffusivity of mixture [kg/m/s]
         //  Used for the implicit energy correction on the temperature laplacian
-        virtual tmp<volScalarField> alphaEff() const
+        tmp<volScalarField> alphaEff() const
         {
             return this->thermo().kappa()/this->thermo().Cpv() + alphat();
         }
@@ -167,6 +166,16 @@ public:
               + this->thermo().Cp().boundaryField()[patchi]*alphat(patchi);
         }
 
+        //- Effective thermal turbulent diffusivity
+        //  of mixture for a patch [kg/m/s]
+        virtual tmp<scalarField> alphaEff(const label patchi) const
+        {
+            return
+                this->thermo().kappa().boundaryField()[patchi]
+               /this->thermo().Cpv().boundaryField()[patchi]
+             + alphat(patchi);
+        }
+
         //- Effective mass diffusion coefficient
         //  for a given specie mass-fraction [kg/m/s]
         virtual tmp<volScalarField> DEff(const volScalarField& Yi) const
@@ -195,11 +204,22 @@ public:
         //- Return the heat flux [W/m^2]
         virtual tmp<surfaceScalarField> q() const;
 
+        //- Return the patch heat flux [W/m^2]
+        virtual tmp<scalarField> q(const label patchi) const;
+
         //- Return the source term for the energy equation
         virtual tmp<fvScalarMatrix> divq(volScalarField& he) const;
 
         //- Return the specie flux for the given specie mass-fraction [kg/m^2/s]
         virtual tmp<surfaceScalarField> j(const volScalarField& Yi) const;
+
+        //- Return the specie flux
+        //  for the given specie mass-fraction for patch [kg/m^2/s]
+        virtual tmp<scalarField> j
+        (
+            const volScalarField& Yi,
+            const label patchi
+        ) const;
 
         //- Return the source term for the given specie mass-fraction equation
         virtual tmp<fvScalarMatrix> divj(volScalarField& Yi) const;

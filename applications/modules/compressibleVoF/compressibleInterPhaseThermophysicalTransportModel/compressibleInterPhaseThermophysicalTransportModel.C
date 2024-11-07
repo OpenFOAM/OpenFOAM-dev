@@ -191,6 +191,18 @@ Foam::compressibleInterPhaseThermophysicalTransportModel::q() const
 
 
 Foam::tmp<Foam::scalarField>
+Foam::compressibleInterPhaseThermophysicalTransportModel::q
+(
+    const label patchi
+) const
+{
+    return
+      - kappaEff(patchi)
+       *momentumTransport_.mixture_.T().boundaryField()[patchi].snGrad();
+}
+
+
+Foam::tmp<Foam::scalarField>
 Foam::compressibleInterPhaseThermophysicalTransportModel::qCorr
 (
     const label patchi

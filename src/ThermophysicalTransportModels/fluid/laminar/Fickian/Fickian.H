@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -142,11 +142,22 @@ public:
         //- Return the heat flux [W/m^2]
         virtual tmp<surfaceScalarField> q() const;
 
+        //- Return the patch heat flux [W/m^2]
+        virtual tmp<scalarField> q(const label patchi) const;
+
         //- Return the source term for the energy equation
         virtual tmp<fvScalarMatrix> divq(volScalarField& he) const;
 
         //- Return the specie flux for the given specie mass-fraction [kg/m^2/s]
         virtual tmp<surfaceScalarField> j(const volScalarField& Yi) const;
+
+        //- Return the specie flux
+        //  for the given specie mass-fraction for patch [kg/m^2/s]
+        virtual tmp<scalarField> j
+        (
+            const volScalarField& Yi,
+            const label patchi
+        ) const;
 
         //- Return the source term for the given specie mass-fraction equation
         virtual tmp<fvScalarMatrix> divj(volScalarField& Yi) const;

@@ -367,6 +367,7 @@ tmp<surfaceScalarField> Fickian<BasicThermophysicalTransportModel>::q() const
                 const volScalarField hi(this->thermo().hsi(i, p, T));
 
                 const surfaceScalarField ji(this->j(Y[i]));
+
                 sumJ += ji;
 
                 sumJh += ji*fvc::interpolate(hi);
@@ -379,6 +380,59 @@ tmp<surfaceScalarField> Fickian<BasicThermophysicalTransportModel>::q() const
             const volScalarField hi(this->thermo().hsi(i, p, T));
 
             sumJh -= sumJ*fvc::interpolate(hi);
+        }
+
+        tmpq.ref() += sumJh;
+    }
+
+    return tmpq;
+}
+
+
+template<class BasicThermophysicalTransportModel>
+tmp<scalarField> Fickian<BasicThermophysicalTransportModel>::q
+(
+    const label patchi
+) const
+{
+    tmp<scalarField> tmpq
+    (
+      - (
+            this->alpha().boundaryField()[patchi]
+           *this->kappaEff(patchi)
+           *this->thermo().T().boundaryField()[patchi].snGrad()
+        )
+    );
+
+    const PtrList<volScalarField>& Y = this->thermo().Y();
+    const scalarField& p = this->thermo().p().boundaryField()[patchi];
+    const scalarField& T = this->thermo().T().boundaryField()[patchi];
+
+    if (Y.size())
+    {
+        scalarField sumJ(tmpq->size(), scalar(0));
+        scalarField sumJh(tmpq->size(), scalar(0));
+
+        forAll(Y, i)
+        {
+            if (i != this->thermo().defaultSpecie())
+            {
+                const scalarField hi(this->thermo().hsi(i, p, T));
+
+                const scalarField ji(this->j(Y[i], patchi));
+
+                sumJ += ji;
+
+                sumJh += ji*hi;
+            }
+        }
+
+        {
+            const label i = this->thermo().defaultSpecie();
+
+            const scalarField hi(this->thermo().hsi(i, p, T));
+
+            sumJh -= sumJ*hi;
         }
 
         tmpq.ref() += sumJh;
@@ -437,6 +491,7 @@ tmp<fvScalarMatrix> Fickian<BasicThermophysicalTransportModel>::divq
             const volScalarField hi(this->thermo().hsi(i, p, T));
 
             const surfaceScalarField ji(this->j(Y[i]));
+
             sumJ += ji;
 
             sumJh += ji*fvc::interpolate(hi);
@@ -485,6 +540,30 @@ tmp<surfaceScalarField> Fickian<BasicThermophysicalTransportModel>::j
     else
     {
         return BasicThermophysicalTransportModel::j(Yi);
+    }
+}
+
+
+template<class BasicThermophysicalTransportModel>
+tmp<scalarField> Fickian<BasicThermophysicalTransportModel>::j
+(
+    const volScalarField& Yi,
+    const label patchi
+) const
+{
+    if (DTFuncs_.size())
+    {
+        const scalarField& p = this->thermo().p().boundaryField()[patchi];
+        const scalarField& T = this->thermo().T().boundaryField()[patchi];
+
+        return
+            BasicThermophysicalTransportModel::j(Yi, patchi)
+          - DTFuncs_[this->thermo().specieIndex(Yi)].value(p, T)
+           *this->thermo().T().boundaryField()[patchi].snGrad()/T;
+    }
+    else
+    {
+        return BasicThermophysicalTransportModel::j(Yi, patchi);
     }
 }
 

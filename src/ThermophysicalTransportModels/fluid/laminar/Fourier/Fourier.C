@@ -114,6 +114,21 @@ tmp<surfaceScalarField> Fourier<BasicThermophysicalTransportModel>::q() const
 
 
 template<class BasicThermophysicalTransportModel>
+tmp<scalarField> Fourier<BasicThermophysicalTransportModel>::q
+(
+    const label patchi
+) const
+{
+    return
+      - (
+            this->alpha().boundaryField()[patchi]
+           *this->thermo().kappa().boundaryField()[patchi]
+           *this->thermo().T().boundaryField()[patchi].snGrad()
+        );
+}
+
+
+template<class BasicThermophysicalTransportModel>
 tmp<fvScalarMatrix>
 Fourier<BasicThermophysicalTransportModel>::divq(volScalarField& he) const
 {
@@ -144,6 +159,23 @@ tmp<surfaceScalarField> Fourier<BasicThermophysicalTransportModel>::j
         << exit(FatalError);
 
     return tmp<surfaceScalarField>(nullptr);
+}
+
+
+template<class BasicThermophysicalTransportModel>
+tmp<scalarField> Fourier<BasicThermophysicalTransportModel>::j
+(
+    const volScalarField& Yi,
+    const label patchi
+) const
+{
+    FatalErrorInFunction
+        << type() << " supports single component systems only, " << nl
+        << "    for multi-component transport select"
+           " unityLewisFourier"
+        << exit(FatalError);
+
+    return tmp<scalarField>(nullptr);
 }
 
 

@@ -154,6 +154,21 @@ eddyDiffusivity<TurbulenceThermophysicalTransportModel>::q() const
 
 
 template<class TurbulenceThermophysicalTransportModel>
+tmp<scalarField> eddyDiffusivity<TurbulenceThermophysicalTransportModel>::q
+(
+    const label patchi
+) const
+{
+    return
+      - (
+            this->alpha().boundaryField()[patchi]
+           *this->kappaEff(patchi)
+           *this->thermo().T().boundaryField()[patchi].snGrad()
+        );
+}
+
+
+template<class TurbulenceThermophysicalTransportModel>
 tmp<fvScalarMatrix>
 eddyDiffusivity<TurbulenceThermophysicalTransportModel>::divq
 (
@@ -182,6 +197,24 @@ eddyDiffusivity<TurbulenceThermophysicalTransportModel>::j
         << exit(FatalError);
 
     return tmp<surfaceScalarField>(nullptr);
+}
+
+
+template<class TurbulenceThermophysicalTransportModel>
+tmp<scalarField>
+eddyDiffusivity<TurbulenceThermophysicalTransportModel>::j
+(
+    const volScalarField& Yi,
+    const label patchi
+) const
+{
+    FatalErrorInFunction
+        << type() << " supports single component systems only, " << nl
+        << "    for multi-component transport select"
+           " nonUnityLewisEddyDiffusivity or unityLewisEddyDiffusivity"
+        << exit(FatalError);
+
+    return tmp<scalarField>(nullptr);
 }
 
 
