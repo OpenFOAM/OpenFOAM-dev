@@ -4,13 +4,13 @@
     const scalar nu = turbulence->nu()().boundaryField()[patchId][faceId];
     const scalar nut = turbulence->nut()().boundaryField()[patchId][faceId];
     const scalar nuEff = turbulence->nuEff()().boundaryField()[patchId][faceId];
-    const symmTensor R = turbulence->R()().boundaryField()[patchId][faceId];
+    const vector tau = turbulence->devTau()().boundaryField()[patchId][faceId];
     const scalar epsilon = turbulence->epsilon()()[cellId];
     const scalar omega = turbulence->omega()()[cellId];
     const scalar k = turbulence->k()()[cellId];
     const scalar magUp = mag(U[cellId] - U.boundaryField()[patchId][faceId]);
 
-    const scalar tauw = flowDirection & R & wallNormal;
+    const scalar tauw = flowDirection & tau;
     const scalar uTau = ::sqrt(mag(tauw));
 
     const scalar yPlus = uTau*y[cellId]/(nu + rootVSmall);
