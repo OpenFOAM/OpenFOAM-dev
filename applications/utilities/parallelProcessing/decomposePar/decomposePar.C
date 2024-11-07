@@ -497,7 +497,7 @@ int main(int argc, char *argv[])
                             IOobject
                             (
                                 "",
-                                procRunTime.name(),
+                                "",
                                 procRunTime
                             ),
                             word::null
