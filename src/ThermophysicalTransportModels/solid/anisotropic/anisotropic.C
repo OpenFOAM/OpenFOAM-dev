@@ -394,6 +394,16 @@ anisotropic<SolidThermophysicalTransportModel>::q() const
 template<class SolidThermophysicalTransportModel>
 Foam::tmp<Foam::scalarField>
 Foam::solidThermophysicalTransportModels::
+anisotropic<SolidThermophysicalTransportModel>::q(const label patchi) const
+{
+    NotImplemented;
+    return tmp<scalarField>(nullptr);
+}
+
+
+template<class SolidThermophysicalTransportModel>
+Foam::tmp<Foam::scalarField>
+Foam::solidThermophysicalTransportModels::
 anisotropic<SolidThermophysicalTransportModel>::qCorr
 (
     const label patchi

@@ -95,6 +95,9 @@ public:
         //- Return the heat flux [W/m^2]
         virtual tmp<surfaceScalarField> q() const = 0;
 
+        //- Return the patch heat flux [W/m^2]
+        virtual tmp<scalarField> q(const label patchi) const = 0;
+
         //- Return the patch heat flux correction [W/m^2]
         //  For isotropic or patch-aligned thermal conductivity qCorr is null
         virtual tmp<scalarField> qCorr(const label patchi) const = 0;

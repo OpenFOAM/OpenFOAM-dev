@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ Description
     This condition models a baffle which adsorbs some species and not others.
     It must be used in conjunction with a
     specieTransferVelocityFvPatchVectorField velocity condition, and a
-    specieTransferTemperatureFvPatchScalarField  temperature condition.
+    specieTransferTemperatureFvPatchScalarField temperature condition.
 
     The mass flux of a species is calculated as a coefficient multiplied by the
     concentration adjacent to the patch.

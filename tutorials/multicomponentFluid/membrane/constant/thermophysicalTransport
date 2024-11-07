@@ -9,47 +9,18 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    location    "system";
-    object      controlDict;
+    location    "constant";
+    object      thermophysicalTransport;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     foamRun;
+RAS
+{
+    model           nonUnityLewisEddyDiffusivity;
 
-solver          multicomponentFluid;
+    Prt             0.85;
+    Sct             0.7;
+}
 
-startFrom       startTime;
-
-startTime       0;
-
-stopAt          endTime;
-
-endTime         10;
-
-deltaT          1e-3;
-
-writeControl    adjustableRunTime;
-
-writeInterval   1;
-
-purgeWrite      0;
-
-writeFormat     ascii;
-
-writePrecision  6;
-
-writeCompression off;
-
-timeFormat      general;
-
-timePrecision   6;
-
-runTimeModifiable true;
-
-adjustTimeStep  yes;
-
-maxCo           1;
-
-libs            ( "libspecieTransfer.so" );
 
 // ************************************************************************* //

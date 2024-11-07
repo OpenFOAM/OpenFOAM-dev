@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -186,6 +186,9 @@ public:
 
         //- Return the heat flux [W/m^2]
         virtual tmp<surfaceScalarField> q() const;
+
+        //- Return the patch heat flux [W/m^2]
+        virtual tmp<scalarField> q(const label patchi) const;
 
         //- Return the patch heat flux correction [W/m^2]
         //  For patch-aligned thermal conductivity qCorr is null

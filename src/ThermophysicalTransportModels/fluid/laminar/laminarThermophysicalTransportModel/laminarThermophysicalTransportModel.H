@@ -59,6 +59,17 @@ protected:
         //- Const access to the coefficients dictionary
         const dictionary& coeffDict() const;
 
+        //- Effective thermal turbulent diffusivity of mixture [kg/m/s]
+        //  Used for the implicit energy correction on the temperature laplacian
+        tmp<volScalarField> alphaEff() const
+        {
+            return volScalarField::New
+            (
+                "alphaEff",
+                this->thermo().kappa()/this->thermo().Cpv()
+            );
+        }
+
 
 public:
 
@@ -146,14 +157,13 @@ public:
             return this->thermo().kappa().boundaryField()[patchi];
         }
 
-        //- Effective thermal turbulent diffusivity of mixture [kg/m/s]
-        virtual tmp<volScalarField> alphaEff() const
+        //- Effective thermal turbulent diffusivity
+        //  of mixture for a patch [kg/m/s]
+        virtual tmp<scalarField> alphaEff(const label patchi) const
         {
-            return volScalarField::New
-            (
-                "alphaEff",
-                this->thermo().kappa()/this->thermo().Cpv()
-            );
+            return
+                this->thermo().kappa().boundaryField()[patchi]
+               /this->thermo().Cpv().boundaryField()[patchi];
         }
 
         //- Effective mass diffusion coefficient

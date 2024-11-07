@@ -101,6 +101,8 @@ nonUnityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::q() const
     );
 
     const PtrList<volScalarField>& Y = this->thermo().Y();
+    const volScalarField& p = this->thermo().p();
+    const volScalarField& T = this->thermo().T();
 
     if (Y.size())
     {
@@ -116,10 +118,7 @@ nonUnityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::q() const
 
         forAll(Y, i)
         {
-            const volScalarField hi
-            (
-                this->thermo().hsi(i, this->thermo().p(), this->thermo().T())
-            );
+            const volScalarField hi(this->thermo().hsi(i, p, T));
 
             hGradY += fvc::interpolate(hi)*fvc::snGrad(Y[i]);
         }
@@ -128,9 +127,55 @@ nonUnityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::q() const
             fvc::interpolate
             (
                 this->alpha()
-                *(
+               *(
                     this->thermo().kappa()/this->thermo().Cp()
                   + (this->Prt_/Sct_)*this->alphat()
+                )
+            )*hGradY;
+    }
+
+    return tmpq;
+}
+
+
+template<class TurbulenceThermophysicalTransportModel>
+tmp<scalarField>
+nonUnityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::q
+(
+    const label patchi
+) const
+{
+    tmp<scalarField> tmpq
+    (
+      - (
+            this->alpha().boundaryField()[patchi]
+           *this->kappaEff(patchi)
+           *this->thermo().T().boundaryField()[patchi].snGrad()
+        )
+    );
+
+    const PtrList<volScalarField>& Y = this->thermo().Y();
+    const fvPatchScalarField& p = this->thermo().p().boundaryField()[patchi];
+    const fvPatchScalarField& T = this->thermo().T().boundaryField()[patchi];
+
+    if (Y.size())
+    {
+        scalarField hGradY(tmpq->size(), scalar(0));
+
+        forAll(Y, i)
+        {
+            const scalarField hi(this->thermo().hsi(i, p, T));
+
+            hGradY += hi*Y[i].boundaryField()[patchi].snGrad();
+        }
+
+        tmpq.ref() -=
+            (
+                this->alpha().boundaryField()[patchi]
+               *(
+                    this->thermo().kappa().boundaryField()[patchi]
+                   /this->thermo().Cp().boundaryField()[patchi]
+                  + (this->Prt_.value()/Sct_.value())*this->alphat(patchi)
                 )
             )*hGradY;
     }

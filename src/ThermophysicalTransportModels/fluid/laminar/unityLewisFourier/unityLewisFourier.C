@@ -100,6 +100,23 @@ unityLewisFourier<BasicThermophysicalTransportModel>::q() const
 
 
 template<class BasicThermophysicalTransportModel>
+tmp<scalarField> unityLewisFourier<BasicThermophysicalTransportModel>::q
+(
+    const label patchi
+)
+const
+{
+    return
+      - (
+            this->alpha().boundaryField()[patchi]
+           *this->thermo().kappa().boundaryField()[patchi]
+           /this->thermo().Cpv()[patchi]
+           *this->thermo().he().boundaryField()[patchi].snGrad()
+        );
+}
+
+
+template<class BasicThermophysicalTransportModel>
 tmp<fvScalarMatrix>
 unityLewisFourier<BasicThermophysicalTransportModel>::
 divq(volScalarField& he) const
@@ -118,7 +135,7 @@ divq(volScalarField& he) const
 
 
 template<class BasicThermophysicalTransportModel>
-tmp<surfaceScalarField>unityLewisFourier<BasicThermophysicalTransportModel>::j
+tmp<surfaceScalarField> unityLewisFourier<BasicThermophysicalTransportModel>::j
 (
     const volScalarField& Yi
 ) const
@@ -133,6 +150,22 @@ tmp<surfaceScalarField>unityLewisFourier<BasicThermophysicalTransportModel>::j
        -fvc::interpolate(this->alpha()*this->DEff(Yi))
        *fvc::snGrad(Yi)
     );
+}
+
+
+template<class BasicThermophysicalTransportModel>
+tmp<scalarField> unityLewisFourier<BasicThermophysicalTransportModel>::j
+(
+    const volScalarField& Yi,
+    const label patchi
+) const
+{
+    return
+      - (
+            this->alpha().boundaryField()[patchi]
+           *this->DEff(Yi, patchi)
+           *Yi.boundaryField()[patchi].snGrad()
+        );
 }
 
 

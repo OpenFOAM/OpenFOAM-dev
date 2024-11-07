@@ -140,9 +140,25 @@ unityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::q() const
             "q",
             this->momentumTransport().alphaRhoPhi().group()
         ),
-       -fvc::interpolate(this->alphaEff()*this->alpha())
+       -fvc::interpolate(this->alpha()*this->alphaEff())
        *fvc::snGrad(this->thermo().he())
     );
+}
+
+
+template<class TurbulenceThermophysicalTransportModel>
+tmp<scalarField>
+unityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::q
+(
+    const label patchi
+) const
+{
+    return
+      - (
+            this->alpha().boundaryField()[patchi]
+           *this->alphaEff(patchi)
+           *this->thermo().he().boundaryField()[patchi].snGrad()
+        );
 }
 
 
@@ -173,6 +189,23 @@ unityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::j
         ),
        -fvc::interpolate(this->DEff(Yi)*this->alpha())*fvc::snGrad(Yi)
     );
+}
+
+
+template<class TurbulenceThermophysicalTransportModel>
+tmp<scalarField>
+unityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::j
+(
+    const volScalarField& Yi,
+    const label patchi
+) const
+{
+    return
+      - (
+            this->alpha().boundaryField()[patchi]
+           *this->DEff(Yi, patchi)
+           *Yi.boundaryField()[patchi].snGrad()
+        );
 }
 
 

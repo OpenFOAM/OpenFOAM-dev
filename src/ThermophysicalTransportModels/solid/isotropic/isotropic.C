@@ -78,6 +78,20 @@ isotropic<SolidThermophysicalTransportModel>::q() const
 template<class SolidThermophysicalTransportModel>
 Foam::tmp<Foam::scalarField>
 Foam::solidThermophysicalTransportModels::
+isotropic<SolidThermophysicalTransportModel>::q(const label patchi) const
+{
+    return
+      - (
+            this->alpha().boundaryField()[patchi]
+           *this->kappa(patchi)
+           *this->thermo().T().boundaryField()[patchi].snGrad()
+        );
+}
+
+
+template<class SolidThermophysicalTransportModel>
+Foam::tmp<Foam::scalarField>
+Foam::solidThermophysicalTransportModels::
 isotropic<SolidThermophysicalTransportModel>::qCorr
 (
     const label patchi

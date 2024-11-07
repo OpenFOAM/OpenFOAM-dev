@@ -31,6 +31,7 @@ License
 #include "fluidThermophysicalTransportModel.H"
 #include "fluidMulticomponentThermo.H"
 #include "addToRunTimeSelectionTable.H"
+#include "fvcGrad.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -137,22 +138,29 @@ void Foam::specieTransferTemperatureFvPatchScalarField::updateCoeffs()
     const fluidThermophysicalTransportModel& ttm =
         db().lookupType<fluidThermophysicalTransportModel>();
 
-    // Get the diffusivity
+    // Get the current energy to linearise around
+    const fvPatchScalarField& hep =
+        ttm.thermo().he().boundaryField()[patch().index()];
+
+    // Get the energy diffusivity
     const scalarField AAlphaEffp
     (
-        patch().magSf()
-       *ttm.kappaEff(patch().index())
-       /ttm.thermo().Cp().boundaryField()[patch().index()]
+        patch().magSf()*ttm.alphaEff(patch().index())
     );
 
-    // Get the current energy to linearise around
-    const fluidThermo& thermo =
-        db().lookupObject<fluidThermo>(physicalProperties::typeName);
-    const scalarField& hep = thermo.he().boundaryField()[patch().index()];
+    // Compute the flux that we need to recover
+    const scalarField phiHep
+    (
+        this->phiHep()
+      - AAlphaEffp*hep.snGrad()
+      - patch().magSf()*ttm.q(patch().index())
+    );
 
+    // Set the gradient and value so that the transport and diffusion combined
+    // result in the desired energy flux
     heValueFraction() = phip/(phip - patch().deltaCoeffs()*AAlphaEffp);
     heRefValue() = hep;
-    heRefGrad() = phip*(hep - phiHep()/uPhip)/AAlphaEffp;
+    heRefGrad() = phip*(hep - phiHep/uPhip)/AAlphaEffp;
 
     mixedEnergyCalculatedTemperatureFvPatchScalarField::updateCoeffs();
 }

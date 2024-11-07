@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,10 +90,11 @@ Foam::adsorptionMassFractionFvPatchScalarField::calcPhiYp() const
     const fluidThermophysicalTransportModel& ttm =
         db().lookupType<fluidThermophysicalTransportModel>();
 
-    const scalarField alphaEffDeltap
+    const volScalarField& Yi = refCast<const volScalarField>(internalField());
+
+    const scalarField DEffDeltap
     (
-        ttm.kappaEff(patch().index())*patch().deltaCoeffs()
-       /ttm.thermo().Cp().boundaryField()[patch().index()]
+        ttm.DEff(Yi, patch().index())*patch().deltaCoeffs()
     );
 
     // Get the specie molecular weight, if needed
@@ -138,7 +139,7 @@ Foam::adsorptionMassFractionFvPatchScalarField::calcPhiYp() const
     // represent this limiting.
     return
         patch().magSf()
-       /(1/c_ + k/alphaEffDeltap)
+       /(1/c_ + k/DEffDeltap)
        *k*Yc;
 }
 

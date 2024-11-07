@@ -578,6 +578,7 @@ MaxwellStefan<BasicThermophysicalTransportModel>::q() const
                 const volScalarField hi(this->thermo().hsi(i, p, T));
 
                 const surfaceScalarField ji(this->j(Y[i]));
+
                 sumJ += ji;
 
                 sumJh += ji*fvc::interpolate(hi);
@@ -590,6 +591,61 @@ MaxwellStefan<BasicThermophysicalTransportModel>::q() const
             const volScalarField hi(this->thermo().hsi(i, p, T));
 
             sumJh -= sumJ*fvc::interpolate(hi);
+        }
+
+        tmpq.ref() += sumJh;
+    }
+
+    return tmpq;
+}
+
+
+template<class BasicThermophysicalTransportModel>
+tmp<scalarField> MaxwellStefan<BasicThermophysicalTransportModel>::q
+(
+    const label patchi
+) const
+{
+    tmp<scalarField> tmpq
+    (
+      - (
+            this->alpha().boundaryField()[patchi]
+           *this->kappaEff(patchi)
+           *this->thermo().T().boundaryField()[patchi]
+        )
+    );
+
+    const label d = this->thermo().defaultSpecie();
+
+    const PtrList<volScalarField>& Y = this->thermo().Y();
+    const volScalarField& p = this->thermo().p();
+    const volScalarField& T = this->thermo().T();
+
+    if (Y.size())
+    {
+        scalarField sumJ(tmpq->size(), scalar(0));
+        scalarField sumJh(tmpq->size(), scalar(0));
+
+        forAll(Y, i)
+        {
+            if (i != d)
+            {
+                const scalarField hi(this->thermo().hsi(i, p, T));
+
+                const scalarField ji(this->j(Y[i], patchi));
+
+                sumJ += ji;
+
+                sumJh += ji*hi;
+            }
+        }
+
+        {
+            const label i = d;
+
+            const scalarField hi(this->thermo().hsi(i, p, T));
+
+            sumJh -= sumJ*hi;
         }
 
         tmpq.ref() += sumJh;
@@ -650,6 +706,7 @@ tmp<fvScalarMatrix> MaxwellStefan<BasicThermophysicalTransportModel>::divq
             const volScalarField hi(this->thermo().hsi(i, p, T));
 
             const surfaceScalarField ji(this->j(Y[i]));
+
             sumJ += ji;
 
             sumJh += ji*fvc::interpolate(hi);
@@ -713,6 +770,44 @@ tmp<surfaceScalarField> MaxwellStefan<BasicThermophysicalTransportModel>::j
         return
             BasicThermophysicalTransportModel::j(Yi)
           + jexp()[this->thermo().specieIndex(Yi)];
+    }
+}
+
+
+template<class BasicThermophysicalTransportModel>
+tmp<scalarField> MaxwellStefan<BasicThermophysicalTransportModel>::j
+(
+    const volScalarField& Yi,
+    const label patchi
+) const
+{
+    const label d = this->thermo().defaultSpecie();
+
+    if (this->thermo().specieIndex(Yi) == d)
+    {
+        const PtrList<volScalarField>& Y = this->thermo().Y();
+
+        tmp<scalarField> tjd
+        (
+            new scalarField(Yi.boundaryField()[patchi].size(), scalar(0))
+        );
+        scalarField& jd = tjd.ref();
+
+        forAll(Y, i)
+        {
+            if (i != d)
+            {
+                jd -= this->j(Y[i], patchi);
+            }
+        }
+
+        return tjd;
+    }
+    else
+    {
+        return
+            BasicThermophysicalTransportModel::j(Yi, patchi)
+          + jexp()[this->thermo().specieIndex(Yi)].boundaryField()[patchi];
     }
 }
 

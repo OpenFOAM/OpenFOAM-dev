@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -113,18 +113,18 @@ Foam::semiPermeableBaffleMassFractionFvPatchScalarField::calcPhiYp() const
     const fluidThermophysicalTransportModel& ttm =
         db().lookupType<fluidThermophysicalTransportModel>();
 
-    const scalarField alphaEffDeltap
+    const volScalarField& Yi = refCast<const volScalarField>(internalField());
+
+    const scalarField DEffDeltap
     (
-        ttm.kappaEff(patch().index())*patch().deltaCoeffs()
-       /ttm.thermo().Cp().boundaryField()[patch().index()]
+        ttm.DEff(Yi, patch().index())*patch().deltaCoeffs()
     );
 
-    const scalarField nbrAlphaEffDeltap
+    const scalarField nbrDEffDeltap
     (
         mapper.fromNeighbour
         (
-            ttm.kappaEff(nbrPatch.index())*nbrPatch.deltaCoeffs()
-           /ttm.thermo().Cp().boundaryField()[nbrPatch.index()]
+            ttm.DEff(Yi, nbrPatch.index())*nbrPatch.deltaCoeffs()
         )
     );
 
@@ -185,7 +185,7 @@ Foam::semiPermeableBaffleMassFractionFvPatchScalarField::calcPhiYp() const
     // harmonically averaged to represent this limiting.
     return
         patch().magSf()
-       /(1/c_ + k/alphaEffDeltap + nbrK/nbrAlphaEffDeltap)
+       /(1/c_ + k/DEffDeltap + nbrK/nbrDEffDeltap)
        *(k*Yc - nbrK*nbrYc);
 }
 
