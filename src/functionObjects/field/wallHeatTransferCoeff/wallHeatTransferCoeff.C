@@ -206,12 +206,13 @@ bool Foam::functionObjects::wallHeatTransferCoeff::write()
         label patchi = iter.key();
         const fvPatch& pp = patches[patchi];
 
+        if (!returnReduce(pp.size(), orOp<bool>())) continue;
+
         const scalarField& hfp = htc.boundaryField()[patchi];
 
         const scalar minHtcp = gMin(hfp);
         const scalar maxHtcp = gMax(hfp);
-        const scalar averageHtcp =
-            gSum(magSf[patchi]*hfp)/gSum(magSf[patchi]);
+        const scalar averageHtcp = gSum(magSf[patchi]*hfp)/gSum(magSf[patchi]);
 
         if (Pstream::master())
         {

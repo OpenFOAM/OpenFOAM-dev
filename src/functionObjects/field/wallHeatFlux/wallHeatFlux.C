@@ -251,6 +251,8 @@ bool Foam::functionObjects::wallHeatFlux::write()
         label patchi = iter.key();
         const fvPatch& pp = patches[patchi];
 
+        if (!returnReduce(pp.size(), orOp<bool>())) continue;
+
         const scalarField& qp = wallHeatFlux.boundaryField()[patchi];
 
         const scalar minqp = gMin(qp);
