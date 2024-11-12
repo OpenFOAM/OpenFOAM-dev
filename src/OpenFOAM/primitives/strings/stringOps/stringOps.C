@@ -1003,11 +1003,19 @@ Foam::string Foam::stringOps::breakIntoIndentedLines
             }
         }
 
-        // End of string
+        // End of string next
         else
         {
-            result += indent + message.substr(i0);
-            break;
+            if (message.size() - i0 > nLength - nIndent)
+            {
+                result += indent + message.substr(i0, i1 - i0) + '\n';
+                i0 = i1;
+            }
+            else
+            {
+                result += indent + message.substr(i0);
+                break;
+            }
         }
     }
 

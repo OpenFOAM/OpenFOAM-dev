@@ -82,6 +82,11 @@ bool any(const boolList& l)
 }
 
 
+// * * * * * * * * * * * * Private Static Data Members * * * * * * * * * * * //
+
+const Foam::scalar Foam::fvMeshStitcher::minWarnProjectedVolumeFraction_ = 0.3;
+
+
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
@@ -1663,10 +1668,10 @@ bool Foam::fvMeshStitcher::disconnectThis
     // Prevent hangs caused by processor cyclic patches using mesh geometry
     mesh_.deltaCoeffs();
 
-    if (any(patchCoupleds) && geometric)
+    if (any(patchCoupleds))
     {
         const volScalarField::Internal o(openness());
-        Info<< indent << "Cell min/avg/max openness = "
+        Info<< indent << "Cell min/average/max openness = "
             << gMin(o) << '/' << gAverage(o) << '/' << gMax(o) << endl;
 
         if (mesh_.moving())
@@ -1674,7 +1679,7 @@ bool Foam::fvMeshStitcher::disconnectThis
             for (label i = 0; i <= mesh_.phi().nOldTimes(false); ++ i)
             {
                 const volScalarField::Internal vce(volumeConservationError(i));
-                Info<< indent << "Cell min/avg/max ";
+                Info<< indent << "Cell min/average/max ";
                 for (label j = 0; j < i; ++ j) Info<< "old-";
                 Info<< (i ? "time " : "") << "volume conservation error = "
                     << gMin(vce) << '/' << gAverage(vce) << '/' << gMax(vce)
@@ -1683,7 +1688,7 @@ bool Foam::fvMeshStitcher::disconnectThis
         }
 
         const volScalarField::Internal pvf(projectedVolumeFraction());
-        Info<< indent << "Cell min/avg/max projected volume fraction = "
+        Info<< indent << "Cell min/average/max projected volume fraction = "
             << gMin(pvf) << '/' << gAverage(pvf) << '/' << gMax(pvf) << endl;
     }
 
@@ -1827,22 +1832,36 @@ bool Foam::fvMeshStitcher::connectThis
     // Prevent hangs caused by processor cyclic patches using mesh geometry
     mesh_.deltaCoeffs();
 
-    if (any(patchCoupleds) && geometric)
+    if (any(patchCoupleds))
     {
         const volScalarField::Internal o(openness());
-        Info<< indent << "Cell min/avg/max openness = "
-            << gMin(o) << '/' << gAverage(o) << '/' << gMax(o) << endl;
+        const scalar gMaxO = gMax(o);
+        Info<< indent << "Cell min/average/max openness = "
+            << gMin(o) << '/' << gAverage(o) << '/' << gMaxO << endl;
+        if (gMaxO > rootSmall)
+        {
+            FatalErrorInFunction
+                << "Maximum openness of " << gMaxO
+                << " is not tolerable" << exit(FatalError);
+        }
 
         if (mesh_.moving())
         {
             for (label i = 0; i <= mesh_.phi().nOldTimes(false); ++ i)
             {
                 const volScalarField::Internal vce(volumeConservationError(i));
-                Info<< indent << "Cell min/avg/max ";
+                const scalar gMaxVce = gMax(vce);
+                Info<< indent << "Cell min/average/max ";
                 for (label j = 0; j < i; ++ j) Info<< "old-";
                 Info<< (i ? "time " : "") << "volume conservation error = "
-                    << gMin(vce) << '/' << gAverage(vce) << '/' << gMax(vce)
+                    << gMin(vce) << '/' << gAverage(vce) << '/' << gMaxVce
                     << endl;
+                if (gMaxVce > rootSmall)
+                {
+                    FatalErrorInFunction
+                        << "Maximum volume conservation error of " << gMaxVce
+                        << " is not tolerable" << exit(FatalError);
+                }
             }
         }
 
@@ -1905,8 +1924,8 @@ bool Foam::fvMeshStitcher::connectThis
                 }
             }
             reduce(minMfe, ListOp<minOp<scalar>>());
-            reduce(sumMfe, ListOp<minOp<scalar>>());
-            reduce(nSumMfe, ListOp<minOp<scalar>>());
+            reduce(sumMfe, ListOp<sumOp<scalar>>());
+            reduce(nSumMfe, ListOp<sumOp<scalar>>());
             reduce(maxMfe, ListOp<maxOp<scalar>>());
 
             // Report
@@ -1922,16 +1941,32 @@ bool Foam::fvMeshStitcher::connectThis
                 )
                 {
                     Info<< indent << fvp.name()
-                        << " min/avg/max mesh flux error = " << minMfe[patchi]
-                        << '/' << sumMfe[patchi]/(nSumMfe[patchi] + vSmall)
-                        << '/' << maxMfe[patchi] << endl;
+                        << " min/average/max mesh flux error = "
+                        << minMfe[patchi] << '/'
+                        << sumMfe[patchi]/(nSumMfe[patchi] + vSmall) << '/'
+                        << maxMfe[patchi] << endl;
                 }
             }
         }
 
         const volScalarField::Internal pvf(projectedVolumeFraction());
-        Info<< indent << "Cell min/avg/max projected volume fraction = "
-            << gMin(pvf) << '/' << gAverage(pvf) << '/' << gMax(pvf) << endl;
+        const scalar gMaxPvf = gMax(pvf);
+        Info<< indent << "Cell min/average/max projected volume fraction = "
+            << gMin(pvf) << '/' << gAverage(pvf) << '/' << gMaxPvf << endl;
+        if (gMaxPvf > minWarnProjectedVolumeFraction_)
+        {
+            WarningInFunction
+                << "Maximum projected volume fraction " << gMaxPvf << " may "
+                << "cause instability." << nl << indent << "Volumetric "
+                << "distortion can be minimised by making the side of the "
+                << "interface" << nl << indent << "with smaller or more "
+                << "finely layered cells the neighbour." << nl << indent
+                << "This is done by specifying this side second to "
+                << "createNonConformalCouples;" << nl << indent << "either on "
+                << "the command line, or in the patches (and regions) entries "
+                << "within" << nl << indent << "the "
+                << "createNonConformalCouplesDict." << endl;
+        }
     }
 
     if (any(patchCoupleds))

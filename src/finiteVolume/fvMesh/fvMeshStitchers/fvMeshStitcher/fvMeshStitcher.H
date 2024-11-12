@@ -74,6 +74,12 @@ protected:
 
 private:
 
+    // Private Static Data
+
+        //- Minimum projected volume fraction that results in a warning
+        static const scalar minWarnProjectedVolumeFraction_;
+
+
     // Private Data
 
         //- Non-const fvMesh reference to allow update
