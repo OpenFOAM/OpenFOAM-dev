@@ -22,6 +22,34 @@ boundaryField
 {
     #includeEtc "caseDicts/setConstraintTypes"
 
+    inletFuel
+    {
+        type            flowRateInletVelocity;
+        massFlowRate
+        {
+            type            table;
+            units           ([CAD] [g/CAD]);
+            values
+            (
+
+                (0          0.0)
+                (625        0.0)
+                (627.5      0.825)
+                (630        1.7)
+                (632.5      1.7)
+                (635        0.8)
+                (637.5      0.0)
+                (720        0.0)
+
+            );
+            outOfBounds     repeat;
+            interpolationScheme linear;
+        }
+        profile             turbulentBL;
+        rho                 rho;
+        rhoInlet            0.7;
+    }
+
     inlet
     {
         type            pressureInletOutletVelocity;

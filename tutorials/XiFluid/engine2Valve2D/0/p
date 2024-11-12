@@ -16,11 +16,16 @@ FoamFile
 
 dimensions      [1 -1 -2 0 0 0 0];
 
-internalField   uniform 1 [bar];
+internalField   uniform 3 [bar];
 
 boundaryField
 {
     #includeEtc "caseDicts/setConstraintTypes"
+
+    inletFuel
+    {
+        type            zeroGradient;
+    }
 
     inlet
     {
@@ -28,14 +33,16 @@ boundaryField
         p0
         {
             type            table;
-            format          csv;
-            file            "constant/expData/pInlet";
-            nHeaderLine     2;          // Number of header lines
             units           ([CAD] [bar]);
-            columns         (0 1);      // Column indices
-            separator       " ";        // Optional (defaults to ",")
-            mergeSeparators yes;        // Merge multiple separators
-            outOfBounds     repeat;     // For multi-cycle simulations, use repeat
+            values
+            (
+                (0      1.0)
+                (340    1.5)
+                (480    1.6)
+                (620    1.5)
+                (720    1.0)
+            );
+            outOfBounds     repeat;
             interpolationScheme linear;
         }
         value           $internalField;
@@ -59,7 +66,7 @@ boundaryField
                 (380    1.0)
                 (720    1.0)
             );
-            outOfBounds     repeat;     // For multi-cycle simulations, use repeat
+            outOfBounds     repeat;
             interpolationScheme linear;
         }
         value           $internalField;
@@ -70,7 +77,7 @@ boundaryField
 
     piston
     {
-        type            zeroGradient;
+        type               fixedFluxExtrapolatedPressure;
     }
 
     liner

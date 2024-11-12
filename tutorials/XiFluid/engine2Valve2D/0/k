@@ -1,0 +1,100 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       volScalarField;
+    location    "0";
+    object      k;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 2 -2 0 0 0 0];
+
+internalField   uniform     0.23;
+
+boundaryField
+{
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    inletFuel
+    {
+        type            turbulentIntensityKineticEnergyInlet;
+        intensity       0.05;
+        value           $internalField;
+    }
+
+    inlet
+    {
+        type            turbulentIntensityKineticEnergyInlet;
+        intensity       0.05;
+        value           $internalField;
+    }
+
+    outlet
+    {
+        type            turbulentIntensityKineticEnergyInlet;
+        intensity       0.05;
+        value           $internalField;
+    }
+
+    piston
+    {
+        type            kqRWallFunction;
+        value           uniform 0;
+    }
+
+    liner
+    {
+        type            kqRWallFunction;
+        value           uniform 0;
+    }
+
+    cylinderHead
+    {
+        type            kqRWallFunction;
+        value           uniform 0;
+    }
+
+    ivHead
+    {
+        type            kqRWallFunction;
+        value           uniform 0;
+    }
+
+    ivStem
+    {
+        type            kqRWallFunction;
+        value           uniform 0;
+    }
+
+    evHead
+    {
+        type            kqRWallFunction;
+        value           uniform 0;
+    }
+
+    evStem
+    {
+        type            kqRWallFunction;
+        value           uniform 0;
+    }
+
+    frontAndBack
+    {
+        type            empty;
+    }
+
+    "nonCouple.*"
+    {
+        type            zeroGradient;
+    }
+}
+
+
+// ************************************************************************* //

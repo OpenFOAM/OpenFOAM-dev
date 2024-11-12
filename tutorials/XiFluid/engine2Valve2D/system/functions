@@ -1,0 +1,60 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      functions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#includeFunc multiValveEngineState
+#includeFunc checkMesh(executeControl=adjustableRunTime, executeInterval=5)
+#includeFunc stopAtTimeStep(minDeltaT=1e-5)
+#includeFunc writeObjects(Su, Xi)
+#includeFunc bXiProgress
+
+fluidMaxDeltaT
+{
+    type            fluidMaxDeltaT;
+    //----------------//
+    // Valve timings need to be consistent with dynamicMeshDict and Allmesh
+    EVO             100;
+    IVO             340;
+    EVC             380;
+    IVC             620;
+    DI              625;
+    SI              715;
+    PERIOD          720;
+    //----------------//
+
+    maxCo           1;
+
+    maxDeltaT
+    {
+        type            table;
+        values
+        (
+            (0    0.1)
+            ($EVO 0.2)
+            ($IVO 0.2)
+            ($EVC 0.2)
+            ($IVC 0.2)
+            (#calc "$DI-1" 0.05)
+            ($DI 0.05)
+            ($SI 0.05)
+            (#calc "$PERIOD-1" 0.1)
+            ($PERIOD 0.1)
+        );
+        interpolationScheme linear;
+        outOfBounds     repeat;
+    }
+}
+
+// ************************************************************************* //

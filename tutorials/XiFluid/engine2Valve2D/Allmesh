@@ -19,7 +19,7 @@ CONROD_LENGTH0=$(foamDictionary constant/dynamicMeshDict -writePrecision 12 \
     -entry mover/piston/motion/conRodLength -value)
 CONROD_LENGTH=$(echo "$SCALE * $CONROD_LENGTH0" | bc -l)
 
-TDC_CLEARANCE=10
+TDC_CLEARANCE=4
 
 # Define mesh generation functions...
 
@@ -61,6 +61,12 @@ createExhaustValveMesh()
         entry0/valveStem=evStem, \
         entry0/liner=nonCouple_ev_cyl, \
         entry0/inlet=outlet"
+    ### ADDED BELOW
+    #foamDictionary constant/${mesh:+meshes/}$mesh/polyMesh/boundary \
+    #    -entry entry0/nonCouple_ev_cyl/type -set patch
+    #foamDictionary constant/${mesh:+meshes/}$mesh/polyMesh/boundary \
+    #    -entry entry0/nonCouple_ev_cyl/inGroups -remove
+
 }
 
 createIntakeValveMesh()
@@ -75,6 +81,11 @@ createIntakeValveMesh()
         entry0/valveHead=ivHead, \
         entry0/valveStem=ivStem, \
         entry0/liner=nonCouple_iv_cyl"
+    ### ADDED BELOW
+    #foamDictionary constant/${mesh:+meshes/}$mesh/polyMesh/boundary \
+    #    -entry entry0/nonCouple_iv_cyl/type -set patch
+    #foamDictionary constant/${mesh:+meshes/}$mesh/polyMesh/boundary \
+    #    -entry entry0/nonCouple_iv_cyl/inGroups -remove
 }
 
 createCylinderMesh()
@@ -150,6 +161,11 @@ createMesh()
 
     runApplication -a transformPoints ${mesh:+-mesh} $mesh \
                    "Rx=90, scale=($SCALE_INV $SCALE_INV $SCALE_INV)"
+
+    # Create cell- and face-sets relevant to XiFluid ignition and fuel direct injection
+    runApplication -a topoSet ${mesh:+-mesh} $mesh -dict system/topoSetDict_ignition
+    runApplication -a topoSet ${mesh:+-mesh} $mesh -dict system/topoSetDict_inletFuel
+    runApplication -a createPatch -overwrite ${mesh:+-mesh} $mesh -dict system/createPatchDict_inletFuel
 
     # Decompose (if necessary) and construct the non-conformal couplings that
     # connect the ports and enable the sliding interfaces

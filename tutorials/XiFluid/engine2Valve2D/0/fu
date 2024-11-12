@@ -10,30 +10,37 @@ FoamFile
     format      ascii;
     class       volScalarField;
     location    "0";
-    object      T;
+    object      fu;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 0 0 1 0 0 0];
+dimensions      [0 0 0 0 0 0 0];
 
-internalField   uniform 300;
+internalField   uniform 0;
 
 boundaryField
 {
     #includeEtc "caseDicts/setConstraintTypes"
 
+    inletFuel
+    {
+        type            inletOutlet;
+        inletValue      uniform 1;
+        value           uniform 1;
+    }
+
     inlet
     {
         type            inletOutlet;
-        inletValue      $internalField;
-        value           $internalField;
+        inletValue      uniform 0;
+        value           uniform 0;
     }
 
     outlet
     {
         type            inletOutlet;
-        inletValue      $internalField;
-        value           $internalField;
+        inletValue      uniform 0;
+        value           uniform 0;
     }
 
     piston
@@ -80,7 +87,7 @@ boundaryField
     {
         type            zeroGradient;
     }
-}
 
+}
 
 // ************************************************************************* //

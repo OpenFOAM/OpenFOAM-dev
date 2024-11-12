@@ -7,14 +7,23 @@
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
+    version     2.0;
     format      ascii;
     class       dictionary;
-    location    "system";
-    object      functions;
+    object      topoSetDict_intelFuel;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#includeFunc multiValveEngineState
-#includeFunc checkMesh(executeControl=adjustableRunTime, executeInterval=5)
+actions
+(
+  {
+    name    inletFuelFaces;
+    type    faceSet;
+    action  new;
+    source  boxToFace;
+    box     (-0.035 -0.1 -1e-5)(0.035 0.1 1e-5);
+  }
+);
+
 
 // ************************************************************************* //

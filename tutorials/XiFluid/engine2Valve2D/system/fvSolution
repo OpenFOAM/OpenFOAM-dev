@@ -26,7 +26,7 @@ solvers
         solver          PBiCGStab;
         preconditioner  DIC;
         tolerance       1e-8;
-        relTol          0.001;
+        relTol          0.01;
     }
 
     pFinal
@@ -51,7 +51,7 @@ solvers
         relTol          0;
     }
 
-    "(U|h|k|epsilon|omega)"
+    "(U|h|k|omega|ft|fu|egr|b|Su|Xi|ha|hau)"
     {
         solver          PBiCGStab;
         preconditioner  DILU;
@@ -59,7 +59,7 @@ solvers
         relTol          0.01;
     }
 
-    "(U|h|k|epsilon|omega)Final"
+    "(U|h|k|omega|ft|fu|egr|b|Su|Xi|ha|hau)Final"
     {
         $U;
         relTol          0;
@@ -69,8 +69,8 @@ solvers
 PIMPLE
 {
     momentumPredictor           yes;
-    nOuterCorrectors            3;
-    nCorrectors                 1;
+    nOuterCorrectors            2;
+    nCorrectors                 2;
     nNonOrthogonalCorrectors    0;
     correctPhi                  yes;
     correctMeshPhi              no;

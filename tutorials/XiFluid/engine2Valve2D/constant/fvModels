@@ -9,53 +9,33 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    location    "system";
-    object      controlDict;
+    location    "constant";
+    object      fvModels;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     foamRun;
-
-solver          fluid;
-
-startFrom       latestTime;
-
-startTime       0;
-
-stopAt          endTime;
-
-endTime         1440;
-
-deltaT          0.1;
-
-writeControl    adjustableRunTime;
-
-writeInterval   5;
-
-purgeWrite      0;
-
-writeFormat     binary;
-
-writePrecision  10;
-
-writeCompression off;
-
-timeFormat      general;
-
-timePrecision   6;
-
-runTimeModifiable true;
-
-adjustTimeStep  no;
-
-maxCo           5;
-
-maxDeltaT       1;
-
-userTime
+ignition
 {
-    type            engine;
-    omega           60 [rpm];
+    type            multiCycleConstantbXiIgnition;
+
+    select          cellZone;
+    cellZone        ignition;
+
+    period          720;
+
+    start           715;
+    duration        15;
+    strength        20;
+    combustionDuration 245;
+
+    XiCorr
+    {
+        type            cylindrical;
+        select          all;
+        thickness       0.05;
+        cylinderFraction 1;
+    }
 }
+
 
 // ************************************************************************* //

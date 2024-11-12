@@ -9,13 +9,29 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    location    "system";
-    object      decomposeParDict;
+    location    "constant";
+    object      physicalProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-numberOfSubdomains  8;
+thermoType
+{
+    type            heheuPsiThermo;
+    mixture         inhomogeneousEGRMixture;
+    transport       polynomial;
+    thermo          janaf;
+    equationOfState perfectGas;
+    specie          specie;
+    energy          absoluteEnthalpy;
+}
 
-method      scotch;
+stoichiometricAirFuelMassRatio 17.23;
+
+#include "$FOAM_CASE/constant/fuel_thermo.foam"
+
+#include "$FOAM_CASE/constant/oxidant_thermo.foam"
+
+#include "$FOAM_CASE/constant/products_thermo.foam"
+
 
 // ************************************************************************* //
