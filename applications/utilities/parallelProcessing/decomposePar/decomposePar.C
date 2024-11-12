@@ -476,7 +476,7 @@ int main(int argc, char *argv[])
             continue;
         }
 
-        // If copying from  zero then just copy everything from the <time>
+        // If copying from zero then just copy everything from the <time>
         // directory to the processor*/<time> directories without altering them
         if (copyZero)
         {
@@ -494,13 +494,7 @@ int main(int argc, char *argv[])
                     (
                         fileHandler().objectPath
                         (
-                            IOobject
-                            (
-                                "",
-                                "",
-                                procRunTime
-                            ),
-                            word::null
+                            IOobject(word::null, fileName::null, procRunTime)
                         )
                     );
 

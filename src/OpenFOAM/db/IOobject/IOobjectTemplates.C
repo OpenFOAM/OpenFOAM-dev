@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,10 +49,7 @@ bool Foam::IOobject::typeHeaderOk(const bool checkType)
     // Determine local status
     if (!masterOnly || Pstream::master())
     {
-        const fileName fName
-        (
-            filePath(Type::typeName, typeGlobalFile<Type>::global)
-        );
+        const fileName fName(filePath(typeGlobalFile<Type>::global));
 
         ok = fp.readHeader(*this, fName, Type::typeName);
         if (ok && checkType && headerClassName_ != Type::typeName)

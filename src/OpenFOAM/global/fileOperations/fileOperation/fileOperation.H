@@ -315,20 +315,14 @@ public:
         // (reg)IOobject functionality
 
             //- Generate disk file name for object. Opposite of filePath.
-            //  Optional wanted typeName.
-            virtual fileName objectPath
-            (
-                const IOobject& io,
-                const word& typeName
-            ) const;
+            virtual fileName objectPath(const IOobject& io) const;
 
             //- Search for an object. globalFile : also check undecomposed case
             //  Optional wanted typeName.
             virtual fileName filePath
             (
                 const bool globalFile,
-                const IOobject&,
-                const word& typeName
+                const IOobject&
             ) const = 0;
 
             //- Search for a directory. globalFile : also check undecomposed

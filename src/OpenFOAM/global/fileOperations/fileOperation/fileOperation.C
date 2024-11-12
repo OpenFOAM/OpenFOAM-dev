@@ -358,7 +358,7 @@ Foam::fileOperation::lookupProcessorsPath(const fileName& fName) const
 bool Foam::fileOperation::exists(IOobject& io) const
 {
     // Generate output filename for object
-    fileName objPath(objectPath(io, word::null));
+    fileName objPath(objectPath(io));
 
     // Test for either directory or a (valid) file & IOobject
     bool ok;
@@ -435,11 +435,7 @@ Foam::fileOperation::~fileOperation()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::fileName Foam::fileOperation::objectPath
-(
-    const IOobject& io,
-    const word& typeName
-) const
+Foam::fileName Foam::fileOperation::objectPath(const IOobject& io) const
 {
     return io.objectPath(false);
 }

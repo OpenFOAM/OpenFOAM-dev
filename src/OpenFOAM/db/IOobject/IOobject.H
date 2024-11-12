@@ -426,10 +426,9 @@ public:
 
             //- Return complete path + object name if the file exists
             //  in the case directory otherwise null.
-            //
             //  If global and parallel searches up into the global case
             //  directory.
-            fileName filePath(const word& typeName, const bool global) const;
+            fileName filePath(const bool global) const;
 
 
         // Reading
@@ -564,7 +563,7 @@ public:
             //- Return the path for the file for this Type
             inline fileName filePath() const
             {
-                return filePath(Type::typeName, typeGlobalFile<Type>::global);
+                return filePath(typeGlobalFile<Type>::global);
             }
 };
 

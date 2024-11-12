@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -137,8 +137,7 @@ public:
             //- Generate disk file name for object. Opposite of filePath.
             virtual fileName objectPath
             (
-                const IOobject& io,
-                const word& typeName
+                const IOobject& io
             ) const;
 
             //- Writes a regIOobject (so header, contents and divider).

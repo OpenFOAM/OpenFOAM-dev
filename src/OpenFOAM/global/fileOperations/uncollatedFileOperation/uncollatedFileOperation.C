@@ -366,8 +366,7 @@ bool Foam::fileOperations::uncollatedFileOperation::mv
 Foam::fileName Foam::fileOperations::uncollatedFileOperation::filePath
 (
     const bool globalFile,
-    const IOobject& io,
-    const word& typeName
+    const IOobject& io
 ) const
 {
     if (debug)

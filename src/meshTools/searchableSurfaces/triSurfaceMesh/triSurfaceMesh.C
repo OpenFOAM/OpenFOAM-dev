@@ -47,7 +47,7 @@ Foam::fileName Foam::triSurfaceMesh::checkFile
     const bool isGlobal
 )
 {
-    const fileName fName(io.filePath(typeName, isGlobal));
+    const fileName fName(io.filePath(isGlobal));
 
     if (fName.empty())
     {
@@ -75,12 +75,7 @@ Foam::fileName Foam::triSurfaceMesh::relativeFilePath
         // - local to the cwd?
         // - local to the case dir?
         // - or just another name?
-        fName = fileHandler().filePath
-        (
-            isGlobal,
-            IOobject(io, fName),
-            word::null
-        );
+        fName = fileHandler().filePath(isGlobal, IOobject(io, fName));
     }
     return fName;
 }
@@ -108,7 +103,7 @@ Foam::fileName Foam::triSurfaceMesh::checkFile
     }
     else
     {
-        fName = io.filePath(typeName, isGlobal);
+        fName = io.filePath(isGlobal);
 
         if (!exists(fName))
         {

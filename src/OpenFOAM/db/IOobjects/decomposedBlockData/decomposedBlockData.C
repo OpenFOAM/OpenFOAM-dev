@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -943,7 +943,7 @@ bool Foam::decomposedBlockData::writeBlocks
 bool Foam::decomposedBlockData::read()
 {
     autoPtr<ISstream> isPtr;
-    fileName objPath(fileHandler().filePath(false, *this, word::null));
+    fileName objPath(fileHandler().filePath(false, *this));
     if (UPstream::master(comm_))
     {
         isPtr.reset(new IFstream(objPath));

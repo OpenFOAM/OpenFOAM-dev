@@ -646,8 +646,7 @@ public:
             virtual fileName filePath
             (
                 const bool globalFile,
-                const IOobject&,
-                const word& typeName
+                const IOobject&
             ) const;
 
             //- Search for a directory. globalFile : also check undecomposed
