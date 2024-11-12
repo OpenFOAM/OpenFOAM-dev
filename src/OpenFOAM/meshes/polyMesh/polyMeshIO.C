@@ -476,7 +476,7 @@ bool Foam::polyMesh::writeObject
                 *this
             );
 
-            rm(faceProcAddressingIO.objectPath(false));
+            fileHandler().rm(faceProcAddressingIO.filePath(false));
         };
 
         if (!Pstream::parRun())
