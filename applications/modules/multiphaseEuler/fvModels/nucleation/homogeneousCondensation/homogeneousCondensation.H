@@ -146,16 +146,6 @@ public:
                 fvMatrix<scalar>& eqn
             ) const;
 
-            //- Override the compressible mass fraction equation to add
-            //  linearisation w.r.t the mass fraction
-            void addSup
-            (
-                const volScalarField& alpha,
-                const volScalarField& rho,
-                const volScalarField& Yi,
-                fvMatrix<scalar>& eqn
-            ) const;
-
 
         //- Correct the fvModel
         //  e.g. solve equations, update model, for film, Lagrangian etc.

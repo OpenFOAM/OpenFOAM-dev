@@ -108,8 +108,8 @@ Foam::fv::homogeneousLiquidPhaseSeparation::homogeneousLiquidPhaseSeparation
     ),
     interface_
     (
-        fluid_.phases()[phaseNames().first()],
-        fluid_.phases()[phaseNames().second()]
+        fluid_.phases()[phaseNames().second()],
+        fluid_.phases()[phaseNames().first()]
     ),
     d_
     (
@@ -321,27 +321,6 @@ void Foam::fv::homogeneousLiquidPhaseSeparation::addSup
     else
     {
         phaseChange::addSup(alpha, rho, eqn);
-    }
-}
-
-
-void Foam::fv::homogeneousLiquidPhaseSeparation::addSup
-(
-    const volScalarField& alpha,
-    const volScalarField& rho,
-    const volScalarField& Yi,
-    fvMatrix<scalar>& eqn
-) const
-{
-    const label i = index(phaseNames(), eqn.psi().group());
-
-    if (i == 0 && specieis().first() != -1 && Yi.member() == specie())
-    {
-        eqn -= fvm::Sp(alpha*mDotByAlphaSolution_, Yi);
-    }
-    else
-    {
-        singleComponentPhaseChange::addSup(alpha, rho, Yi, eqn);
     }
 }
 

@@ -77,8 +77,8 @@ Foam::fv::homogeneousCondensation::homogeneousCondensation
     ),
     interface_
     (
-        fluid_.phases()[phaseNames().first()],
-        fluid_.phases()[phaseNames().second()]
+        fluid_.phases()[phaseNames().second()],
+        fluid_.phases()[phaseNames().first()]
     ),
     d_
     (
@@ -219,7 +219,6 @@ void Foam::fv::homogeneousCondensation::correct()
     // Supersaturation of the nucleating specie
     const volScalarField::Internal S(Xi*p()/pSat);
     DebugField(S);
-
     // Mass, volume and diameter of one molecule in the condensed phase
     const volScalarField::Internal mMolc(WLiquid/NA);
     const volScalarField::Internal vMolc(mMolc/rhoLiquid);
@@ -288,27 +287,6 @@ void Foam::fv::homogeneousCondensation::addSup
     else
     {
         phaseChange::addSup(alpha, rho, eqn);
-    }
-}
-
-
-void Foam::fv::homogeneousCondensation::addSup
-(
-    const volScalarField& alpha,
-    const volScalarField& rho,
-    const volScalarField& Yi,
-    fvMatrix<scalar>& eqn
-) const
-{
-    const label i = index(phaseNames(), eqn.psi().group());
-
-    if (i == 0 && specieis().first() != -1 && Yi.member() == specie())
-    {
-        eqn -= fvm::Sp(alpha*mDotByAlphaGas_, Yi);
-    }
-    else
-    {
-        singleComponentPhaseChange::addSup(alpha, rho, Yi, eqn);
     }
 }
 
