@@ -80,10 +80,12 @@ wmake $targetType fvConstraints
 
 fvModels/Allwmake $targetType $*
 functionObjects/Allwmake $targetType $*
-wmake $targetType fvModels/propellerDisk
 
 lagrangian/Allwmake $targetType $*
 rigidBodyMotion/Allwmake $targetType $*
+
+wmake $targetType fvModels/propellerDisk
+wmake $targetType fvModels/rigidBodyPropellerDisk
 
 wmake $targetType specieTransfer
 wmake $targetType atmosphericModels

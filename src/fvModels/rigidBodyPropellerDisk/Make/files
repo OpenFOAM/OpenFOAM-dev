@@ -1,0 +1,3 @@
+rigidBodyPropellerDisk.C
+
+LIB = $(FOAM_LIBBIN)/librigidBodyPropellerDisk
