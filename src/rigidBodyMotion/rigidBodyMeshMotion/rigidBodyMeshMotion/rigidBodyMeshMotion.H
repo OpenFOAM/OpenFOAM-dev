@@ -65,11 +65,17 @@ class rigidBodyMeshMotion
         //- ID of the body in the RBD::rigidBodyMotion
         const label bodyIndex_;
 
-        //- List of mesh patches associated with this body
+        //- List of mesh patch names associated with this body
         const wordReList patches_;
 
-        //- Patches to integrate forces
+        //- Set of mesh patches associated with this body
         const labelHashSet patchSet_;
+
+        //- Names of the pointZones which move with the body
+        wordReList pointZones_;
+
+        //- pointZones which move with the body
+        labelHashSet pointZoneSet_;
 
         //- Inner morphing distance (limit of solid-body region)
         const scalar di_;

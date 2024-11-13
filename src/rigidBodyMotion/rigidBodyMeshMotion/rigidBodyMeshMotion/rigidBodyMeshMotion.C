@@ -115,6 +115,8 @@ Foam::rigidBodyMeshMotion::bodyMesh::bodyMesh
     bodyIndex_(bodyID),
     patches_(wordReList(dict.lookup("patches"))),
     patchSet_(mesh.boundaryMesh().patchSet(patches_)),
+    pointZones_(dict.lookupOrDefault("pointZones", wordReList::null())),
+    pointZoneSet_(mesh.pointZones().zoneSet(pointZones_)),
     di_(dict.lookup<scalar>("innerDistance")),
     do_(dict.lookup<scalar>("outerDistance")),
     weight_
@@ -228,6 +230,7 @@ Foam::rigidBodyMeshMotion::rigidBodyMeshMotion
         (
             pMesh,
             bodyMeshes_[bi].patchSet_,
+            bodyMeshes_[bi].pointZoneSet_,
             points0(),
             bodyMeshes_[bi].do_
         );
@@ -457,6 +460,7 @@ void Foam::rigidBodyMeshMotion::topoChange(const polyTopoChangeMap& map)
             (
                 pMesh,
                 bodyMeshes_[bi].patchSet_,
+                bodyMeshes_[bi].pointZoneSet_,
                 newPoints0,
                 bodyMeshes_[bi].do_
             );
