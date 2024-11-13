@@ -190,6 +190,16 @@ inline Foam::vector Foam::RBD::rigidBodyModel::p
 }
 
 
+inline Foam::vector Foam::RBD::rigidBodyModel::d
+(
+    const label bodyID,
+    const vector& d
+) const
+{
+    return X0_[master(bodyID)].E().T() & d;
+}
+
+
 inline Foam::spatialVector Foam::RBD::rigidBodyModel::v
 (
     const label bodyID,

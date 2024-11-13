@@ -325,6 +325,10 @@ public:
         //- Return the current position of the given point on the given body
         inline vector p(const label bodyID, const vector& p) const;
 
+        //- Return the current direction of the given direction
+        //  on the given body
+        inline vector d(const label bodyID, const vector& d) const;
+
         //- Return the velocity of the given point on the given body
         inline spatialVector v(const label bodyID, const vector& p) const;
 
