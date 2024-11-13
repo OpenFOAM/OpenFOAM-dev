@@ -58,7 +58,8 @@ void Foam::fv::propellerDisk::addActuationDiskAxialInertialResistance
         dimensionedVector(rho.dimensions()*U.dimensions()/dimTime, Zero)
     );
 
-    const vector centre = diskCentre();
+    const vector centre(this->centre());
+    const vector normal(this->normal());
     const scalar delta = diskThickness(centre);
 
     // hub radius
@@ -66,9 +67,6 @@ void Foam::fv::propellerDisk::addActuationDiskAxialInertialResistance
 
     // propeller radius
     const scalar rProp = 0.5*dProp_;
-
-    // Unit normal
-    const vector nHat = normalised(diskNormal_);
 
     // Disk area
     const scalar A = (rProp - rHub)*(rProp - rHub)*pi;
@@ -78,7 +76,7 @@ void Foam::fv::propellerDisk::addActuationDiskAxialInertialResistance
 
     // Evaluate advance number J,
     // the volumetric mean advance speed of the disk
-    const scalar J = this->J(U, nHat);
+    const scalar J = this->J(U, normal);
 
     // Calculate the mean velocity through the disk
     const scalar Udisk = n*dProp_*J;
@@ -142,12 +140,12 @@ void Foam::fv::propellerDisk::addActuationDiskAxialInertialResistance
                    /(rStar*(1 - rHubPrime) + rHubPrime);
 
                 // A unit normal vector to the direction of the tangent
-                const vector radiusOrtho = normalised(r ^ nHat);
+                const vector radiusOrtho = normalised(r ^ normal);
                 const vector rotationVector = radiusOrtho*rotationDir_;
 
                 force[celli] =
                     alpha[celli]*rho[celli]
-                   *(Faxial*nHat + Ftangential*rotationVector);
+                   *(Faxial*normal + Ftangential*rotationVector);
 
                 Usource[celli] += V[celli]*force[celli];
             }

@@ -55,13 +55,18 @@ void Foam::fv::propellerDisk::readCoeffs(const dictionary& dict)
         IOobject::groupName("U", phaseName_)
     );
 
-    diskNormal_ = dict.lookup<vector>("diskNormal");
-    if (mag(diskNormal_) < small)
+    if (dict.found("centre"))
     {
-        FatalErrorInFunction
-           << "disk direction vector is approximately zero"
-           << exit(FatalIOError);
+        centre_ = dict.lookup<vector>("centre");
     }
+    else
+    {
+        const Field<vector> zoneCellCentres(mesh().cellCentres(), set_.cells());
+        const Field<scalar> zoneCellVolumes(mesh().cellVolumes(), set_.cells());
+        centre_ = gSum(zoneCellVolumes*zoneCellCentres)/set_.V();
+    }
+
+    normal_ = normalised(dict.lookup<vector>("normal"));
 
     n_ = dict.lookup<scalar>("n");
     rotationDir_ = sign(n_);
@@ -87,15 +92,6 @@ void Foam::fv::propellerDisk::readCoeffs(const dictionary& dict)
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-Foam::vector Foam::fv::propellerDisk::diskCentre() const
-{
-    const Field<vector> zoneCellCentres(mesh().cellCentres(), set_.cells());
-    const Field<scalar> zoneCellVolumes(mesh().cellVolumes(), set_.cells());
-
-    return gSum(zoneCellVolumes*zoneCellCentres)/set_.V();
-}
-
 
 Foam::scalar Foam::fv::propellerDisk::diskThickness(const vector& centre) const
 {
