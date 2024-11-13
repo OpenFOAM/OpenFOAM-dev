@@ -172,6 +172,42 @@ Foam::wordList Foam::ZoneList<ZoneType, ZonesType, MeshType>::types() const
 
 
 template<class ZoneType, class ZonesType, class MeshType>
+Foam::labelHashSet Foam::ZoneList<ZoneType, ZonesType, MeshType>::zoneSet
+(
+    const UList<wordRe>& zoneNames,
+    const bool warnNotFound
+) const
+{
+    labelHashSet set;
+
+    if (zoneNames.size())
+    {
+        forAll(zoneNames, i)
+        {
+            const labelList indices
+            (
+                this->findIndices(zoneNames[i])
+            );
+
+            if (indices.size())
+            {
+                set.insert(indices);
+            }
+            else if (warnNotFound)
+            {
+                WarningInFunction
+                    << "Cannot find zone " << zoneNames[i]
+                    << " of type " << type()
+                    << endl;
+            }
+        }
+    }
+
+    return set;
+}
+
+
+template<class ZoneType, class ZonesType, class MeshType>
 void Foam::ZoneList<ZoneType, ZonesType, MeshType>::append
 (
     ZoneType* zonePtr

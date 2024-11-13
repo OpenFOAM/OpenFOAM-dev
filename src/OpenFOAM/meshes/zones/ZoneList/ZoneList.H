@@ -123,6 +123,14 @@ public:
         //- Return a list of zone types
         wordList types() const;
 
+        //- Return the set of zone indices corresponding to the given names
+        //  By default warns if given names are not found
+        labelHashSet zoneSet
+        (
+            const UList<wordRe>& zoneNames,
+            const bool warnNotFound = true
+        ) const;
+
         //- Append or update a zone
         void append(ZoneType*) const;
 
