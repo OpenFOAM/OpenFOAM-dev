@@ -40,6 +40,8 @@ Usage
         selectionMode   cellZone;
         cellZone        propeller;
 
+        body            hull;
+
         centre          (0 0 0);    // Centre of the propeller
         normal          (1 0 0);    // Normal direction of the propeller
 
