@@ -85,7 +85,11 @@ protected:
         //  Used for the implicit energy correction on the temperature laplacian
         tmp<volScalarField> alphaEff() const
         {
-            return this->thermo().kappa()/this->thermo().Cpv() + alphat();
+            return volScalarField::New
+            (
+                "alphaEff",
+                this->thermo().kappa()/this->thermo().Cpv() + alphat()
+            );
         }
 
 
