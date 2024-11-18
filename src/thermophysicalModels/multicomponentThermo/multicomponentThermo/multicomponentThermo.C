@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -163,7 +163,7 @@ Foam::multicomponentThermo::implementation::implementation
                 typeIOobject<volScalarField> time0IO
                 (
                     YdefaultName,
-                    Time::timeName(0),
+                    mesh.time().beginTime().name(),
                     mesh,
                     IOobject::MUST_READ,
                     IOobject::NO_WRITE
