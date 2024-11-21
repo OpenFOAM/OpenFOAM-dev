@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -420,6 +420,7 @@ Foam::SprayParcel<ParcelType>::SprayParcel(const SprayParcel<ParcelType>& p)
 :
     ParcelType(p),
     d0_(p.d0_),
+    mass0_(p.mass0_),
     position0_(p.position0_),
     sigma_(p.sigma_),
     mu_(p.mu_),
