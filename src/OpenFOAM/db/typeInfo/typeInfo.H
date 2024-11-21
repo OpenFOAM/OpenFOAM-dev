@@ -112,6 +112,11 @@ inline To& dynamicCast(From& r)
 template<class To, class From>
 inline To& dynamicCastNull(From& r)
 {
+    if (isNull(r))
+    {
+        return NullObjectNonConstRef<To>();
+    }
+
     try
     {
         return dynamic_cast<To&>(r);
