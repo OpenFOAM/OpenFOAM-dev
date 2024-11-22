@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -126,26 +126,36 @@ public:
 
 #define makeDispersionModel(CloudType)                                         \
                                                                                \
-    typedef Foam::CloudType::momentumCloudType momentumCloudType;            \
+    typedef Foam::CloudType::momentumCloudType CloudType##momentumCloudType;   \
+                                                                               \
     defineTemplateTypeNameAndDebug                                             \
-        (Foam::DispersionModel<momentumCloudType>, 0);                        \
+    (                                                                          \
+        Foam::DispersionModel<CloudType##momentumCloudType>,                   \
+        0                                                                      \
+    );                                                                         \
                                                                                \
     namespace Foam                                                             \
     {                                                                          \
         defineTemplateRunTimeSelectionTable                                    \
         (                                                                      \
-            DispersionModel<momentumCloudType>,                               \
+            DispersionModel<CloudType##momentumCloudType>,                     \
             dictionary                                                         \
         );                                                                     \
     }
 
+
 #define makeDispersionModelType(SS, CloudType)                                 \
                                                                                \
-    typedef Foam::CloudType::momentumCloudType momentumCloudType;            \
-    defineNamedTemplateTypeNameAndDebug(Foam::SS<momentumCloudType>, 0);      \
+    typedef Foam::CloudType::momentumCloudType CloudType##momentumCloudType;   \
                                                                                \
-    Foam::DispersionModel<momentumCloudType>::                                \
-        adddictionaryConstructorToTable<Foam::SS<momentumCloudType>>          \
+    defineNamedTemplateTypeNameAndDebug                                        \
+    (                                                                          \
+        Foam::SS<CloudType##momentumCloudType>,                                \
+        0                                                                      \
+    );                                                                         \
+                                                                               \
+    Foam::DispersionModel<CloudType##momentumCloudType>::                      \
+        adddictionaryConstructorToTable<Foam::SS<CloudType##momentumCloudType>>\
             add##SS##CloudType##momentumCloudType##ConstructorToTable_;
 
 

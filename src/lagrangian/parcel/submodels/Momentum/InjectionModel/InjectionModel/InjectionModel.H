@@ -354,10 +354,11 @@ public:
 
 #define makeInjectionModel(CloudType)                                          \
                                                                                \
-    typedef Foam::CloudType::momentumCloudType momentumCloudType;            \
+    typedef Foam::CloudType::momentumCloudType CloudType##momentumCloudType;   \
+                                                                               \
     defineNamedTemplateTypeNameAndDebug                                        \
     (                                                                          \
-        Foam::InjectionModel<momentumCloudType>,                              \
+        Foam::InjectionModel<CloudType##momentumCloudType>,                    \
         0                                                                      \
     );                                                                         \
                                                                                \
@@ -365,7 +366,7 @@ public:
     {                                                                          \
         defineTemplateRunTimeSelectionTable                                    \
         (                                                                      \
-            InjectionModel<momentumCloudType>,                                \
+            InjectionModel<CloudType##momentumCloudType>,                      \
             dictionary                                                         \
         );                                                                     \
     }
@@ -373,11 +374,16 @@ public:
 
 #define makeInjectionModelType(SS, CloudType)                                  \
                                                                                \
-    typedef Foam::CloudType::momentumCloudType momentumCloudType;            \
-    defineNamedTemplateTypeNameAndDebug(Foam::SS<momentumCloudType>, 0);      \
+    typedef Foam::CloudType::momentumCloudType CloudType##momentumCloudType;   \
                                                                                \
-    Foam::InjectionModel<momentumCloudType>::                                 \
-        adddictionaryConstructorToTable<Foam::SS<momentumCloudType>>          \
+    defineNamedTemplateTypeNameAndDebug                                        \
+    (                                                                          \
+        Foam::SS<CloudType##momentumCloudType>,                                \
+        0                                                                      \
+    );                                                                         \
+                                                                               \
+    Foam::InjectionModel<CloudType##momentumCloudType>::                       \
+        adddictionaryConstructorToTable<Foam::SS<CloudType##momentumCloudType>>\
             add##SS##CloudType##momentumCloudType##ConstructorToTable_;
 
 

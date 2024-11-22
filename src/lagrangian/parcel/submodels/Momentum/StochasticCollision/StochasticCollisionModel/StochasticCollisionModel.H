@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -127,17 +127,18 @@ public:
 
 #define makeStochasticCollisionModel(CloudType)                                \
                                                                                \
-    typedef Foam::CloudType::momentumCloudType momentumCloudType;            \
+    typedef Foam::CloudType::momentumCloudType CloudType##momentumCloudType;   \
+                                                                               \
     defineNamedTemplateTypeNameAndDebug                                        \
     (                                                                          \
-        Foam::StochasticCollisionModel<momentumCloudType>,                    \
+        Foam::StochasticCollisionModel<CloudType##momentumCloudType>,          \
         0                                                                      \
     );                                                                         \
     namespace Foam                                                             \
     {                                                                          \
         defineTemplateRunTimeSelectionTable                                    \
         (                                                                      \
-            StochasticCollisionModel<momentumCloudType>,                      \
+            StochasticCollisionModel<CloudType##momentumCloudType>,            \
             dictionary                                                         \
         );                                                                     \
     }
@@ -145,13 +146,17 @@ public:
 
 #define makeStochasticCollisionModelType(SS, CloudType)                        \
                                                                                \
-    typedef Foam::CloudType::momentumCloudType momentumCloudType;            \
-    defineNamedTemplateTypeNameAndDebug(Foam::SS<momentumCloudType>, 0);      \
+    typedef Foam::CloudType::momentumCloudType CloudType##momentumCloudType;   \
                                                                                \
-    Foam::StochasticCollisionModel<momentumCloudType>::                       \
-        adddictionaryConstructorToTable<Foam::SS<momentumCloudType>>          \
+    defineNamedTemplateTypeNameAndDebug                                        \
+    (                                                                          \
+        Foam::SS<CloudType##momentumCloudType>,                                \
+        0                                                                      \
+    );                                                                         \
+                                                                               \
+    Foam::StochasticCollisionModel<CloudType##momentumCloudType>::             \
+        adddictionaryConstructorToTable<Foam::SS<CloudType##momentumCloudType>>\
             add##SS##CloudType##momentumCloudType##ConstructorToTable_;
-
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
