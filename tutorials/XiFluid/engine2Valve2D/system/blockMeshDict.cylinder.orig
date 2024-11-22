@@ -95,7 +95,6 @@ defaultPatch
 
 boundary
 (
-
     piston
     {
         type    wall;

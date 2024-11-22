@@ -61,6 +61,10 @@ createExhaustValveMesh()
         entry0/valveStem=evStem, \
         entry0/liner=nonCouple_ev_cyl, \
         entry0/inlet=outlet"
+    foamDictionary constant/${mesh:+meshes/}$mesh/polyMesh/boundary -set \
+        "entry0/nonCouple_ev_cyl/type=patch"
+    foamDictionary constant/${mesh:+meshes/}$mesh/polyMesh/boundary -remove \
+        -entry entry0/nonCouple_ev_cyl/inGroups
 }
 
 createIntakeValveMesh()
@@ -75,6 +79,10 @@ createIntakeValveMesh()
         entry0/valveHead=ivHead, \
         entry0/valveStem=ivStem, \
         entry0/liner=nonCouple_iv_cyl"
+    foamDictionary constant/${mesh:+meshes/}$mesh/polyMesh/boundary -set \
+        "entry0/nonCouple_iv_cyl/type=patch"
+    foamDictionary constant/${mesh:+meshes/}$mesh/polyMesh/boundary -remove \
+        -entry entry0/nonCouple_iv_cyl/inGroups
 }
 
 createCylinderMesh()
