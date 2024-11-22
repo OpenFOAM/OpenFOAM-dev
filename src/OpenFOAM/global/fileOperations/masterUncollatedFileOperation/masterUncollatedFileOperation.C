@@ -1869,7 +1869,6 @@ Foam::fileOperations::masterUncollatedFileOperation::readStream
             << " fName : " << fName << " read:" << read << endl;
     }
 
-
     autoPtr<ISstream> isPtr;
     bool isCollated = false;
     IOobject headerIO(io);
@@ -1909,7 +1908,8 @@ Foam::fileOperations::masterUncollatedFileOperation::readStream
                             << " doing straight IFstream input from "
                             << fName << endl;
                     }
-                    io = headerIO;
+                    io.close();
+                    io.IOobject::operator=(headerIO);
                     return isPtr;
                 }
             }

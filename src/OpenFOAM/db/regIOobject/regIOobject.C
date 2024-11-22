@@ -471,32 +471,4 @@ bool Foam::regIOobject::headerOk()
 }
 
 
-void Foam::regIOobject::operator=(const IOobject& io)
-{
-    // Close any file
-    isPtr_.clear();
-
-    const bool ownedByRegistry0 = ownedByRegistry();
-    release();
-
-    // Check out of objectRegistry
-    checkOut();
-
-    IOobject::operator=(io);
-
-    if (registerObject())
-    {
-        // Re-register object with objectRegistry
-        if (ownedByRegistry0)
-        {
-            store();
-        }
-        else
-        {
-            checkIn();
-        }
-    }
-}
-
-
 // ************************************************************************* //
