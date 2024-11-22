@@ -16,6 +16,6 @@ runParallel setFields
 runParallel $(getApplication)
 
 # Reconstruct
-runApplication reconstructPar
+runApplication reconstructPar -constant
 
 #------------------------------------------------------------------------------

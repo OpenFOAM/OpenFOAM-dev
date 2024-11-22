@@ -34,7 +34,7 @@ case $mode in
         # field files were set up with boundary conditions for the processor
         # and nonConformalProcessorCyclic patch groups
         #
-        runApplication reconstructPar -allRegions -noFields
+        runApplication reconstructPar -allRegions -noFields -constant
         runApplication -a decomposePar -allRegions -fields
 
         runParallel $(getApplication)

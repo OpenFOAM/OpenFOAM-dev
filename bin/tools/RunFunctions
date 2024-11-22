@@ -209,8 +209,24 @@ cloneMesh()
     else
         echo "Cloning $to mesh from $from"
         cp -pr $from $to
-        return 0
     fi
+
+    fromFv=$1/constant/fvMesh
+    toFv=$2/constant/fvMesh
+
+    if [ ! -d $fromFv ]
+    then
+        :
+    elif [ -d $toFv ]
+    then
+        echo "Mesh already cloned: remove fvMesh directory $toFv to clone"
+        return 1
+    else
+        echo "Cloning $toFv mesh from $fromFv"
+        cp -pr $fromFv $toFv
+    fi
+
+    return 0
 }
 
 #------------------------------------------------------------------------------

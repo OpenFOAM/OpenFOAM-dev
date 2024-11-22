@@ -32,7 +32,7 @@ case $mode in
         runApplication decomposePar -allRegions -copyZero -cellProc
         runParallel createNonConformalCouples -overwrite
         runParallel foamMultiRun
-        runApplication reconstructPar -allRegions
+        runApplication reconstructPar -allRegions -constant
         ;;
     *)
         echo "Error: mode $mode not recognised"
