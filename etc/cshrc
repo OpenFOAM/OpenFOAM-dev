@@ -143,6 +143,20 @@ endif
 setenv WM_PROJECT_INST_DIR $FOAM_INST_DIR
 setenv WM_PROJECT_DIR $WM_PROJECT_INST_DIR/$WM_PROJECT-$WM_PROJECT_VERSION
 
+# Location of site-specific templates etc
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# unset is equivalent to $WM_PROJECT_INST_DIR/site
+if ( $?WM_PROJECT_SITE ) then
+    set foamOldDirs="$WM_PROJECT_SITE $foamOldDirs"
+    if ( ! -d "$WM_PROJECT_SITE" ) unsetenv WM_PROJECT_SITE
+else
+    unsetenv WM_PROJECT_SITE
+endif
+
+# Location of user files
+# ~~~~~~~~~~~~~~~~~~~~~~
+setenv WM_PROJECT_USER_DIR $HOME/$WM_PROJECT/$LOGNAME-$WM_PROJECT_VERSION
+
 # Source initialisation functions
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 source $WM_PROJECT_DIR/etc/config.csh/functions
@@ -163,20 +177,7 @@ else
     setenv WM_THIRD_PARTY_DIR $WM_PROJECT_INST_DIR/$WM_THIRD_PARTY-$WM_PROJECT_VERSION
 endif
 
-# Location of site-specific templates etc
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# unset is equivalent to $WM_PROJECT_INST_DIR/site
-if ( $?WM_PROJECT_SITE ) then
-    set foamOldDirs="$WM_PROJECT_SITE $foamOldDirs"
-    if ( ! -d "$WM_PROJECT_SITE" ) unsetenv WM_PROJECT_SITE
-else
-    unsetenv WM_PROJECT_SITE
-endif
-
-# Location of user files
-# ~~~~~~~~~~~~~~~~~~~~~~
-setenv WM_PROJECT_USER_DIR $HOME/$WM_PROJECT/$LOGNAME-$WM_PROJECT_VERSION
-
+# Clean standard environment variables (PATH, LD_LIBRARY_PATH, MANPATH)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 set foamClean=$WM_PROJECT_DIR/bin/foamCleanPath
 
