@@ -142,6 +142,20 @@ then
     unset WM_PROJECT_DIR_REAL
 fi
 
+# Location of site-specific templates etc
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# unset is equivalent to $WM_PROJECT_INST_DIR/site
+if [ -d "$WM_PROJECT_SITE" ]
+then
+    export WM_PROJECT_SITE
+else
+    unset WM_PROJECT_SITE
+fi
+
+# Location of user files
+# ~~~~~~~~~~~~~~~~~~~~~~
+export WM_PROJECT_USER_DIR=$HOME/$WM_PROJECT/$USER-$WM_PROJECT_VERSION
+
 # Source initialisation functions
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 . $WM_PROJECT_DIR/etc/config.sh/functions
@@ -172,20 +186,6 @@ then
     fi
     unset WM_THIRD_PARTY_DIR_REAL
 fi
-
-# Location of site-specific templates etc
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# unset is equivalent to $WM_PROJECT_INST_DIR/site
-if [ -d "$WM_PROJECT_SITE" ]
-then
-    export WM_PROJECT_SITE
-else
-    unset WM_PROJECT_SITE
-fi
-
-# Location of user files
-# ~~~~~~~~~~~~~~~~~~~~~~
-export WM_PROJECT_USER_DIR=$HOME/$WM_PROJECT/$USER-$WM_PROJECT_VERSION
 
 # Clean standard environment variables (PATH, LD_LIBRARY_PATH, MANPATH)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
