@@ -1559,7 +1559,21 @@ void Foam::dictArgList
                 }
                 else
                 {
-                    args.append(wordRe(argString(start, i - start)));
+                    string arg(argString(start, i - start));
+
+                    args.append
+                    (
+                        wordRe
+                        (
+                            stringOps::inplaceExpandEntry
+                            (
+                                arg,
+                                dict,
+                                true,
+                                false
+                            )
+                        )
+                    );
                 }
                 start = i+1;
             }
