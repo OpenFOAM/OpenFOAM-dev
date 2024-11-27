@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,6 +67,81 @@ namespace functionEntries
 }
 }
 
+
+// * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * * //
+
+Foam::List<Foam::Tuple2<Foam::word, Foam::string>>
+Foam::functionEntries::includeEntry::insertNamedArgs
+(
+    dictionary& parentDict,
+    Istream& is
+)
+{
+    List<Tuple2<word, string>> namedArgs;
+
+    ISstream& iss = dynamic_cast<ISstream&>(is);
+
+    // If the next character is a '(' process the arguments
+    if (iss.peek() == token::BEGIN_LIST)
+    {
+        // Read line containing the arguments into a string
+        string fNameArgs;
+        iss.readList(fNameArgs);
+
+        // Parse the argument string
+        word funcType;
+        wordReList args;
+        dictArgList(fNameArgs, funcType, args, namedArgs, parentDict);
+
+        // Add the named arguments as entries into the parentDict
+        // temporarily renaming any existing entries with the same name
+        forAll(namedArgs, i)
+        {
+            const Pair<word> dAk(dictAndKeyword(namedArgs[i].first()));
+            dictionary& subDict(parentDict.scopedDict(dAk.first()));
+
+            // Rename the original entry adding a '_'
+            if (subDict.found(dAk.second()))
+            {
+                keyType tmpName(dAk.second());
+                tmpName += '_';
+                subDict.changeKeyword(dAk.second(), tmpName);
+            }
+
+            // Add the temporary argument entry
+            IStringStream entryStream
+            (
+                dAk.second() + ' ' + namedArgs[i].second() + ';'
+            );
+            subDict.set(entry::New(entryStream).ptr());
+        }
+    }
+
+    return namedArgs;
+}
+
+
+void Foam::functionEntries::includeEntry::removeInsertNamedArgs
+(
+    dictionary& parentDict,
+    const List<Tuple2<word, string>>& namedArgs
+)
+{
+    forAll(namedArgs, i)
+    {
+        // Remove the temporary argument entry
+        parentDict.remove(namedArgs[i].first());
+
+        // Reinstate the original entry
+        const Pair<word> dAk(dictAndKeyword(namedArgs[i].first()));
+        dictionary& subDict(parentDict.scopedDict(dAk.first()));
+        keyType tmpName(dAk.second());
+        tmpName += '_';
+        subDict.changeKeyword(tmpName, dAk.second());
+    }
+}
+
+
 // * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * * //
 
 Foam::fileName Foam::functionEntries::includeEntry::includeFileName
@@ -130,6 +205,10 @@ bool Foam::functionEntries::includeEntry::execute
         includeFileName(is.name().path(), rawFName, parentDict)
     );
 
+    // Cache the optional named arguments
+    // temporarily inserted into parentDict
+    List<Tuple2<word, string>> namedArgs(insertNamedArgs(parentDict, is));
+
     autoPtr<ISstream> ifsPtr
     (
         fileHandler().NewIFstream(fName, is.format(), is.version())
@@ -161,8 +240,6 @@ bool Foam::functionEntries::includeEntry::execute
             parentDict.add(IOobject::foamFile, foamFileDict);
             parentDict += parentDictTmp;
         }
-
-        return true;
     }
     else
     {
@@ -173,9 +250,13 @@ bool Foam::functionEntries::includeEntry::execute
             << (ifs.name().size() ? ifs.name() : rawFName)
             << " while reading dictionary " << parentDict.name()
             << exit(FatalIOError);
-
-        return false;
     }
+
+    // Remove named argument entries from parentDict
+    // renaming any existing entries which had the same name
+    removeInsertNamedArgs(parentDict, namedArgs);
+
+    return true;
 }
 
 
@@ -192,6 +273,13 @@ bool Foam::functionEntries::includeEntry::execute
         includeFileName(is.name().path(), rawFName, parentDict)
     );
 
+    // Cache the optional named arguments
+    // temporarily inserted into parentDict
+    List<Tuple2<word, string>> namedArgs
+    (
+        insertNamedArgs(const_cast<dictionary&>(parentDict), is)
+    );
+
     autoPtr<ISstream> ifsPtr(fileHandler().NewIFstream(fName));
     ISstream& ifs = ifsPtr();
 
@@ -202,7 +290,6 @@ bool Foam::functionEntries::includeEntry::execute
             Info<< fName << endl;
         }
         entry.read(parentDict, ifs);
-        return true;
     }
     else
     {
@@ -213,9 +300,13 @@ bool Foam::functionEntries::includeEntry::execute
             << (ifs.name().size() ? ifs.name() : rawFName)
             << " while reading dictionary " << parentDict.name()
             << exit(FatalIOError);
-
-        return false;
     }
+
+    // Remove named argument entries from parentDict
+    // renaming any existing entries which had the same name
+    removeInsertNamedArgs(const_cast<dictionary&>(parentDict), namedArgs);
+
+    return true;
 }
 
 

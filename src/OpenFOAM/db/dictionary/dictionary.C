@@ -28,6 +28,7 @@ License
 #include "regExp.H"
 #include "OSHA1stream.H"
 #include "unitConversion.H"
+#include "stringOps.H"
 
 /* * * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * */
 
@@ -1501,7 +1502,8 @@ void Foam::dictArgList
     const string& argString,
     word& funcName,
     wordReList& args,
-    List<Tuple2<word, string>>& namedArgs
+    List<Tuple2<word, string>>& namedArgs,
+    const dictionary& dict
 )
 {
     funcName = argString;
@@ -1537,12 +1539,20 @@ void Foam::dictArgList
             {
                 if (namedArg)
                 {
+                    string arg(argString(start, i - start));
+
                     namedArgs.append
                     (
                         Tuple2<word, string>
                         (
                             argName,
-                            argString(start, i - start)
+                            stringOps::inplaceExpandEntry
+                            (
+                                arg,
+                                dict,
+                                true,
+                                false
+                            )
                         )
                     );
                     namedArg = false;
@@ -1583,7 +1593,8 @@ void Foam::dictArgList
 (
     const string& argString,
     wordReList& args,
-    List<Tuple2<word, string>>& namedArgs
+    List<Tuple2<word, string>>& namedArgs,
+    const dictionary& dict
 )
 {
     int argLevel = 0;
@@ -1622,12 +1633,20 @@ void Foam::dictArgList
             {
                 if (namedArg)
                 {
+                    string arg(argString(start, i - start));
+
                     namedArgs.append
                     (
                         Tuple2<word, string>
                         (
                             argName,
-                            argString(start, i - start)
+                            stringOps::inplaceExpandEntry
+                            (
+                                arg,
+                                dict,
+                                true,
+                                false
+                            )
                         )
                     );
                     namedArg = false;

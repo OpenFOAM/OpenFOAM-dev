@@ -759,6 +759,7 @@ Foam::Istream& Foam::ISstream::readDelimited
         FatalIOErrorInFunction(*this)
             << "    problem while reading delimited string \n"
             << str.c_str() << endl
+            << "    list depth = " << listDepth
             << exit(FatalIOError);
     }
 

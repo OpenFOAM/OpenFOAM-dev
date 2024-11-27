@@ -918,7 +918,8 @@ void dictArgList
     const string& argString,
     word& configName,
     wordReList& args,
-    List<Tuple2<word, string>>& namedArgs
+    List<Tuple2<word, string>>& namedArgs,
+    const dictionary& dict = dictionary::null
 );
 
 //- Parse dictionary substitution argument list
@@ -926,7 +927,8 @@ void dictArgList
 (
     const string& argString,
     wordReList& args,
-    List<Tuple2<word, string>>& namedArgs
+    List<Tuple2<word, string>>& namedArgs,
+    const dictionary& dict = dictionary::null
 );
 
 //- Extracts dict name and keyword

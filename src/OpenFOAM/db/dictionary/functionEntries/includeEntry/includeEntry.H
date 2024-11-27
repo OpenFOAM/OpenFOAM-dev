@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,19 +25,32 @@ Class
     Foam::functionEntries::includeEntry
 
 Description
-    Specify an include file when reading dictionaries, expects a
-    single string to follow.
+    Specify an include file when reading dictionaries.
 
-    An example of the \c \#include directive:
+    The file name is provided as a string in order to support the '/' directory
+    separator and unusual characters as well as the usual expansion of
+    environment variables and other constructs
+    (eg, the \c ~OpenFOAM/ expansion).
+
+    e.g. to include the file \c includeFile from the \c include directory:
     \verbatim
-        #include "includeFile"
+        #include "include/includeFile"
     \endverbatim
 
-    The usual expansion of environment variables and other constructs
-    (eg, the \c ~OpenFOAM/ expansion) is retained.
+    Additionally optional arguments may be specified which are available for
+    substitution in the included file e.g.
+    \verbatim
+        #include "regionFunctions"(region = heatedWall)
+    \endverbatim
+
+    will substitute \c heatedWall for \c $region in the \c regionFunctions file
+
+    \verbatim
+        #includeFunc sample(region = $region)
+    \endverbatim
 
 See also
-    fileName, string::expand()
+    fileName
 
 SourceFiles
     includeEntry.C
@@ -64,6 +77,24 @@ class includeEntry
 :
     public functionEntry
 {
+    // Private Member Functions
+
+        //- Return the optional named arguments
+        //  temporarily inserted into parentDict
+        static List<Tuple2<word, string>> insertNamedArgs
+        (
+            dictionary& parentDict,
+            Istream& is
+        );
+
+        //- Remove named argument entries from parentDict
+        //  renaming any existing entries which had the same name
+        static void removeInsertNamedArgs
+        (
+            dictionary& parentDict,
+            const List<Tuple2<word, string>>& namedArgs
+        );
+
 
 protected:
 
