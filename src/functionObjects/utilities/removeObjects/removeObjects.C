@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "removeRegisteredObject.H"
+#include "removeObjects.H"
 #include "Time.H"
 #include "polyMesh.H"
 #include "addToRunTimeSelectionTable.H"
@@ -34,21 +34,16 @@ namespace Foam
 {
 namespace functionObjects
 {
-    defineTypeNameAndDebug(removeRegisteredObject, 0);
+    defineTypeNameAndDebug(removeObjects, 0);
 
-    addToRunTimeSelectionTable
-    (
-        functionObject,
-        removeRegisteredObject,
-        dictionary
-    );
+    addToRunTimeSelectionTable(functionObject, removeObjects, dictionary);
 }
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::functionObjects::removeRegisteredObject::removeRegisteredObject
+Foam::functionObjects::removeObjects::removeObjects
 (
     const word& name,
     const Time& runTime,
@@ -71,13 +66,13 @@ Foam::functionObjects::removeRegisteredObject::removeRegisteredObject
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::functionObjects::removeRegisteredObject::~removeRegisteredObject()
+Foam::functionObjects::removeObjects::~removeObjects()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::functionObjects::removeRegisteredObject::read(const dictionary& dict)
+bool Foam::functionObjects::removeObjects::read(const dictionary& dict)
 {
     dict.lookup("objects") >> objectNames_;
 
@@ -85,7 +80,7 @@ bool Foam::functionObjects::removeRegisteredObject::read(const dictionary& dict)
 }
 
 
-bool Foam::functionObjects::removeRegisteredObject::execute()
+bool Foam::functionObjects::removeObjects::execute()
 {
     forAll(objectNames_, i)
     {
@@ -110,7 +105,7 @@ bool Foam::functionObjects::removeRegisteredObject::execute()
 }
 
 
-bool Foam::functionObjects::removeRegisteredObject::write()
+bool Foam::functionObjects::removeObjects::write()
 {
     return true;
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,16 +22,16 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::functionObjects::removeRegisteredObject
+    Foam::functionObjects::removeObjects
 
 Description
     Removes registered objects if present in the database.
 
     Example of function object specification:
     \verbatim
-    removeRegisteredObject1
+    removeObjects1
     {
-        type        removeRegisteredObject;
+        type        removeObjects;
 
         libs        ("libutilityFunctionObjects.so");
 
@@ -41,21 +41,21 @@ Description
 
 Usage
     \table
-        Property     | Description             | Required    | Default value
-        type         | type name: removeRegisteredObject | yes |
-        objects      | objects to remove       | yes         |
+        Property     | Description              | Required    | Default value
+        type         | type name: removeObjects | yes         |
+        objects      | objects to remove        | yes         |
     \endtable
 
 See also
     Foam::functionObject
 
 SourceFiles
-    removeRegisteredObject.C
+    removeObjects.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_removeRegisteredObject_H
-#define functionObjects_removeRegisteredObject_H
+#ifndef functionObjects_removeObjects_H
+#define functionObjects_removeObjects_H
 
 #include "functionObject.H"
 #include "wordList.H"
@@ -72,10 +72,10 @@ namespace functionObjects
 {
 
 /*---------------------------------------------------------------------------*\
-                   Class removeRegisteredObject Declaration
+                   Class removeObjects Declaration
 \*---------------------------------------------------------------------------*/
 
-class removeRegisteredObject
+class removeObjects
 :
     public functionObject
 {
@@ -91,13 +91,13 @@ class removeRegisteredObject
 public:
 
     //- Runtime type information
-    TypeName("removeRegisteredObject");
+    TypeName("removeObjects");
 
 
     // Constructors
 
         //- Construct from Time and dictionary
-        removeRegisteredObject
+        removeObjects
         (
             const word& name,
             const Time& runTime,
@@ -105,16 +105,16 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        removeRegisteredObject(const removeRegisteredObject&) = delete;
+        removeObjects(const removeObjects&) = delete;
 
 
     //- Destructor
-    virtual ~removeRegisteredObject();
+    virtual ~removeObjects();
 
 
     // Member Functions
 
-        //- Read the removeRegisteredObject data
+        //- Read the removeObjects data
         virtual bool read(const dictionary&);
 
         //- Return the list of fields required
@@ -133,7 +133,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const removeRegisteredObject&) = delete;
+        void operator=(const removeObjects&) = delete;
 };
 
 

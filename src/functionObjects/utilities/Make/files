@@ -10,7 +10,7 @@ stopAt/stopAt.C
 stopAt/stopAtFile/stopAtFile.C
 stopAt/stopAtClockTime/stopAtClockTime.C
 stopAt/stopAtTimeStep/stopAtTimeStep.C
-removeRegisteredObject/removeRegisteredObject.C
+removeObjects/removeObjects.C
 writeDictionary/writeDictionary.C
 writeObjects/writeObjects.C
 time/timeFunctionObject.C

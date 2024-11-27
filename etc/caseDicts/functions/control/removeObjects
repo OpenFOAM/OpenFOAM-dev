@@ -1,0 +1,18 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Removes the specified objects, e.g. fields, stored in the case database.
+
+\*---------------------------------------------------------------------------*/
+
+type            removeObjects;
+libs            ("libutilityFunctionObjects.so");
+
+objects         (<objectNames>);
+
+// ************************************************************************* //
