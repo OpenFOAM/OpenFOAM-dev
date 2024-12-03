@@ -118,6 +118,7 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
             buoyancy.ghf*fvc::snGrad(rho)*mesh.magSf()
         );
 
+        UPtrList<surfaceScalarField> alphafsMoving(movingPhases.size());
         PtrList<surfaceScalarField> lalphafs(movingPhases.size());
         PtrList<surfaceScalarField> Fgfs(movingPhases.size());
 
@@ -125,6 +126,8 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
         {
             const phaseModel& phase = movingPhases[movingPhasei];
             const volScalarField& alpha = phase;
+
+            alphafsMoving.set(movingPhasei, &alphafs[phase.index()]);
 
             lalphafs.set
             (
@@ -148,7 +151,7 @@ void Foam::solvers::multiphaseEuler::cellPressureCorrector()
             );
         }
 
-        alphaByADfs = invADVfs & alphafs;
+        alphaByADfs = invADVfs & alphafsMoving;
         FgByADfs = invADVfs & Fgfs;
     }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -372,7 +372,7 @@ template<class Type, template<class> class PatchField, class GeoMesh>
 PtrList<GeometricField<Type, PatchField, GeoMesh>> operator&
 (
     const PtrList<PtrList<GeometricField<scalar, PatchField, GeoMesh>>>& As,
-    const PtrList<GeometricField<Type, PatchField, GeoMesh>>& fs
+    const UPtrList<GeometricField<Type, PatchField, GeoMesh>>& fs
 )
 {
     PtrList<GeometricField<Type, PatchField, GeoMesh >> Afs(fs.size());
