@@ -5,10 +5,12 @@ EXE_INC = \
     -I$(LIB_SRC)/meshTools/lnInclude \
     -I$(LIB_SRC)/motionSolvers/lnInclude \
     -I$(LIB_SRC)/fvMeshMovers/motionSolver/lnInclude \
-    -I$(LIB_SRC)/rigidBodyMotion/rigidBodyDynamics/lnInclude
+    -I$(LIB_SRC)/rigidBodyMotion/rigidBodyDynamics/lnInclude \
+    -I$(LIB_SRC)/rigidBodyMotion/rigidBodyMeshMotion/lnInclude
 
 LIB_LIBS = \
     -lpropellerDisk \
     -lmotionSolvers \
     -lmotionSolver_fvMeshMover \
     -lrigidBodyDynamics \
+    -lrigidBodyMeshMotion

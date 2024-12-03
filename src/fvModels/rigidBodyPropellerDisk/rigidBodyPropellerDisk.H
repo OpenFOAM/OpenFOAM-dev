@@ -125,9 +125,6 @@ protected:
         //- Read the model coefficients
         virtual void readCoeffs(const dictionary& dict);
 
-        //- Return the current propeller centre
-        virtual vector centre() const;
-
         //- Return the current propeller normal
         virtual vector normal() const;
 
@@ -156,6 +153,17 @@ public:
     //- Destructor
     virtual ~rigidBodyPropellerDisk()
     {}
+
+
+    // Member Functions
+
+        //- Return the current propeller centre
+        virtual vector centre() const;
+
+        label bodyID() const
+        {
+            return bodyID_;
+        }
 };
 
 

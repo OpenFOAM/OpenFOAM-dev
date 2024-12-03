@@ -147,6 +147,12 @@ protected:
         //- Propeller function
         autoPtr<Function1<vector2D>> propellerFunction_;
 
+        //- Current force of the propeller on the fluid
+        mutable vector force_;
+
+        //- Current moment of the propeller on the fluid
+        mutable vector moment_;
+
         //- Optional switch to enable logging of integral properties
         Switch log_;
 
@@ -158,12 +164,6 @@ protected:
 
         //- Read the model coefficients
         virtual void readCoeffs(const dictionary& dict);
-
-        //- Return the propeller centre
-        virtual vector centre() const
-        {
-            return centre_;
-        }
 
         //- Return the propeller normal
         virtual vector normal() const
@@ -230,6 +230,25 @@ public:
 
 
     // Member Functions
+
+        //- Return the propeller centre
+        virtual vector centre() const
+        {
+            return centre_;
+        }
+
+        //- Return the current force of the propeller on the fluid
+        vector force() const
+        {
+            return force_;
+        }
+
+        //- Return the current moment of the propeller on the fluid
+        vector moment() const
+        {
+            return moment_;
+        }
+
 
         // Checks
 

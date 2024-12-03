@@ -248,7 +248,7 @@ void Foam::rigidBodyMeshMotionSolver::solve()
                     "patches", bodyMeshes_[bi].patches_,
                     "rhoInf", rhoInf_,
                     "rho", rhoName_,
-                    "CofR", vector::zero
+                    "CofR", X0(bodyID).r()
                 )
             );
 

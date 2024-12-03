@@ -138,6 +138,8 @@ Foam::fv::propellerDisk::propellerDisk
     set_(mesh, dict),
     phaseName_(word::null),
     UName_(word::null),
+    force_(Zero),
+    moment_(Zero),
     log_(false)
 {
     readCoeffs(coeffs(dict));
