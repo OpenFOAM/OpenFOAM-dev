@@ -35,8 +35,7 @@ License
 Foam::IOerrorLocation::IOerrorLocation()
 :
     ioFileName_("unknown"),
-    ioStartLineNumber_(-1),
-    ioEndLineNumber_(-1),
+    ioLineNumber_(-1),
     ioGlobal_(false)
 {}
 
@@ -44,14 +43,12 @@ Foam::IOerrorLocation::IOerrorLocation()
 Foam::IOerrorLocation::IOerrorLocation
 (
     const string& ioFileName,
-    const label ioStartLineNumber,
-    const label ioEndLineNumber,
+    const label ioLineNumber,
     const bool ioGlobal
 )
 :
     ioFileName_(ioFileName),
-    ioStartLineNumber_(ioStartLineNumber),
-    ioEndLineNumber_(ioEndLineNumber),
+    ioLineNumber_(ioLineNumber),
     ioGlobal_(ioGlobal)
 {}
 
@@ -59,8 +56,7 @@ Foam::IOerrorLocation::IOerrorLocation
 Foam::IOerrorLocation::IOerrorLocation(const IOstream& ios)
 :
     ioFileName_(ios.name()),
-    ioStartLineNumber_(ios.lineNumber()),
-    ioEndLineNumber_(-1),
+    ioLineNumber_(ios.lineNumber()),
     ioGlobal_(ios.global())
 {}
 
@@ -68,8 +64,7 @@ Foam::IOerrorLocation::IOerrorLocation(const IOstream& ios)
 Foam::IOerrorLocation::IOerrorLocation(const dictionary& dict)
 :
     ioFileName_(dict.name()),
-    ioStartLineNumber_(dict.startLineNumber()),
-    ioEndLineNumber_(dict.endLineNumber()),
+    ioLineNumber_(dict.endLineNumber()),
     ioGlobal_(dict.global())
 {}
 
@@ -144,8 +139,7 @@ Foam::IOerror::operator Foam::dictionary() const
     errDict.add("type", word("Foam::IOerror"));
 
     errDict.add("ioFileName", ioFileName());
-    errDict.add("ioStartLineNumber", ioStartLineNumber());
-    errDict.add("ioEndLineNumber", ioEndLineNumber());
+    errDict.add("ioLineNumber", ioLineNumber());
 
     return errDict;
 }
@@ -273,14 +267,9 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const IOerror& ioErr)
 
         os  << "file: " << ioErr.ioFileName().c_str();
 
-        if (ioErr.ioStartLineNumber() >= 0 && ioErr.ioEndLineNumber() >= 0)
+        if (ioErr.ioLineNumber() >= 0)
         {
-            os  << " from line " << ioErr.ioStartLineNumber()
-                << " to line " << ioErr.ioEndLineNumber() << '.';
-        }
-        else if (ioErr.ioStartLineNumber() >= 0)
-        {
-            os  << " at line " << ioErr.ioStartLineNumber() << '.';
+            os  << " at or after line " << ioErr.ioLineNumber() << '.';
         }
 
         if (IOerror::level >= 2 && ioErr.sourceFileLineNumber())

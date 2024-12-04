@@ -191,11 +191,8 @@ class IOerrorLocation
         //- File name
         string ioFileName_;
 
-        //- Start line number
-        label ioStartLineNumber_;
-
-        //- End Line number
-        label ioEndLineNumber_;
+        //- Line number
+        label ioLineNumber_;
 
         //- Is file global
         bool ioGlobal_;
@@ -212,8 +209,7 @@ public:
         IOerrorLocation
         (
             const string& ioFileName,
-            const label ioStartLineNumber = -1,
-            const label ioEndLineNumber = -1,
+            const label ioLineNumber = -1,
             const bool ioGlobal = false
         );
 
@@ -233,15 +229,9 @@ public:
         }
 
         //- Access the start line number
-        inline label ioStartLineNumber() const
+        inline label ioLineNumber() const
         {
-            return ioStartLineNumber_;
-        }
-
-        //- Access the end line number
-        inline label ioEndLineNumber() const
-        {
-            return ioEndLineNumber_;
+            return ioLineNumber_;
         }
 
         //- Assess to the global/local file switch

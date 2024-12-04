@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,8 +88,7 @@ Foam::OSstream& Foam::messageStream::operator()
     const char* sourceFileName,
     const int sourceFileLineNumber,
     const string& ioFileName,
-    const label ioStartLineNumber,
-    const label ioEndLineNumber
+    const label ioLineNumber
 )
 {
     OSstream& os = operator OSstream&();
@@ -100,14 +99,9 @@ Foam::OSstream& Foam::messageStream::operator()
         << " at line " << sourceFileLineNumber << endl
         << "    Reading " << ioFileName;
 
-    if (ioStartLineNumber >= 0 && ioEndLineNumber >= 0)
+    if (ioLineNumber >= 0)
     {
-        os  << " from line " << ioStartLineNumber
-            << " to line " << ioEndLineNumber;
-    }
-    else if (ioStartLineNumber >= 0)
-    {
-        os  << " at line " << ioStartLineNumber;
+        os  << " at line " << ioLineNumber;
     }
 
     os << endl  << "    ";
@@ -130,8 +124,7 @@ Foam::OSstream& Foam::messageStream::operator()
         sourceFileName,
         sourceFileLineNumber,
         ioStream.name(),
-        ioStream.lineNumber(),
-        -1
+        ioStream.lineNumber()
     );
 }
 
@@ -150,7 +143,6 @@ Foam::OSstream& Foam::messageStream::operator()
         sourceFileName,
         sourceFileLineNumber,
         dict.name(),
-        dict.startLineNumber(),
         dict.endLineNumber()
     );
 }

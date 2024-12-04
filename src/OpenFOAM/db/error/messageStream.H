@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -156,8 +156,7 @@ public:
             const char* sourceFileName,
             const int sourceFileLineNumber,
             const string& ioFileName,
-            const label ioStartLineNumber = -1,
-            const label ioEndLineNumber = -1
+            const label ioLineNumber = -1
         );
 
         //- Convert to OSstream
