@@ -1502,8 +1502,7 @@ void Foam::dictArgList
     const string& argString,
     word& funcName,
     wordReList& args,
-    List<Tuple2<word, string>>& namedArgs,
-    const dictionary& dict
+    List<Tuple2<word, string>>& namedArgs
 )
 {
     funcName = argString;
@@ -1539,41 +1538,19 @@ void Foam::dictArgList
             {
                 if (namedArg)
                 {
-                    string arg(argString(start, i - start));
-
                     namedArgs.append
                     (
                         Tuple2<word, string>
                         (
                             argName,
-                            stringOps::inplaceExpandEntry
-                            (
-                                arg,
-                                dict,
-                                true,
-                                false
-                            )
+                            argString(start, i - start)
                         )
                     );
                     namedArg = false;
                 }
                 else
                 {
-                    string arg(argString(start, i - start));
-
-                    args.append
-                    (
-                        wordRe
-                        (
-                            stringOps::inplaceExpandEntry
-                            (
-                                arg,
-                                dict,
-                                true,
-                                false
-                            )
-                        )
-                    );
+                    args.append(wordRe(argString(start, i - start)));
                 }
                 start = i+1;
             }
@@ -1607,8 +1584,7 @@ void Foam::dictArgList
 (
     const string& argString,
     wordReList& args,
-    List<Tuple2<word, string>>& namedArgs,
-    const dictionary& dict
+    List<Tuple2<word, string>>& namedArgs
 )
 {
     int argLevel = 0;
@@ -1647,20 +1623,12 @@ void Foam::dictArgList
             {
                 if (namedArg)
                 {
-                    string arg(argString(start, i - start));
-
                     namedArgs.append
                     (
                         Tuple2<word, string>
                         (
                             argName,
-                            stringOps::inplaceExpandEntry
-                            (
-                                arg,
-                                dict,
-                                true,
-                                false
-                            )
+                            argString(start, i - start)
                         )
                     );
                     namedArg = false;

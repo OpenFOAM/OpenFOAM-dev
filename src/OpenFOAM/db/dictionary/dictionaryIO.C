@@ -429,6 +429,13 @@ Foam::wordList Foam::listAllConfigFiles
 }
 
 
+Foam::string Foam::expandArg(const string& arg, const dictionary& dict)
+{
+    string expandedArg(arg);
+    return stringOps::inplaceExpandEntry(expandedArg, dict, true, false);
+}
+
+
 bool Foam::readConfigFile
 (
     const word& configType,
@@ -444,7 +451,7 @@ bool Foam::readConfigFile
     wordReList args;
     List<Tuple2<word, string>> namedArgs;
 
-    dictArgList(argString, funcType, args, namedArgs, parentDict);
+    dictArgList(argString, funcType, args, namedArgs);
 
     // Search for the configuration file
     fileName path = findConfigFile
@@ -506,6 +513,7 @@ bool Foam::readConfigFile
     DynamicList<wordAndDictionary> fieldArgs;
     forAll(args, i)
     {
+        expandArg(args[i], funcDict);
         fieldArgs.append(wordAndDictionary(args[i], dictionary::null));
     }
     forAll(namedArgs, i)
@@ -552,7 +560,10 @@ bool Foam::readConfigFile
             dictionary& subDict(funcDict.scopedDict(dAk.first()));
             IStringStream entryStream
             (
-                dAk.second() + ' ' + namedArgs[i].second() + ';'
+                dAk.second()
+              + ' '
+              + expandArg(namedArgs[i].second(), funcDict)
+              + ';'
             );
             subDict.set(entry::New(entryStream).ptr());
         }
@@ -580,7 +591,7 @@ bool Foam::readConfigFile
              || namedArgs[i].first() == "name"
             )
             {
-                entryName = namedArgs[i].second();
+                entryName = expandArg(namedArgs[i].second(), funcDict);
                 entryName.strip(" \n");
                 named = true;
             }
@@ -605,7 +616,7 @@ bool Foam::readConfigFile
                 }
                 entryName += namedArgs[i].first();
                 entryName += '=';
-                entryName += namedArgs[i].second();
+                entryName += expandArg(namedArgs[i].second(), funcDict);
             }
             entryName += ')';
             string::stripInvalid<word>(entryName);
@@ -654,7 +665,7 @@ bool Foam::readConfigFile
         word funcType;
         wordReList args;
         List<Tuple2<word, string>> namedArgs;
-        dictArgList(argString, funcType, args, namedArgs, parentDict);
+        dictArgList(argString, funcType, args, namedArgs);
 
         string argList;
         forAll(args, i)
