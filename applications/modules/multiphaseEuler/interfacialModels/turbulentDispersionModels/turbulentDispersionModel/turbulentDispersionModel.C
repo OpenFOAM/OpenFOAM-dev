@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,9 +62,9 @@ Foam::tmp<Foam::volScalarField> Foam::blendedTurbulentDispersionModel::D() const
         evaluate
         (
             &turbulentDispersionModel::D,
-            "F",
+            "D",
             turbulentDispersionModel::dimD,
-            true
+            false
         );
 }
 
