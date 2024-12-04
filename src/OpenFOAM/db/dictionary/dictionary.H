@@ -918,8 +918,7 @@ void dictArgList
     const string& argString,
     word& configName,
     wordReList& args,
-    List<Tuple2<word, string>>& namedArgs,
-    const dictionary& dict = dictionary::null
+    List<Tuple2<word, string>>& namedArgs
 );
 
 //- Parse dictionary substitution argument list
@@ -927,8 +926,7 @@ void dictArgList
 (
     const string& argString,
     wordReList& args,
-    List<Tuple2<word, string>>& namedArgs,
-    const dictionary& dict = dictionary::null
+    List<Tuple2<word, string>>& namedArgs
 );
 
 //- Extracts dict name and keyword
@@ -982,6 +980,8 @@ fileName findConfigFile
     const word& configFilesDir,
     const word& region = word::null
 );
+
+string expandArg(const string& arg, const dictionary& dict);
 
 //- Read the specified configuration file
 //  parsing the optional arguments included in the string
