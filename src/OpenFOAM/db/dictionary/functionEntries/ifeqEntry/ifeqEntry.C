@@ -294,7 +294,6 @@ void Foam::functionEntries::ifeqEntry::skipUntil
     {
         token t;
         readToken(t, is);
-        parentDict.setLineNumber(is);
         if (t.isFunctionName())
         {
             if
@@ -331,7 +330,6 @@ bool Foam::functionEntries::ifeqEntry::evaluate
     {
         token t;
         readToken(t, is);
-        parentDict.setLineNumber(is);
 
         if (t.isFunctionName() && t.functionNameToken() == ifeqName)
         {
@@ -396,7 +394,6 @@ bool Foam::functionEntries::ifeqEntry::execute
         while (!is.eof())
         {
             readToken(t, is);
-            parentDict.setLineNumber(is);
 
             if (t.isFunctionName())
             {
@@ -420,7 +417,6 @@ bool Foam::functionEntries::ifeqEntry::execute
                     string line;
                     dynamic_cast<ISstream&>(is).getLine(line);
                     line += ';';
-                    parentDict.setLineNumber(is);
                     IStringStream lineStream(line);
                     const primitiveEntry e("ifEntry", parentDict, lineStream);
                     const Switch doIf(e.stream());
@@ -469,12 +465,10 @@ bool Foam::functionEntries::ifeqEntry::execute
 
     // Read first token and expand if a variable
     token cond1(is);
-    parentDict.setLineNumber(is);
     cond1 = expand(parentDict, cond1);
 
     // Read second token and expand if a variable
     token cond2(is);
-    parentDict.setLineNumber(is);
     cond2 = expand(parentDict, cond2);
 
     const bool equal = equalToken(cond1, cond2);

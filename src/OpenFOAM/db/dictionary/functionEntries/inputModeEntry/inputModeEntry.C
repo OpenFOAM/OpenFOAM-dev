@@ -103,7 +103,6 @@ bool Foam::functionEntries::inputModeEntry::execute
 )
 {
     setMode(is);
-    parentDict.setLineNumber(is);
     return true;
 }
 

@@ -64,8 +64,6 @@ bool Foam::functionEntries::calcIncludeEntry::execute
     // Read the include file name
     fileName fName(is);
 
-    parentDict.setLineNumber(is);
-
     // Substitute dictionary and environment variables. Allow empty
     // substitutions.
     stringOps::inplaceExpandEntry(fName, parentDict, true, true);

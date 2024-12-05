@@ -350,8 +350,6 @@ Foam::string Foam::functionEntries::codeStream::run
     // Parent dictionary provided for string expansion and variable substitution
     const dictionary codeDict("#codeStream", contextDict, is);
 
-    contextDict.setLineNumber(is);
-
     const streamingFunctionType function = getFunction(contextDict, codeDict);
 
     // Use function to write stream

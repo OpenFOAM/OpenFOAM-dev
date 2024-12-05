@@ -38,8 +38,6 @@ Foam::dictionaryEntry::dictionaryEntry
     entry(keyType(is)),
     dictionary(parentDict, is)
 {
-    parentDict.setLineNumber(is);
-
     is.fatalCheck
     (
         "dictionaryEntry::dictionaryEntry"
@@ -58,8 +56,6 @@ Foam::dictionaryEntry::dictionaryEntry
     entry(key),
     dictionary(fileName(key), parentDict, is)
 {
-    parentDict.setLineNumber(is);
-
     is.fatalCheck
     (
         "dictionaryEntry::dictionaryEntry"

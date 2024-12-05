@@ -67,7 +67,6 @@ bool Foam::functionEntries::removeEntry::execute
     const wordList dictKeys = parentDict.toc();
 
     const wordReList patterns = readList<wordRe>(is);
-    parentDict.setLineNumber(is);
 
     const labelList indices = findStrings(patterns, dictKeys);
 

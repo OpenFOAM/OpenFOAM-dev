@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,7 +92,7 @@ bool Foam::primitiveEntry::expandVariable
                 FatalIOErrorInFunction
                 (
                     dict
-                )   << "Illegal dictionary entry or environment variable name "
+                )   << "Unknown dictionary entry or environment variable name "
                     << varName << endl << "Valid dictionary entries are "
                     << dict.toc() << exit(FatalIOError);
 

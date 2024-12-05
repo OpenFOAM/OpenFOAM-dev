@@ -63,7 +63,6 @@ bool Foam::functionEntries::ifEntry::execute
     string line;
     dynamic_cast<ISstream&>(is).getLine(line);
     line += ';';
-    parentDict.setLineNumber(is);
     IStringStream lineStream(line);
     const primitiveEntry e("ifEntry", parentDict, lineStream);
     const Switch doIf(e.stream());

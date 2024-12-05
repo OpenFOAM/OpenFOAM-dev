@@ -64,8 +64,6 @@ Foam::string Foam::functionEntries::negEntry::negateVariable
     // Read variable name as a word including the '$'
     const variable var(is);
 
-    parentDict.setLineNumber(is);
-
     // Strip the leading '$' from the variable name
     const string varName = var(1, var.size() - 1);
 
@@ -96,7 +94,7 @@ Foam::string Foam::functionEntries::negEntry::negateVariable
         FatalIOErrorInFunction
         (
             parentDict
-        )   << "Illegal dictionary variable name " << varName << endl
+        )   << "Unknown dictionary variable name " << varName << endl
             << "Valid dictionary entries are " << parentDict.toc()
             << exit(FatalIOError);
 

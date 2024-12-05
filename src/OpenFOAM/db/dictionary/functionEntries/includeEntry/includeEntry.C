@@ -203,7 +203,6 @@ bool Foam::functionEntries::includeEntry::execute
 )
 {
     const fileName rawFName(is);
-    parentDict.setLineNumber(is);
 
     const fileName fName
     (
@@ -234,16 +233,8 @@ bool Foam::functionEntries::includeEntry::execute
             foamFileDict = parentDict.subDict(IOobject::foamFile);
         }
 
-        // Temporarily rename the parentDict to the path of the included file
-        // so that error message refer to the current file
-        const fileName parentDictName(parentDict.name());
-        parentDict.name() = ifs.name();
-
         // Read and clear the FoamFile entry
         parentDict.read(ifs);
-
-        // Reset name of parentDict
-        parentDict.name() = parentDictName;
 
         // Reinstate original FoamFile entry
         if (foamFileDict.size() != 0)
@@ -281,7 +272,6 @@ bool Foam::functionEntries::includeEntry::execute
 )
 {
     const fileName rawFName(is);
-    parentDict.setLineNumber(is);
 
     const fileName fName
     (
@@ -305,15 +295,7 @@ bool Foam::functionEntries::includeEntry::execute
             Info<< fName << endl;
         }
 
-        // Temporarily rename the parentDict to the path of the included file
-        // so that error message refer to the current file
-        const fileName parentDictName(parentDict.name());
-        const_cast<dictionary&>(parentDict).name() = ifs.name();
-
         entry.read(parentDict, ifs);
-
-        // Reset name of parentDict
-        const_cast<dictionary&>(parentDict).name() = parentDictName;
     }
     else
     {

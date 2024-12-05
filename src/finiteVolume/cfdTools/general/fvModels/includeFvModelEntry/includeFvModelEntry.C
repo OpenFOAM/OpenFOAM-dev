@@ -59,12 +59,8 @@ bool Foam::functionEntries::includeFvModelEntry::execute
     Istream& is
 )
 {
-    parentDict.setLineNumber(is);
-
     // Read line containing the function name and the optional arguments
     const string fNameArgs(readFuncNameArgs(is));
-
-    parentDict.setLineNumber(is);
 
     return readConfigFile
     (

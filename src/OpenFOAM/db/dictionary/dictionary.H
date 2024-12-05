@@ -169,8 +169,8 @@ class dictionary
         //- Parent dictionary
         const dictionary& parent_;
 
-        //- Current line number of the file
-        mutable label lineNumber_;
+        //- Current stream/file pointer
+        mutable const Istream* filePtr_;
 
         //- Entries of matching patterns
         DLList<entry*> patternEntries_;
@@ -350,9 +350,6 @@ public:
         //- Return the scoped keyword with which this dictionary can be
         //  accessed from the top dictionary in the tree
         word topDictKeyword() const;
-
-        //- Reset the cached line number to the current stream line number
-        void setLineNumber(const Istream& is) const;
 
         //- Return line number of first token in dictionary
         label startLineNumber() const;

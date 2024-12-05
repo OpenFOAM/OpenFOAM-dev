@@ -101,7 +101,6 @@ bool Foam::functionEntries::includeEtcEntry::execute
 )
 {
     const fileName rawFName(is);
-    parentDict.setLineNumber(is);
 
     const fileName fName
     (
@@ -163,7 +162,6 @@ bool Foam::functionEntries::includeEtcEntry::execute
 )
 {
     const fileName rawFName(is);
-    parentDict.setLineNumber(is);
 
     const fileName fName
     (

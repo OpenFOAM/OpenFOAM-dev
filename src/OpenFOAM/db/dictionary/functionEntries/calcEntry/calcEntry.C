@@ -81,8 +81,6 @@ Foam::string Foam::functionEntries::calcEntry::calc
     // Read the code expression string delimited by either '"..."' or '#{...#}'
     token t(is);
 
-    dict.setLineNumber(is);
-
     if (t.isVerbatimString())
     {
         const verbatimString& s = t.verbatimStringToken();

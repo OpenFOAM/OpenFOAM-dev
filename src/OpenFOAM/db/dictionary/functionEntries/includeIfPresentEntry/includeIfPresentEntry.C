@@ -71,7 +71,6 @@ bool Foam::functionEntries::includeIfPresentEntry::execute
 )
 {
     const fileName fName(includeFileName(is, parentDict));
-    parentDict.setLineNumber(is);
 
     autoPtr<ISstream> ifsPtr(fileHandler().NewIFstream(fName));
     ISstream& ifs = ifsPtr();
@@ -97,7 +96,6 @@ bool Foam::functionEntries::includeIfPresentEntry::execute
 )
 {
     const fileName fName(includeFileName(is, parentDict));
-    parentDict.setLineNumber(is);
 
     autoPtr<ISstream> ifsPtr(fileHandler().NewIFstream(fName));
     ISstream& ifs = ifsPtr();

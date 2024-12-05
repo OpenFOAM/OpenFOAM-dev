@@ -59,7 +59,8 @@ Foam::dictionary::dictionary
     const KeysAndTs& ... keysAndTs
 )
 :
-    parent_(dictionary::null)
+    parent_(dictionary::null),
+    filePtr_(nullptr)
 {
     set(k, t, keysAndTs ...);
 }
@@ -75,7 +76,8 @@ Foam::dictionary::dictionary
 )
 :
     dictionaryName(name),
-    parent_(dictionary::null)
+    parent_(dictionary::null),
+    filePtr_(nullptr)
 {
     set(k, t, keysAndTs ...);
 }

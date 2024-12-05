@@ -63,8 +63,6 @@ bool Foam::functionEntries::includeFvConstraintEntry::execute
     // Read line containing the function name and the optional arguments
     const string fNameArgs(readFuncNameArgs(is));
 
-    parentDict.setLineNumber(is);
-
     return readConfigFile
     (
         "constraint",
