@@ -24,18 +24,13 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "meshToMesh_fvMeshTopoChanger.H"
-#include "polyTopoChangeMap.H"
-#include "volFields.H"
 #include "surfaceInterpolate.H"
 #include "pointFields.H"
 #include "meshToMeshAdjustTimeStep.H"
-#include "fvMeshToFvMesh.H"
 #include "intersectionCellsToCells.H"
 #include "surfaceToVolVelocity.H"
 #include "MeshToMeshMapGeometricFields.H"
 #include "polyMeshMap.H"
-#include "processorPolyPatch.H"
-#include "setSizeFieldMapper.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -131,7 +126,8 @@ Foam::fvMeshTopoChangers::meshToMesh::meshToMesh
     ),
     repeat_(dict.lookupOrDefault<scalar>("repeat", unitNone, 0)),
     cycle_(dict.lookupOrDefault<scalar>("cycle", unitNone, 0)),
-    timeIndex_(-1)
+    timeIndex_(-1),
+    mapped_(false)
 {
     if (repeat_ > 0 && cycle_ > 0)
     {
@@ -194,8 +190,16 @@ Foam::scalar Foam::fvMeshTopoChangers::meshToMesh::timeToNextMesh() const
 }
 
 
+bool Foam::fvMeshTopoChangers::meshToMesh::mapped() const
+{
+    return mapped_;
+}
+
+
 bool Foam::fvMeshTopoChangers::meshToMesh::update()
 {
+    mapped_ = false;
+
     const Time& time = mesh().time();
 
     // Add the meshToMeshAdjustTimeStepFunctionObject functionObject
@@ -216,7 +220,7 @@ bool Foam::fvMeshTopoChangers::meshToMesh::update()
         );
     }
 
-    // Only refine on the first call in a time-step
+    // Only map on the first call in a time-step
     if (timeIndex_ != time.timeIndex())
     {
         timeIndex_ = time.timeIndex();
@@ -296,6 +300,8 @@ bool Foam::fvMeshTopoChangers::meshToMesh::update()
         polyMeshMap map(mesh(), mapper);
 
         mesh().mapMesh(map);
+
+        mapped_ = true;
 
         return true;
     }

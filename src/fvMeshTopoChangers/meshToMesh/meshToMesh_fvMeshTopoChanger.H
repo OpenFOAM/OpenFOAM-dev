@@ -107,6 +107,10 @@ class meshToMesh
         //- The time index used for updating
         label timeIndex_;
 
+        //- Flag set true if the mesh has been mapped this time-step,
+        //  otherwise false
+        bool mapped_;
+
 
     // Private Member Functions
 
@@ -145,6 +149,10 @@ public:
     // Member Functions
 
         scalar timeToNextMesh() const;
+
+        //- Return true if the mesh has been mapped this time-step,
+        //  otherwise false
+        bool mapped() const;
 
         //- Update the mesh for both mesh motion and topology change
         virtual bool update();
