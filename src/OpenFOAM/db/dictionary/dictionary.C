@@ -333,7 +333,8 @@ Foam::dictionary::dictionary()
 Foam::dictionary::dictionary(const fileName& name)
 :
     dictionaryName(name),
-    parent_(dictionary::null)
+    parent_(dictionary::null),
+    lineNumber_(-1)
 {}
 
 
@@ -344,7 +345,8 @@ Foam::dictionary::dictionary
 )
 :
     dictionaryName(name),
-    parent_(parentDict)
+    parent_(parentDict),
+    lineNumber_(-1)
 {}
 
 
@@ -356,7 +358,8 @@ Foam::dictionary::dictionary
 :
     dictionaryName(dict.name()),
     IDLList<entry>(dict, *this),
-    parent_(parentDict)
+    parent_(parentDict),
+    lineNumber_(-1)
 {
     forAllIter(IDLList<entry>, *this, iter)
     {
@@ -378,7 +381,8 @@ Foam::dictionary::dictionary(const dictionary& dict)
 :
     dictionaryName(dict.name()),
     IDLList<entry>(dict, *this),
-    parent_(dictionary::null)
+    parent_(dictionary::null),
+    lineNumber_(-1)
 {
     forAllIter(IDLList<entry>, *this, iter)
     {
@@ -398,7 +402,8 @@ Foam::dictionary::dictionary(const dictionary& dict)
 
 Foam::dictionary::dictionary(const dictionary* dictPtr)
 :
-    parent_(dictionary::null)
+    parent_(dictionary::null),
+    lineNumber_(-1)
 {
     if (dictPtr)
     {
@@ -458,6 +463,12 @@ Foam::word Foam::dictionary::topDictKeyword() const
 }
 
 
+void Foam::dictionary::setLineNumber(const Istream& is) const
+{
+    lineNumber_ = is.lineNumber();
+}
+
+
 Foam::label Foam::dictionary::startLineNumber() const
 {
     if (size())
@@ -473,13 +484,20 @@ Foam::label Foam::dictionary::startLineNumber() const
 
 Foam::label Foam::dictionary::endLineNumber() const
 {
-    if (size())
+    if (lineNumber_ != -1)
     {
-        return last()->endLineNumber();
+        return lineNumber_;
     }
     else
     {
-        return -1;
+        if (size())
+        {
+            return last()->endLineNumber();
+        }
+        else
+        {
+            return -1;
+        }
     }
 }
 

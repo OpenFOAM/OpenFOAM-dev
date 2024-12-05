@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -205,7 +205,7 @@ bool Foam::functionEntry::execute
     {
         FatalErrorInFunction
             << "Unknown functionEntry '" << functionName
-            << "' in " << is.name() << " near line " << is.lineNumber()
+            << "' in " << is.name() << " at line " << is.lineNumber()
             << nl << nl
             << "Valid functionEntries are :" << endl
             << executedictionaryIstreamMemberFunctionTablePtr_->toc()
@@ -248,7 +248,7 @@ bool Foam::functionEntry::execute
     {
         FatalErrorInFunction
             << "Unknown functionEntry '" << functionName
-            << "' in " << is.name() << " near line " << is.lineNumber()
+            << "' in " << is.name() << " at line " << is.lineNumber()
             << nl << nl
             << "Valid functionEntries are :" << endl
             << executeprimitiveEntryIstreamMemberFunctionTablePtr_->toc()

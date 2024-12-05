@@ -311,7 +311,6 @@ Foam::autoPtr<Foam::functionObjectList> Foam::functionObjectList::New
                 functionsDict,
                 functionEntries::includeFuncEntry::functionObjectDictPath,
                 "system",
-                {"command", args.commandLine()},
                 region
             );
         }
@@ -329,7 +328,6 @@ Foam::autoPtr<Foam::functionObjectList> Foam::functionObjectList::New
                     functionsDict,
                     functionEntries::includeFuncEntry::functionObjectDictPath,
                     "system",
-                    {"command", args.commandLine()},
                     region
                 );
             }

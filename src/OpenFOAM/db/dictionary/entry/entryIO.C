@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,8 +95,12 @@ bool Foam::entry::New(dictionary& parentDict, Istream& is)
     keyType keyword;
     token keyToken;
 
+    parentDict.setLineNumber(is);
+
     // Get the next keyword and if a valid keyword return true
     bool valid = getKeyword(keyword, keyToken, is);
+
+    parentDict.setLineNumber(is);
 
     if (!valid)
     {
@@ -168,6 +172,8 @@ bool Foam::entry::New(dictionary& parentDict, Istream& is)
             token nextToken(is);
             is.putBack(nextToken);
 
+            parentDict.setLineNumber(is);
+
             if (keyword.size() > 2 && keyword[1] == token::BEGIN_BLOCK)
             {
                 // Recursive substitution mode. Replace between {} with
@@ -180,6 +186,8 @@ bool Foam::entry::New(dictionary& parentDict, Istream& is)
                 stringOps::inplaceExpandEntry(s, parentDict, true, false);
                 keyword.std::string::replace(1, keyword.size() - 1, s);
             }
+
+            parentDict.setLineNumber(is);
 
             if (nextToken == token::BEGIN_BLOCK)
             {
@@ -224,6 +232,8 @@ bool Foam::entry::New(dictionary& parentDict, Istream& is)
         {
             token nextToken(is);
             is.putBack(nextToken);
+
+            parentDict.setLineNumber(is);
 
             // Deal with duplicate entries
             bool mergeEntry = false;

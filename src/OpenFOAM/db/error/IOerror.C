@@ -269,7 +269,7 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const IOerror& ioErr)
 
         if (ioErr.ioLineNumber() >= 0)
         {
-            os  << " at or after line " << ioErr.ioLineNumber() << '.';
+            os  << " at line " << ioErr.ioLineNumber() << '.';
         }
 
         if (IOerror::level >= 2 && ioErr.sourceFileLineNumber())

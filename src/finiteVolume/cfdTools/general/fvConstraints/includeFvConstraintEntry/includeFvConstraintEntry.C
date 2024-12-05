@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,14 +63,15 @@ bool Foam::functionEntries::includeFvConstraintEntry::execute
     // Read line containing the function name and the optional arguments
     const string fNameArgs(readFuncNameArgs(is));
 
+    parentDict.setLineNumber(is);
+
     return readConfigFile
     (
         "constraint",
         fNameArgs,
         parentDict,
         fvConstraintDictPath,
-        "system",
-        {"file", is.name() + " at line " + Foam::name(is.lineNumber())}
+        "system"
     );
 }
 

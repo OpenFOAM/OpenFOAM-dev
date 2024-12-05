@@ -203,6 +203,8 @@ bool Foam::functionEntries::includeEntry::execute
 )
 {
     const fileName rawFName(is);
+    parentDict.setLineNumber(is);
+
     const fileName fName
     (
         includeFileName(is.name().path(), rawFName, parentDict)
@@ -279,6 +281,8 @@ bool Foam::functionEntries::includeEntry::execute
 )
 {
     const fileName rawFName(is);
+    parentDict.setLineNumber(is);
+
     const fileName fName
     (
         includeFileName(is.name().path(), rawFName, parentDict)

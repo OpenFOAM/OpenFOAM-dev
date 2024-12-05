@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,10 +64,12 @@ bool Foam::functionEntries::removeEntry::execute
     Istream& is
 )
 {
-    wordList   dictKeys = parentDict.toc();
-    wordReList patterns = readList<wordRe>(is);
+    const wordList dictKeys = parentDict.toc();
 
-    labelList indices = findStrings(patterns, dictKeys);
+    const wordReList patterns = readList<wordRe>(is);
+    parentDict.setLineNumber(is);
+
+    const labelList indices = findStrings(patterns, dictKeys);
 
     forAll(indices, indexI)
     {
@@ -76,5 +78,6 @@ bool Foam::functionEntries::removeEntry::execute
 
     return true;
 }
+
 
 // ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,6 +63,8 @@ Foam::string Foam::functionEntries::negEntry::negateVariable
 {
     // Read variable name as a word including the '$'
     const variable var(is);
+
+    parentDict.setLineNumber(is);
 
     // Strip the leading '$' from the variable name
     const string varName = var(1, var.size() - 1);

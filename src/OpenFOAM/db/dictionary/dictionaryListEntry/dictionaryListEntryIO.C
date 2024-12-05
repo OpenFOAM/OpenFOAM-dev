@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,12 +57,16 @@ Foam::dictionaryListEntry::dictionaryListEntry
         dictionary::null
     )
 {
+    parentDict.setLineNumber(is);
+
     token firstToken(is);
     if (firstToken.isLabel())
     {
         label s = firstToken.labelToken();
 
         is.readBeginList("List");
+
+        parentDict.setLineNumber(is);
 
         for (label i=0; i<s; i++)
         {
@@ -74,6 +78,7 @@ Foam::dictionaryListEntry::dictionaryListEntry
             }
         }
         is.readEndList("List");
+        parentDict.setLineNumber(is);
     }
     else if
     (
@@ -83,6 +88,7 @@ Foam::dictionaryListEntry::dictionaryListEntry
     {
         while (true)
         {
+            parentDict.setLineNumber(is);
             token nextToken(is);
             if
             (

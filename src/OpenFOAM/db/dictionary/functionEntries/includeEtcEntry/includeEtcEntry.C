@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,6 +101,8 @@ bool Foam::functionEntries::includeEtcEntry::execute
 )
 {
     const fileName rawFName(is);
+    parentDict.setLineNumber(is);
+
     const fileName fName
     (
         includeEtcFileName(rawFName, parentDict)
@@ -161,6 +163,8 @@ bool Foam::functionEntries::includeEtcEntry::execute
 )
 {
     const fileName rawFName(is);
+    parentDict.setLineNumber(is);
+
     const fileName fName
     (
         includeEtcFileName(rawFName, parentDict)

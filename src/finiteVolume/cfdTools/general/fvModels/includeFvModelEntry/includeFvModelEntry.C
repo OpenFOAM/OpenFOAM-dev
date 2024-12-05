@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,8 +59,12 @@ bool Foam::functionEntries::includeFvModelEntry::execute
     Istream& is
 )
 {
+    parentDict.setLineNumber(is);
+
     // Read line containing the function name and the optional arguments
     const string fNameArgs(readFuncNameArgs(is));
+
+    parentDict.setLineNumber(is);
 
     return readConfigFile
     (
@@ -68,8 +72,7 @@ bool Foam::functionEntries::includeFvModelEntry::execute
         fNameArgs,
         parentDict,
         fvModelDictPath,
-        "constant",
-        {"file", is.name() + " at line " + Foam::name(is.lineNumber())}
+        "constant"
     );
 }
 

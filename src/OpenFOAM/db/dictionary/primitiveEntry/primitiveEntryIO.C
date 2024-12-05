@@ -38,6 +38,8 @@ void Foam::primitiveEntry::append
     Istream& is
 )
 {
+    dict.setLineNumber(is);
+
     if (disableFunctionEntries)
     {
         newElmt(tokenIndex()++) = currToken;
@@ -85,6 +87,8 @@ bool Foam::primitiveEntry::read(const dictionary& dict, Istream& is)
     label blockCount = 0;
     token currToken;
 
+    dict.setLineNumber(is);
+
     if
     (
         !is.read(currToken).bad()
@@ -102,6 +106,8 @@ bool Foam::primitiveEntry::read(const dictionary& dict, Istream& is)
         {
             blockCount++;
         }
+
+        dict.setLineNumber(is);
 
         while
         (

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,6 +63,7 @@ void Foam::functionEntries::inputModeEntry::setMode(Istream& is)
     clear();
 
     word mode(is);
+
     if (mode == "merge" || mode == "default")
     {
         mode_ = MERGE;
@@ -102,6 +103,7 @@ bool Foam::functionEntries::inputModeEntry::execute
 )
 {
     setMode(is);
+    parentDict.setLineNumber(is);
     return true;
 }
 

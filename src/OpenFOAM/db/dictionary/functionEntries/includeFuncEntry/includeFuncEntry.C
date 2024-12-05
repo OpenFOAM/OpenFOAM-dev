@@ -68,6 +68,7 @@ bool Foam::functionEntries::includeFuncEntry::execute
 {
     // Read line containing the function name and the optional arguments
     const string fNameArgs(readFuncNameArgs(is));
+    parentDict.setLineNumber(is);
 
     return readConfigFile
     (
@@ -75,8 +76,7 @@ bool Foam::functionEntries::includeFuncEntry::execute
         fNameArgs,
         parentDict,
         functionObjectDictPath,
-        "system",
-        {"file", is.name() + " at line " + Foam::name(is.lineNumber())}
+        "system"
     );
 }
 

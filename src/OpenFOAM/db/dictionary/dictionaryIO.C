@@ -47,7 +47,8 @@ Foam::dictionary::dictionary
       ? parentDict.name()/name
       : name
     ),
-    parent_(parentDict)
+    parent_(parentDict),
+    lineNumber_(-1)
 {
     read(is);
 }
@@ -56,7 +57,8 @@ Foam::dictionary::dictionary
 Foam::dictionary::dictionary(Istream& is, const bool keepHeader)
 :
     dictionaryName(is.name()),
-    parent_(dictionary::null)
+    parent_(dictionary::null),
+    lineNumber_(-1)
 {
     // Reset input mode as this is a "top-level" dictionary
     functionEntries::inputModeEntry::clear();
@@ -145,6 +147,8 @@ bool Foam::dictionary::read(Istream& is, const bool keepHeader)
 
         return false;
     }
+
+    lineNumber_ = -1;
 
     return true;
 }
@@ -443,7 +447,6 @@ bool Foam::readConfigFile
     dictionary& parentDict,
     const fileName& configFilesPath,
     const word& configFilesDir,
-    const Pair<string>& contextTypeAndValue,
     const word& region
 )
 {
@@ -565,6 +568,7 @@ bool Foam::readConfigFile
               + expandArg(namedArgs[i].second(), funcDict)
               + ';'
             );
+            entryStream.lineNumber() = parentDict.endLineNumber();
             subDict.set(entry::New(entryStream).ptr());
         }
     }
@@ -659,8 +663,8 @@ bool Foam::readConfigFile
         FatalIOErrorInFunction(funcDict0)
             << nl << "In " << configType << " entry:" << nl
             << "    " << argString.c_str() << nl
-            << nl << "In " << contextTypeAndValue.first().c_str() << ":" << nl
-            << "    " << contextTypeAndValue.second().c_str() << nl;
+            << nl << "In dictionary " << parentDict.name().c_str()
+            << " at line " << parentDict.endLineNumber() << nl;
 
         word funcType;
         wordReList args;

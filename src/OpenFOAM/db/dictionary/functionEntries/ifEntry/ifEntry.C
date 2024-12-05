@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,6 +63,7 @@ bool Foam::functionEntries::ifEntry::execute
     string line;
     dynamic_cast<ISstream&>(is).getLine(line);
     line += ';';
+    parentDict.setLineNumber(is);
     IStringStream lineStream(line);
     const primitiveEntry e("ifEntry", parentDict, lineStream);
     const Switch doIf(e.stream());
