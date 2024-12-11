@@ -290,7 +290,10 @@ int main(int argc, char *argv[])
     forAll(caseMeshRegions, i)
     {
         const fileName& addCase = caseMeshRegions[i].first();
-        const fileName addLocal = "meshes"/caseMeshRegions[i].second();
+        const fileName addLocal =
+        caseMeshRegions[i].second() != word::null
+          ? "meshes"/caseMeshRegions[i].second()
+          : fileName::null;
         const word& addRegion = caseMeshRegions[i].third();
 
         const fileName addCasePath(addCase.path());
