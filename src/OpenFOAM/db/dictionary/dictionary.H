@@ -55,10 +55,10 @@ SourceFiles
 #include "DLList.H"
 #include "HashSet.H"
 #include "ITstream.H"
-#include "wordReList.H"
 #include "Pair.H"
 #include "className.H"
 #include "fieldTypes.H"
+#include "Tuple3.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -918,18 +918,18 @@ dictionary operator|(const dictionary& dict1, const dictionary& dict2);
 //- Parse dictionary substitution argument list
 void dictArgList
 (
-    const string& argString,
+    const Tuple2<string, label>& argString,
     word& configName,
-    wordReList& args,
-    List<Tuple2<word, string>>& namedArgs
+    List<Tuple2<wordRe, label>>& args,
+    List<Tuple3<word, string, label>>& namedArgs
 );
 
 //- Parse dictionary substitution argument list
 void dictArgList
 (
-    const string& argString,
-    wordReList& args,
-    List<Tuple2<word, string>>& namedArgs
+    const Tuple2<string, label>& argString,
+    List<Tuple2<wordRe, label>>& args,
+    List<Tuple3<word, string, label>>& namedArgs
 );
 
 //- Extracts dict name and keyword
@@ -984,7 +984,23 @@ fileName findConfigFile
     const word& region = word::null
 );
 
-string expandArg(const string& arg, const dictionary& dict);
+//- Expand arg within the dict context and return
+string expandArg
+(
+    const string& arg,
+    const dictionary& dict,
+    const label lineNumber
+);
+
+//- Add the keyword value pair to dict
+//  setting the given lineNumber for the entry
+void addArgEntry
+(
+    dictionary& dict,
+    const word& keyword,
+    const string& value,
+    const label lineNumber
+);
 
 //- Read the specified configuration file
 //  parsing the optional arguments included in the string
@@ -1007,7 +1023,7 @@ string expandArg(const string& arg, const dictionary& dict);
 bool readConfigFile
 (
     const word& configType,
-    const string& argString,
+    const Tuple2<string, label>& argString,
     dictionary& parentDict,
     const fileName& configFilesPath,
     const word& configFilesDir,

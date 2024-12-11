@@ -1,9 +1,14 @@
 transformer transforms;
 
 {
-    wordReList simpleTransformations;
-    List<Tuple2<word, string>> transformations;
-    dictArgList(transformationString, simpleTransformations, transformations);
+    List<Tuple2<wordRe, label>> simpleTransformations;
+    List<Tuple3<word, string, label>> transformations;
+    dictArgList
+    (
+        {transformationString, 0},
+        simpleTransformations,
+        transformations
+    );
 
     forAll(transformations, i)
     {

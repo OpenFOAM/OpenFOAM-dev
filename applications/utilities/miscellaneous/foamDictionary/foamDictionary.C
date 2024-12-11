@@ -265,9 +265,9 @@ void remove(dictionary& dict, const dictionary& removeDict)
 
 void rename(dictionary& dict, const string& newNames)
 {
-    wordReList args;
-    List<Tuple2<word, string>> namedArgs;
-    dictArgList(newNames, args, namedArgs);
+    List<Tuple2<wordRe, label>> args;
+    List<Tuple3<word, string, label>> namedArgs;
+    dictArgList({newNames, 0}, args, namedArgs);
 
     forAll(namedArgs, i)
     {
@@ -280,9 +280,9 @@ void rename(dictionary& dict, const string& newNames)
 
 void substitute(dictionary& dict, const string& substitutions)
 {
-    wordReList args;
-    List<Tuple2<word, string>> namedArgs;
-    dictArgList(substitutions, args, namedArgs);
+    List<Tuple2<wordRe, label>> args;
+    List<Tuple3<word, string, label>> namedArgs;
+    dictArgList({substitutions, 0}, args, namedArgs);
 
     forAll(namedArgs, i)
     {

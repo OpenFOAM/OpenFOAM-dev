@@ -58,16 +58,20 @@ Foam::token Foam::functionEntry::readLine(Istream& is)
     }
     else
     {
-        return token(word(readFuncNameArgs(is)), is.lineNumber());
+        const Tuple2<string, label> argStringLine(readFuncNameArgs(is));
+        return token(word(argStringLine.first()), argStringLine.second());
     }
 }
 
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
-Foam::string Foam::functionEntry::readFuncNameArgs(Istream& is)
+Foam::Tuple2<Foam::string, Foam::label>
+Foam::functionEntry::readFuncNameArgs(Istream& is)
 {
     string fNameArgs;
+
+    const label lineNumber0 = is.lineNumber();
 
     // Read the function name with arguments if on the same line
     const token fName(is);
@@ -111,8 +115,23 @@ Foam::string Foam::functionEntry::readFuncNameArgs(Istream& is)
                 ISstream& iss = dynamic_cast<ISstream&>(is);
 
                 iss.putback(token::BEGIN_LIST);
+
+                const label fNameLineNumber = is.lineNumber();
+
                 iss.readList(fNameArgs);
-                fNameArgs = fNameWord + fNameArgs;
+
+                // Reinstate the \n between fName and the '('
+                if (fNameLineNumber != lineNumber0)
+                {
+                    fNameArgs =
+                        fNameWord
+                      + string(fNameLineNumber - lineNumber0, '\n')
+                      + fNameArgs;
+                }
+                else
+                {
+                    fNameArgs = fNameWord + fNameArgs;
+                }
             }
             else
             {
@@ -132,7 +151,7 @@ Foam::string Foam::functionEntry::readFuncNameArgs(Istream& is)
         fNameArgs = fName.anyStringToken();
     }
 
-    return fNameArgs;
+    return Tuple2<string, label>(fNameArgs, lineNumber0);
 }
 
 

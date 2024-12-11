@@ -81,7 +81,7 @@ class includeEntry
 
         //- Return the optional named arguments
         //  temporarily inserted into parentDict
-        static List<Tuple2<word, string>> insertNamedArgs
+        static List<Tuple3<word, string, label>> insertNamedArgs
         (
             dictionary& parentDict,
             Istream& is
@@ -92,7 +92,7 @@ class includeEntry
         static void removeInsertNamedArgs
         (
             dictionary& parentDict,
-            const List<Tuple2<word, string>>& namedArgs
+            const List<Tuple3<word, string, label>>& namedArgs
         );
 
 

@@ -70,14 +70,14 @@ namespace functionEntries
 
 // * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * * //
 
-Foam::List<Foam::Tuple2<Foam::word, Foam::string>>
+Foam::List<Foam::Tuple3<Foam::word, Foam::string, Foam::label>>
 Foam::functionEntries::includeEntry::insertNamedArgs
 (
     dictionary& parentDict,
     Istream& is
 )
 {
-    List<Tuple2<word, string>> namedArgs;
+    List<Tuple3<word, string, label>> namedArgs;
 
     ISstream& iss = dynamic_cast<ISstream&>(is);
 
@@ -85,12 +85,12 @@ Foam::functionEntries::includeEntry::insertNamedArgs
     if (iss.peek() == token::BEGIN_LIST)
     {
         // Read line containing the arguments into a string
-        string fNameArgs;
-        iss.readList(fNameArgs);
+        Tuple2<string, label> fNameArgs(string::null, is.lineNumber());
+        iss.readList(fNameArgs.first());
 
         // Parse the argument string
         word funcType;
-        wordReList args;
+        List<Tuple2<wordRe, label>> args;
         dictArgList(fNameArgs, funcType, args, namedArgs);
 
         // Add the named arguments as entries into the parentDict
@@ -113,7 +113,12 @@ Foam::functionEntries::includeEntry::insertNamedArgs
             (
                 dAk.second()
               + ' '
-              + expandArg(namedArgs[i].second(), parentDict)
+              + expandArg
+                (
+                    namedArgs[i].second(),
+                    parentDict,
+                    namedArgs[i].third()
+                )
               + ';'
             );
             subDict.set(entry::New(entryStream).ptr());
@@ -127,7 +132,7 @@ Foam::functionEntries::includeEntry::insertNamedArgs
 void Foam::functionEntries::includeEntry::removeInsertNamedArgs
 (
     dictionary& parentDict,
-    const List<Tuple2<word, string>>& namedArgs
+    const List<Tuple3<word, string, label>>& namedArgs
 )
 {
     forAll(namedArgs, i)
@@ -211,7 +216,10 @@ bool Foam::functionEntries::includeEntry::execute
 
     // Cache the optional named arguments
     // temporarily inserted into parentDict
-    List<Tuple2<word, string>> namedArgs(insertNamedArgs(parentDict, is));
+    List<Tuple3<word, string, label>> namedArgs
+    (
+        insertNamedArgs(parentDict, is)
+    );
 
     autoPtr<ISstream> ifsPtr
     (
@@ -280,7 +288,7 @@ bool Foam::functionEntries::includeEntry::execute
 
     // Cache the optional named arguments
     // temporarily inserted into parentDict
-    List<Tuple2<word, string>> namedArgs
+    List<Tuple3<word, string, label>> namedArgs
     (
         insertNamedArgs(const_cast<dictionary&>(parentDict), is)
     );

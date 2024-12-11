@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,7 +76,7 @@ protected:
         //- Read the function name and optional argument list
         //  and return as a string.
         //  The optional argument list can be on one or more lines.
-        static string readFuncNameArgs(Istream& is);
+        static Tuple2<string, label> readFuncNameArgs(Istream& is);
 
         //- Insert the given string in a sub-dict context
         static bool insert

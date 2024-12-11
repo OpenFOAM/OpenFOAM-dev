@@ -67,7 +67,7 @@ bool Foam::functionEntries::includeFuncEntry::execute
 )
 {
     // Read line containing the function name and the optional arguments
-    const string fNameArgs(readFuncNameArgs(is));
+    const Tuple2<string, label> fNameArgs(readFuncNameArgs(is));
 
     return readConfigFile
     (
