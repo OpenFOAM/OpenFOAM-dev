@@ -446,20 +446,18 @@ Foam::wordList Foam::listAllConfigFiles
 Foam::string Foam::expandArg
 (
     const string& arg,
-    const dictionary& dict,
+    dictionary& dict,
     const label lineNumber
 )
 {
-    // Add a dummy entry to set the argument line number in funcDict
-    IStringStream entryStream("dummy_ <dummy>;");
-    entryStream.lineNumber() = lineNumber;
-    const_cast<dictionary& >(dict).set(entry::New(entryStream).ptr());
+    // Add a temporary dummy_ entry to set the arg lineNumber in dict
+    dict.set(primitiveEntry("dummy_", token(word("<dummy>"), lineNumber)));
 
     string expandedArg(arg);
     stringOps::inplaceExpandEntry(expandedArg, dict, true, false);
 
-    // Remove dummy entry
-    const_cast<dictionary& >(dict).remove("dummy_");
+    // Remove temporary dummy_ entry
+    dict.remove("dummy_");
 
     return expandedArg;
 }

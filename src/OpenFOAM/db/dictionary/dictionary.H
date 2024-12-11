@@ -984,7 +984,7 @@ fileName findConfigFile
 string expandArg
 (
     const string& arg,
-    const dictionary& dict,
+    dictionary& dict,
     const label lineNumber
 );
 
