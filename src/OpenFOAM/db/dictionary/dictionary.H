@@ -689,10 +689,6 @@ public:
             //  corresponding sub-dictionary entries
             bool substituteKeyword(const word& keyword);
 
-            //- Substitute the given scoped keyword prepended by '$' with the
-            //  corresponding sub-dictionary entries
-            bool substituteScopedKeyword(const word& keyword);
-
             //- Add a new entry
             //  With the merge option, dictionaries are interwoven and
             //  primitive entries are overwritten

@@ -795,30 +795,6 @@ const Foam::entry* Foam::dictionary::lookupScopedEntryPtr
 }
 
 
-bool Foam::dictionary::substituteScopedKeyword(const word& keyword)
-{
-    word varName = keyword(1, keyword.size() - 1);
-
-    // Lookup the variable name in the given dictionary
-    const entry* ePtr = lookupScopedEntryPtr(varName, true, true);
-
-    // If defined insert its entries into this dictionary
-    if (ePtr != nullptr)
-    {
-        const dictionary& addDict = ePtr->dict();
-
-        forAllConstIter(IDLList<entry>, addDict, iter)
-        {
-            add(iter());
-        }
-
-        return true;
-    }
-
-    return false;
-}
-
-
 bool Foam::dictionary::isDict(const word& keyword) const
 {
     // Find non-recursive with patterns
