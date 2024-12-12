@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,6 +73,11 @@ void Foam::blockMeshCartesianConfiguration::calcBlockMeshDict
     }
 
     Info<< "Bounding box is now " << bb_ << endl;
+
+    if (minDimCells_ > 0)
+    {
+        nCells_ = setMinDimCells(nCells_, minDimCells_);
+    }
 
     // Scale nCells_ by refine factor
     nCells_ *= refineFactor_;
@@ -266,6 +271,7 @@ Foam::blockMeshCartesianConfiguration::blockMeshCartesianConfiguration
     const meshingSurfaceList& surfaces,
     const bool& boundsOpt,
     const Vector<label>& nCells,
+    const label minDimCells,
     const label refineFactor,
     const HashTable<Pair<word>>& patchOpts,
     const bool clearBoundary
@@ -273,6 +279,7 @@ Foam::blockMeshCartesianConfiguration::blockMeshCartesianConfiguration
 :
     blockMeshConfigurationBase(name, dir, time, surfaces, patchOpts),
     nCells_(nCells),
+    minDimCells_(minDimCells),
     refineFactor_(refineFactor),
     clearBoundary_(clearBoundary)
 {

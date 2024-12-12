@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,6 +65,9 @@ class meshingSurfaceList
         //- Bounding box for the rotatingZone surfaces
         boundBox rzbb_;
 
+        //- Does the list of surfaces have inlets/outlets?
+        const bool closedDomain_;
+
 
     // Private Member Functions
 
@@ -122,7 +125,8 @@ public:
             const wordList& baffles,
             const boundBox& bb,
             const wordList& inletRegions,
-            const wordList& outletRegions
+            const wordList& outletRegions,
+            const bool& closedDomain
         );
 
         //- Disallow default bitwise copy construction

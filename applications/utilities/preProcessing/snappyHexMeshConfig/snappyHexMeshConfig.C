@@ -95,32 +95,62 @@ Usage
 
     Options:
 
-      - \par -surface \<file\>
-        Single surface geometry file for meshing
-
-      - \par -nCells \<cells\>
-        Number of cells in each direction, e.g. '(10 20 30)'
+      - \par -baffles \<list\>
+        Surfaces that form baffles, e.g. '(helical)'
 
       - \par -bounds \<box\>
         Bounding box of the mesh, e.g. '((-10 -5 0) (10 5 10))'
 
+      - \par -cellZones \<list\>
+        Surfaces that form cellZones, e.g. '(porousZone heatSource)'
+
+      - \par -clearBoundary,
+        Do not set default patch entries, i.e. xMin, xMax, yMin, etc...
+
+      - \par -closedDomain
+        Domain does not contain inlets or outlets
+
       - \par -cylindricalBackground
         Generate a cylindrical background mesh aligned with the z-axis
+
+      - \par -defaultPatch \<entry\>
+        Name and type of default patch, '(\<name\> \<type\>)'
+
+      - \par -explicitFeatures,
+        Use explicit feature capturing, default is implicit
+
+      - \par -firstLayerThickness \<value\>
+        Specify the thickness of the near wall cells for layer addition
+
+      - \par -inletRegions \<list\>
+        Inlet regions on an external surface, e.g. '(inletA inletB)'
+
+      - \par -insidePoint \<point\>
+        Point location inside the region of geometry to be meshed
+
+      - \par -layerExpansionRatio \<value\>
+        Specify the expansion ratio between layers, default 1.2
+
+      - \par -layers \<entry\>
+        Number of layers on specified surfaces, e.g. '((car 3) (ground 4))'
+
+      - \par -minDimCells \<cells\>
+        Number of cells in the shortest direction, e.g. 10
+
+      - \par -nCells \<cells\>
+        Number of cells in each direction, e.g. '(10 20 30)'
+
+      - \par -nCellsBetweenLevels \<int\>
+        Number of cells at successive refinement levels, default 3
 
       - \par -noBackground
         Do not write a blockMeshDict file
 
+      - \par -outletRegions \<list\>
+        Outlet regions on an external surface, e.g. '(outletA outletB)'
+
       - \par -refineBackground \<int\>
         Integer multiplier for the number of cells (>= 1)
-
-      - \par -refinementLevel \<int\>
-        Refinement level used by snappyHexMesh, default 2
-
-      - \par -surfaceLevels \<entry\>
-        Refinement level at specified surfaces, e.g. '((pipe 2) (baffles 1))'
-
-      - \par -refinementRegions \<entry\>
-        Refinement regions specified by '( (\<surface\> \<level\>) (...) )'
 
       - \par -refinementBoxes \<entry\>
         Refinement boxes specified by '( (\<min\> \<max\> \<level\>) (...) )'
@@ -129,48 +159,27 @@ Usage
         Refinement distance specified by
         '( (\<surface\> \<dist\> \<level\>) (...) )'
 
-      - \par -defaultPatch \<entry\>
-        Name and type of default patch, '(\<name\> \<type\>)'
+      - \par -refinementLevel \<int\>
+        Refinement level used by snappyHexMesh, default 2
 
-      - \par -xMinPatch (-xMaxPatch, -yMinPatch, etc...) \<entry\>
-        Name and type of the xMin (xMax, yMin, etc...) patch,
-        '(\<name\> \<type\>)'
+      - \par -refinementRegions \<entry\>
+        Refinement regions specified by '( (\<surface\> \<level\>) (...) )'
 
-      - \par -clearBoundary,
-        Do not set default patch entries, i.e. xMin, xMax, yMin, etc...
-
-      - \par -explicitFeatures,
-        Use explicit feature capturing, default is implicit
-
-      - \par -layers \<entry\>
-        Number of layers on specified surfaces, e.g. '((car 3) (ground 4))'
-
-      - \par -firstLayerThickness \<value\>
-        Specify the thickness of the near wall cells for layer addition
-
-      - \par -layerExpansionRatio \<value\>
-        Specify the expansion ratio between layers, default 1.2
-
-      - \par -cellZones \<list\>
-        Surfaces that form cellZones, e.g. '(porousZone heatSource)'
+      - \par -region \<name\>
+        Specify alternative mesh region
 
       - \par -rotatingZones \<list\>
         Surfaces that form rotatingZones, e.g. '(rotatingZone)'
 
-      - \par -baffles \<list\>
-        Surfaces that form baffles, e.g. '(helical)'
+      - \par -surface \<file\>
+        Single surface geometry file for meshing
 
-      - \par -insidePoint \<point\>
-        Point location inside the region of geometry to be meshed
+      - \par -surfaceLevels \<entry\>
+        Refinement level at specified surfaces, e.g. '((pipe 2) (baffles 1))'
 
-      - \par -nCellsBetweenLevels \<int\>
-        Number of cells at successive refinement levels, default 3
-
-      - \par -inletRegions \<list\>
-        Inlet regions on an external surface, e.g. '(inletA inletB)'
-
-      - \par -outletRegions \<list\>
-        Outlet regions on an external surface, e.g. '(outletA outletB)'
+      - \par -xMinPatch (-xMaxPatch, -yMinPatch, etc...) \<entry\>
+        Name and type of the xMin (xMax, yMin, etc...) patch,
+        '(\<name\> \<type\>)'
 
 \*---------------------------------------------------------------------------*/
 
@@ -220,6 +229,7 @@ int main(int argc, char *argv[])
     );
 
     #include "removeCaseOptions.H"
+    #include "addRegionOption.H"
 
     argList::addOption
     (
@@ -233,6 +243,13 @@ int main(int argc, char *argv[])
         "nCells",
         "cells",
         "number of cells in each direction, e.g. '(10 20 30)'"
+    );
+
+    argList::addOption
+    (
+        "minDimCells",
+        "int",
+        "number of cells in the shortest direction, e.g. 10"
     );
 
     argList::addOption
@@ -400,8 +417,28 @@ int main(int argc, char *argv[])
         "outlet regions on an external surface, e.g. '(outletA outletB)'"
     );
 
+    argList::addBoolOption
+    (
+        "closedDomain",
+        "domain does not contain inlets or outlets"
+    );
+
     #include "setRootCase.H"
     #include "createTime.H"
+
+    word regionName;
+    word regionPath(runTime.system());
+
+    if (args.optionReadIfPresent("region", regionName))
+    {
+        regionPath = runTime.system()/regionName;
+        Info<< "Writing files to " << regionPath << nl <<endl;
+
+        if (!isDir(regionPath))
+        {
+            mkDir(regionPath);
+        }
+    }
 
     fileNameList surfaceNames;
 
@@ -492,6 +529,8 @@ int main(int argc, char *argv[])
         outletRegions.append(args.optionReadList<word>("outletRegions"));
     }
 
+    const bool closedDomain(args.optionFound("closedDomain"));
+
     meshingSurfaceList surfaces
     (
         runTime,
@@ -501,13 +540,20 @@ int main(int argc, char *argv[])
         baffleNames,
         bb,
         inletRegions,
-        outletRegions
+        outletRegions,
+        closedDomain
     );
 
     const Vector<label> nCells
     (
         args.optionLookupOrDefault("nCells", Vector<label>::zero)
     );
+
+    const label minDimCells
+    (
+        args.optionLookupOrDefault("minDimCells", 0)
+    );
+
     const label refineFactor
     (
         args.optionLookupOrDefault("refineBackground", 1)
@@ -529,7 +575,7 @@ int main(int argc, char *argv[])
             blockMeshCylindricalConfiguration blockMeshConfig
             (
                 "blockMeshDict",
-                runTime.system(),
+                regionPath,
                 runTime,
                 surfaces,
                 args.optionFound("bounds"),
@@ -546,11 +592,12 @@ int main(int argc, char *argv[])
             blockMeshCartesianConfiguration blockMeshConfig
             (
                 "blockMeshDict",
-                runTime.system(),
+                regionPath,
                 runTime,
                 surfaces,
                 args.optionFound("bounds"),
                 nCells,
+                minDimCells,
                 refineFactor,
                 patchOpts,
                 clearBoundary
@@ -641,7 +688,7 @@ int main(int argc, char *argv[])
         surfaceFeaturesConfiguration surfaceFeaturesConfig
         (
             "surfaceFeaturesDict",
-            runTime.system(),
+            regionPath,
             runTime,
             surfaces
         );
@@ -652,7 +699,7 @@ int main(int argc, char *argv[])
     snappyHexMeshConfiguration snappyConfig
     (
         "snappyHexMeshDict",
-        runTime.system(),
+        regionPath,
         runTime,
         surfaces,
         refinementLevel,
@@ -673,7 +720,7 @@ int main(int argc, char *argv[])
     meshQualityConfiguration meshQualityConfig
     (
         "meshQualityDict",
-        runTime.system(),
+        regionPath,
         runTime
     );
 

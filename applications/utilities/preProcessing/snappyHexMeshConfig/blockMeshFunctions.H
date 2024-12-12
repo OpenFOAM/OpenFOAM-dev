@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,6 +96,18 @@ inline vector roundUp(const vector& v, const scalar s)
         roundUp(v.x(), s),
         roundUp(v.y(), s),
         roundUp(v.z(), s)
+    );
+}
+
+inline Vector<label> setMinDimCells(const vector& v, const scalar s)
+{
+    const scalar m(cmptMin(v)/s);
+
+    return Vector<label>
+    (
+        round(v.x()/m),
+        round(v.y()/m),
+        round(v.z()/m)
     );
 }
 

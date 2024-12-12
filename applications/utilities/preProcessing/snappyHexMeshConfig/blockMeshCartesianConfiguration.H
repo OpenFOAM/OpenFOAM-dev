@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,6 +56,9 @@ class blockMeshCartesianConfiguration
 
         //- Number of cells in background mesh block
         Vector<label> nCells_;
+
+        //- Number of cells in background mesh shortest direction
+        const label minDimCells_;
 
         //- Refinement factor used to scale nCells
         const label refineFactor_;
@@ -118,6 +121,7 @@ public:
             const meshingSurfaceList& surfaces,
             const bool& boundsOpt,
             const Vector<label>& nCells,
+            const label minDimCells,
             const label refineFactor,
             const HashTable<Pair<word>>& patchOpts,
             const bool clearBoundary

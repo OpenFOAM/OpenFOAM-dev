@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -326,12 +326,14 @@ Foam::meshingSurfaceList::meshingSurfaceList
     const wordList& baffles,
     const boundBox& bb,
     const wordList& specifiedInletRegions,
-    const wordList& specifiedOutletRegions
+    const wordList& specifiedOutletRegions,
+    const bool& closedDomain
 )
 :
     PtrList<meshingSurface>(),
     bb_(),
-    rzbb_()
+    rzbb_(),
+    closedDomain_(closedDomain)
 {
     // Load all the surfaces and construct the bounding box
     forAll(surfaces, i)
@@ -353,6 +355,7 @@ Foam::meshingSurfaceList::meshingSurfaceList
         (
             operator[](i).closed()
          && operator[](i).nParts() == 1
+         && (closedDomain || operator[](i).regions().size() != 1)
          && bbInflate.contains(bb_)
         )
         {
@@ -376,8 +379,13 @@ Foam::meshingSurfaceList::meshingSurfaceList
             }
 
             // If inletRegions and outletRegions are both empty, set "template"
-            // names
-            if (inletRegions.empty() && outletRegions.empty())
+            // names, unless "closedDomain" is specified
+            if
+            (
+                inletRegions.empty()
+             && outletRegions.empty()
+             && !closedDomain
+            )
             {
                 inletRegions.append("<inletRegion>");
                 outletRegions.append("<outletRegion>");
