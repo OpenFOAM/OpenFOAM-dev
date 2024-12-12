@@ -101,6 +101,14 @@ EOF
 
 optionFunctions () {
     cat<<EOF
+_region ()
+{
+    find . -name polyMesh -type d | \
+    awk -F '/' '{print \$(NF-1)}' | \
+    grep -v constant | \
+    sort -u | xargs
+}
+
 _solver ()
 {
     foamToC -table solver | sed '1,/Contents/d' | awk '{print \$1}' | xargs
@@ -296,7 +304,7 @@ $(declareLocals)
         echo "\${_files}" | xargs -n 1 | sort -u
     }
 
-    opts="-case -ext -help -no-ext -target"
+    opts="-case -ext -help -no-ext -target -region"
     for o in \$used ; do opts="\${opts/\$o/}" ; done
     extra=""
     opts="\${opts} \$(_searchDirs)"
@@ -306,10 +314,12 @@ $(caseStart)
             opts="" ; extra="-d" ;;
         -ext)
             opts="" ; extra="" ;;
+        -region)
+            opts="\$(_region)"; extra="" ;;
        -*) ;;
         *)
             case "\${COMP_WORDS[COMP_CWORD-2]}" in
-                -case|-ext|-target) ;;
+                -case|-ext|-target|-region) ;;
                 *) opts=""; extra="" ;;
             esac
             ;;
@@ -472,7 +482,7 @@ do
     handlerOpts="" # file handler options -fileHandler
     rangesOpts=""  # ranges options -time
     argOpts=""     # options with unspecified arguments
-    specialOpts="" # -solver, -table, -func
+    specialOpts="" # -solver, -table, -func, -region
 
     while read -r line
     do
@@ -489,7 +499,7 @@ do
         [ "$opt" = "-libs" ] && next=libList
 
         case "$opt" in
-            -solver|-table|-func)
+            -solver|-table|-func|-region)
                 specialOpts="$specialOpts $opt"
                 continue
                 ;;
