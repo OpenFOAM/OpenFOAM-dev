@@ -40,6 +40,7 @@ options:
   -help   | -h        print the usage
   -no-ext | -n        specify file without extension
   -target | -t <dir>  specify target directory (default = system)
+  -region | -r <name> specify alternative mesh region
 
 Finds an example OpenFOAM case dictionary file in $FOAM_ETC/caseDicts and
 copies it into the respective case directory, e.g.
@@ -160,6 +161,7 @@ setTgt () {
     _prefix="$1"
     _file="$2"
     _tgt="$3"
+    _region="$4"
 
     ! [ "$_tgt" ] && \
         echo "$_file" | grep -q fvModel && \
@@ -177,11 +179,10 @@ setTgt () {
             *) _tgt="system" ;;
         esac
 
+    [ "$_region" ] && _tgt="$_tgt/$_region"
     echo "$_tgt"
-
     [ -d "$_tgt" ] && return 0
-    echo "target directory does not exist: '$_tgt'" >&2
-    return 0
+    return 1
 }
 
 setFile () {
@@ -208,6 +209,7 @@ searchDirs="$searchDirs \
 
 ext="ANY"
 tgt=""
+region=""
 while [ "$#" -gt 0 ]
 do
    case "$1" in
@@ -231,6 +233,11 @@ do
    -t | -target)
       [ "$#" -ge 2 ] || error "'$1' option requires an argument"
       tgt="$2"
+      shift 2
+      ;;
+   -r | -region)
+      [ "$#" -ge 2 ] || error "'$1' option requires an argument"
+      region="$2"
       shift 2
       ;;
    -*)
@@ -260,8 +267,12 @@ files="$(pruneFiles "$files")"
 
 nFiles="$(nArgs "$files")"
 [ "$nFiles" -eq 1 ] && \
-    tgt="$(setTgt "$prefix" "$files" "$tgt")" && \
-    cpFile "$files" "$tgt" && exit 0
+    if tgt="$(setTgt "$prefix" "$files" "$tgt" "$region")"
+    then
+        cpFile "$files" "$tgt" && exit 0
+    else
+        error "target directory does not exist: '$tgt'"
+    fi
 
 echo "Multiple files with \"$prefix\" prefix found:"
 suggest="$(listArgs "$files")"
@@ -282,5 +293,9 @@ read -r nFile
     echo "\"$nFile\" is not a number between 1 and $nFiles" && exit 1
 
 file="$(setFile "$files" "$nFile")"
-tgt="$(setTgt "$prefix" "$file" "$tgt")"
-cpFile "$file" "$tgt"
+if tgt="$(setTgt "$prefix" "$file" "$tgt" "$region")"
+then
+    cpFile "$files" "$tgt" && exit 0
+else
+    error "target directory does not exist: '$tgt'"
+fi
