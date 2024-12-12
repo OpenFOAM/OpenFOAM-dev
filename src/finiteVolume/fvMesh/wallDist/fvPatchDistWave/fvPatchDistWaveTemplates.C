@@ -116,7 +116,7 @@ Foam::label Foam::fvPatchDistWave::wave
         sizesListList<List<List<FvWallInfoType>>>
         (
             FvFaceCellWave<FvWallInfoType, TrackingData>::template
-            listListSizes(mesh.boundary()),
+            listListSizes<fvBoundaryMesh>(mesh.boundary()),
             FvWallInfoType()
         )
     );

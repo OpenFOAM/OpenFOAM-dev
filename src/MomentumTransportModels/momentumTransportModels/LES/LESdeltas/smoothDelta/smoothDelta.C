@@ -116,7 +116,7 @@ void Foam::LESModels::smoothDelta::calcDelta()
         sizesListList<List<List<deltaData>>>
         (
             FvFaceCellWave<deltaData>::template
-            listListSizes(mesh.boundary()),
+            listListSizes<fvBoundaryMesh>(mesh.boundary()),
             deltaData()
         )
     );

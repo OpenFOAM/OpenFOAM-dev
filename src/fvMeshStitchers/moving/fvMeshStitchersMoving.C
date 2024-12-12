@@ -591,7 +591,7 @@ void Foam::fvMeshStitchers::moving::unconformInternalFaceCorrectMeshPhi
         sizesListList<List<List<meshPhiPreCorrectInfo>>>
         (
             FvFaceCellWave<meshPhiPreCorrectInfo>::template
-            listListSizes(subMesh.boundary()),
+            listListSizes<fvBoundaryMesh>(subMesh.boundary()),
             meshPhiPreCorrectInfo()
         )
     );
@@ -641,7 +641,7 @@ void Foam::fvMeshStitchers::moving::unconformInternalFaceCorrectMeshPhi
         sizesListList<List<List<meshPhiCorrectInfo>>>
         (
             FvFaceCellWave<meshPhiCorrectInfo>::template
-            listListSizes(subMesh.boundary()),
+            listListSizes<fvBoundaryMesh>(subMesh.boundary()),
             meshPhiCorrectInfo()
         )
     );
