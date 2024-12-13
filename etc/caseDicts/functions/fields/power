@@ -1,0 +1,43 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Calculates the following power fields:
+
+    + tauUSf:           tauf & Uf
+    + divTauU:          fvc::div(tauUSf)
+    + divTauDotU:       fvc::div(tauf) & U
+    + tauDDotGradU:     divTauU - divTauDotU
+
+    + pUSf:            -pIf & Uf
+    + divPU:            fvc::div(pUSf)
+    + gradPU:          -fvc::grad(p) & U
+    + pDivU:            divPU - gradPU
+
+    + stressUSf:        tauUSf + pUSf
+    + divStressU:       fvc::div(stressUSf)
+    + divStressDotU:    fvc::div(stressf) & U
+    + stressDDotGradU:  divStressU - divStressDotU
+
+    where:
+    + p, U = cell centre pressure and velocity
+    + pIf, Uf = face normal pressure force, and velocity, vectors
+    + tauf = face shear force vectors [-transport.devTau()*mesh().magSf()]
+    + stressf = tauf - pIf
+
+\*---------------------------------------------------------------------------*/
+
+type            power;
+libs            ("libfieldFunctionObjects.so");
+
+executeControl  writeTime;
+writeControl    writeTime;
+
+log             true;
+factor          1e9;
+
+// ************************************************************************* //
