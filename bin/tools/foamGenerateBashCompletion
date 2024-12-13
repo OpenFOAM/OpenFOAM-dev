@@ -103,10 +103,19 @@ optionFunctions () {
     cat<<EOF
 _region ()
 {
-    find . -name polyMesh -type d | \
-    awk -F '/' '{print \$(NF-1)}' | \
-    grep -v constant | \
-    sort -u | xargs
+    find . -maxdepth 3 -name polyMesh -type d 2> /dev/null | \\
+        awk -F '/' '{print \$(NF-1)}' | \\
+        grep -v constant | \\
+        sort -u | xargs
+}
+
+_mesh ()
+{
+    for d in constant system
+    do
+        find "\$d/meshes" -mindepth 1 -maxdepth 1 -type d 2> /dev/null | \\
+        awk -F '/' '{print \$(NF)}'
+    done | sort -u | xargs
 }
 
 _solver ()
@@ -482,7 +491,7 @@ do
     handlerOpts="" # file handler options -fileHandler
     rangesOpts=""  # ranges options -time
     argOpts=""     # options with unspecified arguments
-    specialOpts="" # -solver, -table, -func, -region
+    specialOpts="" # -solver, -table, -func, -region, -mesh
 
     while read -r line
     do
@@ -499,7 +508,7 @@ do
         [ "$opt" = "-libs" ] && next=libList
 
         case "$opt" in
-            -solver|-table|-func|-region)
+            -solver|-table|-func|-region|-mesh)
                 specialOpts="$specialOpts $opt"
                 continue
                 ;;
