@@ -206,10 +206,11 @@ int main(int argc, char *argv[])
     }
 
     #include "createTimeNoFunctionObjects.H"
-    #include "createSpecifiedMeshNoChangers.H"
 
     // Select time if specified
     timeSelector::selectIfPresent(runTime, args);
+
+    #include "createSpecifiedMeshNoChangers.H"
 
     const bool overwrite = args.optionFound("overwrite");
 
