@@ -1,0 +1,72 @@
+#!/bin/sh
+
+# Run from this directory
+cd "${0%/*}" || exit 1
+
+# Source tutorial run functions
+. "$WM_PROJECT_DIR/bin/tools/RunFunctions"
+
+usage () {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do printf "\n%s\n" "$1"; shift; done
+    cat <<USAGE
+
+Usage: ${0##*/} [OPTIONS]
+options:
+  -h | -help             help
+
+Executes the following
++ 'Allmesh' to generate the mesh
++ 'foamRun' to run the simulation
++ 'createGraphs' to create graphs
+
+Options can be applied on the command line which are passed to Allmesh
+and processed as follows:
+USAGE
+    ./Allmesh -h
+    exit 1
+}
+
+meshArgs=""
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -b | -bafflesOff | -g | -graded | -r | -refineRotating)
+        meshArgs="$meshArgs $1"
+        shift 1
+        ;;
+    -i | -impeller | -s | -size)
+        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        meshArgs="$meshArgs $1 $2"
+        shift 2
+        ;;
+    -h | -help)
+        usage
+        ;;
+    -*)
+        usage "Invalid option '$1'"
+        ;;
+    *)
+        break
+        ;;
+    esac
+done
+[ "$#" -eq 0 ] || usage "Arguments specified ($#) =/= required (0)"
+
+#shellcheck disable=SC2086
+[ "$meshArgs" ] && set -- "$@" $meshArgs
+
+# Generate the mesh if not present
+[ -d "constant/polyMesh" ] || ./Allmesh "$@"
+
+runApplication "$(getApplication)"
+
+PbyRho="$(tail -1 postProcessing/power/0/power.dat | awk '{print $2}')"
+D="$(grep "^D " system/blockMeshDict.orig | awk -F'[; ]+' '{print $2}')"
+rpm="$(grep "^omega" constant/rotatingZoneProperties | awk '{print $2}')"
+denominator="$(awk "BEGIN{printf(\"%e\", 1e9*($rpm/60)^3*(0.3*$D)^5)}")"
+powerNumber="$(awk "BEGIN{printf(\"%.2f\", $PbyRho/$denominator)}")"
+
+echo "Power number = $powerNumber"
+
+#------------------------------------------------------------------------------

@@ -1,0 +1,23 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Calculates the power input from the stirrer patch.
+
+\*---------------------------------------------------------------------------*/
+
+type            surfaceFieldValue;
+libs            ( "libfieldFunctionObjects.so" );
+log             no;
+writeFields     no;
+select          patch;
+patch           stirrer;
+operation       sum;
+fields          (stressUSf);
+writeControl    outputTime;
+
+// ************************************************************************* //

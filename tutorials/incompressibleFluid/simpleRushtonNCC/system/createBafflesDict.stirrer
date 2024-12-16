@@ -1,0 +1,38 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      createBafflesDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+internalFacesOnly true;
+
+baffles
+{
+    stirrerGroup // not "stirrer" otherwise clash between group and patch names
+    {
+        type        faceZone;
+        zoneName    stirrer;
+
+        owner
+        {
+            name        stirrer;
+            type        wall;
+        }
+        neighbour
+        {
+            $owner;
+        }
+    }
+}
+
+
+// ************************************************************************* //

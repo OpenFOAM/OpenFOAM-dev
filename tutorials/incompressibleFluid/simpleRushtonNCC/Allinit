@@ -1,0 +1,29 @@
+#!/bin/sh
+
+# Run from this directory
+cd "${0%/*}" || exit 1
+
+# Source tutorial run functions
+. "$WM_PROJECT_DIR/bin/tools/RunFunctions"
+
+# Remove any trailing slash from argument
+timeDir="${1%/}"
+caseDir=${timeDir%/*}
+
+polyMesh="$caseDir/constant/polyMesh"
+echo "Copying mesh from $polyMesh"
+rm -rf constant/polyMesh && cp -r "$polyMesh" constant
+
+(
+    cd 0 && \
+    for orig in *.orig
+    do
+        f="${orig%.*}"
+        t="../$timeDir/$f"
+        [ -f "$t" ] && echo "Copying $t to 0 directory" && cp -rf "$t" "$f"
+    done
+)
+
+foamDictionary -set "boundaryField/stirrer/type=movingWallVelocity" 0/U
+
+#------------------------------------------------------------------------------

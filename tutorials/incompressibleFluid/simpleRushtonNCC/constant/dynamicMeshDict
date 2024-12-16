@@ -1,0 +1,33 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      dynamicMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Disable motion for an MRF simulation
+// Enable motion for an NCC simulation by changing 'mover-disabled' to 'mover'
+mover
+{
+    type            motionSolver;
+
+    libs            ("libfvMotionSolvers.so");
+
+    motionSolver    solidBody;
+
+    cellZone        rotatingZone;
+
+    solidBodyMotionFunction  rotatingMotion;
+
+    #include        "rotatingZoneProperties"
+}
+
+// ************************************************************************* //

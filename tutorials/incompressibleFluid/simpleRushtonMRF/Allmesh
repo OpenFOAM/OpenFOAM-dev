@@ -1,0 +1,109 @@
+#!/bin/sh
+
+# Run from this directory
+cd "${0%/*}" || exit 1
+
+# Source tutorial run functions
+. "$WM_PROJECT_DIR/bin/tools/RunFunctions"
+
+usage () {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat <<USAGE
+
+Usage: ${0##*/} [OPTIONS]
+options:
+  -b | -bafflesOff         do not include baffles
+  -g | -graded             apply grading to resolve boundary layers on tank wall
+  -h | -help               help
+  -i | -impeller <nBlades> number of impeller blades 4 (default) or 6
+  -r | -refineRotating     apply refinement around the rotatingZone
+  -s | -size <size>        mesh size, 1-4, 1=~68k cells (default), 4=~4M cells
+
+USAGE
+    exit 1
+}
+
+# blockMeshDict defaults
+size=1
+mode="uniform"
+
+# other defaults
+baffles="yes"
+refineRotating=""
+blades=4
+
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -b | -bafflesOff)
+        baffles=""
+        shift 1
+        ;;
+    -g | -graded)
+        mode="graded"
+        shift 1
+        ;;
+    -h | -help)
+        usage
+        ;;
+    -i | -impeller)
+        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        [ "$2" -eq "$2" ] 2> /dev/null || \
+            usage "'$1' option must be an integer, either 4 or 6"
+        { [ "$2" -eq 4 ] || [ "$2" -eq 6 ] ; } || \
+            usage "'$1' option must be an integer, either 4 or 6"
+        blades=$2
+        shift 2
+        ;;
+    -r | -refineRotating)
+        refineRotating="yes"
+        shift 1
+        ;;
+    -s | -size)
+        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        [ "$2" -eq "$2" ] 2> /dev/null || \
+            usage "'$1' option must be an integer between 1-4"
+        { [ "$2" -ge 1 ] && [ "$2" -le 4 ] ; } || \
+            usage "'$1' option must be an integer between 1-4"
+        size=$2
+        shift 2
+        ;;
+    -*)
+        usage "Invalid option '$1'"
+        ;;
+    *)
+        break
+        ;;
+    esac
+done
+[ "$#" -eq 0 ] || usage "Arguments specified ($#) =/= required (0)"
+
+# Set blockMeshDict parameters
+printf "Creating blockMesh...\n"
+sed \
+    -e "s/^\(factor[\t ]*\).*/\1$size;/" \
+    -e "s/^\(mode[\t ]*\).*/\1$mode;/" \
+    system/blockMeshDict.orig > system/blockMeshDict
+
+runApplication blockMesh
+runApplication mirrorMesh -overwrite
+foamDictionary -set "pointAndNormalDict/normal=(1 0 0)" system/mirrorMeshDict
+runApplication -a mirrorMesh -overwrite
+
+[ "$refineRotating" ] && \
+    printf "\nRefining mesh around the rotatingZone...\n" && \
+    runApplication -a topoSet -dict topoSetDict.refineRotating && \
+    runApplication refineHexMesh -noFields -overwrite rotatingZoneRefine
+
+printf "\nCreating stirrer...\n"
+[ "$blades" -eq 6 ] && \
+    sed "s/stirrer4/stirrer6/" system/topoSetDict.orig > system/topoSetDict
+runApplication -a topoSet
+runApplication -a createBaffles -dict createBafflesDict.stirrer -overwrite
+
+[ "$baffles" ] && \
+    printf "\nCreating baffles...\n" && \
+    runApplication -a createBaffles -dict createBafflesDict.baffles -overwrite
+
+#------------------------------------------------------------------------------

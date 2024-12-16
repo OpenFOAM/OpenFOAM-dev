@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# Run from this directory
+cd "${0%/*}" || exit 1
+
+# Source tutorial run functions
+. "$WM_PROJECT_DIR/bin/tools/RunFunctions"
+
+printf "\nCreating nonCouple patches...\n"
+runApplication -a createBaffles -dict createBafflesDict.NCC  -overwrite
+runApplication splitBaffles  -overwrite
+
+runApplication createNonConformalCouples -fields -overwrite nonCouple1 nonCouple2
+
+#------------------------------------------------------------------------------

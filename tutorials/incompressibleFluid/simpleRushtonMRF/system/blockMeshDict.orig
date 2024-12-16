@@ -1,0 +1,205 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+factor  1;
+mode    uniform;
+
+// Cells
+// multiple of 6, so  mesh faces coincide with six-blade stirrer
+boxCells  #calc "$factor*6";
+
+r1Cells   #calc "$factor*3";
+r2Cells   $r1Cells;
+r3Cells   $r1Cells;
+r4Cells   #calc "$factor*4";
+
+#ifeq $mode graded
+    r5Cells   #calc "$factor*40";
+    zCells    #calc "$factor*100";
+#else
+    r5Cells   #calc "$factor*25";
+    zCells    #calc "$factor*40";
+#endif
+
+// Tank
+D       1.0;
+H       1.2;
+R       #calc "0.5*$D";
+
+// Rushton radius
+r       #calc "0.3*$R";
+
+// Blades
+rbld    #calc "0.5*$r";
+rdisk   #calc "1.5*$rbld";
+rzone   #calc "0.4*$R";
+
+// Box
+rbox    #calc "0.5*$rbld";
+
+// 45 degs
+rsqrt2  #calc "1.0 / sqrt(2.0)";
+
+rbld45  #calc "$rsqrt2*$rbld";
+rdisk45 #calc "$rsqrt2*$rdisk";
+r45     #calc "$rsqrt2*$r";
+rzone45 #calc "$rsqrt2*$rzone";
+R45     #calc "$rsqrt2*$R";
+
+convertToMeters 1;
+
+vertices
+(
+    (0        0        0)
+    ($rbox    0        0)
+    ($rbld    0        0)
+    ($rdisk   0        0)
+    ($r       0        0)
+    ($rzone   0        0)
+    ($R       0        0)
+    (0        $rbox    0)
+    ($rbox    $rbox    0)
+    (0        $rbld    0)
+    ($rbld45  $rbld45  0)
+    (0        $rdisk   0)
+    ($rdisk45 $rdisk45 0)
+    (0        $r       0)
+    ($r45     $r45     0)
+    (0        $rzone   0)
+    ($rzone45 $rzone45 0)
+    (0        $R       0)
+    ($R45     $R45     0)
+
+    (0        0        $H)
+    ($rbox    0        $H)
+    ($rbld    0        $H)
+    ($rdisk   0        $H)
+    ($r       0        $H)
+    ($rzone   0        $H)
+    ($R       0        $H)
+    (0        $rbox    $H)
+    ($rbox    $rbox    $H)
+    (0        $rbld    $H)
+    ($rbld45  $rbld45  $H)
+    (0        $rdisk   $H)
+    ($rdisk45 $rdisk45 $H)
+    (0        $r       $H)
+    ($r45     $r45     $H)
+    (0        $rzone   $H)
+    ($rzone45 $rzone45 $H)
+    (0        $R       $H)
+    ($R45     $R45     $H)
+);
+
+// Grading
+#ifeq $mode graded
+    zGrd   ((1 1 40)(20 4 1)(1 1 0.025));
+    rGrd   ((4 1 1)(1 1 0.025));
+#else
+    zGrd 1;
+    rGrd 1;
+#endif
+
+boxGrd simpleGrading (1 1 $zGrd);
+r1Grd  simpleGrading (1 1 $zGrd);
+r2Grd  simpleGrading (1 1 $zGrd);
+r3Grd  simpleGrading (1 1 $zGrd);
+r4Grd  simpleGrading (1 1 $zGrd);
+r5Grd  simpleGrading ($rGrd 1 $zGrd);
+
+blocks
+(
+    hex (0 1 8 7 19 20 27 26)     ($boxCells $boxCells $zCells) $boxGrd
+
+    hex (1 2 10 8 20 21 29 27)    ($r1Cells $boxCells $zCells) $r1Grd
+    hex (8 10 9 7 27 29 28 26)    ($r1Cells $boxCells $zCells) $r1Grd
+
+    hex (2 3 12 10 21 22 31 29)   ($r2Cells $boxCells $zCells) $r2Grd
+    hex (10 12 11 9 29 31 30 28)  ($r2Cells $boxCells $zCells) $r2Grd
+
+    hex (3 4 14 12 22 23 33 31)   ($r3Cells $boxCells $zCells) $r3Grd
+    hex (12 14 13 11 31 33 32 30) ($r3Cells $boxCells $zCells) $r3Grd
+
+    hex (4 5 16 14 23 24 35 33)   ($r4Cells $boxCells $zCells) $r4Grd
+    hex (14 16 15 13 33 35 34 32) ($r4Cells $boxCells $zCells) $r4Grd
+
+    hex (5 6 18 16 24 25 37 35)   ($r5Cells $boxCells $zCells) $r5Grd
+    hex (16 18 17 15 35 37 36 34) ($r5Cells $boxCells $zCells) $r5Grd
+);
+
+curve 45 (0 0 1);
+
+edges
+(
+    // Stirrer disk and blades
+    arc 2 10 $curve
+    arc 10 9 $curve
+    arc 21 29 $curve
+    arc 29 28 $curve
+
+    arc 3 12 $curve
+    arc 12 11 $curve
+    arc 22 31 $curve
+    arc 31 30 $curve
+
+    arc 4 14 $curve
+    arc 14 13 $curve
+    arc 23 33 $curve
+    arc 33 32 $curve
+
+    arc 5 16 $curve
+    arc 16 15 $curve
+    arc 24 35 $curve
+    arc 35 34 $curve
+
+    // Outer wall
+    arc 6 18 $curve
+    arc 18 17 $curve
+    arc 25 37 $curve
+    arc 37 36 $curve
+);
+
+defaultPatch
+{
+    name tank;
+    type wall;
+}
+
+// Optional inlet and outlet patches
+boundary
+(
+    inlet
+    {
+        type patch;
+        faces
+        (
+            (0 1 8 7)
+        );
+    }
+    outlet
+    {
+        type patch;
+        faces
+        (
+            (19 26 27 20)
+        );
+    }
+);
+
+mergePatchPairs
+(
+);
+
+// ************************************************************************* //

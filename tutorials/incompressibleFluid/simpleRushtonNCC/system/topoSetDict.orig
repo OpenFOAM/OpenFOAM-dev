@@ -1,0 +1,81 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      topoSetDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+actions
+(
+    // stirrer
+    {
+        action  new;
+        type    faceZoneSet;
+        name    stirrer;
+        source  searchableSurfaceToFaceZone;
+        surface triSurfaceMesh;
+        file    "stirrer4.obj";
+    }
+
+    {
+        action  add;
+        type    faceZoneSet;
+        name    stirrer;
+        source  searchableSurfaceToFaceZone;
+        surface searchableDisk;
+        origin  (0 0 0.6);
+        normal  (0 0 1);
+        radius  0.1125;
+    }
+
+    // baffles
+    {
+        action  new;
+        type    faceZoneSet;
+        name    baffles;
+        source  searchableSurfaceToFaceZone;
+        surface triSurfaceMesh;
+        file    "baffles.obj";
+    }
+
+    // rotatingZone cellZone
+    {
+        action  new;
+        type    cellSet;
+        name    rz;
+        source  cylinderToCell;
+        point1  (0 0 0.54);
+        point2  (0 0 0.66);
+        radius  0.2;
+    }
+
+    {
+        action  new;
+        type    cellZoneSet;
+        name    rotatingZone;
+        source  setToCellZone;
+        set     rz;
+    }
+
+    // rotatingZone faceZone
+    {
+        action  new;
+        type    faceZoneSet;
+        name    rotatingZone;
+        source  searchableSurfaceToFaceZone;
+        surface searchableCylinder;
+        point1  (0 0 0.54);
+        point2  (0 0 0.66);
+        radius  0.2;
+    }
+);
+
+// ************************************************************************* //
