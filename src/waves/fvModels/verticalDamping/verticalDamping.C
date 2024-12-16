@@ -76,6 +76,7 @@ Foam::fv::verticalDamping::verticalDamping
     forcing(name, modelType, mesh, dict),
     UName_(dict.lookupOrDefault<word>("U", "U"))
 {
+    readCoeffs(coeffs(dict));
     writeForceFields();
 }
 
