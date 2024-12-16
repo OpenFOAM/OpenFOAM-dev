@@ -163,6 +163,10 @@ void Foam::fv::propellerDisk::addActuationDiskAxialInertialResistance
             }
         }
 
+        reduce(V_, sumOp<scalar>());
+        reduce(force_, sumOp<vector>());
+        reduce(moment_, sumOp<vector>());
+
         // Normalise to cache the net force and moment of the propeller
         // on the fluid
         force_ /= V_;
