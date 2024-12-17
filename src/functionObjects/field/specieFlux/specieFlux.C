@@ -80,7 +80,7 @@ bool Foam::functionObjects::specieFluxBase::calc()
     const fluidThermophysicalTransportModel& ttm =
         lookupObject<fluidThermophysicalTransportModel>(ttmName);
 
-    const volScalarField& Yi = thermo.Y(fieldName_);
+    const volScalarField& Yi = thermo.Y(IOobject::member(fieldName_));
 
     store(resultName_, calc(ttm, Yi));
 
