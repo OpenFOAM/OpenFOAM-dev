@@ -359,7 +359,7 @@ Foam::Tuple2<Foam::label, Foam::scalar> Foam::tracking::toStationaryTri
     const bool debug = notNull(debugPrefix);
     #define debugIndent string(debugPrefix.size(), ' ').c_str() << ": "
 
-    const vector& x0 =
+    const vector x0 =
         position(mesh, coordinates, celli, facei, faceTrii, stepFraction);
     const vector& x1 = displacement;
     const barycentric& y0 = coordinates;
@@ -733,7 +733,7 @@ Foam::Tuple2<Foam::label, Foam::scalar> Foam::tracking::toMovingTri
     const bool debug = notNull(debugPrefix);
     #define debugIndent string(debugPrefix.size(), ' ').c_str() << ": "
 
-    const vector& x0 =
+    const vector x0 =
         position(mesh, coordinates, celli, facei, faceTrii, stepFraction);
     const vector& x1 = displacement;
     const barycentric& y0 = coordinates;
