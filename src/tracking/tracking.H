@@ -96,11 +96,17 @@ namespace tracking
     //- Track along the displacement for a given fraction of the overall
     //  time-step. End when the track is complete or when a face is hit. Return
     //  whether or not a face was hit (true) or the track completed (false) and
-    //  the proportion of the displacement still to be completed.
+    //  the proportion of the displacement still to be completed. Displacement
+    //  can be a single vector, d, in which case the path is linear and equal
+    //  to x0 + lambda*d, where x0 is the starting position and lambda is the
+    //  local coordinate along the path. Or, displacement can be a pair of
+    //  vectors, d1 and d2, in which case the path is parabolic and equal to
+    //  x0 + lambda*d1 + lambda*lambda*d2.
+    template<class Displacement>
     Tuple2<bool, scalar> toFace
     (
         const polyMesh& mesh,
-        const vector& displacement,
+        const Displacement& displacement,
         const scalar fraction,
         barycentric& coordinates,
         label& celli,
@@ -114,10 +120,11 @@ namespace tracking
 
     //- As toFace, except that if the track ends on an internal face then this
     //  face will be crossed
+    template<class Displacement>
     Tuple2<bool, scalar> toCell
     (
         const polyMesh& mesh,
-        const vector& displacement,
+        const Displacement& displacement,
         const scalar fraction,
         barycentric& coordinates,
         label& celli,
@@ -131,10 +138,11 @@ namespace tracking
 
     //- As toFace, except that the track continues across multiple cells until
     //  it ends or until a boundary face is hit
+    template<class Displacement>
     Tuple2<bool, scalar> toBoundary
     (
         const polyMesh& mesh,
-        const vector& displacement,
+        const Displacement& displacement,
         const scalar fraction,
         barycentric& coordinates,
         label& celli,

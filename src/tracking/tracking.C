@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "tracking.H"
+#include "quadraticEqn.H"
 #include "cubicEqn.H"
 #include "indexedOctree.H"
 #include "treeDataCell.H"
@@ -120,6 +121,22 @@ namespace tracking
         const string& debugPrefix = NullObjectRef<string>()
     );
 
+    //- See toTri. Second order. For a stationary mesh.
+    Tuple2<label, scalar> toStationaryTri
+    (
+        const polyMesh& mesh,
+        const Pair<vector>& displacement,
+        const scalar fraction,
+        barycentric& coordinates,
+        label& celli,
+        label& facei,
+        label& faceTrii,
+        scalar& stepFraction,
+        scalar& stepFractionBehind,
+        label& nTracksBehind,
+        const string& debugPrefix = NullObjectRef<string>()
+    );
+
     //- See toTri. For a moving mesh.
     Tuple2<label, scalar> toMovingTri
     (
@@ -136,15 +153,11 @@ namespace tracking
         const string& debugPrefix = NullObjectRef<string>()
     );
 
-    //- Track along the displacement for a given fraction of the overall
-    //  time-step. End when the track is complete or when a tet triangle is
-    //  hit. Return the index of the tet triangle that was hit, or -1 if the
-    //  end position was reached. Also return the proportion of the
-    //  displacement still to be completed.
-    Tuple2<label, scalar> toTri
+    //- See toTri. Second order. For a moving mesh. Not implemented.
+    Tuple2<label, scalar> toMovingTri
     (
         const polyMesh& mesh,
-        const vector& displacement,
+        const Pair<vector>& displacement,
         const scalar fraction,
         barycentric& coordinates,
         label& celli,
@@ -155,6 +168,30 @@ namespace tracking
         label& nTracksBehind,
         const string& debugPrefix = NullObjectRef<string>()
     );
+
+    //- Track along the displacement for a given fraction of the overall
+    //  time-step. End when the track is complete or when a tet triangle is
+    //  hit. Return the index of the tet triangle that was hit, or -1 if the
+    //  end position was reached. Also return the proportion of the
+    //  displacement still to be completed.
+    template<class Displacement>
+    Tuple2<label, scalar> toTri
+    (
+        const polyMesh& mesh,
+        const Displacement& displacement,
+        const scalar fraction,
+        barycentric& coordinates,
+        label& celli,
+        label& facei,
+        label& faceTrii,
+        scalar& stepFraction,
+        scalar& stepFractionBehind,
+        label& nTracksBehind,
+        const string& debugPrefix = NullObjectRef<string>()
+    );
+
+    //- Scale a second-order displacement
+    Pair<vector> operator*(const scalar f, const Pair<vector>& displacement);
 
 
 // Transformations
@@ -316,20 +353,19 @@ Foam::Tuple2<Foam::label, Foam::scalar> Foam::tracking::toStationaryTri
     scalar& stepFraction,
     scalar& stepFractionBehind,
     label& nTracksBehind,
-    const string& debugPrefix_
+    const string& debugPrefix
 )
 {
-    const bool debug = notNull(debugPrefix_);
-    #define debugPrefix debugPrefix_.c_str() << ": "
-    #define debugIndent string(debugPrefix_.size(), ' ').c_str() << ": "
+    const bool debug = notNull(debugPrefix);
+    #define debugIndent string(debugPrefix.size(), ' ').c_str() << ": "
 
-    const vector x0 =
+    const vector& x0 =
         position(mesh, coordinates, celli, facei, faceTrii, stepFraction);
-    const vector x1 = displacement;
-    const barycentric y0 = coordinates;
+    const vector& x1 = displacement;
+    const barycentric& y0 = coordinates;
 
     DebugInfo
-        << debugPrefix << "Tracking from " << x0
+        << debugPrefix.c_str() << ": Tracking from " << x0
         << " along " << x1 << " to " << x0 + x1 << nl;
 
     // Get the tet geometry
@@ -466,7 +502,213 @@ Foam::Tuple2<Foam::label, Foam::scalar> Foam::tracking::toStationaryTri
         }
     }
 
-    #undef debugPrefix
+    #undef debugIndent
+
+    return Tuple2<label, scalar>(iH, iH != -1 ? 1 - muH*detA : 0);
+}
+
+
+Foam::Tuple2<Foam::label, Foam::scalar> Foam::tracking::toStationaryTri
+(
+    const polyMesh& mesh,
+    const Pair<vector>& displacement,
+    const scalar fraction,
+    barycentric& coordinates,
+    label& celli,
+    label& facei,
+    label& faceTrii,
+    scalar& stepFraction,
+    scalar& stepFractionBehind,
+    label& nTracksBehind,
+    const string& debugPrefix
+)
+{
+    const bool debug = notNull(debugPrefix);
+    #define debugIndent string(debugPrefix.size(), ' ').c_str() << ": "
+
+    const vector x0 =
+        position(mesh, coordinates, celli, facei, faceTrii, stepFraction);
+    const vector& x1 = displacement.first();
+    const vector& x2 = displacement.second();
+    const barycentric& y0 = coordinates;
+
+    DebugInfo
+        << debugPrefix.c_str() << ": Tracking from " << x0
+        << " along " << x1 << ',' << x2 << " to " << x0 + x1 + x2 << nl;
+
+    // Get the tet geometry
+    vector centre;
+    scalar detA;
+    barycentricTensor T;
+    stationaryTetReverseTransform
+    (
+        mesh,
+        celli,
+        facei,
+        faceTrii,
+        centre,
+        detA,
+        T
+    );
+
+    if (debug)
+    {
+        vector o, b, v1, v2;
+        stationaryTetGeometry
+        (
+            mesh,
+            celli,
+            facei,
+            faceTrii,
+            o,
+            b,
+            v1,
+            v2
+        );
+
+        Info<< debugIndent << "Tet points o=" << o << ", b=" << b
+            << ", v1=" << v1 << ", v2=" << v2 << nl
+            << debugIndent << "Tet determinant = " << detA << nl
+            << debugIndent << "Start local coordinates = " << y0 << nl;
+    }
+
+    // Calculate the local tracking displacement and deltaDisplacement
+    barycentric Tx1(x1 & T);
+    barycentric Tx2(x2 & T);
+
+    // Form hit equations
+    FixedList<quadraticEqn, 4> hitEqn;
+    forAll(hitEqn, i)
+    {
+        hitEqn[i] = quadraticEqn(detA*Tx2[i], Tx1[i], y0[i]);
+    }
+
+    if (debug)
+    {
+        for (label i = 0; i < 4; ++ i)
+        {
+            Info<< debugIndent << (i ? "             " : "Hit equation ")
+                << i << " = " << hitEqn[i] << nl;
+        }
+    }
+
+    // Calculate the hit fraction
+    label iH = -1;
+    scalar muH = detA > vSmall ? 1/detA : vGreat;
+    for (label i = 0; i < 4; ++ i)
+    {
+        const Roots<2> mu = hitEqn[i].roots();
+
+        for (label j = 0; j < 2; ++ j)
+        {
+            if
+            (
+                mu.type(j) == rootType::real
+             && hitEqn[i].derivative(mu[j]) < - vSmall
+             && hitEqn[i].derivative(mu[j]) < - mag(detA)*small
+            )
+            {
+                if (debug)
+                {
+                    const barycentric yH
+                    (
+                        hitEqn[0].value(mu[j]),
+                        hitEqn[1].value(mu[j]),
+                        hitEqn[2].value(mu[j]),
+                        hitEqn[3].value(mu[j])
+                    );
+
+                    DebugInfo
+                        << debugIndent << "Hit on tet face " << i
+                        << " at local coordinate " << yH << ", "
+                        << mu*detA*100 << "% of the " << "way along the track"
+                        << nl;
+                }
+
+                if (0 <= mu[j] && mu[j] < muH)
+                {
+                    iH = i;
+                    muH = mu[j];
+                }
+            }
+        }
+    }
+
+    // If there has been no hit on a degenerate or inverted tet then the
+    // displacement must be within the round off error. Advance the step
+    // fraction without moving and return.
+    if (iH == -1 && muH == vGreat)
+    {
+        stepFraction += fraction;
+        return Tuple2<label, scalar>(-1, 0);
+    }
+
+    // Set the new coordinates
+    barycentric yH
+    (
+        hitEqn[0].value(muH),
+        hitEqn[1].value(muH),
+        hitEqn[2].value(muH),
+        hitEqn[3].value(muH)
+    );
+
+    // Clamp to zero any negative coordinates generated by round-off error
+    for (label i = 0; i < 4; ++ i)
+    {
+        yH.replace(i, i == iH ? 0 : max(0, yH[i]));
+    }
+
+    // Re-normalise if within the tet
+    if (iH == -1)
+    {
+        yH /= cmptSum(yH);
+    }
+
+    // Set the new position
+    coordinates = yH;
+
+    // Set the proportion of the track that has been completed
+    stepFraction += fraction*muH*detA;
+
+    if (debug)
+    {
+        if (iH != -1)
+        {
+            Info<< debugIndent << "Track hit tet face " << iH << " first" << nl;
+        }
+        else
+        {
+            Info<< debugIndent << "Track hit no tet faces" << nl;
+        }
+
+        const vector xH =
+            position(mesh, coordinates, celli, facei, faceTrii, stepFraction);
+
+        Info<< debugIndent << "End local coordinates = " << yH << nl
+            << debugIndent << "End global coordinates = " << xH << nl
+            << debugIndent << "Tracking displacement = " << xH - x0 << nl
+            << debugIndent << muH*detA*100 << "% of the step from "
+            << stepFraction - fraction*muH*detA << " to "
+            << stepFraction - fraction*muH*detA + fraction
+            << " completed" << nl << endl;
+    }
+
+    // Accumulate fraction behind
+    if (muH*detA < small || nTracksBehind > 0)
+    {
+        stepFractionBehind += (fraction != 0 ? fraction : 1)*muH*detA;
+
+        if (stepFractionBehind > rootSmall)
+        {
+            stepFractionBehind = 0;
+            nTracksBehind = 0;
+        }
+        else
+        {
+            ++ nTracksBehind;
+        }
+    }
+
     #undef debugIndent
 
     return Tuple2<label, scalar>(iH, iH != -1 ? 1 - muH*detA : 0);
@@ -485,20 +727,19 @@ Foam::Tuple2<Foam::label, Foam::scalar> Foam::tracking::toMovingTri
     scalar& stepFraction,
     scalar& stepFractionBehind,
     label& nTracksBehind,
-    const string& debugPrefix_
+    const string& debugPrefix
 )
 {
-    const bool debug = notNull(debugPrefix_);
-    #define debugPrefix debugPrefix_.c_str() << ": "
-    #define debugIndent string(debugPrefix_.size(), ' ').c_str() << ": "
+    const bool debug = notNull(debugPrefix);
+    #define debugIndent string(debugPrefix.size(), ' ').c_str() << ": "
 
-    const vector x0 =
+    const vector& x0 =
         position(mesh, coordinates, celli, facei, faceTrii, stepFraction);
-    const vector x1 = displacement;
-    const barycentric y0 = coordinates;
+    const vector& x1 = displacement;
+    const barycentric& y0 = coordinates;
 
     DebugInfo
-        << debugPrefix << "Tracking from " << x0
+        << debugPrefix.c_str() << ": Tracking from " << x0
         << " along " << x1 << " to " << x0 + x1 << nl;
 
     // Get the tet geometry
@@ -565,10 +806,10 @@ Foam::Tuple2<Foam::label, Foam::scalar> Foam::tracking::toMovingTri
     {
         for (label i = 0; i < 4; ++ i)
         {
-            Info<< debugPrefix << (i ? "             " : "Hit equation ")
+            Info<< debugIndent << (i ? "             " : "Hit equation ")
                 << i << " = " << hitEqn[i] << nl;
         }
-        Info<< debugPrefix << " DetA equation = " << detA << nl;
+        Info<< debugIndent << " DetA equation = " << detA << nl;
     }
 
     // Calculate the hit fraction
@@ -598,7 +839,7 @@ Foam::Tuple2<Foam::label, Foam::scalar> Foam::tracking::toMovingTri
                     );
                     const scalar detAH = detAEqn.value(mu[j]);
 
-                    Info<< debugPrefix << "Hit on tet face " << i
+                    Info<< debugIndent << "Hit on tet face " << i
                         << " at local coordinate "
                         << (mag(detAH) > vSmall ? name(yH/detAH) : "???")
                         << ", " << mu[j]*detA[0]*100 << "% of the "
@@ -670,20 +911,20 @@ Foam::Tuple2<Foam::label, Foam::scalar> Foam::tracking::toMovingTri
     {
         if (iH != -1)
         {
-            Info<< debugPrefix << "Track hit tet face " << iH << " first" << nl;
+            Info<< debugIndent << "Track hit tet face " << iH << " first" << nl;
         }
         else
         {
-            Info<< debugPrefix << "Track hit no tet faces" << nl;
+            Info<< debugIndent << "Track hit no tet faces" << nl;
         }
 
         const vector xH =
             position(mesh, coordinates, celli, facei, faceTrii, stepFraction);
 
-        Info<< debugPrefix << "End local coordinates = " << yH << nl
-            << debugPrefix << "End global coordinates = " << xH << nl
-            << debugPrefix << "Tracking displacement = " << xH - x0 << nl
-            << debugPrefix << muH*detA[0]*100 << "% of the step from "
+        Info<< debugIndent << "End local coordinates = " << yH << nl
+            << debugIndent << "End global coordinates = " << xH << nl
+            << debugIndent << "Tracking displacement = " << xH - x0 << nl
+            << debugIndent << muH*detA[0]*100 << "% of the step from "
             << stepFraction - fraction*muH*detA[0] << " to "
             << stepFraction - fraction*muH*detA[0] + fraction
             << " completed" << nl << endl;
@@ -705,17 +946,40 @@ Foam::Tuple2<Foam::label, Foam::scalar> Foam::tracking::toMovingTri
         }
     }
 
-    #undef debugPrefix
     #undef debugIndent
 
     return Tuple2<label, scalar>(iH, iH != -1 ? 1 - muH*detA[0] : 0);
 }
 
 
+Foam::Tuple2<Foam::label, Foam::scalar> Foam::tracking::toMovingTri
+(
+    const polyMesh& mesh,
+    const Pair<vector>& displacement,
+    const scalar fraction,
+    barycentric& coordinates,
+    label& celli,
+    label& facei,
+    label& faceTrii,
+    scalar& stepFraction,
+    scalar& stepFractionBehind,
+    label& nTracksBehind,
+    const string& debugPrefix
+)
+{
+    FatalErrorInFunction
+        << "Second-order tracking through moving meshes is not supported"
+        << exit(FatalError);
+
+    return Tuple2<label, scalar>();
+}
+
+
+template<class Displacement>
 Foam::Tuple2<Foam::label, Foam::scalar> Foam::tracking::toTri
 (
     const polyMesh& mesh,
-    const vector& displacement,
+    const Displacement& displacement,
     const scalar fraction,
     barycentric& coordinates,
     label& celli,
@@ -742,6 +1006,21 @@ Foam::Tuple2<Foam::label, Foam::scalar> Foam::tracking::toTri
             coordinates, celli, facei, faceTrii, stepFraction,
             stepFractionBehind, nTracksBehind,
             debugPrefix
+        );
+}
+
+
+Foam::Pair<Foam::vector> Foam::tracking::operator*
+(
+    const scalar f,
+    const Pair<vector>& displacement
+)
+{
+    return
+        Pair<vector>
+        (
+            f*displacement.first() + 2*f*(1 - f)*displacement.second(),
+            f*f*displacement.second()
         );
 }
 
@@ -1082,10 +1361,11 @@ Foam::Pair<Foam::vector> Foam::tracking::faceNormalAndDisplacement
 }
 
 
+template<class Displacement>
 Foam::Tuple2<bool, Foam::scalar> Foam::tracking::toFace
 (
     const polyMesh& mesh,
-    const vector& displacement,
+    const Displacement& displacement,
     const scalar fraction,
     barycentric& coordinates,
     label& celli,
@@ -1151,10 +1431,35 @@ Foam::Tuple2<bool, Foam::scalar> Foam::tracking::toFace
 }
 
 
+template Foam::Tuple2<bool, Foam::scalar>
+Foam::tracking::toFace<Foam::vector>
+(
+    const polyMesh& mesh,
+    const vector& displacement, const scalar fraction,
+    barycentric& coordinates, label& celli, label& facei, label& faceTrii,
+    scalar& stepFraction,
+    scalar& stepFractionBehind, label& nTracksBehind,
+    const string& debugPrefix
+);
+
+
+template Foam::Tuple2<bool, Foam::scalar>
+Foam::tracking::toFace<Foam::Pair<Foam::vector>>
+(
+    const polyMesh& mesh,
+    const Pair<vector>& displacement, const scalar fraction,
+    barycentric& coordinates, label& celli, label& facei, label& faceTrii,
+    scalar& stepFraction,
+    scalar& stepFractionBehind, label& nTracksBehind,
+    const string& debugPrefix
+);
+
+
+template<class Displacement>
 Foam::Tuple2<bool, Foam::scalar> Foam::tracking::toCell
 (
     const polyMesh& mesh,
-    const vector& displacement,
+    const Displacement& displacement,
     const scalar fraction,
     barycentric& coordinates,
     label& celli,
@@ -1187,10 +1492,35 @@ Foam::Tuple2<bool, Foam::scalar> Foam::tracking::toCell
 }
 
 
-Foam::Tuple2<bool, Foam::scalar> Foam::tracking::toBoundary
+template Foam::Tuple2<bool, Foam::scalar>
+Foam::tracking::toCell<Foam::vector>
 (
     const polyMesh& mesh,
     const vector& displacement, const scalar fraction,
+    barycentric& coordinates, label& celli, label& facei, label& faceTrii,
+    scalar& stepFraction,
+    scalar& stepFractionBehind, label& nTracksBehind,
+    const string& debugPrefix
+);
+
+
+template Foam::Tuple2<bool, Foam::scalar>
+Foam::tracking::toCell<Foam::Pair<Foam::vector>>
+(
+    const polyMesh& mesh,
+    const Pair<vector>& displacement, const scalar fraction,
+    barycentric& coordinates, label& celli, label& facei, label& faceTrii,
+    scalar& stepFraction,
+    scalar& stepFractionBehind, label& nTracksBehind,
+    const string& debugPrefix
+);
+
+
+template<class Displacement>
+Foam::Tuple2<bool, Foam::scalar> Foam::tracking::toBoundary
+(
+    const polyMesh& mesh,
+    const Displacement& displacement, const scalar fraction,
     barycentric& coordinates,
     label& celli,
     label& facei,
@@ -1233,6 +1563,30 @@ Foam::Tuple2<bool, Foam::scalar> Foam::tracking::toBoundary
         }
     }
 }
+
+
+template Foam::Tuple2<bool, Foam::scalar>
+Foam::tracking::toBoundary<Foam::vector>
+(
+    const polyMesh& mesh,
+    const vector& displacement, const scalar fraction,
+    barycentric& coordinates, label& celli, label& facei, label& faceTrii,
+    scalar& stepFraction,
+    scalar& stepFractionBehind, label& nTracksBehind,
+    const string& debugPrefix
+);
+
+
+template Foam::Tuple2<bool, Foam::scalar>
+Foam::tracking::toBoundary<Foam::Pair<Foam::vector>>
+(
+    const polyMesh& mesh,
+    const Pair<vector>& displacement, const scalar fraction,
+    barycentric& coordinates, label& celli, label& facei, label& faceTrii,
+    scalar& stepFraction,
+    scalar& stepFractionBehind, label& nTracksBehind,
+    const string& debugPrefix
+);
 
 
 bool Foam::tracking::locate
