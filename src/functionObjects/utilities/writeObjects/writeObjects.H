@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,11 +62,15 @@ Usage
     \table
         Property     | Description             | Required     | Default value
         type         | type name: writeObjects | yes          |
-        objects      | objects to write        | yes          |
+        objects, fields or field | objects to write | yes          |
         writeOption  | only those with this write option | no | anyWrite
     \endtable
 
-    Note: Regular expressions can also be used in \c objects.
+    The objects to be written can either be specified by the \c objects,
+    \c fields or \c field entry, the latter two for backwards compatibility
+    and to provide a more logical, obvious and readable interface when
+    writing fields.  Regular expressions can also be used when specifying
+    multiple \c objects or \c fields.
 
 See also
     Foam::functionObject
