@@ -125,34 +125,30 @@ void Foam::solvers::multiphaseEuler::facePressureCorrector()
             buoyancy.ghf*fvc::snGrad(rho)*mesh.magSf()
         );
 
-        PtrList<surfaceScalarField> lalphafs(movingPhases.size());
+        UPtrList<surfaceScalarField> movingAlphafs(movingPhases.size());
         PtrList<surfaceScalarField> Fgfs(movingPhases.size());
 
         forAll(movingPhases, movingPhasei)
         {
             const phaseModel& phase = movingPhases[movingPhasei];
 
-            lalphafs.set
-            (
-                movingPhasei,
-                max(alphafs[phase.index()], phase.residualAlpha())
-            );
+            movingAlphafs.set(movingPhasei, &alphafs[phase.index()]);
 
             Fgfs.set
             (
                 movingPhasei,
                 Ffs[phase.index()]
-              + lalphafs[movingPhasei]
+              + alphafs[phase.index()]
                *(
-                    ghSnGradRho
-                  - (fvc::interpolate(phase.rho() - rho))
-                   *(buoyancy.g & mesh.Sf())
-                  - fluid.surfaceTension(phase)*mesh.magSf()
+                   ghSnGradRho
+                 - fluid.surfaceTension(phase)*mesh.magSf()
                 )
+              - max(alphafs[phase.index()], phase.residualAlpha())
+               *fvc::interpolate(phase.rho() - rho)*(buoyancy.g & mesh.Sf())
             );
         }
 
-        alphaByADfs = invADVfs & lalphafs;
+        alphaByADfs = invADVfs & movingAlphafs;
         FgByADfs = invADVfs & Fgfs;
     }
 
