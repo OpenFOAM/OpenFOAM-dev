@@ -101,22 +101,4 @@ const Foam::labelUList& Foam::nonConformalCyclicFvPatch::faceCells() const
 }
 
 
-void Foam::nonConformalCyclicFvPatch::makeWeights(scalarField& w) const
-{
-    nonConformalCoupledFvPatch::makeWeights
-    (
-        w,
-        nbrPatch().Sf(),
-        nbrPatch().coupledFvPatch::delta()
-    );
-}
-
-
-Foam::tmp<Foam::vectorField>
-Foam::nonConformalCyclicFvPatch::delta() const
-{
-    return coupledFvPatch::delta(nbrPatch().coupledFvPatch::delta());
-}
-
-
 // ************************************************************************* //

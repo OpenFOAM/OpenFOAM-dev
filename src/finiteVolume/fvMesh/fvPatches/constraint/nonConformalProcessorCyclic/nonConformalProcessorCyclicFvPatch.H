@@ -119,13 +119,6 @@ public:
 
             //- Return the face-cells
             virtual const labelUList& faceCells() const;
-
-
-        //- Make patch weighting factors
-        virtual void makeWeights(scalarField& w) const;
-
-        //- Return delta (P to N) vectors across coupled patch
-        virtual tmp<vectorField> delta() const;
 };
 
 

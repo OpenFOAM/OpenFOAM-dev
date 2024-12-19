@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,24 +72,6 @@ void Foam::coupledFvPatch::makeWeights
 
             w[facei] = dni/di;
         }
-    }
-}
-
-
-Foam::tmp<Foam::vectorField> Foam::coupledFvPatch::delta
-(
-    const vectorField& nbrDelta
-) const
-{
-    if (transform().transforms())
-    {
-        return
-            coupledFvPatch::delta()
-          - transform().transform(nbrDelta);
-    }
-    else
-    {
-        return coupledFvPatch::delta() - nbrDelta;
     }
 }
 

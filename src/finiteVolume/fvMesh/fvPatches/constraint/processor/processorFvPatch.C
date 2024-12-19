@@ -78,8 +78,8 @@ Foam::tmp<Foam::vectorField> Foam::processorFvPatch::delta() const
         if (!boundaryMesh().mesh().conformal())
         {
             return
-                coupledFvPatch::delta
-                (
+                coupledFvPatch::delta()
+              - (
                     boundaryMesh().mesh().Cf().boundaryField()[index()]
                   - boundaryMesh().mesh().C().boundaryField()[index()]
                 );
@@ -87,7 +87,8 @@ Foam::tmp<Foam::vectorField> Foam::processorFvPatch::delta() const
         else
         {
             return
-                coupledFvPatch::delta
+                coupledFvPatch::delta()
+              - transform().transform
                 (
                     procPolyPatch_.neighbFaceCentres()
                   - procPolyPatch_.neighbFaceCellCentres()

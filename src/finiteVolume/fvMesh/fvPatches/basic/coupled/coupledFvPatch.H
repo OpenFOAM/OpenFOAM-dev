@@ -72,9 +72,6 @@ protected:
             const vectorField& nbrDelta
         ) const;
 
-        //- Return delta (P to N) vectors across coupled patch
-        tmp<vectorField> delta(const vectorField& nbrDelta) const;
-
 
 public:
 

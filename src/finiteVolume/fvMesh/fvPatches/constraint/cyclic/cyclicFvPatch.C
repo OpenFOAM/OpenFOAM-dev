@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,9 @@ void Foam::cyclicFvPatch::makeWeights(scalarField& w) const
 
 Foam::tmp<Foam::vectorField> Foam::cyclicFvPatch::delta() const
 {
-    return coupledFvPatch::delta(nbrPatch().coupledFvPatch::delta());
+    return
+        coupledFvPatch::delta()
+      - transform().transform(nbrPatch().coupledFvPatch::delta());
 }
 
 

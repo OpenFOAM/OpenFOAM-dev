@@ -100,42 +100,4 @@ Foam::nonConformalProcessorCyclicFvPatch::faceCells() const
 }
 
 
-void Foam::nonConformalProcessorCyclicFvPatch::makeWeights(scalarField& w) const
-{
-    if (Pstream::parRun())
-    {
-        nonConformalCoupledFvPatch::makeWeights
-        (
-            w,
-          - boundaryMesh().mesh().Sf().boundaryField()[index()],
-            boundaryMesh().mesh().Cf().boundaryField()[index()]
-          - boundaryMesh().mesh().C().boundaryField()[index()]
-        );
-    }
-    else
-    {
-        w = 1;
-    }
-}
-
-
-Foam::tmp<Foam::vectorField>
-Foam::nonConformalProcessorCyclicFvPatch::delta() const
-{
-    if (Pstream::parRun())
-    {
-        return
-            coupledFvPatch::delta
-            (
-                boundaryMesh().mesh().Cf().boundaryField()[index()]
-              - boundaryMesh().mesh().C().boundaryField()[index()]
-            );
-    }
-    else
-    {
-        return coupledFvPatch::delta();
-    }
-}
-
-
 // ************************************************************************* //
