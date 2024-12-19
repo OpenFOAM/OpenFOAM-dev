@@ -260,7 +260,7 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
     const HashPtrTable<Source>& stft
 )
 :
-    Internal(io, diField),
+    Internal(io, diField, false),
     OldTimeField<GeometricField>(this->time().timeIndex()),
     fieldPrevIterPtr_(nullptr),
     boundaryField_(this->mesh().boundary(), *this, ptfl),
@@ -298,8 +298,6 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
         InfoInFunction
             << "Constructing from components" << endl << this->info() << endl;
     }
-
-    readIfPresent();
 }
 
 
@@ -469,33 +467,6 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
 
 
 template<class Type, class GeoMesh, template<class> class PrimitiveField>
-Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
-(
-    const IOobject& io,
-    const GeometricField<Type, GeoMesh, PrimitiveField>& gf
-)
-:
-    Internal(io, gf, false),
-    OldTimeField<GeometricField>(gf.timeIndex()),
-    fieldPrevIterPtr_(nullptr),
-    boundaryField_(*this, gf.boundaryField_),
-    sources_(*this, gf.sources_)
-{
-    if (debug)
-    {
-        InfoInFunction
-            << "Constructing as copy resetting IO params"
-            << endl << this->info() << endl;
-    }
-
-    if (!readIfPresent())
-    {
-        copyOldTimes(io, gf);
-    }
-}
-
-
-template<class Type, class GeoMesh, template<class> class PrimitiveField>
 template<template<class> class PrimitiveField2>
 Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
 (
@@ -503,7 +474,7 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
     const GeometricField<Type, GeoMesh, PrimitiveField2>& gf
 )
 :
-    Internal(io, gf),
+    Internal(io, gf, false),
     OldTimeField<GeometricField>(gf.timeIndex()),
     fieldPrevIterPtr_(nullptr),
     boundaryField_(*this, gf.boundaryField_),
@@ -552,30 +523,6 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
     tgf.clear();
 
     readIfPresent();
-}
-
-
-template<class Type, class GeoMesh, template<class> class PrimitiveField>
-Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
-(
-    const word& newName,
-    const GeometricField<Type, GeoMesh, PrimitiveField>& gf
-)
-:
-    Internal(newName, gf),
-    OldTimeField<GeometricField>(gf.timeIndex()),
-    fieldPrevIterPtr_(nullptr),
-    boundaryField_(*this, gf.boundaryField_),
-    sources_(*this, gf.sources_)
-{
-    if (debug)
-    {
-        InfoInFunction
-            << "Constructing as copy resetting name"
-            << endl << this->info() << endl;
-    }
-
-    copyOldTimes(newName, gf);
 }
 
 
@@ -634,10 +581,11 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
 
 
 template<class Type, class GeoMesh, template<class> class PrimitiveField>
+template<template<class> class PrimitiveField2>
 Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
 (
     const IOobject& io,
-    const GeometricField<Type, GeoMesh, PrimitiveField>& gf,
+    const GeometricField<Type, GeoMesh, PrimitiveField2>& gf,
     const word& patchFieldType
 )
 :
@@ -664,71 +612,37 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
 
 
 template<class Type, class GeoMesh, template<class> class PrimitiveField>
-template<template<class> class PrimitiveField2>
 Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
 (
     const IOobject& io,
-    const GeometricField<Type, GeoMesh, PrimitiveField2>& gf,
+    const tmp<GeometricField<Type, GeoMesh, PrimitiveField>>& tgf,
     const word& patchFieldType
 )
 :
-    Internal(io, gf),
-    OldTimeField<GeometricField>(gf.timeIndex()),
-    fieldPrevIterPtr_(nullptr),
-    boundaryField_(this->mesh().boundary(), *this, patchFieldType),
-    sources_(*this, gf.sources_)
-{
-    if (debug)
-    {
-        InfoInFunction
-            << "Constructing as copy resetting IO params"
-            << endl << this->info() << endl;
-    }
-
-    boundaryField_ == gf.boundaryField_;
-
-    if (!readIfPresent())
-    {
-        copyOldTimes();
-    }
-}
-
-
-template<class Type, class GeoMesh, template<class> class PrimitiveField>
-Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
-(
-    const IOobject& io,
-    const GeometricField<Type, GeoMesh, PrimitiveField>& gf,
-    const wordList& patchFieldTypes,
-    const wordList& actualPatchTypes,
-    const HashTable<word>& fieldSourceTypes
-)
-:
-    Internal(io, gf, false),
-    OldTimeField<GeometricField>(gf.timeIndex()),
-    fieldPrevIterPtr_(nullptr),
-    boundaryField_
+    Internal
     (
-        this->mesh().boundary(),
-        *this,
-        patchFieldTypes,
-        actualPatchTypes
+        io,
+        const_cast<GeometricField<Type, GeoMesh, PrimitiveField>&>(tgf()),
+        tgf.isTmp(),
+        false
     ),
-    sources_(*this, fieldSourceTypes)
+    OldTimeField<GeometricField>(tgf().timeIndex()),
+    fieldPrevIterPtr_(nullptr),
+    boundaryField_(this->mesh().boundary(), *this, patchFieldType),
+    sources_(*this, tgf().sources_)
 {
     if (debug)
     {
         InfoInFunction
-            << "Constructing as copy resetting IO params and patch types"
+            << "Constructing as copy resetting IO params"
             << endl << this->info() << endl;
     }
 
-    boundaryField_ == gf.boundaryField_;
+    boundaryField_ == tgf().boundaryField_;
 
-    if (!readIfPresent())
-    {
-        copyOldTimes(io, gf);
-    }
+    tgf.clear();
+
+    readIfPresent();
 }
 
 
@@ -743,7 +657,7 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
     const HashTable<word>& fieldSourceTypes
 )
 :
-    Internal(io, gf),
+    Internal(io, gf, false),
     OldTimeField<GeometricField>(gf.timeIndex()),
     fieldPrevIterPtr_(nullptr),
     boundaryField_
@@ -809,6 +723,75 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
     boundaryField_ == tgf().boundaryField_;
 
     tgf.clear();
+
+    readIfPresent();
+}
+
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+template<template<class> class PrimitiveField2>
+Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
+(
+    const IOobject& io,
+    const DimensionedField<Type, GeoMesh, PrimitiveField2>& df,
+    const wordList& patchFieldTypes,
+    const wordList& actualPatchTypes,
+    const HashTable<word>& fieldSourceTypes
+)
+:
+    Internal(io, df, false),
+    OldTimeField<GeometricField>(df.timeIndex()),
+    fieldPrevIterPtr_(nullptr),
+    boundaryField_
+    (
+        this->mesh().boundary(),
+        *this,
+        patchFieldTypes,
+        actualPatchTypes
+    ),
+    sources_(*this, fieldSourceTypes)
+{
+    if (debug)
+    {
+        InfoInFunction
+            << "Constructing from internal field and patch types"
+            << endl << this->info() << endl;
+    }
+
+    readIfPresent();
+}
+
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
+(
+    const IOobject& io,
+    const tmp<Internal>& tdf,
+    const wordList& patchFieldTypes,
+    const wordList& actualPatchTypes,
+    const HashTable<word>& fieldSourceTypes
+)
+:
+    Internal(io, const_cast<Internal&>(tdf()), tdf.isTmp(), false),
+    OldTimeField<GeometricField>(tdf().timeIndex()),
+    fieldPrevIterPtr_(nullptr),
+    boundaryField_
+    (
+        this->mesh().boundary(),
+        *this,
+        patchFieldTypes,
+        actualPatchTypes
+    ),
+    sources_(*this, fieldSourceTypes)
+{
+    if (debug)
+    {
+        InfoInFunction
+            << "Constructing from tmp internal field and patch types"
+            << endl << this->info() << endl;
+    }
+
+    tdf.clear();
 
     readIfPresent();
 }
@@ -1120,6 +1103,81 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::New
                 cacheTmp
             ),
             tgf,
+            patchFieldTypes,
+            actualPatchTypes,
+            fieldSourceTypes
+        ),
+        cacheTmp
+    );
+}
+
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+template<template<class> class PrimitiveField2>
+Foam::tmp<Foam::GeometricField<Type, GeoMesh, PrimitiveField>>
+Foam::GeometricField<Type, GeoMesh, PrimitiveField>::New
+(
+    const word& newName,
+    const DimensionedField<Type, GeoMesh, PrimitiveField2>& df,
+    const wordList& patchFieldTypes,
+    const wordList& actualPatchTypes,
+    const HashTable<word>& fieldSourceTypes
+)
+{
+    const bool cacheTmp = df.db().cacheTemporaryObject(newName);
+
+    return tmp<GeometricField<Type, GeoMesh, PrimitiveField>>
+    (
+        new GeometricField<Type, GeoMesh, PrimitiveField>
+        (
+            IOobject
+            (
+                newName,
+                df.instance(),
+                df.local(),
+                df.db(),
+                IOobject::NO_READ,
+                IOobject::NO_WRITE,
+                cacheTmp
+            ),
+            df,
+            patchFieldTypes,
+            actualPatchTypes,
+            fieldSourceTypes
+        ),
+        cacheTmp
+    );
+}
+
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+Foam::tmp<Foam::GeometricField<Type, GeoMesh, PrimitiveField>>
+Foam::GeometricField<Type, GeoMesh, PrimitiveField>::New
+(
+    const word& newName,
+    const tmp<Internal>& tdf,
+    const wordList& patchFieldTypes,
+    const wordList& actualPatchTypes,
+    const HashTable<word>& fieldSourceTypes
+)
+{
+    const bool cacheTmp = tdf().db().cacheTemporaryObject(newName);
+
+    return tmp<GeometricField<Type, GeoMesh, PrimitiveField>>
+    (
+        new GeometricField<Type, GeoMesh, PrimitiveField>
+        (
+            IOobject
+            (
+                newName,
+                tdf().instance(),
+                tdf().local(),
+                tdf().db(),
+                IOobject::NO_READ,
+                IOobject::NO_WRITE,
+                cacheTmp
+            ),
+            tdf,
             patchFieldTypes,
             actualPatchTypes,
             fieldSourceTypes

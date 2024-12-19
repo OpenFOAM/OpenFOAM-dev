@@ -246,15 +246,8 @@ public:
         );
 
         //- Construct as copy resetting IO parameters
-        GeometricField
-        (
-            const IOobject&,
-            const GeometricField<Type, GeoMesh, PrimitiveField>&
-        );
-
-        //- Construct as copy resetting IO parameters
         template<template<class> class PrimitiveField2>
-        explicit GeometricField
+        GeometricField
         (
             const IOobject&,
             const GeometricField<Type, GeoMesh, PrimitiveField2>&
@@ -268,15 +261,8 @@ public:
         );
 
         //- Construct as copy resetting name
-        GeometricField
-        (
-            const word& newName,
-            const GeometricField<Type, GeoMesh, PrimitiveField>&
-        );
-
-        //- Construct as copy resetting name
         template<template<class> class PrimitiveField2>
-        explicit GeometricField
+        GeometricField
         (
             const word& newName,
             const GeometricField<Type, GeoMesh, PrimitiveField2>&
@@ -290,48 +276,61 @@ public:
         );
 
         //- Construct as copy resetting IO parameters and patch field type
-        GeometricField
-        (
-            const IOobject&,
-            const GeometricField<Type, GeoMesh, PrimitiveField>&,
-            const word& patchFieldType
-        );
-
-        //- Construct as copy resetting IO parameters and patch field type
         template<template<class> class PrimitiveField2>
-        explicit GeometricField
+        GeometricField
         (
             const IOobject&,
             const GeometricField<Type, GeoMesh, PrimitiveField2>&,
             const word& patchFieldType
         );
 
-        //- Construct as copy resetting IO parameters and boundary types
-        GeometricField
-        (
-            const IOobject&,
-            const GeometricField<Type, GeoMesh, PrimitiveField>&,
-            const wordList& patchFieldTypes,
-            const wordList& actualPatchTypes = wordList(),
-            const HashTable<word>& fieldSourceTypes = HashTable<word>()
-        );
-
-        //- Construct as copy resetting IO parameters and boundary types
-        template<template<class> class PrimitiveField2>
-        explicit GeometricField
-        (
-            const IOobject&,
-            const GeometricField<Type, GeoMesh, PrimitiveField2>&,
-            const wordList& patchFieldTypes,
-            const wordList& actualPatchTypes = wordList(),
-            const HashTable<word>& fieldSourceTypes = HashTable<word>()
-        );
-
-        //- Construct as copy of tmp resetting IO parameters and boundary types
+        //- Construct as copy of tmp resetting IO parameters
+        //  and patch field type
         GeometricField
         (
             const IOobject&,
             const tmp<GeometricField<Type, GeoMesh, PrimitiveField>>&,
+            const word& patchFieldType
+        );
+
+        //- Construct as copy resetting IO parameters and patch field types
+        template<template<class> class PrimitiveField2>
+        GeometricField
+        (
+            const IOobject&,
+            const GeometricField<Type, GeoMesh, PrimitiveField2>&,
+            const wordList& patchFieldTypes,
+            const wordList& actualPatchTypes = wordList(),
+            const HashTable<word>& fieldSourceTypes = HashTable<word>()
+        );
+
+        //- Construct as copy of tmp resetting IO parameters
+        //  and patch field types
+        GeometricField
+        (
+            const IOobject&,
+            const tmp<GeometricField<Type, GeoMesh, PrimitiveField>>&,
+            const wordList& patchFieldTypes,
+            const wordList& actualPatchTypes = wordList(),
+            const HashTable<word>& fieldSourceTypes = HashTable<word>()
+        );
+
+        //- Construct from IOobject, internal field and patch field types
+        template<template<class> class PrimitiveField2>
+        GeometricField
+        (
+            const IOobject&,
+            const DimensionedField<Type, GeoMesh, PrimitiveField2>&,
+            const wordList& patchFieldTypes,
+            const wordList& actualPatchTypes = wordList(),
+            const HashTable<word>& fieldSourceTypes = HashTable<word>()
+        );
+
+        //- Construct from IOobject, tmp internal field and patch field types
+        GeometricField
+        (
+            const IOobject&,
+            const tmp<Internal>&,
             const wordList& patchFieldTypes,
             const wordList& actualPatchTypes = wordList(),
             const HashTable<word>& fieldSourceTypes = HashTable<word>()
@@ -371,7 +370,7 @@ public:
             const word& name,
             const Mesh&,
             const dimensioned<Type>&,
-            const word& patchFieldType=Patch::calculatedType()
+            const word& patchFieldType = Patch::calculatedType()
         );
 
         //- Return a temporary field constructed from mesh, dimensioned<Type>
@@ -417,6 +416,29 @@ public:
         (
             const word& newName,
             const tmp<GeometricField<Type, GeoMesh, PrimitiveField>>&,
+            const wordList& patchFieldTypes,
+            const wordList& actualPatchTypes = wordList(),
+            const HashTable<word>& fieldSourceTypes = HashTable<word>()
+        );
+
+        //- Return a temporary field constructed from IOobject, internal
+        //  field and patch field types
+        template<template<class> class PrimitiveField2>
+        static tmp<GeometricField<Type, GeoMesh, PrimitiveField>> New
+        (
+            const word& newName,
+            const DimensionedField<Type, GeoMesh, PrimitiveField2>&,
+            const wordList& patchFieldTypes,
+            const wordList& actualPatchTypes = wordList(),
+            const HashTable<word>& fieldSourceTypes = HashTable<word>()
+        );
+
+        //- Return a temporary field constructed from IOobject, tmp internal
+        //  field and patch field types
+        static tmp<GeometricField<Type, GeoMesh, PrimitiveField>> New
+        (
+            const word& newName,
+            const tmp<Internal>&,
             const wordList& patchFieldTypes,
             const wordList& actualPatchTypes = wordList(),
             const HashTable<word>& fieldSourceTypes = HashTable<word>()

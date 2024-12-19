@@ -196,7 +196,7 @@ tmp<DimensionedField<scalar, GeoMesh, Field>> magSqr
 {
     tmp<DimensionedField<scalar, GeoMesh, Field>> tMagSqr
     (
-        DimensionedField<scalar, GeoMesh, PrimitiveField>::New
+        DimensionedField<scalar, GeoMesh, Field>::New
         (
             "magSqr(" + df.name() + ')',
             df.mesh(),
@@ -241,7 +241,7 @@ tmp<DimensionedField<scalar, GeoMesh, Field>> mag
 {
     tmp<DimensionedField<scalar, GeoMesh, Field>> tMag
     (
-        DimensionedField<scalar, GeoMesh, PrimitiveField>::New
+        DimensionedField<scalar, GeoMesh, Field>::New
         (
             "mag(" + df.name() + ')',
             df.mesh(),

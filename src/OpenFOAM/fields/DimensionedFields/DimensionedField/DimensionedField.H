@@ -201,7 +201,7 @@ public:
 
         //- Copy constructor or reuse as specified.
         template<template<class> class PrimitiveField2>
-        explicit DimensionedField
+        DimensionedField
         (
             DimensionedField<Type, GeoMesh, PrimitiveField2>&,
             const bool reuse
@@ -215,7 +215,7 @@ public:
 
         //- Copy constructor resetting IO parameters
         template<template<class> class PrimitiveField2>
-        explicit DimensionedField
+        DimensionedField
         (
             const IOobject&,
             const DimensionedField<Type, GeoMesh, PrimitiveField2>&,
@@ -224,7 +224,7 @@ public:
 
         //- Copy constructor resetting IO parameters and reuse as specified.
         template<template<class> class PrimitiveField2>
-        explicit DimensionedField
+        DimensionedField
         (
             const IOobject&,
             DimensionedField<Type, GeoMesh, PrimitiveField2>&,
@@ -242,7 +242,7 @@ public:
 
         //- Copy constructor resetting name
         template<template<class> class PrimitiveField2>
-        explicit DimensionedField
+        DimensionedField
         (
             const word& newName,
             const DimensionedField<Type, GeoMesh, PrimitiveField2>&
@@ -250,7 +250,7 @@ public:
 
         //- Copy constructor resetting name and reuse as specified.
         template<template<class> class PrimitiveField2>
-        explicit DimensionedField
+        DimensionedField
         (
             const word& newName,
             DimensionedField<Type, GeoMesh, PrimitiveField2>&,
