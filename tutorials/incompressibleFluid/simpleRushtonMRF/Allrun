@@ -43,6 +43,9 @@ do
     -h | -help)
         usage
         ;;
+    -test)
+        shift 1
+        ;;
     -*)
         usage "Invalid option '$1'"
         ;;
