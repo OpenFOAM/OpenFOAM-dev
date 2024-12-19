@@ -293,7 +293,6 @@ read -r nFile
     echo "\"$nFile\" is not a number between 1 and $nFiles" && exit 1
 
 file="$(setFile "$files" "$nFile")"
-echo $file
 if tgt="$(setTgt "$prefix" "$file" "$tgt" "$region")"
 then
     cpFile "$file" "$tgt" && exit 0
