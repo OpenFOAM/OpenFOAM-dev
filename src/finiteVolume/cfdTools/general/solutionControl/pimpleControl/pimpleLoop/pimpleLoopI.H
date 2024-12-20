@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,12 +28,6 @@ License
 inline Foam::label Foam::pimpleLoop::nCorr() const
 {
     return nCorr_;
-}
-
-
-inline bool Foam::pimpleLoop::anyIter() const
-{
-    return corr_ != 0;
 }
 
 

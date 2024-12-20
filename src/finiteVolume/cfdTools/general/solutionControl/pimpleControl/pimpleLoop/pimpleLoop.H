@@ -93,9 +93,6 @@ public:
             //- Maximum number of correctors
             inline label nCorr() const;
 
-            //- Flag to indicate any iteration
-            inline bool anyIter() const;
-
             //- Flag to indicate the first iteration
             inline bool firstIter() const;
 
