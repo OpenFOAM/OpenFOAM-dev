@@ -139,7 +139,7 @@ public:
 
         //- Reset the boundary field contents to the given field
         //  Used for mesh to mesh mapping
-        void reset(const GeometricFieldSources&);
+        void reset(const Internal&, const GeometricFieldSources&);
 
         //- Write sources as dictionary entry
         void writeEntry(const word& keyword, Ostream& os) const;

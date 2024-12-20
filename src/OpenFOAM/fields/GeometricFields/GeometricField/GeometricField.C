@@ -1324,7 +1324,7 @@ void Foam::GeometricField<Type, GeoMesh, PrimitiveField>::reset
 
     Internal::reset(gf);
     boundaryField_.reset(gf.boundaryField());
-    sources_.reset(gf.sources());
+    sources_.reset(*this, gf.sources());
 
     tgf.clear();
 }

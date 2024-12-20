@@ -191,6 +191,7 @@ void Foam::GeometricFieldSources<Type, GeoMesh, PrimitiveField>::readField
 template<class Type, class GeoMesh, template<class> class PrimitiveField>
 void Foam::GeometricFieldSources<Type, GeoMesh, PrimitiveField>::reset
 (
+    const DimensionedField<Type, GeoMesh, PrimitiveField>& field,
     const GeometricFieldSources<Type, GeoMesh, PrimitiveField>& mtf
 )
 {
@@ -200,7 +201,7 @@ void Foam::GeometricFieldSources<Type, GeoMesh, PrimitiveField>::reset
 
     forAllConstIter(typename HashPtrTable<Source>, mtf, iter)
     {
-        this->set(iter.key(), iter()->clone(iter()->internalField()).ptr());
+        this->set(iter.key(), iter()->clone(field).ptr());
     }
 }
 
