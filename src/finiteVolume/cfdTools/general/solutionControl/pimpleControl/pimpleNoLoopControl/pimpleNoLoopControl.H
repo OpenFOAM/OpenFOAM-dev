@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -133,6 +133,9 @@ public:
 
             //- Flag to indicate whether to correct the transport models
             inline bool correctTransport() const;
+
+            //- Maximum number of correctors
+            inline label nCorr() const;
 
             //- Flag to indicate the first iteration
             inline bool firstIter() const;

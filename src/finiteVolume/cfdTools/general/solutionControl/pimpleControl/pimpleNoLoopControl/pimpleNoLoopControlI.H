@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,6 +48,12 @@ inline bool Foam::pimpleNoLoopControl::predictTransport() const
 inline bool Foam::pimpleNoLoopControl::correctTransport() const
 {
     return !transportCorrectionFinal_ || finalIter();
+}
+
+
+inline Foam::label Foam::pimpleNoLoopControl::nCorr() const
+{
+    return pimpleLoopPtr_ ? pimpleLoopPtr_->nCorr() : 1;
 }
 
 
