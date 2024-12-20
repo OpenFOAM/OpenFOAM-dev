@@ -60,7 +60,7 @@ SourceFiles
 #define distribution_H
 
 #include "dictionary.H"
-#include "randomGenerator.H"
+#include "restartableRandomGenerator.H"
 #include "fieldTypes.H"
 #include "scalarField.H"
 
@@ -77,7 +77,7 @@ class distribution
 {
 protected:
 
-    // Protected data
+    // Protected Data
 
         //- Distribution size exponent
         const label Q_;
@@ -86,7 +86,7 @@ protected:
         const label sampleQ_;
 
         //- Random number generator
-        mutable randomGenerator rndGen_;
+        mutable restartableRandomGenerator rndGen_;
 
 
     // Protected Member Functions
@@ -211,6 +211,10 @@ public:
 
         //- Access the sample size exponent
         label sampleQ() const;
+
+        //- Start a sequence of samples. Either a new sequence, or a
+        //  repeat of the previous, as indicated by the provided flag.
+        void start(const bool repeat) const;
 
         //- Sample the distribution
         virtual scalar sample() const = 0;

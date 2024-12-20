@@ -137,6 +137,12 @@ Foam::label Foam::distribution::sampleQ() const
 }
 
 
+void Foam::distribution::start(const bool restart) const
+{
+    rndGen_.start(restart);
+}
+
+
 Foam::tmp<Foam::scalarField>
 Foam::distribution::CDF(const scalarField& x) const
 {
