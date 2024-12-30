@@ -102,11 +102,7 @@ nu
         (
             nu0,
             (tau0_ + k_*pow(strainRate, n_))
-           /max
-            (
-                strainRate,
-                dimensionedScalar("vSmall", dimless/dimTime, vSmall)
-            )
+           /max(strainRate, dimensionedScalar(dimless/dimTime, rootVSmall))
         )
     );
 }
