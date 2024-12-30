@@ -141,8 +141,8 @@ public:
             //- Burnt gas temperature [K]
             virtual tmp<volScalarField> Tb() const;
 
-            //- Enthalpy of formation [J/kg]
-            virtual tmp<volScalarField> hf() const;
+            //- Standard enthalpy of reaction [J/kg]
+            virtual tmp<volScalarField> hr() const;
 
             //- Unburnt gas compressibility [s^2/m^2]
             virtual tmp<volScalarField> psiu() const;
