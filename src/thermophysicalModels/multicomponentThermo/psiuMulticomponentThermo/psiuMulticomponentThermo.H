@@ -182,7 +182,7 @@ public:
                 const label patchi
             ) const = 0;
 
-            //- Standard tnthalpy of reaction [J/kg]
+            //- Standard enthalpy of reaction [J/kg]
             virtual tmp<volScalarField> hr() const = 0;
 
             //- Burnt gas temperature [K]
