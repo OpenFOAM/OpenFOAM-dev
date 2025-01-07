@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -247,22 +247,25 @@ bool Foam::OldTimeField<FieldType>::isOldTime() const
 
 
 template<class FieldType>
+bool Foam::OldTimeField<FieldType>::hasStoredOldTimes() const
+{
+    return timeIndex_ == field().time().timeIndex();
+}
+
+
+template<class FieldType>
 void Foam::OldTimeField<FieldType>::storeOldTimes() const
 {
-    // Store if the time index is not up to date with database's index
-    if
-    (
-        tfield0_.valid()
-     && timeIndex_ != field().time().timeIndex()
-     && !isOldTime()
-    )
+    // Store if it has not yet been done in this time-step
+    if (!hasStoredOldTimes())
     {
-        storeOldTimesInner();
-    }
+        // Propagate through the old-time fields
+        if (!isOldTime())
+        {
+            storeOldTimesInner();
+        }
 
-    // Correct time index
-    if (timeIndex_ != field().time().timeIndex())
-    {
+        // Update the time index
         timeIndex_ = field().time().timeIndex();
         setBase();
     }

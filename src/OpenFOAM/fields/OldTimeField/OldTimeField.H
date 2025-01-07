@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -278,6 +278,9 @@ public:
         //- Return whether or not this is an old-time field
         bool isOldTime() const;
 
+        //- Return whether old-time fields have been stored yet
+        bool hasStoredOldTimes() const;
+
         //- Store the old-time fields
         void storeOldTimes() const;
 
@@ -323,6 +326,7 @@ public:
     using OldTimeField<FieldType>::copyOldTimes;                               \
     using OldTimeField<FieldType>::timeIndex;                                  \
     using OldTimeField<FieldType>::isOldTime;                                  \
+    using OldTimeField<FieldType>::hasStoredOldTimes;                          \
     using OldTimeField<FieldType>::storeOldTimes;                              \
     using OldTimeField<FieldType>::clearOldTimes;                              \
     using OldTimeField<FieldType>::nullOldestTime;                             \
