@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,6 +30,7 @@ License
 #include "faceSet.H"
 #include "pointSet.H"
 #include "fvMeshSubset.H"
+#include "LagrangianMesh.H"
 #include "vtkPVFoamReader.h"
 #include "uindirectPrimitivePatch.H"
 
@@ -100,13 +101,13 @@ void Foam::vtkPVFoam::convertMeshVolume
 }
 
 
-void Foam::vtkPVFoam::convertMeshLagrangian
+void Foam::vtkPVFoam::convertMeshlagrangian
 (
     vtkMultiBlockDataSet* output,
     int& blockNo
 )
 {
-    arrayRange& range = arrayRangeLagrangian_;
+    arrayRange& range = arrayRangelagrangian_;
     range.block(blockNo);      // Set output block
     label datasetNo = 0;       // Restart at dataset 0
     const fvMesh& mesh = *meshPtr_;
@@ -132,6 +133,65 @@ void Foam::vtkPVFoam::convertMeshLagrangian
         {
             AddToBlock(output, vtkmesh, range, datasetNo, cloudName);
             vtkmesh->Delete();
+
+            partDataset_[partId] = datasetNo++;
+        }
+    }
+
+    // Anything added?
+    if (datasetNo)
+    {
+        ++blockNo;
+    }
+
+    if (debug)
+    {
+        printMemory();
+    }
+}
+
+
+void Foam::vtkPVFoam::convertMeshLagrangian
+(
+    vtkMultiBlockDataSet* output,
+    int& blockNo,
+    PtrList<LagrangianMesh>& LmeshPtrs
+)
+{
+    arrayRange& range = arrayRangeLagrangian_;
+    range.block(blockNo);      // Set output block
+    label datasetNo = 0;       // Restart at dataset 0
+    const fvMesh& mesh = *meshPtr_;
+
+    if (debug)
+    {
+        InfoInFunction << endl;
+        printMemory();
+    }
+
+    LmeshPtrs.clear();
+
+    for (int partId = range.start(); partId < range.end(); ++partId)
+    {
+        const word LagrangianName = getPartName(partId);
+
+        if (!partStatus_[partId])
+        {
+            continue;
+        }
+
+        autoPtr<LagrangianMesh> LmeshPtr;
+
+        vtkPolyData* vtkmesh =
+            LagrangianVTKMesh(mesh, LagrangianName, LmeshPtr);
+
+        if (vtkmesh)
+        {
+            AddToBlock(output, vtkmesh, range, datasetNo, LagrangianName);
+
+            vtkmesh->Delete();
+
+            LmeshPtrs.append(LmeshPtr);
 
             partDataset_[partId] = datasetNo++;
         }

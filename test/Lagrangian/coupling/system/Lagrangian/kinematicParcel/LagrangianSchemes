@@ -1,0 +1,53 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system/Lagrangian/kinematicParcel";
+    object      LagrangianSchemes;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+tracking    parabolic;
+
+ddtSchemes
+{
+    default     CrankNicolson;
+}
+
+SpSchemes
+{
+    default     none;
+    Sp(D,U)     implicit;
+    Sp(D,Uc)    explicit;
+    Sp(L,U)     implicit;
+    Sp(L,Uc)    explicit;
+}
+
+averagingSchemes
+{
+    default     none;
+    alpha       cellPoint;
+}
+
+interpolationSchemes
+{
+    default     cell;
+    Uc          cellPoint;
+}
+
+accumulationSchemes
+{
+    default     none;
+    v           cell;
+    S(v*U)      cellPoint;
+}
+
+
+// ************************************************************************* //

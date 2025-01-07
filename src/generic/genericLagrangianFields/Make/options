@@ -1,0 +1,11 @@
+EXE_INC = \
+    -I$(LIB_SRC)/generic/genericPatches/lnInclude \
+    -I$(LIB_SRC)/generic/genericFields/lnInclude \
+    -I$(LIB_SRC)/generic/genericLagrangianPatches/lnInclude \
+    -I$(LIB_SRC)/Lagrangian/Lagrangian/lnInclude
+
+LIB_LIBS = \
+    -lgenericPatches \
+    -lgenericFields \
+    -lgenericLagrangianPatches \
+    -lLagrangian

@@ -178,7 +178,7 @@
                 </Documentation>
             </IntVectorProperty>
 
-            <!-- Available Parts (volume, patches, lagrangian) array -->
+            <!-- Available Parts (volume, patches, Lagrangian) array -->
             <StringVectorProperty
                 name="PartArrayStatus"
                 information_only="1">
@@ -230,6 +230,32 @@
                 </Documentation>
             </StringVectorProperty>
 
+            <!-- Available lagrangian fields array -->
+            <StringVectorProperty
+                name="lagrangianFieldArrayStatus"
+                information_only="1">
+                <ArraySelectionInformationHelper attribute_name="lagrangianField"/>
+            </StringVectorProperty>
+            <StringVectorProperty
+                name="lagrangianFieldStatus"
+                label="lagrangian Fields"
+                command="SetlagrangianFieldArrayStatus"
+                number_of_elements="0"
+                repeat_command="1"
+                number_of_elements_per_command="2"
+                element_types="2 0"
+                information_property="lagrangianFieldArrayStatus"
+                animateable="0">
+                <ArraySelectionDomain name="array_list">
+                    <RequiredProperties>
+                        <Property name="lagrangianFieldArrayStatus" function="ArrayList"/>
+                    </RequiredProperties>
+                </ArraySelectionDomain>
+                <Documentation>
+                    Select lagrangian fields to load
+                </Documentation>
+            </StringVectorProperty>
+
             <!-- Available Lagrangian fields array -->
             <StringVectorProperty
                 name="LagrangianFieldArrayStatus"
@@ -252,7 +278,7 @@
                     </RequiredProperties>
                 </ArraySelectionDomain>
                 <Documentation>
-                    Select Lagrangain fields to load
+                    Select Lagrangian fields to load
                 </Documentation>
             </StringVectorProperty>
 
@@ -264,6 +290,8 @@
                 <Property name="PartStatus"/>
                 <Property name="FieldArrayStatus"/>
                 <Property name="FieldStatus"/>
+                <Property name="lagrangianFieldArrayStatus"/>
+                <Property name="lagrangianFieldStatus"/>
                 <Property name="LagrangianFieldArrayStatus"/>
                 <Property name="LagrangianFieldStatus"/>
             </PropertyGroup>

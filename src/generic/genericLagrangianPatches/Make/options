@@ -1,0 +1,7 @@
+EXE_INC = \
+    -I$(LIB_SRC)/generic/genericPatches/lnInclude \
+    -I$(LIB_SRC)/Lagrangian/Lagrangian/lnInclude
+
+LIB_LIBS = \
+    -lgenericPatches \
+    -lLagrangian

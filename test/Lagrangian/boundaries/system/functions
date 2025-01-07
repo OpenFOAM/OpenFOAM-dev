@@ -1,0 +1,81 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      functions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+kinematicParticle
+{
+    type        kinematicParticleCloud;
+    libs        ("libLagrangianCloud.so");
+}
+
+volume
+{
+    type        cloudVolume;
+    libs        ("libLagrangianCloudFunctionObjects.so");
+    cloud       kinematicParticle;
+}
+
+#includeFunc volIntegrate(kinematicParticle:alpha)
+
+surfaceArea
+{
+    type        cloudSurfaceArea;
+    libs        ("libLagrangianCloudFunctionObjects.so");
+    cloud       kinematicParticle;
+}
+
+volumeFraction
+{
+    type        cloudVolumeFraction;
+    libs        ("libLagrangianCloudFunctionObjects.so");
+    cloud       kinematicParticle;
+}
+
+surfaceAreaPerUnitVolume
+{
+    type        cloudSurfaceAreaPerUnitVolume;
+    libs        ("libLagrangianCloudFunctionObjects.so");
+    cloud       kinematicParticle;
+}
+
+age
+{
+    type        cloudAge;
+    libs        ("libLagrangianCloudFunctionObjects.so");
+    cloud       kinematicParticle;
+}
+
+numberFlux
+{
+    type        cloudNumberFlux;
+    libs        ("libLagrangianCloudFunctionObjects.so");
+    cloud       kinematicParticle;
+}
+
+volumeFlux
+{
+    type        cloudVolumeFlux;
+    libs        ("libLagrangianCloudFunctionObjects.so");
+    cloud       kinematicParticle;
+}
+
+cloudBoundaryCollisionNumberFlux
+{
+    type        cloudBoundaryCollisionNumberFlux;
+    libs        ("libLagrangianCloudFunctionObjects.so");
+    cloud       kinematicParticle;
+}
+
+// ************************************************************************* //

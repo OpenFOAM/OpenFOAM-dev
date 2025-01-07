@@ -1,0 +1,41 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       LagrangianScalarField;
+    location    "0/Lagrangian/cloud";
+    object      d;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [length];
+
+internalField   uniform 0.1 [mm];
+
+boundaryField
+{
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    ".*"
+    {
+        type            calculated;
+    }
+}
+
+sources
+{
+    inlet
+    {
+        type            uniformFixedValue;
+        uniformValue    0.1 [mm];
+    }
+}
+
+
+// ************************************************************************* //

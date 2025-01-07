@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,6 +96,7 @@ class IOobjectList;
 class polyPatch;
 class faceSet;
 class pointSet;
+class LagrangianMesh;
 
 /*---------------------------------------------------------------------------*\
                           Class vtkPVFoam Declaration
@@ -286,6 +287,7 @@ class vtkPVFoam
         //  used to index into partStatus_ and partDataset_
         arrayRange arrayRangeVolume_;
         arrayRange arrayRangePatches_;
+        arrayRange arrayRangelagrangian_;
         arrayRange arrayRangeLagrangian_;
         arrayRange arrayRangeCellZones_;
         arrayRange arrayRangeFaceZones_;
@@ -349,6 +351,9 @@ class vtkPVFoam
             void updateInfoInternalMesh(vtkDataArraySelection*);
 
             //- Lagrangian info
+            void updateInfolagrangian(vtkDataArraySelection*);
+
+            //- Lagrangian info
             void updateInfoLagrangian(vtkDataArraySelection*);
 
             //- Patch info
@@ -404,6 +409,9 @@ class vtkPVFoam
             void updateInfoFields();
 
             //- Lagrangian field info
+            void updateInfolagrangianFields();
+
+            //- Lagrangian field info
             void updateInfoLagrangianFields();
 
 
@@ -422,6 +430,9 @@ class vtkPVFoam
             void updatePointFields(vtkMultiBlockDataSet*);
 
             //- Lagrangian fields
+            void updatelagrangianFields(vtkMultiBlockDataSet*);
+
+            //- Lagrangian fields
             void updateLagrangianFields(vtkMultiBlockDataSet*);
 
 
@@ -431,7 +442,15 @@ class vtkPVFoam
             void convertMeshVolume(vtkMultiBlockDataSet*, int& blockNo);
 
             //- Lagrangian mesh
-            void convertMeshLagrangian(vtkMultiBlockDataSet*, int& blockNo);
+            void convertMeshlagrangian(vtkMultiBlockDataSet*, int& blockNo);
+
+            //- Lagrangian mesh
+            void convertMeshLagrangian
+            (
+                vtkMultiBlockDataSet*,
+                int& blockNo,
+                PtrList<LagrangianMesh>&
+            );
 
             //- Patches
             void convertMeshPatches(vtkMultiBlockDataSet*, int& blockNo);
@@ -461,10 +480,14 @@ class vtkPVFoam
             vtkUnstructuredGrid* volumeVTKMesh(const fvMesh&, polyDecomp&);
 
             //- Add Lagrangian mesh
-            vtkPolyData* lagrangianVTKMesh
+            vtkPolyData* lagrangianVTKMesh(const fvMesh&, const word&);
+
+            //- Add Lagrangian mesh
+            vtkPolyData* LagrangianVTKMesh
             (
                 const fvMesh&,
-                const word& cloudName
+                const word&,
+                autoPtr<LagrangianMesh>&
             );
 
             //- Add patch mesh
@@ -498,7 +521,14 @@ class vtkPVFoam
             void convertFields(vtkMultiBlockDataSet*);
 
             //- Convert Lagrangian fields
-            void convertLagrangianFields(vtkMultiBlockDataSet*);
+            void convertlagrangianFields(vtkMultiBlockDataSet*);
+
+            //- Convert Lagrangian fields
+            void convertLagrangianFields
+            (
+                vtkMultiBlockDataSet*,
+                const PtrList<LagrangianMesh>&
+            );
 
 
         //- Add the fields in the selected time directory to the selection
@@ -614,18 +644,38 @@ class vtkPVFoam
 
             //- Lagrangian fields - all types
             template<class Type>
-            void convertLagrangianFields
+            void convertlagrangianFields
             (
                 const IOobjectList&,
                 vtkMultiBlockDataSet* output,
                 const label datasetNo
             );
 
+            //- Lagrangian fields - all types
+            template<class Type, template<class> class GeoField>
+            void convertLagrangianFields
+            (
+                const IOobjectList&,
+                vtkMultiBlockDataSet* output,
+                const label datasetNo,
+                const LagrangianMesh& Lmesh
+            );
+
             //- Lagrangian field
             template<class Type>
-            void convertLagrangianField
+            void convertlagrangianField
             (
                 const IOField<Type>&,
+                vtkMultiBlockDataSet* output,
+                const arrayRange&,
+                const label datasetNo
+            );
+
+            //- Lagrangian field
+            template<class Type, template<class> class GeoField>
+            void convertLagrangianField
+            (
+                const GeoField<Type>&,
                 vtkMultiBlockDataSet* output,
                 const arrayRange&,
                 const label datasetNo
@@ -757,7 +807,8 @@ public:
         void Update
         (
             vtkMultiBlockDataSet* output,
-            vtkMultiBlockDataSet* lagrangianOutput
+            vtkMultiBlockDataSet* lagrangianOutput,
+            vtkMultiBlockDataSet* LagrangianOutput
         );
 
         //- Clean any storage

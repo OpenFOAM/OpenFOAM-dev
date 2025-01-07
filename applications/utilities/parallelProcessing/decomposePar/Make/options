@@ -4,7 +4,8 @@ EXE_INC = \
     -I$(LIB_SRC)/parallel/parallel/lnInclude \
     -I$(LIB_SRC)/parallel/decompose/decompositionMethods/lnInclude \
     -I$(LIB_SRC)/tracking/lnInclude \
-    -I$(LIB_SRC)/lagrangian/basic/lnInclude
+    -I$(LIB_SRC)/lagrangian/basic/lnInclude \
+    -I$(LIB_SRC)/Lagrangian/Lagrangian/lnInclude
 
 EXE_LIBS = \
     -lfiniteVolume \
@@ -12,4 +13,6 @@ EXE_LIBS = \
     -lparallel \
     -ldecompositionMethods \
     -llagrangian \
-    -lgenericFvFields
+    -lLagrangian \
+    -lgenericFvFields \
+    -lgenericLagrangianFields

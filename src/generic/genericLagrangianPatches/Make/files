@@ -1,0 +1,3 @@
+genericLagrangianPatch/genericLagrangianPatch.C
+
+LIB = $(FOAM_LIBBIN)/libgenericLagrangianPatches

@@ -1,0 +1,96 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      functions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+kinematicParticle
+{
+    type        kinematicParticleCloud;
+    libs        ("libLagrangianCloud.so");
+}
+
+kinematicParcel
+{
+    type        kinematicParcelCloud;
+    libs        ("libLagrangianCloud.so");
+}
+
+particle
+{
+    type        particleCloud;
+    libs        ("libLagrangianCloud.so");
+}
+
+parcel
+{
+    type        parcelCloud;
+    libs        ("libLagrangianCloud.so");
+}
+
+particleCount
+{
+    type        LagrangianFieldValue;
+    libs        ("libLagrangianFunctionObjects.so");
+    Lagrangian  kinematicParcel;
+    operation   sum;
+    field       number;
+}
+
+diameterDistribution
+{
+    type        LagrangianDistribution;
+    libs        ("libLagrangianFunctionObjects.so");
+    Lagrangian  kinematicParcel;
+    field       d;
+    weightField number;
+    nBins       20;
+    setFormat   raw;
+}
+
+volume
+{
+    type        cloudVolume;
+    libs        ("libLagrangianCloudFunctionObjects.so");
+    cloud       parcel;
+}
+
+surfaceArea
+{
+    type        cloudSurfaceArea;
+    libs        ("libLagrangianCloudFunctionObjects.so");
+    cloud       parcel;
+}
+
+mass
+{
+    type        cloudMass;
+    libs        ("libLagrangianCloudFunctionObjects.so");
+    cloud       parcel;
+}
+
+numberFlux
+{
+    type        cloudNumberFlux;
+    libs        ("libLagrangianCloudFunctionObjects.so");
+    cloud       kinematicParcel;
+}
+
+boundaryCollisionForce
+{
+    type        cloudBoundaryCollisionForce;
+    libs        ("libLagrangianCloudFunctionObjects.so");
+    cloud       particle;
+}
+
+// ************************************************************************* //

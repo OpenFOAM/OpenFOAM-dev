@@ -50,4 +50,19 @@ probes
 
 #includeFunc writeObjects(kEpsilon:G)
 
+cloud
+{
+    type        kinematicParticleCloud;
+    libs        ("libLagrangianCloud.so");
+    executeControl timeStep;
+    writeControl writeTime;
+}
+
+cloudAge
+{
+    type        cloudAge;
+    libs        ("libLagrangianCloudFunctionObjects.so");
+    cloud       cloud;
+}
+
 // ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,6 +38,7 @@ Description
 #include "fvFieldReconstructor.H"
 #include "pointFieldReconstructor.H"
 #include "lagrangianFieldReconstructor.H"
+#include "LagrangianFieldReconstructor.H"
 
 using namespace Foam;
 
@@ -552,13 +553,153 @@ int main(int argc, char *argv[])
                                     lagrangianReconstructor                    \
                                    .reconstructFields<Type>                    \
                                     (cloudObjects, selectedLagrangianFields);
-                                DO_CLOUD_FIELDS_TYPE(label, );
+                                DO_CLOUD_FIELDS_TYPE(label, )
                                 FOR_ALL_FIELD_TYPES(DO_CLOUD_FIELDS_TYPE)
                                 #undef DO_CLOUD_FIELDS_TYPE
                             }
                             else
                             {
                                 Info<< dnl << "    (no lagrangian fields)"
+                                    << endl;
+                            }
+                        }
+                    }
+                }
+
+                if (!noLagrangian)
+                {
+                    // Search for Lagrangian meshes that exist on any processor
+                    // and add them into this table of objects
+                    HashTable<IOobjectList> LagrangianObjects;
+                    forAll(runTimes.procTimes(), proci)
+                    {
+                        // Find Lagrangian directories
+                        fileNameList LagrangianDirs
+                        (
+                            fileHandler().readDir
+                            (
+                                fileHandler().filePath
+                                (
+                                    runTimes.procTimes()[proci].timePath()
+                                   /regionDir
+                                   /LagrangianMesh::prefix
+                                ),
+                                fileType::directory
+                            )
+                        );
+
+                        // Add objects in any found Lagrangian directories
+                        forAll(LagrangianDirs, i)
+                        {
+                            // Pass if we already have an objects for this name
+                            if
+                            (
+                                LagrangianObjects.find(LagrangianDirs[i])
+                             != LagrangianObjects.end()
+                            ) continue;
+
+                            // Do local scan for valid Lagrangian objects
+                            IOobjectList objects
+                            (
+                                meshes().procMeshes()[proci],
+                                runTimes.procTimes()[proci].name(),
+                                LagrangianMesh::prefix/LagrangianDirs[i],
+                                IOobject::MUST_READ,
+                                IOobject::NO_WRITE,
+                                false
+                            );
+
+                            // If coordinates or fields are present then add
+                            // this set of objects to the table
+                            if
+                            (
+                                objects.found(LagrangianMesh::coordinatesName)
+                             || LagrangianFieldReconstructor::reconstructs
+                                (
+                                    objects,
+                                    selectedLagrangianFields
+                                )
+                            )
+                            {
+                                LagrangianObjects.insert
+                                (
+                                    LagrangianDirs[i],
+                                    objects
+                                );
+                            }
+                        }
+                    }
+
+                    // Reconstruct the objects found above
+                    if (LagrangianObjects.size())
+                    {
+                        forAllConstIter
+                        (
+                            HashTable<IOobjectList>,
+                            LagrangianObjects,
+                            iter
+                        )
+                        {
+                            const word LagrangianName =
+                                string::validate<word>(iter.key());
+
+                            Info<< dnl << "Reconstructing Lagrangian fields "
+                                << "for " << LagrangianName << endl;
+
+                            const LagrangianFieldReconstructor
+                                LagrangianReconstructor
+                                (
+                                    meshes().completeMesh(),
+                                    meshes().procMeshes(),
+                                    meshes().procFaceAddressing(),
+                                    meshes().procCellAddressing(),
+                                    LagrangianName
+                                );
+
+                            if
+                            (
+                                LagrangianFieldReconstructor::reconstructs
+                                (
+                                    iter(),
+                                    selectedLagrangianFields
+                                )
+                            )
+                            {
+                                #define DO_LAGRANGIAN_FIELDS_TYPE(             \
+                                    Type, GeoField)                            \
+                                    LagrangianReconstructor                    \
+                                   .reconstructFields<GeoField<Type>>          \
+                                    (iter(), selectedLagrangianFields);
+                                DO_LAGRANGIAN_FIELDS_TYPE
+                                (
+                                    label,
+                                    LagrangianField
+                                )
+                                FOR_ALL_FIELD_TYPES
+                                (
+                                    DO_LAGRANGIAN_FIELDS_TYPE,
+                                    LagrangianField
+                                );
+                                DO_LAGRANGIAN_FIELDS_TYPE
+                                (
+                                    label,
+                                    LagrangianInternalField
+                                )
+                                FOR_ALL_FIELD_TYPES
+                                (
+                                    DO_LAGRANGIAN_FIELDS_TYPE,
+                                    LagrangianInternalField
+                                );
+                                #undef DO_LAGRANGIAN_FIELDS_TYPE
+
+                                // --> Note we don't have to explicitly
+                                // reconstruct the dynamic variants of these
+                                // fields as they are IO compatible with the
+                                // non-dynamic fields
+                            }
+                            else
+                            {
+                                Info<< dnl << "    (no Lagrangian fields)"
                                     << endl;
                             }
                         }

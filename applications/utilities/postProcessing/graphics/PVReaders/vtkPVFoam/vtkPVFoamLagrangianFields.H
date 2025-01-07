@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,21 +29,22 @@ InClass
 #ifndef vtkPVFoamLagrangianFields_H
 #define vtkPVFoamLagrangianFields_H
 
-#include "Cloud.H"
-
+#include "vtkPVFoam.H"
+#include "IOobjectList.H"
+#include "LagrangianFields.H"
 #include "vtkOpenFOAMTupleRemap.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::vtkPVFoam::convertLagrangianFields
+void Foam::vtkPVFoam::convertlagrangianFields
 (
     const IOobjectList& objects,
     vtkMultiBlockDataSet* output,
     const label datasetNo
 )
 {
-    const arrayRange& range = arrayRangeLagrangian_;
+    const arrayRange& range = arrayRangelagrangian_;
 
     forAllConstIter(IOobjectList, objects, iter)
     {
@@ -51,14 +52,43 @@ void Foam::vtkPVFoam::convertLagrangianFields
         if (iter()->headerClassName() == IOField<Type>::typeName)
         {
             IOField<Type> tf(*iter());
-            convertLagrangianField(tf, output, range, datasetNo);
+            convertlagrangianField(tf, output, range, datasetNo);
+        }
+    }
+}
+
+
+template<class Type, template<class> class GeoField>
+void Foam::vtkPVFoam::convertLagrangianFields
+(
+    const IOobjectList& objects,
+    vtkMultiBlockDataSet* output,
+    const label datasetNo,
+    const LagrangianMesh& Lmesh
+)
+{
+    const arrayRange& range = arrayRangeLagrangian_;
+
+    forAllConstIter(IOobjectList, objects, iter)
+    {
+        if (iter()->headerClassName() == GeoField<Type>::typeName)
+        {
+            GeoField<Type> tf(*iter(), Lmesh);
+
+            convertLagrangianField<Type, GeoField>
+            (
+                tf,
+                output,
+                range,
+                datasetNo
+            );
         }
     }
 }
 
 
 template<class Type>
-void Foam::vtkPVFoam::convertLagrangianField
+void Foam::vtkPVFoam::convertlagrangianField
 (
     const IOField<Type>& tf,
     vtkMultiBlockDataSet* output,
@@ -76,7 +106,7 @@ void Foam::vtkPVFoam::convertLagrangianField
 
     if (debug)
     {
-        Info<< "convert LagrangianField: "
+        Info<< "convert lagrangianField: "
             << tf.name()
             << " size = " << tf.size()
             << " nComp=" << nComp
@@ -96,6 +126,58 @@ void Foam::vtkPVFoam::convertLagrangianField
         pointData->InsertTuple(i, vec);
     }
 
+
+    vtkPolyData::SafeDownCast
+    (
+        GetDataSetFromBlock(output, range, datasetNo)
+    )   ->GetPointData()
+        ->AddArray(pointData);
+
+    pointData->Delete();
+}
+
+
+template<class Type, template<class> class GeoField>
+void Foam::vtkPVFoam::convertLagrangianField
+(
+    const GeoField<Type>& tf,
+    vtkMultiBlockDataSet* output,
+    const arrayRange& range,
+    const label datasetNo
+)
+{
+    static const label nComp = pTraits<Type>::nComponents;
+
+    vtkFloatArray* pointData = vtkFloatArray::New();
+    pointData->SetNumberOfTuples(tf.primitiveField().size());
+    pointData->SetNumberOfComponents(nComp);
+    pointData->Allocate(nComp*tf.primitiveField().size());
+    pointData->SetName(tf.name().c_str());
+
+    if (debug)
+    {
+        Info<< "convert LagrangianField: "
+            << tf.name()
+            << " size = " << tf.primitiveField().size()
+            << " nComp=" << nComp
+            << " nTuples = " << tf.primitiveField().size() <<  endl;
+    }
+
+    float vec[nComp];
+
+    forAll(tf.primitiveField(), i)
+    {
+        const Type& t = tf.primitiveField()[i];
+
+        for (direction d=0; d<nComp; ++d)
+        {
+            vec[d] = component(t, d);
+        }
+
+        vtkOpenFOAMTupleRemap<Type>(vec);
+
+        pointData->InsertTuple(i, vec);
+    }
 
     vtkPolyData::SafeDownCast
     (

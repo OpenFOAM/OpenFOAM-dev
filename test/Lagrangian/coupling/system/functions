@@ -1,0 +1,43 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      functions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+kinematicParcel_functionObject
+{
+    type        kinematicParcelCloud;
+    libs        ("libLagrangianCloud.so");
+    executeControl timeStep;
+    writeControl writeTime;
+}
+
+volumeFraction
+{
+    type        cloudVolumeFraction;
+    libs        ("libLagrangianCloudFunctionObjects.so");
+    cloud       kinematicParcel;
+    executeControl writeTime;
+    writeControl writeTime;
+}
+
+lagrangianVolumeFraction
+{
+    type        cloudLagrangianVolumeFraction;
+    libs        ("libLagrangianCloudFunctionObjects.so");
+    cloud       kinematicParcel;
+    executeControl writeTime;
+    writeControl writeTime;
+}
+
+// ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,6 +29,8 @@ License
 #include "vtkUnstructuredGrid.h"
 
 // OpenFOAM includes
+#include "cloud.H"
+#include "LagrangianMesh.H"
 #include "IOobjectList.H"
 #include "vtkPVFoam.H"
 #include "vtkPVFoamReader.h"
@@ -208,14 +210,14 @@ void Foam::vtkPVFoam::convertFields(vtkMultiBlockDataSet* output)
 }
 
 
-void Foam::vtkPVFoam::convertLagrangianFields(vtkMultiBlockDataSet* output)
+void Foam::vtkPVFoam::convertlagrangianFields(vtkMultiBlockDataSet* output)
 {
-    arrayRange& range = arrayRangeLagrangian_;
+    arrayRange& range = arrayRangelagrangian_;
     const fvMesh& mesh = *meshPtr_;
 
     wordHashSet selectedFields = getSelected
     (
-        reader_->GetLagrangianFieldSelection()
+        reader_->GetlagrangianFieldSelection()
     );
 
     if (selectedFields.empty())
@@ -239,8 +241,7 @@ void Foam::vtkPVFoam::convertLagrangianFields(vtkMultiBlockDataSet* output)
             continue;
         }
 
-
-        // Get the Lagrangian fields for this time and this cloud
+        // Get the lagrangian fields for this time and this cloud
         // but only keep selected fields
         // the region name is already in the mesh db
         IOobjectList objects
@@ -270,30 +271,117 @@ void Foam::vtkPVFoam::convertLagrangianFields(vtkMultiBlockDataSet* output)
             }
         }
 
-        convertLagrangianFields<label>
+        convertlagrangianFields<label>
         (
             objects, output, datasetNo
         );
-        convertLagrangianFields<scalar>
+        convertlagrangianFields<scalar>
         (
             objects, output, datasetNo
         );
-        convertLagrangianFields<vector>
+        convertlagrangianFields<vector>
         (
             objects, output, datasetNo
         );
-        convertLagrangianFields<sphericalTensor>
+        convertlagrangianFields<sphericalTensor>
         (
             objects, output, datasetNo
         );
-        convertLagrangianFields<symmTensor>
+        convertlagrangianFields<symmTensor>
         (
             objects, output, datasetNo
         );
-        convertLagrangianFields<tensor>
+        convertlagrangianFields<tensor>
         (
             objects, output, datasetNo
         );
+    }
+
+    if (debug)
+    {
+        printMemory();
+    }
+}
+
+
+void Foam::vtkPVFoam::convertLagrangianFields
+(
+    vtkMultiBlockDataSet* output,
+    const PtrList<LagrangianMesh>& LmeshPtrs
+)
+{
+    arrayRange& range = arrayRangeLagrangian_;
+    const fvMesh& mesh = *meshPtr_;
+
+    wordHashSet selectedFields = getSelected
+    (
+        reader_->GetLagrangianFieldSelection()
+    );
+
+    if (selectedFields.empty())
+    {
+        return;
+    }
+
+    if (debug)
+    {
+        InfoInFunction << endl;
+        printMemory();
+    }
+
+    for (int partId = range.start(); partId < range.end(); ++partId)
+    {
+        const word  LagrangianName = getPartName(partId);
+        const label datasetNo = partDataset_[partId];
+
+        if (!partStatus_[partId] || datasetNo < 0)
+        {
+            continue;
+        }
+
+        // Get the lagrangian fields for this time and this cloud
+        // but only keep selected fields
+        // the region name is already in the mesh db
+        IOobjectList objects
+        (
+            getObjects
+            (
+                selectedFields,
+                mesh,
+                dbPtr_().name(),
+                LagrangianMesh::prefix/LagrangianName
+            )
+        );
+
+        if (objects.empty())
+        {
+            continue;
+        }
+
+        if (debug)
+        {
+            InfoInFunction
+                << "converting OpenFOAM Lagrangian fields" << nl << "    ";
+            forAllConstIter(IOobjectList, objects, iter)
+            {
+                Info<< "  " << iter()->name()
+                    << " == " << iter()->objectPath(false) << nl;
+            }
+        }
+
+        #define CONVERT_LAGRANGIAN_FIELDS(Type, GeoField) \
+            convertLagrangianFields<Type, GeoField>       \
+            (                                             \
+                objects,                                  \
+                output,                                   \
+                datasetNo,                                \
+                LmeshPtrs[datasetNo]                      \
+            );
+        CONVERT_LAGRANGIAN_FIELDS(label, LagrangianField);
+        FOR_ALL_FIELD_TYPES(CONVERT_LAGRANGIAN_FIELDS, LagrangianField);
+        CONVERT_LAGRANGIAN_FIELDS(label, LagrangianInternalField);
+        FOR_ALL_FIELD_TYPES(CONVERT_LAGRANGIAN_FIELDS, LagrangianInternalField);
+        #undef CONVERT_LAGRANGIAN_FIELDS
     }
 
     if (debug)

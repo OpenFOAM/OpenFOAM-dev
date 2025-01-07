@@ -1,0 +1,28 @@
+#!/bin/bash
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+runApplication blockMesh
+runApplication foamRun
+
+gnuplot << EOF
+
+set terminal postscript eps color enhanced
+set output "energy.eps"
+
+set xlabel "Time [s]"
+set ylabel "Total Energy [uJ m^3 kg^{-1}]"
+
+plot \
+    "postProcessing/linearTotalEnergy/0/LagrangianFieldValue.dat" \
+    us 1:(1e6*(\$2+\$3)) w l t 'linear', \
+    "postProcessing/linearSubSteppedTotalEnergy/0/LagrangianFieldValue.dat" \
+    us 1:(1e6*(\$2+\$3)) w l t 'linearSubStepped', \
+    "postProcessing/parabolicTotalEnergy/0/LagrangianFieldValue.dat" \
+    us 1:(1e6*(\$2+\$3)) w l t 'parabolic'
+
+EOF
+
+#------------------------------------------------------------------------------

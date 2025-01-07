@@ -1,0 +1,40 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant/Lagrangian/linear";
+    object      LagrangianModels;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+pointInjection
+{
+    type        pointInjection;
+    point       (-0.2 0.4 0);
+    numberRate
+    {
+        type        scale;
+        scale
+        {
+            type        squarePulse;
+            start       0;
+            duration    1;
+        }
+        value       1000;
+    }
+}
+
+gravity
+{
+    type        gravity;
+}
+
+
+// ************************************************************************* //

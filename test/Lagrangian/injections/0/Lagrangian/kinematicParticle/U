@@ -1,0 +1,92 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       LagrangianVectorField;
+    location    "0/Lagrangian/kinematicParticle";
+    object      U;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [velocity];
+
+internalField   uniform (0 0 0);
+
+boundaryField
+{
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    bottom
+    {
+        type            reboundVelocity;
+        e               0.5;
+        mu              9 [%];
+    }
+
+    top
+    {
+        type            stickVelocity;
+    }
+
+    ".*"
+    {
+        type            calculated;
+    }
+}
+
+sources
+{
+    pointInjection1
+    {
+        type            uniformFixedValue;
+        uniformValue
+        {
+            type            table;
+            values
+            (
+                (0 (0.1 -0.2 0))
+                (0.03 (0.05 -0.1 0))
+            );
+        }
+    }
+
+    pointInjection2
+    {
+        type            totalPressureVelocity;
+        direction       (1 0 2);
+        p0
+        {
+            type            table;
+            values
+            (
+                (0 100025)
+                (0.03 100062.5)
+            );
+        };
+    }
+
+    pointInjection3
+    {
+        type            coneVelocity;
+        Umean
+        {
+            type            table;
+            values
+            (
+                (0 (0.1 0.2 0))
+                (0.03 (0.05 0.1 0))
+            );
+        }
+        thetaInner          0 [deg];
+        thetaOuter          5 [deg];
+    }
+}
+
+
+// ************************************************************************* //

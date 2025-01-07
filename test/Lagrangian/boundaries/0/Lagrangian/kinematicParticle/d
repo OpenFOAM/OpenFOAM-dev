@@ -1,0 +1,95 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       LagrangianScalarField;
+    location    "0/Lagrangian/kinematicParticle";
+    object      d;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [length];
+
+internalField   uniform 1e-3;
+
+boundaryField
+{
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    ".*"
+    {
+        type            calculated;
+    }
+}
+
+sources
+{
+    injectionSlabOpen
+    {
+        type            uniformFixedValue;
+        uniformValue    1 [mm];
+    }
+
+    injectionWedgeOpen
+    {
+        type            uniformFixedValue;
+        uniformValue    1 [mm];
+    }
+
+    injectionSlabSymmetry
+    {
+        type            uniformFixedValue;
+        uniformValue    1 [mm];
+    }
+
+    injectionWedgeSymmetry
+    {
+        type            uniformFixedValue;
+        uniformValue    1 [mm];
+    }
+
+    injectionSlabSymmetryPlane
+    {
+        type            uniformFixedValue;
+        uniformValue    1 [mm];
+    }
+
+    injectionWedgeSymmetryPlane
+    {
+        type            uniformFixedValue;
+        uniformValue    1 [mm];
+    }
+
+    injectionSlabCyclic
+    {
+        type            uniformFixedValue;
+        uniformValue    1 [mm];
+    }
+
+    injectionWedgeCyclic
+    {
+        type            uniformFixedValue;
+        uniformValue    1 [mm];
+    }
+
+    injectionSlabNonConformalCyclic
+    {
+        type            uniformFixedValue;
+        uniformValue    1 [mm];
+    }
+
+    injectionWedgeNonConformalCyclic
+    {
+        type            uniformFixedValue;
+        uniformValue    1 [mm];
+    }
+}
+
+
+// ************************************************************************* //

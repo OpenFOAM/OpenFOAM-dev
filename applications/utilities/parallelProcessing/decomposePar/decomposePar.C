@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,6 +76,7 @@ Usage
 #include "fvFieldDecomposer.H"
 #include "pointFieldDecomposer.H"
 #include "lagrangianFieldDecomposer.H"
+#include "LagrangianFieldDecomposer.H"
 
 using namespace Foam;
 
@@ -672,9 +673,131 @@ int main(int argc, char *argv[])
                                 #define DO_CLOUD_FIELDS_TYPE(Type, nullArg)    \
                                     lagrangianDecomposer.decomposeFields<Type> \
                                     (cloudObjects);
-                                DO_CLOUD_FIELDS_TYPE(label, );
+                                DO_CLOUD_FIELDS_TYPE(label, )
                                 FOR_ALL_FIELD_TYPES(DO_CLOUD_FIELDS_TYPE)
                                 #undef DO_CLOUD_FIELDS_TYPE
+                            }
+                            else
+                            {
+                                Info<< dnl << "    (no lagrangian fields)"
+                                    << endl;
+                            }
+                        }
+                    }
+                }
+
+                {
+                    // Find Lagrangian directories
+                    fileNameList LagrangianDirs
+                    (
+                        fileHandler().readDir
+                        (
+                            runTimes.completeTime().timePath()
+                           /regionDir
+                           /LagrangianMesh::prefix,
+                            fileType::directory
+                        )
+                    );
+
+                    // Add objects in any found Lagrangian directories
+                    HashTable<IOobjectList> LagrangianObjects;
+                    forAll(LagrangianDirs, i)
+                    {
+                        // Do local scan for valid Lagrangian objects
+                        IOobjectList objects
+                        (
+                            meshes().completeMesh(),
+                            runTimes.completeTime().name(),
+                            LagrangianMesh::prefix/LagrangianDirs[i],
+                            IOobject::MUST_READ,
+                            IOobject::NO_WRITE,
+                            false
+                        );
+
+                        // If coordinates or fields are present then add
+                        // this set of objects to the table
+                        if
+                        (
+                            objects.found(LagrangianMesh::coordinatesName)
+                         || LagrangianFieldDecomposer::decomposes
+                            (
+                                objects
+                            )
+                        )
+                        {
+                            LagrangianObjects.insert
+                            (
+                                LagrangianDirs[i],
+                                objects
+                            );
+                        }
+                    }
+
+                    // Decompose the objects found above
+                    if (LagrangianObjects.size())
+                    {
+                        forAllConstIter
+                        (
+                            HashTable<IOobjectList>,
+                            LagrangianObjects,
+                            iter
+                        )
+                        {
+                            const word LagrangianName =
+                                string::validate<word>(iter.key());
+
+                            Info<< dnl << "Decomposing Lagrangian fields "
+                                << "for " << LagrangianName << endl;
+
+                            const LagrangianFieldDecomposer
+                                LagrangianDecomposer
+                                (
+                                    meshes().completeMesh(),
+                                    meshes().procMeshes(),
+                                    meshes().procFaceAddressing(),
+                                    meshes().procCellAddressing(),
+                                    LagrangianName
+                                );
+
+                            if
+                            (
+                                LagrangianFieldDecomposer::decomposes
+                                (
+                                    iter()
+                                )
+                            )
+                            {
+                                #define DO_LAGRANGIAN_FIELDS_TYPE(             \
+                                    Type, GeoField)                            \
+                                    LagrangianDecomposer                       \
+                                   .decomposeFields<GeoField<Type>>            \
+                                    (iter());
+                                DO_LAGRANGIAN_FIELDS_TYPE
+                                (
+                                    label,
+                                    LagrangianField
+                                )
+                                FOR_ALL_FIELD_TYPES
+                                (
+                                    DO_LAGRANGIAN_FIELDS_TYPE,
+                                    LagrangianField
+                                )
+                                DO_LAGRANGIAN_FIELDS_TYPE
+                                (
+                                    label,
+                                    LagrangianInternalField
+                                )
+                                FOR_ALL_FIELD_TYPES
+                                (
+                                    DO_LAGRANGIAN_FIELDS_TYPE,
+                                    LagrangianInternalField
+                                )
+                                #undef DO_LAGRANGIAN_FIELDS_TYPE
+
+                                // --> Note we don't have to explicitly
+                                // decompose the dynamic variants of these
+                                // fields as they are IO compatible with the
+                                // non-dynamic fields
                             }
                             else
                             {

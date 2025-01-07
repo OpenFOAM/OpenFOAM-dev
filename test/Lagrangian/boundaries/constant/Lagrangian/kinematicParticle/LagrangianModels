@@ -1,0 +1,93 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant/Lagrangian/kinematicParticle";
+    object      LagrangianModels;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+injectionSlabOpen
+{
+    type        pointInjection;
+    point       (0.005 0.225 0);
+    numberRate  10000;
+}
+
+injectionWedgeOpen
+{
+    type        pointInjection;
+    point       (0.190569 0.226311 0);
+    numberRate  10000;
+}
+
+injectionSlabSymmetry
+{
+    type        pointInjection;
+    point       (0.005 0.175 0);
+    numberRate  10000;
+}
+
+injectionWedgeSymmetry
+{
+    type        pointInjection;
+    point       (0.200148 0.1761 0);
+    numberRate  10000;
+}
+
+injectionSlabSymmetryPlane
+{
+    type        pointInjection;
+    point       (0.005 0.125 0);
+    numberRate  10000;
+}
+
+injectionWedgeSymmetryPlane
+{
+    type        pointInjection;
+    point       (0.209727 0.125889 0);
+    numberRate  10000;
+}
+
+injectionSlabCyclic
+{
+    type        pointInjection;
+    point       (0.005 0.075 0);
+    numberRate  10000;
+}
+
+injectionWedgeCyclic
+{
+    type        pointInjection;
+    point       (0.219305 0.0756772 0);
+    numberRate  10000;
+}
+
+injectionSlabNonConformalCyclic
+{
+    type        pointInjection;
+    point       (0.005 0.025 0);
+    numberRate  50000;
+}
+
+injectionWedgeNonConformalCyclic
+{
+    type        pointInjection;
+    point       (0.22888367 0.02546627 0);
+    numberRate  50000;
+}
+
+drag
+{
+    type        SchillerNaumannDrag;
+}
+
+
+// ************************************************************************* //

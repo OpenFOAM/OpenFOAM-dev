@@ -8,5 +8,7 @@ wmake $targetType genericPatches
 wmake $targetType genericFields
 wmake $targetType genericFvPatches
 wmake $targetType genericFvFields
+wmake $targetType genericLagrangianPatches
+wmake $targetType genericLagrangianFields
 
 #------------------------------------------------------------------------------

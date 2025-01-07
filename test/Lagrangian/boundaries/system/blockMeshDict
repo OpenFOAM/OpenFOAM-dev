@@ -1,0 +1,235 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMeters 0.01;
+
+// Geometry
+xs          (0 10);
+c           (25 -8.523150547392271 0);
+ys0         (25 20 15 10 5 1);
+ys1         (25 20 15 10 5 -1);
+zs          (-1 1);
+theta       12;
+phi         3;
+
+// Zones
+zoneNames   (open symmetry symmetryPlane cyclic nonConformalCyclic);
+
+// Numbers of cells
+nX          20;
+nYs         (10 10 10 10 10);
+
+// Patches
+patchNames  (open symmetry symmetryPlane cyclic nonCouple);
+patchTypes  (patch symmetry symmetryPlane cyclic wall);
+patchGroups ((open) (symmetry) (symmetryPlane) (cyclic) (nonCouple));
+
+vertices
+(
+    #codeStream
+    {
+        code
+        #{
+            const List<scalar> xs($<List<scalar>>xs);
+            const vector c = $<vector>c;
+            const List<scalar> ys0($<List<scalar>>ys0);
+            const List<scalar> ys1($<List<scalar>>ys1);
+            const List<scalar> zs($<List<scalar>>zs);
+            const scalar tanTheta = tan(degToRad($<scalar>theta));
+            const scalar tanPhi = tan(degToRad($<scalar>phi));
+
+            forAll(ys0, yi)
+            {
+                os  << vector(xs[0], ys0[yi], zs[0])
+                    << vector(xs[1], ys1[yi], zs[0])
+                    << vector(
+                        c.x() - tanTheta*(ys0[yi] - c.y()),
+                        ys0[yi],
+                        c.z() - tanPhi*(ys0[yi] - c.y()))
+                    << vector(
+                        c.x() + tanTheta*(ys1[yi] - c.y()),
+                        ys1[yi],
+                        c.z() - tanPhi*(ys1[yi] - c.y()))
+                    << nl;
+            }
+
+            forAll(ys0, yi)
+            {
+                os  << vector(xs[0], ys0[yi], zs[1])
+                    << vector(xs[1], ys1[yi], zs[1])
+                    << vector(
+                        c.x() - tanTheta*(ys0[yi] - c.y()),
+                        ys0[yi],
+                        c.z() + tanPhi*(ys0[yi] - c.y()))
+                    << vector(
+                        c.x() + tanTheta*(ys1[yi] - c.y()),
+                        ys1[yi],
+                        c.z() + tanPhi*(ys1[yi] - c.y()))
+                    << nl;
+            }
+        #};
+    }
+);
+
+blocks
+(
+    #codeStream
+    {
+        code
+        #{
+            const List<scalar> ys0($<List<scalar>>ys0);
+
+            const label nX = $<label>nX;
+            const List<label> nYs($<List<label>>nYs);
+
+            const wordList zoneNames($<wordList>zoneNames);
+
+            forAll(zoneNames, yi)
+            {
+                for (label xi = 0; xi < 4; xi += 2)
+                {
+                    os  << "hex "
+                        << FixedList<label, 8>({
+                            4*ys0.size() + yi*4+xi,
+                            4*ys0.size() + yi*4+1+xi,
+                            4*ys0.size() + (yi + 1)*4+1+xi,
+                            4*ys0.size() + (yi + 1)*4+xi,
+                            yi*4+xi,
+                            yi*4+1+xi,
+                            (yi + 1)*4+1+xi,
+                            (yi + 1)*4+xi})
+                        << zoneNames[yi]
+                        << " (" << nX << ' ' << nYs[yi] << " 1) "
+                        << "simpleGrading (1 1 1)";
+                }
+            }
+        #};
+    }
+);
+
+edges
+(
+    #codeStream
+    {
+        code
+        #{
+            const List<scalar> ys0($<List<scalar>>ys0);
+
+            const scalar theta = $<scalar>theta;
+            const scalar tanPhi = tan(degToRad($<scalar>phi));
+
+            forAll(ys0, yi)
+            {
+                for (label zi = 0; zi < 2; ++ zi)
+                {
+                    os  << "arc "
+                        << zi*4*ys0.size() + yi*4+2 << ' '
+                        << zi*4*ys0.size() + yi*4+3
+                        << ' ' << 2*theta << vector(0, zi ? tanPhi : -tanPhi, -1);
+                }
+            }
+        #};
+    }
+);
+
+defaultPatch
+{
+    type wall;
+    name walls;
+}
+
+boundary
+(
+    #codeStream
+    {
+        code
+        #{
+            const List<scalar> ys0($<List<scalar>>ys0);
+
+            const wordList patchNames($<wordList>patchNames);
+            const wordList patchTypes($<wordList>patchTypes);
+            const List<wordList> patchGroups($<List<wordList>>patchGroups);
+
+            forAll(patchNames, yi)
+            {
+                for (label xi = 0; xi < 4; ++ xi)
+                {
+                    os  << word(patchNames[yi] + Foam::name(xi))
+                        << token::BEGIN_BLOCK;
+
+                    writeEntry(os, "type", patchTypes[yi]);
+
+                    os  << "faces " << token::BEGIN_LIST
+                        << FixedList<label, 4>({
+                            4*ys0.size() + yi*4+xi,
+                            4*ys0.size() + (yi + 1)*4+xi,
+                            (yi + 1)*4+xi,
+                            yi*4+xi})
+                        << token::END_LIST << token::END_STATEMENT;
+
+                    if (!patchGroups[yi].empty())
+                    {
+                        writeEntry(os, "inGroups", patchGroups[yi]);
+                    }
+
+                    if (patchTypes[yi] == "cyclic")
+                    {
+                        writeEntry<word>
+                        (
+                            os,
+                            "neighbourPatch",
+                            patchNames[yi] + Foam::name(xi + (xi % 2 ? -1 : +1))
+                        );
+                    }
+
+                    os  << token::END_BLOCK;
+                }
+            }
+
+            wordList frontAndBackPatchNames({"back", "front"});
+            wordList frontAndBackPatchTypes({"empty", "wedge"});
+
+            for (label xi = 0; xi < 4; xi += 2)
+            {
+                for (label zi = 0; zi < 2; ++ zi)
+                {
+                    os  << word
+                        (
+                            frontAndBackPatchNames[zi]
+                          + frontAndBackPatchTypes[xi/2].capitalise()
+                          + Foam::name(zi)
+                        )
+                        << token::BEGIN_BLOCK;
+
+                    writeEntry(os, "type", frontAndBackPatchTypes[xi/2]);
+
+                    os  << "faces " << token::BEGIN_LIST;
+                    forAll(patchNames, yi)
+                    {
+                        os  << FixedList<label, 4>({
+                                zi*4*ys0.size() + yi*4+xi,
+                                zi*4*ys0.size() + yi*4+1+xi,
+                                zi*4*ys0.size() + (yi + 1)*4+1+xi,
+                                zi*4*ys0.size() + (yi + 1)*4+xi});
+                    }
+                    os  << token::END_LIST << token::END_STATEMENT;
+                    os  << token::END_BLOCK;
+                }
+            }
+        #};
+    }
+);
+
+// ************************************************************************* //

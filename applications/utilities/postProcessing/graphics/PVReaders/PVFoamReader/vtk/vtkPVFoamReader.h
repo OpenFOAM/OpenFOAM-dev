@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -148,6 +148,14 @@ public:
 
     // Description:
     // lagrangianField selection list control
+    virtual vtkDataArraySelection* GetlagrangianFieldSelection();
+    int  GetNumberOflagrangianFieldArrays();
+    int  GetlagrangianFieldArrayStatus(const char* name);
+    void SetlagrangianFieldArrayStatus(const char* name, int status);
+    const char* GetlagrangianFieldArrayName(int index);
+
+    // Description:
+    // LagrangianField selection list control
     virtual vtkDataArraySelection* GetLagrangianFieldSelection();
     int  GetNumberOfLagrangianFieldArrays();
     int  GetLagrangianFieldArrayStatus(const char* name);
@@ -228,6 +236,7 @@ private:
 
     vtkDataArraySelection* PartSelection;
     vtkDataArraySelection* FieldSelection;
+    vtkDataArraySelection* lagrangianFieldSelection;
     vtkDataArraySelection* LagrangianFieldSelection;
 
     //- Cached data for output port0 (experimental!)

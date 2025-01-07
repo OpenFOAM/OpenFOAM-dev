@@ -1,0 +1,117 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      functions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+linear
+{
+    type        kinematicParticleCloud;
+    libs        ("libLagrangianCloud.so");
+    executeControl timeStep;
+    writeControl writeTime;
+}
+
+linearKineticEnergy
+{
+    type        cloudKineticEnergy;
+    libs        ("libLagrangianCloudFunctionObjects.so");
+    cloud       linear;
+    writeControl writeTime;
+}
+
+linearGravitationalPotentialEnergy
+{
+    type        cloudGravitationalPotentialEnergy;
+    libs        ("libLagrangianCloudFunctionObjects.so");
+    cloud       linear;
+    writeControl writeTime;
+}
+
+linearTotalEnergy
+{
+    type        LagrangianFieldValue;
+    libs        ("libLagrangianFunctionObjects.so");
+    Lagrangian  linear;
+    operation   sum;
+    fields      (KE GPE);
+}
+
+linearSubStepped
+{
+    type        kinematicParticleCloud;
+    libs        ("libLagrangianCloud.so");
+    executeControl timeStep;
+    writeControl writeTime;
+}
+
+linearSubSteppedKineticEnergy
+{
+    type        cloudKineticEnergy;
+    libs        ("libLagrangianCloudFunctionObjects.so");
+    cloud       linearSubStepped;
+    writeControl writeTime;
+}
+
+linearSubSteppedGravitationalPotentialEnergy
+{
+    type        cloudGravitationalPotentialEnergy;
+    libs        ("libLagrangianCloudFunctionObjects.so");
+    cloud       linearSubStepped;
+    writeControl writeTime;
+}
+
+linearSubSteppedTotalEnergy
+{
+    type        LagrangianFieldValue;
+    libs        ("libLagrangianFunctionObjects.so");
+    Lagrangian  linearSubStepped;
+    operation   sum;
+    fields      (KE GPE);
+}
+
+parabolic
+{
+    type        kinematicParticleCloud;
+    libs        ("libLagrangianCloud.so");
+    executeControl timeStep;
+    writeControl writeTime;
+}
+
+parabolicKineticEnergy
+{
+    type        cloudKineticEnergy;
+    libs        ("libLagrangianCloudFunctionObjects.so");
+    cloud       parabolic;
+    writeControl writeTime;
+}
+
+parabolicGravitationalPotentialEnergy
+{
+    type        cloudGravitationalPotentialEnergy;
+    libs        ("libLagrangianCloudFunctionObjects.so");
+    cloud       parabolic;
+    writeControl writeTime;
+}
+
+parabolicTotalEnergy
+{
+    type        LagrangianFieldValue;
+    libs        ("libLagrangianFunctionObjects.so");
+    Lagrangian  parabolic;
+    operation   sum;
+    fields      (KE GPE);
+}
+
+
+// ************************************************************************* //

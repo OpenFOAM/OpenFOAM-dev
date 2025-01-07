@@ -1,0 +1,57 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant/Lagrangian/kinematicParcel";
+    object      LagrangianModels;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+pointInjection
+{
+    type        pointInjection;
+    point       (-0.2 0.45 0) [m];
+    numberRate  1e3;
+}
+
+gravity
+{
+    type        gravity;
+}
+
+drag
+{
+    type        GidaspowErgunWenYuDrag;
+    alphaMax    0.65;
+}
+
+lift
+{
+    type        SaffmanMeiLift;
+}
+
+pressureGradient
+{
+    type        pressureGradientForce;
+}
+
+virtualMass
+{
+    type        constantCoefficientVirtualMass;
+    Cvm         0.5;
+}
+
+turbulentDispersion
+{
+    type        turbulentDispersion;
+}
+
+
+// ************************************************************************* //

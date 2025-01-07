@@ -1,0 +1,43 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       volScalarField;
+    location    "0";
+    object      k;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [energy/mass];
+
+magUref         0.25;
+I               0.1;
+k               #calc "1.5*sqr($<scalar>I*$<scalar>magUref)";
+internalField   uniform $k;
+
+boundaryField
+{
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    walls
+    {
+        type            kqRWallFunction;
+        value           $internalField;
+    }
+
+    open
+    {
+        type            inletOutlet;
+        inletValue      $internalField;
+        value           $internalField;
+    }
+}
+
+
+// ************************************************************************* //

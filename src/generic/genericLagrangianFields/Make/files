@@ -1,0 +1,4 @@
+genericLagrangianPatchField/genericLagrangianPatchFields.C
+genericLagrangianFieldSource/genericLagrangianFieldSources.C
+
+LIB = $(FOAM_LIBBIN)/libgenericLagrangianFields

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,6 +78,7 @@ vtkPVFoamReader::vtkPVFoamReader()
 
     PartSelection = vtkDataArraySelection::New();
     FieldSelection = vtkDataArraySelection::New();
+    lagrangianFieldSelection = vtkDataArraySelection::New();
     LagrangianFieldSelection = vtkDataArraySelection::New();
 
     // Setup the selection callback to modify this object when an array
@@ -95,6 +96,11 @@ vtkPVFoamReader::vtkPVFoamReader()
         this->SelectionObserver
     );
     FieldSelection->AddObserver
+    (
+        vtkCommand::ModifiedEvent,
+        this->SelectionObserver
+    );
+    lagrangianFieldSelection->AddObserver
     (
         vtkCommand::ModifiedEvent,
         this->SelectionObserver
@@ -133,12 +139,14 @@ vtkPVFoamReader::~vtkPVFoamReader()
 
     PartSelection->RemoveObserver(this->SelectionObserver);
     FieldSelection->RemoveObserver(this->SelectionObserver);
+    lagrangianFieldSelection->RemoveObserver(this->SelectionObserver);
     LagrangianFieldSelection->RemoveObserver(this->SelectionObserver);
 
     SelectionObserver->Delete();
 
     PartSelection->Delete();
     FieldSelection->Delete();
+    lagrangianFieldSelection->Delete();
     LagrangianFieldSelection->Delete();
 }
 
@@ -330,7 +338,7 @@ int vtkPVFoamReader::RequestData
             << output->GetNumberOfBlocks() << " blocks\n";
     }
 
-    foamData_->Update(output, output);
+    foamData_->Update(output, output, output);
 
     updatePatchNamesView(ShowPatchNames);
 
@@ -547,6 +555,55 @@ void vtkPVFoamReader::SetFieldArrayStatus(const char* name, int status)
 
 // ----------------------------------------------------------------------
 // lagrangianField selection list control
+
+vtkDataArraySelection* vtkPVFoamReader::GetlagrangianFieldSelection()
+{
+    vtkDebugMacro(<<"GetlagrangianFieldSelection");
+    return lagrangianFieldSelection;
+}
+
+
+int vtkPVFoamReader::GetNumberOflagrangianFieldArrays()
+{
+    vtkDebugMacro(<<"GetNumberOflagrangianFieldArrays");
+    return lagrangianFieldSelection->GetNumberOfArrays();
+}
+
+
+const char* vtkPVFoamReader::GetlagrangianFieldArrayName(int index)
+{
+    vtkDebugMacro(<<"GetlagrangianFieldArrayName");
+    return lagrangianFieldSelection->GetArrayName(index);
+}
+
+
+int vtkPVFoamReader::GetlagrangianFieldArrayStatus(const char* name)
+{
+    vtkDebugMacro(<<"GetlagrangianFieldArrayStatus");
+    return lagrangianFieldSelection->ArrayIsEnabled(name);
+}
+
+
+void vtkPVFoamReader::SetlagrangianFieldArrayStatus
+(
+    const char* name,
+    int status
+)
+{
+    vtkDebugMacro(<<"SetlagrangianFieldArrayStatus");
+    if (status)
+    {
+        lagrangianFieldSelection->EnableArray(name);
+    }
+    else
+    {
+        lagrangianFieldSelection->DisableArray(name);
+    }
+}
+
+
+// ----------------------------------------------------------------------
+// LagrangianField selection list control
 
 vtkDataArraySelection* vtkPVFoamReader::GetLagrangianFieldSelection()
 {

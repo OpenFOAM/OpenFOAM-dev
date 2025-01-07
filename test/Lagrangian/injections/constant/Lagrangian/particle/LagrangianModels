@@ -1,0 +1,43 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant/Lagrangian/particle";
+    object      LagrangianModels;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+volumeInjection
+{
+    type        volumeInjection;
+    cellZone    cells12;
+    numberDensity 2 [mm^-3];
+    time        0.025;
+}
+
+patchInjection
+{
+    type        patchInjection;
+    patch       top;
+    numberRate  100000;
+}
+
+diskInjection
+{
+    type        diskInjection;
+    centre      (2 0 0) [cm];
+    axis        (1 0 0);
+    innerDiameter 2 [mm];
+    outerDiameter 2 [mm];
+    numberRate  100000;
+}
+
+
+// ************************************************************************* //

@@ -1,0 +1,24 @@
+cloudVolume/cloudVolume.C
+cloudSurfaceArea/cloudSurfaceArea.C
+cloudMass/cloudMass.C
+
+cloudVolumeFraction/cloudVolumeFraction.C
+cloudSurfaceAreaPerUnitVolume/cloudSurfaceAreaPerUnitVolume.C
+
+cloudLagrangianVolumeFraction/cloudLagrangianVolumeFraction.C
+
+cloudAge/cloudAge.C
+
+cloudKineticEnergy/cloudKineticEnergy.C
+cloudGravitationalPotentialEnergy/cloudGravitationalPotentialEnergy.C
+
+cloudFlux/cloudFlux.C
+cloudFlux/cloudNumberFlux.C
+cloudFlux/cloudVolumeFlux.C
+cloudFlux/cloudMassFlux.C
+
+cloudBoundaryCollisionFlux/cloudBoundaryCollisionFlux.C
+cloudBoundaryCollisionFlux/cloudBoundaryCollisionNumberFlux.C
+cloudBoundaryCollisionFlux/cloudBoundaryCollisionForce.C
+
+LIB = $(FOAM_LIBBIN)/libLagrangianCloudFunctionObjects

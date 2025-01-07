@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,6 +27,7 @@ License
 
 // OpenFOAM includes
 #include "Cloud.H"
+#include "LagrangianMesh.H"
 #include "fvMesh.H"
 #include "IOobjectList.H"
 #include "passiveParticle.H"
@@ -56,16 +57,15 @@ vtkPolyData* Foam::vtkPVFoam::lagrangianVTKMesh
         printMemory();
     }
 
-
     // The region name is already in the mesh db
-    IOobjectList sprayObjs
+    IOobjectList cloudObjs
     (
         mesh,
         mesh.time().name(),
         lagrangian::cloud::prefix/cloudName
     );
 
-    IOobject* positionsPtr = sprayObjs.lookup(word("positions"));
+    IOobject* positionsPtr = cloudObjs.lookup(word("positions"));
     if (positionsPtr)
     {
         lagrangian::Cloud<passiveParticle> parcels(mesh, cloudName, false);
@@ -98,6 +98,58 @@ vtkPolyData* Foam::vtkPVFoam::lagrangianVTKMesh
         vtkmesh->SetVerts(vtkcells);
         vtkcells->Delete();
     }
+
+    if (debug)
+    {
+        printMemory();
+    }
+
+    return vtkmesh;
+}
+
+
+vtkPolyData* Foam::vtkPVFoam::LagrangianVTKMesh
+(
+    const fvMesh& mesh,
+    const word& LagrangianName,
+    autoPtr<LagrangianMesh>& LmeshPtr
+)
+{
+    vtkPolyData* vtkmesh = nullptr;
+
+    if (debug)
+    {
+        InfoInFunction
+            << "timePath "
+            << mesh.time().timePath()/LagrangianMesh::prefix/LagrangianName
+            << endl;
+        printMemory();
+    }
+
+    LmeshPtr.reset(new LagrangianMesh(mesh, LagrangianName));
+
+    const LagrangianVectorInternalField Lpositions(LmeshPtr->position());
+
+    vtkmesh = vtkPolyData::New();
+
+    vtkPoints* vtkpoints = vtkPoints::New();
+    vtkCellArray* vtkcells = vtkCellArray::New();
+
+    vtkpoints->Allocate(LmeshPtr->size());
+    vtkcells->Allocate(LmeshPtr->size());
+
+    for (vtkIdType i = 0; i < LmeshPtr->size(); ++ i)
+    {
+        vtkInsertNextOpenFOAMPoint(vtkpoints, Lpositions[i]);
+
+        vtkcells->InsertNextCell(1, &i);
+    }
+
+    vtkmesh->SetPoints(vtkpoints);
+    vtkpoints->Delete();
+
+    vtkmesh->SetVerts(vtkcells);
+    vtkcells->Delete();
 
     if (debug)
     {

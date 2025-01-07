@@ -1,0 +1,50 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       LagrangianVectorField;
+    location    "0/Lagrangian/kinematicParcel";
+    object      U;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [velocity];
+
+internalField   uniform (0 0 0);
+
+boundaryField
+{
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    walls
+    {
+        type            reboundVelocity;
+        e               0.97;
+        mu              0.09;
+    }
+
+    open
+    {
+        type            escapeVelocity;
+    }
+}
+
+sources
+{
+    pointInjection
+    {
+        type            coneVelocity;
+        Umean           (1 0 0);
+        thetaInner      0 [deg];
+        thetaOuter      5 [deg];
+    }
+}
+
+
+// ************************************************************************* //

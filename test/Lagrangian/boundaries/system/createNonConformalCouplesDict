@@ -1,0 +1,44 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      createNonConformalCouplesDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+fields  no;
+
+nonConformalCouples
+{
+    slab
+    {
+        patches         (nonCouple0 nonCouple1);
+        transform       translational;
+        separation
+        (
+            #calc "$<scalar>blockMeshDict!convertToMeters*\
+            ($<List<scalar>>blockMeshDict!xs[0] - $<List<scalar>>blockMeshDict!xs[1])"
+            0
+            0
+        );
+    }
+
+    wedge
+    {
+        patches         (nonCouple2 nonCouple3);
+        transform       rotational;
+        rotationAxis    (0 0 1);
+        rotationCentre  #calc "$<scalar>blockMeshDict!convertToMeters*$<vector>blockMeshDict!c";
+        rotationAngle   #calc "2*$<scalar>blockMeshDict!theta";
+    }
+}
+
+// ************************************************************************* //

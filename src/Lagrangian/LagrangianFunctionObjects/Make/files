@@ -1,0 +1,4 @@
+LagrangianFieldValue/LagrangianFieldValue.C
+LagrangianDistribution/LagrangianDistribution.C
+
+LIB = $(FOAM_LIBBIN)/libLagrangianFunctionObjects

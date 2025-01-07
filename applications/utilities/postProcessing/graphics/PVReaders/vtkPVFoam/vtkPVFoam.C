@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,6 +29,7 @@ License
 // OpenFOAM includes
 #include "fvMesh.H"
 #include "fvMeshStitcher.H"
+#include "LagrangianMesh.H"
 #include "Time.H"
 #include "patchZones.H"
 #include "collatedFileOperation.H"
@@ -58,6 +59,7 @@ void Foam::vtkPVFoam::resetCounters()
     // Reset array range information (ids and sizes)
     arrayRangeVolume_.reset();
     arrayRangePatches_.reset();
+    arrayRangelagrangian_.reset();
     arrayRangeLagrangian_.reset();
     arrayRangeCellZones_.reset();
     arrayRangeFaceZones_.reset();
@@ -238,7 +240,8 @@ Foam::vtkPVFoam::vtkPVFoam
     fieldsChanged_(true),
     arrayRangeVolume_("unzoned"),
     arrayRangePatches_("patches"),
-    arrayRangeLagrangian_("lagrangian"),
+    arrayRangelagrangian_("lagrangian"),
+    arrayRangeLagrangian_("Lagrangian"),
     arrayRangeCellZones_("cellZone"),
     arrayRangeFaceZones_("faceZone"),
     arrayRangePointZones_("pointZone"),
@@ -418,6 +421,7 @@ void Foam::vtkPVFoam::updateInfo()
     updateInfoPatches(partSelection, enabledEntries, first);
     updateInfoSets(partSelection);
     updateInfoZones(partSelection);
+    updateInfolagrangian(partSelection);
     updateInfoLagrangian(partSelection);
 
     // Restore the enabled selections
@@ -430,6 +434,7 @@ void Foam::vtkPVFoam::updateInfo()
 
     // Update fields
     updateInfoFields();
+    updateInfolagrangianFields();
     updateInfoLagrangianFields();
 
     if (debug)
@@ -505,17 +510,20 @@ void Foam::vtkPVFoam::updateFoamMesh()
 void Foam::vtkPVFoam::Update
 (
     vtkMultiBlockDataSet* output,
-    vtkMultiBlockDataSet* lagrangianOutput
+    vtkMultiBlockDataSet* lagrangianOutput,
+    vtkMultiBlockDataSet* LagrangianOutput
 )
 {
     if (debug)
     {
         InfoInFunction << "Output with "
             << output->GetNumberOfBlocks() << " and "
-            << lagrangianOutput->GetNumberOfBlocks() << " blocks" << endl;
+            << lagrangianOutput->GetNumberOfBlocks() << " blocks" << endl
+            << LagrangianOutput->GetNumberOfBlocks() << " blocks" << endl;
 
         output->Print(cout);
         lagrangianOutput->Print(cout);
+        LagrangianOutput->Print(cout);
         printMemory();
     }
 
@@ -553,13 +561,17 @@ void Foam::vtkPVFoam::Update
         reader_->UpdateProgress(0.7);
     }
 
-    convertMeshLagrangian(lagrangianOutput, blockNo);
+    convertMeshlagrangian(lagrangianOutput, blockNo);
+
+    PtrList<LagrangianMesh> LmeshPtrs;
+    convertMeshLagrangian(LagrangianOutput, blockNo, LmeshPtrs);
 
     reader_->UpdateProgress(0.8);
 
     // Update fields
     convertFields(output);
-    convertLagrangianFields(lagrangianOutput);
+    convertlagrangianFields(lagrangianOutput);
+    convertLagrangianFields(LagrangianOutput, LmeshPtrs);
 
     if (debug)
     {
