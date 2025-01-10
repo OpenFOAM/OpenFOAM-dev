@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -125,19 +125,23 @@ void Foam::functionObjects::fieldAverage::calcAverages()
     Log << type() << " " << name() << ":" << nl;
 
     const label currentTimeIndex = time_.timeIndex();
-    const scalar currentTime = time_.value();
 
-    if (prevTimeIndex_ == currentTimeIndex)
-    {
-        return;
-    }
-
+    if (prevTimeIndex_ == currentTimeIndex) return;
     prevTimeIndex_ = currentTimeIndex;
 
-    if (periodicRestart_ && currentTime > restartPeriod_*periodIndex_)
+    const scalar previousMidTime =
+        time_.value() - time_.deltaTValue() - time_.deltaT0Value()/2;
+    const scalar currentMidTime =
+        time_.value() - time_.deltaTValue()/2;
+
+    if
+    (
+        periodicRestart_
+     && floor(previousMidTime/restartPeriod_)
+     != floor(currentMidTime/restartPeriod_)
+    )
     {
         restart();
-        periodIndex_++;
     }
     else
     {
@@ -395,8 +399,7 @@ Foam::functionObjects::fieldAverage::fieldAverage
     windowName_(""),
     faItems_(),
     totalIter_(),
-    totalTime_(),
-    periodIndex_(1)
+    totalTime_()
 {
     fvMeshFunctionObject::read(dict);
 
