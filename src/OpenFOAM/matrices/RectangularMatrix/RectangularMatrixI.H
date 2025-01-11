@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,83 +26,12 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-inline Foam::RectangularMatrix<Type>::RectangularMatrix()
-:
-    Matrix<RectangularMatrix<Type>, Type>()
-{}
-
-
-template<class Type>
-inline Foam::RectangularMatrix<Type>::RectangularMatrix
-(
-    const label m,
-    const label n
-)
-:
-    Matrix<RectangularMatrix<Type>, Type>(m, n)
-{}
-
-
-template<class Type>
-template<class MatrixType>
-inline Foam::RectangularMatrix<Type>::RectangularMatrix
-(
-    const ConstMatrixBlock<MatrixType>& block
-)
-:
-    Matrix<RectangularMatrix<Type>, Type>(block)
-{}
-
-
-template<class Type>
-template<class MatrixType>
-inline Foam::RectangularMatrix<Type>::RectangularMatrix
-(
-    const MatrixBlock<MatrixType>& block
-)
-:
-    Matrix<RectangularMatrix<Type>, Type>(block)
-{}
-
-
-template<class Type>
-inline Foam::RectangularMatrix<Type>::RectangularMatrix
-(
-    const label m,
-    const label n,
-    const zero
-)
-:
-    Matrix<RectangularMatrix<Type>, Type>(m, n, Zero)
-{}
-
-
-template<class Type>
-inline Foam::RectangularMatrix<Type>::RectangularMatrix
-(
-    const label m,
-    const label n,
-    const Type& t
-)
-:
-    Matrix<RectangularMatrix<Type>, Type>(m, n, t)
-{}
-
-
-template<class Type>
 inline Foam::RectangularMatrix<Type>::RectangularMatrix
 (
     const SquareMatrix<Type>& SM
 )
 :
     Matrix<RectangularMatrix<Type>, Type>(SM)
-{}
-
-
-template<class Type>
-inline Foam::RectangularMatrix<Type>::RectangularMatrix(Istream& is)
-:
-    Matrix<RectangularMatrix<Type>, Type>(is)
 {}
 
 

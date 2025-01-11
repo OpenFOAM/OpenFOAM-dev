@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,42 +38,34 @@ using namespace Foam;
 
 int main(int argc, char *argv[])
 {
-    SquareMatrix<scalar> hmm(3);
+    {
+        SquareMatrix<scalar> hmm
+        {
+            {-3.0, 10.0, -4.0},
+            {2.0, 3.0, 10.0},
+            {2.0, 6.0, 1.0}
+        };
 
-    hmm(0, 0) = -3.0;
-    hmm(0, 1) = 10.0;
-    hmm(0, 2) = -4.0;
-    hmm(1, 0) = 2.0;
-    hmm(1, 1) = 3.0;
-    hmm(1, 2) = 10.0;
-    hmm(2, 0) = 2.0;
-    hmm(2, 1) = 6.0;
-    hmm(2, 2) = 1.0;
+        Info<< max(hmm) << endl;
+        Info<< min(hmm) << endl;
 
-    // Info<< hmm << endl << hmm - 2.0*(-hmm) << endl;
-    Info<< max(hmm) << endl;
-    Info<< min(hmm) << endl;
+        SquareMatrix<scalar> hmm2(3, I);
 
-    SquareMatrix<scalar> hmm2(3, I);
+        hmm = hmm2;
 
-    hmm = hmm2;
+        Info<< hmm << endl;
 
-    Info<< hmm << endl;
+        SquareMatrix<scalar> hmm4;
 
-    // SquareMatrix<scalar> hmm3(Sin);
+        hmm4 = hmm2;
 
-    // Info<< hmm3 << endl;
+        Info<< hmm4 << endl;
 
-    SquareMatrix<scalar> hmm4;
+        SquareMatrix<scalar> hmm5;
 
-    hmm4 = hmm2;
-
-    Info<< hmm4 << endl;
-
-    SquareMatrix<scalar> hmm5;
-
-    hmm4 = hmm5;
-    Info<< hmm5 << endl;
+        hmm4 = hmm5;
+        Info<< hmm5 << endl;
+    }
 
     {
         RectangularMatrix<scalar> rm1(5, 6, 3.1);
@@ -83,14 +75,10 @@ int main(int argc, char *argv[])
     }
 
     {
-        scalarSymmetricSquareMatrix symmMatrix(3, Zero);
-
-        symmMatrix(0, 0) = 4;
-        symmMatrix(1, 0) = 12;
-        symmMatrix(1, 1) = 37;
-        symmMatrix(2, 0) = -16;
-        symmMatrix(2, 1) = -43;
-        symmMatrix(2, 2) = 98;
+        scalarSymmetricSquareMatrix symmMatrix
+        {
+            4, 0, 0, 12, 37, 0, -16, -43, 98
+        };
 
         Info<< "Symmetric Square Matrix = " << symmMatrix << endl;
 
@@ -103,10 +91,7 @@ int main(int argc, char *argv[])
         Info<< "Inverse = " << invDecomposed(symmMatrix2) << endl;
         Info<< "Determinant = " << detDecomposed(symmMatrix2) << endl;
 
-        scalarDiagonalMatrix rhs(3, 0);
-        rhs[0] = 1;
-        rhs[1] = 2;
-        rhs[2] = 3;
+        scalarDiagonalMatrix rhs{1, 2, 3};
 
         LUsolve(symmMatrix, rhs);
 
@@ -115,17 +100,7 @@ int main(int argc, char *argv[])
     }
 
 
-    scalarSquareMatrix squareMatrix(3, Zero);
-
-    squareMatrix(0, 0) = 4;
-    squareMatrix(0, 1) = 12;
-    squareMatrix(0, 2) = -16;
-    squareMatrix(1, 0) = 12;
-    squareMatrix(1, 1) = 37;
-    squareMatrix(1, 2) = -43;
-    squareMatrix(2, 0) = -16;
-    squareMatrix(2, 1) = -43;
-    squareMatrix(2, 2) = 98;
+    scalarSquareMatrix squareMatrix{4, 12, -16, 12, 37, -43, -16, -43, 98};
 
     Info<< nl << "Square Matrix = " << squareMatrix << endl;
 

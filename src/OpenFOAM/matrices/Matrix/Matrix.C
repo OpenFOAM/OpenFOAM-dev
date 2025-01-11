@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,6 +107,106 @@ Foam::Matrix<Form, Type>::Matrix(const label m, const label n, const Type& s)
         {
             v_[i] = s;
         }
+    }
+}
+
+
+template<class Form, class Type>
+template<class InputIterator>
+Foam::Matrix<Form, Type>::Matrix
+(
+    const label m,
+    const label n,
+    InputIterator first,
+    InputIterator last
+)
+:
+    mRows_(m),
+    nCols_(n),
+    v_(nullptr)
+{
+    if (mRows_ < 0 || nCols_ < 0)
+    {
+        FatalErrorInFunction
+            << "Incorrect m, n " << mRows_ << ", " << nCols_
+            << abort(FatalError);
+    }
+
+    if (std::distance(first, last) != mRows_*nCols_)
+    {
+        FatalErrorInFunction
+            << "Number of values provided " << std::distance(first, last)
+            << " is not the same as the number of matrix elements "
+            << mRows_*nCols_
+            << abort(FatalError);
+    }
+
+    allocate();
+
+    if (v_)
+    {
+        const label mn = size();
+        InputIterator iter = first;
+        for (label i=0; i<mn; i++)
+        {
+            v_[i] = *iter;
+            ++iter;
+        }
+    }
+}
+
+
+template<class Form, class Type>
+Foam::Matrix<Form, Type>::Matrix
+(
+    const label m,
+    const label n,
+    std::initializer_list<Type> lst
+)
+:
+    Matrix(m, n, lst.begin(), lst.end())
+{}
+
+
+template<class Form, class Type>
+Foam::Matrix<Form, Type>::Matrix
+(
+    std::initializer_list<std::initializer_list<Type>> lstLst
+)
+:
+    mRows_(lstLst.size()),
+    nCols_(lstLst.begin()->size())
+{
+    allocate();
+
+    label rowi = 0;
+    label i = 0;
+    forAllConstIter
+    (
+        typename std::initializer_list<std::initializer_list<Type>>,
+        lstLst,
+        rowIter
+    )
+    {
+        if (label(rowIter->size()) != nCols_)
+        {
+            FatalErrorInFunction
+                << "Number of columns in row " << rowi
+                << " is not equal to " << nCols_
+                << abort(FatalError);
+        }
+
+        forAllConstIter
+        (
+            typename std::initializer_list<Type>,
+            *rowIter,
+            colIter
+        )
+        {
+            v_[i++] = *colIter;
+        }
+
+        rowi++;
     }
 }
 

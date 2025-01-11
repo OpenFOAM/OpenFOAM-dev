@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,11 +62,7 @@ inline Foam::SquareMatrix<Type>::SquareMatrix
 
 
 template<class Type>
-inline Foam::SquareMatrix<Type>::SquareMatrix
-(
-    const label n,
-    const zero
-)
+inline Foam::SquareMatrix<Type>::SquareMatrix(const label n, const zero)
 :
     Matrix<SquareMatrix<Type>, Type>(n, n, Zero)
 {}
@@ -117,6 +113,55 @@ inline Foam::SquareMatrix<Type>::SquareMatrix
 :
     Matrix<SquareMatrix<Type>, Type>(n, n, t)
 {}
+
+
+template<class Type>
+template<class InputIterator>
+inline Foam::SquareMatrix<Type>::SquareMatrix
+(
+    const label n,
+    InputIterator first,
+    InputIterator last
+)
+:
+    Matrix<SquareMatrix<Type>, Type>(n, n, first, last)
+{}
+
+
+template<class Type>
+inline Foam::SquareMatrix<Type>::SquareMatrix
+(
+    const label n,
+    std::initializer_list<Type> lst
+)
+:
+    Matrix<SquareMatrix<Type>, Type>(n, n, lst)
+{}
+
+
+template<class Type>
+inline Foam::SquareMatrix<Type>::SquareMatrix(std::initializer_list<Type> lst)
+:
+    SquareMatrix<Type>(sqrt(scalar(lst.size())), lst)
+{}
+
+
+template<class Type>
+inline Foam::SquareMatrix<Type>::SquareMatrix
+(
+    std::initializer_list<std::initializer_list<Type>> lstLst
+)
+:
+    Matrix<SquareMatrix<Type>, Type>(lstLst)
+{
+    if (this->m() != this->n())
+    {
+        FatalErrorInFunction
+            << "Attempt to construct a square matrix from a rectangular matrix "
+            << this->m() << " x " << this->n() << nl
+            << abort(FatalError);
+    }
+}
 
 
 template<class Type>

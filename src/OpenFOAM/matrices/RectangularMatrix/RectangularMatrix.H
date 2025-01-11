@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,33 +60,10 @@ public:
 
     // Constructors
 
-        //- Null constructor.
-        inline RectangularMatrix();
-
-        //- Construct given number of rows and columns,
-        inline RectangularMatrix(const label m, const label n);
-
-        //- Construct from a block of another matrix
-        template<class MatrixType>
-        inline RectangularMatrix(const ConstMatrixBlock<MatrixType>&);
-
-        //- Construct from a block of another matrix
-        template<class MatrixType>
-        inline RectangularMatrix(const MatrixBlock<MatrixType>&);
-
-        //- Construct with given number of rows and columns
-        //  initialising all elements to zero
-        inline RectangularMatrix(const label m, const label n, const zero);
-
-        //- Construct with given number of rows and columns
-        //  and value for all elements.
-        inline RectangularMatrix(const label m, const label n, const Type&);
+        using Matrix<RectangularMatrix<Type>, Type>::Matrix;
 
         //- Construct as copy of a square matrix
         inline RectangularMatrix(const SquareMatrix<Type>&);
-
-        //- Construct from Istream.
-        inline RectangularMatrix(Istream&);
 
         //- Clone
         inline autoPtr<RectangularMatrix<Type>> clone() const;

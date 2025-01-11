@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,6 +72,9 @@ public:
 
         //- Construct from size and a value
         DiagonalMatrix(const label, const Type&);
+
+        //- Construct from an initialiser list
+        DiagonalMatrix(std::initializer_list<Type>);
 
         //- Construct from Istream.
         DiagonalMatrix(Istream&);

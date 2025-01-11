@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,6 +58,13 @@ template<class Type>
 Foam::DiagonalMatrix<Type>::DiagonalMatrix(const label size, const Type& val)
 :
     List<Type>(size, val)
+{}
+
+
+template<class Type>
+Foam::DiagonalMatrix<Type>::DiagonalMatrix(std::initializer_list<Type> lst)
+:
+    List<Type>(lst)
 {}
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -121,6 +121,23 @@ public:
         //- Construct with given number of rows and columns
         //  initialising all elements to the given value
         Matrix(const label m, const label n, const Type&);
+
+        //- Construct with given number of rows and columns
+        //  and start and end iterators
+        template<class InputIterator>
+        Matrix
+        (
+            const label m,
+            const label n,
+            InputIterator first,
+            InputIterator last
+        );
+
+        //- Construct with given number of rows and columns and initialiser list
+        Matrix(const label m, const label n, std::initializer_list<Type>);
+
+        //- Construct from initialiser list list
+        Matrix(std::initializer_list<std::initializer_list<Type>>);
 
         //- Copy constructor.
         Matrix(const mType&);

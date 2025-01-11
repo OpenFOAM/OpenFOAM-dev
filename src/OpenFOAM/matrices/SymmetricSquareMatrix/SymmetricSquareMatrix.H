@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,6 +74,32 @@ public:
         //- Construct with given number of rows/columns
         //  initialising all elements to the given value
         inline SymmetricSquareMatrix(const label n, const Type&);
+
+        //- Construct with given number of rows/columns
+        //  and start and end iterators
+        template<class InputIterator>
+        inline SymmetricSquareMatrix
+        (
+            const label n,
+            InputIterator first,
+            InputIterator last
+        );
+
+        //- Construct with given number of rows/columns and initialiser list
+        inline SymmetricSquareMatrix
+        (
+            const label n,
+            std::initializer_list<Type>
+        );
+
+        //- Construct from an initialiser list
+        inline SymmetricSquareMatrix(std::initializer_list<Type>);
+
+        //- Construct from initialiser list list
+        inline SymmetricSquareMatrix
+        (
+            std::initializer_list<std::initializer_list<Type>>
+        );
 
         //- Construct from Istream.
         inline SymmetricSquareMatrix(Istream&);

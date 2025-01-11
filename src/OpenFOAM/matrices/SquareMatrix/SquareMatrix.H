@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,17 +83,36 @@ public:
         //  initialising all elements to zero
         inline SquareMatrix(const label n, const zero);
 
-        //- Construct given number of rows and columns (checked to be equal)
+        //- Construct given number of rows/columns (checked to be equal)
         //  initialising all elements to zero
         inline SquareMatrix(const label m, const label n, const zero);
 
         //- Construct given number of rows/columns
-        //  Initialising to the identity matrix
+        //  initialising to the identity matrix
         inline SquareMatrix(const label n, const Identity<Type>);
 
-        //- Construct with given number of rows and rows
+        //- Construct with given number of rows/columns
         //  initialising all elements to the given value
         inline SquareMatrix(const label n, const Type&);
+
+        //- Construct with given number of rows/columns
+        //  and start and end iterators
+        template<class InputIterator>
+        inline SquareMatrix
+        (
+            const label n,
+            InputIterator first,
+            InputIterator last
+        );
+
+        //- Construct with given number of rows/columns and initialiser list
+        inline SquareMatrix(const label n, std::initializer_list<Type>);
+
+        //- Construct from an initialiser list
+        inline SquareMatrix(std::initializer_list<Type>);
+
+        //- Construct from initialiser list list
+        inline SquareMatrix(std::initializer_list<std::initializer_list<Type>>);
 
         //- Construct as copy of a RectangularMatrix
         //  which is checked to be square
