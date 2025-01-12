@@ -27,9 +27,7 @@ License
 #include "LUscalarMatrix.H"
 #include "LLTMatrix.H"
 #include "QRMatrix.H"
-#include "vector.H"
-#include "tensor.H"
-#include "IFstream.H"
+#include "eigendecomposition.H"
 
 using namespace Foam;
 
@@ -151,6 +149,16 @@ int main(int argc, char *argv[])
             << (x - QR.inv()*source) << endl;
 
         Info<< "QR inv *squareMatrix " << (QR.inv()*squareMatrix) << endl;
+    }
+
+    {
+        scalarSquareMatrix A{1, 0, -4, 0, 5, 4, -4, 4, 3};
+
+        eigendecomposition eigen(A);
+
+        Info<< "matrix " << A << endl;
+        Info<< "eigenvalues " << eigen.d() << endl;
+        Info<< "eigenvectors " << eigen.V().T() << endl;
     }
 
     Info<< "\nEnd\n" << endl;

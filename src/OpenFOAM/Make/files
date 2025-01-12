@@ -325,6 +325,7 @@ matrices/solution/solution.C
 scalarMatrices = matrices/scalarMatrices
 $(scalarMatrices)/scalarMatrices.C
 $(scalarMatrices)/SVD/SVD.C
+$(scalarMatrices)/eigendecomposition/eigendecomposition.C
 
 LUscalarMatrix = matrices/LUscalarMatrix
 $(LUscalarMatrix)/LUscalarMatrix.C
