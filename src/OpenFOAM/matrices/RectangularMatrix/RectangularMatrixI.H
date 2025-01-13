@@ -26,6 +26,13 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
+inline Foam::RectangularMatrix<Type>::RectangularMatrix()
+:
+    Matrix<RectangularMatrix<Type>, Type>()
+{}
+
+
+template<class Type>
 inline Foam::RectangularMatrix<Type>::RectangularMatrix
 (
     const SquareMatrix<Type>& SM

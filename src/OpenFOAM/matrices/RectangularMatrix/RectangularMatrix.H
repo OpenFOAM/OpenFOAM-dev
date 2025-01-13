@@ -62,6 +62,9 @@ public:
 
         using Matrix<RectangularMatrix<Type>, Type>::Matrix;
 
+        //- Null constructor.
+        inline RectangularMatrix();
+
         //- Construct as copy of a square matrix
         inline RectangularMatrix(const SquareMatrix<Type>&);
 
