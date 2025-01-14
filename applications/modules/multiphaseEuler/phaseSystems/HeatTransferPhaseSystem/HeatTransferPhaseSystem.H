@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -164,7 +164,7 @@ public:
 
         //- Return the latent heat for a given interface, mass transfer rate
         //  (used only for its sign), and interface temperature
-        virtual tmp<volScalarField> L
+        tmp<volScalarField> L
         (
             const phaseInterface& interface,
             const volScalarField& dmdtf,
@@ -173,7 +173,7 @@ public:
         ) const;
 
         //- As above, but for a cell-set
-        virtual tmp<scalarField> L
+        tmp<scalarField> L
         (
             const phaseInterface& interface,
             const scalarField& dmdtf,
@@ -184,7 +184,7 @@ public:
 
         //- Return the latent heat for a given interface, specie, mass transfer
         //  rate (used only for its sign), and interface temperature
-        virtual tmp<volScalarField> Li
+        tmp<volScalarField> Li
         (
             const phaseInterface& interface,
             const word& member,
@@ -194,7 +194,7 @@ public:
         ) const;
 
         //- As above, but for a cell-set
-        virtual tmp<scalarField> Li
+        tmp<scalarField> Li
         (
             const phaseInterface& interface,
             const word& member,
