@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -238,10 +238,20 @@ Foam::phaseSystem::phaseSystem
         dimensionedScalar(dimPressure/dimTime, 0)
     ),
 
+    cAlphas_
+    (
+        generateInterfacialValues<scalar>("interfaceCompression")
+    ),
+
     deltaN_
     (
         "deltaN",
         1e-8/pow(average(mesh_.V()), 1.0/3.0)
+    ),
+
+    interfaceSurfaceTensionModels_
+    (
+        generateInterfacialModels<interfaceSurfaceTensionModel>()
     )
 {
     // Groupings
@@ -296,15 +306,6 @@ Foam::phaseSystem::phaseSystem
 
     // Write phi
     phi_.writeOpt() = IOobject::AUTO_WRITE;
-
-    // Interface compression coefficients
-    if (this->found("interfaceCompression"))
-    {
-        generateInterfacialValues("interfaceCompression", cAlphas_);
-    }
-
-    // Surface tension models
-    generateInterfacialModels(interfaceSurfaceTensionModels_);
 
     // Update motion fields
     correctKinematics();

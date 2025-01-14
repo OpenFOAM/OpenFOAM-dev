@@ -68,14 +68,17 @@ ThermalPhaseChangePhaseSystem
 :
     BasePhaseSystem(mesh),
     volatile_(this->template lookupOrDefault<word>("volatile", "none")),
+    saturationModels_
+    (
+        this->template
+        generateInterfacialModels<interfaceSaturationTemperatureModel>()
+    ),
     dmdt0s_(this->phases().size()),
     pressureImplicit_
     (
         this->template lookupOrDefault<Switch>("pressureImplicit", true)
     )
 {
-    this->generateInterfacialModels(saturationModels_);
-
     // Check that models have been specified in the correct combinations
     forAllConstIter
     (

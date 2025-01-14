@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -115,14 +115,29 @@ MomentumTransferPhaseSystem
     const fvMesh& mesh
 )
 :
-    BasePhaseSystem(mesh)
-{
-    this->generateInterfacialModels(dragModels_);
-    this->generateInterfacialModels(virtualMassModels_);
-    this->generateInterfacialModels(liftModels_);
-    this->generateInterfacialModels(wallLubricationModels_);
-    this->generateInterfacialModels(turbulentDispersionModels_);
-}
+    BasePhaseSystem(mesh),
+    dragModels_
+    (
+        this->template generateInterfacialModels<blendedDragModel>()
+    ),
+    virtualMassModels_
+    (
+        this->template generateInterfacialModels<blendedVirtualMassModel>()
+    ),
+    liftModels_
+    (
+        this->template generateInterfacialModels<blendedLiftModel>()
+    ),
+    wallLubricationModels_
+    (
+        this->template generateInterfacialModels<blendedWallLubricationModel>()
+    ),
+    turbulentDispersionModels_
+    (
+        this->template
+        generateInterfacialModels<blendedTurbulentDispersionModel>()
+    )
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

@@ -83,7 +83,7 @@ protected:
         // Sub Models
 
             //- Heat transfer models
-            heatTransferModelTable heatTransferModels_;
+            const heatTransferModelTable heatTransferModels_;
 
 
     // Protected Member Functions

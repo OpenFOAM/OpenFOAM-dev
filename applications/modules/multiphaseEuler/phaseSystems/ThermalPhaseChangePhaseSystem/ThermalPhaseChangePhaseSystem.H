@@ -96,7 +96,7 @@ class ThermalPhaseChangePhaseSystem
         word volatile_;
 
         //- Saturation models used to evaluate Tsat = Tf
-        saturationModelTable saturationModels_;
+        const saturationModelTable saturationModels_;
 
         //- Mass transfer rates
         phaseSystem::dmdtfTable dmdtfs_;

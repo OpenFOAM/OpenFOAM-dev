@@ -71,7 +71,7 @@ private:
         // Sub Models
 
             //- Mass transfer models
-            phaseTransferModelTable phaseTransferModels_;
+            const phaseTransferModelTable phaseTransferModels_;
 
             //- Bulk mass transfer rates
             phaseSystem::dmdtfTable dmdtfs_;

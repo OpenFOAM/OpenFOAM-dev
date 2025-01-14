@@ -157,11 +157,18 @@ InterfaceCompositionPhaseChangePhaseSystem
     nInterfaceCorrectors_
     (
         this->template lookupOrDefault<label>("nInterfaceCorrectors", 1)
+    ),
+    diffusiveMassTransferModels_
+    (
+        this->template
+        generateInterfacialModels<sidedBlendedDiffusiveMassTransferModel>()
+    ),
+    interfaceCompositionModels_
+    (
+        this->template
+        generateInterfacialModels<sidedInterfaceCompositionModel>()
     )
 {
-    this->generateInterfacialModels(interfaceCompositionModels_);
-    this->generateInterfacialModels(diffusiveMassTransferModels_);
-
     // Check that models have been specified in the correct combinations
     forAllConstIter
     (

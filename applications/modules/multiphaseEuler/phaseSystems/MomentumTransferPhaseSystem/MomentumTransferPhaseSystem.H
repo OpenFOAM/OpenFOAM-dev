@@ -117,19 +117,19 @@ class MomentumTransferPhaseSystem
         // Sub Models
 
             //- Drag models
-            dragModelTable dragModels_;
+            const dragModelTable dragModels_;
 
             //- Virtual mass models
-            virtualMassModelTable virtualMassModels_;
+            const virtualMassModelTable virtualMassModels_;
 
             //- Lift models
-            liftModelTable liftModels_;
+            const liftModelTable liftModels_;
 
             //- Wall lubrication models
-            wallLubricationModelTable wallLubricationModels_;
+            const wallLubricationModelTable wallLubricationModels_;
 
             //- Turbulent dispersion models
-            turbulentDispersionModelTable turbulentDispersionModels_;
+            const turbulentDispersionModelTable turbulentDispersionModels_;
 
 
 protected:

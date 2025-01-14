@@ -199,10 +199,13 @@ TwoResistanceHeatTransferPhaseSystem
     const fvMesh& mesh
 )
 :
-    HeatTransferPhaseSystem<BasePhaseSystem>(mesh)
+    HeatTransferPhaseSystem<BasePhaseSystem>(mesh),
+    heatTransferModels_
+    (
+        this->template
+        generateInterfacialModels<sidedBlendedHeatTransferModel>()
+    )
 {
-    this->generateInterfacialModels(heatTransferModels_);
-
     // Check that models have been specified on both sides of the interfaces
     forAllConstIter
     (

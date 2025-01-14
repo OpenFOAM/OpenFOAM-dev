@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,10 +36,12 @@ OneResistanceHeatTransferPhaseSystem
     const fvMesh& mesh
 )
 :
-    HeatTransferPhaseSystem<BasePhaseSystem>(mesh)
-{
-    this->generateInterfacialModels(heatTransferModels_);
-}
+    HeatTransferPhaseSystem<BasePhaseSystem>(mesh),
+    heatTransferModels_
+    (
+        this->template generateInterfacialModels<blendedHeatTransferModel>()
+    )
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

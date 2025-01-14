@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -146,10 +146,12 @@ Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::PhaseTransferPhaseSystem
     const fvMesh& mesh
 )
 :
-    BasePhaseSystem(mesh)
+    BasePhaseSystem(mesh),
+    phaseTransferModels_
+    (
+        this->template generateInterfacialModels<blendedPhaseTransferModel>()
+    )
 {
-    this->generateInterfacialModels(phaseTransferModels_);
-
     forAllConstIter
     (
         phaseTransferModelTable,
@@ -432,7 +434,7 @@ void Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::correct()
     }
 
     // Evaluate the models and sum the results into the mass transfer tables
-    forAllIter
+    forAllConstIter
     (
         phaseTransferModelTable,
         phaseTransferModels_,

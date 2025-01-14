@@ -88,7 +88,7 @@ class InterfaceCompositionPhaseChangePhaseSystem
             const label nInterfaceCorrectors_;
 
             //- Mass transfer models
-            diffusiveMassTransferModelTable diffusiveMassTransferModels_;
+            const diffusiveMassTransferModelTable diffusiveMassTransferModels_;
 
             //- Interface composition models
             interfaceCompositionModelTable interfaceCompositionModels_;
