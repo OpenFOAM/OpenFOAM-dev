@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -553,12 +553,12 @@ void Foam::diameterModels::populationBalanceModel::correctDilatationError()
 {
     forAllIter
     (
-        HashTable<volScalarField>,
+        HashPtrTable<volScalarField>,
         dilatationErrors_,
         iter
     )
     {
-        volScalarField& dilatationError = iter();
+        volScalarField& dilatationError = *iter();
         const word& phaseName = iter.key();
         const phaseModel& phase = fluid_.phases()[phaseName];
         const velocityGroup& velGroup = *velocityGroupPtrs_[phaseName];
@@ -806,7 +806,7 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
         dilatationErrors_.insert
         (
             velGroup.phase().name(),
-            volScalarField
+            new volScalarField
             (
                 IOobject
                 (
@@ -1430,7 +1430,7 @@ void Foam::diameterModels::populationBalanceModel::solve()
                 const volScalarField& alpha = phase;
                 const volScalarField& rho = phase.rho();
                 const volScalarField& dilatationError =
-                    dilatationErrors_[phase.name()];
+                    *dilatationErrors_[phase.name()];
 
                 fvScalarMatrix sizeGroupEqn
                 (
