@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -111,15 +111,21 @@ protected:
     // Protected typedefs
 
         typedef
-            HashTable
+            HashPtrTable
             <
-                autoPtr<interfaceSurfaceTensionModel>,
+                interfaceSurfaceTensionModel,
                 phaseInterfaceKey,
                 phaseInterfaceKey::hash
             >
             interfaceSurfaceTensionModelTable;
 
-        typedef HashTable<scalar, phaseInterfaceKey, phaseInterfaceKey::hash>
+        typedef
+            HashTable
+            <
+                scalar,
+                phaseInterfaceKey,
+                phaseInterfaceKey::hash
+            >
             cAlphaTable;
 
 
@@ -352,41 +358,15 @@ public:
             template<class ModelType>
             void generateInterfacialModels
             (
-                const dictionary& dict,
-                HashTable
+                HashPtrTable
                 <
-                    autoPtr<ModelType>,
+                    ModelType,
                     phaseInterfaceKey,
                     phaseInterfaceKey::hash
                 >& models
             ) const;
 
-            //- Generate interfacial-model tables
-            template<class ModelType>
-            void generateInterfacialModels
-            (
-                HashTable
-                <
-                    autoPtr<ModelType>,
-                    phaseInterfaceKey,
-                    phaseInterfaceKey::hash
-                >& models
-            ) const;
-
-            //- Generate interfacial-model tables
-            template<class ValueType>
-            void generateInterfacialValues
-            (
-                const dictionary& dict,
-                HashTable
-                <
-                    ValueType,
-                    phaseInterfaceKey,
-                    phaseInterfaceKey::hash
-                >& values
-            ) const;
-
-            //- Generate interfacial-model tables
+            //- Generate interfacial-value tables
             template<class ValueType>
             void generateInterfacialValues
             (

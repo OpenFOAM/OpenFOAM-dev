@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -252,7 +252,7 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::saturation
     const phaseInterfaceKey& key
 ) const
 {
-    return saturationModels_[key];
+    return *saturationModels_[key];
 }
 
 
@@ -568,7 +568,7 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctInterfaceThermo()
         const volScalarField& T2(thermo2.T());
 
         const sidedBlendedHeatTransferModel& heatTransferModel =
-            this->heatTransferModels_[interface];
+            *this->heatTransferModels_[interface];
 
         // Interfacial mass transfer update
         {

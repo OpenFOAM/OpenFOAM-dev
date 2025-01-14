@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,16 +61,16 @@ class InterfaceCompositionPhaseChangePhaseSystem
 {
     // Private typedefs
 
-        typedef HashTable
+        typedef HashPtrTable
         <
-            autoPtr<sidedInterfaceCompositionModel>,
+            sidedInterfaceCompositionModel,
             phaseInterfaceKey,
             phaseInterfaceKey::hash
         > interfaceCompositionModelTable;
 
-        typedef HashTable
+        typedef HashPtrTable
         <
-            autoPtr<sidedBlendedDiffusiveMassTransferModel>,
+            sidedBlendedDiffusiveMassTransferModel,
             phaseInterfaceKey,
             phaseInterfaceKey::hash
         > diffusiveMassTransferModelTable;

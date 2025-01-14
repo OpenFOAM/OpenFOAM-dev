@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,7 @@ class Raoult
         volScalarField YNonVapourPrime_;
 
         //- Species' individual composition models
-        HashTable<autoPtr<interfaceCompositionModel>> speciesModels_;
+        HashPtrTable<interfaceCompositionModel> speciesModels_;
 
 
 public:

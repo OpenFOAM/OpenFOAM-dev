@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,37 +72,37 @@ class MomentumTransferPhaseSystem
             phaseInterfaceKey::hash
         > KdTable;
 
-        typedef HashTable
+        typedef HashPtrTable
         <
-            autoPtr<blendedDragModel>,
+            blendedDragModel,
             phaseInterfaceKey,
             phaseInterfaceKey::hash
         > dragModelTable;
 
-        typedef HashTable
+        typedef HashPtrTable
         <
-            autoPtr<blendedVirtualMassModel>,
+            blendedVirtualMassModel,
             phaseInterfaceKey,
             phaseInterfaceKey::hash
         > virtualMassModelTable;
 
-        typedef HashTable
+        typedef HashPtrTable
         <
-            autoPtr<blendedLiftModel>,
+            blendedLiftModel,
             phaseInterfaceKey,
             phaseInterfaceKey::hash
         > liftModelTable;
 
-        typedef HashTable
+        typedef HashPtrTable
         <
-            autoPtr<blendedWallLubricationModel>,
+            blendedWallLubricationModel,
             phaseInterfaceKey,
             phaseInterfaceKey::hash
         > wallLubricationModelTable;
 
-        typedef HashTable
+        typedef HashPtrTable
         <
-            autoPtr<blendedTurbulentDispersionModel>,
+            blendedTurbulentDispersionModel,
             phaseInterfaceKey,
             phaseInterfaceKey::hash
         > turbulentDispersionModelTable;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,7 +64,7 @@ void Foam::TwoResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmdtHefs
 
         // Transfer coefficients
         const sidedBlendedHeatTransferModel& heatTransferModel =
-            heatTransferModels_[interface];
+            *heatTransferModels_[interface];
         const volScalarField H1(heatTransferModel.modelInThe(phase1).K());
         const volScalarField H2(heatTransferModel.modelInThe(phase2).K());
         const volScalarField H1Fac(H1/(H1 + H2));
@@ -129,7 +129,7 @@ void Foam::TwoResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmidtHefs
 
         // Transfer coefficients
         const sidedBlendedHeatTransferModel& heatTransferModel =
-            heatTransferModels_[interface];
+            *heatTransferModels_[interface];
         const volScalarField H1(heatTransferModel.modelInThe(phase1).K());
         const volScalarField H2(heatTransferModel.modelInThe(phase2).K());
         const volScalarField H1Fac(H1/(H1 + H2));
@@ -268,7 +268,7 @@ heatTransfer() const
         heatTransferModelIter
     )
     {
-        const sidedBlendedHeatTransferModel& model = heatTransferModelIter()();
+        const sidedBlendedHeatTransferModel& model = *heatTransferModelIter();
 
         const phaseModel& phase1 = model.interface().phase1();
         const phaseModel& phase2 = model.interface().phase2();

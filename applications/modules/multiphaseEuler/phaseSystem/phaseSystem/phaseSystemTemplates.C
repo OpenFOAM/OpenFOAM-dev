@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -206,15 +206,11 @@ void Foam::phaseSystem::generateInterfacialModels
 template<class ModelType>
 void Foam::phaseSystem::generateInterfacialModels
 (
-    const dictionary& dict,
-    HashTable
-    <
-        autoPtr<ModelType>,
-        phaseInterfaceKey,
-        phaseInterfaceKey::hash
-    >& models
+    HashPtrTable<ModelType, phaseInterfaceKey, phaseInterfaceKey::hash>& models
 ) const
 {
+    const dictionary dict = interfacialDict<dictionary>(modelName<ModelType>());
+
     // Construct lists of interfaces and models
     PtrList<phaseInterface> listInterfaces;
     PtrList<ModelType> listModels;
@@ -229,45 +225,7 @@ void Foam::phaseSystem::generateInterfacialModels
     // Transfer to a keyed table
     forAll(listInterfaces, i)
     {
-        models.insert(listInterfaces[i], listModels.set(i, nullptr));
-    }
-}
-
-
-template<class ModelType>
-void Foam::phaseSystem::generateInterfacialModels
-(
-    HashTable
-    <
-        autoPtr<ModelType>,
-        phaseInterfaceKey,
-        phaseInterfaceKey::hash
-    >& models
-) const
-{
-    generateInterfacialModels
-    (
-        interfacialDict<dictionary>(modelName<ModelType>()),
-        models
-    );
-}
-
-
-template<class ValueType>
-void Foam::phaseSystem::generateInterfacialValues
-(
-    const dictionary& dict,
-    HashTable<ValueType, phaseInterfaceKey, phaseInterfaceKey::hash>& values
-) const
-{
-    forAllConstIter(dictionary, dict, iter)
-    {
-        autoPtr<phaseInterface> interfacePtr =
-            phaseInterface::New(*this, iter().keyword());
-
-        const ValueType value(pTraits<ValueType>(iter().stream()));
-
-        values.insert(interfacePtr(), value);
+        models.insert(listInterfaces[i], listModels.set(i, nullptr).ptr());
     }
 }
 
@@ -279,7 +237,17 @@ void Foam::phaseSystem::generateInterfacialValues
     HashTable<ValueType, phaseInterfaceKey, phaseInterfaceKey::hash>& values
 ) const
 {
-    generateInterfacialValues(interfacialDict<ValueType>(valueName), values);
+    const dictionary dict = interfacialDict<ValueType>(valueName);
+
+    forAllConstIter(dictionary, dict, iter)
+    {
+        autoPtr<phaseInterface> interfacePtr =
+            phaseInterface::New(*this, iter().keyword());
+
+        const ValueType value(pTraits<ValueType>(iter().stream()));
+
+        values.insert(interfacePtr(), value);
+    }
 }
 
 

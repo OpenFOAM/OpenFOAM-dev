@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,9 +66,9 @@ protected:
 
     // Protected typedefs
 
-        typedef HashTable
+        typedef HashPtrTable
         <
-            autoPtr<sidedBlendedHeatTransferModel>,
+            sidedBlendedHeatTransferModel,
             phaseInterfaceKey,
             phaseInterfaceKey::hash
         > heatTransferModelTable;
