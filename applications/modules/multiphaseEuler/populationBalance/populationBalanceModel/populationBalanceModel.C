@@ -410,7 +410,7 @@ void Foam::diameterModels::populationBalanceModel::drift
 
     if (i == sizeGroups().size() - 1)
     {
-        Sp_[i] -= pos(driftRate_())*driftRate_()/fp.x();
+        Sp_[i] -= neg(driftRate_())*driftRate_()/fp.x();
     }
 
     if (i > 0)
@@ -440,7 +440,7 @@ void Foam::diameterModels::populationBalanceModel::drift
 
     if (i == 0)
     {
-        Sp_[i] -= neg(driftRate_())*driftRate_()/fp.x();
+        Sp_[i] -= pos(driftRate_())*driftRate_()/fp.x();
     }
 }
 
