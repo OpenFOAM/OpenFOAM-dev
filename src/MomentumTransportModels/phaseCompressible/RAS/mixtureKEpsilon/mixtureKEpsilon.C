@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -254,7 +254,7 @@ mixtureKEpsilon<BasicMomentumTransportModel>::gasTurbulence() const
         const phaseModel& liquid =
             refCast<const phaseModel>(this->properties());
         const phaseSystem& fluid = liquid.fluid();
-        const phaseModel& gas = fluid.phases()[0];
+        const phaseModel& gas = fluid.otherPhase(liquid);
 
         gasTurbulencePtr_ =
            &const_cast<mixtureKEpsilon<BasicMomentumTransportModel>&>
@@ -285,7 +285,7 @@ tmp<volScalarField> mixtureKEpsilon<BasicMomentumTransportModel>::Ct2() const
 
     const phaseModel& liquid = refCast<const phaseModel>(this->properties());
     const phaseSystem& fluid = liquid.fluid();
-    const phaseModel& gas = fluid.phases()[0];
+    const phaseModel& gas = fluid.otherPhase(liquid);
 
     const dragModels::dispersedDragModel& drag =
         fluid.lookupInterfacialModel<dragModels::dispersedDragModel>
@@ -322,7 +322,7 @@ mixtureKEpsilon<BasicMomentumTransportModel>::rhogEff() const
 {
     const phaseModel& liquid = refCast<const phaseModel>(this->properties());
     const phaseSystem& fluid = liquid.fluid();
-    const phaseModel& gas = fluid.phases()[0];
+    const phaseModel& gas = fluid.otherPhase(liquid);
 
     const virtualMassModels::dispersedVirtualMassModel& virtualMass =
         fluid.lookupInterfacialModel
@@ -404,7 +404,7 @@ mixtureKEpsilon<BasicMomentumTransportModel>::bubbleG() const
 
     const phaseModel& liquid = refCast<const phaseModel>(this->properties());
     const phaseSystem& fluid = liquid.fluid();
-    const phaseModel& gas = fluid.phases()[0];
+    const phaseModel& gas = fluid.otherPhase(liquid);
 
     const dragModels::dispersedDragModel& drag =
         fluid.lookupInterfacialModel<dragModels::dispersedDragModel>
@@ -585,7 +585,7 @@ void mixtureKEpsilon<BasicMomentumTransportModel>::correct()
       - fvm::SuSp(((2.0/3.0)*C1_)*divUm, epsilonm)
       - fvm::Sp(C2_*epsilonm/km, epsilonm)
       + epsilonSource()
-      + fvModels.source(epsilonm)
+      + fvModels.source(rhom, epsilonm)/rhom
     );
 
     epsEqn.ref().relax();
@@ -609,7 +609,7 @@ void mixtureKEpsilon<BasicMomentumTransportModel>::correct()
       - fvm::SuSp((2.0/3.0)*divUm, km)
       - fvm::Sp(epsilonm/km, km)
       + kSource()
-      + fvModels.source(km)
+      + fvModels.source(rhom, km)/rhom
     );
 
     kmEqn.ref().relax();
