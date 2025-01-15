@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,8 +79,8 @@ void Foam::solvers::XiFluid::fuSolve
     (
         bSource/(b + 0.001)
       - 2*Db*c
-       *mag(fvc::grad(ft))/max(ft, 1e-6)
-       *mag(fvc::grad(fuFres))/max(fuFres, 1e-6)
+       *mag(fvc::grad(ft))/max(ft, scalar(1e-6))
+       *mag(fvc::grad(fuFres))/max(fuFres, scalar(1e-6))
     );
 
     fvScalarMatrix fuEqn
