@@ -206,8 +206,6 @@ void Foam::eigendecomposition::tql2()
     scalar f = 0;
     scalar tst1 = 0;
 
-    const scalar eps = pow(2.0, -52.0);
-
     for (label l = 0; l < n; l++)
     {
         // Find small subdiagonal element
@@ -219,7 +217,7 @@ void Foam::eigendecomposition::tql2()
         // Original while-loop from Java code
         while (m < n)
         {
-            if (mag(e_[m]) <= eps*tst1)
+            if (mag(e_[m]) <= small*tst1)
             {
                 break;
             }
@@ -299,7 +297,7 @@ void Foam::eigendecomposition::tql2()
 
                 // Check for convergence
 
-            } while (mag(e_[l]) > eps*tst1);
+            } while (mag(e_[l]) > small*tst1);
         }
         d_[l] = d_[l] + f;
         e_[l] = 0;
@@ -500,7 +498,6 @@ void Foam::eigendecomposition::hqr2()
     label n = nn-1;
     const label low = 0;
     const label high = nn-1;
-    const scalar eps = pow(2.0, -52.0);
 
     scalar exshift = 0;
     scalar p = 0;
@@ -541,7 +538,7 @@ void Foam::eigendecomposition::hqr2()
             {
                 s = norm;
             }
-            if (mag(H_(l, l-1)) < eps*s)
+            if (mag(H_(l, l-1)) < small*s)
             {
                 break;
             }
@@ -721,7 +718,7 @@ void Foam::eigendecomposition::hqr2()
                 if
                 (
                     mag(H_(m, m-1))*(mag(q) + mag(r))
-                  < eps
+                  < small
                    *(mag(p)*(mag(H_(m-1, m-1)) + mag(z) + mag(H_(m+1, m+1))))
                 )
                 {
@@ -877,7 +874,7 @@ void Foam::eigendecomposition::hqr2()
                         }
                         else
                         {
-                            H_(i, n) = -r/(eps*norm);
+                            H_(i, n) = -r/(small*norm);
                         }
 
                         // Solve real equations
@@ -902,7 +899,7 @@ void Foam::eigendecomposition::hqr2()
 
                     // Overflow control
                     t = mag(H_(i, n));
-                    if ((eps*t)*t > 1)
+                    if ((small*t)*t > 1)
                     {
                         for (label j = i; j <= n; j++)
                         {
@@ -974,7 +971,7 @@ void Foam::eigendecomposition::hqr2()
 
                         if ((vr == 0) && (vi == 0))
                         {
-                            vr = eps*norm*(mag(w) + mag(q) +
+                            vr = small*norm*(mag(w) + mag(q) +
                             mag(x) + mag(y) + mag(z));
                         }
 
@@ -1007,7 +1004,7 @@ void Foam::eigendecomposition::hqr2()
                     // Overflow control
 
                     t = max(mag(H_(i, n-1)), mag(H_(i, n)));
-                    if ((eps*t)*t > 1)
+                    if ((small*t)*t > 1)
                     {
                         for (label j = i; j <= n; j++)
                         {
