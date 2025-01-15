@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -253,9 +253,6 @@ public:
 
             //- Remove all regIOobject owned by the registry
             void clear();
-
-            //- Add the given name to the set of temporary objects to cache
-            void addTemporaryObject(const word& name) const;
 
             //- Return true if given name is in the cacheTemporaryObjects set
             bool cacheTemporaryObject(const word& name) const;

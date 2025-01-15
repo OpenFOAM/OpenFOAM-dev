@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -381,24 +381,14 @@ void Foam::objectRegistry::clear()
 }
 
 
-void Foam::objectRegistry::addTemporaryObject
-(
-    const word& name
-) const
-{
-    if (!cacheTemporaryObjects_.found(name))
-    {
-        cacheTemporaryObjects_.insert(name, {false, false});
-    }
-}
-
-
 bool Foam::objectRegistry::cacheTemporaryObject
 (
     const word& name
 ) const
 {
-    return cacheTemporaryObjects_.found(name);
+    const objectRegistry& root = time_;
+
+    return root.cacheTemporaryObjects_.found(name);
 }
 
 
@@ -421,13 +411,17 @@ void Foam::objectRegistry::resetCacheTemporaryObject
             iter().first() = false;
         }
     }
+
+    // Reset the object in the time registry also
+    if (this != &time_)
+    {
+        time_.resetCacheTemporaryObject(ob);
+    }
 }
 
 
 bool Foam::objectRegistry::checkCacheTemporaryObjects() const
 {
-    bool enabled = cacheTemporaryObjects_.size();
-
     forAllConstIter(HashTable<regIOobject*>, *this, iter)
     {
         const objectRegistry* orPtr_ =
@@ -436,16 +430,23 @@ bool Foam::objectRegistry::checkCacheTemporaryObjects() const
         // Protect against re-searching the top-level registry
         if (orPtr_ && orPtr_ != this)
         {
-            enabled = orPtr_->checkCacheTemporaryObjects() || enabled;
+            orPtr_->checkCacheTemporaryObjects();
         }
     }
 
-    if (enabled)
+    const objectRegistry& root = time_;
+
+    if (root.cacheTemporaryObjects_.empty())
+    {
+        return false;
+    }
+
+    if (this != &root)
     {
         forAllIter
         (
             typename HashTable<Pair<bool>>,
-            cacheTemporaryObjects_,
+            root.cacheTemporaryObjects_,
             iter
         )
         {
@@ -458,16 +459,26 @@ bool Foam::objectRegistry::checkCacheTemporaryObjects() const
                     << temporaryObjects_
                     << endl;
             }
-            else
-            {
-                iter().second() = false;
-            }
         }
 
-        temporaryObjects_.clear();
+        cacheTemporaryObjects_.clear();
+    }
+    else
+    {
+        forAllIter
+        (
+            typename HashTable<Pair<bool>>,
+            root.cacheTemporaryObjects_,
+            iter
+        )
+        {
+            iter().second() = false;
+        }
     }
 
-    return enabled;
+    temporaryObjects_.clear();
+
+    return true;
 }
 
 
