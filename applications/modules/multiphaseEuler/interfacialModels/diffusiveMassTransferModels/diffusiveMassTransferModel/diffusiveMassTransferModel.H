@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,9 +79,6 @@ public:
 
         //- Coefficient dimensions
         static const dimensionSet dimK;
-
-        //- Does this model require correcting on fixed flux boundaries?
-        static const bool correctFixedFluxBCs = false;
 
 
     // Constructors

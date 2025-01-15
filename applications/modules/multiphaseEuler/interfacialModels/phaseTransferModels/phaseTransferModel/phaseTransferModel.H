@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,9 +84,6 @@ public:
 
         //- Mass transfer rate derivative w.r.t pressure dimensions
         static const dimensionSet dimD2mdtdp;
-
-        //- Does this model require correcting on fixed flux boundaries?
-        static const bool correctFixedFluxBCs = false;
 
         //- Empty species list
         static const hashedWordList noSpecies_;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,7 +101,8 @@ Foam::tmp<Foam::volScalarField> Foam::blendedHeatTransferModel::K() const
 {
     tmp<volScalarField> (heatTransferModel::*k)() const =
         &heatTransferModel::K;
-    return evaluate(k, "K", heatTransferModel::dimK, false);
+
+    return evaluate(k, "K", heatTransferModel::dimK);
 }
 
 
@@ -112,7 +113,8 @@ Foam::tmp<Foam::volScalarField> Foam::blendedHeatTransferModel::K
 {
     tmp<volScalarField> (heatTransferModel::*k)(const scalar) const =
         &heatTransferModel::K;
-    return evaluate(k, "Kf", heatTransferModel::dimK, false, residualAlpha);
+
+    return evaluate(k, "Kf", heatTransferModel::dimK, residualAlpha);
 }
 
 

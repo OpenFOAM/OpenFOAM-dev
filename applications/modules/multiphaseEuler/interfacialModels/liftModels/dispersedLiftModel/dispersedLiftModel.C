@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,14 +62,20 @@ Foam::tmp<Foam::volVectorField> Foam::liftModels::dispersedLiftModel::Fi() const
 
 Foam::tmp<Foam::volVectorField> Foam::liftModels::dispersedLiftModel::F() const
 {
-    return interface_.dispersed()*Fi();
+    return
+        interface_.sign()
+       *interface_.dispersed()
+       *Fi();
 }
 
 
 Foam::tmp<Foam::surfaceScalarField>
 Foam::liftModels::dispersedLiftModel::Ff() const
 {
-    return fvc::interpolate(interface_.dispersed())*fvc::flux(Fi());
+    return
+        interface_.sign()
+       *fvc::interpolate(interface_.dispersed())
+       *fvc::flux(Fi());
 }
 
 

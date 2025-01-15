@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,14 +57,20 @@ Foam::wallLubricationModels::dispersedWallLubricationModel::
 Foam::tmp<Foam::volVectorField>
 Foam::wallLubricationModels::dispersedWallLubricationModel::F() const
 {
-    return interface_.dispersed()*Fi();
+    return
+        interface_.sign()
+       *interface_.dispersed()
+       *Fi();
 }
 
 
 Foam::tmp<Foam::surfaceScalarField>
 Foam::wallLubricationModels::dispersedWallLubricationModel::Ff() const
 {
-    return fvc::interpolate(interface_.dispersed())*fvc::flux(Fi());
+    return
+        interface_.sign()
+       *fvc::interpolate(interface_.dispersed())
+       *fvc::flux(Fi());
 }
 
 

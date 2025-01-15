@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ License
 
 #include "wallLubricationModel.H"
 #include "wallFvPatch.H"
+#include "correctFixedFluxBCs.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -86,12 +87,15 @@ Foam::wallLubricationModel::~wallLubricationModel()
 Foam::tmp<Foam::volVectorField> Foam::blendedWallLubricationModel::F() const
 {
     return
-        evaluate
+        correctFixedFluxBCs
         (
-            &wallLubricationModel::F,
-            "F",
-            wallLubricationModel::dimF,
-            true
+            interface(),
+            evaluate
+            (
+                &wallLubricationModel::F,
+                "F",
+                wallLubricationModel::dimF
+            )
         );
 }
 
@@ -100,12 +104,15 @@ Foam::tmp<Foam::surfaceScalarField>
 Foam::blendedWallLubricationModel::Ff() const
 {
     return
-        evaluate
+        correctFixedFluxBCs
         (
-            &wallLubricationModel::Ff,
-            "Ff",
-            wallLubricationModel::dimF*dimArea,
-            true
+            interface(),
+            evaluate
+            (
+                &wallLubricationModel::Ff,
+                "Ff",
+                wallLubricationModel::dimF*dimArea
+            )
         );
 }
 

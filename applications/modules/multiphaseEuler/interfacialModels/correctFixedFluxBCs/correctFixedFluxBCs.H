@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,86 +21,69 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Class
-    Foam::liftModels::wallDamped
+Namespace
+    Foam
 
 Description
-
-SourceFiles
-    wallDamped.C
+    Function for correcting model coefficients on patches with fixed flux
+    boundary conditions
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef wallDampedLift_H
-#define wallDampedLift_H
+#ifndef correctFixedFluxBCs_H
+#define correctFixedFluxBCs_H
 
-#include "dispersedLiftModel.H"
-#include "wallDampingModel.H"
+#include "phaseInterface.H"
+#include "fixedValueFvsPatchFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace liftModels
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+template<class Type, class GeoMesh>
+tmp<GeometricField<Type, GeoMesh>> correctFixedFluxBCs
+(
+    const phaseInterface& interface,
+    tmp<GeometricField<Type, GeoMesh>> tfield
+)
 {
+    typedef GeometricField<Type, GeoMesh> typeGeoField;
 
-/*---------------------------------------------------------------------------*\
-                         Class wallDamped Declaration
-\*---------------------------------------------------------------------------*/
+    typename typeGeoField::Boundary& fieldBf = tfield.ref().boundaryFieldRef();
 
-class wallDamped
-:
-    public dispersedLiftModel
-{
-    // Private Data
-
-        //- The lift model to damp
-        autoPtr<liftModel> liftModel_;
-
-        //- The wall-damping model
-        autoPtr<wallDampingModel> wallDampingModel_;
-
-
-public:
-
-    //- Runtime type information
-    TypeName("wallDamped");
-
-
-    // Constructors
-
-        //- Construct from a dictionary and an interface
-        wallDamped
+    forAll(fieldBf, patchi)
+    {
+        if
         (
-            const dictionary& dict,
-            const phaseInterface& interface
-        );
+            (
+                !interface.phase1().stationary()
+             && isA<fixedValueFvsPatchScalarField>
+                (
+                    interface.phase1().phi()().boundaryField()[patchi]
+                )
+            )
+         || (
+                !interface.phase2().stationary()
+             && isA<fixedValueFvsPatchScalarField>
+                (
+                    interface.phase2().phi()().boundaryField()[patchi]
+                )
+            )
+        )
+        {
+            fieldBf[patchi] = Zero;
+        }
+    }
 
-
-    //- Destructor
-    virtual ~wallDamped();
-
-
-    // Member Functions
-
-        //- Lift coefficient
-        virtual tmp<volScalarField> Cl() const;
-
-        //- Return phase-intensive lift force. Note that this is
-        //  signed relative to dispersed-continuous, not phase1-phase2.
-        virtual tmp<volVectorField> Fi() const;
-
-        //- Return lift force
-        virtual tmp<volVectorField> F() const;
-
-        //- Return face lift force
-        virtual tmp<surfaceScalarField> Ff() const;
-};
+    return tfield;
+}
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace liftModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

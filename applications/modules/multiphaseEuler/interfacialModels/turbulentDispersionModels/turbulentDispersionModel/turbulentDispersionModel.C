@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "turbulentDispersionModel.H"
-#include "phaseCompressibleMomentumTransportModel.H"
+#include "correctFixedFluxBCs.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -59,12 +59,15 @@ Foam::turbulentDispersionModel::~turbulentDispersionModel()
 Foam::tmp<Foam::volScalarField> Foam::blendedTurbulentDispersionModel::D() const
 {
     return
-        evaluate
+        correctFixedFluxBCs
         (
-            &turbulentDispersionModel::D,
-            "D",
-            turbulentDispersionModel::dimD,
-            false
+            interface(),
+            evaluate
+            (
+                &turbulentDispersionModel::D,
+                "D",
+                turbulentDispersionModel::dimD
+            )
         );
 }
 

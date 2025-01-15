@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,6 +100,12 @@ const Foam::phaseModel& Foam::dispersedPhaseInterface::dispersed() const
 const Foam::phaseModel& Foam::dispersedPhaseInterface::continuous() const
 {
     return otherPhase(dispersed_);
+}
+
+
+Foam::scalar Foam::dispersedPhaseInterface::sign() const
+{
+    return &dispersed_ == &phase1() ? +1 : -1;
 }
 
 

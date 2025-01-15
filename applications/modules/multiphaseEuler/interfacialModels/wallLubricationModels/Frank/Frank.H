@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,8 +102,9 @@ public:
 
     // Member Functions
 
-        //- Return phase-intensive wall lubrication force
-        tmp<volVectorField> Fi() const;
+        //- Return phase-intensive wall lubrication force. Note that this is
+        //  signed relative to dispersed-continuous, not phase1-phase2.
+        virtual tmp<volVectorField> Fi() const;
 };
 
 

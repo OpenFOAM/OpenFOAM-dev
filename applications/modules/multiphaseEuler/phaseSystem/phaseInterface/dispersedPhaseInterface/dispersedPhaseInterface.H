@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,6 +108,10 @@ public:
 
             //- Continuous phase
             const phaseModel& continuous() const;
+
+            //- Return the sign. +1 if the dispersed phase is first. -1 if the
+            //  continuous phase is first.
+            scalar sign() const;
 
 
         // Properties

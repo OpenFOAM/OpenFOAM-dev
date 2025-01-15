@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,8 @@ Class
     Foam::SidedInterfacialModel
 
 Description
+    Wrapper class for interfacial models for which two instances of the model
+    are used per interface; one for each side of the interface
 
 SourceFiles
     SidedInterfacialModel.C

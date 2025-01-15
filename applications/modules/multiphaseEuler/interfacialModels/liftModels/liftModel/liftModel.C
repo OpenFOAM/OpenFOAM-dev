@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "liftModel.H"
+#include "correctFixedFluxBCs.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -57,13 +58,23 @@ Foam::liftModel::~liftModel()
 
 Foam::tmp<Foam::volVectorField> Foam::blendedLiftModel::F() const
 {
-    return evaluate(&liftModel::F, "F", liftModel::dimF, true);
+    return
+        correctFixedFluxBCs
+        (
+            interface(),
+            evaluate(&liftModel::F, "F", liftModel::dimF)
+        );
 }
 
 
 Foam::tmp<Foam::surfaceScalarField> Foam::blendedLiftModel::Ff() const
 {
-    return evaluate(&liftModel::Ff, "Ff", liftModel::dimF*dimArea, true);
+    return
+        correctFixedFluxBCs
+        (
+            interface(),
+            evaluate(&liftModel::Ff, "Ff", liftModel::dimF*dimArea)
+        );
 }
 
 

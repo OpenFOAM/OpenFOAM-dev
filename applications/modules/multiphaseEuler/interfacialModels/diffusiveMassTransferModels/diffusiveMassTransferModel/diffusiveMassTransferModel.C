@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,8 @@ Foam::blendedDiffusiveMassTransferModel::K() const
 {
     tmp<volScalarField> (diffusiveMassTransferModel::*k)() const =
         &diffusiveMassTransferModel::K;
-    return evaluate(k, "K", diffusiveMassTransferModel::dimK, false);
+
+    return evaluate(k, "K", diffusiveMassTransferModel::dimK);
 }
 
 
