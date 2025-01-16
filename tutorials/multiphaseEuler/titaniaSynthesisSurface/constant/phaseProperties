@@ -81,8 +81,6 @@ particles
         );
     }
 
-    Sct             1.0;
-
     residualAlpha   1e-15;
 }
 
@@ -91,8 +89,6 @@ vapour
     type            reactingPhaseModel;
 
     diameterModel   none;
-
-    Sct             1.0;
 
     residualAlpha   1e-5;
 }

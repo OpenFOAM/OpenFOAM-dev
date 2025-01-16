@@ -9,7 +9,7 @@ FoamFile
 {
     format      ascii;
     class       volScalarField;
-    object      Ar.vapour;
+    object      alpha.vapour;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -24,7 +24,7 @@ boundaryField
     inlet
     {
         type            fixedValue;
-        value           uniform 9.759118E-01;
+        value           uniform 1.0;
     }
 
     outlet
@@ -37,6 +37,5 @@ boundaryField
         type            zeroGradient;
     }
 }
-
 
 // ************************************************************************* //

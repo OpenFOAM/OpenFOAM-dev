@@ -8,25 +8,33 @@
 FoamFile
 {
     format      ascii;
-    class       dictionary;
-    location    "constant";
-    object      momentumTransport.particles;
+    class       volScalarField;
+    object      Ydefault.particles;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-simulationType  RAS;
+dimensions      [];
 
-RAS
+internalField   uniform 0.0;
+
+boundaryField
 {
-    model    phasePressure;
+    #includeEtc "caseDicts/setConstraintTypes"
 
-    turbulence      on;
-
-    phasePressureCoeffs
+    inlet
     {
-        preAlphaExp     500;
-        expMax          1000;
-        g0              1000;
+        type            fixedValue;
+        value           uniform 0.0;
+    }
+
+    outlet
+    {
+        type            zeroGradient;
+    }
+
+    wall
+    {
+        type            zeroGradient;
     }
 }
 

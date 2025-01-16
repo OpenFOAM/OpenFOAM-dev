@@ -14,7 +14,21 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-simulationType  laminar;
+simulationType  RAS;
+
+RAS
+{
+    model    phasePressure;
+
+    turbulence      on;
+
+    phasePressureCoeffs
+    {
+        preAlphaExp     500;
+        expMax          1000;
+        g0              1000;
+    }
+}
 
 
 // ************************************************************************* //
