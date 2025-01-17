@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,6 +97,25 @@ const Foam::labelUList&
 Foam::nonConformalProcessorCyclicFvPatch::faceCells() const
 {
     return nonConformalFvPatch::faceCells();
+}
+
+
+void Foam::nonConformalProcessorCyclicFvPatch::makeWeights(scalarField& w) const
+{
+    if (Pstream::parRun())
+    {
+        nonConformalCoupledFvPatch::makeWeights
+        (
+            w,
+          - boundaryMesh().mesh().Sf().boundaryField()[index()],
+            boundaryMesh().mesh().Cf().boundaryField()[index()]
+          - boundaryMesh().mesh().C().boundaryField()[index()]
+        );
+    }
+    else
+    {
+        w = 1;
+    }
 }
 
 
