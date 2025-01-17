@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,18 +51,17 @@ Usage
     {
         type            fanPressureJump;
         patchType       cyclic;
+
         fanCurve        table;
-        fanCurveCoeffs
-        {
-            file            "$FOAM_CASE/constant/pressureVsQ";
-            format          csv;
-            nHeaderLine     1;
-            columns         (0 1);
-            separator       ",";
-            mergeSeparators no;
-            outOfBounds     clamp;
-            interpolationScheme linear;
-        }
+        file            "$FOAM_CASE/constant/pressureVsQ";
+        format          csv;
+        nHeaderLine     1;
+        columns         (0 1);
+        separator       ",";
+        mergeSeparators no;
+        outOfBounds     clamp;
+        interpolationScheme linear;
+
         value           uniform 0;
     }
     \endverbatim
