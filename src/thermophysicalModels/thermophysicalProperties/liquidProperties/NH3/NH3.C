@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,7 +77,7 @@ Foam::NH3::NH3()
     mug_("mug", 4.1855e-08, 9.8060e-01, 3.0800e+01, 0),
     kappa_("kappa", 1.1606e+00, -2.2840e-03, 0, 0, 0, 0),
     kappag_("kappag", -4.5900e-02, 1.6520e-01, -1.7078e+03, 0),
-    sigma_("sigma", 9.1200e-02, 1.1028e+00, 0, 0, 0, 0),
+    sigma_("sigma", 405.65, 9.1200e-02, 1.1028e+00, 0, 0, 0),
     D_("D", 14.9, 20.1, W(), 28),
     hf_(h_.value(Tstd))
 {}
