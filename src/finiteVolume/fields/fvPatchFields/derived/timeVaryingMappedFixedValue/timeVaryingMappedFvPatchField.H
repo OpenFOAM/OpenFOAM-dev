@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -184,6 +184,16 @@ public:
             const fvPatch&,
             const DimensionedField<Type, volMesh>&,
             const dictionary&
+        );
+
+        //- Construct by mapping given timeVaryingMappedFvPatchField
+        //  onto a new patch
+        timeVaryingMappedFvPatchField
+        (
+            const timeVaryingMappedFvPatchField&,
+            const fvPatch&,
+            const DimensionedField<Type, volMesh>&,
+            const fieldMapper&
         );
 
         //- Copy constructor

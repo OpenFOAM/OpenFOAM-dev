@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -324,6 +324,37 @@ Foam::timeVaryingMappedFvPatchField<Type>::timeVaryingMappedFvPatchField
             << "mapMethod should be one of 'planarInterpolation'"
             << ", 'nearest'" << exit(FatalIOError);
     }
+}
+
+
+template<class Type>
+Foam::timeVaryingMappedFvPatchField<Type>::
+timeVaryingMappedFvPatchField
+(
+    const timeVaryingMappedFvPatchField<Type>& ptf,
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const fieldMapper& mapper
+)
+:
+    patch_(p),
+    internalField_(iF),
+    fieldTableName_(ptf.fieldTableName_),
+    dataDir_(ptf.dataDir_),
+    pointsName_(ptf.pointsName_),
+    sampleName_(ptf.sampleName_),
+    setAverage_(ptf.setAverage_),
+    perturb_(ptf.perturb_),
+    mapMethod_(ptf.mapMethod_),
+    mapperPtr_(nullptr),
+    sampleTimes_(ptf.sampleTimes_),
+    startSampleTime_(ptf.startSampleTime_),
+    startAverage_(ptf.startAverage_),
+    endSampleTime_(ptf.endSampleTime_),
+    endAverage_(ptf.endAverage_),
+    offset_(ptf.offset_, false)
+{
+    map(ptf, mapper);
 }
 
 
