@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -183,6 +183,28 @@ Foam::fv::homogeneousLiquidPhaseSeparation::mDot() const
         mesh().lookupObject<volScalarField::Internal>(alphaNames().first());
 
     return alphaSolution*mDotByAlphaSolution_;
+}
+
+
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::fv::homogeneousLiquidPhaseSeparation::tau() const
+{
+    static const dimensionedScalar mDotRootVSmall
+    (
+        dimDensity/dimTime,
+        rootVSmall
+    );
+
+    const fluidMulticomponentThermo& thermoSolution =
+        refCast<const fluidMulticomponentThermo>(specieThermos().first());
+
+    // Solution density
+    const volScalarField::Internal rhoSolution(vfToVif(thermoSolution.rho()));
+
+    // Mass fraction of nucleating specie
+    const volScalarField::Internal Yi = thermoSolution.Y()[specieis().first()];
+
+    return Yi*rhoSolution/max(mDotByAlphaSolution_, mDotRootVSmall);
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -155,6 +155,31 @@ Foam::fv::homogeneousCondensation::mDot() const
 }
 
 
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::fv::homogeneousCondensation::tau() const
+{
+    static const dimensionedScalar mDotRootVSmall
+    (
+        dimDensity/dimTime,
+        rootVSmall
+    );
+
+    const multicomponentThermo& thermoGas = specieThermos().first();
+
+    // Phase molecular masses and densities
+    const volScalarField::Internal WGas(vfToVif(thermoGas.W()));
+    const volScalarField::Internal rhoGas(vfToVif(thermoGas.rho()));
+
+    // Mole fraction of nucleating specie
+    const volScalarField::Internal Xi
+    (
+        thermoGas.Y()[specieis().first()]*WGas/thermoGas.Wi(specieis().first())
+    );
+
+    return Xi*rhoGas/max(mDotByAlphaGas_, mDotRootVSmall);
+}
+
+
 void Foam::fv::homogeneousCondensation::correct()
 {
     #define DebugField(field)                                                  \
@@ -219,6 +244,7 @@ void Foam::fv::homogeneousCondensation::correct()
     // Supersaturation of the nucleating specie
     const volScalarField::Internal S(Xi*p()/pSat);
     DebugField(S);
+
     // Mass, volume and diameter of one molecule in the condensed phase
     const volScalarField::Internal mMolc(WLiquid/NA);
     const volScalarField::Internal vMolc(mMolc/rhoLiquid);
