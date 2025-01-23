@@ -76,7 +76,7 @@ bool Foam::functionObjects::adjustTimeStepToNucleation::read
     const dictionary& dict
 )
 {
-    modelName_ = dict.lookupOrDefault<word>("phase", word::null);
+    modelName_ = dict.lookupOrDefault<word>("model", word::null);
     maxCo_ = dict.lookupOrDefault<scalar>("maxCo", 1);
 
     return true;
