@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -493,7 +493,7 @@ Foam::fvMeshStitcher::procFacesToIndices
             FixedList<label, 3>& index =
                 indices[otherProcFacei.proci][is[otherProcFacei.proci] ++];
 
-            index = {facei, otherProcFacei.elementi, i};
+            index = {facei, otherProcFacei.elementi, i + 1};
 
             if (!owner) Swap(index[0], index[1]);
         }
@@ -542,7 +542,7 @@ void Foam::fvMeshStitcher::matchIndices
                     {
                         polyFacesBf[patchi][patchFacei] - origPp.start(),
                         origFacesNbrBf[patchi][patchFacei],
-                        -1
+                        0
                     };
 
                 if (!owner) Swap(indexRef[0], indexRef[1]);
@@ -560,6 +560,8 @@ void Foam::fvMeshStitcher::matchIndices
         {
             label refi = 0, i = 0;
 
+            DynamicList<FixedList<label, 3>> removedIndices;
+
             while
             (
                 refi < indicesRef[proci].size()
@@ -570,7 +572,7 @@ void Foam::fvMeshStitcher::matchIndices
                 ({
                     indices[proci][i][0],
                     indices[proci][i][1],
-                    -1
+                    0
                 });
 
                 FixedList<label, 3>& indexRef = indicesRef[proci][refi];
@@ -578,6 +580,12 @@ void Foam::fvMeshStitcher::matchIndices
                 if (index < indexRef)
                 {
                     nCouplesRemoved ++;
+                    removedIndices.append
+                    ({
+                        indices[proci][i][0],
+                        indices[proci][i][1],
+                      - indices[proci][i][2]
+                    });
                     i ++;
                 }
                 else if (index == indexRef)
@@ -595,6 +603,8 @@ void Foam::fvMeshStitcher::matchIndices
 
             nCouplesRemoved += min(indices[proci].size() - i, 0);
             nCouplesAdded += min(indicesRef[proci].size() - refi, 0);
+
+            indicesRef[proci].append(removedIndices);
         }
     }
 
@@ -610,6 +620,17 @@ void Foam::fvMeshStitcher::matchIndices
 
     // Set the indices to the correct values
     Swap(indices, indicesRef);
+}
+
+
+Foam::label Foam::fvMeshStitcher::nValidIndices
+(
+    const List<FixedList<label, 3>>& indices
+)
+{
+    label n = indices.size();
+    while (n > 0 && indices[n - 1][2] < 0) n --;
+    return n;
 }
 
 
@@ -638,17 +659,15 @@ void Foam::fvMeshStitcher::createCouplings
         {
             forAll(indices[proci], indexi)
             {
-                const label patchFacei = indexi + patchOffset;
-
                 const label origFacei = indices[proci][indexi][!owner];
                 const label i = indices[proci][indexi][2];
 
-                polyFacesBf[patchi][patchFacei] = origFacei + origPp.start();
+                const label patchFacei = i >= 0 ? indexi + patchOffset : -1;
 
                 couple c;
-                if (i != -1)
+                if (i != 0)
                 {
-                    c = couples[origFacei][i];
+                    c = couples[origFacei][mag(i) - 1];
                 }
                 else
                 {
@@ -668,25 +687,33 @@ void Foam::fvMeshStitcher::createCouplings
                         );
                 }
 
-                if (!owner)
-                {
-                    c.nbr = c;
-                }
+                // The two parts of the coupling. The projection is to the
+                // neighbour, so the other-side is always taken from the
+                // neighbouring patch faces.
+                const part& pThis = c, pOther = owner ? c.nbr : c;
 
-                SfBf[patchi][patchFacei] = c.nbr.area;
-                CfBf[patchi][patchFacei] = c.nbr.centre;
-
-                if (i != -1)
+                // Remove the area from the corresponding original face
+                if (i >= 0 || owner)
                 {
                     part origP
                     (
                         SfBf[origPp.index()][origFacei],
                         CfBf[origPp.index()][origFacei]
                     );
-                    origP -= c;
+                    origP -= pThis;
+                    if (i < 0 && owner) origP += pOther;
 
                     SfBf[origPp.index()][origFacei] = origP.area;
                     CfBf[origPp.index()][origFacei] = origP.centre;
+                }
+
+                // Add the new coupled face
+                if (i >= 0)
+                {
+                    polyFacesBf[patchi][patchFacei] =
+                        origFacei + origPp.start();
+                    SfBf[patchi][patchFacei] = pOther.area;
+                    CfBf[patchi][patchFacei] = pOther.centre;
                 }
             }
         }
@@ -807,7 +834,7 @@ void Foam::fvMeshStitcher::intersectNonConformalCyclic
     forAll(patchis, proci)
     {
         const label patchi = patchis[proci];
-        const label patchSize = indices[proci].size();
+        const label patchSize = nValidIndices(indices[proci]);
 
         if (patchi == -1 && patchSize)
         {
@@ -922,7 +949,7 @@ void Foam::fvMeshStitcher::intersectNonConformalMappedWall
         {
             polyFacesPf.procOffsets()[proci] = count;
 
-            count += indices[proci].size();
+            count += nValidIndices(indices[proci]);
         }
 
         polyFacesPf.resize(count);

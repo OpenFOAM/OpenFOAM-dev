@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -172,6 +172,12 @@ private:
                 const labelList& patchOffsets,
                 const labelList& patchSizes,
                 const bool owner
+            );
+
+            //- Return the number of valid indices in the given list
+            static label nValidIndices
+            (
+                const List<FixedList<label, 3>>& indices
             );
 
             //- Create couplings by transferring geometry from the original to
