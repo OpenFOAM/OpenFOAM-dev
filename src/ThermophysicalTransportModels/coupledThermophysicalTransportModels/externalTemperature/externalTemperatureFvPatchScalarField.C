@@ -146,7 +146,7 @@ externalTemperatureFvPatchScalarField
         qrName_ != word::null
       ? dict.found("qrPrevious")
       ? scalarField("qrPrevious", dimPower/dimArea, dict, p.size())
-        : scalarField(p.size(), 0)
+      : scalarField(p.size(), 0)
       : scalarField()
     )
 {
