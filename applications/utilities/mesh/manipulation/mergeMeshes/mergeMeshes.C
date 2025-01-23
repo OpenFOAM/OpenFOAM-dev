@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -267,7 +267,10 @@ int main(int argc, char *argv[])
     // Add all the specified mesh regions
     forAll(meshRegions, i)
     {
-        const fileName addLocal = "meshes"/meshRegions[i].first();
+        const fileName addLocal =
+            meshRegions[i].first() != word::null
+          ? "meshes"/meshRegions[i].first()
+          : fileName::null;
         const word& addRegion = meshRegions[i].second();
 
         Info<< "Reading polyMesh " << addLocal/addRegion << endl;
