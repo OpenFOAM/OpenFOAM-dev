@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,6 +80,9 @@ public:
 
             //- Return the mass transfer rate
             virtual tmp<DimensionedField<scalar, volMesh>> mDot() const = 0;
+
+            //- Return the nucleation time scale
+            virtual tmp<DimensionedField<scalar, volMesh>> tau() const = 0;
 };
 
 
