@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -168,12 +168,26 @@ Foam::nonConformalMappedPatchBase::intersection() const
 
         const nonConformalBoundary& ncb = nonConformalBoundary::New(mesh);
 
+        const string patchName =
+            patch_.origPatchName()
+          + " in region "
+          + patch_.origPatch().boundaryMesh().mesh().name();
+
+        const string nbrPatchName =
+            this->nbrMappedPatch().patch_.origPatchName()
+          + " in region "
+          + nbrRegionName();
+
+        const string transformName(transform_.str());
+
         intersection_.update
         (
             patch_.origPatch(),
             ncb.patchPointNormals(patch_.origPatchIndex()),
             nbrMappedPatch().patch_.origPatch(),
-            transform_.transform()
+            transform_.transform(),
+            {patchName, nbrPatchName},
+            transformName.empty() ? NullObjectRef<string>() : transformName
         );
 
         intersectionIsValid_ = 2;

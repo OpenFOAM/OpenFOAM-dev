@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -314,12 +314,16 @@ Foam::nonConformalCyclicPolyPatch::intersection() const
 
         const nonConformalBoundary& ncb = nonConformalBoundary::New(mesh);
 
+        const string transformName(cyclicTransform::str());
+
         intersection_.update
         (
             origPatch(),
             ncb.patchPointNormals(origPatchIndex()),
             nbrPatch().origPatch(),
-            transform()
+            transform(),
+            {origPatchName(), nbrPatch().origPatchName()},
+            transformName.empty() ? NullObjectRef<string>() : transformName
         );
 
         intersectionIsValid_ = 2;
@@ -356,6 +360,8 @@ Foam::nonConformalCyclicPolyPatch::rays() const
 
         const nonConformalBoundary& ncb = nonConformalBoundary::New(mesh);
 
+        const string transformName(cyclicTransform::str());
+
         rays_.update
         (
             primitiveOldTimePatch
@@ -372,7 +378,9 @@ Foam::nonConformalCyclicPolyPatch::rays() const
                 mesh.points(),
                 mesh.oldPoints()
             ),
-            transform()
+            transform(),
+            {origPatchName(), nbrPatch().origPatchName()},
+            transformName.empty() ? NullObjectRef<string>() : transformName
         );
 
         raysIsValid_ = 2;

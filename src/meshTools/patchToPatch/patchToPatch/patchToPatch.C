@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -863,7 +863,9 @@ void Foam::patchToPatch::update
     const vectorField& srcPointNormals,
     const vectorField& srcPointNormals0,
     const primitiveOldTimePatch& tgtPatch,
-    const transformer& tgtToSrc
+    const transformer& tgtToSrc,
+    const ConstRefPair<string>& srcTgtPatchNames,
+    const string& tgtToSrcName
 )
 {
     cpuTime time;
@@ -884,7 +886,7 @@ void Foam::patchToPatch::update
     (
         tgtPatch.has0() ? tgtPatch.localPoints0() : NullObjectRef<pointField>()
     );
-    if (!isNull(tgtToSrc))
+    if (notNull(tgtToSrc))
     {
         tTgtPointsPtr = new pointField(tgtPatch.localPoints());
         tgtToSrc.transformPosition
@@ -919,9 +921,27 @@ void Foam::patchToPatch::update
     }
     const primitiveOldTimePatch& tTgtPatch = tTgtPatchPtr();
 
-    Info<< indent << typeName << ": Calculating couplings between "
-        << srcTotalSize << " source faces and " << tgtTotalSize
-        << " target faces" << incrIndent << endl;
+    Info<< indent << typeName << ": Calculating couplings between";
+    if (isNull(srcTgtPatchNames))
+    {
+        Info<< ' ' << srcTotalSize << " source faces and "
+            << tgtTotalSize << " target faces" << incrIndent;
+    }
+    else
+    {
+        Info<< " ..." << incrIndent << endl << indent
+            << "source patch " << srcTgtPatchNames.first().c_str()
+            << " with " << srcTotalSize << " faces "
+            << "and ..." << endl << indent
+            << "target patch " << srcTgtPatchNames.second().c_str()
+            << " with " << tgtTotalSize << " faces";
+    }
+    if (notNull(tgtToSrcName))
+    {
+        Info<< " ..." << endl << indent
+            << "with transformation " << tgtToSrcName.c_str();
+    }
+    Info<< endl;
 
     // Determine if patches are present on multiple processors
     singleProcess_ =
@@ -1069,7 +1089,9 @@ void Foam::patchToPatch::update
     const primitivePatch& srcPatch,
     const vectorField& srcPointNormals,
     const primitivePatch& tgtPatch,
-    const transformer& tgtToSrc
+    const transformer& tgtToSrc,
+    const ConstRefPair<string>& srcTgtPatchNames,
+    const string& tgtToSrcName
 )
 {
     update
@@ -1078,7 +1100,9 @@ void Foam::patchToPatch::update
         srcPointNormals,
         NullObjectRef<vectorField>(),
         primitiveOldTimePatch(tgtPatch),
-        tgtToSrc
+        tgtToSrc,
+        srcTgtPatchNames,
+        tgtToSrcName
     );
 }
 

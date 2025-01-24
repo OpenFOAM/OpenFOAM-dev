@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,10 +37,11 @@ SourceFiles
 #ifndef patchToPatch_H
 #define patchToPatch_H
 
-#include "remote.H"
 #include "distributionMap.H"
 #include "primitivePatch.H"
 #include "primitiveOldTimePatch.H"
+#include "RefPair.H"
+#include "remote.H"
 #include "runTimeSelectionTables.H"
 #include "treeBoundBox.H"
 
@@ -369,7 +370,10 @@ public:
                 const vectorField& srcPointNormals,
                 const vectorField& srcPointNormals0,
                 const primitiveOldTimePatch& tgtPatch,
-                const transformer& tgtToSrc = NullObjectRef<transformer>()
+                const transformer& tgtToSrc = NullObjectRef<transformer>(),
+                const ConstRefPair<string>& srcTgtPatchNames =
+                    NullObjectRef<ConstRefPair<string>>(),
+                const string& tgtToSrcName = NullObjectRef<string>()
             );
 
             //- Update addressing and weights for the given patches
@@ -378,7 +382,10 @@ public:
                 const primitivePatch& srcPatch,
                 const vectorField& srcPointNormals,
                 const primitivePatch& tgtPatch,
-                const transformer& tgtToSrc = NullObjectRef<transformer>()
+                const transformer& tgtToSrc = NullObjectRef<transformer>(),
+                const ConstRefPair<string>& srcTgtPatchNames =
+                    NullObjectRef<ConstRefPair<string>>(),
+                const string& tgtToSrcName = NullObjectRef<string>()
             );
 
 

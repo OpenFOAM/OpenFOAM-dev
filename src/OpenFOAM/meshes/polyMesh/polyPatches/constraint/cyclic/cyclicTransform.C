@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -586,6 +586,57 @@ void Foam::cyclicTransform::write(Ostream& os) const
     }
 
     os.precision(oldPrecision);
+}
+
+
+Foam::string Foam::cyclicTransform::str() const
+{
+    OStringStream oss;
+
+    switch (transformType_)
+    {
+        case UNSPECIFIED:
+            break;
+
+        case NONE:
+            break;
+
+        case ROTATIONAL:
+        {
+            oss << "axis=" << rotationAxis_
+                << ", centre=" << rotationCentre_
+                << ", angle=";
+
+            if (transformComplete_)
+            {
+                oss << unitDegrees.toUser(rotationAngle_);
+            }
+            else
+            {
+                oss << '?';
+            }
+
+            break;
+        }
+
+        case TRANSLATIONAL:
+        {
+            oss << "separation=";
+
+            if (transformComplete_)
+            {
+                oss << separation_;
+            }
+            else
+            {
+                oss << '?';
+            }
+
+            break;
+        }
+    }
+
+    return oss.str();
 }
 
 
