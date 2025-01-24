@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,6 +64,38 @@ inline Foam::RemoteData<Type>::RemoteData(Istream& is)
 
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
+
+template<class Type>
+inline Foam::RemoteData<Type> Foam::RemoteData<Type>::firstProcOp::operator()
+(
+    const RemoteData<Type>& a,
+    const RemoteData<Type>& b
+) const
+{
+    if (b.proci != -1 && (a.proci == -1 || a.proci < b.proci))
+    {
+        return b;
+    }
+    else
+    {
+        return a;
+    }
+}
+
+
+template<class Type>
+inline void Foam::RemoteData<Type>::firstProcEqOp::operator()
+(
+    RemoteData<Type>& a,
+    const RemoteData<Type>& b
+) const
+{
+    if (b.proci != -1 && (a.proci == -1 || a.proci < b.proci))
+    {
+        a = b;
+    }
+}
+
 
 template<class Type>
 inline void Foam::RemoteData<Type>::smallestEqOp::operator()

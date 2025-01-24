@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,6 +93,26 @@ public:
 
 
     // Public Classes
+
+        //- Operator to take the first valid process
+        struct firstProcOp
+        {
+            inline RemoteData<Type> operator()
+            (
+                const RemoteData<Type>& a,
+                const RemoteData<Type>& b
+            ) const;
+        };
+
+        //- Operator to take the first valid process
+        struct firstProcEqOp
+        {
+            inline void operator()
+            (
+                RemoteData<Type>& a,
+                const RemoteData<Type>& b
+            ) const;
+        };
 
         //- Operator to take smallest valid value
         struct smallestEqOp
