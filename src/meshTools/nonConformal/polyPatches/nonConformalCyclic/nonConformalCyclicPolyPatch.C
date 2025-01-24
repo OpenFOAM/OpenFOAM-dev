@@ -314,7 +314,10 @@ Foam::nonConformalCyclicPolyPatch::intersection() const
 
         const nonConformalBoundary& ncb = nonConformalBoundary::New(mesh);
 
-        const string transformName(cyclicTransform::str());
+        const string inRegionName =
+            mesh.name() == polyMesh::defaultRegion
+          ? ""
+          : " in region " + mesh.name();
 
         intersection_.update
         (
@@ -322,8 +325,11 @@ Foam::nonConformalCyclicPolyPatch::intersection() const
             ncb.patchPointNormals(origPatchIndex()),
             nbrPatch().origPatch(),
             transform(),
-            {origPatchName(), nbrPatch().origPatchName()},
-            transformName.empty() ? NullObjectRef<string>() : transformName
+            {
+                origPatchName() + inRegionName,
+                nbrPatch().origPatchName() + inRegionName
+            },
+            cyclicTransform::str()
         );
 
         intersectionIsValid_ = 2;
@@ -360,7 +366,10 @@ Foam::nonConformalCyclicPolyPatch::rays() const
 
         const nonConformalBoundary& ncb = nonConformalBoundary::New(mesh);
 
-        const string transformName(cyclicTransform::str());
+        const string inRegionName =
+            mesh.name() == polyMesh::defaultRegion
+          ? ""
+          : " in region " + mesh.name();
 
         rays_.update
         (
@@ -379,8 +388,11 @@ Foam::nonConformalCyclicPolyPatch::rays() const
                 mesh.oldPoints()
             ),
             transform(),
-            {origPatchName(), nbrPatch().origPatchName()},
-            transformName.empty() ? NullObjectRef<string>() : transformName
+            {
+                origPatchName() + inRegionName,
+                nbrPatch().origPatchName() + inRegionName
+            },
+            cyclicTransform::str()
         );
 
         raysIsValid_ = 2;

@@ -168,26 +168,21 @@ Foam::nonConformalMappedPatchBase::intersection() const
 
         const nonConformalBoundary& ncb = nonConformalBoundary::New(mesh);
 
-        const string patchName =
-            patch_.origPatchName()
-          + " in region "
-          + patch_.origPatch().boundaryMesh().mesh().name();
-
-        const string nbrPatchName =
-            this->nbrMappedPatch().patch_.origPatchName()
-          + " in region "
-          + nbrRegionName();
-
-        const string transformName(transform_.str());
-
         intersection_.update
         (
             patch_.origPatch(),
             ncb.patchPointNormals(patch_.origPatchIndex()),
             nbrMappedPatch().patch_.origPatch(),
             transform_.transform(),
-            {patchName, nbrPatchName},
-            transformName.empty() ? NullObjectRef<string>() : transformName
+            {
+                patch_.origPatchName()
+              + " in region "
+              + mesh.name(),
+                nbrMappedPatch().patch_.origPatchName()
+              + " in region "
+              + nbrRegionName()
+            },
+            transform_.str()
         );
 
         intersectionIsValid_ = 2;

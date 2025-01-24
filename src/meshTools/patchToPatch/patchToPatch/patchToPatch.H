@@ -373,7 +373,7 @@ public:
                 const transformer& tgtToSrc = NullObjectRef<transformer>(),
                 const ConstRefPair<string>& srcTgtPatchNames =
                     NullObjectRef<ConstRefPair<string>>(),
-                const string& tgtToSrcName = NullObjectRef<string>()
+                const string& tgtToSrcName = string::null
             );
 
             //- Update addressing and weights for the given patches
@@ -385,7 +385,7 @@ public:
                 const transformer& tgtToSrc = NullObjectRef<transformer>(),
                 const ConstRefPair<string>& srcTgtPatchNames =
                     NullObjectRef<ConstRefPair<string>>(),
-                const string& tgtToSrcName = NullObjectRef<string>()
+                const string& tgtToSrcName = string::null
             );
 
 

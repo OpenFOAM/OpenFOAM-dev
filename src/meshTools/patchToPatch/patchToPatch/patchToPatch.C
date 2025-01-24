@@ -936,7 +936,7 @@ void Foam::patchToPatch::update
             << "target patch " << srcTgtPatchNames.second().c_str()
             << " with " << tgtTotalSize << " faces";
     }
-    if (notNull(tgtToSrcName))
+    if (tgtToSrcName.size())
     {
         Info<< " ..." << endl << indent
             << "with transformation " << tgtToSrcName.c_str();
