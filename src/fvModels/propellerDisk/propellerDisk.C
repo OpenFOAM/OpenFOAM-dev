@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,7 +85,19 @@ void Foam::fv::propellerDisk::readCoeffs(const dictionary& dict)
         logFile_ = new functionObjects::logFile(mesh(), name(), typeName);
         logFile_->writeTimeColumnHeaders
         (
-            {"n", "J", "Jcorr", "Udisk", "Ucorr", "Kt", "Kq", "T/rho", "Q/rho"}
+            {
+                "n",
+                "J",
+                "Jcorr",
+                "Udisk",
+                "Ucorr",
+                "Kt",
+                "Kq",
+                "T/rho",
+                "Q/rho",
+                "force",
+                "moment"
+            }
         );
     }
 }

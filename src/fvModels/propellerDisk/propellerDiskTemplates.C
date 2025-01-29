@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -180,7 +180,20 @@ void Foam::fv::propellerDisk::addActuationDiskAxialInertialResistance
         {
             if (logFile_.valid())
             {
-                logFile_->writeTime(n, J, Jcorr, Udisk, Ucorr, Kt, Kq, T, Q);
+                logFile_->writeTime
+                (
+                    n,
+                    J,
+                    Jcorr,
+                    Udisk,
+                    Ucorr,
+                    Kt,
+                    Kq,
+                    T,
+                    Q,
+                    force_,
+                    moment_
+                );
             }
 
             if (mesh().time().writeTime())
