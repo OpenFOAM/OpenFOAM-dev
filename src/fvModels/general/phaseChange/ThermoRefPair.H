@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ Description
 #ifndef ThermoRefPair_H
 #define ThermoRefPair_H
 
-#include "physicalProperties.H"
+#include "fvModel.H"
 #include "objectRegistry.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -62,103 +62,79 @@ class ThermoRefPair
         const ThermoType& second_;
 
 
+    // Private Constructors
+
+        //- Construct from components
+        inline ThermoRefPair
+        (
+            Pair<bool> valid,
+            const ThermoType& first,
+            const ThermoType& second
+        );
+
+
 public:
+
+    //- Declare friendship with other thermo reference pairs
+    template<class OtherThermoType>
+    friend class ThermoRefPair;
+
 
     // Constructors
 
         //- Construct from a database and phase names
-        ThermoRefPair
+        inline ThermoRefPair
         (
             const objectRegistry& db,
             const Pair<word>& phaseNames
-        )
-        :
-            valid_(true, true),
-            first_
-            (
-                db.lookupObject<ThermoType>
-                (
-                    IOobject::groupName
-                    (
-                        physicalProperties::typeName,
-                        phaseNames.first()
-                    )
-                )
-            ),
-            second_
-            (
-                db.lookupObject<ThermoType>
-                (
-                    IOobject::groupName
-                    (
-                        physicalProperties::typeName,
-                        phaseNames.second()
-                    )
-                )
-            )
-        {}
-
-        //- Construct by casting a more primitive thermo type
-        template<class BasicThermoType>
-        ThermoRefPair(const ThermoRefPair<BasicThermoType> basicThermos)
-        :
-            valid_
-            (
-                isA<ThermoType>(basicThermos.first()),
-                isA<ThermoType>(basicThermos.second())
-            ),
-            first_
-            (
-                valid_.first()
-              ? refCast<const ThermoType>(basicThermos.first())
-              : NullObjectRef<ThermoType>()
-            ),
-            second_
-            (
-                valid_.second()
-              ? refCast<const ThermoType>(basicThermos.second())
-              : NullObjectRef<ThermoType>()
-            )
-        {}
+        );
 
 
     // Member Functions
 
         //- Access the validity flags
-        const Pair<bool>& valid() const
-        {
-            return valid_;
-        }
+        inline const Pair<bool>& valid() const;
+
+        //- Return if either validity flag is set
+        inline bool either() const;
+
+        //- Return if both validity flags are set
+        inline bool both() const;
 
         //- Access the first thermo
-        const ThermoType& first() const
-        {
-            return first_;
-        }
+        inline const ThermoType& first() const;
 
         //- Access the second thermo
-        const ThermoType& second() const
-        {
-            return second_;
-        }
+        inline const ThermoType& second() const;
+
+        //- Cast to a different thermo type, with error checking
+        template<class OtherThermoType>
+        inline ThermoRefPair<OtherThermoType> thermos() const;
+
+        //- Cast to a different thermo type, with error checking
+        template<class OtherThermoType>
+        inline ThermoRefPair<OtherThermoType> thermos
+        (
+            const Pair<bool> required,
+            const fvModel& model,
+            const word& thermoType
+        ) const;
 
 
     // Member Operators
 
         //- Access a thermo by index
-        const ThermoType& operator[](const label i) const
-        {
-            return
-                i == 0 ? first()
-              : i == 1 ? second()
-              : NullObjectRef<ThermoType>();
-        }
+        inline const ThermoType& operator[](const label i) const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "ThermoRefPairI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

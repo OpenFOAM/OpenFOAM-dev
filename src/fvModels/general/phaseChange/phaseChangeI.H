@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,6 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "hashedWordList.H"
 #include "phaseChange.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -34,23 +35,15 @@ Foam::fv::phaseChange::thermos() const
 }
 
 
-inline const Foam::ThermoRefPair<Foam::fluidThermo>&
-Foam::fv::phaseChange::fluidThermos() const
-{
-    return fluidThermos_;
-}
-
-
-inline const Foam::ThermoRefPair<Foam::multicomponentThermo>&
-Foam::fv::phaseChange::specieThermos() const
-{
-    return specieThermos_;
-}
-
-
 inline const Foam::Pair<Foam::word>& Foam::fv::phaseChange::heNames() const
 {
     return heNames_;
+}
+
+
+inline const Foam::hashedWordList& Foam::fv::phaseChange::species() const
+{
+    return species_;
 }
 
 

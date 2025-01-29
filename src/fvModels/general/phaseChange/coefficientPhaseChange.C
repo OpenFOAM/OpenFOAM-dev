@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,51 @@ namespace fv
 
 void Foam::fv::coefficientPhaseChange::readCoeffs(const dictionary& dict)
 {
-    C_.read(coeffs(dict));
+    reReadSpecies(dict);
+
+    C_.read(dict);
+}
+
+
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::fv::coefficientPhaseChange::timesY1
+(
+    tmp<volScalarField::Internal> mDot
+) const
+{
+    const ThermoRefPair<multicomponentThermo> mcThermos =
+        thermos().thermos<multicomponentThermo>();
+
+    if (!mcThermos.valid().first() || species().empty())
+    {
+        return mDot;
+    }
+
+    if (species().size() == 1)
+    {
+        return mcThermos.first().Y()[specieis().first()]*mDot;
+    }
+
+    tmp<volScalarField::Internal> tY1 =
+        volScalarField::Internal::New
+        (
+            typedName("Y1"),
+            mcThermos.first().Y()[specieis(0).first()]
+        );
+
+    for (label mDoti = 1; mDoti < species().size(); ++ mDoti)
+    {
+        tY1.ref() += mcThermos.first().Y()[specieis(mDoti).first()];
+    }
+
+    return tY1*mDot;
+}
+
+
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::fv::coefficientPhaseChange::mDotByAlpha1Y1() const
+{
+    return C_*mag(fvc::grad(alpha1_))()();
 }
 
 
@@ -57,16 +101,9 @@ Foam::fv::coefficientPhaseChange::coefficientPhaseChange
     const dictionary& dict
 )
 :
-    singleComponentPhaseChange
-    (
-        name,
-        modelType,
-        mesh,
-        dict,
-        {false, false},
-        {false, false}
-    ),
-    C_("C", dimMass/dimArea/dimTime, NaN)
+    phaseChange(name, modelType, mesh, dict, readSpecies(dict, false)),
+    C_("C", dimMass/dimArea/dimTime, NaN),
+    alpha1_(mesh().lookupObject<volScalarField>(alphaNames().first()))
 {
     readCoeffs(coeffs(dict));
 }
@@ -77,15 +114,23 @@ Foam::fv::coefficientPhaseChange::coefficientPhaseChange
 Foam::tmp<Foam::volScalarField::Internal>
 Foam::fv::coefficientPhaseChange::mDot() const
 {
-    const volScalarField& alpha1 =
-        mesh().lookupObject<volScalarField>(alphaNames().first());
+    return timesY1(alpha1_*mDotByAlpha1Y1());
+}
 
-    tmp<volScalarField::Internal> tmDot =
-        C_*alpha1()*mag(fvc::grad(alpha1))()();
 
-    if (specieis().first() != -1)
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::fv::coefficientPhaseChange::mDot(const label mDoti) const
+{
+    const ThermoRefPair<multicomponentThermo> mcThermos =
+        thermos().thermos<multicomponentThermo>();
+
+    tmp<volScalarField::Internal> tmDot = alpha1_*mDotByAlpha1Y1();
+
+    if (mcThermos.valid().first())
     {
-        tmDot.ref() *= specieThermos().first().Y()[specieis().first()];
+        const labelPair specieis = this->specieis(mDoti);
+
+        tmDot.ref() *= mcThermos.first().Y()[specieis.first()];
     }
 
     return tmDot;
@@ -103,15 +148,7 @@ void Foam::fv::coefficientPhaseChange::addSup
 
     if (i != -1)
     {
-        const volScalarField& alpha1 =
-            mesh().lookupObject<volScalarField>(alphaNames().first());
-
-        volScalarField::Internal mDotByAlpha1(C_*mag(fvc::grad(alpha1)));
-
-        if (specieis().first() != -1)
-        {
-            mDotByAlpha1 *= specieThermos().first().Y()[specieis().first()];
-        }
+        const volScalarField::Internal mDotByAlpha1(timesY1(mDotByAlpha1Y1()));
 
         if (i == 0)
         {
@@ -120,13 +157,13 @@ void Foam::fv::coefficientPhaseChange::addSup
         else
         {
             eqn +=
-                mDotByAlpha1*alpha1
+                mDotByAlpha1*alpha1_
               - correction(fvm::Sp(mDotByAlpha1, eqn.psi()));
         }
     }
     else
     {
-        phaseChange::addSup(alpha, rho, eqn);
+        massTransfer::addSup(alpha, rho, eqn);
     }
 }
 
@@ -141,20 +178,29 @@ void Foam::fv::coefficientPhaseChange::addSup
 {
     const label i = index(phaseNames(), eqn.psi().group());
 
-    if (i == 0 && specieis().first() != -1 && Yi.member() == specie())
+    const ThermoRefPair<multicomponentThermo>& mcThermos =
+        thermos().thermos<multicomponentThermo>();
+
+    if
+    (
+        i == 0
+     && mcThermos.valid().first()
+     && mcThermos.first().containsSpecie(Yi.member())
+     && species().found(Yi.member())
+    )
     {
-        eqn -= fvm::Sp(C_*alpha()*mag(fvc::grad(alpha))()(), Yi);
+        eqn -= fvm::Sp(alpha1_*mDotByAlpha1Y1(), Yi);
     }
     else
     {
-        singleComponentPhaseChange::addSup(alpha, rho, Yi, eqn);
+        phaseChange::addSup(alpha, rho, Yi, eqn);
     }
 }
 
 
 bool Foam::fv::coefficientPhaseChange::read(const dictionary& dict)
 {
-    if (singleComponentPhaseChange::read(dict))
+    if (phaseChange::read(dict))
     {
         readCoeffs(coeffs(dict));
         return true;

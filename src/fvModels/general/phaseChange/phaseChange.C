@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,8 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "phaseChange.H"
-#include "fluidThermo.H"
-#include "multicomponentThermo.H"
+#include "fluidMulticomponentThermo.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
@@ -39,7 +38,203 @@ namespace fv
 }
 
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+void Foam::fv::phaseChange::readCoeffs(const dictionary& dict)
+{
+    energySemiImplicit_ = dict.lookup<bool>("energySemiImplicit");
+}
+
+
+const Foam::List<Foam::labelPair> Foam::fv::phaseChange::initSpecieis() const
+{
+    const ThermoRefPair<multicomponentThermo>& mcThermos =
+        thermos().thermos<multicomponentThermo>();
+
+    List<labelPair> result(species().size(), labelPair(-1, -1));
+
+    forAll(phaseNames(), i)
+    {
+        if (mcThermos.valid()[i])
+        {
+            forAll(species(), mDoti)
+            {
+                result[mDoti][i] = mcThermos[i].species()[species()[mDoti]];
+            }
+        }
+    }
+
+    return result;
+}
+
+
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
+
+Foam::wordList Foam::fv::phaseChange::readSpecie
+(
+    const dictionary& dict,
+    const bool required
+) const
+{
+    const bool haveSpecie = dict.found("specie");
+
+    if (required && !haveSpecie)
+    {
+        dict.lookup<word>("specie");
+    }
+
+    const wordList result =
+        haveSpecie
+      ? wordList(1, dict.lookup<word>("specie"))
+      : wordList();
+
+    return result;
+}
+
+
+Foam::wordList Foam::fv::phaseChange::readSpecies
+(
+    const dictionary& dict,
+    const bool required
+) const
+{
+    const bool haveSpecie = dict.found("specie");
+    const bool haveSpecies = dict.found("species");
+
+    if (haveSpecie && haveSpecies)
+    {
+        FatalIOErrorInFunction(dict)
+            << "Both keywords specie and species "
+            << " are defined in dictionary " << dict.name()
+            << exit(FatalError);
+    }
+
+    if (required && !haveSpecie && !haveSpecies)
+    {
+        FatalIOErrorInFunction(dict)
+            << "Neither keywords specie or species "
+            << " are defined in dictionary " << dict.name()
+            << exit(FatalError);
+    }
+
+    const wordList result =
+        haveSpecie ? wordList(1, dict.lookup<word>("specie"))
+      : haveSpecies ? dict.lookup<wordList>("species")
+      : wordList();
+
+    return result;
+}
+
+
+void Foam::fv::phaseChange::reReadSpecie(const dictionary& dict) const
+{
+    if (species() != readSpecie(dict, false))
+    {
+        FatalIOErrorInFunction(dict)
+            << "Cannot change the specie of a " << type() << " model "
+            << "at run time" << exit(FatalIOError);
+    }
+}
+
+
+void Foam::fv::phaseChange::reReadSpecies(const dictionary& dict) const
+{
+    if (species() != readSpecies(dict, false))
+    {
+        FatalIOErrorInFunction(dict)
+            << "Cannot change the species of a " << type() << " model "
+            << "at run time" << exit(FatalIOError);
+    }
+}
+
+
+void Foam::fv::phaseChange::setSpecies
+(
+    const word& name,
+    const word& modelType,
+    const wordList& species
+)
+{
+    const ThermoRefPair<multicomponentThermo>& mcThermos =
+        thermos().thermos<multicomponentThermo>();
+
+    // Set the names
+    species_ = species;
+
+    // Set the indices
+    specieis_ = List<labelPair>(species.size(), labelPair(-1, -1));
+    forAll(phaseNames(), i)
+    {
+        if (mcThermos.valid()[i])
+        {
+            forAll(species, mDoti)
+            {
+                specieis_[mDoti][i] = mcThermos[i].species()[species[mDoti]];
+            }
+        }
+    }
+
+    // Checks ...
+
+    // If either phase is multicomponent then species should
+    // have been specified
+    if (mcThermos.either() && species_.empty())
+    {
+        FatalErrorInFunction
+            << "Mixture transfer specified by model " << name << " of type "
+            << modelType << " for two phases " << phaseNames().first()
+            << " and " << phaseNames().second() << " but ";
+
+        mcThermos.both()
+      ? FatalErrorInFunction
+            << "both phases have"
+      : FatalErrorInFunction
+            << "phase " << phaseNames()[mcThermos.valid().second()] << " has";
+
+        FatalErrorInFunction
+            << " multiple species" << exit(FatalError);
+    }
+
+    // If neither phase is multicomponent then species should
+    // not have been specified
+    if (!mcThermos.either() && species_.size())
+    {
+        FatalErrorInFunction
+            << "Specie transfer specified by model " << name
+            << " of type " << modelType << " for two pure phases "
+            << phaseNames().first() << " and " << phaseNames().second()
+            << exit(FatalError);
+    }
+
+    // If either phase is pure then there can be at most one specie
+    if (!mcThermos.both() && species_.size() > 1)
+    {
+        FatalErrorInFunction
+            << "Multi-specie transfer specified by model " << name
+            << " of type " << modelType << " for phases "
+            << phaseNames().first() << " and " << phaseNames().second()
+            << " but phase " << phaseNames()[mcThermos.valid().first()]
+            << " is pure " << exit(FatalError);
+    }
+}
+
+
+void Foam::fv::phaseChange::setSpecies(const wordList& species)
+{
+    setSpecies(name(), type(), species);
+}
+
+
+void Foam::fv::phaseChange::reSetSpecies(const wordList& species)
+{
+    if (this->species() != species)
+    {
+        FatalErrorInFunction
+            << "Cannot change the species of a " << type() << " model "
+            << "at run time" << exit(FatalError);
+    }
+}
+
 
 const Foam::volScalarField& Foam::fv::phaseChange::p() const
 {
@@ -99,58 +294,315 @@ Foam::fv::phaseChange::phaseChange
     const word& modelType,
     const fvMesh& mesh,
     const dictionary& dict,
-    const Pair<bool>& fluidThermosRequired,
-    const Pair<bool>& specieThermosRequired
+    const wordList& species
 )
 :
     massTransfer(name, modelType, mesh, dict),
     thermos_(mesh, phaseNames()),
-    fluidThermos_(thermos_),
-    specieThermos_(thermos_),
-    heNames_(thermos_.first().he().name(), thermos_.second().he().name())
+    heNames_(thermos_.first().he().name(), thermos_.second().he().name()),
+    species_(),
+    specieis_(),
+    energySemiImplicit_(false)
 {
-    forAll(fluidThermos_.valid(), i)
-    {
-        if (!fluidThermos_.valid()[i] && fluidThermosRequired[i])
-        {
-            FatalErrorInFunction
-                << "Model " << name << " of type " << modelType
-                << " requires a fluid thermo for phase "
-                << phaseNames()[i] << exit(FatalError);
-        }
-    }
+    readCoeffs(coeffs(dict));
 
-    forAll(specieThermos_.valid(), i)
-    {
-        if (!specieThermos_.valid()[i] && specieThermosRequired[i])
-        {
-            FatalErrorInFunction
-                << "Model " << name << " of type " << modelType
-                << " requires a multicomponent thermo for phase "
-                << phaseNames()[i] << exit(FatalError);
-        }
-    }
+    if (notNull(species)) setSpecies(name, modelType, species);
 }
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
+const Foam::ThermoRefPair<Foam::fluidThermo>
+Foam::fv::phaseChange::fluidThermos
+(
+    const bool firstRequired,
+    const bool secondRequired
+) const
+{
+    return
+        thermos_.thermos<fluidThermo>
+        (
+            {firstRequired, secondRequired},
+            *this,
+            "fluid"
+        );
+}
+
+
+const Foam::ThermoRefPair<Foam::multicomponentThermo>
+Foam::fv::phaseChange::multicomponentThermos
+(
+    const bool firstRequired,
+    const bool secondRequired
+) const
+{
+    return
+        thermos_.thermos<multicomponentThermo>
+        (
+            {firstRequired, secondRequired},
+            *this,
+            "multicomponent"
+        );
+}
+
+
+const Foam::ThermoRefPair<Foam::fluidMulticomponentThermo>
+Foam::fv::phaseChange::fluidMulticomponentThermos
+(
+    const bool firstRequired,
+    const bool secondRequired
+) const
+{
+    return
+        thermos_.thermos<fluidMulticomponentThermo>
+        (
+            {firstRequired, secondRequired},
+            *this,
+            "fluid-multicomponent"
+        );
+}
+
+
+const Foam::labelPair& Foam::fv::phaseChange::specieis(const label mDoti) const
+{
+    static const labelPair noSpecieis(-1, -1);
+
+    if (mDoti == -1)
+    {
+        if (species().empty())
+        {
+            return noSpecieis;
+        }
+        else if (species().size() == 1)
+        {
+            return specieis_[0];
+        }
+        else
+        {
+            FatalErrorInFunction
+                << "Requested mixture/single-specie indices from multi-specie "
+                << "model of type" << type() << exit(FatalError);
+        }
+    }
+
+    return specieis_[mDoti];
+}
+
+
 Foam::tmp<Foam::volScalarField::Internal>
 Foam::fv::phaseChange::Tchange() const
 {
-    const volScalarField::Internal mDot(this->mDot());
+    tmp<volScalarField::Internal> tTchange =
+        volScalarField::Internal::New
+        (
+            name() + ":Tchange",
+            mesh(),
+            dimTemperature
+        );
+    volScalarField::Internal& Tchange = tTchange.ref();
 
-    return pos0(mDot)*thermos().first().T() + neg(mDot)*thermos().second().T();
+    tmp<volScalarField::Internal> tmDot = this->mDot();
+    const volScalarField::Internal& mDot = tmDot();
+
+    const volScalarField::Internal& T1 = thermos().first().T();
+    const volScalarField::Internal& T2 = thermos().second().T();
+
+    forAll(Tchange, i)
+    {
+        Tchange[i] =
+            mDot[i] > 0 ? T1[i]
+          : mDot[i] < 0 ? T2[i]
+          : (T1[i] + T2[i])/2;
+    }
+
+    return tTchange;
 }
 
 
 Foam::tmp<Foam::volScalarField::Internal>
 Foam::fv::phaseChange::Lfraction() const
 {
-    const volScalarField& kappa1 = thermos().first().kappa();
-    const volScalarField& kappa2 = thermos().second().kappa();
+    const volScalarField::Internal& kappa1 = thermos().first().kappa();
+    const volScalarField::Internal& kappa2 = thermos().second().kappa();
 
-    return vfToVif(kappa2/(kappa1 + kappa2));
+    return kappa2/(kappa1 + kappa2);
+}
+
+
+Foam::tmp<Foam::volScalarField::Internal> Foam::fv::phaseChange::L
+(
+    const label mDoti
+) const
+{
+    return L(this->Tchange(), mDoti);
+}
+
+
+Foam::tmp<Foam::volScalarField::Internal> Foam::fv::phaseChange::L
+(
+    const volScalarField::Internal& Tchange,
+    const label mDoti
+) const
+{
+    const ThermoRefPair<multicomponentThermo>& mcThermos =
+        thermos().thermos<multicomponentThermo>();
+
+    const labelPair specieis = this->specieis(mDoti);
+
+    const volScalarField::Internal& p = this->p();
+
+    // Absolute enthalpies at the interface
+    Pair<tmp<volScalarField::Internal>> has;
+    for (label j = 0; j < 2; ++ j)
+    {
+        has[j] =
+            specieis[j] == -1
+          ? thermos()[j].ha(p, Tchange)
+          : mcThermos[j].hai(specieis[j], p, Tchange);
+    }
+
+    // Latent heat of phase change
+    return has.second() - has.first();
+}
+
+
+Foam::tmp<Foam::volScalarField::Internal> Foam::fv::phaseChange::mDot() const
+{
+    if (species().empty())
+    {
+        FatalErrorInFunction
+            << "Mixture phase change rate not defined by model of type "
+            << type() << exit(FatalError);
+    }
+
+    tmp<volScalarField::Internal> tmDot =
+        volScalarField::Internal::New
+        (
+            "mDot",
+            mesh(),
+            dimensionedScalar(dimDensity/dimTime, Zero)
+        );
+
+    forAll(species(), mDoti)
+    {
+        tmDot.ref() += mDot(mDoti);
+    }
+
+    return tmDot;
+}
+
+
+Foam::tmp<Foam::volScalarField::Internal> Foam::fv::phaseChange::mDot
+(
+    const label mDoti
+) const
+{
+    if (mDoti == -1)
+    {
+        return mDot();
+    }
+
+    if (mDoti == 0 && species().size() == 1)
+    {
+        return mDot();
+    }
+
+    if (species().size() > 1)
+    {
+        FatalErrorInFunction
+            << "Specie phase change rate not defined by model of type "
+            << type() << exit(FatalError);
+    }
+
+    return tmp<volScalarField::Internal>(nullptr);
+}
+
+
+void Foam::fv::phaseChange::addSup
+(
+    const volScalarField& alpha,
+    const volScalarField& rho,
+    const volScalarField& heOrYi,
+    fvMatrix<scalar>& eqn
+) const
+{
+    const label i = index(phaseNames(), alpha.group());
+    const label s = sign(phaseNames(), alpha.group());
+
+    const ThermoRefPair<multicomponentThermo>& mcThermos =
+        thermos().thermos<multicomponentThermo>();
+
+    // Energy equation
+    if (index(heNames(), heOrYi.name()) != -1)
+    {
+        const volScalarField::Internal& p = this->p();
+        tmp<volScalarField::Internal> tTchange = this->Tchange();
+
+        for
+        (
+            label mDoti = species().empty() ? -1 : 0;
+            mDoti < species().size();
+            mDoti ++
+        )
+        {
+            const labelPair specieis = this->specieis(mDoti);
+            tmp<volScalarField::Internal> tmDot = this->mDot(mDoti);
+
+            // Direct transfer of energy due to mass transfer
+            eqn +=
+                s
+               *tmDot()
+               *(
+                    specieis[i] == -1
+                  ? thermos()[i].hs(p, tTchange())
+                  : mcThermos[i].hsi(specieis[i], p, tTchange())
+               );
+
+            // Optional linearisation
+            if (energySemiImplicit_)
+            {
+                eqn += -fvm::SuSp(-s*tmDot(), heOrYi) - s*tmDot()*heOrYi;
+            }
+
+            // Latent heat of phase change
+            eqn -=
+                (i == 0 ? 1 - Lfraction() : Lfraction())
+               *tmDot
+               *L(tTchange(), mDoti);
+        }
+
+        return;
+    }
+
+    // Mass fraction equation
+    const word specieName = heOrYi.member();
+    if (mcThermos.valid()[i] && mcThermos[i].containsSpecie(specieName))
+    {
+        // A non-transferring specie. Do not add a source.
+        if (!species().found(specieName)) return;
+
+        // A transferring specie. Add a source.
+        eqn += s*mDot(species()[specieName]);
+
+        return;
+    }
+
+    // Something else. Fall back.
+    massTransfer::addSup(alpha, rho, heOrYi, eqn);
+}
+
+
+bool Foam::fv::phaseChange::read(const dictionary& dict)
+{
+    if (massTransfer::read(dict))
+    {
+        readCoeffs(coeffs(dict));
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 

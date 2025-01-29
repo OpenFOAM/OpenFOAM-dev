@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,7 @@ SourceFiles
 #ifndef coefficientPhaseChange_H
 #define coefficientPhaseChange_H
 
-#include "singleComponentPhaseChange.H"
+#include "phaseChange.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -74,7 +74,7 @@ namespace fv
 
 class coefficientPhaseChange
 :
-    public singleComponentPhaseChange
+    public phaseChange
 {
 private:
 
@@ -84,11 +84,25 @@ private:
         //  area density return the phase change rate. Units of [kg/m^2/s].
         dimensionedScalar C_;
 
+        //- The source phase fraction field
+        const volScalarField& alpha1_;
+
 
     // Private Member Functions
 
         //- Non-virtual read
         void readCoeffs(const dictionary& dict);
+
+        //- Multiply the argument by the mass fraction of transferring species
+        //  in the source phase
+        tmp<DimensionedField<scalar, volMesh>> timesY1
+        (
+            tmp<DimensionedField<scalar, volMesh>> mDot
+        ) const;
+
+        //- Return the phase change rate with the source phase and mass
+        //  fraction factored out
+        virtual tmp<DimensionedField<scalar, volMesh>> mDotByAlpha1Y1() const;
 
 
 public:
@@ -113,8 +127,14 @@ public:
 
         // Sources
 
-            //- Return the phase change rate
+            //- Return the total phase change rate
             virtual tmp<DimensionedField<scalar, volMesh>> mDot() const;
+
+            //- Return the phase change rate of a specie
+            virtual tmp<DimensionedField<scalar, volMesh>> mDot
+            (
+                const label mDoti
+            ) const;
 
             //- Override the compressible continuity equation to add
             //  linearisation w.r.t alpha

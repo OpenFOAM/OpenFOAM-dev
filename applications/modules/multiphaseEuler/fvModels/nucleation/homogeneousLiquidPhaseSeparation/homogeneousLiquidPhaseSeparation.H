@@ -59,10 +59,9 @@ SourceFiles
 #ifndef homogeneousLiquidPhaseSeparation_H
 #define homogeneousLiquidPhaseSeparation_H
 
-#include "singleComponentPhaseChange.H"
+#include "phaseChange.H"
 #include "nucleation.H"
 #include "dispersedPhaseInterface.H"
-#include "saturationPressureModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -77,7 +76,7 @@ namespace fv
 
 class homogeneousLiquidPhaseSeparation
 :
-    public singleComponentPhaseChange,
+    public phaseChange,
     public nucleation
 {
 private:
@@ -86,9 +85,6 @@ private:
 
         //- Phase system
         const phaseSystem& fluid_;
-
-        //- Interface
-        const dispersedPhaseInterface interface_;
 
         //- Diameter of nucleated clusters
         volScalarField::Internal d_;
@@ -147,7 +143,8 @@ public:
             //- Return the nucleation time scale
             virtual tmp<DimensionedField<scalar, volMesh>> tau() const;
 
-            using singleComponentPhaseChange::addSup;
+            //- Use phaseChange's source functions
+            using phaseChange::addSup;
 
             //- Override the compressible continuity equation to add
             //  linearisation w.r.t alpha

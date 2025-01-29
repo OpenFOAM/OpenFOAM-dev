@@ -53,6 +53,8 @@ void Foam::fv::homogeneousLiquidPhaseSeparation::readCoeffs
     const dictionary& dict
 )
 {
+    reReadSpecie(dict);
+
     solubilityCurve_.reset
     (
         Function1<scalar>::New
@@ -75,7 +77,7 @@ Foam::fv::homogeneousLiquidPhaseSeparation::YSat
     return
         volScalarField::Internal::New
         (
-            typedName(IOobject::groupName("YSat", interface_.name())),
+            name() + ":YSat",
             mesh(),
             dimless,
             solubilityCurve_->value(T)
@@ -93,29 +95,16 @@ Foam::fv::homogeneousLiquidPhaseSeparation::homogeneousLiquidPhaseSeparation
     const dictionary& dict
 )
 :
-    singleComponentPhaseChange
-    (
-        name,
-        modelType,
-        mesh,
-        dict,
-        {true, false},
-        {true, false}
-    ),
+    phaseChange(name, modelType, mesh, dict, readSpecie(dict, true)),
     fluid_
     (
         mesh().lookupObject<phaseSystem>(phaseSystem::propertiesName)
-    ),
-    interface_
-    (
-        fluid_.phases()[phaseNames().second()],
-        fluid_.phases()[phaseNames().first()]
     ),
     d_
     (
         IOobject
         (
-            typedName(IOobject::groupName("d", interface_.name())),
+            name + ":d",
             mesh.time().name(),
             mesh,
             IOobject::READ_IF_PRESENT,
@@ -128,7 +117,7 @@ Foam::fv::homogeneousLiquidPhaseSeparation::homogeneousLiquidPhaseSeparation
     (
         IOobject
         (
-            typedName(IOobject::groupName("mDotByAlpha", interface_.name())),
+            name + ":mDotByAlpha",
             mesh.time().name(),
             mesh,
             IOobject::READ_IF_PRESENT,
@@ -158,15 +147,18 @@ Foam::fv::homogeneousLiquidPhaseSeparation::nDot() const
     const volScalarField::Internal& alphaSolution =
         mesh().lookupObject<volScalarField::Internal>(alphaNames().first());
 
-    const multicomponentThermo& thermoSolution = specieThermos().first();
+    const ThermoRefPair<multicomponentThermo> multicomponentThermos =
+        this->multicomponentThermos(true, false);
+
+    const multicomponentThermo& thermoSolution = multicomponentThermos.first();
 
     const volScalarField& p = this->p();
     const volScalarField& T = thermoSolution.T();
 
     const volScalarField::Internal rhoPrecipitate
     (
-        specieThermos().valid().second()
-      ? vfToVif(specieThermos().second().rhoi(specieis().second(), p, T))
+        multicomponentThermos.valid().second()
+      ? vfToVif(multicomponentThermos.second().rhoi(specieis().second(), p, T))
       : vfToVif(thermos().second().rho())
     );
 
@@ -195,8 +187,10 @@ Foam::fv::homogeneousLiquidPhaseSeparation::tau() const
         rootVSmall
     );
 
-    const fluidMulticomponentThermo& thermoSolution =
-        refCast<const fluidMulticomponentThermo>(specieThermos().first());
+    const ThermoRefPair<multicomponentThermo> multicomponentThermos =
+        this->multicomponentThermos(true, false);
+
+    const multicomponentThermo& thermoSolution = multicomponentThermos.first();
 
     // Solution density
     const volScalarField::Internal rhoSolution(vfToVif(thermoSolution.rho()));
@@ -221,8 +215,11 @@ void Foam::fv::homogeneousLiquidPhaseSeparation::correct()
     using constant::physicoChemical::NNA;
     using constant::physicoChemical::k;
 
+    const ThermoRefPair<multicomponentThermo> multicomponentThermos =
+        this->multicomponentThermos(true, false);
+
     const fluidMulticomponentThermo& thermoSolution =
-        refCast<const fluidMulticomponentThermo>(specieThermos().first());
+        this->fluidMulticomponentThermos(true, false).first();
 
     const volScalarField& p = this->p();
     const volScalarField& T = thermoSolution.T();
@@ -234,19 +231,19 @@ void Foam::fv::homogeneousLiquidPhaseSeparation::correct()
     const volScalarField::Internal muSolution(vfToVif(thermoSolution.mu()));
     const volScalarField::Internal WPrecipitate
     (
-        specieThermos().valid().second()
+        multicomponentThermos.valid().second()
       ? volScalarField::Internal::New
         (
             "W",
             mesh(),
-            specieThermos().second().Wi(specieis().second())
+            multicomponentThermos.second().Wi(specieis().second())
         )
       : vfToVif(thermos().second().W())
     );
     const volScalarField::Internal rhoPrecipitate
     (
-        specieThermos().valid().second()
-      ? vfToVif(specieThermos().second().rhoi(specieis().second(), p, T))
+        multicomponentThermos.valid().second()
+      ? vfToVif(multicomponentThermos.second().rhoi(specieis().second(), p, T))
       : vfToVif(thermos().second().rho())
     );
     DebugField(rhoSolution);
@@ -254,7 +251,17 @@ void Foam::fv::homogeneousLiquidPhaseSeparation::correct()
     DebugField(rhoPrecipitate);
 
     // Surface tension
-    const volScalarField::Internal sigma(interface_.sigma());
+    const volScalarField::Internal sigma
+    (
+        fluid_.sigma
+        (
+            phaseInterface
+            (
+                fluid_.phases()[phaseNames().first()],
+                fluid_.phases()[phaseNames().second()]
+            )
+        )
+    );
     DebugField(sigma);
 
     // Mass fraction of nucleating specie
@@ -342,14 +349,14 @@ void Foam::fv::homogeneousLiquidPhaseSeparation::addSup
     }
     else
     {
-        phaseChange::addSup(alpha, rho, eqn);
+        massTransfer::addSup(alpha, rho, eqn);
     }
 }
 
 
 bool Foam::fv::homogeneousLiquidPhaseSeparation::read(const dictionary& dict)
 {
-    if (singleComponentPhaseChange::read(dict))
+    if (phaseChange::read(dict))
     {
         readCoeffs(coeffs(dict));
         return true;

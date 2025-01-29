@@ -23,8 +23,6 @@ zeroDimensionalMassSource/zeroDimensionalMassSource.C
 massTransfer/massTransfer.C
 massTransfer/coefficientMassTransfer.C
 phaseChange/phaseChange.C
-phaseChange/singleComponentPhaseChange.C
-phaseChange/multicomponentPhaseChange.C
 phaseChange/coefficientPhaseChange.C
 
 LIB = $(FOAM_LIBBIN)/libfvModels

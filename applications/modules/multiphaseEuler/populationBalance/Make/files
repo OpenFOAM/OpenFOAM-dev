@@ -47,7 +47,7 @@ daughterSizeDistributionModels/uniformBinary/uniformBinary.C
 driftModels/driftModel/driftModel.C
 driftModels/constantDrift/constantDrift.C
 driftModels/densityChange/densityChange.C
-driftModels/phaseChange/phaseChange.C
+driftModels/phaseChange/phaseChange_driftModel.C
 
 nucleationModels/nucleationModel/nucleationModel.C
 nucleationModels/reactionDriven/reactionDriven.C
