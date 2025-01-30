@@ -22,6 +22,8 @@ streamlines/streamlinesCloud.C
 
 surfaceInterpolate/surfaceInterpolate.C
 
+volField/volField.C
+
 regionSizeDistribution/regionSizeDistribution.C
 histogram/histogram.C
 
