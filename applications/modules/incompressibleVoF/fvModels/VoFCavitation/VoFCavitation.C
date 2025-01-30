@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "VoFCavitation.H"
+#include "VoFSolver.H"
 #include "incompressibleTwoPhaseVoFMixture.H"
 #include "fvcDdt.H"
 #include "fvcDiv.H"
@@ -98,6 +99,9 @@ void Foam::fv::VoFCavitation::addSup
 
     if (&alpha == &mixture_.alpha1() || &alpha == &mixture_.alpha2())
     {
+        const solvers::VoFSolver& solver =
+            mesh().lookupObject<solvers::VoFSolver>(solver::typeName);
+
         const volScalarField& alpha1 = mixture_.alpha1();
         const volScalarField& alpha2 = mixture_.alpha2();
 
@@ -122,7 +126,7 @@ void Foam::fv::VoFCavitation::addSup
         }
 
         // Pressure linearisation
-        else if (eqn.psi().name() == "p_rgh")
+        else if (&eqn.psi() == &solver.p_rgh)
         {
             const Pair<tmp<volScalarField::Internal>> mDot12P
             (

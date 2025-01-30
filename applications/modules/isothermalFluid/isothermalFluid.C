@@ -127,12 +127,12 @@ Foam::solvers::isothermalFluid::isothermalFluid
 
     buoyancy(buoyancy::New(mesh)),
 
-    p_rgh(buoyancy.valid() ? buoyancy->p_rgh : p_),
+    p_rgh_(buoyancy.valid() ? buoyancy->p_rgh : p_),
 
     pressureReference
     (
         p_,
-        p_rgh,
+        p_rgh_,
         pimple.dict(),
         thermo_.incompressible()
     ),
@@ -182,6 +182,7 @@ Foam::solvers::isothermalFluid::isothermalFluid
 
     thermo(thermo_),
     p(p_),
+    p_rgh(p_rgh_),
     rho(rho_),
     U(U_),
     phi(phi_)
@@ -193,7 +194,7 @@ Foam::solvers::isothermalFluid::isothermalFluid
     {
         hydrostaticInitialisation
         (
-            p_rgh,
+            p_rgh_,
             p_,
             rho_,
             U,

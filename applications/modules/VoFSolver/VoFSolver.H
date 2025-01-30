@@ -105,7 +105,7 @@ protected:
 
         //- Reference to the buoyant pressure for buoyant cases
         //  otherwise to the pressure
-        volScalarField& p_rgh;
+        volScalarField& p_rgh_;
 
         //- Reference to the mixture continuity density field
         const volScalarField& rho;
@@ -205,6 +205,10 @@ public:
 
         //- Reference to the VoF mixture
         const VoFMixture& mixture;
+
+        //- Reference to the buoyant pressure for buoyant cases
+        //  otherwise to the pressure
+        const volScalarField& p_rgh;
 
         //- Reference to the velocity field
         const volVectorField& U;

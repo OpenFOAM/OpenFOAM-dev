@@ -173,12 +173,12 @@ Foam::solvers::multiphaseEuler::multiphaseEuler(fvMesh& mesh)
 
     p_(movingPhases_[0].fluidThermo().p()),
 
-    p_rgh(buoyancy.p_rgh),
+    p_rgh_(buoyancy.p_rgh),
 
     pressureReference
     (
         p_,
-        p_rgh,
+        p_rgh_,
         pimple.dict(),
         fluid_.incompressible()
     ),
@@ -189,6 +189,7 @@ Foam::solvers::multiphaseEuler::multiphaseEuler(fvMesh& mesh)
     phases(phases_),
     movingPhases(movingPhases_),
     p(p_),
+    p_rgh(p_rgh_),
     phi(phi_)
 {
     // Read the controls

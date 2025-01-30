@@ -2,12 +2,14 @@ EXE_INC = \
     -I$(FOAM_MODULES)/twoPhaseVoFSolver/lnInclude \
     -I$(FOAM_MODULES)/twoPhaseSolver/lnInclude \
     -I$(FOAM_MODULES)/VoFSolver/lnInclude \
+    -I$(FOAM_MODULES)/fluidSolver/lnInclude \
     -I$(FOAM_MODULES)/incompressibleVoF/lnInclude \
     -I$(LIB_SRC)/physicalProperties/lnInclude \
     -I$(LIB_SRC)/twoPhaseModels/twoPhaseMixture/lnInclude \
     -I$(LIB_SRC)/twoPhaseModels/incompressibleTwoPhases/lnInclude \
     -I$(LIB_SRC)/twoPhaseModels/incompressibleCavitation/lnInclude \
-    -I$(LIB_SRC)/finiteVolume/lnInclude
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/meshTools/lnInclude
 
 LIB_LIBS = \
     -lincompressibleCavitationModels

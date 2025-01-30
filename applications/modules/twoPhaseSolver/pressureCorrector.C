@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,6 +43,7 @@ void Foam::solvers::twoPhaseSolver::incompressiblePressureCorrector
     volScalarField& p
 )
 {
+    volScalarField& p_rgh = p_rgh_;
     volVectorField& U = U_;
     surfaceScalarField& phi(phi_);
 

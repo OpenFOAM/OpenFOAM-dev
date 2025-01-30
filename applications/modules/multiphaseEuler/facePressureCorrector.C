@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,6 +44,7 @@ License
 void Foam::solvers::multiphaseEuler::facePressureCorrector()
 {
     volScalarField& p(p_);
+    volScalarField& p_rgh = p_rgh_;
 
     // Face volume fractions
     PtrList<surfaceScalarField> alphafs(phases.size());

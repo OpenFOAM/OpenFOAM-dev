@@ -121,7 +121,7 @@ Foam::solvers::VoFSolver::VoFSolver
 
     buoyancy(mesh),
 
-    p_rgh(buoyancy.p_rgh),
+    p_rgh_(buoyancy.p_rgh),
 
     rho(mixture_.rho()),
 
@@ -141,10 +141,11 @@ Foam::solvers::VoFSolver::VoFSolver
     MRF(mesh),
 
     mixture(mixture_),
+    p_rgh(p_rgh_),
     U(U_),
     phi(phi_)
 {
-    mesh.schemes().setFluxRequired(p_rgh.name());
+    mesh.schemes().setFluxRequired(p_rgh_.name());
 
     if (LTS)
     {

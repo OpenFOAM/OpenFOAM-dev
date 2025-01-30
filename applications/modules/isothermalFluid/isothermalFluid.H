@@ -106,7 +106,7 @@ protected:
 
         //- Reference to the buoyant pressure for buoyant cases
         //  otherwise to the pressure
-        volScalarField& p_rgh;
+        volScalarField& p_rgh_;
 
 
     // Pressure reference
@@ -216,6 +216,10 @@ public:
 
         //- Reference to the pressure field
         const volScalarField& p;
+
+        //- Reference to the buoyant pressure for buoyant cases
+        //  otherwise to the pressure
+        const volScalarField& p_rgh;
 
         //- Reference to the continuity density field
         const volScalarField& rho;
