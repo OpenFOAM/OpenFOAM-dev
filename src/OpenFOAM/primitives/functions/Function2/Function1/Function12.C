@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,7 +46,7 @@ Foam::Function2s::Function12<Type>::Function12
     {
         FatalIOErrorInFunction(dict)
             << "Both keywords " << name1 << " and " << name2
-            << " are undefined in dictionary " << dict.name()
+            << " are defined in dictionary " << dict.name()
             << exit(FatalError);
     }
 
