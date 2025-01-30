@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,6 +78,44 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::volScalarFieldProperty
                     args.boundaryField()[patchi][patchFacei] ...
                 );
         }
+    }
+
+    return tPsi;
+}
+
+
+template<class MixtureType, class BasicThermoType>
+template<class Mixture, class Method, class ... Args>
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::BasicThermo<MixtureType, BasicThermoType>::volInternalScalarFieldProperty
+(
+    const word& psiName,
+    const dimensionSet& psiDim,
+    Mixture mixture,
+    Method psiMethod,
+    const Args& ... args
+) const
+{
+    tmp<volScalarField::Internal> tPsi
+    (
+        volScalarField::Internal::New
+        (
+            IOobject::groupName(psiName, this->group()),
+            this->mesh(),
+            psiDim
+        )
+    );
+
+    volScalarField::Internal& psi = tPsi.ref();
+
+    auto Yslicer = this->Yslicer();
+
+    forAll(psi, celli)
+    {
+        auto composition = this->cellComposition(Yslicer, celli);
+
+        psi[celli] =
+            ((this->*mixture)(composition).*psiMethod)(args[celli] ...);
     }
 
     return tPsi;
@@ -367,6 +405,26 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::he
 
 
 template<class MixtureType, class BasicThermoType>
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::BasicThermo<MixtureType, BasicThermoType>::he
+(
+    const volScalarField::Internal& p,
+    const volScalarField::Internal& T
+) const
+{
+    return volInternalScalarFieldProperty
+    (
+        "he",
+        dimEnergy/dimMass,
+        &MixtureType::thermoMixture,
+        &MixtureType::thermoMixtureType::he,
+        p,
+        T
+    );
+}
+
+
+template<class MixtureType, class BasicThermoType>
 Foam::tmp<Foam::scalarField>
 Foam::BasicThermo<MixtureType, BasicThermoType>::he
 (
@@ -460,6 +518,26 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::hs
 
 
 template<class MixtureType, class BasicThermoType>
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::BasicThermo<MixtureType, BasicThermoType>::hs
+(
+    const volScalarField::Internal& p,
+    const volScalarField::Internal& T
+) const
+{
+    return volInternalScalarFieldProperty
+    (
+        "hs",
+        dimEnergy/dimMass,
+        &MixtureType::thermoMixture,
+        &MixtureType::thermoMixtureType::hs,
+        p,
+        T
+    );
+}
+
+
+template<class MixtureType, class BasicThermoType>
 Foam::tmp<Foam::scalarField>
 Foam::BasicThermo<MixtureType, BasicThermoType>::hs
 (
@@ -522,6 +600,26 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::ha
 ) const
 {
     return volScalarFieldProperty
+    (
+        "ha",
+        dimEnergy/dimMass,
+        &MixtureType::thermoMixture,
+        &MixtureType::thermoMixtureType::ha,
+        p,
+        T
+    );
+}
+
+
+template<class MixtureType, class BasicThermoType>
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::BasicThermo<MixtureType, BasicThermoType>::ha
+(
+    const volScalarField::Internal& p,
+    const volScalarField::Internal& T
+) const
+{
+    return volInternalScalarFieldProperty
     (
         "ha",
         dimEnergy/dimMass,

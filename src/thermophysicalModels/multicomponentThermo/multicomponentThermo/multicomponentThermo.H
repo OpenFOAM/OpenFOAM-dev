@@ -189,6 +189,14 @@ public:
             ) const = 0;
 
             //- Enthalpy/Internal energy [J/kg]
+            virtual tmp<volScalarField::Internal> hei
+            (
+                const label speciei,
+                const volScalarField::Internal& p,
+                const volScalarField::Internal& T
+            ) const = 0;
+
+            //- Enthalpy/Internal energy [J/kg]
             virtual tmp<volScalarField> hei
             (
                 const label speciei,
@@ -213,6 +221,14 @@ public:
             ) const = 0;
 
             //- Sensible enthalpy [J/kg]
+            virtual tmp<volScalarField::Internal> hsi
+            (
+                const label speciei,
+                const volScalarField::Internal& p,
+                const volScalarField::Internal& T
+            ) const = 0;
+
+            //- Sensible enthalpy [J/kg]
             virtual tmp<volScalarField> hsi
             (
                 const label speciei,
@@ -234,6 +250,14 @@ public:
                 const label speciei,
                 const scalarField& p,
                 const scalarField& T
+            ) const = 0;
+
+            //- Absolute enthalpy [J/kg]
+            virtual tmp<volScalarField::Internal> hai
+            (
+                const label speciei,
+                const volScalarField::Internal& p,
+                const volScalarField::Internal& T
             ) const = 0;
 
             //- Absolute enthalpy [J/kg]

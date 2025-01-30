@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,6 +72,42 @@ Foam::MulticomponentThermo<BaseThermo>::volScalarFieldPropertyi
                     args.boundaryField()[patchi][patchFacei] ...
                 );
         }
+    }
+
+    return tPsi;
+}
+
+
+template<class BaseThermo>
+template<class Method, class ... Args>
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::MulticomponentThermo<BaseThermo>::volInternalScalarFieldPropertyi
+(
+    const word& psiName,
+    const dimensionSet& psiDim,
+    Method psiMethod,
+    const label speciei,
+    const Args& ... args
+) const
+{
+    const typename BaseThermo::mixtureType::thermoType& thermo =
+        this->specieThermo(speciei);
+
+    tmp<volScalarField::Internal> tPsi
+    (
+        volScalarField::Internal::New
+        (
+            IOobject::groupName(psiName, this->T_.group()),
+            this->T_.mesh(),
+            psiDim
+        )
+    );
+
+    volScalarField::Internal& psi = tPsi.ref();
+
+    forAll(psi, celli)
+    {
+        psi[celli] = (thermo.*psiMethod)(args[celli] ...);
     }
 
     return tPsi;
@@ -250,6 +286,27 @@ Foam::tmp<Foam::scalarField> Foam::MulticomponentThermo<BaseThermo>::hei
 
 
 template<class BaseThermo>
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::MulticomponentThermo<BaseThermo>::hei
+(
+    const label speciei,
+    const volScalarField::Internal& p,
+    const volScalarField::Internal& T
+) const
+{
+    return volInternalScalarFieldPropertyi
+    (
+        "he",
+        dimEnergy/dimMass,
+        &BaseThermo::mixtureType::thermoType::he,
+        speciei,
+        p,
+        T
+    );
+}
+
+
+template<class BaseThermo>
 Foam::tmp<Foam::volScalarField>
 Foam::MulticomponentThermo<BaseThermo>::hei
 (
@@ -301,6 +358,27 @@ Foam::tmp<Foam::scalarField> Foam::MulticomponentThermo<BaseThermo>::hsi
 
 
 template<class BaseThermo>
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::MulticomponentThermo<BaseThermo>::hsi
+(
+    const label speciei,
+    const volScalarField::Internal& p,
+    const volScalarField::Internal& T
+) const
+{
+    return volInternalScalarFieldPropertyi
+    (
+        "hs",
+        dimEnergy/dimMass,
+        &BaseThermo::mixtureType::thermoType::hs,
+        speciei,
+        p,
+        T
+    );
+}
+
+
+template<class BaseThermo>
 Foam::tmp<Foam::volScalarField>
 Foam::MulticomponentThermo<BaseThermo>::hsi
 (
@@ -343,6 +421,27 @@ Foam::tmp<Foam::scalarField> Foam::MulticomponentThermo<BaseThermo>::hai
 {
     return scalarFieldPropertyi
     (
+        &BaseThermo::mixtureType::thermoType::ha,
+        speciei,
+        p,
+        T
+    );
+}
+
+
+template<class BaseThermo>
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::MulticomponentThermo<BaseThermo>::hai
+(
+    const label speciei,
+    const volScalarField::Internal& p,
+    const volScalarField::Internal& T
+) const
+{
+    return volInternalScalarFieldPropertyi
+    (
+        "ha",
+        dimEnergy/dimMass,
         &BaseThermo::mixtureType::thermoType::ha,
         speciei,
         p,

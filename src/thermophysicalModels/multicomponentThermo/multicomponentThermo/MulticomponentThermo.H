@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,6 +58,17 @@ protected:
         //- Return a volScalarField of the given property
         template<class Method, class ... Args>
         tmp<volScalarField> volScalarFieldPropertyi
+        (
+            const word& psiName,
+            const dimensionSet& psiDim,
+            Method psiMethod,
+            const label speciei,
+            const Args& ... args
+        ) const;
+
+        //- Return a volScalarField::Internal of the given property
+        template<class Method, class ... Args>
+        tmp<volScalarField::Internal> volInternalScalarFieldPropertyi
         (
             const word& psiName,
             const dimensionSet& psiDim,
@@ -154,6 +165,14 @@ public:
             ) const;
 
             //- Enthalpy/Internal energy [J/kg]
+            virtual tmp<volScalarField::Internal> hei
+            (
+                const label speciei,
+                const volScalarField::Internal& p,
+                const volScalarField::Internal& T
+            ) const;
+
+            //- Enthalpy/Internal energy [J/kg]
             virtual tmp<volScalarField> hei
             (
                 const label speciei,
@@ -178,6 +197,14 @@ public:
             ) const;
 
             //- Sensible enthalpy [J/kg]
+            virtual tmp<volScalarField::Internal> hsi
+            (
+                const label speciei,
+                const volScalarField::Internal& p,
+                const volScalarField::Internal& T
+            ) const;
+
+            //- Sensible enthalpy [J/kg]
             virtual tmp<volScalarField> hsi
             (
                 const label speciei,
@@ -199,6 +226,14 @@ public:
                 const label speciei,
                 const scalarField& p,
                 const scalarField& T
+            ) const;
+
+            //- Absolute enthalpy [J/kg]
+            virtual tmp<volScalarField::Internal> hai
+            (
+                const label speciei,
+                const volScalarField::Internal& p,
+                const volScalarField::Internal& T
             ) const;
 
             //- Absolute enthalpy [J/kg]
