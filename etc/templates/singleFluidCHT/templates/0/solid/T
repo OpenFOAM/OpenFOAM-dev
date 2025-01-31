@@ -26,6 +26,8 @@ boundaryField
         type            coupledTemperature;
         value           $internalField;
     }
+
+    #includeEtc "caseDicts/setConstraintTypes"
 }
 
 

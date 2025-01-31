@@ -35,7 +35,8 @@ boundaryField
 
     wall
     {
-        $inlet;
+        type            calculated;
+        value           $internalField;
     }
 
     #includeEtc "caseDicts/setConstraintTypes"

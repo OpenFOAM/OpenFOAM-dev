@@ -30,17 +30,12 @@ boundaryField
     wall
     {
         type            MarshakRadiation;
-        emissivityMode  solidRadiation;
-        value           uniform 0;
-    }
-
-    externalWall
-    {
-        type            MarshakRadiation;
         emissivityMode  lookup;
         emissivity      uniform 1.0;
         value           uniform 0;
     }
+
+    #includeEtc "caseDicts/setConstraintTypes"
 }
 
 // ************************************************************************* //

@@ -44,26 +44,26 @@ solvers
     G
     {
         $p_rgh;
-        tolerance       1e-5;
+        tolerance       1e-7;
         relTol          0.1;
     }
 
     p_rghFinal
     {
         $p_rgh;
-//      relTol         0;  // for transient cases
+        relTol         0;
     }
 
     "(U|h|e|k|omega|epsilon)Final"
     {
         $U;
-//      relTol         0;  // for transient cases
+        relTol         0;
     }
 
     GFinal
     {
         $G;
-//      relTol         0;  // for transient cases
+        relTol         0;
     }
 }
 

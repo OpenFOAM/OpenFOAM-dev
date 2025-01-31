@@ -1,16 +1,14 @@
 #!/bin/sh
-cd ${0%/*} || exit 1    # run from this directory
+cd ${0%/*} || exit 1    # Run from this directory
 
 # Source tutorial run functions
-. $WM_PROJECT_DIR/bin/tools/RunFunctions
+. "$WM_PROJECT_DIR/bin/tools/RunFunctions"
 
 ./Allmesh
 
-rm -rf 0
-
 runApplication foamSetupCHT
 
-runApplication $(getApplication)
+runApplication "$(getApplication)"
 
 echo
 echo "Creating files for paraview post-processing"

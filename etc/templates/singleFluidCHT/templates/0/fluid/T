@@ -42,8 +42,8 @@ boundaryField
 
     externalWall
     {
-        type           fixedValue;
-        value          uniform $Tinitial;
+        type            fixedValue;
+        value           uniform $Tinitial;
     }
 
     #includeEtc "caseDicts/setConstraintTypes"
