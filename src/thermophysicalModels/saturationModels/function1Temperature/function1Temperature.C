@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,6 +90,36 @@ Foam::saturationModels::function1Temperature::Tsat
 }
 
 
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::saturationModels::function1Temperature::TsatPrime
+(
+    const volScalarField::Internal& p
+) const
+{
+    const scalar dp(rootSmall*p.average().value());
+
+    tmp<volScalarField::Internal> tTsatPrime
+    (
+        volScalarField::Internal::New
+        (
+            "TsatPrime",
+            p.mesh(),
+            dimensionedScalar(dimTemperature/dimPressure, 0)
+        )
+    );
+
+    volScalarField::Internal& TsatPrime = tTsatPrime.ref();
+
+    TsatPrime.primitiveFieldRef() =
+        (
+            function_->value(p.primitiveField() + dp/2)
+          - function_->value(p.primitiveField() - dp/2)
+        )/dp;
+
+    return tTsatPrime;
+}
+
+
 Foam::tmp<Foam::volScalarField>
 Foam::saturationModels::function1Temperature::Tsat
 (
@@ -114,13 +144,55 @@ Foam::saturationModels::function1Temperature::Tsat
 
     forAll(Tsat.boundaryField(), patchi)
     {
-        scalarField& Tsatp = TsatBf[patchi];
         const scalarField& pp = p.boundaryField()[patchi];
 
-        Tsatp = function_->value(pp);
+        TsatBf[patchi] = function_->value(pp);
     }
 
     return tTsat;
+}
+
+
+Foam::tmp<Foam::volScalarField>
+Foam::saturationModels::function1Temperature::TsatPrime
+(
+    const volScalarField& p
+) const
+{
+    const scalar dp(rootSmall*p.average().value());
+
+    tmp<volScalarField> tTsatPrime
+    (
+        volScalarField::New
+        (
+            "TsatPrime",
+            p.mesh(),
+            dimensionedScalar(dimTemperature/dimPressure, 0)
+        )
+    );
+
+    volScalarField& TsatPrime = tTsatPrime.ref();
+
+    TsatPrime.primitiveFieldRef() =
+        (
+            function_->value(p.primitiveField() + dp/2)
+          - function_->value(p.primitiveField() - dp/2)
+        )/dp;
+
+    volScalarField::Boundary& TsatPrimeBf = TsatPrime.boundaryFieldRef();
+
+    forAll(TsatPrime.boundaryField(), patchi)
+    {
+        const scalarField& pp = p.boundaryField()[patchi];
+
+        TsatPrimeBf[patchi] =
+            (
+                function_->value(pp + dp/2)
+              - function_->value(pp - dp/2)
+            )/dp;
+    }
+
+    return tTsatPrime;
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,6 +90,10 @@ class Antoine
         //- Saturation temperature
         template<class FieldType>
         tmp<FieldType> Tsat(const FieldType& p) const;
+
+        //- Saturation temperature derivative w.r.t. pressure
+        template<class FieldType>
+        tmp<FieldType> TsatPrime(const FieldType& p) const;
 
 
 public:

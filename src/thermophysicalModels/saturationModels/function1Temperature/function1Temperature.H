@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,10 +25,9 @@ Class
     Foam::saturationModels::function1Temperature
 
 Description
-    Saturation vapour temperature in terms of
-    the vapour pressure (in Pa). The saturation temperature in Kelvins is
-    specified as a Foam::Function1 type, to enable use of, e.g. constant,
-    polynomial, table values.
+    Saturation vapour temperature in terms of the vapour pressure (in Pa). The
+    saturation temperature in Kelvins is specified as a Foam::Function1 type,
+    to enable use of, e.g. constant, polynomial, table values.
 
     Examples:
 
@@ -36,22 +35,22 @@ Description
         type function1;
         function polynomial
         (
-            (308.0422       0)
-            (0.0015096      1)
-            (-1.61589e-8    2)
-            (1.114106e-13   3)
-            (-4.52216e-19   4)
-            (1.05192e-24    5)
-            (-1.2953e-30    6)
-            (6.5365e-37     7)
+            308.0422
+            0.0015096
+            -1.61589e-8
+            1.114106e-13
+            -4.52216e-19
+            1.05192e-24
+            -1.2953e-30
+            6.5365e-37
         );
     \endverbatim
 
     \verbatim
         type function1;
-        function table;
-        functionCoeffs
+        function
         {
+            type                table;
             file                "filename.csv";
             format              csv;
             nHeaderLine         1;
@@ -60,7 +59,7 @@ Description
             mergeSeparators     no;
             outOfBounds         clamp;
             interpolationScheme linear;
-        };
+        }
     \endverbatim
 
 SourceFiles
@@ -124,6 +123,16 @@ public:
 
         //- Saturation temperature for volScalarField
         virtual tmp<volScalarField> Tsat(const volScalarField& p) const;
+
+        //- Saturation temperature derivative w.r.t. pressure for
+        //  volScalarField::Internal
+        virtual tmp<volScalarField::Internal> TsatPrime
+        (
+            const volScalarField::Internal& p
+        ) const;
+
+        //- Saturation temperature derivative w.r.t. pressure for volScalarField
+        virtual tmp<volScalarField> TsatPrime(const volScalarField& p) const;
 };
 
 

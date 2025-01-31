@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,6 +70,14 @@ Foam::tmp<FieldType>
 Foam::saturationModels::Antoine::Tsat(const FieldType& p) const
 {
     return B_/(log(p*dimensionedScalar(dimless/dimPressure, 1)) - A_) - C_;
+}
+
+
+template<class FieldType>
+Foam::tmp<FieldType>
+Foam::saturationModels::Antoine::TsatPrime(const FieldType& p) const
+{
+    return -B_/p/sqr(log(p*dimensionedScalar(dimless/dimPressure, 1)) - A_);
 }
 
 

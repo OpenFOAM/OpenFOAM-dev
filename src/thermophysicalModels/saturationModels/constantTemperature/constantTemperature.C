@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,6 +50,20 @@ Foam::tmp<FieldType>
 Foam::saturationModels::constantTemperature::Tsat(const FieldType& p) const
 {
     return FieldType::New("Tsat", p.mesh(), Tsat_);
+}
+
+
+template<class FieldType>
+Foam::tmp<FieldType>
+Foam::saturationModels::constantTemperature::TsatPrime(const FieldType& p) const
+{
+    return
+        FieldType::New
+        (
+            "TsatPrime",
+            p.mesh(),
+            dimensionedScalar(dimTemperature/dimPressure, Zero)
+        );
 }
 
 

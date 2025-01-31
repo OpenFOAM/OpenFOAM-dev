@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,6 +90,33 @@ Foam::saturationModels::polynomialTemperature::Tsat
 }
 
 
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::saturationModels::polynomialTemperature::TsatPrime
+(
+    const volScalarField::Internal& p
+) const
+{
+    tmp<volScalarField::Internal> tTsatPrime
+    (
+        volScalarField::Internal::New
+        (
+            "TsatPrime",
+            p.mesh(),
+            dimensionedScalar(dimTemperature/dimPressure, 0)
+        )
+    );
+
+    volScalarField::Internal& TsatPrime = tTsatPrime.ref();
+
+    forAll(TsatPrime, celli)
+    {
+        TsatPrime[celli] = C_.derivative(p[celli]);
+    }
+
+    return tTsatPrime;
+}
+
+
 Foam::tmp<Foam::volScalarField>
 Foam::saturationModels::polynomialTemperature::Tsat
 (
@@ -127,6 +154,46 @@ Foam::saturationModels::polynomialTemperature::Tsat
     }
 
     return tTsat;
+}
+
+
+Foam::tmp<Foam::volScalarField>
+Foam::saturationModels::polynomialTemperature::TsatPrime
+(
+    const volScalarField& p
+) const
+{
+    tmp<volScalarField> tTsatPrime
+    (
+        volScalarField::New
+        (
+            "TsatPrime",
+            p.mesh(),
+            dimensionedScalar(dimTemperature/dimPressure, 0)
+        )
+    );
+
+    volScalarField& TsatPrime = tTsatPrime.ref();
+
+    forAll(TsatPrime, celli)
+    {
+        TsatPrime[celli] = C_.derivative(p[celli]);
+    }
+
+    volScalarField::Boundary& TsatBf = TsatPrime.boundaryFieldRef();
+
+    forAll(TsatPrime.boundaryField(), patchi)
+    {
+        scalarField& Tsatp = TsatBf[patchi];
+        const scalarField& pp = p.boundaryField()[patchi];
+
+        forAll(Tsatp, facei)
+        {
+            Tsatp[facei] = C_.derivative(pp[facei]);
+        }
+    }
+
+    return tTsatPrime;
 }
 
 

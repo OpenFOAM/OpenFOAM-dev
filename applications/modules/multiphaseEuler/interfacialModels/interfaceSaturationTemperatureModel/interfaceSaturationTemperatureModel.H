@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -112,7 +112,22 @@ public:
         const phaseInterface& interface() const;
 
         //- Saturation temperature
+        tmp<volScalarField::Internal> Tsat
+        (
+            const volScalarField::Internal& p
+        ) const;
+
+        //- Saturation temperature
         tmp<volScalarField> Tsat(const volScalarField& p) const;
+
+        //- Saturation temperature derivative w.r.t. pressure
+        tmp<volScalarField::Internal> TsatPrime
+        (
+            const volScalarField::Internal& p
+        ) const;
+
+        //- Saturation temperature derivative w.r.t. pressure
+        tmp<volScalarField> TsatPrime(const volScalarField& p) const;
 
         // Dummy write for regIOobject
         bool writeData(Ostream& os) const;

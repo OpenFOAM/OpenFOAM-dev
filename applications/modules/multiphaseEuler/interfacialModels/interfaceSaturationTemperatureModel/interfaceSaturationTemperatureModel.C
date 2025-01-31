@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,6 +76,16 @@ Foam::interfaceSaturationTemperatureModel::interface() const
 }
 
 
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::interfaceSaturationTemperatureModel::Tsat
+(
+    const volScalarField::Internal& p
+) const
+{
+    return saturationModel_->Tsat(p);
+}
+
+
 Foam::tmp<Foam::volScalarField>
 Foam::interfaceSaturationTemperatureModel::Tsat
 (
@@ -83,6 +93,26 @@ Foam::interfaceSaturationTemperatureModel::Tsat
 ) const
 {
     return saturationModel_->Tsat(p);
+}
+
+
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::interfaceSaturationTemperatureModel::TsatPrime
+(
+    const volScalarField::Internal& p
+) const
+{
+    return saturationModel_->TsatPrime(p);
+}
+
+
+Foam::tmp<Foam::volScalarField>
+Foam::interfaceSaturationTemperatureModel::TsatPrime
+(
+    const volScalarField& p
+) const
+{
+    return saturationModel_->TsatPrime(p);
 }
 
 
