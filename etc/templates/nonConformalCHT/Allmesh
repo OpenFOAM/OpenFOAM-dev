@@ -1,0 +1,33 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. "$WM_PROJECT_DIR/bin/tools/RunFunctions"
+
+# !! Example !! meshing workflow for one solid and one fluid region
+# !! Requires customization !!
+
+region=solid
+runApplication -suffix $region snappyHexMeshConfig \
+    -surface "constant/geometry/$region.obj" \
+    -region $region \
+    -defaultPatch "($region wall)"
+
+# Other common options
+#    -minDimCells <n>
+#    -insidePoint '<(0 0 0)>'
+
+region=fluid
+runApplication -suffix $region snappyHexMeshConfig \
+    -region $region \
+    -layers '((solid 2))'
+
+for region in solid fluid
+do
+    runApplication -suffix $region blockMesh -region $region
+    runApplication -suffix $region snappyHexMesh -region $region -overwrite
+done
+
+runApplication createNonConformalCouples -overwrite
+
+# ----------------------------------------------------------------- end-of-file

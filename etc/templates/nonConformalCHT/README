@@ -1,0 +1,84 @@
+Overview
+========
++ This is a template case for conjugate heat transfer (CHT), where mesh
+  regions are connected with non-conformal coupled (NCC) interfaces
++ The case is setup for a single solid region and a single fluid region; it
+  can be extended to include multiple solid and fluid regions
++ The Allmesh script demonstrates an example workflow for meshing the solid
+  and fluid regions
++ The foamSetupCHT utility is used to setup the field and material property
+  files, by copying them from the templates directory
++ The Allrun script demonstrates the commands to be run
+
+Meshing Strategy
+================
++ snappyHexMeshConfig is used to create blockMeshDict and snappyHexMeshDict
+  files for each of the solid and fluid regions
++ blockMesh and snappyHexMesh are used to create meshes for the individual
+  regions separately
++ snappyHexMeshConfig requires a surface geometry file for each of the mesh
+  regions. In the example provided in the 'Allmesh' script, 'solid.obj' is the
+  geometry file for the solid region
++ The .obj files should be saved in the 'constant/geometry' directory
++ The blockMeshDict and snappyHexMeshDict files are created by
+  snappyHexMeshConfig in sub-directories of the system directory
+  e.g. system/solid/blockMeshDict for the solid region
++ The regions are meshed separately by providing the '-region' flag to
+  blockMesh and snappyHexMesh e.g 'blockMesh -region solid'
++ The solid and fluid meshes are created in sub-directories of the constant
+  directory e.g. constant/solid/polyMesh
++ The Allmesh script can be extended to add more regions, or modified to
+  change the meshing strategy for individual regions
++ After the region meshes have been created, createNonConformalCouples is used
+  to connect the region meshes together
+
+Initialisation
+==============
++ The majority of the case initialisation is performed by the foamSetupCHT
+  utility, after the region meshes have been created
++ foamSetupCHT requires the user to configure a 'materialProperties' file
+  that includes a dictionary entry for each region
++ The dictionary entry for each region should contain:
+  + name of solver: e.g. fluid or solid
+  + name of material: e.g. air or aluminium
++ The material for each region can be selected from the configured materials
+  in the templates/materials directory
++ After configuring the materialProperties file, run the foamSetupCHT utility
++ foamSetupCHT generates region sub-directories in the 0, system and constant
+  directories
++ The default models and configuration (e.g. fvSchemes) for each region are
+  generally reliable
++ However, the user must pay attention to field files (U, T, k, omega, etc),
+  as the boundary conditions and initial conditions in these files are common
+  causes of numerical problems
++ The NCC patches (e.g. NCC1) are added to the "mapped" group when they are
+  created
++ The patches which aren't coupled are added to the "wall" group when they are
+  created
++ External wall boundaries are added to the "externalWall" group when they are
+  created
++ The patch groups are used to simplify the boundary conditions in the field
+  files (e.g. 0/fluid/T), and clearly distinguish between NCC patches and
+  other patches
+
+Source Terms
+============
++ Example fvModels files are included:
+  + solid region: 'heatSourceTotal' and 'heatSourceDensity' heat sources
+  + fluid region: 'thermalRadiation' radiative heat transfer
++ The example fvModels are switched off by default
+
+Running the Solver
+==================
++ The case uses foamMultiRun, which can run either as a steady-state solver,
+  or as a transient solver
++ The default setup is to run steady-state
++ To run transient, the user needs to modify:
+  + fvSchemes: select a suitable ddtScheme (e.g. Euler)
+  + controlDict: select a suitable deltaT and endTime
+
+Post-Processing
+===============
++ In order to post-process with ParaView, run "paraFoam -touchAll", then open
+  paraview and open the individual ".OpenFOAM" dummy files for individual mesh
+  regions.
