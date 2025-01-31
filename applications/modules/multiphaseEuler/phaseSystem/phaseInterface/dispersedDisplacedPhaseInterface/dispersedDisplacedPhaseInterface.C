@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,6 +48,21 @@ namespace Foam
         dispersedDisplacedPhaseInterface,
         word
     );
+}
+
+
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+bool Foam::dispersedDisplacedPhaseInterface::same
+(
+    const phaseInterface& interface,
+    bool strict
+) const
+{
+    return
+        (!strict || isType<dispersedDisplacedPhaseInterface>(interface))
+     && dispersedPhaseInterface::same(interface, false)
+     && displacedPhaseInterface::same(interface, false);
 }
 
 

@@ -53,6 +53,23 @@ namespace Foam
 }
 
 
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+bool Foam::dispersedPhaseInterface::same
+(
+    const phaseInterface& interface,
+    bool strict
+) const
+{
+    return
+        (!strict || isType<dispersedPhaseInterface>(interface))
+     && (strict || isA<dispersedPhaseInterface>(interface))
+     && &dispersed_
+     == &refCast<const dispersedPhaseInterface>(interface).dispersed_
+     && phaseInterface::same(interface, false);
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::dispersedPhaseInterface::dispersedPhaseInterface

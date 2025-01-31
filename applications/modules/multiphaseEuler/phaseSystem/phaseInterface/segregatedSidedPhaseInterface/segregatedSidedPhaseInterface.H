@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,6 +53,14 @@ class segregatedSidedPhaseInterface
     public segregatedPhaseInterface,
     public sidedPhaseInterface
 {
+protected:
+
+    // Protected Member Functions
+
+        //- Return true if the phase interfaces are the same
+        virtual bool same(const phaseInterface& interface, bool strict) const;
+
+
 public:
 
     //- Runtime type information

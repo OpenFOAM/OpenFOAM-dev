@@ -167,6 +167,14 @@ private:
         const uniformDimensionedVectorField& g_;
 
 
+protected:
+
+    // Protected Member Functions
+
+        //- Return true if the phase interfaces are the same
+        virtual bool same(const phaseInterface& interface, bool strict) const;
+
+
 public:
 
     //- Runtime type information
@@ -320,6 +328,12 @@ public:
             //- Return true if this phaseInterface contains the given phase
             inline bool contains(const phaseModel& phase) const;
 
+            //- Return true if the phase interfaces are the same
+            inline bool operator==(const phaseInterface& interface) const;
+
+            //- Return true if the phase interfaces are different
+            inline bool operator!=(const phaseInterface& interface) const;
+
             //- Return the other phase relative to the given phase
             //  Generates a FatalError if this phaseInterface does not contain
             //  the given phase
@@ -356,8 +370,8 @@ public:
         {
             // Private Data
 
-                //- Reference to the pair for which this is an iterator
-                const phaseInterface& pair_;
+                //- Reference to the interface for which this is an iterator
+                const phaseInterface& interface_;
 
                 //- Current index
                 label index_;
@@ -371,7 +385,7 @@ public:
 
             // Constructors
 
-                //- Construct from pair, moving to its 'begin' position
+                //- Construct from interface, moving to its 'begin' position
                 inline explicit const_iterator(const phaseInterface&);
 
 
@@ -397,16 +411,16 @@ public:
         };
 
 
-        //- const_iterator set to the beginning of the pair
+        //- const_iterator set to the beginning of the interface
         inline const_iterator cbegin() const;
 
-        //- const_iterator set to beyond the end of the pair
+        //- const_iterator set to beyond the end of the interface
         inline const_iterator cend() const;
 
-        //- const_iterator set to the beginning of the pair
+        //- const_iterator set to the beginning of the interface
         inline const_iterator begin() const;
 
-        //- const_iterator set to beyond the end of the pair
+        //- const_iterator set to beyond the end of the interface
         inline const_iterator end() const;
 };
 

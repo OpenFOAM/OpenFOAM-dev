@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -330,6 +330,21 @@ Foam::phaseInterface::identifyPhases
             fluid.phases()[nameParts[nameParti - 1]],
             fluid.phases()[nameParts[nameParti + 1]]
         );
+}
+
+
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+bool Foam::phaseInterface::same
+(
+    const phaseInterface& interface,
+    bool strict
+) const
+{
+    return
+        (!strict || isType<phaseInterface>(interface))
+     && &phase1_ == &interface.phase1_
+     && &phase2_ == &interface.phase2_;
 }
 
 

@@ -81,6 +81,24 @@ inline bool Foam::phaseInterface::contains(const phaseModel& phase) const
 }
 
 
+inline bool Foam::phaseInterface::operator==
+(
+    const phaseInterface& interface
+) const
+{
+    return same(interface, true);
+}
+
+
+inline bool Foam::phaseInterface::operator!=
+(
+    const phaseInterface& interface
+) const
+{
+    return !same(interface, true);
+}
+
+
 inline const Foam::phaseModel& Foam::phaseInterface::otherPhase
 (
     const phaseModel& phase
@@ -149,21 +167,21 @@ Foam::phaseInterface::g() const
 
 inline Foam::phaseInterface::const_iterator::const_iterator
 (
-    const phaseInterface& pair,
+    const phaseInterface& interface,
     const label index
 )
 :
-    pair_(pair),
+    interface_(interface),
     index_(index)
 {}
 
 
 inline Foam::phaseInterface::const_iterator::const_iterator
 (
-    const phaseInterface& pair
+    const phaseInterface& interface
 )
 :
-    const_iterator(pair, 0)
+    const_iterator(interface, 0)
 {}
 
 
@@ -196,11 +214,11 @@ Foam::phaseInterface::const_iterator::operator*() const
 {
     if (index_ == 0)
     {
-        return pair_.phase1_;
+        return interface_.phase1_;
     }
     else
     {
-        return pair_.phase2_;
+        return interface_.phase2_;
     }
 }
 
@@ -217,11 +235,11 @@ Foam::phaseInterface::const_iterator::otherPhase() const
 {
     if (index_ == 0)
     {
-        return pair_.phase2_;
+        return interface_.phase2_;
     }
     else
     {
-        return pair_.phase1_;
+        return interface_.phase1_;
     }
 }
 
