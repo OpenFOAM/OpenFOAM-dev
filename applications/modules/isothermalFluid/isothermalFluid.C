@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -325,6 +325,30 @@ void Foam::solvers::isothermalFluid::preSolve()
 }
 
 
+void Foam::solvers::isothermalFluid::prePredictor()
+{
+    if
+    (
+        !mesh.schemes().steady()
+     && !pimple.simpleRho()
+     && pimple.firstIter()
+    )
+    {
+        correctDensity();
+    }
+}
+
+
+void Foam::solvers::isothermalFluid::momentumTransportPredictor()
+{
+    momentumTransport->predict();
+}
+
+
+void Foam::solvers::isothermalFluid::thermophysicalTransportPredictor()
+{}
+
+
 void Foam::solvers::isothermalFluid::thermophysicalPredictor()
 {
     thermo_.correct();
@@ -349,13 +373,14 @@ void Foam::solvers::isothermalFluid::pressureCorrector()
 }
 
 
-void Foam::solvers::isothermalFluid::postCorrector()
+void Foam::solvers::isothermalFluid::momentumTransportCorrector()
 {
-    if (pimple.correctTransport())
-    {
-        momentumTransport->correct();
-    }
+    momentumTransport->correct();
 }
+
+
+void Foam::solvers::isothermalFluid::thermophysicalTransportCorrector()
+{}
 
 
 void Foam::solvers::isothermalFluid::postSolve()

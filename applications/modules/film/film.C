@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,14 +65,15 @@ Foam::solvers::film::~film()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::solvers::film::postCorrector()
+void Foam::solvers::film::thermophysicalTransportPredictor()
 {
-    isothermalFilm::postCorrector();
+    thermophysicalTransport->predict();
+}
 
-    if (pimple.correctTransport())
-    {
-        thermophysicalTransport->correct();
-    }
+
+void Foam::solvers::film::thermophysicalTransportCorrector()
+{
+    thermophysicalTransport->correct();
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -461,6 +461,22 @@ void Foam::solvers::isothermalFilm::preSolve()
 }
 
 
+void Foam::solvers::isothermalFilm::prePredictor()
+{
+    continuityPredictor();
+}
+
+
+void Foam::solvers::isothermalFilm::momentumTransportPredictor()
+{
+    momentumTransport->predict();
+}
+
+
+void Foam::solvers::isothermalFilm::thermophysicalTransportPredictor()
+{}
+
+
 void Foam::solvers::isothermalFilm::moveMesh()
 {}
 
@@ -481,13 +497,14 @@ void Foam::solvers::isothermalFilm::pressureCorrector()
 }
 
 
-void Foam::solvers::isothermalFilm::postCorrector()
+void Foam::solvers::isothermalFilm::momentumTransportCorrector()
 {
-    if (pimple.correctTransport())
-    {
-        momentumTransport->correct();
-    }
+    momentumTransport->correct();
 }
+
+
+void Foam::solvers::isothermalFilm::thermophysicalTransportCorrector()
+{}
 
 
 void Foam::solvers::isothermalFilm::postSolve()

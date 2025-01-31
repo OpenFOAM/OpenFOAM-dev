@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -237,11 +237,11 @@ void Foam::solvers::solidDisplacement::pressureCorrector()
 }
 
 
-void Foam::solvers::solidDisplacement::postCorrector()
+void Foam::solvers::solidDisplacement::thermophysicalTransportCorrector()
 {
     if (thermo.thermalStress())
     {
-        solid::postCorrector();
+        solid::thermophysicalTransportCorrector();
     }
 }
 

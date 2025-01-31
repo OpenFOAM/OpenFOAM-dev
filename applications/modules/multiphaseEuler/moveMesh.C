@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,11 +31,7 @@ License
 
 void Foam::solvers::multiphaseEuler::moveMesh()
 {
-    if
-    (
-        pimple.flow()
-     && (pimple.firstIter() || pimple.moveMeshOuterCorrectors())
-    )
+    if (pimple.firstIter() || pimple.moveMeshOuterCorrectors())
     {
         if
         (
@@ -63,11 +59,7 @@ void Foam::solvers::multiphaseEuler::moveMesh()
 
 void Foam::solvers::multiphaseEuler::motionCorrector()
 {
-    if
-    (
-        pimple.flow()
-     && (pimple.firstIter() || pimple.moveMeshOuterCorrectors())
-    )
+    if (pimple.firstIter() || pimple.moveMeshOuterCorrectors())
     {
         if (mesh.changing())
         {

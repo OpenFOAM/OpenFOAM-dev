@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -139,16 +139,16 @@ public:
 
     // Member Functions
 
-        //- Called at the start of the PIMPLE loop
-        virtual void prePredictor();
+        //- Predict thermophysical transport
+        virtual void thermophysicalTransportPredictor();
 
         //- Construct and solve the energy equation,
         //  convert to temperature
         //  and update thermophysical and transport properties
         virtual void thermophysicalPredictor();
 
-        //- Correct the momentum and thermophysical transport modelling
-        virtual void postCorrector();
+        //- Correct the thermophysical transport
+        virtual void thermophysicalTransportCorrector();
 
 
     // Member Operators

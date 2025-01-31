@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -129,25 +129,15 @@ Foam::solvers::XiFluid::~XiFluid()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::solvers::XiFluid::prePredictor()
+void Foam::solvers::XiFluid::thermophysicalTransportPredictor()
 {
-    isothermalFluid::prePredictor();
-
-    if (pimple.predictTransport())
-    {
-        thermophysicalTransport.predict();
-    }
+    thermophysicalTransport.predict();
 }
 
 
-void Foam::solvers::XiFluid::postCorrector()
+void Foam::solvers::XiFluid::thermophysicalTransportCorrector()
 {
-    isothermalFluid::postCorrector();
-
-    if (pimple.correctTransport())
-    {
-        thermophysicalTransport.correct();
-    }
+    thermophysicalTransport.correct();
 }
 
 

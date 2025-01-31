@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,31 +29,16 @@ License
 
 void Foam::solvers::multiphaseEuler::pressureCorrector()
 {
-    if (pimple.flow())
+    if (faceMomentum)
     {
-        if (faceMomentum)
-        {
-            facePressureCorrector();
-        }
-        else
-        {
-            cellPressureCorrector();
-        }
-
-        fluid_.correctKinematics();
+        facePressureCorrector();
     }
     else
     {
-        PtrList<fvScalarMatrix> pEqnComps
-        (
-            compressibilityEqns(fluid.dmdts(), fluid.d2mdtdps())
-        );
-
-        forAll(phases_, phasei)
-        {
-            phases_[phasei].divU(-pEqnComps[phasei] & p_rgh);
-        }
+        cellPressureCorrector();
     }
+
+    fluid_.correctKinematics();
 }
 
 

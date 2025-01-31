@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -160,26 +160,30 @@ void Foam::solvers::compressibleVoF::prePredictor()
         fvc::ddt(alpha2, rho2)()() + fvc::div(alphaRhoPhi2)()()
       - (fvModels().source(alpha2, rho2)&rho2)()
     );
-
-    if (pimple.predictTransport())
-    {
-        momentumTransport.predict();
-    }
-
-    if (pimple.predictTransport())
-    {
-        thermophysicalTransport.predict();
-    }
 }
 
 
-void Foam::solvers::compressibleVoF::postCorrector()
+void Foam::solvers::compressibleVoF::momentumTransportPredictor()
 {
-    if (pimple.correctTransport())
-    {
-        momentumTransport.correct();
-        thermophysicalTransport.correct();
-    }
+    momentumTransport.predict();
+}
+
+
+void Foam::solvers::compressibleVoF::thermophysicalTransportPredictor()
+{
+    thermophysicalTransport.predict();
+}
+
+
+void Foam::solvers::compressibleVoF::momentumTransportCorrector()
+{
+    momentumTransport.correct();
+}
+
+
+void Foam::solvers::compressibleVoF::thermophysicalTransportCorrector()
+{
+    thermophysicalTransport.correct();
 }
 
 

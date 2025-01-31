@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -183,7 +183,6 @@ Foam::scalar Foam::solvers::incompressibleDriftFlux::maxDeltaT() const
 
 void Foam::solvers::incompressibleDriftFlux::prePredictor()
 {
-    VoFSolver::prePredictor();
     alphaPredictor();
 
     // Apply the diffusion term separately to allow implicit solution
@@ -221,12 +220,17 @@ void Foam::solvers::incompressibleDriftFlux::prePredictor()
     rhoPhi = alphaPhi1*rho1 + alphaPhi2*rho2;
 
     relativeVelocity->correct();
-
-    if (pimple.predictTransport())
-    {
-        momentumTransport->predict();
-    }
 }
+
+
+void Foam::solvers::incompressibleDriftFlux::momentumTransportPredictor()
+{
+    momentumTransport->predict();
+}
+
+
+void Foam::solvers::incompressibleDriftFlux::thermophysicalTransportPredictor()
+{}
 
 
 void Foam::solvers::incompressibleDriftFlux::pressureCorrector()
@@ -239,13 +243,14 @@ void Foam::solvers::incompressibleDriftFlux::thermophysicalPredictor()
 {}
 
 
-void Foam::solvers::incompressibleDriftFlux::postCorrector()
+void Foam::solvers::incompressibleDriftFlux::momentumTransportCorrector()
 {
-    if (pimple.correctTransport())
-    {
-        momentumTransport->correct();
-    }
+    momentumTransport->correct();
 }
+
+
+void Foam::solvers::incompressibleDriftFlux::thermophysicalTransportCorrector()
+{}
 
 
 // ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -131,17 +131,26 @@ int main(int argc, char *argv[])
         {
             forAll(solvers, i)
             {
-                solvers[i].moveMesh();
+                if (solvers[i].pimple.flow())
+                {
+                    solvers[i].moveMesh();
+                }
             }
 
             forAll(solvers, i)
             {
-                solvers[i].motionCorrector();
+                if (solvers[i].pimple.flow())
+                {
+                    solvers[i].motionCorrector();
+                }
             }
 
             forAll(solvers, i)
             {
-                solvers[i].fvModels().correct();
+                if (solvers[i].pimple.models())
+                {
+                    solvers[i].fvModels().correct();
+                }
             }
 
             forAll(solvers, i)
@@ -151,25 +160,77 @@ int main(int argc, char *argv[])
 
             forAll(solvers, i)
             {
-                solvers[i].momentumPredictor();
+                if
+                (
+                    solvers[i].pimple.predictTransport()
+                 && solvers[i].pimple.flow()
+                )
+                {
+                    solvers[i].momentumTransportPredictor();
+                }
+            }
+
+            forAll(solvers, i)
+            {
+                if
+                (
+                    solvers[i].pimple.predictTransport()
+                 && solvers[i].pimple.thermophysics()
+                )
+                {
+                    solvers[i].thermophysicalTransportPredictor();
+                }
+            }
+
+            forAll(solvers, i)
+            {
+                if (solvers[i].pimple.flow())
+                {
+                    solvers[i].momentumPredictor();
+                }
             }
 
             while (pimple.correctEnergy())
             {
                 forAll(solvers, i)
                 {
-                    solvers[i].thermophysicalPredictor();
+                    if (solvers[i].pimple.thermophysics())
+                    {
+                        solvers[i].thermophysicalPredictor();
+                    }
                 }
             }
 
             forAll(solvers, i)
             {
-                solvers[i].pressureCorrector();
+                if (solvers[i].pimple.flow())
+                {
+                    solvers[i].pressureCorrector();
+                }
             }
 
             forAll(solvers, i)
             {
-                solvers[i].postCorrector();
+                if
+                (
+                    solvers[i].pimple.correctTransport()
+                 && solvers[i].pimple.flow()
+                )
+                {
+                    solvers[i].momentumTransportCorrector();
+                }
+            }
+
+            forAll(solvers, i)
+            {
+                if
+                (
+                    solvers[i].pimple.correctTransport()
+                 && solvers[i].pimple.thermophysics()
+                )
+                {
+                    solvers[i].thermophysicalTransportCorrector();
+                }
             }
         }
 

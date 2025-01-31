@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -119,25 +119,22 @@ void Foam::solvers::multiphaseEuler::energyPredictor()
 
 void Foam::solvers::multiphaseEuler::thermophysicalPredictor()
 {
-    if (pimple.thermophysics())
+    for (int Ecorr=0; Ecorr<nEnergyCorrectors; Ecorr++)
     {
-        for (int Ecorr=0; Ecorr<nEnergyCorrectors; Ecorr++)
+        fluid_.predictThermophysicalTransport();
+        compositionPredictor();
+        energyPredictor();
+
+        forAll(fluid.anisothermalPhases(), anisothermalPhasei)
         {
-            fluid_.predictThermophysicalTransport();
-            compositionPredictor();
-            energyPredictor();
+            const phaseModel& phase =
+                fluid.anisothermalPhases()[anisothermalPhasei];
 
-            forAll(fluid.anisothermalPhases(), anisothermalPhasei)
-            {
-                const phaseModel& phase =
-                    fluid.anisothermalPhases()[anisothermalPhasei];
-
-                Info<< phase.name() << " min/max T "
-                    << min(phase.thermo().T()).value()
-                    << " - "
-                    << max(phase.thermo().T()).value()
-                    << endl;
-            }
+            Info<< phase.name() << " min/max T "
+                << min(phase.thermo().T()).value()
+                << " - "
+                << max(phase.thermo().T()).value()
+                << endl;
         }
     }
 }

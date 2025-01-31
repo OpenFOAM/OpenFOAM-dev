@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -272,11 +272,44 @@ void Foam::solvers::shockFluid::preSolve()
 }
 
 
-void Foam::solvers::shockFluid::postCorrector()
+void Foam::solvers::shockFluid::prePredictor()
 {
-    if (!inviscid && pimple.correctTransport())
+    fluxPredictor();
+    correctDensity();
+}
+
+
+void Foam::solvers::shockFluid::momentumTransportPredictor()
+{
+    if (!inviscid)
+    {
+        momentumTransport->predict();
+    }
+}
+
+
+void Foam::solvers::shockFluid::thermophysicalTransportPredictor()
+{
+    if (!inviscid)
+    {
+        thermophysicalTransport->predict();
+    }
+}
+
+
+void Foam::solvers::shockFluid::momentumTransportCorrector()
+{
+    if (!inviscid)
     {
         momentumTransport->correct();
+    }
+}
+
+
+void Foam::solvers::shockFluid::thermophysicalTransportCorrector()
+{
+    if (!inviscid)
+    {
         thermophysicalTransport->correct();
     }
 }

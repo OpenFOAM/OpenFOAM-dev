@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -145,25 +145,33 @@ Foam::solvers::incompressibleMultiphaseVoF::~incompressibleMultiphaseVoF()
 void Foam::solvers::incompressibleMultiphaseVoF::prePredictor()
 {
     multiphaseVoFSolver::prePredictor();
-
-    if (pimple.predictTransport())
-    {
-        momentumTransport.predict();
-    }
 }
+
+
+void Foam::solvers::incompressibleMultiphaseVoF::momentumTransportPredictor()
+{
+    momentumTransport.predict();
+}
+
+
+void Foam::solvers::incompressibleMultiphaseVoF::
+thermophysicalTransportPredictor()
+{}
 
 
 void Foam::solvers::incompressibleMultiphaseVoF::thermophysicalPredictor()
 {}
 
 
-void Foam::solvers::incompressibleMultiphaseVoF::postCorrector()
+void Foam::solvers::incompressibleMultiphaseVoF::momentumTransportCorrector()
 {
-    if (pimple.correctTransport())
-    {
-        momentumTransport.correct();
-    }
+    momentumTransport.correct();
 }
+
+
+void Foam::solvers::incompressibleMultiphaseVoF::
+thermophysicalTransportCorrector()
+{}
 
 
 // ************************************************************************* //

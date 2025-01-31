@@ -25,7 +25,6 @@ filmGaussGrad/filmGaussGrads.C
 
 contactForce.C
 continuityPredictor.C
-prePredictor.C
 momentumPredictor.C
 correctAlpha.C
 isothermalFilm.C

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -137,12 +137,17 @@ void Foam::solvers::incompressibleVoF::prePredictor()
 
     // Calculate the mass-flux
     rhoPhi = alphaPhi1*rho1 + alphaPhi2*rho2;
-
-    if (pimple.predictTransport())
-    {
-        momentumTransport.predict();
-    }
 }
+
+
+void Foam::solvers::incompressibleVoF::momentumTransportPredictor()
+{
+    momentumTransport.predict();
+}
+
+
+void Foam::solvers::incompressibleVoF::thermophysicalTransportPredictor()
+{}
 
 
 void Foam::solvers::incompressibleVoF::pressureCorrector()
@@ -155,13 +160,14 @@ void Foam::solvers::incompressibleVoF::thermophysicalPredictor()
 {}
 
 
-void Foam::solvers::incompressibleVoF::postCorrector()
+void Foam::solvers::incompressibleVoF::momentumTransportCorrector()
 {
-    if (pimple.correctTransport())
-    {
-        momentumTransport.correct();
-    }
+    momentumTransport.correct();
 }
+
+
+void Foam::solvers::incompressibleVoF::thermophysicalTransportCorrector()
+{}
 
 
 // ************************************************************************* //

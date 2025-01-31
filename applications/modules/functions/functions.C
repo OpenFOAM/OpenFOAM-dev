@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -117,6 +117,14 @@ void Foam::solvers::functions::prePredictor()
 {}
 
 
+void Foam::solvers::functions::momentumTransportPredictor()
+{}
+
+
+void Foam::solvers::functions::thermophysicalTransportPredictor()
+{}
+
+
 void Foam::solvers::functions::momentumPredictor()
 {}
 
@@ -129,7 +137,11 @@ void Foam::solvers::functions::pressureCorrector()
 {}
 
 
-void Foam::solvers::functions::postCorrector()
+void Foam::solvers::functions::momentumTransportCorrector()
+{}
+
+
+void Foam::solvers::functions::thermophysicalTransportCorrector()
 {}
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -340,12 +340,19 @@ void Foam::solvers::incompressibleDenseParticleFluid::prePredictor()
            /(Dcf() + dimensionedScalar(Dc().dimensions(), small))
         ).ptr();
     }
-
-    if (pimple.predictTransport())
-    {
-        momentumTransport->predict();
-    }
 }
+
+
+void Foam::solvers::incompressibleDenseParticleFluid::
+momentumTransportPredictor()
+{
+    momentumTransport->predict();
+}
+
+
+void Foam::solvers::incompressibleDenseParticleFluid::
+thermophysicalTransportPredictor()
+{}
 
 
 void Foam::solvers::incompressibleDenseParticleFluid::thermophysicalPredictor()
@@ -363,14 +370,17 @@ void Foam::solvers::incompressibleDenseParticleFluid::pressureCorrector()
 }
 
 
-void Foam::solvers::incompressibleDenseParticleFluid::postCorrector()
+void Foam::solvers::incompressibleDenseParticleFluid::
+momentumTransportCorrector()
 {
-    if (pimple.correctTransport())
-    {
-        viscosity->correct();
-        momentumTransport->correct();
-    }
+    viscosity->correct();
+    momentumTransport->correct();
 }
+
+
+void Foam::solvers::incompressibleDenseParticleFluid::
+thermophysicalTransportCorrector()
+{}
 
 
 void Foam::solvers::incompressibleDenseParticleFluid::postSolve()

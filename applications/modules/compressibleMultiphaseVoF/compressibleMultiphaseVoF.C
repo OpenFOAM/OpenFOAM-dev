@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -130,21 +130,29 @@ void Foam::solvers::compressibleMultiphaseVoF::prePredictor()
         const volScalarField& rho = phases[phasei].thermo().rho();
         contErr.ref() -= (fvModels().source(phases[phasei], rho)&rho)();
     }
-
-    if (pimple.predictTransport())
-    {
-        momentumTransport.predict();
-    }
 }
 
 
-void Foam::solvers::compressibleMultiphaseVoF::postCorrector()
+void Foam::solvers::compressibleMultiphaseVoF::momentumTransportPredictor()
 {
-    if (pimple.correctTransport())
-    {
-        momentumTransport.correct();
-    }
+    momentumTransport.predict();
 }
+
+
+void Foam::solvers::compressibleMultiphaseVoF::
+thermophysicalTransportPredictor()
+{}
+
+
+void Foam::solvers::compressibleMultiphaseVoF::momentumTransportCorrector()
+{
+    momentumTransport.correct();
+}
+
+
+void Foam::solvers::compressibleMultiphaseVoF::
+thermophysicalTransportCorrector()
+{}
 
 
 // ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -172,7 +172,7 @@ public:
         virtual void pressureCorrector();
 
         //- Correct the thermophysical transport modelling
-        virtual void postCorrector();
+        virtual void thermophysicalTransportCorrector();
 
         //- Called after the PIMPLE loop at the end of the time-step
         virtual void postSolve();
