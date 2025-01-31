@@ -44,19 +44,24 @@ void Foam::fv::propellerDisk::addActuationDiskAxialInertialResistance
     const labelUList& cells = set_.cells();
     const scalarField& V = mesh().V();
 
-    volVectorField::Internal force
-    (
-        IOobject
+    if (!forcePtr_.valid())
+    {
+        forcePtr_ = new volVectorField::Internal
         (
-            typedName("force"),
-            mesh().time().name(),
+            IOobject
+            (
+                typedName("force"),
+                mesh().time().name(),
+                mesh(),
+                IOobject::NO_READ,
+                IOobject::AUTO_WRITE
+            ),
             mesh(),
-            IOobject::NO_READ,
-            IOobject::AUTO_WRITE
-        ),
-        mesh(),
-        dimensionedVector(rho.dimensions()*U.dimensions()/dimTime, Zero)
-    );
+            dimensionedVector(rho.dimensions()*U.dimensions()/dimTime, Zero)
+        );
+    }
+
+    volVectorField::Internal& force = forcePtr_();
 
     const vector centre(this->centre());
     const vector normal(this->normal());
@@ -194,11 +199,6 @@ void Foam::fv::propellerDisk::addActuationDiskAxialInertialResistance
                     force_,
                     moment_
                 );
-            }
-
-            if (mesh().time().writeTime())
-            {
-                force.write();
             }
         }
     }
