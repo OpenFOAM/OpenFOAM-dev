@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -229,6 +229,8 @@ int main(int argc, char *argv[])
         false
     );
 
+    srcMesh.postConstruct(false, fvMesh::stitchType::nonGeometric);
+
     fvMesh tgtMesh
     (
         IOobject
@@ -239,6 +241,8 @@ int main(int argc, char *argv[])
         ),
         false
     );
+
+    tgtMesh.postConstruct(false, fvMesh::stitchType::nonGeometric);
 
     Info<< "Source mesh size: "
         << returnReduce(srcMesh.nCells(), sumOp<label>())
