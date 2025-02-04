@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -128,7 +128,6 @@ Foam::scalar Foam::cellsToCellss::matching::calculateAddressing
     DynamicList<label> srcSeeds(10);
 
     const scalarField& srcVc = srcMesh.cellVolumes();
-    const scalarField& tgtVc = tgtMesh.cellVolumes();
 
     label srcCelli = srcSeedI;
     label tgtCelli = tgtSeedI;
@@ -162,13 +161,13 @@ Foam::scalar Foam::cellsToCellss::matching::calculateAddressing
     // transfer addressing into persistent storage
     forAll(srcToTgtCellAddr, i)
     {
-        srcToTgtCellWght[i] = scalarList(srcToTgt[i].size(), srcVc[i]);
+        srcToTgtCellWght[i] = scalarList(srcToTgt[i].size(), scalar(1));
         srcToTgtCellAddr[i].transfer(srcToTgt[i]);
     }
 
     forAll(tgtToSrcCellAddr, i)
     {
-        tgtToSrcCellWght[i] = scalarList(tgtToSrc[i].size(), tgtVc[i]);
+        tgtToSrcCellWght[i] = scalarList(tgtToSrc[i].size(), scalar(1));
         tgtToSrcCellAddr[i].transfer(tgtToSrc[i]);
     }
 
@@ -307,7 +306,6 @@ void Foam::cellsToCellss::matching::normalise
         {
             srcToTgtAddr[srcCelli].resize(1);
             srcToTgtWght[srcCelli].resize(1);
-            srcToTgtWght[srcCelli][0] = 1;
         }
     }
 }
