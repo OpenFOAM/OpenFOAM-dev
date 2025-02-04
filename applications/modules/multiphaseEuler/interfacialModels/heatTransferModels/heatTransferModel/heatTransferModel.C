@@ -114,7 +114,7 @@ Foam::tmp<Foam::volScalarField> Foam::blendedHeatTransferModel::K
     tmp<volScalarField> (heatTransferModel::*k)(const scalar) const =
         &heatTransferModel::K;
 
-    return evaluate(k, "Kf", heatTransferModel::dimK, residualAlpha);
+    return evaluate(k, "K", heatTransferModel::dimK, residualAlpha);
 }
 
 
