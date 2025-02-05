@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -98,7 +98,6 @@ Usage
         operation    | operation to perform    | yes         |
         weightField  | name of field to apply weighting | no |
         weightFields | Names of fields to apply weighting | no |
-        scaleFactor  | scale factor            | no          | 1
         fields       | list of fields to operate on | yes    |
     \endtable
 
@@ -281,9 +280,6 @@ protected:
 
         //- Weight field names - optional
         wordList weightFieldNames_;
-
-        //- Scale factor - optional
-        scalar scaleFactor_;
 
         //- Total area of the surfaceFieldValue
         scalar totalArea_;

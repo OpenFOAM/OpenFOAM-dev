@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -539,11 +539,6 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::initialise
             << " weight field " << weightFieldNames_[0];
     }
 
-    if (dict.readIfPresent("scaleFactor", scaleFactor_))
-    {
-        Info<< "    scale factor = " << scaleFactor_ << nl;
-    }
-
     Info<< nl << endl;
 
     if (writeFields_)
@@ -671,7 +666,6 @@ Foam::functionObjects::fieldValues::surfaceFieldValue::surfaceFieldValue
     selectionName_(string::null),
     operation_(operationTypeNames_.read(dict.lookup("operation"))),
     weightFieldNames_(),
-    scaleFactor_(1),
     writeArea_(dict.lookupOrDefault("writeArea", false)),
     nFaces_(0),
     faceId_(),
@@ -701,7 +695,6 @@ Foam::functionObjects::fieldValues::surfaceFieldValue::surfaceFieldValue
     selectionName_(string::null),
     operation_(operationTypeNames_.read(dict.lookup("operation"))),
     weightFieldNames_(),
-    scaleFactor_(1),
     writeArea_(dict.lookupOrDefault("writeArea", false)),
     nFaces_(0),
     faceId_(),
