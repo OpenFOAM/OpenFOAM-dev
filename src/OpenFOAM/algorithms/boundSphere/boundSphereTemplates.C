@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -207,7 +207,7 @@ Foam::trivialBoundSphere
 
 
 template<class PointField>
-Foam::Tuple2<Foam::point, Foam::scalar> Foam::weizlBoundSphere
+Foam::Tuple2<Foam::point, Foam::scalar> Foam::welzlBoundSphere
 (
     const PointField& ps,
     List<label>& pis,
@@ -240,7 +240,7 @@ Foam::Tuple2<Foam::point, Foam::scalar> Foam::weizlBoundSphere
         {
             boundaryPis[nBoundaryPs] = pis[i];
 
-            sphere = weizlBoundSphere(ps, pis, i, boundaryPis, nBoundaryPs + 1);
+            sphere = welzlBoundSphere(ps, pis, i, boundaryPis, nBoundaryPs + 1);
 
             // Move the limiting point to the start of the list so that the
             // sphere grows as quickly as possible in the recursive calls
@@ -266,7 +266,7 @@ Foam::boundSphere(const PointField& ps, randomGenerator& rndGen)
         labelList pis(identityMap(ps.size()));
         rndGen.permute(pis);
         FixedList<label, 4> boundaryPis({-1, -1, -1, -1});
-        return weizlBoundSphere(ps, pis, ps.size(), boundaryPis, 0);
+        return welzlBoundSphere(ps, pis, ps.size(), boundaryPis, 0);
     }
 }
 
@@ -285,7 +285,7 @@ Foam::boundSphere(const PointField& ps)
         labelList pis(identityMap(ps.size()));
         randomGenerator(0).permute(pis);
         FixedList<label, 4> boundaryPis({-1, -1, -1, -1});
-        return weizlBoundSphere(ps, pis, ps.size(), boundaryPis, 0);
+        return welzlBoundSphere(ps, pis, ps.size(), boundaryPis, 0);
     }
 }
 

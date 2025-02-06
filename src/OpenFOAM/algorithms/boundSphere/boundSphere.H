@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,9 +64,9 @@ Tuple2<point, scalar> trivialBoundSphere
 );
 
 //- Compute a bounding sphere for an arbitrary number of points recursively
-//  using Weizl's algorithm
+//  using Welzl's algorithm
 template<class PointField>
-Tuple2<point, scalar> weizlBoundSphere
+Tuple2<point, scalar> welzlBoundSphere
 (
     const PointField& ps,
     List<label>& pis,
@@ -76,7 +76,7 @@ Tuple2<point, scalar> weizlBoundSphere
 );
 
 //- Compute a bounding sphere for an arbitrary number of points, and given an
-//  engine with which to randomise Weizl's algorithm
+//  engine with which to randomise Welzl's algorithm
 template<class PointField>
 Tuple2<point, scalar> boundSphere
 (
