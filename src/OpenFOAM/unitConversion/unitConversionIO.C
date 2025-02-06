@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -224,8 +224,18 @@ Foam::Istream& Foam::operator>>(Istream& is, unitConversion& units)
     // If not a number or separator, then these are named units. Parse.
     if (!nextToken.isNumber() && nextToken != token::COLON)
     {
-        // Named units. Parse.
-        units.reset(symbols::parseNoBeginOrEnd(is, unitless, Foam::units()));
+        // Named units. Parse. Note: Use an explicit construction of the
+        // identity unit instead of 'unitless' because this function may be
+        // used in a static context before 'unitless' is available.
+        units.reset
+        (
+            symbols::parseNoBeginOrEnd
+            (
+                is,
+                unitConversion(dimless, 0, 0, 1),
+                Foam::units()
+            )
+        );
 
         // Read the next delimiting token. This must be the end bracket.
         is >> nextToken;

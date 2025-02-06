@@ -218,7 +218,7 @@ void Foam::fv::homogeneousLiquidPhaseSeparation::correct()
             << nl;
 
     using constant::mathematical::pi;
-    using constant::physicoChemical::NA;
+    using constant::physicoChemical::NNA;
     using constant::physicoChemical::k;
 
     const fluidMulticomponentThermo& thermoSolution =
@@ -281,7 +281,7 @@ void Foam::fv::homogeneousLiquidPhaseSeparation::correct()
     DebugField(S);
 
     // Mass and volume of one molecule in the precipitate
-    const volScalarField::Internal mMolc(WPrecipitate/NA);
+    const volScalarField::Internal mMolc(WPrecipitate/NNA);
     const volScalarField::Internal vMolc(mMolc/rhoPrecipitate);
     const volScalarField::Internal dMolc(cbrt(6/pi*vMolc));
     DebugField(mMolc);
@@ -306,7 +306,7 @@ void Foam::fv::homogeneousLiquidPhaseSeparation::correct()
     DebugField(intermediate);
     const volScalarField::Internal J
     (
-        cSat*NA*exp(-deltaPhiStar/(k*T()))*k*T()/(3*pi*pow3(dMolc)*muSolution)
+        cSat*NNA*exp(-deltaPhiStar/(k*T()))*k*T()/(3*pi*pow3(dMolc)*muSolution)
     );
     DebugField(J);
 

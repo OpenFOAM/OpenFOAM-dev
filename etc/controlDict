@@ -120,7 +120,7 @@ DimensionedConstants
         physicoChemical
         {
             mu      [1 0 0 0 0 0 0]     1.66054e-27;
-            NA      [0 0 0 0 -1 0 0]    6.02214e+26;
+            NNA     [0 0 0 0 -1 0 0]    6.02214e+26;
             k       [1 2 -2 -1 0 0 0]   1.38065e-23;
         }
 
@@ -157,7 +157,7 @@ DimensionedConstants
         physicoChemical
         {
             mu      [1 0 0 0 0 0 0]     3.66083e-27;
-            NA      [0 0 0 0 -1 0 0]    6.02214e+26;
+            NNA     [0 0 0 0 -1 0 0]    6.02214e+26;
             k       [1 2 -2 -1 0 0 0]   1.82012e-22;
         }
 

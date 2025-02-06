@@ -190,7 +190,7 @@ void Foam::fv::homogeneousCondensation::correct()
             << nl;
 
     using constant::mathematical::pi;
-    using constant::physicoChemical::NA;
+    using constant::physicoChemical::NNA;
     using constant::physicoChemical::k;
 
     const multicomponentThermo& thermoGas = specieThermos().first();
@@ -246,7 +246,7 @@ void Foam::fv::homogeneousCondensation::correct()
     DebugField(S);
 
     // Mass, volume and diameter of one molecule in the condensed phase
-    const volScalarField::Internal mMolc(WLiquid/NA);
+    const volScalarField::Internal mMolc(WLiquid/NNA);
     const volScalarField::Internal vMolc(mMolc/rhoLiquid);
     const volScalarField::Internal dMolc(cbrt(6/pi*vMolc));
     DebugField(mMolc);
@@ -276,7 +276,7 @@ void Foam::fv::homogeneousCondensation::correct()
     // per unit volume
     const volScalarField::Internal J
     (
-        betaIStar1*sqr(cSat*NA)*exp(-deltaPhiStar/(k*T()))
+        betaIStar1*sqr(cSat*NNA)*exp(-deltaPhiStar/(k*T()))
        *sqrt(sigma/(k*T()))
        *2*mMolc/(pi*sqr(d_)*rhoLiquid)
     );
