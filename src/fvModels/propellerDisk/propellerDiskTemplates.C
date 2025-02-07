@@ -123,7 +123,6 @@ void Foam::fv::propellerDisk::addActuationDiskAxialInertialResistance
         const scalar At =
             (105/8.0)*Q/(delta*pi*rProp*(rProp - rHub)*(3*rHub + 4*rProp));
 
-        scalar V_ = 0;
         force_ = Zero;
         moment_ = Zero;
 
@@ -160,7 +159,6 @@ void Foam::fv::propellerDisk::addActuationDiskAxialInertialResistance
 
                 // Integrate the net force and moment of the propeller
                 // on the fluid
-                V_ += V[celli];
                 force_ += Vfi;
                 moment_ += r ^ Vfi;
 
@@ -168,14 +166,8 @@ void Foam::fv::propellerDisk::addActuationDiskAxialInertialResistance
             }
         }
 
-        reduce(V_, sumOp<scalar>());
         reduce(force_, sumOp<vector>());
         reduce(moment_, sumOp<vector>());
-
-        // Normalise to cache the net force and moment of the propeller
-        // on the fluid
-        force_ /= V_;
-        moment_ /= V_;
 
         if
         (
