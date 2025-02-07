@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,13 +23,13 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "PurePhaseModel.H"
+#include "SolidIsothermalPhaseModel.H"
 #include "phaseSystem.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class BasePhaseModel>
-Foam::PurePhaseModel<BasePhaseModel>::PurePhaseModel
+Foam::SolidIsothermalPhaseModel<BasePhaseModel>::SolidIsothermalPhaseModel
 (
     const phaseSystem& fluid,
     const word& phaseName,
@@ -44,72 +44,47 @@ Foam::PurePhaseModel<BasePhaseModel>::PurePhaseModel
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class BasePhaseModel>
-Foam::PurePhaseModel<BasePhaseModel>::~PurePhaseModel()
+Foam::SolidIsothermalPhaseModel<BasePhaseModel>::~SolidIsothermalPhaseModel()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class BasePhaseModel>
-bool Foam::PurePhaseModel<BasePhaseModel>::pure() const
+void Foam::SolidIsothermalPhaseModel<BasePhaseModel>::correctThermo()
+{
+    BasePhaseModel::correctThermo();
+}
+
+
+template<class BasePhaseModel>
+bool Foam::SolidIsothermalPhaseModel<BasePhaseModel>::isothermal() const
 {
     return true;
 }
 
 
 template<class BasePhaseModel>
+Foam::tmp<Foam::scalarField>
+Foam::SolidIsothermalPhaseModel<BasePhaseModel>::kappaEff
+(
+    const label patchi
+) const
+{
+    NotImplemented;
+    return this->thermo().kappa().boundaryField()[patchi];
+}
+
+
+template<class BasePhaseModel>
 Foam::tmp<Foam::fvScalarMatrix>
-Foam::PurePhaseModel<BasePhaseModel>::YiEqn(volScalarField& Yi)
+Foam::SolidIsothermalPhaseModel<BasePhaseModel>::heEqn()
 {
     FatalErrorInFunction
-        << "Cannot construct a species fraction equation for a pure phase"
+        << "Cannot construct an energy equation for an isothermal phase"
         << exit(FatalError);
 
     return tmp<fvScalarMatrix>();
-}
-
-
-template<class BasePhaseModel>
-const Foam::PtrList<Foam::volScalarField>&
-Foam::PurePhaseModel<BasePhaseModel>::Y() const
-{
-    // Y_ has never been set, so we are returning an empty list
-
-    return Y_;
-}
-
-
-template<class BasePhaseModel>
-const Foam::volScalarField&
-Foam::PurePhaseModel<BasePhaseModel>::Y(const word& name) const
-{
-    FatalErrorInFunction
-        << "Cannot get a species fraction by name from a pure phase"
-        << exit(FatalError);
-
-    return NullObjectRef<volScalarField>();
-}
-
-
-template<class BasePhaseModel>
-Foam::PtrList<Foam::volScalarField>&
-Foam::PurePhaseModel<BasePhaseModel>::YRef()
-{
-    FatalErrorInFunction
-        << "Cannot access the species fractions of a pure phase"
-        << exit(FatalError);
-
-    return Y_;
-}
-
-
-template<class BasePhaseModel>
-bool Foam::PurePhaseModel<BasePhaseModel>::solveSpecie
-(
-    const label speciei
-) const
-{
-    return false;
 }
 
 

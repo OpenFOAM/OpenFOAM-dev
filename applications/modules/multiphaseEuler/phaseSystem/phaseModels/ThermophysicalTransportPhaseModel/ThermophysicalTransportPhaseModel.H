@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,22 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::AnisothermalPhaseModel
+    Foam::ThermophysicalTransportPhaseModel
 
 Description
-    Class which represents a phase for which the temperature (strictly energy)
-    varies. Returns the energy equation and corrects the thermodynamic model.
+    Class which makes thermophysical transport modelling available to derived
+    classes
 
 SourceFiles
-    AnisothermalPhaseModel.C
+    ThermophysicalTransportPhaseModel.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef AnisothermalPhaseModel_H
-#define AnisothermalPhaseModel_H
+#ifndef ThermophysicalTransportPhaseModel_H
+#define ThermophysicalTransportPhaseModel_H
 
 #include "phaseModel.H"
-#include "uniformDimensionedFields.H"
 #include "phaseCompressibleMomentumTransportModel.H"
 #include "PhaseThermophysicalTransportModel.H"
 
@@ -45,6 +44,11 @@ SourceFiles
 
 namespace Foam
 {
+
+class fluidThermo;
+class rhoFluidThermo;
+class fluidMulticomponentThermo;
+class rhoFluidMulticomponentThermo;
 
 // Trait for converting the ThermoModel's thermo type to the thermo type needed
 // for the thermophysical transport model type; i.e., from rho-type thermo to
@@ -67,52 +71,37 @@ struct MovingPhaseModelTransportThermoModel<rhoFluidMulticomponentThermo>
 
 
 /*---------------------------------------------------------------------------*\
-                   Class AnisothermalPhaseModel Declaration
+                   Class ThermophysicalTransportPhaseModel Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasePhaseModel>
-class AnisothermalPhaseModel
+class ThermophysicalTransportPhaseModel
 :
     public BasePhaseModel
 {
     // Private Member Data
 
-        //- Gravitational acceleration
-        const uniformDimensionedVectorField& g_;
-
-        //- Thermo type for the thermophysical transport model
+        //- Thermophysical transport model type
         typedef
-            typename MovingPhaseModelTransportThermoModel
-            <
-                typename BasePhaseModel::thermoModel
-            >::type
-            transportThermoModel;
-
-        //- Thermophysical transport model
-        autoPtr
-        <
             PhaseThermophysicalTransportModel
             <
                 phaseCompressible::momentumTransportModel,
-                transportThermoModel
+                typename MovingPhaseModelTransportThermoModel
+                <
+                    typename BasePhaseModel::thermoModel
+                >::type
             >
-        > thermophysicalTransport_;
+            thermophysicalTransportModel;
 
-
-    // Private Member Functions
-
-        //- Optionally filter the pressure work term as the phase-fraction -> 0
-        tmp<volScalarField> filterPressureWork
-        (
-            const tmp<volScalarField>& pressureWork
-        ) const;
+        //- Thermophysical transport model
+        autoPtr<thermophysicalTransportModel> thermophysicalTransport_;
 
 
 public:
 
     // Constructors
 
-        AnisothermalPhaseModel
+        ThermophysicalTransportPhaseModel
         (
             const phaseSystem& fluid,
             const word& phaseName,
@@ -122,16 +111,10 @@ public:
 
 
     //- Destructor
-    virtual ~AnisothermalPhaseModel();
+    virtual ~ThermophysicalTransportPhaseModel();
 
 
     // Member Functions
-
-        //- Return whether the phase is isothermal
-        virtual bool isothermal() const;
-
-        //- Correct the thermodynamics
-        virtual void correctThermo();
 
         //- Predict the energy transport e.g. alphat
         virtual void predictThermophysicalTransport();
@@ -145,13 +128,8 @@ public:
         //- Return the source term for the energy equation
         virtual tmp<fvScalarMatrix> divq(volScalarField& he) const;
 
-        //- Return the source term for the given specie mass-fraction
-        //  equation
+        //- Return the source term for a specie mass-fraction equation
         virtual tmp<fvScalarMatrix> divj(volScalarField& Yi) const;
-
-        //- Return the enthalpy equation
-        virtual tmp<fvScalarMatrix> heEqn();
-
 };
 
 
@@ -162,7 +140,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "AnisothermalPhaseModel.C"
+    #include "ThermophysicalTransportPhaseModel.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

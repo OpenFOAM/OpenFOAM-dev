@@ -22,22 +22,22 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::IsothermalPhaseModel
+    Foam::ThermalPhaseModel
 
 Description
-    Class which represents a phase for which the temperature remains
-    constant. Returns an empty energy equation and updates the energy
-    corresponding to pressure changes only when correctThermo is called.
+    Class which represents a phase for which the temperature (strictly energy)
+    varies. Returns the energy equation and corrects the thermodynamic model.
 
 SourceFiles
-    IsothermalPhaseModel.C
+    ThermalPhaseModel.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef IsothermalPhaseModel_H
-#define IsothermalPhaseModel_H
+#ifndef ThermalPhaseModel_H
+#define ThermalPhaseModel_H
 
 #include "ThermophysicalTransportPhaseModel.H"
+#include "uniformDimensionedFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -45,19 +45,34 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class IsothermalPhaseModel Declaration
+                   Class ThermalPhaseModel Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasePhaseModel>
-class IsothermalPhaseModel
+class ThermalPhaseModel
 :
-    public BasePhaseModel
+    public ThermophysicalTransportPhaseModel<BasePhaseModel>
 {
+    // Private Member Data
+
+        //- Gravitational acceleration
+        const uniformDimensionedVectorField& g_;
+
+
+    // Private Member Functions
+
+        //- Optionally filter the pressure work term as the phase-fraction -> 0
+        tmp<volScalarField> filterPressureWork
+        (
+            const tmp<volScalarField>& pressureWork
+        ) const;
+
+
 public:
 
     // Constructors
 
-        IsothermalPhaseModel
+        ThermalPhaseModel
         (
             const phaseSystem& fluid,
             const word& phaseName,
@@ -67,7 +82,7 @@ public:
 
 
     //- Destructor
-    virtual ~IsothermalPhaseModel();
+    virtual ~ThermalPhaseModel();
 
 
     // Member Functions
@@ -78,21 +93,9 @@ public:
         //- Return whether the phase is isothermal
         virtual bool isothermal() const;
 
-        //- Return the effective thermal conductivity on a patch
-        virtual tmp<scalarField> kappaEff(const label patchi) const;
-
         //- Return the enthalpy equation
         virtual tmp<fvScalarMatrix> heEqn();
 };
-
-
-/*---------------------------------------------------------------------------*\
-        Typedef IsothermalThermophysicalTransportPhaseModel Declaration
-\*---------------------------------------------------------------------------*/
-
-template<class BasePhaseModel>
-using IsothermalThermophysicalTransportPhaseModel =
-    IsothermalPhaseModel<ThermophysicalTransportPhaseModel<BasePhaseModel>>;
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -102,7 +105,7 @@ using IsothermalThermophysicalTransportPhaseModel =
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "IsothermalPhaseModel.C"
+    #include "ThermalPhaseModel.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

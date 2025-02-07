@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::IsothermalSolidPhaseModel
+    Foam::SolidIsothermalPhaseModel
 
 Description
     Class which represents a solid phase for which the temperature (strictly
@@ -30,12 +30,12 @@ Description
     when correctThermo is called.
 
 SourceFiles
-    IsothermalSolidPhaseModel.C
+    SolidIsothermalPhaseModel.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef IsothermalSolidPhaseModel_H
-#define IsothermalSolidPhaseModel_H
+#ifndef SolidIsothermalPhaseModel_H
+#define SolidIsothermalPhaseModel_H
 
 #include "phaseModel.H"
 
@@ -45,11 +45,11 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class IsothermalSolidPhaseModel Declaration
+                    Class SolidIsothermalPhaseModel Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasePhaseModel>
-class IsothermalSolidPhaseModel
+class SolidIsothermalPhaseModel
 :
     public BasePhaseModel
 {
@@ -57,7 +57,7 @@ public:
 
     // Constructors
 
-        IsothermalSolidPhaseModel
+        SolidIsothermalPhaseModel
         (
             const phaseSystem& fluid,
             const word& phaseName,
@@ -67,7 +67,7 @@ public:
 
 
     //- Destructor
-    virtual ~IsothermalSolidPhaseModel();
+    virtual ~SolidIsothermalPhaseModel();
 
 
     // Member Functions
@@ -93,7 +93,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "IsothermalSolidPhaseModel.C"
+    #include "SolidIsothermalPhaseModel.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,13 +23,14 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "IsothermalSolidPhaseModel.H"
+#include "ThermophysicalTransportPhaseModel.H"
 #include "phaseSystem.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class BasePhaseModel>
-Foam::IsothermalSolidPhaseModel<BasePhaseModel>::IsothermalSolidPhaseModel
+Foam::ThermophysicalTransportPhaseModel<BasePhaseModel>::
+ThermophysicalTransportPhaseModel
 (
     const phaseSystem& fluid,
     const word& phaseName,
@@ -37,54 +38,76 @@ Foam::IsothermalSolidPhaseModel<BasePhaseModel>::IsothermalSolidPhaseModel
     const label index
 )
 :
-    BasePhaseModel(fluid, phaseName, referencePhase, index)
+    BasePhaseModel(fluid, phaseName, referencePhase, index),
+    thermophysicalTransport_
+    (
+        thermophysicalTransportModel::New
+        (
+            this->momentumTransport_,
+            this->thermo_
+        )
+    )
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class BasePhaseModel>
-Foam::IsothermalSolidPhaseModel<BasePhaseModel>::~IsothermalSolidPhaseModel()
+Foam::ThermophysicalTransportPhaseModel<BasePhaseModel>::
+~ThermophysicalTransportPhaseModel()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class BasePhaseModel>
-void Foam::IsothermalSolidPhaseModel<BasePhaseModel>::correctThermo()
+void Foam::ThermophysicalTransportPhaseModel<BasePhaseModel>::
+predictThermophysicalTransport()
 {
-    BasePhaseModel::correctThermo();
+    BasePhaseModel::predictThermophysicalTransport();
+    thermophysicalTransport_->predict();
 }
 
 
 template<class BasePhaseModel>
-bool Foam::IsothermalSolidPhaseModel<BasePhaseModel>::isothermal() const
+void Foam::ThermophysicalTransportPhaseModel<BasePhaseModel>::
+correctThermophysicalTransport()
 {
-    return true;
+    BasePhaseModel::correctThermophysicalTransport();
+    thermophysicalTransport_->correct();
 }
 
 
 template<class BasePhaseModel>
 Foam::tmp<Foam::scalarField>
-Foam::IsothermalSolidPhaseModel<BasePhaseModel>::kappaEff
+Foam::ThermophysicalTransportPhaseModel<BasePhaseModel>::kappaEff
 (
     const label patchi
 ) const
 {
-    NotImplemented;
-    return this->thermo().kappa().boundaryField()[patchi];
+    return thermophysicalTransport_->kappaEff(patchi);
 }
 
 
 template<class BasePhaseModel>
 Foam::tmp<Foam::fvScalarMatrix>
-Foam::IsothermalSolidPhaseModel<BasePhaseModel>::heEqn()
+Foam::ThermophysicalTransportPhaseModel<BasePhaseModel>::divq
+(
+    volScalarField& he
+) const
 {
-    FatalErrorInFunction
-        << "Cannot construct an energy equation for an isothermal phase"
-        << exit(FatalError);
+    return thermophysicalTransport_->divq(he);
+}
 
-    return tmp<fvScalarMatrix>();
+
+template<class BasePhaseModel>
+Foam::tmp<Foam::fvScalarMatrix>
+Foam::ThermophysicalTransportPhaseModel<BasePhaseModel>::divj
+(
+    volScalarField& Yi
+) const
+{
+    return thermophysicalTransport_->divj(Yi);
 }
 
 
