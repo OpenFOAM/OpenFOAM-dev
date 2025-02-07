@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,7 +97,7 @@ Foam::List<Foam::labelPair> Foam::cutPoly::faceCuts
                 cuts.last()[1] = fpi0;
             }
 
-            cuti = cuts.last().fcIndex(cuti);
+            cuti = !cuti;
         }
 
         fpi0 = fpi1;

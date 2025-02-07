@@ -40,7 +40,6 @@ SourceFiles
 #include "distributionMap.H"
 #include "primitivePatch.H"
 #include "primitiveOldTimePatch.H"
-#include "RefPair.H"
 #include "remote.H"
 #include "runTimeSelectionTables.H"
 #include "treeBoundBox.H"
@@ -371,8 +370,8 @@ public:
                 const vectorField& srcPointNormals0,
                 const primitiveOldTimePatch& tgtPatch,
                 const transformer& tgtToSrc = NullObjectRef<transformer>(),
-                const ConstRefPair<string>& srcTgtPatchNames =
-                    NullObjectRef<ConstRefPair<string>>(),
+                const Pair<const string&>& srcTgtPatchNames =
+                    NullObjectRef<Pair<const string&>>(),
                 const string& tgtToSrcName = string::null
             );
 
@@ -383,8 +382,8 @@ public:
                 const vectorField& srcPointNormals,
                 const primitivePatch& tgtPatch,
                 const transformer& tgtToSrc = NullObjectRef<transformer>(),
-                const ConstRefPair<string>& srcTgtPatchNames =
-                    NullObjectRef<ConstRefPair<string>>(),
+                const Pair<const string&>& srcTgtPatchNames =
+                    NullObjectRef<Pair<const string&>>(),
                 const string& tgtToSrcName = string::null
             );
 

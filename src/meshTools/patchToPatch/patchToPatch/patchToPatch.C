@@ -864,7 +864,7 @@ void Foam::patchToPatch::update
     const vectorField& srcPointNormals0,
     const primitiveOldTimePatch& tgtPatch,
     const transformer& tgtToSrc,
-    const ConstRefPair<string>& srcTgtPatchNames,
+    const Pair<const string&>& srcTgtPatchNames,
     const string& tgtToSrcName
 )
 {
@@ -1090,7 +1090,7 @@ void Foam::patchToPatch::update
     const vectorField& srcPointNormals,
     const primitivePatch& tgtPatch,
     const transformer& tgtToSrc,
-    const ConstRefPair<string>& srcTgtPatchNames,
+    const Pair<const string&>& srcTgtPatchNames,
     const string& tgtToSrcName
 )
 {

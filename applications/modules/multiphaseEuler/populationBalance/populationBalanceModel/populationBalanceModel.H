@@ -207,7 +207,6 @@ SourceFiles
 #include "sizeGroup.H"
 #include "phaseSystem.H"
 #include "HashPtrTable.H"
-#include "dimensionedScalarPair.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -515,25 +514,25 @@ private:
         //  coefficient function. This spans the range from group i-1 to group
         //  i. The first coefficient is a constant, and the second is
         //  multiplied by v.
-        dimensionedScalarPair etaCoeffs0(const label i) const;
+        Pair<dimensionedScalar> etaCoeffs0(const label i) const;
 
         //- Return the coefficients of the lower half of the number allocation
         //  coefficient function. This spans the range from group i to group
         //  i+1. The first coefficient is a constant, and the second is
         //  multiplied by v.
-        dimensionedScalarPair etaCoeffs1(const label i) const;
+        Pair<dimensionedScalar> etaCoeffs1(const label i) const;
 
         //- Return the coefficients of the lower half of the volume allocation
         //  coefficient function. This spans the range from group i-1 to group
         //  i. The first coefficient is a constant, and the second is
         //  multiplied by 1/v.
-        dimensionedScalarPair etaVCoeffs0(const label i) const;
+        Pair<dimensionedScalar> etaVCoeffs0(const label i) const;
 
         //- Return the coefficients of the lower half of the volume allocation
         //  coefficient function. This spans the range from group i to group
         //  i+1. The first coefficient is a constant, and the second is
         //  multiplied by 1/v.
-        dimensionedScalarPair etaVCoeffs1(const label i) const;
+        Pair<dimensionedScalar> etaVCoeffs1(const label i) const;
 
 
 public:

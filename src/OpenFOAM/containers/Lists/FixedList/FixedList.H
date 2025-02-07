@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -156,7 +156,6 @@ public:
             //- Return the reverse circular index, i.e. the previous index
             //  which returns to the last at the beginning of the list
             inline label rcIndex(const label i) const;
-
 
             //- Return a const pointer to the first data element,
             //  similar to the STL front() method and the string::data() method

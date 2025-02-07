@@ -640,22 +640,22 @@ bool Foam::diameterModels::populationBalanceModel::updateSources()
 }
 
 
-Foam::dimensionedScalarPair
+Foam::Pair<Foam::dimensionedScalar>
 Foam::diameterModels::populationBalanceModel::etaCoeffs0(const label i) const
 {
     static const dimensionedScalar z(dimless, scalar(0));
 
     const dimensionedScalar& xi = sizeGroups()[i].x();
 
-    if (i == 0) return dimensionedScalarPair(z, 1/xi);
+    if (i == 0) return Pair<dimensionedScalar>(z, 1/xi);
 
     const dimensionedScalar& x0 = sizeGroups()[i - 1].x();
 
-    return dimensionedScalarPair(- x0/(xi - x0), 1/(xi - x0));
+    return Pair<dimensionedScalar>(- x0/(xi - x0), 1/(xi - x0));
 }
 
 
-Foam::dimensionedScalarPair
+Foam::Pair<Foam::dimensionedScalar>
 Foam::diameterModels::populationBalanceModel::etaCoeffs1(const label i) const
 {
     static const dimensionedScalar z(dimless, scalar(0));
@@ -664,41 +664,41 @@ Foam::diameterModels::populationBalanceModel::etaCoeffs1(const label i) const
 
     const dimensionedScalar& xi = sizeGroups()[i].x();
 
-    if (i == n - 1) return dimensionedScalarPair(z, 1/xi);
+    if (i == n - 1) return Pair<dimensionedScalar>(z, 1/xi);
 
     const dimensionedScalar& x1 = sizeGroups()[i + 1].x();
 
-    return dimensionedScalarPair(x1/(x1 - xi), - 1/(x1 - xi));
+    return Pair<dimensionedScalar>(x1/(x1 - xi), - 1/(x1 - xi));
 }
 
 
-Foam::dimensionedScalarPair
+Foam::Pair<Foam::dimensionedScalar>
 Foam::diameterModels::populationBalanceModel::etaVCoeffs0(const label i) const
 {
     static const dimensionedScalar o(scalar(1)), zV(dimVolume, scalar(0));
 
-    if (i == 0) return dimensionedScalarPair(o, zV);
+    if (i == 0) return Pair<dimensionedScalar>(o, zV);
 
     const dimensionedScalar& x0 = 1/sizeGroups()[i - 1].x();
     const dimensionedScalar& xi = 1/sizeGroups()[i].x();
 
-    return dimensionedScalarPair(- x0/(xi - x0), 1/(xi - x0));
+    return Pair<dimensionedScalar>(- x0/(xi - x0), 1/(xi - x0));
 }
 
 
-Foam::dimensionedScalarPair
+Foam::Pair<Foam::dimensionedScalar>
 Foam::diameterModels::populationBalanceModel::etaVCoeffs1(const label i) const
 {
     static const dimensionedScalar o(scalar(1)), zV(dimVolume, scalar(0));
 
     const label n = sizeGroups().size();
 
-    if (i == n - 1) return dimensionedScalarPair(o, zV);
+    if (i == n - 1) return Pair<dimensionedScalar>(o, zV);
 
     const dimensionedScalar& xi = 1/sizeGroups()[i].x();
     const dimensionedScalar& x1 = 1/sizeGroups()[i + 1].x();
 
-    return dimensionedScalarPair(x1/(x1 - xi), - 1/(x1 - xi));
+    return Pair<dimensionedScalar>(x1/(x1 - xi), - 1/(x1 - xi));
 }
 
 
@@ -1095,8 +1095,8 @@ Foam::dimensionedScalar Foam::diameterModels::populationBalanceModel::eta
     const dimensionedScalar& v
 ) const
 {
-    const dimensionedScalarPair coeffs0 = etaCoeffs0(i);
-    const dimensionedScalarPair coeffs1 = etaCoeffs1(i);
+    const Pair<dimensionedScalar> coeffs0 = etaCoeffs0(i);
+    const Pair<dimensionedScalar> coeffs1 = etaCoeffs1(i);
 
     return
         max
@@ -1118,8 +1118,8 @@ Foam::diameterModels::populationBalanceModel::eta
     const volScalarField::Internal& v
 ) const
 {
-    const dimensionedScalarPair coeffs0 = etaCoeffs0(i);
-    const dimensionedScalarPair coeffs1 = etaCoeffs1(i);
+    const Pair<dimensionedScalar> coeffs0 = etaCoeffs0(i);
+    const Pair<dimensionedScalar> coeffs1 = etaCoeffs1(i);
 
     return
         max
@@ -1140,8 +1140,8 @@ Foam::dimensionedScalar Foam::diameterModels::populationBalanceModel::etaV
     const dimensionedScalar& v
 ) const
 {
-    const dimensionedScalarPair coeffs0 = etaVCoeffs0(i);
-    const dimensionedScalarPair coeffs1 = etaVCoeffs1(i);
+    const Pair<dimensionedScalar> coeffs0 = etaVCoeffs0(i);
+    const Pair<dimensionedScalar> coeffs1 = etaVCoeffs1(i);
 
     return
         max
@@ -1163,8 +1163,8 @@ Foam::diameterModels::populationBalanceModel::etaV
     const volScalarField::Internal& v
 ) const
 {
-    const dimensionedScalarPair coeffs0 = etaVCoeffs0(i);
-    const dimensionedScalarPair coeffs1 = etaVCoeffs1(i);
+    const Pair<dimensionedScalar> coeffs0 = etaVCoeffs0(i);
+    const Pair<dimensionedScalar> coeffs1 = etaVCoeffs1(i);
 
     return
         max
@@ -1263,9 +1263,9 @@ Foam::dimensionedScalar Foam::diameterModels::populationBalanceModel::etaV
     // 'Integral(C0*PDF + C1/v*PDF)'. C0 and C1 are constants, so this can be
     // rearranged to 'C0*Integral(PDF) + C1*Integral(PDF/v)'. The integrals in
     // this expression are those calculated above.
-    const dimensionedScalarPair etaVCoeffs0 =
+    const Pair<dimensionedScalar> etaVCoeffs0 =
         fi.group().popBal().etaVCoeffs0(fi.i());
-    const dimensionedScalarPair etaVCoeffs1 =
+    const Pair<dimensionedScalar> etaVCoeffs1 =
         fi.group().popBal().etaVCoeffs1(fi.i());
     const scalar sgIntegralPDFetaV =
         etaVCoeffs0.first().value()
@@ -1342,9 +1342,9 @@ Foam::dimensionedScalar Foam::diameterModels::populationBalanceModel::etaV
     //
     // Between diameters #0 and #1, and between #2 and #3, the integration
     // follows the same logic as for the size group.
-    const dimensionedScalarPair vgEtaVCoeffs0 =
+    const Pair<dimensionedScalar> vgEtaVCoeffs0 =
         fi.group().popBal().etaVCoeffs0(vgSizeGroups.first().i());
-    const dimensionedScalarPair vgEtaVCoeffs1 =
+    const Pair<dimensionedScalar> vgEtaVCoeffs1 =
         fi.group().popBal().etaVCoeffs1(vgSizeGroups.last().i());
     const scalar vgIntegralPDFetaV =
         vgEtaVCoeffs0.first().value()

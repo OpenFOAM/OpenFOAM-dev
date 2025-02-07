@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -295,8 +295,7 @@ inline typename Op::result quadOp
     const FixedList<Point, 4>& p
 )
 {
-    static const FixedList<FixedList<label, 3>, 2> i =
-        {{0, 1, 2}, {0, 2, 3}};
+    static const Pair<FixedList<label, 3>> i = {{0, 1, 2}, {0, 2, 3}};
     return
         Op(triReorder(opData, i[0]))(triReorder(p, i[0]))
       + Op(triReorder(opData, i[1]))(triReorder(p, i[1]));
@@ -311,7 +310,7 @@ inline typename Op::result triCutQuad
 (
     const Op& op,
     const FixedList<Point, 3>& p,
-    const FixedList<scalar, 2>& f
+    const Pair<scalar>& f
 )
 {
     return quadOp<Op>(triCutQuad(op, f), triCutQuad(p, f));

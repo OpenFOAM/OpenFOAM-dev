@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -468,7 +468,7 @@ int main(int argc, char *argv[])
     // Keywords for the two patch entries in each selector dictionary. Note
     // "owner" and "neighbour" are preferred; "master" and "slave" are still
     // permitted for backwards compatibility.
-    const FixedList<wordList, 2> patchEntryKeywords
+    const Pair<wordList> patchEntryKeywords
     ({
         wordList({"owner", "master"}),
         wordList({"neighbour", "slave"})
@@ -609,7 +609,7 @@ int main(int argc, char *argv[])
             const dictionary& dict =
                 selectors[selectorI].dict().optionalSubDict("patches");
 
-            FixedList<label, 2> newPatchIDs;
+            labelPair newPatchIDs;
             forAll(patchEntryKeywords, i)
             {
                 const dictionary& patchDict =

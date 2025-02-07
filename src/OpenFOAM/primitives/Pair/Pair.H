@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::Pair
 
 Description
-    An ordered pair of two objects of type \<T\> with first() and second()
+    An ordered pair of two objects of type \<Type\> with first() and second()
     elements.
 
 See also
@@ -36,7 +36,7 @@ See also
 #ifndef Pair_H
 #define Pair_H
 
-#include "FixedList.H"
+#include "Hash.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -64,206 +64,163 @@ inline Ostream& operator<<(Ostream&, const Pair<Type>&);
 
 template<class Type>
 class Pair
-:
-    public FixedList<Type, 2>
 {
+    // Private Data
+
+        //- First object
+        Type f_;
+
+        //- Second object
+        Type s_;
+
 
 public:
+
+    // Public Sub-Classes
+
+        //- Hashing function class
+        template<class HashT=Hash<Type>>
+        class Hash
+        {
+        public:
+
+            // Constructors
+
+                //- Null constructor
+                inline Hash();
+
+
+            // Member Operators
+
+                //- Hash a pair
+                inline unsigned operator()
+                (
+                    const Pair<Type>& p,
+                    unsigned seed = 0
+                ) const;
+        };
+
+
+    // Static Member Functions
+
+        //- Return a null pair
+        static inline const Pair<Type>& null();
+
+        //- Return the size
+        static inline label size();
+
+        //- Check index i is within valid range (0 ... 1)
+        static inline void checkIndex(const label i);
+
+        //- Compare two pairs. Return 0 if they are different, +1 if they are
+        //  identical, and -1 if the elements are the same but reversed.
+        static inline int compare(const Pair<Type>& a, const Pair<Type>& b);
+
 
     // Constructors
 
         //- Null constructor
-        inline Pair()
-        {}
+        inline Pair();
 
         //- Construct from components
-        inline Pair(const Type& f, const Type& s)
-        {
-            first() = f;
-            second() = s;
-        }
-
-        //- Construct from FixedList
-        inline Pair(const FixedList<Type, 2>& fl)
-        :
-            FixedList<Type, 2>(fl)
-        {}
+        inline Pair(const Type& f, const Type& s);
 
         //- Construct from Istream
-        inline Pair(Istream& is)
-        {
-            is >> *this;
-        }
+        inline Pair(Istream& is);
 
 
     // Member Functions
 
         //- Return first
-        inline const Type& first() const
-        {
-            return this->operator[](0);
-        }
+        inline const Type& first() const;
 
         //- Return first
-        inline Type& first()
-        {
-            return this->operator[](0);
-        }
+        inline Type& first();
 
         //- Return second
-        inline const Type& second() const
-        {
-            return this->operator[](1);
-        }
+        inline const Type& second() const;
 
         //- Return second
-        inline Type& second()
-        {
-            return this->operator[](1);
-        }
+        inline Type& second();
 
         //- Return other
-        inline const Type& other(const Type& a) const
-        {
-            if (first() == second())
-            {
-                FatalErrorInFunction
-                    << "Call to other only valid for Pair with differing"
-                    << " elements:" << *this << abort(FatalError);
-                return first();
-            }
-            else if (first() == a)
-            {
-                return second();
-            }
-            else
-            {
-                if (second() != a)
-                {
-                    FatalErrorInFunction
-                        << "Pair " << *this
-                        << " does not contain " << a << abort(FatalError);
-                }
-                return first();
-            }
-        }
+        inline const Type& other(const Type& a) const;
 
 
-        //- Compare Pairs
-        //  Returning:
-        //  -  0: different
-        //  - +1: identical
-        //  - -1: same pair, but reversed order
-        static inline int compare(const Pair<Type>& a, const Pair<Type>& b)
-        {
-            if (a == b)
-            {
-                return 1;
-            }
-            else if (a == reverse(b))
-            {
-                return -1;
-            }
-            else
-            {
-                return 0;
-            }
-        }
+    // Member Operators
+
+        //- Access an element by index
+        inline Type& operator[](const label i);
+
+        //- Const-access an element by index
+        inline const Type& operator[](const label i) const;
+
+
+    // STL type definitions
+
+        //- Type of values the pair contains
+        typedef Type value_type;
+
+        //- Type that can be used for storing into
+        //  pair::value_type objects
+        typedef Type& reference;
+
+        //- Type that can be used for storing into
+        //  constant pair::value_type objects
+        typedef const Type& const_reference;
 };
 
 
+// Global Functions
+
+//- Reverse the elements in a pair
 template<class Type>
-Pair<Type> reverse(const Pair<Type>& p)
-{
-    return Pair<Type>(p.second(), p.first());
-}
+inline Pair<Type> reverse(const Pair<Type>& p);
 
-
+//- Equality comparison
 template<class Type>
-bool operator==(const Pair<Type>& a, const Pair<Type>& b)
-{
-    return (a.first() == b.first() && a.second() == b.second());
-}
+inline bool operator==(const Pair<Type>& a, const Pair<Type>& b);
 
-
+//- Inequality comparison
 template<class Type>
-bool operator!=(const Pair<Type>& a, const Pair<Type>& b)
-{
-    return !(a == b);
-}
+inline bool operator!=(const Pair<Type>& a, const Pair<Type>& b);
 
-
+//- Compare lexographic order
 template<class Type>
-bool operator<(const Pair<Type>& a, const Pair<Type>& b)
-{
-    return
-    (
-        a.first() < b.first()
-     ||
-        (
-            !(b.first() < a.first())
-         && a.second() < b.second()
-        )
-    );
-}
+inline bool operator<(const Pair<Type>& a, const Pair<Type>& b);
 
-
+//- Compare lexographic order
 template<class Type>
-bool operator<=(const Pair<Type>& a, const Pair<Type>& b)
-{
-    return !(b < a);
-}
+inline bool operator<=(const Pair<Type>& a, const Pair<Type>& b);
 
-
+//- Compare lexographic order
 template<class Type>
-bool operator>(const Pair<Type>& a, const Pair<Type>& b)
-{
-    return (b < a);
-}
+inline bool operator>(const Pair<Type>& a, const Pair<Type>& b);
 
-
+//- Compare lexographic order
 template<class Type>
-bool operator>=(const Pair<Type>& a, const Pair<Type>& b)
-{
-    return !(a < b);
-}
+inline bool operator>=(const Pair<Type>& a, const Pair<Type>& b);
 
-
+//- Read a from a stream
 template<class Type>
-inline Istream& operator>>(Istream& is, Pair<Type>& p)
-{
-    is.readBegin("Pair");
-    is >> p.first() >> p.second();
-    is.readEnd("Pair");
+inline Istream& operator>>(Istream& is, Pair<Type>& p);
 
-    // Check state of Istream
-    is.check("operator>>(Istream&, Pair<Type>&)");
-
-    return is;
-}
-
-
+//- Write to a stream
 template<class Type>
-inline Ostream& operator<<(Ostream& os, const Pair<Type>& p)
-{
-    os  << token::BEGIN_LIST
-        << p.first() << token::SPACE << p.second()
-        << token::END_LIST;
+inline Ostream& operator<<(Ostream& os, const Pair<Type>& p);
 
-    return os;
-}
-
-
+//- Write as a dictionary entry
 template<class Type>
-void writeEntry(Ostream& os, const Pair<Type>& p)
-{
-    os << p;
-}
+inline void writeEntry(Ostream& os, const Pair<Type>& p);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "PairI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -208,7 +208,7 @@ void Foam::surfaceIntersection::storeIntersection
 
         // Combine two faces. Always make sure the face from the first surface
         // is element 0.
-        FixedList<label, 2> twoFaces;
+        labelPair twoFaces;
         if (isFirstSurf)
         {
             twoFaces[0] = faceA;

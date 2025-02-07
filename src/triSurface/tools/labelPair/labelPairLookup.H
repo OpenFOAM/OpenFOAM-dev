@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ Description
     Used for e.g. for face1, face2 to shared edge.
 
     Note:
-        The hash table is based on a FixedList and not edge, since an edge
+        The hash table is based on a Pair and not edge, since an edge
         hashes commutatively!
 
 \*---------------------------------------------------------------------------*/
@@ -37,7 +37,7 @@ Description
 #ifndef labelPairLookup_H
 #define labelPairLookup_H
 
-#include "FixedList.H"
+#include "labelPair.H"
 #include "HashTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -46,9 +46,9 @@ namespace Foam
 {
     typedef HashTable
     <
-       label,
-       FixedList<label, 2>,
-       FixedList<label, 2>::Hash<>
+        label,
+        labelPair,
+        labelPair::Hash<>
     > labelPairLookup;
 }
 

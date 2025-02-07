@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,8 +23,18 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "tmp.H"
 #include "error.H"
 #include <typeinfo>
+
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+template<class T>
+inline bool Foam::tmp<T>::isAnyTmp() const
+{
+    return type_ == REUSABLE_TMP || type_ == NON_RESUSABLE_TMP;
+}
+
 
 // * * * * * * * * * * * * * Private Member Operators  * * * * * * * * * * * //
 
@@ -141,13 +151,6 @@ inline Foam::tmp<T>::~tmp()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class T>
-inline bool Foam::tmp<T>::isAnyTmp() const
-{
-    return type_ == REUSABLE_TMP || type_ == NON_RESUSABLE_TMP;
-}
-
 
 template<class T>
 inline bool Foam::tmp<T>::isTmp() const
