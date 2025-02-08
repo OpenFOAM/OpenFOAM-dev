@@ -22,7 +22,7 @@ solvers
         nAlphaSubCycles 1;
 
         MULESCorr       yes;
-        nLimiterIter    5;
+        nLimiterIter    1;
         alphaApplyPrevCorr  yes;
 
         solver          smoothSolver;
@@ -56,7 +56,7 @@ solvers
 
         smoother        DIC;
 
-        tolerance       1e-7;
+        tolerance       1e-8;
         relTol          0.01;
     };
 

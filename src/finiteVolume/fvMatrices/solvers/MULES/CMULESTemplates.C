@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -246,6 +246,13 @@ void Foam::MULES::limiterCorr
         max(boundaryExtremaCoeff - extremaCoeff, 0)
     );
 
+    const scalar tol
+    (
+        nLimiterIter == 1
+      ? 0
+      : MULEScontrols.lookupOrDefault<scalar>("MULEStolerance", 0)
+    );
+
     const labelUList& owner = mesh.owner();
     const labelUList& neighb = mesh.neighbour();
     tmp<volScalarField::Internal> tVsc = mesh.Vsc();
@@ -262,14 +269,18 @@ void Foam::MULES::limiterCorr
     surfaceScalarField::Boundary& lambdaBf =
         lambda.boundaryFieldRef();
 
-    scalarField psiMaxn(psiIf.size());
-    scalarField psiMinn(psiIf.size());
-
-    psiMaxn = psiMin;
-    psiMinn = psiMax;
+    scalarField psiMaxn(psiIf.size(), psiMin);
+    scalarField psiMinn(psiIf.size(), psiMax);
 
     scalarField sumPhip(psiIf.size(), 0.0);
     scalarField mSumPhim(psiIf.size(), 0.0);
+
+    scalarField phiCorrNorm;
+
+    if (tol != 0)
+    {
+        phiCorrNorm = (V*rho.primitiveField()*rDeltaT);
+    }
 
     forAll(phiCorrIf, facei)
     {
@@ -401,6 +412,8 @@ void Foam::MULES::limiterCorr
 
     for (int j=0; j<nLimiterIter; j++)
     {
+        scalar maxDeltaLambdaPhiCorrRes = 0;
+
         sumlPhip = 0;
         mSumlPhim = 0;
 
@@ -447,23 +460,45 @@ void Foam::MULES::limiterCorr
             }
         }
 
-        forAll(sumlPhip, celli)
+        if (nLimiterIter == 1)
         {
-            sumlPhip[celli] =
-                max(min
-                (
-                    (sumlPhip[celli] + psiMaxn[celli])
-                   /(mSumPhim[celli] + rootVSmall),
-                    1.0), 0.0
-                );
+            forAll(sumlPhip, celli)
+            {
+                sumlPhip[celli] =
+                    max(min
+                    (
+                        psiMaxn[celli]/(mSumPhim[celli] + rootVSmall),
+                        1.0), 0.0
+                    );
 
-            mSumlPhim[celli] =
-                max(min
-                (
-                    (mSumlPhim[celli] + psiMinn[celli])
-                   /(sumPhip[celli] + rootVSmall),
-                    1.0), 0.0
-                );
+                mSumlPhim[celli] =
+                    max(min
+                    (
+                        psiMinn[celli]/(sumPhip[celli] + rootVSmall),
+                        1.0), 0.0
+                    );
+            }
+        }
+        else
+        {
+            forAll(sumlPhip, celli)
+            {
+                sumlPhip[celli] =
+                    max(min
+                    (
+                        (sumlPhip[celli] + psiMaxn[celli])
+                       /(mSumPhim[celli] + rootVSmall),
+                        1.0), 0.0
+                    );
+
+                mSumlPhim[celli] =
+                    max(min
+                    (
+                        (mSumlPhim[celli] + psiMinn[celli])
+                       /(sumPhip[celli] + rootVSmall),
+                        1.0), 0.0
+                    );
+            }
         }
 
         const scalarField& lambdam = sumlPhip;
@@ -471,6 +506,8 @@ void Foam::MULES::limiterCorr
 
         forAll(lambdaIf, facei)
         {
+            const scalar lambdaIf0 = lambdaIf[facei];
+
             if (phiCorrIf[facei] > 0)
             {
                 lambdaIf[facei] = min
@@ -486,6 +523,22 @@ void Foam::MULES::limiterCorr
                     lambdaIf[facei],
                     min(lambdam[owner[facei]], lambdap[neighb[facei]])
                 );
+            }
+
+            if (tol > 0)
+            {
+                const scalar phiCorrRes =
+                    mag(phiCorrIf[facei])
+                   /min(phiCorrNorm[owner[facei]], phiCorrNorm[neighb[facei]]);
+
+                if (phiCorrRes > tol)
+                {
+                    maxDeltaLambdaPhiCorrRes = max
+                    (
+                        maxDeltaLambdaPhiCorrRes,
+                        (lambdaIf0 - lambdaIf[facei])*phiCorrRes
+                    );
+                }
             }
         }
 
@@ -509,6 +562,8 @@ void Foam::MULES::limiterCorr
                 {
                     const label pfCelli = pFaceCells[pFacei];
 
+                    const scalar lambdaPf0 = lambdaPf[pFacei];
+
                     if (phiCorrfPf[pFacei] > 0)
                     {
                         lambdaPf[pFacei] =
@@ -518,6 +573,21 @@ void Foam::MULES::limiterCorr
                     {
                         lambdaPf[pFacei] =
                             min(lambdaPf[pFacei], lambdam[pfCelli]);
+                    }
+
+                    if (tol > 0)
+                    {
+                        const scalar phiCorrRes =
+                            mag(phiCorrfPf[pFacei])/phiCorrNorm[pfCelli];
+
+                        if (phiCorrRes > tol)
+                        {
+                            maxDeltaLambdaPhiCorrRes = max
+                            (
+                                maxDeltaLambdaPhiCorrRes,
+                                (lambdaPf0 - lambdaPf[pFacei])*phiCorrRes
+                            );
+                        }
                     }
                 }
             }
@@ -534,6 +604,8 @@ void Foam::MULES::limiterCorr
                     {
                         const label pfCelli = pFaceCells[pFacei];
 
+                        const scalar lambdaPf0 = lambdaPf[pFacei];
+
                         if (phiCorrfPf[pFacei] > 0)
                         {
                             lambdaPf[pFacei] =
@@ -543,6 +615,21 @@ void Foam::MULES::limiterCorr
                         {
                             lambdaPf[pFacei] =
                                 min(lambdaPf[pFacei], lambdam[pfCelli]);
+                        }
+
+                        if (tol > 0)
+                        {
+                            const scalar phiCorrRes =
+                                mag(phiCorrfPf[pFacei])/phiCorrNorm[pfCelli];
+
+                            if (phiCorrRes > tol)
+                            {
+                                maxDeltaLambdaPhiCorrRes = max
+                                (
+                                    maxDeltaLambdaPhiCorrRes,
+                                    (lambdaPf0 - lambdaPf[pFacei])*phiCorrRes
+                                );
+                            }
                         }
                     }
                 }
@@ -563,6 +650,19 @@ void Foam::MULES::limiterCorr
             {
                 lambdaPf = min(lambdaPf, lambdaNbrPf);
             }
+        }
+
+        if (tol != 0)
+        {
+            reduce(maxDeltaLambdaPhiCorrRes, maxOp<scalar>());
+
+            if (debug)
+            {
+                Info<< "MULES: maxDeltaLambdaPhiCorrRes "
+                    << maxDeltaLambdaPhiCorrRes << endl;
+            }
+
+            if (maxDeltaLambdaPhiCorrRes < tol) break;
         }
     }
 }
