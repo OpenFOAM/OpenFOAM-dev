@@ -372,12 +372,12 @@ inline void Foam::tmp<T>::operator=(const tmp<T>& t)
 
     if (t.isAnyTmp())
     {
-        // if (!t.ptr_)
-        // {
-        //     FatalErrorInFunction
-        //         << "Attempted assignment to a deallocated " << typeName()
-        //         << abort(FatalError);
-        // }
+        if (!t.ptr_)
+        {
+            FatalErrorInFunction
+                << "Attempted assignment to a deallocated " << typeName()
+                << abort(FatalError);
+        }
 
         type_ = t.type_;
         ptr_ = t.ptr_;
