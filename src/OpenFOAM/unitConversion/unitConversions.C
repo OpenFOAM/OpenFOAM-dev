@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,17 +80,66 @@ deleteUnitsPtr deleteUnitsPtr_;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-const Foam::unitConversion Foam::unitless(dimless, 0, 0, 1);
+namespace Foam
+{
 
-const Foam::unitConversion Foam::unitAny(dimless, 0, 0, 0);
-const Foam::unitConversion Foam::unitNone(dimless, 0, 0, -1);
+dimensionSet makeDimless()
+{
+    return dimensionSet(0, 0, 0, 0, 0);
+}
 
-const Foam::unitConversion Foam::unitFraction(dimless, 1, 0, 1);
-const Foam::unitConversion Foam::unitPercent(dimless, 1, 0, 0.01);
+unitConversion makeUnitless()
+{
+    return unitConversion(makeDimless(), 0, 0, 1);
+}
 
-const Foam::unitConversion Foam::unitRadians(dimless, 0, 1, 1);
-const Foam::unitConversion Foam::unitRotations(dimless, 0, 1, 2*pi);
-const Foam::unitConversion Foam::unitDegrees(dimless, 0, 1, pi/180);
+unitConversion makeUnitAny()
+{
+    return unitConversion(makeDimless(), 0, 0, 0);
+}
+unitConversion makeUnitNone()
+{
+    return unitConversion(makeDimless(), 0, 0, -1);
+}
+
+unitConversion makeUnitFraction()
+{
+    return unitConversion(makeDimless(), 1, 0, 1);
+}
+unitConversion makeUnitPercent()
+{
+    return unitConversion(makeDimless(), 1, 0, 0.01);
+}
+
+unitConversion makeUnitRadians()
+{
+    return unitConversion(makeDimless(), 0, 1, 1);
+}
+unitConversion makeUnitRotations()
+{
+    return unitConversion(makeDimless(), 0, 1, 2*pi);
+}
+unitConversion makeUnitDegrees()
+{
+    return unitConversion(makeDimless(), 0, 1, pi/180);
+}
+
+}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+const Foam::unitConversion Foam::unitless(makeUnitless());
+
+const Foam::unitConversion Foam::unitAny(makeUnitAny());
+const Foam::unitConversion Foam::unitNone(makeUnitNone());
+
+const Foam::unitConversion Foam::unitFraction(makeUnitFraction());
+const Foam::unitConversion Foam::unitPercent(makeUnitPercent());
+
+const Foam::unitConversion Foam::unitRadians(makeUnitRadians());
+const Foam::unitConversion Foam::unitRotations(makeUnitRotations());
+const Foam::unitConversion Foam::unitDegrees(makeUnitDegrees());
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -128,11 +177,11 @@ const Foam::HashTable<Foam::unitConversion>& Foam::units()
     {
         unitsPtr_ = new HashTable<unitConversion>();
 
-        unitsPtr_->insert("%", unitPercent);
+        unitsPtr_->insert("%", makeUnitPercent());
 
-        unitsPtr_->insert("rad", unitRadians);
-        unitsPtr_->insert("rot", unitRotations);
-        unitsPtr_->insert("deg", unitDegrees);
+        unitsPtr_->insert("rad", makeUnitRadians());
+        unitsPtr_->insert("rot", makeUnitRotations());
+        unitsPtr_->insert("deg", makeUnitDegrees());
 
         // Get the relevant part of the control dictionary
         const dictionary& unitSetDict =
