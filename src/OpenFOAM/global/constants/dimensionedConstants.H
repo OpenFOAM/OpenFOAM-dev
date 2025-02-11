@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,6 @@ SourceFiles
 #ifndef dimensionedConstants_H
 #define dimensionedConstants_H
 
-#include "dictionary.H"
 #include "dimensionedScalar.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -49,8 +48,8 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dictionary& dimensionedConstants();
-
+//- Construct and return a constant by looking up from the DimensionedConstants
+//  sub-dictionary of controlDict
 dimensionedScalar dimensionedConstant
 (
     const char* const group,
@@ -58,13 +57,45 @@ dimensionedScalar dimensionedConstant
     const dimensionSet& dimensions
 );
 
+//- Construct a dimensioned constant with a given value and insert into the
+//  DimensionedConstants sub-dictionary of controlDict
 dimensionedScalar dimensionedConstant
 (
     const char* const group,
     const char* name,
-    const dimensionedScalar& defaultValue
+    const dimensionedScalar& value
 );
 
+//- Construct a dimensioned constant with a given value and insert into the
+//  DimensionedConstants sub-dictionary of controlDict with a different name
+dimensionedScalar dimensionedConstant
+(
+    const char* const group,
+    const char* entryName,
+    const char* codeName,
+    const dimensionedScalar& value
+);
+
+//- Construct a dimensioned constant with given units and value and insert into
+//  the DimensionedConstants sub-dictionary of controlDict
+dimensionedScalar dimensionedConstant
+(
+    const char* const group,
+    const char* name,
+    const unitConversion& units,
+    const scalar value
+);
+
+//- Construct a dimensioned constant with given units and value and insert into
+//  the DimensionedConstants sub-dictionary of controlDict with a different name
+dimensionedScalar dimensionedConstant
+(
+    const char* const group,
+    const char* entryName,
+    const char* codeName,
+    const unitConversion& units,
+    const scalar value
+);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

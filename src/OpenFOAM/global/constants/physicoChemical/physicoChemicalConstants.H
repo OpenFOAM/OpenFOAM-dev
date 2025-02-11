@@ -48,17 +48,17 @@ namespace physicoChemical
     //- Group name for physico-chemical constants
     extern const char* const group;
 
-    //- Universal gas constant: default SI units: [J/kmol/K]
-    extern const dimensionedScalar RR;
-
     //- Universal gas constant: default SI units: [J/mol/K]
     extern const dimensionedScalar R;
 
-    //- Faraday constant: default SI units: [C/kmol]
-    extern const dimensionedScalar FF;
+    //- Universal gas constant: default SI units: [J/kmol/K]
+    extern const dimensionedScalar RR;
 
     //- Faraday constant: default SI units: [C/mol]
     extern const dimensionedScalar F;
+
+    //- Faraday constant: default SI units: [C/kmol]
+    extern const dimensionedScalar FF;
 
     //- Stefan-Boltzmann constant: default SI units: [W/m^2/K^4]
     extern const dimensionedScalar sigma;

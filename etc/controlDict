@@ -93,89 +93,9 @@ DebugSwitches
 }
 
 
-DimensionedConstants
-{
-    unitSet             SI; // USCS
-
-    SICoeffs
-    {
-        universal
-        {
-            c       [0 1 -1 0 0 0 0]    2.99792e+08;
-            G       [-1 3 -2 0 0 0 0]   6.67429e-11;
-            h       [1 2 -1 0 0 0 0]    6.62607e-34;
-        }
-
-        electromagnetic
-        {
-            e       [0 0 1 0 0 1 0]     1.60218e-19;
-        }
-
-        atomic
-        {
-            me      [1 0 0 0 0 0 0]     9.10938e-31;
-            mp      [1 0 0 0 0 0 0]     1.67262e-27;
-        }
-
-        physicoChemical
-        {
-            mu      [1 0 0 0 0 0 0]     1.66054e-27;
-            NNA     [0 0 0 0 -1 0 0]    6.02214e+26;
-            k       [1 2 -2 -1 0 0 0]   1.38065e-23;
-        }
-
-        standard
-        {
-            //- Standard pressure [Pa]
-            Pstd    [1 -1 -2 0 0 0 0]   1e5;
-
-            //- Standard temperature [K]
-            Tstd    [0 0 0 1 0 0 0]     298.15;
-        }
-    }
-
-    USCSCoeffs
-    {
-        universal
-        {
-            c       [0 1 -1 0 0 0 0]    9.83558e+08;
-            G       [-1 3 -2 0 0 0 0]   1.06909e-09;
-            h       [1 2 -1 0 0 0 0]    1.57234e-32;
-        }
-
-        electromagnetic
-        {
-            e       [0 0 1 0 0 1 0]     1.60218e-19;
-        }
-
-        atomic
-        {
-            me      [1 0 0 0 0 0 0]     2.00825e-30;
-            mp      [1 0 0 0 0 0 0]     3.68746e-27;
-        }
-
-        physicoChemical
-        {
-            mu      [1 0 0 0 0 0 0]     3.66083e-27;
-            NNA     [0 0 0 0 -1 0 0]    6.02214e+26;
-            k       [1 2 -2 -1 0 0 0]   1.82012e-22;
-        }
-
-        standard
-        {
-            //- Standard pressure [lbm/ft^2]
-            Pstd    [1 -1 -2 0 0 0 0]   2088.6;
-
-            //- Standard temperature [degR]
-            Tstd    [0 0 0 1 0 0 0]     536.67;
-        }
-    }
-}
-
-
 UnitConversions
 {
-    unitSet             SI; // USCS
+    unitSet             SI;
 
     SICoeffs
     {
@@ -228,9 +148,39 @@ UnitConversions
         ft          [0 1 0 0 0 0 0]     1;
         s           [0 0 1 0 0 0 0]     1;
         R           [0 0 0 1 0 0 0]     1;
-        kmol        [0 0 0 0 1 0 0]     1;
+        lbmol       [0 0 0 0 1 0 0]     1;
         A           [0 0 0 0 0 1 0]     1;
         Cd          [0 0 0 0 0 0 1]     1;
+
+        // Derived units
+        Hz          [s^-1]              1;
+        pdl         [lb ft s^-2]        1;
+
+        // Scaled units
+        us          [s]                 1e-6;
+        ms          [s]                 1e-3;
+        min         [s]                 60;
+        hr          [s]                 3600;
+
+        // Derived scaled units
+        rpm         [rot/min]           1;
+        lbf         [pdl]               32.174049;
+
+        // (conversions to SI needed for constants)
+        kg          [lb]                2.2046226218487757;
+        m           [ft]                3.280839895013123;
+        K           [R]                 1.8;
+        mol         [lbmol]             2.2046226218487757e-3;
+    }
+}
+
+
+DimensionedConstants
+{
+    standard
+    {
+        Pstd    1e5 [kg m^-1 s^-2];
+        Tstd    298.15 [K];
     }
 }
 

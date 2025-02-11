@@ -72,11 +72,11 @@ namespace physicoChemical
     //- Atomic mass unit
     extern const dimensionedScalar mu;
 
-    //- Avagadro number: default SI units: [1/kmol]
-    extern const dimensionedScalar NNA;
-
     //- Avagadro number: default SI units: [1/mol]
     extern const dimensionedScalar NA;
+
+    //- Avagadro number: default SI units: [1/kmol]
+    extern const dimensionedScalar NNA;
 
     //- Boltzmann constant
     extern const dimensionedScalar k;

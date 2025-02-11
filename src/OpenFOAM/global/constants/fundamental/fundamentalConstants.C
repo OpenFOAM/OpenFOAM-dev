@@ -50,17 +50,35 @@ namespace constant
 
 const Foam::dimensionedScalar universal::c
 (
-    dimensionedConstant(universal::group, "c", dimensionSet(0, 1, -1, 0, 0))
+    dimensionedConstant
+    (
+        universal::group,
+        "c",
+        units()["m"]/units()["s"],
+        2.99792e+08
+    )
 );
 
 const Foam::dimensionedScalar universal::G
 (
-    dimensionedConstant(universal::group, "G", dimensionSet(-1, 3, -2, 0, 0))
+    dimensionedConstant
+    (
+        universal::group,
+        "G",
+        pow(units()["m"], 3)/units()["kg"]/pow(units()["s"], 2),
+        6.67429e-11
+    )
 );
 
 const Foam::dimensionedScalar universal::h
 (
-    dimensionedConstant(universal::group, "h", dimensionSet(1, 2, -1, 0, 0))
+    dimensionedConstant
+    (
+        universal::group,
+        "h",
+        units()["kg"]*pow(units()["m"], 2)/units()["s"],
+        6.62607e-34
+    )
 );
 
 
@@ -72,7 +90,8 @@ const Foam::dimensionedScalar electromagnetic::e
     (
         electromagnetic::group,
         "e",
-        dimensionSet(0, 0, 1, 0, 0, 1, 0)
+        units()["A"]*units()["s"],
+        1.60218e-19
     )
 );
 
@@ -81,12 +100,24 @@ const Foam::dimensionedScalar electromagnetic::e
 
 const Foam::dimensionedScalar atomic::me
 (
-    dimensionedConstant(atomic::group, "me", dimensionSet(1, 0, 0, 0, 0))
+    dimensionedConstant
+    (
+        atomic::group,
+        "me",
+        units()["kg"],
+        9.10938e-31
+    )
 );
 
 const Foam::dimensionedScalar atomic::mp
 (
-    dimensionedConstant(atomic::group, "mp", dimensionSet(1, 0, 0, 0, 0))
+    dimensionedConstant
+    (
+        atomic::group,
+        "mp",
+        units()["kg"],
+        1.67262e-27
+    )
 );
 
 
@@ -98,8 +129,14 @@ const Foam::dimensionedScalar physicoChemical::mu
     (
         physicoChemical::group,
         "mu",
-        dimensionSet(1, 0, 0, 0, 0)
+        units()["kg"],
+        1.66054e-27
     )
+);
+
+const Foam::dimensionedScalar physicoChemical::NA
+(
+    dimensionedScalar("NA", dimensionSet(0, 0, 0, 0, -1), 6.02214e+23)
 );
 
 const Foam::dimensionedScalar physicoChemical::NNA
@@ -107,19 +144,10 @@ const Foam::dimensionedScalar physicoChemical::NNA
     dimensionedConstant
     (
         physicoChemical::group,
-        "NNA",
-        dimensionSet(0, 0, 0, 0, -1)
-    )
-);
-
-const Foam::dimensionedScalar physicoChemical::NA
-(
-    dimensionedConstant
-    (
-        physicoChemical::group,
         "NA",
-        (dimensionSet(0, 0, 0, 0, 0)/units()["mol"])
-       .toUser(physicoChemical::NNA)
+        "NNA",
+        pow(units()["mol"], -1),
+        NA.value()
     )
 );
 
@@ -129,7 +157,8 @@ const Foam::dimensionedScalar physicoChemical::k
     (
         physicoChemical::group,
         "k",
-        dimensionSet(1, 2, -2, -1, 0)
+        units()["kg"]*pow(units()["m"], 2)/pow(units()["s"], 2)/units()["K"],
+        1.38065e-23
     )
 );
 
@@ -138,12 +167,22 @@ const Foam::dimensionedScalar physicoChemical::k
 
 const Foam::dimensionedScalar standard::Pstd
 (
-    dimensionedConstant(standard::group, "Pstd", dimensionSet(1, -1, -2, 0, 0))
+    dimensionedConstant
+    (
+        standard::group,
+        "Pstd",
+        dimensionSet(1, -1, -2, 0, 0)
+    )
 );
 
 const Foam::dimensionedScalar standard::Tstd
 (
-    dimensionedConstant(standard::group, "Tstd", dimensionSet(0, 0, 0, 1, 0))
+    dimensionedConstant
+    (
+        standard::group,
+        "Tstd",
+        dimensionSet(0, 0, 0, 1, 0)
+    )
 );
 
 

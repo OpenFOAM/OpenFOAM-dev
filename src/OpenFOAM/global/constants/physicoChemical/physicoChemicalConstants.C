@@ -41,24 +41,34 @@ const char* const physicoChemical::group = "physicoChemical";
 
 // Note: cannot use dimless etc. as they may not have been constructed yet
 
+const Foam::dimensionedScalar physicoChemical::R
+(
+    dimensionedScalar
+    (
+        "R",
+        physicoChemical::NA*physicoChemical::k
+    )
+);
+
+
 const Foam::dimensionedScalar physicoChemical::RR
 (
     dimensionedConstant
     (
         physicoChemical::group,
+        "R",
         "RR",
         physicoChemical::NNA*physicoChemical::k
     )
 );
 
 
-const Foam::dimensionedScalar physicoChemical::R
+const Foam::dimensionedScalar physicoChemical::F
 (
-    dimensionedConstant
+    dimensionedScalar
     (
-        physicoChemical::group,
-        "R",
-        physicoChemical::NA*physicoChemical::k
+        "F",
+        physicoChemical::NA*electromagnetic::e
     )
 );
 
@@ -68,19 +78,9 @@ const Foam::dimensionedScalar physicoChemical::FF
     dimensionedConstant
     (
         physicoChemical::group,
+        "F",
         "FF",
         physicoChemical::NNA*electromagnetic::e
-    )
-);
-
-
-const Foam::dimensionedScalar physicoChemical::F
-(
-    dimensionedConstant
-    (
-        physicoChemical::group,
-        "F",
-        physicoChemical::NA*electromagnetic::e
     )
 );
 
