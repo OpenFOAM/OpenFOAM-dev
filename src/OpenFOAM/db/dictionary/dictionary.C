@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -341,7 +341,7 @@ Foam::dictionary::dictionary(const fileName& name)
 
 Foam::dictionary::dictionary
 (
-    const word& name,
+    const fileName& name,
     const dictionary& parentDict
 )
 :

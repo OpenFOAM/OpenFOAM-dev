@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,7 @@ void Foam::GeometricField<Type, GeoMesh, PrimitiveField>::readFields
     }
     else
     {
-        sources_.readField(*this, dictionary(dict, dictionary()));
+        sources_.readField(*this, dictionary(dict.name()/"sources", dict));
     }
 
     if (dict.found("referenceLevel"))
