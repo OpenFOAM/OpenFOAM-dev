@@ -15,5 +15,13 @@ FoamFile
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #includeFunc mag(U)
+#includeFunc graphCell
+(
+    name=graph,
+    start=(-1e6 0 0),
+    end=(1e6 0 0),
+    axis=x,
+    fields=(T mag(U) p)
+)
 
 // ************************************************************************* //

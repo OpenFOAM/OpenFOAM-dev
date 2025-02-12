@@ -6,44 +6,23 @@ then
     exit 1
 fi
 
-time=$(foamListTimes -latestTime)
-
-graphFile=postProcessing/sample/$time/data.xy
+graphFile=postProcessing/graph/$(foamListTimes -latestTime)/line.xy
 
 gnuplot<<EOF
-    set terminal postscript eps color enhanced font "Helvetica,20"
-    set output 'T.eps'
+    set terminal postscript eps color enhanced font "Helvetica,20" size 5,5
+    set output 'graphs.eps'
 
-    set xlabel 'l (m)'
-    set ylabel 'T (K)'
-    set ytics nomirror
-    set key center
+    set multiplot layout 3,1
 
-    plot "$graphFile" u 1:2 w l t 'T'
-EOF
+    set ylabel 'Temperature [K]'
+    plot [][225:425] "$graphFile" u 1:2 w l t ''
 
-gnuplot<<EOF
-    set terminal postscript eps color enhanced font "Helvetica,20"
-    set output 'U.eps'
+    set ylabel 'Velocity [m/s]'
+    plot [][-50:350] "$graphFile" u 1:3 w l t ''
 
-    set xlabel 'l (m)'
-    set ylabel 'T (K)'
-    set ytics nomirror
-    set key center
-
-    plot "$graphFile" u 1:3 w l t 'U'
-EOF
-
-gnuplot<<EOF
-    set terminal postscript eps color enhanced font "Helvetica,20"
-    set output 'p.eps'
-
-    set xlabel 'l (m)'
-    set ylabel 'p (Pa)'
-    set ytics nomirror
-    set key center
-
-    plot "$graphFile" u 1:4 w l t 'p'
+    set xlabel 'Position [m]'
+    set ylabel 'Pressure [kPa]'
+    plot [][-10:110] "$graphFile" u 1:(\$4/1e3) w l t ''
 EOF
 
 #------------------------------------------------------------------------------
