@@ -20,14 +20,6 @@ solvers
     {
         nAlphaCorr      1;
         nAlphaSubCycles 2;
-
-        MULESCorr       no;
-        nLimiterIter    5;
-
-        solver          smoothSolver;
-        smoother        symGaussSeidel;
-        tolerance       1e-8;
-        relTol          0;
     }
 
     "pcorr.*"
@@ -36,11 +28,11 @@ solvers
         preconditioner
         {
             preconditioner  GAMG;
-            tolerance       1e-05;
+            tolerance       1e-5;
             relTol          0;
             smoother        DICGaussSeidel;
         }
-        tolerance       1e-05;
+        tolerance       1e-5;
         relTol          0;
         maxIter         100;
     }
@@ -79,7 +71,7 @@ solvers
     {
         solver          PBiCGStab;
         preconditioner  DILU;
-        tolerance       1e-06;
+        tolerance       1e-6;
         relTol          0;
         nSweeps         1;
     }
@@ -88,7 +80,7 @@ solvers
     {
         solver          PBiCGStab;
         preconditioner  DILU;
-        tolerance       1e-08;
+        tolerance       1e-8;
         relTol          0;
     }
 }

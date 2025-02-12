@@ -23,7 +23,7 @@ solvers
 
         MULESCorr       yes;
         nLimiterIter    10;
-        MULEStolerance  1e-3;
+        MULEStolerance  1e-2;
 
         solver          smoothSolver;
         smoother        symGaussSeidel;

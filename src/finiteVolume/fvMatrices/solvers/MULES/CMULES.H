@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,7 +94,7 @@ void correct
 (
     const RhoType& rho,
     volScalarField& psi,
-    const surfaceScalarField& phi,
+    const surfaceScalarField& phiBD,
     surfaceScalarField& phiCorr,
     const PsiMaxType& psiMax,
     const PsiMinType& psiMin
@@ -112,31 +112,8 @@ void correct
 (
     const RhoType& rho,
     volScalarField& psi,
-    const surfaceScalarField& phi,
+    const surfaceScalarField& phiBD,
     surfaceScalarField& phiCorr,
-    const SpType& Sp,
-    const SuType& Su,
-    const PsiMaxType& psiMax,
-    const PsiMinType& psiMin
-);
-
-template
-<
-    class RdeltaTType,
-    class RhoType,
-    class SpType,
-    class SuType,
-    class PsiMaxType,
-    class PsiMinType
->
-void limiterCorr
-(
-    surfaceScalarField& allLambda,
-    const RdeltaTType& rDeltaT,
-    const RhoType& rho,
-    const volScalarField& psi,
-    const surfaceScalarField& phi,
-    const surfaceScalarField& phiCorr,
     const SpType& Sp,
     const SuType& Su,
     const PsiMaxType& psiMax,
@@ -157,7 +134,7 @@ void limitCorr
     const RdeltaTType& rDeltaT,
     const RhoType& rho,
     const volScalarField& psi,
-    const surfaceScalarField& phi,
+    const surfaceScalarField& phiBD,
     surfaceScalarField& phiCorr,
     const SpType& Sp,
     const SuType& Su,

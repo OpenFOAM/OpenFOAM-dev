@@ -129,7 +129,6 @@ template
     class RdeltaTType,
     class RhoType,
     class SpType,
-    class SuType,
     class PsiMaxType,
     class PsiMinType
 >
@@ -139,10 +138,10 @@ void limiter
     const RdeltaTType& rDeltaT,
     const RhoType& rho,
     const volScalarField& psi,
-    const surfaceScalarField& phiBD,
+    const scalarField& SuCorr,
+    const surfaceScalarField& phi,
     const surfaceScalarField& phiCorr,
     const SpType& Sp,
-    const SuType& Su,
     const PsiMaxType& psiMax,
     const PsiMinType& psiMin
 );

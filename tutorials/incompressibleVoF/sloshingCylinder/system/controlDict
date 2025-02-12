@@ -18,7 +18,7 @@ application     foamRun;
 
 solver          incompressibleVoF;
 
-startFrom       latestTime;
+startFrom       startTime;
 
 startTime       0;
 
@@ -52,5 +52,10 @@ maxCo           2;
 maxAlphaCo      2;
 
 maxDeltaT       1;
+
+DebugSwitches
+{
+    MULES           1;
+}
 
 // ************************************************************************* //

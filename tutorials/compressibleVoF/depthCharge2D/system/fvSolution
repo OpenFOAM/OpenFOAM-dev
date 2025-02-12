@@ -19,15 +19,10 @@ solvers
     "alpha.water.*"
     {
         nAlphaCorr      1;
-        nAlphaSubCycles 2;
+        nAlphaSubCycles 3;
 
-        MULESCorr       no;
         nLimiterIter    5;
-
-        solver          smoothSolver;
-        smoother        symGaussSeidel;
-        tolerance       1e-8;
-        relTol          0;
+        MULEStolerance  1e-2;
     }
 
     ".*(rho|rhoFinal)"
@@ -41,11 +36,11 @@ solvers
         preconditioner
         {
             preconditioner  GAMG;
-            tolerance       1e-05;
+            tolerance       1e-5;
             relTol          0;
             smoother        DICGaussSeidel;
         }
-        tolerance       1e-05;
+        tolerance       1e-5;
         relTol          0;
         maxIter         100;
     }
@@ -53,8 +48,8 @@ solvers
     p_rgh
     {
         solver          GAMG;
-        tolerance       1e-07;
-        relTol          0.01;
+        tolerance       1e-8;
+        relTol          0;
         smoother        DIC;
     }
 
@@ -64,13 +59,13 @@ solvers
         preconditioner
         {
             preconditioner  GAMG;
-            tolerance       1e-07;
+            tolerance       1e-8;
             relTol          0;
             nVcycles        2;
             smoother        DICGaussSeidel;
             nPreSweeps      2;
         }
-        tolerance       1e-07;
+        tolerance       1e-8;
         relTol          0;
         maxIter         20;
     }
@@ -79,7 +74,7 @@ solvers
     {
         solver          PBiCGStab;
         preconditioner  DILU;
-        tolerance       1e-06;
+        tolerance       1e-6;
         relTol          0;
         nSweeps         1;
     }
@@ -88,7 +83,7 @@ solvers
     {
         solver          PBiCGStab;
         preconditioner  DILU;
-        tolerance       1e-08;
+        tolerance       1e-8;
         relTol          0;
     }
 }

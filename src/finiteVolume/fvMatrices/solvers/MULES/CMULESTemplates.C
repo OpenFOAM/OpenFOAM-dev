@@ -26,8 +26,6 @@ License
 #include "CMULES.H"
 #include "fvcSurfaceIntegrate.H"
 #include "localEulerDdtScheme.H"
-#include "slicedSurfaceFields.H"
-#include "wedgeFvPatch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -114,13 +112,13 @@ void Foam::MULES::correct
 (
     const RhoType& rho,
     volScalarField& psi,
-    const surfaceScalarField& phi,
+    const surfaceScalarField& phiBD,
     surfaceScalarField& phiCorr,
     const PsiMaxType& psiMax,
     const PsiMinType& psiMin
 )
 {
-    correct(rho, psi, phi, phiCorr, zeroField(), zeroField(), psiMax, psiMin);
+    correct(rho, psi, phiBD, phiCorr, zeroField(), zeroField(), psiMax, psiMin);
 }
 
 
@@ -136,7 +134,7 @@ void Foam::MULES::correct
 (
     const RhoType& rho,
     volScalarField& psi,
-    const surfaceScalarField& phi,
+    const surfaceScalarField& phiBD,
     surfaceScalarField& phiCorr,
     const SpType& Sp,
     const SuType& Su,
@@ -155,7 +153,7 @@ void Foam::MULES::correct
             rDeltaT,
             rho,
             psi,
-            phi,
+            phiBD,
             phiCorr,
             Sp,
             Su,
@@ -174,7 +172,7 @@ void Foam::MULES::correct
             rDeltaT,
             rho,
             psi,
-            phi,
+            phiBD,
             phiCorr,
             Sp,
             Su,
@@ -196,493 +194,12 @@ template
     class PsiMaxType,
     class PsiMinType
 >
-void Foam::MULES::limiterCorr
-(
-    surfaceScalarField& lambda,
-    const RdeltaTType& rDeltaT,
-    const RhoType& rho,
-    const volScalarField& psi,
-    const surfaceScalarField& phi,
-    const surfaceScalarField& phiCorr,
-    const SpType& Sp,
-    const SuType& Su,
-    const PsiMaxType& psiMax,
-    const PsiMinType& psiMin
-)
-{
-    const scalarField& psiIf = psi;
-    const volScalarField::Boundary& psiBf = psi.boundaryField();
-
-    const fvMesh& mesh = psi.mesh();
-
-    const dictionary& MULEScontrols = mesh.solution().solverDict(psi.name());
-
-    const label nLimiterIter
-    (
-        MULEScontrols.lookup<label>("nLimiterIter")
-    );
-
-    const scalar smoothLimiter
-    (
-        MULEScontrols.lookupOrDefault<scalar>("smoothLimiter", 0)
-    );
-
-    const scalar extremaCoeff
-    (
-        MULEScontrols.lookupOrDefault<scalar>("extremaCoeff", 0)
-    );
-
-    const scalar boundaryExtremaCoeff
-    (
-        MULEScontrols.lookupOrDefault<scalar>
-        (
-            "boundaryExtremaCoeff",
-            extremaCoeff
-        )
-    );
-
-    const scalar boundaryDeltaExtremaCoeff
-    (
-        max(boundaryExtremaCoeff - extremaCoeff, 0)
-    );
-
-    const scalar tol
-    (
-        nLimiterIter == 1
-      ? 0
-      : MULEScontrols.lookupOrDefault<scalar>("MULEStolerance", 0)
-    );
-
-    const labelUList& owner = mesh.owner();
-    const labelUList& neighb = mesh.neighbour();
-    tmp<volScalarField::Internal> tVsc = mesh.Vsc();
-    const scalarField& V = tVsc();
-
-    const surfaceScalarField::Boundary& phiBf =
-        phi.boundaryField();
-
-    const scalarField& phiCorrIf = phiCorr;
-    const surfaceScalarField::Boundary& phiCorrBf =
-        phiCorr.boundaryField();
-
-    scalarField& lambdaIf = lambda;
-    surfaceScalarField::Boundary& lambdaBf =
-        lambda.boundaryFieldRef();
-
-    scalarField psiMaxn(psiIf.size(), psiMin);
-    scalarField psiMinn(psiIf.size(), psiMax);
-
-    scalarField sumPhip(psiIf.size(), 0.0);
-    scalarField mSumPhim(psiIf.size(), 0.0);
-
-    scalarField phiCorrNorm;
-
-    if (tol != 0)
-    {
-        phiCorrNorm = (V*rho.primitiveField()*rDeltaT);
-    }
-
-    forAll(phiCorrIf, facei)
-    {
-        const label own = owner[facei];
-        const label nei = neighb[facei];
-
-        psiMaxn[own] = max(psiMaxn[own], psiIf[nei]);
-        psiMinn[own] = min(psiMinn[own], psiIf[nei]);
-
-        psiMaxn[nei] = max(psiMaxn[nei], psiIf[own]);
-        psiMinn[nei] = min(psiMinn[nei], psiIf[own]);
-
-        const scalar phiCorrf = phiCorrIf[facei];
-
-        if (phiCorrf > 0)
-        {
-            sumPhip[own] += phiCorrf;
-            mSumPhim[nei] += phiCorrf;
-        }
-        else
-        {
-            mSumPhim[own] -= phiCorrf;
-            sumPhip[nei] -= phiCorrf;
-        }
-    }
-
-    forAll(phiCorrBf, patchi)
-    {
-        const fvPatchScalarField& psiPf = psiBf[patchi];
-        const scalarField& phiCorrPf = phiCorrBf[patchi];
-
-        const labelList& pFaceCells = mesh.boundary()[patchi].faceCells();
-
-        if (psiPf.coupled())
-        {
-            const scalarField psiPNf(psiPf.patchNeighbourField());
-
-            forAll(phiCorrPf, pFacei)
-            {
-                label pfCelli = pFaceCells[pFacei];
-
-                psiMaxn[pfCelli] = max(psiMaxn[pfCelli], psiPNf[pFacei]);
-                psiMinn[pfCelli] = min(psiMinn[pfCelli], psiPNf[pFacei]);
-            }
-        }
-        else if (psiPf.fixesValue())
-        {
-            forAll(phiCorrPf, pFacei)
-            {
-                const label pfCelli = pFaceCells[pFacei];
-
-                psiMaxn[pfCelli] = max(psiMaxn[pfCelli], psiPf[pFacei]);
-                psiMinn[pfCelli] = min(psiMinn[pfCelli], psiPf[pFacei]);
-            }
-        }
-        else
-        {
-            // Add the optional additional allowed boundary extrema
-            if (boundaryDeltaExtremaCoeff > 0)
-            {
-                forAll(phiCorrPf, pFacei)
-                {
-                    const label pfCelli = pFaceCells[pFacei];
-
-                    const scalar extrema =
-                        boundaryDeltaExtremaCoeff
-                       *(psiMax[pfCelli] - psiMin[pfCelli]);
-
-                    psiMaxn[pfCelli] += extrema;
-                    psiMinn[pfCelli] -= extrema;
-                }
-            }
-        }
-
-        forAll(phiCorrPf, pFacei)
-        {
-            const label pfCelli = pFaceCells[pFacei];
-
-            const scalar phiCorrf = phiCorrPf[pFacei];
-
-            if (phiCorrf > 0)
-            {
-                sumPhip[pfCelli] += phiCorrf;
-            }
-            else
-            {
-                mSumPhim[pfCelli] -= phiCorrf;
-            }
-        }
-    }
-
-    if (extremaCoeff > 0)
-    {
-        psiMaxn = min(psiMaxn + extremaCoeff*(psiMax - psiMin), psiMax);
-        psiMinn = max(psiMinn - extremaCoeff*(psiMax - psiMin), psiMin);
-    }
-    else
-    {
-        psiMaxn = min(psiMaxn, psiMax);
-        psiMinn = max(psiMinn, psiMin);
-    }
-
-    if (smoothLimiter > small)
-    {
-        psiMaxn =
-            min(smoothLimiter*psiIf + (1.0 - smoothLimiter)*psiMaxn, psiMax);
-        psiMinn =
-            max(smoothLimiter*psiIf + (1.0 - smoothLimiter)*psiMinn, psiMin);
-    }
-
-    psiMaxn =
-        V
-       *(
-           (rho.primitiveField()*rDeltaT - Sp.primitiveField())*psiMaxn
-         - Su.primitiveField()
-         - rho.primitiveField()*psi.primitiveField()*rDeltaT
-        );
-
-    psiMinn =
-        V
-       *(
-           Su.primitiveField()
-         - (rho.primitiveField()*rDeltaT - Sp.primitiveField())*psiMinn
-         + rho.primitiveField()*psi.primitiveField()*rDeltaT
-        );
-
-    scalarField sumlPhip(psiIf.size());
-    scalarField mSumlPhim(psiIf.size());
-
-    for (int j=0; j<nLimiterIter; j++)
-    {
-        scalar maxDeltaLambdaPhiCorrRes = 0;
-
-        sumlPhip = 0;
-        mSumlPhim = 0;
-
-        forAll(lambdaIf, facei)
-        {
-            const label own = owner[facei];
-            const label nei = neighb[facei];
-
-            const scalar lambdaPhiCorrf = lambdaIf[facei]*phiCorrIf[facei];
-
-            if (lambdaPhiCorrf > 0)
-            {
-                sumlPhip[own] += lambdaPhiCorrf;
-                mSumlPhim[nei] += lambdaPhiCorrf;
-            }
-            else
-            {
-                mSumlPhim[own] -= lambdaPhiCorrf;
-                sumlPhip[nei] -= lambdaPhiCorrf;
-            }
-        }
-
-        forAll(lambdaBf, patchi)
-        {
-            scalarField& lambdaPf = lambdaBf[patchi];
-            const scalarField& phiCorrfPf = phiCorrBf[patchi];
-
-            const labelList& pFaceCells = mesh.boundary()[patchi].faceCells();
-
-            forAll(lambdaPf, pFacei)
-            {
-                label pfCelli = pFaceCells[pFacei];
-
-                scalar lambdaPhiCorrf = lambdaPf[pFacei]*phiCorrfPf[pFacei];
-
-                if (lambdaPhiCorrf > 0)
-                {
-                    sumlPhip[pfCelli] += lambdaPhiCorrf;
-                }
-                else
-                {
-                    mSumlPhim[pfCelli] -= lambdaPhiCorrf;
-                }
-            }
-        }
-
-        if (nLimiterIter == 1)
-        {
-            forAll(sumlPhip, celli)
-            {
-                sumlPhip[celli] =
-                    max(min
-                    (
-                        psiMaxn[celli]/(mSumPhim[celli] + rootVSmall),
-                        1.0), 0.0
-                    );
-
-                mSumlPhim[celli] =
-                    max(min
-                    (
-                        psiMinn[celli]/(sumPhip[celli] + rootVSmall),
-                        1.0), 0.0
-                    );
-            }
-        }
-        else
-        {
-            forAll(sumlPhip, celli)
-            {
-                sumlPhip[celli] =
-                    max(min
-                    (
-                        (sumlPhip[celli] + psiMaxn[celli])
-                       /(mSumPhim[celli] + rootVSmall),
-                        1.0), 0.0
-                    );
-
-                mSumlPhim[celli] =
-                    max(min
-                    (
-                        (mSumlPhim[celli] + psiMinn[celli])
-                       /(sumPhip[celli] + rootVSmall),
-                        1.0), 0.0
-                    );
-            }
-        }
-
-        const scalarField& lambdam = sumlPhip;
-        const scalarField& lambdap = mSumlPhim;
-
-        forAll(lambdaIf, facei)
-        {
-            const scalar lambdaIf0 = lambdaIf[facei];
-
-            if (phiCorrIf[facei] > 0)
-            {
-                lambdaIf[facei] = min
-                (
-                    lambdaIf[facei],
-                    min(lambdap[owner[facei]], lambdam[neighb[facei]])
-                );
-            }
-            else
-            {
-                lambdaIf[facei] = min
-                (
-                    lambdaIf[facei],
-                    min(lambdam[owner[facei]], lambdap[neighb[facei]])
-                );
-            }
-
-            if (tol > 0)
-            {
-                const scalar phiCorrRes =
-                    mag(phiCorrIf[facei])
-                   /min(phiCorrNorm[owner[facei]], phiCorrNorm[neighb[facei]]);
-
-                if (phiCorrRes > tol)
-                {
-                    maxDeltaLambdaPhiCorrRes = max
-                    (
-                        maxDeltaLambdaPhiCorrRes,
-                        (lambdaIf0 - lambdaIf[facei])*phiCorrRes
-                    );
-                }
-            }
-        }
-
-
-        forAll(lambdaBf, patchi)
-        {
-            fvsPatchScalarField& lambdaPf = lambdaBf[patchi];
-            const scalarField& phiCorrfPf = phiCorrBf[patchi];
-            const fvPatchScalarField& psiPf = psiBf[patchi];
-
-            if (isA<wedgeFvPatch>(mesh.boundary()[patchi]))
-            {
-                lambdaPf = 0;
-            }
-            else if (psiPf.coupled())
-            {
-                const labelList& pFaceCells =
-                    mesh.boundary()[patchi].faceCells();
-
-                forAll(lambdaPf, pFacei)
-                {
-                    const label pfCelli = pFaceCells[pFacei];
-
-                    const scalar lambdaPf0 = lambdaPf[pFacei];
-
-                    if (phiCorrfPf[pFacei] > 0)
-                    {
-                        lambdaPf[pFacei] =
-                            min(lambdaPf[pFacei], lambdap[pfCelli]);
-                    }
-                    else
-                    {
-                        lambdaPf[pFacei] =
-                            min(lambdaPf[pFacei], lambdam[pfCelli]);
-                    }
-
-                    if (tol > 0)
-                    {
-                        const scalar phiCorrRes =
-                            mag(phiCorrfPf[pFacei])/phiCorrNorm[pfCelli];
-
-                        if (phiCorrRes > tol)
-                        {
-                            maxDeltaLambdaPhiCorrRes = max
-                            (
-                                maxDeltaLambdaPhiCorrRes,
-                                (lambdaPf0 - lambdaPf[pFacei])*phiCorrRes
-                            );
-                        }
-                    }
-                }
-            }
-            else
-            {
-                const labelList& pFaceCells =
-                    mesh.boundary()[patchi].faceCells();
-                const scalarField& phiPf = phiBf[patchi];
-
-                forAll(lambdaPf, pFacei)
-                {
-                    // Limit outlet faces only
-                    if ((phiPf[pFacei] + phiCorrfPf[pFacei]) > small*small)
-                    {
-                        const label pfCelli = pFaceCells[pFacei];
-
-                        const scalar lambdaPf0 = lambdaPf[pFacei];
-
-                        if (phiCorrfPf[pFacei] > 0)
-                        {
-                            lambdaPf[pFacei] =
-                                min(lambdaPf[pFacei], lambdap[pfCelli]);
-                        }
-                        else
-                        {
-                            lambdaPf[pFacei] =
-                                min(lambdaPf[pFacei], lambdam[pfCelli]);
-                        }
-
-                        if (tol > 0)
-                        {
-                            const scalar phiCorrRes =
-                                mag(phiCorrfPf[pFacei])/phiCorrNorm[pfCelli];
-
-                            if (phiCorrRes > tol)
-                            {
-                                maxDeltaLambdaPhiCorrRes = max
-                                (
-                                    maxDeltaLambdaPhiCorrRes,
-                                    (lambdaPf0 - lambdaPf[pFacei])*phiCorrRes
-                                );
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        // Take minimum of value across coupled patches
-        surfaceScalarField::Boundary lambdaNbrBf
-        (
-            surfaceScalarField::Internal::null(),
-            lambdaBf.boundaryNeighbourField()
-        );
-        forAll(lambdaBf, patchi)
-        {
-            fvsPatchScalarField& lambdaPf = lambdaBf[patchi];
-            const fvsPatchScalarField& lambdaNbrPf = lambdaNbrBf[patchi];
-            if (lambdaPf.coupled())
-            {
-                lambdaPf = min(lambdaPf, lambdaNbrPf);
-            }
-        }
-
-        if (tol != 0)
-        {
-            reduce(maxDeltaLambdaPhiCorrRes, maxOp<scalar>());
-
-            if (debug)
-            {
-                Info<< "MULES: maxDeltaLambdaPhiCorrRes "
-                    << maxDeltaLambdaPhiCorrRes << endl;
-            }
-
-            if (maxDeltaLambdaPhiCorrRes < tol) break;
-        }
-    }
-}
-
-
-template
-<
-    class RdeltaTType,
-    class RhoType,
-    class SpType,
-    class SuType,
-    class PsiMaxType,
-    class PsiMinType
->
 void Foam::MULES::limitCorr
 (
     const RdeltaTType& rDeltaT,
     const RhoType& rho,
     const volScalarField& psi,
-    const surfaceScalarField& phi,
+    const surfaceScalarField& phiBD,
     surfaceScalarField& phiCorr,
     const SpType& Sp,
     const SuType& Su,
@@ -707,16 +224,26 @@ void Foam::MULES::limitCorr
         dimensionedScalar(dimless, 1)
     );
 
-    limiterCorr
+    // Correction equation source
+    scalarField SuCorr
+    (
+        mesh.Vsc()().primitiveField()
+       *(
+            (rho.primitiveField()*rDeltaT)*psi.primitiveField()
+          + Su.primitiveField()
+        )
+    );
+
+    limiter
     (
         lambda,
         rDeltaT,
         rho,
         psi,
-        phi,
+        SuCorr,
+        phiBD,
         phiCorr,
         Sp,
-        Su,
         psiMax,
         psiMin
     );
