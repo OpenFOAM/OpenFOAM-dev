@@ -25,7 +25,7 @@ License
 
 #include "word.H"
 #include "debug.H"
-
+#include <cstdint>
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 const char* const Foam::word::typeName = "word";
