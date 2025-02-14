@@ -19,7 +19,7 @@ solvers
     alpha.fuel
     {
         nAlphaCorr      1;
-        nAlphaSubCycles 4;
+        nAlphaSubCycles polynomial (0 4);
     }
 
     "pcorr.*"

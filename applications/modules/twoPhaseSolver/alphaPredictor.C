@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,27 +70,10 @@ Foam::tmp<Foam::surfaceScalarField> Foam::solvers::twoPhaseSolver::alphaPhi
 
 void Foam::solvers::twoPhaseSolver::alphaSolve
 (
-    const dictionary& alphaControls
+    const dictionary& alphaControls,
+    const label nAlphaSubCycles
 )
 {
-    const label nAlphaSubCycles(alphaControls.lookup<label>("nAlphaSubCycles"));
-
-    const label nAlphaCorr(alphaControls.lookup<label>("nAlphaCorr"));
-
-    const bool MULESCorr
-    (
-        alphaControls.lookupOrDefault<Switch>("MULESCorr", false)
-    );
-
-    // Apply the compression correction from the previous iteration
-    // Improves efficiency for steady-simulations but can only be applied
-    // once the alpha field is reasonably steady, i.e. fully developed
-    const bool alphaApplyPrevCorr
-    (
-        alphaControls.lookupOrDefault<Switch>("alphaApplyPrevCorr", false)
-    );
-
-
     // Set the off-centering coefficient according to ddt scheme
     scalar ocCoeff = 0;
     {
@@ -381,8 +364,7 @@ void Foam::solvers::twoPhaseSolver::alphaPredictor()
 {
     const dictionary& alphaControls = mesh.solution().solverDict(alpha1.name());
 
-    const label nAlphaSubCycles(alphaControls.lookup<label>("nAlphaSubCycles"));
-
+    const label nAlphaSubCycles = ceil(nAlphaSubCyclesPtr->value(alphaCoNum));
 
     if (nAlphaSubCycles > 1)
     {
@@ -418,7 +400,7 @@ void Foam::solvers::twoPhaseSolver::alphaPredictor()
             !(++alphaSubCycle).end();
         )
         {
-            alphaSolve(alphaControls);
+            alphaSolve(alphaControls, nAlphaSubCycles);
             talphaPhi1.ref() += (runTime.deltaT()/totalDeltaT)*alphaPhi1;
         }
 
@@ -427,7 +409,7 @@ void Foam::solvers::twoPhaseSolver::alphaPredictor()
     }
     else
     {
-        alphaSolve(alphaControls);
+        alphaSolve(alphaControls, nAlphaSubCycles);
     }
 }
 

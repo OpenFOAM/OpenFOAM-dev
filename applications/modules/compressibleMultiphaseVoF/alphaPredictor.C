@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -225,7 +225,7 @@ void Foam::solvers::compressibleMultiphaseVoF::alphaPredictor()
 {
     const dictionary& alphaControls = mesh.solution().solverDict("alpha");
 
-    const label nAlphaSubCycles(alphaControls.lookup<label>("nAlphaSubCycles"));
+    const label nAlphaSubCycles = ceil(nAlphaSubCyclesPtr->value(alphaCoNum));
 
     if (nAlphaSubCycles > 1)
     {

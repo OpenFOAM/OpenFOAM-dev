@@ -36,6 +36,40 @@ namespace solvers
 }
 
 
+// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
+
+bool Foam::solvers::twoPhaseSolver::dependenciesModified() const
+{
+    return runTime.controlDict().modified() || mesh.solution().modified();
+}
+
+
+bool Foam::solvers::twoPhaseSolver::read()
+{
+    VoFSolver::read();
+
+    const dictionary& alphaControls = mesh.solution().solverDict(alpha1.name());
+
+    nAlphaSubCyclesPtr =
+        Function1<scalar>::New
+        (
+            "nAlphaSubCycles",
+            mesh.time().userUnits(),
+            dimless,
+            alphaControls
+        );
+
+    nAlphaCorr = alphaControls.lookupOrDefault<label>("nAlphaCorr", 1);
+
+    MULESCorr = alphaControls.lookupOrDefault<Switch>("MULESCorr", false);
+
+    alphaApplyPrevCorr =
+        alphaControls.lookupOrDefault<Switch>("alphaApplyPrevCorr", false);
+
+    return true;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::solvers::twoPhaseSolver::twoPhaseSolver
@@ -87,6 +121,8 @@ Foam::solvers::twoPhaseSolver::twoPhaseSolver
     )
 {
     mesh.schemes().setFluxRequired(alpha1.name());
+
+    read();
 
     if (alphaRestart)
     {

@@ -19,8 +19,7 @@ solvers
     "alpha.water.*"
     {
         nAlphaCorr      1;
-        nAlphaSubCycles 3;
-        nLimiterIter    5;
+        nAlphaSubCycles polynomial (0 4);
     }
 
     p_rgh

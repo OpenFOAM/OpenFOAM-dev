@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,6 +77,10 @@ protected:
         //- Reference to the phases
         PtrListDictionary<VoFphase>& phases;
 
+        //- Function to calculate the number of explicit MULES sub-cycles
+        //  from the alpha Courant number
+        autoPtr<Function1<scalar>> nAlphaSubCyclesPtr;
+
 
 private:
 
@@ -89,6 +93,12 @@ private:
 protected:
 
     // Protected Member Functions
+
+        //- Return true if the solver's dependencies have been modified
+        virtual bool dependenciesModified() const;
+
+        //- Read controls
+        virtual bool read();
 
         //- Adjust the rDeltaT in the vicinity of the interface
         virtual void setInterfaceRDeltaT(volScalarField& rDeltaT);

@@ -18,8 +18,8 @@ solvers
 {
     alpha.water
     {
-        nAlphaCorr      1;
-        nAlphaSubCycles 3;
+        nAlphaSubCycles polynomial (0 4);
+        extremaCoeff    0.01;
     }
 
     "pcorr.*"
@@ -28,13 +28,13 @@ solvers
         preconditioner
         {
             preconditioner  GAMG;
-            tolerance       1e-05;
+            tolerance       1e-5;
             relTol          0;
             smoother        DICGaussSeidel;
             cacheAgglomeration no;
         }
 
-        tolerance       1e-05;
+        tolerance       1e-5;
         relTol          0;
         maxIter         100;
     }
@@ -42,7 +42,7 @@ solvers
     p_rgh
     {
         solver          GAMG;
-        tolerance       1e-08;
+        tolerance       2e-9;
         relTol          0.01;
         smoother        DIC;
     }
@@ -53,14 +53,14 @@ solvers
         preconditioner
         {
             preconditioner  GAMG;
-            tolerance       2e-09;
+            tolerance       2e-9;
             relTol          0;
             nVcycles        2;
             smoother        DICGaussSeidel;
             nPreSweeps      2;
         }
 
-        tolerance       2e-09;
+        tolerance       2e-9;
         relTol          0;
         maxIter         20;
     }
@@ -69,7 +69,7 @@ solvers
     {
         solver          smoothSolver;
         smoother        GaussSeidel;
-        tolerance       1e-06;
+        tolerance       1e-6;
         relTol          0;
         nSweeps         1;
     }
