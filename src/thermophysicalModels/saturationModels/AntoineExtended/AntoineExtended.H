@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,6 +43,7 @@ SourceFiles
 #ifndef AntoineExtended_H
 #define AntoineExtended_H
 
+#include "saturationModels.H"
 #include "saturationPressureModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -62,24 +63,27 @@ class AntoineExtended
 {
     // Private data
 
-        //- Constant A
-        dimensionedScalar A_;
+        //- Coefficient A
+        coefficient A_;
 
-        //- Constant B
-        dimensionedScalar B_;
+        //- Coefficient B
+        coefficient B_;
 
-        //- Constant C
-        dimensionedScalar C_;
+        //- Coefficient C
+        coefficient C_;
 
-        //- Constant D
-        dimensionedScalar D_;
+        //- Coefficient D
+        coefficient D_;
 
-        //- Constant F
-        dimensionedScalar F_;
+        //- Coefficient F
+        coefficient F_;
 
-        //- Constant E
-        //  (after F so F's dimensions can be used in the construction)
-        dimensionedScalar E_;
+        //- Coefficient E. This is declared after F so F's dimensions can be
+        //  used in the construction.
+        coefficient E_;
+
+        //- Coefficient value of one with dimensions of pressure/temperature^D
+        coefficient onePbyTpowD_;
 
 
     // Private Member Functions
@@ -114,6 +118,9 @@ public:
 
 
     // Member Functions
+
+        //- Saturation pressure for scalarField
+        DEFINE_PSAT(scalarField, );
 
         //- Saturation pressure for volScalarField::Internal
         DEFINE_PSAT(volScalarField::Internal, );

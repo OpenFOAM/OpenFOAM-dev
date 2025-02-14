@@ -76,6 +76,16 @@ Foam::interfaceSaturationTemperatureModel::interface() const
 }
 
 
+Foam::tmp<Foam::scalarField>
+Foam::interfaceSaturationTemperatureModel::Tsat
+(
+    const scalarField& p
+) const
+{
+    return saturationModel_->Tsat(p);
+}
+
+
 Foam::tmp<Foam::volScalarField::Internal>
 Foam::interfaceSaturationTemperatureModel::Tsat
 (
@@ -93,6 +103,16 @@ Foam::interfaceSaturationTemperatureModel::Tsat
 ) const
 {
     return saturationModel_->Tsat(p);
+}
+
+
+Foam::tmp<Foam::scalarField>
+Foam::interfaceSaturationTemperatureModel::TsatPrime
+(
+    const scalarField& p
+) const
+{
+    return saturationModel_->TsatPrime(p);
 }
 
 

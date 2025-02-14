@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,6 +39,8 @@ namespace saturationModels
         AntoineExtended,
         dictionary
     );
+
+    static const coefficient oneT(dimTemperature, 1);
 }
 }
 
@@ -49,10 +51,7 @@ template<class FieldType>
 Foam::tmp<FieldType>
 Foam::saturationModels::AntoineExtended::pSat(const FieldType& T) const
 {
-    return
-        dimensionedScalar(dimPressure/pow(dimTemperature, D_), 1)
-       *exp(A_ + B_/(C_ + T) + E_*pow(T, F_))
-       *pow(T, D_);
+    return onePbyTpowD_*exp(A_ + B_/(C_ + T) + E_*pow(T, F_))*pow(T, D_);
 }
 
 
@@ -60,7 +59,7 @@ template<class FieldType>
 Foam::tmp<FieldType>
 Foam::saturationModels::AntoineExtended::pSatPrime(const FieldType& T) const
 {
-    return pSat(T)*((D_ + E_*F_*pow(T, F_))/T - B_/sqr(C_ + T));
+    return pSat(T)*((D_ + E_*(F_*pow(T, F_)))/T - B_/sqr(C_ + T));
 }
 
 
@@ -68,11 +67,7 @@ template<class FieldType>
 Foam::tmp<FieldType>
 Foam::saturationModels::AntoineExtended::lnPSat(const FieldType& T) const
 {
-    return
-        A_
-      + B_/(C_ + T)
-      + D_*log(T*dimensionedScalar(dimless/dimTemperature, 1))
-      + E_*pow(T, F_);
+    return A_ + B_/(C_ + T) + D_*log(T/oneT) + E_*pow(T, F_);
 }
 
 
@@ -89,7 +84,8 @@ Foam::saturationModels::AntoineExtended::AntoineExtended
     C_("C", dimTemperature, dict),
     D_("D", dimless, dict),
     F_("F", dimless, dict),
-    E_("E", dimless/pow(dimTemperature, F_), dict)
+    E_("E", dimless/pow(dimTemperature, F_), dict),
+    onePbyTpowD_(dimPressure/pow(dimTemperature, D_), 1)
 {}
 
 
@@ -101,10 +97,13 @@ Foam::saturationModels::AntoineExtended::~AntoineExtended()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-IMPLEMENT_PSAT(AntoineExtended, volScalarField::Internal);
+IMPLEMENT_PSAT(saturationModels::AntoineExtended, scalarField);
 
 
-IMPLEMENT_PSAT(AntoineExtended, volScalarField);
+IMPLEMENT_PSAT(saturationModels::AntoineExtended, volScalarField::Internal);
+
+
+IMPLEMENT_PSAT(saturationModels::AntoineExtended, volScalarField);
 
 
 // ************************************************************************* //

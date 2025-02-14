@@ -115,24 +115,11 @@ public:
 
     // Member Functions
 
-        //- Saturation temperature for volScalarField::Internal
-        virtual tmp<volScalarField::Internal> Tsat
-        (
-            const volScalarField::Internal& p
-        ) const;
+        //- Saturation temperature for scalarField
+        virtual tmp<scalarField> Tsat(const scalarField& p) const;
 
-        //- Saturation temperature for volScalarField
-        virtual tmp<volScalarField> Tsat(const volScalarField& p) const;
-
-        //- Saturation temperature derivative w.r.t. pressure for
-        //  volScalarField::Internal
-        virtual tmp<volScalarField::Internal> TsatPrime
-        (
-            const volScalarField::Internal& p
-        ) const;
-
-        //- Saturation temperature derivative w.r.t. pressure for volScalarField
-        virtual tmp<volScalarField> TsatPrime(const volScalarField& p) const;
+        //- Saturation temperature derivative w.r.t. pressure for scalarField
+        virtual tmp<scalarField> TsatPrime(const scalarField& p) const;
 };
 
 

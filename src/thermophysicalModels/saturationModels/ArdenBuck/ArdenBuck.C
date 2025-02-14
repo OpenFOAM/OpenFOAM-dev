@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,6 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "saturationModels.H"
 #include "ArdenBuck.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -34,22 +35,14 @@ namespace saturationModels
 {
     defineTypeNameAndDebug(ArdenBuck, 0);
     addToRunTimeSelectionTable(saturationPressureModel, ArdenBuck, dictionary);
+
+    static const coefficient zeroC("zeroC", dimTemperature, 273.15);
+    static const coefficient A("A", dimPressure, 611.21);
+    static const coefficient B("B", dimless, 18.678);
+    static const coefficient C("C", dimTemperature, 234.5);
+    static const coefficient D("D", dimTemperature, 257.14);
 }
 }
-
-
-static const Foam::dimensionedScalar zeroC
-(
-    "zeroC",
-    Foam::dimTemperature,
-    273.15
-);
-
-
-static const Foam::dimensionedScalar A("A", Foam::dimPressure, 611.21);
-static const Foam::dimensionedScalar B("B", Foam::dimless, 18.678);
-static const Foam::dimensionedScalar C("C", Foam::dimTemperature, 234.5);
-static const Foam::dimensionedScalar D("D", Foam::dimTemperature, 257.14);
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -109,10 +102,13 @@ Foam::saturationModels::ArdenBuck::~ArdenBuck()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-IMPLEMENT_PSAT(ArdenBuck, volScalarField::Internal);
+IMPLEMENT_PSAT(saturationModels::ArdenBuck, scalarField);
 
 
-IMPLEMENT_PSAT(ArdenBuck, volScalarField);
+IMPLEMENT_PSAT(saturationModels::ArdenBuck, volScalarField::Internal);
+
+
+IMPLEMENT_PSAT(saturationModels::ArdenBuck, volScalarField);
 
 
 // ************************************************************************* //

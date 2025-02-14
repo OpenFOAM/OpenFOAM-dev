@@ -66,133 +66,29 @@ Foam::saturationModels::function1Temperature::~function1Temperature()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::scalarField>
 Foam::saturationModels::function1Temperature::Tsat
 (
-    const volScalarField::Internal& p
+    const scalarField& p
 ) const
 {
-    tmp<volScalarField::Internal> tTsat
-    (
-        volScalarField::Internal::New
-        (
-            "Tsat",
-            p.mesh(),
-            dimensionedScalar(dimTemperature, 0)
-        )
-    );
-
-    volScalarField::Internal& Tsat = tTsat.ref();
-
-    Tsat.primitiveFieldRef() = function_->value(p.primitiveField());
-
-    return tTsat;
+    return function_->value(p);
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal>
+Foam::tmp<Foam::scalarField>
 Foam::saturationModels::function1Temperature::TsatPrime
 (
-    const volScalarField::Internal& p
+    const scalarField& p
 ) const
 {
-    const scalar dp(rootSmall*p.average().value());
+    const scalar dp(rootSmall*gAverage(p));
 
-    tmp<volScalarField::Internal> tTsatPrime
-    (
-        volScalarField::Internal::New
+    return
         (
-            "TsatPrime",
-            p.mesh(),
-            dimensionedScalar(dimTemperature/dimPressure, 0)
-        )
-    );
-
-    volScalarField::Internal& TsatPrime = tTsatPrime.ref();
-
-    TsatPrime.primitiveFieldRef() =
-        (
-            function_->value(p.primitiveField() + dp/2)
-          - function_->value(p.primitiveField() - dp/2)
+            function_->value(p + dp/2)
+          - function_->value(p - dp/2)
         )/dp;
-
-    return tTsatPrime;
-}
-
-
-Foam::tmp<Foam::volScalarField>
-Foam::saturationModels::function1Temperature::Tsat
-(
-    const volScalarField& p
-) const
-{
-    tmp<volScalarField> tTsat
-    (
-        volScalarField::New
-        (
-            "Tsat",
-            p.mesh(),
-            dimensionedScalar(dimTemperature, 0)
-        )
-    );
-
-    volScalarField& Tsat = tTsat.ref();
-
-    Tsat.primitiveFieldRef() = function_->value(p.primitiveField());
-
-    volScalarField::Boundary& TsatBf = Tsat.boundaryFieldRef();
-
-    forAll(Tsat.boundaryField(), patchi)
-    {
-        const scalarField& pp = p.boundaryField()[patchi];
-
-        TsatBf[patchi] = function_->value(pp);
-    }
-
-    return tTsat;
-}
-
-
-Foam::tmp<Foam::volScalarField>
-Foam::saturationModels::function1Temperature::TsatPrime
-(
-    const volScalarField& p
-) const
-{
-    const scalar dp(rootSmall*p.average().value());
-
-    tmp<volScalarField> tTsatPrime
-    (
-        volScalarField::New
-        (
-            "TsatPrime",
-            p.mesh(),
-            dimensionedScalar(dimTemperature/dimPressure, 0)
-        )
-    );
-
-    volScalarField& TsatPrime = tTsatPrime.ref();
-
-    TsatPrime.primitiveFieldRef() =
-        (
-            function_->value(p.primitiveField() + dp/2)
-          - function_->value(p.primitiveField() - dp/2)
-        )/dp;
-
-    volScalarField::Boundary& TsatPrimeBf = TsatPrime.boundaryFieldRef();
-
-    forAll(TsatPrime.boundaryField(), patchi)
-    {
-        const scalarField& pp = p.boundaryField()[patchi];
-
-        TsatPrimeBf[patchi] =
-            (
-                function_->value(pp + dp/2)
-              - function_->value(pp - dp/2)
-            )/dp;
-    }
-
-    return tTsatPrime;
 }
 
 

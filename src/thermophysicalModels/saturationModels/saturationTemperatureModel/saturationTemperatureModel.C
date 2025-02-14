@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,46 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "saturationModels.H"
 #include "saturationTemperatureModel.H"
+
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+template<class FieldType>
+Foam::tmp<FieldType> Foam::saturationTemperatureModel::Tsat
+(
+    const FieldType& p
+) const
+{
+    return
+        saturationModels::evaluate
+        (
+            p,
+            "Tsat",
+            dimTemperature,
+            *this,
+            &saturationTemperatureModel::Tsat
+        );
+}
+
+
+template<class FieldType>
+Foam::tmp<FieldType> Foam::saturationTemperatureModel::TsatPrime
+(
+    const FieldType& p
+) const
+{
+    return
+        saturationModels::evaluate
+        (
+            p,
+            "TsatPrime",
+            dimTemperature/dimPressure,
+            *this,
+            &saturationTemperatureModel::TsatPrime
+        );
+}
+
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -44,6 +83,14 @@ Foam::saturationTemperatureModel::saturationTemperatureModel()
 
 Foam::saturationTemperatureModel::~saturationTemperatureModel()
 {}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+IMPLEMENT_TSAT(saturationTemperatureModel, volScalarField::Internal);
+
+
+IMPLEMENT_TSAT(saturationTemperatureModel, volScalarField);
 
 
 // ************************************************************************* //

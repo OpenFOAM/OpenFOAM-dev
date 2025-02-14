@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,6 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "saturationModels.H"
 #include "saturationPressureModel.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -31,6 +32,62 @@ namespace Foam
 {
     defineTypeNameAndDebug(saturationPressureModel, 0);
     defineRunTimeSelectionTable(saturationPressureModel, dictionary);
+}
+
+
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+template<class FieldType>
+Foam::tmp<FieldType> Foam::saturationPressureModel::pSat
+(
+    const FieldType& T
+) const
+{
+    return
+        saturationModels::evaluate
+        (
+            T,
+            "pSat",
+            dimPressure,
+            *this,
+            &saturationPressureModel::pSat
+        );
+}
+
+
+template<class FieldType>
+Foam::tmp<FieldType> Foam::saturationPressureModel::pSatPrime
+(
+    const FieldType& T
+) const
+{
+    return
+        saturationModels::evaluate
+        (
+            T,
+            "pSatPrime",
+            dimPressure/dimTemperature,
+            *this,
+            &saturationPressureModel::pSatPrime
+        );
+}
+
+
+template<class FieldType>
+Foam::tmp<FieldType> Foam::saturationPressureModel::lnPSat
+(
+    const FieldType& T
+) const
+{
+    return
+        saturationModels::evaluate
+        (
+            T,
+            "lnPSat",
+            dimless,
+            *this,
+            &saturationPressureModel::lnPSat
+        );
 }
 
 
@@ -44,6 +101,14 @@ Foam::saturationPressureModel::saturationPressureModel()
 
 Foam::saturationPressureModel::~saturationPressureModel()
 {}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+IMPLEMENT_PSAT(saturationPressureModel, volScalarField::Internal);
+
+
+IMPLEMENT_PSAT(saturationPressureModel, volScalarField);
 
 
 // ************************************************************************* //

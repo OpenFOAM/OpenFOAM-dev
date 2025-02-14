@@ -112,6 +112,9 @@ public:
         const phaseInterface& interface() const;
 
         //- Saturation temperature
+        tmp<scalarField> Tsat(const scalarField& p) const;
+
+        //- Saturation temperature
         tmp<volScalarField::Internal> Tsat
         (
             const volScalarField::Internal& p
@@ -119,6 +122,9 @@ public:
 
         //- Saturation temperature
         tmp<volScalarField> Tsat(const volScalarField& p) const;
+
+        //- Saturation temperature derivative w.r.t. pressure
+        tmp<scalarField> TsatPrime(const scalarField& p) const;
 
         //- Saturation temperature derivative w.r.t. pressure
         tmp<volScalarField::Internal> TsatPrime

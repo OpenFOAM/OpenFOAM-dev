@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,6 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "saturationModels.H"
 #include "constantPressure.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -39,6 +40,9 @@ namespace saturationModels
         constantPressure,
         dictionary
     );
+
+    static const dimensionedScalar oneP(dimPressure, 1);
+    static const dimensionedScalar zeroPbyT(dimPressure/dimTemperature, 0);
 }
 }
 
@@ -49,7 +53,7 @@ template<class FieldType>
 Foam::tmp<FieldType>
 Foam::saturationModels::constantPressure::pSat(const FieldType& T) const
 {
-    return FieldType::New("pSat", T.mesh(), pSat_);
+    return evaluate(T, "pSat", pSat_);
 }
 
 
@@ -57,13 +61,7 @@ template<class FieldType>
 Foam::tmp<FieldType>
 Foam::saturationModels::constantPressure::pSatPrime(const FieldType& T) const
 {
-    return
-        FieldType::New
-        (
-            "pSatPrime",
-            T.mesh(),
-            dimensionedScalar(dimPressure/dimTemperature, 0)
-        );
+    return evaluate(T, "pSatPrime", zeroPbyT);
 }
 
 
@@ -71,13 +69,7 @@ template<class FieldType>
 Foam::tmp<FieldType>
 Foam::saturationModels::constantPressure::lnPSat(const FieldType& T) const
 {
-    return
-        FieldType::New
-        (
-            "lnPSat",
-            T.mesh(),
-            dimensionedScalar(dimless, log(pSat_.value()))
-        );
+    return evaluate(T, "lnPSat", log(pSat_/oneP));
 }
 
 
@@ -111,10 +103,13 @@ Foam::saturationModels::constantPressure::~constantPressure()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-IMPLEMENT_PSAT(constantPressure, volScalarField::Internal);
+IMPLEMENT_PSAT(saturationModels::constantPressure, scalarField);
 
 
-IMPLEMENT_PSAT(constantPressure, volScalarField);
+IMPLEMENT_PSAT(saturationModels::constantPressure, volScalarField::Internal);
+
+
+IMPLEMENT_PSAT(saturationModels::constantPressure, volScalarField);
 
 
 // ************************************************************************* //

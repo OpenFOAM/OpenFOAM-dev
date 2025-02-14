@@ -92,6 +92,9 @@ public:
 
     // Member Functions
 
+        //- Saturation pressure for scalarField
+        DEFINE_TSAT(scalarField, );
+
         //- Saturation pressure for volScalarField::Internal
         DEFINE_TSAT(volScalarField::Internal, );
 

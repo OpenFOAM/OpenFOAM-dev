@@ -42,6 +42,7 @@ SourceFiles
 #ifndef Antoine_H
 #define Antoine_H
 
+#include "saturationModels.H"
 #include "saturationPressureModel.H"
 #include "saturationTemperatureModel.H"
 
@@ -63,14 +64,14 @@ class Antoine
 {
     // Private data
 
-        //- Constant A
-        dimensionedScalar A_;
+        //- Coefficient A
+        coefficient A_;
 
-        //- Constant B
-        dimensionedScalar B_;
+        //- Coefficient B
+        coefficient B_;
 
-        //- Constant C
-        dimensionedScalar C_;
+        //- Coefficient C
+        coefficient C_;
 
 
     // Private Member Functions
@@ -114,16 +115,22 @@ public:
 
     // Member Functions
 
+        //- Saturation pressure for scalarField
+        DEFINE_PSAT(scalarField, );
+
         //- Saturation pressure for volScalarField::Internal
         DEFINE_PSAT(volScalarField::Internal, );
 
         //- Saturation pressure for volScalarField
         DEFINE_PSAT(volScalarField, );
 
-        //- Saturation pressure for volScalarField::Internal
+        //- Saturation temperature for scalarField
+        DEFINE_TSAT(scalarField, );
+
+        //- Saturation temperature for volScalarField::Internal
         DEFINE_TSAT(volScalarField::Internal, );
 
-        //- Saturation pressure for volScalarField
+        //- Saturation temperature for volScalarField
         DEFINE_TSAT(volScalarField, );
 };
 

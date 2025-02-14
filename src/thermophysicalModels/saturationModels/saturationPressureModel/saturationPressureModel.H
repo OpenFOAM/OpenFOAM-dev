@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,8 +25,7 @@ Class
     Foam::saturationPressureModel
 
 Description
-    Model to describe the dependence of saturation pressure on temperature, and
-    vice versa
+    Model to describe the dependence of saturation pressure on temperature
 
 SourceFiles
     saturationPressureModel.C
@@ -55,19 +54,19 @@ SourceFiles
 #define IMPLEMENT_PSAT(ModelType, FieldType)                                   \
                                                                                \
     Foam::tmp<Foam::FieldType>                                                 \
-    Foam::saturationModels::ModelType::pSat(const FieldType& T) const          \
+    Foam::ModelType::pSat(const FieldType& T) const                            \
     {                                                                          \
         return pSat<FieldType>(T);                                             \
     }                                                                          \
                                                                                \
     Foam::tmp<Foam::FieldType>                                                 \
-    Foam::saturationModels::ModelType::pSatPrime(const FieldType& T) const     \
+    Foam::ModelType::pSatPrime(const FieldType& T) const                       \
     {                                                                          \
         return pSatPrime<FieldType>(T);                                        \
     }                                                                          \
                                                                                \
     Foam::tmp<Foam::FieldType>                                                 \
-    Foam::saturationModels::ModelType::lnPSat(const FieldType& T) const        \
+    Foam::ModelType::lnPSat(const FieldType& T) const                          \
     {                                                                          \
         return lnPSat<FieldType>(T);                                           \
     }
@@ -84,6 +83,23 @@ namespace Foam
 
 class saturationPressureModel
 {
+private:
+
+    // Private Member Functions
+
+        //- Saturation pressure
+        template<class FieldType>
+        tmp<FieldType> pSat(const FieldType& T) const;
+
+        //- Saturation pressure derivative w.r.t. temperature
+        template<class FieldType>
+        tmp<FieldType> pSatPrime(const FieldType& T) const;
+
+        //- Natural log of the saturation pressure
+        template<class FieldType>
+        tmp<FieldType> lnPSat(const FieldType& T) const;
+
+
 public:
 
     //- Runtime type information
@@ -129,11 +145,14 @@ public:
 
     // Member Functions
 
+        //- Saturation temperature for scalarField
+        DEFINE_PSAT(scalarField, = 0);
+
         //- Saturation pressure for volScalarField::Internal
-        DEFINE_PSAT(volScalarField::Internal, = 0);
+        DEFINE_PSAT(volScalarField::Internal, );
 
         //- Saturation pressure for volScalarField
-        DEFINE_PSAT(volScalarField, = 0);
+        DEFINE_PSAT(volScalarField, );
 };
 
 

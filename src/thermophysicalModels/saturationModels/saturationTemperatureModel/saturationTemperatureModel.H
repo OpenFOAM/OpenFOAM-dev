@@ -25,8 +25,7 @@ Class
     Foam::saturationTemperatureModel
 
 Description
-    Model to describe the dependence of saturation pressure on temperature, and
-    vice versa
+    Model to describe the dependence of saturation temperature on pressure
 
 SourceFiles
     saturationTemperatureModel.C
@@ -53,13 +52,13 @@ SourceFiles
 #define IMPLEMENT_TSAT(ModelType, FieldType)                                   \
                                                                                \
     Foam::tmp<Foam::FieldType>                                                 \
-    Foam::saturationModels::ModelType::Tsat(const FieldType& p) const          \
+    Foam::ModelType::Tsat(const FieldType& p) const                            \
     {                                                                          \
         return Tsat<FieldType>(p);                                             \
     }                                                                          \
                                                                                \
     Foam::tmp<Foam::FieldType>                                                 \
-    Foam::saturationModels::ModelType::TsatPrime(const FieldType& p) const     \
+    Foam::ModelType::TsatPrime(const FieldType& p) const                       \
     {                                                                          \
         return TsatPrime<FieldType>(p);                                        \
     }
@@ -71,11 +70,24 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class saturationTemperatureModel Declaration
+                  Class saturationTemperatureModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class saturationTemperatureModel
 {
+private:
+
+    // Private Member Functions
+
+        //- Saturation temperature
+        template<class FieldType>
+        tmp<FieldType> Tsat(const FieldType& p) const;
+
+        //- Saturation temperature derivative w.r.t. pressure
+        template<class FieldType>
+        tmp<FieldType> TsatPrime(const FieldType& p) const;
+
+
 public:
 
     //- Runtime type information
@@ -121,11 +133,14 @@ public:
 
     // Member Functions
 
+        //- Saturation temperature for scalarField
+        DEFINE_TSAT(scalarField, = 0);
+
         //- Saturation temperature for volScalarField::Internal
-        DEFINE_TSAT(volScalarField::Internal, = 0);
+        DEFINE_TSAT(volScalarField::Internal, );
 
         //- Saturation temperature for volScalarField
-        DEFINE_TSAT(volScalarField, = 0);
+        DEFINE_TSAT(volScalarField, );
 };
 
 
