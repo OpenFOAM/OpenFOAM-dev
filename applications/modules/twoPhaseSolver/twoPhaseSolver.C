@@ -38,12 +38,6 @@ namespace solvers
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
-bool Foam::solvers::twoPhaseSolver::dependenciesModified() const
-{
-    return runTime.controlDict().modified() || mesh.solution().modified();
-}
-
-
 bool Foam::solvers::twoPhaseSolver::read()
 {
     VoFSolver::read();

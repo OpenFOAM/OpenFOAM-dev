@@ -65,12 +65,6 @@ void Foam::solvers::multiphaseVoFSolver::correctCoNum()
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
-bool Foam::solvers::multiphaseVoFSolver::dependenciesModified() const
-{
-    return runTime.controlDict().modified() || mesh.solution().modified();
-}
-
-
 bool Foam::solvers::multiphaseVoFSolver::read()
 {
     VoFSolver::read();
