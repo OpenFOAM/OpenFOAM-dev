@@ -157,7 +157,7 @@ private:
     // Private Member Functions
 
         //- Solve for the phase-fractions
-        void alphaSolve(const dictionary& alphaControls);
+        void alphaSolve();
 
 
 public:

@@ -25,7 +25,6 @@ License
 
 #include "twoPhaseSolver.H"
 #include "subCycle.H"
-#include "interfaceCompression.H"
 #include "CMULES.H"
 #include "CrankNicolsonDdtScheme.H"
 #include "fvcFlux.H"
@@ -36,43 +35,19 @@ License
 Foam::tmp<Foam::surfaceScalarField> Foam::solvers::twoPhaseSolver::alphaPhi
 (
     const surfaceScalarField& phi,
-    const volScalarField& alpha,
-    const dictionary& alphaControls
+    const volScalarField& alpha
 )
 {
-    const word alphaScheme(mesh.schemes().div(divAlphaName)[1].wordToken());
-
-    ITstream compressionScheme
-    (
-        compressionSchemes.found(alphaScheme)
-      ? mesh.schemes().div(divAlphaName)
-      : ITstream
-        (
-            divAlphaName,
-            tokenList
-            {
-                word("Gauss"),
-                word("interfaceCompression"),
-                alphaScheme,
-                alphaControls.lookup<scalar>("cAlpha")
-            }
-        )
-    );
-
     return fvc::flux
     (
         phi,
         alpha,
-        compressionScheme
+        mesh.schemes().div(divAlphaName)
     );
 }
 
 
-void Foam::solvers::twoPhaseSolver::alphaSolve
-(
-    const dictionary& alphaControls,
-    const label nAlphaSubCycles
-)
+void Foam::solvers::twoPhaseSolver::alphaSolve(const label nAlphaSubCycles)
 {
     // Set the off-centering coefficient according to ddt scheme
     scalar ocCoeff = 0;
@@ -154,7 +129,7 @@ void Foam::solvers::twoPhaseSolver::alphaSolve
     tmp<volScalarField::Internal> Su;
     tmp<volScalarField::Internal> Sp;
 
-    alphaSuSp(Su, Sp, alphaControls);
+    alphaSuSp(Su, Sp);
 
     if (MULESCorr)
     {
@@ -227,15 +202,7 @@ void Foam::solvers::twoPhaseSolver::alphaSolve
         }
 
         // Split operator
-        tmp<surfaceScalarField> talphaPhi1Un
-        (
-            alphaPhi
-            (
-                phiCN(),
-                talpha1CN(),
-                alphaControls
-            )
-        );
+        tmp<surfaceScalarField> talphaPhi1Un(alphaPhi(phiCN(), talpha1CN()));
 
         if (MULESCorr)
         {
@@ -362,8 +329,6 @@ void Foam::solvers::twoPhaseSolver::alphaSolve
 
 void Foam::solvers::twoPhaseSolver::alphaPredictor()
 {
-    const dictionary& alphaControls = mesh.solution().solverDict(alpha1.name());
-
     const label nAlphaSubCycles = ceil(nAlphaSubCyclesPtr->value(alphaCoNum));
 
     if (nAlphaSubCycles > 1)
@@ -400,7 +365,7 @@ void Foam::solvers::twoPhaseSolver::alphaPredictor()
             !(++alphaSubCycle).end();
         )
         {
-            alphaSolve(alphaControls, nAlphaSubCycles);
+            alphaSolve(nAlphaSubCycles);
             talphaPhi1.ref() += (runTime.deltaT()/totalDeltaT)*alphaPhi1;
         }
 
@@ -409,7 +374,7 @@ void Foam::solvers::twoPhaseSolver::alphaPredictor()
     }
     else
     {
-        alphaSolve(alphaControls, nAlphaSubCycles);
+        alphaSolve(nAlphaSubCycles);
     }
 }
 

@@ -95,6 +95,9 @@ protected:
         //- Compressibility source
         volScalarField::Internal vDot;
 
+        //- Compressibility source stabilisation tolerance
+        scalar vDotResidualAlpha;
+
 
     // Pressure reference
 
@@ -139,6 +142,9 @@ protected:
 
     // Protected Member Functions
 
+        //- Read controls
+        virtual bool read();
+
         //- Return the pressure reference
         virtual const Foam::pressureReference& pressureReference() const
         {
@@ -171,8 +177,7 @@ protected:
         virtual void alphaSuSp
         (
             tmp<volScalarField::Internal>& Su,
-            tmp<volScalarField::Internal>& Sp,
-            const dictionary& alphaControls
+            tmp<volScalarField::Internal>& Sp
         );
 
         //- Return the momentum equation stress term

@@ -71,14 +71,17 @@ bool Foam::solvers::multiphaseVoFSolver::read()
 
     const dictionary& alphaControls = mesh.solution().solverDict("alpha");
 
+    cAlpha = alphaControls.lookup<scalar>("cAlpha");
+
     nAlphaSubCyclesPtr =
         Function1<scalar>::New
         (
             "nAlphaSubCycles",
-            mesh.time().userUnits(),
+            dimless,
             dimless,
             alphaControls
         );
+
 
     return true;
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,8 +33,7 @@ Foam::tmp<Foam::surfaceScalarField>
 Foam::solvers::incompressibleDriftFlux::alphaPhi
 (
     const surfaceScalarField& phi,
-    const volScalarField& alpha,
-    const dictionary& alphaControls
+    const volScalarField& alpha
 )
 {
     return fvc::flux
@@ -49,8 +48,7 @@ Foam::solvers::incompressibleDriftFlux::alphaPhi
 void Foam::solvers::incompressibleDriftFlux::alphaSuSp
 (
     tmp<volScalarField::Internal>& tSu,
-    tmp<volScalarField::Internal>& tSp,
-    const dictionary& alphaControls
+    tmp<volScalarField::Internal>& tSp
 )
 {
     if (!divergent()) return;

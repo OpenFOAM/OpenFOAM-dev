@@ -138,8 +138,7 @@ protected:
         virtual void alphaSuSp
         (
             tmp<volScalarField::Internal>& Su,
-            tmp<volScalarField::Internal>& Sp,
-            const dictionary& alphaControls
+            tmp<volScalarField::Internal>& Sp
         );
 
         //- Return the momentum equation stress term

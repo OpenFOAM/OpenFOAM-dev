@@ -152,8 +152,7 @@ protected:
         virtual tmp<surfaceScalarField> alphaPhi
         (
             const surfaceScalarField& phi,
-            const volScalarField& alpha,
-            const dictionary& alphaControls
+            const volScalarField& alpha
         );
 
         //- Adjust the rDeltaT in the vicinity of the interface
@@ -163,8 +162,7 @@ protected:
         virtual void alphaSuSp
         (
             tmp<volScalarField::Internal>& Su,
-            tmp<volScalarField::Internal>& Sp,
-            const dictionary& alphaControls
+            tmp<volScalarField::Internal>& Sp
         );
 
         //- Correct the interface properties following mesh-change

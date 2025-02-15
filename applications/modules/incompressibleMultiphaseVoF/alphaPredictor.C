@@ -30,13 +30,8 @@ License
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::solvers::incompressibleMultiphaseVoF::alphaSolve
-(
-    const dictionary& alphaControls
-)
+void Foam::solvers::incompressibleMultiphaseVoF::alphaSolve()
 {
-    const scalar cAlpha(alphaControls.lookup<scalar>("cAlpha"));
-
     const word alphaScheme("div(phi,alpha)");
     const word alpharScheme("div(phirb,alpha)");
 
@@ -158,8 +153,6 @@ void Foam::solvers::incompressibleMultiphaseVoF::alphaSolve
 
 void Foam::solvers::incompressibleMultiphaseVoF::alphaPredictor()
 {
-    const dictionary& alphaControls = mesh.solution().solverDict("alpha");
-
     const label nAlphaSubCycles = ceil(nAlphaSubCyclesPtr->value(alphaCoNum));
 
     if (nAlphaSubCycles > 1)
@@ -194,7 +187,7 @@ void Foam::solvers::incompressibleMultiphaseVoF::alphaPredictor()
             !(++alphaSubCycle).end();
         )
         {
-            alphaSolve(alphaControls);
+            alphaSolve();
             rhoPhiSum += (runTime.deltaT()/totalDeltaT)*rhoPhi;
         }
 
@@ -202,7 +195,7 @@ void Foam::solvers::incompressibleMultiphaseVoF::alphaPredictor()
     }
     else
     {
-        alphaSolve(alphaControls);
+        alphaSolve();
     }
 
     mixture.correct();

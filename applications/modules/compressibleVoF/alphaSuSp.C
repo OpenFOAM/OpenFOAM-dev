@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,15 +31,9 @@ License
 void Foam::solvers::compressibleVoF::alphaSuSp
 (
     tmp<volScalarField::Internal>& tSu,
-    tmp<volScalarField::Internal>& tSp,
-    const dictionary& alphaControls
+    tmp<volScalarField::Internal>& tSp
 )
 {
-    const scalar vDotResidualAlpha
-    (
-        alphaControls.lookupOrDefault("vDotResidualAlpha", 1e-4)
-    );
-
     const dimensionedScalar Szero(vDot.dimensions(), 0);
 
     tSp = volScalarField::Internal::New("Sp", mesh, Szero);

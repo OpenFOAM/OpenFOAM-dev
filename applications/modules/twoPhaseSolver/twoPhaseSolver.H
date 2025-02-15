@@ -127,11 +127,7 @@ private:
     // Private Member Functions
 
         //- Solve for the phase-fractions
-        void alphaSolve
-        (
-            const dictionary& alphaControls,
-            const label nAlphaSubCycles
-        );
+        void alphaSolve(const label nAlphaSubCycles);
 
 
 protected:
@@ -144,8 +140,7 @@ protected:
         virtual tmp<surfaceScalarField> alphaPhi
         (
             const surfaceScalarField& phi,
-            const volScalarField& alpha,
-            const dictionary& alphaControls
+            const volScalarField& alpha
         );
 
         //- Solve for the phase-fractions
@@ -155,8 +150,7 @@ protected:
         virtual void alphaSuSp
         (
             tmp<volScalarField::Internal>& Su,
-            tmp<volScalarField::Internal>& Sp,
-            const dictionary& alphaControls
+            tmp<volScalarField::Internal>& Sp
         ) = 0;
 
         //- Correct the interface properties following mesh-change

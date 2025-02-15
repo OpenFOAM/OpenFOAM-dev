@@ -77,6 +77,8 @@ protected:
         //- Reference to the phases
         PtrListDictionary<VoFphase>& phases;
 
+        scalar cAlpha;
+
         //- Function to calculate the number of explicit MULES sub-cycles
         //  from the alpha Courant number
         autoPtr<Function1<scalar>> nAlphaSubCyclesPtr;

@@ -41,6 +41,21 @@ namespace solvers
 }
 
 
+// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
+
+bool Foam::solvers::compressibleVoF::read()
+{
+    twoPhaseVoFSolver::read();
+
+    const dictionary& alphaControls = mesh.solution().solverDict(alpha1.name());
+
+    vDotResidualAlpha =
+        alphaControls.lookupOrDefault("vDotResidualAlpha", 1e-4);
+
+    return true;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::solvers::compressibleVoF::compressibleVoF(fvMesh& mesh)
@@ -110,6 +125,8 @@ Foam::solvers::compressibleVoF::compressibleVoF(fvMesh& mesh)
 
     mixture(mixture_)
 {
+    read();
+
     if (correctPhi || mesh.topoChanging())
     {
         rAU = new volScalarField
