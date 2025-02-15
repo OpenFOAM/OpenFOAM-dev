@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -111,8 +111,10 @@ int main(int argc, char *argv[])
     }
 
     // Set of valid solver names, listed by:
-    // grep -rwl thermo $FOAM_MODULES | \
-    //     sed "s@$FOAM_MODULES/\([^/]*\).*@\1@g" | sort -u
+    /*
+        grep -rwl thermo $FOAM_MODULES | \
+            sed "s@$FOAM_MODULES/\([^/]*\).*@\1@g" | sort -u
+    */
     const wordHashSet solvers
     {
         "compressibleMultiphaseVoF",
