@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -272,14 +272,14 @@ Foam::label Foam::decompositionMethods::zoltan::decompose
     args[0] = "zoltan";
 
     const int argc = args.size();
-    char* argv[argc];
+    List<char*> argv(argc);
     for (label i = 0; i < argc; i++)
     {
         argv[i] = strdup(args[i].c_str());
     }
 
     float ver;
-    int rc = Zoltan_Initialize(argc, argv, &ver);
+    int rc = Zoltan_Initialize(argc, argv.begin(), &ver);
 
     if (rc != ZOLTAN_OK)
     {

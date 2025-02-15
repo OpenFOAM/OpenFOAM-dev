@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,15 +38,15 @@ bool Foam::regExp::matchGrouping
 {
     if (preg_ && str.size())
     {
-        size_t nmatch = ngroups() + 1;
-        regmatch_t pmatch[nmatch];
+        const size_t nmatch = ngroups() + 1;
+        List<regmatch_t> pmatch(nmatch);
 
         // Also verify that the entire string was matched.
         // pmatch[0] is the entire match
         // pmatch[1..] are the (...) sub-groups
         if
         (
-            regexec(preg_, str.c_str(), nmatch, pmatch, 0) == 0
+            regexec(preg_, str.c_str(), nmatch, pmatch.begin(), 0) == 0
          && (pmatch[0].rm_so == 0 && pmatch[0].rm_eo == label(str.size()))
         )
         {

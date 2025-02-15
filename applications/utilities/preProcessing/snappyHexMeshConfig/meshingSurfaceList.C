@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -327,13 +327,12 @@ Foam::meshingSurfaceList::meshingSurfaceList
     const boundBox& bb,
     const wordList& specifiedInletRegions,
     const wordList& specifiedOutletRegions,
-    const bool& closedDomain
+    const bool closedDomain
 )
 :
     PtrList<meshingSurface>(),
     bb_(),
-    rzbb_(),
-    closedDomain_(closedDomain)
+    rzbb_()
 {
     // Load all the surfaces and construct the bounding box
     forAll(surfaces, i)

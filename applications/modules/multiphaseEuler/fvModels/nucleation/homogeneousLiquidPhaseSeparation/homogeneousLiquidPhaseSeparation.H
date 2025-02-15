@@ -147,6 +147,8 @@ public:
             //- Return the nucleation time scale
             virtual tmp<DimensionedField<scalar, volMesh>> tau() const;
 
+            using singleComponentPhaseChange::addSup;
+
             //- Override the compressible continuity equation to add
             //  linearisation w.r.t alpha
             void addSup
