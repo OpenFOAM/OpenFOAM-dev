@@ -61,6 +61,8 @@ bool Foam::solvers::multiphaseEuler::read()
     nEnergyCorrectors =
         pimple.dict().lookupOrDefault<int>("nEnergyCorrectors", 1);
 
+    alphaControls.read(mesh.solution().solverDict("alpha"));
+
     return true;
 }
 
@@ -247,7 +249,8 @@ void Foam::solvers::multiphaseEuler::prePredictor()
 {
     if (pimple.thermophysics() || pimple.flow())
     {
-        fluid_.solve(rAs);
+        alphaControls.correct(CoNum);
+        fluid_.solve(alphaControls, rAs);
         fluid_.correct();
         fluid_.correctContinuityError();
     }

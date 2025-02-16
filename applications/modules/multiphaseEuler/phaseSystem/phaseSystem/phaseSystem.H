@@ -74,6 +74,46 @@ class phaseSystem
 {
 public:
 
+    // Public Types
+
+        struct alphaControl
+        {
+            //- Function to calculate the number of explicit MULES sub-cycles
+            //  from the alpha Courant number
+            autoPtr<Function1<scalar>> nAlphaSubCyclesPtr;
+
+            label nAlphaSubCycles;
+
+            //- Number of alpha correctors
+            //  Usually used to improve the accuracy at high Courant numbers
+            //  with semi-implicit MULES, MULESCorr = true
+            label nAlphaCorr;
+
+            scalar vDotResidualAlpha;
+
+            void correct(const scalar CoNum)
+            {
+                nAlphaSubCycles = ceil(nAlphaSubCyclesPtr->value(CoNum));
+            }
+
+            void read(const dictionary& dict)
+            {
+                nAlphaSubCyclesPtr = Function1<scalar>::New
+                (
+                    "nAlphaSubCycles",
+                    dimless,
+                    dimless,
+                    dict
+                );
+
+                nAlphaCorr = dict.lookupOrDefault<label>("nAlphaCorr", 1);
+
+                vDotResidualAlpha =
+                    dict.lookupOrDefault("vDotResidualAlpha", 1e-4);
+            }
+        };
+
+
     // Public Typedefs
 
         typedef HashPtrTable<fvVectorMatrix> momentumTransferTable;
@@ -528,7 +568,11 @@ public:
         // Evolution
 
             //- Solve for the phase fractions
-            virtual void solve(const PtrList<volScalarField>& rAs);
+            virtual void solve
+            (
+                const alphaControl& alphaControls,
+                const PtrList<volScalarField>& rAs
+            );
 
             //- Correct the fluid properties other than those listed below
             virtual void correct();

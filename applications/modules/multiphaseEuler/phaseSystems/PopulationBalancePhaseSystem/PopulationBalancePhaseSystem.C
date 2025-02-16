@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -175,10 +175,11 @@ Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::specieTransfer() const
 template<class BasePhaseSystem>
 void Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::solve
 (
+    const phaseSystem::alphaControl& alphaControls,
     const PtrList<volScalarField>& rAs
 )
 {
-    BasePhaseSystem::solve(rAs);
+    BasePhaseSystem::solve(alphaControls, rAs);
 
     forAll(populationBalances_, i)
     {

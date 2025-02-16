@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,19 +41,14 @@ License
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::phaseSystem::solve(const PtrList<volScalarField>& rAs)
+void Foam::phaseSystem::solve
+(
+    const alphaControl& alphaControls,
+    const PtrList<volScalarField>& rAs
+)
 {
-    const dictionary& alphaControls = mesh_.solution().solverDict("alpha");
-
-    const label nAlphaSubCycles(alphaControls.lookup<label>("nAlphaSubCycles"));
-    const label nAlphaCorr(alphaControls.lookup<label>("nAlphaCorr"));
-
+    const label nAlphaSubCycles = alphaControls.nAlphaSubCycles;
     const bool LTS = fv::localEulerDdt::enabled(mesh_);
-
-    const scalar vDotResidualAlpha
-    (
-        alphaControls.lookupOrDefault("vDotResidualAlpha", 1e-4)
-    );
 
     // Optional reference phase which is not solved for
     // but obtained from the sum of the other phases
@@ -122,7 +117,7 @@ void Foam::phaseSystem::solve(const PtrList<volScalarField>& rAs)
         }
     }
 
-    for (int acorr=0; acorr<nAlphaCorr; acorr++)
+    for (int acorr=0; acorr<alphaControls.nAlphaCorr; acorr++)
     {
         PtrList<volScalarField::Internal> Sps(phases().size());
         PtrList<volScalarField::Internal> Sus(phases().size());
@@ -201,16 +196,28 @@ void Foam::phaseSystem::solve(const PtrList<volScalarField>& rAs)
                     {
                         Sp[celli] -=
                             vDot[celli]
-                           /max(1 - alpha[celli], vDotResidualAlpha);
+                           /max
+                            (
+                                1 - alpha[celli],
+                                alphaControls.vDotResidualAlpha
+                            );
                         Su[celli] +=
                             vDot[celli]
-                           /max(1 - alpha[celli], vDotResidualAlpha);
+                           /max
+                            (
+                                1 - alpha[celli],
+                                alphaControls.vDotResidualAlpha
+                            );
                     }
                     else if (vDot[celli] < 0)
                     {
                         Sp[celli] +=
                             vDot[celli]
-                           /max(alpha[celli], vDotResidualAlpha);
+                           /max
+                            (
+                                alpha[celli],
+                                alphaControls.vDotResidualAlpha
+                            );
                     }
                 }
             }

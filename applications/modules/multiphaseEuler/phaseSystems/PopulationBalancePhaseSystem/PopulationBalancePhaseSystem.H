@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,7 +97,11 @@ public:
             specieTransfer() const;
 
         //- Solve all population balance equations
-        virtual void solve(const PtrList<volScalarField>& rAs);
+        virtual void solve
+        (
+            const phaseSystem::alphaControl& alphaControls,
+            const PtrList<volScalarField>& rAs
+        );
 
         //- Correct derived properties
         virtual void correct();

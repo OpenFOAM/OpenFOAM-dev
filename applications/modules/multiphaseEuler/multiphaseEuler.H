@@ -94,6 +94,8 @@ protected:
         //  Defaults to 1
         int nEnergyCorrectors;
 
+        phaseSystem::alphaControl alphaControls;
+
 
     //- Optional LTS reciprocal time-step field
     tmp<volScalarField> trDeltaT;

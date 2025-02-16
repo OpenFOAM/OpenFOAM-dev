@@ -18,7 +18,7 @@ solvers
     "alpha.*"
     {
         nAlphaCorr      1;
-        nAlphaSubCycles 3;
+        nAlphaSubCycles polynomial (0 3);
         implicitPhasePressure yes;
         solver          PBiCGStab;
         preconditioner  DIC;
