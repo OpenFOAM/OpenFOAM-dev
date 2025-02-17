@@ -92,6 +92,7 @@ void correct
 template<class RhoType, class PsiMaxType, class PsiMinType>
 void correct
 (
+    const control& controls,
     const RhoType& rho,
     volScalarField& psi,
     const surfaceScalarField& phiBD,
@@ -110,6 +111,7 @@ template
 >
 void correct
 (
+    const control& controls,
     const RhoType& rho,
     volScalarField& psi,
     const surfaceScalarField& phiBD,
@@ -131,6 +133,7 @@ template
 >
 void limitCorr
 (
+    const control& controls,
     const RdeltaTType& rDeltaT,
     const RhoType& rho,
     const volScalarField& psi,

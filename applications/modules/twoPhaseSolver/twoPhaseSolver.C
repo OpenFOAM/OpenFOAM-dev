@@ -61,6 +61,8 @@ bool Foam::solvers::twoPhaseSolver::read()
     alphaApplyPrevCorr =
         alphaControls.lookupOrDefault<Switch>("alphaApplyPrevCorr", false);
 
+    MULEScontrols.read(alphaControls);
+
     const word alphaScheme(mesh.schemes().div(divAlphaName)[1].wordToken());
 
     if (!compressionSchemes.found(alphaScheme))

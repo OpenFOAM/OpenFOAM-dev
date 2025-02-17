@@ -169,6 +169,7 @@ void Foam::solvers::twoPhaseSolver::alphaSolve(const label nAlphaSubCycles)
             Info<< "Applying the previous iteration compression flux" << endl;
             MULES::correct
             (
+                MULEScontrols,
                 geometricOneField(),
                 alpha1,
                 alphaPhi1,
@@ -213,6 +214,7 @@ void Foam::solvers::twoPhaseSolver::alphaSolve(const label nAlphaSubCycles)
             {
                 MULES::correct
                 (
+                    MULEScontrols,
                     geometricOneField(),
                     alpha1,
                     talphaPhi1Un(),
@@ -227,6 +229,7 @@ void Foam::solvers::twoPhaseSolver::alphaSolve(const label nAlphaSubCycles)
             {
                 MULES::correct
                 (
+                    MULEScontrols,
                     geometricOneField(),
                     alpha1,
                     talphaPhi1Un(),
@@ -255,6 +258,7 @@ void Foam::solvers::twoPhaseSolver::alphaSolve(const label nAlphaSubCycles)
             {
                 MULES::explicitSolve
                 (
+                    MULEScontrols,
                     geometricOneField(),
                     alpha1,
                     phiCN,
@@ -269,6 +273,7 @@ void Foam::solvers::twoPhaseSolver::alphaSolve(const label nAlphaSubCycles)
             {
                 MULES::explicitSolve
                 (
+                    MULEScontrols,
                     geometricOneField(),
                     alpha1,
                     phiCN,

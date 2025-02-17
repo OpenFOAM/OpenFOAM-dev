@@ -35,6 +35,44 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+Foam::MULES::control::control(const dictionary& dict)
+{
+    read(dict);
+}
+
+
+void Foam::MULES::control::read(const dictionary& dict)
+{
+    const dictionary& MULEScontrols = dict.optionalSubDict("MULES");
+
+    smoothingCoeff = MULEScontrols.lookupOrDefault<scalar>("smoothingCoeff", 0);
+
+    extremaCoeff = MULEScontrols.lookupOrDefault<scalar>("extremaCoeff", 0);
+
+    boundaryExtremaCoeff =
+        MULEScontrols.lookupOrDefault<scalar>("boundaryExtremaCoeff", 0);
+
+    if (dict.found("MULES"))
+    {
+        nIter = MULEScontrols.lookupOrDefault<label>("nIter", 3);
+
+        tol =
+            nIter == 1
+          ? 0
+          : MULEScontrols.lookupOrDefault<scalar>("tolerance", 0);
+    }
+    else
+    {
+        nIter = MULEScontrols.lookupOrDefault<label>("nLimiterIter", 3);
+
+        tol =
+            nIter == 1
+          ? 0
+          : MULEScontrols.lookupOrDefault<scalar>("MULEStolerance", 0);
+    }
+}
+
+
 void Foam::MULES::limitSum(UPtrList<scalarField>& phiPsiCorrs)
 {
     forAll(phiPsiCorrs[0], facei)

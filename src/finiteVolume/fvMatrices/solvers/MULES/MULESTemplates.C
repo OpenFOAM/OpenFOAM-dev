@@ -116,6 +116,7 @@ void Foam::MULES::explicitSolve
 template<class RhoType, class PsiMaxType, class PsiMinType>
 void Foam::MULES::explicitSolve
 (
+    const control& controls,
     const RhoType& rho,
     volScalarField& psi,
     const surfaceScalarField& phiBD,
@@ -126,6 +127,7 @@ void Foam::MULES::explicitSolve
 {
     explicitSolve
     (
+        controls,
         rho,
         psi,
         phiBD,
@@ -148,6 +150,7 @@ template
 >
 void Foam::MULES::explicitSolve
 (
+    const control& controls,
     const RhoType& rho,
     volScalarField& psi,
     const surfaceScalarField& phi,
@@ -165,13 +168,39 @@ void Foam::MULES::explicitSolve
     if (fv::localEulerDdt::enabled(mesh))
     {
         const volScalarField& rDeltaT = fv::localEulerDdt::localRDeltaT(mesh);
-        limit(rDeltaT, rho, psi, phi, phiPsi, Sp, Su, psiMax, psiMin, false);
+        limit
+        (
+            controls,
+            rDeltaT,
+            rho,
+            psi,
+            phi,
+            phiPsi,
+            Sp,
+            Su,
+            psiMax,
+            psiMin,
+            false
+        );
         explicitSolve(rDeltaT, rho, psi, phiPsi, Sp, Su);
     }
     else
     {
         const scalar rDeltaT = 1.0/mesh.time().deltaTValue();
-        limit(rDeltaT, rho, psi, phi, phiPsi, Sp, Su, psiMax, psiMin, false);
+        limit
+        (
+            controls,
+            rDeltaT,
+            rho,
+            psi,
+            phi,
+            phiPsi,
+            Sp,
+            Su,
+            psiMax,
+            psiMin,
+            false
+        );
         explicitSolve(rDeltaT, rho, psi, phiPsi, Sp, Su);
     }
 }
@@ -187,6 +216,7 @@ template
 >
 void Foam::MULES::limiter
 (
+    const control& controls,
     surfaceScalarField& lambda,
     const RdeltaTType& rDeltaT,
     const RhoType& rho,
@@ -204,42 +234,9 @@ void Foam::MULES::limiter
 
     const fvMesh& mesh = psi.mesh();
 
-    const dictionary& MULEScontrols = mesh.solution().solverDict(psi.name());
-
-    const label nLimiterIter
-    (
-        MULEScontrols.lookupOrDefault<label>("nLimiterIter", 3)
-    );
-
-    const scalar smoothLimiter
-    (
-        MULEScontrols.lookupOrDefault<scalar>("smoothLimiter", 0)
-    );
-
-    const scalar extremaCoeff
-    (
-        MULEScontrols.lookupOrDefault<scalar>("extremaCoeff", 0)
-    );
-
-    const scalar boundaryExtremaCoeff
-    (
-        MULEScontrols.lookupOrDefault<scalar>
-        (
-            "boundaryExtremaCoeff",
-            extremaCoeff
-        )
-    );
-
     const scalar boundaryDeltaExtremaCoeff
     (
-        max(boundaryExtremaCoeff - extremaCoeff, 0)
-    );
-
-    const scalar tol
-    (
-        nLimiterIter == 1
-      ? 0
-      : MULEScontrols.lookupOrDefault<scalar>("MULEStolerance", 0)
+        max(controls.boundaryExtremaCoeff - controls.extremaCoeff, 0)
     );
 
     const labelUList& owner = mesh.owner();
@@ -262,7 +259,7 @@ void Foam::MULES::limiter
     psiMinn = psiMax;
 
     scalarField phiCorrNorm;
-    if (tol != 0)
+    if (controls.tol != 0)
     {
         phiCorrNorm = (V*(rho.primitiveField()*rDeltaT - Sp.primitiveField()));
     }
@@ -359,10 +356,19 @@ void Foam::MULES::limiter
         }
     }
 
-    if (extremaCoeff > 0)
+    if (controls.extremaCoeff > 0)
     {
-        psiMaxn = min(psiMaxn + extremaCoeff*(psiMax - psiMin), psiMax);
-        psiMinn = max(psiMinn - extremaCoeff*(psiMax - psiMin), psiMin);
+        psiMaxn = min
+        (
+            psiMaxn + controls.extremaCoeff*(psiMax - psiMin),
+            psiMax
+        );
+
+        psiMinn = max
+        (
+            psiMinn - controls.extremaCoeff*(psiMax - psiMin),
+            psiMin
+        );
     }
     else
     {
@@ -370,12 +376,21 @@ void Foam::MULES::limiter
         psiMinn = max(psiMinn, psiMin);
     }
 
-    if (smoothLimiter > small)
+    if (controls.smoothingCoeff > small)
     {
-        psiMaxn =
-            min(smoothLimiter*psiIf + (1.0 - smoothLimiter)*psiMaxn, psiMax);
-        psiMinn =
-            max(smoothLimiter*psiIf + (1.0 - smoothLimiter)*psiMinn, psiMin);
+        psiMaxn = min
+        (
+            controls.smoothingCoeff*psiIf
+          + (1.0 - controls.smoothingCoeff)*psiMaxn,
+            psiMax
+        );
+
+        psiMinn = max
+        (
+            controls.smoothingCoeff*psiIf
+          + (1.0 - controls.smoothingCoeff)*psiMinn,
+            psiMin
+        );
     }
 
     psiMaxn =
@@ -392,7 +407,7 @@ void Foam::MULES::limiter
     // Allocate storage for lambda0 on coupled patches
     // for optional convergence test
     surfaceScalarField::Boundary lambdaBf0(mesh.boundary());
-    if (tol != 0)
+    if (controls.tol != 0)
     {
         forAll(lambdaBf, patchi)
         {
@@ -413,7 +428,7 @@ void Foam::MULES::limiter
         }
     }
 
-    for (int j=0; j<nLimiterIter; j++)
+    for (int j=0; j<controls.nIter; j++)
     {
         // Convergence test parameter
         scalar maxDeltaLambdaPhiCorrRes = 0;
@@ -530,13 +545,13 @@ void Foam::MULES::limiter
                     min(lambdam[owner[facei]], lambdap[neighb[facei]]);
             }
 
-            if (tol > 0)
+            if (controls.tol > 0)
             {
                 const scalar phiCorrRes =
                     mag(phiCorrIf[facei])
                    /min(phiCorrNorm[owner[facei]], phiCorrNorm[neighb[facei]]);
 
-                if (phiCorrRes > tol)
+                if (phiCorrRes > controls.tol)
                 {
                     maxDeltaLambdaPhiCorrRes = max
                     (
@@ -563,7 +578,7 @@ void Foam::MULES::limiter
                 const labelList& pFaceCells =
                     mesh.boundary()[patchi].faceCells();
 
-                if (tol > 0)
+                if (controls.tol > 0)
                 {
                     lambdaBf0[patchi] = lambdaPf;
                 }
@@ -606,12 +621,12 @@ void Foam::MULES::limiter
                             lambdaPf[pFacei] = lambdam[pfCelli];
                         }
 
-                        if (tol > 0)
+                        if (controls.tol > 0)
                         {
                             const scalar phiCorrRes =
                                 mag(phiCorrfPf[pFacei])/phiCorrNorm[pfCelli];
 
-                            if (phiCorrRes > tol)
+                            if (phiCorrRes > controls.tol)
                             {
                                 maxDeltaLambdaPhiCorrRes = max
                                 (
@@ -641,7 +656,7 @@ void Foam::MULES::limiter
                 const fvsPatchScalarField& lambdaNbrPf = lambdaNbrBf[patchi];
                 lambdaPf = min(lambdaPf, lambdaNbrPf);
 
-                if (tol > 0)
+                if (controls.tol > 0)
                 {
                     const fvsPatchScalarField& lambdaPf0 = lambdaBf0[patchi];
                     const scalarField& phiCorrfPf = phiCorrBf[patchi];
@@ -655,7 +670,7 @@ void Foam::MULES::limiter
                             mag(phiCorrfPf[pFacei])
                            /phiCorrNorm[pFaceCells[pFacei]];
 
-                        if (phiCorrRes > tol)
+                        if (phiCorrRes > controls.tol)
                         {
                             maxDeltaLambdaPhiCorrRes = max
                             (
@@ -670,7 +685,7 @@ void Foam::MULES::limiter
         }
 
         // Optional convergence test
-        if (tol != 0)
+        if (controls.tol != 0)
         {
             reduce(maxDeltaLambdaPhiCorrRes, maxOp<scalar>());
 
@@ -680,7 +695,7 @@ void Foam::MULES::limiter
                     << maxDeltaLambdaPhiCorrRes << endl;
             }
 
-            if (maxDeltaLambdaPhiCorrRes < tol) break;
+            if (maxDeltaLambdaPhiCorrRes < controls.tol) break;
         }
     }
 }
@@ -697,6 +712,7 @@ template
 >
 void Foam::MULES::limit
 (
+    const control& controls,
     const RdeltaTType& rDeltaT,
     const RhoType& rho,
     const volScalarField& psi,
@@ -788,6 +804,7 @@ void Foam::MULES::limit
 
     limiter
     (
+        controls,
         lambda,
         rDeltaT,
         rho,
@@ -821,6 +838,7 @@ template
 >
 void Foam::MULES::limit
 (
+    const control& controls,
     const RhoType& rho,
     const volScalarField& psi,
     const surfaceScalarField& phi,
@@ -837,12 +855,38 @@ void Foam::MULES::limit
     if (fv::localEulerDdt::enabled(mesh))
     {
         const volScalarField& rDeltaT = fv::localEulerDdt::localRDeltaT(mesh);
-        limit(rDeltaT, rho, psi, phi, phiPsi, Sp, Su, psiMax, psiMin, rtnCorr);
+        limit
+        (
+            controls,
+            rDeltaT,
+            rho,
+            psi,
+            phi,
+            phiPsi,
+            Sp,
+            Su,
+            psiMax,
+            psiMin,
+            rtnCorr
+        );
     }
     else
     {
         const scalar rDeltaT = 1.0/mesh.time().deltaTValue();
-        limit(rDeltaT, rho, psi, phi, phiPsi, Sp, Su, psiMax, psiMin, rtnCorr);
+        limit
+        (
+            controls,
+            rDeltaT,
+            rho,
+            psi,
+            phi,
+            phiPsi,
+            Sp,
+            Su,
+            psiMax,
+            psiMin,
+            rtnCorr
+        );
     }
 }
 

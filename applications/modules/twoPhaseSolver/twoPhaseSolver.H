@@ -56,6 +56,7 @@ See also
 
 #include "VoFSolver.H"
 #include "twoPhaseVoFMixture.H"
+#include "MULES.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -105,6 +106,9 @@ protected:
         //  Improves efficiency for steady-simulations but can only be applied
         //  once the alpha field is reasonably steady, i.e. fully developed
         bool alphaApplyPrevCorr;
+
+        //- MULES controls
+        MULES::control MULEScontrols;
 
 
     // Kinematic properties

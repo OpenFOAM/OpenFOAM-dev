@@ -82,6 +82,7 @@ bool Foam::solvers::multiphaseVoFSolver::read()
             alphaControls
         );
 
+    MULEScontrols.read(alphaControls);
 
     return true;
 }

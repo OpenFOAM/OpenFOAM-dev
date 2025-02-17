@@ -110,6 +110,7 @@ void Foam::MULES::correct
 template<class RhoType, class PsiMaxType, class PsiMinType>
 void Foam::MULES::correct
 (
+    const control& controls,
     const RhoType& rho,
     volScalarField& psi,
     const surfaceScalarField& phiBD,
@@ -118,7 +119,18 @@ void Foam::MULES::correct
     const PsiMinType& psiMin
 )
 {
-    correct(rho, psi, phiBD, phiCorr, zeroField(), zeroField(), psiMax, psiMin);
+    correct
+    (
+        controls,
+        rho,
+        psi,
+        phiBD,
+        phiCorr,
+        zeroField(),
+        zeroField(),
+        psiMax,
+        psiMin
+    );
 }
 
 
@@ -132,6 +144,7 @@ template
 >
 void Foam::MULES::correct
 (
+    const control& controls,
     const RhoType& rho,
     volScalarField& psi,
     const surfaceScalarField& phiBD,
@@ -150,6 +163,7 @@ void Foam::MULES::correct
 
         limitCorr
         (
+            controls,
             rDeltaT,
             rho,
             psi,
@@ -169,6 +183,7 @@ void Foam::MULES::correct
 
         limitCorr
         (
+            controls,
             rDeltaT,
             rho,
             psi,
@@ -196,6 +211,7 @@ template
 >
 void Foam::MULES::limitCorr
 (
+    const control& controls,
     const RdeltaTType& rDeltaT,
     const RhoType& rho,
     const volScalarField& psi,
@@ -236,6 +252,7 @@ void Foam::MULES::limitCorr
 
     limiter
     (
+        controls,
         lambda,
         rDeltaT,
         rho,

@@ -343,6 +343,31 @@ Foam::phaseSystem::~phaseSystem()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
+void Foam::phaseSystem::alphaControl::read(const dictionary& dict)
+{
+    nAlphaSubCyclesPtr = Function1<scalar>::New
+    (
+        "nAlphaSubCycles",
+        dimless,
+        dimless,
+        dict
+    );
+
+    nAlphaCorr = dict.lookupOrDefault<label>("nAlphaCorr", 1);
+
+    vDotResidualAlpha =
+        dict.lookupOrDefault("vDotResidualAlpha", 1e-4);
+
+    MULES.read(dict);
+}
+
+
+void Foam::phaseSystem::alphaControl::correct(const scalar CoNum)
+{
+    nAlphaSubCycles = ceil(nAlphaSubCyclesPtr->value(CoNum));
+}
+
+
 Foam::tmp<Foam::volScalarField> Foam::phaseSystem::rho() const
 {
     tmp<volScalarField> rho(movingPhaseModels_[0]*movingPhaseModels_[0].rho());

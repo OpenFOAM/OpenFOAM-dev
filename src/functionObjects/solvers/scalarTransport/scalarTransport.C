@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -391,6 +391,8 @@ void Foam::functionObjects::scalarTransport::solveMULES()
     const label nSubCycles(controls.lookup<label>("nSubCycles"));
     const bool MULESCorr(controls.lookupOrDefault<Switch>("MULESCorr", false));
 
+    const MULES::control MULEScontrols(mesh().solution().solverDict(s_.name()));
+
     // Apply the compression correction from the previous iteration
     // Improves efficiency for steady-simulations but can only be applied
     // once the s field is reasonably steady, i.e. fully developed
@@ -528,6 +530,7 @@ void Foam::functionObjects::scalarTransport::solveMULES()
             Info<< "Applying the previous iteration compression flux" << endl;
             MULES::correct
             (
+                MULEScontrols,
                 geometricOneField(),
                 s_,
                 sPhi_,
@@ -563,6 +566,7 @@ void Foam::functionObjects::scalarTransport::solveMULES()
 
             MULES::correct
             (
+                MULEScontrols,
                 geometricOneField(),
                 s_,
                 tsPhiUn(),
@@ -588,6 +592,7 @@ void Foam::functionObjects::scalarTransport::solveMULES()
 
             MULES::explicitSolve
             (
+                MULEScontrols,
                 geometricOneField(),
                 s_,
                 phiCN,

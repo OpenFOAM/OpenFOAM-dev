@@ -64,6 +64,54 @@ NamespaceName("MULES");
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+// MULES control structure
+struct control
+{
+    //- Optional maximum number of limiter iterations
+    //  Defaults to 3
+    label nIter;
+
+    //- Optional limiter convergence tolerance
+    //  1e-2 is usually sufficient
+    //  but 1e-3 can be used for very tight convergence
+    //  Defaults to 0, i.e. unused and nIter iterations are performed
+    scalar tol;
+
+    //- Optional coefficient to relax the local boundedness constraint
+    //  by adding extremaCoeff*local_range to the allowed range
+    //  allowing the solution to approach the global bounds in case temporary
+    //  smearing has caused the solution to deviate from the entire range.
+    //
+    //  A value of 0 enforces strict local boundedness,
+    //  a value of 1 enforces the global bounds only.
+    //  Defaults to 0
+    scalar extremaCoeff;
+
+    //- Optional coefficient to relax the local boundedness constraint
+    //  in the cells adjacent to boundaries only
+    //  Defaults to 0
+    scalar boundaryExtremaCoeff;
+
+    //- Optional coefficient to reduce the allowed range of the solution to
+    //  smoothingCoeff*local_range.
+    //
+    //  This option should only be used to improve the smoothness of the
+    //  solution at low Courant number (explicit solution with sub-cycling)
+    //  otherwise excessive smearing may result.
+    scalar smoothingCoeff;
+
+    //- Null constructor
+    //  Should be followed by a call to read(dict)
+    control()
+    {}
+
+    //- Construct from dict and set the controls
+    control(const dictionary& dict);
+
+    //- Read dict and set the controls
+    void read(const dictionary& dict);
+};
+
 template<class RdeltaTType, class RhoType, class SpType, class SuType>
 void explicitSolve
 (
@@ -96,6 +144,7 @@ void explicitSolve
 template<class RhoType, class PsiMaxType, class PsiMinType>
 void explicitSolve
 (
+    const control& controls,
     const RhoType& rho,
     volScalarField& psi,
     const surfaceScalarField& phiBD,
@@ -114,6 +163,7 @@ template
 >
 void explicitSolve
 (
+    const control& controls,
     const RhoType& rho,
     volScalarField& psi,
     const surfaceScalarField& phiBD,
@@ -134,6 +184,7 @@ template
 >
 void limiter
 (
+    const control& controls,
     surfaceScalarField& lambda,
     const RdeltaTType& rDeltaT,
     const RhoType& rho,
@@ -157,6 +208,7 @@ template
 >
 void limit
 (
+    const control& controls,
     const RdeltaTType& rDeltaT,
     const RhoType& rho,
     const volScalarField& psi,
@@ -179,6 +231,7 @@ template
 >
 void limit
 (
+    const control& controls,
     const RhoType& rho,
     const volScalarField& psi,
     const surfaceScalarField& phi,

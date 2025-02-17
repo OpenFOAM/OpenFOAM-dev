@@ -54,6 +54,7 @@ SourceFiles
 #include "volFields.H"
 #include "surfaceFields.H"
 #include "fvMatricesFwd.H"
+#include "MULES.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -76,12 +77,14 @@ public:
 
     // Public Types
 
+        //- alpha solution control structure
         struct alphaControl
         {
             //- Function to calculate the number of explicit MULES sub-cycles
             //  from the alpha Courant number
             autoPtr<Function1<scalar>> nAlphaSubCyclesPtr;
 
+            //- Number of alpha equation sub-cycles
             label nAlphaSubCycles;
 
             //- Number of alpha correctors
@@ -89,28 +92,17 @@ public:
             //  with semi-implicit MULES, MULESCorr = true
             label nAlphaCorr;
 
+            //- Compressibility source stabilisation tolerance
             scalar vDotResidualAlpha;
 
-            void correct(const scalar CoNum)
-            {
-                nAlphaSubCycles = ceil(nAlphaSubCyclesPtr->value(CoNum));
-            }
+            //- MULES controls
+            MULES::control MULES;
 
-            void read(const dictionary& dict)
-            {
-                nAlphaSubCyclesPtr = Function1<scalar>::New
-                (
-                    "nAlphaSubCycles",
-                    dimless,
-                    dimless,
-                    dict
-                );
+            //- Read the alpha and MULES controls from dict
+            void read(const dictionary& dict);
 
-                nAlphaCorr = dict.lookupOrDefault<label>("nAlphaCorr", 1);
-
-                vDotResidualAlpha =
-                    dict.lookupOrDefault("vDotResidualAlpha", 1e-4);
-            }
+            //- Correct nAlphaSubCycles for the current Courant number
+            void correct(const scalar CoNum);
         };
 
 

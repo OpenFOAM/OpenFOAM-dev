@@ -83,6 +83,7 @@ void Foam::solvers::incompressibleMultiphaseVoF::alphaSolve()
         // Limit alphaPhi for each phase
         MULES::limit
         (
+            MULEScontrols,
             1.0/mesh.time().deltaT().value(),
             geometricOneField(),
             alpha,

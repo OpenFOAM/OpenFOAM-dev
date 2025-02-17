@@ -25,7 +25,6 @@ License
 
 #include "phaseSystem.H"
 
-#include "MULES.H"
 #include "subCycle.H"
 
 #include "fvcDdt.H"
@@ -338,6 +337,7 @@ void Foam::phaseSystem::solve
 
                 MULES::limit
                 (
+                    alphaControls.MULES,
                     geometricOneField(),
                     alpha,
                     phase.phi()(),
