@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -117,9 +117,8 @@ void Foam::RBD::restraints::propellerDiskForce::restrain
     }
 
     // Lookup the propeller force and moment
-    // negated to obtain the force and moment the propeller applied to the body
-    const vector force(-propPtr->force());
-    const vector moment(-propPtr->moment() + (propPtr->centre() ^ force));
+    const vector force(propPtr->force());
+    const vector moment(propPtr->moment() + (propPtr->centre() ^ force));
 
     if (model_.debug)
     {
