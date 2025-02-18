@@ -23,8 +23,6 @@ boundaryField
     {
         type            waveTransmissive;
         gamma           1.4;
-        fieldInf        1e5;
-        lInf            0.05;
         value           $internalField;
     }
 
