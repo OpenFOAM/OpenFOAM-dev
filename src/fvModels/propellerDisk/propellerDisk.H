@@ -149,10 +149,10 @@ protected:
 
         mutable autoPtr<volVectorField::Internal> forcePtr_;
 
-        //- Current force of the propeller on the fluid
+        //- Current force of the fluid on the propeller
         mutable vector force_;
 
-        //- Current moment of the propeller on the fluid
+        //- Current moment of the fluid on the propeller
         mutable vector moment_;
 
         //- Optional switch to enable logging of integral properties
@@ -239,13 +239,13 @@ public:
             return centre_;
         }
 
-        //- Return the current force of the propeller on the fluid
+        //- Return the current force of the fluid on the propeller
         vector force() const
         {
             return force_;
         }
 
-        //- Return the current moment of the propeller on the fluid
+        //- Return the current moment of the fluid on the propeller
         vector moment() const
         {
             return moment_;

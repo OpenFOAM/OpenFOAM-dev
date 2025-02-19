@@ -157,8 +157,8 @@ void Foam::fv::propellerDisk::addActuationDiskAxialInertialResistance
 
                 const vector Vfi(V[celli]*force[celli]);
 
-                // Integrate the net force and moment of the propeller
-                // on the fluid
+                // Integrate the net force and moment
+                // of the fluid on the propeller
                 force_ += Vfi;
                 moment_ += r ^ Vfi;
 
