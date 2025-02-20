@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,8 +29,8 @@ Description
 
     Source:
     \verbatim
-            API (American Petroleum Institute)
-                    Technical Data Book
+        API (American Petroleum Institute)
+               Technical Data Book
     \endverbatim
 
 \*---------------------------------------------------------------------------*/
@@ -72,7 +72,7 @@ public:
 
     // Constructors
 
-        //- Construct from components
+        //- Construct from name and coefficients
         APIdiffCoef
         (
             const word& name,
@@ -99,15 +99,14 @@ public:
 
     // Member Functions
 
-        //- Inherit base class value methods to prevent clang warnings
-        using FieldFunction2<scalar, APIdiffCoef>::value;
-
-        //- API vapour mass diffusivity function using properties from
-        //  construction
+        //- API vapour mass diffusivity function of pressure and temperature
         virtual scalar value(scalar p, scalar T) const
         {
             return 3.6059e-3*(pow(1.8*T, 1.75))*alpha_/(p*beta_);
         }
+
+        //- Inherit base class value methods to prevent clang warnings
+        using FieldFunction2<scalar, APIdiffCoef>::value;
 
         //- API vapour mass diffusivity function using properties from
         //  construction - with specified binary pair
