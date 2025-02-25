@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -385,7 +385,20 @@ public:
 
         //- Reset the field values to the given field
         //  Used for mesh to mesh mapping
-        void reset(const DimensionedField<Type, GeoMesh, PrimitiveField>&);
+        template<template<class> class PrimitiveField2>
+        void reset(const DimensionedField<Type, GeoMesh, PrimitiveField2>&);
+
+        //- Reset the field values to the given tmp-field
+        //  Used for mesh to mesh mapping
+        void reset(const tmp<DimensionedField<Type, GeoMesh, PrimitiveField>>&);
+
+        //- Reset the field values to the given tmp-field
+        //  Used for mesh to mesh mapping
+        template<template<class> class PrimitiveField2>
+        void reset
+        (
+            const tmp<DimensionedField<Type, GeoMesh, PrimitiveField2>>&
+        );
 
 
         // Write

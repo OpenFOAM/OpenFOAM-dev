@@ -41,11 +41,8 @@ Description
 namespace Foam
 {
 
-namespace ioDynamicField
-{
-    template<class Type>
-    using Container = DynamicField<Type>;
-}
+template<class Type>
+using IODynamicFieldContainer = DynamicField<Type>;
 
 template<class Type>
 class IODynamicField;
@@ -70,9 +67,15 @@ struct OldTimeOtherFieldType<IODynamicField<Type>>
 template<class Type>
 class IODynamicField
 :
-    public IOListBase<ioDynamicField::Container, IODynamicField, Type>,
+    public IOListBase<IODynamicFieldContainer, IODynamicField, Type>,
     public OldTimeField<IODynamicField<Type>>
 {
+    // Private Type Definitions
+
+        //- The base IO list class
+        typedef IOListBase<IODynamicFieldContainer, IODynamicField, Type> Base;
+
+
 public:
 
     //- Runtime type information
@@ -85,23 +88,38 @@ public:
         template<class ... Args>
         IODynamicField(Args ... args)
         :
-            IOListBase<ioDynamicField::Container, IODynamicField, Type>
-            (
-                args ...
-            ),
-            OldTimeField<IODynamicField<Type>>
-            (
-                this->time().timeIndex()
-            )
+            Base(args ...),
+            OldTimeField<IODynamicField<Type>>(this->time().timeIndex())
+        {}
+
+        //- Copy construct
+        IODynamicField(const IODynamicField& iodf)
+        :
+            Base(iodf),
+            OldTimeField<IODynamicField<Type>>(iodf)
+        {}
+
+        //- Move construct
+        IODynamicField(IODynamicField&& iodf)
+        :
+            Base(std::move(iodf)),
+            OldTimeField<IODynamicField<Type>>(std::move(iodf))
         {}
 
 
     // Member Operators
 
-        //- Inherit assignment operators
-        using
-            IOListBase<ioDynamicField::Container, IODynamicField, Type>::
-            operator=;
+        //- Copy-assign
+        void operator=(const IODynamicField<Type>& iodf)
+        {
+            Base::operator=(iodf);
+        }
+
+        //- Move-assign
+        void operator=(IODynamicField<Type>&& iodf)
+        {
+            Base::operator=(std::move(iodf));
+        }
 };
 
 

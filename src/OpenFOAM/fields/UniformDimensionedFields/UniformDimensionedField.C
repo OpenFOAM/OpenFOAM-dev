@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -112,6 +112,16 @@ const Type& Foam::UniformDimensionedField<Type>::value() const
 
 
 template<class Type>
+void Foam::UniformDimensionedField<Type>::reset
+(
+    const UniformDimensionedField<Type>& rhs
+)
+{
+    dimensioned<Type>::operator=(rhs);
+}
+
+
+template<class Type>
 bool Foam::UniformDimensionedField<Type>::writeData(Ostream& os) const
 {
     writeKeyword(os, "dimensions");
@@ -152,6 +162,13 @@ void Foam::UniformDimensionedField<Type>::operator=
 )
 {
     dimensioned<Type>::operator=(rhs);
+}
+
+
+template<class Type>
+const Type& Foam::UniformDimensionedField<Type>::operator[](const label) const
+{
+    return this->value();
 }
 
 

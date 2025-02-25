@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -509,7 +509,17 @@ public:
 
         //- Reset the field contents to the given field
         //  Used for mesh to mesh mapping
-        void reset(const tmp<GeometricField>&);
+        template<template<class> class PrimitiveField2>
+        void reset(const GeometricField<Type, GeoMesh, PrimitiveField2>&);
+
+        //- Reset the field contents to the given tmp-field
+        //  Used for mesh to mesh mapping
+        void reset(const tmp<GeometricField<Type, GeoMesh, PrimitiveField>>&);
+
+        //- Reset the field contents to the given tmp-field
+        //  Used for mesh to mesh mapping
+        template<template<class> class PrimitiveField2>
+        void reset(const tmp<GeometricField<Type, GeoMesh, PrimitiveField2>>&);
 
         //- Does the field need a reference level for solution
         bool needReference() const;
@@ -611,15 +621,14 @@ public:
         (
             GeometricField<Type, GeoMesh, PrimitiveField>&&
         );
-        void operator=
-        (
-            const tmp<GeometricField<Type, GeoMesh, PrimitiveField>>&
-        );
-
         template<template<class> class PrimitiveField2>
         void operator=
         (
             const GeometricField<Type, GeoMesh, PrimitiveField2>&
+        );
+        void operator=
+        (
+            const tmp<GeometricField<Type, GeoMesh, PrimitiveField>>&
         );
         template<template<class> class PrimitiveField2>
         void operator=
@@ -633,6 +642,10 @@ public:
         void operator==
         (
             const GeometricField<Type, GeoMesh, PrimitiveField2>&
+        );
+        void operator==
+        (
+            const tmp<GeometricField<Type, GeoMesh, PrimitiveField>>&
         );
         template<template<class> class PrimitiveField2>
         void operator==

@@ -1760,9 +1760,13 @@ void Foam::LagrangianMesh::reset(const bool initial, const bool final)
 
     if (initial)
     {
+        coordinates_.storeOldTimes();
         coordinates_.oldTime();
+        celli_.storeOldTimes();
         celli_.oldTime();
+        facei_.storeOldTimes();
         facei_.oldTime();
+        faceTrii_.storeOldTimes();
         faceTrii_.oldTime();
 
         #define OLD_TIME_TYPE_FIELDS(Type, GeoField)                           \

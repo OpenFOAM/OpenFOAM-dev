@@ -37,6 +37,7 @@ SourceFiles
 #define OldTimeField_H
 
 #include "Time.H"
+#include "GeometricFieldFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -46,35 +47,6 @@ namespace Foam
 // Forward declaration of classes
 template<class FieldType>
 class OldTimeField;
-
-
-/*---------------------------------------------------------------------------*\
-                    Struct OldTimeBaseFieldType Declaration
-\*---------------------------------------------------------------------------*/
-
-template<class FieldType, typename = void>
-struct OldTimeBaseFieldType
-{
-    nil operator()(const OldTimeField<FieldType>& otf) const
-    {
-        return nil();
-    }
-};
-
-template<class FieldType>
-struct OldTimeBaseFieldType
-<
-    FieldType,
-    pTraits<typename FieldType::Base::OldTime>
->
-{
-    typedef typename FieldType::Base::OldTime type;
-
-    const type& operator()(const OldTimeField<FieldType>& otf) const
-    {
-        return static_cast<const type&>(otf.field());
-    }
-};
 
 
 /*---------------------------------------------------------------------------*\
@@ -110,15 +82,6 @@ struct OldTimeField0Type<GeoField<Type, GeoMesh, SubField>>
     typedef GeoField<Type, GeoMesh, Field> type;
 };
 
-template<class Type>
-class UniformDimensionedField;
-
-template<class Type>
-struct OldTimeField0Type<UniformDimensionedField<Type>>
-{
-    typedef UniformDimensionedField<Type> type;
-};
-
 
 /*---------------------------------------------------------------------------*\
                     Class OldTimeOtherFieldType Declaration
@@ -138,16 +101,6 @@ struct OldTimeOtherFieldType<GeoField<Type, GeoMesh, PrimitiveField>>
 {
     template<template<class> class OtherPrimitiveField>
     using type = GeoField<Type, GeoMesh, OtherPrimitiveField>;
-};
-
-template<class Type>
-class UniformDimensionedField;
-
-template<class Type>
-struct OldTimeOtherFieldType<UniformDimensionedField<Type>>
-{
-    template<template<class> class OtherPrimitiveField>
-    using type = UniformDimensionedField<Type>;
 };
 
 
@@ -312,6 +265,84 @@ public:
 
         //- Disallow default bitwise assignment
         void operator=(const OldTimeField<FieldType>&) = delete;
+};
+
+
+/*---------------------------------------------------------------------------*\
+                    Struct OldTimeBaseFieldType Declaration
+\*---------------------------------------------------------------------------*/
+
+template<class FieldType, typename = void>
+struct OldTimeBaseFieldType
+{
+    nil operator()(const OldTimeField<FieldType>& otf) const
+    {
+        return nil();
+    }
+};
+
+template<class FieldType>
+struct OldTimeBaseFieldType
+<
+    FieldType,
+    pTraits<typename FieldType::Base::OldTime>
+>
+{
+    typedef typename FieldType::Base::OldTime type;
+
+    const type& operator()(const OldTimeField<FieldType>& otf) const
+    {
+        return static_cast<const type&>(otf.field());
+    }
+};
+
+
+/*---------------------------------------------------------------------------*\
+                      Struct OldTimeFieldCopy Declaration
+\*---------------------------------------------------------------------------*/
+
+template<class FieldType>
+struct OldTimeFieldCopy
+{
+    typedef typename OldTimeField0Type<FieldType>::type Field0Type;
+
+    tmp<Field0Type> operator()(const IOobject& io, const FieldType& field)
+    {
+        return tmp<Field0Type>(new Field0Type(io, field));
+    }
+
+    void operator()(Field0Type& field0, const FieldType& field)
+    {
+        field0 = field;
+    }
+};
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+struct OldTimeFieldCopy<GeometricField<Type, GeoMesh, PrimitiveField>>
+{
+    typedef GeometricField<Type, GeoMesh, PrimitiveField> FieldType;
+
+    typedef typename OldTimeField0Type<FieldType>::type Field0Type;
+
+    typedef typename FieldType::Patch::Calculated Calculated;
+
+    tmp<Field0Type> operator()(const IOobject& io, const FieldType& field)
+    {
+        // Copy all boundary condition data into the old-time field
+        //return tmp<Field0Type>(new Field0Type(io, field));
+
+        // Only copy boundary condition values into the old-time field
+        return tmp<Field0Type>(new Field0Type(io, field, Calculated::typeName));
+    }
+
+    void operator()(Field0Type& field0, const FieldType& field)
+    {
+        // Copy all boundary condition data into the old-time field
+        //field0.reset(field);
+
+        // Only copy boundary condition values into the old-time field
+        field0 = field;
+    }
 };
 
 

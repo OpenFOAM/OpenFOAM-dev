@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -462,6 +462,13 @@ void Foam::Field<Type>::reset(const Field<Type>& rhs)
             << abort(FatalError);
     }
 
+    List<Type>::operator=(rhs);
+}
+
+
+template<class Type>
+void Foam::Field<Type>::reset(const UList<Type>& rhs)
+{
     List<Type>::operator=(rhs);
 }
 

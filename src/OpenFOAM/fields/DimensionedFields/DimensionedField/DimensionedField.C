@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,16 +34,30 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// check mesh for two fields
-#define checkField(df1, df2, op)                                    \
-if (&(df1).mesh() != &(df2).mesh())                                 \
-{                                                                   \
-    FatalErrorInFunction                                            \
-        << "different mesh for fields "                             \
-        << (df1).name() << " and " << (df2).name()                  \
-        << " during operatrion " <<  op                             \
-        << abort(FatalError);                                       \
-}
+#define checkFieldAssignment(df1, df2)                                         \
+                                                                               \
+    if                                                                         \
+    (                                                                          \
+        static_cast<const regIOobject*>(&df1)                                  \
+     == static_cast<const regIOobject*>(&df2)                                  \
+    )                                                                          \
+    {                                                                          \
+        FatalErrorInFunction                                                   \
+            << "attempted assignment to self for field "                       \
+            << (df1).name() << abort(FatalError);                              \
+    }
+
+
+#define checkFieldOperation(df1, df2, op)                                      \
+                                                                               \
+    if (&(df1).mesh() != &(df2).mesh())                                        \
+    {                                                                          \
+        FatalErrorInFunction                                                   \
+            << "different mesh for fields "                                    \
+            << (df1).name() << " and " << (df2).name()                         \
+            << " during operation " <<  op                                     \
+            << abort(FatalError);                                              \
+    }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -662,21 +676,54 @@ DimensionedField<Type, GeoMesh, PrimitiveField>::weightedAverage
 
 
 template<class Type, class GeoMesh, template<class> class PrimitiveField>
+template<template<class> class PrimitiveField2>
 void DimensionedField<Type, GeoMesh, PrimitiveField>::reset
 (
-    const DimensionedField<Type, GeoMesh, PrimitiveField>& df
+    const DimensionedField<Type, GeoMesh, PrimitiveField2>& df
 )
 {
-    // Check for assignment to self
-    if (this == &df)
-    {
-        FatalErrorInFunction
-            << "attempted assignment to self"
-            << abort(FatalError);
-    }
+    checkFieldAssignment(*this, df);
 
     dimensions_ = df.dimensions();
     PrimitiveField<Type>::operator=(df);
+}
+
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+void DimensionedField<Type, GeoMesh, PrimitiveField>::reset
+(
+    const tmp<DimensionedField<Type, GeoMesh, PrimitiveField>>& tdf
+)
+{
+    const DimensionedField<Type, GeoMesh, PrimitiveField>& df = tdf();
+
+    checkFieldAssignment(*this, df);
+
+    dimensions_ = df.dimensions();
+
+    if (tdf.isTmp())
+    {
+        primitiveFieldRef().transfer(tdf.ref());
+    }
+    else
+    {
+        primitiveFieldRef() = df.primitiveField();
+    }
+
+    tdf.clear();
+}
+
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+template<template<class> class PrimitiveField2>
+void DimensionedField<Type, GeoMesh, PrimitiveField>::reset
+(
+    const tmp<DimensionedField<Type, GeoMesh, PrimitiveField2>>& tdf
+)
+{
+    reset(tdf());
+
+    tdf.clear();
 }
 
 
@@ -688,15 +735,8 @@ void DimensionedField<Type, GeoMesh, PrimitiveField>::operator=
     const DimensionedField<Type, GeoMesh, PrimitiveField>& df
 )
 {
-    // Check for assignment to self
-    if (this == &df)
-    {
-        FatalErrorInFunction
-            << "attempted assignment to self"
-            << abort(FatalError);
-    }
-
-    checkField(*this, df, "=");
+    checkFieldAssignment(*this, df);
+    checkFieldOperation(*this, df, "=");
 
     dimensions_ = df.dimensions();
     PrimitiveField<Type>::operator=(df);
@@ -709,15 +749,8 @@ void DimensionedField<Type, GeoMesh, PrimitiveField>::operator=
     DimensionedField<Type, GeoMesh, PrimitiveField>&& df
 )
 {
-    // Check for assignment to self
-    if (this == &df)
-    {
-        FatalErrorInFunction
-            << "attempted assignment to self"
-            << abort(FatalError);
-    }
-
-    checkField(*this, df, "=");
+    checkFieldAssignment(*this, df);
+    checkFieldOperation(*this, df, "=");
 
     dimensions_ = move(df.dimensions());
     PrimitiveField<Type>::operator=(move(df));
@@ -732,15 +765,8 @@ void DimensionedField<Type, GeoMesh, PrimitiveField>::operator=
 {
     const DimensionedField<Type, GeoMesh, PrimitiveField>& df = tdf();
 
-    // Check for assignment to self
-    if (this == &df)
-    {
-        FatalErrorInFunction
-            << "attempted assignment to self"
-            << abort(FatalError);
-    }
-
-    checkField(*this, df, "=");
+    checkFieldAssignment(*this, df);
+    checkFieldOperation(*this, df, "=");
 
     dimensions_ = df.dimensions();
 
@@ -764,7 +790,7 @@ void DimensionedField<Type, GeoMesh, PrimitiveField>::operator=
     const DimensionedField<Type, GeoMesh, PrimitiveField2>& df
 )
 {
-    checkField(*this, df, "=");
+    checkFieldOperation(*this, df, "=");
 
     dimensions_ = df.dimensions();
     PrimitiveField<Type>::operator=(df);
@@ -780,7 +806,7 @@ void DimensionedField<Type, GeoMesh, PrimitiveField>::operator=
 {
     const DimensionedField<Type, GeoMesh, PrimitiveField2>& df = tdf();
 
-    checkField(*this, df, "=");
+    checkFieldOperation(*this, df, "=");
 
     dimensions_ = df.dimensions();
     PrimitiveField<Type>::operator=(df);
@@ -854,7 +880,7 @@ void DimensionedField<Type, GeoMesh, PrimitiveField>::operator op              \
     const DimensionedField<TYPE, GeoMesh, PrimitiveField2>& df                 \
 )                                                                              \
 {                                                                              \
-    checkField(*this, df, #op);                                                \
+    checkFieldOperation(*this, df, #op);                                       \
                                                                                \
     dimensions_ op df.dimensions();                                            \
     PrimitiveField<Type>::operator op(df);                                     \
@@ -891,7 +917,8 @@ COMPUTED_ASSIGNMENT(scalar, /=)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#undef checkField
+#undef checkFieldAssignment
+#undef checkFieldOperation
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

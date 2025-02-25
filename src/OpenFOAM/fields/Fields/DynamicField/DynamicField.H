@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -172,6 +172,7 @@ public:
             //- Size of the underlying storage.
             inline label capacity() const;
 
+
         // Edit
 
             //- Alter the size of the underlying storage.
@@ -210,6 +211,14 @@ public:
 
             //- Clear the list and delete storage.
             inline void clearStorage();
+
+            //- Reset the field values to the given field
+            //  Equivalent to operator=
+            void reset(const DynamicField<T, SizeInc, SizeMult, SizeDiv>&);
+
+            //- Reset the field values to the given field
+            //  Equivalent to operator=
+            void reset(const UList<T>&);
 
             //- Shrink the allocated space to the number of elements used.
             //  Returns a reference to the DynamicField.

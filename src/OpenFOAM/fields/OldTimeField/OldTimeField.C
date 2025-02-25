@@ -52,7 +52,7 @@ void Foam::OldTimeField<FieldType>::storeOldTimesInner() const
             tfield0_.ref().OldTimeField<Field0Type>::storeOldTimesInner();
 
             // Set the old-field to this field
-            tfield0_.ref() == field();
+            OldTimeFieldCopy<FieldType>()(tfield0_.ref(), field());
             tfield0_.ref().OldTimeField<Field0Type>::timeIndex_ = timeIndex_;
 
             // If we have an old-old field, then the old field is state and
@@ -330,19 +330,20 @@ Foam::OldTimeField<FieldType>::oldTime() const
         setBase();
 
         // Construct a copy of the field
-        tfield0_ = new Field0Type
-        (
-            IOobject
+        tfield0_ =
+            OldTimeFieldCopy<FieldType>()
             (
-                field().name() + "_0",
-                field().time().name(),
-                field().db(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                field().registerObject()
-            ),
-            field()
-        );
+                IOobject
+                (
+                    field().name() + "_0",
+                    field().time().name(),
+                    field().db(),
+                    IOobject::NO_READ,
+                    IOobject::NO_WRITE,
+                    field().registerObject()
+                ),
+                field()
+            );
         setBase();
     }
     else

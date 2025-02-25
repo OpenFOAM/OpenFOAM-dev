@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,7 +47,21 @@ SourceFiles
 namespace Foam
 {
 
-template<class Type> class UniformDimensionedField;
+template<class Type>
+class UniformDimensionedField;
+
+template<class Type>
+struct OldTimeField0Type<UniformDimensionedField<Type>>
+{
+    typedef UniformDimensionedField<Type> type;
+};
+
+template<class Type>
+struct OldTimeOtherFieldType<UniformDimensionedField<Type>>
+{
+    template<template<class> class OtherPrimitiveField>
+    using type = UniformDimensionedField<Type>;
+};
 
 /*---------------------------------------------------------------------------*\
                    Class UniformDimensionedField Declaration
@@ -58,6 +72,7 @@ class UniformDimensionedField
 :
     public regIOobject,
     public dimensioned<Type>,
+    public tmp<UniformDimensionedField<Type>>::refCount,
     public OldTimeField<UniformDimensionedField<Type>>
 {
 
@@ -107,23 +122,15 @@ public:
             return true;
         }
 
-        //- Dummy reference count uniqueness test
-        bool unique() const
-        {
-            return true;
-        }
-
         //- Return a reference to the value
         Type& value();
 
         //- Return a const-reference to the value
         const Type& value() const;
 
-        //- Return the non-dimensioned field
-        FieldType field() const
-        {
-            return FieldType(this->value());
-        }
+        //- Reset the field values to the given field
+        //  Equivalent to operator=
+        void reset(const UniformDimensionedField<Type>&);
 
         //- WriteData function required for regIOobject write operation
         bool writeData(Ostream&) const;
@@ -131,18 +138,17 @@ public:
 
     // Member Operators
 
+        //- Assign to another field
         void operator==(const UniformDimensionedField<Type>&);
+
+        //- Assign to another field
         void operator=(const UniformDimensionedField<Type>&);
+
+        //- Assign to a dimensioned type
         void operator=(const dimensioned<Type>&);
 
-        Type operator[](const label) const
-        {
-            return this->value();
-        }
-
-        //- Dummy reference count decrement
-        void operator--()
-        {}
+        //- Access by index
+        const Type& operator[](const label) const;
 };
 
 

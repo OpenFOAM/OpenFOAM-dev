@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -312,6 +312,26 @@ inline void Foam::DynamicField<T, SizeInc, SizeMult, SizeDiv>::clearStorage()
 {
     Field<T>::clear();
     capacity_ = 0;
+}
+
+
+template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
+inline void Foam::DynamicField<T, SizeInc, SizeMult, SizeDiv>::reset
+(
+    const DynamicField<T, SizeInc, SizeMult, SizeDiv>& lst
+)
+{
+    this->operator=(lst);
+}
+
+
+template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
+inline void Foam::DynamicField<T, SizeInc, SizeMult, SizeDiv>::reset
+(
+    const UList<T>& lst
+)
+{
+    this->operator=(lst);
 }
 
 
