@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,10 +38,11 @@ Foam::Function1s::Scale<Type>::Scale
 :
     FieldFunction1<Type, Scale<Type>>(name),
     scale_(scale.clone().ptr()),
+    constantScale_(scale_->constant()),
     xScale_(xScale.clone().ptr()),
+    constantXScale_(xScale_->constant()),
     value_(value.clone().ptr()),
-    integrableScale_(xScale_->constant() && scale_->constant()),
-    integrableValue_(xScale_->constant() && value_->constant())
+    constantValue_(value_->constant())
 {}
 
 
@@ -55,15 +56,16 @@ Foam::Function1s::Scale<Type>::Scale
 :
     FieldFunction1<Type, Scale<Type>>(name),
     scale_(Function1<scalar>::New("scale", units.x, unitAny, dict)),
+    constantScale_(scale_->constant()),
     xScale_
     (
         dict.found("xScale")
       ? Function1<scalar>::New("xScale", units.x, unitless, dict)
       : autoPtr<Function1<scalar>>(new Constant<scalar>("xScale", 1))
     ),
+    constantXScale_(xScale_->constant()),
     value_(Function1<Type>::New("value", units.x, unitAny, dict)),
-    integrableScale_(xScale_->constant() && scale_->constant()),
-    integrableValue_(xScale_->constant() && value_->constant())
+    constantValue_(value_->constant())
 {}
 
 
@@ -72,10 +74,11 @@ Foam::Function1s::Scale<Type>::Scale(const Scale<Type>& se)
 :
     FieldFunction1<Type, Scale<Type>>(se),
     scale_(se.scale_, false),
+    constantScale_(se.constantScale_),
     xScale_(se.xScale_, false),
+    constantXScale_(se.constantXScale_),
     value_(se.value_, false),
-    integrableScale_(se.integrableScale_),
-    integrableValue_(se.integrableValue_)
+    constantValue_(se.constantValue_)
 {}
 
 

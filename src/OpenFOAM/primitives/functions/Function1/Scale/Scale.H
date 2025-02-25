@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -143,17 +143,20 @@ class Scale
         //- Scalar scaling function
         const autoPtr<Function1<scalar>> scale_;
 
+        //- Is the scalar scaling function constant?
+        const bool constantScale_;
+
         //- Argument scaling function
         const autoPtr<Function1<scalar>> xScale_;
+
+        //- Is the argument scaling function constant?
+        const bool constantXScale_;
 
         //- Value function
         const autoPtr<Function1<Type>> value_;
 
-        //- Is this function integrable?
-        const bool integrableScale_;
-
-        //- Is this function integrable?
-        const bool integrableValue_;
+        //- Is the value function constant?
+        const bool constantValue_;
 
 
 public:

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,8 +30,15 @@ License
 template<class Type>
 inline Type Foam::Function1s::Scale<Type>::value(const scalar x) const
 {
-    const scalar sx = xScale_->value(x)*x;
-    return scale_->value(sx)*value_->value(sx);
+    if (constantScale_ && constantValue_)
+    {
+        return scale_->value(NaN)*value_->value(NaN);
+    }
+    else
+    {
+        const scalar sx = xScale_->value(x)*x;
+        return scale_->value(sx)*value_->value(sx);
+    }
 }
 
 
@@ -42,13 +49,13 @@ inline Type Foam::Function1s::Scale<Type>::integral
     const scalar x2
 ) const
 {
-    if (integrableScale_)
+    if (constantXScale_ && constantScale_)
     {
         const scalar sx = xScale_->value(NaN);
         return scale_->value(NaN)*value_->integral(sx*x1, sx*x2)/sx;
     }
 
-    if (integrableValue_)
+    if (constantXScale_ && constantValue_)
     {
         const scalar sx = xScale_->value(NaN);
         return scale_->integral(sx*x1, sx*x2)/sx*value_->value(NaN);
@@ -67,7 +74,7 @@ inline Type Foam::Function1s::Scale<Type>::integral
 template<class Type>
 inline bool Foam::Function1s::Scale<Type>::constant() const
 {
-    return value_->constant();
+    return constantScale_ && constantValue_;
 }
 
 

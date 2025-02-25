@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,7 +46,7 @@ inline Type Foam::Function1s::Sine<Type>::integral
 {
     using namespace constant::mathematical;
 
-    if (!integrable_)
+    if (!constantAmplitude_)
     {
         FatalErrorInFunction
             << "Integration is not defined for " << type() << " functions "

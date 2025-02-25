@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,6 +96,9 @@ class Sine
         //- Amplitude of the sine function
         const autoPtr<Function1<Type>> amplitude_;
 
+        //- Is the amplitude function constant?
+        const bool constantAmplitude_;
+
         //- Frequency of the sine function
         const scalar frequency_;
 
@@ -104,9 +107,6 @@ class Sine
 
         //- Level to which the sine function is added
         const autoPtr<Function1<Type>> level_;
-
-        //- Is this function integrable?
-        const bool integrable_;
 
 
 public:
