@@ -310,11 +310,6 @@ struct OldTimeFieldCopy
     {
         return tmp<Field0Type>(new Field0Type(io, field));
     }
-
-    void operator()(Field0Type& field0, const FieldType& field)
-    {
-        field0 = field;
-    }
 };
 
 template<class Type, class GeoMesh, template<class> class PrimitiveField>
@@ -328,20 +323,7 @@ struct OldTimeFieldCopy<GeometricField<Type, GeoMesh, PrimitiveField>>
 
     tmp<Field0Type> operator()(const IOobject& io, const FieldType& field)
     {
-        // Copy all boundary condition data into the old-time field
-        //return tmp<Field0Type>(new Field0Type(io, field));
-
-        // Only copy boundary condition values into the old-time field
         return tmp<Field0Type>(new Field0Type(io, field, Calculated::typeName));
-    }
-
-    void operator()(Field0Type& field0, const FieldType& field)
-    {
-        // Copy all boundary condition data into the old-time field
-        //field0.reset(field);
-
-        // Only copy boundary condition values into the old-time field
-        field0 = field;
     }
 };
 

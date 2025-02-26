@@ -52,7 +52,7 @@ void Foam::OldTimeField<FieldType>::storeOldTimesInner() const
             tfield0_.ref().OldTimeField<Field0Type>::storeOldTimesInner();
 
             // Set the old-field to this field
-            OldTimeFieldCopy<FieldType>()(tfield0_.ref(), field());
+            tfield0_.ref() = field();
             tfield0_.ref().OldTimeField<Field0Type>::timeIndex_ = timeIndex_;
 
             // If we have an old-old field, then the old field is state and
