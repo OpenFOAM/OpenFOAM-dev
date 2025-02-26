@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,19 +70,14 @@ void Foam::fvMeshStitcher::resizePatchFields()
 template<class Type>
 void Foam::fvMeshStitcher::preConformSurfaceFields()
 {
-    UPtrList<SurfaceField<Type>> fields(mesh_.curFields<SurfaceField<Type>>());
+    UPtrList<SurfaceField<Type>> fields(mesh_.fields<SurfaceField<Type>>());
 
     forAll(fields, i)
     {
-        SurfaceField<Type>& field = fields[i];
-
-        for (label ti=0; ti<=field.nOldTimes(false); ti++)
-        {
-            conformedFvsPatchField<Type>::conform
-            (
-                field.oldTimeRef(ti).boundaryFieldRefNoStoreOldTimes()
-            );
-        }
+        conformedFvsPatchField<Type>::conform
+        (
+            fields[i].boundaryFieldRefNoStoreOldTimes()
+        );
     }
 }
 
@@ -90,19 +85,14 @@ void Foam::fvMeshStitcher::preConformSurfaceFields()
 template<class Type>
 void Foam::fvMeshStitcher::preConformVolFields()
 {
-    UPtrList<VolField<Type>> fields(mesh_.curFields<VolField<Type>>());
+    UPtrList<VolField<Type>> fields(mesh_.fields<VolField<Type>>());
 
     forAll(fields, i)
     {
-        VolField<Type>& field = fields[i];
-
-        for (label ti=0; ti<=field.nOldTimes(false); ti++)
-        {
-            conformedFvPatchField<Type>::conform
-            (
-                field.oldTimeRef(ti).boundaryFieldRefNoStoreOldTimes()
-            );
-        }
+        conformedFvPatchField<Type>::conform
+        (
+            fields[i].boundaryFieldRefNoStoreOldTimes()
+        );
     }
 }
 
@@ -110,19 +100,14 @@ void Foam::fvMeshStitcher::preConformVolFields()
 template<class Type>
 void Foam::fvMeshStitcher::postUnconformSurfaceFields()
 {
-    UPtrList<SurfaceField<Type>> fields(mesh_.curFields<SurfaceField<Type>>());
+    UPtrList<SurfaceField<Type>> fields(mesh_.fields<SurfaceField<Type>>());
 
     forAll(fields, i)
     {
-        SurfaceField<Type>& field = fields[i];
-
-        for (label ti=0; ti<=field.nOldTimes(false); ti++)
-        {
-            conformedFvsPatchField<Type>::unconform
-            (
-                field.oldTimeRef(ti).boundaryFieldRefNoStoreOldTimes()
-            );
-        }
+        conformedFvsPatchField<Type>::unconform
+        (
+            fields[i].boundaryFieldRefNoStoreOldTimes()
+        );
     }
 }
 
@@ -130,19 +115,14 @@ void Foam::fvMeshStitcher::postUnconformSurfaceFields()
 template<class Type>
 void Foam::fvMeshStitcher::postUnconformVolFields()
 {
-    UPtrList<VolField<Type>> fields(mesh_.curFields<VolField<Type>>());
+    UPtrList<VolField<Type>> fields(mesh_.fields<VolField<Type>>());
 
     forAll(fields, i)
     {
-        VolField<Type>& field = fields[i];
-
-        for (label ti=0; ti<=field.nOldTimes(false); ti++)
-        {
-            conformedFvPatchField<Type>::unconform
-            (
-                field.oldTimeRef(ti).boundaryFieldRefNoStoreOldTimes()
-            );
-        }
+        conformedFvPatchField<Type>::unconform
+        (
+            fields[i].boundaryFieldRefNoStoreOldTimes()
+        );
     }
 }
 
