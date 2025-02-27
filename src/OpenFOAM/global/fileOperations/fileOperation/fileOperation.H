@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -474,7 +474,12 @@ public:
             ) const;
 
             //- Get sorted list of times
-            virtual instantList findTimes(const fileName&, const word&) const;
+            virtual instantList findTimes
+            (
+                const Time&,
+                const fileName&,
+                const word&
+            ) const;
 
             //- Find instance where IOobject is. Fails if cannot be found
             //  and readOpt() is MUST_READ/MUST_READ_IF_MODIFIED. Otherwise

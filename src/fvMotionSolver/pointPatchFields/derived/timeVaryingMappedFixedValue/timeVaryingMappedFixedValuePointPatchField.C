@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -276,7 +276,7 @@ void Foam::timeVaryingMappedFixedValuePointPatchField<Type>::checkTable()
         // Read the times for which data is available
 
         const fileName samplePointsDir = samplePointsFile.path();
-        sampleTimes_ = Time::findTimes(samplePointsDir);
+        sampleTimes_ = this->db().time().findTimes(samplePointsDir);
 
         if (debug)
         {

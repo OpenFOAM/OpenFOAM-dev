@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,7 +44,7 @@ Foam::dynamicMeshPointInterpolator::dynamicMeshPointInterpolator
     const pointMesh& pMesh = pointMesh::New(mesh_);
 
     // Read time values
-    instantList allTimes = Time::findTimes(pMesh().time().path());
+    instantList allTimes = pMesh().time().findTimes(pMesh().time().path());
 
     // Only keep those that contain the field
     DynamicList<word> names(allTimes.size());

@@ -36,9 +36,9 @@ Foam::instantList Foam::Time::findTimes
 (
     const fileName& directory,
     const word& constantName
-)
+) const
 {
-    return fileHandler().fileOperation::findTimes(directory, constantName);
+    return fileHandler().findTimes(*this, directory, constantName);
 }
 
 

@@ -80,7 +80,7 @@ int USERD_set_filenames
     );
 
     // set the available number of time-steps
-    timeDirs = Foam::Time::findTimes(rootDir/caseDir);
+    timeDirs = runTime.findTimes(rootDir/caseDir);
 
     Num_time_steps = timeDirs.size() - 1;
 

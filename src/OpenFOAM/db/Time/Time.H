@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -375,11 +375,11 @@ public:
             );
 
             //- Search a given directory for valid time directories
-            static instantList findTimes
+            instantList findTimes
             (
                 const fileName&,
                 const word& constantName = "constant"
-            );
+            ) const;
 
             //- Return start time index
             virtual label startTimeIndex() const;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1147,7 +1147,7 @@ Foam::fileName Foam::fileOperations::masterUncollatedFileOperation::filePath
     (void)lookupProcessorsPath(io.objectPath(globalFile));
 
     // Trigger caching of times
-    (void)findTimes(io.time().path(), io.time().constant());
+    (void)findTimes(io.time(), io.time().path(), io.time().constant());
 
 
     // Determine master filePath and scatter
@@ -1689,6 +1689,7 @@ Foam::fileOperations::masterUncollatedFileOperation::readObjects
             (
                 fileOperation::findTimes
                 (
+                    db.time(),
                     db.time().path(),
                     db.time().constant()
                 )
@@ -2126,7 +2127,7 @@ bool Foam::fileOperations::masterUncollatedFileOperation::read
         (void)lookupProcessorsPath(io.objectPath());
 
         // Trigger caching of times
-        (void)findTimes(io.time().path(), io.time().constant());
+        (void)findTimes(io.time(), io.time().path(), io.time().constant());
 
         bool ok = false;
         if (Pstream::master())  // comm_))
@@ -2286,47 +2287,55 @@ bool Foam::fileOperations::masterUncollatedFileOperation::writeObject
 
 Foam::instantList Foam::fileOperations::masterUncollatedFileOperation::findTimes
 (
+    const Time& time,
     const fileName& directory,
     const word& constantName
 ) const
 {
-    HashPtrTable<instantList>::const_iterator iter = times_.find(directory);
-    if (iter != times_.end())
+    if (!time.processorCase())
     {
-        if (debug)
-        {
-            Pout<< "masterUncollatedFileOperation::findTimes :"
-                << " Found " << iter()->size() << " cached times" << endl;
-        }
-        return *iter();
+        return fileOperation::findTimes(time, directory, constantName);
     }
     else
     {
-        instantList times;
-        if (Pstream::master())  // comm_))
+        HashPtrTable<instantList>::const_iterator iter = times_.find(directory);
+        if (iter != times_.end())
         {
-            // Do master-only reading always.
-            bool oldParRun = UPstream::parRun();
-            UPstream::parRun() = false;
-            times = fileOperation::findTimes(directory, constantName);
-            UPstream::parRun() = oldParRun;
+            if (debug)
+            {
+                Pout<< "masterUncollatedFileOperation::findTimes :"
+                    << " Found " << iter()->size() << " cached times" << endl;
+            }
+            return *iter();
         }
-        Pstream::scatter(times);    //, Pstream::msgType(), comm_);
-
-        // Note: do we also cache if no times have been found since it might
-        //       indicate a directory that is being filled later on ...
-
-        instantList* tPtr = new instantList(move(times));
-
-        times_.insert(directory, tPtr);
-
-        if (debug)
+        else
         {
-            Pout<< "masterUncollatedFileOperation::findTimes :"
-                << " Caching times:" << *tPtr << nl
-                << "    for directory:" << directory << endl;
+            instantList times;
+            if (Pstream::master())  // comm_))
+            {
+                // Do master-only reading always.
+                bool oldParRun = UPstream::parRun();
+                UPstream::parRun() = false;
+                times = fileOperation::findTimes(time, directory, constantName);
+                UPstream::parRun() = oldParRun;
+            }
+            Pstream::scatter(times);    //, Pstream::msgType(), comm_);
+
+            // Note: do we also cache if no times have been found since it might
+            //       indicate a directory that is being filled later on ...
+
+            instantList* tPtr = new instantList(move(times));
+
+            times_.insert(directory, tPtr);
+
+            if (debug)
+            {
+                Pout<< "masterUncollatedFileOperation::findTimes :"
+                    << " Caching times:" << *tPtr << nl
+                    << "    for directory:" << directory << endl;
+            }
+            return *tPtr;
         }
-        return *tPtr;
     }
 }
 

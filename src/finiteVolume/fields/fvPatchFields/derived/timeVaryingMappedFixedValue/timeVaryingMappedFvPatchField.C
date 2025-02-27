@@ -109,7 +109,7 @@ void Foam::timeVaryingMappedFvPatchField<Type>::checkTable()
         );
 
         // Read the times for which data is available
-        sampleTimes_ = Time::findTimes(dataDir_);
+        sampleTimes_ = patch_.db().time().findTimes(dataDir_);
 
         if (debug)
         {
