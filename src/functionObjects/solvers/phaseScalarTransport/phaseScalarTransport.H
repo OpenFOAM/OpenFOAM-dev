@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,8 +94,7 @@ SourceFiles
 #ifndef functionObjects_phaseScalarTransport_H
 #define functionObjects_phaseScalarTransport_H
 
-#include "fvMeshFunctionObject.H"
-#include "volFields.H"
+#include "scalarTransport.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -138,17 +137,17 @@ class phaseScalarTransport
         //- Name of the pressure field (optional)
         word pName_;
 
-        //- Diffusivity (optional)
+        //- The type of diffusivity
+        scalarTransport::diffusivityType diffusivity_;
+
+        //- Constant diffusivity coefficient (optional)
         scalar D_;
 
-        //- Flag to indicate whether a constant, uniform D_ is specified
-        bool constantD_;
-
         //- Laminar diffusivity coefficient (optional)
-        scalar alphaD_;
+        scalar alphal_;
 
         //- Turbulent diffusivity coefficient (optional)
-        scalar alphaDt_;
+        scalar alphat_;
 
         //- Number of corrector iterations (optional)
         int nCorr_;

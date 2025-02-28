@@ -103,7 +103,11 @@ Foam::functionObjects::scalarTransport::D() const
         const momentumTransportModel& turbulence =
             mesh_.lookupType<momentumTransportModel>();
 
-        return alphal_*turbulence.nu() + alphat_*turbulence.nut();
+        return volScalarField::New
+        (
+            Dname,
+            alphal_*turbulence.nu() + alphat_*turbulence.nut()
+        );
     }
 }
 

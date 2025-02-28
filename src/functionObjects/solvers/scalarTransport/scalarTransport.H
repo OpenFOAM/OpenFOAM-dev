@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -121,6 +121,9 @@ public:
             viscosity
         };
 
+        //- Diffusivity type names
+        static const NamedEnum<diffusivityType, 3> diffusivityTypeNames_;
+
 
 private:
 
@@ -134,9 +137,6 @@ private:
 
         //- Name of density field (optional)
         word rhoName_;
-
-        //- diffusivity type names
-        static const NamedEnum<diffusivityType, 3> diffusivityTypeNames_;
 
         //- The type of diffusivity
         diffusivityType diffusivity_;

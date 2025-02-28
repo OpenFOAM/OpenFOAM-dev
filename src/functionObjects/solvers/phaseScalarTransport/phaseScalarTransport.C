@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -234,40 +234,38 @@ Foam::functionObjects::phaseScalarTransport::D
     const surfaceScalarField& alphaPhi
 ) const
 {
-    if (constantD_)
+    const word Dname("D" + s_.name());
+
+    if (diffusivity_ == scalarTransport::diffusivityType::constant)
     {
         return volScalarField::New
         (
-            "D" + s_.name(),
+            Dname,
             mesh_,
             dimensionedScalar(dimKinematicViscosity, D_)
         );
     }
-
-    const word& nameNoPhase = momentumTransportModel::typeName;
-    const word namePhase = IOobject::groupName(nameNoPhase, phaseName_);
-
-    const word& name =
-        mesh_.foundObject<momentumTransportModel>(namePhase)
-      ? namePhase
-      : mesh_.foundObject<momentumTransportModel>(nameNoPhase)
-        ? nameNoPhase
-        : word::null;
-
-    if (name == word::null)
+    else
     {
+        const word& nameNoPhase = momentumTransportModel::typeName;
+        const word namePhase = IOobject::groupName(nameNoPhase, phaseName_);
+
+        // Try looking up the phase transport model, then try the mixture
+        // transport model, then fail with an error relating to the phase
+        // transport model
+        const momentumTransportModel& turbulence =
+            mesh_.foundObject<momentumTransportModel>(namePhase)
+          ? mesh_.lookupObject<momentumTransportModel>(namePhase)
+          : mesh_.foundObject<momentumTransportModel>(nameNoPhase)
+          ? mesh_.lookupObject<momentumTransportModel>(nameNoPhase)
+          : mesh_.lookupObject<momentumTransportModel>(namePhase);
+
         return volScalarField::New
         (
-            "D" + s_.name(),
-            mesh_,
-            dimensionedScalar(alphaPhi.dimensions()/dimLength, 0)
+            Dname,
+            alphal_*turbulence.nu() + alphat_*turbulence.nut()
         );
     }
-
-    const momentumTransportModel& turbulence =
-        mesh_.lookupObject<momentumTransportModel>(name);
-
-    return alphaD_*turbulence.nu() + alphaDt_*turbulence.nut();
 }
 
 
@@ -347,9 +345,25 @@ bool Foam::functionObjects::phaseScalarTransport::read(const dictionary& dict)
     pName_ = dict.lookupOrDefault<word>("p", "p");
     schemesField_ = dict.lookupOrDefault<word>("schemesField", fieldName_);
 
-    constantD_ = dict.readIfPresent("D", D_);
-    alphaD_ = dict.lookupOrDefault<scalar>("alphaD", 1);
-    alphaDt_ = dict.lookupOrDefault<scalar>("alphaDt", 1);
+    diffusivity_ =
+        scalarTransport::diffusivityTypeNames_.read(dict.lookup("diffusivity"));
+
+    switch(diffusivity_)
+    {
+        case scalarTransport::diffusivityType::none:
+            break;
+
+        case scalarTransport::diffusivityType::constant:
+            dict.lookup("D") >> D_;
+            break;
+
+        case scalarTransport::diffusivityType::viscosity:
+            alphal_ =
+                dict.lookupBackwardsCompatible<scalar>({"alphal", "alphaD"});
+            alphat_ =
+                dict.lookupBackwardsCompatible<scalar>({"alphat", "alphaDt"});
+            break;
+    }
 
     nCorr_ = dict.lookupOrDefault<label>("nCorr", 0);
     residualAlpha_ = dict.lookupOrDefault<scalar>("residualAlpha", rootSmall);
@@ -376,26 +390,15 @@ bool Foam::functionObjects::phaseScalarTransport::execute()
     tmp<surfaceScalarField> tAlphaPhi(this->alphaPhi());
     const surfaceScalarField& alphaPhi = tAlphaPhi();
 
-    // Get the diffusivity
-    const volScalarField D(this->D(alphaPhi));
-
-    // Construct the scheme names
-    const word divScheme =
-        "div("  + alphaPhi.name() + "," + schemesField_ + ")";
-    const word laplacianScheme =
-        "laplacian(" + D.name() + "," + schemesField_ + ")";
-
     // Get the relaxation coefficient
     const scalar relaxCoeff =
         mesh_.solution().relaxEquation(schemesField_)
       ? mesh_.solution().equationRelaxationFactor(schemesField_)
       : 0;
 
-    const Foam::fvModels& fvModels(Foam::fvModels::New(mesh_));
-    const Foam::fvConstraints& fvConstraints
-    (
-        Foam::fvConstraints::New(mesh_)
-    );
+    // Models and constraints
+    const Foam::fvModels& fvModels = Foam::fvModels::New(mesh_);
+    const Foam::fvConstraints& fvConstraints = Foam::fvConstraints::New(mesh_);
 
     // Solve
     if (alphaPhi.dimensions() == dimVolume/dimTime)
@@ -405,18 +408,30 @@ bool Foam::functionObjects::phaseScalarTransport::execute()
             fvScalarMatrix fieldEqn
             (
                 fvm::ddt(alpha, s_)
-              + fvm::div(alphaPhi, s_, divScheme)
-              - fvm::laplacian
+              + fvm::div
                 (
-                    fvc::interpolate(alpha)*fvc::interpolate(D),
+                    alphaPhi,
                     s_,
-                    laplacianScheme
+                    "div(" + alphaPhi.name() + "," + schemesField_ + ")"
                 )
              ==
                 fvModels.source(alpha, s_)
               - fvm::ddt(residualAlpha_, s_)
               + fvc::ddt(residualAlpha_, s_)
             );
+
+            if (diffusivity_ != scalarTransport::diffusivityType::none)
+            {
+                const volScalarField D(this->D(alphaPhi));
+
+                fieldEqn -=
+                    fvm::laplacian
+                    (
+                        fvc::interpolate(alpha)*fvc::interpolate(D),
+                        s_,
+                        "laplacian(" + D.name() + "," + schemesField_ + ")"
+                    );
+            }
 
             fieldEqn.relax(relaxCoeff);
             fvConstraints.constrain(fieldEqn);
@@ -434,18 +449,30 @@ bool Foam::functionObjects::phaseScalarTransport::execute()
             fvScalarMatrix fieldEqn
             (
                 fvm::ddt(alpha, rho, s_)
-              + fvm::div(alphaPhi, s_, divScheme)
-              - fvm::laplacian
+              + fvm::div
                 (
-                    fvc::interpolate(alpha)*fvc::interpolate(rho*D),
+                    alphaPhi,
                     s_,
-                    laplacianScheme
+                    "div(" + alphaPhi.name() + "," + schemesField_ + ")"
                 )
              ==
                 fvModels.source(alpha, rho, s_)
               - fvm::ddt(residualAlpha_*rho, s_)
               + fvc::ddt(residualAlpha_*rho, s_)
             );
+
+            if (diffusivity_ != scalarTransport::diffusivityType::none)
+            {
+                const volScalarField D(this->D(alphaPhi));
+
+                fieldEqn -=
+                    fvm::laplacian
+                    (
+                        fvc::interpolate(alpha)*fvc::interpolate(rho*D),
+                        s_,
+                        "laplacian(" + D.name() + "," + schemesField_ + ")"
+                    );
+            }
 
             fieldEqn.relax(relaxCoeff);
             fvConstraints.constrain(fieldEqn);
