@@ -114,7 +114,7 @@ int main(int argc, char *argv[])
     label perti = 0;
     randomGenerator rndGen(57373);
 
-    while ((mag(cmptMin(eVal)) < vSmall) && perti < 10)
+    while (cmptMin(cmptMag(eVal)) < vSmall && perti < 10)
     {
         WarningInFunction
             << "No eigenValues found, shape may have symmetry, "
