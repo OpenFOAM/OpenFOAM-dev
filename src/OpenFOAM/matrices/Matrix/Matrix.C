@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Matrix.H"
+#include "MatrixSpace.H"
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
@@ -254,7 +255,7 @@ Foam::Matrix<Form, Type>::Matrix(const Matrix<Form2, Type>& M)
 
 template<class Form, class Type>
 template<class MatrixType>
-inline Foam::Matrix<Form, Type>::Matrix
+Foam::Matrix<Form, Type>::Matrix
 (
     const ConstMatrixBlock<MatrixType>& Mb
 )
@@ -276,7 +277,7 @@ inline Foam::Matrix<Form, Type>::Matrix
 
 template<class Form, class Type>
 template<class MatrixType>
-inline Foam::Matrix<Form, Type>::Matrix
+Foam::Matrix<Form, Type>::Matrix
 (
     const MatrixBlock<MatrixType>& Mb
 )
@@ -291,6 +292,28 @@ inline Foam::Matrix<Form, Type>::Matrix
         for (label j=0; j<nCols_; j++)
         {
             (*this)(i,j) = Mb(i,j);
+        }
+    }
+}
+
+
+template<class Form, class Type>
+template<class MSForm, Foam::direction Mrows, Foam::direction Ncols>
+Foam::Matrix<Form, Type>::Matrix
+(
+    const MatrixSpace<MSForm, Type, Mrows, Ncols>& Ms
+)
+:
+    mRows_(Mrows),
+    nCols_(Ncols)
+{
+    allocate();
+
+    for (label i=0; i<mRows_; i++)
+    {
+        for (label j=0; j<nCols_; j++)
+        {
+            (*this)(i,j) = Ms(i,j);
         }
     }
 }

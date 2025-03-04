@@ -71,6 +71,9 @@ class ConstMatrixBlock;
 template<class MatrixType>
 class MatrixBlock;
 
+template<class Form, class Cmpt, direction Mrows, direction Ncols>
+class MatrixSpace;
+
 
 /*---------------------------------------------------------------------------*\
                            Class Matrix Declaration
@@ -153,6 +156,9 @@ public:
         //- Construct from a block of another matrix
         template<class MatrixType>
         Matrix(const MatrixBlock<MatrixType>&);
+
+        template<class MSForm, direction Mrows, direction Ncols>
+        Matrix(const MatrixSpace<MSForm, Type, Mrows, Ncols>&);
 
         //- Construct from Istream.
         Matrix(Istream&);
