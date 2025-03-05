@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -176,26 +176,25 @@ inline Foam::scalar Foam::triangle<Point, PointRef>::sweptVol
 
 
 template<class Point, class PointRef>
-inline Foam::tensor Foam::triangle<Point, PointRef>::inertia
+inline Foam::symmTensor Foam::triangle<Point, PointRef>::inertia
 (
     PointRef refPt,
     scalar density
 ) const
 {
-    Point aRel = a_ - refPt;
-    Point bRel = b_ - refPt;
-    Point cRel = c_ - refPt;
+    const Point aRel = a_ - refPt;
+    const Point bRel = b_ - refPt;
+    const Point cRel = c_ - refPt;
 
-    tensor V
+    const tensor V
     (
         aRel.x(), aRel.y(), aRel.z(),
         bRel.x(), bRel.y(), bRel.z(),
         cRel.x(), cRel.y(), cRel.z()
     );
 
-    scalar a = Foam::mag((b_ - a_)^(c_ - a_));
-
-    tensor S = 1/24.0*(tensor::one + I);
+    const scalar a = Foam::mag((b_ - a_)^(c_ - a_));
+    const symmTensor S = 1/24.0*(symmTensor::one + I);
 
     return
     (
@@ -206,9 +205,8 @@ inline Foam::tensor Foam::triangle<Point, PointRef>::inertia
           + (cRel & cRel)
           + ((aRel + bRel + cRel) & (aRel + bRel + cRel))
         )
-      - a*(V.T() & S & V)
-    )
-   *density;
+      - a*symm(V.T() & S & V)
+    )*density;
 }
 
 

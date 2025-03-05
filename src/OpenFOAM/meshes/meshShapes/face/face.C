@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -367,7 +367,7 @@ Foam::scalar Foam::face::sweptVol
 }
 
 
-Foam::tensor Foam::face::inertia
+Foam::symmTensor Foam::face::inertia
 (
     const pointField& p,
     const point& refPt,
@@ -387,7 +387,7 @@ Foam::tensor Foam::face::inertia
 
     const point ctr = centre(p);
 
-    tensor J = Zero;
+    symmTensor J = Zero;
 
     forAll(*this, i)
     {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ public:
         scalar density,
         scalar& mass,
         vector& cM,
-        tensor& J
+        symmTensor& J
     );
 
     static void massPropertiesShell
@@ -72,7 +72,7 @@ public:
         scalar density,
         scalar& mass,
         vector& cM,
-        tensor& J
+        symmTensor& J
     );
 
     static void massPropertiesSolid
@@ -81,7 +81,7 @@ public:
         scalar density,
         scalar& mass,
         vector& cM,
-        tensor& J
+        symmTensor& J
     );
 
     static void massPropertiesShell
@@ -90,14 +90,14 @@ public:
         scalar density,
         scalar& mass,
         vector& cM,
-        tensor& J
+        symmTensor& J
     );
 
     static tensor applyParallelAxisTheorem
     (
         scalar mass,
         const vector& cM,
-        const tensor& J,
+        const symmTensor& J,
         const vector& refPt
     );
 

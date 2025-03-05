@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
 
         point Cf = f.centre(pts);
 
-        tensor J = Zero;
+        symmTensor J = Zero;
 
         J = f.inertia(pts, Cf, density);
 
@@ -142,7 +142,7 @@ int main(int argc, char *argv[])
 
         scalar m = 0.0;
         vector cM = Zero;
-        tensor J = Zero;
+        symmTensor J = Zero;
 
         momentOfInertia::massPropertiesSolid(pts, tetFaces, density, m, cM, J);
 

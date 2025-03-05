@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
 
     scalar m = 0.0;
     vector cM = Zero;
-    tensor J = Zero;
+    symmTensor J = Zero;
 
     if (args.optionFound("shellProperties"))
     {
@@ -110,25 +110,6 @@ int main(int argc, char *argv[])
 
     vector eVal = eigenValues(J);
     tensor eVec = eigenVectors(J, eVal);
-
-    label perti = 0;
-    randomGenerator rndGen(57373);
-
-    while (cmptMin(cmptMag(eVal)) < vSmall && perti < 10)
-    {
-        WarningInFunction
-            << "No eigenValues found, shape may have symmetry, "
-            << "perturbing inertia tensor diagonal" << endl;
-
-        J.xx() *= 1.0 + small*rndGen.scalar01();
-        J.yy() *= 1.0 + small*rndGen.scalar01();
-        J.zz() *= 1.0 + small*rndGen.scalar01();
-
-        eVal = eigenValues(J);
-        eVec = eigenVectors(J, eVal);
-
-        perti++;
-    }
 
     bool showTransform = true;
 

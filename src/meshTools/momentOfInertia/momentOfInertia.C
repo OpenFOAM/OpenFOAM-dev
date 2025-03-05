@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ void Foam::momentOfInertia::massPropertiesSolid
     scalar density,
     scalar& mass,
     vector& cM,
-    tensor& J
+    symmTensor& J
 )
 {
     // Reimplemented from: Wm4PolyhedralMassProperties.cpp
@@ -169,15 +169,12 @@ void Foam::momentOfInertia::massPropertiesSolid
     J.xx() = integrals[5] + integrals[6];
     J.xy() = -integrals[7];
     J.xz() = -integrals[9];
-    J.yx() = J.xy();
     J.yy() = integrals[4] + integrals[6];
     J.yz() = -integrals[8];
-    J.zx() = J.xz();
-    J.zy() = J.yz();
     J.zz() = integrals[4] + integrals[5];
 
     // inertia relative to center of mass
-    J -= mass*((cM & cM)*I - cM*cM);
+    J -= mass*((cM & cM)*I - sqr(cM));
 
     // Apply density
     mass *= density;
@@ -192,7 +189,7 @@ void Foam::momentOfInertia::massPropertiesShell
     scalar density,
     scalar& mass,
     vector& cM,
-    tensor& J
+    symmTensor& J
 )
 {
     // Reset properties for accumulation
@@ -247,7 +244,7 @@ void Foam::momentOfInertia::massPropertiesSolid
     scalar density,
     scalar& mass,
     vector& cM,
-    tensor& J
+    symmTensor& J
 )
 {
     triFaceList faces(surf.size());
@@ -267,7 +264,7 @@ void Foam::momentOfInertia::massPropertiesShell
     scalar density,
     scalar& mass,
     vector& cM,
-    tensor& J
+    symmTensor& J
 )
 {
     triFaceList faces(surf.size());
@@ -285,7 +282,7 @@ Foam::tensor Foam::momentOfInertia::applyParallelAxisTheorem
 (
     scalar mass,
     const vector& cM,
-    const tensor& J,
+    const symmTensor& J,
     const vector& refPt
 )
 {
@@ -338,7 +335,7 @@ Foam::tensor Foam::momentOfInertia::meshInertia
 
     scalar m = 0.0;
     vector cM = Zero;
-    tensor J = Zero;
+    symmTensor J = Zero;
 
     massPropertiesSolid(mesh.points(), faces, 1.0, m, cM, J);
 
