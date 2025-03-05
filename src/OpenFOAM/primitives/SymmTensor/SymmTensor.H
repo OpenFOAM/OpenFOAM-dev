@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -111,8 +111,11 @@ public:
             inline const Cmpt& xx() const;
             inline const Cmpt& xy() const;
             inline const Cmpt& xz() const;
+            inline const Cmpt& yx() const;
             inline const Cmpt& yy() const;
             inline const Cmpt& yz() const;
+            inline const Cmpt& zx() const;
+            inline const Cmpt& zy() const;
             inline const Cmpt& zz() const;
 
             inline Cmpt& xx();

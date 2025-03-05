@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,6 +102,12 @@ inline const Cmpt& Foam::SymmTensor<Cmpt>::xz() const
 }
 
 template<class Cmpt>
+inline const Cmpt& Foam::SymmTensor<Cmpt>::yx() const
+{
+    return this->v_[XY];
+}
+
+template<class Cmpt>
 inline const Cmpt& Foam::SymmTensor<Cmpt>::yy() const
 {
     return this->v_[YY];
@@ -109,6 +115,18 @@ inline const Cmpt& Foam::SymmTensor<Cmpt>::yy() const
 
 template<class Cmpt>
 inline const Cmpt& Foam::SymmTensor<Cmpt>::yz() const
+{
+    return this->v_[YZ];
+}
+
+template<class Cmpt>
+inline const Cmpt& Foam::SymmTensor<Cmpt>::zx() const
+{
+    return this->v_[XZ];
+}
+
+template<class Cmpt>
+inline const Cmpt& Foam::SymmTensor<Cmpt>::zy() const
 {
     return this->v_[YZ];
 }
