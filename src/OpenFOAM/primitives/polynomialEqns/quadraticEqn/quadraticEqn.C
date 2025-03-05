@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,7 +28,7 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::Roots<2> Foam::quadraticEqn::roots() const
+Foam::Roots<2> Foam::quadraticEqn::roots(const bool real) const
 {
     /*
 
@@ -62,7 +62,14 @@ Foam::Roots<2> Foam::quadraticEqn::roots() const
     }
 
     // This is assumed not to over- or under-flow. If it does, all bets are off.
-    const scalar disc = b*b/4 - a*c;
+    scalar disc = b*b/4 - a*c;
+
+    // Ensure disc is not negative if the roots are known to be real
+    // even if round-off error might cause disc to be slightly negative
+    if (real && disc < 0)
+    {
+        disc = 0;
+    }
 
     // How many roots of what types are available?
     const bool oneReal = disc == 0;
