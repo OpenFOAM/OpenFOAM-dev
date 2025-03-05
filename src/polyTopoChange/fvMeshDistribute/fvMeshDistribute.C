@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -222,7 +222,7 @@ Foam::wordList Foam::fvMeshDistribute::fieldNames
     if (fieldNames.size())
     {
         HashSet<word> fieldSet(fieldNames);
-        fieldSet -= fvMesh::geometryFields;
+        fieldSet -= fvMesh::curGeometryFields;
         fieldNames = fieldSet.toc();
         nFields += checkEqualWordList(typeName, fieldNames);
     }
@@ -1621,10 +1621,6 @@ void Foam::fvMeshDistribute::sendMesh
         << mesh.faceNeighbour()
         << mesh.boundaryMesh()
 
-        //*** Write the old-time volumes if present
-        // << mesh.V0().primitiveField()
-        // << mesh.V00().primitiveField()
-
         << zonePoints
         << zoneFaces
         << zoneFaceFlip
@@ -2956,6 +2952,7 @@ Foam::autoPtr<Foam::polyDistributionMap> Foam::fvMeshDistribute::distribute
             );
             inplaceRenumber(map().addedPointMap(), constructPointMap[sendProc]);
             inplaceRenumber(map().addedPatchMap(), constructPatchMap[sendProc]);
+
 
             if (debug)
             {

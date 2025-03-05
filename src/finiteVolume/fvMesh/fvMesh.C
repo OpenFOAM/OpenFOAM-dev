@@ -72,6 +72,15 @@ const Foam::HashSet<Foam::word> Foam::fvMesh::geometryFields
     "meshPhi_0"
 };
 
+const Foam::HashSet<Foam::word> Foam::fvMesh::curGeometryFields
+{
+    "Vc",
+    "Sf",
+    "magSf",
+    "Cc",
+    "Cf"
+};
+
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -628,8 +637,6 @@ bool Foam::fvMesh::update()
         nullOldestTimeFields();
     }
 
-    if (!conformal()) stitcher_->disconnect(true, true);
-
     // Remove the oldest cell volume field
     if (V00Ptr_)
     {
@@ -640,29 +647,36 @@ bool Foam::fvMesh::update()
         nullDemandDrivenData(V0Ptr_);
     }
 
-    // Set topoChanged_ false before any mesh change
+    // Remove the oldest mesh flux field
+    if (phiPtr_)
+    {
+        phiPtr_->nullOldestTime();
+    }
+
+    // Set topoChanged_ false before any mesh change. Topo-changing can switch
+    // on and off during a run.
     topoChanged_ = false;
-    bool updated = topoChanger_->update();
-    topoChanged_ = updated;
 
-    updated = distributor_->update() || updated;
+    topoChanged_ = topoChanger_->update();
 
-    return updated;
+    const bool distributed = distributor_->update();
+
+    return topoChanged_ || distributed;
 }
 
 
 bool Foam::fvMesh::move()
 {
-    if (!conformal()) stitcher_->disconnect(true, true);
-
-    // Do not set moving false
-    // Once the mesh starts moving it is considered to be moving
-    // for the rest of the run
+    // Do not set moving_ false before any mesh motion. Once the mesh starts
+    // moving it is considered to be moving for the rest of the run.
     const bool moved = mover_->update();
 
     curTimeIndex_ = time().timeIndex();
 
-    stitcher_->connect(true, true, false);
+    if (conformal() && stitcher_->stitches())
+    {
+        stitcher_->connect(true, true, false);
+    }
 
     return moved;
 }
@@ -1106,6 +1120,12 @@ void Foam::fvMesh::mapFields(const polyTopoChangeMap& map)
 }
 
 
+void Foam::fvMesh::preChange()
+{
+    stitcher_->disconnect(true, true);
+}
+
+
 void Foam::fvMesh::setPoints(const pointField& p)
 {
     polyMesh::setPoints(p);
@@ -1124,6 +1144,8 @@ void Foam::fvMesh::setPoints(const pointField& p)
 
 Foam::tmp<Foam::scalarField> Foam::fvMesh::movePoints(const pointField& p)
 {
+    preChange();
+
     // Set the mesh to be moving. This remains true for the rest of the run.
     moving_ = true;
 
@@ -1247,6 +1269,13 @@ Foam::tmp<Foam::scalarField> Foam::fvMesh::movePoints(const pointField& p)
 
 void Foam::fvMesh::topoChange(const polyTopoChangeMap& map)
 {
+    if (!conformal())
+    {
+        FatalErrorInFunction
+            << "The mesh was not disconnected prior to topology change"
+            << exit(FatalError);
+    }
+
     // Update polyMesh. This needs to keep volume existent!
     polyMesh::topoChange(map);
 
@@ -1300,6 +1329,13 @@ void Foam::fvMesh::topoChange(const polyTopoChangeMap& map)
 
 void Foam::fvMesh::mapMesh(const polyMeshMap& map)
 {
+    if (!conformal())
+    {
+        FatalErrorInFunction
+            << "The mesh was not disconnected prior to mesh-to-mesh mapping"
+            << exit(FatalError);
+    }
+
     // Distribute polyMesh data
     polyMesh::mapMesh(map);
 
@@ -1326,6 +1362,13 @@ void Foam::fvMesh::mapMesh(const polyMeshMap& map)
 
 void Foam::fvMesh::distribute(const polyDistributionMap& map)
 {
+    if (!conformal())
+    {
+        FatalErrorInFunction
+            << "The mesh was not disconnected prior to distribution"
+            << exit(FatalError);
+    }
+
     // Distribute polyMesh data
     polyMesh::distribute(map);
 

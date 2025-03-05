@@ -452,9 +452,6 @@ public:
         //- Does this stitcher do anything?
         bool stitches() const;
 
-        //- Is the set of connected region meshes dynamic?
-        bool dynamic() const;
-
         //- Disconnect the mesh by removing faces from the nonConformalCyclics
         bool disconnect
         (

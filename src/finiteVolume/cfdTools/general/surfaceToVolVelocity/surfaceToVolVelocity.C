@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,39 +32,79 @@ const Foam::volVectorField& Foam::surfaceToVolVelocity
     const surfaceVectorField& Uf
 )
 {
-    if (!isFaceVelocity(Uf))
+    if
+    (
+        Uf.dimensions() != dimVelocity
+     && Uf.dimensions() != dimDensity*dimVelocity
+     && Uf.dimensions() != dimVelocity/dimTime
+     && Uf.dimensions() != dimDensity*dimVelocity/dimTime
+    )
     {
         return volVectorField::null();
     }
 
-    const word UfName(Uf.member());
+    const word& surfaceName = Uf.name();
 
-    // Find where the old-time suffixes end
-    string::size_type i = UfName.size();
-    while (i > 0 && UfName(i - 2, 2) == "_0") i -= 2;
+    // Split the name based on non-alphanumeric (and then some) separators
+    DynamicList<word> parts;
+    DynamicList<char> separators;
+    {
+        string::size_type i0 = 0;
 
-    // Split into current name and old-time suffix
-    const word UfCurName = UfName(i);
-    const word Uf_0 = UfName(i, UfName.size());
+        for (string::size_type i = 0; i < surfaceName.size(); ++ i)
+        {
+            const char c = surfaceName[i];
 
-    if (UfCurName.back() != 'f')
+            if (isalnum(c) || c == '_' || c == '.') continue;
+
+            parts.append(surfaceName(i0, i - i0));
+            separators.append(c);
+
+            i0 = i + 1;
+        }
+
+        parts.append(surfaceName(i0, surfaceName.size() - i0));
+    }
+
+    // Convert every part to its equivalent vol name
+    forAll(parts, parti)
+    {
+        word& part = parts[parti];
+
+        // Find where the groups start
+        word::size_type i = part.find_first_of('.');
+        if (i == word::npos) i = part.size();
+
+        // Find where the old-time suffixes start
+        while (i > 0 && part(i - 2, 2) == "_0") i -= 2;
+
+        // We are back to the end of the core field name. If this ends with an
+        // 'f' then this should be removed to form the equivalent vol name.
+        if (i > 0 && part[i - 1] == 'f')
+        {
+            part = word(part(i - 1) + part(i, word::npos));
+        }
+    }
+
+    // Put the parts back together and return
+    word volName;
+    forAll(separators, parti)
+    {
+        volName += parts[parti] + separators[parti];
+    }
+    volName += parts.last();
+
+    // If no 'f' suffixes were removed then there is no corresponding vol name
+    if (volName == surfaceName)
     {
         return volVectorField::null();
     }
 
-    const word Uname =
-        IOobject::groupName
-        (
-            UfCurName(UfCurName.size() - 1) + Uf_0,
-            Uf.group()
-        );
-
-    if (!Uf.mesh().foundObject<volVectorField>(Uname))
-    {
-        return volVectorField::null();
-    }
-
-    return Uf.mesh().lookupObject<volVectorField>(Uname);
+    // Return the vol field if it can be found
+    return
+        Uf.mesh().foundObject<volVectorField>(volName)
+      ? Uf.mesh().lookupObject<volVectorField>(volName)
+      : volVectorField::null();
 }
 
 

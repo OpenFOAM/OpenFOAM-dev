@@ -100,6 +100,19 @@ void Foam::fvMeshStitcher::preConformVolFields()
 template<class Type>
 void Foam::fvMeshStitcher::postUnconformSurfaceFields()
 {
+    if (mesh_.topoChanged())
+    {
+        UPtrList<SurfaceField<Type>> curFields
+        (
+            mesh_.curFields<SurfaceField<Type>>()
+        );
+
+        forAll(curFields, i)
+        {
+            curFields[i].clearOldTimes();
+        }
+    }
+
     UPtrList<SurfaceField<Type>> fields(mesh_.fields<SurfaceField<Type>>());
 
     forAll(fields, i)

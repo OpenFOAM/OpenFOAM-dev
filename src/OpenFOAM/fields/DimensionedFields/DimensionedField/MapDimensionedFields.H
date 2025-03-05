@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ void MapDimensionedFields(const MeshMapper& mapper)
 
     forAllConstIter(typename TableType, fields, fieldIter)
     {
-        if (fvMesh::geometryFields.found(fieldIter()->name())) continue;
+        if (fvMesh::curGeometryFields.found(fieldIter()->name())) continue;
 
         FieldType& field = const_cast<FieldType&>(*fieldIter());
 

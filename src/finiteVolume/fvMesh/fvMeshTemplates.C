@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,11 @@ typename Foam::pTraits<Type>::labelType Foam::fvMesh::validComponents() const
 
 
 template<class GeoField>
-Foam::UPtrList<GeoField> Foam::fvMesh::fields(const bool strict) const
+Foam::UPtrList<GeoField> Foam::fvMesh::fields
+(
+    const bool strict,
+    const HashSet<word>& geometryFields
+) const
 {
     HashTable<GeoField*> fields
     (
@@ -66,11 +70,15 @@ Foam::UPtrList<GeoField> Foam::fvMesh::fields(const bool strict) const
 
 
 template<class GeoField>
-Foam::UPtrList<GeoField> Foam::fvMesh::curFields() const
+Foam::UPtrList<GeoField> Foam::fvMesh::curFields
+(
+    const bool strict,
+    const HashSet<word>& geometryFields
+) const
 {
     HashTable<GeoField*> fields
     (
-        const_cast<fvMesh&>(*this).lookupClass<GeoField>()
+        const_cast<fvMesh&>(*this).lookupClass<GeoField>(strict)
     );
     UPtrList<GeoField> curFields(fields.size());
 

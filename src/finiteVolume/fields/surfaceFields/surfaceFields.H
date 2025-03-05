@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,25 +67,6 @@ inline bool isFlux<scalar>(const DimensionedField<scalar, surfaceMesh>& df)
     return
         df.dimensions() == dimVolumetricFlux
      || df.dimensions() == dimMassFlux;
-}
-
-//- Check if surfaceField is a face velocity or momentum
-template<class Type>
-inline bool isFaceVelocity(const DimensionedField<Type, surfaceMesh>& df)
-{
-    return false;
-}
-
-//- Check if surfaceVectorField is a face velocity or momentum
-template<>
-inline bool isFaceVelocity<vector>
-(
-    const DimensionedField<vector, surfaceMesh>& df
-)
-{
-    return
-        df.dimensions() == dimVelocity
-     || df.dimensions() == dimDensity*dimVelocity;
 }
 
 }

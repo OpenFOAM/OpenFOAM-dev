@@ -82,7 +82,7 @@ void Foam::OldTimeField<FieldType>::nullOldestTimeInner()
         }
         else
         {
-            tfield0_ = tmp<FieldType>(NullObjectRef<FieldType>());
+            tfield0_ = tmp<Field0Type>(NullObjectRef<FieldType>());
         }
     }
 }
@@ -275,9 +275,10 @@ void Foam::OldTimeField<FieldType>::storeOldTimes() const
 template<class FieldType>
 void Foam::OldTimeField<FieldType>::clearOldTimes()
 {
-    if (tfield0_.valid() && notNull(tfield0_()))
+    if (tfield0_.valid())
     {
-        tfield0_.clear();
+        tfield0_ = tmp<Field0Type>();
+        setBase();
     }
 }
 

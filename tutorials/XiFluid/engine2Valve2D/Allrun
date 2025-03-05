@@ -23,6 +23,8 @@ case $mode in
         done
 
         runParallel $(getApplication)
+
+        runApplication reconstructPar
         ;;
     stitchParallel)
         ./Allmesh parallel
@@ -37,6 +39,8 @@ case $mode in
         runApplication -a decomposePar -fields
 
         runParallel $(getApplication)
+
+        runApplication reconstructPar
         ;;
     *)
         echo "Error: mode $mode not recognised"

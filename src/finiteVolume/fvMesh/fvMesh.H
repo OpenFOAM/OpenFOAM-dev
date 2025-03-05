@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -322,8 +322,12 @@ public:
     // Static data
 
         //- Set of names of registered geometric fields
-        //  V, Sf, magSf, C, Cf
+        //  Vc, Vc0, Vc00, Sf, magSf, C, Cf, meshPhi, meshPhi_0
         const static HashSet<word> geometryFields;
+
+        //- Set of names of registered current-time geometric fields
+        //  Vc, Sf, magSf, C, Cf
+        const static HashSet<word> curGeometryFields;
 
 
     // Constructors
@@ -542,12 +546,28 @@ public:
             //- Return the list of fields of type GeoField
             //  i.e. fields that are not geometry
             template<class GeoField>
-            UPtrList<GeoField> fields(const bool strict = false) const;
+            UPtrList<GeoField> fields
+            (
+                bool strict = false,
+                const HashSet<word>& geometryFields = fvMesh::geometryFields
+            ) const;
 
             //- Return the list of current fields of type GeoField
             //  i.e. fields that are not old-times or geometry
             template<class GeoField>
-            UPtrList<GeoField> curFields() const;
+            UPtrList<GeoField> curFields
+            (
+                const bool strict = false,
+                const HashSet<word>& geometryFields = fvMesh::geometryFields
+            ) const;
+
+            //- Return the list of fields and old-time-geometry of type GeoField
+            //  i.e. fields that are not current-time geometry
+            template<class GeoField>
+            UPtrList<GeoField> fieldsAndOldTimeGeometry
+            (
+                const bool strict = false
+            ) const;
 
             //- Return a labelType of valid component indicators
             //  1 : valid (solved)
@@ -582,6 +602,9 @@ public:
 
             //- Clear all geometry and addressing
             void clearOut();
+
+            //- Prepare for a mesh change
+            void preChange();
 
             //- Update mesh corresponding to the given map
             virtual void topoChange(const polyTopoChangeMap& map);

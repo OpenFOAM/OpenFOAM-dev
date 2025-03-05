@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,10 @@ License
 template<class GeoField>
 void Foam::fvMeshDistribute::printFieldInfo(const fvMesh& mesh)
 {
-    const UPtrList<GeoField> fields(mesh.fields<GeoField>());
+    const UPtrList<GeoField> fields
+    (
+        mesh.fields<GeoField>(false, fvMesh::curGeometryFields)
+    );
 
     forAll(fields, i)
     {
@@ -62,7 +65,7 @@ void Foam::fvMeshDistribute::saveBoundaryFields
 
     const UPtrList<SurfaceField<Type>> fields
     (
-        mesh_.fields<SurfaceField<Type>>()
+        mesh_.fields<SurfaceField<Type>>(false, fvMesh::curGeometryFields)
     );
 
     bfields.setSize(fields.size());
@@ -90,7 +93,7 @@ void Foam::fvMeshDistribute::mapBoundaryFields
 
     UPtrList<SurfaceField<Type>> fields
     (
-        mesh_.fields<SurfaceField<Type>>()
+        mesh_.fields<SurfaceField<Type>>(false, fvMesh::curGeometryFields)
     );
 
     forAll(fields, i)
@@ -142,7 +145,7 @@ void Foam::fvMeshDistribute::initMapExposedFaces
 {
     const UPtrList<SurfaceField<Type>> fields
     (
-        mesh_.fields<SurfaceField<Type>>()
+        mesh_.fields<SurfaceField<Type>>(false, fvMesh::curGeometryFields)
     );
 
     ifields.setSize(fields.size());
@@ -176,7 +179,7 @@ void Foam::fvMeshDistribute::mapExposedFaces
 {
     UPtrList<SurfaceField<Type>> fields
     (
-        mesh_.fields<SurfaceField<Type>>()
+        mesh_.fields<SurfaceField<Type>>(false, fvMesh::curGeometryFields)
     );
 
     forAll(fields, i)
@@ -220,7 +223,10 @@ void Foam::fvMeshDistribute::mapExposedFaces
 template<class GeoField>
 void Foam::fvMeshDistribute::correctCoupledPatchFields()
 {
-    UPtrList<GeoField> fields(mesh_.fields<GeoField>());
+    UPtrList<GeoField> fields
+    (
+        mesh_.fields<GeoField>(false, fvMesh::curGeometryFields)
+    );
 
     // Ensure the deltaCoeffs are available for constraint patch evaluation
     mesh_.deltaCoeffs();

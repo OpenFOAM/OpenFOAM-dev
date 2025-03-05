@@ -1648,21 +1648,13 @@ bool Foam::fvMeshStitcher::disconnectThis
     const bool geometric
 )
 {
-    if (!stitches() || (changing && !dynamic()))
-    {
-        return false;
-    }
+    if (!stitches()) return false;
 
     // Determine which patches are coupled
     const boolList patchCoupleds =
         geometric
       ? this->patchCoupleds()
       : boolList(mesh_.boundary().size(), false);
-
-    if (any(patchCoupleds))
-    {
-        Info<< indent << typeName << ": Disconnecting" << incrIndent << endl;
-    }
 
     // Map the non-conformal patch field data to the conformal faces in advance
     // of the non-conformal patches being removed
@@ -1692,38 +1684,6 @@ bool Foam::fvMeshStitcher::disconnectThis
     resizePatchFields<SurfaceField>();
     resizePatchFields<VolField>();
 
-    // Prevent hangs caused by processor cyclic patches using mesh geometry
-    mesh_.deltaCoeffs();
-
-    if (any(patchCoupleds))
-    {
-        const volScalarField::Internal o(openness());
-        Info<< indent << "Cell min/average/max openness = "
-            << gMin(o) << '/' << gAverage(o) << '/' << gMax(o) << endl;
-
-        if (mesh_.moving())
-        {
-            for (label i = 0; i <= mesh_.phi().nOldTimes(false); ++ i)
-            {
-                const volScalarField::Internal vce(volumeConservationError(i));
-                Info<< indent << "Cell min/average/max ";
-                for (label j = 0; j < i; ++ j) Info<< "old-";
-                Info<< (i ? "time " : "") << "volume conservation error = "
-                    << gMin(vce) << '/' << gAverage(vce) << '/' << gMax(vce)
-                    << endl;
-            }
-        }
-
-        const volScalarField::Internal pvf(projectedVolumeFraction());
-        Info<< indent << "Cell min/average/max projected volume fraction = "
-            << gMin(pvf) << '/' << gAverage(pvf) << '/' << gMax(pvf) << endl;
-    }
-
-    if (any(patchCoupleds))
-    {
-        Info<< decrIndent;
-    }
-
     // Create null polyTopoChangeMap
     const polyTopoChangeMap map(mesh_);
 
@@ -1743,10 +1703,7 @@ bool Foam::fvMeshStitcher::connectThis
     const bool load
 )
 {
-    if (!stitches() || (changing && !dynamic()))
-    {
-        return false;
-    }
+    if (!stitches()) return false;
 
     // Create a copy of the conformal poly face addressing
     IOobject polyFacesBfIO(word::null, mesh_.pointsInstance(), mesh_);
@@ -2031,6 +1988,35 @@ void Foam::fvMeshStitcher::preConformVolFields()
 }
 
 
+template<>
+void Foam::fvMeshStitcher::postUnconformSurfaceFields<Foam::vector>()
+{
+    if (mesh_.topoChanged())
+    {
+        UPtrList<surfaceVectorField> Ufs(mesh_.curFields<surfaceVectorField>());
+
+        forAll(Ufs, i)
+        {
+            surfaceVectorField& Uf = Ufs[i];
+
+            const volVectorField& U = surfaceToVolVelocity(Uf);
+
+            if (isNull(U)) Uf.clearOldTimes();
+        }
+    }
+
+    UPtrList<surfaceVectorField> fields(mesh_.fields<surfaceVectorField>());
+
+    forAll(fields, i)
+    {
+        conformedFvsPatchField<vector>::unconform
+        (
+            fields[i].boundaryFieldRefNoStoreOldTimes()
+        );
+    }
+}
+
+
 void Foam::fvMeshStitcher::postUnconformSurfaceFields()
 {
     #define PostUnconformSurfaceFields(Type, nullArg) \
@@ -2293,32 +2279,29 @@ bool Foam::fvMeshStitcher::stitches() const
 }
 
 
-bool Foam::fvMeshStitcher::dynamic() const
-{
-    UPtrList<const fvMesh> regionMeshes(this->regionMeshes());
-
-    forAll(regionMeshes, i)
-    {
-        if (regionMeshes[i].dynamic())
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-
 bool Foam::fvMeshStitcher::disconnect
 (
     const bool changing,
     const bool geometric
 )
 {
-    // Disconnection can happen independently of the state of connected
-    // regions. So, just disconnect immediately.
+    // Don't do anything if we are already disconnected
+    if (mesh_.conformal()) return false;
 
-    return disconnectThis(changing, geometric);
+    // Get all the connected region meshes
+    MultiRegionUList<fvMesh> regionMeshes(this->regionMeshes());
+
+    // Disconnect them all
+    bool result = false;
+    forAll(regionMeshes, i)
+    {
+        if (regionMeshes[i]().stitcher().disconnectThis(changing, geometric))
+        {
+            result = true;
+        }
+    }
+
+    return result;
 }
 
 

@@ -1,0 +1,120 @@
+#!/bin/bash
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+# Run foamDictionary silently
+runFoamDictionary()
+{
+    foamDictionary "$@" >> log.foamDictionary 2>&1
+}
+
+# Create the "base" test case
+(
+    mkdir testBase && cp -r 0 constant system testBase || exit 1
+
+    cd testBase || exit 1
+
+    # Reduce the run time and the refinement and distribution frequencies to
+    # get as short as possible a run in which both refinement and distribution
+    # occur both separately and simultaneously
+    runFoamDictionary system/controlDict -entry endTime -set 0.2
+    runFoamDictionary constant/dynamicMeshDict \
+        -entry topoChanger/refineInterval -set 10
+    runFoamDictionary constant/dynamicMeshDict \
+        -entry distributor/redistributionInterval -set 25
+
+    # Reduce the maximum imbalance so the distributor always does something
+    runFoamDictionary constant/dynamicMeshDict \
+        -entry distributor/maxImbalance -set 0.01
+
+    # Give the mesh an initial imbalance so that the distributor does something
+    # even if there is no refinement
+    runFoamDictionary system/decomposeParDict \
+        -entry decomposer -set scotch
+    runFoamDictionary system/decomposeParDict \
+        -entry scotchCoeffs -set "{ processorWeights ($(yes 1 | head -n $(( \
+        $(getNumberOfProcessors) - 1 ))) 2); }"
+
+    runApplication blockMesh
+    runApplication createNonConformalCouples \
+        -overwrite nonCoupleStationary nonCoupleRotating
+
+    runApplication setFields
+
+    runApplication decomposePar -cellProc
+)
+
+# Run a test
+run()
+{
+    CrankNicolson=$1
+    motion=$2
+    refinement=$3
+    distribution=$4
+
+    # Create a unique name relating to the given options
+    name=
+    [ "$CrankNicolson" = true ] && name+="CrankNicolson"
+    [ "$motion" = true ] && name+="Motion"
+    [ "$refinement" = true ] && name+="Refinement"
+    [ "$distribution" = true ] && name+="Distribution"
+    [ -n "$name" ] || name="None"
+
+    # Create and run the test case
+    (
+        mkdir "test$name" && cp -r testBase/* "test$name" || exit 1
+
+        cd "test$name" || exit 1
+
+        # Modify the case for the given options
+        if [ "$CrankNicolson" = true ]
+        then
+            runFoamDictionary system/fvSchemes \
+                -entry ddtSchemes/default -set "CrankNicolson 0.9"
+            runFoamDictionary system/fvSolution \
+                -entry solvers/alpha.water/nAlphaSubCycles -set 1
+        fi
+        if [ "$motion" = false ]
+        then
+            runFoamDictionary constant/dynamicMeshDict -entry mover -remove
+        fi
+        if [ "$refinement" = false ]
+        then
+            runFoamDictionary constant/dynamicMeshDict \
+                -entry topoChanger -remove
+        fi
+        if [ "$distribution" = false ]
+        then
+            runFoamDictionary constant/dynamicMeshDict \
+                -entry distributor -remove
+        fi
+
+        runParallel $(getApplication)
+    )
+}
+
+# Run tests for various combinations of time schemes and mesh-changes
+run  false false false false
+
+run   true false false false
+run  false  true false false
+run  false false  true false
+run  false false false  true
+
+run   true  true false false
+run   true false  true false
+run   true false false  true
+run  false  true  true false
+run  false  true false  true
+run  false false  true  true
+
+#run  true  true  true false # !!! Not supported
+run   true  true false  true
+run   true false  true  true
+run  false  true  true  true
+
+#run  true  true  true  true # !!! Not supported
+
+#------------------------------------------------------------------------------
