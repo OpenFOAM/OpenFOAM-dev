@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,13 +77,31 @@ bool Foam::polygonTriangulate::intersection
     const vector& normal
 )
 {
-    const vector tau0 = perpendicular(normal);
-    const vector tau1 = normal ^ tau0;
-
     const point& pointA0 = points[edgePointsA[0]];
     const point& pointA1 = points[edgePointsA[1]];
     const point& pointB0 = points[edgePointsB[0]];
     const point& pointB1 = points[edgePointsB[1]];
+
+    // Bounding sphere-based rejection for problematic co-linear cases
+    const point cA = (pointA0 + pointA1)/2;
+    const point cB = (pointB0 + pointB1)/2;
+    const scalar rSqrA = magSqr((pointA0 - pointA1)/2);
+    const scalar rSqrB = magSqr((pointB0 - pointB1)/2);
+    if
+    (
+        magSqr(pointB0 - cA) > rSqrA
+     && magSqr(pointB1 - cA) > rSqrA
+     && magSqr(pointA0 - cB) > rSqrB
+     && magSqr(pointA1 - cB) > rSqrB
+    )
+    {
+        return false;
+    }
+
+    // Solve for the edge-local coordinates of the intersection. If these are
+    // both in the range 0 -> 1 then the edges intersect.
+    const vector tau0 = perpendicular(normal);
+    const vector tau1 = normal ^ tau0;
 
     const point2D point2DA0(tau0 & pointA0, tau1 & pointA0);
     const point2D point2DA1(tau0 & pointA1, tau1 & pointA1);
