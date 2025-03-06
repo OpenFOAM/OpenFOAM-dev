@@ -295,7 +295,7 @@ void Foam::timeVaryingMappedFixedValuePointPatchField<Type>::checkTable()
     (
         sampleTimes_,
         startSampleTime_,
-        this->db().time().value(),
+        this->db().time().userTimeValue(),
         lo,
         hi
     );
@@ -304,7 +304,7 @@ void Foam::timeVaryingMappedFixedValuePointPatchField<Type>::checkTable()
     {
         FatalErrorInFunction
             << "Cannot find starting sampling values for current time "
-            << this->db().time().value() << nl
+            << this->db().time().userTimeValue() << nl
             << "Have sampling values for times "
             << pointToPointPlanarInterpolation::timeNames(sampleTimes_) << nl
             << "In directory "
@@ -476,7 +476,7 @@ void Foam::timeVaryingMappedFixedValuePointPatchField<Type>::updateCoeffs()
         scalar start = sampleTimes_[startSampleTime_].value();
         scalar end = sampleTimes_[endSampleTime_].value();
 
-        scalar s = (this->db().time().value()-start)/(end-start);
+        scalar s = (this->db().time().userTimeValue()-start)/(end-start);
 
         if (debug)
         {
@@ -487,8 +487,8 @@ void Foam::timeVaryingMappedFixedValuePointPatchField<Type>::updateCoeffs()
                 << " with weight:" << s << endl;
         }
 
-        this->operator==((1-s)*startSampledValues_ + s*endSampledValues_);
-        wantedAverage = (1-s)*startAverage_ + s*endAverage_;
+        this->operator==((1 - s)*startSampledValues_ + s*endSampledValues_);
+        wantedAverage = (1 - s)*startAverage_ + s*endAverage_;
     }
 
     // Enforce average. Either by scaling (if scaling factor > 0.5) or by
@@ -516,7 +516,7 @@ void Foam::timeVaryingMappedFixedValuePointPatchField<Type>::updateCoeffs()
                 Pout<< "updateCoeffs :"
                     << " offsetting with:" << offset << endl;
             }
-            this->operator==(fld+offset);
+            this->operator==(fld + offset);
         }
         else
         {
@@ -534,7 +534,10 @@ void Foam::timeVaryingMappedFixedValuePointPatchField<Type>::updateCoeffs()
     // Apply offset to mapped values
     if (offset_.valid())
     {
-        this->operator==(*this + offset_->value(this->db().time().value()));
+        this->operator==
+        (
+            *this + offset_->value(this->db().time().userTimeValue())
+        );
     }
 
     if (debug)
