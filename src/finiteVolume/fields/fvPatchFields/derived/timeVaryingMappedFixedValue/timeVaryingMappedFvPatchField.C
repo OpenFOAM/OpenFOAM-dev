@@ -310,8 +310,13 @@ Foam::timeVaryingMappedFvPatchField<Type>::timeVaryingMappedFvPatchField
 
     if (dict.found("offset"))
     {
-        offset_ =
-            Function1<Type>::New("offset", dimTime, iF.dimensions(), dict);
+        offset_ = Function1<Type>::New
+        (
+            "offset",
+            time().userUnits(),
+            iF.dimensions(),
+            dict
+        );
     }
 
     if
@@ -507,7 +512,7 @@ Foam::tmp<Foam::Field<Type>> Foam::timeVaryingMappedFvPatchField<Type>::map()
     // Apply offset to mapped values
     if (offset_.valid())
     {
-        fld += offset_->value(time().userTimeValue());
+        fld += offset_->value(time().value());
     }
 
     if (debug)

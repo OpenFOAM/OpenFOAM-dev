@@ -63,14 +63,13 @@ timeVaryingMappedFixedValuePointPatchField
 {
     if (dict.found("offset"))
     {
-        offset_ =
-            Function1<Type>::New
-            (
-                "offset",
-                this->db().time().userUnits(),
-                iF.dimensions(),
-                dict
-            );
+        offset_ = Function1<Type>::New
+        (
+            "offset",
+            this->db().time().userUnits(),
+            iF.dimensions(),
+            dict
+        );
     }
 
     if
@@ -536,7 +535,7 @@ void Foam::timeVaryingMappedFixedValuePointPatchField<Type>::updateCoeffs()
     {
         this->operator==
         (
-            *this + offset_->value(this->db().time().userTimeValue())
+            *this + offset_->value(this->db().time().value())
         );
     }
 
