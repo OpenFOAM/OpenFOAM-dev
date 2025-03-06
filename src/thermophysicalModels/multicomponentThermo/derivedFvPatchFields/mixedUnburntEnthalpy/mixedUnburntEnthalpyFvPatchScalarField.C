@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,9 +39,9 @@ mixedUnburntEnthalpyFvPatchScalarField
 :
     mixedFvPatchScalarField(p, iF)
 {
-    valueFraction() = 0.0;
-    refValue() = 0.0;
-    refGrad() = 0.0;
+    valueFraction() = scalar(0);
+    refValue() = scalar(0);
+    refGrad() = scalar(0);
 }
 
 
@@ -66,8 +66,10 @@ mixedUnburntEnthalpyFvPatchScalarField
     const fieldMapper& mapper
 )
 :
-    mixedFvPatchScalarField(ptf, p, iF, mapper)
-{}
+    mixedFvPatchScalarField(ptf, p, iF, mapper, false)
+{
+    map(ptf, mapper);
+}
 
 
 Foam::mixedUnburntEnthalpyFvPatchScalarField::
@@ -82,6 +84,31 @@ mixedUnburntEnthalpyFvPatchScalarField
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void Foam::mixedUnburntEnthalpyFvPatchScalarField::map
+(
+    const mixedUnburntEnthalpyFvPatchScalarField& ptf,
+    const fieldMapper& mapper
+)
+{
+    // Unmapped faces are considered zero-gradient/adiabatic
+    // until they are corrected later
+    mapper(*this, ptf, [&](){ return patchInternalField(); });
+    mapper(refValue(), ptf.refValue(), [&](){ return patchInternalField(); });
+    mapper(refGrad(), ptf.refGrad(), scalar(0));
+    mapper(valueFraction(), ptf.valueFraction(), scalar(0));
+}
+
+
+void Foam::mixedUnburntEnthalpyFvPatchScalarField::map
+(
+    const fvPatchScalarField& ptf,
+    const fieldMapper& mapper
+)
+{
+    map(refCast<const mixedUnburntEnthalpyFvPatchScalarField>(ptf), mapper);
+}
+
 
 void Foam::mixedUnburntEnthalpyFvPatchScalarField::updateCoeffs()
 {

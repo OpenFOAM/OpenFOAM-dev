@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,9 @@ gradientUnburntEnthalpyFvPatchScalarField
 )
 :
     fixedGradientFvPatchScalarField(p, iF)
-{}
+{
+    gradient() = scalar(0);
+}
 
 
 Foam::gradientUnburntEnthalpyFvPatchScalarField::
@@ -62,8 +64,10 @@ gradientUnburntEnthalpyFvPatchScalarField
     const fieldMapper& mapper
 )
 :
-    fixedGradientFvPatchScalarField(ptf, p, iF, mapper)
-{}
+    fixedGradientFvPatchScalarField(ptf, p, iF, mapper, false)
+{
+    map(ptf, mapper);
+}
 
 
 Foam::gradientUnburntEnthalpyFvPatchScalarField::
@@ -78,6 +82,29 @@ gradientUnburntEnthalpyFvPatchScalarField
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void Foam::gradientUnburntEnthalpyFvPatchScalarField::map
+(
+    const gradientUnburntEnthalpyFvPatchScalarField& ptf,
+    const fieldMapper& mapper
+)
+{
+    // Unmapped faces are considered zero-gradient/adiabatic
+    // until they are corrected later
+    mapper(*this, ptf, [&](){ return this->patchInternalField(); });
+    mapper(gradient(), ptf.gradient(), scalar(0));
+}
+
+
+void Foam::gradientUnburntEnthalpyFvPatchScalarField::map
+(
+    const fvPatchScalarField& ptf,
+    const fieldMapper& mapper
+)
+{
+    map(refCast<const gradientUnburntEnthalpyFvPatchScalarField>(ptf), mapper);
+}
+
 
 void Foam::gradientUnburntEnthalpyFvPatchScalarField::updateCoeffs()
 {

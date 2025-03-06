@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -111,6 +111,19 @@ public:
 
 
     // Member Functions
+
+        // Mapping functions
+
+            //- Map the given fvPatchField onto this fvPatchField
+            void map
+            (
+                const mixedUnburntEnthalpyFvPatchScalarField&,
+                const fieldMapper&
+            );
+
+            //- Map the given fvPatchField onto this fvPatchField
+            virtual void map(const fvPatchScalarField&, const fieldMapper&);
+
 
         // Evaluation functions
 
