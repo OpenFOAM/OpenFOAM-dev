@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,6 +27,7 @@ License
 #include "demandDrivenData.H"
 #include "fvcGrad.H"
 #include "standardNormal.H"
+#include "meshTools.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -101,6 +102,8 @@ Foam::vector Foam::GradientDispersionRAS<CloudType>::update
     scalar& tTurb
 )
 {
+    const polyMesh& mesh = this->owner().mesh();
+
     distributions::standardNormal& stdNormal = this->owner().stdNormal();
 
     const scalar cps = 0.16432;
@@ -144,6 +147,8 @@ Foam::vector Foam::GradientDispersionRAS<CloudType>::update
             }
 
             UTurb = sigma*fac*dir;
+
+            meshTools::constrainDirection(mesh, mesh.solutionD(), UTurb);
         }
     }
     else
