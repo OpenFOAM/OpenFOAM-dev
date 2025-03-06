@@ -83,20 +83,12 @@ bool Foam::polygonTriangulate::intersection
     const point& pointB1 = points[edgePointsB[1]];
 
     // Bounding sphere-based rejection for problematic co-linear cases
-    const point cA = (pointA0 + pointA1)/2;
-    const point cB = (pointB0 + pointB1)/2;
-    const scalar rSqrA = magSqr((pointA0 - pointA1)/2);
-    const scalar rSqrB = magSqr((pointB0 - pointB1)/2);
-    if
-    (
-        magSqr(pointB0 - cA) > rSqrA
-     && magSqr(pointB1 - cA) > rSqrA
-     && magSqr(pointA0 - cB) > rSqrB
-     && magSqr(pointA1 - cB) > rSqrB
-    )
-    {
-        return false;
-    }
+    const point centreA = (pointA0 + pointA1)/2;
+    const point centreB = (pointB0 + pointB1)/2;
+    const scalar radiusSqrA = magSqr((pointA0 - pointA1)/2);
+    const scalar radiusSqrB = magSqr((pointB0 - pointB1)/2);
+
+    if (magSqr(centreA - centreB) > radiusSqrA + radiusSqrB) return false;
 
     // Solve for the edge-local coordinates of the intersection. If these are
     // both in the range 0 -> 1 then the edges intersect.

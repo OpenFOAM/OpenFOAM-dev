@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,8 +32,7 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::mixedEnergyFvPatchScalarField::
-mixedEnergyFvPatchScalarField
+Foam::mixedEnergyFvPatchScalarField::mixedEnergyFvPatchScalarField
 (
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF
@@ -41,14 +40,13 @@ mixedEnergyFvPatchScalarField
 :
     mixedFvPatchScalarField(p, iF)
 {
-    valueFraction() = 0.0;
-    refValue() = 0.0;
-    refGrad() = 0.0;
+    valueFraction() = scalar(0);
+    refValue() = scalar(0);
+    refGrad() = scalar(0);
 }
 
 
-Foam::mixedEnergyFvPatchScalarField::
-mixedEnergyFvPatchScalarField
+Foam::mixedEnergyFvPatchScalarField::mixedEnergyFvPatchScalarField
 (
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
@@ -59,8 +57,7 @@ mixedEnergyFvPatchScalarField
 {}
 
 
-Foam::mixedEnergyFvPatchScalarField::
-mixedEnergyFvPatchScalarField
+Foam::mixedEnergyFvPatchScalarField::mixedEnergyFvPatchScalarField
 (
     const mixedEnergyFvPatchScalarField& ptf,
     const fvPatch& p,
@@ -74,8 +71,7 @@ mixedEnergyFvPatchScalarField
 }
 
 
-Foam::mixedEnergyFvPatchScalarField::
-mixedEnergyFvPatchScalarField
+Foam::mixedEnergyFvPatchScalarField::mixedEnergyFvPatchScalarField
 (
     const mixedEnergyFvPatchScalarField& tppsf,
     const DimensionedField<scalar, volMesh>& iF
@@ -94,6 +90,7 @@ void Foam::mixedEnergyFvPatchScalarField::map
 )
 {
     // Unmapped faces are considered zero-gradient/adiabatic
+    // until they are corrected later
     mapper(*this, ptf, [&](){ return patchInternalField(); });
     mapper(refValue(), ptf.refValue(), [&](){ return patchInternalField(); });
     mapper(refGrad(), ptf.refGrad(), scalar(0));
