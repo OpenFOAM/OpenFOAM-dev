@@ -1357,11 +1357,11 @@ void Foam::GeometricField<Type, GeoMesh, PrimitiveField>::reset
 
     if (tgf.isTmp())
     {
-        primitiveFieldRef().transfer(tgf.ref());
+        PrimitiveField<Type>::transfer(tgf.ref());
     }
     else
     {
-        primitiveFieldRef() = gf.primitiveField();
+        PrimitiveField<Type>::operator=(gf.primitiveField());
     }
 
     boundaryField_.reset(gf.boundaryField());
