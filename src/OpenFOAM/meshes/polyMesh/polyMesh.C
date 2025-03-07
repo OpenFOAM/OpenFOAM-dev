@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -975,7 +975,7 @@ bool Foam::polyMesh::found(const IOobject& io)
         fileHandler().findInstance(curDirIo, io.time().value(), word::null);
 
     // Return whether or not this latest-time polyMesh directory exists
-    return fileHandler().isDir(latestDirIo.path(false));
+    return fileHandler().isDir(fileHandler().objectPath(latestDirIo));
 }
 
 
