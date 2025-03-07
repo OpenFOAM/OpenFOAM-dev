@@ -9,9 +9,7 @@ blockEdges/lineEdge/lineEdge.C
 blockEdges/polyLineEdge/polyLine.C
 blockEdges/polyLineEdge/polyLineEdge.C
 blockEdges/arcEdge/arcEdge.C
-blockEdges/BSplineEdge/BSpline.C
 blockEdges/BSplineEdge/BSplineEdge.C
-blockEdges/splineEdge/CatmullRomSpline.C
 blockEdges/splineEdge/splineEdge.C
 blockEdges/projectEdge/projectEdge.C
 blockEdges/projectCurveEdge/projectCurveEdge.C

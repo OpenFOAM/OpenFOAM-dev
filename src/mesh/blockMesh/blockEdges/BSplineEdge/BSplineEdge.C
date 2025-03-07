@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,7 +100,8 @@ Foam::point Foam::blockEdges::BSplineEdge::position(const scalar mu) const
 
 Foam::scalar Foam::blockEdges::BSplineEdge::length() const
 {
-    return BSpline::length();
+    NotImplemented;
+    return NaN;
 }
 
 
