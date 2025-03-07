@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,15 +43,32 @@ Foam::PatchFlowRateInjection<CloudType>::PatchFlowRateInjection
     phiName_(this->coeffDict().template lookupOrDefault<word>("phi", "phi")),
     rhoName_(this->coeffDict().template lookupOrDefault<word>("rho", "rho")),
     duration_(this->readDuration(dict, owner)),
-    concentration_
+    volumeRatio_
     (
-        Function1<scalar>::New
+        this->coeffDict().found("concentration")
+     || this->coeffDict().found("volumeRatio")
+      ? Function1<scalar>::New
         (
-            "concentration",
+            this->coeffDict().found("volumeRatio")
+          ? "volumeRatio"
+          : "concentration",
             this->owner().db().time().userUnits(),
             dimless,
             this->coeffDict()
         )
+      : autoPtr<Function1<scalar>>()
+    ),
+    massRatio_
+    (
+        this->coeffDict().found("massRatio")
+      ? Function1<scalar>::New
+        (
+            "massRatio",
+            this->owner().db().time().userUnits(),
+            dimless,
+            this->coeffDict()
+        )
+      : autoPtr<Function1<scalar>>()
     ),
     parcelConcentration_
     (
@@ -67,7 +84,23 @@ Foam::PatchFlowRateInjection<CloudType>::PatchFlowRateInjection
             owner.rndGen().generator()
         )
     )
-{}
+{
+    if (volumeRatio_.valid() && massRatio_.valid())
+    {
+        FatalIOErrorInFunction(this->coeffDict())
+            << "keywords volumeRatio (or concentration) and "
+            << "massRatio both defined in dictionary "
+            << this->coeffDict().name() << exit(FatalIOError);
+    }
+
+    if (!volumeRatio_.valid() && !massRatio_.valid())
+    {
+        FatalIOErrorInFunction(this->coeffDict())
+            << "keyword volumeRatio or massRatio is "
+            << "undefined in dictionary "
+            << this->coeffDict().name() << exit(FatalIOError);
+    }
+}
 
 
 template<class CloudType>
@@ -81,7 +114,8 @@ Foam::PatchFlowRateInjection<CloudType>::PatchFlowRateInjection
     phiName_(im.phiName_),
     rhoName_(im.rhoName_),
     duration_(im.duration_),
-    concentration_(im.concentration_, false),
+    volumeRatio_(im.volumeRatio_, false),
+    massRatio_(im.massRatio_, false),
     parcelConcentration_(im.parcelConcentration_),
     sizeDistribution_(im.sizeDistribution_, false)
 {}
@@ -111,19 +145,18 @@ Foam::scalar Foam::PatchFlowRateInjection<CloudType>::timeEnd() const
 
 
 template<class CloudType>
-Foam::scalar Foam::PatchFlowRateInjection<CloudType>::flowRate() const
+Foam::scalar Foam::PatchFlowRateInjection<CloudType>::volumetricFlowRate() const
 {
    const polyMesh& mesh = this->owner().mesh();
 
     const surfaceScalarField& phi =
         mesh.lookupObject<surfaceScalarField>(phiName_);
-
     const scalarField& phip = phi.boundaryField()[patchId_];
 
-    scalar flowRateIn = 0.0;
+    scalar flowRateIn;
     if (phi.dimensions() == dimVolumetricFlux)
     {
-        flowRateIn = max(0.0, -sum(phip));
+        flowRateIn = max(scalar(0), -sum(phip));
     }
     else
     {
@@ -131,7 +164,36 @@ Foam::scalar Foam::PatchFlowRateInjection<CloudType>::flowRate() const
             mesh.lookupObject<volScalarField>(rhoName_);
         const scalarField& rhop = rho.boundaryField()[patchId_];
 
-        flowRateIn = max(0.0, -sum(phip/rhop));
+        flowRateIn = max(scalar(0), -sum(phip/rhop));
+    }
+
+    reduce(flowRateIn, sumOp<scalar>());
+
+    return flowRateIn;
+}
+
+
+template<class CloudType>
+Foam::scalar Foam::PatchFlowRateInjection<CloudType>::massFlowRate() const
+{
+   const polyMesh& mesh = this->owner().mesh();
+
+    const surfaceScalarField& phi =
+        mesh.lookupObject<surfaceScalarField>(phiName_);
+    const scalarField& phip = phi.boundaryField()[patchId_];
+
+    scalar flowRateIn;
+    if (phi.dimensions() == dimVolumetricFlux)
+    {
+        const volScalarField& rho =
+            mesh.lookupObject<volScalarField>(rhoName_);
+        const scalarField& rhop = rho.boundaryField()[patchId_];
+
+        flowRateIn = max(scalar(0), -sum(phip*rhop));
+    }
+    else
+    {
+        flowRateIn = max(scalar(0), -sum(phip));
     }
 
     reduce(flowRateIn, sumOp<scalar>());
@@ -149,10 +211,19 @@ Foam::scalar Foam::PatchFlowRateInjection<CloudType>::nParcelsToInject
 {
     if (t1 >= 0 && t0 < duration_)
     {
+        const scalar tMid = (t0 + t1)/2;
+
+        const scalar volumeFlowRateToInject =
+            volumeRatio_.valid()
+          ? volumeRatio_->value(tMid)
+           *volumetricFlowRate()
+          : massRatio_->value(tMid)
+           *massFlowRate()
+           /this->owner().constProps().rho0();
+
         return
             parcelConcentration_
-           *concentration_->value(0.5*(t0 + t1))
-           *flowRate()
+           *volumeFlowRateToInject
            *(min(t1, duration_) - max(t0, 0));
     }
     else
@@ -171,10 +242,18 @@ Foam::scalar Foam::PatchFlowRateInjection<CloudType>::massToInject
 {
     if (t1 >= 0 && t0 < duration_)
     {
+        const scalar tMid = (t0 + t1)/2;
+
+        const scalar massFlowRateToInject =
+            volumeRatio_.valid()
+          ? volumeRatio_->value(tMid)
+           *volumetricFlowRate()
+           *this->owner().constProps().rho0()
+          : massRatio_->value(tMid)
+           *massFlowRate();
+
         return
-            this->owner().constProps().rho0()
-           *concentration_->value(0.5*(t0 + t1))
-           *flowRate()
+            massFlowRateToInject
            *(min(t1, duration_) - max(t0, 0));
     }
     else

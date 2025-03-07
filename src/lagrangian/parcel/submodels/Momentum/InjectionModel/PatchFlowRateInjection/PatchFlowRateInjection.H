@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,13 +25,14 @@ Class
     Foam::PatchFlowRateInjection
 
 Description
-    Patch injection, by using patch flow rate to determine concentration and
-    velocity.
+    Patch injection in which the quantity of particulate material introduced is
+    specified as a fraction of the carrier flow rate.
 
     User specifies:
       - Name of patch
       - Injection duration
-      - Injection target concentration/carrier volume flow rate
+      - The particulate/carrier volume or mass ratio
+      - The number concentration of parcels
 
     Properties:
       - Initial parcel velocity given by local flow velocity
@@ -77,10 +78,13 @@ class PatchFlowRateInjection
         //- Injection duration [s]
         const scalar duration_;
 
-        //- Concentration profile of particle volume to carrier volume [-]
-        autoPtr<Function1<scalar>> concentration_;
+        //- The ratio of particulate volume to carrier volume [-]
+        autoPtr<Function1<scalar>> volumeRatio_;
 
-        //- Parcels to introduce per unit volume flow rate m3 [n/m^3]
+        //- The ratio of particulate mass to carrier mass [-]
+        autoPtr<Function1<scalar>> massRatio_;
+
+        //- Parcels to introduce per unit volume of particulates [m^-3]
         const scalar parcelConcentration_;
 
         //- Parcel size distribution model
@@ -132,7 +136,10 @@ public:
         virtual scalar timeEnd() const;
 
         //- Return the total volumetric flow rate across the patch [m^3/s]
-        scalar flowRate() const;
+        scalar volumetricFlowRate() const;
+
+        //- Return the total mass flow rate across the patch [kg/s]
+        scalar massFlowRate() const;
 
         //- Number of parcels to introduce relative to SOI
         virtual scalar nParcelsToInject(const scalar time0, const scalar time1);
