@@ -166,18 +166,7 @@ void Foam::timeVaryingMappedFixedValuePointPatchField<Type>::map
     const fieldMapper& mapper
 )
 {
-    fixedValuePointPatchField<Type>::map(ptf, mapper);
-
-    const timeVaryingMappedFixedValuePointPatchField<Type>& tiptf =
-        refCast<const timeVaryingMappedFixedValuePointPatchField<Type>>(ptf);
-
-    mapper(startSampledValues_, tiptf.startSampledValues_);
-    mapper(endSampledValues_, tiptf.endSampledValues_);
-
-    // Clear interpolator
-    mapperPtr_.clear();
-    startSampleTime_ = -1;
-    endSampleTime_ = -1;
+    reset(ptf);
 }
 
 

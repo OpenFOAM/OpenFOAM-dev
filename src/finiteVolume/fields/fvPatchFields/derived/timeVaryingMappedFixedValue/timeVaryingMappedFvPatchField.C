@@ -400,13 +400,7 @@ void Foam::timeVaryingMappedFvPatchField<Type>::map
     const fieldMapper& mapper
 )
 {
-    mapper(startSampledValues_, tiptf.startSampledValues_);
-    mapper(endSampledValues_, tiptf.endSampledValues_);
-
-    // Clear interpolator
-    mapperPtr_.clear();
-    startSampleTime_ = -1;
-    endSampleTime_ = -1;
+    reset(tiptf);
 }
 
 
