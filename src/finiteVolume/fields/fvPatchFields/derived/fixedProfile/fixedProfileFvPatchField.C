@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,21 +26,6 @@ License
 #include "fixedProfileFvPatchField.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-template<class Type>
-Foam::fixedProfileFvPatchField<Type>::fixedProfileFvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const Field<Type>& fld
-)
-:
-    fixedValueFvPatchField<Type>(p, iF, fld),
-    profile_(),
-    origin_(0),
-    direction_(Zero)
-{}
-
 
 template<class Type>
 Foam::fixedProfileFvPatchField<Type>::fixedProfileFvPatchField

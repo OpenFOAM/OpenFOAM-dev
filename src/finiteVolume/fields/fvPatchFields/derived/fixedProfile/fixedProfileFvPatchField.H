@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -121,14 +121,6 @@ public:
 
 
     // Constructors
-
-        //- Construct from patch and internal field and patch field
-        fixedProfileFvPatchField
-        (
-            const fvPatch&,
-            const DimensionedField<Type, volMesh>&,
-            const Field<Type>& fld
-        );
 
         //- Construct from patch, internal field and dictionary
         fixedProfileFvPatchField
