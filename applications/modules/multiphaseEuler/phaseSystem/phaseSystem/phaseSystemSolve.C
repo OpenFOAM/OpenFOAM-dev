@@ -505,11 +505,6 @@ void Foam::phaseSystem::solve
                     << ' ' << max(sumAlphaMoving + 1 - alphaVoid).value()
                     << endl;
 
-                if (mesh_.time().writeTime())
-                {
-                    sumAlphaMoving.write();
-                }
-
                 // Correct the sum of the phase fractions to avoid drift
                 forAll(movingPhases(), movingPhasei)
                 {
