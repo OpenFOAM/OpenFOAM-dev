@@ -517,9 +517,7 @@ void Foam::phaseSystem::solve
         {
             forAll(solvePhases, solvePhasei)
             {
-                phaseModel& phase = solvePhases[solvePhasei];
-
-                phase.alphaPhiRef() /= nAlphaSubCycles;
+                solvePhases[solvePhasei].alphaPhiRef() /= nAlphaSubCycles;
             }
         }
 
@@ -541,8 +539,8 @@ void Foam::phaseSystem::solve
 
             forAll(solvePhases, solvePhasei)
             {
-                phaseModel& phase = solvePhases[solvePhasei];
-                referencePhase.alphaPhiRef() -= phase.alphaPhi();
+                referencePhase.alphaPhiRef() -=
+                    solvePhases[solvePhasei].alphaPhi();
             }
 
             referencePhase.alphaRhoPhiRef() =

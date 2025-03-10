@@ -45,6 +45,8 @@ void Foam::MULES::control::read(const dictionary& dict)
 {
     const dictionary& MULEScontrols = dict.optionalSubDict("MULES");
 
+    globalBounds = MULEScontrols.lookupOrDefault<Switch>("globalBounds", false);
+
     smoothingCoeff = MULEScontrols.lookupOrDefault<scalar>("smoothingCoeff", 0);
 
     extremaCoeff = MULEScontrols.lookupOrDefault<scalar>("extremaCoeff", 0);

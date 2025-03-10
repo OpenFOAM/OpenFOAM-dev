@@ -43,6 +43,7 @@ SourceFiles
 #ifndef MULES_H
 #define MULES_H
 
+#include "Switch.H"
 #include "volFieldsFwd.H"
 #include "surfaceFieldsFwd.H"
 #include "primitiveFieldsFwd.H"
@@ -76,6 +77,10 @@ struct control
     //  but 1e-3 can be used for very tight convergence
     //  Defaults to 0, i.e. unused and nIter iterations are performed
     scalar tol;
+
+    //- Optional switch to select global bounds only
+    //  rather than local and global bounds
+    Switch globalBounds;
 
     //- Optional coefficient to relax the local boundedness constraint
     //  by adding extremaCoeff*local_range to the allowed range
@@ -352,6 +357,7 @@ void limitSumLin
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
+    #include "MULESlimiter.C"
     #include "MULESTemplates.C"
 #endif
 
