@@ -41,7 +41,7 @@ case $mode in
 
         runParallel $(getApplication)
 
-        runApplication reconstructPar -allRegions
+        runApplication -a reconstructPar -allRegions
         ;;
     *)
         echo "Error: mode $mode not recognised"
