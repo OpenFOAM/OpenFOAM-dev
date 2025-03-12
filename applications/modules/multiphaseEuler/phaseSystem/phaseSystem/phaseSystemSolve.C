@@ -268,10 +268,10 @@ void Foam::phaseSystem::solve
                 alphaDByAf = this->alphaDByAf(rAs);
             }
 
-            // Create correction fluxes
+            // Create phase volume-fraction fluxes
             PtrList<surfaceScalarField> alphaPhis(movingPhases().size());
 
-            // Create correction fluxes
+            // Create bounded phase volume-fraction fluxes
             PtrList<surfaceScalarField> alphaPhiBDs(movingPhases().size());
 
             forAll(movingPhases(), movingPhasei)
@@ -364,10 +364,10 @@ void Foam::phaseSystem::solve
                     )
                 );
 
-                surfaceScalarField::Boundary& alphaPhiBDBf =
-                    alphaPhiBDs[movingPhasei].boundaryFieldRef();
                 const surfaceScalarField::Boundary& alphaPhiBf =
                     alphaPhi.boundaryField();
+                surfaceScalarField::Boundary& alphaPhiBDBf =
+                    alphaPhiBDs[movingPhasei].boundaryFieldRef();
 
                 forAll(alphaPhiBDBf, patchi)
                 {
@@ -381,7 +381,7 @@ void Foam::phaseSystem::solve
             }
 
             // Limit the flux corrections to ensure the phase fractions sum to 1
-            MULES::limitSumLin(alphasMoving, phisMoving, alphaPhis, phiMoving);
+            MULES::limitSum(alphasMoving, phisMoving, alphaPhis, phiMoving);
             MULES::limitSum(alphasMoving, phisMoving, alphaPhiBDs, phiMoving);
 
             forAll(movingPhases(), movingPhasei)
@@ -407,7 +407,7 @@ void Foam::phaseSystem::solve
             }
 
             // Limit the flux corrections to ensure the phase fractions sum to 1
-            MULES::limitSumLin(alphasMoving, phisMoving, alphaPhis, phiMoving);
+            MULES::limitSum(alphasMoving, phisMoving, alphaPhis, phiMoving);
 
             forAll(solvePhases, solvePhasei)
             {
