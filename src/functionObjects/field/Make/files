@@ -51,6 +51,7 @@ shearStress/shearStress.C
 totalEnthalpy/totalEnthalpy.C
 reconstruct/reconstruct.C
 power/power.C
+tr/tr.C
 
 turbulenceFields/turbulenceFields.C
 yPlus/yPlus.C

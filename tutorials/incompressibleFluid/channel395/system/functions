@@ -24,9 +24,9 @@ FoamFile
     value = 0.5
 )
 
-#includeFunc mag(UPrime2Mean)
+#includeFunc tr(UPrime2Mean)
 
-#includeFunc multiply(half, mag(UPrime2Mean), result = k)
+#includeFunc multiply(half, tr(UPrime2Mean), result = k)
 
 #includeFunc graphLayerAverage
 (
