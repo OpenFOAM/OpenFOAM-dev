@@ -637,34 +637,4 @@ void Foam::MULES::limitSum
 }
 
 
-template
-<
-    template<class> class AlphaList,
-    template<class> class ConstraintList,
-    class ConstraintField,
-    template<class> class PsiPhiList
->
-void Foam::MULES::limitSumLin
-(
-    const AlphaList<const volScalarField>& alphas,
-    const ConstraintList<const ConstraintField>& constraints,
-    PsiPhiList<surfaceScalarField>& psiPhis,
-    const surfaceScalarField& phi
-)
-{
-    PtrList<surfaceScalarField> alphaPhiBDs(psiPhis.size());
-
-    forAll(psiPhis, phasei)
-    {
-        alphaPhiBDs.set
-        (
-            phasei,
-            linear<scalar>(phi.mesh()).interpolate(alphas[phasei])*phi
-        );
-    }
-
-    limitSum(alphaPhiBDs, constraints, psiPhis, phi);
-}
-
-
 // ************************************************************************* //

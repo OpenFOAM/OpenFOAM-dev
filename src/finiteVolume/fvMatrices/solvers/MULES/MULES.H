@@ -333,21 +333,6 @@ void limitSum
     const surfaceScalarField& phi
 );
 
-template
-<
-    template<class> class AlphaList,
-    template<class> class ConstraintList,
-    class ConstraintField,
-    template<class> class PsiPhiList
->
-void limitSumLin
-(
-    const AlphaList<const volScalarField>& alphas,
-    const ConstraintList<const ConstraintField>& constraints,
-    PsiPhiList<surfaceScalarField>& psiPhis,
-    const surfaceScalarField& phi
-);
-
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
