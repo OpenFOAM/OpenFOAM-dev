@@ -414,7 +414,7 @@ void Foam::phaseSystem::solve
                 phaseModel& phase = solvePhases[solvePhasei];
                 volScalarField& alpha = phase;
 
-                surfaceScalarField& alphaPhi =
+                const surfaceScalarField& alphaPhi =
                     alphaPhis[solveMovingPhaseIndices[solvePhasei]];
 
                 MULES::explicitSolve
@@ -461,7 +461,7 @@ void Foam::phaseSystem::solve
             // Report the phase fractions and the phase fraction sum
             forAll(solvePhases, solvePhasei)
             {
-                phaseModel& phase = solvePhases[solvePhasei];
+                const phaseModel& phase = solvePhases[solvePhasei];
 
                 Info<< phase.name() << " fraction, min, max = "
                     << phase.weightedAverage(mesh_.V()).value()
