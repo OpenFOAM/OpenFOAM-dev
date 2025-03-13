@@ -220,7 +220,6 @@ void Foam::solvers::twoPhaseSolver::alphaSolve(const label nAlphaSubCycles)
                     talphaPhi1Un(),
                     talphaPhi1Corr.ref(),
                     (Sp() + divU())(),
-                    (-(Sp() + divU())*alpha1)(),
                     oneField(),
                     zeroField()
                 );

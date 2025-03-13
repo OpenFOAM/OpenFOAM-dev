@@ -29,42 +29,27 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template<class RdeltaTType, class RhoType, class SpType, class SuType>
+template<class RdeltaTType, class RhoType, class SpType>
 void Foam::MULES::correct
 (
     const RdeltaTType& rDeltaT,
     const RhoType& rho,
     volScalarField& psi,
     const surfaceScalarField& phiCorr,
-    const SpType& Sp,
-    const SuType& Su
+    const SpType& Sp
 )
 {
     Info<< "MULES: Correcting " << psi.name() << endl;
 
-    const fvMesh& mesh = psi.mesh();
-
     scalarField psiIf(psi.size(), 0);
     fvc::surfaceIntegrate(psiIf, phiCorr);
 
-    if (mesh.moving())
-    {
-        psi.primitiveFieldRef() =
-        (
-            rho.primitiveField()*psi.primitiveField()*rDeltaT
-          + Su.primitiveField()
-          - psiIf
-        )/(rho.primitiveField()*rDeltaT - Sp.primitiveField());
-    }
-    else
-    {
-        psi.primitiveFieldRef() =
-        (
-            rho.primitiveField()*psi.primitiveField()*rDeltaT
-          + Su.primitiveField()
-          - psiIf
-        )/(rho.primitiveField()*rDeltaT - Sp.primitiveField());
-    }
+    psi.primitiveFieldRef() =
+    (
+        (rho.primitiveField()*rDeltaT - Sp.primitiveField())
+       *psi.primitiveField()
+      - psiIf
+    )/(rho.primitiveField()*rDeltaT - Sp.primitiveField());
 
     psi.correctBoundaryConditions();
 }
@@ -78,18 +63,17 @@ void Foam::MULES::correct
     const surfaceScalarField& phiCorr
 )
 {
-    correct(rho, psi, phiCorr, zeroField(), zeroField());
+    correct(rho, psi, phiCorr, zeroField());
 }
 
 
-template<class RhoType, class SpType, class SuType>
+template<class RhoType, class SpType>
 void Foam::MULES::correct
 (
     const RhoType& rho,
     volScalarField& psi,
     const surfaceScalarField& phiCorr,
-    const SpType& Sp,
-    const SuType& Su
+    const SpType& Sp
 )
 {
     const fvMesh& mesh = psi.mesh();
@@ -97,12 +81,12 @@ void Foam::MULES::correct
     if (fv::localEulerDdt::enabled(mesh))
     {
         const volScalarField& rDeltaT = fv::localEulerDdt::localRDeltaT(mesh);
-        correct(rDeltaT, rho, psi, phiCorr, Sp, Su);
+        correct(rDeltaT, rho, psi, phiCorr, Sp);
     }
     else
     {
         const scalar rDeltaT = 1.0/mesh.time().deltaTValue();
-        correct(rDeltaT, rho, psi, phiCorr, Sp, Su);
+        correct(rDeltaT, rho, psi, phiCorr, Sp);
     }
 }
 
@@ -127,7 +111,6 @@ void Foam::MULES::correct
         phiBD,
         phiCorr,
         zeroField(),
-        zeroField(),
         psiMax,
         psiMin
     );
@@ -138,7 +121,6 @@ template
 <
     class RhoType,
     class SpType,
-    class SuType,
     class PsiMaxType,
     class PsiMinType
 >
@@ -150,7 +132,6 @@ void Foam::MULES::correct
     const surfaceScalarField& phiBD,
     surfaceScalarField& phiCorr,
     const SpType& Sp,
-    const SuType& Su,
     const PsiMaxType& psiMax,
     const PsiMinType& psiMin
 )
@@ -170,12 +151,11 @@ void Foam::MULES::correct
             phiBD,
             phiCorr,
             Sp,
-            Su,
             psiMax,
             psiMin
         );
 
-        correct(rDeltaT, rho, psi, phiCorr, Sp, Su);
+        correct(rDeltaT, rho, psi, phiCorr, Sp);
     }
     else
     {
@@ -190,12 +170,11 @@ void Foam::MULES::correct
             phiBD,
             phiCorr,
             Sp,
-            Su,
             psiMax,
             psiMin
         );
 
-        correct(rDeltaT, rho, psi, phiCorr, Sp, Su);
+        correct(rDeltaT, rho, psi, phiCorr, Sp);
     }
 }
 
@@ -205,7 +184,6 @@ template
     class RdeltaTType,
     class RhoType,
     class SpType,
-    class SuType,
     class PsiMaxType,
     class PsiMinType
 >
@@ -218,7 +196,6 @@ void Foam::MULES::limitCorr
     const surfaceScalarField& phiBD,
     surfaceScalarField& phiCorr,
     const SpType& Sp,
-    const SuType& Su,
     const PsiMaxType& psiMax,
     const PsiMinType& psiMin
 )
@@ -244,10 +221,9 @@ void Foam::MULES::limitCorr
     scalarField SuCorr
     (
         mesh.Vsc()().primitiveField()
-       *(
-            (rho.primitiveField()*rDeltaT)*psi.primitiveField()
-          + Su.primitiveField()
-        )
+       *(rho.primitiveField()*rDeltaT - Sp.primitiveField())
+       *psi.primitiveField()
+
     );
 
     limiter
@@ -266,6 +242,64 @@ void Foam::MULES::limitCorr
     );
 
     phiCorr *= lambda;
+}
+
+
+template
+<
+    class RhoType,
+    class SpType,
+    class PsiMaxType,
+    class PsiMinType
+>
+void Foam::MULES::limitCorr
+(
+    const control& controls,
+    const RhoType& rho,
+    const volScalarField& psi,
+    const surfaceScalarField& phiBD,
+    surfaceScalarField& phiCorr,
+    const SpType& Sp,
+    const PsiMaxType& psiMax,
+    const PsiMinType& psiMin
+)
+{
+    const fvMesh& mesh = psi.mesh();
+
+    if (fv::localEulerDdt::enabled(mesh))
+    {
+        const volScalarField& rDeltaT = fv::localEulerDdt::localRDeltaT(mesh);
+
+        limitCorr
+        (
+            controls,
+            rDeltaT,
+            rho,
+            psi,
+            phiBD,
+            phiCorr,
+            Sp,
+            psiMax,
+            psiMin
+        );
+    }
+    else
+    {
+        const scalar rDeltaT = 1.0/mesh.time().deltaTValue();
+
+        limitCorr
+        (
+            controls,
+            rDeltaT,
+            rho,
+            psi,
+            phiBD,
+            phiCorr,
+            Sp,
+            psiMax,
+            psiMin
+        );
+    }
 }
 
 

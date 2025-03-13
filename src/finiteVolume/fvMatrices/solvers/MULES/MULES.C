@@ -127,7 +127,7 @@ void Foam::MULES::limitSum(UPtrList<scalarField>& phiPsiCorrs)
 void Foam::MULES::limitSum
 (
     UPtrList<scalarField>& phiPsiCorrs,
-    UPtrList<scalarField>& phiPsiFixedCorrs
+    const UPtrList<scalarField>& phiPsiFixedCorrs
 )
 {
     forAll(phiPsiCorrs[0], facei)

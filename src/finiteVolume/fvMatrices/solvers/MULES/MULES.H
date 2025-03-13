@@ -301,7 +301,20 @@ void limitSum(UPtrList<scalarField>& psiPhiCorrs);
 void limitSum
 (
     UPtrList<scalarField>& phiPsiCorrs,
-    UPtrList<scalarField>& phiPsiFixedCorrs
+    const UPtrList<scalarField>& phiPsiFixedCorrs
+);
+
+template
+<
+    template<class> class ConstraintList,
+    class ConstraintField,
+    template<class> class PsiPhiList
+>
+void limitSum
+(
+    const ConstraintList<const ConstraintField>& constraints,
+    PsiPhiList<surfaceScalarField>& psiPhiCorrs,
+    const surfaceScalarField& phi
 );
 
 template
