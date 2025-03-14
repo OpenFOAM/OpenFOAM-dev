@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -40,7 +40,6 @@ options:
   -columns  | -c <cols>  display specified columns, comma-separated, e.g. "2,4"
   -flip     | -f         plot data on x-axis, independent variable on y-axis
   -help     | -h         print the usage
-  -idle     | -i <time>  stops if <file> unchanging for <time> sec (default 60s)
   -logscale | -l         plots data (y-axis) on log scale, e.g. for residuals
   -once     | -o         print a graph one time without refreshing
   -refresh  | -r <time>  refreshes display every <time> sec (default 10s)
@@ -59,9 +58,7 @@ and/or on a log scale using the '-l' option. The default axes can be flipped by
 the '-f' option (with data plotted on the horizontal axis).
 
 In standard monitoring mode, graphs are refreshed (default: every 10s).
-The graph stops refreshing when the data file is unchanged for a prolongued
-period (default: 60s). Graphs can also be printed one time without refreshing
-using the '-o' option.
+Graphs can also be printed one time without refreshing using the '-o' option.
 
 Examples:
 + Monitor residuals on a log scale, running in background ('&')
@@ -79,38 +76,6 @@ error() {
     while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     usage
     exit 1
-}
-
-plotFileHeader() {
-    _term="$1"
-    _size="$2"
-    _logscale="$3"
-    _range="$4"
-    _title="$5"
-    _label="$6"
-
-    _ticFormat="%g"
-    [ "$logscale" = yes ] && _ticFormat="%1.e"
-    _otherAxis="$([ "$AXIS" = x ] && echo y || echo x)"
-
-    printf "set term %s" "$_term"
-    [ "$_size" = default ] || printf " size %s" "$_size"
-    printf "\n"
-
-    [ "$_logscale" = yes ] && printf "set logscale %s\n" "$AXIS"
-    [ "$_range" = none ] || printf "set %srange %s\n" "$AXIS" "$_range"
-    printf "set %stics format \"%s\"\n" "$AXIS" "$_ticFormat"
-    printf "set title \"%s\"\n" "$_title"
-    printf "set %slabel \"%s\"\n" "$_otherAxis" "$_label"
-    echo "plot \\"
-}
-
-plotFileFooter() {
-    cat<<EOF
-
-pause $refresh
-reread
-EOF
 }
 
 howMany() ( echo "$1" | awk '{ print NF }' )
@@ -131,13 +96,14 @@ command -v gnuplot >/dev/null 2>&1 || error "Gnuplot not installed"
 AXIS="y"
 
 # Variables used locally
-term='x11 1 font "helvetica,17" linewidth 1.5 persist noraise'
+term="$(echo show term | gnuplot 2>&1 | sed -n \
+'s/[ ]\+terminal type is \([^ ]\+\) .*/\1/p') \
+ 1 font \",14\" linewidth 1.5 noraise"
 size="default"
 logscale="no"
 range="none"
 title="Data Monitoring"
 
-idle=60
 refresh=10
 once=""
 columns=""
@@ -164,12 +130,6 @@ do
         ;;
     -h | -help)
         usage && exit 0
-        ;;
-    -i | -idle)
-        [ "$#" -ge 2 ] || error "'$1' option requires an argument"
-        isInt "$2" || error "Argument of '$1' is not an integer: '$2'"
-        idle="$2"
-        shift 2
         ;;
     -l | -logscale)
         logscale="yes"
@@ -208,10 +168,6 @@ do
         ;;
     esac
 done
-
-# Settings for one graph, without refresh
-[ "$idle" -eq 0 ] && refresh=0
-[ "$once" ] && idle=0 && refresh=0
 
 # Check input file
 [ $# -eq 1 ] || error "Incorrect arguments specified"
@@ -263,64 +219,84 @@ highest_column="$(echo "$columns" | xargs -n 1 | \
 # shellcheck disable=SC2086
 last_col="$(echo $columns | awk '{print $NF}')"
 
-# START Gnuplot file
-gp_file=$(mktemp /tmp/tmp.foamMonitor.XXXXXX)
+# Generate the gnuplot commands to set up the plot
+gnuplotSetup() {
+    _ticFormat="%g"
+    [ "$logscale" = yes ] && _ticFormat="%1.e"
+    _otherAxis="$([ "$AXIS" = x ] && echo y || echo x)"
 
-plotFileHeader \
-    "$term" \
-    "$size" \
-    "$logscale" \
-    "$range" \
-    "$title" \
-    "$label" > "$gp_file"
+    printf "set term %s" "$term"
+    [ "$size" = default ] || printf " size %s" "$size"
+    printf "\n"
 
-for col in $columns
-do
-    # Reinstate the space between the column name and units
-    field="$(echo "$keys" | awk -v c="$col" '{print $c}' | sed 's/\[/ \[/')"
-    plot_line="\"$file\" using $(flip "1:${col}") with lines title \"$field\""
-    [ "$col" -ne "$last_col" ] && plot_line="$plot_line, \\"
-    echo "$plot_line" >> "$gp_file"
-done
+    [ "$logscale" = yes ] && printf "set logscale %s\n" "$AXIS"
+    [ "$range" = none ] || printf "set %srange %s\n" "$AXIS" "$range"
+    printf "set %stics format \"%s\"\n" "$AXIS" "$_ticFormat"
+    printf "set title \"%s\"\n" "$title"
+    printf "set %slabel \"%s\"\n" "$_otherAxis" "$label"
+}
 
-# Add re-read footer if re-reading file
-[ "$idle" -eq 0 ] || plotFileFooter >> "$gp_file"
-# END Gnuplot file
-
-gnuplot "$gp_file" &
-pid=$!
-
-# Wait for gnuplot to spawn a process (xterm)
-! [ "$term" = "dumb" ] && \
-    start="$(date +%s)"
-    while ! [ "$(pgrep -P $pid)" ]
+# Generate the gnuplot plot command
+gnuplotPlot() {
+    echo "plot \\"
+    for col in $columns
     do
-        # timeout after 2 seconds in event xterm is not spawned
-        now="$(date +%s)"
-        [ $(( now  - start )) -gt 2 ] && break
-        sleep .1
+        # Reinstate the space between the column name and units
+        field="$(echo "$keys" | awk -v c="$col" '{print $c}' | sed 's/\[/ \[/')"
+        plot_line="    \"$file\" using $(flip "1:${col}") with lines title \"$field\""
+        [ "$col" -ne "$last_col" ] && plot_line="$plot_line, \\"
+        echo "$plot_line"
     done
+}
 
-# Get the PID of the spawned process
-ch_pid="$(pgrep -P $pid)"
+# Generate the full gnuplot command for a single plot
+gnuplotOnce() {
+    cat << EOF
+$(gnuplotSetup)
+$(gnuplotPlot)
+EOF
+}
 
-# Kill gnuplot/gnuplot_x11 and delete tmp file, then kill foamMonitor on trap
-trap 'kill -9 $pid $ch_pid; rm -f $gp_file; kill -9 $$' INT TERM
-trap 'rm -f $gp_file' EXIT
+# Generate the full gnuplot command for repeated plots
+gnuplotRepeated() {
+    cat << EOF
+$(gnuplotSetup)
+stop = 0
+bind Close "stop = 1"
+while !stop {
+$(gnuplotPlot)
+pause $refresh
+}
+EOF
+}
 
-# Display graph once only
-[ "$idle" -eq 0 ] && exit 0
-
-# Update timestamp on data file
-touch "$file"
-
-# Re-read data file to update graph
-while true
-do
-    mod_time=$(stat --format=%Y "$file")
-    idle_ago=$(( $(date +%s) - idle ))
-    test "$mod_time" -gt "$idle_ago" || break
-    sleep "$refresh"
-done
+# Call gnuplot. Run in the background unless this is a dumb/ascii terminal. If
+# plotting once then keep the plot open until the user closes the window. If we
+# ever add support for more terminals here, this might need extending.
+if [ "$once" ]
+then
+    if [ "$term" = "dumb" ]
+    then
+        gnuplot << EOF
+$(gnuplotOnce)
+EOF
+    else
+        gnuplot << EOF &
+$(gnuplotOnce)
+pause mouse close
+EOF
+    fi
+else
+    if [ "$term" = "dumb" ]
+    then
+        gnuplot << EOF
+$(gnuplotRepeated)
+EOF
+    else
+        gnuplot << EOF &
+$(gnuplotRepeated)
+EOF
+    fi
+fi
 
 #------------------------------------------------------------------------------
