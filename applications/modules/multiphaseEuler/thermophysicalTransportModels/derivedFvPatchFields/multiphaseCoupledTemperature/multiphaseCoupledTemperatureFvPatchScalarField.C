@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "coupledMultiphaseTemperatureFvPatchScalarField.H"
+#include "multiphaseCoupledTemperatureFvPatchScalarField.H"
 #include "fieldMapper.H"
 #include "phaseSystem.H"
 #include "compressibleMomentumTransportModel.H"
@@ -32,7 +32,7 @@ License
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
-void Foam::coupledMultiphaseTemperatureFvPatchScalarField::getThis
+void Foam::multiphaseCoupledTemperatureFvPatchScalarField::getThis
 (
     tmp<scalarField>& kappa,
     tmp<scalarField>& sumKappaTByDelta,
@@ -86,7 +86,7 @@ void Foam::coupledMultiphaseTemperatureFvPatchScalarField::getThis
 }
 
 
-void Foam::coupledMultiphaseTemperatureFvPatchScalarField::getNbr
+void Foam::multiphaseCoupledTemperatureFvPatchScalarField::getNbr
 (
     tmp<scalarField>& sumKappaTByDeltaNbr,
     tmp<scalarField>& sumKappaByDeltaNbr,
@@ -125,7 +125,7 @@ void Foam::coupledMultiphaseTemperatureFvPatchScalarField::getNbr
 }
 
 
-void Foam::coupledMultiphaseTemperatureFvPatchScalarField::getNbr
+void Foam::multiphaseCoupledTemperatureFvPatchScalarField::getNbr
 (
     tmp<scalarField>& TrefNbr,
     tmp<scalarField>& qNbr
@@ -171,8 +171,8 @@ void Foam::coupledMultiphaseTemperatureFvPatchScalarField::getNbr
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::coupledMultiphaseTemperatureFvPatchScalarField::
-coupledMultiphaseTemperatureFvPatchScalarField
+Foam::multiphaseCoupledTemperatureFvPatchScalarField::
+multiphaseCoupledTemperatureFvPatchScalarField
 (
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
@@ -183,10 +183,10 @@ coupledMultiphaseTemperatureFvPatchScalarField
 {}
 
 
-Foam::coupledMultiphaseTemperatureFvPatchScalarField::
-coupledMultiphaseTemperatureFvPatchScalarField
+Foam::multiphaseCoupledTemperatureFvPatchScalarField::
+multiphaseCoupledTemperatureFvPatchScalarField
 (
-    const coupledMultiphaseTemperatureFvPatchScalarField& psf,
+    const multiphaseCoupledTemperatureFvPatchScalarField& psf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const fieldMapper& mapper
@@ -196,10 +196,10 @@ coupledMultiphaseTemperatureFvPatchScalarField
 {}
 
 
-Foam::coupledMultiphaseTemperatureFvPatchScalarField::
-coupledMultiphaseTemperatureFvPatchScalarField
+Foam::multiphaseCoupledTemperatureFvPatchScalarField::
+multiphaseCoupledTemperatureFvPatchScalarField
 (
-    const coupledMultiphaseTemperatureFvPatchScalarField& psf,
+    const multiphaseCoupledTemperatureFvPatchScalarField& psf,
     const DimensionedField<scalar, volMesh>& iF
 )
 :
@@ -214,7 +214,7 @@ namespace Foam
     makePatchTypeField
     (
         fvPatchScalarField,
-        coupledMultiphaseTemperatureFvPatchScalarField
+        multiphaseCoupledTemperatureFvPatchScalarField
     );
 }
 

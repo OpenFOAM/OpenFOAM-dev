@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::coupledMultiphaseTemperatureFvPatchScalarField
+    Foam::multiphaseCoupledTemperatureFvPatchScalarField
 
 Description
     Mixed boundary condition for the phase temperature of a phase in an
@@ -34,12 +34,12 @@ See also
     Foam::coupledTemperatureFvPatchScalarField
 
 SourceFiles
-    coupledMultiphaseTemperatureFvPatchScalarField.C
+    multiphaseCoupledTemperatureFvPatchScalarField.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef coupledMultiphaseTemperatureFvPatchScalarField_H
-#define coupledMultiphaseTemperatureFvPatchScalarField_H
+#ifndef multiphaseCoupledTemperatureFvPatchScalarField_H
+#define multiphaseCoupledTemperatureFvPatchScalarField_H
 
 #include "coupledTemperatureFvPatchScalarField.H"
 
@@ -49,56 +49,58 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-        Class coupledMultiphaseTemperatureFvPatchScalarField Declaration
+        Class multiphaseCoupledTemperatureFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
-class coupledMultiphaseTemperatureFvPatchScalarField
+class multiphaseCoupledTemperatureFvPatchScalarField
 :
     public coupledTemperatureFvPatchScalarField
 {
 
 protected:
 
-    //- Get the patch kappa, sum kappa*Tc/delta and kappa/delta for all phases
-    //  except the phase being solved and also the phase heat-flux obtained by
-    //  partitioning the sum heat-flux provided
-    virtual void getThis
-    (
-        tmp<scalarField>& kappa,
-        tmp<scalarField>& sumKappaTByDelta,
-        tmp<scalarField>& sumKappaByDelta,
-        scalarField& sumq,
-        tmp<scalarField>& qByKappa
-    ) const;
+    // Protected Member Functions
 
-    //- Get the neighbour patch sum kappa*Tc/delta and kappa/delta
-    //  for all phases and the heat-flux correction
-    virtual void getNbr
-    (
-        tmp<scalarField>& sumKappaTByDeltaNbr,
-        tmp<scalarField>& sumKappaByDeltaNbr,
-        tmp<scalarField>& qNbr
-    ) const;
+        //- Get the patch kappa, sum kappa*Tc/delta and kappa/delta for all
+        //  phases except the phase being solved and also the phase heat-flux
+        //  obtained by partitioning the sum heat-flux provided
+        virtual void getThis
+        (
+            tmp<scalarField>& kappa,
+            tmp<scalarField>& sumKappaTByDelta,
+            tmp<scalarField>& sumKappaByDelta,
+            scalarField& sumq,
+            tmp<scalarField>& qByKappa
+        ) const;
 
-    //- Get the neighbour patch wall temperature and heat-flux
-    //  when wall thermal resistance is specified
-    virtual void getNbr
-    (
-        tmp<scalarField>& TwNbr,
-        tmp<scalarField>& qNbr
-    ) const;
+        //- Get the neighbour patch sum kappa*Tc/delta and kappa/delta
+        //  for all phases and the heat-flux correction
+        virtual void getNbr
+        (
+            tmp<scalarField>& sumKappaTByDeltaNbr,
+            tmp<scalarField>& sumKappaByDeltaNbr,
+            tmp<scalarField>& qNbr
+        ) const;
+
+        //- Get the neighbour patch wall temperature and heat-flux
+        //  when wall thermal resistance is specified
+        virtual void getNbr
+        (
+            tmp<scalarField>& TwNbr,
+            tmp<scalarField>& qNbr
+        ) const;
 
 
 public:
 
     //- Runtime type information
-    TypeName("coupledMultiphaseTemperature");
+    TypeName("multiphaseCoupledTemperature");
 
 
     // Constructors
 
         //- Construct from patch, internal field and dictionary
-        coupledMultiphaseTemperatureFvPatchScalarField
+        multiphaseCoupledTemperatureFvPatchScalarField
         (
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&,
@@ -106,26 +108,26 @@ public:
         );
 
         //- Construct by mapping given
-        //  coupledMultiphaseTemperatureFvPatchScalarField
+        //  multiphaseCoupledTemperatureFvPatchScalarField
         //  onto a new patch
-        coupledMultiphaseTemperatureFvPatchScalarField
+        multiphaseCoupledTemperatureFvPatchScalarField
         (
-            const coupledMultiphaseTemperatureFvPatchScalarField&,
+            const multiphaseCoupledTemperatureFvPatchScalarField&,
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&,
             const fieldMapper&
         );
 
         //- Disallow copy without setting internal field reference
-        coupledMultiphaseTemperatureFvPatchScalarField
+        multiphaseCoupledTemperatureFvPatchScalarField
         (
-            const coupledMultiphaseTemperatureFvPatchScalarField&
+            const multiphaseCoupledTemperatureFvPatchScalarField&
         ) = delete;
 
         //- Copy constructor setting internal field reference
-        coupledMultiphaseTemperatureFvPatchScalarField
+        multiphaseCoupledTemperatureFvPatchScalarField
         (
-            const coupledMultiphaseTemperatureFvPatchScalarField&,
+            const multiphaseCoupledTemperatureFvPatchScalarField&,
             const DimensionedField<scalar, volMesh>&
         );
 
@@ -137,7 +139,7 @@ public:
         {
             return tmp<fvPatchScalarField>
             (
-                new coupledMultiphaseTemperatureFvPatchScalarField(*this, iF)
+                new multiphaseCoupledTemperatureFvPatchScalarField(*this, iF)
             );
         }
 };

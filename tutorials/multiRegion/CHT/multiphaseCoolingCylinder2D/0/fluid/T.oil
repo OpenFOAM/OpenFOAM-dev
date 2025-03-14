@@ -40,7 +40,7 @@ boundaryField
 
     wall
     {
-        type            coupledMultiphaseTemperature;
+        type            multiphaseCoupledTemperature;
         value           $internalField;
     }
 
