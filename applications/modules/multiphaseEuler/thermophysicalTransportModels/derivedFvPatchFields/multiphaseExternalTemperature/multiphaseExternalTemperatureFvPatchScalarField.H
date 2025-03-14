@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,20 +59,20 @@ class multiphaseExternalTemperatureFvPatchScalarField
 
 protected:
 
-    //- Get the patch kappa, sum kappa*Tc/delta, kappa/delta and
-    //  reference temperature for all phases except the phase being solved
-    //  and also the current phase-average wall T and phase heat-flux
-    //  obtained by partitioning the sum heat-flux provided
-    virtual void getKappa
-    (
-        scalarField& kappa,
-        scalarField& sumKappaTByDelta,
-        scalarField& sumKappaByDelta,
-        scalarField& Tref,
-        scalarField& Tw,
-        scalarField& sumq,
-        scalarField& qByKappa
-    ) const;
+    // Protected Member Functions
+
+        //- Get the patch kappa, sum kappa*Tc/delta, kappa/delta and
+        //  reference temperature for all phases except the phase being solved
+        //  and also the current phase-average wall T and phase heat-flux
+        //  obtained by partitioning the sum heat-flux provided
+        virtual void getKappa
+        (
+            scalarField& kappa,
+            tmp<scalarField>& sumKappaTcByDelta,
+            tmp<scalarField>& sumKappaByDelta,
+            tmp<scalarField>& T,
+            tmp<scalarField>& sumq
+        ) const;
 
 
 public:

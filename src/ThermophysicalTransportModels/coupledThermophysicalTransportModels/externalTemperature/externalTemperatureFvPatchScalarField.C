@@ -29,19 +29,54 @@ License
 #include "physicoChemicalConstants.H"
 #include "addToRunTimeSelectionTable.H"
 
-using Foam::constant::physicoChemical::sigma;
-
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
+
+void Foam::externalTemperatureFvPatchScalarField::plusEqOp
+(
+    tmp<scalarField>& tf,
+    const scalar d
+) const
+{
+    if (!tf.valid())
+    {
+        tf = new scalarField(size(), d);
+    }
+    else
+    {
+        tf.ref() += d;
+    }
+}
+
+
+void Foam::externalTemperatureFvPatchScalarField::plusEqOp
+(
+    tmp<scalarField>& tf,
+    const tmp<scalarField>& tdf
+) const
+{
+    if (!tdf.valid())
+    {
+        return;
+    }
+
+    if (!tf.valid())
+    {
+        tf = tdf.ptr();
+    }
+    else
+    {
+        tf.ref() += tdf;
+    }
+}
+
 
 void Foam::externalTemperatureFvPatchScalarField::getKappa
 (
     scalarField& kappa,
-    scalarField& sumKappaTByDelta,
-    scalarField& sumKappaByDelta,
-    scalarField& Tref,
-    scalarField& Tw,
-    scalarField& sumq,
-    scalarField& qByKappa
+    tmp<scalarField>& sumKappaTcByDelta,
+    tmp<scalarField>& sumKappaByDelta,
+    tmp<scalarField>& T,
+    tmp<scalarField>& sumq
 ) const
 {
     const thermophysicalTransportModel& ttm =
@@ -50,16 +85,9 @@ void Foam::externalTemperatureFvPatchScalarField::getKappa
 
     kappa = ttm.kappaEff(patch().index());
 
-    tmp<scalarField> qCorr(ttm.qCorr(patch().index()));
+    T = tmp<scalarField>(*this);
 
-    if (qCorr.valid())
-    {
-        sumq += qCorr;
-    }
-
-    qByKappa = sumq/kappa;
-
-    Tw = *this;
+    plusEqOp(sumq, ttm.qCorr(patch().index()));
 }
 
 
@@ -107,9 +135,29 @@ externalTemperatureFvPatchScalarField
         ).ptr()
       : nullptr
     ),
+    haveEmissivity_(dict.found("emissivity")),
+    emissivity_
+    (
+        haveEmissivity_
+      ? dict.lookup<scalar>("emissivity", unitFraction)
+      : NaN
+    ),
+    haveLayers_(dict.found("thicknessLayers") || dict.found("kappaLayers")),
+    thicknessLayers_
+    (
+        haveLayers_
+      ? dict.lookup<scalarList>("thicknessLayers", dimLength)
+      : scalarList()
+    ),
+    kappaLayers_
+    (
+        haveLayers_
+      ? dict.lookup<scalarList>("kappaLayers", dimThermalConductivity)
+      : scalarList()
+    ),
     Ta_
     (
-        haveh_
+        haveh_ || haveEmissivity_
       ? Function1<scalar>::New
         (
             "Ta",
@@ -118,25 +166,6 @@ externalTemperatureFvPatchScalarField
             dict
         ).ptr()
       : nullptr
-    ),
-    emissivity_(dict.lookupOrDefault<scalar>("emissivity", unitFraction, 0)),
-    thicknessLayers_
-    (
-        dict.lookupOrDefault<scalarList>
-        (
-            "thicknessLayers",
-            dimLength,
-            scalarList()
-        )
-    ),
-    kappaLayers_
-    (
-        dict.lookupOrDefault<scalarList>
-        (
-            "kappaLayers",
-            dimThermalConductivity,
-            scalarList()
-        )
     ),
     relax_(dict.lookupOrDefault<scalar>("relaxation", unitFraction, 1)),
     qrName_(dict.lookupOrDefault<word>("qr", word::null)),
@@ -155,11 +184,10 @@ externalTemperatureFvPatchScalarField
         scalarField("value", iF.dimensions(), dict, p.size())
     );
 
-    if (!haveQ_ && !haveq_ && !haveh_)
+    if (haveEmissivity_ && (emissivity_ < 0 || emissivity_ > 1))
     {
         FatalIOErrorInFunction(dict)
-            << "One or more of Q (heat power), q (heat flux), and h (heat "
-            << "transfer coefficient) must be specified"
+            << "Emissivity must be in the range 0 to 1"
             << exit(FatalIOError);
     }
 
@@ -168,6 +196,13 @@ externalTemperatureFvPatchScalarField
         FatalIOErrorInFunction(dict)
             << "If either thicknessLayers or kappaLayers is specified, then "
             << "both must be specified and be lists of the same length "
+            << exit(FatalIOError);
+    }
+
+    if (haveEmissivity_ && haveLayers_)
+    {
+        FatalIOErrorInFunction(dict)
+            << "Emissivity and thicknessLayers/kappaLayers are incompatible"
             << exit(FatalIOError);
     }
 
@@ -212,10 +247,12 @@ externalTemperatureFvPatchScalarField
     q_(ptf.q_, false),
     haveh_(ptf.haveh_),
     h_(ptf.h_, false),
-    Ta_(ptf.Ta_, false),
+    haveEmissivity_(ptf.haveEmissivity_),
     emissivity_(ptf.emissivity_),
+    haveLayers_(ptf.haveLayers_),
     thicknessLayers_(ptf.thicknessLayers_),
     kappaLayers_(ptf.kappaLayers_),
+    Ta_(ptf.Ta_, false),
     relax_(ptf.relax_),
     qrName_(ptf.qrName_),
     qrRelax_(ptf.qrRelax_),
@@ -242,10 +279,12 @@ externalTemperatureFvPatchScalarField
     q_(tppsf.q_, false),
     haveh_(tppsf.haveh_),
     h_(tppsf.h_, false),
-    Ta_(tppsf.Ta_, false),
+    haveEmissivity_(tppsf.haveEmissivity_),
     emissivity_(tppsf.emissivity_),
+    haveLayers_(tppsf.haveLayers_),
     thicknessLayers_(tppsf.thicknessLayers_),
     kappaLayers_(tppsf.kappaLayers_),
+    Ta_(tppsf.Ta_, false),
     relax_(tppsf.relax_),
     qrName_(tppsf.qrName_),
     qrRelax_(tppsf.qrRelax_),
@@ -290,6 +329,7 @@ void Foam::externalTemperatureFvPatchScalarField::reset
 }
 
 
+
 void Foam::externalTemperatureFvPatchScalarField::updateCoeffs()
 {
     if (updated())
@@ -297,103 +337,143 @@ void Foam::externalTemperatureFvPatchScalarField::updateCoeffs()
         return;
     }
 
-    // Get the radiative heat flux and relax
-    scalarField qr(size(), 0);
-    if (qrName_ != word::null)
-    {
-        qr =
-            qrRelax_
-           *patch().lookupPatchField<volScalarField, scalar>(qrName_)
-          + (1 - qrRelax_)*qrPrevious_;
-        qrPrevious_ = qr;
-    }
+    const scalar t = db().time().value();
 
-    // Compute the total non-convective heat flux
-    scalarField sumq(qr);
+    // Get thermal conductivities, the patch temperature and any explicit
+    // correction heat flux
+    scalarField kappa;
+    tmp<scalarField> sumKappaTcByDelta, sumKappaByDelta;
+    tmp<scalarField> T;
+    tmp<scalarField> sumq;
+    getKappa(kappa, sumKappaTcByDelta, sumKappaByDelta, T, sumq);
+
+    // Add any user specified heat fluxes
     if (haveQ_)
     {
-        sumq += Q_->value(db().time().value())/gSum(patch().magSf());
+        plusEqOp(sumq, Q_->value(t)/gSum(patch().magSf()));
     }
     if (haveq_)
     {
-        sumq += q_->value(db().time().value());
+        plusEqOp(sumq, q_->value(t));
     }
 
-    scalarField kappa(size(), 0);
-    scalarField sumKappaTByDelta(size(), 0);
-    scalarField sumKappaByDelta(size(), 0);
-    scalarField Tref(*this);
-    scalarField Tw(*this);
-    scalarField qByKappa(size(), 0);
-    getKappa
-    (
-        kappa,
-        sumKappaTByDelta,
-        sumKappaByDelta,
-        Tref,
-        Tw,
-        sumq,
-        qByKappa
-    );
+    // Add the (relaxed) radiative heat flux
+    if (qrName_ != word::null)
+    {
+        const fvPatchScalarField& qrCurrent =
+            patch().lookupPatchField<volScalarField, scalar>(qrName_);
 
-    // Add optional external convective heat transfer contribution
+        const scalarField qr(qrRelax_*qrCurrent + (1 - qrRelax_)*qrPrevious_);
+
+        qrPrevious_ = qr;
+
+        plusEqOp(sumq, qr);
+    }
+
+    // Evaluate the ambient temperature
+    const scalar Ta = haveh_ || haveEmissivity_ ? Ta_->value(t) : NaN;
+
+    // Evaluate the combined convective and radiative heat transfer coefficient
+    tmp<scalarField> hEff;
     if (haveh_)
     {
-        scalar totalSolidRes = 0;
-        if (thicknessLayers_.size())
+        plusEqOp(hEff, h_->value(t));
+    }
+    if (haveEmissivity_)
+    {
+        plusEqOp
+        (
+            hEff,
+            emissivity_
+           *constant::physicoChemical::sigma.value()
+           *(sqr(Ta) + sqr(T()))
+           *(Ta + T())
+        );
+    }
+
+    // Determine the (reciprocal of the) heat transfer coefficient for the
+    // layer resistances and combine with the convective and radiative heat
+    // transfer coefficients to create a complete effective coefficient
+    if (hEff.valid() && haveLayers_)
+    {
+        scalar oneByHLayers = 0;
+        if (haveLayers_)
         {
-            forAll(thicknessLayers_, iLayer)
+            forAll(thicknessLayers_, layeri)
             {
-                const scalar l = thicknessLayers_[iLayer];
-                if (kappaLayers_[iLayer] > 0)
-                {
-                    totalSolidRes += l/kappaLayers_[iLayer];
-                }
+                oneByHLayers += thicknessLayers_[layeri]/kappaLayers_[layeri];
             }
         }
 
-        const scalar h = h_->value(this->db().time().value());
-        const scalar Ta = Ta_->value(this->db().time().value());
+        hEff = 1/(1/hEff + oneByHLayers);
+    }
 
-        const scalarField hp
-        (
-            1
-           /(
-                1
-               /(
-                    (emissivity_ > 0)
-                  ? (
-                        h
-                      + emissivity_*sigma.value()
-                       *((pow3(Ta) + pow3(Tw)) + Ta*Tw*(Ta + Tw))
-                    )()
-                  : scalarField(size(), h)
-                ) + totalSolidRes
-            )
-        );
+    // If we have a heat transfer coefficient then add it to the kappa sums
+    if (hEff.valid())
+    {
+        plusEqOp(sumKappaByDelta, hEff());
+        plusEqOp(sumKappaTcByDelta, hEff*Ta);
+    }
 
-        sumKappaByDelta += hp;
-        sumKappaTByDelta += hp*Ta;
+    // Set the mixed parameters
+    const scalarField kappaByDelta(kappa*patch().deltaCoeffs());
+    tmp<scalarField> kappaPlusSumKappaByDelta
+    (
+        sumKappaByDelta.valid()
+      ? kappaByDelta + sumKappaByDelta()
+      : tmp<scalarField>(kappaByDelta)
+    );
 
-        refValue() = sumKappaTByDelta/sumKappaByDelta;
+    // ... value fraction
+    if (sumKappaByDelta.valid())
+    {
+        valueFraction() = sumKappaByDelta()/kappaPlusSumKappaByDelta();
     }
     else
     {
-        refValue() = Tref;
+        valueFraction() = Zero;
     }
 
-    valueFraction() =
-        sumKappaByDelta/(kappa*patch().deltaCoeffs() + sumKappaByDelta);
+    // ... reference value
+    tmp<scalarField> trefValue;
+    if (sumKappaByDelta.valid())
+    {
+        plusEqOp
+        (
+            trefValue,
+            max(sumKappaTcByDelta, small*kappaByDelta*internalField())
+           /max(sumKappaByDelta, small*kappaByDelta)
+        );
+    }
+    if (sumq.valid())
+    {
+        plusEqOp(trefValue, sumq()/kappaPlusSumKappaByDelta());
+    }
+    if (trefValue.valid())
+    {
+        refValue() = trefValue;
+    }
+    else
+    {
+        refValue() = Zero;
+    }
 
-    refGrad() = qByKappa;
+    // ... and reference gradient
+    if (sumq.valid())
+    {
+        refGrad() = sumq*patch().deltaCoeffs()/kappaPlusSumKappaByDelta();
+    }
+    else
+    {
+        refGrad() = Zero;
+    }
 
-    // Modify mixed parameters for under-relaxation
+    // Modify the mixed parameters for under-relaxation
     if (relax_ != 1)
     {
         const scalarField f(valueFraction());
         valueFraction() = 1 - relax_*(1 - f);
-        refValue() = (f*relax_*refValue() + (1 - relax_)*Tw)/valueFraction();
-        // refGrad() = No change
+        refValue() = (f*relax_*refValue() + (1 - relax_)*T)/valueFraction();
     }
 
     mixedFvPatchScalarField::updateCoeffs();
@@ -441,22 +521,22 @@ void Foam::externalTemperatureFvPatchScalarField::write
             dimPower/dimArea/dimTemperature,
             h_()
         );
+    }
+
+    if (haveEmissivity_)
+    {
+        writeEntry(os, "emissivity", emissivity_);
+    }
+
+    if (haveLayers_)
+    {
+        writeEntry(os, "thicknessLayers", thicknessLayers_);
+        writeEntry(os, "kappaLayers", kappaLayers_);
+    }
+
+    if (haveh_ || haveEmissivity_)
+    {
         writeEntry(os, db().time().userUnits(), dimTemperature, Ta_());
-        writeEntryIfDifferent(os, "emissivity", scalar(0), emissivity_);
-        writeEntryIfDifferent
-        (
-            os,
-            "thicknessLayers",
-            scalarList(),
-            thicknessLayers_
-        );
-        writeEntryIfDifferent
-        (
-            os,
-            "kappaLayers",
-            scalarList(),
-            kappaLayers_
-        );
     }
 
     writeEntryIfDifferent(os, "relaxation", scalar(1), relax_);

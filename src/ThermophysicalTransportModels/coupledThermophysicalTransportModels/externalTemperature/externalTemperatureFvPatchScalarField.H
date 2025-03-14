@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -132,22 +132,28 @@ class externalTemperatureFvPatchScalarField
         // Heat transfer coefficient
 
             //- Do we have a heat transfer coefficient?
-            bool haveh_;
+            const bool haveh_;
 
             //- Heat transfer coefficient [W/m^2K]
             autoPtr<Function1<scalar>> h_;
 
-            //- Ambient temperature [K]
-            autoPtr<Function1<scalar>> Ta_;
+            //- Do we have an emissivity?
+            const bool haveEmissivity_;
 
             //- Optional surface emissivity for radiative transfer to ambient
             scalar emissivity_;
+
+            //- Do we have layers?
+            const bool haveLayers_;
 
             //- Thickness of layers
             scalarList thicknessLayers_;
 
             //- Conductivity of layers
             scalarList kappaLayers_;
+
+            //- Ambient temperature [K]
+            autoPtr<Function1<scalar>> Ta_;
 
 
         //- Relaxation factor for the wall temperature (thermal inertia)
@@ -170,18 +176,22 @@ protected:
 
     // Protected Member Functions
 
+        //- Plus-equals op for a tmp field. Will initialise the tmp if empty.
+        void plusEqOp(tmp<scalarField>& tf, const scalar d) const;
+
+        //- Plus-equals op for a tmp field. Will initialise the tmp if empty.
+        void plusEqOp(tmp<scalarField>& tf, const tmp<scalarField>& tdf) const;
+
         //- Get the patch kappa, kappa*Tc/delta, kappa/delta,
         //  reference T, current wall T and also the
         //  heat-flux/delta obtained from the sum heat-flux provided
         virtual void getKappa
         (
             scalarField& kappa,
-            scalarField& sumKappaTByDelta,
-            scalarField& sumKappaByDelta,
-            scalarField& Tref,
-            scalarField& Tw,
-            scalarField& sumq,
-            scalarField& qByKappa
+            tmp<scalarField>& sumKappaTcByDelta,
+            tmp<scalarField>& sumKappaByDelta,
+            tmp<scalarField>& T,
+            tmp<scalarField>& sumq
         ) const;
 
 

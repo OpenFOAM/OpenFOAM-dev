@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,26 +32,27 @@ License
 void Foam::multiphaseExternalTemperatureFvPatchScalarField::getKappa
 (
     scalarField& kappa,
-    scalarField& sumKappaTByDelta,
-    scalarField& sumKappaByDelta,
-    scalarField& Tref,
-    scalarField& Tw,
-    scalarField& sumq,
-    scalarField& qByKappa
+    tmp<scalarField>& sumKappaTcByDelta,
+    tmp<scalarField>& sumKappaByDelta,
+    tmp<scalarField>& T,
+    tmp<scalarField>& sumq
 ) const
 {
-    // Lookup the fluid model
     const phaseSystem& fluid =
         db().lookupObject<phaseSystem>(phaseSystem::propertiesName);
 
-    const phaseModel& thisPhase = fluid.phases()[internalField().group()];
-
-    scalarField sumKappa(size(), scalar(0));
-    scalarField sumKappaT(size(), scalar(0));
-    scalarField sumKappaTw(size(), scalar(0));
-
     const label patchi = patch().index();
 
+    const phaseModel& thisPhase = fluid.phases()[internalField().group()];
+
+    // Get alpha and kappa for this phase
+    const scalarField& alpha = thisPhase.boundaryField()[patchi];
+    const scalarField alphaKappaEff(alpha*thisPhase.kappaEff(patchi));
+
+    // Get alpha and kappa sums for all other phases
+    scalarField sumKappa(size(), scalar(0));
+    scalarField sumKappaTc(size(), scalar(0));
+    scalarField sumKappaT(size(), scalar(0));
     forAll(fluid.phases(), phasei)
     {
         const phaseModel& phase = fluid.phases()[phasei];
@@ -59,35 +60,26 @@ void Foam::multiphaseExternalTemperatureFvPatchScalarField::getKappa
         if (&phase != &thisPhase)
         {
             const scalarField& alpha = phase.boundaryField()[patchi];
-            const scalarField kappaEff(phase.kappaEff(patchi));
-            const scalarField alphaKappaEff(alpha*kappaEff);
+            const scalarField alphaKappaEff(alpha*phase.kappaEff(patchi));
 
             const fvPatchScalarField& T =
                 phase.thermo().T().boundaryField()[patchi];
 
             sumKappa += alphaKappaEff;
-            sumKappaT += alphaKappaEff*T.patchInternalField();
-            sumKappaTw += alphaKappaEff*T;
+            sumKappaTc += alphaKappaEff*T.patchInternalField();
+            sumKappaT += alphaKappaEff*T;
         }
     }
 
-    const scalarField& alpha = thisPhase.boundaryField()[patchi];
-    const scalarField kappaEff(thisPhase.kappaEff(patchi));
-    const scalarField alphaKappaEff(alpha*kappaEff);
-
     kappa = alphaKappaEff;
-    qByKappa = sumq/(max(alpha, rootSmall)*kappaEff);
-    // sumq -= alpha*sumq;
 
-    const scalarField& T = *this;
-    Tw = (sumKappaTw + alphaKappaEff*T)/(sumKappa + alphaKappaEff);
+    if (fluid.phases().size() > 1)
+    {
+        sumKappaByDelta = sumKappa*patch().deltaCoeffs();
+        sumKappaTcByDelta = sumKappaTc*patch().deltaCoeffs();
+    }
 
-    Tref =
-        (sumKappaT + rootSmall*kappaEff*patchInternalField())
-       /(sumKappa + rootSmall*kappaEff);
-
-    sumKappaByDelta = sumKappa*patch().deltaCoeffs();
-    sumKappaTByDelta = sumKappaT*patch().deltaCoeffs();
+    T = (sumKappaT + alphaKappaEff*(*this))/(sumKappa + alphaKappaEff);
 }
 
 

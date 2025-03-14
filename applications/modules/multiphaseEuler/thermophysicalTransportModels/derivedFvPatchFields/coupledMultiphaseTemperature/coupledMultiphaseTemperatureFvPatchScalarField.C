@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,8 +43,7 @@ void Foam::coupledMultiphaseTemperatureFvPatchScalarField::getThis
 {
     // Lookup the fluid model
     const phaseSystem& fluid =
-        patch().boundaryMesh().mesh()
-       .lookupObject<phaseSystem>(phaseSystem::propertiesName);
+        db().lookupObject<phaseSystem>(phaseSystem::propertiesName);
 
     scalarField sumKappa(size(), scalar(0));
     scalarField sumKappaT(size(), scalar(0));
