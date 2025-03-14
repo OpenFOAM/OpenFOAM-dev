@@ -438,7 +438,7 @@ alphatWallBoilingWallFunctionFvPatchScalarField::calcBoiling
     (
         patch().deltaCoeffs()*max(Tw - props.Tc, small*props.Tc)
     );
-    return A1*props.alphatConv*props.Cpw*gradTw + qQuenching_ + qEvaporative_;
+    return A1*props.alphatConv*props.Cpw*gradTw + qQuenching + qEvaporative;
 }
 
 
