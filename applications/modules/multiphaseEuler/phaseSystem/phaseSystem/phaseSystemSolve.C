@@ -50,7 +50,9 @@ void Foam::phaseSystem::solve
     const PtrList<volScalarField>& rAs
 )
 {
-    const bool boundedPredictor = !alphaControls.MULES.globalBounds;
+    const bool boundedPredictor =
+       !alphaControls.MULES.globalBounds
+     && alphaControls.MULES.extremaCoeff == 0;
 
     MULES::control MULESBD(alphaControls.MULES);
     MULESBD.globalBounds = true;
@@ -398,7 +400,9 @@ void Foam::phaseSystem::solve
 
                 MULES::limit
                 (
-                    MULESBD,
+                    boundedPredictor
+                      ? MULESBD
+                      : alphaControls.MULES,
                     geometricOneField(),
                     alpha,
                     phiMoving,
