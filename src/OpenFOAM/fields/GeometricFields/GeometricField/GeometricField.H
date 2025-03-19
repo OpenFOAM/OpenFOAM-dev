@@ -209,6 +209,14 @@ public:
             const HashPtrTable<Source>& = HashPtrTable<Source>()
         );
 
+        //- Constructor from internal field and patch field type
+        GeometricField
+        (
+            const IOobject&,
+            const Internal&,
+            const word& patchFieldType
+        );
+
         //- Constructor from components
         GeometricField
         (
@@ -353,8 +361,17 @@ public:
             const HashPtrTable<Source>& = HashPtrTable<Source>()
         );
 
+        //- Return a temporary field constructed from name,
+        //  internal field and patch field type
+        static tmp<GeometricField<Type, GeoMesh, PrimitiveField>> New
+        (
+            const word& name,
+            const Internal&,
+            const word& patchFieldType
+        );
+
         //- Return a temporary field constructed from name, mesh, dimensionSet
-        //  and patch field type.
+        //  and patch field type
         static tmp<GeometricField<Type, GeoMesh, PrimitiveField>> New
         (
             const word& name,
@@ -364,7 +381,7 @@ public:
         );
 
         //- Return a temporary field constructed from mesh, dimensioned<Type>
-        //  and patch field type.
+        //  and patch field type
         static tmp<GeometricField<Type, GeoMesh, PrimitiveField>> New
         (
             const word& name,
@@ -374,7 +391,7 @@ public:
         );
 
         //- Return a temporary field constructed from mesh, dimensioned<Type>
-        //  and patch field types.
+        //  and patch field types
         static tmp<GeometricField<Type, GeoMesh, PrimitiveField>> New
         (
             const word& name,

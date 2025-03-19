@@ -295,6 +295,30 @@ template<class Type, class GeoMesh, template<class> class PrimitiveField>
 Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
 (
     const IOobject& io,
+    const Internal& diField,
+    const word& patchFieldType
+)
+:
+    Internal(io, diField, false),
+    OldTimeField<GeometricField>(this->time().timeIndex()),
+    fieldPrevIterPtr_(nullptr),
+    boundaryField_(this->mesh().boundary(), *this, patchFieldType),
+    sources_()
+{
+    if (debug)
+    {
+        InfoInFunction
+            << "Constructing from components" << endl << this->info() << endl;
+    }
+
+    readIfPresent();
+}
+
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
+(
+    const IOobject& io,
     const Mesh& mesh,
     const dimensionSet& ds,
     const PrimitiveField<Type>& iField,
@@ -875,6 +899,38 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::New
             diField,
             ptfl,
             stft
+        ),
+        cacheTmp
+    );
+}
+
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+Foam::tmp<Foam::GeometricField<Type, GeoMesh, PrimitiveField>>
+Foam::GeometricField<Type, GeoMesh, PrimitiveField>::New
+(
+    const word& name,
+    const Internal& diField,
+    const word& patchFieldType
+)
+{
+    const bool cacheTmp = diField.mesh().thisDb().cacheTemporaryObject(name);
+
+    return tmp<GeometricField<Type, GeoMesh, PrimitiveField>>
+    (
+        new GeometricField<Type, GeoMesh, PrimitiveField>
+        (
+            IOobject
+            (
+                name,
+                diField.mesh().thisDb().time().name(),
+                diField.mesh().thisDb(),
+                IOobject::NO_READ,
+                IOobject::NO_WRITE,
+                cacheTmp
+            ),
+            diField,
+            patchFieldType
         ),
         cacheTmp
     );
