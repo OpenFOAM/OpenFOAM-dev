@@ -359,6 +359,8 @@ void Foam::phaseSystem::alphaControl::read(const dictionary& dict)
         dict.lookupOrDefault("vDotResidualAlpha", 1e-4);
 
     MULES.read(dict);
+
+    clip = dict.lookupOrDefault<Switch>("clip", false);
 }
 
 

@@ -98,6 +98,11 @@ public:
             //- MULES controls
             MULES::control MULES;
 
+            //- Optionally clip the phase-fractions
+            //  between their physical limits and to sum to 1.
+            //  Defaults to false
+            Switch clip;
+
             //- Read the alpha and MULES controls from dict
             void read(const dictionary& dict);
 

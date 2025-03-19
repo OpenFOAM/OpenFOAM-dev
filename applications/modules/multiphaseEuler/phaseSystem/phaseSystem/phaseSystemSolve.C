@@ -565,6 +565,7 @@ void Foam::phaseSystem::solve
                     mesh_,
                     dimensionedScalar(dimless, 0)
                 );
+
                 forAll(movingPhases(), movingPhasei)
                 {
                     sumAlphaMoving += movingPhases()[movingPhasei];
@@ -577,12 +578,14 @@ void Foam::phaseSystem::solve
                     << ' ' << max(sumAlphaMoving + 1 - alphaVoid()).value()
                     << endl;
 
-                // Correct the sum of the phase fractions to avoid drift
-                // Note: This may no longer be necessary
-                forAll(movingPhases(), movingPhasei)
+                if (alphaControls.clip)
                 {
-                    movingPhases()[movingPhasei].internalFieldRef() *=
-                        alphaVoid()/sumAlphaMoving;
+                    // Scale moving phase-fractions to sum to alphaVoid
+                    forAll(movingPhases(), movingPhasei)
+                    {
+                        movingPhases()[movingPhasei].internalFieldRef() *=
+                            alphaVoid()/sumAlphaMoving;
+                    }
                 }
             }
         }
@@ -598,13 +601,21 @@ void Foam::phaseSystem::solve
         forAll(solvePhases, solvePhasei)
         {
             phaseModel& phase = solvePhases[solvePhasei];
+            volScalarField& alpha = phase;
 
             phase.alphaRhoPhiRef() =
                 fvc::interpolate(phase.rho())*phase.alphaPhi();
 
-            // Forcibly limit the phase-fractions between 0 and 1
-            // Note: This may no longer be necessary
-            phase.maxMin(0, 1);
+            if (alphaControls.clip)
+            {
+                // Clip the phase-fractions between 0 and alphaMax
+                alpha.maxMin(0, phase.alphaMax());
+
+                if (stationaryPhases().size())
+                {
+                    alpha = min(alpha, alphaVoid);
+                }
+            }
         }
 
         if (referencePhasePtr)
