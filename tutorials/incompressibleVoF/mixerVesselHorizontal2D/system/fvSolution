@@ -26,7 +26,7 @@ solvers
     {
         solver          GAMG;
         smoother        DICGaussSeidel;
-        tolerance       0.02;
+        tolerance       0.001;
         relTol          0;
     }
 
