@@ -21,7 +21,9 @@ phases (gas liquid);
 gas
 {
     type            pureIsothermalPhaseModel;
+
     diameterModel   constant;
+
     constantCoeffs
     {
         d               0.0034;
@@ -33,9 +35,8 @@ gas
 liquid
 {
     type            pureIsothermalPhaseModel;
-    diameterModel   none;
 
-    Sc              0.7;
+    diameterModel   none;
 
     residualAlpha   1e-6;
 }

@@ -25,7 +25,6 @@ gas
     type            multicomponentPhaseModel;
     diameterModel   none;
     residualAlpha   1e-6;
-    Sct             0.7;
 }
 
 liquid

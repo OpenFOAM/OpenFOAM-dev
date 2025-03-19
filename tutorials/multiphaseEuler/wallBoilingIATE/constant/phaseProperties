@@ -21,6 +21,7 @@ phases (gas liquid);
 gas
 {
     type            purePhaseModel;
+
     diameterModel   IATE;
 
     IATECoeffs
@@ -60,19 +61,14 @@ gas
         );
     }
 
-    constantCoeffs
-    {
-        d               0.00045;
-    }
-
     residualAlpha   1e-6;
 }
 
 liquid
 {
     type            purePhaseModel;
+
     diameterModel   none;
-    Sc              0.7;
 
     residualAlpha   1e-6;
 }
