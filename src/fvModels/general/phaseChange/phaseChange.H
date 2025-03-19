@@ -215,6 +215,15 @@ public:
                 const label mDoti = -1
             ) const;
 
+            //- Return the latent heat for a patch and a given changing
+            //  temperature
+            tmp<scalarField> L
+            (
+                const label patchi,
+                const scalarField& Tchange,
+                const label mDoti = -1
+            ) const;
+
 
         // Sources
 

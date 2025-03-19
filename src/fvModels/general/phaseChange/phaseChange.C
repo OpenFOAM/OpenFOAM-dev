@@ -466,6 +466,35 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fv::phaseChange::L
 }
 
 
+Foam::tmp<Foam::scalarField> Foam::fv::phaseChange::L
+(
+    const label patchi,
+    const scalarField& Tchange,
+    const label mDoti
+) const
+{
+    const ThermoRefPair<multicomponentThermo>& mcThermos =
+        thermos().thermos<multicomponentThermo>();
+
+    const labelPair specieis = this->specieis(mDoti);
+
+    const fvPatchScalarField& p = this->p().boundaryField()[patchi];
+
+    // Absolute enthalpies at the interface
+    Pair<tmp<scalarField>> has;
+    for (label j = 0; j < 2; ++ j)
+    {
+        has[j] =
+            specieis[j] == -1
+          ? thermos()[j].ha(Tchange, patchi)
+          : mcThermos[j].hai(specieis[j], p, Tchange);
+    }
+
+    // Latent heat of phase change
+    return has.second() - has.first();
+}
+
+
 Foam::tmp<Foam::volScalarField::Internal> Foam::fv::phaseChange::mDot() const
 {
     if (species().empty())
