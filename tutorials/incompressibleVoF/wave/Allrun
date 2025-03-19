@@ -24,7 +24,7 @@ runApplication setWaves
 
 runApplication decomposePar
 
-runParallel $(getApplication)
+runParallel foamRun
 
 runApplication reconstructPar
 

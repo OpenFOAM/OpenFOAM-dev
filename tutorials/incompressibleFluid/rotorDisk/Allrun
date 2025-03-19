@@ -9,6 +9,6 @@ runApplication blockMesh
 runApplication surfaceFeatures
 runApplication snappyHexMesh -overwrite
 
-runApplication $(getApplication)
+runApplication foamRun
 
 #------------------------------------------------------------------------------

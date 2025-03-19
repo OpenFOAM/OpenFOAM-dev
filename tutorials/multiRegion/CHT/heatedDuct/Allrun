@@ -10,7 +10,7 @@ runApplication blockMesh
 runApplication snappyHexMesh -overwrite
 runApplication splitMeshRegions -cellZones -defaultRegionName fluid -overwrite
 runApplication decomposePar -allRegions
-runParallel $(getApplication)
+runParallel foamMultiRun
 runApplication reconstructPar -allRegions
 paraFoam -touchAll
 

@@ -25,7 +25,7 @@ fi
 
 ./Allmesh-$strategy
 
-runApplication $(getApplication)
+runApplication foamMultiRun
 
 paraFoam -touchAll
 

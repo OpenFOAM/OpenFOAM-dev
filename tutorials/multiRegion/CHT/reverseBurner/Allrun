@@ -17,7 +17,7 @@ runApplication decomposePar -allRegions
 
 runParallel setFields -region gas
 
-runParallel $(getApplication)
+runParallel foamMultiRun
 
 runApplication reconstructPar -allRegions -newTimes
 

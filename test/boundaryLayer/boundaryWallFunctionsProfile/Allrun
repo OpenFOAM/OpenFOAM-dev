@@ -17,7 +17,7 @@ do
     sed "s/XXX/$e/g" constant/physicalProperties.template \
         > constant/physicalProperties
 
-    runApplication -s $e  $(getApplication)
+    runApplication -s $e boundaryFoam
 
     # extract y+, U+
     # note: both must be added to foamLog.db

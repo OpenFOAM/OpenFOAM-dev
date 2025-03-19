@@ -4,15 +4,12 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Source tutorial run functions
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
-# Get application directory
-application=$(getApplication)
-
 runApplication blockMesh
 runApplication topoSet
 runApplication refineHexMesh c0 -noFields -overwrite
 
 runApplication decomposePar -cellProc
-runParallel $application
+runParallel foamRun
 
 runApplication reconstructPar
 

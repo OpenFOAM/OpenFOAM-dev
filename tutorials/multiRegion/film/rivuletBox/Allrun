@@ -36,11 +36,11 @@ paraFoam -touchAll
 echo
 
 # Serial run
-#runApplication $(getApplication)
+#runApplication foamMultiRun
 
 # Parallel run
 runApplication decomposePar -allRegions
-runParallel $(getApplication)
+runParallel foamMultiRun
 runApplication reconstructPar -allRegions
 
 #------------------------------------------------------------------------------

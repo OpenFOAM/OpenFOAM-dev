@@ -14,8 +14,6 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     snappyHexMesh;
-
 startFrom       latestTime;
 
 startTime       0;
@@ -43,7 +41,5 @@ timeFormat      general;
 timePrecision   6;
 
 runTimeModifiable true;
-
-}
 
 // ************************************************************************* //

@@ -11,7 +11,7 @@ runApplication createNonConformalCouples -overwrite nonCouple1 nonCouple2
 
 runApplication decomposePar
 
-runParallel $(getApplication)
+runParallel foamRun
 
 runApplication reconstructPar
 

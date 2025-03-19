@@ -16,6 +16,6 @@ runApplication subsetMesh -overwrite c0 -patch floatingObject -noFields
 
 runApplication setWaves
 
-runApplication $(getApplication)
+runApplication foamRun
 
 #------------------------------------------------------------------------------

@@ -19,8 +19,6 @@ DebugSwitches
     PatchEdgeFaceWave 1;
 }
 
-application     icoFoam;
-
 startFrom       latestTime;
 
 startTime       0;

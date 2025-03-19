@@ -21,8 +21,6 @@ DebugSwitches
 //    fvMesh          1;
 }
 
-application     Test-fieldMapping;
-
 startFrom       startTime;
 
 startTime       0;

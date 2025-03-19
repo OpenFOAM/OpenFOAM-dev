@@ -7,9 +7,8 @@ cd "${0%/*}" || exit 1
 . "$WM_PROJECT_DIR/bin/tools/RunFunctions"
 
 # Example with runApplication:
-# - runs blockMesh in background
-# - redirecting standard output to log.blockMesh
-# - does *not* run in log file already exists
+# - redirects all output to log.blockMesh
+# - does *not* run if the log file already exists
 runApplication blockMesh
 
 # Example running topoSet and refineMesh 3 times with multiple dictionaries
@@ -19,14 +18,13 @@ while [ "$i" -lt 3 ]
 do
     runApplication -a topoSet -dict "topoSetDict.${i}"
     runApplication -a refineMesh -dict "refineMeshDict.${i}"
-    i=$(( i + 1))
+    i=$((i + 1))
 done
 
 runApplication decomposePar
 
 # Example with runParallel to run in parallel
-# getApplication finds solver name from "application" entry in controlDict
-runParallel "$(getApplication)"
+runParallel foamRun
 
 runApplication reconstructPar
 

@@ -9,7 +9,7 @@ runApplication decomposePar -copyZero
 runParallel snappyHexMesh -overwrite
 
 runParallel topoSet
-runParallel $(getApplication)
+runParallel foamRun
 
 runApplication reconstructPar
 

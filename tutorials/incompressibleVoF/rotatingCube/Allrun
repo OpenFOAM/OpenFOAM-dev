@@ -10,7 +10,7 @@ runApplication createNonConformalCouples -overwrite nonCoupleStationary nonCoupl
 runApplication setFields
 
 runApplication decomposePar -cellProc
-runParallel $(getApplication)
+runParallel foamRun
 runApplication reconstructPar -cellProc
 
 # Link cellProc files at unchanged times back to cellProc files at previous

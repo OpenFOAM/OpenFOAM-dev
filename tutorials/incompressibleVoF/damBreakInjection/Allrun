@@ -12,6 +12,6 @@ rm -f 0/alpha.water
 # Run
 runApplication blockMesh
 runApplication setFields
-runApplication $(getApplication)
+runApplication foamRun
 
 #------------------------------------------------------------------------------

@@ -8,7 +8,7 @@ runApplication zeroDimensionalMesh
 runApplication foamPostProcess \
     -solver multiphaseEuler \
     -func populationBalanceSetPhaseSizeDistribution
-runApplication $(getApplication)
+runApplication foamRun
 
 ( cd validation && ./createGraphs )
 

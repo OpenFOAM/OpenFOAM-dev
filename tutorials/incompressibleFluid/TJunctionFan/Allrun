@@ -4,9 +4,6 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Source tutorial run functions
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
-# Get application name
-application=$(getApplication)
-
 runApplication blockMesh
 
 # Create faceZones for baffles and fan
@@ -15,6 +12,6 @@ runApplication topoSet
 # Create baffles and the fields on them
 runApplication createBaffles -overwrite
 
-runApplication $application
+runApplication foamRun
 
 #------------------------------------------------------------------------------

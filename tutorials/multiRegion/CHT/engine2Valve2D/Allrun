@@ -10,7 +10,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 case $mode in
     serial)
         ./Allmesh serial
-        runApplication $(getApplication)
+        runApplication foamMultiRun
         ;;
     parallel | stitchSerial)
         ./Allmesh serial
@@ -23,7 +23,7 @@ case $mode in
                            -region fluid
         done
 
-        runParallel $(getApplication)
+        runParallel foamMultiRun
 
         runApplication reconstructPar -allRegions
         ;;
@@ -39,7 +39,7 @@ case $mode in
         runApplication reconstructPar -allRegions -noFields -constant
         runApplication -a decomposePar -allRegions -fields
 
-        runParallel $(getApplication)
+        runParallel foamMultiRun
 
         runApplication -a reconstructPar -allRegions
         ;;

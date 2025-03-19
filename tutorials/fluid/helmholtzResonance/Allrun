@@ -20,7 +20,7 @@ run()
         cd ${1}
         runApplication blockMesh
         runApplication decomposePar
-        runParallel $(getApplication)
+        runParallel foamRun
     )
 }
 

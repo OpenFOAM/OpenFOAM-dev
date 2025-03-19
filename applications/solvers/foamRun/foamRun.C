@@ -48,11 +48,9 @@ Usage
             foamRun -solver fluid
         \endverbatim
 
-      - To update and run a \c rhoPimpleFoam case add the following entries to
+      - To update and run a \c rhoPimpleFoam case add the following entry to
         the controlDict:
         \verbatim
-            application     foamRun;
-
             solver          fluid;
         \endverbatim
         then execute \c foamRun

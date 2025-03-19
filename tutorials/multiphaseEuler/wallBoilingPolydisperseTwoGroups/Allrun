@@ -9,7 +9,7 @@ runApplication extrudeMesh
 runApplication topoSet
 runApplication decomposePar
 
-runParallel $(getApplication)
+runParallel foamRun
 
 runApplication reconstructPar -latestTime
 

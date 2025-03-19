@@ -8,6 +8,6 @@ runApplication blockMesh
 runApplication topoSet
 runApplication createBaffles -overwrite
 
-runApplication $(getApplication)
+runApplication foamRun
 
 #------------------------------------------------------------------------------

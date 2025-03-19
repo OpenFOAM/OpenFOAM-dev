@@ -10,7 +10,7 @@ runApplication topoSet
 runApplication setFields
 runApplication decomposePar
 
-runParallel $(getApplication)
+runParallel foamRun
 
 runApplication reconstructPar -latestTime
 

@@ -23,8 +23,6 @@ DebugSwitches
 //    projectCurve 1;
 }
 
-application     blockMesh;
-
 startFrom       startTime;
 
 startTime       0;

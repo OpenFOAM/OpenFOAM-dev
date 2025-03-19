@@ -13,8 +13,6 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     shallowWaterFoam;
-
 startFrom       startTime;
 
 startTime       0;

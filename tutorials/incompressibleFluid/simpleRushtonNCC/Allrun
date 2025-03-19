@@ -83,7 +83,7 @@ done
 # Create the NCC interface
 ./makeNCC
 
-runApplication "$(getApplication)"
+runApplication foamRun
 
 PbyRho="$(tail -1 postProcessing/power/0/power.dat | awk '{print $2}')"
 D="$(grep "^D " system/blockMeshDict.orig | awk -F'[; ]+' '{print $2}')"

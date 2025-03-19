@@ -12,7 +12,7 @@ runParallel extrudeToRegionMesh -region VoF -overwrite
 
 runApplication -s fields decomposePar -fields -copyZero
 
-runParallel $(getApplication)
+runParallel foamMultiRun
 
 runApplication reconstructPar -allRegions
 

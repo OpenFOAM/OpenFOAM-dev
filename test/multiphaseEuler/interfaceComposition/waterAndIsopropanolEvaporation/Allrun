@@ -26,7 +26,7 @@ do
     for lY in $lYs
     do
         setInertY $lY
-        runApplication -s ${gY}_${lY} $(getApplication)
+        runApplication -s ${gY}_${lY} foamRun
         mv postProcessing postProcessing_${gY}_$lY
     done
 done

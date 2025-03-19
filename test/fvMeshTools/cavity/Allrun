@@ -7,7 +7,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 runApplication blockMesh
 
 # Serial tests
-runApplication $(getApplication)
+runApplication Test-fvMeshTools
 runApplication checkMesh
 runApplication foamToVTK
 
@@ -16,7 +16,7 @@ foamListTimes -rm
 
 # Parallel tests
 runApplication decomposePar
-runParallel -s par $(getApplication)
+runParallel -s par Test-fvMeshTools
 runParallel -s par checkMesh
 runParallel -s par foamToEnsight
 runApplication reconstructPar

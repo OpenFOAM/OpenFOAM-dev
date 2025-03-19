@@ -14,7 +14,7 @@ runApplication chemkinToFoam \
 
 runApplication foamPostProcess -func massFractions
 
-runApplication $(getApplication)
+runApplication foamRun
 
 if ! which gnuplot > /dev/null 2>&1
 then

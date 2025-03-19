@@ -14,8 +14,6 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     boundaryFoam;
-
 startFrom       startTime;
 
 startTime       0;

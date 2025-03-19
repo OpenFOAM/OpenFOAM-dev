@@ -15,7 +15,7 @@ do
     rm -f system/decomposeParDict
 done
 
-runParallel $(getApplication)
+runParallel foamRun
 runApplication reconstructPar -cellProc
 
 #------------------------------------------------------------------------------

@@ -22,7 +22,7 @@ runApplication -s fvSolution foamDictionary system/fvSolution \
 runApplication blockMesh -dict system/blockMeshDict.fine
 runApplication setFields
 runApplication decomposePar
-runParallel $(getApplication)
+runParallel foamRun
 runApplication reconstructPar
 
 #------------------------------------------------------------------------------

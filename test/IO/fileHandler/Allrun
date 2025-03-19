@@ -4,18 +4,16 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Source tutorial run functions
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
-application=$(getApplication)
-
 runApplication blockMesh
 
 #- Test writing collated format
 runApplication decomposePar -fileHandler collated
-runParallel $application -fileHandler collated
+runParallel foamRun -fileHandler collated
 runApplication reconstructPar -latestTime -fileHandler collated
 
 #- Test writing uncollated format
 runApplication -s uncollated decomposePar -fileHandler uncollated -force
-runParallel -s uncollated $application -fileHandler uncollated
+runParallel -s uncollated foamRun -fileHandler uncollated
 
 
 #- Test uncollated+distributed running: copy to different roots
@@ -35,14 +33,14 @@ mkdir -p machineB/fileHandler
 #- Run with different roots
 (   d=$PWD && \
     cd machineA/fileHandler && \
-    runParallel -s multiRoot $application \
+    runParallel -s multiRoot foamRun \
     -fileHandler masterUncollated -ioRanks '(0 2)' \
     -roots "(\"$d/machineA\" \"$d/machineB\" \"$d/machineB\")"
 )
 
 
 #- Restart from uncollated
-runParallel -s collated $application -fileHandler collated
+runParallel -s collated foamRun -fileHandler collated
 runApplication -s collated reconstructPar -latestTime -fileHandler collated
 
 #- Convert the parallel format to uncollated
@@ -50,7 +48,7 @@ runParallel foamFormatConvert -fileHandler uncollated
 
 #- Restart with multiple IO ranks
 runParallel -s multiCollated \
-    $application -fileHandler collated -ioRanks '(0 2)'
+    foamRun -fileHandler collated -ioRanks '(0 2)'
 
 #- Reconstruct the multi-rank format. Delete the collated directory
 #  since conflicts with the multi-collated directory
@@ -63,7 +61,7 @@ runParallel -s uncollated foamFormatConvert -fileHandler uncollated
 
 #- Restart from multiCollated using collated
 runParallel -s uncollated_from_multiCollated \
-    $application -fileHandler uncollated
+    foamRun -fileHandler uncollated
 
 
 
@@ -88,7 +86,7 @@ mkdir -p machineB/fileHandler
 #- Run with different roots
 (   d=$PWD && \
     cd machineA/fileHandler && \
-    runParallel -s distributed_multiCollated $application \
+    runParallel -s distributed_multiCollated foamRun \
     -fileHandler collated -ioRanks '(0 2)' \
     -roots "(\"$d/machineA\" \"$d/machineB\" \"$d/machineB\")"
 )

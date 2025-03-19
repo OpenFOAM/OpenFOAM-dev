@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -46,7 +46,22 @@ getNumberOfProcessors()
 
 getApplication()
 {
-    foamDictionary -entry application -value system/controlDict
+    # If there is an "application" entry then use its value. Otherwise if there
+    # is "solver" then use foamRun. Otherwise if there is "regionSolvers" then
+    # use foamMultiRun. Otherwise generate an error relating to the
+    # "application" entry being missing.
+    if foamDictionary -entry application -quiet system/controlDict
+    then
+        foamDictionary -entry application -value system/controlDict
+    elif foamDictionary -entry solver -quiet system/controlDict
+    then
+        echo foamRun
+    elif foamDictionary -entry regionSolvers -quiet system/controlDict
+    then
+        echo foamMultiRun
+    else
+        foamDictionary -entry application -value system/controlDict
+    fi
 }
 
 getSolver()

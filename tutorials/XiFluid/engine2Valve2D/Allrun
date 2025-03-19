@@ -10,7 +10,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 case $mode in
     serial)
         ./Allmesh serial
-        runApplication $(getApplication)
+        runApplication foamRun
         ;;
     parallel | stitchSerial)
         ./Allmesh serial
@@ -22,7 +22,7 @@ case $mode in
             runApplication -a decomposePar -mesh "$(basename "$meshDir")"
         done
 
-        runParallel $(getApplication)
+        runParallel foamRun
 
         runApplication reconstructPar
         ;;
@@ -38,7 +38,7 @@ case $mode in
         runApplication reconstructPar -noFields -constant
         runApplication -a decomposePar -fields
 
-        runParallel $(getApplication)
+        runParallel foamRun
 
         runApplication -a reconstructPar
         ;;

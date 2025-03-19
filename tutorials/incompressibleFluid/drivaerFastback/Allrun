@@ -110,7 +110,7 @@ runParallel snappyHexMesh -overwrite
 
 runParallel checkMesh
 
-runParallel "$(getApplication)"
+runParallel foamRun
 
 # runApplication reconstructPar -latestTime
 

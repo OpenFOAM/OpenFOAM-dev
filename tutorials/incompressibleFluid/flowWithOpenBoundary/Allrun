@@ -107,6 +107,6 @@ runApplication extrudeMesh
 [ "$pBC" ] && setAtmosphereBC p "$pBC"
 [ "$UBC" ] && setAtmosphereBC U "$UBC"
 
-runApplication "$(getApplication)"
+runApplication foamRun
 
 #------------------------------------------------------------------------------

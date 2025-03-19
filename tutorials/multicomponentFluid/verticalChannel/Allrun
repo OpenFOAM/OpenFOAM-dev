@@ -13,7 +13,7 @@ runApplication potentialFoam
 rm -f 0/phi
 
 # Run the solver
-runApplication $(getApplication)
+runApplication foamRun
 
 # Run post-processing
 runApplication particleTracks

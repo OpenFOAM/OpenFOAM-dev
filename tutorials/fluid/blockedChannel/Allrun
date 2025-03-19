@@ -6,6 +6,6 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 runApplication blockMesh
 runApplication foamPostProcess -func generateAlphas
-runApplication $(getApplication)
+runApplication foamRun
 
 #------------------------------------------------------------------------------

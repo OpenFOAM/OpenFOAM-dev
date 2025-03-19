@@ -11,7 +11,7 @@ runApplication potentialFoam
 # remove incompatible (volumetric) flux field
 rm -f 0/phi
 
-runApplication $(getApplication)
+runApplication foamRun
 
 runApplication steadyParticleTracks
 

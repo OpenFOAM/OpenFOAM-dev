@@ -68,11 +68,9 @@ Usage
         Specify the additional libraries loaded
 
     Example usage:
-      - To update and run a \c chtMultiRegion case add the following entries to
+      - To update and run a \c chtMultiRegion case add the following entry to
         the controlDict:
         \verbatim
-            application     foamMultiRun;
-
             regionSolvers
             {
                 fluid           fluid;

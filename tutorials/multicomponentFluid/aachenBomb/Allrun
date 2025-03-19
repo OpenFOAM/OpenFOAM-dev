@@ -9,6 +9,6 @@ runApplication chemkinToFoam \
                constant/reactions constant/speciesThermo
 
 runApplication blockMesh
-runApplication $(getApplication)
+runApplication foamRun
 
 #------------------------------------------------------------------------------

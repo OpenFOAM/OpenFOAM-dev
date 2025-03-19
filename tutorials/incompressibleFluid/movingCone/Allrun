@@ -11,6 +11,6 @@ do
     runApplication -s $mapTime blockMesh -mesh $mapTime
 done
 
-runApplication $(getApplication)
+runApplication foamRun
 
 #------------------------------------------------------------------------------

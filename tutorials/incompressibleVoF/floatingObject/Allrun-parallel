@@ -10,7 +10,7 @@ runApplication subsetMesh -overwrite c0 -patch floatingObject -noFields
 runApplication setFields
 
 runApplication decomposePar -cellProc
-runParallel $(getApplication)
+runParallel foamRun
 runApplication reconstructPar -cellProc
 
 #------------------------------------------------------------------------------

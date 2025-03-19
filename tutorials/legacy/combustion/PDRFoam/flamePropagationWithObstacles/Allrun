@@ -9,6 +9,6 @@ runApplication topoSet
 
 runApplication PDRMesh -overwrite
 
-runApplication $(getApplication)
+runApplication PDRFoam
 
 #------------------------------------------------------------------------------

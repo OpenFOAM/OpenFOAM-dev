@@ -13,7 +13,7 @@ paraFoam -region solid -touch
 
 runApplication decomposePar -allRegions
 
-runParallel $(getApplication)
+runParallel foamMultiRun
 
 runApplication reconstructPar -latestTime -allRegions
 

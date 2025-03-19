@@ -13,6 +13,6 @@ runApplication setFields -region fluid
 paraFoam -region fluid -touch
 paraFoam -region solid -touch
 
-runApplication $(getApplication)
+runApplication foamMultiRun
 
 #------------------------------------------------------------------------------

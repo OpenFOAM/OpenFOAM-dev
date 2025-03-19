@@ -10,6 +10,6 @@ runApplication snappyHexMesh -overwrite
 
 runApplication decomposePar
 
-runParallel $(getApplication)
+runParallel foamRun
 
 #------------------------------------------------------------------------------

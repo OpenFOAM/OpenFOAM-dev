@@ -9,7 +9,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 runApplication -s air    decomposePar -region air
 runApplication -s porous decomposePar -region porous
 
-runParallel $(getApplication)
+runParallel foamMultiRun
 
 runApplication -s air    reconstructPar -latestTime -region air
 runApplication -s porous reconstructPar -latestTime -region porous

@@ -14,8 +14,6 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     Test-fvMeshTools;
-
 startFrom       startTime;
 
 startTime       0;

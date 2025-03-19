@@ -21,6 +21,6 @@ runApplication -s fvSolution foamDictionary system/fvSolution \
 runApplication blockMesh
 runApplication setFields
 runApplication createBaffles -overwrite
-runApplication $(getApplication)
+runApplication foamRun
 
 #------------------------------------------------------------------------------

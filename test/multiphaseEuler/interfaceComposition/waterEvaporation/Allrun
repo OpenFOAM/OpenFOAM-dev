@@ -58,7 +58,7 @@ do
         for lHe in $lHes
         do
             setThermoAndEnergy $lHe
-            runApplication -s ${gY}_${gHe}_${lHe} $(getApplication)
+            runApplication -s ${gY}_${gHe}_${lHe} foamRun
             mv postProcessing postProcessing_${gY}_${gHe}_${lHe}
         done
     done

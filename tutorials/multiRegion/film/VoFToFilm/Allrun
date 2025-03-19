@@ -14,6 +14,6 @@ printf "\n%s\n" "Creating files for paraview post-processing"
 paraFoam -touchAll
 echo
 
-runApplication $(getApplication)
+runApplication foamMultiRun
 
 #------------------------------------------------------------------------------

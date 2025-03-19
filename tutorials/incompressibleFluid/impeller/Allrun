@@ -8,6 +8,6 @@ runApplication blockMesh
 
 runApplication createNonConformalCouples -overwrite
 
-runApplication $(getApplication)
+runApplication foamRun
 
 #------------------------------------------------------------------------------

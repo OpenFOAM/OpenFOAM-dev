@@ -91,7 +91,7 @@ run()
                 -entry distributor -remove
         fi
 
-        runParallel $(getApplication)
+        runParallel foamRun
     )
 }
 

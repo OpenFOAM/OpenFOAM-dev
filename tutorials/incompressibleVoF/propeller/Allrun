@@ -16,7 +16,7 @@ fi
 runApplication -a decomposePar -fields -copyZero
 
 # Run
-runParallel $(getApplication)
+runParallel foamRun
 
 # Reconstruct
 runApplication reconstructPar -constant

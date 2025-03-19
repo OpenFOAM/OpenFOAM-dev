@@ -4,9 +4,6 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Source tutorial run functions
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
-# Set application name
-application=$(getApplication)
-
 runApplication chemkinToFoam \
                chemkin/grimech30.dat chemkin/thermo30.dat chemkin/transportProperties \
                constant/reactionsGRI constant/thermo.compressibleGasGRI
@@ -22,7 +19,7 @@ then
     runApplication -a foamDictionary -entry "endTime" -set "1500" system/controlDict
     runApplication -a foamDictionary -entry "chemistry" -set "off" constant/chemistryProperties
 
-    runApplication $application
+    runApplication foamRun
 
     # Run with chemistry until flame reach its full size
     runApplication -a foamDictionary -entry "startTime" -set "1500" system/controlDict
@@ -31,6 +28,6 @@ then
     runApplication -a foamDictionary -entry "chemistry" -set "on" constant/chemistryProperties
 fi
 
-runApplication -o $application
+runApplication -o foamRun
 
 #------------------------------------------------------------------------------

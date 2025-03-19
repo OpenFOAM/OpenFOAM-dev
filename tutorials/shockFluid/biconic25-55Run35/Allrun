@@ -19,6 +19,6 @@ runApplication collapseEdges -overwrite
 echo "Changing patch type to wedge type in boundary file"
 sed -i '/wedge/,/nFaces/{s/patch/wedge/}' constant/polyMesh/boundary
 
-runApplication "$(getApplication)"
+runApplication foamRun
 
 #------------------------------------------------------------------------------
