@@ -1213,7 +1213,7 @@ _foamDictionary_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-add -case -dict -diff -doc -entry -expand -fileHandler -help -hostRoots -includes -keywords -libs -merge -noFunctionObjects -output -parallel -remove -rename -roots -set -srcDoc -value -writePrecision"
+    opts="-add -case -dict -diff -doc -entry -expand -fileHandler -help -hostRoots -includes -keywords -libs -merge -noFunctionObjects -output -parallel -quiet -remove -rename -roots -set -srcDoc -value -writePrecision"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra="-d -f"
 

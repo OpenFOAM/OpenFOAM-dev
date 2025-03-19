@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -145,8 +145,20 @@ Foam::IOerror::operator Foam::dictionary() const
 }
 
 
-void Foam::IOerror::exit(const int)
+void Foam::IOerror::exit(const int errNo)
 {
+    if (IOerror::level <= 0)
+    {
+        if (Pstream::parRun())
+        {
+            Pstream::exit(errNo);
+        }
+        else
+        {
+            ::exit(errNo);
+        }
+    }
+
     if (!throwExceptions_ && jobInfo::constructed)
     {
         jobInfo_.add("FatalIOError", operator dictionary());
@@ -174,7 +186,7 @@ void Foam::IOerror::exit(const int)
                 << "\nFOAM parallel run exiting\n" << endl;
         }
 
-        Pstream::exit(1);
+        Pstream::exit(errNo);
     }
     else
     {
@@ -192,7 +204,7 @@ void Foam::IOerror::exit(const int)
         {
             Serr<< endl << *this << endl
                 << "\nFOAM exiting\n" << endl;
-            ::exit(1);
+            ::exit(errNo);
         }
     }
 }

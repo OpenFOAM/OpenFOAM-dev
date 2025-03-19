@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,6 +96,10 @@ Usage
 
       - \par -output
         Path name of the output dictionary, defaults to the input dictionary
+
+      - \par -quiet
+        Operate without outputting to the terminal or raising errors. Just use
+        an exit code to indicate success or failure.
 
     Example usage:
       - Change simulation to run for one timestep only:
@@ -374,6 +378,11 @@ int main(int argc, char *argv[])
         "path name",
         "Path name of the output dictionary"
     );
+    argList::addBoolOption
+    (
+        "quiet",
+        "Operate without outputting to the terminal or raising errors"
+    );
 
     argList args(argc, argv);
 
@@ -390,6 +399,10 @@ int main(int argc, char *argv[])
     {
         entry::disableFunctionEntries = true;
     }
+
+    // Do not write info if the quiet option is set
+    const bool quiet = args.optionFound("quiet");
+    if (quiet) messageStream::level = 0;
 
     // Set write precision
     if (args.optionFound("writePrecision"))

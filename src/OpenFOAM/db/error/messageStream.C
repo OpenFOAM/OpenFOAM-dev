@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -164,7 +164,7 @@ Foam::OSstream& Foam::messageStream::operator()(label communicator)
         communicator = UPstream::worldComm;
     }
 
-    if (level)
+    if (messageStream::level >= 1)
     {
         const bool master = Pstream::master(communicator);
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -124,6 +124,18 @@ Foam::string Foam::error::message() const
 
 void Foam::error::exit(const int errNo)
 {
+    if (error::level <= 0)
+    {
+        if (Pstream::parRun())
+        {
+            Pstream::exit(errNo);
+        }
+        else
+        {
+            ::exit(errNo);
+        }
+    }
+
     if (!throwExceptions_ && jobInfo::constructed)
     {
         jobInfo_.add("FatalError", operator dictionary());

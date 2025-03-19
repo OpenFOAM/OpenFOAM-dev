@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -406,25 +406,6 @@ Foam::fileName Foam::IOobject::relativePath() const
 Foam::fileName Foam::IOobject::filePath(const bool global) const
 {
     return fileHandler().filePath(global, *this);
-}
-
-
-void Foam::IOobject::setBad(const string& s)
-{
-    if (objState_ != GOOD)
-    {
-        FatalErrorInFunction
-            << "Recurrent failure for object " << s
-            << exit(FatalError);
-    }
-
-    if (error::level)
-    {
-        InfoInFunction
-            << "Broken object " << s << info() << endl;
-    }
-
-    objState_ = BAD;
 }
 
 
