@@ -682,7 +682,10 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
             << "Constructing from components" << endl << this->info() << endl;
     }
 
-    readIfPresent();
+    if (!readIfPresent())
+    {
+        boundaryField_.evaluate();
+    }
 }
 
 
@@ -706,7 +709,10 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
             << "Constructing from components" << endl << this->info() << endl;
     }
 
-    readIfPresent();
+    if (!readIfPresent())
+    {
+        boundaryField_.evaluate();
+    }
 }
 
 
