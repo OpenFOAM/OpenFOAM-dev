@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ curl
 
     // Gausses theorem curl
     // tmp<VolField<Type>> tcurlVf =
-    //     fvc::surfaceIntegrate(vf.mesh().Sf() ^ fvc::interpolate(vf));
+    // fvc::surfaceIntegrateExtrapolate(vf.mesh().Sf() ^ fvc::interpolate(vf));
 
     // Calculate curl as the Hodge dual of the skew-symmetric part of grad
     tmp<VolField<Type>> tcurlVf =

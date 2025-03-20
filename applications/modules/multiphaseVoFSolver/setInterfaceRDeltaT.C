@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,7 @@ void Foam::solvers::multiphaseVoFSolver::setInterfaceRDeltaT
 
         const volScalarField::Internal alphaCoRdeltaT
         (
-            fvc::surfaceSum(mag(phi))()()/((2*maxAlphaCo)*mesh.V())
+            fvc::surfaceSum(mag(phi))/((2*maxAlphaCo)*mesh.V())
         );
 
         forAll(phases, phasei)

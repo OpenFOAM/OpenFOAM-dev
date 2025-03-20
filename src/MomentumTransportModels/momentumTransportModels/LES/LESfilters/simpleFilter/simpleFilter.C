@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,6 +37,35 @@ namespace Foam
 }
 
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+template<class Type>
+inline Foam::tmp<Foam::VolField<Type>> Foam::simpleFilter::filter
+(
+    const tmp<VolField<Type>>& unFilteredField
+) const
+{
+    correctBoundaryConditions(unFilteredField);
+
+    tmp<VolField<Type>> filteredField
+    (
+        VolField<Type>::New
+        (
+            "simpleFilteredField",
+            fvc::surfaceSum
+            (
+                mesh().magSf()*fvc::interpolate(unFilteredField)
+            )/fvc::surfaceSum(mesh().magSf()),
+            extrapolatedCalculatedFvPatchField<Type>::typeName
+        )
+    );
+
+    unFilteredField.clear();
+
+    return filteredField;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::simpleFilter::simpleFilter
@@ -67,16 +96,7 @@ Foam::tmp<Foam::volScalarField> Foam::simpleFilter::operator()
     const tmp<volScalarField>& unFilteredField
 ) const
 {
-    correctBoundaryConditions(unFilteredField);
-
-    tmp<volScalarField> filteredField = fvc::surfaceSum
-    (
-        mesh().magSf()*fvc::interpolate(unFilteredField)
-    )/fvc::surfaceSum(mesh().magSf());
-
-    unFilteredField.clear();
-
-    return filteredField;
+    return filter(unFilteredField);
 }
 
 
@@ -85,16 +105,7 @@ Foam::tmp<Foam::volVectorField> Foam::simpleFilter::operator()
     const tmp<volVectorField>& unFilteredField
 ) const
 {
-    correctBoundaryConditions(unFilteredField);
-
-    tmp<volVectorField> filteredField = fvc::surfaceSum
-    (
-        mesh().magSf()*fvc::interpolate(unFilteredField)
-    )/fvc::surfaceSum(mesh().magSf());
-
-    unFilteredField.clear();
-
-    return filteredField;
+    return filter(unFilteredField);
 }
 
 
@@ -103,16 +114,7 @@ Foam::tmp<Foam::volSymmTensorField> Foam::simpleFilter::operator()
     const tmp<volSymmTensorField>& unFilteredField
 ) const
 {
-    correctBoundaryConditions(unFilteredField);
-
-    tmp<volSymmTensorField> filteredField = fvc::surfaceSum
-    (
-        mesh().magSf()*fvc::interpolate(unFilteredField)
-    )/fvc::surfaceSum(mesh().magSf());
-
-    unFilteredField.clear();
-
-    return filteredField;
+    return filter(unFilteredField);
 }
 
 
@@ -121,16 +123,7 @@ Foam::tmp<Foam::volTensorField> Foam::simpleFilter::operator()
     const tmp<volTensorField>& unFilteredField
 ) const
 {
-    correctBoundaryConditions(unFilteredField);
-
-    tmp<volTensorField> filteredField = fvc::surfaceSum
-    (
-        mesh().magSf()*fvc::interpolate(unFilteredField)
-    )/fvc::surfaceSum(mesh().magSf());
-
-    unFilteredField.clear();
-
-    return filteredField;
+    return filter(unFilteredField);
 }
 
 

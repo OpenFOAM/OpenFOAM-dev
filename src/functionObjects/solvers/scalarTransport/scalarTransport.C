@@ -479,7 +479,7 @@ void Foam::functionObjects::scalarTransport::solveMULES()
         {
             const volScalarField::Internal Co
             (
-                (0.5*time_.deltaT())*fvc::surfaceSum(mag(phi))()()/mesh_.V()
+                (0.5*time_.deltaT())*fvc::surfaceSum(mag(phi))/mesh_.V()
             );
 
             const surfaceScalarField cnBDCoeff

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,7 @@ gaussDivScheme<Type>::fvcDiv
 {
     tmp<VolField<typename innerProduct<vector, Type>::type>> tDiv
     (
-        fvc::surfaceIntegrate
+        fvc::surfaceIntegrateExtrapolate
         (
             this->tinterpScheme_().dotInterpolate(this->mesh_.Sf(), vf)
         )

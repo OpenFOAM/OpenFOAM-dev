@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -517,7 +517,7 @@ void Foam::fvMeshStitchers::moving::unconformInternalFaceCorrectMeshPhi
     // Calculate the volume conservation error for the sub mesh
     const volScalarField::Internal subVce
     (
-        fvc::surfaceIntegrate(subPhi*subMesh.time().deltaT())()
+        fvc::surfaceIntegrate(subPhi*subMesh.time().deltaT())
       - (subV - subV0)/subV
     );
 
@@ -651,7 +651,7 @@ void Foam::fvMeshStitchers::moving::unconformInternalFaceCorrectMeshPhi
     const volScalarField::Internal dVdtError
     (
         (subV - subV0)/subMesh.time().deltaT()
-      - fvc::surfaceIntegrate(subPhi + subDeltaPhi)()*subV
+      - fvc::surfaceIntegrate(subPhi + subDeltaPhi)*subV
     );
 
     // Construct track data for the correction wave

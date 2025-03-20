@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,7 +88,7 @@ boundedConvectionScheme<Type>::fvcDiv
 {
     return
         scheme_().fvcDiv(faceFlux, vf)
-      - fvc::surfaceIntegrate(faceFlux)*vf;
+      - fvc::surfaceIntegrateExtrapolate(faceFlux)*vf;
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,8 +53,7 @@ void Foam::solvers::multiphaseEuler::setRDeltaT()
     }
 
     // Set the reciprocal time-step from the local Courant number
-    rDeltaT.internalFieldRef() =
-        fvc::surfaceSum(maxPhi)()()/((2*maxCo)*mesh.V());
+    rDeltaT.internalFieldRef() = fvc::surfaceSum(maxPhi)/((2*maxCo)*mesh.V());
 
     // Clip to user-defined maximum and minimum time-steps
     scalar minRDeltaT = gMin(rDeltaT.primitiveField());

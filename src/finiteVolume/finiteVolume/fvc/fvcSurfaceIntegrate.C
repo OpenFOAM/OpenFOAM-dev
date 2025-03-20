@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,8 +77,55 @@ void surfaceIntegrate
 
 
 template<class Type>
-tmp<VolField<Type>>
+tmp<VolInternalField<Type>>
 surfaceIntegrate
+(
+    const SurfaceField<Type>& ssf
+)
+{
+    const fvMesh& mesh = ssf.mesh();
+
+    tmp<VolInternalField<Type>> tvf
+    (
+        VolInternalField<Type>::New
+        (
+            "surfaceIntegrate("+ssf.name()+')',
+            mesh,
+            dimensioned<Type>
+            (
+                "0",
+                ssf.dimensions()/dimVolume,
+                Zero
+            )
+        )
+    );
+    VolInternalField<Type>& vf = tvf.ref();
+
+    surfaceIntegrate(vf.primitiveFieldRef(), ssf);
+
+    return tvf;
+}
+
+
+template<class Type>
+tmp<VolInternalField<Type>>
+surfaceIntegrate
+(
+    const tmp<SurfaceField<Type>>& tssf
+)
+{
+    tmp<VolInternalField<Type>> tvf
+    (
+        fvc::surfaceIntegrate(tssf())
+    );
+    tssf.clear();
+    return tvf;
+}
+
+
+template<class Type>
+tmp<VolField<Type>>
+surfaceIntegrateExtrapolate
 (
     const SurfaceField<Type>& ssf
 )
@@ -111,14 +158,14 @@ surfaceIntegrate
 
 template<class Type>
 tmp<VolField<Type>>
-surfaceIntegrate
+surfaceIntegrateExtrapolate
 (
     const tmp<SurfaceField<Type>>& tssf
 )
 {
     tmp<VolField<Type>> tvf
     (
-        fvc::surfaceIntegrate(tssf())
+        fvc::surfaceIntegrateExtrapolate(tssf())
     );
     tssf.clear();
     return tvf;
@@ -126,25 +173,20 @@ surfaceIntegrate
 
 
 template<class Type>
-tmp<VolField<Type>>
-surfaceSum
-(
-    const SurfaceField<Type>& ssf
-)
+tmp<VolInternalField<Type>> surfaceSum(const SurfaceField<Type>& ssf)
 {
     const fvMesh& mesh = ssf.mesh();
 
-    tmp<VolField<Type>> tvf
+    tmp<VolInternalField<Type>> tvf
     (
-        VolField<Type>::New
+        VolInternalField<Type>::New
         (
             "surfaceSum("+ssf.name()+')',
             mesh,
-            dimensioned<Type>("0", ssf.dimensions(), Zero),
-            extrapolatedCalculatedFvPatchField<Type>::typeName
+            dimensioned<Type>("0", ssf.dimensions(), Zero)
         )
     );
-    VolField<Type>& vf = tvf.ref();
+    VolInternalField<Type>& vf = tvf.ref();
 
     const labelUList& owner = mesh.owner();
     const labelUList& neighbour = mesh.neighbour();
@@ -168,19 +210,17 @@ surfaceSum
         }
     }
 
-    vf.correctBoundaryConditions();
-
     return tvf;
 }
 
 
 template<class Type>
-tmp<VolField<Type>> surfaceSum
+tmp<VolInternalField<Type>> surfaceSum
 (
     const tmp<SurfaceField<Type>>& tssf
 )
 {
-    tmp<VolField<Type>> tvf = surfaceSum(tssf());
+    tmp<VolInternalField<Type>> tvf = surfaceSum(tssf());
     tssf.clear();
     return tvf;
 }

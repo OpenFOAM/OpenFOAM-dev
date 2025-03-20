@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,6 +34,40 @@ namespace Foam
 {
     defineTypeNameAndDebug(anisotropicFilter, 0);
     addToRunTimeSelectionTable(LESfilter, anisotropicFilter, dictionary);
+}
+
+
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+template<class Type>
+inline Foam::tmp<Foam::VolField<Type>> Foam::anisotropicFilter::filter
+(
+    const tmp<VolField<Type>>& unFilteredField
+) const
+{
+    correctBoundaryConditions(unFilteredField);
+
+    tmp<VolField<Type>> tmpFilteredField
+    (
+        VolField<Type>::New
+        (
+            "anisotropicFilteredField",
+            mesh(),
+            unFilteredField().dimensions()
+        )
+    );
+
+    for (direction d=0; d<pTraits<Type>::nComponents; d++)
+    {
+        tmpFilteredField.ref().replace
+        (
+            d, anisotropicFilter::operator()(unFilteredField().component(d))
+        );
+    }
+
+    unFilteredField.clear();
+
+    return tmpFilteredField;
 }
 
 
@@ -137,7 +171,7 @@ Foam::tmp<Foam::volScalarField> Foam::anisotropicFilter::operator()
         unFilteredField
       + (
            coeff_
-         & fvc::surfaceIntegrate
+         & fvc::surfaceIntegrateExtrapolate
            (
                mesh().Sf()
               *fvc::snGrad(unFilteredField())
@@ -155,22 +189,7 @@ Foam::tmp<Foam::volVectorField> Foam::anisotropicFilter::operator()
     const tmp<volVectorField>& unFilteredField
 ) const
 {
-    correctBoundaryConditions(unFilteredField);
-
-    tmp<volVectorField> tmpFilteredField =
-        unFilteredField
-      + (
-           coeff_
-         & fvc::surfaceIntegrate
-           (
-               mesh().Sf()
-              *fvc::snGrad(unFilteredField())
-           )
-        );
-
-    unFilteredField.clear();
-
-    return tmpFilteredField;
+    return filter(unFilteredField);
 }
 
 
@@ -179,29 +198,7 @@ Foam::tmp<Foam::volSymmTensorField> Foam::anisotropicFilter::operator()
     const tmp<volSymmTensorField>& unFilteredField
 ) const
 {
-    correctBoundaryConditions(unFilteredField);
-
-    tmp<volSymmTensorField> tmpFilteredField
-    (
-        volSymmTensorField::New
-        (
-            "anisotropicFilteredSymmTensorField",
-            mesh(),
-            unFilteredField().dimensions()
-        )
-    );
-
-    for (direction d=0; d<symmTensor::nComponents; d++)
-    {
-        tmpFilteredField.ref().replace
-        (
-            d, anisotropicFilter::operator()(unFilteredField().component(d))
-        );
-    }
-
-    unFilteredField.clear();
-
-    return tmpFilteredField;
+    return filter(unFilteredField);
 }
 
 
@@ -210,29 +207,7 @@ Foam::tmp<Foam::volTensorField> Foam::anisotropicFilter::operator()
     const tmp<volTensorField>& unFilteredField
 ) const
 {
-    correctBoundaryConditions(unFilteredField);
-
-    tmp<volTensorField> tmpFilteredField
-    (
-        volTensorField::New
-        (
-            "anisotropicFilteredTensorField",
-            mesh(),
-            unFilteredField().dimensions()
-        )
-    );
-
-    for (direction d=0; d<tensor::nComponents; d++)
-    {
-        tmpFilteredField.ref().replace
-        (
-            d, anisotropicFilter::operator()(unFilteredField().component(d))
-        );
-    }
-
-    unFilteredField.clear();
-
-    return tmpFilteredField;
+    return filter(unFilteredField);
 }
 
 
