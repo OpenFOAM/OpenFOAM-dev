@@ -209,14 +209,6 @@ public:
             const HashPtrTable<Source>& = HashPtrTable<Source>()
         );
 
-        //- Constructor from internal field and patch field type
-        GeometricField
-        (
-            const IOobject&,
-            const Internal&,
-            const word& patchFieldType
-        );
-
         //- Constructor from components
         GeometricField
         (
@@ -301,6 +293,23 @@ public:
             const word& patchFieldType
         );
 
+        //- Constructor from internal field and patch field type
+        template<template<class> class PrimitiveField2>
+        GeometricField
+        (
+            const IOobject&,
+            const DimensionedField<Type, GeoMesh, PrimitiveField2>&,
+            const word& patchFieldType
+        );
+
+        //- Constructor from temporary internal field and patch field type
+        GeometricField
+        (
+            const IOobject&,
+            const tmp<Internal>&,
+            const word& patchFieldType
+        );
+
         //- Construct as copy resetting IO parameters and patch field types
         template<template<class> class PrimitiveField2>
         GeometricField
@@ -361,15 +370,6 @@ public:
             const HashPtrTable<Source>& = HashPtrTable<Source>()
         );
 
-        //- Return a temporary field constructed from name,
-        //  internal field and patch field type
-        static tmp<GeometricField<Type, GeoMesh, PrimitiveField>> New
-        (
-            const word& name,
-            const Internal&,
-            const word& patchFieldType
-        );
-
         //- Return a temporary field constructed from name, mesh, dimensionSet
         //  and patch field type
         static tmp<GeometricField<Type, GeoMesh, PrimitiveField>> New
@@ -409,6 +409,15 @@ public:
             const tmp<GeometricField<Type, GeoMesh, PrimitiveField>>&
         );
 
+        //- Rename field, reset patch field type and return
+        template<template<class> class PrimitiveField2>
+        static tmp<GeometricField<Type, GeoMesh, PrimitiveField>> New
+        (
+            const word& newName,
+            const GeometricField<Type, GeoMesh, PrimitiveField2>&,
+            const word& patchFieldType
+        );
+
         //- Rename temporary field, reset patch field type and return
         static tmp<GeometricField<Type, GeoMesh, PrimitiveField>> New
         (
@@ -417,7 +426,26 @@ public:
             const word& patchFieldType
         );
 
-        //- Rename and reset patch fields types of temporary field and return
+        //- Return a temporary field constructed from name,
+        //  internal field and patch field type
+        template<template<class> class PrimitiveField2>
+        static tmp<GeometricField<Type, GeoMesh, PrimitiveField>> New
+        (
+            const word& name,
+            const DimensionedField<Type, GeoMesh, PrimitiveField2>&,
+            const word& patchFieldType
+        );
+
+        //- Return a temporary field constructed from name,
+        //  temporary internal field and patch field type
+        static tmp<GeometricField<Type, GeoMesh, PrimitiveField>> New
+        (
+            const word& name,
+            const tmp<Internal>&,
+            const word& patchFieldType
+        );
+
+        //- Rename and reset patch fields types of field and return
         template<template<class> class PrimitiveField2>
         static tmp<GeometricField<Type, GeoMesh, PrimitiveField>> New
         (
@@ -438,8 +466,8 @@ public:
             const HashTable<word>& fieldSourceTypes = HashTable<word>()
         );
 
-        //- Return a temporary field constructed from IOobject, internal
-        //  field and patch field types
+        //- Return a temporary field constructed from IOobject,
+        //  internal field and patch field types
         template<template<class> class PrimitiveField2>
         static tmp<GeometricField<Type, GeoMesh, PrimitiveField>> New
         (
@@ -450,8 +478,8 @@ public:
             const HashTable<word>& fieldSourceTypes = HashTable<word>()
         );
 
-        //- Return a temporary field constructed from IOobject, tmp internal
-        //  field and patch field types
+        //- Return a temporary field constructed from IOobject,
+        //  temporary internal field and patch field types
         static tmp<GeometricField<Type, GeoMesh, PrimitiveField>> New
         (
             const word& newName,
