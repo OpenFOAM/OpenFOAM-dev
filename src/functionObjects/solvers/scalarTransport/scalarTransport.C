@@ -40,6 +40,8 @@ License
 #include "EulerDdtScheme.H"
 #include "localEulerDdtScheme.H"
 #include "CrankNicolsonDdtScheme.H"
+#include "localMax.H"
+#include "zeroGradientFvPatchFields.H"
 #include "subCycle.H"
 #include "interfaceCompression.H"
 
@@ -134,7 +136,7 @@ Foam::functionObjects::scalarTransport::scalarTransport
             time_.name(),
             mesh_,
             IOobject::MUST_READ,
-            IOobject::AUTO_WRITE
+            IOobject::NO_WRITE
         ),
         mesh_
     ),
@@ -143,8 +145,7 @@ Foam::functionObjects::scalarTransport::scalarTransport
     (
         "deltaN",
         1e-8/pow(average(mesh_.V()), 1.0/3.0)
-    ),
-    sRestart_(false)
+    )
 {
     read(dict);
 
@@ -155,32 +156,6 @@ Foam::functionObjects::scalarTransport::scalarTransport
         if (controls.found("nSubCycles"))
         {
             MULES_ = true;
-
-            typeIOobject<surfaceScalarField> sPhiHeader
-            (
-                IOobject::groupName("sPhi", s_.group()),
-                runTime.name(),
-                mesh_,
-                IOobject::READ_IF_PRESENT,
-                IOobject::AUTO_WRITE
-            );
-
-            sRestart_ = sPhiHeader.headerOk();
-
-            if (sRestart_)
-            {
-                Info << "Restarting s" << endl;
-            }
-
-            const surfaceScalarField& phi =
-            mesh_.lookupObject<surfaceScalarField>(phiName_);
-
-            // Scalar volumetric flux
-            tsPhi_ = new surfaceScalarField
-            (
-                sPhiHeader,
-                phi*fvc::interpolate(s_)
-            );
 
             if (controls.lookupOrDefault<Switch>("MULESCorr", false))
             {
@@ -238,7 +213,7 @@ Foam::wordList Foam::functionObjects::scalarTransport::fields() const
 
 bool Foam::functionObjects::scalarTransport::execute()
 {
-    Info<< type() << " write:" << endl;
+    Info<< type() << " execute:" << endl;
 
     const surfaceScalarField& phi =
         mesh_.lookupObject<surfaceScalarField>(phiName_);
@@ -392,7 +367,6 @@ void Foam::functionObjects::scalarTransport::solveMULES()
 {
     const dictionary& controls = mesh_.solution().solverDict(fieldName_);
     const label nCorr(controls.lookup<label>("nCorr"));
-    const label nSubCycles(controls.lookup<label>("nSubCycles"));
     const bool MULESCorr(controls.lookupOrDefault<Switch>("MULESCorr", false));
 
     const MULES::control MULEScontrols(mesh().solution().solverDict(s_.name()));
@@ -412,7 +386,17 @@ void Foam::functionObjects::scalarTransport::solveMULES()
     const surfaceScalarField& phi =
         mesh_.lookupObject<surfaceScalarField>(phiName_);
 
-    surfaceScalarField& sPhi_ = tsPhi_.ref();
+    surfaceScalarField sPhi
+    (
+        IOobject
+        (
+            "sPhi",
+            s_.time().name(),
+            mesh_
+        ),
+        mesh_,
+        phi.dimensions()*s_.dimensions()
+    );
 
     const word sScheme(mesh_.schemes().div(divScheme)[1].wordToken());
 
@@ -459,24 +443,9 @@ void Foam::functionObjects::scalarTransport::solveMULES()
         }
         else if (isType<fv::CrankNicolsonDdtScheme<scalar>>(ddtS))
         {
-            if (nSubCycles > 1)
-            {
-                FatalErrorInFunction
-                    << "Sub-cycling is not supported "
-                       "with the CrankNicolson ddt scheme"
-                    << exit(FatalError);
-            }
-
-            if
-            (
-                sRestart_
-             || time_.timeIndex() > time_.startTimeIndex() + 1
-            )
-            {
-                ocCoeff =
-                    refCast<const fv::CrankNicolsonDdtScheme<scalar>>(ddtS)
-                   .ocCoeff();
-            }
+            ocCoeff =
+                refCast<const fv::CrankNicolsonDdtScheme<scalar>>(ddtS)
+               .ocCoeff();
         }
         else
         {
@@ -489,12 +458,12 @@ void Foam::functionObjects::scalarTransport::solveMULES()
     // Set the time blending factor, 1 for Euler
     scalar cnCoeff = 1.0/(1.0 + ocCoeff);
 
-    tmp<surfaceScalarField> phiCN(phi);
+    tmp<surfaceScalarField> tphiCN(phi);
 
     // Calculate the Crank-Nicolson off-centred volumetric flux
     if (ocCoeff > 0)
     {
-        phiCN = surfaceScalarField::New
+        tphiCN = surfaceScalarField::New
         (
             "phiCN",
             cnCoeff*phi + (1.0 - cnCoeff)*phi.oldTime()
@@ -503,6 +472,41 @@ void Foam::functionObjects::scalarTransport::solveMULES()
 
     if (MULESCorr)
     {
+        tmp<surfaceScalarField> tphiCN1(phi);
+        tmp<surfaceScalarField> tsPhiCN0;
+
+        if (ocCoeff > 0)
+        {
+            const volScalarField::Internal Co
+            (
+                (0.5*time_.deltaT())*fvc::surfaceSum(mag(phi))()()/mesh_.V()
+            );
+
+            const surfaceScalarField cnBDCoeff
+            (
+                localMax<scalar>(mesh_).interpolate
+                (
+                    volScalarField::New
+                    (
+                        "cnBDCoeff",
+                        1.0 - 1.0/max(Co, 2.0),
+                        zeroGradientFvPatchField<scalar>::typeName
+                    )
+                )
+            );
+
+            const surfaceScalarField phiCN0((1.0 - cnBDCoeff)*phi.oldTime());
+
+            tsPhiCN0 = fv::gaussConvectionScheme<scalar>
+            (
+                mesh_,
+                phiCN0,
+                upwind<scalar>(mesh_, phiCN0)
+            ).flux(phiCN0, s_);
+
+            tphiCN1 = cnBDCoeff*phi;
+        }
+
         fvScalarMatrix sEqn
         (
             (
@@ -513,10 +517,15 @@ void Foam::functionObjects::scalarTransport::solveMULES()
           + fv::gaussConvectionScheme<scalar>
             (
                 mesh_,
-                phiCN,
-                upwind<scalar>(mesh_, phiCN)
-            ).fvmDiv(phiCN, s_)
+                tphiCN1,
+                upwind<scalar>(mesh_, tphiCN1)
+            ).fvmDiv(tphiCN1, s_)
         );
+
+        if (tsPhiCN0.valid())
+        {
+            sEqn += fvc::div(tsPhiCN0());
+        }
 
         sEqn.solve();
 
@@ -527,7 +536,13 @@ void Foam::functionObjects::scalarTransport::solveMULES()
             << endl;
 
         tmp<surfaceScalarField> tsPhiUD(sEqn.flux());
-        sPhi_ = tsPhiUD();
+
+        if (tsPhiCN0.valid())
+        {
+            tsPhiUD.ref() += tsPhiCN0;
+        }
+
+        sPhi = tsPhiUD();
 
         if (applyPrevCorr && tsPhiCorr0_.valid())
         {
@@ -537,13 +552,13 @@ void Foam::functionObjects::scalarTransport::solveMULES()
                 MULEScontrols,
                 geometricOneField(),
                 s_,
-                sPhi_,
+                sPhi,
                 tsPhiCorr0_.ref(),
                 oneField(),
                 zeroField()
             );
 
-            sPhi_ += tsPhiCorr0_();
+            sPhi += tsPhiCorr0_();
         }
 
         // Cache the upwind-flux
@@ -557,7 +572,7 @@ void Foam::functionObjects::scalarTransport::solveMULES()
         (
             fvc::flux
             (
-                phiCN(),
+                tphiCN(),
                 (cnCoeff*s_ + (1.0 - cnCoeff)*s_.oldTime())(),
                 mesh_.schemes().div(divScheme)
             )
@@ -565,7 +580,7 @@ void Foam::functionObjects::scalarTransport::solveMULES()
 
         if (MULESCorr)
         {
-            tmp<surfaceScalarField> tsPhiCorr(tsPhiUn() - sPhi_);
+            tmp<surfaceScalarField> tsPhiCorr(tsPhiUn() - sPhi);
             volScalarField s0("s0", s_);
 
             MULES::correct
@@ -573,7 +588,7 @@ void Foam::functionObjects::scalarTransport::solveMULES()
                 MULEScontrols,
                 geometricOneField(),
                 s_,
-                tsPhiUn(),
+                sPhi,
                 tsPhiCorr.ref(),
                 oneField(),
                 zeroField()
@@ -582,25 +597,25 @@ void Foam::functionObjects::scalarTransport::solveMULES()
             // Under-relax the correction for all but the 1st corrector
             if (sCorr == 0)
             {
-                sPhi_ += tsPhiCorr();
+                sPhi += tsPhiCorr();
             }
             else
             {
                 s_ = 0.5*s_ + 0.5*s0;
-                sPhi_ += 0.5*tsPhiCorr();
+                sPhi += 0.5*tsPhiCorr();
             }
         }
         else
         {
-            sPhi_ = tsPhiUn;
+            sPhi = tsPhiUn;
 
             MULES::explicitSolve
             (
                 MULEScontrols,
                 geometricOneField(),
                 s_,
-                phiCN,
-                sPhi_,
+                tphiCN,
+                sPhi,
                 oneField(),
                 zeroField()
             );
@@ -609,25 +624,12 @@ void Foam::functionObjects::scalarTransport::solveMULES()
 
     if (applyPrevCorr && MULESCorr)
     {
-        tsPhiCorr0_ = sPhi_ - tsPhiCorr0_;
+        tsPhiCorr0_ = sPhi - tsPhiCorr0_;
         tsPhiCorr0_.ref().rename("sPhiCorr0");
     }
     else
     {
         tsPhiCorr0_.clear();
-    }
-
-    if
-    (
-        word(mesh_.schemes().ddt("ddt(s)"))
-     == fv::CrankNicolsonDdtScheme<scalar>::typeName
-    )
-    {
-        if (ocCoeff > 0)
-        {
-            // Calculate the end-of-time-step s flux
-            sPhi_ = (sPhi_ - (1.0 - cnCoeff)*sPhi_.oldTime())/cnCoeff;
-        }
     }
 
     Info<< fieldName_ << "volume fraction = "
@@ -640,6 +642,7 @@ void Foam::functionObjects::scalarTransport::solveMULES()
 
 bool Foam::functionObjects::scalarTransport::write()
 {
+    s_.write();
     return true;
 }
 

@@ -166,14 +166,8 @@ private:
         //  needed if a compressive convection scheme is used
         const dimensionedScalar deltaN_;
 
-        //- Scalar volumetric flux
-        tmp<surfaceScalarField> tsPhi_;
-
         //- MULES Correction
         tmp<surfaceScalarField> tsPhiCorr0_;
-
-        //- Switch to indicate that s has been restarted for Crank-Nicolson
-        bool sRestart_;
 
 
     // Private Member Functions
@@ -217,11 +211,16 @@ public:
         //- Return the list of fields required
         virtual wordList fields() const;
 
+        //- Do not execute at the start of the run
+        virtual bool executeAtStart() const
+        {
+            return false;
+        }
+
         //- Calculate the scalarTransport
         virtual bool execute();
 
-        //- Do nothing.
-        //  The volScalarField is registered and written automatically
+        //- Write the updated scalar field
         virtual bool write();
 
 
