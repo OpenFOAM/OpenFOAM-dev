@@ -29,4 +29,6 @@ diffusivity     viscosity;
 alphal          1;
 alphat          1;
 
+writeControl    writeTime;
+
 // ************************************************************************* //

@@ -94,7 +94,7 @@ Foam::volScalarField& Foam::functionObjects::phaseScalarTransport::Phi()
                     time_.name(),
                     mesh_,
                     IOobject::READ_IF_PRESENT,
-                    IOobject::AUTO_WRITE
+                    IOobject::NO_WRITE
                 ),
                 mesh_,
                 dimensionedScalar(phi.dimensions()/dimLength, Zero),
@@ -289,11 +289,10 @@ Foam::functionObjects::phaseScalarTransport::phaseScalarTransport
             time_.name(),
             mesh_,
             IOobject::MUST_READ,
-            IOobject::AUTO_WRITE
+            IOobject::NO_WRITE
         ),
         mesh_
     ),
-    alphaSPtr_(nullptr),
     PhiPtr_(nullptr)
 {
     if (phaseName_ == word::null)
@@ -485,41 +484,6 @@ bool Foam::functionObjects::phaseScalarTransport::execute()
         PhiDimensionErrorInFunction(alphaPhi);
     }
 
-    // Update
-    if (writeAlphaField_)
-    {
-        if (!alphaSPtr_.valid())
-        {
-            alphaSPtr_.set
-            (
-                new volScalarField
-                (
-                    IOobject
-                    (
-                        "alpha"
-                      + word(toupper(fieldName_[0]))
-                      + fieldName_(1, fieldName_.size() - 1),
-                        time_.name(),
-                        mesh_,
-                        IOobject::NO_READ,
-                        IOobject::AUTO_WRITE
-                    ),
-                    mesh_,
-                    dimensionedScalar(s_.dimensions(), Zero)
-                )
-            );
-        }
-
-        alphaSPtr_() = alpha*s_;
-    }
-    else
-    {
-        if (alphaSPtr_.valid())
-        {
-            alphaSPtr_().clear();
-        }
-    }
-
     Info<< endl;
 
     return true;
@@ -528,6 +492,32 @@ bool Foam::functionObjects::phaseScalarTransport::execute()
 
 bool Foam::functionObjects::phaseScalarTransport::write()
 {
+    s_.write();
+
+    if (writeAlphaField_)
+    {
+        const volScalarField& alpha =
+            mesh_.lookupObject<volScalarField>(alphaName_);
+
+        volScalarField alphaS
+        (
+            IOobject
+            (
+                "alpha" + fieldName_.capitalise(),
+                time_.name(),
+                mesh_
+            ),
+            alpha*s_
+        );
+
+        alphaS.write();
+    }
+
+    if (PhiPtr_.valid())
+    {
+        PhiPtr_->write();
+    }
+
     return true;
 }
 

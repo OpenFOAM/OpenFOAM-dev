@@ -165,9 +165,6 @@ class phaseScalarTransport
         //- The field
         volScalarField s_;
 
-        //- The field multiplied by the phase fraction
-        autoPtr<volScalarField> alphaSPtr_;
-
         //- Potential field used to generate the phase flux
         autoPtr<volScalarField> PhiPtr_;
 
@@ -216,6 +213,12 @@ public:
 
         //- Return the list of fields required
         virtual wordList fields() const;
+
+        //- Do not execute at the start of the run
+        virtual bool executeAtStart() const
+        {
+            return false;
+        }
 
         //- Solve for the evolution of the field
         virtual bool execute();
