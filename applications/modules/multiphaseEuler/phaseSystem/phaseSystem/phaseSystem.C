@@ -360,7 +360,7 @@ void Foam::phaseSystem::alphaControl::read(const dictionary& dict)
 
     MULES.read(dict);
 
-    clip = dict.lookupOrDefault<Switch>("clip", false);
+    clip = dict.lookupOrDefault<Switch>("clip", true);
 }
 
 
