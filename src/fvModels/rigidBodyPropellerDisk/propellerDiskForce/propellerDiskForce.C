@@ -118,7 +118,11 @@ void Foam::RBD::restraints::propellerDiskForce::restrain
 
     // Lookup the propeller force and moment
     const vector force(propPtr->force());
-    const vector moment(propPtr->moment() + (propPtr->centre() ^ force));
+    const vector moment
+    (
+        propPtr->moment()
+      + ((propPtr->centre() - model_.X0(bodyIndex_).r()) ^ force)
+    );
 
     if (model_.debug)
     {
