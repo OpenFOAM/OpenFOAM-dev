@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -177,7 +177,7 @@ public:
         virtual tmp<scalarField> internalCoeff(const fvSource&) const = 0;
 
         //- Return the source coefficient
-        tmp<Field<Type>> sourceCoeff(const fvSource&) const;
+        virtual tmp<Field<Type>> sourceCoeff(const fvSource&) const;
 
         //- Return the value
         tmp<Field<Type>> value(const fvSource&) const;
