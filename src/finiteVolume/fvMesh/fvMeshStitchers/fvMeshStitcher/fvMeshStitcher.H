@@ -494,6 +494,12 @@ public:
 };
 
 
+// Template Specialisations
+
+template<>
+void fvMeshStitcher::postUnconformSurfaceFields<Foam::vector>();
+
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam

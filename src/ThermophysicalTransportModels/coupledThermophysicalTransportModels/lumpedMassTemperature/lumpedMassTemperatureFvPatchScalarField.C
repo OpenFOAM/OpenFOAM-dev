@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,11 +36,14 @@ bool Foam::lumpedMassTemperatureFvPatchScalarField::closed() const
     return mag(gSum(patch().Sf()))/gSum(patch().magSf()) < rootSmall;
 }
 
+
 Foam::scalar Foam::lumpedMassTemperatureFvPatchScalarField::V() const
 {
-    return -gSum(patch().Sf() & patch().Cf())
-           /patch().boundaryMesh().mesh().nSolutionD();
+    return
+       -gSum(patch().Sf() & patch().Cf())
+       /patch().boundaryMesh().mesh().nSolutionD();
 }
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -172,18 +175,17 @@ void Foam::lumpedMassTemperatureFvPatchScalarField::updateCoeffs()
             internalField().group()
         );
 
-    const label patchi = patch().index();
     const scalarField Hf
     (
-        ttm.kappaEff(patchi)*patch().magSf()*patch().deltaCoeffs()
+        ttm.kappaEff(patch().index())*patch().magSf()*patch().deltaCoeffs()
     );
-    const scalar Hs = rho_*Cv_*V_/db().time().deltaTValue();
 
-    const scalar t = db().time().userTimeValue();
+    const scalar Hs = rho_*Cv_*V_/db().time().deltaTValue();
 
     T_.value() =
     (
-        Q_->value(t) + gSum(Hf*patchInternalField())
+        Q_->value(db().time().value())
+      + gSum(Hf*patchInternalField())
       + Hs*T_.oldTime().value()
     )/(Hs + gSum(Hf));
 
