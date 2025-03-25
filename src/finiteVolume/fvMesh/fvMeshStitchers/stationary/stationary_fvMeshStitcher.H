@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,12 +28,12 @@ Description
     Mesh stitcher for stationary meshes
 
 SourceFiles
-    fvMeshStitchersStationary.C
+    stationary_fvMeshStitcher.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef fvMeshStitchersStationary_H
-#define fvMeshStitchersStationary_H
+#ifndef stationary_fvMeshStitcher_H
+#define stationary_fvMeshStitcher_H
 
 #include "fvMeshStitcher.H"
 
