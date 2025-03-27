@@ -7,13 +7,21 @@
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    format          ascii;
-    class           dictionary;
-    location        "constant";
-    object          fvModels;
+    format      ascii;
+    class       volScalarField;
+    location    "0";
+    object      k;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+sources
+{
+    injection
+    {
+        type            turbulentIntensityKineticEnergy;
+        intensity       0.05;
+    }
+}
 
 
 // ************************************************************************* //

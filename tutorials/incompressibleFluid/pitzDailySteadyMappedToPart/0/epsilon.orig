@@ -14,10 +14,6 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 2 -3 0 0 0 0];
-
-internalField   uniform 14.855;
-
 boundaryField
 {
     cutIn
@@ -31,16 +27,6 @@ boundaryField
         inletValue      $internalField;
         value           $internalField;
     }
-    lowerWall
-    {
-        type            epsilonWallFunction;
-        value           $internalField;
-    }
-    frontAndBack
-    {
-        type            empty;
-    }
 }
-
 
 // ************************************************************************* //

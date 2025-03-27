@@ -8,17 +8,25 @@
 FoamFile
 {
     format      ascii;
-    class       dictionary;
-    location    "constant";
-    object      physicalProperties.water;
+    class       volScalarField;
+    location    "0";
+    object      omega;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-viscosityModel  constant;
-
-nu              1e-06;
-
-rho             1000;
-
+boundaryField
+{
+    cutIn
+    {
+        type            fixedValue;
+        value           $internalField;
+    }
+    cutOut
+    {
+        type            inletOutlet;
+        inletValue      $internalField;
+        value           $internalField;
+    }
+}
 
 // ************************************************************************* //

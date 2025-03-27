@@ -10,49 +10,14 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "system";
-    object      fvSchemes;
+    object      fvSolution;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-ddtSchemes
+PIMPLE
 {
-    default         Euler;
+    nOuterCorrectors    3;
+    nCorrectors         1;
 }
-
-gradSchemes
-{
-    default         Gauss linear;
-}
-
-divSchemes
-{
-    div(phi,alpha)  Gauss interfaceCompression vanLeer 1;
-
-    div(rhoPhi,U)   Gauss linearUpwind grad(U);
-
-    div(phi,k)      Gauss upwind;
-    div(phi,epsilon) Gauss upwind;
-    div(phi,omega)  Gauss upwind;
-
-    div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
-
-    div(alphaPhi,tracer) Gauss vanLeer;
-}
-
-laplacianSchemes
-{
-    default         Gauss linear uncorrected;
-}
-
-interpolationSchemes
-{
-    default         linear;
-}
-
-snGradSchemes
-{
-    default         uncorrected;
-}
-
 
 // ************************************************************************* //

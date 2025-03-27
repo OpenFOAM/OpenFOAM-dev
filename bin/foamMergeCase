@@ -1,0 +1,225 @@
+#!/bin/bash
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     | Website:  https://openfoam.org
+#   \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamMergeCase
+#
+# Description
+#     Copy a case from a given source directory and merge differences into it.
+#     Differences are specified in dictionaries laid out on disk in the same
+#     way as in the source case. This allows for variants of a case to be
+#     created without replicating common parts of the configuration.
+#
+#     For example, if the source case is configured to use a RAS turbulence
+#     model, but the variant is to run laminar, then a
+#     system/momentumTransport.orig file can be created for the variant which
+#     contains only the following:
+#
+#         // Set the momentum transport model to laminar simulationType
+#         laminar;
+#
+#         // Remove the (now) redundant RAS settings for clarity
+#         ~RAS;
+#
+#     Files specifying the differences are, by default, located in the current
+#     case directory. These must have a .orig extension to prevent them from
+#     being overwritten by the merge operation.
+#
+#     Optionally, additional variant case directories can be supplied, in which
+#     case multiple variations will be applied successively to the source case
+#     files.
+#
+#     The foamUnMergeCase script can be used, with identical arguments, to
+#     reverse the merge operation and recover the original configuration with
+#     only the variant files present.
+#
+#------------------------------------------------------------------------------
+usage() {
+    cat<<USAGE
+
+Usage: ${0##*/} <source case> <variant case 1> ... <variant case N>
+
+Copy a case from a given source directory and merge differences into it.
+Differences are specified in dictionaries laid out on disk in the same
+way as in the source case. This allows for variants of a case to be
+created without replicating common parts of the configuration.
+
+Files specifying the differences are, by default, located in the current
+case directory. These must have a .orig extension to prevent them from
+being overwritten by the merge operation.
+
+Optionally, additional variant case directories can be supplied, in which
+case multiple variations will be applied successively to the source case
+files.
+
+USAGE
+}
+
+error() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    usage
+    exit 1
+}
+
+isCaseValid() {
+    foamListTimes -case "$1" >/dev/null 2>&1
+}
+
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -h | -help)
+        usage && exit 0
+        ;;
+    -*)
+        error "unknown option: '$*'"
+        ;;
+    *)
+        break
+        ;;
+    esac
+done
+
+[ $# -ge 1 ] || error "Incorrect arguments specified"
+
+# Set the source directory
+isCaseValid "$1" || error "'$1' is not a valid case directory"
+srcDir="$1"
+shift
+
+# Set the variant directories
+varDirs=()
+while [ "$#" -gt 0 ]
+do
+    [ -d "$1" ] || error "'$1' is not a valid directory"
+    varDirs+=("$1")
+    shift
+done
+
+# Get the initial time
+t0=$(foamDictionary "$srcDir/system/controlDict" -entry startTime -value)
+
+# Check that all affected files in this case have .orig extensions so that
+# nothing gets permanently overridden
+for srcOrVarDir in "$srcDir" "${varDirs[@]}"
+do
+    while read -r file
+    do
+        thisFileNoOrig="./${file%*.orig}"
+
+        if [ -f "$thisFileNoOrig" ]
+        then
+            error "Cannot not merge into non-orig file '$thisFileNoOrig'"
+        fi
+
+    done < <(
+        cd "$srcOrVarDir" && \
+        find ./"$t0" constant system \
+        \( -path constant/polyMesh -prune -o -path constant/fvMesh -prune \) \
+        -o -type f -print 2>/dev/null
+    )
+done
+
+# Copy files from the source case
+while read -r file
+do
+    srcFile="$srcDir/$file"
+    thisFileNoOrig="./${file%*.orig}"
+    thisDir="$(dirname "$thisFileNoOrig")"
+
+    # Don't copy if there is an orig-variant of this file
+    [ -f "$srcFile.orig" ] && continue
+
+    # Make the directory
+    [ -d "$thisDir" ] || mkdir -p "$thisDir"
+
+    # Copy the source file into the case
+    cp "$srcFile" "$thisFileNoOrig"
+
+done < <(
+    cd "$srcDir" && \
+    find ./"$t0" constant system \
+    \( -path constant/polyMesh -prune -o -path constant/fvMesh -prune \) \
+    -o -type f -print 2>/dev/null
+)
+
+# Merge in settings from the variant directories
+prevDirs=("$srcDir")
+for varDir in "${varDirs[@]}"
+do
+    prevDirs+=("$varDir")
+
+    while read -r file
+    do
+        varFile="$varDir/$file"
+        thisFileNoOrig="./${file%*.orig}"
+        thisDir="$(dirname "$thisFileNoOrig")"
+
+        # Don't merge or copy if there is a previous orig-variant of this file
+        prevFile=
+        for prevDir in "${prevDirs[@]}"
+        do
+            if [ -f "$prevDir/$file.orig" ]
+            then
+                prevFile="$prevDir/$file.orig"
+            fi
+        done
+        [ -z "$prevFile" ] || continue
+
+        # Make the directory
+        [ -d "$thisDir" ] || mkdir -p "$thisDir"
+
+        # If the file exists in this case then merge into it,
+        # and if not then copy to create it
+        if [ -f "$thisFileNoOrig" ]
+        then
+            foamDictionary -dict -merge "$varFile" "$thisFileNoOrig"
+        else
+            cp "$varFile" "$thisFileNoOrig"
+        fi
+
+    done < <(
+        cd "$varDir" && \
+        find ./"$t0" constant system \
+        \( -path constant/polyMesh -prune -o -path constant/fvMesh -prune \) \
+        -o -type f -print 2>/dev/null
+    )
+done
+
+# Merge in settings from this directory
+while read -r file
+do
+    thisFileOrig="./$file"
+    thisFileNoOrig="./${file%*.orig}"
+
+    # If the file exists in this case then merge into it
+    if [ -f "$thisFileNoOrig" ]
+    then
+        foamDictionary -dict -merge "$thisFileOrig" "$thisFileNoOrig"
+    fi
+
+done < <(find ./"$t0" constant system -type f -name "*.orig" 2>/dev/null)
+
+#------------------------------------------------------------------------------

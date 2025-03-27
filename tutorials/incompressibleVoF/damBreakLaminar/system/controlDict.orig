@@ -8,42 +8,13 @@
 FoamFile
 {
     format      ascii;
-    class       volScalarField;
-    location    "0";
-    object      k;
+    class       dictionary;
+    location    "system";
+    object      controlDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 2 -2 0 0 0 0];
-
-internalField   uniform 0.1;
-
-boundaryField
-{
-    #includeEtc "caseDicts/setConstraintTypes"
-
-    wall
-    {
-        type            kqRWallFunction;
-        value           $internalField;
-    }
-
-    atmosphere
-    {
-        type            inletOutlet;
-        inletValue      $internalField;
-        value           $internalField;
-    }
-}
-
-sources
-{
-    injection
-    {
-        type            turbulentIntensityKineticEnergy;
-        intensity       0.05;
-    }
-}
+~DebugSwitches;
 
 
 // ************************************************************************* //

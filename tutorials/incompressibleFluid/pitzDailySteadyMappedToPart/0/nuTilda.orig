@@ -8,29 +8,25 @@
 FoamFile
 {
     format      ascii;
-    class       dictionary;
-    location    "constant";
-    object      fvModels;
+    class       volScalarField;
+    location    "0";
+    object      nuTilda;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-turbulenceDamping
+boundaryField
 {
-    type            VoFTurbulenceDamping;
-
-    delta           1e-4;
+    cutIn
+    {
+        type            fixedValue;
+        value           $internalField;
+    }
+    cutOut
+    {
+        type            inletOutlet;
+        inletValue      $internalField;
+        value           $internalField;
+    }
 }
-
-injection
-{
-    type            volumeSource;
-
-    phase           water;
-
-    points          ((0.438 0.438 0.0073));
-
-    volumetricFlowRate 0.0003;
-}
-
 
 // ************************************************************************* //

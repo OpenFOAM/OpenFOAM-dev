@@ -8,40 +8,26 @@
 FoamFile
 {
     format      ascii;
-    class       volScalarField;
-    location    "0";
-    object      epsilon;
+    class       dictionary;
+    location    "system";
+    object      fvSolution;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 2 -3 0 0 0 0];
-
-internalField   uniform 0.1;
-
-boundaryField
+solvers
 {
-    #includeEtc "caseDicts/setConstraintTypes"
-
-    wall
+    "alpha.water.*"
     {
-        type            epsilonWallFunction;
-        value           $internalField;
+        nLimiterIter    5;
+        ~MULEStolerance;
     }
 
-    atmosphere
+    "tracer.*"
     {
-        type            inletOutlet;
-        inletValue      $internalField;
-        value           $internalField;
-    }
-}
-
-sources
-{
-    injection
-    {
-        type            turbulentMixingLengthDissipationRate;
-        mixingLength    0.0146;
+        solver          PBiCGStab;
+        preconditioner  DILU;
+        tolerance       1e-06;
+        relTol          0;
     }
 }
 

@@ -8,15 +8,20 @@
 FoamFile
 {
     format      ascii;
-    class       dictionary;
-    location    "constant";
-    object      phaseProperties;
+    class       volScalarField;
+    location    "0";
+    object      epsilon;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-phases          (water air);
-
-sigma           0.07;
+sources
+{
+    injection
+    {
+        type            turbulentMixingLengthDissipationRate;
+        mixingLength    0.0146;
+    }
+}
 
 
 // ************************************************************************* //

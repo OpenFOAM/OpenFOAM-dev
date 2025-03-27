@@ -1,0 +1,96 @@
+#!/bin/bash
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     | Website:  https://openfoam.org
+#   \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamUnMergeCase
+#
+# Description
+#     Reverse a merge operation performed with foamMergeCase. This should be
+#     called with exactly the same arguments as foamMergeCase.
+#
+#------------------------------------------------------------------------------
+usage() {
+    cat<<USAGE
+
+Usage: ${0##*/} <source case> <variant case 1> ... <variant case N>
+
+Reverse a merge operation performed with foamMergeCase. This should be
+called with exactly the same arguments as foamMergeCase.
+
+USAGE
+}
+
+error() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    usage
+    exit 1
+}
+
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -h | -help)
+        usage && exit 0
+        ;;
+    -*)
+        error "unknown option: '$*'"
+        ;;
+    *)
+        break
+        ;;
+    esac
+done
+
+[ $# -ge 1 ] || error "Incorrect arguments specified"
+
+# Set the source directory
+[ -d "$1" ] || error "'$1' is not a valid case directory"
+srcDir="$1"
+shift
+
+# Set the variant directories
+varDirs=()
+while [ "$#" -gt 0 ]
+do
+    [ -d "$1" ] || error "'$1' is not a valid directory"
+    varDirs+=("$1")
+    shift
+done
+
+# Remove all non-orig files that exist in the source and variant directories
+while read -r file
+do
+    for varOrSrcDir in "${varDirs[@]}" "$srcDir"
+    do
+        [ -f "$varOrSrcDir/$file" ] || \
+            [ -f "$varOrSrcDir/$file.orig" ] && \
+            rm -f "$file"
+    done
+done < <(find ./[-0-9]* constant system -type f ! -name "*.orig" 2>/dev/null)
+
+# Remove any empty directories
+find . -type d -empty -delete 2>/dev/null
+
+#------------------------------------------------------------------------------

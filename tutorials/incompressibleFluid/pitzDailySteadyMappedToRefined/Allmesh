@@ -5,7 +5,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
 # Get the standard mesh dictionary
-cp -f $FOAM_TUTORIALS/resources/blockMesh/pitzDaily system
+cp -f $FOAM_TUTORIALS/resources/blockMesh/pitzDaily system/blockMeshDict
 
 # Decrease the mesh spacings by a factor
 factor=5/4

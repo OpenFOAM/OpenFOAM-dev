@@ -10,28 +10,16 @@ FoamFile
     format      ascii;
     class       volScalarField;
     location    "0";
-    object      alpha.water;
+    object      epsilon;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [];
-
-internalField   uniform 0;
-
-boundaryField
+sources
 {
-    #includeEtc "caseDicts/setConstraintTypes"
-
-    wall
+    injection
     {
-        type            zeroGradient;
-    }
-
-    atmosphere
-    {
-        type            inletOutlet;
-        inletValue      $internalField;
-        value           $internalField;
+        type            turbulentMixingLengthDissipationRate;
+        mixingLength    0.0146;
     }
 }
 

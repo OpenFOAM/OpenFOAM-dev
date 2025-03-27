@@ -8,29 +8,18 @@
 FoamFile
 {
     format      ascii;
-    class       volVectorField;
+    class       volScalarField;
     location    "0";
-    object      U;
+    object      k;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 1 -1 0 0 0 0];
-
-internalField   uniform (0 0 0);
-
-boundaryField
+sources
 {
-    #includeEtc "caseDicts/setConstraintTypes"
-
-    wall
+    injection
     {
-        type            noSlip;
-    }
-
-    atmosphere
-    {
-        type            pressureInletOutletVelocity;
-        value           $internalField;
+        type            turbulentIntensityKineticEnergy;
+        intensity       0.05;
     }
 }
 

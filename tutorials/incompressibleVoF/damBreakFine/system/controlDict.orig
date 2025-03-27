@@ -8,24 +8,13 @@
 FoamFile
 {
     format      ascii;
-    class       volScalarField;
-    location    "0";
-    object      p;
+    class       dictionary;
+    location    "system";
+    object      controlDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-boundaryField
-{
-    cutIn
-    {
-        type            zeroGradient;
-    }
-    cutOut
-    {
-        type            entrainmentPressure;
-        p0              $internalField;
-        value           $internalField;
-    }
-}
+deltaT          0.0005;
+
 
 // ************************************************************************* //

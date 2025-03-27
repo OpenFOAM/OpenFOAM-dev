@@ -8,17 +8,20 @@
 FoamFile
 {
     format      ascii;
-    class       dictionary;
-    location    "constant";
-    object      physicalProperties.air;
+    class       volVectorField;
+    location    "0";
+    object      U;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-viscosityModel  constant;
-
-nu              1.48e-05;
-
-rho             1;
+sources
+{
+    injection
+    {
+        type            uniformFixedValue;
+        uniformValue    (-1 0 0);
+    }
+}
 
 
 // ************************************************************************* //

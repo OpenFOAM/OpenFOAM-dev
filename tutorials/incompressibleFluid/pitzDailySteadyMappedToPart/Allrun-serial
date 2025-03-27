@@ -5,16 +5,14 @@ cd ${0%/*} || exit 1    # Run from this directory
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 . $WM_PROJECT_DIR/bin/tools/CleanFunctions
 
-# Copy the source case
+# Copy/merge the source case
 isTest "$@" && path=.. || path=$FOAM_TUTORIALS/incompressibleFluid
-cp -r $path/pitzDailySteady/constant .
-cp -rn $path/pitzDailySteady/system/* system
 cp -r $path/pitzDailySteady .
+foamMergeCase $path/pitzDailySteady || exit
 
 # Run the source case
 (
     cd pitzDailySteady
-    isTest "$@" && cleanCase
     runApplication blockMesh -dict $FOAM_TUTORIALS/resources/blockMesh/pitzDaily
     runApplication foamRun -noFunctionObjects
 )
@@ -22,8 +20,6 @@ cp -r $path/pitzDailySteady .
 # Mesh
 runApplication blockMesh
 
-# Map from the source case into this case and run
-#
 # !!! Smooth interpolative mapping from a coarse to a fine case is not
 # available within mapFieldsPar. All current options create fields with step
 # changes at the boundaries between coarse source cells. This poor
@@ -31,9 +27,10 @@ runApplication blockMesh
 # simulation. We need a lot of under-relaxation to overcome this. In future, it
 # is desired to introduce smooth interpolative mapping, which should resolve
 # this issue and the need for additional under-relaxation.
-#
-runApplication mapFieldsPar pitzDailySteady -sourceTime latestTime -fields "(epsilon k nut p U)"
 runApplication foamDictionary system/fvSolution -entry relaxationFactors/equations -set '{ ".*" 0.1; }'
+
+# Map from the source case into this case and run
+runApplication mapFieldsPar pitzDailySteady -sourceTime latestTime -fields "(epsilon k nut p U)"
 runApplication foamRun -noFunctionObjects
 
 #------------------------------------------------------------------------------

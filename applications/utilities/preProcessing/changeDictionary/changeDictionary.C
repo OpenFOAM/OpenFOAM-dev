@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,8 +59,7 @@ Usage
         Specify the subDict name of the replacements dictionary.
 
       - \par -literalRE
-        Do not interpret regular expressions or patchGroups; treat them as any
-        other keyword.
+        Do not interpret regular expressions; treat them as any other keyword.
 
       - \par -enableFunctionEntries
         Enable function entries (default: disabled)
@@ -81,6 +80,7 @@ Usage
 #include "stringListOps.H"
 #include "timeSelector.H"
 #include "systemDict.H"
+#include "mergeDictionaries.H"
 
 using namespace Foam;
 
@@ -126,264 +126,6 @@ HashTable<wordList, word> extractPatchGroups(const dictionary& boundaryDict)
     }
     return groupToPatch;
 }
-
-
-bool merge
-(
-    dictionary&,
-    const dictionary&,
-    const bool,
-    const HashTable<wordList, word>&
-);
-
-
-// Add thisEntry to dictionary thisDict.
-bool addEntry
-(
-    dictionary& thisDict,
-    entry& thisEntry,
-    const entry& mergeEntry,
-    const bool literalRE,
-    const HashTable<wordList, word>& shortcuts
-)
-{
-    bool changed = false;
-
-    // Recursively merge sub-dictionaries
-    // TODO: merge without copying
-    if (thisEntry.isDict() && mergeEntry.isDict())
-    {
-        if
-        (
-            merge
-            (
-                const_cast<dictionary&>(thisEntry.dict()),
-                mergeEntry.dict(),
-                literalRE,
-                shortcuts
-            )
-        )
-        {
-            changed = true;
-        }
-    }
-    else
-    {
-        // Should use in-place modification instead of adding
-        thisDict.add(mergeEntry.clone(thisDict).ptr(), true);
-        changed = true;
-    }
-
-    return changed;
-}
-
-
-
-// List of indices into thisKeys
-labelList findMatches
-(
-    const HashTable<wordList, word>& shortcuts,
-    const wordList& shortcutNames,
-    const wordList& thisKeys,
-    const keyType& key
-)
-{
-    labelList matches;
-
-    if (key.isPattern())
-    {
-        // Wildcard match
-        matches = findStrings(key, thisKeys);
-
-    }
-    else if (shortcuts.size())
-    {
-        // See if patchGroups expand to valid thisKeys
-        labelList indices = findStrings(key, shortcutNames);
-        forAll(indices, i)
-        {
-            const word& name = shortcutNames[indices[i]];
-            const wordList& keys = shortcuts[name];
-            forAll(keys, j)
-            {
-                label index = findIndex(thisKeys, keys[j]);
-                if (index != -1)
-                {
-                    matches.append(index);
-                }
-            }
-        }
-    }
-    return matches;
-}
-
-
-// Dictionary merging/editing.
-// literalRE:
-// - true: behave like dictionary::merge, i.e. add regexps just like
-//   any other key.
-// - false : interpret wildcard as a rule for items to be matched.
-bool merge
-(
-    dictionary& thisDict,
-    const dictionary& mergeDict,
-    const bool literalRE,
-    const HashTable<wordList, word>& shortcuts
-)
-{
-    const wordList shortcutNames(shortcuts.toc());
-
-    bool changed = false;
-
-    // Save current (non-wildcard) keys before adding items.
-    HashSet<word> thisKeysSet;
-    {
-        List<keyType> keys = thisDict.keys(false);
-        forAll(keys, i)
-        {
-            thisKeysSet.insert(keys[i]);
-        }
-    }
-
-    // Pass 1. All literal matches
-
-    forAllConstIter(IDLList<entry>, mergeDict, mergeIter)
-    {
-        const keyType& key = mergeIter().keyword();
-
-        if (key[0] == '~')
-        {
-            word eraseKey = key(1, key.size()-1);
-            if (thisDict.remove(eraseKey))
-            {
-                // Mark thisDict entry as having been match for wildcard
-                // handling later on.
-                thisKeysSet.erase(eraseKey);
-            }
-            changed = true;
-        }
-        else if (literalRE || !(key.isPattern() || shortcuts.found(key)))
-        {
-            entry* entryPtr = thisDict.lookupEntryPtr
-            (
-                key,
-                false,              // recursive
-                false               // patternMatch
-            );
-
-            if (entryPtr)
-            {
-                // Mark thisDict entry as having been match for wildcard
-                // handling later on.
-                thisKeysSet.erase(entryPtr->keyword());
-
-                if
-                (
-                    addEntry
-                    (
-                        thisDict,
-                       *entryPtr,
-                        mergeIter(),
-                        literalRE,
-                        shortcuts
-                    )
-                )
-                {
-                    changed = true;
-                }
-            }
-            else
-            {
-                // not found - just add
-                thisDict.add(mergeIter().clone(thisDict).ptr());
-                changed = true;
-            }
-        }
-    }
-
-
-    // Pass 2. Wildcard or shortcut matches (if any) on any non-match keys.
-
-    if (!literalRE && thisKeysSet.size() > 0)
-    {
-        // Pick up remaining dictionary entries
-        wordList thisKeys(thisKeysSet.toc());
-
-        forAllConstIter(IDLList<entry>, mergeDict, mergeIter)
-        {
-            const keyType& key = mergeIter().keyword();
-
-            if (key[0] == '~')
-            {
-                word eraseKey = key(1, key.size()-1);
-
-                // List of indices into thisKeys
-                labelList matches
-                (
-                    findMatches
-                    (
-                        shortcuts,
-                        shortcutNames,
-                        thisKeys,
-                        eraseKey
-                    )
-                );
-
-                // Remove all matches
-                forAll(matches, i)
-                {
-                    const word& thisKey = thisKeys[matches[i]];
-                    thisKeysSet.erase(thisKey);
-                }
-                changed = true;
-            }
-            else
-            {
-                // List of indices into thisKeys
-                labelList matches
-                (
-                    findMatches
-                    (
-                        shortcuts,
-                        shortcutNames,
-                        thisKeys,
-                        key
-                    )
-                );
-
-                // Add all matches
-                forAll(matches, i)
-                {
-                    const word& thisKey = thisKeys[matches[i]];
-
-                    entry& thisEntry = const_cast<entry&>
-                    (
-                        thisDict.lookupEntry(thisKey, false, false)
-                    );
-
-                    if
-                    (
-                        addEntry
-                        (
-                            thisDict,
-                            thisEntry,
-                            mergeIter(),
-                            literalRE,
-                            HashTable<wordList, word>(0)    // no shortcuts
-                                                            // at deeper levels
-                        )
-                    )
-                    {
-                        changed = true;
-                    }
-                }
-            }
-        }
-    }
-
-    return changed;
-}
-
 
 
 int main(int argc, char *argv[])
@@ -612,7 +354,13 @@ int main(int argc, char *argv[])
                 Info<< "Merging entries from " << replaceDict.toc() << endl;
 
                 // Merge the replacements in
-                merge(fieldDict, replaceDict, literalRE, patchGroups);
+                mergeDictionaries
+                (
+                    fieldDict,
+                    replaceDict,
+                    !literalRE,
+                    patchGroups
+                );
 
                 Info<< "fieldDict:" << fieldDict << endl;
 
@@ -689,7 +437,13 @@ int main(int argc, char *argv[])
                 Info<< "Merging entries from " << replaceDict.toc() << endl;
 
                 // Merge the replacements in
-                merge(fieldDict, replaceDict, literalRE, patchGroups);
+                mergeDictionaries
+                (
+                    fieldDict,
+                    replaceDict,
+                    !literalRE,
+                    patchGroups
+                );
 
                 Info<< "Writing modified fieldDict " << fieldName << endl;
                 fieldDict.regIOobject::write();

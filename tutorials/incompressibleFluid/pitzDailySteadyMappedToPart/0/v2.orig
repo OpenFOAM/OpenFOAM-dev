@@ -10,38 +10,23 @@ FoamFile
     format      ascii;
     class       volScalarField;
     location    "0";
-    object      T;
+    object      v2;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 0 0 1 0 0 0];
-
-internalField   uniform 300;
-
 boundaryField
 {
-    #includeEtc "caseDicts/setConstraintTypes"
-
-    wall
+    cutIn
     {
-        type            zeroGradient;
+        type            fixedValue;
+        value           $internalField;
     }
-
-    atmosphere
+    cutOut
     {
         type            inletOutlet;
         inletValue      $internalField;
+        value           $internalField;
     }
 }
-
-sources
-{
-    injection
-    {
-        type            uniformFixedValue;
-        uniformValue    320;
-    }
-}
-
 
 // ************************************************************************* //

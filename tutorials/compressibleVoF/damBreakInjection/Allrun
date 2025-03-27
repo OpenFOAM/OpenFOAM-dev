@@ -4,10 +4,9 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Source tutorial run functions
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
-# Copy the source case and add the mass source model
+# Merge the source case
 isTest "$@" && path=.. || path=$FOAM_TUTORIALS/compressibleVoF
-cp -rn $path/damBreak/0 $path/damBreak/constant $path/damBreak/system .
-rm -rf 0/alpha.water
+foamMergeCase $path/damBreak || exit 1
 
 # Run
 runApplication blockMesh

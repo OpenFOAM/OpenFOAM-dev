@@ -8,47 +8,20 @@
 FoamFile
 {
     format      ascii;
-    class       dictionary;
-    location    "system";
-    object      controlDict;
+    class       volVectorField;
+    location    "0";
+    object      U;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-solver          incompressibleVoF;
+sources
+{
+    injection
+    {
+        type            uniformFixedValue;
+        uniformValue    (-1 0 0);
+    }
+}
 
-startFrom       startTime;
-
-startTime       0;
-
-stopAt          endTime;
-
-endTime         1;
-
-deltaT          0.001;
-
-writeControl    adjustableRunTime;
-
-writeInterval   0.05;
-
-purgeWrite      0;
-
-writeFormat     ascii;
-
-writePrecision  6;
-
-writeCompression off;
-
-timeFormat      general;
-
-timePrecision   6;
-
-runTimeModifiable yes;
-
-adjustTimeStep  yes;
-
-maxCo           1;
-maxAlphaCo      1;
-
-maxDeltaT       1;
 
 // ************************************************************************* //

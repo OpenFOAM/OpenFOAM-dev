@@ -8,14 +8,22 @@
 FoamFile
 {
     format      ascii;
-    class       uniformDimensionedVectorField;
+    class       dictionary;
     location    "constant";
-    object      g;
+    object      fvModels;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 1 -2 0 0 0 0];
-value           (0 -9.81 0);
+injection
+{
+    type            volumeSource;
+
+    phase           water;
+
+    points          ((0.438 0.438 0.0073));
+
+    volumetricFlowRate 0.0003;
+}
 
 
 // ************************************************************************* //

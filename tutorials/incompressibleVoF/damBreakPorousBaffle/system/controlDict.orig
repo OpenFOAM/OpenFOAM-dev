@@ -8,40 +8,14 @@
 FoamFile
 {
     format      ascii;
-    class       volVectorField;
-    location    "0";
-    object      U;
+    class       dictionary;
+    location    "system";
+    object      controlDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 1 -1 0 0 0 0];
+maxCo           0.1;
 
-internalField   uniform (0 0 0);
-
-boundaryField
-{
-    #includeEtc "caseDicts/setConstraintTypes"
-
-    wall
-    {
-        type            noSlip;
-    }
-
-    atmosphere
-    {
-        type            pressureInletOutletVelocity;
-        value           $internalField;
-    }
-}
-
-sources
-{
-    injection
-    {
-        type            uniformFixedValue;
-        uniformValue    (-1 0 0);
-    }
-}
-
+maxAlphaCo      0.1;
 
 // ************************************************************************* //

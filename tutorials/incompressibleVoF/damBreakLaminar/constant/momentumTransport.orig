@@ -8,42 +8,15 @@
 FoamFile
 {
     format      ascii;
-    class       volScalarField;
-    location    "0";
-    object      epsilon;
+    class       dictionary;
+    location    "constant";
+    object      momentumTransport;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 2 -3 0 0 0 0];
+simulationType  laminar;
 
-internalField   uniform 0.1;
-
-boundaryField
-{
-    #includeEtc "caseDicts/setConstraintTypes"
-
-    wall
-    {
-        type            epsilonWallFunction;
-        value           $internalField;
-    }
-
-    atmosphere
-    {
-        type            inletOutlet;
-        inletValue      $internalField;
-        value           $internalField;
-    }
-}
-
-sources
-{
-    injection
-    {
-        type            turbulentMixingLengthDissipationRate;
-        mixingLength    0.0146;
-    }
-}
+~RAS;
 
 
 // ************************************************************************* //

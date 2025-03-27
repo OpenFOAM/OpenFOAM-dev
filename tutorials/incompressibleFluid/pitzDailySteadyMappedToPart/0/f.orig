@@ -7,14 +7,26 @@
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    format          ascii;
-    class           dictionary;
-    location        "constant";
-    object          momentumTransport;
+    format      ascii;
+    class       volScalarField;
+    location    "0";
+    object      f;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-simulationType  laminar;
-
+boundaryField
+{
+    cutIn
+    {
+        type            fixedValue;
+        value           $internalField;
+    }
+    cutOut
+    {
+        type            inletOutlet;
+        inletValue      $internalField;
+        value           $internalField;
+    }
+}
 
 // ************************************************************************* //
