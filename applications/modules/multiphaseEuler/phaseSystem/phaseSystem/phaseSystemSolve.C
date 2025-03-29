@@ -457,6 +457,17 @@ void Foam::phaseSystem::solve
 
             if (boundedPredictor)
             {
+                if (referencePhasePtr)
+                {
+                    volScalarField& referenceAlpha = *referencePhasePtr;
+                    referenceAlpha = alphaVoid;
+
+                    forAll(solvePhases, solvePhasei)
+                    {
+                        referenceAlpha -= solvePhases[solvePhasei];
+                    }
+                }
+
                 // Limit the flux of the phases
                 // to ensure the phase fractions sum to 1
                 MULES::limitSum(alphasMoving, phisMoving, alphaPhis, phiMoving);
