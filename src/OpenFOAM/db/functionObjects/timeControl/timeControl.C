@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -381,15 +381,24 @@ Foam::scalar Foam::timeControl::timeToNextAction()
 
         case timeControls::adjustableRunTime:
         {
-            return
-                (time_.value() < startTime_)
-              ? startTime_ - time_.value()
-              : max
+            if (time_.value() < startTime_)
+            {
+                return startTime_ - time_.value();
+            }
+            else if (time_.value() > endTime_)
+            {
+                return vGreat;
+            }
+            else
+            {
+                return max
                 (
                     0,
                     (executionIndex_ + 1)*interval_
                   - (time_.value() - startTime_)
                 );
+            }
+
             break;
         }
 
