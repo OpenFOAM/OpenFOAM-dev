@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,6 +54,12 @@ class densityChangeDrift
 :
     public driftModel
 {
+    // Private Data
+
+        //- ...
+        PtrList<volScalarField> dRhoDts_;
+
+
 public:
 
     //- Runtime type information
@@ -74,6 +80,9 @@ public:
 
 
     // Member Functions
+
+        //- Precompute diameter independent expressions
+        virtual void precompute();
 
         //- Add to driftRate
         virtual void addToDriftRate

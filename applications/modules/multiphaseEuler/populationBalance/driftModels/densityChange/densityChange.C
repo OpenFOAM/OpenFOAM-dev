@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,11 +52,38 @@ Foam::diameterModels::driftModels::densityChangeDrift::densityChangeDrift
     const dictionary& dict
 )
 :
-    driftModel(popBal, dict)
+    driftModel(popBal, dict),
+    dRhoDts_()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void Foam::diameterModels::driftModels::densityChangeDrift::precompute()
+{
+    dRhoDts_.clear();
+    dRhoDts_.resize(popBal_.fluid().phases().size());
+
+    forAll(popBal_.sizeGroups(), i)
+    {
+        const sizeGroup& fi = popBal_.sizeGroups()[i];
+        const phaseModel& phase = fi.phase();
+        const volScalarField& alpha = phase;
+        const volScalarField& rho = phase.rho();
+
+        if (dRhoDts_.set(phase.index())) continue;
+
+        dRhoDts_.set
+        (
+            phase.index(),
+            (
+                fvc::ddt(alpha, rho) + fvc::div(phase.alphaRhoPhi())
+              - fvc::Sp(fvc::ddt(alpha) + fvc::div(phase.alphaPhi()), rho)
+            )/rho
+        );
+    }
+}
+
 
 void Foam::diameterModels::driftModels::densityChangeDrift::addToDriftRate
 (
@@ -66,15 +93,8 @@ void Foam::diameterModels::driftModels::densityChangeDrift::addToDriftRate
 {
     const sizeGroup& fi = popBal_.sizeGroups()[i];
     const phaseModel& phase = fi.phase();
-    const volScalarField& alpha = phase;
-    const volScalarField& rho = phase.rho();
 
-    driftRate -=
-        fi.x()
-       *(
-            fvc::ddt(alpha, rho) + fvc::div(phase.alphaRhoPhi())
-          - fvc::Sp(fvc::ddt(alpha) + fvc::div(phase.alphaPhi()), rho)
-        )/rho;
+    driftRate -= fi.x()*dRhoDts_[phase.index()];
 }
 
 
