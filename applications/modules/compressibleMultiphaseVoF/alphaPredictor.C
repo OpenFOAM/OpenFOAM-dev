@@ -237,17 +237,17 @@ void Foam::solvers::compressibleMultiphaseVoF::alphaPredictor()
 
         const dimensionedScalar totalDeltaT = runTime.deltaT();
 
-        List<volScalarField*> alphaPtrs(phases.size());
+        UPtrList<volScalarField> alphas(phases.size());
         forAll(phases, phasei)
         {
-            alphaPtrs[phasei] = &phases[phasei];
+            alphas.set(phasei, &phases[phasei]);
         }
 
         for
         (
             subCycle<volScalarField, subCycleFields> alphaSubCycle
             (
-                alphaPtrs,
+                alphas,
                 nAlphaSubCycles
             );
             !(++alphaSubCycle).end();

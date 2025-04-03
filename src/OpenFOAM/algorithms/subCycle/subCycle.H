@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -129,49 +129,49 @@ class subCycleFields
     // Private Data
 
         //- List of pointers to the fields being sub-cycled
-        List<GeometricField*> gfPtrs_;
+        UPtrList<GeometricField> gfs_;
 
         //- List of pointers to the fields old-time field being sub-cycled
         //  Needed to avoid calls to oldTime() which may cause
         //  unexpected updates of the old-time field
-        List<GeometricField*> gf0Ptrs_;
+        UPtrList<GeometricField> gf0s_;
 
         //- Copy of the "real" old-time value of the fields
-        PtrList<GeometricField> gf_0Ptrs_;
+        PtrList<GeometricField> gf_0s_;
 
 
 public:
 
     //- Type of the list of fields
-    typedef List<GeometricField*> FieldsType;
+    typedef UPtrList<GeometricField> FieldsType;
 
     // Constructors
 
         //- Construct from field list and number of sub-cycles
         subCycleFields
         (
-            List<GeometricField*>& gfPtrs,
+            UPtrList<GeometricField>& gfs,
             const label nSubCycles
         )
         :
-            gfPtrs_(gfPtrs),
-            gf0Ptrs_(gfPtrs.size())
+            gfs_(gfs),
+            gf0s_(gfs.size())
         {
             if (nSubCycles > 1)
             {
-                gf_0Ptrs_.setSize(gfPtrs.size());
+                gf_0s_.setSize(gfs.size());
 
-                forAll(gfPtrs_, i)
+                forAll(gfs_, i)
                 {
-                    gf0Ptrs_[i] = &gfPtrs_[i]->oldTimeRef();
+                    gf0s_.set(i, &gfs_[i].oldTimeRef());
 
-                    gf_0Ptrs_.set
+                    gf_0s_.set
                     (
                         i,
                         new volScalarField
                         (
-                            gf0Ptrs_[i]->name() + "_",
-                            *gf0Ptrs_[i]
+                            gf0s_[i].name() + "_",
+                            gf0s_[i]
                         )
                     );
                 }
@@ -182,17 +182,17 @@ public:
     //- Destructor
     ~subCycleFields()
     {
-        if (gf_0Ptrs_.size())
+        if (gf_0s_.size())
         {
-            forAll(gfPtrs_, i)
+            forAll(gfs_, i)
             {
                 // Reset the old-time fields
-                *gf0Ptrs_[i] = gf_0Ptrs_[i];
+                gf0s_[i] = gf_0s_[i];
 
                 // Correct the time index of the fields
                 // to correspond to the global time
-                gfPtrs_[i]->timeIndex() = time().timeIndex();
-                gf0Ptrs_[i]->timeIndex() = time().timeIndex();
+                gfs_[i].timeIndex() = time().timeIndex();
+                gf0s_[i].timeIndex() = time().timeIndex();
             }
         }
     }
@@ -200,7 +200,7 @@ public:
     //- Access to time
     const Time& time() const
     {
-        return gfPtrs_[0]->time();
+        return gfs_[0].time();
     }
 
     //- Correct the time index of the fields to correspond to
@@ -211,16 +211,16 @@ public:
     //  outer iteration
     void updateTimeIndex()
     {
-        forAll(gfPtrs_, i)
+        forAll(gfs_, i)
         {
-            gfPtrs_[i]->timeIndex() = time().timeIndex() + 1;
-            gf0Ptrs_[i]->timeIndex() = time().timeIndex() + 1;
+            gfs_[i].timeIndex() = time().timeIndex() + 1;
+            gf0s_[i].timeIndex() = time().timeIndex() + 1;
         }
     }
 };
 
 
-/*---------------------------------------------------------------------------*\
+/*---------------------------------------------------------------------------* \
                           Class subCycle Declaration
 \*---------------------------------------------------------------------------*/
 

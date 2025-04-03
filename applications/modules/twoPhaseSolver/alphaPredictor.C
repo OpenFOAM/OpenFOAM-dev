@@ -357,13 +357,13 @@ void Foam::solvers::twoPhaseSolver::alphaPredictor()
             )
         );
 
-        List<volScalarField*> alphaPtrs({&alpha1, &alpha2});
+        UPtrList<volScalarField> alphas({&alpha1, &alpha2});
 
         for
         (
             subCycle<volScalarField, subCycleFields> alphaSubCycle
             (
-                alphaPtrs,
+                alphas,
                 nAlphaSubCycles
             );
             !(++alphaSubCycle).end();

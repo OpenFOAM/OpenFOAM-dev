@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,6 +88,9 @@ public:
 
         //- Construct as copy or reuse as specified
         UPtrList(UPtrList<T>&, bool reuse);
+
+        //- Construct from an initialiser list of pointers
+        UPtrList(std::initializer_list<T*>);
 
 
     // Member Functions
