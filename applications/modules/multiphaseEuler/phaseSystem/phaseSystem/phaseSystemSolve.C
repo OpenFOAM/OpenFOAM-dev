@@ -141,6 +141,27 @@ void Foam::phaseSystem::solve
         }
     }
 
+    // Optional current phase-pressure diffusion fluxes
+    PtrList<surfaceScalarField> alphaPhiDByA(movingPhases().size());
+
+    if (implicitPhasePressure() && rAs.size())
+    {
+        // Cache the phase-pressure diffusion coefficient
+        const surfaceScalarField alphaDByAf(this->alphaDByAf(rAs));
+
+        forAll(movingPhases(), movingPhasei)
+        {
+            const phaseModel& phase = movingPhases()[movingPhasei];
+            const volScalarField& alpha = phase;
+
+            alphaPhiDByA.set
+            (
+                movingPhasei,
+                alphaDByAf*fvc::snGrad(alpha, "bounded")*mesh_.magSf()
+            );
+        }
+    }
+
     for (int acorr=0; acorr<alphaControls.nAlphaCorr; acorr++)
     {
         PtrList<volScalarField::Internal> Sps(phases().size());
@@ -271,12 +292,6 @@ void Foam::phaseSystem::solve
             !(++alphaSubCycle).end();
         )
         {
-            tmp<surfaceScalarField> alphaDByAf;
-            if (implicitPhasePressure() && (rAs.size()))
-            {
-                alphaDByAf = this->alphaDByAf(rAs);
-            }
-
             // Create phase volume-fraction fluxes
             PtrList<surfaceScalarField> alphaPhis(movingPhases().size());
 
@@ -354,11 +369,10 @@ void Foam::phaseSystem::solve
                     }
                 }
 
-                if (alphaDByAf.valid())
+                // Add the optional phase-pressure diffusion flux
+                if (alphaPhiDByA.set(movingPhasei))
                 {
-                    alphaPhi +=
-                        alphaDByAf()
-                       *fvc::snGrad(alpha, "bounded")*mesh_.magSf();
+                    alphaPhi += alphaPhiDByA[movingPhasei];
                 }
 
                 phase.correctInflowOutflow(alphaPhi);
@@ -519,10 +533,11 @@ void Foam::phaseSystem::solve
                 }
             }
 
-            if (alphaDByAf.valid())
+            // Add the optional implicit phase pressure contribution
+            if (implicitPhasePressure() && rAs.size())
             {
-                // Update alphaDByAf due to changes in alpha
-                alphaDByAf = this->alphaDByAf(rAs);
+                // Cache the phase-pressure diffusion coefficient
+                const surfaceScalarField alphaDByAf(this->alphaDByAf(rAs));
 
                 forAll(solvePhases, solvePhasei)
                 {
@@ -532,7 +547,7 @@ void Foam::phaseSystem::solve
                     fvScalarMatrix alphaEqn
                     (
                         fvm::ddt(alpha) - fvc::ddt(alpha)
-                      - fvm::laplacian(alphaDByAf(), alpha, "bounded")
+                      - fvm::laplacian(alphaDByAf, alpha, "bounded")
                     );
 
                     alphaEqn.solve();
