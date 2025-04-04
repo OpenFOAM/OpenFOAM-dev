@@ -398,28 +398,30 @@ Foam::scalar Foam::timeControl::timeToNextAction()
                   - (time_.value() - startTime_)
                 );
             }
-
             break;
         }
 
         case timeControls::runTimes:
         {
-            if (time_.userTimeValue() + timeDelta_ < times_.last())
+            scalar realTimeToNextAction = vGreat;
+
+            forAll(times_, i)
             {
-                forAll(times_, i)
+                const scalar userTimeToThisAction =
+                    times_[i] - time_.userTimeValue();
+
+                if (userTimeToThisAction > timeDelta_)
                 {
-                    if (times_[i] > time_.userTimeValue() + timeDelta_)
-                    {
-                        return time_.userTimeToTime
+                    realTimeToNextAction =
+                        min
                         (
-                            times_[i] - time_.userTimeValue()
+                            realTimeToNextAction,
+                            time_.userTimeToTime(userTimeToThisAction)
                         );
-                    }
                 }
             }
 
-            return vGreat;
-
+            return realTimeToNextAction;
             break;
         }
 
