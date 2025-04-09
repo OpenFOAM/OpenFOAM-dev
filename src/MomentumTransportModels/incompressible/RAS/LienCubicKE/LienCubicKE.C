@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,11 +56,9 @@ addToRunTimeSelectionTable
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-tmp<volScalarField> LienCubicKE::boundEpsilon()
+void LienCubicKE::boundEpsilon()
 {
-    tmp<volScalarField> tCmuk2(Cmu_*sqr(k_));
-    epsilon_ = max(epsilon_, tCmuk2()/(nutMaxCoeff_*nu()));
-    return tCmuk2;
+    epsilon_ = max(epsilon_, Cmu_*sqr(k_)/(nutMaxCoeff_*nu()));
 }
 
 
@@ -113,7 +111,8 @@ void LienCubicKE::correctNonlinearStress(const volTensorField& gradU)
     volScalarField Cmu((2.0/3.0)/(Cmu1_ + sBar + Cmu2_*wBar));
     volScalarField fMu(this->fMu());
 
-    nut_ = fMu*boundEpsilon()/epsilon_;
+    boundEpsilon();
+    nut_ = fMu*Cmu*sqr(k_)/epsilon_;
     nut_.correctBoundaryConditions();
 
     nonlinearStress_ =
@@ -165,6 +164,7 @@ LienCubicKE::LienCubicKE
     Ceps2_("Ceps2", coeffDict(), 1.92),
     sigmak_("sigmak", coeffDict(), 1.0),
     sigmaEps_("sigmaEps", coeffDict(), 1.3),
+    Cmu_("Cmu", coeffDict(), 0.09),
     Cmu1_("Cmu1", coeffDict(), 1.25),
     Cmu2_("Cmu2", coeffDict(), 0.9),
     Cbeta_("Cbeta", coeffDict(), 1000.0),
@@ -174,7 +174,6 @@ LienCubicKE::LienCubicKE
     Cgamma1_("Cgamma1", coeffDict(), 16.0),
     Cgamma2_("Cgamma2", coeffDict(), 16.0),
     Cgamma4_("Cgamma4", coeffDict(), -80.0),
-    Cmu_("Cmu", coeffDict(), 0.09),
     kappa_("kappa", coeffDict(), 0.41),
     Anu_("Anu", coeffDict(), 0.0198),
     AE_("AE", coeffDict(), 0.00375),
@@ -220,6 +219,7 @@ bool LienCubicKE::read()
         Ceps2_.readIfPresent(coeffDict());
         sigmak_.readIfPresent(coeffDict());
         sigmaEps_.readIfPresent(coeffDict());
+        Cmu_.readIfPresent(coeffDict());
         Cmu1_.readIfPresent(coeffDict());
         Cmu2_.readIfPresent(coeffDict());
         Cbeta_.readIfPresent(coeffDict());
@@ -229,7 +229,6 @@ bool LienCubicKE::read()
         Cgamma1_.readIfPresent(coeffDict());
         Cgamma2_.readIfPresent(coeffDict());
         Cgamma4_.readIfPresent(coeffDict());
-        Cmu_.readIfPresent(coeffDict());
         kappa_.readIfPresent(coeffDict());
         Anu_.readIfPresent(coeffDict());
         AE_.readIfPresent(coeffDict());

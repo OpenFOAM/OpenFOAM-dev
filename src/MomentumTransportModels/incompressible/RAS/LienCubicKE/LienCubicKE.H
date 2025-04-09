@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,6 +87,7 @@ protected:
             dimensionedScalar Ceps2_;
             dimensionedScalar sigmak_;
             dimensionedScalar sigmaEps_;
+            dimensionedScalar Cmu_;
             dimensionedScalar Cmu1_;
             dimensionedScalar Cmu2_;
             dimensionedScalar Cbeta_;
@@ -97,7 +98,6 @@ protected:
             dimensionedScalar Cgamma2_;
             dimensionedScalar Cgamma4_;
 
-            dimensionedScalar Cmu_;
             dimensionedScalar kappa_;
 
             dimensionedScalar Anu_;
@@ -116,8 +116,8 @@ protected:
         tmp<volScalarField> f2() const;
         tmp<volScalarField> E(const volScalarField& f2) const;
 
-        //- Bound epsilon and return Cmu*sqr(k) for nut
-        tmp<volScalarField> boundEpsilon();
+        //- Bound epsilon
+        void boundEpsilon();
 
         //- Correct the eddy-viscosity nut
         virtual void correctNut();

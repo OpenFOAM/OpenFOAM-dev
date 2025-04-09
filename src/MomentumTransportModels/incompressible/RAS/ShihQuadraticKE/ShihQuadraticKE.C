@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,7 @@ addToRunTimeSelectionTable
 
 void ShihQuadraticKE::boundEpsilon()
 {
-    epsilon_ = max(epsilon_, 0.09*sqr(k_)/(this->nutMaxCoeff_*this->nu()));
+    epsilon_ = max(epsilon_, Cmu_*sqr(k_)/(nutMaxCoeff_*nu()));
 }
 
 
@@ -121,6 +121,7 @@ ShihQuadraticKE::ShihQuadraticKE
     Ceps2_("Ceps2", coeffDict(), 1.92),
     sigmak_("sigmak", coeffDict(), 1.0),
     sigmaEps_("sigmaEps", coeffDict(), 1.3),
+    Cmu_("Cmu", coeffDict(), 0.09),
     Cmu1_("Cmu1", coeffDict(), 1.25),
     Cmu2_("Cmu2", coeffDict(), 0.9),
     Cbeta_("Cbeta", coeffDict(), 1000.0),
@@ -169,6 +170,7 @@ bool ShihQuadraticKE::read()
         Ceps2_.readIfPresent(coeffDict());
         sigmak_.readIfPresent(coeffDict());
         sigmaEps_.readIfPresent(coeffDict());
+        Cmu_.readIfPresent(coeffDict());
         Cmu1_.readIfPresent(coeffDict());
         Cmu2_.readIfPresent(coeffDict());
         Cbeta_.readIfPresent(coeffDict());
