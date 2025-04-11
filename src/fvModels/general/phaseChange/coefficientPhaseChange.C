@@ -101,7 +101,14 @@ Foam::fv::coefficientPhaseChange::coefficientPhaseChange
     const dictionary& dict
 )
 :
-    phaseChange(name, modelType, mesh, dict, readSpecies(dict, false)),
+    phaseChange
+    (
+        name,
+        modelType,
+        mesh,
+        dict,
+        readSpecies(coeffs(modelType, dict), false)
+    ),
     C_("C", dimMass/dimArea/dimTime, NaN),
     alpha1_(mesh().lookupObject<volScalarField>(alphaNames().first()))
 {

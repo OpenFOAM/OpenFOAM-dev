@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,16 @@ License
 #include "fvModel.H"
 
 // * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * * //
+
+inline const Foam::dictionary& Foam::fvModel::coeffs
+(
+    const word& modelType,
+    const dictionary& dict
+)
+{
+    return dict.optionalSubDict(modelType + "Coeffs");
+}
+
 
 inline const Foam::dimensionSet& Foam::fvModel::sourceDims
 (
@@ -67,7 +77,7 @@ inline const Foam::dictionary& Foam::fvModel::coeffs
     const dictionary& dict
 ) const
 {
-    return dict.optionalSubDict(modelType_ + "Coeffs");
+    return coeffs(modelType_, dict);
 }
 
 
