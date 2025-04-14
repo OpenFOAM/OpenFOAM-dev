@@ -179,6 +179,7 @@ export FOAM_USER_LIBBIN=$WM_PROJECT_USER_DIR/platforms/$WM_OPTIONS/lib
 # DynamicCode templates
 # - default location is the "~OpenFOAM/codeTemplates/dynamicCode" expansion
 # export FOAM_CODE_TEMPLATES=$WM_PROJECT_DIR/etc/codeTemplates/dynamicCode
+export FOAM_CODE_TEMPLATES=$WM_PROJECT_USER_DIR/etc/codeTemplates/dynamicCode
 
 # Convenience
 export FOAM_ETC=$WM_PROJECT_DIR/etc

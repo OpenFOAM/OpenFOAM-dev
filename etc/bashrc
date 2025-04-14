@@ -154,7 +154,7 @@ fi
 
 # Location of user files
 # ~~~~~~~~~~~~~~~~~~~~~~
-export WM_PROJECT_USER_DIR=$HOME/$WM_PROJECT/$USER-$WM_PROJECT_VERSION
+export WM_PROJECT_USER_DIR=$FOAM_INST_DIR/$USER-$WM_PROJECT_VERSION
 
 # Source initialisation functions
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
