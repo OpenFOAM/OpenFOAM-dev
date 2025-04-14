@@ -1,12 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-OpenFOAM Field File Processor
-
-A utility for reading, manipulating, and writing OpenFOAM volScalarField files.
-Supports reading and writing field data files, and manipulating them using NumPy.
-"""
-
 import os
 import re
 import numpy as np
