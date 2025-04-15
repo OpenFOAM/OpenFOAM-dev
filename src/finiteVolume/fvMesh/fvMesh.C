@@ -667,6 +667,8 @@ bool Foam::fvMesh::update()
 
 bool Foam::fvMesh::move()
 {
+    preChange();
+
     // Do not set moving_ false before any mesh motion. Once the mesh starts
     // moving it is considered to be moving for the rest of the run.
     const bool moved = mover_->update();
