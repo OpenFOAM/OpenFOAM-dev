@@ -191,11 +191,11 @@ public:
             //- Return Cp contribution [J/(kg K]
             inline scalar Cp(scalar p, scalar T) const;
 
-            // //- Return internal energy contribution [J/kg]
-            // inline scalar e(const scalar p, const scalar T) const;
+            //- Return internal energy contribution [J/kg]
+            inline scalar e(const scalar p, const scalar T) const;
 
-            // //- Return Cv contribution [J/(kg K]
-            // inline scalar Cv(scalar p, scalar T) const;
+            //- Return Cv contribution [J/(kg K]
+            inline scalar Cv(scalar p, scalar T) const;
 
             // //- Return entropy contribution to the integral of Cp/T [J/kg/K]
             // inline scalar sp(const scalar p, const scalar T) const;

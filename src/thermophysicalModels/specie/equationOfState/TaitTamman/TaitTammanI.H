@@ -117,28 +117,28 @@ inline Foam::scalar Foam::TaitTamman<Specie>::Cp
 }
 
 
-// template<class Specie>
-// inline Foam::scalar Foam::TaitTamman<Specie>::e
-// (
-//     scalar p,
-//     scalar T
-// ) const
-// {
-//     // FIXME: Add the enthalpy calculation
-//     return 0;
-// }
+template<class Specie>
+inline Foam::scalar Foam::TaitTamman<Specie>::e
+(
+    scalar p,
+    scalar T
+) const
+{
+    // FIXME: Add the energy calculation
+    return 0;
+}
 
 
-// template<class Specie>
-// inline Foam::scalar Foam::TaitTamman<Specie>::Cv
-// (
-//     scalar p,
-//     scalar T
-// ) const
-// {
-//     // FIXME: Add the enthalpy calculation
-//     return 0;
-// }
+template<class Specie>
+inline Foam::scalar Foam::TaitTamman<Specie>::Cv
+(
+    scalar p,
+    scalar T
+) const
+{
+    // FIXME: Add the specific heat calculation
+    return 0;
+}
 
 
 // template<class Specie>
