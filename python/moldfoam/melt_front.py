@@ -27,7 +27,6 @@ def extract_alpha_data(case_dir):
     # Read alpha field for each time step
     print(f"Reading alpha field data from {len(time_dirs)} time directories...")
     for time_dir in time_dirs:
-        time_val = float(time_dir)
     
         alpha_file = Path(time_dir) / "alpha.melt"
         try:
@@ -35,7 +34,7 @@ def extract_alpha_data(case_dir):
             alpha_field = processor.read_field(str(alpha_file))
             
             # Store only the internal field data for efficiency
-            alpha_by_time[time_val] = {
+            alpha_by_time[time_dir] = {
                 'data': alpha_field['internal_field'],
                 'path': str(alpha_file)
             }
@@ -50,15 +49,16 @@ def extract_alpha_data(case_dir):
     return alpha_by_time
 
 
-def cross_time(alpha_curr, alpha_prev, t_curr, t_prev):
+def cross_time(alpha_curr, alpha_prev, t_curr, t_prev, threshold):
+    t_curr, t_prev = float(t_curr), float(t_prev)
     alpha_slope = (alpha_curr - alpha_prev) / (t_curr - t_prev)
-    delta_t = (0.5 - alpha_prev) / alpha_slope
+    delta_t = (threshold - alpha_prev) / alpha_slope
     return t_prev + delta_t
 
 
-def calc_melt_front_time(alpha_by_time):
+def calc_melt_front_time(alpha_by_time, threshold=0.5):
     """
-    Calculate the time when alpha crosses 0.5 for each cell.
+    Calculate the time when alpha crosses the threshold for each cell.
     
     Args:
         alpha_by_time: Dictionary mapping time values to alpha field data
@@ -98,14 +98,13 @@ def calc_melt_front_time(alpha_by_time):
         else:
             alpha_prev = alpha_data[t_prev]['data']
         
-        # Find cells where alpha crosses 0.5 between these time steps
-        # We need the cells where alpha was below 0.5 and now is at or above 0.5
-        crossings = np.where((alpha_prev < 0.5) & (alpha_curr >= 0.5))[0]
+        # Find cells where alpha crosses threshold between these time steps
+        crossings = np.where((alpha_prev < threshold) & (alpha_curr >= threshold))[0]
     
         for cell in crossings:
             # Linear interpolation to find more precise crossing time
             crossing_time = cross_time(
-                alpha_curr[cell], alpha_prev[cell], t_curr, t_prev
+                alpha_curr[cell], alpha_prev[cell], t_curr, t_prev, threshold
             )
             
             # Update melt_front_time if this is the first crossing
@@ -116,11 +115,11 @@ def calc_melt_front_time(alpha_by_time):
     filled_cells = np.sum(melt_front_time < float('inf'))
     print(f"Found melt front times for {filled_cells} out of {num_cells} cells")
 
-    melt_front_time[np.isinf(melt_front_time)] = times[-1]
+    melt_front_time[np.isinf(melt_front_time)] = float(times[-1])
     
     return melt_front_time
 
-def write_melt_front_field(case_dir, melt_front_time, alpha_template):
+def write_melt_front_field(case_dir, melt_front_time, alpha_template, times):
     """
     Write the melt front time field to an OpenFOAM field file.
     
@@ -128,11 +127,14 @@ def write_melt_front_field(case_dir, melt_front_time, alpha_template):
         case_dir: Path to the OpenFOAM case directory
         melt_front_time: Array of melt front times
         alpha_template: Template alpha field to use for metadata
+        times: List of time steps used in the calculation
         
     Returns:
         str: Path to the written field file
     """
     processor = ScalarFieldProcessor(case_dir)
+
+    print(list(times))
     
     # Create field data based on the template
     melt_front_field = alpha_template.copy()
@@ -160,6 +162,14 @@ def write_melt_front_field(case_dir, melt_front_time, alpha_template):
     processor.write_field(melt_front_field, output_path)
     
     print(f"Wrote melt front time field to {output_path}")
+
+    for time in times:
+        if time == 'template' or time == "0":
+            continue
+
+        output_path = os.path.join(".", str(time), "meltFrontTime")
+        print("Writing melt front time field to", output_path)
+        processor.write_field(melt_front_field, output_path)
 
     return output_path
 
@@ -197,16 +207,16 @@ def calc_stats(melt_front_time):
         'fill_percentage': len(valid_times) / len(melt_front_time) * 100
     }
 
-def main(case_dir):
+def main(case_dir, threshold):
     """Main function to calculate and save melt front times."""
     
     print(f"Processing case: {case_dir}")
-    
+
     # Extract VoF data from all time steps
     data = extract_alpha_data(case_dir)
     
     # Calculate melt front time
-    melt_front_time = calc_melt_front_time(data)
+    melt_front_time = calc_melt_front_time(data, threshold)
     
     if melt_front_time is None:
         print("Failed to calculate melt front times. Exiting.")
@@ -223,6 +233,6 @@ def main(case_dir):
     print(f"Filled cells: {stats['filled_cells']} out of {stats['total_cells']} ({stats['fill_percentage']:.2f}%)")
     
     # Write the melt front time field using the template
-    write_melt_front_field(case_dir, melt_front_time, data['template'])
+    write_melt_front_field(case_dir, melt_front_time, data['template'], data.keys())
     
     print("\nMelt front time calculation completed successfully.")

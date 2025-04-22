@@ -343,7 +343,7 @@ boundaryField
         """
         if self.case_dir and not os.path.isabs(output_path):
             output_path = self.case_dir / output_path
-            
+
         # Prepare header information
         header = field_data.get('header', {})
         internal_field = field_data.get('internal_field')
