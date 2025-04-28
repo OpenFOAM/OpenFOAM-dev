@@ -14,5 +14,5 @@ def cli():
 @click.argument('case_dir')
 @click.argument('threshold', default=0.5)
 def melt_front_command(case_dir, threshold):
-    """Calculate melt front times and save in postProcessing/"""
+    """Calculate melt front properties and save in postProcessing/"""
     melt_front.main(case_dir, threshold)
