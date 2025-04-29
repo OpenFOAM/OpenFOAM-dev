@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -169,6 +169,15 @@ public:
 
         //- Disallow default bitwise copy construction
         faceZone(const faceZone&) = delete;
+
+        //- Construct and return a clone
+        virtual autoPtr<faceZone> clone() const
+        {
+            return autoPtr<faceZone>
+            (
+                new faceZone(*this, *this, flipMap(), zones())
+            );
+        }
 
         //- Construct and return a clone, resetting the mesh zones
         virtual autoPtr<faceZone> clone(const faceZoneList& mz) const

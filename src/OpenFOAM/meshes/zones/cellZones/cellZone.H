@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,6 +74,15 @@ public:
     // Constructors
 
         using Zone::Zone;
+
+        //- Construct and return a clone
+        virtual autoPtr<cellZone> clone() const
+        {
+            return autoPtr<cellZone>
+            (
+                new cellZone(*this, *this, zones())
+            );
+        }
 
         //- Construct and return a clone, resetting the mesh zones
         virtual autoPtr<cellZone> clone(const cellZoneList& mz) const
