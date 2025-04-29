@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,7 +92,7 @@ public:
         inline tmpNrc(const tmpNrc<T>&);
 
         //- Construct copy moving content
-        inline tmpNrc(const tmpNrc<T>&&);
+        inline tmpNrc(tmpNrc<T>&&);
 
         //- Construct copy transferring content of temporary if required
         inline tmpNrc(const tmpNrc<T>&, bool allowTransfer);
@@ -158,7 +158,7 @@ public:
         inline void operator=(const tmpNrc<T>&);
 
         //- Move assignment transferring the temporary T to this tmpNrc
-        inline void operator=(const tmpNrc<T>&&);
+        inline void operator=(tmpNrc<T>&&);
 };
 
 

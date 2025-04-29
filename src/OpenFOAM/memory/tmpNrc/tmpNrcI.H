@@ -67,7 +67,7 @@ inline Foam::tmpNrc<T>::tmpNrc(const tmpNrc<T>& t)
 
 
 template<class T>
-inline Foam::tmpNrc<T>::tmpNrc(const tmpNrc<T>&& t)
+inline Foam::tmpNrc<T>::tmpNrc(tmpNrc<T>&& t)
 :
     type_(t.type_),
     ptr_(t.ptr_)
@@ -315,7 +315,7 @@ inline void Foam::tmpNrc<T>::operator=(const tmpNrc<T>& t)
 
 
 template<class T>
-inline void Foam::tmpNrc<T>::operator=(const tmpNrc<T>&& t)
+inline void Foam::tmpNrc<T>::operator=(tmpNrc<T>&& t)
 {
     clear();
 
