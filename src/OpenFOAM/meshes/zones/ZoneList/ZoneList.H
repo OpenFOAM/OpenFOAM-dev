@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -132,10 +132,10 @@ public:
         ) const;
 
         //- Append or update a zone
-        void append(ZoneType*) const;
+        const ZoneType& append(ZoneType*) const;
 
         //- Append or update a zone
-        void append(const ZoneType&) const;
+        const ZoneType& append(const ZoneType&) const;
 
         //- Clear addressing
         void clearAddressing();

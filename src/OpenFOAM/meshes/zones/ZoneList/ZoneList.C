@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -208,7 +208,7 @@ Foam::labelHashSet Foam::ZoneList<ZoneType, ZonesType, MeshType>::zoneSet
 
 
 template<class ZoneType, class ZonesType, class MeshType>
-void Foam::ZoneList<ZoneType, ZonesType, MeshType>::append
+const ZoneType& Foam::ZoneList<ZoneType, ZonesType, MeshType>::append
 (
     ZoneType* zonePtr
 ) const
@@ -229,11 +229,13 @@ void Foam::ZoneList<ZoneType, ZonesType, MeshType>::append
             zonePtr
         );
     }
+
+    return *zonePtr;
 }
 
 
 template<class ZoneType, class ZonesType, class MeshType>
-void Foam::ZoneList<ZoneType, ZonesType, MeshType>::append
+const ZoneType& Foam::ZoneList<ZoneType, ZonesType, MeshType>::append
 (
     const ZoneType& zone
 ) const
@@ -253,6 +255,8 @@ void Foam::ZoneList<ZoneType, ZonesType, MeshType>::append
             zone.clone(*this)
         );
     }
+
+    return zone;
 }
 
 
