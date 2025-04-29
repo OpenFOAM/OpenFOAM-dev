@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -254,6 +254,15 @@ inline Foam::autoPtr<T> Foam::PtrListDictionary<T>::set
 )
 {
     return set(i, t->keyword(), t);
+}
+
+
+template<class T>
+inline Foam::autoPtr<T> Foam::PtrListDictionary<T>::remove(const word& key)
+{
+    autoPtr<T> ptr(set(findIndex(key), key, nullptr));
+    this->shrink();
+    return ptr;
 }
 
 
