@@ -60,15 +60,13 @@ class cellZone
 
 public:
 
-    typedef cellZoneList ZonesType;
-
     // Static Data Members
 
         //- The name associated with the zone-labels dictionary entry
         static const char* const labelsName;
 
-    //- Runtime type information
-    TypeName("cellZone");
+        //- Runtime type information
+        ClassName("cellZone");
 
 
     // Constructors
@@ -76,7 +74,7 @@ public:
         using Zone::Zone;
 
         //- Construct and return a clone
-        virtual autoPtr<cellZone> clone() const
+        autoPtr<cellZone> clone() const
         {
             return autoPtr<cellZone>
             (
@@ -85,7 +83,7 @@ public:
         }
 
         //- Construct and return a clone, resetting the mesh zones
-        virtual autoPtr<cellZone> clone(const cellZoneList& mz) const
+        autoPtr<cellZone> clone(const cellZoneList& mz) const
         {
             return autoPtr<cellZone>
             (
@@ -95,7 +93,7 @@ public:
 
         //- Construct and return a clone, resetting the cell list
         //  and mesh zones
-        virtual autoPtr<cellZone> clone
+        autoPtr<cellZone> clone
         (
             const labelUList& addr,
             const cellZoneList& mz
@@ -124,10 +122,10 @@ public:
         }
 
         //- Update zone using the given map
-        virtual void topoChange(const polyTopoChangeMap& map);
+        void topoChange(const polyTopoChangeMap& map);
 
         //- Write dictionary
-        virtual void writeDict(Ostream&) const;
+        void writeDict(Ostream&) const;
 
 
     // Member Operators

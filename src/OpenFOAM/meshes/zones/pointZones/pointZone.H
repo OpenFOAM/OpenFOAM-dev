@@ -66,9 +66,8 @@ public:
         //- The name associated with the zone-labels dictionary entry
         static const char* const labelsName;
 
-
-    //- Runtime type information
-    TypeName("pointZone");
+        //- Runtime type information
+        ClassName("pointZone");
 
 
     // Constructors
@@ -76,7 +75,7 @@ public:
         using Zone::Zone;
 
         //- Construct and return a clone
-        virtual autoPtr<pointZone> clone() const
+        autoPtr<pointZone> clone() const
         {
             return autoPtr<pointZone>
             (
@@ -85,7 +84,7 @@ public:
         }
 
         //- Construct and return a clone, resetting the mesh zones
-        virtual autoPtr<pointZone> clone(const pointZoneList& mz) const
+        autoPtr<pointZone> clone(const pointZoneList& mz) const
         {
             return autoPtr<pointZone>
             (
@@ -95,7 +94,7 @@ public:
 
         //- Construct and return a clone, resetting the point list
         //  and mesh zones
-        virtual autoPtr<pointZone> clone
+        autoPtr<pointZone> clone
         (
             const labelUList& addr,
             const pointZoneList& mz
@@ -121,10 +120,10 @@ public:
         bool checkParallelSync(const bool report = false) const;
 
         //- Update zone using the given map
-        virtual void topoChange(const polyTopoChangeMap& map);
+        void topoChange(const polyTopoChangeMap& map);
 
         //- Write dictionary
-        virtual void writeDict(Ostream&) const;
+        void writeDict(Ostream&) const;
 
 
     // Member Operators

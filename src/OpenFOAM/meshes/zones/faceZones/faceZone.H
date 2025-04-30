@@ -108,15 +108,13 @@ protected:
 
 public:
 
-    typedef faceZoneList ZonesType;
-
     // Static Data Members
 
         //- The name associated with the zone-labels dictionary entry
         static const char* const labelsName;
 
-    //- Runtime type information
-    TypeName("faceZone");
+        //- Runtime type information
+        ClassName("faceZone");
 
 
     // Constructors
@@ -171,7 +169,7 @@ public:
         faceZone(const faceZone&) = delete;
 
         //- Construct and return a clone
-        virtual autoPtr<faceZone> clone() const
+        autoPtr<faceZone> clone() const
         {
             return autoPtr<faceZone>
             (
@@ -180,7 +178,7 @@ public:
         }
 
         //- Construct and return a clone, resetting the mesh zones
-        virtual autoPtr<faceZone> clone(const faceZoneList& mz) const
+        autoPtr<faceZone> clone(const faceZoneList& mz) const
         {
             return autoPtr<faceZone>
             (
@@ -190,7 +188,7 @@ public:
 
         //- Construct and return a clone, resetting the face list
         //  and mesh zones
-        virtual autoPtr<faceZone> clone
+        autoPtr<faceZone> clone
         (
             const labelUList& addr,
             const boolList& fm,
@@ -205,7 +203,7 @@ public:
 
 
     //- Destructor
-    virtual ~faceZone();
+    ~faceZone();
 
 
     // Member Functions
@@ -237,10 +235,10 @@ public:
 
 
         //- Clear addressing
-        virtual void clearAddressing();
+        void clearAddressing();
 
         //- Reset addressing and flip map (clearing demand-driven data)
-        virtual void resetAddressing(const labelUList&, const boolList&);
+        void resetAddressing(const labelUList&, const boolList&);
 
         //- Check zone definition. Return true if in error.
         bool checkDefinition(const bool report = false) const;
@@ -256,13 +254,13 @@ public:
         void swap(faceZone&);
 
         //- Correct patch after moving points
-        virtual void movePoints(const pointField&);
+        void movePoints(const pointField&);
 
         //- Update zone using the given map
-        virtual void topoChange(const polyTopoChangeMap&);
+        void topoChange(const polyTopoChangeMap&);
 
         //- Write dictionary
-        virtual void writeDict(Ostream&) const;
+        void writeDict(Ostream&) const;
 
 
     // Member Operators

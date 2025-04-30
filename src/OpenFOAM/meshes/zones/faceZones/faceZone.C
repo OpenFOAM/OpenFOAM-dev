@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,17 +28,12 @@ License
 #include "polyMesh.H"
 #include "polyTopoChangeMap.H"
 #include "syncTools.H"
-#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    typedef Zone<faceZone, faceZoneList> faceZoneType;
-    defineTemplateRunTimeSelectionTable(faceZoneType, dictionary);
-
     defineTypeNameAndDebug(faceZone, 0);
-    addToRunTimeSelectionTable(faceZone, faceZone, dictionary);
 }
 
 const char* const Foam::faceZone::labelsName = "faceLabels";
@@ -553,12 +548,9 @@ void Foam::faceZone::movePoints(const pointField& p)
 
 void Foam::faceZone::writeDict(Ostream& os) const
 {
-    os  << nl << name() << nl << token::BEGIN_BLOCK << nl
-        << "    type " << type() << token::END_STATEMENT << nl;
-
+    os  << nl << name() << nl << token::BEGIN_BLOCK << nl;
     writeEntry(os, this->labelsName, *this);
     writeEntry(os, "flipMap", flipMap());
-
     os  << token::END_BLOCK << endl;
 }
 

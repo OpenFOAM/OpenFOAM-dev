@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -180,41 +180,6 @@ Foam::Zone<ZoneType, ZonesType>::Zone
     zones_(zones),
     lookupMapPtr_(nullptr)
 {}
-
-
-template<class ZoneType, class ZonesType>
-Foam::autoPtr<ZoneType> Foam::Zone<ZoneType, ZonesType>::New
-(
-    const word& name,
-    const dictionary& dict,
-    const ZonesType& mz
-)
-{
-    if (ZoneType::debug)
-    {
-        InfoInFunction
-            << "Constructing " << ZoneType::typeName << " " << name << endl;
-    }
-
-    const word type(dict.lookup("type"));
-
-    typename dictionaryConstructorTable::iterator cstrIter =
-        dictionaryConstructorTablePtr_->find(type);
-
-    if (cstrIter == dictionaryConstructorTablePtr_->end())
-    {
-        FatalIOErrorInFunction
-        (
-            dict
-        )   << "Unknown " << ZoneType::typeName << " type "
-            << type << nl << nl
-            << "Valid " << ZoneType::typeName << " types are:" << nl
-            << dictionaryConstructorTablePtr_->sortedToc()
-            << exit(FatalIOError);
-    }
-
-    return autoPtr<ZoneType>(cstrIter()(name, dict, mz));
-}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

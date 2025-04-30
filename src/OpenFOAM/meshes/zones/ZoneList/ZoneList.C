@@ -61,7 +61,7 @@ bool Foam::ZoneList<ZoneType, ZonesType, MeshType>::read()
             (
                 zi,
                 patchEntries[zi].keyword(),
-                ZoneType::New
+                new ZoneType
                 (
                     patchEntries[zi].keyword(),
                     patchEntries[zi].dict(),
@@ -156,22 +156,6 @@ Foam::labelList Foam::ZoneList<ZoneType, ZonesType, MeshType>::whichZones
 
 
 template<class ZoneType, class ZonesType, class MeshType>
-Foam::wordList Foam::ZoneList<ZoneType, ZonesType, MeshType>::types() const
-{
-    const PtrListDictionary<ZoneType>& zones = *this;
-
-    wordList lst(zones.size());
-
-    forAll(zones, zi)
-    {
-        lst[zi] = zones[zi].type();
-    }
-
-    return lst;
-}
-
-
-template<class ZoneType, class ZonesType, class MeshType>
 Foam::labelHashSet Foam::ZoneList<ZoneType, ZonesType, MeshType>::zoneSet
 (
     const UList<wordRe>& zoneNames,
@@ -197,7 +181,6 @@ Foam::labelHashSet Foam::ZoneList<ZoneType, ZonesType, MeshType>::zoneSet
             {
                 WarningInFunction
                     << "Cannot find zone " << zoneNames[i]
-                    << " of type " << type()
                     << endl;
             }
         }
@@ -320,11 +303,6 @@ bool Foam::ZoneList<ZoneType, ZonesType, MeshType>::checkParallelSync
     Pstream::gatherList(allNames);
     Pstream::scatterList(allNames);
 
-    List<wordList> allTypes(Pstream::nProcs());
-    allTypes[Pstream::myProcNo()] = this->types();
-    Pstream::gatherList(allTypes);
-    Pstream::scatterList(allTypes);
-
     // Have every processor check but only master print error.
 
     for (label proci = 1; proci < allNames.size(); proci++)
@@ -332,7 +310,6 @@ bool Foam::ZoneList<ZoneType, ZonesType, MeshType>::checkParallelSync
         if
         (
             (allNames[proci] != allNames[0])
-         || (allTypes[proci] != allTypes[0])
         )
         {
             hasError = true;
@@ -341,10 +318,8 @@ bool Foam::ZoneList<ZoneType, ZonesType, MeshType>::checkParallelSync
             {
                 Info<< " ***Inconsistent zones across processors, "
                        "processor 0 has zone names:" << allNames[0]
-                    << " zone types:" << allTypes[0]
                     << " processor " << proci << " has zone names:"
                     << allNames[proci]
-                    << " zone types:" << allTypes[proci]
                     << endl;
             }
         }
@@ -362,7 +337,6 @@ bool Foam::ZoneList<ZoneType, ZonesType, MeshType>::checkParallelSync
                 if (debug || (report && Pstream::master()))
                 {
                     Info<< " ***Zone " << zones[zi].name()
-                        << " of type " << zones[zi].type()
                         << " is not correctly synchronised"
                         << " across coupled boundaries."
                         << " (coupled faces are either not both"

@@ -120,9 +120,6 @@ public:
         //- Given a global object index, return the list of zones it is in
         labelList whichZones(const label objectIndex) const;
 
-        //- Return a list of zone types
-        wordList types() const;
-
         //- Return the set of zone indices corresponding to the given names
         //  By default warns if given names are not found
         labelHashSet zoneSet
