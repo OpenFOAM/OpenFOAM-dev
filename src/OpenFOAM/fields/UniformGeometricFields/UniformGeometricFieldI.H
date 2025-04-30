@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,6 +38,14 @@ Foam::UniformGeometricField<Type>::oldTime() const
 template<class Type>
 inline const typename Foam::UniformGeometricField<Type>::Internal&
 Foam::UniformGeometricField<Type>::operator()() const
+{
+    return *this;
+}
+
+
+template<class Type>
+inline const typename Foam::UniformGeometricField<Type>::Internal&
+Foam::UniformGeometricField<Type>::internalField() const
 {
     return *this;
 }

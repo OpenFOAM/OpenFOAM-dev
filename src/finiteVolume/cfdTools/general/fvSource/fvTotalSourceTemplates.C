@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,8 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "fvTotalSource.H"
-#include "fvCellSet.H"
-#include "fvMatrices.H"
+#include "volFields.H"
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
@@ -41,22 +40,25 @@ void Foam::fvTotalSource::addSupType
         << ", eqnField=" << eqn.psi().name() << endl;
 
     const labelUList cells = this->cells();
-    const scalar V = this->V();
-    const dimensionedScalar S = this->S();
+
+    const scalarField S
+    (
+        scalarField(mesh().V(), cells)/V()*this->S().value()
+    );
 
     // Check the dimensions
-    eqn.dimensions() = S.dimensions()*field.dimensions();
+    eqn.dimensions() = this->S().dimensions()*field.dimensions();
 
     if (&field == &eqn.psi())
     {
         // Get the field source coefficients
         const Field<Type> sourceCoeff
         (
-            field.sources()[name()].sourceCoeff(*this)
+            field.sources()[name()].sourceCoeff(*this, S, cells)
         );
         const scalarField internalCoeff
         (
-            field.sources()[name()].internalCoeff(*this)
+            field.sources()[name()].internalCoeff(*this, S, cells)
         );
 
         // Apply the source
@@ -64,9 +66,8 @@ void Foam::fvTotalSource::addSupType
         scalarField& eqnDiag = eqn.diag();
         forAll(cells, i)
         {
-            const scalar f = mesh().V()[cells[i]]/V;
-            eqnSource[cells[i]] -= f*S.value()*sourceCoeff[i];
-            eqnDiag[cells[i]] += f*S.value()*internalCoeff[i];
+            eqnSource[cells[i]] -= S[i]*sourceCoeff[i];
+            eqnDiag[cells[i]] += S[i]*internalCoeff[i];
         }
     }
     else
@@ -74,15 +75,14 @@ void Foam::fvTotalSource::addSupType
         // Get the field source value
         const Field<Type> value
         (
-            field.sources()[name()].value(*this)
+            field.sources()[name()].value(*this, S, cells)
         );
 
         // Apply the source
         Field<Type>& eqnSource = eqn.source();
         forAll(cells, i)
         {
-            const scalar f = mesh().V()[cells[i]]/V;
-            eqnSource[cells[i]] -= f*S.value()*value[i];
+            eqnSource[cells[i]] -= S[i]*value[i];
         }
     }
 }

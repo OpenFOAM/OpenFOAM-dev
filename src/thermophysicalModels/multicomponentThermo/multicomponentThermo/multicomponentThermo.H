@@ -41,6 +41,7 @@ SourceFiles
 #include "basicThermo.H"
 #include "MulticomponentThermo.H"
 #include "speciesTable.H"
+#include "DimensionedFieldListSlicer.H"
 #include "GeometricFieldListSlicer.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -389,7 +390,26 @@ public:
         ) const;
 
         //- Get the slicer for the given source
-        inline PtrList<scalarField> Yslicer(const fvSource& source) const;
+        inline DimensionedFieldListAndSlicer<scalar, volMesh> Yslicer
+        (
+            const fvSource& model,
+            const volScalarField::Internal& source
+        ) const;
+
+        //- Get the composition of a source cell
+        inline scalarFieldListSlice sourceCellComposition
+        (
+            const DimensionedFieldListAndSlicer<scalar, volMesh>& Yslicer,
+            const label i
+        ) const;
+
+        //- Get the slicer for the given source
+        inline PtrList<scalarField> Yslicer
+        (
+            const fvSource& model,
+            const scalarField& source,
+            const labelUList& cells
+        ) const;
 
         //- Get the composition of a source cell
         inline scalarFieldListSlice sourceCellComposition

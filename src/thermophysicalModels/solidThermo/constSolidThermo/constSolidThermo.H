@@ -267,10 +267,20 @@ public:
             ) const;
 
             //- Enthalpy/Internal energy for source [J/kg]
+            virtual tmp<volScalarField::Internal> he
+            (
+                const volScalarField::Internal& T,
+                const fvSource& model,
+                const volScalarField::Internal& source
+            ) const;
+
+            //- Enthalpy/Internal energy for source [J/kg]
             virtual tmp<scalarField> he
             (
                 const scalarField& T,
-                const fvSource& source
+                const fvSource& model,
+                const scalarField& source,
+                const labelUList& cells
             ) const;
 
             //- Sensible enthalpy [J/kg]

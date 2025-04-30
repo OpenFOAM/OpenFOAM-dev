@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,26 +59,66 @@ Foam::internalFvFieldSource<Type>::~internalFvFieldSource()
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::Field<Type>>
-Foam::internalFvFieldSource<Type>::sourceValue(const fvSource& source) const
+Foam::tmp<Foam::DimensionedField<Type, Foam::volMesh>>
+Foam::internalFvFieldSource<Type>::sourceValue
+(
+    const fvSource& model,
+    const DimensionedField<scalar, volMesh>& source
+) const
 {
     // This value doesn't matter in principle, as this condition takes 100% of
     // its value from the internal field. However, this value does, at least,
     // need to be physical to prevent things like thermo evaluations from
     // failing. So, just take the internal values.
+    return this->internalField();
+}
+
+
+template<class Type>
+Foam::tmp<Foam::Field<Type>>
+Foam::internalFvFieldSource<Type>::sourceValue
+(
+    const fvSource& model,
+    const scalarField& source,
+    const labelUList& cells
+) const
+{
+    // This value doesn't matter in principle, as this condition takes 100% of
+    // its value from the internal field. However, this value does, at least,
+    // need to be physical to prevent things like thermo evaluations from
+    // failing. So, just take the internal values.
+    return tmp<Field<Type>>(new Field<Type>(this->internalField(), cells));
+}
+
+
+template<class Type>
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::internalFvFieldSource<Type>::internalCoeff
+(
+    const fvSource& model,
+    const DimensionedField<scalar, volMesh>& source
+) const
+{
     return
-        tmp<Field<Type>>
+        DimensionedField<scalar, volMesh>::New
         (
-            new Field<Type>(this->internalField(), source.cells())
+            model.name() + ":" + this->internalField().name() + "InternalCoeff",
+            this->internalField().mesh(),
+            dimensionedScalar(dimless, scalar(1))
         );
 }
 
 
 template<class Type>
 Foam::tmp<Foam::scalarField>
-Foam::internalFvFieldSource<Type>::internalCoeff(const fvSource& source) const
+Foam::internalFvFieldSource<Type>::internalCoeff
+(
+    const fvSource& model,
+    const scalarField& source,
+    const labelUList& cells
+) const
 {
-    return tmp<scalarField>(new scalarField(source.nCells(), scalar(1)));
+    return tmp<scalarField>(new scalarField(source.size(), scalar(1)));
 }
 
 

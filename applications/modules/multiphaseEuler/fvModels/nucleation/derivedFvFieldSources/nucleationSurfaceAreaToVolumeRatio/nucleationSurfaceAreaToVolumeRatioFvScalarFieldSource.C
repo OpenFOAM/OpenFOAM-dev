@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,10 +62,11 @@ Foam::nucleationSurfaceAreaToVolumeRatioFvScalarFieldSource::
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::scalarField>
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
 Foam::nucleationSurfaceAreaToVolumeRatioFvScalarFieldSource::sourceValue
 (
-    const fvSource& source
+    const fvSource& model,
+    const DimensionedField<scalar, volMesh>& source
 ) const
 {
     // Determine the size-group index from the end of the field name
@@ -85,24 +86,33 @@ Foam::nucleationSurfaceAreaToVolumeRatioFvScalarFieldSource::sourceValue
         ).popBal().sizeGroups()[i];
 
     tmp<volScalarField::Internal> d =
-        refCast<const fv::nucleation>(source).d();
+        refCast<const fv::nucleation>(model).d();
 
-    tmp<volScalarField::Internal> eta =
-        fi.group().popBal().etaV(fi.i(), constant::mathematical::pi/6*pow3(d));
-
-    return tmp<scalarField>(new scalarField(eta*6/d, source.cells()));
+    return
+        fi.group().popBal().etaV
+        (
+            fi.i(),
+            constant::mathematical::pi/6*pow3(d)
+        );
 }
 
 
-Foam::tmp<Foam::scalarField>
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
 Foam::nucleationSurfaceAreaToVolumeRatioFvScalarFieldSource::internalCoeff
 (
-    const fvSource& source
+    const fvSource& model,
+    const DimensionedField<scalar, volMesh>& source
 ) const
 {
     // Nucleation is always an "inflow" to the nucleating phase, so the source
     // should be fully explicit
-    return tmp<scalarField>(new scalarField(source.nCells(), scalar(0)));
+    return
+        DimensionedField<scalar, volMesh>::New
+        (
+            model.name() + ":" + this->internalField().name() + "InternalCoeff",
+            this->internalField().mesh(),
+            dimensionedScalar(dimless, scalar(0))
+        );
 }
 
 

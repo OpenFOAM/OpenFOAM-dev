@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,24 +73,66 @@ Foam::uniformFixedEnergyTemperatureFvScalarFieldSource::
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::uniformFixedEnergyTemperatureFvScalarFieldSource::sourceHeValue
+(
+    const fvSource& model,
+    const DimensionedField<scalar, volMesh>& source
+) const
+{
+    return
+        DimensionedField<scalar, volMesh>::New
+        (
+            model.name() + ":" + this->internalField().name() + "SourceHeValue",
+            this->internalField().mesh(),
+            dimensionedScalar
+            (
+                this->internalField().dimensions(),
+                uniformHe_->value(this->db().time().value())
+            )
+        );
+}
+
+
 Foam::tmp<Foam::scalarField>
 Foam::uniformFixedEnergyTemperatureFvScalarFieldSource::sourceHeValue
 (
-    const fvSource& source
+    const fvSource& model,
+    const scalarField& source,
+    const labelUList& cells
 ) const
 {
     const scalar v = uniformHe_->value(db().time().value());
-    return tmp<scalarField>(new scalarField(source.nCells(), v));
+    return tmp<scalarField>(new scalarField(source.size(), v));
+}
+
+
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::uniformFixedEnergyTemperatureFvScalarFieldSource::internalCoeff
+(
+    const fvSource& model,
+    const DimensionedField<scalar, volMesh>& source
+) const
+{
+    return
+        DimensionedField<scalar, volMesh>::New
+        (
+            model.name() + ":" + this->internalField().name() + "InternalCoeff",
+            this->internalField().mesh(),
+            dimensionedScalar(dimless, scalar(0))
+        );
 }
 
 
 Foam::tmp<Foam::scalarField>
 Foam::uniformFixedEnergyTemperatureFvScalarFieldSource::internalCoeff
 (
-    const fvSource& source
+    const fvSource& model,
+    const scalarField& source,
+    const labelUList& cells
 ) const
 {
-    return tmp<scalarField>(new scalarField(source.nCells(), scalar(0)));
+    return tmp<scalarField>(new scalarField(source.size(), scalar(0)));
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,8 +43,6 @@ SourceFiles
 
 namespace Foam
 {
-
-class fvCellSet;
 
 /*---------------------------------------------------------------------------*\
                         Class fvTotalSource Declaration
@@ -141,6 +139,9 @@ public:
             //- Return the phase name
             inline const word& phaseName() const;
 
+            //- Return the cells that the source applies to
+            virtual labelUList cells() const = 0;
+
             //- Return the volume of cells that the source applies to
             virtual scalar V() const = 0;
 
@@ -149,9 +150,6 @@ public:
 
             //- Return the source value
             virtual dimensionedScalar S() const = 0;
-
-            //- Return the source value
-            virtual tmp<scalarField> source(const word& fieldName) const;
 
 
         // IO

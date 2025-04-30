@@ -24,8 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "fvTotalSource.H"
-#include "fvCellSet.H"
-#include "fvMatrices.H"
+#include "fvMatrix.H"
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
 
@@ -97,28 +96,6 @@ bool Foam::fvTotalSource::addsSupToField(const word& fieldName) const
     const word group = IOobject::group(fieldName);
 
     return group == word::null || group == phaseName_;
-}
-
-
-Foam::tmp<Foam::scalarField> Foam::fvTotalSource::source
-(
-    const word& fieldName
-) const
-{
-    const word fieldPhaseName = IOobject::group(fieldName);
-
-    return
-        tmp<scalarField>
-        (
-            new scalarField
-            (
-                nCells(),
-                fieldPhaseName == word::null
-             || fieldPhaseName == phaseName_
-              ? S().value()/V()
-              : 0
-            )
-        );
 }
 
 

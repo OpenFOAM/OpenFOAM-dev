@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,6 +72,7 @@ See also
 #define volumeSource_H
 
 #include "fvTotalSource.H"
+#include "fvCellSet.H"
 #include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -170,9 +171,6 @@ public:
 
             //- Return the cells that the source applies to
             virtual labelUList cells() const;
-
-            //- Return the number of cells that the source applies to
-            virtual label nCells() const;
 
             //- Return the volume of cells that the source applies to
             virtual scalar V() const;

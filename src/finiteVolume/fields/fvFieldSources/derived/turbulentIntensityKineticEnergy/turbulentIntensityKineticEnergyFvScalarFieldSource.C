@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,26 +65,55 @@ Foam::turbulentIntensityKineticEnergyFvScalarFieldSource::
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::turbulentIntensityKineticEnergyFvScalarFieldSource::sourceValue
+(
+    const fvSource& model,
+    const DimensionedField<scalar, volMesh>& source
+) const
+{
+    return
+        1.5
+       *sqr(intensity_)
+       *magSqr(this->value<vector>(UName_, model, source));
+}
+
+
 Foam::tmp<Foam::scalarField>
 Foam::turbulentIntensityKineticEnergyFvScalarFieldSource::sourceValue
 (
-    const fvSource& source
+    const fvSource& model,
+    const scalarField& source,
+    const labelUList& cells
 ) const
 {
-    const vectorField Us(this->value<vector>(UName_, source));
-    return 1.5*sqr(intensity_)*magSqr(Us);
+    return
+        1.5
+       *sqr(intensity_)
+       *magSqr(this->value<vector>(UName_, model, source, cells));
+}
+
+
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::turbulentIntensityKineticEnergyFvScalarFieldSource::internalCoeff
+(
+    const fvSource& model,
+    const DimensionedField<scalar, volMesh>& source
+) const
+{
+    return neg0(source);
 }
 
 
 Foam::tmp<Foam::scalarField>
 Foam::turbulentIntensityKineticEnergyFvScalarFieldSource::internalCoeff
 (
-    const fvSource& source
+    const fvSource& model,
+    const scalarField& source,
+    const labelUList& cells
 ) const
 {
-    return
-        neg0(source.source(internalField().name()))
-       *scalarField(source.nCells(), scalar(1));
+    return neg0(source);
 }
 
 

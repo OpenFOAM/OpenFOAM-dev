@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "fvSpecificSource.H"
+#include "polyCellSet.H"
 #include "volFields.H"
 #include "fvmSup.H"
 
@@ -51,7 +52,7 @@ void Foam::fvSpecificSource::addSupType
                 "sourceCoeff",
                 mesh(),
                 field.dimensions(),
-                field.sources()[name()].sourceCoeff(*this)
+                field.sources()[name()].sourceCoeff(*this, tS())
             );
         tmp<typename volScalarField::Internal> internalCoeff =
             volScalarField::Internal::New
@@ -59,7 +60,7 @@ void Foam::fvSpecificSource::addSupType
                 "internalCoeff",
                 mesh(),
                 dimless,
-                field.sources()[name()].internalCoeff(*this)
+                field.sources()[name()].internalCoeff(*this, tS())
             );
 
         // Apply the source
@@ -74,7 +75,7 @@ void Foam::fvSpecificSource::addSupType
                 "value",
                 mesh(),
                 field.dimensions(),
-                field.sources()[name()].value(*this)
+                field.sources()[name()].value(*this, tS())
             );
 
         // Apply the source

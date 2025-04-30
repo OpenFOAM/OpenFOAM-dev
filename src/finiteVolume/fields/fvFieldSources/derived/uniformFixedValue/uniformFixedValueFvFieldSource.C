@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,6 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "DimensionedField.H"
 #include "uniformFixedValueFvFieldSource.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -70,14 +71,63 @@ Foam::uniformFixedValueFvFieldSource<Type>::~uniformFixedValueFvFieldSource()
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 template<class Type>
+Foam::tmp<Foam::DimensionedField<Type, Foam::volMesh>>
+Foam::uniformFixedValueFvFieldSource<Type>::sourceValue
+(
+    const fvSource& model,
+    const DimensionedField<scalar, volMesh>& source
+) const
+{
+    return
+        DimensionedField<Type, volMesh>::New
+        (
+            model.name() + ":" + this->internalField().name() + "SourceValue",
+            this->internalField().mesh(),
+            dimensioned<Type>
+            (
+                this->internalField().dimensions(),
+                uniformValue_->value(this->db().time().value())
+            )
+        );
+}
+
+
+template<class Type>
 Foam::tmp<Foam::Field<Type>>
 Foam::uniformFixedValueFvFieldSource<Type>::sourceValue
 (
-    const fvSource& source
+    const fvSource& model,
+    const scalarField& source,
+    const labelUList& cells
 ) const
 {
-    const Type v = uniformValue_->value(this->db().time().value());
-    return tmp<Field<Type>>(new Field<Type>(source.nCells(), v));
+    return
+        tmp<Field<Type>>
+        (
+            new Field<Type>
+            (
+                source.size(),
+                uniformValue_->value(this->db().time().value())
+            )
+        );
+}
+
+
+template<class Type>
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::uniformFixedValueFvFieldSource<Type>::internalCoeff
+(
+    const fvSource& model,
+    const DimensionedField<scalar, volMesh>& source
+) const
+{
+    return
+        DimensionedField<scalar, volMesh>::New
+        (
+            model.name() + ":" + this->internalField().name() + "InternalCoeff",
+            this->internalField().mesh(),
+            dimensionedScalar(dimless, scalar(0))
+        );
 }
 
 
@@ -85,10 +135,12 @@ template<class Type>
 Foam::tmp<Foam::scalarField>
 Foam::uniformFixedValueFvFieldSource<Type>::internalCoeff
 (
-    const fvSource& source
+    const fvSource& model,
+    const scalarField& source,
+    const labelUList& cells
 ) const
 {
-    return tmp<scalarField>(new scalarField(source.nCells(), scalar(0)));
+    return tmp<scalarField>(new scalarField(source.size(), scalar(0)));
 }
 
 

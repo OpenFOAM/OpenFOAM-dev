@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,46 +28,9 @@ License
 #include "populationBalanceModel.H"
 #include "addToRunTimeSelectionTable.H"
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::singleSizeGroupFvScalarFieldSource::
-singleSizeGroupFvScalarFieldSource
-(
-    const DimensionedField<scalar, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    fvScalarFieldSource(iF, dict),
-    index_(dict.lookup<label>("index"))
-{}
-
-
-Foam::singleSizeGroupFvScalarFieldSource::
-singleSizeGroupFvScalarFieldSource
-(
-    const singleSizeGroupFvScalarFieldSource& field,
-    const DimensionedField<scalar, volMesh>& iF
-)
-:
-    fvScalarFieldSource(field, iF),
-    index_(field.index_)
-{}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::singleSizeGroupFvScalarFieldSource::
-~singleSizeGroupFvScalarFieldSource()
-{}
-
-
-// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
-
-Foam::tmp<Foam::scalarField>
-Foam::singleSizeGroupFvScalarFieldSource::sourceValue
-(
-    const fvSource& source
-) const
+Foam::scalar Foam::singleSizeGroupFvScalarFieldSource::eta() const
 {
     const diameterModels::sizeGroup& fi =
         refCast<const diameterModels::sizeGroup>(internalField());
@@ -84,17 +47,97 @@ Foam::singleSizeGroupFvScalarFieldSource::sourceValue
             << exit(FatalError);
     }
 
-    return tmp<scalarField>(new scalarField(source.nCells(), fi.i() == index_));
+    return fi.i() == index_ ? scalar(1) : scalar(0);
+}
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::singleSizeGroupFvScalarFieldSource::singleSizeGroupFvScalarFieldSource
+(
+    const DimensionedField<scalar, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fvScalarFieldSource(iF, dict),
+    index_(dict.lookup<label>("index"))
+{}
+
+
+Foam::singleSizeGroupFvScalarFieldSource::singleSizeGroupFvScalarFieldSource
+(
+    const singleSizeGroupFvScalarFieldSource& field,
+    const DimensionedField<scalar, volMesh>& iF
+)
+:
+    fvScalarFieldSource(field, iF),
+    index_(field.index_)
+{}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::singleSizeGroupFvScalarFieldSource::~singleSizeGroupFvScalarFieldSource()
+{}
+
+
+// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::singleSizeGroupFvScalarFieldSource::sourceValue
+(
+    const fvSource& model,
+    const DimensionedField<scalar, volMesh>& source
+) const
+{
+    return
+        DimensionedField<scalar, volMesh>::New
+        (
+            model.name() + ":" + this->internalField().name() + "SourceValue",
+            this->internalField().mesh(),
+            dimensionedScalar(dimless, eta())
+        );
+}
+
+
+Foam::tmp<Foam::scalarField>
+Foam::singleSizeGroupFvScalarFieldSource::sourceValue
+(
+    const fvSource& model,
+    const scalarField& source,
+    const labelUList& cells
+) const
+{
+    return tmp<scalarField>(new scalarField(source.size(), eta()));
+}
+
+
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::singleSizeGroupFvScalarFieldSource::internalCoeff
+(
+    const fvSource& model,
+    const DimensionedField<scalar, volMesh>& source
+) const
+{
+    return
+        DimensionedField<scalar, volMesh>::New
+        (
+            model.name() + ":" + this->internalField().name() + "InternalCoeff",
+            this->internalField().mesh(),
+            dimensionedScalar(dimless, scalar(0))
+        );
 }
 
 
 Foam::tmp<Foam::scalarField>
 Foam::singleSizeGroupFvScalarFieldSource::internalCoeff
 (
-    const fvSource& source
+    const fvSource& model,
+    const scalarField& source,
+    const labelUList& cells
 ) const
 {
-    return tmp<scalarField>(new scalarField(source.nCells(), scalar(0)));
+    return tmp<scalarField>(new scalarField(source.size(), scalar(0)));
 }
 
 

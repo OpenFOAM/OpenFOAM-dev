@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,6 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "DimensionedField.H"
 #include "uniformInletOutletFvFieldSource.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -70,15 +71,57 @@ Foam::uniformInletOutletFvFieldSource<Type>::~uniformInletOutletFvFieldSource()
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 template<class Type>
+Foam::tmp<Foam::DimensionedField<Type, Foam::volMesh>>
+Foam::uniformInletOutletFvFieldSource<Type>::sourceValue
+(
+    const fvSource& model,
+    const DimensionedField<scalar, volMesh>& source
+) const
+{
+    return
+        DimensionedField<Type, Foam::volMesh>::New
+        (
+            model.name() + ":" + this->internalField().name() + "SourceValue",
+            this->internalField().mesh(),
+            dimensioned<Type>
+            (
+                this->internalField().dimensions(),
+                uniformInletValue_->value(this->db().time().value())
+            )
+        );
+}
+
+
+template<class Type>
 Foam::tmp<Foam::Field<Type>>
 Foam::uniformInletOutletFvFieldSource<Type>::sourceValue
 (
-    const fvSource& source
+    const fvSource& model,
+    const scalarField& source,
+    const labelUList& cells
 ) const
 {
-    const scalar t = this->db().time().value();
-    const Type v = uniformInletValue_->value(t);
-    return tmp<Field<Type>>(new Field<Type>(source.nCells(), v));
+    return
+        tmp<Field<Type>>
+        (
+            new Field<Type>
+            (
+                source.size(),
+                uniformInletValue_->value(this->db().time().value())
+            )
+        );
+}
+
+
+template<class Type>
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::uniformInletOutletFvFieldSource<Type>::internalCoeff
+(
+    const fvSource& model,
+    const DimensionedField<scalar, volMesh>& source
+) const
+{
+    return neg0(source);
 }
 
 
@@ -86,12 +129,12 @@ template<class Type>
 Foam::tmp<Foam::scalarField>
 Foam::uniformInletOutletFvFieldSource<Type>::internalCoeff
 (
-    const fvSource& source
+    const fvSource& model,
+    const scalarField& source,
+    const labelUList& cells
 ) const
 {
-    return
-        neg0(source.source(this->internalField().name()))
-       *scalarField(source.nCells(), scalar(1));
+    return neg0(source);
 }
 
 

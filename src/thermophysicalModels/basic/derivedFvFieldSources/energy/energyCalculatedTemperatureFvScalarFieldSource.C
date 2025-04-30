@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,10 +70,24 @@ Foam::energyCalculatedTemperatureFvScalarFieldSource::
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::energyCalculatedTemperatureFvScalarFieldSource::sourceValue
+(
+    const fvSource& model,
+    const DimensionedField<scalar, volMesh>& source
+) const
+{
+    NotImplemented;
+    return tmp<DimensionedField<scalar, volMesh>>(nullptr);
+}
+
+
 Foam::tmp<Foam::scalarField>
 Foam::energyCalculatedTemperatureFvScalarFieldSource::sourceValue
 (
-    const fvSource& source
+    const fvSource& model,
+    const scalarField& source,
+    const labelUList& cells
 ) const
 {
     NotImplemented;

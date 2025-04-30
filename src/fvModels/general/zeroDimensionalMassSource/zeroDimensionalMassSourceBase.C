@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -198,12 +198,6 @@ Foam::labelUList Foam::fv::zeroDimensionalMassSourceBase::cells() const
 {
     static labelList zero(1, Zero);
     return labelUList(zero);
-}
-
-
-Foam::label Foam::fv::zeroDimensionalMassSourceBase::nCells() const
-{
-    return 1;
 }
 
 

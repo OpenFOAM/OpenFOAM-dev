@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,6 +27,37 @@ License
 #include "fvSource.H"
 #include "populationBalanceModel.H"
 #include "addToRunTimeSelectionTable.H"
+
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+Foam::scalar Foam::distributionSizeGroupFvScalarFieldSource::eta
+(
+    const fvSource& model
+) const
+{
+    if (!etaPtr_.valid())
+    {
+        const diameterModels::sizeGroup& fi =
+            refCast<const diameterModels::sizeGroup>(internalField());
+
+        etaPtr_.set
+        (
+            new scalar
+            (
+                fi.group().popBal().etaV(fi.i(), distribution_()).value()
+            )
+        );
+
+        if (debug)
+        {
+            Info<< typeName << ": Size group #" << fi.i() << " is receiving "
+                << 100*etaPtr_() << "\% of source " << model.name() << endl;
+        }
+    }
+
+    return etaPtr_();
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -68,43 +99,61 @@ Foam::distributionSizeGroupFvScalarFieldSource::
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::distributionSizeGroupFvScalarFieldSource::sourceValue
+(
+    const fvSource& model,
+    const DimensionedField<scalar, volMesh>& source
+) const
+{
+    return
+        DimensionedField<scalar, volMesh>::New
+        (
+            model.name() + ":" + this->internalField().name() + "SourceValue",
+            this->internalField().mesh(),
+            dimensionedScalar(dimless, eta(model))
+        );
+}
+
+
 Foam::tmp<Foam::scalarField>
 Foam::distributionSizeGroupFvScalarFieldSource::sourceValue
 (
-    const fvSource& source
+    const fvSource& model,
+    const scalarField& source,
+    const labelUList& cells
 ) const
 {
-    if (!etaPtr_.valid())
-    {
-        const diameterModels::sizeGroup& fi =
-            refCast<const diameterModels::sizeGroup>(internalField());
+    return tmp<scalarField>(new scalarField(source.size(), eta(model)));
+}
 
-        etaPtr_.set
+
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::distributionSizeGroupFvScalarFieldSource::internalCoeff
+(
+    const fvSource& model,
+    const DimensionedField<scalar, volMesh>& source
+) const
+{
+    return
+        DimensionedField<scalar, volMesh>::New
         (
-            new scalar
-            (
-                fi.group().popBal().etaV(fi.i(), distribution_()).value()
-            )
+            model.name() + ":" + this->internalField().name() + "InternalCoeff",
+            this->internalField().mesh(),
+            dimensionedScalar(dimless, scalar(0))
         );
-
-        if (debug)
-        {
-            Info<< typeName << ": Size group #" << fi.i() << " is receiving "
-                << 100*etaPtr_() << "\% of source " << source.name() << endl;
-        }
-    }
-
-    return tmp<scalarField>(new scalarField(source.nCells(), etaPtr_()));
 }
 
 
 Foam::tmp<Foam::scalarField>
 Foam::distributionSizeGroupFvScalarFieldSource::internalCoeff
 (
-    const fvSource& source
+    const fvSource& model,
+    const scalarField& source,
+    const labelUList& cells
 ) const
 {
-    return tmp<scalarField>(new scalarField(source.nCells(), scalar(0)));
+    return tmp<scalarField>(new scalarField(source.size(), scalar(0)));
 }
 
 

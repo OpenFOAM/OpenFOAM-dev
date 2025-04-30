@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,29 +68,56 @@ Foam::turbulentMixingLengthFrequencyFvScalarFieldSource::
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::turbulentMixingLengthFrequencyFvScalarFieldSource::sourceValue
+(
+    const fvSource& model,
+    const DimensionedField<scalar, volMesh>& source
+) const
+{
+    const DimensionedField<scalar, volMesh> ks
+    (
+        this->value<scalar>(kName_, model, source)
+    );
+
+    return sqrt(ks)/(pow(Cmu_, 0.25)*mixingLength_);
+}
+
+
 Foam::tmp<Foam::scalarField>
 Foam::turbulentMixingLengthFrequencyFvScalarFieldSource::sourceValue
 (
-    const fvSource& source
+    const fvSource& model,
+    const scalarField& source,
+    const labelUList& cells
 ) const
 {
-    const scalarField ks(this->value<scalar>(kName_, source));
+    const scalarField ks(this->value<scalar>(kName_, model, source, cells));
 
-    const scalar Cmu25 = pow(Cmu_, 0.25);
+    return sqrt(ks)/(pow(Cmu_, 0.25)*mixingLength_);
+}
 
-    return sqrt(ks)/(Cmu25*mixingLength_);
+
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::turbulentMixingLengthFrequencyFvScalarFieldSource::internalCoeff
+(
+    const fvSource& model,
+    const DimensionedField<scalar, volMesh>& source
+) const
+{
+    return neg0(source);
 }
 
 
 Foam::tmp<Foam::scalarField>
 Foam::turbulentMixingLengthFrequencyFvScalarFieldSource::internalCoeff
 (
-    const fvSource& source
+    const fvSource& model,
+    const scalarField& source,
+    const labelUList& cells
 ) const
 {
-    return
-        neg0(source.source(internalField().name()))
-       *scalarField(source.nCells(), scalar(1));
+    return neg0(source);
 }
 
 

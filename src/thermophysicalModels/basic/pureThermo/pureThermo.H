@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,7 +80,19 @@ public:
         ) const;
 
         //- Get the slicer for the given source
-        inline nil Yslicer(const fvSource&) const;
+        inline nil Yslicer
+        (
+            const fvSource& model,
+            const volScalarField::Internal& source
+        ) const;
+
+        //- Get the slicer for the given source
+        inline nil Yslicer
+        (
+            const fvSource& model,
+            const scalarField& source,
+            const labelUList& cells
+        ) const;
 
         //- Get the composition of a source cell
         inline nil sourceCellComposition(const nil, const label i) const;
