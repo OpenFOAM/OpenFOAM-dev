@@ -102,6 +102,19 @@ inline Foam::tmp<T>::tmp(const tmp<T>& t)
 
 
 template<class T>
+inline Foam::tmp<T>::tmp(tmp<T>&& t)
+:
+    type_(t.type_),
+    ptr_(t.ptr_)
+{
+    if (isAnyTmp())
+    {
+        t.ptr_ = 0;
+    }
+}
+
+
+template<class T>
 inline Foam::tmp<T>::tmp(const tmp<T>&& t)
 :
     type_(t.type_),
@@ -390,6 +403,21 @@ inline void Foam::tmp<T>::operator=(const tmp<T>& t)
             << "Attempted assignment to a const reference to an object"
             << " of type " << typeid(T).name()
             << abort(FatalError);
+    }
+}
+
+
+template<class T>
+inline void Foam::tmp<T>::operator=(tmp<T>&& t)
+{
+    clear();
+
+    type_ = t.type_;
+    ptr_ = t.ptr_;
+
+    if (isAnyTmp())
+    {
+        t.ptr_ = 0;
     }
 }
 

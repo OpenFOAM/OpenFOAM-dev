@@ -94,6 +94,9 @@ public:
         //- Construct copy moving content
         inline tmpNrc(tmpNrc<T>&&);
 
+        //- Construct copy moving content
+        inline tmpNrc(const tmpNrc<T>&&);
+
         //- Construct copy transferring content of temporary if required
         inline tmpNrc(const tmpNrc<T>&, bool allowTransfer);
 
@@ -159,6 +162,9 @@ public:
 
         //- Move assignment transferring the temporary T to this tmpNrc
         inline void operator=(tmpNrc<T>&&);
+
+        //- Move assignment transferring the temporary T to this tmpNrc
+        inline void operator=(const tmpNrc<T>&&);
 };
 
 
