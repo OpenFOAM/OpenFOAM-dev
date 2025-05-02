@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ void Foam::truncatedConeToCell::combine(topoSet& set, const bool add) const
 
         if ((magD > 0) && (magD < magAxisSquared))
         {
-            const scalar d2 = (d & d) - sqr(magD) / magAxisSquared;
+            const scalar d2 = magSqr(d) - sqr(magD)/magAxisSquared;
             const scalar radiusAtCell =
                 radius1_ + (radius2_ - radius1_)*magD/(axis&axis);
 

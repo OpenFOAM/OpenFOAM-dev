@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ void Foam::cylinderToFace::combine(topoSet& set, const bool add) const
 
         if ((magD > 0) && (magD < magAxis2))
         {
-            scalar d2 = (d & d) - sqr(magD)/magAxis2;
+            scalar d2 = magSqr(d) - sqr(magD)/magAxis2;
             if (d2 < rad2)
             {
                 addOrDelete(set, facei, add);
