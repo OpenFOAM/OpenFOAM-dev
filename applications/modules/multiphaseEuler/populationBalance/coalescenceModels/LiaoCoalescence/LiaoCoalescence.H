@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,21 +54,21 @@ Description
 
 Usage
     \table
-        Property     | Description                 | Required  | Default value
-        PMax         | Maximum packing limit       | no        | 0.8
-        CPackMax     | Maximum CPack coefficient   | no        | 1.0e5
-        AH           | Hamaker constant            | no        | 3.7e-20
-        CEff         | coefficient CEff            | no        | 2.5
-        CTurb        | coefficient CTurb           | no        | 1.0
-        CBuoy        | coefficient CBuoy           | no        | 1.0
-        CShear       | coefficient CShear          | no        | 1.0
-        CEddy        | coefficient CEddy           | no        | 1.0
-        CWake        | coefficient CWake           | no        | 1.0
-        turbulence   | Switch for turbulence       | yes       | none
-        buoyancy     | Switch for buoyancy         | yes       | none
-        laminarShear | Switch for laminar shear    | yes       | none
-        eddyCapture  | Switch for eddy capture     | yes       | none
-        wake         | Switch for wake entrainment | yes       | none
+        Property       | Description                 | Required  | Default value
+        PMax           | Maximum packing limit       | no        | 0.8
+        CPackMax       | Maximum CPack coefficient   | no        | 1.0e5
+        AH             | Hamaker constant            | no        | 3.7e-20
+        CEff           | coefficient CEff            | no        | 2.5
+        CTurb          | coefficient CTurb           | no        | 1.0
+        CBuoy          | coefficient CBuoy           | no        | 1.0
+        CShear         | coefficient CShear          | no        | 1.0
+        CEddy          | coefficient CEddy           | no        | 1.0
+        CWake          | coefficient CWake           | no        | 1.0
+        turbulence     | Switch for turbulence       | yes       | none
+        buoyancy       | Switch for buoyancy         | yes       | none
+        laminarShear   | Switch for laminar shear    | yes       | none
+        eddyCapture    | Switch for eddy capture     | yes       | none
+        wakeEntrainment| Switch for wake entrainment | yes       | none
     \endtable
 
 SourceFiles
