@@ -1,0 +1,3 @@
+[submodule "ThirdParty-dev"]
+	path = ThirdParty-dev
+	url = https://github.com/OpenFOAM/ThirdParty-dev.git
