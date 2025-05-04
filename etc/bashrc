@@ -103,10 +103,10 @@ export WM_OSTYPE=POSIX
 
 #- Decomposition libraries:
 #    <library>_TYPE = none | system | ThirdParty (OpenFOAM)
-export SCOTCH_TYPE=ThirdParty
+export SCOTCH_TYPE=none #ThirdParty
 export METIS_TYPE=none
 export PARMETIS_TYPE=none
-export ZOLTAN_TYPE=ThirdParty
+export ZOLTAN_TYPE=none #ThirdParty
 
 #    ParaView_TYPE = none | system | paraviewopenfoam | ThirdParty (OpenFOAM)
 export ParaView_TYPE=system
