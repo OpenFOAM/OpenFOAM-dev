@@ -1,0 +1,56 @@
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, ready_for_review]
+
+parameters:
+  timeout: 360
+  partitions:
+    - chamomile
+
+steps:
+  build: |
+    sudo apt-get update
+    sudo apt-get install -y build-essential libopenmpi-dev zlib1g-dev gnuplot gnuplot-x11 libxt-dev cmake flex
+    sudo apt-get install -y libxml2-dev libhdf5-dev libavfilter-dev libtheora-dev libgl2ps-dev libx11-dev libqt5x11extras5-dev libglew-dev libutfcpp-dev 
+    sudo apt-get install -y libdouble-conversion-dev libfreetype-dev libqt5svg5-dev qtxmlpatterns5-dev-tools qttools5-dev python3-dev
+   
+    export FOAM_VERBOSE=1
+    echo ${PWD}
+    . etc/bashrc
+    ./Allwmake -j20
+
+    . ${WM_PROJECT_DIR:?}/bin/tools/RunFunctions
+
+    cd ${WM_PROJECT_DIR}/tutorials/incompressibleFluid/cavity
+    runApplication blockMesh
+    cd ${WM_PROJECT_DIR}
+
+    cd ${WM_PROJECT_DIR}/tutorials/incompressibleFluid/rotor2D
+    runApplication blockMesh
+    cd ${WM_PROJECT_DIR}
+
+    cd ${WM_PROJECT_DIR}/tutorials/incompressibleFluid/propeller
+    cp $FOAM_TUTORIALS/resources/geometry/propeller*.obj.gz constant/geometry/
+    runApplication blockMesh
+    runApplication surfaceFeatures
+    runApplication snappyHexMesh -overwrite
+    runApplication createBaffles -overwrite
+    runApplication splitBaffles -overwrite
+    runApplication renumberMesh -noFields -overwrite
+    runApplication createNonConformalCouples -overwrite nonCouple1 nonCouple2
+    cd ${WM_PROJECT_DIR}
+  
+
+  run:
+    cavity:
+      command: /bin/bash etc/bashrc && foamRun -case ./tutorials/incompressibleFluid/cavity 
+      measurements: 1
+      profiler: perf
+    rotor2d:
+      command: /bin/bash etc/bashrc && foamRun -case ./tutorials/incompressibleFluid/rotor2D 
+      measurements: 1
+      profiler: perf
+        #propeller:
+        #command: /bin/bash etc/bashrc && foamRun -case ./tutorials/incompressibleFluid/propeller 
+        #measurements: 1
+        #profiler: perf
