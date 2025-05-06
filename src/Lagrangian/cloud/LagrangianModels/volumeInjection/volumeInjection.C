@@ -208,7 +208,8 @@ Foam::LagrangianSubMesh Foam::Lagrangian::volumeInjection::modify
 
     // Construct a cumulative sum of the volumes across the processes
     scalarList procSumVolume(Pstream::nProcs(), -vGreat);
-    procSumVolume[Pstream::myProcNo()] = setCellSumVolume.last();
+    procSumVolume[Pstream::myProcNo()] =
+        setCells.size() ? setCellSumVolume.last() : scalar(0);
     Pstream::listCombineGather(procSumVolume, maxEqOp<scalar>());
     Pstream::listCombineScatter(procSumVolume);
     for (label proci = 1; proci < Pstream::nProcs(); proci ++)
