@@ -45,6 +45,10 @@ License
 #include "internalLagrangianFieldSources.H"
 #include "zeroLagrangianFieldSources.H"
 
+#include "polyTopoChangeMap.H"
+#include "polyMeshMap.H"
+#include "polyDistributionMap.H"
+
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
@@ -1941,6 +1945,8 @@ void Foam::LagrangianMesh::storePosition()
 
 void Foam::LagrangianMesh::topoChange(const polyTopoChangeMap& map)
 {
+    if (map.reverseCellMap().empty()) return;
+
     NotImplemented;
 
     meshObjects::topoChange<LagrangianMesh>(*this, map);
