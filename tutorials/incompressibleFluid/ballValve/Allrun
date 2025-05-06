@@ -22,7 +22,7 @@ runApplication decomposePar -cellProc
 runParallel setFields
 
 # Run
-runParallel foamRun;
+runParallel foamRun
 
 # Reconstruct
 runApplication reconstructPar -newTimes

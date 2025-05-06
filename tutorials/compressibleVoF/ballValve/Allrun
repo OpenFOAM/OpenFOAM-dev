@@ -20,7 +20,7 @@ runApplication decomposePar -cellProc
 runParallel potentialFoam -pName p_rgh
 
 # Run
-runParallel foamRun;
+runParallel foamRun
 
 # Reconstruct
 runApplication reconstructPar -newTimes
