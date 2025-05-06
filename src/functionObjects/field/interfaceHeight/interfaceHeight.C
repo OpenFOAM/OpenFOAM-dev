@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,7 +97,7 @@ void Foam::functionObjects::interfaceHeight::writePositions()
         {
             if (set.segments()[si] != set.segments()[si+1]) continue;
 
-            const vector& p0 = set.pointCoord(si), p1 = set.pointCoord(si+1);
+            const vector& p0 = set.pointCoord(si), & p1 = set.pointCoord(si+1);
             const label c0 = set.cells()[si], c1 = set.cells()[si+1];
             const label f0 = set.faces()[si], f1 = set.faces()[si+1];
 

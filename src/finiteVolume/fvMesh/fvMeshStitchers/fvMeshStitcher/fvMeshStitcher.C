@@ -690,7 +690,7 @@ void Foam::fvMeshStitcher::createCouplings
                 // The two parts of the coupling. The projection is to the
                 // neighbour, so the other-side is always taken from the
                 // neighbouring patch faces.
-                const part& pThis = c, pOther = owner ? c.nbr : c;
+                const part& pThis = c, & pOther = owner ? c.nbr : c;
 
                 // Remove the area from the corresponding original face
                 if (i >= 0 || owner)

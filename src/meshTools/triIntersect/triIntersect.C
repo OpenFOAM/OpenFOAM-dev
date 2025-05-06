@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1276,8 +1276,8 @@ void Foam::triIntersect::writeTriProjection
     pointField ps(3*(nu + 1)*(nv + 1));
     for (label i = 0; i < 3; ++ i)
     {
-        const point& p0 = srcPs[i], p1 = srcPs[(i + 1) % 3];
-        const vector& n0 = srcNs[i], n1 = srcNs[(i + 1) % 3];
+        const point& p0 = srcPs[i], & p1 = srcPs[(i + 1) % 3];
+        const vector& n0 = srcNs[i], & n1 = srcNs[(i + 1) % 3];
 
         for (label iu = 0; iu <= nu; ++ iu)
         {
