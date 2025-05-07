@@ -9,6 +9,10 @@ parameters:
 
 steps:
   build: |
+
+    env
+
+    echo $PATH
     sudo apt-get update
     sudo apt-get install -y build-essential libopenmpi-dev zlib1g-dev gnuplot gnuplot-x11 libxt-dev cmake flex openmpi-common
     sudo apt-get install -y libxml2-dev libhdf5-dev libavfilter-dev libtheora-dev libgl2ps-dev libx11-dev libqt5x11extras5-dev libglew-dev libutfcpp-dev 
@@ -83,7 +87,7 @@ steps:
         METIS_TYPE: none
         PARMETIS_TYPE: none
         ZOLTAN_TYPE: none #ThirdParty
-        PATH: $PATH:$WM_PROJECT_DIR/wmake
+        PATH: $PATH:/workspace/wmake
         LD_LIBRARY_PATH: /usr/lib/x86_64-linux-gnu:/usr/local/lib:/usr/local/lib64:/usr/local/papi/lib:/usr/local/cuda-12.8/lib64:/workspace/platforms/linux64GccDPInt32Opt/lib:/workspace/platforms/linux64GccDPInt32Opt/lib/openmpi-system
         LIBRARY_PATH: /usr/local/lib
         #rotor2d:
