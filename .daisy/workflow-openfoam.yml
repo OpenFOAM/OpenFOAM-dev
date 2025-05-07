@@ -5,14 +5,11 @@ on:
 parameters:
   timeout: 360
   partitions:
-    - chamomile
+    - zinnia
 
 steps:
   build: |
 
-    env
-
-    echo $PATH
     sudo apt-get update
     sudo apt-get install -y build-essential libopenmpi-dev zlib1g-dev gnuplot gnuplot-x11 libxt-dev cmake flex openmpi-common
     sudo apt-get install -y libxml2-dev libhdf5-dev libavfilter-dev libtheora-dev libgl2ps-dev libx11-dev libqt5x11extras5-dev libglew-dev libutfcpp-dev 
@@ -26,24 +23,12 @@ steps:
     $FOAM_APPBIN/blockMesh
     cd ${WM_PROJECT_DIR}
 
-    #cd ${WM_PROJECT_DIR}/tutorials/incompressibleFluid/rotor2D
-    #$FOAM_APPBIN/blockMesh
-    #cd ${WM_PROJECT_DIR}
-
-    #cd ${WM_PROJECT_DIR}/tutorials/incompressibleFluid/propeller
-    #cp $FOAM_TUTORIALS/resources/geometry/propeller*.obj.gz constant/geometry/
-    #$FOAM_APPBIN/blockMesh
-    #$FOAM_APPBIN/surfaceFeatures
-    #$FOAM_APPBIN/snappyHexMesh -overwrite
-    #$FOAM_APPBIN/createBaffles -overwrite
-    #$FOAM_APPBIN/splitBaffles -overwrite
-    #$FOAM_APPBIN/renumberMesh -noFields -overwrite
-    #$FOAM_APPBIN/createNonConformalCouples -overwrite nonCouple1 nonCouple2
-    #cd ${WM_PROJECT_DIR}
+    cd ${WM_PROJECT_DIR}/tutorials/incompressibleFluid/rotor2D
+    $FOAM_APPBIN/blockMesh
+    cd ${WM_PROJECT_DIR}
   
-
   run:
-    cavity:
+    rotor2d:
       command: bin/foamRun -case ./tutorials/incompressibleFluid/cavity 
       measurements: 1
       profiler: perf
@@ -91,11 +76,50 @@ steps:
         PATH: $PATH:/workspace/wmake
         LD_LIBRARY_PATH: /usr/lib/x86_64-linux-gnu:/usr/local/lib:/usr/local/lib64:/usr/local/papi/lib:/usr/local/cuda-12.8/lib64:/workspace/platforms/linux64GccDPInt32Opt/lib:/workspace/platforms/linux64GccDPInt32Opt/lib/openmpi-system
         LIBRARY_PATH: /usr/local/lib
-        #rotor2d:
-        #command: bin/foamRun -case ./tutorials/incompressibleFluid/rotor2D 
-        #measurements: 1
-        #profiler: perf
-        #propeller:
-        #command: bin/foamRun -case ./tutorials/incompressibleFluid/propeller 
-        #measurements: 1
-        #profiler: perf
+    rotor2d:
+      command: bin/foamRun -case ./tutorials/incompressibleFluid/rotor2D 
+      measurements: 1
+      profiler: perf
+      env:
+        FOAM_APP: "/workspace/applications"
+        FOAM_APPBIN: "/workspace/platforms/linux64GccDPInt32Opt/bin"
+        FOAM_EXT_LIBBIN: "/workspace/ThirdParty-dev/platforms/linux64GccDPInt32/lib"
+        FOAM_INST_DIR: "/"
+        FOAM_LIBBIN: "/workspace/platforms/linux64GccDPInt32Opt/lib"
+        FOAM_MODULES: "/workspace/applications/modules"
+        FOAM_MPI: "openmpi-system"
+        FOAM_PROJECT_DIR: "/workspace"
+        FOAM_SOLVERS: "/workspace/applications/solvers"
+        FOAM_SRC: "/workspace/src"
+        FOAM_TUTORIALS: "/workspace/tutorials"
+        FOAM_USER_APPBIN: "/platforms/linux64GccDPInt32Opt/bin"
+        FOAM_USER_LIBBIN: "/platforms/linux64GccDPInt32Opt/lib"
+        FOAM_UTILITIES: "/workspace/applications/utilities"
+        WM_ARCH: "linux64"
+        WM_ARCH_OPTION: "64"
+        WM_CC: "gcc"
+        WM_CFLAGS: "-m64 -fPIC -g"
+        WM_COMPILER: "Gcc"
+        WM_COMPILER_LIB_ARCH: "64"
+        WM_COMPILE_OPTION: "Opt"
+        WM_CXX: "g++"
+        WM_CXXFLAGS: "-m64 -fPIC -std: c++0x -g"
+        WM_DIR: "/workspace/wmake"
+        WM_LABEL_OPTION: "Int32"
+        WM_LABEL_SIZE: "32"
+        WM_LDFLAGS: "-m64"
+        WM_LINK_LANGUAGE: "c++"
+        WM_MPLIB: "SYSTEMOPENMPI"
+        WM_OPTIONS: "linux64GccDPInt32Opt"
+        WM_OSTYPE: "POSIX"
+        WM_PRECISION_OPTION: "DP"
+        WM_PROJECT: "OpenFOAM"
+        WM_PROJECT_DIR: "/workspace"
+        WM_PROJECT_INST_DIR: "/"
+        WM_THIRD_PARTY_DIR: "/workspace/ThirdParty-dev"
+        SCOTCH_TYPE: none #ThirdParty
+        METIS_TYPE: none
+        PARMETIS_TYPE: none
+        ZOLTAN_TYPE: none #ThirdParty
+        PATH: $PATH:/workspace/wmake
+        LD_LIBRARY_PATH: /usr/lib/x86_64-linux-gnu:/usr/local/lib:/usr/local/lib64:/usr/local/papi/lib:/usr/local/cuda-12.8/lib64:/workspace/platforms/linux64GccDPInt32Opt/lib:/workspace/platforms/linux64GccDPInt32Opt/lib/openmpi-system
