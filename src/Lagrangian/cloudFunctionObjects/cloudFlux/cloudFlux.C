@@ -156,6 +156,8 @@ void Foam::functionObjects::cloudFlux::preCrossFaces
 
         const labelList& owner = mesh().owner();
 
+        SubList<LagrangianState> states =
+            fraction.mesh().sub(c.mesh().states());
         SubField<label> celli = fraction.mesh().sub(c.mesh().celli());
         SubField<label> facei = fraction.mesh().sub(c.mesh().facei());
 
@@ -163,6 +165,8 @@ void Foam::functionObjects::cloudFlux::preCrossFaces
 
         forAll(fraction, subi)
         {
+            if (states[subi] != LagrangianState::onInternalFace) continue;
+
             phi_.internalFieldRef()[facei[subi]] +=
                 (owner[facei[subi]] == celli[subi] ? +1 : -1)
                *dqdt[subi]
