@@ -20,22 +20,22 @@ steps:
     ./Allwmake -j128
 
     cd ${WM_PROJECT_DIR}/tutorials/incompressibleFluid/cavity
-    $FOAM_APPBIN/blockMesh
+    ${FOAM_APPBIN}/blockMesh
     cd ${WM_PROJECT_DIR}
 
     cd ${WM_PROJECT_DIR}/tutorials/incompressibleFluid/rotor2D
-    $FOAM_APPBIN/blockMesh
+    ${FOAM_APPBIN}/blockMesh
     cd ${WM_PROJECT_DIR}
 
     cd ${WM_PROJECT_DIR}/tutorials/incompressibleFluid/propeller
-    cp $FOAM_TUTORIALS/resources/geometry/propeller*.obj.gz constant/geometry/
-    runApplication blockMesh
-    runApplication surfaceFeatures
-    runApplication snappyHexMesh -overwrite
-    runApplication createBaffles -overwrite
-    runApplication splitBaffles -overwrite
-    runApplication renumberMesh -noFields -overwrite
-    runApplication createNonConformalCouples -overwrite nonCouple1 nonCouple2
+    cp ${FOAM_TUTORIALS}/resources/geometry/propeller*.obj.gz constant/geometry/
+    ${FOAM_APPBIN}/blockMesh
+    ${FOAM_APPBIN}/surfaceFeatures
+    ${FOAM_APPBIN}/snappyHexMesh -overwrite
+    ${FOAM_APPBIN}/createBaffles -overwrite
+    ${FOAM_APPBIN}/splitBaffles -overwrite
+    ${FOAM_APPBIN}/renumberMesh -noFields -overwrite
+    ${FOAM_APPBIN}/createNonConformalCouples -overwrite nonCouple1 nonCouple2
     cd ${WM_PROJECT_DIR}
 
   
@@ -181,3 +181,4 @@ steps:
         PARMETIS_TYPE: none
         ZOLTAN_TYPE: none #ThirdParty
         PATH: $PATH:/workspace/wmake
+        LD_LIBRARY_PATH: /usr/lib/x86_64-linux-gnu:/usr/local/lib:/usr/local/lib64:/usr/local/papi/lib:/usr/local/cuda-12.8/lib64:/workspace/platforms/linux64GccDPInt32Opt/lib:/workspace/platforms/linux64GccDPInt32Opt/lib/openmpi-system
