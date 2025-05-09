@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -161,9 +161,7 @@ const Foam::unitConversion& Foam::operator+
     {
         FatalErrorInFunction
             << "Different units for +" << endl
-            << "     units : "
-            << a << " {" << a.multiplier_ << "} + "
-            << b << " {" << b.multiplier_ << "} + " << endl
+            << "     units : " << a << " + " << b << endl
             << abort(FatalError);
     }
 
