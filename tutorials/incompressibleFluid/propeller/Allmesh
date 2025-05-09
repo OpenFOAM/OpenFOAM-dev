@@ -8,19 +8,19 @@ cd ${0%/*} || exit 1    # Run from this directory
 cp $FOAM_TUTORIALS/resources/geometry/propeller*.obj.gz constant/geometry/
 
 # Mesh in parallel
-runApplication blockMesh
-runApplication surfaceFeatures
-runApplication decomposePar -noFields
-runParallel snappyHexMesh -overwrite
+${FOAM_APPBIN}/blockMesh
+${FOAM_APPBIN}/surfaceFeatures
+${FOAM_APPBIN}/decomposePar -noFields
+${FOAM_APPBIN}/snappyHexMesh -overwrite
 
 # Create the sliding patches
-runParallel createBaffles -overwrite
-runParallel splitBaffles -overwrite
+${FOAM_APPBIN}/createBaffles -overwrite
+${FOAM_APPBIN}/splitBaffles -overwrite
 
 # Renumber
-runParallel renumberMesh -noFields -overwrite
+${FOAM_APPBIN}/renumberMesh -noFields -overwrite
 
 # Create non-conformal couples
-runParallel createNonConformalCouples -overwrite nonCouple1 nonCouple2
+${FOAM_APPBIN}/createNonConformalCouples -overwrite nonCouple1 nonCouple2
 
 #------------------------------------------------------------------------------
