@@ -128,19 +128,75 @@ bool Foam::functionObjects::LagrangianDistribution::multiplyWeight
 
 void Foam::functionObjects::LagrangianDistribution::writeDistribution
 (
+    const word& fieldName,
+    const word& componentName,
+    const scalarField& x,
+    const scalarField& PDF,
+    const scalarField& CDF
+) const
+{
+    if (!Pstream::master()) return;
+
+    const fileName outputPath =
+        time_.globalPath()
+       /writeFile::outputPrefix
+       /(
+            mesh().mesh().name() != polyMesh::defaultRegion
+          ? mesh().mesh().name()
+          : word::null
+        )
+       /name()
+       /time_.name();
+
+    mkDir(outputPath);
+
+    const word fieldComponentName =
+        fieldName
+      + (componentName.empty() ? "" : "_")
+      + componentName;
+
+    formatter_->write
+    (
+        outputPath,
+        fieldComponentName,
+        coordSet(true, fieldComponentName, x),
+        "PDF", PDF,
+        "CDF", CDF
+    );
+}
+
+
+void Foam::functionObjects::LagrangianDistribution::writeDistribution
+(
     const scalarField& weight,
     const word& fieldName,
+    const word& componentName,
     const scalarField& field
 )
 {
-    // Get the limits of the distribution
-    const scalar x0 = gMin(field), xN = gMax(field);
+    // Get the range of the distribution
+    const Pair<scalar> range(gMin(field), gMax(field));
+
+    // Write a single point if the distribution is uniform
+    if (range.first() == range.second())
+    {
+        writeDistribution
+        (
+            fieldName,
+            componentName,
+            scalarField(1, range.first()),
+            scalarField(1, vGreat),
+            scalarField(1, scalar(1))
+        );
+        return;
+    }
 
     // Construct the limits of the bins
     scalarField x(nBins_ + 1);
     for (label nodei = 0; nodei <= nBins_; ++ nodei)
     {
-        x[nodei] = x0 + nodei/scalar(nBins_)*(xN - x0);
+        const scalar f = scalar(nodei)/nBins_;
+        x[nodei] = (1 - f)*range.first() + f*range.second();
     }
 
     // Populate the bins
@@ -148,8 +204,10 @@ void Foam::functionObjects::LagrangianDistribution::writeDistribution
     forAll(field, i)
     {
         const scalar x = field[i];
-        const scalar f = (x - x0)/max(xN - x0, rootVSmall);
-        const scalar bini = min(floor(f*nBins_), nBins_ - 1);
+        const scalar f =
+            (x - range.first())
+           /max(range.second() - range.first(), rootVSmall);
+        const label bini = min(max(floor(f*nBins_), 0), nBins_ - 1);
         const scalar g = f*nBins_ - scalar(bini);
         PDF[bini] += weight[i]*(1 - g);
         PDF[bini + 1] += weight[i]*g;
@@ -161,35 +219,19 @@ void Foam::functionObjects::LagrangianDistribution::writeDistribution
 
     // Normalise and correct the ends, as they have half as many samples as the
     // interior points
-    PDF /= sum(PDF)*(xN - x0)/nBins_;
+    PDF /= sum(PDF)*(range.second() - range.first())/nBins_;
     PDF.first() *= 2;
     PDF.last() *= 2;
 
     // Write
-    if (Pstream::master())
-    {
-        const fileName outputPath =
-            time_.globalPath()
-           /writeFile::outputPrefix
-           /(
-                mesh().mesh().name() != polyMesh::defaultRegion
-              ? mesh().mesh().name()
-              : word::null
-            )
-           /name()
-           /time_.name();
-
-        mkDir(outputPath);
-
-        formatter_->write
-        (
-            outputPath,
-            fieldName,
-            coordSet(true, fieldName, x),
-            "PDF", PDF,
-            "CDF", distributions::unintegrable::integrate(x, PDF)()
-        );
-    }
+    writeDistribution
+    (
+        fieldName,
+        componentName,
+        x,
+        PDF,
+        distributions::unintegrable::integrate(x, PDF)()
+    );
 }
 
 
@@ -210,9 +252,8 @@ bool Foam::functionObjects::LagrangianDistribution::writeDistribution
         writeDistribution
         (
             weight,
-            fieldName
-          + (word(pTraits<Type>::componentNames[d]).empty() ? "" : "_")
-          + word(pTraits<Type>::componentNames[d]),
+            fieldName,
+            pTraits<Type>::componentNames[d],
             field.component(d)()
         );
     }
@@ -278,12 +319,8 @@ bool Foam::functionObjects::LagrangianDistribution::execute()
 
 bool Foam::functionObjects::LagrangianDistribution::write()
 {
-    // We can't construct a distribution without any samples, so quit if the
-    // mesh is empty.
-    if (returnReduce(mesh().size(), sumOp<label>()) == 0)
-    {
-        return true;
-    }
+    // We can't construct a distribution without any samples
+    if (returnReduce(mesh().size(), sumOp<label>()) == 0) return true;
 
     // Construct the weights
     scalarField weight(mesh().size(), 1);

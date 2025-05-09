@@ -21,4 +21,6 @@ cloudBoundaryCollisionFlux/cloudBoundaryCollisionFlux.C
 cloudBoundaryCollisionFlux/cloudBoundaryCollisionNumberFlux.C
 cloudBoundaryCollisionFlux/cloudBoundaryCollisionForce.C
 
+cloudSurfaceDistribution/cloudSurfaceDistribution.C
+
 LIB = $(FOAM_LIBBIN)/libLagrangianCloudFunctionObjects

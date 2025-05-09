@@ -109,10 +109,10 @@ public:
         //- Return the list of fields required
         virtual wordList fields() const;
 
-        //- Return false so this function does not executed at the start
+        //- Return false so this function does not execute at the start
         virtual bool executeAtStart() const;
 
-        //- Calculate and store the number flux
+        //- Do nothing. Everything happens in faces crossing hooks.
         virtual bool execute();
 
         //- Hook before solution steps

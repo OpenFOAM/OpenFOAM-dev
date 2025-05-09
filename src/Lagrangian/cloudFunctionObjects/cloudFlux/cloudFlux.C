@@ -49,7 +49,7 @@ void Foam::functionObjects::cloudFlux::crossPatchFaces
 {
     const Foam::cloud& c = cloud();
 
-    SubField<label> facei = fraction.mesh().sub(c.mesh().facei());
+    const SubField<label> facei = fraction.mesh().sub(c.mesh().facei());
 
     const LagrangianSubScalarField dqdt(q(fraction)/time_.deltaT());
 
@@ -156,10 +156,10 @@ void Foam::functionObjects::cloudFlux::preCrossFaces
 
         const labelList& owner = mesh().owner();
 
-        SubList<LagrangianState> states =
+        const SubList<LagrangianState> states =
             fraction.mesh().sub(c.mesh().states());
-        SubField<label> celli = fraction.mesh().sub(c.mesh().celli());
-        SubField<label> facei = fraction.mesh().sub(c.mesh().facei());
+        const SubField<label> celli = fraction.mesh().sub(c.mesh().celli());
+        const SubField<label> facei = fraction.mesh().sub(c.mesh().facei());
 
         const LagrangianSubScalarField dqdt(q(fraction)/time_.deltaT());
 

@@ -115,14 +115,26 @@ private:
         //- Write the distribution of the given scalar field
         void writeDistribution
         (
+            const word& fieldName,
+            const word& componentName,
+            const scalarField& x,
+            const scalarField& PDF,
+            const scalarField& CDF
+        ) const;
+
+        //- Compute and write the distribution of the given scalar field
+        void writeDistribution
+        (
             const scalarField& weight,
             const word& fieldName,
+            const word& componentName,
             const scalarField& field
         );
 
-        //- Write the distribution of a field given its name. Return whether or
-        //  not the field was found. In the case of higher rank types, multiple
-        //  distributions will be calculated and written independently.
+        //- Compute and write the distribution of a field given its name.
+        //  Return whether or not the field was found. In the case of higher
+        //  rank types, multiple distributions will be calculated and written
+        //  independently.
         template<template<class> class GeoField, class Type>
         bool writeDistribution
         (
