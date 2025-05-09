@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -443,6 +443,11 @@ Foam::Istream& Foam::UIPstream::read(char* data, std::streamsize count)
 Foam::Istream& Foam::UIPstream::rewind()
 {
     externalBufPosition_ = 0;
+
+    // Clear the put back token (if any)
+    token t;
+    Istream::getBack(t);
+
     return *this;
 }
 
