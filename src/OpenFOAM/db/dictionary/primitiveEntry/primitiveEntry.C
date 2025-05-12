@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,7 +110,8 @@ bool Foam::primitiveEntry::expandVariable
 Foam::primitiveEntry::primitiveEntry(const keyType& key, const ITstream& is)
 :
     entry(key),
-    ITstream(is)
+    ITstream(is),
+    startLineNumber_(-1)
 {
     name() += '/' + keyword();
 }
@@ -119,7 +120,8 @@ Foam::primitiveEntry::primitiveEntry(const keyType& key, const ITstream& is)
 Foam::primitiveEntry::primitiveEntry(const keyType& key, const token& t)
 :
     entry(key),
-    ITstream(key, tokenList(1, t))
+    ITstream(key, tokenList(1, t)),
+    startLineNumber_(-1)
 {}
 
 
@@ -130,7 +132,8 @@ Foam::primitiveEntry::primitiveEntry
 )
 :
     entry(key),
-    ITstream(key, tokens)
+    ITstream(key, tokens),
+    startLineNumber_(-1)
 {}
 
 
@@ -141,7 +144,8 @@ Foam::primitiveEntry::primitiveEntry
 )
 :
     entry(key),
-    ITstream(key, move(tokens))
+    ITstream(key, move(tokens)),
+    startLineNumber_(-1)
 {}
 
 
@@ -149,16 +153,13 @@ Foam::primitiveEntry::primitiveEntry
 
 Foam::label Foam::primitiveEntry::startLineNumber() const
 {
-    const tokenList& tokens = *this;
+    return startLineNumber_;
+}
 
-    if (tokens.empty())
-    {
-        return -1;
-    }
-    else
-    {
-        return tokens.first().lineNumber();
-    }
+
+Foam::label& Foam::primitiveEntry::startLineNumber()
+{
+    return startLineNumber_;
 }
 
 
@@ -168,7 +169,7 @@ Foam::label Foam::primitiveEntry::endLineNumber() const
 
     if (tokens.empty())
     {
-        return -1;
+        return startLineNumber_;
     }
     else
     {

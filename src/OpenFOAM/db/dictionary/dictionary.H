@@ -67,6 +67,7 @@ namespace Foam
 
 // Forward declaration of friend functions and operators
 class dictionary;
+class primitiveEntry;
 class regExp;
 class SHA1Digest;
 class unitConversion;
@@ -277,7 +278,15 @@ public:
         //- Construct an empty sub-dictionary with given name and parent
         dictionary(const fileName& name, const dictionary& parentDict);
 
-        //- Construct given the entry name, parent dictionary and Istream,
+        //- Construct given the name, parent dictionary and primitiveEntry
+        dictionary
+        (
+            const fileName& name,
+            const dictionary& parentDict,
+            const primitiveEntry&
+        );
+
+        //- Construct given the name, parent dictionary and Istream,
         //  reading entries until lastEntry or EOF
         dictionary
         (

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,12 +75,83 @@ bool Foam::primitiveEntry::expandFunction
 }
 
 
+void Foam::primitiveEntry::readEntry(const dictionary& dict, Istream& is)
+{
+    tokenIndex() = 0;
+
+    if (read(dict, is))
+    {
+        setSize(tokenIndex());
+        tokenIndex() = 0;
+    }
+    else
+    {
+        std::ostringstream os;
+        os  << "ill defined primitiveEntry starting at keyword '"
+            << keyword() << '\''
+            << " on line " << startLineNumber_
+            << " and ending at line " << is.lineNumber();
+
+        SafeFatalIOErrorInFunction
+        (
+            is,
+            os.str()
+        );
+    }
+}
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::primitiveEntry::primitiveEntry
+(
+    const keyType& key,
+    const dictionary& dict,
+    Istream& is
+)
+:
+    entry(key),
+    ITstream
+    (
+        is.name() + '/' + key,
+        tokenList(10),
+        is.format(),
+        is.version(),
+        is.global()
+    ),
+    startLineNumber_(is.lineNumber())
+{
+    readEntry(dict, is);
+}
+
+
+Foam::primitiveEntry::primitiveEntry(const keyType& key, Istream& is)
+:
+    entry(key),
+    ITstream
+    (
+        is.name() + '/' + key,
+        tokenList(10),
+        is.format(),
+        is.version(),
+        is.global()
+    ),
+    startLineNumber_(is.lineNumber())
+{
+    readEntry(dictionary::null, is);
+}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
 bool Foam::primitiveEntry::read(const dictionary& dict, Istream& is)
 {
     is.fatalCheck
     (
         "primitiveEntry::read(const dictionary&, Istream&) start"
     );
+
+    startLineNumber_ = is.lineNumber();
 
     label blockCount = 0;
     token currToken;
@@ -146,74 +217,6 @@ bool Foam::primitiveEntry::read(const dictionary& dict, Istream& is)
     }
 }
 
-
-void Foam::primitiveEntry::readEntry(const dictionary& dict, Istream& is)
-{
-    label keywordLineNumber = is.lineNumber();
-    tokenIndex() = 0;
-
-    if (read(dict, is))
-    {
-        setSize(tokenIndex());
-        tokenIndex() = 0;
-    }
-    else
-    {
-        std::ostringstream os;
-        os  << "ill defined primitiveEntry starting at keyword '"
-            << keyword() << '\''
-            << " on line " << keywordLineNumber
-            << " and ending at line " << is.lineNumber();
-
-        SafeFatalIOErrorInFunction
-        (
-            is,
-            os.str()
-        );
-    }
-}
-
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::primitiveEntry::primitiveEntry
-(
-    const keyType& key,
-    const dictionary& dict,
-    Istream& is
-)
-:
-    entry(key),
-    ITstream
-    (
-        is.name() + '/' + key,
-        tokenList(10),
-        is.format(),
-        is.version(),
-        is.global()
-    )
-{
-    readEntry(dict, is);
-}
-
-
-Foam::primitiveEntry::primitiveEntry(const keyType& key, Istream& is)
-:
-    entry(key),
-    ITstream
-    (
-        is.name() + '/' + key,
-        tokenList(10),
-        is.format(),
-        is.version(),
-        is.global()
-    )
-{
-    readEntry(dictionary::null, is);
-}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 void Foam::primitiveEntry::write(Ostream& os, const bool contentsOnly) const
 {

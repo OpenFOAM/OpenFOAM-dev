@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -138,7 +138,7 @@ public:
         //- Return the dictionary name
         virtual fileName& name() = 0;
 
-        //- Return line number of first token in dictionary
+        //- Return line number of keyword or first token in dictionary
         virtual label startLineNumber() const = 0;
 
         //- Return line number of last token in dictionary
