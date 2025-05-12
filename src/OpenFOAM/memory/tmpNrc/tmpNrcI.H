@@ -108,14 +108,8 @@ inline Foam::tmpNrc<T>::tmpNrc(const tmpNrc<T>& t, bool allowTransfer)
             }
             else
             {
-                t.type_ = CONST_REF;
+                type_ = CONST_REF;
             }
-        }
-        else
-        {
-            FatalErrorInFunction
-                << "Attempted copy of a deallocated " << typeName()
-                << abort(FatalError);
         }
     }
 }

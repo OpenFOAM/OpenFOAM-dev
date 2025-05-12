@@ -101,7 +101,7 @@ public:
         inline tmpNrc(const tmpNrc<T>&, bool allowTransfer);
 
 
-    //- Destructor: deletes temporary object when the reference count is 0
+    //- Destructor: deletes object if it is temporary
     inline ~tmpNrc();
 
 
