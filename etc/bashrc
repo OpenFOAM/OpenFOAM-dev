@@ -33,7 +33,7 @@
 
 export WM_PROJECT=OpenFOAM
 export WM_THIRD_PARTY=ThirdParty
-export WM_PROJECT_VERSION=dev
+export WM_PROJECT_VERSION=dash
 
 ################################################################################
 # USER EDITABLE PART: Changes made here may be lost with the next upgrade
@@ -48,9 +48,11 @@ if [ -n "$bashrcFile" ]
 then
     export FOAM_INST_DIR=$(cd $(dirname $bashrcFile)/../.. && pwd -P)
 else
-    export FOAM_INST_DIR=$HOME/$WM_PROJECT
+    export FOAM_INST_DIR=$(cd $(dirname $0)/.. && pwd -P)
+    export FOAM_PROJECT_DIR=$(cd $(dirname $0) && pwd -P)
 fi
 unset bashrcFile
+echo ${FOAM_INST_DIR}
 #
 # Please set to the appropriate path if the above default is not correct. E.g.,
 #
@@ -103,10 +105,10 @@ export WM_OSTYPE=POSIX
 
 #- Decomposition libraries:
 #    <library>_TYPE = none | system | ThirdParty (OpenFOAM)
-export SCOTCH_TYPE=ThirdParty
+export SCOTCH_TYPE=none #ThirdParty
 export METIS_TYPE=none
 export PARMETIS_TYPE=none
-export ZOLTAN_TYPE=ThirdParty
+export ZOLTAN_TYPE=none #ThirdParty
 
 #    ParaView_TYPE = none | system | paraviewopenfoam | ThirdParty (OpenFOAM)
 export ParaView_TYPE=system
@@ -130,8 +132,10 @@ foamOldDirs="$WM_PROJECT_DIR $WM_THIRD_PARTY_DIR \
 # Location of installation
 # ~~~~~~~~~~~~~~~~~~~~~~~~
 export WM_PROJECT_INST_DIR=$FOAM_INST_DIR
-export WM_PROJECT_DIR=$WM_PROJECT_INST_DIR/$WM_PROJECT-$WM_PROJECT_VERSION
+export WM_PROJECT_DIR=$FOAM_PROJECT_DIR
+ #$WM_PROJECT_INST_DIR/$WM_PROJECT-$WM_PROJECT_VERSION
 
+echo $WM_PROJECT_DIR
 if [ -d "$WM_PROJECT_DIR" ]
 then
     WM_PROJECT_DIR_REAL=$(cd $WM_PROJECT_DIR && pwd -P)

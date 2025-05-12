@@ -1,4 +1,4 @@
 setDeltaT.C
 foamRun.C
 
-EXE = $(FOAM_APPBIN)/foamRun
+EXE = $(WM_PROJECT_DIR)/bin/foamRun
