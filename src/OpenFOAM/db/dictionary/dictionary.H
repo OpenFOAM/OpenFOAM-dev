@@ -361,10 +361,10 @@ public:
         word topDictKeyword() const;
 
         //- Return line number of first token in dictionary
-        label startLineNumber() const;
+        virtual label startLineNumber() const;
 
         //- Return line number of last token in dictionary
-        label endLineNumber() const;
+        virtual label endLineNumber() const;
 
         //- Return the SHA1 digest of the dictionary contents
         SHA1Digest digest() const;

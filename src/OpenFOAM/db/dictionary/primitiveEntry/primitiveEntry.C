@@ -110,8 +110,7 @@ bool Foam::primitiveEntry::expandVariable
 Foam::primitiveEntry::primitiveEntry(const keyType& key, const ITstream& is)
 :
     entry(key),
-    ITstream(is),
-    startLineNumber_(-1)
+    ITstream(is)
 {
     name() += '/' + keyword();
 }
@@ -120,8 +119,7 @@ Foam::primitiveEntry::primitiveEntry(const keyType& key, const ITstream& is)
 Foam::primitiveEntry::primitiveEntry(const keyType& key, const token& t)
 :
     entry(key),
-    ITstream(key, tokenList(1, t)),
-    startLineNumber_(-1)
+    ITstream(key, tokenList(1, t))
 {}
 
 
@@ -132,8 +130,7 @@ Foam::primitiveEntry::primitiveEntry
 )
 :
     entry(key),
-    ITstream(key, tokens),
-    startLineNumber_(-1)
+    ITstream(key, tokens)
 {}
 
 
@@ -144,24 +141,11 @@ Foam::primitiveEntry::primitiveEntry
 )
 :
     entry(key),
-    ITstream(key, move(tokens)),
-    startLineNumber_(-1)
+    ITstream(key, move(tokens))
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-Foam::label Foam::primitiveEntry::startLineNumber() const
-{
-    return startLineNumber_;
-}
-
-
-Foam::label& Foam::primitiveEntry::startLineNumber()
-{
-    return startLineNumber_;
-}
-
 
 Foam::label Foam::primitiveEntry::endLineNumber() const
 {
@@ -169,7 +153,7 @@ Foam::label Foam::primitiveEntry::endLineNumber() const
 
     if (tokens.empty())
     {
-        return startLineNumber_;
+        return startLineNumber();
     }
     else
     {

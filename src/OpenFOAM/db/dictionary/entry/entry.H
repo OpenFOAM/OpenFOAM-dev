@@ -72,14 +72,30 @@ class entry
         //- Keyword of entry
         keyType keyword_;
 
+        //- Line number of the entry keyword
+        label startLineNumber_;
+
 
     // Private Member Functions
 
-        //- Get the next valid keyword. Return true if is valid keyType.
-        static bool getKeyword(keyType&, token&, Istream&);
+        //- Get the next valid keyword
+        //  set the line number return true if is valid
+        static bool getKeyword
+        (
+            keyType& keyword,
+            token& keywordToken,
+            label& keywordLineNo,
+            Istream& is
+        );
 
-        //- Get the next valid keyword otherwise return false
-        static bool getKeyword(keyType&, Istream&);
+        //- Get the next valid keyword
+        //  set the line number return true if is valid
+        static bool getKeyword
+        (
+            keyType& keyword,
+            label& keywordLineNo,
+            Istream& is
+        );
 
 
 public:
@@ -89,18 +105,15 @@ public:
 
     // Constructors
 
-        //- Construct from keyword
-        entry(const keyType&);
+        //- Construct from keyword and optional line number
+        entry(const keyType& keyword, const label lineNumber=-1);
 
         //- Copy constructor
         entry(const entry&);
 
         //- Construct on freestore as copy with reference to the
         //  dictionary the copy belongs to
-        virtual autoPtr<entry> clone
-        (
-            const dictionary& parentDict
-        ) const = 0;
+        virtual autoPtr<entry> clone(const dictionary& parentDict) const = 0;
 
         //- Construct on freestore as copy
         //  Note: the parent directory is set to dictionary::null
@@ -138,8 +151,17 @@ public:
         //- Return the dictionary name
         virtual fileName& name() = 0;
 
-        //- Return line number of keyword or first token in dictionary
-        virtual label startLineNumber() const = 0;
+        //- Return line number of keyword of the entry
+        virtual label startLineNumber() const
+        {
+            return startLineNumber_;
+        }
+
+        //- Return non-const access to line number of keyword of the entry
+        virtual label& startLineNumber()
+        {
+            return startLineNumber_;
+        }
 
         //- Return line number of last token in dictionary
         virtual label endLineNumber() const = 0;

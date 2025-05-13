@@ -38,8 +38,7 @@ Foam::primitiveEntry::primitiveEntry
 )
 :
     entry(key),
-    ITstream(key, tokenList(10)),
-    startLineNumber_(-1)
+    ITstream(key, tokenList(10))
 {
     OStringStream os;
     os  << t << token::END_STATEMENT;
@@ -56,9 +55,8 @@ Foam::primitiveEntry::primitiveEntry
     const label endLineNumber
 )
 :
-    entry(key),
-    ITstream(key, tokenList(10)),
-    startLineNumber_(startLineNumber)
+    entry(key, startLineNumber),
+    ITstream(key, tokenList(10))
 {
     OStringStream os;
     os  << t << token::END_STATEMENT;

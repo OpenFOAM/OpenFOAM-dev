@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,17 +37,19 @@ int Foam::entry::disableFunctionEntries
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::entry::entry(const keyType& keyword)
+Foam::entry::entry(const keyType& keyword, const label lineNumber)
 :
     IDLList<entry>::link(),
-    keyword_(keyword)
+    keyword_(keyword),
+    startLineNumber_(lineNumber)
 {}
 
 
 Foam::entry::entry(const entry& e)
 :
     IDLList<entry>::link(),
-    keyword_(e.keyword_)
+    keyword_(e.keyword_),
+    startLineNumber_(e.startLineNumber_)
 {}
 
 

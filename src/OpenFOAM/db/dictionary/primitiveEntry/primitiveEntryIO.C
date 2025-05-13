@@ -89,7 +89,7 @@ void Foam::primitiveEntry::readEntry(const dictionary& dict, Istream& is)
         std::ostringstream os;
         os  << "ill defined primitiveEntry starting at keyword '"
             << keyword() << '\''
-            << " on line " << startLineNumber_
+            << " on line " << startLineNumber()
             << " and ending at line " << is.lineNumber();
 
         SafeFatalIOErrorInFunction
@@ -110,7 +110,7 @@ Foam::primitiveEntry::primitiveEntry
     Istream& is
 )
 :
-    entry(key),
+    entry(key, is.lineNumber()),
     ITstream
     (
         is.name() + '/' + key,
@@ -118,8 +118,7 @@ Foam::primitiveEntry::primitiveEntry
         is.format(),
         is.version(),
         is.global()
-    ),
-    startLineNumber_(is.lineNumber())
+    )
 {
     readEntry(dict, is);
 }
@@ -127,7 +126,7 @@ Foam::primitiveEntry::primitiveEntry
 
 Foam::primitiveEntry::primitiveEntry(const keyType& key, Istream& is)
 :
-    entry(key),
+    entry(key, is.lineNumber()),
     ITstream
     (
         is.name() + '/' + key,
@@ -135,8 +134,7 @@ Foam::primitiveEntry::primitiveEntry(const keyType& key, Istream& is)
         is.format(),
         is.version(),
         is.global()
-    ),
-    startLineNumber_(is.lineNumber())
+    )
 {
     readEntry(dictionary::null, is);
 }
@@ -151,7 +149,8 @@ bool Foam::primitiveEntry::read(const dictionary& dict, Istream& is)
         "primitiveEntry::read(const dictionary&, Istream&) start"
     );
 
-    startLineNumber_ = is.lineNumber();
+    // Set the line number of the keyword
+    startLineNumber() = is.lineNumber();
 
     label blockCount = 0;
     token currToken;

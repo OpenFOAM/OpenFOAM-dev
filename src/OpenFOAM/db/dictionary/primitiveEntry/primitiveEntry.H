@@ -62,12 +62,6 @@ class primitiveEntry
     public entry,
     public ITstream
 {
-    // Private Member Data
-
-        //- Start line number of the entry (the line of the keyword)
-        label startLineNumber_;
-
-
     // Private Member Functions
 
         //- Append the given tokens starting at the current tokenIndex
@@ -145,14 +139,8 @@ public:
             return ITstream::name();
         }
 
-        //- Return line number of keyword of the entry
-        label startLineNumber() const;
-
-        //- Return non-const access to line number of keyword of the entry
-        label& startLineNumber();
-
         //- Return line number of last token in dictionary
-        label endLineNumber() const;
+        virtual label endLineNumber() const;
 
         //- Return true because this entry is a stream
         bool isStream() const
