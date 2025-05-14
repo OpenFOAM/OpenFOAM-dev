@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -473,7 +473,19 @@ void Foam::addArgEntry
 {
     IStringStream entryStream(keyword + ' ' + value + ';');
     entryStream.lineNumber() = lineNumber;
-    dict.set(entry::New(entryStream).ptr());
+    autoPtr<entry> argEntry(entry::New(entryStream));
+    if (argEntry.valid())
+    {
+        dict.set(argEntry.ptr());
+    }
+    else
+    {
+        FatalIOErrorInFunction(dict)
+            << "Cannot construct argument entry from string "
+            << entryStream.str() << nl
+            << "    on line " << lineNumber << " of dictionary " << dict.name()
+            << exit(FatalIOError);
+    }
 }
 
 

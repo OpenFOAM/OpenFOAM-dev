@@ -289,14 +289,17 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const IOerror& ioErr)
 
         os  << "file: " << ioErr.ioFileName().c_str();
 
-        if (ioErr.ioEndLineNumber() != -1)
+        if (ioErr.ioStartLineNumber() >= 0)
         {
-            os  << " from line " << ioErr.ioStartLineNumber()
-                << " to " << ioErr.ioEndLineNumber() << '.';
-        }
-        else if (ioErr.ioStartLineNumber() >= 0)
-        {
-            os  << " at line " << ioErr.ioStartLineNumber() << '.';
+            if (ioErr.ioEndLineNumber() >= 0)
+            {
+                os  << " from line " << ioErr.ioStartLineNumber()
+                    << " to " << ioErr.ioEndLineNumber() << '.';
+            }
+            else
+            {
+                os  << " at line " << ioErr.ioStartLineNumber() << '.';
+            }
         }
 
         if (IOerror::level >= 2 && ioErr.sourceFileLineNumber())
