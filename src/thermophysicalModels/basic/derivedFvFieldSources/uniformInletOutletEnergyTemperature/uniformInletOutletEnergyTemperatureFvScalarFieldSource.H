@@ -37,13 +37,12 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    <patchName>
+    <sourceName>
     {
         type            uniformInletOutletEnergyTemperature;
         uniformInletHe  3700000;
     }
     \endverbatim
-
 
 SourceFiles
     uniformInletOutletEnergyTemperatureFvScalarFieldSource.C

@@ -30,7 +30,7 @@ Description
 Usage
     Example of the source condition specification:
     \verbatim
-    <patchName>
+    <sourceName>
     {
         type            internal;
     }

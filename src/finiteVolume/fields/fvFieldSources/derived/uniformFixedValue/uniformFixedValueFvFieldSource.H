@@ -35,7 +35,7 @@ Usage
 
     Example of the source condition specification with a constant value:
     \verbatim
-    <patchName>
+    <sourceName>
     {
         type            uniformFixedValue;
         uniformValue    0.1;
@@ -44,7 +44,7 @@ Usage
 
     Example of the source condition specification with a time-varying value:
     \verbatim
-    <patchName>
+    <sourceName>
     {
         type            uniformFixedValue;
         uniformValue

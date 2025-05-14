@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,52 +22,29 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::turbulentIntensityKineticEnergyFvScalarFieldSource
+    Foam::NaNFvFieldSource
 
 Description
-    This source condition provides a turbulent kinetic energy based on
-    user-supplied turbulence intensity, defined as a fraction of the
-    mean velocity:
-
-        \f[
-            k = 1.5 (I |U|)^2
-        \f]
-
-    where
-
-    \vartable
-        k       | kinetic energy values
-        I       | turbulence intensity
-        U       | velocity field
-    \endvartable
-
-    In the case of a sink, the current cell values are used instead.
+    This source condition provides a NaN value.
 
 Usage
-    \table
-        Property     | Description             | Required    | Default value
-        intensity    | fraction of mean field [0-1] | yes    |
-        U            | velocity field name     | no          | U
-    \endtable
-
-    Example of the boundary condition specification:
+    Example specification:
     \verbatim
     <sourceName>
     {
-        type        turbulentIntensityKineticEnergyInlet;
-        intensity   0.05;           // 5% turbulence
+        type            NaN;
     }
     \endverbatim
 
 SourceFiles
-    turbulentIntensityKineticEnergyFvScalarFieldSource.C
+    NaNFvFieldSource.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef turbulentIntensityKineticEnergyFvScalarFieldSource_H
-#define turbulentIntensityKineticEnergyFvScalarFieldSource_H
+#ifndef NaNFvFieldSource_H
+#define NaNFvFieldSource_H
 
-#include "fvFieldSources.H"
+#include "fvFieldSource.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -75,85 +52,71 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-     Class turbulentIntensityKineticEnergyFvScalarFieldSource Declaration
+               Class NaNFvFieldSource Declaration
 \*---------------------------------------------------------------------------*/
 
-class turbulentIntensityKineticEnergyFvScalarFieldSource
+template<class Type>
+class NaNFvFieldSource
 :
-    public fvScalarFieldSource
+    public fvFieldSource<Type>
 {
-private:
-
-    // Private Data
-
-        //- Turbulent intensity as fraction of mean velocity
-        scalar intensity_;
-
-        //- Name of the velocity field
-        word UName_;
-
-
 public:
 
     //- Runtime type information
-    TypeName("turbulentIntensityKineticEnergy");
+    TypeName("NaN");
 
 
     // Constructors
 
         //- Construct from internal field and dictionary
-        turbulentIntensityKineticEnergyFvScalarFieldSource
+        NaNFvFieldSource
         (
-            const DimensionedField<scalar, volMesh>&,
+            const DimensionedField<Type, volMesh>&,
             const dictionary& dict
         );
 
         //- Copy constructor setting internal field reference
-        turbulentIntensityKineticEnergyFvScalarFieldSource
+        NaNFvFieldSource
         (
-            const turbulentIntensityKineticEnergyFvScalarFieldSource&,
-            const DimensionedField<scalar, volMesh>&
+            const NaNFvFieldSource<Type>&,
+            const DimensionedField<Type, volMesh>&
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual autoPtr<fvScalarFieldSource> clone
+        virtual autoPtr<fvFieldSource<Type>> clone
         (
-            const DimensionedField<scalar, volMesh>& iF
+            const DimensionedField<Type, volMesh>& iF
         ) const
         {
-            return autoPtr<fvScalarFieldSource>
+            return autoPtr<fvFieldSource<Type>>
             (
-                new turbulentIntensityKineticEnergyFvScalarFieldSource
-                (
-                    *this,
-                    iF
-                )
+                new NaNFvFieldSource<Type>(*this, iF)
             );
         }
 
 
     //- Destructor
-    virtual ~turbulentIntensityKineticEnergyFvScalarFieldSource();
+    virtual ~NaNFvFieldSource();
 
 
     // Member Functions
 
         //- Return the source value
-        virtual tmp<DimensionedField<scalar, volMesh>> sourceValue
+        virtual tmp<DimensionedField<Type, volMesh>> sourceValue
         (
             const fvSource& model,
             const DimensionedField<scalar, volMesh>& source
         ) const;
 
         //- Return the source value
-        virtual tmp<scalarField> sourceValue
+        virtual tmp<Field<Type>> sourceValue
         (
             const fvSource& model,
             const scalarField& source,
             const labelUList& cells
         ) const;
 
-        //- Return the internal coefficient
+        //- Return the source value
         virtual tmp<DimensionedField<scalar, volMesh>> internalCoeff
         (
             const fvSource& model,
@@ -167,15 +130,18 @@ public:
             const scalarField& source,
             const labelUList& cells
         ) const;
-
-        //- Write
-        virtual void write(Ostream&) const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "NaNFvFieldSource.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

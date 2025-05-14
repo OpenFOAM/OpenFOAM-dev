@@ -36,7 +36,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    <patchName>
+    <sourceName>
     {
         type            uniformFixedEnergyTemperature;
         uniformHe       3700000;
