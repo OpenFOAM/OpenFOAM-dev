@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ License
 
 #include "MovingPhaseModel.H"
 #include "phaseSystem.H"
-#include "fixedValueFvPatchFields.H"
+#include "fixedValueFvsPatchFields.H"
 #include "slipFvPatchFields.H"
 #include "partialSlipFvPatchFields.H"
 
@@ -86,7 +86,7 @@ Foam::MovingPhaseModel<BasePhaseModel>::phi(const volVectorField& U) const
         {
             if (!U.boundaryField()[patchi].assignable())
             {
-                phiTypes[patchi] = fixedValueFvPatchScalarField::typeName;
+                phiTypes[patchi] = fixedValueFvsPatchScalarField::typeName;
             }
         }
 

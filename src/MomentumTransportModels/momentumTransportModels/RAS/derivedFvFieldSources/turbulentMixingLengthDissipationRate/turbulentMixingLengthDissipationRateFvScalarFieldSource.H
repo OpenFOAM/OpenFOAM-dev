@@ -54,7 +54,7 @@ Usage
 
     Example of the source condition specification:
     \verbatim
-    <patchName>
+    <sourceName>
     {
         type            turbulentMixingLengthDissipationRate;
         mixingLength    0.005;
