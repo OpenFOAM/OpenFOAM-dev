@@ -97,7 +97,7 @@ void Foam::solvers::incompressibleMultiphaseVoF::alphaSolve()
         );
     }
 
-    MULES::limitSum(alphas, alphas, alphaPhis, phi);
+    MULES::limitSum(alphas, alphaPhis, phi);
 
     rhoPhi = Zero;
 

@@ -296,53 +296,33 @@ void limit
     const bool returnCorr
 );
 
-void limitSum(UPtrList<scalarField>& psiPhiCorrs);
+void limitSumCorr(UPtrList<scalarField>& psiPhiCorrs);
 
-void limitSum
+void limitSumCorr
 (
     UPtrList<scalarField>& phiPsiCorrs,
     const UPtrList<scalarField>& phiPsiFixedCorrs
 );
 
-template
-<
-    template<class> class ConstraintList,
-    class ConstraintField,
-    template<class> class PsiPhiList
->
-void limitSum
+void limitSumCorr
 (
-    const ConstraintList<const ConstraintField>& constraints,
-    PsiPhiList<surfaceScalarField>& psiPhiCorrs,
+    const UPtrList<const volScalarField>& psis,
+    UPtrList<surfaceScalarField>& psiPhiCorrs,
     const surfaceScalarField& phi
 );
 
-template
-<
-    template<class> class ConstraintList,
-    class ConstraintField,
-    template<class> class PsiPhiList
->
 void limitSum
 (
+    const UPtrList<const volScalarField>& psis,
     const PtrList<surfaceScalarField>& alphaPhiBDs,
-    const ConstraintList<const ConstraintField>& constraints,
-    PsiPhiList<surfaceScalarField>& psiPhis,
+    UPtrList<surfaceScalarField>& psiPhis,
     const surfaceScalarField& phi
 );
 
-template
-<
-    template<class> class AlphaList,
-    template<class> class ConstraintList,
-    class ConstraintField,
-    template<class> class PsiPhiList
->
 void limitSum
 (
-    const AlphaList<const volScalarField>& alphas,
-    const ConstraintList<const ConstraintField>& constraints,
-    PsiPhiList<surfaceScalarField>& psiPhis,
+    const UPtrList<const volScalarField>& psis,
+    UPtrList<surfaceScalarField>& psiPhis,
     const surfaceScalarField& phi
 );
 

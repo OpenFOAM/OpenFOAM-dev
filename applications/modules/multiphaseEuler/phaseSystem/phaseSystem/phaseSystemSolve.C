@@ -436,7 +436,6 @@ void Foam::phaseSystem::solve
             MULES::limitSum
             (
                 alphasMoving,
-                phisMoving,
                 boundedPredictor ? alphaPhiBDs : alphaPhis,
                 phiMoving
             );
@@ -484,7 +483,7 @@ void Foam::phaseSystem::solve
 
                 // Limit the flux of the phases
                 // to ensure the phase fractions sum to 1
-                MULES::limitSum(alphasMoving, phisMoving, alphaPhis, phiMoving);
+                MULES::limitSum(alphasMoving, alphaPhis, phiMoving);
 
                 forAll(movingPhases(), movingPhasei)
                 {
@@ -509,9 +508,9 @@ void Foam::phaseSystem::solve
                     );
                 }
 
-                // Limit the flux of the phases
+                // Limit the flux corrections of the phases
                 // to ensure the phase fractions sum to 1
-                MULES::limitSum(phisMoving, alphaPhis, phiMoving);
+                MULES::limitSumCorr(alphasMoving, alphaPhis, phiMoving);
 
                 forAll(solvePhases, solvePhasei)
                 {
