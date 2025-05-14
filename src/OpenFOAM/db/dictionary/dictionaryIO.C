@@ -471,7 +471,7 @@ void Foam::addArgEntry
     const label lineNumber
 )
 {
-    IStringStream entryStream(keyword + ' ' + value + ';');
+    IStringStream entryStream(dict.name(), keyword + ' ' + value + ';');
     entryStream.lineNumber() = lineNumber;
     autoPtr<entry> argEntry(entry::New(entryStream));
     if (argEntry.valid())
