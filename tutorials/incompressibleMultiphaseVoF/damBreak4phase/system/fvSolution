@@ -18,7 +18,7 @@ solvers
 {
     "alpha.*"
     {
-        nAlphaSubCycles polynomial (0 2);
+        nSubCycles      polynomial (0 2);
         cAlpha          1;
     }
 

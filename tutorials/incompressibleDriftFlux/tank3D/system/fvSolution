@@ -18,8 +18,8 @@ solvers
 {
     "alpha.*"
     {
-        nAlphaCorr      2;
-        nAlphaSubCycles 1;
+        nCorrectors     2;
+        nSubCycles      1;
 
         MULESCorr       yes;
         nLimiterIter    3;

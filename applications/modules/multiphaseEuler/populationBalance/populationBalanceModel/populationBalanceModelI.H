@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,10 @@ Foam::diameterModels::populationBalanceModel::mesh() const
 
 inline Foam::label Foam::diameterModels::populationBalanceModel::nCorr() const
 {
-    return mesh_.solution().solverDict(name_).lookup<label>("nCorr");
+    return mesh_.solution().solverDict(name_).lookupBackwardsCompatible<label>
+    (
+        {"nCorrectors", "nCorr"}
+    );
 }
 
 

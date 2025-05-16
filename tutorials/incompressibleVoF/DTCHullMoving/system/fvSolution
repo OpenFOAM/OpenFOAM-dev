@@ -18,8 +18,8 @@ solvers
 {
     "alpha.water.*"
     {
-        nAlphaCorr      3;
-        nAlphaSubCycles 1;
+        nCorrectors     3;
+        nSubCycles      1;
 
         MULESCorr       yes;
         nLimiterIter    1;

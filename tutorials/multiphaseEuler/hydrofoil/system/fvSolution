@@ -18,8 +18,8 @@ solvers
 {
     "alpha.*"
     {
-        nAlphaCorr      1;
-        nAlphaSubCycles 1;
+        nCorrectors     1;
+        nSubCycles      1;
     };
 
     p_rgh

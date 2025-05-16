@@ -74,7 +74,7 @@ run()
             runFoamDictionary system/fvSchemes \
                 -entry ddtSchemes/default -set "CrankNicolson 0.9"
             runFoamDictionary system/fvSolution \
-                -entry solvers/alpha.water/nAlphaSubCycles -set 1
+                -entry solvers/alpha.water/nSubCycles      -set 1
         fi
         if [ "$motion" = false ]
         then

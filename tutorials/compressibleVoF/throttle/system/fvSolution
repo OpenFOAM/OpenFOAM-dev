@@ -18,8 +18,8 @@ solvers
 {
     "alpha.vapour.*"
     {
-        nAlphaCorr      3;
-        nAlphaSubCycles 1;
+        nCorrectors     3;
+        nSubCycles      1;
     }
 
     p_rgh

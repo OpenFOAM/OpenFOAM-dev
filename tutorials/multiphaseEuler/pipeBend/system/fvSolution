@@ -17,8 +17,8 @@ solvers
 {
     "alpha.*"
     {
-        nAlphaCorr      1;
-        nAlphaSubCycles polynomial (0 3);
+        nCorrectors     1;
+        nSubCycles      polynomial (0 3);
         implicitPhasePressure yes;
         solver          PBiCGStab;
         preconditioner  DIC;
@@ -70,7 +70,7 @@ solvers
 
     agglomerates
     {
-        nCorr                1;
+        nCorrectors          1;
         tolerance            1e-4;
         scale                true;
         solveOnFinalIterOnly true;

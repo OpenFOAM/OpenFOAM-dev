@@ -45,16 +45,21 @@ bool Foam::solvers::twoPhaseSolver::read()
 
     const dictionary& alphaControls = mesh.solution().solverDict(alpha1.name());
 
-    nAlphaSubCyclesPtr =
-        Function1<scalar>::New
-        (
-            "nAlphaSubCycles",
-            mesh.time().userUnits(),
-            dimless,
-            alphaControls
-        );
+    nAlphaSubCyclesPtr = Function1<scalar>::New
+    (
+        alphaControls.found("nAlphaSubCycles")
+          ? "nAlphaSubCycles"
+          : "nSubCycles",
+        dimless,
+        dimless,
+        alphaControls
+    );
 
-    nAlphaCorr = alphaControls.lookupOrDefault<label>("nAlphaCorr", 1);
+    nAlphaCorr = alphaControls.lookupOrDefaultBackwardsCompatible<label>
+    (
+        {"nCorrectors", "nAlphaCorr"},
+        1
+    );
 
     MULESCorr = alphaControls.lookupOrDefault<Switch>("MULESCorr", false);
 

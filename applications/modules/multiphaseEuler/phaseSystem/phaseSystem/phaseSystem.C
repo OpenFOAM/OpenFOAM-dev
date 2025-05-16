@@ -347,13 +347,19 @@ void Foam::phaseSystem::alphaControl::read(const dictionary& dict)
 {
     nAlphaSubCyclesPtr = Function1<scalar>::New
     (
-        "nAlphaSubCycles",
+        dict.found("nAlphaSubCycles")
+          ? "nAlphaSubCycles"
+          : "nSubCycles",
         dimless,
         dimless,
         dict
     );
 
-    nAlphaCorr = dict.lookupOrDefault<label>("nAlphaCorr", 1);
+    nAlphaCorr = dict.lookupOrDefaultBackwardsCompatible<label>
+    (
+        {"nCorrectors", "nAlphaCorr"},
+        1
+    );
 
     vDotResidualAlpha =
         dict.lookupOrDefault("vDotResidualAlpha", 1e-4);

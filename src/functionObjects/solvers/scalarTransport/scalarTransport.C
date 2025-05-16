@@ -199,7 +199,11 @@ bool Foam::functionObjects::scalarTransport::read(const dictionary& dict)
             break;
     }
 
-    dict.readIfPresent("nCorr", nCorr_);
+    nCorr_ = dict.lookupOrDefaultBackwardsCompatible<label>
+    (
+        {"nCorrectors", "nCorr"},
+        0
+    );
 
     return true;
 }
@@ -366,7 +370,6 @@ void Foam::functionObjects::scalarTransport::subCycleMULES()
 void Foam::functionObjects::scalarTransport::solveMULES()
 {
     const dictionary& controls = mesh_.solution().solverDict(fieldName_);
-    const label nCorr(controls.lookup<label>("nCorr"));
     const bool MULESCorr(controls.lookupOrDefault<Switch>("MULESCorr", false));
 
     const MULES::control MULEScontrols(mesh().solution().solverDict(s_.name()));
@@ -565,7 +568,7 @@ void Foam::functionObjects::scalarTransport::solveMULES()
         tsPhiCorr0_ = tsPhiUD;
     }
 
-    for (int sCorr=0; sCorr<nCorr; sCorr++)
+    for (int sCorr=0; sCorr<nCorr_; sCorr++)
     {
         // Split operator
         tmp<surfaceScalarField> tsPhiUn
