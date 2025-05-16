@@ -13,7 +13,7 @@ include $(DEFAULT_RULES)/c++$(WM_COMPILE_OPTION)
 ptFLAGS     = -DNoRepository -ftemplate-depth-100
 
 c++FLAGS    = $(GFLAGS) $(c++WARN) $(c++OPT) $(c++DBUG) $(ptFLAGS) \
-              $(LIB_HEADER_DIRS) -fPIC
+              $(LIB_HEADER_DIRS) -mcpu=native --param=aarch64-autovec-preference=4 -fPIC
 
 Ctoo        = $(WM_SCHEDULER) $(CC) $(c++FLAGS) -c $< -o $@
 cxxtoo      = $(Ctoo)
