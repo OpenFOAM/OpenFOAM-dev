@@ -125,7 +125,9 @@ public:
             const word& name,
             const labelUList& addr,
             const boolList& fm,
-            const faceZoneList& mz
+            const faceZoneList& mz,
+            const bool moveUpdate = false,
+            const bool topoUpdate = false
         );
 
         //- Construct from components, moving contents
@@ -134,7 +136,9 @@ public:
             const word& name,
             labelList&& addr,
             boolList&& fm,
-            const faceZoneList&
+            const faceZoneList&,
+            const bool moveUpdate = false,
+            const bool topoUpdate = false
         );
 
         //- Construct from dictionary
@@ -150,6 +154,7 @@ public:
         faceZone
         (
             const faceZone&,
+            const word& name,
             const labelUList& addr,
             const boolList& fm,
             const faceZoneList&
@@ -173,7 +178,16 @@ public:
         {
             return autoPtr<faceZone>
             (
-                new faceZone(*this, *this, flipMap(), zones())
+                new faceZone(*this, name(), *this, flipMap(), zones())
+            );
+        }
+
+        //- Construct and return a clone with a new name
+        autoPtr<faceZone> clone(const word& name) const
+        {
+            return autoPtr<faceZone>
+            (
+                new faceZone(*this, name, *this, flipMap(), zones())
             );
         }
 
@@ -182,7 +196,7 @@ public:
         {
             return autoPtr<faceZone>
             (
-                new faceZone(*this, *this, flipMap(), mz)
+                new faceZone(*this, name(), *this, flipMap(), mz)
             );
         }
 
@@ -197,7 +211,7 @@ public:
         {
             return autoPtr<faceZone>
             (
-                new faceZone(*this, addr, fm, mz)
+                new faceZone(*this, name(), addr, fm, mz)
             );
         }
 

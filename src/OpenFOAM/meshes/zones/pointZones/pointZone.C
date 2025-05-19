@@ -111,7 +111,10 @@ bool Foam::pointZone::checkParallelSync(const bool report) const
 
 void Foam::pointZone::topoChange(const polyTopoChangeMap& map)
 {
-    Zone::topoChange(map.pointMap(), map.reversePointMap());
+    if (!topoUpdate_)
+    {
+        Zone::topoChange(map.pointMap(), map.reversePointMap());
+    }
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -279,8 +279,10 @@ public:
         //- Return whether the given IOobject relates to a mesh on disk
         static bool found(const IOobject& io);
 
-        //- Construct from IOobject
-        explicit polyMesh(const IOobject& io);
+        //- Construct from IOobject. Optionally prevent post-construction, so
+        //  that postConstruct may be called manually for finer control of
+        //  construction of mesh changes
+        explicit polyMesh(const IOobject& io, const bool doPost = true);
 
         //- Move construct from IOobject or from components.
         //  Boundary is added using addPatches() member function

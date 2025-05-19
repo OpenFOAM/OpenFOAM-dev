@@ -78,7 +78,16 @@ public:
         {
             return autoPtr<cellZone>
             (
-                new cellZone(*this, *this, zones())
+                new cellZone(*this, name(), *this, zones())
+            );
+        }
+
+        //- Construct and return a clone with a new name
+        autoPtr<cellZone> clone(const word& name) const
+        {
+            return autoPtr<cellZone>
+            (
+                new cellZone(*this, name, *this, zones())
             );
         }
 
@@ -87,7 +96,7 @@ public:
         {
             return autoPtr<cellZone>
             (
-                new cellZone(*this, *this, mz)
+                new cellZone(*this, name(), *this, mz)
             );
         }
 
@@ -101,7 +110,7 @@ public:
         {
             return autoPtr<cellZone>
             (
-                new cellZone(*this, addr, mz)
+                new cellZone(*this, name(), addr, mz)
             );
         }
 

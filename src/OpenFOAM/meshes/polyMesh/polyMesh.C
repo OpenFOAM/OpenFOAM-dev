@@ -35,6 +35,7 @@ License
 #include "treeDataCell.H"
 #include "meshObjects.H"
 #include "pointMesh.H"
+#include "zonesGenerator.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -172,7 +173,7 @@ Foam::autoPtr<Foam::labelIOList> Foam::polyMesh::readTetBasePtIs() const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::polyMesh::polyMesh(const IOobject& io)
+Foam::polyMesh::polyMesh(const IOobject& io, const bool doPost)
 :
     objectRegistry(io, regionDir(io)),
     primitiveMesh(),
@@ -361,6 +362,13 @@ Foam::polyMesh::polyMesh(const IOobject& io)
     pointZones_.readIfPresent();
     faceZones_.readIfPresent();
     cellZones_.readIfPresent();
+
+    if (doPost && zonesGenerator::New(*this).moveUpdate())
+    {
+        pointZones_.write();
+        faceZones_.write();
+        cellZones_.write();
+    }
 }
 
 

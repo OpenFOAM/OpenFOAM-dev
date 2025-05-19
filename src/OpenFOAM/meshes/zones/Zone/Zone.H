@@ -77,6 +77,14 @@ protected:
         //- Reference to zone list
         const ZonesType& zones_;
 
+        //- Flag indicating the zone is updated by the generator
+        //  following mesh motion
+        bool moveUpdate_;
+
+        //- Flag indicating the zone is updated by the generator
+        //  following topology change
+        bool topoUpdate_;
+
 
         // Demand-driven private data
 
@@ -106,7 +114,9 @@ public:
         (
             const word& name,
             const labelUList& indices,
-            const ZonesType& zones
+            const ZonesType& zones,
+            const bool moveUpdate = false,
+            const bool topoUpdate = false
         );
 
         //- Construct from components, moving contents
@@ -114,7 +124,9 @@ public:
         (
             const word& name,
             labelList&& indices,
-            const ZonesType& zones
+            const ZonesType& zones,
+            const bool moveUpdate = false,
+            const bool topoUpdate = false
         );
 
         //- Construct from dictionary
@@ -130,6 +142,7 @@ public:
         Zone
         (
             const Zone&,
+            const word& name,
             const labelUList& indices,
             const ZonesType& zones
         );
@@ -139,6 +152,7 @@ public:
         Zone
         (
             const Zone&,
+            const word& name,
             labelList&& indices,
             const ZonesType& zones
         );
@@ -167,6 +181,13 @@ public:
 
         //- Return ZonesType reference
         const ZonesType& zones() const;
+
+        //- Flag indicating the zone is updated by the generator
+        //  following mesh motion
+        bool moveUpdate() const
+        {
+            return moveUpdate_;
+        }
 
         //- Map storing the local index for every global index.  Used to find
         //  the index of the item in the zone from the known global index. If

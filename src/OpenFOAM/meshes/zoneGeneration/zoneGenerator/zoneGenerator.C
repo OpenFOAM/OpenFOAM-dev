@@ -1,0 +1,220 @@
+/*---------------------------------------------------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+License
+    This file is part of OpenFOAM.
+
+    OpenFOAM is free software: you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+    for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+
+\*---------------------------------------------------------------------------*/
+
+#include "zoneGenerator.H"
+#include "lookup.H"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+    defineTypeNameAndDebug(zoneGenerator, 0);
+    defineRunTimeSelectionTable(zoneGenerator, dictionary);
+}
+
+template<>
+const char* Foam::NamedEnum<Foam::zoneGenerator::zoneTypes, 3>::names[] =
+{
+    "point",
+    "cell",
+    "face"
+};
+
+const Foam::NamedEnum<Foam::zoneGenerator::zoneTypes, 3>
+    Foam::zoneGenerator::zoneTypesNames;
+
+
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+Foam::labelList Foam::zoneGenerator::indices(const boolList& selected)
+{
+    label nSelected = 0;
+    forAll(selected, i)
+    {
+        if (selected[i])
+        {
+            nSelected++;
+        }
+    }
+
+    labelList selectedIndices(nSelected);
+
+    label ui = 0;
+    forAll(selected, i)
+    {
+        if (selected[i])
+        {
+            selectedIndices[ui++] = i;
+        }
+    }
+
+    return selectedIndices;
+}
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::zoneGenerator::zoneGenerator
+(
+    const word& name,
+    const polyMesh& mesh,
+    const dictionary& dict
+)
+:
+    name_(name),
+    dict_(dict),
+    zoneName_(dict.lookupOrDefault("name", name)),
+    mesh_(mesh),
+    moveUpdate_(dict.lookupOrDefault("moveUpdate", false))
+{}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::zoneGenerator::~zoneGenerator()
+{}
+
+
+// * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
+
+Foam::autoPtr<Foam::zoneGenerator>
+Foam::zoneGenerator::New
+(
+    const word& name,
+    const polyMesh& mesh,
+    const dictionary& dict
+)
+{
+    if (debug)
+    {
+        InfoInFunction
+            << "Constructing " << typeName << " " << name << endl;
+    }
+
+    const word type(dict.lookup("type"));
+
+    typename dictionaryConstructorTable::iterator cstrIter =
+        dictionaryConstructorTablePtr_->find(type);
+
+    if (cstrIter == dictionaryConstructorTablePtr_->end())
+    {
+        FatalIOErrorInFunction
+        (
+            dict
+        )   << "Unknown " << typeName << " type "
+            << type << nl << nl
+            << "Valid " << typeName << " types are:" << nl
+            << dictionaryConstructorTablePtr_->sortedToc()
+            << exit(FatalIOError);
+    }
+
+    return autoPtr<zoneGenerator>(cstrIter()(name, mesh, dict));
+}
+
+
+Foam::autoPtr<Foam::zoneGenerator>
+Foam::zoneGenerator::New
+(
+    const polyMesh& mesh,
+    const dictionary& dict
+)
+{
+    if (debug)
+    {
+        InfoInFunction
+            << "Constructing " << typeName << endl;
+    }
+
+    forAllConstIter(dictionary, dict, iter)
+    {
+        const word& name = iter().keyword();
+
+        if (iter().isDict())
+        {
+            if (iter().dict().found("type"))
+            {
+                return zoneGenerator::New(name, mesh, iter().dict());
+            }
+            else
+            {
+                // If an empty keyword is present assume it is a zone name
+                // and add a zone lookup
+                return autoPtr<zoneGenerator>
+                (
+                    new zoneGenerators::lookup(name, mesh, iter().dict())
+                );
+            }
+        }
+        else if (!iter().stream().size())
+        {
+            // If an empty keyword is present assume it is a zone name
+            // and add a zone lookup
+            return autoPtr<zoneGenerator>
+            (
+                new zoneGenerators::lookup
+                (
+                    name,
+                    mesh,
+                    dictionary
+                    (
+                        name,
+                        dict,
+                        primitiveEntry
+                        (
+                            "type",
+                            zoneGenerators::lookup::typeName,
+                            iter().startLineNumber(),
+                            iter().startLineNumber()
+                        )
+                    )
+                )
+            );
+        }
+    }
+
+    FatalIOErrorInFunction(dict)
+        << "Cannot find valid " << typeName
+        << " entry in dictionary " << dict << exit(FatalIOError);
+
+    return autoPtr<zoneGenerator>(nullptr);
+}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+Foam::zoneSet Foam::zoneGenerator::movePoints() const
+{
+    if (moveUpdate_)
+    {
+        return generate();
+    }
+    else
+    {
+        return zoneSet();
+    }
+}
+
+
+// ************************************************************************* //

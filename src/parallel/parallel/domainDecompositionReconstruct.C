@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,6 +27,7 @@ License
 #include "fvMeshAdder.H"
 #include "processorPolyPatch.H"
 #include "processorCyclicPolyPatch.H"
+#include "zoneGenerator.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -545,6 +546,208 @@ void Foam::domainDecomposition::reconstructPoints()
         }
 
         completeMesh_->setPoints(completePoints);
+    }
+
+
+    const pointZoneList& pointZones = completeMesh().pointZones();
+    const pointZoneList& pointZones0 = procMeshes_[0].pointZones();
+
+    const label pointZonesCompare = compareInstances
+    (
+        pointZones.instance(),
+        pointZones0.instance()
+    );
+
+    InfoInFunction
+        << "pointZonesCompare " << pointZonesCompare
+        << " " << pointZones.instance()
+        << " " << pointZones0.instance()
+        << endl;
+
+    if (pointZonesCompare == 1)
+    {
+        InfoInFunction << "Reconstructing pointZones" << endl;
+
+        forAll(pointZones0, pzi)
+        {
+            InfoInFunction
+                << "Reconstructing pointZone " << pointZones0[pzi].name()
+                << endl;
+
+            boolList selected(completeMesh_->nPoints(), false);
+
+            for (label proci=0; proci<nProcs(); proci++)
+            {
+                const labelList& pointZonei =
+                    procMeshes_[proci].pointZones()[pzi];
+
+                const labelList& ppa = procPointAddressing_[proci];
+
+                forAll(pointZonei, zpi)
+                {
+                    selected[ppa[pointZonei[zpi]]] = true;
+                }
+            }
+
+            completeMesh_->pointZones().append
+            (
+                new pointZone
+                (
+                    pointZones0[pzi].name(),
+                    zoneGenerator::indices(selected),
+                    completeMesh_->pointZones()
+                )
+            );
+        }
+
+        completeMesh_->pointZones().writeOpt() = IOobject::AUTO_WRITE;
+        completeMesh_->pointZones().instance() = pointZones0.instance();
+    }
+
+
+    const cellZoneList& cellZones = completeMesh().cellZones();
+    const cellZoneList& cellZones0 = procMeshes_[0].cellZones();
+
+    const label cellZonesCompare = compareInstances
+    (
+        cellZones.instance(),
+        cellZones0.instance()
+    );
+
+    InfoInFunction
+        << "cellZonesCompare " << cellZonesCompare
+        << " " << cellZones.instance()
+        << " " << cellZones0.instance()
+        << endl;
+
+    if (cellZonesCompare == 1)
+    {
+        InfoInFunction << "Reconstructing cellZones" << endl;
+
+        forAll(cellZones0, pzi)
+        {
+            InfoInFunction
+                << "Reconstructing cellZone " << cellZones0[pzi].name()
+                << endl;
+
+            boolList selected(completeMesh_->nCells(), false);
+
+            for (label proci=0; proci<nProcs(); proci++)
+            {
+                const labelList& cellZonei =
+                    procMeshes_[proci].cellZones()[pzi];
+
+                const labelList& pca = procCellAddressing_[proci];
+
+                forAll(cellZonei, zci)
+                {
+                    selected[pca[cellZonei[zci]]] = true;
+                }
+            }
+
+            completeMesh_->cellZones().append
+            (
+                new cellZone
+                (
+                    cellZones0[pzi].name(),
+                    zoneGenerator::indices(selected),
+                    completeMesh_->cellZones()
+                )
+            );
+        }
+
+        completeMesh_->cellZones().writeOpt() = IOobject::AUTO_WRITE;
+        completeMesh_->cellZones().instance() = cellZones0.instance();
+    }
+
+
+    const faceZoneList& faceZones = completeMesh().faceZones();
+    const faceZoneList& faceZones0 = procMeshes_[0].faceZones();
+
+    const label faceZonesCompare = compareInstances
+    (
+        faceZones.instance(),
+        faceZones0.instance()
+    );
+
+    InfoInFunction
+        << "faceZonesCompare " << faceZonesCompare
+        << " " << faceZones.instance()
+        << " " << faceZones0.instance()
+        << endl;
+
+    if (faceZonesCompare == 1)
+    {
+        InfoInFunction << "Reconstructing faceZones" << endl;
+
+        forAll(faceZones0, pzi)
+        {
+            InfoInFunction
+                << "Reconstructing faceZone " << faceZones0[pzi].name()
+                << endl;
+
+            boolList selectedFaces(completeMesh_->nFaces(), false);
+            boolList flipMap(completeMesh_->nFaces(), false);
+
+            const labelList& owner = completeMesh_->owner();
+
+            for (label proci=0; proci<nProcs(); proci++)
+            {
+                const labelList& faceZonei =
+                    procMeshes_[proci].faceZones()[pzi];
+                const boolList& flipMapi =
+                    procMeshes_[proci].faceZones()[pzi].flipMap();
+
+                const labelList& owneri = procMeshes_[proci].owner();
+
+                const labelList& pfa = procFaceAddressing_[proci];
+                const labelList& pca = procCellAddressing_[proci];
+
+                forAll(faceZonei, zfi)
+                {
+                    const label fi = mag(pfa[faceZonei[zfi]]) - 1;
+
+                    selectedFaces[fi] = true;
+
+                    // Find the owner cell of the zone face
+                    // in the complete mesh
+                    const label ownerZfi = owner[fi];
+
+                    // Find the owner cell of the zone face
+                    // in the processor mesh and map to the complete mesh
+                    const label ownerZfii = pca[owneri[faceZonei[zfi]]];
+
+                    // If the zone face owner cell is the same in the
+                    // complete and processor meshes the flipMap of the face
+                    // corresponds ...
+                    if (ownerZfi == ownerZfii)
+                    {
+                        flipMap[fi] = flipMapi[zfi];
+                    }
+                    // ... otherwise flip the flipMap of the face
+                    else
+                    {
+                        flipMap[fi] = !flipMapi[zfi];
+                    }
+                }
+            }
+
+            const labelList faceIndices(zoneGenerator::indices(selectedFaces));
+
+            completeMesh_->faceZones().append
+            (
+                new faceZone
+                (
+                    faceZones0[pzi].name(),
+                    faceIndices,
+                    boolList(flipMap, faceIndices),
+                    completeMesh_->faceZones()
+                )
+            );
+        }
+
+        completeMesh_->faceZones().writeOpt() = IOobject::AUTO_WRITE;
+        completeMesh_->faceZones().instance() = faceZones0.instance();
     }
 }
 

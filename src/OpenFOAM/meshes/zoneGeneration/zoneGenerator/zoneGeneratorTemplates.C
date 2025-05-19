@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,53 +23,31 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "cellZone.H"
-#include "cellZoneList.H"
-#include "polyMesh.H"
-#include "polyTopoChangeMap.H"
+#include "zoneGenerator.H"
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-namespace Foam
+template<class ZoneType>
+inline Foam::labelList Foam::zoneGenerator::zoneGenerator::select
+(
+    const ZoneType& zone,
+    const vectorField& pts
+) const
 {
-    defineTypeNameAndDebug(cellZone, 0);
-}
+    labelList indices(pts.size());
 
-const char * const Foam::cellZone::labelsName = "cellLabels";
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-const Foam::pointField& Foam::cellZone::meshCentres() const
-{
-    return zones_.mesh().cellCentres();
-}
-
-
-bool Foam::cellZone::checkDefinition(const bool report) const
-{
-    return Zone::checkDefinition
-    (
-        meshCentres().size(),
-        report
-    );
-}
-
-
-void Foam::cellZone::topoChange(const polyTopoChangeMap& map)
-{
-    // if (!topoUpdate_)
+    label nInZone = 0;
+    forAll(pts, i)
     {
-        Zone::topoChange(map.cellMap(), map.reverseCellMap());
+        if (zone.contains(pts[i]))
+        {
+            indices[nInZone++] = i;
+        }
     }
-}
 
+    indices.setSize(nInZone);
 
-void Foam::cellZone::writeDict(Ostream& os) const
-{
-    os  << nl << name() << nl << token::BEGIN_BLOCK << nl;
-    writeEntry(os, this->labelsName, *this);
-    os  << token::END_BLOCK << endl;
+    return indices;
 }
 
 

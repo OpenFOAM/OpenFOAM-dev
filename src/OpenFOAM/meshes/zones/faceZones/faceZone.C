@@ -202,10 +202,12 @@ Foam::faceZone::faceZone
     const word& name,
     const labelUList& addr,
     const boolList& fm,
-    const faceZoneList& mz
+    const faceZoneList& mz,
+    const bool moveUpdate,
+    const bool topoUpdate
 )
 :
-    Zone<faceZone, faceZoneList>(name, addr, mz),
+    Zone<faceZone, faceZoneList>(name, addr, mz, moveUpdate, topoUpdate),
     flipMap_(fm),
     patchPtr_(nullptr),
     masterCellsPtr_(nullptr),
@@ -221,10 +223,12 @@ Foam::faceZone::faceZone
     const word& name,
     labelList&& addr,
     boolList&& fm,
-    const faceZoneList& mz
+    const faceZoneList& mz,
+    const bool moveUpdate,
+    const bool topoUpdate
 )
 :
-    Zone<faceZone, faceZoneList>(name, move(addr), mz),
+    Zone<faceZone, faceZoneList>(name, move(addr), mz, moveUpdate, topoUpdate),
     flipMap_(move(fm)),
     patchPtr_(nullptr),
     masterCellsPtr_(nullptr),
@@ -256,12 +260,13 @@ Foam::faceZone::faceZone
 Foam::faceZone::faceZone
 (
     const faceZone& fz,
+    const word& name,
     const labelUList& addr,
     const boolList& fm,
     const faceZoneList& mz
 )
 :
-    Zone<faceZone, faceZoneList>(fz, addr, mz),
+    Zone<faceZone, faceZoneList>(fz, name, addr, mz),
     flipMap_(fm),
     patchPtr_(nullptr),
     masterCellsPtr_(nullptr),
@@ -280,7 +285,7 @@ Foam::faceZone::faceZone
     const faceZoneList& mz
 )
 :
-    Zone<faceZone, faceZoneList>(fz, move(addr), mz),
+    Zone<faceZone, faceZoneList>(fz, fz.name(), move(addr), mz),
     flipMap_(move(fm)),
     patchPtr_(nullptr),
     masterCellsPtr_(nullptr),
@@ -498,42 +503,45 @@ void Foam::faceZone::swap(faceZone& fz)
 
 void Foam::faceZone::topoChange(const polyTopoChangeMap& map)
 {
-    Map<bool> indices;
-    const labelList& faceMap = map.faceMap();
-    const labelList& reverseFaceMap = map.reverseFaceMap();
-    const labelHashSet& flipFaceFlux = map.flipFaceFlux();
-
-    forAll(faceMap, facei)
+    if (!topoUpdate_)
     {
-        const label i = localIndex(faceMap[facei]);
-        if (faceMap[facei] >= 0 && i != -1)
-        {
-            indices.insert
-            (
-                facei,
-                flipFaceFlux.found(facei)
-              ? !flipMap_[i]
-              : flipMap_[i]
-            );
-        }
-    }
+        Map<bool> indices;
+        const labelList& faceMap = map.faceMap();
+        const labelList& reverseFaceMap = map.reverseFaceMap();
+        const labelHashSet& flipFaceFlux = map.flipFaceFlux();
 
-    forAll(reverseFaceMap, facei)
-    {
-        const label i = localIndex(facei);
-        if (reverseFaceMap[facei] >= 0 && i != -1)
+        forAll(faceMap, facei)
         {
-            indices.insert
-            (
-                reverseFaceMap[facei],
-                flipFaceFlux.found(reverseFaceMap[facei])
-              ? !flipMap_[i]
-              : flipMap_[i]
-            );
+            const label i = localIndex(faceMap[facei]);
+            if (faceMap[facei] >= 0 && i != -1)
+            {
+                indices.insert
+                (
+                    facei,
+                    flipFaceFlux.found(facei)
+                  ? !flipMap_[i]
+                  : flipMap_[i]
+                );
+            }
         }
-    }
 
-    reset(indices);
+        forAll(reverseFaceMap, facei)
+        {
+            const label i = localIndex(facei);
+            if (reverseFaceMap[facei] >= 0 && i != -1)
+            {
+                indices.insert
+                (
+                    reverseFaceMap[facei],
+                    flipFaceFlux.found(reverseFaceMap[facei])
+                  ? !flipMap_[i]
+                  : flipMap_[i]
+                );
+            }
+        }
+
+        reset(indices);
+    }
 }
 
 

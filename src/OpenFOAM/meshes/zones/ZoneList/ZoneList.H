@@ -185,8 +185,13 @@ public:
 
     // Member Operators
 
-        //- Return const and non-const reference to ZoneType by index.
-        using PtrListDictionary<ZoneType>::operator[];
+        using PtrList<ZoneType>::operator[];
+
+        //- Return const reference to ZoneType by name
+        const ZoneType& operator[](const word& name) const;
+
+        //- Return non-const reference to ZoneType by name
+        ZoneType& operator[](const word& name);
 
         //- Disallow default bitwise assignment
         void operator=(const ZoneList<ZoneType, ZonesType, MeshType>&) = delete;

@@ -79,7 +79,16 @@ public:
         {
             return autoPtr<pointZone>
             (
-                new pointZone(*this, *this, zones())
+                new pointZone(*this, name(), *this, zones())
+            );
+        }
+
+        //- Construct and return a clone with a new name
+        autoPtr<pointZone> clone(const word& name) const
+        {
+            return autoPtr<pointZone>
+            (
+                new pointZone(*this, name, *this, zones())
             );
         }
 
@@ -88,7 +97,7 @@ public:
         {
             return autoPtr<pointZone>
             (
-                new pointZone(*this, *this, mz)
+                new pointZone(*this, name(), *this, mz)
             );
         }
 
@@ -102,7 +111,7 @@ public:
         {
             return autoPtr<pointZone>
             (
-                new pointZone(*this, addr, mz)
+                new pointZone(*this, name(), addr, mz)
             );
         }
 

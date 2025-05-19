@@ -526,6 +526,46 @@ bool Foam::ZoneList<ZoneType, ZonesType, MeshType>::writeObject
 }
 
 
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
+
+template<class ZoneType, class ZonesType, class MeshType>
+const ZoneType& Foam::ZoneList<ZoneType, ZonesType, MeshType>::operator[]
+(
+    const word& name
+) const
+{
+    const ZoneType* ptr = this->lookupPtr(name);
+
+    if (ptr == nullptr)
+    {
+        FatalErrorInFunction
+            << "Cannot find " << ZoneType::typeName << " " << name
+            << exit(FatalError);
+    }
+
+    return *ptr;
+}
+
+
+template<class ZoneType, class ZonesType, class MeshType>
+ZoneType& Foam::ZoneList<ZoneType, ZonesType, MeshType>::operator[]
+(
+    const word& name
+)
+{
+    ZoneType* ptr = this->lookupPtr(name);
+
+    if (ptr == nullptr)
+    {
+        FatalErrorInFunction
+            << "Cannot find " << ZoneType::typeName << " " << name
+            << exit(FatalError);
+    }
+
+    return *ptr;
+}
+
+
 // * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
 
 template<class ZoneType, class ZonesType, class MeshType>

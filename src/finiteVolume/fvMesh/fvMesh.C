@@ -282,7 +282,7 @@ Foam::surfaceLabelField::Boundary& Foam::fvMesh::polyFacesBfRef()
 
 Foam::fvMesh::fvMesh(const IOobject& io, const bool doPost)
 :
-    polyMesh(io),
+    polyMesh(io, doPost),
     surfaceInterpolation(*this),
     boundary_(*this, boundaryMesh()),
     stitcher_(nullptr),

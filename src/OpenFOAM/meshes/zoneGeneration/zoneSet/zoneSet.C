@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,53 +23,64 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "cellZone.H"
+#include "zoneSet.H"
+#include "pointZoneList.H"
 #include "cellZoneList.H"
-#include "polyMesh.H"
-#include "polyTopoChangeMap.H"
+#include "faceZoneList.H"
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-namespace Foam
+Foam::zoneSet Foam::zoneSet::store() const
 {
-    defineTypeNameAndDebug(cellZone, 0);
-}
+    zoneSet zs;
 
-const char * const Foam::cellZone::labelsName = "cellLabels";
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-const Foam::pointField& Foam::cellZone::meshCentres() const
-{
-    return zones_.mesh().cellCentres();
-}
-
-
-bool Foam::cellZone::checkDefinition(const bool report) const
-{
-    return Zone::checkDefinition
-    (
-        meshCentres().size(),
-        report
-    );
-}
-
-
-void Foam::cellZone::topoChange(const polyTopoChangeMap& map)
-{
-    // if (!topoUpdate_)
+    if (!pZone.empty())
     {
-        Zone::topoChange(map.cellMap(), map.reverseCellMap());
+        zs.pZone = pZone().zones().append(pZone.ptr());
     }
+    else if (pZone.valid())
+    {
+        zs.pZone = pZone();
+    }
+
+    if (!cZone.empty())
+    {
+        zs.cZone = cZone().zones().append(cZone.ptr());
+    }
+    else if (cZone.valid())
+    {
+        zs.cZone = cZone();
+    }
+
+    if (!fZone.empty())
+    {
+        zs.fZone = fZone().zones().append(fZone.ptr());
+    }
+    else if (fZone.valid())
+    {
+        zs.fZone = fZone();
+    }
+
+    return zs;
 }
 
 
-void Foam::cellZone::writeDict(Ostream& os) const
+void Foam::zoneSet::operator=(const zoneSet& zs)
 {
-    os  << nl << name() << nl << token::BEGIN_BLOCK << nl;
-    writeEntry(os, this->labelsName, *this);
-    os  << token::END_BLOCK << endl;
+    if (!zs.pZone.empty())
+    {
+        pZone = zs.pZone;
+    }
+
+    if (!zs.cZone.empty())
+    {
+        cZone = zs.cZone;
+    }
+
+    if (!zs.fZone.empty())
+    {
+        fZone = zs.fZone;
+    }
 }
 
 
