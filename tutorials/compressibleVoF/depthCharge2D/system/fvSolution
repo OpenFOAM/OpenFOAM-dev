@@ -21,8 +21,11 @@ solvers
         nCorrectors     1;
         nSubCycles      3;
 
-        nLimiterIter    5;
-        MULEStolerance  1e-2;
+        MULES
+        {
+            nIter           5;
+            tolerance       1e-2;
+        }
     }
 
     ".*(rho|rhoFinal)"

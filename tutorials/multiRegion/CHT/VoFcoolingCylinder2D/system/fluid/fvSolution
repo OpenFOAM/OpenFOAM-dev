@@ -22,7 +22,11 @@ solvers
         nSubCycles      1;
 
         MULESCorr       yes;
-        nLimiterIter    5;
+
+        MULES
+        {
+            nIter            5;
+        }
 
         solver          smoothSolver;
         smoother        symGaussSeidel;

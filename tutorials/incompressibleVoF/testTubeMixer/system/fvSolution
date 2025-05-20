@@ -19,7 +19,11 @@ solvers
     alpha.water
     {
         nSubCycles      polynomial (0 4);
-        extremaCoeff    0.01;
+
+        MULES
+        {
+            extremaCoeff    0.01;
+        }
     }
 
     "pcorr.*"

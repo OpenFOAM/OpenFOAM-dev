@@ -18,8 +18,11 @@ solvers
 {
     "alpha.water.*"
     {
-        nLimiterIter    5;
-        ~MULEStolerance;
+        MULES
+        {
+            nIter           5;
+            ~tolerance;
+        }
     }
 
     "tracer.*"

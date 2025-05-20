@@ -23,8 +23,12 @@ solvers
 
         MULESCorr       yes;
         alphaApplyPrevCorr  yes;
-        nLimiterIter    20;
-        MULEStolerance  1e-2;
+
+        MULES
+        {
+            nIter           20;
+            tolerance       1e-2;
+        }
 
         solver          smoothSolver;
         smoother        symGaussSeidel;
