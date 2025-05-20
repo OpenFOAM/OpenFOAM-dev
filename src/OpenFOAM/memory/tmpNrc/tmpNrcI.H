@@ -80,19 +80,6 @@ inline Foam::tmpNrc<T>::tmpNrc(tmpNrc<T>&& t)
 
 
 template<class T>
-inline Foam::tmpNrc<T>::tmpNrc(const tmpNrc<T>&& t)
-:
-    type_(t.type_),
-    ptr_(t.ptr_)
-{
-    if (isTmp())
-    {
-        t.ptr_ = 0;
-    }
-}
-
-
-template<class T>
 inline Foam::tmpNrc<T>::tmpNrc(const tmpNrc<T>& t, bool allowTransfer)
 :
     type_(t.type_),
@@ -323,21 +310,6 @@ inline void Foam::tmpNrc<T>::operator=(const tmpNrc<T>& t)
 
 template<class T>
 inline void Foam::tmpNrc<T>::operator=(tmpNrc<T>&& t)
-{
-    clear();
-
-    type_ = t.type_;
-    ptr_ = t.ptr_;
-
-    if (isTmp())
-    {
-        t.ptr_ = 0;
-    }
-}
-
-
-template<class T>
-inline void Foam::tmpNrc<T>::operator=(const tmpNrc<T>&& t)
 {
     clear();
 

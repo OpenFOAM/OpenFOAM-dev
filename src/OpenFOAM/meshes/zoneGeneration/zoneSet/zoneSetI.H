@@ -41,6 +41,22 @@ inline Foam::zoneSet::zoneSet(const zoneSet& zs)
 {}
 
 
+// inline Foam::zoneSet::zoneSet(zoneSet&& zs)
+// :
+//     pZone(std::move(zs.pZone)),
+//     cZone(std::move(zs.cZone)),
+//     fZone(std::move(zs.fZone))
+// {}
+
+
+// inline Foam::zoneSet::zoneSet(const zoneSet&& zs)
+// :
+//     pZone(std::move(zs.pZone)),
+//     cZone(std::move(zs.cZone)),
+//     fZone(std::move(zs.fZone))
+// {}
+
+
 inline Foam::zoneSet::zoneSet(pointZone* pointZonePtr)
 :
     pZone(pointZonePtr),

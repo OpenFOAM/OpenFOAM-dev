@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "fvSpecificSource.H"
-#include "polyCellSet.H"
 #include "volFields.H"
 #include "fvmSup.H"
 

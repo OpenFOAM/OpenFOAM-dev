@@ -71,7 +71,21 @@ int main(int argc, char *argv[])
     #include "setRootCase.H"
     #include "createTime.H"
 
-    #include "createSpecifiedPolyMesh.H"
+    #include "setMeshPath.H"
+    #include "setRegionName.H"
+
+    polyMesh mesh
+    (
+        IOobject
+        (
+            regionName,
+            runTime.name(),
+            meshPath,
+            runTime,
+            IOobject::MUST_READ
+        ),
+        false
+    );
 
     if (args.optionFound("clear"))
     {

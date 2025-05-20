@@ -85,6 +85,9 @@ struct zoneSet
         //- Construct copy transferring content of temporaries
         inline zoneSet(const zoneSet&);
 
+        //- Construct copy moving content
+        inline zoneSet(zoneSet&&) = default;
+
         //- Construct from pointZone pointer
         inline zoneSet(pointZone* pointZonePtr);
 
@@ -131,6 +134,9 @@ struct zoneSet
 
         //- Assignment transferring the temporary zones
         void operator=(const zoneSet&);
+
+        //- Assignment moving content
+        inline zoneSet& operator=(zoneSet&&) = default;
 };
 
 

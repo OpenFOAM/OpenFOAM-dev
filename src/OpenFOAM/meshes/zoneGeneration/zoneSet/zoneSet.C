@@ -36,7 +36,8 @@ Foam::zoneSet Foam::zoneSet::store() const
 
     if (!pZone.empty())
     {
-        zs.pZone = pZone().zones().append(pZone.ptr());
+        pointZone* pZonePtr = pZone.ptr();
+        zs.pZone = pZonePtr->zones().append(pZonePtr);
     }
     else if (pZone.valid())
     {
@@ -45,7 +46,8 @@ Foam::zoneSet Foam::zoneSet::store() const
 
     if (!cZone.empty())
     {
-        zs.cZone = cZone().zones().append(cZone.ptr());
+        cellZone* cZonePtr = cZone.ptr();
+        zs.cZone = cZonePtr->zones().append(cZonePtr);
     }
     else if (cZone.valid())
     {
@@ -54,7 +56,8 @@ Foam::zoneSet Foam::zoneSet::store() const
 
     if (!fZone.empty())
     {
-        zs.fZone = fZone().zones().append(fZone.ptr());
+        faceZone* fZonePtr = fZone.ptr();
+        zs.fZone = fZonePtr->zones().append(fZonePtr);
     }
     else if (fZone.valid())
     {
