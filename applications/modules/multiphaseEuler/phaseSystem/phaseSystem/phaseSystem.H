@@ -92,6 +92,12 @@ public:
             //  with semi-implicit MULES, MULESCorr = true
             label nAlphaCorr;
 
+            //- Semi-implicit MULES switch
+            bool MULESCorr;
+
+            //- Explicit correction relaxation factor (defaults to 0.5)
+            scalar MULESCorrRelax;
+
             //- Compressibility source stabilisation tolerance
             scalar vDotResidualAlpha;
 

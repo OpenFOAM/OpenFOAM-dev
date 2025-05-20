@@ -361,6 +361,10 @@ void Foam::phaseSystem::alphaControl::read(const dictionary& dict)
         1
     );
 
+    MULESCorr = dict.lookupOrDefault<Switch>("MULESCorr", false);
+
+    MULESCorrRelax = dict.lookupOrDefault<scalar>("MULESCorrRelax", 0.5);
+
     vDotResidualAlpha =
         dict.lookupOrDefault("vDotResidualAlpha", 1e-4);
 
