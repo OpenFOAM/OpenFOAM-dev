@@ -84,8 +84,8 @@ solvers
 
 PIMPLE
 {
-    nOuterCorrectors 3;
-    nCorrectors      2;
+    nOuterCorrectors    3;
+    nCorrectors         2;
     nNonOrthogonalCorrectors 0;
 
     faceMomentum        no;

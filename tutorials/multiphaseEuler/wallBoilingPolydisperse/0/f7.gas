@@ -43,4 +43,17 @@ boundaryField
     }
 }
 
+sources
+{
+    heatTransferLimitedPhaseChange
+    {
+        type            interfacialGrowthSizeGroup;
+    }
+    wallBoiling
+    {
+        type            nucleationSizeGroup;
+        libs            ("libmultiphaseEulerFvModels.so");
+    }
+}
+
 // ************************************************************************* //

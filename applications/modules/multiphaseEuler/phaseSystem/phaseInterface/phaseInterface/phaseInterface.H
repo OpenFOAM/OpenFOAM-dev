@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,6 @@ SourceFiles
 
 #include "phaseModel.H"
 #include "compressibleTwoPhases.H"
-#include "uniformDimensionedFields.H"
 #include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -162,9 +161,6 @@ private:
 
         //- Phase 2
         const phaseModel& phase2_;
-
-        //- Gravitational acceleration
-        const uniformDimensionedVectorField& g_;
 
 
 protected:
@@ -343,14 +339,15 @@ public:
             //  this phaseInterface does not contain the given phase
             inline label index(const phaseModel& phase) const;
 
+            //- Access the phase for the given index. Generates a FatalError if
+            //  the index is not 0 or 1.
+            inline const phaseModel& operator[](const label index) const;
+
             //- Return the phase system
             inline const phaseSystem& fluid() const;
 
             //- Return the mesh
             inline const fvMesh& mesh() const;
-
-            //- Return gravitational acceleration
-            inline const uniformDimensionedVectorField& g() const;
 
 
         // Properties
@@ -364,6 +361,8 @@ public:
             //- Surface tension coefficient
             tmp<volScalarField> sigma() const;
 
+
+    // Iterators
 
         //- STL const_iterator
         class const_iterator

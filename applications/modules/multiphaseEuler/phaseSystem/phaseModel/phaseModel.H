@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -293,6 +293,9 @@ public:
             //- Return the species mass fractions
             virtual const PtrList<volScalarField>& Y() const = 0;
 
+            //- Return a species mass fraction by index
+            virtual const volScalarField& Y(const label speciei) const = 0;
+
             //- Return a species mass fraction by name
             virtual const volScalarField& Y(const word& name) const = 0;
 
@@ -303,7 +306,10 @@ public:
             //  not the default specie?
             virtual bool solveSpecie(const label speciei) const = 0;
 
-            //- Return the fuel consumption rate matrix
+            //- Return the consumption rate for a specie
+            virtual tmp<volScalarField::Internal> R(const label) const = 0;
+
+            //- Return consumption rate matrix for a specie
             virtual tmp<fvScalarMatrix> R(volScalarField& Yi) const = 0;
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ Foam::diameterModels::coalescenceModels::hydrodynamic::hydrodynamic
 
 void Foam::diameterModels::coalescenceModels::hydrodynamic::addToCoalescenceRate
 (
-    volScalarField& coalescenceRate,
+    volScalarField::Internal& coalescenceRate,
     const label i,
     const label j
 )

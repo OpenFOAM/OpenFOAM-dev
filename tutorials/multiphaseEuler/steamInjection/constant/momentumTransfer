@@ -1,0 +1,43 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      momentumTransfer;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+drag
+{
+    steam_dispersedIn_water
+    {
+        type            SchillerNaumann;
+    }
+}
+
+virtualMass
+{
+    steam_dispersedIn_water
+    {
+        type            constantCoefficient;
+        Cvm             0.5;
+    }
+}
+
+lift
+{}
+
+wallLubrication
+{}
+
+turbulentDispersion
+{}
+
+// ************************************************************************* //

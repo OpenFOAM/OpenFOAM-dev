@@ -39,4 +39,13 @@ boundaryField
     }
 }
 
+sources
+{
+    phaseChange
+    {
+        type            uniformInletOutlet;
+        uniformInletValue 1.5e-4;
+    }
+}
+
 // ************************************************************************* //

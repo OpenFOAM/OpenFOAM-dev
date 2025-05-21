@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,6 +85,9 @@ public:
 
             //- Return the species mass fractions
             virtual const PtrList<volScalarField>& Y() const;
+
+            //- Return a species mass fraction by index
+            virtual const volScalarField& Y(const label speciei) const;
 
             //- Return a species mass fraction by name
             virtual const volScalarField& Y(const word& name) const;

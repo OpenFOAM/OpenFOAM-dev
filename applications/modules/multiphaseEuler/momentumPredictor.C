@@ -32,13 +32,10 @@ void Foam::solvers::multiphaseEuler::cellMomentumPredictor()
 {
     Info<< "Constructing momentum equations" << endl;
 
-    phaseSystem& fluid(fluid_);
-
-    autoPtr<phaseSystem::momentumTransferTable>
-        momentumTransferPtr(fluid.momentumTransfer());
-
-    phaseSystem::momentumTransferTable&
-        momentumTransfer(momentumTransferPtr());
+    autoPtr<HashPtrTable<fvVectorMatrix>> popBalMomentumTransferPtr =
+        populationBalanceSystem_.momentumTransfer();
+    HashPtrTable<fvVectorMatrix>& popBalMomentumTransfer =
+        popBalMomentumTransferPtr();
 
     forAll(movingPhases, movingPhasei)
     {
@@ -55,7 +52,7 @@ void Foam::solvers::multiphaseEuler::cellMomentumPredictor()
             (
                 phase.UEqn()
              ==
-               *momentumTransfer[phase.name()]
+                *popBalMomentumTransfer[phase.name()]
               + fvModels().source(alpha, rho, U)
             )
         );
@@ -72,13 +69,10 @@ void Foam::solvers::multiphaseEuler::faceMomentumPredictor()
 {
     Info<< "Constructing face momentum equations" << endl;
 
-    phaseSystem& fluid(fluid_);
-
-    autoPtr<phaseSystem::momentumTransferTable>
-        momentumTransferPtr(fluid.momentumTransferf());
-
-    phaseSystem::momentumTransferTable&
-        momentumTransfer(momentumTransferPtr());
+    autoPtr<HashPtrTable<fvVectorMatrix>> popBalMomentumTransferPtr =
+        populationBalanceSystem_.momentumTransferf();
+    HashPtrTable<fvVectorMatrix>& popBalMomentumTransfer =
+        popBalMomentumTransferPtr();
 
     forAll(movingPhases, movingPhasei)
     {
@@ -95,7 +89,7 @@ void Foam::solvers::multiphaseEuler::faceMomentumPredictor()
             (
                 phase.UfEqn()
              ==
-               *momentumTransfer[phase.name()]
+                *popBalMomentumTransfer[phase.name()]
               + fvModels().source(alpha, rho, U)
             )
         );

@@ -14,9 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-type populationBalanceMultiphaseSystem;
-
-phases (air1 air2 air3 water);
+phases          (air1 air2 air3 water);
 
 populationBalances (bubbles);
 
@@ -25,12 +23,11 @@ air1
     type            pureIsothermalPhaseModel;
 
     diameterModel   velocityGroup;
-
     velocityGroupCoeffs
     {
-        populationBalance   bubbles;
+        populationBalance bubbles;
 
-        shapeModel          spherical;
+        shapeModel      spherical;
 
         sizeGroups
         (
@@ -92,12 +89,11 @@ air2
     type            pureIsothermalPhaseModel;
 
     diameterModel   velocityGroup;
-
     velocityGroupCoeffs
     {
-        populationBalance   bubbles;
+        populationBalance bubbles;
 
-        shapeModel          spherical;
+        shapeModel      spherical;
 
         sizeGroups
         (
@@ -121,12 +117,11 @@ air3
     type            pureIsothermalPhaseModel;
 
     diameterModel   velocityGroup;
-
     velocityGroupCoeffs
     {
-        populationBalance   bubbles;
+        populationBalance bubbles;
 
-        shapeModel          spherical;
+        shapeModel      spherical;
 
         sizeGroups
         (
@@ -154,37 +149,10 @@ air3
 water
 {
     type            pureIsothermalPhaseModel;
+
     diameterModel   none;
 
     residualAlpha   1e-6;
-}
-
-populationBalanceCoeffs
-{
-    bubbles
-    {
-        continuousPhase water;
-
-        coalescenceModels
-        (
-            constant
-            {
-                rate 1.0;
-            }
-        );
-
-        binaryBreakupModels
-        ();
-
-        breakupModels
-        ();
-
-        driftModels
-        ();
-
-        nucleationModels
-        ();
-    }
 }
 
 blending
@@ -199,28 +167,26 @@ blending
 surfaceTension
 {}
 
-interfaceCompression
-{}
+populationBalanceCoeffs
+{
+    bubbles
+    {
+        continuousPhase water;
 
-drag
-{}
+        coalescenceModels
+        (
+            constant
+            {
+                rate            1.0;
+            }
+        );
 
-virtualMass
-{}
+        binaryBreakupModels
+        ();
 
-heatTransfer
-{}
-
-phaseTransfer
-{}
-
-lift
-{}
-
-wallLubrication
-{}
-
-turbulentDispersion
-{}
+        breakupModels
+        ();
+    }
+}
 
 // ************************************************************************* //

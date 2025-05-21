@@ -14,13 +14,12 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-type basicMultiphaseSystem;
-
-phases (air water solid);
+phases          (air water solid);
 
 air
 {
-    type            pureIsothermalPhaseModel;
+    type            purePhaseModel;
+
     diameterModel   isothermal;
     isothermalCoeffs
     {
@@ -33,7 +32,8 @@ air
 
 water
 {
-    type            pureIsothermalPhaseModel;
+    type            purePhaseModel;
+
     diameterModel   constant;
     constantCoeffs
     {
@@ -45,7 +45,8 @@ water
 
 solid
 {
-    type            pureStationaryIsothermalPhaseModel;
+    type            pureStationaryPhaseModel;
+
     diameterModel   constant;
     constantCoeffs
     {
@@ -57,17 +58,6 @@ solid
 
 blending
 {
-    drag
-    {
-        type            linear;
-        minFullyContinuousAlpha.air 0.8;
-        minPartlyContinuousAlpha.air 0.5;
-        minFullyContinuousAlpha.water 0.8;
-        minPartlyContinuousAlpha.water 0.5;
-        minFullyContinuousAlpha.solid none;
-        minPartlyContinuousAlpha.solid none;
-    }
-
     default
     {
         type            linear;
@@ -75,6 +65,17 @@ blending
         minPartlyContinuousAlpha.air 0.2;
         minFullyContinuousAlpha.water 0.8;
         minPartlyContinuousAlpha.water 0.2;
+        minFullyContinuousAlpha.solid none;
+        minPartlyContinuousAlpha.solid none;
+    }
+
+    segregated
+    {
+        type            linear;
+        minFullyContinuousAlpha.air 0.8;
+        minPartlyContinuousAlpha.air 0.5;
+        minFullyContinuousAlpha.water 0.8;
+        minPartlyContinuousAlpha.water 0.5;
         minFullyContinuousAlpha.solid none;
         minPartlyContinuousAlpha.solid none;
     }
@@ -88,78 +89,5 @@ surfaceTension
         sigma           0.07;
     }
 }
-
-drag
-{
-    air_dispersedIn_water
-    {
-        type            SchillerNaumann;
-    }
-
-    air_segregatedWith_water
-    {
-        type            segregated;
-        m               0.5;
-        n               8;
-    }
-
-    water_dispersedIn_air
-    {
-        type            SchillerNaumann;
-    }
-
-    air_water_displacedBy_solid
-    {
-        type            AttouFerschneider;
-        gas             air;
-        liquid          water;
-        solid           solid;
-        E1              280;
-        E2              4.8;
-    }
-
-    solid_dispersedIn_air
-    {
-        $air_water_displacedBy_solid;
-    }
-
-    solid_dispersedIn_water
-    {
-        $air_water_displacedBy_solid;
-    }
-}
-
-virtualMass
-{
-    air_dispersedIn_water
-    {
-        type            constantCoefficient;
-        Cvm             0.5;
-    }
-
-    water_dispersedIn_air
-    {
-        type            constantCoefficient;
-        Cvm             0.5;
-    }
-}
-
-heatTransfer
-{}
-
-phaseTransfer
-{}
-
-lift
-{}
-
-wallLubrication
-{}
-
-turbulentDispersion
-{}
-
-interfaceCompression
-{}
 
 // ************************************************************************* //

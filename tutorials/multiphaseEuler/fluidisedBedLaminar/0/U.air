@@ -22,8 +22,8 @@ boundaryField
     inlet
     {
         type            interstitialInletVelocity;
-        inletVelocity      uniform (0 0.25 0);
-        alpha              alpha.air;
+        inletVelocity   uniform (0 0.25 0);
+        alpha           alpha.air;
         value           $internalField;
     }
 

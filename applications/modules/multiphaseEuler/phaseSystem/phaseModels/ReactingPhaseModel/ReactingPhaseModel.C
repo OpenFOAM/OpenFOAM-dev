@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,6 +27,7 @@ License
 #include "phaseSystem.H"
 #include "fvMatrix.H"
 #include "combustionModel.H"
+#include "volFieldsFwd.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -63,10 +64,16 @@ void Foam::ReactingPhaseModel<BasePhaseModel>::correctReactions()
 
 
 template<class BasePhaseModel>
-Foam::tmp<Foam::fvScalarMatrix> Foam::ReactingPhaseModel<BasePhaseModel>::R
-(
-    volScalarField& Yi
-) const
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::ReactingPhaseModel<BasePhaseModel>::R(const label speciei) const
+{
+    return reaction_->R(speciei);
+}
+
+
+template<class BasePhaseModel>
+Foam::tmp<Foam::fvScalarMatrix>
+Foam::ReactingPhaseModel<BasePhaseModel>::R(volScalarField& Yi) const
 {
     return reaction_->R(Yi);
 }

@@ -1,0 +1,32 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    This function looks up the wall boiling model and collects and writes out a
+    field of one of the wall boiling properties. Available properties are:
+
+              wetFraction - The faction of the area which is wetted by liquid
+               dDeparture - The departure diameter
+               fDeparture - The departure frequency
+    nucleationSiteDensity - The area-density of nucleation sites
+               qQuenching - The quenching heat flux
+             qEvaporative - The evaporative heat flux
+
+\*---------------------------------------------------------------------------*/
+
+type                wallBoilingProperty;
+libs                ("libmultiphaseEulerFunctionObjects.so");
+
+//model             <modelName>; // The name of the wall boiling fvModel. Only
+                                 // required if there is more than once such
+                                 // model.
+
+field               <fieldName>; // wetFraction, dDeparture, ...
+
+writeControl        writeTime;
+
+// ************************************************************************* //

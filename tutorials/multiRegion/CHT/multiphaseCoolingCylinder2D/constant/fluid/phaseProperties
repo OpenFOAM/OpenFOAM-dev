@@ -9,18 +9,17 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    location    "constant";
+    location    "constant/fluid";
     object      phaseProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-type    basicMultiphaseSystem;
-
-phases  (oil water);
+phases          (oil water);
 
 oil
 {
     type            purePhaseModel;
+
     diameterModel   isothermal;
     isothermalCoeffs
     {
@@ -34,6 +33,7 @@ oil
 water
 {
     type            purePhaseModel;
+
     diameterModel   constant;
     constantCoeffs
     {
@@ -54,7 +54,7 @@ blending
         minPartlyContinuousAlpha.water 0.3;
     }
 
-    drag
+    segregated
     {
         type            linear;
         minFullyContinuousAlpha.oil 0.7;
@@ -72,70 +72,5 @@ surfaceTension
         sigma           0.07;
     }
 }
-
-drag
-{
-    oil_dispersedIn_water
-    {
-        type            SchillerNaumann;
-    }
-
-    water_dispersedIn_oil
-    {
-        type            SchillerNaumann;
-    }
-
-    oil_segregatedWith_water
-    {
-        type            segregated;
-        m               0.5;
-        n               8;
-    }
-}
-
-virtualMass
-{
-    oil_dispersedIn_water
-    {
-        type            constantCoefficient;
-        Cvm             0.5;
-    }
-
-    water_dispersedIn_oil
-    {
-        type            constantCoefficient;
-        Cvm             0.5;
-    }
-}
-
-heatTransfer
-{
-    oil_dispersedIn_water
-    {
-        type            RanzMarshall;
-        residualAlpha   1e-4;
-    }
-
-    water_dispersedIn_oil
-    {
-        type            RanzMarshall;
-        residualAlpha   1e-4;
-    }
-}
-
-phaseTransfer
-{}
-
-lift
-{}
-
-wallLubrication
-{}
-
-turbulentDispersion
-{}
-
-interfaceCompression
-{}
 
 // ************************************************************************* //

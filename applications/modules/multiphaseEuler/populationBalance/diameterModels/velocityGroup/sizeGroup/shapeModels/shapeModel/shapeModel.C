@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "shapeModel.H"
+#include "populationBalanceModel.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -82,6 +83,13 @@ Foam::diameterModels::shapeModel::~shapeModel()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
+const Foam::diameterModels::shapeModel&
+Foam::diameterModels::shapeModel::model(const sizeGroup& group)
+{
+    return group.group().popBal().sizeGroups()[group.i()].shape();
+}
+
+
 const Foam::diameterModels::sizeGroup&
 Foam::diameterModels::shapeModel::group() const
 {
@@ -95,7 +103,7 @@ void Foam::diameterModels::shapeModel::correct()
 
 void Foam::diameterModels::shapeModel::addCoalescence
 (
-    const volScalarField& Su,
+    const volScalarField::Internal& Su,
     const sizeGroup& fj,
     const sizeGroup& fk
 )
@@ -104,26 +112,8 @@ void Foam::diameterModels::shapeModel::addCoalescence
 
 void Foam::diameterModels::shapeModel::addBreakup
 (
-    const volScalarField& Su,
+    const volScalarField::Internal& Su,
     const sizeGroup& fj
-)
-{}
-
-
-void Foam::diameterModels::shapeModel::addDrift
-(
-    const volScalarField& Su,
-    const sizeGroup& fu,
-    const driftModel& model
-)
-{}
-
-
-void Foam::diameterModels::shapeModel::addNucleation
-(
-    const volScalarField& Su,
-    const sizeGroup& fi,
-    const nucleationModel& model
 )
 {}
 

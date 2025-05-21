@@ -102,6 +102,9 @@ class LiaoCoalescence
 {
     // Private Data
 
+        //- Disambiguate the population balance reference
+        using coalescenceModel::popBal_;
+
         //- Maximum packing limit of bubbles
         dimensionedScalar PMax_;
 
@@ -142,22 +145,22 @@ class LiaoCoalescence
         Switch wakeEntrainment_;
 
         //- Coefficient containing maximum packing limit
-        volScalarField CPack_;
+        volScalarField::Internal CPack_;
 
         //- Limiter for the CPack coefficient
         dimensionedScalar CPackMax_;
 
         //- Critical diameter
-        volScalarField dCrit_;
+        volScalarField::Internal dCrit_;
 
         //- Relative velocity for turbulent collisions
-        volScalarField uRelTurb_;
+        volScalarField::Internal uRelTurb_;
 
         //- Relative velocity for buoyancy-induced collisions
-        volScalarField uRelBuoy_;
+        volScalarField::Internal uRelBuoy_;
 
         //- Relative velocity for shear-induced collisions
-        volScalarField uRelShear_;
+        volScalarField::Internal uRelShear_;
 
 
 public:
@@ -187,7 +190,7 @@ public:
         //- Add to coalescenceRate
         virtual void addToCoalescenceRate
         (
-            volScalarField& coalescenceRate,
+            volScalarField::Internal& coalescenceRate,
             const label i,
             const label j
         );

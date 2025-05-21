@@ -87,7 +87,8 @@ relaxationFactors
 {
     fields
     {
-        thermalPhaseChange:dmdtf 1;
+        heatTransferLimitedPhaseChange:mDot 1;
+        solidSurfaceBoiling:mDot 1;
     }
 
     equations

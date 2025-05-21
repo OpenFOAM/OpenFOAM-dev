@@ -1,0 +1,64 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      momentumTransfer;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+drag
+{
+    air_segregatedWith_water
+    {
+        type            segregated;
+        m               0.1;
+        n               8;
+    }
+
+    air_segregatedWith_oil
+    {
+        $air_segregatedWith_water;
+    }
+
+    air_segregatedWith_mercury
+    {
+        $air_segregatedWith_water;
+    }
+
+    water_segregatedWith_oil
+    {
+        $air_segregatedWith_water;
+    }
+
+    water_segregatedWith_mercury
+    {
+        $air_segregatedWith_water;
+    }
+
+    oil_segregatedWith_mercury
+    {
+        $air_segregatedWith_water;
+    }
+}
+
+virtualMass
+{}
+
+lift
+{}
+
+wallLubrication
+{}
+
+turbulentDispersion
+{}
+
+// ************************************************************************* //

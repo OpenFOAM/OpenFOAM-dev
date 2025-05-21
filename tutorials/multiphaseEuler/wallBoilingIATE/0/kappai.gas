@@ -38,15 +38,30 @@ boundaryField
     {
         type            zeroGradient;
     }
+
     front
     {
         type            wedge;
     }
+
     back
     {
         type            wedge;
     }
 }
 
+sources
+{
+    heatTransferLimitedPhaseChange
+    {
+        type            interfacialGrowthInterfacialCurvature;
+    }
+
+    wallBoiling
+    {
+        type            nucleationInterfacialCurvature;
+        libs            ("libmultiphaseEulerFvModels.so");
+    }
+}
 
 // ************************************************************************* //

@@ -1,0 +1,40 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      fvModels;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+airSource
+{
+    type            uniformGrowth;
+    libs            ("libuniformGrowth.so");
+
+    populationBalance bubbles;
+
+    massFlowRate    $../include!massFlowRate;
+}
+
+waterSink
+{
+    type            massSource;
+
+    select          all;
+    phase           water;
+
+    massFlowRate    #calc "\
+      - $<scalar>{../include!massFlowRate}\
+       /$<scalar>{physicalProperties.air1!mixture/equationOfState/rho}\
+       *$<scalar>{physicalProperties.water!mixture/equationOfState/rho}";
+}
+
+// ************************************************************************* //

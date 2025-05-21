@@ -36,8 +36,7 @@ License
 Foam::PtrList<Foam::fvScalarMatrix>
 Foam::solvers::multiphaseEuler::compressibilityEqns
 (
-    const PtrList<volScalarField>& dmdts,
-    const PtrList<volScalarField>& d2mdtdps
+    const PtrList<volScalarField::Internal>& dmdts
 ) const
 {
     volScalarField& p_rgh = p_rgh_;
@@ -111,10 +110,6 @@ Foam::solvers::multiphaseEuler::compressibilityEqns
         if (dmdts.set(phasei))
         {
             pEqnComp -= dmdts[phasei]/rho;
-        }
-        if (d2mdtdps.set(phasei))
-        {
-            pEqnComp -= correction(fvm::Sp(d2mdtdps[phasei]/rho, p_rgh));
         }
     }
 

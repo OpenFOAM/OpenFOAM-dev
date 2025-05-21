@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,9 +25,9 @@ Class
     Foam::diameterModels::SecondaryPropertyModel
 
 Description
-    Base class for modeling evolution of secondary representative properties of
-    a size class. By default, transport between size classes due to
-    coalescence, breakup and drift conserve the property. This behaviour can be
+    Base class for modelling evolution of secondary representative properties
+    of a size class. By default, transport between size classes due to
+    coalescence and breakup conserve the property. This behaviour can be
     overridden in a derived class.
 
 See also
@@ -43,8 +43,6 @@ SourceFiles
 #define SecondaryPropertyModel_H
 
 #include "sizeGroup.H"
-#include "driftModel.H"
-#include "nucleationModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -60,28 +58,24 @@ namespace diameterModels
 template<class ModelType>
 class SecondaryPropertyModel
 :
-    public ModelType,
-    public regIOobject
+    public ModelType
 {
+private:
 
-protected:
+    // Private Member Functions
 
-    // Protected typedefs
-
-        using SpTable = HashTable<const SecondaryPropertyModel<ModelType>*>;
-
-
-    // Protected Data
-
-        //- Reference to sizeGroup
-        const sizeGroup& group_;
-
-        //- Table with pointers to all secondary properties of ModelType
-        //  available in the registry
-        SpTable SecondaryPropertyModelTable_;
+        //- Return the secondary property model of a given size group
+        const SecondaryPropertyModel<ModelType>& correspondingModel
+        (
+            const sizeGroup& fi
+        ) const;
 
 
 public:
+
+    //- Runtime type information
+    virtual const word& type() const = 0;
+
 
     // Constructors
 
@@ -103,22 +97,17 @@ public:
 
         // Access
 
-            //- Access the sizeGroup
-            const sizeGroup& group() const;
-
-            //- Return table with pointers to all secondary properties of
-            //  ModelType available in the registry
-            const SpTable& SecondaryPropertyModelTable();
-
-            //- Return name of the secondary property of another class for
-            //  for lookup in registry
-            const word SecondaryPropertyName(const sizeGroup& fi) const;
+            //- Return the secondary property model of a given size group
+            static const SecondaryPropertyModel<ModelType>& model
+            (
+                const sizeGroup& fi
+            );
 
             //- Return reference to secondary property field
             virtual const volScalarField& fld() const = 0;
 
             //- Access to secondary property source
-            virtual volScalarField& src() = 0;
+            virtual volScalarField::Internal& src() = 0;
 
 
         // Edit
@@ -126,7 +115,7 @@ public:
             //- Add coalescence contribution to secondary property source
             virtual void addCoalescence
             (
-                const volScalarField& Su,
+                const volScalarField::Internal& Su,
                 const sizeGroup& fj,
                 const sizeGroup& fk
             );
@@ -134,34 +123,12 @@ public:
             //- Add breakup contribution to secondary property source
             virtual void addBreakup
             (
-                const volScalarField& Su,
+                const volScalarField::Internal& Su,
                 const sizeGroup& fj
-            );
-
-            //- Add drift contribution to secondary property source
-            virtual void addDrift
-            (
-                const volScalarField& Su,
-                const sizeGroup& fu,
-                const driftModel& model
-            );
-
-            //- Add drift contribution to secondary property source
-            virtual void addNucleation
-            (
-                const volScalarField& Su,
-                const sizeGroup& fi,
-                const nucleationModel& model
             );
 
             //- Reset secondary property source
             virtual void reset();
-
-
-        // Write
-
-            //- Dummy write for regIOobject
-            bool writeData(Ostream&) const;
 
 
     // Member Operators

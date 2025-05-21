@@ -42,7 +42,7 @@ mixture
     }
     transport
     {
-        kappa       0;
+        kappa       1.38;
     }
 }
 

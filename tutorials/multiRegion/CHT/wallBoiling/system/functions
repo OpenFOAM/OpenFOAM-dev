@@ -16,7 +16,7 @@ FoamFile
 
 #includeFunc wallHeatFlux
 (
-    name=WHFliquid,
+    name=liquidWallHeatFlux,
     writeFields=false,
     phase=liquid,
     region=fluid
@@ -24,7 +24,7 @@ FoamFile
 
 #includeFunc wallHeatFlux
 (
-    name=WHFgas,
+    name=gasWallHeatFlux,
     writeFields=false,
     phase=gas,
     region=fluid
@@ -32,49 +32,56 @@ FoamFile
 
 #includeFunc wallHeatFlux
 (
-    name=WHFsolid,
+    name=solidWallHeatFlux,
     writeFields=false,
     region=solid,
     log=yes
 )
 
-writeWallBoilingProperties
-{
-    type            wallBoilingProperties;
-    libs            ( "libmultiphaseEulerFunctionObjects.so" );
-    writeControl    writeTime;
-    executeAtStart  no;
-    region          fluid;
-    phase           liquid;
-}
+#includeFunc wallBoilingProperty(wetFraction, region=fluid)
+#includeFunc wallBoilingProperty(dDeparture, region=fluid)
+#includeFunc wallBoilingProperty(fDeparture, region=fluid)
+#includeFunc wallBoilingProperty(nucleationSiteDensity, region=fluid)
+
+#includeFunc removeObjects
+(
+    wallBoiling:wetFraction,
+    wallBoiling:dDeparture,
+    wallBoiling:fDeparture,
+    wallBoiling:nucleationSiteDensity,
+    region=fluid
+)
+
 outflow
 {
     type            surfaceFieldValue;
-    libs            ( "libfieldFunctionObjects.so" );
+    libs            ("libfieldFunctionObjects.so");
     log             yes;
     writeFields     false;
     region          fluid;
     select          patch;
     patch           outlet;
     operation       sum;
-    fields          ( alphaRhoPhi.gas  alphaRhoPhi.liquid);
+    fields          (alphaRhoPhi.gas alphaRhoPhi.liquid);
 }
+
 inflow
 {
     type            surfaceFieldValue;
-    libs            ( "libfieldFunctionObjects.so" );
+    libs            ("libfieldFunctionObjects.so");
     log             yes;
     writeFields     false;
     region          fluid;
     select          patch;
     patch           inlet;
     operation       sum;
-    fields          ( alphaRhoPhi.gas alphaRhoPhi.liquid);
+    fields          (alphaRhoPhi.gas alphaRhoPhi.liquid);
 }
+
 outletGas
 {
     type            surfaceFieldValue;
-    libs            ( "libfieldFunctionObjects.so" );
+    libs            ("libfieldFunctionObjects.so");
     log             yes;
     writeFields     false;
     region          fluid;
@@ -82,12 +89,13 @@ outletGas
     patch           outlet;
     operation       sum;
     weightField     alphaRhoPhi.gas;
-    fields          ( h.gas );
+    fields          (h.gas);
 }
+
 outletLiquid
 {
     type            surfaceFieldValue;
-    libs            ( "libfieldFunctionObjects.so" );
+    libs            ("libfieldFunctionObjects.so");
     log             yes;
     writeFields     false;
     region          fluid;
@@ -95,12 +103,13 @@ outletLiquid
     patch           outlet;
     operation       sum;
     weightField     alphaRhoPhi.liquid;
-    fields          ( h.liquid );
+    fields          (h.liquid);
 }
+
 inletGas
 {
     type            surfaceFieldValue;
-    libs            ( "libfieldFunctionObjects.so" );
+    libs            ("libfieldFunctionObjects.so");
     log             yes;
     writeFields     false;
     region          fluid;
@@ -108,12 +117,13 @@ inletGas
     patch           inlet;
     operation       sum;
     weightField     alphaRhoPhi.gas;
-    fields          ( h.gas );
+    fields          (h.gas);
 }
+
 inletLiquid
 {
     type            surfaceFieldValue;
-    libs            ( "libfieldFunctionObjects.so" );
+    libs            ("libfieldFunctionObjects.so");
     log             yes;
     writeFields     false;
     region          fluid;
@@ -121,13 +131,14 @@ inletLiquid
     patch           inlet;
     operation       sum;
     weightField     alphaRhoPhi.liquid;
-    fields          ( h.liquid );
+    fields          (h.liquid);
 }
+
 writeObjects1
 {
-    type        writeObjects;
-    libs        ("libutilityFunctionObjects.so");
-    region      fluid;
+    type            writeObjects;
+    libs            ("libutilityFunctionObjects.so");
+    region          fluid;
 
     objects
     (

@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "phaseSystem.H"
+#include "momentumTransferSystem.H"
 
 #include "subCycle.H"
 
@@ -44,10 +45,31 @@ License
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
+bool Foam::phaseSystem::implicitPhasePressure() const
+{
+    forAll(phases(), phasei)
+    {
+        if
+        (
+            mesh()
+           .solution()
+           .solverDict(phases()[phasei].volScalarField::name())
+           .lookupOrDefault<Switch>("implicitPhasePressure", false)
+        )
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
 void Foam::phaseSystem::solve
 (
     const alphaControl& alphaControls,
-    const PtrList<volScalarField>& rAs
+    const PtrList<volScalarField>& rAs,
+    const momentumTransferSystem& mts
 )
 {
     const bool boundedPredictor =
@@ -271,7 +293,7 @@ void Foam::phaseSystem::solve
     if (implicitPhasePressure() && rAs.size())
     {
         // Cache the phase-pressure diffusion coefficient
-        const surfaceScalarField alphaDByAf(this->alphaDByAf(rAs));
+        const surfaceScalarField alphaDByAf(mts.alphaDByAf(rAs));
 
         forAll(movingPhases(), movingPhasei)
         {
@@ -715,7 +737,7 @@ void Foam::phaseSystem::solve
             if (implicitPhasePressure() && rAs.size())
             {
                 // Cache the phase-pressure diffusion coefficient
-                const surfaceScalarField alphaDByAf(this->alphaDByAf(rAs));
+                const surfaceScalarField alphaDByAf(mts.alphaDByAf(rAs));
 
                 // Add the implicit phase-pressure diffusion contribution
                 // to the phase-fractions and phase-fluxes

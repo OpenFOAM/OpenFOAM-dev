@@ -9,20 +9,39 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
+    location    "constant";
     object      fvModels;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 phaseTurbulenceStabilisation
 {
-    type    phaseTurbulenceStabilisation;
+    type            phaseTurbulenceStabilisation;
 
-    libs    ("libmultiphaseEulerFvModels.so");
+    libs            ("libmultiphaseEulerFvModels.so");
 
-    phase   gas;
+    phase           gas;
 
     alphaInversion  0.1;
 }
 
+cavitation
+{
+    type            multiphaseEuler::cavitation;
+    libs            ("libmultiphaseEulerFvModels.so");
+
+    phases          (liquid gas);
+
+    energySemiImplicit no;
+
+    model           Kunz;
+
+    pSat            79995.75943;
+
+    UInf            5.33;
+    tInf            0.028142589;
+    Cc              100;
+    Cv              100;
+}
 
 // ************************************************************************* //

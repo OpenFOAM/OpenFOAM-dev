@@ -1,0 +1,146 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+gYs="air.gas H2O.gas"
+gHes="e.gas h.gas"
+lHes="e.liquid h.liquid"
+
+setInertY()
+{
+    y=${1%.*}
+    phase=${1#*.}
+
+    case $y in
+        none ) arg="-remove";;
+        * ) arg="-set $y";;
+    esac
+
+    runApplication -a foamDictionary -entry defaultSpecie $arg \
+        constant/physicalProperties.$phase
+}
+
+setThermoAndEnergy()
+{
+    he=${1%.*}
+    phase=${1#*.}
+
+    case $phase in
+        gas ) thermo="janaf";;
+        liquid ) thermo="${he}Const";;
+        * ) exit 1;;
+    esac
+
+    runApplication -a foamDictionary -entry thermoType/thermo -set $thermo \
+        constant/physicalProperties.$phase
+
+    case $he in
+        e ) energy="sensibleInternalEnergy";;
+        h ) energy="sensibleEnthalpy";;
+        * ) exit 1;;
+    esac
+
+    runApplication -a foamDictionary -entry thermoType/energy -set $energy \
+        constant/physicalProperties.$phase
+}
+
+runApplication zeroDimensionalMesh
+
+for gY in $gYs
+do
+    setInertY $gY
+    for gHe in $gHes
+    do
+        setThermoAndEnergy $gHe
+        for lHe in $lHes
+        do
+            setThermoAndEnergy $lHe
+            runApplication -s ${gY}_${gHe}_${lHe} foamRun
+            mv postProcessing postProcessing_${gY}_${gHe}_${lHe}
+        done
+    done
+done
+
+line()
+{
+    path=plot/0/volFieldValue.dat
+
+    index=$(awk -v RS="\t" "/volAverage\($1\)/{print NR; exit}" \
+        postProcessing_${gYs%% *}_${gHes%% *}_${lHes%% *}/$path)
+
+    cat << EOF
+    'postProcessing_${gYs%% *}_${gHes%% *}_${lHes%% *}/$path' \
+    us 1:$index w l axes $2 lc $3 t '$4', \
+    for [gY in '$gYs'] for [gHe in '$gHes'] for [lHe in '$lHes'] \
+    'postProcessing_'.gY.'_'.gHe.'_'.lHe.'/$path' \
+    us 1:$index w l axes $2 lc $3 notitle
+EOF
+}
+
+gnuplot << EOF
+
+set terminal eps enhanced size 5.83,8.27
+set output 'postProcessing.eps'
+
+set lmargin at screen 0.15
+set rmargin at screen 0.84
+
+set multiplot layout 5,1
+
+set xlabel "Time (s)"
+
+set ytics nomirror
+set y2tics
+set ylabel 'Gas volume fraction'
+set y2label 'Liquid volume fraction'
+
+plot \
+    $(line alpha.gas x1y1 1 Gas), \
+    $(line alpha.liquid x1y2 2 Liquid)
+
+set ytics mirror
+unset y2tics
+set ylabel 'Temperature (K)'
+unset y2label
+
+plot \
+    $(line T.gas x1y1 1 Gas), \
+    $(line T.liquid x1y1 2 Liquid), \
+    $(line phaseChange:Ts x1y1 3 Interface)
+
+set ytics nomirror
+set y2tics
+set ylabel "Vapour mass fraction"
+set y2label "Air mass fraction"
+
+plot \
+    $(line H2O.gas x1y1 1 H2O), \
+    $(line air.gas x1y2 2 Air)
+
+set ytics nomirror
+set y2tics
+set ylabel "Mass (kg/m^3)"
+set y2label "Energy (J/m^3)"
+
+plot \
+    $(line dMass.gas x1y1 1 "Gas Mass Change"), \
+    $(line dMass.liquid x1y1 2 "Liquid Mass Change"), \
+    $(line dEnergy.gas x1y2 3 "Gas Energy Change"), \
+    $(line dEnergy.liquid x1y2 4 "Liquid Energy Change")
+
+set ytics nomirror
+set y2tics
+set ylabel "Mass (kg/m^3)"
+set y2label "Energy (J/m^3)"
+
+plot \
+    $(line dMass x1y1 1 "Mass Error"), \
+    $(line dEnergy x1y2 2 "Energy Error")
+
+unset multiplot
+
+EOF
+
+#------------------------------------------------------------------------------

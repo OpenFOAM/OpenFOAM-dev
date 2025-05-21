@@ -37,8 +37,8 @@ FoamFile
 
 #includeFunc writeObjects
 (
-    phaseTransfer:dmidtf.TiO2.particles_vapour,
-    phaseTransfer:dmidtf.TiO2_s.particles_vapour
+    reactionDrivenPhaseChange:mDot_TiO2,
+    surfaceReactionDrivenPhaseChange:mDot_TiO2_s
 )
 
 // ************************************************************************* //

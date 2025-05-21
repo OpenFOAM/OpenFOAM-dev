@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,7 @@ License
 #include "populationBalanceSetSizeDistribution.H"
 #include "distribution.H"
 #include "addToRunTimeSelectionTable.H"
+#include "velocityGroup.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -113,15 +114,63 @@ bool Foam::functionObjects::populationBalanceSetSizeDistribution::write()
                 popBalName_
             );
 
+        HashTable<const diameterModels::velocityGroup*> velocityGroupPtrs;
+
+        // Set the size-group fractions for the population balance
         forAll(popBal.sizeGroups(), sizeGroupi)
         {
-            volScalarField& fi = popBal.sizeGroups()[sizeGroupi];
+            diameterModels::sizeGroup& fi = popBal.sizeGroups()[sizeGroupi];
 
             fi == popBal.etaV(sizeGroupi, distribution_());
 
             Info<< indent << "Writing " << fi.name() << endl;
 
             fi.write();
+
+            velocityGroupPtrs.insert(fi.phase().name(), &fi.group());
+        }
+
+        // Set the volume fractions if there are multiple velocity groups
+        if (velocityGroupPtrs.size() > 1)
+        {
+            tmp<volScalarField> talphas =
+                volScalarField::New
+                (
+                    IOobject::groupName("alpha", popBal.name()),
+                    mesh(),
+                    dimensionedScalar(dimless, scalar(0))
+                );
+            volScalarField& alphas = talphas.ref();
+
+            forAllConstIter
+            (
+                HashTable<const diameterModels::velocityGroup*>,
+                velocityGroupPtrs,
+                iter
+            )
+            {
+                alphas += iter()->phase();
+            }
+
+            forAllConstIter
+            (
+                HashTable<const diameterModels::velocityGroup*>,
+                velocityGroupPtrs,
+                iter
+            )
+            {
+                volScalarField& alpha =
+                    const_cast<phaseModel&>(iter()->phase());
+
+                const label i0 = iter()->sizeGroups().first().i();
+                const label i1 = iter()->sizeGroups().last().i();
+
+                alpha == popBal.etaV(labelPair(i0, i1), distribution_)*alphas;
+
+                Info<< indent << "Writing " << alpha.name() << endl;
+
+                alpha.write();
+            }
         }
     }
     else
@@ -135,9 +184,10 @@ bool Foam::functionObjects::populationBalanceSetSizeDistribution::write()
                 ).phases()[phaseName_].diameter()
             );
 
+        // Set the size-group fractions for this velocity group
         forAll(velGrp.sizeGroups(), i)
         {
-            volScalarField& fi = velGrp.sizeGroups()[i];
+            diameterModels::sizeGroup& fi = velGrp.sizeGroups()[i];
 
             const label sizeGroupi = velGrp.sizeGroups().first().i() + i;
 

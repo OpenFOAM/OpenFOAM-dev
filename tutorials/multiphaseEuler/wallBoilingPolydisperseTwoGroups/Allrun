@@ -28,7 +28,7 @@ runApplication -append foamPostProcess -latestTime -func "
         patch=wall,
         surfaceFormat=raw,
         interpolate=false,
-        fields=(dDeparture.liquid fDeparture.liquid nucleationSiteDensity.liquid wetFraction.liquid qQuenching.liquid qEvaporative.liquid)
+        fields=(wallBoiling:dDeparture wallBoiling:fDeparture wallBoiling:nucleationSiteDensity wallBoiling:wetFraction)
     )"
 
 if ! isTest "$@"

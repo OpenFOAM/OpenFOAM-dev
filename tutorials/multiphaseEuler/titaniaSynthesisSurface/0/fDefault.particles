@@ -38,5 +38,22 @@ boundaryField
     }
 }
 
+sources
+{
+    reactionDrivenPhaseChange
+    {
+        type                distributionSizeGroup;
+        distribution
+        {
+            type                fixedValue;
+            value               4e-10;
+        }
+    }
+
+    surfaceReactionDrivenPhaseChange
+    {
+        type                interfacialGrowthSizeGroup;
+    }
+}
 
 // ************************************************************************* //

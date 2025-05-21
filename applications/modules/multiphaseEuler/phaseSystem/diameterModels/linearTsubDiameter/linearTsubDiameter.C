@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,6 @@ License
 
 #include "linearTsubDiameter.H"
 #include "phaseSystem.H"
-#include "interfaceSaturationTemperatureModel.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -64,6 +63,14 @@ Foam::diameterModels::linearTsub::linearTsub
         dimTemperature,
         diameterProperties.lookupOrDefault("Tsub1", 13.5)
     ),
+    saturationModelPtr_
+    (
+        saturationTemperatureModel::New
+        (
+            "saturationTemperature",
+            diameterProperties
+        ).ptr()
+    ),
     d_
     (
         IOobject
@@ -99,39 +106,23 @@ Foam::tmp<Foam::volScalarField> Foam::diameterModels::linearTsub::d() const
 
 void Foam::diameterModels::linearTsub::correct()
 {
-    const phaseSystem& fluid = phase().fluid();
-    const phaseModel& liquid = fluid.phases()[liquidPhaseName_];
-    const phaseInterface interface(phase(), liquid);
+    const phaseModel& liquid = phase().fluid().phases()[liquidPhaseName_];
 
-    if
+    const volScalarField Tsub
     (
-        fluid.foundInterfacialModel
-        <
-            interfaceSaturationTemperatureModel
-        >(interface)
-    )
-    {
-        const interfaceSaturationTemperatureModel& satModel =
-            fluid.lookupInterfacialModel
-            <
-                interfaceSaturationTemperatureModel
-            >(interface);
+        saturationModelPtr_->Tsat(liquid.fluidThermo().p())
+      - liquid.thermo().T()
+    );
 
-        const volScalarField Tsub
+    d_ = max
+    (
+        d1_,
+        min
         (
-            satModel.Tsat(liquid.fluidThermo().p()) - liquid.thermo().T()
-        );
-
-        d_ = max
-        (
-            d1_,
-            min
-            (
-                d2_,
-                (d1_*(Tsub - Tsub2_) + d2_*(Tsub - Tsub1_))/(Tsub2_ - Tsub1_)
-            )
-        );
-    }
+            d2_,
+            (d1_*(Tsub - Tsub2_) + d2_*(Tsub - Tsub1_))/(Tsub2_ - Tsub1_)
+        )
+    );
 }
 
 
@@ -141,30 +132,19 @@ bool Foam::diameterModels::linearTsub::read(const dictionary& phaseProperties)
 
     diameterProperties().lookup("liquidPhase") >> liquidPhaseName_;
 
-    d2_ =
-        dimensionedScalar
+    d2_.readIfPresent(diameterProperties());
+    Tsub2_.readIfPresent(diameterProperties());
+    d1_.readIfPresent(diameterProperties());
+    Tsub1_.readIfPresent(diameterProperties());
+
+    saturationModelPtr_.reset
+    (
+        saturationTemperatureModel::New
         (
-            dimLength,
-            diameterProperties().lookupOrDefault<scalar>("d2", 0.0015)
-        );
-    Tsub2_ =
-        dimensionedScalar
-        (
-            dimTemperature,
-            diameterProperties().lookupOrDefault<scalar>("Tsub2", 0)
-        );
-    d1_ =
-        dimensionedScalar
-        (
-            dimLength,
-            diameterProperties().lookupOrDefault("d1", 0.00015)
-        );
-    Tsub1_ =
-        dimensionedScalar
-        (
-            dimTemperature,
-            diameterProperties().lookupOrDefault<scalar>("Tsub1", 13.5)
-        );
+            "saturationTemperature",
+            diameterProperties()
+        ).ptr()
+    );
 
     return true;
 }

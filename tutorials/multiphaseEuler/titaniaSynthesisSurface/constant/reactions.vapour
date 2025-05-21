@@ -43,7 +43,7 @@ reactions
 
         reaction    "O2^0 + TiCl4 = TiO2_s + 2Cl2";
 
-        A           4.9e1; //converted from cm/s->m/s
+        A           4.9e1; // converted from cm/s -> m/s
         beta        0.0;
         Ta          8993;
 

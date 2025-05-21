@@ -91,7 +91,8 @@ relaxationFactors
 {
     fields
     {
-        thermalPhaseChange:dmdtf 1.0;
+        heatTransferLimitedPhaseChange:mDot 1;
+        heatTransferLimitedPhaseChange2:mDot 1;
     }
 
     equations

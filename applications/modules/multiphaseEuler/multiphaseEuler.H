@@ -52,7 +52,9 @@ See also
 #define multiphaseEuler_H
 
 #include "fluidSolver.H"
-#include "phaseSystem.H"
+#include "momentumTransferSystem.H"
+#include "heatTransferSystem.H"
+#include "populationBalanceSystem.H"
 #include "phaseCompressibleMomentumTransportModel.H"
 #include "buoyancy.H"
 #include "pressureReference.H"
@@ -109,15 +111,19 @@ protected:
 
     // Phase properties
 
-        autoPtr<phaseSystem> fluidPtr_;
-
-        phaseSystem& fluid_;
+        phaseSystem fluid_;
 
         phaseSystem::phaseModelList& phases_;
 
         phaseSystem::phaseModelPartialList& movingPhases_;
 
         surfaceScalarField& phi_;
+
+        momentumTransferSystem momentumTransferSystem_;
+
+        heatTransferSystem heatTransferSystem_;
+
+        populationBalanceSystem populationBalanceSystem_;
 
 
     // Thermophysical properties
@@ -191,8 +197,7 @@ private:
         //- Return the list of pressure equation compressibility contributions
         PtrList<fvScalarMatrix> compressibilityEqns
         (
-            const PtrList<volScalarField>& dmdts,
-            const PtrList<volScalarField>& d2mdtdps
+            const PtrList<volScalarField::Internal>& dmdts
         ) const;
 
 
@@ -208,6 +213,12 @@ public:
 
         //- Reference to the moving phases
         const phaseSystem::phaseModelPartialList& movingPhases;
+
+        //- Reference to the momentum transfer system
+        const momentumTransferSystem& momentumTransfer;
+
+        //- Reference to the heat transfer system
+        const heatTransferSystem& heatTransfer;
 
         //- Reference to the pressure field
         const volScalarField& p;

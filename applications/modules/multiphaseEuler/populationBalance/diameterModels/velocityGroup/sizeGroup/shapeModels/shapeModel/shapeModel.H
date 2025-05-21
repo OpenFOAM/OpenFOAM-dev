@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,10 +41,7 @@ SourceFiles
 #ifndef shapeModel_H
 #define shapeModel_H
 
-#include "dictionary.H"
-#include "sizeGroup.H"
-#include "driftModel.H"
-#include "nucleationModel.H"
+#include "volFields.H"
 #include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -54,13 +51,15 @@ namespace Foam
 namespace diameterModels
 {
 
+// Forward declaration of classes
+class sizeGroup;
+
 /*---------------------------------------------------------------------------*\
                          Class shapeModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class shapeModel
 {
-
 protected:
 
     // Protected Data
@@ -118,6 +117,9 @@ public:
 
         // Access
 
+            //- Return the shape model for a given size group
+            static const shapeModel& model(const sizeGroup&);
+
             //- Return reference to size group
             const sizeGroup& group() const;
 
@@ -127,6 +129,7 @@ public:
             //- Return representative diameter of the sizeGroup
             virtual const tmp<volScalarField> d() const = 0;
 
+
         // Edit
 
             //- Correct physical diameter
@@ -135,7 +138,7 @@ public:
             //- Add coalescence contribution to secondary property source
             virtual void addCoalescence
             (
-                const volScalarField& Su,
+                const volScalarField::Internal& Su,
                 const sizeGroup& fj,
                 const sizeGroup& fk
             );
@@ -143,24 +146,8 @@ public:
             //- Add breakup contribution to secondary property source
             virtual void addBreakup
             (
-                const volScalarField& Su,
+                const volScalarField::Internal& Su,
                 const sizeGroup& fj
-            );
-
-            //- Add drift contribution to secondary property source
-            virtual void addDrift
-            (
-                const volScalarField& Su,
-                const sizeGroup& fu,
-                const driftModel& model
-            );
-
-            //- Add nucleation contribution to secondary property source
-            virtual void addNucleation
-            (
-                const volScalarField& Su,
-                const sizeGroup& fi,
-                const nucleationModel& model
             );
 
             //- Reset secondary property source

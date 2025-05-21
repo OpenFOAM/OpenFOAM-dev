@@ -5,7 +5,7 @@ populationBalanceSetSizeDistribution/populationBalanceSetSizeDistribution.C
 phaseForces/phaseForces.C
 phaseMap/phaseMap.C
 
-wallBoilingProperties/wallBoilingProperties.C
+wallBoilingProperty/wallBoilingProperty.C
 
 adjustTimeStepToNucleation/adjustTimeStepToNucleation.C
 

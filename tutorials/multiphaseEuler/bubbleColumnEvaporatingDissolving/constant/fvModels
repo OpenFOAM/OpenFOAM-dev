@@ -1,0 +1,73 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      fvModels;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+phaseChange
+{
+    type            massDiffusionLimitedPhaseChange;
+    libs            ("libmultiphaseEulerFvModels.so");
+
+    phases          (gas liquid);
+
+    energySemiImplicit yes;
+
+    interfaceComposition
+    {
+        gas_liquid_inThe_gas
+        {
+            type            saturated;
+            species         (water);
+            Le              1.0;
+            pSat            ArdenBuck;
+        }
+
+        gas_liquid_inThe_liquid
+        {
+            type            Henry;
+            species         (air);
+            k               (1.492e-2);
+            Le              1.0;
+        }
+    }
+
+    diffusiveMassTransfer
+    {
+        blending        heatAndDiffusiveMassTransfer;
+
+        gas_dispersedIn_liquid_inThe_gas
+        {
+            type            spherical;
+        }
+
+        gas_dispersedIn_liquid_inThe_liquid
+        {
+            type            Frossling;
+            Le              1.0;
+        }
+
+        liquid_dispersedIn_gas_inThe_gas
+        {
+            type            Frossling;
+            Le              1.0;
+        }
+
+        liquid_dispersedIn_gas_inThe_liquid
+        {
+            type            spherical;
+        }
+    }
+}
+
+// ************************************************************************* //

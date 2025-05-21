@@ -35,11 +35,10 @@ License
 
 void Foam::solvers::multiphaseEuler::compositionPredictor()
 {
-    autoPtr<phaseSystem::specieTransferTable>
-    specieTransferPtr(fluid.specieTransfer());
-
-    phaseSystem::specieTransferTable&
-    specieTransfer(specieTransferPtr());
+    autoPtr<HashPtrTable<fvScalarMatrix>> popBalSpecieTransferPtr =
+        populationBalanceSystem_.specieTransfer();
+    HashPtrTable<fvScalarMatrix>& popBalSpecieTransfer =
+        popBalSpecieTransferPtr();
 
     fluid_.correctReactions();
 
@@ -59,7 +58,7 @@ void Foam::solvers::multiphaseEuler::compositionPredictor()
                 (
                     phase.YiEqn(Y[i])
                  ==
-                   *specieTransfer[Y[i].name()]
+                    *popBalSpecieTransfer[Y[i].name()]
                   + fvModels().source(alpha, rho, Y[i])
                 );
 
@@ -84,14 +83,19 @@ void Foam::solvers::multiphaseEuler::compositionPredictor()
 
 void Foam::solvers::multiphaseEuler::energyPredictor()
 {
-    autoPtr<phaseSystem::heatTransferTable>
-        heatTransferPtr(fluid.heatTransfer());
+    autoPtr<HashPtrTable<fvScalarMatrix>> heatTransferPtr =
+        heatTransferSystem_.heatTransfer();
+    HashPtrTable<fvScalarMatrix>& heatTransfer =
+        heatTransferPtr();
 
-    phaseSystem::heatTransferTable& heatTransfer = heatTransferPtr();
+    autoPtr<HashPtrTable<fvScalarMatrix>> popBalHeatTransferPtr =
+        populationBalanceSystem_.heatTransfer();
+    HashPtrTable<fvScalarMatrix>& popBalHeatTransfer =
+        popBalHeatTransferPtr();
 
-    forAll(fluid.anisothermalPhases(), anisothermalPhasei)
+    forAll(fluid.thermalPhases(), thermalPhasei)
     {
-        phaseModel& phase = fluid_.anisothermalPhases()[anisothermalPhasei];
+        phaseModel& phase = fluid_.thermalPhases()[thermalPhasei];
 
         const volScalarField& alpha = phase;
         const volScalarField& rho = phase.rho();
@@ -100,7 +104,8 @@ void Foam::solvers::multiphaseEuler::energyPredictor()
         (
             phase.heEqn()
          ==
-           *heatTransfer[phase.name()]
+            *heatTransfer[phase.name()]
+          + *popBalHeatTransfer[phase.name()]
           + fvModels().source(alpha, rho, phase.thermo().he())
         );
 
@@ -111,7 +116,7 @@ void Foam::solvers::multiphaseEuler::energyPredictor()
     }
 
     fluid_.correctThermo();
-    fluid_.correctContinuityError();
+    fluid_.correctContinuityError(populationBalanceSystem_.dmdts());
 }
 
 
@@ -125,10 +130,9 @@ void Foam::solvers::multiphaseEuler::thermophysicalPredictor()
         compositionPredictor();
         energyPredictor();
 
-        forAll(fluid.anisothermalPhases(), anisothermalPhasei)
+        forAll(fluid.thermalPhases(), thermalPhasei)
         {
-            const phaseModel& phase =
-                fluid.anisothermalPhases()[anisothermalPhasei];
+            const phaseModel& phase = fluid.thermalPhases()[thermalPhasei];
 
             Info<< phase.name() << " min/max T "
                 << min(phase.thermo().T()).value()

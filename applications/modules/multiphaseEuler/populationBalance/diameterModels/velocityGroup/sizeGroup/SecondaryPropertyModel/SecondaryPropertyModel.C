@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,33 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "SecondaryPropertyModel.H"
-#include "shapeModel.H"
+
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+template<class ModelType>
+const Foam::diameterModels::SecondaryPropertyModel<ModelType>&
+Foam::diameterModels::SecondaryPropertyModel<ModelType>::correspondingModel
+(
+    const sizeGroup& fi
+) const
+{
+    const ModelType& model = ModelType::model(fi);
+
+    if (!isA<SecondaryPropertyModel<ModelType>>(model))
+    {
+        FatalErrorInFunction
+            << "Phase " << this->group().phase().name() << " of population "
+            << "balance " << this->group().group().popBal().name() << " has a "
+            << type() << " " << ModelType::typeName << " but phase "
+            << fi.phase().name() << " does not. The " << type() << " "
+            << ModelType::typeName << " requires all phases of the population "
+            << "balance to " << " have the " << type() << " "
+            << ModelType::typeName << "." << exit(FatalError);
+    }
+
+    return refCast<const SecondaryPropertyModel<ModelType>>(model);
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -34,18 +60,7 @@ Foam::diameterModels::SecondaryPropertyModel<ModelType>::SecondaryPropertyModel
     const sizeGroup& group
 )
 :
-    ModelType(group),
-    regIOobject
-    (
-        IOobject
-        (
-            IOobject::groupName(typeid(ModelType).name(), group.name()),
-            group.time().constant(),
-            group.mesh()
-        )
-    ),
-    group_(group),
-    SecondaryPropertyModelTable_()
+    ModelType(group)
 {}
 
 
@@ -60,55 +75,36 @@ Foam::diameterModels::SecondaryPropertyModel<ModelType>::
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 template<class ModelType>
-const Foam::diameterModels::sizeGroup&
-Foam::diameterModels::SecondaryPropertyModel<ModelType>::group() const
-{
-    return group_;
-}
-
-
-template<class ModelType>
-const typename Foam::diameterModels::SecondaryPropertyModel<ModelType>::SpTable&
-Foam::diameterModels::SecondaryPropertyModel<ModelType>::
-SecondaryPropertyModelTable()
-{
-    if (SecondaryPropertyModelTable_.empty())
-    {
-        SecondaryPropertyModelTable_ =
-            group_.mesh().template lookupClass
-            <
-                SecondaryPropertyModel<ModelType>
-            >();
-    }
-
-    return SecondaryPropertyModelTable_;
-}
-
-
-template<class ModelType>
-const Foam::word Foam::diameterModels::SecondaryPropertyModel<ModelType>::
-SecondaryPropertyName
+const Foam::diameterModels::SecondaryPropertyModel<ModelType>&
+Foam::diameterModels::SecondaryPropertyModel<ModelType>::model
 (
     const sizeGroup& fi
-) const
+)
 {
-    return word(IOobject::groupName(typeid(ModelType).name(), fi.name()));
+    const ModelType& model = ModelType::model(fi);
+
+    if (!isA<SecondaryPropertyModel<ModelType>>(model))
+    {
+        FatalErrorInFunction
+            << "Phase " << fi.phase().name() << " does not have a "
+            << ModelType::typeName << " with a secondary property"
+            << exit(FatalError);
+    }
+
+    return refCast<const SecondaryPropertyModel<ModelType>>(model);
 }
 
 
 template<class ModelType>
 void Foam::diameterModels::SecondaryPropertyModel<ModelType>::addCoalescence
 (
-    const volScalarField& Su,
+    const volScalarField::Internal& Su,
     const sizeGroup& fj,
     const sizeGroup& fk
 )
 {
-    const volScalarField& propj =
-        SecondaryPropertyModelTable()[SecondaryPropertyName(fj)]->fld();
-
-    const volScalarField& propk =
-        SecondaryPropertyModelTable()[SecondaryPropertyName(fk)]->fld();
+    const volScalarField::Internal& propj = correspondingModel(fj).fld();
+    const volScalarField::Internal& propk = correspondingModel(fk).fld();
 
     src() += (propj*fj.x() + propk*fk.x())/(fj.x() + fk.x())*Su;
 }
@@ -117,44 +113,13 @@ void Foam::diameterModels::SecondaryPropertyModel<ModelType>::addCoalescence
 template<class ModelType>
 void Foam::diameterModels::SecondaryPropertyModel<ModelType>::addBreakup
 (
-    const volScalarField& Su,
+    const volScalarField::Internal& Su,
     const sizeGroup& fj
 )
 {
-    const volScalarField& propj =
-        SecondaryPropertyModelTable()[SecondaryPropertyName(fj)]->fld();
+    const volScalarField::Internal& propj = correspondingModel(fj).fld();
 
     src() += propj*Su;
-}
-
-
-template<class ModelType>
-void Foam::diameterModels::SecondaryPropertyModel<ModelType>::addDrift
-(
-    const volScalarField& Su,
-    const sizeGroup& fu,
-    const driftModel& model
-)
-{
-    const volScalarField& propu =
-        SecondaryPropertyModelTable()[SecondaryPropertyName(fu)]->fld();
-
-    src() += propu*Su;
-}
-
-
-template<class ModelType>
-void Foam::diameterModels::SecondaryPropertyModel<ModelType>::addNucleation
-(
-    const volScalarField& Su,
-    const sizeGroup& fi,
-    const nucleationModel& model
-)
-{
-    const volScalarField& prop =
-        SecondaryPropertyModelTable()[SecondaryPropertyName(fi)]->fld();
-
-    src() += prop*Su;
 }
 
 
@@ -162,14 +127,6 @@ template<class ModelType>
 void Foam::diameterModels::SecondaryPropertyModel<ModelType>::reset()
 {
     src() = Zero;
-}
-
-
-template<class ModelType>
-bool Foam::diameterModels::SecondaryPropertyModel<ModelType>::
-writeData(Ostream& os) const
-{
-    return os.good();
 }
 
 

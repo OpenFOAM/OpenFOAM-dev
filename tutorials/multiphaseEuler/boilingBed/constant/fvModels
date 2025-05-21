@@ -60,5 +60,116 @@ bedHeat
     }
 }
 
+heatTransferLimitedPhaseChange
+{
+    type            heatTransferLimitedPhaseChange;
+    libs            ("libmultiphaseEulerFvModels.so");
+
+    phases          (liquid gas);
+
+    energySemiImplicit yes;
+    pressureImplicit yes;
+
+    saturationTemperature
+    {
+        type            function1;
+        function
+        {
+            type            table;
+            format          csv;
+            nHeaderLine     1;
+            units           ([bar] [K]);
+            columns         (1 0);
+            mergeSeparators no;
+            file            "constant/water-saturation.csv";
+            outOfBounds     clamp;
+            interpolationScheme linear;
+        }
+    }
+}
+
+wallBoiling
+{
+    type            wallBoiling;
+
+    libs            ("libmultiphaseEulerFvModels.so");
+
+    phases          (liquid gas);
+
+    energySemiImplicit no;
+
+    saturationTemperature
+    {
+        $../../heatTransferLimitedPhaseChange/saturationTemperature;
+    }
+
+    partitioningModel
+    {
+        type            Lavieville;
+        alphaCrit       0.2;
+    }
+
+    nucleationSiteModel
+    {
+        type            LemmertChawla;
+        Cn              1;
+        NRef            30000000;
+        deltaTRef       10;
+    }
+
+    departureDiameterModel
+    {
+        type            TolubinskiKostanchuk;
+        dRef            0.00024;
+        dMax            0.0014;
+        dMin            1e-06;
+    }
+
+    departureFrequencyModel
+    {
+        type            KocamustafaogullariIshii;
+        Cf              1.18;
+    }
+}
+
+solidSurfaceBoiling
+{
+    type            phaseSurfaceBoiling;
+
+    libs            ("libmultiphaseEulerFvModels.so");
+
+    phase           solid;
+    phases          (liquid gas);
+
+    energySemiImplicit no;
+
+    saturationTemperature
+    {
+        $../../heatTransferLimitedPhaseChange/saturationTemperature;
+    }
+
+    partitioningModel
+    {
+        type            Lavieville;
+        alphaCrit       0.2;
+    }
+
+    nucleationSiteModel
+    {
+        type            LemmertChawla;
+    }
+
+    departureDiameterModel
+    {
+        type            TolubinskiKostanchuk;
+    }
+
+    departureFrequencyModel
+    {
+        type            KocamustafaogullariIshii;
+        Cf              1.18;
+    }
+}
+
 
 // ************************************************************************* //

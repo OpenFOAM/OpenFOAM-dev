@@ -163,15 +163,19 @@ Foam::solvers::multiphaseEuler::multiphaseEuler(fvMesh& mesh)
 
     buoyancy(mesh),
 
-    fluidPtr_(phaseSystem::New(mesh)),
-
-    fluid_(fluidPtr_()),
+    fluid_(mesh),
 
     phases_(fluid_.phases()),
 
     movingPhases_(fluid_.movingPhases()),
 
     phi_(fluid_.phi()),
+
+    momentumTransferSystem_(fluid_),
+
+    heatTransferSystem_(fluid_),
+
+    populationBalanceSystem_(fluid_),
 
     p_(movingPhases_[0].fluidThermo().p()),
 
@@ -190,6 +194,8 @@ Foam::solvers::multiphaseEuler::multiphaseEuler(fvMesh& mesh)
     fluid(fluid_),
     phases(phases_),
     movingPhases(movingPhases_),
+    momentumTransfer(momentumTransferSystem_),
+    heatTransfer(heatTransferSystem_),
     p(p_),
     p_rgh(p_rgh_),
     phi(phi_)
@@ -250,9 +256,14 @@ void Foam::solvers::multiphaseEuler::prePredictor()
     if (pimple.thermophysics() || pimple.flow())
     {
         alphaControls.correct(CoNum);
-        fluid_.solve(alphaControls, rAs);
+
+        fluid_.solve(alphaControls, rAs, momentumTransferSystem_);
+        populationBalanceSystem_.solve();
+
         fluid_.correct();
-        fluid_.correctContinuityError();
+        populationBalanceSystem_.correct();
+
+        fluid_.correctContinuityError(populationBalanceSystem_.dmdts());
     }
 }
 

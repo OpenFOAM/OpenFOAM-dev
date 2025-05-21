@@ -53,7 +53,7 @@ gnuplot<<EOF
     set yrange [0.5:0.8]
     plot \
         './postProcessing/inflow/$surfaceFile' \
-        every ::4::10000 u  1:(-1*360*\$4) w l lt 1 t 'liquid inflow', \
+        every ::4::10000 u 1:(-1*360*\$4) w l lt 1 t 'liquid inflow', \
         './postProcessing/outflow/$surfaceFile' \
         every ::4::10000 u 1:(360*\$4) w l lt 3 t 'liquid outflow', \
         './postProcessing/outflow/$surfaceFile' \

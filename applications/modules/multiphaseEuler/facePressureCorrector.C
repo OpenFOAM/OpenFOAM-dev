@@ -108,7 +108,7 @@ void Foam::solvers::multiphaseEuler::facePressureCorrector()
             );
         }
 
-        invADVfs = fluid.invADVfs(Afs, HVmfs);
+        invADVfs = momentumTransferSystem_.invADVfs(Afs, HVmfs);
     }
 
     volScalarField rho("rho", fluid.rho());
@@ -118,7 +118,7 @@ void Foam::solvers::multiphaseEuler::facePressureCorrector()
     PtrList<surfaceScalarField> FgByADfs;
     {
         // Explicit force fluxes
-        PtrList<surfaceScalarField> Ffs(fluid.Ffs());
+        PtrList<surfaceScalarField> Ffs(momentumTransferSystem_.Ffs());
 
         const surfaceScalarField ghSnGradRho
         (
@@ -153,10 +153,8 @@ void Foam::solvers::multiphaseEuler::facePressureCorrector()
         FgByADfs = invADVfs & Fgfs;
     }
 
-
     // Mass transfer rates
-    PtrList<volScalarField> dmdts(fluid.dmdts());
-    PtrList<volScalarField> d2mdtdps(fluid.d2mdtdps());
+    PtrList<volScalarField::Internal> dmdts(populationBalanceSystem_.dmdts());
 
     // --- Pressure corrector loop
     while (pimple.correct())
@@ -284,7 +282,7 @@ void Foam::solvers::multiphaseEuler::facePressureCorrector()
         }
 
         // Compressible pressure equations
-        PtrList<fvScalarMatrix> pEqnComps(compressibilityEqns(dmdts, d2mdtdps));
+        PtrList<fvScalarMatrix> pEqnComps(compressibilityEqns(dmdts));
 
         // Cache p prior to solve for density update
         volScalarField p_rgh_0(p_rgh);
@@ -387,15 +385,6 @@ void Foam::solvers::multiphaseEuler::facePressureCorrector()
             if (!phase.incompressible())
             {
                 phase.rho() += phase.fluidThermo().psi()*(p_rgh - p_rgh_0);
-            }
-        }
-
-        // Update mass transfer rates for change in p_rgh
-        forAll(phases, phasei)
-        {
-            if (dmdts.set(phasei) && d2mdtdps.set(phasei))
-            {
-                dmdts[phasei] += d2mdtdps[phasei]*(p_rgh - p_rgh_0);
             }
         }
 

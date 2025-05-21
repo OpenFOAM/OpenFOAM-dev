@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,13 +79,13 @@ class DahnekeInterpolation
         autoPtr<BrownianCollisions> Brownian_;
 
         //- Rate for coagulation due to Brownian collisions
-        volScalarField BrownianRate_;
+        volScalarField::Internal BrownianRate_;
 
         //- Model for coagulation due to ballistic collisions
         autoPtr<ballisticCollisions> ballistic_;
 
         //- Rate for coagulation due to ballistic collisions
-        volScalarField ballisticRate_;
+        volScalarField::Internal ballisticRate_;
 
 
 public:
@@ -115,7 +115,7 @@ public:
         //- Add to coalescenceRate
         virtual void addToCoalescenceRate
         (
-            volScalarField& coalescenceRate,
+            volScalarField::Internal& coalescenceRate,
             const label i,
             const label j
         );

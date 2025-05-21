@@ -27,7 +27,149 @@ thermoType
 
 defaultSpecie Ar;
 
-#include "$FOAM_CASE/constant/thermo.vapour"
+species
+(
+    O2
+    TiCl4
+    TiO2
+    TiO2_s
+    Cl2
+    Ar
+    N2
+);
+
+// Data from NASA Technical Memorandum 4513
+Ar
+{
+    specie
+    {
+        molWeight   39.948;
+    }
+    thermodynamics
+    {
+        Tlow            200;
+        Thigh           6000;
+        Tcommon         1000;
+        highCpCoeffs    (2.5 0 0 0 0 -7.4537500e2 4.37967491);
+        lowCpCoeffs     (2.5 0 0 0 0 -7.4537500e2 4.37967491);
+    }
+    transport
+    {
+        As          2.038169524e-6;
+        Ts          165;
+    }
+}
+
+N2
+{
+    specie
+    {
+        molWeight   28.0134;
+    }
+    thermodynamics
+    {
+        Tlow            0;
+        Thigh           5000;
+        Tcommon         1000;
+        highCpCoeffs    (2.92664 0.00148798 -5.68476e-7 1.0097e-10 -6.75335e-15 -922.798 5.98053);
+        lowCpCoeffs     (3.29868 0.00140824 -3.96322e-6 5.64152e-9 -2.44485e-12 -1020.9 3.95037);
+    }
+    transport
+    {
+        As          1.406732195e-6;
+        Ts          111;
+    }
+}
+
+O2
+{
+    specie
+    {
+        molWeight   31.99825;
+    }
+    thermodynamics
+    {
+        Tlow            200;
+        Thigh           6000;
+        Tcommon         1000;
+        highCpCoeffs    (3.66096083 6.56365523e-4 -1.41149485e-7 2.05797658e-11 -1.29913248e-15 -1.21597725e3 3.41536184);
+        lowCpCoeffs     (3.78245636 -2.99673415e-3 9.84730200e-6 -9.68129508e-9 3.24372836e-12 -1.06394356e3 3.65767573);
+    }
+    transport
+    {
+        As          1.6934113e-6;
+        Ts          127;
+    }
+}
+
+
+TiCl4
+{
+    specie
+    {
+        molWeight   189.6908;
+    }
+    thermodynamics
+    {
+        Tlow            280;
+        Thigh           5000;
+        Tcommon         1000;
+        highCpCoeffs    (1.71426430e1 1.09370870e-3 -1.06903110e-9 2.66167570e-13 -2.27944800e-17 -1.01880270e5 -6.76401420e1);
+        lowCpCoeffs     (1.70660420e1 1.57771680e-3 -1.08703760e-6 1.03903080e-9 -3.60225300e-13 -1.01871340e5 -6.73082280e1);
+    }
+    transport
+    {
+        As          1.6934113e-6; // Taken from oxygen
+        Ts          127;
+    }
+}
+
+TiO2
+{
+    specie
+    {
+        molWeight   79.87880;
+    }
+    thermodynamics
+    {
+        Tlow            280;
+        Thigh           5000;
+        Tcommon         1000;
+        highCpCoeffs    (6.84891510 4.24634610e-3 -3.00889840e-6 1.06025190e-9 -1.43795970e-13 -1.15992460e5 -3.45141060e1);
+        lowCpCoeffs     (-1.61175170e-1 3.79666600e-2 -6.51547500e-5 5.25521360e-8 -1.62000510e-11 -1.14788970e5 -1.88740350);
+    }
+    transport
+    {
+        As          1.6934113e-6; // Taken from oxygen
+        Ts          127;
+    }
+}
+
+TiO2_s
+{
+    $TiO2;
+}
+
+Cl2
+{
+    specie
+    {
+        molWeight   70.90540;
+    }
+    thermodynamics
+    {
+        Tlow            200;
+        Thigh           6000;
+        Tcommon         1000;
+        highCpCoeffs    (4.74727508 -4.88581710e-4 2.68444871e-7 -2.43476083e-11 -1.03683148e-15 -1.51101862e3 -3.44551305e-1);
+        lowCpCoeffs     (2.73638114 7.83525799e-3 -1.45104963e-5 1.25730834e-8 -4.13247145e-12 -1.05880114e3 9.44555879);
+    }
+    transport
+    {
+        As          1.6934113e-6; // Taken from oxygen
+        Ts          127;
+    }
+}
 
 
 // ************************************************************************* //

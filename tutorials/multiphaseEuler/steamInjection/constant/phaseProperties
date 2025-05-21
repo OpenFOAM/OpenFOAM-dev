@@ -14,15 +14,12 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-type thermalPhaseChangeMultiphaseSystem;
-
-phases (steam water);
-
-phaseChange on;
+phases          (steam water);
 
 steam
 {
     type            purePhaseModel;
+
     diameterModel   isothermal;
     isothermalCoeffs
     {
@@ -36,6 +33,7 @@ steam
 water
 {
     type            purePhaseModel;
+
     diameterModel   none;
 
     residualAlpha   1e-3;
@@ -51,62 +49,6 @@ blending
 }
 
 surfaceTension
-{}
-
-saturationTemperature
-{
-    steam_water
-    {
-        type            constant;
-        value           372.76;
-    }
-}
-
-drag
-{
-    steam_dispersedIn_water
-    {
-        type            SchillerNaumann;
-    }
-}
-
-virtualMass
-{
-    steam_dispersedIn_water
-    {
-        type            constantCoefficient;
-        Cvm             0.5;
-    }
-}
-
-heatTransfer
-{
-    steam_dispersedIn_water_inThe_steam
-    {
-        type spherical;
-        residualAlpha 1e-3;
-    }
-
-    steam_dispersedIn_water_inThe_water
-    {
-        type RanzMarshall;
-        residualAlpha 1e-3;
-    }
-}
-
-phaseTransfer
-{}
-
-lift
-{}
-
-wallLubrication
-{}
-
-turbulentDispersion
-{}
-
-interfaceCompression
 {}
 
 // ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,6 @@ SourceFiles
 #ifndef sizeGroup_H
 #define sizeGroup_H
 
-#include "dictionaryEntry.H"
 #include "velocityGroup.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -71,6 +70,7 @@ namespace Foam
 namespace diameterModels
 {
 
+// Forward declaration of classes
 class shapeModel;
 
 /*---------------------------------------------------------------------------*\
@@ -136,7 +136,11 @@ public:
         );
 
         //- Return clone
-        autoPtr<sizeGroup> clone() const;
+        autoPtr<sizeGroup> clone() const
+        {
+            NotImplemented;
+            return autoPtr<sizeGroup>(nullptr);
+        }
 
         //- Return a pointer to a new sizeGroup created from Istream
         class iNew
@@ -196,7 +200,7 @@ public:
     // Member Functions
 
         //- Return index of the size group within the population balance
-        label i() const;
+        inline label i() const;
 
         //- Return const-reference to the phase
         inline const phaseModel& phase() const;
@@ -210,11 +214,11 @@ public:
         //- Return representative volume of the sizeGroup
         inline const dimensionedScalar& x() const;
 
-        //- Return reference to diameterModel of the phase
-        inline autoPtr<shapeModel>& shapeModelPtr();
+        //- Return reference to the shape model
+        shapeModel& shape();
 
-        //- Return const-reference to diameterModel of the phase
-        inline const autoPtr<shapeModel>& shapeModelPtr() const;
+        //- Return const-reference to the shape model
+        const shapeModel& shape() const;
 
         //- Return representative surface area of the sizeGroup
         const tmp<volScalarField> a() const;

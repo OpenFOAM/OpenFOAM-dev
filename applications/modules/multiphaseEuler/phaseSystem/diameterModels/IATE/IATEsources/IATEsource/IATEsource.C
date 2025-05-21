@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,15 +85,18 @@ Foam::tmp<Foam::volScalarField> Foam::diameterModels::IATEsource::Ur() const
        *pow(max(1 - phase(), scalar(0)), 1.75);
 }
 
+
 Foam::tmp<Foam::volScalarField> Foam::diameterModels::IATEsource::Ut() const
 {
     return sqrt(2*otherPhase().k());
 }
 
+
 Foam::tmp<Foam::volScalarField> Foam::diameterModels::IATEsource::Re() const
 {
     return max(Ur()*phase().d()/otherPhase().fluidThermo().nu(), scalar(1e-3));
 }
+
 
 Foam::tmp<Foam::volScalarField> Foam::diameterModels::IATEsource::CD() const
 {
@@ -112,6 +115,7 @@ Foam::tmp<Foam::volScalarField> Foam::diameterModels::IATEsource::CD() const
         );
 }
 
+
 Foam::tmp<Foam::volScalarField> Foam::diameterModels::IATEsource::Mo() const
 {
     const uniformDimensionedVectorField& g =
@@ -122,6 +126,7 @@ Foam::tmp<Foam::volScalarField> Foam::diameterModels::IATEsource::Mo() const
        *(otherPhase().rho() - phase().rho())
        /pow3(sigma());
 }
+
 
 Foam::tmp<Foam::volScalarField> Foam::diameterModels::IATEsource::Eo() const
 {
@@ -134,10 +139,10 @@ Foam::tmp<Foam::volScalarField> Foam::diameterModels::IATEsource::Eo() const
        /sigma();
 }
 
+
 Foam::tmp<Foam::volScalarField> Foam::diameterModels::IATEsource::We() const
 {
-    return
-        otherPhase().rho()*sqr(Ut())*phase().d()/sigma();
+    return otherPhase().rho()*sqr(Ut())*phase().d()/sigma();
 }
 
 

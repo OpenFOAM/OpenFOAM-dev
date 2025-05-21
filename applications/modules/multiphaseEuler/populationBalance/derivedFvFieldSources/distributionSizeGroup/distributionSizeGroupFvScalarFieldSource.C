@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "distributionSizeGroupFvScalarFieldSource.H"
-#include "fvSource.H"
 #include "populationBalanceModel.H"
 #include "addToRunTimeSelectionTable.H"
 

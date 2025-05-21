@@ -14,13 +14,12 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-type basicMultiphaseSystem;
-
-phases (air water);
+phases          (air water);
 
 air
 {
     type            purePhaseModel;
+
     diameterModel   isothermal;
     isothermalCoeffs
     {
@@ -34,6 +33,7 @@ air
 water
 {
     type            purePhaseModel;
+
     diameterModel   constant;
     constantCoeffs
     {
@@ -54,7 +54,7 @@ blending
         minPartlyContinuousAlpha.water 0.3;
     }
 
-    drag
+    segregated
     {
         type            linear;
         minFullyContinuousAlpha.air 0.7;
@@ -65,70 +65,6 @@ blending
 }
 
 surfaceTension
-{}
-
-drag
-{
-    air_dispersedIn_water
-    {
-        type            SchillerNaumann;
-    }
-
-    water_dispersedIn_air
-    {
-        type            SchillerNaumann;
-    }
-
-    air_segregatedWith_water
-    {
-        type            segregated;
-        m               0.5;
-        n               8;
-    }
-}
-
-virtualMass
-{
-    air_dispersedIn_water
-    {
-        type            constantCoefficient;
-        Cvm             0.5;
-    }
-
-    water_dispersedIn_air
-    {
-        type            none;
-    }
-}
-
-heatTransfer
-{
-    air_dispersedIn_water
-    {
-        type            RanzMarshall;
-        residualAlpha   1e-3;
-    }
-
-    water_dispersedIn_air
-    {
-        type            RanzMarshall;
-        residualAlpha   1e-3;
-    }
-}
-
-phaseTransfer
-{}
-
-lift
-{}
-
-wallLubrication
-{}
-
-turbulentDispersion
-{}
-
-interfaceCompression
 {}
 
 // ************************************************************************* //

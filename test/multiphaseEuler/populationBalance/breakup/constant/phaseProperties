@@ -14,9 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-type populationBalanceMultiphaseSystem;
-
-phases (air1 air2 air3 water);
+phases          (air1 air2 air3 water);
 
 populationBalances (bubbles);
 
@@ -25,12 +23,11 @@ air1
     type            pureIsothermalPhaseModel;
 
     diameterModel   velocityGroup;
-
     velocityGroupCoeffs
     {
-        populationBalance   bubbles;
+        populationBalance bubbles;
 
-        shapeModel          spherical;
+        shapeModel      spherical;
 
         sizeGroups
         (
@@ -65,12 +62,11 @@ air2
     type            pureIsothermalPhaseModel;
 
     diameterModel   velocityGroup;
-
     velocityGroupCoeffs
     {
-        populationBalance   bubbles;
+        populationBalance bubbles;
 
-        shapeModel          spherical;
+        shapeModel      spherical;
 
         sizeGroups
         (
@@ -90,12 +86,11 @@ air3
     type            pureIsothermalPhaseModel;
 
     diameterModel   velocityGroup;
-
     velocityGroupCoeffs
     {
-        populationBalance   bubbles;
+        populationBalance bubbles;
 
-        shapeModel          spherical;
+        shapeModel      spherical;
 
         sizeGroups
         (
@@ -118,6 +113,18 @@ water
     residualAlpha   1e-6;
 }
 
+blending
+{
+    default
+    {
+        type            continuous;
+        phase           water;
+    }
+}
+
+surfaceTension
+{}
+
 populationBalanceCoeffs
 {
     bubbles
@@ -134,53 +141,11 @@ populationBalanceCoeffs
         (
             powerLaw
             {
-                power   2.0;
+                power           2.0;
                 daughterSizeDistributionModel uniformBinary;
             }
         );
-
-        driftModels
-        ();
-
-        nucleationModels
-        ();
     }
 }
-
-blending
-{
-    default
-    {
-        type            continuous;
-        phase           water;
-    }
-}
-
-surfaceTension
-{}
-
-interfaceCompression
-{}
-
-drag
-{}
-
-virtualMass
-{}
-
-heatTransfer
-{}
-
-phaseTransfer
-{}
-
-lift
-{}
-
-wallLubrication
-{}
-
-turbulentDispersion
-{}
 
 // ************************************************************************* //

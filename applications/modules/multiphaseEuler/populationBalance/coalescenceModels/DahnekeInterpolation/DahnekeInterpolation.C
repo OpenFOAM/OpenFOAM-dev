@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,11 +93,10 @@ void Foam::diameterModels::coalescenceModels::DahnekeInterpolation::precompute()
 }
 
 
-void
-Foam::diameterModels::coalescenceModels::DahnekeInterpolation::
+void Foam::diameterModels::coalescenceModels::DahnekeInterpolation::
 addToCoalescenceRate
 (
-    volScalarField& coalescenceRate,
+    volScalarField::Internal& coalescenceRate,
     const label i,
     const label j
 )
@@ -108,7 +107,7 @@ addToCoalescenceRate
     Brownian_().addToCoalescenceRate(BrownianRate_, i, j);
     ballistic_().addToCoalescenceRate(ballisticRate_, i, j);
 
-    const volScalarField KnD(BrownianRate_/(2*ballisticRate_));
+    const volScalarField::Internal KnD(BrownianRate_/(2*ballisticRate_));
 
     coalescenceRate += BrownianRate_*(1 + KnD)/(1 + 2*KnD + 2*sqr(KnD));
 }

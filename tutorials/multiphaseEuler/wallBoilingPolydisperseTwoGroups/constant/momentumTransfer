@@ -1,0 +1,105 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      momentumTransfer;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+drag
+{
+    gas_dispersedIn_liquid
+    {
+        type            IshiiZuber;
+    }
+
+    gas2_dispersedIn_liquid
+    {
+        $gas_dispersedIn_liquid;
+    }
+}
+
+virtualMass
+{
+    gas_dispersedIn_liquid
+    {
+        type            constantCoefficient;
+        Cvm             0.5;
+    }
+
+    gas2_dispersedIn_liquid
+    {
+        $gas_dispersedIn_liquid;
+    }
+}
+
+lift
+{
+    gas_dispersedIn_liquid
+    {
+        type            wallDamped;
+
+        lift
+        {
+            type            Tomiyama;
+            Cl              0.288;
+            aspectRatio
+            {
+                type            constant;
+                E0              1;
+            }
+        }
+
+        wallDamping
+        {
+            type            cosine;
+            Cd              1.0;
+            zeroWallDist    0.0002;
+        }
+    }
+
+    gas2_dispersedIn_liquid
+    {
+        $gas_dispersedIn_liquid
+    }
+}
+
+wallLubrication
+{
+    gas_dispersedIn_liquid
+    {
+        type            Antal;
+        Cw1             -0.01;
+        Cw2             0.05;
+    }
+
+    gas2_dispersedIn_liquid
+    {
+        $gas_dispersedIn_liquid
+    }
+}
+
+turbulentDispersion
+{
+    gas_dispersedIn_liquid
+    {
+        type            LopezDeBertodano;
+        Ctd             1.0;
+        residualAlpha   1e-3;
+    }
+
+    gas2_dispersedIn_liquid
+    {
+        $gas_dispersedIn_liquid;
+    }
+}
+
+// ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,7 +70,7 @@ class IATE
 {
     // Private Data
 
-        //- Interfacial curvature (alpha*interfacial area)
+        //- Interfacial curvature (interfacial area per unit volume/alpha)
         volScalarField kappai_;
 
         //- Maximum diameter used for stabilisation in the limit kappai->0

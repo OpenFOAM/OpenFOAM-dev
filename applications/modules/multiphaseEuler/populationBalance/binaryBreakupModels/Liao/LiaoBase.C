@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,7 @@ License
 #include "LiaoBase.H"
 #include "fvcGrad.H"
 #include "phaseCompressibleMomentumTransportModel.H"
+#include "uniformDimensionedFields.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -35,16 +36,16 @@ Foam::diameterModels::LiaoBase::LiaoBase
     const dictionary& dict
 )
 :
-    populationBalance_(popBal),
+    popBal_(popBal),
     kolmogorovLengthScale_
     (
         IOobject
         (
             "kolmogorovLengthScale",
-            populationBalance_.time().name(),
-            populationBalance_.mesh()
+            popBal_.time().name(),
+            popBal_.mesh()
         ),
-        populationBalance_.mesh(),
+        popBal_.mesh(),
         dimensionedScalar
         (
             "kolmogorovLengthScale",
@@ -57,10 +58,10 @@ Foam::diameterModels::LiaoBase::LiaoBase
         IOobject
         (
             "shearStrainRate",
-            populationBalance_.time().name(),
-            populationBalance_.mesh()
+            popBal_.time().name(),
+            popBal_.mesh()
         ),
-        populationBalance_.mesh(),
+        popBal_.mesh(),
         dimensionedScalar
         (
             "shearStrainRate",
@@ -73,10 +74,10 @@ Foam::diameterModels::LiaoBase::LiaoBase
         IOobject
         (
             "eddyStrainRate",
-            populationBalance_.time().name(),
-            populationBalance_.mesh()
+            popBal_.time().name(),
+            popBal_.mesh()
         ),
-        populationBalance_.mesh(),
+        popBal_.mesh(),
         dimensionedScalar
         (
             "eddyStrainRate",
@@ -91,50 +92,46 @@ Foam::diameterModels::LiaoBase::LiaoBase
 
 void Foam::diameterModels::LiaoBase::precompute()
 {
-    kolmogorovLengthScale_ =
-        pow025
-        (
-            pow3(populationBalance_.continuousPhase().fluidThermo().nu())
-           /populationBalance_.continuousTurbulence().epsilon()
-        );
+    const volScalarField::Internal& rhoc = popBal_.continuousPhase().rho();
+
+    tmp<volScalarField> tepsilonc(popBal_.continuousTurbulence().epsilon());
+    const volScalarField::Internal& epsilonc = tepsilonc();
+    tmp<volScalarField> tmu(popBal_.continuousPhase().fluidThermo().mu());
+    const volScalarField::Internal muc = tmu();
+    tmp<volScalarField> tnu(popBal_.continuousPhase().fluidThermo().nu());
+    const volScalarField::Internal nuc = tnu();
+
+    kolmogorovLengthScale_ = pow025(pow3(nuc)/epsilonc);
 
     shearStrainRate_ =
-        sqrt(2.0)
-       *mag(symm(fvc::grad(populationBalance_.continuousPhase().U())));
+        sqrt(2.0)*mag(symm(fvc::grad(popBal_.continuousPhase().U())));
 
-    eddyStrainRate_ =
-           sqrt
-           (
-               populationBalance_.continuousPhase().rho()
-              *populationBalance_.continuousTurbulence().epsilon()
-              /populationBalance_.continuousPhase().fluidThermo().mu()
-           );
+    eddyStrainRate_ = sqrt(rhoc*epsilonc/muc);
 
     if (uTerminal_.empty())
     {
-        const fvMesh& mesh = populationBalance_.mesh();
         const uniformDimensionedVectorField& g =
-            mesh.lookupObject<uniformDimensionedVectorField>("g");
+            popBal_.mesh().lookupObject<uniformDimensionedVectorField>("g");
 
         const dimensionedScalar nuc
         (
             "nuc",
             dimKinematicViscosity,
-            gAverage(populationBalance_.continuousPhase().fluidThermo().nu()())
+            gAverage(popBal_.continuousPhase().fluidThermo().nu()())
         );
 
         const dimensionedScalar rhoc
         (
             "rhoc",
             dimDensity,
-            gAverage(populationBalance_.continuousPhase().rho())
+            gAverage(popBal_.continuousPhase().rho())
         );
 
         const dimensionedScalar rhod
         (
             "rhod",
             dimDensity,
-            gAverage(populationBalance_.sizeGroups()[1].phase().rho())
+            gAverage(popBal_.sizeGroups()[1].phase().rho())
         );
 
         const dimensionedScalar sigma
@@ -143,25 +140,25 @@ void Foam::diameterModels::LiaoBase::precompute()
             dimForce/dimLength,
             gAverage
             (
-                populationBalance_.sigmaWithContinuousPhase
+                popBal_.sigmaWithContinuousPhase
                 (
-                    populationBalance_.sizeGroups()[1].phase()
+                    popBal_.sizeGroups()[1].phase()
                 )()
             )
         );
 
-        for(int m = 0; m < populationBalance_.sizeGroups().size(); m++)
+        forAll(popBal_.sizeGroups(), i)
         {
-            const sizeGroup& f = populationBalance_.sizeGroups()[m];
+            const sizeGroup& fi = popBal_.sizeGroups()[i];
 
             dimensionedScalar uTerminal("uTerminal", dimVelocity, 0.2);
             dimensionedScalar Cd("Cd", dimless, 0.44);
             dimensionedScalar CdEllipse("CdEllipse", dimless, 1);
 
-            dimensionedScalar Re(uTerminal*f.dSph()/nuc);
+            dimensionedScalar Re(uTerminal*fi.dSph()/nuc);
             const dimensionedScalar Eo
             (
-                mag(g)*mag(rhoc - rhod)*sqr(f.dSph())/sigma
+                mag(g)*mag(rhoc - rhod)*sqr(fi.dSph())/sigma
             );
 
             dimensionedScalar F("F", dimForce/dimArea, 1);
@@ -173,9 +170,9 @@ void Foam::diameterModels::LiaoBase::precompute()
 
             int n = 0;
 
-            while(mag(F.value()) >= 1.0e-05 && n++ <= 20)
+            while (mag(F.value()) >= 1.0e-05 && n++ <= 20)
             {
-                Re = uTerminal*f.dSph()/nuc;
+                Re = uTerminal*fi.dSph()/nuc;
 
                 Cd =
                     pos0(1000 - Re)*24/Re*(1 + 0.1*pow(Re, 0.75))
@@ -189,10 +186,10 @@ void Foam::diameterModels::LiaoBase::precompute()
                   + neg(CdEllipse - Cd)*Cd;
 
                 F =
-                    4.0/3.0*(rhoc - rhod)*mag(g)*f.dSph()
+                    4.0/3.0*(rhoc - rhod)*mag(g)*fi.dSph()
                   - rhoc*Cd*sqr(uTerminal);
 
-                ReX = (uTerminal + uTerminalX)*f.dSph()/nuc;
+                ReX = (uTerminal + uTerminalX)*fi.dSph()/nuc;
 
                 CdX =
                     pos0(1000 - ReX)

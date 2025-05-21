@@ -1,0 +1,101 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+#------------------------------------------------------------------------------
+
+internalFieldValue()
+{
+    foamDictionary $1 -expand -writePrecision 12 \
+        -entry internalField -value | cut -d ' ' -f 2
+}
+
+run()
+{
+    runApplication ${1:+-s} $1 foamPostProcess -solver multiphaseEuler \
+        -func populationBalanceSetSizeDistribution
+
+    runApplication ${1:+-s} $1 foamRun
+
+    tLast=$(foamListTimes -latestTime)
+    rhoAir=$(foamDictionary constant/physicalProperties.air1 -entry mixture/equationOfState/rho -value)
+    mDotAir=$(foamDictionary include -entry massFlowRate -value)
+    vDotAir="($mDotAir/$rhoAir)"
+    alphaAir0="($(internalFieldValue 0/alpha.air1) + $(internalFieldValue 0/alpha.air2))"
+    NAir0=$(internalFieldValue "0/integerMoment0(N,v).bubbles")
+
+    gnuplot << EOF
+
+set terminal eps enhanced size 5,5
+set output 'postProcessing${1:+_}${1}.eps'
+
+set style line 1 lw 1.5 lc 'web-green'
+set style line 2 ps 0.5 lw 2 pt 2 lc 'royalblue'
+set style line 3 ps 0.5 lw 2 pt 2 lc 'orange-red'
+set style line 4 ps 0.5 pt 7 lc 'skyblue'
+set style line 5 ps 0.5 pt 7 lc 'orange-red'
+
+set multiplot layout 3,1
+
+set xlabel "Volume [mm^3]"
+set ylabel "[cm^{-3} cm^{-3}]"
+set cblabel "Time [s]"
+
+plot '< printf "NaN "; awk "NR>1 {print \\\$1}" postProcessing/fDistribution/0/fDistribution.xy | tr "\n" " "; printf "\n"; foamListTimes -withZero | while read t; do printf "\$t "; awk "NR>1 {print \\\$2}" postProcessing/fDistribution/\$t/fDistribution.xy | tr "\n" " "; printf "\n"; done' nonuniform matrix us (\$1*1e9):(\$3/1e12):2 w lp t '' palette ps 0.25 pt 7
+
+set ytics nomirror
+set log y2
+set y2tics
+set y2range [1e-6:]
+set y2label "Error [%]"
+set format y2 '%.0e'
+set key outside right center
+
+set xlabel "Time [s]"
+set ylabel "Air Number Density [cm^{-3}]"
+set offsets 0, 0, 0.01, 0.01
+
+plot ($NAir0/1e6) w l ls 1 t 'Analytic', "postProcessing/volAverage(integerMoment0(N,v).bubbles)/0/volFieldValue.dat" us 1:(\$2/1e6) every 40 w p ls 2 t 'Moment', "postProcessing/volAverage(integerMoment0(N,v).bubbles)/0/volFieldValue.dat" us 1:(100*abs(\$2/$NAir0-1)) every 40 axis x1y2 w p ls 3 t '(error)'
+
+set xlabel "Time [s]"
+set ylabel "Air Volume Fraction [-]"
+unset offsets
+
+plot $alphaAir0 + $vDotAir*x w l ls 1 t 'Analytic', '< paste "postProcessing/volAverage(alpha.air1)/0/volFieldValue.dat" "postProcessing/volAverage(alpha.air2)/0/volFieldValue.dat"' us 1:(\$2+\$4) every 40 w p ls 4 t 'Alpha', '< paste "postProcessing/volAverage(alpha.air1)/0/volFieldValue.dat" "postProcessing/volAverage(alpha.air2)/0/volFieldValue.dat"' us 1:(100*abs((\$2+\$4)/($alphaAir0+$vDotAir*\$1)-1)) every 40 axis x1y2 w p ls 5 t '(error)', "postProcessing/volAverage(integerMoment1(N,v).bubbles)/0/volFieldValue.dat" every 40 w p ls 2 t 'Moment', "postProcessing/volAverage(integerMoment1(N,v).bubbles)/0/volFieldValue.dat" us 1:(100*abs(\$2/($alphaAir0+$vDotAir*\$1)-1)) every 40 axis x1y2 w p ls 3 t '(error)'
+
+EOF
+}
+
+#------------------------------------------------------------------------------
+
+! isTest "$@" && [ -n "$1" ] && mode=$1 || mode=all
+
+wmake uniformGrowth
+
+runApplication zeroDimensionalMesh
+
+case $mode in
+    growth)
+        rm -f include && ln -s include.growth include
+        run
+        ;;
+    shrinkage)
+        rm -f include && ln -s include.shrinkage include
+        run
+        ;;
+    all)
+        rm -f include && ln -s include.growth include
+        run growth
+        rm -f 0/alpha.air[12] 0/f[0-9]*.air[12]
+        rm -f include && ln -s include.shrinkage include
+        run shrinkage
+        ;;
+    *)
+        echo "Error: mode $mode not recognised"
+        exit 1
+        ;;
+esac
+
+#------------------------------------------------------------------------------

@@ -87,6 +87,9 @@ class Liao
 {
     // Private Data
 
+        //- Disambiguate the population balance reference
+        using binaryBreakupModel::popBal_;
+
         //- Optional coefficient BTurb
         dimensionedScalar BTurb_;
 
@@ -139,7 +142,7 @@ public:
         //- Add to binary breakupRate
         virtual void addToBinaryBreakupRate
         (
-            volScalarField& binaryBreakupRate,
+            volScalarField::Internal& binaryBreakupRate,
             const label i,
             const label j
         );

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -144,7 +144,7 @@ public:
         //- Add to binary breakupRate
         virtual void addToBinaryBreakupRate
         (
-            volScalarField& binaryBreakupRate,
+            volScalarField::Internal& binaryBreakupRate,
             const label i,
             const label j
         ) = 0;

@@ -25,8 +25,7 @@ Class
     Foam::phaseSystem
 
 Description
-    Class to represent a system of phases and model interfacial transfers
-    between them.
+    Class to represent a system of phases.
 
 SourceFiles
     phaseSystem.C
@@ -61,7 +60,8 @@ SourceFiles
 namespace Foam
 {
 
-class interfaceSurfaceTensionModel;
+class surfaceTensionCoefficientModel;
+class momentumTransferSystem;
 class pressureReference;
 class nonOrthogonalSolutionControl;
 
@@ -117,51 +117,20 @@ public:
         };
 
 
-    // Public Typedefs
+    // Public Type Definitions
 
-        typedef HashPtrTable<fvVectorMatrix> momentumTransferTable;
-
-        typedef HashPtrTable<fvScalarMatrix> heatTransferTable;
-
-        typedef HashPtrTable<fvScalarMatrix> specieTransferTable;
-
+        //- List of phase models
         typedef PtrListDictionary<phaseModel> phaseModelList;
 
+        //- Partial list of phase models
         typedef UPtrList<phaseModel> phaseModelPartialList;
-
-        typedef
-            HashPtrTable
-            <
-                volScalarField,
-                phaseInterfaceKey,
-                phaseInterfaceKey::hash
-            >
-            dmdtfTable;
-
-        typedef
-            HashPtrTable
-            <
-                HashPtrTable<volScalarField>,
-                phaseInterfaceKey,
-                phaseInterfaceKey::hash
-            >
-            dmidtfTable;
-
 
 
 protected:
 
-    // Protected typedefs
+    // Protected Type Definitions
 
-        typedef
-            HashPtrTable
-            <
-                interfaceSurfaceTensionModel,
-                phaseInterfaceKey,
-                phaseInterfaceKey::hash
-            >
-            interfaceSurfaceTensionModelTable;
-
+        //- Table of interface compression coefficients
         typedef
             HashTable
             <
@@ -171,8 +140,18 @@ protected:
             >
             cAlphaTable;
 
+        //- Table of surface tension models
+        typedef
+            HashPtrTable
+            <
+                surfaceTensionCoefficientModel,
+                phaseInterfaceKey,
+                phaseInterfaceKey::hash
+            >
+            surfaceTensionCoefficientModelTable;
 
-    // Protected data
+
+    // Protected Data
 
         //- Reference to the mesh
         const fvMesh& mesh_;
@@ -196,8 +175,8 @@ protected:
         //- Stationary phase models
         phaseModelPartialList stationaryPhaseModels_;
 
-        //- Anisothermal phase models
-        phaseModelPartialList anisothermalPhaseModels_;
+        //- Thermal phase models
+        phaseModelPartialList thermalPhaseModels_;
 
         //- Multi-component phase models
         phaseModelPartialList multicomponentPhaseModels_;
@@ -214,15 +193,12 @@ protected:
         //- Stabilisation for normalisation of the interface normal
         const dimensionedScalar deltaN_;
 
-
-        // Sub Models
-
-            //- Surface tension models
-            const interfaceSurfaceTensionModelTable
-                interfaceSurfaceTensionModels_;
+        //- Surface tension models
+        const surfaceTensionCoefficientModelTable
+            surfaceTensionCoefficientModels_;
 
 
-    // Protected member functions
+    // Protected Member Functions
 
         //- Return the sum of the phase fractions of the moving phases
         tmp<volScalarField> sumAlphaMoving() const;
@@ -230,6 +206,14 @@ protected:
         //- Re-normalise the velocity of the phases
         //  around the specified mixture mean
         void setMixtureU(const volVectorField& Um);
+
+        //- Re-normalise the flux of the phases
+        //  around the specified mixture mean
+        void setMixturePhi
+        (
+            const PtrList<surfaceScalarField>& alphafs,
+            const surfaceScalarField& phim
+        );
 
 
         // Functions required for interface compression
@@ -259,54 +243,20 @@ protected:
             ) const;
 
 
-        // Sub-model construction
-
-            //- Return the dictionary containing interfacial model or value
-            //  settings for the given name. Performs backwards compatibility
-            //  conversions.
-            template<class Type>
-            dictionary interfacialDict
-            (
-                const word& name,
-                const bool defaultIsEmpty
-            ) const;
-
-
 public:
 
     //- Runtime type information
     TypeName("phaseSystem");
 
+
     //- Default name of the phase properties dictionary
     static const word propertiesName;
-
-
-    // Declare runtime construction
-
-        declareRunTimeSelectionTable
-        (
-            autoPtr,
-            phaseSystem,
-            dictionary,
-            (
-                const fvMesh& mesh
-            ),
-            (mesh)
-        );
 
 
     // Constructors
 
         //- Construct from fvMesh
         phaseSystem(const fvMesh& mesh);
-
-
-    // Selectors
-
-        static autoPtr<phaseSystem> New
-        (
-            const fvMesh& mesh
-        );
 
 
     //- Destructor
@@ -342,10 +292,10 @@ public:
             inline phaseModelPartialList& stationaryPhases();
 
             //- Return the models for phases that have variable temperature
-            inline const phaseModelPartialList& anisothermalPhases() const;
+            inline const phaseModelPartialList& thermalPhases() const;
 
             //- Access the models for phases that have variable temperature
-            inline phaseModelPartialList& anisothermalPhases();
+            inline phaseModelPartialList& thermalPhases();
 
             //- Return the models for phases that have multiple species
             inline const phaseModelPartialList& multicomponentPhases() const;
@@ -385,57 +335,14 @@ public:
             inline const Foam::fvConstraints& fvConstraints() const;
 
 
-        // Sub-model construction
-
-            //- Return the model name. This is the same as the model's typename
-            //  but without "Model" on the end.
-            template<class ModelType>
-            word modelName() const;
-
-            //- Generate interfacial-model lists
-            template<class ModelType, class ... InterfaceTypes>
-            void generateInterfacialModels
-            (
-                const dictionary& dict,
-                const phaseInterface& interface,
-                PtrList<phaseInterface>& interfaces,
-                PtrList<ModelType>& models
-            ) const;
-
-            //- Generate interfacial-model tables
-            template<class ModelType>
-            HashPtrTable
-            <
-                ModelType,
-                phaseInterfaceKey,
-                phaseInterfaceKey::hash
-            > generateInterfacialModels() const;
-
-            //- Generate interfacial-value tables
-            template<class ValueType>
-            HashTable
-            <
-                ValueType,
-                phaseInterfaceKey,
-                phaseInterfaceKey::hash
-            > generateInterfacialValues(const word& valueName) const;
-
-            //- Return the dictionary from which to construct a low-level
-            //  sub-model. Checks that there is just one sub-dictionary then
-            //  returns it.
-            template<class ModelType>
-            static const dictionary& modelSubDict(const dictionary& dict);
-
-            //- Check that mass transfer is supported across the given interface
-            template<class ModelType>
-            void validateMassTransfer(const phaseInterface& interface) const;
-
-
         // Sub-model lookup
 
             //- Check availability of a sub model for a given interface
             template<class ModelType>
-            bool foundInterfacialModel(const phaseInterface& interface) const;
+            bool foundInterfacialModel
+            (
+                const phaseInterface& interface
+            ) const;
 
             //- Return a sub model for an interface
             template<class ModelType>
@@ -454,7 +361,10 @@ public:
             tmp<volVectorField> U() const;
 
             //- Return the surface tension coefficient for an interface
-            tmp<volScalarField> sigma(const phaseInterfaceKey& key) const;
+            tmp<volScalarField> sigma
+            (
+                const phaseInterfaceKey& key
+            ) const;
 
             //- Return the surface tension coefficient for an interface on a
             //  patch
@@ -471,148 +381,67 @@ public:
             //- Stabilisation for normalisation of the interface normal
             inline const dimensionedScalar& deltaN() const;
 
-            //- Return the mass transfer rate for an interface
-            virtual tmp<volScalarField> dmdtf
-            (
-                const phaseInterfaceKey& key
-            ) const;
-
-            //- Return the mass transfer rates for each phase
-            virtual PtrList<volScalarField> dmdts() const;
-
-            //- Return the mass transfer pressure implicit coefficients
-            //  for each phase
-            virtual PtrList<volScalarField> d2mdtdps() const;
+            //- Return the surface tension force
+            tmp<surfaceScalarField> surfaceTension(const phaseModel&) const;
 
             //- Return incompressibility
             bool incompressible() const;
 
 
-        // Transfers
-
-            //- Return the momentum transfer matrices for the cell-based
-            //  algorithm
-            virtual autoPtr<momentumTransferTable> momentumTransfer() = 0;
-
-            //- Return the momentum transfer matrices for the face-based
-            //  algorithm
-            virtual autoPtr<momentumTransferTable> momentumTransferf() = 0;
-
-            //- Return the force fluxes for the cell-based algorithm
-            virtual PtrList<surfaceScalarField> Fs() const = 0;
-
-            //- Return the force fluxes for the face-based algorithm
-            virtual PtrList<surfaceScalarField> Ffs() const = 0;
-
-            //- Return the inverse of the central + drag + virtual mass
-            //  coefficient matrix
-            virtual void invADVs
-            (
-                const PtrList<volScalarField>& As,
-                PtrList<volVectorField>& HVms,
-                PtrList<PtrList<volScalarField>>& invADVs,
-                PtrList<PtrList<surfaceScalarField>>& invADVfs
-            ) const = 0;
-
-            //- Return the inverse of the face central + drag + virtual mass
-            //  coefficient matrix
-            virtual PtrList<PtrList<surfaceScalarField>> invADVfs
-            (
-                const PtrList<surfaceScalarField>& Afs,
-                PtrList<surfaceScalarField>& HVmfs
-            ) const = 0;
-
-            //- Returns true if the phase pressure is treated implicitly
-            //  in the phase fraction equation
-            virtual bool implicitPhasePressure(const phaseModel& phase) const;
-
-            //- Returns true if the phase pressure is treated implicitly
-            //  in the phase fraction equation for any phase
-            virtual bool implicitPhasePressure() const;
-
-            //- Return the phase diffusivity
-            //  divided by the momentum central coefficient
-            virtual tmp<surfaceScalarField> alphaDByAf
-            (
-                const PtrList<volScalarField>& rAs
-            ) const = 0;
-
-            //- Return the flux corrections for the cell-based algorithm
-            virtual PtrList<surfaceScalarField> ddtCorrs() const = 0;
-
-            //- Set the cell and faces drag correction fields
-            virtual void dragCorrs
-            (
-                PtrList<volVectorField>& dragCorrs,
-                PtrList<surfaceScalarField>& dragCorrf
-            ) const = 0;
-
-            //- Re-normalise the flux of the phases
-            //  around the specified mixture mean
-            void setMixturePhi
-            (
-                const PtrList<surfaceScalarField>& alphafs,
-                const surfaceScalarField& phim
-            );
-
-            //- Return the heat transfer matrices
-            virtual autoPtr<heatTransferTable> heatTransfer() const = 0;
-
-            //- Return the specie transfer matrices
-            virtual autoPtr<specieTransferTable> specieTransfer() const = 0;
-
-            //- Return the surface tension force
-            tmp<surfaceScalarField> surfaceTension
-            (
-                const phaseModel& phase
-            ) const;
-
-
         // Evolution
 
+            //- Returns true if the phase pressure is treated implicitly
+            //  in the phase fraction equations
+            bool implicitPhasePressure() const;
+
             //- Solve for the phase fractions
-            virtual void solve
+            void solve
             (
                 const alphaControl& alphaControls,
-                const PtrList<volScalarField>& rAs
+                const PtrList<volScalarField>& rAs,
+                const momentumTransferSystem& mts
             );
 
             //- Correct the fluid properties other than those listed below
-            virtual void correct();
+            void correct();
 
             //- Correct the continuity errors
-            virtual void correctContinuityError();
+            void correctContinuityError
+            (
+                const PtrList<volScalarField::Internal>& dmdts
+            );
 
             //- Correct the kinematics
-            virtual void correctKinematics();
+            void correctKinematics();
 
             //- Correct the thermodynamics
-            virtual void correctThermo();
+            void correctThermo();
 
             //- Correct the reactions
-            virtual void correctReactions();
+            void correctReactions();
 
             //- Correct the species mass fractions
-            virtual void correctSpecies();
+            void correctSpecies();
 
             //- Predict the momentumTransport
-            virtual void predictMomentumTransport();
+            void predictMomentumTransport();
 
             //- Predict the energy transport e.g. alphat
-            virtual void predictThermophysicalTransport();
+            void predictThermophysicalTransport();
 
             //- Correct the momentumTransport
-            virtual void correctMomentumTransport();
+            void correctMomentumTransport();
 
             //- Correct the energy transport e.g. alphat
-            virtual void correctThermophysicalTransport();
+            void correctThermophysicalTransport();
 
             //- Update the fluid properties for mesh changes
-            virtual void meshUpdate();
+            void meshUpdate();
 
             //- Correct fixed-flux BCs to be consistent with the velocity BCs
             void correctBoundaryFlux();
 
+            //- ...
             void correctPhi
             (
                 const volScalarField& p_rgh,

@@ -7,7 +7,6 @@
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    version     2.0;
     format      ascii;
     class       dictionary;
     location    "constant";
@@ -15,9 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-type    basicMultiphaseSystem;
-
-phases (gas liquid);
+phases          (gas liquid);
 
 gas
 {
@@ -50,37 +47,6 @@ blending
     }
 }
 
-drag
-{
-    gas_dispersedIn_liquid
-    {
-        type        IshiiZuber;
-    }
-}
-
-virtualMass
-{}
-
-heatTransfer
-{
-    gas_dispersedIn_liquid
-    {
-        type        RanzMarshall;
-    }
-}
-
-lift
-{}
-
-wallLubrication
-{}
-
-turbulentDispersion
-{}
-
-aspectRatio
-{}
-
 surfaceTension
 {
     gas_liquid
@@ -89,30 +55,5 @@ surfaceTension
         sigma       0.071;
     }
 }
-
-saturation
-{}
-
-phaseTransfer
-{
-    gas_dispersedIn_liquid
-    {
-        type        cavitation;
-
-        model       Kunz;
-
-        liquid      liquid;
-
-        pSat        79995.75943;
-
-        UInf        5.33;
-        tInf        0.028142589;
-        Cc          100;
-        Cv          100;
-    }
-}
-
-interfaceCompression
-{}
 
 // ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,11 +62,10 @@ constantCoalescence
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void
-Foam::diameterModels::coalescenceModels::constantCoalescence::
+void Foam::diameterModels::coalescenceModels::constantCoalescence::
 addToCoalescenceRate
 (
-    volScalarField& coalescenceRate,
+    volScalarField::Internal& coalescenceRate,
     const label i,
     const label j
 )

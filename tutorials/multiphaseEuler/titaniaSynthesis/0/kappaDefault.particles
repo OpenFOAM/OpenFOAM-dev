@@ -38,5 +38,13 @@ boundaryField
     }
 }
 
+sources
+{
+    reactionDrivenPhaseChange
+    {
+        type                uniformFixedValueSurfaceAreaVolumeRatio;
+        uniformValue        1.5e10;
+    }
+}
 
 // ************************************************************************* //

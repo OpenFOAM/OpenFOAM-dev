@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,29 +64,36 @@ CoulaloglouTavlarides
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void
-Foam::diameterModels::coalescenceModels::CoulaloglouTavlarides::
+void Foam::diameterModels::coalescenceModels::CoulaloglouTavlarides::
 addToCoalescenceRate
 (
-    volScalarField& coalescenceRate,
+    volScalarField::Internal& coalescenceRate,
     const label i,
     const label j
 )
 {
-    const phaseModel& continuousPhase = popBal_.continuousPhase();
     const sizeGroup& fi = popBal_.sizeGroups()[i];
     const sizeGroup& fj = popBal_.sizeGroups()[j];
+
+    const volScalarField::Internal& rhoc = popBal_.continuousPhase().rho();
+
+    tmp<volScalarField> tsigma(popBal_.sigmaWithContinuousPhase(fi.phase()));
+    const volScalarField::Internal& sigma = tsigma();
+
+    tmp<volScalarField> tmuc(popBal_.continuousPhase().fluidThermo().mu());
+    const volScalarField::Internal& muc = tmuc();
+    tmp<volScalarField> tepsilonc(popBal_.continuousTurbulence().epsilon());
+    const volScalarField::Internal& epsilonc = tepsilonc();
 
     coalescenceRate +=
         C1_*(pow(fi.x(), 2.0/3.0) + pow(fj.x(), 2.0/3.0))
        *sqrt(pow(fi.x(), 2.0/9.0) + pow(fj.x(), 2.0/9.0))
-       *cbrt(popBal_.continuousTurbulence().epsilon())/(1 + popBal_.alphas())
+       *cbrt(epsilonc)
+       /(1 + popBal_.alphas()())
        *exp
         (
-          - C2_*continuousPhase.fluidThermo().mu()*continuousPhase.rho()
-           *popBal_.continuousTurbulence().epsilon()
-           /sqr(popBal_.sigmaWithContinuousPhase(fi.phase()))
-           /pow3(1 + popBal_.alphas())
+          - C2_*muc*rhoc*epsilonc/sqr(sigma)
+           /pow3(1 + popBal_.alphas()())
            *pow4(cbrt(fi.x())*cbrt(fj.x())/(cbrt(fi.x()) + cbrt(fj.x())))
         );
 }

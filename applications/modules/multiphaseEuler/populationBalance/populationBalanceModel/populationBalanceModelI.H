@@ -45,10 +45,24 @@ Foam::diameterModels::populationBalanceModel::fluid() const
 }
 
 
-inline const Foam::phaseSystem::dmdtfTable&
+inline const Foam::diameterModels::populationBalanceModel::dmdtfTable&
 Foam::diameterModels::populationBalanceModel::dmdtfs() const
 {
     return dmdtfs_;
+}
+
+
+inline const Foam::diameterModels::populationBalanceModel::dmdtfTable&
+Foam::diameterModels::populationBalanceModel::expansionDmdtfs() const
+{
+    return expansionDmdtfs_;
+}
+
+
+inline const Foam::diameterModels::populationBalanceModel::dmdtfTable&
+Foam::diameterModels::populationBalanceModel::modelSourceDmdtfs() const
+{
+    return modelSourceDmdtfs_;
 }
 
 
@@ -59,24 +73,17 @@ Foam::diameterModels::populationBalanceModel::mesh() const
 }
 
 
-inline Foam::label Foam::diameterModels::populationBalanceModel::nCorr() const
+inline const Foam::dictionary&
+Foam::diameterModels::populationBalanceModel::solverDict() const
 {
-    return mesh_.solution().solverDict(name_).lookupBackwardsCompatible<label>
-    (
-        {"nCorrectors", "nCorr"}
-    );
+    return mesh_.solution().solverDict(name_);
 }
 
 
-inline Foam::Switch
+inline bool
 Foam::diameterModels::populationBalanceModel::solveOnFinalIterOnly() const
 {
-    return
-        mesh_.solution().solverDict(name_).lookupOrDefault<bool>
-        (
-            "solveOnFinalIterOnly",
-            false
-        );
+    return solverDict().lookupOrDefault<bool>("solveOnFinalIterOnly", false);
 }
 
 
@@ -98,13 +105,6 @@ inline Foam::UPtrList<Foam::diameterModels::sizeGroup>&
 Foam::diameterModels::populationBalanceModel::sizeGroups()
 {
     return sizeGroups_;
-}
-
-
-inline const Foam::volScalarField&
-Foam::diameterModels::populationBalanceModel::Sp(const label i) const
-{
-    return Sp_[i];
 }
 
 

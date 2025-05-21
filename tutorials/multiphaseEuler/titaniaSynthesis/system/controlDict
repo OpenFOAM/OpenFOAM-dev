@@ -50,4 +50,9 @@ maxCo           0.8;
 
 maxDeltaT       1e-3;
 
+cacheTemporaryObjects
+(
+    reactionDrivenPhaseChange:mDot_TiO2
+);
+
 // ************************************************************************* //

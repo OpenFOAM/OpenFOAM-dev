@@ -1,9 +1,7 @@
 EXE_INC = \
+    -I../lnInclude \
     -I../phaseSystem/lnInclude \
-    -I../interfacialModels/lnInclude \
     -I../populationBalance/lnInclude \
-    -I../momentumTransportModels/lnInclude \
-    -I../thermophysicalTransportModels/lnInclude \
     -I../fvModels/lnInclude \
     -I$(LIB_SRC)/fileFormats/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude \
@@ -17,9 +15,11 @@ EXE_INC = \
     -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/compressible/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/phaseCompressible/lnInclude \
+    -I$(LIB_SRC)/fvModels/general/lnInclude
 
 LIB_LIBS = \
-    -lphaseSystems \
+    -lphaseSystem \
+    -lpopulationBalance \
+    -lmultiphaseEulerFvModels \
     -lfileFormats \
-    -lfieldFunctionObjects \
-    -lmultiphaseEulerFvModels
+    -lfieldFunctionObjects

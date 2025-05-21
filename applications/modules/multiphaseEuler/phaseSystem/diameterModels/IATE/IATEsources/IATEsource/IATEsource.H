@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -183,11 +183,7 @@ public:
         //- Return the bubble turbulent Weber number
         tmp<volScalarField> We() const;
 
-        virtual tmp<fvScalarMatrix> R
-        (
-            const volScalarField& alphai,
-            volScalarField& kappai
-        ) const = 0;
+        virtual tmp<fvScalarMatrix> R(volScalarField& kappai) const = 0;
 };
 
 

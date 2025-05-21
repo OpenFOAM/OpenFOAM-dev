@@ -74,8 +74,19 @@ const Foam::PtrList<Foam::volScalarField>&
 Foam::PurePhaseModel<BasePhaseModel>::Y() const
 {
     // Y_ has never been set, so we are returning an empty list
-
     return Y_;
+}
+
+
+template<class BasePhaseModel>
+const Foam::volScalarField&
+Foam::PurePhaseModel<BasePhaseModel>::Y(const label speciei) const
+{
+    FatalErrorInFunction
+        << "Cannot get a species fraction by index from a pure phase"
+        << exit(FatalError);
+
+    return NullObjectRef<volScalarField>();
 }
 
 
