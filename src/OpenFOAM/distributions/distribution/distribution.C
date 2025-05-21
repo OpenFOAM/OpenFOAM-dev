@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,7 +86,7 @@ Foam::distribution::distribution
     sampleQ_(sampleQ),
     rndGen_("rndGen", dict, std::move(rndGen))
 {
-    if (Q_ < 0)
+    if (!dict.lookupOrDefault<bool>("allowNegativeQ", false) && Q_ < 0)
     {
         FatalIOErrorInFunction(dict)
             << name << ": Size exponent cannot be negative" << nl
