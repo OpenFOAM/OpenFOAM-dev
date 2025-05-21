@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -133,9 +133,10 @@ public:
             dictionary,
             (
                 const dictionary& dict,
-                const compressibleTwoPhases& phases
+                const compressibleTwoPhases& phases,
+                const label liquidIndex
             ),
-            (dict, phases)
+            (dict, phases, liquidIndex)
         );
 
 
@@ -145,7 +146,8 @@ public:
         cavitationModel
         (
             const dictionary& dict,
-            const compressibleTwoPhases& phases
+            const compressibleTwoPhases& phases,
+            const label liquidIndex
         );
 
 
@@ -153,7 +155,8 @@ public:
     static autoPtr<cavitationModel> New
     (
         const dictionary& dict,
-        const compressibleTwoPhases& phases
+        const compressibleTwoPhases& phases,
+        const label liquidIndex = -1
     );
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,11 +44,17 @@ namespace compressible
 Foam::compressible::cavitationModel::cavitationModel
 (
     const dictionary& dict,
-    const compressibleTwoPhases& phases
+    const compressibleTwoPhases& phases,
+    const label liquidIndex
 )
 :
     phases_(phases),
-    liquidIndex_(phases.index(dict.lookup<word>("liquid"))),
+    liquidIndex_
+    (
+        liquidIndex != -1
+      ? liquidIndex
+      : phases.index(dict.lookup<word>("liquid"))
+    ),
     saturationModel_(saturationPressureModel::New("pSat", dict))
 {}
 
