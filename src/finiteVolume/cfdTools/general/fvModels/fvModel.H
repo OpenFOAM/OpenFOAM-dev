@@ -117,6 +117,10 @@ public:
     TypeName("fvModel");
 
 
+    //- The keywords read by this class
+    static const wordHashSet keywords;
+
+
     // Declare run-time constructor selection table
 
         declareRunTimeSelectionTable
