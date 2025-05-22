@@ -309,7 +309,13 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::BasicThermo
 :
     physicalProperties(mesh, phaseName),
     MixtureType(properties()),
-    BasicThermoType(properties(), mixture(), mesh, phaseName),
+    BasicThermoType
+    (
+        properties(),
+        static_cast<const MixtureType&>(*this),
+        mesh,
+        phaseName
+    ),
 
     he_
     (

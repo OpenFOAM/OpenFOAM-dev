@@ -208,12 +208,6 @@ public:
             return *this;
         }
 
-        //- Return the mixture
-        const MixtureType& mixture() const
-        {
-            return *this;
-        }
-
         //- Return the name of the thermo physics
         virtual word thermoName() const
         {
