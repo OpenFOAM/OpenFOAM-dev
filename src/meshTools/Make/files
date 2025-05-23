@@ -295,6 +295,7 @@ zoneGenerators/clear/clear.C
 zoneGenerators/union/union.C
 zoneGenerators/difference/difference.C
 zoneGenerators/intersection/intersection.C
+zoneGenerators/invert/invert.C
 
 zoneGenerators/all/all.C
 

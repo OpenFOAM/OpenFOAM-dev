@@ -72,7 +72,11 @@ void Foam::zoneGenerators::Union::select
 }
 
 
-Foam::zoneSet Foam::zoneGenerators::Union::generate(const bool diff) const
+Foam::zoneSet Foam::zoneGenerators::Union::generate
+(
+    const bool diff,
+    const bool all
+) const
 {
     boolList selectedPoints;
     boolList selectedCells;
@@ -82,23 +86,25 @@ Foam::zoneSet Foam::zoneGenerators::Union::generate(const bool diff) const
     forAll(zoneGenerators_, i)
     {
         zoneSet zs(zoneGenerators_[i].generate());
-        const bool diffFirst = diff ? i == 0 : true;
+
+        // Select or deselect
+        const bool sel = all ? false : (diff ? i == 0 : true);
 
         if (zs.pZone.valid())
         {
-            selectedPoints.setSize(mesh_.nPoints(), false);
-            select(selectedPoints, zs.pZone, diffFirst);
+            selectedPoints.setSize(mesh_.nPoints(), all);
+            select(selectedPoints, zs.pZone, sel);
         }
 
         if (zs.cZone.valid())
         {
-            selectedCells.setSize(mesh_.nCells(), false);
-            select(selectedCells, zs.cZone, diffFirst);
+            selectedCells.setSize(mesh_.nCells(), all);
+            select(selectedCells, zs.cZone, sel);
         }
 
         if (zs.fZone.valid())
         {
-            selectedFaces.setSize(mesh_.nFaces(), false);
+            selectedFaces.setSize(mesh_.nFaces(), all);
             flipMap.setSize(mesh_.nFaces(), false);
             select
             (
@@ -106,7 +112,7 @@ Foam::zoneSet Foam::zoneGenerators::Union::generate(const bool diff) const
                 flipMap,
                 zs.fZone(),
                 zs.fZone().flipMap(),
-                diffFirst
+                sel
             );
         }
     }
@@ -176,7 +182,7 @@ Foam::zoneGenerators::Union::~Union()
 
 Foam::zoneSet Foam::zoneGenerators::Union::generate() const
 {
-    return generate(false);
+    return generate(false, false);
 }
 
 

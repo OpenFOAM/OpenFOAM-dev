@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "difference.H"
+#include "invert.H"
 #include "polyMesh.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -33,15 +33,15 @@ namespace Foam
 {
     namespace zoneGenerators
     {
-        defineTypeNameAndDebug(difference, 0);
-        addToRunTimeSelectionTable(zoneGenerator, difference, dictionary);
+        defineTypeNameAndDebug(invert, 0);
+        addToRunTimeSelectionTable(zoneGenerator, invert, dictionary);
     }
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::zoneGenerators::difference::difference
+Foam::zoneGenerators::invert::invert
 (
     const word& name,
     const polyMesh& mesh,
@@ -54,15 +54,15 @@ Foam::zoneGenerators::difference::difference
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::zoneGenerators::difference::~difference()
+Foam::zoneGenerators::invert::~invert()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::zoneSet Foam::zoneGenerators::difference::generate() const
+Foam::zoneSet Foam::zoneGenerators::invert::generate() const
 {
-    return Union::generate(true, false);
+    return Union::generate(true, true);
 }
 
 
