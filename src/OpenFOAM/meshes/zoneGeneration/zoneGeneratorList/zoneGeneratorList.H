@@ -28,13 +28,14 @@ Description
     List of zoneGenerators
 
     Used by Foam::zonesGenerator to generate and store the zones and also by the
-    \c union, \c difference and \c intersection \c zoneGenerators to construct
-    the list of zones they combine.
+    zoneGenerators::Union, zoneGenerators::difference and
+    zoneGenerators::intersection zoneGenerators to construct the list of zones
+    they combine.
 
 See also
-    Foam::zonesGenerator
-    Foam::zoneGenerator
-    Foam::zoneSet
+    zonesGenerator
+    zoneGenerator
+    zoneSet
 
 SourceFiles
     zoneGeneratorList.C

@@ -31,23 +31,23 @@ Description
 Usage
     \table
         Property     | Description             | Required | Default value
-        type         | zoneGenerator type      | no       | lookup
+        type         | Type: lookup            | no       | lookup
         name         | Name of the zone(s)     | no       | zoneGenerator name
-        zoneType     | Type of zone            | no       | all the zones found
+        zoneType     | Type of zone            | no       | all the zone types
     \endtable
 
-    A full specification for the \c zoneGenerators::lookup requires the keyword
-    which is the name of the \c zoneGenerator, the type of the \c zoneGenerator,
+    A full specification for the zoneGenerators::lookup requires the keyword
+    which is the name of the zoneGenerator, the type of the zoneGenerator,
     i.e. \c lookup, the name and type of the zone to be looked-up, e.g.
     \verbatim
-        lookupBox
+        <zoneGenerator name>
         {
             type        lookup;
             name        box;
             zoneType    cell;
         }
     \endverbatim
-    However usually the name of the \c zoneGenerator can be chosen to match the
+    However usually the name of the zoneGenerator can be chosen to match the
     name of the zone to be looked-up so the name entry defaults to the
     \c zoneGenerator keyword to make the specification simpler, e.g.
     \verbatim
@@ -58,8 +58,8 @@ Usage
         }
     \endverbatim
     To further simplify the specification of the \c lookup, given that it will
-    be commonly used in a \c zoneGenerator sequence, \c lookup is the default
-    type, so the box \c cellZone can be looked-up with the following simple
+    be commonly used in a zoneGenerator sequence, \c lookup is the default
+    type, so the box cellZone can be looked-up with the following simple
     specification:
     \verbatim
         box
@@ -67,7 +67,7 @@ Usage
             zoneType    cell;
         }
     \endverbatim
-    If the \c zoneType is omitted the \c zoneSet returned by \c lookup will
+    If the \c zoneType is omitted the zoneSet returned by \c lookup will
     contain each of the three zone types corresponding to the zone name that are
     present in the lists of zones.  Usually there will only be the one zone type
     of the given name so the \c zoneType entry can often be omitted and this
@@ -78,9 +78,9 @@ Usage
     \endverbatim
 
 See also
-    Foam::zoneGenerator
-    Foam::zoneSet
-    Foam::zoneGeneratorList
+    zoneGenerator
+    zoneSet
+    zoneGeneratorList
 
 SourceFiles
     lookup.C

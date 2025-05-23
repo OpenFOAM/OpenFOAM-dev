@@ -162,6 +162,11 @@ public:
 
     // Member Functions
 
+        const word& name() const
+        {
+            return name_;
+        }
+
         //- Return the list of selected indices
         static labelList indices(const boolList& selected);
 
