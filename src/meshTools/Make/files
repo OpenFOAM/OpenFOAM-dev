@@ -289,4 +289,25 @@ patchIntersection/patchIntersection.C
 patchIntersection/primitivePatchIntersection.C
 patchIntersection/polyPatchIntersection.C
 
+zoneGenerators/remove/remove.C
+zoneGenerators/clear/clear.C
+
+zoneGenerators/union/union.C
+zoneGenerators/difference/difference.C
+zoneGenerators/intersection/intersection.C
+
+zoneGenerators/all/all.C
+
+zoneGenerators/volume/volume/volume.C
+zoneGenerators/volume/box/box.C
+zoneGenerators/volume/sphere/sphere.C
+zoneGenerators/volume/hemisphere/hemisphere.C
+zoneGenerators/volume/cylinder/cylinder.C
+zoneGenerators/volume/annulus/annulus.C
+zoneGenerators/volume/truncatedCone/truncatedCone.C
+
+zoneGenerators/conversion/point/pointZoneGenerator.C
+
+zoneGenerators/periodic/periodic.C
+
 LIB = $(FOAM_LIBBIN)/libmeshTools
