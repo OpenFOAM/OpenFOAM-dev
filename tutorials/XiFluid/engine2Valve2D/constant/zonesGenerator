@@ -9,30 +9,20 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    location    "system";
-    object      topoSetDict;
+    location    "constant";
+    object      zonesGenerator;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-actions
-(
-    {
-        name    ignition;
-        type    cellSet;
-        action  new;
-        source  cylinderToCell;
-        point1  (1 -0.05 -0.12);
-        point2  (1 0 -0.12);
-        radius  0.03;
-    }
-    {
-        name    ignition;
-        type    cellZoneSet;
-        action  new;
-        source  setToCellZone;
-        set     ignition;
-    }
-);
+ignition
+{
+    type        cylinder;
+    zoneType    cell;
+    moveUpdate  false;
 
+    point1  (1 -0.05 -0.12);
+    point2  (1 0 -0.12);
+    radius  0.03;
+}
 
 // ************************************************************************* //
