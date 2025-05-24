@@ -311,4 +311,6 @@ zoneGenerators/conversion/point/pointZoneGenerator.C
 
 zoneGenerators/periodic/periodic.C
 
+zoneGenerators/set/set.C
+
 LIB = $(FOAM_LIBBIN)/libmeshTools
