@@ -32,6 +32,7 @@ Usage
         Property     | Description             | Required | Default value
         type         | Type: all               | yes      |
         name         | Name of the zone        | no       | zoneGenerator name
+        zoneType     | Type of zone            | no       | all the zone types
     \endtable
 
     Create a cellZone named \c allCells containing all the cells in the mesh:
@@ -51,7 +52,7 @@ SourceFiles
 #ifndef all_H
 #define all_H
 
-#include "zoneGeneratorList.H"
+#include "zoneGenerator.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
