@@ -7,7 +7,6 @@ cd ${0%/*} || exit 1    # Run from this directory
 runApplication kivaToFoam -file otape17
 
 runApplication createEngineZones -cylinderHead -pistonBowl
-runApplication topoSet
 
 runApplication foamRun
 
