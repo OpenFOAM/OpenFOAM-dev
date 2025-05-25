@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,9 +44,9 @@ Description
 #include "SortableList.H"
 #include "OFstream.H"
 #include "meshTools.H"
+#include "zoneGenerator.H"
 #include "faceSet.H"
 #include "polyTopoChange.H"
-#include "wordReList.H"
 #include "systemDict.H"
 
 using namespace Foam;
@@ -643,6 +643,65 @@ int main(int argc, char *argv[])
                         meshMod
                     );
                 }
+            }
+        }
+        else if (sourceType == "zone")
+        {
+            SortableList<label> patchFaces;
+
+            if (dict.isDict("zone"))
+            {
+                autoPtr<zoneGenerator> zg
+                (
+                    zoneGenerator::New
+                    (
+                        "zone",
+                        zoneGenerator::faceZoneType,
+                        mesh,
+                        dict.subDict("zone")
+                    )
+                );
+
+                patchFaces = zg->generate().fZone();
+
+                Info<< "Set "
+                    << returnReduce(patchFaces.size(), sumOp<label>())
+                    << " faces from zoneGenerator " << zg->name()
+                    << " of type " << zg->type() << endl;
+            }
+            else
+            {
+                const word zoneName(dict.lookup("zone"));
+
+                patchFaces = mesh.faceZones()[zoneName];
+
+                Info<< "Read "
+                    << returnReduce(patchFaces.size(), sumOp<label>())
+                    << " faces from faceZone " << zoneName << endl;
+            }
+
+            patchFaces.sort();
+
+            forAll(patchFaces, i)
+            {
+                label facei = patchFaces[i];
+
+                if (mesh.isInternalFace(facei))
+                {
+                    FatalErrorInFunction
+                        << "Face " << facei << " specified in faceZone "
+                        << " is not an external face of the mesh." << endl
+                        << "This application can only repatch existing boundary"
+                        << " faces." << exit(FatalError);
+                }
+
+                changePatchID
+                (
+                    mesh,
+                    facei,
+                    destPatchi,
+                    meshMod
+                );
             }
         }
         else if (sourceType == "set")

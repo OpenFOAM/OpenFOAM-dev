@@ -25,11 +25,15 @@ patches
             type patch;
         }
 
-        // How to construct: either from 'patches' or 'set'
-        constructFrom set;
+        // Construct from zone
+        constructFrom zone;
 
-        // If constructFrom = set : name of faceSet
-        set f0;
+        // Generate zone
+        zone
+        {
+            type        box;
+            box         (-0.1 -0.001 -0.1)(0.1 0.005 0.1);
+        }
     }
 );
 

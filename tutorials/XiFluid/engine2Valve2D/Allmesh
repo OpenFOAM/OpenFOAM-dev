@@ -159,8 +159,7 @@ createMesh()
     runApplication -a transformPoints ${mesh:+-mesh} $mesh \
                    "Rx=90, scale=($SCALE_INV $SCALE_INV $SCALE_INV)"
 
-    # Create cell- and face-sets relevant to XiFluid ignition and fuel direct injection
-    runApplication -a topoSet ${mesh:+-mesh} $mesh -dict system/topoSetDict.inletFuel
+    # Create fuel direct injection patch
     runApplication -a createPatch -overwrite ${mesh:+-mesh} $mesh -dict system/createPatchDict.inletFuel
 
     # Decompose (if necessary) and construct the non-conformal couplings that

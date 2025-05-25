@@ -25,12 +25,17 @@ patches
             type patch;
         }
 
-        // How to construct: either from 'patches' or 'set'
-        constructFrom set;
+        // Construct from zone
+        constructFrom zone;
 
-        // If constructFrom = set : name of faceSet
-        set inlet;
+        // Generate zone
+        zone
+        {
+            type        box;
+            box         (-0.001 0.25 1.1)(0.001 0.75 1.3);
+        }
     }
+
     {
         // Name of new patch
         name outlet;
@@ -41,11 +46,15 @@ patches
             type patch;
         }
 
-        // How to construct: either from 'patches' or 'set'
-        constructFrom set;
+        // Construct from zone
+        constructFrom zone;
 
-        // If constructFrom = set : name of faceSet
-        set outlet;
+        // Generate zone
+        zone
+        {
+            type        box;
+            box         (1.75 2.999 0.3)(2.25 3.001 0.5);
+        }
     }
 );
 
