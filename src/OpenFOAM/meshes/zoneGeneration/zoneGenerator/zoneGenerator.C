@@ -137,6 +137,46 @@ Foam::zoneGenerator::New
 Foam::autoPtr<Foam::zoneGenerator>
 Foam::zoneGenerator::New
 (
+    const word& name,
+    const zoneTypes& zoneType,
+    const polyMesh& mesh,
+    const dictionary& dict
+)
+{
+    if (debug)
+    {
+        InfoInFunction
+            << "Constructing " << typeName << " " << name << endl;
+    }
+
+    const word type(dict.lookup("type"));
+
+    typename dictionaryConstructorTable::iterator cstrIter =
+        dictionaryConstructorTablePtr_->find(type);
+
+    if (cstrIter == dictionaryConstructorTablePtr_->end())
+    {
+        FatalIOErrorInFunction
+        (
+            dict
+        )   << "Unknown " << typeName << " type "
+            << type << nl << nl
+            << "Valid " << typeName << " types are:" << nl
+            << dictionaryConstructorTablePtr_->sortedToc()
+            << exit(FatalIOError);
+    }
+
+    // Copy the dictionary and add the zoneType entry
+    dictionary typeDict(dict);
+    typeDict.add("zoneType", zoneTypesNames[zoneType]);
+
+    return autoPtr<zoneGenerator>(cstrIter()(name, mesh, typeDict));
+}
+
+
+Foam::autoPtr<Foam::zoneGenerator>
+Foam::zoneGenerator::New
+(
     const polyMesh& mesh,
     const dictionary& dict
 )

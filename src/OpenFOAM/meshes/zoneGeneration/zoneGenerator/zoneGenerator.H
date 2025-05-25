@@ -148,6 +148,15 @@ public:
             const dictionary& dict
         );
 
+        //- Select constructed from name, zoneType, mesh and dictionary
+        static autoPtr<zoneGenerator> New
+        (
+            const word& name,
+            const zoneTypes& zoneType,
+            const polyMesh& mesh,
+            const dictionary& dict
+        );
+
         //- Select constructed from mesh and first valid dictionary
         static autoPtr<zoneGenerator> New
         (
