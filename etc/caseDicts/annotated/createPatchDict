@@ -15,7 +15,8 @@ FoamFile
 
 // This application/dictionary does the following:
 // - Creates new patches from boundary faces, either specified as a set of
-//   existing patches or as a faceSet.
+//   existing patches or a faceZone, either looked-up from the current list of
+//   faceZones or generated locally from a zoneGenerator
 // - Orders faces on coupled patches such that they are opposite. This is done
 //   for all coupled faces, not just for any patches created.
 // - Optional: Synchronises points on coupled patches.
@@ -54,7 +55,7 @@ patches
             // matchTolerance 1e-2;
         }
 
-        // How to construct: either from 'patches' or 'set'
+        // How to construct: either from 'patches' or 'zone'
         constructFrom patches;
 
         // If constructFrom = patches : names of patches. Wildcards allowed.
@@ -81,7 +82,7 @@ patches
             // separation (-1 0 0);
         }
 
-        // How to construct: either from 'patches' or 'set'
+        // How to construct: either from 'patches' or 'zone'
         constructFrom patches;
 
         // If constructFrom = patches : names of patches. Wildcards allowed.
