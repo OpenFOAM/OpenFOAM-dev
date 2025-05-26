@@ -529,12 +529,6 @@ $(general)/fvSource/fvSource.C
 $(general)/fvSource/fvSpecificSource.C
 $(general)/fvSource/fvTotalSource.C
 
-cellSources = sets/cellSources
-$(cellSources)/fieldToCell/fieldToCell.C
-
-faceSources = sets/faceSources
-$(faceSources)/patchFluxToFace/patchFluxToFace.C
-
 solver/solver.C
 solver/solverNew.C
 

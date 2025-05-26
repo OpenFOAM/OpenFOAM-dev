@@ -42,4 +42,6 @@ timePrecision   8;
 
 runTimeModifiable yes;
 
+libs            ("libfvTopoSetSources.so");
+
 // ************************************************************************* //
