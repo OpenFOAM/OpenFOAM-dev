@@ -14,23 +14,25 @@ FoamFile
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-defaultFieldValues
-(
-    volScalarFieldValue T 300
-);
+defaultValues
+{
+    T   300;
+}
 
-regions
-(
-    // Set patch values (using ==)
-    boxToFace
+zones
+{
+    hotFaces
     {
-        box (4.5 -1000 4.5) (5.5 1e-5 5.5);
+        type        box;
+        zoneType    face;
 
-        fieldValues
-        (
-            volScalarFieldValue T 600
-        );
+        box         (4.5 -1000 4.5) (5.5 1e-5 5.5);
+
+        values
+        {
+            T   600;
+        }
     }
-);
+}
 
 // ************************************************************************* //

@@ -14,37 +14,45 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-defaultFieldValues
-(
-    volScalarFieldValue alpha.water 1
-    volScalarFieldValue p_rgh 1e5
-    volScalarFieldValue p 1e5
-    volScalarFieldValue T 300
-);
+defaultValues
+{
+    alpha.water 1;
+    p_rgh       1e5;
+    p           1e5;
+    T           300;
+}
 
-regions
-(
-    sphereToCell
+zones
+{
+    bubble
     {
+        type        sphere;
+        zoneType    cell;
+
         centre (0.5 0.5 0.5);
         radius 0.1;
-        fieldValues
-        (
-            volScalarFieldValue alpha.water 0
-            volScalarFieldValue p_rgh 1e6
-            volScalarFieldValue p 1e6
-            volScalarFieldValue T 578
-        );
-    }
-    boxToCell
-    {
-        box (-10 1 -1) (10 10 1);
-        fieldValues
-        (
-            volScalarFieldValue alpha.water 0
-        );
-    }
-);
 
+        values
+        {
+            alpha.water 0;
+            p_rgh       1e6;
+            p           1e6;
+            T           578;
+        }
+    }
+
+    air
+    {
+        type        box;
+        zoneType    cell;
+
+        box         (-10 1 -1) (10 10 1);
+
+        values
+        {
+            alpha.water 0;
+        }
+    }
+}
 
 // ************************************************************************* //

@@ -13,17 +13,20 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-defaultFieldValues
-(
-    volScalarFieldValue alpha.water 0
-    volVectorFieldValue U (0 0 0)
-);
+defaultValues
+{
+    alpha.water 0;
+    U           (0 0 0);
+}
 
-regions
-(
+zones
+{
     // Setting values inside a box
-    boxToCell
+    box
     {
+        type        box;
+        zoneType    cell;
+
         box     (0 0 0) (30 30 30);
         fieldValues
         (
@@ -33,34 +36,41 @@ regions
     }
 
     // Setting values inside a sphere
-    sphereToCell
+    sphere
     {
-        centre  (40 40 40);
-        radius  10;
-        fieldValues
-        (
-            volScalarFieldValue alpha.water 1
-            volVectorFieldValue U (1 0 0)
-        );
+        type        sphere;
+        zoneType    cell;
+
+        centre      (40 40 40);
+        radius      10;
+
+        values
+        {
+            alpha.water 1;
+            U           (1 0 0);
+        }
     }
 
     // Setting values inside a surface geometry file
-    surfaceToCell
+    surface
     {
-        file           "geometry.obj";
-        outsidePoints  ( (0 0 0) );
-        includeCut     no;
-        includeInside  yes;
-        includeOutside no;
-        nearDistance   0;
-        curvature      0;
-        fieldValues
-        (
-            volScalarFieldValue alpha.water 1
-            volVectorFieldValue U (1 0 0)
-        );
-    }
-);
+        type            surface;
+        zoneType        cell;
 
+        file            "geometry.obj";
+        outsidePoints   ((0 0 0));
+        includeCut      no;
+        includeInside   yes;
+        includeOutside  no;
+        nearDistance    0;
+        curvature       0;
+
+        values
+        {
+            alpha.water 1;
+            U           (1 0 0);
+        }
+    }
+}
 
 // ************************************************************************* //

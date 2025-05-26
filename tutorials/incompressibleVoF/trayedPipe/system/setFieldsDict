@@ -20,24 +20,27 @@ alphaMean       0.25;
 
 #include "blockMeshDict"
 
-defaultFieldValues
-(
-    volScalarFieldValue alpha.water 0
-);
+defaultValues
+{
+    alpha.water 0;
+}
 
-regions
-(
-    cylinderToCell
+zones
+{
+    water
     {
+        type        cylinder;
+        zoneType    cell;
+
         point1  (0 0 0);
         point2  (0 $height 0);
         radius  #calc "$<scalar>radius*sqrt($<scalar>alphaMean)";
-        fieldValues
-        (
-            volScalarFieldValue alpha.water 1
-        );
-    }
-);
 
+        values
+        {
+            alpha.water 1;
+        }
+    }
+}
 
 // ************************************************************************* //

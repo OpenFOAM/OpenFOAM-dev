@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,381 +22,108 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Description
-    Set values on a selected set of cells/patchfaces through a dictionary.
+    Initialises fields with default and zone values
+
+    The default and zone values are read from a dictionary which defaults to
+    system/setFieldsDict, cellZones are used to specify the internal field
+    values and faceZone patch field values.
+
+Usage
+    Any number of fields can be initialised on any number of zones, for
+    example the 1D shock tube is initialised by
+    \verbatim
+        defaultValues
+        {
+            U       (0 0 0);
+            T       348.432;
+            p       100000;
+        }
+
+        zones
+        {
+            lowPressure
+            {
+                type        box;
+                zoneType    cell;
+
+                box         (0 -1 -1) (5 1 1);
+
+                values
+                {
+                    T       278.746;
+                    p       10000;
+                }
+            }
+        }
+    \endverbatim
+    and the water in the tank of the rotatingCube VoF case is initialised by
+    \verbatim
+        defaultValues
+        {
+            alpha.water 0;
+        }
+
+        zones
+        {
+            cells
+            {
+                type        box;
+                zoneType    cell;
+
+                box (-1e300 -1e300 -1e300) (1e300 0 1e300);
+
+                values
+                {
+                    alpha.water 1;
+                }
+            }
+
+            patchFaces
+            {
+                type        box;
+                zoneType    face;
+
+                box (-1e300 -1e300 -1e300) (1e300 0 1e300);
+
+                values
+                {
+                    alpha.water 1;
+                }
+            }
+        }
+    \endverbatim
+    which sets both the internal and inlet values of the patch phase-fraction
+    field.
 
 \*---------------------------------------------------------------------------*/
 
 #include "argList.H"
 #include "timeSelector.H"
-#include "Time.H"
-#include "fvMesh.H"
+#include "volFields.H"
+#include "zoneGenerator.H"
+#include "systemDict.H"
+
+// Backward compatibility
 #include "topoSetSource.H"
 #include "cellSet.H"
 #include "faceSet.H"
-#include "volFields.H"
-#include "systemDict.H"
-#include "processorFvPatch.H"
-#include "CompactListList.H"
+#include "setCellField.H"
 
 using namespace Foam;
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-template<class Type>
-bool setCellFieldType
+void setVolFields
 (
-    const word& fieldTypeDesc,
     const fvMesh& mesh,
-    const labelList& selectedCells,
-    Istream& fieldValueStream
-)
-{
-    if (fieldTypeDesc != VolField<Type>::typeName + "Value")
-    {
-        return false;
-    }
+    const dictionary& fieldsDict,
+    const labelList& selectedCells
+);
 
-    word fieldName(fieldValueStream);
-
-    // Check the current time directory
-    typeIOobject<VolField<Type>> fieldHeader
-    (
-        fieldName,
-        mesh.time().name(),
-        mesh,
-        IOobject::MUST_READ
-    );
-
-    // Check the "constant" directory
-    if (!fieldHeader.headerOk())
-    {
-        fieldHeader = typeIOobject<VolField<Type>>
-        (
-            fieldName,
-            mesh.time().constant(),
-            mesh,
-            IOobject::MUST_READ
-        );
-    }
-
-    // Check field exists
-    if (fieldHeader.headerOk())
-    {
-        Info<< "    Setting internal values of "
-            << fieldHeader.headerClassName()
-            << " " << fieldName << endl;
-
-        VolField<Type> field(fieldHeader, mesh);
-
-        const Type value = pTraits<Type>(fieldValueStream);
-
-        if (selectedCells.size() == field.size())
-        {
-            field.primitiveFieldRef() = value;
-        }
-        else
-        {
-            forAll(selectedCells, celli)
-            {
-                field[selectedCells[celli]] = value;
-            }
-        }
-
-        typename VolField<Type>::
-            Boundary& fieldBf = field.boundaryFieldRef();
-
-        forAll(field.boundaryField(), patchi)
-        {
-            fieldBf[patchi] = fieldBf[patchi].patchInternalField();
-        }
-
-        if (!field.write())
-        {
-            FatalErrorInFunction
-              << "Failed writing field " << fieldName << endl;
-        }
-    }
-    else
-    {
-        WarningInFunction
-          << "Field " << fieldName << " not found" << endl;
-
-        // Consume value
-        (void)pTraits<Type>(fieldValueStream);
-    }
-
-    return true;
-}
-
-
-class setCellField
-{
-
-public:
-
-    setCellField()
-    {}
-
-    autoPtr<setCellField> clone() const
-    {
-        return autoPtr<setCellField>(new setCellField());
-    }
-
-    class iNew
-    {
-        const fvMesh& mesh_;
-        const labelList& selectedCells_;
-
-    public:
-
-        iNew(const fvMesh& mesh, const labelList& selectedCells)
-        :
-            mesh_(mesh),
-            selectedCells_(selectedCells)
-        {}
-
-        autoPtr<setCellField> operator()(Istream& fieldValues) const
-        {
-            word fieldType(fieldValues);
-
-            if
-            (
-               !(
-                    setCellFieldType<scalar>
-                        (fieldType, mesh_, selectedCells_, fieldValues)
-                 || setCellFieldType<vector>
-                        (fieldType, mesh_, selectedCells_, fieldValues)
-                 || setCellFieldType<sphericalTensor>
-                        (fieldType, mesh_, selectedCells_, fieldValues)
-                 || setCellFieldType<symmTensor>
-                        (fieldType, mesh_, selectedCells_, fieldValues)
-                 || setCellFieldType<tensor>
-                        (fieldType, mesh_, selectedCells_, fieldValues)
-                )
-            )
-            {
-                WarningInFunction
-                    << "field type " << fieldType << " not currently supported"
-                    << endl;
-            }
-
-            return autoPtr<setCellField>(new setCellField());
-        }
-    };
-};
-
-
-template<class Type>
-bool setFaceFieldType
+void setPatchFields
 (
-    const word& fieldTypeDesc,
     const fvMesh& mesh,
-    const labelList& selectedFaces,
-    Istream& fieldValueStream
-)
-{
-    if (fieldTypeDesc != VolField<Type>::typeName + "Value")
-    {
-        return false;
-    }
-
-    word fieldName(fieldValueStream);
-
-    // Check the current time directory
-    typeIOobject<VolField<Type>> fieldHeader
-    (
-        fieldName,
-        mesh.time().name(),
-        mesh,
-        IOobject::MUST_READ
-    );
-
-    // Check the "constant" directory
-    if (!fieldHeader.headerOk())
-    {
-        fieldHeader = typeIOobject<VolField<Type>>
-        (
-            fieldName,
-            mesh.time().constant(),
-            mesh,
-            IOobject::MUST_READ
-        );
-    }
-
-    // Check field exists
-    if (fieldHeader.headerOk())
-    {
-        Info<< "    Setting patchField values of "
-            << fieldHeader.headerClassName()
-            << " " << fieldName << endl;
-
-        // Read the field
-        VolField<Type> field(fieldHeader, mesh);
-        typename VolField<Type>::Boundary& fieldBf = field.boundaryFieldRef();
-
-        // Read the value
-        const Type value = pTraits<Type>(fieldValueStream);
-
-        // Determine the number of non-processor patches
-        label nNonProcPatches = 0;
-        forAll(fieldBf, patchi)
-        {
-            if (isA<processorFvPatch>(mesh.boundary()[patchi]))
-            {
-                break;
-            }
-            nNonProcPatches = patchi + 1;
-        }
-
-        // Create a copy of the boundary field
-        typename VolField<Type>::Boundary fieldBfCopy
-        (
-            VolField<Type>::Internal::null(),
-            fieldBf
-        );
-
-        // Loop selected faces and set values in the copied boundary field
-        bool haveWarnedInternal = false, haveWarnedProc = false;
-        labelList nonProcPatchNChangedFaces(nNonProcPatches, 0);
-        forAll(selectedFaces, i)
-        {
-            const label facei = selectedFaces[i];
-
-            if (mesh.isInternalFace(facei))
-            {
-                if (!haveWarnedInternal)
-                {
-                    WarningInFunction
-                        << "Ignoring internal face " << facei
-                        << ". Suppressing further warnings." << endl;
-                    haveWarnedInternal = true;
-                }
-            }
-            else
-            {
-                const labelUList patches =
-                    mesh.polyBFacePatches()[facei - mesh.nInternalFaces()];
-                const labelUList patchFaces =
-                    mesh.polyBFacePatchFaces()[facei - mesh.nInternalFaces()];
-
-                forAll(patches, i)
-                {
-                    if (patches[i] >= nNonProcPatches)
-                    {
-                        if (!haveWarnedProc)
-                        {
-                            WarningInFunction
-                                << "Ignoring face " << patchFaces[i]
-                                << " of processor patch " << patches[i]
-                                << ". Suppressing further warnings." << endl;
-                            haveWarnedProc = true;
-                        }
-                    }
-                    else
-                    {
-                        fieldBfCopy[patches[i]][patchFaces[i]] = value;
-                        nonProcPatchNChangedFaces[patches[i]] ++;
-                    }
-                }
-            }
-        }
-        Pstream::listCombineGather
-        (
-            nonProcPatchNChangedFaces,
-            plusEqOp<label>()
-        );
-        Pstream::listCombineScatter
-        (
-            nonProcPatchNChangedFaces
-        );
-
-        // Reassign boundary values
-        forAll(nonProcPatchNChangedFaces, patchi)
-        {
-            if (nonProcPatchNChangedFaces[patchi] > 0)
-            {
-                Info<< "    On patch "
-                    << field.boundaryField()[patchi].patch().name()
-                    << " set " << nonProcPatchNChangedFaces[patchi]
-                    << " values" << endl;
-                fieldBf[patchi] == fieldBfCopy[patchi];
-            }
-        }
-
-        if (!field.write())
-        {
-            FatalErrorInFunction
-                << "Failed writing field " << field.name() << exit(FatalError);
-        }
-    }
-    else
-    {
-        WarningInFunction
-          << "Field " << fieldName << " not found" << endl;
-
-        // Consume value
-        (void)pTraits<Type>(fieldValueStream);
-    }
-
-    return true;
-}
-
-
-class setFaceField
-{
-
-public:
-
-    setFaceField()
-    {}
-
-    autoPtr<setFaceField> clone() const
-    {
-        return autoPtr<setFaceField>(new setFaceField());
-    }
-
-    class iNew
-    {
-        const fvMesh& mesh_;
-        const labelList& selectedFaces_;
-
-    public:
-
-        iNew(const fvMesh& mesh, const labelList& selectedFaces)
-        :
-            mesh_(mesh),
-            selectedFaces_(selectedFaces)
-        {}
-
-        autoPtr<setFaceField> operator()(Istream& fieldValues) const
-        {
-            word fieldType(fieldValues);
-
-            if
-            (
-               !(
-                    setFaceFieldType<scalar>
-                        (fieldType, mesh_, selectedFaces_, fieldValues)
-                 || setFaceFieldType<vector>
-                        (fieldType, mesh_, selectedFaces_, fieldValues)
-                 || setFaceFieldType<sphericalTensor>
-                        (fieldType, mesh_, selectedFaces_, fieldValues)
-                 || setFaceFieldType<symmTensor>
-                        (fieldType, mesh_, selectedFaces_, fieldValues)
-                 || setFaceFieldType<tensor>
-                        (fieldType, mesh_, selectedFaces_, fieldValues)
-                )
-            )
-            {
-                WarningInFunction
-                    << "field type " << fieldType << " not currently supported"
-                    << endl;
-            }
-
-            return autoPtr<setFaceField>(new setFaceField());
-        }
-    };
-};
+    const dictionary& fieldsDict,
+    const labelList& selectedCells
+);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -413,69 +140,119 @@ int main(int argc, char *argv[])
 
     const dictionary setFieldsDict(systemDict("setFieldsDict", args, mesh));
 
-    if (setFieldsDict.found("defaultFieldValues"))
+    if (setFieldsDict.found("defaultValues"))
     {
         Info<< "Setting field default values" << endl;
+        setVolFields
+        (
+            mesh,
+            setFieldsDict.subDict("defaultValues"),
+            labelList::null()
+        );
+        Info<< endl;
+    }
+    else if (setFieldsDict.found("defaultFieldValues"))
+    {
+        Info<< "Setting field default values" << nl
+            << "    The 'defaultFieldValues' entry is deprecated, "
+               "please use 'default'" << endl;
+
         PtrList<setCellField> defaultFieldValues
         (
             setFieldsDict.lookup("defaultFieldValues"),
-            setCellField::iNew(mesh, labelList(mesh.nCells()))
+            setCellField::iNew(mesh, labelList::null())
         );
         Info<< endl;
     }
 
-    Info<< "Setting field region values" << endl;
-
-    PtrList<entry> regions(setFieldsDict.lookup("regions"));
-
-    forAll(regions, regionI)
+    if (setFieldsDict.found("zones"))
     {
-        const entry& region = regions[regionI];
+        Info<< "Setting field zone values" << endl;
 
-        autoPtr<topoSetSource> source =
-            topoSetSource::New(region.keyword(), mesh, region.dict());
+        const dictionary& zonesDict = setFieldsDict.subDict("zones");
 
-        if (source().setType() == topoSetSource::CELLSETSOURCE)
+        forAllConstIter(dictionary, zonesDict, iter)
         {
-            cellSet selectedCellSet
+            Info<< "Zone: " << iter().keyword() << endl;
+
+            const dictionary& zoneDict = iter().dict();
+
+            autoPtr<zoneGenerator> zg
             (
-                mesh,
-                "cellSet",
-                mesh.nCells()/10+1  // Reasonable size estimate.
+                zoneGenerator::New(iter().keyword(), mesh, zoneDict)
             );
 
-            source->applyToSet
-            (
-                topoSetSource::NEW,
-                selectedCellSet
-            );
+            const zoneSet zs(zg->generate());
 
-            PtrList<setCellField> fieldValues
-            (
-                region.dict().lookup("fieldValues"),
-                setCellField::iNew(mesh, selectedCellSet.toc())
-            );
+            if (zs.cZone.valid())
+            {
+                setVolFields(mesh, zoneDict.subDict("values"), zs.cZone());
+            }
+
+            if (zs.fZone.valid())
+            {
+                setPatchFields(mesh, zoneDict.subDict("values"), zs.fZone());
+            }
         }
-        else if (source().setType() == topoSetSource::FACESETSOURCE)
+    }
+
+    if (setFieldsDict.found("regions"))
+    {
+        PtrList<entry> regions(setFieldsDict.lookup("regions"));
+
+        Info<< "Setting field region values" << nl
+            << "    The 'regions' entry is deprecated, "
+               "please use 'zones'" << endl;
+
+        forAll(regions, ri)
         {
-            faceSet selectedFaceSet
-            (
-                mesh,
-                "faceSet",
-                (mesh.nFaces()-mesh.nInternalFaces())/10+1
-            );
+            const entry& region = regions[ri];
 
-            source->applyToSet
-            (
-                topoSetSource::NEW,
-                selectedFaceSet
-            );
+            autoPtr<topoSetSource> source =
+                topoSetSource::New(region.keyword(), mesh, region.dict());
 
-            PtrList<setFaceField> fieldValues
-            (
-                region.dict().lookup("fieldValues"),
-                setFaceField::iNew(mesh, selectedFaceSet.toc())
-            );
+            if (source().setType() == topoSetSource::CELLSETSOURCE)
+            {
+                cellSet selectedCellSet
+                (
+                    mesh,
+                    "cellSet",
+                    mesh.nCells()/10+1  // Reasonable size estimate.
+                );
+
+                source->applyToSet
+                (
+                    topoSetSource::NEW,
+                    selectedCellSet
+                );
+
+                PtrList<setCellField> fieldValues
+                (
+                    region.dict().lookup("fieldValues"),
+                    setCellField::iNew(mesh, selectedCellSet.toc())
+                );
+            }
+            else if (source().setType() == topoSetSource::FACESETSOURCE)
+            {
+                faceSet selectedFaceSet
+                (
+                    mesh,
+                    "faceSet",
+                    (mesh.nFaces()-mesh.nInternalFaces())/10+1
+                );
+
+                source->applyToSet
+                (
+                    topoSetSource::NEW,
+                    selectedFaceSet
+                );
+
+                PtrList<setFaceField> fieldValues
+                (
+                    region.dict().lookup("fieldValues"),
+                    setFaceField::iNew(mesh, selectedFaceSet.toc())
+                );
+            }
         }
     }
 

@@ -14,26 +14,27 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-defaultFieldValues
-(
-    volScalarFieldValue alpha.gas 0
-    volScalarFieldValue alpha.liquid 1
-    volScalarFieldValue alpha.solid 0
-);
+defaultValues
+{
+    alpha.gas       0;
+    alpha.liquid    1;
+    alpha.solid     0;
+}
 
-regions
-(
-    zoneToCell
+zones
+{
+    bed
     {
-        zone            bed;
-        fieldValues
-        (
-            volScalarFieldValue alpha.gas 0
-            volScalarFieldValue alpha.liquid 0.4
-            volScalarFieldValue alpha.solid  0.6
-        );
-    }
-);
+        type            lookup;
+        zoneType        cell;
 
+        values
+        {
+            alpha.gas       0;
+            alpha.liquid    0.4;
+            alpha.solid     0.6;
+        }
+    }
+}
 
 // ************************************************************************* //

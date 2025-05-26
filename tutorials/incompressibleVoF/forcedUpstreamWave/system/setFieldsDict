@@ -14,34 +14,38 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-defaultFieldValues
-(
-    volScalarFieldValue alpha.water 0
-);
+defaultValues
+{
+    alpha.water 0;
+}
 
-regions
-(
-    boxToCell
+zones
+{
+    cells
     {
-        box (-10000 -10000 -10000) (10000 0 10000);
+        type        box;
+        zoneType    cell;
 
-        fieldValues
-        (
-            volScalarFieldValue alpha.water 1
-        );
+        box         (-10000 -10000 -10000) (10000 0 10000);
+
+        values
+        {
+            alpha.water 1;
+        }
     }
 
-    // Set patch values (using ==)
-    boxToFace
+    inletPatch
     {
-        box (-10000 -10000 -10000) (10000 0 10000);
+        type        box;
+        zoneType    face;
 
-        fieldValues
-        (
-            volScalarFieldValue alpha.water 1
-        );
+        box         (-10000 -10000 -10000) (10000 0 10000);
+
+        values
+        {
+            alpha.water 1;
+        }
     }
-);
-
+}
 
 // ************************************************************************* //

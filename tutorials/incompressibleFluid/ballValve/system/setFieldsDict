@@ -13,25 +13,27 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-defaultFieldValues
-(
-    volScalarFieldValue s 0
-);
+defaultValues
+{
+    s   0;
+}
 
-regions
-(
-    cylinderToFace
+zones
+{
+    inlet
     {
+        type        cylinder;
+        zoneType    face;
+
         point1 (-0.51 0 0);
         point2 (-0.49 0 0);
         radius 0.05;
 
-        fieldValues
-        (
-            volScalarFieldValue s 1
-        );
+        values
+        {
+            s   1;
+        }
     }
-);
-
+}
 
 // ************************************************************************* //

@@ -14,26 +14,29 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-defaultFieldValues
-(
-    volScalarFieldValue ft 0
-    volScalarFieldValue fu 0
-    volScalarFieldValue egr 0
-);
+defaultValues
+{
+    ft  0;
+    fu  0;
+    egr 0;
+}
 
-regions
-(
-    boxToCell
+zones
+{
+    fuelAir
     {
-        box (0 0 -1) (1 0.01 1);
-        fieldValues
-        (
-            volScalarFieldValue ft 0.07
-            volScalarFieldValue fu 0.07
-            volScalarFieldValue egr 0.01
-        );
-    }
-);
+        type        box;
+        zoneType    cell;
 
+        box         (0 0 -1) (1 0.01 1);
+
+        values
+        {
+            ft  0.07;
+            fu  0.07;
+            egr 0.01;
+        }
+    }
+}
 
 // ************************************************************************* //

@@ -14,22 +14,25 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-defaultFieldValues
-(
-    volScalarFieldValue alpha.liquid 0
-);
+defaultValues
+{
+    alpha.liquid 0;
+}
 
-regions
-(
-    boxToCell
+zones
+{
+    liquid
     {
-        box (-100 -100 0.0) (100 100 0.05);
-        fieldValues
-        (
-            volScalarFieldValue alpha.liquid 1
-        );
-    }
-);
+        type        box;
+        zoneType    cell;
 
+        box         (-100 -100 0.0) (100 100 0.05);
+
+        values
+        {
+            alpha.liquid 1;
+        }
+    }
+}
 
 // ************************************************************************* //
