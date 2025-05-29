@@ -37,6 +37,7 @@ SourceFiles
 #define OldTimeField_H
 
 #include "Time.H"
+#include "VoidT.H"
 #include "GeometricFieldFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -282,11 +283,7 @@ struct OldTimeBaseFieldType
 };
 
 template<class FieldType>
-struct OldTimeBaseFieldType
-<
-    FieldType,
-    pTraits<typename FieldType::Base::OldTime>
->
+struct OldTimeBaseFieldType<FieldType, VoidT<typename FieldType::Base::OldTime>>
 {
     typedef typename FieldType::Base::OldTime type;
 

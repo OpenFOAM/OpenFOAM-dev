@@ -94,7 +94,7 @@ void Foam::OldTimeField<FieldType>::setBase(const OldTimeBaseField& otbf) const
 {
     if (!tfield0_.valid())
     {
-        otbf.tfield0_.clear();
+        otbf.tfield0_ = tmp<typename Field0Type::Base>();
     }
     else
     {
@@ -229,7 +229,7 @@ Foam::OldTimeField<FieldType>::~OldTimeField()
 {
     if (tfield0_.valid() && notNull(tfield0_()))
     {
-        tfield0_.clear();
+        tfield0_ = tmp<Field0Type>();
         setBase();
     }
 }
@@ -307,7 +307,7 @@ Foam::label Foam::OldTimeField<FieldType>::nOldTimes
         }
         else
         {
-            return tfield0_->nOldTimes(includeNull) + 1;
+            return tfield0_().nOldTimes(includeNull) + 1;
         }
     }
     else
@@ -327,7 +327,7 @@ Foam::OldTimeField<FieldType>::oldTime() const
 
         // Clear the field0Ptr to ensure the old-time field constructor
         // does not construct the old-old-time field
-        tfield0_.clear();
+        tfield0_ = tmp<Field0Type>();
         setBase();
 
         // Construct a copy of the field
