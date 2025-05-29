@@ -14,22 +14,12 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-coordinates
-{
-    type        global;
-
-    e1          (1 0 0);
-    e2          (0 1 0);
-
-    directions  (e1 e2 e3);
-}
+hexRef8         yes;
 
 zone
 {
     type    box;
     box     (-1e6 -1e6 -1e6)(1e6 -0.15 0.3);
 }
-
-useHexTopology  yes;
 
 // ************************************************************************* //

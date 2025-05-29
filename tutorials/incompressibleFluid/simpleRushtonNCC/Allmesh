@@ -93,8 +93,7 @@ runApplication -a mirrorMesh -overwrite
 
 [ "$refineRotating" ] && \
     printf "\nRefining mesh around the rotatingZone...\n" && \
-    runApplication -a topoSet -dict topoSetDict.refineRotating && \
-    runApplication refineHexMesh -noFields -overwrite rotatingZoneRefine
+    runApplication refineMesh -overwrite
 
 printf "\nCreating stirrer...\n"
 [ "$blades" -eq 6 ] && \

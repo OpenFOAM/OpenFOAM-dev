@@ -13,6 +13,15 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+// Optional switch to apply hexRef8 3D 2x2x2 hex cell refinement
+// in the same manner as and compatible with snappyHexMesh
+// and dynamic refinement/unrefinement.
+// To support further refinement with refineMesh, snappyHexMesh
+// or dynamic refinement/unrefinement the cellLevel and pointLevel files
+// are written.
+hexRef8     false;
+
+// For non-hexRef8 1D, 2D or 3D refinement a coordinate system is required:
 // Type of coordinate system:
 // - global : coordinate system same for every cell. Usually aligned with
 //   x,y,z axis. Specify in globalCoeffs section below.

@@ -9,22 +9,19 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    object      topoSetDict;
+    location    "system";
+    object      refineMeshDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-actions
-(
-    // rotatingZoneRefinement cellSet
-    {
-        action  new;
-        type    cellSet;
-        name    rotatingZoneRefine;
-        source  cylinderToCell;
-        point1  (0 0 0.5);
-        point2  (0 0 0.7);
-        radius  0.25;
-    }
-);
+hexRef8         yes;
+
+zone
+{
+    type    cylinder;
+    point1  (0 0 0.5);
+    point2  (0 0 0.7);
+    radius  0.25;
+}
 
 // ************************************************************************* //

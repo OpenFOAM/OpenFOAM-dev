@@ -5,9 +5,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
 runApplication blockMesh
-runApplication topoSet
-runApplication refineHexMesh c0 -noFields -overwrite
-#runApplication refineMesh -overwrite
+runApplication refineMesh -overwrite
 
 runApplication decomposePar -cellProc
 runParallel foamRun
