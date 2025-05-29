@@ -441,7 +441,7 @@ void Foam::externalTemperatureFvPatchScalarField::updateCoeffs()
         plusEqOp
         (
             trefValue,
-            max(sumKappaTcByDelta, small*kappaByDelta*internalField())
+            max(sumKappaTcByDelta, small*kappaByDelta*patchInternalField())
            /max(sumKappaByDelta, small*kappaByDelta)
         );
     }
