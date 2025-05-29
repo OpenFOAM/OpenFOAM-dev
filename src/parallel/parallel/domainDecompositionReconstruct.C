@@ -558,21 +558,13 @@ void Foam::domainDecomposition::reconstructPoints()
         pointZones0.instance()
     );
 
-    InfoInFunction
-        << "pointZonesCompare " << pointZonesCompare
-        << " " << pointZones.instance()
-        << " " << pointZones0.instance()
-        << endl;
-
     if (pointZonesCompare == 1)
     {
-        InfoInFunction << "Reconstructing pointZones" << endl;
+        Info<< "Reconstructing pointZones" << incrIndent << endl;
 
         forAll(pointZones0, pzi)
         {
-            InfoInFunction
-                << "Reconstructing pointZone " << pointZones0[pzi].name()
-                << endl;
+            Info<< indent << pointZones0[pzi].name() << endl;
 
             boolList selected(completeMesh_->nPoints(), false);
 
@@ -602,6 +594,8 @@ void Foam::domainDecomposition::reconstructPoints()
 
         completeMesh_->pointZones().writeOpt() = IOobject::AUTO_WRITE;
         completeMesh_->pointZones().instance() = pointZones0.instance();
+
+        Info<< decrIndent << endl;
     }
 
 
@@ -614,21 +608,13 @@ void Foam::domainDecomposition::reconstructPoints()
         cellZones0.instance()
     );
 
-    InfoInFunction
-        << "cellZonesCompare " << cellZonesCompare
-        << " " << cellZones.instance()
-        << " " << cellZones0.instance()
-        << endl;
-
     if (cellZonesCompare == 1)
     {
-        InfoInFunction << "Reconstructing cellZones" << endl;
+        Info<< "Reconstructing cellZones" << incrIndent << endl;
 
         forAll(cellZones0, pzi)
         {
-            InfoInFunction
-                << "Reconstructing cellZone " << cellZones0[pzi].name()
-                << endl;
+            Info << indent << cellZones0[pzi].name() << endl;
 
             boolList selected(completeMesh_->nCells(), false);
 
@@ -658,6 +644,8 @@ void Foam::domainDecomposition::reconstructPoints()
 
         completeMesh_->cellZones().writeOpt() = IOobject::AUTO_WRITE;
         completeMesh_->cellZones().instance() = cellZones0.instance();
+
+        Info<< decrIndent << endl;
     }
 
 
@@ -670,21 +658,13 @@ void Foam::domainDecomposition::reconstructPoints()
         faceZones0.instance()
     );
 
-    InfoInFunction
-        << "faceZonesCompare " << faceZonesCompare
-        << " " << faceZones.instance()
-        << " " << faceZones0.instance()
-        << endl;
-
     if (faceZonesCompare == 1)
     {
-        InfoInFunction << "Reconstructing faceZones" << endl;
+        Info<< "Reconstructing faceZones" << incrIndent << endl;
 
         forAll(faceZones0, pzi)
         {
-            InfoInFunction
-                << "Reconstructing faceZone " << faceZones0[pzi].name()
-                << endl;
+            Info<< indent << faceZones0[pzi].name() << endl;
 
             boolList selectedFaces(completeMesh_->nFaces(), false);
             boolList flipMap(completeMesh_->nFaces(), false);
@@ -748,6 +728,8 @@ void Foam::domainDecomposition::reconstructPoints()
 
         completeMesh_->faceZones().writeOpt() = IOobject::AUTO_WRITE;
         completeMesh_->faceZones().instance() = faceZones0.instance();
+
+        Info<< decrIndent << endl;
     }
 }
 
