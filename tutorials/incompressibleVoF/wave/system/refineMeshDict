@@ -14,28 +14,67 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-coordinates
+xBox
 {
-    type        global;
+    type    box;
 
-    e1          (1 0 0);
-    e2          (0 1 0);
+    coordinates
+    {
+        type        global;
 
-    directions  (e1);
+        e1          (1 0 0);
+        e2          (0 1 0);
+
+        directions  (e1);
+    }
+}
+
+yBox
+{
+    $xBox;
+
+    coordinates
+    {
+        directions  (e2);
+    }
 }
 
 zones
 {
-    level1
+    x1
     {
-        type    box;
-        box     (0 0 -2e-05) (0.0036 0.0008 4e-05);
+        $xBox;
+        box     (-1e6 -40 -1e6) (1300 40 1e6);
     }
 
-    level2
+    x2
     {
-        type    box;
-        box     (0 0 -2e-05) (0.0036 0.0003 2e-05);
+        $xBox;
+        box     (-1e6 -30 -1e6) (1200 30 1e6);
+    }
+
+    y1
+    {
+        $yBox;
+        box     (-1e6 -40 -1e6) (1e6 40 1e6);
+    }
+
+    y2
+    {
+        $yBox;
+        box     (-1e6 -30 -1e6) (1e6 30 1e6);
+    }
+
+    y3
+    {
+        $yBox;
+        box     (-1e6 -20 -1e6) (1e6 20 1e6);
+    }
+
+    y4
+    {
+        $yBox;
+        box     (-1e6 -10 -1e6) (1e6 10 1e6);
     }
 }
 

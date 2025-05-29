@@ -14,26 +14,41 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-set box;
-
-coordinateSystem global;
-
-globalCoeffs
+coordinates
 {
-    e1   (1 0 0);
-    e2   (0 1 0);
+    type        global;
+
+    e1          (1 0 0);
+    e2          (0 1 0);
+
+    directions  (e1 e2);
 }
 
-directions
-(
-    e3
-);
+zones
+{
+    level1
+    {
+        type    box;
+        box     (-4.0 -3.0 -2) (4.0 0 3.0);
+    }
 
-useHexTopology  true;
+    level2
+    {
+        type    box;
+        box     (-3.0 -2.0 -1.4) (3.5 0 1.7);
+    }
 
-geometricCut    false;
+    level3
+    {
+        type    box;
+        box     (-2.5 -0.8 -0.6) (3.0 0 1.1);
+    }
 
-writeMesh       false;
-
+    level4
+    {
+        type    box;
+        box     (-2.0 -0.6 -0.4) (2.5 0 0.7);
+    }
+}
 
 // ************************************************************************* //

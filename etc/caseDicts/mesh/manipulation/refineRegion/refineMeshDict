@@ -13,27 +13,29 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-set             c0;
-
-coordinateSystem global;
-
-globalCoeffs
+coordinates
 {
-    e1              (1 0 0);
-    e2              (0 1 0);
+    type        global;
+
+    e1          (1 0 0);
+    e2          (0 1 0);
+
+    directions  (e1 e2 e3);
 }
 
-directions // comment out as required
-(
-    e1
-    e2
-    e3
-);
+zones
+{
+    level1
+    {
+        type    box;
+        box     (-10 -6 -3) (10 0 3);
+    }
 
-useHexTopology  no;
-
-geometricCut    yes;
-
-writeMesh       no;
+    level2
+    {
+        type    box;
+        box     (-5 -3 -2.5) (10 0 2);
+    }
+}
 
 // ************************************************************************* //

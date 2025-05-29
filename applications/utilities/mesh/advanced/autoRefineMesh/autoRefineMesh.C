@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,27 +33,15 @@ Description
 #include "Time.H"
 #include "polyMesh.H"
 #include "twoDPointCorrector.H"
-#include "OFstream.H"
 #include "multiDirRefinement.H"
 
-#include "triSurface.H"
-#include "triSurfaceSearch.H"
-
 #include "cellSet.H"
-#include "pointSet.H"
 #include "surfaceToCell.H"
-#include "surfaceToPoint.H"
-#include "cellToPoint.H"
-#include "pointToCell.H"
-#include "cellToCell.H"
 #include "surfaceSets.H"
 #include "polyTopoChange.H"
-#include "polyTopoChangeMap.H"
-#include "labelIOList.H"
 #include "emptyPolyPatch.H"
 #include "removeCells.H"
 #include "meshSearch.H"
-#include "IOdictionary.H"
 
 using namespace Foam;
 
@@ -96,7 +84,6 @@ direction getNormalDir(const twoDPointCorrector* correct2DPtr)
     }
     return dir;
 }
-
 
 
 // Calculate some edge statistics on mesh. Return min. edge length over all
@@ -442,6 +429,7 @@ void doRefinement
     (
         mesh,
         refCells.toc(),
+        refineDict,
         refineDict
     );
 

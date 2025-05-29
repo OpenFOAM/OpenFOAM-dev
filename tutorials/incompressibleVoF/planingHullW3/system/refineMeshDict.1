@@ -21,7 +21,7 @@ coordinates
     e1          (1 0 0);
     e2          (0 1 0);
 
-    directions  (e1);
+    directions  (e1 e2);
 }
 
 zones
@@ -29,13 +29,43 @@ zones
     level1
     {
         type    box;
-        box     (0 0 -2e-05) (0.0036 0.0008 4e-05);
+        box     (-4.0 -3.0 -2) (4.0 0 3.0);
     }
 
     level2
     {
         type    box;
-        box     (0 0 -2e-05) (0.0036 0.0003 2e-05);
+        box     (-3.0 -2.0 -1.4) (3.5 0 1.7);
+    }
+
+    level3
+    {
+        type    box;
+        box     (-2.5 -0.8 -0.6) (3.0 0 0.8);
+    }
+
+    level4
+    {
+        type    box;
+        box     (-2.0 -0.6 -0.4) (2.5 0 0.5);
+    }
+
+    level5
+    {
+        type    box;
+        box     (-1.0 -0.4 -0.2) (2.2 0.0 0.4);
+    }
+
+    level6
+    {
+        type    box;
+        box     (-0.8 -0.4 -0.1) (2.1 0.0 0.35);
+    }
+
+    level7
+    {
+        type    box;
+        box     (-0.2 -0.25 -0.05) (2.05 0.0 0.3);
     }
 }
 

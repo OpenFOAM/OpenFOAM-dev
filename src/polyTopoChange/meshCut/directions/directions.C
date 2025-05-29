@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -281,11 +281,22 @@ Foam::directions::directions
     const dictionary& dict,
     const twoDPointCorrector* correct2DPtr
 )
-:
-    List<vectorField>(wordList(dict.lookup("directions")).size())
 {
-    const wordList wantedDirs(dict.lookup("directions"));
-    const word coordSystem(dict.lookup("coordinateSystem"));
+    word coordSystem;
+    wordList wantedDirs;
+
+    if (dict.found("type"))
+    {
+        coordSystem = dict.lookup<word>("type");
+        wantedDirs = dict.lookup<wordList>("directions");
+    }
+    else
+    {
+        coordSystem = dict.lookup<word>("coordinateSystem");
+        wantedDirs = dict.lookup<wordList>("directions");
+    }
+
+    setSize(wantedDirs.size());
 
     bool wantE3 = false;
     bool wantE1 = false;
@@ -316,7 +327,7 @@ Foam::directions::directions
 
     if (coordSystem == "global")
     {
-        const dictionary& globalDict = dict.subDict("globalCoeffs");
+        const dictionary& globalDict = dict.optionalSubDict("globalCoeffs");
 
         vector e1(globalDict.lookup("e1"));
         check2D(correct2DPtr, e1);
@@ -328,10 +339,10 @@ Foam::directions::directions
         e3 /= mag(e3);
 
         Info<< "Global Coordinate system:" << endl
-            << "     e3 : " << e3 << endl
-            << "     e1   : " << e1 << endl
-            << "     e2   : " << e2
-            << endl << endl;
+            << "     e1 : " << e1 << nl
+            << "     e2 : " << e2 << nl
+            << "     e3 : " << e3 << nl
+            << endl;
 
         if (wantE3)
         {
@@ -348,7 +359,7 @@ Foam::directions::directions
     }
     else if (coordSystem == "patchLocal")
     {
-        const dictionary& patchDict = dict.subDict("patchLocalCoeffs");
+        const dictionary& patchDict = dict.optionalSubDict("patchLocalCoeffs");
 
         const word patchName(patchDict.lookup("patch"));
 
@@ -379,7 +390,7 @@ Foam::directions::directions
                 << e1 << endl << endl;
         }
 
-        Switch useTopo(dict.lookup("useHexTopology"));
+        Switch useTopo(dict.lookupOrDefault("useHexTopology", false));
 
         vectorField e3Dirs;
         vectorField e1Dirs;

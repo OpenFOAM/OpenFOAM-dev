@@ -10,54 +10,57 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "system";
-    object      topoSetDict;
+    object      refineMeshDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-actions
-(
+coordinates
+{
+    type        global;
+
+    e1          (1 0 0);
+    e2          (0 1 0);
+
+    directions  (e1 e2);
+}
+
+zones
+{
+    level1
     {
-        name    c1;
-        type    cellSet;
-        action  new;
-        source  boxToCell;
+        type    box;
         box     (-10 -6 -3) (10 0 3);
     }
+
+    level2
     {
-        name    c2;
-        type    cellSet;
-        action  new;
-        source  boxToCell;
+        type    box;
         box     (-5 -3 -2.5) (10 0 2);
     }
+
+    level3
     {
-        name    c3;
-        type    cellSet;
-        action  new;
-        source  boxToCell;
+        type    box;
         box     (-3 -1.5 -1) (10 0 1.5);
     }
+
+    level4
     {
-        name    c4;
-        type    cellSet;
-        action  new;
-        source  boxToCell;
+        type    box;
         box     (-2 -1 -0.6) (10 0 1);
     }
+
+    level5
     {
-        name    c5;
-        type    cellSet;
-        action  new;
-        source  boxToCell;
+        type    box;
         box     (-1 -0.6 -0.3) (10 0 0.8);
     }
+
+    level6
     {
-        name    c6;
-        type    cellSet;
-        action  new;
-        source  boxToCell;
+        type    box;
         box     (-0.5 -0.55 -0.15) (6.25 0 0.65);
     }
-);
+}
 
 // ************************************************************************* //

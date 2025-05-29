@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,8 +47,6 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Statc Functions * * * * * * * * * * * * //
 
-// Update refCells pattern for split cells. Note refCells is current
-// list of cells to refine (these should all have been refined)
 void Foam::multiDirRefinement::addCells
 (
     const Map<label>& splitMap,
@@ -79,8 +77,6 @@ void Foam::multiDirRefinement::addCells
 }
 
 
-// Update vectorField for all the new cells. Takes over value of
-// original cell.
 void Foam::multiDirRefinement::update
 (
     const Map<label>& splitMap,
@@ -96,7 +92,6 @@ void Foam::multiDirRefinement::update
 }
 
 
-// Add added cells to labelList
 void Foam::multiDirRefinement::addCells
 (
     const Map<label>& splitMap,
@@ -447,7 +442,7 @@ void Foam::multiDirRefinement::refineFromDict
 )
 {
     // How to walk cell circumference.
-    Switch pureGeomCut(dict.lookup("geometricCut"));
+    Switch pureGeomCut(dict.lookupOrDefault("geometricCut", false));
 
     autoPtr<cellLooper> cellWalker(nullptr);
     if (pureGeomCut)
@@ -471,22 +466,22 @@ void Foam::multiDirRefinement::refineFromDict
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from dictionary
 Foam::multiDirRefinement::multiDirRefinement
 (
     polyMesh& mesh,
     const labelList& cellLabels,        // list of cells to refine
-    const dictionary& dict
+    const dictionary& dict,
+    const dictionary& coordinatesDict
 )
 :
     cellLabels_(cellLabels),
     addedCells_(mesh.nCells())
 {
-    Switch useHex(dict.lookup("useHexTopology"));
+    Switch useHex(dict.lookupOrDefault("useHexTopology", false));
 
-    Switch writeMesh(dict.lookup("writeMesh"));
+    Switch writeMesh(dict.lookupOrDefault("writeMesh", false));
 
-    wordList dirNames(dict.lookup("directions"));
+    wordList dirNames(coordinatesDict.lookup("directions"));
 
     if (useHex && dirNames.size() == 3)
     {
@@ -506,30 +501,30 @@ Foam::multiDirRefinement::multiDirRefinement
 
         // Determine directions for every cell. Can either be uniform
         // (size = 1) or non-uniform (one vector per cell)
-        directions cellDirections(mesh, dict);
+        directions cellDirections(mesh, coordinatesDict);
 
         refineFromDict(mesh, cellDirections, dict, writeMesh);
     }
 }
 
 
-// Construct from dictionary and directions to refine.
 Foam::multiDirRefinement::multiDirRefinement
 (
     polyMesh& mesh,
     const labelList& cellLabels,        // list of cells to refine
     const List<vectorField>& cellDirs,  // Explicitly provided directions
-    const dictionary& dict
+    const dictionary& dict,
+    const dictionary& coordinatesDict
 )
 :
     cellLabels_(cellLabels),
     addedCells_(mesh.nCells())
 {
-    Switch useHex(dict.lookup("useHexTopology"));
+    Switch useHex(dict.lookupOrDefault("useHexTopology", false));
 
-    Switch writeMesh(dict.lookup("writeMesh"));
+    Switch writeMesh(dict.lookupOrDefault("writeMesh", false));
 
-    wordList dirNames(dict.lookup("directions"));
+    wordList dirNames(coordinatesDict.lookup("directions"));
 
     if (useHex && dirNames.size() == 3)
     {
@@ -555,7 +550,6 @@ Foam::multiDirRefinement::multiDirRefinement
 }
 
 
-// Construct from components. Implies meshCutter since directions provided.
 Foam::multiDirRefinement::multiDirRefinement
 (
     polyMesh& mesh,

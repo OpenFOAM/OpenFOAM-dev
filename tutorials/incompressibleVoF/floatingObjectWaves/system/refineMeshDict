@@ -10,20 +10,40 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "system";
-    object      topoSetDict;
+    object      refineMeshDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-actions
-(
+coordinates
+{
+    type        global;
+
+    e1          (1 0 0);
+    e2          (0 1 0);
+
+    directions  (e1 e2 e3);
+}
+
+useHexTopology  true;
+
+zones
+{
+    xyz
     {
-        name    box;
-        type    cellSet;
-        action  new;
-        source  boxToCell;
-        //box (-1e6 -1e6 -40) (1500 1500 40);
-        box (-1e6 -1e6 -40) (1e6 1e6 40);
+        type    box;
+        box     (-100 -100 0.445) (100 100 0.58);
     }
-);
+
+    z
+    {
+        $xyz;
+
+        coordinates
+        {
+            $coordinates;
+            directions  (e3);
+        }
+    }
+}
 
 // ************************************************************************* //

@@ -9,7 +9,7 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    object      snappyRefineMeshDict;
+    object      autoRefineMeshDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -87,12 +87,7 @@ patchLocalCoeffs
 }
 
 // List of directions to refine
-directions
-(
-    e1
-    e2
-    e3
-);
+directions      (e1 e2 e3);
 
 // refinement level difference between neighbouring cells. Set to large if
 // there is no need for a limit.
@@ -100,12 +95,14 @@ splitLevel      2;
 
 // Cut purely geometric (will cut hexes through vertices) or take topology
 // into account.
+// Only applies if 3 directions are specified (defaults to false).
 geometricCut    false;
 
 // Whether to use hex topology. This will never cut hex through vertices.
+// (defaults to false).
 useHexTopology  yes;
 
-// Write meshes from intermediate steps
-writeMesh       true;
+// Write meshes from intermediate steps (defaults to false).
+writeMesh       false;
 
 // ************************************************************************* //

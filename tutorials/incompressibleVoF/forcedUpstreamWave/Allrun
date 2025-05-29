@@ -8,17 +8,7 @@ runApplication blockMesh
 
 runApplication extrudeMesh
 
-for i in 1 2
-do
-    runApplication -s $i topoSet -dict topoSetDict$i
-    runApplication -s $i refineMesh -dict refineMeshDictX -overwrite
-done
-
-for i in 3 4 5 6
-do
-    runApplication -s $i topoSet -dict topoSetDict$i
-    runApplication -s $i refineMesh -dict refineMeshDictY -overwrite
-done
+runApplication refineMesh -overwrite
 
 runApplication setFields
 
