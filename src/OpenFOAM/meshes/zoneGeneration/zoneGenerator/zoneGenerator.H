@@ -176,6 +176,11 @@ public:
             return name_;
         }
 
+        const word& zoneName() const
+        {
+            return zoneName_;
+        }
+
         //- Return the list of selected indices
         static labelList indices(const boolList& selected);
 
