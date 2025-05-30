@@ -144,7 +144,8 @@ Foam::functionObjects::scalarTransport::scalarTransport
     deltaN_
     (
         "deltaN",
-        1e-8/pow(average(mesh_.V()), 1.0/3.0)
+        s_.dimensions()/dimLength,
+        1e-8/pow(average(mesh_.V()), 1.0/3.0).value()
     )
 {
     read(dict);
