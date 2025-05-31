@@ -9,36 +9,22 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    location    "constant";
-    object      fvModels;
+    object      createZonesDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-disk1
+actuationDisk1
 {
-    type            actuationDisk;
-
-    cellZone        actuationDisk1;
-
-    diskDir         (1 0 0);    // Orientation of the disk
-    Cp              0.386;
-    Ct              0.58;
-    diskArea        40;
-    upstreamPoint   (581849 4785810 1065);
+    type        box;
+    zoneType    cell;
+    box         (581850.5 4785805 1061) (581850.8 4785815 1071);
 }
 
-disk2
+actuationDisk2
 {
-    type            actuationDisk;
-
-    cellZone        actuationDisk2;
-
-    diskDir         (1 0 0);    // Orientation of the disk
-    Cp              0.53;
-    Ct              0.58;
-    diskArea        40;
-    upstreamPoint   (581753 4785663 1070);
+    type        box;
+    zoneType    cell;
+    box         (581754 4785658 1065) (581754.4 4785668 1075);
 }
-
 
 // ************************************************************************* //

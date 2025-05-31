@@ -7,8 +7,8 @@ cd ${0%/*} || exit 1    # Run from this directory
 runApplication blockMesh
 runApplication decomposePar -copyZero
 runParallel snappyHexMesh -overwrite
+runParallel createZones
 
-runParallel topoSet
 runParallel foamRun
 
 runApplication reconstructPar

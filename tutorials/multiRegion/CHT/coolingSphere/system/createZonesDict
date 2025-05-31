@@ -9,36 +9,17 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    location    "constant";
-    object      fvModels;
+    object      createZonesDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-disk1
+solid
 {
-    type            actuationDisk;
+    type        sphere;
+    zoneType    cell;
 
-    cellZone        actuationDisk1;
-
-    diskDir         (1 0 0);    // Orientation of the disk
-    Cp              0.386;
-    Ct              0.58;
-    diskArea        40;
-    upstreamPoint   (581849 4785810 1065);
+    centre      (0 0 0);
+    radius      $blockMeshDict!geometry/sphere/radius;
 }
-
-disk2
-{
-    type            actuationDisk;
-
-    cellZone        actuationDisk2;
-
-    diskDir         (1 0 0);    // Orientation of the disk
-    Cp              0.53;
-    Ct              0.58;
-    diskArea        40;
-    upstreamPoint   (581753 4785663 1070);
-}
-
 
 // ************************************************************************* //

@@ -13,7 +13,7 @@ runApplication splitMeshRegions -cellZonesOnly -overwrite
 
 rm -f 0/cellToRegion 0/*/cellToRegion constant/cellToRegion
 
-runApplication -s fluid topoSet -dict system/topoSetDict -region fluid
+runApplication -s fluid createZones -dict system/createZonesDict -region fluid
 
 ! isTest "$@" && [ -n "$1" ] && mode=$1 || mode=parallel
 
