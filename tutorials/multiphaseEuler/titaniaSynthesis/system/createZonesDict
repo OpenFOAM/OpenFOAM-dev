@@ -9,28 +9,17 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    location    "system";
-    object      topoSetDict;
+    object      createZonesDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-actions
-(
-    {
-        name    injection;
-        type    cellSet;
-        action  new;
-        source  boxToCell;
-        box     (0 0.04 0) (0.1 0.05 0.1);
-    }
-
-    {
-        name    injection;
-        type    cellZoneSet;
-        action  new;
-        source  setToCellZone;
-        set     injection;
-    }
-);
+outlet
+{
+    type        cylinder;
+    zoneType    cell;
+    point1      (0.435 0 0);
+    point2      (0.44 0 0);
+    radius      0.015875;
+}
 
 // ************************************************************************* //
