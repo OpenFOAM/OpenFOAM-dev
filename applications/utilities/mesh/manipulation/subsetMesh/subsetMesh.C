@@ -25,11 +25,9 @@ Application
     subsetMesh
 
 Description
-    Selects a section of mesh based on a cellSet.
+    Selects a section of mesh based on a cellZone or cellSet.
 
-    The utility sub-sets the mesh to choose only a part of interest. Check the
-    cellSet/topoSet utilities to see how to select cells based on various
-    shapes.
+    The utility sub-sets the mesh to choose only a part of interest.
 
     The mesh will subset all points, faces and cells needed to make a sub-mesh
     but will not preserve attached boundary types.
@@ -38,11 +36,13 @@ Description
 
 #include "fvMeshSubset.H"
 #include "argList.H"
+#include "zoneGenerator.H"
 #include "cellSet.H"
 #include "IOobjectList.H"
 #include "volFields.H"
 #include "polyTopoChangeMap.H"
 #include "hexRef8Data.H"
+#include "systemDict.H"
 
 using namespace Foam;
 
@@ -90,7 +90,19 @@ int main(int argc, char *argv[])
     #include "addOverwriteOption.H"
     #include "addMeshOption.H"
     #include "addRegionOption.H"
-    argList::validArgs.append("cellSet");
+    #include "addDictOption.H"
+    argList::addOption
+    (
+        "cellSet",
+        "cellSet",
+        "set of cells included in the sub-mesh"
+    );
+    argList::addOption
+    (
+        "cellZone",
+        "cellZone",
+        "zone of cells included in the sub-mesh"
+    );
     argList::addOption
     (
         "patch",
@@ -118,8 +130,17 @@ int main(int argc, char *argv[])
 
     #include "createSpecifiedMeshNoChangers.H"
 
+    const word zoneName = args.optionLookupOrDefault
+    (
+        "cellZone",
+        word::null
+    );
 
-    const word setName = args[1];
+    const word setName = args.optionLookupOrDefault
+    (
+        "cellSet",
+        word::null
+    );
 
     word meshInstance = mesh.pointsInstance();
     word fieldsInstance = runTime.name();
@@ -137,8 +158,6 @@ int main(int argc, char *argv[])
     }
     const bool fields = !args.optionFound("noFields");
 
-
-    Info<< "Reading cell set from " << setName << endl << endl;
 
     // Create mesh subsetting engine
     fvMeshSubset subsetter(mesh);
@@ -184,10 +203,73 @@ int main(int argc, char *argv[])
         )
     );
 
+    if (zoneName != word::null)
+    {
+        Info<< "Selecting cellZone " << zoneName << endl << endl;
+        subsetter.setLargeCellSubset
+        (
+            labelHashSet(mesh.cellZones()[zoneName]),
+            patchi,
+            true
+        );
+    }
+    else if (setName != word::null)
+    {
+        Info<< "Selecting cellSet " << setName << endl << endl;
+        const cellSet currentSet(mesh, setName);
+        subsetter.setLargeCellSubset(currentSet, patchi, true);
+    }
+    else
+    {
+        const dictionary subsetDict
+        (
+            systemDict("subsetMeshDict", args, mesh)
+        );
 
-    cellSet currentSet(mesh, setName);
-    subsetter.setLargeCellSubset(currentSet, patchi, true);
+        if (patchi == -1 && subsetDict.found("patch"))
+        {
+            const word patchName(subsetDict.lookup("patch"));
+            patchi = mesh.boundaryMesh().findIndex(patchName);
 
+            if (patchi == -1)
+            {
+                FatalErrorInFunction
+                    << nl << "Valid patches are " << mesh.boundaryMesh().names()
+                    << exit(FatalError);
+            }
+        }
+
+        labelHashSet subCells;
+
+        if (subsetDict.isDict("zone"))
+        {
+            autoPtr<zoneGenerator> zg
+            (
+                zoneGenerator::New
+                (
+                    "zone",
+                    zoneGenerator::cellZoneType,
+                    mesh,
+                    subsetDict.subDict("zone")
+                )
+            );
+
+            Info<< "Selecting cellZone " << zg->zoneName()
+                << " of type " << zg->type() << endl;
+
+            subCells = zg->generate().cZone();
+        }
+        else
+        {
+            const word cellZoneName(subsetDict.lookup("zone"));
+
+            Info<< "Selecting cellZone " << cellZoneName << endl;
+
+            subCells = mesh.cellZones()[cellZoneName];
+        }
+
+        subsetter.setLargeCellSubset(subCells, patchi, true);
+    }
 
     if (fields)
     {
@@ -228,10 +310,9 @@ int main(int argc, char *argv[])
             runTime++;
         }
 
-        Info<< "Writing subsetted mesh and fields to time "
-            << runTime.name() << endl;
-
+        Info<< "Writing mesh to ";
         subsetter.subMesh().write();
+        Info<< subsetter.subMesh().facesInstance()/mesh.meshDir() << endl;
 
         // Subsetting adds a 'subset' prefix. Rename the fields to remove this.
         #define RenameTypeGeoFields(Type, GeoField)                            \
@@ -258,10 +339,9 @@ int main(int argc, char *argv[])
             runTime++;
         }
 
-        Info<< "Writing subsetted mesh to time "
-            << runTime.name() << endl;
-
+        Info<< "Writing mesh to ";
         subsetter.subMesh().write();
+        Info<< subsetter.subMesh().facesInstance()/mesh.meshDir() << endl;
     }
 
 

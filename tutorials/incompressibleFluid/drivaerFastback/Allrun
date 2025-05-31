@@ -45,7 +45,7 @@ refineBackgroundMesh () {
     while [ $_r -lt "$_nRefine" ]
     do
         echo "Refining the background mesh"
-        runParallel -a refineMesh -overwrite
+        runParallel -a refineMesh -all -overwrite
         _r=$(( _r + 1 ))
     done
 }

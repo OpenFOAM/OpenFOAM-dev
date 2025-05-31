@@ -9,30 +9,23 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    object      topoSetDict;
+    location    "system";
+    object      subsetMeshDict;
 }
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-actions
-(
+zone
+{
+    type invert;
+
+    box
     {
-        name    c0;
-        type    cellSet;
-        action  clear;
+        type        box;
+        zoneType    cell;
+        box         (0.1 0.8 -100) (0.4 100 100);
     }
-    {
-        name    c0;
-        type    cellSet;
-        action  invert;
-    }
-    {
-        name    c0;
-        type    cellSet;
-        action  delete;
-        source  boxToCell;
-        box     (0.375 0.375 0) (0.625 0.625 0.25);
-    }
-);
+}
+
+patch   floatingObject;
 
 // ************************************************************************* //

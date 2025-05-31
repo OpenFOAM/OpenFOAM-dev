@@ -153,7 +153,7 @@ void printEdgeStats(const polyMesh& mesh)
         Info<< "    z aligned :  number:" << nZ << "\tminLen:" << minZ
             << "\tmazLen:" << maxZ << nl;
     }
-    if (nEdges - nX - nY - nZ > 0)
+    if (minOther > great || maxOther > -great)
     {
         Info<< "    other     :  number:" << nEdges - nX - nY - nZ
             << "\tminLen:" << minOther
@@ -368,25 +368,37 @@ int main(int argc, char *argv[])
         }
         else if (refineDict.found("zone"))
         {
-            const dictionary& zoneDict = refineDict.subDict("zone");
+            labelList refCells;
 
-            autoPtr<zoneGenerator> zg
-            (
-                zoneGenerator::New
+            if (refineDict.isDict("zone"))
+            {
+                autoPtr<zoneGenerator> zg
                 (
-                    "zone",
-                    zoneGenerator::cellZoneType,
-                    mesh,
-                    zoneDict
-                )
-            );
+                    zoneGenerator::New
+                    (
+                        "zone",
+                        zoneGenerator::cellZoneType,
+                        mesh,
+                        refineDict.subDict("zone")
+                    )
+                );
 
-            const labelList refCells(zg->generate().cZone());
+                refCells = zg->generate().cZone();
 
-            Info<< "Refining "
-                << returnReduce(refCells.size(), sumOp<label>())
-                << " cells in zone " << zg->zoneName()
-                << " of type " << zg->type() << endl;
+                Info<< "Refining "
+                    << returnReduce(refCells.size(), sumOp<label>())
+                    << " cells in zone " << zg->zoneName()
+                    << " of type " << zg->type() << endl;
+            }
+            else
+            {
+                const word cellZoneName(refineDict.lookup("zone"));
+                refCells = mesh.cellZones()[cellZoneName];
+
+                Info<< "Refining "
+                    << returnReduce(refCells.size(), sumOp<label>())
+                    << " cells in zone " << cellZoneName << endl;
+            }
 
             refineZone
             (
@@ -394,7 +406,9 @@ int main(int argc, char *argv[])
                 refCells,
                 meshCutterPtr,
                 refineDict,
-                zoneDict
+                refineDict.isDict("zone")
+                  ? refineDict.subDict("zone")
+                  : refineDict
             );
         }
         else if (refineDict.found("zones"))

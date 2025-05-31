@@ -17,20 +17,6 @@ FoamFile
 actions
 (
     {
-        name    c0;
-        type    cellSet;
-        action  new;
-        source  boxToCell;
-        box     (0.1 0.8 -100) (0.4 100 100);
-    }
-
-    {
-        name    c0;
-        type    cellSet;
-        action  invert;
-    }
-
-    {
         name    f0FaceSet;
         type    faceSet;
         action  new;

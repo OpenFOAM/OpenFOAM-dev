@@ -6,9 +6,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 runApplication blockMesh
 
-runApplication -s 1  topoSet
-
-runApplication subsetMesh -overwrite c0 -patch floatingObject -noFields
+runApplication subsetMesh -noFields -overwrite
 
 runApplication -s selectBottom \
     topoSet -dict topoSetDict-selectBottom
@@ -16,6 +14,8 @@ runApplication -s selectBottom \
 runApplication createPatch -overwrite
 
 cp -R 0.orig 0 > /dev/null 2>&1
+
+runApplication -s 1  topoSet
 
 runApplication foamRun
 
