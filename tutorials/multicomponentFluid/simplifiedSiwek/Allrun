@@ -7,8 +7,8 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Create mesh
 runApplication blockMesh
 
-# Create ignition cells cellSet
-runApplication topoSet
+# Create ignitionCells cellZone
+runApplication createZones
 
 runApplication foamRun
 

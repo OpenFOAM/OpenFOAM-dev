@@ -18,7 +18,7 @@ ignition
 {
     type            fixedTemperature;
 
-    cellSet         ignition;
+    cellZone        ignition;
 
     mode            uniform;
 

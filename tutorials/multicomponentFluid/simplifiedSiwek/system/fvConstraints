@@ -21,7 +21,7 @@ source1
     timeStart       0.1;
     duration        0.4;
 
-    cellSet         ignitionCells;
+    cellZone        ignitionCells;
 
     mode            uniform;
 

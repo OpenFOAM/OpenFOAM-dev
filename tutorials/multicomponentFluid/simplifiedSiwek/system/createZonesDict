@@ -9,19 +9,16 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    object      topoSetDict;
+    object      createZonesDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-actions
-(
-    {
-        name    ignition;
-        type    cellSet;
-        action  new;
-        source  boxToCell;
-        box     (0.01 0.1 -0.01) (0.02 0.11 0.01);
-    }
-);
+ignitionCells
+{
+    type        sphere;
+    zoneType    cell;
+    centre      (0.125 0.375 0.05);
+    radius      0.005;
+}
 
 // ************************************************************************* //
