@@ -110,6 +110,10 @@ Foam::zoneGenerators::intersection::intersection
 )
 :
     zoneGenerator(name, mesh, dict),
+    zoneType_
+    (
+        zoneTypesAllNames.lookupOrDefault("zoneType", dict, zoneTypesAll::all)
+    ),
     zoneGenerators_(mesh, dict)
 {
     moveUpdate_ = zoneGenerators_.moveUpdate();
@@ -135,19 +139,31 @@ Foam::zoneSet Foam::zoneGenerators::intersection::generate() const
     {
         zoneSet zs(zoneGenerators_[i].generate());
 
-        if (zs.pZone.valid())
+        if
+        (
+            zoneType_ == zoneTypesAll::point
+         || (zoneType_ == zoneTypesAll::all && zs.pZone.valid())
+        )
         {
             nPointIntersections.setSize(mesh_.nPoints(), 0);
             countIntersections(nPointIntersections, zs.pZone);
         }
 
-        if (zs.cZone.valid())
+        if
+        (
+            zoneType_ == zoneTypesAll::cell
+         || (zoneType_ == zoneTypesAll::all && zs.cZone.valid())
+        )
         {
             nCellIntersections.setSize(mesh_.nCells(), 0);
             countIntersections(nCellIntersections, zs.cZone);
         }
 
-        if (zs.fZone.valid())
+        if
+        (
+            zoneType_ == zoneTypesAll::face
+         || (zoneType_ == zoneTypesAll::all && zs.fZone.valid())
+        )
         {
             nFaceIntersections.setSize(mesh_.nFaces(), 0);
             flipMap.setSize(mesh_.nFaces(), false);

@@ -90,19 +90,31 @@ Foam::zoneSet Foam::zoneGenerators::Union::generate
         // Select or deselect
         const bool sel = all ? false : (diff ? i == 0 : true);
 
-        if (zs.pZone.valid())
+        if
+        (
+            zoneType_ == zoneTypesAll::point
+         || (zoneType_ == zoneTypesAll::all && zs.pZone.valid())
+        )
         {
             selectedPoints.setSize(mesh_.nPoints(), all);
             select(selectedPoints, zs.pZone, sel);
         }
 
-        if (zs.cZone.valid())
+        if
+        (
+            zoneType_ == zoneTypesAll::cell
+         || (zoneType_ == zoneTypesAll::all && zs.cZone.valid())
+        )
         {
             selectedCells.setSize(mesh_.nCells(), all);
             select(selectedCells, zs.cZone, sel);
         }
 
-        if (zs.fZone.valid())
+        if
+        (
+            zoneType_ == zoneTypesAll::face
+         || (zoneType_ == zoneTypesAll::all && zs.fZone.valid())
+        )
         {
             selectedFaces.setSize(mesh_.nFaces(), all);
             flipMap.setSize(mesh_.nFaces(), false);
@@ -168,6 +180,10 @@ Foam::zoneGenerators::Union::Union
 )
 :
     zoneGenerator(name, mesh, dict),
+    zoneType_
+    (
+        zoneTypesAllNames.lookupOrDefault("zoneType", dict, zoneTypesAll::all)
+    ),
     zoneGenerators_(mesh, dict)
 {}
 

@@ -101,6 +101,9 @@ class intersection
 {
     // Private Data
 
+        //- The type of zone to lookup (optional)
+        zoneTypesAll zoneType_;
+
         zoneGeneratorList zoneGenerators_;
 
 
