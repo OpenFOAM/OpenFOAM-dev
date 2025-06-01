@@ -46,25 +46,6 @@ actions
         file    "baffles.obj";
     }
 
-    // rotatingZone cellZone
-    {
-        action  new;
-        type    cellSet;
-        name    rz;
-        source  cylinderToCell;
-        point1  (0 0 0.54);
-        point2  (0 0 0.66);
-        radius  0.2;
-    }
-
-    {
-        action  new;
-        type    cellZoneSet;
-        name    rotatingZone;
-        source  setToCellZone;
-        set     rz;
-    }
-
     // rotatingZone faceZone
     {
         action  new;

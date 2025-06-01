@@ -99,6 +99,7 @@ printf "\nCreating stirrer...\n"
 [ "$blades" -eq 6 ] && \
     sed "s/stirrer4/stirrer6/" system/topoSetDict.orig > system/topoSetDict
 runApplication -a topoSet
+runApplication -a createZones
 runApplication -a createBaffles -dict createBafflesDict.stirrer -overwrite
 
 [ "$baffles" ] && \
