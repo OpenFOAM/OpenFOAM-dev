@@ -46,6 +46,19 @@ const Foam::NamedEnum<Foam::zoneGenerator::zoneTypes, 3>
     Foam::zoneGenerator::zoneTypesNames;
 
 
+template<>
+const char* Foam::NamedEnum<Foam::zoneGenerator::zoneTypesAll, 4>::names[] =
+{
+    "point",
+    "cell",
+    "face",
+    "all"
+};
+
+const Foam::NamedEnum<Foam::zoneGenerator::zoneTypesAll, 4>
+    Foam::zoneGenerator::zoneTypesAllNames;
+
+
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 Foam::labelList Foam::zoneGenerator::indices(const boolList& selected)

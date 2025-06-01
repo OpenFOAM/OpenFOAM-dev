@@ -109,11 +109,8 @@ class lookup
 {
     // Private Data
 
-        //- If the zoneType is not set lookup all the zones of the given name
-        bool anyZoneType_;
-
         //- The type of zone to lookup (optional)
-        zoneTypes zoneType_;
+        zoneTypesAll zoneType_;
 
 
 public:

@@ -69,7 +69,7 @@ Foam::zoneSet Foam::zoneGenerators::set::generate() const
 {
     switch (zoneType_)
     {
-        case pointZoneType:
+        case zoneTypes::point:
         {
             return zoneSet
             (
@@ -84,7 +84,7 @@ Foam::zoneSet Foam::zoneGenerators::set::generate() const
             );
         }
 
-        case cellZoneType:
+        case zoneTypes::cell:
         {
             return zoneSet
             (
@@ -99,7 +99,7 @@ Foam::zoneSet Foam::zoneGenerators::set::generate() const
             );
         }
 
-        case faceZoneType:
+        case zoneTypes::face:
         {
             labelList faceIndices(faceSet(mesh_, setName_).toc());
 

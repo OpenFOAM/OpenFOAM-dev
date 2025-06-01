@@ -49,12 +49,9 @@ Foam::zoneGenerators::lookup::lookup
 )
 :
     zoneGenerator(name, mesh, dict),
-    anyZoneType_(!dict.found("zoneType")),
     zoneType_
     (
-       !anyZoneType_
-      ? zoneTypesNames.read(dict.lookup("zoneType"))
-      : pointZoneType
+        zoneTypesAllNames.lookupOrDefault("zoneType", dict, zoneTypesAll::all)
     )
 {}
 
@@ -69,98 +66,96 @@ Foam::zoneGenerators::lookup::~lookup()
 
 Foam::zoneSet Foam::zoneGenerators::lookup::generate() const
 {
-    if (anyZoneType_)
+    switch (zoneType_)
     {
-        zoneSet zs;
-        bool found = false;
-
-        if (mesh_.pointZones().found(zoneName_))
+        case zoneTypesAll::point:
         {
-            zs.pZone = mesh_.pointZones()[zoneName_];
-            found = true;
-            moveUpdate_ = moveUpdate_ || zs.pZone().moveUpdate();
+            const pointZone* pZonePtr =
+                mesh_.pointZones().lookupPtr(zoneName_);
+
+            if (pZonePtr == nullptr)
+            {
+                FatalIOErrorInFunction(dict_)
+                    << "Cannot find pointZone " << zoneName_
+                    << exit(FatalIOError);
+            }
+
+            const pointZone& pZone = *pZonePtr;
+            moveUpdate_ = moveUpdate_ || pZone.moveUpdate();
+            return zoneSet(pZone);
         }
 
-        if (mesh_.cellZones().found(zoneName_))
+        case zoneTypesAll::cell:
         {
-            zs.cZone = mesh_.cellZones()[zoneName_];
-            found = true;
-            moveUpdate_ = moveUpdate_ || zs.cZone().moveUpdate();
+            const cellZone* cZonePtr =
+                mesh_.cellZones().lookupPtr(zoneName_);
+
+            if (cZonePtr == nullptr)
+            {
+                FatalIOErrorInFunction(dict_)
+                    << "Cannot find cellZone " << zoneName_
+                    << exit(FatalIOError);
+            }
+
+            const cellZone& cZone = *cZonePtr;
+            moveUpdate_ = moveUpdate_ || cZone.moveUpdate();
+            return zoneSet(cZone);
         }
 
-        if (mesh_.faceZones().found(zoneName_))
+        case zoneTypesAll::face:
         {
-            zs.fZone = mesh_.faceZones()[zoneName_];
-            found = true;
-            moveUpdate_ = moveUpdate_ || zs.fZone().moveUpdate();
+            const faceZone* fZonePtr =
+                mesh_.faceZones().lookupPtr(zoneName_);
+
+            if (fZonePtr == nullptr)
+            {
+                FatalIOErrorInFunction(dict_)
+                    << "Cannot find faceZone " << zoneName_
+                    << exit(FatalIOError);
+            }
+
+            const faceZone& fZone = *fZonePtr;
+            moveUpdate_ = moveUpdate_ || fZone.moveUpdate();
+            return zoneSet(fZone);
         }
 
-        if (!found)
+        case zoneTypesAll::all:
         {
-            FatalIOErrorInFunction(dict_)
-                << "Cannot find zone " << zoneName_ << exit(FatalIOError);
-        }
+            zoneSet zs;
+            bool found = false;
 
-        return zs;
+            if (mesh_.pointZones().found(zoneName_))
+            {
+                zs.pZone = mesh_.pointZones()[zoneName_];
+                found = true;
+                moveUpdate_ = moveUpdate_ || zs.pZone().moveUpdate();
+            }
+
+            if (mesh_.cellZones().found(zoneName_))
+            {
+                zs.cZone = mesh_.cellZones()[zoneName_];
+                found = true;
+                moveUpdate_ = moveUpdate_ || zs.cZone().moveUpdate();
+            }
+
+            if (mesh_.faceZones().found(zoneName_))
+            {
+                zs.fZone = mesh_.faceZones()[zoneName_];
+                found = true;
+                moveUpdate_ = moveUpdate_ || zs.fZone().moveUpdate();
+            }
+
+            if (!found)
+            {
+                FatalIOErrorInFunction(dict_)
+                    << "Cannot find zone " << zoneName_ << exit(FatalIOError);
+            }
+
+            return zs;
+        }
     }
-    else
-    {
-        switch (zoneType_)
-        {
-            case pointZoneType:
-            {
-                const pointZone* pZonePtr =
-                    mesh_.pointZones().lookupPtr(zoneName_);
 
-                if (pZonePtr == nullptr)
-                {
-                    FatalIOErrorInFunction(dict_)
-                        << "Cannot find pointZone " << zoneName_
-                        << exit(FatalIOError);
-                }
-
-                const pointZone& pZone = *pZonePtr;
-                moveUpdate_ = moveUpdate_ || pZone.moveUpdate();
-                return zoneSet(pZone);
-            }
-
-            case cellZoneType:
-            {
-                const cellZone* cZonePtr =
-                    mesh_.cellZones().lookupPtr(zoneName_);
-
-                if (cZonePtr == nullptr)
-                {
-                    FatalIOErrorInFunction(dict_)
-                        << "Cannot find cellZone " << zoneName_
-                        << exit(FatalIOError);
-                }
-
-                const cellZone& cZone = *cZonePtr;
-                moveUpdate_ = moveUpdate_ || cZone.moveUpdate();
-                return zoneSet(cZone);
-            }
-
-            case faceZoneType:
-            {
-                const faceZone* fZonePtr =
-                    mesh_.faceZones().lookupPtr(zoneName_);
-
-                if (fZonePtr == nullptr)
-                {
-                    FatalIOErrorInFunction(dict_)
-                        << "Cannot find faceZone " << zoneName_
-                        << exit(FatalIOError);
-                }
-
-                const faceZone& fZone = *fZonePtr;
-                moveUpdate_ = moveUpdate_ || fZone.moveUpdate();
-                return zoneSet(fZone);
-            }
-        }
-
-        return zoneSet();
-    }
+    return zoneSet();
 }
 
 

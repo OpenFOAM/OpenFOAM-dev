@@ -93,15 +93,26 @@ public:
 
     // Public Data Types
 
-        //- Enumeration defining the file checking options
-        enum zoneTypes
+        //- Enumeration defining the zone types
+        enum class zoneTypes
         {
-            pointZoneType,
-            cellZoneType,
-            faceZoneType
+            point,
+            cell,
+            face
         };
 
         static const NamedEnum<zoneTypes, 3> zoneTypesNames;
+
+        //- Enumeration defining the zone types with an option for all the types
+        enum class zoneTypesAll
+        {
+            point,
+            cell,
+            face,
+            all
+        };
+
+        static const NamedEnum<zoneTypesAll, 4> zoneTypesAllNames;
 
 
     //- Runtime type information

@@ -35,7 +35,7 @@ Foam::zoneSet Foam::zoneGenerators::volume::generate(const Type& zone) const
 
     switch (zoneType_)
     {
-        case pointZoneType:
+        case zoneTypes::point:
         {
             return zoneSet
             (
@@ -50,7 +50,7 @@ Foam::zoneSet Foam::zoneGenerators::volume::generate(const Type& zone) const
             );
         }
 
-        case cellZoneType:
+        case zoneTypes::cell:
         {
             return zoneSet
             (
@@ -65,7 +65,7 @@ Foam::zoneSet Foam::zoneGenerators::volume::generate(const Type& zone) const
             );
         }
 
-        case faceZoneType:
+        case zoneTypes::face:
         {
             const labelList faceIndices(select(zone, mesh_.faceCentres()));
 

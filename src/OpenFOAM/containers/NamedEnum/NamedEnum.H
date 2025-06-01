@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,6 +44,8 @@ SourceFiles
 namespace Foam
 {
 
+class dictionary;
+
 /*---------------------------------------------------------------------------*\
                           Class NamedEnum Declaration
 \*---------------------------------------------------------------------------*/
@@ -81,6 +83,15 @@ public:
         //- Read a word from Istream and return the corresponding
         //  enumeration element
         Enum read(Istream&) const;
+
+        //- Lookup the name from the dictionary if present and return the
+        //  corresponding enumeration element, otherwise return the defaultValue
+        Enum lookupOrDefault
+        (
+            const word& name,
+            const dictionary& dict,
+            const Enum defaultValue
+        ) const;
 
         //- Write the name representation of the enumeration to an Ostream
         void write(const Enum e, Ostream&) const;

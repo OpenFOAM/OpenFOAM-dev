@@ -65,7 +65,7 @@ Foam::zoneSet Foam::zoneGenerators::all::generate() const
 {
     switch (zoneType_)
     {
-        case pointZoneType:
+        case zoneTypes::point:
         {
             return zoneSet
             (
@@ -80,7 +80,7 @@ Foam::zoneSet Foam::zoneGenerators::all::generate() const
             );
         }
 
-        case cellZoneType:
+        case zoneTypes::cell:
         {
             return zoneSet
             (
@@ -95,7 +95,7 @@ Foam::zoneSet Foam::zoneGenerators::all::generate() const
             );
         }
 
-        case faceZoneType:
+        case zoneTypes::face:
         {
             return zoneSet
             (
