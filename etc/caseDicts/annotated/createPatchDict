@@ -32,11 +32,9 @@ writeCyclicMatch false;
 
 // Patches to create
 patches
-(
+{
+    cyc_half0
     {
-        // Name of new patch
-        name cyc_half0;
-
         // Dictionary to construct new patch from
         patchInfo
         {
@@ -64,10 +62,9 @@ patches
         // If constructFrom = set : name of faceSet
         set f0;
     }
-    {
-        // Name of new patch
-        name cyc_half1;
 
+    cyc_half1
+    {
         // Dictionary to construct new patch from
         patchInfo
         {
@@ -91,6 +88,6 @@ patches
         // If constructFrom = set : name of faceSet
         set f0;
     }
-);
+}
 
 // ************************************************************************* //

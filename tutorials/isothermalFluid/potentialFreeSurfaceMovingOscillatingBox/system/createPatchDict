@@ -14,11 +14,9 @@ FoamFile
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 patches
-(
+{
+    floatingObjectBottom
     {
-        // Name of new patch
-        name floatingObjectBottom;
-
         // Dictionary to construct new patch from
         patchInfo
         {
@@ -31,6 +29,6 @@ patches
         // If constructFrom = set : name of faceSet
         set floatingObjectBottom;
     }
-);
+}
 
 // ************************************************************************* //

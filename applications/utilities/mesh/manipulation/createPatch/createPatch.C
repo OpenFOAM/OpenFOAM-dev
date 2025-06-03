@@ -481,24 +481,42 @@ int main(int argc, char *argv[])
         writeCyclicMatchObjs("initial_", mesh);
     }
 
-    // Read patch construct info from dictionary
-    PtrList<dictionary> patchSources(dict.lookup("patches"));
+    // For backwards-compatibility read patches as list of dictionaries
+    // if not a dictionary
+    dictionary patchesListDict("patches", dict);
+
+    if (!dict.isDict("patches"))
+    {
+        // Read patch construct info from dictionary
+        PtrList<dictionary> patchSources(dict.lookup("patches"));
+
+        forAll(patchSources, psi)
+        {
+            const dictionary& dict = patchSources[psi];
+            patchesListDict.add(dict.lookup<word>("name"), dict);
+        }
+    }
+
+    const dictionary& patchesDict =
+        dict.isDict("patches")
+      ? dict.subDict("patches")
+      : patchesListDict;
+
 
     HashSet<word> addedPatchNames;
-    forAll(patchSources, addedI)
+    forAllConstIter(dictionary, patchesDict, iter)
     {
-        const dictionary& dict = patchSources[addedI];
-        addedPatchNames.insert(dict.lookup<word>("name"));
+        addedPatchNames.insert(iter().keyword());
     }
 
 
     // 1. Add all new patches
     // ~~~~~~~~~~~~~~~~~~~~~~
 
-    if (patchSources.size())
+    if (patchesDict.size())
     {
         // Old and new patches.
-        DynamicList<polyPatch*> allPatches(patches.size()+patchSources.size());
+        DynamicList<polyPatch*> allPatches(patches.size()+patchesDict.size());
 
         label startFacei = mesh.nInternalFaces();
 
@@ -523,11 +541,10 @@ int main(int argc, char *argv[])
             }
         }
 
-        forAll(patchSources, addedI)
+        forAllConstIter(dictionary, patchesDict, iter)
         {
-            const dictionary& dict = patchSources[addedI];
-
-            word patchName(dict.lookup("name"));
+            const word& patchName = iter().keyword();
+            const dictionary& dict = iter().dict();
 
             label destPatchi = patches.findIndex(patchName);
 
@@ -598,12 +615,11 @@ int main(int argc, char *argv[])
 
     polyTopoChange meshMod(mesh);
 
-
-    forAll(patchSources, addedI)
+    forAllConstIter(dictionary, patchesDict, iter)
     {
-        const dictionary& dict = patchSources[addedI];
+        const word& patchName = iter().keyword();
+        const dictionary& dict = iter().dict();
 
-        const word patchName(dict.lookup("name"));
         label destPatchi = patches.findIndex(patchName);
 
         if (destPatchi == -1)
@@ -617,7 +633,7 @@ int main(int argc, char *argv[])
 
         if (sourceType == "patches")
         {
-            labelHashSet patchSources
+            labelHashSet patchesDict
             (
                 patches.patchSet
                 (
@@ -626,7 +642,7 @@ int main(int argc, char *argv[])
             );
 
             // Repatch faces of the patches.
-            forAllConstIter(labelHashSet, patchSources, iter)
+            forAllConstIter(labelHashSet, patchesDict, iter)
             {
                 const polyPatch& pp = patches[iter.key()];
 

@@ -14,11 +14,9 @@ FoamFile
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 patches
-(
+{
+    inlet
     {
-        // Name of new patch
-        name inlet;
-
         // Dictionary to construct new patch from
         patchInfo
         {
@@ -36,10 +34,8 @@ patches
         }
     }
 
+    outlet
     {
-        // Name of new patch
-        name outlet;
-
         // Dictionary to construct new patch from
         patchInfo
         {
@@ -56,6 +52,6 @@ patches
             box         (1.75 2.999 0.3)(2.25 3.001 0.5);
         }
     }
-);
+}
 
 // ************************************************************************* //

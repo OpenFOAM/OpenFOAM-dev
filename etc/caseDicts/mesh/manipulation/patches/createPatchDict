@@ -14,11 +14,9 @@ FoamFile
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 patches
-(
+{
+    inlet
     {
-        // Name of new patch
-        name    inlet;
-
         // Dictionary to construct new patch from
         patchInfo
         {
@@ -36,10 +34,8 @@ patches
         }
     }
 
+    walls
     {
-        // Name of new patch
-        name    walls;
-
         // Dictionary to construct new patch from
         patchInfo
         {
@@ -52,6 +48,6 @@ patches
         // If constructFrom = patches : names of patches. Wildcards allowed.
         patches ("CAD.*");
     }
-);
+}
 
 // ************************************************************************* //

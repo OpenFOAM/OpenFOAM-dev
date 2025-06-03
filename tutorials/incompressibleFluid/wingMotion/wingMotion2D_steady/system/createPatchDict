@@ -14,11 +14,9 @@ FoamFile
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 patches
-(
+{
+    front
     {
-        // Name of new patch
-        name front;
-
         // Dictionary to construct new patch from
         patchInfo
         {
@@ -31,10 +29,9 @@ patches
         // If constructFrom = patches : names of patches. Wildcards allowed.
         patches (symFront);
     }
-    {
-        // Name of new patch
-        name back;
 
+    back
+    {
         // Dictionary to construct new patch from
         patchInfo
         {
@@ -47,6 +44,6 @@ patches
         // If constructFrom = patches : names of patches. Wildcards allowed.
         patches (symBack);
     }
-);
+}
 
 // ************************************************************************* //
