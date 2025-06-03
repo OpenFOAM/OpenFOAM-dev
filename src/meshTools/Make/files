@@ -238,6 +238,7 @@ zoneGenerators/volume/annulus/annulus.C
 zoneGenerators/volume/truncatedCone/truncatedCone.C
 
 zoneGenerators/conversion/point/pointZoneGenerator.C
+zoneGenerators/conversion/face/faceZoneGenerator.C
 
 zoneGenerators/periodic/periodic.C
 

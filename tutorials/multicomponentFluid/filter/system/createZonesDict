@@ -9,45 +9,43 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    location    "system";
-    object      controlDict;
+    object      createZonesDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-solver          multicomponentFluid;
+filter
+{
+    type        box;
+    zoneType    cell;
+    box         (1.5 -10 -10) (2 10 10);
+}
 
-startFrom       startTime;
+leftFluid
+{
+    type        box;
+    zoneType    cell;
+    box         (-10 -10 -10) (1.5 10 10);
+}
 
-startTime       0;
+rightFluid
+{
+    type        box;
+    zoneType    cell;
+    box         (2 -1 -1) (10 10 10);
+}
 
-stopAt          endTime;
+cycLeft
+{
+    type        face;
+    cellFaces   outerInternal;
+    leftFluid;
+}
 
-endTime         5;
-
-deltaT          0.001;
-
-writeControl    adjustableRunTime;
-
-writeInterval   0.1;
-
-purgeWrite      0;
-
-writeFormat     ascii;
-
-writePrecision  10;
-
-writeCompression off;
-
-timeFormat      general;
-
-timePrecision   6;
-
-runTimeModifiable true;
-
-adjustTimeStep  yes;
-
-maxCo           1.0;
-
-maxDeltaT       1;
+cycRight
+{
+    type        face;
+    cellFaces   outerInternal;
+    rightFluid;
+}
 
 // ************************************************************************* //

@@ -1,0 +1,73 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      createZonesDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+rotorFaces
+{
+    type        intersection;
+
+    cylinderFaces
+    {
+        type        face;
+        cylinder;
+    }
+
+    rotorBox
+    {
+        type        box;
+        zoneType    face;
+        box         (-100 -100 0.1) (100 100 0.15);
+    }
+}
+
+rotorBlades
+{
+    type        union;
+
+    rotorBlades1
+    {
+        type        intersection;
+
+        rotorFaces;
+
+        rotorBladesBox
+        {
+            type        box;
+            zoneType    face;
+            box         (-100 0.249 -100) (100 0.251 100);
+        }
+    }
+
+    rotorBlades2
+    {
+        type        intersection;
+
+        rotorFaces;
+
+        rotorBladesBox
+        {
+            type        box;
+            zoneType    face;
+            box         (0.249 -100 -100) (0.251 100 100);
+        }
+    }
+}
+
+removeRotorFaces
+{
+    type        remove;
+    faceZones   (rotorFaces);
+}
+
+// ************************************************************************* //

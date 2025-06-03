@@ -9,7 +9,7 @@ runApplication -s air    blockMesh -region air
 runApplication -s porous blockMesh -region porous
 
 # Create rotor blades in air region
-runApplication -s air.1 topoSet -region air -dict topoSetDict.1
+runApplication -s air.1 createZones -region air -dict createZonesDict.1
 
 runApplication createBaffles -region air -overwrite
 
