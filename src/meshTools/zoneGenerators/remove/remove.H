@@ -47,7 +47,7 @@ Usage
         removeCellZones
         {
             type        remove;
-            cellZones   ("cone1" "coneAnnulus");
+            cellZones   (cone1 coneAnnulus);
         }
     \endverbatim
 
