@@ -9,8 +9,8 @@ mkdir constant/geometry && cp $FOAM_TUTORIALS/resources/geometry/ballValve-torus
 
 # Mesh
 runApplication blockMesh -dict $FOAM_TUTORIALS/resources/blockMesh/ballValve
-runApplication topoSet
-runApplication transformPoints -pointSet ball "Rz=-45"
+runApplication createZones
+runApplication transformPoints -pointZone ball "Rz=-45"
 
 # Create couples
 runApplication createNonConformalCouples -overwrite pipeNonCouple ballNonCouple
