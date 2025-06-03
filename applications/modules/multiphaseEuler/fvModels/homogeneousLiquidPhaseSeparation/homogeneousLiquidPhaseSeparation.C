@@ -46,6 +46,25 @@ namespace fv
 }
 }
 
+
+namespace Foam
+{
+    template<>
+    const char* NamedEnum
+    <
+        fv::homogeneousLiquidPhaseSeparation::nucleateType,
+        3
+    >::names[] = {"solid", "liquid", "gas"};
+}
+
+
+const Foam::NamedEnum
+<
+    Foam::fv::homogeneousLiquidPhaseSeparation::nucleateType,
+    3
+> Foam::fv::homogeneousLiquidPhaseSeparation::nucleateTypeNames_;
+
+
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 void Foam::fv::homogeneousLiquidPhaseSeparation::readCoeffs
@@ -65,6 +84,8 @@ void Foam::fv::homogeneousLiquidPhaseSeparation::readCoeffs
             dict
         ).ptr()
     );
+
+    nucleateType_ = nucleateTypeNames_.read(dict.lookup("nucleate"));
 }
 
 
@@ -126,7 +147,8 @@ Foam::fv::homogeneousLiquidPhaseSeparation::homogeneousLiquidPhaseSeparation
         mesh,
         dimensionedScalar(dimDensity/dimTime, 0)
     ),
-    solubilityCurve_(nullptr)
+    solubilityCurve_(nullptr),
+    nucleateType_(nucleateType::solid)
 {
     readCoeffs(coeffs(dict));
 }
@@ -307,13 +329,25 @@ void Foam::fv::homogeneousLiquidPhaseSeparation::correct()
     const volScalarField::Internal iStar(pi/6*pow3(d_)/vMolc);
     DebugField(iStar);
 
+    // Pre-exponential factor. Depends on the type of nucleates.
+    tmp<volScalarField::Internal> talpha;
+    switch (nucleateType_)
+    {
+        case nucleateType::solid:
+        case nucleateType::liquid:
+            talpha = k*T()/(3*pi*pow3(dMolc)*muSolution);
+            break;
+
+        case nucleateType::gas:
+            talpha = sqrt(2*sigma/(pi*mMolc));
+            break;
+    }
+
     // Number-based nucleation rate; i.e., number of nuclei created per second
     // per unit volume
-    const volScalarField::Internal intermediate(-deltaPhiStar/(k*T()));
-    DebugField(intermediate);
     const volScalarField::Internal J
     (
-        cSat*NNA*exp(-deltaPhiStar/(k*T()))*k*T()/(3*pi*pow3(dMolc)*muSolution)
+        cSat*NNA*talpha*exp(-deltaPhiStar/(k*T()))
     );
     DebugField(J);
 
