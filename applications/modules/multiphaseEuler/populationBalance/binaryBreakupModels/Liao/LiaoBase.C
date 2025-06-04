@@ -30,7 +30,7 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::diameterModels::LiaoBase::LiaoBase
+Foam::populationBalance::LiaoBase::LiaoBase
 (
     const populationBalanceModel& popBal,
     const dictionary& dict
@@ -90,7 +90,7 @@ Foam::diameterModels::LiaoBase::LiaoBase
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::diameterModels::LiaoBase::precompute()
+void Foam::populationBalance::LiaoBase::precompute()
 {
     const volScalarField::Internal& rhoc = popBal_.continuousPhase().rho();
 
@@ -131,35 +131,27 @@ void Foam::diameterModels::LiaoBase::precompute()
         (
             "rhod",
             dimDensity,
-            gAverage(popBal_.sizeGroups()[1].phase().rho())
+            gAverage(popBal_.phases().first().rho())
         );
 
         const dimensionedScalar sigma
         (
             "sigma",
             dimForce/dimLength,
-            gAverage
-            (
-                popBal_.sigmaWithContinuousPhase
-                (
-                    popBal_.sizeGroups()[1].phase()
-                )()
-            )
+            gAverage(popBal_.sigmaWithContinuousPhase(0)())
         );
 
-        forAll(popBal_.sizeGroups(), i)
+        forAll(popBal_.phases(), i)
         {
-            const sizeGroup& fi = popBal_.sizeGroups()[i];
+            const dimensionedScalar& dSph = popBal_.dSph(i);
 
             dimensionedScalar uTerminal("uTerminal", dimVelocity, 0.2);
             dimensionedScalar Cd("Cd", dimless, 0.44);
             dimensionedScalar CdEllipse("CdEllipse", dimless, 1);
 
-            dimensionedScalar Re(uTerminal*fi.dSph()/nuc);
-            const dimensionedScalar Eo
-            (
-                mag(g)*mag(rhoc - rhod)*sqr(fi.dSph())/sigma
-            );
+            dimensionedScalar Re(uTerminal*dSph/nuc);
+
+            const dimensionedScalar Eo(mag(g)*mag(rhoc - rhod)*sqr(dSph)/sigma);
 
             dimensionedScalar F("F", dimForce/dimArea, 1);
             dimensionedScalar dF("dF", dimForce/dimArea/dimVelocity, 1);
@@ -172,7 +164,7 @@ void Foam::diameterModels::LiaoBase::precompute()
 
             while (mag(F.value()) >= 1.0e-05 && n++ <= 20)
             {
-                Re = uTerminal*fi.dSph()/nuc;
+                Re = uTerminal*dSph/nuc;
 
                 Cd =
                     pos0(1000 - Re)*24/Re*(1 + 0.1*pow(Re, 0.75))
@@ -186,10 +178,10 @@ void Foam::diameterModels::LiaoBase::precompute()
                   + neg(CdEllipse - Cd)*Cd;
 
                 F =
-                    4.0/3.0*(rhoc - rhod)*mag(g)*fi.dSph()
+                    4.0/3.0*(rhoc - rhod)*mag(g)*dSph
                   - rhoc*Cd*sqr(uTerminal);
 
-                ReX = (uTerminal + uTerminalX)*fi.dSph()/nuc;
+                ReX = (uTerminal + uTerminalX)*dSph/nuc;
 
                 CdX =
                     pos0(1000 - ReX)

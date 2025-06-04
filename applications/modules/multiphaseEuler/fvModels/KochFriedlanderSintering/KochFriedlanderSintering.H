@@ -99,7 +99,7 @@ private:
     // Private Data
 
         //- Population balance model
-        const diameterModels::populationBalanceModel& popBal_;
+        const populationBalanceModel& popBal_;
 
         //- Sintering time primary particle diameter exponent
         scalar n_;
@@ -117,8 +117,8 @@ private:
         dimensionedScalar dpMin_;
 
         //- Map from the name of the surface-area-volume-ratio fields to the
-        //  index of the size group
-        HashTable<label> kappaNameToSizeGroupIndices_;
+        //  index of the group
+        HashTable<label> kappaNameToGroupIndices_;
 
 
     // Private Member Functions

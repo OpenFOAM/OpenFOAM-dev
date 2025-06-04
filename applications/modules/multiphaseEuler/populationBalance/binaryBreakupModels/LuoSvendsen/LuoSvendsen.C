@@ -32,7 +32,7 @@ License
 
 namespace Foam
 {
-namespace diameterModels
+namespace populationBalance
 {
 namespace binaryBreakupModels
 {
@@ -50,7 +50,7 @@ namespace binaryBreakupModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::diameterModels::binaryBreakupModels::LuoSvendsen::LuoSvendsen
+Foam::populationBalance::binaryBreakupModels::LuoSvendsen::LuoSvendsen
 (
     const populationBalanceModel& popBal,
     const dictionary& dict
@@ -147,7 +147,7 @@ Foam::diameterModels::binaryBreakupModels::LuoSvendsen::LuoSvendsen
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::diameterModels::binaryBreakupModels::LuoSvendsen::precompute()
+void Foam::populationBalance::binaryBreakupModels::LuoSvendsen::precompute()
 {
     kolmogorovLengthScale_ =
         pow025
@@ -161,20 +161,21 @@ void Foam::diameterModels::binaryBreakupModels::LuoSvendsen::precompute()
 }
 
 
-void
-Foam::diameterModels::binaryBreakupModels::LuoSvendsen::addToBinaryBreakupRate
+void Foam::populationBalance::binaryBreakupModels::LuoSvendsen::
+addToBinaryBreakupRate
 (
     volScalarField::Internal& binaryBreakupRate,
     const label i,
     const label j
 )
 {
-    const sizeGroup& fi = popBal_.sizeGroups()[i];
-    const sizeGroup& fj = popBal_.sizeGroups()[j];
+    const dimensionedScalar& dSphj = popBal_.dSph(j);
+    const dimensionedScalar& vi = popBal_.v(i);
+    const dimensionedScalar& vj = popBal_.v(j);
 
     const volScalarField::Internal& rhoc = popBal_.continuousPhase().rho();
 
-    tmp<volScalarField> tsigma(popBal_.sigmaWithContinuousPhase(fi.phase()));
+    tmp<volScalarField> tsigma(popBal_.sigmaWithContinuousPhase(i));
     const volScalarField::Internal& sigma = tsigma();
 
     tmp<volScalarField> tepsilonc(popBal_.continuousTurbulence().epsilon());
@@ -182,18 +183,18 @@ Foam::diameterModels::binaryBreakupModels::LuoSvendsen::addToBinaryBreakupRate
 
     const dimensionedScalar cf
     (
-        pow(fi.x()/fj.x(), 2.0/3.0) + pow((1 - fi.x()/fj.x()), 2.0/3.0) - 1
+        pow(vi/vj, 2.0/3.0) + pow((1 - vi/vj), 2.0/3.0) - 1
     );
 
     const volScalarField::Internal b
     (
         12*cf*sigma
-       /(beta_*rhoc*pow(fj.dSph(), 5.0/3.0)*pow(epsilonc, 2.0/3.0))
+       /(beta_*rhoc*pow(dSphj, 5.0/3.0)*pow(epsilonc, 2.0/3.0))
     );
 
     const volScalarField::Internal xiMin
     (
-        minEddyRatio_*kolmogorovLengthScale_/fj.dSph()
+        minEddyRatio_*kolmogorovLengthScale_/dSphj
     );
 
     const volScalarField::Internal tMin(b/pow(xiMin, 11.0/3.0));
@@ -214,8 +215,8 @@ Foam::diameterModels::binaryBreakupModels::LuoSvendsen::addToBinaryBreakupRate
     binaryBreakupRate +=
         C4_
        *(1 - popBal_.alphas()())
-       /fj.x()
-       *cbrt(epsilonc/sqr(fj.dSph()))
+       /vj
+       *cbrt(epsilonc/sqr(dSphj))
        *integral;
 }
 

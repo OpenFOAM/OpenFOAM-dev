@@ -65,7 +65,7 @@ Usage
     \endtable
 
 See also
-    Foam::diameterModels::populationBalanceModel
+    Foam::populationBalanceModel
     Foam::functionObjects::fvMeshFunctionObject
     Foam::fvCellZone
     Foam::functionObject
@@ -194,15 +194,17 @@ private:
         //- Field averaged coordinate value
         scalar averageCoordinateValue
         (
-            const diameterModels::sizeGroup& fi,
-            const coordinateType& cType
+            const populationBalanceModel&,
+            const label i,
+            const coordinateType&
         );
 
         //- Weighted average
         scalar weightedAverage
         (
-            const scalarField& fld,
-            const diameterModels::sizeGroup& fi
+            const populationBalanceModel&,
+            const label i,
+            const scalarField& field
         );
 
 

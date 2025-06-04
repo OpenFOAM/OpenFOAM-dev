@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ Class
 
 Description
     Sets the population balance size distribution by overwriting the values in
-    the size-group fraction fields with values obtained by integrating a given
+    the group fraction fields with values obtained by integrating a given
     distribution.
 
     This function will only execute in post-processing mode.
@@ -42,7 +42,7 @@ Description
 
         //phase       air1; // <-- alternative to specifying
                             //     'populationBalance' if only a single phase's
-                            //     size group fractions are to be set
+                            //     group fractions are to be set
 
         distribution
         {
@@ -64,7 +64,7 @@ Usage
     \endtable
 
 See also
-    Foam::diameterModels::populationBalanceModel
+    Foam::populationBalanceModel
     Foam::functionObjects::fvMeshFunctionObject
     Foam::functionObject
 
@@ -146,7 +146,7 @@ public:
         //- Execute. Does nothing.
         virtual bool execute();
 
-        //- Calculate and write the size group fraction fields
+        //- Calculate and write the group fraction fields
         virtual bool write();
 
 

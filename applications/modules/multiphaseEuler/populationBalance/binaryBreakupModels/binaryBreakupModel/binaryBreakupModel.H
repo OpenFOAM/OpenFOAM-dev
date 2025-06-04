@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::diameterModels::binaryBreakupModel
+    Foam::populationBalance::binaryBreakupModel
 
 Description
     Base class for binary breakup models that provide a breakup rate between a
@@ -30,7 +30,7 @@ Description
     distribution function.
 
 See also
-    Foam::diameterModels::populationBalanceModel
+    Foam::populationBalanceModel
 
 SourceFiles
     binaryBreakupModel.C
@@ -46,7 +46,7 @@ SourceFiles
 
 namespace Foam
 {
-namespace diameterModels
+namespace populationBalance
 {
 
 /*---------------------------------------------------------------------------*\
@@ -153,7 +153,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace diameterModels
+} // End namespace populationBalance
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

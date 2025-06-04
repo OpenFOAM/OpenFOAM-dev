@@ -26,7 +26,7 @@ Class
 
 Description
     Base class for source conditions which create a growth source terms for
-    secondary properties of the size-groups of a population balance model.
+    secondary properties of the groups of a population balance model.
 
 SourceFiles
     growthSecondaryPropertyFvScalarFieldSource.C
@@ -37,7 +37,7 @@ SourceFiles
 #define growthSecondaryPropertyFvScalarFieldSource_H
 
 #include "growthFvScalarFieldSource.H"
-#include "secondaryPropertyFvScalarFieldSource.H"
+#include "groupPropertyFvScalarField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -51,7 +51,7 @@ namespace Foam
 class growthSecondaryPropertyFvScalarFieldSource
 :
     public growthFvScalarFieldSource,
-    public secondaryPropertyFvScalarFieldSource
+    public groupPropertyFvScalarField
 {
 public:
 
@@ -74,10 +74,10 @@ public:
 
     // Member Functions
 
-        //- Return the value transported from the adjacent group
+        //- Return the value transported from an adjacent group
         virtual tmp<DimensionedField<scalar, volMesh>> value
         (
-            const label i,
+            const label j,
             const fvSource& model
         ) const = 0;
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ License
 
 namespace Foam
 {
-namespace diameterModels
+namespace populationBalance
 {
     defineTypeNameAndDebug(daughterSizeDistributionModel, 0);
     defineRunTimeSelectionTable(daughterSizeDistributionModel, dictionary);
@@ -40,8 +40,8 @@ namespace diameterModels
 
 // * * * * * * * * * * * * * * * * Selector  * * * * * * * * * * * * * * * * //
 
-Foam::autoPtr<Foam::diameterModels::daughterSizeDistributionModel>
-Foam::diameterModels::daughterSizeDistributionModel::New
+Foam::autoPtr<Foam::populationBalance::daughterSizeDistributionModel>
+Foam::populationBalance::daughterSizeDistributionModel::New
 (
     const breakupModel& breakup,
     const dictionary& dict
@@ -76,7 +76,7 @@ Foam::diameterModels::daughterSizeDistributionModel::New
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 
-Foam::diameterModels::daughterSizeDistributionModel::
+Foam::populationBalance::daughterSizeDistributionModel::
 daughterSizeDistributionModel
 (
     const breakupModel& breakup,
@@ -90,7 +90,7 @@ daughterSizeDistributionModel
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::diameterModels::daughterSizeDistributionModel::
+Foam::populationBalance::daughterSizeDistributionModel::
 ~daughterSizeDistributionModel()
 {}
 
@@ -98,7 +98,7 @@ Foam::diameterModels::daughterSizeDistributionModel::
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 const Foam::dimensionedScalar&
-Foam::diameterModels::daughterSizeDistributionModel::nik
+Foam::populationBalance::daughterSizeDistributionModel::nik
 (
     const label i,
     const label k
@@ -108,11 +108,11 @@ Foam::diameterModels::daughterSizeDistributionModel::nik
 }
 
 
-void Foam::diameterModels::daughterSizeDistributionModel::precompute()
+void Foam::populationBalance::daughterSizeDistributionModel::precompute()
 {
     if (nik_.size() == 0)
     {
-        forAll(breakup_.popBal().sizeGroups(), k)
+        forAll(breakup_.popBal().phases(), k)
         {
             nik_.append(new PtrList<dimensionedScalar>());
 

@@ -1,4 +1,4 @@
-uniformGrowthSizeGroupFvScalarFieldSource.C
+uniformGrowthGroupFractionFvScalarFieldSource.C
 uniformGrowth.C
 
 LIB = $(FOAM_USER_LIBBIN)/libuniformGrowth

@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::diameterModels::coalescenceModels::PrinceBlanch
+    Foam::populationBalance::coalescenceModels::PrinceBlanch
 
 Description
     Model of Prince and Blanch (1990). The coalescence rate is calculated by
@@ -145,7 +145,7 @@ SourceFiles
 
 namespace Foam
 {
-namespace diameterModels
+namespace populationBalance
 {
 namespace coalescenceModels
 {
@@ -219,7 +219,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace coalescenceModels
-} // End namespace diameterModels
+} // End namespace populationBalance
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -20,9 +20,9 @@ gas
 {
     type            purePhaseModel;
 
-    diameterModel   constant;
-    constantCoeffs
+    diameterModel
     {
+        type            constant;
         d               0.001;
     }
 
@@ -33,9 +33,9 @@ liquid
 {
     type            purePhaseModel;
 
-    diameterModel   residualDiameter;
-    residualDiameterCoeffs
+    diameterModel
     {
+        type            residualDiameter;
         d               0.003;
         dResidual       0.0001;
     }
@@ -47,9 +47,9 @@ solid
 {
     type            pureStationaryPhaseModel;
 
-    diameterModel   constant;
-    constantCoeffs
+    diameterModel
     {
+        type            constant;
         d               0.01;
     }
 

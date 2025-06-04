@@ -16,52 +16,15 @@ FoamFile
 
 phases          (particles water);
 
-populationBalances (agglomerates);
-
 particles
 {
     type            pureIsothermalPhaseModel;
 
-    diameterModel   velocityGroup;
-    velocityGroupCoeffs
+    diameterModel
     {
+        type            populationBalance;
         populationBalance agglomerates;
-
-        shapeModel spherical;
-
-        sizeGroups
-        (
-            { dSph 1e-6; }
-            { dSph 1.21e-6; }
-            { dSph 1.463e-6; }
-            { dSph 1.77e-6; }
-            { dSph 2.142e-6; }
-            { dSph 2.591e-6; }
-            { dSph 3.134e-6; }
-            { dSph 3.792e-6; }
-            { dSph 4.587e-6; }
-            { dSph 5.549e-6; }
-            { dSph 6.71e-6; }
-            { dSph 8.12e-6; }
-            { dSph 9.82e-6; }
-            { dSph 11.88e-6; }
-            { dSph 14.38e-6; }
-            { dSph 17.39e-6; }
-            { dSph 21.04e-6; }
-            { dSph 25.45e-6; }
-            { dSph 30.79e-6; }
-            { dSph 37.24e-6; }
-            { dSph 45.06e-6; }
-            { dSph 54.51e-6; }
-            { dSph 65.94e-6; }
-            { dSph 79.77e-6; }
-            { dSph 96.49e-6; }
-            { dSph 116.7e-6; }
-            { dSph 141.2e-6; }
-            { dSph 170.8e-6; }
-            { dSph 206.7e-6; }
-            { dSph 250e-6; }
-        );
+        nGroups         30;
     }
 
     alphaMax        0.62;
@@ -89,33 +52,39 @@ blending
 surfaceTension
 {}
 
-populationBalanceCoeffs
+agglomerates
 {
-    agglomerates
+    continuousPhase water;
+
+    sphericalDiameters
     {
-        continuousPhase water;
-
-        coalescenceModels
-        (
-            AdachiStuartFokkink
-            {}
-        );
-
-        binaryBreakupModels
-        ();
-
-        breakupModels
-        (
-            Kusters
-            {
-                daughterSizeDistributionModel Laakkonen;
-                C4 2;
-                B 50e-7;
-                dP 250e-9;
-                Df 2.4;
-            }
-        );
+        type            exponential;
+        min             1e-6;
+        max             250e-6;
     }
+
+    shapeModel      spherical;
+
+    coalescenceModels
+    (
+        AdachiStuartFokkink
+        {}
+    );
+
+    breakupModels
+    (
+        Kusters
+        {
+            daughterSizeDistributionModel Laakkonen;
+            C4 2;
+            B 50e-7;
+            dP 250e-9;
+            Df 2.4;
+        }
+    );
+
+    binaryBreakupModels
+    ();
 }
 
 // ************************************************************************* //

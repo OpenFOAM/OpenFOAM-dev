@@ -20,10 +20,10 @@ gas
 {
     type            purePhaseModel;
 
-    diameterModel   IATE;
-
-    IATECoeffs
+    diameterModel
     {
+        type            IATE;
+
         dMax            1e-2;
         dMin            1e-4;
 

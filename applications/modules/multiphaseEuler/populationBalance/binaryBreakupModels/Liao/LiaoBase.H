@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::diameterModels::LiaoBase
+    Foam::populationBalance::LiaoBase
 
 Description
     Base class for coalescence and breakup models of Liao et al. (2015).
@@ -51,7 +51,7 @@ SourceFiles
 
 namespace Foam
 {
-namespace diameterModels
+namespace populationBalance
 {
 
 /*---------------------------------------------------------------------------*\
@@ -108,7 +108,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace diameterModels
+} // End namespace populationBalance
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

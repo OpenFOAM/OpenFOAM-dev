@@ -42,13 +42,13 @@ sources
 {
     reactionDrivenPhaseChange
     {
-        type                uniformFixedValueSurfaceAreaVolumeRatio;
+        type                uniformFixedValueGroupSurfaceAreaVolumeRatio;
         uniformValue        1.5e10;
     }
 
     surfaceReactionDrivenPhaseChange
     {
-        type                ParkRogakSurfaceAreaVolumeRatio;
+        type                ParkRogakGroupSurfaceAreaVolumeRatio;
     }
 }
 

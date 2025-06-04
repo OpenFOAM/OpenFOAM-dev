@@ -23,6 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "populationBalanceModel.H"
 #include "populationBalanceSizeDistribution.H"
 #include "polyTopoChangeMap.H"
 #include "polyMeshMap.H"
@@ -202,7 +203,8 @@ Foam::functionObjects::populationBalanceSizeDistribution::filterField
 Foam::scalar
 Foam::functionObjects::populationBalanceSizeDistribution::averageCoordinateValue
 (
-    const Foam::diameterModels::sizeGroup& fi,
+    const populationBalanceModel& popBal,
+    const label i,
     const coordinateType& cType
 )
 {
@@ -212,28 +214,26 @@ Foam::functionObjects::populationBalanceSizeDistribution::averageCoordinateValue
     {
         case coordinateType::volume:
         {
-            averageCoordinateValue = fi.x().value();
+            averageCoordinateValue = popBal.v(i).value();
 
             break;
         }
         case coordinateType::area:
         {
-            averageCoordinateValue =
-                weightedAverage(fi.a(), fi);
+            averageCoordinateValue = weightedAverage(popBal, i, popBal.a(i));
 
             break;
         }
         case coordinateType::diameter:
         {
-            averageCoordinateValue =
-                weightedAverage(fi.d(), fi);
+            averageCoordinateValue = weightedAverage(popBal, i, popBal.d(i));
 
             break;
         }
         case coordinateType::projectedAreaDiameter:
         {
             averageCoordinateValue =
-                weightedAverage(sqrt(fi.a()/pi), fi);
+                weightedAverage(popBal, i, sqrt(popBal.a(i)/pi));
 
             break;
         }
@@ -246,61 +246,65 @@ Foam::functionObjects::populationBalanceSizeDistribution::averageCoordinateValue
 Foam::scalar
 Foam::functionObjects::populationBalanceSizeDistribution::weightedAverage
 (
-    const Foam::scalarField& fld,
-    const Foam::diameterModels::sizeGroup& fi
+    const populationBalanceModel& popBal,
+    const label i,
+    const Foam::scalarField& field
 )
 {
+    const volScalarField& alpha = popBal.phases()[i];
+    const volScalarField& fi = popBal.f(i);
+
     scalar weightedAverage(Zero);
 
     switch (weightType_)
     {
         case weightType::numberConcentration:
         {
-            scalarField Ni(filterField(fi*fi.phase()/fi.x().value()));
+            scalarField Ni(filterField(fi*alpha/popBal.v(i).value()));
 
             if (gSum(Ni) == 0)
             {
                 weightedAverage =
-                    gSum(filterField(mesh_.V()*fld))/zone_.V();
+                    gSum(filterField(mesh_.V()*field))/zone_.V();
             }
             else
             {
                 weightedAverage =
-                    gSum(Ni*filterField(fld))/gSum(Ni);
+                    gSum(Ni*filterField(field))/gSum(Ni);
             }
 
             break;
         }
         case weightType::volumeConcentration:
         {
-            scalarField Vi(filterField(fi*fi.phase()));
+            scalarField Vi(filterField(fi*alpha));
 
             if (gSum(Vi) == 0)
             {
                 weightedAverage =
-                    gSum(filterField(mesh_.V()*fld))/zone_.V();
+                    gSum(filterField(mesh_.V()*field))/zone_.V();
             }
             else
             {
                 weightedAverage =
-                    gSum(Vi*filterField(fld))/gSum(Vi);
+                    gSum(Vi*filterField(field))/gSum(Vi);
             }
 
             break;
         }
         case weightType::areaConcentration:
         {
-            scalarField Ai(filterField(fi.a().ref()*fi.phase()));
+            scalarField Ai(filterField(popBal.a(i)()*alpha));
 
             if (gSum(Ai) == 0)
             {
                 weightedAverage =
-                    gSum(filterField(mesh_.V()*fld))/zone_.V();
+                    gSum(filterField(mesh_.V()*field))/zone_.V();
             }
             else
             {
                 weightedAverage =
-                    gSum(Ai*filterField(fld))/gSum(Ai);
+                    gSum(Ai*filterField(field))/gSum(Ai);
             }
 
             break;
@@ -308,7 +312,7 @@ Foam::functionObjects::populationBalanceSizeDistribution::weightedAverage
         case weightType::cellVolume:
         {
             weightedAverage =
-                gSum(filterField(mesh_.V()*fld))/zone_.V();
+                gSum(filterField(mesh_.V()*field))/zone_.V();
 
             break;
         }
@@ -394,24 +398,17 @@ bool Foam::functionObjects::populationBalanceSizeDistribution::write()
 {
     Log << type() << " " << name() << " write:" << nl;
 
-    const diameterModels::populationBalanceModel& popBal =
-        obr_.lookupObject<diameterModels::populationBalanceModel>
-        (
-            popBalName_
-        );
+    const populationBalanceModel& popBal =
+        obr_.lookupObject<populationBalanceModel>(popBalName_);
 
-    const UPtrList<diameterModels::sizeGroup>& sizeGroups =
-        popBal.sizeGroups();
+    scalarField coordinateValues(popBal.nGroups());
+    scalarField boundaryValues(popBal.nGroups() + 1);
+    scalarField resultValues(popBal.nGroups());
 
-    scalarField coordinateValues(sizeGroups.size());
-    scalarField boundaryValues(sizeGroups.size() + 1);
-    scalarField resultValues(sizeGroups.size());
-
-    forAll(sizeGroups, i)
+    forAll(popBal.fs(), i)
     {
-        const diameterModels::sizeGroup& fi = sizeGroups[i];
-
-        coordinateValues[i] = averageCoordinateValue(fi, coordinateType_);
+        coordinateValues[i] =
+            averageCoordinateValue(popBal, i, coordinateType_);
     }
 
     if
@@ -440,12 +437,14 @@ bool Foam::functionObjects::populationBalanceSizeDistribution::write()
     {
         case functionType::numberConcentration:
         {
-            forAll(sizeGroups, i)
+            forAll(popBal.fs(), i)
             {
-                const diameterModels::sizeGroup& fi = sizeGroups[i];
+                const volScalarField& alpha = popBal.phases()[i];
+                const volScalarField& fi = popBal.f(i);
+                const dimensionedScalar& vi = popBal.v(i);
 
                 resultValues[i] =
-                    gSum(filterField(mesh_.V()*fi*fi.phase()/fi.x()))/zone_.V();
+                    gSum(filterField(mesh_.V()*fi*alpha/vi))/zone_.V();
             }
 
             if (normalise_ && sum(resultValues) != 0)
@@ -457,12 +456,14 @@ bool Foam::functionObjects::populationBalanceSizeDistribution::write()
         }
         case functionType::numberDensity:
         {
-            forAll(sizeGroups, i)
+            forAll(popBal.fs(), i)
             {
-                const diameterModels::sizeGroup& fi = sizeGroups[i];
+                const volScalarField& alpha = popBal.phases()[i];
+                const volScalarField& fi = popBal.f(i);
+                const dimensionedScalar& vi = popBal.v(i);
 
                 resultValues[i] =
-                    gSum(filterField(mesh_.V()*fi*fi.phase()/fi.x()))/zone_.V();
+                    gSum(filterField(mesh_.V()*fi*alpha/vi))/zone_.V();
             }
 
             if (normalise_ && sum(resultValues) != 0)
@@ -479,12 +480,13 @@ bool Foam::functionObjects::populationBalanceSizeDistribution::write()
         }
         case functionType::volumeConcentration:
         {
-            forAll(sizeGroups, i)
+            forAll(popBal.fs(), i)
             {
-                const diameterModels::sizeGroup& fi = sizeGroups[i];
+                const volScalarField& alpha = popBal.phases()[i];
+                const volScalarField& fi = popBal.f(i);
 
                 resultValues[i] =
-                    gSum(filterField(mesh_.V()*fi*fi.phase()))/zone_.V();
+                    gSum(filterField(mesh_.V()*fi*alpha))/zone_.V();
             }
 
             if (normalise_ && sum(resultValues) != 0)
@@ -496,12 +498,13 @@ bool Foam::functionObjects::populationBalanceSizeDistribution::write()
         }
         case functionType::volumeDensity:
         {
-            forAll(sizeGroups, i)
+            forAll(popBal.fs(), i)
             {
-                const diameterModels::sizeGroup& fi = sizeGroups[i];
+                const volScalarField& alpha = popBal.phases()[i];
+                const volScalarField& fi = popBal.f(i);
 
                 resultValues[i] =
-                    gSum(filterField(mesh_.V()*fi*fi.phase()))/zone_.V();
+                    gSum(filterField(mesh_.V()*fi*alpha))/zone_.V();
             }
 
             if (normalise_ && sum(resultValues) != 0)
@@ -518,14 +521,16 @@ bool Foam::functionObjects::populationBalanceSizeDistribution::write()
         }
         case functionType::areaConcentration:
         {
-            forAll(sizeGroups, i)
+            forAll(popBal.fs(), i)
             {
-                const diameterModels::sizeGroup& fi = sizeGroups[i];
+                const volScalarField& alpha = popBal.phases()[i];
+                const volScalarField& fi = popBal.f(i);
+                const dimensionedScalar& vi = popBal.v(i);
 
                 resultValues[i] =
                     gSum
                     (
-                        filterField(mesh_.V()*fi.a().ref()*fi*fi.phase()/fi.x())
+                        filterField(mesh_.V()*popBal.a(i)()*fi*alpha/vi)
                     )
                    /zone_.V();
             }
@@ -539,14 +544,16 @@ bool Foam::functionObjects::populationBalanceSizeDistribution::write()
         }
         case functionType::areaDensity:
         {
-            forAll(sizeGroups, i)
+            forAll(popBal.fs(), i)
             {
-                const diameterModels::sizeGroup& fi = sizeGroups[i];
+                const volScalarField& alpha = popBal.phases()[i];
+                const volScalarField& fi = popBal.f(i);
+                const dimensionedScalar& vi = popBal.v(i);
 
                 resultValues[i] =
                     gSum
                     (
-                        filterField(mesh_.V()*fi.a().ref()*fi*fi.phase()/fi.x())
+                        filterField(mesh_.V()*popBal.a(i)()*fi*alpha/vi)
                     )
                    /zone_.V();
             }
@@ -578,18 +585,12 @@ bool Foam::functionObjects::populationBalanceSizeDistribution::write()
             otherCoordinateSymbolicNames[cType] =
                 coordinateTypeSymbolicName(cType);
 
-            otherCoordinateValues.set
-            (
-                cType,
-                new scalarField(popBal.sizeGroups().size())
-            );
+            otherCoordinateValues.set(cType, new scalarField(popBal.nGroups()));
 
-            forAll(sizeGroups, i)
+            forAll(popBal.fs(), i)
             {
-                const diameterModels::sizeGroup& fi = sizeGroups[i];
-
                 otherCoordinateValues[cType][i] =
-                    averageCoordinateValue(fi, cType);
+                    averageCoordinateValue(popBal, i, cType);
             }
         }
 

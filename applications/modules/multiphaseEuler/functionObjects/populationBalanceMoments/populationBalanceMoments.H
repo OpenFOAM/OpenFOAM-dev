@@ -63,7 +63,7 @@ Usage
     \endtable
 
 See also
-    Foam::diameterModels::populationBalanceModel
+    Foam::populationBalanceModel
     Foam::functionObjects::fvMeshFunctionObject
     Foam::functionObject
 
@@ -185,28 +185,16 @@ private:
         void setDimensions(volScalarField& fld, momentType momType);
 
         //- Total concentration
-        tmp<volScalarField> totalConcentration
-        (
-            const diameterModels::populationBalanceModel& popBal
-        );
+        tmp<volScalarField> totalConcentration(const populationBalanceModel&);
 
         //- Mean value
-        tmp<volScalarField> mean
-        (
-            const diameterModels::populationBalanceModel& popBal
-        );
+        tmp<volScalarField> mean(const populationBalanceModel&);
 
         //- Variance
-        tmp<volScalarField> variance
-        (
-            const diameterModels::populationBalanceModel& popBal
-        );
+        tmp<volScalarField> variance(const populationBalanceModel&);
 
         //- Standard deviation
-        tmp<volScalarField> stdDev
-        (
-            const diameterModels::populationBalanceModel& popBal
-        );
+        tmp<volScalarField> stdDev(const populationBalanceModel&);
 
 
 public:

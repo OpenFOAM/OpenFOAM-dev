@@ -31,7 +31,7 @@ License
 
 namespace Foam
 {
-namespace diameterModels
+namespace populationBalance
 {
 namespace coalescenceModels
 {
@@ -46,13 +46,10 @@ namespace coalescenceModels
 }
 }
 
-using Foam::constant::physicoChemical::k;
-using Foam::constant::mathematical::pi;
-
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::diameterModels::coalescenceModels::BrownianCollisions::
+Foam::populationBalance::coalescenceModels::BrownianCollisions::
 BrownianCollisions
 (
     const populationBalanceModel& popBal,
@@ -85,8 +82,12 @@ BrownianCollisions
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::diameterModels::coalescenceModels::BrownianCollisions::precompute()
+void Foam::populationBalance::coalescenceModels::BrownianCollisions::
+precompute()
 {
+    using Foam::constant::physicoChemical::k;
+    using Foam::constant::mathematical::pi;
+
     const volScalarField::Internal& p =
         popBal_.continuousPhase().fluidThermo().p();
 
@@ -96,7 +97,7 @@ void Foam::diameterModels::coalescenceModels::BrownianCollisions::precompute()
 }
 
 
-void Foam::diameterModels::coalescenceModels::BrownianCollisions::
+void Foam::populationBalance::coalescenceModels::BrownianCollisions::
 addToCoalescenceRate
 (
     volScalarField::Internal& coalescenceRate,
@@ -104,12 +105,11 @@ addToCoalescenceRate
     const label j
 )
 {
-    const sizeGroup& fi = popBal_.sizeGroups()[i];
-    const sizeGroup& fj = popBal_.sizeGroups()[j];
+    using Foam::constant::physicoChemical::k;
 
-    tmp<volScalarField> tdi = fi.d();
+    tmp<volScalarField> tdi = popBal_.d(i);
     const volScalarField::Internal& di = tdi();
-    tmp<volScalarField> tdj = fj.d();
+    tmp<volScalarField> tdj = popBal_.d(j);
     const volScalarField::Internal& dj = tdj();
 
     const volScalarField::Internal& Tc = popBal_.continuousPhase().thermo().T();

@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::diameterModels::coalescenceModels::turbulentShear
+    Foam::populationBalance::coalescenceModels::turbulentShear
 
 Description
     Model describing coagulation due to turbulent shear. Utilises physical, i.e.
@@ -42,7 +42,7 @@ SourceFiles
 
 namespace Foam
 {
-namespace diameterModels
+namespace populationBalance
 {
 namespace coalescenceModels
 {
@@ -96,7 +96,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace coalescenceModels
-} // End namespace diameterModels
+} // End namespace populationBalance
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

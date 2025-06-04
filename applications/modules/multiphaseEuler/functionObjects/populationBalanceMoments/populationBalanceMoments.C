@@ -350,7 +350,7 @@ void Foam::functionObjects::populationBalanceMoments::setDimensions
 Foam::tmp<Foam::volScalarField>
 Foam::functionObjects::populationBalanceMoments::totalConcentration
 (
-    const diameterModels::populationBalanceModel& popBal
+    const populationBalanceModel& popBal
 )
 {
     tmp<volScalarField> tTotalConcentration
@@ -391,27 +391,29 @@ Foam::functionObjects::populationBalanceMoments::totalConcentration
         }
     }
 
-    forAll(popBal.sizeGroups(), i)
+    forAll(popBal.fs(), i)
     {
-        const Foam::diameterModels::sizeGroup& fi = popBal.sizeGroups()[i];
+        const volScalarField& alpha = popBal.phases()[i];
+        const volScalarField& fi = popBal.f(i);
+        const dimensionedScalar& vi = popBal.v(i);
 
         switch (weightType_)
         {
             case weightType::numberConcentration:
             {
-                totalConcentration += fi*fi.phase()/fi.x();
+                totalConcentration += fi*alpha/vi;
 
                 break;
             }
             case weightType::volumeConcentration:
             {
-                totalConcentration += fi*fi.phase();
+                totalConcentration += fi*alpha;
 
                 break;
             }
             case weightType::areaConcentration:
             {
-                totalConcentration += fi.a()*fi*fi.phase()/fi.x();
+                totalConcentration += popBal.a(i)*fi*alpha/vi;
 
                 break;
             }
@@ -425,7 +427,7 @@ Foam::functionObjects::populationBalanceMoments::totalConcentration
 Foam::tmp<Foam::volScalarField>
 Foam::functionObjects::populationBalanceMoments::mean
 (
-    const diameterModels::populationBalanceModel& popBal
+    const populationBalanceModel& popBal
 )
 {
     tmp<volScalarField> tMean
@@ -444,23 +446,25 @@ Foam::functionObjects::populationBalanceMoments::mean
 
     volScalarField totalConcentration(this->totalConcentration(popBal));
 
-    forAll(popBal.sizeGroups(), i)
+    forAll(popBal.fs(), i)
     {
-        const Foam::diameterModels::sizeGroup& fi = popBal.sizeGroups()[i];
+        const volScalarField& alpha = popBal.phases()[i];
+        const volScalarField& fi = popBal.f(i);
+        const dimensionedScalar& vi = popBal.v(i);
 
-        volScalarField concentration(fi*fi.phase()/fi.x());
+        volScalarField concentration(fi*alpha/vi);
 
         switch (weightType_)
         {
             case weightType::volumeConcentration:
             {
-                concentration *= fi.x();
+                concentration *= vi;
 
                 break;
             }
             case weightType::areaConcentration:
             {
-                concentration *= fi.a();
+                concentration *= popBal.a(i);
 
                 break;
             }
@@ -483,7 +487,7 @@ Foam::functionObjects::populationBalanceMoments::mean
                         dimensionedScalar unitVolume(dimVolume, 1);
 
                         mean +=
-                            Foam::log(fi.x()/unitVolume)
+                            Foam::log(vi/unitVolume)
                            *concentration/totalConcentration;
 
                         break;
@@ -493,7 +497,7 @@ Foam::functionObjects::populationBalanceMoments::mean
                         dimensionedScalar unitArea(dimArea, 1);
 
                         mean +=
-                            Foam::log(fi.a()/unitArea)
+                            Foam::log(popBal.a(i)/unitArea)
                            *concentration/totalConcentration;
 
                         break;
@@ -503,7 +507,7 @@ Foam::functionObjects::populationBalanceMoments::mean
                         dimensionedScalar unitLength(dimLength, 1);
 
                         mean +=
-                            Foam::log(fi.d()/unitLength)
+                            Foam::log(popBal.d(i)/unitLength)
                            *concentration/totalConcentration;
 
                         break;
@@ -518,19 +522,19 @@ Foam::functionObjects::populationBalanceMoments::mean
                 {
                     case coordinateType::volume:
                     {
-                        mean += fi.x()*concentration/totalConcentration;
+                        mean += vi*concentration/totalConcentration;
 
                         break;
                     }
                     case coordinateType::area:
                     {
-                        mean += fi.a()*concentration/totalConcentration;
+                        mean += popBal.a(i)*concentration/totalConcentration;
 
                         break;
                     }
                     case coordinateType::diameter:
                     {
-                        mean += fi.d()*concentration/totalConcentration;
+                        mean += popBal.d(i)*concentration/totalConcentration;
 
                         break;
                     }
@@ -555,7 +559,7 @@ Foam::functionObjects::populationBalanceMoments::mean
 Foam::tmp<Foam::volScalarField>
 Foam::functionObjects::populationBalanceMoments::variance
 (
-    const diameterModels::populationBalanceModel& popBal
+    const populationBalanceModel& popBal
 )
 {
     tmp<volScalarField> tVariance
@@ -575,23 +579,25 @@ Foam::functionObjects::populationBalanceMoments::variance
     volScalarField totalConcentration(this->totalConcentration(popBal));
     volScalarField mean(this->mean(popBal));
 
-    forAll(popBal.sizeGroups(), i)
+    forAll(popBal.fs(), i)
     {
-        const Foam::diameterModels::sizeGroup& fi = popBal.sizeGroups()[i];
+        const volScalarField& alpha = popBal.phases()[i];
+        const volScalarField& fi = popBal.f(i);
+        const dimensionedScalar& vi = popBal.v(i);
 
-        volScalarField concentration(fi*fi.phase()/fi.x());
+        volScalarField concentration(fi*alpha/vi);
 
         switch (weightType_)
         {
             case weightType::volumeConcentration:
             {
-                concentration *= fi.x();
+                concentration *= vi;
 
                 break;
             }
             case weightType::areaConcentration:
             {
-                concentration *= fi.a();
+                concentration *= popBal.a(i);
 
                 break;
             }
@@ -610,7 +616,7 @@ Foam::functionObjects::populationBalanceMoments::variance
                     case coordinateType::volume:
                     {
                         variance +=
-                            sqr(Foam::log(fi.x()/mean))
+                            sqr(Foam::log(vi/mean))
                            *concentration/totalConcentration;
 
                         break;
@@ -618,7 +624,7 @@ Foam::functionObjects::populationBalanceMoments::variance
                     case coordinateType::area:
                     {
                         variance +=
-                            sqr(Foam::log(fi.a()/mean))
+                            sqr(Foam::log(popBal.a(i)/mean))
                            *concentration/totalConcentration;
 
                         break;
@@ -626,7 +632,7 @@ Foam::functionObjects::populationBalanceMoments::variance
                     case coordinateType::diameter:
                     {
                         variance +=
-                            sqr(Foam::log(fi.d()/mean))
+                            sqr(Foam::log(popBal.d(i)/mean))
                            *concentration/totalConcentration;
 
                         break;
@@ -642,21 +648,25 @@ Foam::functionObjects::populationBalanceMoments::variance
                     case coordinateType::volume:
                     {
                         variance +=
-                            sqr(fi.x() - mean)*concentration/totalConcentration;
+                            sqr(vi - mean)*concentration/totalConcentration;
 
                         break;
                     }
                     case coordinateType::area:
                     {
                         variance +=
-                            sqr(fi.a() - mean)*concentration/totalConcentration;
+                            sqr(popBal.a(i) - mean)
+                           *concentration
+                           /totalConcentration;
 
                         break;
                     }
                     case coordinateType::diameter:
                     {
                         variance +=
-                            sqr(fi.d() - mean)*concentration/totalConcentration;
+                            sqr(popBal.d(i) - mean)
+                           *concentration
+                           /totalConcentration;
 
                         break;
                     }
@@ -674,7 +684,7 @@ Foam::functionObjects::populationBalanceMoments::variance
 Foam::tmp<Foam::volScalarField>
 Foam::functionObjects::populationBalanceMoments::stdDev
 (
-    const diameterModels::populationBalanceModel& popBal
+    const populationBalanceModel& popBal
 )
 {
     switch (meanType_)
@@ -854,11 +864,8 @@ Foam::functionObjects::populationBalanceMoments::read(const dictionary& dict)
 
 bool Foam::functionObjects::populationBalanceMoments::execute()
 {
-    const diameterModels::populationBalanceModel& popBal =
-        obr_.lookupObject<diameterModels::populationBalanceModel>
-        (
-            popBalName_
-        );
+    const populationBalanceModel& popBal =
+        obr_.lookupObject<populationBalanceModel>(popBalName_);
 
     switch (momentType_)
     {
@@ -868,24 +875,25 @@ bool Foam::functionObjects::populationBalanceMoments::execute()
 
             integerMoment = Zero;
 
-            forAll(popBal.sizeGroups(), i)
+            forAll(popBal.fs(), i)
             {
-                const Foam::diameterModels::sizeGroup& fi =
-                    popBal.sizeGroups()[i];
+                const volScalarField& alpha = popBal.phases()[i];
+                const volScalarField& fi = popBal.f(i);
+                const dimensionedScalar& vi = popBal.v(i);
 
-                volScalarField concentration(fi*fi.phase()/fi.x());
+                volScalarField concentration(fi*alpha/vi);
 
                 switch (weightType_)
                 {
                     case weightType::volumeConcentration:
                     {
-                        concentration *= fi.x();
+                        concentration *= vi;
 
                         break;
                     }
                     case weightType::areaConcentration:
                     {
-                        concentration *= fi.a();
+                        concentration *= popBal.a(i);
 
                         break;
                     }
@@ -900,21 +908,21 @@ bool Foam::functionObjects::populationBalanceMoments::execute()
                     case coordinateType::volume:
                     {
                         integerMoment +=
-                            pow(fi.x(), order_)*concentration;
+                            pow(vi, order_)*concentration;
 
                         break;
                     }
                     case coordinateType::area:
                     {
                         integerMoment +=
-                            pow(fi.a(), order_)*concentration;
+                            pow(popBal.a(i), order_)*concentration;
 
                         break;
                     }
                     case coordinateType::diameter:
                     {
                         integerMoment +=
-                            pow(fi.d(), order_)*concentration;
+                            pow(popBal.d(i), order_)*concentration;
 
                         break;
                     }

@@ -31,7 +31,7 @@ License
 
 namespace Foam
 {
-namespace diameterModels
+namespace populationBalance
 {
 namespace binaryBreakupModels
 {
@@ -46,11 +46,11 @@ namespace binaryBreakupModels
 }
 }
 
-using Foam::constant::mathematical::pi;
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::diameterModels::binaryBreakupModels::LehrMilliesMewes::LehrMilliesMewes
+Foam::populationBalance::binaryBreakupModels::LehrMilliesMewes::
+LehrMilliesMewes
 (
     const populationBalanceModel& popBal,
     const dictionary& dict
@@ -62,7 +62,7 @@ Foam::diameterModels::binaryBreakupModels::LehrMilliesMewes::LehrMilliesMewes
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::diameterModels::binaryBreakupModels::LehrMilliesMewes::
+void Foam::populationBalance::binaryBreakupModels::LehrMilliesMewes::
 addToBinaryBreakupRate
 (
     volScalarField::Internal& binaryBreakupRate,
@@ -70,12 +70,14 @@ addToBinaryBreakupRate
     const label j
 )
 {
-    const sizeGroup& fi = popBal_.sizeGroups()[i];
-    const sizeGroup& fj = popBal_.sizeGroups()[j];
+    using Foam::constant::mathematical::pi;
+
+    const dimensionedScalar& dSphi = popBal_.dSph(i);
+    const dimensionedScalar& dSphj = popBal_.dSph(j);
 
     const volScalarField::Internal& rhoc = popBal_.continuousPhase().rho();
 
-    tmp<volScalarField> tsigma(popBal_.sigmaWithContinuousPhase(fj.phase()));
+    tmp<volScalarField> tsigma(popBal_.sigmaWithContinuousPhase(j));
     const volScalarField::Internal& sigma = tsigma();
 
     tmp<volScalarField> tepsilonc(popBal_.continuousTurbulence().epsilon());
@@ -96,11 +98,11 @@ addToBinaryBreakupRate
     );
 
     binaryBreakupRate +=
-        0.5*pow(fj.dSph()/L, 5.0/3.0)
-       *exp(-sqrt(2.0)/pow3(fj.dSph()/L))
-       *6/pow(pi, 1.5)/pow3(fi.dSph()/L)
-       *exp(-9.0/4.0*sqr(log(pow(2.0, 0.4)*fi.dSph()/L)))
-       /max(1 + erf(1.5*log(pow(2.0, 1.0/15.0)*fj.dSph()/L)), small)
+        0.5*pow(dSphj/L, 5.0/3.0)
+       *exp(-sqrt(2.0)/pow3(dSphj/L))
+       *6/pow(pi, 1.5)/pow3(dSphi/L)
+       *exp(-9.0/4.0*sqr(log(pow(2.0, 0.4)*dSphi/L)))
+       /max(1 + erf(1.5*log(pow(2.0, 1.0/15.0)*dSphj/L)), small)
        /(T*pow3(L));
 }
 

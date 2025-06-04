@@ -36,7 +36,7 @@ growthSecondaryPropertyFvScalarFieldSource
 )
 :
     growthFvScalarFieldSource(iF, dict),
-    secondaryPropertyFvScalarFieldSource(iF)
+    groupPropertyFvScalarField(iF)
 {}
 
 
@@ -48,7 +48,7 @@ growthSecondaryPropertyFvScalarFieldSource
 )
 :
     growthFvScalarFieldSource(field, iF),
-    secondaryPropertyFvScalarFieldSource(iF)
+    groupPropertyFvScalarField(iF)
 {}
 
 
@@ -61,7 +61,9 @@ Foam::growthSecondaryPropertyFvScalarFieldSource::internalCoeff
     const DimensionedField<scalar, volMesh>& source
 ) const
 {
-    const diameterModels::sizeGroup& fi = this->fi();
+    const populationBalanceModel& popBal = this->popBal();
+    const label i = this->i();
+    const volScalarField& fi = popBal.f(i);
 
     return fi.sources()[model.name()].internalCoeff(model, source)*fi;
 }
@@ -73,9 +75,9 @@ Foam::growthSecondaryPropertyFvScalarFieldSource::sourceCoeffs
     const fvSource& model
 ) const
 {
-    const diameterModels::sizeGroup& fi = this->fi();
-    const UPtrList<diameterModels::sizeGroup>& popBalFis =
-        fi.group().popBal().sizeGroups();
+    const populationBalanceModel& popBal = this->popBal();
+    const label i = this->i();
+    const volScalarField& fi = popBal.f(i);
 
     Pair<tmp<DimensionedField<scalar, volMesh>>> fiSourceCoeffs =
         refCast<const growthFvScalarFieldSource>
@@ -85,14 +87,14 @@ Foam::growthSecondaryPropertyFvScalarFieldSource::sourceCoeffs
 
     Pair<tmp<DimensionedField<scalar, volMesh>>> tsourceCoeffs;
 
-    if (fi.i() != 0)
+    if (i != 0)
     {
-        tsourceCoeffs.first() = fiSourceCoeffs.first()*value(-1, model);
+        tsourceCoeffs.first() = fiSourceCoeffs.first()*value(i - 1, model);
     }
 
-    if (fi.i() != popBalFis.size() - 1)
+    if (i != popBal.nGroups() - 1)
     {
-        tsourceCoeffs.second() = fiSourceCoeffs.second()*value(+1, model);
+        tsourceCoeffs.second() = fiSourceCoeffs.second()*value(i + 1, model);
     }
 
     return tsourceCoeffs;
@@ -106,17 +108,16 @@ Foam::growthSecondaryPropertyFvScalarFieldSource::sourceCoeff
     const DimensionedField<scalar, volMesh>& source
 ) const
 {
-    const diameterModels::sizeGroup& fi = this->fi();
-    const UPtrList<diameterModels::sizeGroup>& velGrpFis =
-        fi.group().sizeGroups();
+    const populationBalanceModel& popBal = this->popBal();
+    const label i = this->i();
 
     Pair<tmp<DimensionedField<scalar, volMesh>>> tsourceCoeffs =
         sourceCoeffs(model);
 
     return
-        fi.i() == velGrpFis.first().i()
+        i ==  popBal.diameters()[i].iFirst()
       ? neg(source)*tsourceCoeffs.second()
-      : fi.i() == velGrpFis.last().i()
+      : i == popBal.diameters()[i].iLast()
       ? pos(source)*tsourceCoeffs.first()
       : pos(source)*tsourceCoeffs.first()
       + neg(source)*tsourceCoeffs.second();

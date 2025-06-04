@@ -32,7 +32,7 @@ License
 
 namespace Foam
 {
-namespace diameterModels
+namespace populationBalance
 {
 namespace coalescenceModels
 {
@@ -47,12 +47,10 @@ namespace coalescenceModels
 }
 }
 
-using Foam::constant::mathematical::pi;
-
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::diameterModels::coalescenceModels::LiaoCoalescence::LiaoCoalescence
+Foam::populationBalance::coalescenceModels::LiaoCoalescence::LiaoCoalescence
 (
     const populationBalanceModel& popBal,
     const dictionary& dict
@@ -159,27 +157,25 @@ Foam::diameterModels::coalescenceModels::LiaoCoalescence::LiaoCoalescence
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::diameterModels::coalescenceModels::LiaoCoalescence::precompute()
+void Foam::populationBalance::coalescenceModels::LiaoCoalescence::precompute()
 {
     LiaoBase::precompute();
 
     CPack_ = min(PMax_/max(PMax_ - popBal_.alphas(), small), CPackMax_);
 
-    const sizeGroup& f0 = popBal_.sizeGroups().first();
-
     const volScalarField::Internal& rhoc = popBal_.continuousPhase().rho();
 
-    tmp<volScalarField> tsigma(popBal_.sigmaWithContinuousPhase(f0.phase()));
+    tmp<volScalarField> tsigma(popBal_.sigmaWithContinuousPhase(0));
     const volScalarField::Internal& sigma = tsigma();
 
     const uniformDimensionedVectorField& g =
         popBal_.mesh().lookupObject<uniformDimensionedVectorField>("g");
 
-    dCrit_ = 4*sqrt(sigma/(mag(g)*(rhoc - f0.phase().rho()())));
+    dCrit_ = 4*sqrt(sigma/(mag(g)*(rhoc - popBal_.phases().first().rho()())));
 }
 
 
-void Foam::diameterModels::coalescenceModels::LiaoCoalescence::
+void Foam::populationBalance::coalescenceModels::LiaoCoalescence::
 addToCoalescenceRate
 (
     volScalarField::Internal& coalescenceRate,
@@ -187,19 +183,21 @@ addToCoalescenceRate
     const label j
 )
 {
-    const sizeGroup& fi = popBal_.sizeGroups()[i];
-    const sizeGroup& fj = popBal_.sizeGroups()[j];
+    using Foam::constant::mathematical::pi;
+
+    const dimensionedScalar& dSphi = popBal_.dSph(i);
+    const dimensionedScalar& dSphj = popBal_.dSph(j);
 
     const volScalarField::Internal& rhoc = popBal_.continuousPhase().rho();
 
-    tmp<volScalarField> tsigma(popBal_.sigmaWithContinuousPhase(fi.phase()));
+    tmp<volScalarField> tsigma(popBal_.sigmaWithContinuousPhase(i));
     const volScalarField::Internal& sigma = tsigma();
 
     tmp<volScalarField> tmuc(popBal_.continuousPhase().fluidThermo().mu());
     const volScalarField::Internal& muc = tmuc();
 
-    dimensionedScalar dEq(2*fi.dSph()*fj.dSph()/(fi.dSph() + fj.dSph()));
-    dimensionedScalar Aij(pi*0.25*sqr(fi.dSph() + fj.dSph()));
+    dimensionedScalar dEq(2*dSphi*dSphj/(dSphi + dSphj));
+    dimensionedScalar Aij(pi*0.25*sqr(dSphi + dSphj));
 
     if (turbulence_)
     {
@@ -208,7 +206,7 @@ addToCoalescenceRate
 
         uRelTurb_ =
             CTurb_*sqrt(2.0)
-           *sqrt(sqr(cbrt(fi.dSph())) + sqr(cbrt(fj.dSph())))
+           *sqrt(sqr(cbrt(dSphi)) + sqr(cbrt(dSphj)))
            *cbrt(epsilonc);
     }
 
@@ -219,12 +217,12 @@ addToCoalescenceRate
 
     if (laminarShear_)
     {
-        uRelShear_ = CShear_*0.5/pi*(fi.dSph() + fj.dSph())*shearStrainRate_;
+        uRelShear_ = CShear_*0.5/pi*(dSphi + dSphj)*shearStrainRate_;
     }
 
     const volScalarField::Internal collisionEfficiency
     (
-        neg(kolmogorovLengthScale_ - (fi.dSph() + fj.dSph()))
+        neg(kolmogorovLengthScale_ - (dSphi + dSphj))
        *exp
         (
           - CEff_
@@ -236,7 +234,7 @@ addToCoalescenceRate
                *sqr(max(uRelTurb_, max(uRelBuoy_, uRelShear_)))
             )
         )
-      + pos0(kolmogorovLengthScale_ - (fi.dSph() + fj.dSph()))
+      + pos0(kolmogorovLengthScale_ - (dSphi + dSphj))
        *exp
         (
           - (3.0/4.0)
@@ -251,7 +249,7 @@ addToCoalescenceRate
     if (turbulence_)
     {
         coalescenceRate +=
-            neg(kolmogorovLengthScale_ - (fi.dSph() + fj.dSph()))
+            neg(kolmogorovLengthScale_ - (dSphi + dSphj))
            *CPack_
            *Aij
            *uRelTurb_
@@ -272,11 +270,11 @@ addToCoalescenceRate
     {
         const volScalarField::Internal uRelEddy
         (
-            CEddy_*0.5/pi*(fi.dSph() + fj.dSph())*eddyStrainRate_
+            CEddy_*0.5/pi*(dSphi + dSphj)*eddyStrainRate_
         );
 
         coalescenceRate +=
-            pos0(kolmogorovLengthScale_ - (fi.dSph() + fj.dSph()))
+            pos0(kolmogorovLengthScale_ - (dSphi + dSphj))
            *CPack_
            *0.5
            *Aij
@@ -295,19 +293,19 @@ addToCoalescenceRate
            *0.125
            *pi
            *(
-                sqr(fi.dSph())
+                sqr(dSphi)
                *uRelWakeI
-               *pos0(fi.dSph() - 0.5*dCrit_)
+               *pos0(dSphi - 0.5*dCrit_)
                *(
-                    pow6(fi.dSph() - 0.5*dCrit_)
-                   /(pow6(fi.dSph() - 0.5*dCrit_) + pow6(0.5*dCrit_))
+                    pow6(dSphi - 0.5*dCrit_)
+                   /(pow6(dSphi - 0.5*dCrit_) + pow6(0.5*dCrit_))
                 )
-              + sqr(fj.dSph())
+              + sqr(dSphj)
                *uRelWakeJ
-               *pos0(fj.dSph() - 0.5*dCrit_)
+               *pos0(dSphj - 0.5*dCrit_)
                *(
-                    pow6(fj.dSph() - 0.5*dCrit_)
-                   /(pow6(fj.dSph() - 0.5*dCrit_) + pow6(0.5*dCrit_))
+                    pow6(dSphj - 0.5*dCrit_)
+                   /(pow6(dSphj - 0.5*dCrit_) + pow6(0.5*dCrit_))
                 )
             );
     }

@@ -47,11 +47,11 @@ sources
 {
     heatTransferLimitedPhaseChange
     {
-        type            interfacialGrowthSizeGroup;
+        type            interfacialGrowthGroupFraction;
     }
     wallBoiling
     {
-        type            nucleationSizeGroup;
+        type            nucleationGroupFraction;
         libs            ("libmultiphaseEulerFvModels.so");
     }
 }
