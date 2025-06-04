@@ -10,50 +10,30 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "system";
-    object      controlDict;
+    object      setFieldsDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-solver          incompressibleVoF;
-
-startFrom       startTime;
-
-startTime       0;
-
-stopAt          endTime;
-
-endTime         1;
-
-deltaT          0.001;
-
-writeControl    adjustableRunTime;
-
-writeInterval   0.05;
-
-purgeWrite      0;
-
-writeFormat     ascii;
-
-writePrecision  6;
-
-writeCompression off;
-
-timeFormat      general;
-
-timePrecision   6;
-
-runTimeModifiable yes;
-
-adjustTimeStep  yes;
-
-maxCo           1;
-maxAlphaCo      1;
-
-maxDeltaT       1;
-
-DebugSwitches
+defaultValues
 {
-    MULES           1;
+    alpha.water     0;
 }
+
+zones
+{
+    waterColumn
+    {
+        type            box;
+        zoneType        cell;
+
+        box             (0 0 -1) (0.1461 0.292 1);
+
+        values
+        {
+            alpha.water     1;
+        }
+    }
+}
+
 
 // ************************************************************************* //
