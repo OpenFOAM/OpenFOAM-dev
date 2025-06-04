@@ -8,9 +8,6 @@ runApplication blockMesh
 
 runApplication subsetMesh -noFields -overwrite
 
-runApplication -s selectBottom \
-    topoSet -dict topoSetDict-selectBottom
-
 runApplication createPatch -overwrite
 
 cp -R 0.orig 0 > /dev/null 2>&1

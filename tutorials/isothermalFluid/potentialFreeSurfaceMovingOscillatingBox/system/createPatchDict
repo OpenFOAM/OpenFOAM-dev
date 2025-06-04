@@ -23,11 +23,22 @@ patches
             type wall;
         }
 
-        // How to construct: either from 'patches' or 'set'
-        constructFrom set;
+        // Construct patch from a faceZone
+        constructFrom zone;
 
-        // If constructFrom = set : name of faceSet
-        set floatingObjectBottom;
+        zone
+        {
+            type        normal;
+
+            normal      (0 1 0);
+            tol         0.01;
+
+            floatingObject
+            {
+                type        patch;
+                patch       floatingObject;
+            }
+        }
     }
 }
 
