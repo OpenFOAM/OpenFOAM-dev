@@ -10,12 +10,20 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "system";
-    object      functions;
+    object      fvSolution;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#includeFunc phaseScalarTransport(field=tracer.water)
-#includeFunc phaseScalarTransport(field=tracer.air, residualAlpha=1e-6)
+solvers
+{
+    "tracer.*"
+    {
+        solver          PBiCGStab;
+        preconditioner  DILU;
+        tolerance       1e-6;
+        relTol          0;
+    }
+}
 
 
 // ************************************************************************* //

@@ -6,7 +6,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 # Merge the source case
 isTest "$@" && path=.. || path=$FOAM_TUTORIALS/incompressibleVoF
-foamMergeCase $path/damBreak || exit 1
+foamMergeCase $path/damBreakLaminar $path/damBreak || exit 1
 
 # Run
 runApplication blockMesh

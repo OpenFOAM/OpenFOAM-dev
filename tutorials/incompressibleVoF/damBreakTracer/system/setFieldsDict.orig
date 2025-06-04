@@ -10,11 +10,44 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "system";
-    object      controlDict;
+    object      setFieldsDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-~DebugSwitches;
+defaultValues
+{
+    tracer.water    0;
+    tracer.air      0;
+}
+
+zones
+{
+    tracerWater
+    {
+        type            box;
+        zoneType        cell;
+
+        box             (0 0 -1) (0.1461 0.146 1);
+
+        values
+        {
+            tracer.water    1;
+        }
+    }
+
+    tracerAir
+    {
+        type            box;
+        zoneType        cell;
+
+        box             (0 0.292 -1) (0.1461 0.438 1);
+
+        values
+        {
+            tracer.air      1;
+        }
+    }
+}
 
 
 // ************************************************************************* //

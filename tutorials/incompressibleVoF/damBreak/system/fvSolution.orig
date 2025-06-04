@@ -10,58 +10,20 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "system";
-    object      setFieldsDict;
+    object      fvSolution;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-defaultValues
+solvers
 {
-    alpha.water     0;
-    tracer.water    0;
-    tracer.air      0;
-}
-
-zones
-{
-    waterColumn
+    "alpha.water.*"
     {
-        type        box;
-        zoneType    cell;
-
-        box         (0 0 -1) (0.1461 0.292 1);
-
-        values
+        MULES
         {
-            alpha.water     1;
-        }
-    }
-
-    tracerWater
-    {
-        type        box;
-        zoneType    cell;
-
-        box         (0 0 -1) (0.1461 0.146 1);
-
-        values
-        {
-            tracer.water    1;
-        }
-    }
-
-    tracerAir
-    {
-        type        box;
-        zoneType    cell;
-
-        box         (0 0.292 -1) (0.1461 0.438 1);
-
-        values
-        {
-            tracer.air      1;
+            nIter           10;
+            tolerance       1e-2;
         }
     }
 }
-
 
 // ************************************************************************* //

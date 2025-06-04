@@ -9,30 +9,20 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    location    "system";
-    object      setFieldsDict;
+    location    "constant";
+    object      momentumTransport;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-defaultValues
+simulationType  RAS;
+
+RAS
 {
-    alpha.water 0;
+    model           kEpsilon;
+    // model           kOmega;
+
+    turbulence      on;
 }
 
-zones
-{
-    waterColumn
-    {
-        type        box;
-        zoneType    cell;
-
-        box (0 0 -1) (0.1461 0.292 1);
-
-        values
-        {
-            alpha.water 1;
-        }
-    }
-}
 
 // ************************************************************************* //
