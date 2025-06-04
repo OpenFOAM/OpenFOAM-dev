@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -194,7 +194,7 @@ public:
         //- Set/add group with patches
         void setGroup(const word& groupName, const labelList& patchIndices);
 
-        //- Return the set of patch indices corresponding to the given names
+        //- Return the patch set corresponding to the given names
         //  By default warns if given names are not found. Optionally
         //  matches to patchGroups as well as patchNames
         labelHashSet patchSet
@@ -202,6 +202,14 @@ public:
             const UList<wordRe>& patchNames,
             const bool warnNotFound = true,
             const bool usePatchGroups = true
+        ) const;
+
+        //- Return the patch set corresponding to the patch selection entries
+        //  in the given dictionary
+        labelHashSet patchSet
+        (
+            const dictionary&,
+            const bool optional = false
         ) const;
 
         //- Match the patches to groups. Returns all the (fully matched) groups

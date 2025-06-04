@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -827,6 +827,45 @@ Foam::labelHashSet Foam::polyBoundaryMesh::patchSet
     }
 
     return ids;
+}
+
+
+Foam::labelHashSet Foam::polyBoundaryMesh::patchSet
+(
+    const dictionary& dict,
+    const bool optional
+) const
+{
+    List<wordRe> patchNames;
+
+    if (dict.found("patch"))
+    {
+        patchNames = List<wordRe>(1, dict.lookup("patch"));
+    }
+    else if (dict.found("patches"))
+    {
+        patchNames = dict.lookup<wordReList>("patches");
+    }
+    else
+    {
+        if (!optional)
+        {
+            FatalIOErrorInFunction(dict)
+                << "Neither 'patch' or 'patches' specified"
+                << exit(FatalIOError);
+        }
+    }
+
+    labelHashSet patchIDs(patchSet(patchNames));
+
+    if (!optional && !patchIDs.size())
+    {
+        WarningInFunction
+            << "Cannot find any patch named " << patchNames << endl
+            << "Valid patch names are " << names() << endl;
+    }
+
+    return patchIDs;
 }
 
 
