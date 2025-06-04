@@ -63,8 +63,8 @@ protected:
     // Protected Member Functions
 
         //- Generate the zone of the given type
-        template<class Type>
-        zoneSet generate(const Type& zone) const;
+        template<class ZoneGenType>
+        zoneSet generate(const ZoneGenType& zone) const;
 
 
 public:

@@ -28,8 +28,11 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template<class Type>
-Foam::zoneSet Foam::zoneGenerators::volume::generate(const Type& zone) const
+template<class ZoneGenType>
+Foam::zoneSet Foam::zoneGenerators::volume::generate
+(
+    const ZoneGenType& zoneGen
+) const
 {
     labelList indices;
 
@@ -42,7 +45,7 @@ Foam::zoneSet Foam::zoneGenerators::volume::generate(const Type& zone) const
                 new pointZone
                 (
                     zoneName_,
-                    select(zone, mesh_.points()),
+                    select(zoneGen, mesh_.points()),
                     mesh_.pointZones(),
                     moveUpdate_,
                     true
@@ -57,7 +60,7 @@ Foam::zoneSet Foam::zoneGenerators::volume::generate(const Type& zone) const
                 new cellZone
                 (
                     zoneName_,
-                    select(zone, mesh_.cellCentres()),
+                    select(zoneGen, mesh_.cellCentres()),
                     mesh_.cellZones(),
                     moveUpdate_,
                     true
@@ -67,7 +70,7 @@ Foam::zoneSet Foam::zoneGenerators::volume::generate(const Type& zone) const
 
         case zoneTypes::face:
         {
-            const labelList faceIndices(select(zone, mesh_.faceCentres()));
+            const labelList faceIndices(select(zoneGen, mesh_.faceCentres()));
 
             return zoneSet
             (

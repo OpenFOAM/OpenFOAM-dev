@@ -27,10 +27,10 @@ License
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-template<class ZoneType>
+template<class ZoneGenType>
 inline Foam::labelList Foam::zoneGenerator::zoneGenerator::select
 (
-    const ZoneType& zone,
+    const ZoneGenType& zoneGen,
     const vectorField& pts
 ) const
 {
@@ -39,7 +39,7 @@ inline Foam::labelList Foam::zoneGenerator::zoneGenerator::select
     label nInZone = 0;
     forAll(pts, i)
     {
-        if (zone.contains(pts[i]))
+        if (zoneGen.contains(pts[i]))
         {
             indices[nInZone++] = i;
         }

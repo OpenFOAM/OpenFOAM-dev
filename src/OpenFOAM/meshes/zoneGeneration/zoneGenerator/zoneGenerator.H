@@ -78,10 +78,10 @@ protected:
 
     // Protected Member Functions
 
-        template<class ZoneType>
+        template<class ZoneGenType>
         labelList select
         (
-            const ZoneType& zone,
+            const ZoneGenType& zoneGen,
             const vectorField& pts
         ) const;
 
