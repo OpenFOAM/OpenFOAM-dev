@@ -15,7 +15,7 @@ runApplication createPatch -overwrite
 
 cp -R 0.orig 0 > /dev/null 2>&1
 
-runApplication -s 1  topoSet
+runApplication createZones
 
 runApplication foamRun
 

@@ -9,37 +9,27 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    object      topoSetDict;
+    object      createZonesDict;
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-actions
-(
+f0
+{
+    type        intersection;
+
+    freeSurface
     {
-        name    f0FaceSet;
-        type    faceSet;
-        action  new;
-        source  patchToFace;
-        patch   freeSurface;
+        type        patch;
+        patch       freeSurface;
     }
 
+    box
     {
-        name    f0FaceSet;
-        type    faceSet;
-        action  subset;
-        source  boxToFace;
-        box     (-100 0.9 -100) (0.2 100 100);
+        type        box;
+        zoneType    face;
+        box         (-100 0.9 -100) (0.2 100 100);
     }
-
-    {
-        name    f0;
-        type    faceZoneSet;
-        action  new;
-        source  setToFaceZone;
-        faceSet f0FaceSet;
-    }
-);
-
+}
 
 // ************************************************************************* //
