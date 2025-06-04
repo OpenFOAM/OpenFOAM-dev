@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -252,17 +252,36 @@ processValuesTypeType
         {
             const scalarField magSf(mag(Sf));
 
-            Type meanValue = gSum(values*magSf)/gSum(magSf);
+            const Type meanValue = gSum(values*magSf)/gSum(magSf);
 
             const label nComp = pTraits<Type>::nComponents;
 
             for (direction d=0; d<nComp; ++d)
             {
-                scalarField vals(values.component(d));
-                scalar mean = component(meanValue, d);
+                const scalarField vals(values.component(d));
+                const scalar mean = component(meanValue, d);
                 scalar& res = setComponent(result, d);
 
                 res = sqrt(gSum(magSf*sqr(vals - mean))/gSum(magSf))/mean;
+            }
+
+            return true;
+        }
+        case operationType::UI:
+        {
+            const scalarField magSf(mag(Sf));
+
+            const Type meanValue = gSum(values*magSf)/gSum(magSf);
+
+            const label nComp = pTraits<Type>::nComponents;
+
+            for (direction d=0; d<nComp; ++d)
+            {
+                const scalarField vals(values.component(d));
+                const scalar mean = component(meanValue, d);
+                scalar& res = setComponent(result, d);
+
+                res = 1 - 0.5*gSum(magSf*mag(vals - mean))/(gSum(magSf)*mean);
             }
 
             return true;

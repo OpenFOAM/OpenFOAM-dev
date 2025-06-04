@@ -68,7 +68,7 @@ template<>
 const char* Foam::NamedEnum
 <
     Foam::functionObjects::fieldValues::surfaceFieldValue::operationType,
-    14
+    15
 >::names[] =
 {
     "none",
@@ -83,6 +83,7 @@ const char* Foam::NamedEnum
     "minMag",
     "maxMag",
     "CoV",
+    "UI",
     "areaNormalAverage",
     "areaNormalIntegrate"
 };
@@ -96,7 +97,7 @@ const Foam::NamedEnum
 const Foam::NamedEnum
 <
     Foam::functionObjects::fieldValues::surfaceFieldValue::operationType,
-    14
+    15
 > Foam::functionObjects::fieldValues::surfaceFieldValue::operationTypeNames_;
 
 

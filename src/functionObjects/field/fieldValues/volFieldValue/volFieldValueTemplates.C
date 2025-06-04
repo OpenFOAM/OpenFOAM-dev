@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -221,17 +221,34 @@ bool Foam::functionObjects::fieldValues::volFieldValue::processValuesTypeType
         }
         case operationType::CoV:
         {
-            Type meanValue = gSum(values*V)/this->V();
+            const Type meanValue = gSum(values*V)/this->V();
 
             const label nComp = pTraits<Type>::nComponents;
 
             for (direction d=0; d<nComp; ++d)
             {
-                scalarField vals(values.component(d));
-                scalar mean = component(meanValue, d);
+                const scalarField vals(values.component(d));
+                const scalar mean = component(meanValue, d);
                 scalar& res = setComponent(result.value, d);
 
                 res = sqrt(gSum(V*sqr(vals - mean))/this->V())/mean;
+            }
+
+            return true;
+        }
+        case operationType::UI:
+        {
+            const Type meanValue = gSum(values*V)/this->V();
+
+            const label nComp = pTraits<Type>::nComponents;
+
+            for (direction d=0; d<nComp; ++d)
+            {
+                const scalarField vals(values.component(d));
+                const scalar mean = component(meanValue, d);
+                scalar& res = setComponent(result.value, d);
+
+                res = 1 - 0.5*gSum(V*mag(vals - mean))/(this->V()*mean);
             }
 
             return true;

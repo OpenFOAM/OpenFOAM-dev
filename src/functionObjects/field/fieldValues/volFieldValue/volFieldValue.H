@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,17 +78,18 @@ Usage
 
     The \c operation is one of:
     \plaintable
-       none                 | No operation
-       sum                  | Sum
-       sumMag               | Sum of component magnitudes
-       average              | Ensemble average
-       volAverage           | Volume weighted average
-       volIntegrate         | Volume integral
-       min                  | Minimum
-       max                  | Maximum
-       minMag               | Minimum magnitude
-       maxMag               | Maximum magnitude
-       CoV                  | Coefficient of variation: standard deviation/mean
+       none               | No operation
+       sum                | Sum
+       sumMag             | Sum of component magnitudes
+       average            | Ensemble average
+       volAverage         | Volume weighted average
+       volIntegrate       | Volume integral
+       min                | Minimum
+       max                | Maximum
+       minMag             | Minimum magnitude
+       maxMag             | Maximum magnitude
+       CoV                | Coefficient of variation: (standard deviation)/mean
+       UI                 | Uniformity index: ???
     \endplaintable
 
 See also
@@ -143,11 +144,12 @@ public:
             max,
             minMag,
             maxMag,
-            CoV
+            CoV,
+            UI
         };
 
         //- Operation type names
-        static const NamedEnum<operationType, 11> operationTypeNames_;
+        static const NamedEnum<operationType, 12> operationTypeNames_;
 
 
     // Public classes

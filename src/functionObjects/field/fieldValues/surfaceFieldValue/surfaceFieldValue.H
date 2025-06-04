@@ -110,20 +110,21 @@ Usage
 
     The \c operation is one of:
     \plaintable
-       none          | no operation
-       sum           | sum
-       sumMag        | sum of component magnitudes
-       orientedSum   | sum with face orientations
-       average       | ensemble average
-       areaAverage   | area weighted average
-       areaIntegrate | area integral
-       min           | minimum
-       max           | maximum
-       minMag        | minimum magnitude
-       maxMag        | maximum magnitude
-       CoV           | coefficient of variation: standard deviation/mean
-       areaNormalAverage | area weighted average in face normal direction
-       areaNormalIntegrate | area weighted integral in face normal direction
+       none                | No operation
+       sum                 | Sum
+       sumMag              | Sum of component magnitudes
+       orientedSum         | Sum with face orientations
+       average             | Ensemble average
+       areaAverage         | Area weighted average
+       areaIntegrate       | Area integral
+       min                 | Minimum
+       max                 | Maximum
+       minMag              | Minimum magnitude
+       maxMag              | Maximum magnitude
+       CoV                 | Coefficient of variation: (standard deviation)/mean
+       UI                  | Uniformity index: ???
+       areaNormalAverage   | Area weighted average in face normal direction
+       areaNormalIntegrate | Area weighted integral in face normal direction
     \endplaintable
 
     Note:
@@ -213,12 +214,13 @@ public:
             minMag,
             maxMag,
             CoV,
+            UI,
             areaNormalAverage,
             areaNormalIntegrate
         };
 
         //- Operation type names
-        static const NamedEnum<operationType, 14> operationTypeNames_;
+        static const NamedEnum<operationType, 15> operationTypeNames_;
 
 
 private:
