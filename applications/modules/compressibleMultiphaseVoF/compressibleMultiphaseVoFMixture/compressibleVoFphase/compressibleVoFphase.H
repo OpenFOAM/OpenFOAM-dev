@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,9 +63,6 @@ class compressibleVoFphase
         //- Phase thermo
         autoPtr<rhoFluidThermo> thermo_;
 
-        //- Phase mass-fraction
-        volScalarField Alpha_;
-
         //- Phase compressibility contribution
         volScalarField::Internal vDot_;
 
@@ -125,18 +122,6 @@ public:
         rhoFluidThermo& thermo()
         {
             return thermo_();
-        }
-
-        //- Return const-access to phase mass-fraction
-        const volScalarField& Alpha() const
-        {
-            return Alpha_;
-        }
-
-        //- Return access to phase mass-fraction
-        volScalarField& Alpha()
-        {
-            return Alpha_;
         }
 
         //- Return const-access to phase divergence

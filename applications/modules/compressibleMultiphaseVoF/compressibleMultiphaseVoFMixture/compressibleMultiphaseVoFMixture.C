@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,6 +59,19 @@ Foam::compressibleMultiphaseVoFMixture::compressibleMultiphaseVoFMixture
         ),
         mesh,
         dimensionedScalar("rho", dimDensity, 0)
+    ),
+
+    nu_
+    (
+        IOobject
+        (
+            "nu",
+            mesh.time().name(),
+            mesh
+        ),
+        mesh,
+        dimensionedScalar(dimKinematicViscosity, 0),
+        calculatedFvPatchScalarField::typeName
     )
 {
     correct();
@@ -78,42 +91,6 @@ bool Foam::compressibleMultiphaseVoFMixture::incompressible() const
     }
 
     return incompressible;
-}
-
-
-Foam::tmp<Foam::volScalarField>
-Foam::compressibleMultiphaseVoFMixture::nu() const
-{
-    volScalarField mu(phases_[0].Alpha()*phases_[0].thermo().mu());
-
-    for (label phasei=1; phasei<phases_.size(); phasei++)
-    {
-        mu += phases_[phasei].Alpha()*phases_[phasei].thermo().mu();
-    }
-
-    return mu/rho_;
-}
-
-
-Foam::tmp<Foam::scalarField> Foam::compressibleMultiphaseVoFMixture::nu
-(
-    const label patchi
-) const
-{
-    scalarField mu
-    (
-        phases_[0].Alpha().boundaryField()[patchi]
-       *phases_[0].thermo().mu().boundaryField()[patchi]
-    );
-
-    for (label phasei=1; phasei<phases_.size(); phasei++)
-    {
-        mu +=
-            phases_[phasei].Alpha().boundaryField()[patchi]
-           *phases_[phasei].thermo().mu().boundaryField()[patchi];
-    }
-
-    return mu/rho_.boundaryField()[patchi];
 }
 
 
@@ -190,17 +167,16 @@ void Foam::compressibleMultiphaseVoFMixture::correctThermo()
 void Foam::compressibleMultiphaseVoFMixture::correct()
 {
     rho_ = phases_[0]*phases_[0].thermo().rho();
+    volScalarField mu(phases_[0]*phases_[0].thermo().mu());
 
     for (label phasei=1; phasei<phases_.size(); phasei++)
     {
         rho_ += phases_[phasei]*phases_[phasei].thermo().rho();
+        mu += phases_[phasei]*phases_[phasei].thermo().mu();
     }
 
-    forAll(phases_, phasei)
-    {
-        phases_[phasei].Alpha() =
-            phases_[phasei]*phases_[phasei].thermo().rho()/rho_;
-    }
+    // Update the mixture kinematic viscosity
+    nu_ = mu/rho_;
 
     calcAlphas();
 }

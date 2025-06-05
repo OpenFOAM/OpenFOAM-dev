@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,59 +83,6 @@ Foam::incompressibleTwoPhaseVoFMixture::incompressibleTwoPhaseVoFMixture
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField>
-Foam::incompressibleTwoPhaseVoFMixture::mu() const
-{
-    const volScalarField limitedAlpha1
-    (
-        min(max(alpha1(), scalar(0)), scalar(1))
-    );
-
-    return volScalarField::New
-    (
-        "mu",
-        limitedAlpha1*rho1_*nuModel1_->nu()
-      + (scalar(1) - limitedAlpha1)*rho2_*nuModel2_->nu()
-    );
-}
-
-
-Foam::tmp<Foam::surfaceScalarField>
-Foam::incompressibleTwoPhaseVoFMixture::muf() const
-{
-    const surfaceScalarField alpha1f
-    (
-        min(max(fvc::interpolate(alpha1()), scalar(0)), scalar(1))
-    );
-
-    return surfaceScalarField::New
-    (
-        "muf",
-        alpha1f*rho1_*fvc::interpolate(nuModel1_->nu())
-      + (scalar(1) - alpha1f)*rho2_*fvc::interpolate(nuModel2_->nu())
-    );
-}
-
-
-Foam::tmp<Foam::surfaceScalarField>
-Foam::incompressibleTwoPhaseVoFMixture::nuf() const
-{
-    const surfaceScalarField alpha1f
-    (
-        min(max(fvc::interpolate(alpha1()), scalar(0)), scalar(1))
-    );
-
-    return surfaceScalarField::New
-    (
-        "nuf",
-        (
-            alpha1f*rho1_*fvc::interpolate(nuModel1_->nu())
-          + (scalar(1) - alpha1f)*rho2_*fvc::interpolate(nuModel2_->nu())
-        )/(alpha1f*rho1_ + (scalar(1) - alpha1f)*rho2_)
-    );
-}
-
-
 bool Foam::incompressibleTwoPhaseVoFMixture::read()
 {
     if (twoPhaseVoFMixture::read())
@@ -166,7 +113,11 @@ void Foam::incompressibleTwoPhaseVoFMixture::correct()
     );
 
     // Average kinematic viscosity calculated from dynamic viscosity
-    nu_ = mu()/(limitedAlpha1*rho1_ + (scalar(1) - limitedAlpha1)*rho2_);
+    nu_ =
+    (
+        limitedAlpha1*rho1_*nuModel1_->nu()
+      + (scalar(1) - limitedAlpha1)*rho2_*nuModel2_->nu()
+    )/(limitedAlpha1*rho1_ + (scalar(1) - limitedAlpha1)*rho2_);
 }
 
 

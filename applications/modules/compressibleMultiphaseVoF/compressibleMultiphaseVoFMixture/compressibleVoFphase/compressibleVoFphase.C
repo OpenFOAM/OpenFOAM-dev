@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,17 +36,6 @@ Foam::compressibleVoFphase::compressibleVoFphase
 :
     VoFphase(name, mesh),
     thermo_(nullptr),
-    Alpha_
-    (
-        IOobject
-        (
-            IOobject::groupName("Alpha", name),
-            mesh.time().name(),
-            mesh
-        ),
-        mesh,
-        dimensionedScalar(dimless, 0)
-    ),
     vDot_
     (
         IOobject

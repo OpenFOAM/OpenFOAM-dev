@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,12 +76,6 @@ class incompressibleMultiphaseVoFMixture
         volScalarField nu_;
 
 
-    // Private Member Functions
-
-        //- Return the dynamic laminar viscosity
-        tmp<volScalarField> mu() const;
-
-
 public:
 
     TypeName("incompressibleMultiphaseVoFMixture");
@@ -113,10 +107,16 @@ public:
         }
 
         //- Return the kinematic laminar viscosity
-        virtual tmp<volScalarField> nu() const;
+        virtual tmp<volScalarField> nu() const
+        {
+            return nu_;
+        }
 
         //- Return the laminar viscosity for patch
-        virtual tmp<scalarField> nu(const label patchi) const;
+        virtual tmp<scalarField> nu(const label patchi) const
+        {
+            return nu_.boundaryField()[patchi];
+        }
 
         //- Correct the mixture properties
         virtual void correct();
