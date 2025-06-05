@@ -8,40 +8,13 @@
 FoamFile
 {
     format      ascii;
-    class       volScalarField;
-    object      p_rgh;
+    class       uniformDimensionedScalarField;
+    location    "constant";
+    object      pRef;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 dimensions      [1 -1 -2 0 0 0 0];
-
-internalField   uniform 0;
-
-boundaryField
-{
-    walls
-    {
-        type            fixedFluxPressure;
-        value           $internalField;
-    }
-
-    porosityWall
-    {
-        type            fixedFluxPressure;
-        value           $internalField;
-    }
-
-    inlet
-    {
-        type            fixedFluxPressure;
-        value           $internalField;
-    }
-
-    outlet
-    {
-        type            fixedValue;
-        value           $internalField;
-    }
-}
+value           1e5;
 
 // ************************************************************************* //
