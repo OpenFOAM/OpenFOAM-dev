@@ -9,20 +9,15 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    object      topoSetDict;
+    object      createZonesDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-actions
-(
-    {
-        action  new;
-        type    faceZoneSet;
-        name    mid;
-        source  planeToFaceZone;
-        point   (0.41 0 0);
-        normal  (1 0 0);
-    }
-);
+mid
+{
+    type        plane;
+    point       (0.41 0 0);
+    normal      (1 0 0);
+}
 
 // ************************************************************************* //
