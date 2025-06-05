@@ -17,6 +17,8 @@ FoamFile
 height          0.045;
 radius          0.015;
 nCellsPerMetre  2666.67;
+nBaffles        6;
+baffleOverlap   0.4;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -24,6 +26,9 @@ halfThickness #calc "scalar(1)/$<scalar>nCellsPerMetre";
 
 nCellsHeight #calc "round($<scalar>height*$<scalar>nCellsPerMetre)";
 nCellsRadius #calc "round($<scalar>radius*$<scalar>nCellsPerMetre)";
+
+innerBaffleOuterRadius #calc "$<scalar>{radius}/(2 - $<scalar>baffleOverlap)";
+outerBaffleInnerRadius #calc "$radius - $innerBaffleOuterRadius";
 
 convertToMeters 1;
 
