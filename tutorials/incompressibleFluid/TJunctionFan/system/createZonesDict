@@ -7,29 +7,34 @@
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    version     2.0;
     format      ascii;
     class       dictionary;
-    object      topoSetDict;
+    object      createZonesDict;
 }
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-actions
-(
+fan
+{
+    type        surface;
+
+    surface     searchablePlate;
+    origin      (0.1 -0.006 0.004);
+    span        (0 0.012 0.012);
+}
+
+baffle
+{
+    type        difference;
+
+    plane
     {
-        name    f0;
-        type    faceSet;
-        action  new;
-        source  patchToFace;
-        patch   inlet;
+        type        plane;
+        point       (0.1 0 0);
+        normal      (1 0 0);
     }
-    {
-        name    f0;
-        type    faceZoneSet;
-        action  new;
-        source  setToFaceZone;
-        set     f0;
-    }
-);
+
+    fan;
+}
 
 // ************************************************************************* //

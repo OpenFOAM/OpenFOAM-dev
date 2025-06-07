@@ -7,7 +7,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 runApplication blockMesh -region fluid
 
 # Create the 3D baffle
-runApplication topoSet -region fluid
+runApplication createZones -region fluid
 runApplication extrudeToRegionMesh -region fluid -overwrite \
     -dict system/fluid/extrudeToRegionMeshDict.extrudeFromInternalFaces
 

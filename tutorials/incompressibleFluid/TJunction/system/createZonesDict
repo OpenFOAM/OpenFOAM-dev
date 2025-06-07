@@ -9,37 +9,23 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    object      topoSetDict;
+    object      createZonesDict;
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-actions
-(
-    {
-        name    baffle;
-        type    faceZoneSet;
-        action  new;
-        source  planeToFaceZone;
-        point   (0.1 0 0);
-        normal  (1 0 0);
-    }
-    {
-        name    fan;
-        type    faceZoneSet;
-        action  new;
-        source  searchableSurfaceToFaceZone;
-        surface searchablePlate;
-        origin  (0.1 -0.006 0.004);
-        span    (0 0.012 0.012);
-    }
-    {
-        name    baffle;
-        type    faceZoneSet;
-        action  delete;
-        source  faceZoneToFaceZone;
-        zone    fan;
-    }
-);
+fz1
+{
+    type        surface;
+    surface     triSurfaceMesh;
+    file        "surface1.obj";
+}
+
+fz2
+{
+    type        surface;
+    surface     triSurfaceMesh;
+    file        "surface2.obj";
+}
 
 // ************************************************************************* //

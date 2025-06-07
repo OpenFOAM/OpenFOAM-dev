@@ -9,19 +9,16 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    object      topoSetDict;
+    object      createZonesDict;
 }
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-actions
-(
-    {
-        action  new;
-        type    cellSet;
-        name    c0;
-        source  boxToCell;
-        box     (-1 -1 -1) (1 1 1); // Edit box bounds as required
-    }
-);
+baffle3D
+{
+    type        surface;
+    surface     triSurfaceMesh;
+    file        "baffle3D.stl";
+}
 
 // ************************************************************************* //
