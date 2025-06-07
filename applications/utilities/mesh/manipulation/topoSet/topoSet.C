@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,8 @@ Application
 Description
     Executes the sequence of topoSet actions specified in the topoSetDict.
 
-Usage
+    Note:
+        topoSet has been superseded by createZones and is now deprecated.
 
 \*---------------------------------------------------------------------------*/
 
@@ -202,6 +203,13 @@ int main(int argc, char *argv[])
     );
 
     #include "setRootCase.H"
+
+    Warning
+        << nl
+        << "topoSet has been superseded by createZones"
+           " and is now deprecated."
+        << nl << endl;
+
     #include "createTime.H"
 
     const instantList timeDirs = timeSelector::selectIfPresent(runTime, args);
