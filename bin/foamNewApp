@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -37,6 +37,7 @@ usage() {
 Usage: $Script [OPTIONS] <application>
 options:
   -help  | -h         print the usage
+  -plain | -p         create a plain application for non-CFD use
 
 Create directory with source and compilation files for a new application
   <application> (dir)
@@ -56,8 +57,12 @@ error() {
 }
 
 case "$1" in
-(-help | -h)
+-help | -h)
     usage && exit 0
+    ;;
+-plain | -p)
+    dir="$FOAM_ETC/codeTemplates/plain"
+    shift
     ;;
 -*)
     error "$1 is not a valid filename"
@@ -67,19 +72,24 @@ esac
 [ "$#" -eq 1 ] || error "Wrong number of arguments"
 [ -d "$1" ] && error "$1 directory already exists, aborting..."
 
-app=$1
+app="$1"
 year=$(date +%Y)
 
-echo "Creating application code directory ${app}" && mkdir "${app}"
-sed -e "s#NAME#${app}#g" \
-    -e "s#YEAR#${year}#g" \
-    "${dir}/app.C" > "${app}/${app}.C"
+file="${dir##*/}.C"
 
-echo "Creating Make subdirectory" && mkdir "${app}/Make"
-sed "s#NAME#${app}#g" "${dir}/Make/files" > "${app}/Make/files"
-cp "${dir}/Make/options" "${app}/Make"
+echo "Creating application code directory $app" && mkdir "$app"
+sed -e "s#NAME#$app#g" \
+    -e "s#YEAR#$year#g" \
+    "$dir/$file" > "$app/$app.C"
 
-echo "Copying example createFields.H file" && \
-    cp "${dir}/createFields.H" "${app}"
+echo "Creating Make subdirectory" && mkdir "$app/Make"
+sed "s#NAME#$app#g" "$dir/Make/files" > "$app/Make/files"
+cp "$dir/Make/options" "$app/Make"
+
+otherFiles="$(find "$dir" -maxdepth 1 -type f ! -name "$file")"
+for f in $otherFiles
+do
+    echo "Copying example ${f##*/} file" && cp "$f" "$app"
+done
 
 #------------------------------------------------------------------------------
