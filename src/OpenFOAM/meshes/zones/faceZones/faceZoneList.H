@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,16 +60,17 @@ public:
 
     // Member Functions
 
-        //- Return the list of flips for the facei
-        //  for each of the face zones in faceiZones
-        boolList zonesFlipFace
+        //- Insert given oriented indices
+        void insert
         (
-            const label facei,
-            const labelList& faceiZones
+            const List<Map<bool>>& zonesOrientedIndices
         );
 
-        //- Insert given indices and corresponding face flips into zones
-        void insert(const List<Map<bool>>& zonesIndices);
+        //- Insert given unoriented indices
+        void insert
+        (
+            const List<labelHashSet>& zonesIndices
+        );
 };
 
 

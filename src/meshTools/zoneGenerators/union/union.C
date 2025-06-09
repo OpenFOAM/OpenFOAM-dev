@@ -116,16 +116,50 @@ Foam::zoneSet Foam::zoneGenerators::Union::generate
          || (zoneType_ == zoneTypesAll::all && zs.fZone.valid())
         )
         {
+            const bool oriented = !all && zs.fZone().oriented();
+
+            // If selecting faces check the status of the orientation
+            // of the supplied and current faceZones
+            if (sel)
+            {
+                if (!oriented && flipMap.size())
+                {
+                    WarningInFunction
+                        << "faceZone " << zs.fZone().name()
+                        << " is not oriented"
+                           " so the resulting faceZone will not be oriented"
+                            << endl;
+                    flipMap.clear();
+                }
+                else if (oriented && selectedFaces.size() && !flipMap.size())
+                {
+                    WarningInFunction
+                        << "faceZone " << zs.fZone().name()
+                        << " is oriented but a previous faceZone is not "
+                           " so the resulting faceZone will not be oriented"
+                        << endl;
+                }
+            }
+
             selectedFaces.setSize(mesh_.nFaces(), all);
-            flipMap.setSize(mesh_.nFaces(), false);
-            select
-            (
-                selectedFaces,
-                flipMap,
-                zs.fZone(),
-                zs.fZone().flipMap(),
-                sel
-            );
+
+            if (oriented)
+            {
+                flipMap.setSize(mesh_.nFaces(), false);
+
+                select
+                (
+                    selectedFaces,
+                    flipMap,
+                    zs.fZone(),
+                    zs.fZone().flipMap(),
+                    sel
+                );
+            }
+            else
+            {
+                select(selectedFaces, zs.fZone(), sel);
+            }
         }
     }
 
@@ -156,15 +190,24 @@ Foam::zoneSet Foam::zoneGenerators::Union::generate
         )
       : nullptr,
         selectedFaces.size()
-      ? new faceZone
-        (
-            zoneName_,
-            faceIndices,
-            boolList(flipMap, faceIndices),
-            mesh_.faceZones(),
-            moveUpdate_,
-            true
-        )
+      ? flipMap.size()
+          ? new faceZone
+            (
+                zoneName_,
+                faceIndices,
+                boolList(flipMap, faceIndices),
+                mesh_.faceZones(),
+                moveUpdate_,
+                true
+            )
+          : new faceZone
+            (
+                zoneName_,
+                faceIndices,
+                mesh_.faceZones(),
+                moveUpdate_,
+                true
+            )
       : nullptr
     );
 }

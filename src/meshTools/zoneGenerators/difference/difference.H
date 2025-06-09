@@ -29,6 +29,9 @@ Description
     the given list of zoneGenerators and removes the elements which are in
     subsequent zones
 
+    An difference faceZones is oriented if the first faceZones is oriented,
+    otherwise the returned faceZone is unoriented.
+
 Usage
     \table
         Property     | Description             | Required | Default value

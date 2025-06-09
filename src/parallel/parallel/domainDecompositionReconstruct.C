@@ -675,8 +675,11 @@ void Foam::domainDecomposition::reconstructPoints()
             {
                 const labelList& faceZonei =
                     procMeshes_[proci].faceZones()[pzi];
+
                 const boolList& flipMapi =
-                    procMeshes_[proci].faceZones()[pzi].flipMap();
+                    faceZones0[pzi].oriented()
+                      ? procMeshes_[proci].faceZones()[pzi].flipMap()
+                      : boolList::null();
 
                 const labelList& owneri = procMeshes_[proci].owner();
 
@@ -700,30 +703,48 @@ void Foam::domainDecomposition::reconstructPoints()
                     // If the zone face owner cell is the same in the
                     // complete and processor meshes the flipMap of the face
                     // corresponds ...
-                    if (ownerZfi == ownerZfii)
+                    if (flipMapi.size())
                     {
-                        flipMap[fi] = flipMapi[zfi];
-                    }
-                    // ... otherwise flip the flipMap of the face
-                    else
-                    {
-                        flipMap[fi] = !flipMapi[zfi];
+                        if (ownerZfi == ownerZfii)
+                        {
+                            flipMap[fi] = flipMapi[zfi];
+                        }
+                        // ... otherwise flip the flipMap of the face
+                        else
+                        {
+                            flipMap[fi] = !flipMapi[zfi];
+                        }
                     }
                 }
             }
 
             const labelList faceIndices(zoneGenerator::indices(selectedFaces));
 
-            completeMesh_->faceZones().append
-            (
-                new faceZone
+            if (faceZones0[pzi].oriented())
+            {
+                completeMesh_->faceZones().append
                 (
-                    faceZones0[pzi].name(),
-                    faceIndices,
-                    boolList(flipMap, faceIndices),
-                    completeMesh_->faceZones()
-                )
-            );
+                    new faceZone
+                    (
+                        faceZones0[pzi].name(),
+                        faceIndices,
+                        boolList(flipMap, faceIndices),
+                        completeMesh_->faceZones()
+                    )
+                );
+            }
+            else
+            {
+                completeMesh_->faceZones().append
+                (
+                    new faceZone
+                    (
+                        faceZones0[pzi].name(),
+                        faceIndices,
+                        completeMesh_->faceZones()
+                    )
+                );
+            }
         }
 
         completeMesh_->faceZones().writeOpt() = IOobject::AUTO_WRITE;

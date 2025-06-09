@@ -103,7 +103,6 @@ Foam::zoneSet Foam::zoneGenerators::all::generate() const
                 (
                     zoneName_,
                     identityMap(mesh_.nFaces()),
-                    boolList(mesh_.nFaces(), false),
                     mesh_.faceZones(),
                     false,
                     false

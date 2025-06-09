@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,8 +72,11 @@ class mergePolyMesh
         //- Face zone names
         DynamicList<word> faceZoneNames_;
 
+        //- Zones of the added oriented faces
+        List<Map<bool>> faceZonesAddedOrientedFaces_;
+
         //- Zones of the added faces
-        List<Map<bool>> faceZonesAddedFaces_;
+        List<labelHashSet> faceZonesAddedFaces_;
 
         //- Cell zone names
         DynamicList<word> cellZoneNames_;

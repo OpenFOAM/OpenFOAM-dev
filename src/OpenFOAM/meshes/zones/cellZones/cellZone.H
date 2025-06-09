@@ -25,12 +25,15 @@ Class
     Foam::cellZone
 
 Description
-    A subset of mesh cells.
+    Named list of cell indices representing a sub-set of the mesh
 
-    Currently set up as an indirect list but will be extended to use a
-    primitive mesh.  For quick check whether a cell belongs to the zone use
-    the lookup mechanism in cellZoneList, where all the zoned cells are
-    registered with their zone number.
+    Used by mesh-manipulation tools, field initialisation and for sources and
+    functionObjects that apply to sub-sets of the cells.
+
+See also
+    cellZoneList
+    Zone
+    zoneGenerator
 
 SourceFiles
     cellZone.C

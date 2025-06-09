@@ -109,7 +109,6 @@ Foam::zoneSet Foam::zoneGenerators::set::generate() const
                 (
                     zoneName_,
                     faceIndices,
-                    boolList(faceIndices.size(), false),
                     mesh_.faceZones(),
                     false,
                     false

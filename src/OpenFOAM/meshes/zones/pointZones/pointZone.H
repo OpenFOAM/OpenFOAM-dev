@@ -25,13 +25,14 @@ Class
     Foam::pointZone
 
 Description
-    A subset of mesh points.
-    The labels of points in the zone can be obtained from the addressing()
-    list.
+    Named list of point indices representing a sub-set of the mesh faces
 
-    For quick check whether a point belongs to the zone use the lookup
-    mechanism in pointZoneList, where all the zoned points are registered
-    with their zone number.
+    Used by mesh-manipulation tools.
+
+See also
+    pointZoneList
+    Zone
+    zoneGenerator
 
 SourceFiles
     pointZone.C

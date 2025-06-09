@@ -308,6 +308,7 @@ bool Foam::Zone<ZoneType, ZonesType>::checkDefinition
 template<class ZoneType, class ZonesType>
 void Foam::Zone<ZoneType, ZonesType>::insert(const labelHashSet& newIndices)
 {
+    clearAddressing();
     labelHashSet indices(*this);
     indices.insert(newIndices);
     labelList::operator=(indices.sortedToc());

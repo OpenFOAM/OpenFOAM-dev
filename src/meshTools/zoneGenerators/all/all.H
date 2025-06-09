@@ -27,6 +27,8 @@ Class
 Description
     A zoneGenerator which selects all the point, cells or faces of the mesh
 
+    The returned faceZone is unoriented.
+
 Usage
     \table
         Property     | Description             | Required | Default value

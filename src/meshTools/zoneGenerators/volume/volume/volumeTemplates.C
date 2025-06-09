@@ -78,7 +78,6 @@ Foam::zoneSet Foam::zoneGenerators::volume::generate
                 (
                     zoneName_,
                     faceIndices,
-                    boolList(faceIndices.size(), false),
                     mesh_.faceZones(),
                     moveUpdate_,
                     true

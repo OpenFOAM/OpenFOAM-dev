@@ -67,15 +67,24 @@ void Foam::faceZone::calcFaceZonePatch() const
     const faceList& f = zones().mesh().faces();
 
     const labelList& addr = *this;
-    const boolList& flip = flipMap();
 
-    forAll(addr, facei)
+    if (oriented_)
     {
-        if (flip[facei])
+        forAll(addr, facei)
         {
-            patch[facei] = f[addr[facei]].reverseFace();
+            if (flipMap_[facei])
+            {
+                patch[facei] = f[addr[facei]].reverseFace();
+            }
+            else
+            {
+                patch[facei] = f[addr[facei]];
+            }
         }
-        else
+    }
+    else
+    {
+        forAll(addr, facei)
         {
             patch[facei] = f[addr[facei]];
         }
@@ -113,8 +122,6 @@ void Foam::faceZone::calcCellLayers() const
 
         const labelList& mf = *this;
 
-        const boolList& faceFlip = flipMap();
-
         masterCellsPtr_ = new labelList(mf.size());
         labelList& mc = *masterCellsPtr_;
 
@@ -131,7 +138,7 @@ void Foam::faceZone::calcCellLayers() const
               : -1
             );
 
-            if (!faceFlip[facei])
+            if (!oriented_ || !flipMap_[facei])
             {
                 // Face is oriented correctly, no flip needed
                 mc[facei] = neiCelli;
@@ -149,7 +156,7 @@ void Foam::faceZone::calcCellLayers() const
 
 void Foam::faceZone::checkAddressing() const
 {
-    if (size() != flipMap_.size())
+    if (oriented_ && size() != flipMap_.size())
     {
         FatalErrorInFunction
             << "Size of addressing: " << size()
@@ -179,6 +186,7 @@ void Foam::faceZone::checkAddressing() const
 void Foam::faceZone::reset(const Map<bool>& newIndices)
 {
     clearAddressing();
+    oriented_ = true;
 
     labelList& indices = *this;
 
@@ -195,6 +203,15 @@ void Foam::faceZone::reset(const Map<bool>& newIndices)
 }
 
 
+void Foam::faceZone::reset(const labelHashSet& newIndices)
+{
+    clearAddressing();
+    oriented_ = false;
+    flipMap_.clear();
+    labelList::operator=(newIndices.sortedToc());
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::faceZone::faceZone
@@ -208,7 +225,28 @@ Foam::faceZone::faceZone
 )
 :
     Zone<faceZone, faceZoneList>(name, addr, mz, moveUpdate, topoUpdate),
+    oriented_(true),
     flipMap_(fm),
+    patchPtr_(nullptr),
+    masterCellsPtr_(nullptr),
+    slaveCellsPtr_(nullptr),
+    mePtr_(nullptr)
+{
+    checkAddressing();
+}
+
+
+Foam::faceZone::faceZone
+(
+    const word& name,
+    const labelUList& addr,
+    const faceZoneList& mz,
+    const bool moveUpdate,
+    const bool topoUpdate
+)
+:
+    Zone<faceZone, faceZoneList>(name, addr, mz, moveUpdate, topoUpdate),
+    oriented_(false),
     patchPtr_(nullptr),
     masterCellsPtr_(nullptr),
     slaveCellsPtr_(nullptr),
@@ -229,7 +267,28 @@ Foam::faceZone::faceZone
 )
 :
     Zone<faceZone, faceZoneList>(name, move(addr), mz, moveUpdate, topoUpdate),
+    oriented_(true),
     flipMap_(move(fm)),
+    patchPtr_(nullptr),
+    masterCellsPtr_(nullptr),
+    slaveCellsPtr_(nullptr),
+    mePtr_(nullptr)
+{
+    checkAddressing();
+}
+
+
+Foam::faceZone::faceZone
+(
+    const word& name,
+    labelList&& addr,
+    const faceZoneList& mz,
+    const bool moveUpdate,
+    const bool topoUpdate
+)
+:
+    Zone<faceZone, faceZoneList>(name, move(addr), mz, moveUpdate, topoUpdate),
+    oriented_(false),
     patchPtr_(nullptr),
     masterCellsPtr_(nullptr),
     slaveCellsPtr_(nullptr),
@@ -247,7 +306,8 @@ Foam::faceZone::faceZone
 )
 :
     Zone<faceZone, faceZoneList>(name, dict, mz),
-    flipMap_(dict.lookup("flipMap")),
+    oriented_(dict.found("flipMap")),
+    flipMap_(dict.lookupOrDefault("flipMap", boolList::null())),
     patchPtr_(nullptr),
     masterCellsPtr_(nullptr),
     slaveCellsPtr_(nullptr),
@@ -267,7 +327,27 @@ Foam::faceZone::faceZone
 )
 :
     Zone<faceZone, faceZoneList>(fz, name, addr, mz),
+    oriented_(true),
     flipMap_(fm),
+    patchPtr_(nullptr),
+    masterCellsPtr_(nullptr),
+    slaveCellsPtr_(nullptr),
+    mePtr_(nullptr)
+{
+    checkAddressing();
+}
+
+
+Foam::faceZone::faceZone
+(
+    const faceZone& fz,
+    const word& name,
+    const labelUList& addr,
+    const faceZoneList& mz
+)
+:
+    Zone<faceZone, faceZoneList>(fz, name, addr, mz),
+    oriented_(false),
     patchPtr_(nullptr),
     masterCellsPtr_(nullptr),
     slaveCellsPtr_(nullptr),
@@ -286,6 +366,7 @@ Foam::faceZone::faceZone
 )
 :
     Zone<faceZone, faceZoneList>(fz, fz.name(), move(addr), mz),
+    oriented_(true),
     flipMap_(move(fm)),
     patchPtr_(nullptr),
     masterCellsPtr_(nullptr),
@@ -293,6 +374,109 @@ Foam::faceZone::faceZone
     mePtr_(nullptr)
 {
     checkAddressing();
+}
+
+
+Foam::faceZone::faceZone
+(
+    const faceZone& fz,
+    labelList&& addr,
+    const faceZoneList& mz
+)
+:
+    Zone<faceZone, faceZoneList>(fz, fz.name(), move(addr), mz),
+    oriented_(false),
+    patchPtr_(nullptr),
+    masterCellsPtr_(nullptr),
+    slaveCellsPtr_(nullptr),
+    mePtr_(nullptr)
+{
+    checkAddressing();
+}
+
+
+Foam::autoPtr<Foam::faceZone> Foam::faceZone::clone() const
+{
+    if (oriented_)
+    {
+        return autoPtr<faceZone>
+        (
+            new faceZone(*this, name(), *this, flipMap(), zones())
+        );
+    }
+    else
+    {
+        return autoPtr<faceZone>
+        (
+            new faceZone(*this, name(), *this, zones())
+        );
+    }
+}
+
+
+Foam::autoPtr<Foam::faceZone> Foam::faceZone::clone(const word& name) const
+{
+    if (oriented_)
+    {
+        return autoPtr<faceZone>
+        (
+            new faceZone(*this, name, *this, flipMap(), zones())
+        );
+    }
+    else
+    {
+        return autoPtr<faceZone>
+        (
+            new faceZone(*this, name, *this, zones())
+        );
+    }
+}
+
+
+Foam::autoPtr<Foam::faceZone>
+Foam::faceZone::clone(const faceZoneList& mz) const
+{
+    if (oriented_)
+    {
+        return autoPtr<faceZone>
+        (
+            new faceZone(*this, name(), *this, flipMap(), mz)
+        );
+    }
+    else
+    {
+        return autoPtr<faceZone>
+        (
+            new faceZone(*this, name(), *this, mz)
+        );
+    }
+}
+
+
+Foam::autoPtr<Foam::faceZone> Foam::faceZone::clone
+(
+    const labelUList& addr,
+    const boolList& fm,
+    const faceZoneList& mz
+) const
+{
+    return autoPtr<faceZone>
+    (
+        new faceZone(*this, name(), addr, fm, mz)
+    );
+}
+
+
+Foam::autoPtr<Foam::faceZone> Foam::faceZone::clone
+(
+    const labelUList& addr,
+    const faceZoneList& mz
+) const
+{
+    return autoPtr<faceZone>
+    (
+        new faceZone(*this, name(), addr, mz)
+    );
 }
 
 
@@ -385,7 +569,20 @@ void Foam::faceZone::resetAddressing
 {
     clearAddressing();
     labelList::operator=(addr);
+    oriented_ = true;
     flipMap_ = flipMap;
+}
+
+
+void Foam::faceZone::resetAddressing
+(
+    const labelUList& addr
+)
+{
+    clearAddressing();
+    labelList::operator=(addr);
+    oriented_ = false;
+    flipMap_.clear();
 }
 
 
@@ -411,22 +608,43 @@ bool Foam::faceZone::checkParallelSync(const bool report) const
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     {
-        boolList neiZoneFace(mesh.nFaces()-mesh.nInternalFaces(), false);
-        boolList neiZoneFlip(mesh.nFaces()-mesh.nInternalFaces(), false);
-        forAll(*this, i)
-        {
-            const label facei = operator[](i);
+        boolList neiZoneFace(mesh.nFaces() - mesh.nInternalFaces(), false);
+        boolList neiZoneFlip(mesh.nFaces() - mesh.nInternalFaces(), false);
 
-            if (!mesh.isInternalFace(facei))
+        if (oriented_)
+        {
+            forAll(*this, i)
             {
-                neiZoneFace[facei-mesh.nInternalFaces()] = true;
-                neiZoneFlip[facei-mesh.nInternalFaces()] = flipMap()[i];
+                const label facei = operator[](i);
+
+                if (!mesh.isInternalFace(facei))
+                {
+                    neiZoneFace[facei - mesh.nInternalFaces()] = true;
+                    neiZoneFlip[facei - mesh.nInternalFaces()] = flipMap_[i];
+                }
             }
         }
+        else
+        {
+            forAll(*this, i)
+            {
+                const label facei = operator[](i);
+
+                if (!mesh.isInternalFace(facei))
+                {
+                    neiZoneFace[facei - mesh.nInternalFaces()] = true;
+                }
+            }
+        }
+
         boolList myZoneFace(neiZoneFace);
         syncTools::swapBoundaryFaceList(mesh, neiZoneFace);
+
         boolList myZoneFlip(neiZoneFlip);
-        syncTools::swapBoundaryFaceList(mesh, neiZoneFlip);
+        if (oriented_)
+        {
+            syncTools::swapBoundaryFaceList(mesh, neiZoneFlip);
+        }
 
         forAll(*this, i)
         {
@@ -435,7 +653,7 @@ bool Foam::faceZone::checkParallelSync(const bool report) const
 
             if (patchi != -1 && bm[patchi].coupled())
             {
-                const label bFacei = facei-mesh.nInternalFaces();
+                const label bFacei = facei - mesh.nInternalFaces();
 
                 // Check face in zone on both sides
                 if (myZoneFace[bFacei] != neiZoneFace[bFacei])
@@ -457,7 +675,7 @@ bool Foam::faceZone::checkParallelSync(const bool report) const
                         break;
                     }
                 }
-                else if (myZoneFlip[bFacei] == neiZoneFlip[bFacei])
+                else if (oriented_ && myZoneFlip[bFacei] == neiZoneFlip[bFacei])
                 {
                     // Flip state should be opposite.
                     hasError = true;
@@ -488,7 +706,31 @@ bool Foam::faceZone::checkParallelSync(const bool report) const
 
 void Foam::faceZone::insert(const Map<bool>& newIndices)
 {
+    if (!oriented_)
+    {
+        FatalErrorInFunction
+            << "Attempt to insert oriented faces into the unoriented faceZone "
+            << name()
+            << exit(FatalError);
+    }
+
     Map<bool> indices(*this, flipMap_);
+    indices.insert(newIndices);
+    reset(indices);
+}
+
+
+void Foam::faceZone::insert(const labelHashSet& newIndices)
+{
+    if (oriented_)
+    {
+        FatalErrorInFunction
+            << "Attempt to insert unoriented faces into the oriented faceZone "
+            << name()
+            << exit(FatalError);
+    }
+
+    labelHashSet indices(*this);
     indices.insert(newIndices);
     reset(indices);
 }
@@ -497,6 +739,7 @@ void Foam::faceZone::insert(const Map<bool>& newIndices)
 void Foam::faceZone::swap(faceZone& fz)
 {
     Zone::swap(fz);
+    Swap(oriented_, fz.oriented_);
     flipMap_.swap(fz.flipMap_);
 }
 
@@ -505,42 +748,52 @@ void Foam::faceZone::topoChange(const polyTopoChangeMap& map)
 {
     if (!topoUpdate_)
     {
-        Map<bool> indices;
-        const labelList& faceMap = map.faceMap();
-        const labelList& reverseFaceMap = map.reverseFaceMap();
-        const labelHashSet& flipFaceFlux = map.flipFaceFlux();
+        clearAddressing();
 
-        forAll(faceMap, facei)
+        if (oriented_)
         {
-            const label i = localIndex(faceMap[facei]);
-            if (faceMap[facei] >= 0 && i != -1)
-            {
-                indices.insert
-                (
-                    facei,
-                    flipFaceFlux.found(facei)
-                  ? !flipMap_[i]
-                  : flipMap_[i]
-                );
-            }
-        }
+            const labelList& faceMap = map.faceMap();
+            const labelList& reverseFaceMap = map.reverseFaceMap();
+            const labelHashSet& flipFaceFlux = map.flipFaceFlux();
 
-        forAll(reverseFaceMap, facei)
+            Map<bool> newIndicesMap;
+
+            forAll(faceMap, facei)
+            {
+                const label i = localIndex(faceMap[facei]);
+                if (faceMap[facei] >= 0 && i != -1)
+                {
+                    newIndicesMap.insert
+                    (
+                        facei,
+                        flipFaceFlux.found(facei)
+                      ? !flipMap_[i]
+                      : flipMap_[i]
+                    );
+                }
+            }
+
+            forAll(reverseFaceMap, facei)
+            {
+                const label i = localIndex(facei);
+                if (reverseFaceMap[facei] >= 0 && i != -1)
+                {
+                    newIndicesMap.insert
+                    (
+                        reverseFaceMap[facei],
+                        flipFaceFlux.found(reverseFaceMap[facei])
+                      ? !flipMap_[i]
+                      : flipMap_[i]
+                    );
+                }
+            }
+
+            reset(newIndicesMap);
+        }
+        else
         {
-            const label i = localIndex(facei);
-            if (reverseFaceMap[facei] >= 0 && i != -1)
-            {
-                indices.insert
-                (
-                    reverseFaceMap[facei],
-                    flipFaceFlux.found(reverseFaceMap[facei])
-                  ? !flipMap_[i]
-                  : flipMap_[i]
-                );
-            }
+            Zone::topoChange(map.faceMap(), map.reverseFaceMap());
         }
-
-        reset(indices);
     }
 }
 
@@ -558,7 +811,10 @@ void Foam::faceZone::writeDict(Ostream& os) const
 {
     os  << nl << name() << nl << token::BEGIN_BLOCK << nl;
     writeEntry(os, this->labelsName, *this);
-    writeEntry(os, "flipMap", flipMap());
+    if (oriented_)
+    {
+        writeEntry(os, "flipMap", flipMap_);
+    }
     os  << token::END_BLOCK << endl;
 }
 
@@ -568,14 +824,22 @@ void Foam::faceZone::writeDict(Ostream& os) const
 void Foam::faceZone::operator=(const faceZone& zn)
 {
     Zone::operator=(zn);
-    flipMap_ = zn.flipMap_;
+    oriented_ = zn.oriented_;
+    if (oriented_)
+    {
+        flipMap_ = zn.flipMap_;
+    }
 }
 
 
 void Foam::faceZone::operator=(faceZone&& zn)
 {
     Zone::operator=(move(zn));
-    flipMap_ = move(zn.flipMap_);
+    oriented_ = zn.oriented_;
+    if (oriented_)
+    {
+        flipMap_ = move(zn.flipMap_);
+    }
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -201,8 +201,8 @@ int main(int argc, char *argv[])
             break;
         }
 
-        label proci = globalFaces.whichProcID(unsetFacei);
-        label seedFacei = globalFaces.toLocal(proci, unsetFacei);
+        const label proci = globalFaces.whichProcID(unsetFacei);
+        const label seedFacei = globalFaces.toLocal(proci, unsetFacei);
         Info<< "Seeding from processor " << proci << " face " << seedFacei
             << endl;
 
@@ -210,7 +210,7 @@ int main(int argc, char *argv[])
         {
             // Determine orientation of seedFace
 
-            vector d = outsidePoint-patch.faceCentres()[seedFacei];
+            const vector d = outsidePoint - patch.faceCentres()[seedFacei];
             const vector& fn = patch.faceNormals()[seedFacei];
 
             // Set information to correct orientation
@@ -239,7 +239,7 @@ int main(int argc, char *argv[])
             const labelList& fEdges = patch.faceEdges()[seedFacei];
             forAll(fEdges, fEdgeI)
             {
-                label edgeI = fEdges[fEdgeI];
+                const label edgeI = fEdges[fEdgeI];
 
                 patchFaceOrientation& edgeInfo = allEdgeInfo[edgeI];
 
@@ -323,7 +323,7 @@ int main(int argc, char *argv[])
             )
             {
                 // Slave side. Take flipped from neighbour
-                label bFacei = meshFacei-mesh.nInternalFaces();
+                const label bFacei = meshFacei-mesh.nInternalFaces();
 
                 if (neiStatus[bFacei] == orientedSurface::NOFLIP)
                 {
@@ -366,7 +366,7 @@ int main(int argc, char *argv[])
                 << abort(FatalError);
         }
 
-        if (fZone.flipMap()[facei] != newFlipMap[facei])
+        if (!fZone.oriented() || fZone.flipMap()[facei] != newFlipMap[facei])
         {
             nChanged++;
         }

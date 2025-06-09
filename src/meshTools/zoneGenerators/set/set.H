@@ -27,6 +27,9 @@ Class
 Description
     A zoneGenerator which converts a set into the corresponding zone
 
+    The faceZone generated from a face set is unoriented because face sets do
+    not provide the orientation flipMap.
+
 Usage
     \table
         Property     | Description             | Required | Default value

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -314,31 +314,56 @@ void Foam::singleCellFvMesh::agglomerateMesh
         forAll(mesh.faceZones(), zoneI)
         {
             const faceZone& oldFz = mesh.faceZones()[zoneI];
-
             DynamicList<label> newAddressing(oldFz.size());
-            DynamicList<bool> newFlipMap(oldFz.size());
 
-            forAll(oldFz, i)
+            if (oldFz.oriented())
             {
-                label newFacei = reverseFaceMap_[oldFz[i]];
+                DynamicList<bool> newFlipMap(oldFz.size());
 
-                if (newFacei != -1)
+                forAll(oldFz, i)
                 {
-                    newAddressing.append(newFacei);
-                    newFlipMap.append(oldFz.flipMap()[i]);
-                }
-            }
+                    label newFacei = reverseFaceMap_[oldFz[i]];
 
-            faceZones().set
-            (
-                zoneI,
-                oldFz.clone
+                    if (newFacei != -1)
+                    {
+                        newAddressing.append(newFacei);
+                        newFlipMap.append(oldFz.flipMap()[i]);
+                    }
+                }
+
+                faceZones().set
                 (
-                    newAddressing,
-                    newFlipMap,
-                    faceZones()
-                )
-            );
+                    zoneI,
+                    oldFz.clone
+                    (
+                        newAddressing,
+                        newFlipMap,
+                        faceZones()
+                    )
+                );
+            }
+            else
+            {
+                forAll(oldFz, i)
+                {
+                    label newFacei = reverseFaceMap_[oldFz[i]];
+
+                    if (newFacei != -1)
+                    {
+                        newAddressing.append(newFacei);
+                    }
+                }
+
+                faceZones().set
+                (
+                    zoneI,
+                    oldFz.clone
+                    (
+                        newAddressing,
+                        faceZones()
+                    )
+                );
+            }
         }
     }
 

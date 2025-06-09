@@ -28,6 +28,8 @@ Description
     A zoneGenerator which selects the faces returned by the given
     zoneGenerator that are aligned with the given normal.
 
+    The returned faceZone is unoriented and provided the corresponding flipMap.
+
 Usage
     \table
         Property     | Description              | Required | Default value

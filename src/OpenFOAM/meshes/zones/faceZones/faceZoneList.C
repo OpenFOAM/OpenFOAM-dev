@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,26 +35,29 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::boolList Foam::faceZoneList::zonesFlipFace
-(
-    const label facei,
-    const labelList& faceiZones
-)
+void Foam::faceZoneList::insert(const List<Map<bool>>& zonesOrientedIndices)
 {
-    labelList zones(whichZones(facei));
-    boolList flipFaces(zones.size());
+    PtrList<faceZone>& zones = *this;
 
-    forAll(zones, zi)
+    if (zonesOrientedIndices.size() != zones.size())
     {
-        const faceZone& fz = this->operator[](zi);
-        flipFaces[zi] = fz.flipMap()[fz.localIndex(facei)];
+        FatalErrorInFunction
+            << "zonesOrientedIndices.size() " << zonesOrientedIndices.size()
+            << " != number of zones " << zones.size()
+            << exit(FatalError);
     }
 
-    return flipFaces;
+    forAll(zonesOrientedIndices, zonei)
+    {
+        if (zonesOrientedIndices[zonei].size())
+        {
+            zones[zonei].insert(zonesOrientedIndices[zonei]);
+        }
+    }
 }
 
 
-void Foam::faceZoneList::insert(const List<Map<bool>>& zonesIndices)
+void Foam::faceZoneList::insert(const List<labelHashSet>& zonesIndices)
 {
     PtrList<faceZone>& zones = *this;
 
@@ -68,7 +71,10 @@ void Foam::faceZoneList::insert(const List<Map<bool>>& zonesIndices)
 
     forAll(zonesIndices, zonei)
     {
-        zones[zonei].insert(zonesIndices[zonei]);
+        if (zonesIndices[zonei].size())
+        {
+            zones[zonei].insert(zonesIndices[zonei]);
+        }
     }
 }
 

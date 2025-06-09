@@ -28,6 +28,8 @@ Description
     A faceZone zoneGenerator which selects faces based on the intersection of
     a surface with the vector between the adjacent cell centres.
 
+    The returned faceZone is unoriented and provided the corresponding flipMap.
+
 Usage
     \table
         Property     | Description              | Required | Default value

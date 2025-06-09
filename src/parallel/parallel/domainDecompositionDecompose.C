@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1035,14 +1035,17 @@ void Foam::domainDecomposition::decompose()
 
                     label index = fz[zoneI].localIndex(curF);
 
-                    bool flip = fz[zoneI].flipMap()[index];
-
-                    if (curFaceLabels[facei] < 0)
+                    if (fz[zoneI].oriented())
                     {
-                        flip = !flip;
-                    }
+                        bool flip = fz[zoneI].flipMap()[index];
 
-                    zoneFaceFlips[zoneI].append(flip);
+                        if (curFaceLabels[facei] < 0)
+                        {
+                            flip = !flip;
+                        }
+
+                        zoneFaceFlips[zoneI].append(flip);
+                    }
                 }
                 else if (zoneI == -2)
                 {
@@ -1055,14 +1058,17 @@ void Foam::domainDecomposition::decompose()
                         {
                             zoneFaces[zoneI].append(facei);
 
-                            bool flip = fz[zoneI].flipMap()[index];
-
-                            if (curFaceLabels[facei] < 0)
+                            if (fz[zoneI].oriented())
                             {
-                                flip = !flip;
-                            }
+                                bool flip = fz[zoneI].flipMap()[index];
 
-                            zoneFaceFlips[zoneI].append(flip);
+                                if (curFaceLabels[facei] < 0)
+                                {
+                                    flip = !flip;
+                                }
+
+                                zoneFaceFlips[zoneI].append(flip);
+                            }
                         }
                     }
                 }
@@ -1071,16 +1077,31 @@ void Foam::domainDecomposition::decompose()
             procMesh.faceZones().setSize(zoneFaces.size());
             forAll(zoneFaces, zoneI)
             {
-                procMesh.faceZones().set
-                (
-                    zoneI,
-                    fz[zoneI].clone
+                if (fz[zoneI].oriented())
+                {
+                    procMesh.faceZones().set
                     (
-                        zoneFaces[zoneI].shrink(),          // addressing
-                        zoneFaceFlips[zoneI].shrink(),      // flipmap
-                        procMesh.faceZones()
-                    )
-                );
+                        zoneI,
+                        fz[zoneI].clone
+                        (
+                            zoneFaces[zoneI].shrink(),          // addressing
+                            zoneFaceFlips[zoneI].shrink(),      // flipmap
+                            procMesh.faceZones()
+                        )
+                    );
+                }
+                else
+                {
+                    procMesh.faceZones().set
+                    (
+                        zoneI,
+                        fz[zoneI].clone
+                        (
+                            zoneFaces[zoneI].shrink(),          // addressing
+                            procMesh.faceZones()
+                        )
+                    );
+                }
             }
 
             if (fz.size())

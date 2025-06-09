@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -157,6 +157,7 @@ private:
             DynamicList<word>& zoneNames,
             labelList& from1ToAll,
             List<DynamicList<label>>& fzFaces,
+            boolList& fzOrientations,
             List<DynamicList<bool>>& fzFlips
         );
 
@@ -194,6 +195,7 @@ private:
 
             DynamicList<word>& faceZoneNames,
             List<DynamicList<label>>& fzFaces,
+            boolList& fzOrientations,
             List<DynamicList<bool>>& fzFlips,
 
             DynamicList<word>& cellZoneNames,
@@ -208,6 +210,7 @@ private:
 
             const DynamicList<word>& faceZoneNames,
             const List<DynamicList<label>>& fzFaces,
+            const boolList& fzOrientations,
             const List<DynamicList<bool>>& fzFlips,
 
             const DynamicList<word>& cellZoneNames,

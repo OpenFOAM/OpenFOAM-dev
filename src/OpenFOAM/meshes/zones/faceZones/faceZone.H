@@ -25,11 +25,18 @@ Class
     Foam::faceZone
 
 Description
-    A subset of mesh faces organised as a primitive patch.
+    Named list of face indices representing a sub-set of the mesh faces
 
-    For quick check whether a face belongs to the zone use the lookup
-    mechanism in faceZoneList, where all the zoned faces are registered
-    with their zone number.
+    with optional flipMap to provide orientation relative to the orientation
+    of the corresponding mesh faces
+
+    Used by mesh-manipulation tools, field initialisation and for sources and
+    functionObjects that apply to sub-sets of the faces.
+
+See also
+    faceZoneList
+    Zone
+    zoneGenerator
 
 SourceFiles
     faceZone.C
@@ -63,10 +70,8 @@ class faceZone
         //- The name associated with the zone-labels dictionary entry
         static const word labelsName_;
 
-
-protected:
-
-    // Protected data
+        //- faceZone is oriented if the flipMap has been set
+        bool oriented_;
 
         //- Flip map for all faces in the zone.  Set to true if the
         //  face needs to be flipped to achieve the correct orientation.
@@ -88,7 +93,7 @@ protected:
             mutable labelList* mePtr_;
 
 
-    // Protected Member Functions
+    // Private Member Functions
 
         //- Build primitive patch
         void calcFaceZonePatch() const;
@@ -104,6 +109,9 @@ protected:
 
         //- Reset the indices and flipMap from the given map
         void reset(const Map<bool>& indices);
+
+        //- Reset the indices from the given set
+        void reset(const labelHashSet& indices);
 
 
 public:
@@ -130,12 +138,32 @@ public:
             const bool topoUpdate = false
         );
 
+        //- Construct from components without flipMap
+        faceZone
+        (
+            const word& name,
+            const labelUList& addr,
+            const faceZoneList& mz,
+            const bool moveUpdate = false,
+            const bool topoUpdate = false
+        );
+
         //- Construct from components, moving contents
         faceZone
         (
             const word& name,
             labelList&& addr,
             boolList&& fm,
+            const faceZoneList&,
+            const bool moveUpdate = false,
+            const bool topoUpdate = false
+        );
+
+        //- Construct from components without flipMap, moving contents
+        faceZone
+        (
+            const word& name,
+            labelList&& addr,
             const faceZoneList&,
             const bool moveUpdate = false,
             const bool topoUpdate = false
@@ -160,6 +188,16 @@ public:
             const faceZoneList&
         );
 
+        //- Construct given the original zone and resetting the
+        //  face list and mesh zones information without flipMap
+        faceZone
+        (
+            const faceZone&,
+            const word& name,
+            const labelUList& addr,
+            const faceZoneList&
+        );
+
         //- Construct given the original zone, resetting the
         //  face list and mesh zones information
         faceZone
@@ -170,35 +208,26 @@ public:
             const faceZoneList&
         );
 
+        //- Construct given the original zone, resetting the
+        //  face list and mesh zones information without flipMap
+        faceZone
+        (
+            const faceZone&,
+            labelList&& addr,
+            const faceZoneList&
+        );
+
         //- Disallow default bitwise copy construction
         faceZone(const faceZone&) = delete;
 
         //- Construct and return a clone
-        autoPtr<faceZone> clone() const
-        {
-            return autoPtr<faceZone>
-            (
-                new faceZone(*this, name(), *this, flipMap(), zones())
-            );
-        }
+        autoPtr<faceZone> clone() const;
 
         //- Construct and return a clone with a new name
-        autoPtr<faceZone> clone(const word& name) const
-        {
-            return autoPtr<faceZone>
-            (
-                new faceZone(*this, name, *this, flipMap(), zones())
-            );
-        }
+        autoPtr<faceZone> clone(const word& name) const;
 
         //- Construct and return a clone, resetting the mesh zones
-        autoPtr<faceZone> clone(const faceZoneList& mz) const
-        {
-            return autoPtr<faceZone>
-            (
-                new faceZone(*this, name(), *this, flipMap(), mz)
-            );
-        }
+        autoPtr<faceZone> clone(const faceZoneList& mz) const;
 
         //- Construct and return a clone, resetting the face list
         //  and mesh zones
@@ -207,13 +236,15 @@ public:
             const labelUList& addr,
             const boolList& fm,
             const faceZoneList& mz
-        ) const
-        {
-            return autoPtr<faceZone>
-            (
-                new faceZone(*this, name(), addr, fm, mz)
-            );
-        }
+        ) const;
+
+        //- Construct and return a clone, resetting the face list
+        //  and mesh zones
+        autoPtr<faceZone> clone
+        (
+            const labelUList& addr,
+            const faceZoneList& mz
+        ) const;
 
 
     //- Destructor
@@ -222,9 +253,23 @@ public:
 
     // Member Functions
 
+        //- Return true if the faceZone is oriented, i.e. the flipMap is set
+        bool oriented() const
+        {
+            return oriented_;
+        }
+
         //- Return face flip map
         const boolList& flipMap() const
         {
+            if (!oriented_)
+            {
+                FatalErrorInFunction
+                    << "flipMap requested for the unoriented faceZone "
+                    << name()
+                    << exit(FatalError);
+            }
+
             return flipMap_;
         }
 
@@ -254,6 +299,9 @@ public:
         //- Reset addressing and flip map (clearing demand-driven data)
         void resetAddressing(const labelUList&, const boolList&);
 
+        //- Reset addressing (clearing demand-driven data)
+        void resetAddressing(const labelUList&);
+
         //- Check zone definition. Return true if in error.
         bool checkDefinition(const bool report = false) const;
 
@@ -263,6 +311,9 @@ public:
 
         //- Insert given indices and corresponding face flips into zone
         void insert(const Map<bool>& newIndices);
+
+        //- Insert given indices into zone
+        void insert(const labelHashSet& newIndices);
 
         //- Swap two faceZones
         void swap(faceZone&);

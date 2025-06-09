@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -168,6 +168,8 @@ Foam::mergePolyMesh::mergePolyMesh(polyMesh& mesh)
         faceZoneNames_.append(curFaceZoneNames[zonei]);
     }
 
+    faceZonesAddedOrientedFaces_.setSize(faceZoneNames_.size());
+
     faceZonesAddedFaces_.setSize(faceZoneNames_.size());
 
     // Cell zones
@@ -273,7 +275,6 @@ void Foam::mergePolyMesh::addMesh(const polyMesh& m)
     forAll(fz, zonei)
     {
         faceZoneIndices[zonei] = zoneIndex(faceZoneNames_, fz[zonei].name());
-        faceZonesAddedFaces_.setSize(faceZoneNames_.size());
     }
 
     const faceList& f = m.faces();
@@ -345,8 +346,16 @@ void Foam::mergePolyMesh::addMesh(const polyMesh& m)
             const faceZone& fzi = fz[zones[zonei]];
             const bool flip = fzi.flipMap()[fzi.localIndex(facei)];
 
-            faceZonesAddedFaces_[faceZoneIndices[zones[zonei]]]
-           .insert(renumberFaces[facei], flip);
+            if (fzi.oriented())
+            {
+                faceZonesAddedOrientedFaces_[faceZoneIndices[zones[zonei]]]
+                .insert(renumberFaces[facei], flip);
+            }
+            else
+            {
+                faceZonesAddedFaces_[faceZoneIndices[zones[zonei]]]
+                .insert(renumberFaces[facei]);
+            }
         }
     }
 }
@@ -501,6 +510,9 @@ void Foam::mergePolyMesh::merge()
 
     // Add the new points to the pointZones in the merged mesh
     mesh_.pointZones().insert(pointZonesAddedPoints_);
+
+    // Add the new oriented faces to the faceZones in the merged mesh
+    mesh_.faceZones().insert(faceZonesAddedOrientedFaces_);
 
     // Add the new faces to the faceZones in the merged mesh
     mesh_.faceZones().insert(faceZonesAddedFaces_);

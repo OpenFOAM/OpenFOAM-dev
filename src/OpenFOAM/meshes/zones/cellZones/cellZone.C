@@ -58,7 +58,7 @@ bool Foam::cellZone::checkDefinition(const bool report) const
 
 void Foam::cellZone::topoChange(const polyTopoChangeMap& map)
 {
-    // if (!topoUpdate_)
+    if (!topoUpdate_)
     {
         Zone::topoChange(map.cellMap(), map.reverseCellMap());
     }

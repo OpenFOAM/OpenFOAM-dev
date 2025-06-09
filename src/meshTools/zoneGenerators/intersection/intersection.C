@@ -166,14 +166,22 @@ Foam::zoneSet Foam::zoneGenerators::intersection::generate() const
         )
         {
             nFaceIntersections.setSize(mesh_.nFaces(), 0);
-            flipMap.setSize(mesh_.nFaces(), false);
-            countIntersections
-            (
-                nFaceIntersections,
-                flipMap,
-                zs.fZone(),
-                zs.fZone().flipMap()
-            );
+
+            if (zs.fZone().oriented())
+            {
+                flipMap.setSize(mesh_.nFaces(), false);
+                countIntersections
+                (
+                    nFaceIntersections,
+                    flipMap,
+                    zs.fZone(),
+                    zs.fZone().flipMap()
+                );
+            }
+            else
+            {
+                countIntersections(nFaceIntersections, zs.fZone());
+            }
         }
     }
 
@@ -204,15 +212,24 @@ Foam::zoneSet Foam::zoneGenerators::intersection::generate() const
         )
       : nullptr,
         nFaceIntersections.size()
-      ? new faceZone
-        (
-            zoneName_,
-            faceIndices,
-            boolList(flipMap, faceIndices),
-            mesh_.faceZones(),
-            moveUpdate_,
-            true
-        )
+      ? flipMap.size()
+          ? new faceZone
+            (
+                zoneName_,
+                faceIndices,
+                boolList(flipMap, faceIndices),
+                mesh_.faceZones(),
+                moveUpdate_,
+                true
+            )
+          : new faceZone
+            (
+                zoneName_,
+                faceIndices,
+                mesh_.faceZones(),
+                moveUpdate_,
+                true
+            )
       : nullptr
     );
 }

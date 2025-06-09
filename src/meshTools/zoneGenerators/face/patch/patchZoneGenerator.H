@@ -27,6 +27,8 @@ Class
 Description
     A zoneGenerator which constructs a faceZone from a set of patches
 
+    The returned faceZone is unoriented and provided the corresponding flipMap.
+
 Usage
     \table
         Property     | Description             | Required | Default value
