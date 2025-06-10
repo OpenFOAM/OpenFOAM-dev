@@ -17,14 +17,14 @@ FoamFile
 fz1
 {
     type        surface;
-    surface     triSurfaceMesh;
+    surface     triSurface;
     file        "surface1.obj";
 }
 
 fz2
 {
     type        surface;
-    surface     triSurfaceMesh;
+    surface     triSurface;
     file        "surface2.obj";
 }
 

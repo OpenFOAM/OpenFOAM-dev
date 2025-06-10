@@ -29,7 +29,7 @@ geometry
 {
     wing
     {
-        type    triSurfaceMesh;
+        type    triSurface;
         file    "wing_5degrees.obj";
     }
 

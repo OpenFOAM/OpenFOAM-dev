@@ -23,19 +23,19 @@ geometry
 {
     body
     {
-        type triSurfaceMesh;
+        type triSurface;
         file "body.obj";
     }
 
     frontWheels
     {
-        type triSurfaceMesh;
+        type triSurface;
         file "frontWheels.obj";
     }
 
     rearWheels
     {
-        type triSurfaceMesh;
+        type triSurface;
         file "rearWheels.obj";
     }
 

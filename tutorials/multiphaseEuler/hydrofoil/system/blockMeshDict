@@ -54,17 +54,17 @@ geometry
 {
     hydrofoilTip
     {
-        type triSurfaceMesh;
+        type triSurface;
         file "NACAMOD66_6deg_tip.stl";
     }
     hydrofoilLower
     {
-        type triSurfaceMesh;
+        type triSurface;
         file "NACAMOD66_6deg_lower.stl";
     }
     hydrofoilUpper
     {
-        type triSurfaceMesh;
+        type triSurface;
         file "NACAMOD66_6deg_upper.stl";
     }
 }

@@ -24,7 +24,7 @@ geometry
 {
     heatedDuct
     {
-        type triSurfaceMesh;
+        type triSurface;
         file "heatedDuct.stl";
 
         regions
@@ -42,13 +42,13 @@ geometry
 
     metalToHeater
     {
-        type triSurfaceMesh;
+        type triSurface;
         file "metalToHeater.stl";
     }
 
     fluidToMetal
     {
-        type triSurfaceMesh;
+        type triSurface;
         file "fluidToMetal.stl";
     }
 };

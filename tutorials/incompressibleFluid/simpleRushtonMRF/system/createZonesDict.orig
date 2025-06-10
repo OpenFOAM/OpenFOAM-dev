@@ -20,7 +20,7 @@ stirrer
     blades
     {
         type        surface;
-        surface     triSurfaceMesh;
+        surface     triSurface;
         file        "stirrer4.obj";
     }
 
@@ -37,7 +37,7 @@ stirrer
 baffles
 {
     type        surface;
-    surface     triSurfaceMesh;
+    surface     triSurface;
     file        "baffles.obj";
 }
 

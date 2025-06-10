@@ -47,7 +47,7 @@ geometry
 
     sphere
     {
-        type triSurfaceMesh;
+        type triSurface;
         file "sphere.stl"
 
         // Optional: non-default tolerance on intersections

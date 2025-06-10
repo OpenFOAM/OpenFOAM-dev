@@ -23,7 +23,7 @@ geometry
 {
     shell
     {
-        type            triSurfaceMesh;
+        type            triSurface;
         file            "shell.stl";
         regions
         {
@@ -34,7 +34,7 @@ geometry
     }
     tube
     {
-        type            triSurfaceMesh;
+        type            triSurface;
         file            "tube.stl";
         regions
         {
@@ -45,7 +45,7 @@ geometry
     }
     solid
     {
-        type            triSurfaceMesh;
+        type            triSurface;
         file            "solid.stl";
         regions
         {
@@ -54,12 +54,12 @@ geometry
     }
     shell_to_solid
     {
-        type            triSurfaceMesh;
+        type            triSurface;
         file            "shell_to_solid.stl";
     }
     tube_to_solid
     {
-        type            triSurfaceMesh;
+        type            triSurface;
         file            "tube_to_solid.stl";
     }
 };

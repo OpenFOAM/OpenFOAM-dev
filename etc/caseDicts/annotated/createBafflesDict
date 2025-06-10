@@ -53,7 +53,7 @@ baffles
     {
         // Use a surface to select faces and orientation.
         type        surface;
-        surface     triSurfaceMesh;
+        surface     triSurface;
         name        baffle1D.stl;
 
         // Owner patch

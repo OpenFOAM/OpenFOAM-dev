@@ -30,7 +30,7 @@ geometry
 {
     walls
     {
-        type triSurfaceMesh;
+        type triSurface;
         file "cyclone.stl";
     }
 };

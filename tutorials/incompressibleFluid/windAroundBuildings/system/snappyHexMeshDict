@@ -23,7 +23,7 @@ geometry
 {
     buildings
     {
-        type triSurfaceMesh;
+        type triSurface;
         file "buildings.obj";
     }
 

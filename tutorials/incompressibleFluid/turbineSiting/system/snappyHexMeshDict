@@ -44,7 +44,7 @@ geometry
 
     terrain
     {
-        type triSurfaceMesh;
+        type triSurface;
         file "terrain.stl";
     }
 };

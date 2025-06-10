@@ -23,7 +23,7 @@ geometry
 {
     CAD
     {
-        type triSurfaceMesh;
+        type triSurface;
         file "CAD.obj";
     }
 };

@@ -14,8 +14,8 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-surface1.stl    {type triSurfaceMesh;}
-surface2.stl    {type triSurfaceMesh;}
+surface1.stl    {type triSurface;}
+surface2.stl    {type triSurface;}
 
 
 // ************************************************************************* //

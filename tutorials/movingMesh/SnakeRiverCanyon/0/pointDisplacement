@@ -38,7 +38,7 @@ boundaryField
         {
             AcrossRiver
             {
-                type triSurfaceMesh;
+                type triSurface;
                 file "AcrossRiver.stl";
             }
         };
@@ -67,7 +67,7 @@ boundaryField
 //        {
 //            hellskull
 //            {
-//                type triSurfaceMesh;
+//                type triSurface;
 //                file "hellskull.stl";
 //            }
 //        };

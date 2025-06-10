@@ -22,7 +22,7 @@ baffles
     baffle1D
     {
         type        surface;
-        surface     triSurfaceMesh;
+        surface     triSurface;
         file        "baffle1D.stl";
 
         owner

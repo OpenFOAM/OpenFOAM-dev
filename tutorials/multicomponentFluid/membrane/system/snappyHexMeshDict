@@ -24,7 +24,7 @@ geometry
 {
     boundaries
     {
-        type triSurfaceMesh;
+        type triSurface;
         file "boundaries.stl";
 
         regions
@@ -57,7 +57,7 @@ geometry
     }
     membrane
     {
-        type triSurfaceMesh;
+        type triSurface;
         file "membrane.stl";
     }
 };

@@ -17,7 +17,7 @@ FoamFile
 baffle3D
 {
     type        surface;
-    surface     triSurfaceMesh;
+    surface     triSurface;
     file        "baffle3D.stl";
 }
 

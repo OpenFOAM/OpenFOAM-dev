@@ -51,7 +51,7 @@ geometry
 {
     aerofoil
     {
-        type   triSurfaceMesh;
+        type   triSurface;
         file   "NACA0012.obj";
     }
     cylinder

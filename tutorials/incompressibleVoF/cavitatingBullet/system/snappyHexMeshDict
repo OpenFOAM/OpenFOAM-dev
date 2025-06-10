@@ -30,7 +30,7 @@ geometry
 {
     bullet
     {
-        type triSurfaceMesh;
+        type triSurface;
         file "bullet.stl";
 
         regions

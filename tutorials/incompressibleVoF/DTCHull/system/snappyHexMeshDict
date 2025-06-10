@@ -30,7 +30,7 @@ geometry
 {
     hull
     {
-        type triSurfaceMesh;
+        type triSurface;
         file "DTC-scaled.stl";
 
         patchInfo

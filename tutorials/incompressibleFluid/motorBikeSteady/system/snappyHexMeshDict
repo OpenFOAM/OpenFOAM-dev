@@ -29,7 +29,7 @@ geometry
 {
     motorBike
     {
-        type triSurfaceMesh;
+        type triSurface;
         file "motorBike.obj";
     }
 

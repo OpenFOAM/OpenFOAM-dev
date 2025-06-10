@@ -30,7 +30,7 @@ geometry
 {
     flange
     {
-        type triSurfaceMesh;
+        type triSurface;
         file "flange.stl";
     }
 
