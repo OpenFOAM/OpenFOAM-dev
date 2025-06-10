@@ -40,7 +40,7 @@ SourceFiles
 #include "Time.H"
 #include "boundBox.H"
 #include "NamedEnum.H"
-#include "triSurfaceMesh.H"
+#include "searchableTriSurface.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

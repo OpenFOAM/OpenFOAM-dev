@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "closedTriSurfaceMesh.H"
+#include "closedTriSurface.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -32,19 +32,19 @@ namespace Foam
 {
     namespace searchableSurfaces
     {
-        defineTypeNameAndDebug(closedTriSurfaceMesh, 0);
+        defineTypeNameAndDebug(closedTriSurface, 0);
 
         addToRunTimeSelectionTable
         (
             searchableSurface,
-            closedTriSurfaceMesh,
+            closedTriSurface,
             dictionary
         );
 
         addBackwardCompatibleToRunTimeSelectionTable
         (
             searchableSurface,
-            closedTriSurfaceMesh,
+            closedTriSurface,
             dictionary,
             closedTriSurfaceMesh,
             "closedTriSurfaceMesh"
@@ -55,7 +55,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::searchableSurfaces::closedTriSurfaceMesh::closedTriSurfaceMesh
+Foam::searchableSurfaces::closedTriSurface::closedTriSurface
 (
     const IOobject& io,
     const triSurface& s
@@ -65,7 +65,7 @@ Foam::searchableSurfaces::closedTriSurfaceMesh::closedTriSurfaceMesh
 {}
 
 
-Foam::searchableSurfaces::closedTriSurfaceMesh::closedTriSurfaceMesh
+Foam::searchableSurfaces::closedTriSurface::closedTriSurface
 (
     const IOobject& io
 )
@@ -74,7 +74,7 @@ Foam::searchableSurfaces::closedTriSurfaceMesh::closedTriSurfaceMesh
 {}
 
 
-Foam::searchableSurfaces::closedTriSurfaceMesh::closedTriSurfaceMesh
+Foam::searchableSurfaces::closedTriSurface::closedTriSurface
 (
     const IOobject& io,
     const dictionary& dict
@@ -86,7 +86,7 @@ Foam::searchableSurfaces::closedTriSurfaceMesh::closedTriSurfaceMesh
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::searchableSurfaces::closedTriSurfaceMesh::~closedTriSurfaceMesh()
+Foam::searchableSurfaces::closedTriSurface::~closedTriSurface()
 {}
 
 

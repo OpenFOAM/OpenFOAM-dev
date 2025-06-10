@@ -22,12 +22,12 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::searchableSurfaces::closedTriSurfaceMesh
+    Foam::searchableSurfaces::closedTriSurface
 
 Description
     Like triSurface, a surface geometry formed of discrete facets, e.g. \
     triangles and/or quadrilaterals, defined in a file using formats such as
-    Wavefront OBJ, or stereolithography STL. A closedTriSurfaceMesh is a
+    Wavefront OBJ, or stereolithography STL. A closedTriSurface is a
     geometry surface which is meant to be closed but contains some
     imperfections, e.g. small holes or multiple parts, which mean it is not
     strictly closed.
@@ -45,19 +45,19 @@ Usage
 
     Example specification in snappyHexMeshDict/geometry:
     \verbatim
-        type       closedTriSurfaceMesh;
+        type       closedTriSurface;
         file       "surfaceFile.obj";
     \endverbatim
 
 SourceFiles
-    closedTriSurfaceMesh.C
+    closedTriSurface.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef searchableSurfaces_closedTriSurfaceMesh_H
-#define searchableSurfaces_closedTriSurfaceMesh_H
+#ifndef searchableSurfaces_closedTriSurface_H
+#define searchableSurfaces_closedTriSurface_H
 
-#include "triSurfaceMesh.H"
+#include "searchableTriSurface.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -67,10 +67,10 @@ namespace searchableSurfaces
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class closedTriSurfaceMesh Declaration
+                    Class closedTriSurface Declaration
 \*---------------------------------------------------------------------------*/
 
-class closedTriSurfaceMesh
+class closedTriSurface
 :
     public triSurfaceMesh
 {
@@ -83,26 +83,26 @@ public:
     // Constructors
 
         //- Construct from triSurface
-        closedTriSurfaceMesh(const IOobject&, const triSurface&);
+        closedTriSurface(const IOobject&, const triSurface&);
 
         //- Construct read.
-        closedTriSurfaceMesh(const IOobject& io);
+        closedTriSurface(const IOobject& io);
 
         //- Construct from IO and dictionary (used by searchableSurface).
         //  Dictionary may contain a 'scale' entry (eg, 0.001: mm -> m)
-        closedTriSurfaceMesh
+        closedTriSurface
         (
             const IOobject& io,
             const dictionary& dict
         );
 
         //- Disallow default bitwise copy construction
-        closedTriSurfaceMesh(const closedTriSurfaceMesh&) = delete;
+        closedTriSurface(const closedTriSurface&) = delete;
 
 
     // Destructor
 
-        virtual ~closedTriSurfaceMesh();
+        virtual ~closedTriSurface();
 
 
     // Member Functions
@@ -118,7 +118,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const closedTriSurfaceMesh&) = delete;
+        void operator=(const closedTriSurface&) = delete;
 };
 
 

@@ -23,14 +23,14 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "distributedTriSurfaceMesh.H"
+#include "distributedTriSurface.H"
 #include "triSurfaceFields.H"
 #include "distributionMap.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 //template<class Type>
-//void Foam::distributedTriSurfaceMesh::getField
+//void Foam::distributedTriSurface::getField
 //(
 //    const word& fieldName,
 //    const List<pointIndexHit>& info,
@@ -81,7 +81,7 @@ License
 
 
 template<class Type>
-void Foam::searchableSurfaces::distributedTriSurfaceMesh::distributeFields
+void Foam::searchableSurfaces::distributedTriSurface::distributeFields
 (
     const distributionMap& map
 )

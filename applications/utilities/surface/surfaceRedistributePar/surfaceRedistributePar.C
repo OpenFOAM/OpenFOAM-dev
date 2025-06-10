@@ -40,7 +40,7 @@ Description
 #include "argList.H"
 #include "Time.H"
 #include "polyMesh.H"
-#include "distributedTriSurfaceMesh.H"
+#include "distributedTriSurface.H"
 #include "distributionMap.H"
 #include "localIOdictionary.H"
 
@@ -116,7 +116,7 @@ int main(int argc, char *argv[])
 
     Info<< "Reading surface from " << surfFileName << nl << nl
         << "Using distribution method "
-        << searchableSurfaces::distributedTriSurfaceMesh
+        << searchableSurfaces::distributedTriSurface
          ::distributionTypeNames_[distType]
         << " " << distType << nl << endl;
 
@@ -219,7 +219,7 @@ int main(int argc, char *argv[])
 
 
     // Load surface
-    searchableSurfaces::distributedTriSurfaceMesh surfMesh(io);
+    searchableSurfaces::distributedTriSurface surfMesh(io);
     Info<< "Loaded surface" << nl << endl;
 
 

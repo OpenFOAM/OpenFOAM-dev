@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "distributedTriSurfaceMesh.H"
+#include "distributedTriSurface.H"
 #include "distributionMap.H"
 #include "randomGenerator.H"
 #include "addToRunTimeSelectionTable.H"
@@ -45,19 +45,19 @@ namespace Foam
 {
     namespace searchableSurfaces
     {
-        defineTypeNameAndDebug(distributedTriSurfaceMesh, 0);
+        defineTypeNameAndDebug(distributedTriSurface, 0);
 
         addToRunTimeSelectionTable
         (
             searchableSurface,
-            distributedTriSurfaceMesh,
+            distributedTriSurface,
             dictionary
         );
 
         addBackwardCompatibleToRunTimeSelectionTable
         (
             searchableSurface,
-            distributedTriSurfaceMesh,
+            distributedTriSurface,
             dictionary,
             distributedTriSurfaceMesh,
             "distributedTriSurfaceMesh"
@@ -69,7 +69,7 @@ namespace Foam
 template<>
 const char* Foam::NamedEnum
 <
-    Foam::searchableSurfaces::distributedTriSurfaceMesh::distributionType,
+    Foam::searchableSurfaces::distributedTriSurface::distributionType,
     3
 >::names[] =
 {
@@ -80,14 +80,14 @@ const char* Foam::NamedEnum
 
 const Foam::NamedEnum
 <
-    Foam::searchableSurfaces::distributedTriSurfaceMesh::distributionType,
+    Foam::searchableSurfaces::distributedTriSurface::distributionType,
     3
-> Foam::searchableSurfaces::distributedTriSurfaceMesh::distributionTypeNames_;
+> Foam::searchableSurfaces::distributedTriSurface::distributionTypeNames_;
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-bool Foam::searchableSurfaces::distributedTriSurfaceMesh::read()
+bool Foam::searchableSurfaces::distributedTriSurface::read()
 {
     // Get bb of all domains.
     procBb_.setSize(Pstream::nProcs());
@@ -107,7 +107,7 @@ bool Foam::searchableSurfaces::distributedTriSurfaceMesh::read()
 
 
 // Is segment fully local?
-bool Foam::searchableSurfaces::distributedTriSurfaceMesh::isLocal
+bool Foam::searchableSurfaces::distributedTriSurface::isLocal
 (
     const List<treeBoundBox>& myBbs,
     const point& start,
@@ -125,7 +125,7 @@ bool Foam::searchableSurfaces::distributedTriSurfaceMesh::isLocal
 }
 
 
-//void Foam::searchableSurfaces::distributedTriSurfaceMesh::splitSegment
+//void Foam::searchableSurfaces::distributedTriSurface::splitSegment
 //(
 //    const label segmentI,
 //    const point& start,
@@ -187,7 +187,7 @@ bool Foam::searchableSurfaces::distributedTriSurfaceMesh::isLocal
 //}
 
 
-void Foam::searchableSurfaces::distributedTriSurfaceMesh::distributeSegment
+void Foam::searchableSurfaces::distributedTriSurface::distributeSegment
 (
     const label segmentI,
     const point& start,
@@ -268,7 +268,7 @@ void Foam::searchableSurfaces::distributedTriSurfaceMesh::distributeSegment
 
 
 Foam::autoPtr<Foam::distributionMap>
-Foam::searchableSurfaces::distributedTriSurfaceMesh::distributeSegments
+Foam::searchableSurfaces::distributedTriSurface::distributeSegments
 (
     const pointField& start,
     const pointField& end,
@@ -369,7 +369,7 @@ Foam::searchableSurfaces::distributedTriSurfaceMesh::distributeSegments
 }
 
 
-void Foam::searchableSurfaces::distributedTriSurfaceMesh::findLine
+void Foam::searchableSurfaces::distributedTriSurface::findLine
 (
     const bool nearestIntersection,
     const pointField& start,
@@ -553,7 +553,7 @@ void Foam::searchableSurfaces::distributedTriSurfaceMesh::findLine
 // - calculates exchange map
 // - uses map to calculate local triangle index
 Foam::autoPtr<Foam::distributionMap>
-Foam::searchableSurfaces::distributedTriSurfaceMesh::calcLocalQueries
+Foam::searchableSurfaces::distributedTriSurface::calcLocalQueries
 (
     const List<pointIndexHit>& info,
     labelList& triangleIndex
@@ -673,7 +673,7 @@ Foam::searchableSurfaces::distributedTriSurfaceMesh::calcLocalQueries
 
 
 Foam::label
-Foam::searchableSurfaces::distributedTriSurfaceMesh::calcOverlappingProcs
+Foam::searchableSurfaces::distributedTriSurface::calcOverlappingProcs
 (
     const point& centre,
     const scalar radiusSqr,
@@ -705,7 +705,7 @@ Foam::searchableSurfaces::distributedTriSurfaceMesh::calcOverlappingProcs
 // - calculates exchange map
 // - uses map to exchange points and radius
 Foam::autoPtr<Foam::distributionMap>
-Foam::searchableSurfaces::distributedTriSurfaceMesh::calcLocalQueries
+Foam::searchableSurfaces::distributedTriSurface::calcLocalQueries
 (
     const pointField& centres,
     const scalarField& radiusSqr,
@@ -824,7 +824,7 @@ Foam::searchableSurfaces::distributedTriSurfaceMesh::calcLocalQueries
 // describe the shape. For now just a single bounding box per processor but
 // optimisation might be to determine a better fitting shape.
 Foam::List<Foam::List<Foam::treeBoundBox>>
-Foam::searchableSurfaces::distributedTriSurfaceMesh::independentlyDistributedBbs
+Foam::searchableSurfaces::distributedTriSurface::independentlyDistributedBbs
 (
     const triSurface& s
 )
@@ -903,7 +903,7 @@ Foam::searchableSurfaces::distributedTriSurfaceMesh::independentlyDistributedBbs
 
 
 // Does any part of triangle overlap bb.
-bool Foam::searchableSurfaces::distributedTriSurfaceMesh::overlaps
+bool Foam::searchableSurfaces::distributedTriSurface::overlaps
 (
     const List<treeBoundBox>& bbs,
     const point& p0,
@@ -950,7 +950,7 @@ bool Foam::searchableSurfaces::distributedTriSurfaceMesh::overlaps
 }
 
 
-void Foam::searchableSurfaces::distributedTriSurfaceMesh::subsetMeshMap
+void Foam::searchableSurfaces::distributedTriSurface::subsetMeshMap
 (
     const triSurface& s,
     const boolList& include,
@@ -995,7 +995,7 @@ void Foam::searchableSurfaces::distributedTriSurfaceMesh::subsetMeshMap
 }
 
 
-Foam::triSurface Foam::searchableSurfaces::distributedTriSurfaceMesh::subsetMesh
+Foam::triSurface Foam::searchableSurfaces::distributedTriSurface::subsetMesh
 (
     const triSurface& s,
     const labelList& newToOldPoints,
@@ -1028,7 +1028,7 @@ Foam::triSurface Foam::searchableSurfaces::distributedTriSurfaceMesh::subsetMesh
 }
 
 
-Foam::triSurface Foam::searchableSurfaces::distributedTriSurfaceMesh::subsetMesh
+Foam::triSurface Foam::searchableSurfaces::distributedTriSurface::subsetMesh
 (
     const triSurface& s,
     const boolList& include,
@@ -1067,7 +1067,7 @@ Foam::triSurface Foam::searchableSurfaces::distributedTriSurfaceMesh::subsetMesh
 }
 
 
-Foam::triSurface Foam::searchableSurfaces::distributedTriSurfaceMesh::subsetMesh
+Foam::triSurface Foam::searchableSurfaces::distributedTriSurface::subsetMesh
 (
     const triSurface& s,
     const labelList& newToOldFaces,
@@ -1122,7 +1122,7 @@ Foam::triSurface Foam::searchableSurfaces::distributedTriSurfaceMesh::subsetMesh
 }
 
 
-Foam::label Foam::searchableSurfaces::distributedTriSurfaceMesh::findTriangle
+Foam::label Foam::searchableSurfaces::distributedTriSurface::findTriangle
 (
     const List<labelledTri>& allFaces,
     const labelListList& allPointFaces,
@@ -1155,7 +1155,7 @@ Foam::label Foam::searchableSurfaces::distributedTriSurfaceMesh::findTriangle
 
 
 // Merge into allSurf.
-void Foam::searchableSurfaces::distributedTriSurfaceMesh::merge
+void Foam::searchableSurfaces::distributedTriSurface::merge
 (
     const scalar mergeDist,
     const List<labelledTri>& subTris,
@@ -1283,7 +1283,7 @@ void Foam::searchableSurfaces::distributedTriSurfaceMesh::merge
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::searchableSurfaces::distributedTriSurfaceMesh::distributedTriSurfaceMesh
+Foam::searchableSurfaces::distributedTriSurface::distributedTriSurface
 (
     const IOobject& io,
     const triSurface& s,
@@ -1332,7 +1332,7 @@ Foam::searchableSurfaces::distributedTriSurfaceMesh::distributedTriSurfaceMesh
 }
 
 
-Foam::searchableSurfaces::distributedTriSurfaceMesh::distributedTriSurfaceMesh
+Foam::searchableSurfaces::distributedTriSurface::distributedTriSurface
 (
     const IOobject& io
 )
@@ -1413,7 +1413,7 @@ Foam::searchableSurfaces::distributedTriSurfaceMesh::distributedTriSurfaceMesh
 }
 
 
-Foam::searchableSurfaces::distributedTriSurfaceMesh::distributedTriSurfaceMesh
+Foam::searchableSurfaces::distributedTriSurface::distributedTriSurface
 (
     const IOobject& io,
     const dictionary& dict
@@ -1499,14 +1499,14 @@ Foam::searchableSurfaces::distributedTriSurfaceMesh::distributedTriSurfaceMesh
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::searchableSurfaces::distributedTriSurfaceMesh::
-~distributedTriSurfaceMesh()
+Foam::searchableSurfaces::distributedTriSurface::
+~distributedTriSurface()
 {
     clearOut();
 }
 
 
-void Foam::searchableSurfaces::distributedTriSurfaceMesh::clearOut()
+void Foam::searchableSurfaces::distributedTriSurface::clearOut()
 {
     globalTris_.clear();
     triSurfaceMesh::clearOut();
@@ -1515,7 +1515,7 @@ void Foam::searchableSurfaces::distributedTriSurfaceMesh::clearOut()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::globalIndex& Foam::searchableSurfaces::distributedTriSurfaceMesh::
+const Foam::globalIndex& Foam::searchableSurfaces::distributedTriSurface::
 globalTris() const
 {
     if (!globalTris_.valid())
@@ -1526,7 +1526,7 @@ globalTris() const
 }
 
 
-void Foam::searchableSurfaces::distributedTriSurfaceMesh::findNearest
+void Foam::searchableSurfaces::distributedTriSurface::findNearest
 (
     const pointField& samples,
     const scalarField& nearestDistSqr,
@@ -1683,7 +1683,7 @@ void Foam::searchableSurfaces::distributedTriSurfaceMesh::findNearest
 }
 
 
-void Foam::searchableSurfaces::distributedTriSurfaceMesh::findLine
+void Foam::searchableSurfaces::distributedTriSurface::findLine
 (
     const pointField& start,
     const pointField& end,
@@ -1700,7 +1700,7 @@ void Foam::searchableSurfaces::distributedTriSurfaceMesh::findLine
 }
 
 
-void Foam::searchableSurfaces::distributedTriSurfaceMesh::findLineAny
+void Foam::searchableSurfaces::distributedTriSurface::findLineAny
 (
     const pointField& start,
     const pointField& end,
@@ -1717,7 +1717,7 @@ void Foam::searchableSurfaces::distributedTriSurfaceMesh::findLineAny
 }
 
 
-void Foam::searchableSurfaces::distributedTriSurfaceMesh::findLineAll
+void Foam::searchableSurfaces::distributedTriSurface::findLineAll
 (
     const pointField& start,
     const pointField& end,
@@ -1831,7 +1831,7 @@ void Foam::searchableSurfaces::distributedTriSurfaceMesh::findLineAll
 }
 
 
-void Foam::searchableSurfaces::distributedTriSurfaceMesh::getRegion
+void Foam::searchableSurfaces::distributedTriSurface::getRegion
 (
     const List<pointIndexHit>& info,
     labelList& region
@@ -1891,7 +1891,7 @@ void Foam::searchableSurfaces::distributedTriSurfaceMesh::getRegion
 }
 
 
-void Foam::searchableSurfaces::distributedTriSurfaceMesh::getNormal
+void Foam::searchableSurfaces::distributedTriSurface::getNormal
 (
     const List<pointIndexHit>& info,
     vectorField& normal
@@ -1940,7 +1940,7 @@ void Foam::searchableSurfaces::distributedTriSurfaceMesh::getNormal
 }
 
 
-void Foam::searchableSurfaces::distributedTriSurfaceMesh::getField
+void Foam::searchableSurfaces::distributedTriSurface::getField
 (
     const List<pointIndexHit>& info,
     labelList& values
@@ -1995,7 +1995,7 @@ void Foam::searchableSurfaces::distributedTriSurfaceMesh::getField
 }
 
 
-void Foam::searchableSurfaces::distributedTriSurfaceMesh::getVolumeType
+void Foam::searchableSurfaces::distributedTriSurface::getVolumeType
 (
     const pointField& points,
     List<volumeType>& volType
@@ -2008,7 +2008,7 @@ void Foam::searchableSurfaces::distributedTriSurfaceMesh::getVolumeType
 
 
 // Subset the part of surface that is overlapping bb.
-Foam::triSurface Foam::searchableSurfaces::distributedTriSurfaceMesh::
+Foam::triSurface Foam::searchableSurfaces::distributedTriSurface::
 overlappingSurface
 (
     const triSurface& s,
@@ -2050,7 +2050,7 @@ overlappingSurface
 }
 
 
-void Foam::searchableSurfaces::distributedTriSurfaceMesh::distribute
+void Foam::searchableSurfaces::distributedTriSurface::distribute
 (
     const List<treeBoundBox>& bbs,
     const bool keepNonLocal,
@@ -2378,7 +2378,7 @@ void Foam::searchableSurfaces::distributedTriSurfaceMesh::distribute
 }
 
 
-bool Foam::searchableSurfaces::distributedTriSurfaceMesh::writeObject
+bool Foam::searchableSurfaces::distributedTriSurface::writeObject
 (
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
@@ -2414,7 +2414,7 @@ bool Foam::searchableSurfaces::distributedTriSurfaceMesh::writeObject
 }
 
 
-void Foam::searchableSurfaces::distributedTriSurfaceMesh::writeStats
+void Foam::searchableSurfaces::distributedTriSurface::writeStats
 (
     Ostream& os
 ) const

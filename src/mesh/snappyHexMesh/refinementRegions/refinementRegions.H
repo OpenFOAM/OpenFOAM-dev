@@ -37,7 +37,7 @@ SourceFiles
 #define refinementRegions_H
 
 #include "Tuple2.H"
-#include "triSurfaceMesh.H"
+#include "searchableTriSurface.H"
 #include "triSurfaceFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

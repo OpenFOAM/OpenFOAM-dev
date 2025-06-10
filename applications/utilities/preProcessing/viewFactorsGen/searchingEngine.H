@@ -16,9 +16,9 @@ dict.add("bounds", meshBb);
 dict.add
 (
     "distributionType",
-    searchableSurfaces::distributedTriSurfaceMesh::distributionTypeNames_
+    searchableSurfaces::distributedTriSurface::distributionTypeNames_
     [
-        searchableSurfaces::distributedTriSurfaceMesh::FROZEN
+        searchableSurfaces::distributedTriSurface::FROZEN
     ]
 );
 dict.add("mergeDistance", small);
@@ -46,7 +46,7 @@ const triSurface localSurface = triangulate
 );
 
 
-searchableSurfaces::distributedTriSurfaceMesh surfacesMesh
+searchableSurfaces::distributedTriSurface surfacesMesh
 (
     IOobject
     (

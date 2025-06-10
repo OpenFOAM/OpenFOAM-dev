@@ -35,7 +35,7 @@ Usage
 #include "argList.H"
 #include "Time.H"
 
-#include "triSurfaceMesh.H"
+#include "searchableTriSurface.H"
 #include "indexedOctree.H"
 #include "treeBoundBox.H"
 #include "PackedBoolList.H"

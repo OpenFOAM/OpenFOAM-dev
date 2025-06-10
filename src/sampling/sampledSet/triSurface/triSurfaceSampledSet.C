@@ -26,7 +26,7 @@ License
 #include "triSurfaceSampledSet.H"
 #include "meshSearch.H"
 #include "polyMesh.H"
-#include "triSurfaceMesh.H"
+#include "searchableTriSurface.H"
 #include "Time.H"
 #include "addToRunTimeSelectionTable.H"
 

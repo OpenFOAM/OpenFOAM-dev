@@ -29,7 +29,7 @@ License
 #include "Time.H"
 #include "DynamicField.H"
 #include "PatchTools.H"
-#include "triSurfaceMesh.H"
+#include "searchableTriSurface.H"
 #include "vtkWritePolyData.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -109,7 +109,7 @@ Foam::searchableSurfaceList::searchableSurfaceList
         // Note: we would like to e.g. register triSurface 'sphere.stl' as
         // 'sphere'. Unfortunately
         // no support for having object read from different location than
-        // their object name. Maybe have stlTriSurfaceMesh which appends .stl
+        // their object name. Maybe have stlTriSurface which appends .stl
         // when reading/writing?
         namedIO().rename(key);  // names_[surfI]
 

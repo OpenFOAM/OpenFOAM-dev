@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::searchableSurfaces::distributedTriSurfaceMesh
+    Foam::searchableSurfaces::distributedTriSurface
 
 Description
     IOoject and searching on distributed triSurface. All processor hold
@@ -41,14 +41,14 @@ Description
     - frozen : no change
 
 SourceFiles
-    distributedTriSurfaceMesh.C
+    distributedTriSurface.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef distributedTriSurfaceMesh_H
-#define distributedTriSurfaceMesh_H
+#ifndef distributedTriSurface_H
+#define distributedTriSurface_H
 
-#include "triSurfaceMesh.H"
+#include "searchableTriSurface.H"
 #include "IOdictionary.H"
 #include "Pair.H"
 #include "globalIndex.H"
@@ -70,10 +70,10 @@ namespace searchableSurfaces
 {
 
 /*---------------------------------------------------------------------------*\
-                  Class distributedTriSurfaceMesh Declaration
+                  Class distributedTriSurface Declaration
 \*---------------------------------------------------------------------------*/
 
-class distributedTriSurfaceMesh
+class distributedTriSurface
 :
     public triSurfaceMesh
 {
@@ -133,7 +133,7 @@ private:
 
             //- Split segment into subsegments overlapping the processor
             //  bounding box.
-            // void Foam::distributedTriSurfaceMesh::splitSegment
+            // void Foam::distributedTriSurface::splitSegment
             //(
             //    const label segmentI,
             //    const point& start,
@@ -301,7 +301,7 @@ public:
     // Constructors
 
         //- Construct from triSurface
-        distributedTriSurfaceMesh
+        distributedTriSurface
         (
             const IOobject&,
             const triSurface&,
@@ -309,22 +309,22 @@ public:
         );
 
         //- Construct read. Does findInstance to find io.local().
-        distributedTriSurfaceMesh(const IOobject& io);
+        distributedTriSurface(const IOobject& io);
 
         //- Construct from dictionary (used by searchableSurface).
         //  Does read. Does findInstance to find io.local().
-        distributedTriSurfaceMesh
+        distributedTriSurface
         (
             const IOobject& io,
             const dictionary& dict
         );
 
         //- Disallow default bitwise copy construction
-        distributedTriSurfaceMesh(const distributedTriSurfaceMesh&) = delete;
+        distributedTriSurface(const distributedTriSurface&) = delete;
 
 
     //- Destructor
-    virtual ~distributedTriSurfaceMesh();
+    virtual ~distributedTriSurface();
 
         //- Clear storage
         void clearOut();
@@ -467,7 +467,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const distributedTriSurfaceMesh&) = delete;
+        void operator=(const distributedTriSurface&) = delete;
 };
 
 
@@ -477,7 +477,7 @@ public:
 
 //- Trait for obtaining global status
 template<>
-struct typeGlobal<searchableSurfaces::distributedTriSurfaceMesh>
+struct typeGlobal<searchableSurfaces::distributedTriSurface>
 {
     static const bool global = false;
 };
@@ -487,7 +487,7 @@ struct typeGlobal<searchableSurfaces::distributedTriSurfaceMesh>
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "distributedTriSurfaceMeshTemplates.C"
+    #include "distributedTriSurfaceTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
