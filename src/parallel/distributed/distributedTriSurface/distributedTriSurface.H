@@ -75,7 +75,7 @@ namespace searchableSurfaces
 
 class distributedTriSurface
 :
-    public triSurfaceMesh
+    public triSurface
 {
 public:
 
@@ -216,7 +216,7 @@ private:
             //- Finds new bounds based on an independent decomposition.
             List<List<treeBoundBox>> independentlyDistributedBbs
             (
-                const triSurface&
+                const Foam::triSurface&
             );
 
             //- Does any part of triangle overlap bb.
@@ -231,7 +231,7 @@ private:
             //- Find points used in subset
             static void subsetMeshMap
             (
-                const triSurface& s,
+                const Foam::triSurface& s,
                 const boolList& include,
                 const label nIncluded,
                 labelList& newToOldPoints,
@@ -240,27 +240,27 @@ private:
             );
 
             //- Construct subsetted surface
-            static triSurface subsetMesh
+            static Foam::triSurface subsetMesh
             (
-                const triSurface& s,
+                const Foam::triSurface& s,
                 const labelList& newToOldPoints,
                 const labelList& oldToNewPoints,
                 const labelList& newToOldFaces
             );
 
             //- Subset given marked faces
-            static triSurface subsetMesh
+            static Foam::triSurface subsetMesh
             (
-                const triSurface& s,
+                const Foam::triSurface& s,
                 const boolList& include,
                 labelList& newToOldPoints,
                 labelList& newToOldFaces
             );
 
             //- Subset given marked faces
-            static triSurface subsetMesh
+            static Foam::triSurface subsetMesh
             (
-                const triSurface& s,
+                const Foam::triSurface& s,
                 const labelList& newToOldFaces,
                 labelList& newToOldPoints
             );
@@ -304,7 +304,7 @@ public:
         distributedTriSurface
         (
             const IOobject&,
-            const triSurface&,
+            const Foam::triSurface&,
             const dictionary& dict
         );
 
@@ -429,9 +429,9 @@ public:
             virtual void getField(const List<pointIndexHit>&, labelList&) const;
 
             //- Subset the part of surface that is overlapping bounds.
-            static triSurface overlappingSurface
+            static Foam::triSurface overlappingSurface
             (
-                const triSurface&,
+                const Foam::triSurface&,
                 const List<treeBoundBox>&,
                 labelList& subPointMap,
                 labelList& subFaceMap
@@ -445,7 +445,7 @@ public:
         // regIOobject implementation
 
             //- Write using given format, version and compression
-            //  Do not use the triSurfaceMesh::writeObject since it
+            //  Do not use the triSurface::writeObject since it
             //  would filter out empty regions. These need to be preserved
             //  in case we want to make decisions based on the number of
             //  regions.

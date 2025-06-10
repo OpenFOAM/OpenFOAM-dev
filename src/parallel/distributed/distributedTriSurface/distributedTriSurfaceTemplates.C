@@ -62,7 +62,7 @@ License
 //    (
 //        fieldName
 //    );
-//    const triSurface& s = static_cast<const triSurface&>(*this);
+//    const Foam::triSurface& s = static_cast<const Foam::triSurface&>(*this);
 //
 //    values.setSize(triangleIndex.size());
 //

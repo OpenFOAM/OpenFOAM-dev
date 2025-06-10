@@ -826,7 +826,7 @@ Foam::searchableSurfaces::distributedTriSurface::calcLocalQueries
 Foam::List<Foam::List<Foam::treeBoundBox>>
 Foam::searchableSurfaces::distributedTriSurface::independentlyDistributedBbs
 (
-    const triSurface& s
+    const Foam::triSurface& s
 )
 {
     if (!distributor_.valid())
@@ -880,7 +880,7 @@ Foam::searchableSurfaces::distributedTriSurface::independentlyDistributedBbs
         point& bbMin = bbs[distribution[triI]][0].min();
         point& bbMax = bbs[distribution[triI]][0].max();
 
-        const triSurface::FaceType& f = s[triI];
+        const Foam::triSurface::FaceType& f = s[triI];
         forAll(f, fp)
         {
             const point& pt = s.points()[f[fp]];
@@ -952,7 +952,7 @@ bool Foam::searchableSurfaces::distributedTriSurface::overlaps
 
 void Foam::searchableSurfaces::distributedTriSurface::subsetMeshMap
 (
-    const triSurface& s,
+    const Foam::triSurface& s,
     const boolList& include,
     const label nIncluded,
     labelList& newToOldPoints,
@@ -976,7 +976,7 @@ void Foam::searchableSurfaces::distributedTriSurface::subsetMeshMap
                 newToOldFaces[facei++] = oldFacei;
 
                 // Renumber labels for face
-                const triSurface::FaceType& f = s[oldFacei];
+                const Foam::triSurface::FaceType& f = s[oldFacei];
 
                 forAll(f, fp)
                 {
@@ -997,7 +997,7 @@ void Foam::searchableSurfaces::distributedTriSurface::subsetMeshMap
 
 Foam::triSurface Foam::searchableSurfaces::distributedTriSurface::subsetMesh
 (
-    const triSurface& s,
+    const Foam::triSurface& s,
     const labelList& newToOldPoints,
     const labelList& oldToNewPoints,
     const labelList& newToOldFaces
@@ -1024,13 +1024,13 @@ Foam::triSurface Foam::searchableSurfaces::distributedTriSurface::subsetMesh
     }
 
     // Reuse storage.
-    return triSurface(newTriangles, s.patches(), newPoints, true);
+    return Foam::triSurface(newTriangles, s.patches(), newPoints, true);
 }
 
 
 Foam::triSurface Foam::searchableSurfaces::distributedTriSurface::subsetMesh
 (
-    const triSurface& s,
+    const Foam::triSurface& s,
     const boolList& include,
     labelList& newToOldPoints,
     labelList& newToOldFaces
@@ -1069,7 +1069,7 @@ Foam::triSurface Foam::searchableSurfaces::distributedTriSurface::subsetMesh
 
 Foam::triSurface Foam::searchableSurfaces::distributedTriSurface::subsetMesh
 (
-    const triSurface& s,
+    const Foam::triSurface& s,
     const labelList& newToOldFaces,
     labelList& newToOldPoints
 )
@@ -1095,7 +1095,7 @@ Foam::triSurface Foam::searchableSurfaces::distributedTriSurface::subsetMesh
             if (include[oldFacei])
             {
                 // Renumber labels for face
-                const triSurface::FaceType& f = s[oldFacei];
+                const Foam::triSurface::FaceType& f = s[oldFacei];
 
                 forAll(f, fp)
                 {
@@ -1286,11 +1286,11 @@ void Foam::searchableSurfaces::distributedTriSurface::merge
 Foam::searchableSurfaces::distributedTriSurface::distributedTriSurface
 (
     const IOobject& io,
-    const triSurface& s,
+    const Foam::triSurface& s,
     const dictionary& dict
 )
 :
-    triSurfaceMesh(io, s),
+    triSurface(io, s),
     dict_
     (
         IOobject
@@ -1317,7 +1317,7 @@ Foam::searchableSurfaces::distributedTriSurface::distributedTriSurface
         writeStats(Info);
 
         labelList nTris(Pstream::nProcs());
-        nTris[Pstream::myProcNo()] = triSurface::size();
+        nTris[Pstream::myProcNo()] = Foam::triSurface::size();
         Pstream::gatherList(nTris);
         Pstream::scatterList(nTris);
 
@@ -1337,7 +1337,7 @@ Foam::searchableSurfaces::distributedTriSurface::distributedTriSurface
     const IOobject& io
 )
 :
-    triSurfaceMesh
+    triSurface
     (
         IOobject
         (
@@ -1398,7 +1398,7 @@ Foam::searchableSurfaces::distributedTriSurface::distributedTriSurface
         writeStats(Info);
 
         labelList nTris(Pstream::nProcs());
-        nTris[Pstream::myProcNo()] = triSurface::size();
+        nTris[Pstream::myProcNo()] = Foam::triSurface::size();
         Pstream::gatherList(nTris);
         Pstream::scatterList(nTris);
 
@@ -1419,8 +1419,8 @@ Foam::searchableSurfaces::distributedTriSurface::distributedTriSurface
     const dictionary& dict
 )
 :
-    // triSurfaceMesh(io, dict),
-    triSurfaceMesh
+    // triSurface(io, dict),
+    triSurface
     (
         IOobject
         (
@@ -1482,7 +1482,7 @@ Foam::searchableSurfaces::distributedTriSurface::distributedTriSurface
         writeStats(Info);
 
         labelList nTris(Pstream::nProcs());
-        nTris[Pstream::myProcNo()] = triSurface::size();
+        nTris[Pstream::myProcNo()] = Foam::triSurface::size();
         Pstream::gatherList(nTris);
         Pstream::scatterList(nTris);
 
@@ -1509,7 +1509,7 @@ Foam::searchableSurfaces::distributedTriSurface::
 void Foam::searchableSurfaces::distributedTriSurface::clearOut()
 {
     globalTris_.clear();
-    triSurfaceMesh::clearOut();
+    triSurface::clearOut();
 }
 
 
@@ -1844,7 +1844,8 @@ void Foam::searchableSurfaces::distributedTriSurface::getRegion
         {
             if (info[i].hit())
             {
-                region[i] = triSurface::operator[](info[i].index()).region();
+                region[i] =
+                    Foam::triSurface::operator[](info[i].index()).region();
             }
             else
             {
@@ -1873,7 +1874,7 @@ void Foam::searchableSurfaces::distributedTriSurface::getRegion
     // Do my tests
     // ~~~~~~~~~~~
 
-    const triSurface& s = static_cast<const triSurface&>(*this);
+    const Foam::triSurface& s = static_cast<const Foam::triSurface&>(*this);
 
     region.setSize(triangleIndex.size());
 
@@ -1899,7 +1900,7 @@ void Foam::searchableSurfaces::distributedTriSurface::getNormal
 {
     if (!Pstream::parRun())
     {
-        triSurfaceMesh::getNormal(info, normal);
+        triSurface::getNormal(info, normal);
         return;
     }
 
@@ -1922,7 +1923,7 @@ void Foam::searchableSurfaces::distributedTriSurface::getNormal
     // Do my tests
     // ~~~~~~~~~~~
 
-    const triSurface& s = static_cast<const triSurface&>(*this);
+    const Foam::triSurface& s = static_cast<const Foam::triSurface&>(*this);
 
     normal.setSize(triangleIndex.size());
 
@@ -1948,13 +1949,13 @@ void Foam::searchableSurfaces::distributedTriSurface::getField
 {
     if (!Pstream::parRun())
     {
-        triSurfaceMesh::getField(info, values);
+        triSurface::getField(info, values);
         return;
     }
 
     if (foundObject<triSurfaceLabelField>("values"))
     {
-        const triSurfaceLabelField& fld = lookupObject<triSurfaceLabelField>
+        const Foam::triSurfaceLabelField& fld = lookupObject<triSurfaceLabelField>
         (
             "values"
         );
@@ -2011,7 +2012,7 @@ void Foam::searchableSurfaces::distributedTriSurface::getVolumeType
 Foam::triSurface Foam::searchableSurfaces::distributedTriSurface::
 overlappingSurface
 (
-    const triSurface& s,
+    const Foam::triSurface& s,
     const List<treeBoundBox>& bbs,
 
     labelList& subPointMap,
@@ -2150,7 +2151,7 @@ void Foam::searchableSurfaces::distributedTriSurface::distribute
         // Include in faceSendMap/pointSendMap the triangles that are
         // not mapped to any processor so they stay local.
 
-        const triSurface& s = static_cast<const triSurface&>(*this);
+        const Foam::triSurface& s = static_cast<const Foam::triSurface&>(*this);
 
         boolList includedFace(s.size(), true);
 
@@ -2213,7 +2214,7 @@ void Foam::searchableSurfaces::distributedTriSurface::distribute
 
     {
         labelList pointMap;
-        triSurface subSurface
+        Foam::triSurface subSurface
         (
             subsetMesh
             (
@@ -2250,7 +2251,7 @@ void Foam::searchableSurfaces::distributedTriSurface::distribute
                 OPstream str(Pstream::commsTypes::blocking, proci);
 
                 labelList pointMap;
-                triSurface subSurface
+                Foam::triSurface subSurface
                 (
                     subsetMesh
                     (
@@ -2286,7 +2287,7 @@ void Foam::searchableSurfaces::distributedTriSurface::distribute
                 IPstream str(Pstream::commsTypes::blocking, proci);
 
                 // Receive
-                triSurface subSurface(str);
+                Foam::triSurface subSurface(str);
 
                 // if (debug)
                 //{
@@ -2339,12 +2340,15 @@ void Foam::searchableSurfaces::distributedTriSurface::distribute
     );
 
     // Construct triSurface. Reuse storage.
-    triSurface::operator=(triSurface(allTris, patches(), allPoints, true));
+    Foam::triSurface::operator=
+    (
+        Foam::triSurface(allTris, patches(), allPoints, true)
+    );
 
     clearOut();
 
     // Set the bounds() value to the boundBox of the undecomposed surface
-    triSurfaceMesh::bounds() = boundBox(points());
+    triSurface::bounds() = boundBox(points());
 
     reduce(bounds().min(), minOp<point>());
     reduce(bounds().max(), maxOp<point>());
@@ -2389,7 +2393,7 @@ bool Foam::searchableSurfaces::distributedTriSurface::writeObject
     // Make sure dictionary goes to same directory as surface
     const_cast<fileName&>(dict_.instance()) = searchableSurface::instance();
 
-    // Copy of triSurfaceMesh::writeObject except for the sorting of
+    // Copy of triSurface::writeObject except for the sorting of
     // triangles by region. This is done so we preserve region names,
     // even if locally we have zero triangles.
     {
@@ -2401,7 +2405,7 @@ bool Foam::searchableSurfaces::distributedTriSurface::writeObject
         }
 
         // Important: preserve any zero-sized patches
-        triSurface::write(fullPath, true);
+        Foam::triSurface::write(fullPath, true);
 
         if (!isFile(fullPath))
         {
@@ -2421,7 +2425,12 @@ void Foam::searchableSurfaces::distributedTriSurface::writeStats
 {
     boundBox bb;
     label nPoints;
-    PatchTools::calcBounds(static_cast<const triSurface&>(*this), bb, nPoints);
+    PatchTools::calcBounds
+    (
+        static_cast<const Foam::triSurface&>(*this),
+        bb,
+        nPoints
+    );
     reduce(bb.min(), minOp<point>());
     reduce(bb.max(), maxOp<point>());
 

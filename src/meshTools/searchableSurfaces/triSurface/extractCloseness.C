@@ -30,7 +30,7 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::searchableSurfaces::triSurfaceMesh::drawHitProblem
+void Foam::searchableSurfaces::triSurface::drawHitProblem
 (
     const label fi,
     const point& start,
@@ -83,7 +83,7 @@ void Foam::searchableSurfaces::triSurfaceMesh::drawHitProblem
 }
 
 
-void Foam::searchableSurfaces::triSurfaceMesh::processHit
+void Foam::searchableSurfaces::triSurface::processHit
 (
     scalar& internalCloseness,
     scalar& externalCloseness,
@@ -200,7 +200,7 @@ void Foam::searchableSurfaces::triSurfaceMesh::processHit
 
 
 Foam::Pair<Foam::tmp<Foam::triSurfaceScalarField>>
-Foam::searchableSurfaces::triSurfaceMesh::extractCloseness
+Foam::searchableSurfaces::triSurface::extractCloseness
 (
     const scalar internalAngleTolerance,
     const scalar externalAngleTolerance
@@ -296,7 +296,7 @@ Foam::searchableSurfaces::triSurfaceMesh::extractCloseness
 
 
 Foam::Pair<Foam::tmp<Foam::triSurfacePointScalarField>>
-Foam::searchableSurfaces::triSurfaceMesh::extractPointCloseness
+Foam::searchableSurfaces::triSurface::extractPointCloseness
 (
     const scalar internalAngleTolerance,
     const scalar externalAngleTolerance

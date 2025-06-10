@@ -45,7 +45,7 @@ Usage
     \endverbatim
 
 SourceFiles
-    triSurfaceMesh.C
+    triSurface.C
 
 \*---------------------------------------------------------------------------*/
 

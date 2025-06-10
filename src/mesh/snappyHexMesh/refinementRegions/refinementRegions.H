@@ -113,7 +113,7 @@ private:
         //- Interpolate the surface closeness field to the given point
         scalar interpolate
         (
-            const searchableSurfaces::triSurfaceMesh& tris,
+            const searchableSurfaces::triSurface& tris,
             const triSurfacePointScalarField& closeness,
             const point& pt,
             const label index

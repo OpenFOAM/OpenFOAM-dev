@@ -86,7 +86,7 @@ Foam::porosityModels::powerLawLopesdaCostaZone::powerLawLopesdaCostaZone
     );
 
     // Searchable triSurface for the top of the porous region
-    searchableSurfaces::triSurfaceMesh searchSurf
+    searchableSurfaces::triSurface searchSurf
     (
         IOobject
         (

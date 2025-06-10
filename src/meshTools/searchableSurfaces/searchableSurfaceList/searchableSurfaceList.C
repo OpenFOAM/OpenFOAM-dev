@@ -508,10 +508,10 @@ bool Foam::searchableSurfaceList::checkIntersection
 
     forAll(*this, i)
     {
-        if (isA<searchableSurfaces::triSurfaceMesh>(operator[](i)))
+        if (isA<searchableSurfaces::triSurface>(operator[](i)))
         {
-            const searchableSurfaces::triSurfaceMesh& s0 =
-                dynamic_cast<const searchableSurfaces::triSurfaceMesh&>
+            const searchableSurfaces::triSurface& s0 =
+                dynamic_cast<const searchableSurfaces::triSurface&>
                 (
                     operator[](i)
                 );
@@ -746,10 +746,10 @@ void Foam::searchableSurfaceList::writeStats
 
         Info<< "        type      : " << s.type() << nl
             << "        size      : " << s.globalSize() << nl;
-        if (isA<searchableSurfaces::triSurfaceMesh>(s))
+        if (isA<searchableSurfaces::triSurface>(s))
         {
-            const searchableSurfaces::triSurfaceMesh& ts =
-                dynamic_cast<const searchableSurfaces::triSurfaceMesh&>(s);
+            const searchableSurfaces::triSurface& ts =
+                dynamic_cast<const searchableSurfaces::triSurface&>(s);
             Info<< "        edges     : " << ts.nEdges() << nl
                 << "        points    : " << ts.points()().size() << nl;
         }

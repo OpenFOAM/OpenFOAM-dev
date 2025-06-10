@@ -469,7 +469,7 @@ namespace Foam
             );
 
             // Searchable triSurface
-            const searchableSurfaces::triSurfaceMesh searchSurf
+            const searchableSurfaces::triSurface searchSurf
             (
                 IOobject
                 (

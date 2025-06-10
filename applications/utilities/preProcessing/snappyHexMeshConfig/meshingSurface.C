@@ -44,7 +44,7 @@ const Foam::NamedEnum<Foam::meshingSurface::surfaceType, 5>
 
 Foam::label Foam::meshingSurface::nSurfaceParts
 (
-    const searchableSurfaces::triSurfaceMesh& surf
+    const searchableSurfaces::triSurface& surf
 )
 {
     labelList faceZone;
@@ -80,7 +80,7 @@ Foam::meshingSurface::meshingSurface(const fileName& file, const Time& time)
     inletRegions_(),
     outletRegions_()
 {
-    searchableSurfaces::triSurfaceMesh surf
+    searchableSurfaces::triSurface surf
     (
         IOobject
         (

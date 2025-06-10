@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ void Foam::snappyHexMeshConfiguration::writeGeometrySurface(const label surfID)
 {
     beginDict(os_, surfaces_[surfID].name());
 
-    os_ << indent << "type triSurfaceMesh;" << nl
+    os_ << indent << "type triSurface;" << nl
         << indent << "file " << surfaces_[surfID].file() << ";" << endl;
 
     const wordList& inletRegions = surfaces_[surfID].inletRegions();

@@ -131,7 +131,7 @@ private:
         static const NamedEnum<samplingSource, 3> samplingSourceNames_;
 
         //- Surface to sample on
-        const searchableSurfaces::triSurfaceMesh surface_;
+        const searchableSurfaces::triSurface surface_;
 
         //- Whether to sample internal cell values or boundary values
         const samplingSource sampleSource_;

@@ -50,8 +50,8 @@ namespace Foam
             sampledSet,
             triSurface,
             word,
-            triSurfaceMesh,
-            "triSurfaceMesh"
+            triSurface,
+            "triSurface"
         );
     }
 }
@@ -127,15 +127,15 @@ Foam::sampledSets::triSurface::triSurface
     surface_(dict.lookup("surface")),
     points_
     (
-        mesh.time().foundObject<searchableSurfaces::triSurfaceMesh>
+        mesh.time().foundObject<searchableSurfaces::triSurface>
         (
             surface_
         )
-      ? mesh.time().lookupObject<searchableSurfaces::triSurfaceMesh>
+      ? mesh.time().lookupObject<searchableSurfaces::triSurface>
         (
             surface_
         ).points()
-      : searchableSurfaces::triSurfaceMesh
+      : searchableSurfaces::triSurface
         (
             IOobject
             (

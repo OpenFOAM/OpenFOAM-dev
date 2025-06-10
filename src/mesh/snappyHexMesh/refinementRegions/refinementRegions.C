@@ -217,11 +217,11 @@ void Foam::refinementRegions::orient()
         if
         (
             modes_[shelli] != refineMode::distance
-         && isA<searchableSurfaces::triSurfaceMesh>(s)
+         && isA<searchableSurfaces::triSurface>(s)
         )
         {
-            const searchableSurfaces::triSurfaceMesh& shell =
-                refCast<const searchableSurfaces::triSurfaceMesh>(s);
+            const searchableSurfaces::triSurface& shell =
+                refCast<const searchableSurfaces::triSurface>(s);
 
             if (shell.triSurface::size())
             {
@@ -258,13 +258,13 @@ void Foam::refinementRegions::orient()
             if
             (
                 modes_[shelli] != refineMode::distance
-             && isA<searchableSurfaces::triSurfaceMesh>(s)
+             && isA<searchableSurfaces::triSurface>(s)
             )
             {
-                searchableSurfaces::triSurfaceMesh& shell =
-                    const_cast<searchableSurfaces::triSurfaceMesh&>
+                searchableSurfaces::triSurface& shell =
+                    const_cast<searchableSurfaces::triSurface&>
                     (
-                        refCast<const searchableSurfaces::triSurfaceMesh>(s)
+                        refCast<const searchableSurfaces::triSurface>(s)
                     );
 
                 // Flip surface so outsidePt is outside.
@@ -278,7 +278,7 @@ void Foam::refinementRegions::orient()
                 if (anyFlipped)
                 {
                     // orientedSurface will have done a clearOut of the surface.
-                    // we could do a clearout of the triSurfaceMeshes::trees()
+                    // we could do a clearout of the triSurfacees::trees()
                     // but these aren't affected by orientation
                     // (except for cached
                     // sideness which should not be set at this point.
@@ -296,7 +296,7 @@ void Foam::refinementRegions::orient()
 
 Foam::scalar Foam::refinementRegions::interpolate
 (
-    const searchableSurfaces::triSurfaceMesh& tsm,
+    const searchableSurfaces::triSurface& tsm,
     const triSurfacePointScalarField& closeness,
     const point& pt,
     const label index
@@ -307,7 +307,7 @@ Foam::scalar Foam::refinementRegions::interpolate
         triPointRef
         (
             tsm.points(),
-            tsm.triSurface::operator[](index)
+            tsm.Foam::triSurface::operator[](index)
         ).pointToBarycentric(pt)
     );
 
@@ -396,8 +396,8 @@ void Foam::refinementRegions::findHigherLevel
      || modes_[shelli] == refineMode::outsideSpan
     )
     {
-        const searchableSurfaces::triSurfaceMesh& tsm =
-            refCast<const searchableSurfaces::triSurfaceMesh>
+        const searchableSurfaces::triSurface& tsm =
+            refCast<const searchableSurfaces::triSurface>
             (allGeometry_[shells_[shelli]]);
 
         // Collect all those points that have a current maxLevel less than
@@ -579,12 +579,12 @@ Foam::refinementRegions::refinementRegions
             {
                 const searchableSurface& surface = allGeometry_[geomi];
 
-                if (isA<searchableSurfaces::triSurfaceMesh>(surface))
+                if (isA<searchableSurfaces::triSurface>(surface))
                 {
                     dict.lookup("cellsAcrossSpan") >> cellsAcrossSpan_[shelli];
 
-                    const searchableSurfaces::triSurfaceMesh& tsm =
-                        refCast<const searchableSurfaces::triSurfaceMesh>
+                    const searchableSurfaces::triSurface& tsm =
+                        refCast<const searchableSurfaces::triSurface>
                         (surface);
 
                     closeness_.set

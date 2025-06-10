@@ -115,7 +115,7 @@ void greenRefine
 
 void createBoundaryEdgeTrees
 (
-    const PtrList<searchableSurfaces::triSurfaceMesh>& surfs,
+    const PtrList<searchableSurfaces::triSurface>& surfs,
     PtrList<indexedOctree<treeDataEdge>>& bEdgeTrees,
     labelListList& treeBoundaryEdges
 )
@@ -289,16 +289,16 @@ int main(int argc, char *argv[])
     List<DynamicList<point>> newPoints(surfs.size());
     List<PackedBoolList> visitedFace(surfs.size());
 
-    PtrList<searchableSurfaces::triSurfaceMesh> newSurfaces(surfs.size());
+    PtrList<searchableSurfaces::triSurface> newSurfaces(surfs.size());
     forAll(surfs, surfI)
     {
-        const searchableSurfaces::triSurfaceMesh& surf =
-            refCast<const searchableSurfaces::triSurfaceMesh>(surfs[surfI]);
+        const searchableSurfaces::triSurface& surf =
+            refCast<const searchableSurfaces::triSurface>(surfs[surfI]);
 
         newSurfaces.set
         (
             surfI,
-            new searchableSurfaces::triSurfaceMesh
+            new searchableSurfaces::triSurface
             (
                 IOobject
                 (
@@ -503,7 +503,7 @@ int main(int argc, char *argv[])
             newSurfaces.set
             (
                 surfI,
-                new searchableSurfaces::triSurfaceMesh
+                new searchableSurfaces::triSurface
                 (
                     IOobject
                     (
@@ -528,7 +528,7 @@ int main(int argc, char *argv[])
 
     forAll(newSurfaces, surfI)
     {
-        const searchableSurfaces::triSurfaceMesh& newSurf = newSurfaces[surfI];
+        const searchableSurfaces::triSurface& newSurf = newSurfaces[surfI];
 
         Info<< "Writing hooked surface " << newSurf.searchableSurface::name()
             << endl;

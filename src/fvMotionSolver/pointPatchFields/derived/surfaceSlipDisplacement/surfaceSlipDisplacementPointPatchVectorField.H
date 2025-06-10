@@ -38,7 +38,7 @@ Description
 
     Needs:
     - geometry : dictionary with searchableSurfaces. (usually
-      triSurfaceMeshes in constant/triSurface)
+      triSurfacees in constant/triSurface)
     - projectMode : see above
     - projectDirection : if projectMode = fixedNormal
     - wedgePlane : -1 or component to knock out of intersection normal

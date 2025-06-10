@@ -61,7 +61,7 @@ Foam::searchableSurfaces::closedTriSurface::closedTriSurface
     const triSurface& s
 )
 :
-    triSurfaceMesh(io, s)
+    triSurface(io, s)
 {}
 
 
@@ -70,7 +70,7 @@ Foam::searchableSurfaces::closedTriSurface::closedTriSurface
     const IOobject& io
 )
 :
-    triSurfaceMesh(io)
+    triSurface(io)
 {}
 
 
@@ -80,7 +80,7 @@ Foam::searchableSurfaces::closedTriSurface::closedTriSurface
     const dictionary& dict
 )
 :
-    triSurfaceMesh(io, dict)
+    triSurface(io, dict)
 {}
 
 

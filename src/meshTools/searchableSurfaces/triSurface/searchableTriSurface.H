@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::searchableSurfaces::triSurfaceMesh
+    Foam::searchableSurfaces::triSurface
 
 Description
     A surface geometry formed of discrete facets, e.g. triangles and/or
@@ -42,17 +42,17 @@ Usage
 
     Example specification in snappyHexMeshDict/geometry:
     \verbatim
-        type       triSurfaceMesh;
+        type       triSurface;
         file       "surfaceFile.obj";
     \endverbatim
 
 SourceFiles
-    triSurfaceMesh.C
+    triSurface.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef searchableSurfaces_triSurfaceMesh_H
-#define searchableSurfaces_triSurfaceMesh_H
+#ifndef searchableSurfaces_triSurface_H
+#define searchableSurfaces_triSurface_H
 
 #include "treeBoundBox.H"
 #include "searchableSurface.H"
@@ -76,14 +76,14 @@ namespace searchableSurfaces
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class triSurfaceMesh Declaration
+                       Class triSurface Declaration
 \*---------------------------------------------------------------------------*/
 
-class triSurfaceMesh
+class triSurface
 :
     public searchableSurface,
     public objectRegistry,      // so we can store fields
-    public triSurface,
+    public Foam::triSurface,
     public triSurfaceRegionSearch
 {
     // Private member data
@@ -183,14 +183,14 @@ public:
     // Constructors
 
         //- Construct from triSurface
-        triSurfaceMesh(const IOobject&, const triSurface&);
+        triSurface(const IOobject&, const Foam::triSurface&);
 
         //- Construct read
-        triSurfaceMesh(const IOobject& io);
+        triSurface(const IOobject& io);
 
         //- Construct from IO and dictionary (used by searchableSurface).
         //  Dictionary may contain a 'scale' entry (eg, 0.001: mm -> m)
-        triSurfaceMesh
+        triSurface
         (
             const IOobject& io,
             const dictionary& dict
@@ -200,9 +200,9 @@ public:
         // Special constructors for use by distributedTriSurface. File search
         // status (local/global) supplied.
 
-            triSurfaceMesh(const IOobject& io, const bool isGlobal);
+            triSurface(const IOobject& io, const bool isGlobal);
 
-            triSurfaceMesh
+            triSurface
             (
                 const IOobject& io,
                 const dictionary& dict,
@@ -210,11 +210,11 @@ public:
             );
 
         //- Disallow default bitwise copy construction
-        triSurfaceMesh(const triSurfaceMesh&) = delete;
+        triSurface(const triSurface&) = delete;
 
 
     //- Destructor
-    virtual ~triSurfaceMesh();
+    virtual ~triSurface();
 
 
     // Member Functions
@@ -239,7 +239,7 @@ public:
             //- Range of local indices that can be returned.
             virtual label size() const
             {
-                return triSurface::size();
+                return Foam::triSurface::size();
             }
 
             //- Get representative set of element coordinates
@@ -373,7 +373,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const triSurfaceMesh&) = delete;
+        void operator=(const triSurface&) = delete;
 };
 
 
@@ -383,7 +383,7 @@ public:
 
 //- Trait for obtaining global status
 template<>
-struct typeGlobal<searchableSurfaces::triSurfaceMesh>
+struct typeGlobal<searchableSurfaces::triSurface>
 {
     static const bool global = true;
 };

@@ -106,7 +106,7 @@ private:
     // Private Member Functions
 
         //- Returns the number of disconnected regions in a surface
-        label nSurfaceParts(const searchableSurfaces::triSurfaceMesh& surf);
+        label nSurfaceParts(const searchableSurfaces::triSurface& surf);
 
 
 public:

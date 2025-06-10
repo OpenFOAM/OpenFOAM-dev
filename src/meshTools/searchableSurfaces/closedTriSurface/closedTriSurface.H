@@ -72,7 +72,7 @@ namespace searchableSurfaces
 
 class closedTriSurface
 :
-    public triSurfaceMesh
+    public triSurface
 {
 public:
 

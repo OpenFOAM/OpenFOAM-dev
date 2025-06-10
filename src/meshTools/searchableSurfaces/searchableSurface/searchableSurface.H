@@ -31,7 +31,7 @@ Description
     Information returned is usually a pointIndexHit:
     - bool  : was intersection/nearest found?
     - point : intersection point or nearest point
-    - index : unique index on surface (e.g. triangle for triSurfaceMesh)
+    - index : unique index on surface (e.g. triangle for triSurface)
 
 SourceFiles
     searchableSurface.C

@@ -46,7 +46,7 @@ Usage
         baffles
         {
             type        surface;
-            surface     triSurfaceMesh;
+            surface     triSurface;
             file        "baffles.obj";
         }
     \endverbatim
