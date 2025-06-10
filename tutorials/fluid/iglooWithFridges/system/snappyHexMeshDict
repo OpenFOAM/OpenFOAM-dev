@@ -43,7 +43,7 @@ geometry
 
     twoFridgeFreezers
     {
-        type surfaceCollection;
+        type collection;
 
         mergeSubRegions true;
 
