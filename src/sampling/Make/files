@@ -20,9 +20,9 @@ sampledSet/boundaryPoints/boundaryPoints.C
 sampledSet/boundaryRandom/boundaryRandom.C
 sampledSet/points/points.C
 sampledSet/sphereRandom/sphereRandom.C
-sampledSet/triSurfaceMesh/triSurfaceMesh_sampledSet.C
-sampledSet/cellSet/cellSet_sampledSet.C
-sampledSet/faceSet/faceSet_sampledSet.C
+sampledSet/triSurface/triSurfaceSampledSet.C
+sampledSet/cellSet/cellSetSampledSet.C
+sampledSet/faceSet/faceSetSampledSet.C
 
 setWriters = sampledSet/writers
 
@@ -50,7 +50,7 @@ sampledSurface/sampledDistanceSurface/sampledDistanceSurface.C
 sampledSurface/sampledCutPlane/sampledCutPlane.C
 sampledSurface/sampledSurface/sampledSurface.C
 sampledSurface/sampledSurfaces/sampledSurfaces.C
-sampledSurface/sampledTriSurfaceMesh/sampledTriSurfaceMesh.C
+sampledSurface/sampledTriSurface/sampledTriSurface.C
 sampledSurface/sampledThresholdCellFaces/thresholdCellFaces.C
 sampledSurface/sampledThresholdCellFaces/sampledThresholdCellFaces.C
 

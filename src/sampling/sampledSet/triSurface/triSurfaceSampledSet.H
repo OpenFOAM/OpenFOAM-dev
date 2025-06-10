@@ -22,10 +22,10 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::sampledSets::triSurfaceMesh
+    Foam::sampledSets::triSurface
 
 Description
-    Samples from all the points of a triSurfaceMesh. Surface files are read
+    Samples from all the points of a triSurface. Surface files are read
     from constant/triSurface.
 
 Usage
@@ -49,8 +49,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef triSurfaceMesh_sampledSet_H
-#define triSurfaceMesh_sampledSet_H
+#ifndef triSurfaceSampledSet_H
+#define triSurfaceSampledSet_H
 
 #include "sampledSet.H"
 
@@ -62,16 +62,16 @@ namespace sampledSets
 {
 
 /*---------------------------------------------------------------------------*\
-                  Class triSurfaceMesh Declaration
+                        Class triSurface Declaration
 \*---------------------------------------------------------------------------*/
 
-class triSurfaceMesh
+class triSurface
 :
     public sampledSet
 {
     // Private Data
 
-        //- Name of triSurfaceMesh
+        //- Name of triSurface
         const word surface_;
 
         //- Sampling points
@@ -102,7 +102,7 @@ public:
     // Constructors
 
         //- Construct from dictionary
-        triSurfaceMesh
+        triSurface
         (
             const word& name,
             const polyMesh& mesh,
@@ -112,7 +112,7 @@ public:
 
 
     //- Destructor
-    virtual ~triSurfaceMesh();
+    virtual ~triSurface();
 };
 
 

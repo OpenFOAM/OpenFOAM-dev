@@ -22,10 +22,10 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::sampledSurfaces::triSurfaceMesh
+    Foam::sampledSurfaces::triSurface
 
 Description
-    A sampledSurface from a triSurfaceMesh. It samples on the points/triangles
+    A sampledSurface from a triSurface. It samples on the points/triangles
     of the triSurface. It either samples cells or (non-coupled) boundary faces.
 
     There are 6 possible modes:
@@ -63,7 +63,7 @@ Description
     Example:
     \verbatim
     {
-        type        triSurfaceMesh;
+        type        triSurface;
         surface     "surface.stl";
         source      cells;
         interpolate yes;
@@ -79,12 +79,12 @@ Usage
     \endtable
 
 SourceFiles
-    sampledTriSurfaceMesh.C
+    sampledTriSurface.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef sampledTriSurfaceMesh_H
-#define sampledTriSurfaceMesh_H
+#ifndef sampledTriSurface_H
+#define sampledTriSurface_H
 
 #include "sampledSurface.H"
 #include "triSurfaceMesh.H"
@@ -95,17 +95,17 @@ SourceFiles
 namespace Foam
 {
 
-    class treeDataFace;
-    class meshSearch;
+class treeDataFace;
+class meshSearch;
 
 namespace sampledSurfaces
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class triSurfaceMesh Declaration
+                          Class triSurface Declaration
 \*---------------------------------------------------------------------------*/
 
-class triSurfaceMesh
+class triSurface
 :
     public sampledSurface,
     public MeshedSurface<face>
@@ -177,7 +177,7 @@ public:
     // Constructors
 
         //- Construct from components
-        triSurfaceMesh
+        triSurface
         (
             const word& name,
             const polyMesh& mesh,
@@ -186,7 +186,7 @@ public:
         );
 
         //- Construct from dictionary
-        triSurfaceMesh
+        triSurface
         (
             const word& name,
             const polyMesh& mesh,
@@ -194,17 +194,17 @@ public:
         );
 
         //- Construct from triSurface
-        triSurfaceMesh
+        triSurface
         (
             const word& name,
             const polyMesh& mesh,
-            const triSurface& surface,
+            const Foam::triSurface& surface,
             const word& sampleSourceName
         );
 
 
     //- Destructor
-    virtual ~triSurfaceMesh();
+    virtual ~triSurface();
 
 
     // Member Functions
@@ -314,7 +314,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "sampledTriSurfaceMeshTemplates.C"
+    #include "sampledTriSurfaceTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,13 +23,13 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "sampledTriSurfaceMesh.H"
+#include "sampledTriSurface.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
 Foam::tmp<Foam::Field<Type>>
-Foam::sampledSurfaces::triSurfaceMesh::sampleField
+Foam::sampledSurfaces::triSurface::sampleField
 (
     const VolField<Type>& vField
 ) const
@@ -85,7 +85,7 @@ Foam::sampledSurfaces::triSurfaceMesh::sampleField
 
 template<class Type>
 Foam::tmp<Foam::Field<Type>>
-Foam::sampledSurfaces::triSurfaceMesh::interpolateField
+Foam::sampledSurfaces::triSurface::interpolateField
 (
     const interpolation<Type>& interpolator
 ) const

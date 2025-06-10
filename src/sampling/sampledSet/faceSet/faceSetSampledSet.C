@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,8 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "cellSet_sampledSet.H"
-#include "cellSet.H"
+#include "faceSetSampledSet.H"
+#include "faceSet.H"
 #include "polyMesh.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -34,31 +34,31 @@ namespace Foam
 {
 namespace sampledSets
 {
-    defineTypeNameAndDebug(cellSet, 0);
-    addToRunTimeSelectionTable(sampledSet, cellSet, word);
+    defineTypeNameAndDebug(faceSet, 0);
+    addToRunTimeSelectionTable(sampledSet, faceSet, word);
 }
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::sampledSets::cellSet::genSamples()
+void Foam::sampledSets::faceSet::genSamples()
 {
-    const labelList cells(Foam::cellSet(mesh(), setName_).toc());
+    const labelList faces(Foam::faceSet(mesh(), setName_).toc());
 
     setSamples
     (
-        List<point>(IndirectList<point>(mesh().cellCentres(), cells)),
-        identityMap(cells.size()),
-        cells,
-        labelList(cells.size(), -1)
+        List<point>(IndirectList<point>(mesh().faceCentres(), faces)),
+        identityMap(faces.size()),
+        labelList(UIndirectList<label>(mesh().faceOwner(), faces)),
+        faces
     );
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::sampledSets::cellSet::cellSet
+Foam::sampledSets::faceSet::faceSet
 (
     const word& name,
     const polyMesh& mesh,
@@ -75,7 +75,7 @@ Foam::sampledSets::cellSet::cellSet
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::sampledSets::cellSet::~cellSet()
+Foam::sampledSets::faceSet::~faceSet()
 {}
 
 
