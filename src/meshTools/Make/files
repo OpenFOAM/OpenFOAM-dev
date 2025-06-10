@@ -219,6 +219,8 @@ patchIntersection/patchIntersection.C
 patchIntersection/primitivePatchIntersection.C
 patchIntersection/polyPatchIntersection.C
 
+patchFaceOrientation/patchFaceOrientation.C
+
 zoneGenerators/remove/remove.C
 zoneGenerators/clear/clear.C
 

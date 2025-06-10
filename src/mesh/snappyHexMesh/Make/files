@@ -14,7 +14,6 @@ meshRefinement/meshRefinement.C
 meshRefinement/meshRefinementMerge.C
 meshRefinement/meshRefinementProblemCells.C
 meshRefinement/meshRefinementRefine.C
-meshRefinement/patchFaceOrientation.C
 
 refinementFeatures/refinementFeatures.C
 refinementSurfaces/surfaceZonesInfo.C

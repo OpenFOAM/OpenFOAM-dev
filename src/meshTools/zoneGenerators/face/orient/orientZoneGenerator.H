@@ -26,16 +26,19 @@ Class
 
 Description
     A zoneGenerator which sets the face orientation flipMap
-    based on the face normal alignment with the given normal.
 
-    The returned faceZone is unoriented and provided the corresponding flipMap.
+    based either on the face normal alignment with the given normal or
+    orientation with respect to a given point outside the surface.
+
+    The returned faceZone is oriented and provides the corresponding flipMap.
 
 Usage
     \table
-        Property     | Description              | Required | Default value
-        type         | Type: face               | yes      |
-        name         | Name of the zone         | no       | zoneGenerator name
-        normal       | Reference unit vector    | yes      |
+        Property     | Description               | Required | Default value
+        type         | Type: face                | yes      |
+        name         | Name of the zone          | no       | zoneGenerator name
+        normal       | Reference unit vector     | no       |
+        outsidePoint | Point outside the surface | no       |
         moveUpdate   | Switch to update after mesh motion | no | false
     \endtable
 
@@ -45,6 +48,17 @@ Usage
         {
             type        orient;
             normal      (0 1 0);
+            cut;
+        }
+    \endverbatim
+
+    To orient the faceZone \c cut with respect to the point (0 100 0) outside
+    the surface:
+    \verbatim
+        orientedCut
+        {
+            type        orient;
+            point       (0 100 0);
             cut;
         }
     \endverbatim
@@ -67,7 +81,7 @@ namespace zoneGenerators
 {
 
 /*---------------------------------------------------------------------------*\
-                              Class orientZoneGenerator Declaration
+                        Class orientZoneGenerator Declaration
 \*---------------------------------------------------------------------------*/
 
 class orientZoneGenerator
@@ -81,6 +95,21 @@ class orientZoneGenerator
 
         //- Reference unit vector face orientations are compared to
         vector normal_;
+
+        //- Seed outside point
+        vector outsidePoint_;
+
+
+    // Private Member Functions
+
+        //- Orientation based on the face normal alignment with the given normal
+        boolList normalOrientation(const labelList& faceIndices) const;
+
+        //- Orientation based on the given outside point
+        boolList pointOrientation(const faceZone& fZone) const;
+
+        //- Select orientation algorithm based on the user inputs
+        boolList orientation(const faceZone& fZone) const;
 
 
 public:
