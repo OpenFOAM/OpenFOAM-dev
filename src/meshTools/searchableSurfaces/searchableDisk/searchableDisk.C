@@ -30,29 +30,32 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(searchableDisk, 0);
+    namespace searchableSurfaces
+    {
+        defineTypeNameAndDebug(disk, 0);
 
-    addToRunTimeSelectionTable
-    (
-        searchableSurface,
-        searchableDisk,
-        dictionary
-    );
+        addToRunTimeSelectionTable
+        (
+            searchableSurface,
+            disk,
+            dictionary
+        );
 
-    addBackwardCompatibleToRunTimeSelectionTable
-    (
-        searchableSurface,
-        searchableDisk,
-        dictionary,
-        searchableDisk,
-        "searchableDisk"
-    );
+        addBackwardCompatibleToRunTimeSelectionTable
+        (
+            searchableSurface,
+            disk,
+            dictionary,
+            searchableDisk,
+            "searchableDisk"
+        );
+    }
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::pointIndexHit Foam::searchableDisk::findNearest
+Foam::pointIndexHit Foam::searchableSurfaces::disk::findNearest
 (
     const point& sample,
     const scalar nearestDistSqr
@@ -91,7 +94,7 @@ Foam::pointIndexHit Foam::searchableDisk::findNearest
 }
 
 
-void Foam::searchableDisk::findLine
+void Foam::searchableSurfaces::disk::findLine
 (
     const point& start,
     const point& end,
@@ -136,7 +139,7 @@ void Foam::searchableDisk::findLine
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::searchableDisk::searchableDisk
+Foam::searchableSurfaces::disk::disk
 (
     const IOobject& io,
     const point& origin,
@@ -166,7 +169,7 @@ Foam::searchableDisk::searchableDisk
 }
 
 
-Foam::searchableDisk::searchableDisk
+Foam::searchableSurfaces::disk::disk
 (
     const IOobject& io,
     const dictionary& dict
@@ -198,13 +201,13 @@ Foam::searchableDisk::searchableDisk
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::searchableDisk::~searchableDisk()
+Foam::searchableSurfaces::disk::~disk()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::wordList& Foam::searchableDisk::regions() const
+const Foam::wordList& Foam::searchableSurfaces::disk::regions() const
 {
     if (regions_.empty())
     {
@@ -215,7 +218,7 @@ const Foam::wordList& Foam::searchableDisk::regions() const
 }
 
 
-void Foam::searchableDisk::boundingSpheres
+void Foam::searchableSurfaces::disk::boundingSpheres
 (
     pointField& centres,
     scalarField& radiusSqr
@@ -232,7 +235,7 @@ void Foam::searchableDisk::boundingSpheres
 }
 
 
-void Foam::searchableDisk::findNearest
+void Foam::searchableSurfaces::disk::findNearest
 (
     const pointField& samples,
     const scalarField& nearestDistSqr,
@@ -248,7 +251,7 @@ void Foam::searchableDisk::findNearest
 }
 
 
-void Foam::searchableDisk::findLine
+void Foam::searchableSurfaces::disk::findLine
 (
     const pointField& start,
     const pointField& end,
@@ -264,7 +267,7 @@ void Foam::searchableDisk::findLine
 }
 
 
-void Foam::searchableDisk::findLineAny
+void Foam::searchableSurfaces::disk::findLineAny
 (
     const pointField& start,
     const pointField& end,
@@ -275,7 +278,7 @@ void Foam::searchableDisk::findLineAny
 }
 
 
-void Foam::searchableDisk::findLineAll
+void Foam::searchableSurfaces::disk::findLineAll
 (
     const pointField& start,
     const pointField& end,
@@ -302,7 +305,7 @@ void Foam::searchableDisk::findLineAll
 }
 
 
-void Foam::searchableDisk::getRegion
+void Foam::searchableSurfaces::disk::getRegion
 (
     const List<pointIndexHit>& info,
     labelList& region
@@ -313,7 +316,7 @@ void Foam::searchableDisk::getRegion
 }
 
 
-void Foam::searchableDisk::getNormal
+void Foam::searchableSurfaces::disk::getNormal
 (
     const List<pointIndexHit>& info,
     vectorField& normal
@@ -324,7 +327,7 @@ void Foam::searchableDisk::getNormal
 }
 
 
-void Foam::searchableDisk::getVolumeType
+void Foam::searchableSurfaces::disk::getVolumeType
 (
     const pointField& points,
     List<volumeType>& volType

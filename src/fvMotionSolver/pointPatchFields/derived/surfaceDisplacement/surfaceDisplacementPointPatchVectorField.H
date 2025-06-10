@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,7 @@ SourceFiles
 
 #include "pointPatchFields.H"
 #include "fixedValuePointPatchFields.H"
-#include "searchableSurfaces.H"
+#include "searchableSurfaceList.H"
 #include "Switch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -112,7 +112,7 @@ private:
         const word frozenPointsZone_;
 
         //- Demand driven: surface to project
-        mutable autoPtr<searchableSurfaces> surfacesPtr_;
+        mutable autoPtr<searchableSurfaceList> surfacesPtr_;
 
 
     // Private Member Functions
@@ -178,7 +178,7 @@ public:
     // Member Functions
 
         //- Surface to follow. Demand loads surfaceNames.
-        const searchableSurfaces& surfaces() const;
+        const searchableSurfaceList& surfaces() const;
 
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();

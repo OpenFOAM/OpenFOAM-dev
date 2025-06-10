@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,7 +46,7 @@ Foam::projectCurveEdge::projectCurveEdge
 (
     const dictionary& dict,
     const label index,
-    const searchableSurfaces& geometry,
+    const searchableSurfaceList& geometry,
     const pointField& points,
     Istream& is
 )
@@ -67,7 +67,7 @@ Foam::projectCurveEdge::projectCurveEdge
                 << exit(FatalIOError);
         }
 
-        if (isA<searchableExtrudedCircle>(geometry_[surfaces_[i]]))
+        if (isA<searchableSurfaces::extrudedCircle>(geometry_[surfaces_[i]]))
         {
             Info<< type() << " : Using curved surface "
                 << geometry_[surfaces_[i]].name()
@@ -114,10 +114,10 @@ Foam::projectCurveEdge::position(const scalarList& lambdas) const
     // surface
     forAll(surfaces_, i)
     {
-        if (isA<searchableExtrudedCircle>(geometry_[surfaces_[i]]))
+        if (isA<searchableSurfaces::extrudedCircle>(geometry_[surfaces_[i]]))
         {
-            const searchableExtrudedCircle& s =
-            refCast<const searchableExtrudedCircle>
+            const searchableSurfaces::extrudedCircle& s =
+            refCast<const searchableSurfaces::extrudedCircle>
             (
                 geometry_[surfaces_[i]]
             );

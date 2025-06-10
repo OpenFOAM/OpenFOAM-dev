@@ -31,29 +31,32 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(searchableBox, 0);
+    namespace searchableSurfaces
+    {
+        defineTypeNameAndDebug(box, 0);
 
-    addToRunTimeSelectionTable
-    (
-        searchableSurface,
-        searchableBox,
-        dictionary
-    );
+        addToRunTimeSelectionTable
+        (
+            searchableSurface,
+            box,
+            dictionary
+        );
 
-    addBackwardCompatibleToRunTimeSelectionTable
-    (
-        searchableSurface,
-        searchableBox,
-        dictionary,
-        searchableBox,
-        "searchableBox"
-    );
+        addBackwardCompatibleToRunTimeSelectionTable
+        (
+            searchableSurface,
+            box,
+            dictionary,
+            searchableBox,
+            "searchableBox"
+        );
+    }
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::searchableBox::projectOntoCoordPlane
+void Foam::searchableSurfaces::box::projectOntoCoordPlane
 (
     const direction dir,
     const point& planePt,
@@ -82,7 +85,7 @@ void Foam::searchableBox::projectOntoCoordPlane
 
 
 // Returns miss or hit with face (0..5) and region(always 0)
-Foam::pointIndexHit Foam::searchableBox::findNearest
+Foam::pointIndexHit Foam::searchableSurfaces::box::findNearest
 (
     const point& bbMid,
     const point& sample,
@@ -176,7 +179,7 @@ Foam::pointIndexHit Foam::searchableBox::findNearest
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::searchableBox::searchableBox
+Foam::searchableSurfaces::box::box
 (
     const IOobject& io,
     const treeBoundBox& bb
@@ -196,7 +199,7 @@ Foam::searchableBox::searchableBox
 }
 
 
-Foam::searchableBox::searchableBox
+Foam::searchableSurfaces::box::box
 (
     const IOobject& io,
     const dictionary& dict
@@ -218,13 +221,13 @@ Foam::searchableBox::searchableBox
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::searchableBox::~searchableBox()
+Foam::searchableSurfaces::box::~box()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::wordList& Foam::searchableBox::regions() const
+const Foam::wordList& Foam::searchableSurfaces::box::regions() const
 {
     if (regions_.empty())
     {
@@ -235,7 +238,7 @@ const Foam::wordList& Foam::searchableBox::regions() const
 }
 
 
-Foam::tmp<Foam::pointField> Foam::searchableBox::coordinates() const
+Foam::tmp<Foam::pointField> Foam::searchableSurfaces::box::coordinates() const
 {
     tmp<pointField> tCtrs = tmp<pointField>(new pointField(6));
     pointField& ctrs = tCtrs.ref();
@@ -252,7 +255,7 @@ Foam::tmp<Foam::pointField> Foam::searchableBox::coordinates() const
 }
 
 
-void Foam::searchableBox::boundingSpheres
+void Foam::searchableSurfaces::box::boundingSpheres
 (
     pointField& centres,
     scalarField& radiusSqr
@@ -287,13 +290,13 @@ void Foam::searchableBox::boundingSpheres
 }
 
 
-Foam::tmp<Foam::pointField> Foam::searchableBox::points() const
+Foam::tmp<Foam::pointField> Foam::searchableSurfaces::box::points() const
 {
     return treeBoundBox::points();
 }
 
 
-Foam::pointIndexHit Foam::searchableBox::findNearest
+Foam::pointIndexHit Foam::searchableSurfaces::box::findNearest
 (
     const point& sample,
     const scalar nearestDistSqr
@@ -303,7 +306,7 @@ Foam::pointIndexHit Foam::searchableBox::findNearest
 }
 
 
-Foam::pointIndexHit Foam::searchableBox::findNearestOnEdge
+Foam::pointIndexHit Foam::searchableSurfaces::box::findNearestOnEdge
 (
     const point& sample,
     const scalar nearestDistSqr
@@ -373,7 +376,7 @@ Foam::pointIndexHit Foam::searchableBox::findNearestOnEdge
 }
 
 
-Foam::pointIndexHit Foam::searchableBox::findNearest
+Foam::pointIndexHit Foam::searchableSurfaces::box::findNearest
 (
     const linePointRef& ln,
     treeBoundBox& tightest,
@@ -385,7 +388,7 @@ Foam::pointIndexHit Foam::searchableBox::findNearest
 }
 
 
-Foam::pointIndexHit Foam::searchableBox::findLine
+Foam::pointIndexHit Foam::searchableSurfaces::box::findLine
 (
     const point& start,
     const point& end
@@ -448,7 +451,7 @@ Foam::pointIndexHit Foam::searchableBox::findLine
 }
 
 
-Foam::pointIndexHit Foam::searchableBox::findLineAny
+Foam::pointIndexHit Foam::searchableSurfaces::box::findLineAny
 (
     const point& start,
     const point& end
@@ -458,7 +461,7 @@ Foam::pointIndexHit Foam::searchableBox::findLineAny
 }
 
 
-void Foam::searchableBox::findNearest
+void Foam::searchableSurfaces::box::findNearest
 (
     const pointField& samples,
     const scalarField& nearestDistSqr,
@@ -476,7 +479,7 @@ void Foam::searchableBox::findNearest
 }
 
 
-void Foam::searchableBox::findLine
+void Foam::searchableSurfaces::box::findLine
 (
     const pointField& start,
     const pointField& end,
@@ -492,7 +495,7 @@ void Foam::searchableBox::findLine
 }
 
 
-void Foam::searchableBox::findLineAny
+void Foam::searchableSurfaces::box::findLineAny
 (
     const pointField& start,
     const pointField& end,
@@ -508,7 +511,7 @@ void Foam::searchableBox::findLineAny
 }
 
 
-void Foam::searchableBox::findLineAll
+void Foam::searchableSurfaces::box::findLineAll
 (
     const pointField& start,
     const pointField& end,
@@ -576,7 +579,7 @@ void Foam::searchableBox::findLineAll
 }
 
 
-void Foam::searchableBox::getRegion
+void Foam::searchableSurfaces::box::getRegion
 (
     const List<pointIndexHit>& info,
     labelList& region
@@ -587,7 +590,7 @@ void Foam::searchableBox::getRegion
 }
 
 
-void Foam::searchableBox::getNormal
+void Foam::searchableSurfaces::box::getNormal
 (
     const List<pointIndexHit>& info,
     vectorField& normal
@@ -610,7 +613,7 @@ void Foam::searchableBox::getNormal
 }
 
 
-void Foam::searchableBox::getVolumeType
+void Foam::searchableSurfaces::box::getVolumeType
 (
     const pointField& points,
     List<volumeType>& volType

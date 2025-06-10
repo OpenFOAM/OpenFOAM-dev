@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -356,14 +356,14 @@ surfaceSlipDisplacementPointPatchVectorField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const searchableSurfaces&
+const searchableSurfaceList&
 surfaceSlipDisplacementPointPatchVectorField::surfaces() const
 {
     if (surfacesPtr_.empty())
     {
         surfacesPtr_.reset
         (
-            new searchableSurfaces
+            new searchableSurfaceList
             (
                 IOobject
                 (

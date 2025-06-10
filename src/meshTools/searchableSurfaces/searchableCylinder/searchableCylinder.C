@@ -30,29 +30,33 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(searchableCylinder, 0);
+    namespace searchableSurfaces
+    {
+        defineTypeNameAndDebug(cylinder, 0);
 
-    addToRunTimeSelectionTable
-    (
-        searchableSurface,
-        searchableCylinder,
-        dictionary
-    );
+        addToRunTimeSelectionTable
+        (
+            searchableSurface,
+            cylinder,
+            dictionary
+        );
 
-    addBackwardCompatibleToRunTimeSelectionTable
-    (
-        searchableSurface,
-        searchableCylinder,
-        dictionary,
-        searchableCylinder,
-        "searchableCylinder"
-    );
+        addBackwardCompatibleToRunTimeSelectionTable
+        (
+            searchableSurface,
+            cylinder,
+            dictionary,
+            searchableCylinder,
+            "searchableCylinder"
+        );
+    }
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::tmp<Foam::pointField> Foam::searchableCylinder::coordinates() const
+Foam::tmp<Foam::pointField>
+Foam::searchableSurfaces::cylinder::coordinates() const
 {
     tmp<pointField> tCtrs(new pointField(1, 0.5*(point1_ + point2_)));
 
@@ -60,7 +64,7 @@ Foam::tmp<Foam::pointField> Foam::searchableCylinder::coordinates() const
 }
 
 
-void Foam::searchableCylinder::boundingSpheres
+void Foam::searchableSurfaces::cylinder::boundingSpheres
 (
     pointField& centres,
     scalarField& radiusSqr
@@ -77,7 +81,7 @@ void Foam::searchableCylinder::boundingSpheres
 }
 
 
-Foam::tmp<Foam::pointField> Foam::searchableCylinder::points() const
+Foam::tmp<Foam::pointField> Foam::searchableSurfaces::cylinder::points() const
 {
     tmp<pointField> tPts(new pointField(2));
     pointField& pts = tPts.ref();
@@ -89,7 +93,7 @@ Foam::tmp<Foam::pointField> Foam::searchableCylinder::points() const
 }
 
 
-Foam::pointIndexHit Foam::searchableCylinder::findNearest
+Foam::pointIndexHit Foam::searchableSurfaces::cylinder::findNearest
 (
     const point& sample,
     const scalar nearestDistSqr
@@ -192,7 +196,7 @@ Foam::pointIndexHit Foam::searchableCylinder::findNearest
 }
 
 
-Foam::scalar Foam::searchableCylinder::radius2(const point& pt) const
+Foam::scalar Foam::searchableSurfaces::cylinder::radius2(const point& pt) const
 {
     const vector x = (pt-point1_) ^ unitDir_;
     return x&x;
@@ -201,7 +205,7 @@ Foam::scalar Foam::searchableCylinder::radius2(const point& pt) const
 
 // From http://www.gamedev.net/community/forums/topic.asp?topic_id=467789 -
 // intersection of cylinder with ray
-void Foam::searchableCylinder::findLineAll
+void Foam::searchableSurfaces::cylinder::findLineAll
 (
     const point& start,
     const point& end,
@@ -439,7 +443,7 @@ void Foam::searchableCylinder::findLineAll
 }
 
 
-Foam::boundBox Foam::searchableCylinder::calcBounds() const
+Foam::boundBox Foam::searchableSurfaces::cylinder::calcBounds() const
 {
 
     // Adapted from
@@ -489,7 +493,7 @@ Foam::boundBox Foam::searchableCylinder::calcBounds() const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::searchableCylinder::searchableCylinder
+Foam::searchableSurfaces::cylinder::cylinder
 (
     const IOobject& io,
     const point& point1,
@@ -508,7 +512,7 @@ Foam::searchableCylinder::searchableCylinder
 }
 
 
-Foam::searchableCylinder::searchableCylinder
+Foam::searchableSurfaces::cylinder::cylinder
 (
     const IOobject& io,
     const dictionary& dict
@@ -527,13 +531,13 @@ Foam::searchableCylinder::searchableCylinder
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::searchableCylinder::~searchableCylinder()
+Foam::searchableSurfaces::cylinder::~cylinder()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::wordList& Foam::searchableCylinder::regions() const
+const Foam::wordList& Foam::searchableSurfaces::cylinder::regions() const
 {
     if (regions_.empty())
     {
@@ -544,7 +548,7 @@ const Foam::wordList& Foam::searchableCylinder::regions() const
 }
 
 
-void Foam::searchableCylinder::findNearest
+void Foam::searchableSurfaces::cylinder::findNearest
 (
     const pointField& samples,
     const scalarField& nearestDistSqr,
@@ -560,7 +564,7 @@ void Foam::searchableCylinder::findNearest
 }
 
 
-void Foam::searchableCylinder::findLine
+void Foam::searchableSurfaces::cylinder::findLine
 (
     const pointField& start,
     const pointField& end,
@@ -582,7 +586,7 @@ void Foam::searchableCylinder::findLine
 }
 
 
-void Foam::searchableCylinder::findLineAny
+void Foam::searchableSurfaces::cylinder::findLineAny
 (
     const pointField& start,
     const pointField& end,
@@ -604,7 +608,7 @@ void Foam::searchableCylinder::findLineAny
 }
 
 
-void Foam::searchableCylinder::findLineAll
+void Foam::searchableSurfaces::cylinder::findLineAll
 (
     const pointField& start,
     const pointField& end,
@@ -648,7 +652,7 @@ void Foam::searchableCylinder::findLineAll
 }
 
 
-void Foam::searchableCylinder::getRegion
+void Foam::searchableSurfaces::cylinder::getRegion
 (
     const List<pointIndexHit>& info,
     labelList& region
@@ -659,7 +663,7 @@ void Foam::searchableCylinder::getRegion
 }
 
 
-void Foam::searchableCylinder::getNormal
+void Foam::searchableSurfaces::cylinder::getNormal
 (
     const List<pointIndexHit>& info,
     vectorField& normal
@@ -736,7 +740,7 @@ void Foam::searchableCylinder::getNormal
 }
 
 
-void Foam::searchableCylinder::getVolumeType
+void Foam::searchableSurfaces::cylinder::getVolumeType
 (
     const pointField& points,
     List<volumeType>& volType

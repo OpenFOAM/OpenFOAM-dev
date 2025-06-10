@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::searchableDisk
+    Foam::searchableSurfaces::disk
 
 Description
     Surface geometry with a circular disk shape, which can be used with
@@ -38,7 +38,7 @@ Usage
 
     Example specification in snappyHexMeshDict/geometry:
     \verbatim
-        type       searchableDisk;
+        type       disk;
         origin     (10 10 10);
         normal     (0 1 0);
         radius     5;
@@ -59,12 +59,14 @@ SourceFiles
 
 namespace Foam
 {
+namespace searchableSurfaces
+{
 
 /*---------------------------------------------------------------------------*\
-                       Class searchableDisk Declaration
+                       Class disk Declaration
 \*---------------------------------------------------------------------------*/
 
-class searchableDisk
+class disk
 :
     public searchableSurface
 {
@@ -113,7 +115,7 @@ public:
     // Constructors
 
         //- Construct from components
-        searchableDisk
+        disk
         (
             const IOobject& io,
             const point& origin,
@@ -122,18 +124,18 @@ public:
         );
 
         //- Construct from dictionary (used by searchableSurface)
-        searchableDisk
+        disk
         (
             const IOobject& io,
             const dictionary& dict
         );
 
         //- Disallow default bitwise copy construction
-        searchableDisk(const searchableDisk&) = delete;
+        disk(const disk&) = delete;
 
 
     //- Destructor
-    virtual ~searchableDisk();
+    virtual ~disk();
 
 
     // Member Functions
@@ -249,12 +251,13 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const searchableDisk&) = delete;
+        void operator=(const disk&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End of namespace searchableSurfaces
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

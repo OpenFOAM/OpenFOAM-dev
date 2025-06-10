@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::closedTriSurfaceMesh
+    Foam::searchableSurfaces::closedTriSurfaceMesh
 
 Description
     Like triSurface, a surface geometry formed of discrete facets, e.g. \
@@ -54,14 +54,16 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef closedTriSurfaceMesh_H
-#define closedTriSurfaceMesh_H
+#ifndef searchableSurfaces_closedTriSurfaceMesh_H
+#define searchableSurfaces_closedTriSurfaceMesh_H
 
 #include "triSurfaceMesh.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
+{
+namespace searchableSurfaces
 {
 
 /*---------------------------------------------------------------------------*\
@@ -75,7 +77,7 @@ class closedTriSurfaceMesh
 public:
 
     //- Runtime type information
-    TypeName("closedTriSurfaceMesh");
+    TypeName("closedTriSurface");
 
 
     // Constructors
@@ -122,6 +124,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End of namespace searchableSurfaces
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

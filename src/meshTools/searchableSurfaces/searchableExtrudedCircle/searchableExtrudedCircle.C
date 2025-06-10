@@ -36,29 +36,32 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(searchableExtrudedCircle, 0);
+    namespace searchableSurfaces
+    {
+        defineTypeNameAndDebug(extrudedCircle, 0);
 
-    addToRunTimeSelectionTable
-    (
-        searchableSurface,
-        searchableExtrudedCircle,
-        dictionary
-    );
+        addToRunTimeSelectionTable
+        (
+            searchableSurface,
+            extrudedCircle,
+            dictionary
+        );
 
-    addBackwardCompatibleToRunTimeSelectionTable
-    (
-        searchableSurface,
-        searchableExtrudedCircle,
-        dictionary,
-        searchableExtrudedCircle,
-        "searchableExtrudedCircle"
-    );
+        addBackwardCompatibleToRunTimeSelectionTable
+        (
+            searchableSurface,
+            extrudedCircle,
+            dictionary,
+            searchableExtrudedCircle,
+            "searchableExtrudedCircle"
+        );
+    }
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::searchableExtrudedCircle::searchableExtrudedCircle
+Foam::searchableSurfaces::extrudedCircle::extrudedCircle
 (
     const IOobject& io,
     const dictionary& dict
@@ -125,13 +128,13 @@ Foam::searchableExtrudedCircle::searchableExtrudedCircle
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::searchableExtrudedCircle::~searchableExtrudedCircle()
+Foam::searchableSurfaces::extrudedCircle::~extrudedCircle()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::wordList& Foam::searchableExtrudedCircle::regions() const
+const Foam::wordList& Foam::searchableSurfaces::extrudedCircle::regions() const
 {
     if (regions_.empty())
     {
@@ -142,19 +145,20 @@ const Foam::wordList& Foam::searchableExtrudedCircle::regions() const
 }
 
 
-Foam::label Foam::searchableExtrudedCircle::size() const
+Foam::label Foam::searchableSurfaces::extrudedCircle::size() const
 {
     return eMeshPtr_().points().size();
 }
 
 
-Foam::tmp<Foam::pointField> Foam::searchableExtrudedCircle::coordinates() const
+Foam::tmp<Foam::pointField>
+Foam::searchableSurfaces::extrudedCircle::coordinates() const
 {
     return eMeshPtr_().points();
 }
 
 
-void Foam::searchableExtrudedCircle::boundingSpheres
+void Foam::searchableSurfaces::extrudedCircle::boundingSpheres
 (
     pointField& centres,
     scalarField& radiusSqr
@@ -168,7 +172,7 @@ void Foam::searchableExtrudedCircle::boundingSpheres
 }
 
 
-void Foam::searchableExtrudedCircle::findNearest
+void Foam::searchableSurfaces::extrudedCircle::findNearest
 (
     const pointField& samples,
     const scalarField& nearestDistSqr,
@@ -192,7 +196,7 @@ void Foam::searchableExtrudedCircle::findNearest
 }
 
 
-void Foam::searchableExtrudedCircle::findParametricNearest
+void Foam::searchableSurfaces::extrudedCircle::findParametricNearest
 (
     const point& start,
     const point& end,
@@ -396,7 +400,7 @@ void Foam::searchableExtrudedCircle::findParametricNearest
 }
 
 
-void Foam::searchableExtrudedCircle::getRegion
+void Foam::searchableSurfaces::extrudedCircle::getRegion
 (
     const List<pointIndexHit>& info,
     labelList& region
@@ -407,7 +411,7 @@ void Foam::searchableExtrudedCircle::getRegion
 }
 
 
-void Foam::searchableExtrudedCircle::getNormal
+void Foam::searchableSurfaces::extrudedCircle::getNormal
 (
     const List<pointIndexHit>& info,
     vectorField& normal

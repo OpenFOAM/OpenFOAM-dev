@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::searchableSphere
+    Foam::searchableSurfaces::sphere
 
 Description
     Surface geometry with a sphere shape, which can be used with
@@ -37,7 +37,7 @@ Usage
 
     Example specification in snappyHexMeshDict/geometry:
     \verbatim
-        type       searchableSphere;
+        type       sphere;
         centre     (10  10  10);
         radius     5;
     \endverbatim
@@ -57,14 +57,14 @@ SourceFiles
 
 namespace Foam
 {
-
-// Forward declaration of classes
+namespace searchableSurfaces
+{
 
 /*---------------------------------------------------------------------------*\
-                      Class searchableSphere Declaration
+                             Class sphere Declaration
 \*---------------------------------------------------------------------------*/
 
-class searchableSphere
+class sphere
 :
     public searchableSurface
 {
@@ -111,21 +111,21 @@ public:
     // Constructors
 
         //- Construct from components
-        searchableSphere(const IOobject& io, const point&, const scalar radius);
+        sphere(const IOobject& io, const point&, const scalar radius);
 
         //- Construct from dictionary (used by searchableSurface)
-        searchableSphere
+        sphere
         (
             const IOobject& io,
             const dictionary& dict
         );
 
         //- Disallow default bitwise copy construction
-        searchableSphere(const searchableSphere&) = delete;
+        sphere(const sphere&) = delete;
 
 
     //- Destructor
-    virtual ~searchableSphere();
+    virtual ~sphere();
 
 
     // Member Functions
@@ -236,12 +236,13 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const searchableSphere&) = delete;
+        void operator=(const sphere&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End of namespace searchableSurfaces
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "searchableSurfaces.H"
+#include "searchableSurfaceList.H"
 #include "searchableSurfacesQueries.H"
 #include "ListOps.H"
 #include "Time.H"
@@ -36,13 +36,13 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(searchableSurfaces, 0);
+    defineTypeNameAndDebug(searchableSurfaceList, 0);
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-bool Foam::searchableSurfaces::connected
+bool Foam::searchableSurfaceList::connected
 (
     const triSurface& s,
     const label edgeI,
@@ -66,7 +66,7 @@ bool Foam::searchableSurfaces::connected
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::searchableSurfaces::searchableSurfaces(const label size)
+Foam::searchableSurfaceList::searchableSurfaceList(const label size)
 :
     PtrList<searchableSurface>(size),
     regionNames_(size),
@@ -74,7 +74,7 @@ Foam::searchableSurfaces::searchableSurfaces(const label size)
 {}
 
 
-Foam::searchableSurfaces::searchableSurfaces
+Foam::searchableSurfaceList::searchableSurfaceList
 (
     const IOobject& io,
     const dictionary& topDict,
@@ -188,7 +188,7 @@ Foam::searchableSurfaces::searchableSurfaces
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::label Foam::searchableSurfaces::findSurfaceID
+Foam::label Foam::searchableSurfaceList::findSurfaceID
 (
     const word& wantedName
 ) const
@@ -197,7 +197,7 @@ Foam::label Foam::searchableSurfaces::findSurfaceID
 }
 
 
-Foam::label Foam::searchableSurfaces::findSurfaceRegionID
+Foam::label Foam::searchableSurfaceList::findSurfaceRegionID
 (
     const word& surfaceName,
     const word& regionName
@@ -210,7 +210,7 @@ Foam::label Foam::searchableSurfaces::findSurfaceRegionID
 
 
 // Find any intersection
-void Foam::searchableSurfaces::findAnyIntersection
+void Foam::searchableSurfaceList::findAnyIntersection
 (
     const pointField& start,
     const pointField& end,
@@ -230,7 +230,7 @@ void Foam::searchableSurfaces::findAnyIntersection
 }
 
 
-void Foam::searchableSurfaces::findAllIntersections
+void Foam::searchableSurfaceList::findAllIntersections
 (
     const pointField& start,
     const pointField& end,
@@ -251,7 +251,7 @@ void Foam::searchableSurfaces::findAllIntersections
 
 
 //Find intersections of edge nearest to both endpoints.
-void Foam::searchableSurfaces::findNearestIntersection
+void Foam::searchableSurfaceList::findNearestIntersection
 (
     const pointField& start,
     const pointField& end,
@@ -275,7 +275,7 @@ void Foam::searchableSurfaces::findNearestIntersection
 }
 
 
-void Foam::searchableSurfaces::findNearest
+void Foam::searchableSurfaceList::findNearest
 (
     const pointField& samples,
     const scalarField& nearestDistSqr,
@@ -295,7 +295,7 @@ void Foam::searchableSurfaces::findNearest
 }
 
 
-void Foam::searchableSurfaces::findNearest
+void Foam::searchableSurfaceList::findNearest
 (
     const pointField& samples,
     const scalarField& nearestDistSqr,
@@ -317,7 +317,7 @@ void Foam::searchableSurfaces::findNearest
 }
 
 
-Foam::boundBox Foam::searchableSurfaces::bounds() const
+Foam::boundBox Foam::searchableSurfaceList::bounds() const
 {
     return searchableSurfacesQueries::bounds
     (
@@ -327,7 +327,7 @@ Foam::boundBox Foam::searchableSurfaces::bounds() const
 }
 
 
-bool Foam::searchableSurfaces::checkClosed(const bool report) const
+bool Foam::searchableSurfaceList::checkClosed(const bool report) const
 {
     if (report)
     {
@@ -394,7 +394,10 @@ bool Foam::searchableSurfaces::checkClosed(const bool report) const
 }
 
 
-bool Foam::searchableSurfaces::checkNormalOrientation(const bool report) const
+bool Foam::searchableSurfaceList::checkNormalOrientation
+(
+    const bool report
+) const
 {
     if (report)
     {
@@ -440,7 +443,7 @@ bool Foam::searchableSurfaces::checkNormalOrientation(const bool report) const
 }
 
 
-bool Foam::searchableSurfaces::checkSizes
+bool Foam::searchableSurfaceList::checkSizes
 (
     const scalar maxRatio,
     const bool report
@@ -488,7 +491,7 @@ bool Foam::searchableSurfaces::checkSizes
 }
 
 
-bool Foam::searchableSurfaces::checkIntersection
+bool Foam::searchableSurfaceList::checkIntersection
 (
     const scalar tolerance,
     const bool report
@@ -505,12 +508,13 @@ bool Foam::searchableSurfaces::checkIntersection
 
     forAll(*this, i)
     {
-        if (isA<triSurfaceMesh>(operator[](i)))
+        if (isA<searchableSurfaces::triSurfaceMesh>(operator[](i)))
         {
-            const triSurfaceMesh& s0 = dynamic_cast<const triSurfaceMesh&>
-            (
-                operator[](i)
-            );
+            const searchableSurfaces::triSurfaceMesh& s0 =
+                dynamic_cast<const searchableSurfaces::triSurfaceMesh&>
+                (
+                    operator[](i)
+                );
             const edgeList& edges0 = s0.edges();
             const pointField& localPoints0 = s0.localPoints();
 
@@ -613,7 +617,7 @@ bool Foam::searchableSurfaces::checkIntersection
 }
 
 
-bool Foam::searchableSurfaces::checkQuality
+bool Foam::searchableSurfaceList::checkQuality
 (
     const scalar minQuality,
     const bool report
@@ -678,7 +682,7 @@ bool Foam::searchableSurfaces::checkQuality
 
 
 // Check all surfaces. Return number of failures.
-Foam::label Foam::searchableSurfaces::checkTopology
+Foam::label Foam::searchableSurfaceList::checkTopology
 (
     const bool report
 ) const
@@ -698,7 +702,7 @@ Foam::label Foam::searchableSurfaces::checkTopology
 }
 
 
-Foam::label Foam::searchableSurfaces::checkGeometry
+Foam::label Foam::searchableSurfaceList::checkGeometry
 (
     const scalar maxRatio,
     const scalar tol,
@@ -727,7 +731,7 @@ Foam::label Foam::searchableSurfaces::checkGeometry
 }
 
 
-void Foam::searchableSurfaces::writeStats
+void Foam::searchableSurfaceList::writeStats
 (
     const List<wordList>& patchTypes,
     Ostream& os
@@ -742,9 +746,10 @@ void Foam::searchableSurfaces::writeStats
 
         Info<< "        type      : " << s.type() << nl
             << "        size      : " << s.globalSize() << nl;
-        if (isA<triSurfaceMesh>(s))
+        if (isA<searchableSurfaces::triSurfaceMesh>(s))
         {
-            const triSurfaceMesh& ts = dynamic_cast<const triSurfaceMesh&>(s);
+            const searchableSurfaces::triSurfaceMesh& ts =
+                dynamic_cast<const searchableSurfaces::triSurfaceMesh&>(s);
             Info<< "        edges     : " << ts.nEdges() << nl
                 << "        points    : " << ts.points()().size() << nl;
         }
@@ -772,7 +777,7 @@ void Foam::searchableSurfaces::writeStats
 
 // * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * * //
 
-const Foam::searchableSurface& Foam::searchableSurfaces::operator[]
+const Foam::searchableSurface& Foam::searchableSurfaceList::operator[]
 (
     const word& surfName
 ) const
@@ -791,7 +796,7 @@ const Foam::searchableSurface& Foam::searchableSurfaces::operator[]
 }
 
 
-Foam::searchableSurface& Foam::searchableSurfaces::operator[]
+Foam::searchableSurface& Foam::searchableSurfaceList::operator[]
 (
     const word& surfName
 )

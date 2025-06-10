@@ -24,38 +24,41 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "searchableSurfaceCollection.H"
-#include "addToRunTimeSelectionTable.H"
 #include "SortableList.H"
 #include "Time.H"
 #include "ListOps.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(searchableSurfaceCollection, 0);
+    namespace searchableSurfaces
+    {
+        defineTypeNameAndDebug(collection, 0);
 
-    addToRunTimeSelectionTable
-    (
-        searchableSurface,
-        searchableSurfaceCollection,
-        dictionary
-    );
+        addToRunTimeSelectionTable
+        (
+            searchableSurface,
+            collection,
+            dictionary
+        );
 
-    addBackwardCompatibleToRunTimeSelectionTable
-    (
-        searchableSurface,
-        searchableSurfaceCollection,
-        dictionary,
-        searchableSurfaceCollection,
-        "searchableSurfaceCollection"
-    );
+        addBackwardCompatibleToRunTimeSelectionTable
+        (
+            searchableSurface,
+            collection,
+            dictionary,
+            searchableSurfaceCollection,
+            "searchableSurfaceCollection"
+        );
+    }
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::searchableSurfaceCollection::findNearest
+void Foam::searchableSurfaces::collection::findNearest
 (
     const pointField& samples,
     scalarField& minDistSqr,
@@ -123,7 +126,7 @@ void Foam::searchableSurfaceCollection::findNearest
 
 // Sort hits into per-surface bins. Misses are rejected. Maintains map back
 // to position
-void Foam::searchableSurfaceCollection::sortHits
+void Foam::searchableSurfaces::collection::sortHits
 (
     const List<pointIndexHit>& info,
     List<List<pointIndexHit>>& surfInfo,
@@ -179,7 +182,7 @@ void Foam::searchableSurfaceCollection::sortHits
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::searchableSurfaceCollection::searchableSurfaceCollection
+Foam::searchableSurfaces::collection::collection
 (
     const IOobject& io,
     const dictionary& dict
@@ -286,13 +289,13 @@ Foam::searchableSurfaceCollection::searchableSurfaceCollection
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::searchableSurfaceCollection::~searchableSurfaceCollection()
+Foam::searchableSurfaces::collection::~collection()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::wordList& Foam::searchableSurfaceCollection::regions() const
+const Foam::wordList& Foam::searchableSurfaces::collection::regions() const
 {
     if (regions_.size() == 0)
     {
@@ -324,14 +327,14 @@ const Foam::wordList& Foam::searchableSurfaceCollection::regions() const
 }
 
 
-Foam::label Foam::searchableSurfaceCollection::size() const
+Foam::label Foam::searchableSurfaces::collection::size() const
 {
     return indexOffset_.last();
 }
 
 
 Foam::tmp<Foam::pointField>
-Foam::searchableSurfaceCollection::coordinates() const
+Foam::searchableSurfaces::collection::coordinates() const
 {
     tmp<pointField> tCtrs = tmp<pointField>(new pointField(size()));
     pointField& ctrs = tCtrs.ref();
@@ -360,7 +363,7 @@ Foam::searchableSurfaceCollection::coordinates() const
 }
 
 
-void Foam::searchableSurfaceCollection::boundingSpheres
+void Foam::searchableSurfaces::collection::boundingSpheres
 (
     pointField& centres,
     scalarField& radiusSqr
@@ -398,7 +401,7 @@ void Foam::searchableSurfaceCollection::boundingSpheres
 
 
 Foam::tmp<Foam::pointField>
-Foam::searchableSurfaceCollection::points() const
+Foam::searchableSurfaces::collection::points() const
 {
     // Get overall size
     label nPoints = 0;
@@ -435,7 +438,7 @@ Foam::searchableSurfaceCollection::points() const
 }
 
 
-void Foam::searchableSurfaceCollection::findNearest
+void Foam::searchableSurfaces::collection::findNearest
 (
     const pointField& samples,
     const scalarField& nearestDistSqr,
@@ -456,7 +459,7 @@ void Foam::searchableSurfaceCollection::findNearest
 }
 
 
-void Foam::searchableSurfaceCollection::findLine
+void Foam::searchableSurfaces::collection::findLine
 (
     const pointField& start,
     const pointField& end,
@@ -553,7 +556,7 @@ void Foam::searchableSurfaceCollection::findLine
 }
 
 
-void Foam::searchableSurfaceCollection::findLineAny
+void Foam::searchableSurfaces::collection::findLineAny
 (
     const pointField& start,
     const pointField& end,
@@ -565,7 +568,7 @@ void Foam::searchableSurfaceCollection::findLineAny
 }
 
 
-void Foam::searchableSurfaceCollection::findLineAll
+void Foam::searchableSurfaces::collection::findLineAll
 (
     const pointField& start,
     const pointField& end,
@@ -592,7 +595,7 @@ void Foam::searchableSurfaceCollection::findLineAll
 }
 
 
-void Foam::searchableSurfaceCollection::getRegion
+void Foam::searchableSurfaces::collection::getRegion
 (
     const List<pointIndexHit>& info,
     labelList& region
@@ -657,7 +660,7 @@ void Foam::searchableSurfaceCollection::getRegion
 }
 
 
-void Foam::searchableSurfaceCollection::getNormal
+void Foam::searchableSurfaces::collection::getNormal
 (
     const List<pointIndexHit>& info,
     vectorField& normal
@@ -700,7 +703,7 @@ void Foam::searchableSurfaceCollection::getNormal
 }
 
 
-void Foam::searchableSurfaceCollection::getVolumeType
+void Foam::searchableSurfaces::collection::getVolumeType
 (
     const pointField& points,
     List<volumeType>& volType
@@ -712,7 +715,7 @@ void Foam::searchableSurfaceCollection::getVolumeType
 }
 
 
-void Foam::searchableSurfaceCollection::distribute
+void Foam::searchableSurfaces::collection::distribute
 (
     const List<treeBoundBox>& bbs,
     const bool keepNonLocal,
@@ -746,7 +749,7 @@ void Foam::searchableSurfaceCollection::distribute
 }
 
 
-void Foam::searchableSurfaceCollection::setField(const labelList& values)
+void Foam::searchableSurfaces::collection::setField(const labelList& values)
 {
     forAll(subGeom_, surfI)
     {
@@ -766,7 +769,7 @@ void Foam::searchableSurfaceCollection::setField(const labelList& values)
 }
 
 
-void Foam::searchableSurfaceCollection::getField
+void Foam::searchableSurfaces::collection::getField
 (
     const List<pointIndexHit>& info,
     labelList& values

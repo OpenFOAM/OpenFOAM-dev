@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::triSurfaceMesh::drawHitProblem
+void Foam::searchableSurfaces::triSurfaceMesh::drawHitProblem
 (
     const label fi,
     const point& start,
@@ -83,7 +83,7 @@ void Foam::triSurfaceMesh::drawHitProblem
 }
 
 
-void Foam::triSurfaceMesh::processHit
+void Foam::searchableSurfaces::triSurfaceMesh::processHit
 (
     scalar& internalCloseness,
     scalar& externalCloseness,
@@ -200,7 +200,7 @@ void Foam::triSurfaceMesh::processHit
 
 
 Foam::Pair<Foam::tmp<Foam::triSurfaceScalarField>>
-Foam::triSurfaceMesh::extractCloseness
+Foam::searchableSurfaces::triSurfaceMesh::extractCloseness
 (
     const scalar internalAngleTolerance,
     const scalar externalAngleTolerance
@@ -296,7 +296,7 @@ Foam::triSurfaceMesh::extractCloseness
 
 
 Foam::Pair<Foam::tmp<Foam::triSurfacePointScalarField>>
-Foam::triSurfaceMesh::extractPointCloseness
+Foam::searchableSurfaces::triSurfaceMesh::extractPointCloseness
 (
     const scalar internalAngleTolerance,
     const scalar externalAngleTolerance

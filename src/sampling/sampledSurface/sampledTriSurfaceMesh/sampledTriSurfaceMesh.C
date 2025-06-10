@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,31 +34,46 @@ License
 
 namespace Foam
 {
-namespace sampledSurfaces
-{
-    defineTypeNameAndDebug(triSurfaceMesh, 0);
-    addToRunTimeSelectionTable(sampledSurface, triSurfaceMesh, word);
-
-    //- Private class for finding nearest
-    //  Comprising:
-    //  - global index
-    //  - sqr(distance)
-    typedef Tuple2<scalar, label> nearInfo;
-
-    class nearestEqOp
+    namespace sampledSurfaces
     {
+        defineTypeNameAndDebug(triSurfaceMesh, 0);
 
-    public:
+        addToRunTimeSelectionTable
+        (
+            sampledSurface,
+            triSurfaceMesh,
+            word
+        );
 
-        void operator()(nearInfo& x, const nearInfo& y) const
+        addBackwardCompatibleToRunTimeSelectionTable
+        (
+            sampledSurface,
+            triSurfaceMesh,
+            word,
+            triSurfaceMesh,
+            "triSurfaceMesh"
+        );
+
+        //- Private class for finding nearest
+        //  Comprising:
+        //  - global index
+        //  - sqr(distance)
+        typedef Tuple2<scalar, label> nearInfo;
+
+        class nearestEqOp
         {
-            if (y.first() < x.first())
+
+        public:
+
+            void operator()(nearInfo& x, const nearInfo& y) const
             {
-                x = y;
+                if (y.first() < x.first())
+                {
+                    x = y;
+                }
             }
-        }
-    };
-}
+        };
+    }
 }
 
 template<>

@@ -35,14 +35,32 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(triSurfaceMesh, 0);
+    namespace searchableSurfaces
+    {
+        defineTypeNameAndDebug(triSurfaceMesh, 0);
 
-    addToRunTimeSelectionTable(searchableSurface, triSurfaceMesh, dictionary);
+        addToRunTimeSelectionTable
+        (
+            searchableSurface,
+            triSurfaceMesh,
+            dictionary
+        );
+
+        addBackwardCompatibleToRunTimeSelectionTable
+        (
+            searchableSurface,
+            triSurfaceMesh,
+            dictionary,
+            triSurfaceMesh,
+            "triSurfaceMesh"
+        );
+    }
 }
+
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::fileName Foam::triSurfaceMesh::checkFile
+Foam::fileName Foam::searchableSurfaces::triSurfaceMesh::checkFile
 (
     const regIOobject& io,
     const bool isGlobal
@@ -61,7 +79,7 @@ Foam::fileName Foam::triSurfaceMesh::checkFile
 }
 
 
-Foam::fileName Foam::triSurfaceMesh::relativeFilePath
+Foam::fileName Foam::searchableSurfaces::triSurfaceMesh::relativeFilePath
 (
     const regIOobject& io,
     const fileName& f,
@@ -82,7 +100,7 @@ Foam::fileName Foam::triSurfaceMesh::relativeFilePath
 }
 
 
-Foam::fileName Foam::triSurfaceMesh::checkFile
+Foam::fileName Foam::searchableSurfaces::triSurfaceMesh::checkFile
 (
     const regIOobject& io,
     const dictionary& dict,
@@ -118,7 +136,7 @@ Foam::fileName Foam::triSurfaceMesh::checkFile
 }
 
 
-bool Foam::triSurfaceMesh::addFaceToEdge
+bool Foam::searchableSurfaces::triSurfaceMesh::addFaceToEdge
 (
     const edge& e,
     EdgeMap<label>& facesPerEdge
@@ -141,7 +159,7 @@ bool Foam::triSurfaceMesh::addFaceToEdge
 }
 
 
-bool Foam::triSurfaceMesh::isSurfaceClosed() const
+bool Foam::searchableSurfaces::triSurfaceMesh::isSurfaceClosed() const
 {
     const pointField& pts = triSurface::points();
 
@@ -220,7 +238,11 @@ bool Foam::triSurfaceMesh::isSurfaceClosed() const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::triSurfaceMesh::triSurfaceMesh(const IOobject& io, const triSurface& s)
+Foam::searchableSurfaces::triSurfaceMesh::triSurfaceMesh
+(
+    const IOobject& io,
+    const triSurface& s
+)
 :
     searchableSurface(io),
     objectRegistry
@@ -247,7 +269,7 @@ Foam::triSurfaceMesh::triSurfaceMesh(const IOobject& io, const triSurface& s)
 }
 
 
-Foam::triSurfaceMesh::triSurfaceMesh(const IOobject& io)
+Foam::searchableSurfaces::triSurfaceMesh::triSurfaceMesh(const IOobject& io)
 :
     // Find instance for triSurfaceMesh
     searchableSurface(io),
@@ -276,7 +298,7 @@ Foam::triSurfaceMesh::triSurfaceMesh(const IOobject& io)
 }
 
 
-Foam::triSurfaceMesh::triSurfaceMesh
+Foam::searchableSurfaces::triSurfaceMesh::triSurfaceMesh
 (
     const IOobject& io,
     const dictionary& dict
@@ -339,7 +361,11 @@ Foam::triSurfaceMesh::triSurfaceMesh
 }
 
 
-Foam::triSurfaceMesh::triSurfaceMesh(const IOobject& io, const bool isGlobal)
+Foam::searchableSurfaces::triSurfaceMesh::triSurfaceMesh
+(
+    const IOobject& io,
+    const bool isGlobal
+)
 :
     // Find instance for triSurfaceMesh
     searchableSurface(io),
@@ -371,7 +397,7 @@ Foam::triSurfaceMesh::triSurfaceMesh(const IOobject& io, const bool isGlobal)
 }
 
 
-Foam::triSurfaceMesh::triSurfaceMesh
+Foam::searchableSurfaces::triSurfaceMesh::triSurfaceMesh
 (
     const IOobject& io,
     const dictionary& dict,
@@ -438,13 +464,13 @@ Foam::triSurfaceMesh::triSurfaceMesh
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::triSurfaceMesh::~triSurfaceMesh()
+Foam::searchableSurfaces::triSurfaceMesh::~triSurfaceMesh()
 {
     clearOut();
 }
 
 
-void Foam::triSurfaceMesh::clearOut()
+void Foam::searchableSurfaces::triSurfaceMesh::clearOut()
 {
     triSurfaceRegionSearch::clearOut();
     edgeTree_.clear();
@@ -454,7 +480,8 @@ void Foam::triSurfaceMesh::clearOut()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::pointField> Foam::triSurfaceMesh::coordinates() const
+Foam::tmp<Foam::pointField>
+Foam::searchableSurfaces::triSurfaceMesh::coordinates() const
 {
     tmp<pointField> tPts(new pointField(8));
     pointField& pt = tPts.ref();
@@ -470,7 +497,7 @@ Foam::tmp<Foam::pointField> Foam::triSurfaceMesh::coordinates() const
 }
 
 
-void Foam::triSurfaceMesh::boundingSpheres
+void Foam::searchableSurfaces::triSurfaceMesh::boundingSpheres
 (
     pointField& centres,
     scalarField& radiusSqr
@@ -498,13 +525,17 @@ void Foam::triSurfaceMesh::boundingSpheres
 }
 
 
-Foam::tmp<Foam::pointField> Foam::triSurfaceMesh::points() const
+Foam::tmp<Foam::pointField>
+Foam::searchableSurfaces::triSurfaceMesh::points() const
 {
     return triSurface::points();
 }
 
 
-bool Foam::triSurfaceMesh::overlaps(const boundBox& bb) const
+bool Foam::searchableSurfaces::triSurfaceMesh::overlaps
+(
+    const boundBox& bb
+) const
 {
      const indexedOctree<treeDataTriSurface>& octree = tree();
 
@@ -514,7 +545,10 @@ bool Foam::triSurfaceMesh::overlaps(const boundBox& bb) const
 }
 
 
-void Foam::triSurfaceMesh::setPoints(const pointField& newPoints)
+void Foam::searchableSurfaces::triSurfaceMesh::setPoints
+(
+    const pointField& newPoints
+)
 {
     triSurfaceRegionSearch::clearOut();
     edgeTree_.clear();
@@ -523,7 +557,7 @@ void Foam::triSurfaceMesh::setPoints(const pointField& newPoints)
 
 
 const Foam::indexedOctree<Foam::treeDataEdge>&
-Foam::triSurfaceMesh::edgeTree() const
+Foam::searchableSurfaces::triSurfaceMesh::edgeTree() const
 {
     if (edgeTree_.empty())
     {
@@ -582,7 +616,7 @@ Foam::triSurfaceMesh::edgeTree() const
 }
 
 
-const Foam::wordList& Foam::triSurfaceMesh::regions() const
+const Foam::wordList& Foam::searchableSurfaces::triSurfaceMesh::regions() const
 {
     if (regions_.empty())
     {
@@ -596,7 +630,7 @@ const Foam::wordList& Foam::triSurfaceMesh::regions() const
 }
 
 
-bool Foam::triSurfaceMesh::hasVolumeType() const
+bool Foam::searchableSurfaces::triSurfaceMesh::hasVolumeType() const
 {
     if (surfaceClosed_ == -1)
     {
@@ -614,7 +648,7 @@ bool Foam::triSurfaceMesh::hasVolumeType() const
 }
 
 
-void Foam::triSurfaceMesh::findNearest
+void Foam::searchableSurfaces::triSurfaceMesh::findNearest
 (
     const pointField& samples,
     const scalarField& nearestDistSqr,
@@ -625,7 +659,7 @@ void Foam::triSurfaceMesh::findNearest
 }
 
 
-void Foam::triSurfaceMesh::findNearest
+void Foam::searchableSurfaces::triSurfaceMesh::findNearest
 (
     const pointField& samples,
     const scalarField& nearestDistSqr,
@@ -643,7 +677,7 @@ void Foam::triSurfaceMesh::findNearest
 }
 
 
-void Foam::triSurfaceMesh::findLine
+void Foam::searchableSurfaces::triSurfaceMesh::findLine
 (
     const pointField& start,
     const pointField& end,
@@ -654,7 +688,7 @@ void Foam::triSurfaceMesh::findLine
 }
 
 
-void Foam::triSurfaceMesh::findLineAny
+void Foam::searchableSurfaces::triSurfaceMesh::findLineAny
 (
     const pointField& start,
     const pointField& end,
@@ -665,7 +699,7 @@ void Foam::triSurfaceMesh::findLineAny
 }
 
 
-void Foam::triSurfaceMesh::findLineAll
+void Foam::searchableSurfaces::triSurfaceMesh::findLineAll
 (
     const pointField& start,
     const pointField& end,
@@ -676,7 +710,7 @@ void Foam::triSurfaceMesh::findLineAll
 }
 
 
-void Foam::triSurfaceMesh::getRegion
+void Foam::searchableSurfaces::triSurfaceMesh::getRegion
 (
     const List<pointIndexHit>& info,
     labelList& region
@@ -697,7 +731,7 @@ void Foam::triSurfaceMesh::getRegion
 }
 
 
-void Foam::triSurfaceMesh::getNormal
+void Foam::searchableSurfaces::triSurfaceMesh::getNormal
 (
     const List<pointIndexHit>& info,
     vectorField& normal
@@ -773,7 +807,7 @@ void Foam::triSurfaceMesh::getNormal
 }
 
 
-void Foam::triSurfaceMesh::getVolumeType
+void Foam::searchableSurfaces::triSurfaceMesh::getVolumeType
 (
     const pointField& points,
     List<volumeType>& volType
@@ -804,7 +838,7 @@ void Foam::triSurfaceMesh::getVolumeType
 }
 
 
-void Foam::triSurfaceMesh::setField(const labelList& values)
+void Foam::searchableSurfaces::triSurfaceMesh::setField(const labelList& values)
 {
     autoPtr<triSurfaceLabelField> fldPtr
     (
@@ -830,7 +864,7 @@ void Foam::triSurfaceMesh::setField(const labelList& values)
 }
 
 
-void Foam::triSurfaceMesh::getField
+void Foam::searchableSurfaces::triSurfaceMesh::getField
 (
     const List<pointIndexHit>& info,
     labelList& values
@@ -856,7 +890,7 @@ void Foam::triSurfaceMesh::getField
 }
 
 
-bool Foam::triSurfaceMesh::writeObject
+bool Foam::searchableSurfaces::triSurfaceMesh::writeObject
 (
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,

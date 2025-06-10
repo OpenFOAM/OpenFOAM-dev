@@ -24,36 +24,39 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "searchablePlane.H"
-#include "addToRunTimeSelectionTable.H"
 #include "SortableList.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(searchablePlane, 0);
+    namespace searchableSurfaces
+    {
+        defineTypeNameAndDebug(plane, 0);
 
-    addToRunTimeSelectionTable
-    (
-        searchableSurface,
-        searchablePlane,
-        dictionary
-    );
+        addToRunTimeSelectionTable
+        (
+            searchableSurface,
+            plane,
+            dictionary
+        );
 
-    addBackwardCompatibleToRunTimeSelectionTable
-    (
-        searchableSurface,
-        searchablePlane,
-        dictionary,
-        searchablePlane,
-        "searchablePlane"
-    );
+        addBackwardCompatibleToRunTimeSelectionTable
+        (
+            searchableSurface,
+            plane,
+            dictionary,
+            searchablePlane,
+            "searchablePlane"
+        );
+    }
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::pointIndexHit Foam::searchablePlane::findLine
+Foam::pointIndexHit Foam::searchableSurfaces::plane::findLine
 (
     const point& start,
     const point& end
@@ -79,7 +82,7 @@ Foam::pointIndexHit Foam::searchablePlane::findLine
 }
 
 
-Foam::boundBox Foam::searchablePlane::calcBounds() const
+Foam::boundBox Foam::searchableSurfaces::plane::calcBounds() const
 {
     point max(vGreat, vGreat, vGreat);
 
@@ -101,7 +104,7 @@ Foam::boundBox Foam::searchablePlane::calcBounds() const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::searchablePlane::searchablePlane
+Foam::searchableSurfaces::plane::plane
 (
     const IOobject& io,
     const point& basePoint,
@@ -109,20 +112,20 @@ Foam::searchablePlane::searchablePlane
 )
 :
     searchableSurface(io),
-    plane(basePoint, normal)
+    Foam::plane(basePoint, normal)
 {
     bounds() = calcBounds();
 }
 
 
-Foam::searchablePlane::searchablePlane
+Foam::searchableSurfaces::plane::plane
 (
     const IOobject& io,
     const dictionary& dict
 )
 :
     searchableSurface(io),
-    plane(dict)
+    Foam::plane(dict)
 {
     bounds() = calcBounds();
 }
@@ -130,13 +133,13 @@ Foam::searchablePlane::searchablePlane
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::searchablePlane::~searchablePlane()
+Foam::searchableSurfaces::plane::~plane()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::wordList& Foam::searchablePlane::regions() const
+const Foam::wordList& Foam::searchableSurfaces::plane::regions() const
 {
     if (regions_.empty())
     {
@@ -147,7 +150,7 @@ const Foam::wordList& Foam::searchablePlane::regions() const
 }
 
 
-void Foam::searchablePlane::boundingSpheres
+void Foam::searchableSurfaces::plane::boundingSpheres
 (
     pointField& centres,
     scalarField& radiusSqr
@@ -161,7 +164,7 @@ void Foam::searchablePlane::boundingSpheres
 }
 
 
-void Foam::searchablePlane::findNearest
+void Foam::searchableSurfaces::plane::findNearest
 (
     const pointField& samples,
     const scalarField& nearestDistSqr,
@@ -188,7 +191,7 @@ void Foam::searchablePlane::findNearest
 }
 
 
-void Foam::searchablePlane::findLine
+void Foam::searchableSurfaces::plane::findLine
 (
     const pointField& start,
     const pointField& end,
@@ -204,7 +207,7 @@ void Foam::searchablePlane::findLine
 }
 
 
-void Foam::searchablePlane::findLineAny
+void Foam::searchableSurfaces::plane::findLineAny
 (
     const pointField& start,
     const pointField& end,
@@ -215,7 +218,7 @@ void Foam::searchablePlane::findLineAny
 }
 
 
-void Foam::searchablePlane::findLineAll
+void Foam::searchableSurfaces::plane::findLineAll
 (
     const pointField& start,
     const pointField& end,
@@ -241,7 +244,7 @@ void Foam::searchablePlane::findLineAll
 }
 
 
-void Foam::searchablePlane::getRegion
+void Foam::searchableSurfaces::plane::getRegion
 (
     const List<pointIndexHit>& info,
     labelList& region
@@ -252,7 +255,7 @@ void Foam::searchablePlane::getRegion
 }
 
 
-void Foam::searchablePlane::getNormal
+void Foam::searchableSurfaces::plane::getNormal
 (
     const List<pointIndexHit>& info,
     vectorField& n
@@ -263,7 +266,7 @@ void Foam::searchablePlane::getNormal
 }
 
 
-void Foam::searchablePlane::getVolumeType
+void Foam::searchableSurfaces::plane::getVolumeType
 (
     const pointField& points,
     List<volumeType>& volType

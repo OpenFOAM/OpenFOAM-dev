@@ -30,20 +30,32 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(closedTriSurfaceMesh, 0);
+    namespace searchableSurfaces
+    {
+        defineTypeNameAndDebug(closedTriSurfaceMesh, 0);
 
-    addToRunTimeSelectionTable
-    (
-        searchableSurface,
-        closedTriSurfaceMesh,
-        dictionary
-    );
+        addToRunTimeSelectionTable
+        (
+            searchableSurface,
+            closedTriSurfaceMesh,
+            dictionary
+        );
+
+        addBackwardCompatibleToRunTimeSelectionTable
+        (
+            searchableSurface,
+            closedTriSurfaceMesh,
+            dictionary,
+            closedTriSurfaceMesh,
+            "closedTriSurfaceMesh"
+        );
+    }
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::closedTriSurfaceMesh::closedTriSurfaceMesh
+Foam::searchableSurfaces::closedTriSurfaceMesh::closedTriSurfaceMesh
 (
     const IOobject& io,
     const triSurface& s
@@ -53,13 +65,16 @@ Foam::closedTriSurfaceMesh::closedTriSurfaceMesh
 {}
 
 
-Foam::closedTriSurfaceMesh::closedTriSurfaceMesh(const IOobject& io)
+Foam::searchableSurfaces::closedTriSurfaceMesh::closedTriSurfaceMesh
+(
+    const IOobject& io
+)
 :
     triSurfaceMesh(io)
 {}
 
 
-Foam::closedTriSurfaceMesh::closedTriSurfaceMesh
+Foam::searchableSurfaces::closedTriSurfaceMesh::closedTriSurfaceMesh
 (
     const IOobject& io,
     const dictionary& dict
@@ -71,7 +86,7 @@ Foam::closedTriSurfaceMesh::closedTriSurfaceMesh
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::closedTriSurfaceMesh::~closedTriSurfaceMesh()
+Foam::searchableSurfaces::closedTriSurfaceMesh::~closedTriSurfaceMesh()
 {}
 
 

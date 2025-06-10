@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,10 @@ const Foam::NamedEnum<Foam::meshingSurface::surfaceType, 5>
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::label Foam::meshingSurface::nSurfaceParts(const triSurfaceMesh& surf)
+Foam::label Foam::meshingSurface::nSurfaceParts
+(
+    const searchableSurfaces::triSurfaceMesh& surf
+)
 {
     labelList faceZone;
     return surf.markZones(boolList(surf.nEdges(), false), faceZone);
@@ -77,7 +80,7 @@ Foam::meshingSurface::meshingSurface(const fileName& file, const Time& time)
     inletRegions_(),
     outletRegions_()
 {
-    triSurfaceMesh surf
+    searchableSurfaces::triSurfaceMesh surf
     (
         IOobject
         (

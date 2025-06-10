@@ -24,36 +24,39 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "searchablePlate.H"
-#include "addToRunTimeSelectionTable.H"
 #include "SortableList.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(searchablePlate, 0);
+    namespace searchableSurfaces
+    {
+        defineTypeNameAndDebug(plate, 0);
 
-    addToRunTimeSelectionTable
-    (
-        searchableSurface,
-        searchablePlate,
-        dictionary
-    );
+        addToRunTimeSelectionTable
+        (
+            searchableSurface,
+            plate,
+            dictionary
+        );
 
-    addBackwardCompatibleToRunTimeSelectionTable
-    (
-        searchableSurface,
-        searchablePlate,
-        dictionary,
-        searchablePlate,
-        "searchablePlate"
-    );
+        addBackwardCompatibleToRunTimeSelectionTable
+        (
+            searchableSurface,
+            plate,
+            dictionary,
+            searchablePlate,
+            "searchablePlate"
+        );
+    }
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::direction Foam::searchablePlate::calcNormal(const point& span)
+Foam::direction Foam::searchableSurfaces::plate::calcNormal(const point& span)
 {
     direction normalDir = 3;
 
@@ -92,7 +95,7 @@ Foam::direction Foam::searchablePlate::calcNormal(const point& span)
 
 
 // Returns miss or hit with face (always 0)
-Foam::pointIndexHit Foam::searchablePlate::findNearest
+Foam::pointIndexHit Foam::searchableSurfaces::plate::findNearest
 (
     const point& sample,
     const scalar nearestDistSqr
@@ -138,7 +141,7 @@ Foam::pointIndexHit Foam::searchablePlate::findNearest
 }
 
 
-Foam::pointIndexHit Foam::searchablePlate::findLine
+Foam::pointIndexHit Foam::searchableSurfaces::plate::findLine
 (
     const point& start,
     const point& end
@@ -219,7 +222,7 @@ Foam::pointIndexHit Foam::searchablePlate::findLine
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::searchablePlate::searchablePlate
+Foam::searchableSurfaces::plate::plate
 (
     const IOobject& io,
     const point& origin,
@@ -244,7 +247,7 @@ Foam::searchablePlate::searchablePlate
 }
 
 
-Foam::searchablePlate::searchablePlate
+Foam::searchableSurfaces::plate::plate
 (
     const IOobject& io,
     const dictionary& dict
@@ -270,13 +273,13 @@ Foam::searchablePlate::searchablePlate
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::searchablePlate::~searchablePlate()
+Foam::searchableSurfaces::plate::~plate()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::wordList& Foam::searchablePlate::regions() const
+const Foam::wordList& Foam::searchableSurfaces::plate::regions() const
 {
     if (regions_.empty())
     {
@@ -287,13 +290,13 @@ const Foam::wordList& Foam::searchablePlate::regions() const
 }
 
 
-Foam::tmp<Foam::pointField> Foam::searchablePlate::coordinates() const
+Foam::tmp<Foam::pointField> Foam::searchableSurfaces::plate::coordinates() const
 {
     return tmp<pointField>(new pointField(1, origin_ + 0.5*span_));
 }
 
 
-void Foam::searchablePlate::boundingSpheres
+void Foam::searchableSurfaces::plate::boundingSpheres
 (
     pointField& centres,
     scalarField& radiusSqr
@@ -310,7 +313,7 @@ void Foam::searchablePlate::boundingSpheres
 }
 
 
-Foam::tmp<Foam::pointField> Foam::searchablePlate::points() const
+Foam::tmp<Foam::pointField> Foam::searchableSurfaces::plate::points() const
 {
     tmp<pointField> tPts(new pointField(4));
     pointField& pts = tPts.ref();
@@ -338,7 +341,7 @@ Foam::tmp<Foam::pointField> Foam::searchablePlate::points() const
 }
 
 
-bool Foam::searchablePlate::overlaps(const boundBox& bb) const
+bool Foam::searchableSurfaces::plate::overlaps(const boundBox& bb) const
 {
     return
     (
@@ -352,7 +355,7 @@ bool Foam::searchablePlate::overlaps(const boundBox& bb) const
 }
 
 
-void Foam::searchablePlate::findNearest
+void Foam::searchableSurfaces::plate::findNearest
 (
     const pointField& samples,
     const scalarField& nearestDistSqr,
@@ -368,7 +371,7 @@ void Foam::searchablePlate::findNearest
 }
 
 
-void Foam::searchablePlate::findLine
+void Foam::searchableSurfaces::plate::findLine
 (
     const pointField& start,
     const pointField& end,
@@ -384,7 +387,7 @@ void Foam::searchablePlate::findLine
 }
 
 
-void Foam::searchablePlate::findLineAny
+void Foam::searchableSurfaces::plate::findLineAny
 (
     const pointField& start,
     const pointField& end,
@@ -395,7 +398,7 @@ void Foam::searchablePlate::findLineAny
 }
 
 
-void Foam::searchablePlate::findLineAll
+void Foam::searchableSurfaces::plate::findLineAll
 (
     const pointField& start,
     const pointField& end,
@@ -421,7 +424,7 @@ void Foam::searchablePlate::findLineAll
 }
 
 
-void Foam::searchablePlate::getRegion
+void Foam::searchableSurfaces::plate::getRegion
 (
     const List<pointIndexHit>& info,
     labelList& region
@@ -432,7 +435,7 @@ void Foam::searchablePlate::getRegion
 }
 
 
-void Foam::searchablePlate::getNormal
+void Foam::searchableSurfaces::plate::getNormal
 (
     const List<pointIndexHit>& info,
     vectorField& normal
@@ -447,7 +450,7 @@ void Foam::searchablePlate::getNormal
 }
 
 
-void Foam::searchablePlate::getVolumeType
+void Foam::searchableSurfaces::plate::getVolumeType
 (
     const pointField& points,
     List<volumeType>& volType

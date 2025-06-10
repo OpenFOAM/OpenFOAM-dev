@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,7 +46,7 @@ namespace Foam
 {
 
 class searchableSurface;
-class searchableSurfaces;
+class searchableSurfaceList;
 class polyMesh;
 class dictionary;
 
@@ -189,7 +189,7 @@ public:
             static labelList getClosedNamedSurfaces
             (
                 const PtrList<surfaceZonesInfo>& surfList,
-                const searchableSurfaces& allGeometry,
+                const searchableSurfaceList& allGeometry,
                 const labelList& surfaces
             );
 
@@ -197,7 +197,7 @@ public:
             static labelList getUnclosedNamedSurfaces
             (
                 const PtrList<surfaceZonesInfo>& surfList,
-                const searchableSurfaces& allGeometry,
+                const searchableSurfaceList& allGeometry,
                 const labelList& surfaces
             );
 
@@ -205,7 +205,7 @@ public:
             static labelList getAllClosedNamedSurfaces
             (
                 const PtrList<surfaceZonesInfo>& surfList,
-                const searchableSurfaces& allGeometry,
+                const searchableSurfaceList& allGeometry,
                 const labelList& surfaces
             );
 

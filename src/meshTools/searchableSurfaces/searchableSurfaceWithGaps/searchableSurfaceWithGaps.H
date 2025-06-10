@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::searchableSurfaceWithGaps
+    Foam::withGaps
 
 Description
     searchableSurface using multiple slightly shifted underlying surfaces
@@ -50,14 +50,14 @@ SourceFiles
 
 namespace Foam
 {
-
-// Forward declaration of classes
+namespace searchableSurfaces
+{
 
 /*---------------------------------------------------------------------------*\
-                  Class searchableSurfaceWithGaps Declaration
+                  Class withGaps Declaration
 \*---------------------------------------------------------------------------*/
 
-class searchableSurfaceWithGaps
+class withGaps
 :
     public searchableSurface
 {
@@ -99,24 +99,24 @@ class searchableSurfaceWithGaps
 public:
 
     //- Runtime type information
-    TypeName("surfaceWithGaps");
+    TypeName("withGaps");
 
 
     // Constructors
 
         //- Construct from dictionary (used by searchableSurface)
-        searchableSurfaceWithGaps
+        withGaps
         (
             const IOobject& io,
             const dictionary& dict
         );
 
         //- Disallow default bitwise copy construction
-        searchableSurfaceWithGaps(const searchableSurfaceWithGaps&) = delete;
+        withGaps(const withGaps&) = delete;
 
 
     //- Destructor
-    virtual ~searchableSurfaceWithGaps();
+    virtual ~withGaps();
 
 
     // Member Functions
@@ -296,12 +296,13 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const searchableSurfaceWithGaps&) = delete;
+        void operator=(const withGaps&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End of namespace searchableSurfaces
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

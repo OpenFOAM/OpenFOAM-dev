@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,11 +34,26 @@ License
 
 namespace Foam
 {
-namespace sampledSets
-{
-    defineTypeNameAndDebug(triSurfaceMesh, 0);
-    addToRunTimeSelectionTable(sampledSet, triSurfaceMesh, word);
-}
+    namespace sampledSets
+    {
+        defineTypeNameAndDebug(triSurfaceMesh, 0);
+
+        addToRunTimeSelectionTable
+        (
+            sampledSet,
+            triSurfaceMesh,
+            word
+        );
+
+        addBackwardCompatibleToRunTimeSelectionTable
+        (
+            sampledSet,
+            triSurfaceMesh,
+            word,
+            triSurfaceMesh,
+            "triSurfaceMesh"
+        );
+    }
 }
 
 
@@ -112,9 +127,15 @@ Foam::sampledSets::triSurfaceMesh::triSurfaceMesh
     surface_(dict.lookup("surface")),
     points_
     (
-        mesh.time().foundObject<Foam::triSurfaceMesh>(surface_)
-      ? mesh.time().lookupObject<Foam::triSurfaceMesh>(surface_).points()
-      : Foam::triSurfaceMesh
+        mesh.time().foundObject<searchableSurfaces::triSurfaceMesh>
+        (
+            surface_
+        )
+      ? mesh.time().lookupObject<searchableSurfaces::triSurfaceMesh>
+        (
+            surface_
+        ).points()
+      : searchableSurfaces::triSurfaceMesh
         (
             IOobject
             (

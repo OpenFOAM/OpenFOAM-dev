@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::searchablePlane
+    Foam::searchableSurfaces::plane
 
 Description
     Surface geometry of an infinite plane, which can be used with
@@ -41,7 +41,7 @@ Usage
 
     Example specification in snappyHexMeshDict/geometry:
     \verbatim
-        type       searchablePlane;
+        type       plane;
         planeType  pointAndNormal;
         point      (10 10 10);
         normal     (0  1  0);
@@ -62,17 +62,17 @@ SourceFiles
 
 namespace Foam
 {
-
-// Forward declaration of classes
+namespace searchableSurfaces
+{
 
 /*---------------------------------------------------------------------------*\
-                       Class searchablePlane Declaration
+                       Class plane Declaration
 \*---------------------------------------------------------------------------*/
 
-class searchablePlane
+class plane
 :
     public searchableSurface,
-    public plane
+    public Foam::plane
 {
     // Private Member Data
 
@@ -100,7 +100,7 @@ public:
     // Constructors
 
         //- Construct from components
-        searchablePlane
+        plane
         (
             const IOobject& io,
             const point& basePoint,
@@ -108,18 +108,18 @@ public:
         );
 
         //- Construct from dictionary (used by searchableSurface)
-        searchablePlane
+        plane
         (
             const IOobject& io,
             const dictionary& dict
         );
 
         //- Disallow default bitwise copy construction
-        searchablePlane(const searchablePlane&) = delete;
+        plane(const plane&) = delete;
 
 
     //- Destructor
-    virtual ~searchablePlane();
+    virtual ~plane();
 
 
     // Member Functions
@@ -236,12 +236,13 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const searchablePlane&) = delete;
+        void operator=(const plane&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End of namespace searchableSurfaces
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::searchableBox
+    Foam::searchableSurfaces::box
 
 Description
     Surface geometry with a rectangular box shape, aligned with the coordinate
@@ -37,7 +37,7 @@ Usage
 
     Example specification in snappyHexMeshDict/geometry:
     \verbatim
-        type       searchableBox;
+        type       box;
         min        (0  0  0);
         max        (10 10 10);
     \endverbatim
@@ -57,14 +57,14 @@ SourceFiles
 
 namespace Foam
 {
-
-// Forward declaration of classes
+namespace searchableSurfaces
+{
 
 /*---------------------------------------------------------------------------*\
-                        Class searchableBox Declaration
+                            Class box Declaration
 \*---------------------------------------------------------------------------*/
 
-class searchableBox
+class box
 :
     public searchableSurface,
     public treeBoundBox
@@ -105,21 +105,21 @@ public:
     // Constructors
 
         //- Construct from components
-        searchableBox(const IOobject& io, const treeBoundBox& bb);
+        box(const IOobject& io, const treeBoundBox& bb);
 
         //- Construct from dictionary (used by searchableSurface)
-        searchableBox
+        box
         (
             const IOobject& io,
             const dictionary& dict
         );
 
         //- Disallow default bitwise copy construction
-        searchableBox(const searchableBox&) = delete;
+        box(const box&) = delete;
 
 
     //- Destructor
-    virtual ~searchableBox();
+    virtual ~box();
 
 
     // Member Functions
@@ -279,12 +279,13 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const searchableBox&) = delete;
+        void operator=(const box&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End of namespace searchableSurfaces
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

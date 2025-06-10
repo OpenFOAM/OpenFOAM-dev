@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -131,7 +131,7 @@ private:
         static const NamedEnum<samplingSource, 3> samplingSourceNames_;
 
         //- Surface to sample on
-        const Foam::triSurfaceMesh surface_;
+        const searchableSurfaces::triSurfaceMesh surface_;
 
         //- Whether to sample internal cell values or boundary values
         const samplingSource sampleSource_;
@@ -171,7 +171,7 @@ private:
 public:
 
     //- Runtime type information
-    TypeName("triSurfaceMesh");
+    TypeName("triSurface");
 
 
     // Constructors

@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::searchableSurfaceCollection
+    Foam::searchableSurfaces::collection
 
 Description
     Makes a collection of surface geometries by copying from an existing
@@ -30,7 +30,7 @@ Description
     overlapping surfaces are not intersected.
 
 Usage
-    searchableSurfaceCollection requires a surface geometry to be defined
+    collection requires a surface geometry to be defined
     initially, e.g. \c buildingA in the example below. The collection then
     defines copies of buildingA which each can be scaled using the mandatory
     \c scale parameter and then rotated and translated by the mandatory
@@ -52,7 +52,7 @@ Usage
 
     moreBuildings
     {
-        type searchableSurfaceCollection;
+        type collection;
 
         mergeSubRegions true;
 
@@ -105,12 +105,14 @@ SourceFiles
 
 namespace Foam
 {
+namespace searchableSurfaces
+{
 
 /*---------------------------------------------------------------------------*\
-                 Class searchableSurfaceCollection Declaration
+                 Class collection Declaration
 \*---------------------------------------------------------------------------*/
 
-class searchableSurfaceCollection
+class collection
 :
     public searchableSurface
 {
@@ -170,27 +172,27 @@ class searchableSurfaceCollection
 public:
 
     //- Runtime type information
-    TypeName("surfaceCollection");
+    TypeName("collection");
 
 
     // Constructors
 
         //- Construct from dictionary (used by searchableSurface)
-        searchableSurfaceCollection
+        collection
         (
             const IOobject& io,
             const dictionary& dict
         );
 
         //- Disallow default bitwise copy construction
-        searchableSurfaceCollection
+        collection
         (
-            const searchableSurfaceCollection&
+            const collection&
         ) = delete;
 
 
     //- Destructor
-    virtual ~searchableSurfaceCollection();
+    virtual ~collection();
 
 
     // Member Functions
@@ -341,12 +343,13 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const searchableSurfaceCollection&) = delete;
+        void operator=(const collection&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End of namespace searchableSurfaces
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

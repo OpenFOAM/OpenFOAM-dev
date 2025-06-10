@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ License
 #include "OFstream.H"
 #include "geometric.H"
 #include "randomGenerator.H"
-#include "searchableSurfaces.H"
+#include "searchableSurfaceList.H"
 #include "treeBoundBox.H"
 #include "fvMeshTools.H"
 
@@ -2278,8 +2278,8 @@ void Foam::meshRefinement::distribute(const polyDistributionMap& map)
         bb = treeBoundBox(mesh_.points()).extend(1e-4);
 
         // Distribute all geometry (so refinementSurfaces and refinementRegions)
-        searchableSurfaces& geometry =
-            const_cast<searchableSurfaces&>(surfaces_.geometry());
+        searchableSurfaceList& geometry =
+            const_cast<searchableSurfaceList&>(surfaces_.geometry());
 
         forAll(geometry, i)
         {
@@ -2442,8 +2442,8 @@ bool Foam::meshRefinement::write() const
     // been changed) get written as well.
     // Note: should ideally have some 'modified' flag to say whether it
     // has been changed or not.
-    searchableSurfaces& geometry =
-        const_cast<searchableSurfaces&>(surfaces_.geometry());
+    searchableSurfaceList& geometry =
+        const_cast<searchableSurfaceList&>(surfaces_.geometry());
 
     forAll(geometry, i)
     {

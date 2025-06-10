@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::distributedTriSurfaceMesh
+    Foam::searchableSurfaces::distributedTriSurfaceMesh
 
 Description
     IOoject and searching on distributed triSurface. All processor hold
@@ -66,6 +66,8 @@ typedef Pair<point> segment;
 template<>
 inline bool contiguous<segment>() {return contiguous<point>();}
 
+namespace searchableSurfaces
+{
 
 /*---------------------------------------------------------------------------*\
                   Class distributedTriSurfaceMesh Declaration
@@ -293,7 +295,7 @@ private:
 public:
 
     //- Runtime type information
-    TypeName("distributedTriSurfaceMesh");
+    TypeName("distributedTriSurface");
 
 
     // Constructors
@@ -469,15 +471,16 @@ public:
 };
 
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+} // End of namespace searchableSurfaces
+
 //- Trait for obtaining global status
 template<>
-struct typeGlobal<distributedTriSurfaceMesh>
+struct typeGlobal<searchableSurfaces::distributedTriSurfaceMesh>
 {
     static const bool global = false;
 };
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
 

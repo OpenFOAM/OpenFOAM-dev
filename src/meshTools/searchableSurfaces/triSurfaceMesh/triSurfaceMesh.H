@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::triSurfaceMesh
+    Foam::searchableSurfaces::triSurfaceMesh
 
 Description
     A surface geometry formed of discrete facets, e.g. triangles and/or
@@ -51,8 +51,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef triSurfaceMesh_H
-#define triSurfaceMesh_H
+#ifndef searchableSurfaces_triSurfaceMesh_H
+#define searchableSurfaces_triSurfaceMesh_H
 
 #include "treeBoundBox.H"
 #include "searchableSurface.H"
@@ -71,6 +71,8 @@ SourceFiles
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
+{
+namespace searchableSurfaces
 {
 
 /*---------------------------------------------------------------------------*\
@@ -175,7 +177,7 @@ class triSurfaceMesh
 public:
 
     //- Runtime type information
-    TypeName("triSurfaceMesh");
+    TypeName("triSurface");
 
 
     // Constructors
@@ -375,15 +377,16 @@ public:
 };
 
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+} // End of namespace searchableSurfaces
+
 //- Trait for obtaining global status
 template<>
-struct typeGlobal<triSurfaceMesh>
+struct typeGlobal<searchableSurfaces::triSurfaceMesh>
 {
     static const bool global = true;
 };
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
 

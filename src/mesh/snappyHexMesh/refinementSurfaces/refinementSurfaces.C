@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ License
 
 #include "refinementSurfaces.H"
 #include "Time.H"
-#include "searchableSurfaces.H"
+#include "searchableSurfaceList.H"
 #include "refinementRegions.H"
 #include "labelPair.H"
 #include "searchableSurfacesQueries.H"
@@ -36,7 +36,7 @@ License
 
 Foam::refinementSurfaces::refinementSurfaces
 (
-    const searchableSurfaces& allGeometry,
+    const searchableSurfaceList& allGeometry,
     const dictionary& surfacesDict,
     const label gapLevelIncrement
 )
@@ -298,7 +298,7 @@ Foam::refinementSurfaces::refinementSurfaces
 
 Foam::refinementSurfaces::refinementSurfaces
 (
-    const searchableSurfaces& allGeometry,
+    const searchableSurfaceList& allGeometry,
     const labelList& surfaces,
     const wordList& names,
     const PtrList<surfaceZonesInfo>& surfZones,

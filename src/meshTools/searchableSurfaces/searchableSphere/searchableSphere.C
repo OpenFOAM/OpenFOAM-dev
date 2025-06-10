@@ -30,29 +30,32 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(searchableSphere, 0);
+    namespace searchableSurfaces
+    {
+        defineTypeNameAndDebug(sphere, 0);
 
-    addToRunTimeSelectionTable
-    (
-        searchableSurface,
-        searchableSphere,
-        dictionary
-    );
+        addToRunTimeSelectionTable
+        (
+            searchableSurface,
+            sphere,
+            dictionary
+        );
 
-    addBackwardCompatibleToRunTimeSelectionTable
-    (
-        searchableSurface,
-        searchableSphere,
-        dictionary,
-        searchableSphere,
-        "searchableSphere"
-    );
+        addBackwardCompatibleToRunTimeSelectionTable
+        (
+            searchableSurface,
+            sphere,
+            dictionary,
+            searchableSphere,
+            "searchableSphere"
+        );
+    }
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::pointIndexHit Foam::searchableSphere::findNearest
+Foam::pointIndexHit Foam::searchableSurfaces::sphere::findNearest
 (
     const point& sample,
     const scalar nearestDistSqr
@@ -82,7 +85,7 @@ Foam::pointIndexHit Foam::searchableSphere::findNearest
 
 
 // From Graphics Gems - intersection of sphere with ray
-void Foam::searchableSphere::findLineAll
+void Foam::searchableSurfaces::sphere::findLineAll
 (
     const point& start,
     const point& end,
@@ -135,7 +138,7 @@ void Foam::searchableSphere::findLineAll
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::searchableSphere::searchableSphere
+Foam::searchableSurfaces::sphere::sphere
 (
     const IOobject& io,
     const point& centre,
@@ -154,7 +157,7 @@ Foam::searchableSphere::searchableSphere
 }
 
 
-Foam::searchableSphere::searchableSphere
+Foam::searchableSurfaces::sphere::sphere
 (
     const IOobject& io,
     const dictionary& dict
@@ -174,19 +177,19 @@ Foam::searchableSphere::searchableSphere
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::searchableSphere::~searchableSphere()
+Foam::searchableSurfaces::sphere::~sphere()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::searchableSphere::overlaps(const boundBox& bb) const
+bool Foam::searchableSurfaces::sphere::overlaps(const boundBox& bb) const
 {
     return bb.overlaps(centre_, sqr(radius_));
 }
 
 
-const Foam::wordList& Foam::searchableSphere::regions() const
+const Foam::wordList& Foam::searchableSurfaces::sphere::regions() const
 {
     if (regions_.empty())
     {
@@ -198,7 +201,7 @@ const Foam::wordList& Foam::searchableSphere::regions() const
 
 
 
-void Foam::searchableSphere::boundingSpheres
+void Foam::searchableSurfaces::sphere::boundingSpheres
 (
     pointField& centres,
     scalarField& radiusSqr
@@ -215,7 +218,7 @@ void Foam::searchableSphere::boundingSpheres
 }
 
 
-void Foam::searchableSphere::findNearest
+void Foam::searchableSurfaces::sphere::findNearest
 (
     const pointField& samples,
     const scalarField& nearestDistSqr,
@@ -231,7 +234,7 @@ void Foam::searchableSphere::findNearest
 }
 
 
-void Foam::searchableSphere::findLine
+void Foam::searchableSurfaces::sphere::findLine
 (
     const pointField& start,
     const pointField& end,
@@ -254,7 +257,7 @@ void Foam::searchableSphere::findLine
 }
 
 
-void Foam::searchableSphere::findLineAny
+void Foam::searchableSurfaces::sphere::findLineAny
 (
     const pointField& start,
     const pointField& end,
@@ -277,7 +280,7 @@ void Foam::searchableSphere::findLineAny
 }
 
 
-void Foam::searchableSphere::findLineAll
+void Foam::searchableSurfaces::sphere::findLineAll
 (
     const pointField& start,
     const pointField& end,
@@ -321,7 +324,7 @@ void Foam::searchableSphere::findLineAll
 }
 
 
-void Foam::searchableSphere::getRegion
+void Foam::searchableSurfaces::sphere::getRegion
 (
     const List<pointIndexHit>& info,
     labelList& region
@@ -332,7 +335,7 @@ void Foam::searchableSphere::getRegion
 }
 
 
-void Foam::searchableSphere::getNormal
+void Foam::searchableSurfaces::sphere::getNormal
 (
     const List<pointIndexHit>& info,
     vectorField& normal
@@ -357,7 +360,7 @@ void Foam::searchableSphere::getNormal
 }
 
 
-void Foam::searchableSphere::getVolumeType
+void Foam::searchableSurfaces::sphere::getVolumeType
 (
     const pointField& points,
     List<volumeType>& volType

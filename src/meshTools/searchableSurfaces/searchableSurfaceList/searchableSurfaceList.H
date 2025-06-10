@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,18 +22,18 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::searchableSurfaces
+    Foam::searchableSurfaceList
 
 Description
     Container for searchableSurfaces.
 
 SourceFiles
-    searchableSurfaces.C
+    searchableSurfaceList.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef searchableSurfaces_H
-#define searchableSurfaces_H
+#ifndef searchableSurfaceList_H
+#define searchableSurfaceList_H
 
 #include "searchableSurface.H"
 #include "labelPair.H"
@@ -47,10 +47,10 @@ namespace Foam
 class triSurface;
 
 /*---------------------------------------------------------------------------*\
-                     Class searchableSurfaces Declaration
+                     Class searchableSurfaceList Declaration
 \*---------------------------------------------------------------------------*/
 
-class searchableSurfaces
+class searchableSurfaceList
 :
     public PtrList<searchableSurface>
 {
@@ -82,23 +82,23 @@ class searchableSurfaces
 
 public:
 
-    ClassName("searchableSurfaces");
+    ClassName("searchableSurfaceList");
 
 
     // Constructors
 
         //- Construct with length specified. Fill later.
-        explicit searchableSurfaces(const label);
+        explicit searchableSurfaceList(const label);
 
 
         ////- Construct from list of dictionaries
-        // searchableSurfaces(const IOobject&, const PtrList<dictionary>&);
+        // searchableSurfaceList(const IOobject&, const PtrList<dictionary>&);
 
         //- Construct from dictionary and whether to construct names always
         //  as surfaceName "_" regionName (singleRegionName false) or
         //  for single region surfaces as surfaceName only (singleRegionName
         //  true)
-        searchableSurfaces
+        searchableSurfaceList
         (
             const IOobject&,
             const dictionary&,
@@ -106,7 +106,7 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        searchableSurfaces(const searchableSurfaces&) = delete;
+        searchableSurfaceList(const searchableSurfaceList&) = delete;
 
 
     // Member Functions
@@ -264,7 +264,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const searchableSurfaces&) = delete;
+        void operator=(const searchableSurfaceList&) = delete;
 };
 
 

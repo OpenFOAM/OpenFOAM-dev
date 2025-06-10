@@ -32,29 +32,32 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(searchableSurfaceWithGaps, 0);
+    namespace searchableSurfaces
+    {
+        defineTypeNameAndDebug(withGaps, 0);
 
-    addToRunTimeSelectionTable
-    (
-        searchableSurface,
-        searchableSurfaceWithGaps,
-        dictionary
-    );
+        addToRunTimeSelectionTable
+        (
+            searchableSurface,
+            withGaps,
+            dictionary
+        );
 
-    addBackwardCompatibleToRunTimeSelectionTable
-    (
-        searchableSurface,
-        searchableSurfaceWithGaps,
-        dictionary,
-        searchableSurfaceWithGaps,
-        "searchableSurfaceWithGaps"
-    );
+        addBackwardCompatibleToRunTimeSelectionTable
+        (
+            searchableSurface,
+            withGaps,
+            dictionary,
+            searchableSurfaceWithGaps,
+            "searchableSurfaceWithGaps"
+        );
+    }
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::Pair<Foam::vector> Foam::searchableSurfaceWithGaps::offsetVecs
+Foam::Pair<Foam::vector> Foam::searchableSurfaces::withGaps::offsetVecs
 (
     const point& start,
     const point& end
@@ -100,7 +103,7 @@ Foam::Pair<Foam::vector> Foam::searchableSurfaceWithGaps::offsetVecs
 }
 
 
-void Foam::searchableSurfaceWithGaps::offsetVecs
+void Foam::searchableSurfaces::withGaps::offsetVecs
 (
     const pointField& start,
     const pointField& end,
@@ -120,7 +123,7 @@ void Foam::searchableSurfaceWithGaps::offsetVecs
 }
 
 
-Foam::label Foam::searchableSurfaceWithGaps::countMisses
+Foam::label Foam::searchableSurfaces::withGaps::countMisses
 (
     const List<pointIndexHit>& info,
     labelList& missMap
@@ -151,7 +154,7 @@ Foam::label Foam::searchableSurfaceWithGaps::countMisses
 
 
 // Anything not a hit in both counts as a hit
-Foam::label Foam::searchableSurfaceWithGaps::countMisses
+Foam::label Foam::searchableSurfaces::withGaps::countMisses
 (
     const List<pointIndexHit>& plusInfo,
     const List<pointIndexHit>& minInfo,
@@ -184,7 +187,7 @@ Foam::label Foam::searchableSurfaceWithGaps::countMisses
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::searchableSurfaceWithGaps::searchableSurfaceWithGaps
+Foam::searchableSurfaces::withGaps::withGaps
 (
     const IOobject& io,
     const dictionary& dict
@@ -207,13 +210,13 @@ Foam::searchableSurfaceWithGaps::searchableSurfaceWithGaps
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::searchableSurfaceWithGaps::~searchableSurfaceWithGaps()
+Foam::searchableSurfaces::withGaps::~withGaps()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::searchableSurfaceWithGaps::findLine
+void Foam::searchableSurfaces::withGaps::findLine
 (
     const pointField& start,
     const pointField& end,
@@ -338,7 +341,7 @@ void Foam::searchableSurfaceWithGaps::findLine
 }
 
 
-void Foam::searchableSurfaceWithGaps::findLineAny
+void Foam::searchableSurfaces::withGaps::findLineAny
 (
     const pointField& start,
     const pointField& end,
@@ -350,7 +353,7 @@ void Foam::searchableSurfaceWithGaps::findLineAny
 }
 
 
-void Foam::searchableSurfaceWithGaps::findLineAll
+void Foam::searchableSurfaces::withGaps::findLineAll
 (
     const pointField& start,
     const pointField& end,

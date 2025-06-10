@@ -64,7 +64,7 @@ Foam::blockEdges::splineEdge::splineEdge
 (
     const dictionary& dict,
     const label index,
-    const searchableSurfaces& geometry,
+    const searchableSurfaceList& geometry,
     const pointField& points,
     Istream& is
 )
