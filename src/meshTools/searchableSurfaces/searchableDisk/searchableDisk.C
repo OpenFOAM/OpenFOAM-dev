@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,10 +30,23 @@ License
 
 namespace Foam
 {
+    defineTypeNameAndDebug(searchableDisk, 0);
 
-defineTypeNameAndDebug(searchableDisk, 0);
-addToRunTimeSelectionTable(searchableSurface, searchableDisk, dict);
+    addToRunTimeSelectionTable
+    (
+        searchableSurface,
+        searchableDisk,
+        dictionary
+    );
 
+    addBackwardCompatibleToRunTimeSelectionTable
+    (
+        searchableSurface,
+        searchableDisk,
+        dictionary,
+        searchableDisk,
+        "searchableDisk"
+    );
 }
 
 

@@ -17,20 +17,20 @@ geometry
 {
     cylinder
     {
-        type searchableCylinder;
+        type cylinder;
         point1 (0 -4 0);
         point2 (0 4 0);
         radius 0.7;
     }
     cylinder2
     {
-        type    searchableExtrudedCircle;
+        type    extrudedCircle;
         file    "curve2.vtk";
         radius  0.5;
     }
     inletPlane
     {
-        type    searchablePlate;
+        type    plate;
         origin  (-4 -50 -50);
         span    (0 100 100);
     }

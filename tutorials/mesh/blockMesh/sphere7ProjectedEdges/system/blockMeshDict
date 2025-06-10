@@ -19,14 +19,14 @@ geometry
 {
     sphere
     {
-        type searchableSphere;
+        type sphere;
         centre (0 0 0);
         radius 1;
     }
 
     innerSphere
     {
-        type searchableSphere;
+        type sphere;
         centre (0 0 0);
         radius 0.5;
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ License
 namespace Foam
 {
     defineTypeNameAndDebug(searchableSurface, 0);
-    defineRunTimeSelectionTable(searchableSurface, dict);
+    defineRunTimeSelectionTable(searchableSurface, dictionary);
 }
 
 Foam::word Foam::searchableSurface::geometryDir_("geometry");
@@ -48,16 +48,16 @@ Foam::autoPtr<Foam::searchableSurface> Foam::searchableSurface::New
     const dictionary& dict
 )
 {
-    dictConstructorTable::iterator cstrIter =
-        dictConstructorTablePtr_->find(searchableSurfaceType);
+    dictionaryConstructorTable::iterator cstrIter =
+        dictionaryConstructorTablePtr_->find(searchableSurfaceType);
 
-    if (cstrIter == dictConstructorTablePtr_->end())
+    if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
         FatalErrorInFunction
             << "Unknown searchableSurface type " << searchableSurfaceType
             << endl << endl
             << "Valid searchableSurface types : " << endl
-            << dictConstructorTablePtr_->sortedToc()
+            << dictionaryConstructorTablePtr_->sortedToc()
             << exit(FatalError);
     }
 

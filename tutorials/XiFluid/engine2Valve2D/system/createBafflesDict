@@ -20,8 +20,8 @@ baffles
 {
     baffles_ev_port
     {
-        type        searchableSurface;
-        surface     searchablePlate;
+        type        surface;
+        surface     plate;
         origin      (-10 5 0);
         span        (12 0 1e30);
 
@@ -39,8 +39,8 @@ baffles
 
     baffles_iv_port
     {
-        type        searchableSurface;
-        surface     searchablePlate;
+        type        surface;
+        surface     plate;
         origin      (2 5 0);
         span        (10 0 1e30);
 

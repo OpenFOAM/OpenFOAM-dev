@@ -18,7 +18,7 @@ fan
 {
     type        surface;
 
-    surface     searchablePlate;
+    surface     plate;
     origin      (0.1 -0.006 0.004);
     span        (0 0.012 0.012);
 }

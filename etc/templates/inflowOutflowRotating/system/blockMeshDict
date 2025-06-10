@@ -43,7 +43,7 @@ geometry
 {
     rotatingZone
     {
-        type   searchableCylinder;
+        type   cylinder;
         point1 (0 0 -100);
         point2 (0 0  100);
         radius $!backgroundMesh/radIn;
@@ -51,7 +51,7 @@ geometry
 
     fixed
     {
-        type   searchableCylinder;
+        type   cylinder;
         point1 (0 0 -100);
         point2 (0 0  100);
         radius $!backgroundMesh/radOut;

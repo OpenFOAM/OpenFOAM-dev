@@ -33,7 +33,7 @@ geometry
 {
     ncc
     {
-        type searchableSphere;
+        type sphere;
         centre (0 0 0);
         radius $RNcc;
     }

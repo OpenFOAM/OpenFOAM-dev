@@ -21,8 +21,8 @@ baffles
 {
     cyclicFaces
     {
-        type        searchableSurface;
-        surface     searchablePlate;
+        type        surface;
+        surface     plate;
         origin      (0.3042 0.0493 -100);
         span        (0 0.1584 200);
 

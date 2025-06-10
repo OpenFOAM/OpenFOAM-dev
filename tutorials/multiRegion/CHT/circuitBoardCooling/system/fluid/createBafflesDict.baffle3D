@@ -21,7 +21,7 @@ baffles
 {
     baffle3D
     {
-        type        searchableSurface;
+        type        surface;
         surface     triSurfaceMesh;
         file        "baffle3D.stl";
 

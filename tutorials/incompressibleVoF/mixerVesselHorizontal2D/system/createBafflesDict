@@ -21,8 +21,8 @@ baffles
 {
     nonCouple
     {
-        type        searchableSurface;
-        surface     searchableCylinder;
+        type        surface;
+        surface     cylinder;
         point1      (0 0 -100);
         point2      (0 0 100);
         radius      $rMid;

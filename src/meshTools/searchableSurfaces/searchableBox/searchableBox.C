@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,15 +24,30 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "searchableBox.H"
-#include "addToRunTimeSelectionTable.H"
 #include "SortableList.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
     defineTypeNameAndDebug(searchableBox, 0);
-    addToRunTimeSelectionTable(searchableSurface, searchableBox, dict);
+
+    addToRunTimeSelectionTable
+    (
+        searchableSurface,
+        searchableBox,
+        dictionary
+    );
+
+    addBackwardCompatibleToRunTimeSelectionTable
+    (
+        searchableSurface,
+        searchableBox,
+        dictionary,
+        searchableBox,
+        "searchableBox"
+    );
 }
 
 
