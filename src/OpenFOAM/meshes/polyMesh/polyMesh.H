@@ -112,7 +112,7 @@ public:
 
 private:
 
-    // Permanent data
+    // Private Member Data
 
         // Primitive mesh data
 
@@ -594,6 +594,9 @@ public:
 
 
         // Storage management
+
+            //- Print a list of all the currently allocated mesh data
+            void printAllocated() const;
 
             //- Clear geometry
             void clearGeom();

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,7 +74,7 @@ class PackedBoolList;
 
 class primitiveMesh
 {
-    // Permanent data
+    // Private Member Data
 
         // Primitive size data
 
@@ -178,6 +178,8 @@ class primitiveMesh
             mutable scalarField* magFaceAreasPtr_;
 
 
+    // Private Member Functions
+
         // Topological calculations
 
             //- Calculate cell shapes
@@ -202,7 +204,9 @@ class primitiveMesh
             //  During edge calculation, a larger set of data is assembled.
             //  Create and destroy as a set, using clearOutEdges()
             void calcEdges(const bool doFaceEdges) const;
+
             void clearOutEdges();
+
             //- Helper: return (after optional creation) edge between two points
             static label getEdge
             (
@@ -211,6 +215,7 @@ class primitiveMesh
                 const label,
                 const label
             );
+
             //- For on-the-fly addressing calculation
             static label findFirstCommonElementFromSortedLists
             (
@@ -218,15 +223,13 @@ class primitiveMesh
                 const labelList&
             );
 
-protected:
-
-    // Static Data Members
 
         // Geometrical calculations
 
             //- Calculate face centres and areas
             void calcFaceCentresAndAreas() const;
 
+            //- Calculate face centres and areas
             void makeFaceCentresAndAreas
             (
                 const pointField& p,
@@ -238,6 +241,7 @@ protected:
             //- Calculate cell centres and volumes
             void calcCellCentresAndVols() const;
 
+            //- Calculate cell centres and volumes
             void makeCellCentresAndVols
             (
                 const vectorField& fCtrs,
@@ -250,45 +254,72 @@ protected:
             void calcEdgeVectors() const;
 
 
+protected:
+
+    // Protected Static Member Functions
+
+        //- Test if the supplied methods are the same. Same type overload.
+        //  Compares pointers.
+        template<class Class, class Type>
+        static inline bool isMethod
+        (
+            const Type& (Class::*method)() const,
+            const Type& (Class::*otherMethod)() const
+        );
+
+        //- Test if the supplied methods are the same. Different type
+        //  overload. Returns false.
+        template<class Class, class Type, class OtherType>
+        static inline bool isMethod
+        (
+            const Type& (Class::*method)() const,
+            const OtherType& (Class::*otherMethod)() const
+        );
+
+
+    // Protected Constructors
+
         //- Construct null
         primitiveMesh();
 
 
 public:
 
-        // Static data
+    //- Runtime type information
+    ClassName("primitiveMesh");
 
-            ClassName("primitiveMesh");
 
-            //- Estimated number of cells per edge
-            static const unsigned cellsPerEdge_ = 4;
+    // Static data
 
-            //- Estimated number of cells per point
-            static const unsigned cellsPerPoint_ = 8;
+        //- Estimated number of cells per edge
+        static const unsigned cellsPerEdge_ = 4;
 
-            //- Estimated number of faces per cell
-            static const unsigned facesPerCell_ = 6;
+        //- Estimated number of cells per point
+        static const unsigned cellsPerPoint_ = 8;
 
-            //- Estimated number of faces per edge
-            static const unsigned facesPerEdge_ = 4;
+        //- Estimated number of faces per cell
+        static const unsigned facesPerCell_ = 6;
 
-            //- Estimated number of faces per point
-            static const unsigned facesPerPoint_ = 12;
+        //- Estimated number of faces per edge
+        static const unsigned facesPerEdge_ = 4;
 
-            //- Estimated number of edges per cell
-            static const unsigned edgesPerCell_ = 12;
+        //- Estimated number of faces per point
+        static const unsigned facesPerPoint_ = 12;
 
-            //- Estimated number of edges per cell
-            static const unsigned edgesPerFace_ = 4;
+        //- Estimated number of edges per cell
+        static const unsigned edgesPerCell_ = 12;
 
-            //- Estimated number of edges per point
-            static const unsigned edgesPerPoint_ = 6;
+        //- Estimated number of edges per cell
+        static const unsigned edgesPerFace_ = 4;
 
-            //- Estimated number of points per cell
-            static const unsigned pointsPerCell_ = 8;
+        //- Estimated number of edges per point
+        static const unsigned edgesPerPoint_ = 6;
 
-            //- Estimated number of points per face
-            static const unsigned pointsPerFace_ = 4;
+        //- Estimated number of points per cell
+        static const unsigned pointsPerCell_ = 8;
+
+        //- Estimated number of points per face
+        static const unsigned pointsPerFace_ = 4;
 
 
     // Constructors
@@ -486,29 +517,17 @@ public:
             label findCell(const point& location) const;
 
 
-        //  Storage management
+        // Storage management
 
             //- Print a list of all the currently allocated mesh data
             void printAllocated() const;
 
-            // Per storage whether allocated
-            inline bool hasCellShapes() const;
-            inline bool hasEdges() const;
-            inline bool hasCellCells() const;
-            inline bool hasEdgeCells() const;
-            inline bool hasPointCells() const;
-            inline bool hasCells() const;
-            inline bool hasEdgeFaces() const;
-            inline bool hasPointFaces() const;
-            inline bool hasCellEdges() const;
-            inline bool hasFaceEdges() const;
-            inline bool hasPointEdges() const;
-            inline bool hasPointPoints() const;
-            inline bool hasCellPoints() const;
-            inline bool hasCellCentres() const;
-            inline bool hasFaceCentres() const;
-            inline bool hasCellVolumes() const;
-            inline bool hasFaceAreas() const;
+            //- Return whether the result of the given method has been allocated
+            template<class Type>
+            inline bool has
+            (
+                const Type& (primitiveMesh::*method)() const
+            ) const;
 
             // On-the-fly addressing calculation. These functions return either
             // a reference to the full addressing (if already calculated) or
@@ -587,7 +606,6 @@ public:
             ) const;
 
             const labelList& cellEdges(const label celli) const;
-
 
             //- Clear geometry
             void clearGeom();

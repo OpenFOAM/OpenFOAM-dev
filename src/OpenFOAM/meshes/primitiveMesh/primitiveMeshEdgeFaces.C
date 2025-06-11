@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,7 @@ const Foam::labelList& Foam::primitiveMesh::edgeFaces
     DynamicList<label>& storage
 ) const
 {
-    if (hasEdgeFaces())
+    if (efPtr_)
     {
         return edgeFaces()[edgeI];
     }

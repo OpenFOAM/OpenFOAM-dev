@@ -227,18 +227,15 @@ private:
 
         // Storage management
 
-            //- Clear geometry but not the old-time cell volumes
-            void clearGeomNotOldVol();
+            //- Clear FV geometry but not the old-time cell volumes
+            void clearFvGeomNotOldVol();
+
+            //- Clear FV geometry
+            void clearFvGeom();
 
             //- Clear geometry like clearGeomNotOldVol but recreate any
             //  geometric demand-driven data that was set
             void updateGeomNotOldVol();
-
-            //- Clear geometry
-            void clearGeom();
-
-            //- Clear addressing
-            void clearAddressing(const bool isMeshUpdate = false);
 
             //- Store old times fields for all fields of a given type and class
             template<class Type, template<class> class GeoField>
@@ -599,6 +596,15 @@ public:
 
             //- Move the mesh
             bool move();
+
+            //- Print a list of all the currently allocated mesh data
+            void printAllocated() const;
+
+            //- Clear geometry
+            void clearGeom();
+
+            //- Clear addressing
+            void clearAddressing(const bool isMeshUpdate = false);
 
             //- Clear all geometry and addressing
             void clearOut();

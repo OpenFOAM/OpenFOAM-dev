@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -411,6 +411,32 @@ void Foam::surfaceInterpolation::makeNonOrthCorrectionVectors() const
         Pout<< "surfaceInterpolation::makeNonOrthCorrectionVectors() : "
             << "Finished constructing non-orthogonal correction vectors"
             << endl;
+    }
+}
+
+
+void Foam::surfaceInterpolation::printAllocated() const
+{
+    Pout<< "surfaceInterpolation allocated :" << endl;
+
+    if (weights_)
+    {
+        Pout<< "    Weights" << endl;
+    }
+
+    if (deltaCoeffs_)
+    {
+        Pout<< "    Delta coefficients" << endl;
+    }
+
+    if (nonOrthDeltaCoeffs_)
+    {
+        Pout<< "    Non-orthogonal delta coefficients" << endl;
+    }
+
+    if (nonOrthCorrectionVectors_)
+    {
+        Pout<< "    Non-orthogonal correction vectors" << endl;
     }
 }
 

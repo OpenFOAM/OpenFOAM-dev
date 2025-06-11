@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -589,7 +589,7 @@ const Foam::labelList& Foam::primitiveMesh::faceEdges
     DynamicList<label>& storage
 ) const
 {
-    if (hasFaceEdges())
+    if (fePtr_)
     {
         return faceEdges()[facei];
     }
@@ -633,7 +633,7 @@ const Foam::labelList& Foam::primitiveMesh::cellEdges
     DynamicList<label>& storage
 ) const
 {
-    if (hasCellEdges())
+    if (cePtr_)
     {
         return cellEdges()[celli];
     }

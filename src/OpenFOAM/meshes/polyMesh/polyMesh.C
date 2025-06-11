@@ -523,7 +523,6 @@ Foam::polyMesh::polyMesh
 }
 
 
-
 Foam::polyMesh::polyMesh
 (
     const IOobject& io,
