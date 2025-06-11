@@ -38,6 +38,20 @@
 
             <!-- Cache Mesh check-box -->
             <IntVectorProperty
+                name="UiDecomposedCase"
+                command="SetDecomposedCase"
+                label="Decomposed Case"
+                number_of_elements="1"
+                default_values="0"
+                animateable="0">
+                <BooleanDomain name="bool"/>
+                <Documentation>
+                    Read the decomposed case from the processor directories
+                </Documentation>
+            </IntVectorProperty>
+
+            <!-- Cache Mesh check-box -->
+            <IntVectorProperty
                 name="UiCacheMesh"
                 command="SetCacheMesh"
                 label="Cache Mesh"

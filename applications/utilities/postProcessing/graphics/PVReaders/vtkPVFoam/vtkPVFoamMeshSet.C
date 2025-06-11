@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,11 +24,12 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "vtkPVFoam.H"
+#include "vtkOpenFOAMPoints.H"
 
 // OpenFOAM includes
+#include "fvMesh.H"
 #include "faceSet.H"
 #include "pointSet.H"
-#include "vtkOpenFOAMPoints.H"
 
 // VTK includes
 #include "vtkPoints.h"
@@ -45,14 +46,7 @@ vtkPolyData* Foam::vtkPVFoam::faceSetVTKMesh
 {
     vtkPolyData* vtkmesh = vtkPolyData::New();
 
-    if (debug)
-    {
-        InfoInFunction << endl;
-        printMemory();
-    }
-
     // Construct primitivePatch of faces in fSet.
-
     const faceList& meshFaces = mesh.faces();
     faceList patchFaces(fSet.size());
     label facei = 0;
@@ -61,7 +55,6 @@ vtkPolyData* Foam::vtkPVFoam::faceSetVTKMesh
         patchFaces[facei++] = meshFaces[iter.key()];
     }
     primitiveFacePatch p(patchFaces, mesh.points());
-
 
     // The balance of this routine should be identical to patchVTKMesh
 
@@ -83,25 +76,23 @@ vtkPolyData* Foam::vtkPVFoam::faceSetVTKMesh
     vtkCellArray* vtkcells = vtkCellArray::New();
     vtkcells->Allocate(faces.size());
 
+    DynamicList<vtkIdType> nodeIds(4);
+
     forAll(faces, facei)
     {
         const face& f = faces[facei];
-        vtkIdType nodeIds[f.size()];
 
+        nodeIds.resize(f.size());
         forAll(f, fp)
         {
             nodeIds[fp] = f[fp];
         }
-        vtkcells->InsertNextCell(f.size(), nodeIds);
+
+        vtkcells->InsertNextCell(f.size(), nodeIds.data());
     }
 
     vtkmesh->SetPolys(vtkcells);
     vtkcells->Delete();
-
-    if (debug)
-    {
-        printMemory();
-    }
 
     return vtkmesh;
 }
@@ -115,12 +106,6 @@ vtkPolyData* Foam::vtkPVFoam::pointSetVTKMesh
 {
     vtkPolyData* vtkmesh = vtkPolyData::New();
 
-    if (debug)
-    {
-        InfoInFunction << endl;
-        printMemory();
-    }
-
     const pointField& meshPoints = mesh.points();
 
     vtkPoints* vtkpoints = vtkPoints::New();
@@ -133,11 +118,6 @@ vtkPolyData* Foam::vtkPVFoam::pointSetVTKMesh
 
     vtkmesh->SetPoints(vtkpoints);
     vtkpoints->Delete();
-
-    if (debug)
-    {
-        printMemory();
-    }
 
     return vtkmesh;
 }

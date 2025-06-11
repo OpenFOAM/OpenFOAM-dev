@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,64 +29,89 @@ InClass
 #ifndef vtkPVFoamVolFields_H
 #define vtkPVFoamVolFields_H
 
-// OpenFOAM includes
-#include "emptyFvPatchField.H"
-#include "wallPolyPatch.H"
-#include "faceSet.H"
-#include "volPointInterpolation.H"
-
+#include "vtkPVFoam.H"
+#include "vtkPVFoamReader.h"
 #include "vtkPVFoamSurfaceField.H"
 #include "vtkPVFoamPatchField.H"
 #include "vtkOpenFOAMTupleRemap.H"
+
+// OpenFOAM includes
+#include "domainDecomposition.H"
+#include "emptyFvPatchField.H"
+#include "faceSet.H"
+#include "volFields.H"
+#include "volPointInterpolation.H"
+#include "fvFieldReconstructor.H"
+
+// VTK includes
+#include "vtkFloatArray.h"
+#include "vtkUnstructuredGrid.h"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
 void Foam::vtkPVFoam::convertVolFields
 (
-    const fvMesh& mesh,
     const PtrList<PrimitivePatchInterpolation<primitivePatch>>& ppInterpList,
     const IOobjectList& objects,
     const bool interpFields,
     vtkMultiBlockDataSet* output
 )
 {
-    const polyBoundaryMesh& patches = mesh.boundaryMesh();
+    const polyBoundaryMesh& patches =
+        procMeshesPtr_->completeMesh().boundaryMesh();
 
     forAllConstIter(IOobjectList, objects, iter)
     {
         // Restrict to GeometricField<Type, ...>
-        if
-        (
-            iter()->headerClassName()
-         != VolField<Type>::typeName
-        )
-        {
-            continue;
-        }
+        if (iter()->headerClassName() != VolField<Type>::typeName) continue;
 
-        // Load field
-        VolField<Type> tf
-        (
-            *iter(),
-            mesh
-        );
+        // Load the field
+        tmp<VolField<Type>> ttf;
+        if (reader_->GetDecomposedCase())
+        {
+            if (!fvReconstructorPtr_.valid())
+            {
+                fvReconstructorPtr_.set
+                (
+                    new fvFieldReconstructor
+                    (
+                        procMeshesPtr_->completeMesh(),
+                        procMeshesPtr_->procMeshes(),
+                        procMeshesPtr_->procFaceAddressing(),
+                        procMeshesPtr_->procCellAddressing(),
+                        procMeshesPtr_->procFaceAddressingBf()
+                    )
+                );
+            }
+
+            ttf =
+                fvReconstructorPtr_
+              ->reconstructVolField<Type>(*iter());
+        }
+        else
+        {
+            ttf =
+                new VolField<Type>
+                (
+                    *iter(),
+                    procMeshesPtr_->completeMesh()
+                );
+        }
+        const VolField<Type>& tf = ttf();
 
         // Interpolated field (demand driven)
         autoPtr<PointField<Type>> ptfPtr;
         if (interpFields)
         {
-            if (debug)
-            {
-                InfoInFunction<< "interpolating:" << tf.name() << endl;
-            }
+            DebugInFunction
+                << "Interpolating field " << tf.name() << endl;
 
             ptfPtr.reset
             (
                 volPointInterpolation::New(tf.mesh()).interpolate(tf).ptr()
             );
         }
-
 
         // Convert activated internalMesh regions
         convertVolFieldBlock
@@ -115,7 +140,7 @@ void Foam::vtkPVFoam::convertVolFields
             ptfPtr,
             output,
             arrayRangeCellSets_,
-            csetPolyDecomp_
+            setPolyDecomp_
         );
 
 
@@ -131,10 +156,7 @@ void Foam::vtkPVFoam::convertVolFields
             const label datasetNo = partDataset_[partId];
             const label patchId = patches.findIndex(patchName);
 
-            if (!partStatus_[partId] || datasetNo < 0 || patchId < 0)
-            {
-                continue;
-            }
+            if (!partStatus_[partId] || datasetNo < 0 || patchId < 0) continue;
 
             const fvPatchField<Type>& ptf = tf.boundaryField()[patchId];
 
@@ -212,18 +234,12 @@ void Foam::vtkPVFoam::convertVolFields
             const word zoneName = getPartName(partId);
             const label datasetNo = partDataset_[partId];
 
-            if (!partStatus_[partId] || datasetNo < 0)
-            {
-                continue;
-            }
+            if (!partStatus_[partId] || datasetNo < 0) continue;
 
-            const faceZoneList& zMesh = mesh.faceZones();
+            const faceZoneList& zMesh = tf.mesh().faceZones();
             const label zoneId = zMesh.findIndex(zoneName);
 
-            if (zoneId < 0)
-            {
-                continue;
-            }
+            if (zoneId < 0) continue;
 
             convertSurfaceField
             (
@@ -231,7 +247,7 @@ void Foam::vtkPVFoam::convertVolFields
                 output,
                 arrayRangeFaceZones_,
                 datasetNo,
-                mesh,
+                tf.mesh(),
                 zMesh[zoneId]
             );
         }
@@ -247,12 +263,12 @@ void Foam::vtkPVFoam::convertVolFields
             const word selectName = getPartName(partId);
             const label datasetNo = partDataset_[partId];
 
-            if (!partStatus_[partId] || datasetNo < 0)
-            {
-                continue;
-            }
+            if (!partStatus_[partId] || datasetNo < 0) continue;
 
-            const faceSet fSet(mesh, selectName);
+            const autoPtr<faceSet> fSetPtr =
+                reader_->GetDecomposedCase()
+              ? procMeshesPtr_->reconstructSet<faceSet>(selectName)
+              : autoPtr<faceSet>(new faceSet(tf.mesh(), selectName));
 
             convertSurfaceField
             (
@@ -260,8 +276,8 @@ void Foam::vtkPVFoam::convertVolFields
                 output,
                 arrayRangeFaceSets_,
                 datasetNo,
-                mesh,
-                fSet.toc()
+                tf.mesh(),
+                fSetPtr().toc()
             );
         }
     }
@@ -271,7 +287,6 @@ void Foam::vtkPVFoam::convertVolFields
 template<class Type>
 void Foam::vtkPVFoam::convertVolInternalFields
 (
-    const fvMesh& mesh,
     const IOobjectList& objects,
     vtkMultiBlockDataSet* output
 )
@@ -279,21 +294,42 @@ void Foam::vtkPVFoam::convertVolInternalFields
     forAllConstIter(IOobjectList, objects, iter)
     {
         // Restrict to GeometricField<Type, ...>::Internal
-        if
-        (
-            iter()->headerClassName()
-         != VolInternalField<Type>::typeName
-        )
-        {
+        if (iter()->headerClassName() != VolInternalField<Type>::typeName)
             continue;
-        }
 
-        // Load field
-        VolInternalField<Type> tf
-        (
-            *iter(),
-            mesh
-        );
+        // Load the field
+        tmp<VolInternalField<Type>> ttf;
+        if (reader_->GetDecomposedCase())
+        {
+            if (!fvReconstructorPtr_.valid())
+            {
+                fvReconstructorPtr_.set
+                (
+                    new fvFieldReconstructor
+                    (
+                        procMeshesPtr_->completeMesh(),
+                        procMeshesPtr_->procMeshes(),
+                        procMeshesPtr_->procFaceAddressing(),
+                        procMeshesPtr_->procCellAddressing(),
+                        procMeshesPtr_->procFaceAddressingBf()
+                    )
+                );
+            }
+
+            ttf =
+                fvReconstructorPtr_
+              ->reconstructVolInternalField<Type>(*iter());
+        }
+        else
+        {
+            ttf =
+                new VolInternalField<Type>
+                (
+                    *iter(),
+                    procMeshesPtr_->completeMesh()
+                );
+        }
+        const VolInternalField<Type>& tf = ttf();
 
         // Convert activated internalMesh regions
         convertVolInternalFieldBlock<Type>
@@ -319,7 +355,7 @@ void Foam::vtkPVFoam::convertVolInternalFields
             tf,
             output,
             arrayRangeCellSets_,
-            csetPolyDecomp_
+            setPolyDecomp_
         );
     }
 }
@@ -414,14 +450,10 @@ void Foam::vtkPVFoam::convertVolInternalField
     celldata->Allocate(nComp*superCells.size());
     celldata->SetName(tf.name().c_str());
 
-    if (debug)
-    {
-        InfoInFunction
-            << "converting volField::Internal: " << tf.name()
-            << " size = " << tf.size()
-            << " nComp=" << nComp
-            << " nTuples = " << superCells.size() <<  endl;
-    }
+    DebugInFunction
+        << "Converting Vol field: " << tf.name()
+        << " size=" << tf.size() << " (" << superCells.size()
+        << "), nComp=" << nComp << endl;
 
     float vec[nComp];
     forAll(superCells, i)

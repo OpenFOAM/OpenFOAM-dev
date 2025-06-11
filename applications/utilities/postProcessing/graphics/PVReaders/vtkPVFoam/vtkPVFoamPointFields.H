@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,49 +29,71 @@ InClass
 #ifndef vtkPVFoamPointFields_H
 #define vtkPVFoamPointFields_H
 
-// OpenFOAM includes
-#include "interpolatePointToCell.H"
-
+#include "vtkPVFoam.H"
+#include "vtkPVFoamReader.h"
 #include "vtkOpenFOAMTupleRemap.H"
+
+// OpenFOAM includes
+#include "domainDecomposition.H"
+#include "pointFields.H"
+#include "interpolatePointToCell.H"
+#include "pointFieldReconstructor.H"
+
+// VTK includes
+#include "vtkFloatArray.h"
+#include "vtkUnstructuredGrid.h"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
 void Foam::vtkPVFoam::convertPointFields
 (
-    const fvMesh& mesh,
-    const pointMesh& pMesh,
     const IOobjectList& objects,
     vtkMultiBlockDataSet* output
 )
 {
-    const polyBoundaryMesh& patches = mesh.boundaryMesh();
+    const polyBoundaryMesh& patches =
+        procMeshesPtr_->completeMesh().boundaryMesh();
 
     forAllConstIter(IOobjectList, objects, iter)
     {
-        const word& fieldName = iter()->name();
         // restrict to this GeometricField<Type, ...>
-        if
-        (
-            iter()->headerClassName()
-         != PointField<Type>::typeName
-        )
+        if (iter()->headerClassName() != PointField<Type>::typeName)
         {
             continue;
         }
 
-        if (debug)
+        // Load the field
+        tmp<PointField<Type>> tptf;
+        if (reader_->GetDecomposedCase())
         {
-            Info<< "Foam::vtkPVFoam::convertPointFields : "
-                << fieldName << endl;
+            if (!pointReconstructorPtr_.valid())
+            {
+                pointReconstructorPtr_.set
+                (
+                    new pointFieldReconstructor
+                    (
+                        pointMesh::New(procMeshesPtr_->completeMesh()),
+                        procMeshesPtr_->procMeshes(),
+                        procMeshesPtr_->procPointAddressing()
+                    )
+                );
+            }
+
+            tptf =
+                pointReconstructorPtr_
+              ->reconstructField<Type>(*iter());
         }
-
-        PointField<Type> ptf
-        (
-            *iter(),
-            pMesh
-        );
-
+        else
+        {
+            tptf =
+                new PointField<Type>
+                (
+                    *iter(),
+                    pointMesh::New(procMeshesPtr_->completeMesh())
+                );
+        }
+        const PointField<Type>& ptf = tptf();
 
         // Convert activated internalMesh regions
         convertPointFieldBlock
@@ -97,13 +119,10 @@ void Foam::vtkPVFoam::convertPointFields
             ptf,
             output,
             arrayRangeCellSets_,
-            csetPolyDecomp_
+            setPolyDecomp_
         );
 
-
-        //
         // Convert patches - if activated
-        //
         for
         (
             int partId = arrayRangePatches_.start();
@@ -122,7 +141,7 @@ void Foam::vtkPVFoam::convertPointFields
 
             convertPatchPointField
             (
-                fieldName,
+                ptf.name(),
                 ptf.boundaryField()[patchId].patchInternalField()(),
                 output,
                 arrayRangePatches_,
@@ -130,9 +149,7 @@ void Foam::vtkPVFoam::convertPointFields
             );
         }
 
-        //
         // Convert faceZones - if activated
-        //
         for
         (
             int partId = arrayRangeFaceZones_.start();
@@ -142,7 +159,8 @@ void Foam::vtkPVFoam::convertPointFields
         {
             const word zoneName = getPartName(partId);
             const label datasetNo = partDataset_[partId];
-            const label zoneId = mesh.faceZones().findIndex(zoneName);
+            const label zoneId =
+                ptf.mesh().mesh().faceZones().findIndex(zoneName);
 
             if (!partStatus_[partId] || datasetNo < 0 || zoneId < 0)
             {
@@ -153,12 +171,12 @@ void Foam::vtkPVFoam::convertPointFields
             Field<Type> fld
             (
                 ptf.primitiveField(),
-                mesh.faceZones()[zoneId].patch().meshPoints()
+                ptf.mesh().mesh().faceZones()[zoneId].patch().meshPoints()
             );
 
             convertPatchPointField
             (
-                fieldName,
+                ptf.name(),
                 fld,
                 output,
                 arrayRangeFaceZones_,
@@ -231,7 +249,6 @@ void Foam::vtkPVFoam::convertPointField
 
     // Note: using the name of the original volField
     // not the name generated by the interpolation "volPointInterpolate(<name>)"
-
     if (&tf != &VolField<Type>::null())
     {
         pointData->SetName(tf.name().c_str());
@@ -241,15 +258,10 @@ void Foam::vtkPVFoam::convertPointField
         pointData->SetName(ptf.name().c_str());
     }
 
-    if (debug)
-    {
-        Info<< "convert convertPointField: "
-            << ptf.name()
-            << " size = " << nPoints
-            << " nComp=" << nComp
-            << " nTuples = " << (nPoints + addPointCellLabels.size())
-            <<  endl;
-    }
+    DebugInFunction
+        << "Converting Point field: " << tf.name()
+        << " size=" << nPoints << " (" << nPoints + addPointCellLabels.size()
+        << "), nComp=" << nComp << endl;
 
     float vec[nComp];
 

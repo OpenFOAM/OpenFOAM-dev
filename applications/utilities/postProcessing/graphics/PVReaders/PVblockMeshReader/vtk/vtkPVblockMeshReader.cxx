@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,6 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 \*---------------------------------------------------------------------------*/
+
 #include "vtkPVblockMeshReader.h"
 
 #include "pqApplicationCore.h"
@@ -125,11 +126,6 @@ int vtkPVblockMeshReader::RequestInformation
 {
     vtkDebugMacro(<<"RequestInformation");
 
-    if (Foam::vtkPVblockMesh::debug)
-    {
-        cout<<"REQUEST_INFORMATION\n";
-    }
-
     if (!FileName)
     {
         vtkErrorMacro("FileName has to be specified!");
@@ -140,7 +136,7 @@ int vtkPVblockMeshReader::RequestInformation
 
     if (Foam::vtkPVblockMesh::debug)
     {
-        cout<<"RequestInformation with " << nInfo << " item(s)\n";
+        cout<< "\nRequestInformation with " << nInfo << " item(s)\n";
         for (int infoI = 0; infoI < nInfo; ++infoI)
         {
             outputVector->GetInformationObject(infoI)->Print(cout);
@@ -186,7 +182,7 @@ int vtkPVblockMeshReader::RequestData
 
     if (Foam::vtkPVblockMesh::debug)
     {
-        cout<<"RequestData with " << nInfo << " item(s)\n";
+        cout<< "\nRequestData with " << nInfo << " item(s)\n";
         for (int infoI = 0; infoI < nInfo; ++infoI)
         {
             outputVector->GetInformationObject(infoI)->Print(cout);
@@ -203,7 +199,7 @@ int vtkPVblockMeshReader::RequestData
 
     if (Foam::vtkPVblockMesh::debug)
     {
-        cout<< "update output with "
+        cout<< "Update output with "
             << output->GetNumberOfBlocks() << " blocks\n";
     }
 
@@ -280,6 +276,7 @@ void vtkPVblockMeshReader::PrintSelf(ostream& os, vtkIndent indent)
     vtkDebugMacro(<<"PrintSelf");
 
     this->Superclass::PrintSelf(os,indent);
+
     os  << indent << "File name: "
         << (this->FileName ? this->FileName : "(none)") << "\n";
 

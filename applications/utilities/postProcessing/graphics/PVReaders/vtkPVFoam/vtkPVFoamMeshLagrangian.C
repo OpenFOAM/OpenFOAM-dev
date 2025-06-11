@@ -24,14 +24,15 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "vtkPVFoam.H"
+#include "vtkPVFoamReader.h"
+#include "vtkOpenFOAMPoints.H"
 
 // OpenFOAM includes
-#include "Cloud.H"
+#include "domainDecomposition.H"
+#include "lagrangianFieldReconstructor.H"
 #include "LagrangianMesh.H"
-#include "fvMesh.H"
-#include "IOobjectList.H"
-#include "passiveParticle.H"
-#include "vtkOpenFOAMPoints.H"
+#include "LagrangianFieldReconstructor.H"
+#include "passiveParticleCloud.H"
 
 // VTK includes
 #include "vtkCellArray.h"
@@ -42,67 +43,61 @@ License
 
 vtkPolyData* Foam::vtkPVFoam::lagrangianVTKMesh
 (
-    const fvMesh& mesh,
-    const word& cloudName
+    const word& lagrangianName,
+    autoPtr<lagrangianFieldReconstructor>& lreconstructorPtr
 )
 {
     vtkPolyData* vtkmesh = nullptr;
 
-    if (debug)
+    if (reader_->GetDecomposedCase())
     {
-        InfoInFunction
-            << "timePath "
-            << mesh.time().timePath()/lagrangian::cloud::prefix/cloudName
-            << endl;
-        printMemory();
+        lreconstructorPtr.reset
+        (
+            new lagrangianFieldReconstructor
+            (
+                procMeshesPtr_->completeMesh(),
+                procMeshesPtr_->procMeshes(),
+                procMeshesPtr_->procFaceAddressing(),
+                procMeshesPtr_->procCellAddressing(),
+                lagrangianName
+            )
+        );
     }
 
-    // The region name is already in the mesh db
-    IOobjectList cloudObjs
+    autoPtr<passiveParticleCloud> tcloud
     (
-        mesh,
-        mesh.time().name(),
-        lagrangian::cloud::prefix/cloudName
+        reader_->GetDecomposedCase()
+      ? lreconstructorPtr->completeCloud().ptr()
+      : new passiveParticleCloud
+        (
+            procMeshesPtr_->completeMesh(),
+            lagrangianName,
+            false
+        )
     );
+    const passiveParticleCloud& cloud = tcloud();
 
-    IOobject* positionsPtr = cloudObjs.lookup(word("positions"));
-    if (positionsPtr)
+    vtkmesh = vtkPolyData::New();
+    vtkPoints* vtkpoints = vtkPoints::New();
+    vtkCellArray* vtkcells = vtkCellArray::New();
+
+    vtkpoints->Allocate(cloud.size());
+    vtkcells->Allocate(cloud.size());
+
+    vtkIdType particleId = 0;
+    forAllConstIter(lagrangian::Cloud<passiveParticle>, cloud, iter)
     {
-        lagrangian::Cloud<passiveParticle> parcels(mesh, cloudName, false);
+        vtkInsertNextOpenFOAMPoint(vtkpoints, iter().position(cloud.pMesh()));
 
-        if (debug)
-        {
-            Info<< "    cloud with " << parcels.size()
-                << " parcels" << endl;
-        }
-
-        vtkmesh = vtkPolyData::New();
-        vtkPoints* vtkpoints = vtkPoints::New();
-        vtkCellArray* vtkcells = vtkCellArray::New();
-
-        vtkpoints->Allocate(parcels.size());
-        vtkcells->Allocate(parcels.size());
-
-        vtkIdType particleId = 0;
-        forAllConstIter(lagrangian::Cloud<passiveParticle>, parcels, iter)
-        {
-            vtkInsertNextOpenFOAMPoint(vtkpoints, iter().position(mesh));
-
-            vtkcells->InsertNextCell(1, &particleId);
-            particleId++;
-        }
-
-        vtkmesh->SetPoints(vtkpoints);
-        vtkpoints->Delete();
-
-        vtkmesh->SetVerts(vtkcells);
-        vtkcells->Delete();
+        vtkcells->InsertNextCell(1, &particleId);
+        particleId++;
     }
 
-    if (debug)
-    {
-        printMemory();
-    }
+    vtkmesh->SetPoints(vtkpoints);
+    vtkpoints->Delete();
+
+    vtkmesh->SetVerts(vtkcells);
+    vtkcells->Delete();
 
     return vtkmesh;
 }
@@ -110,35 +105,51 @@ vtkPolyData* Foam::vtkPVFoam::lagrangianVTKMesh
 
 vtkPolyData* Foam::vtkPVFoam::LagrangianVTKMesh
 (
-    const fvMesh& mesh,
     const word& LagrangianName,
-    autoPtr<LagrangianMesh>& LmeshPtr
+    autoPtr<LagrangianMesh>& LmeshPtr,
+    autoPtr<LagrangianFieldReconstructor>& LreconstructorPtr
 )
 {
     vtkPolyData* vtkmesh = nullptr;
 
-    if (debug)
+    if (reader_->GetDecomposedCase())
     {
-        InfoInFunction
-            << "timePath "
-            << mesh.time().timePath()/LagrangianMesh::prefix/LagrangianName
-            << endl;
-        printMemory();
+        LreconstructorPtr.reset
+        (
+            new LagrangianFieldReconstructor
+            (
+                procMeshesPtr_->completeMesh(),
+                procMeshesPtr_->procMeshes(),
+                procMeshesPtr_->procFaceAddressing(),
+                procMeshesPtr_->procCellAddressing(),
+                LagrangianName
+            )
+        );
+    }
+    else
+    {
+        LmeshPtr.reset
+        (
+            new LagrangianMesh(procMeshesPtr_->completeMesh(), LagrangianName)
+        );
     }
 
-    LmeshPtr.reset(new LagrangianMesh(mesh, LagrangianName));
+    const LagrangianMesh& Lmesh =
+        reader_->GetDecomposedCase()
+      ? LreconstructorPtr().completeMesh()
+      : LmeshPtr();
 
-    const LagrangianVectorInternalField Lpositions(LmeshPtr->position());
+    const LagrangianVectorInternalField Lpositions(Lmesh.position());
 
     vtkmesh = vtkPolyData::New();
 
     vtkPoints* vtkpoints = vtkPoints::New();
     vtkCellArray* vtkcells = vtkCellArray::New();
 
-    vtkpoints->Allocate(LmeshPtr->size());
-    vtkcells->Allocate(LmeshPtr->size());
+    vtkpoints->Allocate(Lmesh.size());
+    vtkcells->Allocate(Lmesh.size());
 
-    for (vtkIdType i = 0; i < LmeshPtr->size(); ++ i)
+    for (vtkIdType i = 0; i < Lmesh.size(); ++ i)
     {
         vtkInsertNextOpenFOAMPoint(vtkpoints, Lpositions[i]);
 
@@ -150,11 +161,6 @@ vtkPolyData* Foam::vtkPVFoam::LagrangianVTKMesh
 
     vtkmesh->SetVerts(vtkcells);
     vtkcells->Delete();
-
-    if (debug)
-    {
-        printMemory();
-    }
 
     return vtkmesh;
 }

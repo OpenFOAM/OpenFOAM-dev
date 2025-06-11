@@ -64,6 +64,7 @@ class vtkPVFoamReader
 {
 public:
     vtkTypeMacro(vtkPVFoamReader, vtkMultiBlockDataSetAlgorithm);
+
     void PrintSelf(ostream&, vtkIndent);
 
     static vtkPVFoamReader* New();
@@ -76,6 +77,11 @@ public:
     // Set/Get the filename.
     vtkSetStringMacro(FileName);
     vtkGetStringMacro(FileName);
+
+    // Description:
+    // OpenFOAM read the decomposed case from the processor directories
+    vtkSetMacro(DecomposedCase, int);
+    vtkGetMacro(DecomposedCase, int);
 
     // Description:
     // OpenFOAM mesh caching control
@@ -128,37 +134,37 @@ public:
 
     // Description:
     // Get the current timestep
-    int  GetTimeStep();
+    int GetTimeStep();
 
     // Description:
     // Parts selection list control
     virtual vtkDataArraySelection* GetPartSelection();
-    int  GetNumberOfPartArrays();
-    int  GetPartArrayStatus(const char* name);
+    int GetNumberOfPartArrays();
+    int GetPartArrayStatus(const char* name);
     void SetPartArrayStatus(const char* name, int status);
     const char* GetPartArrayName(int index);
 
     // Description:
     // Field selection list control
     virtual vtkDataArraySelection* GetFieldSelection();
-    int  GetNumberOfFieldArrays();
-    int  GetFieldArrayStatus(const char* name);
+    int GetNumberOfFieldArrays();
+    int GetFieldArrayStatus(const char* name);
     void SetFieldArrayStatus(const char* name, int status);
     const char* GetFieldArrayName(int index);
 
     // Description:
     // lagrangianField selection list control
     virtual vtkDataArraySelection* GetlagrangianFieldSelection();
-    int  GetNumberOflagrangianFieldArrays();
-    int  GetlagrangianFieldArrayStatus(const char* name);
+    int GetNumberOflagrangianFieldArrays();
+    int GetlagrangianFieldArrayStatus(const char* name);
     void SetlagrangianFieldArrayStatus(const char* name, int status);
     const char* GetlagrangianFieldArrayName(int index);
 
     // Description:
     // LagrangianField selection list control
     virtual vtkDataArraySelection* GetLagrangianFieldSelection();
-    int  GetNumberOfLagrangianFieldArrays();
-    int  GetLagrangianFieldArrayStatus(const char* name);
+    int GetNumberOfLagrangianFieldArrays();
+    int GetLagrangianFieldArrayStatus(const char* name);
     void SetLagrangianFieldArrayStatus(const char* name, int status);
     const char* GetLagrangianFieldArrayName(int index);
 
@@ -174,6 +180,9 @@ public:
     );
 
     void SelectionModified();
+
+    //- Return information about the available time steps
+    int RequestTimeSteps(vtkInformationVector*);
 
 
 protected:
@@ -223,6 +232,7 @@ private:
 
     int TimeStepRange[2];
     int Refresh;
+    int DecomposedCase;
     int CacheMesh;
     int SkipZeroTime;
 
@@ -234,13 +244,12 @@ private:
     int ShowGroupsOnly;
     int InterpolateVolFields;
 
+    bool First;
+
     vtkDataArraySelection* PartSelection;
     vtkDataArraySelection* FieldSelection;
     vtkDataArraySelection* lagrangianFieldSelection;
     vtkDataArraySelection* LagrangianFieldSelection;
-
-    //- Cached data for output port0 (experimental!)
-    vtkMultiBlockDataSet* output0_;
 
     // BTX
     Foam::vtkPVFoam* foamData_;

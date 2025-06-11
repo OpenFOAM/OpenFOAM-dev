@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,9 +24,10 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "vtkPVFoam.H"
+#include "vtkOpenFOAMPoints.H"
 
 // OpenFOAM includes
-#include "vtkOpenFOAMPoints.H"
+#include "fvMesh.H"
 
 // VTK includes
 #include "vtkPoints.h"
@@ -43,12 +44,6 @@ vtkPolyData* Foam::vtkPVFoam::pointZoneVTKMesh
 {
     vtkPolyData* vtkmesh = vtkPolyData::New();
 
-    if (debug)
-    {
-        InfoInFunction << endl;
-        printMemory();
-    }
-
     const pointField& meshPoints = mesh.points();
 
     vtkPoints* vtkpoints = vtkPoints::New();
@@ -61,12 +56,6 @@ vtkPolyData* Foam::vtkPVFoam::pointZoneVTKMesh
 
     vtkmesh->SetPoints(vtkpoints);
     vtkpoints->Delete();
-
-    if (debug)
-    {
-        InfoInFunction << endl;
-        printMemory();
-    }
 
     return vtkmesh;
 }

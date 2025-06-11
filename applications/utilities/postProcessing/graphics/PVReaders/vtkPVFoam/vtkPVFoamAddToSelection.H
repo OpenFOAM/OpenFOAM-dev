@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,10 +26,11 @@ License
 #ifndef vtkPVFoamAddToSelection_H
 #define vtkPVFoamAddToSelection_H
 
+#include "vtkPVFoam.H"
+
 // OpenFOAM includes
 #include "IOobjectList.H"
 #include "SortableList.H"
-#include "surfaceFields.H"
 
 // VTK includes
 #include "vtkDataArraySelection.h"
@@ -76,40 +77,15 @@ void Foam::vtkPVFoam::addFieldsToSelection
     const string& suffix
 )
 {
-    addToSelection<GeometricField<scalar, meshType>>
-    (
-        select,
-        objects,
-        suffix
-    );
-
-    addToSelection<GeometricField<vector, meshType>>
-    (
-        select,
-        objects,
-        suffix
-    );
-
-    addToSelection<GeometricField<sphericalTensor, meshType>>
-    (
-        select,
-        objects,
-        suffix
-    );
-
-    addToSelection<GeometricField<symmTensor, meshType>>
-    (
-        select,
-        objects,
-        suffix
-    );
-
-    addToSelection<GeometricField<tensor, meshType>>
-    (
-        select,
-        objects,
-        suffix
-    );
+    #define ADD_TO_SELECTION(Type, nullArg)                                    \
+        addToSelection<GeometricField<Type, meshType>>                         \
+        (                                                                      \
+            select,                                                            \
+            objects,                                                           \
+            suffix                                                             \
+        );
+    FOR_ALL_FIELD_TYPES(ADD_TO_SELECTION);
+    #undef ADD_TO_SELECTION
 }
 
 
@@ -121,40 +97,15 @@ void Foam::vtkPVFoam::addInternalFieldsToSelection
     const string& suffix
 )
 {
-    addToSelection<typename GeometricField<scalar, meshType>::Internal>
-    (
-        select,
-        objects,
-        suffix
-    );
-
-    addToSelection<typename GeometricField<vector, meshType>::Internal>
-    (
-        select,
-        objects,
-        suffix
-    );
-
-    addToSelection<typename GeometricField<sphericalTensor, meshType>::Internal>
-    (
-        select,
-        objects,
-        suffix
-    );
-
-    addToSelection<typename GeometricField<symmTensor, meshType>::Internal>
-    (
-        select,
-        objects,
-        suffix
-    );
-
-    addToSelection<typename GeometricField<tensor, meshType>::Internal>
-    (
-        select,
-        objects,
-        suffix
-    );
+    #define ADD_TO_SELECTION(Type, nullArg)                                    \
+        addToSelection<typename GeometricField<Type, meshType>::Internal>      \
+        (                                                                      \
+            select,                                                            \
+            objects,                                                           \
+            suffix                                                             \
+        );
+    FOR_ALL_FIELD_TYPES(ADD_TO_SELECTION);
+    #undef ADD_TO_SELECTION
 }
 
 

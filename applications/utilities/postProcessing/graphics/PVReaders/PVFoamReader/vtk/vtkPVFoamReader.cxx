@@ -22,6 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 \*---------------------------------------------------------------------------*/
+
 #include "vtkPVFoamReader.h"
 
 #include "pqApplicationCore.h"
@@ -42,6 +43,63 @@ License
 // OpenFOAM includes
 #include "vtkPVFoam.H"
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+int vtkPVFoamReader::RequestTimeSteps(vtkInformationVector* outputVector)
+{
+    int nTimeSteps = 0;
+    double* timeSteps = foamData_->findTimes(First, nTimeSteps);
+
+    if (!nTimeSteps) return 0;
+
+    int nInfo = outputVector->GetNumberOfInformationObjects();
+
+    // set identical time steps for all ports
+    for (int infoI = 0; infoI < nInfo; ++infoI)
+    {
+        outputVector->GetInformationObject(infoI)->Set
+        (
+            vtkStreamingDemandDrivenPipeline::TIME_STEPS(),
+            timeSteps,
+            nTimeSteps
+        );
+    }
+
+    if (nTimeSteps)
+    {
+        double timeRange[2];
+        timeRange[0] = timeSteps[0];
+        timeRange[1] = timeSteps[nTimeSteps-1];
+
+        if (Foam::vtkPVFoam::debug > 1)
+        {
+            cout<< "\nnTimeSteps " << nTimeSteps
+                << "\ntimeRange " << timeRange[0] << " to " << timeRange[1]
+                << "\n";
+
+            for (int timeI = 0; timeI < nTimeSteps; ++timeI)
+            {
+                cout<< "step[" << timeI << "] = " << timeSteps[timeI] << "\n";
+            }
+        }
+
+        for (int infoI = 0; infoI < nInfo; ++infoI)
+        {
+            outputVector->GetInformationObject(infoI)->Set
+            (
+                vtkStreamingDemandDrivenPipeline::TIME_RANGE(),
+                timeRange,
+                2
+            );
+        }
+    }
+
+    delete timeSteps;
+
+    return 1;
+}
+
+
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 vtkStandardNewMacro(vtkPVFoamReader);
@@ -59,11 +117,10 @@ vtkPVFoamReader::vtkPVFoamReader()
     FileName  = nullptr;
     foamData_ = nullptr;
 
-    output0_  = nullptr;
-
     TimeStepRange[0] = 0;
     TimeStepRange[1] = 0;
 
+    DecomposedCase = 0;
     CacheMesh = 1;
     Refresh = 0;
 
@@ -75,6 +132,8 @@ vtkPVFoamReader::vtkPVFoamReader()
     ShowPatchNames = 0;
     ShowGroupsOnly = 0;
     InterpolateVolFields = 1;
+
+    First = true;
 
     PartSelection = vtkDataArraySelection::New();
     FieldSelection = vtkDataArraySelection::New();
@@ -121,7 +180,7 @@ vtkPVFoamReader::~vtkPVFoamReader()
 
     if (foamData_)
     {
-        // remove patch names
+        // Remove patch names
         updatePatchNamesView(false);
         delete foamData_;
     }
@@ -130,12 +189,6 @@ vtkPVFoamReader::~vtkPVFoamReader()
     {
         delete [] FileName;
     }
-
-    if (output0_)
-    {
-        output0_->Delete();
-    }
-
 
     PartSelection->RemoveObserver(this->SelectionObserver);
     FieldSelection->RemoveObserver(this->SelectionObserver);
@@ -163,22 +216,17 @@ int vtkPVFoamReader::RequestInformation
 {
     vtkDebugMacro(<<"RequestInformation");
 
-    if (Foam::vtkPVFoam::debug)
-    {
-        cout<<"REQUEST_INFORMATION\n";
-    }
-
     if (!FileName)
     {
         vtkErrorMacro("FileName has to be specified!");
         return 0;
     }
 
-    int nInfo = outputVector->GetNumberOfInformationObjects();
-
     if (Foam::vtkPVFoam::debug)
     {
-        cout<<"RequestInformation with " << nInfo << " item(s)\n";
+        int nInfo = outputVector->GetNumberOfInformationObjects();
+
+        cout<< "\nRequestInformation with " << nInfo << " item(s)\n";
         for (int infoI = 0; infoI < nInfo; ++infoI)
         {
             outputVector->GetInformationObject(infoI)->Print(cout);
@@ -194,10 +242,7 @@ int vtkPVFoamReader::RequestInformation
         foamData_->updateInfo();
     }
 
-    int nTimeSteps = 0;
-    double* timeSteps = foamData_->findTimes(nTimeSteps);
-
-    if (!nTimeSteps)
+    if (!RequestTimeSteps(outputVector))
     {
         vtkErrorMacro("could not find valid OpenFOAM mesh");
 
@@ -206,50 +251,10 @@ int vtkPVFoamReader::RequestInformation
         foamData_ = nullptr;
         return 0;
     }
-
-    // set identical time steps for all ports
-    for (int infoI = 0; infoI < nInfo; ++infoI)
+    else
     {
-        outputVector->GetInformationObject(infoI)->Set
-        (
-            vtkStreamingDemandDrivenPipeline::TIME_STEPS(),
-            timeSteps,
-            nTimeSteps
-        );
+        return 1;
     }
-
-    if (nTimeSteps)
-    {
-        double timeRange[2];
-        timeRange[0] = timeSteps[0];
-        timeRange[1] = timeSteps[nTimeSteps-1];
-
-        if (Foam::vtkPVFoam::debug > 1)
-        {
-            cout<<"nTimeSteps " << nTimeSteps << "\n"
-                <<"timeRange " << timeRange[0] << " to " << timeRange[1]
-                << "\n";
-
-            for (int timeI = 0; timeI < nTimeSteps; ++timeI)
-            {
-                cout<< "step[" << timeI << "] = " << timeSteps[timeI] << "\n";
-            }
-        }
-
-        for (int infoI = 0; infoI < nInfo; ++infoI)
-        {
-            outputVector->GetInformationObject(infoI)->Set
-            (
-                vtkStreamingDemandDrivenPipeline::TIME_RANGE(),
-                timeRange,
-                2
-            );
-        }
-    }
-
-    delete timeSteps;
-
-    return 1;
 }
 
 
@@ -275,11 +280,17 @@ int vtkPVFoamReader::RequestData
         return 0;
     }
 
+    if (First)
+    {
+        First = false;
+        RequestTimeSteps(outputVector);
+    }
+
     int nInfo = outputVector->GetNumberOfInformationObjects();
 
     if (Foam::vtkPVFoam::debug)
     {
-        cout<<"RequestData with " << nInfo << " item(s)\n";
+        cout<< "\nRequestData with " << nInfo << " item(s)\n";
         for (int infoI = 0; infoI < nInfo; ++infoI)
         {
             outputVector->GetInformationObject(infoI)->Print(cout);
@@ -313,9 +324,9 @@ int vtkPVFoamReader::RequestData
                     0
                 )
               : outInfo->Get
-              (
-                  vtkStreamingDemandDrivenPipeline::UPDATE_TIME_STEP()
-              );
+                (
+                    vtkStreamingDemandDrivenPipeline::UPDATE_TIME_STEP()
+                );
         }
     }
 
@@ -334,7 +345,7 @@ int vtkPVFoamReader::RequestData
 
     if (Foam::vtkPVFoam::debug)
     {
-        cout<< "update output with "
+        cout<< "Update output with "
             << output->GetNumberOfBlocks() << " blocks\n";
     }
 

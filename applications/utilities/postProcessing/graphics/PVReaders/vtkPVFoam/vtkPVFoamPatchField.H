@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,14 +29,15 @@ InClass
 #ifndef vtkPVFoamPatchField_H
 #define vtkPVFoamPatchField_H
 
+#include "vtkPVFoam.H"
+#include "vtkOpenFOAMTupleRemap.H"
+
 // VTK includes
 #include "vtkCellData.h"
 #include "vtkFloatArray.h"
 #include "vtkMultiBlockDataSet.h"
 #include "vtkPointData.h"
 #include "vtkPolyData.h"
-
-#include "vtkOpenFOAMTupleRemap.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -81,7 +82,6 @@ void Foam::vtkPVFoam::convertPatchField
 }
 
 
-// as above, but with PointData()
 template<class Type>
 void Foam::vtkPVFoam::convertPatchPointField
 (

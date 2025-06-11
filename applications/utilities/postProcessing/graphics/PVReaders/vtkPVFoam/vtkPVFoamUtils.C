@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,6 @@ Description
 #include "fvMesh.H"
 #include "Time.H"
 #include "IFstream.H"
-#include "memInfo.H"
 
 // VTK includes
 #include "vtkDataArraySelection.h"
@@ -90,7 +89,6 @@ void Foam::vtkPVFoam::AddToBlock
             FatalErrorInFunction
                 << "Block already has a vtkDataSet assigned to it"
                 << endl;
-            return;
         }
 
         block = vtkMultiBlockDataSet::New();
@@ -98,17 +96,9 @@ void Foam::vtkPVFoam::AddToBlock
         block->Delete();
     }
 
-    if (debug)
-    {
-        Info<< "block[" << blockNo << "] has "
-            << block->GetNumberOfBlocks()
-            <<  " datasets prior to adding set " << datasetNo
-            <<  " with name: " << datasetName << endl;
-    }
-
     block->SetBlock(datasetNo, dataset);
 
-    // name the block when assigning dataset 0
+    // name the block when assigning the first dataset
     if (datasetNo == 0)
     {
         output->GetMetaData(blockNo)->Set
@@ -218,10 +208,12 @@ Foam::wordHashSet Foam::vtkPVFoam::getSelected
 
 Foam::stringList Foam::vtkPVFoam::getSelectedArrayEntries
 (
-    vtkDataArraySelection* select
+    vtkDataArraySelection* select,
+    const bool debug
 )
 {
     stringList selections(select->GetNumberOfArrays());
+
     label nElem = 0;
 
     forAll(selections, elemI)
@@ -231,25 +223,22 @@ Foam::stringList Foam::vtkPVFoam::getSelectedArrayEntries
             selections[nElem++] = select->GetArrayName(elemI);
         }
     }
+
     selections.setSize(nElem);
 
-
-    if (debug)
+    // Debugging ...
+    const label nAvailableElem = select->GetNumberOfArrays();
+    DebugInFunction<< "available(";
+    for (int elemI = 0; elemI < nAvailableElem; ++elemI)
     {
-        label nElem = select->GetNumberOfArrays();
-        Info<< "available(";
-        for (int elemI = 0; elemI < nElem; ++elemI)
-        {
-            Info<< " \"" << select->GetArrayName(elemI) << "\"";
-        }
-        Info<< " )\nselected(";
-
-        forAll(selections, elemI)
-        {
-            Info<< " " << selections[elemI];
-        }
-        Info<< " )\n";
+        DebugInfo<< " \"" << select->GetArrayName(elemI) << "\"";
     }
+    DebugInfo<< " )\n    selected(";
+    forAll(selections, elemI)
+    {
+        DebugInfo<< " " << selections[elemI];
+    }
+    DebugInfo<< " )" << endl;
 
     return selections;
 }
@@ -258,10 +247,12 @@ Foam::stringList Foam::vtkPVFoam::getSelectedArrayEntries
 Foam::stringList Foam::vtkPVFoam::getSelectedArrayEntries
 (
     vtkDataArraySelection* select,
-    const arrayRange& range
+    const arrayRange& range,
+    const bool debug
 )
 {
     stringList selections(range.size());
+
     label nElem = 0;
 
     for (int elemI = range.start(); elemI < range.end(); ++elemI)
@@ -271,24 +262,21 @@ Foam::stringList Foam::vtkPVFoam::getSelectedArrayEntries
             selections[nElem++] = select->GetArrayName(elemI);
         }
     }
+
     selections.setSize(nElem);
 
-
-    if (debug)
+    // Debugging ...
+    DebugInFunction<< "available(";
+    for (int elemI = range.start(); elemI < range.end(); ++elemI)
     {
-        Info<< "available(";
-        for (int elemI = range.start(); elemI < range.end(); ++elemI)
-        {
-            Info<< " \"" << select->GetArrayName(elemI) << "\"";
-        }
-        Info<< " )\nselected(";
-
-        forAll(selections, elemI)
-        {
-            Info<< " " << selections[elemI];
-        }
-        Info<< " )\n";
+        DebugInfo<< " \"" << select->GetArrayName(elemI) << "\"";
     }
+    DebugInfo<< " )\nselected(";
+    forAll(selections, elemI)
+    {
+        DebugInfo<< " " << selections[elemI];
+    }
+    DebugInfo<< " )" << endl;
 
     return selections;
 }
@@ -316,19 +304,6 @@ void Foam::vtkPVFoam::setSelectedArrayEntries
                 break;
             }
         }
-    }
-}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-void Foam::vtkPVFoam::printMemory()
-{
-    memInfo mem;
-
-    if (mem.valid())
-    {
-        Info<< "mem peak/size/rss: " << mem << "\n";
     }
 }
 

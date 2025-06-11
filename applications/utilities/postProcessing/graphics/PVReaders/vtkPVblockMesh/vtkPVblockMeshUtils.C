@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,7 +87,6 @@ void Foam::vtkPVblockMesh::AddToBlock
             FatalErrorInFunction
                 << "Block already has a vtkDataSet assigned to it"
                 << endl;
-            return;
         }
 
         block = vtkMultiBlockDataSet::New();
@@ -95,18 +94,9 @@ void Foam::vtkPVblockMesh::AddToBlock
         block->Delete();
     }
 
-    if (debug)
-    {
-        InfoInFunction
-            << "block[" << blockNo << "] has "
-            << block->GetNumberOfBlocks()
-            <<  " datasets prior to adding set " << datasetNo
-            <<  " with name: " << datasetName << endl;
-    }
-
     block->SetBlock(datasetNo, dataset);
 
-    // name the block when assigning dataset 0
+    // name the block when assigning the first dataset
     if (datasetNo == 0)
     {
         output->GetMetaData(blockNo)->Set
@@ -158,6 +148,7 @@ Foam::label Foam::vtkPVblockMesh::GetNumberOfDataSets
 
     vtkDataObject* blockDO = output->GetBlock(blockNo);
     vtkMultiBlockDataSet* block = vtkMultiBlockDataSet::SafeDownCast(blockDO);
+
     if (block)
     {
         return block->GetNumberOfBlocks();
@@ -210,10 +201,12 @@ Foam::wordHashSet Foam::vtkPVblockMesh::getSelected
 
 Foam::stringList Foam::vtkPVblockMesh::getSelectedArrayEntries
 (
-    vtkDataArraySelection* select
+    vtkDataArraySelection* select,
+    const bool debug
 )
 {
     stringList selections(select->GetNumberOfArrays());
+
     label nElem = 0;
 
     forAll(selections, elemI)
@@ -223,26 +216,23 @@ Foam::stringList Foam::vtkPVblockMesh::getSelectedArrayEntries
             selections[nElem++] = select->GetArrayName(elemI);
         }
     }
+
     selections.setSize(nElem);
 
-
-    if (debug)
+    // Debugging ...
+    const label nAvailableElem = select->GetNumberOfArrays();
+    DebugInFunction
+        << "available(";
+    for (int elemI = 0; elemI < nAvailableElem; ++elemI)
     {
-        label nElem = select->GetNumberOfArrays();
-        InfoInFunction
-            << "available(";
-        for (int elemI = 0; elemI < nElem; ++elemI)
-        {
-            Info<< " \"" << select->GetArrayName(elemI) << "\"";
-        }
-        Info<< " )\nselected(";
-
-        forAll(selections, elemI)
-        {
-            Info<< " " << selections[elemI];
-        }
-        Info<< " )\n";
+        DebugInfo<< " \"" << select->GetArrayName(elemI) << "\"";
     }
+    DebugInfo<< " )\nselected(";
+    forAll(selections, elemI)
+    {
+        DebugInfo<< " " << selections[elemI];
+    }
+    DebugInfo<< " )" << endl;
 
     return selections;
 }
@@ -251,10 +241,12 @@ Foam::stringList Foam::vtkPVblockMesh::getSelectedArrayEntries
 Foam::stringList Foam::vtkPVblockMesh::getSelectedArrayEntries
 (
     vtkDataArraySelection* select,
-    const arrayRange& range
+    const arrayRange& range,
+    const bool debug
 )
 {
     stringList selections(range.size());
+
     label nElem = 0;
 
     for (int elemI = range.start(); elemI < range.end(); ++elemI)
@@ -264,25 +256,22 @@ Foam::stringList Foam::vtkPVblockMesh::getSelectedArrayEntries
             selections[nElem++] = select->GetArrayName(elemI);
         }
     }
+
     selections.setSize(nElem);
 
-
-    if (debug)
+    // Debugging ...
+    DebugInFunction
+        << "available(";
+    for (int elemI = range.start(); elemI < range.end(); ++elemI)
     {
-        InfoInFunction
-            << "available(";
-        for (int elemI = range.start(); elemI < range.end(); ++elemI)
-        {
-            Info<< " \"" << select->GetArrayName(elemI) << "\"";
-        }
-        Info<< " )\nselected(";
-
-        forAll(selections, elemI)
-        {
-            Info<< " " << selections[elemI];
-        }
-        Info<< " )\n";
+        DebugInfo<< " \"" << select->GetArrayName(elemI) << "\"";
     }
+    DebugInfo<< " )\nselected(";
+    forAll(selections, elemI)
+    {
+        DebugInfo<< " " << selections[elemI];
+    }
+    DebugInfo<< " )" << endl;
 
     return selections;
 }
@@ -320,12 +309,8 @@ void Foam::vtkPVblockMesh::updateBoolListStatus
     vtkDataArraySelection* selection
 )
 {
-    if (debug)
-    {
-        InfoInFunction << endl;
-    }
-
     const label nElem = selection->GetNumberOfArrays();
+
     if (status.size() != nElem)
     {
         status.setSize(nElem);
@@ -334,16 +319,7 @@ void Foam::vtkPVblockMesh::updateBoolListStatus
 
     forAll(status, elemI)
     {
-        const int setting = selection->GetArraySetting(elemI);
-
-        status[elemI] = setting;
-
-        if (debug)
-        {
-            Info<< "    part[" << elemI << "] = "
-                << status[elemI]
-                << " : " << selection->GetArrayName(elemI) << endl;
-        }
+        status[elemI] = selection->GetArraySetting(elemI);
     }
 }
 

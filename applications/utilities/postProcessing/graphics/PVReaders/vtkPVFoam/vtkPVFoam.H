@@ -47,9 +47,6 @@ SourceFiles
     vtkPVFoamVolFields.H
     vtkPVFoamAddToSelection.H
 
-    // Needed by VTK:
-    vtkDataArrayTemplateImplicit.txx
-
 \*---------------------------------------------------------------------------*/
 
 #ifndef vtkPVFoam_H
@@ -66,9 +63,13 @@ SourceFiles
 #include "wordList.H"
 #include "primitivePatch.H"
 #include "PrimitivePatchInterpolation.H"
-#include "volPointInterpolation.H"
+#include "dictionary.H"
+#include "PtrList.H"
+#include "HashSet.H"
+#include "IOField.H"
+#include "volFieldsFwd.H"
 #include "surfaceFieldsFwd.H"
-#include "instantList.H"
+#include "pointFieldsFwd.H"
 
 // * * * * * * * * * * * * * Forward Declarations  * * * * * * * * * * * * * //
 
@@ -91,12 +92,18 @@ namespace Foam
 // OpenFOAM class forward declarations
 class argList;
 class Time;
+class processorRunTimes;
+class domainDecomposition;
 class fvMesh;
 class IOobjectList;
 class polyPatch;
 class faceSet;
 class pointSet;
+class fvFieldReconstructor;
+class pointFieldReconstructor;
+class lagrangianFieldReconstructor;
 class LagrangianMesh;
+class LagrangianFieldReconstructor;
 
 /*---------------------------------------------------------------------------*\
                           Class vtkPVFoam Declaration
@@ -246,14 +253,14 @@ class vtkPVFoam
         //- Access to the controlling vtkPVFoamReader
         vtkPVFoamReader* reader_;
 
-        //- OpenFOAM time control
-        autoPtr<Time> dbPtr_;
-
         //- Configuration dictionary
         dictionary configDict_;
 
-        //- OpenFOAM mesh
-        fvMesh* meshPtr_;
+        //- OpenFOAM time controls
+        autoPtr<processorRunTimes> procDbsPtr_;
+
+        //- OpenFOAM meshes
+        autoPtr<domainDecomposition> procMeshesPtr_;
 
         //- The mesh in the optional meshes sub-directory
         word meshMesh_;
@@ -269,12 +276,6 @@ class vtkPVFoam
 
         //- The time index
         int timeIndex_;
-
-        //- Track changes in mesh geometry
-        bool meshChanged_;
-
-        //- Track changes in fields
-        bool fieldsChanged_;
 
         //- Selected geometrical parts (internalMesh, patches, ...)
         boolList partStatus_;
@@ -297,17 +298,32 @@ class vtkPVFoam
         arrayRange arrayRangePointSets_;
 
         //- Decomposed cells information (mesh regions)
-        //  TODO: regions
         List<polyDecomp> regionPolyDecomp_;
 
         //- Decomposed cells information (cellZones)
         List<polyDecomp> zonePolyDecomp_;
 
         //- Decomposed cells information (cellSets)
-        List<polyDecomp> csetPolyDecomp_;
+        List<polyDecomp> setPolyDecomp_;
 
         //- List of patch names for rendering to window
         List<vtkTextActor*> patchTextActorsPtrs_;
+
+        //- Finite-volume field reconstructor
+        autoPtr<fvFieldReconstructor> fvReconstructorPtr_;
+
+        //- Point field reconstructor
+        autoPtr<pointFieldReconstructor> pointReconstructorPtr_;
+
+        //- lagrangian field reconstructors
+        PtrList<lagrangianFieldReconstructor> lagrangianReconstructors_;
+
+        //- Lagrangian meshes
+        PtrList<LagrangianMesh> LagrangianMeshes_;
+
+        //- Lagrangian field reconstructors
+        PtrList<LagrangianFieldReconstructor> LagrangianReconstructors_;
+
 
     // Private Member Functions
 
@@ -339,8 +355,6 @@ class vtkPVFoam
             const arrayRange&
         );
 
-        //- Reset data counters
-        void resetCounters();
 
         // Update information helper functions
 
@@ -417,8 +431,19 @@ class vtkPVFoam
 
         // Update helper functions
 
+            //- Clear the reconstructor objects
+            void clearReconstructors();
+
+            //- Clear the OpenFOAM mesh if "Cache Mesh" is false and/or if we
+            //  have switched from reading between the reconstructed and the
+            //  decomposed case.
+            void clearFoamMesh();
+
             //- OpenFOAM mesh
             void updateFoamMesh();
+
+            //- Reset data counters
+            void resetCounters();
 
             //- Reduce memory footprint after conversion
             void reduceMemory();
@@ -445,12 +470,7 @@ class vtkPVFoam
             void convertMeshlagrangian(vtkMultiBlockDataSet*, int& blockNo);
 
             //- Lagrangian mesh
-            void convertMeshLagrangian
-            (
-                vtkMultiBlockDataSet*,
-                int& blockNo,
-                PtrList<LagrangianMesh>&
-            );
+            void convertMeshLagrangian(vtkMultiBlockDataSet*, int& blockNo);
 
             //- Patches
             void convertMeshPatches(vtkMultiBlockDataSet*, int& blockNo);
@@ -480,40 +500,33 @@ class vtkPVFoam
             vtkUnstructuredGrid* volumeVTKMesh(const fvMesh&, polyDecomp&);
 
             //- Add Lagrangian mesh
-            vtkPolyData* lagrangianVTKMesh(const fvMesh&, const word&);
+            vtkPolyData* lagrangianVTKMesh
+            (
+                const word&,
+                autoPtr<lagrangianFieldReconstructor>&
+            );
 
             //- Add Lagrangian mesh
             vtkPolyData* LagrangianVTKMesh
             (
-                const fvMesh&,
                 const word&,
-                autoPtr<LagrangianMesh>&
+                autoPtr<LagrangianMesh>&,
+                autoPtr<LagrangianFieldReconstructor>&
             );
 
             //- Add patch mesh
             template<class PatchType>
-            vtkPolyData* patchVTKMesh(const word& name, const PatchType&);
+            vtkPolyData* patchVTKMesh(const PatchType&);
 
             //- Add point zone
-            vtkPolyData* pointZoneVTKMesh
-            (
-                const fvMesh&,
-                const labelList& pointLabels
-            );
+            vtkPolyData* pointZoneVTKMesh(const fvMesh&, const labelList&);
 
             //- Add face set
-            vtkPolyData* faceSetVTKMesh
-            (
-                const fvMesh&,
-                const faceSet&
-            );
+            vtkPolyData* faceSetVTKMesh(const fvMesh&, const faceSet&);
 
             //- Add point mesh
-            vtkPolyData* pointSetVTKMesh
-            (
-                const fvMesh&,
-                const pointSet&
-            );
+            vtkPolyData* pointSetVTKMesh(const fvMesh&, const pointSet&);
+
 
         // Field conversion functions
 
@@ -524,11 +537,7 @@ class vtkPVFoam
             void convertlagrangianFields(vtkMultiBlockDataSet*);
 
             //- Convert Lagrangian fields
-            void convertLagrangianFields
-            (
-                vtkMultiBlockDataSet*,
-                const PtrList<LagrangianMesh>&
-            );
+            void convertLagrangianFields(vtkMultiBlockDataSet*);
 
 
         //- Add the fields in the selected time directory to the selection
@@ -548,7 +557,6 @@ class vtkPVFoam
             template<class Type>
             void convertVolFields
             (
-                const fvMesh&,
                 const PtrList<PrimitivePatchInterpolation<primitivePatch>>&,
                 const IOobjectList&,
                 const bool interpFields,
@@ -559,7 +567,6 @@ class vtkPVFoam
             template<class Type>
             void convertVolInternalFields
             (
-                const fvMesh&,
                 const IOobjectList&,
                 vtkMultiBlockDataSet* output
             );
@@ -579,8 +586,7 @@ class vtkPVFoam
             template<class Type>
             void convertVolInternalFieldBlock
             (
-                const typename VolField<Type>
-                    ::Internal&,
+                const typename VolField<Type>::Internal&,
                 vtkMultiBlockDataSet* output,
                 const arrayRange&,
                 const List<polyDecomp>& decompLst
@@ -590,8 +596,7 @@ class vtkPVFoam
             template<class Type>
             void convertVolInternalField
             (
-                const typename VolField<Type>
-                    ::Internal&,
+                const typename VolField<Type>::Internal&,
                 vtkMultiBlockDataSet* output,
                 const arrayRange&,
                 const label datasetNo,
@@ -637,7 +642,6 @@ class vtkPVFoam
             template<class Type>
             void convertSurfaceFields
             (
-                const fvMesh& mesh,
                 const IOobjectList& objects,
                 vtkMultiBlockDataSet* output
             );
@@ -657,8 +661,7 @@ class vtkPVFoam
             (
                 const IOobjectList&,
                 vtkMultiBlockDataSet* output,
-                const label datasetNo,
-                const LagrangianMesh& Lmesh
+                const label datasetNo
             );
 
             //- Lagrangian field
@@ -685,8 +688,6 @@ class vtkPVFoam
             template<class Type>
             void convertPointFields
             (
-                const fvMesh&,
-                const pointMesh&,
                 const IOobjectList&,
                 vtkMultiBlockDataSet* output
             );
@@ -754,13 +755,18 @@ class vtkPVFoam
             );
 
             //- Retrieve the current selections
-            static stringList getSelectedArrayEntries(vtkDataArraySelection*);
+            static stringList getSelectedArrayEntries
+            (
+                vtkDataArraySelection*,
+                const bool debug = vtkPVFoam::debug
+            );
 
             //- Retrieve a sub-list of the current selections
             static stringList getSelectedArrayEntries
             (
                 vtkDataArraySelection*,
-                const arrayRange&
+                const arrayRange&,
+                const bool debug = vtkPVFoam::debug
             );
 
             //- Set selection(s)
@@ -816,7 +822,7 @@ public:
 
         //- Allocate and return a list of selected times
         //  returns the count via the parameter
-        double* findTimes(int& nTimeSteps);
+        double* findTimes(const bool first, int& nTimeSteps);
 
         //- Add/remove patch names to/from the view
         void renderPatchNames(vtkRenderer*, const bool show);
@@ -838,12 +844,8 @@ public:
         //- Debug information
         void PrintSelf(ostream&, vtkIndent) const;
 
-        //- Simple memory used debugging information
-        static void printMemory();
-
 
     // Member Operators
-
 
         //- Disallow default bitwise assignment
         void operator=(const vtkPVFoam&) = delete;
