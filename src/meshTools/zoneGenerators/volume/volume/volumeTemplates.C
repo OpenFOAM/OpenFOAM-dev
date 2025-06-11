@@ -45,7 +45,7 @@ Foam::zoneSet Foam::zoneGenerators::volume::generate
                 new pointZone
                 (
                     zoneName_,
-                    select(zoneGen, mesh_.points()),
+                    zoneGen.select(zoneGen, mesh_.points()),
                     mesh_.pointZones(),
                     moveUpdate_,
                     true
@@ -60,7 +60,7 @@ Foam::zoneSet Foam::zoneGenerators::volume::generate
                 new cellZone
                 (
                     zoneName_,
-                    select(zoneGen, mesh_.cellCentres()),
+                    zoneGen.select(zoneGen, mesh_.cellCentres()),
                     mesh_.cellZones(),
                     moveUpdate_,
                     true
@@ -70,7 +70,10 @@ Foam::zoneSet Foam::zoneGenerators::volume::generate
 
         case zoneTypes::face:
         {
-            const labelList faceIndices(select(zoneGen, mesh_.faceCentres()));
+            const labelList faceIndices
+            (
+                zoneGen.select(zoneGen, mesh_.faceCentres())
+            );
 
             return zoneSet
             (

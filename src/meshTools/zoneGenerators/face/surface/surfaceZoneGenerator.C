@@ -66,7 +66,7 @@ Foam::zoneGenerators::surfaceZoneGenerator::surfaceZoneGenerator
             (
                 dict.lookupOrDefault
                 (
-                    "name",
+                    "surfaceName",
                     mesh.objectRegistry::db().name()
                 ),
                 mesh.time().constant(),
