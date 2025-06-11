@@ -1,7 +1,3 @@
 decomposePar.C
-fvFieldDecomposer.C
-pointFieldDecomposer.C
-lagrangianFieldDecomposer.C
-LagrangianFieldDecomposer.C
 
 EXE = $(FOAM_APPBIN)/decomposePar

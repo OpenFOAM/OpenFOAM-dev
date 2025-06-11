@@ -660,7 +660,7 @@ int main(int argc, char *argv[])
                                 )
                             )
                             {
-                                lagrangianFieldDecomposer
+                                const lagrangianFieldDecomposer
                                     lagrangianDecomposer
                                     (
                                         meshes().completeMesh(),
@@ -669,6 +669,8 @@ int main(int argc, char *argv[])
                                         meshes().procCellAddressing(),
                                         cloudName
                                     );
+
+                                lagrangianDecomposer.decomposePositions();
 
                                 #define DO_CLOUD_FIELDS_TYPE(Type, nullArg)    \
                                     lagrangianDecomposer.decomposeFields<Type> \
@@ -758,6 +760,8 @@ int main(int argc, char *argv[])
                                     meshes().procCellAddressing(),
                                     LagrangianName
                                 );
+
+                            LagrangianDecomposer.decomposePositions();
 
                             if
                             (

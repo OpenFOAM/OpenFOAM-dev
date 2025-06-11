@@ -539,7 +539,7 @@ int main(int argc, char *argv[])
                                 )
                             )
                             {
-                                lagrangianFieldReconstructor
+                                const lagrangianFieldReconstructor
                                     lagrangianReconstructor
                                     (
                                         meshes().completeMesh(),
@@ -548,6 +548,8 @@ int main(int argc, char *argv[])
                                         meshes().procCellAddressing(),
                                         cloudName
                                     );
+
+                                lagrangianReconstructor.reconstructPositions();
 
                                 #define DO_CLOUD_FIELDS_TYPE(Type, nullArg)    \
                                     lagrangianReconstructor                    \
@@ -655,6 +657,8 @@ int main(int argc, char *argv[])
                                     meshes().procCellAddressing(),
                                     LagrangianName
                                 );
+
+                            LagrangianReconstructor.reconstructPositions();
 
                             if
                             (
