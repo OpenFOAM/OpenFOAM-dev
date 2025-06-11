@@ -54,16 +54,11 @@ zones
     // Setting values inside a surface geometry file
     surface
     {
-        type            surface;
+        type            insideSurface;
         zoneType        cell;
 
+        surface         closedTriSurface;
         file            "geometry.obj";
-        outsidePoints   ((0 0 0));
-        includeCut      no;
-        includeInside   yes;
-        includeOutside  no;
-        nearDistance    0;
-        curvature       0;
 
         values
         {
