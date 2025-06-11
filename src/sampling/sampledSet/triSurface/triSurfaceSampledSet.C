@@ -50,8 +50,8 @@ namespace Foam
             sampledSet,
             triSurface,
             word,
-            triSurface,
-            "triSurface"
+            triSurfaceMesh,
+            "triSurfaceMesh"
         );
     }
 }

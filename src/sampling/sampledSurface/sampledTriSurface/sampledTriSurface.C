@@ -50,8 +50,8 @@ namespace Foam
             sampledSurface,
             triSurface,
             word,
-            triSurface,
-            "triSurface"
+            triSurfaceMesh,
+            "triSurfaceMesh"
         );
 
         //- Private class for finding nearest
