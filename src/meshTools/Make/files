@@ -245,6 +245,7 @@ zoneGenerators/face/face/faceZoneGenerator.C
 zoneGenerators/face/patch/patchZoneGenerator.C
 zoneGenerators/face/normal/normalZoneGenerator.C
 zoneGenerators/face/orient/orientZoneGenerator.C
+zoneGenerators/face/flip/flipZoneGenerator.C
 zoneGenerators/face/plane/planeZoneGenerator.C
 zoneGenerators/face/surface/surfaceZoneGenerator.C
 

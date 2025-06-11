@@ -31,6 +31,8 @@ Description
     If a faceZone with the same name as the faceZone to be generated is
     returned by a zoneGenerator in the list it is ignored.
 
+    The returned faceZone is oriented and provides the corresponding flipMap.
+
 Usage
     \table
         Property     | Description             | Required | Default value

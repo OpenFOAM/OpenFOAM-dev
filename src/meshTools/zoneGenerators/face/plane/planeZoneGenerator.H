@@ -35,7 +35,7 @@ Description
     defining face zones through channels on which the flow rate is to be
     computed, as it keeps the set local to a single channel.
 
-    The returned faceZone is unoriented and provided the corresponding flipMap.
+    The returned faceZone is oriented and provides the corresponding flipMap.
 
 Usage
     \table

@@ -22,11 +22,11 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::zoneGenerators::surfaceZoneGenerator
+    Foam::zoneGenerators::flipZoneGenerator
 
 Description
-    A faceZone zoneGenerator which selects faces based on the intersection of
-    a surface with the vector between the adjacent cell centres.
+    A zoneGenerator which flips the flipMap of the faceZone returned by the
+    given zoneGenerator.
 
     The returned faceZone is oriented and provides the corresponding flipMap.
 
@@ -35,46 +35,30 @@ Usage
         Property     | Description              | Required | Default value
         type         | Type: face               | yes      |
         name         | Name of the zone         | no       | zoneGenerator name
-        surface      | searchableSurface type   | yes      |
-        tol          | cell-cell vector intersection tolerance | no | rootSmall
-        moveUpdate   | Switch to update after mesh motion | no | false
     \endtable
 
-    To create the faceZone \c baffles containing the faces based on the adjacent
-    cell centres spanning the given triangulated surface:
+    To create the faceZone floatingObject containing the faces of the
+    \c floatingObject patch but flipped to point inwards:
     \verbatim
-        baffles
+        floatingObjectBottom
         {
-            type        surface;
-            surface     triSurface;
-            file        "baffles.obj";
+            type        flip;
+
+            floatingObject
+            {
+                type        patch;
+                patch       floatingObject;
+            }
         }
     \endverbatim
-
-    To create the faceZone \c rotatingZone containing the faces based on the
-    adjacent cell centres spanning the given cylinder:
-    \verbatim
-        rotatingZone
-        {
-            type        surface;
-            surface     searchableCylinder;
-            point1      (0 0 0.54);
-            point2      (0 0 0.66);
-            radius      0.2;
-        }
-    \endverbatim
-
-See also
-    searchableSurface
-    zoneGenerators::planeZoneGenerator
 
 SourceFiles
-    surfaceZoneGenerator.C
+    flipZoneGenerator.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef surfaceZoneGenerator_H
-#define surfaceZoneGenerator_H
+#ifndef flipZoneGenerator_H
+#define flipZoneGenerator_H
 
 #include "zoneGeneratorList.H"
 
@@ -82,39 +66,33 @@ SourceFiles
 
 namespace Foam
 {
-
-class searchableSurface;
-
 namespace zoneGenerators
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class surfaceZoneGenerator Declaration
+                     Class flipZoneGenerator Declaration
 \*---------------------------------------------------------------------------*/
 
-class surfaceZoneGenerator
+class flipZoneGenerator
 :
     public zoneGenerator
 {
     // Private Data
 
-        //- Surface
-        autoPtr<searchableSurface> surfacePtr_;
-
-        //- Tolerance with which to extend the cell-cell vectors
-        const scalar tol_;
+        //- Zone generator supplying the faces
+        autoPtr<zoneGenerator> zoneGenerator_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("surface");
+    TypeName("flip");
 
 
     // Constructors
 
         //- Construct from dictionary
-        surfaceZoneGenerator
+        flipZoneGenerator
         (
             const word& name,
             const polyMesh& mesh,
@@ -123,7 +101,7 @@ public:
 
 
     //- Destructor
-    virtual ~surfaceZoneGenerator();
+    virtual ~flipZoneGenerator();
 
 
     // Member Functions
