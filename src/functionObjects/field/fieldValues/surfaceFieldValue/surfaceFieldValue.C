@@ -27,6 +27,7 @@ License
 #include "processorFvPatch.H"
 #include "processorCyclicFvPatch.H"
 #include "sampledSurface.H"
+#include "zoneGenerator.H"
 #include "mergePoints.H"
 #include "indirectPrimitivePatch.H"
 #include "PatchTools.H"
@@ -105,29 +106,14 @@ const Foam::NamedEnum
 
 void Foam::functionObjects::fieldValues::surfaceFieldValue::setFaceZoneFaces
 (
-    const word& zoneName
+    const faceZone& zone
 )
 {
-    const label zoneId = mesh_.faceZones().findIndex(zoneName);
-
-    if (zoneId < 0)
-    {
-        FatalErrorInFunction
-            << type() << " " << name() << ": "
-            << selectionTypeNames[selectionType_]
-            << "(" << zoneName << "):" << nl
-            << "    Unknown face zone name: " << zoneName
-            << ". Valid face zones are: " << mesh_.faceZones().toc()
-            << nl << exit(FatalError);
-    }
-
-    selectionName_ = zoneName;
+    selectionName_ = zone.name();
 
     // Ensure addressing is built on all processes
     mesh_.polyBFacePatches();
     mesh_.polyBFacePatchFaces();
-
-    const faceZone& zone = mesh_.faceZones()[zoneId];
 
     DynamicList<label> faceIds(zone.size());
     DynamicList<label> facePatchIds(zone.size());
@@ -470,18 +456,44 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::initialise
     {
         case selectionTypes::faceZone:
         {
-            setFaceZoneFaces
-            (
-                dict.lookupBackwardsCompatible<word>({"faceZone", "name"})
-            );
+            if (dict.isDict("faceZone"))
+            {
+                autoPtr<zoneGenerator> zg
+                (
+                    zoneGenerator::New
+                    (
+                        "zone",
+                        zoneGenerator::zoneTypes::face,
+                        mesh_,
+                        dict.subDict("faceZone")
+                    )
+                );
+
+                setFaceZoneFaces(zg->generate().fZone());
+            }
+            else
+            {
+                const word zoneName(dict.lookup<word>("faceZone"));
+                const label zoneId(mesh_.faceZones().findIndex(zoneName));
+
+                if (zoneId < 0)
+                {
+                    FatalErrorInFunction
+                        << type() << " " << name() << ": "
+                        << selectionTypeNames[selectionType_]
+                        << "(" << zoneName << "):" << nl
+                        << "    Unknown faceZone: " << zoneName
+                        << ". Available faceZones: " << mesh_.faceZones().toc()
+                        << nl << exit(FatalError);
+                }
+
+                setFaceZoneFaces(mesh_.faceZones()[zoneId]);
+            }
             break;
         }
         case selectionTypes::patch:
         {
-            setPatchFaces
-            (
-                dict.lookupBackwardsCompatible<wordRe>({"patch", "name"})
-            );
+            setPatchFaces(dict.lookup<wordRe>("patch"));
             break;
         }
         case selectionTypes::patches:
@@ -491,7 +503,7 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::initialise
         }
         case selectionTypes::sampledSurface:
         {
-            setSampledSurfaceFaces(dict.subDict("sampledSurfaceDict"));
+            setSampledSurfaceFaces(dict.subDict("sampledSurface"));
             break;
         }
         default:
@@ -504,52 +516,47 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::initialise
         }
     }
 
-    if (nFaces_ == 0 && (!mesh_.stitcher().stitches() || !mesh_.conformal()))
+    if (nFaces_ > 0)
     {
-        FatalErrorInFunction
-            << type() << " " << name() << ": "
-            << selectionTypeNames[selectionType_]
-            << "(" << selectionName_.c_str() << "):" << nl
-            << " selection has no faces" << exit(FatalError);
-    }
+        if (selectionType_ == selectionTypes::sampledSurface)
+        {
+            surfacePtr_().update();
+        }
 
-    if (selectionType_ == selectionTypes::sampledSurface)
-    {
-        surfacePtr_().update();
-    }
+        totalArea_ = totalArea();
 
-    totalArea_ = totalArea();
+        Info<< type() << " " << name() << ":" << nl
+            << "    total faces  = " << nFaces_
+            << nl
+            << "    total area   = " << totalArea_
+            << nl;
 
-    Info<< type() << " " << name() << ":" << nl
-        << "    total faces  = " << nFaces_
-        << nl
-        << "    total area   = " << totalArea_
-        << nl;
+        if (dict.readIfPresent("weightFields", weightFieldNames_))
+        {
+            Info<< name() << " " << operationTypeNames_[operation_]
+                << " weight fields " << weightFieldNames_;
+        }
+        else if (dict.found("weightField"))
+        {
+            weightFieldNames_.setSize(1);
+            dict.lookup("weightField") >> weightFieldNames_[0];
 
-    if (dict.readIfPresent("weightFields", weightFieldNames_))
-    {
-        Info<< name() << " " << operationTypeNames_[operation_]
-            << " weight fields " << weightFieldNames_;
-    }
-    else if (dict.found("weightField"))
-    {
-        weightFieldNames_.setSize(1);
-        dict.lookup("weightField") >> weightFieldNames_[0];
+            Info<< name() << " " << operationTypeNames_[operation_]
+                << " weight field " << weightFieldNames_[0];
+        }
 
-        Info<< name() << " " << operationTypeNames_[operation_]
-            << " weight field " << weightFieldNames_[0];
-    }
 
-    Info<< nl << endl;
+        Info<< nl << endl;
 
-    if (writeFields_)
-    {
-        const word surfaceFormat(dict.lookup("surfaceFormat"));
+        if (writeFields_)
+        {
+            const word surfaceFormat(dict.lookup("surfaceFormat"));
 
-        surfaceWriterPtr_.reset
-        (
-            surfaceWriter::New(surfaceFormat, dict).ptr()
-        );
+            surfaceWriterPtr_.reset
+            (
+                surfaceWriter::New(surfaceFormat, dict).ptr()
+            );
+        }
     }
 }
 
@@ -733,6 +740,11 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::read
 
 bool Foam::functionObjects::fieldValues::surfaceFieldValue::write()
 {
+    if (nFaces_ == 0)
+    {
+        return false;
+    }
+
     // Look to see if any fields exist. Use the flag to suppress output later.
     bool anyFields = false;
     forAll(fields_, i)

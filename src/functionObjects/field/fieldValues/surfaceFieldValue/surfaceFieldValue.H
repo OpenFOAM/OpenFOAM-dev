@@ -46,7 +46,7 @@ Description
         writeFields     true;
 
         select          patch;
-        name            movingWall;
+        patch           movingWall;
 
         operation       areaAverage;
 
@@ -70,7 +70,7 @@ Description
         surfaceFormat   none;
 
         select          faceZone;
-        name            f0;
+        faceZone        f0;
 
         operation       sum;
 
@@ -94,7 +94,6 @@ Usage
         writeArea    | Write the area of the surfaceFieldValue | no |
         surfaceFormat | output value format    | no          |
         select       | face selection: see below | yes         |
-        name         | name of face select if required  | no |
         operation    | operation to perform    | yes         |
         weightField  | name of field to apply weighting | no |
         weightFields | Names of fields to apply weighting | no |
@@ -103,9 +102,11 @@ Usage
 
     Where the supported \c select options are:
     \plaintable
-        faceZone     | requires a 'name' entry to specify the faceZone
-        patch        | requires a 'name' entry to specify the patch
-        sampledSurface | requires a 'sampledSurfaceDict' sub-dictionary
+        faceZone     | requires a 'faceZone' entry to specify the faceZone \\
+                       or dictionary to specify the zoneGenerator
+        patch        | requires a 'patch' entry to specify the patch
+        patches      | requires a 'patches' entry to specify the patches
+        sampledSurface | requires a 'sampledSurface' sub-dictionary
     \endplaintable
 
     The \c operation is one of:
@@ -227,8 +228,8 @@ private:
 
     // Private Member Functions
 
-        //- Set faces to evaluate based on a face zone
-        void setFaceZoneFaces(const word&);
+        //- Set faces to evaluate from a faceZone
+        void setFaceZoneFaces(const faceZone& zone);
 
         //- Set faces to evaluate based on a list of patch indices
         void setPatchesFaces(const labelList&);

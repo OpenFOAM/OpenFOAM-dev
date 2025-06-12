@@ -30,13 +30,29 @@ poolHeight
 {
     type            surfaceFieldValue;
     libs            ("libfieldFunctionObjects.so");
-    writeControl   timeStep;
-    writeInterval  1;
+    writeControl    timeStep;
+    writeInterval   1;
     log             yes;
     writeTotalArea  no;
     writeFields     no;
     select          faceZone;
-    faceZone        f0;
+    faceZone
+    {
+        type        intersection;
+
+        freeSurface
+        {
+            type        patch;
+            patch       freeSurface;
+        }
+
+        box
+        {
+            type        box;
+            zoneType    face;
+            box         (-100 0.9 -100) (0.2 100 100);
+        }
+    }
     operation       areaAverage;
     fields
     (

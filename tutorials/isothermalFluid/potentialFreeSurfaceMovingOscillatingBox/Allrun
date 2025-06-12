@@ -5,14 +5,10 @@ cd ${0%/*} || exit 1    # Run from this directory
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
 runApplication blockMesh
-
 runApplication subsetMesh -noFields -overwrite
-
 runApplication createPatch -overwrite
 
 cp -R 0.orig 0 > /dev/null 2>&1
-
-runApplication createZones
 
 runApplication foamRun
 
