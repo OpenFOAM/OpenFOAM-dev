@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "zoneGenerator.H"
+#include "dlLibraryTable.H"
 #include "lookup.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -129,7 +130,37 @@ Foam::zoneGenerator::New
             << " " << name << " of type " << type << endl;
     }
 
-    typename dictionaryConstructorTable::iterator cstrIter =
+    if
+    (
+        !dictionaryConstructorTablePtr_
+     || dictionaryConstructorTablePtr_->find(type)
+        == dictionaryConstructorTablePtr_->end()
+    )
+    {
+        if
+        (
+           !libs.open
+            (
+                dict,
+                "libs",
+                dictionaryConstructorTablePtr_
+            )
+        )
+        {
+            libs.open("lib" + type.remove(':') + ".so", false);
+        }
+
+        if (!dictionaryConstructorTablePtr_)
+        {
+            FatalErrorInFunction
+                << "Unknown " << typeName << " type "
+                << type << nl << nl
+                << "Table of " << typeName << " is empty"
+                << exit(FatalError);
+        }
+    }
+
+    dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(type);
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
@@ -157,35 +188,11 @@ Foam::zoneGenerator::New
     const dictionary& dict
 )
 {
-    const word type(dict.lookup("type"));
-
-    if (debug)
-    {
-        InfoInFunction
-            << "Constructing " << typeName
-            << " " << name << " of type " << type << endl;
-    }
-
-    typename dictionaryConstructorTable::iterator cstrIter =
-        dictionaryConstructorTablePtr_->find(type);
-
-    if (cstrIter == dictionaryConstructorTablePtr_->end())
-    {
-        FatalIOErrorInFunction
-        (
-            dict
-        )   << "Unknown " << typeName << " type "
-            << type << nl << nl
-            << "Valid " << typeName << " types are:" << nl
-            << dictionaryConstructorTablePtr_->sortedToc()
-            << exit(FatalIOError);
-    }
-
     // Copy the dictionary and add the zoneType entry
     dictionary typeDict(dict);
     typeDict.add("zoneType", zoneTypesNames[zoneType]);
 
-    return autoPtr<zoneGenerator>(cstrIter()(name, mesh, typeDict));
+    return New(name, mesh, typeDict);
 }
 
 
