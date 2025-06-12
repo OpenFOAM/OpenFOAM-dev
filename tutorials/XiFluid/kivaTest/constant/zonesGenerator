@@ -17,7 +17,6 @@ FoamFile
 cylinderHead
 {
     type        cylinderHeadPoints;
-    libs        ("libfvMeshMoversMultiValveEngine.so");
 }
 
 ignition
