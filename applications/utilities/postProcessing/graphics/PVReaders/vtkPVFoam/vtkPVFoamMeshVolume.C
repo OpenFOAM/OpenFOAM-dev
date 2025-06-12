@@ -336,9 +336,20 @@ vtkUnstructuredGrid* Foam::vtkPVFoam::volumeVTKMesh
             // Mapping from additional point to cell
             addPointCellLabels[addPointi] = celli;
 
-            // The new vertex from the cell-centre
+            // Create a new vertex from the cell-centre. If the mesh doesn't
+            // have cell-centres stored then compute the centre on the fly.
+            // These polyhedra should (hopefully) only be a small minority of
+            // the cells, and computing cell-centres throughout the mesh is
+            // quite expensive and involves a lot of memory (it also creates
+            // face areas and centres and cell volumes).
             const label newVertexLabel = mesh.nPoints() + addPointi;
-            vtkInsertNextOpenFOAMPoint(vtkpoints, mesh.C()[celli]);
+            vtkInsertNextOpenFOAMPoint
+            (
+                vtkpoints,
+                mesh.has(&primitiveMesh::cellCentres)
+              ? mesh.cellCentres()[celli]
+              : mesh.cells()[celli].centre(mesh.points(), mesh.faces())
+            );
 
             // Whether to insert cell in place of original or not.
             bool substituteCell = true;
