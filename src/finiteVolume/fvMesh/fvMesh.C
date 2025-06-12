@@ -31,6 +31,7 @@ License
 #include "slicedSurfaceFields.H"
 #include "SubField.H"
 #include "demandDrivenData.H"
+#include "zonesGenerator.H"
 #include "fvMeshLduAddressing.H"
 #include "fvMeshTopoChanger.H"
 #include "fvMeshDistributor.H"
@@ -361,7 +362,7 @@ Foam::surfaceLabelField::Boundary& Foam::fvMesh::polyFacesBfRef()
 
 Foam::fvMesh::fvMesh(const IOobject& io, const bool doPost)
 :
-    polyMesh(io, doPost),
+    polyMesh(io, false),
     surfaceInterpolation(*this),
     boundary_(*this, boundaryMesh()),
     stitcher_(nullptr),
@@ -399,6 +400,15 @@ Foam::fvMesh::fvMesh(const IOobject& io, const bool doPost)
     if (doPost)
     {
         postConstruct(true, stitchType::geometric);
+    }
+
+    // Generate the zones after the mesh manipulators have been constructed
+    // to support motion-specific zone generators requiring access to the mover
+    if (doPost && zonesGenerator::New(*this).moveUpdate())
+    {
+        pointZones().write();
+        faceZones().write();
+        cellZones().write();
     }
 }
 
