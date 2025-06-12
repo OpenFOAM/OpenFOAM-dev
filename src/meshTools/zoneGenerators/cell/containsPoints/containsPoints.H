@@ -22,49 +22,37 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::zoneGenerators::normalZoneGenerator
+    Foam::zoneGenerators::containsPoints
 
 Description
-    A zoneGenerator which selects the faces returned by the given
-    zoneGenerator that are aligned with the given normal.
-
-    The returned faceZone is oriented and provides the corresponding flipMap.
+    A zoneGenerator which selects the cells containing the given points
 
 Usage
     \table
         Property     | Description              | Required | Default value
-        type         | Type: face               | yes      |
+        type         | Type: cell               | yes      |
         name         | Name of the zone         | no       | zoneGenerator name
-        normal       | Reference unit vector    | yes      |
-        tol          | cos angle tolerance      | yes      |
+        points       | List of points           | yes      |
         moveUpdate   | Switch to update after mesh motion | no | false
     \endtable
 
-    To create the faceZone \c floatingObjectBottom containing the faces of the
-    \c floatingObject patch which point in the y-direction:
+    To create the cellZone \c pointCells of the cells containing the given two
+    points:
     \verbatim
-        floatingObjectBottom
+        pointCells
         {
-            type        normal;
-
-            normal      (0 1 0);
-            tol         0.01;
-
-            floatingObject
-            {
-                type        patch;
-                patch       floatingObject;
-            }
+            type        containsPoints;
+            points      ((0 1 0) (0.1 1 0));
         }
     \endverbatim
 
 SourceFiles
-    normalZoneGenerator.C
+    containsPoints.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef normalZoneGenerator_H
-#define normalZoneGenerator_H
+#ifndef containsPoints_H
+#define containsPoints_H
 
 #include "zoneGeneratorList.H"
 
@@ -76,36 +64,29 @@ namespace zoneGenerators
 {
 
 /*---------------------------------------------------------------------------*\
-                              Class normalZoneGenerator Declaration
+                         Class containsPoints Declaration
 \*---------------------------------------------------------------------------*/
 
-class normalZoneGenerator
+class containsPoints
 :
     public zoneGenerator
 {
     // Private Data
 
-        //- Zone generator supplying the faces
-        autoPtr<zoneGenerator> zoneGenerator_;
-
-        //- Reference unit vector face orientations are compared to
-        vector normal_;
-
-        //- Direction comparison tolerance
-        //  cos of angle between normal_ and face normal
-        const scalar tol_;
+        //- Points to select cells
+        List<point> points_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("normal");
+    TypeName("containsPoints");
 
 
     // Constructors
 
         //- Construct from dictionary
-        normalZoneGenerator
+        containsPoints
         (
             const word& name,
             const polyMesh& mesh,
@@ -114,7 +95,7 @@ public:
 
 
     //- Destructor
-    virtual ~normalZoneGenerator();
+    virtual ~containsPoints();
 
 
     // Member Functions
