@@ -22,7 +22,7 @@ surfaceFieldValue1
     log             yes;
     writeFields     no;
     select          patch;
-    name            outlet;
+    patch           outlet;
     operation       average;
     weightField     phi;
     fields
