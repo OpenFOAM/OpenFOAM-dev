@@ -1,3 +1,0 @@
-createEngineZones.C
-
-EXE = $(FOAM_APPBIN)/createEngineZones

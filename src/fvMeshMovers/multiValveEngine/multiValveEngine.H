@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,7 @@ Description
     - Smooth mesh motion between a moving object and other patches.
 
     - linerPatches: the set of patches corresponding to the cylinder liner
-      Used by createEngineZones
+      Used by zoneGenerators::cylinderHeadPoints
 
     - slidingPatches: a set of patches along which mesh is allowed
       to deform. For example, on the cylinder liner, it is desired to

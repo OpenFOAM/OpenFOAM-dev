@@ -14,14 +14,19 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+cylinderHead
+{
+    type        cylinderHeadPoints;
+    libs        ("libfvMeshMoversMultiValveEngine.so");
+}
+
 ignition
 {
     type        sphere;
     zoneType    cell;
-    moveUpdate  false;
 
-    centre  (0.03 0.002 0.091);
-    radius  0.001;
+    centre      (0.03 0.002 0.091);
+    radius      0.001;
 }
 
 // ************************************************************************* //
