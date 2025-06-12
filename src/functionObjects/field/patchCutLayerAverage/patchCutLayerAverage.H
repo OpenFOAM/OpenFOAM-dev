@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,8 +26,9 @@ Class
 
 Description
     This function object writes graphs of patch face values, area-averaged in
-    planes perpendicular to a given direction. It adaptively grades the
-    distribution of graph points to match the resolution of the mesh.
+    planes perpendicular to a given direction or in contours of a given
+    distance field. It adaptively grades the distribution of graph points to
+    match the resolution of the mesh.
 
     Example of function object specification:
     \verbatim
@@ -56,7 +57,9 @@ Usage
         Property    | Description                  | Required | Default value
         type        | type name: patchCutLayerAverage | yes   |
         patch       | Name of the patch            | yes      |
-        direction   | Axis along which to plot     | yes      |
+        direction   | Axis along which to plot   | if distance not specified |
+        distance    | Distance field along which to plot \\
+                                                 | if direction not specified |
         nPoints     | Number of points in the plot | yes      |
         interpolate | Do linear interpolation      | no       | false
         fields      | Fields to plot values of     | yes      |
@@ -112,6 +115,9 @@ class patchCutLayerAverage
         //- Direction along which to plot
         vector direction_;
 
+        //- Name of the distance field along which to plot
+        word distanceName_;
+
         //- Number of layers
         label nLayers_;
 
@@ -131,25 +137,27 @@ class patchCutLayerAverage
         label nOptimiseIter_;
 
         //- Weights
-        List<weight> weights_;
+        autoPtr<List<weight>> weights_;
 
         //- Layer distances. The distance of the layers' cut-planes to the
         //  origin, in the direction of the given vector. If interpolate is
         //  false, then the distance is taken to the middle of the layer.
-        scalarField layerDistances_;
+        autoPtr<scalarField> layerDistances_;
 
         //- Layer thicknesses. If interpolate is false, then this is the
         //  thickness of the layer that the plot point represents.
         autoPtr<scalarField> layerThicknesses_;
 
         //- Layer positions. The average position of the layer.
-        pointField layerPositions_;
+        autoPtr<pointField> layerPositions_;
 
 
     // Private Member functions
 
-        //- Calculate non-interpolating weights with which to construct plot
-        //  values
+        //- Return the output path
+        fileName outputPath() const;
+
+        //- Calculate and return non-interpolating weights
         List<weight> calcNonInterpolatingWeights
         (
             const scalarField& pointXs,
@@ -160,7 +168,7 @@ class patchCutLayerAverage
             const bool normalise = true
         ) const;
 
-        //- Calculate interpolating weights with which to construct plot values
+        //- Calculate and return interpolating weights
         List<weight> calcInterpolatingWeights
         (
             const scalarField& pointXs,
@@ -171,7 +179,7 @@ class patchCutLayerAverage
             const bool normalise = true
         ) const;
 
-        //- Calculate weights with which to construct plot values
+        //- Calculate and return weights
         List<weight> calcWeights
         (
             const scalarField& pointXs,
@@ -182,6 +190,9 @@ class patchCutLayerAverage
             const bool normalise = true
         ) const;
 
+        //- Calculate and set the weights member data
+        void calcWeights();
+
         //- Construct plot values from face values given a set of weights
         template<class Type>
         inline tmp<Field<Type>> applyWeights
@@ -190,11 +201,8 @@ class patchCutLayerAverage
             const Field<Type>& faceValues
         ) const;
 
-        //- Initialise the cached weights
-        void initialise();
-
-        //- Return the output path
-        fileName outputPath() const;
+        //- Clear the cached weights
+        void clear();
 
 
 public:

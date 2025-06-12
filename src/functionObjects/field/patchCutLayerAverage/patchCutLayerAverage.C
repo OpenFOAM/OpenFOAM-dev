@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ License
 #include "patchCutLayerAverage.H"
 #include "cutPolyIntegral.H"
 #include "OSspecific.H"
-#include "volFields.H"
+#include "volPointInterpolation.H"
 #include "writeFile.H"
 #include "polyTopoChangeMap.H"
 #include "polyMeshMap.H"
@@ -51,6 +51,17 @@ namespace functionObjects
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+Foam::fileName Foam::functionObjects::patchCutLayerAverage::outputPath() const
+{
+    return
+        time_.globalPath()
+       /writeFile::outputPrefix
+       /(mesh_.name() != polyMesh::defaultRegion ? mesh_.name() : word())
+       /name()
+       /time_.name();
+}
+
 
 Foam::List<Foam::functionObjects::patchCutLayerAverage::weight>
 Foam::functionObjects::patchCutLayerAverage::calcNonInterpolatingWeights
@@ -397,30 +408,7 @@ Foam::functionObjects::patchCutLayerAverage::calcWeights
 }
 
 
-template<class Type>
-inline Foam::tmp<Foam::Field<Type>>
-Foam::functionObjects::patchCutLayerAverage::applyWeights
-(
-    const List<weight>& weights,
-    const Field<Type>& faceValues
-) const
-{
-    tmp<Field<Type>> tLayerValues(new Field<Type>(nLayers_, Zero));
-
-    forAll(weights, weighti)
-    {
-        tLayerValues.ref()[weights[weighti].layeri] +=
-            weights[weighti].value*faceValues[weights[weighti].facei];
-    }
-
-    Pstream::listCombineGather(tLayerValues.ref(), plusEqOp<Type>());
-    Pstream::listCombineScatter(tLayerValues.ref());
-
-    return tLayerValues;
-}
-
-
-void Foam::functionObjects::patchCutLayerAverage::initialise()
+void Foam::functionObjects::patchCutLayerAverage::calcWeights()
 {
     const polyPatch& pp = mesh_.boundaryMesh()[patchName_];
     const faceList& faces = pp.localFaces();
@@ -431,8 +419,22 @@ void Foam::functionObjects::patchCutLayerAverage::initialise()
     // there is one more point than there are layers.
     const label nPlot = interpolate_ ? nLayers_ : nLayers_ + 1;
 
-    // Calculate point coordinates
-    const scalarField pointXs(points & direction_);
+    // Calculate or get the point coordinates
+    tmp<scalarField> tpointXs =
+        distanceName_ == word::null
+      ? points & direction_
+      : (
+            mesh_.foundObject<volScalarField>(distanceName_)
+          ? volPointInterpolation::New(mesh_).interpolate
+            (
+                mesh_.lookupObject<volScalarField>(distanceName_)
+            )
+          : tmp<pointScalarField>
+            (
+                mesh_.lookupObject<pointScalarField>(distanceName_)
+            )
+        )().boundaryField()[pp.index()].patchInternalField();
+    const scalarField& pointXs = tpointXs();
 
     // Determine face min and max coordinates
     scalarField faceMinXs(faces.size(), vGreat);
@@ -575,43 +577,72 @@ void Foam::functionObjects::patchCutLayerAverage::initialise()
     }
 
     // Finally, calculate the actual normalised interpolation weights
-    weights_ =
-        calcWeights
+    weights_.reset
+    (
+        new List<weight>
         (
-            pointXs,
-            faceMinXs,
-            faceMaxXs,
-            faceMinOrder,
-            plotXs,
-            true
-        );
+            calcWeights
+            (
+                pointXs,
+                faceMinXs,
+                faceMaxXs,
+                faceMinOrder,
+                plotXs,
+                true
+            )
+        )
+    );
 
     // Calculate plot coordinates and widths
     if (interpolate_)
     {
-        layerDistances_ = plotXs;
+        layerDistances_.reset(new scalarField(plotXs));
     }
     else
     {
         const SubField<scalar> distance0s(plotXs, nLayers_);
         const SubField<scalar> distance1s(plotXs, nLayers_, 1);
-        layerDistances_ = (distance0s + distance1s)/2;
+        layerDistances_.reset(((distance0s + distance1s)/2).ptr());
         layerThicknesses_.reset((distance1s - distance0s).ptr());
     }
 
     // Calculate the plot positions
-    layerPositions_ = applyWeights(weights_, pointField(pp.faceCentres()));
+    layerPositions_.reset
+    (
+        applyWeights(weights_, pointField(pp.faceCentres())).ptr()
+    );
 }
 
 
-Foam::fileName Foam::functionObjects::patchCutLayerAverage::outputPath() const
+template<class Type>
+inline Foam::tmp<Foam::Field<Type>>
+Foam::functionObjects::patchCutLayerAverage::applyWeights
+(
+    const List<weight>& weights,
+    const Field<Type>& faceValues
+) const
 {
-    return
-        time_.globalPath()
-       /writeFile::outputPrefix
-       /(mesh_.name() != polyMesh::defaultRegion ? mesh_.name() : word())
-       /name()
-       /time_.name();
+    tmp<Field<Type>> tLayerValues(new Field<Type>(nLayers_, Zero));
+
+    forAll(weights, weighti)
+    {
+        tLayerValues.ref()[weights[weighti].layeri] +=
+            weights[weighti].value*faceValues[weights[weighti].facei];
+    }
+
+    Pstream::listCombineGather(tLayerValues.ref(), plusEqOp<Type>());
+    Pstream::listCombineScatter(tLayerValues.ref());
+
+    return tLayerValues;
+}
+
+
+void Foam::functionObjects::patchCutLayerAverage::clear()
+{
+    weights_.clear();
+    layerDistances_.clear();
+    layerThicknesses_.clear();
+    layerPositions_.clear();
 }
 
 
@@ -641,7 +672,28 @@ Foam::functionObjects::patchCutLayerAverage::~patchCutLayerAverage()
 bool Foam::functionObjects::patchCutLayerAverage::read(const dictionary& dict)
 {
     patchName_ = dict.lookup<word>("patch");
-    direction_ = normalised(dict.lookup<vector>("direction"));
+
+    const bool haveDirection = dict.found("direction");
+    const bool haveDistance = dict.found("distance");
+    if (haveDirection == haveDistance)
+    {
+        FatalIOErrorInFunction(dict)
+            << "keywords direction and distance both "
+            << (haveDirection ? "" : "un") << "defined in "
+            << "dictionary " << dict.name()
+            << exit(FatalIOError);
+    }
+    else if (haveDirection)
+    {
+        direction_ = normalised(dict.lookup<vector>("direction"));
+        distanceName_ = word::null;
+    }
+    else if (haveDistance)
+    {
+        direction_ = vector::nan;
+        distanceName_ = dict.lookup<word>("distance");
+    }
+
     nLayers_ = dict.lookup<label>("nPoints");
 
     interpolate_ = dict.lookupOrDefault<bool>("interpolate", false);
@@ -662,7 +714,7 @@ bool Foam::functionObjects::patchCutLayerAverage::read(const dictionary& dict)
 
     nOptimiseIter_ = dict.lookupOrDefault("nOptimiseIter", 2);
 
-    initialise();
+    clear();
 
     return true;
 }
@@ -670,7 +722,14 @@ bool Foam::functionObjects::patchCutLayerAverage::read(const dictionary& dict)
 
 Foam::wordList Foam::functionObjects::patchCutLayerAverage::fields() const
 {
-    return fields_;
+    wordList result(fields_);
+
+    if (distanceName_ != word::null)
+    {
+        result.append(distanceName_);
+    }
+
+    return result;
 }
 
 
@@ -682,6 +741,11 @@ bool Foam::functionObjects::patchCutLayerAverage::execute()
 
 bool Foam::functionObjects::patchCutLayerAverage::write()
 {
+    if (!weights_.valid())
+    {
+        calcWeights();
+    }
+
     const polyPatch& pp = mesh_.boundaryMesh()[patchName_];
 
     const bool writeThickness =
@@ -744,7 +808,7 @@ bool Foam::functionObjects::patchCutLayerAverage::write()
     }
 
     // Write
-    if (Pstream::master() && layerPositions_.size())
+    if (Pstream::master() && layerPositions_->size())
     {
         mkDir(outputPath());
 
@@ -754,7 +818,7 @@ bool Foam::functionObjects::patchCutLayerAverage::write()
             typeName,
             coordSet
             (
-                identityMap(layerPositions_.size()),
+                identityMap(layerPositions_->size()),
                 word::null,
                 layerPositions_,
                 coordSet::axisTypeNames_[coordSet::axisType::DISTANCE],
@@ -779,7 +843,7 @@ void Foam::functionObjects::patchCutLayerAverage::movePoints
 {
     if (&mesh == &mesh_)
     {
-        initialise();
+        clear();
     }
 }
 
@@ -791,7 +855,7 @@ void Foam::functionObjects::patchCutLayerAverage::topoChange
 {
     if (&map.mesh() == &mesh_)
     {
-        initialise();
+        clear();
     }
 }
 
@@ -803,7 +867,7 @@ void Foam::functionObjects::patchCutLayerAverage::mapMesh
 {
     if (&map.mesh() == &mesh_)
     {
-        initialise();
+        clear();
     }
 }
 
@@ -815,7 +879,7 @@ void Foam::functionObjects::patchCutLayerAverage::distribute
 {
     if (&map.mesh() == &mesh_)
     {
-        initialise();
+        clear();
     }
 }
 
