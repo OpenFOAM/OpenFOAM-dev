@@ -53,6 +53,10 @@ Foam::IOobject Foam::zonesGenerator::io(const polyMesh& mesh) const
     {
         result.readOpt() = IOobject::NO_READ;
     }
+    else
+    {
+        result.readOpt() = IOobject::MUST_READ_IF_MODIFIED;
+    }
 
     return result;
 }
@@ -84,6 +88,8 @@ Foam::zonesGenerator::zonesGenerator
     zoneGeneratorList(mesh)
 {
     readHeaderOk(IOstream::ASCII, typeName);
+    generate();
+    addWatch();
 }
 
 
@@ -93,7 +99,6 @@ bool Foam::zonesGenerator::readData(Istream& is)
 {
     is >> *this;
     zoneGeneratorList::read(*this);
-    generate();
     return !is.bad();
 }
 
@@ -102,6 +107,17 @@ bool Foam::zonesGenerator::writeData(Ostream& os) const
 {
     dictionary::write(os, false);
     return os.good();
+}
+
+
+bool Foam::zonesGenerator::read()
+{
+    if (regIOobject::read())
+    {
+        generate();
+    }
+
+    return true;
 }
 
 

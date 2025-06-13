@@ -119,7 +119,11 @@ public:
         virtual bool readData(Istream&);
 
         //- WriteData function required for regIOobject write operation
-        bool writeData(Ostream&) const;
+        virtual bool writeData(Ostream&) const;
+
+        //- Read the zonesGenerator dictionary if it has changed
+        //  and regenerate
+        virtual bool read();
 
         //- Update for mesh motion
         virtual bool movePoints();
@@ -138,6 +142,14 @@ public:
 
         //- Disallow default bitwise assignment
         void operator=(const zonesGenerator&) = delete;
+};
+
+
+//- Trait for obtaining global status
+template<>
+struct typeGlobal<zonesGenerator>
+{
+    static const bool global = true;
 };
 
 
