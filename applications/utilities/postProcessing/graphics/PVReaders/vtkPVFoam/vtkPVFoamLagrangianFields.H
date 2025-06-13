@@ -93,14 +93,15 @@ void Foam::vtkPVFoam::convertLagrangianFields
         // restrict to this GeoField<Type>
         if (iter()->headerClassName() != GeoField<Type>::typeName) continue;
 
-        const LagrangianMesh& Lmesh = LagrangianMeshes_[datasetNo];
-
         const GeoField<Type> tf
         (
             reader_->GetDecomposedCase()
           ? LagrangianReconstructors_[datasetNo]
            .reconstructField<GeoField<Type>>(*iter())
-          : tmp<GeoField<Type>>(new GeoField<Type>(*iter(), Lmesh))
+          : tmp<GeoField<Type>>
+            (
+                new GeoField<Type>(*iter(), LagrangianMeshes_[datasetNo])
+            )
         );
 
         convertLagrangianField<Type, GeoField>

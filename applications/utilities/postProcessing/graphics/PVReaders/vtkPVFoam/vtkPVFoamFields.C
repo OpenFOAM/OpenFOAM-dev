@@ -162,6 +162,11 @@ void Foam::vtkPVFoam::convertFields(vtkMultiBlockDataSet* output)
 
 void Foam::vtkPVFoam::convertlagrangianFields(vtkMultiBlockDataSet* output)
 {
+    const fileName lagrangianPrefix =
+        meshRegion_ == polyMesh::defaultRegion
+      ? fileName(lagrangian::cloud::prefix)
+      : meshRegion_/lagrangian::cloud::prefix;
+
     arrayRange& range = arrayRangelagrangian_;
 
     const wordHashSet selectedFields = getSelected
@@ -178,6 +183,34 @@ void Foam::vtkPVFoam::convertlagrangianFields(vtkMultiBlockDataSet* output)
 
         if (!partStatus_[partId] || datasetNo < 0) continue;
 
+        // Find a processor that has some of the cloud in it
+        label proci = -1;
+        if (reader_->GetDecomposedCase())
+        {
+            forAll(procDbsPtr_->procTimes(), procj)
+            {
+                if
+                (
+                    fileHandler().isDir
+                    (
+                        fileHandler().filePath
+                        (
+                            procDbsPtr_->procTimes()[procj].path()
+                           /procDbsPtr_().completeTime().name()
+                           /lagrangianPrefix
+                           /lagrangianName
+                        )
+                    )
+                )
+                {
+                    proci = procj;
+                    break;
+                }
+            }
+        }
+
+        if (reader_->GetDecomposedCase() && proci == -1) continue;
+
         // Get the lagrangian fields for this time and this cloud
         // but only keep selected fields
         // the region name is already in the mesh db
@@ -187,7 +220,7 @@ void Foam::vtkPVFoam::convertlagrangianFields(vtkMultiBlockDataSet* output)
             (
                 selectedFields,
                 reader_->GetDecomposedCase()
-              ? procMeshesPtr_->procMeshes().first()
+              ? procMeshesPtr_->procMeshes()[proci]
               : procMeshesPtr_->completeMesh(),
                 procDbsPtr_().completeTime().name(),
                 lagrangian::cloud::prefix/lagrangianName

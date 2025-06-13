@@ -166,11 +166,6 @@ void Foam::vtkPVFoam::updateInfolagrangian
     vtkDataArraySelection* arraySelection
 )
 {
-    const Time& runTime =
-        reader_->GetDecomposedCase()
-      ? procDbsPtr_->proc0Time()
-      : procDbsPtr_->completeTime();
-
     UPtrList<const Time> runTimes;
     if (reader_->GetDecomposedCase())
     {
@@ -200,17 +195,21 @@ void Foam::vtkPVFoam::updateInfolagrangian
 
     // Get times list. Flush first to force refresh.
     fileHandler().flush();
-    instantList times = runTime.times();
     forAll(runTimes, runTimei)
     {
+        const instantList times = runTimes[runTimei].times();
+
         forAll(times, timei)
         {
             lagrangianDirs +=
                 fileHandler().readDir
                 (
-                    runTimes[runTimei].path()
-                   /times[timei].name()
-                   /lagrangianPrefix,
+                    fileHandler().filePath
+                    (
+                        runTimes[runTimei].path()
+                       /times[timei].name()
+                       /lagrangianPrefix
+                    ),
                     fileType::directory
                 );
         }
@@ -258,7 +257,12 @@ void Foam::vtkPVFoam::updateInfoLagrangian
         LagrangianDirs +=
             fileHandler().readDir
             (
-                runTime.path()/times[timei].name()/LagrangianPrefix,
+                fileHandler().filePath
+                (
+                    runTime.path()
+                   /times[timei].name()
+                   /LagrangianPrefix
+                ),
                 fileType::directory
             );
     }
@@ -728,12 +732,20 @@ void Foam::vtkPVFoam::updateInfolagrangianFields()
 {
     DebugInFunction;
 
-    const Time& runTime =
-        reader_->GetDecomposedCase()
-      ? procDbsPtr_->proc0Time()
-      : procDbsPtr_->completeTime();
-
-    const instantList times = runTime.times();
+    UPtrList<const Time> runTimes;
+    if (reader_->GetDecomposedCase())
+    {
+        runTimes.setSize(procDbsPtr_->nProcs());
+        forAll(procDbsPtr_->procTimes(), proci)
+        {
+            runTimes.set(proci, &procDbsPtr_->procTimes()[proci]);
+        }
+    }
+    else
+    {
+        runTimes.setSize(1);
+        runTimes.set(0, &procDbsPtr_->completeTime());
+    }
 
     vtkDataArraySelection* fieldSelection =
         reader_->GetlagrangianFieldSelection();
@@ -755,25 +767,28 @@ void Foam::vtkPVFoam::updateInfolagrangianFields()
     // set. ParaView will display "(partial)" after field names that only apply
     // to some of the clouds.
     const arrayRange& range = arrayRangelagrangian_;
-
     fileHandler().flush();
-
     for (label partId = range.start(); partId < range.end(); ++ partId)
     {
-        forAll(times, timei)
+        forAll(runTimes, runTimei)
         {
-            IOobjectList objects
-            (
-                runTime,
-                times[timei].name(),
-                lagrangianPrefix/getPartName(partId)
-            );
+            const instantList times = runTimes[runTimei].times();
 
-            #define ADD_TO_SELECTION(Type, nullArg) \
-                addToSelection<IOField<Type>>(fieldSelection, objects);
-            ADD_TO_SELECTION(label, );
-            FOR_ALL_FIELD_TYPES(ADD_TO_SELECTION)
-            #undef ADD_TO_SELECTION
+            forAll(times, timei)
+            {
+                IOobjectList objects
+                (
+                    runTimes[runTimei],
+                    times[timei].name(),
+                    lagrangianPrefix/getPartName(partId)
+                );
+
+                #define ADD_TO_SELECTION(Type, nullArg) \
+                    addToSelection<IOField<Type>>(fieldSelection, objects);
+                ADD_TO_SELECTION(label, );
+                FOR_ALL_FIELD_TYPES(ADD_TO_SELECTION)
+                #undef ADD_TO_SELECTION
+            }
         }
     }
 
