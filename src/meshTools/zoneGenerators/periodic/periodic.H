@@ -30,11 +30,12 @@ Description
 
 Usage
     \table
-        Property  | Description                   | Required | Default value
-        type      | Type: periodic                | yes      |
-        begin     | Begin time for the zones      | no       | Time::beginTime()
-        end       | End time for the zones        | no       | Time::endTime()
-        repeat    | Repetition period             | no       |
+        Property   | Description                  | Required | Default value
+        type       | Type: periodic               | yes      |
+        begin      | Begin time for the zones     | no       | Time::beginTime()
+        end        | End time for the zones       | no       | Time::endTime()
+        repeat     | Repetition period            | no       |
+        deactivate | Invert the activation logic  | no       | false
     \endtable
     These options are followed by a single zoneGenerator specification.
 
@@ -70,6 +71,7 @@ SourceFiles
 #define periodic_H
 
 #include "zoneGeneratorList.H"
+#include "Switch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -101,6 +103,9 @@ class periodic
         //- Optional repetition period for the zones being active
         //  Defaults to no repetition
         const scalar repeat_;
+
+        //- Switch to deactivate rather than activate within the time-range
+        const Switch deactivate_;
 
         //- Active state
         mutable bool active_;

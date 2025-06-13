@@ -54,7 +54,9 @@ bool Foam::zoneGenerators::periodic::activate() const
       ? begin_ + fmod(mesh_.time().userTimeValue() - begin_, repeat_)
       : mesh_.time().userTimeValue();
 
-    return t >= begin_ && t < end_;
+    const bool active = t >= begin_ && t < end_;
+
+    return deactivate_ ? !active : active;
 }
 
 
@@ -103,6 +105,7 @@ Foam::zoneGenerators::periodic::periodic
 
     ),
     repeat_(dict.lookupOrDefault<scalar>("repeat", unitNone, 0)),
+    deactivate_(dict.lookupOrDefault<Switch>("deactivate", false)),
     active_(false)
 {
     moveUpdate_ = true;
