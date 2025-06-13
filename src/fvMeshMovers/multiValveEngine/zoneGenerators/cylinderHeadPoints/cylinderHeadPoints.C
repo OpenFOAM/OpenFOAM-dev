@@ -104,13 +104,23 @@ Foam::zoneSet Foam::zoneGenerators::cylinderHeadPoints::generate() const
     // Assumes the piston moves in the positive axis direction
 
     scalar minZ = great;
+    bool foundIntersection = false;
     forAll(cylinderHeadPoints, pi)
     {
         if (cylinderHeadPoints[pi] && linerPoints[pi])
         {
             minZ = min(mve.piston.axis & points[pi], minZ);
+            foundIntersection = true;
         }
     }
+
+    // If the intersection not found on this processor
+    // set minZ to -great so that the reduction sets minZ
+    if (!foundIntersection)
+    {
+        minZ = -great;
+    }
+
     reduce(minZ, maxOp<scalar>());
 
     // Create the cylinderHead point set
