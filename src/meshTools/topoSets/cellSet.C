@@ -24,34 +24,31 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "cellSet.H"
-#include "polyTopoChangeMap.H"
 #include "polyMesh.H"
-#include "Time.H"
+#include "polyTopoChangeMap.H"
 #include "addToRunTimeSelectionTable.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-defineTypeNameAndDebug(cellSet, 0);
+namespace Foam
+{
+    defineTypeNameAndDebug(cellSet, 0);
 
-addToRunTimeSelectionTable(topoSet, cellSet, word);
-addToRunTimeSelectionTable(topoSet, cellSet, size);
-addToRunTimeSelectionTable(topoSet, cellSet, set);
+    addToRunTimeSelectionTable(topoSet, cellSet, word);
+    addToRunTimeSelectionTable(topoSet, cellSet, size);
+    addToRunTimeSelectionTable(topoSet, cellSet, set);
+}
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-cellSet::cellSet(const IOobject& obj)
+Foam::cellSet::cellSet(const IOobject& obj)
 :
     topoSet(obj, typeName)
 {}
 
 
-cellSet::cellSet
+Foam::cellSet::cellSet
 (
     const polyMesh& mesh,
     const word& name,
@@ -66,7 +63,7 @@ cellSet::cellSet
 }
 
 
-cellSet::cellSet
+Foam::cellSet::cellSet
 (
     const polyMesh& mesh,
     const word& name,
@@ -78,7 +75,7 @@ cellSet::cellSet
 {}
 
 
-cellSet::cellSet
+Foam::cellSet::cellSet
 (
     const polyMesh& mesh,
     const word& name,
@@ -90,7 +87,7 @@ cellSet::cellSet
 {}
 
 
-cellSet::cellSet
+Foam::cellSet::cellSet
 (
     const polyMesh& mesh,
     const word& name,
@@ -102,127 +99,21 @@ cellSet::cellSet
 {}
 
 
-// Database constructors (for when no mesh available)
-cellSet::cellSet
-(
-    const Time& runTime,
-    const word& name,
-    readOption r,
-    writeOption w
-)
-:
-    topoSet
-    (
-        IOobject
-        (
-            name,
-            runTime.findInstance
-            (
-                polyMesh::meshSubDir/"sets",    // polyMesh::meshSubDir,
-                word::null,                     //"faces"
-                IOobject::MUST_READ,
-                runTime.findInstance
-                (
-                    polyMesh::meshSubDir,
-                    "faces",
-                    IOobject::READ_IF_PRESENT
-                )
-            ),
-            polyMesh::meshSubDir/"sets",
-            runTime,
-            r,
-            w
-        ),
-        typeName
-    )
-{}
-
-
-cellSet::cellSet
-(
-    const Time& runTime,
-    const word& name,
-    const label size,
-    writeOption w
-)
-:
-    topoSet
-    (
-        IOobject
-        (
-            name,
-            runTime.findInstance
-            (
-                polyMesh::meshSubDir/"sets",    // polyMesh::meshSubDir,
-                word::null,                     //"faces"
-                IOobject::NO_READ,
-                runTime.findInstance
-                (
-                    polyMesh::meshSubDir,
-                    "faces",
-                    IOobject::READ_IF_PRESENT
-                )
-            ),
-            polyMesh::meshSubDir/"sets",
-            runTime,
-            IOobject::NO_READ,
-            w
-        ),
-        size
-    )
-{}
-
-
-cellSet::cellSet
-(
-    const Time& runTime,
-    const word& name,
-    const labelHashSet& set,
-    writeOption w
-)
-:
-    topoSet
-    (
-        IOobject
-        (
-            name,
-            runTime.findInstance
-            (
-                polyMesh::meshSubDir/"sets",    // polyMesh::meshSubDir,
-                word::null,                     //"faces"
-                IOobject::NO_READ,
-                runTime.findInstance
-                (
-                    polyMesh::meshSubDir,
-                    "faces",
-                    IOobject::READ_IF_PRESENT
-                )
-            ),
-            polyMesh::meshSubDir/"sets",
-            runTime,
-            IOobject::NO_READ,
-            w
-        ),
-        set
-    )
-{}
-
-
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-cellSet::~cellSet()
+Foam::cellSet::~cellSet()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-label cellSet::maxSize(const polyMesh& mesh) const
+Foam::label Foam::cellSet::maxSize(const polyMesh& mesh) const
 {
     return mesh.nCells();
 }
 
 
-void cellSet::topoChange(const polyTopoChangeMap& map)
+void Foam::cellSet::topoChange(const polyTopoChangeMap& map)
 {
     updateLabels(map.reverseCellMap());
 }
@@ -238,9 +129,5 @@ void Foam::cellSet::writeDebug
     topoSet::writeDebug(os, mesh.cellCentres(), maxLen);
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

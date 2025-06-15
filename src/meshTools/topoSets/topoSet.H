@@ -40,20 +40,16 @@ SourceFiles
 
 #include "HashSet.H"
 #include "regIOobject.H"
-#include "labelList.H"
-#include "typeInfo.H"
-#include "autoPtr.H"
-#include "pointField.H"
+#include "pointFieldFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-
-class polyTopoChangeMap;
 class polyMesh;
 class primitiveMesh;
+class polyTopoChangeMap;
 
 /*---------------------------------------------------------------------------*\
                            Class topoSet Declaration
@@ -64,16 +60,7 @@ class topoSet
     public regIOobject,
     public labelHashSet
 {
-protected:
-
-    // Protected Member Functions
-
-        //- Update map from map. Used to update cell/face labels
-        //  after morphing
-        void updateLabels(const labelList& map);
-
-        //- Check validity of contents.
-        void check(const label maxLabel);
+    // Private Member Functions
 
         //- Write part of contents nicely formatted. Prints labels only.
         void writeDebug
@@ -94,6 +81,18 @@ protected:
             topoSet::const_iterator& iter,
             label& elemI
         ) const;
+
+
+protected:
+
+    // Protected Member Functions
+
+        //- Update map from map. Used to update cell/face labels
+        //  after morphing
+        void updateLabels(const labelList& map);
+
+        //- Check validity of contents.
+        void check(const label maxLabel);
 
         //- Write labels and coordinates columnwise to os. Truncate to maxLen.
         void writeDebug
@@ -165,7 +164,6 @@ public:
 
 
     // Constructors
-
 
         //- Construct from IOobject as explicitly passed type.
         //  Can't use typeName info here since subclasses not yet instantiated
@@ -261,8 +259,8 @@ public:
 
     // Member Functions
 
-        //- Invert contents. (insert all members 0..maxLen-1 which were not in
-        //  set)
+        //- Invert contents.
+        //  Insert all members 0..maxLen-1 which were not in set
         virtual void invert(const label maxLen);
 
         //- Subset contents. Only elements present in both sets remain.

@@ -97,36 +97,6 @@ public:
             writeOption w=NO_WRITE
         );
 
-
-        // Used for tetMesh cellSet only.
-
-            //- Construct from objectRegistry and name.
-            cellSet
-            (
-                const Time&,
-                const word& name,
-                readOption r=MUST_READ,
-                writeOption w=NO_WRITE
-            );
-
-            //- Construct empty from objectRegistry.
-            cellSet
-            (
-                const Time&,
-                const word& name,
-                const label size,
-                writeOption w=NO_WRITE
-            );
-
-            //- Construct from labelHashSet
-            cellSet
-            (
-                const Time&,
-                const word& name,
-                const labelHashSet&,
-                writeOption w=NO_WRITE
-            );
-
         //- Disallow default bitwise copy construction
         cellSet(const cellSet&) = delete;
 

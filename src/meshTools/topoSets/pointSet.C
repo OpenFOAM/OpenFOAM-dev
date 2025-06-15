@@ -24,35 +24,33 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "pointSet.H"
-#include "polyTopoChangeMap.H"
 #include "polyMesh.H"
+#include "polyTopoChangeMap.H"
 #include "syncTools.H"
-
 #include "addToRunTimeSelectionTable.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-defineTypeNameAndDebug(pointSet, 0);
+namespace Foam
+{
+    defineTypeNameAndDebug(pointSet, 0);
 
-addToRunTimeSelectionTable(topoSet, pointSet, word);
-addToRunTimeSelectionTable(topoSet, pointSet, size);
-addToRunTimeSelectionTable(topoSet, pointSet, set);
+    addToRunTimeSelectionTable(topoSet, pointSet, word);
+    addToRunTimeSelectionTable(topoSet, pointSet, size);
+    addToRunTimeSelectionTable(topoSet, pointSet, set);
+}
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-pointSet::pointSet(const IOobject& obj)
+Foam::pointSet::pointSet(const IOobject& obj)
 :
     topoSet(obj, typeName)
 {}
 
 
-pointSet::pointSet
+Foam::pointSet::pointSet
 (
     const polyMesh& mesh,
     const word& name,
@@ -66,7 +64,7 @@ pointSet::pointSet
 }
 
 
-pointSet::pointSet
+Foam::pointSet::pointSet
 (
     const polyMesh& mesh,
     const word& name,
@@ -78,7 +76,7 @@ pointSet::pointSet
 {}
 
 
-pointSet::pointSet
+Foam::pointSet::pointSet
 (
     const polyMesh& mesh,
     const word& name,
@@ -90,7 +88,7 @@ pointSet::pointSet
 {}
 
 
-pointSet::pointSet
+Foam::pointSet::pointSet
 (
     const polyMesh& mesh,
     const word& name,
@@ -104,13 +102,13 @@ pointSet::pointSet
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-pointSet::~pointSet()
+Foam::pointSet::~pointSet()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void pointSet::sync(const polyMesh& mesh)
+void Foam::pointSet::sync(const polyMesh& mesh)
 {
     // Convert to boolList
 
@@ -144,19 +142,19 @@ void pointSet::sync(const polyMesh& mesh)
 }
 
 
-label pointSet::maxSize(const polyMesh& mesh) const
+Foam::label Foam::pointSet::maxSize(const polyMesh& mesh) const
 {
     return mesh.nPoints();
 }
 
 
-void pointSet::topoChange(const polyTopoChangeMap& map)
+void Foam::pointSet::topoChange(const polyTopoChangeMap& map)
 {
     updateLabels(map.reversePointMap());
 }
 
 
-void pointSet::writeDebug
+void Foam::pointSet::writeDebug
 (
     Ostream& os,
     const primitiveMesh& mesh,
@@ -166,8 +164,5 @@ void pointSet::writeDebug
     topoSet::writeDebug(os, mesh.points(), maxLen);
 }
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

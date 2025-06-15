@@ -24,9 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "topoSet.H"
-#include "polyTopoChangeMap.H"
 #include "polyMesh.H"
-#include "boundBox.H"
+#include "polyTopoChangeMap.H"
 #include "Time.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -132,8 +131,6 @@ Foam::fileName Foam::topoSet::localPath
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-// Update stored cell numbers using map.
-// Do in two passes to prevent allocation if nothing changed.
 void Foam::topoSet::updateLabels(const labelList& map)
 {
     // Iterate over map to see if anything changed
@@ -196,7 +193,6 @@ void Foam::topoSet::check(const label maxLabel)
 }
 
 
-// Write maxElem elements, starting at iter. Updates iter and elemI.
 void Foam::topoSet::writeDebug
 (
     Ostream& os,
@@ -221,7 +217,6 @@ void Foam::topoSet::writeDebug
 }
 
 
-// Write maxElem elements, starting at iter. Updates iter and elemI.
 void Foam::topoSet::writeDebug
 (
     Ostream& os,

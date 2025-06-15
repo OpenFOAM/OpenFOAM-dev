@@ -24,35 +24,32 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "faceSet.H"
-#include "polyTopoChangeMap.H"
 #include "polyMesh.H"
+#include "polyTopoChangeMap.H"
 #include "syncTools.H"
-
 #include "addToRunTimeSelectionTable.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-defineTypeNameAndDebug(faceSet, 0);
+namespace Foam
+{
+    defineTypeNameAndDebug(faceSet, 0);
 
-addToRunTimeSelectionTable(topoSet, faceSet, word);
-addToRunTimeSelectionTable(topoSet, faceSet, size);
-addToRunTimeSelectionTable(topoSet, faceSet, set);
+    addToRunTimeSelectionTable(topoSet, faceSet, word);
+    addToRunTimeSelectionTable(topoSet, faceSet, size);
+    addToRunTimeSelectionTable(topoSet, faceSet, set);
+}
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-faceSet::faceSet(const IOobject& obj)
+Foam::faceSet::faceSet(const IOobject& obj)
 :
     topoSet(obj, typeName)
 {}
 
 
-faceSet::faceSet
+Foam::faceSet::faceSet
 (
     const polyMesh& mesh,
     const word& name,
@@ -66,7 +63,7 @@ faceSet::faceSet
 }
 
 
-faceSet::faceSet
+Foam::faceSet::faceSet
 (
     const polyMesh& mesh,
     const word& name,
@@ -78,7 +75,7 @@ faceSet::faceSet
 {}
 
 
-faceSet::faceSet
+Foam::faceSet::faceSet
 (
     const polyMesh& mesh,
     const word& name,
@@ -90,7 +87,7 @@ faceSet::faceSet
 {}
 
 
-faceSet::faceSet
+Foam::faceSet::faceSet
 (
     const polyMesh& mesh,
     const word& name,
@@ -104,13 +101,13 @@ faceSet::faceSet
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-faceSet::~faceSet()
+Foam::faceSet::~faceSet()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void faceSet::sync(const polyMesh& mesh)
+void Foam::faceSet::sync(const polyMesh& mesh)
 {
     boolList set(mesh.nFaces(), false);
 
@@ -149,19 +146,19 @@ void faceSet::sync(const polyMesh& mesh)
 }
 
 
-label faceSet::maxSize(const polyMesh& mesh) const
+Foam::label Foam::faceSet::maxSize(const polyMesh& mesh) const
 {
     return mesh.nFaces();
 }
 
 
-void faceSet::topoChange(const polyTopoChangeMap& map)
+void Foam::faceSet::topoChange(const polyTopoChangeMap& map)
 {
     updateLabels(map.reverseFaceMap());
 }
 
 
-void faceSet::writeDebug
+void Foam::faceSet::writeDebug
 (
     Ostream& os,
     const primitiveMesh& mesh,
@@ -171,9 +168,5 @@ void faceSet::writeDebug
     topoSet::writeDebug(os, mesh.faceCentres(), maxLen);
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //
