@@ -40,7 +40,7 @@ Usage
     {
         type            massSource;
 
-        cellSet         massSource;
+        cellZone        massSource;
 
         massFlowRate    1e-4;
     }
@@ -52,8 +52,11 @@ Usage
     {
         type            massSource;
 
-        select          points;
-        points          ((2.75 0.5 0));
+        cellZone
+        {
+            type            containsPoints;
+            points          ((2.75 0.5 0));
+        }
 
         massFlowRate
         {

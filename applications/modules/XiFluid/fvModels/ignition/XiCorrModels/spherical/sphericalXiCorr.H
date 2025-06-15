@@ -41,7 +41,7 @@ Usage
     Where:
     \table
         Property       | Description             | Required  | Default value
-        select         | Correction cell set selection | yes      |
+        cellZone       | Correction cellZone     | yes       |
         sphereFraction | Kernel sphere fraction  | no        | 1
         bMin           | Min b below which no correction | no | 0.01
     \endtable

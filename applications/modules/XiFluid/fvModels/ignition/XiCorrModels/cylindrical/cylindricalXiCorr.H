@@ -42,7 +42,7 @@ Usage
     Where:
     \table
         Property         | Description              | Required  | Default value
-        select           | Correction cell set selection | yes        |
+        cellZone         | Correction cellZone      | yes       |
         thickness        | Thickness of the 2D mesh | yes       |
         cylinderFraction | Kernel cylinder fraction | no        | 1
         bMin             | Min b below which no correction | no | 0.01

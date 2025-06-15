@@ -59,7 +59,7 @@ Usage
         weightType        | weighting in case of field-dependent particle\\
                             properties                     | no\\
                                                            | numberConcentration
-        select            | cellZone or all                | no        | all
+        cellZone          | cellZone                       | yes       |
         name              | name of cellZone if required   | no        |
         setFormat         | output format                  | yes       |
     \endtable

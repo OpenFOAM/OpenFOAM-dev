@@ -51,7 +51,7 @@ Usage
     Where:
     \table
         Property     | Description                 | Required   | Default value
-        select       | Ignition cell set selection | yes        |
+        cellZone     | Correction cellZone         | yes        |
         start        | Ignition start time         | yes        |
         duration     | Ignition duration           | yes        |
         strength     | Ignition strength [1/s]     | yes        |

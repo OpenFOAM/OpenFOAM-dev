@@ -31,11 +31,7 @@ Description
 Usage
     \table
         Property      | Description                    | Required? | Default
-        select        | Type of cell sub-set to \
-                        inject into, or 'all'          | maybe     | <inferred>
-        cellSet       | The name of the cell set       | if select is cellSet |
-        cellZone      | The name of the cell zone      | if select is cellZone |
-        points        | Points inside the cells        | if select is points |
+        cellZone      | The name of the cell zone      | yes       |
         number        | The number to inject           | if numberDensity is \
                                                          not specified |
         numberDensity | The number to inject per unit \

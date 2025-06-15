@@ -61,18 +61,18 @@ Usage
         log          | Write data to standard output       | no    | no
         writeFields  | Write the region field values       | yes   |
         writeLocation| Write the location (if available)   | no    | no
-        select       | fvCellZone type: see below           | yes   |
-        name         | Name of fvCellZone if required       | no    |
+        cellZone     | cellZone                            | yes   |
         operation    | Operation to perform                | yes   |
         weightField  | Name of field to apply weighting    | no    |
         weightFields | Names of fields to apply weighting  | no    |
         fields       | List of fields to operate on        | yes   |
     \endtable
 
-    Where \c select options are:
+    Where \c cellZone options are:
     \plaintable
-        cellZone     | requires a 'name' entry to specify the cellZone
-        all          | all cells
+        cellZone <name>    | Looks-up the named cellZone
+        cellZone {type <zoneGeneratorType>;...} | Generates the cellZone locally
+        cellZone all       | Selects all cells
     \endplaintable
 
     The \c operation is one of:
