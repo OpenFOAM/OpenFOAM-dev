@@ -93,11 +93,14 @@ public:
             const Enum defaultValue
         ) const;
 
+        //- Select the name from the dictionary and return the
+        //  corresponding enumeration element.
+        //  If more than one of the options is present in the dictionary
+        //  generate a FatalError
+        Enum select(const dictionary& dict) const;
+
         //- Write the name representation of the enumeration to an Ostream
         void write(const Enum e, Ostream&) const;
-
-        //- The set of names as a list of strings
-        static stringList strings();
 
         //- The set of names as a list of words
         static wordList words();

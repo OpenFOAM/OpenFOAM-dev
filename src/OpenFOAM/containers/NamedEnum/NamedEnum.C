@@ -33,25 +33,25 @@ Foam::NamedEnum<Enum, nEnum>::NamedEnum()
 :
     HashTable<unsigned int>(2*nEnum)
 {
-    for (unsigned int enumI = 0; enumI < nEnum; ++enumI)
+    for (unsigned int ei = 0; ei < nEnum; ei++)
     {
-        if (!names[enumI] || names[enumI][0] == '\0')
+        if (!names[ei] || names[ei][0] == '\0')
         {
-            stringList goodNames(enumI);
+            stringList goodNames(ei);
 
-            for (unsigned int i = 0; i < enumI; ++i)
+            for (unsigned int i = 0; i < ei; ++i)
             {
                 goodNames[i] = names[i];
             }
 
             FatalErrorInFunction
-                << "Illegal enumeration name at position " << enumI << endl
+                << "Illegal enumeration name at position " << ei << endl
                 << "after entries " << goodNames << ".\n"
                 << "Possibly your NamedEnum<Enum, nEnum>::names array"
                 << " is not of size " << nEnum << endl
                 << abort(FatalError);
         }
-        insert(names[enumI], enumI);
+        insert(names[ei], ei);
     }
 }
 
@@ -91,28 +91,40 @@ Enum Foam::NamedEnum<Enum, nEnum>::lookupOrDefault
 
 
 template<class Enum, unsigned int nEnum>
-void Foam::NamedEnum<Enum, nEnum>::write(const Enum e, Ostream& os) const
+Enum Foam::NamedEnum<Enum, nEnum>::select(const dictionary& dict) const
 {
-    os  << operator[](e);
+    Enum selection = Enum(0);
+    unsigned int nSelections = 0;
+    for (unsigned int ei = 0; ei < nEnum; ei++)
+    {
+        if (dict.found(names[ei]))
+        {
+            selection = Enum(ei);
+            nSelections++;
+        }
+    }
+
+    if (nSelections == 0)
+    {
+        FatalIOErrorInFunction(dict)
+            << "None of the options selected, please specify one of: "
+            << sortedToc() << exit(FatalIOError);
+    }
+    else if (nSelections > 1)
+    {
+        FatalIOErrorInFunction(dict)
+            << "More than one option selected, please specify one of: "
+            << sortedToc() << exit(FatalIOError);
+    }
+
+    return selection;
 }
 
 
 template<class Enum, unsigned int nEnum>
-Foam::stringList Foam::NamedEnum<Enum, nEnum>::strings()
+void Foam::NamedEnum<Enum, nEnum>::write(const Enum e, Ostream& os) const
 {
-    stringList lst(nEnum);
-
-    label nElem = 0;
-    for (unsigned int enumI = 0; enumI < nEnum; ++enumI)
-    {
-        if (names[enumI] && names[enumI][0])
-        {
-            lst[nElem++] = names[enumI];
-        }
-    }
-
-    lst.setSize(nElem);
-    return lst;
+    os  << operator[](e);
 }
 
 
@@ -122,11 +134,11 @@ Foam::wordList Foam::NamedEnum<Enum, nEnum>::words()
     wordList lst(nEnum);
 
     label nElem = 0;
-    for (unsigned int enumI = 0; enumI < nEnum; ++enumI)
+    for (unsigned int ei = 0; ei < nEnum; ei++)
     {
-        if (names[enumI] && names[enumI][0])
+        if (names[ei] && names[ei][0])
         {
-            lst[nElem++] = names[enumI];
+            lst[nElem++] = names[ei];
         }
     }
 

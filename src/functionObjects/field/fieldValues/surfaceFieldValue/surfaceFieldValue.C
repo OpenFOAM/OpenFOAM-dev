@@ -226,7 +226,7 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::setPatchesFaces
         if (patchiis.empty())
         {
             FatalErrorInFunction
-                << type() << " " << this->name() << ": "
+                << type() << ' ' << this->name() << ": "
                 << selectionTypeNames[selectionType_]
                 << "(" << patchNames[i] << "):" << nl
                 << "    Unknown patch name: " << patchNames[i]
@@ -452,65 +452,63 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::initialise
     const dictionary& dict
 )
 {
-    if (dict.found("faceZone"))
+    // Selection type name
+    const word selection(selectionTypeNames[selectionType_]);
+
+    switch (selectionType_)
     {
-        selectionType_ = selectionTypes::faceZone;
-
-        if (dict.isDict("faceZone"))
+        case selectionTypes::faceZone:
         {
-            autoPtr<zoneGenerator> zg
-            (
-                zoneGenerator::New
-                (
-                    "zone",
-                    zoneGenerator::zoneTypes::face,
-                    mesh_,
-                    dict.subDict("faceZone")
-                )
-            );
-
-            setFaceZoneFaces(zg->generate().fZone());
-        }
-        else
-        {
-            const word zoneName(dict.lookup<word>("faceZone"));
-            const label zoneId(mesh_.faceZones().findIndex(zoneName));
-
-            if (zoneId < 0)
+            if (dict.isDict(selection))
             {
-                FatalErrorInFunction
-                    << type() << " " << name() << ": "
-                    << selectionTypeNames[selectionType_]
-                    << "(" << zoneName << "):" << nl
-                    << "    Unknown faceZone: " << zoneName
-                    << ". Available faceZones: " << mesh_.faceZones().toc()
-                    << nl << exit(FatalError);
-            }
+                autoPtr<zoneGenerator> zg
+                (
+                    zoneGenerator::New
+                    (
+                        selection,
+                        zoneGenerator::zoneTypes::face,
+                        mesh_,
+                        dict.subDict(selection)
+                    )
+                );
 
-            setFaceZoneFaces(mesh_.faceZones()[zoneId]);
+                setFaceZoneFaces(zg->generate().fZone());
+            }
+            else
+            {
+                const word zoneName(dict.lookup<word>(selection));
+                const label zoneId(mesh_.faceZones().findIndex(zoneName));
+
+                if (zoneId < 0)
+                {
+                    FatalErrorInFunction
+                        << type() << ' ' << name() << ": "
+                        << selection
+                        << '(' << zoneName << "):" << nl
+                        << "    Unknown faceZone: " << zoneName
+                        << ". Available faceZones: " << mesh_.faceZones().toc()
+                        << nl << exit(FatalError);
+                }
+
+                setFaceZoneFaces(mesh_.faceZones()[zoneId]);
+            }
+            break;
         }
-    }
-    else if (dict.found("patches"))
-    {
-        selectionType_ = selectionTypes::patches;
-        setPatchesFaces(dict.lookup<wordReList>("patches"));
-    }
-    else if (dict.found("patch"))
-    {
-        selectionType_ = selectionTypes::patch;
-        setPatchFaces(dict.lookup<wordRe>("patch"));
-    }
-    else if (dict.found("sampledSurface"))
-    {
-        selectionType_ = selectionTypes::sampledSurface;
-        setSampledSurfaceFaces(dict.subDict("sampledSurface"));
-    }
-    else
-    {
-        FatalIOErrorInFunction(dict)
-            << type() << " " << name() << ": "
-            << "    Unknown selection,  valid selection types are:"
-            << selectionTypeNames.sortedToc() << nl << exit(FatalError);
+        case selectionTypes::patch:
+        {
+            setPatchFaces(dict.lookup<wordRe>(selection));
+            break;
+        }
+        case selectionTypes::patches:
+        {
+            setPatchesFaces(dict.lookup<wordReList>(selection));
+            break;
+        }
+        case selectionTypes::sampledSurface:
+        {
+            setSampledSurfaceFaces(dict.subDict(selection));
+            break;
+        }
     }
 
     if (nFaces_ > 0)
@@ -522,7 +520,7 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::initialise
 
         totalArea_ = totalArea();
 
-        Info<< type() << " " << name() << ":" << nl
+        Info<< type() << ' ' << name() << ":" << nl
             << "    total faces  = " << nFaces_
             << nl
             << "    total area   = " << totalArea_
@@ -530,7 +528,7 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::initialise
 
         if (dict.readIfPresent("weightFields", weightFieldNames_))
         {
-            Info<< name() << " " << operationTypeNames_[operation_]
+            Info<< name() << ' ' << operationTypeNames_[operation_]
                 << " weight fields " << weightFieldNames_;
         }
         else if (dict.found("weightField"))
@@ -538,7 +536,7 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::initialise
             weightFieldNames_.setSize(1);
             dict.lookup("weightField") >> weightFieldNames_[0];
 
-            Info<< name() << " " << operationTypeNames_[operation_]
+            Info<< name() << ' ' << operationTypeNames_[operation_]
                 << " weight field " << weightFieldNames_[0];
         }
 
@@ -661,6 +659,7 @@ Foam::functionObjects::fieldValues::surfaceFieldValue::surfaceFieldValue
     fieldValue(name, runTime, dict, typeName),
     dict_(dict),
     surfaceWriterPtr_(nullptr),
+    selectionType_(selectionTypeNames.select(dict)),
     selectionName_(string::null),
     operation_(operationTypeNames_.read(dict.lookup("operation"))),
     weightFieldNames_(),
@@ -683,6 +682,7 @@ Foam::functionObjects::fieldValues::surfaceFieldValue::surfaceFieldValue
     fieldValue(name, obr, dict, typeName),
     dict_(dict),
     surfaceWriterPtr_(nullptr),
+    selectionType_(selectionTypeNames.select(dict)),
     selectionName_(string::null),
     operation_(operationTypeNames_.read(dict.lookup("operation"))),
     weightFieldNames_(),
