@@ -14,7 +14,6 @@ type            surfaceFieldValue;
 libs            ( "libfieldFunctionObjects.so" );
 log             no;
 writeFields     no;
-select          patch;
 patch           stirrer;
 operation       sum;
 fields          (stressUSf);
