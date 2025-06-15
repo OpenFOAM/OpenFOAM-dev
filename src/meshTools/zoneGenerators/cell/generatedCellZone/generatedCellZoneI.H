@@ -27,13 +27,13 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline bool Foam::polyCellSet::all() const
+inline bool Foam::generatedCellZone::all() const
 {
     return all_;
 }
 
 
-inline const Foam::word& Foam::polyCellSet::cellZoneName() const
+inline const Foam::word& Foam::generatedCellZone::cellZoneName() const
 {
     static word allName_("all");
 
@@ -48,7 +48,7 @@ inline const Foam::word& Foam::polyCellSet::cellZoneName() const
 }
 
 
-inline Foam::labelUList Foam::polyCellSet::cells() const
+inline Foam::labelUList Foam::generatedCellZone::cells() const
 {
     if (all_)
     {
@@ -61,7 +61,7 @@ inline Foam::labelUList Foam::polyCellSet::cells() const
 }
 
 
-inline Foam::label Foam::polyCellSet::nCells() const
+inline Foam::label Foam::generatedCellZone::nCells() const
 {
     if (all_)
     {
@@ -74,7 +74,7 @@ inline Foam::label Foam::polyCellSet::nCells() const
 }
 
 
-inline Foam::label Foam::polyCellSet::celli(const label i) const
+inline Foam::label Foam::generatedCellZone::celli(const label i) const
 {
     if (all_)
     {

@@ -56,7 +56,7 @@ Usage
     \endverbatim
 
 See also
-    Foam::polyCellSet
+    Foam::generatedCellZone
 
 SourceFiles
     volumeInjection.C
@@ -67,7 +67,7 @@ SourceFiles
 #define volumeInjection_H
 
 #include "LagrangianInjection.H"
-#include "polyCellSet.H"
+#include "generatedCellZone.H"
 #include "restartableRandomGenerator.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -90,7 +90,7 @@ private:
     // Private Data
 
         //- The set of cells into which to inject
-        mutable polyCellSet set_;
+        mutable generatedCellZone set_;
 
         //- Do we have the number (true) or the number density (false)
         bool haveNumber_;

@@ -59,7 +59,7 @@ void Foam::fvCellZone::writeFileHeader
 
 Foam::fvCellZone::fvCellZone(const fvMesh& mesh)
 :
-    polyCellSet(mesh),
+    generatedCellZone(mesh),
     mesh_(mesh),
     V_(gSum(mesh_.V()))
 {}
@@ -67,7 +67,7 @@ Foam::fvCellZone::fvCellZone(const fvMesh& mesh)
 
 Foam::fvCellZone::fvCellZone(const fvMesh& mesh, const dictionary& dict)
 :
-    polyCellSet(mesh, dict),
+    generatedCellZone(mesh, dict),
     mesh_(mesh),
     V_(NaN)
 {
@@ -85,35 +85,35 @@ Foam::fvCellZone::~fvCellZone()
 
 void Foam::fvCellZone::movePoints()
 {
-    polyCellSet::movePoints();
+    generatedCellZone::movePoints();
     setV();
 }
 
 
 void Foam::fvCellZone::topoChange(const polyTopoChangeMap& map)
 {
-    polyCellSet::topoChange(map);
+    generatedCellZone::topoChange(map);
     setV();
 }
 
 
 void Foam::fvCellZone::mapMesh(const polyMeshMap& map)
 {
-    polyCellSet::mapMesh(map);
+    generatedCellZone::mapMesh(map);
     setV();
 }
 
 
 void Foam::fvCellZone::distribute(const polyDistributionMap& map)
 {
-    polyCellSet::distribute(map);
+    generatedCellZone::distribute(map);
     setV();
 }
 
 
 bool Foam::fvCellZone::read(const dictionary& dict)
 {
-    polyCellSet::read(dict);
+    generatedCellZone::read(dict);
     setV();
 
     return true;

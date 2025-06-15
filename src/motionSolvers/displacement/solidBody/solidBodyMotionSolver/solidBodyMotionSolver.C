@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "solidBodyMotionSolver.H"
-#include "polyCellSet.H"
+#include "generatedCellZone.H"
 #include "transformField.H"
 #include "syncTools.H"
 #include "polyTopoChangeMap.H"

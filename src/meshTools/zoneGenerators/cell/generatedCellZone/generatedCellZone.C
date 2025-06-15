@@ -23,11 +23,11 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "polyCellSet.H"
+#include "generatedCellZone.H"
 #include "polyMesh.H"
 #include "containsPoints.H"
 
-Foam::labelUList Foam::polyCellSet::identityMap(const label len) const
+Foam::labelUList Foam::generatedCellZone::identityMap(const label len) const
 {
     // Static identity list, resized as required
     static labelList map;
@@ -48,14 +48,18 @@ Foam::labelUList Foam::polyCellSet::identityMap(const label len) const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::polyCellSet::polyCellSet(const polyMesh& mesh)
+Foam::generatedCellZone::generatedCellZone(const polyMesh& mesh)
 :
     mesh_(mesh),
     all_(true)
 {}
 
 
-Foam::polyCellSet::polyCellSet(const polyMesh& mesh, const dictionary& dict)
+Foam::generatedCellZone::generatedCellZone
+(
+    const polyMesh& mesh,
+    const dictionary& dict
+)
 :
     mesh_(mesh),
     all_(true)
@@ -66,13 +70,13 @@ Foam::polyCellSet::polyCellSet(const polyMesh& mesh, const dictionary& dict)
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::polyCellSet::~polyCellSet()
+Foam::generatedCellZone::~generatedCellZone()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::polyCellSet::movePoints()
+void Foam::generatedCellZone::movePoints()
 {
     if (!all())
     {
@@ -81,7 +85,7 @@ void Foam::polyCellSet::movePoints()
 }
 
 
-void Foam::polyCellSet::topoChange(const polyTopoChangeMap& map)
+void Foam::generatedCellZone::topoChange(const polyTopoChangeMap& map)
 {
     if (!all())
     {
@@ -90,7 +94,7 @@ void Foam::polyCellSet::topoChange(const polyTopoChangeMap& map)
 }
 
 
-void Foam::polyCellSet::mapMesh(const polyMeshMap& map)
+void Foam::generatedCellZone::mapMesh(const polyMeshMap& map)
 {
     if (!all())
     {
@@ -99,7 +103,7 @@ void Foam::polyCellSet::mapMesh(const polyMeshMap& map)
 }
 
 
-void Foam::polyCellSet::distribute(const polyDistributionMap& map)
+void Foam::generatedCellZone::distribute(const polyDistributionMap& map)
 {
     if (!all())
     {
@@ -108,7 +112,7 @@ void Foam::polyCellSet::distribute(const polyDistributionMap& map)
 }
 
 
-bool Foam::polyCellSet::read(const dictionary& dict)
+bool Foam::generatedCellZone::read(const dictionary& dict)
 {
     if (dict.found("cellZone"))
     {

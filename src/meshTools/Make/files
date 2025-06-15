@@ -104,8 +104,6 @@ topoSets/topoSet.C
 topoSets/faceSet.C
 topoSets/pointSet.C
 
-topoSets/polyCellSet/polyCellSet.C
-
 momentOfInertia/momentOfInertia.C
 
 triSurface/orientedSurface/orientedSurface.C
@@ -243,6 +241,7 @@ zoneGenerators/volume/insideSurface/insideSurface.C
 zoneGenerators/point/point/pointZoneGenerator.C
 
 zoneGenerators/cell/containsPoints/containsPoints.C
+zoneGenerators/cell/generatedCellZone/generatedCellZone.C
 
 zoneGenerators/face/face/faceZoneGenerator.C
 zoneGenerators/face/patch/patchZoneGenerator.C

@@ -47,15 +47,18 @@ Usage
         }
 
         // Select the cell containing the given point
+        // and update the cells with respect to the fixed points
+        // if the mesh moves
         cellZone
         {
             type            containsPoints;
+            moveUpdate      true;
             points          ((0.075 0.2 0.05));
         }
     \endverbatim
 
 See also
-    Foam::polyCellSet
+    Foam::generatedCellZone
     Foam::generatedZoneSet
     Foam::zoneGenerator
 
@@ -68,7 +71,7 @@ SourceFiles
 #ifndef fvCellZone_H
 #define fvCellZone_H
 
-#include "polyCellSet.H"
+#include "generatedCellZone.H"
 #include "writeFile.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -86,7 +89,7 @@ class polyDistributionMap;
 
 class fvCellZone
 :
-    public polyCellSet
+    public generatedCellZone
 {
     // Private data
 
