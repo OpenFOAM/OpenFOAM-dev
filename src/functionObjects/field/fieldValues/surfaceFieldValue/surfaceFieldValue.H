@@ -25,11 +25,11 @@ Class
     Foam::functionObjects::fieldValues::surfaceFieldValue
 
 Description
-    Surface (face) region selection class.
+    Surface, patch or faceZone selection class
 
     Given a list of user-specified fields and a selection of mesh (or general
     surface) faces, a number of operations can be performed, such as sums,
-    averages and integrations.
+    averages and integrals.
 
     For example, to calculate the volumetric or mass flux across a patch,
     apply the 'orientedSum' operator to the flux field (typically \c phi)
