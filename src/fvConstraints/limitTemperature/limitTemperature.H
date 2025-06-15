@@ -55,7 +55,7 @@ SourceFiles
 #define limitTemperature_H
 
 #include "fvConstraint.H"
-#include "fvCellSet.H"
+#include "fvCellZone.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -75,7 +75,7 @@ class limitTemperature
     // Private data
 
         //- The set of cells the fvConstraint applies to
-        fvCellSet set_;
+        fvCellZone set_;
 
         //- Minimum temperature limit [K]
         scalar Tmin_;

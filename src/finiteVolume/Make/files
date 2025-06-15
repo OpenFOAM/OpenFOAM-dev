@@ -5,7 +5,7 @@ fvMesh/singleCellFvMesh/singleCellFvMesh.C
 
 fvMesh/zeroDimensionalFvMesh/zeroDimensionalFvMesh.C
 
-fvMesh/fvCellSet/fvCellSet.C
+fvMesh/fvCellZone/fvCellZone.C
 
 fvBoundaryMesh = fvMesh/fvBoundaryMesh
 $(fvBoundaryMesh)/fvBoundaryMesh.C

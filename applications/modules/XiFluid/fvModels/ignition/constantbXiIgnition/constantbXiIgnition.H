@@ -96,7 +96,7 @@ protected:
     // Protected Data
 
         //- The set of ignition cells
-        fvCellSet set_;
+        fvCellZone set_;
 
         autoPtr<XiCorrModel> XiCorrModel_;
 

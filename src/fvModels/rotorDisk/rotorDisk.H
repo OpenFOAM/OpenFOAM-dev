@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,7 +101,7 @@ SourceFiles
 #define rotorDisk_H
 
 #include "fvModel.H"
-#include "fvCellSet.H"
+#include "fvCellZone.H"
 #include "cylindricalCS.H"
 #include "cylindrical.H"
 #include "NamedEnum.H"
@@ -158,7 +158,7 @@ private:
     // Private data
 
         //- The set of cells the fvConstraint applies to
-        fvCellSet set_;
+        fvCellZone set_;
 
         //- Name of the velocity field
         word UName_;
@@ -277,7 +277,7 @@ public:
             //  Positive anti-clockwise when looking along -ve lift direction
             inline scalar omega() const;
 
-            inline const fvCellSet& set() const;
+            inline const fvCellZone& set() const;
 
             //- Return the cell centre positions in local rotor frame
             // (Cylindrical r, theta, z)

@@ -51,7 +51,7 @@ SourceFiles
 #define limitMag_H
 
 #include "fvConstraint.H"
-#include "fvCellSet.H"
+#include "fvCellZone.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -71,7 +71,7 @@ class limitMag
     // Private data
 
         //- The set of cells the fvConstraint applies to
-        fvCellSet set_;
+        fvCellZone set_;
 
         //- Field name
         word fieldName_;

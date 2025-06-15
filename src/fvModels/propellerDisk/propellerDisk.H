@@ -91,7 +91,7 @@ SourceFiles
 
 #include "fvModel.H"
 #include "logFile.H"
-#include "fvCellSet.H"
+#include "fvCellZone.H"
 #include "Function1.H"
 #include "vector2D.H"
 #include "forces.H"
@@ -117,7 +117,7 @@ protected:
     // Protected Data
 
         //- The set of cells the fvConstraint applies to
-        fvCellSet set_;
+        fvCellZone set_;
 
         //- The name of the phase to which this fvModel applies
         word phaseName_;

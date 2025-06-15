@@ -59,7 +59,7 @@ SourceFiles
 #define acceleration_H
 
 #include "fvModel.H"
-#include "fvCellSet.H"
+#include "fvCellZone.H"
 #include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -80,7 +80,7 @@ class acceleration
     // Private Data
 
         //- The set of cells the fvConstraint applies to
-        fvCellSet set_;
+        fvCellZone set_;
 
         //- Name of the velocity field
         word UName_;

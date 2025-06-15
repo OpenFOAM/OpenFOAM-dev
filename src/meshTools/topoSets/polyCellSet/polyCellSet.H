@@ -45,6 +45,13 @@ Usage
             type        box;
             box         (3.48 -0.1 -0.1) (3.5 0.1 0.1);
         }
+
+        // Select the cell containing the given point
+        cellZone
+        {
+            type            containsPoints;
+            points          ((0.075 0.2 0.05));
+        }
     \endverbatim
 
 See also

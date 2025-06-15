@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "zeroDimensionalMassSourceBase.H"
-#include "fvCellSet.H"
+#include "fvCellZone.H"
 #include "basicThermo.H"
 #include "addToRunTimeSelectionTable.H"
 

@@ -73,7 +73,7 @@ SourceFiles
 #define heatTransfer_H
 
 #include "fvModel.H"
-#include "fvCellSet.H"
+#include "fvCellZone.H"
 #include "heatTransferCoefficientModel.H"
 #include "heatTransferAv.H"
 
@@ -95,7 +95,7 @@ class heatTransfer
     // Private data
 
         //- The set of cells the model applies to
-        fvCellSet set_;
+        fvCellZone set_;
 
         //- Name of the phase
         word phaseName_;

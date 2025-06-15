@@ -120,7 +120,7 @@ SourceFiles
 #define solidificationMelting_H
 
 #include "fvModel.H"
-#include "fvCellSet.H"
+#include "fvCellZone.H"
 #include "fvMesh.H"
 #include "volFields.H"
 #include "NamedEnum.H"
@@ -156,7 +156,7 @@ private:
     // Private Data
 
         //- The set of cells the fvConstraint applies to
-        fvCellSet set_;
+        fvCellZone set_;
 
         //- Temperature at which isotherm melting occurs
         //  and not isotherm melting starts e.g. eutectic [K]

@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fvCellSet
+    Foam::fvCellZone
 
 Description
     cellZone selection or generation class for fvMesh
@@ -45,6 +45,13 @@ Usage
             type        box;
             box         (3.48 -0.1 -0.1) (3.5 0.1 0.1);
         }
+
+        // Select the cell containing the given point
+        cellZone
+        {
+            type            containsPoints;
+            points          ((0.075 0.2 0.05));
+        }
     \endverbatim
 
 See also
@@ -53,13 +60,13 @@ See also
     Foam::zoneGenerator
 
 SourceFiles
-    fvCellSet.C
-    fvCellSetI.H
+    fvCellZone.C
+    fvCellZoneI.H
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef fvCellSet_H
-#define fvCellSet_H
+#ifndef fvCellZone_H
+#define fvCellZone_H
 
 #include "polyCellSet.H"
 #include "writeFile.H"
@@ -74,10 +81,10 @@ class polyMeshMap;
 class polyDistributionMap;
 
 /*---------------------------------------------------------------------------*\
-                        Class fvCellSet Declaration
+                        Class fvCellZone Declaration
 \*---------------------------------------------------------------------------*/
 
-class fvCellSet
+class fvCellZone
 :
     public polyCellSet
 {
@@ -113,14 +120,14 @@ public:
     // Constructors
 
         //- Construct from mesh selecting all cells
-        fvCellSet(const fvMesh& mesh);
+        fvCellZone(const fvMesh& mesh);
 
         //- Construct from mesh and dictionary
-        fvCellSet(const fvMesh& mesh, const dictionary& dict);
+        fvCellZone(const fvMesh& mesh, const dictionary& dict);
 
 
     //- Destructor
-    ~fvCellSet();
+    ~fvCellZone();
 
 
     // Member Functions
@@ -159,7 +166,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "fvCellSetI.H"
+#include "fvCellZoneI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

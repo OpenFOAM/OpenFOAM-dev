@@ -78,7 +78,7 @@ SourceFiles
 #define VoFSolidificationMelting_H
 
 #include "fvModel.H"
-#include "fvCellSet.H"
+#include "fvCellZone.H"
 #include "fvMesh.H"
 #include "volFields.H"
 #include "Function1.H"
@@ -104,7 +104,7 @@ class VoFSolidificationMelting
     // Private Data
 
         //- The set of cells the fvConstraint applies to
-        fvCellSet set_;
+        fvCellZone set_;
 
         //- Solid fraction as a function of temperature
         autoPtr<Function1<scalar>> alphaSolidT_;

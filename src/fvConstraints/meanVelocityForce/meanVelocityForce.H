@@ -56,7 +56,7 @@ SourceFiles
 #define meanVelocityForce_H
 
 #include "fvConstraint.H"
-#include "fvCellSet.H"
+#include "fvCellZone.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -76,7 +76,7 @@ class meanVelocityForce
     // Private data
 
         //- The set of cells the fvConstraint applies to
-        fvCellSet set_;
+        fvCellZone set_;
 
         //- Name of the velocity field
         word UName_;

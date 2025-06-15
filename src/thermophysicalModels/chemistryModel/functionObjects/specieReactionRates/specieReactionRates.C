@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,7 @@ void Foam::functionObjects::specieReactionRates::writeFileHeader(const label i)
 {
     writeHeader(file(), "Specie reaction rates");
 
-    fvCellSet::writeFileHeader(*this, file());
+    fvCellZone::writeFileHeader(*this, file());
 
     writeHeaderValue(file(), "nSpecie", chemistryModel_.nSpecie());
     writeHeaderValue(file(), "nReaction", chemistryModel_.nReaction());
@@ -81,7 +81,7 @@ Foam::functionObjects::specieReactionRates::specieReactionRates
 )
 :
     fvMeshFunctionObject(name, runTime, dict),
-    fvCellSet(fvMeshFunctionObject::mesh_, dict),
+    fvCellZone(fvMeshFunctionObject::mesh_, dict),
     logFiles(obr_, name),
     phaseName_(dict.lookupOrDefault<word>("phase", word::null)),
     chemistryModel_

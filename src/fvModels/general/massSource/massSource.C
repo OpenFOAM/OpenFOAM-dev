@@ -69,7 +69,7 @@ Foam::fv::massSource::massSource
 )
 :
     massSourceBase(name, modelType, mesh, dict),
-    setPtr_(new fvCellSet(mesh)),
+    setPtr_(new fvCellZone(mesh)),
     massFlowRate_()
 {
     readCoeffs(coeffs(dict));

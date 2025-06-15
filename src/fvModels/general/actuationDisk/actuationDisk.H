@@ -69,7 +69,7 @@ SourceFiles
 #define actuationDisk_H
 
 #include "fvModel.H"
-#include "fvCellSet.H"
+#include "fvCellZone.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -91,7 +91,7 @@ protected:
     // Protected Data
 
         //- The set of cells the fvConstraint applies to
-        fvCellSet set_;
+        fvCellZone set_;
 
         //- The name of the phase to which this fvModel applies
         word phaseName_;

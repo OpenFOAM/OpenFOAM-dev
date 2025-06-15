@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -353,7 +353,7 @@ populationBalanceSizeDistribution
 )
 :
     fvMeshFunctionObject(name, runTime, dict),
-    fvCellSet(fvMeshFunctionObject::mesh_, dict),
+    fvCellZone(fvMeshFunctionObject::mesh_, dict),
     file_(obr_, name),
     mesh_(fvMeshFunctionObject::mesh_),
     popBalName_(dict.lookup("populationBalance")),

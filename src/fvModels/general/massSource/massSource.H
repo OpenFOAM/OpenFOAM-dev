@@ -78,7 +78,7 @@ See also
 #define massSource_H
 
 #include "massSourceBase.H"
-#include "fvCellSet.H"
+#include "fvCellZone.H"
 #include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -101,7 +101,7 @@ private:
     // Private Data
 
         //- The set of cells the source applies to
-        autoPtr<fvCellSet> setPtr_;
+        autoPtr<fvCellZone> setPtr_;
 
         //- Mass flow rate
         autoPtr<Function1<scalar>> massFlowRate_;

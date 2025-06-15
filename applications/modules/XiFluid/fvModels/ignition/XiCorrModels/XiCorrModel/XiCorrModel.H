@@ -53,7 +53,7 @@ SourceFiles
 #ifndef XiCorrModel_H
 #define XiCorrModel_H
 
-#include "fvCellSet.H"
+#include "fvCellZone.H"
 #include "volFieldsFwd.H"
 #include "dimensionedTypes.H"
 #include "runTimeSelectionTables.H"
@@ -72,7 +72,7 @@ class XiCorrModel
     // Private Data
 
         //- The set of Xi correction cells
-        fvCellSet set_;
+        fvCellZone set_;
 
         //- Minimum b below which the Xi correction is not applied
         //  Defaults to 0.01

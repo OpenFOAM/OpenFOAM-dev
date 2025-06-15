@@ -93,7 +93,7 @@ SourceFiles
 #define effectivenessHeatExchanger_H
 
 #include "fvModel.H"
-#include "fvCellSet.H"
+#include "fvCellZone.H"
 #include "Function2.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -114,7 +114,7 @@ class effectivenessHeatExchanger
     // Private data
 
         //- The set of cells the fvConstraint applies to
-        fvCellSet set_;
+        fvCellZone set_;
 
         //- Secondary flow mass rate [kg/s]
         scalar secondaryMassFlowRate_;

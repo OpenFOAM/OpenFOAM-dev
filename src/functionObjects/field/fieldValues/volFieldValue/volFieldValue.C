@@ -152,7 +152,7 @@ void Foam::functionObjects::fieldValues::volFieldValue::writeFileHeader
     const label i
 )
 {
-    fvCellSet::writeFileHeader(*this, file());
+    fvCellZone::writeFileHeader(*this, file());
 
     writeCommented(file(), "Time");
 
@@ -232,7 +232,7 @@ Foam::functionObjects::fieldValues::volFieldValue::volFieldValue
 )
 :
     fieldValue(name, runTime, dict, typeName),
-    fvCellSet(fieldValue::mesh_, dict),
+    fvCellZone(fieldValue::mesh_, dict),
     writeLocation_(false),
     operation_(operationTypeNames_.read(dict.lookup("operation"))),
     scaleFactor_(1)
@@ -249,7 +249,7 @@ Foam::functionObjects::fieldValues::volFieldValue::volFieldValue
 )
 :
     fieldValue(name, obr, dict, typeName),
-    fvCellSet(fieldValue::mesh_, dict),
+    fvCellZone(fieldValue::mesh_, dict),
     writeLocation_(false),
     operation_(operationTypeNames_.read(dict.lookup("operation"))),
     scaleFactor_(1)

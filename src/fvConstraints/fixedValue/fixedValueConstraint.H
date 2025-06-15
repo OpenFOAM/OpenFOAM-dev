@@ -53,7 +53,7 @@ SourceFiles
 #define fixedValueConstraint_H
 
 #include "fvConstraint.H"
-#include "fvCellSet.H"
+#include "fvCellZone.H"
 #include "unknownTypeFunction1.H"
 #include "HashPtrTable.H"
 
@@ -75,7 +75,7 @@ class fixedValueConstraint
     // Private Member Data
 
         //- The set of cells the fvConstraint applies to
-        fvCellSet set_;
+        fvCellZone set_;
 
         //- Field values
         HashPtrTable<unknownTypeFunction1> fieldValues_;

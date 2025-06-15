@@ -221,7 +221,7 @@ Foam::fv::volumeSource::volumeSource
 :
     fvTotalSource(name, modelType, mesh, dict),
     alphaName_(),
-    setPtr_(new fvCellSet(mesh)),
+    setPtr_(new fvCellZone(mesh)),
     volumetricFlowRate_()
 {
     readCoeffs(coeffs(dict));

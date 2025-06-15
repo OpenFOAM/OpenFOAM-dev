@@ -46,7 +46,7 @@ Description
 
 See also
     Foam::functionObjects::fvMeshFunctionObject
-    Foam::fvCellSet
+    Foam::fvCellZone
     Foam::functionObjects::logFiles
 
 SourceFiles
@@ -58,7 +58,7 @@ SourceFiles
 #define functionObjects_reactionRates_H
 
 #include "fvMeshFunctionObject.H"
-#include "fvCellSet.H"
+#include "fvCellZone.H"
 #include "logFiles.H"
 #include "basicChemistryModel.H"
 
@@ -76,7 +76,7 @@ namespace functionObjects
 class reactionRates
 :
     public fvMeshFunctionObject,
-    public fvCellSet,
+    public fvCellZone,
     public logFiles
 {
     // Private Member Data

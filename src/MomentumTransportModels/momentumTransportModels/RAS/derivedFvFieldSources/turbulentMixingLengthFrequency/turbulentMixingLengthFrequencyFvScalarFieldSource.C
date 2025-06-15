@@ -25,7 +25,7 @@ License
 
 #include "turbulentMixingLengthFrequencyFvScalarFieldSource.H"
 #include "addToRunTimeSelectionTable.H"
-#include "fvCellSet.H"
+#include "fvCellZone.H"
 #include "volFields.H"
 #include "momentumTransportModel.H"
 
