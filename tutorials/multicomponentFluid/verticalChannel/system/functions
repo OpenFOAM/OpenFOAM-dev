@@ -21,7 +21,6 @@ surfaceFieldValue1
     writeControl    writeTime;
     log             yes;
     writeFields     no;
-    select          patch;
     patch           outlet;
     operation       average;
     weightField     phi;

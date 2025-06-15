@@ -22,7 +22,6 @@ inletFlux
     log             true;
     // Output field values as well
     writeFields     false;
-    select          patch;
     patch           inlet;
     operation       sum;
 

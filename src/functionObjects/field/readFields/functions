@@ -36,7 +36,6 @@ faceObj2
     writeInterval   1;
     log             true;
     writeFields     true;
-    select          faceZone;
     faceZone        f0;
     operation       areaAverage;
 

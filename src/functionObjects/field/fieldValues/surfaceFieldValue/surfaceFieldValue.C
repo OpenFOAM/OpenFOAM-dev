@@ -452,68 +452,65 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::initialise
     const dictionary& dict
 )
 {
-    switch (selectionType_)
+    if (dict.found("faceZone"))
     {
-        case selectionTypes::faceZone:
+        selectionType_ = selectionTypes::faceZone;
+
+        if (dict.isDict("faceZone"))
         {
-            if (dict.isDict("faceZone"))
-            {
-                autoPtr<zoneGenerator> zg
+            autoPtr<zoneGenerator> zg
+            (
+                zoneGenerator::New
                 (
-                    zoneGenerator::New
-                    (
-                        "zone",
-                        zoneGenerator::zoneTypes::face,
-                        mesh_,
-                        dict.subDict("faceZone")
-                    )
-                );
+                    "zone",
+                    zoneGenerator::zoneTypes::face,
+                    mesh_,
+                    dict.subDict("faceZone")
+                )
+            );
 
-                setFaceZoneFaces(zg->generate().fZone());
-            }
-            else
+            setFaceZoneFaces(zg->generate().fZone());
+        }
+        else
+        {
+            const word zoneName(dict.lookup<word>("faceZone"));
+            const label zoneId(mesh_.faceZones().findIndex(zoneName));
+
+            if (zoneId < 0)
             {
-                const word zoneName(dict.lookup<word>("faceZone"));
-                const label zoneId(mesh_.faceZones().findIndex(zoneName));
-
-                if (zoneId < 0)
-                {
-                    FatalErrorInFunction
-                        << type() << " " << name() << ": "
-                        << selectionTypeNames[selectionType_]
-                        << "(" << zoneName << "):" << nl
-                        << "    Unknown faceZone: " << zoneName
-                        << ". Available faceZones: " << mesh_.faceZones().toc()
-                        << nl << exit(FatalError);
-                }
-
-                setFaceZoneFaces(mesh_.faceZones()[zoneId]);
+                FatalErrorInFunction
+                    << type() << " " << name() << ": "
+                    << selectionTypeNames[selectionType_]
+                    << "(" << zoneName << "):" << nl
+                    << "    Unknown faceZone: " << zoneName
+                    << ". Available faceZones: " << mesh_.faceZones().toc()
+                    << nl << exit(FatalError);
             }
-            break;
+
+            setFaceZoneFaces(mesh_.faceZones()[zoneId]);
         }
-        case selectionTypes::patch:
-        {
-            setPatchFaces(dict.lookup<wordRe>("patch"));
-            break;
-        }
-        case selectionTypes::patches:
-        {
-            setPatchesFaces(dict.lookup<wordReList>("patches"));
-            break;
-        }
-        case selectionTypes::sampledSurface:
-        {
-            setSampledSurfaceFaces(dict.subDict("sampledSurface"));
-            break;
-        }
-        default:
-        {
-            FatalErrorInFunction
-                << type() << " " << name() << ": "
-                << selectionTypeNames[selectionType_]
-                << "    Unknown selection type. Valid selection types are:"
-                << selectionTypeNames.sortedToc() << nl << exit(FatalError);
-        }
+    }
+    else if (dict.found("patches"))
+    {
+        selectionType_ = selectionTypes::patches;
+        setPatchesFaces(dict.lookup<wordReList>("patches"));
+    }
+    else if (dict.found("patch"))
+    {
+        selectionType_ = selectionTypes::patch;
+        setPatchFaces(dict.lookup<wordRe>("patch"));
+    }
+    else if (dict.found("sampledSurface"))
+    {
+        selectionType_ = selectionTypes::sampledSurface;
+        setSampledSurfaceFaces(dict.subDict("sampledSurface"));
+    }
+    else
+    {
+        FatalIOErrorInFunction(dict)
+            << type() << " " << name() << ": "
+            << "    Unknown selection,  valid selection types are:"
+            << selectionTypeNames.sortedToc() << nl << exit(FatalError);
     }
 
     if (nFaces_ > 0)
@@ -664,13 +661,6 @@ Foam::functionObjects::fieldValues::surfaceFieldValue::surfaceFieldValue
     fieldValue(name, runTime, dict, typeName),
     dict_(dict),
     surfaceWriterPtr_(nullptr),
-    selectionType_
-    (
-        selectionTypeNames.read
-        (
-            dict.lookupBackwardsCompatible({"select", "regionType"})
-        )
-    ),
     selectionName_(string::null),
     operation_(operationTypeNames_.read(dict.lookup("operation"))),
     weightFieldNames_(),
@@ -693,13 +683,6 @@ Foam::functionObjects::fieldValues::surfaceFieldValue::surfaceFieldValue
     fieldValue(name, obr, dict, typeName),
     dict_(dict),
     surfaceWriterPtr_(nullptr),
-    selectionType_
-    (
-        selectionTypeNames.read
-        (
-            dict.lookupBackwardsCompatible({"select", "regionType"})
-        )
-    ),
     selectionName_(string::null),
     operation_(operationTypeNames_.read(dict.lookup("operation"))),
     weightFieldNames_(),

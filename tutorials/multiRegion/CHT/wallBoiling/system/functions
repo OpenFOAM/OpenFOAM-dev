@@ -59,7 +59,6 @@ outflow
     log             yes;
     writeFields     false;
     region          fluid;
-    select          patch;
     patch           outlet;
     operation       sum;
     fields          (alphaRhoPhi.gas alphaRhoPhi.liquid);
@@ -72,7 +71,6 @@ inflow
     log             yes;
     writeFields     false;
     region          fluid;
-    select          patch;
     patch           inlet;
     operation       sum;
     fields          (alphaRhoPhi.gas alphaRhoPhi.liquid);
@@ -85,7 +83,6 @@ outletGas
     log             yes;
     writeFields     false;
     region          fluid;
-    select          patch;
     patch           outlet;
     operation       sum;
     weightField     alphaRhoPhi.gas;
@@ -99,7 +96,6 @@ outletLiquid
     log             yes;
     writeFields     false;
     region          fluid;
-    select          patch;
     patch           outlet;
     operation       sum;
     weightField     alphaRhoPhi.liquid;
@@ -113,7 +109,6 @@ inletGas
     log             yes;
     writeFields     false;
     region          fluid;
-    select          patch;
     patch           inlet;
     operation       sum;
     weightField     alphaRhoPhi.gas;
@@ -127,7 +122,6 @@ inletLiquid
     log             yes;
     writeFields     false;
     region          fluid;
-    select          patch;
     patch           inlet;
     operation       sum;
     weightField     alphaRhoPhi.liquid;

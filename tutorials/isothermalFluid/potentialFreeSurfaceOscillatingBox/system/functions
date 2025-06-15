@@ -35,7 +35,6 @@ poolHeight
     log             yes;
     writeTotalArea  no;
     writeFields     no;
-    select          faceZone;
     faceZone
     {
         type        intersection;

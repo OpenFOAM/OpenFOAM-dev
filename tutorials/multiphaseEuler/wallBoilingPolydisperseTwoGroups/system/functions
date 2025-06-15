@@ -87,7 +87,6 @@ outflow
     libs            ("libfieldFunctionObjects.so");
     log             yes;
     writeFields     false;
-    select          patch;
     patch           outlet;
     operation       sum;
     fields          (alphaRhoPhi.gas alphaRhoPhi.gas2 alphaRhoPhi.liquid);
@@ -99,7 +98,6 @@ inflow
     libs            ("libfieldFunctionObjects.so");
     log             yes;
     writeFields     false;
-    select          patch;
     patch           inlet;
     operation       sum;
     fields          (alphaRhoPhi.gas alphaRhoPhi.gas2 alphaRhoPhi.liquid);
@@ -111,7 +109,6 @@ outletGas
     libs            ("libfieldFunctionObjects.so");
     log             yes;
     writeFields     false;
-    select          patch;
     patch           outlet;
     operation       sum;
     weightField     alphaRhoPhi.gas;
@@ -124,7 +121,6 @@ outletGas2
     libs            ("libfieldFunctionObjects.so");
     log             yes;
     writeFields     false;
-    select          patch;
     patch           outlet;
     operation       sum;
     weightField     alphaRhoPhi.gas2;
@@ -137,7 +133,6 @@ outletLiquid
     libs            ("libfieldFunctionObjects.so");
     log             yes;
     writeFields     false;
-    select          patch;
     patch           outlet;
     operation       sum;
     weightField     alphaRhoPhi.liquid;
@@ -150,7 +145,6 @@ inletGas
     libs            ("libfieldFunctionObjects.so");
     log             yes;
     writeFields     false;
-    select          patch;
     patch           inlet;
     operation       sum;
     weightField     alphaRhoPhi.gas;
@@ -163,7 +157,6 @@ inletGas2
     libs            ("libfieldFunctionObjects.so");
     log             yes;
     writeFields     false;
-    select          patch;
     patch           inlet;
     operation       sum;
     weightField     alphaRhoPhi.gas2;
@@ -176,7 +169,6 @@ inletLiquid
     libs            ("libfieldFunctionObjects.so");
     log             yes;
     writeFields     false;
-    select          patch;
     patch           inlet;
     operation       sum;
     weightField     alphaRhoPhi.liquid;
