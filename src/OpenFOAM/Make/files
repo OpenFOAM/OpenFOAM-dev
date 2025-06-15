@@ -502,6 +502,8 @@ meshes/zoneGeneration/lookup/lookup.C
 meshes/zoneGeneration/zoneGeneratorList/zoneGeneratorList.C
 meshes/zoneGeneration/zonesGenerator/zonesGenerator.C
 
+meshes/zoneGeneration/generatedZoneSet/generatedZoneSet.C
+
 polyMesh = meshes/polyMesh
 
 polyPatches = $(polyMesh)/polyPatches

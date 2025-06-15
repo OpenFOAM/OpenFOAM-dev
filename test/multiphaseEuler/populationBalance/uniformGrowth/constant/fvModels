@@ -28,7 +28,7 @@ waterSink
 {
     type            massSource;
 
-    select          all;
+    cellZone        all;
     phase           water;
 
     massFlowRate    #calc "\

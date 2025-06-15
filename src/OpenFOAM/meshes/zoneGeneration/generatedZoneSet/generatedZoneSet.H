@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,137 +22,116 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::limitMag
+    Foam::generatedZoneSet
 
 Description
-    Limits the magnitude of the specified field to the specified \c max value.
 
-Usage
-    Example usage:
-    \verbatim
-    limitU
-    {
-        type            limitMag;
 
-        cellZone        all;
-
-        field           U;
-
-        max             100;
-    }
-    \endverbatim
+See also
+    Foam::zoneSet
+    Foam::zoneGenerator
 
 SourceFiles
-    limitMag.C
+    generatedZoneSet.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef limitMag_H
-#define limitMag_H
+#ifndef generatedZoneSet_H
+#define generatedZoneSet_H
 
-#include "fvConstraint.H"
-#include "fvCellSet.H"
+#include "zoneGenerator.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace fv
-{
 
 /*---------------------------------------------------------------------------*\
-                        Class limitMag Declaration
+                      Class generatedZoneSet Declaration
 \*---------------------------------------------------------------------------*/
 
-class limitMag
+class generatedZoneSet
 :
-    public fvConstraint
+    public zoneSet
 {
-    // Private data
+    // Private Member Data
 
-        //- The set of cells the fvConstraint applies to
-        fvCellSet set_;
-
-        //- Field name
-        word fieldName_;
-
-        //- Maximum velocity magnitude
-        scalar max_;
-
-
-    // Private Member Functions
-
-        //- Non-virtual read
-        void readCoeffs(const dictionary& dict);
-
-        //- Limit the field
-        template<class Type>
-        inline bool constrainType
-        (
-            VolField<Type>& psi
-        ) const;
+        autoPtr<zoneGenerator> zoneGenerator_;
 
 
 public:
 
-    //- Runtime type information
-    TypeName("limitMag");
-
-
     // Constructors
 
-        //- Construct from components
-        limitMag
+        //- Construct null
+        generatedZoneSet()
+        {}
+
+        //- Construct from name, mesh and dictionary
+        generatedZoneSet
         (
             const word& name,
-            const word& modelType,
-            const fvMesh& mesh,
+            const polyMesh& mesh,
+            const dictionary& dict
+        );
+
+        //- Construct from name, zoneType, mesh and dictionary
+        generatedZoneSet
+        (
+            const word& name,
+            const zoneGenerator::zoneTypes& zoneType,
+            const polyMesh& mesh,
             const dictionary& dict
         );
 
         //- Disallow default bitwise copy construction
-        limitMag(const limitMag&) = delete;
-
-
-    //- Destructor
-    virtual ~limitMag()
-    {}
+        generatedZoneSet(const generatedZoneSet&) = delete;
 
 
     // Member Functions
 
-        //- Return the list of fields constrained by the fvConstraint
-        virtual wordList constrainedFields() const;
+        //- Read from dictionary
+        void read
+        (
+            const word& name,
+            const polyMesh& mesh,
+            const dictionary& dict
+        );
 
-        //- Add a constraint to an equation
-        FOR_ALL_FIELD_TYPES(DEFINE_FV_CONSTRAINT_CONSTRAIN_FIELD);
+        //- Read from dictionary
+        void read
+        (
+            const word& name,
+            const zoneGenerator::zoneTypes& zoneType,
+            const polyMesh& mesh,
+            const dictionary& dict
+        );
+
+        //- Set the zoneGenerator and generate the zoneSet
+        void set(const autoPtr<zoneGenerator>& zg);
 
         //- Update for mesh motion
-        virtual bool movePoints();
-
-        //- Update topology using the given map
-        virtual void topoChange(const polyTopoChangeMap&);
-
-        //- Update from another mesh using the given map
-        virtual void mapMesh(const polyMeshMap&);
+        bool movePoints();
 
         //- Redistribute or update using the given distribution map
-        virtual void distribute(const polyDistributionMap&);
+        void distribute(const polyDistributionMap& map);
 
-        //- Read dictionary
-        virtual bool read(const dictionary& dict);
+        //- Update topology using the given map
+        void topoChange(const polyTopoChangeMap& map);
+
+        //- Update from another mesh using the given map
+        void mapMesh(const polyMeshMap& map);
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const limitMag&) = delete;
+        void operator=(const generatedZoneSet&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace fv
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

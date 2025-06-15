@@ -41,7 +41,6 @@ Description
         writeControl    writeTime;
         writeFields     true;
 
-        select          cellZone;
         cellZone        c0;
         operation       volAverage;
 

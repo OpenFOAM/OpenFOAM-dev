@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,7 +47,7 @@ Foam::autoPtr<Foam::Function1<Foam::scalar>> Foam::Function1s::omega::init
     if (!foundOmega && !foundRpm)
     {
         FatalIOErrorInFunction(dict)
-            << "Neither rotational speed rpm or omega defined in dictionary "
+            << "Neither rotational speed rpm nor omega defined in dictionary "
             << dict.name() << exit(FatalIOError);
     }
 

@@ -41,7 +41,6 @@ Usage
     {
         type            volumeSource;
 
-        select          cellSet;
         cellSet         volumeSource;
 
         volumetricFlowRate 1e-4;

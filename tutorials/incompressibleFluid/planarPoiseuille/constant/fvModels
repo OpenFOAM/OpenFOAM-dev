@@ -18,7 +18,7 @@ momentumSource
 {
     type            semiImplicitSource;
 
-    select          all;
+    cellZone        all;
 
     volumeMode      specific;
 

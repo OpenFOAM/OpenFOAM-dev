@@ -120,7 +120,7 @@ contError
     libs            ("libfieldFunctionObjects.so");
     log             yes;
     writeFields     false;
-    select          all;
+    cellZone        all;
     operation       volIntegrate;
     fields          (continuityError.gas continuityError.liquid);
 }

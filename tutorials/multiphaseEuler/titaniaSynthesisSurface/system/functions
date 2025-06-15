@@ -26,8 +26,13 @@ FoamFile
 (
     name=numberDensity,
     populationBalance=aggregates,
-    select=cellZone,
-    cellZone=outlet,
+    cellZone=
+    {
+        type        cylinder;
+        point1      (0.435 0 0);
+        point2      (0.44 0 0);
+        radius      0.015875;
+    },
     functionType=numberDensity,
     coordinateType=projectedAreaDiameter,
     allCoordinates=yes,

@@ -25,104 +25,7 @@ License
 
 #include "polyCellSet.H"
 #include "polyMesh.H"
-
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-namespace Foam
-{
-    template<> const char* NamedEnum
-    <
-        polyCellSet::selectionTypes,
-        4
-        >::names[] =
-    {
-        "points",
-        "cellSet",
-        "cellZone",
-        "all"
-    };
-
-    const NamedEnum<polyCellSet::selectionTypes, 4>
-        polyCellSet::selectionTypeNames;
-}
-
-
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-void Foam::polyCellSet::setCells()
-{
-    Info<< incrIndent;
-
-    switch (selectionType_)
-    {
-        case selectionTypes::points:
-        {
-            Info<< indent << "- selecting cells using points" << endl;
-
-            labelHashSet selectedCells;
-
-            forAll(points_, i)
-            {
-                label celli = mesh_.findCell(points_[i]);
-                if (celli >= 0)
-                {
-                    selectedCells.insert(celli);
-                }
-
-                const label globalCelli = returnReduce(celli, maxOp<label>());
-                if (globalCelli < 0)
-                {
-                    WarningInFunction
-                        << "Unable to find owner cell for point " << points_[i]
-                        << endl;
-                }
-
-            }
-
-            cells_ = selectedCells.toc();
-
-            break;
-        }
-        case selectionTypes::cellSet:
-        {
-            Info<< indent
-                << "- selecting cells using cellSet " << cellSetName_ << endl;
-
-            cells_ = cellSet(mesh_, cellSetName_).toc();
-
-            break;
-        }
-        case selectionTypes::cellZone:
-        {
-            Info<< indent
-                << "- selecting cells using cellZone " << cellSetName_ << endl;
-
-            const label zoneID = mesh_.cellZones().findIndex(cellSetName_);
-            if (zoneID == -1)
-            {
-                FatalErrorInFunction
-                    << "Cannot find cellZone " << cellSetName_ << endl
-                    << "Valid cellZones are " << mesh_.cellZones().toc()
-                    << exit(FatalError);
-            }
-
-            // cells_ not required for cellZone
-
-            break;
-        }
-        case selectionTypes::all:
-        {
-            Info<< indent << "- selecting all cells" << endl;
-
-            // cells_ not required for cellZone
-
-            break;
-        }
-    }
-
-    Info<< decrIndent;
-}
-
+#include "containsPoints.H"
 
 Foam::labelUList Foam::polyCellSet::identityMap(const label len) const
 {
@@ -148,16 +51,14 @@ Foam::labelUList Foam::polyCellSet::identityMap(const label len) const
 Foam::polyCellSet::polyCellSet(const polyMesh& mesh)
 :
     mesh_(mesh),
-    selectionType_(selectionTypes::all),
-    cellSetName_(word::null)
+    all_(true)
 {}
 
 
 Foam::polyCellSet::polyCellSet(const polyMesh& mesh, const dictionary& dict)
 :
     mesh_(mesh),
-    selectionType_(selectionTypes::all),
-    cellSetName_(word::null)
+    all_(true)
 {
     read(dict);
 }
@@ -173,90 +74,105 @@ Foam::polyCellSet::~polyCellSet()
 
 void Foam::polyCellSet::movePoints()
 {
-    if (selectionType_ == selectionTypes::points)
+    if (!all())
     {
-        setCells();
+        cellZone_.movePoints();
     }
 }
 
 
-void Foam::polyCellSet::topoChange(const polyTopoChangeMap&)
+void Foam::polyCellSet::topoChange(const polyTopoChangeMap& map)
 {
-    setCells();
+    if (!all())
+    {
+        cellZone_.topoChange(map);
+    }
 }
 
 
-void Foam::polyCellSet::mapMesh(const polyMeshMap&)
+void Foam::polyCellSet::mapMesh(const polyMeshMap& map)
 {
-    setCells();
+    if (!all())
+    {
+        cellZone_.mapMesh(map);
+    }
 }
 
 
-void Foam::polyCellSet::distribute(const polyDistributionMap&)
+void Foam::polyCellSet::distribute(const polyDistributionMap& map)
 {
-    setCells();
+    if (!all())
+    {
+        cellZone_.distribute(map);
+    }
 }
 
 
 bool Foam::polyCellSet::read(const dictionary& dict)
 {
-    if (dict.found("select") || dict.found("selectionMode"))
+    if (dict.found("cellZone"))
     {
-        selectionType_ = selectionTypeNames.read
-        (
-            dict.lookupBackwardsCompatible({"select", "selectionMode"})
-        );
+        if (!dict.isDict("cellZone"))
+        {
+            if (dict.lookup<word>("cellZone") == "all")
+            {
+                all_ = true;
+            }
+        }
+        else
+        {
+            all_ = false;
+
+            cellZone_.read
+            (
+                "cellZone",
+                zoneGenerator::zoneTypes::cell,
+                mesh_,
+                dict
+            );
+        }
     }
     else if (dict.found("points"))
     {
-        selectionType_ = selectionTypes::points;
+        // For backward compatibility
+
+        IOWarningInFunction(dict)
+            << "points is deprecated, use cellZone instead." << nl
+            << "    For backward compatibility the points entry "
+               "is automatically converted into a cellZone generated "
+               "using the containsPoints zoneGenerator."
+            << endl;
+
+        all_ = false;
+
+        cellZone_.set
+        (
+            autoPtr<zoneGenerator>
+            (
+                new zoneGenerators::containsPoints("points", mesh_, dict)
+            )
+        );
     }
-    else if (dict.found("cellSet"))
+    else if (dict.found("select"))
     {
-        selectionType_ = selectionTypes::cellSet;
-    }
-    else if (dict.found("cellZone"))
-    {
-        selectionType_ = selectionTypes::cellZone;
+        const word selection(dict.lookup("select"));
+
+        IOWarningInFunction(dict)
+            << "select " << selection
+            << " is deprecated, use cellZone instead."
+            << endl;
+
+        if (selection == "all")
+        {
+            all_ = true;
+        }
     }
     else
     {
-        dict.lookup("select");
+        FatalIOErrorInFunction(dict)
+            << "cellZone not specified"
+            << exit(FatalIOError);
     }
-
-    switch (selectionType_)
-    {
-        case selectionTypes::points:
-        {
-            dict.lookup("points") >> points_;
-            break;
-        }
-        case selectionTypes::cellSet:
-        {
-            dict.lookup("cellSet") >> cellSetName_;
-            break;
-        }
-        case selectionTypes::cellZone:
-        {
-            dict.lookup("cellZone") >> cellSetName_;
-            break;
-        }
-        case selectionTypes::all:
-        {
-            break;
-        }
-        default:
-        {
-            FatalErrorInFunction
-                << "Unknown selection type "
-                << selectionTypeNames[selectionType_]
-                << nl << "Valid selection type:"
-                << selectionTypeNames.toc()
-                << exit(FatalError);
-        }
-    }
-
-    setCells();
 
     return true;
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ Description
         type            reactionRates;
         libs            ("libchemistryModel.so");
 
-        select          all; // Or points, cellSet, cellZone
+        cellZone        all; // Or points, cellSet, cellZone
 
         //phase         <phaseName>; // Optional name of the phase
 

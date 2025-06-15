@@ -18,7 +18,6 @@ ignition
 {
     type            constantbXiIgnition;
 
-    select          cellZone;
     cellZone        ignition;
 
     start           -15;
@@ -28,7 +27,7 @@ ignition
     XiCorr
     {
         type            spherical;
-        select          all;
+        cellZone        all;
     }
 }
 

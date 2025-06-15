@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -112,7 +112,7 @@ bool Foam::fv::limitTemperature::constrain(volScalarField& he) const
         }
 
         // Handle boundaries in the case of 'all'
-        if (set_.selectionType() == fvCellSet::selectionTypes::all)
+        if (set_.all())
         {
             volScalarField::Boundary& Tbf = he.boundaryFieldRef();
 
@@ -153,7 +153,7 @@ bool Foam::fv::limitTemperature::constrain(volScalarField& he) const
         }
 
         // Handle boundaries in the case of 'all'
-        if (set_.selectionType() == fvCellSet::selectionTypes::all)
+        if (set_.all())
         {
             volScalarField::Boundary& bf = he.boundaryFieldRef();
 

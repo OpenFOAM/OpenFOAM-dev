@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -116,60 +116,36 @@ void Foam::fv::rotorDisk::readCoeffs(const dictionary& dict)
 
 void Foam::fv::rotorDisk::checkData(const dictionary& dict)
 {
-    // Set inflow type
-    switch (set_.selectionType())
+    // Set the profile ID for each blade section
+    profiles_.connectBlades
+    (
+        blade_.profileName(),
+        blade_.profileIndex()
+    );
+    switch (inletFlow_)
     {
-        case fvCellSet::selectionTypes::cellSet:
-        case fvCellSet::selectionTypes::cellZone:
-        case fvCellSet::selectionTypes::all:
+        case inletFlowType::fixed:
         {
-            // Set the profile ID for each blade section
-            profiles_.connectBlades
+            dict.lookup("inletVelocity") >> inletVelocity_;
+            break;
+        }
+        case inletFlowType::surfaceNormal:
+        {
+            scalar UIn
             (
-                blade_.profileName(),
-                blade_.profileIndex()
+                dict.lookup<scalar>("inletNormalVelocity")
             );
-            switch (inletFlow_)
-            {
-                case inletFlowType::fixed:
-                {
-                    dict.lookup("inletVelocity") >> inletVelocity_;
-                    break;
-                }
-                case inletFlowType::surfaceNormal:
-                {
-                    scalar UIn
-                    (
-                        dict.lookup<scalar>("inletNormalVelocity")
-                    );
-                    inletVelocity_ = -coordSys_.R().e3()*UIn;
-                    break;
-                }
-                case inletFlowType::local:
-                {
-                    break;
-                }
-                default:
-                {
-                    FatalErrorInFunction
-                        << "Unknown inlet velocity type" << abort(FatalError);
-                }
-            }
+            inletVelocity_ = -coordSys_.R().e3()*UIn;
+            break;
+        }
+        case inletFlowType::local:
+        {
             break;
         }
         default:
         {
             FatalErrorInFunction
-                << "Source cannot be used with '"
-                << fvCellSet::selectionTypeNames[set_.selectionType()]
-                << "' mode.  Please use one of: " << nl
-                << fvCellSet::selectionTypeNames
-                   [fvCellSet::selectionTypes::cellSet] << nl
-                << fvCellSet::selectionTypeNames
-                   [fvCellSet::selectionTypes::cellZone] << nl
-                << fvCellSet::selectionTypeNames
-                   [fvCellSet::selectionTypes::all]
-                << exit(FatalError);
+                << "Unknown inlet velocity type" << abort(FatalError);
         }
     }
 }

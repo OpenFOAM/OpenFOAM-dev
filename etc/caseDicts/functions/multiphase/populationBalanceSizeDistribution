@@ -29,9 +29,8 @@ weightType          numberConcentration;  // volumeConcentration,
                                           // relevant for field-dependent
                                           // particle properties, defaults to
                                           // numberConcentration
-select              all;                  // cellZone
+cellZone            all;                  // Selection cellZone
                                           // defaults to all
-cellZone            cellZoneName;         // relevant select cellZone
 
 
 setFormat           raw;

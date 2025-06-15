@@ -189,10 +189,10 @@ Foam::zoneGenerator::New
 )
 {
     // Copy the dictionary and add the zoneType entry
-    dictionary typeDict(dict);
-    typeDict.add("zoneType", zoneTypesNames[zoneType]);
+    dictionary zoneDict(dict);
+    zoneDict.add("zoneType", zoneTypesNames[zoneType]);
 
-    return New(name, mesh, typeDict);
+    return New(name, mesh, zoneDict);
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,7 +78,7 @@ inline bool Foam::fv::limitMag::constrainType
     }
 
     // handle boundaries in the case of 'all'
-    if (set_.selectionType() == fvCellSet::selectionTypes::all)
+    if (set_.all())
     {
         typename VolField<Type>::Boundary& psibf =
             psi.boundaryFieldRef();

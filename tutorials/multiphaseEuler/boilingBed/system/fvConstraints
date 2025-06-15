@@ -18,7 +18,7 @@ limitTgas
 {
     type            limitTemperature;
     active          yes;
-    selectionMode   all;
+    cellZone        all;
     min             290;
     max             1000;
     phase           gas;
@@ -28,7 +28,7 @@ limitTliquid
 {
     type            limitTemperature;
     active          yes;
-    selectionMode   all;
+    cellZone        all;
     min             290;
     max             1000;
     phase           liquid;
@@ -38,7 +38,7 @@ limitTsolid
 {
     type            limitTemperature;
     active          yes;
-    selectionMode   all;
+    cellZone        all;
     min             290;
     max             1000;
     phase           solid;

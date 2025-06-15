@@ -18,7 +18,12 @@ ignition
 {
     type            fixedTemperature;
 
-    cellZone        ignition;
+    cellZone
+    {
+        type        box;
+        zoneType    cell;
+        box         (0.01 0.1 -0.01) (0.02 0.11 0.01);
+    }
 
     mode            uniform;
 

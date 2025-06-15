@@ -289,8 +289,7 @@ bool Foam::functionObjects::fieldValues::volFieldValue::writeValues
             (
                 IOobject
                 (
-                    fieldName + '_' + selectionTypeNames[selectionType()]
-                  + '-' + cellSetName(),
+                    fieldName + '_' + cellZoneName(),
                     time_.name(),
                     obr_,
                     IOobject::NO_READ,
@@ -357,7 +356,7 @@ bool Foam::functionObjects::fieldValues::volFieldValue::writeValues
             file() << tab << result.value;
 
             Log << "    " << operationTypeNames_[operation_]
-                << "(" << cellSetName() << ") of " << fieldName
+                << "(" << cellZoneName() << ") of " << fieldName
                 <<  " = " << result.value;
 
             if (result.celli != -1)

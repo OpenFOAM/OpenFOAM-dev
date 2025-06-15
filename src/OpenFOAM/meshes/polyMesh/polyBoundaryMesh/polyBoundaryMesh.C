@@ -851,7 +851,7 @@ Foam::labelHashSet Foam::polyBoundaryMesh::patchSet
         if (!optional)
         {
             FatalIOErrorInFunction(dict)
-                << "Neither 'patch' or 'patches' specified"
+                << "Neither 'patch' nor 'patches' specified"
                 << exit(FatalIOError);
         }
     }

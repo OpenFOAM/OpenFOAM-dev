@@ -27,68 +27,62 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline const Foam::polyCellSet::selectionTypes&
-Foam::polyCellSet::selectionType() const
+inline bool Foam::polyCellSet::all() const
 {
-    return selectionType_;
+    return all_;
 }
 
 
-inline const Foam::word& Foam::polyCellSet::cellSetName() const
+inline const Foam::word& Foam::polyCellSet::cellZoneName() const
 {
-    return cellSetName_;
+    static word allName_("all");
+
+    if (all_)
+    {
+        return allName_;
+    }
+    else
+    {
+        return cellZone_.cZone().name();
+    }
 }
 
 
 inline Foam::labelUList Foam::polyCellSet::cells() const
 {
-    if (selectionType_ == selectionTypes::all)
+    if (all_)
     {
         return identityMap(mesh_.nCells());
     }
-    else if (selectionType_ == selectionTypes::cellZone)
-    {
-        return mesh_.cellZones()[cellSetName_];
-    }
     else
     {
-        return cells_;
+        return cellZone_.cZone();
     }
 }
 
 
 inline Foam::label Foam::polyCellSet::nCells() const
 {
-    if (selectionType_ == selectionTypes::all)
+    if (all_)
     {
         return mesh_.nCells();
     }
     else
     {
-        return cells().size();
+        return cellZone_.cZone().size();
     }
-}
-
-
-inline bool Foam::polyCellSet::all() const
-{
-    return selectionType_ == selectionTypes::all;
 }
 
 
 inline Foam::label Foam::polyCellSet::celli(const label i) const
 {
-    if (selectionType_ == selectionTypes::all)
+    if (all_)
     {
         return i;
     }
-    else if (selectionType_ == selectionTypes::cellZone)
-    {
-        return mesh_.cellZones()[cellSetName_][i];
-    }
     else
     {
-        return cells_[i];
+        return cellZone_.cZone()[i];
     }
 }
 

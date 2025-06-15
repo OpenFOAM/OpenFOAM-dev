@@ -40,7 +40,6 @@ Usage
     {
         type            massSource;
 
-        select          cellSet;
         cellSet         massSource;
 
         massFlowRate    1e-4;

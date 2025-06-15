@@ -18,7 +18,7 @@ cylinderHeat
 {
     type            heatSource;
 
-    select          all;
+    cellZone        all;
 
     q               5e7;
 }

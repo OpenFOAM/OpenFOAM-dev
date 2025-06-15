@@ -8,8 +8,6 @@ runApplication blockMesh
 
 runApplication splitMeshRegions -cellZonesOnly -overwrite
 
-runApplication createZones -region gas
-
 paraFoam -region gas -touch
 paraFoam -region solid -touch
 

@@ -34,7 +34,6 @@ bedHeat
 {
     type            semiImplicitSource;
 
-    selectionMode   cellZone;
     cellZone        bed;
 
     volumeMode      absolute;

@@ -21,7 +21,13 @@ source1
     timeStart       0.1;
     duration        0.4;
 
-    cellZone        ignitionCells;
+    cellZone
+    {
+        type        sphere;
+        zoneType    cell;
+        centre      (0.125 0.375 0.05);
+        radius      0.005;
+    }
 
     mode            uniform;
 

@@ -18,7 +18,7 @@ energySource
 {
     type            heatSource;
 
-    select          all;
+    cellZone        all;
 
     q               1e7;
 }

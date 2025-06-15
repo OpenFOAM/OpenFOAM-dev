@@ -17,8 +17,11 @@ FoamFile
 (
     name=probabilityDensity.afterBend_1d,
     populationBalance=agglomerates,
-    select=cellZone,
-    cellZone=afterBend_1d,
+    cellZone=
+    {
+        type        box;
+        box         (-0.03 0.43 0.09) (0.03 0.48 0.11);
+    },
     functionType=volumeDensity,
     coordinateType=diameter,
     normalise=yes
@@ -28,8 +31,11 @@ FoamFile
 (
     name=probabilityDensity.afterBend_5d,
     populationBalance=agglomerates,
-    select=cellZone,
-    cellZone=afterBend_5d,
+    cellZone=
+    {
+        type        box;
+        box         (-0.03 0.43 0.25) (0.03 0.48 0.27);
+    },
     functionType=volumeDensity,
     coordinateType=diameter,
     normalise=yes
@@ -39,8 +45,11 @@ FoamFile
 (
     name=probabilityDensity.afterBend_9d,
     populationBalance=agglomerates,
-    select=cellZone,
-    cellZone=afterBend_9d,
+    cellZone=
+    {
+        type        box;
+        box         (-0.03 0.43 0.41) (0.03 0.48 0.43);
+    },
     functionType=volumeDensity,
     coordinateType=diameter,
     normalise=yes
@@ -50,8 +59,11 @@ FoamFile
 (
     name=probabilityDensity.beforeBend_1d,
     populationBalance=agglomerates,
-    select=cellZone,
-    cellZone=beforeBend_1d,
+    cellZone=
+    {
+        type        box;
+        box         (-0.03 0.35 -0.03) (0.03 0.37 0.03);
+    },
     functionType=volumeDensity,
     coordinateType=diameter,
     normalise=yes

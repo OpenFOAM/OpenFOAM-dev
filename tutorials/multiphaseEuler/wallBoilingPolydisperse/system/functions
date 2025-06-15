@@ -37,8 +37,11 @@ volumeDensity.diameter.bubbles
     log             yes;
     functionType    volumeConcentration;
     coordinateType  diameter;
-    select          cellZone;
-    cellZone        x349;
+    cellZone
+    {
+        type        box;
+        box         (3.48 -0.1 -0.1) (3.5 0.1 0.1);
+    }
     populationBalance bubbles;
 }
 
@@ -52,8 +55,11 @@ volumeDensity_bulk.diameter.bubbles
     log             yes;
     functionType    volumeConcentration;
     coordinateType  diameter;
-    select          cellZone;
-    cellZone        x349_bulk;
+    cellZone
+    {
+        type        box;
+        box         (3.48 0.0 -0.1) (3.5 0.005 0.1);
+    }
     populationBalance bubbles;
 }
 
@@ -67,8 +73,11 @@ volumeDensity_wall.diameter.bubbles
     log             yes;
     functionType    volumeConcentration;
     coordinateType  diameter;
-    select          cellZone;
-    cellZone        x349_wall;
+    cellZone
+    {
+        type        box;
+        box         (3.48 0.0093 -0.1) (3.5 0.1 0.1);
+    }
     populationBalance bubbles;
 }
 

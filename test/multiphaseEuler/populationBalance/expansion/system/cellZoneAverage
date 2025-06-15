@@ -17,7 +17,6 @@ writeControl    writeTime;
 writeInterval   1;
 
 fields          (p);
-select          cellZone;
 cellZone        injection;
 
 operation       volAverage;

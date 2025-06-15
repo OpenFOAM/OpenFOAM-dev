@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,7 @@ void Foam::fv::heatSource::readCoeffs(const dictionary& dict)
     if (!dict.found("q") && !dict.found("Q"))
     {
         FatalIOErrorInFunction(coeffs(dict))
-            << "Neither heat source per unit volume, q, or total heat source, "
+            << "Neither heat source per unit volume, q, nor total heat source, "
             << "Q, has been specified. One is required." << exit(FatalIOError);
     }
 

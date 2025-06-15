@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,7 @@ namespace Foam
 
 void Foam::solidBodyMotionSolver::updateSetPointIndices()
 {
-    if (set_.selectionType() == polyCellSet::selectionTypes::all)
+    if (set_.all())
     {
         setPointIndices_.clear();
         return;
@@ -99,7 +99,7 @@ Foam::solidBodyMotionSolver::solidBodyMotionSolver
     setPointIndices_(),
     transform_(SBMFPtr_().transformation())
 {
-    if (set_.selectionType() == polyCellSet::selectionTypes::all)
+    if (set_.all())
     {
         Info<< "Applying solid body motion to entire mesh" << endl;
     }
@@ -120,7 +120,7 @@ Foam::tmp<Foam::pointField> Foam::solidBodyMotionSolver::curPoints() const
 {
     transform_ = SBMFPtr_().transformation();
 
-    if (set_.selectionType() == polyCellSet::selectionTypes::all)
+    if (set_.all())
     {
         return transformPoints(transform_, points0_);
     }
@@ -145,11 +145,7 @@ void Foam::solidBodyMotionSolver::topoChange(const polyTopoChangeMap& map)
     set_.topoChange(map);
     updateSetPointIndices();
 
-    boolList pointInSet
-    (
-        mesh().nPoints(),
-        set_.selectionType() == polyCellSet::selectionTypes::all
-    );
+    boolList pointInSet(mesh().nPoints(), set_.all());
     UIndirectList<bool>(pointInSet, setPointIndices_) = true;
 
     // pointMesh already updates pointFields
