@@ -76,7 +76,9 @@ Foam::zoneSet Foam::zoneGenerators::lookup::generate() const
             if (pZonePtr == nullptr)
             {
                 FatalIOErrorInFunction(dict_)
-                    << "Cannot find pointZone " << zoneName_
+                    << "Cannot find pointZone " << zoneName_ << nl
+                    << "    Available pointZones "
+                    << mesh_.pointZones().sortedToc()
                     << exit(FatalIOError);
             }
 
@@ -93,7 +95,9 @@ Foam::zoneSet Foam::zoneGenerators::lookup::generate() const
             if (cZonePtr == nullptr)
             {
                 FatalIOErrorInFunction(dict_)
-                    << "Cannot find cellZone " << zoneName_
+                    << "Cannot find cellZone " << zoneName_ << nl
+                    << "    Available cellZones "
+                    << mesh_.cellZones().sortedToc()
                     << exit(FatalIOError);
             }
 
@@ -110,7 +114,9 @@ Foam::zoneSet Foam::zoneGenerators::lookup::generate() const
             if (fZonePtr == nullptr)
             {
                 FatalIOErrorInFunction(dict_)
-                    << "Cannot find faceZone " << zoneName_
+                    << "Cannot find faceZone " << zoneName_ << nl
+                    << "    Available faceZones "
+                    << mesh_.faceZones().sortedToc()
                     << exit(FatalIOError);
             }
 
