@@ -15,7 +15,7 @@ FoamFile
 
 type        heatSource;
 
-select      all;
+cellZone    all;
 
 // Total power [W]
 Q           <100>;

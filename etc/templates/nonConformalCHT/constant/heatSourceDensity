@@ -15,7 +15,7 @@ FoamFile
 
 type        heatSource;
 
-select      all;
+cellZone    all;
 
 // Power per unit volume [W/m^3]
 q          <10>;

@@ -13,7 +13,7 @@ Description
 type            reactionRates;
 libs            ("libchemistryModel.so");
 
-select          all; // Or points, cellSet, cellZone
+cellZone        all;
 
 //phase         <phaseName>; // Optional name of the phase
 
