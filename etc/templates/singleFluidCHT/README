@@ -73,7 +73,7 @@ Run splitMeshRegions with "-cellZones" to split the solid cellZones into
 separate mesh regions; the remaining fluid region can be named with the
 "-defaultRegionName" option.  For example, to name the default region "fluid":
 
-  splitMeshRegions -cellZones -defaultRegionName fluid -overwrite
+  splitMeshRegions -cellZones -defaultRegionName fluid
 
 Initialisation
 ==============

@@ -10,7 +10,7 @@ runApplication -s 1 decomposePar -region panel -noFields
 
 runParallel extrudeToRegionMesh \
     -dict system/extrudeToRegionMeshDict.film \
-    -region panel -overwrite
+    -region panel
 
 runApplication -s 1 reconstructPar -allRegions
 

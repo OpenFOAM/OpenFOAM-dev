@@ -10,10 +10,10 @@ runApplication blockMesh
 runApplication createZones
 
 # Create baffles and the fields on them
-runApplication createBaffles -overwrite -dict system/createBafflesDict.NCC
+runApplication createBaffles -dict system/createBafflesDict.NCC
 
 # Create non-conformal couplings
-runApplication createNonConformalCouples -overwrite
+runApplication createNonConformalCouples
 
 runApplication foamRun
 

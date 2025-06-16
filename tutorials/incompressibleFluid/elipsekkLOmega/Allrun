@@ -7,11 +7,11 @@ cd ${0%/*} || exit 1    # Run from this directory
 runApplication blockMesh
 runApplication transformPoints "scale=(1.6666 1 1)"
 
-runApplication mirrorMesh -dict mirrorMeshDict.x -overwrite
+runApplication mirrorMesh -dict mirrorMeshDict.x
 rm log.mirrorMesh
-runApplication mirrorMesh -dict mirrorMeshDict.y -overwrite
+runApplication mirrorMesh -dict mirrorMeshDict.y
 
-runApplication createPatch -overwrite
+runApplication createPatch
 runApplication foamRun
 
 #------------------------------------------------------------------------------

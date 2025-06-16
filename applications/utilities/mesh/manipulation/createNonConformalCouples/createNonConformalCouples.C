@@ -31,8 +31,8 @@ Usage
     \b createNonConformalCouples \<patch1\> \<patch2\>
 
     Options:
-      - \par -overwrite \n
-        Replace the old mesh with the new one, rather than writing the new one
+      - \par -noOverwrite \n
+        Do not replace the old mesh with the new one, writing the new one
         into a separate time directory
 
       - \par -fields \n
@@ -315,7 +315,7 @@ void evaluateNonConformalProcessorCyclics(const fvMesh& mesh)
 
 int main(int argc, char *argv[])
 {
-    #include "addOverwriteOption.H"
+    #include "addNoOverwriteOption.H"
     #include "addMeshOption.H"
     #include "addRegionOption.H"
     #include "addDictOption.H"
@@ -433,7 +433,7 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    const bool overwrite = args.optionFound("overwrite");
+    #include "setNoOverwrite.H"
 
     const word oldInstance = regionMeshes[0].pointsInstance();
 

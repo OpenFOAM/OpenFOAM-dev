@@ -45,7 +45,7 @@ refineBackgroundMesh () {
     while [ $_r -lt "$_nRefine" ]
     do
         echo "Refining the background mesh"
-        runParallel -a refineMesh -all -overwrite
+        runParallel -a refineMesh -all
         _r=$(( _r + 1 ))
     done
 }
@@ -106,7 +106,7 @@ runApplication decomposePar -copyZero
 
 refineBackgroundMesh $nRefine
 
-runParallel snappyHexMesh -overwrite
+runParallel snappyHexMesh
 
 runParallel checkMesh
 

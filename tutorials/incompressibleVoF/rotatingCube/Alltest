@@ -39,7 +39,7 @@ runFoamDictionary()
 
     runApplication blockMesh
     runApplication createNonConformalCouples \
-        -overwrite nonCoupleStationary nonCoupleRotating
+        nonCoupleStationary nonCoupleRotating
 
     runApplication setFields
 

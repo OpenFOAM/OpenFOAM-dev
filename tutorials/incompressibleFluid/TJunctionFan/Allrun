@@ -10,7 +10,7 @@ runApplication blockMesh
 runApplication createZones
 
 # Create baffles and the fields on them
-runApplication createBaffles -overwrite
+runApplication createBaffles
 
 runApplication foamRun
 

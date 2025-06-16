@@ -87,22 +87,22 @@ sed \
     system/blockMeshDict.orig > system/blockMeshDict
 
 runApplication blockMesh
-runApplication mirrorMesh -overwrite
+runApplication mirrorMesh
 foamDictionary -set "pointAndNormalDict/normal=(1 0 0)" system/mirrorMeshDict
-runApplication -a mirrorMesh -overwrite
+runApplication -a mirrorMesh
 
 [ "$refineRotating" ] && \
     printf "\nRefining mesh around the rotatingZone...\n" && \
-    runApplication refineMesh -overwrite
+    runApplication refineMesh
 
 printf "\nCreating stirrer...\n"
 [ "$blades" -eq 6 ] && \
     sed "s/stirrer4/stirrer6/" system/createZonesDict.orig > system/createZonesDict
 runApplication -a createZones
-runApplication -a createBaffles -dict createBafflesDict.stirrer -overwrite
+runApplication -a createBaffles -dict createBafflesDict.stirrer
 
 [ "$baffles" ] && \
     printf "\nCreating baffles...\n" && \
-    runApplication -a createBaffles -dict createBafflesDict.baffles -overwrite
+    runApplication -a createBaffles -dict createBafflesDict.baffles
 
 #------------------------------------------------------------------------------

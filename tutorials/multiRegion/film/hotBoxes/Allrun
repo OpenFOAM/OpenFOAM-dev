@@ -9,10 +9,10 @@ runApplication -s fluid blockMesh -region fluid
 runApplication decomposePar -region fluid -noFields
 
 # Create the boxes and add their surfaces to the boxes patch
-runParallel subsetMesh -region fluid -overwrite -noFields
+runParallel subsetMesh -region fluid -noFields
 
 # Create the film mesh
-runParallel extrudeToRegionMesh -region fluid -overwrite
+runParallel extrudeToRegionMesh -region fluid
 
 runApplication -s fields decomposePar -fields -copyZero
 

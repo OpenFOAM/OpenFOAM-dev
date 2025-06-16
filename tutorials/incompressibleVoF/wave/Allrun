@@ -8,7 +8,7 @@ runApplication blockMesh
 
 runApplication extrudeMesh
 
-runApplication refineMesh -overwrite
+runApplication refineMesh
 
 runApplication setWaves
 

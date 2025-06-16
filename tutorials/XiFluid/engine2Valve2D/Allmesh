@@ -45,7 +45,7 @@ createSingleValveBaseMesh()
                    -dict system/blockMeshDict.$valveState
 
     runApplication -a mirrorMesh ${mesh:+-mesh} $mesh \
-                   -dict system/mirrorMeshDict -overwrite
+                   -dict system/mirrorMeshDict
 }
 
 createExhaustValveMesh()
@@ -145,7 +145,7 @@ createMesh()
     createIntakeValveMesh _tmp_intake $ivLift $nIV $pistonPos $nCylIV
 
     # Combine the mesh modules
-    runApplication -a mergeMeshes -overwrite ${mesh:+-mesh} $mesh \
+    runApplication -a mergeMeshes ${mesh:+-mesh} $mesh \
                    -addMeshes '(_tmp_exhaust _tmp_intake)'
 
     # Delete temporary valve meshes
@@ -153,27 +153,27 @@ createMesh()
 
     # Separate ports to mimic complicated engine assembly
     runApplication -a createBaffles ${mesh:+-mesh} $mesh \
-                   -dict system/createBafflesDict -overwrite
-    runApplication -a splitBaffles ${mesh:+-mesh} $mesh -overwrite
+                   -dict system/createBafflesDict
+    runApplication -a splitBaffles ${mesh:+-mesh} $mesh
 
     runApplication -a transformPoints ${mesh:+-mesh} $mesh \
                    "Rx=90, scale=($SCALE_INV $SCALE_INV $SCALE_INV)"
 
     # Create fuel direct injection patch
-    runApplication -a createPatch -overwrite ${mesh:+-mesh} $mesh -dict system/createPatchDict.inletFuel
+    runApplication -a createPatch ${mesh:+-mesh} $mesh -dict system/createPatchDict.inletFuel
 
     # Decompose (if necessary) and construct the non-conformal couplings that
     # connect the ports and enable the sliding interfaces
     case $mode in
         serial)
             runApplication -a createNonConformalCouples ${mesh:+-mesh} $mesh \
-                           -dict system/createNonConformalCouplesDict -overwrite
+                           -dict system/createNonConformalCouplesDict
             ;;
         parallel)
             runApplication -a decomposePar ${mesh:+-mesh} $mesh -noFields
 
             runParallel -a createNonConformalCouples ${mesh:+-mesh} $mesh \
-                        -dict system/createNonConformalCouplesDict -overwrite
+                        -dict system/createNonConformalCouplesDict
             ;;
                 *)
         echo "Error: mode $mode not recognised"

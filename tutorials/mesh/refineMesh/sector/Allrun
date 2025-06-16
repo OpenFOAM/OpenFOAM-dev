@@ -16,7 +16,7 @@ do
 
     foamDictionary system/refineMeshDict.z -set "zone/radius=$max" \
         -output system/refineMeshDict
-    runApplication -s z_${min}_to_${max} refineMesh -overwrite
+    runApplication -s z_${min}_to_${max} refineMesh
 done
 
 # Refine in cylindrical coordinate directions 3 times
@@ -29,7 +29,7 @@ do
 
     foamDictionary system/refineMeshDict.cyl -set "zone/innerRadius=$min" \
         -output system/refineMeshDict
-    runApplication -s cyl_${min}_to_${max} refineMesh -overwrite
+    runApplication -s cyl_${min}_to_${max} refineMesh
 done
 
 rm -f system/refineMeshDict

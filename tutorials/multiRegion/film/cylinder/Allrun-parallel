@@ -8,7 +8,7 @@ runApplication -s fluid blockMesh -region fluid
 
 runApplication decomposePar -region fluid -noFields
 
-runParallel extrudeToRegionMesh -region fluid -overwrite
+runParallel extrudeToRegionMesh -region fluid
 
 runApplication -s fields decomposePar -fields -copyZero
 

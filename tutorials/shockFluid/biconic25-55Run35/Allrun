@@ -14,7 +14,7 @@ sed -i -e 's/binary/ascii/' -ne '1,17p' $points
 cat $pointsTmp >> $points
 rm $pointsTmp
 
-runApplication collapseEdges -overwrite
+runApplication collapseEdges
 
 echo "Changing patch type to wedge type in boundary file"
 sed -i '/wedge/,/nFaces/{s/patch/wedge/}' constant/polyMesh/boundary

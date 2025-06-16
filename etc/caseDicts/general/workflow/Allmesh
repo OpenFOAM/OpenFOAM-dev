@@ -9,7 +9,7 @@ cd "${0%/*}" || exit 1
 # Example workflow with meshing applications
 runApplication blockMesh
 runApplication topoSet
-runApplication refineMesh -overwrite
+runApplication refineMesh
 runApplication transformPoints "scale=(0.01 0.01 0.01)"
 
 #------------------------------------------------------------------------------

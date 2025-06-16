@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,7 @@ void collectFeatureEdges(const repatchMesh& rMesh, labelList& markedEdges)
 
 int main(int argc, char *argv[])
 {
-    #include "addOverwriteOption.H"
+    #include "addNoOverwriteOption.H"
     argList::noParallel();
     argList::validArgs.append("feature angle[0-180]");
 
@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
 
 
     const scalar featureAngle = degToRad(args.argRead<scalar>(1));
-    const bool overwrite      = args.optionFound("overwrite");
+    #include "setNoOverwrite.H"
 
     const scalar minCos = Foam::cos(featureAngle);
 

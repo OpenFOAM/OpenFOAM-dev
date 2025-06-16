@@ -8,11 +8,11 @@ runApplication blockMesh -region fluid
 
 # Create the 3D baffle
 runApplication createZones -region fluid
-runApplication extrudeToRegionMesh -region fluid -overwrite \
+runApplication extrudeToRegionMesh -region fluid \
     -dict system/fluid/extrudeToRegionMeshDict.extrudeFromInternalFaces
 
 # Create the 1D baffle
-runApplication -s baffle1D createBaffles -region fluid -overwrite \
+runApplication -s baffle1D createBaffles -region fluid \
     -dict system/fluid/createBafflesDict.baffle1D
 
 #------------------------------------------------------------------------------

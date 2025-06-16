@@ -6,7 +6,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 runApplication blockMesh
 runApplication extrudeMesh
-runApplication splitMeshRegions -cellZones -overwrite
+runApplication splitMeshRegions -cellZones
 
 paraFoam -region fluid -touch
 paraFoam -region solid -touch

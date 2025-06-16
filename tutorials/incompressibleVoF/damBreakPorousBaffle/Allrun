@@ -11,7 +11,7 @@ foamMergeCase $path/damBreakLaminar $path/damBreak || exit 1
 # Run
 runApplication blockMesh
 runApplication setFields
-runApplication createBaffles -overwrite
+runApplication createBaffles
 runApplication foamRun
 
 #------------------------------------------------------------------------------

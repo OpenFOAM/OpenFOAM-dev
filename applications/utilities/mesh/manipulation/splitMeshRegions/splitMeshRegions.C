@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,8 +73,6 @@ Description
       -insidePoint) its region name will be either
         - name of a cellZone it matches to or
         - "largestOnly" respectively "insidePoint" or
-        - polyMesh::defaultRegion if additionally -overwrite
-          (so it will overwrite the input mesh!)
 
     - writes maps like decomposePar back to original mesh:
         - pointRegionAddressing : for every point in this region the point in
@@ -1364,7 +1362,7 @@ int main(int argc, char *argv[])
     );
     #include "addMeshOption.H"
     #include "addRegionOption.H"
-    #include "addOverwriteOption.H"
+    #include "addNoOverwriteOption.H"
     argList::addBoolOption
     (
         "cellZones",
@@ -1454,7 +1452,7 @@ int main(int argc, char *argv[])
     const bool useCellZones     = args.optionFound("cellZones");
     const bool useCellZonesOnly = args.optionFound("cellZonesOnly");
     const bool useCellZonesFile = args.optionFound("cellZonesFileOnly");
-    const bool overwrite        = args.optionFound("overwrite");
+    #include "setNoOverwrite.H"
     const bool detectOnly       = args.optionFound("detectOnly");
     const bool sloppyCellZones  = args.optionFound("sloppyCellZones");
     const bool useFaceZones     = args.optionFound("useFaceZones");

@@ -8,7 +8,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 runApplication blockMesh
 
 # Generate the snappy mesh
-runApplication snappyHexMesh -overwrite
+runApplication snappyHexMesh
 
 # Initialise with potentialFoam solution
 runApplication potentialFoam -pName p_rgh

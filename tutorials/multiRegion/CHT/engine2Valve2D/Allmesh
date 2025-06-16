@@ -45,7 +45,7 @@ createSingleValveBaseMesh()
                    -dict system/blockMeshDict.$valveState
 
     runApplication -a mirrorMesh ${mesh:+-mesh} $mesh \
-                   -dict system/mirrorMeshDict -overwrite
+                   -dict system/mirrorMeshDict
 }
 
 createExhaustValveMesh()
@@ -221,7 +221,7 @@ createFluidMesh()
     createIntakeValveMesh _tmp_intake $ivLift $nIV $pistonPos $nCylIV
 
     # Combine the fluid mesh modules
-    runApplication -a mergeMeshes -overwrite ${mesh:+-mesh} $mesh -region $region \
+    runApplication -a mergeMeshes ${mesh:+-mesh} $mesh -region $region \
                    -addMeshes '(_tmp_exhaust _tmp_intake)'
 
     # Delete temporary valve meshes
@@ -229,8 +229,8 @@ createFluidMesh()
 
     # Separate ports to mimic complicated engine assembly
     runApplication -a createBaffles ${mesh:+-mesh} $mesh -region $region \
-                   -dict system/createBafflesDict -overwrite
-    runApplication -a splitBaffles ${mesh:+-mesh} $mesh -region $region -overwrite
+                   -dict system/createBafflesDict
+    runApplication -a splitBaffles ${mesh:+-mesh} $mesh -region $region
 
     runApplication -a transformPoints ${mesh:+-mesh} $mesh -region $region \
                    "Rx=90, scale=($SCALE_INV $SCALE_INV $SCALE_INV)"
@@ -241,7 +241,7 @@ createFluidMesh()
     case $mode in
         serial)
             runApplication -a createNonConformalCouples ${mesh:+-mesh} $mesh \
-                           -dict system/createNonConformalCouplesDict -overwrite
+                           -dict system/createNonConformalCouplesDict
             ;;
         parallel)
             [ -z $mesh ] && regions=-allRegions || regions="-region fluid"
@@ -249,7 +249,7 @@ createFluidMesh()
             runApplication -a decomposePar ${mesh:+-mesh} $mesh $regions -noFields
 
             runParallel -a createNonConformalCouples ${mesh:+-mesh} $mesh \
-                        -dict system/createNonConformalCouplesDict -overwrite
+                        -dict system/createNonConformalCouplesDict
             ;;
                 *)
         echo "Error: mode $mode not recognised"

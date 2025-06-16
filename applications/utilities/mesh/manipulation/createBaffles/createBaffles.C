@@ -329,7 +329,7 @@ int main(int argc, char *argv[])
         "Does not duplicate points."
     );
     #include "addDictOption.H"
-    #include "addOverwriteOption.H"
+    #include "addNoOverwriteOption.H"
     #include "addMeshOption.H"
     #include "addRegionOption.H"
 
@@ -339,7 +339,7 @@ int main(int argc, char *argv[])
 
     const polyBoundaryMesh& bMesh = mesh.boundaryMesh();
 
-    const bool overwrite = args.optionFound("overwrite");
+    #include "setNoOverwrite.H"
 
     const word oldInstance = mesh.pointsInstance();
 

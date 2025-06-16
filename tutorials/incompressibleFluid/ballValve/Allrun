@@ -13,7 +13,7 @@ runApplication createZones
 runApplication transformPoints -pointZone ball "Rz=-45"
 
 # Create couples
-runApplication createNonConformalCouples -overwrite pipeNonCouple ballNonCouple
+runApplication createNonConformalCouples pipeNonCouple ballNonCouple
 
 # Decompose
 runApplication decomposePar -cellProc

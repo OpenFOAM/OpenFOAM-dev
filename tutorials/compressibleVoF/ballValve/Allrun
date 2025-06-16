@@ -11,7 +11,7 @@ mkdir constant/geometry && cp $FOAM_TUTORIALS/resources/geometry/ballValve-torus
 runApplication blockMesh -dict $FOAM_TUTORIALS/resources/blockMesh/ballValve
 
 # Create couples
-runApplication createNonConformalCouples -overwrite
+runApplication createNonConformalCouples
 
 # Decompose
 runApplication decomposePar -cellProc

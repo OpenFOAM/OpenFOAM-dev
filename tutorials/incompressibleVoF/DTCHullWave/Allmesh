@@ -11,10 +11,10 @@ runApplication surfaceFeatures
 
 runApplication blockMesh
 
-runApplication refineMesh -overwrite
+runApplication refineMesh
 
-runApplication snappyHexMesh -overwrite
+runApplication snappyHexMesh
 
-runApplication renumberMesh -noFields -overwrite
+runApplication renumberMesh -noFields
 
 #------------------------------------------------------------------------------

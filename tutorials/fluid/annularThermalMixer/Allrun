@@ -7,11 +7,11 @@ cd ${0%/*} || exit 1    # Run from this directory
 runApplication surfaceFeatures
 
 runApplication blockMesh
-runApplication snappyHexMesh -overwrite
+runApplication snappyHexMesh
 
-runApplication createBaffles -overwrite
-runApplication splitBaffles -overwrite
-runApplication createNonConformalCouples -overwrite nonCouple1 nonCouple2
+runApplication createBaffles
+runApplication splitBaffles
+runApplication createNonConformalCouples nonCouple1 nonCouple2
 
 runApplication foamRun
 

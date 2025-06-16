@@ -7,6 +7,6 @@ cd ${0%/*} || exit 1    # Run from this directory
 runApplication blockMesh
 runApplication createZones
 runApplication transformPoints "scale=(0.01 0.01 0.01)"
-runApplication splitMeshRegions -cellZones -defaultRegionName fluid -overwrite
+runApplication splitMeshRegions -cellZones -defaultRegionName fluid
 
 #------------------------------------------------------------------------------

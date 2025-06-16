@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
 {
     argList::validArgs.append("surfaceFormat");
 
-    #include "addOverwriteOption.H"
+    #include "addNoOverwriteOption.H"
 
     #include "setRootCase.H"
 
@@ -123,7 +123,7 @@ int main(int argc, char *argv[])
     );
 
     const ExtrudeMode surfaceFormat = ExtrudeModeNames[args[1]];
-    const bool overwrite = args.optionFound("overwrite");
+    #include "setNoOverwrite.H"
 
     Info<< "Extruding from " << ExtrudeModeNames[surfaceFormat]
         << " at time " << runTimeExtruded.name() << endl;

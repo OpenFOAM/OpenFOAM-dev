@@ -11,7 +11,7 @@ runApplication -s porous blockMesh -region porous
 # Create rotor blades in air region
 runApplication -s air.1 createZones -region air -dict createZonesDict.1
 
-runApplication createBaffles -region air -overwrite
+runApplication createBaffles -region air
 
 # Create rotor zone in air region for MRF
 runApplication -s air.2 createZones -region air -dict createZonesDict.2

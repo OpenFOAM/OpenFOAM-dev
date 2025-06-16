@@ -25,9 +25,9 @@ runApplication -suffix $region snappyHexMeshConfig \
 for region in solid fluid
 do
     runApplication -suffix $region blockMesh -region $region
-    runApplication -suffix $region snappyHexMesh -region $region -overwrite
+    runApplication -suffix $region snappyHexMesh -region $region
 done
 
-runApplication createNonConformalCouples -overwrite
+runApplication createNonConformalCouples
 
 # ----------------------------------------------------------------- end-of-file

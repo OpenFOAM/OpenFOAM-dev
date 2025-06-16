@@ -633,7 +633,7 @@ void writeMesh
 int main(int argc, char *argv[])
 {
     Foam::argList::removeOption("noFunctionObjects");
-    #include "addOverwriteOption.H"
+    #include "addNoOverwriteOption.H"
     Foam::argList::addBoolOption
     (
         "checkGeometry",
@@ -668,7 +668,7 @@ int main(int argc, char *argv[])
     Info<< "Read mesh in = "
         << runTime.cpuTimeIncrement() << " s" << endl;
 
-    const bool overwrite = args.optionFound("overwrite");
+    #include "setNoOverwrite.H"
     const bool checkGeometry = args.optionFound("checkGeometry");
     const bool surfaceSimplify = args.optionFound("surfaceSimplify");
 
