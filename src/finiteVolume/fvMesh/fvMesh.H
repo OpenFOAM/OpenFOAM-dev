@@ -329,10 +329,17 @@ public:
 
     // Constructors
 
-        //- Construct from IOobject. Optionally prevent post-construction, so
-        //  that postConstruct may be called manually for finer control of
-        //  construction of mesh changes and the level of stitching.
-        explicit fvMesh(const IOobject& io, const bool doPost = true);
+        //- Construct from IOobject.
+        //  Optionally prevent post-construction, so that postConstruct may be
+        //  called manually for finer control of construction of mesh changes
+        //  and the level of stitching.
+        //  Optionally prevent zone generation
+        explicit fvMesh
+        (
+            const IOobject& io,
+            const bool doPost = true,
+            const bool doZones = true
+        );
 
         //- Construct from cellShapes with boundary.
         fvMesh

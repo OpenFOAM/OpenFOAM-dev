@@ -360,7 +360,12 @@ Foam::surfaceLabelField::Boundary& Foam::fvMesh::polyFacesBfRef()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fvMesh::fvMesh(const IOobject& io, const bool doPost)
+Foam::fvMesh::fvMesh
+(
+    const IOobject& io,
+    const bool doPost,
+    const bool doZones
+)
 :
     polyMesh(io, false),
     surfaceInterpolation(*this),
@@ -404,7 +409,7 @@ Foam::fvMesh::fvMesh(const IOobject& io, const bool doPost)
 
     // Generate the zones after the mesh manipulators have been constructed
     // to support motion-specific zone generators requiring access to the mover
-    if (doPost && zonesGenerator::New(*this).moveUpdate())
+    if (doZones && zonesGenerator::New(*this).moveUpdate())
     {
         pointZones().write();
         faceZones().write();

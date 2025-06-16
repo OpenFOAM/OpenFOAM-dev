@@ -279,10 +279,9 @@ public:
         //- Return whether the given IOobject relates to a mesh on disk
         static bool found(const IOobject& io);
 
-        //- Construct from IOobject. Optionally prevent post-construction, so
-        //  that postConstruct may be called manually for finer control of
-        //  construction of mesh changes
-        explicit polyMesh(const IOobject& io, const bool doPost = true);
+        //- Construct from IOobject.
+        //  Optionally prevent zone generation
+        explicit polyMesh(const IOobject& io, const bool doZones = true);
 
         //- Move construct from IOobject or from components.
         //  Boundary is added using addPatches() member function

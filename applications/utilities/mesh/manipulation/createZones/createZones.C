@@ -37,18 +37,29 @@ Usage
       - \par -mesh \<name\>
         Specify an alternative mesh.
 
+      - \par -fvMesh
+        Construct an fvMesh rather than a polyMesh
+        to allow the generation and writing of zones associated with
+        fvMesh movers
+
       - \par -dict \<filename\>
         Specify alternative dictionary for the zoneGenerators,
         defaults to system/createZonesDict
 
+      - \par -zonesGenerator
+        Generate the zones from the constant/zonesGenerator file
+        during mesh construction instead of from createZonesDict
+
       - \par -clear
-        Clear all registered zones before generating new zones.
+        Clear all registered zones before generating new zones from
+        the createZonesDict file.
+        Not applicable to the zonesGenerator option.
 
 \*---------------------------------------------------------------------------*/
 
 #include "argList.H"
 #include "Time.H"
-#include "polyMesh.H"
+#include "fvMesh.H"
 #include "zoneGeneratorList.H"
 #include "zonesGenerator.H"
 #include "systemDict.H"
@@ -67,6 +78,16 @@ int main(int argc, char *argv[])
         "clear",
         "clear all existing zones"
     );
+    argList::addBoolOption
+    (
+        "zonesGenerator",
+        "execute the zonesGenerator on construction"
+    );
+    argList::addBoolOption
+    (
+        "fvMesh",
+        "construct an fvMesh rather than a polyMesh"
+    );
 
     #include "setRootCase.H"
     #include "createTime.H"
@@ -74,39 +95,62 @@ int main(int argc, char *argv[])
     #include "setMeshPath.H"
     #include "setRegionName.H"
 
-    polyMesh mesh
+    const bool constructFvMesh = args.optionFound("fvMesh");
+    const bool zonesGenerator = args.optionFound("zonesGenerator");
+
+    autoPtr<polyMesh> meshPtr
     (
-        IOobject
+        constructFvMesh
+      ? new fvMesh
         (
-            regionName,
-            runTime.name(),
-            meshPath,
-            runTime,
-            IOobject::MUST_READ
-        ),
-        false
+            IOobject
+            (
+                regionName,
+                runTime.name(),
+                meshPath,
+                runTime,
+                IOobject::MUST_READ
+            ),
+            true,
+            zonesGenerator
+        )
+      : new polyMesh
+        (
+            IOobject
+            (
+                regionName,
+                runTime.name(),
+                meshPath,
+                runTime,
+                IOobject::MUST_READ
+            ),
+            zonesGenerator
+        )
     );
 
-    if (args.optionFound("clear"))
+    polyMesh& mesh = meshPtr();
+
+    if (!zonesGenerator)
     {
-        mesh.pointZones().clear();
-        mesh.cellZones().clear();
-        mesh.faceZones().clear();
+        if (args.optionFound("clear"))
+        {
+            mesh.pointZones().clear();
+            mesh.cellZones().clear();
+            mesh.faceZones().clear();
+        }
+
+        const dictionary zoneGeneratorsDict
+        (
+            systemDict("createZonesDict", args, mesh)
+        );
+
+        zoneGeneratorList zoneGenerators(mesh, zoneGeneratorsDict);
+
+        // Generate and register the zones
+        zoneGenerators.generate();
     }
 
-    const dictionary zoneGeneratorsDict
-    (
-        systemDict("createZonesDict", args, mesh)
-    );
-
-    zoneGeneratorList zoneGenerators(mesh, zoneGeneratorsDict);
-
-    // Generate and register the zones
-    zoneGenerators.generate();
-
-    // Generate the zones specified in constant/zonesGenerator
-    // zonesGenerator::New(mesh);
-
+    // Write the zone lists that are not empty
     mesh.pointZones().write();
     mesh.cellZones().write();
     mesh.faceZones().write();
