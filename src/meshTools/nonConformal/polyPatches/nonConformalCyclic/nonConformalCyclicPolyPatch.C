@@ -47,17 +47,13 @@ namespace Foam
     );
 }
 
-
-namespace Foam
-{
-    template<>
-    const char*
-        NamedEnum<nonConformalCyclicPolyPatch::moveUpdate, 3>::names[] =
-        {"always", "detect", "never"};
-}
-
 const Foam::NamedEnum<Foam::nonConformalCyclicPolyPatch::moveUpdate, 3>
-    Foam::nonConformalCyclicPolyPatch::moveUpdateNames_;
+Foam::nonConformalCyclicPolyPatch::moveUpdateNames_
+{
+    "always",
+    "detect",
+    "never"
+};
 
 
 // * * * * * * * * * * * *  Protected Member Functions * * * * * * * * * * * //

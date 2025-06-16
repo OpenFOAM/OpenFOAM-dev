@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,18 +63,12 @@ enum ExtrudeMode
     SURFACE
 };
 
-namespace Foam
+static const NamedEnum<ExtrudeMode, 3> ExtrudeModeNames
 {
-    template<>
-    const char* NamedEnum<ExtrudeMode, 3>::names[] =
-    {
-        "mesh",
-        "patch",
-        "surface"
-    };
-}
-
-static const NamedEnum<ExtrudeMode, 3> ExtrudeModeNames;
+    "mesh",
+    "patch",
+    "surface"
+};
 
 
 label findIndex(const polyBoundaryMesh& patches, const word& name)

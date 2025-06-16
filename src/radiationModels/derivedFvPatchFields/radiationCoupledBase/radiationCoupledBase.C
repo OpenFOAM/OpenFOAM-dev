@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,22 +38,15 @@ namespace Foam
     defineTypeNameAndDebug(radiationCoupledBase, 0);
 }
 
-template<>
-const char* Foam::NamedEnum
-<
-    Foam::radiationCoupledBase::emissivityMethodType,
-    2
->::names[] =
-{
-    "solidRadiation",
-    "lookup"
-};
-
 const Foam::NamedEnum
 <
     Foam::radiationCoupledBase::emissivityMethodType,
     2
-> Foam::radiationCoupledBase::emissivityMethodTypeNames_;
+> Foam::radiationCoupledBase::emissivityMethodTypeNames_
+{
+    "solidRadiation",
+    "lookup"
+};
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -156,15 +149,6 @@ Foam::tmp<Foam::scalarField> Foam::radiationCoupledBase::emissivity() const
         {
             // Return local value
             return emissivity_;
-        }
-
-        default:
-        {
-            FatalErrorInFunction
-                << "Unimplemented method " << method_ << endl
-                << "Please set 'emissivity' to one of "
-                << emissivityMethodTypeNames_.toc()
-                << exit(FatalError);
         }
         break;
     }

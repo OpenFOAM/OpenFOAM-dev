@@ -33,23 +33,18 @@ namespace Foam
     defineTypeNameAndDebug(uniformSizeNumberLagrangianScalarFieldSource, 0);
 }
 
-
-namespace Foam
-{
-    template<>
-    const char* NamedEnum
-    <
-        uniformSizeNumberLagrangianScalarFieldSource::uniformSize,
-        4
-    >::names[] = {"number", "surfaceArea", "volume", "mass"};
-}
-
-
 const Foam::NamedEnum
 <
     Foam::uniformSizeNumberLagrangianScalarFieldSource::uniformSize,
     4
-> Foam::uniformSizeNumberLagrangianScalarFieldSource::uniformSizeNames_;
+>
+Foam::uniformSizeNumberLagrangianScalarFieldSource::uniformSizeNames_
+{
+    "number",
+    "surfaceArea",
+    "volume",
+    "mass"
+};
 
 
 // * * * * * * * * * * * *  Protected Member Functions * * * * * * * * * * * //

@@ -76,23 +76,17 @@ namespace Foam
     }
 }
 
-template<>
-const char* Foam::NamedEnum
-<
-    Foam::sampledSurfaces::triSurface::samplingSource,
-    3
->::names[] =
-{
-    "cells",
-    "insideCells",
-    "boundaryFaces"
-};
 
 const Foam::NamedEnum
 <
     Foam::sampledSurfaces::triSurface::samplingSource,
     3
-> Foam::sampledSurfaces::triSurface::samplingSourceNames_;
+> Foam::sampledSurfaces::triSurface::samplingSourceNames_
+{
+    "cells",
+    "insideCells",
+    "boundaryFaces"
+};
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //

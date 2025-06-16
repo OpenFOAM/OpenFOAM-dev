@@ -485,11 +485,8 @@ void Foam::cloud::calculate
 
 namespace Foam
 {
-    template<>
-    const char* NamedEnum<enum cloud::trackingType, 2>::names[] =
-        {"linear", "parabolic"};
-
-    const NamedEnum<enum cloud::trackingType, 2> cloudTrackingNames;
+    const NamedEnum<enum cloud::trackingType, 2> cloudTrackingNames
+    {"linear", "parabolic"};
 }
 
 

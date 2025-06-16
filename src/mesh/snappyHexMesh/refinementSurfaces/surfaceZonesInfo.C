@@ -31,41 +31,22 @@ License
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-namespace Foam
-{
-    template<>
-    const char* Foam::NamedEnum
-    <
-        Foam::surfaceZonesInfo::areaSelectionAlgo,
-        4
-    >::names[] =
-    {
-        "inside",
-        "outside",
-        "insidePoint",
-        "none"
-    };
-}
 const Foam::NamedEnum<Foam::surfaceZonesInfo::areaSelectionAlgo, 4>
-    Foam::surfaceZonesInfo::areaSelectionAlgoNames;
-
-
-namespace Foam
+Foam::surfaceZonesInfo::areaSelectionAlgoNames
 {
-    template<>
-    const char* Foam::NamedEnum
-    <
-        Foam::surfaceZonesInfo::faceZoneType,
-        3
-    >::names[] =
-    {
-        "internal",
-        "baffle",
-        "boundary"
-    };
-}
+    "inside",
+    "outside",
+    "insidePoint",
+    "none"
+};
+
 const Foam::NamedEnum<Foam::surfaceZonesInfo::faceZoneType, 3>
-    Foam::surfaceZonesInfo::faceZoneTypeNames;
+Foam::surfaceZonesInfo::faceZoneTypeNames
+{
+    "internal",
+    "baffle",
+    "boundary"
+};
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,23 +46,16 @@ License
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 const Foam::NamedEnum<Foam::fileMonitor::fileState, 3>
-    Foam::fileMonitor::fileStateNames_;
+Foam::fileMonitor::fileStateNames_
+{
+    "unmodified",
+    "modified",
+    "deleted"
+};
 
 namespace Foam
 {
     defineTypeNameAndDebug(fileMonitor, 0);
-
-    template<>
-    const char* Foam::NamedEnum
-    <
-        Foam::fileMonitor::fileState,
-        3
-    >::names[] =
-    {
-        "unmodified",
-        "modified",
-        "deleted"
-    };
 
     //- Reduction operator for PackedList of fileState
     class reduceFileStates

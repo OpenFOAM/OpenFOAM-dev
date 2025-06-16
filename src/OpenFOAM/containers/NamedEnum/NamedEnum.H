@@ -35,9 +35,8 @@ SourceFiles
 #ifndef NamedEnum_H
 #define NamedEnum_H
 
+#include "FixedList.H"
 #include "HashTable.H"
-#include "stringList.H"
-#include "wordList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -53,29 +52,25 @@ class dictionary;
 template<class Enum, unsigned int nEnum>
 class NamedEnum
 :
-    public HashTable<unsigned int>
+    public FixedList<word, nEnum>
 {
-    // Private Member Functions
+    // Private Member Data
 
-        //- Disallow default bitwise copy construction
-        NamedEnum(const NamedEnum&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const NamedEnum&) = delete;
+        //- Map of name -> enumeration
+        HashTable<unsigned int> table_;
 
 
 public:
 
-    // Static Data Members
-
-        //- The set of names corresponding to the enumeration Enum
-        static const char* names[nEnum];
-
+    typedef FixedList<word, nEnum> namesType;
 
     // Constructors
 
-        //- Construct from names
-        NamedEnum();
+        //- Construct from list of names
+        NamedEnum(std::initializer_list<word>);
+
+        //- Disallow default bitwise copy construction
+        NamedEnum(const NamedEnum&) = delete;
 
 
     // Member Functions
@@ -102,26 +97,29 @@ public:
         //- Write the name representation of the enumeration to an Ostream
         void write(const Enum e, Ostream&) const;
 
-        //- The set of names as a list of words
-        static wordList words();
-
 
     // Member Operators
 
         //- Return the enumeration element corresponding to the given name
         const Enum operator[](const char* name) const
         {
-            return Enum(HashTable<unsigned int>::operator[](name));
+            return Enum(table_[name]);
         }
 
         //- Return the enumeration element corresponding to the given name
         const Enum operator[](const word& name) const
         {
-            return Enum(HashTable<unsigned int>::operator[](name));
+            return Enum(table_[name]);
         }
 
         //- Return the name of the given enumeration element
-        const char* operator[](const Enum e) const;
+        const word& operator[](const Enum e) const
+        {
+            return FixedList<word, nEnum>::operator[](unsigned(e));
+        }
+
+        //- Disallow default bitwise assignment
+        void operator=(const NamedEnum&) = delete;
 };
 
 

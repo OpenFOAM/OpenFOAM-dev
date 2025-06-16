@@ -60,31 +60,28 @@ Type sum(const tmp<Field<Type>>& x, const bool global)
 
 namespace Foam
 {
-    template<>
-    const char* NamedEnum<cyclicTransform::transformTypes, 4>::names[] =
-    {
-        "unspecified",
-        "none",
-        "rotational",
-        "translational"
-    };
-
-    const NamedEnum<cyclicTransform::transformTypes, 4>
-        cyclicTransform::transformTypeNames;
-
-    const wordList cyclicTransform::keywords =
-    {
-        "transformType",
-        "transform",
-        "rotationAxis",
-        "rotationCentre",
-        "rotationAngle",
-        "separation",
-        "separationVector"
-    };
-
     defineTypeNameAndDebug(cyclicTransform, 0);
 }
+
+const Foam::NamedEnum<Foam::cyclicTransform::transformTypes, 4>
+Foam::cyclicTransform::transformTypeNames
+{
+    "unspecified",
+    "none",
+    "rotational",
+    "translational"
+};
+
+const Foam::wordList Foam::cyclicTransform::keywords
+{
+    "transformType",
+    "transform",
+    "rotationAxis",
+    "rotationCentre",
+    "rotationAngle",
+    "separation",
+    "separationVector"
+};
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //

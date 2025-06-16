@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,20 +68,20 @@ void gatherAndFlatten(DynamicField<Type>& field)
 
 namespace Foam
 {
-    template<>
-    const char*
-        NamedEnum<functionObjects::streamlines::trackDirection, 3>::names[] =
-        {"forward", "backward", "both"};
-
     namespace functionObjects
     {
         defineTypeNameAndDebug(streamlines, 0);
         addToRunTimeSelectionTable(functionObject, streamlines, dictionary);
-
-        const NamedEnum<streamlines::trackDirection, 3>
-            streamlines::trackDirectionNames_;
     }
 }
+
+const Foam::NamedEnum<Foam::functionObjects::streamlines::trackDirection, 3>
+Foam::functionObjects::streamlines::trackDirectionNames_
+{
+    "forward",
+    "backward",
+    "both"
+};
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //

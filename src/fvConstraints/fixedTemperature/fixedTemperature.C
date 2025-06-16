@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,15 +54,12 @@ namespace fv
 }
 
 
-namespace Foam
-{
-    template<>
-    const char* NamedEnum<fv::fixedTemperature::temperatureMode, 2>::names[] =
-        {"uniform", "lookup"};
-}
-
 const Foam::NamedEnum<Foam::fv::fixedTemperature::temperatureMode, 2>
-    Foam::fv::fixedTemperature::modeNames_;
+Foam::fv::fixedTemperature::modeNames_
+{
+    "uniform",
+    "lookup"
+};
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //

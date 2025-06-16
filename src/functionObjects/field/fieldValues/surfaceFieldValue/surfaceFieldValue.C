@@ -52,12 +52,11 @@ namespace fieldValues
 }
 }
 
-template<>
-const char* Foam::NamedEnum
+const Foam::NamedEnum
 <
     Foam::functionObjects::fieldValues::surfaceFieldValue::selectionTypes,
     4
->::names[] =
+> Foam::functionObjects::fieldValues::surfaceFieldValue::selectionTypeNames
 {
     "faceZone",
     "patch",
@@ -65,12 +64,11 @@ const char* Foam::NamedEnum
     "sampledSurface"
 };
 
-template<>
-const char* Foam::NamedEnum
+const Foam::NamedEnum
 <
     Foam::functionObjects::fieldValues::surfaceFieldValue::operationType,
     15
->::names[] =
+> Foam::functionObjects::fieldValues::surfaceFieldValue::operationTypeNames_
 {
     "none",
     "sum",
@@ -88,18 +86,6 @@ const char* Foam::NamedEnum
     "areaNormalAverage",
     "areaNormalIntegrate"
 };
-
-const Foam::NamedEnum
-<
-    Foam::functionObjects::fieldValues::surfaceFieldValue::selectionTypes,
-    4
-> Foam::functionObjects::fieldValues::surfaceFieldValue::selectionTypeNames;
-
-const Foam::NamedEnum
-<
-    Foam::functionObjects::fieldValues::surfaceFieldValue::operationType,
-    15
-> Foam::functionObjects::fieldValues::surfaceFieldValue::operationTypeNames_;
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //

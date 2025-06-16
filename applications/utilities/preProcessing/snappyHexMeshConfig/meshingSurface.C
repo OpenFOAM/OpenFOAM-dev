@@ -28,16 +28,9 @@ License
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-namespace Foam
-{
-    template<>
-    const char* NamedEnum<meshingSurface::surfaceType, 5>::names[] =
-        {"wall", "external", "cellZone", "rotatingZone", "baffle"};
-}
-
-
 const Foam::NamedEnum<Foam::meshingSurface::surfaceType, 5>
-    Foam::meshingSurface::surfaceTypeNames;
+Foam::meshingSurface::surfaceTypeNames
+{"wall", "external", "cellZone", "rotatingZone", "baffle"};
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //

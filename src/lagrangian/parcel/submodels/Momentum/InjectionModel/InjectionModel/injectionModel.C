@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,19 +28,9 @@ License
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-namespace Foam
-{
-    template<>
-    const char* NamedEnum
-    <
-        Foam::injectionModel::uniformParcelSize,
-        3
-    >::names[] = {"nParticle", "surfaceArea", "volume"};
-}
-
-
 const Foam::NamedEnum<Foam::injectionModel::uniformParcelSize, 3>
-    Foam::injectionModel::uniformParcelSizeNames_;
+Foam::injectionModel::uniformParcelSizeNames_
+{"nParticle", "surfaceArea", "volume"};
 
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //

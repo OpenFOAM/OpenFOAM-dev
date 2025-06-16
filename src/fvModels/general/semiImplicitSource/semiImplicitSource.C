@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,17 +44,14 @@ namespace Foam
             dictionary
         );
     }
-
-    template<>
-    const char* NamedEnum<fv::semiImplicitSource::volumeMode, 2>::names[] =
-    {
-        "absolute",
-        "specific"
-    };
 }
 
 const Foam::NamedEnum<Foam::fv::semiImplicitSource::volumeMode, 2>
-    Foam::fv::semiImplicitSource::volumeModeNames_;
+Foam::fv::semiImplicitSource::volumeModeNames_
+{
+    "absolute",
+    "specific"
+};
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //

@@ -44,24 +44,17 @@ namespace Foam
     }
 }
 
-template<>
-const char* Foam::NamedEnum
+const Foam::NamedEnum
 <
     Foam::zoneGenerators::faceZoneGenerator::cellFaces,
     4
->::names[] =
+> Foam::zoneGenerators::faceZoneGenerator::cellFacesNames
 {
     "all",
     "inner",
     "outer",
     "outerInternal"
 };
-
-const Foam::NamedEnum
-<
-    Foam::zoneGenerators::faceZoneGenerator::cellFaces,
-    4
-> Foam::zoneGenerators::faceZoneGenerator::cellFacesNames;
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //

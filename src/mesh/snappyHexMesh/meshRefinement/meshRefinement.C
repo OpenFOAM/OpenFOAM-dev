@@ -61,56 +61,33 @@ License
 namespace Foam
 {
     defineTypeNameAndDebug(meshRefinement, 0);
-
-    template<>
-    const char* Foam::NamedEnum
-    <
-        Foam::meshRefinement::IOdebugType,
-        5
-    >::names[] =
-    {
-        "mesh",
-        "intersections",
-        "featureSeeds",
-        "attraction",
-        "layerInfo"
-    };
-
-    template<>
-    const char* Foam::NamedEnum
-    <
-        Foam::meshRefinement::IOoutputType,
-        1
-    >::names[] =
-    {
-        "layerInfo"
-    };
-
-    template<>
-    const char* Foam::NamedEnum
-    <
-        Foam::meshRefinement::IOwriteType,
-        5
-    >::names[] =
-    {
-        "mesh",
-        "noRefinement",
-        "scalarLevels",
-        "layerSets",
-        "layerFields"
-    };
-
 }
 
 const Foam::NamedEnum<Foam::meshRefinement::IOdebugType, 5>
-Foam::meshRefinement::IOdebugTypeNames;
+Foam::meshRefinement::IOdebugTypeNames
+{
+    "mesh",
+    "intersections",
+    "featureSeeds",
+    "attraction",
+    "layerInfo"
+};
 
 const Foam::NamedEnum<Foam::meshRefinement::IOoutputType, 1>
-Foam::meshRefinement::IOoutputTypeNames;
+Foam::meshRefinement::IOoutputTypeNames
+{
+    "layerInfo"
+};
 
 const Foam::NamedEnum<Foam::meshRefinement::IOwriteType, 5>
-Foam::meshRefinement::IOwriteTypeNames;
-
+Foam::meshRefinement::IOwriteTypeNames
+{
+    "mesh",
+    "noRefinement",
+    "scalarLevels",
+    "layerSets",
+    "layerFields"
+};
 
 Foam::meshRefinement::writeType Foam::meshRefinement::writeLevel_;
 

@@ -39,19 +39,15 @@ namespace functionObjects
 }
 }
 
-
-template<>
-const char* Foam::NamedEnum
-<
-    Foam::functionObjects::fieldAverage::baseType,
-    2
->::names[] = { "iteration", "time"};
-
 const Foam::NamedEnum
 <
     Foam::functionObjects::fieldAverage::baseType,
     2
-> Foam::functionObjects::fieldAverage::baseTypeNames_;
+> Foam::functionObjects::fieldAverage::baseTypeNames_
+{
+    "iteration",
+    "time"
+};
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //

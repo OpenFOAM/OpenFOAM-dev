@@ -33,19 +33,16 @@ License
 namespace Foam
 {
     defineTypeNameAndDebug(IOobject, 0);
-
-    template<>
-    const char* NamedEnum<IOobject::fileCheckTypes, 4>::names[] =
-    {
-        "timeStamp",
-        "timeStampMaster",
-        "inotify",
-        "inotifyMaster"
-    };
 }
 
 const Foam::NamedEnum<Foam::IOobject::fileCheckTypes, 4>
-    Foam::IOobject::fileCheckTypesNames;
+Foam::IOobject::fileCheckTypesNames
+{
+    "timeStamp",
+    "timeStampMaster",
+    "inotify",
+    "inotifyMaster"
+};
 
 // Default fileCheck type
 Foam::IOobject::fileCheckTypes Foam::IOobject::fileModificationChecking

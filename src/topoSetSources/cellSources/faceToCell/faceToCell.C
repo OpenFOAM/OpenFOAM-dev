@@ -34,24 +34,16 @@ namespace Foam
 {
     defineTypeNameAndDebug(faceToCell, 0);
     addToRunTimeSelectionTable(topoSetSource, faceToCell, word);
-
-    template<>
-    const char* Foam::NamedEnum
-    <
-        Foam::faceToCell::faceAction,
-        4
-    >::names[] =
-    {
-        "neighbour",
-        "owner",
-        "any",
-        "all"
-    };
 }
 
-
 const Foam::NamedEnum<Foam::faceToCell::faceAction, 4>
-    Foam::faceToCell::faceActionNames_;
+Foam::faceToCell::faceActionNames_
+{
+    "neighbour",
+    "owner",
+    "any",
+    "all"
+};
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //

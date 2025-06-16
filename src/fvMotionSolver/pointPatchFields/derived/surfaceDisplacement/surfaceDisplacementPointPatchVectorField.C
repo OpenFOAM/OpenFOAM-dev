@@ -38,18 +38,13 @@ namespace Foam
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-template<>
-const char*
-NamedEnum<surfaceDisplacementPointPatchVectorField::projectMode, 3>::
-names[] =
+const NamedEnum<surfaceDisplacementPointPatchVectorField::projectMode, 3>
+surfaceDisplacementPointPatchVectorField::projectModeNames_
 {
     "nearest",
     "pointNormal",
     "fixedNormal"
 };
-
-const NamedEnum<surfaceDisplacementPointPatchVectorField::projectMode, 3>
-    surfaceDisplacementPointPatchVectorField::projectModeNames_;
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //

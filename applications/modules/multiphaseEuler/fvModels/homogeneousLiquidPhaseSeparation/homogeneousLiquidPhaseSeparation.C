@@ -46,23 +46,13 @@ namespace fv
 }
 }
 
-
-namespace Foam
-{
-    template<>
-    const char* NamedEnum
-    <
-        fv::homogeneousLiquidPhaseSeparation::nucleateType,
-        3
-    >::names[] = {"solid", "liquid", "gas"};
-}
-
-
 const Foam::NamedEnum
 <
     Foam::fv::homogeneousLiquidPhaseSeparation::nucleateType,
     3
-> Foam::fv::homogeneousLiquidPhaseSeparation::nucleateTypeNames_;
+>
+Foam::fv::homogeneousLiquidPhaseSeparation::nucleateTypeNames_
+{"solid", "liquid", "gas"};
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //

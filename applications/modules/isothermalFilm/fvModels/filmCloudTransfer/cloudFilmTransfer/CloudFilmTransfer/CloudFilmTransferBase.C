@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,22 +27,13 @@ License
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-namespace Foam
-{
-    template<>
-    const char* NamedEnum
-    <
-        CloudFilmTransferBase::interactionType,
-        3
-    >::names[] = {"absorb", "bounce", "splashBai"};
-}
-
-
 const Foam::NamedEnum
 <
     Foam::CloudFilmTransferBase::interactionType,
     3
-> Foam::CloudFilmTransferBase::interactionTypeNames_;
+>
+Foam::CloudFilmTransferBase::interactionTypeNames_
+{"absorb", "bounce", "splashBai"};
 
 
 // ************************************************************************* //

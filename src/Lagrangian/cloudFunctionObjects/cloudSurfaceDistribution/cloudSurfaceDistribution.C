@@ -50,18 +50,13 @@ namespace functionObjects
 }
 }
 
-template<>
-const char* Foam::NamedEnum
-<
-    Foam::functionObjects::cloudSurfaceDistribution::selectionType,
-    3
->::names[] = {"faceZone", "faceSet", "patch"};
-
 const Foam::NamedEnum
 <
     Foam::functionObjects::cloudSurfaceDistribution::selectionType,
     3
-> Foam::functionObjects::cloudSurfaceDistribution::selectionTypeNames;
+>
+Foam::functionObjects::cloudSurfaceDistribution::selectionTypeNames
+{"faceZone", "faceSet", "patch"};
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -116,7 +111,7 @@ Foam::functionObjects::cloudSurfaceDistribution::readSelectionType
     // If there is only one of the possible keys (i.e., "faceZone", "faceSet",
     // and "patch") present in the dictionary then infer the selection type
     // from that key
-    static wordList keys = selectionTypeNames.words();
+    const NamedEnum<selectionType, 3>::namesType& keys = selectionTypeNames;
     label keyi = -1;
     forAll(keys, i)
     {

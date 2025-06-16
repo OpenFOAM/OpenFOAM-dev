@@ -33,19 +33,12 @@ License
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-namespace Foam
-{
-    template<>
-    const char* NamedEnum<Foam::planeToFaceZone::include, 2>::names[] =
-    {
-        "all",
-        "closest"
-    };
-}
-
 const Foam::NamedEnum<Foam::planeToFaceZone::include, 2>
-    Foam::planeToFaceZone::includeNames_;
-
+Foam::planeToFaceZone::includeNames_
+{
+    "all",
+    "closest"
+};
 
 namespace Foam
 {

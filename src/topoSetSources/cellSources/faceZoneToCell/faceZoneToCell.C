@@ -33,22 +33,14 @@ namespace Foam
 {
     defineTypeNameAndDebug(faceZoneToCell, 0);
     addToRunTimeSelectionTable(topoSetSource, faceZoneToCell, word);
-
-    template<>
-    const char* Foam::NamedEnum
-    <
-        Foam::faceZoneToCell::faceAction,
-        2
-    >::names[] =
-    {
-        "master",
-        "slave"
-    };
 }
 
-
 const Foam::NamedEnum<Foam::faceZoneToCell::faceAction, 2>
-    Foam::faceZoneToCell::faceActionNames_;
+Foam::faceZoneToCell::faceActionNames_
+{
+    "master",
+    "slave"
+};
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //

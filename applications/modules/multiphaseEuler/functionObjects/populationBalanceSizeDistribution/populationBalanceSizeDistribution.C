@@ -42,13 +42,12 @@ namespace functionObjects
 }
 }
 
-template<>
-const char*
-Foam::NamedEnum
+const Foam::NamedEnum
 <
     Foam::functionObjects::populationBalanceSizeDistribution::functionType,
     6
->::names[] =
+>
+Foam::functionObjects::populationBalanceSizeDistribution::functionTypeNames_
 {
     "numberConcentration",
     "numberDensity",
@@ -60,17 +59,10 @@ Foam::NamedEnum
 
 const Foam::NamedEnum
 <
-    Foam::functionObjects::populationBalanceSizeDistribution::functionType,
-    6
-> Foam::functionObjects::populationBalanceSizeDistribution::functionTypeNames_;
-
-template<>
-const char*
-Foam::NamedEnum
-<
     Foam::functionObjects::populationBalanceSizeDistribution::coordinateType,
     4
->::names[] =
+>
+Foam::functionObjects::populationBalanceSizeDistribution:: coordinateTypeNames_
 {
     "volume",
     "area",
@@ -80,35 +72,16 @@ Foam::NamedEnum
 
 const Foam::NamedEnum
 <
-    Foam::functionObjects::populationBalanceSizeDistribution::coordinateType,
-    4
-> Foam::functionObjects::populationBalanceSizeDistribution::
-  coordinateTypeNames_;
-
-
-namespace Foam
-{
-    template<>
-    const char* NamedEnum
-    <
-        Foam::functionObjects::populationBalanceSizeDistribution::weightType,
-        4
-    >::names[] =
-    {
-        "numberConcentration",
-        "volumeConcentration",
-        "areaConcentration",
-        "cellVolume"
-    };
-}
-
-
-const Foam::NamedEnum
-<
     Foam::functionObjects::populationBalanceSizeDistribution::weightType,
     4
 >
-Foam::functionObjects::populationBalanceSizeDistribution::weightTypeNames_;
+Foam::functionObjects::populationBalanceSizeDistribution::weightTypeNames_
+{
+    "numberConcentration",
+    "volumeConcentration",
+    "areaConcentration",
+    "cellVolume"
+};
 
 using Foam::constant::mathematical::pi;
 
@@ -594,11 +567,10 @@ bool Foam::functionObjects::populationBalanceSizeDistribution::write()
     {
         wordList otherCoordinateSymbolicNames(coordinateTypeNames_.size());
         PtrList<scalarField> otherCoordinateValues(coordinateTypeNames_.size());
-        typedef NamedEnum<coordinateType, 4> namedEnumCoordinateType;
 
-        forAllConstIter(namedEnumCoordinateType, coordinateTypeNames_, iter)
+        forAll(coordinateTypeNames_, i)
         {
-            const coordinateType cType = coordinateTypeNames_[iter.key()];
+            const coordinateType cType = coordinateType(i);
 
             otherCoordinateSymbolicNames[cType] =
                 coordinateTypeSymbolicName(cType);

@@ -29,13 +29,8 @@ License
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-namespace Foam
-{
-
-template<>
-const char*
-NamedEnum<refinementRegions::refineMode, 5>::
-names[] =
+const Foam::NamedEnum<Foam::refinementRegions::refineMode, 5>
+Foam::refinementRegions::refineModeNames_
 {
     "inside",
     "outside",
@@ -43,11 +38,6 @@ names[] =
     "insideSpan",
     "outsideSpan"
 };
-
-}
-
-const Foam::NamedEnum<Foam::refinementRegions::refineMode, 5>
-    Foam::refinementRegions::refineModeNames_;
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //

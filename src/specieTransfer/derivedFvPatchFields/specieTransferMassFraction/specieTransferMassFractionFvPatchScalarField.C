@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,27 +32,17 @@ License
 
 // * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-    template<>
-    const char* NamedEnum
-    <
-        specieTransferMassFractionFvPatchScalarField::property,
-        4
-    >::names[] =
-    {
-        "massFraction",
-        "moleFraction",
-        "molarConcentration",
-        "partialPressure"
-    };
-}
-
 const Foam::NamedEnum
 <
     Foam::specieTransferMassFractionFvPatchScalarField::property,
     4
-> Foam::specieTransferMassFractionFvPatchScalarField::propertyNames_;
+> Foam::specieTransferMassFractionFvPatchScalarField::propertyNames_
+{
+    "massFraction",
+    "moleFraction",
+    "molarConcentration",
+    "partialPressure"
+};
 
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //

@@ -65,24 +65,16 @@ namespace Foam
     }
 }
 
-
-template<>
-const char* Foam::NamedEnum
+const Foam::NamedEnum
 <
     Foam::searchableSurfaces::distributedTriSurface::distributionType,
     3
->::names[] =
+> Foam::searchableSurfaces::distributedTriSurface::distributionTypeNames_
 {
     "follow",
     "independent",
     "frozen"
 };
-
-const Foam::NamedEnum
-<
-    Foam::searchableSurfaces::distributedTriSurface::distributionType,
-    3
-> Foam::searchableSurfaces::distributedTriSurface::distributionTypeNames_;
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -1955,11 +1947,8 @@ void Foam::searchableSurfaces::distributedTriSurface::getField
 
     if (foundObject<triSurfaceLabelField>("values"))
     {
-        const Foam::triSurfaceLabelField& fld = lookupObject<triSurfaceLabelField>
-        (
-            "values"
-        );
-
+        const Foam::triSurfaceLabelField& fld =
+            lookupObject<triSurfaceLabelField>("values");
 
         // Get query data (= local index of triangle)
         // ~~~~~~~~~~~~~~

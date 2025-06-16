@@ -62,12 +62,9 @@ namespace Foam
     const word LagrangianMesh::stateName("state");
     const word LagrangianMesh::fractionName("fraction");
 
-    template<>
-    const char* NamedEnum<LagrangianMesh::permutationAlgorithm, 2>::names[] =
-        {"copy", "inPlace"};
-
     const NamedEnum<LagrangianMesh::permutationAlgorithm, 2>
-        LagrangianMesh::permutationAlgorithmNames_;
+    LagrangianMesh::permutationAlgorithmNames_
+    {"copy", "inPlace"};
 
     LagrangianMesh::permutationAlgorithm
         LagrangianMesh::permutationAlgorithm_ =
@@ -78,12 +75,9 @@ namespace Foam
             LagrangianMesh::permutationAlgorithm::copy
         );
 
-    template<>
-    const char* NamedEnum<LagrangianMesh::partitioningAlgorithm, 2>::names[] =
-        {"bin", "quick"};
-
     const NamedEnum<LagrangianMesh::partitioningAlgorithm, 2>
-        LagrangianMesh::partitioningAlgorithmNames_;
+    LagrangianMesh::partitioningAlgorithmNames_
+    {"bin", "quick"};
 
     LagrangianMesh::partitioningAlgorithm
         LagrangianMesh::partitioningAlgorithm_ =

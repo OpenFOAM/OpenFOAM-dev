@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,22 +39,14 @@ License
 namespace Foam
 {
     defineTypeNameAndDebug(mappedInternalPatchBase, 0);
-
-    template<>
-    const char* Foam::NamedEnum
-    <
-        Foam::mappedInternalPatchBase::offsetMode,
-        2
-    >::names[] =
-    {
-        "normal",
-        "direction"
-    };
 }
 
-
 const Foam::NamedEnum<Foam::mappedInternalPatchBase::offsetMode, 2>
-    Foam::mappedInternalPatchBase::offsetModeNames_;
+Foam::mappedInternalPatchBase::offsetModeNames_
+{
+    "normal",
+    "direction"
+};
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //

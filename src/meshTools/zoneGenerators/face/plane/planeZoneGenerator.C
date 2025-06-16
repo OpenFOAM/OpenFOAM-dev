@@ -46,16 +46,12 @@ namespace Foam
     }
 }
 
-template<>
-const char*
-Foam::NamedEnum<Foam::zoneGenerators::planeZoneGenerator::include, 2>::names[] =
+const Foam::NamedEnum<Foam::zoneGenerators::planeZoneGenerator::include, 2>
+Foam::zoneGenerators::planeZoneGenerator::includeNames
 {
     "all",
     "closest"
 };
-
-const Foam::NamedEnum<Foam::zoneGenerators::planeZoneGenerator::include, 2>
-    Foam::zoneGenerators::planeZoneGenerator::includeNames;
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //

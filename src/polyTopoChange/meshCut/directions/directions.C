@@ -36,23 +36,13 @@ License
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-namespace Foam
-{
-    template<>
-    const char* Foam::NamedEnum
-    <
-        Foam::directions::directionType,
-        3
-    >::names[] =
-    {
-        "e1",
-        "e2",
-        "e3"
-    };
-}
-
 const Foam::NamedEnum<Foam::directions::directionType, 3>
-    Foam::directions::directionTypeNames_;
+Foam::directions::directionTypeNames_
+{
+    "e1",
+    "e2",
+    "e3"
+};
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //

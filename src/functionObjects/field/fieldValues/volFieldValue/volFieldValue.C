@@ -44,13 +44,11 @@ namespace fieldValues
 }
 }
 
-template<>
-const char*
-Foam::NamedEnum
+const Foam::NamedEnum
 <
     Foam::functionObjects::fieldValues::volFieldValue::operationType,
     12
->::names[] =
+> Foam::functionObjects::fieldValues::volFieldValue::operationTypeNames_
 {
     "none",
     "sum",
@@ -65,12 +63,6 @@ Foam::NamedEnum
     "CoV",
     "UI"
 };
-
-const Foam::NamedEnum
-<
-    Foam::functionObjects::fieldValues::volFieldValue::operationType,
-    12
-> Foam::functionObjects::fieldValues::volFieldValue::operationTypeNames_;
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //

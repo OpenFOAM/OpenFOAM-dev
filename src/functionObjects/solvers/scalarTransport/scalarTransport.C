@@ -64,24 +64,16 @@ namespace functionObjects
 }
 }
 
-
-template<>
-const char* Foam::NamedEnum
+const Foam::NamedEnum
 <
     Foam::functionObjects::scalarTransport::diffusivityType,
     3
->::names[] =
+> Foam::functionObjects::scalarTransport::diffusivityTypeNames_
 {
     "none",
     "constant",
     "viscosity"
 };
-
-const Foam::NamedEnum
-<
-    Foam::functionObjects::scalarTransport::diffusivityType,
-    3
-> Foam::functionObjects::scalarTransport::diffusivityTypeNames_;
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //

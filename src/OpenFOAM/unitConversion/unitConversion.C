@@ -30,18 +30,15 @@ License
 namespace Foam
 {
     defineTypeNameAndDebug(unitConversion, 0);
-
-    template<>
-    const char* NamedEnum<unitConversion::dimlessUnitType, 2>::names[] =
-    {
-        "fraction",
-        "angle"
-    };
 }
 
 
 const Foam::NamedEnum<Foam::unitConversion::dimlessUnitType, 2>
-    Foam::unitConversion::dimlessUnitTypeNames_;
+Foam::unitConversion::dimlessUnitTypeNames_
+{
+    "fraction",
+    "angle"
+};
 
 
 namespace Foam

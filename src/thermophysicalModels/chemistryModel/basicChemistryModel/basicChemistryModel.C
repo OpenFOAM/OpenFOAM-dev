@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,23 +27,15 @@ License
 
 /* * * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * */
 
-namespace Foam
-{
-    template<>
-    const char* NamedEnum<basicChemistryModel::jacobianType, 2>::names[] =
-    {
-        "fast",
-        "exact"
-    };
-}
-
-
 const Foam::NamedEnum
 <
     Foam::basicChemistryModel::jacobianType,
     2
-> Foam::basicChemistryModel::jacobianTypeNames_;
-
+> Foam::basicChemistryModel::jacobianTypeNames_
+{
+    "fast",
+    "exact"
+};
 
 namespace Foam
 {

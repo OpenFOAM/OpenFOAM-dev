@@ -35,29 +35,22 @@ namespace Foam
     defineRunTimeSelectionTable(zoneGenerator, dictionary);
 }
 
-template<>
-const char* Foam::NamedEnum<Foam::zoneGenerator::zoneTypes, 3>::names[] =
+const Foam::NamedEnum<Foam::zoneGenerator::zoneTypes, 3>
+Foam::zoneGenerator::zoneTypesNames
 {
     "point",
     "cell",
     "face"
 };
 
-const Foam::NamedEnum<Foam::zoneGenerator::zoneTypes, 3>
-    Foam::zoneGenerator::zoneTypesNames;
-
-
-template<>
-const char* Foam::NamedEnum<Foam::zoneGenerator::zoneTypesAll, 4>::names[] =
+const Foam::NamedEnum<Foam::zoneGenerator::zoneTypesAll, 4>
+Foam::zoneGenerator::zoneTypesAllNames
 {
     "point",
     "cell",
     "face",
     "all"
 };
-
-const Foam::NamedEnum<Foam::zoneGenerator::zoneTypesAll, 4>
-    Foam::zoneGenerator::zoneTypesAllNames;
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //

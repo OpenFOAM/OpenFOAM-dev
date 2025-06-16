@@ -53,22 +53,20 @@ namespace fv
 }
 
 
-namespace Foam
-{
-    template<>
-    const char* NamedEnum<fv::rotorDisk::geometryModeType, 2>::names[] =
-        {"auto", "specified"};
-
-    template<>
-    const char* NamedEnum<fv::rotorDisk::inletFlowType, 3>::names[] =
-        {"fixed", "surfaceNormal", "local"};
-}
-
 const Foam::NamedEnum<Foam::fv::rotorDisk::geometryModeType, 2>
-    Foam::fv::rotorDisk::geometryModeTypeNames_;
+Foam::fv::rotorDisk::geometryModeTypeNames_
+{
+    "auto",
+    "specified"
+};
 
 const Foam::NamedEnum<Foam::fv::rotorDisk::inletFlowType, 3>
-    Foam::fv::rotorDisk::inletFlowTypeNames_;
+Foam::fv::rotorDisk::inletFlowTypeNames_
+{
+    "fixed",
+    "surfaceNormal",
+    "local"
+};
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
