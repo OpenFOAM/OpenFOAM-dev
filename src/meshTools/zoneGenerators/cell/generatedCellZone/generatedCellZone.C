@@ -121,20 +121,19 @@ bool Foam::generatedCellZone::read(const dictionary& dict)
             if (dict.lookup<word>("cellZone") == "all")
             {
                 all_ = true;
+                return true;
             }
         }
-        else
-        {
-            all_ = false;
 
-            cellZone_.read
-            (
-                "cellZone",
-                zoneGenerator::zoneTypes::cell,
-                mesh_,
-                dict
-            );
-        }
+        all_ = false;
+
+        cellZone_.read
+        (
+            "cellZone",
+            zoneGenerator::zoneTypes::cell,
+            mesh_,
+            dict
+        );
     }
     else if (dict.found("points"))
     {
