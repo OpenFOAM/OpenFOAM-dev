@@ -363,9 +363,10 @@ Foam::polyMesh::polyMesh(const IOobject& io, const bool doZones)
     faceZones_.readIfPresent();
     cellZones_.readIfPresent();
 
+    // Generate the zones if required
     if (doZones)
     {
-        zonesGenerator::New(*this).moveUpdate();
+        zonesGenerator::New(*this);
     }
 }
 

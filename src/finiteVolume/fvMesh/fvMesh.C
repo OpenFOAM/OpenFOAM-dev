@@ -409,11 +409,9 @@ Foam::fvMesh::fvMesh
 
     // Generate the zones after the mesh manipulators have been constructed
     // to support motion-specific zone generators requiring access to the mover
-    if (doZones && zonesGenerator::New(*this).moveUpdate())
+    if (doZones)
     {
-        pointZones().write();
-        faceZones().write();
-        cellZones().write();
+        zonesGenerator::New(*this);
     }
 }
 
