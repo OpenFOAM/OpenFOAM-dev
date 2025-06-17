@@ -29,7 +29,11 @@ License
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-void Foam::zoneGeneratorList::read(const dictionary& dict)
+void Foam::zoneGeneratorList::read
+(
+    const dictionary& dict,
+    const bool zonesGenerator
+)
 {
     setSize(dict.size());
 
@@ -52,42 +56,99 @@ void Foam::zoneGeneratorList::read(const dictionary& dict)
             }
             else
             {
-                this->set
-                (
-                    i,
-                    name,
-                    new zoneGenerators::lookup(name, mesh_, iter().dict())
-                );
+                if (zonesGenerator)
+                {
+                    // If the type is not specified
+                    // assume the zoneGenerator type is the same as the name
+                    dictionary zoneDict(dict, iter().dict());
+                    zoneDict.add
+                    (
+                        primitiveEntry
+                        (
+                            "type",
+                            name,
+                            iter().startLineNumber(),
+                            iter().startLineNumber()
+                        )
+                    );
+
+                    this->set
+                    (
+                        i,
+                        name,
+                        zoneGenerator::New(name, mesh_, zoneDict).ptr()
+                    );
+                }
+                else
+                {
+                    // If the type is not specified assume the it is a lookup
+                    this->set
+                    (
+                        i,
+                        name,
+                        new zoneGenerators::lookup(name, mesh_, iter().dict())
+                    );
+                }
             }
 
             i++;
         }
         else if (!iter().stream().size())
         {
-            // If an empty keyword is present assume it is a zone name
-            // and add a zone lookup
-            this->set
-            (
-                i,
-                name,
-                new zoneGenerators::lookup
+            if (zonesGenerator)
+            {
+                // If an empty keyword is present assume it is a
+                // zoneGenerator type and add to the list
+                this->set
                 (
+                    i,
                     name,
-                    mesh_,
-                    dictionary
+                    zoneGenerator::New
                     (
                         name,
-                        dict,
-                        primitiveEntry
+                        mesh_,
+                        dictionary
                         (
-                            "type",
-                            zoneGenerators::lookup::typeName,
-                            iter().startLineNumber(),
-                            iter().startLineNumber()
+                            name,
+                            dict,
+                            primitiveEntry
+                            (
+                                "type",
+                                name,
+                                iter().startLineNumber(),
+                                iter().startLineNumber()
+                            )
                         )
                     )
-                )
-            );
+                );
+            }
+            else
+            {
+                // If an empty keyword is present assume it is a zone name
+                // and add a zone lookup
+                this->set
+                (
+                    i,
+                    name,
+                    new zoneGenerators::lookup
+                    (
+                        name,
+                        mesh_,
+                        dictionary
+                        (
+                            name,
+                            dict,
+                            primitiveEntry
+                            (
+                                "type",
+                                zoneGenerators::lookup::typeName,
+                                iter().startLineNumber(),
+                                iter().startLineNumber()
+                            )
+                        )
+                    )
+                );
+            }
 
             i++;
         }

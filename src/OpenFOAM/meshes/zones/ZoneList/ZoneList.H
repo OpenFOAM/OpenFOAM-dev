@@ -75,6 +75,9 @@ class ZoneList
         //- Reference to mesh
         const MeshType& mesh_;
 
+        //- Current timeIndex
+        mutable label timeIndex_;
+
 
     // Private Member Functions
 
@@ -110,6 +113,11 @@ public:
         const MeshType& mesh() const
         {
             return mesh_;
+        }
+
+        label timeIndex() const
+        {
+            return timeIndex_;
         }
 
         using PtrListDictionary<ZoneType>::found;
@@ -149,6 +157,10 @@ public:
 
         //- Insert given indices into zones
         void insert(const List<labelHashSet>& zonesIndices);
+
+        //- Return true if any of the zones were not updated by zoneGenerators
+        //  following mesh topology change
+        bool noTopoUpdate() const;
 
         //- Correct zones after moving points
         virtual void movePoints(const pointField&);

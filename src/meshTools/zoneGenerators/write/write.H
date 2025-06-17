@@ -22,40 +22,58 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::zoneGenerators::clear
+    Foam::zoneGenerators::write
 
 Description
-    A zoneGenerator which clears all existing zones from the mesh
+    A zoneGenerator which writes all existing zones from the mesh
 
 Usage
     \table
         Property     | Description             | Required | Default value
-        type         | Type: clear             | yes      |
+        type         | Type: write             | yes      |
+        zoneType     | Type of zone            | no       | all the zone types
     \endtable
 
-    Example:
+    Examples:
+    To write all the zones that are changing:
     \verbatim
-        clearAllZones
+        writeAllZones
         {
-            type        clear;
+            type        write;
+        }
+    \endverbatim
+    or to write only the cellZones:
+    \verbatim
+        writeCellZones
+        {
+            type        write;
+            zoneType    cell;
         }
     \endverbatim
     When called from the zoneGenerators file which is the most likely use
-    the simpler syntax to clear all the zones can be used:
+    the simpler syntax to write all the zones that are changing can be used:
     \verbatim
-        clear;
+        write;
+    \endverbatim
+    or to write only the cellZones:
+    \verbatim
+        write
+        {
+            zoneType    cell;
+        }
     \endverbatim
 
 See also
     zoneGenerators::remove
+    zoneGenerators::clear
 
 SourceFiles
-    clear.C
+    write.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef clear_H
-#define clear_H
+#ifndef write_H
+#define write_H
 
 #include "zoneGeneratorList.H"
 
@@ -67,24 +85,38 @@ namespace zoneGenerators
 {
 
 /*---------------------------------------------------------------------------*\
-                              Class clear Declaration
+                              Class write Declaration
 \*---------------------------------------------------------------------------*/
 
-class clear
+class write
 :
     public zoneGenerator
 {
+    // Private Member Data
+
+        //- The type of zone to write (optional)
+        zoneTypesAll zoneType_;
+
+        //- timeIndex of the last write
+        mutable label timeIndex_;
+
+
+    // Private Member Functions
+
+        template<class ZoneListType>
+        void writeZoneType(const ZoneListType& zones) const;
+
 
 public:
 
     //- Runtime type information
-    TypeName("clear");
+    TypeName("write");
 
 
     // Constructors
 
         //- Construct from dictionary
-        clear
+        write
         (
             const word& name,
             const polyMesh& mesh,
@@ -93,7 +125,7 @@ public:
 
 
     //- Destructor
-    virtual ~clear();
+    virtual ~write();
 
 
     // Member Functions

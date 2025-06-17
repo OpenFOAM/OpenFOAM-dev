@@ -374,6 +374,12 @@ void Foam::IOobject::updateInstance() const
 }
 
 
+void Foam::IOobject::updateTimeInstance() const
+{
+    instance_ = time().name();
+}
+
+
 Foam::fileName Foam::IOobject::path(const bool global) const
 {
     if (instance_.isAbsolute())

@@ -70,7 +70,11 @@ protected:
 
     // Protected Member Functions
 
-        void read(const dictionary& dict);
+        void read
+        (
+            const dictionary& dict,
+            const bool zonesGenerator = false
+        );
 
 
 public:

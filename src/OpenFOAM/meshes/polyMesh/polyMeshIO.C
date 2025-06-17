@@ -39,22 +39,6 @@ void Foam::polyMesh::setPointsWrite(const Foam::IOobject::writeOption wo)
     {
         tetBasePtIsPtr_->writeOpt() = wo;
     }
-
-    if
-    (
-        DemandDrivenMeshObject
-        <
-            polyMesh,
-            TopoChangeableMeshObject,
-            zonesGenerator
-        >::found(*this)
-     && zonesGenerator::New(*this).moveUpdate()
-    )
-    {
-        pointZones_.writeOpt() = wo;
-        faceZones_.writeOpt() = wo;
-        cellZones_.writeOpt() = wo;
-    }
 }
 
 
@@ -66,9 +50,21 @@ void Foam::polyMesh::setTopologyWrite(const Foam::IOobject::writeOption wo)
     owner_.writeOpt() = wo;
     neighbour_.writeOpt() = wo;
     boundary_.writeOpt() = wo;
-    pointZones_.writeOpt() = wo;
-    faceZones_.writeOpt() = wo;
-    cellZones_.writeOpt() = wo;
+
+    if (pointZones_.noTopoUpdate())
+    {
+        pointZones_.writeOpt() = wo;
+    }
+
+    if (faceZones_.noTopoUpdate())
+    {
+        faceZones_.writeOpt() = wo;
+    }
+
+    if (cellZones_.noTopoUpdate())
+    {
+        cellZones_.writeOpt() = wo;
+    }
 }
 
 
@@ -88,22 +84,6 @@ void Foam::polyMesh::setPointsInstance(const fileName& inst)
         tetBasePtIsPtr_().eventNo() = getEvent();
     }
 
-    if
-    (
-        DemandDrivenMeshObject
-        <
-            polyMesh,
-            TopoChangeableMeshObject,
-            zonesGenerator
-        >::found(*this)
-     && zonesGenerator::New(*this).moveUpdate()
-    )
-    {
-        pointZones_.instance() = inst;
-        faceZones_.instance() = inst;
-        cellZones_.instance() = inst;
-    }
-
     setPointsWrite(IOobject::AUTO_WRITE);
 }
 
@@ -121,9 +101,21 @@ void Foam::polyMesh::setInstance(const fileName& inst)
     owner_.instance() = inst;
     neighbour_.instance() = inst;
     boundary_.instance() = inst;
-    pointZones_.instance() = inst;
-    faceZones_.instance() = inst;
-    cellZones_.instance() = inst;
+
+    if (pointZones_.noTopoUpdate())
+    {
+        pointZones_.instance() = inst;
+    }
+
+    if (faceZones_.noTopoUpdate())
+    {
+        faceZones_.instance() = inst;
+    }
+
+    if (cellZones_.noTopoUpdate())
+    {
+        cellZones_.instance() = inst;
+    }
 
     setTopologyWrite(IOobject::AUTO_WRITE);
 }

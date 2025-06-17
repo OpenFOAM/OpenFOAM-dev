@@ -363,11 +363,9 @@ Foam::polyMesh::polyMesh(const IOobject& io, const bool doZones)
     faceZones_.readIfPresent();
     cellZones_.readIfPresent();
 
-    if (doZones && zonesGenerator::New(*this).moveUpdate())
+    if (doZones)
     {
-        pointZones_.write();
-        faceZones_.write();
-        cellZones_.write();
+        zonesGenerator::New(*this).moveUpdate();
     }
 }
 

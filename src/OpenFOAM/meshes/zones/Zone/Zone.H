@@ -189,6 +189,13 @@ public:
             return moveUpdate_;
         }
 
+        //- Flag indicating the zone is updated by the generator
+        //  following mesh topology change
+        bool topoUpdate() const
+        {
+            return topoUpdate_;
+        }
+
         //- Map storing the local index for every global index.  Used to find
         //  the index of the item in the zone from the known global index. If
         //  the item is not in the zone, returns -1

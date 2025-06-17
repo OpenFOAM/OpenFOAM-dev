@@ -98,7 +98,7 @@ Foam::zonesGenerator::zonesGenerator
 bool Foam::zonesGenerator::readData(Istream& is)
 {
     is >> *this;
-    zoneGeneratorList::read(*this);
+    zoneGeneratorList::read(*this, true);
     return !is.bad();
 }
 

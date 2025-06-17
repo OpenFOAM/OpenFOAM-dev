@@ -221,6 +221,7 @@ patchFaceOrientation/patchFaceOrientation.C
 
 zoneGenerators/remove/remove.C
 zoneGenerators/clear/clear.C
+zoneGenerators/write/write.C
 
 zoneGenerators/union/union.C
 zoneGenerators/difference/difference.C

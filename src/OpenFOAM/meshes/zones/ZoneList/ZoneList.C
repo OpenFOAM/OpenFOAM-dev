@@ -25,6 +25,7 @@ License
 
 #include "ZoneList.H"
 #include "Pstream.H"
+#include "Time.H"
 #include "demandDrivenData.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -100,7 +101,8 @@ Foam::ZoneList<ZoneType, ZonesType, MeshType>::ZoneList
 :
     regIOobject(io),
     PtrListDictionary<ZoneType>(0),
-    mesh_(mesh)
+    mesh_(mesh),
+    timeIndex_(mesh.time().timeIndex())
 {
     read();
 }
@@ -213,6 +215,8 @@ const ZoneType& Foam::ZoneList<ZoneType, ZonesType, MeshType>::append
         );
     }
 
+    timeIndex_ = time().timeIndex();
+
     return *zonePtr;
 }
 
@@ -238,6 +242,8 @@ const ZoneType& Foam::ZoneList<ZoneType, ZonesType, MeshType>::append
             zone.clone(*this)
         );
     }
+
+    timeIndex_ = time().timeIndex();
 
     return zone;
 }
@@ -370,6 +376,25 @@ void Foam::ZoneList<ZoneType, ZonesType, MeshType>::insert
     {
         zones[zonei].insert(zonesIndices[zonei]);
     }
+
+    timeIndex_ = time().timeIndex();
+}
+
+
+template<class ZoneType, class ZonesType, class MeshType>
+bool Foam::ZoneList<ZoneType, ZonesType, MeshType>::noTopoUpdate() const
+{
+    const PtrListDictionary<ZoneType>& zones = *this;
+
+    forAll(zones, zi)
+    {
+        if (!zones[zi].topoUpdate())
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 
@@ -400,6 +425,8 @@ void Foam::ZoneList<ZoneType, ZonesType, MeshType>::topoChange
     {
         zones[zi].topoChange(map);
     }
+
+    timeIndex_ = time().timeIndex();
 }
 
 
@@ -415,6 +442,8 @@ void Foam::ZoneList<ZoneType, ZonesType, MeshType>::mapMesh
     {
         zones[zi].mapMesh(map);
     }
+
+    timeIndex_ = time().timeIndex();
 }
 
 
@@ -430,6 +459,8 @@ void Foam::ZoneList<ZoneType, ZonesType, MeshType>::distribute
     {
         zones[zi].distribute(map);
     }
+
+    timeIndex_ = time().timeIndex();
 }
 
 
@@ -487,6 +518,8 @@ void Foam::ZoneList<ZoneType, ZonesType, MeshType>::swap(ZonesType& otherZones)
 
     zones.shrink();
     otherZones.shrink();
+
+    timeIndex_ = time().timeIndex();
 }
 
 

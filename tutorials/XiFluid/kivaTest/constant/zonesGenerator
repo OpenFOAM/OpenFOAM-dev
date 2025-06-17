@@ -23,9 +23,16 @@ ignition
 {
     type        sphere;
     zoneType    cell;
+    moveUpdate  true;
 
     centre      (0.03 0.002 0.091);
     radius      0.001;
 }
+
+// write
+// {
+//     type        write;
+//     zoneType    nthnth;
+// }
 
 // ************************************************************************* //
