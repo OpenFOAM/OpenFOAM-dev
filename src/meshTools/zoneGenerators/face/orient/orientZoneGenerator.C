@@ -36,11 +36,11 @@ namespace Foam
 {
     namespace zoneGenerators
     {
-        defineTypeNameAndDebug(orientZoneGenerator, 0);
+        defineTypeNameAndDebug(orient, 0);
         addToRunTimeSelectionTable
         (
             zoneGenerator,
-            orientZoneGenerator,
+            orient,
             dictionary
         );
     }
@@ -49,7 +49,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::boolList Foam::zoneGenerators::orientZoneGenerator::normalOrientation
+Foam::boolList Foam::zoneGenerators::orient::normalOrientation
 (
     const labelList& faceIndices
 ) const
@@ -72,7 +72,7 @@ Foam::boolList Foam::zoneGenerators::orientZoneGenerator::normalOrientation
 }
 
 
-Foam::boolList Foam::zoneGenerators::orientZoneGenerator::pointOrientation
+Foam::boolList Foam::zoneGenerators::orient::pointOrientation
 (
     const faceZone& fZone
 ) const
@@ -392,7 +392,7 @@ Foam::boolList Foam::zoneGenerators::orientZoneGenerator::pointOrientation
 }
 
 
-Foam::boolList Foam::zoneGenerators::orientZoneGenerator::orientation
+Foam::boolList Foam::zoneGenerators::orient::orientation
 (
     const faceZone& fZone
 ) const
@@ -410,7 +410,7 @@ Foam::boolList Foam::zoneGenerators::orientZoneGenerator::orientation
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::zoneGenerators::orientZoneGenerator::orientZoneGenerator
+Foam::zoneGenerators::orient::orient
 (
     const word& name,
     const polyMesh& mesh,
@@ -431,13 +431,13 @@ Foam::zoneGenerators::orientZoneGenerator::orientZoneGenerator
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::zoneGenerators::orientZoneGenerator::~orientZoneGenerator()
+Foam::zoneGenerators::orient::~orient()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::zoneSet Foam::zoneGenerators::orientZoneGenerator::generate() const
+Foam::zoneSet Foam::zoneGenerators::orient::generate() const
 {
     zoneSet zs(zoneGenerator_->generate());
     const faceZone& fZone = zs.fZone();

@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::zoneGenerators::surfaceZoneGenerator
+    Foam::zoneGenerators::surface
 
 Description
     A faceZone zoneGenerator which selects faces based on the intersection of
@@ -57,7 +57,7 @@ Usage
         rotatingZone
         {
             type        surface;
-            surface     searchableCylinder;
+            surface     cylinder;
             point1      (0 0 0.54);
             point2      (0 0 0.66);
             radius      0.2;
@@ -69,12 +69,12 @@ See also
     zoneGenerators::planeZoneGenerator
 
 SourceFiles
-    surfaceZoneGenerator.C
+    surface.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef surfaceZoneGenerator_H
-#define surfaceZoneGenerator_H
+#ifndef zoneGenerators_surface_H
+#define zoneGenerators_surface_H
 
 #include "zoneGeneratorList.H"
 
@@ -89,10 +89,10 @@ namespace zoneGenerators
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class surfaceZoneGenerator Declaration
+                    Class surface Declaration
 \*---------------------------------------------------------------------------*/
 
-class surfaceZoneGenerator
+class surface
 :
     public zoneGenerator
 {
@@ -114,7 +114,7 @@ public:
     // Constructors
 
         //- Construct from dictionary
-        surfaceZoneGenerator
+        surface
         (
             const word& name,
             const polyMesh& mesh,
@@ -123,7 +123,7 @@ public:
 
 
     //- Destructor
-    virtual ~surfaceZoneGenerator();
+    virtual ~surface();
 
 
     // Member Functions

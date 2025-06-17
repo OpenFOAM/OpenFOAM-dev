@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::zoneGenerators::planeZoneGenerator
+    Foam::zoneGenerators::plane
 
 Description
     A zoneGenerator which selects faces based on the adjacent cell centres
@@ -77,10 +77,10 @@ namespace zoneGenerators
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class planeZoneGenerator Declaration
+                    Class plane Declaration
 \*---------------------------------------------------------------------------*/
 
-class planeZoneGenerator
+class plane
 :
     public zoneGenerator
 {
@@ -122,7 +122,7 @@ public:
     // Constructors
 
         //- Construct from dictionary
-        planeZoneGenerator
+        plane
         (
             const word& name,
             const polyMesh& mesh,
@@ -131,7 +131,7 @@ public:
 
 
     //- Destructor
-    virtual ~planeZoneGenerator();
+    virtual ~plane();
 
 
     // Member Functions

@@ -36,18 +36,18 @@ namespace Foam
 {
     namespace zoneGenerators
     {
-        defineTypeNameAndDebug(planeZoneGenerator, 0);
+        defineTypeNameAndDebug(plane, 0);
         addToRunTimeSelectionTable
         (
             zoneGenerator,
-            planeZoneGenerator,
+            plane,
             dictionary
         );
     }
 }
 
-const Foam::NamedEnum<Foam::zoneGenerators::planeZoneGenerator::include, 2>
-Foam::zoneGenerators::planeZoneGenerator::includeNames
+const Foam::NamedEnum<Foam::zoneGenerators::plane::include, 2>
+Foam::zoneGenerators::plane::includeNames
 {
     "all",
     "closest"
@@ -56,7 +56,7 @@ Foam::zoneGenerators::planeZoneGenerator::includeNames
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::zoneGenerators::planeZoneGenerator::planeZoneGenerator
+Foam::zoneGenerators::plane::plane
 (
     const word& name,
     const polyMesh& mesh,
@@ -72,13 +72,13 @@ Foam::zoneGenerators::planeZoneGenerator::planeZoneGenerator
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::zoneGenerators::planeZoneGenerator::~planeZoneGenerator()
+Foam::zoneGenerators::plane::~plane()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::zoneSet Foam::zoneGenerators::planeZoneGenerator::generate() const
+Foam::zoneSet Foam::zoneGenerators::plane::generate() const
 {
     // Mark all cells with centres above the plane
     boolList cellIsAbovePlane(mesh_.nCells());

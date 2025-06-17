@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::zoneGenerators::faceZoneGenerator
+    Foam::zoneGenerators::face
 
 Description
     A zoneGenerator which converts the point, cell and face zones
@@ -106,10 +106,10 @@ namespace zoneGenerators
 {
 
 /*---------------------------------------------------------------------------*\
-                              Class faceZoneGenerator Declaration
+                              Class face Declaration
 \*---------------------------------------------------------------------------*/
 
-class faceZoneGenerator
+class face
 :
     public zoneGenerator
 {
@@ -149,7 +149,7 @@ public:
     // Constructors
 
         //- Construct from dictionary
-        faceZoneGenerator
+        face
         (
             const word& name,
             const polyMesh& mesh,
@@ -158,7 +158,7 @@ public:
 
 
     //- Destructor
-    virtual ~faceZoneGenerator();
+    virtual ~face();
 
 
     // Member Functions

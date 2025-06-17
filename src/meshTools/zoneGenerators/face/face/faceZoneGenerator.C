@@ -34,11 +34,11 @@ namespace Foam
 {
     namespace zoneGenerators
     {
-        defineTypeNameAndDebug(faceZoneGenerator, 0);
+        defineTypeNameAndDebug(face, 0);
         addToRunTimeSelectionTable
         (
             zoneGenerator,
-            faceZoneGenerator,
+            face,
             dictionary
         );
     }
@@ -46,9 +46,9 @@ namespace Foam
 
 const Foam::NamedEnum
 <
-    Foam::zoneGenerators::faceZoneGenerator::cellFaces,
+    Foam::zoneGenerators::face::cellFaces,
     4
-> Foam::zoneGenerators::faceZoneGenerator::cellFacesNames
+> Foam::zoneGenerators::face::cellFacesNames
 {
     "all",
     "inner",
@@ -59,7 +59,7 @@ const Foam::NamedEnum
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::zoneGenerators::faceZoneGenerator::faceZoneGenerator
+Foam::zoneGenerators::face::face
 (
     const word& name,
     const polyMesh& mesh,
@@ -82,13 +82,13 @@ Foam::zoneGenerators::faceZoneGenerator::faceZoneGenerator
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::zoneGenerators::faceZoneGenerator::~faceZoneGenerator()
+Foam::zoneGenerators::face::~face()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::zoneSet Foam::zoneGenerators::faceZoneGenerator::generate() const
+Foam::zoneSet Foam::zoneGenerators::face::generate() const
 {
     boolList selectedFaces(mesh_.nFaces(), false);
     boolList flipMap(mesh_.nFaces(), false);
@@ -297,7 +297,7 @@ Foam::zoneSet Foam::zoneGenerators::faceZoneGenerator::generate() const
 
             forAll(zoneFaces, zfi)
             {
-                const face& f = mesh_.faces()[zoneFaces[zfi]];
+                const Foam::face& f = mesh_.faces()[zoneFaces[zfi]];
 
                 forAll(f, fp)
                 {

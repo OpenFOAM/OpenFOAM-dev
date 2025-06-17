@@ -34,11 +34,11 @@ namespace Foam
 {
     namespace zoneGenerators
     {
-        defineTypeNameAndDebug(flipZoneGenerator, 0);
+        defineTypeNameAndDebug(flip, 0);
         addToRunTimeSelectionTable
         (
             zoneGenerator,
-            flipZoneGenerator,
+            flip,
             dictionary
         );
     }
@@ -46,7 +46,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::zoneGenerators::flipZoneGenerator::flipZoneGenerator
+Foam::zoneGenerators::flip::flip
 (
     const word& name,
     const polyMesh& mesh,
@@ -60,13 +60,13 @@ Foam::zoneGenerators::flipZoneGenerator::flipZoneGenerator
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::zoneGenerators::flipZoneGenerator::~flipZoneGenerator()
+Foam::zoneGenerators::flip::~flip()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::zoneSet Foam::zoneGenerators::flipZoneGenerator::generate() const
+Foam::zoneSet Foam::zoneGenerators::flip::generate() const
 {
     zoneSet zs(zoneGenerator_->generate());
     const faceZone& fZone = zs.fZone();

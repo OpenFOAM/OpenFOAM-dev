@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::zoneGenerators::patchZoneGenerator
+    Foam::zoneGenerators::patch
 
 Description
     A zoneGenerator which constructs a faceZone from a set of patches
@@ -66,10 +66,10 @@ namespace zoneGenerators
 {
 
 /*---------------------------------------------------------------------------*\
-                              Class patchZoneGenerator Declaration
+                              Class patch Declaration
 \*---------------------------------------------------------------------------*/
 
-class patchZoneGenerator
+class patch
 :
     public zoneGenerator
 {
@@ -88,7 +88,7 @@ public:
     // Constructors
 
         //- Construct from dictionary
-        patchZoneGenerator
+        patch
         (
             const word& name,
             const polyMesh& mesh,
@@ -97,7 +97,7 @@ public:
 
 
     //- Destructor
-    virtual ~patchZoneGenerator();
+    virtual ~patch();
 
 
     // Member Functions

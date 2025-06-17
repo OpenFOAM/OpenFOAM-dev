@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::zoneGenerators::orientZoneGenerator
+    Foam::zoneGenerators::orient
 
 Description
     A zoneGenerator which sets the face orientation flipMap
@@ -81,10 +81,10 @@ namespace zoneGenerators
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class orientZoneGenerator Declaration
+                        Class orient Declaration
 \*---------------------------------------------------------------------------*/
 
-class orientZoneGenerator
+class orient
 :
     public zoneGenerator
 {
@@ -121,7 +121,7 @@ public:
     // Constructors
 
         //- Construct from dictionary
-        orientZoneGenerator
+        orient
         (
             const word& name,
             const polyMesh& mesh,
@@ -130,7 +130,7 @@ public:
 
 
     //- Destructor
-    virtual ~orientZoneGenerator();
+    virtual ~orient();
 
 
     // Member Functions

@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::zoneGenerators::normalZoneGenerator
+    Foam::zoneGenerators::normal
 
 Description
     A zoneGenerator which selects the faces returned by the given
@@ -76,10 +76,10 @@ namespace zoneGenerators
 {
 
 /*---------------------------------------------------------------------------*\
-                              Class normalZoneGenerator Declaration
+                              Class normal Declaration
 \*---------------------------------------------------------------------------*/
 
-class normalZoneGenerator
+class normal
 :
     public zoneGenerator
 {
@@ -105,7 +105,7 @@ public:
     // Constructors
 
         //- Construct from dictionary
-        normalZoneGenerator
+        normal
         (
             const word& name,
             const polyMesh& mesh,
@@ -114,7 +114,7 @@ public:
 
 
     //- Destructor
-    virtual ~normalZoneGenerator();
+    virtual ~normal();
 
 
     // Member Functions

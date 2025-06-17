@@ -33,11 +33,11 @@ namespace Foam
 {
     namespace zoneGenerators
     {
-        defineTypeNameAndDebug(pointZoneGenerator, 0);
+        defineTypeNameAndDebug(point, 0);
         addToRunTimeSelectionTable
         (
             zoneGenerator,
-            pointZoneGenerator,
+            point,
             dictionary
         );
     }
@@ -46,7 +46,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::zoneGenerators::pointZoneGenerator::pointZoneGenerator
+Foam::zoneGenerators::point::point
 (
     const word& name,
     const polyMesh& mesh,
@@ -60,13 +60,13 @@ Foam::zoneGenerators::pointZoneGenerator::pointZoneGenerator
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::zoneGenerators::pointZoneGenerator::~pointZoneGenerator()
+Foam::zoneGenerators::point::~point()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::zoneSet Foam::zoneGenerators::pointZoneGenerator::generate() const
+Foam::zoneSet Foam::zoneGenerators::point::generate() const
 {
     boolList selectedPoints(mesh_.nPoints(), false);
 

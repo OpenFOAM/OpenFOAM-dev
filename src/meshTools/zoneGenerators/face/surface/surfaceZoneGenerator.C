@@ -36,11 +36,11 @@ namespace Foam
 {
     namespace zoneGenerators
     {
-        defineTypeNameAndDebug(surfaceZoneGenerator, 0);
+        defineTypeNameAndDebug(surface, 0);
         addToRunTimeSelectionTable
         (
             zoneGenerator,
-            surfaceZoneGenerator,
+            surface,
             dictionary
         );
     }
@@ -49,7 +49,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::zoneGenerators::surfaceZoneGenerator::surfaceZoneGenerator
+Foam::zoneGenerators::surface::surface
 (
     const word& name,
     const polyMesh& mesh,
@@ -84,13 +84,13 @@ Foam::zoneGenerators::surfaceZoneGenerator::surfaceZoneGenerator
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::zoneGenerators::surfaceZoneGenerator::~surfaceZoneGenerator()
+Foam::zoneGenerators::surface::~surface()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::zoneSet Foam::zoneGenerators::surfaceZoneGenerator::generate() const
+Foam::zoneSet Foam::zoneGenerators::surface::generate() const
 {
     const labelList& faceOwner = mesh_.faceOwner();
     const labelList& faceNeighbour = mesh_.faceNeighbour();

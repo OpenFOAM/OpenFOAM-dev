@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::zoneGenerators::flipZoneGenerator
+    Foam::zoneGenerators::flip
 
 Description
     A zoneGenerator which flips the flipMap of the faceZone returned by the
@@ -70,10 +70,10 @@ namespace zoneGenerators
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class flipZoneGenerator Declaration
+                     Class flip Declaration
 \*---------------------------------------------------------------------------*/
 
-class flipZoneGenerator
+class flip
 :
     public zoneGenerator
 {
@@ -92,7 +92,7 @@ public:
     // Constructors
 
         //- Construct from dictionary
-        flipZoneGenerator
+        flip
         (
             const word& name,
             const polyMesh& mesh,
@@ -101,7 +101,7 @@ public:
 
 
     //- Destructor
-    virtual ~flipZoneGenerator();
+    virtual ~flip();
 
 
     // Member Functions
