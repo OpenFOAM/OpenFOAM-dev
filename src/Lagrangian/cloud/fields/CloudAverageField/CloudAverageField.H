@@ -59,52 +59,6 @@ class CloudAverageField
 :
     public CloudDerivedField<Type>
 {
-    // Private Static Data
-
-        //- Pointer to remove method for constant weight sum
-        static constexpr void (LagrangianAverage<Type>::*removeWeightSum_)
-        (
-            const LagrangianSubSubField<Type>&
-        ) = &LagrangianAverage<Type>::remove;
-
-        //- Pointer to remove method for computed weight sum
-        static constexpr void (LagrangianAverage<Type>::*removeNoWeightSum_)
-        (
-            const LagrangianSubSubField<scalar>&,
-            const LagrangianSubSubField<Type>&
-        ) = &LagrangianAverage<Type>::remove;
-
-        //- Pointer to add method for constant weight sum
-        static constexpr void (LagrangianAverage<Type>::*addWeightSum_)
-        (
-            const LagrangianSubSubField<Type>&,
-            const bool
-        ) = &LagrangianAverage<Type>::add;
-
-        //- Pointer to add method for computed weight sum
-        static constexpr void (LagrangianAverage<Type>::*addNoWeightSum_)
-        (
-            const LagrangianSubSubField<scalar>&,
-            const LagrangianSubSubField<Type>&,
-            const bool
-        ) = &LagrangianAverage<Type>::add;
-
-        //- Pointer to correct method for constant weight sum
-        static constexpr void (LagrangianAverage<Type>::*correctWeightSum_)
-        (
-            const LagrangianSubSubField<Type>&,
-            const bool
-        ) = &LagrangianAverage<Type>::correct;
-
-        //- Pointer to correct method for computed weight sum
-        static constexpr void (LagrangianAverage<Type>::*correctNoWeightSum_)
-        (
-            const LagrangianSubSubField<scalar>&,
-            const LagrangianSubSubField<Type>&,
-            const bool
-        ) = &LagrangianAverage<Type>::correct;
-
-
     // Private Data
 
         //- The name of the average
