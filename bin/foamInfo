@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2018-2025 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -72,8 +72,9 @@ Examples
   foamInfo -k contactAngle
   foamInfo Function1
   foamInfo square
-  foamInfo fixedTemperatureConstraint
+  foamInfo fixedTemperature
   foamInfo foamNewBC
+  foamInfo box
 
 USAGE
 }
@@ -100,6 +101,15 @@ findModelFiles() {
         ! -name "*I.H" -type f
 }
 
+findClassFiles() {
+    # shellcheck disable=SC2016
+    find "$FOAM_SRC" "$FOAM_APP" -name "*.H" -type f -print0 | \
+        xargs -0 awk -F "[::| ]" -v class="$1" \
+              '/^Class$/{getline;\
+              while(substr($0,length($0)-1,2) == "::"){getline;}\
+              if(class == $NF) print FILENAME}'
+}
+
 findFiles() {
     _pre="$1"
 
@@ -112,6 +122,9 @@ findFiles() {
     # Script
     _out="$(find "$FOAM_APP/../bin" -name "${_pre}" -type f | \
             sed 's@applications/../@@g' ) $_out"
+
+    # Classes
+    _classes="$(findClassFiles "$_pre")"
 
     # Model
     # case-sensitive match
@@ -126,7 +139,7 @@ findFiles() {
     [ "$_models" ] && ! [ "$KEYWORD" ] || \
           _models="$_models $(findModelFiles "*" "*${_pre}*.H" "${_pre}*.H")"
 
-    _out="$_models $_out"
+    _out="$_classes $_models $_out"
 
     for _t in scalar vector tensor
     do
