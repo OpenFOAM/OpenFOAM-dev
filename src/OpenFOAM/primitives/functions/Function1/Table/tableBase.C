@@ -28,14 +28,6 @@ License
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 const Foam::NamedEnum<Foam::Function1s::tableBase::boundsHandling, 5>
-Foam::Function1s::tableBase::boundsHandlingNames_
-{
-    "error",
-    "warn",
-    "clamp",
-    "zero",
-    "repeat"
-};
-
+Foam::Function1s::tableBase::boundsHandlingNames(boundsHandlingNames_());
 
 // ************************************************************************* //

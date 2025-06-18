@@ -67,6 +67,9 @@ public:
     // Constructors
 
         //- Construct from list of names
+        NamedEnum(const FixedList<word, nEnum>& names);
+
+        //- Construct from list of names
         NamedEnum(std::initializer_list<word>);
 
         //- Disallow default bitwise copy construction

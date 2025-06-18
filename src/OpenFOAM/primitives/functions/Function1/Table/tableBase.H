@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,19 @@ public:
         };
 
         //- Enumeration names for handling out-of-bound values
-        static const NamedEnum<boundsHandling, 5> boundsHandlingNames_;
+        static const NamedEnum<boundsHandling, 5> boundsHandlingNames;
+
+        static NamedEnum<boundsHandling, 5>::namesType boundsHandlingNames_()
+        {
+            return
+            {
+                "error",
+                "warn",
+                "clamp",
+                "zero",
+                "repeat"
+            };
+        }
 
 
     // Constructors

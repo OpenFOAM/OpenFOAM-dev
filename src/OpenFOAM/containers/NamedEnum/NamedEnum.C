@@ -29,17 +29,23 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Enum, unsigned int nEnum>
-Foam::NamedEnum<Enum, nEnum>::NamedEnum(std::initializer_list<word> lst)
+Foam::NamedEnum<Enum, nEnum>::NamedEnum(const FixedList<word, nEnum>& names)
 :
-    FixedList<word, nEnum>(lst),
+    FixedList<word, nEnum>(names),
     table_(2*nEnum)
 {
-    const FixedList<word, nEnum>& names = *this;
     forAll(names, ei)
     {
         table_.insert(names[ei], ei);
     }
 }
+
+
+template<class Enum, unsigned int nEnum>
+Foam::NamedEnum<Enum, nEnum>::NamedEnum(std::initializer_list<word> lst)
+:
+    NamedEnum(FixedList<word, nEnum>(lst))
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
