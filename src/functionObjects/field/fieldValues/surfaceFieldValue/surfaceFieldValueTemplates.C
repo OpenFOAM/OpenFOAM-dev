@@ -260,9 +260,13 @@ processValuesTypeType
             {
                 const scalarField vals(values.component(d));
                 const scalar mean = component(meanValue, d);
-                scalar& res = setComponent(result, d);
 
-                res = sqrt(gSum(magSf*sqr(vals - mean))/gSum(magSf))/mean;
+                setComponent(result, d) =
+                    protectedDivide
+                    (
+                        sqrt(gSum(magSf*sqr(vals - mean))/gSum(magSf)),
+                        mean
+                    );
             }
 
             return true;
@@ -279,9 +283,13 @@ processValuesTypeType
             {
                 const scalarField vals(values.component(d));
                 const scalar mean = component(meanValue, d);
-                scalar& res = setComponent(result, d);
 
-                res = 1 - 0.5*gSum(magSf*mag(vals - mean))/(gSum(magSf)*mean);
+                setComponent(result, d) =
+                    1 - 0.5*protectedDivide
+                    (
+                        gSum(magSf*mag(vals - mean))/gSum(magSf),
+                        mean
+                    );
             }
 
             return true;
