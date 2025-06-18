@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -374,6 +374,23 @@ inline Scalar stabilise(const Scalar s, const Scalar small)
     {
         return s - small;
     }
+}
+
+
+//- Divide two numbers and protect the result from overflowing
+inline Scalar protectedDivide(const Scalar a, const Scalar b)
+{
+    return mag(a)/ScalarVGreat < mag(b) ? a/b : sign(a)*sign(b)*ScalarVGreat;
+}
+
+
+//- Divide two numbers, protect the result from overflowing, and clip the
+//  result between 0 and 1
+inline Scalar protectedDivideAndClip01(const Scalar a, const Scalar b)
+{
+    const Scalar bStar = max(mag(a), mag(b));
+
+    return bStar == 0 ? 0 : max(a*sign(b), 0)/bStar;
 }
 
 

@@ -44,23 +44,6 @@ namespace triIntersect
 const scalar maxDot = - cos(degToRad(80));
 
 
-//- Divide two numbers and protect the result from overflowing
-scalar protectedDivide(const scalar a, const scalar b)
-{
-    return mag(a)/vGreat < mag(b) ? a/b : sign(a)*sign(b)*vGreat;
-}
-
-
-//- Divide two numbers, protect the result from overflowing, and clip the
-//  result between 0 and 1
-scalar protectedDivideAndClip01(const scalar a, const scalar b)
-{
-    const scalar bStar = max(mag(a), mag(b));
-
-    return bStar == 0 ? 0 : max(a*sign(b), 0)/bStar;
-}
-
-
 //- Print 3x3 FixedListLists on one line
 template <class Type>
 Ostream& operator<<(Ostream& os, const FixedList<FixedList<Type, 3>, 3>& l)
