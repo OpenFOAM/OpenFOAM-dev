@@ -49,8 +49,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_cloudGravitationalPotentialEnergy_H
-#define functionObjects_cloudGravitationalPotentialEnergy_H
+#ifndef cloudGravitationalPotentialEnergy_functionObject_H
+#define cloudGravitationalPotentialEnergy_functionObject_H
 
 #include "cloudLagrangianMeshFunctionObject.H"
 

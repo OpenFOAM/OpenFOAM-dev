@@ -31,8 +31,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef blockVertices_pointVertex_H
-#define blockVertices_pointVertex_H
+#ifndef pointVertex_blockVertex_H
+#define pointVertex_blockVertex_H
 
 #include "blockVertex.H"
 

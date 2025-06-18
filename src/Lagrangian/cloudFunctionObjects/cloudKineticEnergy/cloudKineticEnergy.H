@@ -48,8 +48,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_cloudKineticEnergy_H
-#define functionObjects_cloudKineticEnergy_H
+#ifndef cloudKineticEnergy_functionObject_H
+#define cloudKineticEnergy_functionObject_H
 
 #include "cloudLagrangianMeshFunctionObject.H"
 

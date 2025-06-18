@@ -101,8 +101,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_volFieldValue_H
-#define functionObjects_volFieldValue_H
+#ifndef volFieldValue_functionObject_H
+#define volFieldValue_functionObject_H
 
 #include "fieldValue.H"
 #include "fvCellZone.H"

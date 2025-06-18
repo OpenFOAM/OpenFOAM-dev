@@ -152,8 +152,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_surfaceFieldValue_H
-#define functionObjects_surfaceFieldValue_H
+#ifndef surfaceFieldValue_functionObject_H
+#define surfaceFieldValue_functionObject_H
 
 #include "fieldValue.H"
 #include "NamedEnum.H"

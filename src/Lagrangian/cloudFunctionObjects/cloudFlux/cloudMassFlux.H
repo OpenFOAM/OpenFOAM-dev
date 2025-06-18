@@ -48,8 +48,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_cloudMassFlux_H
-#define functionObjects_cloudMassFlux_H
+#ifndef cloudMassFlux_functionObject_H
+#define cloudMassFlux_functionObject_H
 
 #include "cloudFlux.H"
 

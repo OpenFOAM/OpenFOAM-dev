@@ -48,8 +48,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_cloudBoundaryCollisionForce_H
-#define functionObjects_cloudBoundaryCollisionForce_H
+#ifndef cloudBoundaryCollisionForce_functionObject_H
+#define cloudBoundaryCollisionForce_functionObject_H
 
 #include "cloudBoundaryCollisionFlux.H"
 

@@ -33,8 +33,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_cloudBoundaryCollisionFlux_H
-#define functionObjects_cloudBoundaryCollisionFlux_H
+#ifndef cloudBoundaryCollisionFlux_functionObject_H
+#define cloudBoundaryCollisionFlux_functionObject_H
 
 #include "LagrangianPatchField.H"
 #include "cloudFvMeshFunctionObject.H"

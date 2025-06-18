@@ -70,8 +70,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_cloudSurfaceDistribution_H
-#define functionObjects_cloudSurfaceDistribution_H
+#ifndef cloudSurfaceDistribution_functionObject_H
+#define cloudSurfaceDistribution_functionObject_H
 
 #include "cloudFunctionObject.H"
 #include "setWriter.H"

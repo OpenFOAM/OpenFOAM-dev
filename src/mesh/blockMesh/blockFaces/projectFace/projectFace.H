@@ -33,8 +33,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef blockFaces_projectFace_H
-#define blockFaces_projectFace_H
+#ifndef projectFace_blockFace_H
+#define projectFace_blockFace_H
 
 #include "blockFace.H"
 

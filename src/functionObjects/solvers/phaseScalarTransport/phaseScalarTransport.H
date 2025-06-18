@@ -91,8 +91,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_phaseScalarTransport_H
-#define functionObjects_phaseScalarTransport_H
+#ifndef phaseScalarTransport_functionObject_H
+#define phaseScalarTransport_functionObject_H
 
 #include "scalarTransport.H"
 

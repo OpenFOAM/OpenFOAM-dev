@@ -104,8 +104,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_fieldAverage_H
-#define functionObjects_fieldAverage_H
+#ifndef fieldAverage_functionObject_H
+#define fieldAverage_functionObject_H
 
 #include "fvMeshFunctionObject.H"
 

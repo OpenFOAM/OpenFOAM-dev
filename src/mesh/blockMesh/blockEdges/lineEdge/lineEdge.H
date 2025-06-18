@@ -32,8 +32,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef blockEdges_lineEdge_H
-#define blockEdges_lineEdge_H
+#ifndef lineEdge_blockEdge_H
+#define lineEdge_blockEdge_H
 
 #include "blockEdge.H"
 

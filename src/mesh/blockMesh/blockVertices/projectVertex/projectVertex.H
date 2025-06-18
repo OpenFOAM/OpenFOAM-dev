@@ -33,8 +33,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef blockVertices_projectVertex_H
-#define blockVertices_projectVertex_H
+#ifndef projectVertex_blockVertex_H
+#define projectVertex_blockVertex_H
 
 #include "pointVertex.H"
 

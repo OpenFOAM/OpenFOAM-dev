@@ -32,8 +32,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef blockVertices_namedVertex_H
-#define blockVertices_namedVertex_H
+#ifndef namedVertex_blockVertex_H
+#define namedVertex_blockVertex_H
 
 #include "blockVertex.H"
 

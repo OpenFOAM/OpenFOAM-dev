@@ -32,8 +32,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_cloudFlux_H
-#define functionObjects_cloudFlux_H
+#ifndef cloudFlux_functionObject_H
+#define cloudFlux_functionObject_H
 
 #include "LagrangianPatchField.H"
 #include "cloudFvMeshFunctionObject.H"

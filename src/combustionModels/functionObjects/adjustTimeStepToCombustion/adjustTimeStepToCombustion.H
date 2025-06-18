@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,8 +59,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_adjustTimeStepToCombustion_H
-#define functionObjects_adjustTimeStepToCombustion_H
+#ifndef adjustTimeStepToCombustion_functionObject_H
+#define adjustTimeStepToCombustion_functionObject_H
 
 #include "regionFunctionObject.H"
 #include "timeIOdictionary.H"

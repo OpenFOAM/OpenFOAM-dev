@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,8 +101,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_wallHeatTransferCoeff_H
-#define functionObjects_wallHeatTransferCoeff_H
+#ifndef wallHeatTransferCoeff_functionObject_H
+#define wallHeatTransferCoeff_functionObject_H
 
 #include "fvMeshFunctionObject.H"
 #include "logFiles.H"

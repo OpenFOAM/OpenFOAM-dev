@@ -90,8 +90,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_scalarTransport_H
-#define functionObjects_scalarTransport_H
+#ifndef scalarTransport_functionObject_H
+#define scalarTransport_functionObject_H
 
 #include "fvMeshFunctionObject.H"
 #include "volFields.H"

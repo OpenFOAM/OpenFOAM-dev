@@ -48,8 +48,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_cloudNumberFlux_H
-#define functionObjects_cloudNumberFlux_H
+#ifndef cloudNumberFlux_functionObject_H
+#define cloudNumberFlux_functionObject_H
 
 #include "cloudFlux.H"
 

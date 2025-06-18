@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,8 +73,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_sampledSurfaces_H
-#define functionObjects_sampledSurfaces_H
+#ifndef sampledSurfaces_functionObject_H
+#define sampledSurfaces_functionObject_H
 
 #include "fvMeshFunctionObject.H"
 #include "sampledSurface.H"

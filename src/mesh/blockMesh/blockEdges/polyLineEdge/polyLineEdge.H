@@ -32,8 +32,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef blockEdges_polyLineEdge_H
-#define blockEdges_polyLineEdge_H
+#ifndef polyLineEdge_blockEdge_H
+#define polyLineEdge_blockEdge_H
 
 #include "blockEdge.H"
 #include "polyLine.H"

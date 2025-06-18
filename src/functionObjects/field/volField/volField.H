@@ -37,8 +37,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_volField_H
-#define functionObjects_volField_H
+#ifndef volField_functionObject_H
+#define volField_functionObject_H
 
 #include "fieldExpression.H"
 

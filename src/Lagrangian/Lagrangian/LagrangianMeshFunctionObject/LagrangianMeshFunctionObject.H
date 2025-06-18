@@ -32,8 +32,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_LagrangianMeshFunctionObject_H
-#define functionObjects_LagrangianMeshFunctionObject_H
+#ifndef LagrangianMeshFunctionObject_functionObject_H
+#define LagrangianMeshFunctionObject_functionObject_H
 
 #include "objectRegistryFunctionObject.H"
 

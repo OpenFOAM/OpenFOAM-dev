@@ -54,8 +54,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_specieReactionRates_H
-#define functionObjects_specieReactionRates_H
+#ifndef specieReactionRates_functionObject_H
+#define specieReactionRates_functionObject_H
 
 #include "fvMeshFunctionObject.H"
 #include "fvCellZone.H"

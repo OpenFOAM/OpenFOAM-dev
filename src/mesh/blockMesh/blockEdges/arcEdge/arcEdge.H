@@ -39,8 +39,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef blockEdges_arcEdge_H
-#define blockEdges_arcEdge_H
+#ifndef arcEdge_blockEdge_H
+#define arcEdge_blockEdge_H
 
 #include "blockEdge.H"
 

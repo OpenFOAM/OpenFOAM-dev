@@ -49,8 +49,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_cloudLagrangianVolumeFraction_H
-#define functionObjects_cloudLagrangianVolumeFraction_H
+#ifndef cloudLagrangianVolumeFraction_functionObject_H
+#define cloudLagrangianVolumeFraction_functionObject_H
 
 #include "cloudLagrangianMeshFunctionObject.H"
 

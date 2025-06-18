@@ -32,8 +32,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef blockEdges_BSplineEdge_H
-#define blockEdges_BSplineEdge_H
+#ifndef BSplineEdge_blockEdge_H
+#define BSplineEdge_blockEdge_H
 
 #include "blockEdge.H"
 #include "BSpline.H"

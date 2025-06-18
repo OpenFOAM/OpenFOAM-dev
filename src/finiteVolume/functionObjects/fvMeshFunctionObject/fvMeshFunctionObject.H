@@ -41,8 +41,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_fvMeshFunctionObject_H
-#define functionObjects_fvMeshFunctionObject_H
+#ifndef fvMeshFunctionObject_functionObject_H
+#define fvMeshFunctionObject_functionObject_H
 
 #include "regionFunctionObject.H"
 

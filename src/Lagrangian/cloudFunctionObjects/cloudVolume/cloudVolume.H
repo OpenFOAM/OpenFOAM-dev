@@ -48,8 +48,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_cloudVolume_H
-#define functionObjects_cloudVolume_H
+#ifndef cloudVolume_functionObject_H
+#define cloudVolume_functionObject_H
 
 #include "cloudLagrangianMeshFunctionObject.H"
 
