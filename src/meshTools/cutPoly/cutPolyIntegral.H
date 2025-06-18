@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,10 +36,7 @@ SourceFiles
 #define cutPolyIntegral_H
 
 #include "cutPolyValue.H"
-
 #include <tuple>
-#include <type_traits>
-#include <utility>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -48,11 +45,14 @@ namespace Foam
 namespace cutPoly
 {
 
-//- Compute the face-area and face-area-integrals of the given properties over
-//  a face
+//- Definition for the type of a face-area-integral
+template<class Type>
+using AreaIntegralType =
+    typename Foam::outerProduct<Foam::vector, Type>::type;
+
+//- Compute the face-area and face-area-integrals of the given properties
 template<template<class> class FaceValues, class ... Types>
-std::tuple<vector, typename outerProduct<vector, Types>::type ...>
-faceAreaIntegral
+Tuple2<vector, std::tuple<AreaIntegralType<Types> ...>> faceAreaIntegral
 (
     const FaceValues<point>& fPs,
     const point& fPAvg,
@@ -60,10 +60,54 @@ faceAreaIntegral
     const std::tuple<Types ...>& fPsiAvg
 );
 
-//- Compute the face-area and face-area-integral of the given property over
-//  a cut-face. ToDo: Make variadic as faceAreaIntegral.
+//- Compute the face-area
+template<template<class> class FaceValues>
+inline vector faceArea
+(
+    const FaceValues<point>& fPs,
+    const point& fPAvg
+);
+
+//- Compute the face-area and face-area-integral of a given property
+template<template<class> class FaceValues, class Type>
+inline Tuple2<vector, AreaIntegralType<Type>> faceAreaIntegral
+(
+    const FaceValues<point>& fPs,
+    const point& fPAvg,
+    const FaceValues<Type>& fPsis,
+    const Type& fPsiAvg
+);
+
+//- Compute the face-cut-area and face-cut-area-integral of the given properties
+template<class ... Types>
+Tuple2<vector, std::tuple<AreaIntegralType<Types> ...>> faceCutAreaIntegral
+(
+    const face& f,
+    const vector& fArea,
+    const std::tuple<Types ...>& fPsis,
+    const List<labelPair>& fCuts,
+    const pointField& ps,
+    const std::tuple<const Field<Types>& ...>& pPsis,
+    const scalarField& pAlphas,
+    const scalar isoAlpha,
+    const bool below
+);
+
+//- Compute the face-cut-area
+inline vector faceCutArea
+(
+    const face& f,
+    const vector& fArea,
+    const List<labelPair>& fCuts,
+    const pointField& ps,
+    const scalarField& pAlphas,
+    const scalar isoAlpha,
+    const bool below
+);
+
+//- Compute the face-cut-area and face-cut-area-integral of the given property
 template<class Type>
-Tuple2<vector, typename outerProduct<vector, Type>::type> faceCutAreaIntegral
+inline Tuple2<vector, AreaIntegralType<Type>> faceCutAreaIntegral
 (
     const face& f,
     const vector& fArea,
@@ -76,10 +120,85 @@ Tuple2<vector, typename outerProduct<vector, Type>::type> faceCutAreaIntegral
     const bool below
 );
 
-//- Compute the cell-volume and cell-volume-integral of the given property over
-//  a cut-cell. ToDo: Make variadic as faceAreaIntegral.
+//- Compute the cell-volume and cell-volume-integrals of the given properties
+template<class ... Types>
+Tuple2<scalar, std::tuple<Types ...>> cellVolumeIntegral
+(
+    const cell& c,
+    const cellEdgeAddressing& cAddr,
+    const point& cPAvg,
+    const std::tuple<Types ...>& cPsiAvgs,
+    const vectorField& fAreas,
+    const vectorField& fCentres,
+    const std::tuple<const Field<Types>& ...>& fPsis
+);
+
+//- Compute the cell-volume
+inline scalar cellVolume
+(
+    const cell& c,
+    const cellEdgeAddressing& cAddr,
+    const point& cPAvg,
+    const vectorField& fAreas,
+    const vectorField& fCentres
+);
+
+//- Compute the cell-volume and cell-volume-integrals of the given property
 template<class Type>
-Tuple2<scalar, Type> cellCutVolumeIntegral
+inline Tuple2<scalar, Type> cellVolumeIntegral
+(
+    const cell& c,
+    const cellEdgeAddressing& cAddr,
+    const point& cPAvg,
+    const Type& cPsiAvg,
+    const vectorField& fAreas,
+    const vectorField& fCentres,
+    const Field<Type>& fPsis
+);
+
+//- Compute the cell-cut-volume and cell-cut-volume-integral
+//  of the given properties
+template<class ... Types>
+Tuple2<scalar, std::tuple<Types ...>> cellCutVolumeIntegral
+(
+    const cell& c,
+    const cellEdgeAddressing& cAddr,
+    const scalar cVolume,
+    const std::tuple<Types ...>& cPsis,
+    const labelListList& cCuts,
+    const faceUList& fs,
+    const vectorField& fAreas,
+    const vectorField& fCentres,
+    const std::tuple<const Field<Types>& ...>& fPsis,
+    const vectorField& fCutAreas,
+    const pointField& ps,
+    const std::tuple<const Field<Types>& ...>& pPsis,
+    const scalarField& pAlphas,
+    const scalar isoAlpha,
+    const bool below
+);
+
+//- Compute the cell-cut-volume
+inline scalar cellCutVolume
+(
+    const cell& c,
+    const cellEdgeAddressing& cAddr,
+    const scalar cVolume,
+    const labelListList& cCuts,
+    const faceUList& fs,
+    const vectorField& fAreas,
+    const vectorField& fCentres,
+    const vectorField& fCutAreas,
+    const pointField& ps,
+    const scalarField& pAlphas,
+    const scalar isoAlpha,
+    const bool below
+);
+
+//- Compute the cell-cut-volume and cell-cut-volume-integral
+//  of the given property
+template<class Type>
+inline Tuple2<scalar, Type> cellCutVolumeIntegral
 (
     const cell& c,
     const cellEdgeAddressing& cAddr,
@@ -91,7 +210,6 @@ Tuple2<scalar, Type> cellCutVolumeIntegral
     const vectorField& fCentres,
     const vectorField& fPsis,
     const vectorField& fCutAreas,
-    const vectorField& fCutPsis,
     const pointField& ps,
     const Field<Type>& pPsis,
     const scalarField& pAlphas,
@@ -101,6 +219,10 @@ Tuple2<scalar, Type> cellCutVolumeIntegral
 
 } // End namespace cutPoly
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "cutPolyIntegralI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

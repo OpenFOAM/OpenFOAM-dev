@@ -80,9 +80,6 @@ Foam::functionObjects::patchCutLayerAverage::calcNonInterpolatingWeights
     const vectorField& faceNormals = pp.faceNormals();
     const pointField& points = pp.localPoints();
 
-    // One-value for every point. Needed for the cutPoly routines.
-    const scalarField pointOnes(points.size(), scalar(1));
-
     // Generate weights for each face in turn
     DynamicList<weight> dynWeights(faces.size()*2);
     label layeri = 0;
@@ -111,36 +108,32 @@ Foam::functionObjects::patchCutLayerAverage::calcNonInterpolatingWeights
             if (faceMinXs[facei] < x0)
             {
                 dynWeights.last().value -=
-                    cutPoly::faceCutAreaIntegral
+                    cutPoly::faceCutArea
                     (
                         faces[facei],
                         faceAreas[facei],
-                        scalar(1),
                         cutPoly::faceCuts(faces[facei], pointXs, x0),
                         points,
-                        pointOnes,
                         pointXs,
                         x0,
                         true
-                    ).first() & faceNormals[facei];
+                    ) & faceNormals[facei];
             }
 
             // Right interval
             if (faceMaxXs[facei] > x1)
             {
                 dynWeights.last().value -=
-                    cutPoly::faceCutAreaIntegral
+                    cutPoly::faceCutArea
                     (
                         faces[facei],
                         faceAreas[facei],
-                        scalar(1),
                         cutPoly::faceCuts(faces[facei], pointXs, x1),
                         points,
-                        pointOnes,
                         pointXs,
                         x1,
                         false
-                    ).first() & faceNormals[facei];
+                    ) & faceNormals[facei];
             }
 
             layerj ++;
@@ -611,6 +604,47 @@ void Foam::functionObjects::patchCutLayerAverage::calcWeights()
     (
         applyWeights(weights_, pointField(pp.faceCentres())).ptr()
     );
+
+    if (debug)
+    {
+        const List<weight> weights =
+            calcWeights
+            (
+                pointXs,
+                faceMinXs,
+                faceMaxXs,
+                faceMinOrder,
+                plotXs,
+                false
+            );
+
+        volTensorField layers
+        (
+            IOobject
+            (
+                name() + ":layers",
+                mesh_.time().name(),
+                mesh()
+            ),
+            mesh(),
+            dimensionedTensor(dimless, tensor::zero)
+        );
+
+        tensorField& pLayers =
+            layers.boundaryFieldRef()[pp.index()];
+
+        forAll(weights, weighti)
+        {
+            const weight& w = weights[weighti];
+
+            pLayers[w.facei][w.layeri % tensor::nComponents] =
+                w.value/pp.magFaceAreas()[w.facei];
+        }
+
+        Info<< name() << ": Writing " << layers.name() << endl;
+
+        layers.write();
+    }
 }
 
 
