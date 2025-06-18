@@ -23,9 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "flipZoneGenerator.H"
+#include "point_zoneGenerator.H"
 #include "polyMesh.H"
-#include "syncTools.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -34,19 +33,20 @@ namespace Foam
 {
     namespace zoneGenerators
     {
-        defineTypeNameAndDebug(flip, 0);
+        defineTypeNameAndDebug(point, 0);
         addToRunTimeSelectionTable
         (
             zoneGenerator,
-            flip,
+            point,
             dictionary
         );
     }
 }
 
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::zoneGenerators::flip::flip
+Foam::zoneGenerators::point::point
 (
     const word& name,
     const polyMesh& mesh,
@@ -54,38 +54,83 @@ Foam::zoneGenerators::flip::flip
 )
 :
     zoneGenerator(name, mesh, dict),
-    zoneGenerator_(zoneGenerator::New(mesh, dict))
+    zoneGenerators_(mesh, dict)
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::zoneGenerators::flip::~flip()
+Foam::zoneGenerators::point::~point()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::zoneSet Foam::zoneGenerators::flip::generate() const
+Foam::zoneSet Foam::zoneGenerators::point::generate() const
 {
-    zoneSet zs(zoneGenerator_->generate());
-    const faceZone& fZone = zs.fZone();
-    boolList flipMap(fZone.flipMap());
+    boolList selectedPoints(mesh_.nPoints(), false);
 
-    forAll(flipMap, fi)
+    forAll(zoneGenerators_, i)
     {
-        flipMap[fi] = !flipMap[fi];
+        zoneSet zs(zoneGenerators_[i].generate());
+
+        if (zs.pZone.valid() && zs.pZone().name() != zoneName_)
+        {
+            const labelList& zonePoints = zs.pZone();
+
+            forAll(zonePoints, zpi)
+            {
+                selectedPoints[zonePoints[zpi]] = true;
+            }
+        }
+
+        if (zs.cZone.valid())
+        {
+            const labelList& zoneCells = zs.cZone();
+
+            forAll(zoneCells, zci)
+            {
+                const labelList& cellFaces = mesh_.cells()[zoneCells[zci]];
+
+                forAll(cellFaces, cFacei)
+                {
+                    const face& f = mesh_.faces()[cellFaces[cFacei]];
+
+                    forAll(f, fp)
+                    {
+                        selectedPoints[f[fp]] = true;
+                    }
+                }
+            }
+        }
+
+        if (zs.fZone.valid())
+        {
+            const labelList& zoneFaces = zs.fZone();
+
+            forAll(zoneFaces, zfi)
+            {
+                const face& f = mesh_.faces()[zoneFaces[zfi]];
+
+                forAll(f, fp)
+                {
+                    selectedPoints[f[fp]] = true;
+                }
+            }
+        }
     }
+
+    moveUpdate_ = zoneGenerators_.moveUpdate();
 
     return zoneSet
     (
-        new faceZone
+        new pointZone
         (
-            fZone,
             zoneName_,
-            fZone,
-            flipMap,
-            mesh_.faceZones()
+            indices(selectedPoints),
+            mesh_.pointZones(),
+            moveUpdate_,
+            true
         )
     );
 }

@@ -22,39 +22,49 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::zoneGenerators::patch
+    Foam::zoneGenerators::normal
 
 Description
-    A zoneGenerator which constructs a faceZone from a set of patches
+    A zoneGenerator which selects the faces returned by the given
+    zoneGenerator that are aligned with the given normal.
 
     The returned faceZone is oriented and provides the corresponding flipMap.
 
 Usage
     \table
-        Property     | Description             | Required | Default value
-        type         | Type: face              | yes      |
-        name         | Name of the zone        | no       | zoneGenerator name
-        patch        | Name of patch           | no       |
-        patches      | List of patch names     | no       | ()
+        Property     | Description              | Required | Default value
+        type         | Type: face               | yes      |
+        name         | Name of the zone         | no       | zoneGenerator name
+        normal       | Reference unit vector    | yes      |
+        tol          | cos angle tolerance      | yes      |
         moveUpdate   | Switch to update after mesh motion | no | false
     \endtable
 
-    To convert patch named \c freeSurface into a faceZone of the same name:
+    To create the faceZone \c floatingObjectBottom containing the faces of the
+    \c floatingObject patch which point in the y-direction:
     \verbatim
-        freeSurface
+        floatingObjectBottom
         {
-            type        patch;
-            patch       freeSurface;
+            type        normal;
+
+            normal      (0 1 0);
+            tol         0.01;
+
+            floatingObject
+            {
+                type        patch;
+                patch       floatingObject;
+            }
         }
     \endverbatim
 
 SourceFiles
-    patchZoneGenerator.C
+    normal_zoneGenerator.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef patchZoneGenerator_H
-#define patchZoneGenerator_H
+#ifndef normal_zoneGenerator_H
+#define normal_zoneGenerator_H
 
 #include "zoneGeneratorList.H"
 
@@ -66,29 +76,36 @@ namespace zoneGenerators
 {
 
 /*---------------------------------------------------------------------------*\
-                              Class patch Declaration
+                              Class normal Declaration
 \*---------------------------------------------------------------------------*/
 
-class patch
+class normal
 :
     public zoneGenerator
 {
     // Private Data
 
-        //- Set of patches to convert into faceZone
-        labelHashSet patchSet_;
+        //- Zone generator supplying the faces
+        autoPtr<zoneGenerator> zoneGenerator_;
+
+        //- Reference unit vector face orientations are compared to
+        vector normal_;
+
+        //- Direction comparison tolerance
+        //  cos of angle between normal_ and face normal
+        const scalar tol_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("patch");
+    TypeName("normal");
 
 
     // Constructors
 
         //- Construct from dictionary
-        patch
+        normal
         (
             const word& name,
             const polyMesh& mesh,
@@ -97,7 +114,7 @@ public:
 
 
     //- Destructor
-    virtual ~patch();
+    virtual ~normal();
 
 
     // Member Functions

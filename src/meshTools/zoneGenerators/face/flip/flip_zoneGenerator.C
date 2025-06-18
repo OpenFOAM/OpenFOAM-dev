@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "patchZoneGenerator.H"
+#include "flip_zoneGenerator.H"
 #include "polyMesh.H"
 #include "syncTools.H"
 #include "addToRunTimeSelectionTable.H"
@@ -34,11 +34,11 @@ namespace Foam
 {
     namespace zoneGenerators
     {
-        defineTypeNameAndDebug(patch, 0);
+        defineTypeNameAndDebug(flip, 0);
         addToRunTimeSelectionTable
         (
             zoneGenerator,
-            patch,
+            flip,
             dictionary
         );
     }
@@ -46,7 +46,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::zoneGenerators::patch::patch
+Foam::zoneGenerators::flip::flip
 (
     const word& name,
     const polyMesh& mesh,
@@ -54,50 +54,38 @@ Foam::zoneGenerators::patch::patch
 )
 :
     zoneGenerator(name, mesh, dict),
-    patchSet_(mesh.boundaryMesh().patchSet(dict))
+    zoneGenerator_(zoneGenerator::New(mesh, dict))
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::zoneGenerators::patch::~patch()
+Foam::zoneGenerators::flip::~flip()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::zoneSet Foam::zoneGenerators::patch::generate() const
+Foam::zoneSet Foam::zoneGenerators::flip::generate() const
 {
-    boolList selectedFaces(mesh_.nFaces(), false);
+    zoneSet zs(zoneGenerator_->generate());
+    const faceZone& fZone = zs.fZone();
+    boolList flipMap(fZone.flipMap());
 
-    forAllConstIter(labelHashSet, patchSet_, iter)
+    forAll(flipMap, fi)
     {
-        const label patchi = iter.key();
-        const polyPatch& pp = mesh_.boundaryMesh()[patchi];
-
-        for
-        (
-            label facei = pp.start();
-            facei < pp.start() + pp.size();
-            facei++
-        )
-        {
-            selectedFaces[facei] = true;
-        }
+        flipMap[fi] = !flipMap[fi];
     }
-
-    const labelList faceIndices(indices(selectedFaces));
 
     return zoneSet
     (
         new faceZone
         (
+            fZone,
             zoneName_,
-            faceIndices,
-            boolList(faceIndices.size(), false),
-            mesh_.faceZones(),
-            moveUpdate_,
-            true
+            fZone,
+            flipMap,
+            mesh_.faceZones()
         )
     );
 }

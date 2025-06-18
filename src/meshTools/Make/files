@@ -239,18 +239,18 @@ zoneGenerators/volume/annulus/annulus.C
 zoneGenerators/volume/truncatedCone/truncatedCone.C
 zoneGenerators/volume/insideSurface/insideSurface.C
 
-zoneGenerators/point/point/pointZoneGenerator.C
+zoneGenerators/point/point/point_zoneGenerator.C
 
 zoneGenerators/cell/containsPoints/containsPoints.C
 zoneGenerators/cell/generatedCellZone/generatedCellZone.C
 
-zoneGenerators/face/face/faceZoneGenerator.C
-zoneGenerators/face/patch/patchZoneGenerator.C
-zoneGenerators/face/normal/normalZoneGenerator.C
-zoneGenerators/face/orient/orientZoneGenerator.C
-zoneGenerators/face/flip/flipZoneGenerator.C
-zoneGenerators/face/plane/planeZoneGenerator.C
-zoneGenerators/face/surface/surfaceZoneGenerator.C
+zoneGenerators/face/face/face_zoneGenerator.C
+zoneGenerators/face/patch/patch_zoneGenerator.C
+zoneGenerators/face/normal/normal_zoneGenerator.C
+zoneGenerators/face/orient/orient_zoneGenerator.C
+zoneGenerators/face/flip/flip_zoneGenerator.C
+zoneGenerators/face/plane/plane_zoneGenerator.C
+zoneGenerators/face/surface/surface_zoneGenerator.C
 
 zoneGenerators/periodic/periodic.C
 

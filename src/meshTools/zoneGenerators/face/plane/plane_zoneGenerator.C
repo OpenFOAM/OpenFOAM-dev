@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "planeZoneGenerator.H"
+#include "plane_zoneGenerator.H"
 #include "polyMesh.H"
 #include "uindirectPrimitivePatch.H"
 #include "PatchTools.H"

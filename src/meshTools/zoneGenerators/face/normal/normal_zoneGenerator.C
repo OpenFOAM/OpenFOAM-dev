@@ -23,8 +23,9 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "pointZoneGenerator.H"
+#include "normal_zoneGenerator.H"
 #include "polyMesh.H"
+#include "syncTools.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -33,20 +34,19 @@ namespace Foam
 {
     namespace zoneGenerators
     {
-        defineTypeNameAndDebug(point, 0);
+        defineTypeNameAndDebug(normal, 0);
         addToRunTimeSelectionTable
         (
             zoneGenerator,
-            point,
+            normal,
             dictionary
         );
     }
 }
 
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::zoneGenerators::point::point
+Foam::zoneGenerators::normal::normal
 (
     const word& name,
     const polyMesh& mesh,
@@ -54,81 +54,48 @@ Foam::zoneGenerators::point::point
 )
 :
     zoneGenerator(name, mesh, dict),
-    zoneGenerators_(mesh, dict)
+    zoneGenerator_(zoneGenerator::New(mesh, dict)),
+    normal_(normalised(dict.lookup<vector>("normal", dimless))),
+    tol_(dict.lookup<scalar>("tol", dimless))
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::zoneGenerators::point::~point()
+Foam::zoneGenerators::normal::~normal()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::zoneSet Foam::zoneGenerators::point::generate() const
+Foam::zoneSet Foam::zoneGenerators::normal::generate() const
 {
-    boolList selectedPoints(mesh_.nPoints(), false);
+    labelList faceIndices(zoneGenerator_->generate().fZone());
+    const vectorField& faceAreas = mesh_.faceAreas();
 
-    forAll(zoneGenerators_, i)
+    label fj = 0;
+    forAll(faceIndices, fi)
     {
-        zoneSet zs(zoneGenerators_[i].generate());
+        const label facei = faceIndices[fi];
 
-        if (zs.pZone.valid() && zs.pZone().name() != zoneName_)
+        const vector n(normalised(faceAreas[facei]));
+
+        if (mag(1 - (n & normal_)) < tol_)
         {
-            const labelList& zonePoints = zs.pZone();
-
-            forAll(zonePoints, zpi)
-            {
-                selectedPoints[zonePoints[zpi]] = true;
-            }
-        }
-
-        if (zs.cZone.valid())
-        {
-            const labelList& zoneCells = zs.cZone();
-
-            forAll(zoneCells, zci)
-            {
-                const labelList& cellFaces = mesh_.cells()[zoneCells[zci]];
-
-                forAll(cellFaces, cFacei)
-                {
-                    const face& f = mesh_.faces()[cellFaces[cFacei]];
-
-                    forAll(f, fp)
-                    {
-                        selectedPoints[f[fp]] = true;
-                    }
-                }
-            }
-        }
-
-        if (zs.fZone.valid())
-        {
-            const labelList& zoneFaces = zs.fZone();
-
-            forAll(zoneFaces, zfi)
-            {
-                const face& f = mesh_.faces()[zoneFaces[zfi]];
-
-                forAll(f, fp)
-                {
-                    selectedPoints[f[fp]] = true;
-                }
-            }
+            faceIndices[fj++] = facei;
         }
     }
 
-    moveUpdate_ = zoneGenerators_.moveUpdate();
+    faceIndices.setSize(fj);
 
     return zoneSet
     (
-        new pointZone
+        new faceZone
         (
             zoneName_,
-            indices(selectedPoints),
-            mesh_.pointZones(),
+            faceIndices,
+            boolList(faceIndices.size(), false),
+            mesh_.faceZones(),
             moveUpdate_,
             true
         )

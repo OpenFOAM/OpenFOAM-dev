@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "surfaceZoneGenerator.H"
+#include "surface_zoneGenerator.H"
 #include "Time.H"
 #include "polyMesh.H"
 #include "searchableSurface.H"

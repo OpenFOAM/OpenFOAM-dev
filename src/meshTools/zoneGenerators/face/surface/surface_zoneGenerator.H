@@ -22,54 +22,59 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::zoneGenerators::orient
+    Foam::zoneGenerators::surface
 
 Description
-    A zoneGenerator which sets the face orientation flipMap
-
-    based either on the face normal alignment with the given normal or
-    orientation with respect to a given point outside the surface.
+    A faceZone zoneGenerator which selects faces based on the intersection of
+    a surface with the vector between the adjacent cell centres.
 
     The returned faceZone is oriented and provides the corresponding flipMap.
 
 Usage
     \table
-        Property     | Description               | Required | Default value
-        type         | Type: face                | yes      |
-        name         | Name of the zone          | no       | zoneGenerator name
-        normal       | Reference unit vector     | no       |
-        outsidePoint | Point outside the surface | no       |
+        Property     | Description              | Required | Default value
+        type         | Type: face               | yes      |
+        name         | Name of the zone         | no       | zoneGenerator name
+        surface      | searchableSurface type   | yes      |
+        tol          | cell-cell vector intersection tolerance | no | rootSmall
         moveUpdate   | Switch to update after mesh motion | no | false
     \endtable
 
-    To orient the faceZone \c cut corresponding to the positive y-direction:
+    To create the faceZone \c baffles containing the faces based on the adjacent
+    cell centres spanning the given triangulated surface:
     \verbatim
-        orientedCut
+        baffles
         {
-            type        orient;
-            normal      (0 1 0);
-            cut;
+            type        surface;
+            surface     triSurface;
+            file        "baffles.obj";
         }
     \endverbatim
 
-    To orient the faceZone \c cut with respect to the point (0 100 0) outside
-    the surface:
+    To create the faceZone \c rotatingZone containing the faces based on the
+    adjacent cell centres spanning the given cylinder:
     \verbatim
-        orientedCut
+        rotatingZone
         {
-            type        orient;
-            point       (0 100 0);
-            cut;
+            type        surface;
+            surface     cylinder;
+            point1      (0 0 0.54);
+            point2      (0 0 0.66);
+            radius      0.2;
         }
     \endverbatim
+
+See also
+    searchableSurface
+    zoneGenerators::plane_zoneGenerator
 
 SourceFiles
-    orientZoneGenerator.C
+    surface.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef orientZoneGenerator_H
-#define orientZoneGenerator_H
+#ifndef surface_zoneGenerator_H
+#define surface_zoneGenerator_H
 
 #include "zoneGeneratorList.H"
 
@@ -77,51 +82,39 @@ SourceFiles
 
 namespace Foam
 {
+
+class searchableSurface;
+
 namespace zoneGenerators
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class orient Declaration
+                    Class surface Declaration
 \*---------------------------------------------------------------------------*/
 
-class orient
+class surface
 :
     public zoneGenerator
 {
     // Private Data
 
-        //- Zone generator supplying the faces
-        autoPtr<zoneGenerator> zoneGenerator_;
+        //- Surface
+        autoPtr<searchableSurface> surfacePtr_;
 
-        //- Reference unit vector face orientations are compared to
-        vector normal_;
-
-        //- Seed outside point
-        vector outsidePoint_;
-
-
-    // Private Member Functions
-
-        //- Orientation based on the face normal alignment with the given normal
-        boolList normalOrientation(const labelList& faceIndices) const;
-
-        //- Orientation based on the given outside point
-        boolList pointOrientation(const faceZone& fZone) const;
-
-        //- Select orientation algorithm based on the user inputs
-        boolList orientation(const faceZone& fZone) const;
+        //- Tolerance with which to extend the cell-cell vectors
+        const scalar tol_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("orient");
+    TypeName("surface");
 
 
     // Constructors
 
         //- Construct from dictionary
-        orient
+        surface
         (
             const word& name,
             const polyMesh& mesh,
@@ -130,7 +123,7 @@ public:
 
 
     //- Destructor
-    virtual ~orient();
+    virtual ~surface();
 
 
     // Member Functions

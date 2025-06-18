@@ -22,11 +22,18 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::zoneGenerators::normal
+    Foam::zoneGenerators::plane
 
 Description
-    A zoneGenerator which selects the faces returned by the given
-    zoneGenerator that are aligned with the given normal.
+    A zoneGenerator which selects faces based on the adjacent cell centres
+    spanning a given plane. The plane is defined by a point and normal vector.
+
+    Additionally, an include entry can be specified. When omitted or set to
+    "all", then all faces that meet the criteria are included in the set. When
+    set to "closest", just the faces that belong to the closest contiguous
+    region to the plane point are included. This latter setting is useful when
+    defining face zones through channels on which the flow rate is to be
+    computed, as it keeps the set local to a single channel.
 
     The returned faceZone is oriented and provides the corresponding flipMap.
 
@@ -35,36 +42,30 @@ Usage
         Property     | Description              | Required | Default value
         type         | Type: face               | yes      |
         name         | Name of the zone         | no       | zoneGenerator name
-        normal       | Reference unit vector    | yes      |
-        tol          | cos angle tolerance      | yes      |
+        point        | Point on plane           | yes      |
+        normal       | Normal to plane          | yes      |
+        include      | Include option: all or closest | yes      |
         moveUpdate   | Switch to update after mesh motion | no | false
     \endtable
 
-    To create the faceZone \c floatingObjectBottom containing the faces of the
-    \c floatingObject patch which point in the y-direction:
+    To create the faceZone \c mid containing the faces based on the adjacent
+    cell centres spanning a given plane:
     \verbatim
-        floatingObjectBottom
+        mid
         {
-            type        normal;
-
-            normal      (0 1 0);
-            tol         0.01;
-
-            floatingObject
-            {
-                type        patch;
-                patch       floatingObject;
-            }
+            type        plane;
+            point       (0.41 0 0);
+            normal      (1 0 0);
         }
     \endverbatim
 
 SourceFiles
-    normalZoneGenerator.C
+    plane_zoneGenerator.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef normalZoneGenerator_H
-#define normalZoneGenerator_H
+#ifndef plane_zoneGenerator_H
+#define plane_zoneGenerator_H
 
 #include "zoneGeneratorList.H"
 
@@ -76,36 +77,52 @@ namespace zoneGenerators
 {
 
 /*---------------------------------------------------------------------------*\
-                              Class normal Declaration
+                    Class plane Declaration
 \*---------------------------------------------------------------------------*/
 
-class normal
+class plane
 :
     public zoneGenerator
 {
+public:
+
+    // Public Enumerations
+
+        //- Enumeration for what to include
+        enum class include
+        {
+            all,
+            closest
+        };
+
+        //- Include option names
+        static const NamedEnum<include, 2> includeNames;
+
+
+private:
+
     // Private Data
 
-        //- Zone generator supplying the faces
-        autoPtr<zoneGenerator> zoneGenerator_;
+        //- Point on the plane
+        const vector point_;
 
-        //- Reference unit vector face orientations are compared to
-        vector normal_;
+        //- Normal to the plane
+        const vector normal_;
 
-        //- Direction comparison tolerance
-        //  cos of angle between normal_ and face normal
-        const scalar tol_;
+        //- Include option
+        const include include_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("normal");
+    TypeName("plane");
 
 
     // Constructors
 
         //- Construct from dictionary
-        normal
+        plane
         (
             const word& name,
             const polyMesh& mesh,
@@ -114,7 +131,7 @@ public:
 
 
     //- Destructor
-    virtual ~normal();
+    virtual ~plane();
 
 
     // Member Functions

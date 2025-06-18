@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "normalZoneGenerator.H"
+#include "patch_zoneGenerator.H"
 #include "polyMesh.H"
 #include "syncTools.H"
 #include "addToRunTimeSelectionTable.H"
@@ -34,11 +34,11 @@ namespace Foam
 {
     namespace zoneGenerators
     {
-        defineTypeNameAndDebug(normal, 0);
+        defineTypeNameAndDebug(patch, 0);
         addToRunTimeSelectionTable
         (
             zoneGenerator,
-            normal,
+            patch,
             dictionary
         );
     }
@@ -46,7 +46,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::zoneGenerators::normal::normal
+Foam::zoneGenerators::patch::patch
 (
     const word& name,
     const polyMesh& mesh,
@@ -54,39 +54,39 @@ Foam::zoneGenerators::normal::normal
 )
 :
     zoneGenerator(name, mesh, dict),
-    zoneGenerator_(zoneGenerator::New(mesh, dict)),
-    normal_(normalised(dict.lookup<vector>("normal", dimless))),
-    tol_(dict.lookup<scalar>("tol", dimless))
+    patchSet_(mesh.boundaryMesh().patchSet(dict))
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::zoneGenerators::normal::~normal()
+Foam::zoneGenerators::patch::~patch()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::zoneSet Foam::zoneGenerators::normal::generate() const
+Foam::zoneSet Foam::zoneGenerators::patch::generate() const
 {
-    labelList faceIndices(zoneGenerator_->generate().fZone());
-    const vectorField& faceAreas = mesh_.faceAreas();
+    boolList selectedFaces(mesh_.nFaces(), false);
 
-    label fj = 0;
-    forAll(faceIndices, fi)
+    forAllConstIter(labelHashSet, patchSet_, iter)
     {
-        const label facei = faceIndices[fi];
+        const label patchi = iter.key();
+        const polyPatch& pp = mesh_.boundaryMesh()[patchi];
 
-        const vector n(normalised(faceAreas[facei]));
-
-        if (mag(1 - (n & normal_)) < tol_)
+        for
+        (
+            label facei = pp.start();
+            facei < pp.start() + pp.size();
+            facei++
+        )
         {
-            faceIndices[fj++] = facei;
+            selectedFaces[facei] = true;
         }
     }
 
-    faceIndices.setSize(fj);
+    const labelList faceIndices(indices(selectedFaces));
 
     return zoneSet
     (

@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "orientZoneGenerator.H"
+#include "orient_zoneGenerator.H"
 #include "polyMesh.H"
 #include "syncTools.H"
 #include "patchFaceOrientation.H"

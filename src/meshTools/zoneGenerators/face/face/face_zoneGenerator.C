@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "faceZoneGenerator.H"
+#include "face_zoneGenerator.H"
 #include "polyMesh.H"
 #include "syncTools.H"
 #include "addToRunTimeSelectionTable.H"
