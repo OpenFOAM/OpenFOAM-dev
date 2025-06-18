@@ -22,36 +22,36 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::searchableSurfaces::sphere
+    Foam::searchableSurfaces::box
 
 Description
-    Surface geometry with a sphere shape, which can be used with
-    snappyHexMesh.
+    Surface geometry with a rectangular box shape, aligned with the coordinate
+    axes, which can be used with snappyHexMesh.
 
 Usage
     \table
-        Property  | Description         | Required
-        centre    | Sphere centre       | yes
-        radius    | Sphere radius       | yes
+        Property  | Description                    | Required
+        min       | Minimum point of bounding box  | yes
+        max       | Maximum point of bounding box  | yes
     \endtable
 
     Example specification in snappyHexMeshDict/geometry:
     \verbatim
-        type       sphere;
-        centre     (10  10  10);
-        radius     5;
+        type       box;
+        min        (0  0  0);
+        max        (10 10 10);
     \endverbatim
 
 SourceFiles
-    searchableSphere.C
+    searchableBox.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef searchableSphere_H
-#define searchableSphere_H
+#ifndef box_searchableSurface_H
+#define box_searchableSurface_H
 
-#include "treeBoundBox.H"
 #include "searchableSurface.H"
+#include "treeBoundBox.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -61,71 +61,65 @@ namespace searchableSurfaces
 {
 
 /*---------------------------------------------------------------------------*\
-                             Class sphere Declaration
+                            Class box Declaration
 \*---------------------------------------------------------------------------*/
 
-class sphere
+class box
 :
-    public searchableSurface
+    public searchableSurface,
+    public treeBoundBox
 {
     // Private Member Data
 
-        //- Centre point
-        const point centre_;
-
-        //- Radius
-        const scalar radius_;
-
-        //- Names of regions
         mutable wordList regions_;
 
 
     // Private Member Functions
 
+        //- Project onto component dir of planePt and update index() (=face)
+        void projectOntoCoordPlane
+        (
+            const direction dir,
+            const point& planePt,
+            pointIndexHit& info
+        ) const;
+
         //- Inherit findNearest from searchableSurface
         using searchableSurface::findNearest;
 
-        //- Find nearest point on sphere.
+        //- Returns miss or hit with face (0..5)
         pointIndexHit findNearest
         (
+            const point& bbMid,
             const point& sample,
             const scalar nearestDistSqr
-        ) const;
-
-        //- Find intersection with sphere
-        void findLineAll
-        (
-            const point& start,
-            const point& end,
-            pointIndexHit& near,
-            pointIndexHit& far
         ) const;
 
 
 public:
 
     //- Runtime type information
-    TypeName("sphere");
+    TypeName("box");
 
 
     // Constructors
 
         //- Construct from components
-        sphere(const IOobject& io, const point&, const scalar radius);
+        box(const IOobject& io, const treeBoundBox& bb);
 
         //- Construct from dictionary (used by searchableSurface)
-        sphere
+        box
         (
             const IOobject& io,
             const dictionary& dict
         );
 
         //- Disallow default bitwise copy construction
-        sphere(const sphere&) = delete;
+        box(const box&) = delete;
 
 
     //- Destructor
-    virtual ~sphere();
+    virtual ~box();
 
 
     // Member Functions
@@ -141,16 +135,12 @@ public:
         //- Range of local indices that can be returned.
         virtual label size() const
         {
-            return 1;
+            return 6;
         }
 
         //- Get representative set of element coordinates
         //  Usually the element centres (should be of length size()).
-        virtual tmp<pointField> coordinates() const
-        {
-            tmp<pointField> tCtrs(new pointField(1, centre_));
-            return tCtrs;
-        }
+        virtual tmp<pointField> coordinates() const;
 
         //- Get bounding spheres (centre and radius squared), one per element.
         //  Any point on element is guaranteed to be inside.
@@ -161,13 +151,66 @@ public:
         ) const;
 
         //- Get the points that define the surface.
-        virtual tmp<pointField> points() const
+        virtual tmp<pointField> points() const;
+
+        // Does any part of the surface overlap the supplied bound box?
+        virtual bool overlaps(const boundBox& bb) const
         {
-            return coordinates();
+            return boundBox::overlaps(bb);
         }
 
-        //- Does any part of the surface overlap the supplied bound box?
-        virtual bool overlaps(const boundBox& bb) const;
+        // Single point queries.
+
+            //- Calculate nearest point on surface.
+            //  Returns
+            //  - bool : any point found nearer than nearestDistSqr
+            //  - label: relevant index in surface (=face 0..5)
+            //  - point: actual nearest point found
+            pointIndexHit findNearest
+            (
+                const point& sample,
+                const scalar nearestDistSqr
+            ) const;
+
+            //- Calculate nearest point on edge.
+            //  Returns
+            //  - bool : any point found nearer than nearestDistSqr
+            //  - label: relevant index in surface(=?)
+            //  - point: actual nearest point found
+            pointIndexHit findNearestOnEdge
+            (
+                const point& sample,
+                const scalar nearestDistSqr
+            ) const;
+
+            //- Find nearest to segment.
+            //  Returns
+            //  - bool : any point found?
+            //  - label: relevant index in shapes (=face 0..5)
+            //  - point: actual nearest point found
+            //  sets:
+            //  - tightest  : bounding box
+            //  - linePoint : corresponding nearest point on line
+            pointIndexHit findNearest
+            (
+                const linePointRef& ln,
+                treeBoundBox& tightest,
+                point& linePoint
+            ) const;
+
+            //- Find nearest intersection of line between start and end.
+            pointIndexHit findLine
+            (
+                const point& start,
+                const point& end
+            ) const;
+
+            //- Find any intersection of line between start and end.
+            pointIndexHit findLineAny
+            (
+                const point& start,
+                const point& end
+            ) const;
 
 
         // Multiple point queries.
@@ -236,7 +279,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const sphere&) = delete;
+        void operator=(const box&) = delete;
 };
 
 

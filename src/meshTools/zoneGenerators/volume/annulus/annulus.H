@@ -60,8 +60,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef zoneGenerators_annulus_H
-#define zoneGenerators_annulus_H
+#ifndef annulus_zoneGenerator_H
+#define annulus_zoneGenerator_H
 
 #include "volume.H"
 

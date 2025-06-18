@@ -62,8 +62,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef zoneGenerators_cylinder_H
-#define zoneGenerators_cylinder_H
+#ifndef cylinder_zoneGenerator_H
+#define cylinder_zoneGenerator_H
 
 #include "volume.H"
 

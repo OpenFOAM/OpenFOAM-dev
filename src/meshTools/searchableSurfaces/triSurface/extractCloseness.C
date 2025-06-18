@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "searchableTriSurface.H"
+#include "triSurface_searchableSurface.H"
 #include "triSurfaceFields.H"
 #include "meshTools.H"
 #include "Time.H"

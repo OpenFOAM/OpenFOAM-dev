@@ -67,8 +67,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef periodic_H
-#define periodic_H
+#ifndef periodic_zoneGenerator_H
+#define periodic_zoneGenerator_H
 
 #include "zoneGeneratorList.H"
 #include "Switch.H"

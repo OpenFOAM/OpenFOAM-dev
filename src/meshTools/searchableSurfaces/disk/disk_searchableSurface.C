@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "searchableDisk.H"
+#include "disk_searchableSurface.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -155,7 +155,7 @@ Foam::searchableSurfaces::disk::disk
     // Rough approximation of bounding box
     // vector span(radius_, radius_, radius_);
 
-    // See searchableCylinder
+    // See cylinder
     vector span
     (
         sqrt(sqr(normal_.y()) + sqr(normal_.z())),
@@ -185,7 +185,7 @@ Foam::searchableSurfaces::disk::disk
     // Rough approximation of bounding box
     // vector span(radius_, radius_, radius_);
 
-    // See searchableCylinder
+    // See cylinder
     vector span
     (
         sqrt(sqr(normal_.y()) + sqr(normal_.z())),

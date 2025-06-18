@@ -33,8 +33,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef zoneGenerators_volume_H
-#define zoneGenerators_volume_H
+#ifndef volume_zoneGenerator_H
+#define volume_zoneGenerator_H
 
 #include "zoneGenerator.H"
 

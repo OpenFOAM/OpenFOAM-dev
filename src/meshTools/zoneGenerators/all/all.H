@@ -51,8 +51,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef all_H
-#define all_H
+#ifndef all_zoneGenerator_H
+#define all_zoneGenerator_H
 
 #include "zoneGenerator.H"
 

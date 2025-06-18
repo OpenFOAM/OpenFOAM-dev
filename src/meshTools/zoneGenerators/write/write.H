@@ -72,8 +72,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef write_H
-#define write_H
+#ifndef write_zoneGenerator_H
+#define write_zoneGenerator_H
 
 #include "zoneGeneratorList.H"
 

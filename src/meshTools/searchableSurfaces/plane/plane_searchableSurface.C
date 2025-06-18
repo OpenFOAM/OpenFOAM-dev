@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "searchablePlane.H"
+#include "plane_searchableSurface.H"
 #include "SortableList.H"
 #include "addToRunTimeSelectionTable.H"
 

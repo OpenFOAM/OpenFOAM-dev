@@ -59,8 +59,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef remove_H
-#define remove_H
+#ifndef remove_zoneGenerator_H
+#define remove_zoneGenerator_H
 
 #include "zoneGeneratorList.H"
 

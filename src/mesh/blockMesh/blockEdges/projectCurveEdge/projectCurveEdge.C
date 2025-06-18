@@ -29,7 +29,7 @@ License
 #include "pointConstraint.H"
 #include "OBJstream.H"
 #include "linearInterpolationWeights.H"
-#include "searchableExtrudedCircle.H"
+#include "extrudedCircle_searchableSurface.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 

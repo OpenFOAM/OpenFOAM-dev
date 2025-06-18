@@ -51,8 +51,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef searchableSurfaces_triSurface_H
-#define searchableSurfaces_triSurface_H
+#ifndef triSurface_searchableSurface_H
+#define triSurface_searchableSurface_H
 
 #include "treeBoundBox.H"
 #include "searchableSurface.H"

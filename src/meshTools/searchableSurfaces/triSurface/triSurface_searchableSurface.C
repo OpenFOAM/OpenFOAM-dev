@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "searchableTriSurface.H"
+#include "triSurface_searchableSurface.H"
 #include "randomGenerator.H"
 #include "addToRunTimeSelectionTable.H"
 #include "EdgeMap.H"

@@ -86,8 +86,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef zoneGenerators_invert_H
-#define zoneGenerators_invert_H
+#ifndef invert_zoneGenerator_H
+#define invert_zoneGenerator_H
 
 #include "zoneGeneratorList.H"
 #include "union.H"

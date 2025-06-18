@@ -60,8 +60,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef zoneGenerators_sphere_H
-#define zoneGenerators_sphere_H
+#ifndef sphere_zoneGenerator_H
+#define sphere_zoneGenerator_H
 
 #include "volume.H"
 

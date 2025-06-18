@@ -63,8 +63,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef set_H
-#define set_H
+#ifndef set_zoneGenerator_H
+#define set_zoneGenerator_H
 
 #include "zoneGenerator.H"
 

@@ -54,10 +54,10 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef searchableSurfaces_closedTriSurface_H
-#define searchableSurfaces_closedTriSurface_H
+#ifndef closedTriSurface_searchableSurface_H
+#define closedTriSurface_searchableSurface_H
 
-#include "searchableTriSurface.H"
+#include "triSurface_searchableSurface.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

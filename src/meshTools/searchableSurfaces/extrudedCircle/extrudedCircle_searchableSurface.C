@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "searchableExtrudedCircle.H"
+#include "extrudedCircle_searchableSurface.H"
 #include "Time.H"
 #include "edgeMesh.H"
 #include "indexedOctree.H"

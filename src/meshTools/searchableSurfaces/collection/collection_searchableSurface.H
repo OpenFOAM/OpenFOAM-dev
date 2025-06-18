@@ -88,12 +88,12 @@ Usage
     \endverbatim
 
 SourceFiles
-    searchableSurfaceCollection.C
+    collection_searchableSurface.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef searchableSurfaceCollection_H
-#define searchableSurfaceCollection_H
+#ifndef collection_searchableSurface_H
+#define collection_searchableSurface_H
 
 #include "searchableSurface.H"
 #include "treeBoundBox.H"

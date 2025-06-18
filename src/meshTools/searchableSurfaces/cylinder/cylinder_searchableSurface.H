@@ -22,41 +22,38 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::searchableSurfaces::plane
+    Foam::searchableSurfaces::cylinder
 
 Description
-    Surface geometry of an infinite plane, which can be used with
+    Surface geometry with a cylinder shape, which can be used with
     snappyHexMesh.
 
 Usage
     \table
-        Property  | Description                             | Required
-        planeType | Plane type, e.g. pointAndNormal         | yes
-        point     | Point location for pointAndNormal plane | yes
-        normal    | Normal vector for pointAndNormal plane  | yes
+        Property  | Description                          | Required
+        point1    | Point at one end of cylinder axis    | yes
+        point2    | Point at other end of cylinder axis  | yes
+        radius    | Cylinder radius                      | yes
     \endtable
-
-    Note: there are also other options for planeType, including
-    'planeEquation' and 'embeddedPoints'.
 
     Example specification in snappyHexMeshDict/geometry:
     \verbatim
-        type       plane;
-        planeType  pointAndNormal;
-        point      (10 10 10);
-        normal     (0  1  0);
+        type       cylinder;
+        point1     (10  10  10);
+        point2     (20  10  10);
+        radius     5;
     \endverbatim
 
 SourceFiles
-    searchablePlane.C
+    searchableCylinder.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef searchablePlane_H
-#define searchablePlane_H
+#ifndef cylinder_searchableSurface_H
+#define cylinder_searchableSurface_H
 
+#include "treeBoundBox.H"
 #include "searchableSurface.H"
-#include "plane.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -66,60 +63,91 @@ namespace searchableSurfaces
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class plane Declaration
+                     Class cylinder Declaration
 \*---------------------------------------------------------------------------*/
 
-class plane
+class cylinder
 :
-    public searchableSurface,
-    public Foam::plane
+    public searchableSurface
 {
     // Private Member Data
 
+        //- 'left' point
+        const point point1_;
+
+        //- 'right' point
+        const point point2_;
+
+        //- Length of vector point2-point1
+        const scalar magDir_;
+
+        //- Normalised vector point2-point1
+        const vector unitDir_;
+
+        //- Radius squared
+        const scalar radius_;
+
+        //- Names of regions
         mutable wordList regions_;
 
 
     // Private Member Functions
 
-        pointIndexHit findLine
+        //- Inherit findNearest from searchableSurface
+        using searchableSurface::findNearest;
+
+        //- Find nearest point on cylinder.
+        pointIndexHit findNearest
         (
-            const point& start,
-            const point& end
+            const point& sample,
+            const scalar nearestDistSqr
         ) const;
 
-        //- Return the boundBox of the plane
+        scalar radius2(const point& pt) const;
+
+        //- Find intersection with cylinder
+        void findLineAll
+        (
+            const point& start,
+            const point& end,
+            pointIndexHit& near,
+            pointIndexHit& far
+        ) const;
+
+        //- Return the boundBox of the cylinder
         boundBox calcBounds() const;
 
 
 public:
 
     //- Runtime type information
-    TypeName("plane");
+    TypeName("cylinder");
 
 
     // Constructors
 
         //- Construct from components
-        plane
+        cylinder
         (
             const IOobject& io,
-            const point& basePoint,
-            const vector& normal
+            const point&,
+            const point&,
+            const scalar radius
         );
 
         //- Construct from dictionary (used by searchableSurface)
-        plane
+        cylinder
         (
             const IOobject& io,
             const dictionary& dict
         );
 
         //- Disallow default bitwise copy construction
-        plane(const plane&) = delete;
+        cylinder(const cylinder&) = delete;
 
 
     //- Destructor
-    virtual ~plane();
+    virtual ~cylinder();
 
 
     // Member Functions
@@ -129,7 +157,7 @@ public:
         //- Whether supports volume type below
         virtual bool hasVolumeType() const
         {
-            return false;
+            return true;
         }
 
         //- Range of local indices that can be returned.
@@ -140,15 +168,10 @@ public:
 
         //- Get representative set of element coordinates
         //  Usually the element centres (should be of length size()).
-        virtual tmp<pointField> coordinates() const
-        {
-            tmp<pointField> tCtrs(new pointField(1, refPoint()));
-            return tCtrs;
-        }
+        virtual tmp<pointField> coordinates() const;
 
         //- Get bounding spheres (centre and radius squared), one per element.
         //  Any point on element is guaranteed to be inside.
-        //  Note: radius limited to sqr(great)
         virtual void boundingSpheres
         (
             pointField& centres,
@@ -156,10 +179,7 @@ public:
         ) const;
 
         //- Get the points that define the surface.
-        virtual tmp<pointField> points() const
-        {
-            return coordinates();
-        }
+        virtual tmp<pointField> points() const;
 
         //- Does any part of the surface overlap the supplied bound box?
         virtual bool overlaps(const boundBox& bb) const
@@ -236,7 +256,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const plane&) = delete;
+        void operator=(const cylinder&) = delete;
 };
 
 

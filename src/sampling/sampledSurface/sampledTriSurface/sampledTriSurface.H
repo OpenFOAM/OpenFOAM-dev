@@ -87,7 +87,7 @@ SourceFiles
 #define sampledTriSurface_H
 
 #include "sampledSurface.H"
-#include "searchableTriSurface.H"
+#include "triSurface_searchableSurface.H"
 #include "MeshedSurface.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

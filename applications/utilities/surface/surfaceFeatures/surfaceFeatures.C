@@ -29,7 +29,7 @@ Description
 
 #include "argList.H"
 #include "Time.H"
-#include "searchableTriSurface.H"
+#include "triSurface_searchableSurface.H"
 #include "featureEdgeMesh.H"
 #include "extendedFeatureEdgeMesh.H"
 #include "surfaceFeatures.H"

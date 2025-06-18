@@ -62,8 +62,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef zoneGenerators_hemisphere_H
-#define zoneGenerators_hemisphere_H
+#ifndef hemisphere_zoneGenerator_H
+#define hemisphere_zoneGenerator_H
 
 #include "volume.H"
 

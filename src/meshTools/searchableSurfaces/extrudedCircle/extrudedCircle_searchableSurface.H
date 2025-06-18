@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,120 +22,96 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::searchableSurfaces::plate
+    Foam::searchableSurfaces::extrudedCircle
 
 Description
-    Surface geometry of a finite plane, aligned with the coordinate
-    axes, which can be used with snappyHexMesh.
+    Surface geometry with a tube shape, which can be used with
+    snappyHexMesh. The geometry is formed from a line geometry, described
+    by the edgeMesh (.eMesh) file format, to which a radius is applied
+    to form a tube.
 
 Usage
     \table
-        Property  | Description                         | Required
-        origin    | Position of one corner of the plate | yes
-        span      | The vector span of the plate        | yes
+        Property  | Description                          | Required
+        file      | File describing the line (.eMesh)    | yes
+        radius    | Tube radius                          | yes
     \endtable
-
-    Note: the span of the plate requires one zero component corresponding to the
-    normal direction of the plate.
 
     Example specification in snappyHexMeshDict/geometry:
     \verbatim
-        type       plate;
-        origin     (10 10 10);
-        span       (20  0 10);
+        type       extrudedCircle;
+        file       "line.eMesh";
+        radius     5;
     \endverbatim
 
 SourceFiles
-    searchablePlate.C
+    searchableExtrudedCircle.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef searchablePlate_H
-#define searchablePlate_H
+#ifndef extrudedCircle_searchableSurface_H
+#define extrudedCircle_searchableSurface_H
 
-#include "searchableSurface.H"
 #include "treeBoundBox.H"
+#include "searchableSurface.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+
+// Forward declaration of classes
+class edgeMesh;
+class treeDataEdge;
+template <class Type> class indexedOctree;
+
 namespace searchableSurfaces
 {
 
 /*---------------------------------------------------------------------------*\
-                             Class plate Declaration
+                  Class extrudedCircle Declaration
 \*---------------------------------------------------------------------------*/
 
-class plate
+class extrudedCircle
 :
     public searchableSurface
 {
     // Private Member Data
 
-        const point origin_;
+        //- Feature
+        autoPtr<edgeMesh> eMeshPtr_;
 
-        const vector span_;
+        //- Search structure
+        autoPtr<indexedOctree<treeDataEdge>> edgeTree_;
 
-        //- Coordinate direction which is normal
-        const direction normalDir_;
+        //- Radius
+        const scalar radius_;
 
+        //- Names of regions
         mutable wordList regions_;
-
-
-    // Private Member Functions
-
-        //- Calculate normal direction from span
-        static direction calcNormal(const point&);
-
-        //- Inherit findNearest from searchableSurface
-        using searchableSurface::findNearest;
-
-        pointIndexHit findNearest
-        (
-            const point& sample,
-            const scalar nearestDistSqr
-        ) const;
-
-        pointIndexHit findLine
-        (
-            const point& start,
-            const point& end
-        ) const;
-
-        //- Disallow default bitwise copy construction
-        plate(const plate&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const plate&) = delete;
 
 
 public:
 
     //- Runtime type information
-    TypeName("plate");
+    TypeName("extrudedCircle");
 
 
     // Constructors
 
-        //- Construct from components
-        plate
-        (
-            const IOobject& io,
-            const point& origin,
-            const vector& span
-        );
-
         //- Construct from dictionary (used by searchableSurface)
-        plate
+        extrudedCircle
         (
             const IOobject& io,
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        extrudedCircle(const extrudedCircle&) = delete;
+
 
     //- Destructor
-    virtual ~plate();
+    virtual ~extrudedCircle();
 
 
     // Member Functions
@@ -145,14 +121,11 @@ public:
         //- Whether supports volume type below
         virtual bool hasVolumeType() const
         {
-            return false;
+            return true;
         }
 
         //- Range of local indices that can be returned.
-        virtual label size() const
-        {
-            return 1;
-        }
+        virtual label size() const;
 
         //- Get representative set of element coordinates
         //  Usually the element centres (should be of length size()).
@@ -167,10 +140,17 @@ public:
         ) const;
 
         //- Get the points that define the surface.
-        virtual tmp<pointField> points() const;
+        virtual tmp<pointField> points() const
+        {
+            return coordinates();
+        }
 
         //- Does any part of the surface overlap the supplied bound box?
-        virtual bool overlaps(const boundBox& bb) const;
+        virtual bool overlaps(const boundBox& bb) const
+        {
+            NotImplemented;
+            return false;
+        }
 
 
         // Multiple point queries.
@@ -182,19 +162,38 @@ public:
                 List<pointIndexHit>&
             ) const;
 
+            //- Unique to parametric geometry: given points find
+            //  an interpolated (along the curve) point on the surface.
+            //  The lambdas[0] is equivalent for start, lambdas.last()
+            //  is equivalent for end.
+            virtual void findParametricNearest
+            (
+                const point& start,
+                const point& end,
+                const scalarField& lambdas,
+                const scalarField& nearestDistSqr,
+                List<pointIndexHit>&
+            ) const;
+
             virtual void findLine
             (
                 const pointField& start,
                 const pointField& end,
                 List<pointIndexHit>&
-            ) const;
+            ) const
+            {
+                NotImplemented;
+            }
 
             virtual void findLineAny
             (
                 const pointField& start,
                 const pointField& end,
                 List<pointIndexHit>&
-            ) const;
+            ) const
+            {
+                NotImplemented;
+            }
 
             //- Get all intersections in order from start to end.
             virtual void findLineAll
@@ -202,7 +201,10 @@ public:
                 const pointField& start,
                 const pointField& end,
                 List<List<pointIndexHit>>&
-            ) const;
+            ) const
+            {
+                NotImplemented;
+            }
 
             //- From a set of points and indices get the region
             virtual void getRegion
@@ -224,16 +226,22 @@ public:
             (
                 const pointField&,
                 List<volumeType>&
-            ) const;
-
-
-        // regIOobject implementation
+            ) const
+            {
+                NotImplemented;
+            }
 
             bool writeData(Ostream&) const
             {
                 NotImplemented;
                 return false;
             }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const extrudedCircle&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,38 +22,29 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::searchableSurfaces::disk
+    Foam::withGaps
 
 Description
-    Surface geometry with a circular disk shape, which can be used with
-    snappyHexMesh.
-
-Usage
-    \table
-        Property  | Description                 | Required
-        origin    | Centre of the disk          | yes
-        centre    | Normal to the disk surface  | yes
-        radius    | Radius of the disk          | yes
-    \endtable
-
-    Example specification in snappyHexMeshDict/geometry:
-    \verbatim
-        type       disk;
-        origin     (10 10 10);
-        normal     (0 1 0);
-        radius     5;
-    \endverbatim
+    searchableSurface using multiple slightly shifted underlying surfaces
+    to make sure pierces don't go through gaps:
+    - shift test vector with two small vectors (of size gap_) perpendicular
+      to the original.
+      Test with + and - this vector. Only if both register a hit is it seen
+      as one.
+    - extend the test vector slightly (with small) to account for numerical
+      inaccuracies.
 
 SourceFiles
-    searchableDisk.C
+    searchableSurfaceWithGaps.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef searchableDisk_H
-#define searchableDisk_H
+#ifndef withGaps_searchableSurface_H
+#define withGaps_searchableSurface_H
 
-#include "treeBoundBox.H"
 #include "searchableSurface.H"
+#include "UPtrList.H"
+#include "Pair.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -63,103 +54,101 @@ namespace searchableSurfaces
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class disk Declaration
+                  Class withGaps Declaration
 \*---------------------------------------------------------------------------*/
 
-class disk
+class withGaps
 :
     public searchableSurface
 {
     // Private Member Data
 
-        //- origin
-        const point origin_;
+        //- Gap size in metre
+        const scalar gap_;
 
-        //- normal
-        vector normal_;
-
-        //- radius
-        const scalar radius_;
-
-        //- Names of regions
-        mutable wordList regions_;
+        //- Underlying geometry (size 1)
+        UPtrList<searchableSurface> subGeom_;
 
 
     // Private Member Functions
 
-        //- Inherit findNearest from searchableSurface
-        using searchableSurface::findNearest;
+        Pair<vector> offsetVecs(const point&, const point&) const;
 
-        //- Find nearest point on disk
-        pointIndexHit findNearest
+        void offsetVecs
         (
-            const point& sample,
-            const scalar nearestDistSqr
+            const pointField& start,
+            const pointField& end,
+            pointField& offset0,
+            pointField& offset1
         ) const;
 
-        //- Find intersection with disk
-        void findLine
+        static label countMisses
         (
-            const point& start,
-            const point& end,
-            pointIndexHit&
-        ) const;
+            const List<pointIndexHit>& info,
+            labelList& missMap
+        );
+
+        static label countMisses
+        (
+            const List<pointIndexHit>& plusInfo,
+            const List<pointIndexHit>& minInfo,
+            labelList& missMap
+        );
 
 
 public:
 
     //- Runtime type information
-    TypeName("disk");
+    TypeName("withGaps");
 
 
     // Constructors
 
-        //- Construct from components
-        disk
-        (
-            const IOobject& io,
-            const point& origin,
-            const point& normal,
-            const scalar radius
-        );
-
         //- Construct from dictionary (used by searchableSurface)
-        disk
+        withGaps
         (
             const IOobject& io,
             const dictionary& dict
         );
 
         //- Disallow default bitwise copy construction
-        disk(const disk&) = delete;
+        withGaps(const withGaps&) = delete;
 
 
     //- Destructor
-    virtual ~disk();
+    virtual ~withGaps();
 
 
     // Member Functions
 
-        virtual const wordList& regions() const;
+        const searchableSurface& surface() const
+        {
+            return subGeom_[0];
+        }
+
+
+        virtual const wordList& regions() const
+        {
+            return surface().regions();
+        }
 
         //- Whether supports volume type below
         virtual bool hasVolumeType() const
         {
-            return false;
+            return surface().hasVolumeType();
         }
 
         //- Range of local indices that can be returned.
         virtual label size() const
         {
-            return 1;
+            return surface().size();
         }
 
         //- Get representative set of element coordinates
         //  Usually the element centres (should be of length size()).
         virtual tmp<pointField> coordinates() const
         {
-            tmp<pointField> tCtrs(new pointField(1, origin_));
-            return tCtrs;
+            return surface().coordinates();
         }
 
         //- Get bounding spheres (centre and radius squared), one per element.
@@ -168,31 +157,44 @@ public:
         (
             pointField& centres,
             scalarField& radiusSqr
-        ) const;
+        ) const
+        {
+            surface().boundingSpheres(centres, radiusSqr);
+        }
 
         //- Get the points that define the surface.
         virtual tmp<pointField> points() const
         {
-            return coordinates();
+            return surface().points();
         }
 
         //- Does any part of the surface overlap the supplied bound box?
+        //  Note: use perturbed surface? Since uses boundbox of points and
+        //        not actual intersection chosen to use unperturbed surface.
         virtual bool overlaps(const boundBox& bb) const
         {
-            NotImplemented;
-
-            return false;
+            return surface().overlaps(bb);
         }
 
 
         // Multiple point queries.
 
+            //- Find nearest on original surface. Note:does not use perturbation
+            //  and hence might be inconsistent with intersections.
             virtual void findNearest
             (
                 const pointField& sample,
                 const scalarField& nearestDistSqr,
-                List<pointIndexHit>&
-            ) const;
+                List<pointIndexHit>& info
+            ) const
+            {
+                surface().findNearest
+                (
+                    sample,
+                    nearestDistSqr,
+                    info
+                );
+            }
 
             virtual void findLine
             (
@@ -219,39 +221,82 @@ public:
             //- From a set of points and indices get the region
             virtual void getRegion
             (
-                const List<pointIndexHit>&,
+                const List<pointIndexHit>& info,
                 labelList& region
-            ) const;
+            ) const
+            {
+                surface().getRegion(info, region);
+            }
 
             //- From a set of points and indices get the normal
             virtual void getNormal
             (
-                const List<pointIndexHit>&,
+                const List<pointIndexHit>& info,
                 vectorField& normal
-            ) const;
+            ) const
+            {
+                surface().getNormal(info, normal);
+            }
 
             //- Determine type (inside/outside/mixed) for point. unknown if
             //  cannot be determined (e.g. non-manifold surface)
             virtual void getVolumeType
             (
-                const pointField&,
-                List<volumeType>&
-            ) const;
+                const pointField& samples,
+                List<volumeType>& info
+            ) const
+            {
+                surface().getVolumeType(samples, info);
+            }
 
+
+        // Other
+
+            //- Set bounds of surface. Bounds currently set as list of
+            //  bounding boxes. The bounds are hints to the surface as for
+            //  the range of queries it can expect. faceMap/pointMap can be
+            //  set if the surface has done any redistribution.
+            // virtual void distribute
+            //(
+            //    const List<treeBoundBox>& bbs,
+            //    const bool keepNonLocal,
+            //    autoPtr<distributionMap>& faceMap,
+            //    autoPtr<distributionMap>& pointMap
+            //)
+            //{
+            //    subGeom_[0].distribute(bbs, keepNonLocal, faceMap, pointMap);
+            //}
+
+            //- WIP. Store element-wise field.
+            virtual void setField(const labelList& values)
+            {
+                subGeom_[0].setField(values);
+            }
+
+            //- WIP. From a set of hits (points and
+            //  indices) get the specified field. Misses do not get set. Return
+            //  empty field if not supported.
+            virtual void getField
+            (
+                const List<pointIndexHit>& info,
+                labelList& values
+            ) const
+            {
+                surface().getField(info, values);
+            }
 
         // regIOobject implementation
 
-            bool writeData(Ostream&) const
+            bool writeData(Ostream& os) const
             {
-                NotImplemented;
-                return false;
+                return surface().writeData(os);
             }
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const disk&) = delete;
+        void operator=(const withGaps&) = delete;
 };
 
 

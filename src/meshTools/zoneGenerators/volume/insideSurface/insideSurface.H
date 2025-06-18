@@ -59,8 +59,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef zoneGenerators_insideSurface_H
-#define zoneGenerators_insideSurface_H
+#ifndef insideSurface_zoneGenerator_H
+#define insideSurface_zoneGenerator_H
 
 #include "volume.H"
 

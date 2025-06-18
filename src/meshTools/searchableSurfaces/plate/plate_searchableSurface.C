@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "searchablePlate.H"
+#include "plate_searchableSurface.H"
 #include "SortableList.H"
 #include "addToRunTimeSelectionTable.H"
 

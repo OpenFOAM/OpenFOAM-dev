@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "searchableBox.H"
+#include "box_searchableSurface.H"
 #include "SortableList.H"
 #include "addToRunTimeSelectionTable.H"
 

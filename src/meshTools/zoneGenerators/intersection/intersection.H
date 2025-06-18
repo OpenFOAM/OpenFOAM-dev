@@ -82,8 +82,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef zoneGenerators_intersection_H
-#define zoneGenerators_intersection_H
+#ifndef intersection_zoneGenerator_H
+#define intersection_zoneGenerator_H
 
 #include "zoneGeneratorList.H"
 

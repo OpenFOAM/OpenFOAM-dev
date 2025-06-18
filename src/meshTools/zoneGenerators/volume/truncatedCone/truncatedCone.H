@@ -63,8 +63,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef zoneGenerators_truncatedCone_H
-#define zoneGenerators_truncatedCone_H
+#ifndef truncatedCone_zoneGenerator_H
+#define truncatedCone_zoneGenerator_H
 
 #include "volume.H"
 

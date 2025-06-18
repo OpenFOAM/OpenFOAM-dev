@@ -81,8 +81,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef union_H
-#define union_H
+#ifndef union_zoneGenerator_H
+#define union_zoneGenerator_H
 
 #include "zoneGeneratorList.H"
 

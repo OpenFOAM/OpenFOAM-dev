@@ -27,7 +27,7 @@ License
 #include "powerLawLopesdaCosta.H"
 #include "geometricOneField.H"
 #include "fvMatrices.H"
-#include "searchableTriSurface.H"
+#include "triSurface_searchableSurface.H"
 #include "triSurfaceTools.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //

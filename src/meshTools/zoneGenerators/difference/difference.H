@@ -92,8 +92,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef zoneGenerators_difference_H
-#define zoneGenerators_difference_H
+#ifndef difference_zoneGenerator_H
+#define difference_zoneGenerator_H
 
 #include "zoneGeneratorList.H"
 #include "union.H"

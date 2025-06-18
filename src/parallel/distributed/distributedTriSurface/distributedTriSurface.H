@@ -48,7 +48,7 @@ SourceFiles
 #ifndef distributedTriSurface_H
 #define distributedTriSurface_H
 
-#include "searchableTriSurface.H"
+#include "triSurface_searchableSurface.H"
 #include "IOdictionary.H"
 #include "Pair.H"
 #include "globalIndex.H"

@@ -103,8 +103,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef zoneGenerators_box_H
-#define zoneGenerators_box_H
+#ifndef box_zoneGenerator_H
+#define box_zoneGenerator_H
 
 #include "volume.H"
 #include "treeBoundBoxList.H"

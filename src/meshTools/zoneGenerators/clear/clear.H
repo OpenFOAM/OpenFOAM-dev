@@ -54,8 +54,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef clear_H
-#define clear_H
+#ifndef clear_zoneGenerator_H
+#define clear_zoneGenerator_H
 
 #include "zoneGeneratorList.H"
 

@@ -22,35 +22,33 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::searchableSurfaces::cylinder
+    Foam::searchableSurfaces::sphere
 
 Description
-    Surface geometry with a cylinder shape, which can be used with
+    Surface geometry with a sphere shape, which can be used with
     snappyHexMesh.
 
 Usage
     \table
-        Property  | Description                          | Required
-        point1    | Point at one end of cylinder axis    | yes
-        point2    | Point at other end of cylinder axis  | yes
-        radius    | Cylinder radius                      | yes
+        Property  | Description         | Required
+        centre    | Sphere centre       | yes
+        radius    | Sphere radius       | yes
     \endtable
 
     Example specification in snappyHexMeshDict/geometry:
     \verbatim
-        type       cylinder;
-        point1     (10  10  10);
-        point2     (20  10  10);
+        type       sphere;
+        centre     (10  10  10);
         radius     5;
     \endverbatim
 
 SourceFiles
-    searchableCylinder.C
+    searchableSphere.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef searchableCylinder_H
-#define searchableCylinder_H
+#ifndef sphere_searchableSurface_H
+#define sphere_searchableSurface_H
 
 #include "treeBoundBox.H"
 #include "searchableSurface.H"
@@ -63,28 +61,19 @@ namespace searchableSurfaces
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class cylinder Declaration
+                             Class sphere Declaration
 \*---------------------------------------------------------------------------*/
 
-class cylinder
+class sphere
 :
     public searchableSurface
 {
     // Private Member Data
 
-        //- 'left' point
-        const point point1_;
+        //- Centre point
+        const point centre_;
 
-        //- 'right' point
-        const point point2_;
-
-        //- Length of vector point2-point1
-        const scalar magDir_;
-
-        //- Normalised vector point2-point1
-        const vector unitDir_;
-
-        //- Radius squared
+        //- Radius
         const scalar radius_;
 
         //- Names of regions
@@ -96,16 +85,14 @@ class cylinder
         //- Inherit findNearest from searchableSurface
         using searchableSurface::findNearest;
 
-        //- Find nearest point on cylinder.
+        //- Find nearest point on sphere.
         pointIndexHit findNearest
         (
             const point& sample,
             const scalar nearestDistSqr
         ) const;
 
-        scalar radius2(const point& pt) const;
-
-        //- Find intersection with cylinder
+        //- Find intersection with sphere
         void findLineAll
         (
             const point& start,
@@ -114,40 +101,31 @@ class cylinder
             pointIndexHit& far
         ) const;
 
-        //- Return the boundBox of the cylinder
-        boundBox calcBounds() const;
-
 
 public:
 
     //- Runtime type information
-    TypeName("cylinder");
+    TypeName("sphere");
 
 
     // Constructors
 
         //- Construct from components
-        cylinder
-        (
-            const IOobject& io,
-            const point&,
-            const point&,
-            const scalar radius
-        );
+        sphere(const IOobject& io, const point&, const scalar radius);
 
         //- Construct from dictionary (used by searchableSurface)
-        cylinder
+        sphere
         (
             const IOobject& io,
             const dictionary& dict
         );
 
         //- Disallow default bitwise copy construction
-        cylinder(const cylinder&) = delete;
+        sphere(const sphere&) = delete;
 
 
     //- Destructor
-    virtual ~cylinder();
+    virtual ~sphere();
 
 
     // Member Functions
@@ -168,7 +146,11 @@ public:
 
         //- Get representative set of element coordinates
         //  Usually the element centres (should be of length size()).
-        virtual tmp<pointField> coordinates() const;
+        virtual tmp<pointField> coordinates() const
+        {
+            tmp<pointField> tCtrs(new pointField(1, centre_));
+            return tCtrs;
+        }
 
         //- Get bounding spheres (centre and radius squared), one per element.
         //  Any point on element is guaranteed to be inside.
@@ -179,15 +161,13 @@ public:
         ) const;
 
         //- Get the points that define the surface.
-        virtual tmp<pointField> points() const;
+        virtual tmp<pointField> points() const
+        {
+            return coordinates();
+        }
 
         //- Does any part of the surface overlap the supplied bound box?
-        virtual bool overlaps(const boundBox& bb) const
-        {
-            NotImplemented;
-
-            return false;
-        }
+        virtual bool overlaps(const boundBox& bb) const;
 
 
         // Multiple point queries.
@@ -256,7 +236,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const cylinder&) = delete;
+        void operator=(const sphere&) = delete;
 };
 
 

@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "searchableSurfaceWithGaps.H"
+#include "withGaps_searchableSurface.H"
 #include "Time.H"
 #include "ListOps.H"
 #include "addToRunTimeSelectionTable.H"

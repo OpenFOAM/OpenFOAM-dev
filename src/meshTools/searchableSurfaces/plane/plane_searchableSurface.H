@@ -22,36 +22,41 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::searchableSurfaces::box
+    Foam::searchableSurfaces::plane
 
 Description
-    Surface geometry with a rectangular box shape, aligned with the coordinate
-    axes, which can be used with snappyHexMesh.
+    Surface geometry of an infinite plane, which can be used with
+    snappyHexMesh.
 
 Usage
     \table
-        Property  | Description                    | Required
-        min       | Minimum point of bounding box  | yes
-        max       | Maximum point of bounding box  | yes
+        Property  | Description                             | Required
+        planeType | Plane type, e.g. pointAndNormal         | yes
+        point     | Point location for pointAndNormal plane | yes
+        normal    | Normal vector for pointAndNormal plane  | yes
     \endtable
+
+    Note: there are also other options for planeType, including
+    'planeEquation' and 'embeddedPoints'.
 
     Example specification in snappyHexMeshDict/geometry:
     \verbatim
-        type       box;
-        min        (0  0  0);
-        max        (10 10 10);
+        type       plane;
+        planeType  pointAndNormal;
+        point      (10 10 10);
+        normal     (0  1  0);
     \endverbatim
 
 SourceFiles
-    searchableBox.C
+    searchablePlane.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef searchableBox_H
-#define searchableBox_H
+#ifndef plane_searchableSurface_H
+#define plane_searchableSurface_H
 
 #include "searchableSurface.H"
-#include "treeBoundBox.H"
+#include "plane.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -61,13 +66,13 @@ namespace searchableSurfaces
 {
 
 /*---------------------------------------------------------------------------*\
-                            Class box Declaration
+                       Class plane Declaration
 \*---------------------------------------------------------------------------*/
 
-class box
+class plane
 :
     public searchableSurface,
-    public treeBoundBox
+    public Foam::plane
 {
     // Private Member Data
 
@@ -76,50 +81,45 @@ class box
 
     // Private Member Functions
 
-        //- Project onto component dir of planePt and update index() (=face)
-        void projectOntoCoordPlane
+        pointIndexHit findLine
         (
-            const direction dir,
-            const point& planePt,
-            pointIndexHit& info
+            const point& start,
+            const point& end
         ) const;
 
-        //- Inherit findNearest from searchableSurface
-        using searchableSurface::findNearest;
-
-        //- Returns miss or hit with face (0..5)
-        pointIndexHit findNearest
-        (
-            const point& bbMid,
-            const point& sample,
-            const scalar nearestDistSqr
-        ) const;
+        //- Return the boundBox of the plane
+        boundBox calcBounds() const;
 
 
 public:
 
     //- Runtime type information
-    TypeName("box");
+    TypeName("plane");
 
 
     // Constructors
 
         //- Construct from components
-        box(const IOobject& io, const treeBoundBox& bb);
+        plane
+        (
+            const IOobject& io,
+            const point& basePoint,
+            const vector& normal
+        );
 
         //- Construct from dictionary (used by searchableSurface)
-        box
+        plane
         (
             const IOobject& io,
             const dictionary& dict
         );
 
         //- Disallow default bitwise copy construction
-        box(const box&) = delete;
+        plane(const plane&) = delete;
 
 
     //- Destructor
-    virtual ~box();
+    virtual ~plane();
 
 
     // Member Functions
@@ -129,21 +129,26 @@ public:
         //- Whether supports volume type below
         virtual bool hasVolumeType() const
         {
-            return true;
+            return false;
         }
 
         //- Range of local indices that can be returned.
         virtual label size() const
         {
-            return 6;
+            return 1;
         }
 
         //- Get representative set of element coordinates
         //  Usually the element centres (should be of length size()).
-        virtual tmp<pointField> coordinates() const;
+        virtual tmp<pointField> coordinates() const
+        {
+            tmp<pointField> tCtrs(new pointField(1, refPoint()));
+            return tCtrs;
+        }
 
         //- Get bounding spheres (centre and radius squared), one per element.
         //  Any point on element is guaranteed to be inside.
+        //  Note: radius limited to sqr(great)
         virtual void boundingSpheres
         (
             pointField& centres,
@@ -151,66 +156,18 @@ public:
         ) const;
 
         //- Get the points that define the surface.
-        virtual tmp<pointField> points() const;
-
-        // Does any part of the surface overlap the supplied bound box?
-        virtual bool overlaps(const boundBox& bb) const
+        virtual tmp<pointField> points() const
         {
-            return boundBox::overlaps(bb);
+            return coordinates();
         }
 
-        // Single point queries.
+        //- Does any part of the surface overlap the supplied bound box?
+        virtual bool overlaps(const boundBox& bb) const
+        {
+            NotImplemented;
 
-            //- Calculate nearest point on surface.
-            //  Returns
-            //  - bool : any point found nearer than nearestDistSqr
-            //  - label: relevant index in surface (=face 0..5)
-            //  - point: actual nearest point found
-            pointIndexHit findNearest
-            (
-                const point& sample,
-                const scalar nearestDistSqr
-            ) const;
-
-            //- Calculate nearest point on edge.
-            //  Returns
-            //  - bool : any point found nearer than nearestDistSqr
-            //  - label: relevant index in surface(=?)
-            //  - point: actual nearest point found
-            pointIndexHit findNearestOnEdge
-            (
-                const point& sample,
-                const scalar nearestDistSqr
-            ) const;
-
-            //- Find nearest to segment.
-            //  Returns
-            //  - bool : any point found?
-            //  - label: relevant index in shapes (=face 0..5)
-            //  - point: actual nearest point found
-            //  sets:
-            //  - tightest  : bounding box
-            //  - linePoint : corresponding nearest point on line
-            pointIndexHit findNearest
-            (
-                const linePointRef& ln,
-                treeBoundBox& tightest,
-                point& linePoint
-            ) const;
-
-            //- Find nearest intersection of line between start and end.
-            pointIndexHit findLine
-            (
-                const point& start,
-                const point& end
-            ) const;
-
-            //- Find any intersection of line between start and end.
-            pointIndexHit findLineAny
-            (
-                const point& start,
-                const point& end
-            ) const;
+            return false;
+        }
 
 
         // Multiple point queries.
@@ -279,7 +236,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const box&) = delete;
+        void operator=(const plane&) = delete;
 };
 
 
