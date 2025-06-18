@@ -85,10 +85,11 @@ void Foam::fvMeshMovers::multiValveEngine::movingObject::calcScale
         }
     }
 
-    // Convert the scale function to a cosine
-    if (cosine_)
+    // Apply optional cosine scaling to the point motion
+    if (cosineScale_ > 0)
     {
         scale =
+            cosineScale_ *
             min
             (
                 max
@@ -99,7 +100,8 @@ void Foam::fvMeshMovers::multiValveEngine::movingObject::calcScale
                     scalar(0)
                 ),
                 scalar(1)
-            );
+            )
+          + (1 - cosineScale_) * scale_.primitiveField();
     }
 
     pointConstraints::New(pMesh).constrain(scale_);
@@ -304,7 +306,10 @@ Foam::fvMeshMovers::multiValveEngine::movingObject::movingObject
         pointMesh::New(meshMover_.mesh()),
         dimensionedScalar(dimless, 0)
     ),
-    cosine_(dict.lookupOrDefault("cosineScaling", false)),
+    cosineScale_
+    (
+        dict.lookupOrDefault<scalar>("cosineScale", dimless, 0)
+    ),
     travelInterval_
     (
         dict.lookupOrDefault<scalar>("travelInterval", dimLength, great)

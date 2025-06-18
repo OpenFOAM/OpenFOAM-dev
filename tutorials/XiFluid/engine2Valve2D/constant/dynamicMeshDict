@@ -49,7 +49,7 @@ mover
         movingFrozenLayerThickness  0;
 
         travelInterval              0.1;
-        cosineScaling               yes;
+        cosineScale                 1;
     }
 
     valves
@@ -63,7 +63,7 @@ mover
             movingFrozenLayerThickness  0;
 
             travelInterval              5.8e-3;
-            cosineScaling               yes;
+            cosineScale                 1;
 
             minLift                     0.01;
 
@@ -78,7 +78,10 @@ mover
                     (380    0.01) // EVC + meshToMesh map
                     (720    0.0)
                 );
-                outOfBounds     repeat; // For multi-cycle simulations, use repeat
+
+                // For multi-cycle simulations, use repeat
+                outOfBounds     repeat;
+
                 interpolationScheme linear;
             }
         }

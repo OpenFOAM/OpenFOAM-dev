@@ -79,10 +79,10 @@ Description
         - staticFrozenLayerThickness: thickness of layer in which points
           are fixed with respect to static patches (e.g. walls). (Default 0)
 
-        - cosineScaling: a switch whether nodal translation is weighted by
-          its distance from the moving object. The objective is to yield less
-          deformation near the moving object and sustain e.g. boundary layer.
-          (Default no, i.e. linear weighting)
+        - cosineScale: scaling factor between 0 and 1 for cosine scaling applied
+          to the motion. A value of 0 means linear weighting, a value of 1 means
+          full cosine scaling (much less deformation near the moving object) and
+          sustains e.g. boundary layer.  (Default 0, i.e. linear weighting)
 
         - travelInterval: part of the stroke travelled after
           which the cached motion scaling weights are recalculated
@@ -166,7 +166,7 @@ Description
 
             travelInterval      0.1;
 
-            cosineScaling       yes;
+            cosineScale         0.5;
         }
 
         valves
@@ -183,7 +183,7 @@ Description
 
                 travelInterval      0.01;
 
-                cosineScaling       yes;
+                cosineScale         1;
 
                 minLift     0.001;
 
@@ -305,9 +305,8 @@ public:
             //- Interpolation scale (1 at moving patches, 0 at far-field)
             pointScalarField scale_;
 
-            //- Switch to use cosine-based scaling
-            //  for the boundary point motion
-            Switch cosine_;
+            //- Cosine scale for the boundary point motion, between 0 and 1
+            const scalar cosineScale_;
 
             //- Update the scale_ field when the travel exceeds travelInterval
             const scalar travelInterval_;
