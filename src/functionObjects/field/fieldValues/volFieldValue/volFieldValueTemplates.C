@@ -229,9 +229,13 @@ bool Foam::functionObjects::fieldValues::volFieldValue::processValuesTypeType
             {
                 const scalarField vals(values.component(d));
                 const scalar mean = component(meanValue, d);
-                scalar& res = setComponent(result.value, d);
 
-                res = sqrt(gSum(V*sqr(vals - mean))/this->V())/mean;
+                setComponent(result.value, d) =
+                    protectedDivide
+                    (
+                        sqrt(gSum(V*sqr(vals - mean))/this->V()),
+                        mean
+                    );
             }
 
             return true;
@@ -246,9 +250,13 @@ bool Foam::functionObjects::fieldValues::volFieldValue::processValuesTypeType
             {
                 const scalarField vals(values.component(d));
                 const scalar mean = component(meanValue, d);
-                scalar& res = setComponent(result.value, d);
 
-                res = 1 - 0.5*gSum(V*mag(vals - mean))/(this->V()*mean);
+                setComponent(result.value, d) =
+                    1 - 0.5*protectedDivide
+                    (
+                        gSum(V*mag(vals - mean))/this->V(),
+                        mean
+                    );
             }
 
             return true;
