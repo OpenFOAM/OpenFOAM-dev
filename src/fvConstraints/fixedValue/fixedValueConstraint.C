@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -112,14 +112,14 @@ bool Foam::fv::fixedValueConstraint::constrainType
     {
         eqn.setValues
         (
-            set_.cells(),
+            set_.zone(),
             values,
             scalarList(set_.nCells(), fraction_->value(t))
         );
     }
     else
     {
-        eqn.setValues(set_.cells(), values);
+        eqn.setValues(set_.zone(), values);
     }
 
     return set_.nCells();

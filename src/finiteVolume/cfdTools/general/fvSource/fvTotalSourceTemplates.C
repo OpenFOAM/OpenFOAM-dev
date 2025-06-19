@@ -39,7 +39,7 @@ void Foam::fvTotalSource::addSupType
         << "field=" << field.name()
         << ", eqnField=" << eqn.psi().name() << endl;
 
-    const labelUList cells = this->cells();
+    const labelList& cells = this->zone();
 
     const scalarField S
     (

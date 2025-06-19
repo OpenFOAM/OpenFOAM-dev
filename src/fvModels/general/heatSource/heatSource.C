@@ -142,7 +142,7 @@ void Foam::fv::heatSource::addSup
     fvMatrix<scalar>& eqn
 ) const
 {
-    const labelUList cells = set_.cells();
+    const labelList& cells = set_.zone();
 
     const scalar q = q_->value(mesh().time().value());
 

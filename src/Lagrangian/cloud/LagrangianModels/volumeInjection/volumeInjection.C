@@ -139,7 +139,7 @@ Foam::LagrangianSubMesh Foam::Lagrangian::volumeInjection::modify
 
     // Reference the mesh faces and the set cells
     const faceList& faces = mesh.mesh().faces();
-    const labelUList setCellCells = set_.cells();
+    const labelList& setCellCells = set_.zone();
     const UIndirectList<cell> setCells(mesh.mesh().cells(), setCellCells);
 
     // Create point and cell-centre fields at the current fraction

@@ -33,7 +33,7 @@ inline bool Foam::generatedCellZone::all() const
 }
 
 
-inline const Foam::word& Foam::generatedCellZone::cellZoneName() const
+inline const Foam::word& Foam::generatedCellZone::zoneName() const
 {
     static word allName_("all");
 
@@ -48,11 +48,11 @@ inline const Foam::word& Foam::generatedCellZone::cellZoneName() const
 }
 
 
-inline Foam::labelUList Foam::generatedCellZone::cells() const
+inline const Foam::cellZone& Foam::generatedCellZone::zone() const
 {
     if (all_)
     {
-        return identityMap(mesh_.nCells());
+        return mesh_.cellZones().all();
     }
     else
     {

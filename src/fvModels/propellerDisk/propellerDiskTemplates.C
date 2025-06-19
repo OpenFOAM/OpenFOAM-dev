@@ -41,7 +41,7 @@ void Foam::fv::propellerDisk::addActuationDiskAxialInertialResistance
     const volVectorField::Internal& U
 ) const
 {
-    const labelUList& cells = set_.cells();
+    const labelList& cells = set_.zone();
     const scalarField& V = mesh().V();
 
     if (!forcePtr_.valid())

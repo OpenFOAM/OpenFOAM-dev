@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -266,7 +266,7 @@ void Foam::fv::effectivenessHeatExchanger::addSup
        *(secondaryInletT_ - primaryInletT_)
        *(CpfMean/faceZoneArea_)*mag(totalphi);
 
-    const labelUList cells = set_.cells();
+    const labelList& cells = set_.zone();
 
     const volScalarField& T = mesh().lookupObject<volScalarField>(TName_);
     const scalarField TCells(T, cells);

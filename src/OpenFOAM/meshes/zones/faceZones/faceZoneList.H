@@ -60,6 +60,9 @@ public:
 
     // Member Functions
 
+        //- Return number of faces in the mesh
+        label allSize() const;
+
         //- Insert given oriented indices
         void insert
         (

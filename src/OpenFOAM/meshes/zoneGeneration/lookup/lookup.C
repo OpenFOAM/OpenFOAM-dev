@@ -127,6 +127,13 @@ Foam::zoneSet Foam::zoneGenerators::lookup::generate() const
 
         case zoneTypesAll::all:
         {
+            if (zoneName_ == "all")
+            {
+                FatalIOErrorInFunction(dict_)
+                    << "zoneType not specified or set to all for zone all"
+                    << exit(FatalIOError);
+            }
+
             zoneSet zs;
             bool found = false;
 

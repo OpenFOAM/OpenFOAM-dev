@@ -38,6 +38,7 @@ SourceFiles
 #define fvTotalSource_H
 
 #include "fvSource.H"
+#include "cellZone.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -139,8 +140,8 @@ public:
             //- Return the phase name
             inline const word& phaseName() const;
 
-            //- Return the cells that the source applies to
-            virtual labelUList cells() const = 0;
+            //- Return the cellZone that the source applies to
+            virtual const cellZone& zone() const = 0;
 
             //- Return the volume of cells that the source applies to
             virtual scalar V() const = 0;

@@ -194,10 +194,9 @@ Foam::fv::zeroDimensionalMassSourceBase::zeroDimensionalMassSourceBase
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::labelUList Foam::fv::zeroDimensionalMassSourceBase::cells() const
+const Foam::cellZone& Foam::fv::zeroDimensionalMassSourceBase::zone() const
 {
-    static labelList zero(1, Zero);
-    return labelUList(zero);
+    return mesh().cellZones().all();
 }
 
 

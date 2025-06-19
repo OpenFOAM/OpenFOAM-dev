@@ -490,12 +490,6 @@ Foam::faceZone::~faceZone()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::pointField& Foam::faceZone::meshCentres() const
-{
-    return zones_.mesh().faceCentres();
-}
-
-
 const Foam::primitiveFacePatch& Foam::faceZone::patch() const
 {
     if (!patchPtr_)
@@ -840,6 +834,22 @@ void Foam::faceZone::operator=(faceZone&& zn)
     {
         flipMap_ = move(zn.flipMap_);
     }
+}
+
+
+void Foam::faceZone::operator=(const labelUList& lst)
+{
+    Zone::operator=(lst);
+    oriented_ = false;
+    flipMap_.clear();
+}
+
+
+void Foam::faceZone::operator=(labelList&& lst)
+{
+    Zone::operator=(move(lst));
+    oriented_ = false;
+    flipMap_.clear();
 }
 
 

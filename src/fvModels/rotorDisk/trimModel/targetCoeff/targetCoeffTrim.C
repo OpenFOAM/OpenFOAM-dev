@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ Foam::vector Foam::targetCoeffTrim::calcCoeffs
 {
     rotor_.calculate(rho, U, thetag, force, false, false);
 
-    const labelUList cells = rotor_.set().cells();
+    const labelList& cells = rotor_.set().zone();
     const vectorField& C = rotor_.mesh().C();
     const List<point>& x = rotor_.x();
 

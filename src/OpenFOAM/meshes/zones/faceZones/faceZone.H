@@ -273,9 +273,6 @@ public:
             return flipMap_;
         }
 
-        //- Return the mesh face centres
-        const pointField& meshCentres() const;
-
         //- Return reference to primitive patch
         const primitiveFacePatch& patch() const;
 
@@ -335,6 +332,12 @@ public:
 
         //- Move assignment to zone, clearing demand-driven data
         void operator=(faceZone&&);
+
+        //- Assignment operator to indices
+        void operator=(const labelUList&);
+
+        //- Move assignment of indices
+        void operator=(labelList&&);
 };
 
 

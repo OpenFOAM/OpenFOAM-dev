@@ -230,8 +230,6 @@ zoneGenerators/difference/difference.C
 zoneGenerators/intersection/intersection.C
 zoneGenerators/invert/invert.C
 
-zoneGenerators/all/all.C
-
 zoneGenerators/volume/volume/volume.C
 zoneGenerators/volume/box/box.C
 zoneGenerators/volume/sphere/sphere.C

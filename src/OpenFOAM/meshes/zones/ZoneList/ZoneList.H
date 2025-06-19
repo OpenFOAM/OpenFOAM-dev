@@ -78,6 +78,8 @@ class ZoneList
         //- Current timeIndex
         mutable label timeIndex_;
 
+        mutable autoPtr<ZoneType> all_;
+
 
     // Private Member Functions
 
@@ -124,6 +126,11 @@ public:
 
         //- Return true if objectIndex is in any zone
         bool found(const label objectIndex) const;
+
+        using PtrListDictionary<ZoneType>::lookupPtr;
+
+        //- Return const reference to ZoneType by name
+        const ZoneType* lookupPtr(const word& name) const;
 
         //- Given a global object index, return the list of zones it is in
         labelList whichZones(const label objectIndex) const;
@@ -193,6 +200,10 @@ public:
             IOstream::compressionType,
             const bool write
         ) const;
+
+
+        //- Return const reference to the all zone
+        const ZoneType& all() const;
 
 
     // Member Operators

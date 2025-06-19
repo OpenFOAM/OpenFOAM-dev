@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -177,7 +177,7 @@ void Foam::fv::VoFSolidificationMelting::addSup
     scalarField& Sp = eqn.diag();
     const scalarField& V = mesh().V();
 
-    const labelUList cells = set_.cells();
+    const labelList& cells = set_.zone();
 
     forAll(cells, i)
     {
@@ -213,7 +213,7 @@ void Foam::fv::VoFSolidificationMelting::correct()
     const volScalarField& TVoF = thermo.thermo1().T();
     const volScalarField& alphaVoF = thermo.alpha1();
 
-    const labelUList cells = set_.cells();
+    const labelList& cells = set_.zone();
 
     forAll(cells, i)
     {

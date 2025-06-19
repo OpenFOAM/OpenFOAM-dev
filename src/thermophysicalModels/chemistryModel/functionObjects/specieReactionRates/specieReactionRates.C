@@ -163,7 +163,7 @@ bool Foam::functionObjects::specieReactionRates::write()
                         scalarField
                         (
                             fvMeshFunctionObject::mesh_.V()*RR[speciei],
-                            cells()
+                            zone()
                         )
                     );
             }

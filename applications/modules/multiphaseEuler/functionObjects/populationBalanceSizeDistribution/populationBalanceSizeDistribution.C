@@ -191,7 +191,7 @@ Foam::functionObjects::populationBalanceSizeDistribution::filterField
     }
     else
     {
-        return tmp<scalarField>(new scalarField(field, cells()));
+        return tmp<scalarField>(new scalarField(field, zone()));
     }
 }
 

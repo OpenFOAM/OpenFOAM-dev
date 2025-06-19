@@ -78,9 +78,9 @@ Foam::fv::massSource::massSource
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::labelUList Foam::fv::massSource::cells() const
+const Foam::cellZone& Foam::fv::massSource::zone() const
 {
-    return setPtr_->cells();
+    return setPtr_->zone();
 }
 
 

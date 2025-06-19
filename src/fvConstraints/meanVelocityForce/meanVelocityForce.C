@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -134,7 +134,7 @@ Foam::scalar Foam::fv::meanVelocityForce::magUbarAve
     const volVectorField& U
 ) const
 {
-    const labelUList cells = set_.cells();
+    const labelList& cells = set_.zone();
     const scalarField& cv = mesh().V();
 
     scalar magUbarAve = 0;
@@ -172,7 +172,7 @@ bool Foam::fv::meanVelocityForce::constrain
 
     const scalar gradP = gradP0_ + dGradP_;
 
-    UIndirectList<vector>(Su, set_.cells()) = normalised(Ubar_)*gradP;
+    UIndirectList<vector>(Su, set_.zone()) = normalised(Ubar_)*gradP;
 
     eqn -= Su;
 
@@ -211,7 +211,7 @@ bool Foam::fv::meanVelocityForce::constrain(volVectorField& U) const
 {
     const scalarField& rAU = rAPtr_();
 
-    const labelUList cells = set_.cells();
+    const labelList& cells = set_.zone();
     const scalarField& cv = mesh().V();
 
     // Average rAU over the cell set

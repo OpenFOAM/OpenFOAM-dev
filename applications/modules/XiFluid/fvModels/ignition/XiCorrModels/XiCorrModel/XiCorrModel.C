@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,7 +74,7 @@ void Foam::XiCorrModel::XiCorr
     const volScalarField& mgb
 ) const
 {
-    const labelUList cells = set_.cells();
+    const labelList& cells = set_.zone();
     const scalarField bCells(b, cells);
 
     scalar bMin = min(bCells);

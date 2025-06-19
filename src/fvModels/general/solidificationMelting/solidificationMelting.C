@@ -182,7 +182,7 @@ void Foam::fv::solidificationMelting::update
 
     const volScalarField& T = mesh().lookupObject<volScalarField>(TName_);
 
-    const labelUList cells = set_.cells();
+    const labelList& cells = set_.zone();
 
     forAll(cells, i)
     {
@@ -362,7 +362,7 @@ void Foam::fv::solidificationMelting::addSup
     vectorField& Su = eqn.source();
     const scalarField& V = mesh().V();
 
-    const labelUList cells = set_.cells();
+    const labelList& cells = set_.zone();
 
     forAll(cells, i)
     {

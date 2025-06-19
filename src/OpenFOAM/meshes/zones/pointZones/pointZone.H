@@ -119,9 +119,6 @@ public:
 
     // Member Functions
 
-        //- Return the mesh points
-        const pointField& meshCentres() const;
-
         //- Check zone definition. Return true if in error.
         bool checkDefinition(const bool report = false) const;
 

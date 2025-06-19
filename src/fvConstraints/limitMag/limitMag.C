@@ -63,7 +63,7 @@ inline bool Foam::fv::limitMag::constrainType
 
     Field<Type>& psiif = psi.primitiveFieldRef();
 
-    const labelUList cells = set_.cells();
+    const labelList& cells = set_.zone();
 
     forAll(cells, i)
     {

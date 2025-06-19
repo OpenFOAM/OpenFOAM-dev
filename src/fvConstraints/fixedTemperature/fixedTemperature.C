@@ -147,7 +147,7 @@ bool Foam::fv::fixedTemperature::constrain
     const word& fieldName
 ) const
 {
-    const labelUList cells = set_.cells();
+    const labelList& cells = set_.zone();
 
     const basicThermo& thermo =
         mesh().lookupObject<basicThermo>

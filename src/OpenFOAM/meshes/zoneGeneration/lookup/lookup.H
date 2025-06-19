@@ -76,6 +76,17 @@ Usage
     \verbatim
         box;
     \endverbatim
+    There is a special \c all zone of each type generated and cached
+    automatically by the corresponding zoneList which holds an identity map of
+    all the points, cells or faces and is returned by \c lookup using the
+    reserved zone name "all", e.g. to return the cellZone corresponding to all
+    the cells in the mesh use:
+    \verbatim
+        all
+        {
+            zoneType    cell;
+        }
+    \endverbatim
 
 See also
     zoneGenerator

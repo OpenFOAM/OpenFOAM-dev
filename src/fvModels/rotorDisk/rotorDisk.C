@@ -164,7 +164,7 @@ void Foam::fv::rotorDisk::setFaceArea(vector& axis, const bool correct)
 
     // Calculate cell addressing for selected cells
     labelList cellAddr(mesh().nCells(), -1);
-    UIndirectList<label>(cellAddr, set_.cells()) =
+    UIndirectList<label>(cellAddr, set_.zone()) =
         identityMap(set_.nCells());
     labelList nbrFaceCellAddr(mesh().nFaces() - nInternalFaces, -1);
     forAll(pbm, patchi)
@@ -276,7 +276,7 @@ void Foam::fv::rotorDisk::setFaceArea(vector& axis, const bool correct)
             mesh(),
             dimensionedScalar(dimArea, 0)
         );
-        UIndirectList<scalar>(area.primitiveField(), set_.cells()) = area_;
+        UIndirectList<scalar>(area.primitiveField(), set_.zone()) = area_;
 
         Info<< type() << ": " << name() << " writing field " << area.name()
             << endl;
@@ -305,7 +305,7 @@ void Foam::fv::rotorDisk::createCoordinateSystem(const dictionary& dict)
             const scalarField& V = mesh().V();
             const vectorField& C = mesh().C();
 
-            const labelUList cells = set_.cells();
+            const labelList& cells = set_.zone();
 
             forAll(cells, i)
             {
@@ -386,7 +386,7 @@ void Foam::fv::rotorDisk::createCoordinateSystem(const dictionary& dict)
                 (
                     axis,
                     origin,
-                    UIndirectList<vector>(mesh().C(), set_.cells())()
+                    UIndirectList<vector>(mesh().C(), set_.zone())()
                 )
             );
 
@@ -415,7 +415,7 @@ void Foam::fv::rotorDisk::constructGeometry()
 {
     const vectorField& C = mesh().C();
 
-    const labelUList cells = set_.cells();
+    const labelList& cells = set_.zone();
 
     forAll(cells, i)
     {

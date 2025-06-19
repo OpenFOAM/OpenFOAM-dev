@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,7 +84,7 @@ void Foam::fv::heatTransfer::add
 
     tmp<volScalarField> mask =
         volScalarField::New("mask", mesh(), dimensionedScalar(dimless, 0));
-    UIndirectList<scalar>(mask.ref().primitiveFieldRef(), set_.cells()) = 1;
+    UIndirectList<scalar>(mask.ref().primitiveFieldRef(), set_.zone()) = 1;
     const volScalarField htcAv
     (
         alpha*mask*heatTransferCoefficientModel_->htc()*heatTransferAv_->Av()

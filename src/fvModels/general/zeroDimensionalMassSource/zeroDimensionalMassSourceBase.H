@@ -97,8 +97,8 @@ public:
 
         // Access
 
-            //- Return the cells that the source applies to
-            virtual labelUList cells() const;
+            //- Return the cellZone that the source applies to
+            virtual const cellZone& zone() const;
 
             //- Return the volume of cells that the source applies to
             virtual scalar V() const;

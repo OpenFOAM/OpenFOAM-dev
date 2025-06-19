@@ -138,6 +138,23 @@ bool Foam::ZoneList<ZoneType, ZonesType, MeshType>::found
 
 
 template<class ZoneType, class ZonesType, class MeshType>
+const ZoneType* Foam::ZoneList<ZoneType, ZonesType, MeshType>::lookupPtr
+(
+    const word& name
+) const
+{
+    if (name == "all")
+    {
+        return &all();
+    }
+    else
+    {
+        return PtrListDictionary<ZoneType>::lookupPtr(name);
+    }
+}
+
+
+template<class ZoneType, class ZonesType, class MeshType>
 Foam::labelList Foam::ZoneList<ZoneType, ZonesType, MeshType>::whichZones
 (
     const label objectIndex
@@ -426,6 +443,18 @@ void Foam::ZoneList<ZoneType, ZonesType, MeshType>::topoChange
         zones[zi].topoChange(map);
     }
 
+    if (all_.valid())
+    {
+        const label allSize = static_cast<const ZonesType&>(*this).allSize();
+        if (all().size() != allSize)
+        {
+            all_() = identityMap
+            (
+                static_cast<const ZonesType&>(*this).allSize()
+            );
+        }
+    }
+
     timeIndex_ = time().timeIndex();
 }
 
@@ -443,6 +472,8 @@ void Foam::ZoneList<ZoneType, ZonesType, MeshType>::mapMesh
         zones[zi].mapMesh(map);
     }
 
+    all_.clear();
+
     timeIndex_ = time().timeIndex();
 }
 
@@ -459,6 +490,8 @@ void Foam::ZoneList<ZoneType, ZonesType, MeshType>::distribute
     {
         zones[zi].distribute(map);
     }
+
+    all_.clear();
 
     timeIndex_ = time().timeIndex();
 }
@@ -559,6 +592,25 @@ bool Foam::ZoneList<ZoneType, ZonesType, MeshType>::writeObject
 }
 
 
+template<class ZoneType, class ZonesType, class MeshType>
+const ZoneType& Foam::ZoneList<ZoneType, ZonesType, MeshType>::all() const
+{
+    const ZonesType& zones = static_cast<const ZonesType&>(*this);
+
+    if (!all_.valid())
+    {
+        all_ = new ZoneType
+        (
+            "all",
+            identityMap(zones.allSize()),
+            zones
+        );
+    }
+
+    return all_();
+}
+
+
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class ZoneType, class ZonesType, class MeshType>
@@ -567,7 +619,7 @@ const ZoneType& Foam::ZoneList<ZoneType, ZonesType, MeshType>::operator[]
     const word& name
 ) const
 {
-    const ZoneType* ptr = this->lookupPtr(name);
+    const ZoneType* ptr = lookupPtr(name);
 
     if (ptr == nullptr)
     {

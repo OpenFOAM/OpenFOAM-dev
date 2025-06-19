@@ -146,7 +146,7 @@ bool Foam::functionObjects::reactionRates::write()
                 scalarField
                 (
                     fvMeshFunctionObject::mesh_.V()*RR,
-                    cells()
+                    zone()
                 )
             );
 

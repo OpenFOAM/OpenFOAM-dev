@@ -49,7 +49,7 @@ void Foam::fvTotalSource::addSource(fvMatrix<scalar>& eqn) const
     DebugInFunction
         << "eqnField=" << eqn.psi().name() << endl;
 
-    const labelUList cells = this->cells();
+    const labelList& cells = this->zone();
     const scalar V = this->V();
     const dimensionedScalar S = this->S();
 

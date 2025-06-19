@@ -61,8 +61,8 @@ void Foam::fv::propellerDisk::readCoeffs(const dictionary& dict)
     }
     else
     {
-        const Field<vector> zoneCellCentres(mesh().cellCentres(), set_.cells());
-        const Field<scalar> zoneCellVolumes(mesh().cellVolumes(), set_.cells());
+        const Field<vector> zoneCellCentres(mesh().cellCentres(), set_.zone());
+        const Field<scalar> zoneCellVolumes(mesh().cellVolumes(), set_.zone());
         centre_ = gSum(zoneCellVolumes*zoneCellCentres)/set_.V();
     }
 
@@ -107,7 +107,7 @@ void Foam::fv::propellerDisk::readCoeffs(const dictionary& dict)
 
 Foam::scalar Foam::fv::propellerDisk::diskThickness(const vector& centre) const
 {
-    const Field<vector> zoneCellCentres(mesh().cellCentres(), set_.cells());
+    const Field<vector> zoneCellCentres(mesh().cellCentres(), set_.zone());
     const scalar r2 = gMax(magSqr(zoneCellCentres - centre));
 
     return set_.V()/(constant::mathematical::pi*r2);
@@ -120,7 +120,7 @@ Foam::scalar Foam::fv::propellerDisk::J
     const vector& nHat
 ) const
 {
-    const labelUList& cells = set_.cells();
+    const labelList& cells = set_.zone();
     const scalarField& V = mesh().V();
 
     scalar VUn = 0;

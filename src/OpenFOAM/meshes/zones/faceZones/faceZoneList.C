@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "faceZoneList.H"
+#include "polyMesh.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -34,6 +35,12 @@ namespace Foam
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+Foam::label Foam::faceZoneList::allSize() const
+{
+    return mesh().nFaces();
+}
+
 
 void Foam::faceZoneList::insert(const List<Map<bool>>& zonesOrientedIndices)
 {

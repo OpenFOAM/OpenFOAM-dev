@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,7 @@ void Foam::MRFZone::setMRFFaces()
     boolList faceInMRF(mesh_.nFaces(), false);
     boolList cellInMRF(mesh_.nCells(), false);
     {
-        const labelUList MRFCells = cellSet_.cells();
+        const labelList& MRFCells = cellSet_.zone();
 
         forAll(MRFCells, i)
         {
@@ -198,7 +198,7 @@ void Foam::MRFZone::addCoriolis
 {
     checkMRFBCs(U);
 
-    const labelUList cells = cellSet_.cells();
+    const labelList& cells = cellSet_.zone();
     vectorField& ddtUc = ddtU.primitiveFieldRef();
     const vectorField& Uc = U;
 
@@ -217,7 +217,7 @@ void Foam::MRFZone::addCentrifugalAcceleration
     volVectorField& centrifugalAcceleration
 ) const
 {
-    const labelUList cells = cellSet_.cells();
+    const labelList& cells = cellSet_.zone();
     const volVectorField& C = mesh_.C();
     vectorField& cac = centrifugalAcceleration.primitiveFieldRef();
 
@@ -247,7 +247,7 @@ void Foam::MRFZone::addCentrifugalAcceleration
 void Foam::MRFZone::makeRelative(volVectorField& U) const
 {
     const volVectorField& C = mesh_.C();
-    const labelUList cells = cellSet_.cells();
+    const labelList& cells = cellSet_.zone();
 
     const vector Omega = this->Omega();
 
@@ -314,7 +314,7 @@ void Foam::MRFZone::makeRelative(Field<vector>& Up, const label patchi) const
 void Foam::MRFZone::makeAbsolute(volVectorField& U) const
 {
     const volVectorField& C = mesh_.C();
-    const labelUList cells = cellSet_.cells();
+    const labelList& cells = cellSet_.zone();
 
     const vector Omega = this->Omega();
 

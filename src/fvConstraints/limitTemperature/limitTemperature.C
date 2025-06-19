@@ -99,7 +99,7 @@ Foam::wordList Foam::fv::limitTemperature::constrainedFields() const
 
 bool Foam::fv::limitTemperature::constrain(volScalarField& he) const
 {
-    const labelUList cells = set_.cells();
+    const labelList& cells = set_.zone();
 
     if (he.dimensions() == dimTemperature)
     {

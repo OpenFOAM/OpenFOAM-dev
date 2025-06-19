@@ -230,9 +230,9 @@ Foam::fv::volumeSource::volumeSource
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::labelUList Foam::fv::volumeSource::cells() const
+const Foam::cellZone& Foam::fv::volumeSource::zone() const
 {
-    return setPtr_->cells();
+    return setPtr_->zone();
 }
 
 

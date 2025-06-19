@@ -56,9 +56,9 @@ void Foam::solidBodyMotionSolver::updateSetPointIndices()
 
     boolList pointInSet(mesh().nPoints(), false);
 
-    forAll(set_.cells(), setCelli)
+    forAll(set_.zone(), setCelli)
     {
-        const cell& c = mesh().cells()[set_.cells()[setCelli]];
+        const cell& c = mesh().cells()[set_.zone()[setCelli]];
         forAll(c, cfi)
         {
             const face& f = mesh().faces()[c[cfi]];

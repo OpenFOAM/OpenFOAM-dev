@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -115,7 +115,7 @@ void Foam::fv::constantbXiIgnition::addSup
     scalarField& Sp = eqn.diag();
     const scalarField& V = mesh().V();
 
-    const labelUList cells = set_.cells();
+    const labelList& cells = set_.zone();
 
     const scalar strength = strength_.value();
     const scalar duration = duration_.value();

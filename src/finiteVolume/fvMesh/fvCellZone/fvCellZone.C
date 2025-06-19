@@ -30,7 +30,7 @@ License
 
 void Foam::fvCellZone::setV()
 {
-    const labelUList cells(this->cells());
+    const labelList& cells(this->zone());
 
     V_ = 0;
     forAll(cells, i)
@@ -50,7 +50,7 @@ void Foam::fvCellZone::writeFileHeader
 )
 {
     wf.writeCommented(file, "Selection");
-    file<< setw(1) << ':' << setw(1) << ' ' << cellZoneName() << endl;
+    file<< setw(1) << ':' << setw(1) << ' ' << zoneName() << endl;
     wf.writeHeaderValue(file, "Volume", V());
 }
 

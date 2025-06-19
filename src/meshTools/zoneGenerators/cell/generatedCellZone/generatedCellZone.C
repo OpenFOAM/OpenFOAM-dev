@@ -27,25 +27,6 @@ License
 #include "polyMesh.H"
 #include "containsPoints.H"
 
-Foam::labelUList Foam::generatedCellZone::identityMap(const label len) const
-{
-    // Static identity list, resized as required
-    static labelList map;
-
-    if (len > map.size())
-    {
-        map.resize(len);
-
-        forAll(map, i)
-        {
-            map[i] = i;
-        }
-    }
-
-    return SubList<label>(map, len);
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::generatedCellZone::generatedCellZone(const polyMesh& mesh)

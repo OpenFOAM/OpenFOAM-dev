@@ -144,7 +144,7 @@ void Foam::fv::semiImplicitSource::addSupType
     }
 
     // Explicit source function for the field
-    UIndirectList<Type>(Su, set_.cells()) =
+    UIndirectList<Type>(Su, set_.zone()) =
         fieldSu_[field.name()]->template value<Type>(t)/VDash;
 
     volScalarField::Internal Sp
@@ -168,7 +168,7 @@ void Foam::fv::semiImplicitSource::addSupType
     );
 
     // Implicit source function for the field
-    UIndirectList<scalar>(Sp, set_.cells()) =
+    UIndirectList<scalar>(Sp, set_.zone()) =
         fieldSp_[field.name()]->template value<scalar>(t)/VDash;
 
     eqn += Su - fvm::SuSp(-Sp, psi);

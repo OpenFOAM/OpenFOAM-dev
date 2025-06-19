@@ -95,12 +95,6 @@ class generatedCellZone
         generatedZoneSet cellZone_;
 
 
-    // Private functions
-
-        //- Return the identity map of length len
-        labelUList identityMap(const label len) const;
-
-
 public:
 
     // Constructors
@@ -124,10 +118,10 @@ public:
             inline bool all() const;
 
             //- Return const access to the name of cellZone
-            inline const word& cellZoneName() const;
+            inline const word& zoneName() const;
 
             //- Return const access to the cell set
-            inline labelUList cells() const;
+            inline const cellZone& zone() const;
 
             //- Return the number of cells in the set
             inline label nCells() const;
