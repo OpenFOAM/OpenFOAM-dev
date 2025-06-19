@@ -29,7 +29,7 @@ Description
     then removes the elements from the given list of zoneGenerators
 
     This is equivalent to using the zoneGenerator::difference with
-    zoneGenerator:all as the first zoneGenerator in the list.
+    \c all as the first zoneGenerator in the list.
 
 Usage
     \table
