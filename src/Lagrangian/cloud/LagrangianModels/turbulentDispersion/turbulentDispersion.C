@@ -300,7 +300,7 @@ void Foam::Lagrangian::turbulentDispersion::calculate
             Uturb[subi] = dir*stdNormal.sample()*magUturb[subi];
 
             // Add it to the average
-            avgUturbPtr_()[subi] += (min(dt/Dt, 1) - dtPrev/Dt)*Uturb[subi];
+            avgUturbPtr_()[subi] += (min(dt, Dt) - dtPrev)/Dt*Uturb[subi];
         }
 
         // Set the fraction to where we got to in the current eddy
