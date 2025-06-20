@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,7 @@ License
 
 inline Foam::label Foam::particle::getNewParticleIndex() const
 {
-    label id = particleCount_++;
+    const label id = particleCount ++;
 
     if (id == labelMax)
     {
@@ -40,6 +40,7 @@ inline Foam::label Foam::particle::getNewParticleIndex() const
             << "Particle counter has overflowed. This might cause problems"
             << " when reconstructing particle tracks." << endl;
     }
+
     return id;
 }
 

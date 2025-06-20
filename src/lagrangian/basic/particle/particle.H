@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -204,7 +204,10 @@ public:
         );
 
         //- Cumulative particle counter - used to provide unique ID
-        static label particleCount_;
+        static label particleCount;
+
+        //- Particles are not instantaneous by default
+        static const bool instantaneous = false;
 
 
     // Constructors

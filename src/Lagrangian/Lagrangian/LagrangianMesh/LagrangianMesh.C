@@ -1066,10 +1066,13 @@ Foam::LagrangianMesh::LagrangianMesh
     checkFieldSize(facei_);
     checkFieldSize(faceTrii_);
 
-    // Ask for the tetBasePtIs and oldCellCentres to trigger all processors to
-    // build them, otherwise, if some processors have no elements then there is
-    // a comms mismatch.
+    // Request the tet base points so that they are built on all processors.
+    // Constructing tet base points requires communication, so we can't leave
+    // it until the tracking requests them as those calls are not synchronised.
+    // Some processors might not be doing any tracking at all.
     mesh_.tetBasePtIs();
+
+    // Mark the need to store the old-time cell-centres if the mesh is moving
     mesh_.oldCellCentres();
 }
 
