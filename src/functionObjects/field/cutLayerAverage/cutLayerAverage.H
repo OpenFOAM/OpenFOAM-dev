@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,25 +22,30 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::functionObjects::patchCutLayerAverage
+    Foam::functionObjects::cutLayerAverage
 
 Description
-    This function object writes graphs of patch face values, area-averaged in
+    This function object writes graphs of cell values, volume-averaged in
     planes perpendicular to a given direction or in contours of a given
     distance field. It adaptively grades the distribution of graph points to
     match the resolution of the mesh.
 
+    Unlike the \c layerAverage function, this function does not require the
+    mesh to be of any specific structure. This function will cut cells that
+    span multiple layers in order to distribute their contributions between the
+    layers. The cutting process has an expense associated with it and the point
+    grading is calculated iteratively and is somewhat approximate.
+
     Example of function object specification:
     \verbatim
-    patchCutLayerAverage1
+    cutLayerAverage1
     {
-        type            patchCutLayerAverage;
-        libs            ("libpatchCutLayerAverageFunctionObject.so");
+        type            cutLayerAverage;
+        libs            ("libcutLayerAverageFunctionObject.so");
 
         writeControl    writeTime;
         writeInterval   1;
 
-        patch           lowerWall;
         direction       (1 0 0);
         nPoints         100;
         interpolate     no;
@@ -55,8 +60,7 @@ Description
 Usage
     \table
         Property    | Description                  | Required | Default value
-        type        | type name: patchCutLayerAverage | yes   |
-        patch       | Name of the patch            | yes      |
+        type        | type name: cutLayerAverage   | yes   |
         direction   | Axis along which to plot    | if distance not specified |
         distance    | Distance field along which to plot \\
                                                  | if direction not specified |
@@ -67,16 +71,19 @@ Usage
         setFormat   | Format of the output file    | yes      |
     \endtable
 
+See also
+    Foam::functionObjects::layerAverage
+
 SourceFiles
-    patchCutLayerAverage.C
+    cutLayerAverage.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef patchCutLayerAverage_H
-#define patchCutLayerAverage_H
+#ifndef cutLayerAverage_H
+#define cutLayerAverage_H
 
 #include "fvMeshFunctionObject.H"
-#include "vector.H"
+#include "volFieldsFwd.H"
 #include "setWriter.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -90,27 +97,24 @@ namespace functionObjects
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class patchCutLayerAverage Declaration
+                       Class cutLayerAverage Declaration
 \*---------------------------------------------------------------------------*/
 
-class patchCutLayerAverage
+class cutLayerAverage
 :
     public fvMeshFunctionObject
 {
     // Private Structures
 
-        //- Weight for a given face and layer
+        //- Weight for a given cell and layer
         struct weight
         {
-            label facei, layeri;
+            label celli, layeri;
             scalar value;
         };
 
 
     // Private Data
-
-        //- Name of the patch
-        word patchName_;
 
         //- Direction along which to plot
         vector direction_;
@@ -161,9 +165,9 @@ class patchCutLayerAverage
         List<weight> calcNonInterpolatingWeights
         (
             const scalarField& pointXs,
-            const scalarField& faceMinXs,
-            const scalarField& faceMaxXs,
-            const labelList& faceMinOrder,
+            const scalarField& cellMinXs,
+            const scalarField& cellMaxXs,
+            const labelList& cellMinOrder,
             const scalarField& plotXs,
             const bool normalise = true
         ) const;
@@ -172,9 +176,9 @@ class patchCutLayerAverage
         List<weight> calcInterpolatingWeights
         (
             const scalarField& pointXs,
-            const scalarField& faceMinXs,
-            const scalarField& faceMaxXs,
-            const labelList& faceMinOrder,
+            const scalarField& cellMinXs,
+            const scalarField& cellMaxXs,
+            const labelList& cellMinOrder,
             const scalarField& plotXs,
             const bool normalise = true
         ) const;
@@ -183,9 +187,9 @@ class patchCutLayerAverage
         List<weight> calcWeights
         (
             const scalarField& pointXs,
-            const scalarField& faceMinXs,
-            const scalarField& faceMaxXs,
-            const labelList& faceMinOrder,
+            const scalarField& cellMinXs,
+            const scalarField& cellMaxXs,
+            const labelList& cellMinOrder,
             const scalarField& plotXs,
             const bool normalise = true
         ) const;
@@ -193,12 +197,12 @@ class patchCutLayerAverage
         //- Calculate and set the weights member data
         void calcWeights();
 
-        //- Construct plot values from face values given a set of weights
+        //- Construct plot values from cell values given a set of weights
         template<class Type>
         inline tmp<Field<Type>> applyWeights
         (
             const List<weight>& weights,
-            const Field<Type>& faceValues
+            const VolInternalField<Type>& cellValues
         ) const;
 
         //- Clear the cached weights
@@ -208,13 +212,13 @@ class patchCutLayerAverage
 public:
 
     //- Runtime type information
-    TypeName("patchCutLayerAverage");
+    TypeName("cutLayerAverage");
 
 
     // Constructors
 
         //- Construct from Time and dictionary
-        patchCutLayerAverage
+        cutLayerAverage
         (
             const word& name,
             const Time& runTime,
@@ -223,12 +227,12 @@ public:
 
 
     //- Destructor
-    virtual ~patchCutLayerAverage();
+    virtual ~cutLayerAverage();
 
 
     // Member Functions
 
-        //- Read the patchCutLayerAverage data
+        //- Read the cutLayerAverage data
         virtual bool read(const dictionary&);
 
         //- Return the list of fields required
@@ -237,7 +241,7 @@ public:
         //- Execute, currently does nothing
         virtual bool execute();
 
-        //- Write the patchCutLayerAverage
+        //- Write the cutLayerAverage
         virtual bool write();
 
         //- Update for mesh point-motion

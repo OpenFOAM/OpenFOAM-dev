@@ -6,14 +6,12 @@
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 Description
-    Writes graphs of patch face values, area-averaged in planes perpendicular
+    Writes graphs of cell values, volume-averaged in planes perpendicular
     to a given direction or in contours of a given distance field. It
     adaptively grades the distribution of graph points to match the resolution
     of the mesh.
 
 \*---------------------------------------------------------------------------*/
-
-patch           <patchName>; // Patch on which to average values
 
 direction       <direction>; // Direction along which to graph
 
@@ -38,6 +36,6 @@ axis            default;     // The independent variable of the graph. Can be
 
 fields          (<fieldNames>);
 
-#includeEtc "caseDicts/functions/graphs/graphPatchCutLayerAverage.cfg"
+#includeEtc "caseDicts/functions/graphs/graphCutLayerAverage.cfg"
 
 // ************************************************************************* //

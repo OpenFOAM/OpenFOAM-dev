@@ -6,7 +6,8 @@
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 Description
-    Generates plots of fields averaged over the layers in the mesh
+    Writes graphs of cell values, volume-averaged in the layers of cells in the
+    mesh.
 
 \*---------------------------------------------------------------------------*/
 

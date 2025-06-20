@@ -90,48 +90,53 @@ Foam::functionObjects::patchCutLayerAverage::calcNonInterpolatingWeights
         const scalar a = faceAreas[facei] & faceNormals[facei];
 
         // Find the next relevant layer
-        while (faceMinXs[facei] > plotXs[layeri + 1])
-        {
-            layeri ++;
-        }
+        while (faceMinXs[facei] > plotXs[layeri + 1]) layeri ++;
 
         // Loop over all relevant layer intervals
         label layerj = layeri;
         while (faceMaxXs[facei] > plotXs[layerj])
         {
-            const scalar x0 = plotXs[layerj], x1 = plotXs[layerj + 1];
-
             // Add a new weight
             dynWeights.append({facei, layerj, a});
 
             // Left interval
-            if (faceMinXs[facei] < x0)
+            if (faceMinXs[facei] < plotXs[layerj])
             {
                 dynWeights.last().value -=
                     cutPoly::faceCutArea
                     (
                         faces[facei],
                         faceAreas[facei],
-                        cutPoly::faceCuts(faces[facei], pointXs, x0),
+                        cutPoly::faceCuts
+                        (
+                            faces[facei],
+                            pointXs,
+                            plotXs[layerj]
+                        ),
                         points,
                         pointXs,
-                        x0,
+                        plotXs[layerj],
                         true
                     ) & faceNormals[facei];
             }
 
             // Right interval
-            if (faceMaxXs[facei] > x1)
+            if (faceMaxXs[facei] > plotXs[layerj + 1])
             {
                 dynWeights.last().value -=
                     cutPoly::faceCutArea
                     (
                         faces[facei],
                         faceAreas[facei],
-                        cutPoly::faceCuts(faces[facei], pointXs, x1),
+                        cutPoly::faceCuts
+                        (
+                            faces[facei],
+                            pointXs,
+                            plotXs[layerj + 1]
+                        ),
                         points,
                         pointXs,
-                        x1,
+                        plotXs[layerj + 1],
                         false
                     ) & faceNormals[facei];
             }
@@ -198,123 +203,151 @@ Foam::functionObjects::patchCutLayerAverage::calcInterpolatingWeights
 
         const scalar a = faceAreas[facei] & faceNormals[facei];
 
-        // Find the next relevant plot point
-        while (faceMinXs[facei] > plotXs[layeri + 1])
-        {
-            layeri ++;
-        }
+        // Find the next relevant layer
+        while (faceMinXs[facei] > plotXs[layeri + 1]) layeri ++;
 
-        // Loop over all relevant plot points
+        // Loop over all relevant layers
         label layerj = layeri;
-        while (layerj == 0 || faceMaxXs[facei] > plotXs[layerj - 1])
+        while (faceMaxXs[facei] > plotXs[max(layerj - 1, 0)])
         {
-            const scalar xLeft = layerj > 0 ? plotXs[layerj - 1] : NaN;
-            const scalar xMid = plotXs[layerj];
-            const scalar xRight =
-                layerj < nLayers_ - 1 ? plotXs[layerj + 1] : NaN;
-
             // Add a new weight
             dynWeights.append({facei, layerj, 0});
 
             // Left interval
-            if (layerj > 0 && faceMinXs[facei] < xMid)
+            if (layerj > 0 && faceMinXs[facei] < plotXs[layerj])
             {
+                // Update the basis function on the relevant points and
+                // calculate the area-average value on the face
                 forAll(faces[facei], facePointi)
                 {
                     const label pointi = faces[facei][facePointi];
                     pointFs[pointi] =
-                        (pointXs[pointi] - xLeft)/(xMid - xLeft);
+                        (pointXs[pointi] - plotXs[layerj - 1])
+                       /(plotXs[layerj] - plotXs[layerj - 1]);
                 }
-
-                const scalar f = faces[facei].average(points, pointFs);
+                const scalar faceF =
+                    cutPoly::faceAreaAverage
+                    (
+                        faces[facei],
+                        points,
+                        pointFs
+                    ).second();
 
                 // Add the whole face's contribution
-                dynWeights.last().value += f*a;
+                dynWeights.last().value += faceF*a;
 
                 // Cut off anything before the left point
-                if (faceMinXs[facei] < xLeft)
+                if (faceMinXs[facei] < plotXs[layerj - 1])
                 {
                     dynWeights.last().value -=
                         cutPoly::faceCutAreaIntegral
                         (
                             faces[facei],
                             faceAreas[facei],
-                            f,
-                            cutPoly::faceCuts(faces[facei], pointXs, xLeft),
+                            faceF,
+                            cutPoly::faceCuts
+                            (
+                                faces[facei],
+                                pointXs,
+                                plotXs[layerj - 1]
+                            ),
                             points,
                             pointFs,
                             pointXs,
-                            xLeft,
+                            plotXs[layerj - 1],
                             true
                         ).second() & faceNormals[facei];
                 }
 
                 // Cut off anything after the middle point
-                if (faceMaxXs[facei] > xMid)
+                if (faceMaxXs[facei] > plotXs[layerj])
                 {
                     dynWeights.last().value -=
                         cutPoly::faceCutAreaIntegral
                         (
                             faces[facei],
                             faceAreas[facei],
-                            f,
-                            cutPoly::faceCuts(faces[facei], pointXs, xMid),
+                            faceF,
+                            cutPoly::faceCuts
+                            (
+                                faces[facei],
+                                pointXs,
+                                plotXs[layerj]
+                            ),
                             points,
                             pointFs,
                             pointXs,
-                            xMid,
+                            plotXs[layerj],
                             false
                         ).second() & faceNormals[facei];
                 }
             }
 
             // Right interval
-            if (layerj < nLayers_ - 1 && faceMaxXs[facei] > xMid)
+            if (layerj < nLayers_ - 1 && faceMaxXs[facei] > plotXs[layerj])
             {
+                // Update the basis function on the relevant points and
+                // calculate the area-average value on the face
                 forAll(faces[facei], facePointi)
                 {
                     const label pointi = faces[facei][facePointi];
                     pointFs[pointi] =
-                        (xRight - pointXs[pointi])/(xRight - xMid);
+                        (plotXs[layerj + 1] - pointXs[pointi])
+                       /(plotXs[layerj + 1] - plotXs[layerj]);
                 }
-
-                const scalar f = faces[facei].average(points, pointFs);
+                const scalar faceF =
+                    cutPoly::faceAreaAverage
+                    (
+                        faces[facei],
+                        points,
+                        pointFs
+                    ).second();
 
                 // Add the whole face's contribution
-                dynWeights.last().value += f*a;
+                dynWeights.last().value += faceF*a;
 
                 // Cut off anything before the middle point
-                if (faceMinXs[facei] < xMid)
+                if (faceMinXs[facei] < plotXs[layerj])
                 {
                     dynWeights.last().value -=
                         cutPoly::faceCutAreaIntegral
                         (
                             faces[facei],
                             faceAreas[facei],
-                            f,
-                            cutPoly::faceCuts(faces[facei], pointXs, xMid),
+                            faceF,
+                            cutPoly::faceCuts
+                            (
+                                faces[facei],
+                                pointXs,
+                                plotXs[layerj]
+                            ),
                             points,
                             pointFs,
                             pointXs,
-                            xMid,
+                            plotXs[layerj],
                             true
                         ).second() & faceNormals[facei];
                 }
 
                 // Cut off anything after the right point
-                if (faceMaxXs[facei] > xRight)
+                if (faceMaxXs[facei] > plotXs[layerj + 1])
                 {
                     dynWeights.last().value -=
                         cutPoly::faceCutAreaIntegral
                         (
                             faces[facei],
                             faceAreas[facei],
-                            f,
-                            cutPoly::faceCuts(faces[facei], pointXs, xRight),
+                            faceF,
+                            cutPoly::faceCuts
+                            (
+                                faces[facei],
+                                pointXs,
+                                plotXs[layerj + 1]
+                            ),
                             points,
                             pointFs,
                             pointXs,
-                            xRight,
+                            plotXs[layerj + 1],
                             false
                         ).second() & faceNormals[facei];
                 }
@@ -538,7 +571,11 @@ void Foam::functionObjects::patchCutLayerAverage::calcWeights()
         label ploti = 1;
         for (label ploti0 = 0; ploti0 < nPlot - 1; ++ ploti0)
         {
-            while (plotSumCounts[ploti0 + 1] > ploti*plotDeltaCount)
+            while
+            (
+                ploti < nPlot
+             && plotSumCounts[ploti0 + 1] > ploti*plotDeltaCount
+            )
             {
                 const scalar f =
                     (ploti*plotDeltaCount - plotSumCounts[ploti0])

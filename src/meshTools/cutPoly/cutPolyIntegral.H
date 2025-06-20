@@ -57,25 +57,72 @@ Tuple2<vector, std::tuple<AreaIntegralType<Types> ...>> faceAreaIntegral
     const FaceValues<point>& fPs,
     const point& fPAvg,
     const std::tuple<FaceValues<Types> ...>& fPsis,
-    const std::tuple<Types ...>& fPsiAvg
+    const std::tuple<Types ...>& fPsiAvgs
 );
 
 //- Compute the face-area
-template<template<class> class FaceValues>
 inline vector faceArea
 (
-    const FaceValues<point>& fPs,
-    const point& fPAvg
+    const face& f,
+    const point& fPAvg,
+    const pointField& ps
+);
+
+//- Compute the face-area
+inline vector faceArea
+(
+    const face& f,
+    const pointField& ps
 );
 
 //- Compute the face-area and face-area-integral of a given property
-template<template<class> class FaceValues, class Type>
+template<class Type>
 inline Tuple2<vector, AreaIntegralType<Type>> faceAreaIntegral
+(
+    const face& f,
+    const point& fPAvg,
+    const Type& fPsiAvg,
+    const pointField& ps,
+    const Field<Type>& pPsis
+);
+
+//- Compute the face-area and face-area-integral of a given property
+template<class Type>
+inline Tuple2<vector, AreaIntegralType<Type>> faceAreaIntegral
+(
+    const face& f,
+    const pointField& ps,
+    const Field<Type>& pPsis
+);
+
+//- Compute the face-area and face-area-averages of the given properties
+template<template<class> class FaceValues, class ... Types>
+Tuple2<vector, std::tuple<Types ...>> faceAreaAverage
 (
     const FaceValues<point>& fPs,
     const point& fPAvg,
-    const FaceValues<Type>& fPsis,
-    const Type& fPsiAvg
+    const std::tuple<FaceValues<Types> ...>& fPsis,
+    const std::tuple<Types ...>& fPsiAvgs
+);
+
+//- Compute the face-area and face-area-average of a given property
+template<class Type>
+inline Tuple2<vector, Type> faceAreaAverage
+(
+    const face& f,
+    const point& fPAvg,
+    const Type& fPsiAvg,
+    const pointField& ps,
+    const Field<Type>& pPsis
+);
+
+//- Compute the face-area and face-area-average of a given property
+template<class Type>
+inline Tuple2<vector, Type> faceAreaAverage
+(
+    const face& f,
+    const pointField& ps,
+    const Field<Type>& pPsis
 );
 
 //- Compute the face-cut-area and face-cut-area-integral of the given properties
@@ -129,7 +176,7 @@ Tuple2<scalar, std::tuple<Types ...>> cellVolumeIntegral
     const point& cPAvg,
     const std::tuple<Types ...>& cPsiAvgs,
     const vectorField& fAreas,
-    const vectorField& fCentres,
+    const pointField& fCentres,
     const std::tuple<const Field<Types>& ...>& fPsis
 );
 
@@ -140,7 +187,16 @@ inline scalar cellVolume
     const cellEdgeAddressing& cAddr,
     const point& cPAvg,
     const vectorField& fAreas,
-    const vectorField& fCentres
+    const pointField& fCentres
+);
+
+//- Compute the cell-volume
+inline scalar cellVolume
+(
+    const cell& c,
+    const cellEdgeAddressing& cAddr,
+    const vectorField& fAreas,
+    const pointField& fCentres
 );
 
 //- Compute the cell-volume and cell-volume-integrals of the given property
@@ -152,7 +208,18 @@ inline Tuple2<scalar, Type> cellVolumeIntegral
     const point& cPAvg,
     const Type& cPsiAvg,
     const vectorField& fAreas,
-    const vectorField& fCentres,
+    const pointField& fCentres,
+    const Field<Type>& fPsis
+);
+
+//- Compute the cell-volume and cell-volume-integrals of the given property
+template<class Type>
+inline Tuple2<scalar, Type> cellVolumeIntegral
+(
+    const cell& c,
+    const cellEdgeAddressing& cAddr,
+    const vectorField& fAreas,
+    const pointField& fCentres,
     const Field<Type>& fPsis
 );
 
@@ -168,9 +235,10 @@ Tuple2<scalar, std::tuple<Types ...>> cellCutVolumeIntegral
     const labelListList& cCuts,
     const faceUList& fs,
     const vectorField& fAreas,
-    const vectorField& fCentres,
+    const pointField& fCentres,
     const std::tuple<const Field<Types>& ...>& fPsis,
     const vectorField& fCutAreas,
+    const std::tuple<const Field<Types>& ...>& fCutPsis,
     const pointField& ps,
     const std::tuple<const Field<Types>& ...>& pPsis,
     const scalarField& pAlphas,
@@ -187,7 +255,7 @@ inline scalar cellCutVolume
     const labelListList& cCuts,
     const faceUList& fs,
     const vectorField& fAreas,
-    const vectorField& fCentres,
+    const pointField& fCentres,
     const vectorField& fCutAreas,
     const pointField& ps,
     const scalarField& pAlphas,
@@ -207,9 +275,10 @@ inline Tuple2<scalar, Type> cellCutVolumeIntegral
     const labelListList& cCuts,
     const faceUList& fs,
     const vectorField& fAreas,
-    const vectorField& fCentres,
-    const vectorField& fPsis,
+    const pointField& fCentres,
+    const Field<Type>& fPsis,
     const vectorField& fCutAreas,
+    const Field<Type>& fCutPsis,
     const pointField& ps,
     const Field<Type>& pPsis,
     const scalarField& pAlphas,

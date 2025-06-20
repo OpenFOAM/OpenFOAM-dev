@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,6 +74,93 @@ Type edgeCutValue
     const scalar isoAlpha,
     const Field<Type>& pPsis
 );
+
+
+/*---------------------------------------------------------------------------*\
+                       Class FaceValues Declaration
+\*---------------------------------------------------------------------------*/
+
+template<class Type>
+class FaceValues
+{
+    // Private Data
+
+        //- The face
+        const face& f_;
+
+        //- The point values that we want to iterate over
+        const Field<Type>& pPsis_;
+
+
+public:
+
+    // Public Typedefs
+
+        //- The value type
+        typedef Type value_type;
+
+
+    // Public Classes
+
+        //- Forward iterator
+        class const_iterator
+        {
+            // Private Data
+
+                //- Reference to the face-values
+                const FaceValues<Type>& fValues_;
+
+                //- Index of the face-point
+                label i_;
+
+
+        public:
+
+            // Constructors
+
+                //- Construct from components
+                const_iterator(const FaceValues<Type>& fValues, const label i);
+
+
+            // Member Functions
+
+                //- Get the next value around the sub-face
+                Type next() const;
+
+
+            // Member Operators
+
+                //- Equality comparison
+                bool operator==(const const_iterator& it) const;
+
+                //- Inequality comparison
+                bool operator!=(const const_iterator& it) const;
+
+                //- Dereference
+                Type operator*() const;
+
+                //- Increment
+                inline const_iterator& operator++();
+
+                //- Increment
+                inline const_iterator operator++(int);
+        };
+
+
+    // Constructors
+
+        //- Construct from components
+        FaceValues(const face& f, const Field<Type>& pPsis);
+
+
+    // Member Functions
+
+        //- Get the beginning of the iteration over the values
+        const_iterator begin() const;
+
+        //- Get the end of the iteration over the values
+        const_iterator end() const;
+};
 
 
 /*---------------------------------------------------------------------------*\

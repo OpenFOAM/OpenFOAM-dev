@@ -33,6 +33,8 @@ namespace Foam
 namespace cutPoly
 {
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
 template<class Int, Int Offset, class Sequence>
 struct OffsetSequence;
 
@@ -104,220 +106,6 @@ auto tupleOp(const std::tuple<Types ...>& tuple, const Op& op)
 }
 
 
-struct OpIndex
-{
-    const label i_;
-
-    OpIndex(const label i)
-    :
-        i_(i)
-    {}
-
-    template<class Type>
-    const Type& operator()(const List<Type>& xs) const
-    {
-        return xs[i_];
-    }
-};
-
-
-struct OpBegin
-{
-    template<class Type>
-    auto operator()(const Type& x) const
-    {
-        return x.begin();
-    }
-};
-
-
-struct OpDereference
-{
-    template<class Type>
-    auto operator()(const Type& x) const
-    {
-        return *x;
-    }
-};
-
-
-struct OpNext
-{
-    template<class Type>
-    auto operator()(const Type& x) const
-    {
-        return x.next();
-    }
-};
-
-
-template<class ScaleType>
-struct OpScaled
-{
-    const ScaleType s_;
-
-    OpScaled(const ScaleType& s)
-    :
-        s_(s)
-    {}
-
-    template<class Type>
-    auto operator()(const Type& x) const
-    {
-        return s_*x;
-    }
-};
-
-
-struct OpPreInner
-{
-    const vector& v_;
-
-    OpPreInner(const vector& v)
-    :
-        v_(v)
-    {}
-
-    template<class Type>
-    auto operator()(const Type& x) const
-    {
-        return v_ & x;
-    }
-};
-
-
-struct OpIndirectAverage
-{
-    const labelUList& is_;
-
-    OpIndirectAverage(const labelUList& is)
-    :
-        is_(is)
-    {}
-
-    template<class Container>
-    auto operator()(const Container& xs) const
-    {
-        typename Container::value_type nResult =
-            pTraits<typename Container::value_type>::zero;
-
-        forAll(is_, i)
-        {
-            nResult += xs[is_[i]];
-        }
-
-        return nResult/is_.size();
-    }
-};
-
-
-struct OpIterableAverage
-{
-    template<class Container>
-    auto operator()(const Container& xs) const
-    {
-        label n = 0;
-
-        typename Container::value_type nResult =
-            pTraits<typename Container::value_type>::zero;
-
-        forAllConstIter(typename Container, xs, iter)
-        {
-            ++ n;
-            nResult += *iter;
-        }
-
-        return nResult/n;
-    }
-};
-
-
-struct OpFaceCutValues
-{
-    const face& f_;
-    const List<labelPair>& fCuts_;
-    const scalarField& pAlphas_;
-    const scalar isoAlpha_;
-    const bool below_;
-
-    OpFaceCutValues
-    (
-        const face& f,
-        const List<labelPair>& fCuts,
-        const scalarField& pAlphas,
-        const scalar isoAlpha,
-        const bool below
-    )
-    :
-        f_(f),
-        fCuts_(fCuts),
-        pAlphas_(pAlphas),
-        isoAlpha_(isoAlpha),
-        below_(below)
-    {}
-
-    template<class Type>
-    auto operator()(const Field<Type>& pPsis) const
-    {
-        return
-            FaceCutValues<Type>
-            (
-                f_,
-                fCuts_,
-                pPsis,
-                pAlphas_,
-                isoAlpha_,
-                below_
-            );
-    }
-};
-
-
-struct OpCellCutValues
-{
-    const cell& c_;
-    const cellEdgeAddressing& cAddr_;
-    const labelListList& cCuts_;
-    const faceList& fs_;
-    const scalarField& pAlphas_;
-    const scalar isoAlpha_;
-
-    OpCellCutValues
-    (
-        const cell& c,
-        const cellEdgeAddressing& cAddr,
-        const labelListList& cCuts,
-        const faceList& fs,
-        const scalarField& pAlphas,
-        const scalar isoAlpha
-    )
-    :
-        c_(c),
-        cAddr_(cAddr),
-        cCuts_(cCuts),
-        fs_(fs),
-        pAlphas_(pAlphas),
-        isoAlpha_(isoAlpha)
-    {}
-
-    template<class Type>
-    auto operator()(const Field<Type>& pPsis) const
-    {
-        return
-            CellCutValues<Type>
-            (
-                c_,
-                cAddr_,
-                cCuts_,
-                fs_,
-                pPsis,
-                pAlphas_,
-                isoAlpha_
-            );
-    }
-};
-
-
 template<class Op, class Tuple, class Int, Int ... Is>
 void tupleInPlaceOp
 (
@@ -339,16 +127,6 @@ void tupleInPlaceOp(std::tuple<Types ...>& tuple, const Op& op)
 {
     tupleInPlaceOp(tuple, std::make_index_sequence<sizeof ... (Types)>(), op);
 }
-
-
-struct InPlaceOpAdvance
-{
-    template<class Type>
-    void operator()(Type& x) const
-    {
-        ++ x;
-    }
-};
 
 
 template<class BinaryOp, class Tuple, class Int, Int ... Is>
@@ -381,15 +159,7 @@ auto tupleBinaryOp
     );
 }
 
-
-struct BinaryOpAdd
-{
-    template<class Type>
-    auto operator()(const Type& a, const Type& b) const
-    {
-        return a + b;
-    }
-};
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace cutPoly
 } // End namespace Foam
@@ -407,7 +177,7 @@ Foam::cutPoly::faceAreaIntegral
     const FaceValues<point>& fPs,
     const point& fPAvg,
     const std::tuple<FaceValues<Types> ...>& fPsis,
-    const std::tuple<Types ...>& fPsiAvg
+    const std::tuple<Types ...>& fPsiAvgs
 )
 {
     vector fCutsArea = Zero;
@@ -438,7 +208,7 @@ Foam::cutPoly::faceAreaIntegral
                         tupleBinaryOp
                         (
                             psi1,
-                            fPsiAvg,
+                            fPsiAvgs,
                             BinaryOpAdd()
                         ),
                         BinaryOpAdd()
@@ -456,6 +226,32 @@ Foam::cutPoly::faceAreaIntegral
         (
             fCutsArea,
             fCutsAreaPsi
+        );
+}
+
+
+template<template<class> class FaceValues, class ... Types>
+Foam::Tuple2<Foam::vector, std::tuple<Types ...>>
+Foam::cutPoly::faceAreaAverage
+(
+    const FaceValues<point>& fPs,
+    const point& fPAvg,
+    const std::tuple<FaceValues<Types> ...>& fPsis,
+    const std::tuple<Types ...>& fPsiAvgs
+)
+{
+    auto fSumPPsis = faceAreaIntegral(fPs, fPAvg, fPsis, fPsiAvgs);
+
+    const vector& fArea = fSumPPsis.first();
+    const scalar fMagSqrArea = magSqr(fArea);
+
+    return
+        Tuple2<vector, std::tuple<Types ...>>
+        (
+            fArea,
+            fMagSqrArea > vSmall
+          ? tupleOp(fSumPPsis.second(), OpPreInner(fArea/fMagSqrArea))
+          : fPsiAvgs
         );
 }
 
@@ -523,7 +319,7 @@ Foam::cutPoly::cellVolumeIntegral
     const point& cPAvg,
     const std::tuple<Types ...>& cPsiAvgs,
     const vectorField& fAreas,
-    const vectorField& fCentres,
+    const pointField& fCentres,
     const std::tuple<const Field<Types>& ...>& fPsis
 )
 {
@@ -574,9 +370,10 @@ Foam::cutPoly::cellCutVolumeIntegral
     const labelListList& cCuts,
     const faceUList& fs,
     const vectorField& fAreas,
-    const vectorField& fCentres,
+    const pointField& fCentres,
     const std::tuple<const Field<Types>& ...>& fPsis,
     const vectorField& fCutAreas,
+    const std::tuple<const Field<Types>& ...>& fCutPsis,
     const pointField& ps,
     const std::tuple<const Field<Types>& ...>& pPsis,
     const scalarField& pAlphas,
@@ -628,7 +425,7 @@ Foam::cutPoly::cellCutVolumeIntegral
             cPsiAvgs,
             fCutAreas,
             fCentres, // !!!
-            fPsis
+            fCutPsis
         );
 
     // Create readably named references to the parts of the result
@@ -667,35 +464,31 @@ Foam::cutPoly::cellCutVolumeIntegral
     // cut. However, to obtain that centroid we have to divide by the area
     // magnitude, so this can't be generalised to types that do not support
     // division.
-    auto cCutSumPPsis =
-        faceAreaIntegral
+    const auto cCutAreaPPsis =
+        faceAreaAverage
         (
             cCutPValues,
             cCutPAvg,
             std::tuple_cat(std::make_tuple(cCutPValues), cCutPsiValues),
             std::tuple_cat(std::make_tuple(cCutPAvg), cCutPsiAvgs)
         );
-    const vector& cCutArea = cCutSumPPsis.first();
-    const scalar cCutMagSqrArea = magSqr(cCutArea);
-    const point cCutCentre =
-        cCutMagSqrArea > vSmall
-      ? (cCutArea/cCutMagSqrArea) & std::get<0>(cCutSumPPsis.second())
-      : cPAvg;
-    const auto cCutPsis =
-        cCutMagSqrArea > vSmall
-      ? tupleOp
-        (
-            tupleTail(cCutSumPPsis.second()),
-            OpPreInner(cCutArea/cCutMagSqrArea)
-        )
-      : cCutPsiAvgs;
+    const vector& cCutArea = cCutAreaPPsis.first();
+    const vector& cCutCentre = std::get<0>(cCutAreaPPsis.second());
+    const auto cCutPsis = tupleTail(cCutAreaPPsis.second());
 
     /*
     // This method is more approximate, as it uses point averages rather
     // than centroids. This does not involve division, though, so this
     // could be used with types like polynomials that only support addition
     // and multiplication.
-    const vector cCutArea = faceArea(cCutPValues, cCutPAvg);
+    const vector cCutArea =
+        faceAreaIntegral
+        (
+            cCutPValues,
+            cCutPAvg,
+            std::make_tuple(),
+            std::make_tuple()
+        ).first();
     const point& cCutCentre = cCutPAvg;
     const auto& cCutPsis = cCutPsiAvgs;
     */

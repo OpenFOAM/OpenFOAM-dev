@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,10 +22,46 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::layerAverage
+    Foam::functionObjects::layerAverage
 
 Description
-    Generates plots of fields averaged over the layers in the mesh
+    This function object writes graphs of cell values, volume-averaged in
+    the layers of cells in the mesh.
+
+    The layers are defined by a set of patches or zones. Between these patches
+    and/or zones the mesh must be perfectly layered; i.e., every cell must be a
+    prism for which the base polygon is topologically similar to the
+    corresponding face on the patch or zone. If the mesh is not layered in this
+    way, then consider using the \c cutLayerAverage function instead.
+
+    Patches can be used to define the start of the layers and hence the
+    beginning of the graph. E.g.:
+
+    \verbatim
+              Patch
+             <--||    1    |    2    |    3    | ...
+                ||---------+---------+---------+----
+             <--||    1    |    2    |    3    | ...
+                ||---------+---------+---------+----
+             <--||    1    |    2    |    3    | ...
+    \endverbatim
+
+    Zones can define either the start or the end of the layers, depending on
+    the zones' orientations. Layers will be enumerated in the same way as for a
+    patch; i.e., they will number outwards in a direction opposite to the
+    zone's normal direction. If two zones (or a zone and a patch) overlap then
+    the one in front (relative to the zones' orientations) defines the start of
+    the layers and the one behind defines the end of the layers. If two zones
+    overlap and have opposing orientations then an error will be generated.
+
+    \verbatim
+              Zone A                         Zone B
+    ... |    <--||    1    |    2    |    3 <--||       | ...
+    ----+-------||---------+---------+---------||-------+----
+    ... |    <--||    1    |    2    |    3 <--||       | ...
+    ----+-------||---------+---------+---------||-------+----
+    ... |    <--||    1    |    2    |    3 <--||       | ...
+    \endverbatim
 
     Example of function object specification:
     \verbatim
@@ -58,12 +94,15 @@ Usage
         patches       | Patches that layers extrude from | no | ()
         zones         | Face zones that the layers extrude from | no | ()
         axis          | Component of the position to plot against | yes |
-        symmetric     | Is the geometry symmetric around the centre layer? \
+        symmetric     | Is the geometry symmetric around the centre layer? \\
                                                    | no         | false
         fields        | Fields to average and plot | yes        |
         weightField   | Field with which to weight the average | no | none
         weightFields  | Fields with which to weight the average | no | ()
     \endtable
+
+See also
+    Foam::functionObjects::cutLayerAverage
 
 SourceFiles
     layerAverage.C
