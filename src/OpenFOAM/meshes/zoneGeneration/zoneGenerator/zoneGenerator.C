@@ -35,23 +35,6 @@ namespace Foam
     defineRunTimeSelectionTable(zoneGenerator, dictionary);
 }
 
-const Foam::NamedEnum<Foam::zoneGenerator::zoneTypes, 3>
-Foam::zoneGenerator::zoneTypesNames
-{
-    "point",
-    "cell",
-    "face"
-};
-
-const Foam::NamedEnum<Foam::zoneGenerator::zoneTypesAll, 4>
-Foam::zoneGenerator::zoneTypesAllNames
-{
-    "point",
-    "cell",
-    "face",
-    "all"
-};
-
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
@@ -183,7 +166,15 @@ Foam::zoneGenerator::New
 {
     // Copy the dictionary and add the zoneType entry
     dictionary zoneDict(dict);
-    zoneDict.add("zoneType", zoneTypesNames[zoneType]);
+    zoneDict.add
+    (
+        primitiveEntry
+        (
+            "zoneType",
+            zoneTypesNames[zoneType],
+            zoneDict.endLineNumber()
+        )
+    );
 
     return New(name, mesh, zoneDict);
 }
@@ -233,7 +224,6 @@ Foam::zoneGenerator::New
                 (
                     "type",
                     zoneGenerators::lookup::typeName,
-                    iter().startLineNumber(),
                     iter().startLineNumber()
                 )
             );

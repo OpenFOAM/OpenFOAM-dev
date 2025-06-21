@@ -154,4 +154,25 @@ inline bool Foam::zoneSet::valid() const
 }
 
 
+template<>
+inline const Foam::pointZone& Foam::zoneSet::zone<Foam::pointZone>() const
+{
+    return pZone();
+}
+
+
+template<>
+inline const Foam::cellZone& Foam::zoneSet::zone<Foam::cellZone>() const
+{
+    return cZone();
+}
+
+
+template<>
+inline const Foam::faceZone& Foam::zoneSet::zone<Foam::faceZone>() const
+{
+    return fZone();
+}
+
+
 // ************************************************************************* //

@@ -76,43 +76,9 @@ protected:
         mutable bool moveUpdate_;
 
 
-    // Protected Member Functions
-
-        template<class ZoneGenType>
-        labelList select
-        (
-            const ZoneGenType& zoneGen,
-            const vectorField& pts
-        ) const;
-
-
 public:
 
     friend class zoneGeneratorList;
-
-
-    // Public Data Types
-
-        //- Enumeration defining the zone types
-        enum class zoneTypes
-        {
-            point,
-            cell,
-            face
-        };
-
-        static const NamedEnum<zoneTypes, 3> zoneTypesNames;
-
-        //- Enumeration defining the zone types with an option for all the types
-        enum class zoneTypesAll
-        {
-            point,
-            cell,
-            face,
-            all
-        };
-
-        static const NamedEnum<zoneTypesAll, 4> zoneTypesAllNames;
 
 
     //- Runtime type information
@@ -219,12 +185,6 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "zoneGeneratorTemplates.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

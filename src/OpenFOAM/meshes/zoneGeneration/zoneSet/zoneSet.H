@@ -49,6 +49,7 @@ See also
 #ifndef zoneSet_H
 #define zoneSet_H
 
+#include "NamedEnum.H"
 #include "tmpNrc.H"
 #include "pointZone.H"
 #include "cellZone.H"
@@ -58,6 +59,33 @@ See also
 
 namespace Foam
 {
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+//- Enumeration defining the zone types
+enum class zoneTypes
+{
+    point,
+    cell,
+    face
+};
+
+//- Named enumeration defining the zone type names
+extern const NamedEnum<zoneTypes, 3> zoneTypesNames;
+
+//- Enumeration defining the zone types with an option for all the types
+enum class zoneTypesAll
+{
+    point,
+    cell,
+    face,
+    all
+};
+
+//- Named enumeration defining the zone type names
+//  with an option for all the types
+extern const NamedEnum<zoneTypesAll, 4> zoneTypesAllNames;
+
 
 /*---------------------------------------------------------------------------*\
                           Class zoneSet Declaration
@@ -75,6 +103,15 @@ struct zoneSet
 
         //- Temporary faceZone
         tmpNrc<faceZone> fZone;
+
+
+        //- Enumeration defining the zone types
+        enum class zoneTypess
+        {
+            point,
+            cell,
+            face
+        };
 
 
     // Constructors
@@ -128,6 +165,9 @@ struct zoneSet
 
         //- Store the temporary zones and return the stored zoneSet
         zoneSet store() const;
+
+        template<class ZoneType>
+        inline const ZoneType& zone() const;
 
 
     // Member Operators

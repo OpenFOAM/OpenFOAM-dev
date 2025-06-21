@@ -28,6 +28,27 @@ License
 #include "cellZoneList.H"
 #include "faceZoneList.H"
 
+
+// * * * * * * * * * * * * * * * * Static Data * * * * * * * * * * * * * * * //
+
+const Foam::NamedEnum<Foam::zoneTypes, 3>
+Foam::zoneTypesNames
+{
+    "point",
+    "cell",
+    "face"
+};
+
+const Foam::NamedEnum<Foam::zoneTypesAll, 4>
+Foam::zoneTypesAllNames
+{
+    "point",
+    "cell",
+    "face",
+    "all"
+};
+
+
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 Foam::zoneSet Foam::zoneSet::store() const
