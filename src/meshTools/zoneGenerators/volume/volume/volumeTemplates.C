@@ -195,7 +195,7 @@ inline Foam::labelList Foam::zoneGenerators::volume::selectOp
 {
     if (select_ == selection::inside)
     {
-        return zoneGen.template select
+        return zoneGen.select
         (
             zoneGen,
             zoneGenerators,
@@ -206,7 +206,7 @@ inline Foam::labelList Foam::zoneGenerators::volume::selectOp
     }
     else
     {
-        return zoneGen.template select
+        return zoneGen.select
         (
             zoneGen,
             zoneGenerators,
