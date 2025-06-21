@@ -61,7 +61,16 @@ Foam::primitiveEntry::primitiveEntry
     OStringStream os;
     os  << t << token::END_STATEMENT;
     IStringStream iss(os.str());
-    iss.lineNumber() = endLineNumber;
+
+    if (endLineNumber != -1)
+    {
+        iss.lineNumber() = endLineNumber;
+    }
+    else
+    {
+        iss.lineNumber() = startLineNumber;
+    }
+
     readEntry(dictionary::null, iss());
 }
 

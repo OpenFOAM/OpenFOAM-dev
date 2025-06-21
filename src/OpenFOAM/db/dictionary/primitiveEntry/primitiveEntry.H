@@ -113,7 +113,7 @@ public:
             const keyType&,
             const T&,
             const label startLineNumber,
-            const label endLineNumber
+            const label endLineNumber = -1
         );
 
         autoPtr<entry> clone(const dictionary&) const

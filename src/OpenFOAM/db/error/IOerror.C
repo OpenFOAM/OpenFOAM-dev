@@ -291,7 +291,7 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const IOerror& ioErr)
 
         if (ioErr.ioStartLineNumber() >= 0)
         {
-            if (ioErr.ioEndLineNumber() >= 0)
+            if (ioErr.ioEndLineNumber() > ioErr.ioStartLineNumber())
             {
                 os  << " from line " << ioErr.ioStartLineNumber()
                     << " to " << ioErr.ioEndLineNumber() << '.';
