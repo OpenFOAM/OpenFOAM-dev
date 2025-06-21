@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -148,12 +148,27 @@ Op(maxMagSqr, (magSqr(x) >= magSqr(y) ? x : y))
 Op(minMod, minMod(x, y))
 Op(and, x && y)
 Op(or, x || y)
-Op(not, x != y)
 Op(equal, x == y)
 Op(less, x < y)
 Op(lessEq, x <= y)
 Op(greater, x > y)
 Op(greaterEq, x >= y)
+
+#define UOp(opName, op)                                                        \
+                                                                               \
+    template<class T>                                                          \
+    class opName##Op                                                           \
+    {                                                                          \
+    public:                                                                    \
+                                                                               \
+        T operator()(const T& x) const WARNRETURN                              \
+        {                                                                      \
+            return op;                                                         \
+        }                                                                      \
+    };
+
+UOp(nop, x)
+UOp(not, !x)
 
 #undef Op
 #undef WARNRETURN
