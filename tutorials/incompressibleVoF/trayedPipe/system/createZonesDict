@@ -86,43 +86,34 @@ baffles
     // Cut away the outer portion of the inner baffles
     innerBaffles
     {
-        type        difference;
+        type        annulus;
+        zoneType    face;
+        select      outside;
+        point1      (0 0 0);
+        point2      (0 $blockMeshDict!height 0);
+        innerRadius $blockMeshDict!innerBaffleOuterRadius;
+        outerRadius $blockMeshDict!radius;
 
-        inner;
-
-        gap
-        {
-            type        annulus;
-            zoneType    face;
-            point1      (0 0 0);
-            point2      (0 $blockMeshDict!height 0);
-            innerRadius $blockMeshDict!innerBaffleOuterRadius;
-            outerRadius $blockMeshDict!radius;
-        }
+        zone        inner;
     }
 
     // Cut away the outer portion of the inner baffles
     outerBaffles
     {
-        type        difference;
+        type        cylinder;
+        zoneType    face;
+        select      outside;
+        point1      (0 0 0);
+        point2      (0 $blockMeshDict!height 0);
+        radius      $blockMeshDict!outerBaffleInnerRadius;
 
-        outer;
-
-        gap
-        {
-            type        cylinder;
-            zoneType    face;
-            point1      (0 0 0);
-            point2      (0 $blockMeshDict!height 0);
-            radius      $blockMeshDict!outerBaffleInnerRadius;
-        }
+        zone        outer;
     }
 }
 
 // Remove temporary faceZones
-cleanup
+remove
 {
-    type        remove;
     faceZones   (inner outer);
 }
 

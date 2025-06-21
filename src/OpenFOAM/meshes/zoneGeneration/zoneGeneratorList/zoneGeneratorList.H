@@ -41,6 +41,7 @@ SourceFiles
     zoneGeneratorList.C
 
 \*---------------------------------------------------------------------------*/
+
 #ifndef zoneGeneratorList_H
 #define zoneGeneratorList_H
 
@@ -73,7 +74,7 @@ protected:
         void read
         (
             const dictionary& dict,
-            const bool zonesGenerator = false
+            const bool topLevel = false
         );
 
 
@@ -85,7 +86,21 @@ public:
         zoneGeneratorList(const polyMesh& mesh);
 
         //- Construct from mesh and dictionary
-        zoneGeneratorList(const polyMesh& mesh, const dictionary& dict);
+        zoneGeneratorList
+        (
+            const polyMesh& mesh,
+            const dictionary& dict,
+            const bool topLevel = false
+        );
+
+        //- Construct from mesh and dictionary and sub-dictionary names
+        zoneGeneratorList
+        (
+            const polyMesh& mesh,
+            const dictionary& dict,
+            const word& zoneName,
+            const word& zonesName
+        );
 
         //- Disallow default bitwise copy construction
         zoneGeneratorList(const zoneGeneratorList&) = delete;

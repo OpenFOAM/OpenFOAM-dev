@@ -16,35 +16,15 @@ FoamFile
 
 zone
 {
-    type invert;
-
-    box1
-    {
-        type        box;
-        zoneType    cell;
-        box         (0.4 0.1 0.1) (0.6 0.3 0.3);
-    }
-
-    box2
-    {
-        type        box;
-        zoneType    cell;
-        box         (0.4 0.1 0.4) (0.6 0.3 0.6);
-    }
-
-    box3
-    {
-        type        box;
-        zoneType    cell;
-        box         (0.4 0.4 0.1) (0.6 0.6 0.3);
-    }
-
-    box4
-    {
-        type        box;
-        zoneType    cell;
-        box         (0.4 0.4 0.4) (0.6 0.6 0.6);
-    }
+    type        box;
+    select      outside;
+    boxes
+    (
+        (0.4 0.1 0.1) (0.6 0.3 0.3)
+        (0.4 0.1 0.4) (0.6 0.3 0.6)
+        (0.4 0.4 0.1) (0.6 0.6 0.3)
+        (0.4 0.4 0.4) (0.6 0.6 0.6)
+    );
 }
 
 patch   film;

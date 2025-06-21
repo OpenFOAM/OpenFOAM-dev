@@ -187,7 +187,7 @@ Foam::zoneSet Foam::zoneGenerators::intersection::generate() const
 
     moveUpdate_ = zoneGenerators_.moveUpdate();
 
-    labelList faceIndices(indices(nFaceIntersections));
+    const labelList faceIndices(indices(nFaceIntersections));
 
     return zoneSet
     (

@@ -25,18 +25,29 @@ Class
     Foam::zoneGenerators::sphere
 
 Description
-    A zoneGenerator which selects points, cells or faces with centres inside a
-    sphere.
+    A zoneGenerator which selects points, cells or faces with centres either
+    inside or outside a sphere.
+
+    By default all the points, cells or faces of the mesh are tested for being
+    inside or outside the sphere but an optional single zone or list of zones
+    may be provided and those points, cells or faces are tested instead.  This
+    provides an efficient method of hierarchical sub-division of space where an
+    initial selection of points cells or faces is refined by selecting the
+    sub-set inside or outside the given sphere rather than having to generate
+    another zone to intersect with.
 
 Usage
     \table
-        Property     | Description             | Required | Default value
-        type         | Type: sphere            | yes      |
-        name         | Name of the zone        | no       | zoneGenerator name
-        zoneType     | Type of zone            | yes      |
-        moveUpdate   | Switch to update after mesh motion | no | false
-        centre       | Centre of the sphere    | yes      |
-        radius       | Radius of the sphere    | yes      |
+        Property     | Description             | Required  | Default value
+        type         | Type: sphere            | yes       |
+        name         | Name of the zone        | no        | zoneGenerator name
+        zoneType     | Type of zone            | yes       |
+        select       | Select either the inside or outside | no | inside
+        moveUpdate   | Switch to update after mesh motion  | no | false
+        centre       | Centre of the sphere    | yes       |
+        radius       | Radius of the sphere    | yes       |
+        zone         | Optional zone to sub-set            | no  |
+        zones        | Optional list of zones to sub-set   | no  |
     \endtable
 
     A cellZone named \c sphere1 containing the cells with centres inside
@@ -94,7 +105,7 @@ class sphere
 
     // Private Member Functions
 
-        friend class zoneGenerator;
+        friend class volume;
 
         //- Return true if the spherees contain the given point
         inline bool contains(const point& p) const;

@@ -25,19 +25,30 @@ Class
     Foam::zoneGenerators::annulus
 
 Description
-    A zoneGenerator which selects points, cells or faces with centres inside a
-    annulus.
+    A zoneGenerator which selects points, cells or faces with centres either
+    inside or outside a annulus.
+
+    By default all the points, cells or faces of the mesh are tested for being
+    inside or outside the annulus but an optional single zone or list of zones
+    may be provided and those points, cells or faces are tested instead.  This
+    provides an efficient method of hierarchical sub-division of space where an
+    initial selection of points cells or faces is refined by selecting the
+    sub-set inside or outside the given annulus rather than having to generate
+    another zone to intersect with.
 
 Usage
     \table
-        Property     | Description             | Required | Default value
-        type         | Type: annulus           | yes      |
-        name         | Name of the zone        | no       | zoneGenerator name
-        zoneType     | Type of zone            | yes      |
-        point1       | First point on annulus axis       | yes |
-        point2       | Second point on annulus axis      | yes |
-        outerRadius  | Outer radius of the annulus | yes |
-        innerRadius  | Inner radius of the annulus | yes |
+        Property     | Description             | Required  | Default value
+        type         | Type: annulus           | yes       |
+        name         | Name of the zone        | no        | zoneGenerator name
+        zoneType     | Type of zone            | yes       |
+        select       | Select either the inside or outside | no  | inside
+        point1       | First point on annulus axis         | yes |
+        point2       | Second point on annulus axis        | yes |
+        outerRadius  | Outer radius of the annulus         | yes |
+        innerRadius  | Inner radius of the annulus         | yes |
+        zone         | Optional zone to sub-set            | no  |
+        zones        | Optional list of zones to sub-set   | no  |
     \endtable
 
     A cellZone named \c annulus1 containing the cells with centres inside
@@ -109,7 +120,7 @@ class annulus
 
     // Private Member Functions
 
-        friend class zoneGenerator;
+        friend class volume;
 
         //- Return true if the annuluses contain the given point
         inline bool contains(const point& p) const;

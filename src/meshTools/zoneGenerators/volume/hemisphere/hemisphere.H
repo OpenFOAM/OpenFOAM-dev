@@ -25,19 +25,30 @@ Class
     Foam::zoneGenerators::hemisphere
 
 Description
-    A zoneGenerator which selects points, cells or faces with centres inside a
-    hemisphere.
+    A zoneGenerator which selects points, cells or faces with centres either
+    inside or outside a hemisphere.
+
+    By default all the points, cells or faces of the mesh are tested for being
+    inside or outside the hemisphere but an optional single zone or list of
+    zones may be provided and those points, cells or faces are tested instead.
+    This provides an efficient method of hierarchical sub-division of space
+    where an initial selection of points cells or faces is refined by selecting
+    the sub-set inside or outside the given hemisphere rather than having to
+    generate another zone to intersect with.
 
 Usage
     \table
-        Property     | Description             | Required | Default value
-        type         | Type: hemisphere        | yes      |
-        name         | Name of the zone        | no       | zoneGenerator name
-        zoneType     | Type of zone            | yes      |
-        moveUpdate   | Switch to update after mesh motion | no | false
+        Property     | Description             | Required  | Default value
+        type         | Type: hemisphere        | yes       |
+        name         | Name of the zone        | no        | zoneGenerator name
+        zoneType     | Type of zone            | yes       |
+        select       | Select either the inside or outside | no | inside
+        moveUpdate   | Switch to update after mesh motion  | no | false
         centre       | Centre of the hemisphere | yes      |
         axis         | Axis of the hemisphere   | yes      |
         radius       | Radius of the hemisphere | yes      |
+        zone         | Optional zone to sub-set            | no  |
+        zones        | Optional list of zones to sub-set   | no  |
     \endtable
 
     A cellZone named \c hemisphere1 containing the cells with centres inside
@@ -99,7 +110,7 @@ class hemisphere
 
     // Private Member Functions
 
-        friend class zoneGenerator;
+        friend class volume;
 
         //- Return true if the hemispherees contain the given point
         inline bool contains(const point& p) const;

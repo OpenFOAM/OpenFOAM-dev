@@ -43,10 +43,12 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
+template<class ZoneType, class UnaryOp>
 Foam::labelList Foam::zoneGenerators::insideSurface::select
 (
     const insideSurface& zoneGen,
-    const vectorField& pts
+    const vectorField& pts,
+    const UnaryOp& uop
 ) const
 {
     labelList indices(pts.size());
@@ -57,7 +59,7 @@ Foam::labelList Foam::zoneGenerators::insideSurface::select
     label nInZone = 0;
     forAll(volType, i)
     {
-        if (volType[i] == volumeType::inside)
+        if (uop(volType[i] == volumeType::inside))
         {
             indices[nInZone++] = i;
         }
@@ -66,6 +68,107 @@ Foam::labelList Foam::zoneGenerators::insideSurface::select
     indices.setSize(nInZone);
 
     return indices;
+}
+
+
+template<class ZoneType, class UnaryOp>
+Foam::labelList Foam::zoneGenerators::insideSurface::select
+(
+    const insideSurface& zoneGen,
+    const zoneGeneratorList& zoneGenerators,
+    const vectorField& pts,
+    const UnaryOp& uop
+) const
+{
+    if (!zoneGenerators.size())
+    {
+        return zoneGen.select<ZoneType>(zoneGen, pts, uop);
+    }
+
+    boolList selected(pts.size(), false);
+
+    forAll(zoneGenerators, zgi)
+    {
+        zoneSet zs(zoneGenerators[zgi].generate());
+
+        const labelList& zsIndices(zs.zone<ZoneType>());
+
+        const pointField zonePoints(pts, zsIndices);
+        List<volumeType> volType;
+        surfacePtr_->getVolumeType(zonePoints, volType);
+
+        forAll(zsIndices, i)
+        {
+            if (uop(volType[i] == volumeType::inside))
+            {
+                selected[zsIndices[i]] = true;
+            }
+        }
+    }
+
+    return indices(selected);
+}
+
+
+template<class UnaryOp>
+Foam::labelList Foam::zoneGenerators::insideSurface::select
+(
+    const insideSurface& zoneGen,
+    const zoneGeneratorList& zoneGenerators,
+    const vectorField& pts,
+    boolList& flipMap,
+    const UnaryOp& uop
+) const
+{
+    if (!zoneGenerators.size())
+    {
+        return select<faceZone>(zoneGen, pts, uop);
+    }
+
+    bool oriented = true;
+    boolList selected(pts.size(), false);
+
+    forAll(zoneGenerators, zgi)
+    {
+        zoneSet zs(zoneGenerators[zgi].generate());
+
+        const faceZone& fZone = zs.fZone();
+        const labelList& zsIndices(fZone);
+
+        const pointField zonePoints(pts, zsIndices);
+        List<volumeType> volType;
+        surfacePtr_->getVolumeType(zonePoints, volType);
+
+        if (oriented && fZone.oriented())
+        {
+            flipMap.setSize(mesh_.nFaces(), false);
+            const boolList& zsFlipMap(fZone.flipMap());
+
+            forAll(zsIndices, i)
+            {
+                if (uop(volType[i] == volumeType::inside))
+                {
+                    selected[zsIndices[i]] = true;
+                    flipMap[zsIndices[i]] = zsFlipMap[i];
+                }
+            }
+        }
+        else
+        {
+            oriented = false;
+            flipMap.clear();
+
+            forAll(zsIndices, i)
+            {
+                if (uop(volType[i] == volumeType::inside))
+                {
+                    selected[zsIndices[i]] = true;
+                }
+            }
+        }
+    }
+
+    return indices(selected);
 }
 
 

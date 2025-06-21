@@ -25,6 +25,12 @@ License
 
 #include "volume.H"
 
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+const Foam::NamedEnum<Foam::zoneGenerators::volume::selection, 2>
+Foam::zoneGenerators::volume::selectionNames(selectionNames_());
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::zoneGenerators::volume::volume
@@ -35,7 +41,9 @@ Foam::zoneGenerators::volume::volume
 )
 :
     zoneGenerator(name, mesh, dict),
-    zoneType_(zoneTypesNames.read(dict.lookup("zoneType")))
+    zoneType_(zoneTypesNames.read(dict.lookup("zoneType"))),
+    select_(selectionNames.lookupOrDefault("select", dict, selection::inside)),
+    zoneGenerators_(mesh, dict, "zone", "zones")
 {}
 
 

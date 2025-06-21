@@ -16,14 +16,9 @@ FoamFile
 
 zone
 {
-    type invert;
-
-    box
-    {
-        type        box;
-        zoneType    cell;
-        box         (0.1 0.8 -100) (0.4 100 100);
-    }
+    type        box;
+    select      outside;
+    box         (0.1 0.8 -100) (0.4 100 100);
 }
 
 patch   floatingObject;

@@ -16,14 +16,9 @@ FoamFile
 
 zone
 {
-    type invert;
-
-    box
-    {
-        type        box;
-        zoneType    cell;
-        box         (0.375 0.375 0) (0.625 0.625 0.25);
-    }
+    type        box;
+    select      outside;
+    box         (0.375 0.375 0) (0.625 0.625 0.25);
 }
 
 patch   walls;

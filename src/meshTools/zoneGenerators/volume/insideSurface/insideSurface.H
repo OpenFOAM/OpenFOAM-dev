@@ -25,17 +25,28 @@ Class
     Foam::zoneGenerators::insideSurface
 
 Description
-    A zoneGenerator which selects points, cells or faces with centres inside a
-    surface
+    A zoneGenerator which selects points, cells or faces with centres either
+    inside or outside a surface
+
+    By default all the points, cells or faces of the mesh are tested for being
+    inside or outside the surface but an optional single zone or list of zones
+    may be provided and those points, cells or faces are tested instead.  This
+    provides an efficient method of hierarchical sub-division of space where an
+    initial selection of points cells or faces is refined by selecting the
+    sub-set inside or outside the given surface rather than having to generate
+    another zone to intersect with.
 
 Usage
     \table
-        Property     | Description             | Required | Default value
-        type         | Type: insideSurface     | yes      |
-        name         | Name of the zone        | no       | zoneGenerator name
-        zoneType     | Type of zone            | yes      |
-        moveUpdate   | Switch to update after mesh motion | no | false
-        surface      | searchableSurface type  | yes      |
+        Property     | Description             | Required  | Default value
+        type         | Type: insideSurface     | yes       |
+        name         | Name of the zone        | no        | zoneGenerator name
+        zoneType     | Type of zone            | yes       |
+        select       | Select either the inside or outside | no | inside
+        moveUpdate   | Switch to update after mesh motion  | no | false
+        surface      | searchableSurface type  | yes       |
+        zone         | Optional zone to sub-set            | no  |
+        zones        | Optional list of zones to sub-set   | no  |
     \endtable
 
     A cellZone named \c cylinder containing the cells with centres inside the
@@ -92,12 +103,33 @@ protected:
 
     // Protected Member Functions
 
-        friend class zoneGenerators::volume;
+        friend class volume;
 
+        template<class ZoneType, class UnaryOp>
         labelList select
         (
             const insideSurface& zoneGen,
-            const vectorField& pts
+            const vectorField& pts,
+            const UnaryOp& uop
+        ) const;
+
+        template<class ZoneType, class UnaryOp>
+        labelList select
+        (
+            const insideSurface& zoneGen,
+            const zoneGeneratorList& zoneGenerators,
+            const vectorField& pts,
+            const UnaryOp& uop
+        ) const;
+
+        template<class UnaryOp>
+        labelList select
+        (
+            const insideSurface& zoneGen,
+            const zoneGeneratorList& zoneGenerators,
+            const vectorField& pts,
+            boolList& flipMap,
+            const UnaryOp& uop
         ) const;
 
 
