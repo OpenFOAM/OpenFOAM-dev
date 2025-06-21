@@ -280,8 +280,7 @@ public:
         static bool found(const IOobject& io);
 
         //- Construct from IOobject.
-        //  Optionally prevent zone generation
-        explicit polyMesh(const IOobject& io, const bool doZones = true);
+        explicit polyMesh(const IOobject& io);
 
         //- Move construct from IOobject or from components.
         //  Boundary is added using addPatches() member function

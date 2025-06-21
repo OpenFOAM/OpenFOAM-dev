@@ -48,7 +48,7 @@ Usage
 
       - \par -zonesGenerator
         Generate the zones from the constant/zonesGenerator file
-        during mesh construction instead of from createZonesDict
+        during fvMesh construction instead of from createZonesDict
 
       - \par -clear
         Clear all registered zones before generating new zones from
@@ -95,8 +95,8 @@ int main(int argc, char *argv[])
     #include "setMeshPath.H"
     #include "setRegionName.H"
 
-    const bool constructFvMesh = args.optionFound("fvMesh");
     const bool zonesGenerator = args.optionFound("zonesGenerator");
+    const bool constructFvMesh = args.optionFound("fvMesh") || zonesGenerator;
 
     autoPtr<polyMesh> meshPtr
     (
@@ -123,8 +123,7 @@ int main(int argc, char *argv[])
                 meshPath,
                 runTime,
                 IOobject::MUST_READ
-            ),
-            zonesGenerator
+            )
         )
     );
 

@@ -173,7 +173,7 @@ Foam::autoPtr<Foam::labelIOList> Foam::polyMesh::readTetBasePtIs() const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::polyMesh::polyMesh(const IOobject& io, const bool doZones)
+Foam::polyMesh::polyMesh(const IOobject& io)
 :
     objectRegistry(io, regionDir(io)),
     primitiveMesh(),
@@ -362,12 +362,6 @@ Foam::polyMesh::polyMesh(const IOobject& io, const bool doZones)
     pointZones_.readIfPresent();
     faceZones_.readIfPresent();
     cellZones_.readIfPresent();
-
-    // Generate the zones if required
-    if (doZones)
-    {
-        zonesGenerator::New(*this);
-    }
 }
 
 

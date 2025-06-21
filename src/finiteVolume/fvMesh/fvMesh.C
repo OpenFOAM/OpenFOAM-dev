@@ -367,7 +367,7 @@ Foam::fvMesh::fvMesh
     const bool doZones
 )
 :
-    polyMesh(io, false),
+    polyMesh(io),
     surfaceInterpolation(*this),
     boundary_(*this, boundaryMesh()),
     stitcher_(nullptr),

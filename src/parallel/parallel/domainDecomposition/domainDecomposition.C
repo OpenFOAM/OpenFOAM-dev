@@ -107,6 +107,7 @@ void Foam::domainDecomposition::readComplete(const bool doPost)
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
+            false,
             false
         )
     );
@@ -137,6 +138,7 @@ void Foam::domainDecomposition::readProcs(const bool doPost)
                     IOobject::NO_READ,
                     IOobject::NO_WRITE
                 ),
+                false,
                 false
             )
         );
