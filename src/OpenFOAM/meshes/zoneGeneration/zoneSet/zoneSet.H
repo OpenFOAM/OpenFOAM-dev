@@ -180,6 +180,16 @@ struct zoneSet
 };
 
 
+template<>
+inline const pointZone& zoneSet::zone<pointZone>() const;
+
+template<>
+inline const cellZone& zoneSet::zone<cellZone>() const;
+
+template<>
+inline const faceZone& zoneSet::zone<faceZone>() const;
+
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
