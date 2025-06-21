@@ -111,7 +111,7 @@ bool Foam::generatedCellZone::read(const dictionary& dict)
         cellZone_.read
         (
             "cellZone",
-            zoneGenerator::zoneTypes::cell,
+            zoneTypes::cell,
             mesh_,
             dict
         );

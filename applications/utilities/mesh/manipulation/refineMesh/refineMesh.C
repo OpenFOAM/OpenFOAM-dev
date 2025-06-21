@@ -377,7 +377,7 @@ int main(int argc, char *argv[])
                     zoneGenerator::New
                     (
                         "zone",
-                        zoneGenerator::zoneTypes::cell,
+                        zoneTypes::cell,
                         mesh,
                         refineDict.subDict("zone")
                     )
@@ -425,7 +425,7 @@ int main(int argc, char *argv[])
                     zoneGenerator::New
                     (
                         name,
-                        zoneGenerator::zoneTypes::cell,
+                        zoneTypes::cell,
                         mesh,
                         zoneDict
                     )

@@ -144,7 +144,7 @@ int main(int argc, char *argv[])
             systemDict("createZonesDict", args, mesh)
         );
 
-        zoneGeneratorList zoneGenerators(mesh, zoneGeneratorsDict);
+        zoneGeneratorList zoneGenerators(mesh, zoneGeneratorsDict, true);
 
         // Generate and register the zones
         zoneGenerators.generate();

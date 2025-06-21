@@ -672,7 +672,7 @@ int main(int argc, char *argv[])
                     zoneGenerator::New
                     (
                         "zone",
-                        zoneGenerator::zoneTypes::face,
+                        zoneTypes::face,
                         mesh,
                         dict.subDict("zone")
                     )

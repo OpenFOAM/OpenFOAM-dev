@@ -452,7 +452,7 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::initialise
                     zoneGenerator::New
                     (
                         selection,
-                        zoneGenerator::zoneTypes::face,
+                        zoneTypes::face,
                         mesh_,
                         dict.subDict(selection)
                     )

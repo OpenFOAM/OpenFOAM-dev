@@ -248,7 +248,7 @@ int main(int argc, char *argv[])
                 zoneGenerator::New
                 (
                     "zone",
-                    zoneGenerator::zoneTypes::cell,
+                    zoneTypes::cell,
                     mesh,
                     subsetDict.subDict("zone")
                 )

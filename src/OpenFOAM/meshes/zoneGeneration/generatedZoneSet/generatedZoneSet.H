@@ -79,7 +79,7 @@ public:
         generatedZoneSet
         (
             const word& name,
-            const zoneGenerator::zoneTypes& zoneType,
+            const zoneTypes& zoneType,
             const polyMesh& mesh,
             const dictionary& dict
         );
@@ -102,7 +102,7 @@ public:
         void read
         (
             const word& name,
-            const zoneGenerator::zoneTypes& zoneType,
+            const zoneTypes& zoneType,
             const polyMesh& mesh,
             const dictionary& dict
         );
