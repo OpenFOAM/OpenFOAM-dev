@@ -79,7 +79,6 @@ void Foam::generatedZoneSet::read
             (
                 "type",
                 zoneGenerators::lookup::typeName,
-                zoneStream.lineNumber(),
                 zoneStream.lineNumber()
             )
         );
@@ -122,7 +121,6 @@ void Foam::generatedZoneSet::read
             (
                 "type",
                 zoneGenerators::lookup::typeName,
-                zoneStream.lineNumber(),
                 zoneStream.lineNumber()
             )
         );
