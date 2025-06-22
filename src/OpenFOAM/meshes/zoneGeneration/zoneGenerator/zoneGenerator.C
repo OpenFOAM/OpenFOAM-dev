@@ -164,19 +164,22 @@ Foam::zoneGenerator::New
     const dictionary& dict
 )
 {
-    // Copy the dictionary and add the zoneType entry
-    dictionary zoneDict(dict);
-    zoneDict.add
+    return New
     (
-        primitiveEntry
+        name,
+        mesh,
+        // Copy the dictionary and add the zoneType entry
+        dictionary
         (
-            "zoneType",
-            zoneTypesNames[zoneType],
-            zoneDict.endLineNumber()
+            dict,
+            primitiveEntry
+            (
+                "zoneType",
+                zoneTypesNames[zoneType],
+                dict.endLineNumber()
+            )
         )
     );
-
-    return New(name, mesh, zoneDict);
 }
 
 
@@ -217,20 +220,24 @@ Foam::zoneGenerator::New
         {
             // If an empty keyword is present assume it is a zone name
             // and add a zone lookup
-            dictionary zoneDict(name, dict);
-            zoneDict.add
-            (
-                primitiveEntry
-                (
-                    "type",
-                    zoneGenerators::lookup::typeName,
-                    iter().startLineNumber()
-                )
-            );
-
             return autoPtr<zoneGenerator>
             (
-                new zoneGenerators::lookup(name, mesh, zoneDict)
+                new zoneGenerators::lookup
+                (
+                    name,
+                    mesh,
+                    dictionary
+                    (
+                        name,
+                        dict,
+                        primitiveEntry
+                        (
+                            "type",
+                            zoneGenerators::lookup::typeName,
+                            iter().startLineNumber()
+                        )
+                    )
+                )
             );
         }
     }

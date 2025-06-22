@@ -25,6 +25,7 @@ License
 
 #include "dictionary.H"
 #include "IOobject.H"
+#include "HashSet.H"
 #include "inputModeEntry.H"
 #include "calcIncludeEntry.H"
 #include "stringOps.H"

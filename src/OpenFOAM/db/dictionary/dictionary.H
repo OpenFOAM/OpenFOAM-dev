@@ -25,10 +25,11 @@ Class
     Foam::dictionary
 
 Description
-    A list of keyword definitions, which are a keyword followed by any number
-    of values (e.g. words and numbers). The keywords can represent patterns
-    which are matched using Posix regular expressions. The general order for
-    searching is as follows:
+    A list of keywords followed by any number of values (e.g. words and
+    numbers) or sub-dictionaries
+
+    The keywords can represent patterns which are matched using Posix regular
+    expressions. The general order for searching is as follows:
     - exact match
     - pattern match (in reverse order)
     - optional recursion into the enclosing (parent) dictionaries
@@ -38,25 +39,22 @@ Description
     dictionaries since, unlike the IOdictionary class, it does not use an
     objectRegistry itself to work.
 
-    To add - a merge() member function with a non-const dictionary parameter?
-    This would avoid unnecessary cloning in the add(entry*, bool) method.
-
 SourceFiles
     dictionary.C
     dictionaryIO.C
+    dictionaryTemplates.C
 
 \*---------------------------------------------------------------------------*/
 
 #ifndef dictionary_H
 #define dictionary_H
 
+#include "className.H"
 #include "entry.H"
 #include "IDLList.H"
 #include "DLList.H"
-#include "HashSet.H"
 #include "ITstream.H"
 #include "Pair.H"
-#include "className.H"
 #include "fieldTypes.H"
 #include "Tuple3.H"
 
@@ -241,6 +239,14 @@ class dictionary
         template<class T>
         T readType(const word& keyword, ITstream& is) const;
 
+        //- Assign a T entry, overwrite any existing entry
+        template<class T>
+        void setKeyT(const keyType&, const T&);
+
+        //- Assign multiple T entries, overwriting any existing entries
+        template<class T, class ... KeysAndTs>
+        void setKeyT(const keyType&, const T&, const KeysAndTs& ...);
+
 
     // Private Classes
 
@@ -291,25 +297,6 @@ public:
         //  reading entries until EOF, optionally keeping the header
         dictionary(Istream&, const bool keepHeader=false);
 
-        //- Construct top-level dictionary with given T entries
-        template<class T, class ... KeysAndTs>
-        dictionary
-        (
-            const keyType& k,
-            const T& t,
-            const KeysAndTs& ... keysAndTs
-        );
-
-        //- Construct top-level dictionary with given name and T entries
-        template<class T, class ... KeysAndTs>
-        dictionary
-        (
-            const fileName& name,
-            const keyType& k,
-            const T& t,
-            const KeysAndTs& ... keysAndTs
-        );
-
         //- Construct as copy given the parent dictionary
         dictionary(const dictionary& parentDict, const dictionary&);
 
@@ -319,6 +306,48 @@ public:
         //- Construct top-level dictionary as copy from pointer to dictionary.
         //  A null pointer is treated like an empty dictionary.
         dictionary(const dictionary*);
+
+        //- Construct dictionary with given parent and list of entries
+        template<class ... Entries>
+        dictionary
+        (
+            const fileName& name,
+            const dictionary& parentDict,
+            const entry& e,
+            const Entries& ... entries
+        );
+
+        //- Construct dictionary as copy, adding list of entries
+        template<class ... Entries>
+        dictionary
+        (
+            const dictionary& dict,
+            const entry& e,
+            const Entries& ... entries
+        );
+
+        //- Construct top-level dictionary with given T entries
+        template<class T1, class T2, class ... KeysAndTs>
+        dictionary
+        (
+            const keyType& k1,
+            const T1& t1,
+            const keyType& k2,
+            const T2& t2,
+            const KeysAndTs& ... keysAndTs
+        );
+
+        //- Construct top-level dictionary with given name and T entries
+        template<class T1, class T2, class ... KeysAndTs>
+        dictionary
+        (
+            const fileName& name,
+            const keyType& k1,
+            const T1& t1,
+            const keyType& k2,
+            const T2& t2,
+            const KeysAndTs& ... keysAndTs
+        );
 
         //- Construct and return clone
         autoPtr<dictionary> clone() const;
@@ -735,6 +764,10 @@ public:
 
             //- Assign a new entry, overwrite any existing entry
             void set(const entry&);
+
+            //- Assign a new entry, overwrite any existing entry
+            template<class ... Entries>
+            void set(const entry& e, const Entries& ... entries);
 
             //- Assign a dictionary entry, overwrite any existing entry
             void set(const keyType&, const dictionary&);

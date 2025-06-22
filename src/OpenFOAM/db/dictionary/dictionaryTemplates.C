@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,37 +49,95 @@ T Foam::dictionary::readType(const word& keyword, ITstream& is) const
 }
 
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-template<class T, class ... KeysAndTs>
-Foam::dictionary::dictionary
-(
-    const keyType& k,
-    const T& t,
-    const KeysAndTs& ... keysAndTs
-)
-:
-    parent_(dictionary::null),
-    filePtr_(nullptr)
+template<class ... Entries>
+void Foam::dictionary::set(const entry& e, const Entries& ... entries)
 {
-    set(k, t, keysAndTs ...);
+    set(e);
+    set(entries ...);
+}
+
+
+template<class T>
+void Foam::dictionary::setKeyT(const keyType& k, const T& t)
+{
+    set(new primitiveEntry(k, t));
 }
 
 
 template<class T, class ... KeysAndTs>
-Foam::dictionary::dictionary
+void Foam::dictionary::setKeyT
 (
-    const fileName& name,
     const keyType& k,
     const T& t,
     const KeysAndTs& ... keysAndTs
 )
-:
-    dictionaryName(name),
-    parent_(dictionary::null),
-    filePtr_(nullptr)
 {
-    set(k, t, keysAndTs ...);
+    set(new primitiveEntry(k, t));
+    setKeyT(keysAndTs ...);
+}
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+template<class ... Entries>
+Foam::dictionary::dictionary
+(
+    const fileName& name,
+    const dictionary& parentDict,
+    const entry& e,
+    const Entries& ... entries
+)
+:
+    dictionary(name, parentDict)
+{
+    set(e, entries ...);
+}
+
+
+template<class ... Entries>
+Foam::dictionary::dictionary
+(
+    const dictionary& dict,
+    const entry& e,
+    const Entries& ... entries
+)
+:
+    dictionary(dict)
+{
+    set(e, entries ...);
+}
+
+
+template<class T1, class T2, class ... KeysAndTs>
+Foam::dictionary::dictionary
+(
+    const keyType& k1,
+    const T1& t1,
+    const keyType& k2,
+    const T2& t2,
+    const KeysAndTs& ... keysAndTs
+)
+:
+    dictionary()
+{
+    setKeyT(k1, t1, k2, t2, keysAndTs ...);
+}
+
+
+template<class T1, class T2, class ... KeysAndTs>
+Foam::dictionary::dictionary
+(
+    const fileName& name,
+    const keyType& k1,
+    const T1& t1,
+    const keyType& k2,
+    const T2& t2,
+    const KeysAndTs& ... keysAndTs
+)
+:
+    dictionary(name)
+{
+    setKeyT(k1, t1, k2, t2, keysAndTs ...);
 }
 
 
@@ -427,7 +485,7 @@ void Foam::dictionary::add(const keyType& k, const T& t, bool overwrite)
 template<class T>
 void Foam::dictionary::set(const keyType& k, const T& t)
 {
-    set(new primitiveEntry(k, t));
+    setKeyT(k, t);
 }
 
 
@@ -439,8 +497,7 @@ void Foam::dictionary::set
     const KeysAndTs& ... keysAndTs
 )
 {
-    set(new primitiveEntry(k, t));
-    set(keysAndTs ...);
+    setKeyT(k, t, keysAndTs ...);
 }
 
 

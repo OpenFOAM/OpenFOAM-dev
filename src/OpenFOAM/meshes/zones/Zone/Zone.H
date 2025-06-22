@@ -35,9 +35,10 @@ SourceFiles
 #ifndef Zone_H
 #define Zone_H
 
-#include "labelList.H"
 #include "className.H"
+#include "labelList.H"
 #include "dictionary.H"
+#include "HashSet.H"
 #include "Map.H"
 #include "pointFieldFwd.H"
 

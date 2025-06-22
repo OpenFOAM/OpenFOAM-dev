@@ -60,22 +60,25 @@ void Foam::zoneGeneratorList::read
                 {
                     // If the type is not specified
                     // assume the zoneGenerator type is the same as the name
-                    dictionary zoneDict(dict, iter().dict());
-                    zoneDict.add
-                    (
-                        primitiveEntry
-                        (
-                            "type",
-                            name,
-                            iter().startLineNumber()
-                        )
-                    );
-
                     this->set
                     (
                         i,
                         name,
-                        zoneGenerator::New(name, mesh_, zoneDict)
+                        zoneGenerator::New
+                        (
+                            name,
+                            mesh_,
+                            dictionary
+                            (
+                                iter().dict(),
+                                primitiveEntry
+                                (
+                                    "type",
+                                    name,
+                                    iter().startLineNumber()
+                                )
+                            )
+                        )
                     );
                 }
                 else
@@ -124,22 +127,26 @@ void Foam::zoneGeneratorList::read
             {
                 // If an empty keyword is present assume it is a zone name
                 // and add a zone lookup
-                dictionary zoneDict(name, dict);
-                zoneDict.add
-                (
-                    primitiveEntry
-                    (
-                        "type",
-                        zoneGenerators::lookup::typeName,
-                        iter().startLineNumber()
-                    )
-                );
-
                 this->set
                 (
                     i,
                     name,
-                    new zoneGenerators::lookup(name, mesh_, zoneDict)
+                    new zoneGenerators::lookup
+                    (
+                        name,
+                        mesh_,
+                        dictionary
+                        (
+                            name,
+                            dict,
+                            primitiveEntry
+                            (
+                                "type",
+                                zoneGenerators::lookup::typeName,
+                                iter().startLineNumber()
+                            )
+                        )
+                    )
                 );
             }
 
@@ -204,19 +211,26 @@ Foam::zoneGeneratorList::zoneGeneratorList
         {
             ITstream& zoneStream(dict.lookup(zoneName));
             const word name(zoneStream);
-
-            dictionary zoneDict(name, dict);
-            zoneDict.add
+            append
             (
-                primitiveEntry
+                name,
+                new zoneGenerators::lookup
                 (
-                    "type",
-                    zoneGenerators::lookup::typeName,
-                    zoneStream.lineNumber()
+                    name,
+                    mesh,
+                    dictionary
+                    (
+                        name,
+                        dict,
+                        primitiveEntry
+                        (
+                            "type",
+                            zoneGenerators::lookup::typeName,
+                            zoneStream.lineNumber()
+                        )
+                    )
                 )
             );
-
-            append(name, new zoneGenerators::lookup(name, mesh, zoneDict));
         }
     }
     else if (dict.found(zonesName))
