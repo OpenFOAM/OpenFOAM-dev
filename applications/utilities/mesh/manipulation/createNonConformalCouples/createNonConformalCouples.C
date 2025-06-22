@@ -585,6 +585,7 @@ int main(int argc, char *argv[])
 
             dictionary patchDict
             (
+                fileName("patchDict"),
                 "type", couple.ncPatchType,
                 "nFaces", 0,
                 "startFace", regionFirstProcFaceis[regioni],
