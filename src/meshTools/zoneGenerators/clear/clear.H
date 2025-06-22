@@ -40,8 +40,9 @@ Usage
             type        clear;
         }
     \endverbatim
-    When called from the zoneGenerators file which is the most likely use
-    the simpler syntax to clear all the zones can be used:
+    When called from the top-level of the createZonesDict or zonesGenerator
+    files which is the most likely use the simpler syntax to clear all the zones
+    can be used:
     \verbatim
         clear;
     \endverbatim

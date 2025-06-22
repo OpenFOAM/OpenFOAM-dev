@@ -50,6 +50,16 @@ Usage
             cellZones   (cone1 coneAnnulus);
         }
     \endverbatim
+    When called from the top-level of the createZonesDict or zonesGenerator
+    files which is the most likely use the simpler syntax to remove zones
+    can be used:
+    \verbatim
+        remove
+        {
+            cellZones   (cone1 coneAnnulus);
+        }
+    \endverbatim
+
 
 See also
     zoneGenerators::clear

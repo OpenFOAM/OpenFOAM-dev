@@ -50,8 +50,9 @@ Usage
             zoneType    cell;
         }
     \endverbatim
-    When called from the zoneGenerators file which is the most likely use
-    the simpler syntax to write all the zones that are changing can be used:
+    When called from the top-level of the createZonesDict or zonesGenerator
+    files which is the most likely use the simpler syntax to write all the zones
+    that are changing can be used:
     \verbatim
         write;
     \endverbatim
