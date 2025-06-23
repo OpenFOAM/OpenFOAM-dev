@@ -54,6 +54,9 @@ flipNormals false;
 //- Linear extrusion in specified direction
 //extrudeModel        linearDirection;
 
+//- Linear extrusion along an arbitrary path specified as an edgeMesh
+//extrudeModel        path;
+
 //- Sector extrusion
 //extrudeModel        sector;
 
@@ -90,6 +93,11 @@ linearDirectionCoeffs
 {
     direction       (0 1 0);
     thickness       0.05;
+}
+
+pathCoeffs
+{
+    path            "constant/geometry/curve.obj";
 }
 
 linearRadialCoeffs
