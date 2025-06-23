@@ -106,7 +106,7 @@ public:
     // Constructors
 
         //- Construct from keyword and optional line number
-        entry(const keyType& keyword, const label lineNumber=-1);
+        explicit entry(const keyType& keyword, const label lineNumber=-1);
 
         //- Copy constructor
         entry(const entry&);
