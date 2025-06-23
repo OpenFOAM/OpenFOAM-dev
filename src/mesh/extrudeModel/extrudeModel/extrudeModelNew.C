@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,15 @@ Foam::autoPtr<Foam::extrudeModel> Foam::extrudeModel::New
     const dictionary& dict
 )
 {
-    const word modelType(dict.lookup("extrudeModel"));
+    const dictionary& modelDict =
+        dict.isDict("extrudeModel")
+      ? dict.subDict("extrudeModel")
+      : dict;
+
+    const word modelType
+    (
+        modelDict.lookupBackwardsCompatible({"type", "extrudeModel"})
+    );
 
     Info<< "Selecting extrudeModel " << modelType << endl;
 
@@ -49,7 +57,7 @@ Foam::autoPtr<Foam::extrudeModel> Foam::extrudeModel::New
             << exit(FatalIOError);
     }
 
-    return autoPtr<extrudeModel>(cstrIter()(dict));
+    return autoPtr<extrudeModel>(cstrIter()(modelDict));
 }
 
 

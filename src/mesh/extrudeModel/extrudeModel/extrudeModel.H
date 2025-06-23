@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,9 +59,12 @@ protected:
 
         const scalar expansionRatio_;
 
-        const dictionary& dict_;
 
-        const dictionary& coeffDict_;
+    // Protected Member Functions
+
+        //- Backward compatibility function
+        // to return the model Coeffs dictionary
+        const dictionary& coeffDict(const dictionary& dict) const;
 
 
 public:
@@ -86,7 +89,7 @@ public:
     // Constructors
 
         //- Construct from dictionary
-        extrudeModel(const word& modelType, const dictionary&);
+        extrudeModel(const dictionary&);
 
         //- Disallow default bitwise copy construction
         extrudeModel(const extrudeModel&) = delete;
@@ -104,11 +107,11 @@ public:
 
     // Member Functions
 
-        // Access
+        //- Return the number of layers in the extrusion
+        label nLayers() const;
 
-            label nLayers() const;
-
-            scalar expansionRatio() const;
+        //- Return the extrusion expansion ratio
+        scalar expansionRatio() const;
 
 
     // Member Operators

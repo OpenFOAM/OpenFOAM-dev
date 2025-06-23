@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "path.H"
+#include "edgeMesh.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -87,8 +88,8 @@ Foam::tensor Foam::extrudeModels::path::orthonormalBasis
 
 Foam::extrudeModels::path::path(const dictionary& dict)
 :
-    extrudeModel(typeName, dict),
-    eMeshPtr_(edgeMesh::New(coeffDict_.lookup("path"))),
+    extrudeModel(dict),
+    eMeshPtr_(edgeMesh::New(dict.lookup("path"))),
     distances_(eMeshPtr_->points().size(), scalar(0)),
     directions_(distances_.size()),
     normals_(directions_.size()),

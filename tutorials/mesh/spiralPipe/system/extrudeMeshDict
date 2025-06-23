@@ -23,10 +23,13 @@ flipNormals     false;
 
 mergeFaces      false;
 
-extrudeModel    path;
+extrudeModel
+{
+    type            path;
 
-path            "constant/geometry/curve.obj";
+    path            "constant/geometry/curve.obj";
 
-nLayers         500;
+    nLayers         500;
+}
 
 // ************************************************************************* //

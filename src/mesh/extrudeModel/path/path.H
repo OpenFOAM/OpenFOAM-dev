@@ -41,13 +41,15 @@ Description
 #define path_extrudeModel_H
 
 #include "extrudeModel.H"
-#include "edgeMesh.H"
 #include "pointField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+
+class edgeMesh;
+
 namespace extrudeModels
 {
 

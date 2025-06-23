@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,8 +44,8 @@ addToRunTimeSelectionTable(extrudeModel, linearNormal, dictionary);
 
 linearNormal::linearNormal(const dictionary& dict)
 :
-    extrudeModel(typeName, dict),
-    thickness_(coeffDict_.lookup<scalar>("thickness")),
+    extrudeModel(dict),
+    thickness_(coeffDict(dict).lookup<scalar>("thickness")),
     firstCellThickness_(0),
     layerPoints_(nLayers_)
 {
@@ -56,7 +56,7 @@ linearNormal::linearNormal(const dictionary& dict)
             << exit(FatalError);
     }
 
-    coeffDict_.readIfPresent("firstCellThickness", firstCellThickness_);
+    coeffDict(dict).readIfPresent("firstCellThickness", firstCellThickness_);
 
     if (firstCellThickness_ >= thickness_)
     {

@@ -28,14 +28,12 @@ regionPatchNames   (wall);
 regionOppositePatchTypes    (empty);
 regionOppositePatchNames    (empty);
 
-extrudeModel    linearNormal;
-
-nLayers         1;
-
-expansionRatio  1;
-
-linearNormalCoeffs
+extrudeModel
 {
+    type            linearNormal;
+
+    nLayers         1;
+    expansionRatio  1;
     thickness       0.01;
 }
 

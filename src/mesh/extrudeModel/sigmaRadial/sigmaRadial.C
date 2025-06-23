@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,10 +44,10 @@ addToRunTimeSelectionTable(extrudeModel, sigmaRadial, dictionary);
 
 sigmaRadial::sigmaRadial(const dictionary& dict)
 :
-    extrudeModel(typeName, dict),
-    RTbyg_(coeffDict_.lookup<scalar>("RTbyg")),
-    pRef_(coeffDict_.lookup<scalar>("pRef")),
-    pStrat_(coeffDict_.lookup<scalar>("pStrat"))
+    extrudeModel(dict),
+    RTbyg_(coeffDict(dict).lookup<scalar>("RTbyg")),
+    pRef_(coeffDict(dict).lookup<scalar>("pRef")),
+    pStrat_(coeffDict(dict).lookup<scalar>("pStrat"))
 {
     if (mag(expansionRatio() - 1.0) > small)
     {
