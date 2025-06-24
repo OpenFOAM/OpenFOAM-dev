@@ -2286,6 +2286,11 @@ bool Foam::fvMeshStitcher::disconnect
     // Don't do anything if we are already disconnected
     if (mesh_.conformal()) return false;
 
+    if (!changing)
+    {
+        return disconnectThis(changing, geometric);
+    }
+
     // Get all the connected region meshes
     MultiRegionUList<fvMesh> regionMeshes(this->regionMeshes());
 
