@@ -643,6 +643,7 @@ int main(int argc, char *argv[])
 
         layerExtrude.setRefinement
         (
+            mesh,
             globalFaces,
             edgeGlobalFaces,
 

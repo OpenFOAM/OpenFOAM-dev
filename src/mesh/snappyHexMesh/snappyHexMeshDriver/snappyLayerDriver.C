@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -3077,6 +3077,7 @@ void Foam::snappyLayerDriver::addLayers
     // Current set of topology changes. (changing mesh clears out
     // polyTopoChange)
     polyTopoChange savedMeshMod(mesh.boundaryMesh().size());
+    addPatchCellLayer savedAddLayer(mesh);
     // Per cell 0 or number of layers in the cell column it is part of
     labelList cellNLayers;
     // Per face actual overall layer thickness
@@ -3304,6 +3305,7 @@ void Foam::snappyLayerDriver::addLayers
             // Not add layer if patchDisp is zero.
             addLayer.setRefinement
             (
+                mesh,
                 globalFaces,
                 edgeGlobalFaces,
 
@@ -3325,6 +3327,7 @@ void Foam::snappyLayerDriver::addLayers
 
             // Store mesh changes for if mesh is correct.
             savedMeshMod = meshMod;
+            savedAddLayer = addLayer;
 
 
             // With the stored topo changes we create a new mesh so we can
@@ -3497,6 +3500,9 @@ void Foam::snappyLayerDriver::addLayers
 
     // Apply the stored topo changes to the current mesh.
     autoPtr<polyTopoChangeMap> map = savedMeshMod.changeMesh(mesh);
+
+    // Update the zones
+    savedAddLayer.updateZones(mesh);
 
     // Update fields
     mesh.topoChange(map);
