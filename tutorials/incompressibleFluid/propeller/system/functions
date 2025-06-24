@@ -20,7 +20,7 @@ FoamFile
 //writeInterval   1;
 
 #includeFunc Q
-#include "surfaces"
-#include "forces"
+#includeFunc surfaces
+#includeFunc forces
 
 // ************************************************************************* //

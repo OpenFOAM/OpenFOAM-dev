@@ -6,30 +6,30 @@
      \\/     M anipulation  |
 \*---------------------------------------------------------------------------*/
 
-cutPlane
-{
-    type            surfaces;
-    libs            ("libsampling.so");
-    writeControl    writeTime;
+type            surfaces;
+libs            ("libsampling.so");
 
-    surfaceFormat   vtk;
-    writeFormat     binary;
-    fields          (p U);
+writeControl    writeTime;
 
-    interpolationScheme cellPoint;
+surfaceFormat   vtk;
 
-    surfaces
-    (
-        yNormal
-        {
-            type            cutPlane;
-            planeType       pointAndNormal;
-            point           (0 0 0);
-            normal          (0 1 0);
-            interpolate     true;
-        }
-    );
-}
+writeFormat     binary;
+
+fields          (p U);
+
+interpolationScheme cellPoint;
+
+surfaces
+(
+    yNormal
+    {
+        type            cutPlane;
+        planeType       pointAndNormal;
+        point           (0 0 0);
+        normal          (0 1 0);
+        interpolate     true;
+    }
+);
 
 
 // ************************************************************************* //

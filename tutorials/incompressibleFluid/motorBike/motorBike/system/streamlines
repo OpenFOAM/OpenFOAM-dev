@@ -6,41 +6,37 @@
      \\/     M anipulation  |
 \*---------------------------------------------------------------------------*/
 
-streamlines
+type            streamlines;
+libs            ("libfieldFunctionObjects.so");
+
+// Output every
+writeControl    writeTime;
+
+// Write format
+setFormat       vtk;
+
+// Track forward (+U) or backward (-U) or both
+direction       forward;
+
+// Names of fields to sample. Should contain above velocity field!
+fields          (p U);
+
+// Steps particles can travel before being removed
+lifeTime        10000;
+
+// Number of steps per cell (estimate). Set to 1 to disable subcycling.
+nSubCycle       5;
+
+// Cloud name to use
+cloudName       particleTracks;
+
+// Seeding method.
+seedSampleSet
 {
-    type            streamlines;
-
-    libs            ("libfieldFunctionObjects.so");
-
-    // Output every
-    writeControl    writeTime;
-
-    // Write format
-    setFormat       vtk;
-
-    // Track forward (+U) or backward (-U) or both
-    direction       forward;
-
-    // Names of fields to sample. Should contain above velocity field!
-    fields (p U);
-
-    // Steps particles can travel before being removed
-    lifeTime        10000;
-
-    // Number of steps per cell (estimate). Set to 1 to disable subcycling.
-    nSubCycle 5;
-
-    // Cloud name to use
-    cloudName       particleTracks;
-
-    // Seeding method.
-    seedSampleSet
-    {
-        type        lineUniform;
-        start       (-1.001 1e-7 0.0011);
-        end         (-1.001 1e-7 1.0011);
-        nPoints     20;
-    }
+    type        lineUniform;
+    start       (-1.001 1e-7 0.0011);
+    end         (-1.001 1e-7 1.0011);
+    nPoints     20;
 }
 
 

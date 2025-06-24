@@ -6,45 +6,45 @@
      \\/     M anipulation  |
 \*---------------------------------------------------------------------------*/
 
+type            surfaces;
+libs            ("libsampling.so");
+
+writeControl    writeTime;
+
+surfaceFormat   vtk;
+
+writeFormat     binary;
+
+fields          (p U Q);
+
+interpolationScheme cellPoint;
+
 surfaces
-{
-    type            surfaces;
-    libs            ("libsampling.so");
-    writeControl    writeTime;
+(
+    zNormal
+    {
+        type            cutPlane;
+        planeType       pointAndNormal;
+        point           (0 0 0);
+        normal          (0 0 1);
+        interpolate     true;
+    }
 
-    surfaceFormat   vtk;
-    writeFormat     binary;
-    fields          (p U Q);
+    isoQ
+    {
+        type            isoSurface;
+        isoField        Q;
+        isoValue        1000;
+        interpolate     true;
+    }
 
-    interpolationScheme cellPoint;
-
-    surfaces
-    (
-        zNormal
-        {
-            type            cutPlane;
-            planeType       pointAndNormal;
-            point           (0 0 0);
-            normal          (0 0 1);
-            interpolate     true;
-        }
-
-        isoQ
-        {
-            type            isoSurface;
-            isoField        Q;
-            isoValue        1000;
-            interpolate     true;
-        }
-
-        propeller
-        {
-            type            patch;
-            patches         ("propeller.*");
-            interpolate     true;
-        }
-    );
-}
+    propeller
+    {
+        type            patch;
+        patches         ("propeller.*");
+        interpolate     true;
+    }
+);
 
 
 // ************************************************************************* //
