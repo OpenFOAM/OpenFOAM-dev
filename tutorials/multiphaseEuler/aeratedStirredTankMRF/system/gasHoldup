@@ -1,0 +1,70 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Computes dispersed gas holdup from the gas phase fraction field, excluding
+    regions above a given threshold, e.g. regions where the gas is segregated.
+
+\*---------------------------------------------------------------------------*/
+
+libs            ("libutilityFunctionObjects.so");
+type            coded;
+
+alphaTreshold   0.5;
+
+codeInclude
+#{
+    #include "OFstream.H"
+    #include "OSspecific.H"
+#};
+
+codeData
+#{
+    autoPtr<OFstream> file;
+#};
+
+codeRead
+#{
+    fileName dir
+    (
+        mesh().time().globalPath()/
+        "postProcessing"/
+        name()/
+        mesh().time().name()
+    );
+
+    mkDir(dir);
+    file = new OFstream(dir/"gasHoldup.dat");
+
+    file()<< "# Time" << tab << "gasHoldup" << tab << "gasHoldupMean" << endl;
+#};
+
+codeFields
+#{
+    fields.append("alpha.gas");
+    fields.append("alphaMean.gas");
+#};
+
+codeWrite
+#{
+    scalar alphaTreshold = $alphaTreshold;
+
+    const volScalarField& alpha =
+        mesh().lookupObject<volScalarField>("alpha.gas");
+
+    const scalarField& V = mesh().V();
+
+    const scalar gasHoldup
+    (
+        gSum(neg(alpha - alphaTreshold)*alpha*V)
+       /gSum(neg(alpha - alphaTreshold)*V)
+    );
+
+    file() << mesh().time().userTimeValue() << tab << gasHoldup << endl;
+#};
+
+// ************************************************************************* //

@@ -1,0 +1,44 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      functions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#includeFunc fieldAverage
+(
+    alpha.gas,
+    U.gas,
+    U.liquid
+)
+
+#includeFunc gasHoldup
+
+#includeFunc patchFlowRate
+(
+    name=inletGasFlow,
+    field=alphaPhi.gas,
+    patch=inlet,
+    writeControl=timeStep,
+    writeInterval=10
+)
+
+#includeFunc patchFlowRate
+(
+    name=outletGasFlow,
+    field=alphaPhi.gas,
+    patch=outlet,
+    writeControl=timeStep,
+    writeInterval=10
+)
+
+// ************************************************************************* //

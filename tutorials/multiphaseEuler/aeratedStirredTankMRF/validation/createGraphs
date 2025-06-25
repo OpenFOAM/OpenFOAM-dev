@@ -1,0 +1,36 @@
+#!/bin/sh
+
+if ! which gnuplot > /dev/null 2>&1
+then
+    echo "gnuplot not found - skipping graph creation" >&2
+    exit 1
+fi
+
+gnuplot<<EOF
+
+set term pngcairo
+set grid
+set key right top box
+
+#\*-------------------------------Gas holdup---------------------------------*/
+
+unset logscale
+unset format
+set title 'Gas holdup'
+set output '../gasHoldup.png'
+set xlabel 't (s)'
+set ylabel '<~{/Symbol \a }{.6—} ~_G{.6—}  > (-)'
+
+plot '../postProcessing/gasHoldup/0/gasHoldup.dat' u 1:2 w l notitle
+
+#\*-------------------------------Flow rates---------------------------------*/
+
+set title 'Flow rate'
+set output '../flowRates.png'
+set xlabel 't (s)'
+set ylabel 'Flow rate (m^3/s)'
+
+plot '../postProcessing/inletGasFlow/0/surfaceFieldValue.dat' u 1:2 w l t 'Gas inlet',\
+     '../postProcessing/outletGasFlow/0/surfaceFieldValue.dat' u 1:2 w l t 'Gas outlet'
+
+EOF
