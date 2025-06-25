@@ -13,6 +13,8 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
+cellZone        all;         // Cells to include in the plot
+
 direction       <direction>; // Direction along which to graph
 
 //distance      <fieldName>; // Name of the distance field. Contours of this

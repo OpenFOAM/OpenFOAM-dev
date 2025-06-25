@@ -402,9 +402,9 @@ Foam::List<Foam::functionObjects::cutLayerAverage::weight>
 Foam::functionObjects::cutLayerAverage::calcNonInterpolatingWeights
 (
     const scalarField& pointXs,
-    const scalarField& cellMinXs,
-    const scalarField& cellMaxXs,
-    const labelList& cellMinOrder,
+    const scalarField& zoneCellMinXs,
+    const scalarField& zoneCellMaxXs,
+    const labelList& zoneCellMinOrder,
     const scalarField& plotXs,
     const bool normalise
 ) const
@@ -422,16 +422,16 @@ Foam::functionObjects::cutLayerAverage::calcNonInterpolatingWeights
     label nActiveLayers = 0;
     {
         label layeri = 0;
-        forAll(cellMinOrder, cellMinOrderi)
+        forAll(zoneCellMinOrder, zoneCellMinOrderi)
         {
-            const label celli = cellMinOrder[cellMinOrderi];
+            const label zoneCelli = zoneCellMinOrder[zoneCellMinOrderi];
 
             // Find the next relevant layer
-            while (cellMinXs[celli] > plotXs[layeri + 1]) layeri ++;
+            while (zoneCellMinXs[zoneCelli] > plotXs[layeri + 1]) layeri ++;
 
             // Find the first irrelevant layer
             label layerj = layeri;
-            while (cellMaxXs[celli] > plotXs[layerj]) layerj ++;
+            while (zoneCellMaxXs[zoneCelli] > plotXs[layerj]) layerj ++;
 
             nActiveLayers = max(nActiveLayers, layerj - layeri);
         }
@@ -441,15 +441,16 @@ Foam::functionObjects::cutLayerAverage::calcNonInterpolatingWeights
     faceCutData fcd(mesh_, nActiveLayers, pointXs, plotXs);
 
     // Generate weights for each cell in turn
-    DynamicList<weight> dynWeights(cells.size()*2);
+    DynamicList<weight> dynWeights(zone_.nCells()*2);
     label layeri = 0;
-    forAll(cellMinOrder, cellMinOrderi)
+    forAll(zoneCellMinOrder, zoneCellMinOrderi)
     {
-        const label celli = cellMinOrder[cellMinOrderi];
+        const label zoneCelli = zoneCellMinOrder[zoneCellMinOrderi];
+        const label celli = zone_.celli(zoneCelli);
 
         // Find the next relevant layer and remove all data relating to
         // layers now behind the spans of the remaining cells
-        while (cellMinXs[celli] > plotXs[layeri + 1])
+        while (zoneCellMinXs[zoneCelli] > plotXs[layeri + 1])
         {
             fcd.clear(layeri);
             layeri ++;
@@ -457,7 +458,7 @@ Foam::functionObjects::cutLayerAverage::calcNonInterpolatingWeights
 
         // Loop over all relevant layer intervals
         label layerj = layeri;
-        while (cellMaxXs[celli] > plotXs[layerj])
+        while (zoneCellMaxXs[zoneCelli] > plotXs[layerj])
         {
             // Compute the face data as necessary
             fcd.cache(celli, layerj);
@@ -467,7 +468,7 @@ Foam::functionObjects::cutLayerAverage::calcNonInterpolatingWeights
             dynWeights.append({celli, layerj, cellVolumes[celli]});
 
             // Left interval
-            if (cellMinXs[celli] < plotXs[layerj])
+            if (zoneCellMinXs[zoneCelli] < plotXs[layerj])
             {
                 dynWeights.last().value -=
                     cutPoly::cellCutVolume
@@ -496,7 +497,7 @@ Foam::functionObjects::cutLayerAverage::calcNonInterpolatingWeights
             }
 
             // Right interval
-            if (cellMaxXs[celli] > plotXs[layerj + 1])
+            if (zoneCellMaxXs[zoneCelli] > plotXs[layerj + 1])
             {
                 dynWeights.last().value -=
                     cutPoly::cellCutVolume
@@ -559,9 +560,9 @@ Foam::List<Foam::functionObjects::cutLayerAverage::weight>
 Foam::functionObjects::cutLayerAverage::calcInterpolatingWeights
 (
     const scalarField& pointXs,
-    const scalarField& cellMinXs,
-    const scalarField& cellMaxXs,
-    const labelList& cellMinOrder,
+    const scalarField& zoneCellMinXs,
+    const scalarField& zoneCellMaxXs,
+    const labelList& zoneCellMinOrder,
     const scalarField& plotXs,
     const bool normalise
 ) const
@@ -579,16 +580,22 @@ Foam::functionObjects::cutLayerAverage::calcInterpolatingWeights
     label nActiveLayers = 0;
     {
         label layeri = 0;
-        forAll(cellMinOrder, cellMinOrderi)
+        forAll(zoneCellMinOrder, zoneCellMinOrderi)
         {
-            const label celli = cellMinOrder[cellMinOrderi];
+            const label zoneCelli = zoneCellMinOrder[zoneCellMinOrderi];
 
             // Find the next relevant layer
-            while (cellMinXs[celli] > plotXs[layeri + 1]) layeri ++;
+            while (zoneCellMinXs[zoneCelli] > plotXs[layeri + 1])
+            {
+                layeri ++;
+            }
 
             // Find the first irrelevant layer
             label layerj = layeri;
-            while (cellMaxXs[celli] > plotXs[max(layerj - 1, 0)]) layerj ++;
+            while (zoneCellMaxXs[zoneCelli] > plotXs[max(layerj - 1, 0)])
+            {
+                layerj ++;
+            }
 
             nActiveLayers = max(nActiveLayers, layerj - layeri + 1);
         }
@@ -599,15 +606,16 @@ Foam::functionObjects::cutLayerAverage::calcInterpolatingWeights
     faceFsData ffs(fcd, mesh_, nActiveLayers, pointXs, plotXs);
 
     // Generate weights for each cell in turn
-    DynamicList<weight> dynWeights(cells.size()*2);
+    DynamicList<weight> dynWeights(zone_.nCells()*2);
     label layeri = 0;
-    forAll(cellMinOrder, cellMinOrderi)
+    forAll(zoneCellMinOrder, zoneCellMinOrderi)
     {
-        const label celli = cellMinOrder[cellMinOrderi];
+        const label zoneCelli = zoneCellMinOrder[zoneCellMinOrderi];
+        const label celli = zone_.celli(zoneCelli);
 
         // Find the next relevant layer and remove all data relating to
         // layers now behind the spans of the remaining cells
-        while (cellMinXs[celli] > plotXs[layeri + 1])
+        while (zoneCellMinXs[zoneCelli] > plotXs[layeri + 1])
         {
             if (layeri != 0) fcd.clear(layeri - 1);
             ffs.clear(layeri);
@@ -616,7 +624,7 @@ Foam::functionObjects::cutLayerAverage::calcInterpolatingWeights
 
         // Loop over all relevant layers
         label layerj = layeri;
-        while (cellMaxXs[celli] > plotXs[max(layerj - 1, 0)])
+        while (zoneCellMaxXs[zoneCelli] > plotXs[max(layerj - 1, 0)])
         {
             // Compute the connected face data as necessary
             if (layerj != 0) fcd.cache(celli, layerj - 1);
@@ -643,7 +651,11 @@ Foam::functionObjects::cutLayerAverage::calcInterpolatingWeights
                 );
 
             // Left interval
-            if (layerj > 0 && cellMinXs[celli] < plotXs[layerj])
+            if
+            (
+                layerj > 0
+             && zoneCellMinXs[zoneCelli] < plotXs[layerj]
+            )
             {
                 const scalar cellVF =
                     cutPoly::cellVolumeIntegral
@@ -659,7 +671,7 @@ Foam::functionObjects::cutLayerAverage::calcInterpolatingWeights
                 dynWeights.last().value += cellVF;
 
                 // Cut off anything before the left point
-                if (cellMinXs[celli] < plotXs[layerj - 1])
+                if (zoneCellMinXs[zoneCelli] < plotXs[layerj - 1])
                 {
                     dynWeights.last().value -=
                         cutPoly::cellCutVolumeIntegral
@@ -692,7 +704,7 @@ Foam::functionObjects::cutLayerAverage::calcInterpolatingWeights
                 }
 
                 // Cut off anything after the middle point
-                if (cellMaxXs[celli] > plotXs[layerj])
+                if (zoneCellMaxXs[zoneCelli] > plotXs[layerj])
                 {
                     dynWeights.last().value -=
                         cutPoly::cellCutVolumeIntegral
@@ -718,7 +730,11 @@ Foam::functionObjects::cutLayerAverage::calcInterpolatingWeights
             }
 
             // Right interval
-            if (layerj < nLayers_ - 1 && cellMaxXs[celli] > plotXs[layerj])
+            if
+            (
+                layerj < nLayers_ - 1
+             && zoneCellMaxXs[zoneCelli] > plotXs[layerj]
+            )
             {
                 const scalar cellVF =
                     cutPoly::cellVolumeIntegral
@@ -734,7 +750,7 @@ Foam::functionObjects::cutLayerAverage::calcInterpolatingWeights
                 dynWeights.last().value += cellVF;
 
                 // Cut off anything before the middle point
-                if (cellMinXs[celli] < plotXs[layerj])
+                if (zoneCellMinXs[zoneCelli] < plotXs[layerj])
                 {
                     dynWeights.last().value -=
                         cutPoly::cellCutVolumeIntegral
@@ -759,7 +775,7 @@ Foam::functionObjects::cutLayerAverage::calcInterpolatingWeights
                 }
 
                 // Cut off anything after the right point
-                if (cellMaxXs[celli] > plotXs[layerj + 1])
+                if (zoneCellMaxXs[zoneCelli] > plotXs[layerj + 1])
                 {
                     dynWeights.last().value -=
                         cutPoly::cellCutVolumeIntegral
@@ -843,9 +859,9 @@ Foam::List<Foam::functionObjects::cutLayerAverage::weight>
 Foam::functionObjects::cutLayerAverage::calcWeights
 (
     const scalarField& pointXs,
-    const scalarField& cellMinXs,
-    const scalarField& cellMaxXs,
-    const labelList& cellMinOrder,
+    const scalarField& zoneCellMinXs,
+    const scalarField& zoneCellMaxXs,
+    const labelList& zoneCellMinOrder,
     const scalarField& plotXs,
     const bool normalise
 ) const
@@ -855,18 +871,18 @@ Foam::functionObjects::cutLayerAverage::calcWeights
       ? calcInterpolatingWeights
         (
             pointXs,
-            cellMinXs,
-            cellMaxXs,
-            cellMinOrder,
+            zoneCellMinXs,
+            zoneCellMaxXs,
+            zoneCellMinOrder,
             plotXs,
             normalise
         )
       : calcNonInterpolatingWeights
         (
             pointXs,
-            cellMinXs,
-            cellMaxXs,
-            cellMinOrder,
+            zoneCellMinXs,
+            zoneCellMaxXs,
+            zoneCellMinOrder,
             plotXs,
             normalise
         );
@@ -904,25 +920,28 @@ void Foam::functionObjects::cutLayerAverage::calcWeights()
     const scalarField& pointXs = tpointXs();
 
     // Determine face min and max coordinates
-    scalarField cellMinXs(cells.size(), vGreat);
-    scalarField cellMaxXs(cells.size(), -vGreat);
-    forAll(cells, celli)
+    scalarField zoneCellMinXs(zone_.nCells(), vGreat);
+    scalarField zoneCellMaxXs(zone_.nCells(), -vGreat);
+    forAll(zoneCellMinXs, zoneCelli)
     {
+        const label celli = zone_.celli(zoneCelli);
         forAll(cells[celli], cellFacei)
         {
             const label facei = cells[celli][cellFacei];
             forAll(faces[facei], facePointi)
             {
                 const label pointi = faces[facei][facePointi];
-                cellMinXs[celli] = min(cellMinXs[celli], pointXs[pointi]);
-                cellMaxXs[celli] = max(cellMaxXs[celli], pointXs[pointi]);
+                zoneCellMinXs[zoneCelli] =
+                    min(zoneCellMinXs[zoneCelli], pointXs[pointi]);
+                zoneCellMaxXs[zoneCelli] =
+                    max(zoneCellMaxXs[zoneCelli], pointXs[pointi]);
             }
         }
     }
 
     // Create orderings of the cells based on their min and max coordinates
-    labelList cellMinOrder(cells.size());
-    sortedOrder(cellMinXs, cellMinOrder);
+    labelList zoneCellMinOrder(zone_.nCells());
+    sortedOrder(zoneCellMinXs, zoneCellMinOrder);
 
     // Assume equal spacing to begin with
     const scalar xMin = gMin(pointXs), xMax = gMax(pointXs);
@@ -948,9 +967,9 @@ void Foam::functionObjects::cutLayerAverage::calcWeights()
             calcWeights
             (
                 pointXs,
-                cellMinXs,
-                cellMaxXs,
-                cellMinOrder,
+                zoneCellMinXs,
+                zoneCellMaxXs,
+                zoneCellMinOrder,
                 plotXs,
                 false
             );
@@ -1059,9 +1078,9 @@ void Foam::functionObjects::cutLayerAverage::calcWeights()
             calcWeights
             (
                 pointXs,
-                cellMinXs,
-                cellMaxXs,
-                cellMinOrder,
+                zoneCellMinXs,
+                zoneCellMaxXs,
+                zoneCellMinOrder,
                 plotXs,
                 true
             )
@@ -1093,9 +1112,9 @@ void Foam::functionObjects::cutLayerAverage::calcWeights()
             calcWeights
             (
                 pointXs,
-                cellMinXs,
-                cellMaxXs,
-                cellMinOrder,
+                zoneCellMinXs,
+                zoneCellMaxXs,
+                zoneCellMinOrder,
                 plotXs,
                 false
             );
@@ -1168,7 +1187,8 @@ Foam::functionObjects::cutLayerAverage::cutLayerAverage
     const dictionary& dict
 )
 :
-    fvMeshFunctionObject(name, runTime, dict)
+    fvMeshFunctionObject(name, runTime, dict),
+    zone_(mesh())
 {
     read(dict);
 }
@@ -1184,6 +1204,8 @@ Foam::functionObjects::cutLayerAverage::~cutLayerAverage()
 
 bool Foam::functionObjects::cutLayerAverage::read(const dictionary& dict)
 {
+    zone_.read(dict);
+
     const bool haveDirection = dict.found("direction");
     const bool haveDistance = dict.found("distance");
     if (haveDirection == haveDistance)
@@ -1353,6 +1375,7 @@ void Foam::functionObjects::cutLayerAverage::movePoints
 {
     if (&mesh == &mesh_)
     {
+        zone_.movePoints();
         clear();
     }
 }
@@ -1365,6 +1388,7 @@ void Foam::functionObjects::cutLayerAverage::topoChange
 {
     if (&map.mesh() == &mesh_)
     {
+        zone_.topoChange(map);
         clear();
     }
 }
@@ -1377,6 +1401,7 @@ void Foam::functionObjects::cutLayerAverage::mapMesh
 {
     if (&map.mesh() == &mesh_)
     {
+        zone_.mapMesh(map);
         clear();
     }
 }
@@ -1389,6 +1414,7 @@ void Foam::functionObjects::cutLayerAverage::distribute
 {
     if (&map.mesh() == &mesh_)
     {
+        zone_.distribute(map);
         clear();
     }
 }

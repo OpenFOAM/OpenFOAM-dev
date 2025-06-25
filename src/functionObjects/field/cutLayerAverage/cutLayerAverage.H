@@ -60,7 +60,8 @@ Description
 Usage
     \table
         Property    | Description                  | Required | Default value
-        type        | type name: cutLayerAverage   | yes   |
+        type        | type name: cutLayerAverage   | yes      |
+        cellZone    | The name of the cell zone    | yes      |
         direction   | Axis along which to plot    | if distance not specified |
         distance    | Distance field along which to plot \\
                                                  | if direction not specified |
@@ -84,6 +85,7 @@ SourceFiles
 
 #include "fvMeshFunctionObject.H"
 #include "volFieldsFwd.H"
+#include "generatedCellZone.H"
 #include "setWriter.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -115,6 +117,9 @@ class cutLayerAverage
 
 
     // Private Data
+
+        //- The set of cells to average
+        generatedCellZone zone_;
 
         //- Direction along which to plot
         vector direction_;
@@ -165,9 +170,9 @@ class cutLayerAverage
         List<weight> calcNonInterpolatingWeights
         (
             const scalarField& pointXs,
-            const scalarField& cellMinXs,
-            const scalarField& cellMaxXs,
-            const labelList& cellMinOrder,
+            const scalarField& zoneCellMinXs,
+            const scalarField& zoneCellMaxXs,
+            const labelList& zoneCellMinOrder,
             const scalarField& plotXs,
             const bool normalise = true
         ) const;
@@ -176,9 +181,9 @@ class cutLayerAverage
         List<weight> calcInterpolatingWeights
         (
             const scalarField& pointXs,
-            const scalarField& cellMinXs,
-            const scalarField& cellMaxXs,
-            const labelList& cellMinOrder,
+            const scalarField& zoneCellMinXs,
+            const scalarField& zoneCellMaxXs,
+            const labelList& zoneCellMinOrder,
             const scalarField& plotXs,
             const bool normalise = true
         ) const;
@@ -187,9 +192,9 @@ class cutLayerAverage
         List<weight> calcWeights
         (
             const scalarField& pointXs,
-            const scalarField& cellMinXs,
-            const scalarField& cellMaxXs,
-            const labelList& cellMinOrder,
+            const scalarField& zoneCellMinXs,
+            const scalarField& zoneCellMaxXs,
+            const labelList& zoneCellMinOrder,
             const scalarField& plotXs,
             const bool normalise = true
         ) const;
