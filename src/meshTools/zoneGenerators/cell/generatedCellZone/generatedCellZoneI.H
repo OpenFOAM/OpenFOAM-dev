@@ -33,7 +33,7 @@ inline bool Foam::generatedCellZone::all() const
 }
 
 
-inline const Foam::word& Foam::generatedCellZone::zoneName() const
+inline const Foam::word& Foam::generatedCellZone::name() const
 {
     static word allName_("all");
 

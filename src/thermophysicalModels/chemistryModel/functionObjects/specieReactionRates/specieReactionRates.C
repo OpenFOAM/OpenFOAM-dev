@@ -25,6 +25,9 @@ License
 
 #include "specieReactionRates.H"
 #include "fvcVolumeIntegrate.H"
+#include "polyTopoChangeMap.H"
+#include "polyMeshMap.H"
+#include "polyDistributionMap.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -51,7 +54,7 @@ void Foam::functionObjects::specieReactionRates::writeFileHeader(const label i)
 {
     writeHeader(file(), "Specie reaction rates");
 
-    fvCellZone::writeFileHeader(*this, file());
+    zone_.writeFileHeader(*this, file());
 
     writeHeaderValue(file(), "nSpecie", chemistryModel_.nSpecie());
     writeHeaderValue(file(), "nReaction", chemistryModel_.nReaction());
@@ -81,8 +84,8 @@ Foam::functionObjects::specieReactionRates::specieReactionRates
 )
 :
     fvMeshFunctionObject(name, runTime, dict),
-    fvCellZone(fvMeshFunctionObject::mesh_, dict),
     logFiles(obr_, name),
+    zone_(fvMeshFunctionObject::mesh_, dict),
     phaseName_(dict.lookupOrDefault<word>("phase", word::null)),
     chemistryModel_
     (
@@ -131,7 +134,7 @@ bool Foam::functionObjects::specieReactionRates::write()
     const label nReaction = chemistryModel_.nReaction();
 
     // Region volume
-    const scalar V = this->V();
+    const scalar V = zone_.V();
 
     for (label reactioni=0; reactioni<nReaction; reactioni++)
     {
@@ -151,7 +154,7 @@ bool Foam::functionObjects::specieReactionRates::write()
         {
             scalar sumVRRi = 0;
 
-            if (all())
+            if (zone_.all())
             {
                 sumVRRi = fvc::domainIntegrate(RR[speciei]).value();
             }
@@ -163,7 +166,7 @@ bool Foam::functionObjects::specieReactionRates::write()
                         scalarField
                         (
                             fvMeshFunctionObject::mesh_.V()*RR[speciei],
-                            zone()
+                            zone_.zone()
                         )
                     );
             }
@@ -195,6 +198,54 @@ bool Foam::functionObjects::specieReactionRates::write()
     }
 
     return true;
+}
+
+
+void Foam::functionObjects::specieReactionRates::movePoints
+(
+    const polyMesh& mesh
+)
+{
+    if (&mesh == &this->mesh())
+    {
+        zone_.movePoints();
+    }
+}
+
+
+void Foam::functionObjects::specieReactionRates::topoChange
+(
+    const polyTopoChangeMap& map
+)
+{
+    if (&map.mesh() == &mesh())
+    {
+        zone_.topoChange(map);
+    }
+}
+
+
+void Foam::functionObjects::specieReactionRates::mapMesh
+(
+    const polyMeshMap& map
+)
+{
+    if (&map.mesh() == &mesh())
+    {
+        zone_.mapMesh(map);
+    }
+}
+
+
+void Foam::functionObjects::specieReactionRates::distribute
+(
+    const polyDistributionMap& map
+)
+{
+    if (&map.mesh() == &mesh())
+    {
+        zone_.distribute(map);
+    }
 }
 
 

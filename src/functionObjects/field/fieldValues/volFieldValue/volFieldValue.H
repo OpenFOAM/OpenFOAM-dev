@@ -122,8 +122,7 @@ namespace fieldValues
 
 class volFieldValue
 :
-    public fieldValue,
-    public fvCellZone
+    public fieldValue
 {
 
 public:
@@ -161,6 +160,9 @@ public:
 protected:
 
     // Protected data
+
+        //- cellZone
+        fvCellZone zone_;
 
         //- Write the location if available for this operation - optional
         Switch writeLocation_;
@@ -318,6 +320,21 @@ public:
 
         //- Calculate and write
         virtual bool write();
+
+
+        // Mesh changes
+
+            //- Update for mesh motion
+            virtual void movePoints(const polyMesh&);
+
+            //- Update topology using the given map
+            virtual void topoChange(const polyTopoChangeMap&);
+
+            //- Update from another mesh using the given map
+            virtual void mapMesh(const polyMeshMap&);
+
+            //- Redistribute or update using the given distribution map
+            virtual void distribute(const polyDistributionMap&);
 };
 
 

@@ -97,7 +97,7 @@ void Foam::functionObjects::fieldValues::volFieldValue::compareScalars
         }
 
         result.value = values[i];
-        result.celli = celli(i);
+        result.celli = zone_.celli(i);
         result.cc = fieldValue::mesh_.C()[result.celli];
     }
     else
@@ -221,7 +221,7 @@ bool Foam::functionObjects::fieldValues::volFieldValue::processValuesTypeType
         }
         case operationType::CoV:
         {
-            const Type meanValue = gSum(values*V)/this->V();
+            const Type meanValue = gSum(values*V)/zone_.V();
 
             const label nComp = pTraits<Type>::nComponents;
 
@@ -233,7 +233,7 @@ bool Foam::functionObjects::fieldValues::volFieldValue::processValuesTypeType
                 setComponent(result.value, d) =
                     protectedDivide
                     (
-                        sqrt(gSum(V*sqr(vals - mean))/this->V()),
+                        sqrt(gSum(V*sqr(vals - mean))/zone_.V()),
                         mean
                     );
             }
@@ -242,7 +242,7 @@ bool Foam::functionObjects::fieldValues::volFieldValue::processValuesTypeType
         }
         case operationType::UI:
         {
-            const Type meanValue = gSum(values*V)/this->V();
+            const Type meanValue = gSum(values*V)/zone_.V();
 
             const label nComp = pTraits<Type>::nComponents;
 
@@ -254,7 +254,7 @@ bool Foam::functionObjects::fieldValues::volFieldValue::processValuesTypeType
                 setComponent(result.value, d) =
                     1 - 0.5*protectedDivide
                     (
-                        gSum(V*mag(vals - mean))/this->V(),
+                        gSum(V*mag(vals - mean))/zone_.V(),
                         mean
                     );
             }
@@ -297,7 +297,7 @@ bool Foam::functionObjects::fieldValues::volFieldValue::writeValues
             (
                 IOobject
                 (
-                    fieldName + '_' + zoneName(),
+                    fieldName + '_' + zone_.name(),
                     time_.name(),
                     obr_,
                     IOobject::NO_READ,
@@ -364,7 +364,7 @@ bool Foam::functionObjects::fieldValues::volFieldValue::writeValues
             file() << tab << result.value;
 
             Log << "    " << operationTypeNames_[operation_]
-                << "(" << zoneName() << ") of " << fieldName
+                << "(" << zone_.name() << ") of " << fieldName
                 <<  " = " << result.value;
 
             if (result.celli != -1)
@@ -402,13 +402,13 @@ Foam::functionObjects::fieldValues::volFieldValue::filterField
     const Field<Type>& field
 ) const
 {
-    if (all())
+    if (zone_.all())
     {
         return field;
     }
     else
     {
-        return tmp<Field<Type>>(new Field<Type>(field, zone()));
+        return tmp<Field<Type>>(new Field<Type>(field, zone_.zone()));
     }
 }
 

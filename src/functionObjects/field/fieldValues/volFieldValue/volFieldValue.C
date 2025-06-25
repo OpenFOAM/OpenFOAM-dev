@@ -27,6 +27,9 @@ License
 #include "fvMesh.H"
 #include "volFields.H"
 #include "writeFile.H"
+#include "polyTopoChangeMap.H"
+#include "polyMeshMap.H"
+#include "polyDistributionMap.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -144,7 +147,7 @@ void Foam::functionObjects::fieldValues::volFieldValue::writeFileHeader
     const label i
 )
 {
-    fvCellZone::writeFileHeader(*this, file());
+    zone_.writeFileHeader(*this, file());
 
     writeCommented(file(), "Time");
 
@@ -224,7 +227,7 @@ Foam::functionObjects::fieldValues::volFieldValue::volFieldValue
 )
 :
     fieldValue(name, runTime, dict, typeName),
-    fvCellZone(fieldValue::mesh_, dict),
+    zone_(fieldValue::mesh_, dict),
     writeLocation_(false),
     operation_(operationTypeNames_.read(dict.lookup("operation"))),
     scaleFactor_(1)
@@ -241,7 +244,7 @@ Foam::functionObjects::fieldValues::volFieldValue::volFieldValue
 )
 :
     fieldValue(name, obr, dict, typeName),
-    fvCellZone(fieldValue::mesh_, dict),
+    zone_(fieldValue::mesh_, dict),
     writeLocation_(false),
     operation_(operationTypeNames_.read(dict.lookup("operation"))),
     scaleFactor_(1)
@@ -301,7 +304,7 @@ bool Foam::functionObjects::fieldValues::volFieldValue::write()
     }
 
     // Construct the weight field and the volumes
-    scalarField weights(nCells(), 1);
+    scalarField weights(zone_.nCells(), 1);
     forAll(weightFieldNames_, i)
     {
         weights *= getFieldValues<scalar>(weightFieldNames_[i]);
@@ -333,6 +336,58 @@ bool Foam::functionObjects::fieldValues::volFieldValue::write()
     Log << endl;
 
     return true;
+}
+
+
+void Foam::functionObjects::fieldValues::volFieldValue::movePoints
+(
+    const polyMesh& mesh
+)
+{
+    if (&mesh == &this->mesh())
+    {
+        fieldValue::movePoints(mesh);
+        zone_.movePoints();
+    }
+}
+
+
+void Foam::functionObjects::fieldValues::volFieldValue::topoChange
+(
+    const polyTopoChangeMap& map
+)
+{
+    if (&map.mesh() == &mesh())
+    {
+        fieldValue::topoChange(map);
+        zone_.topoChange(map);
+    }
+}
+
+
+void Foam::functionObjects::fieldValues::volFieldValue::mapMesh
+(
+    const polyMeshMap& map
+)
+{
+    if (&map.mesh() == &mesh())
+    {
+        fieldValue::mapMesh(map);
+        zone_.mapMesh(map);
+    }
+}
+
+
+void Foam::functionObjects::fieldValues::volFieldValue::distribute
+(
+    const polyDistributionMap& map
+)
+{
+    if (&map.mesh() == &mesh())
+    {
+        fieldValue::distribute(map);
+        zone_.distribute(map);
+    }
 }
 
 

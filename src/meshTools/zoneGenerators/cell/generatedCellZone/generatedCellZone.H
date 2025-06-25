@@ -105,6 +105,9 @@ public:
         //- Construct from mesh and dictionary
         generatedCellZone(const polyMesh& mesh, const dictionary& dict);
 
+        //- Disallow default bitwise copy construction
+        generatedCellZone(const generatedCellZone&) = delete;
+
 
     //- Destructor
     ~generatedCellZone();
@@ -118,7 +121,7 @@ public:
             inline bool all() const;
 
             //- Return const access to the name of cellZone
-            inline const word& zoneName() const;
+            inline const word& name() const;
 
             //- Return const access to the cell set
             inline const cellZone& zone() const;
@@ -149,6 +152,12 @@ public:
 
             //- Read coefficients dictionary
             bool read(const dictionary& dict);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const generatedCellZone&) = delete;
 };
 
 

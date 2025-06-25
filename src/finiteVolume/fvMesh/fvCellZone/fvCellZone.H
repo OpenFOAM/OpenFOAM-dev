@@ -108,18 +108,6 @@ class fvCellZone
         void setV();
 
 
-protected:
-
-    // Protected Member Functions
-
-        //- Output file header information
-        void writeFileHeader
-        (
-            const functionObjects::writeFile& wf,
-            Ostream& file
-        );
-
-
 public:
 
     // Constructors
@@ -137,10 +125,15 @@ public:
 
     // Member Functions
 
-        // Access
+        //- Return const access to the total cell volume
+        inline scalar V() const;
 
-            //- Return const access to the total cell volume
-            inline scalar V() const;
+        //- Output file header information
+        void writeFileHeader
+        (
+            const functionObjects::writeFile& wf,
+            Ostream& file
+        );
 
 
         // Mesh changes

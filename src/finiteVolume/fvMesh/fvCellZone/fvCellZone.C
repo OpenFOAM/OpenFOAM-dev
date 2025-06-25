@@ -41,20 +41,6 @@ void Foam::fvCellZone::setV()
 }
 
 
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-void Foam::fvCellZone::writeFileHeader
-(
-    const functionObjects::writeFile& wf,
-    Ostream& file
-)
-{
-    wf.writeCommented(file, "Selection");
-    file<< setw(1) << ':' << setw(1) << ' ' << zoneName() << endl;
-    wf.writeHeaderValue(file, "Volume", V());
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::fvCellZone::fvCellZone(const fvMesh& mesh)
@@ -82,6 +68,18 @@ Foam::fvCellZone::~fvCellZone()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void Foam::fvCellZone::writeFileHeader
+(
+    const functionObjects::writeFile& wf,
+    Ostream& file
+)
+{
+    wf.writeCommented(file, "Selection");
+    file<< setw(1) << ':' << setw(1) << ' ' << name() << endl;
+    wf.writeHeaderValue(file, "Volume", V());
+}
+
 
 void Foam::fvCellZone::movePoints()
 {

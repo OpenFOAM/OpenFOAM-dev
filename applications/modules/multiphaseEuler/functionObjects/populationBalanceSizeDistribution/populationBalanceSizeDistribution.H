@@ -97,8 +97,7 @@ namespace functionObjects
 
 class populationBalanceSizeDistribution
 :
-    public fvMeshFunctionObject,
-    public fvCellZone
+    public fvMeshFunctionObject
 {
 public:
 
@@ -152,6 +151,9 @@ private:
 
         //- Reference to mesh
         const fvMesh& mesh_;
+
+        //- cellZone
+        fvCellZone zone_;
 
         //- Name of the population balance
         const word popBalName_;
@@ -247,6 +249,21 @@ public:
 
         //- Calculate and write the size distribution
         virtual bool write();
+
+
+        // Mesh changes
+
+            //- Update for mesh motion
+            virtual void movePoints(const polyMesh&);
+
+            //- Update topology using the given map
+            virtual void topoChange(const polyTopoChangeMap&);
+
+            //- Update from another mesh using the given map
+            virtual void mapMesh(const polyMeshMap&);
+
+            //- Redistribute or update using the given distribution map
+            virtual void distribute(const polyDistributionMap&);
 
 
     // Member Operators
