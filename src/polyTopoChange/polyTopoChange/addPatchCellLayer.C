@@ -1162,6 +1162,7 @@ void Foam::addPatchCellLayer::setRefinement
         }
     }
 
+
     //
     // Modify old patch faces to be on the inside
     //
@@ -1217,62 +1218,43 @@ void Foam::addPatchCellLayer::setRefinement
     }
 
 
-
     //
     // Create 'side' faces, one per edge that is being extended.
     //
-
-    const labelListList& faceEdges = pp.faceEdges();
-    const faceList& localFaces = pp.localFaces();
-    const edgeList& edges = pp.edges();
 
     // Get number of layers per edge. This is 0 if edge is not extruded;
     // max of connected faces otherwise.
     labelList edgeLayers(pp.nEdges());
 
+    forAll(edgeLayers, ppEdgei)
     {
-        // Use list over mesh.nEdges() since syncTools does not yet support
-        // partial list synchronisation.
-        labelList meshEdgeLayers(mesh.nEdges(), -1);
+        edgeLayers[ppEdgei] = 0;
 
-        forAll(meshEdges, edgeI)
+        const edge& e = pp.edges()[ppEdgei];
+
+        if (nPointLayers[e[0]] != 0 || nPointLayers[e[1]] != 0)
         {
-            const edge& e = edges[edgeI];
+            const labelList& eFaces = pp.edgeFaces()[ppEdgei];
 
-            label meshEdgeI = meshEdges[edgeI];
-
-            if ((nPointLayers[e[0]] == 0) && (nPointLayers[e[1]] == 0))
+            forAll(eFaces, eFacei)
             {
-                meshEdgeLayers[meshEdgeI] = 0;
+                edgeLayers[ppEdgei] = max
+                (
+                    nFaceLayers[eFaces[eFacei]],
+                    edgeLayers[ppEdgei]
+                );
             }
-            else
-            {
-                const labelList& eFaces = pp.edgeFaces()[edgeI];
-
-                forAll(eFaces, i)
-                {
-                    meshEdgeLayers[meshEdgeI] = max
-                    (
-                        nFaceLayers[eFaces[i]],
-                        meshEdgeLayers[meshEdgeI]
-                    );
-                }
-            }
-        }
-
-        syncTools::syncEdgeList
-        (
-            mesh,
-            meshEdgeLayers,
-            maxEqOp<label>(),
-            label(0)            // initial value
-        );
-
-        forAll(meshEdges, edgeI)
-        {
-            edgeLayers[edgeI] = meshEdgeLayers[meshEdges[edgeI]];
         }
     }
+
+    syncTools::syncEdgeList
+    (
+        mesh,
+        meshEdges,
+        edgeLayers,
+        maxEqOp<label>(),
+        label(0)
+    );
 
 
     // Determine the face zones that logically extrude from each patch edge
@@ -1380,7 +1362,7 @@ void Foam::addPatchCellLayer::setRefinement
     // between the same two faces and extrude string into a single face.
     forAll(pp, patchFacei)
     {
-        const labelList& fEdges = faceEdges[patchFacei];
+        const labelList& fEdges = pp.faceEdges()[patchFacei];
 
         forAll(fEdges, fp)
         {
@@ -1402,7 +1384,7 @@ void Foam::addPatchCellLayer::setRefinement
 
             if (startFe != -1)
             {
-                const face& f = localFaces[patchFacei];
+                const face& f = pp.localFaces()[patchFacei];
 
                 // Create a string of vertices to extrude into a face
                 labelList stringedVerts
