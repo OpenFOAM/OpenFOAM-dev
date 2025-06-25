@@ -172,11 +172,14 @@ Foam::zoneGenerator::New
         dictionary
         (
             dict,
-            primitiveEntry
+            dictionary::entries
             (
-                "zoneType",
-                zoneTypesNames[zoneType],
-                dict.endLineNumber()
+                primitiveEntry
+                (
+                    "zoneType",
+                    zoneTypesNames[zoneType],
+                    dict.endLineNumber()
+                )
             )
         )
     );
@@ -230,11 +233,14 @@ Foam::zoneGenerator::New
                     (
                         name,
                         dict,
-                        primitiveEntry
+                        dictionary::entries
                         (
-                            "type",
-                            zoneGenerators::lookup::typeName,
-                            iter().startLineNumber()
+                            primitiveEntry
+                            (
+                                "type",
+                                zoneGenerators::lookup::typeName,
+                                iter().startLineNumber()
+                            )
                         )
                     )
                 )

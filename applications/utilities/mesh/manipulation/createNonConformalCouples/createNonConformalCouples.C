@@ -583,9 +583,8 @@ int main(int argc, char *argv[])
             const label regioni =
                 regionNames[couple.regionNames[!owner]];
 
-            dictionary patchDict
+            dictionary patchDict = dictionary::entries
             (
-                fileName("patchDict"),
                 "type", couple.ncPatchType,
                 "nFaces", 0,
                 "startFace", regionFirstProcFaceis[regioni],

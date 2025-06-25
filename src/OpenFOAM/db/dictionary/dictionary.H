@@ -57,6 +57,7 @@ SourceFiles
 #include "Pair.H"
 #include "fieldTypes.H"
 #include "Tuple3.H"
+#include <tuple>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -239,13 +240,17 @@ class dictionary
         template<class T>
         T readType(const word& keyword, ITstream& is) const;
 
-        //- Assign a T entry, overwrite any existing entry
-        template<class T>
-        void setKeyT(const keyType&, const T&);
+        //- Assign multiple entries, overwriting any existing entries
+        template<class ... Entries, size_t ... Indices>
+        void set
+        (
+            const std::tuple<const Entries& ...>&,
+            const std::integer_sequence<size_t, Indices ...>&
+        );
 
-        //- Assign multiple T entries, overwriting any existing entries
-        template<class T, class ... KeysAndTs>
-        void setKeyT(const keyType&, const T&, const KeysAndTs& ...);
+        //- Assign multiple entries, overwriting any existing entries
+        template<class ... Entries>
+        void set(const std::tuple<const Entries& ...>&);
 
 
     // Private Classes
@@ -271,6 +276,13 @@ public:
         //- If true write optional keywords and values
         //  if not present in dictionary
         static int writeOptionalEntries;
+
+
+    // Static Member Functions
+
+        //- Construct an entries tuple from which to make a dictionary
+        template<class ... Entries>
+        static std::tuple<const Entries& ...> entries(const Entries& ...);
 
 
     // Constructors
@@ -307,46 +319,33 @@ public:
         //  A null pointer is treated like an empty dictionary.
         dictionary(const dictionary*);
 
-        //- Construct dictionary with given parent and list of entries
+        //- Construct top-level dictionary with given entries
+        template<class ... Entries>
+        dictionary(const std::tuple<const Entries& ...>&);
+
+        //- Construct top-level dictionary with given name and entries
+        template<class ... Entries>
+        dictionary
+        (
+            const fileName& name,
+            const std::tuple<const Entries& ...>&
+        );
+
+        //- Construct dictionary with given name, parent and entries
         template<class ... Entries>
         dictionary
         (
             const fileName& name,
             const dictionary& parentDict,
-            const entry& e,
-            const Entries& ... entries
+            const std::tuple<const Entries& ...>&
         );
 
-        //- Construct dictionary as copy, adding list of entries
+        //- Construct dictionary as copy and add a list of entries
         template<class ... Entries>
         dictionary
         (
             const dictionary& dict,
-            const entry& e,
-            const Entries& ... entries
-        );
-
-        //- Construct top-level dictionary with given T entries
-        template<class T1, class T2, class ... KeysAndTs>
-        dictionary
-        (
-            const keyType& k1,
-            const T1& t1,
-            const keyType& k2,
-            const T2& t2,
-            const KeysAndTs& ... keysAndTs
-        );
-
-        //- Construct top-level dictionary with given name and T entries
-        template<class T1, class T2, class ... KeysAndTs>
-        dictionary
-        (
-            const fileName& name,
-            const keyType& k1,
-            const T1& t1,
-            const keyType& k2,
-            const T2& t2,
-            const KeysAndTs& ... keysAndTs
+            const std::tuple<const Entries& ...>&
         );
 
         //- Construct and return clone
@@ -765,10 +764,6 @@ public:
             //- Assign a new entry, overwrite any existing entry
             void set(const entry&);
 
-            //- Assign a new entry, overwrite any existing entry
-            template<class ... Entries>
-            void set(const entry& e, const Entries& ... entries);
-
             //- Assign a dictionary entry, overwrite any existing entry
             void set(const keyType&, const dictionary&);
 
@@ -776,9 +771,13 @@ public:
             template<class T>
             void set(const keyType&, const T&);
 
+            //- Assign multiple entries, overwriting any existing entries
+            template<class ... Entries>
+            void set(const entry& e, const Entries& ...);
+
             //- Assign multiple T entries, overwriting any existing entries
-            template<class T, class ... KeysAndTs>
-            void set(const keyType&, const T&, const KeysAndTs& ...);
+            template<class T, class ... Entries>
+            void set(const keyType&, const T&, const Entries& ...);
 
             //- Remove an entry specified by keyword
             bool remove(const word&);

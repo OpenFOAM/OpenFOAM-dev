@@ -26,6 +26,18 @@ License
 #include "dictionary.H"
 #include "primitiveEntry.H"
 
+// * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
+
+template<class ... Entries>
+std::tuple<const Entries& ...> Foam::dictionary::entries
+(
+    const Entries& ... entries
+)
+{
+    return std::tuple<const Entries& ...>(entries ...);
+}
+
+
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class T>
@@ -49,48 +61,62 @@ T Foam::dictionary::readType(const word& keyword, ITstream& is) const
 }
 
 
-template<class ... Entries>
-void Foam::dictionary::set(const entry& e, const Entries& ... entries)
-{
-    set(e);
-    set(entries ...);
-}
-
-
-template<class T>
-void Foam::dictionary::setKeyT(const keyType& k, const T& t)
-{
-    set(new primitiveEntry(k, t));
-}
-
-
-template<class T, class ... KeysAndTs>
-void Foam::dictionary::setKeyT
+template<class ... Entries, size_t ... Indices>
+void Foam::dictionary::set
 (
-    const keyType& k,
-    const T& t,
-    const KeysAndTs& ... keysAndTs
+    const std::tuple<const Entries& ...>& entries,
+    const std::integer_sequence<size_t, Indices ...>&
 )
 {
-    set(new primitiveEntry(k, t));
-    setKeyT(keysAndTs ...);
+    set(std::get<Indices>(entries) ...);
+}
+
+
+template<class ... Entries>
+void Foam::dictionary::set
+(
+    const std::tuple<const Entries& ...>& entries
+)
+{
+    set(entries, std::make_integer_sequence<size_t, sizeof ... (Entries)>());
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class ... Entries>
+Foam::dictionary::dictionary(const std::tuple<const Entries& ...>& entries)
+:
+    dictionary()
+{
+    set(entries);
+}
+
+
+template<class ... Entries>
+Foam::dictionary::dictionary
+(
+    const fileName& name,
+    const std::tuple<const Entries& ...>& entries
+)
+:
+    dictionary(name)
+{
+    set(entries);
+}
+
+
+template<class ... Entries>
 Foam::dictionary::dictionary
 (
     const fileName& name,
     const dictionary& parentDict,
-    const entry& e,
-    const Entries& ... entries
+    const std::tuple<const Entries& ...>& entries
 )
 :
     dictionary(name, parentDict)
 {
-    set(e, entries ...);
+    set(entries);
 }
 
 
@@ -98,46 +124,12 @@ template<class ... Entries>
 Foam::dictionary::dictionary
 (
     const dictionary& dict,
-    const entry& e,
-    const Entries& ... entries
+    const std::tuple<const Entries& ...>& entries
 )
 :
     dictionary(dict)
 {
-    set(e, entries ...);
-}
-
-
-template<class T1, class T2, class ... KeysAndTs>
-Foam::dictionary::dictionary
-(
-    const keyType& k1,
-    const T1& t1,
-    const keyType& k2,
-    const T2& t2,
-    const KeysAndTs& ... keysAndTs
-)
-:
-    dictionary()
-{
-    setKeyT(k1, t1, k2, t2, keysAndTs ...);
-}
-
-
-template<class T1, class T2, class ... KeysAndTs>
-Foam::dictionary::dictionary
-(
-    const fileName& name,
-    const keyType& k1,
-    const T1& t1,
-    const keyType& k2,
-    const T2& t2,
-    const KeysAndTs& ... keysAndTs
-)
-:
-    dictionary(name)
-{
-    setKeyT(k1, t1, k2, t2, keysAndTs ...);
+    set(entries);
 }
 
 
@@ -485,19 +477,28 @@ void Foam::dictionary::add(const keyType& k, const T& t, bool overwrite)
 template<class T>
 void Foam::dictionary::set(const keyType& k, const T& t)
 {
-    setKeyT(k, t);
+    set(new primitiveEntry(k, t));
 }
 
 
-template<class T, class ... KeysAndTs>
+template<class ... Entries>
+void Foam::dictionary::set(const entry& e, const Entries& ... entries)
+{
+    set(e);
+    set(entries ...);
+}
+
+
+template<class T, class ... Entries>
 void Foam::dictionary::set
 (
     const keyType& k,
     const T& t,
-    const KeysAndTs& ... keysAndTs
+    const Entries& ... entries
 )
 {
-    setKeyT(k, t, keysAndTs ...);
+    set(k, t);
+    set(entries ...);
 }
 
 

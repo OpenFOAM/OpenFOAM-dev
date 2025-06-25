@@ -71,11 +71,14 @@ void Foam::zoneGeneratorList::read
                             dictionary
                             (
                                 iter().dict(),
-                                primitiveEntry
+                                dictionary::entries
                                 (
-                                    "type",
-                                    name,
-                                    iter().startLineNumber()
+                                    primitiveEntry
+                                    (
+                                        "type",
+                                        name,
+                                        iter().startLineNumber()
+                                    )
                                 )
                             )
                         )
@@ -113,11 +116,14 @@ void Foam::zoneGeneratorList::read
                         (
                             name,
                             dict,
-                            primitiveEntry
+                            dictionary::entries
                             (
-                                "type",
-                                name,
-                                iter().startLineNumber()
+                                primitiveEntry
+                                (
+                                    "type",
+                                    name,
+                                    iter().startLineNumber()
+                                )
                             )
                         )
                     )
@@ -139,11 +145,14 @@ void Foam::zoneGeneratorList::read
                         (
                             name,
                             dict,
-                            primitiveEntry
+                            dictionary::entries
                             (
-                                "type",
-                                zoneGenerators::lookup::typeName,
-                                iter().startLineNumber()
+                                primitiveEntry
+                                (
+                                    "type",
+                                    zoneGenerators::lookup::typeName,
+                                    iter().startLineNumber()
+                                )
                             )
                         )
                     )
@@ -222,11 +231,14 @@ Foam::zoneGeneratorList::zoneGeneratorList
                     (
                         name,
                         dict,
-                        primitiveEntry
+                        dictionary::entries
                         (
-                            "type",
-                            zoneGenerators::lookup::typeName,
-                            zoneStream.lineNumber()
+                            primitiveEntry
+                            (
+                                "type",
+                                zoneGenerators::lookup::typeName,
+                                zoneStream.lineNumber()
+                            )
                         )
                     )
                 )
