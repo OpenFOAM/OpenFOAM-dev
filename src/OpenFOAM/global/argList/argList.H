@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -312,13 +312,14 @@ public:
                 const T& deflt
             ) const;
 
-            //- Read a List of values from the named option
-            template<class T>
-            List<T> optionReadList(const word& opt) const
-            {
-                return readList<T>(optionLookup(opt)());
-            }
+            //- Count brackets, to support the optionReadList function
+            inline label bracketLevel(const string& str) const;
 
+            //- Read a List of values from the named option
+            // Avoids the need for "()" around the List and, to one level,
+            // any type within the List that requires "()", e.g. a Tuple.
+            template<class T>
+            inline List<T> optionReadList(const word& opt) const;
 
             //- Return the argument corresponding to index.
             //  Index 0 corresponds to the name of the executable.

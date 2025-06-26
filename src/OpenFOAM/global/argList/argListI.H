@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -173,6 +173,57 @@ namespace Foam
     Foam::argList::optionRead<Foam::fileName>(const word& opt) const
     {
         return options_[opt];
+    }
+
+    inline Foam::label
+    Foam::argList::bracketLevel(const Foam::string& str) const
+    {
+        label level = 0;
+        label maxLevel = 0;
+
+        for
+        (
+            string::const_iterator iter = str.begin();
+            iter != str.end();
+            ++iter
+        )
+        {
+            const char c = *iter;
+
+            if (c == '(')
+            {
+                level++;
+            }
+            else if (c == ')')
+            {
+                level--;
+            }
+
+            maxLevel = max(maxLevel, level);
+        }
+
+        return maxLevel;
+    }
+
+    template<class T>
+    inline Foam::List<T>
+    Foam::argList::optionReadList(const word& opt) const
+    {
+        string argstr(optionLookup(opt).str());
+
+        OStringStream os;
+        const T x;
+        os << x;
+
+        label level = bracketLevel(os.str()) + 1;
+
+        while (bracketLevel(argstr) < level)
+        {
+            argstr.insert(0, "(");
+            argstr.insert(argstr.size(), ")");
+        }
+
+        return readList<T>(IStringStream(argstr)());
     }
 }
 
