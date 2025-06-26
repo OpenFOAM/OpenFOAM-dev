@@ -227,14 +227,21 @@ int main(int argc, char *argv[])
 
     argList::addNote
     (
-        "Writes blockMeshDict, surfaceFeaturesDict and snappyHexMeshDict "
-        "files from surface geometry files.\n"
+        "Writes blockMeshDict, snappyHexMeshDict, surfaceFeaturesDict "
+        "and meshQualityDict files.\n"
+        "Requires surface geometry files as inputs.\n"
         "For more information, see 'Description' in snappyHexMeshConfig.C "
         "or run\n\n    foamInfo snappyHexMeshConfig"
     );
 
     #include "removeCaseOptions.H"
     #include "addRegionOption.H"
+
+    argList::addBoolOption
+    (
+        "rm",
+        "delete mesh configuration files"
+    );
 
     argList::addOption
     (
@@ -439,18 +446,53 @@ int main(int argc, char *argv[])
     #include "createTime.H"
 
     word regionName;
-    word regionPath(runTime.system());
+    word dir(runTime.system());
 
     if (args.optionReadIfPresent("region", regionName))
     {
-        regionPath = runTime.system()/regionName;
-        Info<< "Writing files to " << regionPath << nl <<endl;
+        dir = runTime.system()/regionName;
 
-        if (!isDir(regionPath))
+        if (!isDir(dir))
         {
-            mkDir(regionPath);
+            mkDir(dir);
         }
     }
+
+    if (args.optionFound("rm"))
+    {
+        wordList dicts
+        {
+            "snappyHexMeshDict",
+            "blockMeshDict",
+            "meshQualityDict",
+            "surfaceFeaturesDict"
+        };
+
+        Info<< "Deleting mesh configuration files in '"
+            << dir << "'" << endl;
+        label count = 0;
+
+        forAll(dicts, i)
+        {
+            if (rm(dir/dicts[i]))
+            {
+                Info<< "+ " << dicts[i] << endl;
+                ++count;
+            }
+        }
+
+        if (count == 0)
+        {
+            Info<< "+ No files to delete" << endl;
+        }
+
+        Info<< "\nEnd\n" << endl;
+
+        return 0;
+    }
+
+    Info<< "Writing mesh configuration files to '"
+        << dir << "'" << nl << endl;
 
     fileNameList surfaceNames;
 
@@ -587,7 +629,7 @@ int main(int argc, char *argv[])
             blockMeshCylindricalConfiguration blockMeshConfig
             (
                 "blockMeshDict",
-                regionPath,
+                dir,
                 runTime,
                 surfaces,
                 args.optionFound("bounds"),
@@ -604,7 +646,7 @@ int main(int argc, char *argv[])
             blockMeshCartesianConfiguration blockMeshConfig
             (
                 "blockMeshDict",
-                regionPath,
+                dir,
                 runTime,
                 surfaces,
                 args.optionFound("bounds"),
@@ -723,7 +765,7 @@ int main(int argc, char *argv[])
         surfaceFeaturesConfiguration surfaceFeaturesConfig
         (
             "surfaceFeaturesDict",
-            regionPath,
+            dir,
             runTime,
             surfaces
         );
@@ -734,7 +776,7 @@ int main(int argc, char *argv[])
     snappyHexMeshConfiguration snappyConfig
     (
         "snappyHexMeshDict",
-        regionPath,
+        dir,
         runTime,
         surfaces,
         refinementLevel,
@@ -756,7 +798,7 @@ int main(int argc, char *argv[])
     meshQualityConfiguration meshQualityConfig
     (
         "meshQualityDict",
-        regionPath,
+        dir,
         runTime
     );
 

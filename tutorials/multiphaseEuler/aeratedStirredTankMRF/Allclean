@@ -7,6 +7,6 @@ cd "${0%/*}" || exit 1
 . "$WM_PROJECT_DIR/bin/tools/CleanFunctions"
 
 cleanCase && rm -f *.png
-rm -f system/blockMeshDict system/meshQualityDict system/snappyHexMeshDict
+snappyHexMeshConfig -rm > /dev/null
 
 #------------------------------------------------------------------------------
