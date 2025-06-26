@@ -6,4 +6,5 @@ EXE_LIBS = \
     -lfiniteVolume \
     -lgenericPatches \
     -lmeshTools \
-    -ltopoSetSources
+    -ltopoSetSources \
+    -lfvTopoSetSources
