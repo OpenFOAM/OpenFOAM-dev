@@ -59,7 +59,7 @@ OPENMPI)
     then
         openmpiSrcDir=$(_foamMostRecentDir "$WM_THIRD_PARTY_DIR"/openmpi-*)
         export OPENMPI_VERSION=${openmpiSrcDir##*openmpi-}
-        unsert openmpiSrcDir
+        unset openmpiSrcDir
     fi
 
     # Warn if OpenMPI was not found
