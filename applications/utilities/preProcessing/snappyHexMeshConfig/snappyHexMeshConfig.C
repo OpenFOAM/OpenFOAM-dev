@@ -98,13 +98,13 @@ Usage
     Options:
 
       - \par -baffles \<list\>
-        Surfaces that form baffles, e.g. '(helical)'
+        Surfaces that form baffles, e.g. 'helical'
 
       - \par -bounds \<box\>
-        Bounding box of the mesh, e.g. '((-10 -5 0) (10 5 10))'
+        Bounding box of the mesh, e.g. '(-10 -5 0) (10 5 10)'
 
       - \par -cellZones \<list\>
-        Surfaces that form cellZones, e.g. '(porousZone heatSource)'
+        Surfaces that form cellZones, e.g. 'porousZone heatSource'
 
       - \par -clearBoundary,
         Do not set default patch entries, i.e. xMin, xMax, yMin, etc...
@@ -125,19 +125,19 @@ Usage
         Specify the thickness of the near wall cells for layer addition
 
       - \par -inletRegions \<list\>
-        Inlet regions on an external surface, e.g. '(inletA inletB)'
+        Inlet regions on an external surface, e.g. 'inletA inletB'
 
       - \par -insidePoint \<point\>
         Point location inside the region of geometry to be meshed
 
       - \par -insidePoints \<list\>
-        Point locations inside geometry to be meshed, e.g. '((0 0 0) (0 1 0))'
+        Point locations inside geometry to be meshed, e.g. '(0 0 0) (0 1 0)'
 
       - \par -layerExpansionRatio \<value\>
         Specify the expansion ratio between layers, default 1.2
 
       - \par -layers \<entry\>
-        Number of layers on specified surfaces, e.g. '((car 3) (ground 4))'
+        Number of layers on specified surfaces, e.g. '(car 3) (ground 4)'
 
       - \par -minDimCells \<cells\>
         Number of cells in the shortest direction, e.g. 10
@@ -152,13 +152,13 @@ Usage
         Do not write a blockMeshDict file
 
       - \par -outletRegions \<list\>
-        Outlet regions on an external surface, e.g. '(outletA outletB)'
+        Outlet regions on an external surface, e.g. 'outletA outletB'
 
       - \par -refineBackground \<int\>
         Integer multiplier for the number of cells (>= 1)
 
       - \par -refinementBoxes \<entry\>
-        Refinement boxes specified by '( (\<min\> \<max\> \<level\>) (...) )'
+        Refinement boxes specified by '(\<min\> \<max\> \<level\>) (...) '
 
       - \par -refinementDists \<entry\>
         Refinement distance specified by
@@ -168,19 +168,19 @@ Usage
         Refinement level used by snappyHexMesh, default 2
 
       - \par -refinementRegions \<entry\>
-        Refinement regions specified by '( (\<surface\> \<level\>) (...) )'
+        Refinement regions specified by '(\<surface\> \<level\>) (...)'
 
       - \par -region \<name\>
         Specify alternative mesh region
 
       - \par -rotatingZones \<list\>
-        Surfaces that form rotatingZones, e.g. '(rotatingZone)'
+        Surfaces that form rotatingZones, e.g. 'rotatingZone'
 
       - \par -surface \<file\>
         Single surface geometry file for meshing
 
       - \par -surfaceLevels \<entry\>
-        Refinement level at specified surfaces, e.g. '((pipe 2) (baffles 1))'
+        Refinement level at specified surfaces, e.g. '(pipe 2) (baffles 1)'
 
       - \par -xMinPatch (-xMaxPatch, -yMinPatch, etc...) \<entry\>
         Name and type of the xMin (xMax, yMin, etc...) patch,
@@ -268,7 +268,7 @@ int main(int argc, char *argv[])
     (
         "bounds",
         "box",
-        "bounding box of the mesh, e.g. '((-10 -5 0) (10 5 10))'"
+        "bounding box of the mesh, e.g. '(-10 -5 0) (10 5 10)'"
     );
 
     argList::addBoolOption
@@ -301,21 +301,21 @@ int main(int argc, char *argv[])
     (
         "surfaceLevels",
         "entry",
-        "refinement level at specified surfaces, e.g. '((pipe 2) (baffles 1))'"
+        "refinement level at specified surfaces, e.g. '(pipe 2) (baffles 1)'"
     );
 
     argList::addOption
     (
         "refinementRegions",
         "entry",
-        "refinement regions specified by '( (<surface> <level>) (...) )'"
+        "refinement regions specified by '(<surface> <level>) (...)'"
     );
 
     argList::addOption
     (
         "refinementBoxes",
         "entry",
-        "refinement boxes specified by '( (<min> <max> <level>) (...) )'"
+        "refinement boxes specified by '(<min> <max> <level>) (...)'"
     );
 
     argList::addOption
@@ -323,7 +323,7 @@ int main(int argc, char *argv[])
         "refinementDists",
         "entry",
         "refinement distance specified by "
-        "'( (<surface> <dist> <level>) (...) )'"
+        "'(<surface> <dist> <level>) (...)'"
     );
 
     argList::addOption
@@ -363,7 +363,7 @@ int main(int argc, char *argv[])
     (
         "layers",
         "entry",
-        "number of layers on specified surfaces, e.g. '((car 3) (ground 4))'"
+        "number of layers on specified surfaces, e.g. '(car 3) (ground 4)'"
     );
 
     argList::addOption
@@ -384,21 +384,21 @@ int main(int argc, char *argv[])
     (
         "cellZones",
         "list",
-        "surfaces that form cellZones, e.g. '(porousZone heatSource)'"
+        "surfaces that form cellZones, e.g. 'porousZone heatSource'"
     );
 
     argList::addOption
     (
         "rotatingZones",
         "list",
-        "surfaces that form rotatingZones, e.g. '(rotatingZone)'"
+        "surfaces that form rotatingZones, e.g. 'rotatingZone'"
     );
 
     argList::addOption
     (
         "baffles",
         "list",
-        "surfaces that form baffles, e.g. '(helical)'"
+        "surfaces that form baffles, e.g. 'helical'"
     );
 
     argList::addOption
@@ -412,7 +412,7 @@ int main(int argc, char *argv[])
     (
         "insidePoints",
         "list",
-        "point locations inside the geometry, e.g. '((0 1 0) (1 1 1))'"
+        "point locations inside the geometry, e.g. '(0 1 0) (1 1 1)'"
     );
 
     argList::addOption
@@ -426,14 +426,14 @@ int main(int argc, char *argv[])
     (
         "inletRegions",
         "list",
-        "inlet regions on an external surface, e.g. '(inletA inletB)'"
+        "inlet regions on an external surface, e.g. 'inletA inletB'"
     );
 
     argList::addOption
     (
         "outletRegions",
         "list",
-        "outlet regions on an external surface, e.g. '(outletA outletB)'"
+        "outlet regions on an external surface, e.g. 'outletA outletB'"
     );
 
     argList::addBoolOption

@@ -8,9 +8,9 @@ cd "${0%/*}" || exit 1
 
 runApplication snappyHexMeshConfig \
     -cylindricalBackground \
-    -rotatingZones '(rotatingZone)' \
-    -surfaceLevels "((sparger 3) (stirrer 3))" \
-    -baffles "(baffles)"
+    -rotatingZones 'rotatingZone' \
+    -surfaceLevels "(sparger 3) (stirrer 3)" \
+    -baffles "baffles"
 
 runApplication blockMesh
 runApplication decomposePar -copyZero
