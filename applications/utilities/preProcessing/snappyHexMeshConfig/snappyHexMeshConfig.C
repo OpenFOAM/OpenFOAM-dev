@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,7 +88,9 @@ Description
     '-nCellsBetweenLevels' to control the transition between refinement
     levels. A '-layers' option controls additional layers of cells at specified
     surfaces. The insidePoint parameter is set to '(0 0 0)' by default but can
-    be overridden using the '-insidePoint' option.
+    be overridden using the '-insidePoint' option.  There is an alternative
+    '-insidePoints' option to specify multiple insidePoints to mesh multiple
+    disconnected mesh regions.
 
 Usage
     \b snappyHexMeshConfig [OPTIONS]
@@ -127,6 +129,9 @@ Usage
 
       - \par -insidePoint \<point\>
         Point location inside the region of geometry to be meshed
+
+      - \par -insidePoints \<list\>
+        Point locations inside geometry to be meshed, e.g. '((0 0 0) (0 1 0))'
 
       - \par -layerExpansionRatio \<value\>
         Specify the expansion ratio between layers, default 1.2
@@ -394,6 +399,13 @@ int main(int argc, char *argv[])
         "insidePoint",
         "point",
         "point location inside the region of geometry to be meshed"
+    );
+
+    argList::addOption
+    (
+        "insidePoints",
+        "list",
+        "point locations inside the geometry, e.g. '((0 1 0) (1 1 1))'"
     );
 
     argList::addOption
@@ -673,10 +685,33 @@ int main(int argc, char *argv[])
         args.optionLookupOrDefault<scalar>("layerExpansionRatio", 1.2)
     );
 
-    const point insidePoint
-    (
-        args.optionLookupOrDefault<point>("insidePoint", point::zero)
-    );
+    if (args.optionFound("insidePoint") && args.optionFound("insidePoints"))
+    {
+        FatalErrorInFunction
+            << "Options '-insidePoint' and '-insidePoints' "
+            << "cannot both be selected"
+            << exit(FatalError);
+    }
+
+    List<point> insidePoints;
+    bool insidePointsOpt(false);
+
+    if (args.optionFound("insidePoints"))
+    {
+        insidePoints.append
+        (
+            args.optionReadList<point>("insidePoints")
+        );
+
+        insidePointsOpt = true;
+    }
+    else
+    {
+        insidePoints.append
+        (
+            args.optionLookupOrDefault<point>("insidePoint", point::zero)
+        );
+    }
 
     const label nCellsBetweenLevels
     (
@@ -711,7 +746,8 @@ int main(int argc, char *argv[])
         layers,
         firstLayerThickness,
         layerExpansionRatio,
-        insidePoint,
+        insidePointsOpt,
+        insidePoints,
         nCellsBetweenLevels
     );
 

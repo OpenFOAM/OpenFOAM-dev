@@ -406,8 +406,22 @@ void Foam::snappyHexMeshConfiguration::writeCastellatedMeshControls()
     writeRefinementRegions();
 
     // Needs customising
-    os_ << indent << "insidePoint "
-        << insidePoint_ << ";" << endl;
+    if (insidePointsOpt_)
+    {
+        beginList(os_, "insidePoints");
+
+        forAll(insidePoints_, i)
+        {
+            os_ << indent << insidePoints_[i] << endl;
+        }
+
+        endList(os_);
+    }
+    else
+    {
+        os_ << indent << "insidePoint "
+            << insidePoints_[0] << ";" << endl;
+    }
 
     os_ << indent << "nCellsBetweenLevels "
         << nCellsBetweenLevels_
@@ -536,7 +550,8 @@ Foam::snappyHexMeshConfiguration::snappyHexMeshConfiguration
     const List<Tuple2<word, label>>& layers,
     const scalar firstLayerThickness,
     const scalar layerExpansionRatio,
-    const point& insidePoint,
+    const bool insidePointsOpt,
+    const List<point>& insidePoints,
     const label nCellsBetweenLevels
 )
 :
@@ -551,7 +566,8 @@ Foam::snappyHexMeshConfiguration::snappyHexMeshConfiguration
     layers_(layers),
     firstLayerThickness_(firstLayerThickness),
     layerExpansionRatio_(layerExpansionRatio),
-    insidePoint_(insidePoint),
+    insidePointsOpt_(insidePointsOpt),
+    insidePoints_(insidePoints),
     nCellsBetweenLevels_(nCellsBetweenLevels)
 {}
 
