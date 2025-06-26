@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -30,7 +30,7 @@
 #
 #------------------------------------------------------------------------------
 
-unsetenv MPI_ARCH_PATH MPI_HOME FOAM_MPI_LIBBIN
+unsetenv MPI_ARCH_PATH
 
 switch ("$WM_MPLIB")
 case SYSTEMOPENMPI:
@@ -48,8 +48,33 @@ case SYSTEMOPENMPI:
     breaksw
 
 case OPENMPI:
-    setenv FOAM_MPI openmpi-2.1.1
-    # Optional configuration tweaks:
+    # Look for the source directory
+    if ( ! $?OPENMPI_VERSION ) then
+        set openmpiSrcDir=`eval _foamMostRecentDir "$WM_THIRD_PARTY_DIR"/openmpi-*`
+        setenv OPENMPI_VERSION `echo $openmpiSrcDir | sed 's/.*openmpi-//g'`
+        unset openmpiSrcDir
+    endif
+
+    # Warn if OpenMPI was not found
+    if ( ! -d "$WM_THIRD_PARTY_DIR"/openmpi-$OPENMPI_VERSION ) then
+        if ( "$OPENMPI_VERSION" == "" ) then
+            set ver="?"
+        else
+            set ver=$OPENMPI_VERSION
+        endif
+
+        echo
+        echo "Warning in $WM_PROJECT_DIR/etc/config.sh/mpi:"
+        echo "    OpenMPI sources directory" \
+             " $WM_THIRD_PARTY_DIR/openmpi-$ver not found"
+        echo
+
+        unset ver
+    endif
+
+    setenv FOAM_MPI openmpi-$OPENMPI_VERSION
+
+    # Optional configuration tweaks
     _foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config.csh/openmpi`
 
     setenv MPI_ARCH_PATH $WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/$FOAM_MPI
@@ -111,8 +136,32 @@ case SYSTEMMPI:
     breaksw
 
 case MPICH:
-    setenv FOAM_MPI mpich2-1.1.1p1
-    setenv MPI_HOME $WM_THIRD_PARTY_DIR/$FOAM_MPI
+    # Look for the source directory
+    if ( ! $?MPICH_VERSION ) then
+        set mpichSrcDir=`eval _foamMostRecentDir "$WM_THIRD_PARTY_DIR"/mpich-*`
+        setenv MPICH_VERSION `echo $mpichSrcDir | sed 's/.*mpich-//g'`
+        unset mpichSrcDir
+    endif
+
+    # Warn if MPICH was not found
+    if ( ! -d "$WM_THIRD_PARTY_DIR"/mpich-$MPICH_VERSION ) then
+        if ( "$MPICH_VERSION" == "" ) then
+            set ver="?"
+        else
+            set ver=$MPICH_VERSION
+        endif
+
+        echo
+        echo "Warning in $WM_PROJECT_DIR/etc/config.sh/mpi:"
+        echo "    MPICH sources directory" \
+             " $WM_THIRD_PARTY_DIR/mpich-$ver not found"
+        echo
+
+        unset ver
+    endif
+
+    setenv FOAM_MPI mpich-$MPICH_VERSION
+
     setenv MPI_ARCH_PATH $WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/$FOAM_MPI
 
     _foamAddPath    $MPI_ARCH_PATH/bin
@@ -149,8 +198,7 @@ case MV2MPI:
 
 case HPMPI:
     setenv FOAM_MPI hpmpi
-    setenv MPI_HOME /opt/hpmpi
-    setenv MPI_ARCH_PATH $MPI_HOME
+    setenv MPI_ARCH_PATH /opt/hpmpi
 
     _foamAddPath $MPI_ARCH_PATH/bin
 

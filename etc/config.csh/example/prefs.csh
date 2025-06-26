@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -47,6 +47,11 @@
 ## Specify system openmpi
 ## ~~~~~~~~~~~~~~~~~~~~~~
 #setenv WM_MPLIB SYSTEMOPENMPI
+
+## Specify OpenFOAM ThirdParty openmpi with version
+## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#setenv WM_MPLIB OPENMPI
+#setenv OPENMPI_VERSION 2.1.1
 
 ## Specify options for decomposition libraries
 ## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
