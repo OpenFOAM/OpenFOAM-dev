@@ -358,18 +358,13 @@ void Foam::fv::homogeneousLiquidPhaseSeparation::addSup
 {
     const label i = index(alphaNames(), eqn.psi().name());
 
-    if (i != -1)
+    // !!! Note at present multiphaseEuler cannot linearise w.r.t alphaA in the
+    // continuity equation for alphaB. So we can only create a linearised
+    // source for this model in the solution volume-fraction equation.
+
+    if (i == 0)
     {
-        if (i == 0)
-        {
-            eqn -= fvm::Sp(mDotByAlphaSolution_, eqn.psi());
-        }
-        else
-        {
-            eqn +=
-                mDot()
-              - correction(fvm::Sp(mDotByAlphaSolution_, eqn.psi()));
-        }
+        eqn -= fvm::Sp(mDotByAlphaSolution_, eqn.psi());
     }
     else
     {
