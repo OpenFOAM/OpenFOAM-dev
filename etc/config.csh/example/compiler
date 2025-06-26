@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -30,18 +30,11 @@
 #
 #------------------------------------------------------------------------------
 
-# Modified compiler settings
+# Override compiler settings
 switch ("$WM_COMPILER")
 case Gcc46:
-case Gcc46++0x:
+    # Example of using an old unsupported third-party compiler
     set gcc_version=gcc-4.6.0
-    set gmp_version=gmp-5.0.1
-    set mpfr_version=mpfr-2.4.2
-    set mpc_version=mpc-0.8.1
-    breaksw
-case Gcc45:
-case Gcc45++0x:
-    set gcc_version=gcc-4.5.2
     set gmp_version=gmp-5.0.1
     set mpfr_version=mpfr-2.4.2
     set mpc_version=mpc-0.8.1
