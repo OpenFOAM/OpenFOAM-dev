@@ -49,7 +49,7 @@ Description
 
     - Run-time clearance estimation based on patch-to-patch distances printed.
 
-    - Supports cellSet and cellZone definitions to restrict mesh motion.
+    - Supports cellZone definitions to restrict mesh motion.
 
     - Supports domains with nonConformalCoupling (NCC) interfaces,
       enabling e.g. nodes to slide along with the interface.
@@ -211,7 +211,7 @@ Description
       there should be no horizontal NCC interface separating piston from
       cylinder head as it would result in potentially ill defined mesh
       deformation. Due to same feature, in a schematic case setup above, valve
-      motion affects only cells between NCC patches even though no cellSet is
+      motion affects only cells between NCC patches even though no cellZone is
       explicitly defined.
 
 SourceFiles
