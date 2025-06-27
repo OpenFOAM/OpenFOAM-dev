@@ -1,0 +1,25 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      createZonesDict;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// This is a skeleton file for configuring zoneGenerators.
+//
+// The available zoneGenerators can be listed using 'foamToC':
+//    foamToC -table zoneGenerator
+//
+// Examples of their configuration can be found using 'foamInfo',
+// e.g. for the 'union' zoneGenerator:
+//    foamInfo union
+
+// ************************************************************************* //
