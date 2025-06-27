@@ -47,7 +47,7 @@ Usage
     {
         type            heatTransfer;
 
-        cellSet         c0;
+        cellZone        c0;
 
         semiImplicit    no;
 

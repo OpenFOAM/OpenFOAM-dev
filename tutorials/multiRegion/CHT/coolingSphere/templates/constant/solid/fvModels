@@ -17,11 +17,11 @@ FoamFile
 fixedPower
 {
     type            heatSource;
+
     cellZone        all;
 
-    Q               100;          // Set power (W)
+    Q               100;          // Power (W)
 }
 */
-
 
 //************************************************************************** //
