@@ -23,45 +23,78 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+// * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
+
+template<class ZoneType>
+inline void Foam::zoneSet::checkValid(const tmpNrc<ZoneType>& zone) const
+{
+    if (!zone.valid())
+    {
+        FatalErrorInFunction
+            << "zoneSet does not contain a " << ZoneType::typeName << nl;
+
+        if (pZone_.valid())
+        {
+            FatalError
+                << "    zoneSet contains pointZone " << pZone_().name() << nl;
+        }
+
+        if (cZone_.valid())
+        {
+            FatalError
+                << "    zoneSet contains cellZone " << cZone_().name() << nl;
+        }
+
+        if (fZone_.valid())
+        {
+            FatalError
+                << "    zoneSet contains facesZone " << fZone_().name() << nl;
+        }
+
+        FatalError << exit(FatalError);
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 inline Foam::zoneSet::zoneSet()
 :
-    pZone(nullptr),
-    cZone(nullptr),
-    fZone(nullptr)
+    pZone_(nullptr),
+    cZone_(nullptr),
+    fZone_(nullptr)
 {}
 
 
 inline Foam::zoneSet::zoneSet(const zoneSet& zs)
 :
-    pZone(zs.pZone),
-    cZone(zs.cZone),
-    fZone(zs.fZone)
+    pZone_(zs.pZone_),
+    cZone_(zs.cZone_),
+    fZone_(zs.fZone_)
 {}
 
 
 inline Foam::zoneSet::zoneSet(pointZone* pointZonePtr)
 :
-    pZone(pointZonePtr),
-    cZone(nullptr),
-    fZone(nullptr)
+    pZone_(pointZonePtr),
+    cZone_(nullptr),
+    fZone_(nullptr)
 {}
 
 
 inline Foam::zoneSet::zoneSet(cellZone* cellZonePtr)
 :
-    pZone(nullptr),
-    cZone(cellZonePtr),
-    fZone(nullptr)
+    pZone_(nullptr),
+    cZone_(cellZonePtr),
+    fZone_(nullptr)
 {}
 
 
 inline Foam::zoneSet::zoneSet(faceZone* faceZonePtr)
 :
-    pZone(nullptr),
-    cZone(nullptr),
-    fZone(faceZonePtr)
+    pZone_(nullptr),
+    cZone_(nullptr),
+    fZone_(faceZonePtr)
 {}
 
 
@@ -72,41 +105,41 @@ inline Foam::zoneSet::zoneSet
     faceZone* faceZonePtr
 )
 :
-    pZone(pointZonePtr),
-    cZone(cellZonePtr),
-    fZone(faceZonePtr)
+    pZone_(pointZonePtr),
+    cZone_(cellZonePtr),
+    fZone_(faceZonePtr)
 {}
 
 
 inline Foam::zoneSet::zoneSet(const pointZone& pointZoneRef)
 :
-    pZone(pointZoneRef),
-    cZone(nullptr),
-    fZone(nullptr)
+    pZone_(pointZoneRef),
+    cZone_(nullptr),
+    fZone_(nullptr)
 {}
 
 
 inline Foam::zoneSet::zoneSet(const cellZone& cellZoneRef)
 :
-    pZone(nullptr),
-    cZone(cellZoneRef),
-    fZone(nullptr)
+    pZone_(nullptr),
+    cZone_(cellZoneRef),
+    fZone_(nullptr)
 {}
 
 
 inline Foam::zoneSet::zoneSet(const faceZone& faceZoneRef)
 :
-    pZone(nullptr),
-    cZone(nullptr),
-    fZone(faceZoneRef)
+    pZone_(nullptr),
+    cZone_(nullptr),
+    fZone_(faceZoneRef)
 {}
 
 
 inline Foam::zoneSet::zoneSet(const zoneSet& zs, bool allowTransfer)
 :
-    pZone(zs.pZone, allowTransfer),
-    cZone(zs.cZone, allowTransfer),
-    fZone(zs.fZone, allowTransfer)
+    pZone_(zs.pZone_, allowTransfer),
+    cZone_(zs.cZone_, allowTransfer),
+    fZone_(zs.fZone_, allowTransfer)
 {}
 
 
@@ -114,16 +147,16 @@ inline Foam::zoneSet Foam::zoneSet::clone(const word& name) const
 {
     return zoneSet
     (
-        pZone.valid()
-      ? pZone().clone(name).ptr()
+        pZone_.valid()
+      ? pZone_().clone(name).ptr()
       : nullptr,
 
-        cZone.valid()
-      ? cZone().clone(name).ptr()
+        cZone_.valid()
+      ? cZone_().clone(name).ptr()
       : nullptr,
 
-        fZone.valid()
-      ? fZone().clone(name).ptr()
+        fZone_.valid()
+      ? fZone_().clone(name).ptr()
       : nullptr
     );
 }
@@ -131,10 +164,73 @@ inline Foam::zoneSet Foam::zoneSet::clone(const word& name) const
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
+inline bool Foam::zoneSet::pValid() const
+{
+
+    return pZone_.valid();
+}
+
+
+inline bool Foam::zoneSet::cValid() const
+{
+
+    return cZone_.valid();
+}
+
+
+inline bool Foam::zoneSet::fValid() const
+{
+
+    return fZone_.valid();
+}
+
+
 inline bool Foam::zoneSet::valid() const
 {
 
-    return pZone.valid() || cZone.valid() || fZone.valid();
+    return pZone_.valid() || cZone_.valid() || fZone_.valid();
+}
+
+
+template<>
+inline bool Foam::zoneSet::valid<Foam::pointZone>() const
+{
+    return pValid();
+}
+
+
+template<>
+inline bool Foam::zoneSet::valid<Foam::cellZone>() const
+{
+    return cValid();
+}
+
+
+template<>
+inline bool Foam::zoneSet::valid<Foam::faceZone>() const
+{
+    return fValid();
+}
+
+
+inline const Foam::pointZone& Foam::zoneSet::pZone() const
+{
+    checkValid(pZone_);
+    return pZone_();
+}
+
+
+inline const Foam::cellZone& Foam::zoneSet::cZone() const
+{
+    checkValid(cZone_);
+    return cZone_();
+}
+
+
+inline const Foam::faceZone& Foam::zoneSet::fZone() const
+{
+    checkValid(fZone_);
+    return fZone_();
 }
 
 
@@ -156,6 +252,26 @@ template<>
 inline const Foam::faceZone& Foam::zoneSet::zone<Foam::faceZone>() const
 {
     return fZone();
+}
+
+
+// * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * * //
+
+inline void Foam::zoneSet::operator=(const pointZone& pZone)
+{
+    pZone_ = pZone;
+}
+
+
+inline void Foam::zoneSet::operator=(const cellZone& cZone)
+{
+    cZone_ = cZone;
+}
+
+
+inline void Foam::zoneSet::operator=(const faceZone& fZone)
+{
+    fZone_ = fZone;
 }
 
 

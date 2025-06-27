@@ -126,8 +126,14 @@ class lookup
 
     // Private Member Functions
 
-        //- Check if a zone with the given zoneName of any type exists
-        void checkOtherZones(const word& zoneName) const;
+        //- Check if the zone with the given zoneName and type exists
+        //  and return a reference otherwise error
+        template<class ZoneListType>
+        const typename ZoneListType::zoneType& lookupZone
+        (
+            const ZoneListType& zones,
+            const word& zoneName
+        ) const;
 
 
 public:

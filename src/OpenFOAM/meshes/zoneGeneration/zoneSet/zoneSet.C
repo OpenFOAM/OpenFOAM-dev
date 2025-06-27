@@ -28,7 +28,6 @@ License
 #include "cellZoneList.H"
 #include "faceZoneList.H"
 
-
 // * * * * * * * * * * * * * * * * Static Data * * * * * * * * * * * * * * * //
 
 const Foam::NamedEnum<Foam::zoneTypes, 3>
@@ -55,55 +54,57 @@ Foam::zoneSet Foam::zoneSet::store() const
 {
     zoneSet zs;
 
-    if (!pZone.empty())
+    if (!pZone_.empty())
     {
-        pointZone* pZonePtr = pZone.ptr();
-        zs.pZone = pZonePtr->zones().append(pZonePtr);
+        pointZone* pZone_Ptr = pZone_.ptr();
+        zs.pZone_ = pZone_Ptr->zones().append(pZone_Ptr);
     }
-    else if (pZone.valid())
+    else if (pZone_.valid())
     {
-        zs.pZone = pZone();
-    }
-
-    if (!cZone.empty())
-    {
-        cellZone* cZonePtr = cZone.ptr();
-        zs.cZone = cZonePtr->zones().append(cZonePtr);
-    }
-    else if (cZone.valid())
-    {
-        zs.cZone = cZone();
+        zs.pZone_ = pZone_();
     }
 
-    if (!fZone.empty())
+    if (!cZone_.empty())
     {
-        faceZone* fZonePtr = fZone.ptr();
-        zs.fZone = fZonePtr->zones().append(fZonePtr);
+        cellZone* cZone_Ptr = cZone_.ptr();
+        zs.cZone_ = cZone_Ptr->zones().append(cZone_Ptr);
     }
-    else if (fZone.valid())
+    else if (cZone_.valid())
     {
-        zs.fZone = fZone();
+        zs.cZone_ = cZone_();
+    }
+
+    if (!fZone_.empty())
+    {
+        faceZone* fZone_Ptr = fZone_.ptr();
+        zs.fZone_ = fZone_Ptr->zones().append(fZone_Ptr);
+    }
+    else if (fZone_.valid())
+    {
+        zs.fZone_ = fZone_();
     }
 
     return zs;
 }
 
 
+// * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * * //
+
 void Foam::zoneSet::operator=(const zoneSet& zs)
 {
-    if (!zs.pZone.empty())
+    if (!zs.pZone_.empty())
     {
-        pZone = zs.pZone;
+        pZone_ = zs.pZone_;
     }
 
-    if (!zs.cZone.empty())
+    if (!zs.cZone_.empty())
     {
-        cZone = zs.cZone;
+        cZone_ = zs.cZone_;
     }
 
-    if (!zs.fZone.empty())
+    if (!zs.fZone_.empty())
     {
-        fZone = zs.fZone;
+        fZone_ = zs.fZone_;
     }
 }
 

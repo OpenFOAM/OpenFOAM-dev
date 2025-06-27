@@ -142,27 +142,27 @@ Foam::zoneSet Foam::zoneGenerators::intersection::generate() const
         if
         (
             zoneType_ == zoneTypesAll::point
-         || (zoneType_ == zoneTypesAll::all && zs.pZone.valid())
+         || (zoneType_ == zoneTypesAll::all && zs.pValid())
         )
         {
             nPointIntersections.setSize(mesh_.nPoints(), 0);
-            countIntersections(nPointIntersections, zs.pZone);
+            countIntersections(nPointIntersections, zs.pZone());
         }
 
         if
         (
             zoneType_ == zoneTypesAll::cell
-         || (zoneType_ == zoneTypesAll::all && zs.cZone.valid())
+         || (zoneType_ == zoneTypesAll::all && zs.cValid())
         )
         {
             nCellIntersections.setSize(mesh_.nCells(), 0);
-            countIntersections(nCellIntersections, zs.cZone);
+            countIntersections(nCellIntersections, zs.cZone());
         }
 
         if
         (
             zoneType_ == zoneTypesAll::face
-         || (zoneType_ == zoneTypesAll::all && zs.fZone.valid())
+         || (zoneType_ == zoneTypesAll::all && zs.fValid())
         )
         {
             nFaceIntersections.setSize(mesh_.nFaces(), 0);

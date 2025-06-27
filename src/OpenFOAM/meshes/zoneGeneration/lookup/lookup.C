@@ -41,22 +41,44 @@ namespace Foam
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
-void Foam::zoneGenerators::lookup::checkOtherZones(const word& zoneName) const
+template<class ZoneListType>
+const typename ZoneListType::zoneType& Foam::zoneGenerators::lookup::lookupZone
+(
+    const ZoneListType& zones,
+    const word& zoneName
+) const
 {
-    if (mesh_.pointZones().lookupPtr(zoneName_) != nullptr)
+    typedef typename ZoneListType::zoneType ZoneType;
+
+    const ZoneType* zonePtr = zones.lookupPtr(zoneName_);
+
+    if (zonePtr == nullptr)
     {
-        FatalIOError << "    Found pointZone " << zoneName << nl;
+        FatalIOErrorInFunction(dict_)
+            << "Cannot find " << ZoneType::typeName << " " << zoneName_ << nl;
+
+        if (mesh_.pointZones().lookupPtr(zoneName_) != nullptr)
+        {
+            FatalIOError << "    Found pointZone " << zoneName << nl;
+        }
+
+        if (mesh_.cellZones().lookupPtr(zoneName_) != nullptr)
+        {
+            FatalIOError << "    Found cellZone " << zoneName << nl;
+        }
+
+        if (mesh_.faceZones().lookupPtr(zoneName_) != nullptr)
+        {
+            FatalIOError << "    Found faceZone " << zoneName << nl;
+        }
+
+        FatalIOError
+            << "    Available " << ZoneType::typeName << "s: "
+            << zones.sortedToc()
+            << exit(FatalIOError);
     }
 
-    if (mesh_.cellZones().lookupPtr(zoneName_) != nullptr)
-    {
-        FatalIOError << "    Found cellZone " << zoneName << nl;
-    }
-
-    if (mesh_.faceZones().lookupPtr(zoneName_) != nullptr)
-    {
-        FatalIOError << "    Found faceZone " << zoneName << nl;
-    }
+    return *zonePtr;
 }
 
 
@@ -91,59 +113,21 @@ Foam::zoneSet Foam::zoneGenerators::lookup::generate() const
     {
         case zoneTypesAll::point:
         {
-            const pointZone* pZonePtr =
-                mesh_.pointZones().lookupPtr(zoneName_);
-
-            if (pZonePtr == nullptr)
-            {
-                FatalIOErrorInFunction(dict_)
-                    << "Cannot find pointZone " << zoneName_ << nl
-                    << "    Available pointZones "
-                    << mesh_.pointZones().sortedToc()
-                    << exit(FatalIOError);
-            }
-
-            const pointZone& pZone = *pZonePtr;
+            const pointZone& pZone = lookupZone(mesh_.pointZones(), zoneName_);
             moveUpdate_ = moveUpdate_ || pZone.moveUpdate();
             return zoneSet(pZone);
         }
 
         case zoneTypesAll::cell:
         {
-            const cellZone* cZonePtr =
-                mesh_.cellZones().lookupPtr(zoneName_);
-
-            if (cZonePtr == nullptr)
-            {
-                FatalIOErrorInFunction(dict_)
-                    << "Cannot find cellZone " << zoneName_ << nl
-                    << "    Available cellZones "
-                    << mesh_.cellZones().sortedToc()
-                    << exit(FatalIOError);
-            }
-
-            const cellZone& cZone = *cZonePtr;
+            const cellZone& cZone = lookupZone(mesh_.cellZones(), zoneName_);
             moveUpdate_ = moveUpdate_ || cZone.moveUpdate();
             return zoneSet(cZone);
         }
 
         case zoneTypesAll::face:
         {
-            const faceZone* fZonePtr =
-                mesh_.faceZones().lookupPtr(zoneName_);
-
-            if (fZonePtr == nullptr)
-            {
-                FatalIOErrorInFunction(dict_)
-                    << "Cannot find faceZone " << zoneName_ << nl;
-                checkOtherZones(zoneName_);
-                FatalIOError
-                    << "    Available faceZones "
-                    << mesh_.faceZones().sortedToc()
-                    << exit(FatalIOError);
-            }
-
-            const faceZone& fZone = *fZonePtr;
+            const faceZone& fZone = lookupZone(mesh_.faceZones(), zoneName_);
             moveUpdate_ = moveUpdate_ || fZone.moveUpdate();
             return zoneSet(fZone);
         }
@@ -162,21 +146,21 @@ Foam::zoneSet Foam::zoneGenerators::lookup::generate() const
 
             if (mesh_.pointZones().found(zoneName_))
             {
-                zs.pZone = mesh_.pointZones()[zoneName_];
+                zs = mesh_.pointZones()[zoneName_];
                 found = true;
                 moveUpdate_ = moveUpdate_ || zs.pZone().moveUpdate();
             }
 
             if (mesh_.cellZones().found(zoneName_))
             {
-                zs.cZone = mesh_.cellZones()[zoneName_];
+                zs = mesh_.cellZones()[zoneName_];
                 found = true;
                 moveUpdate_ = moveUpdate_ || zs.cZone().moveUpdate();
             }
 
             if (mesh_.faceZones().found(zoneName_))
             {
-                zs.fZone = mesh_.faceZones()[zoneName_];
+                zs = mesh_.faceZones()[zoneName_];
                 found = true;
                 moveUpdate_ = moveUpdate_ || zs.fZone().moveUpdate();
             }

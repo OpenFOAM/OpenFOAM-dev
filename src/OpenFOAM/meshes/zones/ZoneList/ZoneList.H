@@ -89,6 +89,9 @@ class ZoneList
 
 public:
 
+        typedef ZoneType zoneType;
+
+
     // Constructors
 
         //- Read constructor given IOobject and a MeshType reference

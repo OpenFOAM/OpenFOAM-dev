@@ -74,7 +74,7 @@ Foam::zoneSet Foam::zoneGenerators::point::generate() const
     {
         zoneSet zs(zoneGenerators_[i].generate());
 
-        if (zs.pZone.valid() && zs.pZone().name() != zoneName_)
+        if (zs.pValid() && zs.pZone().name() != zoneName_)
         {
             const labelList& zonePoints = zs.pZone();
 
@@ -84,7 +84,7 @@ Foam::zoneSet Foam::zoneGenerators::point::generate() const
             }
         }
 
-        if (zs.cZone.valid())
+        if (zs.cValid())
         {
             const labelList& zoneCells = zs.cZone();
 
@@ -104,7 +104,7 @@ Foam::zoneSet Foam::zoneGenerators::point::generate() const
             }
         }
 
-        if (zs.fZone.valid())
+        if (zs.fValid())
         {
             const labelList& zoneFaces = zs.fZone();
 

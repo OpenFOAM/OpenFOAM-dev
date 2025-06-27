@@ -93,27 +93,27 @@ Foam::zoneSet Foam::zoneGenerators::Union::generate
         if
         (
             zoneType_ == zoneTypesAll::point
-         || (zoneType_ == zoneTypesAll::all && zs.pZone.valid())
+         || (zoneType_ == zoneTypesAll::all && zs.pValid())
         )
         {
             selectedPoints.setSize(mesh_.nPoints(), all);
-            select(selectedPoints, zs.pZone, sel);
+            select(selectedPoints, zs.pZone(), sel);
         }
 
         if
         (
             zoneType_ == zoneTypesAll::cell
-         || (zoneType_ == zoneTypesAll::all && zs.cZone.valid())
+         || (zoneType_ == zoneTypesAll::all && zs.cValid())
         )
         {
             selectedCells.setSize(mesh_.nCells(), all);
-            select(selectedCells, zs.cZone, sel);
+            select(selectedCells, zs.cZone(), sel);
         }
 
         if
         (
             zoneType_ == zoneTypesAll::face
-         || (zoneType_ == zoneTypesAll::all && zs.fZone.valid())
+         || (zoneType_ == zoneTypesAll::all && zs.fValid())
         )
         {
             const bool oriented = !all && zs.fZone().oriented();

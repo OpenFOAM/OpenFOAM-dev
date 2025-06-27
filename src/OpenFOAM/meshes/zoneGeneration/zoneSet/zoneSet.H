@@ -91,19 +91,28 @@ extern const NamedEnum<zoneTypesAll, 4> zoneTypesAllNames;
                           Class zoneSet Declaration
 \*---------------------------------------------------------------------------*/
 
-struct zoneSet
+class zoneSet
 {
-    // Public Data
+    // Private Data
 
         //- Temporary pointZone
-        tmpNrc<pointZone> pZone;
+        tmpNrc<pointZone> pZone_;
 
         //- Temporary cellZone
-        tmpNrc<cellZone> cZone;
+        tmpNrc<cellZone> cZone_;
 
         //- Temporary faceZone
-        tmpNrc<faceZone> fZone;
+        tmpNrc<faceZone> fZone_;
 
+
+    // Private Member Functions
+
+        //- Print to FatalError the names of all the types zones allocated
+        template<class ZoneType>
+        void checkValid(const tmpNrc<ZoneType>& zone) const;
+
+
+public:
 
         //- Enumeration defining the zone types
         enum class zoneTypess
@@ -160,14 +169,43 @@ struct zoneSet
 
     // Member Functions
 
-        //- Return true if any of the zone types have been defined
+        //- Return true if the pointZone is allocated
+        inline bool pValid() const;
+
+        //- Return true if the cellZone is allocated
+        inline bool cValid() const;
+
+        //- Return true if the faceZone is allocated
+        inline bool fValid() const;
+
+        //- Return true if any of the zone types are allocated
         inline bool valid() const;
+
+        //- Return true if the zone type specified by template specialisation
+        //  is allocated
+        template<class ZoneType>
+        inline bool valid() const;
+
+        //- Return a reference to the pointZone if allocated
+        //  otherwise stop with an error
+        inline const pointZone& pZone() const;
+
+        //- Return a reference to the cellZone if allocated
+        //  otherwise stop with an error
+        inline const cellZone& cZone() const;
+
+        //- Return a reference to the faceZone if allocated
+        //  otherwise stop with an error
+        inline const faceZone& fZone() const;
+
+        //- Return a reference to the zone type
+        //  specified by template specialisation if allocated
+        //  otherwise stop with an error
+        template<class ZoneType>
+        inline const ZoneType& zone() const;
 
         //- Store the temporary zones and return the stored zoneSet
         zoneSet store() const;
-
-        template<class ZoneType>
-        inline const ZoneType& zone() const;
 
 
     // Member Operators
@@ -177,7 +215,26 @@ struct zoneSet
 
         //- Assignment moving content
         inline zoneSet& operator=(zoneSet&&) = default;
+
+        //- Assignment to pointZone, updating pZone_
+        inline void operator=(const pointZone&);
+
+        //- Assignment to cellZone, updating cZone_
+        inline void operator=(const cellZone&);
+
+        //- Assignment to faceZone, updating fZone_
+        inline void operator=(const faceZone&);
 };
+
+
+template<>
+inline bool zoneSet::valid<pointZone>() const;
+
+template<>
+inline bool zoneSet::valid<cellZone>() const;
+
+template<>
+inline bool zoneSet::valid<faceZone>() const;
 
 
 template<>

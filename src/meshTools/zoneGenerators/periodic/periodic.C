@@ -137,7 +137,7 @@ Foam::zoneSet Foam::zoneGenerators::periodic::generate() const
 
             nullZoneSet_ = zoneSet
             (
-                zs.pZone.valid()
+                zs.pValid()
               ? new pointZone
                 (
                     zoneName_,
@@ -147,7 +147,7 @@ Foam::zoneSet Foam::zoneGenerators::periodic::generate() const
                     true
                 )
               : nullptr,
-                zs.cZone.valid()
+                zs.cValid()
               ? new cellZone
                 (
                     zoneName_,
@@ -157,7 +157,7 @@ Foam::zoneSet Foam::zoneGenerators::periodic::generate() const
                     true
                 )
               : nullptr,
-                zs.fZone.valid()
+                zs.fValid()
               ? new faceZone
                 (
                     zoneName_,

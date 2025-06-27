@@ -184,12 +184,12 @@ int main(int argc, char *argv[])
 
             const zoneSet zs(zg->generate());
 
-            if (zs.cZone.valid())
+            if (zs.cValid())
             {
                 setVolFields(mesh, zoneDict.subDict("values"), zs.cZone());
             }
 
-            if (zs.fZone.valid())
+            if (zs.fValid())
             {
                 setPatchFields(mesh, zoneDict.subDict("values"), zs.fZone());
             }
