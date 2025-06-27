@@ -39,6 +39,27 @@ namespace Foam
 }
 
 
+// * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
+
+void Foam::zoneGenerators::lookup::checkOtherZones(const word& zoneName) const
+{
+    if (mesh_.pointZones().lookupPtr(zoneName_) != nullptr)
+    {
+        FatalIOError << "    Found pointZone " << zoneName << nl;
+    }
+
+    if (mesh_.cellZones().lookupPtr(zoneName_) != nullptr)
+    {
+        FatalIOError << "    Found cellZone " << zoneName << nl;
+    }
+
+    if (mesh_.faceZones().lookupPtr(zoneName_) != nullptr)
+    {
+        FatalIOError << "    Found faceZone " << zoneName << nl;
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::zoneGenerators::lookup::lookup
@@ -114,7 +135,9 @@ Foam::zoneSet Foam::zoneGenerators::lookup::generate() const
             if (fZonePtr == nullptr)
             {
                 FatalIOErrorInFunction(dict_)
-                    << "Cannot find faceZone " << zoneName_ << nl
+                    << "Cannot find faceZone " << zoneName_ << nl;
+                checkOtherZones(zoneName_);
+                FatalIOError
                     << "    Available faceZones "
                     << mesh_.faceZones().sortedToc()
                     << exit(FatalIOError);

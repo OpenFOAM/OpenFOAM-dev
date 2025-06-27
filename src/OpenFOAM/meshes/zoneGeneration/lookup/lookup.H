@@ -124,6 +124,12 @@ class lookup
         zoneTypesAll zoneType_;
 
 
+    // Private Member Functions
+
+        //- Check if a zone with the given zoneName of any type exists
+        void checkOtherZones(const word& zoneName) const;
+
+
 public:
 
     //- Runtime type information

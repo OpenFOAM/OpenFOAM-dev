@@ -36,34 +36,6 @@ namespace Foam
 }
 
 
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-Foam::labelList Foam::zoneGenerator::indices(const boolList& selected)
-{
-    label nSelected = 0;
-    forAll(selected, i)
-    {
-        if (selected[i])
-        {
-            nSelected++;
-        }
-    }
-
-    labelList selectedIndices(nSelected);
-
-    label ui = 0;
-    forAll(selected, i)
-    {
-        if (selected[i])
-        {
-            selectedIndices[ui++] = i;
-        }
-    }
-
-    return selectedIndices;
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::zoneGenerator::zoneGenerator
@@ -257,6 +229,32 @@ Foam::zoneGenerator::New
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+Foam::labelList Foam::zoneGenerator::indices(const boolList& selected)
+{
+    label nSelected = 0;
+    forAll(selected, i)
+    {
+        if (selected[i])
+        {
+            nSelected++;
+        }
+    }
+
+    labelList selectedIndices(nSelected);
+
+    label ui = 0;
+    forAll(selected, i)
+    {
+        if (selected[i])
+        {
+            selectedIndices[ui++] = i;
+        }
+    }
+
+    return selectedIndices;
+}
+
 
 Foam::zoneSet Foam::zoneGenerator::movePoints() const
 {
