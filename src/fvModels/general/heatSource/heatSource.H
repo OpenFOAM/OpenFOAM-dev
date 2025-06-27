@@ -35,7 +35,7 @@ Usage
     {
         type            heatSource;
 
-        cellSet         heater;
+        cellZone        heater;
 
         Q               1e6;
     }
