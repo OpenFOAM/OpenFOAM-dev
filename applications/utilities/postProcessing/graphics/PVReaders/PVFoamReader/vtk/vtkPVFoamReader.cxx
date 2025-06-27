@@ -28,6 +28,9 @@ License
 #include "pqApplicationCore.h"
 #include "pqRenderView.h"
 #include "pqServerManagerModel.h"
+#include "pqPVApplicationCore.h"
+#include "pqAnimationManager.h"
+#include "pqAnimationScene.h"
 
 // VTK includes
 #include "vtkCallbackCommand.h"
@@ -37,15 +40,18 @@ License
 #include "vtkMultiBlockDataSet.h"
 #include "vtkObjectFactory.h"
 #include "vtkSMRenderViewProxy.h"
+#include "vtkSMAnimationSceneProxy.h"
+#include "vtkSMPropertyHelper.h"
 #include "vtkStreamingDemandDrivenPipeline.h"
 #include "vtkStringArray.h"
+#include "vtkCompositeAnimationPlayer.h"
 
 // OpenFOAM includes
 #include "vtkPVFoam.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-int vtkPVFoamReader::RequestTimeSteps(vtkInformationVector* outputVector)
+int vtkPVFoamReader::requestTimeSteps(vtkInformationVector* outputVector)
 {
     int nTimeSteps = 0;
     double* timeSteps = foamData_->findTimes(First, nTimeSteps);
@@ -100,6 +106,31 @@ int vtkPVFoamReader::RequestTimeSteps(vtkInformationVector* outputVector)
 }
 
 
+void vtkPVFoamReader::updatePatchNamesView(const bool show)
+{
+    pqApplicationCore* appCore = pqApplicationCore::instance();
+    if (!appCore) return;
+
+    // Server manager model for querying items in the server manager
+    pqServerManagerModel* smModel = appCore->getServerManagerModel();
+    if (!smModel || !foamData_) return;
+
+    // Get all the pqRenderView instances
+    QList<pqRenderView*> renderViews = smModel->findItems<pqRenderView*>();
+
+    for (int viewI=0; viewI < renderViews.size(); ++viewI)
+    {
+        foamData_->renderPatchNames
+        (
+            renderViews[viewI]->getRenderViewProxy()->GetRenderer(),
+            show
+        );
+    }
+
+    // use refresh here?
+}
+
+
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 vtkStandardNewMacro(vtkPVFoamReader);
@@ -116,9 +147,6 @@ vtkPVFoamReader::vtkPVFoamReader()
 
     FileName  = nullptr;
     foamData_ = nullptr;
-
-    TimeStepRange[0] = 0;
-    TimeStepRange[1] = 0;
 
     DecomposedCase = 0;
     CacheMesh = 1;
@@ -140,35 +168,61 @@ vtkPVFoamReader::vtkPVFoamReader()
     lagrangianFieldSelection = vtkDataArraySelection::New();
     LagrangianFieldSelection = vtkDataArraySelection::New();
 
-    // Setup the selection callback to modify this object when an array
-    // selection is changed.
-    SelectionObserver = vtkCallbackCommand::New();
-    SelectionObserver->SetCallback
+    // Setup the selection-modified callback to modify this object when an
+    // array selection is changed
+    SelectionModifiedObserver = vtkCallbackCommand::New();
+    SelectionModifiedObserver->SetCallback
     (
         &vtkPVFoamReader::SelectionModifiedCallback
     );
-    SelectionObserver->SetClientData(this);
+    SelectionModifiedObserver->SetClientData(this);
 
     PartSelection->AddObserver
     (
         vtkCommand::ModifiedEvent,
-        this->SelectionObserver
+        this->SelectionModifiedObserver
     );
     FieldSelection->AddObserver
     (
         vtkCommand::ModifiedEvent,
-        this->SelectionObserver
+        this->SelectionModifiedObserver
     );
     lagrangianFieldSelection->AddObserver
     (
         vtkCommand::ModifiedEvent,
-        this->SelectionObserver
+        this->SelectionModifiedObserver
     );
     LagrangianFieldSelection->AddObserver
     (
         vtkCommand::ModifiedEvent,
-        this->SelectionObserver
+        this->SelectionModifiedObserver
     );
+
+    // Setup the animation-property-modified callback to reset the play-mode
+    // back to to SNAP_TO_TIMESTEPS whenever ParaView mysteriously changes it
+    // back to SEQUENCE
+    vtkSMProxy* animationSceneProxy =
+        pqPVApplicationCore::instance()
+      ->animationManager()
+      ->getActiveScene()
+      ->getProxy();
+
+    AnimationPropertyModifiedObserver = vtkCallbackCommand::New();
+    AnimationPropertyModifiedObserver->SetCallback
+    (
+        &vtkPVFoamReader::AnimationPropertyModifiedCallback
+    );
+    AnimationPropertyModifiedObserver->SetClientData(this);
+
+    animationSceneProxy->AddObserver
+    (
+        vtkCommand::PropertyModifiedEvent,
+        this->AnimationPropertyModifiedObserver
+    );
+
+    // Explicitly call the animation-property-modified callback so that the
+    // play-mode is correctly set at the start
+    AnimationPropertyModifiedCallback(animationSceneProxy, 0, this, nullptr);
 }
 
 
@@ -190,12 +244,12 @@ vtkPVFoamReader::~vtkPVFoamReader()
         delete [] FileName;
     }
 
-    PartSelection->RemoveObserver(this->SelectionObserver);
-    FieldSelection->RemoveObserver(this->SelectionObserver);
-    lagrangianFieldSelection->RemoveObserver(this->SelectionObserver);
-    LagrangianFieldSelection->RemoveObserver(this->SelectionObserver);
+    PartSelection->RemoveObserver(this->SelectionModifiedObserver);
+    FieldSelection->RemoveObserver(this->SelectionModifiedObserver);
+    lagrangianFieldSelection->RemoveObserver(this->SelectionModifiedObserver);
+    LagrangianFieldSelection->RemoveObserver(this->SelectionModifiedObserver);
 
-    SelectionObserver->Delete();
+    SelectionModifiedObserver->Delete();
 
     PartSelection->Delete();
     FieldSelection->Delete();
@@ -242,7 +296,7 @@ int vtkPVFoamReader::RequestInformation
         foamData_->updateInfo();
     }
 
-    if (!RequestTimeSteps(outputVector))
+    if (!requestTimeSteps(outputVector))
     {
         vtkErrorMacro("could not find valid OpenFOAM mesh");
 
@@ -283,7 +337,7 @@ int vtkPVFoamReader::RequestData
     if (First)
     {
         First = false;
-        RequestTimeSteps(outputVector);
+        requestTimeSteps(outputVector);
     }
 
     int nInfo = outputVector->GetNumberOfInformationObjects();
@@ -299,7 +353,6 @@ int vtkPVFoamReader::RequestData
 
     // Get the requested time step.
     // We only support requests for a single time step
-
     int nRequestTime = 0;
     double requestTime[nInfo];
 
@@ -417,40 +470,6 @@ void vtkPVFoamReader::SetShowGroupsOnly(int val)
 }
 
 
-void vtkPVFoamReader::updatePatchNamesView(const bool show)
-{
-    pqApplicationCore* appCore = pqApplicationCore::instance();
-
-    // need to check this, since our destructor calls this
-    if (!appCore)
-    {
-        return;
-    }
-
-    // Server manager model for querying items in the server manager
-    pqServerManagerModel* smModel = appCore->getServerManagerModel();
-
-    if (!smModel || !foamData_)
-    {
-        return;
-    }
-
-    // Get all the pqRenderView instances
-    QList<pqRenderView*> renderViews = smModel->findItems<pqRenderView*>();
-
-    for (int viewI=0; viewI < renderViews.size(); ++viewI)
-    {
-        foamData_->renderPatchNames
-        (
-            renderViews[viewI]->getRenderViewProxy()->GetRenderer(),
-            show
-        );
-    }
-
-    // use refresh here?
-}
-
-
 void vtkPVFoamReader::PrintSelf(ostream& os, vtkIndent indent)
 {
     vtkDebugMacro(<<"PrintSelf");
@@ -461,9 +480,7 @@ void vtkPVFoamReader::PrintSelf(ostream& os, vtkIndent indent)
 
     foamData_->PrintSelf(os, indent);
 
-    os  << indent << "Time step range: "
-        << this->TimeStepRange[0] << " - " << this->TimeStepRange[1] << "\n"
-        << indent << "Time step: " << this->GetTimeStep() << endl;
+    os  << indent << "Time step: " << this->GetTimeStep() << endl;
 }
 
 
@@ -672,14 +689,23 @@ void vtkPVFoamReader::SelectionModifiedCallback
     void*
 )
 {
-    static_cast<vtkPVFoamReader*>(clientdata)->SelectionModified();
+    static_cast<vtkPVFoamReader*>(clientdata)->Modified();
 }
 
 
-void vtkPVFoamReader::SelectionModified()
+void vtkPVFoamReader::AnimationPropertyModifiedCallback
+(
+    vtkObject* object,
+    unsigned long,
+    void* clientdata,
+    void*
+)
 {
-    vtkDebugMacro(<<"SelectionModified");
-    Modified();
+    vtkSMPropertyHelper
+    (
+        static_cast<vtkSMAnimationSceneProxy*>(object),
+        "PlayMode"
+    ).Set(vtkCompositeAnimationPlayer::SNAP_TO_TIMESTEPS);
 }
 
 
