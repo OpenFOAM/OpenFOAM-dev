@@ -6,8 +6,8 @@
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 Description
-    Calculate the specie-flux and write it as a surfaceScalarField
-    'specieFlux(<specieName>)'.
+    Calculate the total specie-flux (i.e., advective plus diffusive) and write
+    it as a surfaceScalarField 'specieFlux(<specieName>)'.
 
 \*---------------------------------------------------------------------------*/
 
