@@ -27,12 +27,13 @@ zones
         type        box;
         zoneType    cell;
 
-        box     (0 0 0) (30 30 30);
-        fieldValues
-        (
-            volScalarFieldValue alpha.water 1
-            volVectorFieldValue U (1 0 0)
-        );
+        box         (0 0 0) (30 30 30);
+
+        values
+        {
+            alpha.water 1;
+            U           (1 0 0);
+        }
     }
 
     // Setting values inside a sphere

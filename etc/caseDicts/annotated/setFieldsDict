@@ -15,8 +15,8 @@ FoamFile
 
 defaultValues
 {
-    alpha1  0;
-    U       (0 0 0);
+    alpha.water 0;
+    U           (0 0 0);
 }
 
 zones
@@ -30,10 +30,10 @@ zones
 
         box (0 0 -1) (0.1461 0.292 1);
 
-        fieldValues
-        (
-            volScalarFieldValue alpha1 1
-        );
+        values
+        {
+            alpha.water 1;
+        }
     }
 
     // Set patch values (using ==)
@@ -44,9 +44,15 @@ zones
 
         box (0 0 -1) (0.1461 0.292 1);
 
+        zone
+        {
+            type        patch;
+            patches     (inlet outlet);
+        }
+
         values
         {
-            alpha1  1;
+            alpha.water 1;
         }
     }
 }
