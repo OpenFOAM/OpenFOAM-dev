@@ -41,6 +41,12 @@ zones
 
         box         (-999 -999 -999) (999 999 0.244);
 
+        zone
+        {
+            type        patch;
+            patches     (inlet outlet);
+        }
+
         values
         {
             alpha.water 1;

@@ -41,6 +41,12 @@ zones
 
         box (-1e300 -1e300 -1e300) (1e300 0 1e300);
 
+        zone
+        {
+            type        patch;
+            patches     (inlet outlet);
+        }
+
         values
         {
             alpha.water 1;

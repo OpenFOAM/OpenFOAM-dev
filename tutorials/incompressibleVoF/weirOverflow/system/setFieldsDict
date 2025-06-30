@@ -32,6 +32,25 @@ zones
             alpha.water 1;
         }
     }
+
+    patchFaces
+    {
+        type        box;
+        zoneType    face;
+
+        box         (-100 0 -100) (0 20 100);
+
+        zone
+        {
+            type        patch;
+            patch       inlet;
+        }
+
+        values
+        {
+            alpha.water 1;
+        }
+    }
 }
 
 // ************************************************************************* //
