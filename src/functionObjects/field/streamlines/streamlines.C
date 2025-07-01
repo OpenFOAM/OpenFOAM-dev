@@ -23,15 +23,11 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "Pstream.H"
-#include "functionObjectList.H"
 #include "streamlines.H"
 #include "streamlinesCloud.H"
-#include "ReadFields.H"
 #include "meshSearch.H"
 #include "sampledSet.H"
 #include "globalIndex.H"
-#include "distributionMap.H"
 #include "interpolationCellPoint.H"
 #include "PatchTools.H"
 #include "writeFile.H"
@@ -95,7 +91,7 @@ Foam::functionObjects::streamlines::streamlines
 :
     fvMeshFunctionObject(name, runTime, dict),
     nSubCycle_(0),
-    meshSearchPtr_(new meshSearch(mesh_))
+    searchEngine_(mesh_)
 {
     read(dict);
 }
@@ -170,7 +166,7 @@ bool Foam::functionObjects::streamlines::read(const dictionary& dict)
     (
         "seedSampleSet",
         mesh_,
-        meshSearchPtr_(),
+        searchEngine_,
         dict.subDict("seedSampleSet")
     );
 
@@ -586,7 +582,7 @@ void Foam::functionObjects::streamlines::movePoints(const polyMesh& mesh)
 {
     if (&mesh == &mesh_)
     {
-        meshSearchPtr_.reset(new meshSearch(mesh_));
+        searchEngine_.correct();
         sampledSetPtr_->movePoints();
     }
 }
@@ -599,7 +595,8 @@ void Foam::functionObjects::streamlines::topoChange
 {
     if (&map.mesh() == &mesh_)
     {
-        meshSearchPtr_.reset(new meshSearch(mesh_));
+        searchEngine_.correct();
+
         sampledSetPtr_->topoChange(map);
     }
 }
@@ -612,7 +609,8 @@ void Foam::functionObjects::streamlines::mapMesh
 {
     if (&map.mesh() == &mesh_)
     {
-        meshSearchPtr_.reset(new meshSearch(mesh_));
+        searchEngine_.correct();
+
         sampledSetPtr_->mapMesh(map);
     }
 }
@@ -625,7 +623,8 @@ void Foam::functionObjects::streamlines::distribute
 {
     if (&map.mesh() == &mesh_)
     {
-        meshSearchPtr_.reset(new meshSearch(mesh_));
+        searchEngine_.correct();
+
         sampledSetPtr_->distribute(map);
     }
 }

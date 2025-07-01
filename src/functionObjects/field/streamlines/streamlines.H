@@ -105,14 +105,8 @@ SourceFiles
 #define streamlines_functionObject_H
 
 #include "fvMeshFunctionObject.H"
-#include "volFieldsFwd.H"
-#include "DynamicList.H"
-#include "DynamicField.H"
-#include "scalarList.H"
-#include "vectorList.H"
+#include "meshSearch.H"
 #include "setWriter.H"
-#include "indirectPrimitivePatch.H"
-#include "NamedEnum.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -120,7 +114,6 @@ namespace Foam
 {
 
 // Forward declaration of classes
-class meshSearch;
 class sampledSet;
 
 namespace functionObjects
@@ -185,7 +178,7 @@ private:
         Switch writeAge_;
 
         //- Mesh searching engine
-        autoPtr<meshSearch> meshSearchPtr_;
+        meshSearch searchEngine_;
 
         //- Seed set engine
         autoPtr<sampledSet> sampledSetPtr_;
