@@ -25,6 +25,12 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+inline Foam::label Foam::fvCellZone::nGlobalCells() const
+{
+    return nGlobalCells_;
+}
+
+
 inline Foam::scalar Foam::fvCellZone::V() const
 {
     return V_;

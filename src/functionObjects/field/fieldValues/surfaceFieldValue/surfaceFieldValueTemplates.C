@@ -341,8 +341,8 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::writeValues
                     file() << tab << result;                                   \
                                                                                \
                     Log << "    " << operationTypeNames_[operation_]           \
-                        << "(" << selectionName_ << ") of " << fieldName       \
-                        <<  " = " << result << endl;                           \
+                        << "(" << selectionName_.c_str() << ") of "            \
+                        << fieldName <<  " = " << result << endl;              \
                 }                                                              \
             }                                                                  \
                                                                                \
@@ -387,7 +387,7 @@ Foam::functionObjects::fieldValues::surfaceFieldValue::filterField
             FatalErrorInFunction
                 << type() << " " << name() << ": "
                 << selectionTypeNames[selectionType_]
-                << "(" << selectionName_ << "):"
+                << "(" << selectionName_.c_str() << "):"
                 << nl
                 << "    Unable to process internal faces for volume field "
                 << field.name() << nl << abort(FatalError);

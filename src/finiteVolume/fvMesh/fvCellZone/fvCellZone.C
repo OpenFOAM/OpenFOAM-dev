@@ -28,9 +28,12 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fvCellZone::setV()
+void Foam::fvCellZone::update()
 {
     const labelList& cells(this->zone());
+
+    nGlobalCells_ = cells.size();
+    reduce(nGlobalCells_, sumOp<label>());
 
     V_ = 0;
     forAll(cells, i)
@@ -47,6 +50,7 @@ Foam::fvCellZone::fvCellZone(const fvMesh& mesh)
 :
     generatedCellZone(mesh),
     mesh_(mesh),
+    nGlobalCells_(returnReduce(mesh.nCells(), sumOp<label>())),
     V_(gSum(mesh_.V()))
 {}
 
@@ -55,9 +59,10 @@ Foam::fvCellZone::fvCellZone(const fvMesh& mesh, const dictionary& dict)
 :
     generatedCellZone(mesh, dict),
     mesh_(mesh),
+    nGlobalCells_(-1),
     V_(NaN)
 {
-    setV();
+    update();
 }
 
 
@@ -77,6 +82,7 @@ void Foam::fvCellZone::writeFileHeader
 {
     wf.writeCommented(file, "Selection");
     file<< setw(1) << ':' << setw(1) << ' ' << name() << endl;
+    wf.writeHeaderValue(file, "Cells", nGlobalCells());
     wf.writeHeaderValue(file, "Volume", V());
 }
 
@@ -84,35 +90,35 @@ void Foam::fvCellZone::writeFileHeader
 void Foam::fvCellZone::movePoints()
 {
     generatedCellZone::movePoints();
-    setV();
+    update();
 }
 
 
 void Foam::fvCellZone::topoChange(const polyTopoChangeMap& map)
 {
     generatedCellZone::topoChange(map);
-    setV();
+    update();
 }
 
 
 void Foam::fvCellZone::mapMesh(const polyMeshMap& map)
 {
     generatedCellZone::mapMesh(map);
-    setV();
+    update();
 }
 
 
 void Foam::fvCellZone::distribute(const polyDistributionMap& map)
 {
     generatedCellZone::distribute(map);
-    setV();
+    update();
 }
 
 
 bool Foam::fvCellZone::read(const dictionary& dict)
 {
     generatedCellZone::read(dict);
-    setV();
+    update();
 
     return true;
 }

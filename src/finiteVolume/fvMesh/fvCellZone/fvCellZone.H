@@ -98,14 +98,17 @@ class fvCellZone
         //- Reference to the mesh
         const fvMesh& mesh_;
 
+        //- The global number of cells
+        mutable label nGlobalCells_;
+
         //- Sum of cell volumes
         mutable scalar V_;
 
 
     // Private functions
 
-        //- Set the sum of scalar volumes
-        void setV();
+        //- Update the global number of cells and the sum of cell volumes
+        void update();
 
 
 public:
@@ -124,6 +127,9 @@ public:
 
 
     // Member Functions
+
+        //- Return const access to the global number of cells
+        inline label nGlobalCells() const;
 
         //- Return const access to the total cell volume
         inline scalar V() const;

@@ -56,16 +56,18 @@ Description
 
 Usage
     \table
-        Property     | Description              | Required    | Default value
-        type         | Type name: volFieldValue            | yes   |
-        log          | Write data to standard output       | no    | no
-        writeFields  | Write the region field values       | yes   |
-        writeLocation| Write the location (if available)   | no    | no
-        cellZone     | cellZone                            | yes   |
-        operation    | Operation to perform                | yes   |
-        weightField  | Name of field to apply weighting    | no    |
-        weightFields | Names of fields to apply weighting  | no    |
-        fields       | List of fields to operate on        | yes   |
+        Property     | Description                   | Required | Default value
+        type         | Type name: volFieldValue      | yes      |
+        log          | Write data to standard output | no       | no
+        writeFields  | Write the region field values | yes      |
+        writeNumberOfCells | Write the number of cells in the zone | no | no
+        writeVolume  | Write the volume of the zone  | no       | no
+        writeLocation| Write the location (if available) | no   | no
+        cellZone     | cellZone                      | yes      |
+        operation    | Operation to perform          | yes      |
+        weightField  | Name of field to apply weighting | no    | none
+        weightFields | Names of fields to apply weighting | no  | none
+        fields       | List of fields to operate on  | yes      |
     \endtable
 
     Where \c cellZone options are:
@@ -161,11 +163,8 @@ protected:
 
     // Protected data
 
-        //- cellZone
+        //- The cellZone to operate on
         fvCellZone zone_;
-
-        //- Write the location if available for this operation - optional
-        Switch writeLocation_;
 
         //- Operation to apply to values
         operationType operation_;
@@ -173,8 +172,17 @@ protected:
         //- Weight field names
         wordList weightFieldNames_;
 
-        //- Scale factor - optional
+        //- Scale factor
         scalar scaleFactor_;
+
+        //- Optionally write the number of faces in the surface
+        const bool writeNCells_;
+
+        //- Optionally write the area of the surface
+        const bool writeVolume_;
+
+        //- Optionally write the location if available for this operation
+        const bool writeLocation_;
 
 
     // Protected Member Functions

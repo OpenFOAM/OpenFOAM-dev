@@ -385,7 +385,7 @@ combineSurfaceGeometry
 
 
 Foam::scalar
-Foam::functionObjects::fieldValues::surfaceFieldValue::totalArea() const
+Foam::functionObjects::fieldValues::surfaceFieldValue::area() const
 {
     if (selectionType_ == selectionTypes::sampledSurface)
     {
@@ -407,25 +407,25 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::writeFileHeader
 {
     if (operation_ != operationType::none)
     {
-        writeCommented(file(), "Selection : ");
+        writeCommented(file(), "Selection");
         file()
+            << setw(1) << ':' << setw(1) << ' '
             << selectionTypeNames[selectionType_] << "("
             << selectionName_.c_str() << ")" << endl;
-        writeCommented(file(), "Faces  : ");
-        file() << nFaces_ << endl;
-        writeCommented(file(), "Area   : ");
-        file() << totalArea_ << endl;
+
+        writeHeaderValue(file(), "Faces", nFaces_);
+
+        writeHeaderValue(file(), "Area", area_);
 
         writeCommented(file(), "Time");
-        if (writeArea_)
-        {
-            file() << tab << "Area";
-        }
+
+        if (writeNFaces_) file() << tab << "Faces";
+        if (writeArea_) file() << tab << "Area";
 
         forAll(fields_, fieldi)
         {
             file()
-            << tab << operationTypeNames_[operation_]
+                << tab << operationTypeNames_[operation_]
                 << "(" << fields_[fieldi] << ")";
         }
 
@@ -505,16 +505,7 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::moveMesh()
             break;
     }
 
-    if (nFaces_)
-    {
-        totalArea_ = totalArea();
-
-        Info<< type() << ' ' << name() << ":" << nl
-            << "    total faces  = " << nFaces_ << nl
-            << "    total area   = " << totalArea_ << nl;
-    }
-
-    Info<< nl << endl;
+    area_ = nFaces_ ? area() : NaN;
 }
 
 
@@ -552,11 +543,16 @@ Foam::functionObjects::fieldValues::surfaceFieldValue::surfaceFieldValue
     selectionName_(string::null),
     operation_(operationTypeNames_.read(dict.lookup("operation"))),
     weightFieldNames_(),
-    writeArea_(dict.lookupOrDefault("writeArea", false)),
     nFaces_(0),
+    area_(NaN),
+    writeNFaces_(dict.lookupOrDefault("writeNumberOfFaces", false)),
+    writeArea_(dict.lookupOrDefault("writeArea", false)),
+    faceZonePtr_(nullptr),
+    patchNames_(),
     faceId_(),
     facePatchId_(),
-    faceSign_()
+    faceSign_(),
+    surfacePtr_(nullptr)
 {
     read(dict);
 }
@@ -574,9 +570,10 @@ Foam::functionObjects::fieldValues::surfaceFieldValue::surfaceFieldValue
     selectionName_(string::null),
     operation_(operationTypeNames_.read(dict.lookup("operation"))),
     weightFieldNames_(),
-    totalArea_(NaN),
-    writeArea_(dict.lookupOrDefault("writeArea", false)),
     nFaces_(0),
+    area_(NaN),
+    writeNFaces_(dict.lookupOrDefault("writeNumberOfFaces", false)),
+    writeArea_(dict.lookupOrDefault("writeArea", false)),
     faceZonePtr_(nullptr),
     patchNames_(),
     faceId_(),
@@ -652,19 +649,15 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::read
         }
     }
 
-    if (dict.readIfPresent("weightFields", weightFieldNames_))
+    if (dict.found("weightFields"))
     {
-        Info<< name() << ' ' << operationTypeNames_[operation_]
-            << " weight fields " << weightFieldNames_;
+        dict.lookup("weightFields") >> weightFieldNames_;
     }
     else if (dict.found("weightField"))
     {
         weightFieldNames_.setSize(1);
 
         dict.lookup("weightField") >> weightFieldNames_[0];
-
-        Info<< name() << ' ' << operationTypeNames_[operation_]
-            << " weight field " << weightFieldNames_[0];
     }
 
     if (writeFields_)
@@ -678,6 +671,26 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::read
     }
 
     changeMesh();
+
+    // Report configuration
+    Info<< type() << ' ' << name() << " read:" << nl;
+    Info<< "    number of faces = " << nFaces_ << nl;
+    if (nFaces_)
+    {
+        Info<< "    area = " << area_ << nl;
+    }
+    Info<< "    operation = " << operationTypeNames_[operation_] << nl;
+    if (weightFieldNames_.size() == 1)
+    {
+        Info<< "    weight field = " << weightFieldNames_[0] << nl;
+    }
+    if (weightFieldNames_.size() > 1)
+    {
+        Info<< "    weight fields =";
+        forAll(weightFieldNames_, i) Info<< ' ' << weightFieldNames_[i];
+        Info<< nl;
+    }
+    Info<< endl;
 
     return true;
 }
@@ -722,15 +735,25 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::write()
         writeTime(file());
     }
 
-    // Write the total area if necessary
+    // Write the number of faces and/or the area if necessary
+    if (anyFields && operation_ != operationType::none && Pstream::master())
+    {
+        if (writeNFaces_)
+        {
+            file() << tab << nFaces_;
+        }
+        if (writeArea_)
+        {
+            file() << tab << area_;
+        }
+    }
+    if (writeNFaces_)
+    {
+        Log << "    number of faces = " << nFaces_ << endl;
+    }
     if (writeArea_)
     {
-        totalArea_ = totalArea();
-        if (anyFields && operation_ != operationType::none && Pstream::master())
-        {
-            file() << tab << totalArea_;
-        }
-        Log << "    total area = " << totalArea_ << endl;
+        Log << "    area = " << area_ << endl;
     }
 
     // Construct the sign and weight fields and the surface normals
@@ -836,7 +859,7 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::write()
               + (
                     selectionType_ == selectionTypes::patches
                   ? selectionName_.replace(" ", ",").c_str()
-                  : selectionName_
+                  : selectionName_.c_str()
                 )
               + ")",
                 points,

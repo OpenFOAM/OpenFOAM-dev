@@ -117,34 +117,40 @@ void Foam::functionObjects::fieldValues::volFieldValue::writeFileHeader
     const label i
 )
 {
-    zone_.writeFileHeader(*this, file());
-
-    writeCommented(file(), "Time");
-
-    forAll(fields_, fieldi)
+    if (operation_ != operationType::none)
     {
-        file() << tab << operationTypeNames_[operation_] << "(";
+        zone_.writeFileHeader(*this, file());
 
-        forAll(weightFieldNames_, i)
+        writeCommented(file(), "Time");
+
+        if (writeNCells_) file() << tab << "Cells";
+        if (writeVolume_) file() << tab << "Volume";
+
+        forAll(fields_, fieldi)
         {
-            file() << weightFieldNames_[i] << ',';
+            file() << tab << operationTypeNames_[operation_] << "(";
+
+            forAll(weightFieldNames_, i)
+            {
+                file() << weightFieldNames_[i] << ',';
+            }
+
+            file() << fields_[fieldi] << ")";
+
+            if (writeLocation_)
+            {
+                #define writeFileHeaderLocationFieldType(fieldType, none)      \
+                    if (validField<fieldType>(fields_[fieldi]))                \
+                    {                                                          \
+                        writeFileHeaderLocation<fieldType>();                  \
+                    }
+                FOR_ALL_FIELD_TYPES(writeFileHeaderLocationFieldType)
+                #undef writeHeaderLocationFieldType
+            }
         }
 
-        file() << fields_[fieldi] << ")";
-
-        if (writeLocation_)
-        {
-            #define writeFileHeaderLocationFieldType(fieldType, none)          \
-                if (validField<fieldType>(fields_[fieldi]))                    \
-                {                                                              \
-                    writeFileHeaderLocation<fieldType>();                      \
-                }
-            FOR_ALL_FIELD_TYPES(writeFileHeaderLocationFieldType)
-            #undef writeHeaderLocationFieldType
-        }
+        file() << endl;
     }
-
-    file() << endl;
 }
 
 
@@ -198,9 +204,11 @@ Foam::functionObjects::fieldValues::volFieldValue::volFieldValue
 :
     fieldValue(name, runTime, dict, typeName),
     zone_(fieldValue::mesh_, dict),
-    writeLocation_(false),
     operation_(operationTypeNames_.read(dict.lookup("operation"))),
-    scaleFactor_(1)
+    scaleFactor_(1),
+    writeNCells_(dict.lookupOrDefault("writeNumberOfCells", false)),
+    writeVolume_(dict.lookupOrDefault("writeVolume", false)),
+    writeLocation_(dict.lookupOrDefault("writeLocation", false))
 {
     read(dict);
 }
@@ -215,9 +223,11 @@ Foam::functionObjects::fieldValues::volFieldValue::volFieldValue
 :
     fieldValue(name, obr, dict, typeName),
     zone_(fieldValue::mesh_, dict),
-    writeLocation_(false),
     operation_(operationTypeNames_.read(dict.lookup("operation"))),
-    scaleFactor_(1)
+    scaleFactor_(1),
+    writeNCells_(dict.lookupOrDefault("writeNumberOfCells", false)),
+    writeVolume_(dict.lookupOrDefault("writeVolume", false)),
+    writeLocation_(dict.lookupOrDefault("writeLocation", false))
 {
     read(dict);
 }
@@ -238,29 +248,42 @@ bool Foam::functionObjects::fieldValues::volFieldValue::read
 {
     fieldValue::read(dict);
 
-    dict.readIfPresent<Switch>("writeLocation", writeLocation_);
-
-    if (dict.readIfPresent("weightFields", weightFieldNames_))
+    if (dict.found("weightFields"))
     {
-        Info<< name() << " " << operationTypeNames_[operation_]
-            << " weight fields " << weightFieldNames_;
+        dict.lookup("weightFields") >> weightFieldNames_;
     }
     else if (dict.found("weightField"))
     {
         weightFieldNames_.setSize(1);
 
         dict.lookup("weightField") >> weightFieldNames_[0];
-
-        Info<< name() << " " << operationTypeNames_[operation_]
-            << " weight field " << weightFieldNames_[0];
     }
 
-    if (dict.readIfPresent("scaleFactor", scaleFactor_))
+    dict.readIfPresent("scaleFactor", scaleFactor_);
+
+    // Report configuration
+    Info<< type() << ' ' << name() << " read:" << nl;
+    Info<< "    number of cells = " << zone_.nGlobalCells() << nl;
+    if (zone_.nGlobalCells())
     {
-        Info<< "    scale factor = " << scaleFactor_ << nl;
+        Info<< "    volume = " << zone_.V() << nl;
     }
-
-    Info<< nl << endl;
+    Info<< "    operation = " << operationTypeNames_[operation_] << nl;
+    if (weightFieldNames_.size() == 1)
+    {
+        Info<< "    weight field = " << weightFieldNames_[0] << nl;
+    }
+    if (weightFieldNames_.size() > 1)
+    {
+        Info<< "    weight fields =";
+        forAll(weightFieldNames_, i) Info<< ' ' << weightFieldNames_[i];
+        Info<< nl;
+    }
+    if (scaleFactor_ != scalar(1))
+    {
+        Info<< "    scale factor = " << scaleFactor_;
+    }
+    Info<< endl;
 
     return true;
 }
@@ -292,6 +315,27 @@ bool Foam::functionObjects::fieldValues::volFieldValue::write()
     if (anyFields && operation_ != operationType::none && Pstream::master())
     {
         writeTime(file());
+    }
+
+    // Write the number of faces and/or the area if necessary
+    if (anyFields && operation_ != operationType::none && Pstream::master())
+    {
+        if (writeNCells_)
+        {
+            file() << tab << zone_.nGlobalCells();
+        }
+        if (writeVolume_)
+        {
+            file() << tab << zone_.V();
+        }
+    }
+    if (writeNCells_)
+    {
+        Log << "    number of cells = " << zone_.nGlobalCells() << endl;
+    }
+    if (writeVolume_)
+    {
+        Log << "    volume = " << zone_.V() << endl;
     }
 
     // Construct the weight field and the volumes
