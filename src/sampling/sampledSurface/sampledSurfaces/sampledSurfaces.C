@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -115,7 +115,7 @@ bool Foam::functionObjects::sampledSurfaces::update()
     }
 
     // Dimension as fraction of mesh bounding box
-    scalar mergeDim = mergeTol_ * mesh_.bounds().mag();
+    scalar mergeDim = mergeTol_*mesh_.bounds().mag();
 
     if (Pstream::master() && debug)
     {
@@ -207,12 +207,32 @@ bool Foam::functionObjects::sampledSurfaces::read(const dictionary& dict)
         // Define the surface formatter
         formatter_ = surfaceWriter::New(writeType, dict);
 
-        PtrList<sampledSurface> newList
-        (
-            dict.lookup("surfaces"),
-            sampledSurface::iNew(mesh_)
-        );
-        transfer(newList);
+        if (dict.isDict("surfaces"))
+        {
+            const dictionary& surfacesDict = dict.subDict("surfaces");
+
+            setSize(surfacesDict.size());
+
+            label i = 0;
+
+            forAllConstIter(dictionary, surfacesDict, iter)
+            {
+                set
+                (
+                    i++,
+                    sampledSurface::New(iter().keyword(), mesh_, iter().dict())
+                );
+            }
+        }
+        else
+        {
+            PtrList<sampledSurface> newList
+            (
+                dict.lookup("surfaces"),
+                sampledSurface::iNew(mesh_)
+            );
+            transfer(newList);
+        }
 
         if (Pstream::parRun())
         {
