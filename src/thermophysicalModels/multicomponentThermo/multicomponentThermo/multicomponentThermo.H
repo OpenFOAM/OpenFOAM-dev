@@ -93,7 +93,7 @@ public:
             virtual const List<bool>& speciesActive() const = 0;
 
             //- Synchronise the specie active flags
-            void syncSpeciesActive() const;
+            virtual void syncSpeciesActive() const = 0;
 
             //- Set specie active
             inline void setSpecieActive(const label speciei) const;
@@ -131,7 +131,7 @@ public:
 
             //- Normalise the mass fractions by clipping positive and deriving
             //  the default specie mass fraction from the other species.
-            void normaliseY();
+            virtual void normaliseY() = 0;
 
 
         // Specie molecular properties
@@ -329,6 +329,8 @@ protected:
         //- Species mass fractions
         PtrList<volScalarField> Y_;
 
+        mutable tmp<volScalarField> Ydefault_;
+
 
     // Protected Member Functions
 
@@ -365,11 +367,18 @@ public:
         //- Access the specie active flags
         virtual const List<bool>& speciesActive() const;
 
+        //- Synchronise the specie active flags
+        virtual void syncSpeciesActive() const;
+
         //- Access the mass-fraction fields
         virtual PtrList<volScalarField>& Y();
 
         //- Access the mass-fraction fields
         virtual const PtrList<volScalarField>& Y() const;
+
+        //- Normalise the mass fractions by clipping positive and deriving
+        //  the default specie mass fraction from the other species.
+        virtual void normaliseY();
 
         //- Get the slicer
         inline volScalarFieldListSlicer Yslicer() const;
