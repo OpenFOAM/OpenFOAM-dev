@@ -31,6 +31,8 @@ License
 #include "LagrangianmDdt.H"
 #include "LagrangianSubFields.H"
 #include "dimensionedTypes.H"
+#include "calculatedLagrangianPatchFields.H"
+#include "noneStateLagrangianLabelFieldSource.H"
 #include "pimpleNoLoopControl.H"
 #include "Time.H"
 #include "fvMesh.H"
@@ -230,19 +232,19 @@ Foam::IOobject Foam::cloud::stateIo(const IOobject::readOption r) const
 }
 
 
-Foam::autoPtr<Foam::LagrangianLabelInternalField>
+Foam::autoPtr<Foam::LagrangianLabelDynamicField>
 Foam::cloud::readStates() const
 {
-    typeIOobject<LagrangianLabelInternalField> stateIo
+    typeIOobject<LagrangianLabelDynamicField> stateIo
     (
         this->stateIo(IOobject::MUST_READ)
     );
 
     return
-        autoPtr<Foam::LagrangianLabelInternalField>
+        autoPtr<Foam::LagrangianLabelDynamicField>
         (
             stateIo.headerOk()
-          ? new LagrangianLabelInternalField(stateIo, mesh_)
+          ? new LagrangianLabelDynamicField(stateIo, mesh_)
           : nullptr
         );
 }
@@ -251,7 +253,7 @@ Foam::cloud::readStates() const
 Foam::autoPtr<Foam::List<Foam::LagrangianState>>
 Foam::cloud::initialStates() const
 {
-    // Return an empty pointer of we have no states stored
+    // Return an empty pointer if we have no states stored
     if (!statePtr_.valid()) return autoPtr<List<LagrangianState>>();
 
     // Allocate a list of states
@@ -277,6 +279,12 @@ Foam::cloud::initialStates() const
 }
 
 
+void Foam::cloud::clearStates()
+{
+    statePtr_.clear();
+}
+
+
 bool Foam::cloud::storeStates()
 {
     // Determine whether states are needed
@@ -292,26 +300,34 @@ bool Foam::cloud::storeStates()
 
     reduce(needStates, orOp<bool>());
 
-    // Create or destroy the state labels field as appropriate
+    // Create the state labels field as appropriate
     if (needStates && !statePtr_.valid())
     {
         statePtr_.set
         (
-            new LagrangianLabelInternalField
+            new LagrangianLabelDynamicField
             (
                 stateIo(IOobject::NO_READ),
                 mesh_,
                 dimensioned<label>
                 (
+                    Foam::name(LagrangianState::none),
                     dimless,
                     static_cast<label>(LagrangianState::none)
-                )
+                ),
+                wordList
+                (
+                    mesh().boundary().size(),
+                    calculatedLagrangianPatchLabelField::typeName
+                ),
+                wordList::null(),
+                LagrangianModels().modelTypeFieldSourceTypes
+                <
+                    LagrangianInjection,
+                    noneStateLagrangianLabelFieldSource
+                >()
             )
         );
-    }
-    if (!needStates && statePtr_.valid())
-    {
-        statePtr_.clear();
     }
 
     return needStates;
@@ -725,6 +741,10 @@ void Foam::cloud::solve()
       ? LagrangianMesh::changer(mesh_, statesPtr())
       : LagrangianMesh::changer(mesh_, LagrangianState::inCell);
     statesPtr.clear();
+
+    // State information is now in the cloud. Clear the stored state labels so
+    // that they can be re-built (if necessary) by the cloud evolution below.
+    clearStates();
 
     // If we have initial states then we need to evaluate the
     // derived/non-constraint boundary conditions so that any affected
