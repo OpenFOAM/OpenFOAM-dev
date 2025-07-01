@@ -94,10 +94,10 @@ Foam::functionObjects::streamlines::streamlines
 )
 :
     fvMeshFunctionObject(name, runTime, dict),
-    dict_(dict),
-    nSubCycle_(0)
+    nSubCycle_(0),
+    meshSearchPtr_(new meshSearch(mesh_))
 {
-    read(dict_);
+    read(dict);
 }
 
 
@@ -111,11 +111,6 @@ Foam::functionObjects::streamlines::~streamlines()
 
 bool Foam::functionObjects::streamlines::read(const dictionary& dict)
 {
-    if (dict != dict_)
-    {
-        dict_ = dict;
-    }
-
     Info<< type() << " " << name() << ":" << nl;
 
     dict.lookup("fields") >> fields_;
@@ -170,8 +165,6 @@ bool Foam::functionObjects::streamlines::read(const dictionary& dict)
         );
 
     cloudName_ = dict.lookupOrDefault<word>("cloudName", "streamlines");
-
-    meshSearchPtr_.reset(new meshSearch(mesh_));
 
     sampledSetPtr_ = sampledSet::New
     (
@@ -591,8 +584,8 @@ void Foam::functionObjects::streamlines::movePoints(const polyMesh& mesh)
 {
     if (&mesh == &mesh_)
     {
-        // Moving mesh affects the search tree
-        read(dict_);
+        meshSearchPtr_.reset(new meshSearch(mesh_));
+        sampledSetPtr_->movePoints();
     }
 }
 
@@ -604,7 +597,8 @@ void Foam::functionObjects::streamlines::topoChange
 {
     if (&map.mesh() == &mesh_)
     {
-        read(dict_);
+        meshSearchPtr_.reset(new meshSearch(mesh_));
+        sampledSetPtr_->topoChange(map);
     }
 }
 
@@ -616,7 +610,8 @@ void Foam::functionObjects::streamlines::mapMesh
 {
     if (&map.mesh() == &mesh_)
     {
-        read(dict_);
+        meshSearchPtr_.reset(new meshSearch(mesh_));
+        sampledSetPtr_->mapMesh(map);
     }
 }
 
@@ -628,7 +623,8 @@ void Foam::functionObjects::streamlines::distribute
 {
     if (&map.mesh() == &mesh_)
     {
-        read(dict_);
+        meshSearchPtr_.reset(new meshSearch(mesh_));
+        sampledSetPtr_->distribute(map);
     }
 }
 
