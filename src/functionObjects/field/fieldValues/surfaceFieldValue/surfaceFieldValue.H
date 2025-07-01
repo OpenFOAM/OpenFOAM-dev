@@ -163,6 +163,7 @@ SourceFiles
 namespace Foam
 {
 
+class generatedFaceZone;
 class sampledSurface;
 class surfaceWriter;
 
@@ -225,20 +226,17 @@ private:
 
     // Private Member Functions
 
-        //- Set faces to evaluate from a faceZone
-        void setFaceZoneFaces(const faceZone& zone);
+        //- ...
+        labelList patchis(const wordReList&) const;
 
-        //- Set faces to evaluate based on a list of patch indices
-        void setPatchesFaces(const labelList&);
+        //- Set faces to evaluate from the faceZone
+        void setFaceZoneFaces();
 
-        //- Set faces to evaluate based on a list of patch names
-        void setPatchesFaces(const wordReList&);
+        //- Set faces to evaluate based the list of patch names
+        void setPatchesFaces();
 
-        //- Set faces to evaluate based on a patch name
-        void setPatchFaces(const wordRe&);
-
-        //- Set faces according to sampledSurface
-        void setSampledSurfaceFaces(const dictionary&);
+        //- Set faces according to the sampledSurface
+        void setSampledSurfaceFaces();
 
         //- Combine mesh faces and points from multiple processors
         void combineMeshGeometry
@@ -261,10 +259,6 @@ private:
 protected:
 
     // Protected data
-
-        //- Input dictionary
-        //  Cached for mesh changes
-        dictionary dict_;
 
         //- Surface writer
         autoPtr<surfaceWriter> surfaceWriterPtr_;
@@ -291,7 +285,19 @@ protected:
         label nFaces_;
 
 
-        // If operating on mesh faces (faceZone, patch)
+        // If operating on a faceZone
+
+            //- The face-zone
+            autoPtr<generatedFaceZone> faceZonePtr_;
+
+
+        // If operating on a patch or patches
+
+            //- The name(s) of the patches
+            wordReList patchNames_;
+
+
+        // If operating on a faceZone, patch or patches
 
             //- Local list of face IDs
             labelList faceId_;
@@ -311,9 +317,6 @@ protected:
 
 
     // Protected Member Functions
-
-        //- Initialise, e.g. face addressing
-        void initialise(const dictionary& dict);
 
         //- Return true if the field name is valid
         template<class Type>
@@ -395,6 +398,12 @@ protected:
 
         //- Output file header information
         virtual void writeFileHeader(const label i);
+
+        //- ...
+        void moveMesh();
+
+        //- ...
+        void changeMesh();
 
 
 public:

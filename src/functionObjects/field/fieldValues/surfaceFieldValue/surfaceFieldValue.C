@@ -27,7 +27,7 @@ License
 #include "processorFvPatch.H"
 #include "processorCyclicFvPatch.H"
 #include "sampledSurface.H"
-#include "zoneGenerator.H"
+#include "generatedFaceZone.H"
 #include "mergePoints.H"
 #include "indirectPrimitivePatch.H"
 #include "PatchTools.H"
@@ -90,12 +90,40 @@ const Foam::NamedEnum
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-void Foam::functionObjects::fieldValues::surfaceFieldValue::setFaceZoneFaces
+Foam::labelList Foam::functionObjects::fieldValues::surfaceFieldValue::patchis
 (
-    const faceZone& zone
-)
+    const wordReList& patchNames
+) const
 {
-    selectionName_ = zone.name();
+    labelList patchis;
+
+    forAll(patchNames, i)
+    {
+        const labelList patchiis =
+            mesh_.boundaryMesh().findIndices(patchNames[i]);
+
+        if (patchiis.empty())
+        {
+            FatalErrorInFunction
+                << type() << ' ' << this->name() << ": "
+                << selectionTypeNames[selectionType_]
+                << "(" << patchNames[i] << "):" << nl
+                << "    Unknown patch name: " << patchNames[i]
+                << ". Valid patch names are: "
+                << mesh_.boundaryMesh().names() << nl
+                << exit(FatalError);
+        }
+
+        patchis.append(patchiis);
+    }
+
+    return patchis;
+}
+
+
+void Foam::functionObjects::fieldValues::surfaceFieldValue::setFaceZoneFaces()
+{
+    const faceZone& zone = faceZonePtr_->zone();
 
     // Ensure addressing is built on all processes
     mesh_.polyBFacePatches();
@@ -151,12 +179,9 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::setFaceZoneFaces
 }
 
 
-void Foam::functionObjects::fieldValues::surfaceFieldValue::setPatchesFaces
-(
-    const labelList& patchis
-)
+void Foam::functionObjects::fieldValues::surfaceFieldValue::setPatchesFaces()
 {
-    selectionName_.clear();
+    const labelList patchis = this->patchis(patchNames_);
 
     faceId_.clear();
     facePatchId_.clear();
@@ -166,8 +191,6 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::setPatchesFaces
     {
         const label patchi = patchis[i];
         const fvPatch& fvp = mesh_.boundary()[patchi];
-
-        selectionName_.append((i ? " " : "") + fvp.name());
 
         faceId_.append(identityMap(fvp.size()));
         facePatchId_.append(labelList(fvp.size(), patchi));
@@ -197,60 +220,10 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::setPatchesFaces
 }
 
 
-void Foam::functionObjects::fieldValues::surfaceFieldValue::setPatchesFaces
-(
-    const wordReList& patchNames
-)
-{
-    labelList patchis;
-
-    forAll(patchNames, i)
-    {
-        const labelList patchiis =
-            mesh_.boundaryMesh().findIndices(patchNames[i]);
-
-        if (patchiis.empty())
-        {
-            FatalErrorInFunction
-                << type() << ' ' << this->name() << ": "
-                << selectionTypeNames[selectionType_]
-                << "(" << patchNames[i] << "):" << nl
-                << "    Unknown patch name: " << patchNames[i]
-                << ". Valid patch names are: "
-                << mesh_.boundaryMesh().names() << nl
-                << exit(FatalError);
-        }
-
-        patchis.append(patchiis);
-    }
-
-    setPatchesFaces(patchis);
-}
-
-
-void Foam::functionObjects::fieldValues::surfaceFieldValue::setPatchFaces
-(
-    const wordRe& patchName
-)
-{
-    setPatchesFaces(wordReList(1, patchName));
-
-    selectionName_ =
-        patchName.isPattern() ? '"' + patchName + '"' : string(patchName);
-}
-
-
 void
-Foam::functionObjects::fieldValues::surfaceFieldValue::setSampledSurfaceFaces
-(
-    const dictionary& dict
-)
+Foam::functionObjects::fieldValues::surfaceFieldValue::setSampledSurfaceFaces()
 {
-    surfacePtr_ = sampledSurface::New(name(), mesh_, dict);
-
     surfacePtr_().update();
-
-    selectionName_ = surfacePtr_().name();
 
     nFaces_ = returnReduce(surfacePtr_().faces().size(), sumOp<label>());
 }
@@ -351,7 +324,7 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::combineMeshGeometry
     // Merge
     labelList oldToNew;
     pointField newPoints;
-    bool hasMerged = mergePoints
+    const bool hasMerged = mergePoints
     (
         points,
         small,
@@ -362,12 +335,6 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::combineMeshGeometry
 
     if (hasMerged)
     {
-        if (debug)
-        {
-            Pout<< "Merged from " << points.size()
-                << " down to " << newPoints.size() << " points" << endl;
-        }
-
         points.transfer(newPoints);
         forAll(faces, i)
         {
@@ -432,115 +399,6 @@ Foam::functionObjects::fieldValues::surfaceFieldValue::totalArea() const
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-void Foam::functionObjects::fieldValues::surfaceFieldValue::initialise
-(
-    const dictionary& dict
-)
-{
-    // Selection type name
-    const word selection(selectionTypeNames[selectionType_]);
-
-    switch (selectionType_)
-    {
-        case selectionTypes::faceZone:
-        {
-            if (dict.isDict(selection))
-            {
-                autoPtr<zoneGenerator> zg
-                (
-                    zoneGenerator::New
-                    (
-                        selection,
-                        zoneTypes::face,
-                        mesh_,
-                        dict.subDict(selection)
-                    )
-                );
-
-                setFaceZoneFaces(zg->generate().fZone());
-            }
-            else
-            {
-                const word zoneName(dict.lookup<word>(selection));
-                const label zoneId(mesh_.faceZones().findIndex(zoneName));
-
-                if (zoneId < 0)
-                {
-                    FatalErrorInFunction
-                        << type() << ' ' << name() << ": "
-                        << selection
-                        << '(' << zoneName << "):" << nl
-                        << "    Unknown faceZone: " << zoneName
-                        << ". Available faceZones: " << mesh_.faceZones().toc()
-                        << nl << exit(FatalError);
-                }
-
-                setFaceZoneFaces(mesh_.faceZones()[zoneId]);
-            }
-            break;
-        }
-        case selectionTypes::patch:
-        {
-            setPatchFaces(dict.lookup<wordRe>(selection));
-            break;
-        }
-        case selectionTypes::patches:
-        {
-            setPatchesFaces(dict.lookup<wordReList>(selection));
-            break;
-        }
-        case selectionTypes::sampledSurface:
-        {
-            setSampledSurfaceFaces(dict.subDict(selection));
-            break;
-        }
-    }
-
-    if (nFaces_ > 0)
-    {
-        if (selectionType_ == selectionTypes::sampledSurface)
-        {
-            surfacePtr_().update();
-        }
-
-        totalArea_ = totalArea();
-
-        Info<< type() << ' ' << name() << ":" << nl
-            << "    total faces  = " << nFaces_
-            << nl
-            << "    total area   = " << totalArea_
-            << nl;
-
-        if (dict.readIfPresent("weightFields", weightFieldNames_))
-        {
-            Info<< name() << ' ' << operationTypeNames_[operation_]
-                << " weight fields " << weightFieldNames_;
-        }
-        else if (dict.found("weightField"))
-        {
-            weightFieldNames_.setSize(1);
-            dict.lookup("weightField") >> weightFieldNames_[0];
-
-            Info<< name() << ' ' << operationTypeNames_[operation_]
-                << " weight field " << weightFieldNames_[0];
-        }
-
-
-        Info<< nl << endl;
-
-        if (writeFields_)
-        {
-            const word surfaceFormat(dict.lookup("surfaceFormat"));
-
-            surfaceWriterPtr_.reset
-            (
-                surfaceWriter::New(surfaceFormat, dict).ptr()
-            );
-        }
-    }
-}
-
 
 void Foam::functionObjects::fieldValues::surfaceFieldValue::writeFileHeader
 (
@@ -633,6 +491,52 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::processValues
 }
 
 
+void Foam::functionObjects::fieldValues::surfaceFieldValue::moveMesh()
+{
+    switch (selectionType_)
+    {
+        case selectionTypes::faceZone:
+        case selectionTypes::patch:
+        case selectionTypes::patches:
+            break;
+        case selectionTypes::sampledSurface:
+            surfacePtr_->expire();
+            setSampledSurfaceFaces();
+            break;
+    }
+
+    if (nFaces_)
+    {
+        totalArea_ = totalArea();
+
+        Info<< type() << ' ' << name() << ":" << nl
+            << "    total faces  = " << nFaces_ << nl
+            << "    total area   = " << totalArea_ << nl;
+    }
+
+    Info<< nl << endl;
+}
+
+
+void Foam::functionObjects::fieldValues::surfaceFieldValue::changeMesh()
+{
+    switch (selectionType_)
+    {
+        case selectionTypes::faceZone:
+            setFaceZoneFaces();
+            break;
+        case selectionTypes::patch:
+        case selectionTypes::patches:
+            setPatchesFaces();
+            break;
+        case selectionTypes::sampledSurface:
+            break;
+    }
+
+    moveMesh();
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::functionObjects::fieldValues::surfaceFieldValue::surfaceFieldValue
@@ -643,7 +547,6 @@ Foam::functionObjects::fieldValues::surfaceFieldValue::surfaceFieldValue
 )
 :
     fieldValue(name, runTime, dict, typeName),
-    dict_(dict),
     surfaceWriterPtr_(nullptr),
     selectionType_(selectionTypeNames.select(dict)),
     selectionName_(string::null),
@@ -655,7 +558,7 @@ Foam::functionObjects::fieldValues::surfaceFieldValue::surfaceFieldValue
     facePatchId_(),
     faceSign_()
 {
-    read(dict_);
+    read(dict);
 }
 
 Foam::functionObjects::fieldValues::surfaceFieldValue::surfaceFieldValue
@@ -666,19 +569,22 @@ Foam::functionObjects::fieldValues::surfaceFieldValue::surfaceFieldValue
 )
 :
     fieldValue(name, obr, dict, typeName),
-    dict_(dict),
     surfaceWriterPtr_(nullptr),
     selectionType_(selectionTypeNames.select(dict)),
     selectionName_(string::null),
     operation_(operationTypeNames_.read(dict.lookup("operation"))),
     weightFieldNames_(),
+    totalArea_(NaN),
     writeArea_(dict.lookupOrDefault("writeArea", false)),
     nFaces_(0),
+    faceZonePtr_(nullptr),
+    patchNames_(),
     faceId_(),
     facePatchId_(),
-    faceSign_()
+    faceSign_(),
+    surfacePtr_(nullptr)
 {
-    read(dict_);
+    read(dict);
 }
 
 
@@ -695,13 +601,83 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::read
     const dictionary& dict
 )
 {
-    if (dict != dict_)
+    fieldValue::read(dict);
+
+    const word selection(selectionTypeNames[selectionType_]);
+
+    switch (selectionType_)
     {
-        dict_ = dict;
+        case selectionTypes::faceZone:
+        {
+            faceZonePtr_.reset(new generatedFaceZone(mesh_, dict));
+
+            break;
+        }
+        case selectionTypes::patch:
+        {
+            const wordRe patchName = dict.lookup<wordRe>(selection);
+
+            patchNames_ = wordReList(1, patchName);
+
+            selectionName_ =
+                patchName.isPattern()
+              ? '"' + patchName + '"'
+              : string(patchName);
+
+            break;
+        }
+        case selectionTypes::patches:
+        {
+            patchNames_ = dict.lookup<wordReList>(selection);
+
+            const labelList patchis = this->patchis(patchNames_);
+
+            selectionName_.clear();
+
+            forAll(patchis, i)
+            {
+                const fvPatch& fvp = mesh_.boundary()[patchis[i]];
+                selectionName_.append((i ? " " : "") + fvp.name());
+            }
+
+            break;
+        }
+        case selectionTypes::sampledSurface:
+        {
+            surfacePtr_ = sampledSurface::New(name(), mesh_, dict);
+
+            selectionName_ = surfacePtr_().name();
+
+            break;
+        }
     }
 
-    fieldValue::read(dict);
-    initialise(dict);
+    if (dict.readIfPresent("weightFields", weightFieldNames_))
+    {
+        Info<< name() << ' ' << operationTypeNames_[operation_]
+            << " weight fields " << weightFieldNames_;
+    }
+    else if (dict.found("weightField"))
+    {
+        weightFieldNames_.setSize(1);
+
+        dict.lookup("weightField") >> weightFieldNames_[0];
+
+        Info<< name() << ' ' << operationTypeNames_[operation_]
+            << " weight field " << weightFieldNames_[0];
+    }
+
+    if (writeFields_)
+    {
+        const word surfaceFormat(dict.lookup("surfaceFormat"));
+
+        surfaceWriterPtr_.reset
+        (
+            surfaceWriter::New(surfaceFormat, dict).ptr()
+        );
+    }
+
+    changeMesh();
 
     return true;
 }
@@ -884,11 +860,14 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::movePoints
     const polyMesh& mesh
 )
 {
-    if (&mesh == &mesh_)
+    if (&mesh == &this->mesh())
     {
-        // It may be necessary to reset if the mesh moves. The total area might
-        // change, as might non-conformal faces.
-        initialise(dict_);
+        fieldValue::movePoints(mesh);
+        if (selectionType_ == selectionTypes::faceZone)
+        {
+            faceZonePtr_->movePoints();
+        }
+        moveMesh();
     }
 }
 
@@ -898,9 +877,14 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::topoChange
     const polyTopoChangeMap& map
 )
 {
-    if (&map.mesh() == &mesh_)
+    if (&map.mesh() == &mesh())
     {
-        initialise(dict_);
+        fieldValue::topoChange(map);
+        if (selectionType_ == selectionTypes::faceZone)
+        {
+            faceZonePtr_->topoChange(map);
+        }
+        changeMesh();
     }
 }
 
@@ -910,9 +894,14 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::mapMesh
     const polyMeshMap& map
 )
 {
-    if (&map.mesh() == &mesh_)
+    if (&map.mesh() == &mesh())
     {
-        initialise(dict_);
+        fieldValue::mapMesh(map);
+        if (selectionType_ == selectionTypes::faceZone)
+        {
+            faceZonePtr_->mapMesh(map);
+        }
+        changeMesh();
     }
 }
 
@@ -922,9 +911,15 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::distribute
     const polyDistributionMap& map
 )
 {
-    if (&map.mesh() == &mesh_)
+    if (&map.mesh() == &mesh())
     {
-        initialise(dict_);
+        fieldValue::distribute(map);
+        if (selectionType_ == selectionTypes::faceZone)
+        {
+            faceZonePtr_->distribute(map);
+        }
+
+        changeMesh();
     }
 }
 

@@ -179,9 +179,6 @@ protected:
 
     // Protected Member Functions
 
-        //- Initialise, e.g. cell addressing
-        void initialise(const dictionary& dict);
-
         //- Return true if the field name is valid
         template<class Type>
         bool validField(const word& fieldName) const;

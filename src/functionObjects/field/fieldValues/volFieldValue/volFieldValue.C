@@ -70,36 +70,6 @@ const Foam::NamedEnum
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-void Foam::functionObjects::fieldValues::volFieldValue::initialise
-(
-    const dictionary& dict
-)
-{
-    dict.readIfPresent<Switch>("writeLocation", writeLocation_);
-
-    if (dict.readIfPresent("weightFields", weightFieldNames_))
-    {
-        Info<< name() << " " << operationTypeNames_[operation_]
-            << " weight fields " << weightFieldNames_;
-    }
-    else if (dict.found("weightField"))
-    {
-        weightFieldNames_.setSize(1);
-        dict.lookup("weightField") >> weightFieldNames_[0];
-
-        Info<< name() << " " << operationTypeNames_[operation_]
-            << " weight field " << weightFieldNames_[0];
-    }
-
-    if (dict.readIfPresent("scaleFactor", scaleFactor_))
-    {
-        Info<< "    scale factor = " << scaleFactor_ << nl;
-    }
-
-    Info<< nl << endl;
-}
-
-
 template<class Type>
 void Foam::functionObjects::fieldValues::volFieldValue::
 writeFileHeaderLocation()
@@ -268,8 +238,29 @@ bool Foam::functionObjects::fieldValues::volFieldValue::read
 {
     fieldValue::read(dict);
 
-    // No additional info to read
-    initialise(dict);
+    dict.readIfPresent<Switch>("writeLocation", writeLocation_);
+
+    if (dict.readIfPresent("weightFields", weightFieldNames_))
+    {
+        Info<< name() << " " << operationTypeNames_[operation_]
+            << " weight fields " << weightFieldNames_;
+    }
+    else if (dict.found("weightField"))
+    {
+        weightFieldNames_.setSize(1);
+
+        dict.lookup("weightField") >> weightFieldNames_[0];
+
+        Info<< name() << " " << operationTypeNames_[operation_]
+            << " weight field " << weightFieldNames_[0];
+    }
+
+    if (dict.readIfPresent("scaleFactor", scaleFactor_))
+    {
+        Info<< "    scale factor = " << scaleFactor_ << nl;
+    }
+
+    Info<< nl << endl;
 
     return true;
 }

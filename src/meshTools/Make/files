@@ -251,6 +251,7 @@ zoneGenerators/face/orient/orient_zoneGenerator.C
 zoneGenerators/face/flip/flip_zoneGenerator.C
 zoneGenerators/face/plane/plane_zoneGenerator.C
 zoneGenerators/face/surface/surface_zoneGenerator.C
+zoneGenerators/face/generatedFaceZone/generatedFaceZone.C
 
 zoneGenerators/periodic/periodic.C
 
