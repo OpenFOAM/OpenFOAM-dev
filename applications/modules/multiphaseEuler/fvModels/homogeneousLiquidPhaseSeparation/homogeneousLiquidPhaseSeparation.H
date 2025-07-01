@@ -41,7 +41,7 @@ Usage
         phases          (liquid sugar);
 
         // The specie that is condensing
-        specie          C2H12O6;
+        specie          C6H12O6;
 
         // Linearise the latent heat contribution into the energy equation?
         energySemiImplicit no;
