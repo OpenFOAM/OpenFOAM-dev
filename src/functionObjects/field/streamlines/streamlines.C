@@ -576,6 +576,8 @@ bool Foam::functionObjects::streamlines::write()
         );
     }
 
+    Info<< endl;
+
     return true;
 }
 
