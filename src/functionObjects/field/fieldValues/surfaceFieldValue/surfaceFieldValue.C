@@ -496,6 +496,8 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::moveMesh()
     switch (selectionType_)
     {
         case selectionTypes::faceZone:
+            if (faceZonePtr_->zone().moveUpdate()) setFaceZoneFaces();
+            break;
         case selectionTypes::patch:
         case selectionTypes::patches:
             break;
@@ -514,7 +516,7 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::changeMesh()
     switch (selectionType_)
     {
         case selectionTypes::faceZone:
-            setFaceZoneFaces();
+            if (!faceZonePtr_->zone().moveUpdate()) setFaceZoneFaces();
             break;
         case selectionTypes::patch:
         case selectionTypes::patches:
@@ -941,7 +943,6 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::distribute
         {
             faceZonePtr_->distribute(map);
         }
-
         changeMesh();
     }
 }
