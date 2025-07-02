@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -559,7 +559,8 @@ Foam::meshSearch::meshSearch
     if
     (
         cellDecompMode_ == polyMesh::FACE_DIAG_TRIS
-     || cellDecompMode_ == polyMesh::CELL_TETS)
+     || cellDecompMode_ == polyMesh::CELL_TETS
+    )
     {
         // Force construction of face diagonals
         (void)mesh.tetBasePtIs();
@@ -897,6 +898,16 @@ void Foam::meshSearch::clearOut()
     boundaryTreePtr_.clear();
     cellTreePtr_.clear();
     overallBbPtr_.clear();
+
+    if
+    (
+        cellDecompMode_ == polyMesh::FACE_DIAG_TRIS
+     || cellDecompMode_ == polyMesh::CELL_TETS
+    )
+    {
+        // Force construction of face diagonals
+        (void)mesh_.tetBasePtIs();
+    }
 }
 
 
