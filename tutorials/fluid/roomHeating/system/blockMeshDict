@@ -1,0 +1,126 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMeters 1;
+
+xCells1  32;
+xCells2  15;
+yCells   10;
+zCells   35;
+
+xGrading
+(
+    (0.2 1.5 16)
+    (1   1   3)
+);
+
+zGrading
+(
+    (1 1.5 16)
+    (2 0.5 2)
+    (2 0.5 0.5)
+    (1 1.5 0.0625)
+);
+
+vertices
+(
+    (0  0 0)
+    (4  0 0)
+    (10 0 0)
+    (0  5 0)
+    (4  5 0)
+    (10 5 0)
+
+    (0  0 2)
+    (4  0 3)
+    (10 0 3)
+    (0  5 2)
+    (4  5 3)
+    (10 5 3)
+);
+
+blocks
+(
+    hex (0 1 4 3 6 7 10 9)
+    ($xCells1 $yCells $zCells)
+    simpleGrading ($xGrading 1 $zGrading)
+
+    hex (1 2 5 4 7 8 11 10)
+    ($xCells2 $yCells $zCells)
+    simpleGrading (1 1 $zGrading)
+);
+
+edges
+(
+);
+
+boundary
+(
+    glass
+    {
+        type wall;
+        faces
+        (
+            (0 6 9 3)
+        );
+    }
+
+    floor
+    {
+        type wall;
+        faces
+        (
+            (0 1 4 3)
+            (1 2 5 4)
+        );
+    }
+
+    ceiling
+    {
+        type wall;
+        faces
+        (
+            (7 8 11 10)
+        );
+    }
+
+    roof
+    {
+        type wall;
+        faces
+        (
+            (6 7 10 9)
+        );
+    }
+
+    walls
+    {
+        type wall;
+        faces
+        (
+            (3 4 10 9)
+            (4 5 11 10)
+            (5 2 8 11)
+            (7 8 2 1)
+            (7 1 0 6)
+        );
+    }
+);
+
+mergePatchPairs
+(
+);
+
+// ************************************************************************* //

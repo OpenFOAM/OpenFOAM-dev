@@ -1,0 +1,55 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       volScalarField;
+    location    "0";
+    object      T;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+Tinf            270;
+Tfloor          285;
+
+dimensions      [0 0 0 1 0 0 0];
+
+internalField   uniform $Tfloor;
+
+boundaryField
+{
+    glass
+    {
+        type            externalTemperature;
+        Ta              constant $Tinf;
+        h               uniform 8;
+        value           uniform $Tinf;
+    }
+    floor
+    {
+        type            fixedValue;
+        value           uniform $Tfloor;
+    }
+    ceiling
+    {
+        type            fixedValue;
+        value           uniform 294;
+    }
+    roof
+    {
+        $glass;
+        h               uniform 4;
+    }
+    walls
+    {
+        type            zeroGradient;
+    }
+}
+
+
+// ************************************************************************* //

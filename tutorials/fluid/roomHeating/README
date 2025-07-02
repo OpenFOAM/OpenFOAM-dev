@@ -1,0 +1,9 @@
+# Note on the roomHeating case
+The roomHeating case based on an example from the book "Notes on Computational
+Fluid Dynamics" by C.J. Greenshields and H.G Weller, see:
+https://doc.cfd.direct/notes/cfd-general-principles/heating-a-room
+
+# Changes from the book example
+Compared to the example in the book, the case differs in the following ways:
++ the mesh is larger, so resolves the wall boundary layers better;
++ it uses more realistic heat transfer coefficients.
