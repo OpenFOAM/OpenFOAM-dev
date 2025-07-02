@@ -11,12 +11,14 @@ runApplication decomposePar
 # Steady-state run
 runParallel -s steady foamRun
 
-# Transient run
-foamDictionary -set \
-    "endTime=6000, deltaT=0.01, adjustTimeStep=yes" \
-    system/controlDict
-foamDictionary -set "ddtSchemes/default=Euler" system/fvSchemes
-runParallel -s transient foamRun
+if ! isTest "$@"
+    # Transient run
+    foamDictionary -set \
+        "endTime=6000, deltaT=0.01, adjustTimeStep=yes" \
+        system/controlDict
+    foamDictionary -set "ddtSchemes/default=Euler" system/fvSchemes
+    runParallel -s transient foamRun
+fi
 
 runApplication reconstructPar -latestTime
 
