@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,7 +71,7 @@ Foam::functionObjects::sampledSets::sampleLocalType
 
             forAll(s, i)
             {
-                const point& position = s.positions()[i];
+                const point& position = s.pointCoord(i);
                 const label celli = s.cells()[i];
                 const label facei = s.faces()[i];
 
