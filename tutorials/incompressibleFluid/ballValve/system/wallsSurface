@@ -19,13 +19,13 @@ interpolate false;
 fields      ();
 
 surfaces
-(
+{
     walls
     {
         type        patch;
         interpolate $interpolate;
         patches     (pipeWalls pipeNonCouple ballWalls ballNonCouple);
     }
-);
+}
 
 // ************************************************************************* //

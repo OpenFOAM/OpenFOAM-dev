@@ -20,7 +20,7 @@ fields          (p U);
 interpolationScheme cellPoint;
 
 surfaces
-(
+{
     yNormal
     {
         type            cutPlane;
@@ -29,7 +29,7 @@ surfaces
         normal          (0 1 0);
         interpolate     true;
     }
-);
+}
 
 
 // ************************************************************************* //

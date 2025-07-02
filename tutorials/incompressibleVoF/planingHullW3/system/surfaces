@@ -20,7 +20,7 @@ surfaces
     interpolationScheme cellPoint;
 
     surfaces
-    (
+    {
         iso-alpha
         {
             type            isoSurface;
@@ -35,7 +35,7 @@ surfaces
             patches         (hull);
             interpolate     true;
         }
-    );
+    }
 }
 
 // ************************************************************************* //

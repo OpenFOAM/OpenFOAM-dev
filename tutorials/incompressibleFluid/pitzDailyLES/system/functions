@@ -52,7 +52,7 @@ surfaceSampling
     fields          (U);
 
     surfaces
-    (
+    {
         nearWall
         {
             type            patchInternalField;
@@ -61,7 +61,7 @@ surfaceSampling
             interpolate     true;
             triangulate     false;
         }
-    );
+    }
 }
 
 #includeFunc scalarTransport(s)

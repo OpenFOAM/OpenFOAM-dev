@@ -20,7 +20,7 @@ fields          (p U Q);
 interpolationScheme cellPoint;
 
 surfaces
-(
+{
     zNormal
     {
         type            cutPlane;
@@ -44,7 +44,7 @@ surfaces
         patches         ("propeller.*");
         interpolate     true;
     }
-);
+}
 
 
 // ************************************************************************* //

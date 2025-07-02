@@ -18,7 +18,7 @@ fields          (p U);
 interpolationScheme cellPoint;
 
 surfaces
-(
+{
     zNormal
     {
         type            cutPlane;
@@ -27,7 +27,7 @@ surfaces
         normal          (0 0 1);
         interpolate     true;
     }
-);
+}
 
 
 // ************************************************************************* //
