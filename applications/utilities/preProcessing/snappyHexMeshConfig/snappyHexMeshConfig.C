@@ -213,7 +213,20 @@ void readPatchOption
 {
     if (args.optionFound(name))
     {
-        opts.insert(name, args.optionRead<Pair<word>>(name));
+        List<word> patchOption(args.optionReadList<word>(name));
+
+        if (patchOption.size() == 2)
+        {
+            opts.insert(name, Pair<word>(patchOption[0], patchOption[1]));
+        }
+        else
+        {
+            FatalErrorInFunction
+                << "Argument to option '-" << name
+                << "' is " << args.option(name) << nl
+                << "It should be of the form \"<name> <type>\""
+                << exit(FatalError);
+        }
     }
 }
 
@@ -330,7 +343,7 @@ int main(int argc, char *argv[])
     (
         "defaultPatch",
         "entry",
-        "name and type of default patch, '(<name> <type>)'"
+        "name and type of default patch, '<name> <type>'"
     );
 
     List<word> patches(blockMeshCartesianConfiguration::patches);
@@ -343,7 +356,7 @@ int main(int argc, char *argv[])
             "entry",
             "patch in the "
           + patches[i]
-          + " direction, format '(<name> <type>)'"
+          + " direction, format '<name> <type>'"
         );
     }
 
