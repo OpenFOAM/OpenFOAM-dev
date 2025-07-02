@@ -595,9 +595,7 @@ Foam::meshSearch::meshSearch
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::meshSearch::~meshSearch()
-{
-    clearOut();
-}
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -893,7 +891,7 @@ bool Foam::meshSearch::isInside(const point& p) const
 }
 
 
-void Foam::meshSearch::clearOut()
+void Foam::meshSearch::correct()
 {
     boundaryTreePtr_.clear();
     cellTreePtr_.clear();
@@ -908,12 +906,6 @@ void Foam::meshSearch::clearOut()
         // Force construction of face diagonals
         (void)mesh_.tetBasePtIs();
     }
-}
-
-
-void Foam::meshSearch::correct()
-{
-    clearOut();
 }
 
 
