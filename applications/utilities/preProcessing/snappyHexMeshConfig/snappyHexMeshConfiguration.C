@@ -97,7 +97,7 @@ void Foam::snappyHexMeshConfiguration::writeSearchableBox(const label i)
 {
     beginDict(os_, "box" + std::to_string(i));
 
-    os_ << indent << "type searchableBox;" << nl
+    os_ << indent << "type box;" << nl
         << indent << "min " << refinementBoxes_[i].first() << ";" << nl
         << indent << "max " << refinementBoxes_[i].second() << ";" << endl;
 
