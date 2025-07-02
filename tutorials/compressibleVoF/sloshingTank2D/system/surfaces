@@ -1,0 +1,19 @@
+type            surfaces;
+libs            ("libsampling.so");
+writeControl    writeTime;
+surfaceFormat   raw;
+fields
+(
+    p
+);
+interpolationScheme cellPoint;
+
+surfaces
+{
+    walls
+    {
+        type        patch;
+        patches     (walls);
+        triangulate false;
+    }
+}

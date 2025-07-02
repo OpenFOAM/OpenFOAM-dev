@@ -546,17 +546,8 @@ bool Foam::readConfigFile
     // Delay processing the functionEntries
     // until after the argument entries have been added
     entry::disableFunctionEntries = true;
-    dictionary funcsDict(fileName(funcType), parentDict, fileStream);
+    dictionary funcDict(fileName(funcType), parentDict, fileStream);
     entry::disableFunctionEntries = false;
-
-    dictionary* funcDictPtr = &funcsDict;
-
-    if (funcsDict.found(funcType) && funcsDict.isDict(funcType))
-    {
-        funcDictPtr = &funcsDict.subDict(funcType);
-    }
-
-    dictionary& funcDict = *funcDictPtr;
 
     // Store the funcDict as read for error reporting context
     const dictionary funcDict0(funcDict);
@@ -777,7 +768,7 @@ bool Foam::readConfigFile
         funcArgsDict = dictionary
         (
             funcType,
-            funcsDict,
+            funcDict,
             IStringStream(os.str())()
         );
     }
