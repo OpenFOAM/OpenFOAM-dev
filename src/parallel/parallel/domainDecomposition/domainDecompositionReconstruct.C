@@ -519,7 +519,7 @@ void Foam::domainDecomposition::reconstruct()
     completeMesh_->setPointsInstance(procMeshes()[0].pointsInstance());
 
     // Allocate a stitcher, but do not stitch
-    completeMesh_->postConstruct(false, fvMesh::stitchType::none);
+    completeMesh_->postConstruct(false, false, fvMesh::stitchType::none);
 
     Info<< decrIndent;
 }

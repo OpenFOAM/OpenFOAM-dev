@@ -107,13 +107,13 @@ void Foam::domainDecomposition::readComplete(const bool doPost)
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            false,
             false
         )
     );
 
     completeMesh_->postConstruct
     (
+        false,
         false,
         doPost ? fvMesh::stitchType::nonGeometric : fvMesh::stitchType::none
     );
@@ -138,13 +138,13 @@ void Foam::domainDecomposition::readProcs(const bool doPost)
                     IOobject::NO_READ,
                     IOobject::NO_WRITE
                 ),
-                false,
                 false
             )
         );
 
         procMeshes_[proci].postConstruct
         (
+            false,
             false,
             doPost ? fvMesh::stitchType::nonGeometric : fvMesh::stitchType::none
         );

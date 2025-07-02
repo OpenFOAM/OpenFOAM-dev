@@ -337,8 +337,7 @@ public:
         explicit fvMesh
         (
             const IOobject& io,
-            const bool doPost = true,
-            const bool doZones = true
+            const bool doPost = true
         );
 
         //- Construct from cellShapes with boundary.
@@ -397,6 +396,7 @@ public:
             void postConstruct
             (
                 const bool changers,
+                const bool zones,
                 const stitchType stitch
             );
 

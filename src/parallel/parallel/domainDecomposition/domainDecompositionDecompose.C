@@ -932,7 +932,7 @@ void Foam::domainDecomposition::decompose()
         procMesh.addFvPatches(procPatches);
 
         // Allocate a stitcher, but do not stitch
-        procMesh.postConstruct(false, fvMesh::stitchType::none);
+        procMesh.postConstruct(false, false, fvMesh::stitchType::none);
 
         // Create point zones
         {

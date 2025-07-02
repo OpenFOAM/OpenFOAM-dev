@@ -363,8 +363,8 @@ Foam::surfaceLabelField::Boundary& Foam::fvMesh::polyFacesBfRef()
 Foam::fvMesh::fvMesh
 (
     const IOobject& io,
-    const bool doPost,
-    const bool doZones
+    const bool doPost
+    // const bool doZones
 )
 :
     polyMesh(io),
@@ -404,14 +404,7 @@ Foam::fvMesh::fvMesh
 
     if (doPost)
     {
-        postConstruct(true, stitchType::geometric);
-    }
-
-    // Generate the zones after the mesh manipulators have been constructed
-    // to support motion-specific zone generators requiring access to the mover
-    if (doZones)
-    {
-        zonesGenerator::New(*this);
+        postConstruct(true, true, stitchType::geometric);
     }
 }
 
@@ -637,7 +630,12 @@ Foam::fvMesh::~fvMesh()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::fvMesh::postConstruct(const bool changers, const stitchType stitch)
+void Foam::fvMesh::postConstruct
+(
+    const bool changers,
+    const bool zones,
+    const stitchType stitch
+)
 {
     // Construct the stitcher
     stitcher_.set(fvMeshStitcher::New(*this, changers).ptr());
@@ -693,6 +691,13 @@ void Foam::fvMesh::postConstruct(const bool changers, const stitchType stitch)
                 *this
             );
         }
+    }
+
+    // Generate the zones after the mesh manipulators have been constructed
+    // to support motion-specific zone generators requiring access to the mover
+    if (zones)
+    {
+        zonesGenerator::New(*this);
     }
 }
 

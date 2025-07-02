@@ -98,10 +98,11 @@ int main(int argc, char *argv[])
     const bool zonesGenerator = args.optionFound("zonesGenerator");
     const bool constructFvMesh = args.optionFound("fvMesh") || zonesGenerator;
 
-    autoPtr<polyMesh> meshPtr
-    (
-        constructFvMesh
-      ? new fvMesh
+    autoPtr<polyMesh> meshPtr;
+
+    if (constructFvMesh)
+    {
+        fvMesh *fvMeshPtr = new fvMesh
         (
             IOobject
             (
@@ -111,10 +112,21 @@ int main(int argc, char *argv[])
                 runTime,
                 IOobject::MUST_READ
             ),
+            false
+        );
+
+        fvMeshPtr->postConstruct
+        (
             true,
-            zonesGenerator
-        )
-      : new polyMesh
+            zonesGenerator,
+            fvMesh::stitchType::geometric
+        );
+
+        meshPtr = fvMeshPtr;
+    }
+    else
+    {
+        meshPtr = new polyMesh
         (
             IOobject
             (
@@ -124,8 +136,8 @@ int main(int argc, char *argv[])
                 runTime,
                 IOobject::MUST_READ
             )
-        )
-    );
+        );
+    }
 
     polyMesh& mesh = meshPtr();
 

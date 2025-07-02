@@ -9,8 +9,7 @@ Foam::fvMesh mesh
         runTime,
         Foam::IOobject::MUST_READ
     ),
-    false,
     false
 );
 
-mesh.postConstruct(false, fvMesh::stitchType::geometric);
+mesh.postConstruct(false, false, fvMesh::stitchType::geometric);
