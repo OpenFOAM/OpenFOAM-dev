@@ -71,7 +71,7 @@ Foam::functionObjects::sampledSets::sampleLocalType
 
             forAll(s, i)
             {
-                const point& position = s.pointCoord(i);
+                const point& position = s.positions()[i];
                 const label celli = s.cells()[i];
                 const label facei = s.faces()[i];
 

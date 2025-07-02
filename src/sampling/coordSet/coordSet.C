@@ -289,12 +289,25 @@ Foam::tmp<Foam::pointField> Foam::coordSet::pointCoords() const
             if (positions_.valid()) return positions_();
             FatalErrorInFunction
                 << "Point coordinate requested from coordinate set with "
-                << axisTypeNames_[axis_] << " axis, but with no valid point"
+                << axisTypeNames_[axis_] << " axis, but with no valid points"
                 << exit(FatalError);
             break;
     }
 
     return pointField::null();
+}
+
+
+const Foam::pointField& Foam::coordSet::positions() const
+{
+    if (!positions_.valid())
+    {
+        FatalErrorInFunction
+            << "Positions requested from coordinate set with no valid points"
+            << exit(FatalError);
+    }
+
+    return positions_();
 }
 
 
