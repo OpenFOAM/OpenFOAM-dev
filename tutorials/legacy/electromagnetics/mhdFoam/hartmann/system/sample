@@ -22,7 +22,7 @@ interpolationScheme cellPoint;
 setFormat       raw;
 
 sets
-(
+{
     line_centreProfile
     {
         type    lineUniform;
@@ -31,7 +31,7 @@ sets
         end     (10.001 1 0.01);
         nPoints 100;
     }
-);
+}
 
 fields          ( Ux );
 

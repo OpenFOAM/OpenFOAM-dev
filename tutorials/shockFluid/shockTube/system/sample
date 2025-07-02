@@ -22,7 +22,7 @@ interpolationScheme cellPoint;
 setFormat       raw;
 
 sets
-(
+{
     data
     {
         type    lineFace;
@@ -31,7 +31,7 @@ sets
         end     (4.995 0 0);
         nPoints 1000;
     }
-);
+}
 
 fields          (T mag(U) p);
 
