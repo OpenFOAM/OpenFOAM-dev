@@ -282,7 +282,7 @@ bool Foam::functionObjects::streamlines::write()
                 new streamlinesParticle
                 (
                     mesh_,
-                    sampledSetPtr_().pointCoord(i),
+                    sampledSetPtr_().positions()[i],
                     sampledSetPtr_().cells()[i],
                     nLocateBoundaryHits,
                     lifeTime_,

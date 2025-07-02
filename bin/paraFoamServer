@@ -1,0 +1,125 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     | Website:  https://openfoam.org
+#   \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     paraFoamServer
+#
+# Description
+#     start ParaView Server (pvserver) with the OpenFOAM libraries
+#
+#------------------------------------------------------------------------------
+usage() {
+    cat<<USAGE
+
+Usage: ${0##*/} [OPTIONS]
+options:
+  -help             print the usage
+
+* Start ParaView Server (pvserver) $ParaView_VERSION with the OpenFOAM libraries
+
+USAGE
+}
+
+error() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    usage
+    exit 1
+}
+
+pvserverExec () {
+    # For now filter out any ld.so errors. Caused by non-system compiler?
+    LD_PRELOAD="$ParaView_LIB_DIR/libpqCore-pv$ParaView_MAJOR.so" \
+        pvserver "$@" 2>&1 | grep -v -F 'Inconsistency detected by ld.so'
+}
+
+noPV() {
+    cat<<EOF
+
+For information on packaged versions of OpenFOAM/ParaView and compilation of
+OpenFOAM/ParaView, see https://openfoam.org/download
+
+Alternatively, you might be able to view your OpenFOAM data with the reader
+module provided with ParaView by running:
+    paraFoam -builtin
+
+EOF
+}
+
+noPVExe () {
+    cat<<EOF
+FATAL ERROR: A ParaView executable was not found on your system.  This means
+that ParaView is not installed, or that OpenFOAM has been configured to use a
+different installation of ParaView from that which is installed.
+EOF
+noPV
+}
+
+noPVReader () {
+    cat<<EOF
+FATAL ERROR: The reader module for OpenFOAM data was not found on your system.
+This means that OpenFOAM was not built with ParaView support, or that ParaView
+is not installed, or that OpenFOAM has been configured to use a different
+installation of ParaView from that which is installed.
+EOF
+noPV
+}
+
+# We want to do nice exit when running paraview to give paraview opportunity
+# to clean up
+unset FOAM_ABORT
+
+# Hack: change all locale to 'C' i.e. using '.' for decimal point. This is
+# only needed temporarily until paraview is locale aware. (git version is
+# already 2010-07)
+export LC_ALL=C
+
+# Parse options
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -h | -help)
+        usage && exit 0
+        ;;
+    --)
+        shift
+        break    # Stop here, treat balance as paraview options
+        ;;
+    --*)
+        break    # Stop here, treat this and balance as paraview options
+        ;;
+    *)
+        error "unknown option/argument: '$*'"
+        ;;
+    esac
+done
+
+# Check that the executable and/or the reader module are available
+! which pvserver > /dev/null 2>&1 && noPVExe && exit 1
+! [ -f "$PV_PLUGIN_PATH/libPVFoamReader_SM.so" ] && noPVReader && exit 1
+
+# Run pvserver
+pvserverExec "$@"
+
+#------------------------------------------------------------------------------
