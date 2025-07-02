@@ -1,0 +1,75 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Calculates the Reynolds number and friction factor for pipe flow
+
+\*---------------------------------------------------------------------------*/
+
+libs     ("libutilityFunctionObjects.so");
+type     coded;
+
+executeAtStart  no;
+writeControl    timeStep;
+writeInterval   1;
+
+diameter ${${FOAM_CASE}/system/blockMeshDict!diameter};
+nu       ${${FOAM_CASE}/constant/physicalProperties!nu};
+
+codeInclude
+#{
+    #include "volFields.H"
+    #include "fvcVolumeIntegrate.H"
+    #include "OFstream.H"
+    #include "OSspecific.H"
+    #include "fvModels.H"
+#};
+
+codeOptions
+#{
+    -I$(LIB_SRC)/finiteVolume/lnInclude
+#};
+
+codeData
+#{
+    autoPtr<OFstream> file;
+#};
+
+codeRead
+#{
+    fileName dir
+    (
+        mesh().time().globalPath()/
+        "postProcessing"/
+        mesh().time().name()/
+        name()
+    );
+
+    mkDir(dir);
+    file = new OFstream(dir/"data");
+
+    file()<< "#time" << tab
+          << "Re" << tab
+          << "fDarcy"<< tab
+          << endl;
+#};
+
+codeWrite
+#{
+    const volVectorField& U = mesh().lookupObject<volVectorField>("U");
+    const scalar Umean = mag(fvc::domainIntegrate(U).value())/gSum(mesh().V());
+    scalar Re = Umean*$diameter / $nu;
+
+    scalar gradP =
+        mesh().lookupObject<volVectorField::Internal>("gradPUSu")[0].x();
+    scalar fDarcy = gradP*$diameter /(0.5*sqr(Umean));
+
+    file()<< mesh().time().userTimeValue() << tab
+          << Re << tab
+          << fDarcy << tab
+          << endl;
+#};

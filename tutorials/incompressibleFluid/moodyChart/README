@@ -1,0 +1,6 @@
+# Note on the moodyChart case
+The moodyChart case is a single simulation that generates points on the Moody
+chart, i.e. friction factor versus Reynolds number.  It plots the points on a
+graph, comparing them with the curve fit to the Moody chart data by S.E. Haaland
+in "Simple and Explicit Formulas for the Friction Factor in Turbulent Pipe
+Flow", J. Fluids Eng., 1983.

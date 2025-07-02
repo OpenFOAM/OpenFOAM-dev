@@ -1,0 +1,118 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     | Website:  https://openfoam.org
+#   \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     UPlusYPlusGraph
+#
+# Description
+#     Plots a graph of UPlus vs yPlus for the moodyChart tutorial case
+#
+#------------------------------------------------------------------------------
+
+usage() {
+    cat<<USAGE
+
+Usage: ${0##*/} [OPTIONS] <time>
+options:
+  -help   | -h        print the usage
+
+Plots a graph of Uplus vs yPlus for the moodyChart tutorial case at the
+specified <time>
+
+USAGE
+}
+
+error() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "Error: $1"; shift; done
+    usage
+    exit 1
+}
+
+format () {
+    cat<<EOF
+set term pngcairo size 750,500
+set key right bottom
+set key font ",16"
+set notitle
+set xlabel "y^{+}" font ",18"
+set ylabel "U^{+}" font ",18"
+set xrange [1:50000]
+set xtics (1, 10, 100, 1000, 10000)
+set yrange [0:35]
+set ytics (0, 5, 10, 15, 20, 25, 30, 35)
+set tics font ",16"
+set logscale x
+EOF
+}
+
+while [ "$#" -gt 0 ]
+do
+   case "$1" in
+   -h | -help)
+      usage && exit 0
+      ;;
+   -*)
+      error "invalid option '$1'"
+      ;;
+   *)
+      break
+      ;;
+    esac
+done
+
+[ $# -eq 1 ] || error "Number of argument ($#) /= 1"
+printf "%f" "$1" > /dev/null 2>&1 || \
+    error "Argument '$1' must be a number (time)"
+
+time="$1"
+
+# Formatting defaults
+ptFmt='lt 1 lw 2 ps 2'
+lineFmt='lt 1 lw 1.5'
+colLam='lc rgb "dark-spring-green"'
+colTurb='lc rgb "dark-magenta"'
+
+# Test if gnuplot is installed
+! command -v gnuplot >/dev/null 2>&1 && \
+    echo 'gnuplot not found - skipping graph creation' && \
+    exit 1
+
+# Plotting
+gnuplot<<EOF
+    $(format)
+    deltaP = 6*(10**($time-7))
+    utau = sqrt(0.1*deltaP/4)
+    nu = 1e-6
+    kappa = 0.41
+    E = 9.8
+    set output 'Uprofile-$time.png'
+    plot [1:][0:] 'postProcessing/Uprofile/${time}/line.xy' \
+                  using (\$1*utau/nu):(\$2/utau) \
+                  title 'CFD' $ptFmt, \
+                  (1/kappa)*log(E*x) \
+                  title 'U^{+} = 1/{/Symbol k} ln(y^{+}) + B' $lineFmt $colTurb, \
+                  x \
+                  title 'U^{+} = y^{+}' $lineFmt $colLam
+EOF

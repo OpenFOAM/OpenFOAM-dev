@@ -1,0 +1,71 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     | Website:  https://openfoam.org
+#   \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     frictionFactorReGraph
+#
+# Description
+#     Plots a graph of "frictionFactor" vs "Re" for the moodyChart tutorial
+#
+#------------------------------------------------------------------------------
+
+! command -v gnuplot >/dev/null 2>&1 && \
+    echo 'gnuplot not found - skipping graph creation' && \
+    exit 1
+
+# Formatting
+format () {
+    cat<<EOF
+set term pngcairo size 750,500
+set key right top
+set notitle
+set xlabel "Reynolds number, Re (-)"
+set ylabel "Friction coefficient, f_{D} (-)"
+set xrange [100:1e8]
+set xtics (1e2, 1e3, 1e4, 1e5, 1e6, 1e7, 1e8)
+set format x "10^{%L}"
+set yrange [0.005:0.4]
+set ytics (0.005, 0.01, 0.02, 0.04, 0.08, 0.16, 0.32)
+set logscale xy
+EOF
+}
+
+ptFmt='lt 1 lw 2 ps 2'
+lineFmt='lt 1 lw 1.5'
+colLam='lc rgb "dark-spring-green"'
+colTurb='lc rgb "dark-magenta"'
+
+# Plotting
+gnuplot<<EOF
+    $(format)
+    Ks = 0
+    D = 0.1
+    f(x) = x > 2000 ? 1/(-1.8*log10((Ks/D/3.7)**1.11+(6.9/x)))**2 : 0
+    g(x) = x < 2000 ? 64/x : 0
+    set output 'moodyChart.png'
+    plot 'postProcessing/0/frictionFactor/data' u 2:3 t 'Laminar CFD' $ptFmt $colLam, \
+         'postProcessing/2/frictionFactor/data' u 2:3 t 'RAS CFD' $ptFmt $colTurb, \
+          g(x) t 'Laminar (64/x)' $lineFmt $colLam, \
+          f(x) t 'Turbulent (Haaland)' $lineFmt $colTurb
+EOF

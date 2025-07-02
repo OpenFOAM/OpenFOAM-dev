@@ -1,0 +1,39 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      gradP;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+type            semiImplicitSource;
+cellZone        all;
+volumeMode      specific;
+
+sources
+{
+    U
+    {
+        explicit
+        {
+            type coded;
+            name gradP;
+
+            code
+            #{
+                return vector(6*pow(10, x - 7), 0, 0);
+            #};
+        }
+
+        implicit 0;
+    }
+}
+
+// ************************************************************************* //
