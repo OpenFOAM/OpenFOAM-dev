@@ -53,8 +53,9 @@ class ${typeName}FvModel${SourceType}
 {
     // Private Data
 
-        //- The set of cells the fvModel applies to
-        fvCellZone set_;
+        //- The cellZone the fvModel applies to
+        //  if the evaluation function loop over the cellZone
+        fvCellZone zone_;
 
 
 public:

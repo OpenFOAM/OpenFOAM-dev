@@ -64,7 +64,7 @@ Foam::fv::constantbXiIgnition::constantbXiIgnition
 )
 :
     bXiIgnition(name, modelType, mesh, dict),
-    set_(mesh, dict),
+    zone_(mesh, dict),
     XiCorrModel_(XiCorrModel::New(mesh, dict)),
     start_("start", mesh().time().userUnits(), dict),
     duration_("duration", mesh().time().userUnits(), dict),
@@ -115,7 +115,7 @@ void Foam::fv::constantbXiIgnition::addSup
     scalarField& Sp = eqn.diag();
     const scalarField& V = mesh().V();
 
-    const labelList& cells = set_.zone();
+    const labelList& cells = zone_.zone();
 
     const scalar strength = strength_.value();
     const scalar duration = duration_.value();
@@ -148,14 +148,14 @@ void Foam::fv::constantbXiIgnition::topoChange
     const polyTopoChangeMap& map
 )
 {
-    set_.topoChange(map);
+    zone_.topoChange(map);
     XiCorrModel_->topoChange(map);
 }
 
 
 void Foam::fv::constantbXiIgnition::mapMesh(const polyMeshMap& map)
 {
-    set_.mapMesh(map);
+    zone_.mapMesh(map);
     XiCorrModel_->mapMesh(map);
 }
 
@@ -165,14 +165,14 @@ void Foam::fv::constantbXiIgnition::distribute
     const polyDistributionMap& map
 )
 {
-    set_.distribute(map);
+    zone_.distribute(map);
     XiCorrModel_->distribute(map);
 }
 
 
 bool Foam::fv::constantbXiIgnition::movePoints()
 {
-    set_.movePoints();
+    zone_.movePoints();
     XiCorrModel_->movePoints();
     return true;
 }
@@ -182,7 +182,7 @@ bool Foam::fv::constantbXiIgnition::read(const dictionary& dict)
 {
     if (fvModel::read(dict))
     {
-        set_.read(coeffs(dict));
+        zone_.read(coeffs(dict));
         XiCorrModel_->read(coeffs(dict));
         readCoeffs(coeffs(dict));
         return true;

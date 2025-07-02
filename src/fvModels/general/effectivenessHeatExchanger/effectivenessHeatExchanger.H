@@ -113,8 +113,8 @@ class effectivenessHeatExchanger
 {
     // Private data
 
-        //- The set of cells the fvConstraint applies to
-        fvCellZone set_;
+        //- The cellZone the fvConstraint applies to
+        fvCellZone zone_;
 
         //- Secondary flow mass rate [kg/s]
         scalar secondaryMassFlowRate_;

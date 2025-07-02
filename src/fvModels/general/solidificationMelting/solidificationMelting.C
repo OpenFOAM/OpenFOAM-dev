@@ -182,7 +182,7 @@ void Foam::fv::solidificationMelting::update
 
     const volScalarField& T = mesh().lookupObject<volScalarField>(TName_);
 
-    const labelList& cells = set_.zone();
+    const labelList& cells = zone_.zone();
 
     forAll(cells, i)
     {
@@ -261,7 +261,7 @@ Foam::fv::solidificationMelting::solidificationMelting
 )
 :
     fvModel(name, modelType, mesh, dict),
-    set_(mesh, coeffs(dict)),
+    zone_(mesh, coeffs(dict)),
     Tsol_(NaN),
     Tliq_(NaN),
     alpha1e_(NaN),
@@ -291,7 +291,7 @@ Foam::fv::solidificationMelting::solidificationMelting
         zeroGradientFvPatchScalarField::typeName
     ),
     curTimeIndex_(-1),
-    deltaT_(set_.nCells(), 0)
+    deltaT_(zone_.nCells(), 0)
 {
     readCoeffs(coeffs(dict));
 }
@@ -362,7 +362,7 @@ void Foam::fv::solidificationMelting::addSup
     vectorField& Su = eqn.source();
     const scalarField& V = mesh().V();
 
-    const labelList& cells = set_.zone();
+    const labelList& cells = zone_.zone();
 
     forAll(cells, i)
     {
@@ -393,7 +393,7 @@ void Foam::fv::solidificationMelting::addSup
 
 bool Foam::fv::solidificationMelting::movePoints()
 {
-    set_.movePoints();
+    zone_.movePoints();
     return true;
 }
 
@@ -403,13 +403,13 @@ void Foam::fv::solidificationMelting::topoChange
     const polyTopoChangeMap& map
 )
 {
-    set_.topoChange(map);
+    zone_.topoChange(map);
 }
 
 
 void Foam::fv::solidificationMelting::mapMesh(const polyMeshMap& map)
 {
-    set_.mapMesh(map);
+    zone_.mapMesh(map);
 }
 
 
@@ -418,7 +418,7 @@ void Foam::fv::solidificationMelting::distribute
     const polyDistributionMap& map
 )
 {
-    set_.distribute(map);
+    zone_.distribute(map);
 }
 
 
@@ -426,7 +426,7 @@ bool Foam::fv::solidificationMelting::read(const dictionary& dict)
 {
     if (fvModel::read(dict))
     {
-        set_.read(coeffs(dict));
+        zone_.read(coeffs(dict));
         readCoeffs(coeffs(dict));
         return true;
     }

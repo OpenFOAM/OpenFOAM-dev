@@ -164,8 +164,8 @@ void Foam::fv::rotorDisk::setFaceArea(vector& axis, const bool correct)
 
     // Calculate cell addressing for selected cells
     labelList cellAddr(mesh().nCells(), -1);
-    UIndirectList<label>(cellAddr, set_.zone()) =
-        identityMap(set_.nCells());
+    UIndirectList<label>(cellAddr, zone_.zone()) =
+        identityMap(zone_.nCells());
     labelList nbrFaceCellAddr(mesh().nFaces() - nInternalFaces, -1);
     forAll(pbm, patchi)
     {
@@ -276,7 +276,7 @@ void Foam::fv::rotorDisk::setFaceArea(vector& axis, const bool correct)
             mesh(),
             dimensionedScalar(dimArea, 0)
         );
-        UIndirectList<scalar>(area.primitiveField(), set_.zone()) = area_;
+        UIndirectList<scalar>(area.primitiveField(), zone_.zone()) = area_;
 
         Info<< type() << ": " << name() << " writing field " << area.name()
             << endl;
@@ -305,7 +305,7 @@ void Foam::fv::rotorDisk::createCoordinateSystem(const dictionary& dict)
             const scalarField& V = mesh().V();
             const vectorField& C = mesh().C();
 
-            const labelList& cells = set_.zone();
+            const labelList& cells = zone_.zone();
 
             forAll(cells, i)
             {
@@ -386,7 +386,7 @@ void Foam::fv::rotorDisk::createCoordinateSystem(const dictionary& dict)
                 (
                     axis,
                     origin,
-                    UIndirectList<vector>(mesh().C(), set_.zone())()
+                    UIndirectList<vector>(mesh().C(), zone_.zone())()
                 )
             );
 
@@ -415,7 +415,7 @@ void Foam::fv::rotorDisk::constructGeometry()
 {
     const vectorField& C = mesh().C();
 
-    const labelList& cells = set_.zone();
+    const labelList& cells = zone_.zone();
 
     forAll(cells, i)
     {
@@ -492,7 +492,7 @@ Foam::fv::rotorDisk::rotorDisk
 )
 :
     fvModel(name, modelType, mesh, dict),
-    set_(mesh, dict),
+    zone_(mesh, dict),
     UName_(word::null),
     omega_(0),
     nBlades_(0),
@@ -500,10 +500,10 @@ Foam::fv::rotorDisk::rotorDisk
     inletVelocity_(Zero),
     tipEffect_(1),
     flap_(),
-    x_(set_.nCells(), Zero),
-    R_(set_.nCells(), I),
-    invR_(set_.nCells(), I),
-    area_(set_.nCells(), Zero),
+    x_(zone_.nCells(), Zero),
+    R_(zone_.nCells(), I),
+    invR_(zone_.nCells(), I),
+    area_(zone_.nCells(), Zero),
     coordSys_("rotorCoordSys", vector::zero, axesRotation(sphericalTensor::I)),
     cylindrical_(),
     rMax_(0),
@@ -614,26 +614,26 @@ void Foam::fv::rotorDisk::addSup
 
 bool Foam::fv::rotorDisk::movePoints()
 {
-    set_.movePoints();
+    zone_.movePoints();
     return true;
 }
 
 
 void Foam::fv::rotorDisk::topoChange(const polyTopoChangeMap& map)
 {
-    set_.topoChange(map);
+    zone_.topoChange(map);
 }
 
 
 void Foam::fv::rotorDisk::mapMesh(const polyMeshMap& map)
 {
-    set_.mapMesh(map);
+    zone_.mapMesh(map);
 }
 
 
 void Foam::fv::rotorDisk::distribute(const polyDistributionMap& map)
 {
-    set_.distribute(map);
+    zone_.distribute(map);
 }
 
 
@@ -641,7 +641,7 @@ bool Foam::fv::rotorDisk::read(const dictionary& dict)
 {
     if (fvModel::read(dict))
     {
-        set_.read(coeffs(dict));
+        zone_.read(coeffs(dict));
         readCoeffs(coeffs(dict));
         return true;
     }

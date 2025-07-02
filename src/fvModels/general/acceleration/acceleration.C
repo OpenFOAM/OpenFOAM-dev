@@ -80,7 +80,7 @@ void Foam::fv::acceleration::add
     const vector dU = velocity_->value(t) - velocity_->value(t - dt);
     const vector a = dU/mesh().time().deltaTValue();
 
-    const labelList& cells = set_.zone();
+    const labelList& cells = zone_.zone();
 
     vectorField& eqnSource = eqn.source();
     forAll(cells, i)
@@ -101,7 +101,7 @@ Foam::fv::acceleration::acceleration
 )
 :
     fvModel(name, modelType, mesh, dict),
-    set_(mesh, coeffs(dict)),
+    zone_(mesh, coeffs(dict)),
     UName_(word::null),
     velocity_(nullptr)
 {
@@ -152,26 +152,26 @@ void Foam::fv::acceleration::addSup
 
 bool Foam::fv::acceleration::movePoints()
 {
-    set_.movePoints();
+    zone_.movePoints();
     return true;
 }
 
 
 void Foam::fv::acceleration::topoChange(const polyTopoChangeMap& map)
 {
-    set_.topoChange(map);
+    zone_.topoChange(map);
 }
 
 
 void Foam::fv::acceleration::mapMesh(const polyMeshMap& map)
 {
-    set_.mapMesh(map);
+    zone_.mapMesh(map);
 }
 
 
 void Foam::fv::acceleration::distribute(const polyDistributionMap& map)
 {
-    set_.distribute(map);
+    zone_.distribute(map);
 }
 
 
@@ -179,7 +179,7 @@ bool Foam::fv::acceleration::read(const dictionary& dict)
 {
     if (fvModel::read(dict))
     {
-        set_.read(coeffs(dict));
+        zone_.read(coeffs(dict));
         readCoeffs(coeffs(dict));
         return true;
     }

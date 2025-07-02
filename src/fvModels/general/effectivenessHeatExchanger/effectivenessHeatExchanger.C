@@ -192,7 +192,7 @@ Foam::fv::effectivenessHeatExchanger::effectivenessHeatExchanger
 )
 :
     fvModel(name, modelType, mesh, dict),
-    set_(mesh, coeffs(dict)),
+    zone_(mesh, coeffs(dict)),
     secondaryMassFlowRate_(NaN),
     secondaryInletT_(NaN),
     primaryInletT_(NaN),
@@ -266,7 +266,7 @@ void Foam::fv::effectivenessHeatExchanger::addSup
        *(secondaryInletT_ - primaryInletT_)
        *(CpfMean/faceZoneArea_)*mag(totalphi);
 
-    const labelList& cells = set_.zone();
+    const labelList& cells = zone_.zone();
 
     const volScalarField& T = mesh().lookupObject<volScalarField>(TName_);
     const scalarField TCells(T, cells);
@@ -329,7 +329,7 @@ void Foam::fv::effectivenessHeatExchanger::addSup
 
 bool Foam::fv::effectivenessHeatExchanger::movePoints()
 {
-    set_.movePoints();
+    zone_.movePoints();
     return true;
 }
 
@@ -339,13 +339,13 @@ void Foam::fv::effectivenessHeatExchanger::topoChange
     const polyTopoChangeMap& map
 )
 {
-    set_.topoChange(map);
+    zone_.topoChange(map);
 }
 
 
 void Foam::fv::effectivenessHeatExchanger::mapMesh(const polyMeshMap& map)
 {
-    set_.mapMesh(map);
+    zone_.mapMesh(map);
 }
 
 
@@ -354,7 +354,7 @@ void Foam::fv::effectivenessHeatExchanger::distribute
     const polyDistributionMap& map
 )
 {
-    set_.distribute(map);
+    zone_.distribute(map);
 }
 
 
@@ -362,7 +362,7 @@ bool Foam::fv::effectivenessHeatExchanger::read(const dictionary& dict)
 {
     if (fvModel::read(dict))
     {
-        set_.read(coeffs(dict));
+        zone_.read(coeffs(dict));
         readCoeffs(coeffs(dict));
         setZone();
         return true;

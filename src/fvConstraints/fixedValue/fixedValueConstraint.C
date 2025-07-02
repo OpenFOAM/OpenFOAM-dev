@@ -104,7 +104,7 @@ bool Foam::fv::fixedValueConstraint::constrainType
 
     const List<Type> values
     (
-        set_.nCells(),
+        zone_.nCells(),
         fieldValues_[fieldName]->value<Type>(t)
     );
 
@@ -112,17 +112,17 @@ bool Foam::fv::fixedValueConstraint::constrainType
     {
         eqn.setValues
         (
-            set_.zone(),
+            zone_.zone(),
             values,
-            scalarList(set_.nCells(), fraction_->value(t))
+            scalarList(zone_.nCells(), fraction_->value(t))
         );
     }
     else
     {
-        eqn.setValues(set_.zone(), values);
+        eqn.setValues(zone_.zone(), values);
     }
 
-    return set_.nCells();
+    return zone_.nCells();
 }
 
 
@@ -137,7 +137,7 @@ Foam::fv::fixedValueConstraint::fixedValueConstraint
 )
 :
     fvConstraint(name, modelType, mesh, dict),
-    set_(mesh, coeffs(dict))
+    zone_(mesh, coeffs(dict))
 {
     readCoeffs(coeffs(dict));
 }
@@ -160,20 +160,20 @@ FOR_ALL_FIELD_TYPES
 
 bool Foam::fv::fixedValueConstraint::movePoints()
 {
-    set_.movePoints();
+    zone_.movePoints();
     return true;
 }
 
 
 void Foam::fv::fixedValueConstraint::topoChange(const polyTopoChangeMap& map)
 {
-    set_.topoChange(map);
+    zone_.topoChange(map);
 }
 
 
 void Foam::fv::fixedValueConstraint::mapMesh(const polyMeshMap& map)
 {
-    set_.mapMesh(map);
+    zone_.mapMesh(map);
 }
 
 
@@ -182,7 +182,7 @@ void Foam::fv::fixedValueConstraint::distribute
     const polyDistributionMap& map
 )
 {
-    set_.distribute(map);
+    zone_.distribute(map);
 }
 
 
@@ -190,7 +190,7 @@ bool Foam::fv::fixedValueConstraint::read(const dictionary& dict)
 {
     if (fvConstraint::read(dict))
     {
-        set_.read(coeffs(dict));
+        zone_.read(coeffs(dict));
         readCoeffs(coeffs(dict));
         return true;
     }

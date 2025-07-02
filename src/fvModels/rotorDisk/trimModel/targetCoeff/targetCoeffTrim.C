@@ -53,7 +53,7 @@ Foam::vector Foam::targetCoeffTrim::calcCoeffs
 {
     rotor_.calculate(rho, U, thetag, force, false, false);
 
-    const labelList& cells = rotor_.set().zone();
+    const labelList& cells = rotor_.zone().zone();
     const vectorField& C = rotor_.mesh().C();
     const List<point>& x = rotor_.x();
 

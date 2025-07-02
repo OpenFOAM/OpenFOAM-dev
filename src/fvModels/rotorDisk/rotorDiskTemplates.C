@@ -50,7 +50,7 @@ void Foam::fv::rotorDisk::calculate
     scalar AOAmax = -great;
     scalar powerEff = 0;
 
-    const labelList& cells = set_.zone();
+    const labelList& cells = zone_.zone();
 
     forAll(cells, i)
     {
@@ -181,7 +181,7 @@ void Foam::fv::rotorDisk::writeField
 
     Field<Type>& field = tfield.ref();
 
-    const labelList& cells = set_.zone();
+    const labelList& cells = zone_.zone();
 
     if (cells.size() != values.size())
     {

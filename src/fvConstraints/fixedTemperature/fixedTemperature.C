@@ -117,7 +117,7 @@ Foam::fv::fixedTemperature::fixedTemperature
 )
 :
     fvConstraint(name, modelType, mesh, dict),
-    set_(mesh, coeffs(dict)),
+    zone_(mesh, coeffs(dict)),
     mode_(temperatureMode::uniform),
     TValue_(nullptr),
     TName_(word::null),
@@ -147,7 +147,7 @@ bool Foam::fv::fixedTemperature::constrain
     const word& fieldName
 ) const
 {
-    const labelList& cells = set_.zone();
+    const labelList& cells = zone_.zone();
 
     const basicThermo& thermo =
         mesh().lookupObject<basicThermo>
@@ -211,26 +211,26 @@ bool Foam::fv::fixedTemperature::constrain
 
 bool Foam::fv::fixedTemperature::movePoints()
 {
-    set_.movePoints();
+    zone_.movePoints();
     return true;
 }
 
 
 void Foam::fv::fixedTemperature::topoChange(const polyTopoChangeMap& map)
 {
-    set_.topoChange(map);
+    zone_.topoChange(map);
 }
 
 
 void Foam::fv::fixedTemperature::mapMesh(const polyMeshMap& map)
 {
-    set_.mapMesh(map);
+    zone_.mapMesh(map);
 }
 
 
 void Foam::fv::fixedTemperature::distribute(const polyDistributionMap& map)
 {
-    set_.distribute(map);
+    zone_.distribute(map);
 }
 
 
@@ -238,7 +238,7 @@ bool Foam::fv::fixedTemperature::read(const dictionary& dict)
 {
     if (fvConstraint::read(dict))
     {
-        set_.read(coeffs(dict));
+        zone_.read(coeffs(dict));
         readCoeffs(coeffs(dict));
         return true;
     }

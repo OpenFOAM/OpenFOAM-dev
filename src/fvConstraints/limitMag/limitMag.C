@@ -63,7 +63,7 @@ inline bool Foam::fv::limitMag::constrainType
 
     Field<Type>& psiif = psi.primitiveFieldRef();
 
-    const labelList& cells = set_.zone();
+    const labelList& cells = zone_.zone();
 
     forAll(cells, i)
     {
@@ -78,7 +78,7 @@ inline bool Foam::fv::limitMag::constrainType
     }
 
     // handle boundaries in the case of 'all'
-    if (set_.all())
+    if (zone_.all())
     {
         typename VolField<Type>::Boundary& psibf =
             psi.boundaryFieldRef();
@@ -117,7 +117,7 @@ Foam::fv::limitMag::limitMag
 )
 :
     fvConstraint(name, modelType, mesh, dict),
-    set_(mesh, coeffs(dict)),
+    zone_(mesh, coeffs(dict)),
     fieldName_(word::null),
     max_(vGreat)
 {
@@ -142,26 +142,26 @@ FOR_ALL_FIELD_TYPES
 
 bool Foam::fv::limitMag::movePoints()
 {
-    set_.movePoints();
+    zone_.movePoints();
     return true;
 }
 
 
 void Foam::fv::limitMag::topoChange(const polyTopoChangeMap& map)
 {
-    set_.topoChange(map);
+    zone_.topoChange(map);
 }
 
 
 void Foam::fv::limitMag::mapMesh(const polyMeshMap& map)
 {
-    set_.mapMesh(map);
+    zone_.mapMesh(map);
 }
 
 
 void Foam::fv::limitMag::distribute(const polyDistributionMap& map)
 {
-    set_.distribute(map);
+    zone_.distribute(map);
 }
 
 
@@ -169,7 +169,7 @@ bool Foam::fv::limitMag::read(const dictionary& dict)
 {
     if (fvConstraint::read(dict))
     {
-        set_.read(coeffs(dict));
+        zone_.read(coeffs(dict));
         readCoeffs(coeffs(dict));
         return true;
     }

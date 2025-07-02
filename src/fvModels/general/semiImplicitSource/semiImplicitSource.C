@@ -136,7 +136,7 @@ void Foam::fv::semiImplicitSource::addSupType
     switch (volumeMode_)
     {
         case volumeMode::absolute:
-            VDash = set_.V();
+            VDash = zone_.V();
             break;
         case volumeMode::specific:
             VDash = 1;
@@ -144,7 +144,7 @@ void Foam::fv::semiImplicitSource::addSupType
     }
 
     // Explicit source function for the field
-    UIndirectList<Type>(Su, set_.zone()) =
+    UIndirectList<Type>(Su, zone_.zone()) =
         fieldSu_[field.name()]->template value<Type>(t)/VDash;
 
     volScalarField::Internal Sp
@@ -168,7 +168,7 @@ void Foam::fv::semiImplicitSource::addSupType
     );
 
     // Implicit source function for the field
-    UIndirectList<scalar>(Sp, set_.zone()) =
+    UIndirectList<scalar>(Sp, zone_.zone()) =
         fieldSp_[field.name()]->template value<scalar>(t)/VDash;
 
     eqn += Su - fvm::SuSp(-Sp, psi);
@@ -211,7 +211,7 @@ Foam::fv::semiImplicitSource::semiImplicitSource
 )
 :
     fvModel(name, modelType, mesh, dict),
-    set_(mesh, coeffs(dict)),
+    zone_(mesh, coeffs(dict)),
     volumeMode_(volumeMode::absolute)
 {
     readCoeffs(coeffs(dict));
@@ -255,20 +255,20 @@ FOR_ALL_FIELD_TYPES
 
 bool Foam::fv::semiImplicitSource::movePoints()
 {
-    set_.movePoints();
+    zone_.movePoints();
     return true;
 }
 
 
 void Foam::fv::semiImplicitSource::topoChange(const polyTopoChangeMap& map)
 {
-    set_.topoChange(map);
+    zone_.topoChange(map);
 }
 
 
 void Foam::fv::semiImplicitSource::mapMesh(const polyMeshMap& map)
 {
-    set_.mapMesh(map);
+    zone_.mapMesh(map);
 }
 
 
@@ -277,7 +277,7 @@ void Foam::fv::semiImplicitSource::distribute
     const polyDistributionMap& map
 )
 {
-    set_.distribute(map);
+    zone_.distribute(map);
 }
 
 
@@ -285,7 +285,7 @@ bool Foam::fv::semiImplicitSource::read(const dictionary& dict)
 {
     if (fvModel::read(dict))
     {
-        set_.read(coeffs(dict));
+        zone_.read(coeffs(dict));
         readCoeffs(coeffs(dict));
         return true;
     }

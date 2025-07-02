@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ Foam::fixedTrim::fixedTrim
 )
 :
     trimModel(rotor, dict, typeName),
-    thetag_(rotor.set().nCells(), 0.0)
+    thetag_(rotor.zone().nCells(), 0.0)
 {
     read(dict);
 }
