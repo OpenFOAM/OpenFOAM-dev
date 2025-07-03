@@ -1,0 +1,14 @@
+# Overview
+The parshallFlume case simulates the flow of water through a constriction in a
+flume. The geometry is based on flume 13 from ISO 9826:1992, "Measurement of
+liquid flows in open channels - Parshall and SAIIRI flumes", 1992.
+
+# Function object
+The case contains a 'flumeMonitor' function object to monitor the volumetric
+flow rate, Froude number and water height on two planes upstream of the throat
+and two planes downstream of the throat.
+
+# Empirical correlation
+flumeMonitor also uses the empirical correlation from Table 3 in ISO 9826:1992
+to estimate the volumetric flow rate from the water height immediately upstream
+of the throat.

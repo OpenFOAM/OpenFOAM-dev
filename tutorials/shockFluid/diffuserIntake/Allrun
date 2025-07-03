@@ -6,9 +6,11 @@ cd "${0%/*}" || exit 1
 # Source tutorial run functions
 . "$WM_PROJECT_DIR/bin/tools/RunFunctions"
 
-# Example workflow with meshing applications
 runApplication blockMesh
-runApplication createZones
-runApplication transformPoints "scale=(0.01 0.01 0.01)"
+runApplication foamRun
+
+runApplication foamPostProcess -latestTime -func \
+    "graphFace(name=graph,start=(0 0 0),end=(0.5 0 0),fields=(Cf p),axis=x)"
+./createGraphs
 
 #------------------------------------------------------------------------------

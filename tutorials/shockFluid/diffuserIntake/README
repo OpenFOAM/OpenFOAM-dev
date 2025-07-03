@@ -1,0 +1,17 @@
+# Overview
+The diffuserIntake case is based on the experimental setup of E. Schulein et
+al. "Documentation of Two-Dimensional Impinging Shock/Turbulent Boundary Layer
+Interaction Flow", DLR Report DLR IB 223-96 A 49, 1996.
+
+# Mesh configuration
+The case includes a parameterised blockMeshDict file, which contains a parameter
+'plateAngle' corresponding to the angle of the top (inclined) plate. The
+plateAngle is currently set to 10 degrees, to match the 'beta = 10' case in the
+reference.
+
+# Experimental data
+The reference provides measurements of the pressure (p) and friction coefficient
+(Cf) on the bottom (hortizontal) plate. The case is configured to calculate Cf
+using the 'skinFrictionCoeff' function object. The 'createGraphs' script
+compares the calculated values of Cf and p with the experimental measurements,
+for a plateAngle of 10 degrees.

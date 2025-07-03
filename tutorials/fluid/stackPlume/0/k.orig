@@ -1,0 +1,55 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       volScalarField;
+    object      k;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+kWind 0.375;
+kStack 1.5;
+
+dimensions      [0 2 -2 0 0 0 0];
+
+internalField   uniform $kWind;
+
+boundaryField
+{
+    inletWind
+    {
+        type            atmBoundaryLayerInletK;
+        #include        "${${FOAM_CASE}/system/setAtmBoundaryLayerDict"
+        value           uniform $kWind;
+    }
+
+    inlet
+    {
+        type            turbulentIntensityKineticEnergyInlet;
+        intensity       0.05;
+        value           uniform $kStack;
+    }
+
+    outlet
+    {
+        type            inletOutlet;
+        inletValue      uniform $kWind;
+        value           uniform $kWind;
+    }
+
+    wall
+    {
+        type            kqRWallFunction;
+        value           uniform $kWind;
+    }
+
+    #includeEtc "caseDicts/setConstraintTypes"
+}
+
+// ************************************************************************* //

@@ -1,0 +1,45 @@
+// Description
+//   Calculates skin friction coefficient (Cf) from the wallShearStress
+
+libs     ("libutilityFunctionObjects.so");
+type     coded;
+writeControl writeTime;
+
+magU      ${${FOAM_CASE}/0/U!Uinlet};
+M         ${${FOAM_CASE}/constant/physicalProperties!mixture/specie/molWeight};
+pInf      ${${FOAM_CASE}/0/p!pInlet};
+TInf      ${${FOAM_CASE}/0/T!Tinlet};
+
+codeInclude
+#{
+    #include "constants.H"
+    using namespace Foam::constant::thermodynamic;
+#};
+
+codeOptions
+#{
+    -I$(LIB_SRC)/finiteVolume/lnInclude
+#};
+
+codeFields
+#{
+    fields.append("wallShearStress");
+#};
+
+codeWrite
+#{
+    const scalar R = RR / $M;
+    const scalar rhoInf = $pInf / (R*$TInf);
+
+    const volVectorField& wallShearStress =
+        mesh().lookupObject<volVectorField>("wallShearStress");
+
+    volScalarField Cf
+    (
+        "Cf",
+        (wallShearStress & vector(-1, 0, 0))
+       /dimensionedScalar(wallShearStress.dimensions(), 0.5*rhoInf*sqr($magU))
+    );
+
+    Cf.write();
+#};

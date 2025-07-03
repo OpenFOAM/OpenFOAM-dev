@@ -1,0 +1,26 @@
+#!/bin/sh
+
+# Run from this directory
+cd "${0%/*}" || exit 1
+
+# Source tutorial run functions
+. "$WM_PROJECT_DIR/bin/tools/RunFunctions"
+
+runApplication snappyHexMeshConfig \
+    -bounds '(-50 -200 0)(950 200 200)' \
+    -nCells '(40 16 8)' \
+    -clearBoundary \
+    -xMinPatch 'inletWind patch' \
+    -zMinPatch 'ground wall' \
+    -defaultPatch 'outlet patch' \
+    -insidePoint '(0 0 50)' \
+    -refinementDists '(stack 5 5)' \
+    -refinementBoxes '
+                         ((0 -10 0) (10 10 20) 2)
+                         ((-50 -80 0) (950 80 200) 1)
+                     '
+
+runApplication blockMesh
+runApplication snappyHexMesh
+
+#------------------------------------------------------------------------------

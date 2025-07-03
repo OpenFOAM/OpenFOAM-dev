@@ -1,0 +1,7 @@
+# E. Schulein et al. "Documentation of Two-Dimensional Impinging Shock/Turbulent Boundary Layer Interaction Flow", DLR Report DLR IB 223-96 A 49, 1996.
+# Appendix C
+# x cf
+0.376 0.005162
+0.396 0.006084
+0.426 0.005346
+0.449 0.005393

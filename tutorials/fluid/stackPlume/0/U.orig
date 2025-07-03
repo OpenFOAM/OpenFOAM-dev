@@ -1,0 +1,53 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       volVectorField;
+    object      U;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+UStack 20;
+
+dimensions      [0 1 -1 0 0 0 0];
+
+internalField   uniform (0 0 0);
+
+boundaryField
+{
+    inletWind
+    {
+        type            atmBoundaryLayerInletVelocity;
+        #include        "${${FOAM_CASE}/system/setAtmBoundaryLayerDict"
+        value           uniform ($Uref 0 0);
+    }
+
+    inlet
+    {
+        type            flowRateInletVelocity;
+        meanVelocity    constant $UStack;
+        value           $internalField;
+    }
+
+    outlet
+    {
+        type            freestreamVelocity;
+        freestreamValue uniform (0 0 0);
+        value           $internalField;
+    }
+
+    wall
+    {
+        type            noSlip;
+    }
+
+    #includeEtc "caseDicts/setConstraintTypes"
+}
+
+// ************************************************************************* //
