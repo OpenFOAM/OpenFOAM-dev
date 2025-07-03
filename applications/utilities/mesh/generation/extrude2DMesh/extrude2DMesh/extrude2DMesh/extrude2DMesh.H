@@ -69,8 +69,6 @@ class extrude2DMesh
 
         const extrudeModel& model_;
 
-        const word modelType_;
-
         const word patchType_;
 
         label frontPatchi_;
