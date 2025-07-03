@@ -1,0 +1,196 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Prints fluid height, Froude number and flow rate at sampling locations
+
+\*---------------------------------------------------------------------------*/
+
+libs     ("libutilityFunctionObjects.so");
+type     coded;
+
+executeAtStart  yes;
+writeControl    runTime;
+writeInterval   5;
+
+codeInclude
+#{
+    #include "OFstream.H"
+    #include "OSspecific.H"
+    #include "surfaceInterpolate.H"
+    #include "slicedSurfaceFields.H"
+    #include "uniformDimensionedFields.H"
+#};
+
+codeData
+#{
+    PtrList<OFstream> filePtrs;
+    autoPtr<wordList> locations;
+    autoPtr<scalarList> widths;
+#};
+
+codeRead
+#{
+    // Create 3 output files
+    fileName dir
+    (
+        mesh().time().globalPath()/
+        "postProcessing"/
+        mesh().time().name()/
+        name()
+    );
+
+    mkDir(dir);
+
+    wordList fileNames{"height", "Fr", "flowRate"};
+
+    if (Pstream::master())
+    {
+        filePtrs.setSize(fileNames.size());
+        forAll(fileNames, i)
+        {
+            filePtrs.set(i, new OFstream(dir/fileNames[i]));
+        }
+    }
+
+    // Sampling locations, names of faceZones
+    locations = new wordList
+    {
+        "nearInlet",
+        "upstream",
+        "downstream",
+        "nearOutlet"
+    };
+
+    // Flume width at sampling locations
+    widths = new scalarList{5.0, 3.04, 2.4, 5.0};
+
+    if (Pstream::master())
+    {
+        forAll(filePtrs, filei)
+        {
+            filePtrs[filei]<< "# time";
+
+            forAll(locations(), loci)
+            {
+                filePtrs[filei]<< tab << locations()[loci];
+            }
+
+            if (fileNames[filei] == "flowRate")
+            {
+                filePtrs[filei]<< tab << "Qempirical";
+            }
+
+            filePtrs[filei]<< endl;
+        }
+    }
+#};
+
+codeWrite
+#{
+    // Print time to files
+    if (Pstream::master())
+    {
+        forAll(filePtrs, filei)
+        {
+            filePtrs[filei]<< mesh().time().userTimeValue();
+        }
+    }
+
+    scalar heightUp = 0.0;
+
+    // Phase fraction on faces: creates a full surface field, as a scalarField
+    // including boundary patches, to handle indexing correctly when faceZones
+    // coincide with processor patches in parallel cases
+    const scalarField alphaf
+    (
+        slicedSurfaceScalarField
+        (
+            IOobject
+            (
+                "splicedAlphaPhi",
+                mesh().time().name(),
+                mesh()
+            ),
+            fvc::interpolate
+            (
+                mesh().lookupObject<volScalarField>("alpha.water")
+            ),
+            false
+        ).splice()
+    );
+
+    // Volumetric flux of water, see above for explanation of scalarField
+    const scalarField alphaPhi
+    (
+        slicedSurfaceScalarField
+        (
+            IOobject
+            (
+                "splicedAlphaPhi",
+                mesh().time().name(),
+                mesh()
+            ),
+            mesh().lookupObject<surfaceScalarField>("alphaPhi.water"),
+            false
+        ).splice()
+    );
+
+    const scalar magG =
+        mag(mesh().lookupObject<uniformDimensionedVectorField>("g").value());
+
+    forAll(locations(), i)
+    {
+        // Reference to faceZone
+        const faceZone& fZone = mesh().faceZones()[locations()[i]];
+
+        scalar area = 0.0;
+        scalar flowRate = 0.0;
+        forAll(fZone, i)
+        {
+            const label facei = fZone[i];
+            area += mesh().magSf()[facei]*alphaf[facei];
+            // Handle faces pointing in opposing directions
+            const label faceSign = fZone.flipMap()[i] ? -1 : 1;
+            flowRate += faceSign*alphaPhi[facei];
+        }
+        reduce(area, sumOp<scalar>());
+        reduce(flowRate, sumOp<scalar>());
+
+        scalar height = area/widths()[i];
+        scalar Fr = max(mag(flowRate/area/sqrt(magG*height)), 0.0);
+
+        if (Pstream::master())
+        {
+            filePtrs[0]<< tab << height;
+            filePtrs[1]<< tab << Fr;
+            filePtrs[2]<< tab << flowRate;
+        }
+
+        if (locations()[i] == "upstream")
+        {
+            heightUp = height;
+        }
+    }
+
+    // Add empirical correlation for Q, ISO 9826:1992 Table 3, column 3
+    if (Pstream::master())
+    {
+        filePtrs[2]<< tab << 6.004*pow(heightUp, 1.605);
+    }
+
+    // Complete the line
+    if (Pstream::master())
+    {
+        forAll(filePtrs, filei)
+        {
+            filePtrs[filei]<< endl;
+        }
+    }
+#};
+
+// ************************************************************************* //
