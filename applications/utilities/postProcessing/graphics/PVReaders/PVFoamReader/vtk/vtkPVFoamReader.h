@@ -46,6 +46,7 @@ SourceFiles
 // VTK forward declarations
 class vtkDataArraySelection;
 class vtkCallbackCommand;
+class vtkSMProxy;
 
 // OpenFOAM forward declarations
 namespace Foam
@@ -261,6 +262,9 @@ private:
 
     //- Add/remove patch names to/from the view
     void updatePatchNamesView(const bool show);
+
+    //- Get the active animation scene proxy, if any
+    vtkSMProxy* getActiveAnimationSceneProxy();
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

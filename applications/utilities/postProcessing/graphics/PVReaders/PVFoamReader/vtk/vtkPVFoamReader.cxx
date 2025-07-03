@@ -108,12 +108,14 @@ int vtkPVFoamReader::requestTimeSteps(vtkInformationVector* outputVector)
 
 void vtkPVFoamReader::updatePatchNamesView(const bool show)
 {
+    if (!foamData_) return;
+
     pqApplicationCore* appCore = pqApplicationCore::instance();
     if (!appCore) return;
 
     // Server manager model for querying items in the server manager
     pqServerManagerModel* smModel = appCore->getServerManagerModel();
-    if (!smModel || !foamData_) return;
+    if (!smModel) return;
 
     // Get all the pqRenderView instances
     QList<pqRenderView*> renderViews = smModel->findItems<pqRenderView*>();
@@ -128,6 +130,21 @@ void vtkPVFoamReader::updatePatchNamesView(const bool show)
     }
 
     // use refresh here?
+}
+
+
+vtkSMProxy* vtkPVFoamReader::getActiveAnimationSceneProxy()
+{
+    pqPVApplicationCore* appCore = pqPVApplicationCore::instance();
+    if (!appCore) return nullptr;
+
+    pqAnimationManager* animationManager = appCore->animationManager();
+    if (!animationManager) return nullptr;
+
+    pqAnimationScene* animationScene = animationManager->getActiveScene();
+    if (!animationScene) return nullptr;
+
+    return animationScene->getProxy();
 }
 
 
@@ -201,11 +218,8 @@ vtkPVFoamReader::vtkPVFoamReader()
     // Setup the animation-property-modified callback to reset the play-mode
     // back to to SNAP_TO_TIMESTEPS whenever ParaView mysteriously changes it
     // back to SEQUENCE
-    vtkSMProxy* animationSceneProxy =
-        pqPVApplicationCore::instance()
-      ->animationManager()
-      ->getActiveScene()
-      ->getProxy();
+    vtkSMProxy* animationSceneProxy = getActiveAnimationSceneProxy();
+    if (!animationSceneProxy) return;
 
     AnimationPropertyModifiedObserver = vtkCallbackCommand::New();
     AnimationPropertyModifiedObserver->SetCallback
@@ -244,10 +258,10 @@ vtkPVFoamReader::~vtkPVFoamReader()
         delete [] FileName;
     }
 
-    PartSelection->RemoveObserver(this->SelectionModifiedObserver);
-    FieldSelection->RemoveObserver(this->SelectionModifiedObserver);
-    lagrangianFieldSelection->RemoveObserver(this->SelectionModifiedObserver);
-    LagrangianFieldSelection->RemoveObserver(this->SelectionModifiedObserver);
+    PartSelection->RemoveObserver(SelectionModifiedObserver);
+    FieldSelection->RemoveObserver(SelectionModifiedObserver);
+    lagrangianFieldSelection->RemoveObserver(SelectionModifiedObserver);
+    LagrangianFieldSelection->RemoveObserver(SelectionModifiedObserver);
 
     SelectionModifiedObserver->Delete();
 
@@ -255,6 +269,13 @@ vtkPVFoamReader::~vtkPVFoamReader()
     FieldSelection->Delete();
     lagrangianFieldSelection->Delete();
     LagrangianFieldSelection->Delete();
+
+    vtkSMProxy* animationSceneProxy = getActiveAnimationSceneProxy();
+    if (!animationSceneProxy) return;
+
+    animationSceneProxy->RemoveObserver(AnimationPropertyModifiedObserver);
+
+    AnimationPropertyModifiedObserver->Delete();
 }
 
 
@@ -417,7 +438,10 @@ void vtkPVFoamReader::SetRefresh()
 {
     Modified();
 
-    pqApplicationCore::instance()->render();
+    pqApplicationCore* appCore = pqApplicationCore::instance();
+    if (!appCore) return;
+
+    appCore->render();
 }
 
 
