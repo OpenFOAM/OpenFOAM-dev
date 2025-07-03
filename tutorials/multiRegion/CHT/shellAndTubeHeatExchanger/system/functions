@@ -16,6 +16,6 @@ FoamFile
 
 #includeFunc residuals(region = shell, p_rgh, U, h)
 #includeFunc residuals(region = tube, p_rgh, U, h)
-#includeFunc residuals(region = solid, h)
+#includeFunc residuals(region = solid, e)
 
 // ************************************************************************* //

@@ -95,8 +95,8 @@ private:
 
     // Private Data
 
-        //- The set of cells the fvConstraint applies to
-        fvCellZone set_;
+        //- The cellZone the fvConstraint applies to
+        fvCellZone zone_;
 
         //- Operation mode
         temperatureMode mode_;

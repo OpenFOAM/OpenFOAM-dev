@@ -67,8 +67,8 @@ class heatSource
 {
     // Private data
 
-        //- The set of cells the model applies to
-        fvCellZone set_;
+        //- The cellZone the model applies to
+        fvCellZone zone_;
 
         //- The heat source
         autoPtr<Function1<scalar>> q_;

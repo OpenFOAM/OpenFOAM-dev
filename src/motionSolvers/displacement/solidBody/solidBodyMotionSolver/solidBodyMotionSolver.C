@@ -48,7 +48,7 @@ namespace Foam
 
 void Foam::solidBodyMotionSolver::updateSetPointIndices()
 {
-    if (set_.all())
+    if (zone_.all())
     {
         setPointIndices_.clear();
         return;
@@ -56,9 +56,9 @@ void Foam::solidBodyMotionSolver::updateSetPointIndices()
 
     boolList pointInSet(mesh().nPoints(), false);
 
-    forAll(set_.zone(), setCelli)
+    forAll(zone_.zone(), setCelli)
     {
-        const cell& c = mesh().cells()[set_.zone()[setCelli]];
+        const cell& c = mesh().cells()[zone_.zone()[setCelli]];
         forAll(c, cfi)
         {
             const face& f = mesh().faces()[c[cfi]];
@@ -95,11 +95,11 @@ Foam::solidBodyMotionSolver::solidBodyMotionSolver
 :
     points0MotionSolver(name, mesh, dict, typeName),
     SBMFPtr_(solidBodyMotionFunction::New(dict, mesh.time())),
-    set_(mesh, dict),
+    zone_(mesh, dict),
     setPointIndices_(),
     transform_(SBMFPtr_().transformation())
 {
-    if (set_.all())
+    if (zone_.all())
     {
         Info<< "Applying solid body motion to entire mesh" << endl;
     }
@@ -120,7 +120,7 @@ Foam::tmp<Foam::pointField> Foam::solidBodyMotionSolver::curPoints() const
 {
     transform_ = SBMFPtr_().transformation();
 
-    if (set_.all())
+    if (zone_.all())
     {
         return transformPoints(transform_, points0_);
     }
@@ -142,10 +142,10 @@ Foam::tmp<Foam::pointField> Foam::solidBodyMotionSolver::curPoints() const
 
 void Foam::solidBodyMotionSolver::topoChange(const polyTopoChangeMap& map)
 {
-    set_.topoChange(map);
+    zone_.topoChange(map);
     updateSetPointIndices();
 
-    boolList pointInSet(mesh().nPoints(), set_.all());
+    boolList pointInSet(mesh().nPoints(), zone_.all());
     UIndirectList<bool>(pointInSet, setPointIndices_) = true;
 
     // pointMesh already updates pointFields
@@ -193,7 +193,7 @@ void Foam::solidBodyMotionSolver::distribute(const polyDistributionMap& map)
 {
     points0MotionSolver::distribute(map);
 
-    set_.distribute(map);
+    zone_.distribute(map);
     updateSetPointIndices();
 }
 
@@ -202,7 +202,7 @@ void Foam::solidBodyMotionSolver::mapMesh(const polyMeshMap& map)
 {
     points0MotionSolver::mapMesh(map);
 
-    set_.mapMesh(map);
+    zone_.mapMesh(map);
     updateSetPointIndices();
 }
 

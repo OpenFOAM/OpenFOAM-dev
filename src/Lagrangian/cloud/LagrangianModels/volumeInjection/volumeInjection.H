@@ -85,8 +85,8 @@ private:
 
     // Private Data
 
-        //- The set of cells into which to inject
-        mutable generatedCellZone set_;
+        //- The cellZone into which to inject
+        mutable generatedCellZone zone_;
 
         //- Do we have the number (true) or the number density (false)
         bool haveNumber_;

@@ -157,8 +157,8 @@ private:
 
     // Private data
 
-        //- The set of cells the fvConstraint applies to
-        fvCellZone set_;
+        //- The cellZone the fvModel applies to
+        fvCellZone zone_;
 
         //- Name of the velocity field
         word UName_;
@@ -277,7 +277,7 @@ public:
             //  Positive anti-clockwise when looking along -ve lift direction
             inline scalar omega() const;
 
-            inline const fvCellZone& set() const;
+            inline const fvCellZone& zone() const;
 
             //- Return the cell centre positions in local rotor frame
             // (Cylindrical r, theta, z)

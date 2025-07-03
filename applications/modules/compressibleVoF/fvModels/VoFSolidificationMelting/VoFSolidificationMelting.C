@@ -103,7 +103,7 @@ Foam::fv::VoFSolidificationMelting::VoFSolidificationMelting
 )
 :
     fvModel(name, modelType, mesh, dict),
-    set_(mesh, coeffs(dict)),
+    zone_(mesh, coeffs(dict)),
     alphaSolidT_(),
     L_("L", dimEnergy/dimMass, NaN),
     relax_(NaN),
@@ -177,7 +177,7 @@ void Foam::fv::VoFSolidificationMelting::addSup
     scalarField& Sp = eqn.diag();
     const scalarField& V = mesh().V();
 
-    const labelList& cells = set_.zone();
+    const labelList& cells = zone_.zone();
 
     forAll(cells, i)
     {
@@ -213,7 +213,7 @@ void Foam::fv::VoFSolidificationMelting::correct()
     const volScalarField& TVoF = thermo.thermo1().T();
     const volScalarField& alphaVoF = thermo.alpha1();
 
-    const labelList& cells = set_.zone();
+    const labelList& cells = zone_.zone();
 
     forAll(cells, i)
     {
@@ -236,13 +236,13 @@ void Foam::fv::VoFSolidificationMelting::topoChange
     const polyTopoChangeMap& map
 )
 {
-    set_.topoChange(map);
+    zone_.topoChange(map);
 }
 
 
 void Foam::fv::VoFSolidificationMelting::mapMesh(const polyMeshMap& map)
 {
-    set_.mapMesh(map);
+    zone_.mapMesh(map);
 }
 
 
@@ -251,13 +251,13 @@ void Foam::fv::VoFSolidificationMelting::distribute
     const polyDistributionMap& map
 )
 {
-    set_.distribute(map);
+    zone_.distribute(map);
 }
 
 
 bool Foam::fv::VoFSolidificationMelting::movePoints()
 {
-    set_.movePoints();
+    zone_.movePoints();
     return true;
 }
 
@@ -266,7 +266,7 @@ bool Foam::fv::VoFSolidificationMelting::read(const dictionary& dict)
 {
     if (fvModel::read(dict))
     {
-        set_.read(coeffs(dict));
+        zone_.read(coeffs(dict));
         readCoeffs(coeffs(dict));
         return true;
     }

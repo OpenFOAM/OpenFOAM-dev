@@ -66,7 +66,7 @@ Foam::fv::limitTemperature::limitTemperature
 )
 :
     fvConstraint(name, modelType, mesh, dict),
-    set_(mesh, coeffs(dict)),
+    zone_(mesh, coeffs(dict)),
     Tmin_(-vGreat),
     Tmax_(vGreat),
     fieldName_(word::null),
@@ -99,7 +99,7 @@ Foam::wordList Foam::fv::limitTemperature::constrainedFields() const
 
 bool Foam::fv::limitTemperature::constrain(volScalarField& he) const
 {
-    const labelList& cells = set_.zone();
+    const labelList& cells = zone_.zone();
 
     if (he.dimensions() == dimTemperature)
     {
@@ -112,7 +112,7 @@ bool Foam::fv::limitTemperature::constrain(volScalarField& he) const
         }
 
         // Handle boundaries in the case of 'all'
-        if (set_.all())
+        if (zone_.all())
         {
             volScalarField::Boundary& Tbf = he.boundaryFieldRef();
 
@@ -153,7 +153,7 @@ bool Foam::fv::limitTemperature::constrain(volScalarField& he) const
         }
 
         // Handle boundaries in the case of 'all'
-        if (set_.all())
+        if (zone_.all())
         {
             volScalarField::Boundary& bf = he.boundaryFieldRef();
 
@@ -185,26 +185,26 @@ bool Foam::fv::limitTemperature::constrain(volScalarField& he) const
 
 bool Foam::fv::limitTemperature::movePoints()
 {
-    set_.movePoints();
+    zone_.movePoints();
     return true;
 }
 
 
 void Foam::fv::limitTemperature::topoChange(const polyTopoChangeMap& map)
 {
-    set_.topoChange(map);
+    zone_.topoChange(map);
 }
 
 
 void Foam::fv::limitTemperature::mapMesh(const polyMeshMap& map)
 {
-    set_.mapMesh(map);
+    zone_.mapMesh(map);
 }
 
 
 void Foam::fv::limitTemperature::distribute(const polyDistributionMap& map)
 {
-    set_.distribute(map);
+    zone_.distribute(map);
 }
 
 
@@ -212,7 +212,7 @@ bool Foam::fv::limitTemperature::read(const dictionary& dict)
 {
     if (fvConstraint::read(dict))
     {
-        set_.read(coeffs(dict));
+        zone_.read(coeffs(dict));
         readCoeffs(coeffs(dict));
         return true;
     }

@@ -94,8 +94,8 @@ class heatTransfer
 {
     // Private data
 
-        //- The set of cells the model applies to
-        fvCellZone set_;
+        //- The cellzone the model applies to
+        fvCellZone zone_;
 
         //- Name of the phase
         word phaseName_;

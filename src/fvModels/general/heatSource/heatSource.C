@@ -86,7 +86,7 @@ void Foam::fv::heatSource::readCoeffs(const dictionary& dict)
             new Function1s::Scale<scalar>
             (
                 "q",
-                Function1s::Constant<scalar>("1/V", 1/set_.V()),
+                Function1s::Constant<scalar>("1/V", 1/zone_.V()),
                 Function1s::Constant<scalar>("1", 1),
                 Function1<scalar>::New
                 (
@@ -112,7 +112,7 @@ Foam::fv::heatSource::heatSource
 )
 :
     fvModel(name, modelType, mesh, dict),
-    set_(mesh, coeffs(dict)),
+    zone_(mesh, coeffs(dict)),
     q_(nullptr)
 {
     readCoeffs(coeffs(dict));
@@ -142,7 +142,7 @@ void Foam::fv::heatSource::addSup
     fvMatrix<scalar>& eqn
 ) const
 {
-    const labelList& cells = set_.zone();
+    const labelList& cells = zone_.zone();
 
     const scalar q = q_->value(mesh().time().value());
 
@@ -167,26 +167,26 @@ void Foam::fv::heatSource::addSup
 
 bool Foam::fv::heatSource::movePoints()
 {
-    set_.movePoints();
+    zone_.movePoints();
     return true;
 }
 
 
 void Foam::fv::heatSource::topoChange(const polyTopoChangeMap& map)
 {
-    set_.topoChange(map);
+    zone_.topoChange(map);
 }
 
 
 void Foam::fv::heatSource::mapMesh(const polyMeshMap& map)
 {
-    set_.mapMesh(map);
+    zone_.mapMesh(map);
 }
 
 
 void Foam::fv::heatSource::distribute(const polyDistributionMap& map)
 {
-    set_.distribute(map);
+    zone_.distribute(map);
 }
 
 

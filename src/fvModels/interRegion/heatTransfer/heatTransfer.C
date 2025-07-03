@@ -84,7 +84,7 @@ void Foam::fv::heatTransfer::add
 
     tmp<volScalarField> mask =
         volScalarField::New("mask", mesh(), dimensionedScalar(dimless, 0));
-    UIndirectList<scalar>(mask.ref().primitiveFieldRef(), set_.zone()) = 1;
+    UIndirectList<scalar>(mask.ref().primitiveFieldRef(), zone_.zone()) = 1;
     const volScalarField htcAv
     (
         alpha*mask*heatTransferCoefficientModel_->htc()*heatTransferAv_->Av()
@@ -127,7 +127,7 @@ Foam::fv::heatTransfer::heatTransfer
 )
 :
     fvModel(name, modelType, mesh, dict),
-    set_(mesh, dict),
+    zone_(mesh, dict),
     phaseName_(word::null),
     semiImplicit_(false),
     TName_(word::null),
@@ -200,26 +200,26 @@ void Foam::fv::heatTransfer::correct()
 
 bool Foam::fv::heatTransfer::movePoints()
 {
-    set_.movePoints();
+    zone_.movePoints();
     return true;
 }
 
 
 void Foam::fv::heatTransfer::topoChange(const polyTopoChangeMap& map)
 {
-    set_.topoChange(map);
+    zone_.topoChange(map);
 }
 
 
 void Foam::fv::heatTransfer::mapMesh(const polyMeshMap& map)
 {
-    set_.mapMesh(map);
+    zone_.mapMesh(map);
 }
 
 
 void Foam::fv::heatTransfer::distribute(const polyDistributionMap& map)
 {
-    set_.distribute(map);
+    zone_.distribute(map);
 }
 
 

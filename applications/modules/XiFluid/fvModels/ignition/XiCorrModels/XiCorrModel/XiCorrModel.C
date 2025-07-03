@@ -52,7 +52,7 @@ Foam::XiCorrModel::XiCorrModel
     const dictionary& dict
 )
 :
-    set_(mesh, dict),
+    zone_(mesh, dict),
     bMin_("bMin", dimless, 0.001)
 {
     readCoeffs(dict);
@@ -74,7 +74,7 @@ void Foam::XiCorrModel::XiCorr
     const volScalarField& mgb
 ) const
 {
-    const labelList& cells = set_.zone();
+    const labelList& cells = zone_.zone();
     const scalarField bCells(b, cells);
 
     scalar bMin = min(bCells);
@@ -117,13 +117,13 @@ void Foam::XiCorrModel::topoChange
     const polyTopoChangeMap& map
 )
 {
-    set_.topoChange(map);
+    zone_.topoChange(map);
 }
 
 
 void Foam::XiCorrModel::mapMesh(const polyMeshMap& map)
 {
-    set_.mapMesh(map);
+    zone_.mapMesh(map);
 }
 
 
@@ -132,13 +132,13 @@ void Foam::XiCorrModel::distribute
     const polyDistributionMap& map
 )
 {
-    set_.distribute(map);
+    zone_.distribute(map);
 }
 
 
 bool Foam::XiCorrModel::movePoints()
 {
-    set_.movePoints();
+    zone_.movePoints();
     return true;
 }
 
@@ -150,7 +150,7 @@ bool Foam::XiCorrModel::read(const dictionary& dict)
         dict.subDict("XiCorr").optionalSubDict(type() + "Coeffs")
     );
 
-    set_.read(XiCorrDict);
+    zone_.read(XiCorrDict);
     return readCoeffs(XiCorrDict);
 }
 

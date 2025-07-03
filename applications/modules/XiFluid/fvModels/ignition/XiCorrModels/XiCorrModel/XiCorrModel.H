@@ -71,8 +71,8 @@ class XiCorrModel
 {
     // Private Data
 
-        //- The set of Xi correction cells
-        fvCellZone set_;
+        //- The Xi correction cellZone
+        fvCellZone zone_;
 
         //- Minimum b below which the Xi correction is not applied
         //  Defaults to 0.01

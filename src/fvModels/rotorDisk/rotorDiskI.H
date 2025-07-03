@@ -39,9 +39,9 @@ inline Foam::scalar Foam::fv::rotorDisk::omega() const
 }
 
 
-inline const Foam::fvCellZone& Foam::fv::rotorDisk::set() const
+inline const Foam::fvCellZone& Foam::fv::rotorDisk::zone() const
 {
-    return set_;
+    return zone_;
 }
 
 

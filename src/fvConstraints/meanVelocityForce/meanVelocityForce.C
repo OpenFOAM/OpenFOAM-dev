@@ -95,7 +95,7 @@ Foam::fv::meanVelocityForce::meanVelocityForce
 )
 :
     fvConstraint(name, modelType, mesh, dict),
-    set_(mesh, coeffs(dict)),
+    zone_(mesh, coeffs(dict)),
     UName_(word::null),
     Ubar_(vector::uniform(NaN)),
     relaxation_(NaN),
@@ -134,7 +134,7 @@ Foam::scalar Foam::fv::meanVelocityForce::magUbarAve
     const volVectorField& U
 ) const
 {
-    const labelList& cells = set_.zone();
+    const labelList& cells = zone_.zone();
     const scalarField& cv = mesh().V();
 
     scalar magUbarAve = 0;
@@ -144,7 +144,7 @@ Foam::scalar Foam::fv::meanVelocityForce::magUbarAve
         magUbarAve += (normalised(Ubar_) & U[celli])*cv[celli];
     }
     reduce(magUbarAve, sumOp<scalar>());
-    magUbarAve /= set_.V();
+    magUbarAve /= zone_.V();
 
     return magUbarAve;
 }
@@ -172,7 +172,7 @@ bool Foam::fv::meanVelocityForce::constrain
 
     const scalar gradP = gradP0_ + dGradP_;
 
-    UIndirectList<vector>(Su, set_.zone()) = normalised(Ubar_)*gradP;
+    UIndirectList<vector>(Su, zone_.zone()) = normalised(Ubar_)*gradP;
 
     eqn -= Su;
 
@@ -211,7 +211,7 @@ bool Foam::fv::meanVelocityForce::constrain(volVectorField& U) const
 {
     const scalarField& rAU = rAPtr_();
 
-    const labelList& cells = set_.zone();
+    const labelList& cells = zone_.zone();
     const scalarField& cv = mesh().V();
 
     // Average rAU over the cell set
@@ -222,7 +222,7 @@ bool Foam::fv::meanVelocityForce::constrain(volVectorField& U) const
         rAUave += rAU[celli]*cv[celli];
     }
     reduce(rAUave, sumOp<scalar>());
-    rAUave /= set_.V();
+    rAUave /= zone_.V();
 
     const scalar magUbarAve = this->magUbarAve(U);
 
@@ -250,26 +250,26 @@ bool Foam::fv::meanVelocityForce::constrain(volVectorField& U) const
 
 bool Foam::fv::meanVelocityForce::movePoints()
 {
-    set_.movePoints();
+    zone_.movePoints();
     return true;
 }
 
 
 void Foam::fv::meanVelocityForce::topoChange(const polyTopoChangeMap& map)
 {
-    set_.topoChange(map);
+    zone_.topoChange(map);
 }
 
 
 void Foam::fv::meanVelocityForce::mapMesh(const polyMeshMap& map)
 {
-    set_.mapMesh(map);
+    zone_.mapMesh(map);
 }
 
 
 void Foam::fv::meanVelocityForce::distribute(const polyDistributionMap& map)
 {
-    set_.distribute(map);
+    zone_.distribute(map);
 }
 
 
@@ -277,7 +277,7 @@ bool Foam::fv::meanVelocityForce::read(const dictionary& dict)
 {
     if (fvConstraint::read(dict))
     {
-        set_.read(coeffs(dict));
+        zone_.read(coeffs(dict));
         return true;
     }
     else

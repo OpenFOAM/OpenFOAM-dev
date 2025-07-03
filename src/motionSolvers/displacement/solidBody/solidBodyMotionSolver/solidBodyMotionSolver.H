@@ -58,8 +58,8 @@ class solidBodyMotionSolver
         //- The motion control function
         autoPtr<solidBodyMotionFunction> SBMFPtr_;
 
-        //- The name of the cell zone to restrict motion to
-        generatedCellZone set_;
+        //- The name of the cellZone to restrict motion to
+        generatedCellZone zone_;
 
         //- Points to move when cell zone is supplied
         labelList setPointIndices_;
