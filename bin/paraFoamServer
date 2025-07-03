@@ -50,8 +50,7 @@ error() {
 
 pvserverExec () {
     # For now filter out any ld.so errors. Caused by non-system compiler?
-    LD_PRELOAD="$ParaView_LIB_DIR/libpqCore-pv$ParaView_MAJOR.so" \
-        pvserver "$@" 2>&1 | grep -v -F 'Inconsistency detected by ld.so'
+    pvserver "$@" 2>&1 | grep -v -F 'Inconsistency detected by ld.so'
 }
 
 noPV() {
