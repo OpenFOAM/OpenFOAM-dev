@@ -1,0 +1,37 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Writes a vector of (0 Uy Uz)
+
+\*---------------------------------------------------------------------------*/
+
+libs     ("libutilityFunctionObjects.so");
+type     coded;
+
+writeControl writeTime;
+
+codeOptions
+#{
+    -I$(LIB_SRC)/finiteVolume/lnInclude
+#};
+
+codeWrite
+#{
+    volVectorField Uyz
+    (
+        "Uyz",
+        I - sqr(vector(1, 0, 0)) & mesh().lookupObject<volVectorField>("U")
+    );
+
+    Uyz.write();
+#};
+
+codeFields
+#{
+    fields.append("U");
+#};

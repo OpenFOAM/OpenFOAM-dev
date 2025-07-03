@@ -1,0 +1,40 @@
+#!/bin/sh
+
+# Run from this directory
+cd "${0%/*}" || exit 1
+
+# Source tutorial run functions
+. "$WM_PROJECT_DIR/bin/tools/RunFunctions"
+
+copyEntry () {
+    _from="$1"
+    _to="$2"
+    _file="$3"
+
+    # Temporary file
+    _tmp=$(mktemp tmp.XXXXXX)
+
+    # Extract the value the "from" entry and write to tmp file
+    foamDictionary -entry "$_from" -value "$_file" > "$_tmp"
+
+    # Set the "to" entry with the value in the tmp file, silently
+    foamDictionary -entry "$_to" -set "$(cat "$_tmp")" "$_file" >/dev/null 2>&1
+
+    # Delete tmp file
+    rm -f "$_tmp"
+}
+
+# Generate the mesh if not present
+[ -d "constant/polyMesh" ] || ./Allmesh
+
+# Initialise fields according to atmospheric boundary layer
+runApplication setAtmBoundaryLayer
+copyEntry boundaryField/outlet/value boundaryField/outlet/freestreamValue 0/U
+copyEntry boundaryField/outlet/value boundaryField/outlet/inletValue 0/k
+copyEntry boundaryField/outlet/value boundaryField/outlet/inletValue 0/epsilon
+
+runApplication decomposePar
+runParallel foamRun
+runApplication reconstructPar
+
+#------------------------------------------------------------------------------

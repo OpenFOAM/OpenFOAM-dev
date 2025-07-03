@@ -1,0 +1,16 @@
+# Overview
+The stackPlume case simulates the dispersion of smoke from a chimney stack in an
+atmospheric boundary layer. Lagrangian particle tracking and a 'scalarTransport'
+function object are used to simulate the trajectory of the plume and the
+deposition of particles at ground level.
+
+# Atmospheric boundary layer
+The atmospheric boundary layer is based on a logarithmic velocity profile with
+parameters defined in 'setAtmBoundaryLayerDict'. The atmospheric boundary layer
+is applied to the flow both as an initial condition and a boundary condition on
+the sides of the domain.
+
+# Plume structure
+A function object 'Uyz' is used to extract the y and z components of velocity
+and create a new field 'Uyz'. Uyz can be used to visualize the components of
+velocity normal to the trajectory of the plume.
