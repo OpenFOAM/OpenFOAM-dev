@@ -1,0 +1,126 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMeters 1;
+
+plateLen      0.3;
+plateAngle    10;
+plateAngleRad #calc "degToRad($plateAngle)";
+
+xTopPlateStart  0.023;
+xTopPlateEnd    #calc "$xTopPlateStart + $plateLen*cos($plateAngleRad)";
+xBottomPlateEnd 0.5;
+zTopPlateStart  0.115;
+zTopPlateEnd    #calc "$zTopPlateStart - $plateLen*sin($plateAngleRad)";
+
+plateWidth    0.01; // For 2D simulation; experimental width = 0.4m
+yMax #calc "0.5*$plateWidth";
+yMin #neg $yMax;
+
+vertices
+(
+    (0                $yMin 0)
+    ($xTopPlateStart  $yMin 0)
+    ($xTopPlateEnd    $yMin 0)
+    ($xBottomPlateEnd $yMin 0)
+    (0                $yMin $zTopPlateStart)
+    ($xTopPlateStart  $yMin $zTopPlateStart)
+    ($xTopPlateEnd    $yMin $zTopPlateEnd)
+    ($xBottomPlateEnd $yMin $zTopPlateEnd)
+
+    (0                $yMax 0)
+    ($xTopPlateStart  $yMax 0)
+    ($xTopPlateEnd    $yMax 0)
+    ($xBottomPlateEnd $yMax 0)
+    (0                $yMax $zTopPlateStart)
+    ($xTopPlateStart  $yMax $zTopPlateStart)
+    ($xTopPlateEnd    $yMax $zTopPlateEnd)
+    ($xBottomPlateEnd $yMax $zTopPlateEnd)
+);
+
+zGradBL 23;
+rzGradBL #calc "1.0 / $zGradBL";
+
+zGrading
+(
+    (0.3 34 $zGradBL)
+    (0.4 14 1.0)
+    (0.3 34 $rzGradBL)
+);
+
+blocks
+(
+    hex (0 1 9 8 4 5 13 12) (6 1 82) simpleGrading (1 1 $zGrading)
+    hex (1 2 10 9 5 6 14 13) (110 1 82) simpleGrading (0.34 1 $zGrading)
+    hex (2 3 11 10 6 7 15 14) (80 1 82) simpleGrading (2.19 1 $zGrading)
+);
+
+defaultPatch
+{
+    type empty;
+}
+
+boundary
+(
+    inlet
+    {
+        type patch;
+        faces
+        (
+            (0 4 12 8)
+        );
+    }
+
+    outlet
+    {
+        type patch;
+        faces
+        (
+            (3 7 15 11)
+        );
+    }
+
+    bottom
+    {
+        type wall;
+        faces
+        (
+            (0 1 9 8)
+            (1 2 10 9)
+            (2 3 11 10)
+        );
+    }
+
+    top
+    {
+        type wall;
+        faces
+        (
+            (5 6 14 13)
+            (6 7 15 14)
+        );
+    }
+
+    upstream
+    {
+        type symmetryPlane;
+        faces
+        (
+            (4 5 13 12)
+        );
+    }
+);
+
+// ************************************************************************* //

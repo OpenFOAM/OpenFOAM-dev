@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# Run from this directory
+cd "${0%/*}" || exit 1
+
+# Source tutorial run functions
+. "$WM_PROJECT_DIR/bin/tools/RunFunctions"
+
+runApplication blockMesh
+runApplication foamRun
+
+runApplication foamPostProcess -latestTime -func \
+    "graphFace(name=graph,start=(0 0 0),end=(0.5 0 0),fields=(Cf p),axis=x)"
+./createGraphs
+
+#------------------------------------------------------------------------------
