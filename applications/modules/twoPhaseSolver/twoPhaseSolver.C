@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "twoPhaseSolver.H"
-#include "interfaceCompression.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -67,26 +66,6 @@ bool Foam::solvers::twoPhaseSolver::read()
         alphaControls.lookupOrDefault<Switch>("alphaApplyPrevCorr", false);
 
     MULEScontrols.read(alphaControls);
-
-    const word alphaScheme(mesh.schemes().div(divAlphaName)[1].wordToken());
-
-    if (!compressionSchemes.found(alphaScheme))
-    {
-        WarningInFunction
-            << "Scheme " << alphaScheme << " for " << divAlphaName
-            << " is not an interface compression scheme:"
-            << compressionSchemes.toc() << endl;
-    }
-
-    if (alphaControls.found("cAlpha"))
-    {
-        FatalErrorInFunction
-            << "Deprecated and unused cAlpha entry specified in "
-            << alphaControls.name() << nl
-            << "Please update the case to use one of the run-time "
-               "selectable interface compression schemes:"
-            << compressionSchemes.toc() << exit(FatalError);
-    }
 
     return true;
 }
