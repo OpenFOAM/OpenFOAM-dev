@@ -27,7 +27,7 @@ solvers
         MULES
         {
             nIter           3;
-            boundaryExtremaCoeff 1;
+            globalBounds    yes;
         }
 
         solver          smoothSolver;
