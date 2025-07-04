@@ -523,12 +523,7 @@ void Foam::fv::massDiffusionLimitedPhaseChange::correct()
         Ts_ -=
             (H1*(Ts_ - T1) + H2*(Ts_ - T2) + mDotL)
            /(max(H1 + H2 + mDotLPrime, HSmall));
-
-        Info<< indent << "min/mean/max Ts"
-            << " = " << gMin(Ts_.primitiveField())
-            << '/' << gAverage(Ts_.primitiveField())
-            << '/' << gMax(Ts_.primitiveField())
-            << endl;
+        infoField("Ts", Ts_);
 
         // Update the interface compositions
         forAll(phaseNames(), i)
@@ -578,12 +573,7 @@ void Foam::fv::massDiffusionLimitedPhaseChange::correct()
 
     // Correct the total phase change rate
     correctMDot();
-
-    Info<< indent << "min/mean/max mDot"
-        << " = " << gMin(mDot_.primitiveField())
-        << '/' << gAverage(mDot_.primitiveField())
-        << '/' << gMax(mDot_.primitiveField())
-        << endl;
+    infoField("mDot", mDot_);
 
     Info<< decrIndent;
 }

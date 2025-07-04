@@ -216,12 +216,9 @@ Foam::fv::homogeneousLiquidPhaseSeparation::tau() const
 
 void Foam::fv::homogeneousLiquidPhaseSeparation::correct()
 {
-    #define DebugField(field)                                                  \
-        DebugInfo                                                              \
-            << name() << ": "                                                  \
-            << #field << ' ' << field.dimensions() << " min/avg/max = "        \
-            << gMin(field) << '/' << gAverage(field) << '/' << gMax(field)     \
-            << nl;
+    #define infoFieldVariable(field, print) infoField(#field, field, print)
+
+    Info<< type() << ": " << name() << endl << incrIndent;
 
     using constant::mathematical::pi;
     using constant::physicoChemical::NNA;
@@ -235,8 +232,8 @@ void Foam::fv::homogeneousLiquidPhaseSeparation::correct()
 
     const volScalarField& p = this->p();
     const volScalarField& T = thermoSolution.T();
-    DebugField(p);
-    DebugField(T);
+    infoFieldVariable(p, debug);
+    infoFieldVariable(T, debug);
 
     // Phase molecular masses and densities
     const volScalarField::Internal rhoSolution(vfToVif(thermoSolution.rho()));
@@ -258,9 +255,9 @@ void Foam::fv::homogeneousLiquidPhaseSeparation::correct()
       ? vfToVif(multicomponentThermos.second().rhoi(specieis().second(), p, T))
       : vfToVif(thermos().second().rho())
     );
-    DebugField(rhoSolution);
-    DebugField(WPrecipitate);
-    DebugField(rhoPrecipitate);
+    infoFieldVariable(rhoSolution, debug);
+    infoFieldVariable(WPrecipitate, debug);
+    infoFieldVariable(rhoPrecipitate, debug);
 
     // Surface tension
     const volScalarField::Internal sigma
@@ -274,7 +271,7 @@ void Foam::fv::homogeneousLiquidPhaseSeparation::correct()
             )
         )
     );
-    DebugField(sigma);
+    infoFieldVariable(sigma, debug);
 
     // Mass fraction of nucleating specie
     const volScalarField::Internal Yi = thermoSolution.Y()[specieis().first()];
@@ -292,32 +289,32 @@ void Foam::fv::homogeneousLiquidPhaseSeparation::correct()
     );
     const volScalarField::Internal YSat(solubility/(solubility + 1));
     const volScalarField::Internal cSat(YSat*rhoSolution/WPrecipitate);
-    DebugField(YSat);
-    DebugField(cSat);
+    infoFieldVariable(YSat, debug);
+    infoFieldVariable(cSat, debug);
 
     // Supersaturation of the nucleating specie
     const volScalarField::Internal S(Yi/YSat);
-    DebugField(S);
+    infoFieldVariable(S, true);
 
     // Mass and volume of one molecule in the precipitate
     const volScalarField::Internal mMolc(WPrecipitate/NNA);
     const volScalarField::Internal vMolc(mMolc/rhoPrecipitate);
     const volScalarField::Internal dMolc(cbrt(6/pi*vMolc));
-    DebugField(mMolc);
-    DebugField(vMolc);
-    DebugField(dMolc);
+    infoFieldVariable(mMolc, debug);
+    infoFieldVariable(vMolc, debug);
+    infoFieldVariable(dMolc, debug);
 
     // Diameter of nuclei
     d_ = 4*sigma*vMolc/(k*T()*log(max(S, 1 + small)));
-    DebugField(d_);
+    infoField("d", d_);
 
     // ?
     const volScalarField::Internal deltaPhiStar(pi/3*sigma*sqr(d_));
-    DebugField(deltaPhiStar);
+    infoFieldVariable(deltaPhiStar, debug);
 
     // Ratio of nucleus volume to molecular volume
     const volScalarField::Internal iStar(pi/6*pow3(d_)/vMolc);
-    DebugField(iStar);
+    infoFieldVariable(iStar, debug);
 
     // Pre-exponential factor. Depends on the type of nucleates.
     tmp<volScalarField::Internal> talpha;
@@ -339,13 +336,19 @@ void Foam::fv::homogeneousLiquidPhaseSeparation::correct()
     (
         cSat*NNA*talpha*exp(-deltaPhiStar/(k*T()))
     );
-    DebugField(J);
+    infoFieldVariable(J, debug);
 
     // Mass transfer rate
     mDotByAlphaSolution_ = J*iStar*mMolc;
-    DebugField(mDotByAlphaSolution_);
+    infoFieldVariable(mDotByAlphaSolution_, debug);
 
-    #undef DebugField
+    const volScalarField::Internal& alphaSolution =
+        mesh().lookupObject<volScalarField::Internal>(alphaNames().first());
+    infoField("mDot", alphaSolution*mDotByAlphaSolution_);
+
+    Info<< decrIndent;
+
+    #undef infoFieldVariable
 }
 
 

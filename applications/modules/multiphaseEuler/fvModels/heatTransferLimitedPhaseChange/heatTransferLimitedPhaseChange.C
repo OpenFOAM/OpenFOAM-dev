@@ -101,12 +101,7 @@ void Foam::fv::heatTransferLimitedPhaseChange::correctMDot() const
 
     // Saturation temperature
     const volScalarField::Internal Tsat(saturationModelPtr_->Tsat(p));
-
-    Info<< indent << "min/mean/max Tsat"
-        << " = " << gMin(Tsat.primitiveField())
-        << '/' << gAverage(Tsat.primitiveField())
-        << '/' << gMax(Tsat.primitiveField())
-        << endl;
+    infoField("Tsat", Tsat);
 
     // Latent heat
     const volScalarField::Internal L(this->L(Tsat));
@@ -122,12 +117,7 @@ void Foam::fv::heatTransferLimitedPhaseChange::correctMDot() const
 
     // Recalculate the phase change rate
     mDot_ = (1 - f)*mDot_ + f*(H1*(T1 - Tsat) + H2*(T2 - Tsat))/L;
-
-    Info<< indent << "min/mean/max mDot"
-        << " = " << gMin(mDot_.primitiveField())
-        << '/' << gAverage(mDot_.primitiveField())
-        << '/' << gMax(mDot_.primitiveField())
-        << endl;
+    infoField("mDot", mDot_);
 
     // Recalculate the phase change rate derivative w.r.t. pressure
     if (pressureImplicit_)

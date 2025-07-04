@@ -24,12 +24,52 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "fvSource.H"
+#include "volMesh.H"
 
-// * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
     defineTypeNameAndDebug(fvSource, 0);
+}
+
+
+// * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
+
+void Foam::fvSource::infoField
+(
+    const word& name,
+    const dimensionSet& dims,
+    const scalarField& field,
+    const bool print
+)
+{
+    if (!print) return;
+
+    Info<< indent << "min/average/max " << name
+        << " = " << gMin(field) << '/' << gAverage(field) << '/' << gMax(field)
+        << ' ' << dims << endl;
+}
+
+
+void Foam::fvSource::infoField
+(
+    const word& name,
+    const DimensionedField<scalar, volMesh>& field,
+    const bool print
+)
+{
+    infoField(name, field.dimensions(), field.primitiveField(), print);
+}
+
+
+void Foam::fvSource::infoField
+(
+    const DimensionedField<scalar, volMesh>& field,
+    const bool print
+)
+{
+    infoField(field.name(), field, print);
 }
 
 

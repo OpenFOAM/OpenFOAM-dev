@@ -177,12 +177,9 @@ Foam::fv::homogeneousCondensation::tau() const
 
 void Foam::fv::homogeneousCondensation::correct()
 {
-    #define DebugField(field)                                                  \
-        DebugInfo                                                              \
-            << name() << ": "                                                  \
-            << #field << ' ' << field.dimensions() << " min/avg/max = "        \
-            << gMin(field) << '/' << gAverage(field) << '/' << gMax(field)     \
-            << nl;
+    #define infoFieldVariable(field, print) infoField(#field, field, print)
+
+    Info<< type() << ": " << name() << endl << incrIndent;
 
     using constant::mathematical::pi;
     using constant::physicoChemical::NNA;
@@ -195,8 +192,8 @@ void Foam::fv::homogeneousCondensation::correct()
 
     const volScalarField& p = this->p();
     const volScalarField& T = thermoGas.T();
-    DebugField(p);
-    DebugField(T);
+    infoFieldVariable(p, debug);
+    infoFieldVariable(T, debug);
 
     // Phase molecular masses and densities
     const volScalarField::Internal WGas(vfToVif(thermoGas.W()));
@@ -218,10 +215,10 @@ void Foam::fv::homogeneousCondensation::correct()
       ? vfToVif(multicomponentThermos.second().rhoi(specieis().second(), p, T))
       : vfToVif(thermos().second().rho())
     );
-    DebugField(WGas);
-    DebugField(rhoGas);
-    DebugField(WLiquid);
-    DebugField(rhoLiquid);
+    infoFieldVariable(WGas, debug);
+    infoFieldVariable(rhoGas, debug);
+    infoFieldVariable(WLiquid, debug);
+    infoFieldVariable(rhoLiquid, debug);
 
     // Surface tension
     const volScalarField::Internal sigma
@@ -235,7 +232,7 @@ void Foam::fv::homogeneousCondensation::correct()
             )
         )
     );
-    DebugField(sigma);
+    infoFieldVariable(sigma, debug);
 
     // Mole fraction of nucleating specie
     const volScalarField::Internal Xi
@@ -246,39 +243,39 @@ void Foam::fv::homogeneousCondensation::correct()
     // Saturation pressure and concentration
     const volScalarField::Internal pSat(saturationModel_->pSat(T()));
     const volScalarField::Internal cSat(pSat/p()*rhoGas/WGas);
-    DebugField(pSat);
-    DebugField(cSat);
+    infoFieldVariable(pSat, debug);
+    infoFieldVariable(cSat, debug);
 
     // Supersaturation of the nucleating specie
     const volScalarField::Internal S(Xi*p()/pSat);
-    DebugField(S);
+    infoFieldVariable(S, true);
 
     // Mass, volume and diameter of one molecule in the condensed phase
     const volScalarField::Internal mMolc(WLiquid/NNA);
     const volScalarField::Internal vMolc(mMolc/rhoLiquid);
     const volScalarField::Internal dMolc(cbrt(6/pi*vMolc));
-    DebugField(mMolc);
-    DebugField(vMolc);
-    DebugField(dMolc);
+    infoFieldVariable(mMolc, debug);
+    infoFieldVariable(vMolc, debug);
+    infoFieldVariable(dMolc, debug);
 
     // Diameter of nuclei
     d_ = 4*sigma*vMolc/(k*T()*log(max(S, 1 + small)));
-    DebugField(d_);
+    infoField("d", d_);
 
     // ?
     const volScalarField::Internal deltaPhiStar(pi/3*sigma*sqr(d_));
-    DebugField(deltaPhiStar);
+    infoFieldVariable(deltaPhiStar, debug);
 
     // Ratio of nucleus volume to molecular volume
     const volScalarField::Internal iStar(pi/6*pow3(d_)/vMolc);
-    DebugField(iStar);
+    infoFieldVariable(iStar, debug);
 
     // ?
     const volScalarField::Internal betaIStar1
     (
         sqrt(6*k*T()/mMolc)*sqrt((iStar + 1)/iStar)*sqr(d_/2 + dMolc/2)
     );
-    DebugField(betaIStar1);
+    infoFieldVariable(betaIStar1, debug);
 
     // Number-based nucleation rate; i.e., number of nuclei created per second
     // per unit volume
@@ -288,13 +285,19 @@ void Foam::fv::homogeneousCondensation::correct()
        *sqrt(sigma/(k*T()))
        *2*mMolc/(pi*sqr(d_)*rhoLiquid)
     );
-    DebugField(J);
+    infoFieldVariable(J, debug);
 
     // Mass transfer rate
     mDotByAlphaGas_ = J*iStar*mMolc;
-    DebugField(mDotByAlphaGas_);
+    infoFieldVariable(mDotByAlphaGas_, debug);
 
-    #undef DebugField
+    const volScalarField::Internal& alphaGas =
+        mesh().lookupObject<volScalarField::Internal>(alphaNames().first());
+    infoField("mDot", alphaGas*mDotByAlphaGas_);
+
+    Info<< decrIndent;
+
+    #undef infoFieldVariable
 }
 
 

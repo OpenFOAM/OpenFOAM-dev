@@ -37,6 +37,7 @@ SourceFiles
 
 #include "fvModel.H"
 #include "scalarField.H"
+#include "DimensionedFieldFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -55,6 +56,33 @@ public:
 
     //- Runtime type information
     TypeName("fvSource");
+
+
+    // Static Member Functions
+
+        //- Print min/average/max information for a given field
+        static void infoField
+        (
+            const word& name,
+            const dimensionSet& dims,
+            const scalarField& field,
+            const bool print = true
+        );
+
+        //- Print min/average/max information for a given field
+        static void infoField
+        (
+            const word& name,
+            const DimensionedField<scalar, volMesh>& field,
+            const bool print = true
+        );
+
+        //- Print min/average/max information for a given field
+        static void infoField
+        (
+            const DimensionedField<scalar, volMesh>& field,
+            const bool print = true
+        );
 
 
     // Constructors

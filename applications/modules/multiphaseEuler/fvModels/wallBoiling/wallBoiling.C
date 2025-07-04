@@ -715,10 +715,12 @@ void Foam::fv::wallBoiling::correctMDot() const
         mDot.alphatLiquid_ =
             isBoiling*alphatBoilingLiquid
           + (1 - isBoiling)*lagProps.alphatConvLiquid;
-
-        Info<< indent << mesh().boundary()[patchi].name()
-            << ": min/mean/max mDot = " << gMin(mDot) << '/'
-            << gAverage(mDot) << '/' << gMax(mDot) << endl;
+        infoField
+        (
+            "mDot[" + mesh().boundary()[patchi].name() + "]",
+            dimDensity/dimTime,
+            mDot
+        );
 
         // Sum the phase change rate into the internal field
         const labelUList& faceCells = mesh().boundary()[patchi].faceCells();
