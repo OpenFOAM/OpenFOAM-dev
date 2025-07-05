@@ -301,7 +301,7 @@ void Foam::functionObjects::LagrangianFieldValue::writeValueAndLocationValues
     {
         FixedList<label, pTraits<Type>::nComponents>& ei = result.elementi;
 
-        ei = 0;
+        ei = Zero;
 
         for (label i = 1; i < field.size(); ++ i)
         {
