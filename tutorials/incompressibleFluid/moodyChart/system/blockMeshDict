@@ -18,7 +18,7 @@ diameter   0.1;
 // 1 - Coarse (576 cells), 2 - Medium (2304 cells), 3 - Fine (9216 cells)
 meshScalingFactor 1;
 
-boxCells   #calc "8 * pow(2, $meshScalingFactor - 1)";
+boxCells   #calc "8 * pow(label(2), $meshScalingFactor - 1)";
 radCells   #calc "$boxCells * 2";
 length     #calc "2.0 * $diameter / $radCells";
 radIn      #calc "$diameter / 2.0";
