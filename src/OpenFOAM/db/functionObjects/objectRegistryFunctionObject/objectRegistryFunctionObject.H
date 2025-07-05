@@ -26,7 +26,7 @@ Class
 
 Description
     Specialisation of Foam::functionObject which holds a reference to an object
-    registry. Provides a number of functions for cacheing and accessing objects
+    registry. Provides a number of functions for caching and accessing objects
     from the registry.
 
 See also

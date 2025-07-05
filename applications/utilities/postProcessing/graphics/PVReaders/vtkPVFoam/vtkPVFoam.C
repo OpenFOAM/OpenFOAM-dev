@@ -205,7 +205,7 @@ void Foam::vtkPVFoam::topoChangePartsStatus()
     }
 
     // Clear the part datasets. Note that this is not optimal as it means we
-    // are not re-using existing data sets.
+    // are not reusing existing data sets.
     partDataset_.setSize(nElem);
     partDataset_ = -1;
 

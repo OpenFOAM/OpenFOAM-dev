@@ -206,7 +206,7 @@ bool Foam::regIOobject::checkIn()
 {
     if (!registered_)
     {
-        // multiple checkin of same object is disallowed - this would mess up
+        // multiple checkIn of same object is disallowed - this would mess up
         // any mapping
         registered_ = db().checkIn(*this);
 

@@ -78,7 +78,7 @@ public:
         //- Construct as copy
         LagrangianCoeff(const LagrangianCoeff<Type, Implicit>& coeff);
 
-        //- Construct as copy or re-use as specified
+        //- Construct as copy or reuse as specified
         LagrangianCoeff
         (
             LagrangianCoeff<Type, Implicit>& coeff,

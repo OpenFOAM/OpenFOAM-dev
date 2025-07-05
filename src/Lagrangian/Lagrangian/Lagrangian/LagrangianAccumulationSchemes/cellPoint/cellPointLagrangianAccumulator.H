@@ -26,7 +26,7 @@ Class
 
 Description
     Helper class for the cell-point Lagrangian accumulation scheme. This is a
-    mesh object in order to provide a place to store re-usable accumulation
+    mesh object in order to provide a place to store reusable accumulation
     weights and workspace.
 
 SourceFiles

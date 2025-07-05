@@ -384,7 +384,7 @@ void Foam::mergePolyMesh::merge()
 
         const polyBoundaryMesh& oldPatches = mesh_.boundaryMesh();
 
-        // Note.  Re-using counter in two for loops
+        // Note.  Reusing counter in two for loops
         label patchi = 0;
 
         for (patchi = 0; patchi < oldPatches.size(); patchi++)

@@ -103,7 +103,7 @@ class truncatedCone
         //- Second point on cone axis
         vector point2_;
 
-        //- Radis 1
+        //- Radius 1
         scalar radius1_;
 
         //- Radius 2
