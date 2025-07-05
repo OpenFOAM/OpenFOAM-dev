@@ -72,8 +72,9 @@ Usage
 
     Where \c cellZone options are:
     \plaintable
-        cellZone <name>    | Looks-up the named cellZone
-        cellZone {type <zoneGeneratorType>;...} | Generates the cellZone locally
+        cellZone \<name\>  | Looks-up the named cellZone
+        cellZone {type \<zoneGeneratorType\>;...} | \\
+            Generates the cellZone locally
         cellZone all       | Selects all cells
     \endplaintable
 

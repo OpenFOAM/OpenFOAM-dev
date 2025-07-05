@@ -71,7 +71,7 @@ Usage
     contain each of the three zone types corresponding to the zone name that are
     present in the lists of zones.  Usually there will only be the one zone type
     of the given name so the \c zoneType entry can often be omitted and this
-    form of default \lookup can simply be specified as the name of
+    form of default \c lookup can simply be specified as the name of
     the zone only, e.g.
     \verbatim
         box;
