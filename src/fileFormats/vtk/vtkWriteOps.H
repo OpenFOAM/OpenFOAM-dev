@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,10 +53,10 @@ namespace Foam
 namespace vtkWriteOps
 {
     //- Swap halves of word
-    void swapWord(label& word32);
+    void swapWord(int32_t& word32);
 
     //- Swap halves of word
-    void swapWords(const label nWords, label* words32);
+    void swapWords(const label nWords, int32_t* words32);
 
     //- Cast an integer to the corresponding VTK write type. Does nothing.
     inline label cast(const label& x);

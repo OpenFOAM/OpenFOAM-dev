@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-void Foam::vtkWriteOps::swapWord(label& word32)
+void Foam::vtkWriteOps::swapWord(int32_t& word32)
 {
     char* mem = reinterpret_cast<char*>(&word32);
 
@@ -66,7 +66,7 @@ void Foam::vtkWriteOps::swapWord(label& word32)
 }
 
 
-void Foam::vtkWriteOps::swapWords(const label nWords, label* words32)
+void Foam::vtkWriteOps::swapWords(const label nWords, int32_t* words32)
 {
     for (label i = 0; i < nWords; i++)
     {
@@ -85,7 +85,7 @@ void Foam::vtkWriteOps::write
     if (binary)
     {
         #ifdef LITTLEENDIAN
-        swapWords(fField.size(), reinterpret_cast<label*>(fField.begin()));
+        swapWords(fField.size(), reinterpret_cast<int32_t*>(fField.begin()));
         #endif
         os.write
         (
@@ -138,7 +138,7 @@ void Foam::vtkWriteOps::write
     if (binary)
     {
         #ifdef LITTLEENDIAN
-        swapWords(elems.size(), reinterpret_cast<label*>(elems.begin()));
+        swapWords(elems.size(), reinterpret_cast<int32_t*>(elems.begin()));
         #endif
         os.write
         (
