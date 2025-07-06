@@ -60,18 +60,59 @@ usage() {
 
 Usage: ${0##*/} <source case> <variant case 1> ... <variant case N>
 
-Copy a case from a given source directory and merge differences into it.
-Differences are specified in dictionaries laid out on disk in the same
-way as in the source case. This allows for variants of a case to be
-created without replicating common parts of the configuration.
+There is often a need to run several CFD simulations which are generally similar
+but include small differences.  The foamMergeCase script is designed to help
+maintain cases in these circumstances.  It allows users to create a 'variant'
+case that contains file differences from a complete, 'source' case.
 
-Files specifying the differences are, by default, located in the current
-case directory. These must have a .orig extension to prevent them from
-being overwritten by the merge operation.
+The file differences in the variant case are organised in the same directory
+structure as normal.  Differences are stored in files given a '.orig' extension
+and only need to include the modified entries.  foamMergeCase can then be
+executed from within the variant case directory using the source case directory
+provided as an argument.  The source case files are copied into the variant
+case, merging the changes from the '.orig' file(s).
 
-Optionally, additional variant case directories can be supplied, in which
-case multiple variations will be applied successively to the source case
-files.
+An accompanying foamUnMergeCase script removes files that the foamMergeCase
+script copies from the source case, resetting the case back to its original
+variant form.  The variant case should include their own Allrun and Allclean
+scripts which include the respective foamMergeCase and foamUnMergeCase commands.
+
+The following example creates a variant of the 'pitzDaily' case named
+'pitzDailyWater', changing the fluid from air to water by changing kinematic
+viscosity nu to 1e-6.  To do this, the user should first copy the 'pitzDaily'
+case into their working directory and delete files they do not wish to modify
+during the merge.
+
+  cp -r \$FOAM_TUTORIALS/incompressibleFluid/pitzDaily pitzDailyWater
+  cd pitzDailyWater
+  rm -rf 0 system constant/momentumTransport
+  mv constant/physicalProperties constant/physicalProperties.orig
+
+The user can then remove the 'viscosityModel' entry from
+constant/physicalProperties.orig and set the 'nu' entry to 1e-6, either by
+editing the file or by running the following 'foamDictionary' commands.
+
+  foamDictionary -entry "viscosityModel" -remove constant/physicalProperties.orig
+  foamDictionary -set "nu=1e-6" constant/physicalProperties.orig
+
+To complete the automation of this variant case, the user should add the
+following foamMergeCase command before the 'runApplication blockMesh' command in
+the Allrun script.
+
+  runApplication foamMergeCase \$FOAM_TUTORIALS/incompressibleFluid/pitzDaily
+
+The user can now run the case by executing the Allrun script with './Allrun'.
+To be able to reset the case back to its original form, the user should first
+copy a standard Allclean script into the case directory as follows.
+
+  foamGet Allclean
+
+Then they should add the equivalent 'foamUnMergeCase' command at the end of the
+file, i.e. after the 'cleanCase' function is called.
+
+  foamUnMergeCase \$FOAM_TUTORIALS/incompressibleFluid/pitzDaily
+
+The case can now be reset by running the Allclean script with'./Allclean'
 
 USAGE
 }

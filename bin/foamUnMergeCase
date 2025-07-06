@@ -35,8 +35,10 @@ usage() {
 
 Usage: ${0##*/} <source case> <variant case 1> ... <variant case N>
 
-Reverse a merge operation performed with foamMergeCase. This should be
-called with exactly the same arguments as foamMergeCase.
+Reverse a merge operation performed with foamMergeCase. This should be called
+with exactly the same arguments as foamMergeCase.  For further information, run:
+
+  foamMergeCase -help
 
 USAGE
 }
