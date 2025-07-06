@@ -560,33 +560,6 @@ _createBaffles_ ()
 }
 complete -o filenames -o nospace -F _createBaffles_ createBaffles
 
-_createEngineZones_ ()
-{
-    local cur="${COMP_WORDS[COMP_CWORD]}"
-    local prev="${COMP_WORDS[COMP_CWORD-1]}"
-    local line=${COMP_LINE}
-    local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
-
-    opts="-case -cylinderHead -doc -fileHandler -help -libs -mesh -noFunctionObjects -pistonBowl -region -srcDoc"
-    for o in $used ; do opts="${opts/$o/}" ; done
-    extra=""
-
-    [ "$COMP_CWORD" = 1 ] || \
-    case "$prev" in
-        -case)
-            opts="" ; extra="-d" ;;
-        -fileHandler)
-            opts="uncollated collated masterUncollated" ; extra="" ;;
-        -libs)
-            opts="" ; extra="" ;;
-        -mesh) opts="$(_mesh ${cur})" ;;
-        -region) opts="$(_region ${cur})" ;;
-       *) ;;
-    esac
-    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
-}
-complete -o filenames -o nospace -F _createEngineZones_ createEngineZones
-
 _createExternalCoupledPatchGeometry_ ()
 {
     local cur="${COMP_WORDS[COMP_CWORD]}"
@@ -1411,7 +1384,7 @@ _foamSetupCHT_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -nonConformalCouples -parallel -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -2972,7 +2945,7 @@ _snappyHexMeshConfig_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-baffles -bounds -cellZones -clearBoundary -closedDomain -cylindricalBackground -defaultPatch -doc -explicitFeatures -firstLayerThickness -help -inletRegions -insidePoint -layerExpansionRatio -layers -minDimCells -nCells -nCellsBetweenLevels -noBackground -outletRegions -refineBackground -refinementBoxes -refinementDists -refinementLevel -refinementRegions -region -rotatingZones -srcDoc -surface -surfaceLevels -xMaxPatch -xMinPatch -yMaxPatch -yMinPatch -zMaxPatch -zMinPatch"
+    opts="-baffles -bounds -cellZones -clearBoundary -closedDomain -cylindricalBackground -defaultPatch -doc -explicitFeatures -firstLayerThickness -help -inletRegions -insidePoint -insidePoints -layerExpansionRatio -layers -minDimCells -nCells -nCellsBetweenLevels -noBackground -outletRegions -refineBackground -refinementBoxes -refinementDists -refinementLevel -refinementRegions -region -rm -rotatingZones -srcDoc -surface -surfaceLevels -xMaxPatch -xMinPatch -yMaxPatch -yMinPatch -zMaxPatch -zMinPatch"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -2980,7 +2953,7 @@ _snappyHexMeshConfig_ ()
     case "$prev" in
         -surface)
             opts="" ; extra="-d -f" ;;
-        -baffles|-bounds|-cellZones|-defaultPatch|-firstLayerThickness|-inletRegions|-insidePoint|-layerExpansionRatio|-layers|-minDimCells|-nCells|-nCellsBetweenLevels|-outletRegions|-refineBackground|-refinementBoxes|-refinementDists|-refinementLevel|-refinementRegions|-rotatingZones|-surfaceLevels|-xMaxPatch|-xMinPatch|-yMaxPatch|-yMinPatch|-zMaxPatch|-zMinPatch)
+        -baffles|-bounds|-cellZones|-defaultPatch|-firstLayerThickness|-inletRegions|-insidePoint|-insidePoints|-layerExpansionRatio|-layers|-minDimCells|-nCells|-nCellsBetweenLevels|-outletRegions|-refineBackground|-refinementBoxes|-refinementDists|-refinementLevel|-refinementRegions|-rotatingZones|-surfaceLevels|-xMaxPatch|-xMinPatch|-yMaxPatch|-yMinPatch|-zMaxPatch|-zMinPatch)
             opts="" ; extra="" ;;
         -region) opts="$(_region ${cur})" ;;
        *) ;;
@@ -5056,6 +5029,25 @@ _paraFoam_ ()
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
 complete -o filenames -o nospace -F _paraFoam_ paraFoam
+
+_paraFoamServer_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
+
+    opts="-help"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o filenames -o nospace -F _paraFoamServer_ paraFoamServer
 
 _pimpleFoam_ ()
 {
