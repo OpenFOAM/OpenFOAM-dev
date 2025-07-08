@@ -384,14 +384,14 @@ checkBanner() # scope, files...
         then
             case "$fileExtension" in
                 (c|C|Cver|cxx|dox|H|h|l|L)
-                    if ! git show $scopeShow"$file" | pcregrep -q -M "$sourceBanner"
+                    if ! git show $scopeShow"$file" | pcre2grep -q -M "$sourceBanner"
                     then
                         ((++errorCount))
                         errorMessages+=("$file")
                     fi
                     ;;
                 (''|awk|csh|gnuplot|sed|sh)
-                    if ! git show $scopeShow"$file" | pcregrep -q -M "$scriptBanner"
+                    if ! git show $scopeShow"$file" | pcre2grep -q -M "$scriptBanner"
                     then
                         ((++errorCount))
                         errorMessages+=("$file")
@@ -407,7 +407,7 @@ checkBanner() # scope, files...
         # Versioned case files
         elif git grep -q -e "Version:  \(dev\|[0-9.]+\)" $scopeGrep"$file"
         then
-            if ! git show $scopeShow"$file" | pcregrep -q -M "$dictBanner"
+            if ! git show $scopeShow"$file" | pcre2grep -q -M "$dictBanner"
             then
                 ((++errorCount))
                 errorMessages+=("$file")
