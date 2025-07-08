@@ -40,6 +40,7 @@ Description
     objectRegistry itself to work.
 
 SourceFiles
+    dictionaryStatics.C
     dictionary.C
     dictionaryIO.C
     dictionaryTemplates.C

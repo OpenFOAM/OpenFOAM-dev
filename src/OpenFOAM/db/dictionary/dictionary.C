@@ -30,21 +30,6 @@ License
 #include "unitConversion.H"
 #include "stringOps.H"
 
-/* * * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * */
-
-namespace Foam
-{
-    defineTypeNameAndDebug(dictionary, 0);
-}
-
-const Foam::dictionary Foam::dictionary::null;
-
-int Foam::dictionary::writeOptionalEntries
-(
-    Foam::debug::infoSwitch("writeOptionalEntries", 0)
-);
-
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 const Foam::entry* Foam::dictionary::lookupScopedSubEntryPtr

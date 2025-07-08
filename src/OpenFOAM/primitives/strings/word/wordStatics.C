@@ -24,13 +24,13 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "word.H"
+#include "debug.H"
 
-// * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-void Foam::writeEntry(Ostream& os, const word& value)
-{
-    os << value;
-}
+const char* const Foam::word::typeName = "word";
+int Foam::word::debug(Foam::debug::debugSwitch(word::typeName, 0));
+const Foam::word Foam::word::null;
 
 
 // ************************************************************************* //

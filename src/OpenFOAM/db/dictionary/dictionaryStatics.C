@@ -23,14 +23,20 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "word.H"
+#include "dictionary.H"
 
-// * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
+/* * * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * */
 
-void Foam::writeEntry(Ostream& os, const word& value)
+namespace Foam
 {
-    os << value;
+    defineTypeNameAndDebug(dictionary, 0);
 }
 
+const Foam::dictionary Foam::dictionary::null;
+
+int Foam::dictionary::writeOptionalEntries
+(
+    Foam::debug::infoSwitch("writeOptionalEntries", 0)
+);
 
 // ************************************************************************* //

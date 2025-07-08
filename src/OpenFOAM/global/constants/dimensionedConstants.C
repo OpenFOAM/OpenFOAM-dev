@@ -122,7 +122,7 @@ Foam::dimensionedScalar Foam::dimensionedConstant
 
     if (!dict.found(group))
     {
-        dict.add(group, dictionary());
+        dict.add(group, dictionary::null);
     }
 
     dict.subDict(group).add(entryName, dimensionedValue);
@@ -163,7 +163,7 @@ Foam::dimensionedScalar Foam::dimensionedConstant
 
     if (!dict.found(group))
     {
-        dict.add(group, dictionary());
+        dict.add(group, dictionary::null);
     }
 
     dict.subDict(group).add(entryName, dimensionedValue);

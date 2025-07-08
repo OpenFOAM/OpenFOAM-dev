@@ -38,7 +38,7 @@ const Foam::wordList Foam::Function1s::Coded<Type>::codeKeys
 template<class Type>
 const Foam::wordList Foam::Function1s::Coded<Type>::codeDictVars
 (
-    {word(), word()}
+    {word::null, word::null}
 );
 
 
