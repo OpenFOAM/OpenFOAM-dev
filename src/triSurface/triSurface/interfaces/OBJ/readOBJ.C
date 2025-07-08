@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,15 +49,7 @@ bool Foam::triSurface::readOBJ(const fileName& OBJfileName)
 
     while (OBJfile.good())
     {
-        string line = getLineNoComment(OBJfile);
-
-        label sz = line.size();
-
-        if (sz && line[sz-1] == '\\')
-        {
-            line.substr(0, sz-1);
-            line += getLineNoComment(OBJfile);
-        }
+        const string line = getLineNoComment(OBJfile);
 
         // Read first word
         IStringStream lineStream(line);

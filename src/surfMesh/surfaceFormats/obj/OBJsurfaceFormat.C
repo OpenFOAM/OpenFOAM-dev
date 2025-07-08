@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,14 +80,7 @@ bool Foam::fileFormats::OBJsurfaceFormat<Face>::read
 
     while (is.good())
     {
-        string line = this->getLineNoComment(is);
-
-        // handle continuations
-        if (line[line.size()-1] == '\\')
-        {
-            line.substr(0, line.size()-1);
-            line += this->getLineNoComment(is);
-        }
+        const string line = this->getLineNoComment(is);
 
         // Read first word
         IStringStream lineStream(line);
