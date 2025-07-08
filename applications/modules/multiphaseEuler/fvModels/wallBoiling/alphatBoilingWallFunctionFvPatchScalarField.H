@@ -149,6 +149,12 @@ public:
 
             //- Write
             virtual void write(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Inherit assignment
+        using fixedValueFvPatchScalarField::operator=;
 };
 
 

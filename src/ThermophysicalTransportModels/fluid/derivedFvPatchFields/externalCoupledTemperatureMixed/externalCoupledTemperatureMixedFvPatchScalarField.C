@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ externalCoupledTemperatureMixedFvPatchScalarField
     const dictionary& dict
 )
 :
-    externalCoupledMixedFvPatchField<scalar>(p, iF, dict)
+    externalCoupledMixedFvPatchScalarField(p, iF, dict)
 {}
 
 
@@ -62,7 +62,7 @@ externalCoupledTemperatureMixedFvPatchScalarField
     const fieldMapper& mapper
 )
 :
-    externalCoupledMixedFvPatchField<scalar>(ptf, p, iF, mapper)
+    externalCoupledMixedFvPatchScalarField(ptf, p, iF, mapper)
 {}
 
 
@@ -73,7 +73,7 @@ externalCoupledTemperatureMixedFvPatchScalarField
     const DimensionedField<scalar, volMesh>& iF
 )
 :
-    externalCoupledMixedFvPatchField<scalar>(ecmpf, iF)
+    externalCoupledMixedFvPatchScalarField(ecmpf, iF)
 {}
 
 
@@ -189,7 +189,7 @@ void Foam::externalCoupledTemperatureMixedFvPatchScalarField::evaluate
     const Pstream::commsTypes comms
 )
 {
-    externalCoupledMixedFvPatchField<scalar>::evaluate(comms);
+    externalCoupledMixedFvPatchScalarField::evaluate(comms);
 }
 
 
@@ -198,7 +198,7 @@ void Foam::externalCoupledTemperatureMixedFvPatchScalarField::write
     Ostream& os
 ) const
 {
-    externalCoupledMixedFvPatchField<scalar>::write(os);
+    externalCoupledMixedFvPatchScalarField::write(os);
 }
 
 

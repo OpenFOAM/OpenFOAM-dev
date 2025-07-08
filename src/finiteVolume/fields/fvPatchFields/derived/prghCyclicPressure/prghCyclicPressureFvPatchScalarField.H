@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -103,23 +103,6 @@ class prghCyclicPressureFvPatchScalarField
         scalarField jump_;
 
 
-    // Private Member Functions
-
-        //- Get the far-field density from the owner patch
-        scalar rhoInf() const;
-
-        //- Update result field based on interface functionality
-        template<class ... Cmpt>
-        void updateInterfaceMatrix
-        (
-            scalarField& result,
-            const scalarField& psiInternal,
-            const scalarField& coeffs,
-            const Pstream::commsTypes commsType,
-            const Cmpt ... cmpt
-        ) const;
-
-
 public:
 
     //- Runtime type information
@@ -202,6 +185,12 @@ public:
 
         //- Write
         virtual void write(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Inherit assignment
+        using jumpCyclicFvPatchScalarField::operator=;
 };
 
 
@@ -210,7 +199,6 @@ public:
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 
 #endif
 

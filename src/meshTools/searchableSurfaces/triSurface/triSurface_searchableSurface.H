@@ -257,7 +257,7 @@ public:
             //- Get the points that define the surface.
             virtual tmp<pointField> points() const;
 
-            // Does any part of the surface overlap the supplied bound box?
+            //- Does any part of the surface overlap the supplied bound box?
             virtual bool overlaps(const boundBox& bb) const;
 
             virtual void findNearest

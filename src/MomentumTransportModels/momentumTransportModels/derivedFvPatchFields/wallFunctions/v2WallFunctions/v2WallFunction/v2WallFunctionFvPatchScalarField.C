@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,7 +44,7 @@ v2WallFunctionFvPatchScalarField::v2WallFunctionFvPatchScalarField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchField<scalar>(p, iF, dict)
+    fixedValueFvPatchScalarField(p, iF, dict)
 {}
 
 
@@ -56,7 +56,7 @@ v2WallFunctionFvPatchScalarField::v2WallFunctionFvPatchScalarField
     const fieldMapper& mapper
 )
 :
-    fixedValueFvPatchField<scalar>(ptf, p, iF, mapper)
+    fixedValueFvPatchScalarField(ptf, p, iF, mapper)
 {}
 
 
@@ -66,7 +66,7 @@ v2WallFunctionFvPatchScalarField::v2WallFunctionFvPatchScalarField
     const DimensionedField<scalar, volMesh>& iF
 )
 :
-    fixedValueFvPatchField<scalar>(v2wfpsf, iF)
+    fixedValueFvPatchScalarField(v2wfpsf, iF)
 {}
 
 
@@ -124,7 +124,7 @@ void v2WallFunctionFvPatchScalarField::updateCoeffs()
         v2[facei] *= sqr(uTau);
     }
 
-    fixedValueFvPatchField<scalar>::updateCoeffs();
+    fixedValueFvPatchScalarField::updateCoeffs();
 
     // TODO: perform averaging for cells sharing more than one boundary face
 }

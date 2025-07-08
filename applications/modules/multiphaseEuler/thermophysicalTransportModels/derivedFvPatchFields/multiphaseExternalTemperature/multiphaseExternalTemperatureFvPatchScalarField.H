@@ -126,6 +126,12 @@ public:
                 new multiphaseExternalTemperatureFvPatchScalarField(*this, iF)
             );
         }
+
+
+    // Member Operators
+
+        //- Inherit assignment
+        using externalTemperatureFvPatchScalarField::operator=;
 };
 
 

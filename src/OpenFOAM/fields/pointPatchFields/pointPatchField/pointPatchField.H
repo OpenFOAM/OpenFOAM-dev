@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -442,34 +442,34 @@ public:
 
     // Member Operators
 
-        virtual void operator=(const pointPatchField<Type>&){}
-        virtual void operator=(pointPatchField<Type>&&){}
-        virtual void operator+=(const pointPatchField<Type>&){}
-        virtual void operator-=(const pointPatchField<Type>&){}
-        virtual void operator*=(const pointPatchField<scalar>&){}
-        virtual void operator/=(const pointPatchField<scalar>&){}
+        virtual void operator=(const UList<Type>&) {}
 
-        virtual void operator=(const Field<Type>&){}
-        virtual void operator+=(const Field<Type>&){}
-        virtual void operator-=(const Field<Type>&){}
+        virtual void operator=(const pointPatchField<Type>&) {}
+        virtual void operator=(pointPatchField<Type>&&) {}
+        virtual void operator+=(const pointPatchField<Type>&) {}
+        virtual void operator-=(const pointPatchField<Type>&) {}
+        virtual void operator*=(const pointPatchField<scalar>&) {}
+        virtual void operator/=(const pointPatchField<scalar>&) {}
 
-        virtual void operator*=(const Field<scalar>&){}
-        virtual void operator/=(const Field<scalar>&){}
+        virtual void operator+=(const Field<Type>&) {}
+        virtual void operator-=(const Field<Type>&) {}
 
-        virtual void operator=(const Type&){}
-        virtual void operator+=(const Type&){}
-        virtual void operator-=(const Type&){}
-        virtual void operator*=(const scalar){}
-        virtual void operator/=(const scalar){}
+        virtual void operator*=(const Field<scalar>&) {}
+        virtual void operator/=(const Field<scalar>&) {}
+
+        virtual void operator=(const Type&) {}
+        virtual void operator+=(const Type&) {}
+        virtual void operator-=(const Type&) {}
+        virtual void operator*=(const scalar) {}
+        virtual void operator/=(const scalar) {}
 
 
-        // Force an assignment irrespective of form of patch
-        // By generic these do nothing unless the patch actually has boundary
-        // values
+        // Force an assignment irrespective of form of patch. These do nothing
+        // unless the patch actually has boundary values.
 
-            virtual void operator==(const pointPatchField<Type>&){}
-            virtual void operator==(const Field<Type>&){}
-            virtual void operator==(const Type&){}
+        virtual void operator==(const pointPatchField<Type>&) {}
+        virtual void operator==(const Field<Type>&) {}
+        virtual void operator==(const Type&) {}
 
 
     // Ostream operator

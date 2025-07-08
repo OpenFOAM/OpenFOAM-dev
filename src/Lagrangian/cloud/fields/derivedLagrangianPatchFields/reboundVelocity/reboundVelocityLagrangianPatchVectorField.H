@@ -148,6 +148,12 @@ public:
 
         //- Return the state after interaction with this patch
         virtual LagrangianState state() const;
+
+
+    // Member Operators
+
+        //- Inherit assignment
+        using cloudVelocityLagrangianPatchVectorField::operator=;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -184,6 +184,12 @@ public:
             //- Reset the fvPatchField to the given fvPatchField
             //  Used for mesh to mesh mapping
             virtual void reset(const fvPatchScalarField&);
+
+
+    // Member Operators
+
+        //- Inherit assignment
+        using calculatedFvPatchScalarField::operator=;
 };
 
 

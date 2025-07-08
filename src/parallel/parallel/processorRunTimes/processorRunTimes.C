@@ -36,7 +36,7 @@ Foam::processorRunTimes::processorRunTimes::procRunTimes
     const nProcsFrom npf
 )
 {
-    label nProcs;
+    label nProcs = -1;
     switch (npf)
     {
         case nProcsFrom::decomposeParDict:

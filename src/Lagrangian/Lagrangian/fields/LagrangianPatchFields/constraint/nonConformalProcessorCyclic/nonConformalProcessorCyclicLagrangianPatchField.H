@@ -162,6 +162,12 @@ public:
                 )
             );
         }
+
+
+    // Member Operators
+
+        //- Inherit assignment
+        using processorCyclicLagrangianPatchField<Type>::operator=;
 };
 
 

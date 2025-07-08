@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,12 +44,12 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                   Class mappedFilmPressureFvPatchScalarField Declaration
+             Class mappedFilmPressureFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
 class mappedFilmPressureFvPatchScalarField
 :
-    public zeroGradientFvPatchField<scalar>
+    public zeroGradientFvPatchScalarField
 {
 
 public:
@@ -92,12 +92,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<scalar>> clone
+        virtual tmp<fvPatchScalarField> clone
         (
             const DimensionedField<scalar, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<scalar>>
+            return tmp<fvPatchScalarField>
             (
                 new mappedFilmPressureFvPatchScalarField(*this, iF)
             );
@@ -114,6 +114,12 @@ public:
 
         //- Write
         virtual void write(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Inherit assignment
+        using zeroGradientFvPatchScalarField::operator=;
 };
 
 

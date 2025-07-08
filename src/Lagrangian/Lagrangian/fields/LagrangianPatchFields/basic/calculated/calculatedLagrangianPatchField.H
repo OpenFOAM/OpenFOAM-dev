@@ -118,6 +118,12 @@ public:
                 new calculatedLagrangianPatchField<Type>(*this, iIo)
             );
         }
+
+
+    // Member Operators
+
+        //- Inherit assignment
+        using LagrangianPatchField<Type>::operator=;
 };
 
 

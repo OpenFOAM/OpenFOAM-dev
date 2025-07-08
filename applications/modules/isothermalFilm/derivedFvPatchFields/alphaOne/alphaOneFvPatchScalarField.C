@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,7 @@ Foam::alphaOneFvPatchScalarField::alphaOneFvPatchScalarField
     const DimensionedField<scalar, volMesh>& iF
 )
 :
-    fixedValueFvPatchField<scalar>(p, iF)
+    fixedValueFvPatchScalarField(p, iF)
 {
     this->evaluate();
 }
@@ -47,7 +47,7 @@ Foam::alphaOneFvPatchScalarField::alphaOneFvPatchScalarField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchField<scalar>(p, iF, dict, false)
+    fixedValueFvPatchScalarField(p, iF, dict, false)
 {
     this->evaluate();
 }
@@ -61,7 +61,7 @@ Foam::alphaOneFvPatchScalarField::alphaOneFvPatchScalarField
     const fieldMapper& mapper
 )
 :
-    fixedValueFvPatchField<scalar>(ptf, p, iF, mapper, false) // Don't map
+    fixedValueFvPatchScalarField(ptf, p, iF, mapper, false) // Don't map
 {
     // Evaluate since value not mapped
     this->evaluate();
@@ -74,7 +74,7 @@ Foam::alphaOneFvPatchScalarField::alphaOneFvPatchScalarField
     const DimensionedField<scalar, volMesh>& iF
 )
 :
-    fixedValueFvPatchField<scalar>(ptf, iF)
+    fixedValueFvPatchScalarField(ptf, iF)
 {
     this->evaluate();
 }
@@ -89,15 +89,15 @@ void Foam::alphaOneFvPatchScalarField::updateCoeffs()
         return;
     }
 
-    fvPatchField<scalar>::operator=(1.0);
+    fvPatchScalarField::operator=(1.0);
 
-    fixedValueFvPatchField<scalar>::updateCoeffs();
+    fixedValueFvPatchScalarField::updateCoeffs();
 }
 
 
 void Foam::alphaOneFvPatchScalarField::write(Ostream& os) const
 {
-    fvPatchField<scalar>::write(os);
+    fvPatchScalarField::write(os);
     writeEntry(os, "value", *this);
 }
 

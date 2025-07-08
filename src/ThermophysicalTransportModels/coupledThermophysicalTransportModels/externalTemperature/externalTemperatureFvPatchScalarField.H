@@ -281,6 +281,12 @@ public:
 
             //- Write
             void write(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Inherit assignment
+        using mixedFvPatchScalarField::operator=;
 };
 
 

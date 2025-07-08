@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -129,7 +129,7 @@ class IFstream;
 
 class externalCoupledTemperatureMixedFvPatchScalarField
 :
-    public externalCoupledMixedFvPatchField<scalar>
+    public externalCoupledMixedFvPatchScalarField
 {
 
 protected:
@@ -180,12 +180,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<scalar>> clone
+        virtual tmp<fvPatchScalarField> clone
         (
             const DimensionedField<scalar, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<scalar>>
+            return tmp<fvPatchScalarField>
             (
                 new externalCoupledTemperatureMixedFvPatchScalarField
                 (
@@ -213,6 +213,12 @@ public:
 
         //- Write
         virtual void write(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Inherit assignment
+        using externalCoupledMixedFvPatchScalarField::operator=;
 };
 
 

@@ -72,6 +72,12 @@ public:
 
         //- Return the state after interaction with this patch
         virtual LagrangianState state() const = 0;
+
+
+    // Member Operators
+
+        //- Inherit assignment
+        using LagrangianPatchVectorField::operator=;
 };
 
 

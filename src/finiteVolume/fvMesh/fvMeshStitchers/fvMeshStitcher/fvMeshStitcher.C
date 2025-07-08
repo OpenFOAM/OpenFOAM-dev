@@ -1411,10 +1411,13 @@ void Foam::fvMeshStitcher::stabiliseOrigPatchFaces
         const label origPatchi = allOrigPatchIndices[i];
         const polyPatch& origPp = mesh_.boundaryMesh()[origPatchi];
 
+        const vectorField::subField origPpFaceAreas = origPp.faceAreas();
+        const pointField::subField origPpFaceCentres = origPp.faceCentres();
+
         forAll(origPp, origPatchFacei)
         {
-            const vector& a = origPp.faceAreas()[origPatchFacei];
-            const point& c = origPp.faceCentres()[origPatchFacei];
+            const vector& a = origPpFaceAreas[origPatchFacei];
+            const point& c = origPpFaceCentres[origPatchFacei];
 
             vector& Sf = SfBf[origPatchi][origPatchFacei];
             point& Cf = CfBf[origPatchi][origPatchFacei];

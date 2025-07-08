@@ -132,6 +132,12 @@ public:
                 )
             );
         }
+
+
+    // Member Operators
+
+        //- Inherit assignment
+        using LagrangianPatchField<Type>::operator=;
 };
 
 

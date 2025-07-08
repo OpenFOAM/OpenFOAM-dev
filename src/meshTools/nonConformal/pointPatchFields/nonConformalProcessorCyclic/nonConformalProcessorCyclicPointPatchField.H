@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -135,6 +135,12 @@ public:
 
     //- Destructor
     virtual ~nonConformalProcessorCyclicPointPatchField();
+
+
+    // Member Operators
+
+        //- Inherit assignment
+        using coupledPointPatchField<Type>::operator=;
 };
 
 

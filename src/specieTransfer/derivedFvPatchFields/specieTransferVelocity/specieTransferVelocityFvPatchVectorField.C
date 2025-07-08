@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,7 @@ specieTransferVelocityFvPatchVectorField
     const dictionary& dict
 )
 :
-    fixedValueInletOutletFvPatchField<vector>(p, iF, dict),
+    fixedValueInletOutletFvPatchVectorField(p, iF, dict),
     rhoName_(dict.lookupOrDefault<word>("rho", "rho"))
 {}
 
@@ -55,7 +55,7 @@ specieTransferVelocityFvPatchVectorField
     const fieldMapper& mapper
 )
 :
-    fixedValueInletOutletFvPatchField<vector>(ptf, p, iF, mapper),
+    fixedValueInletOutletFvPatchVectorField(ptf, p, iF, mapper),
     rhoName_(ptf.rhoName_)
 {}
 
@@ -67,7 +67,7 @@ specieTransferVelocityFvPatchVectorField
     const DimensionedField<vector, volMesh>& iF
 )
 :
-    fixedValueInletOutletFvPatchField<vector>(ptf, iF),
+    fixedValueInletOutletFvPatchVectorField(ptf, iF),
     rhoName_(ptf.rhoName_)
 {}
 
@@ -118,7 +118,7 @@ void Foam::specieTransferVelocityFvPatchVectorField::updateCoeffs()
     const tensorField Tau(tensor::I - sqr(nf));
     this->operator==((Tau & *this) + nf*phip()/(rhop*patch().magSf()));
 
-    fixedValueInletOutletFvPatchField<vector>::updateCoeffs();
+    fixedValueInletOutletFvPatchVectorField::updateCoeffs();
 }
 
 

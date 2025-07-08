@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -215,7 +215,7 @@ wallCellWallFunctionFvPatchScalarField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchField<scalar>(p, iF, dict, false),
+    fixedValueFvPatchScalarField(p, iF, dict, false),
     masterPatchi_(-1),
     wallCellsPtr_(nullptr),
     wallCellFractionPtr_(nullptr)
@@ -234,7 +234,7 @@ wallCellWallFunctionFvPatchScalarField
     const fieldMapper& mapper
 )
 :
-    fixedValueFvPatchField<scalar>(ptf, p, iF, mapper, false),
+    fixedValueFvPatchScalarField(ptf, p, iF, mapper, false),
     masterPatchi_(-1),
     wallCellsPtr_(nullptr),
     wallCellFractionPtr_(nullptr)
@@ -251,7 +251,7 @@ wallCellWallFunctionFvPatchScalarField
     const DimensionedField<scalar, volMesh>& iF
 )
 :
-    fixedValueFvPatchField<scalar>(ewfpsf, iF),
+    fixedValueFvPatchScalarField(ewfpsf, iF),
     masterPatchi_(-1),
     wallCellsPtr_(nullptr),
     wallCellFractionPtr_(nullptr)
@@ -279,7 +279,7 @@ void Foam::wallCellWallFunctionFvPatchScalarField::reset
     const fvPatchScalarField& ptf
 )
 {
-    fixedValueFvPatchField<scalar>::reset(ptf);
+    fixedValueFvPatchScalarField::reset(ptf);
     wallCellsPtr_.clear();
     wallCellFractionPtr_.clear();
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ SourceFiles
 #ifndef fWallFunctionFvPatchScalarField_H
 #define fWallFunctionFvPatchScalarField_H
 
-#include "fixedValueFvPatchField.H"
+#include "fixedValueFvPatchFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -67,7 +67,7 @@ namespace RASModels
 
 class fWallFunctionFvPatchScalarField
 :
-    public fixedValueFvPatchField<scalar>
+    public fixedValueFvPatchScalarField
 {
 
 public:
@@ -128,6 +128,12 @@ public:
 
             //- Update the coefficients associated with the patch field
             virtual void updateCoeffs();
+
+
+    // Member Operators
+
+        //- Inherit assignment
+        using fixedValueFvPatchScalarField::operator=;
 };
 
 

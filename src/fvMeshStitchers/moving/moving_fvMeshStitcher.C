@@ -944,17 +944,18 @@ void Foam::fvMeshStitchers::moving::unconformErrorFaceCorrectMeshPhi
 
             const fvPatch& origFvp = nccFvp.origPatch();
 
+            const pointField::subField origPpFaceCentres =
+                origFvp.patch().faceCentres();
+
             forAll(nccFvp, nccPatchFacei)
             {
                 const label origPatchFacei =
                     nccFvp.polyFaces()[nccPatchFacei]
                   - origFvp.start();
 
-                const point& origC =
-                    origFvp.patch().faceCentres()[origPatchFacei];
+                const point& origC = origPpFaceCentres[origPatchFacei];
                 const point origC0 =
-                    origFvp.patch()[origPatchFacei]
-                   .centre(mesh().oldPoints());
+                    origFvp.patch()[origPatchFacei].centre(mesh().oldPoints());
 
                 tnccMeshMagUfb[nccPatchi][nccPatchFacei] =
                     mag(origC - origC0)/mesh().time().deltaTValue();

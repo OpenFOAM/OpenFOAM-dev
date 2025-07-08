@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "angularOscillatingVelocityPointPatchVectorField.H"
-#include "pointPatchFields.H"
 #include "addToRunTimeSelectionTable.H"
 #include "Time.H"
 #include "polyMesh.H"
@@ -44,7 +43,7 @@ angularOscillatingVelocityPointPatchVectorField
     const dictionary& dict
 )
 :
-    fixedValuePointPatchField<vector>(p, iF, dict),
+    fixedValuePointPatchVectorField(p, iF, dict),
     axis_(dict.lookup<vector>("axis", dimless)),
     origin_(dict.lookup<vector>("origin", dimLength)),
     angle0_(dict.lookup<scalar>("angle0", unitRadians)),
@@ -76,7 +75,7 @@ angularOscillatingVelocityPointPatchVectorField
     const fieldMapper& mapper
 )
 :
-    fixedValuePointPatchField<vector>(ptf, p, iF, mapper),
+    fixedValuePointPatchVectorField(ptf, p, iF, mapper),
     axis_(ptf.axis_),
     origin_(ptf.origin_),
     angle0_(ptf.angle0_),
@@ -93,7 +92,7 @@ angularOscillatingVelocityPointPatchVectorField
     const DimensionedField<vector, pointMesh>& iF
 )
 :
-    fixedValuePointPatchField<vector>(ptf, iF),
+    fixedValuePointPatchVectorField(ptf, iF),
     axis_(ptf.axis_),
     origin_(ptf.origin_),
     angle0_(ptf.angle0_),
@@ -107,14 +106,14 @@ angularOscillatingVelocityPointPatchVectorField
 
 void angularOscillatingVelocityPointPatchVectorField::map
 (
-    const pointPatchField<vector>& ptf,
+    const pointPatchVectorField& ptf,
     const fieldMapper& mapper
 )
 {
     const angularOscillatingVelocityPointPatchVectorField& aOVptf =
         refCast<const angularOscillatingVelocityPointPatchVectorField>(ptf);
 
-    fixedValuePointPatchField<vector>::map(aOVptf, mapper);
+    fixedValuePointPatchVectorField::map(aOVptf, mapper);
 
     mapper(p0_, aOVptf.p0_);
 }
@@ -122,13 +121,13 @@ void angularOscillatingVelocityPointPatchVectorField::map
 
 void angularOscillatingVelocityPointPatchVectorField::reset
 (
-    const pointPatchField<vector>& ptf
+    const pointPatchVectorField& ptf
 )
 {
     const angularOscillatingVelocityPointPatchVectorField& aOVptf =
         refCast<const angularOscillatingVelocityPointPatchVectorField>(ptf);
 
-    fixedValuePointPatchField<vector>::reset(aOVptf);
+    fixedValuePointPatchVectorField::reset(aOVptf);
 
     p0_.reset(aOVptf.p0_);
 }
@@ -160,7 +159,7 @@ void angularOscillatingVelocityPointPatchVectorField::updateCoeffs()
         )/t.deltaTValue()
     );
 
-    fixedValuePointPatchField<vector>::updateCoeffs();
+    fixedValuePointPatchVectorField::updateCoeffs();
 }
 
 
@@ -169,7 +168,7 @@ void angularOscillatingVelocityPointPatchVectorField::write
     Ostream& os
 ) const
 {
-    pointPatchField<vector>::write(os);
+    pointPatchVectorField::write(os);
     writeEntry(os, "axis", axis_);
     writeEntry(os, "origin", origin_);
     writeEntry(os, "angle0", angle0_);

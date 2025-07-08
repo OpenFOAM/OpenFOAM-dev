@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -122,10 +122,11 @@ public:
 
     // Member Operators
 
-        // Disable assignment operators
-
-            virtual void operator=(const Field<Type>&){}
-            virtual void operator=(const Type&){}
+        virtual void operator=(const valuePointPatchField<Type>&) {}
+        virtual void operator=(const pointPatchField<Type>&) {}
+        virtual void operator=(pointPatchField<Type>&&) {}
+        virtual void operator=(const UList<Type>&) {}
+        virtual void operator=(const Type&) {}
 };
 
 

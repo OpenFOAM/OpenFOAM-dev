@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "oscillatingVelocityPointPatchVectorField.H"
-#include "pointPatchFields.H"
 #include "addToRunTimeSelectionTable.H"
 #include "Time.H"
 #include "polyMesh.H"
@@ -44,7 +43,7 @@ oscillatingVelocityPointPatchVectorField
     const dictionary& dict
 )
 :
-    fixedValuePointPatchField<vector>(p, iF, dict),
+    fixedValuePointPatchVectorField(p, iF, dict),
     amplitude_(dict.lookup<vector>("amplitude", dimLength)),
     omega_(dict.lookup<scalar>("omega", unitRadians/dimTime))
 {
@@ -73,7 +72,7 @@ oscillatingVelocityPointPatchVectorField
     const fieldMapper& mapper
 )
 :
-    fixedValuePointPatchField<vector>(ptf, p, iF, mapper),
+    fixedValuePointPatchVectorField(ptf, p, iF, mapper),
     amplitude_(ptf.amplitude_),
     omega_(ptf.omega_),
     p0_(mapper(ptf.p0_))
@@ -87,7 +86,7 @@ oscillatingVelocityPointPatchVectorField
     const DimensionedField<vector, pointMesh>& iF
 )
 :
-    fixedValuePointPatchField<vector>(ptf, iF),
+    fixedValuePointPatchVectorField(ptf, iF),
     amplitude_(ptf.amplitude_),
     omega_(ptf.omega_),
     p0_(ptf.p0_)
@@ -98,14 +97,14 @@ oscillatingVelocityPointPatchVectorField
 
 void oscillatingVelocityPointPatchVectorField::map
 (
-    const pointPatchField<vector>& ptf,
+    const pointPatchVectorField& ptf,
     const fieldMapper& mapper
 )
 {
     const oscillatingVelocityPointPatchVectorField& oVptf =
         refCast<const oscillatingVelocityPointPatchVectorField>(ptf);
 
-    fixedValuePointPatchField<vector>::map(oVptf, mapper);
+    fixedValuePointPatchVectorField::map(oVptf, mapper);
 
     mapper(p0_, oVptf.p0_);
 }
@@ -113,13 +112,13 @@ void oscillatingVelocityPointPatchVectorField::map
 
 void oscillatingVelocityPointPatchVectorField::reset
 (
-    const pointPatchField<vector>& ptf
+    const pointPatchVectorField& ptf
 )
 {
     const oscillatingVelocityPointPatchVectorField& oVptf =
         refCast<const oscillatingVelocityPointPatchVectorField>(ptf);
 
-    fixedValuePointPatchField<vector>::reset(oVptf);
+    fixedValuePointPatchVectorField::reset(oVptf);
 
     p0_.reset(oVptf.p0_);
 }
@@ -142,13 +141,13 @@ void oscillatingVelocityPointPatchVectorField::updateCoeffs()
        /t.deltaTValue()
     );
 
-    fixedValuePointPatchField<vector>::updateCoeffs();
+    fixedValuePointPatchVectorField::updateCoeffs();
 }
 
 
 void oscillatingVelocityPointPatchVectorField::write(Ostream& os) const
 {
-    pointPatchField<vector>::write(os);
+    pointPatchVectorField::write(os);
     writeEntry(os, "amplitude", amplitude_);
     writeEntry(os, "omega", omega_);
     writeEntry(os, "p0", p0_);

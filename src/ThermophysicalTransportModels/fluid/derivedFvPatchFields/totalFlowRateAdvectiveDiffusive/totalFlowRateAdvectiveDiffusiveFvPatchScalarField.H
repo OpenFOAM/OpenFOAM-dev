@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,7 @@ SourceFiles
 #ifndef totalFlowRateAdvectiveDiffusiveFvPatchScalarField_H
 #define totalFlowRateAdvectiveDiffusiveFvPatchScalarField_H
 
-#include "mixedFvPatchField.H"
+#include "mixedFvPatchFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -51,7 +51,7 @@ namespace Foam
 
 class totalFlowRateAdvectiveDiffusiveFvPatchScalarField
 :
-    public mixedFvPatchField<scalar>
+    public mixedFvPatchScalarField
 {
     // Private Data
 
@@ -107,12 +107,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<scalar>> clone
+        virtual tmp<fvPatchScalarField> clone
         (
             const DimensionedField<scalar, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<scalar>>
+            return tmp<fvPatchScalarField>
             (
                 new
                 totalFlowRateAdvectiveDiffusiveFvPatchScalarField
@@ -144,6 +144,12 @@ public:
 
         //- Write
         virtual void write(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Inherit assignment
+        using mixedFvPatchScalarField::operator=;
 };
 
 

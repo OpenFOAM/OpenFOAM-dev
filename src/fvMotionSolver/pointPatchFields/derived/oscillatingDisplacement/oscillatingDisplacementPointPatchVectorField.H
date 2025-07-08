@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,8 @@ SourceFiles
 #ifndef oscillatingDisplacementPointPatchVectorField_H
 #define oscillatingDisplacementPointPatchVectorField_H
 
-#include "fixedValuePointPatchField.H"
+#include "pointPatchFields.H"
+#include "fixedValuePointPatchFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -48,11 +49,12 @@ namespace Foam
 
 class oscillatingDisplacementPointPatchVectorField
 :
-    public fixedValuePointPatchField<vector>
+    public fixedValuePointPatchVectorField
 {
     // Private Data
 
         vector amplitude_;
+
         scalar omega_;
 
 
@@ -89,12 +91,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual autoPtr<pointPatchField<vector>> clone
+        virtual autoPtr<pointPatchVectorField> clone
         (
             const DimensionedField<vector, pointMesh>& iF
         ) const
         {
-            return autoPtr<pointPatchField<vector>>
+            return autoPtr<pointPatchVectorField>
             (
                 new oscillatingDisplacementPointPatchVectorField
                 (
@@ -115,6 +117,12 @@ public:
 
         //- Write
         virtual void write(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Inherit assignment
+        using fixedValuePointPatchVectorField::operator=;
 };
 
 

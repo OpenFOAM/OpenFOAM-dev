@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "waveDisplacementPointPatchVectorField.H"
-#include "pointPatchFields.H"
 #include "addToRunTimeSelectionTable.H"
 #include "Time.H"
 #include "polyMesh.H"
@@ -40,7 +39,7 @@ waveDisplacementPointPatchVectorField
     const dictionary& dict
 )
 :
-    fixedValuePointPatchField<vector>(p, iF, dict),
+    fixedValuePointPatchVectorField(p, iF, dict),
     amplitude_(dict.lookup<vector>("amplitude", dimLength)),
     omega_(dict.lookup<scalar>("omega", unitRadians/dimTime)),
     waveNumber_
@@ -91,7 +90,7 @@ waveDisplacementPointPatchVectorField
     const fieldMapper& mapper
 )
 :
-    fixedValuePointPatchField<vector>(ptf, p, iF, mapper),
+    fixedValuePointPatchVectorField(ptf, p, iF, mapper),
     amplitude_(ptf.amplitude_),
     omega_(ptf.omega_),
     waveNumber_(ptf.waveNumber_)
@@ -105,7 +104,7 @@ waveDisplacementPointPatchVectorField
     const DimensionedField<vector, pointMesh>& iF
 )
 :
-    fixedValuePointPatchField<vector>(ptf, iF),
+    fixedValuePointPatchVectorField(ptf, iF),
     amplitude_(ptf.amplitude_),
     omega_(ptf.omega_),
     waveNumber_(ptf.waveNumber_)
@@ -140,13 +139,13 @@ void Foam::waveDisplacementPointPatchVectorField::updateCoeffs()
         timeRamp*startRamp*endRamp*amplitude_*cos(omega_*t.value() - points)
     );
 
-    fixedValuePointPatchField<vector>::updateCoeffs();
+    fixedValuePointPatchVectorField::updateCoeffs();
 }
 
 
 void Foam::waveDisplacementPointPatchVectorField::write(Ostream& os) const
 {
-    pointPatchField<vector>::write(os);
+    pointPatchVectorField::write(os);
     writeEntry(os, "amplitude", amplitude_);
     writeEntry(os, "omega", omega_);
     writeEntry(os, "waveNumber", waveNumber_);

@@ -171,6 +171,12 @@ public:
             PstreamBuffers&,
             const LagrangianScalarInternalDynamicField& fraction
         );
+
+
+    // Member Operators
+
+        //- Inherit assignment
+        using processorLagrangianPatchField<Type>::operator=;
 };
 
 

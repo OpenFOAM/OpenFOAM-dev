@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ uniformInterpolatedDisplacementPointPatchVectorField
     const dictionary& dict
 )
 :
-    fixedValuePointPatchField<vector>(p, iF, dict),
+    fixedValuePointPatchVectorField(p, iF, dict),
     pointInterpolator_
     (
         new dynamicMeshPointInterpolator(iF.mesh().mesh(), dict)
@@ -59,7 +59,7 @@ uniformInterpolatedDisplacementPointPatchVectorField
     const fieldMapper& mapper
 )
 :
-    fixedValuePointPatchField<vector>(ptf, p, iF, mapper)
+    fixedValuePointPatchVectorField(ptf, p, iF, mapper)
 {}
 
 
@@ -70,7 +70,7 @@ uniformInterpolatedDisplacementPointPatchVectorField
     const DimensionedField<vector, pointMesh>& iF
 )
 :
-    fixedValuePointPatchField<vector>(ptf, iF)
+    fixedValuePointPatchVectorField(ptf, iF)
 {}
 
 
@@ -89,7 +89,7 @@ void Foam::uniformInterpolatedDisplacementPointPatchVectorField::updateCoeffs()
         patchInternalField(pointInterpolator_->curPointField()())
     );
 
-    fixedValuePointPatchField<vector>::updateCoeffs();
+    fixedValuePointPatchVectorField::updateCoeffs();
 }
 
 
@@ -99,7 +99,7 @@ void Foam::uniformInterpolatedDisplacementPointPatchVectorField::write
 )
 const
 {
-    pointPatchField<vector>::write(os);
+    pointPatchVectorField::write(os);
     pointInterpolator_->write(os);
     writeEntry(os, "value", *this);
 }

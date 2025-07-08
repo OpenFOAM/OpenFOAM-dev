@@ -142,6 +142,12 @@ public:
                 new multiphaseCoupledTemperatureFvPatchScalarField(*this, iF)
             );
         }
+
+
+    // Member Operators
+
+        //- Inherit assignment
+        using coupledTemperatureFvPatchScalarField::operator=;
 };
 
 

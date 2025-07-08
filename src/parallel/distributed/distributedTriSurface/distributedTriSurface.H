@@ -351,6 +351,9 @@ public:
                 return globalTris().size();
             }
 
+            //- Does any part of the surface overlap the supplied bound box?
+            using triSurface::overlaps;
+
             virtual void findNearest
             (
                 const pointField& sample,

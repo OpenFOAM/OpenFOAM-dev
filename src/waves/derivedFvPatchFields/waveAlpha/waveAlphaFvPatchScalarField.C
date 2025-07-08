@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,19 +38,19 @@ Foam::waveAlphaFvPatchScalarField::waveAlphaFvPatchScalarField
     const dictionary& dict
 )
 :
-    fixedValueInletOutletFvPatchField<scalar>(p, iF, dict, false),
+    fixedValueInletOutletFvPatchScalarField(p, iF, dict, false),
     liquid_(dict.lookupOrDefault<Switch>("liquid", true))
 {
     if (dict.found("value"))
     {
-        fixedValueInletOutletFvPatchField<scalar>::operator==
+        fixedValueInletOutletFvPatchScalarField::operator==
         (
             scalarField("value", iF.dimensions(), dict, p.size())
         );
     }
     else
     {
-        fixedValueInletOutletFvPatchField<scalar>::operator==
+        fixedValueInletOutletFvPatchScalarField::operator==
         (
             patchInternalField()
         );
@@ -66,7 +66,7 @@ Foam::waveAlphaFvPatchScalarField::waveAlphaFvPatchScalarField
     const fieldMapper& mapper
 )
 :
-    fixedValueInletOutletFvPatchField<scalar>(ptf, p, iF, mapper),
+    fixedValueInletOutletFvPatchScalarField(ptf, p, iF, mapper),
     liquid_(ptf.liquid_)
 {}
 
@@ -77,7 +77,7 @@ Foam::waveAlphaFvPatchScalarField::waveAlphaFvPatchScalarField
     const DimensionedField<scalar, volMesh>& iF
 )
 :
-    fixedValueInletOutletFvPatchField<scalar>(ptf, iF),
+    fixedValueInletOutletFvPatchScalarField(ptf, iF),
     liquid_(ptf.liquid_)
 {}
 
@@ -174,7 +174,7 @@ void Foam::waveAlphaFvPatchScalarField::updateCoeffs()
 
     operator==(alpha(db().time().value()));
 
-    fixedValueInletOutletFvPatchField<scalar>::updateCoeffs();
+    fixedValueInletOutletFvPatchScalarField::updateCoeffs();
 }
 
 
@@ -183,7 +183,7 @@ void Foam::waveAlphaFvPatchScalarField::write
     Ostream& os
 ) const
 {
-    fixedValueInletOutletFvPatchField<scalar>::write(os);
+    fixedValueInletOutletFvPatchScalarField::write(os);
     writeEntryIfDifferent<Switch>(os, "liquid", true, liquid_);
 }
 

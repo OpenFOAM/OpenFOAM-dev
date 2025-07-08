@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,7 @@ namespace Foam
 
 class alphaOneFvPatchScalarField
 :
-    public fixedValueFvPatchField<scalar>
+    public fixedValueFvPatchScalarField
 {
 
 public:
@@ -98,12 +98,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<scalar>> clone
+        virtual tmp<fvPatchScalarField> clone
         (
             const DimensionedField<scalar, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<scalar>>
+            return tmp<fvPatchScalarField>
             (
                 new alphaOneFvPatchScalarField(*this, iF)
             );
@@ -121,9 +121,12 @@ public:
 
     // Member Operators
 
+        //- Inherit assignment
+        using fixedValueFvPatchScalarField::operator=;
+
         // Disallow forced assignment
 
-        virtual void operator==(const fvPatchField<scalar>&) {}
+        virtual void operator==(const fvPatchScalarField&) {}
         virtual void operator==(const Field<scalar>&) {}
         virtual void operator==(const scalar&) {}
 };

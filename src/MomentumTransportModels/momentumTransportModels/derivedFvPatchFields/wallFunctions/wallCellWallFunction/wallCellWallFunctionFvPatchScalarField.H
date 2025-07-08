@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ SourceFiles
 #ifndef wallCellWallFunctionFvPatchScalarField_H
 #define wallCellWallFunctionFvPatchScalarField_H
 
-#include "fixedValueFvPatchField.H"
+#include "fixedValueFvPatchFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -48,7 +48,7 @@ namespace Foam
 
 class wallCellWallFunctionFvPatchScalarField
 :
-    public fixedValueFvPatchField<scalar>
+    public fixedValueFvPatchScalarField
 {
     // Private Data
 
@@ -177,7 +177,7 @@ public:
 
     // Member Operators
 
-        //- Inherit assignment operators to prevent warnings
+        //- Inherit assignment
         using fvPatchScalarField::operator=;
 };
 

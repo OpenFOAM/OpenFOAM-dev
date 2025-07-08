@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ SourceFiles
 #define angularOscillatingVelocityPointPatchVectorField_H
 
 #include "pointPatchFields.H"
-#include "fixedValuePointPatchField.H"
+#include "fixedValuePointPatchFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -49,7 +49,7 @@ namespace Foam
 
 class angularOscillatingVelocityPointPatchVectorField
 :
-    public fixedValuePointPatchField<vector>
+    public fixedValuePointPatchVectorField
 {
     // Private Data
 
@@ -97,12 +97,12 @@ public:
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual autoPtr<pointPatchField<vector>> clone
+        virtual autoPtr<pointPatchVectorField> clone
         (
             const DimensionedField<vector, pointMesh>& iF
         ) const
         {
-            return autoPtr<pointPatchField<vector>>
+            return autoPtr<pointPatchVectorField>
             (
                 new angularOscillatingVelocityPointPatchVectorField
                 (
@@ -122,7 +122,7 @@ public:
 
             //- Reset the pointPatchField to the given pointPatchField
             //  Used for mesh to mesh mapping
-            virtual void reset(const pointPatchField<vector>&);
+            virtual void reset(const pointPatchVectorField&);
 
 
         // Evaluation functions
@@ -133,6 +133,12 @@ public:
 
         //- Write
         virtual void write(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Inherit assignment
+        using fixedValuePointPatchVectorField::operator=;
 };
 
 

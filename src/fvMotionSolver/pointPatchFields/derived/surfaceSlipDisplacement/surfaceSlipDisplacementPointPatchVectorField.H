@@ -188,6 +188,9 @@ public:
         (
             const surfaceSlipDisplacementPointPatchVectorField&
         ) = delete;
+
+        //- Inherit assignment
+        using pointPatchVectorField::operator=;
 };
 
 

@@ -194,6 +194,9 @@ public:
         (
             const surfaceDisplacementPointPatchVectorField&
         ) = delete;
+
+        //- Inherit assignment
+        using fixedValuePointPatchVectorField::operator=;
 };
 
 

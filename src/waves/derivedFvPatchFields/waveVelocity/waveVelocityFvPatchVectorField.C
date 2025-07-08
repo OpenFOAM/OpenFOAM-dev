@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,18 +38,18 @@ Foam::waveVelocityFvPatchVectorField::waveVelocityFvPatchVectorField
     const dictionary& dict
 )
 :
-    fixedValueInletOutletFvPatchField<vector>(p, iF, dict, false)
+    fixedValueInletOutletFvPatchVectorField(p, iF, dict, false)
 {
     if (dict.found("value"))
     {
-        fixedValueInletOutletFvPatchField<vector>::operator==
+        fixedValueInletOutletFvPatchVectorField::operator==
         (
             vectorField("value", iF.dimensions(), dict, p.size())
         );
     }
     else
     {
-        fixedValueInletOutletFvPatchField<vector>::operator==
+        fixedValueInletOutletFvPatchVectorField::operator==
         (
             patchInternalField()
         );
@@ -65,7 +65,7 @@ Foam::waveVelocityFvPatchVectorField::waveVelocityFvPatchVectorField
     const fieldMapper& mapper
 )
 :
-    fixedValueInletOutletFvPatchField<vector>(ptf, p, iF, mapper)
+    fixedValueInletOutletFvPatchVectorField(ptf, p, iF, mapper)
 {}
 
 
@@ -75,7 +75,7 @@ Foam::waveVelocityFvPatchVectorField::waveVelocityFvPatchVectorField
     const DimensionedField<vector, volMesh>& iF
 )
 :
-    fixedValueInletOutletFvPatchField<vector>(ptf, iF)
+    fixedValueInletOutletFvPatchVectorField(ptf, iF)
 {}
 
 
@@ -177,7 +177,7 @@ void Foam::waveVelocityFvPatchVectorField::updateCoeffs()
 
     operator==(U(db().time().value()));
 
-    fixedValueInletOutletFvPatchField<vector>::updateCoeffs();
+    fixedValueInletOutletFvPatchVectorField::updateCoeffs();
 }
 
 

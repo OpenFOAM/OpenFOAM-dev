@@ -243,6 +243,8 @@ void Foam::mappedInternalPatchBase::calcMapping() const
     // Dump connecting lines for debugging
     if (debug)
     {
+        const pointField::subField patchFaceCentres = patch_.faceCentres();
+
         OBJstream obj
         (
             patch_.name()
@@ -256,13 +258,13 @@ void Foam::mappedInternalPatchBase::calcMapping() const
         mapPtr_->distribute(ccs);
         forAll(patch_, patchFacei)
         {
-            const point& fc = patch_.faceCentres()[patchFacei];
+            const point& fc = patchFaceCentres[patchFacei];
             const point mid = 0.51*fc + 0.49*ccs[patchFacei];
             obj.write(linePointRef(fc, mid));
         }
 
         // Patch -> Cells
-        pointField fcs(patch_.faceCentres());
+        pointField fcs(patchFaceCentres);
         mapPtr_->reverseDistribute(cellIndices_.size(), fcs);
         forAll(cellIndices_, i)
         {
@@ -391,12 +393,13 @@ Foam::tmp<Foam::pointField> Foam::mappedInternalPatchBase::samplePoints() const
     // with a triangulation of the face. This triangulation matches the
     // tetrahedralisation used for cell searches. This maximises the chances
     // that the point will be successfully found in a cell.
+    const pointField::subField patchFaceCentres = patch_.faceCentres();
     forAll(patch_, patchFacei)
     {
         const pointField& ps = mesh.points();
 
         const face& f = patch_[patchFacei];
-        const point& fc = patch_.faceCentres()[patchFacei];
+        const point& fc = patchFaceCentres[patchFacei];
 
         result[patchFacei] = fc;
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ kLowReWallFunctionFvPatchScalarField::kLowReWallFunctionFvPatchScalarField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchField<scalar>(p, iF, dict),
+    fixedValueFvPatchScalarField(p, iF, dict),
     Ceps2_(dict.lookupOrDefault<scalar>("Ceps2", dimless, 1.9))
 {}
 
@@ -55,7 +55,7 @@ kLowReWallFunctionFvPatchScalarField::kLowReWallFunctionFvPatchScalarField
     const fieldMapper& mapper
 )
 :
-    fixedValueFvPatchField<scalar>(ptf, p, iF, mapper),
+    fixedValueFvPatchScalarField(ptf, p, iF, mapper),
     Ceps2_(ptf.Ceps2_)
 {}
 
@@ -66,7 +66,7 @@ kLowReWallFunctionFvPatchScalarField::kLowReWallFunctionFvPatchScalarField
     const DimensionedField<scalar, volMesh>& iF
 )
 :
-    fixedValueFvPatchField<scalar>(kwfpsf, iF),
+    fixedValueFvPatchScalarField(kwfpsf, iF),
     Ceps2_(kwfpsf.Ceps2_)
 {}
 
@@ -128,7 +128,7 @@ void kLowReWallFunctionFvPatchScalarField::updateCoeffs()
     // Limit kw to avoid failure of the turbulence model due to division by kw
     kw = max(kw, small);
 
-    fixedValueFvPatchField<scalar>::updateCoeffs();
+    fixedValueFvPatchScalarField::updateCoeffs();
 
     // TODO: perform averaging for cells sharing more than one boundary face
 }
@@ -137,7 +137,7 @@ void kLowReWallFunctionFvPatchScalarField::updateCoeffs()
 void kLowReWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
     writeEntry(os, "Ceps2", Ceps2_);
-    fixedValueFvPatchField<scalar>::write(os);
+    fixedValueFvPatchScalarField::write(os);
 }
 
 

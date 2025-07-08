@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ Foam::mappedFilmPressureFvPatchScalarField::mappedFilmPressureFvPatchScalarField
     const dictionary& dict
 )
 :
-    zeroGradientFvPatchField<scalar>(p, iF, dict)
+    zeroGradientFvPatchScalarField(p, iF, dict)
 {}
 
 
@@ -49,7 +49,7 @@ Foam::mappedFilmPressureFvPatchScalarField::mappedFilmPressureFvPatchScalarField
     const fieldMapper& mapper
 )
 :
-    zeroGradientFvPatchField<scalar>(ptf, p, iF, mapper)
+    zeroGradientFvPatchScalarField(ptf, p, iF, mapper)
 {}
 
 
@@ -59,7 +59,7 @@ Foam::mappedFilmPressureFvPatchScalarField::mappedFilmPressureFvPatchScalarField
     const DimensionedField<scalar, volMesh>& iF
 )
 :
-    zeroGradientFvPatchField<scalar>(ptf, iF)
+    zeroGradientFvPatchScalarField(ptf, iF)
 {}
 
 
@@ -94,13 +94,13 @@ void Foam::mappedFilmPressureFvPatchScalarField::updateCoeffs()
         this->patch().faceCells()
     ) = *this;
 
-    zeroGradientFvPatchField<scalar>::updateCoeffs();
+    zeroGradientFvPatchScalarField::updateCoeffs();
 }
 
 
 void Foam::mappedFilmPressureFvPatchScalarField::write(Ostream& os) const
 {
-    fvPatchField<scalar>::write(os);
+    fvPatchScalarField::write(os);
     writeEntry(os, "value", *this);
 }
 
