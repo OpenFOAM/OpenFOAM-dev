@@ -26,6 +26,8 @@ License
 #include "volFields.H"
 #include "processorFvPatch.H"
 #include "CompactListList.H"
+#include "PtrDictionary.H"
+#include "wordReListMatcher.H"
 
 using namespace Foam;
 
@@ -38,6 +40,7 @@ void setVolField
     const IOobject& fieldHeader,
     const fvMesh& mesh,
     const labelList& selectedCells,
+    const PtrDictionary<wordReList>& extrapolatePatches,
     Istream& fieldValueStream
 )
 {
@@ -67,7 +70,21 @@ void setVolField
 
         forAll(field.boundaryField(), patchi)
         {
-            fieldBf[patchi] = fieldBf[patchi].patchInternalField();
+            if
+            (
+                extrapolatePatches.found(mesh.boundary()[patchi].name())
+             && wordReListMatcher
+                (
+                    extrapolatePatches[mesh.boundary()[patchi].name()]
+                ).match(fieldName)
+            )
+            {
+                fieldBf[patchi] == fieldBf[patchi].patchInternalField();
+            }
+            else
+            {
+                fieldBf[patchi] = fieldBf[patchi].patchInternalField();
+            }
         }
 
         if (!field.write())
@@ -200,7 +217,8 @@ void setVolFields
 (
     const fvMesh& mesh,
     const dictionary& fieldsDict,
-    const labelList& selectedCells
+    const labelList& selectedCells,
+    const PtrDictionary<wordReList>& extrapolatePatches
 )
 {
     forAllConstIter(dictionary, fieldsDict, iter)
@@ -238,6 +256,7 @@ void setVolFields
                     fieldHeader,                                               \
                     mesh,                                                      \
                     selectedCells,                                             \
+                    extrapolatePatches,                                        \
                     iter().stream()                                            \
                 );
 

@@ -24,7 +24,6 @@ zones
     cells
     {
         type        box;
-        zoneType    cell;
 
         box         (-999 -999 -999) (999 999 0.244);
 
@@ -33,25 +32,11 @@ zones
             alpha.water 1;
         }
     }
+}
 
-    patchFaces
-    {
-        type        box;
-        zoneType    face;
-
-        box         (-999 -999 -999) (999 999 0.244);
-
-        zone
-        {
-            type        patch;
-            patches     (inlet outlet);
-        }
-
-        values
-        {
-            alpha.water 1;
-        }
-    }
+extrapolatePatches
+{
+    "inlet|outlet"   (alpha.water);
 }
 
 // ************************************************************************* //
