@@ -99,7 +99,7 @@ void Foam::Function1s::Scale<Type>::write
 ) const
 {
     writeEntry(os, units.x, unitless, scale_());
-    writeEntry(os, units.x, units.x, xScale_());
+    writeEntry(os, units.x, unitless, xScale_());
     writeEntry(os, units, value_());
 }
 
