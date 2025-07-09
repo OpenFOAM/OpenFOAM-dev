@@ -142,12 +142,6 @@ Usage
 #include "zoneGenerator.H"
 #include "systemDict.H"
 
-// Backward compatibility
-#include "topoSetSource.H"
-#include "cellSet.H"
-#include "faceSet.H"
-#include "setCellField.H"
-
 using namespace Foam;
 
 void setVolFields
@@ -218,19 +212,6 @@ int main(int argc, char *argv[])
         );
         Info<< endl;
     }
-    else if (setFieldsDict.found("defaultFieldValues"))
-    {
-        Info<< "Setting field default values" << nl
-            << "    The 'defaultFieldValues' entry is deprecated, "
-               "please use 'default'" << endl;
-
-        PtrList<setCellField> defaultFieldValues
-        (
-            setFieldsDict.lookup("defaultFieldValues"),
-            setCellField::iNew(mesh, labelList::null())
-        );
-        Info<< endl;
-    }
 
     if (setFieldsDict.found("zones"))
     {
@@ -280,67 +261,6 @@ int main(int argc, char *argv[])
             }
         }
     }
-
-    if (setFieldsDict.found("regions"))
-    {
-        PtrList<entry> regions(setFieldsDict.lookup("regions"));
-
-        Info<< "Setting field region values" << nl
-            << "    The 'regions' entry is deprecated, "
-               "please use 'zones'" << endl;
-
-        forAll(regions, ri)
-        {
-            const entry& region = regions[ri];
-
-            autoPtr<topoSetSource> source =
-                topoSetSource::New(region.keyword(), mesh, region.dict());
-
-            if (source().setType() == topoSetSource::CELLSETSOURCE)
-            {
-                cellSet selectedCellSet
-                (
-                    mesh,
-                    "cellSet",
-                    mesh.nCells()/10+1  // Reasonable size estimate.
-                );
-
-                source->applyToSet
-                (
-                    topoSetSource::NEW,
-                    selectedCellSet
-                );
-
-                PtrList<setCellField> fieldValues
-                (
-                    region.dict().lookup("fieldValues"),
-                    setCellField::iNew(mesh, selectedCellSet.toc())
-                );
-            }
-            else if (source().setType() == topoSetSource::FACESETSOURCE)
-            {
-                faceSet selectedFaceSet
-                (
-                    mesh,
-                    "faceSet",
-                    (mesh.nFaces()-mesh.nInternalFaces())/10+1
-                );
-
-                source->applyToSet
-                (
-                    topoSetSource::NEW,
-                    selectedFaceSet
-                );
-
-                PtrList<setFaceField> fieldValues
-                (
-                    region.dict().lookup("fieldValues"),
-                    setFaceField::iNew(mesh, selectedFaceSet.toc())
-                );
-            }
-        }
-    }
-
 
     Info<< "\nEnd\n" << endl;
 
