@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,11 +83,14 @@ private:
         //- Type of time control
         timeControls timeControl_;
 
-        //- Start time for execution - defaults to beginTime
+        //- Start time for execution - defaults to Time::beginTime
         scalar startTime_;
 
         //- End time for execution - defaults to vGreat
         scalar endTime_;
+
+        //- Begin time for execution - defaults to Time::beginTime
+        scalar beginTime_;
 
         //- Execution interval steps for timeStep mode
         //  a value <= 1 means execute at every time step
@@ -107,6 +110,14 @@ private:
 
         //- Index of previous execution
         mutable label executionIndex_;
+
+
+    // Private Member Functions
+
+        //- Round the given scalar down to the nearest label. As a static_cast
+        //  to label, except that negative numbers are rounded down rather than
+        //  towards zero.
+        static label roundDown(const scalar);
 
 
 public:
