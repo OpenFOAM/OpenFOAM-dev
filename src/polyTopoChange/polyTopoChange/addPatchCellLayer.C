@@ -1389,7 +1389,7 @@ void Foam::addPatchCellLayer::setRefinement
                 // Create a string of vertices to extrude into a face
                 labelList stringedVerts
                 (
-                    (endFe + f.size() - startFe + 2) % f.size()
+                    2 + (endFe + f.size() - startFe)%f.size()
                 );
                 label fp = startFe;
                 for (label i = 0; i < stringedVerts.size() - 1; i ++)
