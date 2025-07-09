@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,7 +45,6 @@ namespace sampledSets
 
 void Foam::sampledSets::lineCellFace::calcSamples
 (
-    const label storeFaces,
     DynamicList<point>& samplingPositions,
     DynamicList<scalar>& samplingDistances,
     DynamicList<label>& samplingSegments,
@@ -59,7 +58,7 @@ void Foam::sampledSets::lineCellFace::calcSamples
         searchEngine(),
         start_,
         end_,
-        storeFaces,
+        storeBothProcFaces_ ? 2 : 1,
         true,
         samplingPositions,
         samplingDistances,
@@ -67,50 +66,6 @@ void Foam::sampledSets::lineCellFace::calcSamples
         samplingCells,
         samplingFaces
     );
-}
-
-
-void Foam::sampledSets::lineCellFace::genSamplesStoreFaces
-(
-    const label storeFaces
-)
-{
-    DynamicList<point> samplingPositions;
-    DynamicList<scalar> samplingDistances;
-    DynamicList<label> samplingSegments;
-    DynamicList<label> samplingCells;
-    DynamicList<label> samplingFaces;
-
-    calcSamples
-    (
-        storeFaces,
-        samplingPositions,
-        samplingDistances,
-        samplingSegments,
-        samplingCells,
-        samplingFaces
-    );
-
-    samplingPositions.shrink();
-    samplingDistances.shrink();
-    samplingSegments.shrink();
-    samplingCells.shrink();
-    samplingFaces.shrink();
-
-    setSamples
-    (
-        samplingPositions,
-        samplingDistances,
-        samplingSegments,
-        samplingCells,
-        samplingFaces
-    );
-}
-
-
-void Foam::sampledSets::lineCellFace::genSamples()
-{
-    genSamplesStoreFaces(1);
 }
 
 
@@ -126,10 +81,9 @@ Foam::sampledSets::lineCellFace::lineCellFace
 :
     sampledSet(name, mesh, searchEngine, dict),
     start_(dict.lookup("start")),
-    end_(dict.lookup("end"))
-{
-    genSamples();
-}
+    end_(dict.lookup("end")),
+    storeBothProcFaces_(false)
+{}
 
 
 Foam::sampledSets::lineCellFace::lineCellFace
@@ -144,10 +98,9 @@ Foam::sampledSets::lineCellFace::lineCellFace
 :
     sampledSet(name, mesh, searchEngine, axis),
     start_(start),
-    end_(end)
-{
-    genSamplesStoreFaces(2);
-}
+    end_(end),
+    storeBothProcFaces_(true)
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

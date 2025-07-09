@@ -85,7 +85,7 @@ void Foam::functionObjects::interfaceHeight::writePositions()
         // Find the height of the location above the boundary
         scalar hLB =
             set.size()
-          ? - gHat & (locations_[li] - set.pointCoord(0))
+          ? - gHat & (locations_[li] - set.coords().pointCoord(0))
           : - vGreat;
         reduce(hLB, maxOp<scalar>());
 
@@ -97,7 +97,8 @@ void Foam::functionObjects::interfaceHeight::writePositions()
         {
             if (set.segments()[si] != set.segments()[si+1]) continue;
 
-            const vector& p0 = set.pointCoord(si), & p1 = set.pointCoord(si+1);
+            const vector& p0 = set.coords().pointCoord(si);
+            const vector& p1 = set.coords().pointCoord(si+1);
             const label c0 = set.cells()[si], c1 = set.cells()[si+1];
             const label f0 = set.faces()[si], f1 = set.faces()[si+1];
 

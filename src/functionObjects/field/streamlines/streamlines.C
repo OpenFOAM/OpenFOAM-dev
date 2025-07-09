@@ -583,6 +583,7 @@ void Foam::functionObjects::streamlines::movePoints(const polyMesh& mesh)
     if (&mesh == &mesh_)
     {
         searchEngine_.correct();
+
         sampledSetPtr_->movePoints();
     }
 }

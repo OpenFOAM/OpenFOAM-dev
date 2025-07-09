@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,40 +69,6 @@ void Foam::sampledSets::lineCell::calcSamples
 }
 
 
-void Foam::sampledSets::lineCell::genSamples()
-{
-    DynamicList<point> samplingPositions;
-    DynamicList<scalar> samplingDistances;
-    DynamicList<label> samplingSegments;
-    DynamicList<label> samplingCells;
-    DynamicList<label> samplingFaces;
-
-    calcSamples
-    (
-        samplingPositions,
-        samplingDistances,
-        samplingSegments,
-        samplingCells,
-        samplingFaces
-    );
-
-    samplingPositions.shrink();
-    samplingDistances.shrink();
-    samplingSegments.shrink();
-    samplingCells.shrink();
-    samplingFaces.shrink();
-
-    setSamples
-    (
-        samplingPositions,
-        samplingDistances,
-        samplingSegments,
-        samplingCells,
-        samplingFaces
-    );
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::sampledSets::lineCell::lineCell
@@ -116,9 +82,7 @@ Foam::sampledSets::lineCell::lineCell
     sampledSet(name, mesh, searchEngine, dict),
     start_(dict.lookup("start")),
     end_(dict.lookup("end"))
-{
-    genSamples();
-}
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

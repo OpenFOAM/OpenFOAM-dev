@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,17 +84,15 @@ class boundaryRandom
 
     // Private Member Functions
 
-        //- Sample all points
-        void calcSamples
+        //- Calculate all the sampling points
+        virtual void calcSamples
         (
             DynamicList<point>& samplingPositions,
+            DynamicList<scalar>&,
             DynamicList<label>& samplingSegments,
             DynamicList<label>& samplingCells,
             DynamicList<label>& samplingFaces
         ) const;
-
-        //- Use calcSamples to obtain samples and copy them into *this
-        virtual void genSamples();
 
 
 public:

@@ -42,17 +42,24 @@ namespace sampledSets
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::sampledSets::faceSet::genSamples()
+void Foam::sampledSets::faceSet::calcSamples
+(
+    DynamicList<point>& samplingPositions,
+    DynamicList<scalar>&,
+    DynamicList<label>& samplingSegments,
+    DynamicList<label>& samplingCells,
+    DynamicList<label>& samplingFaces
+) const
 {
-    const labelList faces(Foam::faceSet(mesh(), setName_).toc());
+    samplingFaces = Foam::faceSet(mesh(), setName_).toc();
 
-    setSamples
-    (
-        List<point>(IndirectList<point>(mesh().faceCentres(), faces)),
-        identityMap(faces.size()),
-        labelList(UIndirectList<label>(mesh().faceOwner(), faces)),
-        faces
-    );
+    samplingPositions =
+        IndirectList<point>(mesh().cellCentres(), samplingFaces);
+
+    samplingSegments = identityMap(samplingFaces.size());
+
+    samplingCells =
+        labelList(UIndirectList<label>(mesh().faceOwner(), samplingFaces));
 }
 
 
@@ -68,9 +75,7 @@ Foam::sampledSets::faceSet::faceSet
 :
     sampledSet(name, mesh, searchEngine, dict),
     setName_(dict.lookup("set"))
-{
-    genSamples();
-}
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

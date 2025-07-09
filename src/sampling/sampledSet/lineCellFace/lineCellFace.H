@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,25 +79,23 @@ class lineCellFace
         //- End point
         const point end_;
 
+        //- If this line intersects a processor boundary, should both the owner
+        //  and neighbour patch faces be stored? In general, for
+        //  post-processing no. For some specific programmatic use cases, yes.
+        const bool storeBothProcFaces_;
+
 
     // Private Member Functions
 
         //- Calculate all the sampling points
         virtual void calcSamples
         (
-            const label storeFaces,
             DynamicList<point>& samplingPositions,
             DynamicList<scalar>& samplingDistances,
             DynamicList<label>& samplingSegments,
             DynamicList<label>& samplingCells,
             DynamicList<label>& samplingFaces
         ) const;
-
-        //- Uses calcSamples to obtain samples and copies them into *this
-        void genSamplesStoreFaces(const label storeFaces);
-
-        //- Uses calcSamples to obtain samples and copies them into *this
-        virtual void genSamples();
 
 
 public:

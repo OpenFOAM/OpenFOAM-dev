@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,6 +49,7 @@ namespace sampledSets
 void Foam::sampledSets::boundaryPoints::calcSamples
 (
     DynamicList<point>& samplingPositions,
+    DynamicList<scalar>&,
     DynamicList<label>& samplingSegments,
     DynamicList<label>& samplingCells,
     DynamicList<label>& samplingFaces
@@ -179,36 +180,6 @@ void Foam::sampledSets::boundaryPoints::calcSamples
 }
 
 
-void Foam::sampledSets::boundaryPoints::genSamples()
-{
-    DynamicList<point> samplingPositions;
-    DynamicList<label> samplingSegments;
-    DynamicList<label> samplingCells;
-    DynamicList<label> samplingFaces;
-
-    calcSamples
-    (
-        samplingPositions,
-        samplingSegments,
-        samplingCells,
-        samplingFaces
-    );
-
-    samplingPositions.shrink();
-    samplingSegments.shrink();
-    samplingCells.shrink();
-    samplingFaces.shrink();
-
-    setSamples
-    (
-        samplingPositions,
-        samplingSegments,
-        samplingCells,
-        samplingFaces
-    );
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::sampledSets::boundaryPoints::boundaryPoints
@@ -223,9 +194,7 @@ Foam::sampledSets::boundaryPoints::boundaryPoints
     points_(dict.lookup("points")),
     patches_(dict.lookup("patches")),
     maxDistance_(dict.lookup<scalar>("maxDistance"))
-{
-    genSamples();
-}
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

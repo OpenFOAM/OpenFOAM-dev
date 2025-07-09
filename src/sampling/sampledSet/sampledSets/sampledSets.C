@@ -58,7 +58,7 @@ namespace functionObjects
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::functionObjects::sampledSets::combineSampledSets()
+void Foam::functionObjects::sampledSets::updateMasterSets()
 {
     masterSets_.setSize(size());
     masterSetOrders_.setSize(size());
@@ -67,7 +67,7 @@ void Foam::functionObjects::sampledSets::combineSampledSets()
     {
         const sampledSet& s = operator[](seti);
 
-        Tuple2<coordSet, labelList> g = s.gather();
+        Tuple2<coordSet, labelList> g = s.coords().gather();
 
         masterSets_.set(seti, new coordSet(g.first()));
         masterSetOrders_[seti] = g.second();
@@ -118,62 +118,55 @@ Foam::functionObjects::sampledSets::~sampledSets()
 
 bool Foam::functionObjects::sampledSets::read(const dictionary& dict)
 {
-    bool setsFound = dict.found("sets");
-    if (setsFound)
+    if (!dict.found("sets")) return true;
+
+    dict.lookup("fields") >> fields_;
+
+    dict.lookup("interpolationScheme") >> interpolationScheme_;
+
+    formatter_ = setWriter::New(dict.lookup("setFormat"), dict);
+
+    if (dict.isDict("sets"))
     {
-        dict.lookup("fields") >> fields_;
+        const dictionary& setsDict = dict.subDict("sets");
 
-        dict.lookup("interpolationScheme") >> interpolationScheme_;
+        setSize(setsDict.size());
 
-        const word writeType(dict.lookup("setFormat"));
+        label i = 0;
 
-        // Define the set formatter
-        formatter_ = setWriter::New(writeType, dict);
-
-        if (dict.isDict("sets"))
+        forAllConstIter(dictionary, setsDict, iter)
         {
-            const dictionary& setsDict = dict.subDict("sets");
-
-            setSize(setsDict.size());
-
-            label i = 0;
-
-            forAllConstIter(dictionary, setsDict, iter)
-            {
-                set
-                (
-                    i++,
-                    sampledSet::New
-                    (
-                        iter().keyword(),
-                        mesh_,
-                        searchEngine_,
-                        iter().dict()
-                    )
-                );
-            }
-        }
-        else
-        {
-            PtrList<sampledSet> newList
+            set
             (
-                dict.lookup("sets"),
-                sampledSet::iNew(mesh_, searchEngine_)
+                i++,
+                sampledSet::New
+                (
+                    iter().keyword(),
+                    mesh_,
+                    searchEngine_,
+                    iter().dict()
+                )
             );
-            transfer(newList);
         }
+    }
+    else
+    {
+        PtrList<sampledSet> newList
+        (
+            dict.lookup("sets"),
+            sampledSet::iNew(mesh_, searchEngine_)
+        );
+        transfer(newList);
+    }
 
-        combineSampledSets();
-
-        if (this->size())
+    if (this->size())
+    {
+        Info<< "Reading set description:" << nl;
+        forAll(*this, seti)
         {
-            Info<< "Reading set description:" << nl;
-            forAll(*this, seti)
-            {
-                Info<< "    " << operator[](seti).name() << nl;
-            }
-            Info<< endl;
+            Info<< "    " << operator[](seti).name() << nl;
         }
+        Info<< endl;
     }
 
     return true;
@@ -196,6 +189,8 @@ bool Foam::functionObjects::sampledSets::write()
 {
     if (size())
     {
+        updateMasterSets();
+
         if (Pstream::master())
         {
             if (debug)
@@ -286,20 +281,15 @@ void Foam::functionObjects::sampledSets::movePoints(const polyMesh& mesh)
 {
     if (&mesh == &mesh_)
     {
-        if (this->size())
-        {
-            searchEngine_.correct();
-        }
+        searchEngine_.correct();
 
         forAll(*this, seti)
         {
             operator[](seti).movePoints();
         }
 
-        if (this->size())
-        {
-            combineSampledSets();
-        }
+        masterSets_.clear();
+        masterSetOrders_.clear();
     }
 }
 
@@ -311,20 +301,15 @@ void Foam::functionObjects::sampledSets::topoChange
 {
     if (&map.mesh() == &mesh_)
     {
-        if (this->size())
-        {
-            searchEngine_.correct();
-        }
+        searchEngine_.correct();
 
         forAll(*this, seti)
         {
             operator[](seti).topoChange(map);
         }
 
-        if (this->size())
-        {
-            combineSampledSets();
-        }
+        masterSets_.clear();
+        masterSetOrders_.clear();
     }
 }
 
@@ -333,20 +318,15 @@ void Foam::functionObjects::sampledSets::mapMesh(const polyMeshMap& map)
 {
     if (&map.mesh() == &mesh_)
     {
-        if (this->size())
-        {
-            searchEngine_.correct();
-        }
+        searchEngine_.correct();
 
         forAll(*this, seti)
         {
             operator[](seti).mapMesh(map);
         }
 
-        if (this->size())
-        {
-            combineSampledSets();
-        }
+        masterSets_.clear();
+        masterSetOrders_.clear();
     }
 }
 
@@ -358,20 +338,15 @@ void Foam::functionObjects::sampledSets::distribute
 {
     if (&map.mesh() == &mesh_)
     {
-        if (this->size())
-        {
-            searchEngine_.correct();
-        }
+        searchEngine_.correct();
 
         forAll(*this, seti)
         {
             operator[](seti).distribute(map);
         }
 
-        if (this->size())
-        {
-            combineSampledSets();
-        }
+        masterSets_.clear();
+        masterSetOrders_.clear();
     }
 }
 

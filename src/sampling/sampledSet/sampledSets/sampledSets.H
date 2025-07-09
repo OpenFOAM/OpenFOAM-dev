@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -106,7 +106,7 @@ class sampledSets
 
         //- Combine sets on all processors. Sort by curveDist and produce
         //  index list. Valid result only on master processor.
-        void combineSampledSets();
+        void updateMasterSets();
 
         //- Sample all fields of a type on a given set
         template<class Type>

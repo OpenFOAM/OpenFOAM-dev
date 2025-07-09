@@ -75,8 +75,15 @@ class faceSet
 
     // Private Member Functions
 
-        //- Generate the samples
-        virtual void genSamples();
+        //- Calculate all the sampling points
+        virtual void calcSamples
+        (
+            DynamicList<point>& samplingPositions,
+            DynamicList<scalar>&,
+            DynamicList<label>& samplingSegments,
+            DynamicList<label>& samplingCells,
+            DynamicList<label>& samplingFaces
+        ) const;
 
 
 public:

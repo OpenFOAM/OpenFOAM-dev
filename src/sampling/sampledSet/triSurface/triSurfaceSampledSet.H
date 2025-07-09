@@ -80,17 +80,15 @@ class triSurface
 
     // Private Member Functions
 
-        //- Samples all points in sampleCoords.
-        void calcSamples
+        //- Calculate all the sampling points
+        virtual void calcSamples
         (
             DynamicList<point>& samplingPositions,
+            DynamicList<scalar>&,
             DynamicList<label>& samplingSegments,
             DynamicList<label>& samplingCells,
             DynamicList<label>& samplingFaces
         ) const;
-
-        //- Uses calcSamples to obtain samples. Copies them into *this.
-        virtual void genSamples();
 
 
 public:

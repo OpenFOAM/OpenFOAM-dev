@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,6 +50,7 @@ namespace sampledSets
 void Foam::sampledSets::sphereRandom::calcSamples
 (
     DynamicList<point>& samplingPositions,
+    DynamicList<scalar>&,
     DynamicList<label>& samplingSegments,
     DynamicList<label>& samplingCells,
     DynamicList<label>& samplingFaces
@@ -82,36 +83,6 @@ void Foam::sampledSets::sphereRandom::calcSamples
 }
 
 
-void Foam::sampledSets::sphereRandom::genSamples()
-{
-    DynamicList<point> samplingPositions;
-    DynamicList<label> samplingSegments;
-    DynamicList<label> samplingCells;
-    DynamicList<label> samplingFaces;
-
-    calcSamples
-    (
-        samplingPositions,
-        samplingSegments,
-        samplingCells,
-        samplingFaces
-    );
-
-    samplingPositions.shrink();
-    samplingSegments.shrink();
-    samplingCells.shrink();
-    samplingFaces.shrink();
-
-    setSamples
-    (
-        samplingPositions,
-        samplingSegments,
-        samplingCells,
-        samplingFaces
-    );
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::sampledSets::sphereRandom::sphereRandom
@@ -126,9 +97,7 @@ Foam::sampledSets::sphereRandom::sphereRandom
     centre_(dict.lookup("centre")),
     radius_(dict.lookup<scalar>("radius")),
     nPoints_(dict.lookup<label>("nPoints"))
-{
-    genSamples();
-}
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

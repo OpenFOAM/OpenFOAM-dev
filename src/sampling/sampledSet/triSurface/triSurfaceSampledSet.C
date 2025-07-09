@@ -62,6 +62,7 @@ namespace Foam
 void Foam::sampledSets::triSurface::calcSamples
 (
     DynamicList<point>& samplingPositions,
+    DynamicList<scalar>&,
     DynamicList<label>& samplingSegments,
     DynamicList<label>& samplingCells,
     DynamicList<label>& samplingFaces
@@ -80,36 +81,6 @@ void Foam::sampledSets::triSurface::calcSamples
             samplingFaces.append(-1);
         }
     }
-}
-
-
-void Foam::sampledSets::triSurface::genSamples()
-{
-    DynamicList<point> samplingPositions;
-    DynamicList<label> samplingSegments;
-    DynamicList<label> samplingCells;
-    DynamicList<label> samplingFaces;
-
-    calcSamples
-    (
-        samplingPositions,
-        samplingSegments,
-        samplingCells,
-        samplingFaces
-    );
-
-    samplingPositions.shrink();
-    samplingSegments.shrink();
-    samplingCells.shrink();
-    samplingFaces.shrink();
-
-    setSamples
-    (
-        samplingPositions,
-        samplingSegments,
-        samplingCells,
-        samplingFaces
-    );
 }
 
 
@@ -149,9 +120,7 @@ Foam::sampledSets::triSurface::triSurface
             )
         ).points()
     )
-{
-    genSamples();
-}
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

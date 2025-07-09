@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -258,9 +258,6 @@ public:
             //- Determine inside/outside status
             bool isInside(const point&) const;
 
-
-        //- Delete all storage
-        void clearOut();
 
         //- Correct for mesh geom/topo changes
         void correct();
