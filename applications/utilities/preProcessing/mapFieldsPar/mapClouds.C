@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -179,6 +179,8 @@ void Foam::mapClouds(const fvMeshToFvMesh& interp)
     const polyMesh& srcMesh = interp.srcMesh();
     const polyMesh& tgtMesh = interp.tgtMesh();
 
+    const meshSearch& tgtSearchEngine = meshSearch::New(tgtMesh);
+
     // Determine the clouds present in this mesh
     const fileNameList cloudDirs =
         gatherAndFlatten
@@ -246,7 +248,7 @@ void Foam::mapClouds(const fvMeshToFvMesh& interp)
             (
                 new passiveParticle
                 (
-                    tgtMesh,
+                    tgtSearchEngine,
                     positions[tgtParticlei],
                     tgtCells[tgtParticlei],
                     nLocateBoundaryHits

@@ -67,8 +67,6 @@ class polyTopoChangeMap;
 class polyMeshMap;
 class polyDistributionMap;
 class polyMeshTetDecomposition;
-class treeDataCell;
-template<class Type> class indexedOctree;
 
 /*---------------------------------------------------------------------------*\
                           Class polyMesh Declaration
@@ -93,20 +91,6 @@ public:
             POINTS_MOVED,
             TOPO_CHANGE,
             TOPO_PATCH_CHANGE
-        };
-
-        //- Enumeration defining the decomposition of the cell for
-        //  inside/outside test
-        enum cellDecomposition
-        {
-            FACE_PLANES,      //- Faces considered as planes
-
-            FACE_CENTRE_TRIS, //- Faces decomposed into triangles
-                              //  using face-centre
-
-            FACE_DIAG_TRIS,   //- Faces decomposed into triangles diagonally
-
-            CELL_TETS         //- Cell decomposed into tets
         };
 
 
@@ -151,9 +135,6 @@ private:
 
             //- Base point for face decomposition into tets
             mutable autoPtr<labelIOList> tetBasePtIsPtr_;
-
-            //- Search tree to allow spatial cell searching
-            mutable autoPtr<indexedOctree<treeDataCell>> cellTreePtr_;
 
 
         // Zoning information
@@ -431,9 +412,6 @@ public:
             //- Return the tetBasePtIs
             const labelIOList& tetBasePtIs() const;
 
-            //- Return the cell search tree
-            const indexedOctree<treeDataCell>& cellTree() const;
-
             //- Return point zones
             const pointZoneList& pointZones() const
             {
@@ -611,52 +589,11 @@ public:
             //- Clear tet base points
             void clearTetBasePtIs();
 
-            //- Clear cell tree data
-            void clearCellTree();
-
             //- Remove all files from mesh instance
             void removeFiles(const fileName& instanceDir) const;
 
             //- Remove all files from mesh instance()
             void removeFiles() const;
-
-
-        // Position search functions
-
-            //- Find the cell, tetFacei and tetPti for point p
-            void findCellFacePt
-            (
-                const point& p,
-                label& celli,
-                label& tetFacei,
-                label& tetPti
-            ) const;
-
-            //- Find the tetFacei and tetPti for point p in celli.
-            //  tetFacei and tetPtI are set to -1 if not found
-            void findTetFacePt
-            (
-                const label celli,
-                const point& p,
-                label& tetFacei,
-                label& tetPti
-            ) const;
-
-            //- Test if point p is in the celli
-            bool pointInCell
-            (
-                const point& p,
-                label celli,
-                const cellDecomposition = CELL_TETS
-            ) const;
-
-            //- Find cell enclosing this location and return index
-            //  If not found -1 is returned
-            label findCell
-            (
-                const point& p,
-                const cellDecomposition = CELL_TETS
-            ) const;
 
 
         // Write

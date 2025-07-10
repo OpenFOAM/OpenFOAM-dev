@@ -24,9 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "triSurfaceSampledSet.H"
-#include "meshSearch.H"
-#include "polyMesh.H"
 #include "triSurface_searchableSurface.H"
+#include "meshSearch.H"
 #include "Time.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -68,10 +67,12 @@ void Foam::sampledSets::triSurface::calcSamples
     DynamicList<label>& samplingFaces
 ) const
 {
+    const meshSearch& searchEngine = meshSearch::New(mesh());
+
     forAll(points_, i)
     {
         const point& pt = points_[i];
-        const label celli = searchEngine().findCell(pt);
+        const label celli = searchEngine.findCell(pt);
 
         if (celli != -1)
         {
@@ -90,11 +91,10 @@ Foam::sampledSets::triSurface::triSurface
 (
     const word& name,
     const polyMesh& mesh,
-    const meshSearch& searchEngine,
     const dictionary& dict
 )
 :
-    sampledSet(name, mesh, searchEngine, dict),
+    sampledSet(name, mesh, dict),
     surface_(dict.lookup("surface")),
     points_
     (

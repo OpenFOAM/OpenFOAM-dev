@@ -111,7 +111,6 @@ public:
         (
             const word& name,
             const polyMesh& mesh,
-            const meshSearch& searchEngine,
             const dictionary& dict
         );
 
@@ -120,7 +119,6 @@ public:
         (
             const word& name,
             const polyMesh& mesh,
-            const meshSearch& searchEngine,
             const word& axis,
             const point& start,
             const point& end

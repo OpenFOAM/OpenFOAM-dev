@@ -22,23 +22,23 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::meshSearch
+    Foam::meshBoundarySearch
 
 Description
-    Mesh object that implements searches within the local cells and faces
+    Mesh object that implements searches within the local boundary faces
 
 SourceFiles
-    meshSearch.C
+    meshBoundarySearch.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef meshSearch_H
-#define meshSearch_H
+#ifndef meshBoundarySearch_H
+#define meshBoundarySearch_H
 
 #include "DemandDrivenMeshObject.H"
+#include "polyMesh.H"
+#include "treeDataFace.H"
 #include "indexedOctree.H"
-#include "pointInCell.H"
-#include "treeDataCell.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -46,111 +46,90 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class meshSearch Declaration
+                         Class meshBoundarySearch Declaration
 \*---------------------------------------------------------------------------*/
 
-class meshSearch
+class meshBoundarySearch
 :
     public DemandDrivenMeshObject
     <
         polyMesh,
         DeletableMeshObject,
-        meshSearch
+        meshBoundarySearch
     >
 {
+    // Private Classes
+
+        // Intersection operation class that checks previous successful hits so
+        // that they are not duplicated
+        class findUniqueIntersectOp;
+
+
     // Private Data
 
-        //- Cell tree
-        const indexedOctree<treeDataCell> cellTree_;
-
-
-protected:
-
-    friend class DemandDrivenMeshObject
-    <
-        polyMesh,
-        DeletableMeshObject,
-        meshSearch
-    >;
-
-
-    // Protected Constructors
-
-        //- Construct from mesh
-        explicit meshSearch(const polyMesh& mesh);
+        //- Boundary tree
+        const indexedOctree<treeDataFace> boundaryTree_;
 
 
 public:
 
     //- Run-time type information
-    TypeName("meshSearch");
+    TypeName("meshBoundarySearch");
 
 
     // Constructors
 
-        //- Lookup or construct from mesh and cell decomposition option
-        static const meshSearch& New
-        (
-            const polyMesh& mesh,
-            const pointInCellShapes = pointInCellShapes::tets
-        );
+        //- Construct from mesh
+        meshBoundarySearch(const polyMesh& mesh);
 
         //- Disallow default bitwise copy construction
-        meshSearch(const meshSearch&) = delete;
+        meshBoundarySearch(const meshBoundarySearch&) = delete;
 
 
     //- Destructor
-    virtual ~meshSearch();
+    virtual ~meshBoundarySearch();
 
 
     // Member Functions
 
         // Access
 
-            //- Access the cell tree
-            inline const indexedOctree<treeDataCell>& cellTree() const
+            //- Access the boundary tree
+            inline const indexedOctree<treeDataFace>& boundaryTree() const
             {
-                return cellTree_;
+                return boundaryTree_;
             }
 
 
         // Queries
 
-            //- Find the cell with centre closest to the given point
-            label findNearestCell(const point& p) const;
+            //- Find the boundary face with centre closest to the given point
+            label findNearestBoundaryFace(const point& p) const;
 
-            //- Find the cell with centre closest to the given point. Do a
-            //  linear search through all the cells instead of using the tree.
-            static label findNearestCellNoTree
+            //- Find the first intersection of the boundary with the line
+            //  defined by the given start and end points
+            pointIndexHit intersection
             (
-                const polyMesh& mesh,
-                const point& p
-            );
-
-            //- Find the face with centre closest to the given point
-            label findNearestFace(const point& p) const;
-
-            //- Find the cell containing the given point
-            label findCell
-            (
-                const point& p,
-                const pointInCellShapes = pointInCellShapes::tets
+                const point& pStart,
+                const point& pEnd
             ) const;
 
-            //- Find the cell containing the given point. Do a
-            //  linear search through all the cells instead of using the tree.
-            static label findCellNoTree
+            //- Find all intersections of the boundary with the line
+            //  defined by the given start and end points
+            List<pointIndexHit> intersections
             (
-                const polyMesh& mesh,
-                const point& p,
-                const pointInCellShapes = pointInCellShapes::tets
-            );
+                const point& pStart,
+                const point& pEnd
+            ) const;
+
+            //- Determine whether the given point is inside the mesh boundary
+            bool isInside(const point&) const;
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const meshSearch&) = delete;
+        void operator=(const meshBoundarySearch&) = delete;
 };
 
 

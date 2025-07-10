@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -263,8 +263,10 @@ void Foam::ConeInjection<CloudType>::topoChange()
     if (injectionMethod_ == imPoint && position_->constant())
     {
         vector position = position_->value(0);
+
         this->findCellAtPosition
         (
+            meshSearch::New(this->owner().mesh()),
             position,
             injectorCoordinates_,
             injectorCell_,
@@ -321,6 +323,7 @@ Foam::scalar Foam::ConeInjection<CloudType>::massToInject
 template<class CloudType>
 void Foam::ConeInjection<CloudType>::setPositionAndCell
 (
+    const meshSearch& searchEngine,
     const label parcelI,
     const label,
     const scalar time,
@@ -351,6 +354,7 @@ void Foam::ConeInjection<CloudType>::setPositionAndCell
             {
                 this->findCellAtPosition
                 (
+                    searchEngine,
                     pos,
                     coordinates,
                     celli,
@@ -373,6 +377,7 @@ void Foam::ConeInjection<CloudType>::setPositionAndCell
             const point pos = position_->value(t) + d/2*tanVec;
             this->findCellAtPosition
             (
+                searchEngine,
                 pos,
                 coordinates,
                 celli,

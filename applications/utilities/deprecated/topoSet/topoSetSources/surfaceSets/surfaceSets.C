@@ -33,7 +33,6 @@ License
 #include "cellToPoint.H"
 #include "cellToCell.H"
 #include "pointToCell.H"
-#include "meshSearch.H"
 #include "cellClassification.H"
 
 
@@ -234,17 +233,8 @@ void Foam::surfaceSets::getSurfaceSets
     labelHashSet& cut
 )
 {
-    // Construct search engine on mesh
-    meshSearch queryMesh(mesh);
-
     // Cut faces with surface and classify cells
-    cellClassification cellType
-    (
-        mesh,
-        queryMesh,
-        querySurf,
-        outsidePts
-    );
+    cellClassification cellType(mesh, querySurf, outsidePts);
 
     if (nCutLayers > 0)
     {

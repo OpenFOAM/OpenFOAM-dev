@@ -25,8 +25,6 @@ License
 
 #include "points.H"
 #include "meshSearch.H"
-#include "DynamicList.H"
-#include "polyMesh.H"
 #include "sampledSetCloud.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -47,7 +45,6 @@ namespace sampledSets
 void Foam::sampledSets::points::calcSamples
 (
     const polyMesh& mesh,
-    const meshSearch& searchEngine,
     const pointField& points,
     DynamicList<point>& samplingPositions,
     DynamicList<scalar>& samplingDistances,
@@ -56,6 +53,8 @@ void Foam::sampledSets::points::calcSamples
     DynamicList<label>& samplingFaces
 )
 {
+    const meshSearch& searchEngine = meshSearch::New(mesh);
+
     // Create a cloud with which to track segments
     sampledSetCloud particles
     (
@@ -127,7 +126,7 @@ void Foam::sampledSets::points::calcSamples
                 (
                     new sampledSetParticle
                     (
-                        mesh,
+                        searchEngine,
                         points[pointi],
                         procAndCelli.second(),
                         nLocateBoundaryHits,
@@ -180,10 +179,12 @@ void Foam::sampledSets::points::calcSamples
 {
     if (!ordered_)
     {
+        const meshSearch& searchEngine = meshSearch::New(mesh());
+
         forAll(points_, i)
         {
             const point& pt = points_[i];
-            const label celli = searchEngine().findCell(pt);
+            const label celli = searchEngine.findCell(pt);
 
             if (celli != -1)
             {
@@ -199,7 +200,6 @@ void Foam::sampledSets::points::calcSamples
         calcSamples
         (
             mesh(),
-            searchEngine(),
             pointField(points_),
             samplingPositions,
             samplingDistances,
@@ -217,11 +217,10 @@ Foam::sampledSets::points::points
 (
     const word& name,
     const polyMesh& mesh,
-    const meshSearch& searchEngine,
     const dictionary& dict
 )
 :
-    sampledSet(name, mesh, searchEngine, dict),
+    sampledSet(name, mesh, dict),
     points_(dict.lookup("points")),
     ordered_(dict.lookup<bool>("ordered"))
 {}

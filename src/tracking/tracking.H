@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,6 +45,7 @@ SourceFiles
 namespace Foam
 {
 
+class meshSearch;
 class wedgePolyPatch;
 class cyclicPolyPatch;
 class processorPolyPatch;
@@ -158,11 +159,25 @@ namespace tracking
 // Initialisation
 
     //- Initialise the location at the given position. Returns whether or not a
-    //  boundary was hit. The cell index should be initialised to -1, or the
-    //  index of the cell.
+    //  boundary was hit. The cell index must be valid.
     bool locate
     (
         const polyMesh& mesh,
+        const point& position,
+        barycentric& coordinates,
+        label& celli,
+        label& facei,
+        label& faceTrii,
+        const scalar stepFraction,
+        const string& debugPrefix = NullObjectRef<string>()
+    );
+
+    //- Initialise the location at the given position. Returns whether or not a
+    //  boundary was hit. The cell index may be invalid, in which case a tree
+    //  search is performed to find the cell containing the position.
+    bool locate
+    (
+        const meshSearch& searchEngine,
         const point& position,
         barycentric& coordinates,
         label& celli,

@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "containsPoints.H"
-#include "polyMesh.H"
+#include "meshSearch.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -67,13 +67,15 @@ Foam::zoneGenerators::containsPoints::~containsPoints()
 
 Foam::zoneSet Foam::zoneGenerators::containsPoints::generate() const
 {
+    const meshSearch& searchEngine = meshSearch::New(mesh_);
+
     labelList cellIndices(points_.size());
 
     label czi = 0;
 
     forAll(points_, i)
     {
-        const label celli = mesh_.findCell(points_[i]);
+        const label celli = searchEngine.findCell(points_[i]);
         if (celli >= 0)
         {
             cellIndices[czi++] = celli;

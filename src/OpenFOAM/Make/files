@@ -564,7 +564,6 @@ $(primitiveMesh)/primitiveMeshEdgeCells.C
 $(primitiveMesh)/primitiveMeshEdgeFaces.C
 $(primitiveMesh)/primitiveMeshEdges.C
 $(primitiveMesh)/primitiveMeshFaceCentresAndAreas.C
-$(primitiveMesh)/primitiveMeshFindCell.C
 $(primitiveMesh)/primitiveMeshPointCells.C
 $(primitiveMesh)/primitiveMeshPointFaces.C
 $(primitiveMesh)/primitiveMeshPointPoints.C
@@ -728,6 +727,7 @@ $(interpolationWeights)/linearInterpolationWeights/linearInterpolationWeights.C
 $(interpolationWeights)/stepInterpolationWeights/stepInterpolationWeights.C
 $(interpolationWeights)/splineInterpolationWeights/splineInterpolationWeights.C
 
+algorithms/pointInCell/pointInCell.C
 algorithms/indexedOctree/indexedOctreeName.C
 algorithms/indexedOctree/treeDataCell.C
 algorithms/indexedOctree/volumeType.C

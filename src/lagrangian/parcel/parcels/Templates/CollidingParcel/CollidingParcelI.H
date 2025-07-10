@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,6 +22,8 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 \*---------------------------------------------------------------------------*/
+
+#include "CollidingParcel.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -81,13 +83,13 @@ inline Foam::CollidingParcel<ParcelType>::CollidingParcel
 template<class ParcelType>
 inline Foam::CollidingParcel<ParcelType>::CollidingParcel
 (
-    const polyMesh& mesh,
+    const meshSearch& searchEngine,
     const vector& position,
     const label celli,
     label& nLocateBoundaryHits
 )
 :
-    ParcelType(mesh, position, celli, nLocateBoundaryHits),
+    ParcelType(searchEngine, position, celli, nLocateBoundaryHits),
     f_(Zero),
     angularMomentum_(Zero),
     torque_(Zero),

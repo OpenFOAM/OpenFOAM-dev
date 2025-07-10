@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,7 @@ License
 #include "SurfaceFilmModel.H"
 #include "volFields.H"
 #include "surfaceFields.H"
+#include "meshSearch.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -95,6 +96,8 @@ template<class CloudType>
 template<class TrackCloudType>
 void Foam::SurfaceFilmModel<CloudType>::inject(TrackCloudType& cloud)
 {
+    const meshSearch& searchEngine = meshSearch::New(this->owner().mesh());
+
     const labelList& filmPatches = this->filmPatches();
 
     forAll(filmPatches, filmi)
@@ -135,7 +138,7 @@ void Foam::SurfaceFilmModel<CloudType>::inject(TrackCloudType& cloud)
                     parcelType* pPtr =
                         new parcelType
                         (
-                            this->owner().pMesh(),
+                            searchEngine,
                             pos,
                             celli,
                             nLocateBoundaryHits

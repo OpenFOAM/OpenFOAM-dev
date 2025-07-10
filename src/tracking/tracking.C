@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,8 +26,7 @@ License
 #include "tracking.H"
 #include "quadraticEqn.H"
 #include "cubicEqn.H"
-#include "indexedOctree.H"
-#include "treeDataCell.H"
+#include "meshSearch.H"
 
 #include "emptyPolyPatch.H"
 #include "wedgePolyPatch.H"
@@ -1601,11 +1600,6 @@ bool Foam::tracking::locate
     const string& debugPrefix
 )
 {
-    // Find the cell, if it has not been given
-    if (celli < 0)
-    {
-        celli = mesh.cellTree().findInside(position);
-    }
     if (celli < 0)
     {
         FatalErrorInFunction
@@ -1674,6 +1668,40 @@ bool Foam::tracking::locate
 
     // Return successful if in a cell
     return !onBoundaryAndF.first();
+}
+
+
+bool Foam::tracking::locate
+(
+    const meshSearch& searchEngine,
+    const point& position,
+    barycentric& coordinates,
+    label& celli,
+    label& facei,
+    label& faceTrii,
+    const scalar stepFraction,
+    const string& debugPrefix
+)
+{
+    // Find the cell, if it has not been given
+    if (celli < 0)
+    {
+        celli = searchEngine.findCell(position);
+    }
+
+    // Locate starting at the identified cell
+    return
+        locate
+        (
+            searchEngine.mesh(),
+            position,
+            coordinates,
+            celli,
+            facei,
+            faceTrii,
+            stepFraction,
+            debugPrefix
+        );
 }
 
 

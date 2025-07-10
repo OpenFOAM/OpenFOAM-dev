@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,11 +24,9 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "polyMesh.H"
-#include "Time.H"
 #include "primitiveMesh.H"
+#include "Time.H"
 #include "DynamicList.H"
-#include "indexedOctree.H"
-#include "treeDataCell.H"
 #include "globalMeshData.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -474,7 +472,6 @@ Foam::polyMesh::polyMesh
     geometricD_(Zero),
     solutionD_(Zero),
     tetBasePtIsPtr_(nullptr),
-    cellTreePtr_(nullptr),
     pointZones_
     (
         IOobject
@@ -752,7 +749,6 @@ Foam::polyMesh::polyMesh
     geometricD_(Zero),
     solutionD_(Zero),
     tetBasePtIsPtr_(nullptr),
-    cellTreePtr_(nullptr),
     pointZones_
     (
         IOobject

@@ -53,7 +53,6 @@ namespace Foam
 
 // Forward declaration of classes
 class polyMesh;
-class meshSearch;
 class polyTopoChangeMap;
 class polyMeshMap;
 class polyDistributionMap;
@@ -71,9 +70,6 @@ class sampledSet
 
         //- Reference to mesh
         const polyMesh& mesh_;
-
-        //- Reference to mesh searching class
-        const meshSearch& searchEngine_;
 
         //- Coordinate set
         mutable autoPtr<coordSet> coordsPtr_;
@@ -120,33 +116,29 @@ public:
             (
                 const word& name,
                 const polyMesh& mesh,
-                const meshSearch& searchEngine,
                 const dictionary& dict
             ),
-            (name, mesh, searchEngine, dict)
+            (name, mesh, dict)
         );
 
 
-        //- Class used for the read-construction of
-        //  PtrLists of sampledSet
+        //- Class used for the read-construction of PtrLists of sampledSet
         class iNew
         {
             const polyMesh& mesh_;
-            const meshSearch& searchEngine_;
 
         public:
 
-            iNew(const polyMesh& mesh, const meshSearch& searchEngine)
+            iNew(const polyMesh& mesh)
             :
-                mesh_(mesh),
-                searchEngine_(searchEngine)
+                mesh_(mesh)
             {}
 
             autoPtr<sampledSet> operator()(Istream& is) const
             {
                 word name(is);
                 dictionary dict(is);
-                return sampledSet::New(name, mesh_, searchEngine_, dict);
+                return sampledSet::New(name, mesh_, dict);
             }
         };
 
@@ -158,7 +150,6 @@ public:
         (
             const word& name,
             const polyMesh& mesh,
-            const meshSearch& searchEngine,
             const word& axis
         );
 
@@ -167,7 +158,6 @@ public:
         (
             const word& name,
             const polyMesh& mesh,
-            const meshSearch& searchEngine,
             const dictionary& dict
         );
 
@@ -186,7 +176,6 @@ public:
         (
             const word& name,
             const polyMesh& mesh,
-            const meshSearch& searchEngine,
             const dictionary& dict
         );
 
@@ -202,9 +191,6 @@ public:
 
         //- Access the mesh
         inline const polyMesh& mesh() const;
-
-        //- Access the search engine
-        inline const meshSearch& searchEngine() const;
 
         //- Access the coordinate set
         inline const coordSet& coords() const;

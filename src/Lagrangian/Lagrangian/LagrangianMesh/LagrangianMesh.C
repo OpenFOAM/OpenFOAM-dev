@@ -30,10 +30,10 @@ License
 #include "LagrangianMeshLocation.H"
 #include "LagrangianModels.H"
 #include "ListOps.H"
+#include "meshSearch.H"
 #include "meshObjects.H"
 #include "Time.H"
 #include "tracking.H"
-#include "treeDataCell.H"
 #include "debug.H"
 
 #include "internalLagrangianPatch.H"
@@ -1324,9 +1324,11 @@ Foam::LagrangianMesh::location Foam::LagrangianMesh::locate
     const scalar fraction
 ) const
 {
+    const meshSearch& searchEngine = meshSearch::New(mesh());
+
     // Look for a containing cell and set the process if found
     remote procCelli;
-    procCelli.elementi = mesh().cellTree().findInside(position);
+    procCelli.elementi = searchEngine.findCell(position);
     procCelli.proci = procCelli.elementi >= 0 ? Pstream::myProcNo() : -1;
 
     // Pick a unique processor
@@ -1339,7 +1341,7 @@ Foam::LagrangianMesh::location Foam::LagrangianMesh::locate
         result =
             tracking::locate
             (
-                mesh_, position,
+                searchEngine, position,
                 coordinates, celli, facei, faceTrii, fraction
             )
           ? location::inCell
@@ -1363,11 +1365,13 @@ Foam::List<Foam::LagrangianMesh::location> Foam::LagrangianMesh::locate
     const scalarList& fraction
 ) const
 {
+    const meshSearch& searchEngine = meshSearch::New(mesh());
+
     // Look for containing cells and set the process if found
     List<remote> procCelli(position.size());
     forAll(position, i)
     {
-        procCelli[i].elementi = mesh().cellTree().findInside(position[0]);
+        procCelli[i].elementi = searchEngine.findCell(position[i]);
         procCelli[i].proci =
             procCelli[i].elementi >= 0 ? Pstream::myProcNo() : -1;
     }
@@ -1384,7 +1388,7 @@ Foam::List<Foam::LagrangianMesh::location> Foam::LagrangianMesh::locate
         result =
             tracking::locate
             (
-                mesh_, position[i],
+                searchEngine, position[i],
                 coordinates[i], celli[i], facei[i], faceTrii[i], fraction[i]
             )
           ? location::inCell

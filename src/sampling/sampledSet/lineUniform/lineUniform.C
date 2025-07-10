@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "lineUniform.H"
-#include "meshSearch.H"
 #include "DynamicList.H"
 #include "polyMesh.H"
 #include "sampledSetCloud.H"
@@ -62,7 +61,6 @@ void Foam::sampledSets::lineUniform::calcSamples
     points::calcSamples
     (
         mesh(),
-        searchEngine(),
         points,
         samplingPositions,
         samplingDistances,
@@ -85,11 +83,10 @@ Foam::sampledSets::lineUniform::lineUniform
 (
     const word& name,
     const polyMesh& mesh,
-    const meshSearch& searchEngine,
     const dictionary& dict
 )
 :
-    sampledSet(name, mesh, searchEngine, dict),
+    sampledSet(name, mesh, dict),
     start_(dict.lookup("start")),
     end_(dict.lookup("end")),
     nPoints_(dict.lookup<label>("nPoints"))

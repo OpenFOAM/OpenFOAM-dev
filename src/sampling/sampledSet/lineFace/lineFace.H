@@ -105,7 +105,6 @@ public:
         static void calcSamples
         (
             const polyMesh& mesh,
-            const meshSearch& searchEngine,
             const vector& start,
             const vector& end,
             const label storeFaces,
@@ -125,7 +124,6 @@ public:
         (
             const word& name,
             const polyMesh& mesh,
-            const meshSearch& searchEngine,
             const dictionary& dict
         );
 

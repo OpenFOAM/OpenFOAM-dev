@@ -36,6 +36,7 @@ License
 #include "wallPolyPatch.H"
 #include "nonConformalCyclicPolyPatch.H"
 #include "cpuLoad.H"
+#include "meshSearch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -485,6 +486,8 @@ void Foam::lagrangian::Cloud<ParticleType>::topoChange
 
     const vectorField& positions = globalPositionsPtr_();
 
+    const meshSearch& searchEngine = meshSearch::New(pMesh_);
+
     label lostCount = 0;
 
     label particlei = 0;
@@ -494,7 +497,7 @@ void Foam::lagrangian::Cloud<ParticleType>::topoChange
 
         const label celli = map.reverseCellMap()[iter().cell()];
 
-        if (!iter().locate(pMesh_, pos, celli))
+        if (!iter().locate(searchEngine, pos, celli))
         {
             this->remove(iter);
             lostCount ++;
@@ -533,6 +536,8 @@ void Foam::lagrangian::Cloud<ParticleType>::mapMesh(const polyMeshMap& map)
 
     const vectorField& positions = globalPositionsPtr_();
 
+    const meshSearch& searchEngine = meshSearch::New(pMesh_);
+
     label lostCount = 0;
 
     // Loop the particles. Map those that remain on this processor, and
@@ -558,7 +563,7 @@ void Foam::lagrangian::Cloud<ParticleType>::mapMesh(const polyMeshMap& map)
             }
             else if (proci == Pstream::myProcNo())
             {
-                if (!iter().locate(pMesh_, pos, celli))
+                if (!iter().locate(searchEngine, pos, celli))
                 {
                     this->remove(iter);
                     lostCount ++;
@@ -615,7 +620,7 @@ void Foam::lagrangian::Cloud<ParticleType>::mapMesh(const polyMeshMap& map)
                     const label celli = receiveCellIndices[particlei];
                     const vector& pos = receivePositions[particlei ++];
 
-                    if (iter().locate(pMesh_, pos, celli))
+                    if (iter().locate(searchEngine, pos, celli))
                     {
                         this->append(receiveParticles.remove(iter));
                     }
@@ -661,6 +666,8 @@ void Foam::lagrangian::Cloud<ParticleType>::distribute
             << "Cloud::storeGlobalPositions has not been called."
             << exit(FatalError);
     }
+
+    const meshSearch& searchEngine = meshSearch::New(pMesh_);
 
     const vectorField& positions = globalPositionsPtr_();
 
@@ -734,7 +741,7 @@ void Foam::lagrangian::Cloud<ParticleType>::distribute
         {
             const point& pos = cellParticlePositions[celli][cellParticlei++];
 
-            if (iter().locate(pMesh_, pos, celli))
+            if (iter().locate(searchEngine, pos, celli))
             {
                 this->append(cellParticles[celli].remove(iter));
             }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,9 +64,9 @@ class treeDataFace
         static scalar tolSqr;
 
 
-
     // Private Data
 
+        //- Reference to the mesh
         const primitiveMesh& mesh_;
 
         //- Subset of faces to work on
@@ -91,7 +91,6 @@ class treeDataFace
         void update();
 
 public:
-
 
     class findNearestOp
     {

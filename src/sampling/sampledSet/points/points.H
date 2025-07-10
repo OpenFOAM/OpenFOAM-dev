@@ -119,7 +119,6 @@ public:
         static void calcSamples
         (
             const polyMesh& mesh,
-            const meshSearch& searchEngine,
             const pointField& points,
             DynamicList<point>& samplingPositons,
             DynamicList<scalar>& samplingDistances,
@@ -136,7 +135,6 @@ public:
         (
             const word& name,
             const polyMesh& mesh,
-            const meshSearch& searchEngine,
             const dictionary& dict
         );
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ License
 
 #include "InjectionModel.H"
 #include "meshTools.H"
+#include "meshSearch.H"
 #include "volFields.H"
 #include "Scale.H"
 
@@ -212,6 +213,7 @@ Foam::label Foam::InjectionModel<CloudType>::index() const
 template<class CloudType>
 bool Foam::InjectionModel<CloudType>::findCellAtPosition
 (
+    const meshSearch& searchEngine,
     const point& position,
     barycentric& coordinates,
     label& celli,
@@ -221,10 +223,10 @@ bool Foam::InjectionModel<CloudType>::findCellAtPosition
 )
 {
     // Subroutine for finding the cell
-    auto findProcAndCell = [this](const point& pos)
+    auto findProcAndCell = [this,&searchEngine](const point& pos)
     {
         // Find the containing cell
-        label celli = this->owner().mesh().findCell(pos);
+        label celli = searchEngine.findCell(pos);
 
         // Synchronise so only a single processor finds this position
         label proci = celli >= 0 ? Pstream::myProcNo() : -1;
@@ -272,7 +274,7 @@ bool Foam::InjectionModel<CloudType>::findCellAtPosition
     if (proci == Pstream::myProcNo())
     {
         label nLocateBoundaryHits = 0;
-        particle p(this->owner().mesh(), pos, celli, nLocateBoundaryHits);
+        particle p(searchEngine, pos, celli, nLocateBoundaryHits);
 
         if (nLocateBoundaryHits != 0)
         {
@@ -604,6 +606,8 @@ void Foam::InjectionModel<CloudType>::inject
 {
     const polyMesh& mesh = this->owner().mesh();
 
+    const meshSearch& searchEngine = meshSearch::New(mesh);
+
     const scalar time1 = this->owner().db().time().value();
     const scalar time0 =
         this->owner().db().time().value()
@@ -685,6 +689,7 @@ void Foam::InjectionModel<CloudType>::inject
             label celli = -1, tetFacei = -1, tetPti = -1, facei = -1;
             setPositionAndCell
             (
+                searchEngine,
                 parceli,
                 nParcels,
                 timeInj,
@@ -780,6 +785,8 @@ void Foam::InjectionModel<CloudType>::injectSteadyState
 {
     const polyMesh& mesh = this->owner().mesh();
 
+    const meshSearch& searchEngine = meshSearch::New(mesh);
+
     preInject(td);
 
     // Reset counters
@@ -802,6 +809,7 @@ void Foam::InjectionModel<CloudType>::injectSteadyState
             label celli = -1, tetFacei = -1, tetPti = -1, facei = -1;
             setPositionAndCell
             (
+                searchEngine,
                 parceli,
                 nParcels,
                 0,

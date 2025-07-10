@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,13 +89,13 @@ inline Foam::ReactingMultiphaseParcel<ParcelType>::ReactingMultiphaseParcel
 template<class ParcelType>
 inline Foam::ReactingMultiphaseParcel<ParcelType>::ReactingMultiphaseParcel
 (
-    const polyMesh& mesh,
+    const meshSearch& searchEngine,
     const vector& position,
     const label celli,
     label& nLocateBoundaryHits
 )
 :
-    ParcelType(mesh, position, celli, nLocateBoundaryHits),
+    ParcelType(searchEngine, position, celli, nLocateBoundaryHits),
     mass0_(0),
     YGas_(0),
     YLiquid_(0),

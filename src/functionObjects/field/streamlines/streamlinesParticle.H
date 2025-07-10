@@ -208,10 +208,11 @@ public:
 
     // Constructors
 
-        //- Construct from components
+        //- Construct from a position and a cell, searching for the rest of the
+        //  required topology
         streamlinesParticle
         (
-            const polyMesh& mesh,
+            const meshSearch& searchEngine,
             const vector& position,
             const label celli,
             label& nLocateBoundaryHits,

@@ -25,7 +25,6 @@ License
 
 #include "sampledSet.H"
 #include "polyMesh.H"
-#include "meshSearch.H"
 #include "lineCell.H"
 #include "lineCellFace.H"
 #include "lineFace.H"
@@ -105,13 +104,11 @@ Foam::sampledSet::sampledSet
 (
     const word& name,
     const polyMesh& mesh,
-    const meshSearch& searchEngine,
     const word& axis
 )
 :
     name_(name),
     mesh_(mesh),
-    searchEngine_(searchEngine),
     coordsPtr_(nullptr),
     cellsPtr_(),
     facesPtr_(),
@@ -123,13 +120,11 @@ Foam::sampledSet::sampledSet
 (
     const word& name,
     const polyMesh& mesh,
-    const meshSearch& searchEngine,
     const dictionary& dict
 )
 :
     name_(name),
     mesh_(mesh),
-    searchEngine_(searchEngine),
     coordsPtr_(),
     cellsPtr_(),
     facesPtr_(),
@@ -159,7 +154,6 @@ Foam::autoPtr<Foam::sampledSet> Foam::sampledSet::New
 (
     const word& name,
     const polyMesh& mesh,
-    const meshSearch& searchEngine,
     const dictionary& dict
 )
 {
@@ -210,7 +204,6 @@ Foam::autoPtr<Foam::sampledSet> Foam::sampledSet::New
         (
             name,
             mesh,
-            searchEngine,
             dict.optionalSubDict(sampleType + "Coeffs")
         )
     );

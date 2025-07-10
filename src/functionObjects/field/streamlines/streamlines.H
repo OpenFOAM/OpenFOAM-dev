@@ -105,7 +105,6 @@ SourceFiles
 #define streamlines_functionObject_H
 
 #include "fvMeshFunctionObject.H"
-#include "meshSearch.H"
 #include "setWriter.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -176,9 +175,6 @@ private:
 
         //- Write the streamlines ages
         Switch writeAge_;
-
-        //- Mesh searching engine
-        meshSearch searchEngine_;
 
         //- Seed set engine
         autoPtr<sampledSet> sampledSetPtr_;

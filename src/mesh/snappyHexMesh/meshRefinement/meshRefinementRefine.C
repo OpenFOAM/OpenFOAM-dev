@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,7 @@ License
 #include "Cloud.H"
 #include "OBJstream.H"
 #include "cellSet.H"
-#include "treeDataCell.H"
+#include "meshSearch.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -332,7 +332,6 @@ void Foam::meshRefinement::markFeatureCellLevel
     //    visited cells with their level (through trackingData)
     // 5. do 4 until all edges have been visited.
 
-
     // Find all start cells of features.
     // Is done by tracking from insidePoint.
     lagrangian::Cloud<trackedParticle> startPointCloud
@@ -342,18 +341,18 @@ void Foam::meshRefinement::markFeatureCellLevel
         IDLList<trackedParticle>()
     );
 
-
     // Features are identical on all processors. Number them so we know
     // what to seed. Do this on only the processor that
     // holds the insidePoint.
-
     label nLocateBoundaryHits = 0;
+
+    const meshSearch& searchEngine = meshSearch::New(mesh());
 
     forAll(insidePoints, i)
     {
         const point& insidePoint = insidePoints[i];
 
-        const label celli = mesh_.cellTree().findInside(insidePoint);
+        const label celli = searchEngine.findCell(insidePoint);
 
         if (celli != -1)
         {
@@ -394,7 +393,7 @@ void Foam::meshRefinement::markFeatureCellLevel
                         (
                             new trackedParticle
                             (
-                                mesh_,
+                                searchEngine,
                                 insidePoint,
                                 celli,
                                 nLocateBoundaryHits,
@@ -438,7 +437,7 @@ void Foam::meshRefinement::markFeatureCellLevel
                         (
                             new trackedParticle
                             (
-                                mesh_,
+                                searchEngine,
                                 insidePoint,
                                 celli,
                                 nLocateBoundaryHits,

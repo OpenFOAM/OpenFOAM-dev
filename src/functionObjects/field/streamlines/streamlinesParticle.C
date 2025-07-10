@@ -129,7 +129,7 @@ void Foam::streamlinesParticle::endTrack(trackingData& td)
 
 Foam::streamlinesParticle::streamlinesParticle
 (
-    const polyMesh& mesh,
+    const meshSearch& searchEngine,
     const vector& position,
     const label celli,
     label& nLocateBoundaryHits,
@@ -137,7 +137,7 @@ Foam::streamlinesParticle::streamlinesParticle
     const label trackIndex
 )
 :
-    particle(mesh, position, celli, nLocateBoundaryHits),
+    particle(searchEngine, position, celli, nLocateBoundaryHits),
     lifeTime_(lifeTime),
     trackIndex_(trackIndex),
     trackPartIndex_(0),

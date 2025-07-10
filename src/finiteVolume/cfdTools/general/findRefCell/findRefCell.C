@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "findRefCell.H"
+#include "meshSearch.H"
 
 // * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
 
@@ -69,17 +70,24 @@ bool Foam::setRefCell
         {
             point refPointi(dict.lookup(refPointName));
 
-            // Try fast approximate search avoiding octree construction
-            refCelli = field.mesh().findCell(refPointi, polyMesh::FACE_PLANES);
+            // Try a linear search with approximate face-planes test to avoid
+            // octree and tet-base-point construction
+            refCelli =
+                meshSearch::findCellNoTree
+                (
+                    field.mesh(),
+                    refPointi,
+                    pointInCellShapes::facePlanes
+                );
 
             label hasRef = (refCelli >= 0 ? 1 : 0);
             label sumHasRef = returnReduce<label>(hasRef, sumOp<label>());
 
-            // If reference cell no found use octree search
-            // with cell tet-decomposition
+            // If a reference cell was not found then use a robust cell-tet
+            // test with an octree search
             if (sumHasRef != 1)
             {
-                refCelli = field.mesh().findCell(refPointi);
+                refCelli = meshSearch::New(field.mesh()).findCell(refPointi);
 
                 hasRef = (refCelli >= 0 ? 1 : 0);
                 sumHasRef = returnReduce<label>(hasRef, sumOp<label>());

@@ -25,9 +25,7 @@ License
 
 #include "lineFace.H"
 #include "meshSearch.H"
-#include "DynamicList.H"
-#include "polyMesh.H"
-#include "treeDataCell.H"
+#include "meshBoundarySearch.H"
 #include "sampledSetCloud.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -48,7 +46,6 @@ namespace sampledSets
 void Foam::sampledSets::lineFace::calcSamples
 (
     const polyMesh& mesh,
-    const meshSearch& searchEngine,
     const vector& start,
     const vector& end,
     const label storeFaces,
@@ -60,6 +57,11 @@ void Foam::sampledSets::lineFace::calcSamples
     DynamicList<label>& samplingFaces
 )
 {
+    const meshSearch& searchEngine =
+        meshSearch::New(mesh);
+    const meshBoundarySearch& boundarySearchEngine =
+        meshBoundarySearch::New(mesh);
+
     // Get all candidates for starting the tracks
     List<DynamicList<label>> procCandidateCells(Pstream::nProcs());
     List<DynamicList<scalar>> procCandidateTs(Pstream::nProcs());
@@ -79,7 +81,7 @@ void Foam::sampledSets::lineFace::calcSamples
         }
 
         const List<pointIndexHit> bHits =
-            searchEngine.intersections(start, end);
+            boundarySearchEngine.intersections(start, end);
         forAll(bHits, bHiti)
         {
             for (label bHitj = bHiti + 1; bHitj < bHits.size(); ++ bHitj)
@@ -158,7 +160,7 @@ void Foam::sampledSets::lineFace::calcSamples
                     (
                         new sampledSetParticle
                         (
-                            mesh,
+                            searchEngine,
                             p,
                             celli,
                             nLocateBoundaryHits,
@@ -208,7 +210,13 @@ void Foam::sampledSets::lineFace::calcSamples
                 // the tracks
                 if (proci == Pstream::myProcNo() && i == 0 && storeCells)
                 {
-                    particle trackBwd(mesh, p, celli, nLocateBoundaryHits);
+                    particle trackBwd
+                    (
+                        searchEngine,
+                        p,
+                        celli,
+                        nLocateBoundaryHits
+                    );
                     particle trackFwd(trackBwd);
                     trackBwd.trackToFace(mesh, start - p, 0);
                     trackFwd.trackToFace(mesh, end - p, 0);
@@ -280,7 +288,6 @@ void Foam::sampledSets::lineFace::calcSamples
     calcSamples
     (
         mesh(),
-        searchEngine(),
         start_,
         end_,
         1,
@@ -300,11 +307,10 @@ Foam::sampledSets::lineFace::lineFace
 (
     const word& name,
     const polyMesh& mesh,
-    const meshSearch& searchEngine,
     const dictionary& dict
 )
 :
-    sampledSet(name, mesh, searchEngine, dict),
+    sampledSet(name, mesh, dict),
     start_(dict.lookup("start")),
     end_(dict.lookup("end"))
 {}

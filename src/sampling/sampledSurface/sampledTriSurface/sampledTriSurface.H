@@ -96,7 +96,6 @@ namespace Foam
 {
 
 class treeDataFace;
-class meshSearch;
 
 namespace sampledSurfaces
 {
@@ -111,6 +110,9 @@ class triSurface
     public MeshedSurface<face>
 {
 public:
+
+    // Public Typedefs
+
         //- Types of communications
         enum samplingSource
         {
@@ -119,16 +121,13 @@ public:
             boundaryFaces,
         };
 
+        //- Names of communication types
+        static const NamedEnum<samplingSource, 3> samplingSourceNames_;
+
+
 private:
 
-    // Private Typedefs
-
-        typedef MeshedSurface<face> MeshStorage;
-
-
     // Private Data
-
-        static const NamedEnum<samplingSource, 3> samplingSourceNames_;
 
         //- Surface to sample on
         const searchableSurfaces::triSurface surface_;
@@ -154,19 +153,18 @@ private:
         //- Get tree of all non-coupled boundary faces
         const indexedOctree<treeDataFace>& nonCoupledboundaryTree() const;
 
-        //- Sample field on faces
+        //- Sample field on surface
         template<class Type>
         tmp<Field<Type>> sampleField
         (
             const VolField<Type>& vField
         ) const;
 
-
+        //- Interpolate field on surface
         template<class Type>
         tmp<Field<Type>>
         interpolateField(const interpolation<Type>&) const;
 
-        bool update(const meshSearch& meshSearcher);
 
 public:
 
@@ -221,21 +219,16 @@ public:
         //  Do nothing (and return false) if no update was needed
         virtual bool update();
 
-        //- Update the surface using a bound box to limit the searching.
-        //  For direct use, i.e. not through sample.
-        //  Do nothing (and return false) if no update was needed
-        bool update(const treeBoundBox&);
-
         //- Points of surface
         virtual const pointField& points() const
         {
-            return MeshStorage::points();
+            return MeshedSurface<face>::points();
         }
 
         //- Faces of surface
         virtual const faceList& faces() const
         {
-            return MeshStorage::faces();
+            return MeshedSurface<face>::faces();
         }
 
 
@@ -275,7 +268,6 @@ public:
         (
             const interpolation<scalar>&
         ) const;
-
 
         //- Interpolate field on surface
         virtual tmp<vectorField> interpolate

@@ -186,11 +186,10 @@ Foam::sampledSets::boundaryPoints::boundaryPoints
 (
     const word& name,
     const polyMesh& mesh,
-    const meshSearch& searchEngine,
     const dictionary& dict
 )
 :
-    sampledSet(name, mesh, searchEngine, dict),
+    sampledSet(name, mesh, dict),
     points_(dict.lookup("points")),
     patches_(dict.lookup("patches")),
     maxDistance_(dict.lookup<scalar>("maxDistance"))

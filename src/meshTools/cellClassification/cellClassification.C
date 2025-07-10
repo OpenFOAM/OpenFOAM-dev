@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,9 +25,8 @@ License
 
 #include "cellClassification.H"
 #include "triSurfaceSearch.H"
-#include "indexedOctree.H"
-#include "treeDataFace.H"
 #include "meshSearch.H"
+#include "treeDataFace.H"
 #include "cellInfo.H"
 #include "polyMesh.H"
 #include "FaceCellWave.H"
@@ -246,13 +245,11 @@ Foam::boolList Foam::cellClassification::markFaces
 // 'outside'
 void Foam::cellClassification::markCells
 (
-    const meshSearch& queryMesh,
     const boolList& piercedFace,
     const List<point>& outsidePts
 )
 {
     // Use meshwave to partition mesh, starting from outsidePt
-
 
     // Construct null; sets type to NOTSET
     List<cellInfo> cellInfoList(mesh_.nCells());
@@ -273,6 +270,7 @@ void Foam::cellClassification::markCells
         }
     }
 
+
     //
     // Mark cells containing outside points as being outside
     //
@@ -283,7 +281,7 @@ void Foam::cellClassification::markCells
     forAll(outsidePts, outsidePtI)
     {
         // Use linear search for points.
-        label celli = queryMesh.findCell(outsidePts[outsidePtI], -1, false);
+        label celli = meshSearch::findCellNoTree(mesh_, outsidePts[outsidePtI]);
 
         if (returnReduce(celli, maxOp<label>()) == -1)
         {
@@ -480,7 +478,6 @@ void Foam::cellClassification::getMeshOutside
 Foam::cellClassification::cellClassification
 (
     const polyMesh& mesh,
-    const meshSearch& meshQuery,
     const triSurfaceSearch& surfQuery,
     const List<point>& outsidePoints
 )
@@ -488,12 +485,7 @@ Foam::cellClassification::cellClassification
     labelList(mesh.nCells(), cellClassification::NOTSET),
     mesh_(mesh)
 {
-    markCells
-    (
-        meshQuery,
-        markFaces(surfQuery),
-        outsidePoints
-    );
+    markCells(markFaces(surfQuery), outsidePoints);
 }
 
 

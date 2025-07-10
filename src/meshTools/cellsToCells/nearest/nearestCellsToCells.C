@@ -25,8 +25,7 @@ License
 
 #include "nearestCellsToCells.H"
 #include "pointIndexHit.H"
-#include "indexedOctree.H"
-#include "treeDataCell.H"
+#include "meshSearch.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -56,6 +55,8 @@ bool Foam::cellsToCellss::nearest::findInitialSeeds
 {
     const vectorField& srcCcs = srcMesh.cellCentres();
 
+    const meshSearch& tgtSearchEngine = meshSearch::New(tgtMesh);
+
     for (label i = startSeedI; i < srcCellIDs.size(); i++)
     {
         label srcI = srcCellIDs[i];
@@ -63,8 +64,9 @@ bool Foam::cellsToCellss::nearest::findInitialSeeds
         if (mapFlag[srcI])
         {
             const point& srcCc = srcCcs[srcI];
+
             pointIndexHit hit =
-                tgtMesh.cellTree().findNearest(srcCc, great);
+                tgtSearchEngine.cellTree().findNearest(srcCc, great);
 
             if (hit.hit())
             {

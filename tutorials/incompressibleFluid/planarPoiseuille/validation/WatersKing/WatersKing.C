@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,6 +45,7 @@ Description
 #include "argList.H"
 #include "viscosityModel.H"
 #include "incompressibleMomentumTransportModel.H"
+#include "meshSearch.H"
 #include "OFstream.H"
 
 using namespace Foam;
@@ -68,7 +69,7 @@ int main(int argc, char *argv[])
     const label centrelineID = mesh.boundary().findIndex("centreline");
     const vector patchToCell =
         mesh.boundary()[centrelineID].Cf()[0]
-      - mesh.C()[mesh.findNearestCell(location)];
+      - mesh.C()[meshSearch::findNearestCellNoTree(mesh, location)];
 
     const scalar y = patchToCell.y()/h;
     Info<< "Normalised distance from centreline = " << y << nl << endl;

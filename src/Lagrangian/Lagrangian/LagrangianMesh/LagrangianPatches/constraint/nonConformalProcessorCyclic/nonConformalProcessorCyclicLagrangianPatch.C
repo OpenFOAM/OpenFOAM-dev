@@ -25,6 +25,7 @@ License
 
 #include "nonConformalProcessorCyclicLagrangianPatch.H"
 #include "LagrangianFields.H"
+#include "meshSearch.H"
 #include "RemoteData.H"
 #include "tracking.H"
 #include "addToRunTimeSelectionTable.H"
@@ -110,6 +111,8 @@ void Foam::nonConformalProcessorCyclicLagrangianPatch::evaluate
     const LagrangianScalarInternalDynamicField& fraction
 ) const
 {
+    const meshSearch& searchEngine = meshSearch::New(mesh.mesh());
+
     // Receive
     UIPstream uips(nonConformalProcessorCyclicPatch_.neighbProcNo(), pBufs);
     labelField receivePatchFace(uips);
@@ -134,7 +137,7 @@ void Foam::nonConformalProcessorCyclicLagrangianPatch::evaluate
         (
            !tracking::locate
             (
-                mesh.mesh(),
+                searchEngine,
                 receivePosition[i],
                 receiveCoordinates[i],
                 receiveCelli[i],

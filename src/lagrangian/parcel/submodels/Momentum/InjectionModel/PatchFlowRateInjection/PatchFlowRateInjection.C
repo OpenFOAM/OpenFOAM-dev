@@ -266,6 +266,7 @@ Foam::scalar Foam::PatchFlowRateInjection<CloudType>::massToInject
 template<class CloudType>
 void Foam::PatchFlowRateInjection<CloudType>::setPositionAndCell
 (
+    const meshSearch&,
     const label,
     const label,
     const scalar,

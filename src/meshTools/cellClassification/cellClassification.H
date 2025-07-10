@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,7 +92,6 @@ SourceFiles
 #ifndef cellClassification_H
 #define cellClassification_H
 
-#include "Map.H"
 #include "boolList.H"
 #include "labelList.H"
 #include "faceList.H"
@@ -104,7 +103,6 @@ namespace Foam
 
 // Forward declaration of classes
 class triSurfaceSearch;
-class meshSearch;
 class polyMesh;
 class primitiveMesh;
 
@@ -165,7 +163,6 @@ private:
         //  domains.
         void markCells
         (
-            const meshSearch& queryMesh,
             const boolList& piercedFace,
             const List<point>& outsidePts
         );
@@ -202,7 +199,6 @@ public:
         cellClassification
         (
             const polyMesh& mesh,
-            const meshSearch& meshQuery,
             const triSurfaceSearch& surfQuery,
             const List<point>& outsidePoints
         );

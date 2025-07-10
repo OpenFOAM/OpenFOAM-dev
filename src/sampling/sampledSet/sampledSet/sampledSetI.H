@@ -39,12 +39,6 @@ inline const Foam::polyMesh& Foam::sampledSet::mesh() const
 }
 
 
-inline const Foam::meshSearch& Foam::sampledSet::searchEngine() const
-{
-    return searchEngine_;
-}
-
-
 inline const Foam::coordSet& Foam::sampledSet::coords() const
 {
     if (!coordsPtr_.valid())

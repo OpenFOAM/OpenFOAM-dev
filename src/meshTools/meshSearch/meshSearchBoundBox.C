@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,31 +23,33 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "meshSearchFACE_CENTRE_TRISMeshObject.H"
+#include "meshSearchBoundBox.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(meshSearchFACE_CENTRE_TRISMeshObject, 0);
+    defineTypeNameAndDebug(meshSearchBoundBox, 0);
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::meshSearchFACE_CENTRE_TRISMeshObject::
-meshSearchFACE_CENTRE_TRISMeshObject
-(
-    const polyMesh& mesh
-)
+Foam::meshSearchBoundBox::meshSearchBoundBox(const polyMesh& mesh)
 :
     DemandDrivenMeshObject
     <
         polyMesh,
         DeletableMeshObject,
-        meshSearchFACE_CENTRE_TRISMeshObject
+        meshSearchBoundBox
     >(mesh),
-    meshSearch(mesh, polyMesh::FACE_CENTRE_TRIS)
+    bb_(treeBoundBox(mesh.points()).extend(1e-4))
+{}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::meshSearchBoundBox::~meshSearchBoundBox()
 {}
 
 

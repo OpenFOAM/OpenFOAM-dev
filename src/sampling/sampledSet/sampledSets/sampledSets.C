@@ -100,7 +100,6 @@ Foam::functionObjects::sampledSets::sampledSets
        /(mesh_.name() != polyMesh::defaultRegion ? mesh_.name() : word())
        /name
     ),
-    searchEngine_(mesh_),
     interpolationScheme_(word::null),
     formatter_(nullptr)
 {
@@ -143,7 +142,6 @@ bool Foam::functionObjects::sampledSets::read(const dictionary& dict)
                 (
                     iter().keyword(),
                     mesh_,
-                    searchEngine_,
                     iter().dict()
                 )
             );
@@ -154,7 +152,7 @@ bool Foam::functionObjects::sampledSets::read(const dictionary& dict)
         PtrList<sampledSet> newList
         (
             dict.lookup("sets"),
-            sampledSet::iNew(mesh_, searchEngine_)
+            sampledSet::iNew(mesh_)
         );
         transfer(newList);
     }
@@ -281,8 +279,6 @@ void Foam::functionObjects::sampledSets::movePoints(const polyMesh& mesh)
 {
     if (&mesh == &mesh_)
     {
-        searchEngine_.correct();
-
         forAll(*this, seti)
         {
             operator[](seti).movePoints();
@@ -301,8 +297,6 @@ void Foam::functionObjects::sampledSets::topoChange
 {
     if (&map.mesh() == &mesh_)
     {
-        searchEngine_.correct();
-
         forAll(*this, seti)
         {
             operator[](seti).topoChange(map);
@@ -318,8 +312,6 @@ void Foam::functionObjects::sampledSets::mapMesh(const polyMeshMap& map)
 {
     if (&map.mesh() == &mesh_)
     {
-        searchEngine_.correct();
-
         forAll(*this, seti)
         {
             operator[](seti).mapMesh(map);
@@ -338,8 +330,6 @@ void Foam::functionObjects::sampledSets::distribute
 {
     if (&map.mesh() == &mesh_)
     {
-        searchEngine_.correct();
-
         forAll(*this, seti)
         {
             operator[](seti).distribute(map);

@@ -24,14 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "sphereRandom.H"
-#include "sampledSet.H"
 #include "meshSearch.H"
-#include "DynamicList.H"
-#include "polyMesh.H"
 #include "addToRunTimeSelectionTable.H"
-#include "word.H"
-#include "mathematicalConstants.H"
-#include "randomGenerator.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -56,6 +50,8 @@ void Foam::sampledSets::sphereRandom::calcSamples
     DynamicList<label>& samplingFaces
 ) const
 {
+    const meshSearch& searchEngine = meshSearch::New(mesh());
+
     randomGenerator rndGen(261782, true);
 
     for (label i = 0; i < nPoints_; ++ i)
@@ -70,7 +66,7 @@ void Foam::sampledSets::sphereRandom::calcSamples
         }
 
         const point pt = centre_ + dpt;
-        const label celli = searchEngine().findCell(pt);
+        const label celli = searchEngine.findCell(pt);
 
         if (celli != -1)
         {
@@ -89,11 +85,10 @@ Foam::sampledSets::sphereRandom::sphereRandom
 (
     const word& name,
     const polyMesh& mesh,
-    const meshSearch& searchEngine,
     const dictionary& dict
 )
 :
-    sampledSet(name, mesh, searchEngine, dict),
+    sampledSet(name, mesh, dict),
     centre_(dict.lookup("centre")),
     radius_(dict.lookup<scalar>("radius")),
     nPoints_(dict.lookup<label>("nPoints"))

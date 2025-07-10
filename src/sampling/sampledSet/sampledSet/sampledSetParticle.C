@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ License
 
 Foam::sampledSetParticle::sampledSetParticle
 (
-    const polyMesh& mesh,
+    const meshSearch& searchEngine,
     const point& position,
     const label celli,
     label& nLocateBoundaryHits,
@@ -39,7 +39,7 @@ Foam::sampledSetParticle::sampledSetParticle
     const scalar distance
 )
 :
-    particle(mesh, position, celli, nLocateBoundaryHits),
+    particle(searchEngine, position, celli, nLocateBoundaryHits),
     seti_(seti),
     setF_(setF),
     distance_(distance),

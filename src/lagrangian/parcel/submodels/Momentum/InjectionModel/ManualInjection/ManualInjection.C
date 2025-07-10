@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -117,6 +117,8 @@ Foam::ManualInjection<CloudType>::~ManualInjection()
 template<class CloudType>
 void Foam::ManualInjection<CloudType>::topoChange()
 {
+    const meshSearch& searchEngine = meshSearch::New(this->owner().mesh());
+
     label nRejected = 0;
 
     PackedBoolList keep(positions_.size(), true);
@@ -127,6 +129,7 @@ void Foam::ManualInjection<CloudType>::topoChange()
         (
             !this->findCellAtPosition
             (
+                searchEngine,
                 positions_[pI],
                 injectorCoordinates_[pI],
                 injectorCells_[pI],
@@ -205,6 +208,7 @@ Foam::scalar Foam::ManualInjection<CloudType>::massToInject
 template<class CloudType>
 void Foam::ManualInjection<CloudType>::setPositionAndCell
 (
+    const meshSearch& searchEngine,
     const label parcelI,
     const label,
     const scalar,

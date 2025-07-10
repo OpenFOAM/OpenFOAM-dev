@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "lineCell.H"
-#include "meshSearch.H"
 #include "DynamicList.H"
 #include "polyMesh.H"
 #include "addToRunTimeSelectionTable.H"
@@ -55,7 +54,6 @@ void Foam::sampledSets::lineCell::calcSamples
     lineFace::calcSamples
     (
         mesh(),
-        searchEngine(),
         start_,
         end_,
         0,
@@ -75,11 +73,10 @@ Foam::sampledSets::lineCell::lineCell
 (
     const word& name,
     const polyMesh& mesh,
-    const meshSearch& searchEngine,
     const dictionary& dict
 )
 :
-    sampledSet(name, mesh, searchEngine, dict),
+    sampledSet(name, mesh, dict),
     start_(dict.lookup("start")),
     end_(dict.lookup("end"))
 {}

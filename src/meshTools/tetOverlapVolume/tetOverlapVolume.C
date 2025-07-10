@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,8 +27,6 @@ License
 #include "polyMesh.H"
 #include "OFstream.H"
 #include "treeBoundBox.H"
-#include "indexedOctree.H"
-#include "treeDataCell.H"
 #include "cutTriTet.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -145,21 +143,6 @@ Foam::treeBoundBox Foam::tetOverlapVolume::pyrBb
 
 
 // * * * * * * * * * * * Public Member Functions  * * * * * * * * * * * * * //
-
-Foam::labelList Foam::tetOverlapVolume::overlappingCells
-(
-    const polyMesh& fromMesh,
-    const polyMesh& toMesh,
-    const label iTo
-) const
-{
-    const indexedOctree<treeDataCell>& treeA = fromMesh.cellTree();
-
-    treeBoundBox bbB(toMesh.points(), toMesh.cellPoints()[iTo]);
-
-    return treeA.findBox(bbB);
-}
-
 
 Foam::scalar Foam::tetOverlapVolume::cellVolumeMinDecomp
 (

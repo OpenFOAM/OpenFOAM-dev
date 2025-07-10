@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,14 +65,12 @@ Foam::treeDataCell::treeDataCell
 (
     const bool cacheBb,
     const polyMesh& mesh,
-    const labelUList& cellLabels,
-    const polyMesh::cellDecomposition decompMode
+    const labelUList& cellLabels
 )
 :
     mesh_(mesh),
     cellLabels_(cellLabels),
-    cacheBb_(cacheBb),
-    decompMode_(decompMode)
+    cacheBb_(cacheBb)
 {
     update();
 }
@@ -82,14 +80,12 @@ Foam::treeDataCell::treeDataCell
 (
     const bool cacheBb,
     const polyMesh& mesh,
-    labelList&& cellLabels,
-    const polyMesh::cellDecomposition decompMode
+    labelList&& cellLabels
 )
 :
     mesh_(mesh),
     cellLabels_(move(cellLabels)),
-    cacheBb_(cacheBb),
-    decompMode_(decompMode)
+    cacheBb_(cacheBb)
 {
     update();
 }
@@ -98,14 +94,12 @@ Foam::treeDataCell::treeDataCell
 Foam::treeDataCell::treeDataCell
 (
     const bool cacheBb,
-    const polyMesh& mesh,
-    const polyMesh::cellDecomposition decompMode
+    const polyMesh& mesh
 )
 :
     mesh_(mesh),
     cellLabels_(identityMap(mesh_.nCells())),
-    cacheBb_(cacheBb),
-    decompMode_(decompMode)
+    cacheBb_(cacheBb)
 {
     update();
 }
@@ -171,10 +165,11 @@ bool Foam::treeDataCell::overlaps
 bool Foam::treeDataCell::contains
 (
     const label index,
-    const point& sample
+    const point& sample,
+    const pointInCellShapes cellShapes
 ) const
 {
-    return mesh_.pointInCell(sample, cellLabels_[index], decompMode_);
+    return pointInCell(sample, mesh_, cellLabels_[index], cellShapes);
 }
 
 

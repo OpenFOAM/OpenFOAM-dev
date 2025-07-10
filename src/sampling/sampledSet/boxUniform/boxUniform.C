@@ -24,13 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "boxUniform.H"
-#include "sampledSet.H"
 #include "meshSearch.H"
-#include "DynamicList.H"
-#include "polyMesh.H"
 #include "addToRunTimeSelectionTable.H"
-#include "word.H"
-#include "transform.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -55,6 +50,8 @@ void Foam::sampledSets::boxUniform::calcSamples
     DynamicList<label>& samplingFaces
 ) const
 {
+    const meshSearch& searchEngine = meshSearch::New(mesh());
+
     for (label k = 0; k < nPoints_.z(); ++ k)
     {
         for (label j = 0; j < nPoints_.y(); ++ j)
@@ -68,7 +65,7 @@ void Foam::sampledSets::boxUniform::calcSamples
                     cmptMultiply(vector::one - t, box_.min())
                   + cmptMultiply(t, box_.max());
 
-                const label celli = searchEngine().findCell(pt);
+                const label celli = searchEngine.findCell(pt);
 
                 if (celli != -1)
                 {
@@ -92,11 +89,10 @@ Foam::sampledSets::boxUniform::boxUniform
 (
     const word& name,
     const polyMesh& mesh,
-    const meshSearch& searchEngine,
     const dictionary& dict
 )
 :
-    sampledSet(name, mesh, searchEngine, dict),
+    sampledSet(name, mesh, dict),
     box_(dict.lookup("box")),
     nPoints_(dict.lookup("nPoints"))
 {}

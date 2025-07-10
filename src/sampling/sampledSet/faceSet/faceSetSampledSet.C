@@ -69,11 +69,10 @@ Foam::sampledSets::faceSet::faceSet
 (
     const word& name,
     const polyMesh& mesh,
-    const meshSearch& searchEngine,
     const dictionary& dict
 )
 :
-    sampledSet(name, mesh, searchEngine, dict),
+    sampledSet(name, mesh, dict),
     setName_(dict.lookup("set"))
 {}
 

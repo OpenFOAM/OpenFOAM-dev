@@ -24,14 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "circleRandom.H"
-#include "sampledSet.H"
 #include "meshSearch.H"
-#include "DynamicList.H"
-#include "polyMesh.H"
 #include "addToRunTimeSelectionTable.H"
-#include "word.H"
-#include "mathematicalConstants.H"
-#include "randomGenerator.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -56,6 +50,8 @@ void Foam::sampledSets::circleRandom::calcSamples
     DynamicList<label>& samplingFaces
 ) const
 {
+    const meshSearch& searchEngine = meshSearch::New(mesh());
+
     randomGenerator rndGen(261782, true);
 
     const vector radial1 = normalised(perpendicular(normal_));
@@ -71,7 +67,7 @@ void Foam::sampledSets::circleRandom::calcSamples
         const scalar c = cos(theta), s = sin(theta);
 
         const point pt = centre_ + r*(c*radial1 + s*radial2);
-        const label celli = searchEngine().findCell(pt);
+        const label celli = searchEngine.findCell(pt);
 
         if (celli != -1)
         {
@@ -90,11 +86,10 @@ Foam::sampledSets::circleRandom::circleRandom
 (
     const word& name,
     const polyMesh& mesh,
-    const meshSearch& searchEngine,
     const dictionary& dict
 )
 :
-    sampledSet(name, mesh, searchEngine, dict),
+    sampledSet(name, mesh, dict),
     centre_(dict.lookup("centre")),
     normal_(normalised(dict.lookup<vector>("normal"))),
     radius_(dict.lookup<scalar>("radius")),

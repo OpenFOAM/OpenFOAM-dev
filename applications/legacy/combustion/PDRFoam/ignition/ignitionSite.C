@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,7 @@ License
 #include "ignitionSite.H"
 #include "Time.H"
 #include "volFields.H"
+#include "meshSearch.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -36,7 +37,7 @@ void Foam::ignitionSite::findIgnitionCells(const fvMesh& mesh)
     const volVectorField& centres = mesh.C();
     const scalarField& vols = mesh.V();
 
-    label ignCell = mesh.findCell(location_);
+    label ignCell = meshSearch::New(mesh).findCell(location_);
     if (ignCell == -1)
     {
         return;

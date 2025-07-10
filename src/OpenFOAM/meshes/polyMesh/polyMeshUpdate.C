@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,8 +31,6 @@ Description
 #include "Time.H"
 #include "globalMeshData.H"
 #include "pointMesh.H"
-#include "indexedOctree.H"
-#include "treeDataCell.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
@@ -61,9 +59,6 @@ void Foam::polyMesh::topoChange(const polyTopoChangeMap& map)
 
     // Remove the stored tet base points
     tetBasePtIsPtr_.clear();
-
-    // Remove the cell tree
-    cellTreePtr_.clear();
 
     // Update parallel data
     if (globalMeshDataPtr_.valid())

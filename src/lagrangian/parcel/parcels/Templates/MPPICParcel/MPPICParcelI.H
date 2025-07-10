@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,13 +46,13 @@ inline Foam::MPPICParcel<ParcelType>::MPPICParcel
 template<class ParcelType>
 inline Foam::MPPICParcel<ParcelType>::MPPICParcel
 (
-    const polyMesh& mesh,
+    const meshSearch& searchEngine,
     const vector& position,
     const label celli,
     label& nLocateBoundaryHits
 )
 :
-    ParcelType(mesh, position, celli, nLocateBoundaryHits),
+    ParcelType(searchEngine, position, celli, nLocateBoundaryHits),
     id_(-1, -1)
 {}
 

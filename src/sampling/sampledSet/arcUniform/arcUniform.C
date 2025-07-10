@@ -25,7 +25,6 @@ License
 
 #include "arcUniform.H"
 #include "sampledSet.H"
-#include "meshSearch.H"
 #include "DynamicList.H"
 #include "polyMesh.H"
 #include "addToRunTimeSelectionTable.H"
@@ -70,7 +69,6 @@ void Foam::sampledSets::arcUniform::calcSamples
     points::calcSamples
     (
         mesh(),
-        searchEngine(),
         points,
         samplingPositions,
         samplingDistances,
@@ -95,11 +93,10 @@ Foam::sampledSets::arcUniform::arcUniform
 (
     const word& name,
     const polyMesh& mesh,
-    const meshSearch& searchEngine,
     const dictionary& dict
 )
 :
-    sampledSet(name, mesh, searchEngine, dict),
+    sampledSet(name, mesh, dict),
     centre_(dict.lookup("centre")),
     normal_(normalised(dict.lookup<vector>("normal"))),
     radial_(dict.lookup<vector>("radial")),

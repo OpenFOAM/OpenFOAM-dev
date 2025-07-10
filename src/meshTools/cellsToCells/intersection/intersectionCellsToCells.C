@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,8 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "intersectionCellsToCells.H"
-#include "indexedOctree.H"
-#include "treeDataCell.H"
+#include "meshSearch.H"
 #include "tetOverlapVolume.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -102,6 +101,8 @@ bool Foam::cellsToCellss::intersection::findInitialSeeds
     const faceList& srcFaces = srcMesh.faces();
     const pointField& srcPts = srcMesh.points();
 
+    const meshSearch& tgtSearchEngine = meshSearch::New(tgtMesh);
+
     for (label i = startSeedI; i < srcCellIDs.size(); i++)
     {
         const label srcI = srcCellIDs[i];
@@ -110,7 +111,7 @@ bool Foam::cellsToCellss::intersection::findInitialSeeds
         {
             const labelList tgtIDs
             (
-                tgtMesh.cellTree().findBox
+                tgtSearchEngine.cellTree().findBox
                 (
                     treeBoundBox(srcCells[srcI].bb(srcPts, srcFaces))
                 )

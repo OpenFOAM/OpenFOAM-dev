@@ -24,8 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "matchingCellsToCells.H"
-#include "indexedOctree.H"
-#include "treeDataCell.H"
+#include "meshSearch.H"
+#include "pointInCell.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -50,11 +50,11 @@ bool Foam::cellsToCellss::matching::intersect
     const label tgtCelli
 ) const
 {
-    return tgtMesh.pointInCell
+    return pointInCellFacePlanes
     (
         srcMesh.cellCentres()[srcCelli],
-        tgtCelli,
-        polyMesh::FACE_PLANES
+        tgtMesh,
+        tgtCelli
     );
 }
 
@@ -74,6 +74,8 @@ bool Foam::cellsToCellss::matching::findInitialSeeds
     const faceList& srcFaces = srcMesh.faces();
     const pointField& srcPts = srcMesh.points();
 
+    const meshSearch& tgtSearchEngine = meshSearch::New(tgtMesh);
+
     for (label i = startSeedI; i < srcCellIDs.size(); i++)
     {
         label srcI = srcCellIDs[i];
@@ -81,7 +83,8 @@ bool Foam::cellsToCellss::matching::findInitialSeeds
         if (mapFlag[srcI])
         {
             const point srcCtr(srcCells[srcI].centre(srcPts, srcFaces));
-            label tgtI = tgtMesh.cellTree().findInside(srcCtr);
+
+            label tgtI = tgtSearchEngine.findCell(srcCtr);
 
             if (tgtI != -1 && intersect(srcMesh, tgtMesh, srcI, tgtI))
             {

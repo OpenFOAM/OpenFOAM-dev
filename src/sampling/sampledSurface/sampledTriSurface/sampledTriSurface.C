@@ -25,8 +25,8 @@ License
 
 #include "sampledTriSurface.H"
 #include "meshSearch.H"
-#include "treeDataCell.H"
 #include "treeDataFace.H"
+#include "pointInCell.H"
 #include "OBJstream.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -94,7 +94,7 @@ const Foam::NamedEnum
 const Foam::indexedOctree<Foam::treeDataFace>&
 Foam::sampledSurfaces::triSurface::nonCoupledboundaryTree() const
 {
-    // Variant of meshSearch::boundaryTree() that only does non-coupled
+    // Variant of meshBoundarySearch::boundaryTree() that only does non-coupled
     // boundary faces.
 
     if (!boundaryTreePtr_.valid())
@@ -143,11 +143,136 @@ Foam::sampledSurfaces::triSurface::nonCoupledboundaryTree() const
 }
 
 
-bool Foam::sampledSurfaces::triSurface::update
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::sampledSurfaces::triSurface::triSurface
 (
-    const meshSearch& meshSearcher
+    const word& name,
+    const polyMesh& mesh,
+    const word& surfaceName,
+    const samplingSource sampleSource
 )
+:
+    sampledSurface(name, mesh),
+    surface_
+    (
+        IOobject
+        (
+            surfaceName,
+            mesh.time().constant(),
+            searchableSurface::geometryDir(mesh.time()),
+            mesh,
+            IOobject::MUST_READ,
+            IOobject::NO_WRITE,
+            false
+        )
+    ),
+    sampleSource_(sampleSource),
+    needsUpdate_(true),
+    sampleElements_(0),
+    samplePoints_(0)
+{}
+
+
+Foam::sampledSurfaces::triSurface::triSurface
+(
+    const word& name,
+    const polyMesh& mesh,
+    const dictionary& dict
+)
+:
+    sampledSurface(name, mesh, dict),
+    surface_
+    (
+        IOobject
+        (
+            dict.lookup("surface"),
+            mesh.time().constant(),
+            searchableSurface::geometryDir(mesh.time()),
+            mesh,
+            IOobject::MUST_READ,
+            IOobject::NO_WRITE,
+            false
+        )
+    ),
+    sampleSource_(samplingSourceNames_[dict.lookup("source")]),
+    needsUpdate_(true),
+    sampleElements_(0),
+    samplePoints_(0)
+{}
+
+
+Foam::sampledSurfaces::triSurface::triSurface
+(
+    const word& name,
+    const polyMesh& mesh,
+    const Foam::triSurface& surface,
+    const word& sampleSourceName
+)
+:
+    sampledSurface(name, mesh),
+    surface_
+    (
+        IOobject
+        (
+            name,
+            mesh.time().constant(),
+            searchableSurface::geometryDir(mesh.time()),
+            mesh,
+            IOobject::NO_READ,
+            IOobject::NO_WRITE,
+            false
+        ),
+        surface
+    ),
+    sampleSource_(samplingSourceNames_[sampleSourceName]),
+    needsUpdate_(true),
+    sampleElements_(0),
+    samplePoints_(0)
+{}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::sampledSurfaces::triSurface::~triSurface()
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+bool Foam::sampledSurfaces::triSurface::needsUpdate() const
 {
+    return needsUpdate_;
+}
+
+
+bool Foam::sampledSurfaces::triSurface::expire()
+{
+    // already marked as expired
+    if (needsUpdate_)
+    {
+        return false;
+    }
+
+    sampledSurface::clearGeom();
+    MeshedSurface<face>::clear();
+
+    boundaryTreePtr_.clear();
+    sampleElements_.clear();
+    samplePoints_.clear();
+
+    needsUpdate_ = true;
+    return true;
+}
+
+
+bool Foam::sampledSurfaces::triSurface::update()
+{
+    if (!needsUpdate_)
+    {
+        return false;
+    }
+
     // Find the cells the triangles of the surface are in.
     // Does approximation by looking at the face centres only
     const pointField& fc = surface_.faceCentres();
@@ -173,15 +298,14 @@ bool Foam::sampledSurfaces::triSurface::update
     {
         // Search for nearest cell
 
-        const indexedOctree<treeDataCell>& cellTree = meshSearcher.cellTree();
+        const indexedOctree<treeDataCell>& cellTree =
+            meshSearch::New(mesh(), pointInCellShapes::facePlanes).cellTree();
 
         forAll(fc, triI)
         {
-            pointIndexHit nearInfo = cellTree.findNearest
-            (
-                fc[triI],
-                sqr(great)
-            );
+            pointIndexHit nearInfo =
+                cellTree.findNearest(fc[triI], sqr(great));
+
             if (nearInfo.hit())
             {
                 nearest[triI].first() = magSqr(nearInfo.hitPoint()-fc[triI]);
@@ -193,13 +317,20 @@ bool Foam::sampledSurfaces::triSurface::update
     {
         // Search for cell containing point
 
-        const indexedOctree<treeDataCell>& cellTree = meshSearcher.cellTree();
+        const indexedOctree<treeDataCell>& cellTree =
+            meshSearch::New(mesh(), pointInCellShapes::facePlanes).cellTree();
 
         forAll(fc, triI)
         {
             if (cellTree.bb().contains(fc[triI]))
             {
-                label index = cellTree.findInside(fc[triI]);
+                label index =
+                    cellTree.findInside
+                    (
+                        fc[triI],
+                        pointInCellShapes::facePlanes
+                    );
+
                 if (index != -1)
                 {
                     nearest[triI].first() = 0.0;
@@ -359,15 +490,7 @@ bool Foam::sampledSurfaces::triSurface::update
                 sampleElements_[pointi] = celli;
 
                 // Check if point inside cell
-                if
-                (
-                    mesh().pointInCell
-                    (
-                        pt,
-                        sampleElements_[pointi],
-                        meshSearcher.decompMode()
-                    )
-                )
+                if (pointInCellFacePlanes(pt, mesh(), sampleElements_[pointi]))
                 {
                     samplePoints_[pointi] = pt;
                 }
@@ -525,157 +648,6 @@ bool Foam::sampledSurfaces::triSurface::update
     needsUpdate_ = false;
 
     return true;
-}
-
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::sampledSurfaces::triSurface::triSurface
-(
-    const word& name,
-    const polyMesh& mesh,
-    const word& surfaceName,
-    const samplingSource sampleSource
-)
-:
-    sampledSurface(name, mesh),
-    surface_
-    (
-        IOobject
-        (
-            surfaceName,
-            mesh.time().constant(),
-            searchableSurface::geometryDir(mesh.time()),
-            mesh,
-            IOobject::MUST_READ,
-            IOobject::NO_WRITE,
-            false
-        )
-    ),
-    sampleSource_(sampleSource),
-    needsUpdate_(true),
-    sampleElements_(0),
-    samplePoints_(0)
-{}
-
-
-Foam::sampledSurfaces::triSurface::triSurface
-(
-    const word& name,
-    const polyMesh& mesh,
-    const dictionary& dict
-)
-:
-    sampledSurface(name, mesh, dict),
-    surface_
-    (
-        IOobject
-        (
-            dict.lookup("surface"),
-            mesh.time().constant(),
-            searchableSurface::geometryDir(mesh.time()),
-            mesh,
-            IOobject::MUST_READ,
-            IOobject::NO_WRITE,
-            false
-        )
-    ),
-    sampleSource_(samplingSourceNames_[dict.lookup("source")]),
-    needsUpdate_(true),
-    sampleElements_(0),
-    samplePoints_(0)
-{}
-
-
-Foam::sampledSurfaces::triSurface::triSurface
-(
-    const word& name,
-    const polyMesh& mesh,
-    const Foam::triSurface& surface,
-    const word& sampleSourceName
-)
-:
-    sampledSurface(name, mesh),
-    surface_
-    (
-        IOobject
-        (
-            name,
-            mesh.time().constant(),
-            searchableSurface::geometryDir(mesh.time()),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::NO_WRITE,
-            false
-        ),
-        surface
-    ),
-    sampleSource_(samplingSourceNames_[sampleSourceName]),
-    needsUpdate_(true),
-    sampleElements_(0),
-    samplePoints_(0)
-{}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::sampledSurfaces::triSurface::~triSurface()
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-bool Foam::sampledSurfaces::triSurface::needsUpdate() const
-{
-    return needsUpdate_;
-}
-
-
-bool Foam::sampledSurfaces::triSurface::expire()
-{
-    // already marked as expired
-    if (needsUpdate_)
-    {
-        return false;
-    }
-
-    sampledSurface::clearGeom();
-    MeshStorage::clear();
-
-    boundaryTreePtr_.clear();
-    sampleElements_.clear();
-    samplePoints_.clear();
-
-    needsUpdate_ = true;
-    return true;
-}
-
-
-bool Foam::sampledSurfaces::triSurface::update()
-{
-    if (!needsUpdate_)
-    {
-        return false;
-    }
-
-    // Mesh search engine, no triangulation of faces.
-    meshSearch meshSearcher(mesh(), polyMesh::FACE_PLANES);
-
-    return update(meshSearcher);
-}
-
-
-bool Foam::sampledSurfaces::triSurface::update(const treeBoundBox& bb)
-{
-    if (!needsUpdate_)
-    {
-        return false;
-    }
-
-    // Mesh search engine on subset, no triangulation of faces.
-    meshSearch meshSearcher(mesh(), bb, polyMesh::FACE_PLANES);
-
-    return update(meshSearcher);
 }
 
 

@@ -156,6 +156,7 @@ public:
             //- Set the injection position and owner cell, tetFace and tetPt
             virtual void setPositionAndCell
             (
+                const meshSearch& searchEngine,
                 const label parcelI,
                 const label nParcels,
                 const scalar time,

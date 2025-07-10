@@ -25,6 +25,7 @@ License
 
 #include "nonConformalCyclicLagrangianPatch.H"
 #include "LagrangianFields.H"
+#include "meshSearch.H"
 #include "RemoteData.H"
 #include "tracking.H"
 #include "addToRunTimeSelectionTable.H"
@@ -107,6 +108,8 @@ void Foam::nonConformalCyclicLagrangianPatch::evaluate
 {
     const LagrangianSubMesh& patchMesh = this->mesh();
 
+    const meshSearch& searchEngine = meshSearch::New(mesh.mesh());
+
     // Sub-set the geometry and topology of the elements
     SubField<barycentric> patchCoordinates = patchMesh.sub(mesh.coordinates());
     SubField<label> patchCelli = patchMesh.sub(mesh.celli());
@@ -133,7 +136,7 @@ void Foam::nonConformalCyclicLagrangianPatch::evaluate
         (
            !tracking::locate
             (
-                mesh.mesh(),
+                searchEngine,
                 receivePosition[i],
                 patchCoordinates[i],
                 patchCelli[i],

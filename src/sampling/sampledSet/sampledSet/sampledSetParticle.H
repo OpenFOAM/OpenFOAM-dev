@@ -149,10 +149,11 @@ public:
 
     // Constructors
 
-        //- Construct from components
+        //- Construct from a position and a cell, searching for the rest of the
+        //  required topology
         sampledSetParticle
         (
-            const polyMesh& mesh,
+            const meshSearch& searchEngine,
             const point& position,
             const label celli,
             label& nLocateBoundaryHits,

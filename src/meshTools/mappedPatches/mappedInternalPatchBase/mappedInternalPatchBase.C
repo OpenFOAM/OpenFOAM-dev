@@ -27,8 +27,7 @@ License
 #include "SubField.H"
 #include "Time.H"
 #include "triPointRef.H"
-#include "treeDataCell.H"
-#include "indexedOctree.H"
+#include "meshSearch.H"
 #include "globalIndex.H"
 #include "RemoteData.H"
 #include "OBJstream.H"
@@ -93,6 +92,8 @@ void Foam::mappedInternalPatchBase::calcMapping() const
 
     const polyMesh& nbrMesh = this->nbrMesh();
 
+    const meshSearch& nbrSearchEngine = meshSearch::New(nbrMesh);
+
     const globalIndex patchGlobalIndex(patch_.size());
 
     // Find processor and cell/face indices of samples
@@ -122,12 +123,11 @@ void Foam::mappedInternalPatchBase::calcMapping() const
         List<RemoteData<scalar>> allNearest(patchGlobalIndex.size());
 
         // Find containing cell for every sampling point
-        const indexedOctree<Foam::treeDataCell>& tree = nbrMesh.cellTree();
         forAll(allPoints, alli)
         {
             const point& p = allPoints[alli];
 
-            const label celli = tree.findInside(p);
+            const label celli = nbrSearchEngine.findCell(p);
 
             if (celli != -1)
             {
@@ -172,14 +172,14 @@ void Foam::mappedInternalPatchBase::calcMapping() const
                 << nbrRegionName() << " with offset mode "
                 << offsetModeNames_[offsetMode_] << "." << endl;
 
-            const indexedOctree<Foam::treeDataCell>& tree = nbrMesh.cellTree();
             forAll(allPoints, alli)
             {
                 const point& p = allPoints[alli];
 
                 if (allNearest[alli].proci == -1)
                 {
-                    const pointIndexHit pih = tree.findNearest(p, sqr(great));
+                    const pointIndexHit pih =
+                        nbrSearchEngine.cellTree().findNearest(p, sqr(great));
 
                     allNearest[alli].proci = Pstream::myProcNo();
                     allNearest[alli].elementi = pih.index();

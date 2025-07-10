@@ -134,8 +134,6 @@ void Foam::surfaceToCell::combine(topoSet& set, const bool add) const
 
     if (useSurfaceOrientation_ && (includeInside_ || includeOutside_))
     {
-        const meshSearch queryMesh(mesh_);
-
         //- Calculate for each searchPoint inside/outside status.
         boolList isInside(querySurf().calcInside(mesh_.cellCentres()));
 
@@ -160,19 +158,14 @@ void Foam::surfaceToCell::combine(topoSet& set, const bool add) const
         // Cut cells with surface and classify cells
         //
 
-
-        // Construct search engine on mesh
-
-        const meshSearch queryMesh(mesh_);
-
-
         // Check all 'outside' points
         forAll(outsidePoints_, outsideI)
         {
             const point& outsidePoint = outsidePoints_[outsideI];
 
             // Find cell point is in. Linear search.
-            label celli = queryMesh.findCell(outsidePoint, -1, false);
+            label celli = meshSearch::findCellNoTree(mesh_, outsidePoint);
+
             if (returnReduce(celli, maxOp<label>()) == -1)
             {
                 FatalErrorInFunction
@@ -184,13 +177,7 @@ void Foam::surfaceToCell::combine(topoSet& set, const bool add) const
 
         // Cut faces with surface and classify cells
 
-        cellClassification cellType
-        (
-            mesh_,
-            queryMesh,
-            querySurf(),
-            outsidePoints_
-        );
+        cellClassification cellType(mesh_, querySurf(), outsidePoints_);
 
 
         Info<< "    Marked inside/outside using surface intersection in = "

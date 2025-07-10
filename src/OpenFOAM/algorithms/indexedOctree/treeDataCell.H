@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,6 +39,7 @@ SourceFiles
 #include "polyMesh.H"
 #include "treeBoundBoxList.H"
 #include "volumeType.H"
+#include "pointInCell.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -64,9 +65,6 @@ class treeDataCell
 
         //- Whether to precalculate and store cell bounding box
         const bool cacheBb_;
-
-        //- How to decide if point is inside cell
-        const polyMesh::cellDecomposition decompMode_;
 
         //- Cell bounding boxes (valid only if cacheBb_)
         treeBoundBoxList bbs_;
@@ -137,30 +135,13 @@ public:
     // Constructors
 
         //- Construct from mesh and subset of cells.
-        treeDataCell
-        (
-            const bool cacheBb,
-            const polyMesh&,
-            const labelUList&,
-            const polyMesh::cellDecomposition decompMode
-        );
+        treeDataCell(const bool cacheBb, const polyMesh&, const labelUList&);
 
         //- Move construct from mesh and subset of cells, transferring contents
-        treeDataCell
-        (
-            const bool cacheBb,
-            const polyMesh&,
-            labelList&&,
-            const polyMesh::cellDecomposition decompMode
-        );
+        treeDataCell(const bool cacheBb, const polyMesh&, labelList&&);
 
         //- Construct from mesh. Uses all cells in mesh.
-        treeDataCell
-        (
-            const bool cacheBb,
-            const polyMesh&,
-            const polyMesh::cellDecomposition decompMode
-        );
+        treeDataCell(const bool cacheBb, const polyMesh&);
 
 
     // Member Functions
@@ -175,11 +156,6 @@ public:
             inline const polyMesh& mesh() const
             {
                 return mesh_;
-            }
-
-            inline polyMesh::cellDecomposition decompMode() const
-            {
-                return decompMode_;
             }
 
             inline label size() const
@@ -213,11 +189,12 @@ public:
                 const treeBoundBox& sampleBb
             ) const;
 
-            //- Does shape at index contain sample
+            //- Does shape at index contain sample?
             bool contains
             (
                 const label index,
-                const point& sample
+                const point& sample,
+                const pointInCellShapes
             ) const;
 };
 

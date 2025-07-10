@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -219,9 +219,9 @@ inline Foam::molecule::constantProperties::constantProperties
 }
 
 
-inline Foam::molecule::molecule
+Foam::molecule::molecule
 (
-    const polyMesh& mesh,
+    const meshSearch& searchEngine,
     const vector& position,
     const label celli,
     label& nLocateBoundaryHits,
@@ -237,7 +237,7 @@ inline Foam::molecule::molecule
 
 )
 :
-    particle(mesh, position, celli, nLocateBoundaryHits),
+    particle(searchEngine, position, celli, nLocateBoundaryHits),
     Q_(Q),
     v_(v),
     a_(a),
@@ -251,7 +251,7 @@ inline Foam::molecule::molecule
     siteForces_(constProps.nSites(), Zero),
     sitePositions_(constProps.nSites())
 {
-    setSitePositions(mesh, constProps);
+    setSitePositions(searchEngine.mesh(), constProps);
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -161,13 +161,7 @@ void Foam::InteractionLists<ParticleType>::buildInteractionLists()
 
     indexedOctree<treeDataCell> coupledPatchRangeTree
     (
-        treeDataCell
-        (
-            true,                   // Cache cell bb
-            mesh_,
-            coupledPatchRangeCells, // Subset of mesh
-            polyMesh::CELL_TETS     // Consistent with tracking
-        ),
+        treeDataCell(true, mesh_, coupledPatchRangeCells),
         procBbRndExt,
         8,              // maxLevel,
         10,             // leafSize,
@@ -386,7 +380,7 @@ void Foam::InteractionLists<ParticleType>::buildInteractionLists()
 
     indexedOctree<treeDataCell> allCellsTree
     (
-        treeDataCell(true, mesh_, polyMesh::CELL_TETS),
+        treeDataCell(true, mesh_),
         procBbRndExt,
         8,              // maxLevel,
         10,             // leafSize,

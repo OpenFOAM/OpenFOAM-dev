@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "nearestToCell.H"
-#include "polyMesh.H"
+#include "meshSearch.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -40,9 +40,11 @@ namespace Foam
 
 void Foam::nearestToCell::combine(topoSet& set, const bool add) const
 {
+    const meshSearch& searchEngine = meshSearch::New(mesh_);
+
     forAll(points_, pointi)
     {
-        addOrDelete(set, mesh_.findNearestCell(points_[pointi]), add);
+        addOrDelete(set, searchEngine.findNearestCell(points_[pointi]), add);
     }
 }
 

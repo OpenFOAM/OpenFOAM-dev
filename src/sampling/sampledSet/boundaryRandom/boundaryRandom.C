@@ -25,7 +25,6 @@ License
 
 #include "boundaryRandom.H"
 #include "sampledSet.H"
-#include "meshSearch.H"
 #include "DynamicList.H"
 #include "polyMesh.H"
 #include "addToRunTimeSelectionTable.H"
@@ -168,11 +167,10 @@ Foam::sampledSets::boundaryRandom::boundaryRandom
 (
     const word& name,
     const polyMesh& mesh,
-    const meshSearch& searchEngine,
     const dictionary& dict
 )
 :
-    sampledSet(name, mesh, searchEngine, dict),
+    sampledSet(name, mesh, dict),
     patches_(dict.lookup("patches")),
     nPoints_(dict.lookup<label>("nPoints"))
 {}

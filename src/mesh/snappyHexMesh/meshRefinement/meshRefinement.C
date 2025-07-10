@@ -53,7 +53,7 @@ License
 #include "geometric.H"
 #include "randomGenerator.H"
 #include "searchableSurfaceList.H"
-#include "treeBoundBox.H"
+#include "meshSearch.H"
 #include "fvMeshTools.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -2031,8 +2031,10 @@ Foam::label Foam::meshRefinement::findRegion
     const point& location
 )
 {
+    const meshSearch& searchEngine = meshSearch::New(mesh);
+
     label regioni = -1;
-    label celli = mesh.findCell(location);
+    label celli = searchEngine.findCell(location);
     if (celli != -1)
     {
         regioni = cellRegion[celli];
@@ -2042,7 +2044,7 @@ Foam::label Foam::meshRefinement::findRegion
     if (regioni == -1)
     {
         // See if we can perturb a bit
-        celli = mesh.findCell(location + perturbVec);
+        celli = searchEngine.findCell(location + perturbVec);
         if (celli != -1)
         {
             regioni = cellRegion[celli];

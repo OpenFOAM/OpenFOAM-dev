@@ -102,6 +102,7 @@ Description
 #include "mappedWallPolyPatch.H"
 #include "fvMeshTools.H"
 #include "zeroGradientFvPatchFields.H"
+#include "meshSearch.H"
 
 using namespace Foam;
 
@@ -1933,9 +1934,7 @@ int main(int argc, char *argv[])
 
             label regioni = -1;
 
-            (void)mesh.tetBasePtIs();
-
-            label celli = mesh.findCell(insidePoint);
+            label celli = meshSearch::New(mesh).findCell(insidePoint);
 
             Info<< nl << "Found point " << insidePoint << " in cell " << celli
                 << endl;

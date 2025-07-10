@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,11 +77,6 @@ class thresholdCellFaces
     public sampledSurface,
     public MeshedSurface<face>
 {
-    // Private Typedefs
-
-        typedef MeshedSurface<face> MeshStorage;
-
-
     // Private Data
 
         //- Field to get threshold
@@ -165,13 +160,13 @@ public:
         //- Points of surface
         virtual const pointField& points() const
         {
-            return MeshStorage::points();
+            return MeshedSurface<face>::points();
         }
 
         //- Faces of surface
         virtual const faceList& faces() const
         {
-            return MeshStorage::faces();
+            return MeshedSurface<face>::faces();
         }
 
         //- Sample field on surface

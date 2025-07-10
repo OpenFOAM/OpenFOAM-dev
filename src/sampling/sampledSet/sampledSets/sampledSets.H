@@ -39,7 +39,6 @@ SourceFiles
 #include "fvMeshFunctionObject.H"
 #include "sampledSet.H"
 #include "volFieldsFwd.H"
-#include "meshSearch.H"
 #include "interpolation.H"
 #include "coordSet.H"
 #include "setWriter.H"
@@ -73,10 +72,6 @@ class sampledSets
 
         //- Output path
         fileName outputPath_;
-
-        //- Mesh search engine
-        meshSearch searchEngine_;
-
 
         // Read from dictionary
 

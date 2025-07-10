@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -146,6 +146,7 @@ protected:
         //  ensure that it lies in a cell and not edge/face
         bool findCellAtPosition
         (
+            const meshSearch& searchEngine,
             const point& position,
             barycentric& coordinates,
             label& celli,
@@ -315,6 +316,7 @@ public:
             //- Set the injection position and owner cell, tetFace and tetPt
             virtual void setPositionAndCell
             (
+                const meshSearch& searchEngine,
                 const label parcelI,
                 const label nParcels,
                 const scalar time,

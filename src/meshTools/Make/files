@@ -63,9 +63,9 @@ edgeFaceCirculator/edgeFaceCirculator.C
 
 polyMeshZipUpCells/polyMeshZipUpCells.C
 
+meshSearch/meshSearchBoundBox.C
 meshSearch/meshSearch.C
-meshSearch/meshSearchFACE_CENTRE_TRISMeshObject.C
-meshSearch/meshSearchMeshObject.C
+meshSearch/meshBoundarySearch.C
 
 meshTools/meshTools.C
 

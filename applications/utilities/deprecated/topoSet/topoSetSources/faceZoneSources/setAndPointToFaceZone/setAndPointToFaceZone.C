@@ -26,9 +26,8 @@ License
 #include "setAndPointToFaceZone.H"
 #include "FaceCellWave.H"
 #include "faceZoneSet.H"
-#include "indexedOctree.H"
+#include "meshSearch.H"
 #include "minData.H"
-#include "treeDataCell.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -94,6 +93,8 @@ void Foam::setAndPointToFaceZone::applyToSet
         return;
     }
 
+    const meshSearch& searchEngine = meshSearch::New(mesh_);
+
     // Cast to get the zone
     faceZoneSet& fzSet = refCast<faceZoneSet>(set);
 
@@ -122,7 +123,7 @@ void Foam::setAndPointToFaceZone::applyToSet
 
         // Find the cell containing the given point and give that an even
         // higher index
-        const label celli = mesh_.cellTree().findInside(point_);
+        const label celli = searchEngine.findCell(point_);
         if (returnReduce(celli, maxOp<label>()) == -1)
         {
             FatalErrorInFunction

@@ -59,6 +59,9 @@ void Foam::functionObjects::nearWallFields::calcAddressing()
 
     DebugInFunction << "nPatchFaces: " << globalWalls.size() << endl;
 
+    // Get the mesh searching engine
+    const meshSearch& searchEngine = meshSearch::New(mesh_);
+
     // Construct cloud
     lagrangian::Cloud<findCellParticle> cloud
     (
@@ -85,7 +88,7 @@ void Foam::functionObjects::nearWallFields::calcAddressing()
             (
                 new findCellParticle
                 (
-                    mesh_,
+                    searchEngine,
                     patch.Cf()[patchFacei],
                     patch.faceCells()[patchFacei],
                     nLocateBoundaryHits,

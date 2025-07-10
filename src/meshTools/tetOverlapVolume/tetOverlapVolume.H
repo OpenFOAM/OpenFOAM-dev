@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -128,15 +128,6 @@ public:
 
 
     // Public members
-
-        //- Return a list of cells in meshA which overlaps with cellBI in
-        // meshB
-        labelList overlappingCells
-        (
-            const polyMesh& meshA,
-            const polyMesh& meshB,
-            const label cellBI
-        ) const;
 
         //- Calculates the cell volume
         scalar cellVolumeMinDecomp

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ License
 
 #include "moleculeCloud.H"
 #include "fvMesh.H"
+#include "meshSearch.H"
 #include "mathematicalConstants.H"
 
 using namespace Foam::constant::mathematical;
@@ -483,6 +484,8 @@ void Foam::moleculeCloud::initialiseMolecules
 
     const cellZoneList& cellZones = mesh_.cellZones();
 
+    const meshSearch& searchEngine = meshSearch::New(mesh());
+
     if (!cellZones.size())
     {
         FatalErrorInFunction
@@ -744,12 +747,13 @@ void Foam::moleculeCloud::initialiseMolecules
                             );
 
                             const label cell =
-                                mesh_.cellTree().findInside(globalPosition);
+                                searchEngine.findCell(globalPosition);
 
                             if (findIndex(zone, cell) != -1)
                             {
                                 createMolecule
                                 (
+                                    searchEngine,
                                     globalPosition,
                                     cell,
                                     nLocateBoundaryHits,
@@ -822,7 +826,7 @@ void Foam::moleculeCloud::initialiseMolecules
                                             );
 
                                         const label cell =
-                                            mesh_.cellTree().findInside
+                                            searchEngine.findCell
                                             (
                                                 globalPosition
                                             );
@@ -831,6 +835,7 @@ void Foam::moleculeCloud::initialiseMolecules
                                         {
                                             createMolecule
                                             (
+                                                searchEngine,
                                                 globalPosition,
                                                 cell,
                                                 nLocateBoundaryHits,
@@ -894,7 +899,7 @@ void Foam::moleculeCloud::initialiseMolecules
                                             );
 
                                         const label cell =
-                                            mesh_.cellTree().findInside
+                                            searchEngine.findCell
                                             (
                                                 globalPosition
                                             );
@@ -903,6 +908,7 @@ void Foam::moleculeCloud::initialiseMolecules
                                         {
                                             createMolecule
                                             (
+                                                searchEngine,
                                                 globalPosition,
                                                 cell,
                                                 nLocateBoundaryHits,
@@ -976,6 +982,7 @@ void Foam::moleculeCloud::initialiseMolecules
 
 void Foam::moleculeCloud::createMolecule
 (
+    const meshSearch& searchEngine,
     const point& position,
     label cell,
     label& nLocateBoundaryHits,
@@ -1034,7 +1041,7 @@ void Foam::moleculeCloud::createMolecule
     (
         new molecule
         (
-            mesh_,
+            searchEngine,
             position,
             cell,
             nLocateBoundaryHits,

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -140,6 +140,7 @@ private:
         //- Per node per octant whether is fully inside/outside/mixed.
         mutable PackedList<2> nodeTypes_;
 
+
     // Private Member Functions
 
         //- Helper: does bb intersect a sphere around sample? Or is any
@@ -152,6 +153,7 @@ private:
             const scalar nearestDistSqr,
             const point& sample
         );
+
 
         // Construction
 
@@ -210,12 +212,10 @@ private:
             (
                 const label nodeI,
                 const linePointRef& ln,
-
                 treeBoundBox& tightest,
                 label& nearestShapeI,
                 point& linePoint,
                 point& nearestPoint,
-
                 const FindNearestOp& fnOp
             ) const;
 
@@ -262,7 +262,6 @@ private:
             (
                 const label nodeI,
                 const direction octant,
-
                 label& parentNodeI,
                 label& parentOctant
             ) const;
@@ -290,15 +289,12 @@ private:
                 const bool findAny,
                 const point& treeStart,
                 const vector& treeVec,
-
                 const point& start,
                 const point& end,
                 const label nodeI,
                 const direction octantI,
-
                 pointIndexHit& hitInfo,
                 direction& faceID,
-
                 const FindIntersectOp& fiOp
             ) const;
 
@@ -333,7 +329,6 @@ private:
                 labelHashSet& elements
             ) const;
 
-
             //- Find all elements intersecting sphere.
             void findSphere
             (
@@ -343,7 +338,7 @@ private:
                 labelHashSet& elements
             ) const;
 
-
+            //- ...
             template<class CompareOp>
             static void findNear
             (
@@ -438,6 +433,7 @@ public:
             );
         }
 
+
     // Member Functions
 
         // Access
@@ -518,6 +514,7 @@ public:
 
         // Queries
 
+            //- Find nearest to point
             pointIndexHit findNearest
             (
                 const point& sample,
@@ -534,7 +531,6 @@ public:
             (
                 const point& sample,
                 const scalar nearestDistSqr,
-
                 const FindNearestOp& fnOp
             ) const;
 
@@ -544,11 +540,9 @@ public:
             (
                 const label nodeI,
                 const point&,
-
                 scalar& nearestDistSqr,
                 label& nearestShapeI,
                 point& nearestPoint,
-
                 const FindNearestOp& fnOp
             ) const;
 
@@ -566,6 +560,7 @@ public:
                 point& linePoint
             ) const;
 
+            //- As above but with custom operation
             template<class FindNearestOp>
             pointIndexHit findNearest
             (
@@ -628,7 +623,8 @@ public:
 
             //- Find shape containing point. Only implemented for certain
             //  shapes.
-            label findInside(const point&) const;
+            template<class ... Args>
+            label findInside(const point&, const Args& ...) const;
 
             //- Find the shape indices that occupy the result of findNode
             const labelList& findIndices(const point&) const;
@@ -677,6 +673,7 @@ public:
                 const label
             ) const;
 
+            //- Write to a stream
             bool write(Ostream& os) const;
 
 

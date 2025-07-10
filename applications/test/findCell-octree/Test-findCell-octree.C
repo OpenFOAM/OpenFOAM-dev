@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,8 +48,6 @@ int main(int argc, char *argv[])
 
     const point sample = args.argRead<point>(1);
 
-    const polyMesh::cellDecomposition decompMode = polyMesh::CELL_TETS;
-
     treeBoundBox meshBb(mesh.bounds());
 
     // Calculate typical cell related size to shift bb by.
@@ -72,7 +70,7 @@ int main(int argc, char *argv[])
     {
         indexedOctree<treeDataCell> ioc
         (
-            treeDataCell(true, mesh, decompMode), // FACEDIAGTETS),
+            treeDataCell(true, mesh),
             shiftedBb,
             10,         // maxLevel
             100,        // leafsize
@@ -85,33 +83,16 @@ int main(int argc, char *argv[])
             {
                 Info<< "indexed octree for " << i << endl;
             }
-            ioc.findInside(sample);
+            ioc.findInside(sample, pointInCellShapes::tets);
         }
 
         Info<< "Point:" << sample << " is in shape "
-            << ioc.findInside(sample)
+            << ioc.findInside(sample, pointInCellShapes::tets)
             << ", where the possible cells were:" << nl
             << ioc.findIndices(sample)
             << endl;
 
         Info<< "Found in indexedOctree " << nReps << " times in "
-            << runTime.cpuTimeIncrement() << " s" << endl;
-    }
-
-    {
-        for (label i = 0; i < nReps - 1 ; i++)
-        {
-            if ((i % 100) == 0)
-            {
-                Info<< "linear search for " << i << endl;
-            }
-            mesh.findCell(sample, decompMode);
-        }
-
-        Info<< "Point:" << sample << " is in cell  "
-            << mesh.findCell(sample, decompMode) << endl;
-
-        Info<< "Found in mesh.findCell " << nReps << " times in "
             << runTime.cpuTimeIncrement() << " s" << endl;
     }
 

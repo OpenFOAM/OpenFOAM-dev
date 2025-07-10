@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,7 +93,6 @@ void getType(const labelList& elems, const label type, labelHashSet& set)
 void cutBySurface
 (
     const polyMesh& mesh,
-    const meshSearch& queryMesh,
     const triSurfaceSearch& querySurf,
 
     const pointField& outsidePts,
@@ -106,14 +105,7 @@ void cutBySurface
 )
 {
     // Cut with surface and classify as inside/outside/cut
-    cellType =
-        cellClassification
-        (
-            mesh,
-            queryMesh,
-            querySurf,
-            outsidePts
-        );
+    cellType = cellClassification(mesh, querySurf, outsidePts);
 
     // Get inside/outside/cutCells cellSets.
     cellSet inside(mesh, "inside", mesh.nCells()/10);
@@ -247,7 +239,6 @@ void cutBySurface
 label selectOutsideCells
 (
     const polyMesh& mesh,
-    const meshSearch& queryMesh,
     const pointField& outsidePts,
     cellClassification& cellType
 )
@@ -269,7 +260,7 @@ label selectOutsideCells
     forAll(outsidePts, outsidePtI)
     {
         // Find cell containing point. Linear search.
-        label celli = queryMesh.findCell(outsidePts[outsidePtI], -1, false);
+        label celli = meshSearch::findCellNoTree(mesh, outsidePts[outsidePtI]);
 
         if (celli != -1 && cellType[celli] == MESH)
         {
@@ -382,15 +373,13 @@ int main(int argc, char *argv[])
     // Print edge stats on original mesh.
     (void)edgeCalc.minLen(Info);
 
-    // Search engine on mesh. Face decomposition since faces might be warped.
-    meshSearch queryMesh(mesh);
-
     // Check all 'outside' points
     forAll(outsidePts, outsideI)
     {
         const point& outsidePoint = outsidePts[outsideI];
 
-        label celli = queryMesh.findCell(outsidePoint, -1, false);
+        label celli = meshSearch::findCellNoTree(mesh, outsidePoint);
+
         if (returnReduce(celli, maxOp<label>()) == -1)
         {
             FatalErrorInFunction
@@ -432,7 +421,6 @@ int main(int argc, char *argv[])
         cutBySurface
         (
             mesh,
-            queryMesh,
             querySurf,
 
             outsidePts,
@@ -491,13 +479,7 @@ int main(int argc, char *argv[])
             // Since we're selecting the cells reachable from outsidePoints
             // and the set might have changed, redo the outsideCells
             // calculation
-            nOutside = selectOutsideCells
-            (
-                mesh,
-                queryMesh,
-                outsidePts,
-                cellType
-            );
+            nOutside = selectOutsideCells(mesh, outsidePts, cellType);
         }
     } while
     (

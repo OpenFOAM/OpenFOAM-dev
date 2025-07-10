@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -201,7 +201,7 @@ public:
         //  required topology. Other properties are initialised as null.
         inline ReactingParcel
         (
-            const polyMesh& mesh,
+            const meshSearch& searchEngine,
             const vector& position,
             const label celli,
             label& nLocateBoundaryHits

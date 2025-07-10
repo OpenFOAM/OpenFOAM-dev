@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,11 +97,14 @@ Foam::ReactingLookupTableInjection<CloudType>::~ReactingLookupTableInjection()
 template<class CloudType>
 void Foam::ReactingLookupTableInjection<CloudType>::topoChange()
 {
+    const meshSearch& searchEngine = meshSearch::New(this->owner().mesh());
+
     // Set/cache the injector cells
     forAll(injectors_, i)
     {
         this->findCellAtPosition
         (
+            searchEngine,
             injectors_[i].x(),
             injectorCoordinates_[i],
             injectorCells_[i],
@@ -163,6 +166,7 @@ Foam::scalar Foam::ReactingLookupTableInjection<CloudType>::massToInject
 template<class CloudType>
 void Foam::ReactingLookupTableInjection<CloudType>::setPositionAndCell
 (
+    const meshSearch& searchEngine,
     const label parcelI,
     const label nParcels,
     const scalar time,

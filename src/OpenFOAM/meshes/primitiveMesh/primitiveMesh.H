@@ -495,28 +495,6 @@ public:
             inline bool isInternalFace(const label faceIndex) const;
 
 
-        // Useful derived info
-
-            //- Return true if the point in the cell bounding box.
-            //  The bounding box may be isotropically inflated by the fraction
-            //  inflationFraction
-            bool pointInCellBB
-            (
-                const point& p,
-                label celli,
-                scalar inflationFraction = 0
-            ) const;
-
-            //- Return true if the  point is in the cell
-            bool pointInCell(const point& p, label celli) const;
-
-            //- Find the cell with the nearest cell centre to location
-            label findNearestCell(const point& location) const;
-
-            //- Find cell enclosing this location (-1 if not in mesh)
-            label findCell(const point& location) const;
-
-
         // Storage management
 
             //- Print a list of all the currently allocated mesh data

@@ -28,6 +28,7 @@ License
 #include "emptyPolyPatch.H"
 #include "cellSet.H"
 #include "syncTools.H"
+#include "meshSearch.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -91,13 +92,15 @@ Foam::boolList Foam::regionToCell::findRegions
     const regionSplit& cellRegion
 ) const
 {
+    const meshSearch& searchEngine = meshSearch::New(mesh_);
+
     boolList keepRegion(cellRegion.nRegions(), false);
 
     forAll(insidePoints_, i)
     {
         // Find the region containing the insidePoint
 
-        label celli = mesh_.findCell(insidePoints_[i]);
+        label celli = searchEngine.findCell(insidePoints_[i]);
 
         label keepRegionI = -1;
         label keepProci = -1;

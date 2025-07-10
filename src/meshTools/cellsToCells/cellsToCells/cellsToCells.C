@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,6 +31,7 @@ License
 #include "wedgePolyPatch.H"
 #include "processorPolyPatch.H"
 #include "Time.H"
+#include "pointInCell.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -219,7 +220,7 @@ Foam::remote Foam::cellsToCells::srcToTgtPoint
         const polyMesh& localTgtMesh =
             singleProcess_ == -1 ? localTgtMeshPtr_() : tgtMesh;
 
-        if (localTgtMesh.pointInCell(p, tgtCelli))
+        if (pointInCell(p, localTgtMesh, tgtCelli))
         {
             return
                 singleProcess_ == -1

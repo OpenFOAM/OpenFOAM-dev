@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,6 +27,7 @@ License
 #include "unitConversion.H"
 #include "polyMesh.H"
 #include "globalIndex.H"
+#include "meshSearch.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -117,11 +118,12 @@ Foam::refinementParameters::cellSelectionPoints::cellSelectionPoints
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::labelList Foam::refinementParameters::findCells(const polyMesh& mesh)
-const
+Foam::labelList Foam::refinementParameters::findCells
+(
+    const polyMesh& mesh
+) const
 {
-    // Force calculation of tet-diag decomposition (for use in findCell)
-    (void)mesh.tetBasePtIs();
+    const meshSearch& searchEngine = meshSearch::New(mesh);
 
     // Global calculation engine
     globalIndex globalCells(mesh.nCells());
@@ -133,7 +135,7 @@ const
     {
         const point& insidePoint = selectionPoints_.inside()[i];
 
-        label localCelli = mesh.findCell(insidePoint);
+        label localCelli = searchEngine.findCell(insidePoint);
 
         label globalCelli = -1;
 

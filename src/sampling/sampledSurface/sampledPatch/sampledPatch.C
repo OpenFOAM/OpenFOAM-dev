@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,7 +107,8 @@ bool Foam::sampledSurfaces::patch::expire()
     }
 
     sampledSurface::clearGeom();
-    MeshStorage::clear();
+    MeshedSurface<face>::clear();
+
     patchIndices_.clear();
     patchIndex_.clear();
     patchFaceLabels_.clear();
@@ -183,7 +184,7 @@ bool Foam::sampledSurfaces::patch::update()
     // too often anyhow.
     if (triangulate_)
     {
-        MeshStorage::triangulate();
+        MeshedSurface<face>::triangulate();
     }
 
     if (debug)
@@ -203,7 +204,7 @@ void Foam::sampledSurfaces::patch::remapFaces(const labelUList& faceMap)
     // recalculate the cells cut
     if (notNull(faceMap) && faceMap.size())
     {
-        MeshStorage::remapFaces(faceMap);
+        MeshedSurface<face>::remapFaces(faceMap);
         patchFaceLabels_ = labelList
         (
             UIndirectList<label>(patchFaceLabels_, faceMap)

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -2288,9 +2288,11 @@ Foam::labelBits Foam::dynamicIndexedOctree<Type>::findNode
 
 
 template<class Type>
+template<class ... Args>
 Foam::label Foam::dynamicIndexedOctree<Type>::findInside
 (
-    const point& sample
+    const point& sample,
+    const Args& ... args
 ) const
 {
     labelBits index = findNode(0, sample);
@@ -2308,7 +2310,7 @@ Foam::label Foam::dynamicIndexedOctree<Type>::findInside
         {
             label shapeI = indices[elemI];
 
-            if (shapes_.contains(shapeI, sample))
+            if (shapes_.contains(shapeI, sample, args ...))
             {
                 return shapeI;
             }

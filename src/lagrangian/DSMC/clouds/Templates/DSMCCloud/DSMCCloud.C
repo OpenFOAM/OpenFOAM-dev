@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,6 +95,8 @@ void Foam::DSMCCloud<ParcelType>::initialise
         dsmcInitialiseDict.subDict("numberDensities")
     );
 
+    const meshSearch& searchEngine = meshSearch::New(mesh_);
+
     List<word> molecules(numberDensitiesDict.toc());
 
     Field<scalar> numberDensities(molecules.size());
@@ -176,7 +178,16 @@ void Foam::DSMCCloud<ParcelType>::initialise
 
                     U += velocity;
 
-                    addNewParcel(p, celli, nLocateBoundaryHits, U, Ei, typeId);
+                    addNewParcel
+                    (
+                        searchEngine,
+                        p,
+                        celli,
+                        nLocateBoundaryHits,
+                        U,
+                        Ei,
+                        typeId
+                    );
                 }
             }
         }
@@ -463,6 +474,7 @@ void Foam::DSMCCloud<ParcelType>::calculateFields()
 template<class ParcelType>
 void Foam::DSMCCloud<ParcelType>::addNewParcel
 (
+    const meshSearch& searchEngine,
     const vector& position,
     const label celli,
     label& nLocateBoundaryHits,
@@ -475,7 +487,7 @@ void Foam::DSMCCloud<ParcelType>::addNewParcel
     (
         new ParcelType
         (
-            mesh_,
+            searchEngine,
             position,
             celli,
             nLocateBoundaryHits,

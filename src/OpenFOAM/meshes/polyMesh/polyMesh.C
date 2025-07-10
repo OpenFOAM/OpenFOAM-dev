@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "polyMesh.H"
+#include "OSspecific.H"
 #include "Time.H"
 #include "cellIOList.H"
 #include "wedgePolyPatch.H"
@@ -31,11 +32,8 @@ License
 #include "globalMeshData.H"
 #include "processorPolyPatch.H"
 #include "polyMeshTetDecomposition.H"
-#include "indexedOctree.H"
-#include "treeDataCell.H"
 #include "meshObjects.H"
 #include "pointMesh.H"
-#include "zonesGenerator.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -44,8 +42,12 @@ namespace Foam
     defineTypeNameAndDebug(polyMesh, 0);
 }
 
+
 Foam::word Foam::polyMesh::defaultRegion = "region0";
+
+
 Foam::word Foam::polyMesh::meshSubDir = "polyMesh";
+
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -244,7 +246,6 @@ Foam::polyMesh::polyMesh(const IOobject& io)
     geometricD_(Zero),
     solutionD_(Zero),
     tetBasePtIsPtr_(readTetBasePtIs()),
-    cellTreePtr_(nullptr),
     pointZones_
     (
         IOobject
@@ -449,7 +450,6 @@ Foam::polyMesh::polyMesh
     geometricD_(Zero),
     solutionD_(Zero),
     tetBasePtIsPtr_(readTetBasePtIs()),
-    cellTreePtr_(nullptr),
     pointZones_
     (
         IOobject
@@ -599,7 +599,6 @@ Foam::polyMesh::polyMesh
     geometricD_(Zero),
     solutionD_(Zero),
     tetBasePtIsPtr_(readTetBasePtIs()),
-    cellTreePtr_(nullptr),
     pointZones_
     (
         IOobject
@@ -698,7 +697,6 @@ Foam::polyMesh::polyMesh(polyMesh&& mesh)
     geometricD_(mesh.geometricD_),
     solutionD_(mesh.solutionD_),
     tetBasePtIsPtr_(move(mesh.tetBasePtIsPtr_)),
-    cellTreePtr_(move(mesh.cellTreePtr_)),
     pointZones_(move(mesh.pointZones_)),
     faceZones_(move(mesh.faceZones_)),
     cellZones_(move(mesh.cellZones_)),
@@ -1076,33 +1074,6 @@ const Foam::labelIOList& Foam::polyMesh::tetBasePtIs() const
 }
 
 
-const Foam::indexedOctree<Foam::treeDataCell>&
-Foam::polyMesh::cellTree() const
-{
-    if (cellTreePtr_.empty())
-    {
-        cellTreePtr_.reset
-        (
-            new indexedOctree<treeDataCell>
-            (
-                treeDataCell
-                (
-                    false,      // not cache bb
-                    *this,
-                    CELL_TETS   // use tet-decomposition for any inside test
-                ),
-                treeBoundBox(points()).extend(1e-4),
-                8,              // maxLevel
-                10,             // leafsize
-                5.0             // duplicity
-            )
-        );
-    }
-
-    return cellTreePtr_();
-}
-
-
 void Foam::polyMesh::addPatches
 (
     const List<polyPatch*>& p,
@@ -1434,9 +1405,6 @@ void Foam::polyMesh::setPoints(const pointField& newPoints)
     faceZones_.movePoints(points_);
     cellZones_.movePoints(points_);
 
-    // Cell tree might become invalid
-    cellTreePtr_.clear();
-
     // Reset valid directions (could change with rotation)
     geometricD_ = Zero;
     solutionD_ = Zero;
@@ -1495,9 +1463,6 @@ Foam::tmp<Foam::scalarField> Foam::polyMesh::movePoints
     pointZones_.movePoints(points_);
     faceZones_.movePoints(points_);
     cellZones_.movePoints(points_);
-
-    // Cell tree might become invalid
-    cellTreePtr_.clear();
 
     // Reset valid directions (could change with rotation)
     geometricD_ = Zero;
@@ -1575,227 +1540,6 @@ void Foam::polyMesh::removeFiles(const fileName& instanceDir) const
 void Foam::polyMesh::removeFiles() const
 {
     removeFiles(instance());
-}
-
-
-void Foam::polyMesh::findCellFacePt
-(
-    const point& p,
-    label& celli,
-    label& tetFacei,
-    label& tetPti
-) const
-{
-    celli = -1;
-    tetFacei = -1;
-    tetPti = -1;
-
-    const indexedOctree<treeDataCell>& tree = cellTree();
-
-    // Find point inside cell
-    celli = tree.findInside(p);
-
-    if (celli != -1)
-    {
-        // Check the nearest cell to see if the point is inside.
-        findTetFacePt(celli, p, tetFacei, tetPti);
-    }
-}
-
-
-void Foam::polyMesh::findTetFacePt
-(
-    const label celli,
-    const point& p,
-    label& tetFacei,
-    label& tetPti
-) const
-{
-    const polyMesh& mesh = *this;
-
-    tetIndices tet(polyMeshTetDecomposition::findTet(mesh, celli, p));
-    tetFacei = tet.face();
-    tetPti = tet.tetPt();
-}
-
-
-bool Foam::polyMesh::pointInCell
-(
-    const point& p,
-    label celli,
-    const cellDecomposition decompMode
-) const
-{
-    switch (decompMode)
-    {
-        case FACE_PLANES:
-        {
-            return primitiveMesh::pointInCell(p, celli);
-        }
-        break;
-
-        case FACE_CENTRE_TRIS:
-        {
-            // only test that point is on inside of plane defined by cell face
-            // triangles
-            const cell& cFaces = cells()[celli];
-
-            forAll(cFaces, cFacei)
-            {
-                label facei = cFaces[cFacei];
-                const face& f = faces_[facei];
-                const point& fc = faceCentres()[facei];
-                bool isOwn = (owner_[facei] == celli);
-
-                forAll(f, fp)
-                {
-                    label pointi;
-                    label nextPointi;
-
-                    if (isOwn)
-                    {
-                        pointi = f[fp];
-                        nextPointi = f.nextLabel(fp);
-                    }
-                    else
-                    {
-                        pointi = f.nextLabel(fp);
-                        nextPointi = f[fp];
-                    }
-
-                    triPointRef faceTri
-                    (
-                        points()[pointi],
-                        points()[nextPointi],
-                        fc
-                    );
-
-                    vector proj = p - faceTri.centre();
-
-                    if ((faceTri.area() & proj) > 0)
-                    {
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
-        break;
-
-        case FACE_DIAG_TRIS:
-        {
-            // only test that point is on inside of plane defined by cell face
-            // triangles
-            const cell& cFaces = cells()[celli];
-
-            forAll(cFaces, cFacei)
-            {
-                label facei = cFaces[cFacei];
-                const face& f = faces_[facei];
-
-                for (label tetPti = 1; tetPti < f.size() - 1; tetPti++)
-                {
-                    // Get tetIndices of face triangle
-                    tetIndices faceTetIs(celli, facei, tetPti);
-
-                    triPointRef faceTri = faceTetIs.faceTri(*this);
-
-                    vector proj = p - faceTri.centre();
-
-                    if ((faceTri.area() & proj) > 0)
-                    {
-                        return false;
-                    }
-                }
-            }
-
-            return true;
-        }
-        break;
-
-        case CELL_TETS:
-        {
-            label tetFacei;
-            label tetPti;
-
-            findTetFacePt(celli, p, tetFacei, tetPti);
-
-            return tetFacei != -1;
-        }
-        break;
-    }
-
-    return false;
-}
-
-
-Foam::label Foam::polyMesh::findCell
-(
-    const point& p,
-    const cellDecomposition decompMode
-) const
-{
-    if
-    (
-        Pstream::parRun()
-     && (decompMode == FACE_DIAG_TRIS || decompMode == CELL_TETS)
-    )
-    {
-        // Force construction of face-diagonal decomposition before testing
-        // for zero cells.
-        //
-        // If parallel running a local domain might have zero cells so never
-        // construct the face-diagonal decomposition which uses parallel
-        // transfers.
-        (void)tetBasePtIs();
-    }
-
-    if (nCells() == 0)
-    {
-        return -1;
-    }
-
-    if (decompMode == CELL_TETS)
-    {
-        // Advanced search method utilising an octree
-        // and tet-decomposition of the cells
-
-        label celli;
-        label tetFacei;
-        label tetPti;
-
-        findCellFacePt(p, celli, tetFacei, tetPti);
-
-        return celli;
-    }
-    else
-    {
-        // Approximate search avoiding the construction of an octree
-        // and cell decomposition
-
-        // Find the nearest cell centre to this location
-        label celli = findNearestCell(p);
-
-        // If point is in the nearest cell return
-        if (pointInCell(p, celli, decompMode))
-        {
-            return celli;
-        }
-        else
-        {
-            // Point is not in the nearest cell so search all cells
-
-            for (label celli = 0; celli < nCells(); celli++)
-            {
-                if (pointInCell(p, celli, decompMode))
-                {
-                    return celli;
-                }
-            }
-
-            return -1;
-        }
-    }
 }
 
 

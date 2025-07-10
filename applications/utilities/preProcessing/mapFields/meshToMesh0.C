@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,23 +26,23 @@ License
 #include "meshToMesh0.H"
 #include "processorFvPatch.H"
 #include "demandDrivenData.H"
-#include "treeDataCell.H"
+#include "meshSearch.H"
 #include "treeDataFace.H"
 #include "tetOverlapVolume.H"
+#include "pointInCell.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-defineTypeNameAndDebug(meshToMesh0, 0);
+    defineTypeNameAndDebug(meshToMesh0, 0);
 }
+
 
 const Foam::scalar Foam::meshToMesh0::directHitTol = 1e-5;
 
 
-
-
-
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 void Foam::meshToMesh0::calcAddressing()
 {
@@ -108,7 +108,7 @@ void Foam::meshToMesh0::calcAddressing()
 
     indexedOctree<treeDataCell> oc
     (
-        treeDataCell(false, fromMesh_, polyMesh::CELL_TETS),
+        treeDataCell(false, fromMesh_),
         shiftedBb,      // overall bounding box
         8,              // maxLevel
         10,             // leafsize
@@ -178,8 +178,8 @@ void Foam::meshToMesh0::calcAddressing()
                     wallBb.max() + vector(typDim, typDim, typDim)
                 );
 
-                // Note: allow more levels than in meshSearch. Assume patch
-                // is not as big as all boundary faces
+                // Note: Allow more levels than in meshBoundarySearch. Assume
+                // patch is not as big as all boundary faces.
                 indexedOctree<treeDataFace> oc
                 (
                     treeDataFace(false, fromPatch),
@@ -276,7 +276,7 @@ void Foam::meshToMesh0::cellAddresses
         cellAddressing_[toi] = -1;
 
         // Check point is actually in the nearest cell
-        if (fromMesh.pointInCell(p, curCell))
+        if (pointInCell(p, fromMesh, curCell))
         {
             cellAddressing_[toi] = curCell;
         }
@@ -287,7 +287,9 @@ void Foam::meshToMesh0::cellAddresses
             // the octree search to find it.
             if (boundaryCell[curCell])
             {
-                cellAddressing_[toi] = oc.findInside(p);
+                cellAddressing_[toi] =
+                    oc.findInside(p, pointInCellShapes::tets);
+
                 if (cellAddressing_[toi] != -1)
                 {
                     curCell = cellAddressing_[toi];
@@ -305,7 +307,7 @@ void Foam::meshToMesh0::cellAddresses
                 {
                     // Search through all the neighbours.
                     // If point is in neighbour reset current cell
-                    if (fromMesh.pointInCell(p, neighbours[ni]))
+                    if (pointInCell(p, fromMesh, neighbours[ni]))
                     {
                         cellAddressing_[toi] = neighbours[ni];
                         found = true;
@@ -329,7 +331,7 @@ void Foam::meshToMesh0::cellAddresses
                         {
                             // Search through all the neighbours.
                             // If point is in neighbour reset current cell
-                            if (fromMesh.pointInCell(p, nn[ni]))
+                            if (pointInCell(p, fromMesh, nn[ni]))
                             {
                                 cellAddressing_[toi] = nn[ni];
                                 found = true;
@@ -343,7 +345,8 @@ void Foam::meshToMesh0::cellAddresses
                 if (!found)
                 {
                     // Still not found so use the octree
-                    cellAddressing_[toi] = oc.findInside(p);
+                    cellAddressing_[toi] =
+                       oc.findInside(p, pointInCellShapes::tets);
 
                     if (cellAddressing_[toi] != -1)
                     {
@@ -536,19 +539,22 @@ void Foam::meshToMesh0::calculateCellToCellAddressing() const
             << exit(FatalError);
     }
 
+    const meshSearch& fromSearchEngine = meshSearch::New(fromMesh_);
+
     //- Initialise overlap volume to zero
     V_ = 0.0;
-
-    tetOverlapVolume overlapEngine;
 
     cellToCellAddressingPtr_ = new labelListList(toMesh_.nCells());
     labelListList& cellToCell = *cellToCellAddressingPtr_;
 
-
     forAll(cellToCell, iTo)
     {
         const labelList overLapCells =
-            overlapEngine.overlappingCells(fromMesh_, toMesh_, iTo);
+            fromSearchEngine.cellTree().findBox
+            (
+                treeBoundBox(toMesh_.points(), toMesh_.cellPoints()[iTo])
+            );
+
         if (overLapCells.size() > 0)
         {
             cellToCell[iTo].setSize(overLapCells.size());

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,65 +22,84 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::meshSearchFACE_CENTRE_TRISMeshObject
+    Foam::meshSearchBoundBox
 
 Description
-    DemandDrivenMeshObject wrapper around
-    meshSearch(mesh,  polyMesh::FACE_CENTRE_TRIS).
+    Mesh object to hold a bound box for use by mesh search engines
 
 SourceFiles
+    meshSearchBoundBox.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef meshSearchFACE_CENTRE_TRISMeshObject_H
-#define meshSearchFACE_CENTRE_TRISMeshObject_H
+#ifndef meshSearchBoundBox_H
+#define meshSearchBoundBox_H
 
 #include "DemandDrivenMeshObject.H"
-#include "meshSearch.H"
+#include "polyMesh.H"
+#include "treeBoundBox.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
+// Forward declaration of classes
+class treeBoundBox;
+
 /*---------------------------------------------------------------------------*\
-            Class meshSearchFACE_CENTRE_TRISMeshObject Declaration
+                         Class meshSearchBoundBox Declaration
 \*---------------------------------------------------------------------------*/
 
-class meshSearchFACE_CENTRE_TRISMeshObject
+class meshSearchBoundBox
 :
     public DemandDrivenMeshObject
     <
         polyMesh,
         DeletableMeshObject,
-        meshSearchFACE_CENTRE_TRISMeshObject
-    >,
-    public meshSearch
+        meshSearchBoundBox
+    >
 {
+    // Private Data
 
-protected:
-
-    friend class DemandDrivenMeshObject
-    <
-        polyMesh,
-        DeletableMeshObject,
-        meshSearchFACE_CENTRE_TRISMeshObject
-    >;
-
-    // Protected Constructors
-
-        //- Constructor given polyMesh
-        explicit meshSearchFACE_CENTRE_TRISMeshObject(const polyMesh& mesh);
+        //- Bound box
+        const treeBoundBox bb_;
 
 
 public:
 
-    // Declare name of the class and its debug switch
-    TypeName("meshSearchFACE_CENTRE_TRISMeshObject");
+    //- Run-time type information
+    TypeName("meshSearchBoundBox");
+
+
+    // Constructors
+
+        //- Construct from mesh
+        meshSearchBoundBox(const polyMesh& mesh);
+
+        //- Disallow default bitwise copy construction
+        meshSearchBoundBox(const meshSearchBoundBox&) = delete;
+
 
     //- Destructor
-    virtual ~meshSearchFACE_CENTRE_TRISMeshObject()
-    {}
+    virtual ~meshSearchBoundBox();
+
+
+    // Member Functions
+
+        // Access
+
+            //- Access the bound box
+            inline const treeBoundBox& bb() const
+            {
+                return bb_;
+            }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const meshSearchBoundBox&) = delete;
 };
 
 

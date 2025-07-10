@@ -25,7 +25,6 @@ License
 
 #include "streamlines.H"
 #include "streamlinesCloud.H"
-#include "meshSearch.H"
 #include "sampledSet.H"
 #include "globalIndex.H"
 #include "interpolationCellPoint.H"
@@ -90,8 +89,7 @@ Foam::functionObjects::streamlines::streamlines
 )
 :
     fvMeshFunctionObject(name, runTime, dict),
-    nSubCycle_(0),
-    searchEngine_(mesh_)
+    nSubCycle_(0)
 {
     read(dict);
 }
@@ -166,7 +164,6 @@ bool Foam::functionObjects::streamlines::read(const dictionary& dict)
     (
         "seedSampleSet",
         mesh_,
-        searchEngine_,
         dict.subDict("seedSampleSet")
     );
 
@@ -256,6 +253,9 @@ bool Foam::functionObjects::streamlines::write()
             );
     }
 
+    // Get the mesh searching engine
+    const meshSearch& searchEngine = meshSearch::New(mesh_);
+
     // Do tracking to create sampled data
     DynamicField<point> allPositions;
     DynamicField<label> allTracks;
@@ -281,7 +281,7 @@ bool Foam::functionObjects::streamlines::write()
             (
                 new streamlinesParticle
                 (
-                    mesh_,
+                    searchEngine,
                     sampledSetPtr_().positions()[i],
                     sampledSetPtr_().cells()[i],
                     nLocateBoundaryHits,
@@ -582,8 +582,6 @@ void Foam::functionObjects::streamlines::movePoints(const polyMesh& mesh)
 {
     if (&mesh == &mesh_)
     {
-        searchEngine_.correct();
-
         sampledSetPtr_->movePoints();
     }
 }
@@ -596,8 +594,6 @@ void Foam::functionObjects::streamlines::topoChange
 {
     if (&map.mesh() == &mesh_)
     {
-        searchEngine_.correct();
-
         sampledSetPtr_->topoChange(map);
     }
 }
@@ -610,8 +606,6 @@ void Foam::functionObjects::streamlines::mapMesh
 {
     if (&map.mesh() == &mesh_)
     {
-        searchEngine_.correct();
-
         sampledSetPtr_->mapMesh(map);
     }
 }
@@ -624,8 +618,6 @@ void Foam::functionObjects::streamlines::distribute
 {
     if (&map.mesh() == &mesh_)
     {
-        searchEngine_.correct();
-
         sampledSetPtr_->distribute(map);
     }
 }

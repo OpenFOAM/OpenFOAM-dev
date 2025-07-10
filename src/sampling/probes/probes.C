@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,6 +28,7 @@ License
 #include "polyTopoChangeMap.H"
 #include "OSspecific.H"
 #include "writeFile.H"
+#include "meshSearch.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -54,6 +55,8 @@ void Foam::probes::findElements(const fvMesh& mesh)
         Info<< "probes: resetting sample locations" << endl;
     }
 
+    const meshSearch& searchEngine = meshSearch::New(mesh_);
+
     elementList_.clear();
     elementList_.setSize(size());
 
@@ -64,7 +67,7 @@ void Foam::probes::findElements(const fvMesh& mesh)
     {
         const vector& location = operator[](probei);
 
-        const label celli = mesh.findCell(location);
+        const label celli = searchEngine.findCell(location);
 
         elementList_[probei] = celli;
 

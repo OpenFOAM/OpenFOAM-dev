@@ -28,6 +28,7 @@ License
 #include "triPointRef.H"
 #include "tetIndices.H"
 #include "standardNormal.H"
+#include "meshSearch.H"
 
 using namespace Foam::constant::mathematical;
 
@@ -142,7 +143,9 @@ void Foam::FreeStream<CloudType>::inflow()
 {
     CloudType& cloud(this->owner());
 
-    const polyMesh& mesh(cloud.mesh());
+    const polyMesh& mesh = cloud.mesh();
+
+    const meshSearch& searchEngine = meshSearch::New(mesh);
 
     const scalar deltaT = mesh.time().deltaTValue();
 
@@ -406,6 +409,7 @@ void Foam::FreeStream<CloudType>::inflow()
 
                     cloud.addNewParcel
                     (
+                        searchEngine,
                         p,
                         celli,
                         nLocateBoundaryHits,

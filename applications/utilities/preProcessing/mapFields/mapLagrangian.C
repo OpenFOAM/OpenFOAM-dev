@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ License
 
 #include "MapLagrangianFields.H"
 #include "passiveParticleCloud.H"
-#include "meshSearch.H"
+#include "meshBoundarySearch.H"
 #include "OSspecific.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -36,49 +36,32 @@ namespace Foam
 static const scalar perturbFactor = 1e-6;
 
 
-// Special version of findCell that generates a cell guaranteed to be
-// compatible with tracking.
 static label findCell
 (
+    const meshSearch& searchEngine,
+    const meshBoundarySearch& boundarySearchEngine,
     const lagrangian::Cloud<passiveParticle>& cloud,
     const point& pt
 )
 {
-    label celli = -1;
-    label tetFacei = -1;
-    label tetPtI = -1;
-
     const polyMesh& mesh = cloud.pMesh();
 
-    mesh.findCellFacePt(pt, celli, tetFacei, tetPtI);
-
+    // Standard search for the cell that contains the point
+    const label celli = searchEngine.findCell(pt);
     if (celli >= 0)
     {
         return celli;
     }
-    else
+
+    // See if the particle is on a boundary face by finding the nearest
+    // boundary face and shifting the particle slightly into the owner cell
+    // before doing the standard search again
+    const label facei = boundarySearchEngine.findNearestBoundaryFace(pt);
+    if (facei >= 0)
     {
-        // See if particle on face by finding nearest face and shifting
-        // particle.
-
-        meshSearch meshSearcher
-        (
-            mesh,
-            polyMesh::FACE_PLANES    // no decomposition needed
-        );
-
-        label facei = meshSearcher.findNearestBoundaryFace(pt);
-
-        if (facei >= 0)
-        {
-            const point& cc = mesh.cellCentres()[mesh.faceOwner()[facei]];
-
-            const point perturbPt = (1-perturbFactor)*pt+perturbFactor*cc;
-
-            mesh.findCellFacePt(perturbPt, celli, tetFacei, tetPtI);
-
-            return celli;
-        }
+        const point& cc = mesh.cellCentres()[mesh.faceOwner()[facei]];
+        const point perturbPt = (1 - perturbFactor)*pt + perturbFactor*cc;
+        return searchEngine.findCell(perturbPt);
     }
 
     return -1;
@@ -104,6 +87,10 @@ void mapLagrangian(const meshToMesh0& meshToMesh0Interp)
     const fvMesh& meshSource = meshToMesh0Interp.fromMesh();
     const fvMesh& meshTarget = meshToMesh0Interp.toMesh();
 
+    const meshSearch& targetInternalSearchEngine =
+        meshSearch::New(meshTarget);
+    const meshBoundarySearch& targetBoundarySearchEngine =
+        meshBoundarySearch::New(meshTarget);
 
     fileNameList cloudDirs
     (
@@ -251,6 +238,8 @@ void mapLagrangian(const meshToMesh0& meshToMesh0Interp)
                         label targetCell =
                             findCell
                             (
+                                targetInternalSearchEngine,
+                                targetBoundarySearchEngine,
                                 targetParcels,
                                 iter().position(meshSource)
                             );
@@ -262,7 +251,7 @@ void mapLagrangian(const meshToMesh0& meshToMesh0Interp)
                             (
                                 new passiveParticle
                                 (
-                                    meshTarget,
+                                    targetInternalSearchEngine,
                                     iter().position(meshSource),
                                     targetCell,
                                     nLocateBoundaryHits

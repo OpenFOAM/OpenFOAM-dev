@@ -27,7 +27,6 @@ License
 #include "fvMesh.H"
 #include "interpolation.H"
 #include "IOmanip.H"
-#include "meshSearch.H"
 #include "lineCellFace.H"
 #include "Time.H"
 #include "uniformDimensionedFields.H"
@@ -76,7 +75,6 @@ void Foam::functionObjects::interfaceHeight::writePositions()
         (
             "",
             mesh_,
-            meshSearch(mesh_),
             coordSet::axisTypeNames_[coordSet::axisType::XYZ],
             locations_[li] + gHat*mesh_.bounds().mag(),
             locations_[li] - gHat*mesh_.bounds().mag()

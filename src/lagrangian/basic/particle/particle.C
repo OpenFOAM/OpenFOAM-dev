@@ -27,8 +27,6 @@ License
 #include "tracking.H"
 #include "polyTopoChangeMap.H"
 #include "transform.H"
-#include "treeDataCell.H"
-#include "indexedOctree.H"
 #include "cubicEqn.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -38,6 +36,29 @@ Foam::label Foam::particle::particleCount = 0;
 namespace Foam
 {
     defineTypeNameAndDebug(particle, 0);
+}
+
+
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+bool Foam::particle::locate
+(
+    const polyMesh& mesh,
+    const vector& position,
+    label celli
+)
+{
+    celli_ = celli;
+
+    return
+        tracking::locate
+        (
+            mesh, position,
+            coordinates_, celli_, tetFacei_, tetPti_, 1,
+            debug
+          ? static_cast<const string&>(string("Particle " + name(origId())))
+          : NullObjectRef<string>()
+        );
 }
 
 
@@ -68,7 +89,7 @@ Foam::particle::particle
 
 Foam::particle::particle
 (
-    const polyMesh& mesh,
+    const meshSearch& searchEngine,
     const vector& position,
     const label celli,
     label& nLocateBoundaryHits
@@ -85,7 +106,7 @@ Foam::particle::particle
     origProc_(Pstream::myProcNo()),
     origId_(getNewParticleIndex())
 {
-    if (!locate(mesh, position, celli))
+    if (!locate(searchEngine, position, celli))
     {
         nLocateBoundaryHits ++;
     }
@@ -111,7 +132,7 @@ Foam::particle::particle(const particle& p)
 
 bool Foam::particle::locate
 (
-    const polyMesh& mesh,
+    const meshSearch& searchEngine,
     const vector& position,
     label celli
 )
@@ -121,7 +142,7 @@ bool Foam::particle::locate
     return
         tracking::locate
         (
-            mesh, position,
+            searchEngine, position,
             coordinates_, celli_, tetFacei_, tetPti_, 1,
             debug
           ? static_cast<const string&>(string("Particle " + name(origId())))

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ inline Foam::DSMCParcel<ParcelType>::constantProperties::constantProperties
 template<class ParcelType>
 inline Foam::DSMCParcel<ParcelType>::DSMCParcel
 (
-    const polyMesh& mesh,
+    const meshSearch& searchEngine,
     const vector& position,
     const label celli,
     label& nLocateBoundaryHits,
@@ -64,7 +64,7 @@ inline Foam::DSMCParcel<ParcelType>::DSMCParcel
     const label typeId
 )
 :
-    ParcelType(mesh, position, celli, nLocateBoundaryHits),
+    ParcelType(searchEngine, position, celli, nLocateBoundaryHits),
     U_(U),
     Ei_(Ei),
     typeId_(typeId)

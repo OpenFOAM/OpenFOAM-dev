@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "lineCellFace.H"
-#include "meshSearch.H"
 #include "DynamicList.H"
 #include "polyMesh.H"
 #include "addToRunTimeSelectionTable.H"
@@ -55,7 +54,6 @@ void Foam::sampledSets::lineCellFace::calcSamples
     lineFace::calcSamples
     (
         mesh(),
-        searchEngine(),
         start_,
         end_,
         storeBothProcFaces_ ? 2 : 1,
@@ -75,11 +73,10 @@ Foam::sampledSets::lineCellFace::lineCellFace
 (
     const word& name,
     const polyMesh& mesh,
-    const meshSearch& searchEngine,
     const dictionary& dict
 )
 :
-    sampledSet(name, mesh, searchEngine, dict),
+    sampledSet(name, mesh, dict),
     start_(dict.lookup("start")),
     end_(dict.lookup("end")),
     storeBothProcFaces_(false)
@@ -90,13 +87,12 @@ Foam::sampledSets::lineCellFace::lineCellFace
 (
     const word& name,
     const polyMesh& mesh,
-    const meshSearch& searchEngine,
     const word& axis,
     const point& start,
     const point& end
 )
 :
-    sampledSet(name, mesh, searchEngine, axis),
+    sampledSet(name, mesh, axis),
     start_(start),
     end_(end),
     storeBothProcFaces_(true)

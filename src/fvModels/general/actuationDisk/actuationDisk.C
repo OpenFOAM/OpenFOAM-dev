@@ -27,6 +27,7 @@ License
 #include "fvMesh.H"
 #include "fvMatrix.H"
 #include "geometricOneField.H"
+#include "meshSearch.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -88,7 +89,7 @@ void Foam::fv::actuationDisk::readCoeffs(const dictionary& dict)
     }
 
     upstreamPoint_ = dict.lookup<point>("upstreamPoint");
-    upstreamCellId_ = mesh().findCell(upstreamPoint_);
+    upstreamCellId_ = meshSearch::New(mesh()).findCell(upstreamPoint_);
     if (returnReduce(upstreamCellId_, maxOp<label>()) == -1)
     {
         FatalIOErrorInFunction(coeffs(dict))
