@@ -18,4 +18,6 @@ TARGET_LINK_LIBRARIES(
     OpenFOAM
     Qt${PARAVIEW_QT_MAJOR_VERSION}::Core
     Qt${PARAVIEW_QT_MAJOR_VERSION}::Gui
+    LINK_PRIVATE
+    ParaView::pqApplicationComponents
 )
