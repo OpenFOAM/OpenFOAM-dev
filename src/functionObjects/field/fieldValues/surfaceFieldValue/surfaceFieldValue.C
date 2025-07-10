@@ -643,7 +643,16 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::read
         }
         case selectionTypes::sampledSurface:
         {
-            surfacePtr_ = sampledSurface::New(name(), mesh_, dict);
+            surfacePtr_ =
+                sampledSurface::New
+                (
+                    name(),
+                    mesh_,
+                    dict.subDict
+                    (
+                        selectionTypeNames[selectionTypes::sampledSurface]
+                    )
+                );
 
             selectionName_ = surfacePtr_().name();
 
