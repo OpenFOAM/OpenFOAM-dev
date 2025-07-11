@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,8 +62,14 @@ GeometricFieldSources
     const GeometricFieldSources<Type, GeoMesh, PrimitiveField>& mtf
 )
 :
-    GeometricFieldSources(iF, static_cast<const HashPtrTable<Source>&>(mtf))
-{}
+    HashPtrTable<Source>(mtf.capacity()),
+    errorLocation_(mtf.errorLocation_)
+{
+    forAllConstIter(typename HashPtrTable<Source>, mtf, iter)
+    {
+        this->set(iter.key(), iter()->clone(iF).ptr());
+    }
+}
 
 
 template<class Type, class GeoMesh, template<class> class PrimitiveField>
@@ -75,8 +81,14 @@ GeometricFieldSources
     const GeometricFieldSources<Type, GeoMesh, PrimitiveField2>& mtf
 )
 :
-    GeometricFieldSources(iF, static_cast<const HashPtrTable<Source>&>(mtf))
-{}
+    HashPtrTable<Source>(mtf.capacity()),
+    errorLocation_(mtf.errorLocation_)
+{
+    forAllConstIter(typename HashPtrTable<Source>, mtf, iter)
+    {
+        this->set(iter.key(), iter()->clone(iF).ptr());
+    }
+}
 
 
 template<class Type, class GeoMesh, template<class> class PrimitiveField>
