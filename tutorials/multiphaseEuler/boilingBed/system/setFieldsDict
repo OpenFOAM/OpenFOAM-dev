@@ -26,7 +26,6 @@ zones
     bed
     {
         type            lookup;
-        zoneType        cell;
 
         values
         {

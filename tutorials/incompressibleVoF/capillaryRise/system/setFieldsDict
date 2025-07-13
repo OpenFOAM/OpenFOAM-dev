@@ -24,7 +24,6 @@ zones
     water
     {
         type        box;
-        zoneType    cell;
 
         box         (0 0 -1) (1 8e-3 1);
 

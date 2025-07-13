@@ -30,7 +30,6 @@ zones
     water
     {
         type        cylinder;
-        zoneType    cell;
 
         point1  (0 0 0);
         point2  (0 $height 0);

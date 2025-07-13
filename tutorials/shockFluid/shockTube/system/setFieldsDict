@@ -26,7 +26,6 @@ zones
     lowPressure
     {
         type        box;
-        zoneType    cell;
 
         box         (0 -1 -1) (5 1 1);
 

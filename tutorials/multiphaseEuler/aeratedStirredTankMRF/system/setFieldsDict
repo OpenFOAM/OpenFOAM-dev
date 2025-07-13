@@ -19,7 +19,6 @@ zones
     gas
     {
         type        box;
-        zoneType    cell;
 
         box         (-0.51 -0.51 0.8) (0.51 0.51 1.5);
 

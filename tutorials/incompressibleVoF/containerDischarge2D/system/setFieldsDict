@@ -24,7 +24,6 @@ zones
     liquid
     {
         type        box;
-        zoneType    cell;
 
         box         (-100 -100 0.0) (100 100 0.05);
 

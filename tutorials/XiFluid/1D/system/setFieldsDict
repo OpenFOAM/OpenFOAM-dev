@@ -26,7 +26,6 @@ zones
     burnt
     {
         type        box;
-        zoneType    cell;
 
         box         (0 -1 -1) (0.025 1 1);
 

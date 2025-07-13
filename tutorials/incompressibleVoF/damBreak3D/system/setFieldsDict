@@ -24,7 +24,6 @@ zones
     waterColumn
     {
         type        box;
-        zoneType    cell;
 
         box         (0 0 0) (0.6 0.1875 0.75);
 

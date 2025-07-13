@@ -26,7 +26,6 @@ zones
     fuelAir
     {
         type        box;
-        zoneType    cell;
 
         box         (0 0 -1) (1 0.01 1);
 

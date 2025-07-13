@@ -27,7 +27,6 @@ zones
     bubble
     {
         type        sphere;
-        zoneType    cell;
 
         centre (0.5 0.5 0.5);
         radius 0.1;
@@ -44,7 +43,6 @@ zones
     air
     {
         type        box;
-        zoneType    cell;
 
         box         (-10 1 -1) (10 10 1);
 

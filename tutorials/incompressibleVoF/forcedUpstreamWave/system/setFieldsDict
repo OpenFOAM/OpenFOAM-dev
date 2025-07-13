@@ -24,7 +24,6 @@ zones
     cells
     {
         type        box;
-        zoneType    cell;
 
         box         (-10000 -10000 -10000) (10000 0 10000);
 

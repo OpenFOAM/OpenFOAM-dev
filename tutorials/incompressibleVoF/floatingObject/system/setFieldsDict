@@ -24,7 +24,6 @@ zones
     water
     {
         type        box;
-        zoneType    cell;
 
         box         (-100 -100 -100) (100 100 0.5368);
 
@@ -37,7 +36,6 @@ zones
     bump
     {
         type        box;
-        zoneType    cell;
 
         box         (0.7 0.8 -100) (100 100 0.651);
 

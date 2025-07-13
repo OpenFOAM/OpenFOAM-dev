@@ -26,7 +26,6 @@ zones
     bed
     {
         type        box;
-        zoneType    cell;
 
         box         (0 0.3333 -0.1) (0.15 0.6501 0.1);
 

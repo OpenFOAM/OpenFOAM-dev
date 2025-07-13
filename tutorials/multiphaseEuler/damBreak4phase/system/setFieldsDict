@@ -27,7 +27,6 @@ zones
     water
     {
         type        box;
-        zoneType    cell;
 
         box         (0 0 -1) (0.1461 0.292 1);
 
@@ -43,7 +42,6 @@ zones
     oil
     {
         type        box;
-        zoneType    cell;
 
         box         (0.1461 0 -1) (0.2922 0.292 1);
 
@@ -59,7 +57,6 @@ zones
     mercury
     {
         type        box;
-        zoneType    cell;
 
         box         (0 0 -1) (0.1461 0.1 1);
 

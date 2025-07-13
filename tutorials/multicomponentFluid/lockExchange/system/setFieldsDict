@@ -24,7 +24,6 @@ zones
     sludge
     {
         type        box;
-        zoneType    cell;
 
         box         (0 0 0) (5 2 2);
 

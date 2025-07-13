@@ -28,7 +28,6 @@ zones
     pipe
     {
         type        lookup;
-        zoneType    cell;
 
         values
         {
