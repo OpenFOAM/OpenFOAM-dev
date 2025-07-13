@@ -78,11 +78,11 @@ Usage
                     alpha.water 1;
                 }
             }
+        }
 
-            extrapolatePatches
-            {
-                "inlet|outlet"   (alpha.water);
-            }
+        extrapolatePatches
+        {
+            "inlet|outlet"   (alpha.water);
         }
     \endverbatim
     which sets the internal values of phase-fraction field and inlet and outlet

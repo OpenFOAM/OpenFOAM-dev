@@ -22,11 +22,9 @@ defaultValues
 zones
 {
     // Set cell values
-    // (does zerogradient on boundaries)
     cells
     {
         type        box;
-        zoneType    cell;
 
         box (0 0 -1) (0.1461 0.292 1);
 
@@ -35,26 +33,11 @@ zones
             alpha.water 1;
         }
     }
+}
 
-    // Set patch values (using ==)
-    patchFaces
-    {
-        type        box;
-        zoneType    face;
-
-        box (0 0 -1) (0.1461 0.292 1);
-
-        zone
-        {
-            type        patch;
-            patches     (inlet outlet);
-        }
-
-        values
-        {
-            alpha.water 1;
-        }
-    }
+extrapolatePatches
+{
+    "inlet|outlet"   (alpha.water);
 }
 
 // ************************************************************************* //

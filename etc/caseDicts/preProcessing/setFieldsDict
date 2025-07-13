@@ -25,7 +25,6 @@ zones
     box
     {
         type        box;
-        zoneType    cell;
 
         box         (0 0 0) (30 30 30);
 
@@ -40,7 +39,6 @@ zones
     sphere
     {
         type        sphere;
-        zoneType    cell;
 
         centre      (40 40 40);
         radius      10;
@@ -56,7 +54,6 @@ zones
     surface
     {
         type            insideSurface;
-        zoneType        cell;
 
         surface         closedTriSurface;
         file            "geometry.obj";
