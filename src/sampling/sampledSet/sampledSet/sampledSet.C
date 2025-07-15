@@ -79,22 +79,32 @@ void Foam::sampledSet::setSamples() const
             << abort(FatalError);
     }
 
+    pointField positions;
+    positions.transfer(samplingPositions);
+
+    scalarField distances;
+    samplingDistances.transfer(samplingDistances);
+
     coordsPtr_.reset
     (
         new coordSet
         (
             samplingSegments,
             word::null,
-            pointField(samplingPositions),
+            positions,
             coordSet::axisTypeNames_[coordSet::axisType::DISTANCE],
-            samplingDistances.size() == samplingPositions.size()
-          ? scalarField(samplingDistances)
-          : scalarField::null(),
+            distances.size() == positions.size()
+          ? distances
+          : NullObjectRef<scalarField>(),
             coordSet::axisTypeNames_[axis_]
         )
     );
-    cellsPtr_.reset(new labelList(samplingCells));
-    facesPtr_.reset(new labelList(samplingFaces));
+
+    cellsPtr_.reset(new labelList());
+    cellsPtr_().transfer(samplingCells);
+
+    facesPtr_.reset(new labelList());
+    facesPtr_().transfer(samplingFaces);
 }
 
 
