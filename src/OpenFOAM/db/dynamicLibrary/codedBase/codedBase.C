@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -262,20 +262,20 @@ void Foam::codedBase::createLibrary
         }
     }
 
-
     // All processes must wait for compile to finish
     if (regIOobject::fileModificationSkew > 0)
     {
-        //- Since the library has only been compiled on the master the
-        //  other nodes need to pick this library up through NFS
-        //  We do this by just polling a few times using the
-        //  fileModificationSkew.
-
         const fileName libPath = dynCode.libPath();
 
-        off_t mySize = fileSize(libPath);
-        off_t masterSize = mySize;
+        // Determine and communicate the master file size. Scattering
+        // blocks the other processes until the master has finished
+        // compiling.
+        off_t masterSize = Pstream::master() ? fileSize(libPath) : -1;
         Pstream::scatter(masterSize);
+
+        // Determine the local file size. This may be incorrect if NFS is
+        // taking its time, in which case we wait and try again.
+        off_t mySize = Pstream::master() ? masterSize : fileSize(libPath);
 
         if (debug)
         {
