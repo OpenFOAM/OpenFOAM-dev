@@ -489,7 +489,7 @@ void Foam::functionObjects::scalarTransport::solveMULES()
                     volScalarField::New
                     (
                         "cnBDCoeff",
-                        max(cnCoeff, 1.0 - 1.0/max(Co, 2.0)),
+                        max(cnCoeff, scalar(1.0) - scalar(1.0)/max(Co, scalar(2.0))),
                         zeroGradientFvPatchField<scalar>::typeName
                     )
                 )

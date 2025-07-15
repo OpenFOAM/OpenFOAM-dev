@@ -71,9 +71,9 @@ void Foam::solvers::compressibleVoF::alphaSuSp
         if (vDot[celli] > 0.0)
         {
             Sp[celli] -=
-                vDot[celli]/max(1.0 - alpha1[celli], vDotResidualAlpha);
+                vDot[celli]/max(scalar(1.0) - alpha1[celli], vDotResidualAlpha);
             Su[celli] +=
-                vDot[celli]/max(1.0 - alpha1[celli], vDotResidualAlpha);
+                vDot[celli]/max(scalar(1.0) - alpha1[celli], vDotResidualAlpha);
         }
         else if (vDot[celli] < 0.0)
         {

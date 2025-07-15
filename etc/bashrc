@@ -33,7 +33,7 @@
 
 export WM_PROJECT=OpenFOAM
 export WM_THIRD_PARTY=ThirdParty
-export WM_PROJECT_VERSION=dash
+export WM_PROJECT_VERSION=dev
 
 ################################################################################
 # USER EDITABLE PART: Changes made here may be lost with the next upgrade
@@ -47,6 +47,7 @@ export WM_PROJECT_VERSION=dash
 if [ -n "$bashrcFile" ]
 then
     export FOAM_INST_DIR=$(cd $(dirname $bashrcFile)/../.. && pwd -P)
+    export FOAM_PROJECT_DIR=$(cd $(dirname $bashrcFile)/.. && pwd -P)
 else
     export FOAM_INST_DIR=$(cd $(dirname $0)/.. && pwd -P)
     export FOAM_PROJECT_DIR=$(cd $(dirname $0) && pwd -P)
@@ -84,7 +85,7 @@ export WM_ARCH_OPTION=64
 
 #- Precision:
 #    WM_PRECISION_OPTION = SP | DP | LP
-export WM_PRECISION_OPTION=DP
+export WM_PRECISION_OPTION=SP
 
 #- Label size:
 #    WM_LABEL_SIZE = 32 | 64
@@ -97,7 +98,7 @@ export WM_COMPILE_OPTION=Opt
 #- MPI implementation:
 #    WM_MPLIB = SYSTEMOPENMPI | OPENMPI | SYSTEMMPI | MPICH | MPICH-GM | HPMPI
 #               | MPI | FJMPI | QSMPI | SGIMPI | INTELMPI
-export WM_MPLIB=SYSTEMOPENMPI
+export WM_MPLIB=NONE #SYSTEMOPENMPI
 
 #- Operating System:
 #    WM_OSTYPE = POSIX | ???
@@ -111,7 +112,7 @@ export PARMETIS_TYPE=none
 export ZOLTAN_TYPE=none #ThirdParty
 
 #    ParaView_TYPE = none | system | paraviewopenfoam | ThirdParty (OpenFOAM)
-export ParaView_TYPE=system
+export ParaView_TYPE=none
 
 #- Floating-point signal handling:
 #    set or unset
@@ -176,9 +177,9 @@ _foamParams $@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 if [ ${WM_THIRD_PARTY%%/*} = ${WM_PROJECT_DIR##*/} ]
 then
-    export WM_THIRD_PARTY_DIR=$WM_PROJECT_INST_DIR/$WM_THIRD_PARTY
+    export WM_THIRD_PARTY_DIR=$WM_PROJECT_DIR/$WM_THIRD_PARTY
 else
-    export WM_THIRD_PARTY_DIR=$WM_PROJECT_INST_DIR/$WM_THIRD_PARTY-$WM_PROJECT_VERSION
+    export WM_THIRD_PARTY_DIR=$WM_PROJECT_DIR/$WM_THIRD_PARTY-$WM_PROJECT_VERSION
 fi
 
 if [ -d "$WM_THIRD_PARTY_DIR" ]
