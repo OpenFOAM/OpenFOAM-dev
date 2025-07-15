@@ -1,16 +1,16 @@
     export FOAM_APP="/workspace/applications"
-    export FOAM_APPBIN="/workspace/platforms/linux64GccDPInt32Opt/bin"
-    export FOAM_EXT_LIBBIN="/workspace/ThirdParty-dev/platforms/linux64GccDPInt32/lib"
+    export FOAM_APPBIN="/workspace/platforms/linux64GccSPInt32Opt/bin"
+    export FOAM_EXT_LIBBIN="/workspace/ThirdParty-dev/platforms/linux64GccSPInt32/lib"
     export FOAM_INST_DIR="/"
-    export FOAM_LIBBIN="/workspace/platforms/linux64GccDPInt32Opt/lib"
+    export FOAM_LIBBIN="/workspace/platforms/linux64GccSPInt32Opt/lib"
     export FOAM_MODULES="/workspace/applications/modules"
     export FOAM_MPI="openmpi-system"
     export FOAM_PROJECT_DIR="/workspace"
     export FOAM_SOLVERS="/workspace/applications/solvers"
     export FOAM_SRC="/workspace/src"
     export FOAM_TUTORIALS="/workspace/tutorials"
-    export FOAM_USER_APPBIN="/platforms/linux64GccDPInt32Opt/bin"
-    export FOAM_USER_LIBBIN="/platforms/linux64GccDPInt32Opt/lib"
+    export FOAM_USER_APPBIN="/platforms/linux64GccSPInt32Opt/bin"
+    export FOAM_USER_LIBBIN="/platforms/linux64GccSPInt32Opt/lib"
     export FOAM_UTILITIES="/workspace/applications/utilities"
 
     export  WM_ARCH="linux64"
@@ -28,9 +28,9 @@
     export  WM_LDFLAGS="-m64"
     export  WM_LINK_LANGUAGE="c++"
     export  WM_MPLIB=NONE #"SYSTEMOPENMPI"
-    export  WM_OPTIONS="linux64GccDPInt32Opt"
+    export  WM_OPTIONS="linux64GccSPInt32Opt"
     export  WM_OSTYPE="POSIX"
-    export  WM_PRECISION_OPTION="DP"
+    export  WM_PRECISION_OPTION="SP"
     export  WM_PROJECT="OpenFOAM"
     export  WM_PROJECT_DIR="/workspace"
     export  WM_PROJECT_INST_DIR="/"
@@ -43,5 +43,5 @@
 
     
     export PATH=$PATH:$WM_PROJECT_DIR/wmake
-    export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:/usr/local/lib:/usr/local/lib64:/usr/local/papi/lib:/usr/local/cuda-12.8/lib64:/workspace/platforms/linux64GccDPInt32Opt/lib:/workspace/platforms/linux64GccDPInt32Opt/lib/dummy
+    export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:/usr/local/lib:/usr/local/lib64:/usr/local/papi/lib:/usr/local/cuda-12.8/lib64:/workspace/platforms/linux64GccSPInt32Opt/lib:/workspace/platforms/linux64GccSPInt32Opt/lib/dummy
     export LIBRARY_PATH=/usr/local/lib
