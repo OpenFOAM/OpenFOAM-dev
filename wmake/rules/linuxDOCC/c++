@@ -8,13 +8,14 @@ c++WARN     = -Wall -Wextra -Wold-style-cast -Wnon-virtual-dtor \
 c++LESSWARN = -Wno-old-style-cast -Wno-unused-local-typedefs \
               -Wno-tautological-undefined-compare -Wno-shift-negative-value
 
-CC          = clang++-15 -std=c++14 -m64
+CC          = docc-cpp -std=c++14 -m32
 
 include $(DEFAULT_RULES)/c++$(WM_COMPILE_OPTION)
 
 ptFLAGS     = -DNoRepository -ftemplate-depth-100
 
-c++FLAGS    = $(GFLAGS) $(c++WARN) $(c++OPT) $(c++DBUG) $(ptFLAGS) $(LIB_HEADER_DIRS) -fPIC
+c++FLAGS    = $(GFLAGS) $(c++WARN) $(c++OPT) $(c++DBUG) $(ptFLAGS) \
+              $(LIB_HEADER_DIRS) -fPIC -mllvm -hotspot
 
 Ctoo        = $(WM_SCHEDULER) $(CC) $(c++FLAGS) -c $< -o $@
 cxxtoo      = $(Ctoo)
@@ -24,4 +25,4 @@ cpptoo      = $(Ctoo)
 LINK_LIBS   = $(c++DBUG)
 
 LINKLIBSO   = $(CC) $(c++FLAGS) -shared
-LINKEXE     = $(CC) $(c++FLAGS) -Xlinker --add-needed
+LINKEXE     = $(CC) $(c++FLAGS) -Xlinker --add-needed -ldaisy_rtl

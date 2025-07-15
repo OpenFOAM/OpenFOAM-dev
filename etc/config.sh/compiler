@@ -37,6 +37,8 @@ OpenFOAM | ThirdParty)
     gmp_version=gmp-5.1.2
     mpfr_version=mpfr-3.1.2
     mpc_version=mpc-1.0.1
+   
+   echo $WM_COMPILER
 
     case "$WM_COMPILER" in
     Gcc55)
@@ -62,9 +64,13 @@ OpenFOAM | ThirdParty)
         ;;
     Clang)
         # Using clang - not gcc
-        export WM_CC='clang'
-        export WM_CXX='clang++'
+        export WM_CC='clang-15'
+        export WM_CXX='clang++-15'
         clang_version=llvm-3.7.0
+        ;;
+    DOCC)
+        export WM_CC='docc'
+        export WM_CXX='docc-cpp'
         ;;
     *)
         /bin/cat <<USAGE 1>&2

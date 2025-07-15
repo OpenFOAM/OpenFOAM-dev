@@ -2,7 +2,7 @@ SUFFIXES += .c
 
 cWARN        = -Wall
 
-cc          = clang-15 -m32
+cc          = docc -mllvm -hotspot -m32
 
 include $(DEFAULT_RULES)/c$(WM_COMPILE_OPTION)
 
@@ -13,4 +13,4 @@ ctoo        = $(WM_SCHEDULER) $(cc) $(cFLAGS) -c $< -o $@
 LINK_LIBS   = $(cDBUG)
 
 LINKLIBSO   = $(cc) -shared
-LINKEXE     = $(cc) -Xlinker --add-needed -Xlinker -z -Xlinker nodefs
+LINKEXE     = $(cc) -Xlinker --add-needed -Xlinker -z -Xlinker nodefs -ldaisy_rtl

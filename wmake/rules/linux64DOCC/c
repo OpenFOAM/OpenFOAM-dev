@@ -2,7 +2,7 @@ SUFFIXES += .c
 
 cWARN        = -Wall
 
-cc          = clang-15 -m32
+cc          = docc -m64
 
 include $(DEFAULT_RULES)/c$(WM_COMPILE_OPTION)
 

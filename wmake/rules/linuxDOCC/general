@@ -1,0 +1,8 @@
+LD         = ld -melf_i386
+
+PROJECT_LIBS = -l$(WM_PROJECT) -ldl
+
+include $(GENERAL_RULES)/standard
+
+include $(DEFAULT_RULES)/c
+include $(DEFAULT_RULES)/c++
