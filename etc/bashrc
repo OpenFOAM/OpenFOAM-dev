@@ -84,7 +84,7 @@ export WM_ARCH_OPTION=64
 
 #- Precision:
 #    WM_PRECISION_OPTION = SP | DP | LP
-export WM_PRECISION_OPTION=SP
+export WM_PRECISION_OPTION=DP
 
 #- Label size:
 #    WM_LABEL_SIZE = 32 | 64
@@ -97,7 +97,7 @@ export WM_COMPILE_OPTION=Opt
 #- MPI implementation:
 #    WM_MPLIB = SYSTEMOPENMPI | OPENMPI | SYSTEMMPI | MPICH | MPICH-GM | HPMPI
 #               | MPI | FJMPI | QSMPI | SGIMPI | INTELMPI
-export WM_MPLIB=NONE #SYSTEMOPENMPI
+export WM_MPLIB=SYSTEMOPENMPI
 
 #- Operating System:
 #    WM_OSTYPE = POSIX | ???
@@ -111,7 +111,7 @@ export PARMETIS_TYPE=none
 export ZOLTAN_TYPE=none #ThirdParty
 
 #    ParaView_TYPE = none | system | paraviewopenfoam | ThirdParty (OpenFOAM)
-export ParaView_TYPE=none
+export ParaView_TYPE=system
 
 #- Floating-point signal handling:
 #    set or unset
