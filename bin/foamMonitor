@@ -98,7 +98,7 @@ AXIS="y"
 # Variables used locally
 term="$(echo show term | gnuplot 2>&1 | sed -n \
 's/[ ]\+terminal type is \([^ ]\+\) .*/\1/p') \
- 1 font \",14\" linewidth 1.5 noraise"
+ 1 linewidth 1.5 noraise"
 size="default"
 logscale="no"
 range="none"
@@ -226,7 +226,17 @@ gnuplotSetup() {
     _otherAxis="$([ "$AXIS" = x ] && echo y || echo x)"
 
     printf "set term %s" "$term"
-    [ "$size" = default ] || printf " size %s" "$size"
+
+    # if '-size' specified, scale the font size to a sensible compromise
+    # assumes approximate defaults of window size 600x400 and font size 12
+    ! [ "$size" = default ] && \
+        _fontsize="$(awk \
+            -v x="$(echo "$size" | cut -d, -f1)" \
+            -v y="$(echo "$size" | cut -d, -f2)" \
+            'BEGIN {x/=600; y/=400; printf "%i", 12*(x < y ? x : y)**0.8}')" && \
+        printf " size %s" "$size" && \
+        printf " font \",%i\"" "$_fontsize"
+
     printf "\n"
 
     [ "$logscale" = yes ] && printf "set logscale %s\n" "$AXIS"
