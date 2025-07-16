@@ -41,7 +41,7 @@ namespace sampledSets
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::sampledSets::circleRandom::calcSamples
+bool Foam::sampledSets::circleRandom::calcSamples
 (
     DynamicList<point>& samplingPositions,
     DynamicList<scalar>&,
@@ -77,6 +77,9 @@ void Foam::sampledSets::circleRandom::calcSamples
             samplingFaces.append(-1);
         }
     }
+
+    // This set is unordered. Distances have not been created.
+    return false;
 }
 
 

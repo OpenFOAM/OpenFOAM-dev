@@ -276,7 +276,7 @@ void Foam::sampledSets::lineFace::calcSamples
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::sampledSets::lineFace::calcSamples
+bool Foam::sampledSets::lineFace::calcSamples
 (
     DynamicList<point>& samplingPositions,
     DynamicList<scalar>& samplingDistances,
@@ -298,6 +298,9 @@ void Foam::sampledSets::lineFace::calcSamples
         samplingCells,
         samplingFaces
     );
+
+    // This set is ordered. Distances have been created.
+    return true;
 }
 
 

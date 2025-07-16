@@ -44,7 +44,7 @@ namespace sampledSets
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::sampledSets::lineUniform::calcSamples
+bool Foam::sampledSets::lineUniform::calcSamples
 (
     DynamicList<point>& samplingPositions,
     DynamicList<scalar>& samplingDistances,
@@ -74,6 +74,9 @@ void Foam::sampledSets::lineUniform::calcSamples
     {
         samplingDistances[i] = mag(samplingPositions[i] - start_);
     }
+
+    // This set is ordered. Distances have been created.
+    return true;
 }
 
 

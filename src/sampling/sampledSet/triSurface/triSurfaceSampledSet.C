@@ -58,7 +58,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::sampledSets::triSurface::calcSamples
+bool Foam::sampledSets::triSurface::calcSamples
 (
     DynamicList<point>& samplingPositions,
     DynamicList<scalar>&,
@@ -82,6 +82,9 @@ void Foam::sampledSets::triSurface::calcSamples
             samplingFaces.append(-1);
         }
     }
+
+    // This set is unordered. Distances have not been created.
+    return false;
 }
 
 

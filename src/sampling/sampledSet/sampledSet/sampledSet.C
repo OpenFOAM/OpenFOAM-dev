@@ -49,21 +49,19 @@ void Foam::sampledSet::setSamples() const
     DynamicList<label> samplingCells;
     DynamicList<label> samplingFaces;
 
-    calcSamples
-    (
-        samplingPositions,
-        samplingDistances,
-        samplingSegments,
-        samplingCells,
-        samplingFaces
-    );
+    const bool ordered =
+        calcSamples
+        (
+            samplingPositions,
+            samplingDistances,
+            samplingSegments,
+            samplingCells,
+            samplingFaces
+        );
 
     if
     (
-        (
-            samplingDistances.size() != 0
-         && samplingDistances.size() != samplingPositions.size()
-        )
+        (ordered && samplingDistances.size() != samplingPositions.size())
      || (samplingCells.size() != samplingPositions.size())
      || (samplingFaces.size() != samplingPositions.size())
      || (samplingSegments.size() != samplingPositions.size())
@@ -71,8 +69,10 @@ void Foam::sampledSet::setSamples() const
     {
         FatalErrorInFunction
             << "sizes not equal : "
-            << "  positions:" << samplingPositions.size()
-            << "  distances:" << samplingDistances.size()
+            << "  positions:" << samplingPositions.size();
+        if (ordered) FatalError
+            << "  distances:" << samplingDistances.size();
+        FatalError
             << "  segments:" << samplingSegments.size()
             << "  cells:" << samplingCells.size()
             << "  faces:" << samplingFaces.size()
@@ -83,7 +83,7 @@ void Foam::sampledSet::setSamples() const
     positions.transfer(samplingPositions);
 
     scalarField distances;
-    samplingDistances.transfer(samplingDistances);
+    if (ordered) distances.transfer(samplingDistances);
 
     coordsPtr_.reset
     (
@@ -93,9 +93,7 @@ void Foam::sampledSet::setSamples() const
             word::null,
             positions,
             coordSet::axisTypeNames_[coordSet::axisType::DISTANCE],
-            distances.size() == positions.size()
-          ? distances
-          : NullObjectRef<scalarField>(),
+            ordered ? distances : NullObjectRef<scalarField>(),
             coordSet::axisTypeNames_[axis_]
         )
     );

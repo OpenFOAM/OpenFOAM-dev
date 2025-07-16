@@ -168,7 +168,7 @@ void Foam::sampledSets::points::calcSamples
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::sampledSets::points::calcSamples
+bool Foam::sampledSets::points::calcSamples
 (
     DynamicList<point>& samplingPositions,
     DynamicList<scalar>& samplingDistances,
@@ -208,6 +208,9 @@ void Foam::sampledSets::points::calcSamples
             samplingFaces
         );
     }
+
+    // Return whether or not distances have been created
+    return ordered_;
 }
 
 

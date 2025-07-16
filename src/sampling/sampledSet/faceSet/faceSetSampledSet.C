@@ -42,7 +42,7 @@ namespace sampledSets
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::sampledSets::faceSet::calcSamples
+bool Foam::sampledSets::faceSet::calcSamples
 (
     DynamicList<point>& samplingPositions,
     DynamicList<scalar>&,
@@ -60,6 +60,9 @@ void Foam::sampledSets::faceSet::calcSamples
 
     samplingCells =
         labelList(UIndirectList<label>(mesh().faceOwner(), samplingFaces));
+
+    // This set is unordered. Distances have not been created.
+    return false;
 }
 
 

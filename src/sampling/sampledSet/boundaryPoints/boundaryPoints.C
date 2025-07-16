@@ -46,7 +46,7 @@ namespace sampledSets
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::sampledSets::boundaryPoints::calcSamples
+bool Foam::sampledSets::boundaryPoints::calcSamples
 (
     DynamicList<point>& samplingPositions,
     DynamicList<scalar>&,
@@ -177,6 +177,9 @@ void Foam::sampledSets::boundaryPoints::calcSamples
                 << " within a distance of " << maxDistance_ << endl;
         }
     }
+
+    // This set is unordered. Distances have not been created.
+    return false;
 }
 
 

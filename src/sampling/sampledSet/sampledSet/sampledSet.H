@@ -87,7 +87,7 @@ class sampledSet
     // Private Member Functions
 
         //- Calc the samples
-        virtual void calcSamples
+        virtual bool calcSamples
         (
             DynamicList<point>& samplingPositions,
             DynamicList<scalar>& samplingDistances,

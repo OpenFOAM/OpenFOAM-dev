@@ -49,7 +49,7 @@ namespace sampledSets
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::sampledSets::boundaryRandom::calcSamples
+bool Foam::sampledSets::boundaryRandom::calcSamples
 (
     DynamicList<point>& samplingPositions,
     DynamicList<scalar>&,
@@ -158,6 +158,9 @@ void Foam::sampledSets::boundaryRandom::calcSamples
             samplingFaces.append(tetIs.face());
         }
     }
+
+    // This set is unordered. Distances have not been created.
+    return false;
 }
 
 

@@ -45,7 +45,7 @@ namespace sampledSets
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::sampledSets::arcUniform::calcSamples
+bool Foam::sampledSets::arcUniform::calcSamples
 (
     DynamicList<point>& samplingPositions,
     DynamicList<scalar>& samplingDistances,
@@ -84,6 +84,9 @@ void Foam::sampledSets::arcUniform::calcSamples
         const scalar theta = atan2(v & axis2, v & axis1);
         samplingDistances[i] = radius*theta;
     }
+
+    // This set is ordered. Distances have been created.
+    return true;
 }
 
 

@@ -96,7 +96,7 @@ class boundaryPoints
     // Private Member Functions
 
         //- Calculate all the sampling points
-        virtual void calcSamples
+        virtual bool calcSamples
         (
             DynamicList<point>& samplingPositions,
             DynamicList<scalar>&,

@@ -42,7 +42,7 @@ namespace sampledSets
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::sampledSets::cellSet::calcSamples
+bool Foam::sampledSets::cellSet::calcSamples
 (
     DynamicList<point>& samplingPositions,
     DynamicList<scalar>&,
@@ -59,6 +59,9 @@ void Foam::sampledSets::cellSet::calcSamples
     samplingSegments = identityMap(samplingCells.size());
 
     samplingFaces = labelList(samplingCells.size(), -1);
+
+    // This set is unordered. Distances have not been created.
+    return false;
 }
 
 
