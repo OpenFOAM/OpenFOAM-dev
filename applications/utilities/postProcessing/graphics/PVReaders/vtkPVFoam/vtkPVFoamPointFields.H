@@ -65,34 +65,48 @@ void Foam::vtkPVFoam::convertPointFields
 
         // Load the field
         tmp<PointField<Type>> tptf;
-        if (reader_->GetDecomposedCase())
-        {
-            if (!pointReconstructorPtr_.valid())
-            {
-                pointReconstructorPtr_.set
-                (
-                    new pointFieldReconstructor
-                    (
-                        pointMesh::New(procMeshesPtr_->completeMesh()),
-                        procMeshesPtr_->procMeshes(),
-                        procMeshesPtr_->procPointAddressing()
-                    )
-                );
-            }
 
-            tptf =
-                pointReconstructorPtr_
-              ->reconstructField<Type>(*iter());
-        }
-        else
+        FatalIOError.throwExceptions();
+
+        try
         {
-            tptf =
-                new PointField<Type>
-                (
-                    *iter(),
-                    pointMesh::New(procMeshesPtr_->completeMesh())
-                );
+            if (reader_->GetDecomposedCase())
+            {
+                if (!pointReconstructorPtr_.valid())
+                {
+                    pointReconstructorPtr_.set
+                    (
+                        new pointFieldReconstructor
+                        (
+                            pointMesh::New(procMeshesPtr_->completeMesh()),
+                            procMeshesPtr_->procMeshes(),
+                            procMeshesPtr_->procPointAddressing()
+                        )
+                    );
+                }
+
+                tptf =
+                    pointReconstructorPtr_
+                  ->reconstructField<Type>(*iter());
+            }
+            else
+            {
+                tptf =
+                    new PointField<Type>
+                    (
+                        *iter(),
+                        pointMesh::New(procMeshesPtr_->completeMesh())
+                    );
+            }
         }
+        catch (IOerror& err)
+        {
+            Warning<< err << endl;
+            continue;
+        }
+
+        FatalIOError.dontThrowExceptions();
+
         const PointField<Type>& ptf = tptf();
 
         // Convert activated internalMesh regions

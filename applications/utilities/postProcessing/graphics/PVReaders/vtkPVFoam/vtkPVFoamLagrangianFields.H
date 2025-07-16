@@ -57,7 +57,10 @@ void Foam::vtkPVFoam::convertlagrangianFields
     forAllConstIter(IOobjectList, objects, iter)
     {
         // restrict to this IOField<Type>
-        if (iter()->headerClassName() != IOField<Type>::typeName) continue;
+        if (iter()->headerClassName() != IOField<Type>::typeName)
+        {
+            continue;
+        }
 
         const IOField<Type> tf
         (
@@ -91,26 +94,39 @@ void Foam::vtkPVFoam::convertLagrangianFields
     forAllConstIter(IOobjectList, objects, iter)
     {
         // restrict to this GeoField<Type>
-        if (iter()->headerClassName() != GeoField<Type>::typeName) continue;
+        if (iter()->headerClassName() != GeoField<Type>::typeName)
+        {
+            continue;
+        }
 
-        const GeoField<Type> tf
-        (
-            reader_->GetDecomposedCase()
-          ? LagrangianReconstructors_[datasetNo]
-           .reconstructField<GeoField<Type>>(*iter())
-          : tmp<GeoField<Type>>
+        FatalIOError.throwExceptions();
+
+        try
+        {
+            const GeoField<Type> tf
             (
-                new GeoField<Type>(*iter(), LagrangianMeshes_[datasetNo])
-            )
-        );
+                reader_->GetDecomposedCase()
+              ? LagrangianReconstructors_[datasetNo]
+               .reconstructField<GeoField<Type>>(*iter())
+              : tmp<GeoField<Type>>
+                (
+                    new GeoField<Type>(*iter(), LagrangianMeshes_[datasetNo])
+                )
+            );
 
-        convertLagrangianField<Type, GeoField>
-        (
-            tf,
-            output,
-            range,
-            datasetNo
-        );
+            convertLagrangianField<Type, GeoField>
+            (
+                tf,
+                output,
+                range,
+                datasetNo
+            );
+        }
+        catch (IOerror& err)
+        {
+            Warning<< err << endl;
+            continue;
+        }
     }
 }
 

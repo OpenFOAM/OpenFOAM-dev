@@ -64,40 +64,56 @@ void Foam::vtkPVFoam::convertVolFields
     forAllConstIter(IOobjectList, objects, iter)
     {
         // Restrict to GeometricField<Type, ...>
-        if (iter()->headerClassName() != VolField<Type>::typeName) continue;
+        if (iter()->headerClassName() != VolField<Type>::typeName)
+        {
+            continue;
+        }
 
         // Load the field
         tmp<VolField<Type>> ttf;
-        if (reader_->GetDecomposedCase())
-        {
-            if (!fvReconstructorPtr_.valid())
-            {
-                fvReconstructorPtr_.set
-                (
-                    new fvFieldReconstructor
-                    (
-                        procMeshesPtr_->completeMesh(),
-                        procMeshesPtr_->procMeshes(),
-                        procMeshesPtr_->procFaceAddressing(),
-                        procMeshesPtr_->procCellAddressing(),
-                        procMeshesPtr_->procFaceAddressingBf()
-                    )
-                );
-            }
 
-            ttf =
-                fvReconstructorPtr_
-              ->reconstructVolField<Type>(*iter());
-        }
-        else
+        FatalIOError.throwExceptions();
+
+        try
         {
-            ttf =
-                new VolField<Type>
+            if (reader_->GetDecomposedCase())
+            {
+                if (!fvReconstructorPtr_.valid())
+                {
+                    fvReconstructorPtr_.set
+                    (
+                        new fvFieldReconstructor
+                        (
+                            procMeshesPtr_->completeMesh(),
+                            procMeshesPtr_->procMeshes(),
+                            procMeshesPtr_->procFaceAddressing(),
+                            procMeshesPtr_->procCellAddressing(),
+                            procMeshesPtr_->procFaceAddressingBf()
+                        )
+                    );
+                }
+
+                ttf =
+                    fvReconstructorPtr_
+                  ->reconstructVolField<Type>(*iter());
+            }
+            else
+            {
+                ttf = new VolField<Type>
                 (
                     *iter(),
                     procMeshesPtr_->completeMesh()
                 );
+            }
         }
+        catch (IOerror& err)
+        {
+            Warning<< err << endl;
+            continue;
+        }
+
+        FatalIOError.dontThrowExceptions();
+
         const VolField<Type>& tf = ttf();
 
         // Interpolated field (demand driven)
@@ -295,40 +311,56 @@ void Foam::vtkPVFoam::convertVolInternalFields
     {
         // Restrict to GeometricField<Type, ...>::Internal
         if (iter()->headerClassName() != VolInternalField<Type>::typeName)
+        {
             continue;
+        }
 
         // Load the field
         tmp<VolInternalField<Type>> ttf;
-        if (reader_->GetDecomposedCase())
-        {
-            if (!fvReconstructorPtr_.valid())
-            {
-                fvReconstructorPtr_.set
-                (
-                    new fvFieldReconstructor
-                    (
-                        procMeshesPtr_->completeMesh(),
-                        procMeshesPtr_->procMeshes(),
-                        procMeshesPtr_->procFaceAddressing(),
-                        procMeshesPtr_->procCellAddressing(),
-                        procMeshesPtr_->procFaceAddressingBf()
-                    )
-                );
-            }
 
-            ttf =
-                fvReconstructorPtr_
-              ->reconstructVolInternalField<Type>(*iter());
-        }
-        else
+        FatalIOError.throwExceptions();
+
+        try
         {
-            ttf =
-                new VolInternalField<Type>
-                (
-                    *iter(),
-                    procMeshesPtr_->completeMesh()
-                );
+            if (reader_->GetDecomposedCase())
+            {
+                if (!fvReconstructorPtr_.valid())
+                {
+                    fvReconstructorPtr_.set
+                    (
+                        new fvFieldReconstructor
+                        (
+                            procMeshesPtr_->completeMesh(),
+                            procMeshesPtr_->procMeshes(),
+                            procMeshesPtr_->procFaceAddressing(),
+                            procMeshesPtr_->procCellAddressing(),
+                            procMeshesPtr_->procFaceAddressingBf()
+                        )
+                    );
+                }
+
+                ttf =
+                    fvReconstructorPtr_
+                  ->reconstructVolInternalField<Type>(*iter());
+            }
+            else
+            {
+                ttf =
+                    new VolInternalField<Type>
+                    (
+                        *iter(),
+                        procMeshesPtr_->completeMesh()
+                    );
+            }
         }
+        catch (IOerror& err)
+        {
+            Warning<< err << endl;
+            continue;
+        }
+
+        FatalIOError.dontThrowExceptions();
+
         const VolInternalField<Type>& tf = ttf();
 
         // Convert activated internalMesh regions

@@ -199,36 +199,50 @@ void Foam::vtkPVFoam::convertSurfaceFields
 
         // Load the field
         tmp<SurfaceField<Type>> ttf;
-        if (reader_->GetDecomposedCase())
-        {
-            if (!fvReconstructorPtr_.valid())
-            {
-                fvReconstructorPtr_.set
-                (
-                    new fvFieldReconstructor
-                    (
-                        procMeshesPtr_->completeMesh(),
-                        procMeshesPtr_->procMeshes(),
-                        procMeshesPtr_->procFaceAddressing(),
-                        procMeshesPtr_->procCellAddressing(),
-                        procMeshesPtr_->procFaceAddressingBf()
-                    )
-                );
-            }
 
-            ttf =
-                fvReconstructorPtr_
-              ->reconstructFvSurfaceField<Type>(*iter());
-        }
-        else
+        FatalIOError.throwExceptions();
+
+        try
         {
-            ttf =
-                new SurfaceField<Type>
-                (
-                    *iter(),
-                    procMeshesPtr_->completeMesh()
-                );
+            if (reader_->GetDecomposedCase())
+            {
+                if (!fvReconstructorPtr_.valid())
+                {
+                    fvReconstructorPtr_.set
+                    (
+                        new fvFieldReconstructor
+                        (
+                            procMeshesPtr_->completeMesh(),
+                            procMeshesPtr_->procMeshes(),
+                            procMeshesPtr_->procFaceAddressing(),
+                            procMeshesPtr_->procCellAddressing(),
+                            procMeshesPtr_->procFaceAddressingBf()
+                        )
+                    );
+                }
+
+                ttf =
+                    fvReconstructorPtr_
+                  ->reconstructFvSurfaceField<Type>(*iter());
+            }
+            else
+            {
+                ttf =
+                    new SurfaceField<Type>
+                    (
+                        *iter(),
+                        procMeshesPtr_->completeMesh()
+                    );
+            }
         }
+        catch (IOerror& err)
+        {
+            Warning<< err << endl;
+            continue;
+        }
+
+        FatalIOError.dontThrowExceptions();
+
         const SurfaceField<Type>& tf = ttf();
 
         // Convert patches - if activated
