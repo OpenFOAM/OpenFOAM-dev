@@ -37,7 +37,7 @@ case SYSTEMOPENMPI:
     # Use the system installed openmpi, get library directory via mpicc
     setenv FOAM_MPI openmpi-system
 
-    set libDir=`mpicc --showme:link | sed -e 's/.*-L\([^ ]*\).*/\1/'`
+    set libDir=`mpicc --showme:link | sed -e 's/.*\(-L\|-Wl,-rpath=\|-Wl,-rpath,\|-Wl,-rpath -Wl,\)\([^ ]*\).*/\2/'`
 
     # Bit of a hack: strip off 'lib' and hope this is the path to openmpi
     # include files and libraries.
