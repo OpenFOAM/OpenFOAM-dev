@@ -43,7 +43,8 @@ SYSTEMOPENMPI)
         unset OPAL_PREFIX
     fi
 
-    libDir=`mpicc --showme:link | sed -e 's/.*-L\([^ ]*\).*/\1/'`
+    # Get mpicc to report the link flags and extract the library directory
+    libDir=`mpicc --showme:link | sed -e 's/.*\(-L\|-Wl,-rpath=\|-Wl,-rpath,\|-Wl,-rpath -Wl,\)\([^ ]*\).*/\2/'`
 
     # Bit of a hack: strip off 'lib' and hope this is the path to openmpi
     # include files and libraries.
