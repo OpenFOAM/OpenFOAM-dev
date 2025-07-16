@@ -211,14 +211,14 @@ Foam::OSstream& Foam::messageStream::operator()(label communicator)
 
 Foam::messageStream Foam::SeriousError
 (
-    "--> FOAM Serious Error : ",
+    "--> FOAM Serious Error: ",
     messageStream::SERIOUS,
     100
 );
 
 Foam::messageStream Foam::Warning
 (
-    "--> FOAM Warning : ",
+    "--> FOAM Warning: ",
     messageStream::WARNING
 );
 
