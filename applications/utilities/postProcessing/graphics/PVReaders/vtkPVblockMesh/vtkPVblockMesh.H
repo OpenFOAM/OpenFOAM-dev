@@ -167,7 +167,7 @@ class vtkPVblockMesh
         autoPtr<Time> dbPtr_;
 
         //- OpenFOAM mesh
-        blockMesh* meshPtr_;
+        autoPtr<blockMesh> meshPtr_;
 
         //- The mesh region
         word meshRegion_;

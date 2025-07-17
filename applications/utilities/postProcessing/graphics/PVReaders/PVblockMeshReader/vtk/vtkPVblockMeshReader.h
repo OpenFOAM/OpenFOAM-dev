@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -151,20 +151,17 @@ protected:
 
 private:
 
-    //- Add/remove point numbers to/from the view
-    void updatePointNumbersView(const bool show);
-
-
-    //- Show Point Numbers
     int ShowPointNumbers;
 
     vtkDataArraySelection* BlockSelection;
-
     vtkDataArraySelection* CurvedEdgesSelection;
 
     // BTX
     Foam::vtkPVblockMesh* foamData_;
     // ETX
+
+    //- Add/remove point numbers to/from the view
+    void updatePointNumbersView(const bool show);
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

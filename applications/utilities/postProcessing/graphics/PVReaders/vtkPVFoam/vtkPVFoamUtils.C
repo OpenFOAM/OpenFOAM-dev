@@ -289,6 +289,7 @@ void Foam::vtkPVFoam::setSelectedArrayEntries
 )
 {
     const int nElem = select->GetNumberOfArrays();
+
     select->DisableAllArrays();
 
     // Loop through entries, setting values from selectedEntries
