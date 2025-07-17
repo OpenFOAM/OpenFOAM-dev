@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,15 +84,7 @@ bool Foam::functionObjects::timeControl::executeAtStart() const
 
 bool Foam::functionObjects::timeControl::execute()
 {
-    if
-    (
-        executeControl_.active()
-     && (
-            postProcess
-         || executeControl_.execute()
-         || (executeAtStart() && time_.timeIndex() == time_.startTimeIndex())
-        )
-    )
+    if (executeControl_.active() && (postProcess || executeControl_.execute()))
     {
         foPtr_->execute();
     }
@@ -103,15 +95,7 @@ bool Foam::functionObjects::timeControl::execute()
 
 bool Foam::functionObjects::timeControl::write()
 {
-    if
-    (
-        writeControl_.active()
-     && (
-            postProcess
-         || writeControl_.execute()
-         || (executeAtStart() && time_.timeIndex() == time_.startTimeIndex())
-        )
-    )
+    if (writeControl_.active() && (postProcess || writeControl_.execute()))
     {
         foPtr_->write();
     }
