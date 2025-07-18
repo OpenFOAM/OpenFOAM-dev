@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2020-2025 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -31,17 +31,18 @@
 #
 #------------------------------------------------------------------------------
 
-echo "The twoPhaseEulerFoam solver has been replaced" \
-     "by the more general multiphaseEuler solver module"
-echo "which supports two-phase and multiphase systems containing" \
-     "fluid and stationary phases,"
-echo "compressible or incompressible," \
-     "with heat and mass transfer, reactions, size distribution"
-echo "and all the usual phase interaction and transfer models."
-echo
-echo "When running with two-phases the optional referencePhase entry" \
-     "in phaseProperties can be used to specify"
-echo "which phase fraction should not be solved, providing compatibility" \
-     "with reactingtTwoPhaseEulerFoam."
+cat <<EOF
+
+The twoPhaseEulerFoam solver has been replaced by the more general
+multiphaseEuler solver module which supports two-phase and multiphase systems
+containing fluid and stationary phases, compressible or incompressible, with
+heat and mass transfer, reactions, size distribution and all the usual phase
+interaction and transfer models.
+
+When running with two-phases the optional referencePhase entry in
+phaseProperties can be used to specify which phase fraction should not be
+solved, providing compatibility with reactingtTwoPhaseEulerFoam.
+
+EOF
 
 #------------------------------------------------------------------------------
