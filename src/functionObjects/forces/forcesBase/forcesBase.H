@@ -158,15 +158,6 @@ protected:
         //- Initialise the fields
         void initialise();
 
-        //- Return the effective surface stress
-        tmp<surfaceVectorField> devTau() const;
-
-        //- Dynamic viscosity field
-        tmp<volScalarField> mu() const;
-
-        //- Return rho if specified otherwise rhoRef
-        tmp<volScalarField> rho() const;
-
         //- Return rhoRef if the pressure field is dynamic, i.e. p/rho
         //  otherwise return 1
         scalar rho(const volScalarField& p) const;
@@ -252,6 +243,15 @@ public:
         {
             return wordList::null();
         }
+
+        //- Return the effective surface stress
+        tmp<surfaceVectorField> devTau() const;
+
+        //- Dynamic viscosity field
+        tmp<volScalarField> mu() const;
+
+        //- Return rho if specified otherwise rhoRef
+        tmp<volScalarField> rho() const;
 
         //- Calculate the forces and moments
         virtual void calcForcesMoments();
