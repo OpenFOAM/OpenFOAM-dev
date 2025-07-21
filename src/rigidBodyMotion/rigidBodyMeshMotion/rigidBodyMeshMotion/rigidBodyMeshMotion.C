@@ -231,6 +231,8 @@ Foam::rigidBodyMeshMotion::rigidBodyMeshMotion
             pMesh,
             bodyMeshes_[bi].patchSet_,
             bodyMeshes_[bi].pointZoneSet_,
+            labelHashSet(),
+            labelHashSet(),
             points0(),
             bodyMeshes_[bi].do_
         );
@@ -461,6 +463,8 @@ void Foam::rigidBodyMeshMotion::topoChange(const polyTopoChangeMap& map)
                 pMesh,
                 bodyMeshes_[bi].patchSet_,
                 bodyMeshes_[bi].pointZoneSet_,
+                labelHashSet(),
+                labelHashSet(),
                 newPoints0,
                 bodyMeshes_[bi].do_
             );

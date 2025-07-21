@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ License
 Foam::pointDist::pointDist
 (
     const pointMesh& pMesh,
-    const labelHashSet& patchIDs,
+    const labelHashSet& startPatchIDs,
     const pointField& points,
     const scalar maxDist
 )
@@ -50,7 +50,7 @@ Foam::pointDist::pointDist
         dimensionedScalar(dimLength, great)
     ),
     points_(points),
-    patchIndices_(patchIDs),
+    startPatchIDs_(startPatchIDs),
     maxDist_(maxDist)
 {
     correct();
@@ -60,8 +60,10 @@ Foam::pointDist::pointDist
 Foam::pointDist::pointDist
 (
     const pointMesh& pMesh,
-    const labelHashSet& patchIDs,
-    const labelHashSet& zoneIDs,
+    const labelHashSet& startPatchIDs,
+    const labelHashSet& startZoneIDs,
+    const labelHashSet& endPatchIDs,
+    const labelHashSet& endZoneIDs,
     const pointField& points,
     const scalar maxDist
 )
@@ -78,8 +80,10 @@ Foam::pointDist::pointDist
         dimensionedScalar(dimLength, great)
     ),
     points_(points),
-    patchIndices_(patchIDs),
-    zoneIndices_(zoneIDs),
+    startPatchIDs_(startPatchIDs),
+    startZoneIDs_(startZoneIDs),
+    endPatchIDs_(endPatchIDs),
+    endZoneIDs_(endZoneIDs),
     maxDist_(maxDist)
 {
     correct();
@@ -98,29 +102,37 @@ void Foam::pointDist::correct()
 {
     const pointBoundaryMesh& pbm = mesh().boundary();
 
-    label nPatchPoints = 0;
+    label nKnownPoints = 0;
 
-    forAllConstIter(labelHashSet, patchIndices_, iter)
+    forAllConstIter(labelHashSet, startPatchIDs_, iter)
     {
-        const label patchi = iter.key();
-        nPatchPoints += pbm[patchi].meshPoints().size();
+        nKnownPoints += pbm[iter.key()].meshPoints().size();
     }
 
-    forAllConstIter(labelHashSet, zoneIndices_, iter)
+    forAllConstIter(labelHashSet, startZoneIDs_, iter)
     {
-        const label zonei = iter.key();
-        nPatchPoints += mesh()().pointZones()[zonei].size();
+        nKnownPoints += mesh()().pointZones()[iter.key()].size();
+    }
+
+    forAllConstIter(labelHashSet, endPatchIDs_, iter)
+    {
+        nKnownPoints += pbm[iter.key()].meshPoints().size();
+    }
+
+    forAllConstIter(labelHashSet, endZoneIDs_, iter)
+    {
+        nKnownPoints += mesh()().pointZones()[iter.key()].size();
     }
 
     pointEdgeDist::data pointEdgeData(points_, maxDist_);
 
-    // Set initial changed points to all the patch points(if patch present)
-    List<pointEdgeDist> patchPointsInfo(nPatchPoints);
-    labelList patchPoints(nPatchPoints);
-    nPatchPoints = 0;
+    // Set the start points of the wave
+    List<pointEdgeDist> knownPointsInfo(nKnownPoints);
+    labelList knownPoints(nKnownPoints);
+    nKnownPoints = 0;
 
-    // Add the patch points to the patchPointsInfo
-    forAllConstIter(labelHashSet, patchIndices_, iter)
+    // Add the patch start points to the knownPointsInfo
+    forAllConstIter(labelHashSet, startPatchIDs_, iter)
     {
         const label patchi = iter.key();
         const labelList& mp = pbm[patchi].meshPoints();
@@ -128,18 +140,18 @@ void Foam::pointDist::correct()
         forAll(mp, ppi)
         {
             const label meshPointi = mp[ppi];
-            patchPoints[nPatchPoints] = meshPointi;
-            patchPointsInfo[nPatchPoints] = pointEdgeDist
+            knownPoints[nKnownPoints] = meshPointi;
+            knownPointsInfo[nKnownPoints] = pointEdgeDist
             (
                 pointEdgeData.points[meshPointi],
                 0
             );
-            nPatchPoints++;
+            nKnownPoints++;
         }
     }
 
-    // Add the zone points to the patchPointsInfo
-    forAllConstIter(labelHashSet, zoneIndices_, iter)
+    // Add the zone start points to the knownPointsInfo
+    forAllConstIter(labelHashSet, startZoneIDs_, iter)
     {
         const label zonei = iter.key();
         const labelList& zonePoints = mesh()().pointZones()[zonei];
@@ -147,13 +159,51 @@ void Foam::pointDist::correct()
         forAll(zonePoints, j)
         {
             const label meshPointi = zonePoints[j];
-            patchPoints[nPatchPoints] = meshPointi;
-            patchPointsInfo[nPatchPoints] = pointEdgeDist
+            knownPoints[nKnownPoints] = meshPointi;
+            knownPointsInfo[nKnownPoints] = pointEdgeDist
             (
                 pointEdgeData.points[meshPointi],
                 0
             );
-            nPatchPoints++;
+            nKnownPoints++;
+        }
+    }
+
+    // Add the patch end points to the knownPointsInfo
+    forAllConstIter(labelHashSet, endPatchIDs_, iter)
+    {
+        const label patchi = iter.key();
+        const labelList& mp = pbm[patchi].meshPoints();
+
+        forAll(mp, ppi)
+        {
+            const label meshPointi = mp[ppi];
+            knownPoints[nKnownPoints] = meshPointi;
+            knownPointsInfo[nKnownPoints] = pointEdgeDist
+            (
+                pointEdgeData.points[meshPointi],
+                -great
+            );
+            nKnownPoints++;
+        }
+    }
+
+    // Add the zone end points to the knownPointsInfo
+    forAllConstIter(labelHashSet, endZoneIDs_, iter)
+    {
+        const label zonei = iter.key();
+        const labelList& zonePoints = mesh()().pointZones()[zonei];
+
+        forAll(zonePoints, j)
+        {
+            const label meshPointi = zonePoints[j];
+            knownPoints[nKnownPoints] = meshPointi;
+            knownPointsInfo[nKnownPoints] = pointEdgeDist
+            (
+                pointEdgeData.points[meshPointi],
+                -great
+            );
+            nKnownPoints++;
         }
     }
 
@@ -170,8 +220,8 @@ void Foam::pointDist::correct()
     > patchCalc
     (
         mesh()(),
-        patchPoints,
-        patchPointsInfo,
+        knownPoints,
+        knownPointsInfo,
 
         allPointInfo,
         allEdgeInfo,
@@ -183,7 +233,7 @@ void Foam::pointDist::correct()
 
     forAll(allPointInfo, pointi)
     {
-        if (allPointInfo[pointi].valid(pointEdgeData))
+        if (allPointInfo[pointi].set(pointEdgeData))
         {
             psf[pointi] = sqrt(allPointInfo[pointi].distSqr());
         }
@@ -193,7 +243,7 @@ void Foam::pointDist::correct()
         }
     }
 
-    forAllConstIter(labelHashSet, zoneIndices_, iter)
+    forAllConstIter(labelHashSet, startZoneIDs_, iter)
     {
         const label zonei = iter.key();
         const labelList& zonePoints = mesh()().pointZones()[zonei];

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,18 +31,24 @@ License
 inline bool Foam::pointEdgeDist::update
 (
     const point& pt,
-    const pointEdgeDist& w2,
+    const pointEdgeDist& ped2,
     const scalar tol,
     data& td
 )
 {
-    const scalar dist2 = magSqr(pt - w2.origin());
+    // Don't propagate into or past the end points
+    if (distSqr_ < 0 || ped2.distSqr_ < 0)
+    {
+        return false;
+    }
+
+    const scalar dist2 = magSqr(pt - ped2.origin());
 
     if (!valid(td))
     {
         // current not yet set so use any value
         distSqr_ = dist2;
-        origin_ = w2.origin();
+        origin_ = ped2.origin();
 
         if (distSqr_ > td.maxDistSqr)
         {
@@ -54,7 +60,7 @@ inline bool Foam::pointEdgeDist::update
         }
     }
 
-    scalar diff = distSqr_ - dist2;
+    const scalar diff = distSqr_ - dist2;
 
     if (diff < 0)
     {
@@ -71,7 +77,7 @@ inline bool Foam::pointEdgeDist::update
     {
         // update with new values
         distSqr_ = dist2;
-        origin_ = w2.origin();
+        origin_ = ped2.origin();
 
         if (distSqr_ > td.maxDistSqr)
         {
@@ -119,9 +125,15 @@ inline Foam::scalar Foam::pointEdgeDist::distSqr() const
 }
 
 
-inline bool Foam::pointEdgeDist::valid(data& td) const
+inline bool Foam::pointEdgeDist::valid(const data& td) const
 {
     return origin_ != point::max;
+}
+
+
+inline bool Foam::pointEdgeDist::set(const data& td) const
+{
+    return distSqr_ >= 0 && valid(td);
 }
 
 

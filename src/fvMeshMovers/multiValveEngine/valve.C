@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -115,6 +115,8 @@ void Foam::fvMeshMovers::multiValveEngine::valveObject::updatePoints
                 pMesh,
                 patchSet,
                 movingPointZones(),
+                staticPatchSet_,
+                staticPointZones(),
                 points,
                 maxMotionDistance_
             );
@@ -124,6 +126,8 @@ void Foam::fvMeshMovers::multiValveEngine::valveObject::updatePoints
                 pMesh,
                 staticPatchSet_,
                 staticPointZones(),
+                patchSet,
+                movingPointZones(),
                 points,
                 maxMotionDistance_
             );

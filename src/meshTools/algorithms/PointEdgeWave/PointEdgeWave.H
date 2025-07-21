@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -224,8 +224,8 @@ public:
         PointEdgeWave
         (
             const polyMesh& mesh,
-            const labelList& initialPoints,
-            const List<Type>& initialPointsInfo,
+            const labelList& startPoints,
+            const List<Type>& startPointsInfo,
             UList<Type>& allPointInfo,
             UList<Type>& allEdgeInfo,
             const label maxIter,
@@ -279,11 +279,11 @@ public:
 
         label getUnsetPoints() const;
 
-        //- Copy initial data into allPointInfo_
+        //- Copy start data into allPointInfo_
         void setPointInfo
         (
-            const labelList& changedPoints,
-            const List<Type>& changedPointsInfo
+            const labelList& startPoints,
+            const List<Type>& startPointsInfo
         );
 
         //- Propagate from point to edge. Returns total number of edges
