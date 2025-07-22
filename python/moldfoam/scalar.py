@@ -36,12 +36,16 @@ class OpenFOAMFieldReader:
         
         # Parse boundary fields
         boundary_fields = self._parse_boundary_fields(content)
+
+        # Parse additional variables defined outside main sections
+        additional_vars = self._parse_additional_variables(content)
         
         return {
             'header': header,
             'internal_field': internal_field,
             'boundary_fields': boundary_fields,
-            'raw_content': content
+            'additional_vars': additional_vars,
+            'raw_content': content,
         }
     
     def _parse_header(self, content):
@@ -178,11 +182,11 @@ class OpenFOAMFieldReader:
         
         # Now parse each patch entry
         # Find all patch entries using the same approach
-        pattern = re.compile(r'\s*(\w+)\s*\{', re.DOTALL)
+        pattern = re.compile(r'\s*([^\s{]+)\s*\{', re.DOTALL)
         
         # Find all patch entry starting positions
         patch_starts = [(m.group(1), m.end()) for m in pattern.finditer(boundary_content)]
-        
+
         for i, (patch_name, patch_start) in enumerate(patch_starts):
             # Find the end of this patch entry by counting braces
             level = 1  # Start with level 1 for the opening brace we already found
@@ -275,6 +279,139 @@ class OpenFOAMFieldReader:
             boundary_fields[patch_name] = patch_data
         
         return boundary_fields
+    
+    def _parse_additional_variables(self, content):
+        """Parse additional global variables defined outside main sections."""
+        additional_vars = OrderedDict()
+        
+        # Create a copy of content to work with
+        working_content = content
+        
+        # Remove main sections to avoid parsing their content as variables
+        
+        # Remove FoamFile section
+        foam_file_match = re.search(r'FoamFile\s*\{', working_content)
+        if foam_file_match:
+            start_pos = foam_file_match.start()
+            pos = foam_file_match.end()
+            level = 1
+            while level > 0 and pos < len(working_content):
+                if working_content[pos] == '{':
+                    level += 1
+                elif working_content[pos] == '}':
+                    level -= 1
+                pos += 1
+            working_content = working_content[:start_pos] + working_content[pos:]
+        
+        # Remove dimensions line
+        working_content = re.sub(r'dimensions\s*\[[^\]]*\]\s*;', '', working_content)
+        
+        # Remove internalField section
+        internal_match = re.search(r'internalField\s+', working_content)
+        if internal_match:
+            start_pos = internal_match.start()
+            pos = internal_match.end()
+            
+            # Handle uniform case
+            uniform_match = re.match(r'uniform\s+[^;]*;', working_content[pos:])
+            if uniform_match:
+                end_pos = pos + uniform_match.end()
+                working_content = working_content[:start_pos] + working_content[end_pos:]
+            else:
+                # Handle nonuniform case - look for semicolon after balanced parentheses
+                paren_level = 0
+                brace_level = 0
+                while pos < len(working_content):
+                    char = working_content[pos]
+                    if char == '(':
+                        paren_level += 1
+                    elif char == ')':
+                        paren_level -= 1
+                    elif char == '{':
+                        brace_level += 1
+                    elif char == '}':
+                        brace_level -= 1
+                    elif char == ';' and paren_level == 0 and brace_level == 0:
+                        pos += 1
+                        break
+                    pos += 1
+                working_content = working_content[:start_pos] + working_content[pos:]
+        
+        # Remove boundaryField section
+        boundary_match = re.search(r'boundaryField\s*\{', working_content)
+        if boundary_match:
+            start_pos = boundary_match.start()
+            pos = boundary_match.end()
+            level = 1
+            while level > 0 and pos < len(working_content):
+                if working_content[pos] == '{':
+                    level += 1
+                elif working_content[pos] == '}':
+                    level -= 1
+                pos += 1
+            working_content = working_content[:start_pos] + working_content[pos:]
+        
+        # Remove C++ style comments
+        working_content = re.sub(r'//.*?\n', '\n', working_content)
+        # Remove C style comments
+        working_content = re.sub(r'/\*.*?\*/', '', working_content, flags=re.DOTALL)
+        
+        # Now find variable definitions in remaining content
+        # Look for patterns like: variableName content;
+        # We need to handle nested structures properly for the content part
+        
+        lines = working_content.split('\n')
+        i = 0
+        
+        while i < len(lines):
+            line = lines[i].strip()
+            
+            # Skip empty lines
+            if not line:
+                i += 1
+                continue
+            
+            # Look for variable definition start (word at beginning of line)
+            var_match = re.match(r'^(\w+)\s+(.*)', line)
+            if var_match:
+                var_name = var_match.group(1)
+                remaining_content = var_match.group(2)
+                
+                # Collect the complete variable definition until we find the terminating semicolon
+                # Need to handle nested parentheses and braces
+                var_lines = [line]
+                paren_level = remaining_content.count('(') - remaining_content.count(')')
+                brace_level = remaining_content.count('{') - remaining_content.count('}')
+                
+                # Check if this line already ends the definition
+                if remaining_content.rstrip().endswith(';') and paren_level == 0 and brace_level == 0:
+                    # Complete definition on single line
+                    full_definition = line
+                else:
+                    # Multi-line definition - keep collecting until balanced and ends with semicolon
+                    i += 1
+                    while i < len(lines):
+                        current_line = lines[i]
+                        var_lines.append(current_line)
+                        
+                        # Update nesting levels
+                        paren_level += current_line.count('(') - current_line.count(')')
+                        brace_level += current_line.count('{') - current_line.count('}')
+                        
+                        # Check if we've reached the end
+                        if (current_line.rstrip().endswith(';') and 
+                            paren_level == 0 and brace_level == 0):
+                            break
+                        i += 1
+                    
+                    full_definition = '\n'.join(var_lines)
+                
+                # Store the complete variable definition
+                additional_vars[var_name] = full_definition
+            
+            i += 1
+        
+        return additional_vars
 
 
 class OpenFOAMFieldWriter:
@@ -303,6 +440,11 @@ FoamFile
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 dimensions      [{{ dimensions|join(' ') }}];
+                                        
+{% for name, var_content in additional_vars.items() %}
+{{ var_content }}
+                                        
+{% endfor %}
 
 internalField   {% if is_uniform %}uniform {{ value }}{% else %}nonuniform List<scalar>
 {{ values|length }}
@@ -348,6 +490,7 @@ boundaryField
         header = field_data.get('header', {})
         internal_field = field_data.get('internal_field')
         boundary_fields = field_data.get('boundary_fields', {})
+        additional_vars = field_data.get('additional_vars', {})
         
         # Format dimensions if present
         dimensions = header.get('dimensions', [0, 0, 0, 0, 0, 0, 0])
@@ -396,6 +539,7 @@ boundaryField
             location=header.get('location', '0'),
             object=header.get('object', 'field'),
             dimensions=dimensions,
+            additional_vars=additional_vars,
             is_uniform=is_uniform,
             value=value,
             values=values,

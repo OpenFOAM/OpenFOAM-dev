@@ -32,6 +32,10 @@ def extract_data(case_dir):
     time_dirs = sorted([d for d in os.listdir(case_dir) 
                      if d.replace('.', '', 1).isdigit()], 
                      key=lambda x: float(x))
+
+    # Exclude 9999 time step if it exists (this is the post-processing time stamp)
+    if '9999' in time_dirs:
+        time_dirs.remove('9999')
     
     # Dictionary to store alpha values by time
     data_by_time = {}
@@ -41,7 +45,7 @@ def extract_data(case_dir):
     for time_dir in time_dirs:
     
         alpha_file = Path(time_dir) / "alpha.melt"
-        T_file = Path(time_dir) / "meltFrontTemp"
+        T_file = Path(time_dir) / "T"
         try:
             # Read the alpha field
             alpha_field = processor.read_field(str(alpha_file))
@@ -78,9 +82,39 @@ def extract_data(case_dir):
 
 def cross_time(alpha_curr, alpha_prev, t_curr, t_prev, threshold):
     t_curr, t_prev = float(t_curr), float(t_prev)
+    # Avoid division by zero
+    if (t_curr - t_prev) == 0:
+        return t_curr
     alpha_slope = (alpha_curr - alpha_prev) / (t_curr - t_prev)
     delta_t = (threshold - alpha_prev) / alpha_slope
     return t_prev + delta_t
+
+
+def fill_uniform(data, times, field_name):
+    """Fill uniform fields with cell values."""
+
+    # Get number of cells from the first time step that has a spatially varying field
+    uniform_values = []
+    for i in range(len(times)):
+        field = getattr(data[times[i]], field_name)
+        if np.isscalar(field):
+            uniform_values.append(field)
+        else:
+            break
+
+    if i == len(times):
+        raise ValueError(f"No non-uniform field found for {field_name} in the provided times.")
+
+    num_cells = len(field)
+
+    # Backfill all the previous data with uniform values
+    for i in range(len(uniform_values)):
+        data[times[i]] = data[times[i]]._replace(
+            **{field_name: np.full(num_cells, uniform_values[i])}
+        )
+
+    return data, num_cells
+
 
 
 def calc_melt_front(alpha_by_time, threshold=0.5):
@@ -101,19 +135,15 @@ def calc_melt_front(alpha_by_time, threshold=0.5):
     
     if not times:
         raise ValueError("No time steps found with valid alpha data")
-    
-    # Get number of cells from the first time step
-    first_alpha = data[times[1]].alpha
-    if isinstance(first_alpha, (int, float)):
-        print("Warning: Alpha field is uniform. Cannot calculate melt front times.")
-        return None
-    
-    num_cells = len(first_alpha)
-    print(f"Calculating melt front times for {num_cells} cells...")
+
+    data, num_cells = fill_uniform(data, times, 'alpha')
+    data, num_cells = fill_uniform(data, times, 'T')
+
+    print(f"Calculating melt front data for {num_cells} cells...")
 
     # Initialize melt_front_time with a large value
     melt_front_time = np.ones(num_cells) * float('inf')
-    melt_front_temp = data[times[1]].T.copy()
+    melt_front_temp = data[times[0]].T.copy()
 
     # For each time step
     for i in range(1, len(times)):
@@ -151,9 +181,9 @@ def calc_melt_front(alpha_by_time, threshold=0.5):
     print(f"Found melt front times for {filled_cells} out of {num_cells} cells")
 
     # Set melt front time to the last time step for cells that never crossed the threshold
-    unfilled = np.where(np.isinf(melt_front_time))[0]
-    melt_front_time[unfilled] = float(times[-1])
-    melt_front_temp[unfilled] = data[times[-1]].T[unfilled]
+    # unfilled = np.where(np.isinf(melt_front_time))[0]
+    # melt_front_time[unfilled] = float(times[-1])
+    # melt_front_temp[unfilled] = data[times[-1]].T[unfilled]
 
     return melt_front_time, melt_front_temp
 
@@ -172,10 +202,10 @@ def write_melt_front_field(case_dir, melt_front_time, template, times):
     """
     processor = ScalarFieldProcessor(case_dir)
 
-    print(list(times))
-
     # Create field data based on the template
     melt_front_field = template.field.copy()
+
+    print("template field:", melt_front_field.keys())
 
     # Update header information
     melt_front_field['header']['class'] = 'volScalarField'
@@ -203,6 +233,8 @@ def write_melt_front_field(case_dir, melt_front_time, template, times):
     for time in times:
         if time == 'template' or time == "0":
             continue
+
+        print(f"\tWriting field for time {time}...")
 
         output_path = os.path.join(".", str(time), template.name)
         processor.write_field(melt_front_field, output_path)
