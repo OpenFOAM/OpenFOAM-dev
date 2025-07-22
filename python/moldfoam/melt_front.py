@@ -2,7 +2,7 @@ import os
 import numpy as np
 from typing import NamedTuple, Any
 from pathlib import Path
-from moldfoam.scalar import ScalarFieldProcessor
+from moldfoam.field import FieldReader
 
 
 class FieldData(NamedTuple):
@@ -26,7 +26,7 @@ def extract_data(case_dir):
     Returns:
         dict: Dictionary mapping time values to alpha field data
     """
-    processor = ScalarFieldProcessor(case_dir)
+    reader = FieldReader(case_dir)
     
     # Get time directories sorted numerically
     time_dirs = sorted([d for d in os.listdir(case_dir) 
@@ -48,13 +48,13 @@ def extract_data(case_dir):
         T_file = Path(time_dir) / "T"
         try:
             # Read the alpha field
-            alpha_field = processor.read_field(str(alpha_file))
-            T_field = processor.read_field(str(T_file))
-            
+            alpha_field = reader.read_field(str(alpha_file))
+            T_field = reader.read_field(str(T_file))
+
             # Store only the internal field data for efficiency
             data_by_time[time_dir] = FieldData(
-                alpha=alpha_field['internal_field'],
-                T=T_field['internal_field'],
+                alpha=alpha_field.internal_field,
+                T=T_field.internal_field,
             )
             
             if len(data_by_time) == 1:
@@ -75,6 +75,7 @@ def extract_data(case_dir):
                 )
         except Exception as e:
             print(f"Error reading {alpha_file}: {str(e)}")
+            raise e
     
     print(f"Successfully read data from {len(data_by_time)-1} time steps")
     return data_by_time
@@ -187,7 +188,7 @@ def calc_melt_front(alpha_by_time, threshold=0.5):
 
     return melt_front_time, melt_front_temp
 
-def write_melt_front_field(case_dir, melt_front_time, template, times):
+def write_melt_front_field(melt_front_time, template):
     """
     Write the melt front time field to an OpenFOAM field file.
     
@@ -195,51 +196,33 @@ def write_melt_front_field(case_dir, melt_front_time, template, times):
         case_dir: Path to the OpenFOAM case directory
         melt_front_time: Array of melt front times
         template: Template fields to use for metadata
-        times: List of time steps used in the calculation
         
     Returns:
         str: Path to the written field file
     """
-    processor = ScalarFieldProcessor(case_dir)
 
     # Create field data based on the template
     melt_front_field = template.field.copy()
 
-    print("template field:", melt_front_field.keys())
-
     # Update header information
-    melt_front_field['header']['class'] = 'volScalarField'
-    melt_front_field['header']['object'] = template.name
-    melt_front_field['header']['location'] = 'postProcessing'
-    melt_front_field['header']['dimensions'] = template.dimensions
+    melt_front_field.class_ = 'volScalarField'
+    melt_front_field.object = template.name
+    melt_front_field.location = 'postProcessing'
+    melt_front_field.dimensions = template.dimensions
 
     # Replace infinite values with a large number for visualization
     viz_data = melt_front_time.copy()
     viz_data[np.isinf(viz_data)] = 1e+30
 
     # Update the internal field data
-    melt_front_field['internal_field'] = viz_data
-
-    # Create output directory
-    output_dir = os.path.join(case_dir, 'postProcessing')
-    os.makedirs(output_dir, exist_ok=True)
+    melt_front_field.is_uniform = False
+    melt_front_field.values = viz_data
     
-    # Write the field file
+    # Write the field files
     output_path = os.path.join('postProcessing', template.name)
-    processor.write_field(melt_front_field, output_path)
+    melt_front_field.write(output_path)
 
     print(f"Wrote melt front field to {output_path}")
-
-    for time in times:
-        if time == 'template' or time == "0":
-            continue
-
-        print(f"\tWriting field for time {time}...")
-
-        output_path = os.path.join(".", str(time), template.name)
-        processor.write_field(melt_front_field, output_path)
-
-    return output_path
 
 def calc_stats(melt_front_time):
     """
@@ -279,6 +262,7 @@ def main(case_dir, threshold):
     """Main function to calculate and save melt front times."""
     
     print(f"Processing case: {case_dir}")
+    case_dir = Path(case_dir)
 
     # Extract VoF data from all time steps
     data = extract_data(case_dir)
@@ -301,7 +285,7 @@ def main(case_dir, threshold):
     print(f"Filled cells: {stats['filled_cells']} out of {stats['total_cells']} ({stats['fill_percentage']:.2f}%)")
     
     # Write the melt front fields using the template
-    write_melt_front_field(case_dir, melt_front_time, data['template'].alpha, data.keys())
-    write_melt_front_field(case_dir, melt_front_temp, data['template'].T, data.keys())
+    write_melt_front_field(melt_front_time, data['template'].alpha)
+    write_melt_front_field(melt_front_temp, data['template'].T)
     
     print("\nMelt front time calculation completed successfully.")

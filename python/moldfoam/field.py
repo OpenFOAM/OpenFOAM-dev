@@ -3,17 +3,75 @@ from pathlib import Path
 import re
 import numpy as np
 from collections import OrderedDict
+from typing import Any
+from pydantic import Field, validator
 
-from moldfoam import j2_env
+from moldfoam.config import FOAMConfig, FOAMConfigBase
 
-class OpenFOAMFieldReader:
+
+class FOAMField(FOAMConfig):
+    # FoamFile header
+    class_: str = Field(default="volScalarField")
+    location: str = Field(default="0")
+    object: str = Field(default="field")
+
+    @property
+    def template_name(self) -> str:
+        return "field.jinja"
+    
+    dimensions: list[Any] = Field()
+    is_uniform: bool = Field()
+
+    additional_vars: dict[str, Any] = Field(default_factory=dict)
+    value: Any = Field(default=None)
+    values: Any = Field(default=None)
+    boundary_fields: dict[str, Any] = Field(default_factory=dict)
+
+    @property
+    def internal_field(self) -> Any:
+        """Return the internal field value, either as a single value or a list."""
+        if self.is_uniform:
+            return self.value
+        return self.values
+
+
+class BoundaryField(FOAMConfigBase):
+    type: str = Field()
+    is_uniform: bool = Field()
+    additional_vars: dict[str, Any] = Field(default_factory=dict)
+
+
+class UniformBC(BoundaryField):
+    value: Any = Field(..., description="Uniform value for the field")
+    is_uniform: bool = Field(default=True)
+
+    # Validate that field is uniform
+    @validator('is_uniform')
+    def check_uniform(cls, v):
+        if not v:
+            raise ValueError("UniformBC must be uniform")
+        return v
+
+class NonuniformBC(BoundaryField):
+    values: list[Any] = Field(..., description="List of non-uniform values for the field")
+    is_uniform: bool = Field(default=False)
+
+    # Validate that field is non-uniform
+    @validator('is_uniform')
+    def check_nonuniform(cls, v):
+        if v:
+            raise ValueError("NonuniformBC must not be uniform")
+        return v
+
+
+class FieldReader:
     """Class for reading OpenFOAM field files."""
     
     def __init__(self, case_dir=None):
         """Initialize the reader with an optional case directory."""
         self.case_dir = Path(case_dir) if case_dir else None
         
-    def read_field(self, field_path):
+    def read_field(self, field_path) -> FOAMField:
         """
         Read an OpenFOAM field file and return the header info and data.
 
@@ -33,21 +91,29 @@ class OpenFOAMFieldReader:
         header = self._parse_header(content)
         
         # Parse the internal field
-        internal_field = self._parse_internal_field(content)
+        is_uniform, internal_field = self._parse_internal_field(content)
         
         # Parse boundary fields
         boundary_fields = self._parse_boundary_fields(content)
 
         # Parse additional variables defined outside main sections
         additional_vars = self._parse_additional_variables(content)
-        
-        return {
-            'header': header,
-            'internal_field': internal_field,
-            'boundary_fields': boundary_fields,
-            'additional_vars': additional_vars,
-            'raw_content': content,
-        }
+
+        boundary_fields = self._format_boundary_fields(boundary_fields)
+
+        return FOAMField(
+            foam_version=header.get('version', '2.0'),
+            format=header.get('format', 'ascii'),
+            class_=header.get('class', 'volScalarField'),
+            location=header.get('location', '0'),
+            object=header.get('object', 'field'),
+            dimensions=header.get('dimensions', [0, 0, 0, 0, 0, 0, 0]),
+            additional_vars=additional_vars,
+            is_uniform=is_uniform,
+            value=internal_field if is_uniform else None,
+            values=[] if is_uniform else internal_field,
+            boundary_fields=boundary_fields,
+        )
     
     def _parse_header(self, content):
         """Parse the header section of an OpenFOAM field file."""
@@ -74,6 +140,7 @@ class OpenFOAMFieldReader:
     
     def _parse_internal_field(self, content):
         """Parse the internal field section of an OpenFOAM field file."""
+
         # Check if uniform or nonuniform
         uniform_match = re.search(r'internalField\s+uniform\s+(.*?);', content)
         if uniform_match:
@@ -81,18 +148,18 @@ class OpenFOAMFieldReader:
             # Handle scalar, vector, tensor values
             try:
                 # Try parsing as a number
-                return float(value_str)
+                return True, float(value_str)
             except ValueError:
                 # Try parsing as a vector/tensor (remove parentheses and split)
                 if '(' in value_str and ')' in value_str:
                     vector_str = value_str.strip('()')
                     return np.array([float(v) for v in vector_str.split()])
-                return value_str
+                return True, value_str
         
         # Find nonuniform field using a more robust approach
         internal_field_match = re.search(r'internalField\s+nonuniform\s+List<\w+>\s*\n?\s*(\d+)\s*\n?\s*\(', content)
         if not internal_field_match:
-            return None
+            return False, None
             
         size = int(internal_field_match.group(1))
         list_start = internal_field_match.end()
@@ -112,13 +179,13 @@ class OpenFOAMFieldReader:
         if level != 0 or pos >= len(content):
             # Unbalanced parentheses
             print("Warning: Unbalanced parentheses in internalField section")
-            return None
+            return False, None
             
         # Check if there's a semicolon after the closing parenthesis
         semicolon_pos = content.find(';', pos)
         if semicolon_pos == -1 or not content[pos:semicolon_pos].strip() == '':
             print("Warning: No semicolon found after internalField list closing parenthesis")
-            return None
+            return False, None
             
         # Extract the data string
         data_str = content[list_start:pos-1]  # Exclude the final closing parenthesis
@@ -146,7 +213,7 @@ class OpenFOAMFieldReader:
         if len(values) != size:
             print(f"Warning: Expected {size} values in internalField, but got {len(values)}")
         
-        return np.array(values)
+        return False, np.array(values)
     
     def _parse_boundary_fields(self, content):
         """Parse the boundary fields section of an OpenFOAM field file."""
@@ -413,53 +480,8 @@ class OpenFOAMFieldReader:
             i += 1
         
         return additional_vars
-
-
-class OpenFOAMFieldWriter:
-    """Class for writing OpenFOAM field files."""
     
-    def __init__(self, case_dir=None):
-        """Initialize the writer with an optional case directory."""
-        self.case_dir = Path(case_dir) if case_dir else None
-        
-        # Template for scalar field file
-        self.scalar_template = j2_env.get_template('scalar.jinja')
-
-    def write_field(self, field_data, output_path):
-        """
-        Write field data to an OpenFOAM field file.
-        
-        Args:
-            field_data: Dictionary containing header info and field data
-            output_path: Path where the field file will be written
-        """
-        if self.case_dir and not os.path.isabs(output_path):
-            output_path = self.case_dir / output_path
-
-        # Prepare header information
-        header = field_data.get('header', {})
-        internal_field = field_data.get('internal_field')
-        boundary_fields = field_data.get('boundary_fields', {})
-        additional_vars = field_data.get('additional_vars', {})
-        
-        # Format dimensions if present
-        dimensions = header.get('dimensions', [0, 0, 0, 0, 0, 0, 0])
-        
-        # Check if internal field is uniform
-        is_uniform = not isinstance(internal_field, np.ndarray)
-        
-        # Format internal field value
-        if is_uniform:
-            if isinstance(internal_field, np.ndarray):  # Vector/tensor
-                value = f"({' '.join(str(v) for v in internal_field)})"
-            else:  # Scalar
-                value = str(internal_field)
-            values = []
-        else:
-            value = None
-            values = internal_field
-        
-        # Format boundary fields
+    def _format_boundary_fields(self, boundary_fields):
         formatted_boundary_fields = {}
         for patch_name, patch_data in boundary_fields.items():
             formatted_patch = patch_data.copy()
@@ -477,161 +499,29 @@ class OpenFOAMFieldWriter:
                 else:
                     formatted_patch['values'] = patch_value
                     formatted_patch['is_uniform'] = False
-            
-            formatted_boundary_fields[patch_name] = formatted_patch
-        
-        # Render template
-        output_content = self.scalar_template.render(
-            version=header.get('version', ''),
-            foam_version=header.get('version', '2.0'),
-            format=header.get('format', 'ascii'),
-            class_=header.get('class', 'volScalarField'),
-            location=header.get('location', '0'),
-            object=header.get('object', 'field'),
-            dimensions=dimensions,
-            additional_vars=additional_vars,
-            is_uniform=is_uniform,
-            value=value,
-            values=values,
-            boundary_fields=formatted_boundary_fields
-        )
-        
-        # Ensure directory exists
-        os.makedirs(os.path.dirname(output_path), exist_ok=True)
-        
-        # Write file
-        with open(output_path, 'w') as f:
-            f.write(output_content)
-        
-        return output_path
+            else:
+                formatted_patch['is_uniform'] = True
+                formatted_patch['value'] = None
 
-
-class ScalarFieldProcessor:
-    """High-level class for processing OpenFOAM field files."""
-    
-    def __init__(self, case_dir=None):
-        """Initialize the processor with an optional case directory."""
-        self.case_dir = Path(case_dir) if case_dir else None
-        self.reader = OpenFOAMFieldReader(case_dir)
-        self.writer = OpenFOAMFieldWriter(case_dir)
-    
-    def read_field(self, field_path):
-        """Read a field file."""
-        return self.reader.read_field(field_path)
-    
-    def write_field(self, field_data, output_path):
-        """Write field data to a file."""
-        return self.writer.write_field(field_data, output_path)
-    
-    def apply_function(self, field_data, func):
-        """
-        Apply a function to the internal field data.
-        
-        Args:
-            field_data: Field data dictionary
-            func: Function to apply to the internal field
-            
-        Returns:
-            dict: Updated field data dictionary
-        """
-        updated_data = field_data.copy()
-        internal_field = field_data['internal_field']
-        
-        if isinstance(internal_field, np.ndarray):
-            updated_data['internal_field'] = func(internal_field)
-        else:
-            updated_data['internal_field'] = func(internal_field)
-            
-        return updated_data
-    
-    def combine_fields(self, field_a, field_b, operation='add'):
-        """
-        Combine two field datasets with a specified operation.
-        
-        Args:
-            field_a: First field data dictionary
-            field_b: Second field data dictionary
-            operation: Operation to perform ('add', 'subtract', 'multiply', 'divide')
-            
-        Returns:
-            dict: Combined field data dictionary
-        """
-        # Ensure both fields have the same format
-        if field_a['header'].get('class') != field_b['header'].get('class'):
-            raise ValueError("Field classes don't match")
-            
-        result = field_a.copy()
-        
-        # Combine internal fields
-        a_internal = field_a['internal_field']
-        b_internal = field_b['internal_field']
-        
-        if operation == 'add':
-            result['internal_field'] = a_internal + b_internal
-        elif operation == 'subtract':
-            result['internal_field'] = a_internal - b_internal
-        elif operation == 'multiply':
-            result['internal_field'] = a_internal * b_internal
-        elif operation == 'divide':
-            result['internal_field'] = a_internal / b_internal
-        else:
-            raise ValueError(f"Unsupported operation: {operation}")
-            
-        return result
-    
-    def scale_field(self, field_data, factor):
-        """
-        Scale a field by a constant factor.
-        
-        Args:
-            field_data: Field data dictionary
-            factor: Scaling factor
-            
-        Returns:
-            dict: Scaled field data dictionary
-        """
-        return self.apply_function(field_data, lambda x: x * factor)
-    
-    def extract_values_at_locations(self, field_data, locations):
-        """
-        Extract field values at specific coordinates (requires cell mapping).
-        This is a placeholder function - implementation would require a mesh reader.
-        
-        Args:
-            field_data: Field data dictionary
-            locations: List of (x, y, z) coordinates
-            
-        Returns:
-            dict: Dictionary mapping location to field value
-        """
-        # This would require reading the mesh to map coordinates to cell indices
-        # Placeholder implementation
-        raise NotImplementedError("Requires mesh reader to map coordinates to cells")
-    
-    def compute_statistics(self, field_data):
-        """
-        Compute basic statistics for a field.
-        
-        Args:
-            field_data: Field data dictionary
-            
-        Returns:
-            dict: Dictionary of statistics
-        """
-        internal_field = field_data['internal_field']
-        
-        if not isinstance(internal_field, np.ndarray):
-            # For uniform fields, return a single value
-            return {
-                'min': internal_field,
-                'max': internal_field,
-                'mean': internal_field,
-                'std': 0.0
+            additional_vars = {
+                k: v for k, v in patch_data.items()
+                if k not in ['type', 'value', 'is_uniform', 'values']
             }
-            
-        return {
-            'min': np.min(internal_field),
-            'max': np.max(internal_field),
-            'mean': np.mean(internal_field),
-            'std': np.std(internal_field)
-        }
+
+            if formatted_patch['is_uniform']:
+                formatted_patch = UniformBC(
+                    type=formatted_patch['type'],
+                    value=formatted_patch['value'],
+                    additional_vars=additional_vars
+                )
+            else:
+                formatted_patch = NonuniformBC(
+                    type=formatted_patch['type'],
+                    values=formatted_patch['values'],
+                    additional_vars=additional_vars
+                )
+
+            formatted_boundary_fields[patch_name] = formatted_patch
+
+        return formatted_boundary_fields
+

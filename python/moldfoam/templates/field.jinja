@@ -3,8 +3,7 @@
 dimensions      [{{ dimensions|join(' ') }}];
                                         
 {% for name, var_content in additional_vars.items() %}
-{{ var_content }}
-                                        
+{{ var_content }}              
 {% endfor %}
 
 internalField   {% if is_uniform %}uniform {{ value }}{% else %}nonuniform List<scalar>
@@ -20,15 +19,16 @@ boundaryField
     {{ name }}
     {
         type            {{ patch.type }};
-        {% if 'value' in patch %}value           {% if patch.is_uniform %}uniform {{ patch.value }}{% else %}nonuniform List<scalar>
+        {%- if 'value' in patch and patch.value is not none %}
+        value           {% if patch.is_uniform %}{{ patch.value }}{% else %}nonuniform List<scalar>
         {{ patch.values|length }}
         (
         {% for val in patch.values %}
             {{ val }}{% endfor %}
         ){% endif %};
-        {% endif %}
-        {% for key, val in patch.items() %}{% if key not in ['type', 'value', 'is_uniform', 'values'] %}
-        {{ key }}            {{ val }};{% endif %}{% endfor %}
+        {%- endif -%}  {# 'value' in patch #}
+        {%- for key, val in patch.additional_vars.items() %}
+        {{ key }}            {{ val }};{% endfor %}
     }
 {% endfor %}
 }

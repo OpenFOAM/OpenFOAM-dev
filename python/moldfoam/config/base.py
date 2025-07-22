@@ -1,10 +1,11 @@
 from typing import Any, Literal
+import os
 from pydantic import BaseModel, Field
 
 from moldfoam import j2_env
 
 
-class FoamConfigBase(BaseModel):
+class FOAMConfigBase(BaseModel):
 
     class Config:
         populate_by_name = True
@@ -14,7 +15,7 @@ class FoamConfigBase(BaseModel):
         return self.dict(by_alias=True)
 
 
-class FOAMConfig(FoamConfigBase):
+class FOAMConfig(FOAMConfigBase):
     """Base class for OpenFOAM configurations."""
 
     foam_version: str = Field(default="2.0", description="FoamFile format version")
@@ -35,3 +36,15 @@ class FOAMConfig(FoamConfigBase):
         template = j2_env.get_template(self.template_name)
         return template.render(**self.to_openfoam_dict())
     
+    def write(self, output_path: str) -> str:
+        output_content = self.render()
+
+        # Ensure directory exists
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+
+        # Write file
+        with open(output_path, 'w') as f:
+            f.write(output_content)
+
+        return output_content
+

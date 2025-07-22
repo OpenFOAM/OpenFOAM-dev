@@ -1,17 +1,17 @@
 from pydantic import BaseModel, Field, validator, model_validator
 from typing import Literal, Optional
 
-from ..base import FOAMConfig, FoamConfigBase
+from ..base import FOAMConfig, FOAMConfigBase
 
 
-class PIMPLEConfig(FoamConfigBase):
+class PIMPLEConfig(FOAMConfigBase):
     momentum_predictor: Literal['yes', 'no'] = Field(alias="momentumPredictor")
     n_outer_correctors: int = Field(alias="nOuterCorrectors")
     n_correctors: int = Field(alias="nCorrectors")
     n_non_orthogonal_correctors: int = Field(alias="nNonOrthogonalCorrectors")
 
 
-class PressureConfig(FoamConfigBase):
+class PressureConfig(FOAMConfigBase):
     preconditioner: Literal["DIC", "GAMG"] = Field()
     atol: float = Field(default=1e-8, alias="tolerance")
     rtol: float = Field(default=1e-2, alias="relTol")

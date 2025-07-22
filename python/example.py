@@ -1,4 +1,5 @@
-from moldfoam import config
+from moldfoam import config, dimensions
+from moldfoam import field
 
 template = config.system.control.ControlConfig(
     solver="compressibleVoF",
@@ -42,5 +43,77 @@ template = config.system.fv_solution.FVSolutionConfig(
 )
 
 print(template.to_openfoam_dict())
+
+print(template.render())
+
+T_wall = 323.15  # Wall temperature [K]
+T0 = 500.0  # Initial temperature [K]
+h = 1200.0  # Heat flux [W/m^2/K]
+
+# Boundary conditions
+bcs = {
+    "\"MOLD_PART.*\"": field.UniformBC(
+        type="externalWallHeatFluxTemperature",
+        value=T_wall,
+        additional_vars={
+            "Ta": T_wall,  # Ambient temperature
+            "h": f"uniform {h}",
+        }
+    ),
+    "MELT_POINT": field.UniformBC(
+        type="fixedValue",
+        value=T0,
+    ),
+    "MELT_VENT": field.UniformBC(
+        type="inletOutlet",
+        value=T0,
+        additional_vars={
+            "inletValue": T_wall,
+        }
+    )
+}
+
+template = field.FOAMField(
+    class_='volScalarField',
+    object='T',
+    location='0',
+    dimensions=dimensions.TEMPERATURE,
+    is_uniform=True,
+    value=500,
+    boundary_fields=bcs,
+)
+
+print(template.render())
+
+# Pressure field
+p_atm = 1e5
+bcs = {
+    "\"MOLD_PART.*\"": field.UniformBC(
+        type="zeroGradient",
+        value=p_atm,
+    ),
+    "MELT_POINT": field.UniformBC(
+        type="zeroGradient",
+        value=p_atm,
+    ),
+    # TODO: Need pressure vent BCs
+    # "MELT_VENT": field.UniformBC(
+    #     type="codedMixed",
+    #     value=T0,
+    #     additional_vars={
+    #         "inletValue": T_wall,
+    #     }
+    # )
+}
+
+template = field.FOAMField(
+    class_='volScalarField',
+    object='p_rgh',
+    location='0',
+    dimensions=dimensions.PRESSURE,
+    is_uniform=True,
+    value=p_atm,
+    boundary_fields=bcs,
+)
 
 print(template.render())
