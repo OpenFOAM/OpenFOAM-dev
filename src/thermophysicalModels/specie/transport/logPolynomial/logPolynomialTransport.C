@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,14 +36,14 @@ Foam::logPolynomialTransport<Thermo, PolySize>::logPolynomialTransport
 )
 :
     Thermo(name, dict),
-    muCoeffs_
+    muLogCoeffs_
     (
         dict.subDict("transport").lookup
         (
             "muLogCoeffs<" + Foam::name(PolySize) + '>'
         )
     ),
-    kappaCoeffs_
+    kappaLogCoeffs_
     (
         dict.subDict("transport").lookup
         (
@@ -67,12 +67,12 @@ void Foam::logPolynomialTransport<Thermo, PolySize>::write(Ostream& os) const
     dict.add
     (
         word("muLogCoeffs<" + Foam::name(PolySize) + '>'),
-        muCoeffs_
+        muLogCoeffs_
     );
     dict.add
     (
         word("kappaLogCoeffs<" + Foam::name(PolySize) + '>'),
-        kappaCoeffs_
+        kappaLogCoeffs_
     );
     os  << indent << dict.dictName() << dict;
 

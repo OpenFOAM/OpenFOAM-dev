@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,13 +31,13 @@ template<class Thermo, int PolySize>
 inline Foam::logPolynomialTransport<Thermo, PolySize>::logPolynomialTransport
 (
     const Thermo& t,
-    const Polynomial<PolySize>& muCoeffs,
-    const Polynomial<PolySize>& kappaCoeffs
+    const Polynomial<PolySize>& muLogCoeffs,
+    const Polynomial<PolySize>& kappaLogCoeffs
 )
 :
     Thermo(t),
-    muCoeffs_(muCoeffs),
-    kappaCoeffs_(kappaCoeffs)
+    muLogCoeffs_(muLogCoeffs),
+    kappaLogCoeffs_(kappaLogCoeffs)
 {}
 
 
@@ -49,8 +49,8 @@ inline Foam::logPolynomialTransport<Thermo, PolySize>::logPolynomialTransport
 )
 :
     Thermo(name, pt),
-    muCoeffs_(pt.muCoeffs_),
-    kappaCoeffs_(pt.kappaCoeffs_)
+    muLogCoeffs_(pt.muLogCoeffs_),
+    kappaLogCoeffs_(pt.kappaLogCoeffs_)
 {}
 
 
@@ -74,7 +74,7 @@ inline Foam::scalar Foam::logPolynomialTransport<Thermo, PolySize>::mu
     const scalar T
 ) const
 {
-    return exp(muCoeffs_.value(log(T)));
+    return exp(muLogCoeffs_.value(log(T)));
 }
 
 
@@ -85,7 +85,7 @@ inline Foam::scalar Foam::logPolynomialTransport<Thermo, PolySize>::kappa
     const scalar T
 ) const
 {
-    return exp(kappaCoeffs_.value(log(T)));
+    return exp(kappaLogCoeffs_.value(log(T)));
 }
 
 
@@ -106,8 +106,8 @@ inline void Foam::logPolynomialTransport<Thermo, PolySize>::operator+=
         Y1 /= this->Y();
         scalar Y2 = pt.Y()/this->Y();
 
-        muCoeffs_ = Y1*muCoeffs_ + Y2*pt.muCoeffs_;
-        kappaCoeffs_ = Y1*kappaCoeffs_ + Y2*pt.kappaCoeffs_;
+        muLogCoeffs_ = Y1*muLogCoeffs_ + Y2*pt.muLogCoeffs_;
+        kappaLogCoeffs_ = Y1*kappaLogCoeffs_ + Y2*pt.kappaLogCoeffs_;
     }
 }
 
@@ -142,8 +142,8 @@ inline Foam::logPolynomialTransport<Thermo, PolySize> Foam::operator+
         (
             t,
             0,
-            pt1.muCoeffs_,
-            pt1.kappaCoeffs_
+            pt1.muLogCoeffs_,
+            pt1.kappaLogCoeffs_
         );
     }
     else
@@ -154,8 +154,8 @@ inline Foam::logPolynomialTransport<Thermo, PolySize> Foam::operator+
         return logPolynomialTransport<Thermo, PolySize>
         (
             t,
-            Y1*pt1.muCoeffs_ + Y2*pt2.muCoeffs_,
-            Y1*pt1.kappaCoeffs_ + Y2*pt2.kappaCoeffs_
+            Y1*pt1.muLogCoeffs_ + Y2*pt2.muLogCoeffs_,
+            Y1*pt1.kappaLogCoeffs_ + Y2*pt2.kappaLogCoeffs_
         );
     }
 }
@@ -171,8 +171,8 @@ inline Foam::logPolynomialTransport<Thermo, PolySize> Foam::operator*
     return logPolynomialTransport<Thermo, PolySize>
     (
         s*static_cast<const Thermo&>(pt),
-        pt.muCoeffs_,
-        pt.kappaCoeffs_
+        pt.muLogCoeffs_,
+        pt.kappaLogCoeffs_
     );
 }
 
