@@ -1,0 +1,70 @@
+
+solvers
+{
+    "alpha.melt.*"
+    {
+        nAlphaCorr      1;
+        nAlphaSubCycles 1;
+
+        solver          smoothSolver;
+        smoother        symGaussSeidel;
+        tolerance       1e-10;
+        relTol          0;
+
+        MULESCorr       yes;
+        nLimiterIter    5;
+    }
+
+
+    "p_rgh|p"
+    {
+        solver          PCG;
+        {% if pressure.preconditioner == "DIC" %}
+        preconditioner  DIC;
+        {% elif pressure.preconditioner == "GAMG" %}
+        preconditioner
+        {
+            preconditioner  GAMG;
+            tolerance       1e-5;
+            relTol          0;
+            nVcycles        2;
+            smoother        GaussSeidel;
+            nPreSweeps      0;
+            nPostSweeps     2;
+            nFinestSweeps   2;
+            cacheAgglomeration true;
+            nCellsInCoarsestLevel 10;
+            agglomerator    faceAreaPair;
+            mergeLevels     1;
+        }
+        {% endif %}
+        
+        tolerance       {{pressure.tolerance}};
+        relTol          {{pressure.relTol}};
+        maxIter         {{pressure.maxIter}};
+    }
+
+    
+    "pcorr.*"
+    {
+        $p_rgh;
+        tolerance       1e-8;
+    }
+
+    p_rghFinal
+    {
+        $p_rgh;
+        relTol          0;
+    }
+
+    "(U|T).*"
+    {
+        solver          smoothSolver;
+        smoother        GaussSeidel;
+        tolerance       1e-8;
+        relTol          0.0;
+        minIter         1;
+        maxIter         10000;
+    }
+
+}

@@ -3,11 +3,19 @@ from pydantic import BaseModel, Field
 
 from moldfoam import j2_env
 
-class FOAMConfig(BaseModel):
-    """Base class for OpenFOAM configurations."""
+
+class FoamConfigBase(BaseModel):
 
     class Config:
         populate_by_name = True
+
+    def to_openfoam_dict(self) -> dict[str, Any]:
+        """Get dictionary with camelCase keys for OpenFOAM templates."""
+        return self.dict(by_alias=True)
+
+
+class FOAMConfig(FoamConfigBase):
+    """Base class for OpenFOAM configurations."""
 
     foam_version: str = Field(default="2.0", description="FoamFile format version")
     format: Literal['ascii', 'binary'] = Field(default="ascii", description="File format")
@@ -21,10 +29,6 @@ class FOAMConfig(BaseModel):
     def template_name(self) -> str:
         """Return the template name for rendering."""
         raise NotImplementedError("Subclasses must define a template_name")
-
-    def to_openfoam_dict(self) -> dict[str, Any]:
-        """Get dictionary with camelCase keys for OpenFOAM templates."""
-        return self.dict(by_alias=True)
 
     def render(self) -> str:
         """Render the controlDict template with the current configuration."""

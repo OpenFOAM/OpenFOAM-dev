@@ -1,0 +1,7 @@
+{% extends "base.jinja" %}
+{% block content %}
+{% if type_ == "VoF" %}
+{% include "system/fvSchemes.VoF.jinja" %}
+{% elif type_ == "default" %}
+{% endif %}
+{% endblock %}

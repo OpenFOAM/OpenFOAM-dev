@@ -1,0 +1,39 @@
+ddtSchemes
+{
+    default         Euler;
+}
+
+gradSchemes
+{
+    default         Gauss linear;
+}
+
+divSchemes
+{
+    div(phi,alpha)  Gauss interfaceCompression upwind {{ interfaceCompression }};
+
+    div(rhoPhi,U)   Gauss linearUpwind grad(U);
+
+    div(alphaRhoPhi,e) Gauss upwind;
+    div(alphaRhoPhi,T) Gauss upwind;
+
+    div(rhoPhi,K)   Gauss upwind;
+    div(phi,p)      Gauss upwind;
+
+    div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
+}
+
+laplacianSchemes
+{
+    default         Gauss linear uncorrected;
+}
+
+interpolationSchemes
+{
+    default         linear;
+}
+
+snGradSchemes
+{
+    default         uncorrected;
+}

@@ -1,9 +1,9 @@
 from pydantic import Field, validator, model_validator
 from typing import Literal, Optional
 
-from .base import FOAMConfig
+from ..base import FOAMConfig
 
-class ControlDictConfig(FOAMConfig):
+class ControlConfig(FOAMConfig):
     """OpenFOAM controlDict configuration."""
 
     @property
