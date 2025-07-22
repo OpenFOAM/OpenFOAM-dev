@@ -9,8 +9,9 @@ reactionDrivenPhaseChange/reactionDrivenPhaseChange.C
 
 # Nucleation phase change
 nucleation/nucleation.C
-homogeneousCondensation/homogeneousCondensation.C
-homogeneousLiquidPhaseSeparation/homogeneousLiquidPhaseSeparation.C
+homogeneousNucleation/homogeneousNucleation.C
+homogeneousNucleation/homogeneousCondensation.C
+homogeneousNucleation/homogeneousLiquidPhaseSeparation.C
 wallBoiling/wallBoiling.C
 wallBoiling/wallBoilingPhaseChangeRateFvPatchScalarField.C
 wallBoiling/alphatBoilingWallFunctionFvPatchScalarField.C

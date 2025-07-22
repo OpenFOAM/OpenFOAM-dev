@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,49 +22,23 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::homogeneousLiquidPhaseSeparation
+    Foam::fv::homogeneousNucleation
 
 Description
-    Model for the homogeneous nucleation of a solid or liquid phase separating
-    out of a liquid solution
-
-Usage
-    Example usage:
-    \verbatim
-    homogeneousLiquidPhaseSeparation
-    {
-        type            homogeneousLiquidPhaseSeparation;
-        libs            ("libmultiphaseEulerFvModels.so");
-
-        // Phases between which the transfer occurs. The first phase is the
-        // solution, and the second is the precipitate.
-        phases          (liquid sugar);
-
-        // The specie that is condensing
-        specie          C6H12O6;
-
-        // Linearise the latent heat contribution into the energy equation?
-        energySemiImplicit no;
-
-        // Solubility given in mass of solute per mass of solvent
-        solubility      constant 0.9;
-
-        // Type of the nucleate: 'solid', 'liquid' or 'gas'.
-        nucleate        solid;
-    }
-    \endverbatim
+    Base class for homogeneous nucleation models based on classical nucleation
+    theory
 
 SourceFiles
-    homogeneousLiquidPhaseSeparation.C
+    homogeneousNucleation.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef homogeneousLiquidPhaseSeparation_H
-#define homogeneousLiquidPhaseSeparation_H
+#ifndef homogeneousNucleation_H
+#define homogeneousNucleation_H
 
 #include "phaseChange.H"
+#include "phaseSystem.H"
 #include "nucleation.H"
-#include "dispersedPhaseInterface.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -74,25 +48,14 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-              Class homogeneousLiquidPhaseSeparation Declaration
+                   Class homogeneousNucleation Declaration
 \*---------------------------------------------------------------------------*/
 
-class homogeneousLiquidPhaseSeparation
+class homogeneousNucleation
 :
     public phaseChange,
     public nucleation
 {
-public:
-
-    // Public Type Definitions
-
-        //- Enumeration for the nucleate types
-        enum class nucleateType { solid, liquid, gas };
-
-        //- Names of the moment types
-        static const NamedEnum<nucleateType, 3> nucleateTypeNames_;
-
-
 private:
 
     // Private Data
@@ -100,17 +63,26 @@ private:
         //- Phase system
         const phaseSystem& fluid_;
 
+        //- Reference to the solution phase
+        const phaseModel& solution_;
+
+        //- Reference to the nucleating phase
+        const phaseModel& nucleate_;
+
+        //- Reference to the field associated with the pressure equation
+        const volScalarField& p_rgh_;
+
+        //- Counter for the evaluations of the pressure equation sources
+        mutable label pressureEquationIndex_;
+
         //- Diameter of nucleated clusters
-        volScalarField::Internal d_;
+        mutable volScalarField::Internal d_;
 
         //- Phase change rate, per unit volume of the solution
-        volScalarField::Internal mDotByAlphaSolution_;
+        mutable volScalarField::Internal mDotByAlphaSolution_;
 
-        //- Solubility curve
-        autoPtr<Function1<scalar>> solubilityCurve_;
-
-        //- Nucleate type
-        nucleateType nucleateType_;
+        //- Phase change rate
+        mutable volScalarField::Internal mDot_;
 
 
     // Private Member Functions
@@ -118,24 +90,33 @@ private:
         //- Non-virtual read
         void readCoeffs(const dictionary& dict);
 
-        //- Evaluate the solubility curve at the given temperature to return
-        //  the saturated mass fraction of solute
-        tmp<volScalarField::Internal> YSat
-        (
-            const volScalarField::Internal& T
-        ) const;
+        //- Correct the stored diameter and phase change rates
+        void correctDAndMDot() const;
+
+        //- Calculate and return the diameter of nucleates and the phase change
+        //  rate per quantity of the solution phase
+        virtual Pair<tmp<volScalarField::Internal>>
+            dAndMDotByAlphaSolution() const = 0;
+
+
+protected:
+
+    // Protected Member Functions
+
+        //- Return the surface tension coefficient between the phases
+        tmp<volScalarField::Internal> sigma() const;
 
 
 public:
 
     //- Runtime type information
-    TypeName("homogeneousLiquidPhaseSeparation");
+    TypeName("homogeneousNucleation");
 
 
     // Constructors
 
         //- Construct from explicit source name and mesh
-        homogeneousLiquidPhaseSeparation
+        homogeneousNucleation
         (
             const word& name,
             const word& modelType,

@@ -22,47 +22,47 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::homogeneousCondensation
+    Foam::fv::homogeneousLiquidPhaseSeparation
 
 Description
-    Model for the homogeneous nucleation of liquid droplets out of a gaseous
-    mixture
+    Model for the homogeneous nucleation of a solid or liquid phase separating
+    out of a liquid solution
 
 Usage
     Example usage:
     \verbatim
-    homogeneousCondensation
+    homogeneousLiquidPhaseSeparation
     {
-        type            homogeneousCondensation;
+        type            homogeneousLiquidPhaseSeparation;
         libs            ("libmultiphaseEulerFvModels.so");
 
         // Phases between which the transfer occurs. The first phase is the
-        // gas, and the second is the condensed liquid.
-        phases          (gas water);
+        // solution, and the second is the precipitate.
+        phases          (liquid sugar);
 
         // The specie that is condensing
-        specie          H2O;
+        specie          C6H12O6;
 
         // Linearise the latent heat contribution into the energy equation?
         energySemiImplicit no;
 
-        // Saturation curve for the specie in the gaseous phase
-        pSat            ArdenBuck;
+        // Solubility given in mass of solute per mass of solvent
+        solubility      constant 0.9;
+
+        // Type of the nucleate: 'solid', 'liquid' or 'gas'.
+        nucleate        solid;
     }
     \endverbatim
 
 SourceFiles
-    homogeneousCondensation.C
+    homogeneousLiquidPhaseSeparation.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef homogeneousCondensation_H
-#define homogeneousCondensation_H
+#ifndef homogeneousLiquidPhaseSeparation_H
+#define homogeneousLiquidPhaseSeparation_H
 
-#include "phaseChange.H"
-#include "nucleation.H"
-#include "dispersedPhaseInterface.H"
-#include "saturationPressureModel.H"
+#include "homogeneousNucleation.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -72,29 +72,19 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                   Class homogeneousCondensation Declaration
+              Class homogeneousLiquidPhaseSeparation Declaration
 \*---------------------------------------------------------------------------*/
 
-class homogeneousCondensation
+class homogeneousLiquidPhaseSeparation
 :
-    public phaseChange,
-    public nucleation
+    public homogeneousNucleation
 {
 private:
 
     // Private Data
 
-        //- Phase system
-        const phaseSystem& fluid_;
-
-        //- Diameter of nucleated clusters
-        volScalarField::Internal d_;
-
-        //- Phase change rate, per unit volume of the gas
-        volScalarField::Internal mDotByAlphaGas_;
-
-        //- Saturation pressure model
-        autoPtr<saturationPressureModel> saturationModel_;
+        //- Solubility curve
+        autoPtr<Function1<scalar>> solubilityCurve_;
 
 
     // Private Member Functions
@@ -102,17 +92,22 @@ private:
         //- Non-virtual read
         void readCoeffs(const dictionary& dict);
 
+        //- Calculate and return the diameter of nucleates and the phase change
+        //  rate per quantity of the solution phase
+        virtual Pair<tmp<volScalarField::Internal>>
+            dAndMDotByAlphaSolution() const;
+
 
 public:
 
     //- Runtime type information
-    TypeName("homogeneousCondensation");
+    TypeName("homogeneousLiquidPhaseSeparation");
 
 
     // Constructors
 
         //- Construct from explicit source name and mesh
-        homogeneousCondensation
+        homogeneousLiquidPhaseSeparation
         (
             const word& name,
             const word& modelType,
@@ -122,38 +117,6 @@ public:
 
 
     // Member Functions
-
-        // Sources
-
-            //- Return the diameter of nuclei
-            virtual tmp<DimensionedField<scalar, volMesh>> d() const;
-
-            //- Return the number rate at which nuclei are generated
-            virtual tmp<DimensionedField<scalar, volMesh>> nDot() const;
-
-            //- Return the mass transfer rate
-            virtual tmp<DimensionedField<scalar, volMesh>> mDot() const;
-
-            //- Return the nucleation time scale
-            virtual tmp<DimensionedField<scalar, volMesh>> tau() const;
-
-            //- Use phaseChange's source functions
-            using phaseChange::addSup;
-
-            //- Override the compressible continuity equation to add
-            //  linearisation w.r.t alpha
-            void addSup
-            (
-                const volScalarField& alpha,
-                const volScalarField& rho,
-                fvMatrix<scalar>& eqn
-            ) const;
-
-
-        //- Correct the fvModel
-        //  e.g. solve equations, update model, for film, Lagrangian etc.
-        virtual void correct();
-
 
         // IO
 
