@@ -48,9 +48,6 @@ Usage
 
         // Solubility given in mass of solute per mass of solvent
         solubility      constant 0.9;
-
-        // Type of the nucleate: 'solid', 'liquid' or 'gas'.
-        nucleate        solid;
     }
     \endverbatim
 
