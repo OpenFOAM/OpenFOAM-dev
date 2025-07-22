@@ -1,0 +1,76 @@
+{% extends "base.jinja" %}
+{% block content %}
+application     {{ application }};
+
+solver          {{ solver }};
+
+startFrom       {{ startFrom }};
+
+startTime       {{ startTime }};
+
+stopAt          {{ stopAt }};
+
+endTime         {{ endTime }};
+
+deltaT          {{ deltaT }};
+
+writeControl    {{ writeControl }};
+
+writeInterval   {{ writeInterval }};
+
+purgeWrite      {{ purgeWrite }};
+
+writeFormat     {{ writeFormat }};
+
+writePrecision  {{ writePrecision }};
+
+writeCompression {{ writeCompression }};
+
+timeFormat      {{ timeFormat }};
+
+timePrecision   {{ timePrecision }};
+
+runTimeModifiable {{ runTimeModifiable }};
+
+adjustTimeStep  {% if adjustTimeStep %} "yes" {% else %} "no" {% endif %};
+
+{% if adjustTimeStep %}
+maxCo           {{ maxCo }};
+
+maxAlphaCo      {{ maxAlphaCo }};
+
+maxDeltaT       {{ maxDeltaT }};
+{% endif %}
+
+functions
+{
+ {% if trackPressure %}
+    maxPressure
+    {
+        type            volFieldValue;
+        libs            ("libfieldFunctionObjects.so");
+        writeControl    timeStep;
+        writeInterval   1;
+        select          all;
+        log             true;
+        writeFields     false;
+        operation       max;
+        fields          (p);
+    }
+
+    minPressure
+    {
+        type            volFieldValue;
+        libs            ("libfieldFunctionObjects.so");
+        writeControl    timeStep;
+        writeInterval   1;
+        select          all;
+        log             true;
+        writeFields     false;
+        operation       min;
+        fields          (p);
+    }
+ {% endif %}
+}
+
+{% endblock %}

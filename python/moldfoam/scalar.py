@@ -1,9 +1,10 @@
 import os
+from pathlib import Path
 import re
 import numpy as np
-from pathlib import Path
 from collections import OrderedDict
-from jinja2 import Template
+
+from moldfoam import j2_env
 
 class OpenFOAMFieldReader:
     """Class for reading OpenFOAM field files."""
@@ -15,10 +16,10 @@ class OpenFOAMFieldReader:
     def read_field(self, field_path):
         """
         Read an OpenFOAM field file and return the header info and data.
-        
+
         Args:
             field_path: Path to the field file
-            
+
         Returns:
             dict: A dictionary containing header information and field data
         """
@@ -422,58 +423,7 @@ class OpenFOAMFieldWriter:
         self.case_dir = Path(case_dir) if case_dir else None
         
         # Template for scalar field file
-        self.scalar_template = Template('''/*--------------------------------*- C++ -*----------------------------------*\\
-| =========                 |                                                 |
-| \\\\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\\\    /   O peration     | Version:  {{version}}                            |
-|   \\\\  /    A nd           | Web:      www.OpenFOAM.org                      |
-|    \\\\/     M anipulation  |                                                 |
-\\*---------------------------------------------------------------------------*/
-FoamFile
-{
-    version     {{foam_version}};
-    format      {{format}};
-    class       {{class_}};
-    location    "{{location}}";
-    object      {{object}};
-}
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-dimensions      [{{ dimensions|join(' ') }}];
-                                        
-{% for name, var_content in additional_vars.items() %}
-{{ var_content }}
-                                        
-{% endfor %}
-
-internalField   {% if is_uniform %}uniform {{ value }}{% else %}nonuniform List<scalar>
-{{ values|length }}
-(
-{% for val in values %}
-    {{ val }}{% endfor %}
-){% endif %};
-
-boundaryField
-{
-{% for name, patch in boundary_fields.items() %}
-    {{ name }}
-    {
-        type            {{ patch.type }};
-        {% if 'value' in patch %}value           {% if patch.is_uniform %}uniform {{ patch.value }}{% else %}nonuniform List<scalar>
-        {{ patch.values|length }}
-        (
-        {% for val in patch.values %}
-            {{ val }}{% endfor %}
-        ){% endif %};
-        {% endif %}
-        {% for key, val in patch.items() %}{% if key not in ['type', 'value', 'is_uniform', 'values'] %}
-        {{ key }}            {{ val }};{% endif %}{% endfor %}
-    }
-{% endfor %}
-}
-
-// ************************************************************************* //
-''')
+        self.scalar_template = j2_env.get_template('scalar.jinja')
 
     def write_field(self, field_data, output_path):
         """
