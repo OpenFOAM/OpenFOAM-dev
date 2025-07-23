@@ -104,6 +104,8 @@ namespace Foam
 namespace fv
 {
 
+class propellerDiskAdjustment;
+
 /*---------------------------------------------------------------------------*\
                      Class propellerDisk Declaration
 \*---------------------------------------------------------------------------*/
@@ -160,6 +162,8 @@ protected:
         //- Optional log file
         mutable autoPtr<functionObjects::logFile> logFile_;
 
+        autoPtr<propellerDiskAdjustment> adjustment_;
+
 
     // Protected Member Functions
 
@@ -173,20 +177,18 @@ protected:
         }
 
         //- Return the rotation speed
-        virtual scalar n() const
-        {
-            return n_;
-        }
+        scalar n() const;
 
-        //- No rotation speed correction
-        virtual void correctn(const scalar T) const
-        {}
+        //- Rotation speed correction
+        void correctn(const scalar T) const;
 
         //- Computes the thickness of the disk in streamwise direction
         scalar diskThickness(const vector& centre) const;
 
         //- Return the normalised flow-rate through the disk
         scalar J(const vectorField& U, const vector& nHat) const;
+
+        friend class propellerDiskAdjustment;
 
 
 private:

@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "propellerDisk.H"
+#include "propellerDiskAdjustment.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -100,6 +101,24 @@ void Foam::fv::propellerDisk::readCoeffs(const dictionary& dict)
             }
         );
     }
+
+    bool adjustment(dict.lookupOrDefault<Switch>("adjustment", false));
+
+    if (adjustment)
+    {
+        if (adjustment_.valid())
+        {
+            adjustment_->readCoeffs(dict);
+        }
+        else
+        {
+            adjustment_ = new propellerDiskAdjustment(*this, dict);
+        }
+    }
+    else
+    {
+        adjustment_.clear();
+    }
 }
 
 
@@ -133,6 +152,28 @@ Foam::scalar Foam::fv::propellerDisk::J
     const scalar Uref = VUn/zone_.V();
 
     return mag(Uref/(n_*dProp_));
+}
+
+
+Foam::scalar Foam::fv::propellerDisk::n() const
+{
+    if (adjustment_.valid())
+    {
+        return adjustment_->n();
+    }
+    else
+    {
+        return n_;
+    }
+}
+
+
+void Foam::fv::propellerDisk::correctn(const scalar T) const
+{
+    if (adjustment_.valid())
+    {
+        adjustment_->correctn(T);
+    }
 }
 
 
