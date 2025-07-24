@@ -25,6 +25,7 @@ License
 
 #include "dictionary.H"
 #include "primitiveEntry.H"
+#include "dictionaryEntry.H"
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
 
@@ -478,6 +479,17 @@ template<class T>
 void Foam::dictionary::set(const keyType& k, const T& t)
 {
     set(new primitiveEntry(k, t));
+}
+
+
+template<class ... Entries>
+void Foam::dictionary::set
+(
+    const keyType& k,
+    const std::tuple<const Entries& ...>& entries
+)
+{
+    set(new dictionaryEntry(k, *this, entries));
 }
 
 

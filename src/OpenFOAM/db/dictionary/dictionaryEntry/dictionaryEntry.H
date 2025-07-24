@@ -39,11 +39,11 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
+#include "dictionary.H"
+
 #ifndef dictionaryEntry_H
 #define dictionaryEntry_H
 
-#include "entry.H"
-#include "dictionary.H"
 #include "InfoProxy.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

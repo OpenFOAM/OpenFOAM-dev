@@ -768,6 +768,10 @@ public:
             //- Assign a dictionary entry, overwrite any existing entry
             void set(const keyType&, const dictionary&);
 
+            //- Assign a dictionary entry, overwrite any existing entry
+            template<class ... Entries>
+            void set(const keyType&, const std::tuple<const Entries& ...>&);
+
             //- Assign a T entry, overwrite any existing entry
             template<class T>
             void set(const keyType&, const T&);
