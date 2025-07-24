@@ -199,6 +199,12 @@ Foam::fv::propellerDisk::propellerDisk
 }
 
 
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::fv::propellerDisk::~propellerDisk()
+{}
+
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 bool Foam::fv::propellerDisk::read(const dictionary& dict)

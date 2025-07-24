@@ -228,8 +228,7 @@ public:
 
 
     //- Destructor
-    virtual ~propellerDisk()
-    {}
+    virtual ~propellerDisk();
 
 
     // Member Functions
