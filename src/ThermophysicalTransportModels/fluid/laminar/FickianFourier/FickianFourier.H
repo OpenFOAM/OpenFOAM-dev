@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,11 +93,11 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#include "Fickian.H"
-#include "unityLewisFourier.H"
-
 #ifndef FickianFourier_H
 #define FickianFourier_H
+
+#include "Fickian.H"
+#include "unityLewisFourier.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
