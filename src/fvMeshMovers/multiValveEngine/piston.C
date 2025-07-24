@@ -36,7 +36,7 @@ Foam::word Foam::fvMeshMovers::multiValveEngine::pistonObject::pistonBowlName
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
-Foam::scalar Foam::fvMeshMovers::multiValveEngine::pistonObject::bore() const
+void Foam::fvMeshMovers::multiValveEngine::pistonObject::calculateBore()
 {
     const polyBoundaryMesh& pbm = meshMover_.mesh().boundaryMesh();
 
@@ -59,11 +59,11 @@ Foam::scalar Foam::fvMeshMovers::multiValveEngine::pistonObject::bore() const
 
     // Assuming the piston moves in the positive axis direction
     // remove the axis_ component to find the lateral extent of the piston
-    return mag
-    (
-        (pistonMax - (axis& pistonMax)*pistonMax)
-      - (pistonMin - (axis& pistonMin)*pistonMin)
-    )/sqrt(2.0);
+    pistonMax = pistonMax - (axis & pistonMax)*pistonMax;
+    pistonMin = pistonMin - (axis & pistonMin)*pistonMin;
+
+    bore_ = mag(pistonMax - pistonMin)/sqrt(2.0);
+    centre_ = (pistonMax + pistonMin)/2;
 }
 
 
@@ -99,12 +99,25 @@ Foam::fvMeshMovers::multiValveEngine::pistonObject::pistonObject
 )
 :
     movingObject(name, engine, dict),
-    bore_(bore()),
     clearance_(0)
-{}
+{
+    calculateBore();
+}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+Foam::scalar Foam::fvMeshMovers::multiValveEngine::pistonObject::bore() const
+{
+    return bore_;
+}
+
+
+Foam::vector Foam::fvMeshMovers::multiValveEngine::pistonObject::centre() const
+{
+    return centre_;
+}
+
 
 Foam::scalar Foam::fvMeshMovers::multiValveEngine::pistonObject::position
 (

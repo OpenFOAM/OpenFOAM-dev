@@ -382,8 +382,11 @@ public:
     {
         // Private member data
 
-            //- Bore
+            //- Cylinder bore
             scalar bore_;
+
+            //- Cylinder centre
+            vector centre_;
 
             //- Clearance
             scalar clearance_;
@@ -391,9 +394,9 @@ public:
 
         // Private member functions
 
-            //- Return the bore
+            //- Calculate and bore and centre
             //  calculated from the lateral extent of the piston
-            scalar bore() const;
+            void calculateBore();
 
             //- Calculate clearance estimate based on minimum distance
             //  between piston and any other patch excluding slidingPatches.
@@ -417,6 +420,12 @@ public:
 
 
         // Member Functions
+
+            //- Return the bore
+            scalar bore() const;
+
+            //- Return the piston centre
+            vector centre() const;
 
             //- Return the piston position for the given CA theta
             scalar position(const scalar theta) const;
