@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,8 +24,11 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "histogram.H"
-#include "coordSet.H"
 #include "volFields.H"
+#include "setWriter.H"
+#include "polyTopoChangeMap.H"
+#include "polyMeshMap.H"
+#include "polyDistributionMap.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -50,6 +53,7 @@ Foam::functionObjects::histogram::histogram
 )
 :
     fvMeshFunctionObject(name, runTime, dict),
+    zone_(mesh(), dict),
     file_(obr_, name)
 {
     read(dict);
@@ -93,36 +97,9 @@ bool Foam::functionObjects::histogram::write()
 {
     Log << type() << " " << name() << " write:" << nl;
 
-    autoPtr<volScalarField> fieldPtr;
-    if (obr_.foundObject<volScalarField>(fieldName_))
-    {
-        Log << "    Looking up field " << fieldName_ << endl;
-    }
-    else
-    {
-        Log << "    Reading field " << fieldName_ << endl;
-        fieldPtr.reset
-        (
-            new volScalarField
-            (
-                IOobject
-                (
-                    fieldName_,
-                    time_.name(),
-                    mesh_,
-                    IOobject::MUST_READ,
-                    IOobject::NO_WRITE
-                ),
-                mesh_
-            )
-        );
-    }
-
-    const volScalarField& field =
+    const volScalarField& field
     (
-         fieldPtr.valid()
-       ? fieldPtr()
-       : obr_.lookupObject<volScalarField>(fieldName_)
+        obr_.lookupObject<volScalarField>(fieldName_)
     );
 
     // Calculate the mid-points of bins for the graph axis
@@ -138,12 +115,28 @@ bool Foam::functionObjects::histogram::write()
     scalarField volFrac(nBins_, 0);
     const scalarField& V = mesh_.V();
 
-    forAll(field, celli)
+    if (zone_.all())
     {
-        const label bini = (field[celli] - min_)/delta;
-        if (bini >= 0 && bini < nBins_)
+        forAll(field, celli)
         {
-            volFrac[bini] += V[celli];
+            const label bini = (field[celli] - min_)/delta;
+            if (bini >= 0 && bini < nBins_)
+            {
+                volFrac[bini] += V[celli];
+            }
+        }
+    }
+    else
+    {
+        const labelList& zoneCells = zone_.zone();
+        forAll(zoneCells, i)
+        {
+            const label celli = zoneCells[i];
+            const label bini = (field[celli] - min_)/delta;
+            if (bini >= 0 && bini < nBins_)
+            {
+                volFrac[bini] += V[celli];
+            }
         }
     }
 
@@ -169,6 +162,54 @@ bool Foam::functionObjects::histogram::write()
     }
 
     return true;
+}
+
+
+void Foam::functionObjects::histogram::movePoints
+(
+    const polyMesh& mesh
+)
+{
+    if (&mesh == &this->mesh())
+    {
+        zone_.movePoints();
+    }
+}
+
+
+void Foam::functionObjects::histogram::topoChange
+(
+    const polyTopoChangeMap& map
+)
+{
+    if (&map.mesh() == &mesh())
+    {
+        zone_.topoChange(map);
+    }
+}
+
+
+void Foam::functionObjects::histogram::mapMesh
+(
+    const polyMeshMap& map
+)
+{
+    if (&map.mesh() == &mesh())
+    {
+        zone_.mapMesh(map);
+    }
+}
+
+
+void Foam::functionObjects::histogram::distribute
+(
+    const polyDistributionMap& map
+)
+{
+    if (&map.mesh() == &mesh())
+    {
+        zone_.distribute(map);
+    }
 }
 
 
