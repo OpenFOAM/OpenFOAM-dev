@@ -114,15 +114,9 @@ void Foam::diameterModels::linearTsub::correct()
       - liquid.thermo().T()
     );
 
-    d_ = max
-    (
-        d1_,
-        min
-        (
-            d2_,
-            (d1_*(Tsub - Tsub2_) + d2_*(Tsub - Tsub1_))/(Tsub2_ - Tsub1_)
-        )
-    );
+    const volScalarField f((Tsub - Tsub1_)/(Tsub2_ - Tsub1_));
+
+    d_ = max(d1_, min(d2_, (1 - f)*d1_ + f*d2_));
 }
 
 
