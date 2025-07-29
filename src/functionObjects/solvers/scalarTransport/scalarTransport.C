@@ -639,6 +639,7 @@ void Foam::functionObjects::scalarTransport::solveMULES()
 bool Foam::functionObjects::scalarTransport::write()
 {
     s_.write();
+
     return true;
 }
 
