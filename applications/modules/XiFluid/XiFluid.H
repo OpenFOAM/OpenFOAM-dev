@@ -233,7 +233,8 @@ protected:
         void EauSolve
         (
             const fv::convectionScheme<scalar>& mvConvection,
-            const volScalarField& Db
+            const volScalarField& Db,
+            const tmp<surfaceScalarField>& phiub
         );
 
         //- Solve the energy equation
