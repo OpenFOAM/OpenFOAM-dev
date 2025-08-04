@@ -74,7 +74,7 @@ private:
     // Private Data
 
         //- Population balance model
-        const diameterModels::populationBalanceModel& popBal_;
+        const populationBalanceModel& popBal_;
 
         //- Names of the phases
         const wordList phaseNames_;

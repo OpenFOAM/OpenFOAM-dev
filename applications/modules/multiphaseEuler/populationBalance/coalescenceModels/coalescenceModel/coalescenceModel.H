@@ -22,13 +22,13 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::diameterModels::coalescenceModel
+    Foam::populationBalance::coalescenceModel
 
 Description
     Base class for coalescence models.
 
 See also
-    Foam::diameterModels::populationBalanceModel
+    Foam::populationBalanceModel
 
 SourceFiles
     coalescenceModel.C
@@ -44,7 +44,7 @@ SourceFiles
 
 namespace Foam
 {
-namespace diameterModels
+namespace populationBalance
 {
 
 /*---------------------------------------------------------------------------*\
@@ -151,7 +151,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace diameterModels
+} // End namespace populationBalance
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ License
 
 namespace Foam
 {
-namespace diameterModels
+namespace populationBalance
 {
 namespace daughterSizeDistributionModels
 {
@@ -49,7 +49,7 @@ namespace daughterSizeDistributionModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::diameterModels::daughterSizeDistributionModels::uniformBinary::
+Foam::populationBalance::daughterSizeDistributionModels::uniformBinary::
 uniformBinary
 (
     const breakupModel& breakup,
@@ -62,7 +62,7 @@ uniformBinary
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::diameterModels::daughterSizeDistributionModels::uniformBinary::
+Foam::populationBalance::daughterSizeDistributionModels::uniformBinary::
 ~uniformBinary()
 {}
 
@@ -70,16 +70,17 @@ Foam::diameterModels::daughterSizeDistributionModels::uniformBinary::
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::dimensionedScalar
-Foam::diameterModels::daughterSizeDistributionModels::uniformBinary::calcNik
+Foam::populationBalance::daughterSizeDistributionModels::uniformBinary::calcNik
 (
     const label i,
     const label k
 ) const
 {
-    const dimensionedScalar& x0 = breakup_.popBal().sizeGroups()[0].x();
-    const dimensionedScalar& xi = breakup_.popBal().sizeGroups()[i].x();
-    const dimensionedScalar& xk = breakup_.popBal().sizeGroups()[k].x();
-    const UPtrList<sizeGroup>& sizeGroups = breakup_.popBal().sizeGroups();
+    const populationBalanceModel& popBal = breakup_.popBal();
+
+    const dimensionedScalar& x0 = popBal.v(0);
+    const dimensionedScalar& xi = popBal.v(i);
+    const dimensionedScalar& xk = popBal.v(k);
 
     if (i == 0)
     {
@@ -88,15 +89,15 @@ Foam::diameterModels::daughterSizeDistributionModels::uniformBinary::calcNik
             return 1;
         }
 
-        return (sizeGroups[i+1].x() - xi)/(xk - x0);
+        return (popBal.v(i+1) - xi)/(xk - x0);
     }
     else if (i == k)
     {
-        return (xi - sizeGroups[i-1].x())/(xk - x0);
+        return (xi - popBal.v(i-1))/(xk - x0);
     }
     else
     {
-        return (sizeGroups[i+1].x() - sizeGroups[i-1].x())/(xk - x0);
+        return (popBal.v(i+1) - popBal.v(i-1))/(xk - x0);
     }
 }
 

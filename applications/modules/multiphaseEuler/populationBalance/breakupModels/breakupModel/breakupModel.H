@@ -22,14 +22,14 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::diameterModels::breakupModel
+    Foam::populationBalance::breakupModel
 
 Description
     Base class for breakup models which provide a total breakup rate and a
     separate daughter size distribution function.
 
 See also
-    Foam::diameterModels::populationBalanceModel
+    Foam::populationBalanceModel
 
 SourceFiles
     breakupModel.C
@@ -46,7 +46,7 @@ SourceFiles
 
 namespace Foam
 {
-namespace diameterModels
+namespace populationBalance
 {
 
 /*---------------------------------------------------------------------------*\
@@ -173,7 +173,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace diameterModels
+} // End namespace populationBalance
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -22,10 +22,10 @@ gas
 {
     type            pureIsothermalPhaseModel;
 
-    diameterModel   constant;
-    constantCoeffs
+    diameterModel
     {
-        d           1e-3;
+        type            constant;
+        d               1e-3;
     }
 
     residualAlpha   1e-6;
@@ -35,10 +35,10 @@ liquid
 {
     type            pureIsothermalPhaseModel;
 
-    diameterModel   constant;
-    constantCoeffs
+    diameterModel
     {
-        d           1e-4;
+        type            constant;
+        d               1e-4;
     }
 
     residualAlpha   1e-6;

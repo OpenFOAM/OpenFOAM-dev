@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::diameterModels::binaryBreakupModels::LuoSvendsen
+    Foam::populationBalance::binaryBreakupModels::LuoSvendsen
 
 Description
     Model of Luo and Svendsen (1996). The breakup rate is calculated by
@@ -141,7 +141,7 @@ SourceFiles
 
 namespace Foam
 {
-namespace diameterModels
+namespace populationBalance
 {
 namespace binaryBreakupModels
 {
@@ -218,7 +218,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace binaryBreakupModels
-} // End namespace diameterModels
+} // End namespace populationBalance
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

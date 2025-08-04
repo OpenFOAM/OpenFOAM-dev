@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ License
 
 namespace Foam
 {
-namespace diameterModels
+namespace populationBalance
 {
     defineTypeNameAndDebug(breakupModel, 0);
     defineRunTimeSelectionTable(breakupModel, dictionary);
@@ -39,8 +39,8 @@ namespace diameterModels
 
 // * * * * * * * * * * * * * * * * Selector  * * * * * * * * * * * * * * * * //
 
-Foam::autoPtr<Foam::diameterModels::breakupModel>
-Foam::diameterModels::breakupModel::New
+Foam::autoPtr<Foam::populationBalance::breakupModel>
+Foam::populationBalance::breakupModel::New
 (
     const word& type,
     const populationBalanceModel& popBal,
@@ -69,7 +69,7 @@ Foam::diameterModels::breakupModel::New
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::diameterModels::breakupModel::breakupModel
+Foam::populationBalance::breakupModel::breakupModel
 (
     const populationBalanceModel& popBal,
     const dictionary& dict
@@ -83,7 +83,7 @@ Foam::diameterModels::breakupModel::breakupModel
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::diameterModels::breakupModel::precompute()
+void Foam::populationBalance::breakupModel::precompute()
 {}
 
 

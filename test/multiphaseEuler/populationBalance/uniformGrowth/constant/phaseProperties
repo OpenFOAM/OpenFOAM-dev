@@ -18,37 +18,15 @@ phases          (air1 air2 water);
 
 referencePhase  water;
 
-populationBalances (bubbles);
-
 air1
 {
     type            pureIsothermalPhaseModel;
 
-    diameterModel   velocityGroup;
-    velocityGroupCoeffs
+    diameterModel
     {
+        type             populationBalance;
         populationBalance bubbles;
-
-        shapeModel      spherical;
-
-        sizeGroups
-        (
-            { dSph 1.0e-3; }
-            { dSph 1.1e-3; }
-            { dSph 1.2e-3; }
-            { dSph 1.3e-3; }
-            { dSph 1.4e-3; }
-            { dSph 1.5e-3; }
-            { dSph 1.6e-3; }
-            { dSph 1.7e-3; }
-            { dSph 1.8e-3; }
-            { dSph 1.9e-3; }
-            { dSph 2.0e-3; }
-            { dSph 2.1e-3; }
-            { dSph 2.2e-3; }
-            { dSph 2.3e-3; }
-            { dSph 2.4e-3; }
-        );
+        nGroups         15;
     }
 
     residualAlpha   1e-6;
@@ -58,32 +36,11 @@ air2
 {
     type            pureIsothermalPhaseModel;
 
-    diameterModel   velocityGroup;
-    velocityGroupCoeffs
+    diameterModel
     {
+        type            populationBalance;
         populationBalance bubbles;
-
-        shapeModel      spherical;
-
-        sizeGroups
-        (
-            { dSph 2.5e-3; }
-            { dSph 2.6e-3; }
-            { dSph 2.7e-3; }
-            { dSph 2.8e-3; }
-            { dSph 2.9e-3; }
-            { dSph 3.0e-3; }
-            { dSph 3.1e-3; }
-            { dSph 3.2e-3; }
-            { dSph 3.3e-3; }
-            { dSph 3.4e-3; }
-            { dSph 3.5e-3; }
-            { dSph 3.6e-3; }
-            { dSph 3.7e-3; }
-            { dSph 3.8e-3; }
-            { dSph 3.9e-3; }
-            { dSph 4.0e-3; }
-        );
+        nGroups         16;
     }
 
     residualAlpha   1e-6;
@@ -110,21 +67,27 @@ blending
 surfaceTension
 {}
 
-populationBalanceCoeffs
+bubbles
 {
-    bubbles
+    continuousPhase water;
+
+    sphericalDiameters
     {
-        continuousPhase water;
-
-        coalescenceModels
-        ();
-
-        binaryBreakupModels
-        ();
-
-        breakupModels
-        ();
+        type            uniform;
+        min             1.0e-3;
+        max             4.0e-3;
     }
+
+    shapeModel      spherical;
+
+    coalescenceModels
+    ();
+
+    breakupModels
+    ();
+
+    binaryBreakupModels
+    ();
 }
 
 // ************************************************************************* //

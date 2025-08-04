@@ -31,7 +31,7 @@ License
 
 namespace Foam
 {
-namespace diameterModels
+namespace populationBalance
 {
 namespace coalescenceModels
 {
@@ -46,12 +46,10 @@ namespace coalescenceModels
 }
 }
 
-using Foam::constant::mathematical::pi;
-
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::diameterModels::coalescenceModels::AdachiStuartFokkink::
+Foam::populationBalance::coalescenceModels::AdachiStuartFokkink::
 AdachiStuartFokkink
 (
     const populationBalanceModel& popBal,
@@ -64,7 +62,7 @@ AdachiStuartFokkink
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::diameterModels::coalescenceModels::AdachiStuartFokkink::
+void Foam::populationBalance::coalescenceModels::AdachiStuartFokkink::
 addToCoalescenceRate
 (
     volScalarField::Internal& coalescenceRate,
@@ -72,12 +70,11 @@ addToCoalescenceRate
     const label j
 )
 {
-    const sizeGroup& fi = popBal_.sizeGroups()[i];
-    const sizeGroup& fj = popBal_.sizeGroups()[j];
+    using Foam::constant::mathematical::pi;
 
-    tmp<volScalarField> tdi = fi.d();
+    tmp<volScalarField> tdi = popBal_.d(i);
     const volScalarField::Internal& di = tdi();
-    tmp<volScalarField> tdj = fj.d();
+    tmp<volScalarField> tdj = popBal_.d(j);
     const volScalarField::Internal& dj = tdj();
 
     tmp<volScalarField> tepsilonc(popBal_.continuousTurbulence().epsilon());

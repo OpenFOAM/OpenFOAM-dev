@@ -16,35 +16,15 @@ FoamFile
 
 phases          (air1 air2 air3 water);
 
-populationBalances (bubbles);
-
 air1
 {
     type            pureIsothermalPhaseModel;
 
-    diameterModel   velocityGroup;
-    velocityGroupCoeffs
+    diameterModel
     {
+        type            populationBalance;
         populationBalance bubbles;
-
-        shapeModel      spherical;
-
-        sizeGroups
-        (
-           { dSph 1.2407009818E+00; }
-           { dSph 1.3400311786E+00; }
-           { dSph 1.4473137252E+00; }
-           { dSph 1.5631852837E+00; }
-           { dSph 1.6883334890E+00; }
-           { dSph 1.8235010272E+00; }
-           { dSph 1.9694900437E+00; }
-           { dSph 2.1271669027E+00; }
-           { dSph 2.2974673296E+00; }
-           { dSph 2.4814019636E+00; }
-           { dSph 2.6800623572E+00; }
-           { dSph 2.8946274492E+00; }
-           { dSph 3.1263705674E+00; }
-        );
+        nGroups         13;
     }
 
     residualAlpha   1e-6;
@@ -54,26 +34,11 @@ air2
 {
     type            pureIsothermalPhaseModel;
 
-    diameterModel   velocityGroup;
-    velocityGroupCoeffs
+    diameterModel
     {
+        type            populationBalance;
         populationBalance bubbles;
-
-        shapeModel      spherical;
-
-        sizeGroups
-        (
-           { dSph 3.3766669780E+00; }
-           { dSph 3.6470020557E+00; }
-           { dSph 3.9389800874E+00; }
-           { dSph 4.2543338042E+00; }
-           { dSph 4.5949346580E+00; }
-           { dSph 4.9628039272E+00; }
-           { dSph 5.3601247143E+00; }
-           { dSph 5.7892548984E+00; }
-           { dSph 6.2527411349E+00; }
-           { dSph 6.7533339573E+00; }
-        );
+        nGroups         10;
     }
 
     residualAlpha   1e-6;
@@ -83,24 +48,11 @@ air3
 {
     type            pureIsothermalPhaseModel;
 
-    diameterModel   velocityGroup;
-    velocityGroupCoeffs
+    diameterModel
     {
+        type            populationBalance;
         populationBalance bubbles;
-
-        shapeModel      spherical;
-
-        sizeGroups
-        (
-           { dSph 7.2940041101E+00; }
-           { dSph 7.8779601749E+00; }
-           { dSph 8.5086676096E+00; }
-           { dSph 9.1898693161E+00; }
-           { dSph 9.9256078544E+00; }
-           { dSph 1.0720249427E+01; }
-           { dSph 1.1578509798E+01; }
-           { dSph 1.2505482270E+01; }
-        );
+        nGroups         8;
     }
 
     residualAlpha   1e-6;
@@ -127,31 +79,37 @@ blending
 surfaceTension
 {}
 
-populationBalanceCoeffs
+bubbles
 {
-    bubbles
+    continuousPhase water;
+
+    sphericalDiameters
     {
-        continuousPhase water;
-
-        coalescenceModels
-        (
-            hydrodynamic
-            {}
-        );
-
-        binaryBreakupModels
-        ();
-
-        breakupModels
-        (
-            exponential
-            {
-                C               0.1;
-                exponent        0.01;
-                daughterSizeDistributionModel uniformBinary;
-            }
-        );
+        type            exponential;
+        min             1.2407009818E+00;
+        max             1.2505482270E+01;
     }
+
+    shapeModel      spherical;
+
+    coalescenceModels
+    (
+        hydrodynamic
+        {}
+    );
+
+    breakupModels
+    (
+        exponential
+        {
+            C               0.1;
+            exponent        0.01;
+            daughterSizeDistributionModel uniformBinary;
+        }
+    );
+
+    binaryBreakupModels
+    ();
 }
 
 // ************************************************************************* //

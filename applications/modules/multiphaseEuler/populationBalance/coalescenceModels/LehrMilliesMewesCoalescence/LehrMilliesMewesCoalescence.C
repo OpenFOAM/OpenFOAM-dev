@@ -31,7 +31,7 @@ License
 
 namespace Foam
 {
-namespace diameterModels
+namespace populationBalance
 {
 namespace coalescenceModels
 {
@@ -46,11 +46,10 @@ namespace coalescenceModels
 }
 }
 
-using Foam::constant::mathematical::pi;
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::diameterModels::coalescenceModels::LehrMilliesMewesCoalescence::
+Foam::populationBalance::coalescenceModels::LehrMilliesMewesCoalescence::
 LehrMilliesMewesCoalescence
 (
     const populationBalanceModel& popBal,
@@ -65,7 +64,7 @@ LehrMilliesMewesCoalescence
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::diameterModels::coalescenceModels::LehrMilliesMewesCoalescence::
+void Foam::populationBalance::coalescenceModels::LehrMilliesMewesCoalescence::
 addToCoalescenceRate
 (
     volScalarField::Internal& coalescenceRate,
@@ -73,8 +72,12 @@ addToCoalescenceRate
     const label j
 )
 {
-    const sizeGroup& fi = popBal_.sizeGroups()[i];
-    const sizeGroup& fj = popBal_.sizeGroups()[j];
+    using Foam::constant::mathematical::pi;
+
+    const dimensionedScalar& dSphi = popBal_.dSph(i);
+    const dimensionedScalar& dSphj = popBal_.dSph(j);
+    const phaseModel& phasei = popBal_.phases()[i];
+    const phaseModel& phasej = popBal_.phases()[j];
 
     tmp<volScalarField> tepsilonc(popBal_.continuousTurbulence().epsilon());
     const volScalarField::Internal& epsilonc = tepsilonc();
@@ -85,19 +88,19 @@ addToCoalescenceRate
         (
             sqrt(2.0)
            *cbrt(epsilonc)
-           *sqrt(cbrt(sqr(fi.dSph())) + cbrt(sqr(fj.dSph()))),
-            mag(fi.phase().U()()() - fj.phase().U()()())
+           *sqrt(cbrt(sqr(dSphi)) + cbrt(sqr(dSphj))),
+            mag(phasei.U()()() - phasej.U()()())
         )
     );
 
     coalescenceRate +=
         pi/4
-       *sqr(fi.dSph() + fj.dSph())
+       *sqr(dSphi + dSphj)
        *min(uChar, uCrit_)
        *exp
         (
           - sqr(cbrt(alphaMax_)
-           /cbrt(max(popBal_.alphas()(), fi.phase().residualAlpha())) - 1)
+           /cbrt(max(popBal_.alphas()(), phasei.residualAlpha())) - 1)
         );
 }
 

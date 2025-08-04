@@ -33,7 +33,7 @@ License
 
 namespace Foam
 {
-namespace diameterModels
+namespace populationBalance
 {
 namespace coalescenceModels
 {
@@ -48,11 +48,10 @@ namespace coalescenceModels
 }
 }
 
-using Foam::constant::mathematical::pi;
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::diameterModels::coalescenceModels::Luo::
+Foam::populationBalance::coalescenceModels::Luo::
 Luo
 (
     const populationBalanceModel& popBal,
@@ -67,69 +66,70 @@ Luo
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::diameterModels::coalescenceModels::Luo::addToCoalescenceRate
+void Foam::populationBalance::coalescenceModels::Luo::addToCoalescenceRate
 (
     volScalarField::Internal& coalescenceRate,
     const label i,
     const label j
 )
 {
-    const sizeGroup& fi = popBal_.sizeGroups()[i];
-    const sizeGroup& fj = popBal_.sizeGroups()[j];
+    using Foam::constant::mathematical::pi;
+
+    const dimensionedScalar& dSphi = popBal_.dSph(i);
+    const dimensionedScalar& dSphj = popBal_.dSph(j);
 
     const volScalarField::Internal& rhoc = popBal_.continuousPhase().rho();
 
-    tmp<volScalarField> tsigma(popBal_.sigmaWithContinuousPhase(fi.phase()));
+    tmp<volScalarField> tsigma(popBal_.sigmaWithContinuousPhase(i));
     const volScalarField::Internal& sigma = tsigma();
+
+    const dispersedPhaseInterface interface
+    (
+        popBal_.phases()[i],
+        popBal_.continuousPhase()
+    );
 
     if
     (
-        popBal_.fluid().foundInterfacialModel
+       !popBal_.fluid().foundInterfacialModel
         <
             virtualMassModels::dispersedVirtualMassModel
-        >
-        (
-            dispersedPhaseInterface(fi.phase(), popBal_.continuousPhase())
-        )
+        >(interface)
     )
     {
-        tmp<volScalarField> tCvm =
-            popBal_.fluid().lookupInterfacialModel
-            <
-                virtualMassModels::dispersedVirtualMassModel
-            >
-            (
-                dispersedPhaseInterface(fi.phase(), popBal_.continuousPhase())
-            ).Cvm();
-        const volScalarField::Internal& Cvm = tCvm();
-
-        tmp<volScalarField> tepsilonc(popBal_.continuousTurbulence().epsilon());
-        const volScalarField::Internal& epsilonc = tepsilonc();
-
-        const dimensionedScalar xi = fi.dSph()/fj.dSph();
-
-        const volScalarField::Internal uij
-        (
-            sqrt(beta_)*cbrt(epsilonc*fi.dSph())*sqrt(1 + pow(xi, -2.0/3.0))
-        );
-
-        coalescenceRate +=
-            pi/4*sqr(fi.dSph() + fj.dSph())*uij
-           *exp
-            (
-              - C1_
-               *sqrt(0.75*(1 + sqr(xi))*(1 + pow3(xi)))
-               /(sqrt(fi.phase().rho()()/rhoc + Cvm)*pow3(1 + xi))
-               *sqrt(rhoc*fi.dSph()*sqr(uij)/sigma)
-            );
-    }
-    else
-    {
         FatalErrorInFunction
-            << "A virtual mass model for " << fi.phase().name() << " in "
-            << popBal_.continuousPhase().name() << " is not specified. This is "
-            << "required by the Luo coalescence model." << exit(FatalError);
+            << "A virtual mass model for " << popBal_.phases()[i].name()
+            << " in " << popBal_.continuousPhase().name() << " is not "
+            << "specified. This is required by the Luo coalescence model."
+            << exit(FatalError);
     }
+
+    tmp<volScalarField> tCvm =
+        popBal_.fluid().lookupInterfacialModel
+        <
+            virtualMassModels::dispersedVirtualMassModel
+        >(interface).Cvm();
+    const volScalarField::Internal& Cvm = tCvm();
+
+    tmp<volScalarField> tepsilonc(popBal_.continuousTurbulence().epsilon());
+    const volScalarField::Internal& epsilonc = tepsilonc();
+
+    const dimensionedScalar xi = dSphi/dSphj;
+
+    const volScalarField::Internal uij
+    (
+        sqrt(beta_)*cbrt(epsilonc*dSphi)*sqrt(1 + pow(xi, -2.0/3.0))
+    );
+
+    coalescenceRate +=
+        pi/4*sqr(dSphi + dSphj)*uij
+       *exp
+        (
+          - C1_
+           *sqrt(0.75*(1 + sqr(xi))*(1 + pow3(xi)))
+           /(sqrt(popBal_.phases()[i].rho()()/rhoc + Cvm)*pow3(1 + xi))
+           *sqrt(rhoc*dSphi*sqr(uij)/sigma)
+        );
 }
 
 

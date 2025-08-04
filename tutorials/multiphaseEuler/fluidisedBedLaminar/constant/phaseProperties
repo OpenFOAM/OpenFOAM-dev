@@ -20,9 +20,9 @@ particles
 {
     type            purePhaseModel;
 
-    diameterModel   constant;
-    constantCoeffs
+    diameterModel
     {
+        type            constant;
         d               3e-4;
     }
 

@@ -20,9 +20,9 @@ gas
 {
     type            purePhaseModel;
 
-    diameterModel   constant;
-    constantCoeffs
+    diameterModel
     {
+        type            constant;
         d               0.0002;
     }
 

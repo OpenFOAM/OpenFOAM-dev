@@ -26,7 +26,7 @@ License
 #include "populationBalanceSetSizeDistribution.H"
 #include "distribution.H"
 #include "addToRunTimeSelectionTable.H"
-#include "velocityGroup.H"
+#include "populationBalance.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -108,30 +108,32 @@ bool Foam::functionObjects::populationBalanceSetSizeDistribution::write()
 
     if (popBalName_ != word::null)
     {
-        diameterModels::populationBalanceModel& popBal =
-            obr_.lookupObjectRef<diameterModels::populationBalanceModel>
-            (
-                popBalName_
-            );
+        populationBalanceModel& popBal =
+            obr_.lookupObjectRef<populationBalanceModel>(popBalName_);
 
-        HashTable<const diameterModels::velocityGroup*> velocityGroupPtrs;
+        HashTable<const diameterModels::populationBalance*> diameterPtrs;
 
-        // Set the size-group fractions for the population balance
-        forAll(popBal.sizeGroups(), sizeGroupi)
+        // Set the group fractions for the population balance
+        forAll(popBal.fs(), i)
         {
-            diameterModels::sizeGroup& fi = popBal.sizeGroups()[sizeGroupi];
+            volScalarField& fi = popBal.f(i);
 
-            fi == popBal.etaV(sizeGroupi, distribution_());
+            fi == popBal.etaV(i, distribution_());
 
             Info<< indent << "Writing " << fi.name() << endl;
 
             fi.write();
 
-            velocityGroupPtrs.insert(fi.phase().name(), &fi.group());
+            diameterPtrs.insert
+            (
+                popBal.phases()[i].name(),
+                &popBal.diameters()[i]
+            );
         }
 
-        // Set the volume fractions if there are multiple velocity groups
-        if (velocityGroupPtrs.size() > 1)
+        // Set the volume fractions if there are multiple phases in this
+        // population balance
+        if (diameterPtrs.size() > 1)
         {
             tmp<volScalarField> talphas =
                 volScalarField::New
@@ -144,8 +146,8 @@ bool Foam::functionObjects::populationBalanceSetSizeDistribution::write()
 
             forAllConstIter
             (
-                HashTable<const diameterModels::velocityGroup*>,
-                velocityGroupPtrs,
+                HashTable<const diameterModels::populationBalance*>,
+                diameterPtrs,
                 iter
             )
             {
@@ -154,16 +156,16 @@ bool Foam::functionObjects::populationBalanceSetSizeDistribution::write()
 
             forAllConstIter
             (
-                HashTable<const diameterModels::velocityGroup*>,
-                velocityGroupPtrs,
+                HashTable<const diameterModels::populationBalance*>,
+                diameterPtrs,
                 iter
             )
             {
                 volScalarField& alpha =
                     const_cast<phaseModel&>(iter()->phase());
 
-                const label i0 = iter()->sizeGroups().first().i();
-                const label i1 = iter()->sizeGroups().last().i();
+                const label i0 = iter()->iFirst();
+                const label i1 = iter()->iLast();
 
                 alpha == popBal.etaV(labelPair(i0, i1), distribution_)*alphas;
 
@@ -175,8 +177,8 @@ bool Foam::functionObjects::populationBalanceSetSizeDistribution::write()
     }
     else
     {
-        diameterModels::velocityGroup& velGrp =
-            refCast<diameterModels::velocityGroup>
+        diameterModels::populationBalance& diameter =
+            refCast<diameterModels::populationBalance>
             (
                 obr_.lookupObjectRef<phaseSystem>
                 (
@@ -184,14 +186,15 @@ bool Foam::functionObjects::populationBalanceSetSizeDistribution::write()
                 ).phases()[phaseName_].diameter()
             );
 
-        // Set the size-group fractions for this velocity group
-        forAll(velGrp.sizeGroups(), i)
+        populationBalanceModel& popBal =
+            obr_.lookupObjectRef<populationBalanceModel>(diameter.popBalName());
+
+        // Set the group fractions for this phase
+        for (label i = diameter.iFirst(); i <= diameter.iLast(); ++ i)
         {
-            diameterModels::sizeGroup& fi = velGrp.sizeGroups()[i];
+            volScalarField& fi = popBal.f(i);
 
-            const label sizeGroupi = velGrp.sizeGroups().first().i() + i;
-
-            fi == velGrp.popBal().etaV(sizeGroupi, distribution_());
+            fi == popBal.etaV(i, distribution_());
 
             Info<< indent << "Writing " << fi.name() << endl;
 

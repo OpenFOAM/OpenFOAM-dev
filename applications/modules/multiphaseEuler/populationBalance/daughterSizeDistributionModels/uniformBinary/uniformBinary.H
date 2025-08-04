@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::diameterModels::daughterSizeDistributionModels::uniformBinary
+    Foam::populationBalance::daughterSizeDistributionModels::uniformBinary
 
 Description
     Daughter size distribution for uniform binary breakup.
@@ -41,7 +41,7 @@ SourceFiles
 
 namespace Foam
 {
-namespace diameterModels
+namespace populationBalance
 {
 namespace daughterSizeDistributionModels
 {
@@ -75,7 +75,7 @@ public:
 
     // Member Functions
 
-        //- Calculate contribution to sizeGroup i due to breakup in sizeGroup k
+        //- Calculate contribution to group i due to breakup in group k
         virtual dimensionedScalar calcNik(const label i, const label k) const;
 };
 
@@ -83,7 +83,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace daughterSizeDistributionModels
-} // End namespace diameterModels
+} // End namespace populationBalance
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

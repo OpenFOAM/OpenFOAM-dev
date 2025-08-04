@@ -16,27 +16,15 @@ FoamFile
 
 phases          (air1 air2 water);
 
-populationBalances (bubbles);
-
 air1
 {
     type            pureIsothermalPhaseModel;
 
-    diameterModel   velocityGroup;
-    velocityGroupCoeffs
+    diameterModel
     {
+        type            populationBalance;
         populationBalance bubbles;
-
-        shapeModel      spherical;
-
-        sizeGroups
-        (
-            { dSph 1e-3; }
-            { dSph 2e-3; }
-            { dSph 3e-3; }
-            { dSph 4e-3; }
-            { dSph 5e-3; }
-        );
+        nGroups         5;
     }
 
     residualAlpha   1e-6;
@@ -46,23 +34,11 @@ air2
 {
     type            pureIsothermalPhaseModel;
 
-    diameterModel   velocityGroup;
-    velocityGroupCoeffs
+    diameterModel
     {
+        type            populationBalance;
         populationBalance bubbles;
-
-        shapeModel      spherical;
-
-        sizeGroups
-        (
-            { dSph 6e-3; }
-            { dSph 7e-3; }
-            { dSph 8e-3; }
-            { dSph 9e-3; }
-            { dSph 10e-3; }
-            { dSph 11e-3; }
-            { dSph 12e-3; }
-        );
+        nGroups         7;
     }
 
     residualAlpha   1e-6;
@@ -101,27 +77,33 @@ surfaceTension
     }
 }
 
-populationBalanceCoeffs
+bubbles
 {
-    bubbles
+    continuousPhase water;
+
+    sphericalDiameters
     {
-        continuousPhase water;
-
-        coalescenceModels
-        (
-            LehrMilliesMewes
-            {}
-        );
-
-        binaryBreakupModels
-        (
-            LehrMilliesMewes
-            {}
-        );
-
-        breakupModels
-        ();
+        type            uniform;
+        min             1e-3;
+        max             12e-3;
     }
+
+    shapeModel      spherical;
+
+    coalescenceModels
+    (
+        LehrMilliesMewes
+        {}
+    );
+
+    breakupModels
+    ();
+
+    binaryBreakupModels
+    (
+        LehrMilliesMewes
+        {}
+    );
 }
 
 // ************************************************************************* //

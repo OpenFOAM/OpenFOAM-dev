@@ -30,7 +30,7 @@ License
 
 namespace Foam
 {
-namespace diameterModels
+namespace populationBalance
 {
 namespace binaryBreakupModels
 {
@@ -48,7 +48,7 @@ namespace binaryBreakupModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::diameterModels::binaryBreakupModels::powerLawUniformBinary::
+Foam::populationBalance::binaryBreakupModels::powerLawUniformBinary::
 powerLawUniformBinary
 (
     const populationBalanceModel& popBal,
@@ -62,7 +62,7 @@ powerLawUniformBinary
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::diameterModels::binaryBreakupModels::powerLawUniformBinary::
+void Foam::populationBalance::binaryBreakupModels::powerLawUniformBinary::
 addToBinaryBreakupRate
 (
     volScalarField::Internal& binaryBreakupRate,
@@ -70,10 +70,10 @@ addToBinaryBreakupRate
     const label j
 )
 {
-    const sizeGroup& fj = popBal_.sizeGroups()[j];
+    const dimensionedScalar& vj = popBal_.vs()[j];
 
     binaryBreakupRate.primitiveFieldRef() +=
-        pow(fj.x().value(), power_)*2/fj.x().value();
+        pow(vj.value(), power_)*2/vj.value();
 }
 
 

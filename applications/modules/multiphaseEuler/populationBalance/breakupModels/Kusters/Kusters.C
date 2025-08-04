@@ -31,7 +31,7 @@ License
 
 namespace Foam
 {
-namespace diameterModels
+namespace populationBalance
 {
 namespace breakupModels
 {
@@ -46,11 +46,10 @@ namespace breakupModels
 }
 }
 
-using Foam::constant::mathematical::pi;
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::diameterModels::breakupModels::Kusters::Kusters
+Foam::populationBalance::breakupModels::Kusters::Kusters
 (
     const populationBalanceModel& popBal,
     const dictionary& dict
@@ -66,15 +65,15 @@ Foam::diameterModels::breakupModels::Kusters::Kusters
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::diameterModels::breakupModels::Kusters::setBreakupRate
+void Foam::populationBalance::breakupModels::Kusters::setBreakupRate
 (
     volScalarField::Internal& breakupRate,
     const label i
 )
 {
-    const sizeGroup& fi = popBal_.sizeGroups()[i];
+    using Foam::constant::mathematical::pi;
 
-    tmp<volScalarField> tdi = fi.d();
+    tmp<volScalarField> tdi = popBal_.d(i);
     const volScalarField::Internal& di = tdi();
 
     tmp<volScalarField> tepsilonc(popBal_.continuousTurbulence().epsilon());
