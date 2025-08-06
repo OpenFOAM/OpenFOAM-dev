@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,14 +27,14 @@ Class
 Description
     Stabilisation source for phase transport equations
 
-    Applies an implicit source to the phase transport equation for the specified
-    \c field when the phase volume fraction is below \c residualAlpha.  The
-    stabilisation rate is provided by the registered
-    uniformDimensionedScalarField \c rate, which could be extended to also
-    support volScalarField and volScalarField::Internal field types.  The \c
-    field is currently stabilised towards zero in the limit of the phase volume
-    fraction approaching zero but this could be extended to support a
-    specified value or a value or field looked-up from the database.
+    Applies an implicit source to the phase transport equation for the
+    specified \c field when the phase volume fraction is below \c
+    residualAlpha. The stabilisation rate is provided by the registered \c rate
+    which can either be a uniformDimensionedScalarField, a volScalarField or a
+    volScalarField::Internal. The \c field is currently stabilised towards zero
+    in the limit of the phase volume fraction approaching zero but this could
+    be extended to support a specified value or a value or field looked-up from
+    the database.
 
 Usage
     Example usage:
@@ -46,6 +46,7 @@ Usage
         field           sigma.liquid;
 
         rate            rLambda.liquid;
+
         residualAlpha   1e-3;
     }
     \endverbatim
@@ -92,6 +93,15 @@ class phaseLimitStabilisation
         //- Non-virtual read
         void readCoeffs(const dictionary& dict);
 
+        //- Add stabilisation source terms
+        template<class Type, class RhoRateFieldType>
+        void addStabilisation
+        (
+            const volScalarField& alpha,
+            const RhoRateFieldType& rhoRate,
+            fvMatrix<Type>& eqn
+        ) const;
+
         //- Add source terms to an incompressible phase equation
         template<class Type>
         void addSupType
@@ -102,11 +112,11 @@ class phaseLimitStabilisation
         ) const;
 
         //- Add source terms to a phase equation
-        template<class Type>
+        template<class Type, class RhoFieldType>
         void addSupType
         (
             const volScalarField& alpha,
-            const volScalarField& rho,
+            const RhoFieldType& rho,
             const VolField<Type>& field,
             fvMatrix<Type>& eqn
         ) const;
