@@ -45,7 +45,7 @@ addToRunTimeSelectionTable(extrudeModel, sphericalRadial, dictionary);
 sphericalRadial::sphericalRadial(const dictionary& dict)
 :
     extrudeModel(dict),
-    R_(Function1<scalar>::New("R", dimless, dimLength, coeffDict(dict)))
+    R_(Function1<scalar>::New("R", dimless, dimLength, dict))
 {}
 
 

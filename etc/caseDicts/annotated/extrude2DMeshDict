@@ -19,11 +19,11 @@ extrudeModel
 {
     type            linearDirection;
 
-    direction       (0 0 1);
-    thickness       0.1;
-
     nLayers             1;
     expansionRatio      1.0;
+
+    direction       (0 0 1);
+    thickness       0.1;
 }
 
 patchType           empty;
@@ -32,15 +32,12 @@ patchType           empty;
 // extrudeModel
 // {
 //     type            wedge;
-
+//
 //     axisPt      (0 0 0);
 //     axis        (1 0 0);
 //     angle       10;
-
-//     nLayers             1;
-//     expansionRatio      1.0;
 // }
-
+//
 // patchType           wedge;
 
 // ************************************************************************* //

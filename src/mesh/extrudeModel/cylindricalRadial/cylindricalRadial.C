@@ -45,9 +45,9 @@ addToRunTimeSelectionTable(extrudeModel, cylindricalRadial, dictionary);
 cylindricalRadial::cylindricalRadial(const dictionary& dict)
 :
     extrudeModel(dict),
-    axisPt_(coeffDict(dict).lookup<vector>("axisPt", dimLength)),
-    axis_(coeffDict(dict).lookup<vector>("axis", dimless)),
-    R_(Function1<scalar>::New("R", dimless, dimLength, coeffDict(dict)))
+    axisPt_(dict.lookup<vector>("axisPt", dimLength)),
+    axis_(dict.lookup<vector>("axis", dimless)),
+    R_(Function1<scalar>::New("R", dimless, dimLength, dict))
 {
     axis_ /= mag(axis_);
 }

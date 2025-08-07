@@ -32,17 +32,23 @@ Foam::autoPtr<Foam::extrudeModel> Foam::extrudeModel::New
     const dictionary& dict
 )
 {
-    const dictionary& modelDict =
-        dict.isDict("extrudeModel")
-      ? dict.subDict("extrudeModel")
-      : dict;
+    const bool haveModelDict = dict.isDict(typeName);
 
-    const word modelType
-    (
-        modelDict.lookupBackwardsCompatible({"type", "extrudeModel"})
-    );
+    word modelType;
+    const dictionary* modelDictPtr = nullptr;
+    if (haveModelDict)
+    {
+        modelDictPtr = &dict.subDict(typeName);
+        modelType = modelDictPtr->lookup<word>("type");
+    }
+    else
+    {
+        modelType = dict.lookup<word>(typeName);
+        modelDictPtr = &dict.optionalSubDict(modelType + "Coeffs");
+    }
+    const dictionary& modelDict = *modelDictPtr;
 
-    Info<< "Selecting extrudeModel " << modelType << endl;
+    Info<< "Selecting " << typeName << " " << modelType << endl;
 
     dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(modelType);
@@ -50,9 +56,9 @@ Foam::autoPtr<Foam::extrudeModel> Foam::extrudeModel::New
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
         FatalIOErrorInFunction(dict)
-            << "Unknown extrudeModel type "
+            << "Unknown " << typeName << " type "
             << modelType << nl << nl
-            << "Valid extrudeModel types are :" << nl
+            << "Valid " << typeName << " types are :" << nl
             << dictionaryConstructorTablePtr_->sortedToc() << nl
             << exit(FatalIOError);
     }

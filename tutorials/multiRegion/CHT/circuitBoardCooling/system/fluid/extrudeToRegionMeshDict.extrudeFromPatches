@@ -24,6 +24,7 @@ extrudeModel
 
     nLayers         50;
     expansionRatio  1;
+
     thickness       0.02;
 }
 

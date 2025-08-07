@@ -27,9 +27,10 @@ extrudeModel
 {
     type            path;
 
-    path            "constant/geometry/curve.obj";
-
     nLayers         500;
+    expansionRatio  1;
+
+    path            "constant/geometry/curve.obj";
 }
 
 // ************************************************************************* //

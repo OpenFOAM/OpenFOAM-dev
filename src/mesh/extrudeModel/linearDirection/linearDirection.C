@@ -45,8 +45,8 @@ addToRunTimeSelectionTable(extrudeModel, linearDirection, dictionary);
 linearDirection::linearDirection(const dictionary& dict)
 :
     extrudeModel(dict),
-    direction_(coeffDict(dict).lookup("direction")),
-    thickness_(coeffDict(dict).lookup<scalar>("thickness"))
+    direction_(dict.lookup("direction")),
+    thickness_(dict.lookup<scalar>("thickness"))
 {
     direction_ /= mag(direction_);
 
