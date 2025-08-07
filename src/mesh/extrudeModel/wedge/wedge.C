@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,16 +44,8 @@ addToRunTimeSelectionTable(extrudeModel, wedge, dictionary);
 
 wedge::wedge(const dictionary& dict)
 :
-    sector(dict)
-{
-    if (nLayers_ != 1)
-    {
-        IOWarningInFunction(dict)
-            << "Expected nLayers (if specified) to be 1"
-            << endl;
-        nLayers_ = 1;
-    }
-}
+    sector(dict, true)
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

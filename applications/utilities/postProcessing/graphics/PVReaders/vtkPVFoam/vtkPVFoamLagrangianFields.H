@@ -127,6 +127,8 @@ void Foam::vtkPVFoam::convertLagrangianFields
             Warning<< err << endl;
             continue;
         }
+
+        FatalIOError.dontThrowExceptions();
     }
 }
 

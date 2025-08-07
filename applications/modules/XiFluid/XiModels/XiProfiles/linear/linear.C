@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,7 +75,7 @@ Foam::XiProfiles::linear::~linear()
 
 Foam::tmp<Foam::volScalarField> Foam::XiProfiles::linear::profile() const
 {
-    return 1 + XiShapeCoeff_*2*(0.5 - b_);
+    return 1 + (2*XiShapeCoeff_)*(0.5 - b_);
 }
 
 

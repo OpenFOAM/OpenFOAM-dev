@@ -142,7 +142,6 @@ class XiFluid
 :
     public isothermalFluid
 {
-
 protected:
 
     // Thermophysical properties
@@ -178,6 +177,15 @@ protected:
 
         //- Dictionary of combustion model coefficients
         IOdictionary combustionProperties;
+
+        //- Minimum b below which a numerical compensation burn-out term
+        //  is applied to ensure b -> 0 and the flame speed is correct.
+        //  Defaults to 1e-3
+        scalar bMin_;
+
+        //- |grad(b)| division stabilisation coefficient.
+        //  Defaults to 1e-3
+        scalar mgbCoeff_;
 
         //- Strained laminar flame-speed model
         autoPtr<SuModel> SuModel_;
@@ -233,7 +241,8 @@ protected:
         void EauSolve
         (
             const fv::convectionScheme<scalar>& mvConvection,
-            const volScalarField& Db
+            const volScalarField& Db,
+            const tmp<surfaceScalarField>& phiub
         );
 
         //- Solve the energy equation

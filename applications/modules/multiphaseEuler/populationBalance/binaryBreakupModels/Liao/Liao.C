@@ -32,7 +32,7 @@ License
 
 namespace Foam
 {
-namespace diameterModels
+namespace populationBalance
 {
 namespace binaryBreakupModels
 {
@@ -47,12 +47,10 @@ namespace binaryBreakupModels
 }
 }
 
-using Foam::constant::mathematical::pi;
-
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::diameterModels::binaryBreakupModels::Liao::Liao
+Foam::populationBalance::binaryBreakupModels::Liao::Liao
 (
     const populationBalanceModel& popBal,
     const dictionary& dict
@@ -73,40 +71,41 @@ Foam::diameterModels::binaryBreakupModels::Liao::Liao
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::diameterModels::binaryBreakupModels::Liao::precompute()
+void Foam::populationBalance::binaryBreakupModels::Liao::precompute()
 {
     LiaoBase::precompute();
 }
 
 
-void Foam::diameterModels::binaryBreakupModels::Liao::addToBinaryBreakupRate
+void Foam::populationBalance::binaryBreakupModels::Liao::addToBinaryBreakupRate
 (
     volScalarField::Internal& binaryBreakupRate,
     const label i,
     const label j
 )
 {
-    const sizeGroup& fi = popBal_.sizeGroups()[i];
-    const sizeGroup& fj = popBal_.sizeGroups()[j];
+    const dimensionedScalar& dSphi = popBal_.dSph(i);
+    const dimensionedScalar& dSphj = popBal_.dSph(j);
+    const dimensionedScalar& vj = popBal_.v(j);
 
     const volScalarField::Internal& rhoc = popBal_.continuousPhase().rho();
 
-    tmp<volScalarField> tsigma(popBal_.sigmaWithContinuousPhase(fi.phase()));
+    tmp<volScalarField> tsigma(popBal_.sigmaWithContinuousPhase(i));
     const volScalarField::Internal& sigma = tsigma();
 
     tmp<volScalarField> tmuc(popBal_.continuousPhase().fluidThermo().mu());
     const volScalarField::Internal& muc = tmuc();
 
-    const dimensionedScalar dk(cbrt(pow3(fj.dSph()) - pow3(fi.dSph())));
+    const dimensionedScalar dk(cbrt(pow3(dSphj) - pow3(dSphi)));
 
     const volScalarField::Internal tauCrit1
     (
-        6*sigma/fj.dSph()*(sqr(fi.dSph()/fj.dSph()) + sqr(dk/fj.dSph()) - 1)
+        6*sigma/dSphj*(sqr(dSphi/dSphj) + sqr(dk/dSphj) - 1)
     );
 
     const volScalarField::Internal tauCrit2
     (
-        sigma/min(dk, fi.dSph())
+        sigma/min(dk, dSphi)
     );
 
     const volScalarField::Internal tauCrit(max(tauCrit1, tauCrit2));
@@ -118,15 +117,15 @@ void Foam::diameterModels::binaryBreakupModels::Liao::addToBinaryBreakupRate
 
         const volScalarField::Internal tauTurb
         (
-            pos(fj.dSph() - kolmogorovLengthScale_)*BTurb_*rhoc
-           *sqr(cbrt(epsilonc*fj.dSph()))
+            pos(dSphj - kolmogorovLengthScale_)*BTurb_*rhoc
+           *sqr(cbrt(epsilonc*dSphj))
         );
 
         binaryBreakupRate +=
             pos(tauTurb - tauCrit)
-           /fj.dSph()
+           /dSphj
            *sqrt(mag(tauTurb - tauCrit)/rhoc)
-           /fj.x();
+           /vj;
     }
 
     if (laminarShear_)
@@ -138,16 +137,16 @@ void Foam::diameterModels::binaryBreakupModels::Liao::addToBinaryBreakupRate
 
         binaryBreakupRate +=
             pos(tauShear - tauCrit)
-           /fj.dSph()
+           /dSphj
            *sqrt(mag(tauShear - tauCrit)/rhoc)
-           /fj.x();
+           /vj;
     }
 
     if (turbulentShear_)
     {
         const volScalarField::Internal tauEddy
         (
-            pos0(kolmogorovLengthScale_ - fj.dSph())
+            pos0(kolmogorovLengthScale_ - dSphj)
            *BEddy_
            *muc
            *eddyStrainRate_
@@ -155,8 +154,8 @@ void Foam::diameterModels::binaryBreakupModels::Liao::addToBinaryBreakupRate
 
         binaryBreakupRate +=
             pos(tauEddy - tauCrit)
-           /fj.dSph()
-           *sqrt(mag(tauEddy - tauCrit)/rhoc)/fj.x();
+           /dSphj
+           *sqrt(mag(tauEddy - tauCrit)/rhoc)/vj;
     }
 
     if (interfacialFriction_)
@@ -168,8 +167,8 @@ void Foam::diameterModels::binaryBreakupModels::Liao::addToBinaryBreakupRate
 
         binaryBreakupRate +=
             pos(tauFric - tauCrit)
-           /fj.dSph()
-           *sqrt(mag(tauFric - tauCrit)/rhoc)/fj.x();
+           /dSphj
+           *sqrt(mag(tauFric - tauCrit)/rhoc)/vj;
     }
 }
 

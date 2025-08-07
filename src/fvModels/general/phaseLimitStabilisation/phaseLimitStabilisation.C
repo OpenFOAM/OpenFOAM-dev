@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,18 +57,15 @@ void Foam::fv::phaseLimitStabilisation::readCoeffs(const dictionary& dict)
 }
 
 
-template<class Type>
-void Foam::fv::phaseLimitStabilisation::addSupType
+template<class Type, class RhoRateFieldType>
+void Foam::fv::phaseLimitStabilisation::addStabilisation
 (
     const volScalarField& alpha,
-    const VolField<Type>& field,
+    const RhoRateFieldType& rhoRate,
     fvMatrix<Type>& eqn
 ) const
 {
-    const uniformDimensionedScalarField& rate =
-        mesh().lookupObjectRef<uniformDimensionedScalarField>(rateName_);
-
-    eqn -= fvm::Sp(max(residualAlpha_ - alpha, scalar(0))*rate, eqn.psi());
+    eqn -= fvm::Sp(max(residualAlpha_ - alpha(), scalar(0))*rhoRate, eqn.psi());
 }
 
 
@@ -76,15 +73,52 @@ template<class Type>
 void Foam::fv::phaseLimitStabilisation::addSupType
 (
     const volScalarField& alpha,
-    const volScalarField& rho,
     const VolField<Type>& field,
     fvMatrix<Type>& eqn
 ) const
 {
-    const uniformDimensionedScalarField& rate =
-        mesh().lookupObjectRef<uniformDimensionedScalarField>(rateName_);
+    addSupType(alpha, geometricOneField(), field, eqn);
+}
 
-    eqn -= fvm::Sp(max(residualAlpha_ - alpha, scalar(0))*rho*rate, eqn.psi());
+
+template<class Type, class RhoFieldType>
+void Foam::fv::phaseLimitStabilisation::addSupType
+(
+    const volScalarField& alpha,
+    const RhoFieldType& rho,
+    const VolField<Type>& field,
+    fvMatrix<Type>& eqn
+) const
+{
+    if (mesh().foundObject<volScalarField::Internal>(rateName_))
+    {
+        const volScalarField::Internal& rate =
+            mesh().lookupObjectRef<volScalarField::Internal>(rateName_);
+
+        addStabilisation(alpha, rho.internalField()*rate, eqn);
+    }
+    else if (mesh().foundObject<uniformDimensionedScalarField>(rateName_))
+    {
+        const uniformDimensionedScalarField& rate =
+            mesh().lookupObjectRef<uniformDimensionedScalarField>(rateName_);
+
+        addStabilisation(alpha, rho.internalField()*rate, eqn);
+    }
+    else
+    {
+        FatalErrorInFunction
+            << nl
+            << "    request for " << volScalarField::Internal::typeName
+            << " or " << uniformDimensionedScalarField::typeName
+            << " " << rateName_ << " from objectRegistry " << this->name()
+            << " failed\n    available objects of type "
+            << volScalarField::Internal::typeName << " are" << nl
+            << mesh().toc<volScalarField::Internal>()
+            << "\n    available objects of type "
+            << uniformDimensionedScalarField::typeName << " are" << nl
+            << mesh().toc<uniformDimensionedScalarField>()
+            << abort(FatalError);
+    }
 }
 
 

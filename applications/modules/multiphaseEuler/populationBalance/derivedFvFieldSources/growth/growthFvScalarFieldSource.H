@@ -26,7 +26,7 @@ Class
 
 Description
     Base class for source conditions which create a growth source terms in the
-    size group equations or related secondary property equations of a
+    group fraction equations or related secondary property equations of a
     population balance.
 
 SourceFiles

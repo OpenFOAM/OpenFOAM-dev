@@ -130,10 +130,6 @@ public:
     vtkGetMacro(InterpolateVolFields, int);
 
     // Description:
-    // Get the current timestep
-    int GetTimeStep();
-
-    // Description:
     // Parts selection list control
     virtual vtkDataArraySelection* GetPartSelection();
     int GetNumberOfPartArrays();

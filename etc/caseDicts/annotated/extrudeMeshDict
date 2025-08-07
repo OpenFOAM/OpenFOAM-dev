@@ -49,13 +49,14 @@ extrudeModel
 {
     type            linearNormal;
 
-    thickness       0.05;
     nLayers         10;
     expansionRatio  1.0;
+
+    thickness       0.05;
 }
 
 // Single layer linear extrusion in point-normal direction
-//  with empty patches on front and back
+// with empty patches on front and back
 // extrudeModel
 // {
 //     type            plane;
@@ -65,34 +66,37 @@ extrudeModel
 // extrudeModel
 // {
 //     type            linearDirection;
-
-//     direction       (0 1 0);
-//     thickness       0.05;
+//
 //     nLayers         10;
 //     expansionRatio  1.0;
+//
+//     direction       (0 1 0);
+//     thickness       0.05;
 // }
 
 // Linear extrusion along an arbitrary path specified as an edgeMesh
 // extrudeModel
 // {
-//     type             path;
-
-//     path            "constant/geometry/curve.obj";
+//     type            path;
+//
 //     nLayers         10;
 //     expansionRatio  1.0;
+//
+//     path            "constant/geometry/curve.obj";
 // }
 
 // Sector extrusion
 // extrudeModel
 // {
 //     type            sector;
-
-//     axisPt          (0 0.1 -0.05);
-//     axis            (-1 0 0);
-//     angle           360;
+//
 //     // For nLayers=1 assume symmetry so angle/2 on each side
 //     nLayers         10;
 //     expansionRatio  1.0;
+//
+//     axisPt          (0 0.1 -0.05);
+//     axis            (-1 0 0);
+//     angle           360;
 // }
 
 // Wedge extrusion of a single layer
@@ -110,38 +114,37 @@ extrudeModel
 // extrudeModel
 // {
 //     type            linearRadial;
-
-//     R               0.1;
-//     // Optional inner radius
-//     Rsurface        0.01;
-
+//
 //     nLayers         10;
 //     expansionRatio  1.0;
+//
+//     R               0.1;
+//     Rsurface        0.01; // Optional inner radius
 // }
 
 // Extrudes into sphere around (0 0 0) with specified radii
 // extrudeModel
 // {
 //     type            sphericalRadial;
-
-//     // Radii specified through interpolation table
-//     R               table ((0 0.01)(3 0.03)(10 0.1));
-
+//
 //     nLayers         10;
 //     expansionRatio  1.0;
+//
+//     // Radii specified through interpolation table
+//     R               table ((0 0.01)(3 0.03)(10 0.1));
 // }
 
 // Extrudes into sphere with grading according to pressure (atmospherics)
 // extrudeModel
 // {
 //     type            sigmaRadial;
-
+//
+//     nLayers         10;
+//     expansionRatio  1.0;
+//
 //     RTbyg           1;
 //     pRef            1;
 //     pStrat          1;
-
-//     nLayers         10;
-//     expansionRatio  1.0;
 // }
 
 // Do front and back need to be merged? Usually only makes sense for 360

@@ -42,7 +42,7 @@ sources
 {
     reactionDrivenPhaseChange
     {
-        type                distributionSizeGroup;
+        type                distributionGroupFraction;
         distribution
         {
             type                fixedValue;

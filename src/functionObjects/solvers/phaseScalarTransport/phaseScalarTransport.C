@@ -488,6 +488,41 @@ bool Foam::functionObjects::phaseScalarTransport::execute()
         PhiDimensionErrorInFunction(alphaPhi);
     }
 
+    // Update the alpha*S field
+    if (writeAlphaField_)
+    {
+        if (!alphaSPtr_.valid())
+        {
+            alphaSPtr_.set
+            (
+                new volScalarField
+                (
+                    IOobject
+                    (
+                        "alpha"
+                      + word(toupper(fieldName_[0]))
+                      + fieldName_(1, fieldName_.size() - 1),
+                        time_.name(),
+                        mesh_,
+                        IOobject::NO_READ,
+                        IOobject::NO_WRITE
+                    ),
+                    mesh_,
+                    dimensionedScalar(s_.dimensions(), Zero)
+                )
+            );
+        }
+
+        alphaSPtr_() = alpha*s_;
+    }
+    else
+    {
+        if (alphaSPtr_.valid())
+        {
+            alphaSPtr_().clear();
+        }
+    }
+
     Info<< endl;
 
     return true;
@@ -498,23 +533,9 @@ bool Foam::functionObjects::phaseScalarTransport::write()
 {
     s_.write();
 
-    if (writeAlphaField_)
+    if (alphaSPtr_.valid())
     {
-        const volScalarField& alpha =
-            mesh_.lookupObject<volScalarField>(alphaName_);
-
-        volScalarField alphaS
-        (
-            IOobject
-            (
-                "alpha" + fieldName_.capitalise(),
-                time_.name(),
-                mesh_
-            ),
-            alpha*s_
-        );
-
-        alphaS.write();
+        alphaSPtr_->write();
     }
 
     if (PhiPtr_.valid())

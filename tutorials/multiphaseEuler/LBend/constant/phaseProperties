@@ -20,10 +20,9 @@ solids
 {
     type            purePhaseModel;
 
-    diameterModel   constant;
-
-    constantCoeffs
+    diameterModel
     {
+        type            constant;
         d               462e-6;
     }
 

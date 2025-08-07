@@ -26,7 +26,6 @@ License
 #include "uniformGrowth.H"
 #include "fvMatrices.H"
 #include "addToRunTimeSelectionTable.H"
-#include "velocityGroup.H"
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
 
@@ -44,22 +43,23 @@ namespace fv
 
 Foam::wordList Foam::fv::uniformGrowth::phaseNames() const
 {
-    HashSet<word> names;
-    forAll(popBal_.sizeGroups(), i)
+    wordList names(popBal_.uniquePhases().size());
+    forAll(popBal_.uniquePhases(), uniquePhasei)
     {
-        names.insert(popBal_.sizeGroups()[i].phase().name());
+        names[uniquePhasei] =
+            popBal_.uniquePhases()[uniquePhasei].name();
     }
-    return names.toc();
+    return names;
 }
 
 
 Foam::wordList Foam::fv::uniformGrowth::alphaNames() const
 {
-    wordList names(phaseNames_.size());
-    forAll(names, i)
+    wordList names(popBal_.uniquePhases().size());
+    forAll(popBal_.uniquePhases(), uniquePhasei)
     {
-        names[i] =
-            popBal_.fluid().phases()[phaseNames_[i]].volScalarField::name();
+        names[uniquePhasei] =
+            popBal_.uniquePhases()[uniquePhasei].volScalarField::name();
     }
     return names;
 }
@@ -67,10 +67,11 @@ Foam::wordList Foam::fv::uniformGrowth::alphaNames() const
 
 Foam::wordList Foam::fv::uniformGrowth::rhoNames() const
 {
-    wordList names(phaseNames_.size());
-    forAll(names, i)
+    wordList names(popBal_.uniquePhases().size());
+    forAll(popBal_.uniquePhases(), uniquePhasei)
     {
-        names[i] = popBal_.fluid().phases()[phaseNames_[i]].rho().name();
+        names[uniquePhasei] =
+            popBal_.uniquePhases()[uniquePhasei].rho().name();
     }
     return names;
 }
@@ -221,7 +222,7 @@ Foam::fv::uniformGrowth::uniformGrowth
     fvSpecificSource(name, modelType, mesh, dict),
     popBal_
     (
-        mesh().lookupObject<diameterModels::populationBalanceModel>
+        mesh().lookupObject<populationBalanceModel>
         (
             coeffs(dict).lookup<word>("populationBalance")
         )
@@ -270,13 +271,12 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fv::uniformGrowth::S
             dimensionedScalar(inv(dimVolume), scalar(0))
         );
 
-    forAll(popBal_.sizeGroups(), i)
+    forAll(popBal_.fs(), i)
     {
-        const diameterModels::sizeGroup& fi = popBal_.sizeGroups()[i];
+        tmp<volScalarField::Internal> tN =
+            popBal_.phases()[i]()*popBal_.f(i)/popBal_.v(i);
 
-        tmp<volScalarField::Internal> tN = fi.phase()()*fi()/fi.x();
-
-        if (&fi.phase() == &phase)
+        if (&popBal_.phases()[i] == &phase)
         {
             tSumNPhase.ref() += tN();
         }

@@ -29,8 +29,11 @@ liquid
 {
     type            multicomponentPhaseModel;
 
-    diameterModel   constant;
-    d               5e-4;
+    diameterModel
+    {
+        type            constant;
+        d               5e-4;
+    }
 
     residualAlpha   1e-6;
 }

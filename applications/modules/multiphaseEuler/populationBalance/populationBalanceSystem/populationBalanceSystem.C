@@ -25,6 +25,7 @@ License
 
 #include "populationBalanceSystem.H"
 #include "fvmSup.H"
+#include "populationBalance.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -38,18 +39,13 @@ namespace Foam
 
 void Foam::populationBalanceSystem::addDmdts
 (
-    const diameterModels::populationBalanceModel::dmdtfTable& dmdtfs,
+    const populationBalanceModel::dmdtfTable& dmdtfs,
     PtrList<volScalarField::Internal>& dmdts
 ) const
 {
     forAll(populationBalances_, popBali)
     {
-        forAllConstIter
-        (
-            diameterModels::populationBalanceModel::dmdtfTable,
-            dmdtfs,
-            dmdtfIter
-        )
+        forAllConstIter(populationBalanceModel::dmdtfTable, dmdtfs, dmdtfIter)
         {
             const phaseInterface interface(fluid_, dmdtfIter.key());
 
@@ -62,13 +58,13 @@ void Foam::populationBalanceSystem::addDmdts
 
 void Foam::populationBalanceSystem::addDmdtUfs
 (
-    const diameterModels::populationBalanceModel::dmdtfTable& dmdtfs,
+    const populationBalanceModel::dmdtfTable& dmdtfs,
     HashPtrTable<fvVectorMatrix>& eqns
 ) const
 {
     forAllConstIter
     (
-        diameterModels::populationBalanceModel::dmdtfTable,
+        populationBalanceModel::dmdtfTable,
         dmdtfs,
         dmdtfIter
     )
@@ -99,17 +95,12 @@ void Foam::populationBalanceSystem::addDmdtUfs
 
 void Foam::populationBalanceSystem::addDmdtHefs
 (
-    const diameterModels::populationBalanceModel::dmdtfTable& dmdtfs,
+    const populationBalanceModel::dmdtfTable& dmdtfs,
     HashPtrTable<fvScalarMatrix>& eqns
 ) const
 {
     // Loop the pairs
-    forAllConstIter
-    (
-        diameterModels::populationBalanceModel::dmdtfTable,
-        dmdtfs,
-        dmdtfIter
-    )
+    forAllConstIter(populationBalanceModel::dmdtfTable, dmdtfs, dmdtfIter)
     {
         const phaseInterface interface(fluid_, dmdtfIter.key());
 
@@ -147,16 +138,11 @@ void Foam::populationBalanceSystem::addDmdtHefs
 
 void Foam::populationBalanceSystem::addDmdtYfs
 (
-    const diameterModels::populationBalanceModel::dmdtfTable& dmdtfs,
+    const populationBalanceModel::dmdtfTable& dmdtfs,
     HashPtrTable<fvScalarMatrix>& eqns
 ) const
 {
-    forAllConstIter
-    (
-        diameterModels::populationBalanceModel::dmdtfTable,
-        dmdtfs,
-        dmdtfIter
-    )
+    forAllConstIter(populationBalanceModel::dmdtfTable, dmdtfs, dmdtfIter)
     {
         const phaseInterface interface(fluid_, dmdtfIter.key());
 
@@ -189,15 +175,34 @@ Foam::populationBalanceSystem::populationBalanceSystem
     fluid_(fluid),
     populationBalances_()
 {
-    if (fluid_.found("populationBalances"))
+    // Extract the names of all the population balances from the associated
+    // diameter models
+    wordHashSet populationBalanceNameSet;
+    forAll(fluid_.phases(), phasei)
     {
-        PtrList<diameterModels::populationBalanceModel> popBals
-        (
-            fluid_.lookup("populationBalances"),
-            diameterModels::populationBalanceModel::iNew(fluid_)
-        );
+        const diameterModel& diameter = fluid_.phases()[phasei].diameter();
 
-        populationBalances_.transfer(popBals);
+        if (!isA<diameterModels::populationBalance>(diameter)) continue;
+
+        populationBalanceNameSet.insert
+        (
+            refCast<const diameterModels::populationBalance>
+            (
+                diameter
+            ).popBalName()
+        );
+    }
+
+    // Construct the population balance models
+    const wordList populationBalanceNames = populationBalanceNameSet.toc();
+    populationBalances_.resize(populationBalanceNames.size());
+    forAll(populationBalances_, popBali)
+    {
+        populationBalances_.set
+        (
+            popBali,
+            new populationBalanceModel(fluid_, populationBalanceNames[popBali])
+        );
     }
 }
 

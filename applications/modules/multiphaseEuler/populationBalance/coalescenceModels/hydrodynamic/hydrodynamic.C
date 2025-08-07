@@ -30,7 +30,7 @@ License
 
 namespace Foam
 {
-namespace diameterModels
+namespace populationBalance
 {
 namespace coalescenceModels
 {
@@ -43,7 +43,7 @@ namespace coalescenceModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::diameterModels::coalescenceModels::hydrodynamic::hydrodynamic
+Foam::populationBalance::coalescenceModels::hydrodynamic::hydrodynamic
 (
     const populationBalanceModel& popBal,
     const dictionary& dict
@@ -55,18 +55,16 @@ Foam::diameterModels::coalescenceModels::hydrodynamic::hydrodynamic
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::diameterModels::coalescenceModels::hydrodynamic::addToCoalescenceRate
+void Foam::populationBalance::coalescenceModels::hydrodynamic::
+addToCoalescenceRate
 (
     volScalarField::Internal& coalescenceRate,
     const label i,
     const label j
 )
 {
-    const sizeGroup& fi = popBal_.sizeGroups()[i];
-    const sizeGroup& fj = popBal_.sizeGroups()[j];
-
     coalescenceRate.primitiveFieldRef() +=
-        pow3((cbrt(fi.x().value()) + cbrt(fj.x().value())));
+        pow3(cbrt(popBal_.v(i).value()) + cbrt(popBal_.v(j).value()));
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,7 +71,6 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// Transform across an interface. Implementation referred to Type
 template<class Type, class TrackingData>
 void Foam::PointEdgeWave<Type, TrackingData>::transform
 (
@@ -88,11 +87,6 @@ void Foam::PointEdgeWave<Type, TrackingData>::transform
 }
 
 
-// Update info for pointi, at position pt, with information from
-// neighbouring edge.
-// Updates:
-//      - changedPoint_, changedPoints_, nChangedPoints_,
-//      - statistics: nEvals_, nUnvisitedPoints_
 template<class Type, class TrackingData>
 bool Foam::PointEdgeWave<Type, TrackingData>::updatePoint
 (
@@ -102,6 +96,12 @@ bool Foam::PointEdgeWave<Type, TrackingData>::updatePoint
     Type& pointInfo
 )
 {
+    // Update info for pointi, at position pt, with information from
+    // neighbouring edge.
+    // Updates:
+    //      - changedPoint_, changedPoints_, nChangedPoints_,
+    //      - statistics: nEvals_, nUnvisitedPoints_
+
     nEvals_++;
 
     bool wasValid = pointInfo.valid(td_);
@@ -135,11 +135,6 @@ bool Foam::PointEdgeWave<Type, TrackingData>::updatePoint
 }
 
 
-// Update info for pointi, at position pt, with information from
-// same point.
-// Updates:
-//      - changedPoint_, changedPoints_, nChangedPoints_,
-//      - statistics: nEvals_, nUnvisitedPoints_
 template<class Type, class TrackingData>
 bool Foam::PointEdgeWave<Type, TrackingData>::updatePoint
 (
@@ -148,6 +143,12 @@ bool Foam::PointEdgeWave<Type, TrackingData>::updatePoint
     Type& pointInfo
 )
 {
+    // Update info for pointi, at position pt, with information from
+    // same point.
+    // Updates:
+    //      - changedPoint_, changedPoints_, nChangedPoints_,
+    //      - statistics: nEvals_, nUnvisitedPoints_
+
     nEvals_++;
 
     bool wasValid = pointInfo.valid(td_);
@@ -180,11 +181,6 @@ bool Foam::PointEdgeWave<Type, TrackingData>::updatePoint
 }
 
 
-// Update info for edgeI, at position pt, with information from
-// neighbouring point.
-// Updates:
-//      - changedEdge_, changedEdges_, nChangedEdges_,
-//      - statistics: nEvals_, nUnvisitedEdge_
 template<class Type, class TrackingData>
 bool Foam::PointEdgeWave<Type, TrackingData>::updateEdge
 (
@@ -194,6 +190,12 @@ bool Foam::PointEdgeWave<Type, TrackingData>::updateEdge
     Type& edgeInfo
 )
 {
+    // Update info for edgeI, at position pt, with information from
+    // neighbouring point.
+    // Updates:
+    //      - changedEdge_, changedEdges_, nChangedEdges_,
+    //      - statistics: nEvals_, nUnvisitedEdge_
+
     nEvals_++;
 
     bool wasValid = edgeInfo.valid(td_);
@@ -227,7 +229,6 @@ bool Foam::PointEdgeWave<Type, TrackingData>::updateEdge
 }
 
 
-// Check if patches of given type name are present
 template<class Type, class TrackingData>
 template<class PatchType>
 Foam::label Foam::PointEdgeWave<Type, TrackingData>::countPatchType() const
@@ -245,7 +246,6 @@ Foam::label Foam::PointEdgeWave<Type, TrackingData>::countPatchType() const
 }
 
 
-// Transfer all the information to/from neighbouring processors
 template<class Type, class TrackingData>
 void Foam::PointEdgeWave<Type, TrackingData>::handleProcPatches()
 {
@@ -427,8 +427,6 @@ void Foam::PointEdgeWave<Type, TrackingData>::handleCyclicPatches()
 }
 
 
-// Guarantee collocated points have same information.
-// Return number of points changed.
 template<class Type, class TrackingData>
 Foam::label Foam::PointEdgeWave<Type, TrackingData>::handleCollocatedPoints()
 {
@@ -521,14 +519,12 @@ Foam::label Foam::PointEdgeWave<Type, TrackingData>::handleCollocatedPoints()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Iterate, propagating changedPointsInfo across mesh, until no change (or
-// maxIter reached). Initial point values specified.
 template<class Type, class TrackingData>
 Foam::PointEdgeWave<Type, TrackingData>::PointEdgeWave
 (
     const polyMesh& mesh,
-    const labelList& changedPoints,
-    const List<Type>& changedPointsInfo,
+    const labelList& startPoints,
+    const List<Type>& startPointsInfo,
 
     UList<Type>& allPointInfo,
     UList<Type>& allEdgeInfo,
@@ -573,7 +569,7 @@ Foam::PointEdgeWave<Type, TrackingData>::PointEdgeWave
 
 
     // Set from initial changed points data
-    setPointInfo(changedPoints, changedPointsInfo);
+    setPointInfo(startPoints, startPointsInfo);
 
     if (debug)
     {
@@ -650,18 +646,18 @@ Foam::label Foam::PointEdgeWave<Type, TrackingData>::getUnsetEdges() const
 template<class Type, class TrackingData>
 void Foam::PointEdgeWave<Type, TrackingData>::setPointInfo
 (
-    const labelList& changedPoints,
-    const List<Type>& changedPointsInfo
+    const labelList& startPoints,
+    const List<Type>& startPointsInfo
 )
 {
-    forAll(changedPoints, changedPointi)
+    forAll(startPoints, startPointi)
     {
-        label pointi = changedPoints[changedPointi];
+        label pointi = startPoints[startPointi];
 
         bool wasValid = allPointInfo_[pointi].valid(td_);
 
         // Copy info for pointi
-        allPointInfo_[pointi] = changedPointsInfo[changedPointi];
+        allPointInfo_[pointi] = startPointsInfo[startPointi];
 
         // Maintain count of unset points
         if (!wasValid && allPointInfo_[pointi].valid(td_))
@@ -683,7 +679,6 @@ void Foam::PointEdgeWave<Type, TrackingData>::setPointInfo
 }
 
 
-// Propagate information from edge to point. Return number of points changed.
 template<class Type, class TrackingData>
 Foam::label Foam::PointEdgeWave<Type, TrackingData>::edgeToPoint()
 {
@@ -745,11 +740,6 @@ Foam::label Foam::PointEdgeWave<Type, TrackingData>::edgeToPoint()
         handleProcPatches();
     }
 
-    // if (debug)
-    //{
-    //    Pout<< "Changed points            : " << nChangedPoints_ << endl;
-    //}
-
     // Sum nChangedPoints over all procs
     label totNChanged = nChangedPoints_;
 
@@ -759,7 +749,6 @@ Foam::label Foam::PointEdgeWave<Type, TrackingData>::edgeToPoint()
 }
 
 
-// Propagate information from point to edge. Return number of edges changed.
 template<class Type, class TrackingData>
 Foam::label Foam::PointEdgeWave<Type, TrackingData>::pointToEdge()
 {
@@ -827,7 +816,6 @@ Foam::label Foam::PointEdgeWave<Type, TrackingData>::pointToEdge()
 }
 
 
-// Iterate
 template<class Type, class TrackingData>
 Foam::label Foam::PointEdgeWave<Type, TrackingData>::iterate
 (

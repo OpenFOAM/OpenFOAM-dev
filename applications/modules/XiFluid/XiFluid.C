@@ -72,6 +72,18 @@ Foam::solvers::XiFluid::XiFluid(fvMesh& mesh)
         )
     ),
 
+    bMin_
+    (
+        combustionProperties.subDict("flameWrinkling")
+       .lookupOrDefault("bMin", 1e-3)
+    ),
+
+    mgbCoeff_
+    (
+        combustionProperties.subDict("flameWrinkling")
+       .lookupOrDefault("mgbCoeff", 1e-3)
+    ),
+
     SuModel_
     (
         SuModel::New

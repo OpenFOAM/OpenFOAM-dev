@@ -16,51 +16,15 @@ FoamFile
 
 phases          (particles vapour);
 
-populationBalances (aggregates);
-
 particles
 {
     type            purePhaseModel;
 
-    diameterModel   velocityGroup;
-    velocityGroupCoeffs
+    diameterModel
     {
-        populationBalance   aggregates;
-
-        shapeModel          fractal;
-
-        sizeGroups
-        (
-            { dSph 4.000E-10; Df 1.8; alphaC 1; }
-            { dSph 5.769E-10; Df 1.8; alphaC 1; }
-            { dSph 8.320E-10; Df 1.8; alphaC 1; }
-            { dSph 1.200E-09; Df 1.8; alphaC 1; }
-            { dSph 1.731E-09; Df 1.8; alphaC 1; }
-            { dSph 2.496E-09; Df 1.8; alphaC 1; }
-            { dSph 3.600E-09; Df 1.8; alphaC 1; }
-            { dSph 5.192E-09; Df 1.8; alphaC 1; }
-            { dSph 7.488E-09; Df 1.8; alphaC 1; }
-            { dSph 1.080E-08; Df 1.8; alphaC 1; }
-            { dSph 1.558E-08; Df 1.8; alphaC 1; }
-            { dSph 2.246E-08; Df 1.8; alphaC 1; }
-            { dSph 3.240E-08; Df 1.8; alphaC 1; }
-            { dSph 4.673E-08; Df 1.8; alphaC 1; }
-            { dSph 6.739E-08; Df 1.8; alphaC 1; }
-            { dSph 9.720E-08; Df 1.8; alphaC 1; }
-            { dSph 1.402E-07; Df 1.8; alphaC 1; }
-            { dSph 2.022E-07; Df 1.8; alphaC 1; }
-            { dSph 2.916E-07; Df 1.8; alphaC 1; }
-            { dSph 4.206E-07; Df 1.8; alphaC 1; }
-            { dSph 6.066E-07; Df 1.8; alphaC 1; }
-            { dSph 8.748E-07; Df 1.8; alphaC 1; }
-            { dSph 1.262E-06; Df 1.8; alphaC 1; }
-            { dSph 1.820E-06; Df 1.8; alphaC 1; }
-            { dSph 2.624E-06; Df 1.8; alphaC 1; }
-            { dSph 3.785E-06; Df 1.8; alphaC 1; }
-            { dSph 5.459E-06; Df 1.8; alphaC 1; }
-            { dSph 7.873E-06; Df 1.8; alphaC 1; }
-            { dSph 1.136E-05; Df 1.8; alphaC 1; }
-        );
+        type            populationBalance;
+        populationBalance aggregates;
+        nGroups         29;
     }
 
     residualAlpha   1e-15;
@@ -87,26 +51,37 @@ blending
 surfaceTension
 {}
 
-populationBalanceCoeffs
+aggregates
 {
-    aggregates
+    continuousPhase vapour;
+
+    sphericalDiameters
     {
-        continuousPhase vapour;
-
-        coalescenceModels
-        (
-            DahnekeInterpolation
-            {
-                sigma           340e-12;
-            }
-        );
-
-        binaryBreakupModels
-        ();
-
-        breakupModels
-        ();
+        type            exponential;
+        min             4.000E-10;
+        max             1.136E-05;
     }
+
+    shapeModel
+    {
+        type            fractal;
+        Df              1.8;
+        alphaC          1;
+    }
+
+    coalescenceModels
+    (
+        DahnekeInterpolation
+        {
+            sigma           340e-12;
+        }
+    );
+
+    breakupModels
+    ();
+
+    binaryBreakupModels
+    ();
 }
 
 // ************************************************************************* //

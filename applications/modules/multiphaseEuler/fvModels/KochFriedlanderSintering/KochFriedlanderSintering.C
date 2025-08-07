@@ -27,7 +27,6 @@ License
 #include "fvmSup.H"
 #include "fractal.H"
 #include "addToRunTimeSelectionTable.H"
-#include "sizeGroup.H"
 #include "volFieldsFwd.H"
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
@@ -79,7 +78,7 @@ Foam::fv::KochFriedlanderSintering::KochFriedlanderSintering
     fvModel(name, modelType, mesh, dict),
     popBal_
     (
-        mesh().lookupObject<diameterModels::populationBalanceModel>
+        mesh().lookupObject<populationBalanceModel>
         (
             coeffs(dict).lookup("populationBalance")
         )
@@ -92,17 +91,16 @@ Foam::fv::KochFriedlanderSintering::KochFriedlanderSintering
 {
     readCoeffs(coeffs(dict));
 
-    forAll(popBal_.sizeGroups(), sizeGroupi)
+    const populationBalance::shapeModel& shape = popBal_.shape();
+
+    if (!isA<populationBalance::shapeModels::fractal>(shape)) return;
+
+    const populationBalance::shapeModels::fractal& fractal =
+        refCast<const populationBalance::shapeModels::fractal>(shape);
+
+    forAll(popBal_.fs(), i)
     {
-        const diameterModels::shapeModel& shapeModel =
-            popBal_.sizeGroups()[sizeGroupi].shape();
-
-        if (!isA<diameterModels::shapeModels::fractal>(shapeModel)) continue;
-
-        const diameterModels::shapeModels::fractal& fractal =
-            refCast<const diameterModels::shapeModels::fractal>(shapeModel);
-
-        kappaNameToSizeGroupIndices_.insert(fractal.fld().name(), sizeGroupi);
+        kappaNameToGroupIndices_.insert(fractal.fld(i).name(), i);
     }
 }
 
@@ -114,7 +112,7 @@ bool Foam::fv::KochFriedlanderSintering::addsSupToField
     const word& fieldName
 ) const
 {
-    return kappaNameToSizeGroupIndices_.found(fieldName);
+    return kappaNameToGroupIndices_.found(fieldName);
 }
 
 
@@ -124,12 +122,11 @@ Foam::fv::KochFriedlanderSintering::tau
     const volScalarField::Internal& kappa
 ) const
 {
-    const diameterModels::sizeGroup& fi =
-        popBal_.sizeGroups()[kappaNameToSizeGroupIndices_[kappa.name()]];
+    const label i = kappaNameToGroupIndices_[kappa.name()];
 
-    const volScalarField::Internal& T = fi.phase().thermo().T();
+    const volScalarField::Internal& T = popBal_.phases()[i].thermo().T();
 
-    const volScalarField::Internal dp(6/max(6/fi.dSph(), kappa));
+    const volScalarField::Internal dp(6/max(6/popBal_.dSph(i), kappa));
 
     return Cs_*pow(dp, n_)*pow(T, m_)*exp(Ta_/T*(1 - dpMin_/dp));
 }
@@ -143,12 +140,11 @@ void Foam::fv::KochFriedlanderSintering::addSup
     fvMatrix<scalar>& eqn
 ) const
 {
-    const diameterModels::sizeGroup& fi =
-        popBal_.sizeGroups()[kappaNameToSizeGroupIndices_[kappa.name()]];
+    const label i = kappaNameToGroupIndices_[kappa.name()];
 
     const volScalarField::Internal R(alphaFi()*rho()/tau(kappa));
 
-    eqn += R*6/fi.dSph() - fvm::Sp(R, kappa);
+    eqn += R*6/popBal_.dSph(i) - fvm::Sp(R, kappa);
 }
 
 

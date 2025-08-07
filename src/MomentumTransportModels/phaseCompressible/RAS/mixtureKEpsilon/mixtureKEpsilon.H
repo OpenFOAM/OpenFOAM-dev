@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,7 @@ Description
             C2          1.92;
             C3          C2;
             Cp          0.25; // Bubble generated turbulence
-            alphap      0.3;  // Gas phase fraction below which
+            alphap      1;    // Gas phase fraction below which
                               // bubble generated turbulence is included
             sigmak      1.0;
             sigmaEps    1.3;

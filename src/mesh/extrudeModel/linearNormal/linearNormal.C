@@ -42,10 +42,10 @@ addToRunTimeSelectionTable(extrudeModel, linearNormal, dictionary);
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-linearNormal::linearNormal(const dictionary& dict)
+linearNormal::linearNormal(const dictionary& dict, const bool single)
 :
-    extrudeModel(dict),
-    thickness_(coeffDict(dict).lookup<scalar>("thickness")),
+    extrudeModel(dict, single),
+    thickness_(dict.lookup<scalar>("thickness")),
     firstCellThickness_(0),
     layerPoints_(nLayers_)
 {
@@ -56,7 +56,7 @@ linearNormal::linearNormal(const dictionary& dict)
             << exit(FatalError);
     }
 
-    coeffDict(dict).readIfPresent("firstCellThickness", firstCellThickness_);
+    dict.readIfPresent("firstCellThickness", firstCellThickness_);
 
     if (firstCellThickness_ >= thickness_)
     {

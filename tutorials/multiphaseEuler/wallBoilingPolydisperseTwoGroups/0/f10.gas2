@@ -47,11 +47,11 @@ sources
 {
     heatTransferLimitedPhaseChange
     {
-        type            interfacialGrowthSizeGroup;
+        type            interfacialGrowthGroupFraction;
     }
     heatTransferLimitedPhaseChange2
     {
-        type            interfacialGrowthSizeGroup;
+        type            interfacialGrowthGroupFraction;
     }
     wallBoiling
     {

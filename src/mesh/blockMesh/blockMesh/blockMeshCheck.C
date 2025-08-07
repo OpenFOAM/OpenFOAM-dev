@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,9 +29,46 @@ License
 
 void Foam::blockMesh::check(const polyMesh& bm, const dictionary& dict) const
 {
-    Info<< nl << "Check topology" << endl;
+    const pointField& points = bm.points();
+    const cellList& cells = bm.cells();
+    const polyPatchList& patches = bm.boundaryMesh();
 
-    bool ok = true;
+    label nBoundaryFaces = 0;
+    forAll(cells, celli)
+    {
+        nBoundaryFaces += cells[celli].nFaces();
+    }
+
+    nBoundaryFaces -= 2*bm.nInternalFaces();
+
+    label nDefinedBoundaryFaces = 0;
+    forAll(patches, patchi)
+    {
+        nDefinedBoundaryFaces += patches[patchi].size();
+    }
+
+    if (verboseOutput)
+    {
+        Info<< nl << "Basic statistics" << nl
+            << "    Number of internal faces : "
+            << bm.nInternalFaces() << nl
+            << "    Number of boundary faces : "
+            << nBoundaryFaces << nl
+            << "    Number of defined boundary faces : "
+            << nDefinedBoundaryFaces << nl
+            << "    Number of undefined boundary faces : "
+            << nBoundaryFaces - nDefinedBoundaryFaces << nl;
+
+        if (nBoundaryFaces - nDefinedBoundaryFaces > 0)
+        {
+            Info<< "        (Warning : only leave undefined the front "
+                << "and back planes of 2D planar geometries!)" << endl;
+        }
+    }
+
+    Info<< nl << "Checking topology" << endl;
+
+    OStringStream oss;
 
     // Check for duplicate curved edge definitions
     forAll(edges_, cei)
@@ -40,11 +77,11 @@ void Foam::blockMesh::check(const polyMesh& bm, const dictionary& dict) const
         {
             if (edges_[cei].compare(edges_[cej]) != 0)
             {
-                Info<< "    Curved edge ";
-                edges_[cej].write(Info, dict);
-                Info<< "    is a duplicate of curved edge " << edges_[cei]
-                    << endl;
-                ok = false;
+                oss << "    Curved edge #" << cei << ' ';
+                edges_[cei].write(oss, dict);
+                oss << " is a duplicate of curved edge #" << cej << ' ';
+                edges_[cej].write(oss, dict);
+                oss << endl;
                 break;
             }
         }
@@ -75,11 +112,9 @@ void Foam::blockMesh::check(const polyMesh& bm, const dictionary& dict) const
 
         if (!found)
         {
-            Info<< "    Curved edge ";
-            edges_[cei].write(Info, dict);
-            Info<< "    does not correspond to a block edge."
-                << endl;
-            ok = false;
+            oss << "    Curved edge #" << cei << ' ';
+            edges_[cei].write(oss, dict);
+            oss << " does not correspond to a block edge" << endl;
         }
     }
 
@@ -92,12 +127,11 @@ void Foam::blockMesh::check(const polyMesh& bm, const dictionary& dict) const
         {
             if (faces_[cfi].compare(faces_[cfj]) != 0)
             {
-                Info<< "    Curved face ";
-                faces_[cfj].write(Info, dict);
-                Info<< "    is a duplicate of curved face ";
-                faces_[cfi].write(Info, dict);
-                Info<< endl;
-                ok = false;
+                oss << "    Curved face #" << cfi << ' ';
+                faces_[cfi].write(oss, dict);
+                oss << " is a duplicate of curved face #" << cfj << ' ';
+                faces_[cfj].write(oss, dict);
+                oss << endl;
                 break;
             }
         }
@@ -116,55 +150,13 @@ void Foam::blockMesh::check(const polyMesh& bm, const dictionary& dict) const
 
         if (!found)
         {
-            Info<< "    Curved face ";
-            faces_[cfi].write(Info, dict);
-            Info<< "    does not correspond to a block face." << endl;
-            ok = false;
+            oss << "    Curved face #" << cfi << ' ';
+            faces_[cfi].write(oss, dict);
+            oss << " does not correspond to a block face" << endl;
         }
     }
 
-    const pointField& points = bm.points();
-    const cellList& cells = bm.cells();
-    const polyPatchList& patches = bm.boundaryMesh();
-
-    label nBoundaryFaces = 0;
-    forAll(cells, celli)
-    {
-        nBoundaryFaces += cells[celli].nFaces();
-    }
-
-    nBoundaryFaces -= 2*bm.nInternalFaces();
-
-    label nDefinedBoundaryFaces = 0;
-    forAll(patches, patchi)
-    {
-        nDefinedBoundaryFaces += patches[patchi].size();
-    }
-
-
-    if (verboseOutput)
-    {
-        Info<< nl << tab << "Basic statistics" << nl
-            << tab << tab << "Number of internal faces : "
-            << bm.nInternalFaces() << nl
-            << tab << tab << "Number of boundary faces : "
-            << nBoundaryFaces << nl
-            << tab << tab << "Number of defined boundary faces : "
-            << nDefinedBoundaryFaces << nl
-            << tab << tab << "Number of undefined boundary faces : "
-            << nBoundaryFaces - nDefinedBoundaryFaces << nl;
-
-        if ((nBoundaryFaces - nDefinedBoundaryFaces) > 0)
-        {
-            Info<< tab << tab << tab
-                << "(Warning : only leave undefined the front and back planes "
-                << "of 2D planar geometries!)" << endl;
-        }
-
-        Info<< tab << "Checking patch -> block consistency" << endl;
-    }
-
-
+    // Check patch-face consistency
     forAll(patches, patchi)
     {
         const faceList& Patch = patches[patchi];
@@ -189,17 +181,13 @@ void Foam::blockMesh::check(const polyMesh& bm, const dictionary& dict) const
                             (
                                 patchFace.area(points)
                               & faces[cellFaces[cellFacei]].area(points)
-                            ) < 0.0
+                            ) < 0
                         )
                         {
-                            Info<< tab << tab
-                                << "Face " << patchFacei
-                                << " of patch " << patchi
-                                << " (" << patches[patchi].name() << ")"
-                                << " points inwards"
+                            oss << "    Face #" << patchFacei << ' '
+                                << patchFace << " of patch #" << patchi << ' '
+                                << patches[patchi].name() << " points inwards"
                                 << endl;
-
-                            ok = false;
                         }
                     }
                 }
@@ -207,27 +195,18 @@ void Foam::blockMesh::check(const polyMesh& bm, const dictionary& dict) const
 
             if (!patchFaceOK)
             {
-                Info<< tab << tab
-                    << "Face " << patchFacei
-                    << " of patch " << patchi
-                    << " (" << patches[patchi].name() << ")"
+                oss << "    Face #" << patchFacei << ' ' << patchFace
+                    << " of patch #" << patchi << ' ' << patches[patchi].name()
                     << " does not match any block faces" << endl;
-
-                ok = false;
             }
         }
     }
 
-    if (verboseOutput)
+    if (!oss.str().empty())
     {
-        Info<< endl;
-    }
-
-    if (!ok)
-    {
-        FatalErrorInFunction
-            << "Block mesh topology incorrect, stopping mesh generation!"
-            << exit(FatalError);
+        FatalIOErrorInFunction(dict)
+            << oss.str().c_str()
+            << exit(FatalIOError);
     }
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -200,16 +200,31 @@ Foam::blockDescriptor::blockDescriptor
     nCurvedFaces_(0)
 {
     // Read cell model and list of vertices (potentially with variables)
-    word model(is);
+    word modelName(is);
+    const cellModel* modelPtr = cellModeller::lookup(modelName);
+    if (!modelPtr)
+    {
+        FatalIOErrorInFunction(is)
+            << "Block type " << modelName << " not recognised"
+            << exit(FatalIOError);
+    }
     blockShape_ = cellShape
     (
-        model,
+        *modelPtr,
         blockMeshTools::read<label>
         (
             is,
             dict.subOrEmptyDict("namedVertices")
         )
     );
+    if (blockShape_.size() != blockShape_.model().nPoints())
+    {
+        FatalIOErrorInFunction(is)
+            << "Block of type " << modelName << " has "
+            << blockShape_.size() << " points rather than "
+            << blockShape_.model().nPoints()
+            << exit(FatalIOError);
+    }
 
     // Examine next token
     token t(is);
@@ -427,7 +442,6 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const blockDescriptor& bd)
     os  << ' '  << bd.density()
         << " simpleGrading (";
 
-
     const List<gradingDescriptors>& expand = bd.expand_;
 
     // Can we use a compact notation?
@@ -466,7 +480,6 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const blockDescriptor& bd)
             os  << expand[edgei];
         }
     }
-
 
     os  << ")";
 

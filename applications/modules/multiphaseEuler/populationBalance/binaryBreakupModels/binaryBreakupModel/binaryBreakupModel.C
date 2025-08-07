@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ License
 
 namespace Foam
 {
-namespace diameterModels
+namespace populationBalance
 {
     defineTypeNameAndDebug(binaryBreakupModel, 0);
     defineRunTimeSelectionTable(binaryBreakupModel, dictionary);
@@ -39,8 +39,8 @@ namespace diameterModels
 
 // * * * * * * * * * * * * * * * * Selector  * * * * * * * * * * * * * * * * //
 
-Foam::autoPtr<Foam::diameterModels::binaryBreakupModel>
-Foam::diameterModels::binaryBreakupModel::New
+Foam::autoPtr<Foam::populationBalance::binaryBreakupModel>
+Foam::populationBalance::binaryBreakupModel::New
 (
     const word& type,
     const populationBalanceModel& popBal,
@@ -69,7 +69,7 @@ Foam::diameterModels::binaryBreakupModel::New
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::diameterModels::binaryBreakupModel::binaryBreakupModel
+Foam::populationBalance::binaryBreakupModel::binaryBreakupModel
 (
     const populationBalanceModel& popBal,
     const dictionary& dict
@@ -81,7 +81,7 @@ Foam::diameterModels::binaryBreakupModel::binaryBreakupModel
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::diameterModels::binaryBreakupModel::precompute()
+void Foam::populationBalance::binaryBreakupModel::precompute()
 {}
 
 

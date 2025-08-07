@@ -84,6 +84,23 @@ void Foam::solvers::multiphaseEuler::setRDeltaT()
 
     if (faceMomentum)
     {
+        if (!trDeltaTf.valid())
+        {
+            trDeltaTf = new surfaceScalarField
+            (
+                IOobject
+                (
+                    fv::localEulerDdt::rDeltaTfName,
+                    runTime.name(),
+                    mesh,
+                    IOobject::READ_IF_PRESENT,
+                    IOobject::AUTO_WRITE
+                ),
+                mesh,
+                dimensionedScalar(dimless/dimTime, 1)
+            );
+        }
+
         trDeltaTf.ref() = fvc::interpolate(rDeltaT);
     }
 }

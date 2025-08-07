@@ -8,5 +8,6 @@ pistonPointEdgeData/pistonPointEdgeData.C
 multiValveEngineState/multiValveEngineState.C
 zoneGenerators/cylinderHeadPoints/cylinderHeadPoints.C
 zoneGenerators/pistonBowlPoints/pistonBowlPoints.C
+zoneGenerators/externalPoints/externalPoints.C
 
 LIB = $(FOAM_LIBBIN)/libfvMeshMoversMultiValveEngine

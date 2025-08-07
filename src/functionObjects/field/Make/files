@@ -14,7 +14,6 @@ nearWallFields/nearWallFields.C
 nearWallFields/findCellParticle.C
 
 processorField/processorField.C
-readFields/readFields.C
 
 streamlines/streamlines.C
 streamlines/streamlinesParticle.C

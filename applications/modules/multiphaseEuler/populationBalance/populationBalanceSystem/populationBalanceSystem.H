@@ -30,7 +30,7 @@ Description
     the population balance interactions.
 
 See also
-    Foam::diameterModels::populationBalanceModel
+    Foam::populationBalanceModel
 
 SourceFiles
     populationBalanceSystem.C
@@ -60,7 +60,7 @@ class populationBalanceSystem
         const phaseSystem& fluid_;
 
         //- Population balances
-        PtrList<diameterModels::populationBalanceModel> populationBalances_;
+        PtrList<populationBalanceModel> populationBalances_;
 
 
     // Private Member Functions
@@ -68,28 +68,28 @@ class populationBalanceSystem
         //- Add interface mass transfer rates to phase-mass transfer rates
         void addDmdts
         (
-            const diameterModels::populationBalanceModel::dmdtfTable& dmdtfs,
+            const populationBalanceModel::dmdtfTable& dmdtfs,
             PtrList<volScalarField::Internal>& dmdts
         ) const;
 
         //- Add momentum transfer terms which result from mass transfers
         void addDmdtUfs
         (
-            const diameterModels::populationBalanceModel::dmdtfTable& dmdtfs,
+            const populationBalanceModel::dmdtfTable& dmdtfs,
             HashPtrTable<fvVectorMatrix>& eqns
         ) const;
 
         //- Add energy transfer terms which result from mass transfers
         void addDmdtHefs
         (
-            const diameterModels::populationBalanceModel::dmdtfTable& dmdtfs,
+            const populationBalanceModel::dmdtfTable& dmdtfs,
             HashPtrTable<fvScalarMatrix>& eqns
         ) const;
 
         //- Add specie transfer terms which result from mass transfers
         void addDmdtYfs
         (
-            const diameterModels::populationBalanceModel::dmdtfTable& dmdtfs,
+            const populationBalanceModel::dmdtfTable& dmdtfs,
             HashPtrTable<fvScalarMatrix>& eqns
         ) const;
 

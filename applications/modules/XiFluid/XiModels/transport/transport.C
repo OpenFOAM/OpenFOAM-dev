@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,8 @@ namespace XiModels
 bool Foam::XiModels::transport::readCoeffs(const dictionary& dict)
 {
     XiModel::readCoeffs(dict);
-
+    differentialPropagation_ =
+        dict.lookupOrDefault<Switch>("differentialPropagation", false);
     return true;
 }
 
@@ -114,15 +115,17 @@ void Foam::XiModels::transport::correct()
     const volVectorField& n = mesh.lookupObject<volVectorField>("n");
     const surfaceScalarField& nf = mesh.lookupObject<surfaceScalarField>("nf");
 
-    const surfaceScalarField phiXi
+    surfaceScalarField phiXi
     (
         "phiXi",
         phiSt
-      + (
-          - fvc::interpolate(fvc::laplacian(Db, b_)/mgb)*nf
-          + fvc::interpolate(rho_)*fvc::interpolate(Su_*(1/Xi_ - Xi_))*nf
-        )
+      - fvc::interpolate(fvc::laplacian(Db, b_)/mgb)*nf
     );
+
+    if (differentialPropagation_)
+    {
+        phiXi += fvc::interpolate(rho_)*fvc::interpolate(Su_*(1/Xi_ - Xi_))*nf;
+    }
 
     const surfaceScalarField& phi = turbulence_.alphaRhoPhi();
 

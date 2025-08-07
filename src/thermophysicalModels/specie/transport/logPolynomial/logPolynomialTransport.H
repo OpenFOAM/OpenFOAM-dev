@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,15 +30,15 @@ Description
     conductivity:
 
     \verbatim
-        log(mu) = muCoeffs[0] + muCoeffs[1]*log(T)
-           + muCoeffs[2]*sqr(log(T)) + muCoeffs[3]*pow3(log(T))
-           + muCoeffs[4]*pow4(log(T)) + muCoeffs[5]*pow(log(T), 5)
-           + muCoeffs[6]*pow(log(T), 6) + muCoeffs[7]*pow(log(T), 7)
+        log(mu) = muLogCoeffs[0] + muLogCoeffs[1]*log(T)
+           + muLogCoeffs[2]*sqr(log(T)) + muLogCoeffs[3]*pow3(log(T))
+           + muLogCoeffs[4]*pow4(log(T)) + muLogCoeffs[5]*pow(log(T), 5)
+           + muLogCoeffs[6]*pow(log(T), 6) + muLogCoeffs[7]*pow(log(T), 7)
 
-        log(kappa) = kappaCoeffs[0] + kappaCoeffs[1]*log(T)
-           + kappaCoeffs[2]*sqr(log(T)) + kappaCoeffs[3]*pow3(log(T))
-           + kappaCoeffs[4]*pow4(log(T)) + kappaCoeffs[5]*pow(log(T), 5)
-           + kappaCoeffs[6]*pow(log(T), 6) + kappaCoeffs[7]*pow(log(T), 7)
+        log(kappa) = kappaLogCoeffs[0] + kappaLogCoeffs[1]*log(T)
+           + kappaLogCoeffs[2]*sqr(log(T)) + kappaLogCoeffs[3]*pow3(log(T))
+           + kappaLogCoeffs[4]*pow4(log(T)) + kappaLogCoeffs[5]*pow(log(T), 5)
+           + kappaLogCoeffs[6]*pow(log(T), 6) + kappaLogCoeffs[7]*pow(log(T), 7)
     \endverbatim
 
     The polynomial function is templated on the order of the polynomial which
@@ -46,17 +46,17 @@ Description
 
 Usage
     \table
-        Property        | Description
-        muCoeffs<8>     | Dynamic viscosity polynomial coefficients
-        kappaCoeffs<8>  | Thermal conductivity polynomial coefficients
+        Property           | Description
+        muLogCoeffs<8>     | Dynamic viscosity polynomial coefficients
+        kappaLogCoeffs<8>  | Thermal conductivity polynomial coefficients
     \endtable
 
     Example of the specification of the transport properties:
     \verbatim
     transport
     {
-        muCoeffs<8>     (1000 -0.05 0.003 0 0 0 0 0);
-        kappaCoeffs<8>  (2000 -0.15 0.023 0 0 0 0 0);
+        muLogCoeffs<8>     (1000 -0.05 0.003 0 0 0 0 0);
+        kappaLogCoeffs<8>  (2000 -0.15 0.023 0 0 0 0 0);
     }
     \endverbatim
 
@@ -117,10 +117,10 @@ class logPolynomialTransport
     // Private Data
 
         //- Dynamic viscosity polynomial coefficients [Pa.s/K^i]
-        Polynomial<PolySize> muCoeffs_;
+        Polynomial<PolySize> muLogCoeffs_;
 
         //- Thermal conductivity polynomial coefficients [W/m/K/K^i]
-        Polynomial<PolySize> kappaCoeffs_;
+        Polynomial<PolySize> kappaLogCoeffs_;
 
 
 public:

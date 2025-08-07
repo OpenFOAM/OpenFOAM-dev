@@ -32,7 +32,7 @@ License
 
 namespace Foam
 {
-namespace diameterModels
+namespace populationBalance
 {
 namespace coalescenceModels
 {
@@ -50,7 +50,7 @@ namespace coalescenceModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::diameterModels::coalescenceModels::DahnekeInterpolation::
+Foam::populationBalance::coalescenceModels::DahnekeInterpolation::
 DahnekeInterpolation
 (
     const populationBalanceModel& popBal,
@@ -87,13 +87,14 @@ DahnekeInterpolation
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::diameterModels::coalescenceModels::DahnekeInterpolation::precompute()
+void Foam::populationBalance::coalescenceModels::DahnekeInterpolation::
+precompute()
 {
     Brownian_().precompute();
 }
 
 
-void Foam::diameterModels::coalescenceModels::DahnekeInterpolation::
+void Foam::populationBalance::coalescenceModels::DahnekeInterpolation::
 addToCoalescenceRate
 (
     volScalarField::Internal& coalescenceRate,

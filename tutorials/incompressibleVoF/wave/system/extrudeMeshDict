@@ -22,13 +22,12 @@ sourcePatches   (right);
 
 flipNormals     false;
 
-nLayers         25;
-
-expansionRatio  1.09;
-
 extrudeModel
 {
     type            linearNormal;
+
+    nLayers         25;
+    expansionRatio  1.09;
 
     thickness       1500;
 }

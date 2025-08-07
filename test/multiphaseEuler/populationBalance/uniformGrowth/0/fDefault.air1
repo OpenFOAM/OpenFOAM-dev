@@ -24,7 +24,7 @@ sources
 {
     airSource
     {
-        type            uniformGrowthSizeGroup;
+        type            uniformGrowthGroupFraction;
         libs            ("libuniformGrowth.so");
     }
 }

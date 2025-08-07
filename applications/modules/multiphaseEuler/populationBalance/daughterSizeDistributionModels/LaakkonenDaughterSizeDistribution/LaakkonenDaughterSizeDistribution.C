@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ License
 
 namespace Foam
 {
-namespace diameterModels
+namespace populationBalance
 {
 namespace daughterSizeDistributionModels
 {
@@ -49,7 +49,7 @@ namespace daughterSizeDistributionModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::diameterModels::daughterSizeDistributionModels::
+Foam::populationBalance::daughterSizeDistributionModels::
 LaakkonenDaughterSizeDistribution::LaakkonenDaughterSizeDistribution
 (
     const breakupModel& breakup,
@@ -63,7 +63,7 @@ LaakkonenDaughterSizeDistribution::LaakkonenDaughterSizeDistribution
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::diameterModels::daughterSizeDistributionModels::
+Foam::populationBalance::daughterSizeDistributionModels::
 LaakkonenDaughterSizeDistribution::~LaakkonenDaughterSizeDistribution()
 {}
 
@@ -71,7 +71,7 @@ LaakkonenDaughterSizeDistribution::~LaakkonenDaughterSizeDistribution()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::dimensionedScalar
-Foam::diameterModels::daughterSizeDistributionModels::
+Foam::populationBalance::daughterSizeDistributionModels::
 LaakkonenDaughterSizeDistribution::antiderivative
 (
     const dimensionedScalar& xk,
@@ -97,21 +97,22 @@ LaakkonenDaughterSizeDistribution::antiderivative
 
 
 Foam::dimensionedScalar
-Foam::diameterModels::daughterSizeDistributionModels::
+Foam::populationBalance::daughterSizeDistributionModels::
 LaakkonenDaughterSizeDistribution::calcNik
 (
     const label i,
     const label k
 ) const
 {
-    const dimensionedScalar& x0 = breakup_.popBal().sizeGroups()[0].x();
-    dimensionedScalar xi = breakup_.popBal().sizeGroups()[i].x() - x0;
-    dimensionedScalar xk = breakup_.popBal().sizeGroups()[k].x() - x0;
-    const UPtrList<sizeGroup>& sizeGroups = breakup_.popBal().sizeGroups();
+    const populationBalanceModel& popBal = breakup_.popBal();
+
+    const dimensionedScalar& x0 = popBal.v(0);
+    const dimensionedScalar xi = popBal.v(i) - x0;
+    const dimensionedScalar xk = popBal.v(k) - x0;
 
     if (i == 0)
     {
-        dimensionedScalar xii = sizeGroups[i+1].x() - x0;
+        const dimensionedScalar xii = popBal.v(i+1) - x0;
 
         if (k == 0)
         {
@@ -119,27 +120,27 @@ LaakkonenDaughterSizeDistribution::calcNik
         }
 
         return
-            antiderivative(xk, xi, xii, (xii-xi))
-          - antiderivative(xk, xii, xii, (xii-xi));
+            antiderivative(xk, xi, xii, xii - xi)
+          - antiderivative(xk, xii, xii, xii - xi);
     }
     else if (i == k)
     {
-        dimensionedScalar x = sizeGroups[i-1].x() - x0;
+        const dimensionedScalar x = popBal.v(i-1) - x0;
 
         return
-            antiderivative(xk, xi, x, (xi-x))
-          - antiderivative(xk, x, x, (xi-x));
+            antiderivative(xk, xi, x, xi - x)
+          - antiderivative(xk, x, x, xi - x);
     }
     else
     {
-        dimensionedScalar x = sizeGroups[i-1].x() - x0;
-        dimensionedScalar xii = sizeGroups[i+1].x() - x0;
+        const dimensionedScalar x = popBal.v(i-1) - x0;
+        const dimensionedScalar xii = popBal.v(i+1) - x0;
 
         return
-            antiderivative(xk, xi, xii, (xii-xi))
-          - antiderivative(xk, xii, xii, (xii-xi))
-          + antiderivative(xk, xi, x, (xi-x))
-          - antiderivative(xk, x, x, (xi-x));
+            antiderivative(xk, xi, xii, xii - xi)
+          - antiderivative(xk, xii, xii, xii - xi)
+          + antiderivative(xk, xi, x, xi - x)
+          - antiderivative(xk, x, x, xi - x);
     }
 }
 

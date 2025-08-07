@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ Foam::word Foam::fvMeshMovers::multiValveEngine::pistonObject::pistonBowlName
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
-Foam::scalar Foam::fvMeshMovers::multiValveEngine::pistonObject::bore() const
+void Foam::fvMeshMovers::multiValveEngine::pistonObject::calculateBore()
 {
     const polyBoundaryMesh& pbm = meshMover_.mesh().boundaryMesh();
 
@@ -59,33 +59,36 @@ Foam::scalar Foam::fvMeshMovers::multiValveEngine::pistonObject::bore() const
 
     // Assuming the piston moves in the positive axis direction
     // remove the axis_ component to find the lateral extent of the piston
-    return mag
-    (
-        (pistonMax - (axis& pistonMax)*pistonMax)
-      - (pistonMin - (axis& pistonMin)*pistonMin)
-    )/sqrt(2.0);
+    pistonMax = pistonMax - (axis & pistonMax)*pistonMax;
+    pistonMin = pistonMin - (axis & pistonMin)*pistonMin;
+
+    bore_ = mag(pistonMax - pistonMin)/sqrt(2.0);
+    centre_ = (pistonMax + pistonMin)/2;
 }
 
 
-void Foam::fvMeshMovers::multiValveEngine::pistonObject::correctClearance
-(
-    pointDist& pDist
-)
+void Foam::fvMeshMovers::multiValveEngine::pistonObject::correctClearance()
 {
-    clearance_ = great;
+    const polyBoundaryMesh& pbm = meshMover_.mesh().boundaryMesh();
 
-    forAllConstIter(labelHashSet, staticPatchSet_, iter)
+    // Find the maximum and minimum coordinate of the liner patch-sets
+    scalar linerMax(-great);
+    scalar linerMin(great);
+
+    forAllConstIter(labelHashSet, meshMover_.linerPatchSet_, iter)
     {
-        const polyPatch& pp = meshMover_.mesh().boundaryMesh()[iter.key()];
-        const labelList& meshPoints = pp.meshPoints();
-
-        forAll(meshPoints, pointi)
+        const label patchi = iter.key();
+        if (pbm[patchi].localPoints().size())
         {
-            clearance_ = min(clearance_, pDist[meshPoints[pointi]]);
+            linerMax = max(linerMax, axis & max(pbm[patchi].localPoints()));
+            linerMin = min(linerMin, axis & min(pbm[patchi].localPoints()));
         }
     }
 
-    reduce(clearance_, minOp<scalar>());
+    reduce(linerMax, maxOp<scalar>());
+    reduce(linerMin, minOp<scalar>());
+
+    clearance_ = linerMax - linerMin;
 }
 
 
@@ -99,12 +102,25 @@ Foam::fvMeshMovers::multiValveEngine::pistonObject::pistonObject
 )
 :
     movingObject(name, engine, dict),
-    bore_(bore()),
     clearance_(0)
-{}
+{
+    calculateBore();
+}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+Foam::scalar Foam::fvMeshMovers::multiValveEngine::pistonObject::bore() const
+{
+    return bore_;
+}
+
+
+Foam::vector Foam::fvMeshMovers::multiValveEngine::pistonObject::centre() const
+{
+    return centre_;
+}
+
 
 Foam::scalar Foam::fvMeshMovers::multiValveEngine::pistonObject::position
 (
@@ -178,6 +194,8 @@ void Foam::fvMeshMovers::multiValveEngine::pistonObject::updatePoints
             pMesh,
             patchSet,
             movingPointZones(),
+            staticPatchSet_,
+            staticPointZones(),
             points,
             maxMotionDistance_
         );
@@ -187,12 +205,14 @@ void Foam::fvMeshMovers::multiValveEngine::pistonObject::updatePoints
             pMesh,
             staticPatchSet_,
             staticPointZones(),
+            patchSet,
+            movingPointZones(),
             points,
             maxMotionDistance_
         );
 
         // Update the clearance from the distance to piston field
-        correctClearance(pDistMoving);
+        correctClearance();
 
         calcScale
         (

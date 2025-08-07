@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,12 +29,12 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
+#ifndef interRegionModel_H
+#define interRegionModel_H
+
 #include "fvModel.H"
 #include "volFields.H"
 #include "cellsToCells.H"
-
-#ifndef interRegionModel_H
-#define interRegionModel_H
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,11 +100,11 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#include "Fickian.H"
-#include "unityLewisEddyDiffusivity.H"
-
 #ifndef FickianEddyDiffusivity_H
 #define FickianEddyDiffusivity_H
+
+#include "Fickian.H"
+#include "unityLewisEddyDiffusivity.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

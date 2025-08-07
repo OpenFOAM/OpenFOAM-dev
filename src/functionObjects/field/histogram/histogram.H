@@ -36,6 +36,7 @@ Description
         libs            ("libfieldFunctionObjects.so");
 
         field           p;
+        cellZone        all;
         nBins           100;
         min             -5;
         max             5;
@@ -48,11 +49,20 @@ Usage
         Property     | Description             | Required    | Default value
         type         | type name: histogram    | yes         |
         field        | Field to analyse        | yes         |
+        cellZone     | cellZone                | yes         |
         nBins        | Number of bins for the histogram | yes|
         max          | Maximum value sampled   | yes         |
         min          | minimum value sampled   | no          | 0
         setFormat    | Output format           | yes         |
     \endtable
+
+    Where \c cellZone options are:
+    \plaintable
+        cellZone \<name\>  | Looks-up the named cellZone
+        cellZone {type \<zoneGeneratorType\>;...} | \\
+            Generates the cellZone locally
+        cellZone all       | Selects all cells
+    \endplaintable
 
 See also
     Foam::functionObject
@@ -68,13 +78,16 @@ SourceFiles
 #define histogram_functionObject_H
 
 #include "fvMeshFunctionObject.H"
+#include "generatedCellZone.H"
 #include "writeFile.H"
-#include "setWriter.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+
+class setWriter;
+
 namespace functionObjects
 {
 
@@ -87,6 +100,9 @@ class histogram
     public fvMeshFunctionObject
 {
     // Private Data
+
+        //- The cellZone to operate on
+        generatedCellZone zone_;
 
         writeFile file_;
 
@@ -145,6 +161,21 @@ public:
         //  foamPostProcess overrides the usual writeControl behaviour and
         //  forces writing always (used in post-processing mode)
         virtual bool write();
+
+
+        // Mesh changes
+
+            //- Update for mesh motion
+            virtual void movePoints(const polyMesh&);
+
+            //- Update topology using the given map
+            virtual void topoChange(const polyTopoChangeMap&);
+
+            //- Update from another mesh using the given map
+            virtual void mapMesh(const polyMeshMap&);
+
+            //- Redistribute or update using the given distribution map
+            virtual void distribute(const polyDistributionMap&);
 
 
     // Member Operators

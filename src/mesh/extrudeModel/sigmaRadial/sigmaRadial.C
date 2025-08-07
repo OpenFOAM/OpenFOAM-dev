@@ -45,9 +45,9 @@ addToRunTimeSelectionTable(extrudeModel, sigmaRadial, dictionary);
 sigmaRadial::sigmaRadial(const dictionary& dict)
 :
     extrudeModel(dict),
-    RTbyg_(coeffDict(dict).lookup<scalar>("RTbyg")),
-    pRef_(coeffDict(dict).lookup<scalar>("pRef")),
-    pStrat_(coeffDict(dict).lookup<scalar>("pStrat"))
+    RTbyg_(dict.lookup<scalar>("RTbyg")),
+    pRef_(dict.lookup<scalar>("pRef")),
+    pStrat_(dict.lookup<scalar>("pStrat"))
 {
     if (mag(expansionRatio() - 1.0) > small)
     {

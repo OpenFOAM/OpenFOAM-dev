@@ -165,6 +165,9 @@ class phaseScalarTransport
         //- The field
         volScalarField s_;
 
+        //- The field multiplied by the phase fraction
+        autoPtr<volScalarField> alphaSPtr_;
+
         //- Potential field used to generate the phase flux
         autoPtr<volScalarField> PhiPtr_;
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,15 +22,15 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::diameterModels::daughterSizeDistributionModel
+    Foam::populationBalance::daughterSizeDistributionModel
 
 Description
     Base class for daughter size distribution models. Currently only supports
     field-independent formulations.
 
 See also
-    Foam::diameterModels::breakupModel
-    Foam::diameterModels::populationBalanceModel
+    Foam::populationBalance::breakupModel
+    Foam::populationBalanceModel
 
 SourceFiles
     daughterSizeDistributionModel.C
@@ -47,7 +47,7 @@ SourceFiles
 
 namespace Foam
 {
-namespace diameterModels
+namespace populationBalance
 {
 
 class breakupModel;
@@ -65,7 +65,7 @@ protected:
         //- Reference to the breakupModel
         const breakupModel& breakup_;
 
-        //- Contribution to sizeGroup i due to breakup in sizeGroup k
+        //- Contribution to group i due to breakup in group k
         PtrList<PtrList<dimensionedScalar>> nik_;
 
 
@@ -114,13 +114,13 @@ public:
 
     // Member Functions
 
-        //- Return contribution to sizeGroup i due to breakup in sizeGroup k
+        //- Return contribution to group i due to breakup in group k
         const dimensionedScalar& nik(const label i, const label k) const;
 
         //- Precompute field independent expressions
         void precompute();
 
-        //- Calculate contribution to sizeGroup i due to breakup in sizeGroup k
+        //- Calculate contribution to group i due to breakup in group k
         virtual dimensionedScalar calcNik
         (
             const label i,
@@ -131,7 +131,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace diameterModels
+} // End namespace populationBalance
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

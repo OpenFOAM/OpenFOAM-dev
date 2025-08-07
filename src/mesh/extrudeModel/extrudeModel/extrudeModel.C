@@ -35,10 +35,10 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::extrudeModel::extrudeModel(const dictionary& dict)
+Foam::extrudeModel::extrudeModel(const dictionary& dict, const bool single)
 :
-    nLayers_(dict.lookupOrDefault<label>("nLayers", 1)),
-    expansionRatio_(dict.lookupOrDefault<scalar>("expansionRatio", 1))
+    nLayers_(single ? 1 : dict.lookup<label>("nLayers")),
+    expansionRatio_(single ? 1 : dict.lookup<scalar>("expansionRatio"))
 {}
 
 
@@ -49,15 +49,6 @@ Foam::extrudeModel::~extrudeModel()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-const Foam::dictionary& Foam::extrudeModel::coeffDict
-(
-    const dictionary& dict
-) const
-{
-    return dict.optionalSubDict(type() + "Coeffs");
-}
-
 
 Foam::label Foam::extrudeModel::nLayers() const
 {

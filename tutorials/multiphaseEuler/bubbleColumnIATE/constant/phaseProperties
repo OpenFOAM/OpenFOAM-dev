@@ -20,13 +20,14 @@ air
 {
     type            purePhaseModel;
 
-    diameterModel   IATE;
-    IATECoeffs
+    diameterModel
     {
-        dMax 1e-2;
-        dMin 1e-4;
+        type            IATE;
 
-        residualAlpha 1e-6;
+        dMax            1e-2;
+        dMin            1e-4;
+
+        residualAlpha   1e-6;
 
         sources
         (
@@ -57,9 +58,9 @@ water
 {
     type          purePhaseModel;
 
-    diameterModel constant;
-    constantCoeffs
+    diameterModel
     {
+        type          constant;
         d               1e-4;
     }
 

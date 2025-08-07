@@ -124,9 +124,7 @@ void Foam::blockFace::write(Ostream& os, const dictionary& d) const
 
 Foam::Ostream& Foam::operator<<(Ostream& os, const blockFace& p)
 {
-    os << p.vertices_ << endl;
-
-    return os;
+    return os << p.vertices_;
 }
 
 

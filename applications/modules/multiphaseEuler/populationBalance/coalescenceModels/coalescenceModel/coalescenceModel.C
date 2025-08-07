@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ License
 
 namespace Foam
 {
-namespace diameterModels
+namespace populationBalance
 {
     defineTypeNameAndDebug(coalescenceModel, 0);
     defineRunTimeSelectionTable(coalescenceModel, dictionary);
@@ -39,8 +39,8 @@ namespace diameterModels
 
 // * * * * * * * * * * * * * * * * Selector  * * * * * * * * * * * * * * * * //
 
-Foam::autoPtr<Foam::diameterModels::coalescenceModel>
-Foam::diameterModels::coalescenceModel::New
+Foam::autoPtr<Foam::populationBalance::coalescenceModel>
+Foam::populationBalance::coalescenceModel::New
 (
     const word& type,
     const populationBalanceModel& popBal,
@@ -69,7 +69,7 @@ Foam::diameterModels::coalescenceModel::New
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::diameterModels::coalescenceModel::coalescenceModel
+Foam::populationBalance::coalescenceModel::coalescenceModel
 (
     const populationBalanceModel& popBal,
     const dictionary& dict
@@ -81,7 +81,7 @@ Foam::diameterModels::coalescenceModel::coalescenceModel
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::diameterModels::coalescenceModel::precompute()
+void Foam::populationBalance::coalescenceModel::precompute()
 {}
 
 

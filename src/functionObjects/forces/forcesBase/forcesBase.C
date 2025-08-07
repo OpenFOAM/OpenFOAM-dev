@@ -205,143 +205,6 @@ void Foam::functionObjects::forcesBase::initialise()
 }
 
 
-Foam::tmp<Foam::surfaceVectorField>
-Foam::functionObjects::forcesBase::devTau() const
-{
-    typedef incompressible::momentumTransportModel icoModel;
-    typedef compressible::momentumTransportModel cmpModel;
-    typedef phaseIncompressible::momentumTransportModel phaseIcoModel;
-    typedef phaseCompressible::momentumTransportModel phaseCmpModel;
-
-    const word& modelName = momentumTransportModel::typeName;
-    const word phaseModelName =
-        phaseName_ == word::null
-      ? word::null
-      : IOobject::groupName(momentumTransportModel::typeName, phaseName_);
-
-    if (obr_.foundObject<icoModel>(modelName))
-    {
-        const incompressible::momentumTransportModel& model =
-            obr_.lookupObject<icoModel>(modelName);
-
-        return fvc::interpolate(alpha()*rho())*model.devSigma();
-    }
-    else if (obr_.foundObject<cmpModel>(modelName))
-    {
-        const cmpModel& model =
-            obr_.lookupObject<cmpModel>(modelName);
-
-        return fvc::interpolate(alpha())*model.devTau();
-    }
-    else if (obr_.foundObject<phaseIcoModel>(phaseModelName))
-    {
-        const phaseIcoModel& model =
-            obr_.lookupObject<phaseIcoModel>(phaseModelName);
-
-        return fvc::interpolate(rho())*model.devSigma();
-    }
-    else if (obr_.foundObject<phaseCmpModel>(phaseModelName))
-    {
-        const phaseCmpModel& model =
-            obr_.lookupObject<phaseCmpModel>(phaseModelName);
-
-        return model.devTau();
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "No valid model for viscous stress calculation"
-            << exit(FatalError);
-
-        return surfaceVectorField::null();
-    }
-}
-
-
-Foam::tmp<Foam::volScalarField> Foam::functionObjects::forcesBase::mu() const
-{
-    typedef incompressible::momentumTransportModel icoModel;
-    typedef compressible::momentumTransportModel cmpModel;
-    typedef phaseIncompressible::momentumTransportModel phaseIcoModel;
-    typedef phaseCompressible::momentumTransportModel phaseCmpModel;
-
-    const word& modelName = momentumTransportModel::typeName;
-    const word phaseModelName =
-        phaseName_ == word::null
-      ? word::null
-      : IOobject::groupName(momentumTransportModel::typeName, phaseName_);
-
-    if (obr_.foundObject<icoModel>(modelName))
-    {
-        const incompressible::momentumTransportModel& model =
-            obr_.lookupObject<icoModel>(modelName);
-
-        return rho()*model.nu();
-    }
-    else if (obr_.foundObject<cmpModel>(modelName))
-    {
-        const cmpModel& model =
-            obr_.lookupObject<cmpModel>(modelName);
-
-        return model.rho()*model.nu();
-    }
-    else if (obr_.foundObject<phaseIcoModel>(phaseModelName))
-    {
-        const phaseIcoModel& model =
-            obr_.lookupObject<phaseIcoModel>(phaseModelName);
-
-        return rho()*model.nu();
-    }
-    else if (obr_.foundObject<phaseCmpModel>(phaseModelName))
-    {
-        const phaseCmpModel& model =
-            obr_.lookupObject<phaseCmpModel>(phaseModelName);
-
-        return model.rho()*model.nu();
-    }
-    else if (obr_.foundObject<dictionary>("physicalProperties"))
-    {
-        // Legacy support for icoFoam
-
-        const dictionary& physicalProperties =
-             obr_.lookupObject<dictionary>("physicalProperties");
-
-        const dimensionedScalar nu
-        (
-            "nu",
-            dimKinematicViscosity,
-            physicalProperties.lookup("nu")
-        );
-
-        return rho()*nu;
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "No valid model for dynamic viscosity calculation"
-            << exit(FatalError);
-
-        return volScalarField::null();
-    }
-}
-
-
-Foam::tmp<Foam::volScalarField> Foam::functionObjects::forcesBase::rho() const
-{
-    if (rhoName_ == "rhoInf")
-    {
-        return volScalarField::New
-        (
-            "rho",
-            mesh_,
-            dimensionedScalar(dimDensity, rhoRef_)
-        );
-    }
-    else
-    {
-        return(obr_.lookupObject<volScalarField>(rhoName_));
-    }
-}
 
 
 Foam::scalar Foam::functionObjects::forcesBase::rho
@@ -774,6 +637,144 @@ bool Foam::functionObjects::forcesBase::read(const dictionary& dict)
     resetNames(createFileNames(dict));
 
     return true;
+}
+
+Foam::tmp<Foam::surfaceVectorField>
+Foam::functionObjects::forcesBase::devTau() const
+{
+    typedef incompressible::momentumTransportModel icoModel;
+    typedef compressible::momentumTransportModel cmpModel;
+    typedef phaseIncompressible::momentumTransportModel phaseIcoModel;
+    typedef phaseCompressible::momentumTransportModel phaseCmpModel;
+
+    const word& modelName = momentumTransportModel::typeName;
+    const word phaseModelName =
+        phaseName_ == word::null
+      ? word::null
+      : IOobject::groupName(momentumTransportModel::typeName, phaseName_);
+
+    if (obr_.foundObject<icoModel>(modelName))
+    {
+        const incompressible::momentumTransportModel& model =
+            obr_.lookupObject<icoModel>(modelName);
+
+        return fvc::interpolate(alpha()*rho())*model.devSigma();
+    }
+    else if (obr_.foundObject<cmpModel>(modelName))
+    {
+        const cmpModel& model =
+            obr_.lookupObject<cmpModel>(modelName);
+
+        return fvc::interpolate(alpha())*model.devTau();
+    }
+    else if (obr_.foundObject<phaseIcoModel>(phaseModelName))
+    {
+        const phaseIcoModel& model =
+            obr_.lookupObject<phaseIcoModel>(phaseModelName);
+
+        return fvc::interpolate(rho())*model.devSigma();
+    }
+    else if (obr_.foundObject<phaseCmpModel>(phaseModelName))
+    {
+        const phaseCmpModel& model =
+            obr_.lookupObject<phaseCmpModel>(phaseModelName);
+
+        return model.devTau();
+    }
+    else
+    {
+        FatalErrorInFunction
+            << "No valid model for viscous stress calculation"
+            << exit(FatalError);
+
+        return surfaceVectorField::null();
+    }
+}
+
+
+Foam::tmp<Foam::volScalarField> Foam::functionObjects::forcesBase::mu() const
+{
+    typedef incompressible::momentumTransportModel icoModel;
+    typedef compressible::momentumTransportModel cmpModel;
+    typedef phaseIncompressible::momentumTransportModel phaseIcoModel;
+    typedef phaseCompressible::momentumTransportModel phaseCmpModel;
+
+    const word& modelName = momentumTransportModel::typeName;
+    const word phaseModelName =
+        phaseName_ == word::null
+      ? word::null
+      : IOobject::groupName(momentumTransportModel::typeName, phaseName_);
+
+    if (obr_.foundObject<icoModel>(modelName))
+    {
+        const incompressible::momentumTransportModel& model =
+            obr_.lookupObject<icoModel>(modelName);
+
+        return rho()*model.nu();
+    }
+    else if (obr_.foundObject<cmpModel>(modelName))
+    {
+        const cmpModel& model =
+            obr_.lookupObject<cmpModel>(modelName);
+
+        return model.rho()*model.nu();
+    }
+    else if (obr_.foundObject<phaseIcoModel>(phaseModelName))
+    {
+        const phaseIcoModel& model =
+            obr_.lookupObject<phaseIcoModel>(phaseModelName);
+
+        return rho()*model.nu();
+    }
+    else if (obr_.foundObject<phaseCmpModel>(phaseModelName))
+    {
+        const phaseCmpModel& model =
+            obr_.lookupObject<phaseCmpModel>(phaseModelName);
+
+        return model.rho()*model.nu();
+    }
+    else if (obr_.foundObject<dictionary>("physicalProperties"))
+    {
+        // Legacy support for icoFoam
+
+        const dictionary& physicalProperties =
+             obr_.lookupObject<dictionary>("physicalProperties");
+
+        const dimensionedScalar nu
+        (
+            "nu",
+            dimKinematicViscosity,
+            physicalProperties.lookup("nu")
+        );
+
+        return rho()*nu;
+    }
+    else
+    {
+        FatalErrorInFunction
+            << "No valid model for dynamic viscosity calculation"
+            << exit(FatalError);
+
+        return volScalarField::null();
+    }
+}
+
+
+Foam::tmp<Foam::volScalarField> Foam::functionObjects::forcesBase::rho() const
+{
+    if (rhoName_ == "rhoInf")
+    {
+        return volScalarField::New
+        (
+            "rho",
+            mesh_,
+            dimensionedScalar(dimDensity, rhoRef_)
+        );
+    }
+    else
+    {
+        return(obr_.lookupObject<volScalarField>(rhoName_));
+    }
 }
 
 

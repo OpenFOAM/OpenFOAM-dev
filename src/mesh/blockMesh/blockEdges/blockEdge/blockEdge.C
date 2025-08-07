@@ -146,10 +146,11 @@ Foam::blockEdge::position(const scalarList& lambdas) const
 
 void Foam::blockEdge::write(Ostream& os, const dictionary& d) const
 {
+    os << token::BEGIN_LIST;
     blockVertex::write(os, start_, d);
-    os << tab;
+    os << token::SPACE;
     blockVertex::write(os, end_, d);
-    os << endl;
+    os << token::END_LIST;
 }
 
 
@@ -157,9 +158,12 @@ void Foam::blockEdge::write(Ostream& os, const dictionary& d) const
 
 Foam::Ostream& Foam::operator<<(Ostream& os, const blockEdge& p)
 {
-    os << p.start_ << tab << p.end_ << endl;
-
-    return os;
+    return os
+        << token::BEGIN_LIST
+        << p.start_
+        << token::SPACE
+        << p.end_
+        << token::END_LIST;
 }
 
 

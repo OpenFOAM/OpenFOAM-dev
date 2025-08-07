@@ -60,13 +60,6 @@ protected:
         const scalar expansionRatio_;
 
 
-    // Protected Member Functions
-
-        //- Backward compatibility function
-        // to return the model Coeffs dictionary
-        const dictionary& coeffDict(const dictionary& dict) const;
-
-
 public:
 
     //- Runtime type information
@@ -89,7 +82,7 @@ public:
     // Constructors
 
         //- Construct from dictionary
-        extrudeModel(const dictionary&);
+        extrudeModel(const dictionary&, const bool single = false);
 
         //- Disallow default bitwise copy construction
         extrudeModel(const extrudeModel&) = delete;

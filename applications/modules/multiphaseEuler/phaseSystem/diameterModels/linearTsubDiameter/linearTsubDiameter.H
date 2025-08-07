@@ -26,7 +26,7 @@ Class
 
 Description
     Vapour bubble diameter model for modelling of condensation of vapour
-    bubbles. Calculates bubble diameter as a function of liquid phase
+    bubbles. Calculates bubble diameter as a linear function of liquid phase
     subcooling.
 
     Reference:

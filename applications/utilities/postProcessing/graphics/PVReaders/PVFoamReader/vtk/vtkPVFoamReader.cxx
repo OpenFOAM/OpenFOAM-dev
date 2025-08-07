@@ -281,7 +281,6 @@ vtkPVFoamReader::~vtkPVFoamReader()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-// Do everything except set the output info
 int vtkPVFoamReader::RequestInformation
 (
     vtkInformation* vtkNotUsed(request),
@@ -333,7 +332,6 @@ int vtkPVFoamReader::RequestInformation
 }
 
 
-// Set the output info
 int vtkPVFoamReader::RequestData
 (
     vtkInformation* vtkNotUsed(request),
@@ -499,18 +497,11 @@ void vtkPVFoamReader::PrintSelf(ostream& os, vtkIndent indent)
     vtkDebugMacro(<<"PrintSelf");
 
     this->Superclass::PrintSelf(os,indent);
+
     os  << indent << "File name: "
         << (this->FileName ? this->FileName : "(none)") << "\n";
 
     foamData_->PrintSelf(os, indent);
-
-    os  << indent << "Time step: " << this->GetTimeStep() << endl;
-}
-
-
-int vtkPVFoamReader::GetTimeStep()
-{
-    return foamData_ ? foamData_->timeIndex() : -1;
 }
 
 

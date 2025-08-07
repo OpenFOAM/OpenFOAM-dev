@@ -42,7 +42,7 @@ sources
 {
     reactionDrivenPhaseChange
     {
-        type                distributionSizeGroup;
+        type                distributionGroupFraction;
         distribution
         {
             type                fixedValue;
@@ -52,7 +52,7 @@ sources
 
     surfaceReactionDrivenPhaseChange
     {
-        type                interfacialGrowthSizeGroup;
+        type                interfacialGrowthGroupFraction;
     }
 }
 

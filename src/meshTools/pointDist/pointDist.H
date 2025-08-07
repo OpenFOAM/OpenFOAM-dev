@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,11 +58,17 @@ class pointDist
         //- Reference to pointField
         const pointField& points_;
 
-        //- Set of patch IDs
-        const labelHashSet patchIndices_;
+        //- Set of start patch IDs for which the distance is 0
+        const labelHashSet startPatchIDs_;
 
-        //- Set of pointZone IDs for which the distance is 0
-        const labelHashSet zoneIndices_;
+        //- Set of start pointZone IDs for which the distance is 0
+        const labelHashSet startZoneIDs_;
+
+        //- Set of end patch IDs for which the distance is great
+        const labelHashSet endPatchIDs_;
+
+        //- Set of end pointZone IDs for which the distance is great
+        const labelHashSet endZoneIDs_;
 
         //- Maximum distance at which the point-edge wave is stopped
         const scalar maxDist_;
@@ -72,23 +78,26 @@ public:
 
     // Constructors
 
-        //- Construct from mesh and set of patches and points
+        //- Construct from mesh and set of start patches
+        //  for which the distance is 0 and points
         pointDist
         (
             const pointMesh& pMesh,
-            const labelHashSet& patchIDs,
+            const labelHashSet& startPatchIDs,
             const pointField& points,
             const scalar maxDist = rootVGreat
         );
 
-        //- Construct from mesh, set of patches,
-        //  set of pointZones for which the distance is 0
+        //- Construct from mesh, set of start patches and pointZones
+        //  for which the distance is 0
         //  and points
         pointDist
         (
             const pointMesh& pMesh,
-            const labelHashSet& patchIDs,
-            const labelHashSet& zoneIDs,
+            const labelHashSet& startPatchIDs,
+            const labelHashSet& startZoneIDs,
+            const labelHashSet& endPatchIDs,
+            const labelHashSet& endZoneIDs,
             const pointField& points,
             const scalar maxDist = rootVGreat
         );

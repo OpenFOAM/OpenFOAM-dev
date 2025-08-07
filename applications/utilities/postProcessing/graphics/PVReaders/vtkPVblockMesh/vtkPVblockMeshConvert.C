@@ -47,6 +47,10 @@ void Foam::vtkPVblockMesh::convertMeshBlocks
     int& blockNo
 )
 {
+    DebugInFunction;
+
+    if (!meshPtr_.valid()) return;
+
     vtkDataArraySelection* selection = reader_->GetBlockSelection();
     arrayRange& range = arrayRangeBlocks_;
     range.block(blockNo);   // Set output block
@@ -117,6 +121,10 @@ void Foam::vtkPVblockMesh::convertMeshEdges
     int& blockNo
 )
 {
+    DebugInFunction;
+
+    if (!meshPtr_.valid()) return;
+
     vtkDataArraySelection* selection = reader_->GetCurvedEdgesSelection();
     arrayRange& range = arrayRangeEdges_;
 
@@ -213,6 +221,10 @@ void Foam::vtkPVblockMesh::convertMeshCorners
     int& blockNo
 )
 {
+    DebugInFunction;
+
+    if (!meshPtr_.valid()) return;
+
     arrayRange& range = arrayRangeCorners_;
     range.block(blockNo);      // Set output block
     label datasetNo = 0;       // Restart at dataset 0

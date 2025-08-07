@@ -176,7 +176,7 @@ void Foam::OldTimeField<FieldType>::copyOldTimes
     const OtherOldTime<OtherPrimitiveField>& otf
 )
 {
-    if (otf.tfield0_.valid() && notNull(otf.tfield0_()))
+    if (otf.tfield0_.valid() && otf.tfield0_.isTmp() && notNull(otf.tfield0_()))
     {
         tfield0_ = new Field0Type(newName + "_0", otf.tfield0_());
         setBase();
@@ -200,7 +200,7 @@ Foam::OldTimeField<FieldType>::OldTimeField(const OldTimeField<FieldType>& otf)
     timeIndex_(otf.timeIndex_),
     tfield0_(nullptr)
 {
-    if (otf.tfield0_.valid() && notNull(otf.tfield0_()))
+    if (otf.tfield0_.valid() && otf.tfield0_.isTmp() && notNull(otf.tfield0_()))
     {
         tfield0_ = new Field0Type(otf.tfield0_());
         setBase();
@@ -214,7 +214,7 @@ Foam::OldTimeField<FieldType>::OldTimeField(OldTimeField<FieldType>&& otf)
     timeIndex_(otf.timeIndex_),
     tfield0_(nullptr)
 {
-    if (otf.tfield0_.valid() && notNull(otf.tfield0_()))
+    if (otf.tfield0_.valid() && otf.tfield0_.isTmp() && notNull(otf.tfield0_()))
     {
         tfield0_ = tmp<Field0Type>(move(otf.tfield0_));
         setBase();

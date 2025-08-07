@@ -31,7 +31,7 @@ License
 
 namespace Foam
 {
-namespace diameterModels
+namespace populationBalance
 {
 namespace breakupModels
 {
@@ -49,7 +49,7 @@ namespace breakupModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::diameterModels::breakupModels::Laakkonen::
+Foam::populationBalance::breakupModels::Laakkonen::
 Laakkonen
 (
     const populationBalanceModel& popBal,
@@ -65,17 +65,18 @@ Laakkonen
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::diameterModels::breakupModels::Laakkonen::setBreakupRate
+void Foam::populationBalance::breakupModels::Laakkonen::setBreakupRate
 (
     volScalarField::Internal& breakupRate,
     const label i
 )
 {
-    const sizeGroup& fi = popBal_.sizeGroups()[i];
+    const dimensionedScalar& dSphi = popBal_.dSph(i);
 
     const volScalarField::Internal& rhoc = popBal_.continuousPhase().rho();
+    const volScalarField::Internal& rhod = popBal_.phases()[i].rho();
 
-    tmp<volScalarField> tsigma(popBal_.sigmaWithContinuousPhase(fi.phase()));
+    tmp<volScalarField> tsigma(popBal_.sigmaWithContinuousPhase(i));
     const volScalarField::Internal& sigma = tsigma();
 
     tmp<volScalarField> tepsilonc(popBal_.continuousTurbulence().epsilon());
@@ -93,15 +94,15 @@ void Foam::diameterModels::breakupModels::Laakkonen::setBreakupRate
                 C2_
                *sigma
                /(
-                   rhoc*pow(fi.dSph(), 5.0/3.0)
+                   rhoc*pow(dSphi, 5.0/3.0)
                   *pow(epsilonc, 2.0/3.0)
                 )
               + C3_
                *muc
                /(
-                    sqrt(rhoc*fi.phase().rho())
+                    sqrt(rhoc*rhod)
                    *cbrt(epsilonc)
-                   *pow(fi.dSph(), 4.0/3.0)
+                   *pow(dSphi, 4.0/3.0)
                 )
             )
         );
