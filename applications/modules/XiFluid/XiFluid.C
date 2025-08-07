@@ -72,6 +72,18 @@ Foam::solvers::XiFluid::XiFluid(fvMesh& mesh)
         )
     ),
 
+    bMin_
+    (
+        combustionProperties.subDict("flameWrinkling")
+       .lookupOrDefault("bMin", 1e-3)
+    ),
+
+    mgbCoeff_
+    (
+        combustionProperties.subDict("flameWrinkling")
+       .lookupOrDefault("mgbCoeff", 1e-3)
+    ),
+
     SuModel_
     (
         SuModel::New
@@ -98,9 +110,6 @@ Foam::solvers::XiFluid::XiFluid(fvMesh& mesh)
     Su(SuModel_->Su()),
     Xi(XiModel_->Xi())
 {
-    bMin_ = combustionProperties.lookupOrDefault("bMin", 1e-3);
-    mgbCoeff_ = combustionProperties.lookupOrDefault("mgbCoeff", 1e-3);
-
     thermo.validate(type(), "ha", "ea");
 
     if (thermo_.containsSpecie("ft"))
