@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,26 +93,26 @@ void Foam::fv::phaseTurbulenceStabilisation::addAlphaRhoSup
     {
         if (movingPhases[phasei] != phase_)
         {
-            const phaseCompressible::momentumTransportModel& turbulence =
+            const phaseCompressible::momentumTransportModel& otherTurbulence =
                 mesh.lookupType<phaseCompressible::momentumTransportModel>
                 (
-                    phaseName_
+                    movingPhases[phasei].name()
                 );
 
-            if (notNull(turbulence))
+            if (notNull(otherTurbulence))
             {
                 const volScalarField::Internal phaseTransferRate
                 (
                     movingPhases[phasei]
                    *min
                     (
-                        turbulence.epsilon()/turbulence.k(),
+                        otherTurbulence.epsilon()/otherTurbulence.k(),
                         1.0/phase_.time().deltaT()
                     )
                 );
 
                 transferRate += phaseTransferRate;
-                psiTransferRate += phaseTransferRate*(turbulence.*psi)()();
+                psiTransferRate += phaseTransferRate*(otherTurbulence.*psi)()();
             }
         }
     }
