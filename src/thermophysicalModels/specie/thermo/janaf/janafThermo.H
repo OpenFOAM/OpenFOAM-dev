@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,8 +28,8 @@ Description
     Enthalpy based thermodynamics package using JANAF tables:
 
     \verbatim
-        Cp = (((a4*T + a3)*T + a2)*T + a1)*T + a0
-        ha = ((((a4/5*T + a3/4)*T + a2/3)*T + a1/2)*T + a0)*T + a5
+        Cp/R = (((a4*T + a3)*T + a2)*T + a1)*T + a0
+        ha/R = ((((a4/5*T + a3/4)*T + a2/3)*T + a1/2)*T + a0)*T + a5
     \endverbatim
 
 Usage
