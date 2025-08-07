@@ -75,9 +75,6 @@ Foam::XiProfiles::linear::~linear()
 
 Foam::tmp<Foam::volScalarField> Foam::XiProfiles::linear::profile() const
 {
-    // For rhou/rhob-1 = 2.72 use 0.515
-    // For rhou/rhob-1 = 5.27 use 0.53
-    // For rhou/rhob-1 = 10.22 use 0.55
     return 1 + (2*XiShapeCoeff_)*(0.5 - b_);
 }
 
