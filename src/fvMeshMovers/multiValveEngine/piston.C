@@ -67,25 +67,28 @@ void Foam::fvMeshMovers::multiValveEngine::pistonObject::calculateBore()
 }
 
 
-void Foam::fvMeshMovers::multiValveEngine::pistonObject::correctClearance
-(
-    pointDist& pDist
-)
+void Foam::fvMeshMovers::multiValveEngine::pistonObject::correctClearance()
 {
-    clearance_ = great;
+    const polyBoundaryMesh& pbm = meshMover_.mesh().boundaryMesh();
 
-    forAllConstIter(labelHashSet, staticPatchSet_, iter)
+    // Find the maximum and minimum coordinate of the liner patch-sets
+    scalar linerMax(-great);
+    scalar linerMin(great);
+
+    forAllConstIter(labelHashSet, meshMover_.linerPatchSet_, iter)
     {
-        const polyPatch& pp = meshMover_.mesh().boundaryMesh()[iter.key()];
-        const labelList& meshPoints = pp.meshPoints();
-
-        forAll(meshPoints, pointi)
+        const label patchi = iter.key();
+        if (pbm[patchi].localPoints().size())
         {
-            clearance_ = min(clearance_, pDist[meshPoints[pointi]]);
+            linerMax = max(linerMax, axis & max(pbm[patchi].localPoints()));
+            linerMin = min(linerMin, axis & min(pbm[patchi].localPoints()));
         }
     }
 
-    reduce(clearance_, minOp<scalar>());
+    reduce(linerMax, maxOp<scalar>());
+    reduce(linerMin, minOp<scalar>());
+
+    clearance_ = linerMax - linerMin;
 }
 
 
@@ -209,7 +212,7 @@ void Foam::fvMeshMovers::multiValveEngine::pistonObject::updatePoints
         );
 
         // Update the clearance from the distance to piston field
-        correctClearance(pDistMoving);
+        correctClearance();
 
         calcScale
         (

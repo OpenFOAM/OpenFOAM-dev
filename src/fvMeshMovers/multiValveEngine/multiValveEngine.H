@@ -398,9 +398,8 @@ public:
             //  calculated from the lateral extent of the piston
             void calculateBore();
 
-            //- Calculate clearance estimate based on minimum distance
-            //  between piston and any other patch excluding slidingPatches.
-            void correctClearance(pointDist&);
+            //- Calculate clearance from the liner extent
+            void correctClearance();
 
 
     public:
