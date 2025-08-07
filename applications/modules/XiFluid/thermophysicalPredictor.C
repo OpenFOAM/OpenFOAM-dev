@@ -201,35 +201,39 @@ void Foam::solvers::XiFluid::bSolve
     const dimensionedScalar dMgb
     (
         "dMgb",
-        1.0e-3*
+        mgbCoeff_*
         (b*c*mgb)().weightedAverage(mesh.V())
        /((b*c)().weightedAverage(mesh.V()) + small)
       + dimensionedScalar(mgb.dimensions(), small)
     );
 
-    mgb += dMgb;
+    // Stabilise mgb for division here and sub-models
+    mgb = max(mgb, dMgb);
 
     const surfaceVectorField SfHat(mesh.Sf()/mesh.magSf());
     surfaceVectorField nfVec(fvc::interpolate(n));
     nfVec += SfHat*(fvc::snGrad(b) - (SfHat & nfVec));
-    nfVec /= (mag(nfVec) + dMgb);
-    surfaceScalarField nf("nf", mesh.Sf() & nfVec);
+    nfVec /= max(mag(nfVec), dMgb);
+    const surfaceScalarField nf("nf", mesh.Sf() & nfVec);
     n /= mgb;
 
-    // Ignition corrected Xi
-    const volScalarField XiCorr(this->XiCorr(Xi, nf, dMgb));
+    // Ignition corrected Xi*Su
+    const volScalarField SuXiCorr(Su*this->XiCorr(Xi, nf, dMgb));
 
     // Turbulent flame speed volumetric flux
-    const surfaceScalarField phivSt("phivSt", fvc::interpolate(Su*XiCorr)*nf);
+    const surfaceScalarField phivSt("phivSt", fvc::interpolate(SuXiCorr)*nf);
 
     // Turbulent flame speed mass flux
-    const surfaceScalarField phiSt("phiSt", fvc::interpolate(rhou)*phivSt);
+    const surfaceScalarField phiSt("phiSt", fvc::interpolate(rhou*SuXiCorr)*nf);
+
+    const dimensionedScalar mgbStab(2*dMgb/bMin_/mgbCoeff_);
 
     fvScalarMatrix bSourceEqn
     (
         fvModels().source(rho, b)
       - fvm::div(phiSt, b)
       + fvm::Sp(fvc::div(phiSt), b)
+      - fvm::Sp(rhou*Su*Xi*mgbStab*max(bMin_ - b, scalar(0)), b)
     );
 
     // Create b equation

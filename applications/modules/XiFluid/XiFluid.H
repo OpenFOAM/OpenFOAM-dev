@@ -142,6 +142,17 @@ class XiFluid
 :
     public isothermalFluid
 {
+    // Private member data
+
+        //- Minimum b below which a numerical compensation burn-out term
+        //  is applied to ensure b -> 0 and the flame speed is correct.
+        //  Defaults to 1e-3
+        scalar bMin_;
+
+        //- |grad(b)| division stabilisation coefficient.
+        //  Defaults to 1e-3
+        scalar mgbCoeff_;
+
 
 protected:
 
