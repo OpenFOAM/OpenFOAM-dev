@@ -740,7 +740,10 @@ void Foam::faceZone::swap(faceZone& fz)
 
 void Foam::faceZone::topoChange(const polyTopoChangeMap& map)
 {
-    if (!topoUpdate_)
+    // topoChange update of generated zones is necessary
+    // as part of redistribution which uses topoChange
+    // to add meshes
+    // if (!topoUpdate_)
     {
         clearAddressing();
 

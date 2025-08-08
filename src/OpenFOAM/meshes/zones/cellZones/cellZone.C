@@ -52,7 +52,10 @@ bool Foam::cellZone::checkDefinition(const bool report) const
 
 void Foam::cellZone::topoChange(const polyTopoChangeMap& map)
 {
-    if (!topoUpdate_)
+    // topoChange update of generated zones is necessary
+    // as part of redistribution which uses topoChange
+    // to add meshes
+    // if (!topoUpdate_)
     {
         Zone::topoChange(map.cellMap(), map.reverseCellMap());
     }

@@ -105,7 +105,10 @@ bool Foam::pointZone::checkParallelSync(const bool report) const
 
 void Foam::pointZone::topoChange(const polyTopoChangeMap& map)
 {
-    if (!topoUpdate_)
+    // topoChange update of generated zones is necessary
+    // as part of redistribution which uses topoChange
+    // to add meshes
+    // if (!topoUpdate_)
     {
         Zone::topoChange(map.pointMap(), map.reversePointMap());
     }
