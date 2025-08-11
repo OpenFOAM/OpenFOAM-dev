@@ -17,11 +17,15 @@ solvers
 {
     "alpha.water.*"
     {
-        nAlphaCorr      2;
-        nAlphaSubCycles 1;
+        nCorrectors     2;
+        nSubCycles      1;
 
         MULESCorr       yes;
-        nLimiterIter    5;
+
+        MULES
+        {
+            nIter           5;
+        }
 
         solver          smoothSolver;
         smoother        symGaussSeidel;
