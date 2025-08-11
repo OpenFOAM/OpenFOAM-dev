@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ SourceFiles
 #define list_fvMeshTopoChanger_H
 
 #include "fvMeshTopoChanger.H"
-#include "PtrDictionary.H"
+#include "PtrListDictionary.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -55,7 +55,7 @@ class list
 {
     // Private Data
 
-        PtrDictionary<fvMeshTopoChanger> list_;
+        PtrListDictionary<fvMeshTopoChanger> list_;
 
 
 public:

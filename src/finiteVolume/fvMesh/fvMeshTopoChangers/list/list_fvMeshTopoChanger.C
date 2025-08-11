@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,7 +44,8 @@ namespace fvMeshTopoChangers
 
 Foam::fvMeshTopoChangers::list::list(fvMesh& mesh, const dictionary& dict)
 :
-    fvMeshTopoChanger(mesh)
+    fvMeshTopoChanger(mesh),
+    list_(0)
 {
     const dictionary& solversDict = dict.subDict("topoChangers");
 
@@ -55,7 +56,7 @@ Foam::fvMeshTopoChangers::list::list(fvMesh& mesh, const dictionary& dict)
             const word& name = iter().keyword();
             const dictionary& dict = iter().dict();
 
-            list_.insert
+            list_.append
             (
                 name,
                 fvMeshTopoChanger::New(mesh, dict).ptr()
@@ -77,7 +78,7 @@ bool Foam::fvMeshTopoChangers::list::update()
 {
     bool updated = false;
 
-    forAllIter(PtrDictionary<fvMeshTopoChanger>, list_, iter)
+    forAllIter(PtrListDictionary<fvMeshTopoChanger>, list_, iter)
     {
         updated = iter().update() || updated;
         mesh().topoChanged_ = updated;
@@ -89,7 +90,7 @@ bool Foam::fvMeshTopoChangers::list::update()
 
 void Foam::fvMeshTopoChangers::list::topoChange(const polyTopoChangeMap& map)
 {
-    forAllIter(PtrDictionary<fvMeshTopoChanger>, list_, iter)
+    forAllIter(PtrListDictionary<fvMeshTopoChanger>, list_, iter)
     {
         iter().topoChange(map);
     }
@@ -98,7 +99,7 @@ void Foam::fvMeshTopoChangers::list::topoChange(const polyTopoChangeMap& map)
 
 void Foam::fvMeshTopoChangers::list::mapMesh(const polyMeshMap& map)
 {
-    forAllIter(PtrDictionary<fvMeshTopoChanger>, list_, iter)
+    forAllIter(PtrListDictionary<fvMeshTopoChanger>, list_, iter)
     {
         iter().mapMesh(map);
     }
@@ -110,7 +111,7 @@ void Foam::fvMeshTopoChangers::list::distribute
     const polyDistributionMap& map
 )
 {
-    forAllIter(PtrDictionary<fvMeshTopoChanger>, list_, iter)
+    forAllIter(PtrListDictionary<fvMeshTopoChanger>, list_, iter)
     {
         iter().distribute(map);
     }

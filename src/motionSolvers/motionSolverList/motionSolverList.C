@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,8 @@ Foam::motionSolverList::motionSolverList
     const dictionary& dict
 )
 :
-    motionSolver(name, mesh, typeName)
+    motionSolver(name, mesh, typeName),
+    motionSolvers_(0)
 {
     const dictionary& solversDict = dict.subDict("solvers");
 
@@ -61,7 +62,7 @@ Foam::motionSolverList::motionSolverList
             const word& name = iter().keyword();
             const dictionary& dict = iter().dict();
 
-            motionSolvers_.insert
+            motionSolvers_.append
             (
                 name,
                 motionSolver::New(name, mesh, dict).ptr()
@@ -86,7 +87,7 @@ Foam::tmp<Foam::pointField> Foam::motionSolverList::curPoints() const
         // Accumulated displacement
         pointField disp(mesh().nPoints(), Zero);
 
-        forAllConstIter(PtrDictionary<motionSolver>, motionSolvers_, iter)
+        forAllConstIter(PtrListDictionary<motionSolver>, motionSolvers_, iter)
         {
             disp += iter().curPoints() - mesh().points();
         }
@@ -102,7 +103,7 @@ Foam::tmp<Foam::pointField> Foam::motionSolverList::curPoints() const
 
 void Foam::motionSolverList::solve()
 {
-    forAllIter(PtrDictionary<motionSolver>, motionSolvers_, iter)
+    forAllIter(PtrListDictionary<motionSolver>, motionSolvers_, iter)
     {
         iter().solve();
     }
@@ -111,7 +112,7 @@ void Foam::motionSolverList::solve()
 
 void Foam::motionSolverList::topoChange(const polyTopoChangeMap& map)
 {
-    forAllIter(PtrDictionary<motionSolver>, motionSolvers_, iter)
+    forAllIter(PtrListDictionary<motionSolver>, motionSolvers_, iter)
     {
         iter().topoChange(map);
     }
@@ -120,7 +121,7 @@ void Foam::motionSolverList::topoChange(const polyTopoChangeMap& map)
 
 void Foam::motionSolverList::mapMesh(const polyMeshMap& map)
 {
-    forAllIter(PtrDictionary<motionSolver>, motionSolvers_, iter)
+    forAllIter(PtrListDictionary<motionSolver>, motionSolvers_, iter)
     {
         iter().mapMesh(map);
     }
@@ -132,7 +133,7 @@ void Foam::motionSolverList::distribute
     const polyDistributionMap& map
 )
 {
-    forAllIter(PtrDictionary<motionSolver>, motionSolvers_, iter)
+    forAllIter(PtrListDictionary<motionSolver>, motionSolvers_, iter)
     {
         iter().distribute(map);
     }
@@ -141,7 +142,7 @@ void Foam::motionSolverList::distribute
 
 void Foam::motionSolverList::movePoints(const pointField& points)
 {
-    forAllIter(PtrDictionary<motionSolver>, motionSolvers_, iter)
+    forAllIter(PtrListDictionary<motionSolver>, motionSolvers_, iter)
     {
         iter().movePoints(points);
     }
