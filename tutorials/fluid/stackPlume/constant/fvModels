@@ -9,18 +9,11 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    location    "system/Lagrangian/cloud";
-    object      LagrangianSolution;
+    location    "constant";
+    object      fvModels;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-outerCorrectors off;
+#includeModel parcelCloud(name=cloud)
 
-maxTimeStepFraction 0.3;
-
-maxCellLengthScaleFraction 0.3;
-
-nCorrectors     0;
-
-
-// ************************************************************************* //
+//************************************************************************ //

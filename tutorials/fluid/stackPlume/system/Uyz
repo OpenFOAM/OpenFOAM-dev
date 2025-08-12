@@ -25,7 +25,7 @@ codeWrite
     volVectorField Uyz
     (
         "Uyz",
-        I - sqr(vector(1, 0, 0)) & mesh().lookupObject<volVectorField>("U")
+        (I - sqr(vector(1, 0, 0))) & mesh().lookupObject<volVectorField>("U")
     );
 
     Uyz.write();

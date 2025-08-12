@@ -25,6 +25,7 @@ SpSchemes
 {
     default     none;
     Sp(D,U)     implicit;
+    Sp(D,Uc)    explicit;
 }
 
 averagingSchemes
@@ -37,7 +38,9 @@ interpolationSchemes
 }
 
 accumulationSchemes
-{}
+{
+    ".*"        cellPoint;
+}
 
 
 // ************************************************************************* //

@@ -18,12 +18,4 @@ FoamFile
 #includeFunc Uyz
 #includeFunc patchIntegrate(name=sumFlueGas, patch=ground, flueGas)
 
-cloud
-{
-    type           parcelCloud;
-    libs           ("libLagrangianCloud.so");
-    executeControl timeStep;
-    writeControl   writeTime;
-}
-
 // ************************************************************************* //
