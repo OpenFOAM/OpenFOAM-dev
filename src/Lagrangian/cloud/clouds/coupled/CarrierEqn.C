@@ -83,7 +83,7 @@ void Foam::operator+=
     if (cEqn.Sp.valid())
     {
         fvEqn.dimensions() +=
-            cEqn.Sp.S().dimensions()/dimTime/fvEqn.psi().dimensions();
+            cEqn.Sp.S().dimensions()/dimTime*fvEqn.psi().dimensions();
         fvEqn.diag() += cEqn.Sp.S().primitiveField()/deltaT.value();
     }
 }
@@ -106,7 +106,7 @@ void Foam::operator-=
     if (cEqn.Sp.valid())
     {
         fvEqn.dimensions() -=
-            cEqn.Sp.S().dimensions()/dimTime/fvEqn.psi().dimensions();
+            cEqn.Sp.S().dimensions()/dimTime*fvEqn.psi().dimensions();
         fvEqn.diag() -= cEqn.Sp.S().primitiveField()/deltaT.value();
     }
 }
