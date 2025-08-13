@@ -91,6 +91,9 @@ public:
         //- Update corresponding to the given distribution map
         virtual void distribute(const polyDistributionMap&);
 
+        //- Write
+        virtual bool write(const bool write = true) const;
+
 
     // Member Operators
 

@@ -118,4 +118,17 @@ void Foam::fvMeshTopoChangers::list::distribute
 }
 
 
+bool Foam::fvMeshTopoChangers::list::write(const bool write) const
+{
+    bool written = false;
+
+    forAllConstIter(PtrListDictionary<fvMeshTopoChanger>, list_, iter)
+    {
+        written = iter().write(write) || written;
+    }
+
+    return written;
+}
+
+
 // ************************************************************************* //
