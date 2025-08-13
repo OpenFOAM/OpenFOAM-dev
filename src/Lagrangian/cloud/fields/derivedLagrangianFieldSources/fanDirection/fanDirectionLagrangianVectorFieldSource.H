@@ -22,86 +22,94 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::massLagrangianScalarFieldSource
+    Foam::fanDirectionLagrangianVectorFieldSource
 
 Description
-    This source condition provides the mass of introduced particles. It
-    converts between the corresponding volume/diameter/density/etc...,
-    conditions to automatically produce a value for the mass. It is selected
-    automatically by the clouds that need it, so the user should never need
-    to specify this condition explicitly.
+    Mix-in for source conditions that provides a random injection direction
+    between two fan angles
 
 SourceFiles
-    massLagrangianScalarFieldSource.C
+    fanDirectionLagrangianVectorFieldSource.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef massLagrangianScalarFieldSource_H
-#define massLagrangianScalarFieldSource_H
+#ifndef fanDirectionLagrangianVectorFieldSource_H
+#define fanDirectionLagrangianVectorFieldSource_H
 
-#include "LagrangianFieldSources.H"
-#include "cloudLagrangianFieldSource.H"
+#include "LagrangianInjection.H"
+#include "Function1.H"
+#include "restartableRandomGenerator.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
+class LagrangianFieldSourceBase;
+
 /*---------------------------------------------------------------------------*\
-             Class massLagrangianScalarFieldSource Declaration
+            Class fanDirectionLagrangianVectorFieldSource Declaration
 \*---------------------------------------------------------------------------*/
 
-class massLagrangianScalarFieldSource
-:
-    public LagrangianScalarFieldSource,
-    private cloudLagrangianFieldSource
+class fanDirectionLagrangianVectorFieldSource
 {
+private:
+
+    // Private Data
+
+        //- Reference to the field source
+        const LagrangianFieldSourceBase& field_;
+
+        //- Direction normal to the plane of the fan
+        const autoPtr<Function1<vector>> normal_;
+
+        //- Inner half-fan angle
+        const autoPtr<Function1<scalar>> thetaInner_;
+
+        //- Outer half-fan angle
+        const autoPtr<Function1<scalar>> thetaOuter_;
+
+        //- A random number generator
+        mutable restartableRandomGenerator rndGen_;
+
+        //- The time index
+        mutable label timeIndex_;
+
+
 public:
-
-    //- Runtime type information
-    TypeName("mass");
-
 
     // Constructors
 
-        //- Construct from internal field
-        massLagrangianScalarFieldSource(const regIOobject&);
-
-        //- Construct from internal field and dictionary
-        massLagrangianScalarFieldSource(const regIOobject&, const dictionary&);
-
-        //- Copy constructor setting the internal field reference
-        massLagrangianScalarFieldSource
+        //- Construct from a dictionary
+        fanDirectionLagrangianVectorFieldSource
         (
-            const massLagrangianScalarFieldSource&,
-            const regIOobject&
+            const LagrangianFieldSourceBase&,
+            const dictionary& dict
         );
 
-        //- Construct and return a clone setting the internal field reference
-        virtual autoPtr<LagrangianScalarFieldSource> clone
+        //- Copy constructor
+        fanDirectionLagrangianVectorFieldSource
         (
-            const regIOobject& iIo
-        ) const
-        {
-            return autoPtr<LagrangianScalarFieldSource>
-            (
-                new massLagrangianScalarFieldSource(*this, iIo)
-            );
-        }
+            const fanDirectionLagrangianVectorFieldSource&,
+            const LagrangianFieldSourceBase&
+        );
 
 
     //- Destructor
-    virtual ~massLagrangianScalarFieldSource();
+    ~fanDirectionLagrangianVectorFieldSource();
 
 
     // Member Functions
 
         //- Return the value for an instantaneous injection
-        virtual tmp<LagrangianSubScalarField> value
+        tmp<LagrangianSubVectorField> direction
         (
             const LagrangianInjection&,
-            const LagrangianSubMesh&
+            const LagrangianSubVectorField& axis
         ) const;
+
+        //- Write
+        void write(Ostream&) const;
 };
 
 

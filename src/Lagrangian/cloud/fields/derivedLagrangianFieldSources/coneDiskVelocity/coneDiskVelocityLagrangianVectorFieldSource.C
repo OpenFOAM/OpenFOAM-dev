@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "coneDiskVelocityLagrangianVectorFieldSource.H"
-#include "diskInjection.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -37,7 +36,8 @@ coneDiskVelocityLagrangianVectorFieldSource
 )
 :
     LagrangianVectorFieldSource(iIo, dict),
-    Function1LagrangianFieldSource<vector>(*this),
+    Function1LagrangianFieldSource(*this),
+    coneDiskDirectionLagrangianVectorFieldSource(*this, dict),
     Umag_
     (
         Function1<scalar>::New
@@ -45,26 +45,6 @@ coneDiskVelocityLagrangianVectorFieldSource
             "Umag",
             iIo.time().userUnits(),
             dimVelocity,
-            dict
-        )
-    ),
-    thetaInner_
-    (
-        Function1<scalar>::New
-        (
-            "thetaInner",
-            iIo.time().userUnits(),
-            unitDegrees,
-            dict
-        )
-    ),
-    thetaOuter_
-    (
-        Function1<scalar>::New
-        (
-            "thetaOuter",
-            iIo.time().userUnits(),
-            unitDegrees,
             dict
         )
     )
@@ -79,10 +59,9 @@ coneDiskVelocityLagrangianVectorFieldSource
 )
 :
     LagrangianVectorFieldSource(field, iIo),
-    Function1LagrangianFieldSource<vector>(*this),
-    Umag_(field.Umag_, false),
-    thetaInner_(field.thetaInner_, false),
-    thetaOuter_(field.thetaOuter_, false)
+    Function1LagrangianFieldSource(*this),
+    coneDiskDirectionLagrangianVectorFieldSource(field, *this),
+    Umag_(field.Umag_, false)
 {}
 
 
@@ -102,59 +81,9 @@ Foam::coneDiskVelocityLagrangianVectorFieldSource::value
     const LagrangianSubMesh& subMesh
 ) const
 {
-    const Lagrangian::diskInjection& diskInjection =
-        modelCast<Lagrangian::diskInjection>(injection);
-
-    // Evaluate the axial velocity
-    const LagrangianSubScalarField Umag
-    (
+    return
         value(injection, subMesh, dimVelocity, Umag_())
-    );
-
-    // Get the geometry from the disk injection model
-    const LagrangianSubScalarField rFrac
-    (
-        LagrangianSubScalarField::New
-        (
-            "r",
-            subMesh,
-            dimless,
-            diskInjection.rFrac()
-        )
-    );
-    const LagrangianSubVectorField axis
-    (
-        LagrangianSubVectorField::New
-        (
-            "axis",
-            subMesh,
-            dimless,
-            diskInjection.axis()
-        )
-    );
-    const LagrangianSubVectorField radial
-    (
-        LagrangianSubVectorField::New
-        (
-            "radial",
-            subMesh,
-            dimless,
-            diskInjection.radial()
-        )
-    );
-
-    // Evaluate the cone angle
-    const tmp<LagrangianSubScalarField> tthetaInner =
-        value(injection, subMesh, dimless, thetaInner_());
-    const tmp<LagrangianSubScalarField> tthetaOuter =
-        value(injection, subMesh, dimless, thetaOuter_());
-    const LagrangianSubScalarField theta
-    (
-        (1 - rFrac)*tthetaInner + rFrac*tthetaOuter
-    );
-
-    // Return the velocity in the calculated direction
-    return Umag*(cos(theta)*axis + sin(theta)*radial);
+       *direction(injection, subMesh);
 }
 
 
@@ -162,9 +91,9 @@ void Foam::coneDiskVelocityLagrangianVectorFieldSource::write(Ostream& os) const
 {
     LagrangianVectorFieldSource::write(os);
 
+    coneDiskDirectionLagrangianVectorFieldSource::write(os);
+
     writeEntry(os, db().time().userUnits(), dimVelocity, Umag_());
-    writeEntry(os, db().time().userUnits(), unitDegrees, thetaInner_());
-    writeEntry(os, db().time().userUnits(), unitDegrees, thetaOuter_());
 }
 
 

@@ -78,6 +78,7 @@ SourceFiles
 #define distributionDiameterLagrangianScalarFieldSource_H
 
 #include "LagrangianFieldSources.H"
+#include "cloudLagrangianFieldSource.H"
 #include "distribution.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -91,7 +92,8 @@ namespace Foam
 
 class distributionDiameterLagrangianScalarFieldSource
 :
-    public LagrangianScalarFieldSource
+    public LagrangianScalarFieldSource,
+    private cloudLagrangianFieldSource
 {
 private:
 
@@ -102,9 +104,6 @@ private:
 
         //- The time index
         mutable label timeIndex_;
-
-        //- Name of the number field
-        const word numberName_;
 
 
 public:

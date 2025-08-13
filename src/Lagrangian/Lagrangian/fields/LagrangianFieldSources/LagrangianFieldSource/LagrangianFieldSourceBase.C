@@ -23,76 +23,45 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "surfaceAreaLagrangianScalarFieldSource.H"
-#include "shaped.H"
-#include "addToRunTimeSelectionTable.H"
+#include "LagrangianFieldSourceBase.H"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+    defineTypeNameAndDebug(LagrangianFieldSourceBase, 0);
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::surfaceAreaLagrangianScalarFieldSource::
-surfaceAreaLagrangianScalarFieldSource
+Foam::LagrangianFieldSourceBase::LagrangianFieldSourceBase
 (
     const regIOobject& iIo
 )
 :
-    LagrangianScalarFieldSource(iIo),
-    cloudLagrangianFieldSource(*this)
-{}
-
-
-Foam::surfaceAreaLagrangianScalarFieldSource::
-surfaceAreaLagrangianScalarFieldSource
-(
-    const regIOobject& iIo,
-    const dictionary& dict
-)
-:
-    LagrangianScalarFieldSource(iIo, dict),
-    cloudLagrangianFieldSource(*this)
-{}
-
-
-Foam::surfaceAreaLagrangianScalarFieldSource::
-surfaceAreaLagrangianScalarFieldSource
-(
-    const surfaceAreaLagrangianScalarFieldSource& field,
-    const regIOobject& iIo
-)
-:
-    LagrangianScalarFieldSource(field, iIo),
-    cloudLagrangianFieldSource(*this)
+    internalIo_(iIo)
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::surfaceAreaLagrangianScalarFieldSource::
-~surfaceAreaLagrangianScalarFieldSource()
+Foam::LagrangianFieldSourceBase::~LagrangianFieldSourceBase()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::LagrangianSubScalarField>
-Foam::surfaceAreaLagrangianScalarFieldSource::value
-(
-    const LagrangianInjection& injection,
-    const LagrangianSubMesh& subMesh
-) const
+const Foam::objectRegistry& Foam::LagrangianFieldSourceBase::db() const
 {
-    return cloud<clouds::shaped>(injection, subMesh).a(injection, subMesh);
+    return internalIo_.db();
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
+const Foam::word& Foam::LagrangianFieldSourceBase::internalName() const
 {
-    makeNullConstructableLagrangianTypeFieldSource
-    (
-        LagrangianScalarFieldSource,
-        surfaceAreaLagrangianScalarFieldSource
-    );
+    return internalIo_.name();
 }
+
 
 // ************************************************************************* //

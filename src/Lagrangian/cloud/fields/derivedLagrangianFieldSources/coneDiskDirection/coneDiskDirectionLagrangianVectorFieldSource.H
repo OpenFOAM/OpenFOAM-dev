@@ -22,86 +22,84 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::massLagrangianScalarFieldSource
+    Foam::coneDiskDirectionLagrangianVectorFieldSource
 
 Description
-    This source condition provides the mass of introduced particles. It
-    converts between the corresponding volume/diameter/density/etc...,
-    conditions to automatically produce a value for the mass. It is selected
-    automatically by the clouds that need it, so the user should never need
-    to specify this condition explicitly.
+    Mix-in for source conditions that provides a random injection direction
+    on a disk between two cone angles
 
 SourceFiles
-    massLagrangianScalarFieldSource.C
+    coneDiskDirectionLagrangianVectorFieldSource.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef massLagrangianScalarFieldSource_H
-#define massLagrangianScalarFieldSource_H
+#ifndef coneDiskDirectionLagrangianVectorFieldSource_H
+#define coneDiskDirectionLagrangianVectorFieldSource_H
 
-#include "LagrangianFieldSources.H"
-#include "cloudLagrangianFieldSource.H"
+#include "LagrangianInjection.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
+class LagrangianFieldSourceBase;
+
 /*---------------------------------------------------------------------------*\
-             Class massLagrangianScalarFieldSource Declaration
+            Class coneDiskDirectionLagrangianVectorFieldSource Declaration
 \*---------------------------------------------------------------------------*/
 
-class massLagrangianScalarFieldSource
-:
-    public LagrangianScalarFieldSource,
-    private cloudLagrangianFieldSource
+class coneDiskDirectionLagrangianVectorFieldSource
 {
+private:
+
+    // Private Data
+
+        //- Reference to the field source
+        const LagrangianFieldSourceBase& field_;
+
+        //- Inner half-cone angle
+        const autoPtr<Function1<scalar>> thetaInner_;
+
+        //- Outer half-cone angle
+        const autoPtr<Function1<scalar>> thetaOuter_;
+
+
 public:
-
-    //- Runtime type information
-    TypeName("mass");
-
 
     // Constructors
 
-        //- Construct from internal field
-        massLagrangianScalarFieldSource(const regIOobject&);
-
-        //- Construct from internal field and dictionary
-        massLagrangianScalarFieldSource(const regIOobject&, const dictionary&);
-
-        //- Copy constructor setting the internal field reference
-        massLagrangianScalarFieldSource
+        //- Construct from a dictionary
+        coneDiskDirectionLagrangianVectorFieldSource
         (
-            const massLagrangianScalarFieldSource&,
-            const regIOobject&
+            const LagrangianFieldSourceBase&,
+            const dictionary& dict
         );
 
-        //- Construct and return a clone setting the internal field reference
-        virtual autoPtr<LagrangianScalarFieldSource> clone
+        //- Copy constructor
+        coneDiskDirectionLagrangianVectorFieldSource
         (
-            const regIOobject& iIo
-        ) const
-        {
-            return autoPtr<LagrangianScalarFieldSource>
-            (
-                new massLagrangianScalarFieldSource(*this, iIo)
-            );
-        }
+            const coneDiskDirectionLagrangianVectorFieldSource&,
+            const LagrangianFieldSourceBase&
+        );
 
 
     //- Destructor
-    virtual ~massLagrangianScalarFieldSource();
+    ~coneDiskDirectionLagrangianVectorFieldSource();
 
 
     // Member Functions
 
         //- Return the value for an instantaneous injection
-        virtual tmp<LagrangianSubScalarField> value
+        tmp<LagrangianSubVectorField> direction
         (
             const LagrangianInjection&,
             const LagrangianSubMesh&
         ) const;
+
+        //- Write
+        void write(Ostream&) const;
 };
 
 

@@ -26,7 +26,7 @@ Class
 
 Description
     Mix-in for source conditions that provides functions for evaluating
-    Function1s at variable times.
+    Function1s at variable times
 
 SourceFiles
     Function1LagrangianFieldSource.C
@@ -46,24 +46,38 @@ SourceFiles
 namespace Foam
 {
 
+class LagrangianFieldSourceBase;
 class LagrangianModel;
 
 /*---------------------------------------------------------------------------*\
                Class Function1LagrangianFieldSource Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Type>
 class Function1LagrangianFieldSource
 {
     // Private Member Data
 
-        //- Reference to the derived field source
-        const LagrangianFieldSource<Type>& field_;
+        //- Reference to the field source
+        const LagrangianFieldSourceBase& field_;
 
 
 protected:
 
     // Protected Member Functions
+
+        //- Return the source value
+        template<class Type>
+        tmp<LagrangianSubField<Type>> value
+        (
+            const LagrangianModel& model,
+            const LagrangianSubMesh& subMesh,
+            const Function1<Type>& function
+        ) const;
+
+
+public:
+
+    // Static Member Functions
 
         //- Return the source value
         template<class OtherType>
@@ -75,16 +89,6 @@ protected:
             const Function1<OtherType>& function
         );
 
-        //- Return the source value
-        tmp<LagrangianSubField<Type>> value
-        (
-            const LagrangianModel& model,
-            const LagrangianSubMesh& subMesh,
-            const Function1<Type>& function
-        ) const;
-
-
-public:
 
     // Constructors
 
@@ -101,7 +105,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "Function1LagrangianFieldSource.C"
+    #include "Function1LagrangianFieldSourceTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

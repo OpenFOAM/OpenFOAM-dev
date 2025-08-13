@@ -23,64 +23,82 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "surfaceAreaLagrangianScalarFieldSource.H"
-#include "shaped.H"
+#include "fanVelocityLagrangianVectorFieldSource.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::surfaceAreaLagrangianScalarFieldSource::
-surfaceAreaLagrangianScalarFieldSource
-(
-    const regIOobject& iIo
-)
-:
-    LagrangianScalarFieldSource(iIo),
-    cloudLagrangianFieldSource(*this)
-{}
-
-
-Foam::surfaceAreaLagrangianScalarFieldSource::
-surfaceAreaLagrangianScalarFieldSource
+Foam::fanVelocityLagrangianVectorFieldSource::
+fanVelocityLagrangianVectorFieldSource
 (
     const regIOobject& iIo,
     const dictionary& dict
 )
 :
-    LagrangianScalarFieldSource(iIo, dict),
-    cloudLagrangianFieldSource(*this)
+    LagrangianVectorFieldSource(iIo, dict),
+    Function1LagrangianFieldSource(*this),
+    fanDirectionLagrangianVectorFieldSource(*this, dict),
+    Ucentre_
+    (
+        Function1<vector>::New
+        (
+            "Ucentre",
+            iIo.time().userUnits(),
+            dimVelocity,
+            dict
+        )
+    )
 {}
 
 
-Foam::surfaceAreaLagrangianScalarFieldSource::
-surfaceAreaLagrangianScalarFieldSource
+Foam::fanVelocityLagrangianVectorFieldSource::
+fanVelocityLagrangianVectorFieldSource
 (
-    const surfaceAreaLagrangianScalarFieldSource& field,
+    const fanVelocityLagrangianVectorFieldSource& field,
     const regIOobject& iIo
 )
 :
-    LagrangianScalarFieldSource(field, iIo),
-    cloudLagrangianFieldSource(*this)
+    LagrangianVectorFieldSource(field, iIo),
+    Function1LagrangianFieldSource(*this),
+    fanDirectionLagrangianVectorFieldSource(field, *this),
+    Ucentre_(field.Ucentre_, false)
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::surfaceAreaLagrangianScalarFieldSource::
-~surfaceAreaLagrangianScalarFieldSource()
+Foam::fanVelocityLagrangianVectorFieldSource::
+~fanVelocityLagrangianVectorFieldSource()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::LagrangianSubScalarField>
-Foam::surfaceAreaLagrangianScalarFieldSource::value
+Foam::tmp<Foam::LagrangianSubVectorField>
+Foam::fanVelocityLagrangianVectorFieldSource::value
 (
     const LagrangianInjection& injection,
     const LagrangianSubMesh& subMesh
 ) const
 {
-    return cloud<clouds::shaped>(injection, subMesh).a(injection, subMesh);
+    const LagrangianSubVectorField Ucentre
+    (
+        value(injection, subMesh, Ucentre_())
+    );
+
+    const LagrangianSubScalarField magUcentre(mag(Ucentre));
+
+    return magUcentre*direction(injection, Ucentre/magUcentre);
+}
+
+
+void Foam::fanVelocityLagrangianVectorFieldSource::write(Ostream& os) const
+{
+    LagrangianVectorFieldSource::write(os);
+
+    fanDirectionLagrangianVectorFieldSource::write(os);
+
+    writeEntry(os, db().time().userUnits(), dimVelocity, Ucentre_());
 }
 
 
@@ -88,10 +106,10 @@ Foam::surfaceAreaLagrangianScalarFieldSource::value
 
 namespace Foam
 {
-    makeNullConstructableLagrangianTypeFieldSource
+    makeLagrangianTypeFieldSource
     (
-        LagrangianScalarFieldSource,
-        surfaceAreaLagrangianScalarFieldSource
+        LagrangianVectorFieldSource,
+        fanVelocityLagrangianVectorFieldSource
     );
 }
 

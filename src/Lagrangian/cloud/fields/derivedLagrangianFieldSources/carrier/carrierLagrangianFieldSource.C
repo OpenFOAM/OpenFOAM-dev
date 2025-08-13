@@ -38,7 +38,7 @@ Foam::carrierLagrangianFieldSource<Type>::carrierLagrangianFieldSource
 )
 :
     LagrangianFieldSource<Type>(iIo, dict),
-    CloudLagrangianFieldSource<Type>(*this),
+    cloudLagrangianFieldSource(*this),
     fieldcName_(dict.lookupOrDefault<word>("fieldc", iIo.name()))
 {}
 
@@ -51,7 +51,7 @@ Foam::carrierLagrangianFieldSource<Type>::carrierLagrangianFieldSource
 )
 :
     LagrangianFieldSource<Type>(field, iIo),
-    CloudLagrangianFieldSource<Type>(*this),
+    cloudLagrangianFieldSource(*this),
     fieldcName_(field.fieldcName_)
 {}
 

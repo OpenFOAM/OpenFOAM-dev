@@ -40,7 +40,7 @@ SourceFiles
 #define surfaceAreaLagrangianScalarFieldSource_H
 
 #include "LagrangianFieldSources.H"
-#include "CloudLagrangianFieldSource.H"
+#include "cloudLagrangianFieldSource.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -54,7 +54,7 @@ namespace Foam
 class surfaceAreaLagrangianScalarFieldSource
 :
     public LagrangianScalarFieldSource,
-    private CloudLagrangianFieldSource<scalar>
+    private cloudLagrangianFieldSource
 {
 public:
 

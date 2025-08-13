@@ -95,7 +95,7 @@ sources
     injectionSlabNonConformalCyclic
     {
         type            coneVelocity;
-        Umean           (1.2 -0.18 0);
+        Ucentre         (1.2 -0.18 0);
         thetaInner      0;
         thetaOuter      1;
     }
@@ -103,7 +103,7 @@ sources
     injectionWedgeNonConformalCyclic
     {
         type            coneVelocity;
-        Umean           (0.6 -0.22 0);
+        Ucentre         (0.6 -0.22 0);
         thetaInner      0;
         thetaOuter      1;
     }

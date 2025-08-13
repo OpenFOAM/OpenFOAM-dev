@@ -22,125 +22,105 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::carrierLagrangianFieldSource
+    Foam::totalPressureVelocityMagnitudeLagrangianScalarFieldSource
 
 Description
-    This source condition creates a Lagrangian value interpolated from a given
-    carrier field. By default the field chosen is that with the same name as
-    the Lagrangian field, but this can be overridden with the \c fieldc
-    control.
-
-Usage
-    \table
-        Property  | Description            | Required? | Default
-        fieldc    | The carrier field name | no | The Lagrangian field name
-    \endtable
-
-    Example specification:
-    \verbatim
-    <LagrangianModelName>
-    {
-        type            carrier;
-        fieldc          U.air;
-    }
-    \endverbatim
+    Mix-in for source conditions that compute the velocity magnitude from the
+    difference between a specified upstream pressure and the local interpolated
+    pressure
 
 SourceFiles
-    carrierLagrangianFieldSource.C
+    totalPressureVelocityMagnitudeLagrangianScalarFieldSource.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef carrierLagrangianFieldSource_H
-#define carrierLagrangianFieldSource_H
+#ifndef totalPressureVelocityMagnitudeLagrangianScalarFieldSource_H
+#define totalPressureVelocityMagnitudeLagrangianScalarFieldSource_H
 
-#include "LagrangianFieldSource.H"
-#include "cloudLagrangianFieldSource.H"
+#include "LagrangianInjection.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
+class LagrangianFieldSourceBase;
+class cloudLagrangianFieldSource;
+
 /*---------------------------------------------------------------------------*\
-                Class carrierLagrangianFieldSource Declaration
+  Class totalPressureVelocityMagnitudeLagrangianScalarFieldSource Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Type>
-class carrierLagrangianFieldSource
-:
-    public LagrangianFieldSource<Type>,
-    private cloudLagrangianFieldSource
+class totalPressureVelocityMagnitudeLagrangianScalarFieldSource
 {
 private:
 
     // Private Data
 
-        //- The carrier field name
-        const word fieldcName_;
+        //- Reference to the field source
+        const LagrangianFieldSourceBase& field_;
+
+        //- Reference to the cloud field source
+        const cloudLagrangianFieldSource& cloudField_;
+
+        //- Total pressure entry. Cached until evaluation as the function
+        //  cannot be constructed until the carrier pressure dimensions are
+        //  available. After this it is deleted.
+        mutable autoPtr<entry> p0Entry_;
+
+        //- Total pressure
+        mutable autoPtr<Function1<scalar>> p0_;
+
+        //- Name of the carrier density field
+        const word rhocName_;
+
+        //- Name of the carrier pressure field
+        const word pcName_;
 
 
 public:
 
-    //- Runtime type information
-    TypeName("carrier");
-
-
     // Constructors
 
-        //- Construct from internal field and dictionary
-        carrierLagrangianFieldSource
+        //- Construct from a dictionary
+        totalPressureVelocityMagnitudeLagrangianScalarFieldSource
         (
-            const regIOobject&,
+            const LagrangianFieldSourceBase&,
+            const cloudLagrangianFieldSource&,
             const dictionary& dict
         );
 
-        //- Copy constructor setting the internal field reference
-        carrierLagrangianFieldSource
+        //- Copy constructor
+        totalPressureVelocityMagnitudeLagrangianScalarFieldSource
         (
-            const carrierLagrangianFieldSource&,
-            const regIOobject&
+            const totalPressureVelocityMagnitudeLagrangianScalarFieldSource&,
+            const LagrangianFieldSourceBase&,
+            const cloudLagrangianFieldSource&
         );
-
-        //- Construct and return a clone setting the internal field reference
-        virtual autoPtr<LagrangianFieldSource<Type>> clone
-        (
-            const regIOobject& iIo
-        ) const
-        {
-            return autoPtr<LagrangianFieldSource<Type>>
-            (
-                new carrierLagrangianFieldSource(*this, iIo)
-            );
-        }
 
 
     //- Destructor
-    virtual ~carrierLagrangianFieldSource();
+    ~totalPressureVelocityMagnitudeLagrangianScalarFieldSource();
 
 
     // Member Functions
 
         //- Return the value for an instantaneous injection
-        virtual tmp<LagrangianSubField<Type>> value
+        tmp<LagrangianSubScalarField> Umag
         (
             const LagrangianInjection&,
             const LagrangianSubMesh&
         ) const;
 
         //- Write
-        virtual void write(Ostream&) const;
+        void write(Ostream&) const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "carrierLagrangianFieldSource.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

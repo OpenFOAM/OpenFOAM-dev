@@ -242,8 +242,22 @@ private:
 
         // Addition
 
+            //- Return the sub-mesh associated with appending a given number of
+            //  elements
+            LagrangianSubMesh appendMesh(const label n) const;
+
             //- Append specified elements in the mesh with the given geometry
             //  and topology. Does nothing to fields.
+            void append
+            (
+                const LagrangianSubMesh& appendMesh,
+                const barycentricField& coordinates,
+                const labelField& celli,
+                const labelField& facei,
+                const labelField& faceTrii
+            );
+
+            //- As above but creates and returns the sub-mesh
             LagrangianSubMesh append
             (
                 const barycentricField& coordinates,
@@ -254,7 +268,17 @@ private:
 
             //- Birth specified elements in the mesh from the given list of
             //  parent indices. Does nothing to fields.
-            LagrangianSubMesh append(const labelList& parents);
+            void append
+            (
+                const LagrangianSubMesh& appendMesh,
+                const labelList& parents
+            );
+
+            //- As above but creates and returns the sub-mesh
+            LagrangianSubMesh append
+            (
+                const labelList& parents
+            );
 
             //- Expand and set values for explicitly specified fields following
             //  an injection or birth event
@@ -757,9 +781,25 @@ public:
                 const LagrangianScalarInternalDynamicField& fraction
             );
 
+            //- Return the sub-mesh associated with an injection of a given
+            //  number of elements
+            LagrangianSubMesh injectionMesh(const label n) const;
+
             //- Inject specified elements into the mesh. This method does not
             //  know how to set values for the fields. If any fields are
             //  registered then this function will error.
+            template<class ... FieldNamesAndFields>
+            void inject
+            (
+                const LagrangianSubMesh& injectionMesh,
+                const barycentricField& coordinates,
+                const labelField& celli,
+                const labelField& facei,
+                const labelField& faceTrii,
+                const FieldNamesAndFields& ... fieldNamesAndFields
+            );
+
+            //- As above but creates and returns the sub-mesh
             template<class ... FieldNamesAndFields>
             LagrangianSubMesh inject
             (
@@ -777,6 +817,19 @@ public:
             //  Internal fields without source conditions must be specified
             //  manually or an error will result.
             template<class ... FieldNamesAndFields>
+            void inject
+            (
+                const LagrangianInjection& injection,
+                const LagrangianSubMesh& injectionMesh,
+                const barycentricField& coordinates,
+                const labelField& celli,
+                const labelField& facei,
+                const labelField& faceTrii,
+                const FieldNamesAndFields& ... fieldNamesAndFields
+            );
+
+            //- As above but creates and returns the sub-mesh
+            template<class ... FieldNamesAndFields>
             LagrangianSubMesh inject
             (
                 const LagrangianInjection& injection,
@@ -787,10 +840,23 @@ public:
                 const FieldNamesAndFields& ... fieldNamesAndFields
             );
 
+            //- Return the sub-mesh associated with birthing a given number of
+            //  elements
+            LagrangianSubMesh birthMesh(const label n) const;
+
             //- Birth specified elements into the mesh. Fields are expanded
             //  accordingly. New field values can be specified manually by
             //  providing alternating name and field arguments. Values for
             //  other fields will be mapped from the parent elements.
+            template<class ... FieldNamesAndFields>
+            void birth
+            (
+                const LagrangianSubMesh& birthMesh,
+                const labelList& parents,
+                const FieldNamesAndFields& ... fieldNamesAndFields
+            );
+
+            //- As above but creates and returns the sub-mesh
             template<class ... FieldNamesAndFields>
             LagrangianSubMesh birth
             (

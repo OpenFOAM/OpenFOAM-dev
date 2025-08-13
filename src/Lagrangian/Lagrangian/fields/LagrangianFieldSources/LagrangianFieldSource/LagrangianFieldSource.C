@@ -29,6 +29,7 @@ License
 #include "LagrangianSource.H"
 #include "LagrangianInjection.H"
 #include "dictionary.H"
+#include "dlLibraryTable.H"
 #include "regIOobject.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -39,8 +40,8 @@ Foam::LagrangianFieldSource<Type>::LagrangianFieldSource
     const regIOobject& iIo
 )
 :
+    LagrangianFieldSourceBase(iIo),
     libs_(fileNameList::null()),
-    internalIo_(iIo),
     internalField_
     (
         refCastNull<const LagrangianInternalDynamicField<Type>>(iIo)
@@ -59,8 +60,8 @@ Foam::LagrangianFieldSource<Type>::LagrangianFieldSource
     const dictionary& dict
 )
 :
+    LagrangianFieldSourceBase(iIo),
     libs_(dict.lookupOrDefault("libs", fileNameList::null())),
-    internalIo_(iIo),
     internalField_
     (
         refCastNull<const LagrangianInternalDynamicField<Type>>(iIo)
@@ -79,8 +80,8 @@ Foam::LagrangianFieldSource<Type>::LagrangianFieldSource
     const regIOobject& iIo
 )
 :
+    LagrangianFieldSourceBase(iIo),
     libs_(field.libs_),
-    internalIo_(iIo),
     internalField_
     (
         refCastNull<const LagrangianInternalDynamicField<Type>>(iIo)
@@ -163,13 +164,6 @@ Foam::LagrangianFieldSource<Type>::~LagrangianFieldSource()
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
-
-template<class Type>
-const Foam::objectRegistry& Foam::LagrangianFieldSource<Type>::db() const
-{
-    return internalIo_.db();
-}
-
 
 template<class Type>
 const Foam::dimensionSet&
@@ -315,100 +309,6 @@ Foam::LagrangianFieldSource<Type>::value
         << exit(FatalError);
 
     return tmp<LagrangianSubField<Type>>(nullptr);
-}
-
-
-template<class Type>
-template<class OtherType>
-const Foam::LagrangianFieldSource<OtherType>&
-Foam::LagrangianFieldSource<Type>::fieldSource
-(
-    const word& name,
-    const LagrangianModel& model
-) const
-{
-    const LagrangianDynamicField<OtherType>& lf =
-        db().template lookupObject<LagrangianDynamicField<OtherType>>(name);
-
-    return lf.sources()[model.name()];
-}
-
-
-template<class Type>
-template<class OtherType, class OtherFieldSourceType>
-const OtherFieldSourceType& Foam::LagrangianFieldSource<Type>::fieldSourceCast
-(
-    const word& name,
-    const LagrangianModel& model
-) const
-{
-    const LagrangianFieldSource<OtherType>& lfs =
-        fieldSource<OtherType>(name, model);
-
-    if (!isA<OtherFieldSourceType>(lfs))
-    {
-        FatalErrorInFunction
-            << "The '" << type() << "' source of field '"
-            << (db().dbDir()/internalIo_.name()).c_str()
-            << "' for the '" << model.type() << "' Lagrangian model '"
-            << model.name() << "' requires the corresponding source of field '"
-            << (db().dbDir()/name).c_str()
-            << "' to be of type '" << OtherFieldSourceType::typeName
-            << "' (or a derivation thereof), rather than '" << lfs.type()
-            << "'" << exit(FatalError);
-    }
-
-    return refCast<const OtherFieldSourceType>(lfs);
-}
-
-
-template<class Type>
-template<class OtherModelType>
-const OtherModelType& Foam::LagrangianFieldSource<Type>::modelCast
-(
-    const LagrangianModel& model
-) const
-{
-    if (!isA<OtherModelType>(model))
-    {
-        FatalErrorInFunction
-            << "The '" << type() << "' source of field '"
-            << (db().dbDir()/internalIo_.name()).c_str()
-            << "' for the Lagrangian model '" << model.name()
-            << "' requires a model of type '" << OtherModelType::typeName
-            << "' (or a derivation thereof), rather than '" << model.type()
-            << "'" << exit(FatalError);
-    }
-
-    return refCast<const OtherModelType>(model);
-}
-
-
-template<class Type>
-template<class OtherType>
-Foam::tmp<Foam::LagrangianSubField<OtherType>>
-Foam::LagrangianFieldSource<Type>::value
-(
-    const word& name,
-    const LagrangianSource& source,
-    const LagrangianSubMesh& subMesh
-) const
-{
-    return fieldSource<OtherType>(name, source).value(source, subMesh);
-}
-
-
-template<class Type>
-template<class OtherType>
-Foam::tmp<Foam::LagrangianSubField<OtherType>>
-Foam::LagrangianFieldSource<Type>::value
-(
-    const word& name,
-    const LagrangianInjection& injection,
-    const LagrangianSubMesh& subMesh
-) const
-{
-    return fieldSource<OtherType>(name, injection).value(injection, subMesh);
 }
 
 

@@ -121,14 +121,14 @@ private:
         //- The time index
         mutable label timeIndex_;
 
-        //- Cached radius fractions
-        mutable autoPtr<scalarField> rFracPtr_;
-
         //- Cached axes
-        mutable autoPtr<vectorField> axisPtr_;
+        mutable autoPtr<LagrangianSubVectorField> axisPtr_;
+
+        //- Cached radius fractions
+        mutable autoPtr<LagrangianSubScalarField> rFracPtr_;
 
         //- Cached radial vectors
-        mutable autoPtr<vectorField> radialPtr_;
+        mutable autoPtr<LagrangianSubVectorField> radialPtr_;
 
 
     // Private Member Functions
@@ -159,14 +159,17 @@ public:
 
         // Access
 
-            //- Access the cached radius fractions. Only valid during injection.
-            const scalarField& rFrac() const;
+            //- Return the area of the disk
+            const dimensionedScalar area() const;
 
             //- Access the cached axes. Only valid during injection.
-            const vectorField& axis() const;
+            const LagrangianSubVectorField& axis() const;
+
+            //- Access the cached radius fractions. Only valid during injection.
+            const LagrangianSubScalarField& rFrac() const;
 
             //- Access the cached radial vectors. Only valid during injection.
-            const vectorField& radial() const;
+            const LagrangianSubVectorField& radial() const;
 
 
         //- Create new elements in the Lagrangian mesh

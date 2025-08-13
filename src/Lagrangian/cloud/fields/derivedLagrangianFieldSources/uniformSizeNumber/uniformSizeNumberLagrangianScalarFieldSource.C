@@ -64,7 +64,7 @@ void Foam::uniformSizeNumberLagrangianScalarFieldSource::calcSizes
     const bool actuallyNeedm = needm || uniformSize_ == uniformSize::mass;
 
     const Foam::clouds::shaped& shapedCloud =
-        this->cloud<Foam::clouds::shaped>(injection, subMesh);
+        cloud<Foam::clouds::shaped>(injection, subMesh);
 
     // Evaluate the volume and mass (as necessary) of the created particles
     if (actuallyNeedv)
@@ -74,7 +74,7 @@ void Foam::uniformSizeNumberLagrangianScalarFieldSource::calcSizes
     if (actuallyNeedm)
     {
         const clouds::massive& massiveCloud =
-            this->cloud<clouds::massive>(injection, subMesh);
+            cloud<clouds::massive>(injection, subMesh);
 
         m = massiveCloud.m(injection, subMesh);
     }
@@ -122,7 +122,7 @@ uniformSizeNumberLagrangianScalarFieldSource
 )
 :
     LagrangianScalarFieldSource(iIo, dict),
-    CloudLagrangianFieldSource<scalar>(*this),
+    cloudLagrangianFieldSource(*this),
     uniformSize_(uniformSizeNames_[dict.lookup<word>("uniformSize")])
 {}
 
@@ -135,7 +135,7 @@ uniformSizeNumberLagrangianScalarFieldSource
 )
 :
     LagrangianScalarFieldSource(field, iIo),
-    CloudLagrangianFieldSource<scalar>(*this),
+    cloudLagrangianFieldSource(*this),
     uniformSize_(field.uniformSize_)
 {}
 

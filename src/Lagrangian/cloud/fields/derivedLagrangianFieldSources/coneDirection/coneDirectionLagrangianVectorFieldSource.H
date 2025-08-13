@@ -22,86 +22,91 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::massLagrangianScalarFieldSource
+    Foam::coneDirectionLagrangianVectorFieldSource
 
 Description
-    This source condition provides the mass of introduced particles. It
-    converts between the corresponding volume/diameter/density/etc...,
-    conditions to automatically produce a value for the mass. It is selected
-    automatically by the clouds that need it, so the user should never need
-    to specify this condition explicitly.
+    Mix-in for source conditions that provides a random injection direction
+    between two cone angles
 
 SourceFiles
-    massLagrangianScalarFieldSource.C
+    coneDirectionLagrangianVectorFieldSource.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef massLagrangianScalarFieldSource_H
-#define massLagrangianScalarFieldSource_H
+#ifndef coneDirectionLagrangianVectorFieldSource_H
+#define coneDirectionLagrangianVectorFieldSource_H
 
-#include "LagrangianFieldSources.H"
-#include "cloudLagrangianFieldSource.H"
+#include "LagrangianInjection.H"
+#include "Function1.H"
+#include "restartableRandomGenerator.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
+class LagrangianFieldSourceBase;
+
 /*---------------------------------------------------------------------------*\
-             Class massLagrangianScalarFieldSource Declaration
+            Class coneDirectionLagrangianVectorFieldSource Declaration
 \*---------------------------------------------------------------------------*/
 
-class massLagrangianScalarFieldSource
-:
-    public LagrangianScalarFieldSource,
-    private cloudLagrangianFieldSource
+class coneDirectionLagrangianVectorFieldSource
 {
+private:
+
+    // Private Data
+
+        //- Reference to the field source
+        const LagrangianFieldSourceBase& field_;
+
+        //- Inner half-cone angle
+        const autoPtr<Function1<scalar>> thetaInner_;
+
+        //- Outer half-cone angle
+        const autoPtr<Function1<scalar>> thetaOuter_;
+
+        //- A random number generator
+        mutable restartableRandomGenerator rndGen_;
+
+        //- The time index
+        mutable label timeIndex_;
+
+
 public:
-
-    //- Runtime type information
-    TypeName("mass");
-
 
     // Constructors
 
-        //- Construct from internal field
-        massLagrangianScalarFieldSource(const regIOobject&);
-
-        //- Construct from internal field and dictionary
-        massLagrangianScalarFieldSource(const regIOobject&, const dictionary&);
-
-        //- Copy constructor setting the internal field reference
-        massLagrangianScalarFieldSource
+        //- Construct from a dictionary
+        coneDirectionLagrangianVectorFieldSource
         (
-            const massLagrangianScalarFieldSource&,
-            const regIOobject&
+            const LagrangianFieldSourceBase&,
+            const dictionary& dict
         );
 
-        //- Construct and return a clone setting the internal field reference
-        virtual autoPtr<LagrangianScalarFieldSource> clone
+        //- Copy constructor
+        coneDirectionLagrangianVectorFieldSource
         (
-            const regIOobject& iIo
-        ) const
-        {
-            return autoPtr<LagrangianScalarFieldSource>
-            (
-                new massLagrangianScalarFieldSource(*this, iIo)
-            );
-        }
+            const coneDirectionLagrangianVectorFieldSource&,
+            const LagrangianFieldSourceBase&
+        );
 
 
     //- Destructor
-    virtual ~massLagrangianScalarFieldSource();
+    ~coneDirectionLagrangianVectorFieldSource();
 
 
     // Member Functions
 
         //- Return the value for an instantaneous injection
-        virtual tmp<LagrangianSubScalarField> value
+        tmp<LagrangianSubVectorField> direction
         (
             const LagrangianInjection&,
-            const LagrangianSubMesh&
+            const LagrangianSubVectorField& axis
         ) const;
+
+        //- Write
+        void write(Ostream&) const;
 };
 
 

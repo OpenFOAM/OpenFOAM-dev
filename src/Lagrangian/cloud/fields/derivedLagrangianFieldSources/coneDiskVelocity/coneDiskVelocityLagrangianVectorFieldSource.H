@@ -59,7 +59,7 @@ SourceFiles
 
 #include "LagrangianFieldSources.H"
 #include "Function1LagrangianFieldSource.H"
-#include "randomGenerator.H"
+#include "coneDiskDirectionLagrangianVectorFieldSource.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -73,7 +73,8 @@ namespace Foam
 class coneDiskVelocityLagrangianVectorFieldSource
 :
     public LagrangianVectorFieldSource,
-    private Function1LagrangianFieldSource<vector>
+    private Function1LagrangianFieldSource,
+    private coneDiskDirectionLagrangianVectorFieldSource
 {
 private:
 
@@ -82,17 +83,11 @@ private:
         //- Velocity magnitude
         const autoPtr<Function1<scalar>> Umag_;
 
-        //- Inner half-cone angle
-        const autoPtr<Function1<scalar>> thetaInner_;
-
-        //- Outer half-cone angle
-        const autoPtr<Function1<scalar>> thetaOuter_;
-
 
     // Private Member Functions
 
         //- Use the base class' value method
-        using Function1LagrangianFieldSource<vector>::value;
+        using Function1LagrangianFieldSource::value;
 
 
 public:

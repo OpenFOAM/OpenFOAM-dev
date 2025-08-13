@@ -23,82 +23,100 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "coneVelocityLagrangianVectorFieldSource.H"
+#include "totalPressureConeVelocityLagrangianVectorFieldSource.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::coneVelocityLagrangianVectorFieldSource::
-coneVelocityLagrangianVectorFieldSource
+Foam::totalPressureConeVelocityLagrangianVectorFieldSource::
+totalPressureConeVelocityLagrangianVectorFieldSource
 (
     const regIOobject& iIo,
     const dictionary& dict
 )
 :
     LagrangianVectorFieldSource(iIo, dict),
+    cloudLagrangianFieldSource(*this),
     Function1LagrangianFieldSource(*this),
+    totalPressureVelocityMagnitudeLagrangianScalarFieldSource
+    (
+        *this,
+        *this,
+        dict
+    ),
     coneDirectionLagrangianVectorFieldSource(*this, dict),
-    Ucentre_
+    direction_
     (
         Function1<vector>::New
         (
-            "Ucentre",
+            "direction",
             iIo.time().userUnits(),
-            dimVelocity,
+            dimless,
             dict
         )
     )
 {}
 
 
-Foam::coneVelocityLagrangianVectorFieldSource::
-coneVelocityLagrangianVectorFieldSource
+Foam::totalPressureConeVelocityLagrangianVectorFieldSource::
+totalPressureConeVelocityLagrangianVectorFieldSource
 (
-    const coneVelocityLagrangianVectorFieldSource& field,
+    const totalPressureConeVelocityLagrangianVectorFieldSource& field,
     const regIOobject& iIo
 )
 :
     LagrangianVectorFieldSource(field, iIo),
+    cloudLagrangianFieldSource(*this),
     Function1LagrangianFieldSource(*this),
+    totalPressureVelocityMagnitudeLagrangianScalarFieldSource
+    (
+        field,
+        *this,
+        *this
+    ),
     coneDirectionLagrangianVectorFieldSource(field, *this),
-    Ucentre_(field.Ucentre_, false)
+    direction_(field.direction_, false)
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::coneVelocityLagrangianVectorFieldSource::
-~coneVelocityLagrangianVectorFieldSource()
+Foam::totalPressureConeVelocityLagrangianVectorFieldSource::
+~totalPressureConeVelocityLagrangianVectorFieldSource()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::LagrangianSubVectorField>
-Foam::coneVelocityLagrangianVectorFieldSource::value
+Foam::totalPressureConeVelocityLagrangianVectorFieldSource::value
 (
     const LagrangianInjection& injection,
     const LagrangianSubMesh& subMesh
 ) const
 {
-    const LagrangianSubVectorField Ucentre
-    (
-        value(injection, subMesh, Ucentre_())
-    );
-
-    const LagrangianSubScalarField magUcentre(mag(Ucentre));
-
-    return magUcentre*direction(injection, Ucentre/magUcentre);
+    return
+        Umag(injection, subMesh)
+       *direction
+        (
+            injection,
+            normalised(value(injection, subMesh, dimless, direction_()))
+        );
 }
 
 
-void Foam::coneVelocityLagrangianVectorFieldSource::write(Ostream& os) const
+void Foam::totalPressureConeVelocityLagrangianVectorFieldSource::write
+(
+    Ostream& os
+) const
 {
     LagrangianVectorFieldSource::write(os);
 
     coneDirectionLagrangianVectorFieldSource::write(os);
 
-    writeEntry(os, db().time().userUnits(), dimVelocity, Ucentre_());
+    totalPressureVelocityMagnitudeLagrangianScalarFieldSource::write(os);
+
+    writeEntry(os, db().time().userUnits(), unitNone, direction_());
 }
 
 
@@ -109,7 +127,7 @@ namespace Foam
     makeLagrangianTypeFieldSource
     (
         LagrangianVectorFieldSource,
-        coneVelocityLagrangianVectorFieldSource
+        totalPressureConeVelocityLagrangianVectorFieldSource
     );
 }
 

@@ -151,6 +151,13 @@ public:
 
     // Member Functions
 
+        //- Return the volumetric flow rate for this time-step
+        dimensionedScalar Q
+        (
+            const LagrangianInjection&,
+            const LagrangianSubMesh&
+        ) const;
+
         //- Return the value for an instantaneous injection
         virtual tmp<LagrangianSubScalarField> value
         (

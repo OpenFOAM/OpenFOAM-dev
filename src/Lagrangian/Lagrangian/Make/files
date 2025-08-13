@@ -60,6 +60,7 @@ derivedLagrangianPatchFields = $(LagrangianPatchFields)/derived
 
 # Field Sources
 LagrangianFieldSources = fields/LagrangianFieldSources
+$(LagrangianFieldSources)/LagrangianFieldSource/LagrangianFieldSourceBase.C
 $(LagrangianFieldSources)/LagrangianFieldSource/LagrangianFieldSources.C
 
 derivedLagrangianFieldSources = $(LagrangianFieldSources)/derived

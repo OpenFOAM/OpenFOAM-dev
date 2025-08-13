@@ -35,9 +35,7 @@ SourceFiles
 #ifndef LagrangianFieldSource_H
 #define LagrangianFieldSource_H
 
-#include "dlLibraryTable.H"
-#include "LagrangianFieldsFwd.H"
-#include "LagrangianSubFieldsFwd.H"
+#include "LagrangianFieldSourceBase.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -45,16 +43,6 @@ namespace Foam
 {
 
 // Forward declaration of classes
-class regIOobject;
-class dimensionSet;
-class objectRegistry;
-class dictionary;
-class LagrangianMesh;
-class LagrangianSubMesh;
-class LagrangianModel;
-class LagrangianSource;
-class LagrangianInjection;
-
 template<class Type>
 class LagrangianFieldSource;
 
@@ -63,19 +51,18 @@ template<class Type>
 Ostream& operator<<(Ostream&, const LagrangianFieldSource<Type>&);
 
 /*---------------------------------------------------------------------------*\
-                         Class LagrangianFieldSource Declaration
+                      Class LagrangianFieldSource Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
 class LagrangianFieldSource
+:
+    public LagrangianFieldSourceBase
 {
     // Private Data
 
         //- Optional list of libraries required for this field source value
         fileNameList libs_;
-
-        //- Reference to the internal IO object
-        const regIOobject& internalIo_;
 
         //- Reference to the internal field
         const LagrangianInternalDynamicField<Type>& internalField_;
@@ -179,11 +166,8 @@ public:
 
         // Access
 
-            //- Return local objectRegistry
-            const objectRegistry& db() const;
-
             //- Return internal dimensions reference
-            const dimensionSet& internalDimensions() const;
+            virtual const dimensionSet& internalDimensions() const;
 
             //- Return internal field reference
             const LagrangianInternalDynamicField<Type>& internalField() const;
@@ -231,48 +215,6 @@ public:
             tmp<LagrangianSubField<Type>> value
             (
                 const LagrangianModel&,
-                const LagrangianSubMesh&
-            ) const;
-
-            //- Lookup and return another field source
-            template<class OtherType>
-            const LagrangianFieldSource<OtherType>& fieldSource
-            (
-                const word& name,
-                const LagrangianModel&
-            ) const;
-
-            //- Lookup and return another field source and then cast to a
-            //  specified type. Handle errors.
-            template<class OtherType, class OtherFieldSourceType>
-            const OtherFieldSourceType& fieldSourceCast
-            (
-                const word& name,
-                const LagrangianModel&
-            ) const;
-
-            //- Cast a model to the given type. Handle errors.
-            template<class OtherModelType>
-            const OtherModelType& modelCast
-            (
-                const LagrangianModel&
-            ) const;
-
-            //- Lookup and return the value of another field source
-            template<class OtherType>
-            tmp<LagrangianSubField<OtherType>> value
-            (
-                const word& name,
-                const LagrangianSource&,
-                const LagrangianSubMesh&
-            ) const;
-
-            //- Lookup and return the value of another field source
-            template<class OtherType>
-            tmp<LagrangianSubField<OtherType>> value
-            (
-                const word& name,
-                const LagrangianInjection&,
                 const LagrangianSubMesh&
             ) const;
 

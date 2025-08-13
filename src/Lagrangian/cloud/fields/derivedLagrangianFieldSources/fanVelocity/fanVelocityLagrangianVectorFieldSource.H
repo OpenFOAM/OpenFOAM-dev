@@ -22,55 +22,55 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::uniformFixedValueLagrangianFieldSource
+    Foam::fanVelocityLagrangianVectorFieldSource
 
 Description
-    This source condition provides a uniform fixed value.
+    This source condition provides a fan velocity profile, characterised by a
+    centreline velocity, a normal, and inner and outer fan angles. The
+    centreline velocity and normal are Function1s and can vary with time. This
+    is likely to be used in conjunction with a point injection model.
 
 Usage
     \table
-        Property          | Description         | Required? | Default
-        uniformValue      | The uniform value   | yes       |
+        Property      | Description                       | Required? | Default
+        Ucentre       | The velocity along the centreline | yes       |
+        thetaInner    | The inner fan angle               | yes       |
+        thetaOuter    | The outer fan angle               | yes       |
     \endtable
 
-    Example specification for a constant value:
+    Example specification:
     \verbatim
     <LagrangianModelName>
     {
-        type            uniformFixedValue;
-        uniformValue    0.1;
-    }
-    \endverbatim
-
-    Example specification for a time-varying value:
-    \verbatim
-    <LagrangianModelName>
-    {
-        type            uniformFixedValue;
-        uniformValue
+        type            fanVelocity;
+        Ucentre
         {
             type            table;
             values
             (
-                (0 0)
-                (1 0.1)
-                (9 0.1)
-                (10 0)
+                (0 (0.1 0 0))
+                (0.5 (0.5 0 0))
             );
         }
+        thetaInner      15 [deg];
+        thetaOuter      22.5 [deg];
     }
     \endverbatim
 
+See also
+    Foam::Function1s
+
 SourceFiles
-    uniformFixedValueLagrangianFieldSource.C
+    fanVelocityLagrangianVectorFieldSource.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef uniformFixedValueLagrangianFieldSource_H
-#define uniformFixedValueLagrangianFieldSource_H
+#ifndef fanVelocityLagrangianVectorFieldSource_H
+#define fanVelocityLagrangianVectorFieldSource_H
 
-#include "LagrangianFieldSource.H"
+#include "LagrangianFieldSources.H"
 #include "Function1LagrangianFieldSource.H"
+#include "fanDirectionLagrangianVectorFieldSource.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -78,21 +78,21 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-               Class uniformFixedValueLagrangianFieldSource Declaration
+            Class fanVelocityLagrangianVectorFieldSource Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Type>
-class uniformFixedValueLagrangianFieldSource
+class fanVelocityLagrangianVectorFieldSource
 :
-    public LagrangianFieldSource<Type>,
-    private Function1LagrangianFieldSource
+    public LagrangianVectorFieldSource,
+    private Function1LagrangianFieldSource,
+    private fanDirectionLagrangianVectorFieldSource
 {
 private:
 
     // Private Data
 
-        //- Uniform value
-        autoPtr<Function1<Type>> uniformValue_;
+        //- Centreline velocity
+        const autoPtr<Function1<vector>> Ucentre_;
 
 
     // Private Member Functions
@@ -104,60 +104,46 @@ private:
 public:
 
     //- Runtime type information
-    TypeName("uniformFixedValue");
+    TypeName("fanVelocity");
 
 
     // Constructors
 
         //- Construct from internal field and dictionary
-        uniformFixedValueLagrangianFieldSource
+        fanVelocityLagrangianVectorFieldSource
         (
             const regIOobject&,
             const dictionary& dict
         );
 
         //- Copy constructor setting the internal field reference
-        uniformFixedValueLagrangianFieldSource
+        fanVelocityLagrangianVectorFieldSource
         (
-            const uniformFixedValueLagrangianFieldSource<Type>&,
+            const fanVelocityLagrangianVectorFieldSource&,
             const regIOobject&
         );
 
         //- Construct and return a clone setting the internal field reference
-        virtual autoPtr<LagrangianFieldSource<Type>> clone
+        virtual autoPtr<LagrangianVectorFieldSource> clone
         (
             const regIOobject& iIo
         ) const
         {
-            return autoPtr<LagrangianFieldSource<Type>>
+            return autoPtr<LagrangianVectorFieldSource>
             (
-                new uniformFixedValueLagrangianFieldSource<Type>(*this, iIo)
+                new fanVelocityLagrangianVectorFieldSource(*this, iIo)
             );
         }
 
 
     //- Destructor
-    virtual ~uniformFixedValueLagrangianFieldSource();
+    virtual ~fanVelocityLagrangianVectorFieldSource();
 
 
     // Member Functions
 
-        //- Return the source value
-        virtual tmp<LagrangianSubField<Type>> sourceValue
-        (
-            const LagrangianSource&,
-            const LagrangianSubMesh&
-        ) const;
-
-        //- Return the internal coefficient
-        virtual tmp<LagrangianSubScalarField> internalCoeff
-        (
-            const LagrangianSource&,
-            const LagrangianSubMesh&
-        ) const;
-
         //- Return the value for an instantaneous injection
-        virtual tmp<LagrangianSubField<Type>> value
+        virtual tmp<LagrangianSubVectorField> value
         (
             const LagrangianInjection&,
             const LagrangianSubMesh&
@@ -171,12 +157,6 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "uniformFixedValueLagrangianFieldSource.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

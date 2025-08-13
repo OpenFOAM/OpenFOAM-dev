@@ -22,25 +22,43 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::massLagrangianScalarFieldSource
+    Foam::flowRateConeDiskVelocityLagrangianVectorFieldSource
 
 Description
-    This source condition provides the mass of introduced particles. It
-    converts between the corresponding volume/diameter/density/etc...,
-    conditions to automatically produce a value for the mass. It is selected
-    automatically by the clouds that need it, so the user should never need
-    to specify this condition explicitly.
+    This source condition provides a conical velocity profile over a disk,
+    characterised by inner and outer cone angles. The velocity magnitude is
+    obtained from the area of the disk and the flow rate of the corresponding
+    flowRateNumber condition. This condition must be used in conjunction with a
+    disk injection model and a flow rate condition from the number.
+
+Usage
+    \table
+        Property      | Description                       | Required? | Default
+        thetaInner    | The inner cone angle              | yes       |
+        thetaOuter    | The outer cone angle              | yes       |
+    \endtable
+
+    Example specification:
+    \verbatim
+    <LagrangianModelName>
+    {
+        type            flowRateConeDiskVelocity;
+        thetaInner      5 [deg];
+        thetaOuter      30 [deg];
+    }
+    \endverbatim
 
 SourceFiles
-    massLagrangianScalarFieldSource.C
+    flowRateConeDiskVelocityLagrangianVectorFieldSource.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef massLagrangianScalarFieldSource_H
-#define massLagrangianScalarFieldSource_H
+#ifndef flowRateConeDiskVelocityLagrangianVectorFieldSource_H
+#define flowRateConeDiskVelocityLagrangianVectorFieldSource_H
 
 #include "LagrangianFieldSources.H"
 #include "cloudLagrangianFieldSource.H"
+#include "coneDiskDirectionLagrangianVectorFieldSource.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -48,60 +66,69 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-             Class massLagrangianScalarFieldSource Declaration
+     Class flowRateConeDiskVelocityLagrangianVectorFieldSource Declaration
 \*---------------------------------------------------------------------------*/
 
-class massLagrangianScalarFieldSource
+class flowRateConeDiskVelocityLagrangianVectorFieldSource
 :
-    public LagrangianScalarFieldSource,
-    private cloudLagrangianFieldSource
+    public LagrangianVectorFieldSource,
+    private cloudLagrangianFieldSource,
+    private coneDiskDirectionLagrangianVectorFieldSource
 {
 public:
 
     //- Runtime type information
-    TypeName("mass");
+    TypeName("flowRateConeDiskVelocity");
 
 
     // Constructors
 
-        //- Construct from internal field
-        massLagrangianScalarFieldSource(const regIOobject&);
-
         //- Construct from internal field and dictionary
-        massLagrangianScalarFieldSource(const regIOobject&, const dictionary&);
+        flowRateConeDiskVelocityLagrangianVectorFieldSource
+        (
+            const regIOobject&,
+            const dictionary& dict
+        );
 
         //- Copy constructor setting the internal field reference
-        massLagrangianScalarFieldSource
+        flowRateConeDiskVelocityLagrangianVectorFieldSource
         (
-            const massLagrangianScalarFieldSource&,
+            const flowRateConeDiskVelocityLagrangianVectorFieldSource&,
             const regIOobject&
         );
 
         //- Construct and return a clone setting the internal field reference
-        virtual autoPtr<LagrangianScalarFieldSource> clone
+        virtual autoPtr<LagrangianVectorFieldSource> clone
         (
             const regIOobject& iIo
         ) const
         {
-            return autoPtr<LagrangianScalarFieldSource>
+            return autoPtr<LagrangianVectorFieldSource>
             (
-                new massLagrangianScalarFieldSource(*this, iIo)
+                new flowRateConeDiskVelocityLagrangianVectorFieldSource
+                (
+                    *this,
+                    iIo
+                )
             );
         }
 
 
     //- Destructor
-    virtual ~massLagrangianScalarFieldSource();
+    virtual ~flowRateConeDiskVelocityLagrangianVectorFieldSource();
 
 
     // Member Functions
 
         //- Return the value for an instantaneous injection
-        virtual tmp<LagrangianSubScalarField> value
+        virtual tmp<LagrangianSubVectorField> value
         (
             const LagrangianInjection&,
             const LagrangianSubMesh&
         ) const;
+
+        //- Write
+        virtual void write(Ostream&) const;
 };
 
 

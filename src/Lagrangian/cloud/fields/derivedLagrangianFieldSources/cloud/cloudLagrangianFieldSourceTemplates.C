@@ -23,38 +23,35 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "CloudLagrangianFieldSource.H"
+#include "cloudLagrangianFieldSource.H"
 #include "LagrangianModel.H"
 #include "cloud.H"
 #include "CloudTypes.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class Type>
 template<class Derived>
-Foam::CloudLagrangianFieldSource<Type>::CloudLagrangianFieldSource
+Foam::cloudLagrangianFieldSource::cloudLagrangianFieldSource
 (
     const Derived& field
 )
 :
-    field_(static_cast<const LagrangianFieldSource<Type>&>(field)),
+    field_(static_cast<const LagrangianFieldSourceBase&>(field)),
     cloud_(field_.db().template lookupType<Foam::cloud>())
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-template<class Type>
 template<class Cloud, class ... Clouds>
-bool Foam::CloudLagrangianFieldSource<Type>::isCloud() const
+bool Foam::cloudLagrangianFieldSource::isCloud() const
 {
     return CloudTypes<Cloud, Clouds ...>::isA(cloud_);
 }
 
 
-template<class Type>
 template<class Cloud, class ... Clouds>
-void Foam::CloudLagrangianFieldSource<Type>::assertCloud
+void Foam::cloudLagrangianFieldSource::assertCloud
 (
     const LagrangianModel& model,
     const LagrangianSubMesh& subMesh
@@ -64,7 +61,7 @@ void Foam::CloudLagrangianFieldSource<Type>::assertCloud
     {
         FatalErrorInFunction
             << "The '" << field_.type() << "' source of field '"
-            << (field_.db().dbDir()/field_.internalField().name()).c_str()
+            << (field_.db().dbDir()/field_.internalName()).c_str()
             << "' for the '" << model.type() << "' Lagrangian model '"
             << model.name() << "' of cloud '" << cloud_.mesh().name()
             << "' requires a cloud of type "
@@ -75,9 +72,8 @@ void Foam::CloudLagrangianFieldSource<Type>::assertCloud
 }
 
 
-template<class LagrangianFieldSource>
 template<class Cloud>
-const Cloud& Foam::CloudLagrangianFieldSource<LagrangianFieldSource>::cloud
+const Cloud& Foam::cloudLagrangianFieldSource::cloud
 (
     const LagrangianModel& model,
     const LagrangianSubMesh& subMesh

@@ -24,8 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "distributionDiameterLagrangianScalarFieldSource.H"
+#include "grouped.H"
 #include "uniformSizeNumberLagrangianScalarFieldSource.H"
-#include "LagrangianFields.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -38,6 +38,7 @@ distributionDiameterLagrangianScalarFieldSource
 )
 :
     LagrangianScalarFieldSource(iIo, dict),
+    cloudLagrangianFieldSource(*this),
     distribution_
     (
         distribution::New
@@ -48,8 +49,7 @@ distributionDiameterLagrangianScalarFieldSource
             randomGenerator::seed(iIo.name() + ':' + dict.dictName())
         )
     ),
-    timeIndex_(-1),
-    numberName_(dict.lookupOrDefault<word>("number", "number"))
+    timeIndex_(-1)
 {}
 
 
@@ -61,9 +61,9 @@ distributionDiameterLagrangianScalarFieldSource
 )
 :
     LagrangianScalarFieldSource(field, iIo),
+    cloudLagrangianFieldSource(*this),
     distribution_(field.distribution_, false),
-    timeIndex_(-1),
-    numberName_(field.numberName_)
+    timeIndex_(-1)
 {}
 
 
@@ -83,20 +83,21 @@ Foam::distributionDiameterLagrangianScalarFieldSource::value
     const LagrangianSubMesh& subMesh
 ) const
 {
-    // Look up the distribution number source
-    const uniformSizeNumberLagrangianScalarFieldSource& numberUsnFs =
-        fieldSourceCast<scalar, uniformSizeNumberLagrangianScalarFieldSource>
-        (
-            numberName_,
-            injection
-        );
+    // Obtain up the distribution number source
+    const uniformSizeNumberLagrangianScalarFieldSource& uniformSizeNumber =
+        cloud<clouds::grouped>(injection, subMesh)
+       .number
+       .sources()[injection.name()]
+       .fieldSourceCast<uniformSizeNumberLagrangianScalarFieldSource>
+        (injection);
 
     // The sample size exponent of the distribution is obtained from the number
     // source. This wasn't available during construction, so it is set here if
     // this is the first execution.
     if (timeIndex_ == -1)
     {
-        distribution_ = distribution::New(distribution_, numberUsnFs.sampleQ());
+        distribution_ =
+            distribution::New(distribution_, uniformSizeNumber.sampleQ());
     }
 
     // Restart the distribution if the time index has not changed. This ensures
@@ -125,7 +126,6 @@ void Foam::distributionDiameterLagrangianScalarFieldSource::write
     LagrangianScalarFieldSource::write(os);
 
     writeEntry(os, "distribution", internalDimensions(), distribution_());
-    writeEntryIfDifferent<word>(os, "number", "number", numberName_);
 }
 
 

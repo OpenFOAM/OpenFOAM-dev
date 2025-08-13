@@ -22,19 +22,18 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::CloudLagrangianFieldSource
+    Foam::cloudLagrangianFieldSource
 
 Description
-    Templated base class for source conditions that refer to a cloud. Not a
-    source condition in itself. Must be mixed in.
+    Mix-in for source conditions that refer to a cloud
 
 SourceFiles
-    CloudLagrangianFieldSource.C
+    cloudLagrangianFieldSource.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef CloudLagrangianFieldSource_H
-#define CloudLagrangianFieldSource_H
+#ifndef cloudLagrangianFieldSource_H
+#define cloudLagrangianFieldSource_H
 
 #include "LagrangianFieldsFwd.H"
 #include "LagrangianSubFieldsFwd.H"
@@ -44,28 +43,35 @@ SourceFiles
 namespace Foam
 {
 
+class LagrangianFieldSourceBase;
 class LagrangianModel;
 class cloud;
 
 /*---------------------------------------------------------------------------*\
-                 Class CloudLagrangianFieldSource Declaration
+                 Class cloudLagrangianFieldSource Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Type>
-class CloudLagrangianFieldSource
+class cloudLagrangianFieldSource
 {
     // Private Member Data
 
-        //- Reference to the derived field source
-        const LagrangianFieldSource<Type>& field_;
+        //- Reference to the field source
+        const LagrangianFieldSourceBase& field_;
 
         //- Reference to the cloud
         const Foam::cloud& cloud_;
 
 
-protected:
+public:
 
-    // Protected Member Functions
+    // Constructors
+
+        //- Construct with reference to the derived field source
+        template<class Derived>
+        cloudLagrangianFieldSource(const Derived&);
+
+
+    // Member Functions
 
         //- Determine whether the cloud is one of the given types
         template<class Cloud, class ... Clouds>
@@ -86,15 +92,6 @@ protected:
             const LagrangianModel& model,
             const LagrangianSubMesh& subMesh
         ) const;
-
-
-public:
-
-    // Constructors
-
-        //- Construct with reference to the derived field source
-        template<class Derived>
-        CloudLagrangianFieldSource(const Derived&);
 };
 
 
@@ -105,7 +102,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "CloudLagrangianFieldSource.C"
+    #include "cloudLagrangianFieldSourceTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

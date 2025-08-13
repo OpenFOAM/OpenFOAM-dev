@@ -26,14 +26,14 @@ Class
 
 Description
     This source condition provides a conical velocity profile, characterised by
-    a mean velocity and inner and outer cone angles. The mean velocity is a
-    Function1 and can vary with time. This is likely to be used in conjunction
-    with a point injection model.
+    a centreline velocity and inner and outer cone angles. The centreline
+    velocity is a Function1 and can vary with time. This is likely to be used
+    in conjunction with a point injection model.
 
 Usage
     \table
         Property      | Description                       | Required? | Default
-        Umean         | The velocity along the centreline | yes       |
+        Ucentre       | The velocity along the centreline | yes       |
         thetaInner    | The inner cone angle              | yes       |
         thetaOuter    | The outer cone angle              | yes       |
     \endtable
@@ -43,7 +43,7 @@ Usage
     <LagrangianModelName>
     {
         type            coneVelocity;
-        Umean
+        Ucentre
         {
             type            table;
             values
@@ -70,7 +70,7 @@ SourceFiles
 
 #include "LagrangianFieldSources.H"
 #include "Function1LagrangianFieldSource.H"
-#include "restartableRandomGenerator.H"
+#include "coneDirectionLagrangianVectorFieldSource.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -84,32 +84,21 @@ namespace Foam
 class coneVelocityLagrangianVectorFieldSource
 :
     public LagrangianVectorFieldSource,
-    private Function1LagrangianFieldSource<vector>
+    private Function1LagrangianFieldSource,
+    private coneDirectionLagrangianVectorFieldSource
 {
 private:
 
     // Private Data
 
-        //- Mean velocity
-        const autoPtr<Function1<vector>> Umean_;
-
-        //- Inner half-cone angle
-        const autoPtr<Function1<scalar>> thetaInner_;
-
-        //- Outer half-cone angle
-        const autoPtr<Function1<scalar>> thetaOuter_;
-
-        //- A random number generator
-        mutable restartableRandomGenerator rndGen_;
-
-        //- The time index
-        mutable label timeIndex_;
+        //- Centreline velocity
+        const autoPtr<Function1<vector>> Ucentre_;
 
 
     // Private Member Functions
 
         //- Use the base class' value method
-        using Function1LagrangianFieldSource<vector>::value;
+        using Function1LagrangianFieldSource::value;
 
 
 public:

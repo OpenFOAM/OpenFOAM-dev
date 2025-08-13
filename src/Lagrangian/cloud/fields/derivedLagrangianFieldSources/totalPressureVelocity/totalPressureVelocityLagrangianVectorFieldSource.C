@@ -24,8 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "totalPressureVelocityLagrangianVectorFieldSource.H"
-#include "coupledToIncompressibleFluid.H"
-#include "massive.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -38,9 +36,14 @@ totalPressureVelocityLagrangianVectorFieldSource
 )
 :
     LagrangianVectorFieldSource(iIo, dict),
-    Function1LagrangianFieldSource<vector>(*this),
-    CloudLagrangianFieldSource<vector>(*this),
-    dict_(new dictionary(dict)),
+    cloudLagrangianFieldSource(*this),
+    Function1LagrangianFieldSource(*this),
+    totalPressureVelocityMagnitudeLagrangianScalarFieldSource
+    (
+        *this,
+        *this,
+        dict
+    ),
     direction_
     (
         Function1<vector>::New
@@ -49,23 +52,6 @@ totalPressureVelocityLagrangianVectorFieldSource
             iIo.time().userUnits(),
             dimless,
             dict
-        )
-    ),
-    p0_(nullptr),
-    rhocName_
-    (
-        dict.lookupOrDefault<word>
-        (
-            clouds::coupled::carrierName("rho"),
-            "rho"
-        )
-    ),
-    pcName_
-    (
-        dict.lookupOrDefault<word>
-        (
-            clouds::coupled::carrierName("p"),
-            "p"
         )
     )
 {}
@@ -79,13 +65,14 @@ totalPressureVelocityLagrangianVectorFieldSource
 )
 :
     LagrangianVectorFieldSource(field, iIo),
-    Function1LagrangianFieldSource<vector>(*this),
-    CloudLagrangianFieldSource<vector>(*this),
-    dict_(field.dict_, false),
-    direction_(field.direction_, false),
-    p0_(field.p0_, false),
-    rhocName_(field.rhocName_),
-    pcName_(field.pcName_)
+    cloudLagrangianFieldSource(*this),
+    Function1LagrangianFieldSource(*this),
+    totalPressureVelocityMagnitudeLagrangianScalarFieldSource
+    (
+        field,
+        *this,
+        *this
+    )
 {}
 
 
@@ -105,89 +92,9 @@ Foam::totalPressureVelocityLagrangianVectorFieldSource::value
     const LagrangianSubMesh& subMesh
 ) const
 {
-    // Get the carrier pressure
-    const volScalarField& pcVf =
-        subMesh.mesh().mesh().lookupObject<volScalarField>(pcName_);
-    const CarrierField<scalar>& pc =
-        cloud<clouds::coupled>(injection, subMesh).carrierField(pcVf);
-
-    // Construct the total pressure function now we know the dimensions
-    if (dict_.valid())
-    {
-        p0_ =
-            Function1<scalar>::New
-            (
-                "p0",
-                subMesh.mesh().time().userUnits(),
-                pcVf.dimensions(),
-                dict_()
-            ).ptr();
-
-        dict_.clear();
-    }
-
-    // Evaluate the direction the pressure drop
-    const LagrangianSubVectorField direction
-    (
-        normalised(value(injection, subMesh, dimless, direction_()))
-    );
-    const LagrangianSubScalarField deltaP
-    (
-        max
-        (
-            value(injection, subMesh, pcVf.dimensions(), p0_())
-          - pc(subMesh),
-            dimensionedScalar(pcVf.dimensions(), scalar(0))
-        )
-    );
-
-    // Return the direction multiplied by the velocity magnitude associated
-    // with the dynamic head
-    if (pcVf.dimensions() == dimKinematicPressure)
-    {
-        const clouds::coupledToIncompressibleFluid& ctifCloud =
-            cloud<clouds::coupledToIncompressibleFluid>(injection, subMesh);
-
-        return direction*sqrt(2*deltaP/ctifCloud.rhoByRhoc);
-    }
-    else if (pcVf.dimensions() == dimPressure)
-    {
-        assertCloud
-        <
-            clouds::coupledToIncompressibleFluid,
-            clouds::massive
-        >(injection, subMesh);
-
-        if (isCloud<clouds::coupledToIncompressibleFluid>())
-        {
-            const clouds::coupledToIncompressibleFluid& ctifCloud =
-                cloud<clouds::coupledToIncompressibleFluid>(injection, subMesh);
-
-            // Get the carrier density
-            const volScalarField& rhocVf =
-                subMesh.mesh().mesh().lookupObject<volScalarField>(rhocName_);
-            const CarrierField<scalar>& rhoc =
-                cloud<clouds::coupled>(injection, subMesh).carrierField(rhocVf);
-
-            return direction*sqrt(2*deltaP/(ctifCloud.rhoByRhoc*rhoc(subMesh)));
-        }
-        else // if (isCloud<clouds::massive>())
-        {
-            const clouds::massive& mCloud =
-                cloud<clouds::massive>(injection, subMesh);
-
-            return direction*sqrt(2*deltaP/mCloud.rho(subMesh));
-        }
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "Dimensions of field " << pcVf.name()
-            << " not recognised as pressure"
-            << exit(FatalError);
-
-        return tmp<LagrangianSubVectorField>(nullptr);
-    }
+    return
+        Umag(injection, subMesh)
+       *normalised(value(injection, subMesh, dimless, direction_()));
 }
 
 
@@ -196,31 +103,11 @@ void Foam::totalPressureVelocityLagrangianVectorFieldSource::write
     Ostream& os
 ) const
 {
-    if (dict_.valid())
-    {
-        dict_->write(os, false);
-    }
-    else
-    {
-        LagrangianVectorFieldSource::write(os);
+    LagrangianVectorFieldSource::write(os);
 
-        writeEntry(os, db().time().userUnits(), dimless, direction_());
-        writeEntry(os, db().time().userUnits(), dimPressure, p0_());
-        writeEntryIfDifferent<word>
-        (
-            os,
-            clouds::coupled::carrierName("rho"),
-            "rho",
-            rhocName_
-        );
-        writeEntryIfDifferent<word>
-        (
-            os,
-            clouds::coupled::carrierName("p"),
-            "p",
-            pcName_
-        );
-    }
+    totalPressureVelocityMagnitudeLagrangianScalarFieldSource::write(os);
+
+    writeEntry(os, db().time().userUnits(), unitNone, direction_());
 }
 
 

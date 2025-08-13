@@ -24,28 +24,28 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Function1LagrangianFieldSource.H"
-#include "LagrangianMesh.H"
-#include "LagrangianModel.H"
+#include "LagrangianFieldSource.H"
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
 
 template<class Type>
-template<class Derived>
-Foam::Function1LagrangianFieldSource<Type>::Function1LagrangianFieldSource
+Foam::tmp<Foam::LagrangianSubField<Type>>
+Foam::Function1LagrangianFieldSource::value
 (
-    const Derived& field
-)
-:
-    field_(static_cast<const LagrangianFieldSource<Type>&>(field))
-{}
+    const LagrangianModel& model,
+    const LagrangianSubMesh& subMesh,
+    const Function1<Type>& function
+) const
+{
+    return value(model, subMesh, field_.internalDimensions(), function);
+}
 
 
-// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * *  Protected Member Functions * * * * * * * * * * * //
 
-template<class Type>
 template<class OtherType>
 Foam::tmp<Foam::LagrangianSubField<OtherType>>
-Foam::Function1LagrangianFieldSource<Type>::value
+Foam::Function1LagrangianFieldSource::value
 (
     const LagrangianModel& model,
     const LagrangianSubMesh& subMesh,
@@ -101,17 +101,16 @@ Foam::Function1LagrangianFieldSource<Type>::value
 }
 
 
-template<class Type>
-Foam::tmp<Foam::LagrangianSubField<Type>>
-Foam::Function1LagrangianFieldSource<Type>::value
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+template<class Derived>
+Foam::Function1LagrangianFieldSource::Function1LagrangianFieldSource
 (
-    const LagrangianModel& model,
-    const LagrangianSubMesh& subMesh,
-    const Function1<Type>& function
-) const
-{
-    return value(model, subMesh, field_.internalDimensions(), function);
-}
+    const Derived& field
+)
+:
+    field_(static_cast<const LagrangianFieldSourceBase&>(field))
+{}
 
 
 // ************************************************************************* //

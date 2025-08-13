@@ -23,82 +23,86 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "coneVelocityLagrangianVectorFieldSource.H"
+#include "flowRateConeDiskVelocityLagrangianVectorFieldSource.H"
+#include "diskInjection.H"
+#include "flowRateNumberLagrangianScalarFieldSource.H"
+#include "grouped.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::coneVelocityLagrangianVectorFieldSource::
-coneVelocityLagrangianVectorFieldSource
+Foam::flowRateConeDiskVelocityLagrangianVectorFieldSource::
+flowRateConeDiskVelocityLagrangianVectorFieldSource
 (
     const regIOobject& iIo,
     const dictionary& dict
 )
 :
     LagrangianVectorFieldSource(iIo, dict),
-    Function1LagrangianFieldSource(*this),
-    coneDirectionLagrangianVectorFieldSource(*this, dict),
-    Ucentre_
-    (
-        Function1<vector>::New
-        (
-            "Ucentre",
-            iIo.time().userUnits(),
-            dimVelocity,
-            dict
-        )
-    )
+    cloudLagrangianFieldSource(*this),
+    coneDiskDirectionLagrangianVectorFieldSource(*this, dict)
 {}
 
 
-Foam::coneVelocityLagrangianVectorFieldSource::
-coneVelocityLagrangianVectorFieldSource
+Foam::flowRateConeDiskVelocityLagrangianVectorFieldSource::
+flowRateConeDiskVelocityLagrangianVectorFieldSource
 (
-    const coneVelocityLagrangianVectorFieldSource& field,
+    const flowRateConeDiskVelocityLagrangianVectorFieldSource& field,
     const regIOobject& iIo
 )
 :
     LagrangianVectorFieldSource(field, iIo),
-    Function1LagrangianFieldSource(*this),
-    coneDirectionLagrangianVectorFieldSource(field, *this),
-    Ucentre_(field.Ucentre_, false)
+    cloudLagrangianFieldSource(*this),
+    coneDiskDirectionLagrangianVectorFieldSource(field, *this)
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::coneVelocityLagrangianVectorFieldSource::
-~coneVelocityLagrangianVectorFieldSource()
+Foam::flowRateConeDiskVelocityLagrangianVectorFieldSource::
+~flowRateConeDiskVelocityLagrangianVectorFieldSource()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::LagrangianSubVectorField>
-Foam::coneVelocityLagrangianVectorFieldSource::value
+Foam::flowRateConeDiskVelocityLagrangianVectorFieldSource::value
 (
     const LagrangianInjection& injection,
     const LagrangianSubMesh& subMesh
 ) const
 {
-    const LagrangianSubVectorField Ucentre
+    const flowRateNumberLagrangianScalarFieldSource& flowRateNumber =
+        cloud<clouds::grouped>(injection, subMesh)
+       .number
+       .sources()[injection.name()]
+       .fieldSourceCast<flowRateNumberLagrangianScalarFieldSource>(injection);
+
+    const Lagrangian::diskInjection& diskInjection =
+        modelCast<Lagrangian::diskInjection>(injection);
+
+    const LagrangianSubVectorField direction
     (
-        value(injection, subMesh, Ucentre_())
+        this->direction(injection, subMesh)
     );
 
-    const LagrangianSubScalarField magUcentre(mag(Ucentre));
-
-    return magUcentre*direction(injection, Ucentre/magUcentre);
+    return
+        flowRateNumber.Q(injection, subMesh)
+       /diskInjection.area()
+       *direction
+       /average(direction & diskInjection.axis());
 }
 
 
-void Foam::coneVelocityLagrangianVectorFieldSource::write(Ostream& os) const
+void Foam::flowRateConeDiskVelocityLagrangianVectorFieldSource::write
+(
+    Ostream& os
+) const
 {
     LagrangianVectorFieldSource::write(os);
 
-    coneDirectionLagrangianVectorFieldSource::write(os);
-
-    writeEntry(os, db().time().userUnits(), dimVelocity, Ucentre_());
+    coneDiskDirectionLagrangianVectorFieldSource::write(os);
 }
 
 
@@ -109,7 +113,7 @@ namespace Foam
     makeLagrangianTypeFieldSource
     (
         LagrangianVectorFieldSource,
-        coneVelocityLagrangianVectorFieldSource
+        flowRateConeDiskVelocityLagrangianVectorFieldSource
     );
 }
 

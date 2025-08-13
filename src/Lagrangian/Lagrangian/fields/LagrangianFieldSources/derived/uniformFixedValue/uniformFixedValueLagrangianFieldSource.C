@@ -36,7 +36,7 @@ uniformFixedValueLagrangianFieldSource
 )
 :
     LagrangianFieldSource<Type>(iIo, dict),
-    Function1LagrangianFieldSource<Type>(*this),
+    Function1LagrangianFieldSource(*this),
     uniformValue_
     (
         Function1<Type>::New
@@ -59,7 +59,7 @@ uniformFixedValueLagrangianFieldSource
 )
 :
     LagrangianFieldSource<Type>(field, iIo),
-    Function1LagrangianFieldSource<Type>(*this),
+    Function1LagrangianFieldSource(*this),
     uniformValue_(field.uniformValue_, false)
 {}
 
