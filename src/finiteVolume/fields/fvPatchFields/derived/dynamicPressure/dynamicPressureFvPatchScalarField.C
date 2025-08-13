@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -121,7 +121,7 @@ Foam::dynamicPressureFvPatchScalarField::dynamicPressureFvPatchScalarField
     rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
     psiName_(dict.lookupOrDefault<word>("psi", "none")),
     gamma_(dict.lookupOrDefault<scalar>("gamma", dimless, 1)),
-    p0_("p0", dimPressure, dict, p.size())
+    p0_("p0", iF.dimensions(), dict, p.size())
 {
     if (dict.found("value"))
     {
