@@ -25,7 +25,10 @@ Class
     Foam::turbulentDispersion
 
 Description
-    ...
+    Model for turbulent dispersion. This model creates a random turbulent
+    velocity fluctuation based on the carrier's turbulent properties. It then
+    uses the drag model to construct a corresponding force which it applies for
+    a duration equal to the carrier's turbulent time scale.
 
 Usage
     Example specification:
