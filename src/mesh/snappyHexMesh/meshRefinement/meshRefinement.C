@@ -1116,8 +1116,11 @@ Foam::meshRefinement::meshRefinement
     shells_(shells),
     meshCutter_
     (
-        mesh,
-        false   // do not try to read history.
+        hexRef8::New
+        (
+            mesh,
+            false   // do not try to read history.
+        )
     ),
     surfaceIndex_
     (
@@ -2235,9 +2238,7 @@ void Foam::meshRefinement::distribute(const polyDistributionMap& map)
 {
     // mesh_ already distributed; distribute my member data
 
-    // surfaceQueries_ ok.
-
-    // refinement
+    // Explicitly redistribute the hexRef8 meshObject
     meshCutter_.distribute(map);
 
     // surfaceIndex is face data.
@@ -2325,14 +2326,15 @@ void Foam::meshRefinement::topoChange
 {
     // For now only meshCutter has storable/retrievable data.
 
-    // Update numbering of cells/vertices.
-    meshCutter_.topoChange
-    (
-        map,
-        pointsToRestore,
-        facesToRestore,
-        cellsToRestore
-    );
+    // Update numbering of cells/vertices in hexRef8
+    // Now done automatically in polyMesh::topoChange
+    // meshCutter_.topoChange
+    // (
+    //     map,
+    //     pointsToRestore,
+    //     facesToRestore,
+    //     cellsToRestore
+    // );
 
     // Update surfaceIndex
     updateList(map.faceMap(), label(-1), surfaceIndex_);
@@ -2757,7 +2759,8 @@ void Foam::meshRefinement::write
 
     if (writeFlags && !(writeFlags & NOWRITEREFINEMENT))
     {
-        meshCutter_.write();
+        // The hexRef8 meshObject state writing is now handled by polyMesh
+        // meshCutter_.write();
         surfaceIndex_.write();
     }
 

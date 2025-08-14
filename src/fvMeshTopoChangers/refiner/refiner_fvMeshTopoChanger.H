@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -189,7 +189,7 @@ class refiner
         label nBufferLayers_;
 
         //- Mesh cutting engine
-        hexRef8 meshCutter_;
+        hexRef8& meshCutter_;
 
         //- Dump cellLevel for postprocessing
         Switch dumpLevel_;
@@ -202,10 +202,6 @@ class refiner
 
         //- Protected cells (usually since not hexes)
         PackedBoolList protectedCells_;
-
-        //- Has the mesh refinement changed since the last time
-        //  the refinement history was written
-        mutable bool changedSinceWrite_;
 
         //- The time index used for updating
         label timeIndex_;
@@ -355,12 +351,6 @@ public:
 
     // Member Functions
 
-        //- Direct access to the refinement engine
-        const hexRef8& meshCutter() const
-        {
-            return meshCutter_;
-        }
-
         //- Cells which should not be refined/unrefined
         const PackedBoolList& protectedCell() const
         {
@@ -384,12 +374,6 @@ public:
 
         //- Update corresponding to the given distribution map
         virtual void distribute(const polyDistributionMap&);
-
-
-    // Writing
-
-        //- Write using given format, version and compression
-        virtual bool write(const bool write = true) const;
 
 
     // Member Operators

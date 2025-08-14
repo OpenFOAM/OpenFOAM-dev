@@ -35,6 +35,7 @@ SourceFiles
 #ifndef hexRef8_H
 #define hexRef8_H
 
+#include "DemandDrivenMeshObject.H"
 #include "labelIOList.H"
 #include "face.H"
 #include "HashSet.H"
@@ -63,6 +64,13 @@ class polyDistributionMap;
 \*---------------------------------------------------------------------------*/
 
 class hexRef8
+:
+    public DemandDrivenMeshObject
+    <
+        polyMesh,
+        PermanentMeshObject,
+        hexRef8
+    >
 {
     // Private Data
 
@@ -524,8 +532,26 @@ public:
                 const labelList& cellMap
             );
 
+            //- Correct weighting factors for moving mesh.
+            virtual bool movePoints();
+
+            //- Update from another mesh using the given map
+            virtual void mapMesh(const polyMeshMap&);
+
             //- Update local numbering for mesh redistribution
-            void distribute(const polyDistributionMap&);
+            virtual void distribute(const polyDistributionMap&);
+
+            //- Reordered/removed trailing patches.
+            //  If validBoundary call is parallel
+            //  synced and all add the same patch with same settings
+            virtual void reorderPatches
+            (
+                const labelUList& newToOld,
+                const bool validBoundary
+            );
+
+            //- Inserted patch at patchi
+            virtual void addPatch(const label patchi);
 
             //- Debug: Check coupled mesh for correctness
             void checkMesh() const;
@@ -575,8 +601,14 @@ public:
             // Set instance for mesh files
             void setInstance(const fileName& inst);
 
-            //- Force writing refinement+history to polyMesh directory.
-            bool write(const bool write = true) const;
+            //- Write using given format, version and compression
+            virtual bool writeObject
+            (
+                IOstream::streamFormat,
+                IOstream::versionNumber,
+                IOstream::compressionType,
+                const bool write = true
+            ) const;
 
 
     // Member Operators

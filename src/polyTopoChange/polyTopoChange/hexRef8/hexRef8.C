@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1788,6 +1788,12 @@ bool Foam::hexRef8::matchHexShape
 
 Foam::hexRef8::hexRef8(const polyMesh& mesh, const bool readHistory)
 :
+    DemandDrivenMeshObject
+    <
+        polyMesh,
+        PermanentMeshObject,
+        hexRef8
+    >(mesh),
     mesh_(mesh),
     cellLevel_
     (
@@ -1901,6 +1907,8 @@ Foam::hexRef8::hexRef8(const polyMesh& mesh, const bool readHistory)
     {
         checkMesh();
     }
+
+    writeOpt() = IOobject::AUTO_WRITE;
 }
 
 
@@ -1913,6 +1921,12 @@ Foam::hexRef8::hexRef8
     const scalar level0Edge
 )
 :
+    DemandDrivenMeshObject
+    <
+        polyMesh,
+        PermanentMeshObject,
+        hexRef8
+    >(mesh),
     mesh_(mesh),
     cellLevel_
     (
@@ -2008,6 +2022,8 @@ Foam::hexRef8::hexRef8
     {
         checkMesh();
     }
+
+    writeOpt() = IOobject::AUTO_WRITE;
 }
 
 
@@ -2019,6 +2035,12 @@ Foam::hexRef8::hexRef8
     const scalar level0Edge
 )
 :
+    DemandDrivenMeshObject
+    <
+        polyMesh,
+        PermanentMeshObject,
+        hexRef8
+    >(mesh),
     mesh_(mesh),
     cellLevel_
     (
@@ -4354,6 +4376,21 @@ void Foam::hexRef8::subset
 }
 
 
+bool Foam::hexRef8::movePoints()
+{
+    return true;
+}
+
+
+void Foam::hexRef8::mapMesh(const polyMeshMap&)
+{
+    // meshCutter_ will need to be re-constructed from the new mesh
+    // and protectedCells_ updated.
+    // The constructor should be refactored for the protectedCells_ update.
+    NotImplemented;
+}
+
+
 void Foam::hexRef8::distribute(const polyDistributionMap& map)
 {
     if (debug)
@@ -4381,6 +4418,18 @@ void Foam::hexRef8::distribute(const polyDistributionMap& map)
     // Clear cell shapes
     cellShapesPtr_.clear();
 }
+
+
+void Foam::hexRef8::reorderPatches
+(
+    const labelUList& newToOld,
+    const bool validBoundary
+)
+{}
+
+
+void Foam::hexRef8::addPatch(const label patchi)
+{}
 
 
 void Foam::hexRef8::checkMesh() const
@@ -5469,7 +5518,13 @@ void Foam::hexRef8::setUnrefinement
 }
 
 
-bool Foam::hexRef8::write(const bool write) const
+bool Foam::hexRef8::writeObject
+(
+    IOstream::streamFormat fmt,
+    IOstream::versionNumber ver,
+    IOstream::compressionType cmp,
+    const bool write
+) const
 {
     if (cellLevel_.size() != mesh_.nCells())
     {
@@ -5488,13 +5543,13 @@ bool Foam::hexRef8::write(const bool write) const
     }
 
     bool writeOk =
-        cellLevel_.write(write)
-     && pointLevel_.write(write)
-     && level0Edge_.write(write);
+        cellLevel_.writeObject(fmt, ver, cmp, write)
+     && pointLevel_.writeObject(fmt, ver, cmp, write)
+     && level0Edge_.writeObject(fmt, ver, cmp, write);
 
     if (history_.active())
     {
-        writeOk = writeOk && history_.write(write);
+        writeOk = writeOk && history_.writeObject(fmt, ver, cmp, write);
     }
 
     return writeOk;

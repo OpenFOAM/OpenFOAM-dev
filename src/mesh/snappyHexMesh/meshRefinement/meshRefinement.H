@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -181,8 +181,8 @@ private:
         //- All shell-refinement interaction
         const refinementRegions& shells_;
 
-        //- Refinement engine
-        hexRef8 meshCutter_;
+        //- Reference to refinement engine meshObject
+        hexRef8& meshCutter_;
 
         //- Per cc-cc vector the index of the surface hit
         labelIOList surfaceIndex_;

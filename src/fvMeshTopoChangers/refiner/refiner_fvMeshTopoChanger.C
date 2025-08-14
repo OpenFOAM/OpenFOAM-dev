@@ -1165,11 +1165,10 @@ Foam::fvMeshTopoChangers::refiner::refiner(fvMesh& mesh, const dictionary& dict)
 :
     fvMeshTopoChanger(mesh),
     dict_(dict),
-    meshCutter_(mesh),
+    meshCutter_(hexRef8::New(mesh)),
     dumpLevel_(false),
     nRefinementIterations_(0),
     protectedCells_(mesh.nCells(), 0),
-    changedSinceWrite_(false),
     timeIndex_(-1)
 {
     // Read static part of dictionary
@@ -1526,14 +1525,9 @@ bool Foam::fvMeshTopoChangers::refiner::update()
         {
             // Compact refinement history occasionally (how often?).
             // Unrefinement causes holes in the refinementHistory.
-            const_cast<refinementHistory&>(meshCutter().history()).compact();
+            const_cast<refinementHistory&>(meshCutter_.history()).compact();
         }
         nRefinementIterations_++;
-    }
-
-    if (hasChanged)
-    {
-        changedSinceWrite_ = true;
     }
 
     return hasChanged;
@@ -1541,76 +1535,18 @@ bool Foam::fvMeshTopoChangers::refiner::update()
 
 
 void Foam::fvMeshTopoChangers::refiner::topoChange(const polyTopoChangeMap& map)
-{
-    // Update numbering of cells/vertices.
-    meshCutter_.topoChange(map);
-}
+{}
 
 
 void Foam::fvMeshTopoChangers::refiner::mapMesh(const polyMeshMap& map)
-{
-    // meshCutter_ will need to be re-constructed from the new mesh
-    // and protectedCells_ updated.
-    // The constructor should be refactored for the protectedCells_ update.
-    NotImplemented;
-}
+{}
 
 
 void Foam::fvMeshTopoChangers::refiner::distribute
 (
     const polyDistributionMap& map
 )
-{
-    // Redistribute the mesh cutting engine
-    meshCutter_.distribute(map);
-}
-
-
-bool Foam::fvMeshTopoChangers::refiner::write(const bool write) const
-{
-    if (changedSinceWrite_)
-    {
-        // Force refinement data to go to the current time directory.
-        const_cast<hexRef8&>(meshCutter_).setInstance(mesh().time().name());
-
-        bool writeOk = meshCutter_.write(write);
-
-        if (dumpLevel_)
-        {
-            volScalarField scalarCellLevel
-            (
-                IOobject
-                (
-                    "cellLevel",
-                    mesh().time().name(),
-                    mesh(),
-                    IOobject::NO_READ,
-                    IOobject::AUTO_WRITE,
-                    false
-                ),
-                mesh(),
-                dimensionedScalar(dimless, 0)
-            );
-
-            const labelList& cellLevel = meshCutter_.cellLevel();
-
-            forAll(cellLevel, celli)
-            {
-                scalarCellLevel[celli] = cellLevel[celli];
-            }
-
-            writeOk = writeOk && scalarCellLevel.write();
-        }
-
-        changedSinceWrite_ = false;
-
-        return writeOk;
-    }
-    else
-    {
-        return true;
-    }
-}
+{}
 
 
 // ************************************************************************* //
