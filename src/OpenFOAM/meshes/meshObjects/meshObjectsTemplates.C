@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -322,7 +322,10 @@ void Foam::meshObjects::clear(objectRegistry& obr)
 
     forAllIter(typename HashTable<MeshObjectType<Mesh>*>, meshObjects, iter)
     {
-        Delete<Mesh>(iter()->io_);
+        if (!isA<PermanentMeshObject<Mesh>>(*iter()))
+        {
+            Delete<Mesh>(iter()->io_);
+        }
     }
 }
 

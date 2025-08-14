@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,6 +40,9 @@ Description
     - RepatchableMeshObject:
         mesh object to be updated on patch or topology change,
         mesh-to-mesh mapping, redistribution or motion otherwise deleted
+    - PermanentMeshObject:
+        mesh object to be updated on patch or topology change,
+        mesh-to-mesh mapping, redistribution or motion and never deleted
 
 \*---------------------------------------------------------------------------*/
 
@@ -86,7 +89,7 @@ public:
 
 
 /*---------------------------------------------------------------------------*\
-                     Class MoveableMeshObject Declaration
+                    Class MoveableMeshObject Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Mesh>
@@ -108,7 +111,7 @@ public:
 
 
 /*---------------------------------------------------------------------------*\
-                   Class DistributeableMeshObject Declaration
+                    Class DistributeableMeshObject Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Mesh>
@@ -155,7 +158,7 @@ public:
 
 
 /*---------------------------------------------------------------------------*\
-                       Class RepatchableMeshObject Declaration
+                    Class RepatchableMeshObject Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Mesh>
@@ -181,6 +184,26 @@ public:
 
     //- Inserted patch at patchi
     virtual void addPatch(const label patchi) = 0;
+};
+
+
+
+/*---------------------------------------------------------------------------*\
+                    Class PermanentMeshObject Declaration
+\*---------------------------------------------------------------------------*/
+
+template<class Mesh>
+class PermanentMeshObject
+:
+    public RepatchableMeshObject<Mesh>
+{
+public:
+
+    template<class Type>
+    PermanentMeshObject(Type& mo)
+    :
+        RepatchableMeshObject<Mesh>(mo)
+    {}
 };
 
 
