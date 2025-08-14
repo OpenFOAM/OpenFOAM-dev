@@ -94,6 +94,32 @@ DimensionedField<Type, GeoMesh, PrimitiveField>::DimensionedField
     const IOobject& io,
     const Mesh& mesh,
     const dimensionSet& dims,
+    const tmp<PrimitiveField<Type>>& tfield
+)
+:
+    regIOobject(io),
+    PrimitiveField<Type>(tfield),
+    OldTimeField<DimensionedField>(this->time().timeIndex()),
+    mesh_(mesh),
+    dimensions_(dims)
+{
+    if (this->size() && this->size() != GeoMesh::size(mesh))
+    {
+        FatalErrorInFunction
+            << "size of field = " << this->size()
+            << " is not the same as the size of mesh = "
+            << GeoMesh::size(mesh)
+            << abort(FatalError);
+    }
+}
+
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+DimensionedField<Type, GeoMesh, PrimitiveField>::DimensionedField
+(
+    const IOobject& io,
+    const Mesh& mesh,
+    const dimensionSet& dims,
     const bool checkIOFlags
 )
 :
@@ -381,6 +407,40 @@ DimensionedField<Type, GeoMesh, PrimitiveField>::New
             mesh,
             ds,
             field
+        ),
+        cacheTmp
+    );
+}
+
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+Foam::tmp<Foam::DimensionedField<Type, GeoMesh, PrimitiveField>>
+DimensionedField<Type, GeoMesh, PrimitiveField>::New
+(
+    const word& name,
+    const Mesh& mesh,
+    const dimensionSet& ds,
+    const tmp<PrimitiveField<Type>>& tfield
+)
+{
+    const bool cacheTmp = mesh.thisDb().cacheTemporaryObject(name);
+
+    return tmp<DimensionedField<Type, GeoMesh, PrimitiveField>>
+    (
+        new DimensionedField<Type, GeoMesh, PrimitiveField>
+        (
+            IOobject
+            (
+                name,
+                mesh.thisDb().time().name(),
+                mesh.thisDb(),
+                IOobject::NO_READ,
+                IOobject::NO_WRITE,
+                cacheTmp
+            ),
+            mesh,
+            ds,
+            tfield
         ),
         cacheTmp
     );
