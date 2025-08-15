@@ -356,16 +356,13 @@ class hexRef8
             ) const;
 
 
-    //- Declare friendship with the base mesh object so that it can use
-    //  this class' private constructors
-    friend class DemandDrivenMeshObject
-    <
-        polyMesh,
-        PermanentMeshObject,
-        hexRef8
-    >;
+public:
 
-    // Private constructors
+    //- Runtime type information
+    ClassName("hexRef8");
+
+
+    // Constructors
 
         //- Construct from mesh, read_if_present refinement data
         //  (from write below). If readHistory is true does read_if_present
@@ -392,15 +389,6 @@ class hexRef8
             const labelList& pointLevel,
             const scalar level0Edge = -great
         );
-
-
-public:
-
-    //- Runtime type information
-    ClassName("hexRef8");
-
-
-    // Constructors
 
         //- Disallow default bitwise copy construction
         hexRef8(const hexRef8&) = delete;
@@ -507,7 +495,7 @@ public:
             //  Called after the mesh change. setRefinement will already have
             //  made sure the pointLevel_ and cellLevel_ are the size of the new
             //  mesh so we only need to account for reordering.
-            void topoChange(const polyTopoChangeMap&);
+            virtual void topoChange(const polyTopoChangeMap&);
 
 
             // Restoring : is where other processes delete and reinsert data.
