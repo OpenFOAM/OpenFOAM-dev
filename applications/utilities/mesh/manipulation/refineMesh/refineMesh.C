@@ -200,9 +200,6 @@ void refineZone
 
         // Update mesh objects
         mesh.topoChange(map);
-
-        // Update hexRef8 cells/vertices
-        meshCutter.topoChange(map);
     }
     else
     {
@@ -469,13 +466,6 @@ int main(int argc, char *argv[])
     Info<< "Writing mesh to ";
     mesh.write();
     Info<< mesh.facesInstance()/mesh.meshDir() << endl;
-
-    if (meshCutterPtr)
-    {
-        Info<< "Writing hexRef8 refinement level files to "
-            << mesh.facesInstance()/mesh.meshDir() << endl;
-        meshCutterPtr->write();
-    }
 
     Info<< "\nEnd\n" << endl;
 
