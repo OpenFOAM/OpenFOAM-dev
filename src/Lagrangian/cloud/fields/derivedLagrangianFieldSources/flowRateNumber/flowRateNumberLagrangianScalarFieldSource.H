@@ -68,7 +68,7 @@ Usage
     {
         type            flowRateNumber;
         uniformSize     volume; // number, surfaceArea, mass
-        volumetricFlowRate 1 [g/s];
+        volumetricFlowRate 1 [ml/s];
     }
     \endverbatim
 
