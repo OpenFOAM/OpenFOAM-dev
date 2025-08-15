@@ -55,14 +55,14 @@ namespace functionObjects
 void Foam::clouds::kinematicParcel::initialise(const bool predict)
 {
     cloud::initialise(predict);
-    coupled::initialise(predict);
+    carried::initialise(predict);
 }
 
 
 void Foam::clouds::kinematicParcel::partition()
 {
     cloud::partition();
-    coupled::partition();
+    carried::partition();
 }
 
 

@@ -22,20 +22,22 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::clouds::coupled
+    Foam::clouds::carried
 
 Description
-    Base class for clouds which are coupled to a fluid
+    Base class for clouds which are carried by a fluid
 
 SourceFiles
-    coupled.C
+    carried.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef coupled_H
-#define coupled_H
+#ifndef carried_H
+#define carried_H
 
-#include "carried.H"
+#include "cloud.H"
+#include "PtrDictionary.H"
+#include "volFieldsFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -43,29 +45,27 @@ namespace Foam
 {
 
 template<class Type>
-class CarrierEqn;
+class CarrierField;
 
 namespace clouds
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class coupled Declaration
+                           Class carried Declaration
 \*---------------------------------------------------------------------------*/
 
-class coupled
-:
-    public carried
+class carried
 {
 private:
 
     // Private Data
 
-        //- Carrier equations
-        #define DECLARE_CARRIER_EQNS(Type, nullArg)       \
-            mutable PtrDictionary<CarrierEqn<Type>>       \
-                CAT3(carrier, CAPITALIZE(Type), Eqns_);
-        FOR_ALL_FIELD_TYPES(DECLARE_CARRIER_EQNS);
-        #undef DECLARE_CARRIER_EQNS
+        //- Carrier fields
+        #define DECLARE_CARRIER_FIELDS(Type, nullArg)     \
+            mutable PtrDictionary<CarrierField<Type>>     \
+                CAT3(carrier, CAPITALIZE(Type), Fields_);
+        FOR_ALL_FIELD_TYPES(DECLARE_CARRIER_FIELDS);
+        #undef DECLARE_CARRIER_FIELDS
 
         //- Carrier velocity time derivative
         mutable autoPtr<volVectorField> dUdtcPtr_;
@@ -73,24 +73,32 @@ private:
 
     // Private Member Functions
 
-        //- Calculate the carrier kinematic viscosity
-        virtual tmp<LagrangianSubScalarField> calcNuc
-        (
-            const LagrangianModelRef& model,
-            const LagrangianSubMesh& subMesh
-        ) const = 0;
-
-        //- Access the carrier equations. Only specialisations are defined.
+        //- Access the carrier fields. Only specialisations are defined.
         template<class Type>
-        PtrDictionary<CarrierEqn<Type>>& carrierEqns() const;
+        PtrDictionary<CarrierField<Type>>& carrierFields() const;
+
+        //- Clear the carrier fields
+        void clearCarrierFields();
+
+        //- Reset the carrier fields
+        void resetCarrierFields(const bool predict);
+
+        //- Read the carrier velocity time derivative
+        autoPtr<volVectorField> readDUdtc(const cloud& c) const;
+
+        //- Access the carrier velocity time derivative
+        const volVectorField& dUdtc() const;
 
 
 protected:
 
     // Protected Member Functions
 
-        //- Clear the carrier equations
-        void clearCarrierEqns();
+        //- Initialisation hook
+        void initialise(const bool predict);
+
+        //- Partition hook
+        void partition();
 
 
 public:
@@ -98,44 +106,46 @@ public:
     // Public Static Data
 
         //- Run-time type information
-        TypeName("coupled");
+        TypeName("carried");
 
 
     // Public Data
 
-        //- Carrier kinematic viscosity
-        const CloudDerivedField<scalar>& nuc;
+        //- Carrier velocity
+        const CarrierField<vector>& Uc;
+
+        //- Carrier velocity curl
+        const CarrierField<vector>& curlUc;
+
+        //- Carrier advective derivative
+        const CarrierField<vector>& DUDtc;
 
 
     // Constructors
 
         //- Construct from a reference to the cloud
-        coupled(const cloud& c);
+        carried(const cloud& c);
 
 
     //- Destructor
-    virtual ~coupled();
+    virtual ~carried();
 
 
     // Member Functions
 
-        // Equations
+        //- Modify a name to disambiguate it as relating to the carrier
+        static word carrierName(const word& name);
 
-            //- Add/get a carrier equation to/from the cache
-            template<class Type>
-            CarrierEqn<Type>& carrierEqn(const VolField<Type>&);
 
-            //- Add/get a carrier equation to/from the cache
-            template<class Type>
-            const CarrierEqn<Type>& carrierEqn(const VolField<Type>&) const;
+        // Fields
 
-            //- Add/get a carrier equation to/from the cache
+            //- Add/get a carrier field to/from the cache
             template<class Type>
-            CarrierEqn<Type>& carrierEqn(const CarrierField<Type>&);
+            const CarrierField<Type>& carrierField(const VolField<Type>&) const;
 
-            //- Add/get a carrier equation to/from the cache
-            template<class Type>
-            const CarrierEqn<Type>& carrierEqn(const CarrierField<Type>&) const;
+            //- Add/get a carrier field to/from the cache
+            template<class Type, class ... Args>
+            const CarrierField<Type>& carrierField(const Args& ... args) const;
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -146,7 +156,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "coupledTemplates.C"
+    #include "carriedTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

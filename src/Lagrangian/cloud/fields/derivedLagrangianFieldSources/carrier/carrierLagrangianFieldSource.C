@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "carrierLagrangianFieldSource.H"
-#include "coupled.H"
+#include "carried.H"
 #include "volFields.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -74,7 +74,7 @@ Foam::carrierLagrangianFieldSource<Type>::value
 ) const
 {
     return
-        this->template cloud<clouds::coupled>(injection, subMesh).carrierField
+        this->template cloud<clouds::carried>(injection, subMesh).carrierField
         (
             subMesh.mesh().mesh().lookupObject<VolField<Type>>(fieldcName_)
         )(subMesh);

@@ -102,7 +102,7 @@ void Foam::Lagrangian::SaffmanMeiLift::addUSup
 {
     const LagrangianSubTensorField& L = this->L(U.mesh());
 
-    const LagrangianSubVectorField& Uc = cloud<clouds::coupled>().Uc(U.mesh());
+    const LagrangianSubVectorField& Uc = cloud<clouds::carried>().Uc(U.mesh());
 
     if (eqn.isPsi(U))
     {
@@ -142,7 +142,7 @@ Foam::Lagrangian::SaffmanMeiLift::SaffmanMeiLift
         )
     )
 {
-    cloud<clouds::coupled>().curlUc.psi();
+    cloud<clouds::carried>().curlUc.psi();
 }
 
 

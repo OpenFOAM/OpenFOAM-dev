@@ -48,11 +48,11 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class CarrierField Declaration
+                       Class CarrierFieldBase Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
-class CarrierField
+class CarrierFieldBase
 :
     public CloudDerivedField<Type>
 {
@@ -94,16 +94,36 @@ class CarrierField
         ) const;
 
 
+protected:
+
+    // Protected Member Functions
+
+        //- Return whether or not to interpolate in time as well as space
+        bool useOldTime(const LagrangianMesh&) const;
+
+        //- Return the interpolation engine
+        const interpolation<Type>& psiInterpolation
+        (
+            const LagrangianMesh&
+        ) const;
+
+        //- Return the old-time interpolation engine
+        const interpolation<Type>& psi0Interpolation
+        (
+            const LagrangianMesh&
+        ) const;
+
+
 public:
 
     // Constructors
 
         //- Construct from a reference to a carrier field
-        CarrierField(const VolField<Type>&);
+        CarrierFieldBase(const VolField<Type>&);
 
         //- Construct from a name and an evaluation function
         template<class F>
-        CarrierField(const word& name, const F& f);
+        CarrierFieldBase(const word& name, const F& f);
 
 
     // Member Functions
@@ -117,6 +137,92 @@ public:
         //- Reset
         void reset(const bool predict);
 };
+
+
+/*---------------------------------------------------------------------------*\
+                     Class CarrierFieldGradBase Declaration
+\*---------------------------------------------------------------------------*/
+
+template<class Type>
+class CarrierFieldGradBase
+:
+    public CarrierFieldBase<Type>
+{
+    // Private Type Definitions
+
+        //- The gradient type
+        typedef typename outerProduct<Type, vector>::type GradType;
+
+
+    // Private Member Functions
+
+        //- Interpolate the gradient and return the result
+        tmp<LagrangianSubField<GradType>> interpolateGrad
+        (
+            const LagrangianModelRef&,
+            const LagrangianSubMesh& subMesh
+        ) const;
+
+
+public:
+
+    // Constructors
+
+        //- Construct from arguments passed to the base class
+        template<class ... Args>
+        CarrierFieldGradBase(const Args& ... args);
+
+
+    // Public Data
+
+        // The gradient derived field
+        CloudDerivedField<GradType> grad;
+
+
+    // Member Functions
+
+        //- Reset
+        void reset(const bool predict);
+};
+
+
+/*---------------------------------------------------------------------------*\
+                 Typedef CarrierFieldBaseOrGradBase Declaration
+\*---------------------------------------------------------------------------*/
+
+template<class Type>
+using CarrierFieldBaseOrGradBase =
+    typename std::conditional
+    <
+        (pTraits<Type>::rank > 1),
+        CarrierFieldBase<Type>,
+        CarrierFieldGradBase<Type>
+    >::type;
+
+
+/*---------------------------------------------------------------------------*\
+                         Class CarrierField Declaration
+\*---------------------------------------------------------------------------*/
+
+template<class Type>
+class CarrierField
+:
+    public CarrierFieldBaseOrGradBase<Type>
+{
+    // Private Type Definitions
+
+        //- The base class
+        typedef CarrierFieldBaseOrGradBase<Type> Base;
+
+
+public:
+
+    // Constructors
+
+        //- Inherit constructors
+        using Base::Base;
+};
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

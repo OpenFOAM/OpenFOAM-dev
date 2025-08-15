@@ -75,8 +75,8 @@ void Foam::Lagrangian::gravity::addSup
 {
     if
     (
-        isCloud<clouds::coupled>()
-     && eqn.isPsi(cloud<clouds::coupled>().Uc(U.mesh()))
+        isCloud<clouds::carried>()
+     && eqn.isPsi(cloud<clouds::carried>().Uc(U.mesh()))
     )
     {
         // Gravity does not contribute to the carrier momentum equation
@@ -107,8 +107,8 @@ void Foam::Lagrangian::gravity::addSup
 {
     if
     (
-        isCloud<clouds::coupled>()
-     && eqn.isPsi(cloud<clouds::coupled>().Uc(U.mesh()))
+        isCloud<clouds::carried>()
+     && eqn.isPsi(cloud<clouds::carried>().Uc(U.mesh()))
     )
     {
         // Gravity does not contribute to the carrier momentum equation

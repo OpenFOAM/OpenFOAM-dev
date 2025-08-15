@@ -83,7 +83,7 @@ void Foam::Lagrangian::constantCoefficientVirtualMass::addUSup
         eqn -= Lagrangianm::ddt0(deltaT, vOrMAdd, U);
     }
 
-    eqn.Su += vOrMAdd*cloud<clouds::coupled>().DUDtc(U.mesh());
+    eqn.Su += vOrMAdd*cloud<clouds::carried>().DUDtc(U.mesh());
 }
 
 
@@ -109,7 +109,7 @@ Foam::Lagrangian::constantCoefficientVirtualMass::constantCoefficientVirtualMass
         )
     )
 {
-    cloud<clouds::coupled>().DUDtc.psi();
+    cloud<clouds::carried>().DUDtc.psi();
 }
 
 

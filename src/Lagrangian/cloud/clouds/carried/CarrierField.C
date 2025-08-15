@@ -24,14 +24,14 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "CarrierField.H"
-#include "coupled.H"
+#include "carried.H"
 
 /*---------------------------------------------------------------------------*\
                   Class CloudDerivedField::Functor Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
-class Foam::CarrierField<Type>::Functor
+class Foam::CarrierFieldBase<Type>::Functor
 {
 public:
 
@@ -60,7 +60,7 @@ public:
 
 template<class Type>
 template<class F>
-class Foam::CarrierField<Type>::Function
+class Foam::CarrierFieldBase<Type>::Function
 :
     public Functor
 {
@@ -106,7 +106,7 @@ public:
 
 template<class Type>
 Foam::tmp<Foam::LagrangianSubField<Type>>
-Foam::CarrierField<Type>::interpolate
+Foam::CarrierFieldBase<Type>::interpolate
 (
     const LagrangianModelRef&,
     const LagrangianSubMesh& subMesh
@@ -114,47 +114,8 @@ Foam::CarrierField<Type>::interpolate
 {
     const LagrangianMesh& mesh = subMesh.mesh();
 
-    // Determine whether old-time values are available, and whether or not they
-    // should be used
-    const bool useOldTime =
-        psi().hasStoredOldTimes()
-     && psi().nOldTimes(false)
-     && mesh.foundObject<LagrangianScalarInternalDynamicField>
-        (
-            LagrangianMesh::fractionName
-        );
-
-    /*
-    Info<< "--> Interpolation of carrier field " << name_ << ' '
-        << (useOldTime ? "*IS*" : "is *NOT*") << " using old-time values"
-        << endl;
-    */
-
-    // Construct the interpolation on demand
-    if (!psiInterpolationPtr_.valid())
-    {
-        psiInterpolationPtr_ =
-            interpolation<Type>::New
-            (
-                word(subMesh.mesh().schemes().interpolation(name())),
-                psi()
-            );
-    }
-
-    // Construct the old-time interpolation on demand, if necessary
-    if (useOldTime && !psi0InterpolationPtr_.valid())
-    {
-        psi0InterpolationPtr_ =
-            interpolation<Type>::New
-            (
-                word(subMesh.mesh().schemes().interpolation(name())),
-                psi().oldTime()
-            );
-    }
-
-    // Interpolate the values
     tmp<Field<Type>> tpsic =
-        psiInterpolationPtr_->interpolate
+        psiInterpolation(mesh).interpolate
         (
             subMesh.sub(mesh.coordinates()),
             subMesh.sub(mesh.celli()),
@@ -164,10 +125,10 @@ Foam::CarrierField<Type>::interpolate
 
     // If using old-time values, interpolate them also, and combine with the
     // current-time values using the current tracking fraction
-    if (useOldTime)
+    if (useOldTime(mesh))
     {
         tmp<Field<Type>> tpsi0c =
-            psi0InterpolationPtr_->interpolate
+            psi0Interpolation(mesh).interpolate
             (
                 subMesh.sub(mesh.coordinates()),
                 subMesh.sub(mesh.celli()),
@@ -175,11 +136,10 @@ Foam::CarrierField<Type>::interpolate
                 subMesh.sub(mesh.faceTrii())
             );
 
-        SubField<scalar> fraction =
+        const SubField<scalar> fraction =
             subMesh.sub
             (
-                mesh
-               .lookupObject<LagrangianScalarInternalDynamicField>
+                mesh.lookupObject<LagrangianScalarInternalDynamicField>
                 (
                     LagrangianMesh::fractionName
                 ).primitiveField()
@@ -210,13 +170,144 @@ Foam::CarrierField<Type>::interpolate
 }
 
 
+template<class Type>
+Foam::tmp
+<
+    Foam::LagrangianSubField
+    <
+        typename Foam::CarrierFieldGradBase<Type>::GradType
+    >
+>
+Foam::CarrierFieldGradBase<Type>::interpolateGrad
+(
+    const LagrangianModelRef&,
+    const LagrangianSubMesh& subMesh
+) const
+{
+    const LagrangianMesh& mesh = subMesh.mesh();
+
+    // Interpolate the values
+    tmp<Field<GradType>> tpsic =
+        this->psiInterpolation(mesh).interpolateGrad
+        (
+            subMesh.sub(mesh.coordinates()),
+            subMesh.sub(mesh.celli()),
+            subMesh.sub(mesh.facei()),
+            subMesh.sub(mesh.faceTrii())
+        );
+
+    // If using old-time values, interpolate them also, and combine with the
+    // current-time values using the current tracking fraction
+    if (this->useOldTime(mesh))
+    {
+        tmp<Field<GradType>> tpsi0c =
+            this->psi0Interpolation(mesh).interpolateGrad
+            (
+                subMesh.sub(mesh.coordinates()),
+                subMesh.sub(mesh.celli()),
+                subMesh.sub(mesh.facei()),
+                subMesh.sub(mesh.faceTrii())
+            );
+
+        const SubField<scalar> fraction =
+            subMesh.sub
+            (
+                mesh
+               .lookupObject<LagrangianScalarInternalDynamicField>
+                (
+                    LagrangianMesh::fractionName
+                ).primitiveField()
+            );
+
+        tpsic = (1 - fraction)*tpsi0c + fraction*tpsic;
+    }
+
+    // Build the dimensioned field and return
+    return tmp<LagrangianSubField<GradType>>
+    (
+        new LagrangianSubField<GradType>
+        (
+            IOobject
+            (
+                "grad("
+              + this->name() + ':' + Foam::name(subMesh.group())
+              + ')',
+                mesh.time().name(),
+                mesh,
+                IOobject::NO_READ,
+                IOobject::NO_WRITE,
+                false
+            ),
+            subMesh,
+            this->psi().dimensions()/dimLength,
+            tpsic
+        )
+    );
+}
+
+
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+template<class Type>
+bool Foam::CarrierFieldBase<Type>::useOldTime(const LagrangianMesh& mesh) const
+{
+    return
+        psi().hasStoredOldTimes()
+     && psi().nOldTimes(false)
+     && mesh.foundObject<LagrangianScalarInternalDynamicField>
+        (
+            LagrangianMesh::fractionName
+        );
+}
+
+
+template<class Type>
+const Foam::interpolation<Type>& Foam::CarrierFieldBase<Type>::psiInterpolation
+(
+    const LagrangianMesh& mesh
+) const
+{
+    if (!psiInterpolationPtr_.valid())
+    {
+        psiInterpolationPtr_ =
+            interpolation<Type>::New
+            (
+                word(mesh.schemes().interpolation(name())),
+                psi()
+            );
+    }
+
+    return psiInterpolationPtr_();
+}
+
+
+template<class Type>
+const Foam::interpolation<Type>& Foam::CarrierFieldBase<Type>::psi0Interpolation
+(
+    const LagrangianMesh& mesh
+) const
+{
+    if (!psi0InterpolationPtr_.valid())
+    {
+        psi0InterpolationPtr_ =
+            interpolation<Type>::New
+            (
+                word(mesh.schemes().interpolation(name())),
+                psi().oldTime()
+            );
+    }
+
+    return psi0InterpolationPtr_();
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::CarrierField<Type>::CarrierField(const VolField<Type>& psi)
+Foam::CarrierFieldBase<Type>::CarrierFieldBase(const VolField<Type>& psi)
 :
-    CloudDerivedField<Type>(*this, &CarrierField::interpolate),
-    name_(clouds::coupled::carrierName(psi.name())),
+    CloudDerivedField<Type>(*this, &CarrierFieldBase::interpolate),
+    name_(clouds::carried::carrierName(psi.name())),
     functorPtr_(nullptr),
     tpsi_(psi),
     psiInterpolationPtr_(nullptr),
@@ -226,9 +317,9 @@ Foam::CarrierField<Type>::CarrierField(const VolField<Type>& psi)
 
 template<class Type>
 template<class F>
-Foam::CarrierField<Type>::CarrierField(const word& name, const F& f)
+Foam::CarrierFieldBase<Type>::CarrierFieldBase(const word& name, const F& f)
 :
-    CloudDerivedField<Type>(*this, &CarrierField::interpolate),
+    CloudDerivedField<Type>(*this, &CarrierFieldBase::interpolate),
     name_(name),
     functorPtr_(new Function<F>(name_, f)),
     tpsi_(nullptr),
@@ -237,10 +328,19 @@ Foam::CarrierField<Type>::CarrierField(const word& name, const F& f)
 {}
 
 
+template<class Type>
+template<class ... Args>
+Foam::CarrierFieldGradBase<Type>::CarrierFieldGradBase(const Args& ... args)
+:
+    CarrierFieldBase<Type>(args ...),
+    grad(*this, &CarrierFieldGradBase::interpolateGrad)
+{}
+
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-const Foam::VolField<Type>& Foam::CarrierField<Type>::psi() const
+const Foam::VolField<Type>& Foam::CarrierFieldBase<Type>::psi() const
 {
     if (!tpsi_.valid())
     {
@@ -252,14 +352,14 @@ const Foam::VolField<Type>& Foam::CarrierField<Type>::psi() const
 
 
 template<class Type>
-const Foam::word& Foam::CarrierField<Type>::name() const
+const Foam::word& Foam::CarrierFieldBase<Type>::name() const
 {
     return name_;
 }
 
 
 template<class Type>
-void Foam::CarrierField<Type>::reset(const bool predict)
+void Foam::CarrierFieldBase<Type>::reset(const bool predict)
 {
     CloudDerivedField<Type>::clear(true);
 
@@ -278,6 +378,15 @@ void Foam::CarrierField<Type>::reset(const bool predict)
 
     psiInterpolationPtr_.clear();
     psi0InterpolationPtr_.clear();
+}
+
+
+template<class Type>
+void Foam::CarrierFieldGradBase<Type>::reset(const bool predict)
+{
+    CarrierFieldBase<Type>::reset(predict);
+
+    grad.clear(true);
 }
 
 

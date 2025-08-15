@@ -129,9 +129,9 @@ Foam::Lagrangian::turbulentDispersion::turbulentDispersion
     ),
     kc_
     (
-        cloud<clouds::coupled>().carrierField<scalar>
+        cloud<clouds::carried>().carrierField<scalar>
         (
-            clouds::coupled::carrierName
+            clouds::carried::carrierName
             (
                 momentumTransportModel_.k()().name()
             ),
@@ -143,9 +143,9 @@ Foam::Lagrangian::turbulentDispersion::turbulentDispersion
     ),
     epsilonc_
     (
-        cloud<clouds::coupled>().carrierField<scalar>
+        cloud<clouds::carried>().carrierField<scalar>
         (
-            clouds::coupled::carrierName
+            clouds::carried::carrierName
             (
                 momentumTransportModel_.epsilon()().name()
             ),
@@ -225,7 +225,7 @@ void Foam::Lagrangian::turbulentDispersion::calculate
     // Update the eddy time-scale
     const LagrangianSubScalarField magUrel
     (
-        mag(cloud().U(subMesh) - cloud<clouds::coupled>().Uc(subMesh))
+        mag(cloud().U(subMesh) - cloud<clouds::carried>().Uc(subMesh))
     );
     static const dimensionedScalar rootVSmallEpsilon
     (

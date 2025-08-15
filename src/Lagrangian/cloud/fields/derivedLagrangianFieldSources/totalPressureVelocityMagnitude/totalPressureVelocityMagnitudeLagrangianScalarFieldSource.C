@@ -49,7 +49,7 @@ totalPressureVelocityMagnitudeLagrangianScalarFieldSource
     (
         dict.lookupOrDefault<word>
         (
-            clouds::coupled::carrierName("rho"),
+            clouds::carried::carrierName("rho"),
             "rho"
         )
     ),
@@ -57,7 +57,7 @@ totalPressureVelocityMagnitudeLagrangianScalarFieldSource
     (
         dict.lookupOrDefault<word>
         (
-            clouds::coupled::carrierName("p"),
+            clouds::carried::carrierName("p"),
             "p"
         )
     )
@@ -102,7 +102,7 @@ Foam::totalPressureVelocityMagnitudeLagrangianScalarFieldSource::Umag
         subMesh.mesh().mesh().lookupObject<volScalarField>(pcName_);
     const CarrierField<scalar>& pc =
         cloudField_
-       .cloud<clouds::coupled>(injection, subMesh)
+       .cloud<clouds::carried>(injection, subMesh)
        .carrierField(pcVf);
 
     // Construct the total pressure function now we know the dimensions
@@ -164,7 +164,7 @@ Foam::totalPressureVelocityMagnitudeLagrangianScalarFieldSource::Umag
                 subMesh.mesh().mesh().lookupObject<volScalarField>(rhocName_);
             const CarrierField<scalar>& rhoc =
                 cloudField_
-               .cloud<clouds::coupled>(injection, subMesh)
+               .cloud<clouds::carried>(injection, subMesh)
                .carrierField(rhocVf);
 
             return sqrt(2*deltaP/(ctifCloud.rhoByRhoc*rhoc(subMesh)));
@@ -206,7 +206,7 @@ void Foam::totalPressureVelocityMagnitudeLagrangianScalarFieldSource::write
     writeEntryIfDifferent<word>
     (
         os,
-        clouds::coupled::carrierName("rho"),
+        clouds::carried::carrierName("rho"),
         "rho",
         rhocName_
     );
@@ -214,7 +214,7 @@ void Foam::totalPressureVelocityMagnitudeLagrangianScalarFieldSource::write
     writeEntryIfDifferent<word>
     (
         os,
-        clouds::coupled::carrierName("p"),
+        clouds::carried::carrierName("p"),
         "p",
         pcName_
     );

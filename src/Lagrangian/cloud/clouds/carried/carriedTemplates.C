@@ -23,55 +23,35 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "coupled.H"
-#include "CarrierEqn.H"
+#include "carried.H"
+#include "CarrierField.H"
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::CarrierEqn<Type>& Foam::clouds::coupled::carrierEqn
+const Foam::CarrierField<Type>& Foam::clouds::carried::carrierField
 (
     const VolField<Type>& psi
-)
+) const
 {
-    CarrierEqn<Type>* lookupPtr =
-        carrierEqns<Type>().lookupPtr(psi.name());
+    return carrierField<Type, VolField<Type>>(psi);
+}
+
+
+template<class Type, class ... Args>
+const Foam::CarrierField<Type>& Foam::clouds::carried::carrierField
+(
+    const Args& ... args
+) const
+{
+    const CarrierField<Type>* lookupPtr =
+        carrierFields<Type>().lookupPtr(CarrierField<Type>(args ...).name());
 
     if (lookupPtr) return *lookupPtr;
 
-    CarrierEqn<Type>* ptr = new CarrierEqn<Type>(psi);
-    carrierEqns<Type>().insert(psi.name(), ptr);
+    CarrierField<Type>* ptr = new CarrierField<Type>(args ...);
+    carrierFields<Type>().insert(ptr->name(), ptr);
     return *ptr;
-}
-
-
-template<class Type>
-const Foam::CarrierEqn<Type>& Foam::clouds::coupled::carrierEqn
-(
-    const VolField<Type>& psi
-) const
-{
-    return carrierEqns<Type>()[psi.name()];
-}
-
-
-template<class Type>
-Foam::CarrierEqn<Type>& Foam::clouds::coupled::carrierEqn
-(
-    const CarrierField<Type>& psic
-)
-{
-    return carrierEqn(psic.psi());
-}
-
-
-template<class Type>
-const Foam::CarrierEqn<Type>& Foam::clouds::coupled::carrierEqn
-(
-    const CarrierField<Type>& psic
-) const
-{
-    return carrierEqn(psic.psi());
 }
 
 

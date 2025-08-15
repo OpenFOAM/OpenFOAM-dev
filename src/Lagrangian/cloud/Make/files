@@ -4,6 +4,7 @@ cloud/cloud.C
 # Cloud Mix-ins
 clouds/shaped/shaped.C
 clouds/spherical/spherical.C
+clouds/carried/carried.C
 clouds/coupled/coupled.C
 clouds/coupledToIncompressibleFluid/coupledToIncompressibleFluid.C
 clouds/coupledToFluid/coupledToFluid.C
@@ -12,6 +13,7 @@ clouds/massive/massive.C
 clouds/grouped/grouped.C
 
 # Derived Clouds
+clouds/tracer/tracer.C
 clouds/kinematicParticle/kinematicParticle.C
 clouds/kinematicParcel/kinematicParcel.C
 clouds/particle/particle.C
