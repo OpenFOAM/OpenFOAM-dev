@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -127,6 +127,76 @@ Foam::autoPtr<Foam::Function1<Type>> Foam::Function1<Type>::New
 )
 {
     return New(name, {xUnits, valueUnits}, dict);
+}
+
+
+template<class Type>
+Foam::autoPtr<Foam::Function1<Type>> Foam::Function1<Type>::New
+(
+    const Function1s::unitConversions& units,
+    const entry& e
+)
+{
+    // If the function is a dictionary (preferred) then read straightforwardly
+    if (e.isDict())
+    {
+        const dictionary& coeffDict(e.dict());
+
+        const word Function1Type(coeffDict.lookup("type"));
+
+        typename dictionaryConstructorTable::iterator cstrIter =
+            dictionaryConstructorTablePtr_->find(Function1Type);
+
+        if (cstrIter == dictionaryConstructorTablePtr_->end())
+        {
+            FatalIOErrorInFunction(e.dict())
+                << "Unknown Function1 type "
+                << Function1Type << " for Function1 "
+                << e.keyword() << nl << nl
+                << "Valid Function1 types are:" << nl
+                << dictionaryConstructorTablePtr_->sortedToc() << nl
+                << exit(FatalIOError);
+        }
+
+        return cstrIter()(e.keyword(), units, coeffDict);
+    }
+
+    // Get the stream
+    Istream& is(e.stream());
+
+    // Peek at the first token
+    token firstToken(is);
+    is.putBack(firstToken);
+
+    // Read the type, or assume constant
+    const word Function1Type =
+        firstToken.isWord() ? word(is) : Function1s::Constant<Type>::typeName;
+
+    // If the entry is not a type followed by a end statement then
+    // construct the function from the stream
+    if (!firstToken.isWord() || !is.eof())
+    {
+        return New(e.keyword(), units, Function1Type, is);
+    }
+
+    FatalIOErrorInFunction(e.stream())
+        << "A " << (e.keyword() + "Coeffs") << " sub-dictionary is not "
+        << "supported. The " << e.keyword() << " entry should be the "
+        << "sub-dictionary." << exit(FatalIOError);
+
+    return autoPtr<Function1<Type>>(nullptr);
+}
+
+
+template<class Type>
+Foam::autoPtr<Foam::Function1<Type>> Foam::Function1<Type>::New
+(
+    const unitConversion& xUnits,
+    const unitConversion& valueUnits,
+    const entry& e
+)
+{
+    return New({xUnits, valueUnits}, e);
 }
 
 

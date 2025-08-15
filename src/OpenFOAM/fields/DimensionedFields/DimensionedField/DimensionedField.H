@@ -145,6 +145,15 @@ public:
         );
 
         //- Construct from components
+        DimensionedField
+        (
+            const IOobject&,
+            const Mesh& mesh,
+            const dimensionSet&,
+            const tmp<PrimitiveField<Type>>&
+        );
+
+        //- Construct from components
         //  Used for temporary fields which are initialised after construction
         DimensionedField
         (
@@ -275,6 +284,16 @@ public:
             const Mesh& mesh,
             const dimensionSet&,
             const PrimitiveField<Type>&
+        );
+
+        //- Return a temporary field constructed from name, mesh,
+        //  dimensionSet and tmp field
+        static tmp<DimensionedField<Type, GeoMesh, PrimitiveField>> New
+        (
+            const word& name,
+            const Mesh& mesh,
+            const dimensionSet&,
+            const tmp<PrimitiveField<Type>>&
         );
 
         //- Return a temporary field constructed from name, mesh

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -200,6 +200,21 @@ public:
             const unitConversion& xUnits,
             const unitConversion& valueUnits,
             const dictionary& dict
+        );
+
+        //- Select from an entry
+        static autoPtr<Function1<Type>> New
+        (
+            const Function1s::unitConversions& units,
+            const entry& e
+        );
+
+        //- Select from an entry
+        static autoPtr<Function1<Type>> New
+        (
+            const unitConversion& xUnits,
+            const unitConversion& valueUnits,
+            const entry& e
         );
 
         //- Select from Istream
