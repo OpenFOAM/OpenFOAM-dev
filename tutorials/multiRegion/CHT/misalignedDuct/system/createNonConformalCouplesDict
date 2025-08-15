@@ -30,12 +30,27 @@ nonConformalCouples
         patches         (solidNonCouple1 solidNonCouple2);
     }
 
-    fluid1Solid2
+    solid1Fluid2
     {
         owner
         {
+            region          solid;
+            patch           solidNonCouple1;
+
+            patchFields
+            {
+                T
+                {
+                    type        coupledTemperature;
+                    value       uniform 297;
+                }
+            }
+        }
+
+        neighbour
+        {
             region          fluid;
-            patch           fluidNonCouple1;
+            patch           fluidNonCouple2;
 
             patchFields
             {
@@ -55,43 +70,29 @@ nonConformalCouples
             }
         }
 
-        neighbour
+    }
+
+    solid2Fluid1
+    {
+        owner
         {
             region          solid;
             patch           solidNonCouple2;
 
             patchFields
             {
-                T
-                {
-                    type        coupledTemperature;
-                    value       uniform 297;
-                }
-            }
-        }
-    }
-
-    fluid2Solid1
-    {
-        owner
-        {
-            region          fluid;
-            patch           fluidNonCouple2;
-
-            patchFields
-            {
-                $../../../fluid1Solid2/owner/patchFields;
+                $../../../solid1Fluid2/owner/patchFields;
             }
         }
 
         neighbour
         {
-            region          solid;
-            patch           solidNonCouple1;
+            region          fluid;
+            patch           fluidNonCouple1;
 
             patchFields
             {
-                $../../../fluid1Solid2/neighbour/patchFields;
+                $../../../solid1Fluid2/neighbour/patchFields;
             }
         }
     }

@@ -24,13 +24,13 @@ nonConformalCouples
         patches         (nonCoupleRotating nonCoupleStationary);
     }
 
-    fluidSolid
+    solidFluid
     {
-        regions         (fluid solid);
-        patches         (nonCoupleRotating nonCoupleStationary);
+        regions         (solid fluid);
+        patches         (nonCoupleStationary nonCoupleRotating);
     }
 
-    fluidRoller
+    rollerFluid
     {
         regions         (roller fluid);
         patches         (nonCoupleRotating nonCoupleStationary);
@@ -38,8 +38,8 @@ nonConformalCouples
 
     solidRoller
     {
-        regions         (roller solid);
-        patches         (nonCoupleRotating nonCoupleStationary);
+        regions         (solid roller);
+        patches         (nonCoupleStationary nonCoupleRotating);
     }
 }
 

@@ -39,7 +39,7 @@ boundaryField
         value           $internalField;
     }
 
-    fluidRoller_on_nonCoupleRotating
+    rollerFluid_on_nonCoupleRotating
     {
         type            coupledTemperature;
         value           $internalField;

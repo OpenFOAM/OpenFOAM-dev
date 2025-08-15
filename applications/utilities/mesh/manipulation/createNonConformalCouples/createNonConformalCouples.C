@@ -31,12 +31,15 @@ Usage
     \b createNonConformalCouples \<patch1\> \<patch2\>
 
     Options:
+      - \par -region \n
+        Specify an alternative mesh region
+
+      - \par -fields \n
+        Add non-conformal boundary conditions to the fields
+
       - \par -noOverwrite \n
         Do not replace the old mesh with the new one, writing the new one
         into a separate time directory
-
-      - \par -fields \n
-        Add non-conformal boundary conditions to the fields.
 
 Note
     If run with two arguments, these arguments specify the patches between
@@ -46,11 +49,22 @@ Note
 Usage
     \b createNonConformalCouples
 
+    Options:
+      - \par -dict \<filename\>
+        Specify alternative dictionary for the non-conformal couples,
+        defaults to system/createNonConformalCouplesDict
+
+      - \par -noOverwrite \n
+        Do not replace the old mesh with the new one, writing the new one
+        into a separate time directory
+
 Note
     If run without arguments then settings are read from a \b
     system/createNonConformalCouplesDict dictionary (or from a different
     dictionary specified by the \b -dict option). This dictionary can specify
-    the creation of multiple couples and/or couples with transformations.
+    the creation of multiple couples, inter-region couples, and/or couples with
+    transformations. Annotated examples can be found in
+    $FOAM_ETC/caseDicts/annotated/createNonConformalCouplesDict.
 
 \*---------------------------------------------------------------------------*/
 

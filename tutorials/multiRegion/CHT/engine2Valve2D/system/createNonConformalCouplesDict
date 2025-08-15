@@ -50,10 +50,10 @@ nonConformalCouples
 
     // Inter-region mapped-wall couplings
 
-    fluidLiner
+    linerFluid
     {
-        regions         (fluid liner);
-        patches         (nonCoupleFluidLiner nonCoupleLiner);
+        regions         (liner fluid);
+        patches         (nonCoupleLiner nonCoupleFluidLiner);
     }
 
     linerPiston
@@ -68,28 +68,28 @@ nonConformalCouples
         patches         (nonCoupleCylinderHead nonCoupleFluidCylinderHead);
     }
 
-    fluidValve1
+    valveFluidEvStem
     {
-        regions         (fluid exhaustValve);
-        patches         (evStem nonCoupleExhaustValve);
+        regions         (exhaustValve fluid);
+        patches         (nonCoupleExhaustValve evStem);
     }
 
-    fluidValve2
+    valueFluidIvStem
     {
-        regions         (fluid intakeValve);
-        patches         (ivStem nonCoupleIntakeValve);
+        regions         (intakeValve fluid);
+        patches         (nonCoupleIntakeValve ivStem);
     }
 
-    fluidValve3
+    valueFluidEvHead
     {
-        regions         (fluid exhaustValve);
-        patches         (evHead nonCoupleExhaustValve);
+        regions         (exhaustValve fluid);
+        patches         (nonCoupleExhaustValve evHead);
     }
 
-    fluidValve4
+    valveFluidIvHead
     {
-        regions         (fluid intakeValve);
-        patches         (ivHead nonCoupleIntakeValve);
+        regions         (intakeValve fluid);
+        patches         (nonCoupleIntakeValve ivHead);
     }
 
     cylinderHeadValve1

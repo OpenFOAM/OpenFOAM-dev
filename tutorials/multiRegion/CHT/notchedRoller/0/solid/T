@@ -41,7 +41,7 @@ boundaryField
         value           $internalField;
     }
 
-    fluidSolid_on_nonCoupleStationary
+    solidFluid_on_nonCoupleStationary
     {
         type            coupledTemperature;
         value           $internalField;

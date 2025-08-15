@@ -14,38 +14,150 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// Whether or not to add boundary conditions for the added patch to the fields
+// Whether or not to add boundary conditions for the added patch to the fields.
 fields  no;
+
+/*---------------------------------------------------------------------------*\
+                               Modifying Fields
+
+It is usually recommended to set 'fields no;' so that createNonConformalCouples
+does not modify the fields. The initial fields then have to be configured so
+that they correspond to the mesh after all stages of its construction have been
+completed (including createNonConformalCouples). This is usually simpler than
+configuring the utility to do the field manipulation. Using '#includeEtc
+"caseDicts/setConstraintTypes"' in all boundary fields is advised as this will
+add appropriate boundary conditions for all constraint types (including
+nonConformalCyclic). For basic non-conformal cyclic usage, this is likely to be
+the only necessary addition to the field files.
+
+Sometimes, however, 'fields yes;' needs to be used. E.g., when the case has
+undergone an initialisation stage without the non-conformal couples, it is not
+possible to retain unused non-conformal patch settings throughout the duration
+of the initialisation stage. They have to be added at the point of creation of
+the non-conformal couples.
+
+If 'fields yes;' is set, then createNonConformalCouples will add patch fields
+for all the patches it creates, on all the fields available. Patch fields can
+be added automatically for constraint patches (e.g., nonConformalCyclic)
+without any further configuration. However, patch fields cannot be added
+automatically to non-constraint patches (e.g., nonConformalMappedWall).
+Instead, these require a 'patchFields' specification (see below). Boundary
+conditions that override a patch's constraint type (e.g., fixedJump,
+fanPressureJump, ...) also need a 'patchFields' specification.
+
+Note that 'fields yes;' will overwrite all the fields in the current time
+directory. If some of these fields are manually configured then consider adding
+a '.orig' extension to them so that the original manual configuration is not
+lost and is automatically recovered when the case is cleaned.
+\*---------------------------------------------------------------------------*/
 
 // The list of non-conformal couples to be created. Each entry in this section
 // creates a single non-conformal coupling.
 nonConformalCouples
 {
-    /*
-    // Unique name used to generate the name of the coupled patches
+    // A coupling. The name is only used to construct names for the coupled
+    // patches; i.e., <name>_on_<patch1> and <name>_on_<patch2>.
     <name>
     {
-        // Name of the two original patches between which to create the coupling
-        patches         (<patch1> <patch2>);
+        // Basic Name-Based Patch and Region Selection
 
-        // Type of the transformation; "none", "rotational", or "translational"
-        transform       <transformType>;
+            // Names of the original patches between which to create the
+            // coupling. The first is the owner side and the second is the
+            // neighbour.
+            patches         (<patch1> <patch2>);
 
-        // Additional transformation settings (if any)
-        ...
+            // Optional: The region in which to create a non-conformal cyclic
+            region          <region>;
+
+            // Optional: The regions between which to create a non-conformal
+            // mapped-wall
+            regions         (<region1> <region2>);
+
+
+        // Advanced Dictionary-Based Patch and Region Selection. Use this
+        // instead of the above when 'fields yes;' and non-constraint boundary
+        // conditions are needed; either because mapped walls are being created
+        // or because boundary conditions that override the constraint type are
+        // being used.
+
+            owner
+            {
+                // Name of the owner region
+                region      <region1>;
+
+                // Name of the owner original patch
+                patch       <patch1>
+
+                // Patch fields to add for the owner coupled patch
+                patchFields
+                {
+                    <field1>
+                    {
+                        type        <type>;
+
+                        ...
+                    }
+                    <field2>
+                    {
+                        type        <type>;
+
+                        ...
+                    }
+
+                    ...
+                }
+            }
+
+            neighbour
+            {
+                // Name of the neighbour region
+                region      <region2>;
+
+                // Name of the neighbour original patch
+                patch       <patch2>
+
+                // Patch fields to add for the neighbour coupled patch
+                patchFields
+                {
+                    ...
+                }
+            }
+
+
+        // Transformation
+
+            // Optional: The type of the transformation; 'none' (default),
+            // 'rotational', or 'translational'
+            transform       <type>;
+
+            // If 'transform rotational;': Transformation parameters
+            rotationAxis    <axis>;
+            rotationCentre  <centre>;
+            rotationAngle   <angle>;
+
+            // If 'transform translational;': Transformation parameters
+            separation      <delta>;
+
+
+        // Other
+
+            // Optional: The condition that triggers re-calculation following
+            // motion; 'always' (default), 'never', or 'detect'. 'always' will
+            // always re-calculate the mapping, 'never' will not, and 'detect'
+            // will compare the new and old points and re-calculate if there is
+            // any difference.
+            moveUpdate      <type>;
     }
-    */
 
     // Example: Create a non-conformal cyclic coupling with no transformation
-    nonConformalCouple_none
+    cyclicNoTransform
     {
         patches         (nonCouple1 nonCouple2);
-        transform       none;
     }
 
     // Example: Create a non-conformal cyclic coupling with a 30 degree
     // rotational transformation
-    nonConformalCouple_30deg
+    cyclic30DegRotation
     {
         patches         (nonCoupleBehind nonCoupleAhead);
         transform       rotational;
@@ -56,25 +168,141 @@ nonConformalCouples
 
     // Example: Create a non-conformal cyclic coupling with a 2 metre
     // translational transformation
-    nonConformalCouple_2m
+    cyclic2mTranslation
     {
         patches         (nonCoupleBack nonCoupleFront);
         transform       translational;
         separation      (0 2 0);
     }
 
-    // Example: Create a non-conformal mapped-wall coupling between a fluid and
-    // a solid region
-    fluidSolid
+    // Example: Create a non-conformal mapped-wall coupling between a solid and
+    // a fluid region
+    nonConformalMappedWall
     {
-        regions         (fluid solid);
-        patches         (nonCoupleRotating nonCoupleStationary);
+        regions         (solid fluid);
+        patches         (surface wall);
     }
+
+    // Example: Create a non-conformal mapped-wall coupling between a solid and
+    // a fluid region and add boundary conditions for a thermally coupled
+    // no-slip wall (with 'fields yes;'). From
+    // $FOAM_TUTORIALS/multiRegion/CHT/misalignedDuct.
+    coupledNoSlipWall
+    {
+        owner
+        {
+            region      solid;
+            patch       solidNonCouple1;
+
+            patchFields
+            {
+                T
+                {
+                    type        coupledTemperature;
+                    value       uniform 297;
+                }
+            }
+        }
+
+        neighbour
+        {
+            region      fluid;
+            patch       fluidNonCouple2;
+
+            patchFields
+            {
+                p
+                {
+                    type        fixedFluxPressure;
+                }
+                T
+                {
+                    type        coupledTemperature;
+                    value       uniform 297;
+                }
+                U
+                {
+                    type        noSlip;
+                }
+            }
+        }
+    }
+
+    // Example: Create a non-conformal cyclic coupling and add a fan-pressure
+    // jump boundary condition to the pressure (with 'fields yes;'). From
+    // $FOAM_TUTORIALS/ncompressibleFluid/TJunctionFan.
+    fan
+    {
+        owner
+        {
+            patch       fan0;
+
+            patchFields
+            {
+                p
+                {
+                    type        fanPressureJump;
+                    patchType   nonConformalCyclic;
+                    jump        uniform 0;
+                    value       uniform 0;
+                    jumpTable   polynomial (100);
+                }
+            }
+        }
+
+        neighbour
+        {
+            patch       fan1;
+
+            patchFields
+            {
+                $../../owner/patchFields;
+            }
+        }
+    }
+
+    // Example: Create multiple rotationally transformed non-conformal cyclic
+    // couplings between the same two original patches. This allows a sector
+    // geometry to have a rotating part and remain connected to the stationary
+    // parts. Similar to $FOAM_TUTORIALS/incompressibleFluid/impeller.
+    nonConformalCouple0
+    {
+        patches         (nonCouple1 nonCouple2);
+        transform       none;
+    }
+    nonConformalCouple60
+    {
+        $nonConformalCouple0;
+        transform       rotational;
+        rotationAxis    (-1 0 0);
+        rotationCentre  (0 0 0);
+        rotationAngle   60;
+    }
+    nonConformalCouple120 { $nonConformalCouple60; rotationAngle 120; }
+    nonConformalCouple180 { $nonConformalCouple60; rotationAngle 180; }
+    nonConformalCouple240 { $nonConformalCouple60; rotationAngle 240; }
+    nonConformalCouple300 { $nonConformalCouple60; rotationAngle 300; }
 }
 
-// Note that in rare cases it may be appropriate to create multiple couplings
-// between the same two patches. That can be achieved with multiple entries
-// with the same patches specified. See the
-// modules/incompressibleFluid/impeller tutorial for an example of this.
+/*---------------------------------------------------------------------------*\
+                           Owner-Neighbour Ordering
+
+The non-conformal coupling system connects the finite volume mesh by projecting
+the faces of the owner side onto those of the neighbour side. This means that
+the owner side is distorted to some extent, whilst the neighbour side is not.
+This distortion is proportional to the imperfection in the interface; i.e.,
+mesh conformation failures, gaps and overlaps.
+
+The owner patch should be chosen as the patch for which this distortion is the
+least problematic. In general, this will be the side which has the largest
+adjacent cells. In multi-region cases it may also be the side for which the
+solution algorithm is the most robust.
+
+In a typical solid-fluid mapped wall interface in a conjugate heat transfer
+case, the solid should almost always be the owner. The fluid algorithm is more
+complicated and fragile than that of the solid, and the fluid mesh is likely to
+be substantially more refined in the vicinity of the interface due to
+constraints associated with wall models.
+\*---------------------------------------------------------------------------*/
 
 // ************************************************************************* //

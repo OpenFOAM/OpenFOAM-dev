@@ -53,13 +53,13 @@ boundaryField
         value           $internalField;
     }
 
-    fluidSolid_on_nonCoupleRotating
+    solidFluid_on_nonCoupleRotating
     {
         type            coupledTemperature;
         value           $internalField;
     }
 
-    fluidRoller_on_nonCoupleStationary
+    rollerFluid_on_nonCoupleStationary
     {
         type            coupledTemperature;
         value           $internalField;

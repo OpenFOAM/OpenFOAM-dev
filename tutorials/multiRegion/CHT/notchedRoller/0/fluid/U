@@ -53,13 +53,13 @@ boundaryField
         value           uniform (0 0 0);
     }
 
-    fluidSolid_on_nonCoupleRotating
+    solidFluid_on_nonCoupleRotating
     {
         type            movingMappedWallVelocity;
         value           uniform (0 0 0);
     }
 
-    fluidRoller_on_nonCoupleStationary
+    rollerFluid_on_nonCoupleStationary
     {
         type            movingMappedWallVelocity;
         value           uniform (0 0 0);
