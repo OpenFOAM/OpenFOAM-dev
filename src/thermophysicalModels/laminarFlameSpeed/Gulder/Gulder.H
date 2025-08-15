@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,22 +79,15 @@ class Gulder
 
         inline scalar SuRef
         (
-            scalar phi
+            const scalar phi
         ) const;
 
         inline scalar Su0pTphi
         (
-            scalar p,
-            scalar Tu,
-            scalar phi,
-            scalar Yres
-        ) const;
-
-        tmp<volScalarField> Su0pTphi
-        (
-            const volScalarField& p,
-            const volScalarField& Tu,
-            scalar phi
+            const scalar p,
+            const scalar Tu,
+            const scalar phi,
+            const scalar Yegr
         ) const;
 
         tmp<volScalarField> Su0pTphi

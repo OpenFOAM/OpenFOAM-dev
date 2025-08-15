@@ -23,7 +23,6 @@ thermoType
     equationOfState perfectGas;
     specie          specie;
     energy          absoluteEnthalpy;
-    // energy          absoluteInternalEnergy;
 }
 
 stoichiometricAirFuelMassRatio 15.0336;

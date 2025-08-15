@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -356,65 +356,19 @@ Foam::tmp<Foam::volScalarField> Foam::laminarFlameSpeedModels::SCOPE::Ma
 Foam::tmp<Foam::volScalarField>
 Foam::laminarFlameSpeedModels::SCOPE::Ma() const
 {
-    if (psiuMulticomponentThermo_.containsSpecie("ft"))
-    {
-        const volScalarField& ft = psiuMulticomponentThermo_.Y("ft");
-
-        return Ma
-        (
-            dimensionedScalar
-            (
-                "stoichiometricAirFuelMassRatio",
-                dimless,
-                psiuMulticomponentThermo_.properties()
-            )*ft/(scalar(1) - ft)
-        );
-    }
-    else
-    {
-        const fvMesh& mesh = psiuMulticomponentThermo_.p().mesh();
-
-        return tmp<volScalarField>
-        (
-            volScalarField::New
-            (
-                "Ma",
-                mesh,
-                dimensionedScalar(dimless, Ma(equivalenceRatio_))
-            )
-        );
-    }
+    return Ma(psiuMulticomponentThermo_.Phi());
 }
 
 
 Foam::tmp<Foam::volScalarField>
 Foam::laminarFlameSpeedModels::SCOPE::operator()() const
 {
-    if (psiuMulticomponentThermo_.containsSpecie("ft"))
-    {
-        const volScalarField& ft = psiuMulticomponentThermo_.Y("ft");
-
-        return Su0pTphi
-        (
-            psiuMulticomponentThermo_.p(),
-            psiuMulticomponentThermo_.Tu(),
-            dimensionedScalar
-            (
-                "stoichiometricAirFuelMassRatio",
-                dimless,
-                psiuMulticomponentThermo_.properties()
-            )*ft/(scalar(1) - ft)
-        );
-    }
-    else
-    {
-        return Su0pTphi
-        (
-            psiuMulticomponentThermo_.p(),
-            psiuMulticomponentThermo_.Tu(),
-            equivalenceRatio_
-        );
-    }
+    return Su0pTphi
+    (
+        psiuMulticomponentThermo_.p(),
+        psiuMulticomponentThermo_.Tu(),
+        psiuMulticomponentThermo_.Phi()
+    );
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,15 +43,8 @@ Foam::laminarFlameSpeed::laminarFlameSpeed
     const psiuMulticomponentThermo& ct
 )
 :
-    psiuMulticomponentThermo_(ct),
-    equivalenceRatio_(0)
-{
-    if (!psiuMulticomponentThermo_.containsSpecie("ft"))
-    {
-        equivalenceRatio_ =
-            dimensionedScalar("equivalenceRatio", dimless, dict).value();
-    }
-}
+    psiuMulticomponentThermo_(ct)
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

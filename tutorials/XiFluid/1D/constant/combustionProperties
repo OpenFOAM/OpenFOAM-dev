@@ -22,8 +22,6 @@ laminarFlameSpeed
     {
         model           constant;
 
-        equivalenceRatio 1;
-
         Su              0.3 [m/s];
     }
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,6 +33,7 @@ Foam::homogeneousMixture<ThermoType>::homogeneousMixture
     const dictionary& dict
 )
 :
+    Phi_(dict.lookup<scalar>("Phi")),
     reactants_("reactants", dict.subDict("reactants")),
     products_("products", dict.subDict("products")),
     mixture_("mixture", reactants_)
@@ -124,6 +125,7 @@ Foam::homogeneousMixture<ThermoType>::products
 template<class ThermoType>
 void Foam::homogeneousMixture<ThermoType>::read(const dictionary& dict)
 {
+    Phi_ = dict.lookup<scalar>("Phi");
     reactants_ = ThermoType("reactants", dict.subDict("reactants"));
     products_ = ThermoType("products", dict.subDict("products"));
 }

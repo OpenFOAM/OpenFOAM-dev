@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,12 +55,12 @@ Foam::laminarFlameSpeedModels::RaviPetersen::RaviPetersen
 :
     laminarFlameSpeed(dict, ct),
     pPoints_(coeffDict.lookup("pPoints")),
-    EqRPoints_(coeffDict.lookup("EqRPoints")),
+    PhiPoints_(coeffDict.lookup("PhiPoints")),
     alpha_(coeffDict.lookup("alpha")),
     beta_(coeffDict.lookup("beta")),
     TRef_(coeffDict.lookup<scalar>("TRef"))
 {
-    checkPointsMonotonicity(coeffDict, "equivalenceRatio", EqRPoints_);
+    checkPointsMonotonicity(coeffDict, "Phi", PhiPoints_);
     checkPointsMonotonicity(coeffDict, "pressure", pPoints_);
     checkCoefficientArrayShape(coeffDict, "alpha", alpha_);
     checkCoefficientArrayShape(coeffDict, "beta", beta_);
@@ -106,7 +106,7 @@ void Foam::laminarFlameSpeedModels::RaviPetersen::checkCoefficientArrayShape
 {
     bool ok = true;
 
-    ok &= x.size() == EqRPoints_.size() - 1;
+    ok &= x.size() == PhiPoints_.size() - 1;
 
     forAll(x, i)
     {
@@ -202,16 +202,16 @@ inline Foam::scalar Foam::laminarFlameSpeedModels::RaviPetersen::dPolynomial
 
 inline Foam::scalar Foam::laminarFlameSpeedModels::RaviPetersen::THatPowB
 (
-    const label EqRIndex,
+    const label PhiIndex,
     const label pIndex,
-    const scalar EqR,
+    const scalar Phi,
     const scalar Tu
 ) const
 {
     return pow
     (
         Tu/TRef_,
-        polynomial(beta_[EqRIndex][pIndex],EqR)
+        polynomial(beta_[PhiIndex][pIndex],Phi)
     );
 }
 
@@ -219,66 +219,66 @@ inline Foam::scalar Foam::laminarFlameSpeedModels::RaviPetersen::THatPowB
 inline Foam::scalar
 Foam::laminarFlameSpeedModels::RaviPetersen::correlationInRange
 (
-    const label EqRIndex,
+    const label PhiIndex,
     const label pIndex,
-    const scalar EqR,
+    const scalar Phi,
     const scalar Tu
 ) const
 {
     // standard correlation
     return
-        polynomial(alpha_[EqRIndex][pIndex],EqR)
-       *THatPowB(EqRIndex, pIndex, EqR, Tu);
+        polynomial(alpha_[PhiIndex][pIndex],Phi)
+       *THatPowB(PhiIndex, pIndex, Phi, Tu);
 }
 
 
 inline Foam::scalar
 Foam::laminarFlameSpeedModels::RaviPetersen::correlationOutOfRange
 (
-    const label EqRIndex,
+    const label PhiIndex,
     const label pIndex,
-    const scalar EqR,
-    const scalar EqRLim,
+    const scalar Phi,
+    const scalar PhiLim,
     const scalar Tu
 ) const
 {
-    scalar A = polynomial(alpha_[EqRIndex][pIndex], EqRLim);
-    scalar dA = dPolynomial(alpha_[EqRIndex][pIndex], EqRLim);
-    scalar dB = dPolynomial(beta_[EqRIndex][pIndex], EqRLim);
-    scalar TB = THatPowB(EqRIndex, pIndex, EqRLim, Tu);
+    scalar A = polynomial(alpha_[PhiIndex][pIndex], PhiLim);
+    scalar dA = dPolynomial(alpha_[PhiIndex][pIndex], PhiLim);
+    scalar dB = dPolynomial(beta_[PhiIndex][pIndex], PhiLim);
+    scalar TB = THatPowB(PhiIndex, pIndex, PhiLim, Tu);
 
     // linear extrapolation from the bounds of the correlation
-    return max(TB*(A + (dA + A*log(Tu/TRef_)*dB)*(EqR - EqRLim)), 0.0);
+    return max(TB*(A + (dA + A*log(Tu/TRef_)*dB)*(Phi - PhiLim)), 0.0);
 }
 
 
-inline Foam::scalar Foam::laminarFlameSpeedModels::RaviPetersen::speed
+inline Foam::scalar Foam::laminarFlameSpeedModels::RaviPetersen::Su0pTphi
 (
-    const scalar EqR,
     const scalar p,
-    const scalar Tu
+    const scalar Tu,
+    const scalar Phi
 ) const
 {
     scalar Su = 0, s;
 
-    label EqRIndex, pIndex;
-    scalar EqRXi, pXi;
-    scalar EqRLim, pLim;
-    bool EqRInRange;
+    label PhiIndex, pIndex;
+    scalar PhiXi, pXi;
+    scalar PhiLim, pLim;
+    bool PhiInRange;
 
-    EqRInRange = interval(EqRPoints_, EqR, EqRIndex, EqRXi, EqRLim);
+    PhiInRange = interval(PhiPoints_, Phi, PhiIndex, PhiXi, PhiLim);
 
     interval(pPoints_, p, pIndex, pXi, pLim);
 
     for (label pI = 0; pI < 2; pI ++)
     {
-        if (EqRInRange)
+        if (PhiInRange)
         {
-            s = correlationInRange(EqRIndex, pIndex + pI, EqR, Tu);
+            s = correlationInRange(PhiIndex, pIndex + pI, Phi, Tu);
         }
         else
         {
-            s = correlationOutOfRange(EqRIndex, pIndex + pI, EqR, EqRLim, Tu);
+            s = correlationOutOfRange(PhiIndex, pIndex + pI, Phi, PhiLim, Tu);
         }
 
         Su += (1 - pXi)*s;
@@ -294,46 +294,16 @@ inline Foam::scalar Foam::laminarFlameSpeedModels::RaviPetersen::speed
 Foam::tmp<Foam::volScalarField>
 Foam::laminarFlameSpeedModels::RaviPetersen::operator()() const
 {
-    const volScalarField& p = psiuMulticomponentThermo_.p();
-    const volScalarField& Tu = psiuMulticomponentThermo_.Tu();
-
-    volScalarField EqR
-    (
-        IOobject
-        (
-            "EqR",
-            p.time().name(),
-            p.db(),
-            IOobject::NO_READ,
-            IOobject::NO_WRITE,
-            false
-        ),
-        p.mesh(),
-        dimensionedScalar(dimless, 0)
-    );
-
     if (psiuMulticomponentThermo_.containsSpecie("egr"))
     {
         FatalErrorInFunction
             << "The " << type() << " model does not support EGR"
             << exit(FatalError);
     }
-    else if (psiuMulticomponentThermo_.containsSpecie("ft"))
-    {
-        const volScalarField& ft = psiuMulticomponentThermo_.Y("ft");
 
-        EqR =
-            dimensionedScalar
-            (
-                "stoichiometricAirFuelMassRatio",
-                dimless,
-                psiuMulticomponentThermo_.properties()
-            )*ft/max(1 - ft, small);
-    }
-    else
-    {
-        EqR = equivalenceRatio_;
-    }
+    const volScalarField& p = psiuMulticomponentThermo_.p();
+    const volScalarField& Tu = psiuMulticomponentThermo_.Tu();
+    const volScalarField Phi(psiuMulticomponentThermo_.Phi());
 
     tmp<volScalarField> tSu0
     (
@@ -349,7 +319,23 @@ Foam::laminarFlameSpeedModels::RaviPetersen::operator()() const
 
     forAll(Su0, celli)
     {
-        Su0[celli] = speed(EqR[celli], p[celli], Tu[celli]);
+        Su0[celli] = Su0pTphi(p[celli], Tu[celli], Phi[celli]);
+    }
+
+    volScalarField::Boundary& Su0Bf = Su0.boundaryFieldRef();
+
+    forAll(Su0Bf, patchi)
+    {
+        forAll(Su0Bf[patchi], facei)
+        {
+            Su0Bf[patchi][facei] =
+                Su0pTphi
+                (
+                    p.boundaryField()[patchi][facei],
+                    Tu.boundaryField()[patchi][facei],
+                    Phi.boundaryField()[patchi][facei]
+                );
+        }
     }
 
     return tSu0;

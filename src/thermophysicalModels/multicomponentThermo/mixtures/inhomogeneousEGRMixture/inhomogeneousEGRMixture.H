@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,7 +79,7 @@ private:
     // Private Data
 
         //- Stoichiometric air/fuel ratio
-        dimensionedScalar stoicRatio_;
+        scalar stoicRatio_;
 
         //- Fuel thermodynamic model
         thermoType fuel_;
@@ -129,6 +129,9 @@ public:
 
         //- Return the residual fraction of fuel in the burnt mixture
         scalar fres(const scalarFieldListSlice& Y) const;
+
+        //- Return the fuel-oxidant equivalence ratio
+        scalar Phi(const scalarFieldListSlice& Y) const;
 
         //- Return the mixture for the given composition
         const thermoType& mixture

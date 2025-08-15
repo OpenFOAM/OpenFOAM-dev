@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ Foam::inhomogeneousMixture<ThermoType>::inhomogeneousMixture
     const dictionary& dict
 )
 :
-    stoicRatio_("stoichiometricAirFuelMassRatio", dimless, dict),
+    stoicRatio_(dict.lookup<scalar>("stoichiometricAirFuelMassRatio")),
     fuel_("fuel", dict.subDict("fuel")),
     oxidant_("oxidant", dict.subDict("oxidant")),
     products_("burntProducts", dict.subDict("burntProducts")),
@@ -49,7 +49,17 @@ Foam::scalar Foam::inhomogeneousMixture<ThermoType>::fres
     const scalarFieldListSlice& Y
 ) const
 {
-    return max(Y[FT] - (scalar(1) - Y[FT])/stoicRatio_.value(), scalar(0));
+    return max(Y[FT] - (scalar(1) - Y[FT])/stoicRatio_, scalar(0));
+}
+
+
+template<class ThermoType>
+Foam::scalar Foam::inhomogeneousMixture<ThermoType>::Phi
+(
+    const scalarFieldListSlice& Y
+) const
+{
+    return stoicRatio_*Y[FT]/max(scalar(1) - Y[FT], small);
 }
 
 
@@ -66,7 +76,7 @@ const ThermoType& Foam::inhomogeneousMixture<ThermoType>::mixture
     }
     else
     {
-        const scalar ox = 1 - ft - (ft - fu)*stoicRatio_.value();
+        const scalar ox = 1 - ft - (ft - fu)*stoicRatio_;
         const scalar pr = 1 - fu - ox;
 
         mixture_ = fu*fuel_;
@@ -140,9 +150,7 @@ void Foam::inhomogeneousMixture<ThermoType>::read
     const dictionary& dict
 )
 {
-    stoicRatio_ =
-        dimensionedScalar("stoichiometricAirFuelMassRatio", dimless, dict);
-
+    stoicRatio_ = dict.lookup<scalar>("stoichiometricAirFuelMassRatio");
     fuel_ = ThermoType("fuel", dict.subDict("fuel"));
     oxidant_ = ThermoType("oxidant", dict.subDict("oxidant"));
     products_ = ThermoType("burntProducts", dict.subDict("burntProducts"));

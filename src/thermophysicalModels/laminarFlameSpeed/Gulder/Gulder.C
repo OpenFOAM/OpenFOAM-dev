@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,12 +74,12 @@ Foam::laminarFlameSpeedModels::Gulder::~Gulder()
 
 inline Foam::scalar Foam::laminarFlameSpeedModels::Gulder::SuRef
 (
-    scalar phi
+    const scalar Phi
 ) const
 {
-    if (phi > small)
+    if (Phi > small)
     {
-        return W_*pow(phi, eta_)*exp(-xi_*sqr(phi - 1.075));
+        return W_*pow(Phi, eta_)*exp(-xi_*sqr(Phi - 1.075));
     }
     else
     {
@@ -90,61 +90,16 @@ inline Foam::scalar Foam::laminarFlameSpeedModels::Gulder::SuRef
 
 inline Foam::scalar Foam::laminarFlameSpeedModels::Gulder::Su0pTphi
 (
-    scalar p,
-    scalar Tu,
-    scalar phi,
-    scalar Yres
+    const scalar p,
+    const scalar Tu,
+    const scalar Phi,
+    const scalar Yegr
 ) const
 {
     static const scalar Tref = 300.0;
     static const scalar pRef = 1.013e5;
 
-    return SuRef(phi)*pow((Tu/Tref), alpha_)*pow((p/pRef), beta_)*(1 - f_*Yres);
-}
-
-
-Foam::tmp<Foam::volScalarField> Foam::laminarFlameSpeedModels::Gulder::Su0pTphi
-(
-    const volScalarField& p,
-    const volScalarField& Tu,
-    scalar phi
-) const
-{
-    tmp<volScalarField> tSu0
-    (
-        volScalarField::New
-        (
-            "Su0",
-            p.mesh(),
-            dimensionedScalar(dimVelocity, 0)
-        )
-    );
-
-    volScalarField& Su0 = tSu0.ref();
-
-    forAll(Su0, celli)
-    {
-        Su0[celli] = Su0pTphi(p[celli], Tu[celli], phi, 0);
-    }
-
-    volScalarField::Boundary& Su0Bf = Su0.boundaryFieldRef();
-
-    forAll(Su0Bf, patchi)
-    {
-        forAll(Su0Bf[patchi], facei)
-        {
-            Su0Bf[patchi][facei] =
-                Su0pTphi
-                (
-                    p.boundaryField()[patchi][facei],
-                    Tu.boundaryField()[patchi][facei],
-                    phi,
-                    0
-                );
-        }
-    }
-
-    return tSu0;
+    return SuRef(Phi)*pow((Tu/Tref), alpha_)*pow((p/pRef), beta_)*(1 - f_*Yegr);
 }
 
 
@@ -193,12 +148,11 @@ Foam::tmp<Foam::volScalarField> Foam::laminarFlameSpeedModels::Gulder::Su0pTphi
 }
 
 
-Foam::tmp<Foam::volScalarField>
-Foam::laminarFlameSpeedModels::Gulder::Su0pTphi
+Foam::tmp<Foam::volScalarField> Foam::laminarFlameSpeedModels::Gulder::Su0pTphi
 (
     const volScalarField& p,
     const volScalarField& Tu,
-    const volScalarField& phi,
+    const volScalarField& Phi,
     const volScalarField& egr
 ) const
 {
@@ -216,7 +170,7 @@ Foam::laminarFlameSpeedModels::Gulder::Su0pTphi
 
     forAll(Su0, celli)
     {
-        Su0[celli] = Su0pTphi(p[celli], Tu[celli], phi[celli], egr[celli]);
+        Su0[celli] = Su0pTphi(p[celli], Tu[celli], Phi[celli], egr[celli]);
     }
 
     volScalarField::Boundary& Su0Bf = Su0.boundaryFieldRef();
@@ -230,7 +184,7 @@ Foam::laminarFlameSpeedModels::Gulder::Su0pTphi
                 (
                     p.boundaryField()[patchi][facei],
                     Tu.boundaryField()[patchi][facei],
-                    phi.boundaryField()[patchi][facei],
+                    Phi.boundaryField()[patchi][facei],
                     egr.boundaryField()[patchi][facei]
                 );
         }
@@ -243,42 +197,14 @@ Foam::laminarFlameSpeedModels::Gulder::Su0pTphi
 Foam::tmp<Foam::volScalarField>
 Foam::laminarFlameSpeedModels::Gulder::operator()() const
 {
-    if
-    (
-        psiuMulticomponentThermo_.containsSpecie("ft")
-     && psiuMulticomponentThermo_.containsSpecie("egr")
-    )
+    if (psiuMulticomponentThermo_.containsSpecie("egr"))
     {
-        const volScalarField& ft = psiuMulticomponentThermo_.Y("ft");
-        const volScalarField& egr = psiuMulticomponentThermo_.Y("egr");
-
         return Su0pTphi
         (
             psiuMulticomponentThermo_.p(),
             psiuMulticomponentThermo_.Tu(),
-            dimensionedScalar
-            (
-                "stoichiometricAirFuelMassRatio",
-                dimless,
-                psiuMulticomponentThermo_.properties()
-            )*ft/max(1 - ft - egr, small),
-            egr
-        );
-    }
-    else if (psiuMulticomponentThermo_.containsSpecie("ft"))
-    {
-        const volScalarField& ft = psiuMulticomponentThermo_.Y("ft");
-
-        return Su0pTphi
-        (
-            psiuMulticomponentThermo_.p(),
-            psiuMulticomponentThermo_.Tu(),
-            dimensionedScalar
-            (
-                "stoichiometricAirFuelMassRatio",
-                dimless,
-                psiuMulticomponentThermo_.properties()
-            )*ft/max(1 - ft, small)
+            psiuMulticomponentThermo_.Phi(),
+            psiuMulticomponentThermo_.Y("egr")
         );
     }
     else
@@ -287,7 +213,7 @@ Foam::laminarFlameSpeedModels::Gulder::operator()() const
         (
             psiuMulticomponentThermo_.p(),
             psiuMulticomponentThermo_.Tu(),
-            equivalenceRatio_
+            psiuMulticomponentThermo_.Phi()
         );
     }
 }

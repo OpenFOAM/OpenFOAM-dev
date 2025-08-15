@@ -150,6 +150,9 @@ public:
             //- Return the residual fraction of fuel in the burnt mixture
             virtual tmp<volScalarField> fres() const = 0;
 
+            //- Return the fuel-oxidant equivalence ratio
+            virtual tmp<volScalarField> Phi() const = 0;
+
             //- Reset the mixture to an unburnt state and update EGR
             virtual void reset() = 0;
 

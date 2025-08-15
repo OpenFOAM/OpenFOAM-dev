@@ -22,8 +22,6 @@ laminarFlameSpeed
     {
         model           Gulder;
 
-        equivalenceRatio 1;
-
         fuel            Propane;
 
         Propane

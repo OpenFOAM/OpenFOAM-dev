@@ -24,7 +24,6 @@ laminarFlameSpeed
         model           Gulder;
 
         fuel            IsoOctane;
-        equivalenceRatio 1;
 
         Methane
         {

@@ -27,6 +27,8 @@ thermoType
 
 stoichiometricAirFuelMassRatio 15.675;
 
+Phi     1;
+
 reactants
 {
     specie

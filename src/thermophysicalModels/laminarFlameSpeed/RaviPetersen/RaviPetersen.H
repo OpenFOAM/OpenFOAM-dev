@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,7 @@ class RaviPetersen
         List<scalar> pPoints_;
 
         //- Correlation equivalence ratios
-        List<scalar> EqRPoints_;
+        List<scalar> PhiPoints_;
 
         //- Correlation alpha coefficients
         List<List<List<scalar>>> alpha_;
@@ -126,37 +126,37 @@ class RaviPetersen
         //- Calculate normalised temperature to the power of the B polynomial
         inline scalar THatPowB
         (
-            const label EqRIndex,
+            const label PhiIndex,
             const label pIndex,
-            const scalar EqR,
+            const scalar Phi,
             const scalar Tu
         ) const;
 
         //- Return the flame speed within the correlation range
         inline scalar correlationInRange
         (
-            const label EqRIndex,
+            const label PhiIndex,
             const label pIndex,
-            const scalar EqR,
+            const scalar Phi,
             const scalar Tu
         ) const;
 
         //- Extrapolate the flame speed correlation outside its range
         inline scalar correlationOutOfRange
         (
-            const label EqRIndex,
+            const label PhiIndex,
             const label pIndex,
-            const scalar EqR,
-            const scalar EqRLim,
+            const scalar Phi,
+            const scalar PhiLim,
             const scalar Tu
         ) const;
 
         //- Return the laminar flame speed [m/s]
-        inline scalar speed
+        inline scalar Su0pTphi
         (
-            const scalar EqR,
             const scalar p,
-            const scalar Tu
+            const scalar Tu,
+            const scalar Phi
         ) const;
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -281,6 +281,51 @@ Foam::PsiuMulticomponentThermo<BaseThermo>::fres() const
     }
 
     return tfres;
+}
+
+
+template<class BaseThermo>
+Foam::tmp<Foam::volScalarField>
+Foam::PsiuMulticomponentThermo<BaseThermo>::Phi() const
+{
+    tmp<volScalarField> tPhi
+    (
+        volScalarField::New
+        (
+            "Phi",
+            this->mesh(),
+            dimless
+        )
+    );
+
+    auto Yslicer = this->Yslicer();
+
+    scalarField& PhiCells = tPhi.ref().primitiveFieldRef();
+
+    forAll(PhiCells, celli)
+    {
+        PhiCells[celli] = BaseThermo::mixtureType::Phi
+        (
+            this->cellComposition(Yslicer, celli)
+        );
+    }
+
+    volScalarField::Boundary& PhiBf = tPhi.ref().boundaryFieldRef();
+
+    forAll(PhiBf, patchi)
+    {
+        fvPatchScalarField& PhiPf = PhiBf[patchi];
+
+        forAll(PhiPf, facei)
+        {
+            PhiPf[facei] = BaseThermo::mixtureType::Phi
+            (
+                this->patchFaceComposition(Yslicer, patchi, facei)
+            );
+        }
+    }
+
+    return tPhi;
 }
 
 

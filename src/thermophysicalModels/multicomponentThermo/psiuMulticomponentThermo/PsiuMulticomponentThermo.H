@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,6 +95,9 @@ public:
 
             //- Return the residual fraction of fuel in the burnt mixture
             virtual tmp<volScalarField> fres() const;
+
+            //- Return the fuel-oxidant equivalence ratio
+            virtual tmp<volScalarField> Phi() const;
 
             //- Reset the mixture to an unburnt state and update EGR
             virtual void reset();

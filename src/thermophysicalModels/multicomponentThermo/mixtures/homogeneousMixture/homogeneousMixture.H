@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,6 +76,9 @@ private:
 
     // Private Data
 
+        //- Return the fuel-oxidant equivalence ratio
+        scalar Phi_;
+
         //- Reactant thermodynamic model
         thermoType reactants_;
 
@@ -120,6 +123,12 @@ public:
         scalar fres(const scalarFieldListSlice& Y) const
         {
             return 0;
+        }
+
+        //- Return the fuel-oxidant equivalence ratio
+        scalar Phi(const scalarFieldListSlice& Y) const
+        {
+            return Phi_;
         }
 
         //- Return the mixture for the given composition
