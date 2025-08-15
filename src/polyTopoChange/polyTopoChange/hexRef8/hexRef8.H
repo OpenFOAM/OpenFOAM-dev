@@ -356,13 +356,16 @@ class hexRef8
             ) const;
 
 
-public:
+    //- Declare friendship with the base mesh object so that it can use
+    //  this class' private constructors
+    friend class DemandDrivenMeshObject
+    <
+        polyMesh,
+        PermanentMeshObject,
+        hexRef8
+    >;
 
-    //- Runtime type information
-    ClassName("hexRef8");
-
-
-    // Constructors
+    // Private constructors
 
         //- Construct from mesh, read_if_present refinement data
         //  (from write below). If readHistory is true does read_if_present
@@ -389,6 +392,15 @@ public:
             const labelList& pointLevel,
             const scalar level0Edge = -great
         );
+
+
+public:
+
+    //- Runtime type information
+    ClassName("hexRef8");
+
+
+    // Constructors
 
         //- Disallow default bitwise copy construction
         hexRef8(const hexRef8&) = delete;

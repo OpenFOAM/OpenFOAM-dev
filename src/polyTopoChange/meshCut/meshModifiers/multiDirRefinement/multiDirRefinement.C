@@ -232,7 +232,7 @@ void Foam::multiDirRefinement::refineHex8
             << endl;
     }
 
-    hexRef8 hexRefiner
+    hexRef8& hexRefiner = hexRef8::New
     (
         mesh,
         labelList(mesh.nCells(), 0),    // cellLevel
