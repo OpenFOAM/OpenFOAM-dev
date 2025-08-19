@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,11 +47,7 @@ Foam::functionObjects::phaseMap::phaseMap
     const dictionary& dict
 )
 :
-    fvMeshFunctionObject(name, runTime, dict),
-    phases_
-    (
-        mesh_.lookupObject<phaseSystem>(phaseSystem::propertiesName).phases()
-    )
+    fvMeshFunctionObject(name, runTime, dict)
 {}
 
 
@@ -71,11 +67,14 @@ bool Foam::functionObjects::phaseMap::execute()
 
 bool Foam::functionObjects::phaseMap::write()
 {
+    const phaseSystem& fluid =
+        mesh_.lookupObject<phaseSystem>(phaseSystem::propertiesName);
+
     volScalarField phaseMap
     (
         IOobject
         (
-            IOobject::groupName(phases_[0].member(), "map"),
+            IOobject::groupName(fluid.phases()[0].member(), "map"),
             mesh_.time().name(),
             mesh_,
             IOobject::NO_READ,
@@ -87,9 +86,9 @@ bool Foam::functionObjects::phaseMap::write()
 
     scalar level = 0;
 
-    forAll(phases_, i)
+    forAll(fluid.phases(), i)
     {
-        phaseMap += level*phases_[i];
+        phaseMap += level*fluid.phases()[i];
         level += 1;
     }
 

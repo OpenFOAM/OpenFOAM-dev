@@ -60,7 +60,6 @@ SourceFiles
 #include "fvMeshFunctionObject.H"
 #include "fvCellZone.H"
 #include "logFiles.H"
-#include "basicChemistryModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -85,9 +84,6 @@ class specieReactionRates
 
         //- Name of the phase
         const word phaseName_;
-
-        //- Reference to the chemistry model
-        const basicChemistryModel& chemistryModel_;
 
         //- Whether or not to write the specie reaction rate fields
         bool writeFields_;

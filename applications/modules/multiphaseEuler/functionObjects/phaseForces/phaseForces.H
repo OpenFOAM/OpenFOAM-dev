@@ -68,7 +68,8 @@ SourceFiles
 #define phaseForces_functionObject_H
 
 #include "fvMeshFunctionObject.H"
-#include "phaseSystem.H"
+#include "HashPtrTable.H"
+#include "volFieldsFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -89,14 +90,11 @@ protected:
 
     // Protected data
 
+        //- Name of the phase for which forces are evaluated
+        const word phaseName_;
+
         //- Force fields
-        HashPtrTable<volVectorField> forceFields_;
-
-        //- Phase for which forces are evaluated
-        const phaseModel& phase_;
-
-        //- Constant access to phaseSystem
-        const phaseSystem& fluid_;
+        autoPtr<HashPtrTable<volVectorField>> forceFields_;
 
 
 public:

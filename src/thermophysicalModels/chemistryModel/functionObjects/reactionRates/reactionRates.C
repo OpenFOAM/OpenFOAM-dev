@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "reactionRates.H"
+#include "basicChemistryModel.H"
 #include "fvcVolumeIntegrate.H"
 #include "polyTopoChangeMap.H"
 #include "polyMeshMap.H"
@@ -52,7 +53,13 @@ namespace functionObjects
 
 void Foam::functionObjects::reactionRates::writeFileHeader(const label i)
 {
-    const label nReaction = chemistryModel_.nReaction();
+    const basicChemistryModel& chemistryModel =
+        mesh().lookupObject<basicChemistryModel>
+        (
+            IOobject::groupName("chemistryProperties", phaseName_)
+        );
+
+    const label nReaction = chemistryModel.nReaction();
 
     writeHeader(file(), "Reaction rates");
 
@@ -63,7 +70,7 @@ void Foam::functionObjects::reactionRates::writeFileHeader(const label i)
 
     for (label reactioni = 0; reactioni < nReaction; ++ reactioni)
     {
-        writeTabbed(file(), chemistryModel_.reactionName(reactioni));
+        writeTabbed(file(), chemistryModel.reactionName(reactioni));
     }
 
     file() << endl;
@@ -83,13 +90,6 @@ Foam::functionObjects::reactionRates::reactionRates
     logFiles(obr_, name),
     zone_(fvMeshFunctionObject::mesh_, dict),
     phaseName_(dict.lookupOrDefault<word>("phase", word::null)),
-    chemistryModel_
-    (
-        fvMeshFunctionObject::mesh_.lookupObject<basicChemistryModel>
-        (
-            IOobject::groupName("chemistryProperties", phaseName_)
-        )
-    ),
     writeFields_(false)
 {
     read(dict);
@@ -126,7 +126,13 @@ bool Foam::functionObjects::reactionRates::write()
 {
     logFiles::write();
 
-    const label nReaction = chemistryModel_.nReaction();
+    const basicChemistryModel& chemistryModel =
+        mesh().lookupObject<basicChemistryModel>
+        (
+            IOobject::groupName("chemistryProperties", phaseName_)
+        );
+
+    const label nReaction = chemistryModel.nReaction();
 
     if (Pstream::master())
     {
@@ -137,7 +143,7 @@ bool Foam::functionObjects::reactionRates::write()
     {
         const volScalarField::Internal RR
         (
-            chemistryModel_.reactionRR(reactioni)
+            chemistryModel.reactionRR(reactioni)
         );
 
         // Compute the average rate and write it into the log file

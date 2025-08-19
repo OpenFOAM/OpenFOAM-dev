@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "specieReactionRates.H"
+#include "basicChemistryModel.H"
 #include "fvcVolumeIntegrate.H"
 #include "polyTopoChangeMap.H"
 #include "polyMeshMap.H"
@@ -52,18 +53,24 @@ namespace functionObjects
 
 void Foam::functionObjects::specieReactionRates::writeFileHeader(const label i)
 {
+    const basicChemistryModel& chemistryModel =
+        mesh().lookupObject<basicChemistryModel>
+        (
+            IOobject::groupName("chemistryProperties", phaseName_)
+        );
+
     writeHeader(file(), "Specie reaction rates");
 
     zone_.writeFileHeader(*this, file());
 
-    writeHeaderValue(file(), "nSpecie", chemistryModel_.nSpecie());
-    writeHeaderValue(file(), "nReaction", chemistryModel_.nReaction());
+    writeHeaderValue(file(), "nSpecie", chemistryModel.nSpecie());
+    writeHeaderValue(file(), "nReaction", chemistryModel.nReaction());
 
     writeCommented(file(), "Time");
     writeTabbed(file(), "Reaction");
 
     const wordList& speciesNames =
-        chemistryModel_.thermo().species();
+        chemistryModel.thermo().species();
 
     forAll (speciesNames, si)
     {
@@ -87,13 +94,6 @@ Foam::functionObjects::specieReactionRates::specieReactionRates
     logFiles(obr_, name),
     zone_(fvMeshFunctionObject::mesh_, dict),
     phaseName_(dict.lookupOrDefault<word>("phase", word::null)),
-    chemistryModel_
-    (
-        fvMeshFunctionObject::mesh_.lookupObject<basicChemistryModel>
-        (
-            IOobject::groupName("chemistryProperties", phaseName_)
-        )
-    ),
     writeFields_(false)
 {
     read(dict);
@@ -130,8 +130,14 @@ bool Foam::functionObjects::specieReactionRates::write()
 {
     logFiles::write();
 
-    const label nSpecie = chemistryModel_.nSpecie();
-    const label nReaction = chemistryModel_.nReaction();
+    const basicChemistryModel& chemistryModel =
+        mesh().lookupObject<basicChemistryModel>
+        (
+            IOobject::groupName("chemistryProperties", phaseName_)
+        );
+
+    const label nSpecie = chemistryModel.nSpecie();
+    const label nReaction = chemistryModel.nReaction();
 
     // Region volume
     const scalar V = zone_.V();
@@ -146,7 +152,7 @@ bool Foam::functionObjects::specieReactionRates::write()
 
         const PtrList<volScalarField::Internal> RR
         (
-            chemistryModel_.specieReactionRR(reactioni)
+            chemistryModel.specieReactionRR(reactioni)
         );
 
         // Compute the average rates and write them into the log file

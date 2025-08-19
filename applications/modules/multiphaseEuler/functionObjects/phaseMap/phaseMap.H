@@ -75,14 +75,6 @@ class phaseMap
 :
     public fvMeshFunctionObject
 {
-protected:
-
-    // Protected data
-
-        //- Constant access to phases
-        const phaseSystem::phaseModelList& phases_;
-
-
 public:
 
     //- Runtime type information
