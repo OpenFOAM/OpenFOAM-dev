@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -127,6 +127,11 @@ public:
         const bool validBoundary
     );
 
+    //- Clear all meshObjects of type MeshObjectType
+    template<class Mesh, template<class> class MeshObjectType>
+    static void clearAll(objectRegistry&);
+
+    //- Clear all but permanent meshObjects of type MeshObjectType
     template<class Mesh, template<class> class MeshObjectType>
     static void clear(objectRegistry&);
 

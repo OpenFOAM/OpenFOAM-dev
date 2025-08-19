@@ -152,6 +152,9 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
 
         clearOut();
 
+        // Clear all DeletableMeshObjects
+        meshObjects::clearAll<polyMesh, DeletableMeshObject>(*this);
+
         points_ = pointIOField
         (
             IOobject

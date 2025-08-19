@@ -306,6 +306,28 @@ void Foam::meshObjects::reorderPatches
 
 
 template<class Mesh, template<class> class MeshObjectType>
+void Foam::meshObjects::clearAll(objectRegistry& obr)
+{
+    HashTable<MeshObjectType<Mesh>*> meshObjects
+    (
+        obr.lookupClass<MeshObjectType<Mesh>>()
+    );
+
+    if (meshObjects::debug)
+    {
+        Pout<< "meshObjects::clear(objectRegistry&) :"
+            << " clearing " << Mesh::typeName
+            << " meshObjects for region " << obr.name() << endl;
+    }
+
+    forAllIter(typename HashTable<MeshObjectType<Mesh>*>, meshObjects, iter)
+    {
+        Delete<Mesh>(iter()->io_);
+    }
+}
+
+
+template<class Mesh, template<class> class MeshObjectType>
 void Foam::meshObjects::clear(objectRegistry& obr)
 {
     HashTable<MeshObjectType<Mesh>*> meshObjects
