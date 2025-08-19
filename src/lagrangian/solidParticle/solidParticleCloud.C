@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ License
 #include "solidParticleCloud.H"
 #include "fvMesh.H"
 #include "volFields.H"
-#include "interpolationCellPoint.H"
+#include "cellPoint_interpolation.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -77,9 +77,9 @@ void Foam::solidParticleCloud::move(const dimensionedVector& g)
     const volVectorField& U = mesh_.lookupObject<const volVectorField>("U");
     const volScalarField& nu = mesh_.lookupObject<const volScalarField>("nu");
 
-    interpolationCellPoint<scalar> rhoInterp(rho);
-    interpolationCellPoint<vector> UInterp(U);
-    interpolationCellPoint<scalar> nuInterp(nu);
+    interpolations::cellPoint<scalar> rhoInterp(rho);
+    interpolations::cellPoint<vector> UInterp(U);
+    interpolations::cellPoint<scalar> nuInterp(nu);
 
     solidParticle::trackingData
         td(*this, rhoInterp, UInterp, nuInterp, g.value());

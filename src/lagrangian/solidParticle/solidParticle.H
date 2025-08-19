@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ SourceFiles
 #include "Cloud.H"
 #include "IOstream.H"
 #include "autoPtr.H"
-#include "interpolationCellPoint.H"
+#include "cellPoint_interpolation.H"
 #include "contiguous.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -92,9 +92,9 @@ public:
     {
         // Interpolators for continuous phase fields
 
-            const interpolationCellPoint<scalar>& rhoInterp_;
-            const interpolationCellPoint<vector>& UInterp_;
-            const interpolationCellPoint<scalar>& nuInterp_;
+            const interpolations::cellPoint<scalar>& rhoInterp_;
+            const interpolations::cellPoint<vector>& UInterp_;
+            const interpolations::cellPoint<scalar>& nuInterp_;
 
         //- Local gravitational or other body-force acceleration
         const vector& g_;
@@ -107,20 +107,20 @@ public:
             inline trackingData
             (
                 const solidParticleCloud& spc,
-                const interpolationCellPoint<scalar>& rhoInterp,
-                const interpolationCellPoint<vector>& UInterp,
-                const interpolationCellPoint<scalar>& nuInterp,
+                const interpolations::cellPoint<scalar>& rhoInterp,
+                const interpolations::cellPoint<vector>& UInterp,
+                const interpolations::cellPoint<scalar>& nuInterp,
                 const vector& g
             );
 
 
         // Member Functions
 
-            inline const interpolationCellPoint<scalar>& rhoInterp() const;
+            inline const interpolations::cellPoint<scalar>& rhoInterp() const;
 
-            inline const interpolationCellPoint<vector>& UInterp() const;
+            inline const interpolations::cellPoint<vector>& UInterp() const;
 
-            inline const interpolationCellPoint<scalar>& nuInterp() const;
+            inline const interpolations::cellPoint<scalar>& nuInterp() const;
 
             inline const vector& g() const;
     };

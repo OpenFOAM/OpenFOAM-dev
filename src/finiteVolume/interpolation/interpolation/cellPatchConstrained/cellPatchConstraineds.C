@@ -23,65 +23,17 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "solidParticle.H"
+#include "cellPatchConstrained.H"
+#include "addToRunTimeSelectionTable.H"
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-inline Foam::solidParticle::trackingData::trackingData
-(
-    const solidParticleCloud& spc,
-    const interpolations::cellPoint<scalar>& rhoInterp,
-    const interpolations::cellPoint<vector>& UInterp,
-    const interpolations::cellPoint<scalar>& nuInterp,
-    const vector& g
-)
-:
-    particle::trackingData(spc),
-    rhoInterp_(rhoInterp),
-    UInterp_(UInterp),
-    nuInterp_(nuInterp),
-    g_(g)
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-inline const Foam::interpolations::cellPoint<Foam::scalar>&
-Foam::solidParticle::trackingData::rhoInterp() const
+namespace Foam
 {
-    return rhoInterp_;
-}
-
-
-inline const Foam::interpolations::cellPoint<Foam::vector>&
-Foam::solidParticle::trackingData::UInterp() const
+namespace interpolations
 {
-    return UInterp_;
+    FOR_ALL_FIELD_TYPES(makeInterpolation, cellPatchConstrained);
 }
-
-
-inline const Foam::interpolations::cellPoint<Foam::scalar>&
-Foam::solidParticle::trackingData::nuInterp() const
-{
-    return nuInterp_;
 }
-
-inline const Foam::vector& Foam::solidParticle::trackingData::g() const
-{
-    return g_;
-}
-
-
-inline Foam::scalar Foam::solidParticle::d() const
-{
-    return d_;
-}
-
-
-inline const Foam::vector& Foam::solidParticle::U() const
-{
-    return U_;
-}
-
 
 // ************************************************************************* //

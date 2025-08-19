@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ License
 
 #include "meshToMesh0.H"
 #include "volFields.H"
-#include "interpolationCellPoint.H"
+#include "cellPoint_interpolation.H"
 #include "SubField.H"
 #include "mixedFvPatchField.H"
 #include "forwardFieldMapper.H"
@@ -124,7 +124,7 @@ void Foam::meshToMesh0::interpolateField
 ) const
 {
     // Cell-Point interpolation
-    interpolationCellPoint<Type> interpolator(fromVf);
+    interpolations::cellPoint<Type> interpolator(fromVf);
 
     forAll(toF, celli)
     {

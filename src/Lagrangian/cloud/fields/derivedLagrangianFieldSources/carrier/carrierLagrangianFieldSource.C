@@ -25,6 +25,7 @@ License
 
 #include "carrierLagrangianFieldSource.H"
 #include "coupled.H"
+#include "volFields.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //

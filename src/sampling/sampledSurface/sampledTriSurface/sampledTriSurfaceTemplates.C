@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "sampledTriSurface.H"
+#include "volFields.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 

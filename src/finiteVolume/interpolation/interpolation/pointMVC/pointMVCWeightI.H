@@ -23,63 +23,26 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "sampledThresholdCellFaces.H"
-#include "thresholdCellFaces.H"
-#include "volFields.H"
+#include "pointMVCWeight.H"
+#include "pointFields.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-template<class Type>
-Foam::tmp<Foam::Field<Type>>
-Foam::sampledSurfaces::thresholdCellFaces::sampleField
-(
-    const VolField<Type>& vField
-) const
-{
-    // Recreate geometry if time has changed
-    updateGeometry();
-
-    return tmp<Field<Type>>(new Field<Type>(vField, meshCells_));
-}
-
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::Field<Type>>
-Foam::sampledSurfaces::thresholdCellFaces::interpolateField
+inline Type Foam::pointMVCWeight::interpolate
 (
-    const interpolation<Type>& interpolator
+    const PointField<Type>& psip
 ) const
 {
-    // Recreate geometry if time has changed
-    updateGeometry();
+    const labelList& vertices = psip.mesh()().cellPoints()[cellIndex_];
 
-    // One value per point
-    tmp<Field<Type>> tvalues(new Field<Type>(points().size()));
-    Field<Type>& values = tvalues.ref();
-
-    boolList pointDone(points().size(), false);
-
-    forAll(faces(), cutFacei)
+    Type t = Zero;
+    forAll(vertices, i)
     {
-        const face& f = faces()[cutFacei];
-
-        forAll(f, faceVertI)
-        {
-            label pointi = f[faceVertI];
-
-            if (!pointDone[pointi])
-            {
-                values[pointi] = interpolator.interpolate
-                (
-                    points()[pointi],
-                    meshCells_[cutFacei]
-                );
-                pointDone[pointi] = true;
-            }
-        }
+        t += psip[vertices[i]]*weights_[i];
     }
 
-    return tvalues;
+    return t;
 }
 
 

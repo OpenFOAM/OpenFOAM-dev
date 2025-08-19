@@ -23,60 +23,56 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "sampledIsoSurfaceSurface.H"
-#include "volFields.H"
 #include "volPointInterpolation_interpolation.H"
+#include "volPointInterpolation.H"
 
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-template<class Type>
-Foam::tmp<Foam::Field<Type>>
-Foam::sampledSurfaces::sampledIsoSurfaceSurface::sampleField
-(
-    const VolField<Type>& vField
-) const
-{
-    update();
-
-    return isoSurfPtr_->sample(vField.primitiveField());
-}
-
+// * * * * * * * * * * * * * * * * Constructor * * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::Field<Type>>
-Foam::sampledSurfaces::sampledIsoSurfaceSurface::interpolateField
+Foam::interpolations::volPointInterpolation<Type>::volPointInterpolation
 (
-    const interpolation<Type>& interpolator
-) const
-{
-    update();
+    const VolField<Type>& psi
+)
+:
+    psip_
+    (
+        Foam::volPointInterpolation::New(psi.mesh()).interpolate
+        (
+            psi,
+            "volPointInterpolate(" + psi.name() + ')',
+            true        // use cache
+        )
+    )
+{}
 
-    if (isA<interpolations::volPointInterpolation<Type>>(interpolator))
-    {
-        const PointField<Type>& pField =
-            refCast<const interpolations::volPointInterpolation<Type>>
-            (interpolator).psip();
 
-        return isoSurfPtr_().interpolate(pField.primitiveField());
-    }
-    else
-    {
-        const pointField& points = isoSurfPtr_->points();
-        const faceList& faces = isoSurfPtr_->faces();
-        const labelList& faceCells = isoSurfPtr_->faceCells();
+template<class Type>
+Foam::interpolations::volPointInterpolation<Type>::volPointInterpolation
+(
+    const volPointInterpolation<Type>& i
+)
+:
+    psip_(i.psip_.clone())
+{}
 
-        labelList pointCells(points.size());
-        forAll(faces, facei)
-        {
-            forAll(faces[facei], facePointi)
-            {
-                pointCells[faces[facei][facePointi]] = faceCells[facei];
-            }
-        }
 
-        return interpolator.interpolate(points, pointCells);
-    }
-}
+template<class Type>
+Foam::interpolations::volPointInterpolation<Type>::volPointInterpolation
+(
+    const VolField<Type>& psi,
+    tmp<PointField<Type>> psip
+)
+:
+    psip_(psip)
+{}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+template<class Type>
+Foam::interpolations::volPointInterpolation<Type>::~volPointInterpolation()
+{}
+
 
 
 // ************************************************************************* //

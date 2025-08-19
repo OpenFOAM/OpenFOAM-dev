@@ -23,63 +23,36 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "sampledThresholdCellFaces.H"
-#include "thresholdCellFaces.H"
+#include "cell_interpolation.H"
 #include "volFields.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::Field<Type>>
-Foam::sampledSurfaces::thresholdCellFaces::sampleField
-(
-    const VolField<Type>& vField
-) const
-{
-    // Recreate geometry if time has changed
-    updateGeometry();
-
-    return tmp<Field<Type>>(new Field<Type>(vField, meshCells_));
-}
+Foam::interpolations::cell<Type>::cell(const VolField<Type>& psi)
+:
+    fieldInterpolation<Type, cell<Type>>(psi)
+{}
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type>>
-Foam::sampledSurfaces::thresholdCellFaces::interpolateField
+Foam::interpolations::cell<Type>::cell(const cell<Type>& i)
+:
+    fieldInterpolation<Type, cell<Type>>(i)
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class Type>
+Type Foam::interpolations::cell<Type>::interpolate
 (
-    const interpolation<Type>& interpolator
+    const vector&,
+    const label celli,
+    const label
 ) const
 {
-    // Recreate geometry if time has changed
-    updateGeometry();
-
-    // One value per point
-    tmp<Field<Type>> tvalues(new Field<Type>(points().size()));
-    Field<Type>& values = tvalues.ref();
-
-    boolList pointDone(points().size(), false);
-
-    forAll(faces(), cutFacei)
-    {
-        const face& f = faces()[cutFacei];
-
-        forAll(f, faceVertI)
-        {
-            label pointi = f[faceVertI];
-
-            if (!pointDone[pointi])
-            {
-                values[pointi] = interpolator.interpolate
-                (
-                    points()[pointi],
-                    meshCells_[cutFacei]
-                );
-                pointDone[pointi] = true;
-            }
-        }
-    }
-
-    return tvalues;
+    return this->psi_[celli];
 }
 
 

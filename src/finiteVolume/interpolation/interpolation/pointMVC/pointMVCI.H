@@ -23,64 +23,22 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "solidParticle.H"
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-inline Foam::solidParticle::trackingData::trackingData
-(
-    const solidParticleCloud& spc,
-    const interpolations::cellPoint<scalar>& rhoInterp,
-    const interpolations::cellPoint<vector>& UInterp,
-    const interpolations::cellPoint<scalar>& nuInterp,
-    const vector& g
-)
-:
-    particle::trackingData(spc),
-    rhoInterp_(rhoInterp),
-    UInterp_(UInterp),
-    nuInterp_(nuInterp),
-    g_(g)
-{}
-
+#include "pointMVC.H"
+#include "pointMVCWeight.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline const Foam::interpolations::cellPoint<Foam::scalar>&
-Foam::solidParticle::trackingData::rhoInterp() const
+template<class Type>
+inline Type Foam::interpolations::pointMVC<Type>::interpolate
+(
+    const vector& position,
+    const label celli,
+    const label facei
+) const
 {
-    return rhoInterp_;
-}
-
-
-inline const Foam::interpolations::cellPoint<Foam::vector>&
-Foam::solidParticle::trackingData::UInterp() const
-{
-    return UInterp_;
-}
-
-
-inline const Foam::interpolations::cellPoint<Foam::scalar>&
-Foam::solidParticle::trackingData::nuInterp() const
-{
-    return nuInterp_;
-}
-
-inline const Foam::vector& Foam::solidParticle::trackingData::g() const
-{
-    return g_;
-}
-
-
-inline Foam::scalar Foam::solidParticle::d() const
-{
-    return d_;
-}
-
-
-inline const Foam::vector& Foam::solidParticle::U() const
-{
-    return U_;
+    return
+        pointMVCWeight(this->mesh_, position, celli, facei)
+       .interpolate(this->psip_);
 }
 
 

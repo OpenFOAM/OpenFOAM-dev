@@ -28,7 +28,7 @@ License
 #include "volFields.H"
 #include "sampledSurface.H"
 #include "surfaceWriter.H"
-#include "interpolationCellPoint.H"
+#include "cellPoint_interpolation.H"
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
@@ -72,7 +72,7 @@ Foam::functionObjects::fieldValues::surfaceFieldValue::getFieldValues
             if (surfacePtr_().interpolate())
             {
                 // Interpolate the field to the surface points
-                const interpolationCellPoint<Type> interp(fld);
+                const interpolations::cellPoint<Type> interp(fld);
                 tmp<Field<Type>> tintFld(surfacePtr_().interpolate(interp));
                 const Field<Type>& intFld = tintFld();
 

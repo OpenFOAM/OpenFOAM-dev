@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,20 +23,21 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "interpolation.H"
-#include "addToRunTimeSelectionTable.H"
+#include "volPointInterpolation_interpolation.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    #define defineInterpolation(Type, nullArg)                                 \
-        defineNamedTemplateTypeNameAndDebug(interpolation<Type>, 0);           \
-        defineTemplateRunTimeSelectionTable(interpolation<Type>, dictionary);
+namespace interpolations
+{
+    #define defineVolPointInterpolation(Type, nullArg)                         \
+        defineNamedTemplateTypeNameAndDebug(volPointInterpolation<Type>, 0);   \
 
-    FOR_ALL_FIELD_TYPES(defineInterpolation);
+    FOR_ALL_FIELD_TYPES(defineVolPointInterpolation);
 
-    #undef defineInterpolation
+    #undef defineVolPointInterpolation
+}
 }
 
 // ************************************************************************* //

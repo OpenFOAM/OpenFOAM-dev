@@ -23,63 +23,58 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "sampledThresholdCellFaces.H"
-#include "thresholdCellFaces.H"
+#include "cellPatchConstrained.H"
 #include "volFields.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::Field<Type>>
-Foam::sampledSurfaces::thresholdCellFaces::sampleField
+Foam::interpolations::cellPatchConstrained<Type>::cellPatchConstrained
 (
-    const VolField<Type>& vField
-) const
-{
-    // Recreate geometry if time has changed
-    updateGeometry();
-
-    return tmp<Field<Type>>(new Field<Type>(vField, meshCells_));
-}
+    const VolField<Type>& psi
+)
+:
+    fieldInterpolation<Type, cellPatchConstrained<Type>>(psi)
+{}
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type>>
-Foam::sampledSurfaces::thresholdCellFaces::interpolateField
+Foam::interpolations::cellPatchConstrained<Type>::cellPatchConstrained
 (
-    const interpolation<Type>& interpolator
+    const cellPatchConstrained<Type>& i
+)
+:
+    fieldInterpolation<Type, cellPatchConstrained<Type>>(i)
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class Type>
+Type Foam::interpolations::cellPatchConstrained<Type>::interpolate
+(
+    const vector& pt,
+    const label celli,
+    const label facei
 ) const
 {
-    // Recreate geometry if time has changed
-    updateGeometry();
+    const fvMesh& mesh = this->psi_.mesh();
 
-    // One value per point
-    tmp<Field<Type>> tvalues(new Field<Type>(points().size()));
-    Field<Type>& values = tvalues.ref();
-
-    boolList pointDone(points().size(), false);
-
-    forAll(faces(), cutFacei)
+    if (facei >= 0 && facei >= this->psi_.mesh().nInternalFaces())
     {
-        const face& f = faces()[cutFacei];
+        const polyBoundaryMesh& pbm = mesh.boundaryMesh();
 
-        forAll(f, faceVertI)
+        const label patchi = pbm.patchIndices()[facei - mesh.nInternalFaces()];
+
+        if (!pbm[patchi].empty())
         {
-            label pointi = f[faceVertI];
+            const label patchFacei = pbm[patchi].whichFace(facei);
 
-            if (!pointDone[pointi])
-            {
-                values[pointi] = interpolator.interpolate
-                (
-                    points()[pointi],
-                    meshCells_[cutFacei]
-                );
-                pointDone[pointi] = true;
-            }
+            return this->psi_.boundaryField()[patchi][patchFacei];
         }
     }
 
-    return tvalues;
+    return this->psi_[celli];
 }
 
 

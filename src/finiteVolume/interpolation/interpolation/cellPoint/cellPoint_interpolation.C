@@ -23,63 +23,50 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "sampledThresholdCellFaces.H"
-#include "thresholdCellFaces.H"
-#include "volFields.H"
+#include "cellPoint_interpolation.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::Field<Type>>
-Foam::sampledSurfaces::thresholdCellFaces::sampleField
+Foam::interpolations::cellPointBase<Type>::cellPointBase
 (
-    const VolField<Type>& vField
-) const
+    const VolField<Type>& psi
+)
+:
+    fieldInterpolation<Type, cellPoint<Type>>(psi),
+    volPointInterpolation<Type>(psi)
 {
-    // Recreate geometry if time has changed
-    updateGeometry();
-
-    return tmp<Field<Type>>(new Field<Type>(vField, meshCells_));
+    // The interpolation process needs the tetrahedral decomposition
+    (void)psi.mesh().tetBasePtIs();
 }
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type>>
-Foam::sampledSurfaces::thresholdCellFaces::interpolateField
+Foam::interpolations::cellPointBase<Type>::cellPointBase
 (
-    const interpolation<Type>& interpolator
-) const
+    const cellPointBase<Type>& i
+)
+:
+    fieldInterpolation<Type, cellPoint<Type>>(i),
+    volPointInterpolation<Type>(i)
 {
-    // Recreate geometry if time has changed
-    updateGeometry();
+    // The interpolation process needs the tetrahedral decomposition
+    (void)this->psi().mesh().tetBasePtIs();
+}
 
-    // One value per point
-    tmp<Field<Type>> tvalues(new Field<Type>(points().size()));
-    Field<Type>& values = tvalues.ref();
 
-    boolList pointDone(points().size(), false);
-
-    forAll(faces(), cutFacei)
-    {
-        const face& f = faces()[cutFacei];
-
-        forAll(f, faceVertI)
-        {
-            label pointi = f[faceVertI];
-
-            if (!pointDone[pointi])
-            {
-                values[pointi] = interpolator.interpolate
-                (
-                    points()[pointi],
-                    meshCells_[cutFacei]
-                );
-                pointDone[pointi] = true;
-            }
-        }
-    }
-
-    return tvalues;
+template<class Type>
+Foam::interpolations::cellPointBase<Type>::cellPointBase
+(
+    const VolField<Type>& psi,
+    tmp<PointField<Type>> psip
+)
+:
+    fieldInterpolation<Type, cellPoint<Type>>(psi),
+    volPointInterpolation<Type>(psi, psip)
+{
+    // The interpolation process needs the tetrahedral decomposition
+    (void)psi.mesh().tetBasePtIs();
 }
 
 

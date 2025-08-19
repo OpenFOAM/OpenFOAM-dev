@@ -80,7 +80,7 @@ SourceFiles
 #include "fvMeshFunctionObject.H"
 #include "volFields.H"
 #include "Tuple2.H"
-#include "interpolationCellPoint.H"
+#include "cellPoint_interpolation.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -155,7 +155,7 @@ protected:
         template<class Type>
         void sampleBoundaryField
         (
-            const interpolationCellPoint<Type>& interpolator,
+            const interpolations::cellPoint<Type>& interpolator,
             VolField<Type>& fld
         ) const;
 

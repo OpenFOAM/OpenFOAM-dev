@@ -28,6 +28,7 @@ License
 #include "cloud_functionObject.H"
 #include "LagrangiancDdt.H"
 #include "LagrangianmDdt.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
