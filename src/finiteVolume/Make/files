@@ -282,6 +282,7 @@ $(constraintFvsPatchFields)/nonConformalError/nonConformalErrorFvsPatchFields.C
 $(constraintFvsPatchFields)/nonConformalProcessorCyclic/nonConformalProcessorCyclicFvsPatchFields.C
 
 derivedFvsPatchFields = $(fvsPatchFields)/derived
+$(derivedFvsPatchFields)/zeroFixedValue/zeroFixedValueFvsPatchFields.C
 $(derivedFvsPatchFields)/polyFaces/polyFacesFvsPatchLabelField.C
 $(derivedFvsPatchFields)/nonConformalPolyFaces/nonConformalPolyFacesFvsPatchLabelField.C
 $(derivedFvsPatchFields)/nonConformalMappedPolyFaces/nonConformalMappedPolyFacesFvsPatchLabelField.C

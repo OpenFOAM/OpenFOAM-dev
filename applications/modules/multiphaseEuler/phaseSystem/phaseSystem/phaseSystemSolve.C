@@ -433,7 +433,7 @@ void Foam::phaseSystem::solve
                 alphaPhis.set
                 (
                     movingPhasei,
-                    new surfaceScalarField
+                    surfaceScalarField::New
                     (
                         IOobject::groupName("alphaPhi", phase.name()),
                         fvc::flux
@@ -441,7 +441,8 @@ void Foam::phaseSystem::solve
                             phase.phi()(),
                             alpha,
                             "div(phi," + alpha.name() + ')'
-                        )
+                        ),
+                        phase.alphaPhi()().boundaryField().types()
                     )
                 );
 

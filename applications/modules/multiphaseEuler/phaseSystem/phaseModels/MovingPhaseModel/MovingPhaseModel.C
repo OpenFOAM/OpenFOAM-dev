@@ -25,9 +25,11 @@ License
 
 #include "MovingPhaseModel.H"
 #include "phaseSystem.H"
-#include "fixedValueFvsPatchFields.H"
+#include "zeroFixedValueFvsPatchFields.H"
+#include "fixedValueFvPatchFields.H"
+#include "wallFvPatch.H"
+#include "noSlipFvPatchVectorField.H"
 #include "slipFvPatchFields.H"
-#include "partialSlipFvPatchFields.H"
 
 #include "fvmDdt.H"
 #include "fvmDiv.H"
@@ -110,6 +112,43 @@ Foam::MovingPhaseModel<BasePhaseModel>::phi(const volVectorField& U) const
 }
 
 
+template<class BasePhaseModel>
+Foam::wordList Foam::MovingPhaseModel<BasePhaseModel>::alphaPhiTypes
+(
+    const volVectorField& U
+) const
+{
+    wordList alphaPhiTypes
+    (
+        U.boundaryField().size(),
+        calculatedFvsPatchScalarField::typeName
+    );
+
+    forAll(U.boundaryField(), patchi)
+    {
+        const fvPatchVectorField& UPf = U.boundaryField()[patchi];
+
+        if
+        (
+            // Check for fixedValue with a value of 0 for backward compatibility
+            (
+                isType<fixedValueFvPatchVectorField>(UPf)
+             && gSum(UPf) == vector::zero
+            )
+            // Check for all wall types
+         || isA<wallFvPatch>(this->mesh().boundary()[patchi])
+         || isA<noSlipFvPatchVectorField>(UPf)
+         || isA<slipFvPatchVectorField>(UPf)
+        )
+        {
+            alphaPhiTypes[patchi] = zeroFixedValueFvsPatchScalarField::typeName;
+        }
+    }
+
+    return alphaPhiTypes;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class BasePhaseModel>
@@ -146,7 +185,8 @@ Foam::MovingPhaseModel<BasePhaseModel>::MovingPhaseModel
             IOobject::NO_WRITE
         ),
         fluid.mesh(),
-        dimensionedScalar(dimensionSet(0, 3, -1, 0, 0), 0)
+        dimensionedScalar(dimensionSet(0, 3, -1, 0, 0), 0),
+        alphaPhiTypes(U_)
     ),
     alphaRhoPhi_
     (
@@ -159,7 +199,8 @@ Foam::MovingPhaseModel<BasePhaseModel>::MovingPhaseModel
             IOobject::AUTO_WRITE
         ),
         fluid.mesh(),
-        dimensionedScalar(dimensionSet(1, 0, -1, 0, 0), 0)
+        dimensionedScalar(dimensionSet(1, 0, -1, 0, 0), 0),
+        alphaPhiTypes(U_)
     ),
     Uf_(nullptr),
     divU_(nullptr),
