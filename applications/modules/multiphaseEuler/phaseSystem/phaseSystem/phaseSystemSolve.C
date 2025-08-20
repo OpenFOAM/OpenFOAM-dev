@@ -862,7 +862,7 @@ void Foam::phaseSystem::solve
                         volScalarField& alpha = phase;
 
                         alpha +=
-                            alphaControls.MULESCorrRelax
+                            (1 - alphaControls.MULESCorrRelax)
                            *(alphaPreds[movingPhasei] - alpha);
 
                         alphaPreds[movingPhasei] = alpha;
