@@ -135,8 +135,8 @@ Foam::wordList Foam::MovingPhaseModel<BasePhaseModel>::alphaPhiTypes
                 isType<fixedValueFvPatchVectorField>(UPf)
              && gSum(UPf) == vector::zero
             )
-            // Check for all wall types
-         || isA<wallFvPatch>(this->mesh().boundary()[patchi])
+            // Check for wall patch type
+         || isType<wallFvPatch>(this->mesh().boundary()[patchi])
          || isA<noSlipFvPatchVectorField>(UPf)
          || isA<slipFvPatchVectorField>(UPf)
         )
