@@ -21,21 +21,17 @@ boundaryField
 {
     inlet
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            slip;
     }
 
     outlet
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            slip;
     }
 
     walls
     {
-        type            JohnsonJacksonParticleSlip;
-        specularityCoefficient  0.01;
-        value           uniform (0 0 0);
+        type            noSlip;
     }
 
     frontAndBackPlanes

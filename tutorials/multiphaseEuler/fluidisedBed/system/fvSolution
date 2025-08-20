@@ -20,7 +20,9 @@ solvers
     {
         nCorrectors     1;
         nSubCycles      3;
+
         implicitPhasePressure yes;
+        clip            no;
 
         solver          PBiCGStab;
         preconditioner  DIC;
