@@ -257,40 +257,27 @@ void Foam::solvers::XiFluid::bSolve
     //
     // The bounded non-conservative part of the unburnt-mean gas velocity flux
     // difference is already included in the b-Xi burning rate but it can also
-    // be included in the Eau equation in bounded non-conserative form for
+    // be included in the Hau equation in bounded non-conserative form for
     // consistency
     //
     // This term cannot be used in partially-premixed combustion due to
-    // the resultant inconsistency between ft and Eau transport.
+    // the resultant inconsistency between ft and Hau transport.
     // A possible solution would be to solve for fuu as well as ft.
-    tmp<surfaceScalarField> phiu;
+    tmp<surfaceScalarField> phiDbu;
     tmp<surfaceScalarField> phib;
     if (!thermo_.containsSpecie("ft"))
     {
         const surfaceScalarField bf(fvc::interpolate(b));
-
-        const surfaceScalarField phiStub
-        (
-            fvc::interpolate(rhou/rhob - 1)*fvc::interpolate(rho)*phivSt
-        );
 
         const surfaceScalarField phiDb
         (
             fvc::interpolate(Db)*fvc::snGrad(b)*mesh.magSf()
         );
 
-        phiu = new surfaceScalarField
-        (
-            "phiu",
-            (1 - bf)*phiStub - phiDb/max(bf, 0.0001)
-        );
+        phiDbu = new surfaceScalarField("phiDbu", - phiDb/max(bf, 0.0001));
 
         // Not currently required
-        // phib = new surfaceScalarField
-        // (
-        //     "phib",
-        //     phiDb/max(1 - bf, 0.0001) - bf*phiStub
-        // );
+        // phiDbb = new surfaceScalarField("phiDbb", phiDb/max(1 - bf, 0.0001));
     }
 
     // Correct the flame wrinkling
@@ -304,84 +291,74 @@ void Foam::solvers::XiFluid::bSolve
         fuSolve(mvConvection, Db, (bSourceEqn & b));
     }
 
-    EauSolve(mvConvection, Db, phiu);
+    HauSolve(mvConvection, Db, phiDbu);
 }
 
 
-void Foam::solvers::XiFluid::EauSolve
+void Foam::solvers::XiFluid::HauSolve
 (
     const fv::convectionScheme<scalar>& mvConvection,
     const volScalarField& Db,
-    const tmp<surfaceScalarField>& phiu
+    const tmp<surfaceScalarField>& phiDbu
 )
 {
-    volScalarField& heau = thermo_.heu();
+    volScalarField& hau = thermo_.heu();
 
     const volScalarField::Internal rhoByRhou(rho()/thermo.rhou()());
 
-    fvScalarMatrix EauEqn
+    fvScalarMatrix HauEqn
     (
-        fvm::ddt(rho, heau) + mvConvection.fvmDiv(phi, heau)
+        fvm::ddt(rho, hau) + mvConvection.fvmDiv(phi, hau)
       + rhoByRhou
        *(
             (fvc::ddt(rho, K) + fvc::div(phi, K))()
-          + pressureWork
-            (
-                heau.name() == "eau"
-              ? mvConvection.fvcDiv(phi, p/rho)()
-              : -dpdt
-            )
+          + pressureWork(-dpdt)
         )
-      - fvm::laplacian(Db, heau)
+      - fvm::laplacian(Db, hau)
      ==
-        fvModels().source(rho, heau)
+        fvModels().source(rho, hau)
     );
 
-    if (phiu.valid())
+    if (phiDbu.valid())
     {
-        EauEqn +=
-            fvm::div(phiu(), heau, "div(phiSt,b)")
-          - fvm::Sp(fvc::div(phiu()), heau);
+        HauEqn +=
+            fvm::div(phiDbu(), hau, "div(phiSt,b)")
+          - fvm::Sp(fvc::div(phiDbu()), hau);
     }
 
-    EauEqn.relax();
-    fvConstraints().constrain(EauEqn);
-    EauEqn.solve();
-    fvConstraints().constrain(heau);
+    HauEqn.relax();
+    fvConstraints().constrain(HauEqn);
+    HauEqn.solve();
+    fvConstraints().constrain(hau);
 }
 
 
-void Foam::solvers::XiFluid::EaSolve
+void Foam::solvers::XiFluid::HaSolve
 (
     const fv::convectionScheme<scalar>& mvConvection,
     const volScalarField& Db
 )
 {
-    volScalarField& hea = thermo_.he();
+    volScalarField& ha = thermo_.he();
 
-    fvScalarMatrix EaEqn
+    fvScalarMatrix HaEqn
     (
-        fvm::ddt(rho, hea) + mvConvection.fvmDiv(phi, hea)
+        fvm::ddt(rho, ha) + mvConvection.fvmDiv(phi, ha)
       + fvc::ddt(rho, K) + fvc::div(phi, K)
-      + pressureWork
-        (
-            hea.name() == "ea"
-          ? mvConvection.fvcDiv(phi, p/rho)()
-          : -dpdt
-        )
-      - fvm::laplacian(Db, hea)
+      + pressureWork(-dpdt)
+      - fvm::laplacian(Db, ha)
      ==
         (
             buoyancy.valid()
-          ? fvModels().source(rho, hea) + rho*(U & buoyancy->g)
-          : fvModels().source(rho, hea)
+          ? fvModels().source(rho, ha) + rho*(U & buoyancy->g)
+          : fvModels().source(rho, ha)
         )
     );
 
-    EaEqn.relax();
-    fvConstraints().constrain(EaEqn);
-    EaEqn.solve();
-    fvConstraints().constrain(hea);
+    HaEqn.relax();
+    fvConstraints().constrain(HaEqn);
+    HaEqn.solve();
+    fvConstraints().constrain(ha);
 }
 
 
@@ -444,7 +421,7 @@ void Foam::solvers::XiFluid::thermophysicalPredictor()
         egrSolve(mvConvection(), Db);
     }
 
-    EaSolve(mvConvection(), Db);
+    HaSolve(mvConvection(), Db);
 
     if (!ignited)
     {

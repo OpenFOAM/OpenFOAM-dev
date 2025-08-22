@@ -237,16 +237,16 @@ protected:
             const volScalarField& Db
         );
 
-        //- Solve the unburnt energy equation
-        void EauSolve
+        //- Solve the unburnt enthalpy equation
+        void HauSolve
         (
             const fv::convectionScheme<scalar>& mvConvection,
             const volScalarField& Db,
-            const tmp<surfaceScalarField>& phiub
+            const tmp<surfaceScalarField>& phiDbu
         );
 
-        //- Solve the energy equation
-        void EaSolve
+        //- Solve the enthalpy equation
+        void HaSolve
         (
             const fv::convectionScheme<scalar>& mvConvection,
             const volScalarField& Db

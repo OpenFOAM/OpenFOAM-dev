@@ -26,7 +26,6 @@ typeRenamed
 energy
 (
     absoluteEnthalpy
-    absoluteInternalEnergy
 );
 
 mixture
@@ -46,10 +45,6 @@ transport
 
 thermo
 (
-    eConst
-    ePolynomial
-    ePower
-    eTabulated
     hConst
     hPolynomial
     hPower

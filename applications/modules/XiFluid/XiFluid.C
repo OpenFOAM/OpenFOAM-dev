@@ -110,7 +110,7 @@ Foam::solvers::XiFluid::XiFluid(fvMesh& mesh)
     Su(SuModel_->Su()),
     Xi(XiModel_->Xi())
 {
-    thermo.validate(type(), "ha", "ea");
+    thermo.validate(type(), "ha");
 
     if (thermo_.containsSpecie("ft"))
     {
