@@ -210,7 +210,11 @@ void Foam::MULES::limitSumCorr
 
         forAll(psis, phasei)
         {
-            if (!psis[phasei].boundaryField()[patchi].assignable())
+            if
+            (
+               !psis[phasei].boundaryField()[patchi].assignable()
+             || psiPhiCorrs[phasei].boundaryField()[patchi].fixesValue()
+            )
             {
                 nFixed++;
             }
@@ -239,9 +243,13 @@ void Foam::MULES::limitSumCorr
             label i = 0;
             label fixedi = 0;
 
-            forAll(psiPhiCorrsPatch, phasei)
+            forAll(psis, phasei)
             {
-                if (!psis[phasei].boundaryField()[patchi].assignable())
+                if
+                (
+                   !psis[phasei].boundaryField()[patchi].assignable()
+                 || psiPhiCorrs[phasei].boundaryField()[patchi].fixesValue()
+                )
                 {
                     psiPhiCorrsFixedPatch.set
                     (
@@ -278,14 +286,14 @@ void Foam::MULES::limitSum
 {
     forAll(psiPhis, phasei)
     {
-        psiPhis[phasei] -= alphaPhiBDs[phasei];
+        psiPhis[phasei] == psiPhis[phasei] - alphaPhiBDs[phasei];
     }
 
     limitSumCorr(psis, psiPhis, phi);
 
     forAll(psiPhis, phasei)
     {
-        psiPhis[phasei] += alphaPhiBDs[phasei];
+        psiPhis[phasei] == psiPhis[phasei] + alphaPhiBDs[phasei];
     }
 }
 
