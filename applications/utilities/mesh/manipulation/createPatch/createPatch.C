@@ -761,7 +761,8 @@ int main(int argc, char *argv[])
         {
             FatalErrorInFunction
                 << "Invalid source type " << sourceType << endl
-                << "Valid source types are 'patches' 'set'" << exit(FatalError);
+                << "Valid source types: patches set zone"
+                << exit(FatalError);
         }
     }
     Info<< endl;
