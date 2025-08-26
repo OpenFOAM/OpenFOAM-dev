@@ -25,6 +25,7 @@ solvers
         MULES
         {
             nIter           5;
+            tolerance       1e-2;
         }
 
         solver          smoothSolver;
