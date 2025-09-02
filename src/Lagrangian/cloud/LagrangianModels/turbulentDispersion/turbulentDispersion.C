@@ -28,6 +28,7 @@ License
 #include "coupledToIncompressibleFluid.H"
 #include "coupledToFluid.H"
 #include "standardNormal.H"
+#include "wallPolyPatch.H"
 #include "maxLagrangianFieldSources.H"
 #include "NaNLagrangianFieldSources.H"
 #include "internalLagrangianFieldSources.H"
@@ -121,6 +122,11 @@ Foam::Lagrangian::turbulentDispersion::turbulentDispersion
     cloudLagrangianModel(static_cast<const LagrangianModel&>(*this)),
     dragPtr_(nullptr),
     momentumTransportModel_(mesh.mesh().lookupType<momentumTransportModel>()),
+    Cmu75_(pow(dimensionedScalar("Cmu", dimless, modelDict, 0.09), 0.75)),
+    maxDiscreteEddies_
+    (
+        modelDict.lookupOrDefault<label>("maxDiscreteEddies", 32)
+    ),
     kc_
     (
         cloud<clouds::coupled>().carrierField<scalar>
@@ -217,7 +223,6 @@ void Foam::Lagrangian::turbulentDispersion::calculate
     const LagrangianSubVectorField& Uturb0 = Uturb.oldTime();
 
     // Update the eddy time-scale
-    const dimensionedScalar cps(dimless, 0.16432); // (model constant ?)
     const LagrangianSubScalarField magUrel
     (
         mag(cloud().U(subMesh) - cloud<clouds::coupled>().Uc(subMesh))
@@ -236,12 +241,37 @@ void Foam::Lagrangian::turbulentDispersion::calculate
         max
         (
             kc_(subMesh)/max(epsilonc_(subMesh), rootVSmallEpsilon),
-            cps*kc_(subMesh)*sqrt(kc_(subMesh))
+            Cmu75_*kc_(subMesh)*sqrt(kc_(subMesh))
            /max(epsilonc_(subMesh)*magUrel, rootVSmallEpsilonU)
         );
 
     // Velocity fluctuation magnitude
-    const LagrangianSubScalarField magUturb(sqrt(2.0/3.0*kc_(subMesh)));
+    LagrangianSubScalarField magUturb(sqrt(2.0/3.0*kc_(subMesh)));
+
+    // Modify particles on the walls to account for the turbulent kinetic
+    // energy being constrained to zero. This prevents a turbulent velocity
+    // fluctuation from pointing through a wall and causing a particle to
+    // vibrate as the drag model and the rebound model fight each other.
+    const PackedBoolList patchIsWall
+    (
+        mesh().mesh().boundaryMesh().findIndices<wallPolyPatch>().toc()
+    );
+    forAll(subMesh, subi)
+    {
+        const label i = subi + subMesh.start();
+
+        if (mesh().state(i) < LagrangianState::onPatchZero) continue;
+
+        const label patchi =
+            static_cast<label>(mesh().state(i))
+          - static_cast<label>(LagrangianState::onPatchZero);
+
+        if (!patchIsWall[patchi]) continue;
+
+        tTurb[subi] = rootVSmall;
+
+        magUturb[subi] = 0;
+    }
 
     // Initialise the average turbulent velocities
     avgUturbPtr_.reset
@@ -271,6 +301,16 @@ void Foam::Lagrangian::turbulentDispersion::calculate
             false
         );
 
+        // Generate a random direction with a normally distributed magnitude
+        auto rndDir = [&rndGen, &stdNormal]()
+        {
+            const scalar theta =
+                rndGen.scalar01()*constant::mathematical::twoPi;
+            const scalar z = 2*rndGen.scalar01() - 1;
+            const scalar r = sqrt(1 - sqr(z));
+            return stdNormal.sample()*vector(r*cos(theta), r*sin(theta), z);
+        };
+
         // Set up sub-stepping
         const scalar Dt = max(deltaT[subi], rootVSmall);
         scalar dt = 0;
@@ -284,27 +324,40 @@ void Foam::Lagrangian::turbulentDispersion::calculate
         }
 
         // Add new eddies across the time-step
-        while (dt < Dt)
+        const scalar nEddies = Dt/tTurb[subi];
+        if (nEddies < maxDiscreteEddies_)
         {
-            const scalar dtPrev = dt;
-            dt += tTurb[subi];
+            while (dt < Dt)
+            {
+                // Create a turbulent velocity fluctuation for the new eddy
+                Uturb[subi] = rndDir()*magUturb[subi];
 
-            // Create a random direction with normally distributed magnitude
-            const scalar theta =
-                rndGen.scalar01()*constant::mathematical::twoPi;
-            const scalar u = 2*rndGen.scalar01() - 1;
-            const scalar a = sqrt(1 - sqr(u));
-            const vector dir(a*cos(theta), a*sin(theta), u);
+                // Add this eddy to the average
+                avgUturbPtr_()[subi] +=
+                    (min(dt + tTurb[subi], Dt) - dt)/Dt*Uturb[subi];
 
-            // Set the new turbulent fluctuation velocity
-            Uturb[subi] = dir*stdNormal.sample()*magUturb[subi];
+                // Increment the time
+                dt += tTurb[subi];
+            }
 
-            // Add it to the average
-            avgUturbPtr_()[subi] += (min(dt, Dt) - dtPrev)/Dt*Uturb[subi];
+            // Set the fraction to where we got to in the current eddy
+            fractionTurb[subi] = 1 - (dt - Dt)/tTurb[subi];
         }
+        else
+        {
+            // Create a turbulent velocity fluctuation for the new eddy
+            Uturb[subi] = rndDir()*magUturb[subi];
 
-        // Set the fraction to where we got to in the current eddy
-        fractionTurb[subi] = 1 - (dt - Dt)/tTurb[subi];
+            // Add the combined effect of all the eddies to the average
+            avgUturbPtr_()[subi] +=
+                (Dt - dt)/Dt
+               *sqrt(nEddies/3)
+               *stdNormal.sample<vector>()
+               *magUturb[subi];
+
+            // Set the fraction to indicate that the eddies are finished
+            fractionTurb[subi] = 1;
+        }
     }
 
     // If this is not the final iteration then rewind the generator so that the
