@@ -39,8 +39,9 @@ sources
 {
     pointInjection
     {
-        type            coneVelocity;
+        type            fanVelocity;
         Ucentre         (1 0 0);
+        normal          (0 0 1);
         thetaInner      0 [deg];
         thetaOuter      5 [deg];
     }
