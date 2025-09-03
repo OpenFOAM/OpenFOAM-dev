@@ -2197,12 +2197,16 @@ Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
 Foam::fvMeshStitcher::openness() const
 {
     return
-        mag(fvc::surfaceIntegrate(mesh_.Sf()))*mesh_.V()
-       /max
+        DimensionedField<scalar, volMesh>::New
         (
-            mag(fvc::surfaceSum(cmptMag(mesh_.Sf())))(),
-            (small*sqr(cbrt(mesh_.V())))()
-        )();
+            "openness",
+            mag(fvc::surfaceIntegrate(mesh_.Sf()))*mesh_.V()
+           /max
+            (
+                mag(fvc::surfaceSum(cmptMag(mesh_.Sf())))(),
+                (small*sqr(cbrt(mesh_.V())))()
+            )()
+        );
 }
 
 
@@ -2224,19 +2228,29 @@ Foam::fvMeshStitcher::volumeConservationError(const label n) const
     const volScalarField::Internal& V = n == 0 ? mesh_.V() : mesh_.V0();
     const volScalarField::Internal& V0 = n == 0 ? mesh_.V0() : mesh_.V00();
 
-    return fvc::surfaceIntegrate(phi*deltaT)() - (V - V0)/mesh_.V();
+    return
+        DimensionedField<scalar, volMesh>::New
+        (
+            "volumeConservationError" + word(n == 0 ? "" : "_0"),
+            fvc::surfaceIntegrate(phi*deltaT)() - (V - V0)/mesh_.V()
+        );
 }
 
 
 Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
 Foam::fvMeshStitcher::projectedVolumeFraction() const
 {
-    return mag
-    (
-        fvc::surfaceIntegrate(mesh_.Sf() & mesh_.Cf())
-       /mesh_.nSolutionD()
-      - 1
-    );
+    return
+        DimensionedField<scalar, volMesh>::New
+        (
+            "projectedVolumeFraction",
+            mag
+            (
+                fvc::surfaceIntegrate(mesh_.Sf() & mesh_.Cf())
+               /mesh_.nSolutionD()
+              - 1
+            )
+        );
 }
 
 
