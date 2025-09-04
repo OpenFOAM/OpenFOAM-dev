@@ -72,8 +72,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef BC_H
-#define BC_H
+#ifndef CONSTRUCT_H
+#define CONSTRUCT_H
 
 #include "BASEFvPatchFields.H"
 #include "Function1.H"
