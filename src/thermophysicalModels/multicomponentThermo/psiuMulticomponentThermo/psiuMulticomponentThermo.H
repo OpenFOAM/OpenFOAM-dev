@@ -89,7 +89,10 @@ public:
             PsiuMulticomponentThermo<BasicThermo<MixtureType, composite>>;
 
         //- The derived name
-        static const word derivedThermoName;
+        static word derivedThermoName()
+        {
+            return "heheuPsiThermo";
+        }
 
 
     //- Runtime type information

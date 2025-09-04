@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,8 +32,6 @@ namespace Foam
     defineTypeNameAndDebug(rhoFluidThermo, 0);
     defineRunTimeSelectionTable(rhoFluidThermo, fvMesh);
 }
-
-const Foam::word Foam::rhoFluidThermo::derivedThermoName("heRhoThermo");
 
 
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
