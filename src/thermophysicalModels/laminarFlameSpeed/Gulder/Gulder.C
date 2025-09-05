@@ -99,7 +99,9 @@ inline Foam::scalar Foam::laminarFlameSpeedModels::Gulder::Su0pTphi
     static const scalar Tref = 300.0;
     static const scalar pRef = 1.013e5;
 
-    return SuRef(Phi)*pow((Tu/Tref), alpha_)*pow((p/pRef), beta_)*(1 - f_*Yegr);
+    return
+        SuRef(Phi)*pow((Tu/Tref), alpha_)*pow((p/pRef), beta_)
+       *max(1 - f_*Yegr, 0);
 }
 
 
