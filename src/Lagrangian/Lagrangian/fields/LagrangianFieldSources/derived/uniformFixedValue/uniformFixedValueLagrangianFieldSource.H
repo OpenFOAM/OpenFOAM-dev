@@ -85,7 +85,7 @@ template<class Type>
 class uniformFixedValueLagrangianFieldSource
 :
     public LagrangianFieldSource<Type>,
-    private Function1LagrangianFieldSource<Type>
+    private Function1LagrangianFieldSource
 {
 private:
 
@@ -98,7 +98,7 @@ private:
     // Private Member Functions
 
         //- Use the base class' value method
-        using Function1LagrangianFieldSource<Type>::value;
+        using Function1LagrangianFieldSource::value;
 
 
 public:

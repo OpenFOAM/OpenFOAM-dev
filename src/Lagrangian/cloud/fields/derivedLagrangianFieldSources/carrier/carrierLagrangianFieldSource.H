@@ -54,7 +54,7 @@ SourceFiles
 #define carrierLagrangianFieldSource_H
 
 #include "LagrangianFieldSource.H"
-#include "CloudLagrangianFieldSource.H"
+#include "cloudLagrangianFieldSource.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -69,7 +69,7 @@ template<class Type>
 class carrierLagrangianFieldSource
 :
     public LagrangianFieldSource<Type>,
-    private CloudLagrangianFieldSource<Type>
+    private cloudLagrangianFieldSource
 {
 private:
 

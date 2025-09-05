@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,9 +30,9 @@ License
 inline Foam::solidParticle::trackingData::trackingData
 (
     const solidParticleCloud& spc,
-    const interpolationCellPoint<scalar>& rhoInterp,
-    const interpolationCellPoint<vector>& UInterp,
-    const interpolationCellPoint<scalar>& nuInterp,
+    const interpolations::cellPoint<scalar>& rhoInterp,
+    const interpolations::cellPoint<vector>& UInterp,
+    const interpolations::cellPoint<scalar>& nuInterp,
     const vector& g
 )
 :
@@ -46,21 +46,21 @@ inline Foam::solidParticle::trackingData::trackingData
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline const Foam::interpolationCellPoint<Foam::scalar>&
+inline const Foam::interpolations::cellPoint<Foam::scalar>&
 Foam::solidParticle::trackingData::rhoInterp() const
 {
     return rhoInterp_;
 }
 
 
-inline const Foam::interpolationCellPoint<Foam::vector>&
+inline const Foam::interpolations::cellPoint<Foam::vector>&
 Foam::solidParticle::trackingData::UInterp() const
 {
     return UInterp_;
 }
 
 
-inline const Foam::interpolationCellPoint<Foam::scalar>&
+inline const Foam::interpolations::cellPoint<Foam::scalar>&
 Foam::solidParticle::trackingData::nuInterp() const
 {
     return nuInterp_;

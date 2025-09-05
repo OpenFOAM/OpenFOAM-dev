@@ -171,6 +171,26 @@ Foam::LagrangianMesh::lookupCurrentFields(const bool strict)
 
 
 template<class ... FieldNamesAndFields>
+void Foam::LagrangianMesh::inject
+(
+    const LagrangianSubMesh& injectionMesh,
+    const barycentricField& coordinates,
+    const labelField& celli,
+    const labelField& facei,
+    const labelField& faceTrii,
+    const FieldNamesAndFields& ... fieldNamesAndFields
+)
+{
+    append(injectionMesh, coordinates, celli, facei, faceTrii);
+
+    const wordHashSet specifiedFieldNames =
+        appendSpecifiedFields(injectionMesh, fieldNamesAndFields ...);
+
+    injectUnspecifiedFields(injectionMesh, specifiedFieldNames);
+}
+
+
+template<class ... FieldNamesAndFields>
 Foam::LagrangianSubMesh Foam::LagrangianMesh::inject
 (
     const barycentricField& coordinates,
@@ -189,6 +209,27 @@ Foam::LagrangianSubMesh Foam::LagrangianMesh::inject
     injectUnspecifiedFields(injectionMesh, specifiedFieldNames);
 
     return injectionMesh;
+}
+
+
+template<class ... FieldNamesAndFields>
+void Foam::LagrangianMesh::inject
+(
+    const LagrangianInjection& injection,
+    const LagrangianSubMesh& injectionMesh,
+    const barycentricField& coordinates,
+    const labelField& celli,
+    const labelField& facei,
+    const labelField& faceTrii,
+    const FieldNamesAndFields& ... fieldNamesAndFields
+)
+{
+    append(injectionMesh, coordinates, celli, facei, faceTrii);
+
+    const wordHashSet specifiedFieldNames =
+        appendSpecifiedFields(injectionMesh, fieldNamesAndFields ...);
+
+    injectUnspecifiedFields(injection, injectionMesh, specifiedFieldNames);
 }
 
 
@@ -212,6 +253,23 @@ Foam::LagrangianSubMesh Foam::LagrangianMesh::inject
     injectUnspecifiedFields(injection, injectionMesh, specifiedFieldNames);
 
     return injectionMesh;
+}
+
+
+template<class ... FieldNamesAndFields>
+void Foam::LagrangianMesh::birth
+(
+    const LagrangianSubMesh& birthMesh,
+    const labelList& parents,
+    const FieldNamesAndFields& ... fieldNamesAndFields
+)
+{
+    append(birthMesh, parents);
+
+    const wordHashSet specifiedFieldNames =
+        appendSpecifiedFields(birthMesh, fieldNamesAndFields ...);
+
+    birthUnspecifiedFields(parents, birthMesh, specifiedFieldNames);
 }
 
 

@@ -53,7 +53,7 @@ void Foam::cellPointLagrangianAccumulator::accumulate
         cPsi[celli] += coordinates.a()*lPsi[subi];
     }
 
-    // Do the more complicated cell-point-cell contributions...
+    // Do the more complicated cell-point-cell contributions ...
 
     // Sum contributions into the point workspace
     DynamicList<Type>& accumulatingPointValues =

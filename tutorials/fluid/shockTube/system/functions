@@ -15,6 +15,7 @@ FoamFile
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #includeFunc mag(U)
+
 #includeFunc graphCell
 (
     name=graph,

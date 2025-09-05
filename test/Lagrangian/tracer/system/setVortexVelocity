@@ -1,0 +1,44 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+
+type            coded;
+libs            ("libutilityFunctionObjects.so");
+
+fields          (U);
+
+rpm             60;
+
+codeWrite
+#{
+    volVectorField U
+    (
+        IOobject
+        (
+            "U",
+            mesh().time().name(),
+            mesh(),
+            IOobject::MUST_READ
+        ),
+        mesh()
+    );
+
+    const dimensionedVector meshC(dimLength, mesh().bounds().midpoint());
+
+    const dimensionedVector omega
+    (
+        dimRate,
+        units()["rpm"].toStandard($<scalar>rpm)
+       *vector(Vector<label>::one - mesh().geometricD())/2
+    );
+
+    U == (omega^(mesh().C() - meshC));
+
+    U.write();
+#};
+
+// ************************************************************************* //

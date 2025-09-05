@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "flowRateNumberLagrangianScalarFieldSource.H"
+#include "massive.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -93,6 +94,49 @@ Foam::flowRateNumberLagrangianScalarFieldSource::
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
+Foam::dimensionedScalar Foam::flowRateNumberLagrangianScalarFieldSource::Q
+(
+    const LagrangianInjection& injection,
+    const LagrangianSubMesh& subMesh
+) const
+{
+    // Get the range of the time-step
+    const scalar t1 = db().time().value();
+    const scalar t0 = t1 - db().time().deltaTValue();
+
+    if (volumetricFlowRate_.valid())
+    {
+        // Evaluate the volumetric flow rate directly
+        return
+            dimensionedScalar
+            (
+                dimVolumetricFlux,
+                volumetricFlowRate_->integral(t0, t1)
+            );
+    }
+    else
+    {
+        // Calculate the necessary sizes
+        tmp<LagrangianSubScalarField> size, v, m;
+        calcSizes
+        (
+            injection, subMesh,
+            size,
+            true, v,
+            true, m
+        );
+
+        // Convert the mass flow rate to a volumetric flow rate
+        return
+            dimensionedScalar
+            (
+                dimMassFlux,
+                massFlowRate_->integral(t0, t1)
+            )*sum(v/size())/sum(m/size());
+    }
+}
+
 
 Foam::tmp<Foam::LagrangianSubScalarField>
 Foam::flowRateNumberLagrangianScalarFieldSource::value

@@ -59,8 +59,9 @@ SourceFiles
 #define totalPressureVelocityLagrangianVectorFieldSource_H
 
 #include "LagrangianFieldSources.H"
-#include "CloudLagrangianFieldSource.H"
+#include "cloudLagrangianFieldSource.H"
 #include "Function1LagrangianFieldSource.H"
+#include "totalPressureVelocityMagnitudeLagrangianScalarFieldSource.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -74,36 +75,22 @@ namespace Foam
 class totalPressureVelocityLagrangianVectorFieldSource
 :
     public LagrangianVectorFieldSource,
-    private Function1LagrangianFieldSource<vector>,
-    private CloudLagrangianFieldSource<vector>
+    private cloudLagrangianFieldSource,
+    private Function1LagrangianFieldSource,
+    private totalPressureVelocityMagnitudeLagrangianScalarFieldSource
 {
 private:
 
     // Private Data
 
-        //- Cached dictionary. This is needed as construction of the total
-        //  pressure function is delayed until the dimensions of pressure are
-        //  known. This will be thrown away once total pressure has been
-        //  constructed.
-        mutable autoPtr<dictionary> dict_;
-
         //- Direction
         const autoPtr<Function1<vector>> direction_;
-
-        //- Total pressure
-        mutable autoPtr<Function1<scalar>> p0_;
-
-        //- Name of the carrier density field
-        const word rhocName_;
-
-        //- Name of the carrier pressure field
-        const word pcName_;
 
 
     // Private Member Functions
 
         //- Use the base class' value method
-        using Function1LagrangianFieldSource<vector>::value;
+        using Function1LagrangianFieldSource::value;
 
 
 public:

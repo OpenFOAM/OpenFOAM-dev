@@ -494,8 +494,15 @@ void Foam::LagrangianMesh::resizeContainer(Container& container) const
 }
 
 
-Foam::LagrangianSubMesh Foam::LagrangianMesh::append
+Foam::LagrangianSubMesh Foam::LagrangianMesh::appendMesh(const label n) const
+{
+    return LagrangianSubMesh(*this, LagrangianGroup::none, n, size());
+}
+
+
+void Foam::LagrangianMesh::append
 (
+    const LagrangianSubMesh& appendMesh,
     const barycentricField& coordinates,
     const labelField& celli,
     const labelField& facei,
@@ -503,14 +510,6 @@ Foam::LagrangianSubMesh Foam::LagrangianMesh::append
 )
 {
     clearPosition();
-
-    const LagrangianSubMesh appendMesh
-    (
-        *this,
-        LagrangianGroup::none,
-        coordinates.size(),
-        size()
-    );
 
     if (statesPtr_.valid())
     {
@@ -533,25 +532,38 @@ Foam::LagrangianSubMesh Foam::LagrangianMesh::append
     faceTrii_.append(faceTrii);
 
     subAll_.size_ = size();
-
-    return appendMesh;
 }
 
 
 Foam::LagrangianSubMesh Foam::LagrangianMesh::append
 (
-    const labelList& parents
+    const barycentricField& coordinates,
+    const labelField& celli,
+    const labelField& facei,
+    const labelField& faceTrii
 )
 {
-    clearPosition();
-
     const LagrangianSubMesh appendMesh
     (
         *this,
         LagrangianGroup::none,
-        parents.size(),
+        coordinates.size(),
         size()
     );
+
+    append(appendMesh, coordinates, celli, facei, faceTrii);
+
+    return appendMesh;
+}
+
+
+void Foam::LagrangianMesh::append
+(
+    const LagrangianSubMesh& appendMesh,
+    const labelList& parents
+)
+{
+    clearPosition();
 
     if (statesPtr_.valid())
     {
@@ -588,6 +600,23 @@ Foam::LagrangianSubMesh Foam::LagrangianMesh::append
         UIndirectList<label>(faceTrii_, parents)();
 
     subAll_.size_ = size();
+}
+
+
+Foam::LagrangianSubMesh Foam::LagrangianMesh::append
+(
+    const labelList& parents
+)
+{
+    const LagrangianSubMesh appendMesh
+    (
+        *this,
+        LagrangianGroup::none,
+        parents.size(),
+        size()
+    );
+
+    append(appendMesh, parents);
 
     return appendMesh;
 }
@@ -1754,6 +1783,18 @@ void Foam::LagrangianMesh::crossFaces
             << Pstream::commsTypeNames[Pstream::defaultCommsType]
             << exit(FatalError);
     }
+}
+
+
+Foam::LagrangianSubMesh Foam::LagrangianMesh::injectionMesh(const label n) const
+{
+    return appendMesh(n);
+}
+
+
+Foam::LagrangianSubMesh Foam::LagrangianMesh::birthMesh(const label n) const
+{
+    return appendMesh(n);
 }
 
 

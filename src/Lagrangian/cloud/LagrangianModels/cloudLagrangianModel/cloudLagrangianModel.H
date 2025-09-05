@@ -25,8 +25,7 @@ Class
     Foam::cloudLagrangianModel
 
 Description
-    Base class for Lagrangian models that refer to a cloud. Not a Lagrangian
-    model in itself. Must be mixed in.
+    Mix-in for Lagrangian models that refer to a cloud
 
 SourceFiles
     cloudLagrangianModel.C

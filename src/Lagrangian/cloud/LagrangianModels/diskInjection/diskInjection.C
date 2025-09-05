@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "LagrangianMesh.H"
+#include "LagrangianSubFieldsFwd.H"
 #include "diskInjection.H"
 #include "addToRunTimeSelectionTable.H"
 #include "LagrangianFields.H"
@@ -67,20 +68,20 @@ void Foam::Lagrangian::diskInjection::readCoeffs(const dictionary& modelDict)
         ).ptr()
     );
 
-    const bool haveDiemeter = modelDict.found("diameter");
-    const bool haveInnerDiemeter = modelDict.found("innerDiameter");
-    const bool haveOuterDiemeter = modelDict.found("outerDiameter");
+    const bool haveDiameter = modelDict.found("diameter");
+    const bool haveInnerDiameter = modelDict.found("innerDiameter");
+    const bool haveOuterDiameter = modelDict.found("outerDiameter");
 
-    if (haveDiemeter == (haveInnerDiemeter || haveOuterDiemeter))
+    if (haveDiameter == (haveInnerDiameter || haveOuterDiameter))
     {
         FatalIOErrorInFunction(modelDict)
             << "keywords diameter and innerDiameter/outerDiameter are both "
-            << (haveDiemeter ? "" : "un") << "defined in "
+            << (haveDiameter ? "" : "un") << "defined in "
             << "dictionary " << modelDict.name()
             << exit(FatalIOError);
     }
 
-    if (haveInnerDiemeter != haveOuterDiemeter)
+    if (haveInnerDiameter != haveOuterDiameter)
     {
         FatalIOErrorInFunction(modelDict)
             << "keywords innerDiameter and outerDiameter are not both defined "
@@ -88,7 +89,7 @@ void Foam::Lagrangian::diskInjection::readCoeffs(const dictionary& modelDict)
             << exit(FatalIOError);
     }
 
-    if (haveDiemeter)
+    if (haveDiameter)
     {
         innerDiameter_ = 0;
         outerDiameter_ = modelDict.lookup<scalar>("diameter", dimLength);
@@ -140,20 +141,20 @@ Foam::Lagrangian::diskInjection::diskInjection
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-const Foam::scalarField& Foam::Lagrangian::diskInjection::rFrac() const
+const Foam::dimensionedScalar Foam::Lagrangian::diskInjection::area() const
 {
-    if (!rFracPtr_.valid())
-    {
-        FatalErrorInFunction
-            << "Radius fraction requested outside of the injection"
-            << exit(FatalError);
-    }
-
-    return rFracPtr_();
+    return
+        dimensionedScalar
+        (
+            dimArea,
+            constant::mathematical::pi
+           *(sqr(outerDiameter_) - sqr(innerDiameter_))
+        );
 }
 
 
-const Foam::vectorField& Foam::Lagrangian::diskInjection::axis() const
+const Foam::LagrangianSubVectorField&
+Foam::Lagrangian::diskInjection::axis() const
 {
     if (!axisPtr_.valid())
     {
@@ -166,7 +167,22 @@ const Foam::vectorField& Foam::Lagrangian::diskInjection::axis() const
 }
 
 
-const Foam::vectorField& Foam::Lagrangian::diskInjection::radial() const
+const Foam::LagrangianSubScalarField&
+Foam::Lagrangian::diskInjection::rFrac() const
+{
+    if (!rFracPtr_.valid())
+    {
+        FatalErrorInFunction
+            << "Radius fraction requested outside of the injection"
+            << exit(FatalError);
+    }
+
+    return rFracPtr_();
+}
+
+
+const Foam::LagrangianSubVectorField&
+Foam::Lagrangian::diskInjection::radial() const
 {
     if (!radialPtr_.valid())
     {
@@ -203,15 +219,14 @@ Foam::LagrangianSubMesh Foam::Lagrangian::diskInjection::modify
 
     // Evaluate the variable centre and axis, and create radial vectors to
     // complete the local coordinate system
-    const pointField centre(centre_->value(t0 + fraction*(t1 - t0)));
-    axisPtr_.set(normalised(axis_->value(t0 + fraction*(t1 - t0))).ptr());
-    const vectorField radial1(normalised(perpendicular(axis())));
-    const vectorField radial2(axis() ^ radial1);
+    tmp<pointField> centre(centre_->value(t0 + fraction*(t1 - t0)));
+    tmp<vectorField> axis(normalised(axis_->value(t0 + fraction*(t1 - t0))));
+    tmp<vectorField> radial1(normalised(perpendicular(axis())));
+    tmp<vectorField> radial2(axis() ^ radial1());
 
-    // Create random radii within and angles around the disk. Store temporarily
-    // so that source conditions can use it.
-    rFracPtr_.set(rndGen_.scalar01(numberInt).ptr());
-    const scalarField r
+    // Create random radii within and angles around the disk
+    tmp<scalarField> rFrac(rndGen_.scalar01(numberInt));
+    tmp<scalarField> r
     (
         sqrt
         (
@@ -219,13 +234,14 @@ Foam::LagrangianSubMesh Foam::Lagrangian::diskInjection::modify
           + rFrac()*sqr(outerDiameter_/2)
         )
     );
-    const scalarField phi
+    tmp<scalarField> phi
     (
         constant::mathematical::twoPi*rndGen_.scalar01(numberInt)
     );
 
     // Evaluate the radial vector
-    radialPtr_.set((cos(phi)*radial1 + sin(phi)*radial2).ptr());
+    tmp<vectorField> radial(cos(phi())*radial1 + sin(phi())*radial2);
+    phi.clear();
 
     // Evaluate the positions
     const pointField positions(centre + r*radial());
@@ -248,24 +264,69 @@ Foam::LagrangianSubMesh Foam::Lagrangian::diskInjection::modify
     checkLocation(locations, positions);
 
     // Remove particles not on this process
-    filter(coordinates, celli, facei, faceTrii, fraction);
+    filter
+    (
+        coordinates,
+        celli,
+        facei,
+        faceTrii,
+        fraction,
+        axis.ref(),
+        rFrac.ref(),
+        radial.ref()
+    );
+
+    // Construct the injection sub-mesh
+    const LagrangianSubMesh injectionMesh = mesh.injectionMesh(numberInt);
+
+    // Cache the geometry for use by source conditions
+    axisPtr_.set
+    (
+        LagrangianSubVectorField::New
+        (
+            "axis",
+            injectionMesh,
+            dimless,
+            axis
+        ).ptr()
+    );
+    rFracPtr_.set
+    (
+        LagrangianSubScalarField::New
+        (
+            "rFrac",
+            injectionMesh,
+            dimless,
+            rFrac
+        ).ptr()
+    );
+    radialPtr_.set
+    (
+        LagrangianSubVectorField::New
+        (
+            "radial",
+            injectionMesh,
+            dimless,
+            radial
+        ).ptr()
+    );
 
     // Inject particles
-    LagrangianSubMesh injectionMesh =
-        mesh.inject
-        (
-            *this,
-            coordinates,
-            celli,
-            facei,
-            faceTrii,
-            LagrangianMesh::fractionName,
-            fraction
-        );
+    mesh.inject
+    (
+        *this,
+        injectionMesh,
+        coordinates,
+        celli,
+        facei,
+        faceTrii,
+        LagrangianMesh::fractionName,
+        fraction
+    );
 
     // Clean up
-    rFracPtr_.clear();
     axisPtr_.clear();
+    rFracPtr_.clear();
     radialPtr_.clear();
 
     return injectionMesh;

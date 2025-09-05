@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,7 +81,7 @@ void Foam::functionObjects::nearWallFields::createFields
 template<class Type>
 void Foam::functionObjects::nearWallFields::sampleBoundaryField
 (
-    const interpolationCellPoint<Type>& interpolator,
+    const interpolations::cellPoint<Type>& interpolator,
     VolField<Type>& field
 ) const
 {
@@ -144,7 +144,7 @@ void Foam::functionObjects::nearWallFields::sampleFields
         sfields[i] == field;
 
         // Construct interpolation method
-        interpolationCellPoint<Type> interpolator(field);
+        interpolations::cellPoint<Type> interpolator(field);
 
         // Override sampled values
         sampleBoundaryField(interpolator, sfields[i]);

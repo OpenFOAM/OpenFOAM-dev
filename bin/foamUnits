@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -76,7 +76,7 @@ cleanArg() {
 dimDir="$FOAM_SRC/OpenFOAM/dimensionSet"
 
 setFile="$dimDir/dimensionSet.C"
-BASE_DIMS="$(sed -n "/names\[\]/,/}/p" "$setFile" | awk -F\" '{print $2}')"
+BASE_DIMS="$(sed -n "/dimensionTypeNames_/,/}/p" "$setFile" | awk -F\" '{print $2}')"
 
 SETS_FILE="$dimDir/dimensionSets.C"
 DRVD_DIMS="$(grep "dimensionsPtr_->insert(\"" "$SETS_FILE" | awk -F\" '{print $2}')"

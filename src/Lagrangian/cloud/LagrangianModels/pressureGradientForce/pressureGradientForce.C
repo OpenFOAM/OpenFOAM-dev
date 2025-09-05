@@ -57,7 +57,7 @@ void Foam::Lagrangian::pressureGradientForce::addUSup
     const LagrangianSubMesh& subMesh = U.mesh();
 
     const clouds::shaped& sCloud = cloud<clouds::shaped>();
-    const clouds::coupled& cCloud = cloud<clouds::coupled>();
+    const clouds::carried& cCloud = cloud<clouds::carried>();
 
     const LagrangianSubScalarField& v = sCloud.v(subMesh);
 
@@ -85,7 +85,7 @@ Foam::Lagrangian::pressureGradientForce::pressureGradientForce
     LagrangianModel(name, mesh),
     cloudLagrangianModel(static_cast<const LagrangianModel&>(*this))
 {
-    cloud<clouds::coupled>().DUDtc.psi();
+    cloud<clouds::carried>().DUDtc.psi();
 }
 
 

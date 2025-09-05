@@ -24,37 +24,9 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "coupled.H"
-#include "CarrierField.H"
 #include "CarrierEqn.H"
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
-
-template<class Type>
-const Foam::CarrierField<Type>& Foam::clouds::coupled::carrierField
-(
-    const VolField<Type>& psi
-) const
-{
-    return carrierField<Type, VolField<Type>>(psi);
-}
-
-
-template<class Type, class ... Args>
-const Foam::CarrierField<Type>& Foam::clouds::coupled::carrierField
-(
-    const Args& ... args
-) const
-{
-    const CarrierField<Type>* lookupPtr =
-        carrierFields<Type>().lookupPtr(CarrierField<Type>(args ...).name());
-
-    if (lookupPtr) return *lookupPtr;
-
-    CarrierField<Type>* ptr = new CarrierField<Type>(args ...);
-    carrierFields<Type>().insert(ptr->name(), ptr);
-    return *ptr;
-}
-
 
 template<class Type>
 Foam::CarrierEqn<Type>& Foam::clouds::coupled::carrierEqn

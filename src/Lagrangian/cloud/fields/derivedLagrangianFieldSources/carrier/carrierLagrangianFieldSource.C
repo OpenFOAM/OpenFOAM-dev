@@ -24,7 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "carrierLagrangianFieldSource.H"
-#include "coupled.H"
+#include "carried.H"
+#include "volFields.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -37,7 +38,7 @@ Foam::carrierLagrangianFieldSource<Type>::carrierLagrangianFieldSource
 )
 :
     LagrangianFieldSource<Type>(iIo, dict),
-    CloudLagrangianFieldSource<Type>(*this),
+    cloudLagrangianFieldSource(*this),
     fieldcName_(dict.lookupOrDefault<word>("fieldc", iIo.name()))
 {}
 
@@ -50,7 +51,7 @@ Foam::carrierLagrangianFieldSource<Type>::carrierLagrangianFieldSource
 )
 :
     LagrangianFieldSource<Type>(field, iIo),
-    CloudLagrangianFieldSource<Type>(*this),
+    cloudLagrangianFieldSource(*this),
     fieldcName_(field.fieldcName_)
 {}
 
@@ -73,7 +74,7 @@ Foam::carrierLagrangianFieldSource<Type>::value
 ) const
 {
     return
-        this->template cloud<clouds::coupled>(injection, subMesh).carrierField
+        this->template cloud<clouds::carried>(injection, subMesh).carrierField
         (
             subMesh.mesh().mesh().lookupObject<VolField<Type>>(fieldcName_)
         )(subMesh);

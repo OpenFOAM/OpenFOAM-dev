@@ -51,7 +51,7 @@ void Foam::Lagrangian::drag::addUSup
     const LagrangianSubScalarField& D = this->D(U.mesh());
 
     const LagrangianSubVectorField& Uc =
-        cloud<clouds::coupled>().Uc(U.mesh());
+        cloud<clouds::carried>().Uc(U.mesh());
 
     if (eqn.isPsi(U))
     {

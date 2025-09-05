@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "coneVelocityLagrangianVectorFieldSource.H"
-#include "mathematicalConstants.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -37,45 +36,18 @@ coneVelocityLagrangianVectorFieldSource
 )
 :
     LagrangianVectorFieldSource(iIo, dict),
-    Function1LagrangianFieldSource<vector>(*this),
-    Umean_
+    Function1LagrangianFieldSource(*this),
+    coneDirectionLagrangianVectorFieldSource(*this, dict),
+    Ucentre_
     (
         Function1<vector>::New
         (
-            "Umean",
+            "Ucentre",
             iIo.time().userUnits(),
             dimVelocity,
             dict
         )
-    ),
-    thetaInner_
-    (
-        Function1<scalar>::New
-        (
-            "thetaInner",
-            iIo.time().userUnits(),
-            unitDegrees,
-            dict
-        )
-    ),
-    thetaOuter_
-    (
-        Function1<scalar>::New
-        (
-            "thetaOuter",
-            iIo.time().userUnits(),
-            unitDegrees,
-            dict
-        )
-    ),
-    rndGen_
-    (
-        "rndGen",
-        dict,
-        randomGenerator::seed(iIo.name() + ':' + dict.dictName()),
-        false
-    ),
-    timeIndex_(-1)
+    )
 {}
 
 
@@ -87,12 +59,9 @@ coneVelocityLagrangianVectorFieldSource
 )
 :
     LagrangianVectorFieldSource(field, iIo),
-    Function1LagrangianFieldSource<vector>(*this),
-    Umean_(field.Umean_, false),
-    thetaInner_(field.thetaInner_, false),
-    thetaOuter_(field.thetaOuter_, false),
-    rndGen_(field.rndGen_),
-    timeIndex_(-1)
+    Function1LagrangianFieldSource(*this),
+    coneDirectionLagrangianVectorFieldSource(field, *this),
+    Ucentre_(field.Ucentre_, false)
 {}
 
 
@@ -112,58 +81,14 @@ Foam::coneVelocityLagrangianVectorFieldSource::value
     const LagrangianSubMesh& subMesh
 ) const
 {
-    // Restart the generator if necessary and set the time index up to date
-    rndGen_.start(timeIndex_ == db().time().timeIndex());
-    timeIndex_ = db().time().timeIndex();
-
-    // Evaluate mean velocity
-    const LagrangianSubVectorField Umean(value(injection, subMesh, Umean_()));
-
-    // Normalise to get the cone axis
-    const LagrangianSubVectorField nDir(normalised(Umean));
-
-    // Construct a random direction perpendicular to the cone axis
-    const tmp<LagrangianSubVectorField> tt1Dir(normalised(perpendicular(nDir)));
-    const tmp<LagrangianSubVectorField> tt2Dir(nDir ^ tt1Dir());
-    const tmp<LagrangianSubScalarField> tphi =
-        LagrangianSubScalarField::New
-        (
-            "phi",
-            subMesh,
-            dimless,
-            constant::mathematical::twoPi*rndGen_.scalar01(subMesh.size())
-        );
-    const LagrangianSubVectorField tDir
+    const LagrangianSubVectorField Ucentre
     (
-        tt1Dir*cos(tphi()) + tt2Dir*sin(tphi())
+        value(injection, subMesh, Ucentre_())
     );
-    tphi.clear();
 
-    // Pick a random angle within the cone angles
-    const tmp<LagrangianSubScalarField> tthetaInner =
-        value(injection, subMesh, dimless, thetaInner_());
-    const tmp<LagrangianSubScalarField> tthetaOuter =
-        value(injection, subMesh, dimless, thetaOuter_());
-    const tmp<LagrangianSubScalarField> tthetaFrac =
-        LagrangianSubScalarField::New
-        (
-            "thetaFrac",
-            subMesh,
-            dimless,
-            rndGen_.scalar01(subMesh.size())
-        );
-    const LagrangianSubScalarField theta
-    (
-        sqrt
-        (
-            (1 - tthetaFrac())*sqr(tthetaInner)
-          + tthetaFrac()*sqr(tthetaOuter)
-        )
-    );
-    tthetaFrac.clear();
+    const LagrangianSubScalarField magUcentre(mag(Ucentre));
 
-    // Return the velocity in the calculated direction
-    return mag(Umean)*(cos(theta)*nDir + sin(theta)*tDir);
+    return magUcentre*direction(injection, Ucentre/magUcentre);
 }
 
 
@@ -171,11 +96,9 @@ void Foam::coneVelocityLagrangianVectorFieldSource::write(Ostream& os) const
 {
     LagrangianVectorFieldSource::write(os);
 
-    writeEntry(os, db().time().userUnits(), dimVelocity, Umean_());
-    writeEntry(os, db().time().userUnits(), unitDegrees, thetaInner_());
-    writeEntry(os, db().time().userUnits(), unitDegrees, thetaOuter_());
+    coneDirectionLagrangianVectorFieldSource::write(os);
 
-    writeEntry(os, "rndGen", rndGen_);
+    writeEntry(os, db().time().userUnits(), dimVelocity, Ucentre_());
 }
 
 

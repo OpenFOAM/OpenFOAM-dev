@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "sampledIsoSurfaceSurface.H"
-#include "interpolationVolPointInterpolation.H"
+#include "volFields.H"
+#include "volPointInterpolation_interpolation.H"
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
@@ -50,10 +51,10 @@ Foam::sampledSurfaces::sampledIsoSurfaceSurface::interpolateField
 {
     update();
 
-    if (isA<interpolationVolPointInterpolation<Type>>(interpolator))
+    if (isA<interpolations::volPointInterpolation<Type>>(interpolator))
     {
         const PointField<Type>& pField =
-            refCast<const interpolationVolPointInterpolation<Type>>
+            refCast<const interpolations::volPointInterpolation<Type>>
             (interpolator).psip();
 
         return isoSurfPtr_().interpolate(pField.primitiveField());

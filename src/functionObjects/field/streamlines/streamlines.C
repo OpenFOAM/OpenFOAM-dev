@@ -27,7 +27,7 @@ License
 #include "streamlinesCloud.H"
 #include "sampledSet.H"
 #include "globalIndex.H"
-#include "interpolationCellPoint.H"
+#include "cellPoint_interpolation.H"
 #include "PatchTools.H"
 #include "writeFile.H"
 #include "polyTopoChangeMap.H"
@@ -155,7 +155,7 @@ bool Foam::functionObjects::streamlines::read(const dictionary& dict)
         dict.lookupOrDefault
         (
             "interpolationScheme",
-            interpolationCellPoint<scalar>::typeName
+            interpolations::cellPoint<scalar>::typeName
         );
 
     cloudName_ = dict.lookupOrDefault<word>("cloudName", "streamlines");

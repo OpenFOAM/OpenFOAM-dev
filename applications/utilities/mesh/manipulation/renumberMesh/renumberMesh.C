@@ -50,8 +50,11 @@ Description
 #include "faceSet.H"
 #include "pointSet.H"
 #include "systemDict.H"
+#include "hexRef8Data.H"
 
 using namespace Foam;
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 void writeCellLabels
 (
@@ -733,6 +736,23 @@ int main(int argc, char *argv[])
 
     Info<< endl;
 
+
+    // Read hex-refinement data (if any)
+    hexRef8Data refData
+    (
+        IOobject
+        (
+            "dummy",
+            mesh.facesInstance(),
+            polyMesh::meshSubDir,
+            mesh,
+            IOobject::READ_IF_PRESENT,
+            IOobject::NO_WRITE,
+            false
+        )
+    );
+
+
     // From renumbering:
     // - from new cell/face back to original cell/face
     labelList cellOrder;
@@ -923,6 +943,7 @@ int main(int argc, char *argv[])
     // Update fields
     mesh.topoChange(map);
 
+
     // Update proc maps
     if
     (
@@ -984,6 +1005,10 @@ int main(int argc, char *argv[])
     }
 
 
+    // Update the hex-refinement data (if any)
+    refData.topoChange(map);
+
+
     {
         label band;
         scalar profile;
@@ -1021,6 +1046,7 @@ int main(int argc, char *argv[])
 
         Info<< endl;
     }
+
 
     if (orderPoints)
     {
@@ -1086,6 +1112,8 @@ int main(int argc, char *argv[])
     Info<< "Writing mesh to " << mesh.facesInstance() << endl;
 
     mesh.write();
+
+    refData.write();
 
     if (cellProcAddressing.headerOk())
     {

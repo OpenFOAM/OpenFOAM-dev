@@ -35,17 +35,12 @@ SourceFiles
 #ifndef coupled_H
 #define coupled_H
 
-#include "cloud.H"
-#include "PtrDictionary.H"
-#include "volFieldsFwd.H"
+#include "carried.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-template<class Type>
-class CarrierField;
 
 template<class Type>
 class CarrierEqn;
@@ -58,17 +53,12 @@ namespace clouds
 \*---------------------------------------------------------------------------*/
 
 class coupled
+:
+    public carried
 {
 private:
 
     // Private Data
-
-        //- Carrier fields
-        #define DECLARE_CARRIER_FIELDS(Type, nullArg)     \
-            mutable PtrDictionary<CarrierField<Type>>     \
-                CAT3(carrier, CAPITALIZE(Type), Fields_);
-        FOR_ALL_FIELD_TYPES(DECLARE_CARRIER_FIELDS);
-        #undef DECLARE_CARRIER_FIELDS
 
         //- Carrier equations
         #define DECLARE_CARRIER_EQNS(Type, nullArg)       \
@@ -90,25 +80,9 @@ private:
             const LagrangianSubMesh& subMesh
         ) const = 0;
 
-        //- Access the carrier fields. Only specialisations are defined.
-        template<class Type>
-        PtrDictionary<CarrierField<Type>>& carrierFields() const;
-
-        //- Clear the carrier fields
-        void clearCarrierFields();
-
-        //- Reset the carrier fields
-        void resetCarrierFields(const bool predict);
-
         //- Access the carrier equations. Only specialisations are defined.
         template<class Type>
         PtrDictionary<CarrierEqn<Type>>& carrierEqns() const;
-
-        //- Read the carrier velocity time derivative
-        autoPtr<volVectorField> readDUdtc(const cloud& c) const;
-
-        //- Access the carrier velocity time derivative
-        const volVectorField& dUdtc() const;
 
 
 protected:
@@ -117,12 +91,6 @@ protected:
 
         //- Clear the carrier equations
         void clearCarrierEqns();
-
-        //- Initialisation hook
-        void initialise(const bool predict);
-
-        //- Partition hook
-        void partition();
 
 
 public:
@@ -134,15 +102,6 @@ public:
 
 
     // Public Data
-
-        //- Carrier velocity
-        const CarrierField<vector>& Uc;
-
-        //- Carrier velocity curl
-        const CarrierField<vector>& curlUc;
-
-        //- Carrier advective derivative
-        const CarrierField<vector>& DUDtc;
 
         //- Carrier kinematic viscosity
         const CloudDerivedField<scalar>& nuc;
@@ -160,19 +119,7 @@ public:
 
     // Member Functions
 
-        //- Modify a name to disambiguate it as relating to the carrier
-        static word carrierName(const word& name);
-
-
-        // Fields
-
-            //- Add/get a carrier field to/from the cache
-            template<class Type>
-            const CarrierField<Type>& carrierField(const VolField<Type>&) const;
-
-            //- Add/get a carrier field to/from the cache
-            template<class Type, class ... Args>
-            const CarrierField<Type>& carrierField(const Args& ... args) const;
+        // Equations
 
             //- Add/get a carrier equation to/from the cache
             template<class Type>

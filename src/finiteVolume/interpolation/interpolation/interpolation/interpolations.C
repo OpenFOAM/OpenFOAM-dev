@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,25 +24,19 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "interpolation.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+    #define defineInterpolation(Type, nullArg)                                 \
+        defineNamedTemplateTypeNameAndDebug(interpolation<Type>, 0);           \
+        defineTemplateRunTimeSelectionTable(interpolation<Type>, dictionary);
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-// Define the constructor function hash tables
+    FOR_ALL_FIELD_TYPES(defineInterpolation);
 
-FOR_ALL_FIELD_TYPES(defineInterpolation, interpolation);
-
-defineTemplateRunTimeSelectionTable(interpolation<scalar>, dictionary);
-defineTemplateRunTimeSelectionTable(interpolation<vector>, dictionary);
-defineTemplateRunTimeSelectionTable(interpolation<sphericalTensor>, dictionary);
-defineTemplateRunTimeSelectionTable(interpolation<symmTensor>, dictionary);
-defineTemplateRunTimeSelectionTable(interpolation<tensor>, dictionary);
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
+    #undef defineInterpolation
+}
 
 // ************************************************************************* //

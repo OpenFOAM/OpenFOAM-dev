@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,17 +24,11 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "interpolation.H"
-#include "volFields.H"
-#include "polyMesh.H"
-#include "calculatedPointPatchFields.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::interpolation<Type>::interpolation
-(
-    const VolField<Type>& psi
-)
+Foam::interpolationBase<Type>::interpolationBase(const VolField<Type>& psi)
 :
     psi_(psi),
     mesh_(psi.mesh())
@@ -42,7 +36,10 @@ Foam::interpolation<Type>::interpolation
 
 
 template<class Type>
-Foam::interpolation<Type>::interpolation(const interpolation<Type>& i)
+Foam::interpolationBase<Type>::interpolationBase
+(
+    const interpolationBase<Type>& i
+)
 :
     psi_(i.psi_),
     mesh_(i.mesh_)
@@ -86,10 +83,27 @@ Foam::autoPtr<Foam::interpolation<Type>> Foam::interpolation<Type>::New
 }
 
 
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+template<class Type>
+Foam::interpolationBase<Type>::~interpolationBase()
+{}
+
+
+template<class Type>
+Foam::interpolationGradBase<Type>::~interpolationGradBase()
+{}
+
+
+template<class Type>
+Foam::interpolation<Type>::~interpolation()
+{}
+
+
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 template<class Type>
-Type Foam::interpolation<Type>::interpolate
+Type Foam::interpolationBase<Type>::interpolate
 (
     const barycentric& coordinates,
     const tetIndices& tetIs,
@@ -99,7 +113,44 @@ Type Foam::interpolation<Type>::interpolate
     return
         interpolate
         (
-            tetIs.tet(mesh_).barycentricToPoint(coordinates),
+            tetIs.tet(this->mesh_).barycentricToPoint(coordinates),
+            tetIs.cell(),
+            facei
+        );
+}
+
+
+template<class Type>
+Foam::interpolationGradType<Type>
+Foam::interpolationGradBase<Type>::interpolateGrad
+(
+    const vector& position,
+    const label celli,
+    const label facei
+) const
+{
+    FatalErrorInFunction
+        << "Interpolation method " << type() << " for field "
+        << this->psi_.name() << " does not support gradient interpolation"
+        << exit(FatalError);
+
+    return pTraits<interpolationGradType<Type>>::nan;
+}
+
+
+template<class Type>
+Foam::interpolationGradType<Type>
+Foam::interpolationGradBase<Type>::interpolateGrad
+(
+    const barycentric& coordinates,
+    const tetIndices& tetIs,
+    const label facei
+) const
+{
+    return
+        interpolateGrad
+        (
+            tetIs.tet(this->mesh_).barycentricToPoint(coordinates),
             tetIs.cell(),
             facei
         );
@@ -108,7 +159,7 @@ Type Foam::interpolation<Type>::interpolate
 
 template<class Type, class InterpolationType>
 Foam::tmp<Foam::Field<Type>>
-Foam::fieldInterpolation<Type, InterpolationType>::interpolate
+Foam::fieldInterpolationBase<Type, InterpolationType>::interpolate
 (
     const vectorField& position,
     const labelList& celli,
@@ -136,7 +187,7 @@ Foam::fieldInterpolation<Type, InterpolationType>::interpolate
 
 template<class Type, class InterpolationType>
 Foam::tmp<Foam::Field<Type>>
-Foam::fieldInterpolation<Type, InterpolationType>::interpolate
+Foam::fieldInterpolationBase<Type, InterpolationType>::interpolate
 (
     const Field<barycentric>& coordinates,
     const labelList& celli,
@@ -153,6 +204,70 @@ Foam::fieldInterpolation<Type, InterpolationType>::interpolate
     {
         field[i] =
             static_cast<const InterpolationType&>(*this).interpolate
+            (
+                coordinates[i],
+                tetIndices(celli[i], tetFacei[i], tetPti[i]),
+                isNull(facei) ? -1 : facei[i]
+            );
+    }
+
+    return tField;
+}
+
+
+template<class Type, class InterpolationType>
+Foam::tmp<Foam::Field<Foam::interpolationGradType<Type>>>
+Foam::fieldInterpolationGradBase<Type, InterpolationType>::interpolateGrad
+(
+    const vectorField& position,
+    const labelList& celli,
+    const labelList& facei
+) const
+{
+    tmp<Field<interpolationGradType<Type>>> tField
+    (
+        new Field<interpolationGradType<Type>>(position.size())
+    );
+
+    Field<interpolationGradType<Type>>& field = tField.ref();
+
+    forAll(field, i)
+    {
+        field[i] =
+            static_cast<const InterpolationType&>(*this).interpolateGrad
+            (
+                position[i],
+                celli[i],
+                isNull(facei) ? -1 : facei[i]
+            );
+    }
+
+    return tField;
+}
+
+
+template<class Type, class InterpolationType>
+Foam::tmp<Foam::Field<Foam::interpolationGradType<Type>>>
+Foam::fieldInterpolationGradBase<Type, InterpolationType>::interpolateGrad
+(
+    const Field<barycentric>& coordinates,
+    const labelList& celli,
+    const labelList& tetFacei,
+    const labelList& tetPti,
+    const labelList& facei
+) const
+{
+    tmp<Field<interpolationGradType<Type>>> tField
+    (
+        new Field<interpolationGradType<Type>>(coordinates.size())
+    );
+
+    Field<interpolationGradType<Type>>& field = tField.ref();
+
+    forAll(field, i)
+    {
+        field[i] =
+            static_cast<const InterpolationType&>(*this).interpolateGrad
             (
                 coordinates[i],
                 tetIndices(celli[i], tetFacei[i], tetPti[i]),

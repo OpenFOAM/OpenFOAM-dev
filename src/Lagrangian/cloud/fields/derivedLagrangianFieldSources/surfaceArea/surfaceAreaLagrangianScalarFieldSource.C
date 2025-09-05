@@ -36,7 +36,7 @@ surfaceAreaLagrangianScalarFieldSource
 )
 :
     LagrangianScalarFieldSource(iIo),
-    CloudLagrangianFieldSource<scalar>(*this)
+    cloudLagrangianFieldSource(*this)
 {}
 
 
@@ -48,7 +48,7 @@ surfaceAreaLagrangianScalarFieldSource
 )
 :
     LagrangianScalarFieldSource(iIo, dict),
-    CloudLagrangianFieldSource<scalar>(*this)
+    cloudLagrangianFieldSource(*this)
 {}
 
 
@@ -60,7 +60,7 @@ surfaceAreaLagrangianScalarFieldSource
 )
 :
     LagrangianScalarFieldSource(field, iIo),
-    CloudLagrangianFieldSource<scalar>(*this)
+    cloudLagrangianFieldSource(*this)
 {}
 
 

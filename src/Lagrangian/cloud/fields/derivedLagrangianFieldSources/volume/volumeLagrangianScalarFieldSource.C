@@ -35,7 +35,7 @@ Foam::volumeLagrangianScalarFieldSource::volumeLagrangianScalarFieldSource
 )
 :
     LagrangianScalarFieldSource(iIo),
-    CloudLagrangianFieldSource<scalar>(*this)
+    cloudLagrangianFieldSource(*this)
 {}
 
 
@@ -46,7 +46,7 @@ Foam::volumeLagrangianScalarFieldSource::volumeLagrangianScalarFieldSource
 )
 :
     LagrangianScalarFieldSource(iIo, dict),
-    CloudLagrangianFieldSource<scalar>(*this)
+    cloudLagrangianFieldSource(*this)
 {}
 
 
@@ -57,7 +57,7 @@ Foam::volumeLagrangianScalarFieldSource::volumeLagrangianScalarFieldSource
 )
 :
     LagrangianScalarFieldSource(field, iIo),
-    CloudLagrangianFieldSource<scalar>(*this)
+    cloudLagrangianFieldSource(*this)
 {}
 
 

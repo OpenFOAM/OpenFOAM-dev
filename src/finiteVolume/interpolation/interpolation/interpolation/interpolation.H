@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,32 +27,38 @@ Class
 Description
     Abstract base class for interpolation
 
+SourceFiles
+    interpolation.C
+
 \*---------------------------------------------------------------------------*/
 
 #ifndef interpolation_H
 #define interpolation_H
 
-#include "faceList.H"
-#include "volFieldsFwd.H"
-#include "pointFields.H"
-#include "typeInfo.H"
 #include "autoPtr.H"
 #include "tetIndices.H"
-#include "addToRunTimeSelectionTable.H"
+#include "volFieldsFwd.H"
+#include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-class polyMesh;
-
 /*---------------------------------------------------------------------------*\
-                        Class interpolation Declaration
+                    Typedef interpolationGradType Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
-class interpolation
+using interpolationGradType = typename outerProduct<Type, vector>::type;
+
+
+/*---------------------------------------------------------------------------*\
+                       Class interpolationBase Declaration
+\*---------------------------------------------------------------------------*/
+
+template<class Type>
+class interpolationBase
 {
 protected:
 
@@ -63,6 +69,173 @@ protected:
 
         //- Reference to the mesh
         const polyMesh& mesh_;
+
+
+public:
+
+    // Constructors
+
+        //- Construct from components
+        interpolationBase(const VolField<Type>& psi);
+
+        //- Copy constructor
+        interpolationBase(const interpolationBase<Type>& i);
+
+
+    //- Destructor
+    virtual ~interpolationBase();
+
+
+    // Member Functions
+
+        //- Return the field to be interpolated
+        const VolField<Type>& psi() const
+        {
+            return psi_;
+        }
+
+        //- Interpolate to the given point in the given cell
+        virtual Type interpolate
+        (
+            const vector& position,
+            const label celli,
+            const label facei = -1
+        ) const = 0;
+
+        //- As above, but for a field
+        virtual tmp<Field<Type>> interpolate
+        (
+            const vectorField& position,
+            const labelList& celli,
+            const labelList& facei = NullObjectRef<labelList>()
+        ) const = 0;
+
+        //- Interpolate to the given coordinates in the
+        //  tetrahedron defined by the given indices. Calls interpolate
+        //  function above here except where overridden by derived
+        //  interpolation types.
+        virtual Type interpolate
+        (
+            const barycentric& coordinates,
+            const tetIndices& tetIs,
+            const label facei = -1
+        ) const;
+
+        //- As above, but for a field
+        virtual tmp<Field<Type>> interpolate
+        (
+            const Field<barycentric>& coordinates,
+            const labelList& celli,
+            const labelList& tetFacei,
+            const labelList& tetPti,
+            const labelList& facei = NullObjectRef<labelList>()
+        ) const = 0;
+};
+
+
+/*---------------------------------------------------------------------------*\
+                     Class interpolationGradBase Declaration
+\*---------------------------------------------------------------------------*/
+
+template<class Type>
+class interpolationGradBase
+:
+    public interpolationBase<Type>
+{
+protected:
+
+    // Protected Type Definitions
+
+        //- The type of the interpolated gradient
+        typedef typename outerProduct<Type, vector>::type GradType;
+
+
+public:
+
+    //- Runtime type information
+    virtual const word& type() const = 0;
+
+
+    // Constructors
+
+        //- Inherit base class constructors
+        using interpolationBase<Type>::interpolationBase;
+
+
+    //- Destructor
+    virtual ~interpolationGradBase();
+
+
+    // Member Functions
+
+        //- Interpolate the gradient to the given point in the given cell.
+        //  Fails with a "not supported" error unless overridden by derived
+        //  interpolation types.
+        virtual interpolationGradType<Type> interpolateGrad
+        (
+            const vector& position,
+            const label celli,
+            const label facei = -1
+        ) const;
+
+        //- As above, but for a field
+        virtual tmp<Field<interpolationGradType<Type>>> interpolateGrad
+        (
+            const vectorField& position,
+            const labelList& celli,
+            const labelList& facei = NullObjectRef<labelList>()
+        ) const = 0;
+
+        //- Interpolate the gradient to the given coordinates in the
+        //  tetrahedron defined by the given indices. Calls interpolateGrad
+        //  function above here except where overridden by derived
+        //  interpolation types.
+        virtual interpolationGradType<Type> interpolateGrad
+        (
+            const barycentric& coordinates,
+            const tetIndices& tetIs,
+            const label facei = -1
+        ) const;
+
+        //- As above, but for a field
+        virtual tmp<Field<interpolationGradType<Type>>> interpolateGrad
+        (
+            const Field<barycentric>& coordinates,
+            const labelList& celli,
+            const labelList& tetFacei,
+            const labelList& tetPti,
+            const labelList& facei = NullObjectRef<labelList>()
+        ) const = 0;
+};
+
+
+/*---------------------------------------------------------------------------*\
+                 Typedef interpolationBaseOrGradBase Declaration
+\*---------------------------------------------------------------------------*/
+
+template<class Type>
+using interpolationBaseOrGradBase =
+    typename std::conditional
+    <
+        (pTraits<Type>::rank > 1),
+        interpolationBase<Type>,
+        interpolationGradBase<Type>
+    >::type;
+
+
+/*---------------------------------------------------------------------------*\
+                        Class interpolation Declaration
+\*---------------------------------------------------------------------------*/
+
+template<class Type>
+class interpolation
+:
+    public interpolationBaseOrGradBase<Type>
+{
+    // Private Type Definitions
+
+        //- The base class
+        typedef interpolationBaseOrGradBase<Type> Base;
 
 
 public:
@@ -78,9 +251,7 @@ public:
             autoPtr,
             interpolation,
             dictionary,
-            (
-                const VolField<Type>& psi
-            ),
+            (const VolField<Type>& psi),
             (psi)
         );
 
@@ -104,78 +275,24 @@ public:
 
     // Constructors
 
-        //- Construct from components
-        interpolation
-        (
-            const VolField<Type>& psi
-        );
-
-        //- Copy constructor
-        interpolation(const interpolation<Type>& i);
+        //- Inherit base class constructors
+        using Base::Base;
 
         //- Clone
         virtual autoPtr<interpolation<Type>> clone() const = 0;
 
 
-
     //- Destructor
-    virtual ~interpolation()
-    {}
-
-
-    // Member Functions
-
-        //- Return the field to be interpolated
-        const VolField<Type>& psi() const
-        {
-            return psi_;
-        }
-
-        //- Interpolate field to the given point in the given cell
-        virtual Type interpolate
-        (
-            const vector& position,
-            const label celli,
-            const label facei = -1
-        ) const = 0;
-
-        //- As above, but for a field
-        virtual tmp<Field<Type>> interpolate
-        (
-            const vectorField& position,
-            const labelList& celli,
-            const labelList& facei = NullObjectRef<labelList>()
-        ) const = 0;
-
-        //- Interpolate field to the given coordinates in the tetrahedron
-        //  defined by the given indices. Calls interpolate function
-        //  above here except where overridden by derived
-        //  interpolation types.
-        virtual Type interpolate
-        (
-            const barycentric& coordinates,
-            const tetIndices& tetIs,
-            const label facei = -1
-        ) const;
-
-        //- As above, but for a field
-        virtual tmp<Field<Type>> interpolate
-        (
-            const Field<barycentric>& coordinates,
-            const labelList& celli,
-            const labelList& tetFacei,
-            const labelList& tetPti,
-            const labelList& facei = NullObjectRef<labelList>()
-        ) const = 0;
+    virtual ~interpolation();
 };
 
 
 /*---------------------------------------------------------------------------*\
-                     Class fieldInterpolation Declaration
+                   Class fieldInterpolationBase Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type, class InterpolationType>
-class fieldInterpolation
+class fieldInterpolationBase
 :
     public interpolation<Type>
 {
@@ -189,7 +306,10 @@ public:
 
     // Member Functions
 
-        //- Interpolate field to the given points in the given cells
+        //- Inherit non-field interpolation methods
+        using interpolationBase<Type>::interpolate;
+
+        //- Interpolate to the points in the given cells
         virtual tmp<Field<Type>> interpolate
         (
             const vectorField& position,
@@ -197,7 +317,7 @@ public:
             const labelList& facei = NullObjectRef<labelList>()
         ) const;
 
-        //- Interpolate field to the given coordinates in the given tetrahedra
+        //- Interpolate to the coordinates in the given tetrahedra
         virtual tmp<Field<Type>> interpolate
         (
             const Field<barycentric>& coordinates,
@@ -209,16 +329,98 @@ public:
 };
 
 
+/*---------------------------------------------------------------------------*\
+                 Class fieldInterpolationGradBase Declaration
+\*---------------------------------------------------------------------------*/
+
+template<class Type, class InterpolationType>
+class fieldInterpolationGradBase
+:
+    public fieldInterpolationBase<Type, InterpolationType>
+{
+public:
+
+    // Constructors
+
+        //- Inherit base class constructors
+        using
+            fieldInterpolationBase<Type, InterpolationType>::
+            fieldInterpolationBase;
+
+
+    // Member Functions
+
+        //- Inherit non-field gradient interpolation methods
+        using interpolationGradBase<Type>::interpolateGrad;
+
+        //- Interpolate the gradient to the points in the given cells
+        virtual tmp<Field<interpolationGradType<Type>>> interpolateGrad
+        (
+            const vectorField& position,
+            const labelList& celli,
+            const labelList& facei = NullObjectRef<labelList>()
+        ) const;
+
+        //- Interpolate the gradient to the coordinates in the given tetrahedra
+        virtual tmp<Field<interpolationGradType<Type>>> interpolateGrad
+        (
+            const Field<barycentric>& coordinates,
+            const labelList& celli,
+            const labelList& tetFacei,
+            const labelList& tetPti,
+            const labelList& facei = NullObjectRef<labelList>()
+        ) const;
+};
+
+
+/*---------------------------------------------------------------------------*\
+              Typedef fieldInterpolationBaseOrGradBase Declaration
+\*---------------------------------------------------------------------------*/
+
+template<class Type, class InterpolationType>
+using fieldInterpolationBaseOrGradBase =
+    typename std::conditional
+    <
+        (pTraits<Type>::rank > 1),
+        fieldInterpolationBase<Type, InterpolationType>,
+        fieldInterpolationGradBase<Type, InterpolationType>
+    >::type;
+
+
+/*---------------------------------------------------------------------------*\
+                     Class fieldInterpolation Declaration
+\*---------------------------------------------------------------------------*/
+
+template<class Type, class InterpolationType>
+class fieldInterpolation
+:
+    public fieldInterpolationBaseOrGradBase<Type, InterpolationType>
+{
+    // Private Type Definitions
+
+        //- The base class
+        typedef fieldInterpolationBaseOrGradBase<Type, InterpolationType> Base;
+
+
+public:
+
+    // Constructors
+
+        //- Inherit base class constructors
+        using Base::Base;
+};
+
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define defineInterpolation(Type, InterpolationType)                           \
-    defineNamedTemplateTypeNameAndDebug(InterpolationType<Type>, 0);
-
 #define makeInterpolation(Type, InterpolationType)                             \
+                                                                               \
+    defineNamedTemplateTypeNameAndDebug(InterpolationType<Type>, 0);           \
+                                                                               \
     addTemplatedToRunTimeSelectionTable                                        \
     (                                                                          \
         interpolation,                                                         \

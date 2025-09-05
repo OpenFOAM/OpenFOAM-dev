@@ -35,7 +35,7 @@ sources
     pointInjection
     {
         type            coneVelocity;
-        Umean
+        Ucentre
         {
             type            table;
             values

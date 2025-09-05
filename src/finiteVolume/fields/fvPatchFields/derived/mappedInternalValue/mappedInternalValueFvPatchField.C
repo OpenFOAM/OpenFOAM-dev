@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ License
 
 #include "mappedInternalValueFvPatchField.H"
 #include "volFields.H"
-#include "interpolationCell.H"
+#include "cell_interpolation.H"
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
@@ -191,7 +191,7 @@ void Foam::mappedInternalValueFvPatchField<Type>::updateCoeffs()
     // Construct mapped values
     Field<Type> sampleValues;
 
-    if (interpolationScheme_ != interpolationCell<Type>::typeName)
+    if (interpolationScheme_ != interpolations::cell<Type>::typeName)
     {
         // Create an interpolation
         autoPtr<interpolation<Type>> interpolatorPtr

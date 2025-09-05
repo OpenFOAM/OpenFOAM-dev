@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -250,7 +250,7 @@ Foam::fluxLimitedLangmuirHinshelwoodReactionRate::operator()
             rc *= pow(c[ra_[i]], exp_[i]);
         }
 
-        if (rc > rootSmall)
+        if (rc > rootVSmall)
         {
             forAll(s_, i)
             {
@@ -306,7 +306,7 @@ inline Foam::scalar Foam::fluxLimitedLangmuirHinshelwoodReactionRate::ddT
 
         scalar r = k0/pow(a_ + sumkc, m_[0]);
 
-        if (rc > rootSmall)
+        if (rc > rootVSmall)
         {
             label l = -1;
 

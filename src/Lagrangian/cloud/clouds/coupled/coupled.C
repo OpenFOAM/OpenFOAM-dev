@@ -23,12 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "autoPtr.H"
 #include "coupled.H"
-#include "fvcCurl.H"
-#include "fvcDdt.H"
-#include "LagrangianmDdt.H"
-#include "volFieldsFwd.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -42,56 +37,6 @@ namespace clouds
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-#define ACCESS_CARRIER_FIELDS(Type, nullArg)                                   \
-namespace Foam                                                                 \
-{                                                                              \
-    namespace clouds                                                           \
-    {                                                                          \
-        template<>                                                             \
-        PtrDictionary<CarrierField<Type>>& coupled::carrierFields() const      \
-        {                                                                      \
-            return CAT3(carrier, CAPITALIZE(Type), Fields_);                   \
-        }                                                                      \
-    }                                                                          \
-}
-FOR_ALL_FIELD_TYPES(ACCESS_CARRIER_FIELDS)
-#undef ACCESS_CARRIER_FIELDS
-
-
-void Foam::clouds::coupled::clearCarrierFields()
-{
-    #define CLEAR_TYPE_CARRIER_FIELDS(Type, nullArg)                           \
-        forAllIter                                                             \
-        (                                                                      \
-            PtrDictionary<CarrierField<Type>>,                                 \
-            carrierFields<Type>(),                                             \
-            iter                                                               \
-        )                                                                      \
-        {                                                                      \
-            iter().clear(true);                                                \
-       }
-    FOR_ALL_FIELD_TYPES(CLEAR_TYPE_CARRIER_FIELDS);
-    #undef CLEAR_TYPE_CARRIER_FIELDS
-}
-
-
-void Foam::clouds::coupled::resetCarrierFields(const bool predict)
-{
-    #define RESET_TYPE_CARRIER_FIELDS(Type, nullArg)                           \
-        forAllIter                                                             \
-        (                                                                      \
-            PtrDictionary<CarrierField<Type>>,                                 \
-            carrierFields<Type>(),                                             \
-            iter                                                               \
-        )                                                                      \
-        {                                                                      \
-            iter().reset(predict);                                             \
-       }
-    FOR_ALL_FIELD_TYPES(RESET_TYPE_CARRIER_FIELDS);
-    #undef RESET_TYPE_CARRIER_FIELDS
-}
-
 
 #define ACCESS_CARRIER_EQNS(Type, nullArg)                                     \
 namespace Foam                                                                 \
@@ -107,63 +52,6 @@ namespace Foam                                                                 \
 }
 FOR_ALL_FIELD_TYPES(ACCESS_CARRIER_EQNS)
 #undef ACCESS_CARRIER_EQNS
-
-
-Foam::autoPtr<Foam::volVectorField> Foam::clouds::coupled::readDUdtc
-(
-    const cloud& c
-) const
-{
-    const volVectorField& U =
-        c.mesh().mesh().lookupObject<volVectorField>("U");
-
-    typeIOobject<volVectorField> io
-    (
-        "ddt(" + U.name() + ")",
-        U.mesh().time().name(),
-        U.mesh(),
-        IOobject::READ_IF_PRESENT,
-        IOobject::AUTO_WRITE
-    );
-
-    return
-        autoPtr<volVectorField>
-        (
-            io.headerOk()
-          ? new volVectorField(io, U.mesh())
-          : nullptr
-        );
-}
-
-
-const Foam::volVectorField& Foam::clouds::coupled::dUdtc() const
-{
-    if (Uc.psi().hasStoredOldTimes())
-    {
-        dUdtcPtr_.reset(fvc::ddt(Uc.psi()).ptr());
-    }
-    else if (!dUdtcPtr_.valid())
-    {
-        dUdtcPtr_.set
-        (
-            new volVectorField
-            (
-                IOobject
-                (
-                    "ddt(" + Uc.psi().name() + ")",
-                    Uc.psi().mesh().time().name(),
-                    Uc.psi().mesh(),
-                    IOobject::NO_READ,
-                    IOobject::AUTO_WRITE
-                ),
-                Uc.psi().mesh(),
-                dimensionedVector(dimVelocity/dimTime, Zero)
-            )
-        );
-    }
-
-    return dUdtcPtr_();
-}
 
 
 // * * * * * * * * * * * *  Protected Member Functions * * * * * * * * * * * //
@@ -185,52 +73,11 @@ void Foam::clouds::coupled::clearCarrierEqns()
 }
 
 
-void Foam::clouds::coupled::initialise(const bool predict)
-{
-    resetCarrierFields(predict);
-}
-
-
-void Foam::clouds::coupled::partition()
-{
-    clearCarrierFields();
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::clouds::coupled::coupled(const cloud& c)
 :
-    dUdtcPtr_(readDUdtc(c)),
-    Uc
-    (
-        carrierField<vector>
-        (
-            c.mesh().mesh().lookupObject<volVectorField>("U")
-        )
-    ),
-    curlUc
-    (
-        carrierField<vector>
-        (
-            "curlUc",
-            [&]()
-            {
-                return fvc::curl(Uc.psi());
-            }
-        )
-    ),
-    DUDtc
-    (
-        carrierField<vector>
-        (
-            "DUDtc",
-            [&]()
-            {
-                return dUdtc() + (Uc.psi() & fvc::grad(Uc.psi()));
-            }
-        )
-    ),
+    carried(c),
     nuc(c.derivedField<scalar>(*this, &coupled::calcNuc))
 {}
 
@@ -239,19 +86,6 @@ Foam::clouds::coupled::coupled(const cloud& c)
 
 Foam::clouds::coupled::~coupled()
 {}
-
-
-// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
-
-Foam::word Foam::clouds::coupled::carrierName(const word& name)
-{
-    return
-        IOobject::groupName
-        (
-            IOobject::member(name) + 'c',
-            IOobject::group(name)
-        );
-}
 
 
 // ************************************************************************* //
