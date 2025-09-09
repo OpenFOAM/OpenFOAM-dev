@@ -58,12 +58,6 @@ protected:
 
     // Protected Member Functions
 
-        //- Initialisation hook
-        virtual void initialise(const bool predict);
-
-        //- Partition hook
-        virtual void partition();
-
         //- Return the acceleration with which to do second-order tracking
         virtual tmp<LagrangianSubVectorField> dUdt
         (
@@ -80,6 +74,9 @@ protected:
             const bool final
         );
 
+        //- Partition hook
+        virtual void partition();
+
 
 public:
 
@@ -92,7 +89,12 @@ public:
     // Constructors
 
         //- Construct from a mesh and context
-        tracer(LagrangianMesh& mesh, const contextType context);
+        tracer
+        (
+            LagrangianMesh& mesh,
+            const contextType context,
+            const dictionary& dict
+        );
 
 
     //- Destructor
@@ -102,7 +104,7 @@ public:
     // Member Functions
 
         //- Solve the cloud's evolution over the current time-step
-        virtual void solve();
+        virtual void solve(const bool initial, const bool final);
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

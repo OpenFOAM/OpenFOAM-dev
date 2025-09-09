@@ -61,7 +61,7 @@ public:
     // Public Data
 
         //- Number
-        CloudStateField<scalar>& number;
+        CloudStateField<scalar> number;
 
 
     // Constructors

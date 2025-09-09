@@ -730,6 +730,12 @@ public:
             //- Return the global positions
             tmp<LagrangianVectorInternalField> position() const;
 
+            //- Return the global positions for a sub-mesh
+            tmp<LagrangianSubVectorField> position
+            (
+                const LagrangianSubMesh& subMesh
+            ) const;
+
             //- Return the global position of an element
             point position(const label i) const;
 

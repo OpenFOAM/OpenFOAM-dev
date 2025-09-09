@@ -45,6 +45,7 @@ Foam::clouds::shaped::shaped(const cloud& c)
 :
     v(c.derivedField<scalar>(vName, *this, &shaped::calcv)),
     a(c.derivedField<scalar>(*this, &shaped::calca)),
+    aByV(c.derivedField<scalar>(*this, &shaped::calcaByV)),
     alpha
     (
         c.averageField<scalar>
@@ -61,6 +62,7 @@ Foam::clouds::shaped::shaped(const cloud& c, const grouped& groupedCloud)
 :
     v(c.derivedField<scalar>(vName, *this, &shaped::calcv)),
     a(c.derivedField<scalar>(*this, &shaped::calca)),
+    aByV(c.derivedField<scalar>(*this, &shaped::calcaByV)),
     alpha
     (
         c.averageField<scalar>

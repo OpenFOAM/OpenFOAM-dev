@@ -25,7 +25,7 @@ Class
     Foam::clouds::coupledToFluid
 
 Description
-    Base class for clouds which are coupled to a fluid
+    Base class for clouds which are coupled to a variable density fluid
 
 SourceFiles
     coupledToFluid.C
@@ -62,11 +62,21 @@ private:
         //- Cached carrier density field
         tmp<volScalarField> trhocVf_;
 
+        //- Cached corresponding Eulerian phase density field
+        tmp<volScalarField> trhocPhaseVf_;
+
+        //- Reference to the carrier dynamic viscosity field. Might be null.
+        const volScalarField& mucVf_;
+
 
     // Private Member Functions
 
         //- Get the carrier density field
-        virtual tmp<volScalarField> getRhocVf() const;
+        tmp<volScalarField> getRhocVf(const word& phaseName) const;
+
+        //- Get a reference to the carrier dynamic viscosity field. Might
+        //  return null.
+        const volScalarField& getMucVf(const word& phaseName) const;
 
         //- Calculate the carrier kinematic viscosity
         virtual tmp<LagrangianSubScalarField> calcNuc
@@ -80,8 +90,8 @@ protected:
 
     // Protected Member Functions
 
-        //- Update the carrier density
-        void updateRhoc();
+        //- Update the cached carrier fields
+        void updateCarrier();
 
 
 public:
@@ -97,14 +107,17 @@ public:
         //- Carrier density
         const CarrierField<scalar>& rhoc;
 
+        //- Corresponding Eulerian density
+        const CarrierField<scalar>& rhocPhase;
+
         //- Carrier dynamic viscosity
-        const CarrierField<scalar>& muc;
+        const CloudDerivedField<scalar>& muc;
 
 
     // Constructors
 
         //- Construct from a reference to the cloud
-        coupledToFluid(const cloud&);
+        coupledToFluid(const cloud& c, const dictionary& dict);
 
 
     //- Destructor

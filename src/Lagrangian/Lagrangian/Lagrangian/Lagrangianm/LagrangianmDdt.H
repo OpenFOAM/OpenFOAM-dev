@@ -53,6 +53,9 @@ class LagrangianEqn;
 
 namespace Lagrangianm
 {
+    //- Initialise time-derivative information. Registers fields used to
+    //  construct for higher-order schemes and to evaluate instantaneous
+    //  time derivatives.
     template<class Type>
     bool initDdt
     (
@@ -61,6 +64,9 @@ namespace Lagrangianm
         const bool instantaneousDdt = false
     );
 
+    //- Initialise time-derivative information. Registers fields used to
+    //  construct for higher-order schemes and to evaluate instantaneous
+    //  time derivatives.
     template<class Type, template<class> class PrimitiveField>
     bool initDdt
     (
@@ -69,6 +75,8 @@ namespace Lagrangianm
         const bool instantaneousDdt = false
     );
 
+    //- Return the no-time-derivative matrix containing higher-order
+    //  modifications to source terms
     template<class Type>
     tmp<LagrangianEqn<Type>> noDdt
     (
@@ -77,6 +85,8 @@ namespace Lagrangianm
         const LagrangianSubSubField<Type>& psi
     );
 
+    //- Return the no-time-derivative matrix containing higher-order
+    //  modifications to source terms
     template<class Type, template<class> class PrimitiveField>
     tmp<LagrangianEqn<Type>> noDdt
     (
@@ -85,6 +95,7 @@ namespace Lagrangianm
         const LagrangianSubField<Type, PrimitiveField>& psi
     );
 
+    //- Return the time-derivative matrix
     template<class Type>
     tmp<LagrangianEqn<Type>> Ddt
     (
@@ -92,6 +103,7 @@ namespace Lagrangianm
         LagrangianSubSubField<Type>& psi
     );
 
+    //- Return the time-derivative matrix
     template<class Type>
     tmp<LagrangianEqn<Type>> Ddt
     (
@@ -100,32 +112,32 @@ namespace Lagrangianm
         LagrangianSubSubField<Type>& psi
     );
 
+    //- Return a Euler implicit time derivative matrix
     template<class Type>
     tmp<LagrangianEqn<Type>> ddt
     (
-        const LagrangianSubScalarField& deltaT,
         const LagrangianSubSubField<Type>& psi
     );
 
+    //- Return a Euler implicit time derivative matrix
     template<class Type>
     tmp<LagrangianEqn<Type>> ddt
     (
-        const LagrangianSubScalarField& deltaT,
         const LagrangianSubScalarSubField& m,
         const LagrangianSubSubField<Type>& psi
     );
 
+    //- Return a Euler explicit/forward time derivative matrix
     template<class Type>
     tmp<LagrangianEqn<Type>> ddt0
     (
-        const LagrangianSubScalarField& deltaT,
         const LagrangianSubSubField<Type>& psi
     );
 
+    //- Return a Euler explicit/forward time derivative matrix
     template<class Type>
     tmp<LagrangianEqn<Type>> ddt0
     (
-        const LagrangianSubScalarField& deltaT,
         const LagrangianSubScalarSubField& m,
         const LagrangianSubSubField<Type>& psi
     );

@@ -37,14 +37,15 @@ Foam::fv::cloud::cloud
     const cloud::Cloud<Type>&
 )
 :
-    fvModel(name, modelType, mesh, dict),
+    fvSource(name, modelType, mesh, dict),
     cloudPtr_
     (
         Foam::cloud::New<Type>
         (
             mesh,
             name,
-            Foam::cloud::contextType::fvModel
+            Foam::cloud::contextType::fvModel,
+            dict
         ).ptr()
     ),
     cloud_(cloudPtr_()),

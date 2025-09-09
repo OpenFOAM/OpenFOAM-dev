@@ -91,7 +91,7 @@ Foam::wordList Foam::functionObjects::cloudSurfaceDistribution::readFields
     }
     else
     {
-        return wordList(1, dict.lookup<word>(key));
+        return wordList({dict.lookup<word>(key)});
     }
 }
 

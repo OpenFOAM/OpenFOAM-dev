@@ -55,7 +55,7 @@ Foam::functionObjects::cloudNumberFlux::q
         )
       : toSubField<scalar, LagrangianSubMesh>
         (
-            "1:" + Foam::name(fraction.mesh().group()),
+            fraction.mesh().sub("1"),
             fraction.mesh(),
             dimensionedScalar(dimless, scalar(1))
         );

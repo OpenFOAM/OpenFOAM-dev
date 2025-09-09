@@ -25,6 +25,7 @@ License
 
 #include "CarrierField.H"
 #include "carried.H"
+#include "volFields.H"
 
 /*---------------------------------------------------------------------------*\
                   Class CloudDerivedField::Functor Declaration
@@ -155,7 +156,7 @@ Foam::CarrierFieldBase<Type>::interpolate
         (
             IOobject
             (
-                name() + ':' + Foam::name(subMesh.group()),
+                subMesh.sub(name()),
                 mesh.time().name(),
                 mesh,
                 IOobject::NO_READ,
@@ -229,9 +230,7 @@ Foam::CarrierFieldGradBase<Type>::interpolateGrad
         (
             IOobject
             (
-                "grad("
-              + this->name() + ':' + Foam::name(subMesh.group())
-              + ')',
+                subMesh.sub("grad(" + this->name() + ')'),
                 mesh.time().name(),
                 mesh,
                 IOobject::NO_READ,
@@ -307,7 +306,23 @@ template<class Type>
 Foam::CarrierFieldBase<Type>::CarrierFieldBase(const VolField<Type>& psi)
 :
     CloudDerivedField<Type>(*this, &CarrierFieldBase::interpolate),
-    name_(clouds::carried::carrierName(psi.name())),
+    name_(clouds::carried::nameToCarrierName(psi.name())),
+    functorPtr_(nullptr),
+    tpsi_(psi),
+    psiInterpolationPtr_(nullptr),
+    psi0InterpolationPtr_(nullptr)
+{}
+
+
+template<class Type>
+Foam::CarrierFieldBase<Type>::CarrierFieldBase
+(
+    const word& name,
+    const VolField<Type>& psi
+)
+:
+    CloudDerivedField<Type>(*this, &CarrierFieldBase::interpolate),
+    name_(name),
     functorPtr_(nullptr),
     tpsi_(psi),
     psiInterpolationPtr_(nullptr),
@@ -359,13 +374,13 @@ const Foam::word& Foam::CarrierFieldBase<Type>::name() const
 
 
 template<class Type>
-void Foam::CarrierFieldBase<Type>::reset(const bool predict)
+void Foam::CarrierFieldBase<Type>::reset(const bool initial)
 {
     CloudDerivedField<Type>::clear(true);
 
     if (tpsi_.valid() && tpsi_.isTmp())
     {
-        if (predict)
+        if (initial)
         {
             tpsi_.ref().nullOldestTime();
         }
@@ -382,9 +397,9 @@ void Foam::CarrierFieldBase<Type>::reset(const bool predict)
 
 
 template<class Type>
-void Foam::CarrierFieldGradBase<Type>::reset(const bool predict)
+void Foam::CarrierFieldGradBase<Type>::reset(const bool initial)
 {
-    CarrierFieldBase<Type>::reset(predict);
+    CarrierFieldBase<Type>::reset(initial);
 
     grad.clear(true);
 }

@@ -421,7 +421,7 @@ Foam::CloudDerivedField<Type>::operator()
             (
                 new Foam::LagrangianSubField<Type>
                 (
-                    name_ + ':' + name(subMesh.group()),
+                    subMesh.sub(name_),
                     functorPtr_()(model, subMesh)
                 )
             );

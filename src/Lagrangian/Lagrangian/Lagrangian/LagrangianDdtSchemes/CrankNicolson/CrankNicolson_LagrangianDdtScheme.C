@@ -38,7 +38,7 @@ Foam::word Foam::Lagrangian::ddtSchemes::CrankNicolson<Type>::S0Name
     const LagrangianSubSubField<Type>& psi
 ) const
 {
-    return typedName("S0(" + LagrangianModel::fieldName(psi) + ")");
+    return typedName("S0(" + psi.mesh().complete(psi.name()) + ")");
 }
 
 
@@ -48,7 +48,7 @@ Foam::word Foam::Lagrangian::ddtSchemes::CrankNicolson<Type>::deltaTSp0Name
     const LagrangianSubSubField<Type>& psi
 ) const
 {
-    return typedName("deltaTSp0(" + LagrangianModel::fieldName(psi) + ")");
+    return typedName("deltaTSp0(" + psi.mesh().complete(psi.name()) + ")");
 }
 
 
@@ -192,16 +192,14 @@ Foam::Lagrangian::ddtSchemes::CrankNicolson<Type>::LagrangianmDdt
     LagrangianSubSubField<Type>& psi
 )
 {
-    tmp<LagrangianEqn<Type>> tEqn =
-        CrankNicolson<Type>::LagrangianmNoDdt(deltaT, dimless, psi);
-
-    tEqn.ref().deltaTSp += 1;
-    tEqn.ref().deltaTSu -= psi.oldTime();
-
-    // Set the equation name and the non-const field reference
-    tEqn->op(LagrangianEqn<Type>(psi));
-
-    return tEqn;
+    // Return the standard time-derivative equation, but add the
+    // no-time-derivative matrix to it to get the time-step and trigger the
+    // necessary side-effects, and also add an empty equation so that the name
+    // and the non-const field reference are set
+    return
+        Lagrangian::ddtScheme<Type>::Lagrangianmddt(psi)
+      + CrankNicolson<Type>::LagrangianmNoDdt(deltaT, dimless, psi)
+      + tmp<LagrangianEqn<Type>>(new LagrangianEqn<Type>(psi));
 }
 
 
@@ -214,16 +212,14 @@ Foam::Lagrangian::ddtSchemes::CrankNicolson<Type>::LagrangianmDdt
     LagrangianSubSubField<Type>& psi
 )
 {
-    tmp<LagrangianEqn<Type>> tEqn =
-        CrankNicolson<Type>::LagrangianmNoDdt(deltaT, m.dimensions(), psi);
-
-    tEqn.ref().deltaTSp += m;
-    tEqn.ref().deltaTSu -= m.oldTime()*psi.oldTime();
-
-    // Set the equation name and the non-const field reference
-    tEqn->op(LagrangianEqn<Type>(psi));
-
-    return tEqn;
+    // Return the standard time-derivative equation, but add the
+    // no-time-derivative matrix to it to get the time-step and trigger the
+    // necessary side-effects, and also add an empty equation so that the name
+    // and the non-const field reference are set
+    return
+        Lagrangian::ddtScheme<Type>::Lagrangianmddt(m, psi)
+      + CrankNicolson<Type>::LagrangianmNoDdt(deltaT, m.dimensions(), psi)
+      + tmp<LagrangianEqn<Type>>(new LagrangianEqn<Type>(psi));
 }
 
 

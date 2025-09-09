@@ -42,18 +42,15 @@ Foam::clouds::grouped::grouped(const cloud& c)
 :
     number
     (
-        c.stateField<scalar>
+        IOobject
         (
-            IOobject
-            (
-                "number",
-                c.time().name(),
-                c.mesh(),
-                IOobject::MUST_READ,
-                IOobject::AUTO_WRITE
-            ),
-            c.mesh()
-        )
+            "number",
+            c.time().name(),
+            c.mesh(),
+            IOobject::MUST_READ,
+            IOobject::AUTO_WRITE
+        ),
+        c.mesh()
     )
 {}
 

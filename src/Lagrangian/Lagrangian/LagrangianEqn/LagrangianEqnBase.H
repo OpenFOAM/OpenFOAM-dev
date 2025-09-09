@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::LagrangianEqn
+    Foam::LagrangianEqnBase
 
 Description
     Non-templated base class for Lagrangian equations
@@ -70,6 +70,29 @@ protected:
 
 
 public:
+
+    // Public Classes
+
+        //- Plus-equals operation
+        class plusEqOp
+        {
+            template<class A, class B>
+            inline void operator()(A& a, const B& b)
+            {
+                a += b;
+            }
+        };
+
+        //- Minus-equals operation
+        class minusEqOp
+        {
+            template<class A, class B>
+            inline void operator()(A& a, const B& b)
+            {
+                a -= b;
+            }
+        };
+
 
     // Member Functions
 

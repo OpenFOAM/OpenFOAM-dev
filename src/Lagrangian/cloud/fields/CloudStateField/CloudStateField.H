@@ -84,7 +84,10 @@ public:
     // Member Functions
 
         //- Access a part of the field
-        LagrangianSubSubField<Type>& ref(const LagrangianSubMesh& subMesh);
+        const LagrangianSubSubField<Type>& ref(const LagrangianSubMesh&) const;
+
+        //- Access a part of the field
+        LagrangianSubSubField<Type>& ref(const LagrangianSubMesh&);
 
         //- Clear
         void clear();

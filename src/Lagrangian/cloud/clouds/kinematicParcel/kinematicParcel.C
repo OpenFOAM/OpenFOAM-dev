@@ -28,6 +28,7 @@ License
 #include "cloud_functionObject.H"
 #include "LagrangiancDdt.H"
 #include "LagrangianmDdt.H"
+#include "oneOrTmp.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -51,20 +52,6 @@ namespace functionObjects
 
 
 // * * * * * * * * * * * *  Protected Member Functions * * * * * * * * * * * //
-
-void Foam::clouds::kinematicParcel::initialise(const bool predict)
-{
-    cloud::initialise(predict);
-    carried::initialise(predict);
-}
-
-
-void Foam::clouds::kinematicParcel::partition()
-{
-    cloud::partition();
-    carried::partition();
-}
-
 
 Foam::tmp<Foam::LagrangianSubVectorField>
 Foam::clouds::kinematicParcel::dUdt
@@ -103,19 +90,23 @@ bool Foam::clouds::kinematicParcel::reCalculateModified()
     {
         result = Lagrangianm::initDdt(dimless, v, dUdt) || result;
 
-        /*
-        if (context != contextType::functionObject)
+        result = reCalculateModified(v, onec) || result;
+
+        if (hasPhase())
         {
-            result = Lagrangianm::initDdt(dimVolume, onec()) || result;
+            result = reCalculateModified(v, onecPhase) || result;
         }
-        */
     }
 
-    result = Lagrangianm::initDdt(dimVolume, U, dUdt) || result;
-
-    if (context != contextType::functionObject)
     {
-        result = Lagrangianm::initDdt(dimVolume, Uc(subMesh)) || result;
+        result = Lagrangianm::initDdt(dimVolume, U, dUdt) || result;
+
+        result = reCalculateModified(v, Uc) || result;
+
+        if (hasPhase() && &UcPhase != &Uc)
+        {
+            result = reCalculateModified(v, UcPhase) || result;
+        }
     }
 
     return result;
@@ -134,27 +125,40 @@ void Foam::clouds::kinematicParcel::calculate
     LagrangianSubScalarSubField& v = this->v.ref(subMesh);
     LagrangianSubVectorSubField& U = this->U.ref(subMesh);
 
-    // Solve the number equation if a model provides a number source
-    if (LagrangianModels().addsSupToField(word::null))
+    // Evaluate the fractional source
+    LagrangianEqn<scalar> oneEqn(LagrangianModels().source(deltaT));
+
+    // Initialise a unity fractional change in number (i.e., no change)
+    oneOrTmp<LagrangianSubScalarField> numberByNumber0;
+
+    // Solve the number equation if a model provides a fractional source
+    if (oneEqn.valid())
     {
         LagrangianEqn<scalar> numberEqn
         (
             Lagrangianm::Ddt(deltaT, number)
          ==
-            number*LagrangianModels().source(deltaT)
+            oneEqn
         );
 
         numberEqn.solve(final);
+
+        // Set the fractional change in number
+        numberByNumber0 = number/number.oldTime();
+
+        // Correct the fractional source
+        oneEqn *= numberByNumber0();
     }
 
     // Solve the volume equation if a model provides a volume source
-    if (LagrangianModels().addsSupToField(v))
+    if (oneEqn.valid() || LagrangianModels().addsSupToField(v))
     {
         LagrangianEqn<scalar> vEqn
         (
             Lagrangianm::Ddt(deltaT, v)
+          + oneEqn
          ==
-            LagrangianModels().source(deltaT, v)
+            numberByNumber0()*LagrangianModels().source(deltaT, v)
         );
 
         vEqn.solve(final);
@@ -162,19 +166,12 @@ void Foam::clouds::kinematicParcel::calculate
         // Correct the diameter
         spherical::correct(v);
 
-        /*
-        if (context != contextType::functionObject && final)
-        {
-            LagrangianEqn<scalar> vcEqn
-            (
-                Lagrangianm::noDdt(deltaT, dimVolume, onec())
-             ==
-                LagrangianModels().sourceProxy(deltaT, v, onec())
-            );
+        calculate(deltaT, final, v, onec, number);
 
-            carrierEqn(one()) += number*vcEqn;
+        if (hasPhase())
+        {
+            calculate(deltaT, final, v, onecPhase, number);
         }
-        */
     }
 
     // Solve the velocity equation
@@ -182,24 +179,27 @@ void Foam::clouds::kinematicParcel::calculate
         LagrangianEqn<vector> UEqn
         (
             Lagrangianm::Ddt(deltaT, v, U)
+          + v*oneEqn
          ==
-            LagrangianModels().source(deltaT, v, U)
+            numberByNumber0*LagrangianModels().source(deltaT, v, U)
         );
 
         UEqn.solve(final);
 
-        if (context != contextType::functionObject && final)
-        {
-            LagrangianEqn<vector> UcEqn
-            (
-                Lagrangianm::noDdt(deltaT, dimVolume, Uc(subMesh))
-             ==
-                LagrangianModels().sourceProxy(deltaT, v, U, Uc(subMesh))
-            );
+        calculate(deltaT, final, v, U, Uc, number);
 
-            carrierEqn(Uc) += number*UcEqn;
+        if (hasPhase() && &UcPhase != &Uc)
+        {
+            calculate(deltaT, final, v, U, UcPhase, number);
         }
     }
+}
+
+
+void Foam::clouds::kinematicParcel::partition()
+{
+    cloud::partition();
+    carried::clearCarrierFields();
 }
 
 
@@ -208,13 +208,14 @@ void Foam::clouds::kinematicParcel::calculate
 Foam::clouds::kinematicParcel::kinematicParcel
 (
     LagrangianMesh& mesh,
-    const contextType context
+    const contextType context,
+    const dictionary& dict
 )
 :
     cloud(mesh, context),
     grouped(static_cast<const cloud&>(*this)),
     spherical(*this, *this),
-    coupledToIncompressibleFluid(static_cast<const cloud&>(*this)),
+    coupledToConstantDensityFluid(static_cast<const cloud&>(*this), dict),
     sphericalCoupled(*this, *this, *this)
 {
     reCalculateModified();
@@ -229,13 +230,19 @@ Foam::clouds::kinematicParcel::~kinematicParcel()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::clouds::kinematicParcel::solve()
+void Foam::clouds::kinematicParcel::solve
+(
+    const bool initial,
+    const bool final
+)
 {
     // Pre-solve operations ...
+    carried::resetCarrierFields(initial);
     coupled::clearCarrierEqns();
-    coupledToIncompressibleFluid::updateNuc();
+    coupledToConstantDensityFluid::updateCarrier();
 
-    cloud::solve();
+    // Solve
+    cloud::solve(initial, final);
 
     // Post-solve operations ...
 }

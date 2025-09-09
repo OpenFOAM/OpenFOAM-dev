@@ -67,11 +67,12 @@ Foam::LagrangianCoeff<Type, Implicit>::LagrangianCoeff
 template<class Type, bool Implicit>
 Foam::LagrangianCoeff<Type, Implicit>::LagrangianCoeff
 (
+    const LagrangianEqnBase& eqn,
     const LagrangianCoeff<Type, Implicit>& coeff
 )
 :
     tmp<LagrangianCoeff<Type, Implicit>>::refCount(),
-    eqn_(coeff.eqn_),
+    eqn_(eqn),
     S_(coeff.S_, false)
 {}
 
@@ -79,11 +80,12 @@ Foam::LagrangianCoeff<Type, Implicit>::LagrangianCoeff
 template<class Type, bool Implicit>
 Foam::LagrangianCoeff<Type, Implicit>::LagrangianCoeff
 (
+    const LagrangianEqnBase& eqn,
     LagrangianCoeff<Type, Implicit>& coeff,
     const bool reuse
 )
 :
-    eqn_(coeff.eqn_),
+    eqn_(eqn),
     S_(coeff.S_, reuse)
 {}
 
@@ -196,6 +198,23 @@ void Foam::LagrangianCoeff<Type, Implicit>::operator+=
 
 
 template<class Type, bool Implicit>
+template<class OtherType>
+void Foam::LagrangianCoeff<Type, Implicit>::operator+=
+(
+    const LagrangianCoeff<OtherType, Implicit>& coeff
+)
+{
+    if (!coeff.valid()) return;
+
+    FatalErrorInFunction
+        << "Cannot add a " << pTraits<OtherType>::typeName
+        << (Implicit ? "implicit" : "explicit")
+        << " coefficient to equation " << eqn().name()
+        << exit(FatalError);
+}
+
+
+template<class Type, bool Implicit>
 void Foam::LagrangianCoeff<Type, Implicit>::operator+=
 (
     const dimensioned<Type>& dt
@@ -243,6 +262,23 @@ void Foam::LagrangianCoeff<Type, Implicit>::operator-=
 {
     if (!coeff.valid()) return;
     operator-=(coeff.S_());
+}
+
+
+template<class Type, bool Implicit>
+template<class OtherType>
+void Foam::LagrangianCoeff<Type, Implicit>::operator-=
+(
+    const LagrangianCoeff<OtherType, Implicit>& coeff
+)
+{
+    if (!coeff.valid()) return;
+
+    FatalErrorInFunction
+        << "Cannot subtract a " << pTraits<OtherType>::typeName
+        << (Implicit ? "implicit" : "explicit")
+        << " coefficient from equation " << eqn().name()
+        << exit(FatalError);
 }
 
 

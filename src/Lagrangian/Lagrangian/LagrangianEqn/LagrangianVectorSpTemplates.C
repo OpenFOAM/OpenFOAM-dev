@@ -110,6 +110,19 @@ void Foam::LagrangianSp<Foam::vector>::operator+=
 }
 
 
+template<class OtherType>
+void Foam::LagrangianSp<Foam::vector>::operator+=
+(
+    const LagrangianSp<OtherType>& Sp
+)
+{
+    if (Sp.valid())
+    {
+        this->operator+=(Sp.S());
+    }
+}
+
+
 template<template<class> class PrimitiveField>
 void Foam::LagrangianSp<Foam::vector>::operator-=
 (
@@ -163,6 +176,19 @@ void Foam::LagrangianSp<Foam::vector>::operator-=
 {
     makeTensor();
     tensorCoeff_ -= tS;
+}
+
+
+template<class OtherType>
+void Foam::LagrangianSp<Foam::vector>::operator-=
+(
+    const LagrangianSp<OtherType>& Sp
+)
+{
+    if (Sp.valid())
+    {
+        this->operator+=(Sp.S());
+    }
 }
 
 

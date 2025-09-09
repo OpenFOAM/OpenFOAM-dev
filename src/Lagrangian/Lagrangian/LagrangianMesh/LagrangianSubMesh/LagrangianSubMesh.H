@@ -168,6 +168,12 @@ public:
 
         // Sub-setting
 
+            //- Return the name of a field corresponding to this sub-mesh
+            inline word sub(const word& fieldName) const;
+
+            //- Return the name of a field corresponding to the complete mesh
+            word complete(const word& subFieldName) const;
+
             //- Return a sub-list corresponding to this sub-mesh
             template<class Type>
             SubList<Type> sub(const List<Type>& list) const;

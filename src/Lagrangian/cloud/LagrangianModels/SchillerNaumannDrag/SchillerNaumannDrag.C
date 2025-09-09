@@ -25,7 +25,7 @@ License
 
 #include "SchillerNaumannDrag.H"
 #include "addToRunTimeSelectionTable.H"
-#include "coupledToIncompressibleFluid.H"
+#include "coupledToConstantDensityFluid.H"
 #include "coupledToFluid.H"
 #include "sphericalCoupled.H"
 
@@ -63,15 +63,15 @@ Foam::Lagrangian::SchillerNaumannDrag::calcD
 
     assertCloud
     <
-        clouds::coupledToIncompressibleFluid,
+        clouds::coupledToConstantDensityFluid,
         clouds::coupledToFluid
     >();
 
     tmp<LagrangianSubScalarField> tmucByRhoOrMuc =
-        isCloud<clouds::coupledToIncompressibleFluid>()
+        isCloud<clouds::coupledToConstantDensityFluid>()
       ? (
-            cloud<clouds::coupledToIncompressibleFluid>().nuc(model, subMesh)
-           /cloud<clouds::coupledToIncompressibleFluid>().rhoByRhoc
+            cloud<clouds::coupledToConstantDensityFluid>().nuc(model, subMesh)
+           /cloud<clouds::coupledToConstantDensityFluid>().rhoByRhoc
         )
       : tmp<LagrangianSubScalarField>
         (
@@ -81,7 +81,7 @@ Foam::Lagrangian::SchillerNaumannDrag::calcD
     return
         LagrangianSubScalarField::New
         (
-            "D:" + Foam::name(subMesh.group()),
+            subMesh.sub("D"),
             CdRe(Re)*(constant::mathematical::pi/8)*d*tmucByRhoOrMuc
         );
 }

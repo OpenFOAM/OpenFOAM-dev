@@ -76,11 +76,10 @@ template<class Type>
 Foam::tmp<Foam::LagrangianEqn<Type>>
 Foam::Lagrangian::ddtScheme<Type>::Lagrangianmddt
 (
-    const LagrangianSubScalarField& deltaT,
     const LagrangianSubSubField<Type>& psi
 )
 {
-    tmp<LagrangianEqn<Type>> tEqn(new LagrangianEqn<Type>(deltaT, psi));
+    tmp<LagrangianEqn<Type>> tEqn(new LagrangianEqn<Type>(psi));
 
     tEqn.ref().deltaTSp += 1;
     tEqn.ref().deltaTSu -= psi.oldTime();
@@ -93,12 +92,11 @@ template<class Type>
 Foam::tmp<Foam::LagrangianEqn<Type>>
 Foam::Lagrangian::ddtScheme<Type>::Lagrangianmddt
 (
-    const LagrangianSubScalarField& deltaT,
     const LagrangianSubScalarSubField& m,
     const LagrangianSubSubField<Type>& psi
 )
 {
-    tmp<LagrangianEqn<Type>> tEqn(new LagrangianEqn<Type>(deltaT, psi));
+    tmp<LagrangianEqn<Type>> tEqn(new LagrangianEqn<Type>(psi));
 
     tEqn.ref().deltaTSp += m;
     tEqn.ref().deltaTSu -= m.oldTime()*psi.oldTime();
@@ -111,11 +109,10 @@ template<class Type>
 Foam::tmp<Foam::LagrangianEqn<Type>>
 Foam::Lagrangian::ddtScheme<Type>::Lagrangianmddt0
 (
-    const LagrangianSubScalarField& deltaT,
     const LagrangianSubSubField<Type>& psi
 )
 {
-    tmp<LagrangianEqn<Type>> tEqn(new LagrangianEqn<Type>(deltaT, psi));
+    tmp<LagrangianEqn<Type>> tEqn(new LagrangianEqn<Type>(psi));
 
     tEqn.ref().deltaTSu += psi - psi.oldTime();
 
@@ -127,16 +124,38 @@ template<class Type>
 Foam::tmp<Foam::LagrangianEqn<Type>>
 Foam::Lagrangian::ddtScheme<Type>::Lagrangianmddt0
 (
-    const LagrangianSubScalarField& deltaT,
     const LagrangianSubScalarSubField& m,
     const LagrangianSubSubField<Type>& psi
 )
 {
-    tmp<LagrangianEqn<Type>> tEqn(new LagrangianEqn<Type>(deltaT, psi));
+    tmp<LagrangianEqn<Type>> tEqn(new LagrangianEqn<Type>(psi));
 
     tEqn.ref().deltaTSu += m*psi - m.oldTime()*psi.oldTime();
 
     return tEqn;
+}
+
+
+template<class Type>
+Foam::tmp<Foam::LagrangianSubField<Type>>
+Foam::Lagrangian::ddtScheme<Type>::LagrangiancdeltaTddt0
+(
+    const LagrangianSubSubField<Type>& psi
+)
+{
+    return psi - psi.oldTime();
+}
+
+
+template<class Type>
+Foam::tmp<Foam::LagrangianSubField<Type>>
+Foam::Lagrangian::ddtScheme<Type>::LagrangiancdeltaTddt0
+(
+    const LagrangianSubScalarSubField& m,
+    const LagrangianSubSubField<Type>& psi
+)
+{
+    return m*psi - m.oldTime()*psi.oldTime();
 }
 
 

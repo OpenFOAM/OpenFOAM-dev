@@ -36,7 +36,7 @@ SourceFiles
 #define carried_H
 
 #include "cloud.H"
-#include "PtrDictionary.H"
+#include "HashPtrTable.H"
 #include "volFieldsFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -60,28 +60,25 @@ private:
 
     // Private Data
 
+        //- The name of the carrier phase
+        const word carrierPhaseName_;
+
+        //- The name of the corresponding Eulerian phase
+        const word phaseName_;
+
         //- Carrier fields
-        #define DECLARE_CARRIER_FIELDS(Type, nullArg)     \
-            mutable PtrDictionary<CarrierField<Type>>     \
+        #define DECLARE_CARRIER_FIELDS(Type, nullArg)    \
+            mutable HashPtrTable<CarrierField<Type>>     \
                 CAT3(carrier, CAPITALIZE(Type), Fields_);
         FOR_ALL_FIELD_TYPES(DECLARE_CARRIER_FIELDS);
         #undef DECLARE_CARRIER_FIELDS
-
-        //- Carrier velocity time derivative
-        mutable autoPtr<volVectorField> dUdtcPtr_;
 
 
     // Private Member Functions
 
         //- Access the carrier fields. Only specialisations are defined.
         template<class Type>
-        PtrDictionary<CarrierField<Type>>& carrierFields() const;
-
-        //- Clear the carrier fields
-        void clearCarrierFields();
-
-        //- Reset the carrier fields
-        void resetCarrierFields(const bool predict);
+        HashPtrTable<CarrierField<Type>>& carrierFields() const;
 
         //- Read the carrier velocity time derivative
         autoPtr<volVectorField> readDUdtc(const cloud& c) const;
@@ -94,11 +91,11 @@ protected:
 
     // Protected Member Functions
 
-        //- Initialisation hook
-        void initialise(const bool predict);
+        //- Clear the carrier fields
+        void clearCarrierFields();
 
-        //- Partition hook
-        void partition();
+        //- Reset the carrier fields
+        void resetCarrierFields(const bool initial);
 
 
 public:
@@ -117,14 +114,20 @@ public:
         //- Carrier velocity curl
         const CarrierField<vector>& curlUc;
 
+        //- Carrier velocity time derivative
+        private: mutable autoPtr<volVectorField> dUdtcPtr_; public:
+
         //- Carrier advective derivative
         const CarrierField<vector>& DUDtc;
+
+        //- Corresponding Eulerian phase velocity
+        const CarrierField<vector>& UcPhase;
 
 
     // Constructors
 
         //- Construct from a reference to the cloud
-        carried(const cloud& c);
+        carried(const cloud& c, const dictionary& dict);
 
 
     //- Destructor
@@ -133,8 +136,22 @@ public:
 
     // Member Functions
 
-        //- Modify a name to disambiguate it as relating to the carrier
-        static word carrierName(const word& name);
+        //- Return the name of the carrier phase
+        const word& carrierPhaseName() const;
+
+        //- Return the name of the corresponding Eulerian phase
+        const word& phaseName() const;
+
+        //- Return whether this cloud has a corresponding Eulerian phase
+        bool hasPhase() const;
+
+        //- Convert a name to its disambiguated carrier equivalent name. I.e.,
+        //  add a 'c' suffix to the member.
+        static word nameToCarrierName(const word& name);
+
+        //- Convert a disambiguated carrier name to its equivalent name. I.e.,
+        //  remove the 'c' suffix from the member.
+        static word carrierNameToName(const word& namec);
 
 
         // Fields

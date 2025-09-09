@@ -100,12 +100,12 @@ protected:
             LagrangianEqn<Type>& eqn
         ) const;
 
-        //- Add a source term to a mass-weighted equation
+        //- Add a source term to a volume or mass-weighted equation
         template<class Type>
         void addSupType
         (
             const LagrangianSubScalarField& deltaT,
-            const LagrangianSubScalarSubField& m,
+            const LagrangianSubScalarSubField& vOrM,
             const LagrangianSubSubField<Type>& field,
             LagrangianEqn<Type>& eqn
         ) const;
@@ -145,8 +145,41 @@ public:
 
         //- Return the name of the field associated with a source term (base
         //  condition for the above)
-        template<class AlphaRhoFieldType>
-        static word fieldName(const AlphaRhoFieldType& alphaRhoField);
+        template
+        <
+            class Type,
+            class GeoMesh,
+            template<class> class PrimitiveField
+        >
+        static const word& fieldName
+        (
+            const GeometricField<Type, GeoMesh, PrimitiveField>&
+        );
+
+        //- Return the name of the field associated with a source term (base
+        //  condition for the above)
+        template
+        <
+            class Type,
+            class GeoMesh,
+            template<class> class PrimitiveField
+        >
+        static const word& fieldName
+        (
+            const DimensionedField<Type, GeoMesh, PrimitiveField>&
+        );
+
+        //- Return the name of the field associated with a source term (base
+        //  condition for the above)
+        template
+        <
+            class Type,
+            template<class> class PrimitiveField
+        >
+        static word fieldName
+        (
+            const DimensionedField<Type, LagrangianSubMesh, PrimitiveField>&
+        );
 
         //- Return the name of the product of the fields associated with a
         //  source term
@@ -242,14 +275,24 @@ public:
 
             //- Return true if the LagrangianModel adds a source term to the
             //  given field's transport equation
-            virtual bool addsSupToField(const word&) const;
+            virtual bool addsSupToField
+            (
+                const word& fieldName,
+                const word& eqnFieldName
+            ) const = 0;
 
             //- Return true if the LagrangianModels adds a source term to the
             //  given field's transport equation
-            template<class Type, template<class> class PrimitiveField>
+            template
+            <
+                class Type,
+                template<class> class PrimitiveField,
+                template<class> class PrimitiveEqnField
+            >
             bool addsSupToField
             (
-                const LagrangianSubField<Type, PrimitiveField>& field
+                const LagrangianSubField<Type, PrimitiveField>& field,
+                const LagrangianSubField<Type, PrimitiveEqnField>& eqnfield
             ) const;
 
 
@@ -285,18 +328,32 @@ public:
 
         // Sources
 
+            //- Hook before source evaluation
+            virtual void preAddSup
+            (
+                const LagrangianSubScalarField& deltaT,
+                const bool final
+            );
+
             //- Add a fractional source term
             virtual void addSup
             (
                 const LagrangianSubScalarField& deltaT,
-                LagrangianSubScalarField& S
+                LagrangianEqn<scalar>& eqn
             ) const;
 
             //- Add a source term to an equation
             FOR_ALL_FIELD_TYPES(DEFINE_LAGRANGIAN_MODEL_ADD_FIELD_SUP)
 
-            //- Add a source term to a mass-weighted equation
-            FOR_ALL_FIELD_TYPES(DEFINE_LAGRANGIAN_MODEL_ADD_M_FIELD_SUP)
+            //- Add a source term to a volume or mass-weighted equation
+            FOR_ALL_FIELD_TYPES(DEFINE_LAGRANGIAN_MODEL_ADD_V_OR_M_FIELD_SUP)
+
+            //- Hook after source evaluation
+            virtual void postAddSup
+            (
+                const LagrangianSubScalarField& deltaT,
+                const bool final
+            );
 
 
         // Mesh changes

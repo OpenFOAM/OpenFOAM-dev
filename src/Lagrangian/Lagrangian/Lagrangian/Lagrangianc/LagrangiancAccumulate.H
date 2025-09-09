@@ -49,6 +49,7 @@ namespace Foam
 
 namespace Lagrangianc
 {
+    //- Accumulate a Lagrangian field into a finite volume field
     template<class CellMesh, class Type, template<class> class PrimitiveField>
     tmp<DimensionedField<Type, CellMesh>> accumulate
     (
@@ -56,12 +57,14 @@ namespace Lagrangianc
         const word& name
     );
 
+    //- Accumulate a Lagrangian field into a finite volume field
     template<class CellMesh, class Type, template<class> class PrimitiveField>
     tmp<DimensionedField<Type, CellMesh>> accumulate
     (
         const DimensionedField<Type, LagrangianMesh, PrimitiveField>& lPsi
     );
 
+    //- Accumulate a Lagrangian field into a finite volume field
     template<class CellMesh, class Type, template<class> class PrimitiveField>
     void accumulate
     (
@@ -69,6 +72,7 @@ namespace Lagrangianc
         DimensionedField<Type, CellMesh>& vPsi
     );
 
+    //- Accumulate a Lagrangian field into a finite volume field
     template<class CellMesh, class Type, template<class> class PrimitiveField>
     void accumulate
     (

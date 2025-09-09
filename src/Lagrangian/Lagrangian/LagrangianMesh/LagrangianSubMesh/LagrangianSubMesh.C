@@ -103,6 +103,35 @@ Foam::LagrangianSubMesh::~LagrangianSubMesh()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
+Foam::word Foam::LagrangianSubMesh::complete(const word& subFieldName) const
+{
+    const word groupName = Foam::name(group());
+
+    word fieldName = subFieldName;
+
+    word::size_type subi = 0, i = 0;
+
+    while (subi < subFieldName.size())
+    {
+        if
+        (
+            subFieldName[subi] != ':'
+         || subFieldName.size() < groupName.size() + subi + 1
+         || subFieldName(subi + 1, groupName.size()) != groupName
+        )
+        {
+            fieldName[i ++] = subFieldName[subi ++];
+        }
+        else
+        {
+            subi += groupName.size() + 1;
+        }
+    }
+
+    return fieldName(i);
+}
+
+
 template<>
 Foam::tmp<Foam::vectorField> Foam::LagrangianSubMesh::nf
 (
@@ -143,7 +172,7 @@ Foam::tmp<Foam::LagrangianSubVectorField> Foam::LagrangianSubMesh::nf
     return
         LagrangianSubVectorField::New
         (
-            "nf:" + Foam::name(subMesh.group()),
+            subMesh.sub("nf"),
             subMesh,
             dimless,
             nf<vectorField>(fraction)
@@ -187,7 +216,7 @@ Foam::tmp<Foam::LagrangianSubVectorField> Foam::LagrangianSubMesh::nf
     return
         LagrangianSubVectorField::New
         (
-            "nf:" + Foam::name(group()),
+            sub("nf"),
             *this,
             dimless,
             nf<vectorField>(fraction)
@@ -235,7 +264,7 @@ Foam::tmp<Foam::LagrangianSubVectorField> Foam::LagrangianSubMesh::Uf
     return
         LagrangianSubVectorField::New
         (
-            "Uf:" + Foam::name(subMesh.group()),
+            subMesh.sub("Uf"),
             subMesh,
             dimVelocity,
             Uf<vectorField>(fraction)
@@ -279,7 +308,7 @@ Foam::tmp<Foam::LagrangianSubVectorField> Foam::LagrangianSubMesh::Uf
     return
         LagrangianSubVectorField::New
         (
-            "Uf:" + Foam::name(group()),
+            sub("Uf"),
             *this,
             dimVelocity,
             Uf<vectorField>(fraction)

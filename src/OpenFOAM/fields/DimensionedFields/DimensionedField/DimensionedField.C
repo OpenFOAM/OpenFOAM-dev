@@ -787,6 +787,38 @@ void DimensionedField<Type, GeoMesh, PrimitiveField>::reset
 }
 
 
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+void DimensionedField<Type, GeoMesh, PrimitiveField>::max
+(
+    const dimensioned<Type>& dt
+)
+{
+    Foam::max(primitiveFieldRef(), primitiveField(), dt.value());
+}
+
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+void DimensionedField<Type, GeoMesh, PrimitiveField>::min
+(
+    const dimensioned<Type>& dt
+)
+{
+    Foam::min(primitiveFieldRef(), primitiveField(), dt.value());
+}
+
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+void DimensionedField<Type, GeoMesh, PrimitiveField>::maxMin
+(
+    const dimensioned<Type>& minDt,
+    const dimensioned<Type>& maxDt
+)
+{
+    Foam::max(primitiveFieldRef(), primitiveField(), minDt.value());
+    Foam::min(primitiveFieldRef(), primitiveField(), maxDt.value());
+}
+
+
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Type, class GeoMesh, template<class> class PrimitiveField>

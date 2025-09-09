@@ -25,7 +25,7 @@ Class
     Foam::clouds::sphericalCoupled
 
 Description
-    Base class for clouds of spherical particles which are coupled to a fluid
+    Base class for clouds of spherical particles which are coupled to a carrier
 
 SourceFiles
     sphericalCoupled.C

@@ -58,7 +58,7 @@ bool Foam::functionObjects::cloud::executeAtStart() const
 
 bool Foam::functionObjects::cloud::execute()
 {
-    cloudPtr_->solve();
+    cloudPtr_->solve(true, true);
     Info<< endl;
     return true;
 }

@@ -78,10 +78,15 @@ public:
         using LagrangianCoeff<scalar, true>::LagrangianCoeff;
 
         //- Construct as copy
-        LagrangianSp(const LagrangianSp<Type>& Sp);
+        LagrangianSp(const LagrangianEqnBase&, const LagrangianSp<Type>& Sp);
 
         //- Construct as copy or reuse as specified
-        LagrangianSp(LagrangianSp<Type>& Sp, const bool reuse);
+        LagrangianSp
+        (
+            const LagrangianEqnBase&,
+            LagrangianSp<Type>& Sp,
+            const bool reuse
+        );
 
         //- Move construct
         LagrangianSp(LagrangianSp<Type>&& Sp);
@@ -110,13 +115,15 @@ public:
         using LagrangianCoeff<scalar, true>::operator+=;
 
         //- Addition assignment
-        void operator+=(const LagrangianSp<Type>& Sp);
+        template<class OtherType>
+        void operator+=(const LagrangianSp<OtherType>&);
 
         //- Subtraction assignment
         using LagrangianCoeff<scalar, true>::operator-=;
 
         //- Subtraction assignment
-        void operator-=(const LagrangianSp<Type>& Sp);
+        template<class OtherType>
+        void operator-=(const LagrangianSp<OtherType>& Sp);
 
         //- Multiply assignment
         using LagrangianCoeff<scalar, true>::operator*=;
@@ -164,14 +171,23 @@ public:
 
     // Constructors
 
-        //- Construct from a reference to the equation
+        //- Construct empty
         LagrangianSp(const LagrangianEqn<vector>& eqn);
 
         //- Construct as copy
-        LagrangianSp(const LagrangianSp<vector>& coeff);
+        LagrangianSp
+        (
+            const LagrangianEqnBase& eqn,
+            const LagrangianSp<vector>& coeff
+        );
 
         //- Construct as copy or reuse as specified
-        LagrangianSp(LagrangianSp<vector>& coeff, const bool reuse);
+        LagrangianSp
+        (
+            const LagrangianEqnBase& eqn,
+            LagrangianSp<vector>& coeff,
+            const bool reuse
+        );
 
         //- Move construct
         LagrangianSp(LagrangianSp<vector>&& coeff);
@@ -250,6 +266,10 @@ public:
         void operator+=(const LagrangianSp<vector>& Sp);
 
         //- Addition assignment
+        template<class OtherType>
+        void operator+=(const LagrangianSp<OtherType>& Sp);
+
+        //- Addition assignment
         void operator+=(const dimensioned<scalar>&);
 
         //- Addition assignment
@@ -282,6 +302,10 @@ public:
 
         //- Subtraction assignment
         void operator-=(const LagrangianSp<vector>& Sp);
+
+        //- Addition assignment
+        template<class OtherType>
+        void operator-=(const LagrangianSp<OtherType>& Sp);
 
         //- Subtraction assignment
         void operator-=(const dimensioned<scalar>&);

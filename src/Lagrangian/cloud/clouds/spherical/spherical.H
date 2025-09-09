@@ -73,6 +73,13 @@ private:
             const LagrangianSubMesh& subMesh
         ) const;
 
+        //- Calculate the particles' surface area per unit volumes
+        virtual tmp<LagrangianSubScalarField> calcaByV
+        (
+            const LagrangianModelRef& model,
+            const LagrangianSubMesh& subMesh
+        ) const;
+
 
 protected:
 
@@ -93,7 +100,7 @@ public:
     // Public Data
 
         //- Diameter
-        CloudStateField<scalar>& d;
+        CloudStateField<scalar> d;
 
 
     // Constructors

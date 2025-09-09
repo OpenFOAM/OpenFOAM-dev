@@ -49,14 +49,33 @@ namespace Foam
 
 namespace Lagrangianc
 {
+    //- Return the instantaneous time-derivative
     template<class Type>
     tmp<LagrangianSubField<Type>> Ddt
     (
         const LagrangianSubSubField<Type>& psi
     );
 
+    //- Return the instantaneous time-derivative
     template<class Type>
     tmp<LagrangianSubField<Type>> Ddt
+    (
+        const LagrangianSubScalarSubField& m,
+        const LagrangianSubSubField<Type>& psi
+    );
+
+    //- Return the Euler explicit/forward time derivative multiplied by the
+    //  time-step
+    template<class Type>
+    tmp<LagrangianSubField<Type>> deltaTddt0
+    (
+        const LagrangianSubSubField<Type>& psi
+    );
+
+    //- Return the Euler explicit/forward time derivative multiplied by the
+    //  time-step
+    template<class Type>
+    tmp<LagrangianSubField<Type>> deltaTddt0
     (
         const LagrangianSubScalarSubField& m,
         const LagrangianSubSubField<Type>& psi

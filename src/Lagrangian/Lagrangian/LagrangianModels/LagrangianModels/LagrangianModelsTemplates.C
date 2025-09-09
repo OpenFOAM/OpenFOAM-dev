@@ -55,12 +55,13 @@ Foam::tmp<Foam::LagrangianEqn<Type>> Foam::LagrangianModels::sourceTerm
     const PtrListDictionary<LagrangianModel>& modelList(*this);
 
     const word fieldName = LagrangianModel::fieldName(alphaRhoFields ...);
+    const word eqnFieldName = LagrangianModel::fieldName(eqnField);
 
     forAll(modelList, i)
     {
         const LagrangianModel& model = modelList[i];
 
-        if (model.addsSupToField(fieldName))
+        if (model.addsSupToField(fieldName, eqnFieldName))
         {
             addSupFields_[i].insert(fieldName);
 
@@ -123,6 +124,27 @@ bool Foam::LagrangianModels::addsSupToField
 }
 
 
+template
+<
+    class Type,
+    template<class> class PrimitiveField,
+    template<class> class PrimitiveEqnField
+>
+bool Foam::LagrangianModels::addsSupToField
+(
+    const LagrangianSubField<Type, PrimitiveField>& field,
+    const LagrangianSubField<Type, PrimitiveEqnField>& eqnField
+) const
+{
+    return
+        addsSupToField
+        (
+            LagrangianModel::fieldName(field),
+            LagrangianModel::fieldName(eqnField)
+        );
+}
+
+
 template<class ... ModelAndFieldSourceTypes>
 Foam::HashTable<Foam::word>
 Foam::LagrangianModels::modelTypeFieldSourceTypes() const
@@ -175,11 +197,11 @@ template<class Type, template<class> class PrimitiveField>
 Foam::tmp<Foam::LagrangianEqn<Type>> Foam::LagrangianModels::source
 (
     const LagrangianSubScalarField& deltaT,
-    const LagrangianSubField<scalar, PrimitiveField>& m,
+    const LagrangianSubField<scalar, PrimitiveField>& vOrM,
     const LagrangianSubField<Type, PrimitiveField>& field
 ) const
 {
-    return sourceTerm(field, deltaT, m, field);
+    return sourceTerm(field, deltaT, vOrM, field);
 }
 
 
@@ -192,12 +214,12 @@ template
 Foam::tmp<Foam::LagrangianEqn<Type>> Foam::LagrangianModels::sourceProxy
 (
     const LagrangianSubScalarField& deltaT,
-    const LagrangianSubField<scalar, PrimitiveField>& m,
+    const LagrangianSubField<scalar, PrimitiveField>& vOrM,
     const LagrangianSubField<Type, PrimitiveField>& field,
     const LagrangianSubField<Type, PrimitiveEqnField>& eqnField
 ) const
 {
-    return sourceTerm(eqnField, deltaT, m, field);
+    return sourceTerm(eqnField, deltaT, vOrM, field);
 }
 
 

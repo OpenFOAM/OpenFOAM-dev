@@ -26,13 +26,24 @@ License
 #include "CloudStateField.H"
 #include "toSubField.H"
 
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+template<class Type>
+template<class ... Args>
+Foam::CloudStateField<Type>::CloudStateField(const Args& ... args)
+:
+    LagrangianDynamicField<Type>(args ...),
+    psiAllPtr_(this->mesh().subAll().sub(*this).ptr())
+{}
+
+
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::LagrangianSubSubField<Type>& Foam::CloudStateField<Type>::ref
+const Foam::LagrangianSubSubField<Type>& Foam::CloudStateField<Type>::ref
 (
     const LagrangianSubMesh& subMesh
-)
+) const
 {
     // Error if this is the all-mesh
     if (&subMesh == &subMesh.mesh().subAll())
@@ -55,21 +66,23 @@ Foam::LagrangianSubSubField<Type>& Foam::CloudStateField<Type>::ref
 
 
 template<class Type>
+Foam::LagrangianSubSubField<Type>& Foam::CloudStateField<Type>::ref
+(
+    const LagrangianSubMesh& subMesh
+)
+{
+    // Evaluate and store if it doesn't already exist for the sub-mesh
+    static_cast<const CloudStateField<Type>&>(*this).ref(subMesh);
+
+    return psiSubSubPtr_();
+}
+
+
+template<class Type>
 void Foam::CloudStateField<Type>::clear()
 {
     psiSubSubPtr_.clear();
 }
-
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-template<class Type>
-template<class ... Args>
-Foam::CloudStateField<Type>::CloudStateField(const Args& ... args)
-:
-    LagrangianDynamicField<Type>(args ...),
-    psiAllPtr_(this->mesh().subAll().sub(*this).ptr())
-{}
 
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //

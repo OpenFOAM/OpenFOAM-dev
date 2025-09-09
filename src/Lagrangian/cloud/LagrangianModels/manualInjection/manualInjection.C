@@ -43,9 +43,37 @@ namespace Lagrangian
 
 void Foam::Lagrangian::manualInjection::readCoeffs(const dictionary& modelDict)
 {
-    fileName_ = modelDict.lookup<fileName>("file");
+    const bool havePositions = modelDict.found("positions");
+    const bool haveFile = modelDict.found("file");
+    const bool haveUnits = modelDict.found("units");
 
-    units_.readIfPresent("units", modelDict);
+    if (havePositions == haveFile)
+    {
+        FatalIOErrorInFunction(modelDict)
+            << (haveFile ? "both keywords " : "neither keyword")
+            << " positions " << (haveFile ? "and" : "nor")
+            << " file defined in dictionary " << modelDict.name()
+            << exit(FatalIOError);
+    }
+
+    if (havePositions && haveUnits)
+    {
+        FatalIOErrorInFunction(modelDict)
+            << "both keywords positions and units defined in dictionary "
+            << modelDict.name() << exit(FatalIOError);
+    }
+
+    if (havePositions)
+    {
+        positions_ = modelDict.lookup<List<point>>("positions", dimLength);
+    }
+
+    if (haveFile)
+    {
+        fileName_ = modelDict.lookup<fileName>("file");
+
+        units_.readIfPresent("units", modelDict);
+    }
 
     time_ =
         modelDict.lookupOrDefault<scalar>
@@ -68,6 +96,7 @@ Foam::Lagrangian::manualInjection::manualInjection
 )
 :
     LagrangianInjection(name, mesh),
+    positions_(),
     fileName_(fileName::null),
     units_(dimLength),
     time_(NaN)
@@ -89,20 +118,33 @@ Foam::LagrangianSubMesh Foam::Lagrangian::manualInjection::modify
 
     if (!(t0 <= time_ && time_ < t1)) return mesh.subNone();
 
-    // Read the positions file
-    GlobalIOField<point> positions
-    (
-        IOobject
-        (
-            fileName_,
-            mesh.time().constant(),
-            mesh,
-            IOobject::MUST_READ,
-            IOobject::NO_WRITE
-        )
-    );
+    // Read and unit convert the positions if specified in a file
+    tmp<pointField> tpositions;
+    if (fileName_ == fileName::null)
+    {
+        tpositions = tmp<pointField>(positions_);
+    }
+    else
+    {
+        tpositions =
+            new pointField
+            (
+                GlobalIOField<point>
+                (
+                    IOobject
+                    (
+                        fileName_,
+                        mesh.time().constant(),
+                        mesh,
+                        IOobject::MUST_READ,
+                        IOobject::NO_WRITE
+                    )
+                )
+            );
 
-    units_.makeStandard(positions);
+        units_.makeStandard(tpositions.ref());
+    }
+    const pointField& positions = tpositions();
 
     const label number = positions.size();
 

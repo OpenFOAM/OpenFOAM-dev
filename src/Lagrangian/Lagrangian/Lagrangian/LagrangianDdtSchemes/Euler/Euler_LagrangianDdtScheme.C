@@ -70,13 +70,11 @@ Foam::Lagrangian::ddtSchemes::Euler<Type>::LagrangianmDdt
     LagrangianSubSubField<Type>& psi
 )
 {
-    tmp<LagrangianEqn<Type>> tEqn =
-        Lagrangian::ddtScheme<Type>::Lagrangianmddt(deltaT, psi);
-
-    // Set the equation name and the non-const field reference
-    tEqn->op(LagrangianEqn<Type>(psi));
-
-    return tEqn;
+    // Return the standard time-derivative equation, but add an empty equation
+    // to it so that the name, time-step and non-const field reference are set
+    return
+        Lagrangian::ddtScheme<Type>::Lagrangianmddt(psi)
+      + tmp<LagrangianEqn<Type>>(new LagrangianEqn<Type>(deltaT, psi));
 }
 
 
@@ -89,13 +87,11 @@ Foam::Lagrangian::ddtSchemes::Euler<Type>::LagrangianmDdt
     LagrangianSubSubField<Type>& psi
 )
 {
-    tmp<LagrangianEqn<Type>> tEqn =
-        Lagrangian::ddtScheme<Type>::Lagrangianmddt(deltaT, m, psi);
-
-    // Set the equation name and the non-const field reference
-    tEqn->op(LagrangianEqn<Type>(psi));
-
-    return tEqn;
+    // Return the standard time-derivative equation, but add an empty equation
+    // to it so that the name, time-step and non-const field reference are set
+    return
+        Lagrangian::ddtScheme<Type>::Lagrangianmddt(m, psi)
+      + tmp<LagrangianEqn<Type>>(new LagrangianEqn<Type>(deltaT, psi));
 }
 
 

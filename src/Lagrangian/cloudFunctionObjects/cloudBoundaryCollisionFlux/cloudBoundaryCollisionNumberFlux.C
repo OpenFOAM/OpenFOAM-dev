@@ -63,7 +63,7 @@ Foam::functionObjects::cloudBoundaryCollisionNumberFlux::q
     return
         toSubField<scalar, LagrangianSubMesh>
         (
-            Foam::name(scalar(sign > 0)) + ":" + Foam::name(subMesh.group()),
+            subMesh.sub(Foam::name(scalar(sign > 0))),
             subMesh,
             dimensionedScalar(dimless, scalar(sign > 0))
         );

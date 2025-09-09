@@ -51,23 +51,25 @@ Foam::LagrangianSp<Foam::vector>::LagrangianSp(const LagrangianEqn<vector>& eqn)
 
 Foam::LagrangianSp<Foam::vector>::LagrangianSp
 (
+    const LagrangianEqnBase& eqn,
     const LagrangianSp<vector>& coeff
 )
 :
     tmp<LagrangianSp<vector>>::refCount(),
-    scalarCoeff_(coeff.scalarCoeff_),
-    tensorCoeff_(coeff.tensorCoeff_)
+    scalarCoeff_(eqn, coeff.scalarCoeff_),
+    tensorCoeff_(eqn, coeff.tensorCoeff_)
 {}
 
 
 Foam::LagrangianSp<Foam::vector>::LagrangianSp
 (
+    const LagrangianEqnBase& eqn,
     LagrangianSp<vector>& coeff,
     const bool reuse
 )
 :
-    scalarCoeff_(coeff.scalarCoeff_, reuse),
-    tensorCoeff_(coeff.tensorCoeff_, reuse)
+    scalarCoeff_(eqn, coeff.scalarCoeff_, reuse),
+    tensorCoeff_(eqn, coeff.tensorCoeff_, reuse)
 {}
 
 

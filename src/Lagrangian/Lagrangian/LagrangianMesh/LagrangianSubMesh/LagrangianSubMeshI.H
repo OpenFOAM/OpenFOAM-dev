@@ -84,4 +84,13 @@ inline Foam::label Foam::LagrangianSubMesh::index() const
 }
 
 
+inline Foam::word Foam::LagrangianSubMesh::sub
+(
+    const word& fieldName
+) const
+{
+    return fieldName + ':' + Foam::name(group());
+}
+
+
 // ************************************************************************* //

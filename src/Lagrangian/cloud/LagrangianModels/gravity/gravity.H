@@ -94,6 +94,13 @@ public:
         //- Return the name of the velocity field
         virtual wordList addSupFields() const;
 
+        //- Return true for the velocity field
+        virtual bool addsSupToField
+        (
+            const word& fieldName,
+            const word& eqnFieldName
+        ) const;
+
         //- Add a source term to the velocity equation
         virtual void addSup
         (

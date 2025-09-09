@@ -25,7 +25,7 @@ Class
     Foam::clouds::coupled
 
 Description
-    Base class for clouds which are coupled to a fluid
+    Base class for clouds which are coupled to a carrier
 
 SourceFiles
     coupled.C
@@ -60,9 +60,15 @@ private:
 
     // Private Data
 
+        //- Reference to the cloud
+        const cloud& cloud_;
+
+        //- Cached carrier kinematic viscosity field
+        tmp<volScalarField> tnucVf_;
+
         //- Carrier equations
-        #define DECLARE_CARRIER_EQNS(Type, nullArg)       \
-            mutable PtrDictionary<CarrierEqn<Type>>       \
+        #define DECLARE_CARRIER_EQNS(Type, nullArg)    \
+            mutable HashPtrTable<CarrierEqn<Type>>     \
                 CAT3(carrier, CAPITALIZE(Type), Eqns_);
         FOR_ALL_FIELD_TYPES(DECLARE_CARRIER_EQNS);
         #undef DECLARE_CARRIER_EQNS
@@ -73,24 +79,77 @@ private:
 
     // Private Member Functions
 
+        //- Get the carrier kinematic viscosity field
+        tmp<volScalarField> getNucVf() const;
+
         //- Calculate the carrier kinematic viscosity
         virtual tmp<LagrangianSubScalarField> calcNuc
         (
             const LagrangianModelRef& model,
             const LagrangianSubMesh& subMesh
-        ) const = 0;
+        ) const;
+
+        //- Add/get a carrier equation to/from the cache
+        template<class Type>
+        CarrierEqn<Type>& carrierEqn
+        (
+            const CloudDerivedField<Type>&,
+            const LagrangianSubMesh&
+        );
+
+        //- Add/get a carrier equation to/from the cache
+        template<class Type>
+        CarrierEqn<Type>& carrierEqn
+        (
+            const CarrierField<Type>&,
+            const LagrangianSubMesh&
+        );
 
         //- Access the carrier equations. Only specialisations are defined.
         template<class Type>
-        PtrDictionary<CarrierEqn<Type>>& carrierEqns() const;
+        HashPtrTable<CarrierEqn<Type>>& carrierEqns() const;
 
 
 protected:
 
     // Protected Member Functions
 
+        //- Update the cached carrier fields
+        void updateCarrier();
+
         //- Clear the carrier equations
         void clearCarrierEqns();
+
+        //- Do re-calculation of a carrier equation for modified particles
+        template<class Fieldc>
+        bool reCalculateModified
+        (
+            const LagrangianSubScalarSubField& vOrM,
+            const Fieldc& fieldc
+        );
+
+        //- Do calculation of a carrier equation
+        template<class Fieldc, class Scale = one>
+        void calculate
+        (
+            const LagrangianSubScalarField& deltaT,
+            const bool final,
+            const LagrangianSubScalarSubField& vOrM,
+            const Fieldc& fieldc,
+            const Scale& scale = one()
+        );
+
+        //- Do calculation of a carrier equation
+        template<class Type, class Fieldc, class Scale = one>
+        void calculate
+        (
+            const LagrangianSubScalarField& deltaT,
+            const bool final,
+            const LagrangianSubScalarSubField& vOrM,
+            const LagrangianSubSubField<Type>& field,
+            const Fieldc& fieldc,
+            const Scale& scale = one()
+        );
 
 
 public:
@@ -110,7 +169,7 @@ public:
     // Constructors
 
         //- Construct from a reference to the cloud
-        coupled(const cloud& c);
+        coupled(const cloud& c, const dictionary& dict);
 
 
     //- Destructor
@@ -121,21 +180,35 @@ public:
 
         // Equations
 
-            //- Add/get a carrier equation to/from the cache
+            //- Return if a carrier equation is in the cache
             template<class Type>
-            CarrierEqn<Type>& carrierEqn(const VolField<Type>&);
+            bool hasCarrierEqn(const word&) const;
 
-            //- Add/get a carrier equation to/from the cache
+            //- Get a carrier equation from the cache
+            template<class Type>
+            const CarrierEqn<Type>& carrierEqn(const word&) const;
+
+            //- Get multiple phase carrier equations from the cache
+            template<class Type>
+            const HashTable<const CarrierEqn<Type>*> carrierEqns
+            (
+                const word&
+            ) const;
+
+            //- Return if a carrier equation is in the cache
+            template<class Type>
+            bool hasCarrierEqn(const VolField<Type>&) const;
+
+            //- Get a carrier equation from the cache
             template<class Type>
             const CarrierEqn<Type>& carrierEqn(const VolField<Type>&) const;
 
-            //- Add/get a carrier equation to/from the cache
+            //- Get multiple phase carrier equations from the cache
             template<class Type>
-            CarrierEqn<Type>& carrierEqn(const CarrierField<Type>&);
-
-            //- Add/get a carrier equation to/from the cache
-            template<class Type>
-            const CarrierEqn<Type>& carrierEqn(const CarrierField<Type>&) const;
+            const HashTable<const CarrierEqn<Type>*> carrierEqns
+            (
+                const VolField<Type>&
+            ) const;
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

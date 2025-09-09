@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "cloud.H"
-#include "CloudStateField.H"
 #include "CloudDerivedField.H"
 #include "CloudAverageField.H"
 
@@ -36,6 +35,7 @@ Foam::autoPtr<Type> Foam::cloud::New
     const polyMesh& pMesh,
     const word& name,
     const contextType context,
+    const dictionary& dict,
     const IOobject::readOption readOption,
     const IOobject::writeOption writeOption
 )
@@ -46,25 +46,14 @@ Foam::autoPtr<Type> Foam::cloud::New
             new Type
             (
                 mesh(pMesh, name, readOption, writeOption),
-                context
+                context,
+                dict
             )
         );
 }
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
-
-template<class Type, class ... Args>
-Foam::CloudStateField<Type>& Foam::cloud::stateField
-(
-    const Args& ... args
-) const
-{
-    CloudStateField<Type>* ptr = new CloudStateField<Type>(args ...);
-    stateFields<Type>().append(ptr);
-    return *ptr;
-}
-
 
 template<class Type, class ... Args>
 const Foam::CloudDerivedField<Type>& Foam::cloud::derivedField

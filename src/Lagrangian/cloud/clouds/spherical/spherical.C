@@ -74,6 +74,17 @@ Foam::clouds::spherical::calca
 }
 
 
+Foam::tmp<Foam::LagrangianSubScalarField>
+Foam::clouds::spherical::calcaByV
+(
+    const LagrangianModelRef& model,
+    const LagrangianSubMesh& subMesh
+) const
+{
+    return 6/d(model, subMesh);
+}
+
+
 // * * * * * * * * * * * *  Protected Member Functions * * * * * * * * * * * //
 
 void Foam::clouds::spherical::correct(const LagrangianSubScalarSubField& v)
@@ -91,14 +102,14 @@ void Foam::clouds::spherical::correct(const LagrangianSubScalarSubField& v)
 Foam::clouds::spherical::spherical(const cloud& c)
 :
     shaped(c),
-    d(c.stateField<scalar>(dIo(c), c.mesh()))
+    d(dIo(c), c.mesh())
 {}
 
 
 Foam::clouds::spherical::spherical(const cloud& c, const grouped& groupedCloud)
 :
     shaped(c, groupedCloud),
-    d(c.stateField<scalar>(dIo(c), c.mesh()))
+    d(dIo(c), c.mesh())
 {}
 
 

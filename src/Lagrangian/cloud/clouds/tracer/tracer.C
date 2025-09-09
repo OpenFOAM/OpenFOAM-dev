@@ -47,20 +47,6 @@ namespace functionObjects
 
 // * * * * * * * * * * * *  Protected Member Functions * * * * * * * * * * * //
 
-void Foam::clouds::tracer::initialise(const bool predict)
-{
-    cloud::initialise(predict);
-    carried::initialise(predict);
-}
-
-
-void Foam::clouds::tracer::partition()
-{
-    cloud::partition();
-    carried::partition();
-}
-
-
 Foam::tmp<Foam::LagrangianSubVectorField>
 Foam::clouds::tracer::dUdt
 (
@@ -93,12 +79,20 @@ void Foam::clouds::tracer::calculate
 }
 
 
+void Foam::clouds::tracer::partition()
+{
+    cloud::partition();
+    carried::clearCarrierFields();
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::clouds::tracer::tracer
 (
     LagrangianMesh& mesh,
-    const contextType context
+    const contextType context,
+    const dictionary& dict
 )
 :
     cloud
@@ -113,7 +107,7 @@ Foam::clouds::tracer::tracer
             escapeVelocityLagrangianPatchVectorField::typeName
         )
     ),
-    carried(static_cast<const cloud&>(*this))
+    carried(static_cast<const cloud&>(*this), dict)
 {
     // Create NaN values on newly injected particles. These values will then
     // get corrected by a call to calculate as a result of reCalculateModified
@@ -144,11 +138,13 @@ Foam::clouds::tracer::~tracer()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::clouds::tracer::solve()
+void Foam::clouds::tracer::solve(const bool initial, const bool final)
 {
     // Pre-solve operations ...
+    carried::resetCarrierFields(initial);
 
-    cloud::solve();
+    // Solve
+    cloud::solve(initial, final);
 
     // Post-solve operations ...
 }

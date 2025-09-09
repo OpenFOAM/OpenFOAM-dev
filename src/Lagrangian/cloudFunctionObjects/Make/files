@@ -1,3 +1,5 @@
+cloudPosition/cloudPosition.C
+
 cloudVolume/cloudVolume.C
 cloudSurfaceArea/cloudSurfaceArea.C
 cloudMass/cloudMass.C

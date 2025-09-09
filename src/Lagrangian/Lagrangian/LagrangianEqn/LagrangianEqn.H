@@ -55,21 +55,26 @@ class LagrangianEqn
     public tmp<LagrangianEqn<Type>>::refCount,
     public LagrangianEqnBase
 {
+    // Private Classes
+
+        //- Helper class to create the psiSub/psiSubSub references
+        template<template<class> class PrimitiveField>
+        struct PsiRef;
+
+
     // Private Data
 
         //- The time-step field
         tmp<LagrangianSubScalarField> tDeltaT_;
 
-        //- Reference to the sub-sub-field. One of this and psiSub will be
-        //  valid and the other will be null.
+        //- Non-const reference to the sub-sub field. Might be null.
+        LagrangianSubSubField<Type>& psiSubSubRef_;
+
+        //- Reference to the sub-sub-field. Might be null.
         const LagrangianSubSubField<Type>& psiSubSub_;
 
-        //- Reference to the sub-field. One of this and psiSubSub will be
-        //  valid and the other will be null.
+        //- Reference to the sub-field. Might be null.
         const LagrangianSubField<Type>& psiSub_;
-
-        //- Non-const pointer to the field. Might be null.
-        LagrangianSubSubField<Type>* psiPtr_;
 
         //- Previous implicit time coefficient field into which to cache the
         //  implicit time coefficient on destruction. Might be null.
@@ -80,14 +85,32 @@ class LagrangianEqn
         LagrangianDynamicField<Type>* S0Ptr_;
 
 
-    // Private Classes
+    // Private Member Functions
 
-        //- Helper class to create the psiSub/psiSubSub references
-        template<template<class> class PrimitiveField>
-        struct PsiRef;
+        //- Check an operation between the given equations is valid
+        template<class TypeB>
+        void preOpCheck
+        (
+            const tmp<LagrangianEqn<Type>>& tA,
+            const tmp<LagrangianEqn<TypeB>>& tB
+        ) const;
+
+        //- Copy/check the time-step field from/against another equation as
+        //  part of an operation
+        template<class OtherType>
+        void opDeltaT(const tmp<LagrangianEqn<OtherType>>& tOther);
+
+        //- Clear a temporary equation as part of an operation
+        template<class OtherType>
+        static void opClear(const tmp<LagrangianEqn<OtherType>>& tOther);
 
 
 public:
+
+    //- Declare friendship with Lagrangian equations of different types
+    template<class OtherType>
+    friend class LagrangianEqn;
+
 
     // Public Data
 
@@ -214,14 +237,36 @@ public:
                 NullObjectNonConstRef<LagrangianDynamicField<Type>>()
         );
 
+        //- Construct field-less equation. Essentially just a cache of
+        //  coefficients.
+        LagrangianEqn(const LagrangianSubMesh& mesh);
+
         //- Copy construct
         LagrangianEqn(const LagrangianEqn<Type>& eqn);
+
+        //- Construct from tmp
+        LagrangianEqn(const tmp<LagrangianEqn<Type>>& tEqn);
 
         //- Move construct
         LagrangianEqn(LagrangianEqn<Type>&& eqn);
 
-        //- Construct from tmp
-        LagrangianEqn(const tmp<LagrangianEqn<Type>>& tEqn);
+        //- Construct from a binary operation of two equations
+        template<class EqOp>
+        LagrangianEqn
+        (
+            const tmp<LagrangianEqn<Type>>& tA,
+            const tmp<LagrangianEqn<Type>>& tB,
+            const EqOp& eqOp
+        );
+
+        //- Construct from a binary operation of two equations
+        template<class EqOp, class TypeB>
+        LagrangianEqn
+        (
+            const tmp<LagrangianEqn<Type>>& tA,
+            const tmp<LagrangianEqn<TypeB>>& tB,
+            const EqOp& eqOp
+        );
 
 
     //- Destructor
@@ -236,21 +281,18 @@ public:
         //- Return the field
         tmp<LagrangianSubSubField<Type>> psi() const;
 
-        //- Return the field IO
-        const regIOobject& psiIo() const;
-
         //- Return the field name
         const word& psiName() const;
 
+        //- Return the field group
+        word psiGroup() const;
+
         //- Return whether the given field is that of the equation
         template<template<class> class PrimitiveField>
-        bool isPsi(const LagrangianSubField<Type, PrimitiveField>& psi) const;
+        bool isPsi(const LagrangianSubField<Type, PrimitiveField>&) const;
 
-        //- Check the operation with another equation
-        void op(const LagrangianEqn<Type>& other);
-
-        //- Set the previous field to that stored by another tmp equation
-        void setPrevious(const tmp<LagrangianEqn<Type>>& tOther);
+        //- Determine whether this matrix has any valid coefficients
+        bool valid() const;
 
         //- Return the combined time and non-time explicit coefficient
         tmp<LagrangianCoeff<Type, false>> allSu() const;
@@ -275,16 +317,45 @@ public:
     // Member Operators
 
         //- Addition assignment
-        void operator+=(const LagrangianEqn<Type>& other);
+        template<class OtherType>
+        void operator+=(const LagrangianEqn<OtherType>& other);
 
         //- Addition assignment
-        void operator+=(const tmp<LagrangianEqn<Type>>& tOther);
+        template<class OtherType>
+        void operator+=(const tmp<LagrangianEqn<OtherType>>& tOther);
 
         //- Subtraction assignment
-        void operator-=(const LagrangianEqn<Type>& other);
+        template<class OtherType>
+        void operator-=(const LagrangianEqn<OtherType>& other);
 
         //- Subtraction assignment
-        void operator-=(const tmp<LagrangianEqn<Type>>& tOther);
+        template<class OtherType>
+        void operator-=(const tmp<LagrangianEqn<OtherType>>& tOther);
+
+        //- Multiply assignment
+        template<template<class> class PrimitiveField>
+        void operator*=(const LagrangianSubField<scalar, PrimitiveField>&);
+
+        //- Multiply assignment
+        template<template<class> class PrimitiveField>
+        void operator*=(const tmp<LagrangianSubField<scalar, PrimitiveField>>&);
+
+        //- Multiply assignment
+        void operator*=(const dimensioned<scalar>&);
+
+        //- Multiply assignment
+        void operator*=(const zero&);
+
+        //- Division assignment
+        template<template<class> class PrimitiveField>
+        void operator/=(const LagrangianSubField<scalar, PrimitiveField>&);
+
+        //- Division assignment
+        template<template<class> class PrimitiveField>
+        void operator/=(const tmp<LagrangianSubField<scalar, PrimitiveField>>&);
+
+        //- Division assignment
+        void operator/=(const dimensioned<scalar>& dt);
 };
 
 
@@ -298,26 +369,37 @@ tmp<LagrangianEqn<Type>> operator-(const tmp<LagrangianEqn<Type>>& tEqn);
 
 #define LAGRANGIAN_EQN_EQN_OPERATOR(Op)                                        \
                                                                                \
-    template<class Type>                                                       \
+    template<class Type, class TypeB>                                          \
     tmp<LagrangianEqn<Type>> operator Op                                       \
     (                                                                          \
         const LagrangianEqn<Type>& a,                                          \
-        const LagrangianEqn<Type>& b                                           \
+        const LagrangianEqn<TypeB>& b                                          \
     );                                                                         \
                                                                                \
-    template<class Type>                                                       \
+    template<class Type, class TypeB>                                          \
     tmp<LagrangianEqn<Type>> operator Op                                       \
     (                                                                          \
         const tmp<LagrangianEqn<Type>>& tA,                                    \
-        const LagrangianEqn<Type>& b                                           \
+        const LagrangianEqn<TypeB>& b                                          \
     );                                                                         \
                                                                                \
-    template<class Type>                                                       \
+    template<class Type, class TypeB>                                          \
     tmp<LagrangianEqn<Type>> operator Op                                       \
     (                                                                          \
         const tmp<LagrangianEqn<Type>>& tA,                                    \
-        const tmp<LagrangianEqn<Type>>& tB                                     \
+        const tmp<LagrangianEqn<TypeB>>& tB                                    \
     );                                                                         \
+                                                                               \
+    template<class Type, class TypeB>                                          \
+    tmp<LagrangianEqn<Type>> operator Op                                       \
+    (                                                                          \
+        const LagrangianEqn<Type>& a,                                          \
+        const tmp<LagrangianEqn<TypeB>>& tB                                    \
+    );
+
+#define LAGRANGIAN_COMMUTATIVE_EQN_EQN_OPERATOR(Op)                            \
+                                                                               \
+    LAGRANGIAN_EQN_EQN_OPERATOR(Op)                                            \
                                                                                \
     template<class Type>                                                       \
     tmp<LagrangianEqn<Type>> operator Op                                       \
@@ -327,7 +409,7 @@ tmp<LagrangianEqn<Type>> operator-(const tmp<LagrangianEqn<Type>>& tEqn);
     );
 
 //- Addition
-LAGRANGIAN_EQN_EQN_OPERATOR(+)
+LAGRANGIAN_COMMUTATIVE_EQN_EQN_OPERATOR(+)
 
 //- Subtraction
 LAGRANGIAN_EQN_EQN_OPERATOR(-)
@@ -336,6 +418,7 @@ LAGRANGIAN_EQN_EQN_OPERATOR(-)
 LAGRANGIAN_EQN_EQN_OPERATOR(==)
 
 #undef LAGRANGIAN_EQN_EQN_OPERATOR
+#undef LAGRANGIAN_COMMUTATIVE_EQN_EQN_OPERATOR
 
 #define LAGRANGIAN_EQN_FIELD_OPERATOR(Op, LagrangianSubField)                  \
                                                                                \
@@ -491,6 +574,7 @@ LAGRANGIAN_EQN_SCALAR_FIELD_OPERATOR(/, LagrangianSubSubField)
 #undef LAGRANGIAN_EQN_SCALAR_FIELD_OPERATOR
 #undef LAGRANGIAN_SCALAR_FIELD_EQN_OPERATOR
 
+
 /*---------------------------------------------------------------------------*\
                     Class LagrangianEqn::PsiRef Declaration
 \*---------------------------------------------------------------------------*/
@@ -518,6 +602,7 @@ struct Foam::LagrangianEqn<Type>::PsiRef
         return NullObjectRef<LagrangianSubField<Type, PrimitiveField>>();
     };
 };
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

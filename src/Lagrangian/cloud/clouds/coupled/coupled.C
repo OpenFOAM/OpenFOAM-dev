@@ -24,6 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "coupled.H"
+#include "physicalProperties.H"
+#include "viscosity.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -38,13 +40,48 @@ namespace clouds
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
+Foam::tmp<Foam::volScalarField> Foam::clouds::coupled::getNucVf() const
+{
+    const word nucName = IOobject::groupName("nu", carrierPhaseName());
+
+    if (cloud_.mesh().mesh().foundObject<volScalarField>(nucName))
+    {
+        return cloud_.mesh().mesh().lookupObject<volScalarField>(nucName);
+    }
+
+    const word viscosityName =
+        IOobject::groupName(physicalProperties::typeName, carrierPhaseName());
+
+    if (cloud_.mesh().mesh().foundObject<viscosity>(viscosityName))
+    {
+        return cloud_.mesh().mesh().lookupObject<viscosity>(viscosityName).nu();
+    }
+
+    return tmp<volScalarField>(nullptr);
+}
+
+
+Foam::tmp<Foam::LagrangianSubScalarField> Foam::clouds::coupled::calcNuc
+(
+    const LagrangianModelRef& model,
+    const LagrangianSubMesh& subMesh
+) const
+{
+    FatalErrorInFunction
+        << "Could not determine the carrier viscosity"
+        << exit(FatalError);
+
+    return tmp<LagrangianSubScalarField>(nullptr);
+}
+
+
 #define ACCESS_CARRIER_EQNS(Type, nullArg)                                     \
 namespace Foam                                                                 \
 {                                                                              \
     namespace clouds                                                           \
     {                                                                          \
         template<>                                                             \
-        PtrDictionary<CarrierEqn<Type>>& coupled::carrierEqns() const          \
+        HashPtrTable<CarrierEqn<Type>>& coupled::carrierEqns() const           \
         {                                                                      \
             return CAT3(carrier, CAPITALIZE(Type), Eqns_);                     \
         }                                                                      \
@@ -56,17 +93,26 @@ FOR_ALL_FIELD_TYPES(ACCESS_CARRIER_EQNS)
 
 // * * * * * * * * * * * *  Protected Member Functions * * * * * * * * * * * //
 
+void Foam::clouds::coupled::updateCarrier()
+{
+    if (tnucVf_.isTmp())
+    {
+        tnucVf_.ref() = getNucVf();
+    }
+}
+
+
 void Foam::clouds::coupled::clearCarrierEqns()
 {
     #define CLEAR_TYPE_CARRIER_EQNS(Type, nullArg)                             \
         forAllIter                                                             \
         (                                                                      \
-            PtrDictionary<CarrierEqn<Type>>,                                   \
+            HashPtrTable<CarrierEqn<Type>>,                                    \
             carrierEqns<Type>(),                                               \
             iter                                                               \
         )                                                                      \
         {                                                                      \
-            iter().clear();                                                    \
+            iter()->clear();                                                   \
         }
     FOR_ALL_FIELD_TYPES(CLEAR_TYPE_CARRIER_EQNS);
     #undef CLEAR_TYPE_CARRIER_EQNS
@@ -75,10 +121,17 @@ void Foam::clouds::coupled::clearCarrierEqns()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::clouds::coupled::coupled(const cloud& c)
+Foam::clouds::coupled::coupled(const cloud& c, const dictionary& dict)
 :
-    carried(c),
-    nuc(c.derivedField<scalar>(*this, &coupled::calcNuc))
+    carried(c, dict),
+    cloud_(c),
+    tnucVf_(getNucVf()),
+    nuc
+    (
+        tnucVf_.valid()
+      ? carrierField<scalar>(tnucVf_())
+      : c.derivedField<scalar>(*this, &coupled::calcNuc)
+    )
 {}
 
 

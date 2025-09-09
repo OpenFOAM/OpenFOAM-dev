@@ -47,8 +47,7 @@ SourceFiles
 #define parcel_H
 
 #include "grouped.H"
-#include "massive.H"
-#include "coupledToFluid.H"
+#include "massiveCoupledToFluid.H"
 #include "sphericalCoupled.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -69,23 +68,24 @@ class parcel
     public spherical,
     public massive,
     public coupledToFluid,
-    public sphericalCoupled
+    public sphericalCoupled,
+    public massiveCoupledToFluid
 {
 protected:
 
     // Protected Member Functions
-
-        //- Initialisation hook
-        virtual void initialise(const bool predict);
-
-        //- Partition hook
-        virtual void partition();
 
         //- Return the acceleration with which to do second-order tracking
         virtual tmp<LagrangianSubVectorField> dUdt
         (
             const LagrangianSubMesh&
         ) const;
+
+        //- Do re-calculation of a carrier equation for modified particles
+        using coupled::reCalculateModified;
+
+        //- Do calculation of a carrier equation
+        using coupled::calculate;
 
         //- Do we need to re-calculate particles that are modified?
         virtual bool reCalculateModified();
@@ -96,6 +96,9 @@ protected:
             const LagrangianSubScalarField& deltaT,
             const bool final
         );
+
+        //- Partition hook
+        virtual void partition();
 
 
 public:
@@ -109,7 +112,12 @@ public:
     // Constructors
 
         //- Construct from a mesh and context
-        parcel(LagrangianMesh& mesh, const contextType context);
+        parcel
+        (
+            LagrangianMesh& mesh,
+            const contextType context,
+            const dictionary& dict
+        );
 
 
     //- Destructor
@@ -119,7 +127,7 @@ public:
     // Member Functions
 
         //- Solve the cloud's evolution over the current time-step
-        virtual void solve();
+        virtual void solve(const bool initial, const bool final);
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

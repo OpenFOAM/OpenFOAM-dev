@@ -1,0 +1,53 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system/Lagrangian/droplets";
+    object      LagrangianSchemes;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+tracking    linear;
+
+ddtSchemes
+{
+    default     Euler;
+}
+
+SpSchemes
+{
+    default     none;
+    Sp(D,U)     implicit;
+    Sp(D,Uc)    explicit;
+}
+
+averagingSchemes
+{
+    default     none;
+    alpha       cellPoint;
+}
+
+interpolationSchemes
+{
+    default     cell;
+    Uc          cellPoint;
+    alphac.air  cellPoint;
+}
+
+accumulationSchemes
+{
+    default     none;
+    S(v)        cell;
+    S(m)        cell;
+    S(v*U)      cell;
+    S(m*U)      cell;
+}
+
+// ************************************************************************* //

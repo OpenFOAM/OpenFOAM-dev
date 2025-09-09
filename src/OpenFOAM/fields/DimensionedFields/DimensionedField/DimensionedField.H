@@ -419,6 +419,19 @@ public:
             const tmp<DimensionedField<Type, GeoMesh, PrimitiveField2>>&
         );
 
+        //- Set the field to the maximum of its value and a given value
+        void max(const dimensioned<Type>&);
+
+        //- Set the field to the minimum of its value and a given value
+        void min(const dimensioned<Type>&);
+
+        //- Clip the field to between two values
+        void maxMin
+        (
+            const dimensioned<Type>& minDt,
+            const dimensioned<Type>& maxDt
+        );
+
 
         // Write
 

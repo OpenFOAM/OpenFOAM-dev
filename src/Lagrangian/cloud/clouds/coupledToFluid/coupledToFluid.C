@@ -40,20 +40,21 @@ namespace clouds
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField>
-Foam::clouds::coupledToFluid::getRhocVf() const
+Foam::clouds::coupledToFluid::getRhocVf(const word& phaseName) const
 {
-    if (mesh_.mesh().foundObject<volScalarField>("rho"))
+    const word rhocName = IOobject::groupName("rho", phaseName);
+
+    if (mesh_.mesh().foundObject<volScalarField>(rhocName))
     {
-        return mesh_.mesh().lookupObject<volScalarField>("rho");
+        return mesh_.mesh().lookupObject<volScalarField>(rhocName);
     }
 
-    if (mesh_.mesh().foundObject<basicThermo>(physicalProperties::typeName))
+    const word thermocName =
+        IOobject::groupName(physicalProperties::typeName, phaseName);
+
+    if (mesh_.mesh().foundObject<basicThermo>(thermocName))
     {
-        return
-            mesh_.mesh().lookupObject<basicThermo>
-            (
-                physicalProperties::typeName
-            ).rho();
+        return mesh_.mesh().lookupObject<basicThermo>(thermocName).rho();
     }
 
     FatalErrorInFunction
@@ -61,6 +62,28 @@ Foam::clouds::coupledToFluid::getRhocVf() const
         << exit(FatalError);
 
     return tmp<volScalarField>(nullptr);
+}
+
+
+const Foam::volScalarField&
+Foam::clouds::coupledToFluid::getMucVf(const word& phaseName) const
+{
+    const word mucName = IOobject::groupName("mu", phaseName);
+
+    if (mesh_.mesh().foundObject<volScalarField>(mucName))
+    {
+        return mesh_.mesh().lookupObject<volScalarField>(mucName);
+    }
+
+    const word thermocName =
+        IOobject::groupName(physicalProperties::typeName, phaseName);
+
+    if (mesh_.mesh().foundObject<fluidThermo>(thermocName))
+    {
+        return mesh_.mesh().lookupObject<fluidThermo>(thermocName).mu();
+    }
+
+    return NullObjectRef<volScalarField>();
 }
 
 
@@ -77,32 +100,73 @@ Foam::clouds::coupledToFluid::calcNuc
 
 // * * * * * * * * * * * *  Protected Member Functions * * * * * * * * * * * //
 
-void Foam::clouds::coupledToFluid::updateRhoc()
+void Foam::clouds::coupledToFluid::updateCarrier()
 {
+    coupled::updateCarrier();
+
     if (trhocVf_.isTmp())
     {
-        trhocVf_ = getRhocVf();
+        trhocVf_.ref() = getRhocVf(carrierPhaseName());
+    }
+
+    if (trhocPhaseVf_.isTmp())
+    {
+        trhocPhaseVf_.ref() = getRhocVf(phaseName());
     }
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::clouds::coupledToFluid::coupledToFluid(const cloud& c)
+Foam::clouds::coupledToFluid::coupledToFluid
+(
+    const cloud& c,
+    const dictionary& dict
+)
+
 :
-    coupled(c),
+    coupled(c, dict),
     mesh_(c.mesh()),
-    trhocVf_(getRhocVf()),
+    trhocVf_(getRhocVf(carrierPhaseName())),
+    trhocPhaseVf_
+    (
+        hasPhase()
+      ? getRhocVf(phaseName())
+      : tmp<volScalarField>(NullObjectRef<volScalarField>())
+    ),
+    mucVf_(getMucVf(carrierPhaseName())),
     rhoc(carrierField<scalar>(trhocVf_())),
+    rhocPhase
+    (
+        hasPhase()
+      ? carrierField<scalar>(trhocPhaseVf_())
+      : carrierField<scalar>
+        (
+            "rhocPhase",
+            [&]()
+            {
+                FatalErrorInFunction
+                    << "Cloud " << c.name() << " does not have a corresponding "
+                    << "Eulerian phase density" << exit(FatalError);
+                return tmp<volScalarField>(nullptr);
+            }
+        )
+    ),
     muc
     (
-        carrierField<scalar>
+        isNull(mucVf_)
+      ? c.derivedField<scalar>
         (
-            mesh_
-           .mesh()
-           .lookupObject<fluidThermo>(physicalProperties::typeName)
-           .mu()
+            [&]
+            (
+                const LagrangianModelRef& model,
+                const LagrangianSubMesh& subMesh
+            )
+            {
+                return rhoc(model, subMesh)*nuc(model, subMesh);
+            }
         )
+      : carrierField<scalar>(mucVf_)
     )
 {}
 
@@ -111,6 +175,9 @@ Foam::clouds::coupledToFluid::coupledToFluid(const cloud& c)
 
 Foam::clouds::coupledToFluid::~coupledToFluid()
 {}
+
+
+// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 
 // ************************************************************************* //

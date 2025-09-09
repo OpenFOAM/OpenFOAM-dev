@@ -25,7 +25,7 @@ License
 
 #include "constantCoefficientVirtualMass.H"
 #include "addToRunTimeSelectionTable.H"
-#include "coupledToIncompressibleFluid.H"
+#include "coupledToConstantDensityFluid.H"
 #include "coupledToFluid.H"
 #include "shaped.H"
 #include "LagrangianmDdt.H"
@@ -59,8 +59,8 @@ Foam::Lagrangian::constantCoefficientVirtualMass::calcVOrMAdd
     const LagrangianSubScalarField& v = cloud<clouds::shaped>().v(subMesh);
 
     return
-        isCloud<clouds::coupledToIncompressibleFluid>()
-      ? Cvm_*v/cloud<clouds::coupledToIncompressibleFluid>().rhoByRhoc
+        isCloud<clouds::coupledToConstantDensityFluid>()
+      ? Cvm_*v/cloud<clouds::coupledToConstantDensityFluid>().rhoByRhoc
       : Cvm_*v*cloud<clouds::coupledToFluid>().rhoc(subMesh);
 }
 
@@ -76,11 +76,11 @@ void Foam::Lagrangian::constantCoefficientVirtualMass::addUSup
 
     if (eqn.isPsi(U))
     {
-        eqn -= Lagrangianm::ddt(deltaT, vOrMAdd, U);
+        eqn -= Lagrangianm::ddt(vOrMAdd, U);
     }
     else
     {
-        eqn -= Lagrangianm::ddt0(deltaT, vOrMAdd, U);
+        eqn -= Lagrangianm::ddt0(vOrMAdd, U);
     }
 
     eqn.Su += vOrMAdd*cloud<clouds::carried>().DUDtc(U.mesh());
@@ -118,7 +118,22 @@ Foam::Lagrangian::constantCoefficientVirtualMass::constantCoefficientVirtualMass
 Foam::wordList
 Foam::Lagrangian::constantCoefficientVirtualMass::addSupFields() const
 {
-    return wordList(1, cloud().U.name());
+    return wordList({cloud().U.name()});
+}
+
+
+bool Foam::Lagrangian::constantCoefficientVirtualMass::addsSupToField
+(
+    const word& fieldName,
+    const word& eqnFieldName
+) const
+{
+    return
+        fieldName == cloud().U.name()
+     && (
+            eqnFieldName == cloud().U.name()
+         || eqnFieldName == cloud<clouds::coupled>().Uc.name()
+        );
 }
 
 
@@ -129,7 +144,7 @@ void Foam::Lagrangian::constantCoefficientVirtualMass::addSup
     LagrangianEqn<vector>& eqn
 ) const
 {
-    assertCloud<clouds::coupledToIncompressibleFluid>();
+    assertCloud<clouds::coupledToConstantDensityFluid>();
 
     addUSup(deltaT, U, eqn);
 }
@@ -143,7 +158,11 @@ void Foam::Lagrangian::constantCoefficientVirtualMass::addSup
     LagrangianEqn<vector>& eqn
 ) const
 {
-    assertCloud<clouds::coupledToIncompressibleFluid, clouds::coupledToFluid>();
+    assertCloud
+    <
+        clouds::coupledToConstantDensityFluid,
+        clouds::coupledToFluid
+    >();
 
     addUSup(deltaT, U, eqn);
 }

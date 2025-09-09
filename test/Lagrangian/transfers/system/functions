@@ -1,0 +1,112 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      functions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+incompressibleFluidDropletsVolume
+{
+    type        cloudVolume;
+    libs        ("libLagrangianCloudFunctionObjects.so");
+    region      incompressibleFluid;
+    cloud       droplets;
+    writeControl writeTime;
+}
+
+incompressibleFluidDropletsPlot
+{
+    type        LagrangianFieldValue;
+    libs        ("libLagrangianFunctionObjects.so");
+    region      incompressibleFluid;
+    Lagrangian  droplets;
+    weightField number;
+    fields      (v);
+    operation   sum;
+}
+
+incompressibleFluidCarrierPlot
+{
+    type        volFieldValue;
+    libs        ("libfieldFunctionObjects.so");
+    region      incompressibleFluid;
+    fields      (droplets:1Eqn:Su);
+    writeFields no;
+    select      all;
+    operation   sum;
+}
+
+multicomponentFluidDropletsMass
+{
+    type        cloudMass;
+    libs        ("libLagrangianCloudFunctionObjects.so");
+    region      multicomponentFluid;
+    cloud       droplets;
+    writeControl writeTime;
+}
+
+multicomponentFluidDropletsPlot
+{
+    $incompressibleFluidDropletsPlot
+    region      multicomponentFluid;
+    fields      (m);
+}
+
+multicomponentFluidCarrierPlot
+{
+    $incompressibleFluidCarrierPlot;
+    region      multicomponentFluid;
+    fields      (droplets:rhoEqn:Su);
+}
+
+#includeFunc phaseScalarTransport(region=incompressibleVoF, field=s.air)
+
+incompressibleVoFDropletsVolume
+{
+    $incompressibleFluidDropletsVolume;
+    region      incompressibleVoF;
+}
+
+incompressibleVoFDropletsPlot
+{
+    $incompressibleFluidDropletsPlot;
+    region      incompressibleVoF;
+}
+
+incompressibleVoFCarrierPlot
+{
+    $incompressibleFluidCarrierPlot;
+    region      incompressibleVoF;
+    fields      (droplets:1Eqn.water:Su droplets:1Eqn.air:Su);
+}
+
+compressibleVoFDropletsMass
+{
+    $multicomponentFluidDropletsMass;
+    region      compressibleVoF;
+}
+
+compressibleVoFDropletsPlot
+{
+    $incompressibleFluidDropletsPlot;
+    region      compressibleVoF;
+    fields      (m);
+}
+
+compressibleVoFCarrierPlot
+{
+    $incompressibleFluidCarrierPlot;
+    region      compressibleVoF;
+    fields      (droplets:rhoEqn.water:Su droplets:rhoEqn.air:Su);
+}
+
+// ************************************************************************* //

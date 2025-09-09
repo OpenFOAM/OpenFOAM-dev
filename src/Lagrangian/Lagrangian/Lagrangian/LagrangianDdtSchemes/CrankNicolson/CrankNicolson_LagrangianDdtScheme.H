@@ -79,7 +79,9 @@ public:
 
     // Member Functions
 
-        //- Initialise time-derivative information
+        //- Initialise time-derivative information. Registers fields used to
+        //  construct for higher-order schemes and to evaluate instantaneous
+        //  time derivatives.
         virtual bool LagrangianmInitDdt
         (
             const dimensionSet& mDims,
@@ -87,7 +89,8 @@ public:
             const bool instantaneousDdt
         );
 
-        //- Return the no-time-derivative matrix
+        //- Return the no-time-derivative matrix containing higher-order
+        //  modifications to source terms
         virtual tmp<LagrangianEqn<Type>> LagrangianmNoDdt
         (
             const LagrangianSubScalarField& deltaT,

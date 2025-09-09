@@ -25,7 +25,7 @@ License
 
 #include "pressureGradientForce.H"
 #include "addToRunTimeSelectionTable.H"
-#include "coupledToIncompressibleFluid.H"
+#include "coupledToConstantDensityFluid.H"
 #include "coupledToFluid.H"
 #include "shaped.H"
 
@@ -63,8 +63,8 @@ void Foam::Lagrangian::pressureGradientForce::addUSup
 
     const LagrangianSubScalarField mcByMOrMc
     (
-        isCloud<clouds::coupledToIncompressibleFluid>()
-      ? v/cloud<clouds::coupledToIncompressibleFluid>().rhoByRhoc
+        isCloud<clouds::coupledToConstantDensityFluid>()
+      ? v/cloud<clouds::coupledToConstantDensityFluid>().rhoByRhoc
       : v*cloud<clouds::coupledToFluid>().rhoc(subMesh)
     );
 
@@ -93,7 +93,22 @@ Foam::Lagrangian::pressureGradientForce::pressureGradientForce
 
 Foam::wordList Foam::Lagrangian::pressureGradientForce::addSupFields() const
 {
-    return wordList(1, cloud().U.name());
+    return wordList({cloud().U.name()});
+}
+
+
+bool Foam::Lagrangian::pressureGradientForce::addsSupToField
+(
+    const word& fieldName,
+    const word& eqnFieldName
+) const
+{
+    return
+        fieldName == cloud().U.name()
+     && (
+            eqnFieldName == cloud().U.name()
+         || eqnFieldName == cloud<clouds::coupled>().Uc.name()
+        );
 }
 
 
@@ -104,7 +119,7 @@ void Foam::Lagrangian::pressureGradientForce::addSup
     LagrangianEqn<vector>& eqn
 ) const
 {
-    assertCloud<clouds::coupledToIncompressibleFluid>();
+    assertCloud<clouds::coupledToConstantDensityFluid>();
 
     addUSup(U, eqn);
 }
@@ -118,7 +133,11 @@ void Foam::Lagrangian::pressureGradientForce::addSup
     LagrangianEqn<vector>& eqn
 ) const
 {
-    assertCloud<clouds::coupledToIncompressibleFluid, clouds::coupledToFluid>();
+    assertCloud
+    <
+        clouds::coupledToConstantDensityFluid,
+        clouds::coupledToFluid
+    >();
 
     addUSup(U, eqn);
 }

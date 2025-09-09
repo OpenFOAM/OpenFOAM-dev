@@ -22,103 +22,74 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::clouds::coupledToIncompressibleFluid
+    Foam::Lagrangian::SpSchemes::upwind
 
 Description
-    Base class for clouds which are coupled to an incompressible fluid
+    Upwind/Su-Sp Lagrangian Sp scheme
 
 SourceFiles
-    coupledToIncompressibleFluid.C
+    upwind_LagrangianSpScheme.C
+    upwind_LagrangianSpSchemes.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef coupledToIncompressibleFluid_H
-#define coupledToIncompressibleFluid_H
+#ifndef upwind_LagrangianSpScheme_H
+#define upwind_LagrangianSpScheme_H
 
-#include "coupled.H"
-#include "physicalProperties.H"
+#include "LagrangianSpScheme.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace clouds
+namespace Lagrangian
+{
+namespace SpSchemes
 {
 
 /*---------------------------------------------------------------------------*\
-                 Class coupledToIncompressibleFluid Declaration
+                          Class upwind Declaration
 \*---------------------------------------------------------------------------*/
 
-class coupledToIncompressibleFluid
+template<class Type, class SpType>
+class upwind
 :
-    public coupled
+    public SpScheme<Type, SpType>
 {
-private:
-
-    // Private Member Data
-
-        //- Reference to the mesh
-        const LagrangianMesh& mesh_;
-
-        //- Physical properties dictionary
-        Foam::physicalProperties physicalProperties_;
-
-        //- Cached carrier kinematic viscosity field
-        tmp<volScalarField> tnucVf_;
-
-
-    // Private Member Functions
-
-        //- Get the carrier kinematic viscosity field
-        virtual tmp<volScalarField> getNucVf() const;
-
-        //- Calculate the carrier kinematic viscosity
-        virtual tmp<LagrangianSubScalarField> calcNuc
-        (
-            const LagrangianModelRef& model,
-            const LagrangianSubMesh& subMesh
-        ) const;
-
-
-protected:
-
-    // Protected Member Functions
-
-        //- Update the carrier kinematic viscosity
-        void updateNuc();
-
-
 public:
 
-    // Public Static Data
-
-        //- Run-time type information
-        TypeName("coupledToIncompressibleFluid");
-
-
-    // Public Data
-
-        //- Cloud/carrier density ratio
-        const dimensionedScalar rhoByRhoc;
-
-        //- Carrier kinematic viscosity
-        const CarrierField<scalar>& nuc;
+    //- Runtime type information
+    TypeName("upwind");
 
 
     // Constructors
 
-        //- Construct from a reference to the cloud
-        coupledToIncompressibleFluid(const cloud&);
+        //- Inherit constructors
+        using SpScheme<Type, SpType>::SpScheme;
 
 
-    //- Destructor
-    virtual ~coupledToIncompressibleFluid();
+    // Member Functions
+
+        //- Return the source matrix
+        virtual tmp<LagrangianEqn<Type>> LagrangianmSp
+        (
+            const LagrangianSubField<SpType>& Sp,
+            const LagrangianSubSubField<Type>& psi
+        );
 };
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace clouds
+} // End namespace SpSchemes
+} // End namespace Lagrangian
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "upwind_LagrangianSpScheme.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

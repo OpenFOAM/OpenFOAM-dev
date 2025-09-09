@@ -121,6 +121,9 @@ public:
         //- Construct from a reference to a carrier field
         CarrierFieldBase(const VolField<Type>&);
 
+        //- Construct from a name and a reference to a carrier field
+        CarrierFieldBase(const word& name, const VolField<Type>&);
+
         //- Construct from a name and an evaluation function
         template<class F>
         CarrierFieldBase(const word& name, const F& f);
@@ -135,7 +138,7 @@ public:
         const word& name() const;
 
         //- Reset
-        void reset(const bool predict);
+        void reset(const bool initial);
 };
 
 
@@ -182,7 +185,7 @@ public:
     // Member Functions
 
         //- Reset
-        void reset(const bool predict);
+        void reset(const bool initial);
 };
 
 

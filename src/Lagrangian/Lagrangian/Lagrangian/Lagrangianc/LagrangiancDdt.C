@@ -65,4 +65,39 @@ Foam::tmp<Foam::LagrangianSubField<Type>> Foam::Lagrangianc::Ddt
 }
 
 
+template<class Type>
+Foam::tmp<Foam::LagrangianSubField<Type>> Foam::Lagrangianc::deltaTddt0
+(
+    const LagrangianSubSubField<Type>& psi
+)
+{
+    const LagrangianMesh& mesh = psi.mesh().mesh();
+
+    return
+        Lagrangian::ddtScheme<Type>::New
+        (
+            mesh,
+            mesh.schemes().ddt("ddt(" + psi.name() + ')')
+        ).ref().LagrangiancdeltaTddt0(psi);
+}
+
+
+template<class Type>
+Foam::tmp<Foam::LagrangianSubField<Type>> Foam::Lagrangianc::deltaTddt0
+(
+    const LagrangianSubScalarSubField& m,
+    const LagrangianSubSubField<Type>& psi
+)
+{
+    const LagrangianMesh& mesh = psi.mesh().mesh();
+
+    return
+        Lagrangian::ddtScheme<Type>::New
+        (
+            mesh,
+            mesh.schemes().ddt("ddt(" + m.name() + ',' + psi.name() + ')')
+        ).ref().LagrangiancdeltaTddt0(m, psi);
+}
+
+
 // ************************************************************************* //

@@ -42,25 +42,25 @@ License
         addSupType(deltaT, field, eqn);                                        \
     }
 
-#define DEFINE_LAGRANGIAN_MODEL_ADD_M_FIELD_SUP(Type, nullArg)                 \
+#define DEFINE_LAGRANGIAN_MODEL_ADD_V_OR_M_FIELD_SUP(Type, nullArg)            \
     virtual void addSup                                                        \
     (                                                                          \
         const LagrangianSubScalarField& deltaT,                                \
-        const LagrangianSubScalarSubField& m,                                  \
+        const LagrangianSubScalarSubField& vOrM,                               \
         const LagrangianSubSubField<Type>& field,                              \
         LagrangianEqn<Type>& eqn                                               \
     ) const;
 
-#define IMPLEMENT_LAGRANGIAN_MODEL_ADD_M_FIELD_SUP(Type, modelType)            \
+#define IMPLEMENT_LAGRANGIAN_MODEL_ADD_V_OR_M_FIELD_SUP(Type, modelType)       \
     void Foam::modelType::addSup                                               \
     (                                                                          \
         const LagrangianSubScalarField& deltaT,                                \
-        const LagrangianSubScalarSubField& m,                                  \
+        const LagrangianSubScalarSubField& vOrM,                               \
         const LagrangianSubSubField<Type>& field,                              \
         LagrangianEqn<Type>& eqn                                               \
     ) const                                                                    \
     {                                                                          \
-        addSupType(deltaT, m, field, eqn);                                     \
+        addSupType(deltaT, vOrM, field, eqn);                                  \
     }
 
 

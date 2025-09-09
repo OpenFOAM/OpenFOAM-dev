@@ -1,0 +1,128 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+# Mesh, set volume-fraction fields and run
+runApplication -s incompressibleFluid blockMesh -region incompressibleFluid
+runApplication -s multicomponentFluid blockMesh -region multicomponentFluid
+runApplication -s incompressibleVoF blockMesh -region incompressibleVoF
+runApplication -s compressibleVoF blockMesh -region compressibleVoF
+runApplication -s incompressibleVoF foamPostProcess -func setAlphaWater -region incompressibleVoF
+runApplication -s compressibleVoF foamPostProcess -func setAlphaWater -region compressibleVoF
+runApplication foamMultiRun
+
+# Get initial amounts of droplet material
+N0=$(foamDictionary 0/Lagrangian/droplets/number -entry sources/injection/uniformValue -value)
+d0=$(foamDictionary 0/Lagrangian/droplets/d -entry sources/injection/uniformValue -value)
+V0="($N0*pi/6*$d0**3)"
+multicomponentFluidRho0=$(foamDictionary 0/multicomponentFluid/Lagrangian/droplets/rho \
+    -expand -entry uniformValue -value)
+compressibleVoFRho0=$(foamDictionary 0/compressibleVoF/Lagrangian/droplets/rho \
+    -expand -entry uniformValue -value)
+
+# Get the first log time
+t1=$(ls postProcessing/incompressibleVoF/incompressibleVoFCarrierPlot | head -n 1)
+
+# Get the data files
+incompressibleFluidDropletsPlot="\
+postProcessing/incompressibleFluidDropletsPlot/0/LagrangianFieldValue.dat"
+incompressibleFluidCarrierPlot="\
+postProcessing/incompressibleFluid/incompressibleFluidCarrierPlot/$t1/volFieldValue.dat"
+multicomponentFluidDropletsPlot="\
+postProcessing/multicomponentFluidDropletsPlot/0/LagrangianFieldValue.dat"
+multicomponentFluidCarrierPlot="\
+postProcessing/multicomponentFluid/multicomponentFluidCarrierPlot/$t1/volFieldValue.dat"
+incompressibleVoFDropletsPlot="\
+postProcessing/incompressibleVoFDropletsPlot/0/LagrangianFieldValue.dat"
+incompressibleVoFCarrierPlot="\
+postProcessing/incompressibleVoF/incompressibleVoFCarrierPlot/$t1/volFieldValue.dat"
+compressibleVoFDropletsPlot="\
+postProcessing/compressibleVoFDropletsPlot/0/LagrangianFieldValue.dat"
+compressibleVoFCarrierPlot="\
+postProcessing/compressibleVoF/compressibleVoFCarrierPlot/$t1/volFieldValue.dat"
+
+cumulative="< awk '{for(i=1;i<=NF;i++){sum[i]+=\$i;\$i=sum[i]};print}'"
+
+# Plot a comparison between the change in droplet volume or mass and the
+# corresponding carrier source terms
+gnuplot << EOF
+
+set terminal postscript eps color enhanced size 5,5
+set output "transfers.eps"
+
+set multiplot layout 2,1 margins 0.17, 0.83, 0.1, 0.95 spacing 0.1
+
+set xlabel "Time [s]"
+set ytics nomirror
+set ylabel "Volume [mm^3]"
+set y2tics
+set y2label "Mass [{/Symbol m}g]"
+
+set key bottom right Right noreverse
+
+plot [$t1:] \
+    "$incompressibleFluidDropletsPlot" us 1:(1e9*($V0-\$2)) \
+    w l lc 'red' t "Incompressible Fluid Droplet Volume Loss", \
+    "$incompressibleFluidCarrierPlot" us 1:(1e9*\$2) smooth cumulative \
+    w l lc 'dark-red' dt '-' t "Incompressible Fluid Carrier Volume Gain", \
+    \
+    "$multicomponentFluidDropletsPlot" us 1:(1e6*($multicomponentFluidRho0*$V0-\$2)) \
+    axes x1y2 w l lc 'goldenrod' t "Multicomponent Fluid Droplet Mass Loss", \
+    "$multicomponentFluidCarrierPlot" us 1:(1e6*\$2) smooth cumulative \
+    axes x1y2 w l lc 'dark-goldenrod' dt '-' t "Multicomponent Fluid Carrier Mass Gain", \
+    \
+    "$incompressibleVoFDropletsPlot" us 1:(1e9*($V0-\$2)) \
+    w l lc 'web-green' t "Incompressible VoF Droplet Volume Loss", \
+    "$incompressibleVoFCarrierPlot" us 1:(1e9*(\$2+\$3)) smooth cumulative \
+    w l lc 'dark-green' dt '-' t "Incompressible VoF Carrier Volume Gain", \
+    "$incompressibleVoFCarrierPlot" us 1:(1e9*\$2) smooth cumulative \
+    w l lc 'dark-green' dt '-.' t "(components)", \
+    "$incompressibleVoFCarrierPlot" us 1:(1e9*\$3) smooth cumulative \
+    w l lc 'dark-green' dt '-.' t "", \
+    \
+    "$compressibleVoFDropletsPlot" us 1:(1e6*($compressibleVoFRho0*$V0-\$2)) \
+    axes x1y2 w l lc 'web-blue' t "Compressible VoF Droplet Mass Loss", \
+    "$compressibleVoFCarrierPlot" us 1:(1e6*(\$2+\$3)) smooth cumulative \
+    axes x1y2 w l lc 'dark-blue' dt '-' t "Compressible VoF Carrier Mass Gain", \
+    "$compressibleVoFCarrierPlot" us 1:(1e6*\$2) smooth cumulative \
+    axes x1y2 w l lc 'dark-blue' dt '-.' t "(components)", \
+    "$compressibleVoFCarrierPlot" us 1:(1e6*\$3) smooth cumulative \
+    axes x1y2 w l lc 'dark-blue' dt '-.' t ""
+
+set log y
+set log y2
+
+set key bottom left Left reverse
+
+plot [$t1:] \
+    v1=NaN "< paste \
+    <(grep -v '^\\\\(#\\\\|0[ \\t]\\\\)' $incompressibleFluidDropletsPlot) \
+    <(grep -v '^#' $incompressibleFluidCarrierPlot)" \
+    u 1:(v0=v1,v1=\$2,1e9*abs(v1-v0+\$4)) w l lc 'red' \
+    t "Incompressible Fluid Volume Error", \
+    \
+    v1=NaN "< paste \
+    <(grep -v '^\\\\(#\\\\|0[ \\t]\\\\)' $multicomponentFluidDropletsPlot) \
+    <(grep -v '^#' $multicomponentFluidCarrierPlot)" \
+    u 1:(v0=v1,v1=\$2,1e6*abs(v1-v0+\$4)) axes x1y2 w l lc 'goldenrod' \
+    t "Multicompnent Fluid Mass Error", \
+    \
+    v1=NaN "< paste \
+    <(grep -v '^\\\\(#\\\\|0[ \\t]\\\\)' $incompressibleVoFDropletsPlot) \
+    <(grep -v '^#' $incompressibleVoFCarrierPlot)" \
+    u 1:(v0=v1,v1=\$2,1e9*abs(v1-v0+\$4+\$5)) w l lc 'web-green' \
+    t "Incompressible VoF Volume Error", \
+    \
+    m1=NaN "< paste \
+    <(grep -v '^\\\\(#\\\\|0[ \\t]\\\\)' $compressibleVoFDropletsPlot) \
+    <(grep -v '^#' $compressibleVoFCarrierPlot)" \
+    u 1:(v0=m1,m1=\$2,1e9*abs(m1-v0+\$4+\$5)) axes x1y2 w l lc 'web-blue' \
+    t "Compressible VoF Mass Error"
+
+unset multiplot
+
+EOF
+
+#------------------------------------------------------------------------------

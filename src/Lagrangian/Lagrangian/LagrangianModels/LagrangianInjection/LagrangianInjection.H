@@ -109,7 +109,11 @@ public:
             //- Return true if the LagrangianModel adds a source term to the
             //  given field's transport equation. Returns false. Injections are
             //  instantaneous. They do not create continuous sources.
-            virtual bool addsSupToField(const word& fieldName) const;
+            virtual bool addsSupToField
+            (
+                const word& fieldName,
+                const word& eqnFieldName
+            ) const;
 };
 
 

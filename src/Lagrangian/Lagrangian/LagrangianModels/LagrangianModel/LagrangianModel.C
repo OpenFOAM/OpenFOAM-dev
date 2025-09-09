@@ -50,7 +50,7 @@ template<class Type>
 void Foam::LagrangianModel::addSupType
 (
     const LagrangianSubScalarField& deltaT,
-    const LagrangianSubScalarSubField& m,
+    const LagrangianSubScalarSubField& vOrM,
     const LagrangianSubSubField<Type>& field,
     LagrangianEqn<Type>& eqn
 ) const
@@ -144,12 +144,6 @@ Foam::wordList Foam::LagrangianModel::addSupFields() const
 }
 
 
-bool Foam::LagrangianModel::addsSupToField(const word& fieldName) const
-{
-    return findIndex(addSupFields(), fieldName) != -1;
-}
-
-
 void Foam::LagrangianModel::postConstruct()
 {}
 
@@ -184,18 +178,42 @@ void Foam::LagrangianModel::calculate
 {}
 
 
+void Foam::LagrangianModel::preAddSup
+(
+    const LagrangianSubScalarField& deltaT,
+    const bool final
+)
+{}
+
+
 void Foam::LagrangianModel::addSup
 (
     const LagrangianSubScalarField& deltaT,
-    LagrangianSubScalarField& S
+    LagrangianEqn<scalar>& eqn
 ) const
 {}
 
 
-FOR_ALL_FIELD_TYPES(IMPLEMENT_LAGRANGIAN_MODEL_ADD_FIELD_SUP, LagrangianModel)
+FOR_ALL_FIELD_TYPES
+(
+    IMPLEMENT_LAGRANGIAN_MODEL_ADD_FIELD_SUP,
+    LagrangianModel
+)
 
 
-FOR_ALL_FIELD_TYPES(IMPLEMENT_LAGRANGIAN_MODEL_ADD_M_FIELD_SUP, LagrangianModel)
+FOR_ALL_FIELD_TYPES
+(
+    IMPLEMENT_LAGRANGIAN_MODEL_ADD_V_OR_M_FIELD_SUP,
+    LagrangianModel
+)
+
+
+void Foam::LagrangianModel::postAddSup
+(
+    const LagrangianSubScalarField& deltaT,
+    const bool final
+)
+{}
 
 
 void Foam::LagrangianModel::topoChange(const polyTopoChangeMap&)

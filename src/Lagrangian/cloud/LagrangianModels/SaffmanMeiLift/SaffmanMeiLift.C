@@ -25,7 +25,7 @@ License
 
 #include "SaffmanMeiLift.H"
 #include "addToRunTimeSelectionTable.H"
-#include "coupledToIncompressibleFluid.H"
+#include "coupledToConstantDensityFluid.H"
 #include "coupledToFluid.H"
 #include "sphericalCoupled.H"
 #include "LagrangianmSp.H"
@@ -71,8 +71,8 @@ Foam::Lagrangian::SaffmanMeiLift::calcL
 
     const LagrangianSubScalarField mcByMOrMc
     (
-        isCloud<clouds::coupledToIncompressibleFluid>()
-      ? v/cloud<clouds::coupledToIncompressibleFluid>().rhoByRhoc
+        isCloud<clouds::coupledToConstantDensityFluid>()
+      ? v/cloud<clouds::coupledToConstantDensityFluid>().rhoByRhoc
       : v*cloud<clouds::coupledToFluid>().rhoc(model, subMesh)
     );
 
@@ -88,7 +88,7 @@ Foam::Lagrangian::SaffmanMeiLift::calcL
     return
         LagrangianSubTensorField::New
         (
-            "L:" + Foam::name(subMesh.group()),
+            subMesh.sub("L"),
             -mcByMOrMc*3/(twoPi*sqrt(Rew + rootVSmall))*Cld*(*curlUc)
         );
 }
@@ -109,14 +109,10 @@ void Foam::Lagrangian::SaffmanMeiLift::addUSup
         eqn.Su += L & Uc;
         eqn -= Lagrangianm::Sp(L, U);
     }
-    else if (eqn.isPsi(Uc))
+    else
     {
         eqn += Lagrangianm::Sp(L, Uc);
         eqn.Su -= L & U;
-    }
-    else
-    {
-        eqn.Su += L & (Uc - U);
     }
 }
 
@@ -150,7 +146,22 @@ Foam::Lagrangian::SaffmanMeiLift::SaffmanMeiLift
 
 Foam::wordList Foam::Lagrangian::SaffmanMeiLift::addSupFields() const
 {
-    return wordList(1, cloud().U.name());
+    return wordList({cloud().U.name()});
+}
+
+
+bool Foam::Lagrangian::SaffmanMeiLift::addsSupToField
+(
+    const word& fieldName,
+    const word& eqnFieldName
+) const
+{
+    return
+        fieldName == cloud().U.name()
+     && (
+            eqnFieldName == cloud().U.name()
+         || eqnFieldName == cloud<clouds::coupled>().Uc.name()
+        );
 }
 
 
@@ -161,7 +172,7 @@ void Foam::Lagrangian::SaffmanMeiLift::addSup
     LagrangianEqn<vector>& eqn
 ) const
 {
-    assertCloud<clouds::coupledToIncompressibleFluid>();
+    assertCloud<clouds::coupledToConstantDensityFluid>();
 
     addUSup(U, eqn);
 }
@@ -175,7 +186,11 @@ void Foam::Lagrangian::SaffmanMeiLift::addSup
     LagrangianEqn<vector>& eqn
 ) const
 {
-    assertCloud<clouds::coupledToIncompressibleFluid, clouds::coupledToFluid>();
+    assertCloud
+    <
+        clouds::coupledToConstantDensityFluid,
+        clouds::coupledToFluid
+    >();
 
     addUSup(U, eqn);
 }

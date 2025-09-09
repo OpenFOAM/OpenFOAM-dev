@@ -1,0 +1,71 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      functions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+incompressibleVoFDropletsPosition
+{
+    type        cloudPosition;
+    libs        ("libLagrangianCloudFunctionObjects.so");
+    region      incompressibleVoF;
+    cloud       droplets;
+}
+
+incompressibleVoFDropletsPositionPlot
+{
+    type        LagrangianFieldValue;
+    libs        ("libLagrangianFunctionObjects.so");
+    region      incompressibleVoF;
+    Lagrangian  droplets;
+    field       position;
+    operation   average;
+}
+
+incompressibleVoFParticlesPosition
+{
+    $incompressibleVoFDropletsPosition;
+    cloud       particles;
+}
+
+incompressibleVoFParticlesPositionPlot
+{
+    $incompressibleVoFDropletsPositionPlot;
+    Lagrangian  particles;
+}
+
+compressibleVoFDropletsPosition
+{
+    $incompressibleVoFDropletsPosition;
+    region      compressibleVoF;
+}
+
+compressibleVoFDropletsPositionPlot
+{
+    $incompressibleVoFDropletsPositionPlot;
+    region      compressibleVoF;
+}
+
+compressibleVoFParticlesPosition
+{
+    $compressibleVoFDropletsPosition;
+    cloud       particles;
+}
+
+compressibleVoFParticlesPositionPlot
+{
+    $compressibleVoFDropletsPositionPlot;
+    Lagrangian  particles;
+}
+
+// ************************************************************************* //

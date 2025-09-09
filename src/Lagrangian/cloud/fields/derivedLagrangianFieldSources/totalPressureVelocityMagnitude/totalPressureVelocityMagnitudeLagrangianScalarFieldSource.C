@@ -25,7 +25,7 @@ License
 
 #include "totalPressureVelocityMagnitudeLagrangianScalarFieldSource.H"
 #include "cloudLagrangianFieldSource.H"
-#include "coupledToIncompressibleFluid.H"
+#include "coupledToConstantDensityFluid.H"
 #include "Function1LagrangianFieldSource.H"
 #include "LagrangianFieldSource.H"
 #include "massive.H"
@@ -49,7 +49,7 @@ totalPressureVelocityMagnitudeLagrangianScalarFieldSource
     (
         dict.lookupOrDefault<word>
         (
-            clouds::carried::carrierName("rho"),
+            clouds::carried::nameToCarrierName("rho"),
             "rho"
         )
     ),
@@ -57,7 +57,7 @@ totalPressureVelocityMagnitudeLagrangianScalarFieldSource
     (
         dict.lookupOrDefault<word>
         (
-            clouds::carried::carrierName("p"),
+            clouds::carried::nameToCarrierName("p"),
             "p"
         )
     )
@@ -139,25 +139,31 @@ Foam::totalPressureVelocityMagnitudeLagrangianScalarFieldSource::Umag
     // with the dynamic head
     if (pcVf.dimensions() == dimKinematicPressure)
     {
-        const clouds::coupledToIncompressibleFluid& ctifCloud =
-            cloudField_
-           .cloud<clouds::coupledToIncompressibleFluid>(injection, subMesh);
+        const clouds::coupledToConstantDensityFluid& ctcdfCloud =
+            cloudField_.cloud<clouds::coupledToConstantDensityFluid>
+            (
+                injection,
+                subMesh
+            );
 
-        return sqrt(2*deltaP/ctifCloud.rhoByRhoc);
+        return sqrt(2*deltaP/ctcdfCloud.rhoByRhoc);
     }
     else if (pcVf.dimensions() == dimPressure)
     {
         cloudField_.assertCloud
         <
-            clouds::coupledToIncompressibleFluid,
+            clouds::coupledToConstantDensityFluid,
             clouds::massive
         >(injection, subMesh);
 
-        if (cloudField_.isCloud<clouds::coupledToIncompressibleFluid>())
+        if (cloudField_.isCloud<clouds::coupledToConstantDensityFluid>())
         {
-            const clouds::coupledToIncompressibleFluid& ctifCloud =
-                cloudField_
-               .cloud<clouds::coupledToIncompressibleFluid>(injection, subMesh);
+            const clouds::coupledToConstantDensityFluid& ctcdfCloud =
+                cloudField_.cloud<clouds::coupledToConstantDensityFluid>
+                (
+                    injection,
+                    subMesh
+                );
 
             // Get the carrier density
             const volScalarField& rhocVf =
@@ -167,7 +173,7 @@ Foam::totalPressureVelocityMagnitudeLagrangianScalarFieldSource::Umag
                .cloud<clouds::carried>(injection, subMesh)
                .carrierField(rhocVf);
 
-            return sqrt(2*deltaP/(ctifCloud.rhoByRhoc*rhoc(subMesh)));
+            return sqrt(2*deltaP/(ctcdfCloud.rhoByRhoc*rhoc(subMesh)));
         }
         else // if (isCloud<clouds::massive>())
         {
@@ -206,7 +212,7 @@ void Foam::totalPressureVelocityMagnitudeLagrangianScalarFieldSource::write
     writeEntryIfDifferent<word>
     (
         os,
-        clouds::carried::carrierName("rho"),
+        clouds::carried::nameToCarrierName("rho"),
         "rho",
         rhocName_
     );
@@ -214,7 +220,7 @@ void Foam::totalPressureVelocityMagnitudeLagrangianScalarFieldSource::write
     writeEntryIfDifferent<word>
     (
         os,
-        clouds::carried::carrierName("p"),
+        clouds::carried::nameToCarrierName("p"),
         "p",
         pcName_
     );

@@ -26,7 +26,7 @@ License
 #include "gravity.H"
 #include "addToRunTimeSelectionTable.H"
 #include "lookupUniformDimensionedField.H"
-#include "coupledToIncompressibleFluid.H"
+#include "coupledToConstantDensityFluid.H"
 #include "coupledToFluid.H"
 #include "massive.H"
 
@@ -62,7 +62,19 @@ Foam::Lagrangian::gravity::gravity
 
 Foam::wordList Foam::Lagrangian::gravity::addSupFields() const
 {
-    return wordList(1, cloud().U.name());
+    return wordList({cloud().U.name()});
+}
+
+
+bool Foam::Lagrangian::gravity::addsSupToField
+(
+    const word& fieldName,
+    const word& eqnFieldName
+) const
+{
+    return
+        fieldName == cloud().U.name()
+     && eqnFieldName == cloud().U.name();
 }
 
 
@@ -73,20 +85,12 @@ void Foam::Lagrangian::gravity::addSup
     LagrangianEqn<vector>& eqn
 ) const
 {
-    if
-    (
-        isCloud<clouds::carried>()
-     && eqn.isPsi(cloud<clouds::carried>().Uc(U.mesh()))
-    )
+    if (isCloud<clouds::coupledToConstantDensityFluid>())
     {
-        // Gravity does not contribute to the carrier momentum equation
-    }
-    else if (isCloud<clouds::coupledToIncompressibleFluid>())
-    {
-        const clouds::coupledToIncompressibleFluid& ctifCloud =
-            cloud<clouds::coupledToIncompressibleFluid>();
+        const clouds::coupledToConstantDensityFluid& ctcdfCloud =
+            cloud<clouds::coupledToConstantDensityFluid>();
 
-        const dimensionedScalar& rhoByRhoc = ctifCloud.rhoByRhoc;
+        const dimensionedScalar& rhoByRhoc = ctcdfCloud.rhoByRhoc;
 
         eqn.Su += g*(1 - 1/rhoByRhoc);
     }
@@ -105,20 +109,12 @@ void Foam::Lagrangian::gravity::addSup
     LagrangianEqn<vector>& eqn
 ) const
 {
-    if
-    (
-        isCloud<clouds::carried>()
-     && eqn.isPsi(cloud<clouds::carried>().Uc(U.mesh()))
-    )
+    if (isCloud<clouds::coupledToConstantDensityFluid>())
     {
-        // Gravity does not contribute to the carrier momentum equation
-    }
-    else if (isCloud<clouds::coupledToIncompressibleFluid>())
-    {
-        const clouds::coupledToIncompressibleFluid& ctifCloud =
-            cloud<clouds::coupledToIncompressibleFluid>();
+        const clouds::coupledToConstantDensityFluid& ctcdfCloud =
+            cloud<clouds::coupledToConstantDensityFluid>();
 
-        const dimensionedScalar& rhoByRhoc = ctifCloud.rhoByRhoc;
+        const dimensionedScalar& rhoByRhoc = ctcdfCloud.rhoByRhoc;
 
         eqn.Su += vOrM*g*(1 - 1/rhoByRhoc);
     }

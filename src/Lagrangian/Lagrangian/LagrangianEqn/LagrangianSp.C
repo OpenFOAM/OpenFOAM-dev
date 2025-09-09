@@ -28,16 +28,25 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::LagrangianSp<Type>::LagrangianSp(const LagrangianSp<Type>& Sp)
+Foam::LagrangianSp<Type>::LagrangianSp
+(
+    const LagrangianEqnBase& eqn,
+    const LagrangianSp<Type>& Sp
+)
 :
-    LagrangianCoeff<scalar, true>(Sp)
+    LagrangianCoeff<scalar, true>(eqn, Sp)
 {}
 
 
 template<class Type>
-Foam::LagrangianSp<Type>::LagrangianSp(LagrangianSp<Type>& Sp, const bool reuse)
+Foam::LagrangianSp<Type>::LagrangianSp
+(
+    const LagrangianEqnBase& eqn,
+    LagrangianSp<Type>& Sp,
+    const bool reuse
+)
 :
-    LagrangianCoeff<scalar, true>(Sp, reuse)
+    LagrangianCoeff<scalar, true>(eqn, Sp, reuse)
 {}
 
 
@@ -95,14 +104,16 @@ Foam::LagrangianSp<Type>::Su(const LagrangianEqn<Type>& eqn) const
 // * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::LagrangianSp<Type>::operator+=(const LagrangianSp<Type>& Sp)
+template<class OtherType>
+void Foam::LagrangianSp<Type>::operator+=(const LagrangianSp<OtherType>& Sp)
 {
     static_cast<LagrangianCoeff<scalar, true>&>(*this) += Sp;
 }
 
 
 template<class Type>
-void Foam::LagrangianSp<Type>::operator-=(const LagrangianSp<Type>& Sp)
+template<class OtherType>
+void Foam::LagrangianSp<Type>::operator-=(const LagrangianSp<OtherType>& Sp)
 {
     static_cast<LagrangianCoeff<scalar, true>&>(*this) -= Sp;
 }

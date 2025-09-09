@@ -38,16 +38,47 @@ Foam::word Foam::LagrangianModel::fieldName
 }
 
 
-template<class AlphaRhoFieldType>
-Foam::word Foam::LagrangianModel::fieldName
+template
+<
+    class Type,
+    class GeoMesh,
+    template<class> class PrimitiveField
+>
+const Foam::word& Foam::LagrangianModel::fieldName
 (
-    const AlphaRhoFieldType& alphaRhoField
+    const GeometricField<Type, GeoMesh, PrimitiveField>& field
 )
 {
-    const word group = alphaRhoField.group();
-    const word member = alphaRhoField.member();
-    const string::size_type i = member.find(':');
-    return IOobject::groupName(member(i), group);
+    return field.name();
+}
+
+
+template
+<
+    class Type,
+    class GeoMesh,
+    template<class> class PrimitiveField
+>
+const Foam::word& Foam::LagrangianModel::fieldName
+(
+    const DimensionedField<Type, GeoMesh, PrimitiveField>& field
+)
+{
+    return field.name();
+}
+
+
+template
+<
+    class Type,
+    template<class> class PrimitiveField
+>
+Foam::word Foam::LagrangianModel::fieldName
+(
+    const DimensionedField<Type, LagrangianSubMesh, PrimitiveField>& field
+)
+{
+    return field.mesh().complete(field.name());
 }
 
 
@@ -74,13 +105,19 @@ Foam::word Foam::LagrangianModel::fieldsName
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-template<class Type, template<class> class PrimitiveField>
+template
+<
+    class Type,
+    template<class> class PrimitiveField,
+    template<class> class PrimitiveEqnField
+>
 bool Foam::LagrangianModel::addsSupToField
 (
-    const LagrangianSubField<Type, PrimitiveField>& field
+    const LagrangianSubField<Type, PrimitiveField>& field,
+    const LagrangianSubField<Type, PrimitiveEqnField>& eqnField
 ) const
 {
-    return addsSupToField(fieldName(field.name()));
+    return addsSupToField(fieldName(field.name()), fieldName(eqnField.name()));
 }
 
 

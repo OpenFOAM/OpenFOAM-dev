@@ -55,7 +55,7 @@ Foam::LagrangianSubMesh::sub
     const DimensionedField<Type, LagrangianMesh, PrimitiveField>& field
 ) const
 {
-    const word subFieldName = field.name() + ':' + name(group());
+    const word subFieldName = sub(field.name());
 
     return tmp<LagrangianSubSubField<Type>>
     (

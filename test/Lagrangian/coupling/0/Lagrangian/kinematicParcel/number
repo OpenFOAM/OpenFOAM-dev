@@ -16,7 +16,7 @@ FoamFile
 
 dimensions      [];
 
-internalField   uniform 1e-3;
+internalField   uniform 1;
 
 boundaryField
 {
@@ -34,7 +34,7 @@ sources
     {
         type            flowRateNumber;
         uniformSize     volume;
-        volumetricFlowRate 0.7 [l/s];
+        volumetricFlowRate 7 [ml/s];
     }
 }
 

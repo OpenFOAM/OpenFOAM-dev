@@ -1,0 +1,71 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+# Mesh, set fields and run
+runApplication -s incompressibleVoF blockMesh -region incompressibleVoF
+runApplication -s compressibleVoF blockMesh -region compressibleVoF
+runApplication -s incompressibleVoF setFields -region incompressibleVoF \
+    -dict system/setFieldsDict
+runApplication -s compressibleVoF setFields -region compressibleVoF \
+    -dict system/setFieldsDict
+runApplication foamMultiRun
+
+# Get the densities of the phases
+rhoAir=$(foamDictionary constant/incompressibleVoF/physicalProperties.air \
+    -entry rho -value)
+rhoWater=$(foamDictionary constant/incompressibleVoF/physicalProperties.water \
+    -entry rho -value)
+rhoParticles=$(foamDictionary 0/incompressibleVoF/Lagrangian/particles/rho \
+    -entry uniformValue -value)
+
+pathHead="postProcessing/"
+pathTail="PositionPlot/0/LagrangianFieldValue.dat"
+
+gnuplot << EOF
+
+set terminal postscript eps color enhanced size 3.5,2.5
+set output "position.eps"
+
+set xlabel "Time [s]"
+set ylabel "Position [m]"
+
+g = -9.81
+x0 = 0.4
+x1 = 0.2
+
+a_dropletInAir = (1 - 1.0*$rhoAir/$rhoWater)*g
+a_particleInAir = (1 - 1.0*$rhoAir/$rhoParticles)*g
+a_particleInWater = (1 - 1.0*$rhoWater/$rhoParticles)*g
+
+z_droplet(t) = x0 + 0.5*a_dropletInAir*t**2
+
+t1_particleInAir = ((2/a_particleInAir)*(x1 - x0))**0.5
+
+z_particle(t) = \
+    t < t1_particleInAir \
+  ? x0 + 0.5*a_particleInAir*t**2 \
+  : x1 + t1_particleInAir*a_particleInAir*(t - t1_particleInAir) \
+  + 0.5*a_particleInWater*(t - t1_particleInAir)**2
+
+fileHead="postProcessing/"
+fileTail="PositionPlot/0/LagrangianFieldValue.dat"
+
+plot [0:0.5][0:] \
+    x1 lc 'black' dt '-  ' t 'Interface', \
+    z_droplet(x) t 'Analytic Droplets (No Drag)', \
+    z_particle(x) t 'Analytic Particles (No Drag)', \
+    fileHead."incompressibleVoFDroplets".fileTail \
+    us 1:4 w l t 'Incompressible VoF Droplets', \
+    fileHead."incompressibleVoFParticles".fileTail \
+    us 1:4 w l t 'Incompressible VoF Particles', \
+    fileHead."compressibleVoFDroplets".fileTail \
+    us 1:4 w l dt '-' t 'Compressible VoF Droplets', \
+    fileHead."compressibleVoFParticles".fileTail \
+    us 1:4 w l dt '-' t 'Compressible VoF Particles'
+
+EOF
+
+#------------------------------------------------------------------------------

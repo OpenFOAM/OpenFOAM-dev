@@ -129,7 +129,9 @@ public:
             return mesh_;
         }
 
-        //- Initialise time-derivative information
+        //- Initialise time-derivative information. Registers fields used to
+        //  construct for higher-order schemes and to evaluate instantaneous
+        //  time derivatives.
         virtual bool LagrangianmInitDdt
         (
             const dimensionSet& mDims,
@@ -137,7 +139,8 @@ public:
             const bool instantaneousDdt
         ) = 0;
 
-        //- Return the no-time-derivative matrix
+        //- Return the no-time-derivative matrix containing higher-order
+        //  modifications to source terms
         virtual tmp<LagrangianEqn<Type>> LagrangianmNoDdt
         (
             const LagrangianSubScalarField& deltaT,
@@ -173,32 +176,43 @@ public:
             const LagrangianSubSubField<Type>& psi
         ) = 0;
 
-        //- Return the time-derivative matrix
+        //- Return a Euler implicit time derivative matrix
         static tmp<LagrangianEqn<Type>> Lagrangianmddt
         (
-            const LagrangianSubScalarField& deltaT,
             const LagrangianSubSubField<Type>& psi
         );
 
-        //- Return the time-derivative matrix
+        //- Return a Euler implicit time derivative matrix
         static tmp<LagrangianEqn<Type>> Lagrangianmddt
         (
-            const LagrangianSubScalarField& deltaT,
             const LagrangianSubScalarSubField& m,
             const LagrangianSubSubField<Type>& psi
         );
 
-        //- Return the explicit/forward time-derivative matrix
+        //- Return a Euler explicit/forward time-derivative matrix
         static tmp<LagrangianEqn<Type>> Lagrangianmddt0
         (
-            const LagrangianSubScalarField& deltaT,
             const LagrangianSubSubField<Type>& psi
         );
 
-        //- Return the explicit/forward time-derivative matrix
+        //- Return a Euler explicit/forward time-derivative matrix
         static tmp<LagrangianEqn<Type>> Lagrangianmddt0
         (
-            const LagrangianSubScalarField& deltaT,
+            const LagrangianSubScalarSubField& m,
+            const LagrangianSubSubField<Type>& psi
+        );
+
+        //- Return the Euler explicit/forward time-derivative multiplied by the
+        //  time-step
+        static tmp<LagrangianSubField<Type>> LagrangiancdeltaTddt0
+        (
+            const LagrangianSubSubField<Type>& psi
+        );
+
+        //- Return the Euler explicit/forward time-derivative multiplied by the
+        //  time-step
+        static tmp<LagrangianSubField<Type>> LagrangiancdeltaTddt0
+        (
             const LagrangianSubScalarSubField& m,
             const LagrangianSubSubField<Type>& psi
         );

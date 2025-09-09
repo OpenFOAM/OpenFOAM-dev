@@ -66,6 +66,13 @@ class shaped
             const LagrangianSubMesh& subMesh
         ) const = 0;
 
+        //- Calculate the particles' surface area per unit volumes
+        virtual tmp<LagrangianSubScalarField> calcaByV
+        (
+            const LagrangianModelRef& model,
+            const LagrangianSubMesh& subMesh
+        ) const = 0;
+
 
 public:
 
@@ -85,6 +92,9 @@ public:
 
         //- Surface area
         const CloudDerivedField<scalar>& a;
+
+        //- Surface area per unit volume
+        const CloudDerivedField<scalar>& aByV;
 
         //- Volume fraction
         const CloudAverageField<scalar>& alpha;

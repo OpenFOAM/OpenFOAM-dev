@@ -61,6 +61,7 @@ Usage
         Lagrangian      cloud;
         field           m;
         weightField     number;
+        operation       sum;
     }
     \endverbatim
 

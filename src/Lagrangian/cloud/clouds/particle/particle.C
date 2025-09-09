@@ -52,20 +52,6 @@ namespace functionObjects
 
 // * * * * * * * * * * * *  Protected Member Functions * * * * * * * * * * * //
 
-void Foam::clouds::particle::initialise(const bool predict)
-{
-    cloud::initialise(predict);
-    carried::initialise(predict);
-}
-
-
-void Foam::clouds::particle::partition()
-{
-    cloud::partition();
-    carried::partition();
-}
-
-
 Foam::tmp<Foam::LagrangianSubVectorField> Foam::clouds::particle::dUdt
 (
     const LagrangianSubMesh& subMesh
@@ -96,17 +82,23 @@ bool Foam::clouds::particle::reCalculateModified()
     {
         result = Lagrangianm::initDdt(dimless, m, dUdt) || result;
 
-        if (context != contextType::functionObject)
+        result = reCalculateModified(m, rhoc) || result;
+
+        if (hasPhase())
         {
-            result = Lagrangianm::initDdt(dimVolume, rhoc(subMesh)) || result;
+            result = reCalculateModified(m, rhocPhase) || result;
         }
     }
 
-    result = Lagrangianm::initDdt(dimMass, U, dUdt) || result;
-
-    if (context != contextType::functionObject)
     {
-        result = Lagrangianm::initDdt(dimMass, Uc(subMesh)) || result;
+        result = Lagrangianm::initDdt(dimMass, U, dUdt) || result;
+
+        result = reCalculateModified(m, Uc) || result;
+
+        if (hasPhase() && &UcPhase != &Uc)
+        {
+            result = reCalculateModified(m, UcPhase) || result;
+        }
     }
 
     return result;
@@ -140,16 +132,11 @@ void Foam::clouds::particle::calculate
         // Correct the diameter, assuming the density remains constant
         spherical::correct(toSubField(m/rho));
 
-        if (context != contextType::functionObject && final)
-        {
-            LagrangianEqn<scalar> mcEqn
-            (
-                Lagrangianm::noDdt(deltaT, dimVolume, rhoc(subMesh))
-             ==
-                LagrangianModels().sourceProxy(deltaT, m, rhoc(subMesh))
-            );
+        calculate(deltaT, final, m, rhoc);
 
-            carrierEqn(rhoc) += mcEqn;
+        if (hasPhase())
+        {
+            calculate(deltaT, final, m, rhocPhase);
         }
     }
 
@@ -164,18 +151,20 @@ void Foam::clouds::particle::calculate
 
         UEqn.solve(final);
 
-        if (context != contextType::functionObject && final)
-        {
-            LagrangianEqn<vector> UcEqn
-            (
-                Lagrangianm::noDdt(deltaT, dimMass, Uc(subMesh))
-             ==
-                LagrangianModels().sourceProxy(deltaT, m, U, Uc(subMesh))
-            );
+        calculate(deltaT, final, m, U, Uc);
 
-            carrierEqn(Uc) += UcEqn;
+        if (hasPhase() && &UcPhase != &Uc)
+        {
+            calculate(deltaT, final, m, U, UcPhase);
         }
     }
+}
+
+
+void Foam::clouds::particle::partition()
+{
+    cloud::partition();
+    carried::clearCarrierFields();
 }
 
 
@@ -184,14 +173,16 @@ void Foam::clouds::particle::calculate
 Foam::clouds::particle::particle
 (
     LagrangianMesh& mesh,
-    const contextType context
+    const contextType context,
+    const dictionary& dict
 )
 :
     cloud(mesh, context),
     spherical(static_cast<const cloud&>(*this)),
     massive(*this, *this),
-    coupledToFluid(static_cast<const cloud&>(*this)),
-    sphericalCoupled(*this, *this, *this)
+    coupledToFluid(static_cast<const cloud&>(*this), dict),
+    sphericalCoupled(*this, *this, *this),
+    massiveCoupledToFluid(*this, *this, *this)
 {
     reCalculateModified();
 }
@@ -205,13 +196,15 @@ Foam::clouds::particle::~particle()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::clouds::particle::solve()
+void Foam::clouds::particle::solve(const bool initial, const bool final)
 {
     // Pre-solve operations ...
+    carried::resetCarrierFields(initial);
     coupled::clearCarrierEqns();
-    coupledToFluid::updateRhoc();
+    coupledToFluid::updateCarrier();
 
-    cloud::solve();
+    // Solve
+    cloud::solve(initial, final);
 
     // Post-solve operations ...
 }

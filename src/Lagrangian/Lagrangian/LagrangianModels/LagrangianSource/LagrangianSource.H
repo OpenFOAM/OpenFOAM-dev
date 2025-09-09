@@ -70,13 +70,6 @@ public:
 
     // Member Functions
 
-        // Checks
-
-            //- Return true if the LagrangianModel adds a source term to the
-            //  given field's transport equation. Must be provided by sources.
-            virtual bool addsSupToField(const word& fieldName) const = 0;
-
-
         // Sources
 
             //- Return the source value

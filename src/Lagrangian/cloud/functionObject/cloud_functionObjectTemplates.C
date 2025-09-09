@@ -45,6 +45,7 @@ Foam::functionObjects::cloud::cloud
             refCast<const polyMesh>(obr_),
             name,
             Foam::cloud::contextType::functionObject,
+            dict,
             IOobject::READ_IF_PRESENT,
             IOobject::NO_WRITE
         ).ptr()

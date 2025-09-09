@@ -47,18 +47,15 @@ Foam::clouds::massive::massive(const cloud& c, const shaped& shapedCloud)
 :
     rho
     (
-        c.stateField<scalar>
+        IOobject
         (
-            IOobject
-            (
-                "rho",
-                c.time().name(),
-                c.mesh(),
-                IOobject::MUST_READ,
-                IOobject::AUTO_WRITE
-            ),
-            c.mesh()
-        )
+            "rho",
+            c.time().name(),
+            c.mesh(),
+            IOobject::MUST_READ,
+            IOobject::AUTO_WRITE
+        ),
+        c.mesh()
     ),
     m
     (

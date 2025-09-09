@@ -108,7 +108,11 @@ Foam::LagrangianInjection::~LagrangianInjection()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-bool Foam::LagrangianInjection::addsSupToField(const word& fieldName) const
+bool Foam::LagrangianInjection::addsSupToField
+(
+    const word& fieldName,
+    const word& eqnFieldName
+) const
 {
     return false;
 }

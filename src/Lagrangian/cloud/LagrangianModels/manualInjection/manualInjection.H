@@ -30,13 +30,24 @@ Description
 
 Usage
     \table
-        Property    | Description                     | Required? | Default
-        file        | Name of the file containing the positions | yes |
-        units       | Units of the positions in the file | no     | [m]
-        time        | The time at which to inject     | no        | 0
+        Property  | Description                  | Required? | Default
+        positions | Positions at which to inject | if file not specified |
+        file      | File containing the positions | if positions not specified |
+        units     | Units of the positions in the file | if file specified | [m]
+        time      | The time at which to inject  | no        | 0
     \endtable
 
     Example specification:
+    \verbatim
+    <LagrangianModelName>
+    {
+        type        manualInjection;
+        positions   ((0 0 0) (1 1 1) (2 2 2)) [m];
+        time        1.23 [s];
+    }
+    \endverbatim
+
+    Example specification with positions in a file:
     \verbatim
     <LagrangianModelName>
     {
@@ -75,10 +86,13 @@ private:
 
     // Private Data
 
-        //- File containing positions
+        //- Positions at which to inject
+        pointField positions_;
+
+        //- File containing the positions
         fileName fileName_;
 
-        //- Optional unit conversion for the positions
+        //- Units of the positions in the file
         unitConversion units_;
 
         //- The time at which to inject

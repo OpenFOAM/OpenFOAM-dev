@@ -64,7 +64,7 @@ public:
     // Public Data
 
         //- Density
-        CloudStateField<scalar>& rho;
+        CloudStateField<scalar> rho;
 
         //- Mass
         const CloudDerivedField<scalar>& m;

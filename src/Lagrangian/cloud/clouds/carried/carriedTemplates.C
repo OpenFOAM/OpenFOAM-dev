@@ -44,13 +44,14 @@ const Foam::CarrierField<Type>& Foam::clouds::carried::carrierField
     const Args& ... args
 ) const
 {
-    const CarrierField<Type>* lookupPtr =
-        carrierFields<Type>().lookupPtr(CarrierField<Type>(args ...).name());
+    typename HashPtrTable<CarrierField<Type>>::iterator iter =
+        carrierFields<Type>().find(CarrierField<Type>(args ...).name());
 
-    if (lookupPtr) return *lookupPtr;
+    if (iter != carrierFields<Type>().end()) return **iter;
 
     CarrierField<Type>* ptr = new CarrierField<Type>(args ...);
     carrierFields<Type>().insert(ptr->name(), ptr);
+
     return *ptr;
 }
 

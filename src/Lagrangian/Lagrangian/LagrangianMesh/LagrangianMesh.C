@@ -1332,6 +1332,29 @@ Foam::LagrangianMesh::position() const
 }
 
 
+Foam::tmp<Foam::LagrangianSubVectorField>
+Foam::LagrangianMesh::position(const LagrangianSubMesh& subMesh) const
+{
+    tmp<LagrangianSubVectorField> tresult =
+        LagrangianSubVectorField::New
+        (
+            positionName,
+            subMesh,
+            dimLength
+        );
+    LagrangianSubVectorField& result = tresult.ref();
+
+    forAll(subMesh, subi)
+    {
+        const label i = subi + subMesh.start();
+
+        result[subi] = position(i);
+    }
+
+    return tresult;
+}
+
+
 Foam::point Foam::LagrangianMesh::position(const label i) const
 {
     return
@@ -1971,7 +1994,13 @@ void Foam::LagrangianMesh::clearPosition()
 {
     if (foundObject<LagrangianVectorInternalField>(positionName))
     {
-        lookupObjectRef<LagrangianVectorInternalField>(positionName).checkOut();
+        LagrangianVectorInternalField& position =
+            lookupObjectRef<LagrangianVectorInternalField>(positionName);
+
+        if (position.ownedByRegistry())
+        {
+            position.checkOut();
+        }
     }
 }
 

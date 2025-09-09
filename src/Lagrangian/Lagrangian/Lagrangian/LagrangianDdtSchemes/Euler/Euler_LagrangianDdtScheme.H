@@ -70,7 +70,7 @@ public:
 
     // Member Functions
 
-        //- Initialise time-derivative information
+        //- Does nothing
         virtual bool LagrangianmInitDdt
         (
             const dimensionSet& mDims,
@@ -78,7 +78,7 @@ public:
             const bool instantaneousDdt
         );
 
-        //- Return the no-time-derivative matrix
+        //- Return an empty matrix
         virtual tmp<LagrangianEqn<Type>> LagrangianmNoDdt
         (
             const LagrangianSubScalarField& deltaT,

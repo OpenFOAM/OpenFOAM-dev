@@ -72,15 +72,20 @@ public:
 
     // Constructors
 
-        //- Construct from a reference to the equation
+        //- Construct empty
         LagrangianCoeff(const LagrangianEqnBase& eqn);
 
         //- Construct as copy
-        LagrangianCoeff(const LagrangianCoeff<Type, Implicit>& coeff);
+        LagrangianCoeff
+        (
+            const LagrangianEqnBase& eqn,
+            const LagrangianCoeff<Type, Implicit>& coeff
+        );
 
         //- Construct as copy or reuse as specified
         LagrangianCoeff
         (
+            const LagrangianEqnBase& eqn,
             LagrangianCoeff<Type, Implicit>& coeff,
             const bool reuse
         );
@@ -134,6 +139,10 @@ public:
         void operator+=(const LagrangianCoeff<Type, Implicit>&);
 
         //- Addition assignment
+        template<class OtherType>
+        void operator+=(const LagrangianCoeff<OtherType, Implicit>&);
+
+        //- Addition assignment
         void operator+=(const dimensioned<Type>&);
 
         //- Addition assignment
@@ -149,6 +158,10 @@ public:
 
         //- Subtraction assignment
         void operator-=(const LagrangianCoeff<Type, Implicit>&);
+
+        //- Addition assignment
+        template<class OtherType>
+        void operator-=(const LagrangianCoeff<OtherType, Implicit>&);
 
         //- Subtraction assignment
         void operator-=(const dimensioned<Type>&);
@@ -179,7 +192,7 @@ public:
         void operator/=(const tmp<LagrangianSubField<scalar, PrimitiveField>>&);
 
         //- Division assignment
-        void operator/=(const dimensioned<scalar>& dt);
+        void operator/=(const dimensioned<scalar>&);
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

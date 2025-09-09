@@ -168,13 +168,23 @@ Foam::LagrangianModels::~LagrangianModels()
 
 bool Foam::LagrangianModels::addsSupToField(const word& fieldName) const
 {
+    return addsSupToField(fieldName, fieldName);
+}
+
+
+bool Foam::LagrangianModels::addsSupToField
+(
+    const word& fieldName,
+    const word& eqnFieldName
+) const
+{
     const PtrListDictionary<LagrangianModel>& modelList(*this);
 
     forAll(modelList, i)
     {
         const LagrangianModel& model = modelList[i];
 
-        if (model.addsSupToField(fieldName))
+        if (model.addsSupToField(fieldName, eqnFieldName))
         {
             return true;
         }
@@ -270,19 +280,34 @@ void Foam::LagrangianModels::calculate
 }
 
 
-Foam::tmp<Foam::LagrangianSubScalarField>
+void Foam::LagrangianModels::preSource
+(
+    const LagrangianSubScalarField& deltaT,
+    const bool final
+)
+{
+    PtrListDictionary<LagrangianModel>& modelList(*this);
+
+    forAll(modelList, i)
+    {
+        modelList[i].preAddSup(deltaT, final);
+    }
+}
+
+
+Foam::tmp<Foam::LagrangianEqn<Foam::scalar>>
 Foam::LagrangianModels::source(const LagrangianSubScalarField& deltaT) const
 {
     checkApplied();
 
-    tmp<LagrangianSubScalarField> tS =
-        LagrangianSubScalarField::New
+    tmp<LagrangianEqn<scalar>> tEqn
+    (
+        new LagrangianEqn<scalar>
         (
-            word::null,
-            deltaT.mesh(),
-            dimensionedScalar(dimRate, 0)
-        );
-    LagrangianSubScalarField& S = tS.ref();
+            deltaT.mesh()
+        )
+    );
+    LagrangianEqn<scalar>& eqn = tEqn.ref();
 
     const PtrListDictionary<LagrangianModel>& modelList(*this);
 
@@ -290,15 +315,30 @@ Foam::LagrangianModels::source(const LagrangianSubScalarField& deltaT) const
     {
         const LagrangianModel& model = modelList[i];
 
-        if (model.addsSupToField(word::null))
+        if (model.addsSupToField(word::null, word::null))
         {
             addSupFields_[i].insert(word::null);
 
-            model.addSup(deltaT, S);
+            model.addSup(deltaT, eqn);
         }
     }
 
-    return tS;
+    return tEqn;
+}
+
+
+void Foam::LagrangianModels::postSource
+(
+    const LagrangianSubScalarField& deltaT,
+    const bool final
+)
+{
+    PtrListDictionary<LagrangianModel>& modelList(*this);
+
+    forAll(modelList, i)
+    {
+        modelList[i].postAddSup(deltaT, final);
+    }
 }
 
 

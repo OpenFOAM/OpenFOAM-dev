@@ -46,7 +46,7 @@ namespace Foam                                                                 \
     namespace clouds                                                           \
     {                                                                          \
         template<>                                                             \
-        PtrDictionary<CarrierField<Type>>& carried::carrierFields() const      \
+        HashPtrTable<CarrierField<Type>>& carried::carrierFields() const       \
         {                                                                      \
             return CAT3(carrier, CAPITALIZE(Type), Fields_);                   \
         }                                                                      \
@@ -56,53 +56,16 @@ FOR_ALL_FIELD_TYPES(ACCESS_CARRIER_FIELDS)
 #undef ACCESS_CARRIER_FIELDS
 
 
-void Foam::clouds::carried::clearCarrierFields()
-{
-    #define CLEAR_TYPE_CARRIER_FIELDS(Type, nullArg)                           \
-        forAllIter                                                             \
-        (                                                                      \
-            PtrDictionary<CarrierField<Type>>,                                 \
-            carrierFields<Type>(),                                             \
-            iter                                                               \
-        )                                                                      \
-        {                                                                      \
-            iter().clear(true);                                                \
-       }
-    FOR_ALL_FIELD_TYPES(CLEAR_TYPE_CARRIER_FIELDS);
-    #undef CLEAR_TYPE_CARRIER_FIELDS
-}
-
-
-void Foam::clouds::carried::resetCarrierFields(const bool predict)
-{
-    #define RESET_TYPE_CARRIER_FIELDS(Type, nullArg)                           \
-        forAllIter                                                             \
-        (                                                                      \
-            PtrDictionary<CarrierField<Type>>,                                 \
-            carrierFields<Type>(),                                             \
-            iter                                                               \
-        )                                                                      \
-        {                                                                      \
-            iter().reset(predict);                                             \
-       }
-    FOR_ALL_FIELD_TYPES(RESET_TYPE_CARRIER_FIELDS);
-    #undef RESET_TYPE_CARRIER_FIELDS
-}
-
-
 Foam::autoPtr<Foam::volVectorField> Foam::clouds::carried::readDUdtc
 (
     const cloud& c
 ) const
 {
-    const volVectorField& U =
-        c.mesh().mesh().lookupObject<volVectorField>("U");
-
     typeIOobject<volVectorField> io
     (
-        "ddt(" + U.name() + ")",
-        U.mesh().time().name(),
-        U.mesh(),
+        "ddt(" + Uc.psi().name() + ")",
+        Uc.psi().mesh().time().name(),
+        Uc.psi().mesh(),
         IOobject::READ_IF_PRESENT,
         IOobject::AUTO_WRITE
     );
@@ -111,7 +74,7 @@ Foam::autoPtr<Foam::volVectorField> Foam::clouds::carried::readDUdtc
         autoPtr<volVectorField>
         (
             io.headerOk()
-          ? new volVectorField(io, U.mesh())
+          ? new volVectorField(io, Uc.psi().mesh())
           : nullptr
         );
 }
@@ -149,49 +112,118 @@ const Foam::volVectorField& Foam::clouds::carried::dUdtc() const
 
 // * * * * * * * * * * * *  Protected Member Functions * * * * * * * * * * * //
 
-void Foam::clouds::carried::initialise(const bool predict)
+void Foam::clouds::carried::clearCarrierFields()
 {
-    resetCarrierFields(predict);
+    #define CLEAR_TYPE_CARRIER_FIELDS(Type, nullArg)                           \
+        forAllIter                                                             \
+        (                                                                      \
+            HashPtrTable<CarrierField<Type>>,                                  \
+            carrierFields<Type>(),                                             \
+            iter                                                               \
+        )                                                                      \
+        {                                                                      \
+            iter()->clear(true);                                               \
+        }
+    FOR_ALL_FIELD_TYPES(CLEAR_TYPE_CARRIER_FIELDS);
+    #undef CLEAR_TYPE_CARRIER_FIELDS
 }
 
 
-void Foam::clouds::carried::partition()
+void Foam::clouds::carried::resetCarrierFields(const bool initial)
 {
-    clearCarrierFields();
+    #define RESET_TYPE_CARRIER_FIELDS(Type, nullArg)                           \
+        forAllIter                                                             \
+        (                                                                      \
+            HashPtrTable<CarrierField<Type>>,                                  \
+            carrierFields<Type>(),                                             \
+            iter                                                               \
+        )                                                                      \
+        {                                                                      \
+            iter()->reset(initial);                                            \
+       }
+    FOR_ALL_FIELD_TYPES(RESET_TYPE_CARRIER_FIELDS);
+    #undef RESET_TYPE_CARRIER_FIELDS
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::clouds::carried::carried(const cloud& c)
+Foam::clouds::carried::carried(const cloud& c, const dictionary& dict)
 :
-    dUdtcPtr_(readDUdtc(c)),
+    carrierPhaseName_
+    (
+        dict.found("phase") || dict.found("carrierPhase")
+      ? dict.lookup<word>("carrierPhase")
+      : word::null
+    ),
+    phaseName_
+    (
+        dict.lookupOrDefault<word>("phase", word::null)
+    ),
     Uc
     (
         carrierField<vector>
         (
-            c.mesh().mesh().lookupObject<volVectorField>("U")
+            c.mesh().mesh().lookupObject<volVectorField>
+            (
+                c.mesh().mesh().foundObject<volVectorField>
+                (
+                    IOobject::groupName("U", carrierPhaseName())
+                )
+              ? IOobject::groupName("U", carrierPhaseName())
+              : c.mesh().mesh().foundObject<volVectorField>
+                (
+                    "U"
+                )
+              ? "U"
+              : IOobject::groupName("U", carrierPhaseName())
+            )
         )
     ),
     curlUc
     (
         carrierField<vector>
         (
-            "curlUc",
+            IOobject::groupName("curlUc", carrierPhaseName()),
             [&]()
             {
                 return fvc::curl(Uc.psi());
             }
         )
     ),
+    dUdtcPtr_(readDUdtc(c)),
     DUDtc
     (
         carrierField<vector>
         (
-            "DUDtc",
+            IOobject::groupName("DUDtc", carrierPhaseName()),
             [&]()
             {
                 return dUdtc() + (Uc.psi() & fvc::grad(Uc.psi()));
+            }
+        )
+    ),
+    UcPhase
+    (
+        hasPhase()
+      ? Uc.psi().group() == word::null
+      ? Uc
+      : carrierField<vector>
+        (
+            c.mesh().mesh().lookupObject<volVectorField>
+            (
+                IOobject::groupName("U", phaseName())
+            )
+        )
+      : carrierField<vector>
+        (
+            "UcPhase",
+            [&]()
+            {
+                FatalErrorInFunction
+                    << "Cloud " << c.name() << " does not have a corresponding "
+                    << "Eulerian phase velocity" << exit(FatalError);
+                return tmp<volVectorField>(nullptr);
             }
         )
     )
@@ -206,13 +238,51 @@ Foam::clouds::carried::~carried()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::word Foam::clouds::carried::carrierName(const word& name)
+const Foam::word& Foam::clouds::carried::carrierPhaseName() const
+{
+    return carrierPhaseName_;
+}
+
+
+const Foam::word& Foam::clouds::carried::phaseName() const
+{
+    return phaseName_;
+}
+
+
+bool Foam::clouds::carried::hasPhase() const
+{
+    return phaseName_ != word::null;
+}
+
+
+Foam::word Foam::clouds::carried::nameToCarrierName(const word& name)
 {
     return
         IOobject::groupName
         (
             IOobject::member(name) + 'c',
             IOobject::group(name)
+        );
+}
+
+
+Foam::word Foam::clouds::carried::carrierNameToName(const word& namec)
+{
+    const word memberc = IOobject::member(namec);
+
+    if (memberc[memberc.size() - 1] != 'c')
+    {
+        FatalErrorInFunction
+            << "Name " << namec << " is not a carrier name"
+            << exit(FatalError);
+    }
+
+    return
+        IOobject::groupName
+        (
+            memberc(memberc.size() - 1),
+            IOobject::group(namec)
         );
 }
 

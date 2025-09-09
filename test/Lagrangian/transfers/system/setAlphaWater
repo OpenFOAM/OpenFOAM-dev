@@ -1,0 +1,54 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+
+type            coded;
+libs            ("libutilityFunctionObjects.so");
+
+fields          (alpha.water);
+
+interfaceMiddle 0.2;
+interfaceDepth  0.04;
+
+codeInclude
+#{
+    #include "mathematicalConstants.H"
+#};
+
+codeWrite
+#{
+    volScalarField alphaWater
+    (
+        IOobject
+        (
+            "alpha.water",
+            mesh().time().name(),
+            mesh(),
+            IOobject::MUST_READ
+        ),
+        mesh()
+    );
+
+    const dimensionedScalar interfaceMiddle(dimLength, $<scalar>interfaceMiddle);
+    const dimensionedScalar interfaceDepth(dimLength, $<scalar>interfaceDepth);
+
+    // Signed height from the interface
+    const volScalarField::Internal h(mesh().C().component(2) - interfaceMiddle);
+
+    // Linear ramp over the interface width
+    const volScalarField::Internal r
+    (
+        min(max(0.5 + h/interfaceDepth, scalar(0)), scalar(1))
+    );
+
+    // Smooth cosine function for alpha
+    alphaWater.internalFieldRef() = (1 - cos(constant::mathematical::pi*r))/2;
+
+    alphaWater.write();
+#};
+
+// ************************************************************************* //

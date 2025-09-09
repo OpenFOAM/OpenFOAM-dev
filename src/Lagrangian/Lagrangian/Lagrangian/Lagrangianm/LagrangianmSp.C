@@ -27,6 +27,7 @@ License
 #include "LagrangianSpScheme.H"
 #include "LagrangianMesh.H"
 #include "LagrangianSubFields.H"
+#include "Explicit_LagrangianSpScheme.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -37,6 +38,11 @@ Foam::tmp<Foam::LagrangianEqn<Type>> Foam::Lagrangianm::Sp
     const LagrangianSubSubField<Type>& psi
 )
 {
+    if (isNull(Sp))
+    {
+        return tmp<LagrangianEqn<Type>>(new LagrangianEqn<Type>(psi));
+    }
+
     const LagrangianMesh& mesh = psi.mesh().mesh();
 
     return
@@ -56,6 +62,81 @@ Foam::tmp<Foam::LagrangianEqn<Type>> Foam::Lagrangianm::Sp
 )
 {
     return Lagrangianm::Sp(Sp, toSubField(psi)());
+}
+
+
+template<class Type>
+Foam::tmp<Foam::LagrangianEqn<Type>> Foam::Lagrangianm::explicitSp0
+(
+    const LagrangianSubScalarField& Sp,
+    const LagrangianSubSubField<Type>& psi
+)
+{
+    if (isNull(Sp))
+    {
+        return tmp<LagrangianEqn<Type>>(new LagrangianEqn<Type>(psi));
+    }
+
+    tmp<LagrangianSubSubField<Type>> tpsi0 =
+        psi.nOldTimes()
+      ? toSubField(psi.oldTime())
+      : tmp<LagrangianSubSubField<Type>>(psi);
+
+    return
+        Lagrangian::SpSchemes::Explicit<Type, scalar>
+        (
+            psi.mesh().mesh()
+        ).LagrangianmSp(Sp, tpsi0());
+}
+
+
+template<class Type>
+Foam::tmp<Foam::LagrangianEqn<Type>> Foam::Lagrangianm::explicitSp0
+(
+    const LagrangianSubScalarField& Sp,
+    const LagrangianSubScalarSubField& m,
+    const LagrangianSubSubField<Type>& psi
+)
+{
+    if (isNull(Sp))
+    {
+        return tmp<LagrangianEqn<Type>>(new LagrangianEqn<Type>(psi));
+    }
+
+    tmp<LagrangianSubScalarSubField> tm0 =
+        m.nOldTimes()
+      ? toSubField(m.oldTime())
+      : tmp<LagrangianSubSubField<Type>>(m);
+    tmp<LagrangianSubSubField<Type>> tpsi0 =
+        psi.nOldTimes()
+      ? toSubField(psi.oldTime())
+      : tmp<LagrangianSubSubField<Type>>(psi);
+
+    return
+        Lagrangian::SpSchemes::Explicit<Type, scalar>
+        (
+            psi.mesh().mesh()
+        ).LagrangianmSp(Sp*tm0, tpsi0());
+}
+
+
+template<class Type>
+Foam::tmp<Foam::LagrangianEqn<Type>> Foam::Lagrangianm::implicitDeltaTSp
+(
+    const LagrangianSubScalarField& deltaTSp,
+    const LagrangianSubSubField<Type>& psi
+)
+{
+    if (isNull(deltaTSp))
+    {
+        return tmp<LagrangianEqn<Type>>(new LagrangianEqn<Type>(psi));
+    }
+
+    tmp<LagrangianEqn<Type>> tEqn(new LagrangianEqn<Type>(psi));
+
+    tEqn.ref().deltaTSp += deltaTSp;
+
+    return tEqn;
 }
 
 

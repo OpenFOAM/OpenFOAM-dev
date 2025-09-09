@@ -52,6 +52,7 @@ class LagrangianEqn;
 
 namespace Lagrangianm
 {
+    //- Return a source matrix
     template<class Type, class SpType>
     tmp<LagrangianEqn<Type>> Sp
     (
@@ -59,11 +60,34 @@ namespace Lagrangianm
         const LagrangianSubSubField<Type>& psi
     );
 
+    //- Return a source matrix
     template<class Type, class SpType, template<class> class PrimitiveField>
     tmp<LagrangianEqn<Type>> Sp
     (
         const LagrangianSubField<SpType>& Sp,
         const LagrangianSubField<Type, PrimitiveField>& psi
+    );
+
+    template<class Type>
+    tmp<LagrangianEqn<Type>> explicitSp0
+    (
+        const LagrangianSubScalarField& Sp,
+        const LagrangianSubSubField<Type>& psi
+    );
+
+    template<class Type>
+    tmp<LagrangianEqn<Type>> explicitSp0
+    (
+        const LagrangianSubScalarField& Sp,
+        const LagrangianSubScalarSubField& m,
+        const LagrangianSubSubField<Type>& psi
+    );
+
+    template<class Type>
+    tmp<LagrangianEqn<Type>> implicitDeltaTSp
+    (
+        const LagrangianSubScalarField& Sp,
+        const LagrangianSubSubField<Type>& psi
     );
 }
 
