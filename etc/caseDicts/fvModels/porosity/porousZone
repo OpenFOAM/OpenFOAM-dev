@@ -18,7 +18,6 @@ type           porosityForce;
 porosityForceCoeffs
 {
     type           DarcyForchheimer;
-    select         cellZone;
     cellZone       <cellZoneName>; // Specify the name of the cellZone
 
     DarcyForchheimerCoeffs

@@ -1,0 +1,27 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      createZonesDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+rotating
+{
+    type        cylinder;
+    zoneType    cell;
+
+    point1      (0 0 -1);
+    point2      (0 0 1);
+    radius      #calc
+        "$<scalar>blockMeshDict!convertToMeters * $<scalar>blockMeshDict!R";
+}
+
+// ************************************************************************* //

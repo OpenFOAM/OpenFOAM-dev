@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ License
 
 #include "ZoneList.H"
 #include "Pstream.H"
+#include "Time.H"
 #include "demandDrivenData.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -61,7 +62,7 @@ bool Foam::ZoneList<ZoneType, ZonesType, MeshType>::read()
             (
                 zi,
                 patchEntries[zi].keyword(),
-                ZoneType::New
+                new ZoneType
                 (
                     patchEntries[zi].keyword(),
                     patchEntries[zi].dict(),
@@ -100,7 +101,8 @@ Foam::ZoneList<ZoneType, ZonesType, MeshType>::ZoneList
 :
     regIOobject(io),
     PtrListDictionary<ZoneType>(0),
-    mesh_(mesh)
+    mesh_(mesh),
+    timeIndex_(mesh.time().timeIndex())
 {
     read();
 }
@@ -136,6 +138,23 @@ bool Foam::ZoneList<ZoneType, ZonesType, MeshType>::found
 
 
 template<class ZoneType, class ZonesType, class MeshType>
+const ZoneType* Foam::ZoneList<ZoneType, ZonesType, MeshType>::lookupPtr
+(
+    const word& name
+) const
+{
+    if (name == "all")
+    {
+        return &all();
+    }
+    else
+    {
+        return PtrListDictionary<ZoneType>::lookupPtr(name);
+    }
+}
+
+
+template<class ZoneType, class ZonesType, class MeshType>
 Foam::labelList Foam::ZoneList<ZoneType, ZonesType, MeshType>::whichZones
 (
     const label objectIndex
@@ -152,22 +171,6 @@ Foam::labelList Foam::ZoneList<ZoneType, ZonesType, MeshType>::whichZones
     }
 
     return zones;
-}
-
-
-template<class ZoneType, class ZonesType, class MeshType>
-Foam::wordList Foam::ZoneList<ZoneType, ZonesType, MeshType>::types() const
-{
-    const PtrListDictionary<ZoneType>& zones = *this;
-
-    wordList lst(zones.size());
-
-    forAll(zones, zi)
-    {
-        lst[zi] = zones[zi].type();
-    }
-
-    return lst;
 }
 
 
@@ -197,7 +200,6 @@ Foam::labelHashSet Foam::ZoneList<ZoneType, ZonesType, MeshType>::zoneSet
             {
                 WarningInFunction
                     << "Cannot find zone " << zoneNames[i]
-                    << " of type " << type()
                     << endl;
             }
         }
@@ -208,7 +210,7 @@ Foam::labelHashSet Foam::ZoneList<ZoneType, ZonesType, MeshType>::zoneSet
 
 
 template<class ZoneType, class ZonesType, class MeshType>
-void Foam::ZoneList<ZoneType, ZonesType, MeshType>::append
+const ZoneType& Foam::ZoneList<ZoneType, ZonesType, MeshType>::append
 (
     ZoneType* zonePtr
 ) const
@@ -229,11 +231,15 @@ void Foam::ZoneList<ZoneType, ZonesType, MeshType>::append
             zonePtr
         );
     }
+
+    timeIndex_ = time().timeIndex();
+
+    return *zonePtr;
 }
 
 
 template<class ZoneType, class ZonesType, class MeshType>
-void Foam::ZoneList<ZoneType, ZonesType, MeshType>::append
+const ZoneType& Foam::ZoneList<ZoneType, ZonesType, MeshType>::append
 (
     const ZoneType& zone
 ) const
@@ -253,6 +259,10 @@ void Foam::ZoneList<ZoneType, ZonesType, MeshType>::append
             zone.clone(*this)
         );
     }
+
+    timeIndex_ = time().timeIndex();
+
+    return zone;
 }
 
 
@@ -316,11 +326,6 @@ bool Foam::ZoneList<ZoneType, ZonesType, MeshType>::checkParallelSync
     Pstream::gatherList(allNames);
     Pstream::scatterList(allNames);
 
-    List<wordList> allTypes(Pstream::nProcs());
-    allTypes[Pstream::myProcNo()] = this->types();
-    Pstream::gatherList(allTypes);
-    Pstream::scatterList(allTypes);
-
     // Have every processor check but only master print error.
 
     for (label proci = 1; proci < allNames.size(); proci++)
@@ -328,7 +333,6 @@ bool Foam::ZoneList<ZoneType, ZonesType, MeshType>::checkParallelSync
         if
         (
             (allNames[proci] != allNames[0])
-         || (allTypes[proci] != allTypes[0])
         )
         {
             hasError = true;
@@ -337,10 +341,8 @@ bool Foam::ZoneList<ZoneType, ZonesType, MeshType>::checkParallelSync
             {
                 Info<< " ***Inconsistent zones across processors, "
                        "processor 0 has zone names:" << allNames[0]
-                    << " zone types:" << allTypes[0]
                     << " processor " << proci << " has zone names:"
                     << allNames[proci]
-                    << " zone types:" << allTypes[proci]
                     << endl;
             }
         }
@@ -358,7 +360,6 @@ bool Foam::ZoneList<ZoneType, ZonesType, MeshType>::checkParallelSync
                 if (debug || (report && Pstream::master()))
                 {
                     Info<< " ***Zone " << zones[zi].name()
-                        << " of type " << zones[zi].type()
                         << " is not correctly synchronised"
                         << " across coupled boundaries."
                         << " (coupled faces are either not both"
@@ -392,6 +393,25 @@ void Foam::ZoneList<ZoneType, ZonesType, MeshType>::insert
     {
         zones[zonei].insert(zonesIndices[zonei]);
     }
+
+    timeIndex_ = time().timeIndex();
+}
+
+
+template<class ZoneType, class ZonesType, class MeshType>
+bool Foam::ZoneList<ZoneType, ZonesType, MeshType>::noTopoUpdate() const
+{
+    const PtrListDictionary<ZoneType>& zones = *this;
+
+    forAll(zones, zi)
+    {
+        if (!zones[zi].topoUpdate())
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 
@@ -422,6 +442,20 @@ void Foam::ZoneList<ZoneType, ZonesType, MeshType>::topoChange
     {
         zones[zi].topoChange(map);
     }
+
+    if (all_.valid())
+    {
+        const label allSize = static_cast<const ZonesType&>(*this).allSize();
+        if (all().size() != allSize)
+        {
+            all_() = identityMap
+            (
+                static_cast<const ZonesType&>(*this).allSize()
+            );
+        }
+    }
+
+    timeIndex_ = time().timeIndex();
 }
 
 
@@ -437,6 +471,10 @@ void Foam::ZoneList<ZoneType, ZonesType, MeshType>::mapMesh
     {
         zones[zi].mapMesh(map);
     }
+
+    all_.clear();
+
+    timeIndex_ = time().timeIndex();
 }
 
 
@@ -452,6 +490,10 @@ void Foam::ZoneList<ZoneType, ZonesType, MeshType>::distribute
     {
         zones[zi].distribute(map);
     }
+
+    all_.clear();
+
+    timeIndex_ = time().timeIndex();
 }
 
 
@@ -509,6 +551,8 @@ void Foam::ZoneList<ZoneType, ZonesType, MeshType>::swap(ZonesType& otherZones)
 
     zones.shrink();
     otherZones.shrink();
+
+    timeIndex_ = time().timeIndex();
 }
 
 
@@ -545,6 +589,65 @@ bool Foam::ZoneList<ZoneType, ZonesType, MeshType>::writeObject
     {
         return true;
     }
+}
+
+
+template<class ZoneType, class ZonesType, class MeshType>
+const ZoneType& Foam::ZoneList<ZoneType, ZonesType, MeshType>::all() const
+{
+    const ZonesType& zones = static_cast<const ZonesType&>(*this);
+
+    if (!all_.valid())
+    {
+        all_ = new ZoneType
+        (
+            "all",
+            identityMap(zones.allSize()),
+            zones
+        );
+    }
+
+    return all_();
+}
+
+
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
+
+template<class ZoneType, class ZonesType, class MeshType>
+const ZoneType& Foam::ZoneList<ZoneType, ZonesType, MeshType>::operator[]
+(
+    const word& name
+) const
+{
+    const ZoneType* ptr = lookupPtr(name);
+
+    if (ptr == nullptr)
+    {
+        FatalErrorInFunction
+            << "Cannot find " << ZoneType::typeName << " " << name
+            << exit(FatalError);
+    }
+
+    return *ptr;
+}
+
+
+template<class ZoneType, class ZonesType, class MeshType>
+ZoneType& Foam::ZoneList<ZoneType, ZonesType, MeshType>::operator[]
+(
+    const word& name
+)
+{
+    ZoneType* ptr = this->lookupPtr(name);
+
+    if (ptr == nullptr)
+    {
+        FatalErrorInFunction
+            << "Cannot find " << ZoneType::typeName << " " << name
+            << exit(FatalError);
+    }
+
+    return *ptr;
 }
 
 

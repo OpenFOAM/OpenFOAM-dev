@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -326,18 +326,18 @@ checkHeaderIfndefNames() # scope, fix, files...
     do
         case "$file" in
             (*.H)
-                correctDefine=$(basename "$file" | sed 's/\./_/')
+                correctDefine=$(basename "${file%.H}" | sed 's/\./_/')
 
-                if git grep -q -e "#ifndef.*_H$" --and --not -e "#ifndef.*[ _]$correctDefine" $scopeGrep"$file"
+                if git grep -q -e "#ifndef .*_H$" --and --not -e "#ifndef \(\|.\+_\)${correctDefine}.*_H" $scopeGrep"$file"
                 then
                     ((++errorCount))
                     errorMessages+=("$file")
 
-                    currentDefine=$(grep "#ifndef.*_H$" "$file" | sed 's/#ifndef\s*//')
+                    currentDefine=$(grep "#ifndef .*_H$" "$file" | sed 's/#ifndef\s*//')
 
                     if $fix
                     then
-                        sed -i -e "s/$currentDefine/$correctDefine/" "$file"
+                        sed -i -e "s/$currentDefine/${correctDefine}_H/" "$file"
                     fi
                 fi
                 ;;
@@ -350,8 +350,7 @@ checkHeaderIfndefNames() # scope, fix, files...
 #ifndef/#define statements match the file name. Check and re-add them
 before pushing:"
     else
-        failMessage="
-Revise the following files so that the #ifndef/#define statements match
+        failMessage="Revise the following files so that the #ifndef/#define statements match
 the file name:"
     fi
 

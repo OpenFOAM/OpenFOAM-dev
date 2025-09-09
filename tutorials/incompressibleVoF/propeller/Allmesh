@@ -11,16 +11,16 @@ cp $FOAM_TUTORIALS/resources/geometry/propeller*.obj.gz constant/geometry/
 runApplication blockMesh
 runApplication surfaceFeatures
 runApplication decomposePar -noFields
-runParallel snappyHexMesh -overwrite
+runParallel snappyHexMesh
 
 # Create the sliding patches
-runParallel createBaffles -overwrite
-runParallel splitBaffles -overwrite
+runParallel createBaffles
+runParallel splitBaffles
 
 # Renumber
-runParallel renumberMesh -noFields -overwrite
+runParallel renumberMesh -noFields
 
 # Create non-conformal couples
-runParallel createNonConformalCouples -overwrite nonCouple1 nonCouple2
+runParallel createNonConformalCouples nonCouple1 nonCouple2
 
 #------------------------------------------------------------------------------

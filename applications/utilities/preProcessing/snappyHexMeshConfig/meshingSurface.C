@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,21 +28,17 @@ License
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-namespace Foam
-{
-    template<>
-    const char* NamedEnum<meshingSurface::surfaceType, 5>::names[] =
-        {"wall", "external", "cellZone", "rotatingZone", "baffle"};
-}
-
-
 const Foam::NamedEnum<Foam::meshingSurface::surfaceType, 5>
-    Foam::meshingSurface::surfaceTypeNames;
+Foam::meshingSurface::surfaceTypeNames
+{"wall", "external", "cellZone", "rotatingZone", "baffle"};
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::label Foam::meshingSurface::nSurfaceParts(const triSurfaceMesh& surf)
+Foam::label Foam::meshingSurface::nSurfaceParts
+(
+    const searchableSurfaces::triSurface& surf
+)
 {
     labelList faceZone;
     return surf.markZones(boolList(surf.nEdges(), false), faceZone);
@@ -77,7 +73,7 @@ Foam::meshingSurface::meshingSurface(const fileName& file, const Time& time)
     inletRegions_(),
     outletRegions_()
 {
-    triSurfaceMesh surf
+    searchableSurfaces::triSurface surf
     (
         IOobject
         (

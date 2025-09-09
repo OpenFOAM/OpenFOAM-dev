@@ -14,27 +14,30 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-defaultFieldValues
-(
-    volScalarFieldValue T 300
-    volScalarFieldValue N2 0.77
-    volScalarFieldValue O2 0.23
-    volScalarFieldValue CH4 0
-);
+defaultValues
+{
+    T   300;
+    N2  0.77;
+    O2  0.23;
+    CH4 0;
+}
 
-regions
-(
-    boxToCell
+zones
+{
+    fuel
     {
-        box (0 -10 -100) (0.0036 10 0);
-        fieldValues
-        (
-            volScalarFieldValue CH4 0.1561
-            volScalarFieldValue O2 0.1966
-            volScalarFieldValue N2 0.6473
-        );
-    }
-);
+        type        box;
+        zoneType    cell;
 
+        box (0 -10 -100) (0.0036 10 0);
+
+        values
+        {
+            CH4 0.1561;
+            O2  0.1966;
+            N2  0.6473;
+        }
+    }
+}
 
 // ************************************************************************* //

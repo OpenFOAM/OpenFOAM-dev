@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "zeroDimensionalMassSourceBase.H"
-#include "fvCellSet.H"
+#include "fvCellZone.H"
 #include "basicThermo.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -194,16 +194,9 @@ Foam::fv::zeroDimensionalMassSourceBase::zeroDimensionalMassSourceBase
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::labelUList Foam::fv::zeroDimensionalMassSourceBase::cells() const
+const Foam::cellZone& Foam::fv::zeroDimensionalMassSourceBase::zone() const
 {
-    static labelList zero(1, Zero);
-    return labelUList(zero);
-}
-
-
-Foam::label Foam::fv::zeroDimensionalMassSourceBase::nCells() const
-{
-    return 1;
+    return mesh().cellZones().all();
 }
 
 

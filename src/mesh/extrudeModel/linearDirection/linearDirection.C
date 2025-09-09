@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,9 +44,9 @@ addToRunTimeSelectionTable(extrudeModel, linearDirection, dictionary);
 
 linearDirection::linearDirection(const dictionary& dict)
 :
-    extrudeModel(typeName, dict),
-    direction_(coeffDict_.lookup("direction")),
-    thickness_(coeffDict_.lookup<scalar>("thickness"))
+    extrudeModel(dict),
+    direction_(coeffDict(dict).lookup("direction")),
+    thickness_(coeffDict(dict).lookup<scalar>("thickness"))
 {
     direction_ /= mag(direction_);
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ License
 
 #include "pointConstraints.H"
 #include "emptyPointPatch.H"
+#include "wedgePointPatch.H"
 #include "polyMesh.H"
 #include "pointMesh.H"
 #include "globalMeshData.H"
@@ -62,7 +63,12 @@ void Foam::pointConstraints::makePatchPatchAddressing()
 
     forAll(pbm, patchi)
     {
-        if (!isA<emptyPointPatch>(pbm[patchi]) && !pbm[patchi].coupled())
+        if
+        (
+            !isA<emptyPointPatch>(pbm[patchi])
+         && !isA<wedgePointPatch>(pbm[patchi])
+         && !pbm[patchi].coupled()
+        )
         {
             const labelList& bp = bm[patchi].boundaryPoints();
 
@@ -99,7 +105,12 @@ void Foam::pointConstraints::makePatchPatchAddressing()
 
     forAll(pbm, patchi)
     {
-        if (!isA<emptyPointPatch>(pbm[patchi]) && !pbm[patchi].coupled())
+        if
+        (
+            !isA<emptyPointPatch>(pbm[patchi])
+         && !isA<wedgePointPatch>(pbm[patchi])
+         && !pbm[patchi].coupled()
+        )
         {
             const labelList& bp = bm[patchi].boundaryPoints();
             const labelList& meshPoints = pbm[patchi].meshPoints();
@@ -159,7 +170,12 @@ void Foam::pointConstraints::makePatchPatchAddressing()
         // Copy from patchPatch constraints into coupledConstraints.
         forAll(pbm, patchi)
         {
-            if (!isA<emptyPointPatch>(pbm[patchi]) && !pbm[patchi].coupled())
+            if
+            (
+                !isA<emptyPointPatch>(pbm[patchi])
+             && !isA<wedgePointPatch>(pbm[patchi])
+             && !pbm[patchi].coupled()
+            )
             {
                 const labelList& bp = bm[patchi].boundaryPoints();
                 const labelList& meshPoints = pbm[patchi].meshPoints();

@@ -6,36 +6,33 @@
      \\/     M anipulation  |
 \*---------------------------------------------------------------------------*/
 
+type            surfaces;
+libs            ("libsampling.so");
+writeControl    runTime;
+writeInterval   0.02;
+
+surfaceFormat   vtk;
+writeFormat     binary;
+fields          (alpha.water);
+
+interpolationScheme cellPoint;
+
 surfaces
 {
-    type            surfaces;
-    libs            ("libsampling.so");
-    writeControl    runTime;
-    writeInterval   0.02;
+    iso-alpha
+    {
+        type            isoSurface;
+        isoField        alpha.water;
+        isoValue        0.5;
+        interpolate     true;
+    }
 
-    surfaceFormat   vtk;
-    writeFormat     binary;
-    fields          (alpha.water);
-
-    interpolationScheme cellPoint;
-
-    surfaces
-    (
-        iso-alpha
-        {
-            type            isoSurface;
-            isoField        alpha.water;
-            isoValue        0.5;
-            interpolate     true;
-        }
-
-        hull
-        {
-            type            patch;
-            patches         (hull);
-            interpolate     true;
-        }
-    );
+    hull
+    {
+        type            patch;
+        patches         (hull);
+        interpolate     true;
+    }
 }
 
 // ************************************************************************* //

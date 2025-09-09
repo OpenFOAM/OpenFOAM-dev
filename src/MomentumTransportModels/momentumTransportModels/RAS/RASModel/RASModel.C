@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,7 @@ Foam::RASModel<BasicMomentumTransportModel>::RASModel
         viscosity
     ),
 
-    turbulence_(RASDict().lookup("turbulence")),
+    turbulence_(RASDict().template lookupOrDefault<Switch>("turbulence", true)),
     kMin_("kMin", sqr(dimVelocity), RASDict(), small),
     nutMaxCoeff_("nutMaxCoeff", dimless, RASDict(), 1e5),
 
@@ -162,7 +162,7 @@ bool Foam::RASModel<BasicMomentumTransportModel>::read()
 {
     if (BasicMomentumTransportModel::read())
     {
-        RASDict().lookup("turbulence") >> turbulence_;
+        turbulence_.readIfPresent("turbulence", RASDict());
         kMin_.readIfPresent(RASDict());
         nutMaxCoeff_.readIfPresent(RASDict());
 

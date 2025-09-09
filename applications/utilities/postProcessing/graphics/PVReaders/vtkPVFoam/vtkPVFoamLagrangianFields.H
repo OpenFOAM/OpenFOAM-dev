@@ -30,9 +30,17 @@ InClass
 #define vtkPVFoamLagrangianFields_H
 
 #include "vtkPVFoam.H"
-#include "IOobjectList.H"
-#include "LagrangianFields.H"
+#include "vtkPVFoamReader.h"
 #include "vtkOpenFOAMTupleRemap.H"
+
+// OpenFOAM includes
+#include "LagrangianFields.H"
+#include "lagrangianFieldReconstructor.H"
+#include "LagrangianFieldReconstructor.H"
+
+// VTK includes
+#include "vtkFloatArray.h"
+#include "vtkPointData.h"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -49,11 +57,23 @@ void Foam::vtkPVFoam::convertlagrangianFields
     forAllConstIter(IOobjectList, objects, iter)
     {
         // restrict to this IOField<Type>
-        if (iter()->headerClassName() == IOField<Type>::typeName)
-        {
-            IOField<Type> tf(*iter());
-            convertlagrangianField(tf, output, range, datasetNo);
-        }
+        if (iter()->headerClassName() != IOField<Type>::typeName) continue;
+
+        const IOField<Type> tf
+        (
+            reader_->GetDecomposedCase()
+          ? lagrangianReconstructors_[datasetNo]
+           .reconstructField<Type, IOField, IOField>(*iter())
+          : tmp<IOField<Type>>(new IOField<Type>(*iter()))
+        );
+
+        convertlagrangianField
+        (
+            tf,
+            output,
+            range,
+            datasetNo
+        );
     }
 }
 
@@ -63,26 +83,34 @@ void Foam::vtkPVFoam::convertLagrangianFields
 (
     const IOobjectList& objects,
     vtkMultiBlockDataSet* output,
-    const label datasetNo,
-    const LagrangianMesh& Lmesh
+    const label datasetNo
 )
 {
     const arrayRange& range = arrayRangeLagrangian_;
 
     forAllConstIter(IOobjectList, objects, iter)
     {
-        if (iter()->headerClassName() == GeoField<Type>::typeName)
-        {
-            GeoField<Type> tf(*iter(), Lmesh);
+        // restrict to this GeoField<Type>
+        if (iter()->headerClassName() != GeoField<Type>::typeName) continue;
 
-            convertLagrangianField<Type, GeoField>
+        const GeoField<Type> tf
+        (
+            reader_->GetDecomposedCase()
+          ? LagrangianReconstructors_[datasetNo]
+           .reconstructField<GeoField<Type>>(*iter())
+          : tmp<GeoField<Type>>
             (
-                tf,
-                output,
-                range,
-                datasetNo
-            );
-        }
+                new GeoField<Type>(*iter(), LagrangianMeshes_[datasetNo])
+            )
+        );
+
+        convertLagrangianField<Type, GeoField>
+        (
+            tf,
+            output,
+            range,
+            datasetNo
+        );
     }
 }
 
@@ -104,28 +132,26 @@ void Foam::vtkPVFoam::convertlagrangianField
     pointData->Allocate(nComp*tf.size());
     pointData->SetName(tf.name().c_str());
 
-    if (debug)
-    {
-        Info<< "convert lagrangianField: "
-            << tf.name()
-            << " size = " << tf.size()
-            << " nComp=" << nComp
-            << " nTuples = " << tf.size() <<  endl;
-    }
+    DebugInFunction
+        << "Converting lagrangian field: " << tf.name()
+        << " size=" << tf.size()
+        << ", nComp=" << nComp << endl;
 
     float vec[nComp];
+
     forAll(tf, i)
     {
         const Type& t = tf[i];
+
         for (direction d=0; d<nComp; ++d)
         {
             vec[d] = component(t, d);
         }
+
         vtkOpenFOAMTupleRemap<Type>(vec);
 
         pointData->InsertTuple(i, vec);
     }
-
 
     vtkPolyData::SafeDownCast
     (
@@ -154,14 +180,10 @@ void Foam::vtkPVFoam::convertLagrangianField
     pointData->Allocate(nComp*tf.primitiveField().size());
     pointData->SetName(tf.name().c_str());
 
-    if (debug)
-    {
-        Info<< "convert LagrangianField: "
-            << tf.name()
-            << " size = " << tf.primitiveField().size()
-            << " nComp=" << nComp
-            << " nTuples = " << tf.primitiveField().size() <<  endl;
-    }
+    DebugInFunction
+        << "Converting Lagrangian field: " << tf.name()
+        << " size=" << tf.primitiveField().size()
+        << ", nComp=" << nComp << endl;
 
     float vec[nComp];
 

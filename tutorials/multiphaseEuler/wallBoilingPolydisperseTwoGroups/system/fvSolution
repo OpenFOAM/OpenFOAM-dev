@@ -18,13 +18,13 @@ solvers
 {
     "alpha.*"
     {
-        nAlphaCorr      1;
-        nAlphaSubCycles 1;
+        nCorrectors     1;
+        nSubCycles      1;
     }
 
     bubbles
     {
-        nCorr                   1;
+        nCorrectors             1;
         tolerance               1e-4;
         scale                   true;
         solveOnFinalIterOnly    true;
@@ -91,7 +91,8 @@ relaxationFactors
 {
     fields
     {
-        thermalPhaseChange:dmdtf 1.0;
+        heatTransferLimitedPhaseChange:mDot 1;
+        heatTransferLimitedPhaseChange2:mDot 1;
     }
 
     equations

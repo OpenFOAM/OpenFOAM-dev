@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ using namespace Foam;
 int main(int argc, char *argv[])
 {
     Foam::argList::addBoolOption("write", "write mesh/results files");
-    #include "addOverwriteOption.H"
+    #include "addNoOverwriteOption.H"
     #include "addRegionOption.H"
 
     #include "setRootCase.H"

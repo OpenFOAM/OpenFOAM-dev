@@ -20,7 +20,7 @@ addLayers       true;
 
 
 // Geometry. Definition of all surfaces. All surfaces are of class
-// searchableSurface.
+// surface.
 // Surfaces are used
 // - to specify refinement for any mesh cell intersecting it
 // - to specify refinement for any mesh cell inside/outside/near
@@ -29,13 +29,13 @@ geometry
 {
     motorBike
     {
-        type triSurfaceMesh;
+        type triSurface;
         file "motorBike.obj";
     }
 
     refinementBox
     {
-        type searchableBox;
+        type box;
         min (-1.0 -0.7 0.0);
         max ( 8.0  0.7 2.5);
     }

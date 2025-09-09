@@ -357,8 +357,7 @@ Foam::phaseInterface::phaseInterface
 )
 :
     phase1_(getPhase1(phase1, phase2)),
-    phase2_(getPhase2(phase1, phase2)),
-    g_(phase1.mesh().lookupObject<uniformDimensionedVectorField>("g"))
+    phase2_(getPhase2(phase1, phase2))
 {}
 
 

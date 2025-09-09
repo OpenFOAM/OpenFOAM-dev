@@ -6,7 +6,7 @@
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 Description
-    Calculate the specie-flux and write it as a surfaceScalarField
+    Calculate the diffusive specie-flux and write it as a surfaceScalarField
     'specieDiffusiveFlux(<specieName>)'.
 
 \*---------------------------------------------------------------------------*/

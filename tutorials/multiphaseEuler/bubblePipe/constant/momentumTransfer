@@ -1,0 +1,122 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      momentumTransfer;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+drag
+{
+    air1_dispersedIn_water
+    {
+        type            IshiiZuber;
+    }
+
+    air2_dispersedIn_water
+    {
+        type            IshiiZuber;
+    }
+}
+
+virtualMass
+{
+    air1_dispersedIn_water
+    {
+        type            constantCoefficient;
+        Cvm             0.5;
+    }
+
+    air2_dispersedIn_water
+    {
+        type            constantCoefficient;
+        Cvm             0.5;
+    }
+}
+
+lift
+{
+    air1_dispersedIn_water
+    {
+        type            wallDamped;
+
+        wallDamping
+        {
+            type        cosine;
+            Cd          3.0;
+        }
+
+        lift
+        {
+            type        Tomiyama;
+
+            aspectRatio
+            {
+                type    Wellek;
+            }
+        }
+    }
+
+    air2_dispersedIn_water
+    {
+        type            wallDamped;
+
+        wallDamping
+        {
+            type        cosine;
+            Cd          3.0;
+        }
+
+        lift
+        {
+            type        Tomiyama;
+
+            aspectRatio
+            {
+                type    Wellek;
+            }
+        }
+    }
+}
+
+wallLubrication
+{
+    air1_dispersedIn_water
+    {
+        type            Antal;
+        Cw1             -0.01;
+        Cw2             0.05;
+    }
+
+    air2_dispersedIn_water
+    {
+        type            Antal;
+        Cw1             -0.01;
+        Cw2             0.05;
+    }
+}
+
+turbulentDispersion
+{
+    air1_dispersedIn_water
+    {
+        type            Burns;
+        sigma           0.9;
+    }
+
+    air2_dispersedIn_water
+    {
+        type            Burns;
+        sigma           0.9;
+    }
+}
+
+// ************************************************************************* //

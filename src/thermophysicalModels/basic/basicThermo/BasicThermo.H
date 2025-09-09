@@ -125,11 +125,26 @@ protected:
 
         //- Return a scalarField of the given property for a source
         template<class Mixture, class Method, class ... Args>
+        tmp<volScalarField::Internal> fieldSourceProperty
+        (
+            const word& psiName,
+            const dimensionSet& psiDim,
+            Mixture mixture,
+            Method psiMethod,
+            const fvSource& model,
+            const volScalarField::Internal& source,
+            const Args& ... args
+        ) const;
+
+        //- Return a scalarField of the given property for a source
+        template<class Mixture, class Method, class ... Args>
         tmp<scalarField> fieldSourceProperty
         (
             Mixture mixture,
             Method psiMethod,
-            const fvSource& source,
+            const fvSource& model,
+            const scalarField& source,
+            const labelUList& cells,
             const Args& ... args
         ) const;
 
@@ -189,12 +204,6 @@ public:
 
         //- Return the properties dictionary
         virtual const IOdictionary& properties() const
-        {
-            return *this;
-        }
-
-        //- Return the mixture
-        const MixtureType& mixture() const
         {
             return *this;
         }
@@ -293,10 +302,20 @@ public:
             ) const;
 
             //- Enthalpy/Internal energy for source [J/kg]
+            virtual tmp<volScalarField::Internal> he
+            (
+                const volScalarField::Internal& T,
+                const fvSource& model,
+                const volScalarField::Internal& source
+            ) const;
+
+            //- Enthalpy/Internal energy for source [J/kg]
             virtual tmp<scalarField> he
             (
                 const scalarField& T,
-                const fvSource& source
+                const fvSource& model,
+                const scalarField& source,
+                const labelUList& cells
             ) const;
 
             //- Sensible enthalpy [J/kg/K]

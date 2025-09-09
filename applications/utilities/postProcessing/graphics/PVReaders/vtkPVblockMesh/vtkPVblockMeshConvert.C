@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,12 +25,11 @@ License
 
 #include "vtkPVblockMesh.H"
 #include "vtkPVblockMeshReader.h"
+#include "vtkOpenFOAMPoints.H"
 
 // OpenFOAM includes
 #include "blockMesh.H"
 #include "Time.H"
-
-#include "vtkOpenFOAMPoints.H"
 
 // VTK includes
 #include "vtkCellArray.h"
@@ -39,7 +38,6 @@ License
 #include "vtkPoints.h"
 #include "vtkPolyData.h"
 #include "vtkUnstructuredGrid.h"
-
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
@@ -57,25 +55,12 @@ void Foam::vtkPVblockMesh::convertMeshBlocks
     const blockMesh& blkMesh = *meshPtr_;
     const Foam::pointField& blockPoints = blkMesh.vertices();
 
-    if (debug)
-    {
-        InfoInFunction << endl;
-    }
-
     int blockI = 0;
     const scalar scaleFactor = blkMesh.scaleFactor();
 
-    for
-    (
-        int partId = range.start();
-        partId < range.end();
-        ++partId, ++blockI
-    )
+    for (int partId = range.start(); partId < range.end(); ++partId, ++blockI)
     {
-        if (!blockStatus_[partId])
-        {
-            continue;
-        }
+        if (!blockStatus_[partId]) continue;
 
         const blockDescriptor& blockDef = blkMesh[blockI];
 
@@ -83,7 +68,7 @@ void Foam::vtkPVblockMesh::convertMeshBlocks
 
         // Convert OpenFOAM mesh vertices to VTK
         vtkPoints *vtkpoints = vtkPoints::New();
-        vtkpoints->Allocate( blockDef.nPoints() );
+        vtkpoints->Allocate(blockDef.nPoints());
         const labelList& blockLabels = blockDef.blockShape();
 
         vtkmesh->Allocate(1);
@@ -121,12 +106,8 @@ void Foam::vtkPVblockMesh::convertMeshBlocks
         datasetNo++;
     }
 
-
     // Anything added?
-    if (datasetNo)
-    {
-        ++blockNo;
-    }
+    if (datasetNo) ++blockNo;
 }
 
 
@@ -148,17 +129,9 @@ void Foam::vtkPVblockMesh::convertMeshEdges
     int edgeI = 0;
     const scalar scaleFactor = blkMesh.scaleFactor();
 
-    for
-    (
-        int partId = range.start();
-        partId < range.end();
-        ++partId, ++edgeI
-    )
+    for (int partId = range.start(); partId < range.end(); ++partId, ++edgeI)
     {
-        if (!edgeStatus_[partId])
-        {
-            continue;
-        }
+        if (!edgeStatus_[partId]) continue;
 
         // Search each block
         forAll(blkMesh, blockI)
@@ -190,10 +163,10 @@ void Foam::vtkPVblockMesh::convertMeshEdges
                 vtkPolyData* vtkmesh = vtkPolyData::New();
                 vtkPoints* vtkpoints = vtkPoints::New();
 
-                vtkpoints->Allocate( edgePoints.size() );
+                vtkpoints->Allocate(edgePoints.size());
                 vtkmesh->Allocate(1);
 
-                vtkIdType pointIds[edgePoints.size()];
+                List<vtkIdType> pointIds(edgePoints.size());
                 forAll(edgePoints, ptI)
                 {
                     vtkInsertNextOpenFOAMPoint
@@ -209,7 +182,7 @@ void Foam::vtkPVblockMesh::convertMeshEdges
                 (
                     VTK_POLY_LINE,
                     edgePoints.size(),
-                    pointIds
+                    pointIds.data()
                 );
 
                 vtkmesh->SetPoints(vtkpoints);
@@ -229,12 +202,8 @@ void Foam::vtkPVblockMesh::convertMeshEdges
         }
     }
 
-
     // Anything added?
-    if (datasetNo)
-    {
-        ++blockNo;
-    }
+    if (datasetNo) ++blockNo;
 }
 
 
@@ -251,55 +220,44 @@ void Foam::vtkPVblockMesh::convertMeshCorners
     const pointField& blockPoints = meshPtr_->vertices();
     const scalar& scaleFactor = meshPtr_->scaleFactor();
 
-    if (debug)
+    vtkPolyData* vtkmesh = vtkPolyData::New();
+    vtkPoints* vtkpoints = vtkPoints::New();
+    vtkCellArray* vtkcells = vtkCellArray::New();
+
+    vtkpoints->Allocate(blockPoints.size());
+    vtkcells->Allocate(blockPoints.size());
+
+    vtkIdType pointId = 0;
+    forAll(blockPoints, ptI)
     {
-        InfoInFunction << endl;
-    }
-
-    if (true)  // Or some flag or other condition
-    {
-        vtkPolyData* vtkmesh = vtkPolyData::New();
-        vtkPoints* vtkpoints = vtkPoints::New();
-        vtkCellArray* vtkcells = vtkCellArray::New();
-
-        vtkpoints->Allocate( blockPoints.size() );
-        vtkcells->Allocate( blockPoints.size() );
-
-        vtkIdType pointId = 0;
-        forAll(blockPoints, ptI)
-        {
-            vtkInsertNextOpenFOAMPoint
-            (
-                vtkpoints,
-                blockPoints[ptI],
-                scaleFactor
-            );
-
-            vtkcells->InsertNextCell(1, &pointId);
-            pointId++;
-        }
-
-        vtkmesh->SetPoints(vtkpoints);
-        vtkpoints->Delete();
-
-        vtkmesh->SetVerts(vtkcells);
-        vtkcells->Delete();
-
-        AddToBlock
+        vtkInsertNextOpenFOAMPoint
         (
-            output, vtkmesh, range, datasetNo,
-            arrayRangeCorners_.name()
+            vtkpoints,
+            blockPoints[ptI],
+            scaleFactor
         );
-        vtkmesh->Delete();
 
-        datasetNo++;
+        vtkcells->InsertNextCell(1, &pointId);
+        pointId++;
     }
+
+    vtkmesh->SetPoints(vtkpoints);
+    vtkpoints->Delete();
+
+    vtkmesh->SetVerts(vtkcells);
+    vtkcells->Delete();
+
+    AddToBlock
+    (
+        output, vtkmesh, range, datasetNo,
+        arrayRangeCorners_.name()
+    );
+    vtkmesh->Delete();
+
+    datasetNo++;
 
     // Anything added?
-    if (datasetNo)
-    {
-        ++blockNo;
-    }
+    if (datasetNo) ++blockNo;
 }
 
 

@@ -345,7 +345,12 @@ Foam::dictionary::dictionary
     const dictionary& parentDict
 )
 :
-    dictionaryName(name),
+    dictionaryName
+    (
+        parentDict.name().size()
+      ? parentDict.name()/name
+      : name
+    ),
     parent_(parentDict),
     filePtr_(nullptr)
 {}

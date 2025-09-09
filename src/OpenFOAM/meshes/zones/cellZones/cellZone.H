@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,12 +25,15 @@ Class
     Foam::cellZone
 
 Description
-    A subset of mesh cells.
+    Named list of cell indices representing a sub-set of the mesh
 
-    Currently set up as an indirect list but will be extended to use a
-    primitive mesh.  For quick check whether a cell belongs to the zone use
-    the lookup mechanism in cellZoneList, where all the zoned cells are
-    registered with their zone number.
+    Used by mesh-manipulation tools, field initialisation and for sources and
+    functionObjects that apply to sub-sets of the cells.
+
+See also
+    cellZoneList
+    Zone
+    zoneGenerator
 
 SourceFiles
     cellZone.C
@@ -60,33 +63,49 @@ class cellZone
 
 public:
 
-    typedef cellZoneList ZonesType;
-
     // Static Data Members
 
         //- The name associated with the zone-labels dictionary entry
         static const char* const labelsName;
 
-    //- Runtime type information
-    TypeName("cellZone");
+        //- Runtime type information
+        ClassName("cellZone");
 
 
     // Constructors
 
         using Zone::Zone;
 
-        //- Construct and return a clone, resetting the mesh zones
-        virtual autoPtr<cellZone> clone(const cellZoneList& mz) const
+        //- Construct and return a clone
+        autoPtr<cellZone> clone() const
         {
             return autoPtr<cellZone>
             (
-                new cellZone(*this, *this, mz)
+                new cellZone(*this, name(), *this, zones())
+            );
+        }
+
+        //- Construct and return a clone with a new name
+        autoPtr<cellZone> clone(const word& name) const
+        {
+            return autoPtr<cellZone>
+            (
+                new cellZone(*this, name, *this, zones())
+            );
+        }
+
+        //- Construct and return a clone, resetting the mesh zones
+        autoPtr<cellZone> clone(const cellZoneList& mz) const
+        {
+            return autoPtr<cellZone>
+            (
+                new cellZone(*this, name(), *this, mz)
             );
         }
 
         //- Construct and return a clone, resetting the cell list
         //  and mesh zones
-        virtual autoPtr<cellZone> clone
+        autoPtr<cellZone> clone
         (
             const labelUList& addr,
             const cellZoneList& mz
@@ -94,15 +113,12 @@ public:
         {
             return autoPtr<cellZone>
             (
-                new cellZone(*this, addr, mz)
+                new cellZone(*this, name(), addr, mz)
             );
         }
 
 
     // Member Functions
-
-        //- Return the mesh cell centres
-        const pointField& meshCentres() const;
 
         //- Check zone definition. Return true if in error.
         bool checkDefinition(const bool report = false) const;
@@ -115,10 +131,10 @@ public:
         }
 
         //- Update zone using the given map
-        virtual void topoChange(const polyTopoChangeMap& map);
+        void topoChange(const polyTopoChangeMap& map);
 
         //- Write dictionary
-        virtual void writeDict(Ostream&) const;
+        void writeDict(Ostream&) const;
 
 
     // Member Operators

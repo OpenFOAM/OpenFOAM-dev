@@ -14,9 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-type    basicMultiphaseSystem;
-
-phases (gas liquid);
+phases          (gas liquid);
 
 gas
 {
@@ -41,77 +39,6 @@ liquid
     residualAlpha   1e-6;
 }
 
-drag
-{
-    gas_dispersedIn_liquid
-    {
-        type            IshiiZuber;
-    }
-}
-
-virtualMass
-{
-    gas_dispersedIn_liquid
-    {
-        type            constantCoefficient;
-        Cvm             0.5;
-    }
-}
-
-heatTransfer
-{
-    gas_dispersedIn_liquid
-    {
-        type RanzMarshall;
-    }
-}
-
-lift
-{
-    gas_dispersedIn_liquid
-    {
-        type wallDamped;
-
-        lift
-        {
-            type Tomiyama;
-            Cl 0.288;
-
-            aspectRatio
-            {
-                type constant;
-                E0 1;
-            }
-        }
-
-        wallDamping
-        {
-            type    cosine;
-            Cd      1.0;
-            zeroInNearWallCells yes;
-        }
-    }
-}
-
-wallLubrication
-{
-    gas_dispersedIn_liquid
-    {
-        type            Antal;
-        Cw1             -0.01;
-        Cw2             0.05;
-    }
-}
-
-turbulentDispersion
-{
-    gas_dispersedIn_liquid
-    {
-        type                Burns;
-        sigma               0.7;
-    }
-}
-
 blending
 {
     default
@@ -129,11 +56,5 @@ surfaceTension
         sigma           0.071;
     }
 }
-
-phaseTransfer
-{}
-
-interfaceCompression
-{}
 
 // ************************************************************************* //

@@ -28,8 +28,8 @@ writeCachedObjects
     );
 }
 
-#include "cutPlane"
-#include "streamlines"
-#include "forceCoeffs"
+#includeFunc cutPlane
+#includeFunc streamlines
+#includeFunc forceCoeffs
 
 // ************************************************************************* //

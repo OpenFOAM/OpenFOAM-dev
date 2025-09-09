@@ -80,7 +80,7 @@ public:
         //- Construct as copy
         LagrangianSp(const LagrangianSp<Type>& Sp);
 
-        //- Construct as copy or re-use as specified
+        //- Construct as copy or reuse as specified
         LagrangianSp(LagrangianSp<Type>& Sp, const bool reuse);
 
         //- Move construct
@@ -170,7 +170,7 @@ public:
         //- Construct as copy
         LagrangianSp(const LagrangianSp<vector>& coeff);
 
-        //- Construct as copy or re-use as specified
+        //- Construct as copy or reuse as specified
         LagrangianSp(LagrangianSp<vector>& coeff, const bool reuse);
 
         //- Move construct

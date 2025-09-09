@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,8 +49,7 @@ Usage
     {
         type            actuationDisk;
 
-        select          cellSet;
-        cellSet         actuationDisk1;
+        cellZone        actuationDisk1;
 
         diskDir         (-1 0 0);   // Disk direction
         Cp              0.1;        // Power coefficient
@@ -70,7 +69,7 @@ SourceFiles
 #define actuationDisk_H
 
 #include "fvModel.H"
-#include "fvCellSet.H"
+#include "fvCellZone.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -91,8 +90,8 @@ protected:
 
     // Protected Data
 
-        //- The set of cells the fvConstraint applies to
-        fvCellSet set_;
+        //- The cellZone the fvConstraint applies to
+        fvCellZone zone_;
 
         //- The name of the phase to which this fvModel applies
         word phaseName_;

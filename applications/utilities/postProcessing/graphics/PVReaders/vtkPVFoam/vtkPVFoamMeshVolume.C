@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,12 +25,11 @@ License
 
 #include "vtkPVFoam.H"
 #include "vtkPVFoamReader.h"
+#include "vtkOpenFOAMPoints.H"
 
 // OpenFOAM includes
-#include "fvMesh.H"
+#include "volFields.H"
 #include "cellModeller.H"
-#include "vtkOpenFOAMPoints.H"
-#include "Swap.H"
 #include "polygonTriangulate.H"
 
 // VTK includes
@@ -55,12 +54,6 @@ vtkUnstructuredGrid* Foam::vtkPVFoam::volumeVTKMesh
 
     vtkUnstructuredGrid* vtkmesh = vtkUnstructuredGrid::New();
 
-    if (debug)
-    {
-        InfoInFunction << endl;
-        printMemory();
-    }
-
     const cellShapeList& cellShapes = mesh.cellShapes();
 
     // Number of additional points needed by the decomposition of polyhedra
@@ -79,12 +72,6 @@ vtkUnstructuredGrid* Foam::vtkPVFoam::volumeVTKMesh
     // and cells
     if (!reader_->GetUseVTKPolyhedron())
     {
-        if (debug)
-        {
-            InfoInFunction
-                << "... scanning for polyhedra" << endl;
-        }
-
         forAll(cellShapes, celli)
         {
             const cellModel& model = cellShapes[celli].model();
@@ -127,21 +114,13 @@ vtkUnstructuredGrid* Foam::vtkPVFoam::volumeVTKMesh
 
     // Set size of additional cells mapping array
     // (from added cell to original cell)
-
-    if (debug)
-    {
-        Info<< "    mesh nCells     = " << mesh.nCells() << nl
-            << "         nPoints    = " << mesh.nPoints() << nl
-            << "         nAddCells  = " << nAddCells << nl
-            << "         nAddPoints = " << nAddPoints << endl;
-    }
-
     superCells.setSize(mesh.nCells() + nAddCells);
 
-    if (debug)
-    {
-        Info<< "    ... converting points" << endl;
-    }
+    DebugInFunction
+        << "nCells=" << mesh.nCells()
+        << ", nPoints=" << mesh.nPoints()
+        << ", nAddCells=" << nAddCells
+        << ", nAddPoints=" << nAddPoints << endl;
 
     // Convert OpenFOAM mesh vertices to VTK
     vtkPoints* vtkpoints = vtkPoints::New();
@@ -152,12 +131,6 @@ vtkUnstructuredGrid* Foam::vtkPVFoam::volumeVTKMesh
     forAll(points, i)
     {
         vtkInsertNextOpenFOAMPoint(vtkpoints, points[i]);
-    }
-
-
-    if (debug)
-    {
-        Info<< "    ... converting cells" << endl;
     }
 
     vtkmesh->Allocate(mesh.nCells() + nAddCells);
@@ -363,9 +336,20 @@ vtkUnstructuredGrid* Foam::vtkPVFoam::volumeVTKMesh
             // Mapping from additional point to cell
             addPointCellLabels[addPointi] = celli;
 
-            // The new vertex from the cell-centre
+            // Create a new vertex from the cell-centre. If the mesh doesn't
+            // have cell-centres stored then compute the centre on the fly.
+            // These polyhedra should (hopefully) only be a small minority of
+            // the cells, and computing cell-centres throughout the mesh is
+            // quite expensive and involves a lot of memory (it also creates
+            // face areas and centres and cell volumes).
             const label newVertexLabel = mesh.nPoints() + addPointi;
-            vtkInsertNextOpenFOAMPoint(vtkpoints, mesh.C()[celli]);
+            vtkInsertNextOpenFOAMPoint
+            (
+                vtkpoints,
+                mesh.has(&primitiveMesh::cellCentres)
+              ? mesh.cellCentres()[celli]
+              : mesh.cells()[celli].centre(mesh.points(), mesh.faces())
+            );
 
             // Whether to insert cell in place of original or not.
             bool substituteCell = true;
@@ -481,11 +465,6 @@ vtkUnstructuredGrid* Foam::vtkPVFoam::volumeVTKMesh
 
     vtkmesh->SetPoints(vtkpoints);
     vtkpoints->Delete();
-
-    if (debug)
-    {
-        printMemory();
-    }
 
     return vtkmesh;
 }

@@ -76,7 +76,9 @@ bool Foam::solvers::multiphaseVoFSolver::read()
     nAlphaSubCyclesPtr =
         Function1<scalar>::New
         (
-            "nAlphaSubCycles",
+            alphaControls.found("nAlphaSubCycles")
+          ? "nAlphaSubCycles"
+          : "nSubCycles",
             dimless,
             dimless,
             alphaControls

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -252,17 +252,44 @@ processValuesTypeType
         {
             const scalarField magSf(mag(Sf));
 
-            Type meanValue = gSum(values*magSf)/gSum(magSf);
+            const Type meanValue = gSum(values*magSf)/gSum(magSf);
 
             const label nComp = pTraits<Type>::nComponents;
 
             for (direction d=0; d<nComp; ++d)
             {
-                scalarField vals(values.component(d));
-                scalar mean = component(meanValue, d);
-                scalar& res = setComponent(result, d);
+                const scalarField vals(values.component(d));
+                const scalar mean = component(meanValue, d);
 
-                res = sqrt(gSum(magSf*sqr(vals - mean))/gSum(magSf))/mean;
+                setComponent(result, d) =
+                    protectedDivide
+                    (
+                        sqrt(gSum(magSf*sqr(vals - mean))/gSum(magSf)),
+                        mean
+                    );
+            }
+
+            return true;
+        }
+        case operationType::UI:
+        {
+            const scalarField magSf(mag(Sf));
+
+            const Type meanValue = gSum(values*magSf)/gSum(magSf);
+
+            const label nComp = pTraits<Type>::nComponents;
+
+            for (direction d=0; d<nComp; ++d)
+            {
+                const scalarField vals(values.component(d));
+                const scalar mean = component(meanValue, d);
+
+                setComponent(result, d) =
+                    1 - 0.5*protectedDivide
+                    (
+                        gSum(magSf*mag(vals - mean))/gSum(magSf),
+                        mean
+                    );
             }
 
             return true;
@@ -314,8 +341,8 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::writeValues
                     file() << tab << result;                                   \
                                                                                \
                     Log << "    " << operationTypeNames_[operation_]           \
-                        << "(" << selectionName_ << ") of " << fieldName       \
-                        <<  " = " << result << endl;                           \
+                        << "(" << selectionName_.c_str() << ") of "            \
+                        << fieldName <<  " = " << result << endl;              \
                 }                                                              \
             }                                                                  \
                                                                                \
@@ -360,7 +387,7 @@ Foam::functionObjects::fieldValues::surfaceFieldValue::filterField
             FatalErrorInFunction
                 << type() << " " << name() << ": "
                 << selectionTypeNames[selectionType_]
-                << "(" << selectionName_ << "):"
+                << "(" << selectionName_.c_str() << "):"
                 << nl
                 << "    Unable to process internal faces for volume field "
                 << field.name() << nl << abort(FatalError);

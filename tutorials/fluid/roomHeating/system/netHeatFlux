@@ -1,0 +1,23 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Calculates the total wallHeatFlux through the entire boundary, i.e. all
+    patches.
+
+\*---------------------------------------------------------------------------*/
+
+type            surfaceFieldValue;
+libs            ( "libfieldFunctionObjects.so" );
+log             no;
+writeFields     no;
+patch           ".*";
+operation       areaIntegrate;
+fields          (wallHeatFlux);
+writeControl    outputTime;
+
+// ************************************************************************* //

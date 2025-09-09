@@ -148,9 +148,9 @@ void Foam::solvers::compressibleMultiphaseVoF::pressureCorrector()
 
                 phi = phiHbyA + p_rghEqnIncomp.flux();
 
-                p = p_rgh + rho*buoyancy.gh;
+                p = p_rgh + rho*buoyancy.gh + buoyancy.pRef;
                 fvConstraints().constrain(p);
-                p_rgh = p - rho*buoyancy.gh;
+                p_rgh = p - rho*buoyancy.gh - buoyancy.pRef;
                 p_rgh.correctBoundaryConditions();
 
                 U = HbyA
@@ -165,7 +165,7 @@ void Foam::solvers::compressibleMultiphaseVoF::pressureCorrector()
         mixture.correct();
 
         // Correct p_rgh for consistency with p and the updated densities
-        p_rgh = p - rho*buoyancy.gh;
+        p_rgh = p - rho*buoyancy.gh - buoyancy.pRef;
         p_rgh.correctBoundaryConditions();
     }
 

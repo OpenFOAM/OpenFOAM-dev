@@ -21,7 +21,7 @@ FoamFile
 //   patch.
 //
 // - Faces are selected to make into baffles by specifying either a faceZone or
-//   a searchableSurface.
+//   a surface.
 //
 // - Each selection requires two patches to be specified; the owner (or master)
 //   and the neighbour (or slave).
@@ -52,8 +52,8 @@ baffles
     baffleFaces
     {
         // Use a surface to select faces and orientation.
-        type        searchableSurface;
-        surface     triSurfaceMesh;
+        type        surface;
+        surface     triSurface;
         name        baffle1D.stl;
 
         // Owner patch

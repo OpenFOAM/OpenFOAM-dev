@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,23 +28,16 @@ License
 
 // * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-    template<>
-    const char* Foam::NamedEnum<Foam::coordSet::axisType, 6>::names[] =
-    {
-        "xyz",
-        "x",
-        "y",
-        "z",
-        "distance",
-        "default"
-    };
-}
-
-
 const Foam::NamedEnum<Foam::coordSet::axisType, 6>
-    Foam::coordSet::axisTypeNames_;
+Foam::coordSet::axisTypeNames_
+{
+    "xyz",
+    "x",
+    "y",
+    "z",
+    "distance",
+    "default"
+};
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -296,12 +289,25 @@ Foam::tmp<Foam::pointField> Foam::coordSet::pointCoords() const
             if (positions_.valid()) return positions_();
             FatalErrorInFunction
                 << "Point coordinate requested from coordinate set with "
-                << axisTypeNames_[axis_] << " axis, but with no valid point"
+                << axisTypeNames_[axis_] << " axis, but with no valid points"
                 << exit(FatalError);
             break;
     }
 
     return pointField::null();
+}
+
+
+const Foam::pointField& Foam::coordSet::positions() const
+{
+    if (!positions_.valid())
+    {
+        FatalErrorInFunction
+            << "Positions requested from coordinate set with no valid points"
+            << exit(FatalError);
+    }
+
+    return positions_();
 }
 
 

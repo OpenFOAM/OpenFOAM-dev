@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,86 +42,41 @@ namespace functionObjects
 }
 }
 
-
-namespace Foam
-{
-    template<>
-    const char* NamedEnum
-    <
-        Foam::functionObjects::populationBalanceMoments::momentType,
-        4
-    >::names[] = {"integerMoment", "mean", "variance", "stdDev"};
-}
-
-
 const Foam::NamedEnum
 <
     Foam::functionObjects::populationBalanceMoments::momentType,
     4
 >
-Foam::functionObjects::populationBalanceMoments::momentTypeNames_;
-
-
-namespace Foam
-{
-    template<>
-    const char* NamedEnum
-    <
-        Foam::functionObjects::populationBalanceMoments::coordinateType,
-        3
-    >::names[] = {"volume", "area", "diameter"};
-}
-
+Foam::functionObjects::populationBalanceMoments::momentTypeNames_
+{"integerMoment", "mean", "variance", "stdDev"};
 
 const Foam::NamedEnum
 <
     Foam::functionObjects::populationBalanceMoments::coordinateType,
     3
 >
-Foam::functionObjects::populationBalanceMoments::coordinateTypeNames_;
-
-
-namespace Foam
-{
-    template<>
-    const char* NamedEnum
-    <
-        Foam::functionObjects::populationBalanceMoments::weightType,
-        3
-    >::names[] =
-    {
-        "numberConcentration",
-        "volumeConcentration",
-        "areaConcentration"
-    };
-}
-
+Foam::functionObjects::populationBalanceMoments::coordinateTypeNames_
+{"volume", "area", "diameter"};
 
 const Foam::NamedEnum
 <
     Foam::functionObjects::populationBalanceMoments::weightType,
     3
 >
-Foam::functionObjects::populationBalanceMoments::weightTypeNames_;
-
-
-namespace Foam
+Foam::functionObjects::populationBalanceMoments::weightTypeNames_
 {
-    template<>
-    const char* NamedEnum
-    <
-        Foam::functionObjects::populationBalanceMoments::meanType,
-        3
-    >::names[] = {"arithmetic", "geometric", "notApplicable"};
-}
-
+    "numberConcentration",
+    "volumeConcentration",
+    "areaConcentration"
+};
 
 const Foam::NamedEnum
 <
     Foam::functionObjects::populationBalanceMoments::meanType,
     3
 >
-Foam::functionObjects::populationBalanceMoments::meanTypeNames_;
+Foam::functionObjects::populationBalanceMoments::meanTypeNames_
+{"arithmetic", "geometric", "notApplicable"};
 
 
 // * * * * * * * * * * * * Private Member Functions * * * * * * * * * * * * //

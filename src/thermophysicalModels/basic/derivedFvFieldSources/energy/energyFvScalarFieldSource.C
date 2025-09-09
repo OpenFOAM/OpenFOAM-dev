@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,32 +69,80 @@ Foam::energyFvScalarFieldSource::~energyFvScalarFieldSource()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::scalarField>
-Foam::energyFvScalarFieldSource::sourceValue(const fvSource& source) const
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::energyFvScalarFieldSource::sourceValue
+(
+    const fvSource& model,
+    const DimensionedField<scalar, volMesh>& source
+) const
 {
     const basicThermo& thermo = basicThermo::lookupThermo(*this);
-    const fvScalarFieldSource& Ts = thermo.T().sources()[source.name()];
+    const fvScalarFieldSource& Ts = thermo.T().sources()[model.name()];
 
     if (isA<energyCalculatedTemperatureFvScalarFieldSource>(Ts))
     {
         return
             refCast<const energyCalculatedTemperatureFvScalarFieldSource>(Ts)
-           .sourceHeValue(source);
+           .sourceHeValue(model, source);
     }
     else
     {
-        return thermo.he(Ts.sourceValue(source), source);
+        return thermo.he(Ts.sourceValue(model, source), model, source);
     }
 }
 
 
 Foam::tmp<Foam::scalarField>
-Foam::energyFvScalarFieldSource::internalCoeff(const fvSource& source) const
+Foam::energyFvScalarFieldSource::sourceValue
+(
+    const fvSource& model,
+    const scalarField& source,
+    const labelUList& cells
+) const
 {
     const basicThermo& thermo = basicThermo::lookupThermo(*this);
-    const fvScalarFieldSource& Ts = thermo.T().sources()[source.name()];
+    const fvScalarFieldSource& Ts = thermo.T().sources()[model.name()];
 
-    return Ts.internalCoeff(source);
+    if (isA<energyCalculatedTemperatureFvScalarFieldSource>(Ts))
+    {
+        return
+            refCast<const energyCalculatedTemperatureFvScalarFieldSource>(Ts)
+           .sourceHeValue(model, source, cells);
+    }
+    else
+    {
+        const scalarField T(Ts.sourceValue(model, source, cells));
+        return thermo.he(T, model, source, cells);
+    }
+}
+
+
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::energyFvScalarFieldSource::internalCoeff
+(
+    const fvSource& model,
+    const DimensionedField<scalar, volMesh>& source
+) const
+{
+    const basicThermo& thermo = basicThermo::lookupThermo(*this);
+    const fvScalarFieldSource& Ts = thermo.T().sources()[model.name()];
+
+    return Ts.internalCoeff(model, source);
+}
+
+
+Foam::tmp<Foam::scalarField>
+Foam::energyFvScalarFieldSource::internalCoeff
+(
+    const fvSource& model,
+    const scalarField& source,
+    const labelUList& cells
+) const
+{
+    const basicThermo& thermo = basicThermo::lookupThermo(*this);
+    const fvScalarFieldSource& Ts = thermo.T().sources()[model.name()];
+
+    return Ts.internalCoeff(model, source, cells);
 }
 
 

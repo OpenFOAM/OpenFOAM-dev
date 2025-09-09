@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,40 +33,26 @@ License
 namespace Foam
 {
     defineTypeNameAndDebug(Time, 0);
-
-    template<>
-    const char* Foam::NamedEnum
-    <
-        Foam::Time::stopAtControl,
-        4
-    >::names[] =
-    {
-        "endTime",
-        "noWriteNow",
-        "writeNow",
-        "nextWrite"
-    };
-
-    template<>
-    const char* Foam::NamedEnum
-    <
-        Foam::Time::writeControl,
-        5
-    >::names[] =
-    {
-        "timeStep",
-        "runTime",
-        "adjustableRunTime",
-        "clockTime",
-        "cpuTime"
-    };
 }
 
 const Foam::NamedEnum<Foam::Time::stopAtControl, 4>
-    Foam::Time::stopAtControlNames;
+Foam::Time::stopAtControlNames
+{
+    "endTime",
+    "noWriteNow",
+    "writeNow",
+    "nextWrite"
+};
 
 const Foam::NamedEnum<Foam::Time::writeControl, 5>
-    Foam::Time::writeControlNames;
+Foam::Time::writeControlNames
+{
+    "timeStep",
+    "runTime",
+    "adjustableRunTime",
+    "clockTime",
+    "cpuTime"
+};
 
 Foam::Time::format Foam::Time::format_(Foam::Time::format::general);
 

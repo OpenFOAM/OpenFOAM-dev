@@ -23,21 +23,17 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-// VTK includes
-#include "vtkDataArraySelection.h"
-#include "vtkPolyData.h"
-#include "vtkUnstructuredGrid.h"
-
-// OpenFOAM includes
-#include "cloud.H"
-#include "LagrangianMesh.H"
-#include "IOobjectList.H"
 #include "vtkPVFoam.H"
 #include "vtkPVFoamReader.h"
 #include "vtkPVFoamVolFields.H"
 #include "vtkPVFoamPointFields.H"
 #include "vtkPVFoamLagrangianFields.H"
 
+// OpenFOAM includes
+#include "domainDecomposition.H"
+#include "cloud.H"
+#include "LagrangianMesh.H"
+#include "IOobjectList.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
@@ -59,7 +55,7 @@ Foam::IOobjectList Foam::vtkPVFoam::getObjects
     IOobjectList objects(mesh, instance, local);
 
     // Add any objects from constant that are not already present
-    IOobjectList objectsConstant(mesh, dbPtr_().constant(), local);
+    IOobjectList objectsConstant(mesh, Time::constant(), local);
     forAllIter(IOobjectList, objectsConstant, iter)
     {
         if (!objects.found(iter.key()))
@@ -86,17 +82,12 @@ Foam::IOobjectList Foam::vtkPVFoam::getObjects
 
 void Foam::vtkPVFoam::convertFields(vtkMultiBlockDataSet* output)
 {
-    const fvMesh& mesh = *meshPtr_;
+    if (reader_->GetDecomposedCase() && !procDbsPtr_->nProcs()) return;
 
-    wordHashSet selectedFields = getSelected
-    (
-        reader_->GetFieldSelection()
-    );
+    const wordHashSet selectedFields =
+        getSelected(reader_->GetFieldSelection());
 
-    if (selectedFields.empty())
-    {
-        return;
-    }
+    if (selectedFields.empty()) return;
 
     // Get objects (fields) for this time - only keep selected fields
     // the region name is already in the mesh db
@@ -105,32 +96,28 @@ void Foam::vtkPVFoam::convertFields(vtkMultiBlockDataSet* output)
         getObjects
         (
             selectedFields,
-            mesh,
-            dbPtr_().name()
+            reader_->GetDecomposedCase()
+          ? procMeshesPtr_->procMeshes().first()
+          : procMeshesPtr_->completeMesh(),
+            reader_->GetDecomposedCase()
+          ? procDbsPtr_->proc0Time().name()
+          : procDbsPtr_->completeTime().name()
         )
     );
 
-    if (objects.empty())
-    {
-        return;
-    }
+    if (objects.empty()) return;
 
-    if (debug)
+    DebugInFunction
+        << "Converting OpenFOAM volume fields" << endl;
+    forAllConstIter(IOobjectList, objects, iter)
     {
-        InfoInFunction<< nl
-            << "    converting OpenFOAM volume fields" << endl;
-        forAllConstIter(IOobjectList, objects, iter)
-        {
-            Info<< "  " << iter()->name()
-                << " == " << iter()->objectPath(false) << nl;
-        }
-        printMemory();
+        DebugInfo
+            << "    " << iter()->name()
+            << " == " << iter()->objectPath(false) << endl;
     }
-
 
     PtrList<PrimitivePatchInterpolation<primitivePatch>>
-        ppInterpList(mesh.boundaryMesh().size());
-
+        ppInterpList(procMeshesPtr_->completeMesh().boundaryMesh().size());
     forAll(ppInterpList, i)
     {
         ppInterpList.set
@@ -138,108 +125,91 @@ void Foam::vtkPVFoam::convertFields(vtkMultiBlockDataSet* output)
             i,
             new PrimitivePatchInterpolation<primitivePatch>
             (
-                mesh.boundaryMesh()[i]
+                procMeshesPtr_->completeMesh().boundaryMesh()[i]
             )
         );
     }
 
-
     bool interpFields = reader_->GetInterpolateVolFields();
 
-    convertVolFields<scalar>
-    (
-        mesh, ppInterpList, objects, interpFields, output
-    );
-    convertVolFields<vector>
-    (
-        mesh, ppInterpList, objects, interpFields, output
-    );
-    convertVolFields<sphericalTensor>
-    (
-        mesh, ppInterpList, objects, interpFields, output
-    );
-    convertVolFields<symmTensor>
-    (
-        mesh, ppInterpList, objects, interpFields, output
-    );
-    convertVolFields<tensor>
-    (
-        mesh, ppInterpList, objects, interpFields, output
-    );
+    #define CONVERT_VOL_FIELDS(Type, nullArg) \
+        convertVolFields<Type>                \
+        (                                     \
+            ppInterpList,                     \
+            objects,                          \
+            interpFields,                     \
+            output                            \
+        );
+    FOR_ALL_FIELD_TYPES(CONVERT_VOL_FIELDS)
+    #undef CONVERT_VOL_FIELDS
 
-    convertVolInternalFields<scalar>
-    (
-        mesh, objects, output
-    );
-    convertVolInternalFields<vector>
-    (
-        mesh, objects, output
-    );
-    convertVolInternalFields<sphericalTensor>
-    (
-        mesh, objects, output
-    );
-    convertVolInternalFields<symmTensor>
-    (
-        mesh, objects, output
-    );
-    convertVolInternalFields<tensor>
-    (
-        mesh, objects, output
-    );
+    #define CONVERT_VOL_INTERNAL_FIELDS(Type, nullArg) \
+        convertVolInternalFields<Type>(objects, output);
+    FOR_ALL_FIELD_TYPES(CONVERT_VOL_INTERNAL_FIELDS)
+    #undef CONVERT_VOL_INTERNAL_FIELDS
 
-    convertSurfaceFields<scalar>(mesh, objects, output);
-    convertSurfaceFields<vector>(mesh, objects, output);
-    convertSurfaceFields<sphericalTensor>(mesh, objects, output);
-    convertSurfaceFields<symmTensor>(mesh, objects, output);
-    convertSurfaceFields<tensor>(mesh, objects, output);
+    #define CONVERT_SURFACE_FIELDS(Type, nullArg) \
+        convertSurfaceFields<Type>(objects, output);
+    FOR_ALL_FIELD_TYPES(CONVERT_SURFACE_FIELDS)
+    #undef CONVERT_SURFACE_FIELDS
 
-    // Construct interpolation on the raw mesh
-    const pointMesh& pMesh = pointMesh::New(mesh);
-
-    convertPointFields<scalar>(mesh, pMesh, objects, output);
-    convertPointFields<vector>(mesh, pMesh, objects, output);
-    convertPointFields<sphericalTensor>(mesh, pMesh, objects, output);
-    convertPointFields<symmTensor>(mesh, pMesh, objects, output);
-    convertPointFields<tensor>(mesh, pMesh, objects, output);
-
-    if (debug)
-    {
-        printMemory();
-    }
+    #define CONVERT_POINT_FIELDS(Type, nullArg) \
+        convertPointFields<Type>(objects, output);
+    FOR_ALL_FIELD_TYPES(CONVERT_POINT_FIELDS)
+    #undef CONVERT_POINT_FIELDS
 }
 
 
 void Foam::vtkPVFoam::convertlagrangianFields(vtkMultiBlockDataSet* output)
 {
-    arrayRange& range = arrayRangelagrangian_;
-    const fvMesh& mesh = *meshPtr_;
+    const fileName lagrangianPrefix =
+        meshRegion_ == polyMesh::defaultRegion
+      ? fileName(lagrangian::cloud::prefix)
+      : meshRegion_/lagrangian::cloud::prefix;
 
-    wordHashSet selectedFields = getSelected
+    arrayRange& range = arrayRangelagrangian_;
+
+    const wordHashSet selectedFields = getSelected
     (
         reader_->GetlagrangianFieldSelection()
     );
 
-    if (selectedFields.empty())
-    {
-        return;
-    }
-
-    if (debug)
-    {
-        InfoInFunction << endl;
-        printMemory();
-    }
+    if (selectedFields.empty()) return;
 
     for (int partId = range.start(); partId < range.end(); ++partId)
     {
-        const word  cloudName = getPartName(partId);
+        const word lagrangianName = getPartName(partId);
         const label datasetNo = partDataset_[partId];
 
-        if (!partStatus_[partId] || datasetNo < 0)
+        if (!partStatus_[partId] || datasetNo < 0) continue;
+
+        // Find a processor that has some of the cloud in it
+        label proci = -1;
+        if (reader_->GetDecomposedCase())
         {
-            continue;
+            forAll(procDbsPtr_->procTimes(), procj)
+            {
+                if
+                (
+                    fileHandler().isDir
+                    (
+                        fileHandler().filePath
+                        (
+                            procDbsPtr_->procTimes()[procj].path()
+                           /procDbsPtr_().completeTime().name()
+                           /lagrangianPrefix
+                           /lagrangianName
+                        )
+                    )
+                )
+                {
+                    proci = procj;
+                    break;
+                }
+            }
         }
+
+        if (reader_->GetDecomposedCase() && proci == -1) continue;
 
         // Get the lagrangian fields for this time and this cloud
         // but only keep selected fields
@@ -249,97 +219,53 @@ void Foam::vtkPVFoam::convertlagrangianFields(vtkMultiBlockDataSet* output)
             getObjects
             (
                 selectedFields,
-                mesh,
-                dbPtr_().name(),
-                lagrangian::cloud::prefix/cloudName
+                reader_->GetDecomposedCase()
+              ? procMeshesPtr_->procMeshes()[proci]
+              : procMeshesPtr_->completeMesh(),
+                procDbsPtr_().completeTime().name(),
+                lagrangian::cloud::prefix/lagrangianName
             )
         );
 
-        if (objects.empty())
+        if (objects.empty()) continue;
+
+        DebugInFunction
+            << "Converting OpenFOAM lagrangian fields" << endl;
+        forAllConstIter(IOobjectList, objects, iter)
         {
-            continue;
+            DebugInfo
+                << "    " << iter()->name()
+                << " == " << iter()->objectPath(false) << endl;
         }
 
-        if (debug)
-        {
-            InfoInFunction
-                << "converting OpenFOAM lagrangian fields" << nl << "    ";
-            forAllConstIter(IOobjectList, objects, iter)
-            {
-                Info<< "  " << iter()->name()
-                    << " == " << iter()->objectPath(false) << nl;
-            }
-        }
-
-        convertlagrangianFields<label>
-        (
-            objects, output, datasetNo
-        );
-        convertlagrangianFields<scalar>
-        (
-            objects, output, datasetNo
-        );
-        convertlagrangianFields<vector>
-        (
-            objects, output, datasetNo
-        );
-        convertlagrangianFields<sphericalTensor>
-        (
-            objects, output, datasetNo
-        );
-        convertlagrangianFields<symmTensor>
-        (
-            objects, output, datasetNo
-        );
-        convertlagrangianFields<tensor>
-        (
-            objects, output, datasetNo
-        );
-    }
-
-    if (debug)
-    {
-        printMemory();
+        #define CONVERT_LAGRANGIAN_FIELDS(Type, nullArg) \
+            convertlagrangianFields<Type>(objects, output, datasetNo);
+        CONVERT_LAGRANGIAN_FIELDS(label, );
+        FOR_ALL_FIELD_TYPES(CONVERT_LAGRANGIAN_FIELDS);
+        #undef CONVERT_LAGRANGIAN_FIELDS
     }
 }
 
 
-void Foam::vtkPVFoam::convertLagrangianFields
-(
-    vtkMultiBlockDataSet* output,
-    const PtrList<LagrangianMesh>& LmeshPtrs
-)
+void Foam::vtkPVFoam::convertLagrangianFields(vtkMultiBlockDataSet* output)
 {
     arrayRange& range = arrayRangeLagrangian_;
-    const fvMesh& mesh = *meshPtr_;
 
-    wordHashSet selectedFields = getSelected
+    const wordHashSet selectedFields = getSelected
     (
         reader_->GetLagrangianFieldSelection()
     );
 
-    if (selectedFields.empty())
-    {
-        return;
-    }
-
-    if (debug)
-    {
-        InfoInFunction << endl;
-        printMemory();
-    }
+    if (selectedFields.empty()) return;
 
     for (int partId = range.start(); partId < range.end(); ++partId)
     {
-        const word  LagrangianName = getPartName(partId);
+        const word LagrangianName = getPartName(partId);
         const label datasetNo = partDataset_[partId];
 
-        if (!partStatus_[partId] || datasetNo < 0)
-        {
-            continue;
-        }
+        if (!partStatus_[partId] || datasetNo < 0) continue;
 
-        // Get the lagrangian fields for this time and this cloud
+        // Get the Lagrangian fields for this time and this cloud
         // but only keep selected fields
         // the region name is already in the mesh db
         IOobjectList objects
@@ -347,46 +273,32 @@ void Foam::vtkPVFoam::convertLagrangianFields
             getObjects
             (
                 selectedFields,
-                mesh,
-                dbPtr_().name(),
+                reader_->GetDecomposedCase()
+              ? procMeshesPtr_->procMeshes().first()
+              : procMeshesPtr_->completeMesh(),
+                procDbsPtr_().completeTime().name(),
                 LagrangianMesh::prefix/LagrangianName
             )
         );
 
-        if (objects.empty())
-        {
-            continue;
-        }
+        if (objects.empty()) continue;
 
-        if (debug)
+        DebugInFunction
+            << "Converting OpenFOAM Lagrangian fields" << endl;
+        forAllConstIter(IOobjectList, objects, iter)
         {
-            InfoInFunction
-                << "converting OpenFOAM Lagrangian fields" << nl << "    ";
-            forAllConstIter(IOobjectList, objects, iter)
-            {
-                Info<< "  " << iter()->name()
-                    << " == " << iter()->objectPath(false) << nl;
-            }
+            DebugInfo
+                << "    " << iter()->name()
+                << " == " << iter()->objectPath(false) << endl;
         }
 
         #define CONVERT_LAGRANGIAN_FIELDS(Type, GeoField) \
-            convertLagrangianFields<Type, GeoField>       \
-            (                                             \
-                objects,                                  \
-                output,                                   \
-                datasetNo,                                \
-                LmeshPtrs[datasetNo]                      \
-            );
+            convertLagrangianFields<Type, GeoField>(objects, output, datasetNo);
         CONVERT_LAGRANGIAN_FIELDS(label, LagrangianField);
         FOR_ALL_FIELD_TYPES(CONVERT_LAGRANGIAN_FIELDS, LagrangianField);
         CONVERT_LAGRANGIAN_FIELDS(label, LagrangianInternalField);
         FOR_ALL_FIELD_TYPES(CONVERT_LAGRANGIAN_FIELDS, LagrangianInternalField);
         #undef CONVERT_LAGRANGIAN_FIELDS
-    }
-
-    if (debug)
-    {
-        printMemory();
     }
 }
 

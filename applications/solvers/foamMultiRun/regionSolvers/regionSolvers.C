@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -142,7 +142,7 @@ Foam::regionSolvers::regionSolvers(const Time& runTime)
 
     forAll(regions_, i)
     {
-        regions_[i].postConstruct(true, fvMesh::stitchType::geometric);
+        regions_[i].postConstruct(true, true, fvMesh::stitchType::geometric);
     }
 
     // Select the solvers

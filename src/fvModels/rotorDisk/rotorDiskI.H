@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,9 +39,9 @@ inline Foam::scalar Foam::fv::rotorDisk::omega() const
 }
 
 
-inline const Foam::fvCellSet& Foam::fv::rotorDisk::set() const
+inline const Foam::fvCellZone& Foam::fv::rotorDisk::zone() const
 {
-    return set_;
+    return zone_;
 }
 
 

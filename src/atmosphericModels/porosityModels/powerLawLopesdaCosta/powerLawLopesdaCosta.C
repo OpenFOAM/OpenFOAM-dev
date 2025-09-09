@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,7 @@ License
 #include "powerLawLopesdaCosta.H"
 #include "geometricOneField.H"
 #include "fvMatrices.H"
-#include "triSurfaceMesh.H"
+#include "triSurface_searchableSurface.H"
 #include "triSurfaceTools.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -86,7 +86,7 @@ Foam::porosityModels::powerLawLopesdaCostaZone::powerLawLopesdaCostaZone
     );
 
     // Searchable triSurface for the top of the porous region
-    triSurfaceMesh searchSurf
+    searchableSurfaces::triSurface searchSurf
     (
         IOobject
         (

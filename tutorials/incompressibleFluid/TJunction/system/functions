@@ -65,4 +65,40 @@ cloudAge
     cloud       cloud;
 }
 
+cloudDistribution
+{
+    type        LagrangianDistribution;
+    libs        ("libLagrangianFunctionObjects.so");
+    Lagrangian  cloud;
+    fields      (d);
+    nBins       20;
+    setFormat   raw;
+    writeControl writeTime;
+}
+
+cloudInletDistribution
+{
+    type        cloudSurfaceDistribution;
+    libs        ("libLagrangianCloudFunctionObjects.so");
+    cloud       cloud;
+    patch       inlet;
+    fields      (d);
+    nBins       20;
+    setFormat   raw;
+    writeControl writeTime;
+}
+
+cloudOutlet1Distribution
+{
+    $cloudInletDistribution;
+    patch       outlet1;
+    fields      (d U);
+}
+
+cloudOutlet2Distribution
+{
+    $cloudOutlet1Distribution;
+    patch       outlet2;
+}
+
 // ************************************************************************* //

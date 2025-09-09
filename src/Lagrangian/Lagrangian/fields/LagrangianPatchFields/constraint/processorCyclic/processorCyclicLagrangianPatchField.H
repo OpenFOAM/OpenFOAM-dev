@@ -31,6 +31,7 @@ Description
 
 Usage
     Example specification:
+    \verbatim
     <LagrangianPatchName>
     {
         type            processorCyclic;

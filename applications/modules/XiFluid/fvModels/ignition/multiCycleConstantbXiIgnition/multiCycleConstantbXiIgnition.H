@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,6 @@ Usage
     {
         type            multiCycleConstantbXiIgnition;
 
-        select          cellZone;
         cellZone        ignition;
 
         // Timings are defined in crank angles for a multi-cycle engine case
@@ -46,7 +45,7 @@ Usage
         XiCorr
         {
             type            spherical;
-            select          all;
+            cellZone        all;
         }
     }
     \endverbatim
@@ -54,7 +53,7 @@ Usage
     Where:
     \table
         Property          | Description              | Required | Default value
-        select            | Ignition cell set selection | yes      |
+        cellZone          | Correction cellZone         | yes       |
         start             | Ignition start time         | yes      |
         duration          | Ignition duration           | yes      |
         combustionDuration| Combustion duration         | yes      |

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,8 +61,8 @@ Usage
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef heatTransferCoefficientModels_variable_H
-#define heatTransferCoefficientModels_variable_H
+#ifndef variable_heatTransferCoefficientModel_H
+#define variable_heatTransferCoefficientModel_H
 
 #include "heatTransferCoefficientModel.H"
 

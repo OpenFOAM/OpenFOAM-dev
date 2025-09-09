@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,11 +63,10 @@ ballisticCollisions
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void
-Foam::diameterModels::coalescenceModels::ballisticCollisions::
+void Foam::diameterModels::coalescenceModels::ballisticCollisions::
 addToCoalescenceRate
 (
-    volScalarField& coalescenceRate,
+    volScalarField::Internal& coalescenceRate,
     const label i,
     const label j
 )
@@ -75,12 +74,17 @@ addToCoalescenceRate
     const sizeGroup& fi = popBal_.sizeGroups()[i];
     const sizeGroup& fj = popBal_.sizeGroups()[j];
 
-    const volScalarField& T = popBal_.continuousPhase().thermo().T();
-    const volScalarField& rhoP = fi.phase().rho();
+    tmp<volScalarField> tdi = fi.d();
+    const volScalarField::Internal& di = tdi();
+    tmp<volScalarField> tdj = fj.d();
+    const volScalarField::Internal& dj = tdj();
+
+    const volScalarField::Internal& Tc = popBal_.continuousPhase().thermo().T();
 
     coalescenceRate +=
-        sqrt(3*k*T/rhoP)*sqr(fi.d() + fj.d())
-       *sqrt(1/pow3(fi.d()) + 1/pow3(fj.d()));
+        sqrt(3*k*Tc/fi.phase().rho()())
+       *sqr(di + dj)
+       *sqrt(1/pow3(di) + 1/pow3(dj));
 }
 
 

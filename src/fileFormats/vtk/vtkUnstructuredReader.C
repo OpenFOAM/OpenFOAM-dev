@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,49 +36,38 @@ License
 namespace Foam
 {
     defineTypeNameAndDebug(vtkUnstructuredReader, 1);
-
-    template<>
-    const char*
-    NamedEnum<vtkUnstructuredReader::vtkDataType, 8>::names[] =
-    {
-        "int",
-        "unsigned_int",
-        "long",
-        "unsigned_long",
-        "float",
-        "double",
-        "string",
-        "vtkIdType"
-    };
-    const NamedEnum<vtkUnstructuredReader::vtkDataType, 8>
-    vtkUnstructuredReader::vtkDataTypeNames;
-
-
-    template<>
-    const char*
-    NamedEnum<vtkUnstructuredReader::vtkDataSetType, 3>::names[] =
-    {
-        "FIELD",
-        "SCALARS",
-        "VECTORS"
-    };
-    const NamedEnum<vtkUnstructuredReader::vtkDataSetType, 3>
-    vtkUnstructuredReader::vtkDataSetTypeNames;
-
-
-    template<>
-    const char*
-    NamedEnum<vtkUnstructuredReader::parseMode, 5>::names[] =
-    {
-        "NOMODE",
-        "UNSTRUCTURED_GRID",
-        "POLYDATA",
-        "CELL_DATA",
-        "POINT_DATA"
-    };
-    const NamedEnum<vtkUnstructuredReader::parseMode, 5>
-    vtkUnstructuredReader::parseModeNames;
 }
+
+const Foam::NamedEnum<Foam::vtkUnstructuredReader::vtkDataType, 8>
+Foam::vtkUnstructuredReader::vtkDataTypeNames
+{
+    "int",
+    "unsigned_int",
+    "long",
+    "unsigned_long",
+    "float",
+    "double",
+    "string",
+    "vtkIdType"
+    };
+
+const Foam::NamedEnum<Foam::vtkUnstructuredReader::vtkDataSetType, 3>
+Foam::vtkUnstructuredReader::vtkDataSetTypeNames
+{
+    "FIELD",
+    "SCALARS",
+    "VECTORS"
+    };
+
+const Foam::NamedEnum<Foam::vtkUnstructuredReader::parseMode, 5>
+Foam::vtkUnstructuredReader::parseModeNames
+{
+    "NOMODE",
+    "UNSTRUCTURED_GRID",
+    "POLYDATA",
+    "CELL_DATA",
+    "POINT_DATA"
+};
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //

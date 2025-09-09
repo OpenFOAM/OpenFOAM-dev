@@ -24,7 +24,7 @@ setFormat       raw;
 fields          ( p wallHeatFlux );
 
 sets
-(
+{
     cone25
     {
         type    lineFace;
@@ -49,6 +49,6 @@ sets
         end     (0.193675 0.13092 0);
         nPoints 40;
     }
-);
+}
 
 // ************************************************************************* //

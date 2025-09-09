@@ -1,0 +1,51 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      createZonesDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+filter
+{
+    type        box;
+    zoneType    cell;
+    box         (1.5 -10 -10) (2 10 10);
+}
+
+leftFluid
+{
+    type        box;
+    zoneType    cell;
+    box         (-10 -10 -10) (1.5 10 10);
+}
+
+rightFluid
+{
+    type        box;
+    zoneType    cell;
+    box         (2 -1 -1) (10 10 10);
+}
+
+cycLeft
+{
+    type        face;
+    cellFaces   outerInternal;
+    leftFluid;
+}
+
+cycRight
+{
+    type        face;
+    cellFaces   outerInternal;
+    rightFluid;
+}
+
+// ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,11 +63,10 @@ turbulentShear
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void
-Foam::diameterModels::coalescenceModels::turbulentShear::
+void Foam::diameterModels::coalescenceModels::turbulentShear::
 addToCoalescenceRate
 (
-    volScalarField& coalescenceRate,
+    volScalarField::Internal& coalescenceRate,
     const label i,
     const label j
 )
@@ -75,11 +74,19 @@ addToCoalescenceRate
     const sizeGroup& fi = popBal_.sizeGroups()[i];
     const sizeGroup& fj = popBal_.sizeGroups()[j];
 
-    const volScalarField& rho = popBal_.continuousPhase().rho();
-    tmp<volScalarField> epsilon(popBal_.continuousTurbulence().epsilon());
-    tmp<volScalarField> mu(popBal_.continuousPhase().fluidThermo().mu());
+    tmp<volScalarField> tdi = fi.d();
+    const volScalarField::Internal& di = tdi();
+    tmp<volScalarField> tdj = fj.d();
+    const volScalarField::Internal& dj = tdj();
 
-    coalescenceRate += C_*sqrt(epsilon*rho/mu)*pow3(fi.d() + fj.d());
+    const volScalarField::Internal& rhoc = popBal_.continuousPhase().rho();
+
+    tmp<volScalarField> tepsilonc(popBal_.continuousTurbulence().epsilon());
+    const volScalarField::Internal& epsilonc = tepsilonc();
+    tmp<volScalarField> tmu(popBal_.continuousPhase().fluidThermo().mu());
+    const volScalarField::Internal muc = tmu();
+
+    coalescenceRate += C_*sqrt(epsilonc*rhoc/muc)*pow3(di + dj);
 }
 
 

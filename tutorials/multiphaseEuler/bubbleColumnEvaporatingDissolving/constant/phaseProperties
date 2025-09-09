@@ -14,13 +14,12 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-type    interfaceCompositionPhaseChangeMultiphaseSystem;
-
-phases (gas liquid);
+phases          (gas liquid);
 
 gas
 {
     type            multicomponentPhaseModel;
+
     diameterModel   isothermal;
     isothermalCoeffs
     {
@@ -34,7 +33,8 @@ gas
 liquid
 {
     type            multicomponentPhaseModel;
-    diameterModel constant;
+
+    diameterModel   constant;
     constantCoeffs
     {
         d               1e-4;
@@ -54,18 +54,13 @@ blending
         minPartlyContinuousAlpha.liquid 0.3;
     }
 
-    heatTransfer
+    heatAndDiffusiveMassTransfer
     {
         type            linear;
         minFullyContinuousAlpha.gas 1;
         minPartlyContinuousAlpha.gas 0;
         minFullyContinuousAlpha.liquid 1;
         minPartlyContinuousAlpha.liquid 0;
-    }
-
-    diffusiveMassTransfer
-    {
-        $heatTransfer;
     }
 }
 
@@ -77,119 +72,5 @@ surfaceTension
         sigma           0.07;
     }
 }
-
-drag
-{
-    gas_dispersedIn_liquid
-    {
-        type            SchillerNaumann;
-    }
-
-    liquid_dispersedIn_gas
-    {
-        type            SchillerNaumann;
-    }
-}
-
-virtualMass
-{
-    gas_dispersedIn_liquid
-    {
-        type            constantCoefficient;
-        Cvm             0.5;
-    }
-
-    liquid_dispersedIn_gas
-    {
-        type            constantCoefficient;
-        Cvm             0.5;
-    }
-}
-
-interfaceComposition
-{
-    gas_liquid_inThe_gas
-    {
-        type saturated;
-        species ( water );
-        Le 1.0;
-        pSat ArdenBuck;
-    }
-
-    gas_liquid_inThe_liquid
-    {
-        type Henry;
-        species ( air );
-        k ( 1.492e-2 );
-        Le 1.0;
-    }
-}
-
-heatTransfer
-{
-    gas_dispersedIn_liquid_inThe_gas
-    {
-        type spherical;
-        residualAlpha 1e-4;
-    }
-
-    liquid_dispersedIn_gas_inThe_gas
-    {
-        type RanzMarshall;
-        residualAlpha 1e-4;
-    }
-
-    gas_dispersedIn_liquid_inThe_liquid
-    {
-        type RanzMarshall;
-        residualAlpha 1e-4;
-    }
-
-    liquid_dispersedIn_gas_inThe_liquid
-    {
-        type spherical;
-        residualAlpha 1e-4;
-    }
-}
-
-diffusiveMassTransfer
-{
-    gas_dispersedIn_liquid_inThe_gas
-    {
-        type spherical;
-    }
-
-    liquid_dispersedIn_gas_inThe_gas
-    {
-        type Frossling;
-        Le 1.0;
-    }
-
-    gas_dispersedIn_liquid_inThe_liquid
-    {
-        type Frossling;
-        Le 1.0;
-    }
-
-    liquid_dispersedIn_gas_inThe_liquid
-    {
-        type spherical;
-    }
-}
-
-phaseTransfer
-{}
-
-lift
-{}
-
-wallLubrication
-{}
-
-turbulentDispersion
-{}
-
-interfaceCompression
-{}
 
 // ************************************************************************* //

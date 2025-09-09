@@ -13,16 +13,16 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-type       limitPressure;
+type        limitPressure;
 
-select     all;
+cellZone    all;
 
 // limits can be specified absolute
-// min        <200>;
-// max        <500>;
+// min         <200>;
+// max         <500>;
 
 // ... or as multipliers on initial min/max values
-minFactor  <0.1>;
-maxFactor  <1.5>;
+minFactor   <0.1>;
+maxFactor   <1.5>;
 
 //************************************************************************** //

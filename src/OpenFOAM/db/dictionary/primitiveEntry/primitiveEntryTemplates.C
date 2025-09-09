@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,11 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class T>
-Foam::primitiveEntry::primitiveEntry(const keyType& key, const T& t)
+Foam::primitiveEntry::primitiveEntry
+(
+    const keyType& key,
+    const T& t
+)
 :
     entry(key),
     ITstream(key, tokenList(10))
@@ -39,6 +43,35 @@ Foam::primitiveEntry::primitiveEntry(const keyType& key, const T& t)
     OStringStream os;
     os  << t << token::END_STATEMENT;
     readEntry(dictionary::null, IStringStream(os.str())());
+}
+
+
+template<class T>
+Foam::primitiveEntry::primitiveEntry
+(
+    const keyType& key,
+    const T& t,
+    const label startLineNumber,
+    const label endLineNumber
+)
+:
+    entry(key, startLineNumber),
+    ITstream(key, tokenList(10))
+{
+    OStringStream os;
+    os  << t << token::END_STATEMENT;
+    IStringStream iss(os.str());
+
+    if (endLineNumber != -1)
+    {
+        iss.lineNumber() = endLineNumber;
+    }
+    else
+    {
+        iss.lineNumber() = startLineNumber;
+    }
+
+    readEntry(dictionary::null, iss());
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,12 +45,11 @@ namespace functionObjects
 }
 }
 
-template<>
-const char* Foam::NamedEnum
+const Foam::NamedEnum
 <
     Foam::functionObjects::turbulenceFields::compressibleField,
     7
->::names[] =
+> Foam::functionObjects::turbulenceFields::compressibleFieldNames_
 {
     "k",
     "epsilon",
@@ -63,16 +62,9 @@ const char* Foam::NamedEnum
 
 const Foam::NamedEnum
 <
-    Foam::functionObjects::turbulenceFields::compressibleField,
-    7
-> Foam::functionObjects::turbulenceFields::compressibleFieldNames_;
-
-template<>
-const char* Foam::NamedEnum
-<
     Foam::functionObjects::turbulenceFields::incompressibleField,
     6
->::names[] =
+> Foam::functionObjects::turbulenceFields::incompressibleFieldNames_
 {
     "k",
     "epsilon",
@@ -81,12 +73,6 @@ const char* Foam::NamedEnum
     "nuEff",
     "R"
 };
-
-const Foam::NamedEnum
-<
-    Foam::functionObjects::turbulenceFields::incompressibleField,
-    6
-> Foam::functionObjects::turbulenceFields::incompressibleFieldNames_;
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //

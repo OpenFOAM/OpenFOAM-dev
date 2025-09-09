@@ -34,8 +34,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_cloudLagrangianMeshFunctionObject_H
-#define functionObjects_cloudLagrangianMeshFunctionObject_H
+#ifndef cloudLagrangianMeshFunctionObject_functionObject_H
+#define cloudLagrangianMeshFunctionObject_functionObject_H
 
 #include "LagrangianMeshFunctionObject.H"
 #include "cloudFunctionObject.H"

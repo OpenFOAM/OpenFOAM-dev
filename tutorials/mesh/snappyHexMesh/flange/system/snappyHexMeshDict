@@ -21,7 +21,7 @@ addLayers       false;
 
 
 // Geometry. Definition of all surfaces. All surfaces are of class
-// searchableSurface.
+// surface.
 // Surfaces are used
 // - to specify refinement for any mesh cell intersecting it
 // - to specify refinement for any mesh cell inside/outside/near
@@ -30,14 +30,14 @@ geometry
 {
     flange
     {
-        type triSurfaceMesh;
+        type triSurface;
         file "flange.stl";
     }
 
     //- Refine a bit extra around the small centre hole
     refineHole
     {
-        type searchableSphere;
+        type sphere;
         centre (0 0 -0.012);
         radius 0.003;
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -160,27 +160,96 @@ Foam::fvFieldSource<Type>::internalField() const
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type>> Foam::fvFieldSource<Type>::sourceCoeff
+Foam::tmp<Foam::Field<Type>> Foam::fvFieldSource<Type>::sourceValue
 (
-    const fvSource& source
+    const fvSource& model,
+    const scalarField& source,
+    const labelUList& cells
 ) const
 {
-    return (1 - internalCoeff(source))*sourceValue(source);
+    FatalErrorInFunction
+        << "Condition of type " << type() << " cannot be used for source "
+        << model.name() << " of field " << internalField().name()
+        << " in file " << internalField().objectPath() << " as it is not "
+        << "defined for cell sets. It can only be used for sources that "
+        << "span the entire mesh." << exit(FatalError);
+
+    return tmp<Field<Type>>(nullptr);
+}
+
+
+template<class Type>
+Foam::tmp<Foam::scalarField> Foam::fvFieldSource<Type>::internalCoeff
+(
+    const fvSource& model,
+    const scalarField& source,
+    const labelUList& cells
+) const
+{
+    FatalErrorInFunction
+        << "Condition of type " << type() << " cannot be used for source "
+        << model.name() << " of field " << internalField().name()
+        << " in file " << internalField().objectPath() << " as it is not "
+        << "defined for cell sets. It can only be used for sources that "
+        << "span the entire mesh." << exit(FatalError);
+
+    return tmp<scalarField>(nullptr);
+}
+
+
+template<class Type>
+Foam::tmp<Foam::DimensionedField<Type, Foam::volMesh>>
+Foam::fvFieldSource<Type>::sourceCoeff
+(
+    const fvSource& model,
+    const DimensionedField<scalar, volMesh>& source
+) const
+{
+    return
+        (1 - internalCoeff(model, source))
+       *sourceValue(model, source);
+}
+
+
+template<class Type>
+Foam::tmp<Foam::Field<Type>> Foam::fvFieldSource<Type>::sourceCoeff
+(
+    const fvSource& model,
+    const scalarField& source,
+    const labelUList& cells
+) const
+{
+    return
+        (1 - internalCoeff(model, source, cells))
+       *sourceValue(model, source, cells);
+}
+
+
+template<class Type>
+Foam::tmp<Foam::DimensionedField<Type, Foam::volMesh>>
+Foam::fvFieldSource<Type>::value
+(
+    const fvSource& model,
+    const DimensionedField<scalar, volMesh>& source
+) const
+{
+    return
+        sourceCoeff(model, source)
+      + internalCoeff(model, source)*internalField();
 }
 
 
 template<class Type>
 Foam::tmp<Foam::Field<Type>> Foam::fvFieldSource<Type>::value
 (
-    const fvSource& source
+    const fvSource& model,
+    const scalarField& source,
+    const labelUList& cells
 ) const
 {
-    const Field<Type> setInternalField
-    (
-        UIndirectList<Type>(internalField(), source.cells())
-    );
-
-    return sourceCoeff(source) + internalCoeff(source)*setInternalField;
+    return
+        sourceCoeff(model, source, cells)
+      + internalCoeff(model, source, cells)*Field<Type>(internalField(), cells);
 }
 
 
@@ -189,13 +258,27 @@ template<class OtherType>
 const Foam::fvFieldSource<OtherType>& Foam::fvFieldSource<Type>::fieldSource
 (
     const word& name,
-    const fvSource& source
+    const fvSource& model
 ) const
 {
     const VolField<OtherType>& vf =
         db().template lookupObject<VolField<OtherType>>(name);
 
-    return vf.sources()[source.name()];
+    return vf.sources()[model.name()];
+}
+
+
+template<class Type>
+template<class OtherType>
+Foam::tmp<Foam::DimensionedField<OtherType, Foam::volMesh>>
+Foam::fvFieldSource<Type>::value
+(
+    const word& name,
+    const fvSource& model,
+    const DimensionedField<scalar, volMesh>& source
+) const
+{
+    return fieldSource<OtherType>(name, model).value(model, source);
 }
 
 
@@ -204,10 +287,12 @@ template<class OtherType>
 Foam::tmp<Foam::Field<OtherType>> Foam::fvFieldSource<Type>::value
 (
     const word& name,
-    const fvSource& source
+    const fvSource& model,
+    const scalarField& source,
+    const labelUList& cells
 ) const
 {
-    return fieldSource<OtherType>(name, source).value(source);
+    return fieldSource<OtherType>(name, model).value(model, source, cells);
 }
 
 

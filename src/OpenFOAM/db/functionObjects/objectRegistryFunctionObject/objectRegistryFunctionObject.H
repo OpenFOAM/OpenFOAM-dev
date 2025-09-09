@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ Class
 
 Description
     Specialisation of Foam::functionObject which holds a reference to an object
-    registry. Provides a number of functions for cacheing and accessing objects
+    registry. Provides a number of functions for caching and accessing objects
     from the registry.
 
 See also
@@ -37,8 +37,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_objectRegistryFunctionObject_H
-#define functionObjects_objectRegistryFunctionObject_H
+#ifndef objectRegistryFunctionObject_functionObject_H
+#define objectRegistryFunctionObject_functionObject_H
 
 #include "functionObject.H"
 

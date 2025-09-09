@@ -33,7 +33,7 @@ SourceFiles
 #define codedFvModelTemplate_H
 
 #include "fvModel.H"
-#include "fvCellSet.H"
+#include "fvCellZone.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -53,8 +53,9 @@ class ${typeName}FvModel${SourceType}
 {
     // Private Data
 
-        //- The set of cells the fvModel applies to
-        fvCellSet set_;
+        //- The cellZone the fvModel applies to
+        //  if the evaluation function loop over the cellZone
+        fvCellZone zone_;
 
 
 public:

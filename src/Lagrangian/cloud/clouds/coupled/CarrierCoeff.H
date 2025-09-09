@@ -77,7 +77,7 @@ public:
         //- Construct as copy
         CarrierCoeff(const CarrierCoeff<Type, Implicit>& coeff);
 
-        //- Construct as copy or re-use as specified
+        //- Construct as copy or reuse as specified
         CarrierCoeff(CarrierCoeff<Type, Implicit>& coeff, const bool reuse);
 
         //- Move construct

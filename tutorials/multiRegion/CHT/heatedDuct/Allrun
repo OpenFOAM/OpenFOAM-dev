@@ -7,8 +7,8 @@ cd ${0%/*} || exit 1    # Run from this directory
 rm -rf constant/polyMesh/sets
 
 runApplication blockMesh
-runApplication snappyHexMesh -overwrite
-runApplication splitMeshRegions -cellZones -defaultRegionName fluid -overwrite
+runApplication snappyHexMesh
+runApplication splitMeshRegions -cellZones -defaultRegionName fluid
 runApplication decomposePar -allRegions
 runParallel foamMultiRun
 runApplication reconstructPar -allRegions

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,7 @@ class GeometricFieldListSlicer
 
     // Private Data
 
-        //- Pointers to the internal fields
+        //- Pointers to the primitive fields
         UPtrList<const Field<Type>> fields_;
 
         //- Pointers to the patch fields. Indexed by patch, then by field.

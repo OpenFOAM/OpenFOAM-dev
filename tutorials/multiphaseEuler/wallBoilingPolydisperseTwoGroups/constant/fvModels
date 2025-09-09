@@ -7,7 +7,6 @@
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    version     2.0;
     format      ascii;
     class       dictionary;
     location    "constant";
@@ -17,35 +16,111 @@ FoamFile
 
 phaseTurbulenceStabilisationGas
 {
-    type    phaseTurbulenceStabilisation;
+    type            phaseTurbulenceStabilisation;
+    libs            ("libmultiphaseEulerFvModels.so");
 
-    libs    ("libmultiphaseEulerFvModels.so");
-
-    phase   gas;
+    phase           gas;
 
     alphaInversion  0.1;
 }
 
 phaseTurbulenceStabilisationGas2
 {
-    type    phaseTurbulenceStabilisation;
+    type            phaseTurbulenceStabilisation;
+    libs            ("libmultiphaseEulerFvModels.so");
 
-    libs    ("libmultiphaseEulerFvModels.so");
-
-    phase   gas2;
+    phase           gas2;
 
     alphaInversion  0.1;
 }
 
 phaseTurbulenceStabilisationLiquid
 {
-    type    phaseTurbulenceStabilisation;
+    type            phaseTurbulenceStabilisation;
+    libs            ("libmultiphaseEulerFvModels.so");
 
-    libs    ("libmultiphaseEulerFvModels.so");
-
-    phase   liquid;
+    phase           liquid;
 
     alphaInversion  0.1;
+}
+
+heatTransferLimitedPhaseChange
+{
+    type            heatTransferLimitedPhaseChange;
+    libs            ("libmultiphaseEulerFvModels.so");
+
+    phases          (liquid gas);
+
+    energySemiImplicit yes;
+    pressureImplicit yes;
+
+    saturationTemperature
+    {
+        type            function1;
+        function
+        {
+            type            table;
+            format          csv;
+            nHeaderLine     1;
+            units           ([MPa] [K]);
+            columns         (1 0);
+            mergeSeparators no;
+            file "$FOAM_TUTORIALS/resources/thermoData/wallBoiling-saturation.csv";
+            outOfBounds     clamp;
+            interpolationScheme linear;
+        }
+    }
+}
+
+heatTransferLimitedPhaseChange2
+{
+    $../heatTransferLimitedPhaseChange;
+
+    phases          (liquid gas2);
+}
+
+wallBoiling
+{
+    type            wallBoiling;
+
+    libs            ("libmultiphaseEulerFvModels.so");
+
+    phases          (liquid gas);
+
+    energySemiImplicit no;
+
+    saturationTemperature
+    {
+        $../../heatTransferLimitedPhaseChange/saturationTemperature;
+    }
+
+    partitioningModel
+    {
+        type            Lavieville;
+        alphaCrit       0.2;
+    }
+
+    nucleationSiteModel
+    {
+        type            LemmertChawla;
+        Cn              1;
+        NRef            30000000;
+        deltaTRef       10;
+    }
+
+    departureDiameterModel
+    {
+        type            TolubinskiKostanchuk;
+        dRef            0.00024;
+        dMax            0.0014;
+        dMin            1e-06;
+    }
+
+    departureFrequencyModel
+    {
+        type            KocamustafaogullariIshii;
+        Cf              1.18;
+    }
 }
 
 

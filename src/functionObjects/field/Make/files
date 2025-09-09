@@ -89,6 +89,7 @@ cylindrical/cylindricalFunctionObject.C
 uniform/uniform.C
 
 layerAverage/layerAverage.C
+cutLayerAverage/cutLayerAverage.C
 patchCutLayerAverage/patchCutLayerAverage.C
 
 LIB = $(FOAM_LIBBIN)/libfieldFunctionObjects

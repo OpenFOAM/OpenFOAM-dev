@@ -14,9 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-type    thermalPhaseChangePopulationBalanceMultiphaseSystem;
-
-phases (gas gas2 liquid);
+phases          (gas gas2 liquid);
 
 populationBalances (bubbles);
 
@@ -25,25 +23,24 @@ gas
     type            purePhaseModel;
 
     diameterModel   velocityGroup;
-
     velocityGroupCoeffs
     {
-        populationBalance    bubbles;
+        populationBalance   bubbles;
 
-        shapeModel  spherical;
+        shapeModel          spherical;
 
         sizeGroups
         (
-            {dSph 1.0e-4; }
-            {dSph 1.2e-4; }
-            {dSph 1.44e-4; }
-            {dSph 1.728e-4; }
-            {dSph 2.074e-4; }
-            {dSph 2.49e-4; }
-            {dSph 2.99e-4; }
-            {dSph 3.6e-4; }
-            {dSph 4.3e-4; }
-            {dSph 5.16e-4; }
+            { dSph 1.0e-4; }
+            { dSph 1.2e-4; }
+            { dSph 1.44e-4; }
+            { dSph 1.728e-4; }
+            { dSph 2.074e-4; }
+            { dSph 2.49e-4; }
+            { dSph 2.99e-4; }
+            { dSph 3.6e-4; }
+            { dSph 4.3e-4; }
+            { dSph 5.16e-4; }
         );
     }
 
@@ -55,7 +52,6 @@ gas2
     type            purePhaseModel;
 
     diameterModel   velocityGroup;
-
     velocityGroupCoeffs
     {
         populationBalance    bubbles;
@@ -64,23 +60,23 @@ gas2
 
         sizeGroups
         (
-            {dSph 6.19e-4; }
-            {dSph 7.43e-4; }
-            {dSph 8.92e-4; }
-            {dSph 1.07e-3; }
-            {dSph 1.28e-3; }
-            {dSph 1.54e-3; }
-            {dSph 1.85e-3; }
-            {dSph 2.22e-3; }
-            {dSph 2.67e-3; }
-            {dSph 3.19e-3; }
-            {dSph 3.85e-3; }
-            {dSph 4.6e-3; }
-            {dSph 5.52e-3; }
-            {dSph 6.62e-3; }
-            {dSph 7.95e-3; }
-            {dSph 9.54e-3; }
-            {dSph 1.14e-2; }
+            { dSph 6.19e-4; }
+            { dSph 7.43e-4; }
+            { dSph 8.92e-4; }
+            { dSph 1.07e-3; }
+            { dSph 1.28e-3; }
+            { dSph 1.54e-3; }
+            { dSph 1.85e-3; }
+            { dSph 2.22e-3; }
+            { dSph 2.67e-3; }
+            { dSph 3.19e-3; }
+            { dSph 3.85e-3; }
+            { dSph 4.6e-3; }
+            { dSph 5.52e-3; }
+            { dSph 6.62e-3; }
+            { dSph 7.95e-3; }
+            { dSph 9.54e-3; }
+            { dSph 1.14e-2; }
         );
     }
 
@@ -96,201 +92,12 @@ liquid
     residualAlpha   1e-6;
 }
 
-populationBalanceCoeffs
-{
-    bubbles
-    {
-        continuousPhase liquid;
-
-        coalescenceModels
-        (
-            PrinceBlanch
-            {
-                turbulence on;
-                buoyancy   on;
-                laminarShear off;
-                C1  0.05;
-            }
-        );
-
-        binaryBreakupModels
-        (
-            LehrMilliesMewes
-            {}
-        );
-
-        breakupModels
-        ();
-
-        driftModels
-        (
-            phaseChange
-            {
-                interfaces (gas_liquid gas2_liquid);
-                dmdtf   thermalPhaseChange:dmdtf;
-            }
-
-            densityChange
-            {}
-        );
-
-        nucleationModels
-        (
-            wallBoiling
-            {
-                velocityGroup gas;
-            }
-        );
-    }
-}
-
-drag
-{
-    gas_dispersedIn_liquid
-    {
-        type            IshiiZuber;
-    }
-
-    gas2_dispersedIn_liquid
-    {
-        type            IshiiZuber;
-    }
-}
-
-virtualMass
-{
-    gas_dispersedIn_liquid
-    {
-        type            constantCoefficient;
-        Cvm             0.5;
-    }
-
-    gas2_dispersedIn_liquid
-    {
-        type            constantCoefficient;
-        Cvm             0.5;
-    }
-}
-
-heatTransfer
-{
-    gas_dispersedIn_liquid_inThe_gas
-    {
-        type spherical;
-    }
-
-    gas2_dispersedIn_liquid_inThe_gas2
-    {
-        type spherical;
-    }
-
-    gas_dispersedIn_liquid_inThe_liquid
-    {
-        type RanzMarshall;
-    }
-
-    gas2_dispersedIn_liquid_inThe_liquid
-    {
-        type RanzMarshall;
-    }
-}
-
-lift
-{
-    gas_dispersedIn_liquid
-    {
-        type wallDamped;
-
-        lift
-        {
-            type Tomiyama;
-            Cl 0.288;
-
-            aspectRatio
-            {
-                type constant;
-                E0 1;
-            }
-        }
-
-        wallDamping
-        {
-            type    cosine;
-            Cd      1.0;
-            zeroWallDist 0.0002;
-        }
-    }
-
-    gas2_dispersedIn_liquid
-    {
-        $gas_dispersedIn_liquid
-    }
-}
-
-wallLubrication
-{
-   gas_dispersedIn_liquid
-    {
-        type            Antal;
-        Cw1             -0.01;
-        Cw2             0.05;
-    }
-
-    gas2_dispersedIn_liquid
-    {
-        $gas_dispersedIn_liquid
-    }
-}
-
-turbulentDispersion
-{
-    gas_dispersedIn_liquid
-    {
-        type                LopezDeBertodano;
-        Ctd                 1.0;
-        residualAlpha       1e-3;
-    }
-
-    gas2_dispersedIn_liquid
-    {
-        type                LopezDeBertodano;
-        Ctd                 1.0;
-        residualAlpha       1e-3;
-    }
-}
-
 blending
 {
     default
     {
         type            continuous;
         phase           liquid;
-    }
-}
-
-saturationTemperature
-{
-    gas_liquid
-    {
-        type            function1;
-
-        function
-        {
-            type            table;
-            format          csv;
-            nHeaderLine     1;
-            units           ([MPa] [K]);
-            columns         (1 0);
-            mergeSeparators no;
-            file "$FOAM_TUTORIALS/resources/thermoData/wallBoiling-saturation.csv";
-            outOfBounds     clamp;
-            interpolationScheme linear;
-        }
-    }
-
-    gas2_liquid
-    {
-        $gas_liquid
     }
 }
 
@@ -308,7 +115,32 @@ surfaceTension
     }
 }
 
-phaseTransfer
-{}
+populationBalanceCoeffs
+{
+    bubbles
+    {
+        continuousPhase liquid;
+
+        coalescenceModels
+        (
+            PrinceBlanch
+            {
+                turbulence      on;
+                buoyancy        on;
+                laminarShear    off;
+                C1              0.05;
+            }
+        );
+
+        binaryBreakupModels
+        (
+            LehrMilliesMewes
+            {}
+        );
+
+        breakupModels
+        ();
+    }
+}
 
 // ************************************************************************* //

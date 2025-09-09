@@ -24,26 +24,24 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "vtkPVFoam.H"
+#include "vtkPVFoamReader.h"
+#include "vtkPVFoamAddToSelection.H"
 
 // OpenFOAM includes
-#include "vtkPVFoamReader.h"
+#include "processorRunTimes.H"
+#include "domainDecomposition.H"
 #include "cellSet.H"
 #include "faceSet.H"
 #include "pointSet.H"
 #include "IOobjectList.H"
-#include "IOPtrList.H"
 #include "polyBoundaryMeshEntries.H"
 #include "entry.H"
-#include "Cloud.H"
+#include "cloud.H"
+#include "pointMesh.H"
 #include "LagrangianMesh.H"
-#include "surfaceFields.H"
-
-// Local includes
-#include "vtkPVFoamAddToSelection.H"
 
 // VTK includes
 #include "vtkDataArraySelection.h"
-
 
 // * * * * * * * * * * * * * * * Private Classes * * * * * * * * * * * * * * //
 
@@ -105,20 +103,23 @@ Foam::wordList Foam::vtkPVFoam::getZoneNames(const ZonesType& zones) const
 template<class ZonesType>
 Foam::wordList Foam::vtkPVFoam::getZoneNames(const word& zonesName) const
 {
-    wordList names;
+    const Time& runTime =
+        reader_->GetDecomposedCase()
+      ? procDbsPtr_->proc0Time()
+      : procDbsPtr_->completeTime();
 
     // Mesh not loaded - read from file
     typeIOobject<ZonesType> ioObj
     (
         zonesName,
-        dbPtr_().findInstance
+        runTime.findInstance
         (
             meshDir_,
             zonesName,
             IOobject::READ_IF_PRESENT
         ),
         meshDir_,
-        dbPtr_(),
+        runTime,
         IOobject::READ_IF_PRESENT,
         IOobject::NO_WRITE,
         false
@@ -128,14 +129,19 @@ Foam::wordList Foam::vtkPVFoam::getZoneNames(const word& zonesName) const
     {
         const zonesEntries<ZonesType> zones(ioObj);
 
-        names.setSize(zones.size());
+        wordList names(zones.size());
+
         forAll(zones, zoneI)
         {
             names[zoneI] = zones[zoneI].keyword();
         }
-    }
 
-    return names;
+        return names;
+    }
+    else
+    {
+        return wordList();
+    }
 }
 
 
@@ -144,25 +150,14 @@ void Foam::vtkPVFoam::updateInfoInternalMesh
     vtkDataArraySelection* arraySelection
 )
 {
-    if (debug)
-    {
-        InfoInFunction << endl;
-    }
-
     // Determine mesh parts (internalMesh, patches...)
-    //- Add internal mesh as first entry
+    // - Add internal mesh as first entry
     arrayRangeVolume_.reset(arraySelection->GetNumberOfArrays());
     arraySelection->AddArray
     (
         "internalMesh"
     );
     arrayRangeVolume_ += 1;
-
-    if (debug)
-    {
-        // Just for debug info
-        getSelectedArrayEntries(arraySelection);
-    }
 }
 
 
@@ -171,39 +166,56 @@ void Foam::vtkPVFoam::updateInfolagrangian
     vtkDataArraySelection* arraySelection
 )
 {
-    if (debug)
+    UPtrList<const Time> runTimes;
+    if (reader_->GetDecomposedCase())
     {
-        InfoInFunction << nl
-            << "    " << dbPtr_->timePath()/lagrangian::cloud::prefix << endl;
+        runTimes.setSize(procDbsPtr_->nProcs());
+        forAll(procDbsPtr_->procTimes(), proci)
+        {
+            runTimes.set(proci, &procDbsPtr_->procTimes()[proci]);
+        }
+    }
+    else
+    {
+        runTimes.setSize(1);
+        runTimes.set(0, &procDbsPtr_->completeTime());
     }
 
     // Use the db directly since this might be called without a mesh,
     // but the region must get added back in
-    fileName lagrangianPrefix(lagrangian::cloud::prefix);
-    if (meshRegion_ != polyMesh::defaultRegion)
-    {
-        lagrangianPrefix = meshRegion_/lagrangian::cloud::prefix;
-    }
+    const fileName lagrangianPrefix =
+        meshRegion_ == polyMesh::defaultRegion
+      ? fileName(lagrangian::cloud::prefix)
+      : meshRegion_/lagrangian::cloud::prefix;
 
     arrayRangelagrangian_.reset(arraySelection->GetNumberOfArrays());
 
     // Generate a list of lagrangian clouds across all times
-    HashSet<fileName> cloudDirs;
+    HashSet<fileName> lagrangianDirs;
 
     // Get times list. Flush first to force refresh.
     fileHandler().flush();
-    instantList times = dbPtr_().times();
-    forAll(times, timei)
+    forAll(runTimes, runTimei)
     {
-        cloudDirs +=
-            fileHandler().readDir
-            (
-                dbPtr_->path()/times[timei].name()/lagrangianPrefix,
-                fileType::directory
-            );
+        const instantList times = runTimes[runTimei].times();
+
+        forAll(times, timei)
+        {
+            lagrangianDirs +=
+                fileHandler().readDir
+                (
+                    fileHandler().filePath
+                    (
+                        runTimes[runTimei].path()
+                       /times[timei].name()
+                       /lagrangianPrefix
+                    ),
+                    fileType::directory
+                );
+        }
     }
 
-    forAllConstIter(HashSet<fileName>, cloudDirs, cloudIter)
+    forAllConstIter(HashSet<fileName>, lagrangianDirs, cloudIter)
     {
         arraySelection->AddArray
         (
@@ -211,13 +223,7 @@ void Foam::vtkPVFoam::updateInfolagrangian
         );
     }
 
-    arrayRangelagrangian_ += cloudDirs.size();
-
-    if (debug)
-    {
-        // Just for debug info
-        getSelectedArrayEntries(arraySelection);
-    }
+    arrayRangelagrangian_ += lagrangianDirs.size();
 }
 
 
@@ -226,11 +232,10 @@ void Foam::vtkPVFoam::updateInfoLagrangian
     vtkDataArraySelection* arraySelection
 )
 {
-    if (debug)
-    {
-        InfoInFunction << nl
-            << "    " << dbPtr_->timePath()/LagrangianMesh::prefix << endl;
-    }
+    const Time& runTime =
+        reader_->GetDecomposedCase()
+      ? procDbsPtr_->proc0Time()
+      : procDbsPtr_->completeTime();
 
     // Use the db directly since this might be called without a mesh,
     // but the region must get added back in
@@ -246,13 +251,18 @@ void Foam::vtkPVFoam::updateInfoLagrangian
 
     // Get times list. Flush first to force refresh.
     fileHandler().flush();
-    instantList times = dbPtr_().times();
+    instantList times = runTime.times();
     forAll(times, timei)
     {
         LagrangianDirs +=
             fileHandler().readDir
             (
-                dbPtr_->path()/times[timei].name()/LagrangianPrefix,
+                fileHandler().filePath
+                (
+                    runTime.path()
+                   /times[timei].name()
+                   /LagrangianPrefix
+                ),
                 fileType::directory
             );
     }
@@ -266,12 +276,6 @@ void Foam::vtkPVFoam::updateInfoLagrangian
     }
 
     arrayRangeLagrangian_ += LagrangianDirs.size();
-
-    if (debug)
-    {
-        // Just for debug info
-        getSelectedArrayEntries(arraySelection);
-    }
 }
 
 
@@ -282,26 +286,20 @@ void Foam::vtkPVFoam::updateInfoPatches
     const bool first
 )
 {
-    if (debug)
-    {
-        InfoInFunction
-            << " [meshPtr=" << (meshPtr_ ? "set" : "nullptr") << "]" << endl;
-    }
-
-
     HashSet<string> enabledEntriesSet(enabledEntries);
 
     arrayRangePatches_.reset(arraySelection->GetNumberOfArrays());
 
     int nPatches = 0;
-    if (meshPtr_)
+    if (procMeshesPtr_.valid())
     {
-        const polyBoundaryMesh& patches = meshPtr_->boundaryMesh();
+        const fvMesh& mesh = procMeshesPtr_->completeMesh();
+
+        const polyBoundaryMesh& patches = mesh.boundaryMesh();
         const HashTable<labelList, word>& groups = patches.groupPatchIndices();
         const wordList allPatchNames = patches.names();
 
         // Add patch groups
-
         for
         (
             HashTable<labelList, word>::const_iterator iter = groups.begin();
@@ -312,6 +310,7 @@ void Foam::vtkPVFoam::updateInfoPatches
             const word& groupName = iter.key();
             const labelList& patchIDs = iter();
 
+            // Count the number of faces in this group
             label nFaces = 0;
             forAll(patchIDs, i)
             {
@@ -334,14 +333,13 @@ void Foam::vtkPVFoam::updateInfoPatches
                         forAll(patchIDs, i)
                         {
                             const polyPatch& pp = patches[patchIDs[i]];
+
                             if (pp.size())
                             {
-                                string vtkPatchName
+                                enabledEntriesSet.insert
                                 (
                                     pp.name() + " - " + pp.type()
                                 );
-
-                                enabledEntriesSet.insert(vtkPatchName);
                             }
                         }
                     }
@@ -349,9 +347,7 @@ void Foam::vtkPVFoam::updateInfoPatches
             }
         }
 
-
         // Add patches
-
         if (!reader_->GetShowGroupsOnly())
         {
             forAll(patches, patchi)
@@ -360,10 +356,10 @@ void Foam::vtkPVFoam::updateInfoPatches
 
                 if (pp.size())
                 {
-                    const string vtkPatchName = pp.name() + " - " + pp.type();
-
-                    // Add patch to GUI list
-                    arraySelection->AddArray(vtkPatchName.c_str());
+                    arraySelection->AddArray
+                    (
+                        (pp.name() + " - " + pp.type()).c_str()
+                    );
 
                     ++nPatches;
                 }
@@ -372,19 +368,26 @@ void Foam::vtkPVFoam::updateInfoPatches
     }
     else
     {
+        const bool decomposed = reader_->GetDecomposedCase();
+
+        const Time& runTime =
+            decomposed
+          ? procDbsPtr_->proc0Time()
+          : procDbsPtr_->completeTime();
+
         // Mesh not loaded - read from file
         // but this could fail if we've supplied a bad region name
         typeIOobject<polyBoundaryMesh> ioObj
         (
             "boundary",
-            dbPtr_().findInstance
+            runTime.findInstance
             (
                 meshDir_,
                 "boundary",
                 IOobject::READ_IF_PRESENT
             ),
             meshDir_,
-            dbPtr_(),
+            runTime,
             IOobject::READ_IF_PRESENT,
             IOobject::NO_WRITE,
             false
@@ -395,38 +398,34 @@ void Foam::vtkPVFoam::updateInfoPatches
         {
             polyBoundaryMeshEntries patchEntries(ioObj);
 
-
             // Read patches and determine sizes
-
             wordList names(patchEntries.size());
             labelList sizes(patchEntries.size());
-
+            boolList isProc(patchEntries.size());
             forAll(patchEntries, patchi)
             {
                 const dictionary& patchDict = patchEntries[patchi].dict();
 
-                sizes[patchi] = patchDict.lookup<label>("nFaces");
                 names[patchi] = patchEntries[patchi].keyword();
+                sizes[patchi] = patchDict.lookup<label>("nFaces");
+                isProc[patchi] = patchDict.found("myProcNo");
             }
 
-
-            // Add (non-zero) patch groups to the list of mesh parts
-
-            HashTable<labelList, word> groups(patchEntries.size());
-
+            // Build a map from the group name to a list of the indices of the
+            // patches in the group
+            HashTable<labelList> groups(patchEntries.size());
             forAll(patchEntries, patchi)
             {
                 const dictionary& patchDict = patchEntries[patchi].dict();
 
-                wordList groupNames;
-                patchDict.readIfPresent("inGroups", groupNames);
+                const wordList groupNames =
+                    patchDict.lookupOrDefault("inGroups", wordList());
 
                 forAll(groupNames, groupI)
                 {
-                    HashTable<labelList, word>::iterator iter = groups.find
-                    (
-                        groupNames[groupI]
-                    );
+                    HashTable<labelList, word>::iterator iter =
+                        groups.find(groupNames[groupI]);
+
                     if (iter != groups.end())
                     {
                         iter().append(patchi);
@@ -438,13 +437,8 @@ void Foam::vtkPVFoam::updateInfoPatches
                 }
             }
 
-            for
-            (
-                HashTable<labelList, word>::const_iterator iter =
-                    groups.begin();
-                iter != groups.end();
-                ++iter
-            )
+            // Add (non-zero) patch groups to the list of mesh parts
+            forAllConstIter(HashTable<labelList>, groups, iter)
             {
                 const word& groupName = iter.key();
                 const labelList& patchIDs = iter();
@@ -452,7 +446,10 @@ void Foam::vtkPVFoam::updateInfoPatches
                 label nFaces = 0;
                 forAll(patchIDs, i)
                 {
-                    nFaces += sizes[patchIDs[i]];
+                    if (!isProc[patchIDs[i]])
+                    {
+                        nFaces += sizes[patchIDs[i]];
+                    }
                 }
 
                 // Valid patch if nFace > 0 - add patch to GUI list
@@ -468,24 +465,19 @@ void Foam::vtkPVFoam::updateInfoPatches
                         if (!reader_->GetShowGroupsOnly())
                         {
                             enabledEntriesSet.erase(vtkGrpName);
+
                             forAll(patchIDs, i)
                             {
                                 if (sizes[patchIDs[i]])
                                 {
-                                    const word patchType
+                                    enabledEntriesSet.insert
                                     (
-                                        patchEntries[patchIDs[i]].dict().lookup
-                                        (
-                                            "type"
-                                        )
+                                        names[patchIDs[i]]
+                                      + " - "
+                                      + patchEntries[patchIDs[i]]
+                                       .dict()
+                                       .lookup<word>("type")
                                     );
-
-                                    string vtkPatchName
-                                    (
-                                        names[patchIDs[i]] + " - " + patchType
-                                    );
-
-                                    enabledEntriesSet.insert(vtkPatchName);
                                 }
                             }
                         }
@@ -493,9 +485,7 @@ void Foam::vtkPVFoam::updateInfoPatches
                 }
             }
 
-
             // Add (non-zero) patches to the list of mesh parts
-
             if (!reader_->GetShowGroupsOnly())
             {
                 const wordReList defaultPatchTypes
@@ -524,12 +514,9 @@ void Foam::vtkPVFoam::updateInfoPatches
 
                         arraySelection->AddArray(vtkPatchName.c_str());
 
-                        if (first)
+                        if (first && findStrings(defaultPatchTypes, patchType))
                         {
-                            if (findStrings(defaultPatchTypes, patchType))
-                            {
-                                enabledEntriesSet.insert(vtkPatchName);
-                            }
+                            enabledEntriesSet.insert(vtkPatchName);
                         }
 
                         ++nPatches;
@@ -538,16 +525,11 @@ void Foam::vtkPVFoam::updateInfoPatches
             }
         }
     }
+
     arrayRangePatches_ += nPatches;
 
     // Update enabled entries in case of group selection
     enabledEntries = enabledEntriesSet.toc();
-
-    if (debug)
-    {
-        // Just for debug info
-        getSelectedArrayEntries(arraySelection);
-    }
 }
 
 
@@ -556,86 +538,64 @@ void Foam::vtkPVFoam::updateInfoZones
     vtkDataArraySelection* arraySelection
 )
 {
-    if (!reader_->GetIncludeZones())
-    {
-        return;
-    }
+    if (!reader_->GetIncludeZones()) return;
 
-    if (debug)
-    {
-        InfoInFunction
-            << " [meshPtr=" << (meshPtr_ ? "set" : "nullptr") << "]" << endl;
-    }
-
-    wordList namesLst;
+    const fvMesh& mesh =
+       !procMeshesPtr_.valid()
+      ? NullObjectRef<fvMesh>()
+      : reader_->GetDecomposedCase()
+      ? procMeshesPtr_->haveProcs()
+      ? procMeshesPtr_->procMeshes().first()
+      : NullObjectRef<fvMesh>()
+      : procMeshesPtr_->completeMesh();
 
     // cellZones information
-    if (meshPtr_)
-    {
-        namesLst = getZoneNames(meshPtr_->cellZones());
-    }
-    else
-    {
-        namesLst = getZoneNames<cellZoneList>("cellZones");
-    }
+    const wordList cellZoneNames =
+        notNull(mesh)
+      ? getZoneNames(mesh.cellZones())
+      : getZoneNames<cellZoneList>("cellZones");
 
     arrayRangeCellZones_.reset(arraySelection->GetNumberOfArrays());
-    forAll(namesLst, elemI)
+    forAll(cellZoneNames, i)
     {
         arraySelection->AddArray
         (
-            (namesLst[elemI] + " - cellZone").c_str()
+            (cellZoneNames[i] + " - cellZone").c_str()
         );
     }
-    arrayRangeCellZones_ += namesLst.size();
-
+    arrayRangeCellZones_ += cellZoneNames.size();
 
     // faceZones information
-    if (meshPtr_)
-    {
-        namesLst = getZoneNames(meshPtr_->faceZones());
-    }
-    else
-    {
-        namesLst = getZoneNames<faceZoneList>("faceZones");
-    }
+    const wordList faceZoneNames =
+        notNull(mesh)
+      ? getZoneNames(mesh.faceZones())
+      : getZoneNames<faceZoneList>("faceZones");
 
     arrayRangeFaceZones_.reset(arraySelection->GetNumberOfArrays());
-    forAll(namesLst, elemI)
+    forAll(faceZoneNames, i)
     {
         arraySelection->AddArray
         (
-            (namesLst[elemI] + " - faceZone").c_str()
+            (faceZoneNames[i] + " - faceZone").c_str()
         );
     }
-    arrayRangeFaceZones_ += namesLst.size();
-
+    arrayRangeFaceZones_ += faceZoneNames.size();
 
     // pointZones information
-    if (meshPtr_)
-    {
-        namesLst = getZoneNames(meshPtr_->pointZones());
-    }
-    else
-    {
-        namesLst = getZoneNames<pointZoneList>("pointZones");
-    }
+    const wordList pointZoneNames =
+        notNull(mesh)
+      ? getZoneNames(mesh.pointZones())
+      : getZoneNames<pointZoneList>("pointZones");
 
     arrayRangePointZones_.reset(arraySelection->GetNumberOfArrays());
-    forAll(namesLst, elemI)
+    forAll(pointZoneNames, i)
     {
         arraySelection->AddArray
         (
-            (namesLst[elemI] + " - pointZone").c_str()
+            (pointZoneNames[i] + " - pointZone").c_str()
         );
     }
-    arrayRangePointZones_ += namesLst.size();
-
-    if (debug)
-    {
-        // Just for debug info
-        getSelectedArrayEntries(arraySelection);
-    }
+    arrayRangePointZones_ += pointZoneNames.size();
 }
 
 
@@ -644,27 +604,24 @@ void Foam::vtkPVFoam::updateInfoSets
     vtkDataArraySelection* arraySelection
 )
 {
-    if (!reader_->GetIncludeSets())
-    {
-        return;
-    }
+    if (!reader_->GetIncludeSets()) return;
 
-    if (debug)
-    {
-        InfoInFunction << endl;
-    }
+    const Time& runTime =
+        reader_->GetDecomposedCase()
+      ? procDbsPtr_->proc0Time()
+      : procDbsPtr_->completeTime();
 
     // Add names of sets. Search for last time directory with a sets
     // subdirectory. Take care not to search beyond the last mesh.
 
-    word facesInstance = dbPtr_().findInstance
+    const word facesInstance = runTime.findInstance
     (
         meshDir_,
         "faces",
         IOobject::READ_IF_PRESENT
     );
 
-    word setsInstance = dbPtr_().findInstance
+    const word setsInstance = runTime.findInstance
     (
         meshDir_/"sets",
         word::null,
@@ -672,55 +629,25 @@ void Foam::vtkPVFoam::updateInfoSets
         facesInstance
     );
 
-    IOobjectList objects(dbPtr_(), setsInstance, meshDir_/"sets");
-
-    if (debug)
-    {
-        Info<< "     Foam::vtkPVFoam::updateInfoSets read "
-            << objects.names() << " from " << setsInstance << endl;
-    }
-
+    const IOobjectList objects(runTime, setsInstance, meshDir_/"sets");
 
     arrayRangeCellSets_.reset(arraySelection->GetNumberOfArrays());
-    arrayRangeCellSets_ += addToSelection<cellSet>
-    (
-        arraySelection,
-        objects,
-        " - cellSet"
-    );
+    arrayRangeCellSets_ +=
+        addToSelection<cellSet>(arraySelection, objects, " - cellSet");
 
     arrayRangeFaceSets_.reset(arraySelection->GetNumberOfArrays());
-    arrayRangeFaceSets_ += addToSelection<faceSet>
-    (
-        arraySelection,
-        objects,
-        " - faceSet"
-    );
+    arrayRangeFaceSets_ +=
+        addToSelection<faceSet>(arraySelection, objects, " - faceSet");
 
     arrayRangePointSets_.reset(arraySelection->GetNumberOfArrays());
-    arrayRangePointSets_ += addToSelection<pointSet>
-    (
-        arraySelection,
-        objects,
-        " - pointSet"
-    );
-
-    if (debug)
-    {
-        // Just for debug info
-        getSelectedArrayEntries(arraySelection);
-    }
+    arrayRangePointSets_ +=
+        addToSelection<pointSet>(arraySelection, objects, " - pointSet");
 }
 
 
 void Foam::vtkPVFoam::updateInfoFields()
 {
-    if (debug)
-    {
-        InfoInFunction
-            << " [meshPtr=" << (meshPtr_ ? "set" : "nullptr") << "]"
-            << endl;
-    }
+    DebugInFunction;
 
     vtkDataArraySelection* fieldSelection = reader_->GetFieldSelection();
 
@@ -732,12 +659,15 @@ void Foam::vtkPVFoam::updateInfoFields()
         regionPrefix = meshRegion_;
     }
 
-    const Time& runTime = dbPtr_();
+    const Time& runTime =
+        reader_->GetDecomposedCase()
+      ? procDbsPtr_->proc0Time()
+      : procDbsPtr_->completeTime();
+
     const instantList times = runTime.times();
 
     stringList enabledEntries;
-
-    if (fieldSelection->GetNumberOfArrays() == 0 && !meshPtr_)
+    if (fieldSelection->GetNumberOfArrays() == 0 && !procMeshesPtr_.valid())
     {
         const wordReList defaultFieldRes
         (
@@ -775,7 +705,7 @@ void Foam::vtkPVFoam::updateInfoFields()
     else
     {
         // Preserve the enabled selections
-        enabledEntries = getSelectedArrayEntries(fieldSelection);
+        enabledEntries = getSelectedArrayEntries(fieldSelection, false);
     }
 
     fieldSelection->RemoveAllArrays();
@@ -793,21 +723,35 @@ void Foam::vtkPVFoam::updateInfoFields()
 
     // Restore the enabled selections
     setSelectedArrayEntries(fieldSelection, enabledEntries);
+
+    if (debug) getSelectedArrayEntries(fieldSelection);
 }
 
 
 void Foam::vtkPVFoam::updateInfolagrangianFields()
 {
-    if (debug)
+    DebugInFunction;
+
+    UPtrList<const Time> runTimes;
+    if (reader_->GetDecomposedCase())
     {
-        InfoInFunction << endl;
+        runTimes.setSize(procDbsPtr_->nProcs());
+        forAll(procDbsPtr_->procTimes(), proci)
+        {
+            runTimes.set(proci, &procDbsPtr_->procTimes()[proci]);
+        }
+    }
+    else
+    {
+        runTimes.setSize(1);
+        runTimes.set(0, &procDbsPtr_->completeTime());
     }
 
     vtkDataArraySelection* fieldSelection =
         reader_->GetlagrangianFieldSelection();
 
     // Preserve the enabled selections
-    stringList enabledEntries = getSelectedArrayEntries(fieldSelection);
+    stringList enabledEntries = getSelectedArrayEntries(fieldSelection, false);
     fieldSelection->RemoveAllArrays();
 
     // Use the db directly since this might be called without a mesh,
@@ -823,46 +767,54 @@ void Foam::vtkPVFoam::updateInfolagrangianFields()
     // set. ParaView will display "(partial)" after field names that only apply
     // to some of the clouds.
     const arrayRange& range = arrayRangelagrangian_;
-
     fileHandler().flush();
     for (label partId = range.start(); partId < range.end(); ++ partId)
     {
-        const instantList times = dbPtr_().times();
-        forAll(times, timei)
+        forAll(runTimes, runTimei)
         {
-            IOobjectList objects
-            (
-                dbPtr_(),
-                times[timei].name(),
-                lagrangianPrefix/getPartName(partId)
-            );
+            const instantList times = runTimes[runTimei].times();
 
-            addToSelection<IOField<label>>(fieldSelection, objects);
-            addToSelection<IOField<scalar>>(fieldSelection, objects);
-            addToSelection<IOField<vector>>(fieldSelection, objects);
-            addToSelection<IOField<sphericalTensor>>(fieldSelection, objects);
-            addToSelection<IOField<symmTensor>>(fieldSelection, objects);
-            addToSelection<IOField<tensor>>(fieldSelection, objects);
+            forAll(times, timei)
+            {
+                IOobjectList objects
+                (
+                    runTimes[runTimei],
+                    times[timei].name(),
+                    lagrangianPrefix/getPartName(partId)
+                );
+
+                #define ADD_TO_SELECTION(Type, nullArg) \
+                    addToSelection<IOField<Type>>(fieldSelection, objects);
+                ADD_TO_SELECTION(label, );
+                FOR_ALL_FIELD_TYPES(ADD_TO_SELECTION)
+                #undef ADD_TO_SELECTION
+            }
         }
     }
 
     // Restore the enabled selections
     setSelectedArrayEntries(fieldSelection, enabledEntries);
+
+    if (debug) getSelectedArrayEntries(fieldSelection);
 }
 
 
 void Foam::vtkPVFoam::updateInfoLagrangianFields()
 {
-    if (debug)
-    {
-        InfoInFunction << endl;
-    }
+    DebugInFunction;
+
+    const Time& runTime =
+        reader_->GetDecomposedCase()
+      ? procDbsPtr_->proc0Time()
+      : procDbsPtr_->completeTime();
+
+    const instantList times = runTime.times();
 
     vtkDataArraySelection* fieldSelection =
         reader_->GetLagrangianFieldSelection();
 
     // Preserve the enabled selections
-    stringList enabledEntries = getSelectedArrayEntries(fieldSelection);
+    stringList enabledEntries = getSelectedArrayEntries(fieldSelection, false);
     fieldSelection->RemoveAllArrays();
 
     // Use the db directly since this might be called without a mesh,
@@ -880,15 +832,13 @@ void Foam::vtkPVFoam::updateInfoLagrangianFields()
 
     fileHandler().flush();
 
-    const instantList times = dbPtr_().times();
-
     for (label partId = range.start(); partId < range.end(); ++ partId)
     {
         forAll(times, timei)
         {
             IOobjectList objects
             (
-                dbPtr_(),
+                runTime,
                 times[timei].name(),
                 LagrangianPrefix/getPartName(partId)
             );
@@ -905,6 +855,8 @@ void Foam::vtkPVFoam::updateInfoLagrangianFields()
 
     // Restore the enabled selections
     setSelectedArrayEntries(fieldSelection, enabledEntries);
+
+    if (debug) getSelectedArrayEntries(fieldSelection);
 }
 
 

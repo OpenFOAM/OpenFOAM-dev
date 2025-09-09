@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,7 +80,6 @@ Usage
     {
         type            solidificationMelting;
 
-        select          cellZone;
         cellZone        iceZone;
 
         Tsol            273;
@@ -121,7 +120,7 @@ SourceFiles
 #define solidificationMelting_H
 
 #include "fvModel.H"
-#include "fvCellSet.H"
+#include "fvCellZone.H"
 #include "fvMesh.H"
 #include "volFields.H"
 #include "NamedEnum.H"
@@ -156,8 +155,8 @@ private:
 
     // Private Data
 
-        //- The set of cells the fvConstraint applies to
-        fvCellSet set_;
+        //- The cellZone the fvConstraint applies to
+        fvCellZone zone_;
 
         //- Temperature at which isotherm melting occurs
         //  and not isotherm melting starts e.g. eutectic [K]

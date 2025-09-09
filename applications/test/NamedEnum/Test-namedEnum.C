@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,16 +44,12 @@ public:
     static const Foam::NamedEnum<options, 3> namedEnum;
 };
 
-
-template<>
-const char* Foam::NamedEnum<namedEnumTest::options, 3>::names[] =
+const Foam::NamedEnum<namedEnumTest::options, 3> namedEnumTest::namedEnum
 {
     "a",
     "b",
     "c"
 };
-
-const Foam::NamedEnum<namedEnumTest::options, 3> namedEnumTest::namedEnum;
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

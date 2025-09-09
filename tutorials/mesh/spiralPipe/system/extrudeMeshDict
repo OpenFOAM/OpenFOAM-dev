@@ -1,0 +1,35 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      extrudeMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+constructFrom   mesh;
+
+sourceCase      ".";
+
+sourcePatches   (outlet);
+
+flipNormals     false;
+
+mergeFaces      false;
+
+extrudeModel
+{
+    type            path;
+
+    path            "constant/geometry/curve.obj";
+
+    nLayers         500;
+}
+
+// ************************************************************************* //

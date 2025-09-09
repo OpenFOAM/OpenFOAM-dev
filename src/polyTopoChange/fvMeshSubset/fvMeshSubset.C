@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -358,13 +358,25 @@ void Foam::fvMeshSubset::subsetZones()
         // -1 :    ,,           , unflipped
         //  0 : not part of faceZone
         labelList zone(baseMesh().nFaces(), 0);
-        forAll(fz, j)
+
+        if (fz.oriented())
         {
-            if (fz.flipMap()[j])
+            const boolList& flipMap = fz.flipMap();
+            forAll(fz, j)
             {
-                zone[fz[j]] = 1;
+                if (flipMap[j])
+                {
+                    zone[fz[j]] = 1;
+                }
+                else
+                {
+                    zone[fz[j]] = -1;
+                }
             }
-            else
+        }
+        else
+        {
+            forAll(fz, j)
             {
                 zone[fz[j]] = -1;
             }
@@ -399,13 +411,25 @@ void Foam::fvMeshSubset::subsetZones()
             }
         }
 
-        fZonePtrs[i] = new faceZone
-        (
-            fz.name(),
-            subAddressing,
-            subFlipStatus,
-            fvMeshSubsetPtr_().faceZones()
-        );
+        if (fz.oriented())
+        {
+            fZonePtrs[i] = new faceZone
+            (
+                fz.name(),
+                subAddressing,
+                subFlipStatus,
+                fvMeshSubsetPtr_().faceZones()
+            );
+        }
+        else
+        {
+            fZonePtrs[i] = new faceZone
+            (
+                fz.name(),
+                subAddressing,
+                fvMeshSubsetPtr_().faceZones()
+            );
+        }
     }
 
     // CellZones

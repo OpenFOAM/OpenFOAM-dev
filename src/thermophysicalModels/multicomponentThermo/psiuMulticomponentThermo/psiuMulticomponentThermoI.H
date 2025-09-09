@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,6 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "DimensionedFieldListSlicer.H"
 #include "psiuMulticomponentThermo.H"
 #include "FieldListSlice.H"
 
@@ -85,10 +86,48 @@ Foam::psiuMulticomponentThermo::implementation::patchFaceComposition
 }
 
 
-Foam::PtrList<Foam::scalarField>
+inline Foam::DimensionedFieldListAndSlicer<Foam::scalar, Foam::volMesh>
 Foam::psiuMulticomponentThermo::implementation::Yslicer
 (
-    const fvSource& source
+    const fvSource& model,
+    const volScalarField::Internal& source
+) const
+{
+    PtrList<DimensionedField<scalar, volMesh>> result(Y_.size());
+
+    forAll(Y_, i)
+    {
+        result.set
+        (
+            i,
+            Y_[i]
+           .sources()[model.name()]
+           .sourceValue(model, source)
+           .ptr()
+        );
+    }
+
+    return result;
+}
+
+
+inline Foam::scalarFieldListSlice
+Foam::psiuMulticomponentThermo::implementation::sourceCellComposition
+(
+    const DimensionedFieldListAndSlicer<scalar, volMesh>& Yslicer,
+    const label i
+) const
+{
+    return Yslicer.slice(i);
+}
+
+
+inline Foam::PtrList<Foam::scalarField>
+Foam::psiuMulticomponentThermo::implementation::Yslicer
+(
+    const fvSource& model,
+    const scalarField& source,
+    const labelUList& cells
 ) const
 {
     PtrList<scalarField> result(Y_.size());
@@ -98,7 +137,10 @@ Foam::psiuMulticomponentThermo::implementation::Yslicer
         result.set
         (
             i,
-            Y_[i].sources()[source.name()].sourceValue(source).ptr()
+            Y_[i]
+           .sources()[model.name()]
+           .sourceValue(model, source, cells)
+           .ptr()
         );
     }
 

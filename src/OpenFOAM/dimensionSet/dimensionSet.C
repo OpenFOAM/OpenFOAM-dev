@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,23 +32,20 @@ License
 namespace Foam
 {
     defineTypeNameAndDebug(dimensionSet, 1);
-
-    template<>
-    const char* NamedEnum<dimensionSet::dimensionType, 7>::names[] =
-    {
-        "mass",
-        "length",
-        "time",
-        "temperature",
-        "moles",
-        "current",
-        "luminousIntensity"
-    };
 }
 
 
 const Foam::NamedEnum<Foam::dimensionSet::dimensionType, 7>
-    Foam::dimensionSet::dimensionTypeNames_;
+Foam::dimensionSet::dimensionTypeNames_
+{
+    "mass",
+    "length",
+    "time",
+    "temperature",
+    "moles",
+    "current",
+    "luminousIntensity"
+};
 
 
 namespace Foam

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,22 +53,20 @@ namespace fv
 }
 
 
-namespace Foam
-{
-    template<>
-    const char* NamedEnum<fv::rotorDisk::geometryModeType, 2>::names[] =
-        {"auto", "specified"};
-
-    template<>
-    const char* NamedEnum<fv::rotorDisk::inletFlowType, 3>::names[] =
-        {"fixed", "surfaceNormal", "local"};
-}
-
 const Foam::NamedEnum<Foam::fv::rotorDisk::geometryModeType, 2>
-    Foam::fv::rotorDisk::geometryModeTypeNames_;
+Foam::fv::rotorDisk::geometryModeTypeNames_
+{
+    "auto",
+    "specified"
+};
 
 const Foam::NamedEnum<Foam::fv::rotorDisk::inletFlowType, 3>
-    Foam::fv::rotorDisk::inletFlowTypeNames_;
+Foam::fv::rotorDisk::inletFlowTypeNames_
+{
+    "fixed",
+    "surfaceNormal",
+    "local"
+};
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
@@ -116,60 +114,36 @@ void Foam::fv::rotorDisk::readCoeffs(const dictionary& dict)
 
 void Foam::fv::rotorDisk::checkData(const dictionary& dict)
 {
-    // Set inflow type
-    switch (set_.selectionType())
+    // Set the profile ID for each blade section
+    profiles_.connectBlades
+    (
+        blade_.profileName(),
+        blade_.profileIndex()
+    );
+    switch (inletFlow_)
     {
-        case fvCellSet::selectionTypes::cellSet:
-        case fvCellSet::selectionTypes::cellZone:
-        case fvCellSet::selectionTypes::all:
+        case inletFlowType::fixed:
         {
-            // Set the profile ID for each blade section
-            profiles_.connectBlades
+            dict.lookup("inletVelocity") >> inletVelocity_;
+            break;
+        }
+        case inletFlowType::surfaceNormal:
+        {
+            scalar UIn
             (
-                blade_.profileName(),
-                blade_.profileIndex()
+                dict.lookup<scalar>("inletNormalVelocity")
             );
-            switch (inletFlow_)
-            {
-                case inletFlowType::fixed:
-                {
-                    dict.lookup("inletVelocity") >> inletVelocity_;
-                    break;
-                }
-                case inletFlowType::surfaceNormal:
-                {
-                    scalar UIn
-                    (
-                        dict.lookup<scalar>("inletNormalVelocity")
-                    );
-                    inletVelocity_ = -coordSys_.R().e3()*UIn;
-                    break;
-                }
-                case inletFlowType::local:
-                {
-                    break;
-                }
-                default:
-                {
-                    FatalErrorInFunction
-                        << "Unknown inlet velocity type" << abort(FatalError);
-                }
-            }
+            inletVelocity_ = -coordSys_.R().e3()*UIn;
+            break;
+        }
+        case inletFlowType::local:
+        {
             break;
         }
         default:
         {
             FatalErrorInFunction
-                << "Source cannot be used with '"
-                << fvCellSet::selectionTypeNames[set_.selectionType()]
-                << "' mode.  Please use one of: " << nl
-                << fvCellSet::selectionTypeNames
-                   [fvCellSet::selectionTypes::cellSet] << nl
-                << fvCellSet::selectionTypeNames
-                   [fvCellSet::selectionTypes::cellZone] << nl
-                << fvCellSet::selectionTypeNames
-                   [fvCellSet::selectionTypes::all]
-                << exit(FatalError);
+                << "Unknown inlet velocity type" << abort(FatalError);
         }
     }
 }
@@ -190,8 +164,8 @@ void Foam::fv::rotorDisk::setFaceArea(vector& axis, const bool correct)
 
     // Calculate cell addressing for selected cells
     labelList cellAddr(mesh().nCells(), -1);
-    UIndirectList<label>(cellAddr, set_.cells()) =
-        identityMap(set_.nCells());
+    UIndirectList<label>(cellAddr, zone_.zone()) =
+        identityMap(zone_.nCells());
     labelList nbrFaceCellAddr(mesh().nFaces() - nInternalFaces, -1);
     forAll(pbm, patchi)
     {
@@ -302,7 +276,7 @@ void Foam::fv::rotorDisk::setFaceArea(vector& axis, const bool correct)
             mesh(),
             dimensionedScalar(dimArea, 0)
         );
-        UIndirectList<scalar>(area.primitiveField(), set_.cells()) = area_;
+        UIndirectList<scalar>(area.primitiveField(), zone_.zone()) = area_;
 
         Info<< type() << ": " << name() << " writing field " << area.name()
             << endl;
@@ -331,7 +305,7 @@ void Foam::fv::rotorDisk::createCoordinateSystem(const dictionary& dict)
             const scalarField& V = mesh().V();
             const vectorField& C = mesh().C();
 
-            const labelUList cells = set_.cells();
+            const labelList& cells = zone_.zone();
 
             forAll(cells, i)
             {
@@ -412,7 +386,7 @@ void Foam::fv::rotorDisk::createCoordinateSystem(const dictionary& dict)
                 (
                     axis,
                     origin,
-                    UIndirectList<vector>(mesh().C(), set_.cells())()
+                    UIndirectList<vector>(mesh().C(), zone_.zone())()
                 )
             );
 
@@ -441,7 +415,7 @@ void Foam::fv::rotorDisk::constructGeometry()
 {
     const vectorField& C = mesh().C();
 
-    const labelUList cells = set_.cells();
+    const labelList& cells = zone_.zone();
 
     forAll(cells, i)
     {
@@ -518,7 +492,7 @@ Foam::fv::rotorDisk::rotorDisk
 )
 :
     fvModel(name, modelType, mesh, dict),
-    set_(mesh, dict),
+    zone_(mesh, dict),
     UName_(word::null),
     omega_(0),
     nBlades_(0),
@@ -526,10 +500,10 @@ Foam::fv::rotorDisk::rotorDisk
     inletVelocity_(Zero),
     tipEffect_(1),
     flap_(),
-    x_(set_.nCells(), Zero),
-    R_(set_.nCells(), I),
-    invR_(set_.nCells(), I),
-    area_(set_.nCells(), Zero),
+    x_(zone_.nCells(), Zero),
+    R_(zone_.nCells(), I),
+    invR_(zone_.nCells(), I),
+    area_(zone_.nCells(), Zero),
     coordSys_("rotorCoordSys", vector::zero, axesRotation(sphericalTensor::I)),
     cylindrical_(),
     rMax_(0),
@@ -640,26 +614,26 @@ void Foam::fv::rotorDisk::addSup
 
 bool Foam::fv::rotorDisk::movePoints()
 {
-    set_.movePoints();
+    zone_.movePoints();
     return true;
 }
 
 
 void Foam::fv::rotorDisk::topoChange(const polyTopoChangeMap& map)
 {
-    set_.topoChange(map);
+    zone_.topoChange(map);
 }
 
 
 void Foam::fv::rotorDisk::mapMesh(const polyMeshMap& map)
 {
-    set_.mapMesh(map);
+    zone_.mapMesh(map);
 }
 
 
 void Foam::fv::rotorDisk::distribute(const polyDistributionMap& map)
 {
-    set_.distribute(map);
+    zone_.distribute(map);
 }
 
 
@@ -667,7 +641,7 @@ bool Foam::fv::rotorDisk::read(const dictionary& dict)
 {
     if (fvModel::read(dict))
     {
-        set_.read(coeffs(dict));
+        zone_.read(coeffs(dict));
         readCoeffs(coeffs(dict));
         return true;
     }

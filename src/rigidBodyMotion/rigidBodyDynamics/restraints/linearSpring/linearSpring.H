@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,8 +32,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef RBD_restraints_linearSpring_H
-#define RBD_restraints_linearSpring_H
+#ifndef linearSpring_RBD_restraint_H
+#define linearSpring_RBD_restraint_H
 
 #include "rigidBodyRestraint.H"
 #include "Switch.H"

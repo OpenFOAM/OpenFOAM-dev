@@ -106,6 +106,9 @@ public:
         inline tmp(const tmp<T>&);
 
         //- Construct copy moving content, does not increment reference count
+        inline tmp(tmp<T>&&);
+
+        //- Construct copy moving content, does not increment reference count
         inline tmp(const tmp<T>&&);
 
         //- Construct copy transferring content of temporary if required
@@ -176,6 +179,9 @@ public:
 
         //- Assignment transferring the temporary T to this tmp
         inline void operator=(const tmp<T>&);
+
+        //- Move assignment transferring the temporary T to this tmp
+        inline void operator=(tmp<T>&&);
 
         //- Move assignment transferring the temporary T to this tmp
         inline void operator=(const tmp<T>&&);

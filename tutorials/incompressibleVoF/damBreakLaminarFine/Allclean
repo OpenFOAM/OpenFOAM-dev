@@ -9,6 +9,6 @@ cleanVoFCase
 
 # Un-merge the source case
 path=$FOAM_TUTORIALS/incompressibleVoF
-foamUnMergeCase $path/damBreak $path/damBreakLaminar $path/damBreakFine
+foamUnMergeCase $path/damBreakLaminar $path/damBreakFine
 
 #------------------------------------------------------------------------------

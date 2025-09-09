@@ -56,10 +56,11 @@ massSource
 {
     type            massSource;
 
-    points
-    (
-        (2.75 0.5 0)
-    );
+    cellZone
+    {
+        type            containsPoints;
+        points          ((2.75 0.5 0));
+    }
 
     massFlowRate
     {

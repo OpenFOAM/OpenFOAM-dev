@@ -9,9 +9,6 @@ shapeModels = $(sizeGroup)/shapeModels
 $(shapeModels)/shapeModel/shapeModel.C
 $(shapeModels)/spherical/spherical.C
 $(shapeModels)/fractal/fractal.C
-$(shapeModels)/fractal/sinteringModels/sinteringModel/sinteringModel.C
-$(shapeModels)/fractal/sinteringModels/KochFriedlander/KochFriedlander.C
-$(shapeModels)/fractal/sinteringModels/noSintering/noSintering.C
 
 coalescenceModels/coalescenceModel/coalescenceModel.C
 coalescenceModels/AdachiStuartFokkink/AdachiStuartFokkink.C
@@ -44,19 +41,21 @@ daughterSizeDistributionModels/daughterSizeDistributionModel/daughterSizeDistrib
 daughterSizeDistributionModels/LaakkonenDaughterSizeDistribution/LaakkonenDaughterSizeDistribution.C
 daughterSizeDistributionModels/uniformBinary/uniformBinary.C
 
-driftModels/driftModel/driftModel.C
-driftModels/constantDrift/constantDrift.C
-driftModels/densityChange/densityChange.C
-driftModels/phaseChange/phaseChange_driftModel.C
-
-nucleationModels/nucleationModel/nucleationModel.C
-nucleationModels/reactionDriven/reactionDriven.C
-
-derivedFvPatchFields/singleSizeGroup/singleSizeGroupFvPatchScalarField.C
-derivedFvPatchFields/distributionSizeGroup/distributionSizeGroupFvPatchScalarField.C
+derivedFvFieldSources/growth/growthFvScalarFieldSource.C
 
 derivedFvFieldSources/singleSizeGroup/singleSizeGroupFvScalarFieldSource.C
 derivedFvFieldSources/distributionSizeGroup/distributionSizeGroupFvScalarFieldSource.C
+derivedFvFieldSources/growthSizeGroup/growthSizeGroupFvScalarFieldSource.C
+derivedFvFieldSources/interfacialGrowthSizeGroup/interfacialGrowthSizeGroupFvScalarFieldSource.C
 
+derivedFvFieldSources/secondaryProperty/secondaryPropertyFvScalarFieldSource.C
+derivedFvFieldSources/growthSecondaryProperty/growthSecondaryPropertyFvScalarFieldSource.C
+
+derivedFvFieldSources/uniformFixedValueSurfaceAreaVolumeRatio/uniformFixedValueSurfaceAreaVolumeRatioFvScalarFieldSource.C
+derivedFvFieldSources/interfacialGrowthSurfaceAreaVolumeRatio/interfacialGrowthSurfaceAreaVolumeRatioFvScalarFieldSource.C
+derivedFvFieldSources/hardSphereSurfaceAreaVolumeRatio/hardSphereSurfaceAreaVolumeRatioFvScalarFieldSource.C
+derivedFvFieldSources/ParkRogakSurfaceAreaVolumeRatio/ParkRogakSurfaceAreaVolumeRatioFvScalarFieldSource.C
+
+populationBalanceSystem/populationBalanceSystem.C
 
 LIB = $(FOAM_LIBBIN)/libpopulationBalance

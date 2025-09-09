@@ -44,73 +44,105 @@ flipNormals false;
 // with the same name as the corresponding patch
 //zoneNames (patchNames)
 
-//- Linear extrusion in point-normal direction
-//extrudeModel        linearNormal;
+// Linear extrusion in point-normal direction
+extrudeModel
+{
+    type            linearNormal;
 
-//- Single layer linear extrusion in point-normal direction
+    thickness       0.05;
+    nLayers         10;
+    expansionRatio  1.0;
+}
+
+// Single layer linear extrusion in point-normal direction
 //  with empty patches on front and back
-//extrudeModel        plane;
+// extrudeModel
+// {
+//     type            plane;
+// }
 
-//- Linear extrusion in specified direction
-//extrudeModel        linearDirection;
+// Linear extrusion in specified direction
+// extrudeModel
+// {
+//     type            linearDirection;
 
-//- Sector extrusion
-//extrudeModel        sector;
+//     direction       (0 1 0);
+//     thickness       0.05;
+//     nLayers         10;
+//     expansionRatio  1.0;
+// }
 
-//- Wedge extrusion of a single layer
+// Linear extrusion along an arbitrary path specified as an edgeMesh
+// extrudeModel
+// {
+//     type             path;
+
+//     path            "constant/geometry/curve.obj";
+//     nLayers         10;
+//     expansionRatio  1.0;
+// }
+
+// Sector extrusion
+// extrudeModel
+// {
+//     type            sector;
+
+//     axisPt          (0 0.1 -0.05);
+//     axis            (-1 0 0);
+//     angle           360;
+//     // For nLayers=1 assume symmetry so angle/2 on each side
+//     nLayers         10;
+//     expansionRatio  1.0;
+// }
+
+// Wedge extrusion of a single layer
 //  with wedge patches on front and back
-extrudeModel        wedge;
+// extrudeModel
+// {
+//     type            wedge;
+//
+//     axisPt          (0 0 0);
+//     axis            (1 0 0);
+//     angle           1;
+// }
 
-//- Extrudes into sphere around (0 0 0)
-//extrudeModel        linearRadial;
+// Extrudes into sphere around (0 0 0)
+// extrudeModel
+// {
+//     type            linearRadial;
 
-//- Extrudes into sphere around (0 0 0) with specified radii
-//extrudeModel        sphericalRadial;
+//     R               0.1;
+//     // Optional inner radius
+//     Rsurface        0.01;
 
-//- Extrudes into sphere with grading according to pressure (atmospherics)
-//extrudeModel        sigmaRadial;
+//     nLayers         10;
+//     expansionRatio  1.0;
+// }
 
-nLayers             10;
+// Extrudes into sphere around (0 0 0) with specified radii
+// extrudeModel
+// {
+//     type            sphericalRadial;
 
-expansionRatio      1.0;
+//     // Radii specified through interpolation table
+//     R               table ((0 0.01)(3 0.03)(10 0.1));
 
-sectorCoeffs
-{
-    axisPt      (0 0.1 -0.05);
-    axis        (-1 0 0);
-    angle       360;  // For nLayers=1 assume symmetry so angle/2 on each side
-}
+//     nLayers         10;
+//     expansionRatio  1.0;
+// }
 
-linearNormalCoeffs
-{
-    thickness       0.05;
-}
+// Extrudes into sphere with grading according to pressure (atmospherics)
+// extrudeModel
+// {
+//     type            sigmaRadial;
 
-linearDirectionCoeffs
-{
-    direction       (0 1 0);
-    thickness       0.05;
-}
+//     RTbyg           1;
+//     pRef            1;
+//     pStrat          1;
 
-linearRadialCoeffs
-{
-    R               0.1;
-    // Optional inner radius
-    Rsurface        0.01;
-}
-
-sphericalRadialCoeffs
-{
-    // Radii specified through interpolation table
-    R               table ((0 0.01)(3 0.03)(10 0.1));
-}
-
-sigmaRadialCoeffs
-{
-    RTbyg           1;
-    pRef            1;
-    pStrat          1;
-}
+//     nLayers         10;
+//     expansionRatio  1.0;
+// }
 
 // Do front and back need to be merged? Usually only makes sense for 360
 // degree wedges.
@@ -119,5 +151,4 @@ mergeFaces false;
 // Merge small edges. Fraction of bounding box.
 mergeTol 0;
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// ************************************************************************* //

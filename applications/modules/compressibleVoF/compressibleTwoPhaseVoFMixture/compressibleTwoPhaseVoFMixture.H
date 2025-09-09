@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,11 +75,8 @@ class compressibleTwoPhaseVoFMixture
         //- Mixture density
         volScalarField rho_;
 
-        //- Mass-fraction of phase 1
-        volScalarField Alpha1_;
-
-        //- Mass-fraction of phase 2
-        volScalarField Alpha2_;
+        //- Mixture viscosity
+        volScalarField nu_;
 
 
 public:
@@ -185,10 +182,16 @@ public:
         virtual void correct();
 
         //- Kinematic viscosity of mixture [m^2/s]
-        virtual tmp<volScalarField> nu() const;
+        virtual tmp<volScalarField> nu() const
+        {
+            return nu_;
+        }
 
         //- Kinematic viscosity of mixture for patch [m^2/s]
-        virtual tmp<scalarField> nu(const label patchi) const;
+        virtual tmp<scalarField> nu(const label patchi) const
+        {
+            return nu_.boundaryField()[patchi];
+        }
 
 
     // IO

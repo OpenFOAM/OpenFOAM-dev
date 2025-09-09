@@ -69,6 +69,7 @@ $(derivedLagrangianFieldSources)/zero/zeroLagrangianFieldSources.C
 $(derivedLagrangianFieldSources)/max/maxLagrangianFieldSources.C
 $(derivedLagrangianFieldSources)/NaN/NaNLagrangianFieldSources.C
 $(derivedLagrangianFieldSources)/distribution/distributionLagrangianScalarFieldSource.C
+$(derivedLagrangianFieldSources)/noneState/noneStateLagrangianLabelFieldSource.C
 
 # Fields
 fields/LagrangianFields/LagrangianFields.C

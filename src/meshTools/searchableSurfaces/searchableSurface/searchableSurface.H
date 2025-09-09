@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ Description
     Information returned is usually a pointIndexHit:
     - bool  : was intersection/nearest found?
     - point : intersection point or nearest point
-    - index : unique index on surface (e.g. triangle for triSurfaceMesh)
+    - index : unique index on surface (e.g. triangle for triSurface)
 
 SourceFiles
     searchableSurface.C
@@ -95,7 +95,7 @@ public:
         (
             autoPtr,
             searchableSurface,
-            dict,
+            dictionary,
             (
                 const IOobject& io,
                 const dictionary& dict
@@ -213,59 +213,6 @@ public:
 
         //- Does any part of the surface overlap the supplied bound box?
         virtual bool overlaps(const boundBox& bb) const = 0;
-
-        // Single point queries.
-
-            ////- Calculate nearest point on surface. Returns
-            ////  - bool : any point found nearer than nearestDistSqr
-            ////  - label: relevant index in surface
-            ////  - label: region in surface
-            ////  - point: actual nearest point found
-            // virtual pointIndexHit findNearest
-            //(
-            //    const point& sample,
-            //    const scalar nearestDistSqr
-            //) const = 0;
-            //
-            ////- Calculate nearest point on edge. Returns
-            ////  - bool : any point found nearer than nearestDistSqr
-            ////  - label: relevant index in surface
-            ////  - label: region in surface
-            ////  - point: actual nearest point found
-            // virtual pointIndexHit findNearestOnEdge
-            //(
-            //    const point& sample,
-            //    const scalar nearestDistSqr
-            //) const = 0;
-            //
-            ////- Find nearest to segment. Returns
-            ////  - bool : any point found?
-            ////  - label: relevant index in shapes
-            ////  - label: region in surface
-            ////  - point: actual nearest point found
-            ////  sets:
-            ////  - tightest  : bounding box
-            ////  - linePoint : corresponding nearest point on line
-            // virtual pointIndexHit findNearest
-            //(
-            //    const linePointRef& ln,
-            //    treeBoundBox& tightest,
-            //    point& linePoint
-            //) const = 0;
-            //
-            ////- Find nearest intersection of line between start and end.
-            // virtual pointIndexHit findLine
-            //(
-            //    const point& start,
-            //    const point& end
-            //) const = 0;
-            //
-            ////- Find any intersection of line between start and end.
-            // virtual pointIndexHit findLineAny
-            //(
-            //    const point& start,
-            //    const point& end
-            //) const = 0;
 
 
         // Multiple point queries. When surface is distributed the index

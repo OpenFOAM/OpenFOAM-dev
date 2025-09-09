@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -45,7 +45,7 @@ setting the MRF zone to all the cells in the mesh using the optional
 
 SRF
 {
-    select          all;
+    cellZone        all;
 
     origin    (0 0 0);
     axis      (0 0 1);

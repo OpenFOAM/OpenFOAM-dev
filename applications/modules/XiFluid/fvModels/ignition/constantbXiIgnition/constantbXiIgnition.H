@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,6 @@ Usage
     {
         type            constantbXiIgnition;
 
-        select          cellZone;
         cellZone        ignition;
 
         start           0;
@@ -44,7 +43,7 @@ Usage
         XiCorr
         {
             type            spherical;
-            select          all;
+            cellZone        all;
         }
     }
     \endverbatim
@@ -52,7 +51,7 @@ Usage
     Where:
     \table
         Property     | Description                 | Required   | Default value
-        select       | Ignition cell set selection | yes        |
+        cellZone     | Correction cellZone         | yes        |
         start        | Ignition start time         | yes        |
         duration     | Ignition duration           | yes        |
         strength     | Ignition strength [1/s]     | yes        |
@@ -96,8 +95,8 @@ protected:
 
     // Protected Data
 
-        //- The set of ignition cells
-        fvCellSet set_;
+        //- The ignition cellZone
+        fvCellZone zone_;
 
         autoPtr<XiCorrModel> XiCorrModel_;
 

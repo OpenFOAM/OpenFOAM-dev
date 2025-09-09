@@ -12,7 +12,7 @@ CC          = icpx -std=c++14 -fp-model precise
 
 include $(DEFAULT_RULES)/c++$(WM_COMPILE_OPTION)
 
-ptFLAGS     = -DNoRepository -ftemplate-depth-100
+ptFLAGS     = -DNoRepository -ftemplate-depth-256
 
 c++FLAGS    = $(GFLAGS) $(c++WARN) $(c++OPT) $(c++DBUG) $(ptFLAGS) $(LIB_HEADER_DIRS) -fPIC
 

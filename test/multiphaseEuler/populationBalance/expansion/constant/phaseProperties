@@ -1,0 +1,134 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      phaseProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+phases          (air1 air2 air3 water);
+
+referencePhase  water;
+
+populationBalances (bubbles);
+
+air1
+{
+    type            pureIsothermalPhaseModel;
+
+    diameterModel   velocityGroup;
+    velocityGroupCoeffs
+    {
+        populationBalance bubbles;
+
+        shapeModel      spherical;
+
+        sizeGroups
+        (
+            { dSph 3.00e-03; }
+            { dSph 3.01e-03; }
+            { dSph 3.02e-03; }
+            { dSph 3.03e-03; }
+            { dSph 3.04e-03; }
+            { dSph 3.05e-03; }
+        );
+    }
+
+    residualAlpha   1e-6;
+}
+
+air2
+{
+    type            pureIsothermalPhaseModel;
+
+    diameterModel   velocityGroup;
+    velocityGroupCoeffs
+    {
+        populationBalance bubbles;
+
+        shapeModel      spherical;
+
+        sizeGroups
+        (
+            { dSph 3.06e-03; }
+            { dSph 3.07e-03; }
+            { dSph 3.08e-03; }
+            { dSph 3.09e-03; }
+            { dSph 3.10e-03; }
+        );
+    }
+
+    residualAlpha       1e-6;
+}
+
+air3
+{
+    type            pureIsothermalPhaseModel;
+
+    diameterModel   velocityGroup;
+    velocityGroupCoeffs
+    {
+        populationBalance bubbles;
+
+        shapeModel      spherical;
+
+        sizeGroups
+        (
+            { dSph 3.11e-03; }
+            { dSph 3.12e-03; }
+            { dSph 3.13e-03; }
+            { dSph 3.14e-03; }
+            { dSph 3.15e-03; }
+        );
+    }
+
+    residualAlpha   1e-6;
+}
+
+water
+{
+    type            pureIsothermalPhaseModel;
+
+    diameterModel   none;
+
+    residualAlpha   1e-6;
+}
+
+blending
+{
+    default
+    {
+        type            continuous;
+        phase           water;
+    }
+}
+
+surfaceTension
+{}
+
+populationBalanceCoeffs
+{
+    bubbles
+    {
+        continuousPhase water;
+
+        coalescenceModels
+        ();
+
+        binaryBreakupModels
+        ();
+
+        breakupModels
+        ();
+    }
+}
+
+// ************************************************************************* //

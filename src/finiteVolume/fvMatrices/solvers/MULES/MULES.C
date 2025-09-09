@@ -75,7 +75,7 @@ void Foam::MULES::control::read(const dictionary& dict)
 }
 
 
-void Foam::MULES::limitSum(UPtrList<scalarField>& phiPsiCorrs)
+void Foam::MULES::limitSumCorr(UPtrList<scalarField>& phiPsiCorrs)
 {
     forAll(phiPsiCorrs[0], facei)
     {
@@ -124,7 +124,7 @@ void Foam::MULES::limitSum(UPtrList<scalarField>& phiPsiCorrs)
 }
 
 
-void Foam::MULES::limitSum
+void Foam::MULES::limitSumCorr
 (
     UPtrList<scalarField>& phiPsiCorrs,
     const UPtrList<scalarField>& phiPsiFixedCorrs
@@ -181,6 +181,134 @@ void Foam::MULES::limitSum
             }
         }
     }
+}
+
+
+void Foam::MULES::limitSumCorr
+(
+    const UPtrList<const volScalarField>& psis,
+    UPtrList<surfaceScalarField>& psiPhiCorrs,
+    const surfaceScalarField& phi
+)
+{
+    {
+        UPtrList<scalarField> psiPhiCorrsInternal(psiPhiCorrs.size());
+
+        forAll(psiPhiCorrsInternal, phasei)
+        {
+            psiPhiCorrsInternal.set(phasei, &psiPhiCorrs[phasei]);
+        }
+
+        limitSumCorr(psiPhiCorrsInternal);
+    }
+
+    const surfaceScalarField::Boundary& phibf = phi.boundaryField();
+
+    forAll(phibf, patchi)
+    {
+        label nFixed = 0;
+
+        forAll(psis, phasei)
+        {
+            if (!psis[phasei].boundaryField()[patchi].assignable())
+            {
+                nFixed++;
+            }
+        }
+
+        if (nFixed == 0)
+        {
+            UPtrList<scalarField> psiPhiCorrsPatch(psiPhiCorrs.size());
+
+            forAll(psiPhiCorrsPatch, phasei)
+            {
+                psiPhiCorrsPatch.set
+                (
+                    phasei,
+                    &psiPhiCorrs[phasei].boundaryFieldRef()[patchi]
+                );
+            }
+
+            limitSumCorr(psiPhiCorrsPatch);
+        }
+        else if (nFixed < psiPhiCorrs.size())
+        {
+            UPtrList<scalarField> psiPhiCorrsPatch(psiPhiCorrs.size());
+            UPtrList<scalarField> psiPhiCorrsFixedPatch(psiPhiCorrs.size());
+
+            label i = 0;
+            label fixedi = 0;
+
+            forAll(psiPhiCorrsPatch, phasei)
+            {
+                if (!psis[phasei].boundaryField()[patchi].assignable())
+                {
+                    psiPhiCorrsFixedPatch.set
+                    (
+                        fixedi++,
+                        &psiPhiCorrs[phasei].boundaryFieldRef()[patchi]
+                    );
+                }
+                else
+                {
+                    psiPhiCorrsPatch.set
+                    (
+                        i++,
+                        &psiPhiCorrs[phasei].boundaryFieldRef()[patchi]
+                    );
+                }
+            }
+
+            psiPhiCorrsPatch.setSize(i);
+            psiPhiCorrsFixedPatch.setSize(fixedi);
+
+            limitSumCorr(psiPhiCorrsPatch, psiPhiCorrsFixedPatch);
+        }
+    }
+}
+
+
+void Foam::MULES::limitSum
+(
+    const UPtrList<const volScalarField>& psis,
+    const PtrList<surfaceScalarField>& alphaPhiBDs,
+    UPtrList<surfaceScalarField>& psiPhis,
+    const surfaceScalarField& phi
+)
+{
+    forAll(psiPhis, phasei)
+    {
+        psiPhis[phasei] -= alphaPhiBDs[phasei];
+    }
+
+    limitSumCorr(psis, psiPhis, phi);
+
+    forAll(psiPhis, phasei)
+    {
+        psiPhis[phasei] += alphaPhiBDs[phasei];
+    }
+}
+
+
+void Foam::MULES::limitSum
+(
+    const UPtrList<const volScalarField>& psis,
+    UPtrList<surfaceScalarField>& psiPhis,
+    const surfaceScalarField& phi
+)
+{
+    PtrList<surfaceScalarField> alphaPhiBDs(psiPhis.size());
+
+    forAll(psiPhis, phasei)
+    {
+        alphaPhiBDs.set
+        (
+            phasei,
+            upwind<scalar>(phi.mesh(), phi).flux(psis[phasei])
+        );
+    }
+
+    limitSum(psis, alphaPhiBDs, psiPhis, phi);
 }
 
 

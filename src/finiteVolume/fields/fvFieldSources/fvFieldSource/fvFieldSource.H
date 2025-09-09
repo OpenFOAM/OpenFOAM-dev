@@ -171,23 +171,80 @@ public:
         const DimensionedField<Type, volMesh>& internalField() const;
 
         //- Return the source value
-        virtual tmp<Field<Type>> sourceValue(const fvSource&) const = 0;
+        virtual tmp<DimensionedField<Type, volMesh>> sourceValue
+        (
+            const fvSource& model,
+            const DimensionedField<scalar, volMesh>& source
+        ) const = 0;
+
+        //- Return the source value
+        virtual tmp<Field<Type>> sourceValue
+        (
+            const fvSource& model,
+            const scalarField& source,
+            const labelUList& cells
+        ) const;
 
         //- Return the internal coefficient
-        virtual tmp<scalarField> internalCoeff(const fvSource&) const = 0;
+        virtual tmp<DimensionedField<scalar, volMesh>> internalCoeff
+        (
+            const fvSource& model,
+            const DimensionedField<scalar, volMesh>& source
+        ) const = 0;
+
+        //- Return the internal coefficient
+        virtual tmp<scalarField> internalCoeff
+        (
+            const fvSource& model,
+            const scalarField& source,
+            const labelUList& cells
+        ) const;
 
         //- Return the source coefficient
-        virtual tmp<Field<Type>> sourceCoeff(const fvSource&) const;
+        virtual tmp<DimensionedField<Type, volMesh>> sourceCoeff
+        (
+            const fvSource& model,
+            const DimensionedField<scalar, volMesh>& source
+        ) const;
+
+        //- Return the source coefficient
+        virtual tmp<Field<Type>> sourceCoeff
+        (
+            const fvSource& model,
+            const scalarField& source,
+            const labelUList& cells
+        ) const;
 
         //- Return the value
-        tmp<Field<Type>> value(const fvSource&) const;
+        tmp<DimensionedField<Type, volMesh>> value
+        (
+            const fvSource& model,
+            const DimensionedField<scalar, volMesh>& source
+        ) const;
+
+        //- Return the value
+        tmp<Field<Type>> value
+        (
+            const fvSource& model,
+            const scalarField& source,
+            const labelUList& cells
+        ) const;
 
         //- Lookup and return another field source
         template<class OtherType>
         const fvFieldSource<OtherType>& fieldSource
         (
             const word& name,
-            const fvSource&
+            const fvSource& model
+        ) const;
+
+        //- Lookup and return the value of another field source
+        template<class OtherType>
+        tmp<DimensionedField<OtherType, volMesh>> value
+        (
+            const word& name,
+            const fvSource& model,
+            const DimensionedField<scalar, volMesh>& source
         ) const;
 
         //- Lookup and return the value of another field source
@@ -195,7 +252,9 @@ public:
         tmp<Field<OtherType>> value
         (
             const word& name,
-            const fvSource&
+            const fvSource& model,
+            const scalarField& source,
+            const labelUList& cells
         ) const;
 
         //- Write

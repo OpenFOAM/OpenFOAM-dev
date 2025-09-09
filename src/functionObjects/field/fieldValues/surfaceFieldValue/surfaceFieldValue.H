@@ -25,11 +25,11 @@ Class
     Foam::functionObjects::fieldValues::surfaceFieldValue
 
 Description
-    Surface (face) region selection class.
+    Surface, patch or faceZone selection class
 
     Given a list of user-specified fields and a selection of mesh (or general
     surface) faces, a number of operations can be performed, such as sums,
-    averages and integrations.
+    averages and integrals.
 
     For example, to calculate the volumetric or mass flux across a patch,
     apply the 'orientedSum' operator to the flux field (typically \c phi)
@@ -45,8 +45,7 @@ Description
         writeControl    writeTime;
         writeFields     true;
 
-        select          patch;
-        name            movingWall;
+        patch           movingWall;
 
         operation       areaAverage;
 
@@ -69,8 +68,7 @@ Description
 
         surfaceFormat   none;
 
-        select          faceZone;
-        name            f0;
+        faceZone        f0;
 
         operation       sum;
 
@@ -87,43 +85,45 @@ Description
 
 Usage
     \table
-        Property     | Description             | Required    | Default value
-        type         | type name: surfaceFieldValue   | yes         |
-        log          | write data to standard output | no    | no
-        writeFields  | Write the field values  | yes     |
-        writeArea    | Write the area of the surfaceFieldValue | no |
-        surfaceFormat | output value format    | no          |
-        select       | face selection: see below | yes         |
-        name         | name of face select if required  | no |
-        operation    | operation to perform    | yes         |
-        weightField  | name of field to apply weighting | no |
-        weightFields | Names of fields to apply weighting | no |
-        fields       | list of fields to operate on | yes    |
+        Property     | Description                   | Required | Default value
+        type         | Type name: surfaceFieldValue  | yes      |
+        log          | Write data to standard output | no       | no
+        writeFields  | Write the field values        | yes      |
+        writeNumberOfFaces | Write the number of faces in the surface | no | no
+        writeArea    | Write the area of the surface | no       | no
+        surfaceFormat | Output value format          | if writeFields |
+        operation    | Operation to perform          | yes      |
+        weightField  | Name of field to apply weighting | no    | none
+        weightFields | Names of fields to apply weighting | no  | none
+        fields       | List of fields to operate on  | yes      |
     \endtable
 
-    Where the supported \c select options are:
+    Where the supported selections are:
     \plaintable
-        faceZone     | requires a 'name' entry to specify the faceZone
-        patch        | requires a 'name' entry to specify the patch
-        sampledSurface | requires a 'sampledSurfaceDict' sub-dictionary
+        faceZone     | requires a 'faceZone' entry to specify the faceZone \\
+                       or dictionary to specify the zoneGenerator
+        patch        | requires a 'patch' entry to specify the patch
+        patches      | requires a 'patches' entry to specify the patches
+        sampledSurface | requires a 'sampledSurface' sub-dictionary
     \endplaintable
 
     The \c operation is one of:
     \plaintable
-       none          | no operation
-       sum           | sum
-       sumMag        | sum of component magnitudes
-       orientedSum   | sum with face orientations
-       average       | ensemble average
-       areaAverage   | area weighted average
-       areaIntegrate | area integral
-       min           | minimum
-       max           | maximum
-       minMag        | minimum magnitude
-       maxMag        | maximum magnitude
-       CoV           | coefficient of variation: standard deviation/mean
-       areaNormalAverage | area weighted average in face normal direction
-       areaNormalIntegrate | area weighted integral in face normal direction
+       none                | No operation
+       sum                 | Sum
+       sumMag              | Sum of component magnitudes
+       orientedSum         | Sum with face orientations
+       average             | Ensemble average
+       areaAverage         | Area weighted average
+       areaIntegrate       | Area integral
+       min                 | Minimum
+       max                 | Maximum
+       minMag              | Minimum magnitude
+       maxMag              | Maximum magnitude
+       CoV                 | Coefficient of variation: (standard deviation)/mean
+       UI                  | Uniformity index: ???
+       areaNormalAverage   | Area weighted average in face normal direction
+       areaNormalIntegrate | Area weighted integral in face normal direction
     \endplaintable
 
     Note:
@@ -153,8 +153,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_surfaceFieldValue_H
-#define functionObjects_surfaceFieldValue_H
+#ifndef surfaceFieldValue_functionObject_H
+#define surfaceFieldValue_functionObject_H
 
 #include "fieldValue.H"
 #include "NamedEnum.H"
@@ -164,6 +164,7 @@ SourceFiles
 namespace Foam
 {
 
+class generatedFaceZone;
 class sampledSurface;
 class surfaceWriter;
 
@@ -197,7 +198,6 @@ public:
         //- Selection type names
         static const NamedEnum<selectionTypes, 4> selectionTypeNames;
 
-
         //- Operation type enumeration
         enum class operationType
         {
@@ -213,32 +213,30 @@ public:
             minMag,
             maxMag,
             CoV,
+            UI,
             areaNormalAverage,
             areaNormalIntegrate
         };
 
         //- Operation type names
-        static const NamedEnum<operationType, 14> operationTypeNames_;
+        static const NamedEnum<operationType, 15> operationTypeNames_;
 
 
 private:
 
     // Private Member Functions
 
-        //- Set faces to evaluate based on a face zone
-        void setFaceZoneFaces(const word&);
+        //- Convert patch names to patch indices
+        labelList patchis(const wordReList&) const;
 
-        //- Set faces to evaluate based on a list of patch indices
-        void setPatchesFaces(const labelList&);
+        //- Set faces to evaluate from the faceZone
+        void setFaceZoneFaces();
 
-        //- Set faces to evaluate based on a list of patch names
-        void setPatchesFaces(const wordReList&);
+        //- Set faces to evaluate based the list of patch names
+        void setPatchesFaces();
 
-        //- Set faces to evaluate based on a patch name
-        void setPatchFaces(const wordRe&);
-
-        //- Set faces according to sampledSurface
-        void setSampledSurfaceFaces(const dictionary&);
+        //- Set faces according to the sampledSurface
+        void setSampledSurfaceFaces();
 
         //- Combine mesh faces and points from multiple processors
         void combineMeshGeometry
@@ -254,17 +252,13 @@ private:
             pointField& points
         ) const;
 
-        //- Calculate and return total area of the surfaceFieldValue: sum(magSf)
-        scalar totalArea() const;
+        //- Calculate and return the area of the surface
+        scalar area() const;
 
 
 protected:
 
     // Protected data
-
-        //- Input dictionary
-        //  Cached for mesh changes
-        dictionary dict_;
 
         //- Surface writer
         autoPtr<surfaceWriter> surfaceWriterPtr_;
@@ -281,17 +275,32 @@ protected:
         //- Weight field names - optional
         wordList weightFieldNames_;
 
-        //- Total area of the surfaceFieldValue
-        scalar totalArea_;
-
-        //- Optionally write the area of the surfaceFieldValue
-        bool writeArea_;
-
         //- Global number of faces
         label nFaces_;
 
+        //- Area of the surface
+        scalar area_;
 
-        // If operating on mesh faces (faceZone, patch)
+        //- Optionally write the number of faces in the surface
+        const bool writeNFaces_;
+
+        //- Optionally write the area of the surface
+        const bool writeArea_;
+
+
+        // If operating on a faceZone
+
+            //- The face-zone
+            autoPtr<generatedFaceZone> faceZonePtr_;
+
+
+        // If operating on a patch or patches
+
+            //- The name(s) of the patches
+            wordReList patchNames_;
+
+
+        // If operating on a faceZone, patch or patches to operate on
 
             //- Local list of face IDs
             labelList faceId_;
@@ -311,9 +320,6 @@ protected:
 
 
     // Protected Member Functions
-
-        //- Initialise, e.g. face addressing
-        void initialise(const dictionary& dict);
 
         //- Return true if the field name is valid
         template<class Type>
@@ -395,6 +401,12 @@ protected:
 
         //- Output file header information
         virtual void writeFileHeader(const label i);
+
+        //- Update the surface following mesh motion
+        void moveMesh();
+
+        //- Update the surface following mesh change
+        void changeMesh();
 
 
 public:

@@ -227,18 +227,15 @@ private:
 
         // Storage management
 
-            //- Clear geometry but not the old-time cell volumes
-            void clearGeomNotOldVol();
+            //- Clear FV geometry but not the old-time cell volumes
+            void clearFvGeomNotOldVol();
+
+            //- Clear FV geometry
+            void clearFvGeom();
 
             //- Clear geometry like clearGeomNotOldVol but recreate any
             //  geometric demand-driven data that was set
             void updateGeomNotOldVol();
-
-            //- Clear geometry
-            void clearGeom();
-
-            //- Clear addressing
-            void clearAddressing(const bool isMeshUpdate = false);
 
             //- Store old times fields for all fields of a given type and class
             template<class Type, template<class> class GeoField>
@@ -332,10 +329,16 @@ public:
 
     // Constructors
 
-        //- Construct from IOobject. Optionally prevent post-construction, so
-        //  that postConstruct may be called manually for finer control of
-        //  construction of mesh changes and the level of stitching.
-        explicit fvMesh(const IOobject& io, const bool doPost = true);
+        //- Construct from IOobject.
+        //  Optionally prevent post-construction, so that postConstruct may be
+        //  called manually for finer control of construction of mesh changes
+        //  and the level of stitching.
+        //  Optionally prevent zone generation
+        explicit fvMesh
+        (
+            const IOobject& io,
+            const bool doPost = true
+        );
 
         //- Construct from cellShapes with boundary.
         fvMesh
@@ -393,6 +396,7 @@ public:
             void postConstruct
             (
                 const bool changers,
+                const bool zones,
                 const stitchType stitch
             );
 
@@ -599,6 +603,15 @@ public:
 
             //- Move the mesh
             bool move();
+
+            //- Print a list of all the currently allocated mesh data
+            void printAllocated() const;
+
+            //- Clear geometry
+            void clearGeom();
+
+            //- Clear addressing
+            void clearAddressing(const bool isMeshUpdate = false);
 
             //- Clear all geometry and addressing
             void clearOut();

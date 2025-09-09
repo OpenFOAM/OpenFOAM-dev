@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -112,12 +112,16 @@ Foam::Zone<ZoneType, ZonesType>::Zone
 (
     const word& name,
     const labelUList& indices,
-    const ZonesType& zones
+    const ZonesType& zones,
+    const bool moveUpdate,
+    const bool topoUpdate
 )
 :
     labelList(indices),
     name_(name),
     zones_(zones),
+    moveUpdate_(moveUpdate),
+    topoUpdate_(topoUpdate),
     lookupMapPtr_(nullptr)
 {}
 
@@ -127,12 +131,16 @@ Foam::Zone<ZoneType, ZonesType>::Zone
 (
     const word& name,
     labelList&& indices,
-    const ZonesType& zones
+    const ZonesType& zones,
+    const bool moveUpdate,
+    const bool topoUpdate
 )
 :
     labelList(move(indices)),
     name_(name),
     zones_(zones),
+    moveUpdate_(moveUpdate),
+    topoUpdate_(topoUpdate),
     lookupMapPtr_(nullptr)
 {}
 
@@ -148,6 +156,8 @@ Foam::Zone<ZoneType, ZonesType>::Zone
     labelList(dict.lookup(ZoneType::labelsName)),
     name_(name),
     zones_(zones),
+    moveUpdate_(false),
+    topoUpdate_(false),
     lookupMapPtr_(nullptr)
 {}
 
@@ -156,13 +166,16 @@ template<class ZoneType, class ZonesType>
 Foam::Zone<ZoneType, ZonesType>::Zone
 (
     const Zone& z,
+    const word& name,
     const labelUList& indices,
     const ZonesType& zones
 )
 :
     labelList(indices),
-    name_(z.name()),
+    name_(name),
     zones_(zones),
+    moveUpdate_(z.moveUpdate_),
+    topoUpdate_(z.topoUpdate_),
     lookupMapPtr_(nullptr)
 {}
 
@@ -171,50 +184,18 @@ template<class ZoneType, class ZonesType>
 Foam::Zone<ZoneType, ZonesType>::Zone
 (
     const Zone& z,
+    const word& name,
     labelList&& indices,
     const ZonesType& zones
 )
 :
     labelList(move(indices)),
-    name_(z.name()),
+    name_(name),
     zones_(zones),
+    moveUpdate_(z.moveUpdate_),
+    topoUpdate_(z.topoUpdate_),
     lookupMapPtr_(nullptr)
 {}
-
-
-template<class ZoneType, class ZonesType>
-Foam::autoPtr<ZoneType> Foam::Zone<ZoneType, ZonesType>::New
-(
-    const word& name,
-    const dictionary& dict,
-    const ZonesType& mz
-)
-{
-    if (ZoneType::debug)
-    {
-        InfoInFunction
-            << "Constructing " << ZoneType::typeName << " " << name << endl;
-    }
-
-    const word type(dict.lookup("type"));
-
-    typename dictionaryConstructorTable::iterator cstrIter =
-        dictionaryConstructorTablePtr_->find(type);
-
-    if (cstrIter == dictionaryConstructorTablePtr_->end())
-    {
-        FatalIOErrorInFunction
-        (
-            dict
-        )   << "Unknown " << ZoneType::typeName << " type "
-            << type << nl << nl
-            << "Valid " << ZoneType::typeName << " types are:" << nl
-            << dictionaryConstructorTablePtr_->sortedToc()
-            << exit(FatalIOError);
-    }
-
-    return autoPtr<ZoneType>(cstrIter()(name, dict, mz));
-}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -327,6 +308,7 @@ bool Foam::Zone<ZoneType, ZonesType>::checkDefinition
 template<class ZoneType, class ZonesType>
 void Foam::Zone<ZoneType, ZonesType>::insert(const labelHashSet& newIndices)
 {
+    clearAddressing();
     labelHashSet indices(*this);
     indices.insert(newIndices);
     labelList::operator=(indices.sortedToc());
@@ -360,6 +342,8 @@ void Foam::Zone<ZoneType, ZonesType>::distribute(const polyDistributionMap&)
 template<class ZoneType, class ZonesType>
 void Foam::Zone<ZoneType, ZonesType>::operator=(const Zone& zn)
 {
+    moveUpdate_ = zn.moveUpdate_;
+    topoUpdate_ = zn.topoUpdate_;
     clearAddressing();
     labelList::operator=(zn);
 }
@@ -368,6 +352,8 @@ void Foam::Zone<ZoneType, ZonesType>::operator=(const Zone& zn)
 template<class ZoneType, class ZonesType>
 void Foam::Zone<ZoneType, ZonesType>::operator=(Zone&& zn)
 {
+    moveUpdate_ = zn.moveUpdate_;
+    topoUpdate_ = zn.topoUpdate_;
     clearAddressing();
     labelList::operator=(move(zn));
 }

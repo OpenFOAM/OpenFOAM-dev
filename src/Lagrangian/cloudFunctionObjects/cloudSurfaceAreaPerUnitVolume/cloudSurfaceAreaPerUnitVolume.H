@@ -48,8 +48,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_cloudSurfaceAreaPerUnitVolume_H
-#define functionObjects_cloudSurfaceAreaPerUnitVolume_H
+#ifndef cloudSurfaceAreaPerUnitVolume_functionObject_H
+#define cloudSurfaceAreaPerUnitVolume_functionObject_H
 
 #include "cloudFvMeshFunctionObject.H"
 

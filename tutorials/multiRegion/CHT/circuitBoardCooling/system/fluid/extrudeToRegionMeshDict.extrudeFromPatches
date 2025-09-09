@@ -18,17 +18,15 @@ region          baffle3D;
 patches         (baffle3D0);
 oppositePatches (baffle3D1);
 
-extrudeModel    linearNormal;
-
-nLayers         50;
-
-expansionRatio  1;
-
-adaptMesh       yes; // apply mapped to both regions
-
-linearNormalCoeffs
+extrudeModel
 {
+    type            linearNormal;
+
+    nLayers         50;
+    expansionRatio  1;
     thickness       0.02;
 }
+
+adaptMesh       yes; // apply mapped to both regions
 
 // ************************************************************************* //

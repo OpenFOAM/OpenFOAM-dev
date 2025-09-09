@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,41 +67,50 @@ Luo
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::diameterModels::coalescenceModels::Luo::
-addToCoalescenceRate
+void Foam::diameterModels::coalescenceModels::Luo::addToCoalescenceRate
 (
-    volScalarField& coalescenceRate,
+    volScalarField::Internal& coalescenceRate,
     const label i,
     const label j
 )
 {
     const sizeGroup& fi = popBal_.sizeGroups()[i];
     const sizeGroup& fj = popBal_.sizeGroups()[j];
-    const phaseModel& continuousPhase = popBal_.continuousPhase();
+
+    const volScalarField::Internal& rhoc = popBal_.continuousPhase().rho();
+
+    tmp<volScalarField> tsigma(popBal_.sigmaWithContinuousPhase(fi.phase()));
+    const volScalarField::Internal& sigma = tsigma();
 
     if
     (
         popBal_.fluid().foundInterfacialModel
-        <virtualMassModels::dispersedVirtualMassModel>
+        <
+            virtualMassModels::dispersedVirtualMassModel
+        >
         (
             dispersedPhaseInterface(fi.phase(), popBal_.continuousPhase())
         )
     )
     {
-        const virtualMassModels::dispersedVirtualMassModel& vm =
+        tmp<volScalarField> tCvm =
             popBal_.fluid().lookupInterfacialModel
-            <virtualMassModels::dispersedVirtualMassModel>
+            <
+                virtualMassModels::dispersedVirtualMassModel
+            >
             (
                 dispersedPhaseInterface(fi.phase(), popBal_.continuousPhase())
-            );
+            ).Cvm();
+        const volScalarField::Internal& Cvm = tCvm();
+
+        tmp<volScalarField> tepsilonc(popBal_.continuousTurbulence().epsilon());
+        const volScalarField::Internal& epsilonc = tepsilonc();
 
         const dimensionedScalar xi = fi.dSph()/fj.dSph();
 
-        const volScalarField uij
+        const volScalarField::Internal uij
         (
-            sqrt(beta_)
-           *cbrt(popBal_.continuousTurbulence().epsilon()*fi.dSph())
-           *sqrt(1 + pow(xi, -2.0/3.0))
+            sqrt(beta_)*cbrt(epsilonc*fi.dSph())*sqrt(1 + pow(xi, -2.0/3.0))
         );
 
         coalescenceRate +=
@@ -110,15 +119,8 @@ addToCoalescenceRate
             (
               - C1_
                *sqrt(0.75*(1 + sqr(xi))*(1 + pow3(xi)))
-               /(
-                    sqrt(fi.phase().rho()/continuousPhase.rho()
-                  + vm.Cvm())*pow3(1 + xi)
-                )
-               *sqrt
-                (
-                    continuousPhase.rho()*fi.dSph()*sqr(uij)
-                   /popBal_.sigmaWithContinuousPhase(fi.phase())
-                )
+               /(sqrt(fi.phase().rho()()/rhoc + Cvm)*pow3(1 + xi))
+               *sqrt(rhoc*fi.dSph()*sqr(uij)/sigma)
             );
     }
     else

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,7 @@ Description
 
     Needs:
     - geometry : dictionary with searchableSurfaces. (usually
-      triSurfaceMeshes in constant/triSurface)
+      triSurfacees in constant/triSurface)
     - projectMode : see above
     - projectDirection : if projectMode = fixedNormal
     - wedgePlane : -1 or component to knock out of intersection normal
@@ -54,7 +54,7 @@ SourceFiles
 #define surfaceSlipDisplacementPointPatchVectorField_H
 
 #include "pointPatchFields.H"
-#include "searchableSurfaces.H"
+#include "searchableSurfaceList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -103,7 +103,7 @@ private:
         const word frozenPointsZone_;
 
         //- Demand driven: surface to project
-        mutable autoPtr<searchableSurfaces> surfacesPtr_;
+        mutable autoPtr<searchableSurfaceList> surfacesPtr_;
 
 
     // Private Member Functions
@@ -169,7 +169,7 @@ public:
     // Member Functions
 
         //- Surface to follow. Demand loads surfaceNames.
-        const searchableSurfaces& surfaces() const;
+        const searchableSurfaceList& surfaces() const;
 
         //- Update the patch field
         virtual void evaluate

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,57 +38,36 @@ License
 namespace Foam
 {
     defineTypeNameAndDebug(extendedEdgeMesh, 0);
-
-    template<>
-    const char* Foam::NamedEnum
-    <
-        Foam::extendedEdgeMesh::pointStatus,
-        4
-    >::names[] =
-    {
-        "convex",
-        "concave",
-        "mixed",
-        "nonFeature"
-    };
-
-    template<>
-    const char* Foam::NamedEnum
-    <
-        Foam::extendedEdgeMesh::edgeStatus,
-        6
-    >::names[] =
-    {
-        "external",
-        "internal",
-        "flat",
-        "open",
-        "multiple",
-        "none"
-    };
-
-    template<>
-    const char* Foam::NamedEnum
-    <
-        Foam::extendedEdgeMesh::sideVolumeType,
-        4
-    >::names[] =
-    {
-        "inside",
-        "outside",
-        "both",
-        "neither"
-    };
 }
 
 const Foam::NamedEnum<Foam::extendedEdgeMesh::pointStatus, 4>
-    Foam::extendedEdgeMesh::pointStatusNames_;
+Foam::extendedEdgeMesh::pointStatusNames_
+{
+    "convex",
+    "concave",
+    "mixed",
+    "nonFeature"
+};
 
 const Foam::NamedEnum<Foam::extendedEdgeMesh::edgeStatus, 6>
-    Foam::extendedEdgeMesh::edgeStatusNames_;
+Foam::extendedEdgeMesh::edgeStatusNames_
+{
+    "external",
+    "internal",
+    "flat",
+    "open",
+    "multiple",
+    "none"
+};
 
 const Foam::NamedEnum<Foam::extendedEdgeMesh::sideVolumeType, 4>
-    Foam::extendedEdgeMesh::sideVolumeTypeNames_;
+Foam::extendedEdgeMesh::sideVolumeTypeNames_
+{
+    "inside",
+    "outside",
+    "both",
+    "neither"
+};
 
 Foam::scalar Foam::extendedEdgeMesh::cosNormalAngleTol_ =
     Foam::cos(degToRad(0.1));

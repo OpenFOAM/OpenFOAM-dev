@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,13 +25,14 @@ Class
     Foam::pointZone
 
 Description
-    A subset of mesh points.
-    The labels of points in the zone can be obtained from the addressing()
-    list.
+    Named list of point indices representing a sub-set of the mesh faces
 
-    For quick check whether a point belongs to the zone use the lookup
-    mechanism in pointZoneList, where all the zoned points are registered
-    with their zone number.
+    Used by mesh-manipulation tools.
+
+See also
+    pointZoneList
+    Zone
+    zoneGenerator
 
 SourceFiles
     pointZone.C
@@ -66,27 +67,44 @@ public:
         //- The name associated with the zone-labels dictionary entry
         static const char* const labelsName;
 
-
-    //- Runtime type information
-    TypeName("pointZone");
+        //- Runtime type information
+        ClassName("pointZone");
 
 
     // Constructors
 
         using Zone::Zone;
 
-        //- Construct and return a clone, resetting the mesh zones
-        virtual autoPtr<pointZone> clone(const pointZoneList& mz) const
+        //- Construct and return a clone
+        autoPtr<pointZone> clone() const
         {
             return autoPtr<pointZone>
             (
-                new pointZone(*this, *this, mz)
+                new pointZone(*this, name(), *this, zones())
+            );
+        }
+
+        //- Construct and return a clone with a new name
+        autoPtr<pointZone> clone(const word& name) const
+        {
+            return autoPtr<pointZone>
+            (
+                new pointZone(*this, name, *this, zones())
+            );
+        }
+
+        //- Construct and return a clone, resetting the mesh zones
+        autoPtr<pointZone> clone(const pointZoneList& mz) const
+        {
+            return autoPtr<pointZone>
+            (
+                new pointZone(*this, name(), *this, mz)
             );
         }
 
         //- Construct and return a clone, resetting the point list
         //  and mesh zones
-        virtual autoPtr<pointZone> clone
+        autoPtr<pointZone> clone
         (
             const labelUList& addr,
             const pointZoneList& mz
@@ -94,15 +112,12 @@ public:
         {
             return autoPtr<pointZone>
             (
-                new pointZone(*this, addr, mz)
+                new pointZone(*this, name(), addr, mz)
             );
         }
 
 
     // Member Functions
-
-        //- Return the mesh points
-        const pointField& meshCentres() const;
 
         //- Check zone definition. Return true if in error.
         bool checkDefinition(const bool report = false) const;
@@ -112,10 +127,10 @@ public:
         bool checkParallelSync(const bool report = false) const;
 
         //- Update zone using the given map
-        virtual void topoChange(const polyTopoChangeMap& map);
+        void topoChange(const polyTopoChangeMap& map);
 
         //- Write dictionary
-        virtual void writeDict(Ostream&) const;
+        void writeDict(Ostream&) const;
 
 
     // Member Operators

@@ -112,7 +112,7 @@ Foam::wordList Foam::fv::phaseChange::readSpecies
     if (required && !haveSpecie && !haveSpecies)
     {
         FatalIOErrorInFunction(dict)
-            << "Neither keywords specie or species "
+            << "Neither keywords specie nor species "
             << " are defined in dictionary " << dict.name()
             << exit(FatalError);
     }

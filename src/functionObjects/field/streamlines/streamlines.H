@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,18 +101,12 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_streamlines_H
-#define functionObjects_streamlines_H
+#ifndef streamlines_functionObject_H
+#define streamlines_functionObject_H
 
 #include "fvMeshFunctionObject.H"
-#include "volFieldsFwd.H"
-#include "DynamicList.H"
-#include "DynamicField.H"
-#include "scalarList.H"
-#include "vectorList.H"
+#include "meshSearch.H"
 #include "setWriter.H"
-#include "indirectPrimitivePatch.H"
-#include "NamedEnum.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -120,7 +114,6 @@ namespace Foam
 {
 
 // Forward declaration of classes
-class meshSearch;
 class sampledSet;
 
 namespace functionObjects
@@ -154,9 +147,6 @@ private:
 
     // Private Data
 
-        //- Input dictionary
-        dictionary dict_;
-
         //- List of fields to sample
         wordList fields_;
 
@@ -187,17 +177,14 @@ private:
         //- Write the streamlines ages
         Switch writeAge_;
 
+        //- Mesh searching engine
+        meshSearch searchEngine_;
 
-        // Demand driven
+        //- Seed set engine
+        autoPtr<sampledSet> sampledSetPtr_;
 
-            //- Mesh searching engine
-            autoPtr<meshSearch> meshSearchPtr_;
-
-            //- Seed set engine
-            autoPtr<sampledSet> sampledSetPtr_;
-
-            //- File writer
-            autoPtr<setWriter> formatterPtr_;
+        //- File writer
+        autoPtr<setWriter> formatterPtr_;
 
 
 public:

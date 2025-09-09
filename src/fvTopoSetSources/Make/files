@@ -1,0 +1,4 @@
+cellSources/fieldToCell/fieldToCell.C
+faceSources/patchFluxToFace/patchFluxToFace.C
+
+LIB = $(FOAM_LIBBIN)/libfvTopoSetSources

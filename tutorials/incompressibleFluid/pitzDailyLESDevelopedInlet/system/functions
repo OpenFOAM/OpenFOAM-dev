@@ -62,7 +62,7 @@ surfaceSampling
     );
 
     surfaces
-    (
+    {
         nearWall
         {
             type            patchInternalField;
@@ -71,7 +71,7 @@ surfaceSampling
             interpolate     true;
             triangulate     false;
         }
-    );
+    }
 }
 
 // ************************************************************************* //

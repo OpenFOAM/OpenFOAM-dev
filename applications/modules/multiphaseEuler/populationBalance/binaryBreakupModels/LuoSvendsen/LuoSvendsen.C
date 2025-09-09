@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -164,39 +164,47 @@ void Foam::diameterModels::binaryBreakupModels::LuoSvendsen::precompute()
 void
 Foam::diameterModels::binaryBreakupModels::LuoSvendsen::addToBinaryBreakupRate
 (
-    volScalarField& binaryBreakupRate,
+    volScalarField::Internal& binaryBreakupRate,
     const label i,
     const label j
 )
 {
-    const phaseModel& continuousPhase = popBal_.continuousPhase();
     const sizeGroup& fi = popBal_.sizeGroups()[i];
     const sizeGroup& fj = popBal_.sizeGroups()[j];
+
+    const volScalarField::Internal& rhoc = popBal_.continuousPhase().rho();
+
+    tmp<volScalarField> tsigma(popBal_.sigmaWithContinuousPhase(fi.phase()));
+    const volScalarField::Internal& sigma = tsigma();
+
+    tmp<volScalarField> tepsilonc(popBal_.continuousTurbulence().epsilon());
+    const volScalarField::Internal& epsilonc = tepsilonc();
 
     const dimensionedScalar cf
     (
         pow(fi.x()/fj.x(), 2.0/3.0) + pow((1 - fi.x()/fj.x()), 2.0/3.0) - 1
     );
 
-    const volScalarField b
+    const volScalarField::Internal b
     (
-        12*cf*popBal_.sigmaWithContinuousPhase(fi.phase())
-       /(
-            beta_*continuousPhase.rho()*pow(fj.dSph(), 5.0/3.0)
-           *pow(popBal_.continuousTurbulence().epsilon(), 2.0/3.0)
-        )
+        12*cf*sigma
+       /(beta_*rhoc*pow(fj.dSph(), 5.0/3.0)*pow(epsilonc, 2.0/3.0))
     );
 
-    const volScalarField xiMin(minEddyRatio_*kolmogorovLengthScale_/fj.dSph());
+    const volScalarField::Internal xiMin
+    (
+        minEddyRatio_*kolmogorovLengthScale_/fj.dSph()
+    );
 
-    const volScalarField tMin(b/pow(xiMin, 11.0/3.0));
+    const volScalarField::Internal tMin(b/pow(xiMin, 11.0/3.0));
 
-    volScalarField integral(3/(11*pow(b, 8.0/11.0)));
-
+    volScalarField::Internal integral(3/(11*pow(b, 8.0/11.0)));
     forAll(integral, celli)
     {
         integral[celli] *=
-            2*pow(b[celli], 3.0/11.0)*tgamma(5.0/11.0)
+            2
+           *pow(b[celli], 3.0/11.0)
+           *tgamma(5.0/11.0)
            *(
                 gammaUpperReg5by11_->value(b[celli])
               - gammaUpperReg5by11_->value(tMin[celli])
@@ -204,12 +212,10 @@ Foam::diameterModels::binaryBreakupModels::LuoSvendsen::addToBinaryBreakupRate
     }
 
     binaryBreakupRate +=
-        C4_*(1 - popBal_.alphas())/fj.x()
-       *cbrt
-        (
-            popBal_.continuousTurbulence().epsilon()
-           /sqr(fj.dSph())
-        )
+        C4_
+       *(1 - popBal_.alphas()())
+       /fj.x()
+       *cbrt(epsilonc/sqr(fj.dSph()))
        *integral;
 }
 

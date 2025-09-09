@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,10 +46,11 @@ namespace cavitationModels
 Foam::compressible::cavitationModels::Merkle::Merkle
 (
     const dictionary& dict,
-    const compressibleTwoPhases& phases
+    const compressibleTwoPhases& phases,
+    const label liquidIndex
 )
 :
-    cavitationModel(dict, phases),
+    cavitationModel(dict, phases, liquidIndex),
 
     UInf_("UInf", dimVelocity, dict),
     tInf_("tInf", dimTime, dict),

@@ -35,6 +35,7 @@ License
 #include "treeDataCell.H"
 #include "meshObjects.H"
 #include "pointMesh.H"
+#include "zonesGenerator.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -513,7 +514,6 @@ Foam::polyMesh::polyMesh
     // Set the primitive mesh
     initMesh();
 }
-
 
 
 Foam::polyMesh::polyMesh

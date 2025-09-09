@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,7 @@ Foam::LESModel<BasicMomentumTransportModel>::LESModel
         viscosity
     ),
 
-    turbulence_(LESDict().lookup("turbulence")),
+    turbulence_(LESDict().template lookupOrDefault<Switch>("turbulence", true)),
     kMin_("kMin", sqr(dimVelocity), LESDict(), small),
     nutMaxCoeff_("nutMaxCoeff", dimless, LESDict(), 1e5),
 
@@ -172,7 +172,7 @@ bool Foam::LESModel<BasicMomentumTransportModel>::read()
 {
     if (BasicMomentumTransportModel::read())
     {
-        LESDict().lookup("turbulence") >> turbulence_;
+        turbulence_.readIfPresent("turbulence", LESDict());
         delta_().read(LESDict());
 
         kMin_.readIfPresent(LESDict());

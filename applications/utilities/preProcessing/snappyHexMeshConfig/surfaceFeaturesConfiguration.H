@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,13 +52,15 @@ class surfaceFeaturesConfiguration
 :
     public caseFileConfiguration
 {
-    // Private Data
+protected:
+
+    // Protected Data
 
         //- List of surfaces used for generating features
         const meshingSurfaceList& surfaces_;
 
 
-    // Private Member Functions
+    // Protected Member Functions
 
         //- Write surfaces
         void writeSurfaces();

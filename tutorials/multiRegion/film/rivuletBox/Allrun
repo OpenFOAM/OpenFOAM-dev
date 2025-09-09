@@ -8,11 +8,11 @@ runApplication blockMesh -region box
 
 runApplication -s panel extrudeToRegionMesh \
     -dict system/extrudeToRegionMeshDict.panel \
-    -region box -overwrite
+    -region box
 
 runApplication -s film extrudeToRegionMesh \
     -dict system/extrudeToRegionMeshDict.film \
-    -region panel -overwrite
+    -region panel
 
 # Add the coupling between box and film
 # Third-region coupling is not currently supported by extrudeToRegionMesh

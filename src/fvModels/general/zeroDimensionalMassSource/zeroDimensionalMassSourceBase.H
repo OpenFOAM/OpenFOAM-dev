@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,11 +97,8 @@ public:
 
         // Access
 
-            //- Return the cells that the source applies to
-            virtual labelUList cells() const;
-
-            //- Return the number of cells that the source applies to
-            virtual label nCells() const;
+            //- Return the cellZone that the source applies to
+            virtual const cellZone& zone() const;
 
             //- Return the volume of cells that the source applies to
             virtual scalar V() const;

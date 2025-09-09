@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,8 +33,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef blockVertices_projectVertex_H
-#define blockVertices_projectVertex_H
+#ifndef projectVertex_blockVertex_H
+#define projectVertex_blockVertex_H
 
 #include "pointVertex.H"
 
@@ -55,7 +55,7 @@ class projectVertex
 {
     // Private Data
 
-        const searchableSurfaces& geometry_;
+        const searchableSurfaceList& geometry_;
 
         //- The indices of surfaces onto which the points are projected
         labelList surfaces_;
@@ -74,7 +74,7 @@ public:
         (
             const dictionary&,
             const label index,
-            const searchableSurfaces& geometry,
+            const searchableSurfaceList& geometry,
             Istream&
         );
 

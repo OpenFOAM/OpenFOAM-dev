@@ -1,0 +1,30 @@
+# Representative industrial aerated stirred tank reactor
+
+Representative industrial case for simulating an aerated stirred tank operating
+with air as the gaseous phase and water as the liquid phase. The tank is baffled
+and the stirrer features a pitch-blade impeller at the top and a Rushton turbine
+at the bottom. The geometric ratios adhere to the recommendations given by
+Middleton & Smith [^1], making the flow regime map published therein applicable.
+
+The setup was tested for various combinations rotational speeds and gas flow
+rates, which demonstrated the following flow regimes:
+
+| Regime                                                    | rpm | m^3/min |
+| --------------------------------------------------------- | --- | ------- |
+| Fully flooded stirrer, no dispersion                      | 100 | 0.37    |
+| Gas dispersed in upper part, small gas cavities at blades | 200 | 0.15    |
+| Gas dispersed in upper part, large gas cavities           | 200 | 0.75    |
+| Complete dispersion, small gas cavities                   | 500 | 0.37    |
+| Complete dispersion, large gas cavities                   | 500 | 1.12    |
+
+The case uses a combination of the semi-implicit MULES algorithm with
+sub-cycling to solve the phase fraction transport equation at the high maximum
+Courant number of 40, which enables the solution to evolve quickly to a
+steady-state.  It is possible to maintain a stable and accurate solution at such
+a high maximum Courant number because the regions of high velocity are localised
+around the sparger and blade tips while the mean Courant number is less than
+~0.7.
+
+[^1]: Middleton, J. C., & Smith, J. M. (2004). Gas–Liquid Mixing in Turbulent
+    Systems. In: Paul E.L., Atiemo- Obeng V.A., Kresta S.M. (Eds.). Handbook of
+    industrial mixing. John Wiley & Sons Inc.

@@ -23,7 +23,7 @@ geometry
 {
     vessel
     {
-        type triSurfaceMesh;
+        type triSurface;
         file "mixerVessel-vessel.stl";
         regions
         {
@@ -35,7 +35,7 @@ geometry
     }
     oilInlet
     {
-        type triSurfaceMesh;
+        type triSurface;
         file "mixerVessel-oilInlet.stl";
         regions
         {
@@ -47,7 +47,7 @@ geometry
     }
     outlet
     {
-        type triSurfaceMesh;
+        type triSurface;
         file "mixerVessel-outlet.stl";
         regions
         {
@@ -59,7 +59,7 @@ geometry
     }
     shaftRotating
     {
-        type triSurfaceMesh;
+        type triSurface;
         file "mixerVessel-shaftRotating.stl";
         regions
         {
@@ -71,7 +71,7 @@ geometry
     }
     shaft
     {
-        type triSurfaceMesh;
+        type triSurface;
         file "mixerVessel-shaft.stl";
         regions
         {
@@ -83,7 +83,7 @@ geometry
     }
     sparger
     {
-        type triSurfaceMesh;
+        type triSurface;
         file "mixerVessel-sparger.stl";
         regions
         {
@@ -95,7 +95,7 @@ geometry
     }
     stirrer
     {
-        type triSurfaceMesh;
+        type triSurface;
         file "mixerVessel-stirrer.stl";
         regions
         {
@@ -107,7 +107,7 @@ geometry
     }
     baffles
     {
-        type triSurfaceMesh;
+        type triSurface;
         file "mixerVessel-baffles.stl";
         regions
         {
@@ -119,7 +119,7 @@ geometry
     }
     rotating
     {
-        type triSurfaceMesh;
+        type triSurface;
         file "rotating.stl";
     }
 };

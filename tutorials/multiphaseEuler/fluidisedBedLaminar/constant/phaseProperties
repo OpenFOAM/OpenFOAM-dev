@@ -14,14 +14,13 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-type basicMultiphaseSystem;
-
-phases (particles air);
+phases          (particles air);
 
 particles
 {
-    type          purePhaseModel;
-    diameterModel constant;
+    type            purePhaseModel;
+
+    diameterModel   constant;
     constantCoeffs
     {
         d               3e-4;
@@ -33,8 +32,9 @@ particles
 
 air
 {
-    type          purePhaseModel;
-    diameterModel none;
+    type            purePhaseModel;
+
+    diameterModel   none;
 
     residualAlpha   0;
 }
@@ -56,40 +56,5 @@ surfaceTension
         sigma           0;
     }
 }
-
-drag
-{
-    particles_dispersedIn_air
-    {
-        type            GidaspowErgunWenYu;
-    }
-}
-
-virtualMass
-{}
-
-heatTransfer
-{
-    particles_dispersedIn_air
-    {
-        type            RanzMarshall;
-        residualAlpha   1e-4;
-    }
-}
-
-phaseTransfer
-{}
-
-lift
-{}
-
-wallLubrication
-{}
-
-turbulentDispersion
-{}
-
-interfaceCompression
-{}
 
 // ************************************************************************* //

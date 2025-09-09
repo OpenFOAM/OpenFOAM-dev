@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,11 +35,11 @@ Usage
 #include "argList.H"
 #include "Time.H"
 
-#include "triSurfaceMesh.H"
+#include "triSurface_searchableSurface.H"
 #include "indexedOctree.H"
 #include "treeBoundBox.H"
 #include "PackedBoolList.H"
-#include "searchableSurfaces.H"
+#include "searchableSurfaceList.H"
 #include "systemDict.H"
 
 using namespace Foam;
@@ -115,7 +115,7 @@ void greenRefine
 
 void createBoundaryEdgeTrees
 (
-    const PtrList<triSurfaceMesh>& surfs,
+    const PtrList<searchableSurfaces::triSurface>& surfs,
     PtrList<indexedOctree<treeDataEdge>>& bEdgeTrees,
     labelListList& treeBoundaryEdges
 )
@@ -253,7 +253,7 @@ int main(int argc, char *argv[])
 
     Info<< "Hooking distance = " << dist << endl;
 
-    searchableSurfaces surfs
+    searchableSurfaceList surfs
     (
         IOobject
         (
@@ -289,16 +289,16 @@ int main(int argc, char *argv[])
     List<DynamicList<point>> newPoints(surfs.size());
     List<PackedBoolList> visitedFace(surfs.size());
 
-    PtrList<triSurfaceMesh> newSurfaces(surfs.size());
+    PtrList<searchableSurfaces::triSurface> newSurfaces(surfs.size());
     forAll(surfs, surfI)
     {
-        const triSurfaceMesh& surf =
-            refCast<const triSurfaceMesh>(surfs[surfI]);
+        const searchableSurfaces::triSurface& surf =
+            refCast<const searchableSurfaces::triSurface>(surfs[surfI]);
 
         newSurfaces.set
         (
             surfI,
-            new triSurfaceMesh
+            new searchableSurfaces::triSurface
             (
                 IOobject
                 (
@@ -503,7 +503,7 @@ int main(int argc, char *argv[])
             newSurfaces.set
             (
                 surfI,
-                new triSurfaceMesh
+                new searchableSurfaces::triSurface
                 (
                     IOobject
                     (
@@ -528,7 +528,7 @@ int main(int argc, char *argv[])
 
     forAll(newSurfaces, surfI)
     {
-        const triSurfaceMesh& newSurf = newSurfaces[surfI];
+        const searchableSurfaces::triSurface& newSurf = newSurfaces[surfI];
 
         Info<< "Writing hooked surface " << newSurf.searchableSurface::name()
             << endl;

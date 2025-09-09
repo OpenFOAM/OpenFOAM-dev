@@ -11,7 +11,7 @@ runApplication surfaceFeatures
 runApplication blockMesh
 
 runApplication decomposePar -copyZero
-runParallel snappyHexMesh -overwrite
+runParallel snappyHexMesh
 
 runParallel patchSummary
 runParallel potentialFoam

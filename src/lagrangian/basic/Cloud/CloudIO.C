@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,12 +61,12 @@ void Foam::lagrangian::Cloud<ParticleType>::readCloudUniformProperties()
         if (uniformPropsDict.found(procName))
         {
             uniformPropsDict.subDict(procName).lookup("particleCount")
-                >> ParticleType::particleCount_;
+                >> ParticleType::particleCount;
         }
     }
     else
     {
-        ParticleType::particleCount_ = 0;
+        ParticleType::particleCount = 0;
     }
 }
 
@@ -89,7 +89,7 @@ void Foam::lagrangian::Cloud<ParticleType>::writeCloudUniformProperties() const
     );
 
     labelList np(Pstream::nProcs(), 0);
-    np[Pstream::myProcNo()] = ParticleType::particleCount_;
+    np[Pstream::myProcNo()] = ParticleType::particleCount;
 
     Pstream::listCombineGather(np, maxEqOp<label>());
     Pstream::listCombineScatter(np);
@@ -157,8 +157,9 @@ Foam::lagrangian::Cloud<ParticleType>::Cloud
     patchNonConformalCyclicPatches_(patchNonConformalCyclicPatches(pMesh)),
     globalPositionsPtr_()
 {
+    // See comments in the other constructor
     pMesh_.tetBasePtIs();
-    pMesh_.oldCellCentres();
+    if (!ParticleType::instantaneous) pMesh_.oldCellCentres();
 
     initCloud(checkClass);
 }

@@ -37,7 +37,6 @@ FoamFile
 (
     name=probabilityDensity.injection,
     populationBalance=bubbles,
-    select=cellZone,
     cellZone=injection,
     functionType=volumeDensity,
     coordinateType=diameter,
@@ -48,7 +47,6 @@ FoamFile
 (
     name=probabilityDensity.outlet,
     populationBalance=bubbles,
-    select=cellZone,
     cellZone=outlet,
     functionType=volumeDensity,
     coordinateType=diameter,

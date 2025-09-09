@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,8 +29,8 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef fileOperations_uncollatedFileOperation_H
-#define fileOperations_uncollatedFileOperation_H
+#ifndef uncollatedFileOperation_fileOperation_H
+#define uncollatedFileOperation_fileOperation_H
 
 #include "fileOperation.H"
 

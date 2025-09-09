@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,7 @@ License
 #include "polyMesh.H"
 #include "Time.H"
 #include "cellIOList.H"
+#include "zonesGenerator.H"
 #include "OSspecific.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -49,9 +50,21 @@ void Foam::polyMesh::setTopologyWrite(const Foam::IOobject::writeOption wo)
     owner_.writeOpt() = wo;
     neighbour_.writeOpt() = wo;
     boundary_.writeOpt() = wo;
-    pointZones_.writeOpt() = wo;
-    faceZones_.writeOpt() = wo;
-    cellZones_.writeOpt() = wo;
+
+    if (pointZones_.noTopoUpdate())
+    {
+        pointZones_.writeOpt() = wo;
+    }
+
+    if (faceZones_.noTopoUpdate())
+    {
+        faceZones_.writeOpt() = wo;
+    }
+
+    if (cellZones_.noTopoUpdate())
+    {
+        cellZones_.writeOpt() = wo;
+    }
 }
 
 
@@ -88,9 +101,21 @@ void Foam::polyMesh::setInstance(const fileName& inst)
     owner_.instance() = inst;
     neighbour_.instance() = inst;
     boundary_.instance() = inst;
-    pointZones_.instance() = inst;
-    faceZones_.instance() = inst;
-    cellZones_.instance() = inst;
+
+    if (pointZones_.noTopoUpdate())
+    {
+        pointZones_.instance() = inst;
+    }
+
+    if (faceZones_.noTopoUpdate())
+    {
+        faceZones_.instance() = inst;
+    }
+
+    if (cellZones_.noTopoUpdate())
+    {
+        cellZones_.instance() = inst;
+    }
 
     setTopologyWrite(IOobject::AUTO_WRITE);
 }
@@ -103,9 +128,11 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
         InfoInFunction << "Updating mesh based on saved data." << endl;
     }
 
+    polyMesh::readUpdateState state = polyMesh::UNCHANGED;
+
     // Find the points and faces instance
-    fileName pointsInst(time().findInstance(meshDir(), "points"));
-    fileName facesInst(time().findInstance(meshDir(), "faces"));
+    const fileName pointsInst(time().findInstance(meshDir(), "points"));
+    const fileName facesInst(time().findInstance(meshDir(), "faces"));
 
     if (debug)
     {
@@ -306,80 +333,16 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
         geometricD_ = Zero;
         solutionD_ = Zero;
 
-        // pointZones
-        {
-            pointZoneList newPointZones
-            (
-                IOobject
-                (
-                    "pointZones",
-                    facesInst,
-                    meshSubDir,
-                    *this,
-                    IOobject::READ_IF_PRESENT,
-                    IOobject::NO_WRITE,
-                    false
-                ),
-                *this
-            );
-
-            pointZones_.swap(newPointZones);
-            pointZones_.instance() = facesInst;
-        }
-
-        // faceZones
-        {
-            faceZoneList newFaceZones
-            (
-                IOobject
-                (
-                    "faceZones",
-                    facesInst,
-                    meshSubDir,
-                    *this,
-                    IOobject::READ_IF_PRESENT,
-                    IOobject::NO_WRITE,
-                    false
-                ),
-                *this
-            );
-
-            faceZones_.swap(newFaceZones);
-            faceZones_.instance() = facesInst;
-        }
-
-        // cellZones
-        {
-            cellZoneList newCellZones
-            (
-                IOobject
-                (
-                    "cellZones",
-                    facesInst,
-                    meshSubDir,
-                    *this,
-                    IOobject::READ_IF_PRESENT,
-                    IOobject::NO_WRITE,
-                    false
-                ),
-                *this
-            );
-
-            cellZones_.swap(newCellZones);
-            cellZones_.instance() = facesInst;
-        }
-
         // Re-read tet base points
         tetBasePtIsPtr_ = readTetBasePtIs();
 
-
         if (boundaryChanged)
         {
-            return polyMesh::TOPO_PATCH_CHANGE;
+            state = polyMesh::TOPO_PATCH_CHANGE;
         }
         else
         {
-            return polyMesh::TOPO_CHANGE;
+            state = polyMesh::TOPO_CHANGE;
         }
     }
     else if (pointsInst != pointsInstance())
@@ -442,17 +405,120 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
         geometricD_ = Zero;
         solutionD_ = Zero;
 
-        return polyMesh::POINTS_MOVED;
+        state = polyMesh::POINTS_MOVED;
     }
-    else
-    {
-        if (debug)
-        {
-            Info<< "No change" << endl;
-        }
 
-        return polyMesh::UNCHANGED;
+    // pointZones
+    {
+        const fileName pointZonesInst
+        (
+            time().findInstance
+            (
+                meshDir(),
+                "pointZones",
+                IOobject::READ_IF_PRESENT,
+                facesInst
+            )
+        );
+
+        if (pointZonesInst != pointZones_.instance())
+        {
+            pointZoneList newPointZones
+            (
+                IOobject
+                (
+                    "pointZones",
+                    pointZonesInst,
+                    meshSubDir,
+                    *this,
+                    IOobject::READ_IF_PRESENT,
+                    IOobject::NO_WRITE,
+                    false
+                ),
+                *this
+            );
+
+            pointZones_.swap(newPointZones);
+            pointZones_.instance() = pointZonesInst;
+        }
     }
+
+    // faceZones
+    {
+        const fileName faceZonesInst
+        (
+            time().findInstance
+            (
+                meshDir(),
+                "faceZones",
+                IOobject::READ_IF_PRESENT,
+                facesInst
+            )
+        );
+
+        if (faceZonesInst != faceZones_.instance())
+        {
+            faceZoneList newFaceZones
+            (
+                IOobject
+                (
+                    "faceZones",
+                    faceZonesInst,
+                    meshSubDir,
+                    *this,
+                    IOobject::READ_IF_PRESENT,
+                    IOobject::NO_WRITE,
+                    false
+                ),
+                *this
+            );
+
+            faceZones_.swap(newFaceZones);
+            faceZones_.instance() = faceZonesInst;
+        }
+    }
+
+    // cellZones
+    {
+        const fileName cellZonesInst
+        (
+            time().findInstance
+            (
+                meshDir(),
+                "cellZones",
+                IOobject::READ_IF_PRESENT,
+                facesInst
+            )
+        );
+
+        if (cellZonesInst != cellZones_.instance())
+        {
+            cellZoneList newCellZones
+            (
+                IOobject
+                (
+                    "cellZones",
+                    cellZonesInst,
+                    meshSubDir,
+                    *this,
+                    IOobject::READ_IF_PRESENT,
+                    IOobject::NO_WRITE,
+                    false
+                ),
+                *this
+            );
+
+            cellZones_.swap(newCellZones);
+            cellZones_.instance() = cellZonesInst;
+        }
+    }
+
+    if (debug && state == polyMesh::UNCHANGED)
+    {
+        Info<< "No change" << endl;
+    }
+
+    return state;
 }
 
 

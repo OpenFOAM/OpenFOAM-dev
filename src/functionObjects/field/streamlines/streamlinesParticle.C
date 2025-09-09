@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -255,8 +255,7 @@ bool Foam::streamlinesParticle::move
             {
                 // Sub-cycling. Cross the cell in nSubCycle steps.
                 particle copy(*this);
-                copy.trackToFace(td.mesh, maxDt*U, 1);
-                dt *= (copy.stepFraction() - stepFraction())/td.nSubCycle_;
+                dt *= (1 - copy.trackToFace(td.mesh, maxDt*U, 0))/td.nSubCycle_;
             }
             else if (subIter == td.nSubCycle_ - 1)
             {

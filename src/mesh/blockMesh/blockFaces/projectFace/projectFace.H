@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,8 +33,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef blockFaces_projectFace_H
-#define blockFaces_projectFace_H
+#ifndef projectFace_blockFace_H
+#define projectFace_blockFace_H
 
 #include "blockFace.H"
 
@@ -63,7 +63,7 @@ class projectFace
 
         const searchableSurface& lookupSurface
         (
-            const searchableSurfaces& geometry,
+            const searchableSurfaceList& geometry,
             Istream& is
         ) const;
 
@@ -97,7 +97,7 @@ public:
         (
             const dictionary& dict,
             const label index,
-            const searchableSurfaces& geometry,
+            const searchableSurfaceList& geometry,
             Istream&
         );
 

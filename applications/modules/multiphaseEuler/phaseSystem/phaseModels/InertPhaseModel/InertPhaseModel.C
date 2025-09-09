@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ License
 
 #include "InertPhaseModel.H"
 #include "phaseSystem.H"
+#include "volFieldsFwd.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -51,11 +52,22 @@ Foam::InertPhaseModel<BasePhaseModel>::~InertPhaseModel()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class BasePhaseModel>
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::InertPhaseModel<BasePhaseModel>::R(const label speciei) const
+{
+    return
+        volScalarField::Internal::New
+        (
+            IOobject::groupName("R_" + this->Y()[speciei].name(), this->name()),
+            this->mesh(),
+            dimensionedScalar(dimDensity/dimTime, 0)
+        );
+}
+
+
+template<class BasePhaseModel>
 Foam::tmp<Foam::fvScalarMatrix>
-Foam::InertPhaseModel<BasePhaseModel>::R
-(
-    volScalarField& Yi
-) const
+Foam::InertPhaseModel<BasePhaseModel>::R(volScalarField& Yi) const
 {
     return tmp<fvScalarMatrix>
     (

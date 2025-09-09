@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,26 +73,60 @@ Foam::uniformInletOutletEnergyTemperatureFvScalarFieldSource::
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::uniformInletOutletEnergyTemperatureFvScalarFieldSource::sourceHeValue
+(
+    const fvSource& model,
+    const DimensionedField<scalar, volMesh>& source
+) const
+{
+    return
+        DimensionedField<scalar, volMesh>::New
+        (
+            model.name() + ":" + this->internalField().name() + "SourceHeValue",
+            this->internalField().mesh(),
+            dimensionedScalar
+            (
+                this->internalField().dimensions(),
+                uniformInletHe_->value(this->db().time().value())
+            )
+        );
+}
+
+
 Foam::tmp<Foam::scalarField>
 Foam::uniformInletOutletEnergyTemperatureFvScalarFieldSource::sourceHeValue
 (
-    const fvSource& source
+    const fvSource& model,
+    const scalarField& source,
+    const labelUList& cells
 ) const
 {
     const scalar v = uniformInletHe_->value(db().time().value());
-    return tmp<scalarField>(new scalarField(source.nCells(), v));
+    return tmp<scalarField>(new scalarField(source.size(), v));
+}
+
+
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::uniformInletOutletEnergyTemperatureFvScalarFieldSource::internalCoeff
+(
+    const fvSource& model,
+    const DimensionedField<scalar, volMesh>& source
+) const
+{
+    return neg0(source);
 }
 
 
 Foam::tmp<Foam::scalarField>
 Foam::uniformInletOutletEnergyTemperatureFvScalarFieldSource::internalCoeff
 (
-    const fvSource& source
+    const fvSource& model,
+    const scalarField& source,
+    const labelUList& cells
 ) const
 {
-    return
-        neg0(source.source(internalField().name()))
-       *scalarField(source.nCells(), scalar(1));
+    return neg0(source);
 }
 
 

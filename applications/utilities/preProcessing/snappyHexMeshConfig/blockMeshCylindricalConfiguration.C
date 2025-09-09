@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -288,7 +288,7 @@ void Foam::blockMeshCylindricalConfiguration::writeGeometry()
     {
         beginDict(os_, geometries[i]);
 
-        os_ << indent << "type searchableCylinder;" << nl
+        os_ << indent << "type cylinder;" << nl
             << indent << "point1 (0 0 " << zMin << ");" << nl
             << indent << "point2 (0 0 " << zMax << ");" << nl
             << indent << "radius $!backgroundMesh/" << dims[i] << ";" << endl;

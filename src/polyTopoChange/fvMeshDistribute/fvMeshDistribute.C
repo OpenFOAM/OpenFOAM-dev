@@ -1538,6 +1538,7 @@ void Foam::fvMeshDistribute::sendMesh
 
     // Assume sparse, possibly overlapping face zones
     CompactListList<label> zoneFaces;
+    boolList zoneOrientation;
     CompactListList<bool> zoneFaceFlip;
     {
         const faceZoneList& faceZones = mesh.faceZones();
@@ -1555,6 +1556,7 @@ void Foam::fvMeshDistribute::sendMesh
         }
 
         zoneFaces.setSize(rowSizes);
+        zoneOrientation.setSize(faceZoneNames.size(), false);
         zoneFaceFlip.setSize(rowSizes);
 
         forAll(faceZoneNames, nameI)
@@ -1564,7 +1566,12 @@ void Foam::fvMeshDistribute::sendMesh
             if (myZoneID != -1)
             {
                 zoneFaces[nameI].deepCopy(faceZones[myZoneID]);
-                zoneFaceFlip[nameI].deepCopy(faceZones[myZoneID].flipMap());
+
+                if (faceZones[myZoneID].oriented())
+                {
+                    zoneOrientation[nameI] = true;
+                    zoneFaceFlip[nameI].deepCopy(faceZones[myZoneID].flipMap());
+                }
             }
         }
     }
@@ -1623,6 +1630,7 @@ void Foam::fvMeshDistribute::sendMesh
 
         << zonePoints
         << zoneFaces
+        << zoneOrientation
         << zoneFaceFlip
         << zoneCells
 
@@ -1666,6 +1674,7 @@ Foam::autoPtr<Foam::fvMesh> Foam::fvMeshDistribute::receiveMesh
 
     CompactListList<label> zonePoints(fromNbr);
     CompactListList<label> zoneFaces(fromNbr);
+    boolList zoneOrientation(fromNbr);
     CompactListList<bool> zoneFaceFlip(fromNbr);
     CompactListList<label> zoneCells(fromNbr);
 
@@ -1728,13 +1737,25 @@ Foam::autoPtr<Foam::fvMesh> Foam::fvMeshDistribute::receiveMesh
     List<faceZone*> fZonePtrs(faceZoneNames.size());
     forAll(fZonePtrs, i)
     {
-        fZonePtrs[i] = new faceZone
-        (
-            faceZoneNames[i],
-            zoneFaces[i],
-            zoneFaceFlip[i],
-            domainMesh.faceZones()
-        );
+        if (zoneOrientation[i])
+        {
+            fZonePtrs[i] = new faceZone
+            (
+                faceZoneNames[i],
+                zoneFaces[i],
+                zoneFaceFlip[i],
+                domainMesh.faceZones()
+            );
+        }
+        else
+        {
+            fZonePtrs[i] = new faceZone
+            (
+                faceZoneNames[i],
+                zoneFaces[i],
+                domainMesh.faceZones()
+            );
+        }
     }
 
     List<cellZone*> cZonePtrs(cellZoneNames.size());

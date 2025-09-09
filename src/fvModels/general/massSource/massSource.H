@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,8 +40,7 @@ Usage
     {
         type            massSource;
 
-        select          cellSet;
-        cellSet         massSource;
+        cellZone        massSource;
 
         massFlowRate    1e-4;
     }
@@ -53,8 +52,11 @@ Usage
     {
         type            massSource;
 
-        select          points;
-        points          ((2.75 0.5 0));
+        cellZone
+        {
+            type            containsPoints;
+            points          ((2.75 0.5 0));
+        }
 
         massFlowRate
         {
@@ -79,6 +81,7 @@ See also
 #define massSource_H
 
 #include "massSourceBase.H"
+#include "fvCellZone.H"
 #include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -101,7 +104,7 @@ private:
     // Private Data
 
         //- The set of cells the source applies to
-        autoPtr<fvCellSet> setPtr_;
+        autoPtr<fvCellZone> setPtr_;
 
         //- Mass flow rate
         autoPtr<Function1<scalar>> massFlowRate_;
@@ -135,11 +138,8 @@ public:
 
         // Access
 
-            //- Return the cells that the source applies to
-            virtual labelUList cells() const;
-
-            //- Return the number of cells that the source applies to
-            virtual label nCells() const;
+            //- Return the cellZone that the source applies to
+            virtual const cellZone& zone() const;
 
             //- Return the volume of cells that the source applies to
             virtual scalar V() const;

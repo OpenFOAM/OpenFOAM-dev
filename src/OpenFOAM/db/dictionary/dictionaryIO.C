@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ License
 
 #include "dictionary.H"
 #include "IOobject.H"
+#include "HashSet.H"
 #include "inputModeEntry.H"
 #include "calcIncludeEntry.H"
 #include "stringOps.H"
@@ -471,9 +472,21 @@ void Foam::addArgEntry
     const label lineNumber
 )
 {
-    IStringStream entryStream(keyword + ' ' + value + ';');
+    IStringStream entryStream(dict.name(), keyword + ' ' + value + ';');
     entryStream.lineNumber() = lineNumber;
-    dict.set(entry::New(entryStream).ptr());
+    autoPtr<entry> argEntry(entry::New(entryStream));
+    if (argEntry.valid())
+    {
+        dict.set(argEntry.ptr());
+    }
+    else
+    {
+        FatalIOErrorInFunction(dict)
+            << "Cannot construct argument entry from string "
+            << entryStream.str() << nl
+            << "    on line " << lineNumber << " of dictionary " << dict.name()
+            << exit(FatalIOError);
+    }
 }
 
 
@@ -533,17 +546,8 @@ bool Foam::readConfigFile
     // Delay processing the functionEntries
     // until after the argument entries have been added
     entry::disableFunctionEntries = true;
-    dictionary funcsDict(fileName(funcType), parentDict, fileStream);
+    dictionary funcDict(fileName(funcType), parentDict, fileStream);
     entry::disableFunctionEntries = false;
-
-    dictionary* funcDictPtr = &funcsDict;
-
-    if (funcsDict.found(funcType) && funcsDict.isDict(funcType))
-    {
-        funcDictPtr = &funcsDict.subDict(funcType);
-    }
-
-    dictionary& funcDict = *funcDictPtr;
 
     // Store the funcDict as read for error reporting context
     const dictionary funcDict0(funcDict);
@@ -764,7 +768,7 @@ bool Foam::readConfigFile
         funcArgsDict = dictionary
         (
             funcType,
-            funcsDict,
+            funcDict,
             IStringStream(os.str())()
         );
     }

@@ -21,7 +21,7 @@ addLayers       true;
 
 
 // Geometry. Definition of all surfaces. All surfaces are of class
-// searchableSurface.
+// surface.
 // Surfaces are used
 // - to specify refinement for any mesh cell intersecting it
 // - to specify refinement for any mesh cell inside/outside/near
@@ -30,7 +30,7 @@ geometry
 {
     hull
     {
-        type triSurfaceMesh;
+        type triSurface;
         file "DTC-scaled.stl";
 
         patchInfo

@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "twoPhaseSolver.H"
-#include "interfaceCompression.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -45,16 +44,21 @@ bool Foam::solvers::twoPhaseSolver::read()
 
     const dictionary& alphaControls = mesh.solution().solverDict(alpha1.name());
 
-    nAlphaSubCyclesPtr =
-        Function1<scalar>::New
-        (
-            "nAlphaSubCycles",
-            mesh.time().userUnits(),
-            dimless,
-            alphaControls
-        );
+    nAlphaSubCyclesPtr = Function1<scalar>::New
+    (
+        alphaControls.found("nAlphaSubCycles")
+          ? "nAlphaSubCycles"
+          : "nSubCycles",
+        dimless,
+        dimless,
+        alphaControls
+    );
 
-    nAlphaCorr = alphaControls.lookupOrDefault<label>("nAlphaCorr", 1);
+    nAlphaCorr = alphaControls.lookupOrDefaultBackwardsCompatible<label>
+    (
+        {"nCorrectors", "nAlphaCorr"},
+        1
+    );
 
     MULESCorr = alphaControls.lookupOrDefault<Switch>("MULESCorr", false);
 
@@ -62,26 +66,6 @@ bool Foam::solvers::twoPhaseSolver::read()
         alphaControls.lookupOrDefault<Switch>("alphaApplyPrevCorr", false);
 
     MULEScontrols.read(alphaControls);
-
-    const word alphaScheme(mesh.schemes().div(divAlphaName)[1].wordToken());
-
-    if (!compressionSchemes.found(alphaScheme))
-    {
-        WarningInFunction
-            << "Scheme " << alphaScheme << " for " << divAlphaName
-            << " is not an interface compression scheme:"
-            << compressionSchemes.toc() << endl;
-    }
-
-    if (alphaControls.found("cAlpha"))
-    {
-        FatalErrorInFunction
-            << "Deprecated and unused cAlpha entry specified in "
-            << alphaControls.name() << nl
-            << "Please update the case to use one of the run-time "
-               "selectable interface compression schemes:"
-            << compressionSchemes.toc() << exit(FatalError);
-    }
 
     return true;
 }

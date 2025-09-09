@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,25 +30,15 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-    template<>
-    const char* NamedEnum
-    <
-        fanPressureFvPatchScalarField::fanFlowDirection,
-        2
-    >::names[] =
-    {
-        "in",
-        "out"
-    };
-}
-
 const Foam::NamedEnum
 <
     Foam::fanPressureFvPatchScalarField::fanFlowDirection,
     2
-> Foam::fanPressureFvPatchScalarField::fanFlowDirectionNames_;
+> Foam::fanPressureFvPatchScalarField::fanFlowDirectionNames_
+{
+    "in",
+    "out"
+};
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //

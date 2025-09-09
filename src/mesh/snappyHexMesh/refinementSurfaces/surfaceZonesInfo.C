@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,47 +25,28 @@ License
 
 #include "surfaceZonesInfo.H"
 #include "searchableSurface.H"
-#include "searchableSurfaces.H"
+#include "searchableSurfaceList.H"
 #include "polyMesh.H"
 #include "dictionary.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-namespace Foam
-{
-    template<>
-    const char* Foam::NamedEnum
-    <
-        Foam::surfaceZonesInfo::areaSelectionAlgo,
-        4
-    >::names[] =
-    {
-        "inside",
-        "outside",
-        "insidePoint",
-        "none"
-    };
-}
 const Foam::NamedEnum<Foam::surfaceZonesInfo::areaSelectionAlgo, 4>
-    Foam::surfaceZonesInfo::areaSelectionAlgoNames;
-
-
-namespace Foam
+Foam::surfaceZonesInfo::areaSelectionAlgoNames
 {
-    template<>
-    const char* Foam::NamedEnum
-    <
-        Foam::surfaceZonesInfo::faceZoneType,
-        3
-    >::names[] =
-    {
-        "internal",
-        "baffle",
-        "boundary"
-    };
-}
+    "inside",
+    "outside",
+    "insidePoint",
+    "none"
+};
+
 const Foam::NamedEnum<Foam::surfaceZonesInfo::faceZoneType, 3>
-    Foam::surfaceZonesInfo::faceZoneTypeNames;
+Foam::surfaceZonesInfo::faceZoneTypeNames
+{
+    "internal",
+    "baffle",
+    "boundary"
+};
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -222,7 +203,7 @@ Foam::labelList Foam::surfaceZonesInfo::getNamedSurfaces
 Foam::labelList Foam::surfaceZonesInfo::getClosedNamedSurfaces
 (
     const PtrList<surfaceZonesInfo>& surfList,
-    const searchableSurfaces& allGeometry,
+    const searchableSurfaceList& allGeometry,
     const labelList& surfaces
 )
 {
@@ -254,7 +235,7 @@ Foam::labelList Foam::surfaceZonesInfo::getClosedNamedSurfaces
 Foam::labelList Foam::surfaceZonesInfo::getUnclosedNamedSurfaces
 (
     const PtrList<surfaceZonesInfo>& surfList,
-    const searchableSurfaces& allGeometry,
+    const searchableSurfaceList& allGeometry,
     const labelList& surfaces
 )
 {
@@ -281,7 +262,7 @@ Foam::labelList Foam::surfaceZonesInfo::getUnclosedNamedSurfaces
 Foam::labelList Foam::surfaceZonesInfo::getAllClosedNamedSurfaces
 (
     const PtrList<surfaceZonesInfo>& surfList,
-    const searchableSurfaces& allGeometry,
+    const searchableSurfaceList& allGeometry,
     const labelList& surfaces
 )
 {

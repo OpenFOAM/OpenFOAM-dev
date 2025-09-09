@@ -14,50 +14,63 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-defaultFieldValues
-(
-    volScalarFieldValue alpha.air 1
-    volScalarFieldValue alpha.water 0
-    volScalarFieldValue alpha.oil 0
-    volScalarFieldValue alpha.mercury 0
-);
+defaultValues
+{
+    alpha.air       1;
+    alpha.water     0;
+    alpha.oil       0;
+    alpha.mercury   0;
+}
 
-regions
-(
-    boxToCell
+zones
+{
+    water
     {
-        box (0 0 -1) (0.1461 0.292 1);
-        fieldValues
-        (
-            volScalarFieldValue alpha.water 1
-            volScalarFieldValue alpha.oil 0
-            volScalarFieldValue alpha.mercury 0
-            volScalarFieldValue alpha.air 0
-        );
-    }
-    boxToCell
-    {
-        box (0.1461 0 -1) (0.2922 0.292 1);
-        fieldValues
-        (
-            volScalarFieldValue alpha.water 0
-            volScalarFieldValue alpha.oil 1
-            volScalarFieldValue alpha.mercury 0
-            volScalarFieldValue alpha.air 0
-        );
-    }
-    boxToCell
-    {
-        box (0 0 -1) (0.1461 0.1 1);
-        fieldValues
-        (
-            volScalarFieldValue alpha.water 0
-            volScalarFieldValue alpha.oil 0
-            volScalarFieldValue alpha.mercury 1
-            volScalarFieldValue alpha.air 0
-        );
-    }
-);
+        type        box;
+        zoneType    cell;
 
+        box         (0 0 -1) (0.1461 0.292 1);
+
+        values
+        {
+            alpha.water     1;
+            alpha.oil       0;
+            alpha.mercury   0;
+            alpha.air       0;
+        }
+    }
+
+    oil
+    {
+        type        box;
+        zoneType    cell;
+
+        box         (0.1461 0 -1) (0.2922 0.292 1);
+
+        values
+        {
+            alpha.water     0;
+            alpha.oil       1;
+            alpha.mercury   0;
+            alpha.air       0;
+        }
+    }
+
+    mercury
+    {
+        type        box;
+        zoneType    cell;
+
+        box         (0 0 -1) (0.1461 0.1 1);
+
+        values
+        {
+            alpha.water     0;
+            alpha.oil       0;
+            alpha.mercury   1;
+            alpha.air       0;
+        }
+    }
+}
 
 // ************************************************************************* //

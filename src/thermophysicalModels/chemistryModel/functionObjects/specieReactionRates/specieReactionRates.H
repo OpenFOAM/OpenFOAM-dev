@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ Description
         type            specieReactionRates;
         libs            ("libchemistryModel.so");
 
-        select          all; // Or points, cellSet, cellZone
+        cellZone        all; // Or points, cellSet, cellZone
 
         //phase         <phaseName>; // Optional name of the phase
 
@@ -46,7 +46,7 @@ Description
 
 See also
     Foam::functionObjects::fvMeshFunctionObject
-    Foam::fvCellSet
+    Foam::fvCellZone
     Foam::functionObjects::logFiles
 
 SourceFiles
@@ -54,11 +54,11 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_specieReactionRates_H
-#define functionObjects_specieReactionRates_H
+#ifndef specieReactionRates_functionObject_H
+#define specieReactionRates_functionObject_H
 
 #include "fvMeshFunctionObject.H"
-#include "fvCellSet.H"
+#include "fvCellZone.H"
 #include "logFiles.H"
 #include "basicChemistryModel.H"
 
@@ -76,10 +76,12 @@ namespace functionObjects
 class specieReactionRates
 :
     public fvMeshFunctionObject,
-    public fvCellSet,
     public logFiles
 {
     // Private Member Data
+
+        //- cellZone
+        fvCellZone zone_;
 
         //- Name of the phase
         const word phaseName_;
@@ -137,6 +139,21 @@ public:
 
         //- Write the specie reaction rates
         virtual bool write();
+
+
+        // Mesh changes
+
+            //- Update for mesh motion
+            virtual void movePoints(const polyMesh&);
+
+            //- Update topology using the given map
+            virtual void topoChange(const polyTopoChangeMap&);
+
+            //- Update from another mesh using the given map
+            virtual void mapMesh(const polyMeshMap&);
+
+            //- Redistribute or update using the given distribution map
+            virtual void distribute(const polyDistributionMap&);
 
 
     // Member Operators

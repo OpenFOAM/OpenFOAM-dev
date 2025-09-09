@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -130,12 +130,39 @@ bool Foam::functionObjects::sampledSets::read(const dictionary& dict)
         // Define the set formatter
         formatter_ = setWriter::New(writeType, dict);
 
-        PtrList<sampledSet> newList
-        (
-            dict.lookup("sets"),
-            sampledSet::iNew(mesh_, searchEngine_)
-        );
-        transfer(newList);
+        if (dict.isDict("sets"))
+        {
+            const dictionary& setsDict = dict.subDict("sets");
+
+            setSize(setsDict.size());
+
+            label i = 0;
+
+            forAllConstIter(dictionary, setsDict, iter)
+            {
+                set
+                (
+                    i++,
+                    sampledSet::New
+                    (
+                        iter().keyword(),
+                        mesh_,
+                        searchEngine_,
+                        iter().dict()
+                    )
+                );
+            }
+        }
+        else
+        {
+            PtrList<sampledSet> newList
+            (
+                dict.lookup("sets"),
+                sampledSet::iNew(mesh_, searchEngine_)
+            );
+            transfer(newList);
+        }
+
         combineSampledSets();
 
         if (this->size())

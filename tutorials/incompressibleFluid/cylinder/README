@@ -1,0 +1,20 @@
+# Overview
+The cylinder case is configured with a Reynolds number (Re) = 1.  It runs with:
++ constant/momentumTransport: simulationType laminar;
++ system/fvSchemes/ddtSchemems: default steadyState.
+
+# Changing Reynolds number
+The case includes a parameterised blockMeshDict file, in which the domain size
+and mesh scales with the specified 'diameter'.  The Re can be controlled by
+modifying the diameter, inlet velocity ('Uinlet' in 0/U file) and/or 'nu' in
+constant/physicalProperties.
+
+# Turbulence modelling
+If the Re is increased to a level where turbulence is expected, the
+'simulationType' can be changed to 'RAS' and the case includes the necessary
+turbulence fields for the default model.
+
+# Transient simulation
+The fvSchemes and fvSolution files include comments instructing the user how to
+switch the case to a transient simulation, e.g. when vortex shedding occurs at
+higher Re.

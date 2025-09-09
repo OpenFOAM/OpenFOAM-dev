@@ -17,7 +17,7 @@ FoamFile
 thermoType
 {
     type            heRhoThermo;
-    mixture         multicomponentMixture;
+    mixture         pureMixture;
     transport       const;
     thermo          hConst;
     equationOfState rhoConst;
@@ -25,11 +25,7 @@ thermoType
     energy          sensibleInternalEnergy;
 }
 
-species (TiO2 TiO2_s);
-
-defaultSpecie TiO2;
-
-TiO2
+mixture
 {
     specie
     {
@@ -49,11 +45,6 @@ TiO2
         mu          1e-7;
         Pr          8.0e-6;
     }
-}
-
-TiO2_s
-{
-    $TiO2
 }
 
 

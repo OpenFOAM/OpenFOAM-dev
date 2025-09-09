@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,6 +22,8 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 \*---------------------------------------------------------------------------*/
+
+#include "phaseSystem.H"
 
 // * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
 
@@ -141,16 +143,16 @@ Foam::phaseSystem::stationaryPhases()
 
 
 inline const Foam::phaseSystem::phaseModelPartialList&
-Foam::phaseSystem::anisothermalPhases() const
+Foam::phaseSystem::thermalPhases() const
 {
-    return anisothermalPhaseModels_;
+    return thermalPhaseModels_;
 }
 
 
 inline Foam::phaseSystem::phaseModelPartialList&
-Foam::phaseSystem::anisothermalPhases()
+Foam::phaseSystem::thermalPhases()
 {
-    return anisothermalPhaseModels_;
+    return thermalPhaseModels_;
 }
 
 

@@ -49,8 +49,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef solvers_functions_H
-#define solvers_functions_H
+#ifndef functions_solver_H
+#define functions_solver_H
 
 #include "movingMesh.H"
 

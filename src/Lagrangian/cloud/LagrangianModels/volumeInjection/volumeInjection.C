@@ -45,7 +45,7 @@ namespace Lagrangian
 
 void Foam::Lagrangian::volumeInjection::readCoeffs(const dictionary& modelDict)
 {
-    set_.read(modelDict);
+    zone_.read(modelDict);
 
     haveNumber_ = modelDict.found("number");
     const bool haveNumberDensity = modelDict.found("numberDensity");
@@ -85,7 +85,7 @@ Foam::Lagrangian::volumeInjection::volumeInjection
 )
 :
     LagrangianInjection(name, mesh),
-    set_(mesh.mesh()),
+    zone_(mesh.mesh()),
     haveNumber_(false),
     numberOrNumberDensity_(NaN),
     time_(NaN),
@@ -114,7 +114,7 @@ void Foam::Lagrangian::volumeInjection::correct()
 
     if (mesh().mesh().moving())
     {
-        set_.movePoints();
+        zone_.movePoints();
     }
 }
 
@@ -139,7 +139,7 @@ Foam::LagrangianSubMesh Foam::Lagrangian::volumeInjection::modify
 
     // Reference the mesh faces and the set cells
     const faceList& faces = mesh.mesh().faces();
-    const labelUList setCellCells = set_.cells();
+    const labelList& setCellCells = zone_.zone();
     const UIndirectList<cell> setCells(mesh.mesh().cells(), setCellCells);
 
     // Create point and cell-centre fields at the current fraction
@@ -208,7 +208,8 @@ Foam::LagrangianSubMesh Foam::Lagrangian::volumeInjection::modify
 
     // Construct a cumulative sum of the volumes across the processes
     scalarList procSumVolume(Pstream::nProcs(), -vGreat);
-    procSumVolume[Pstream::myProcNo()] = setCellSumVolume.last();
+    procSumVolume[Pstream::myProcNo()] =
+        setCells.size() ? setCellSumVolume.last() : scalar(0);
     Pstream::listCombineGather(procSumVolume, maxEqOp<scalar>());
     Pstream::listCombineScatter(procSumVolume);
     for (label proci = 1; proci < Pstream::nProcs(); proci ++)
@@ -302,7 +303,7 @@ Foam::LagrangianSubMesh Foam::Lagrangian::volumeInjection::modify
     // See the note in volumeInjection::correct
     if (mesh.mesh().moving())
     {
-        set_.movePoints();
+        zone_.movePoints();
     }
 
     return injectionMesh;
@@ -311,13 +312,13 @@ Foam::LagrangianSubMesh Foam::Lagrangian::volumeInjection::modify
 
 void Foam::Lagrangian::volumeInjection::topoChange(const polyTopoChangeMap& map)
 {
-    set_.topoChange(map);
+    zone_.topoChange(map);
 }
 
 
 void Foam::Lagrangian::volumeInjection::mapMesh(const polyMeshMap& map)
 {
-    set_.mapMesh(map);
+    zone_.mapMesh(map);
 }
 
 
@@ -326,7 +327,7 @@ void Foam::Lagrangian::volumeInjection::distribute
     const polyDistributionMap& map
 )
 {
-    set_.distribute(map);
+    zone_.distribute(map);
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,6 +90,8 @@ class multiDirRefinement
 
         //- Given map from original to added cell set the refineCell for
         //  the added cells to be equal to the one on the original cells.
+        //  Note refCells is current list of cells to refine
+        //  (these should all have been refined)
         static void addCells(const Map<label>&, List<refineCell>&);
 
         //- Given map from original to added cell set the vectorField for
@@ -153,7 +155,8 @@ public:
         (
             polyMesh& mesh,
             const labelList& cellLabels,    // cells to refine
-            const dictionary& dict
+            const dictionary& dict,
+            const dictionary& coordinatesDict
         );
 
         //- Explicitly provided directions to split in.
@@ -162,7 +165,8 @@ public:
             polyMesh& mesh,
             const labelList& cellLabels,    // cells to refine
             const List<vectorField>&,       // Explicitly provided directions
-            const dictionary& dict
+            const dictionary& dict,
+            const dictionary& coordinatesDict
         );
 
         //- Construct from components. Only this one would allow undo actions.

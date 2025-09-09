@@ -23,7 +23,7 @@ geometry
 {
     fixed
     {
-        type triSurfaceMesh;
+        type triSurface;
         file "fixed.obj";
         regions
         {
@@ -33,12 +33,12 @@ geometry
     }
     rotating
     {
-        type triSurfaceMesh;
+        type triSurface;
         file "rotating.obj";
     }
     rotatingZone
     {
-        type triSurfaceMesh;
+        type triSurface;
         file "rotatingZone.obj";
     }
 };

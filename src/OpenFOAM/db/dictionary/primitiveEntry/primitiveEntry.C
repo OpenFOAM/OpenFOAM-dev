@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -147,28 +147,13 @@ Foam::primitiveEntry::primitiveEntry
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::label Foam::primitiveEntry::startLineNumber() const
-{
-    const tokenList& tokens = *this;
-
-    if (tokens.empty())
-    {
-        return -1;
-    }
-    else
-    {
-        return tokens.first().lineNumber();
-    }
-}
-
-
 Foam::label Foam::primitiveEntry::endLineNumber() const
 {
     const tokenList& tokens = *this;
 
     if (tokens.empty())
     {
-        return -1;
+        return startLineNumber();
     }
     else
     {

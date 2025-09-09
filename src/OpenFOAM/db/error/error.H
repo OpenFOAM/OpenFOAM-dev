@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -191,8 +191,11 @@ class IOerrorLocation
         //- File name
         string ioFileName_;
 
-        //- Line number
-        label ioLineNumber_;
+        //- Start line number
+        label ioStartLineNumber_;
+
+        //- End line number
+        label ioEndLineNumber_;
 
         //- Is file global
         bool ioGlobal_;
@@ -209,7 +212,8 @@ public:
         IOerrorLocation
         (
             const string& ioFileName,
-            const label ioLineNumber = -1,
+            const label ioStartLineNumber = -1,
+            const label ioEndLineNumber = -1,
             const bool ioGlobal = false
         );
 
@@ -229,9 +233,15 @@ public:
         }
 
         //- Access the start line number
-        inline label ioLineNumber() const
+        inline label ioStartLineNumber() const
         {
-            return ioLineNumber_;
+            return ioStartLineNumber_;
+        }
+
+        //- Access the end line number
+        inline label ioEndLineNumber() const
+        {
+            return ioEndLineNumber_;
         }
 
         //- Assess to the global/local file switch

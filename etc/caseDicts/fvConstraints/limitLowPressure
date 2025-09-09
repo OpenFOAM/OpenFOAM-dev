@@ -13,10 +13,10 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-type       limitPressure;
+type        limitPressure;
 
-select     all;
+cellZone    all;
 
-min        <1e4>;
+min         <1e4>;
 
 //************************************************************************** //

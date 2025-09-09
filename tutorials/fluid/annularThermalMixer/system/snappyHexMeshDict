@@ -21,55 +21,55 @@ geometry
 {
     couple
     {
-        type        triSurfaceMesh;
+        type        triSurface;
         file        "couple.obj";
     }
 
     innerInlet
     {
-        type        triSurfaceMesh;
+        type        triSurface;
         file        "innerInlet.obj";
     }
 
     outerInlet
     {
-        type        triSurfaceMesh;
+        type        triSurface;
         file        "outerInlet.obj";
     }
 
     innerOutlet
     {
-        type        triSurfaceMesh;
+        type        triSurface;
         file        "innerOutlet.obj";
     }
 
     outerOutlet
     {
-        type        triSurfaceMesh;
+        type        triSurface;
         file        "outerOutlet.obj";
     }
 
     rotorBlades
     {
-        type        triSurfaceMesh;
+        type        triSurface;
         file        "rotorBlades.obj";
     }
 
     shaft
     {
-        type        triSurfaceMesh;
+        type        triSurface;
         file        "shaft.obj";
     }
 
     statorBlades
     {
-        type        triSurfaceMesh;
+        type        triSurface;
         file        "statorBlades.obj";
     }
 
     walls
     {
-        type        triSurfaceMesh;
+        type        triSurface;
         file        "wall.obj";
     }
 };

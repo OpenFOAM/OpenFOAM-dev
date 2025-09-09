@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,7 @@ SourceFiles
 #ifndef MRFZone_H
 #define MRFZone_H
 
-#include "fvCellSet.H"
+#include "fvCellZone.H"
 #include "volFieldsFwd.H"
 #include "surfaceFields.H"
 #include "omega1.H"
@@ -67,7 +67,7 @@ class MRFZone
         dictionary coeffs_;
 
         //- MRF zone cell set
-        fvCellSet cellSet_;
+        fvCellZone cellSet_;
 
         //- Internal faces that are in the MRF region
         labelList internalFaces_;

@@ -14,25 +14,29 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-defaultFieldValues
-(
-    volVectorFieldValue U (0 0 0)
-    volScalarFieldValue T 348.432
-    volScalarFieldValue p 100000
-);
+defaultValues
+{
+    U       (0 0 0);
+    T       348.432;
+    p       100000;
+}
 
-regions
-(
-    boxToCell
+zones
+{
+    lowPressure
     {
-        box (0 -1 -1) (5 1 1);
-        fieldValues
-        (
-            volScalarFieldValue T 278.746
-            volScalarFieldValue p 10000
-        );
+        type        box;
+        zoneType    cell;
+
+        box         (0 -1 -1) (5 1 1);
+
+        values
+        {
+            T       278.746;
+            p       10000;
+        }
     }
-);
+}
 
 
 // ************************************************************************* //

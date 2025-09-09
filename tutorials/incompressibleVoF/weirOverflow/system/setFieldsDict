@@ -13,22 +13,44 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-defaultFieldValues
-(
-    volScalarFieldValue alpha.water 0
-);
+defaultValues
+{
+    alpha.water 0;
+}
 
-regions
-(
-    boxToCell
+zones
+{
+    water
     {
-        box (-100 0 -100) (0 20 100);
+        type        box;
+        zoneType    cell;
 
-        fieldValues
-        (
-            volScalarFieldValue alpha.water 1
-        );
+        box         (-100 0 -100) (0 20 100);
+
+        values
+        {
+            alpha.water 1;
+        }
     }
-);
+
+    patchFaces
+    {
+        type        box;
+        zoneType    face;
+
+        box         (-100 0 -100) (0 20 100);
+
+        zone
+        {
+            type        patch;
+            patch       inlet;
+        }
+
+        values
+        {
+            alpha.water 1;
+        }
+    }
+}
 
 // ************************************************************************* //

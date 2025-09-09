@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,7 +71,11 @@ class compressibleMultiphaseVoFMixture
         //- Dictionary of phases
         UPtrListDictionary<compressibleVoFphase> phases_;
 
+        //- Mixture density
         volScalarField rho_;
+
+        //- Mixture viscosity
+        volScalarField nu_;
 
 
 public:
@@ -107,14 +111,17 @@ public:
         //- Return true if all phases are incompressible
         bool incompressible() const;
 
-        //- Return the kinematic laminar viscosity
-        virtual tmp<volScalarField> nu() const;
+        //- Kinematic viscosity of mixture [m^2/s]
+        virtual tmp<volScalarField> nu() const
+        {
+            return nu_;
+        }
 
-        //- Return the laminar viscosity for patch
-        virtual tmp<scalarField> nu(const label patchi) const;
-
-        //- Return the face-interpolated dynamic laminar viscosity
-        tmp<surfaceScalarField> nuf() const;
+        //- Kinematic viscosity of mixture for patch [m^2/s]
+        virtual tmp<scalarField> nu(const label patchi) const
+        {
+            return nu_.boundaryField()[patchi];
+        }
 
         //- Return the mixture compressibility/density
         virtual tmp<volScalarField> psiByRho() const;

@@ -1,0 +1,179 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Geometry size
+convertToMeters 1;
+diameter       0.001;
+
+// Global mesh scaling factor:
+// 3 = 5388 cells (after mirroring); 4 = 9536 cells; 5 = 14860 cells
+scalingFactor  3;
+
+// Block vertex parameters
+cylRadius      #calc "$diameter / 2.0";
+cylMax         $cylRadius;
+cylMin         #neg $cylMax;
+
+domainMax      #calc "100*$diameter";
+domainMin      #neg $domainMax;
+
+layerMax       #calc "8*$cylMax";
+layerMin       #neg $layerMax;
+
+xJoin          #calc "20*$diameter";
+yJoin          #calc "$layerMax + 11*$diameter";
+
+zMax           $cylRadius;
+zMin           #neg $zMax;
+
+// For force coefficient calculations
+projArea       #calc "2*$diameter*$zMax";
+
+vertices
+(
+    ($domainMin  0          $zMin)
+    ($layerMin   0          $zMin)
+    ($cylMin     0          $zMin)
+    ($cylMax     0          $zMin)
+    ($layerMax   0          $zMin)
+    ($xJoin      0          $zMin)
+    ($domainMax  0          $zMin)
+
+    (0           $cylMax    $zMin)
+    (0           $layerMax  $zMin)
+    ($xJoin      $yJoin     $zMin)
+    ($domainMax  $yJoin     $zMin)
+
+    (0           $domainMax $zMin)
+    ($xJoin      $domainMax $zMin)
+    ($domainMax  $domainMax $zMin)
+
+    ($domainMin  0          $zMax)
+    ($layerMin   0          $zMax)
+    ($cylMin     0          $zMax)
+    ($cylMax     0          $zMax)
+    ($layerMax   0          $zMax)
+    ($xJoin      0          $zMax)
+    ($domainMax  0          $zMax)
+
+    (0           $cylMax    $zMax)
+    (0           $layerMax  $zMax)
+    ($xJoin      $yJoin     $zMax)
+    ($domainMax  $yJoin     $zMax)
+
+    (0           $domainMax $zMax)
+    ($xJoin      $domainMax $zMax)
+    ($domainMax  $domainMax $zMax)
+);
+
+// Cell numbers per block
+layerCells     #calc "13*$scalingFactor";
+downCircCells  #calc "8*$scalingFactor";
+upCircCells    #calc "ceil(0.4*$layerCells)";
+
+inletCells     #calc "3*$scalingFactor";
+
+xJoinCells     #calc "5*$scalingFactor";
+xOutCells      #calc "5*$scalingFactor";
+
+// Expansion ratios (ERs)
+layerER        1000;
+circER         2;
+joinER         2.6;
+outER          6;
+inletER        50;
+
+// Convenient alias
+sg             simpleGrading;
+
+blocks
+(
+    hex (3 4 8 7 17 18 22 21)     ($layerCells $downCircCells 1) $sg ($layerER $circER 1)
+    hex (7 8 1 2 21 22 15 16)     ($layerCells $upCircCells 1)   $sg ($layerER 1 1)
+
+    hex (4 5 9 8 18 19 23 22)     ($xJoinCells $downCircCells 1) $sg ($joinER $circER 1)
+    hex (5 6 10 9 19 20 24 23)    ($xOutCells $downCircCells 1)  $sg ($outER $circER 1)
+
+    hex (8 11 0 1 22 25 14 15)    ($inletCells $upCircCells 1)   $sg ($inletER 1 1)
+    hex (8 9 12 11 22 23 26 25)   ($xJoinCells $inletCells 1)    $sg ($joinER $inletER 1)
+    hex (9 10 13 12 23 24 27 26)  ($xOutCells $inletCells 1)     $sg ($outER $inletER 1)
+);
+
+// Edge parameters
+arcZ        90 (0 0 1);
+midX        #calc "$xJoin / 2.0";
+midY        #calc "$layerMax + (7.0 / 11.0)*($yJoin - $layerMax)";
+
+edges
+(
+    arc 3  7  $arcZ
+    arc 7  2  $arcZ
+    arc 17 21 $arcZ
+    arc 21 16 $arcZ
+    arc 4  8  $arcZ
+    arc 8  1  $arcZ
+    arc 18 22 $arcZ
+    arc 22 15 $arcZ
+    arc 11 0  $arcZ
+    arc 25 14 $arcZ
+    arc 8  9  ($midX $midY $zMin)
+    arc 22 23 ($midX $midY $zMax)
+);
+
+defaultPatch
+{
+    name frontAndBack;
+    type empty;
+}
+
+boundary
+(
+    inlet
+    {
+        type patch;
+        faces
+        (
+            (0  11 25 14)
+            (11 12 26 25)
+            (12 13 27 26)
+        );
+    }
+
+    outlet
+    {
+        type patch;
+        faces
+        (
+            (6  10 24 20)
+            (10 13 27 24)
+        );
+    }
+
+    cylinder
+    {
+        type wall;
+        faces
+        (
+            (3 7 21 17)
+            (7 2 16 21)
+        );
+    }
+);
+
+mergePatchPairs
+(
+);
+
+// ************************************************************************* //

@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -64,7 +64,7 @@ OpenFOAM | ThirdParty)
         # Using clang - not gcc
         export WM_CC='clang'
         export WM_CXX='clang++'
-        clang_version=llvm-3.7.0
+        clang_version=llvm-19.1.7
         ;;
     *)
         /bin/cat <<USAGE 1>&2

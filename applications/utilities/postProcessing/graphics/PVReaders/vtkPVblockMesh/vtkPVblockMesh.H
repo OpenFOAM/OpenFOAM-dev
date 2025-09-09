@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,9 +33,6 @@ SourceFiles
     vtkPVblockMeshUpdate.C
     vtkPVblockMeshUtils.C
 
-    // Needed by VTK:
-    vtkDataArrayTemplateImplicit.txx
-
 \*---------------------------------------------------------------------------*/
 
 #ifndef vtkPVblockMesh_H
@@ -50,7 +47,6 @@ SourceFiles
 #include "fileName.H"
 #include "stringList.H"
 #include "wordList.H"
-
 #include "primitivePatch.H"
 
 // * * * * * * * * * * * * * Forward Declarations  * * * * * * * * * * * * * //
@@ -198,6 +194,7 @@ class vtkPVblockMesh
         //- List of point numbers for rendering to window
         List<vtkTextActor*> pointNumberTextActorsPtrs_;
 
+
     // Private Member Functions
 
         // Convenience method use to convert the readers from VTK 5
@@ -238,6 +235,7 @@ class vtkPVblockMesh
         //- Reset data counters
         void resetCounters();
 
+
         // Update information helper functions
 
             //- Internal block info
@@ -246,10 +244,12 @@ class vtkPVblockMesh
             //- Block curved edges info
             void updateInfoEdges(vtkDataArraySelection*);
 
+
         // Update helper functions
 
             //- OpenFOAM mesh
             void updateFoamMesh();
+
 
         // Mesh conversion functions
 
@@ -276,13 +276,18 @@ class vtkPVblockMesh
             );
 
             //- Retrieve the current selections
-            static stringList getSelectedArrayEntries(vtkDataArraySelection*);
+            static stringList getSelectedArrayEntries
+            (
+                vtkDataArraySelection*,
+                const bool debug = vtkPVblockMesh::debug
+            );
 
             //- Retrieve a sub-list of the current selections
             static stringList getSelectedArrayEntries
             (
                 vtkDataArraySelection*,
-                const arrayRange&
+                const arrayRange&,
+                const bool debug = vtkPVblockMesh::debug
             );
 
             //- Set selection(s)
@@ -319,9 +324,10 @@ public:
 
     // Member Functions
 
-        //- Update
+        //- Update information
         void updateInfo();
 
+        //- Update
         void Update(vtkMultiBlockDataSet* output);
 
         //- Clean any storage
@@ -329,6 +335,7 @@ public:
 
         //- Add/remove point numbers to/from the view
         void renderPointNumbers(vtkRenderer*, const bool show);
+
 
      // Access
 

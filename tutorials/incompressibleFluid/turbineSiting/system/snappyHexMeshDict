@@ -21,7 +21,7 @@ addLayers       false;
 
 
 // Geometry. Definition of all surfaces. All surfaces are of class
-// searchableSurface.
+// surface.
 // Surfaces are used
 // - to specify refinement for any mesh cell intersecting it
 // - to specify refinement for any mesh cell inside/outside/near
@@ -30,21 +30,21 @@ geometry
 {
     windTurbine1
     {
-        type searchableBox;
+        type box;
         min (581845 4785805 1061);
         max (581855 4785815 1071);
     }
 
     windTurbine2
     {
-        type searchableBox;
+        type box;
         min (581740 4785658 1065);
         max (581771 4785671 1079);
     }
 
     terrain
     {
-        type triSurfaceMesh;
+        type triSurface;
         file "terrain.stl";
     }
 };
@@ -140,7 +140,6 @@ castellatedMeshControls
 
 
             //- Optional faceZone and (for closed surface) cellZone with
-            //  how to select the cells that are in the cellZone
             //  (inside / outside / specified insidePoint)
             // faceZone sphere;
             // cellZone sphere;

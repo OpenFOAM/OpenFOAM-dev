@@ -13,9 +13,15 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// Cells to refine; name of cell set
-set c0;
+// Optional switch to apply hexRef8 3D 2x2x2 hex cell refinement
+// in the same manner as and compatible with snappyHexMesh
+// and dynamic refinement/unrefinement.
+// To support further refinement with refineMesh, snappyHexMesh
+// or dynamic refinement/unrefinement the cellLevel and pointLevel files
+// are written.
+hexRef8     false;
 
+// For non-hexRef8 1D, 2D or 3D refinement a coordinate system is required:
 // Type of coordinate system:
 // - global : coordinate system same for every cell. Usually aligned with
 //   x,y,z axis. Specify in globalCoeffs section below.
@@ -24,51 +30,70 @@ set c0;
 // - fieldBased : uses the list of field names from the directions list for
 //   selecting the directions to cut. Meant to be used with geometricCut, but
 //   can also be used with useHexTopology.
-coordinateSystem global;
-//coordinateSystem patchLocal;
-//coordinateSystem fieldBased;
-
-// .. and its coefficients. x,y in this case. (normal (e3) direction is
-// calculated as e1^e2)
-globalCoeffs
+coordinates
 {
+    type        global;
+    // type        patchLocal;
+    // type        fieldBased;
+
+    // .. and its coefficients. x,y in this case. (normal (e3) direction is
+    // calculated as e1^e2)
     e1      (1 0 0);
     e2      (0 1 0);
+
+    // .. or for patchLocal
+    // patch   outside;  // Normal direction is facenormal of face 0 of patch
+    // e1      (1 0 0);
+
+    // List of directions to refine, if global or patchLocal
+    directions  (e1 e2 e3);
+
+    // List of directions to refine, if "fieldBased". Keep in mind that these
+    // fields must be of type "vectorField", not "volVectorField".
+    // directions
+    // (
+    //     radialDirectionFieldName
+    //     angularDirectionFieldName
+    //     heightDirectionFieldName
+    // );
 }
-
-patchLocalCoeffs
-{
-    patch   outside;  // Normal direction is facenormal of zero'th face of patch
-    e1      (1 0 0);
-}
-
-// List of directions to refine, if global or patchLocal
-directions
-(
-    e1
-    e2
-    e3
-);
-
-// List of directions to refine, if "fieldBased". Keep in mind that these
-// fields must be of type "vectorField", not "volVectorField".
-//directions
-//(
-//    radialDirectionFieldName
-//    angularDirectionFieldName
-//    heightDirectionFieldName
-//);
 
 // Whether to use hex topology. This will
 // - if patchLocal: all cells on selected patch should be hex
 // - split all hexes in 2x2x2 through the middle of edges.
+// Only applies if 3 directions are specified (defaults to false).
 useHexTopology  true;
 
 // Cut purely geometric (will cut hexes through vertices) or take topology
-// into account. Incompatible with useHexTopology
+// into account (defaults to false).
 geometricCut    false;
 
-// Write meshes from intermediate steps
+// Write meshes from intermediate steps (defaults to false).
 writeMesh       false;
+
+// Zone to refine
+// Generated or looked-up from the mesh by the specified zoneGenerator
+zone
+{
+    type    box;
+    box     (0 0 -2e-05) (0.0036 0.0008 4e-05);
+}
+
+// Alternatively a list of zones to refine
+// specified as a list of zoneGenerators, one for each refinement level
+// zones
+// {
+//     level1
+//     {
+//         type    box;
+//         box     (0 0 -2e-05) (0.0036 0.0008 4e-05);
+//     }
+
+//     level2
+//     {
+//         type    box;
+//         box     (0 0 -2e-05) (0.0036 0.0003 2e-05);
+//     }
+// }
 
 // ************************************************************************* //

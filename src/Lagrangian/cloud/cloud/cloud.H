@@ -94,7 +94,7 @@ private:
         #undef DECLARE_AVERAGE_FIELDS
 
         //- Retained state labels
-        autoPtr<LagrangianLabelInternalField> statePtr_;
+        autoPtr<LagrangianLabelDynamicField> statePtr_;
 
         //- Cell length scale
         scalarField cellLengthScaleVf_;
@@ -149,13 +149,16 @@ private:
 
         //- Read and return the retained state labels, if the file exists,
         //  otherwise return an empty pointer
-        autoPtr<LagrangianLabelInternalField> readStates() const;
+        autoPtr<LagrangianLabelDynamicField> readStates() const;
 
         //- Return the retained state enumerations, if they are available,
         //  otherwise return an empty pointer
         autoPtr<List<LagrangianState>> initialStates() const;
 
-        //- Store or clear the retained state labels as necessary
+        //- Clear the retained state labels
+        void clearStates();
+
+        //- Store the retained state labels if necessary
         bool storeStates();
 
         //- Store the retained state labels for the given sub-mesh

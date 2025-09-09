@@ -10,6 +10,6 @@ cp $FOAM_TUTORIALS/resources/geometry/pipe*.obj.gz constant/geometry/
 
 runApplication surfaceFeatures
 runApplication blockMesh
-runApplication snappyHexMesh -overwrite
+runApplication snappyHexMesh
 
 #------------------------------------------------------------------------------

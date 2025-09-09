@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,7 +97,7 @@ void Foam::functionObjects::fieldValues::volFieldValue::compareScalars
         }
 
         result.value = values[i];
-        result.celli = celli(i);
+        result.celli = zone_.celli(i);
         result.cc = fieldValue::mesh_.C()[result.celli];
     }
     else
@@ -221,17 +221,42 @@ bool Foam::functionObjects::fieldValues::volFieldValue::processValuesTypeType
         }
         case operationType::CoV:
         {
-            Type meanValue = gSum(values*V)/this->V();
+            const Type meanValue = gSum(values*V)/zone_.V();
 
             const label nComp = pTraits<Type>::nComponents;
 
             for (direction d=0; d<nComp; ++d)
             {
-                scalarField vals(values.component(d));
-                scalar mean = component(meanValue, d);
-                scalar& res = setComponent(result.value, d);
+                const scalarField vals(values.component(d));
+                const scalar mean = component(meanValue, d);
 
-                res = sqrt(gSum(V*sqr(vals - mean))/this->V())/mean;
+                setComponent(result.value, d) =
+                    protectedDivide
+                    (
+                        sqrt(gSum(V*sqr(vals - mean))/zone_.V()),
+                        mean
+                    );
+            }
+
+            return true;
+        }
+        case operationType::UI:
+        {
+            const Type meanValue = gSum(values*V)/zone_.V();
+
+            const label nComp = pTraits<Type>::nComponents;
+
+            for (direction d=0; d<nComp; ++d)
+            {
+                const scalarField vals(values.component(d));
+                const scalar mean = component(meanValue, d);
+
+                setComponent(result.value, d) =
+                    1 - 0.5*protectedDivide
+                    (
+                        gSum(V*mag(vals - mean))/zone_.V(),
+                        mean
+                    );
             }
 
             return true;
@@ -272,8 +297,7 @@ bool Foam::functionObjects::fieldValues::volFieldValue::writeValues
             (
                 IOobject
                 (
-                    fieldName + '_' + selectionTypeNames[selectionType()]
-                  + '-' + cellSetName(),
+                    fieldName + '_' + zone_.name(),
                     time_.name(),
                     obr_,
                     IOobject::NO_READ,
@@ -340,7 +364,7 @@ bool Foam::functionObjects::fieldValues::volFieldValue::writeValues
             file() << tab << result.value;
 
             Log << "    " << operationTypeNames_[operation_]
-                << "(" << cellSetName() << ") of " << fieldName
+                << "(" << zone_.name() << ") of " << fieldName
                 <<  " = " << result.value;
 
             if (result.celli != -1)
@@ -378,13 +402,13 @@ Foam::functionObjects::fieldValues::volFieldValue::filterField
     const Field<Type>& field
 ) const
 {
-    if (all())
+    if (zone_.all())
     {
         return field;
     }
     else
     {
-        return tmp<Field<Type>>(new Field<Type>(field, cells()));
+        return tmp<Field<Type>>(new Field<Type>(field, zone_.zone()));
     }
 }
 

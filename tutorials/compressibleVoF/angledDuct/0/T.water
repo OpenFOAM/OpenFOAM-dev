@@ -1,0 +1,46 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      binary;
+    class       volScalarField;
+    location    "0";
+    object      T.water;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 0 0 1 0 0 0];
+
+internalField   uniform 300;
+
+boundaryField
+{
+    porosityWall
+    {
+        type            calculated;
+        value           uniform 300;
+    }
+    inlet
+    {
+        type            calculated;
+        value           uniform 300;
+    }
+    outlet
+    {
+        type            calculated;
+        value           uniform 300;
+    }
+    walls
+    {
+        type            calculated;
+        value           uniform 300;
+    }
+}
+
+
+// ************************************************************************* //

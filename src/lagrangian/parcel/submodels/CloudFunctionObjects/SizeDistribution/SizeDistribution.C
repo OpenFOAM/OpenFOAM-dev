@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,10 +32,24 @@ License
 template<class CloudType>
 void Foam::SizeDistribution<CloudType>::write()
 {
-    const scalar d0 = this->owner().Dmin(), d1 = this->owner().Dmax();
+    // Check that there are some parcels
+    const label nParcels =
+        returnReduce(this->owner().nParcels(), sumOp<label>());
+    if (nParcels == 0)
+    {
+        Info<< type() << ": Not writing the distribution as the cloud "
+            << "is empty" << nl << endl;
+        return;
+    }
 
-    // Quit if there is no distribution of diameters
-    if (d1 == d0) return;
+    // Check that there is a non-zero range of diameters
+    const scalar d0 = this->owner().Dmin(), d1 = this->owner().Dmax();
+    if (d1 == d0)
+    {
+        Info<< type() << ": Not writing the distribution as the cloud "
+            << "has uniform particle diameters" << nl << endl;
+        return;
+    }
 
     // The x-axis is linearly spaced between the limiting diameters
     scalarField ds(nPoints_);
@@ -76,6 +90,9 @@ void Foam::SizeDistribution<CloudType>::write()
     parcelPDF.first() *= 2;
     parcelPDF.last() *= 2;
     parcelPDF /= sum(parcelPDF)*(d1 - d0)/(nPoints_ - 1);
+
+    Info<< type() << ": Writing the distribution to "
+        << this->writeTimeDir().relativePath() << nl << endl;
 
     // Write
     if (Pstream::master())

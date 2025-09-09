@@ -18,7 +18,6 @@ ignition
 {
     type            constantbXiIgnition;
 
-    select          cellZone;
     cellZone        ignition;
 
     start           0;
@@ -28,7 +27,7 @@ ignition
     XiCorr
     {
         type            cylindrical;
-        select          all;
+        cellZone        all;
         thickness       0.001;
         cylinderFraction 0.25;
     }

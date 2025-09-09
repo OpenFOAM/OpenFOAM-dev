@@ -26,7 +26,7 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#include "dictionary.H"
+#include "dictionaryEntry.H"
 #include "fieldTypes.H"
 #include "Ostream.H"
 #include "Pstream.H"

@@ -9,13 +9,12 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
+    location    "constant";
     object      phaseProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-type populationBalanceMultiphaseSystem;
-
-phases (air1 air2 water);
+phases          (air1 air2 water);
 
 populationBalances (bubbles);
 
@@ -24,7 +23,6 @@ air1
     type            pureIsothermalPhaseModel;
 
     diameterModel   velocityGroup;
-
     velocityGroupCoeffs
     {
         populationBalance bubbles;
@@ -49,7 +47,6 @@ air2
     type            pureIsothermalPhaseModel;
 
     diameterModel   velocityGroup;
-
     velocityGroupCoeffs
     {
         populationBalance bubbles;
@@ -80,38 +77,6 @@ water
     residualAlpha   1e-6;
 }
 
-populationBalanceCoeffs
-{
-    bubbles
-    {
-        continuousPhase water;
-
-        coalescenceModels
-        (
-            LehrMilliesMewes
-            {}
-        );
-
-        binaryBreakupModels
-        (
-            LehrMilliesMewes
-            {}
-        );
-
-        breakupModels
-        ();
-
-        driftModels
-        (
-            densityChange
-            {}
-        );
-
-        nucleationModels
-        ();
-    }
-}
-
 blending
 {
     default
@@ -136,117 +101,26 @@ surfaceTension
     }
 }
 
-interfaceCompression
-{}
-
-drag
+populationBalanceCoeffs
 {
-    air1_dispersedIn_water
+    bubbles
     {
-        type            IshiiZuber;
-    }
+        continuousPhase water;
 
-    air2_dispersedIn_water
-    {
-        type            IshiiZuber;
-    }
-}
+        coalescenceModels
+        (
+            LehrMilliesMewes
+            {}
+        );
 
-virtualMass
-{
-    air1_dispersedIn_water
-    {
-        type            constantCoefficient;
-        Cvm             0.5;
-    }
+        binaryBreakupModels
+        (
+            LehrMilliesMewes
+            {}
+        );
 
-    air2_dispersedIn_water
-    {
-        type            constantCoefficient;
-        Cvm             0.5;
-    }
-}
-
-heatTransfer
-{}
-
-phaseTransfer
-{}
-
-lift
-{
-    air1_dispersedIn_water
-    {
-        type            wallDamped;
-
-        wallDamping
-        {
-            type        cosine;
-            Cd          3.0;
-        }
-
-        lift
-        {
-            type        Tomiyama;
-
-            aspectRatio
-            {
-                type    Wellek;
-            }
-        }
-    }
-
-    air2_dispersedIn_water
-    {
-        type            wallDamped;
-
-        wallDamping
-        {
-            type        cosine;
-            Cd          3.0;
-        }
-
-        lift
-        {
-            type        Tomiyama;
-
-            aspectRatio
-            {
-                type    Wellek;
-            }
-        }
-    }
-}
-
-wallLubrication
-{
-    air1_dispersedIn_water
-    {
-        type            Antal;
-        Cw1             -0.01;
-        Cw2             0.05;
-    }
-
-    air2_dispersedIn_water
-    {
-        type            Antal;
-        Cw1             -0.01;
-        Cw2             0.05;
-    }
-}
-
-turbulentDispersion
-{
-    air1_dispersedIn_water
-    {
-        type            Burns;
-        sigma           0.9;
-    }
-
-    air2_dispersedIn_water
-    {
-        type            Burns;
-        sigma           0.9;
+        breakupModels
+        ();
     }
 }
 

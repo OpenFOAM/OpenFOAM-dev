@@ -20,10 +20,11 @@ massSource
 
     phase           air;
 
-    points
-    (
-        (0.075 0.2 0.05)
-    );
+    cellZone
+    {
+        type            containsPoints;
+        points          ((0.075 0.2 0.05));
+    }
 
     massFlowRate
     {

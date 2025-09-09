@@ -45,6 +45,10 @@ License
 #include "internalLagrangianFieldSources.H"
 #include "zeroLagrangianFieldSources.H"
 
+#include "polyTopoChangeMap.H"
+#include "polyMeshMap.H"
+#include "polyDistributionMap.H"
+
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
@@ -58,12 +62,9 @@ namespace Foam
     const word LagrangianMesh::stateName("state");
     const word LagrangianMesh::fractionName("fraction");
 
-    template<>
-    const char* NamedEnum<LagrangianMesh::permutationAlgorithm, 2>::names[] =
-        {"copy", "inPlace"};
-
     const NamedEnum<LagrangianMesh::permutationAlgorithm, 2>
-        LagrangianMesh::permutationAlgorithmNames_;
+    LagrangianMesh::permutationAlgorithmNames_
+    {"copy", "inPlace"};
 
     LagrangianMesh::permutationAlgorithm
         LagrangianMesh::permutationAlgorithm_ =
@@ -74,12 +75,9 @@ namespace Foam
             LagrangianMesh::permutationAlgorithm::copy
         );
 
-    template<>
-    const char* NamedEnum<LagrangianMesh::partitioningAlgorithm, 2>::names[] =
-        {"bin", "quick"};
-
     const NamedEnum<LagrangianMesh::partitioningAlgorithm, 2>
-        LagrangianMesh::partitioningAlgorithmNames_;
+    LagrangianMesh::partitioningAlgorithmNames_
+    {"bin", "quick"};
 
     LagrangianMesh::partitioningAlgorithm
         LagrangianMesh::partitioningAlgorithm_ =
@@ -1068,10 +1066,13 @@ Foam::LagrangianMesh::LagrangianMesh
     checkFieldSize(facei_);
     checkFieldSize(faceTrii_);
 
-    // Ask for the tetBasePtIs and oldCellCentres to trigger all processors to
-    // build them, otherwise, if some processors have no elements then there is
-    // a comms mismatch.
+    // Request the tet base points so that they are built on all processors.
+    // Constructing tet base points requires communication, so we can't leave
+    // it until the tracking requests them as those calls are not synchronised.
+    // Some processors might not be doing any tracking at all.
     mesh_.tetBasePtIs();
+
+    // Mark the need to store the old-time cell-centres if the mesh is moving
     mesh_.oldCellCentres();
 }
 
@@ -1941,6 +1942,8 @@ void Foam::LagrangianMesh::storePosition()
 
 void Foam::LagrangianMesh::topoChange(const polyTopoChangeMap& map)
 {
+    if (map.reverseCellMap().empty()) return;
+
     NotImplemented;
 
     meshObjects::topoChange<LagrangianMesh>(*this, map);

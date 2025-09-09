@@ -1,0 +1,30 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      createZonesDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+actuationDisk1
+{
+    type        box;
+    zoneType    cell;
+    box         (581850.5 4785805 1061) (581850.8 4785815 1071);
+}
+
+actuationDisk2
+{
+    type        box;
+    zoneType    cell;
+    box         (581754 4785658 1065) (581754.4 4785668 1075);
+}
+
+// ************************************************************************* //

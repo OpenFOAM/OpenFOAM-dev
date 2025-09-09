@@ -26,8 +26,13 @@ FoamFile
 (
     name=numberDensity,
     populationBalance=aggregates,
-    select=cellZone,
-    cellZone=outlet,
+    cellZone=
+    {
+        type        cylinder;
+        point1      (0.435 0 0);
+        point2      (0.44 0 0);
+        radius      0.015875;
+    },
     functionType=numberDensity,
     coordinateType=projectedAreaDiameter,
     allCoordinates=yes,
@@ -37,8 +42,8 @@ FoamFile
 
 #includeFunc writeObjects
 (
-    phaseTransfer:dmidtf.TiO2.particles_vapour,
-    phaseTransfer:dmidtf.TiO2_s.particles_vapour
+    reactionDrivenPhaseChange:mDot_TiO2,
+    surfaceReactionDrivenPhaseChange:mDot_TiO2_s
 )
 
 // ************************************************************************* //

@@ -11,19 +11,10 @@ runApplication surfaceFeatures
 
 runApplication blockMesh
 
-for i in 1 2 3 4 5 6
-do
-    runApplication -a foamDictionary system/refineMeshDict -entry set -set c${i}
+runApplication refineMesh
 
-    runApplication -a topoSet
+runApplication snappyHexMesh
 
-    runApplication -a refineMesh -dict refineMeshDict -overwrite
-done
-
-rm -rf constant/polyMesh/sets
-
-runApplication snappyHexMesh -overwrite
-
-runApplication renumberMesh -noFields -overwrite
+runApplication renumberMesh -noFields
 
 #------------------------------------------------------------------------------

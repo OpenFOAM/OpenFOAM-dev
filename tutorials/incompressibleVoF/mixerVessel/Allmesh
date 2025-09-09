@@ -11,13 +11,13 @@ cp $FOAM_TUTORIALS/resources/geometry/mixerVessel*.stl.gz constant/geometry/
 runApplication blockMesh
 runApplication surfaceFeatures
 runApplication decomposePar -noFields
-runParallel snappyHexMesh -overwrite
+runParallel snappyHexMesh
 
 # Create the sliding patches
-runParallel createBaffles -overwrite
-runParallel splitBaffles -overwrite
+runParallel createBaffles
+runParallel splitBaffles
 
 # Create non-conformal couples
-runParallel createNonConformalCouples -overwrite nonCouple1 nonCouple2
+runParallel createNonConformalCouples nonCouple1 nonCouple2
 
 #------------------------------------------------------------------------------

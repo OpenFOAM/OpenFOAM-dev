@@ -34,8 +34,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_cloudFvMeshFunctionObject_H
-#define functionObjects_cloudFvMeshFunctionObject_H
+#ifndef cloudFvMeshFunctionObject_functionObject_H
+#define cloudFvMeshFunctionObject_functionObject_H
 
 #include "fvMeshFunctionObject.H"
 #include "cloudFunctionObject.H"

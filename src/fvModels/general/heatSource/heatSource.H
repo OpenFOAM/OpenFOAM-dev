@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,8 +35,7 @@ Usage
     {
         type            heatSource;
 
-        select          cellSet;
-        cellSet         heater;
+        cellZone        heater;
 
         Q               1e6;
     }
@@ -48,7 +47,7 @@ Usage
 #define heatSource_H
 
 #include "fvModel.H"
-#include "fvCellSet.H"
+#include "fvCellZone.H"
 #include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -68,8 +67,8 @@ class heatSource
 {
     // Private data
 
-        //- The set of cells the model applies to
-        fvCellSet set_;
+        //- The cellZone the model applies to
+        fvCellZone zone_;
 
         //- The heat source
         autoPtr<Function1<scalar>> q_;

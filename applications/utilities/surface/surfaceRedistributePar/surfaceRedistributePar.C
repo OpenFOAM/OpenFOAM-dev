@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ Description
 #include "argList.H"
 #include "Time.H"
 #include "polyMesh.H"
-#include "distributedTriSurfaceMesh.H"
+#include "distributedTriSurface.H"
 #include "distributionMap.H"
 #include "localIOdictionary.H"
 
@@ -116,7 +116,8 @@ int main(int argc, char *argv[])
 
     Info<< "Reading surface from " << surfFileName << nl << nl
         << "Using distribution method "
-        << distributedTriSurfaceMesh::distributionTypeNames_[distType]
+        << searchableSurfaces::distributedTriSurface
+         ::distributionTypeNames_[distType]
         << " " << distType << nl << endl;
 
     const bool keepNonMapped = args.options().found("keepNonMapped");
@@ -218,7 +219,7 @@ int main(int argc, char *argv[])
 
 
     // Load surface
-    distributedTriSurfaceMesh surfMesh(io);
+    searchableSurfaces::distributedTriSurface surfMesh(io);
     Info<< "Loaded surface" << nl << endl;
 
 

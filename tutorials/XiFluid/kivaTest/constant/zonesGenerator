@@ -1,0 +1,32 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      zonesGenerator;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+cylinderHead
+{
+    type        cylinderHeadPoints;
+}
+
+ignition
+{
+    type        sphere;
+    zoneType    cell;
+    moveUpdate  true;
+
+    centre      (0.03 0.002 0.091);
+    radius      0.001;
+}
+
+// ************************************************************************* //

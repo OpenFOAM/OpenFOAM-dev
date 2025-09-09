@@ -29,7 +29,7 @@ geometry
 {
     cylinder
     {
-        type      searchableCylinder;
+        type      cylinder;
         point1    (0 0 -1);
         point2    (0 0  1);
         radius    $radius;

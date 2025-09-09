@@ -1,0 +1,26 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+runApplication blockMesh
+runApplication createZones
+runApplication decomposePar
+
+# Steady-state run
+runParallel -s steady foamRun
+
+if ! isTest "$@"
+then
+    # Transient run
+    foamDictionary -set \
+        "endTime=6000, deltaT=0.01, adjustTimeStep=yes" \
+        system/controlDict
+    foamDictionary -set "ddtSchemes/default=Euler" system/fvSchemes
+    runParallel -s transient foamRun
+fi
+
+runApplication reconstructPar -latestTime
+
+#------------------------------------------------------------------------------

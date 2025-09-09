@@ -1,0 +1,40 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      functions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#includeFunc continuity
+#includeFunc volAverage
+(
+    name=plot,
+    alpha.gas,
+    alpha.liquid,
+    air.gas,
+    H2O.gas,
+    H2O.liquid,
+    C3H8O.gas,
+    C3H8O.liquid,
+    p,
+    T.gas,
+    T.liquid,
+    phaseChange:Ts,
+    dMass.gas,
+    dMass.liquid,
+    dMass,
+    dEnergy.gas,
+    dEnergy.liquid,
+    dEnergy
+)
+
+// ************************************************************************* //

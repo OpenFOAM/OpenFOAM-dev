@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,13 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-bool Foam::entry::getKeyword(keyType& keyword, token& keywordToken, Istream& is)
+bool Foam::entry::getKeyword
+(
+    keyType& keyword,
+    token& keywordToken,
+    label& keywordLineNo,
+    Istream& is
+)
 {
     // Read the next valid token discarding spurious ';'s
     do
@@ -49,15 +55,21 @@ bool Foam::entry::getKeyword(keyType& keyword, token& keywordToken, Istream& is)
     while (keywordToken == token::END_STATEMENT);
 
     keyword = keywordToken;
+    keywordLineNo = is.lineNumber();
 
     return !keyword.isUndefined();
 }
 
 
-bool Foam::entry::getKeyword(keyType& keyword, Istream& is)
+bool Foam::entry::getKeyword
+(
+    keyType& keyword,
+    label& keywordLineNo,
+    Istream& is
+)
 {
     token keywordToken;
-    bool ok = getKeyword(keyword, keywordToken, is);
+    bool ok = getKeyword(keyword, keywordToken, keywordLineNo, is);
 
     if (ok)
     {
@@ -93,10 +105,11 @@ bool Foam::entry::New(dictionary& parentDict, Istream& is)
     is.fatalCheck("entry::New(const dictionary& parentDict, Istream&)");
 
     keyType keyword;
+    label keywordLineNo = -1;
     token keyToken;
 
-    // Get the next keyword and if a valid keyword return true
-    bool valid = getKeyword(keyword, keyToken, is);
+    // Get the next keyword and if valid return true
+    bool valid = getKeyword(keyword, keyToken, keywordLineNo, is);
 
     if (!valid)
     {
@@ -308,11 +321,17 @@ bool Foam::entry::New(dictionary& parentDict, Istream& is)
                         // Read and discard the entry
                         if (nextToken == token::BEGIN_BLOCK)
                         {
-                            dictionaryEntry dummy(keyword, parentDict, is);
+                            dictionaryEntry dummy
+                            (
+                                keyword,
+                                keywordLineNo,
+                                parentDict,
+                                is
+                            );
                         }
                         else
                         {
-                            primitiveEntry  dummy(keyword, parentDict, is);
+                            primitiveEntry dummy(keyword, parentDict, is);
                         }
                         return true;
                     }
@@ -330,7 +349,7 @@ bool Foam::entry::New(dictionary& parentDict, Istream& is)
             {
                 return parentDict.add
                 (
-                    new dictionaryEntry(keyword, parentDict, is),
+                    new dictionaryEntry(keyword, keywordLineNo, parentDict, is),
                     mergeEntry
                 );
             }
@@ -352,9 +371,10 @@ Foam::autoPtr<Foam::entry> Foam::entry::New(Istream& is)
     is.fatalCheck("entry::New(Istream&)");
 
     keyType keyword;
+    label keywordLineNo = -1;
 
     // Get the next keyword and if invalid return false
-    if (!getKeyword(keyword, is))
+    if (!getKeyword(keyword, keywordLineNo, is))
     {
         return autoPtr<entry>(nullptr);
     }
@@ -367,7 +387,13 @@ Foam::autoPtr<Foam::entry> Foam::entry::New(Istream& is)
         {
             return autoPtr<entry>
             (
-                new dictionaryEntry(keyword, dictionary::null, is)
+                new dictionaryEntry
+                (
+                    keyword,
+                    keywordLineNo,
+                    dictionary::null,
+                    is
+                )
             );
         }
         else

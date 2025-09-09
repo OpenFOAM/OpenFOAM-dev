@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,7 @@ SourceFiles
 
 #include "points0MotionSolver.H"
 #include "solidBodyMotionFunction.H"
-#include "polyCellSet.H"
+#include "generatedCellZone.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -58,8 +58,8 @@ class solidBodyMotionSolver
         //- The motion control function
         autoPtr<solidBodyMotionFunction> SBMFPtr_;
 
-        //- The name of the cell zone to restrict motion to
-        polyCellSet set_;
+        //- The name of the cellZone to restrict motion to
+        generatedCellZone zone_;
 
         //- Points to move when cell zone is supplied
         labelList setPointIndices_;

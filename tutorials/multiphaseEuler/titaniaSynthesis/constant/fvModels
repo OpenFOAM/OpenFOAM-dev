@@ -1,0 +1,42 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      fvModels;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+reactionDrivenPhaseChange
+{
+    type            reactionDrivenPhaseChange;
+    libs            ("libmultiphaseEulerFvModels.so");
+
+    phases          (particles vapour);
+
+    species         (TiO2);
+
+    energySemiImplicit no;
+}
+
+sintering
+{
+    type            KochFriedlanderSintering;
+    libs            ("libmultiphaseEulerFvModels.so");
+
+    populationBalance aggregates;
+
+    Cs              8.3e24;
+    n               4.0;
+    m               1.0;
+    Ta              3700.0;
+}
+
+// ************************************************************************* //

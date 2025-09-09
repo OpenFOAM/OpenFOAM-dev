@@ -1,0 +1,75 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      fvSchemes;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+ddtSchemes
+{
+    default         steadyState;
+}
+
+gradSchemes
+{
+    default         Gauss linear;
+
+    limited         cellLimited Gauss linear 1;
+    grad(U)         $limited;
+    grad(k)         $limited;
+    grad(omega)     $limited;
+    grad(epsilon)   $limited;
+}
+
+divSchemes
+{
+    default         none;
+
+#ifeq $!ddtSchemes/default steadyState
+    div(phi,U)      bounded Gauss linearUpwindV limited;
+    turbulence      bounded Gauss limitedLinear 1;
+#else
+    div(phi,U)      Gauss linearUpwindV limited;
+    turbulence      Gauss limitedLinear 1;
+#endif
+
+    div(phi,k)      $turbulence;
+    div(phi,omega)  $turbulence;
+    div(phi,epsilon) $turbulence;
+    div(phi,e)      $turbulence;
+    div(phi,K)      $turbulence;
+
+    div(phi,(p|rho))    Gauss linear;
+    div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
+}
+
+laplacianSchemes
+{
+    default         Gauss linear corrected;
+}
+
+interpolationSchemes
+{
+    default         linear;
+}
+
+snGradSchemes
+{
+    default         corrected;
+}
+
+wallDist
+{
+    method meshWave;
+}
+
+// ************************************************************************* //

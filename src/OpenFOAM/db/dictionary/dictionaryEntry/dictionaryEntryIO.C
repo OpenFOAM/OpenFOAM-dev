@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ Foam::dictionaryEntry::dictionaryEntry
     Istream& is
 )
 :
-    entry(keyType(is)),
+    entry(keyType(is), is.lineNumber()),
     dictionary(parentDict, is)
 {
     is.fatalCheck
@@ -49,11 +49,12 @@ Foam::dictionaryEntry::dictionaryEntry
 Foam::dictionaryEntry::dictionaryEntry
 (
     const keyType& key,
+    const label lineNumber,
     const dictionary& parentDict,
     Istream& is
 )
 :
-    entry(key),
+    entry(key, lineNumber),
     dictionary(fileName(key), parentDict, is)
 {
     is.fatalCheck
@@ -62,6 +63,17 @@ Foam::dictionaryEntry::dictionaryEntry
         "(const keyType&, const dictionary& parentDict, Istream&)"
     );
 }
+
+
+Foam::dictionaryEntry::dictionaryEntry
+(
+    const keyType& key,
+    const dictionary& parentDict,
+    Istream& is
+)
+:
+    dictionaryEntry(key, is.lineNumber(), parentDict, is)
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //

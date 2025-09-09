@@ -115,7 +115,8 @@ void Foam::Lagrangian::patchInjection::calcSumAreas()
 
     // Construct a cumulative sum of the areas across the processes
     procSumArea_ = scalar(-vGreat);
-    procSumArea_[Pstream::myProcNo()] = patchFaceSumArea_.last();
+    procSumArea_[Pstream::myProcNo()] =
+        patch.size() ? patchFaceSumArea_.last() : scalar(0);
     Pstream::listCombineGather(procSumArea_, maxEqOp<scalar>());
     Pstream::listCombineScatter(procSumArea_);
     for (label proci = 1; proci < Pstream::nProcs(); proci ++)
@@ -176,7 +177,7 @@ Foam::LagrangianSubMesh Foam::Lagrangian::patchInjection::modify
     numberDeferred_ = number - numberInt;
 
     // Inject at random times throughout the time-step
-    scalarField fraction(globalRndGen_.scalar01(numberInt));
+    const scalarField fraction(globalRndGen_.scalar01(numberInt));
 
     // Binary search for a given volume within a supplied cumulative volume sum.
     // Once the interval has been found, subtract the lower value from that
@@ -216,6 +217,7 @@ Foam::LagrangianSubMesh Foam::Lagrangian::patchInjection::modify
     DynamicList<label> injectCells(numberInt/Pstream::nProcs());
     DynamicList<label> injectFaces(numberInt/Pstream::nProcs());
     DynamicList<label> injectFaceTris(numberInt/Pstream::nProcs());
+    DynamicList<scalar> injectFraction(numberInt/Pstream::nProcs());
 
     // Create a (global) list of areas at which to inject. Each area is
     // searched for in the cumulative lists to identify a triangle into
@@ -239,6 +241,7 @@ Foam::LagrangianSubMesh Foam::Lagrangian::patchInjection::modify
             injectCells.append(mesh.mesh().faceOwner()[facei]);
             injectFaces.append(facei);
             injectFaceTris.append(faceTrii + 1);
+            injectFraction.append(fraction[areai]);
         }
     }
 
@@ -252,7 +255,7 @@ Foam::LagrangianSubMesh Foam::Lagrangian::patchInjection::modify
             labelField(injectFaces),
             labelField(injectFaceTris),
             LagrangianMesh::fractionName,
-            fraction
+            scalarField(injectFraction)
         );
 
     // Execute functions for this sub mesh. This ensures that flux fields and

@@ -40,7 +40,7 @@ surfaces
     interpolationScheme cellPoint;
 
     surfaces
-    (
+    {
         interface
         {
             type            isoSurface;
@@ -48,7 +48,7 @@ surfaces
             isoValue        0.5;
             interpolate     true;
         }
-    );
+    }
 }
 
 // ************************************************************************* //

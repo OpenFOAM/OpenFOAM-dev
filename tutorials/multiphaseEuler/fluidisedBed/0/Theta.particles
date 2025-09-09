@@ -34,7 +34,7 @@ boundaryField
 
     walls
     {
-        type               JohnsonJacksonParticleTheta;
+        type            JohnsonJacksonParticleTheta;
         restitutionCoefficient 0.8;
         specularityCoefficient 0.01;
         value           uniform 1e-4;

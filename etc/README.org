@@ -15,7 +15,4 @@
   The config.*/example directories contains various example configuration files
   for the corresponding shell:
   + =compiler=: an example of fine tuning ThirdParty compiler settings
-  + =openmpi=: an example of fine tuning openmpi settings for OpenFOAM
-  + =paraview=: an example of chaining to the standard config/paraview with a
-    different ParaView_VERSION
   + =prefs=: an example of supplying alternative site-defined settings

@@ -14,13 +14,12 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-type basicMultiphaseSystem;
-
-phases (water oil mercury air);
+phases          (water oil mercury air);
 
 water
 {
     type            pureIsothermalPhaseModel;
+
     diameterModel   constant;
     constantCoeffs
     {
@@ -33,6 +32,7 @@ water
 oil
 {
     type            pureIsothermalPhaseModel;
+
     diameterModel   constant;
     constantCoeffs
     {
@@ -45,6 +45,7 @@ oil
 mercury
 {
     type            pureIsothermalPhaseModel;
+
     diameterModel   constant;
     constantCoeffs
     {
@@ -57,6 +58,7 @@ mercury
 air
 {
     type            pureIsothermalPhaseModel;
+
     diameterModel   constant;
     constantCoeffs
     {
@@ -81,7 +83,7 @@ blending
         minPartlyContinuousAlpha.air 0.3;
     }
 
-    drag
+    segregated
     {
         type            linear;
         minFullyContinuousAlpha.water 0.7;
@@ -143,233 +145,5 @@ interfaceCompression
     water_mercury 1;
     oil_mercury   1;
 }
-
-drag
-{
-    air_dispersedIn_water
-    {
-        type            SchillerNaumann;
-    }
-
-    water_dispersedIn_air
-    {
-        type            SchillerNaumann;
-    }
-
-    air_segregatedWith_water
-    {
-        type            segregated;
-        m               0.5;
-        n               8;
-    }
-
-    air_dispersedIn_oil
-    {
-        type            SchillerNaumann;
-    }
-
-    oil_dispersedIn_air
-    {
-        type            SchillerNaumann;
-    }
-
-    air_segregatedWith_oil
-    {
-        type            segregated;
-        m               0.5;
-        n               8;
-    }
-
-    air_dispersedIn_mercury
-    {
-        type            SchillerNaumann;
-    }
-
-    mercury_dispersedIn_air
-    {
-        type            SchillerNaumann;
-    }
-
-    air_segregatedWith_mercury
-    {
-        type            segregated;
-        m               0.5;
-        n               8;
-    }
-
-    water_dispersedIn_oil
-    {
-        type            SchillerNaumann;
-    }
-
-    oil_dispersedIn_water
-    {
-        type            SchillerNaumann;
-    }
-
-    water_segregatedWith_oil
-    {
-        type            segregated;
-        m               0.5;
-        n               8;
-    }
-
-    water_dispersedIn_mercury
-    {
-        type            SchillerNaumann;
-    }
-
-    mercury_dispersedIn_water
-    {
-        type            SchillerNaumann;
-    }
-
-    water_segregatedWith_mercury
-    {
-        type            segregated;
-        m               0.5;
-        n               8;
-    }
-
-    oil_dispersedIn_mercury
-    {
-        type            SchillerNaumann;
-    }
-
-    mercury_dispersedIn_oil
-    {
-        type            SchillerNaumann;
-    }
-
-    oil_segregatedWith_mercury
-    {
-        type            segregated;
-        m               0.5;
-        n               8;
-    }
-}
-
-virtualMass
-{
-    air_dispersedIn_water
-    {
-        type            constantCoefficient;
-        Cvm             0.5;
-    }
-
-    air_dispersedIn_oil
-    {
-        type            constantCoefficient;
-        Cvm             0.5;
-    }
-
-    air_dispersedIn_mercury
-    {
-        type            constantCoefficient;
-        Cvm             0.5;
-    }
-
-    water_dispersedIn_air
-    {
-        type            none;
-    }
-
-    oil_dispersedIn_air
-    {
-        type            none;
-    }
-
-    mercury_dispersedIn_air
-    {
-        type            none;
-    }
-}
-
-heatTransfer
-{
-    air_dispersedIn_water
-    {
-        type            RanzMarshall;
-        residualAlpha   1e-3;
-    }
-
-    water_dispersedIn_air
-    {
-        type            RanzMarshall;
-        residualAlpha   1e-3;
-    }
-
-    air_dispersedIn_oil
-    {
-        type            RanzMarshall;
-        residualAlpha   1e-3;
-    }
-
-    oil_dispersedIn_air
-    {
-        type            RanzMarshall;
-        residualAlpha   1e-3;
-    }
-
-    air_dispersedIn_mercury
-    {
-        type            RanzMarshall;
-        residualAlpha   1e-3;
-    }
-
-    mercury_dispersedIn_air
-    {
-        type            RanzMarshall;
-        residualAlpha   1e-3;
-    }
-
-    water_dispersedIn_oil
-    {
-        type            RanzMarshall;
-        residualAlpha   1e-3;
-    }
-
-    oil_dispersedIn_water
-    {
-        type            RanzMarshall;
-        residualAlpha   1e-3;
-    }
-
-    water_dispersedIn_mercury
-    {
-        type            RanzMarshall;
-        residualAlpha   1e-3;
-    }
-
-    mercury_dispersedIn_water
-    {
-        type            RanzMarshall;
-        residualAlpha   1e-3;
-    }
-
-    oil_dispersedIn_mercury
-    {
-        type            RanzMarshall;
-        residualAlpha   1e-3;
-    }
-
-    mercury_dispersedIn_oil
-    {
-        type            RanzMarshall;
-        residualAlpha   1e-3;
-    }
-}
-
-phaseTransfer
-{}
-
-lift
-{}
-
-wallLubrication
-{}
-
-turbulentDispersion
-{}
 
 // ************************************************************************* //

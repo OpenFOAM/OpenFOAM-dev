@@ -6,7 +6,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 runApplication -s fluid blockMesh -region fluid
 
-runApplication extrudeToRegionMesh -region fluid -overwrite
+runApplication extrudeToRegionMesh -region fluid
 
 printf "\n%s\n" "Creating files for paraview post-processing"
 paraFoam -touchAll

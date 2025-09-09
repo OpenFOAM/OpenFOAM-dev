@@ -87,14 +87,14 @@ void Foam::momentOfInertia::massPropertiesSolid
         const triFace& tri(triFaces[i]);
 
         // vertices of triangle i
-        vector v0 = pts[tri[0]];
-        vector v1 = pts[tri[1]];
-        vector v2 = pts[tri[2]];
+        const vector& v0 = pts[tri[0]];
+        const vector& v1 = pts[tri[1]];
+        const vector& v2 = pts[tri[2]];
 
         // cross product of edges
-        vector eA = v1 - v0;
-        vector eB = v2 - v0;
-        vector n = eA ^ eB;
+        const vector eA(v1 - v0);
+        const vector eB(v2 - v0);
+        const vector n(eA ^ eB);
 
         // compute integral terms
         scalar tmp0, tmp1, tmp2;
@@ -194,7 +194,7 @@ void Foam::momentOfInertia::massPropertiesShell
 {
     // Reset properties for accumulation
 
-    mass = 0.0;
+    mass = 0;
     cM = Zero;
     J = Zero;
 
@@ -204,16 +204,16 @@ void Foam::momentOfInertia::massPropertiesShell
     {
         const triFace& tri(triFaces[i]);
 
-        triPointRef t
+        const triPointRef t
         (
             pts[tri[0]],
             pts[tri[1]],
             pts[tri[2]]
         );
 
-        scalar triMag = t.mag();
+        const scalar triMag = t.mag();
 
-        cM +=  triMag*t.centre();
+        cM += triMag*t.centre();
 
         mass += triMag;
     }
@@ -290,9 +290,9 @@ Foam::tensor Foam::momentOfInertia::applyParallelAxisTheorem
     // new reference point from the centre of mass of the body that
     // the inertia tensor applies to.
 
-    vector d = (refPt - cM);
+    const vector d(refPt - cM);
 
-    return J + mass*((d & d)*I - d*d);
+    return J + mass*(magSqr(d)*I - sqr(d));
 }
 
 
@@ -333,7 +333,7 @@ Foam::tensor Foam::momentOfInertia::meshInertia
         faces[cTI] = cellTets[cTI].faceTriIs(mesh);
     }
 
-    scalar m = 0.0;
+    scalar m = 0;
     vector cM = Zero;
     symmTensor J = Zero;
 

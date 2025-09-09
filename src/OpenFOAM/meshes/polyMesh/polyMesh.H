@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -112,7 +112,7 @@ public:
 
 private:
 
-    // Permanent data
+    // Private Member Data
 
         // Primitive mesh data
 
@@ -279,7 +279,7 @@ public:
         //- Return whether the given IOobject relates to a mesh on disk
         static bool found(const IOobject& io);
 
-        //- Construct from IOobject
+        //- Construct from IOobject.
         explicit polyMesh(const IOobject& io);
 
         //- Move construct from IOobject or from components.
@@ -592,6 +592,9 @@ public:
 
 
         // Storage management
+
+            //- Print a list of all the currently allocated mesh data
+            void printAllocated() const;
 
             //- Clear geometry
             void clearGeom();

@@ -18,8 +18,8 @@ solvers
 {
     "alpha.*"
     {
-        nAlphaCorr      1;
-        nAlphaSubCycles 3;
+        nCorrectors     1;
+        nSubCycles      3;
     }
 
     p_rgh
@@ -92,7 +92,7 @@ relaxationFactors
 {
     fields
     {
-        thermalPhaseChange:dmdtf 1;
+        phaseChange:mDot 1;
     }
 
     equations

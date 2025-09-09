@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,7 +44,7 @@ SourceFiles
 #define blockMesh_H
 
 #include "blockList.H"
-#include "searchableSurfaces.H"
+#include "searchableSurfaceList.H"
 #include "polyMesh.H"
 #include "IOdictionary.H"
 #include "blockVertexList.H"
@@ -76,7 +76,7 @@ class blockMesh
         bool checkFaceCorrespondence_;
 
         //- Optional searchable geometry to project face-points to
-        searchableSurfaces geometry_;
+        searchableSurfaceList geometry_;
 
         //- The scaling factor to convert to meters
         scalar scaleFactor_;
@@ -246,7 +246,7 @@ public:
             }
 
             //- Optional searchable geometry to project face-points to
-            const searchableSurfaces& geometry() const
+            const searchableSurfaceList& geometry() const
             {
                 return geometry_;
             }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,9 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "populationBalanceSizeDistribution.H"
+#include "polyTopoChangeMap.H"
+#include "polyMeshMap.H"
+#include "polyDistributionMap.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -42,13 +45,12 @@ namespace functionObjects
 }
 }
 
-template<>
-const char*
-Foam::NamedEnum
+const Foam::NamedEnum
 <
     Foam::functionObjects::populationBalanceSizeDistribution::functionType,
     6
->::names[] =
+>
+Foam::functionObjects::populationBalanceSizeDistribution::functionTypeNames_
 {
     "numberConcentration",
     "numberDensity",
@@ -60,17 +62,10 @@ Foam::NamedEnum
 
 const Foam::NamedEnum
 <
-    Foam::functionObjects::populationBalanceSizeDistribution::functionType,
-    6
-> Foam::functionObjects::populationBalanceSizeDistribution::functionTypeNames_;
-
-template<>
-const char*
-Foam::NamedEnum
-<
     Foam::functionObjects::populationBalanceSizeDistribution::coordinateType,
     4
->::names[] =
+>
+Foam::functionObjects::populationBalanceSizeDistribution:: coordinateTypeNames_
 {
     "volume",
     "area",
@@ -80,35 +75,16 @@ Foam::NamedEnum
 
 const Foam::NamedEnum
 <
-    Foam::functionObjects::populationBalanceSizeDistribution::coordinateType,
-    4
-> Foam::functionObjects::populationBalanceSizeDistribution::
-  coordinateTypeNames_;
-
-
-namespace Foam
-{
-    template<>
-    const char* NamedEnum
-    <
-        Foam::functionObjects::populationBalanceSizeDistribution::weightType,
-        4
-    >::names[] =
-    {
-        "numberConcentration",
-        "volumeConcentration",
-        "areaConcentration",
-        "cellVolume"
-    };
-}
-
-
-const Foam::NamedEnum
-<
     Foam::functionObjects::populationBalanceSizeDistribution::weightType,
     4
 >
-Foam::functionObjects::populationBalanceSizeDistribution::weightTypeNames_;
+Foam::functionObjects::populationBalanceSizeDistribution::weightTypeNames_
+{
+    "numberConcentration",
+    "volumeConcentration",
+    "areaConcentration",
+    "cellVolume"
+};
 
 using Foam::constant::mathematical::pi;
 
@@ -212,13 +188,13 @@ Foam::functionObjects::populationBalanceSizeDistribution::filterField
     const scalarField& field
 ) const
 {
-    if (all())
+    if (zone_.all())
     {
         return field;
     }
     else
     {
-        return tmp<scalarField>(new scalarField(field, cells()));
+        return tmp<scalarField>(new scalarField(field, zone_.zone()));
     }
 }
 
@@ -285,7 +261,7 @@ Foam::functionObjects::populationBalanceSizeDistribution::weightedAverage
             if (gSum(Ni) == 0)
             {
                 weightedAverage =
-                    gSum(filterField(mesh_.V()*fld))/this->V();
+                    gSum(filterField(mesh_.V()*fld))/zone_.V();
             }
             else
             {
@@ -302,7 +278,7 @@ Foam::functionObjects::populationBalanceSizeDistribution::weightedAverage
             if (gSum(Vi) == 0)
             {
                 weightedAverage =
-                    gSum(filterField(mesh_.V()*fld))/this->V();
+                    gSum(filterField(mesh_.V()*fld))/zone_.V();
             }
             else
             {
@@ -319,7 +295,7 @@ Foam::functionObjects::populationBalanceSizeDistribution::weightedAverage
             if (gSum(Ai) == 0)
             {
                 weightedAverage =
-                    gSum(filterField(mesh_.V()*fld))/this->V();
+                    gSum(filterField(mesh_.V()*fld))/zone_.V();
             }
             else
             {
@@ -332,7 +308,7 @@ Foam::functionObjects::populationBalanceSizeDistribution::weightedAverage
         case weightType::cellVolume:
         {
             weightedAverage =
-                gSum(filterField(mesh_.V()*fld))/this->V();
+                gSum(filterField(mesh_.V()*fld))/zone_.V();
 
             break;
         }
@@ -353,9 +329,9 @@ populationBalanceSizeDistribution
 )
 :
     fvMeshFunctionObject(name, runTime, dict),
-    fvCellSet(fvMeshFunctionObject::mesh_, dict),
     file_(obr_, name),
     mesh_(fvMeshFunctionObject::mesh_),
+    zone_(fvMeshFunctionObject::mesh_, dict),
     popBalName_(dict.lookup("populationBalance")),
     functionType_(functionTypeNames_.read(dict.lookup("functionType"))),
     coordinateType_(coordinateTypeNames_.read(dict.lookup("coordinateType"))),
@@ -469,7 +445,7 @@ bool Foam::functionObjects::populationBalanceSizeDistribution::write()
                 const diameterModels::sizeGroup& fi = sizeGroups[i];
 
                 resultValues[i] =
-                    gSum(filterField(mesh_.V()*fi*fi.phase()/fi.x()))/this->V();
+                    gSum(filterField(mesh_.V()*fi*fi.phase()/fi.x()))/zone_.V();
             }
 
             if (normalise_ && sum(resultValues) != 0)
@@ -486,7 +462,7 @@ bool Foam::functionObjects::populationBalanceSizeDistribution::write()
                 const diameterModels::sizeGroup& fi = sizeGroups[i];
 
                 resultValues[i] =
-                    gSum(filterField(mesh_.V()*fi*fi.phase()/fi.x()))/this->V();
+                    gSum(filterField(mesh_.V()*fi*fi.phase()/fi.x()))/zone_.V();
             }
 
             if (normalise_ && sum(resultValues) != 0)
@@ -508,7 +484,7 @@ bool Foam::functionObjects::populationBalanceSizeDistribution::write()
                 const diameterModels::sizeGroup& fi = sizeGroups[i];
 
                 resultValues[i] =
-                    gSum(filterField(mesh_.V()*fi*fi.phase()))/this->V();
+                    gSum(filterField(mesh_.V()*fi*fi.phase()))/zone_.V();
             }
 
             if (normalise_ && sum(resultValues) != 0)
@@ -525,7 +501,7 @@ bool Foam::functionObjects::populationBalanceSizeDistribution::write()
                 const diameterModels::sizeGroup& fi = sizeGroups[i];
 
                 resultValues[i] =
-                    gSum(filterField(mesh_.V()*fi*fi.phase()))/this->V();
+                    gSum(filterField(mesh_.V()*fi*fi.phase()))/zone_.V();
             }
 
             if (normalise_ && sum(resultValues) != 0)
@@ -551,7 +527,7 @@ bool Foam::functionObjects::populationBalanceSizeDistribution::write()
                     (
                         filterField(mesh_.V()*fi.a().ref()*fi*fi.phase()/fi.x())
                     )
-                   /this->V();
+                   /zone_.V();
             }
 
             if (normalise_ && sum(resultValues) != 0)
@@ -572,7 +548,7 @@ bool Foam::functionObjects::populationBalanceSizeDistribution::write()
                     (
                         filterField(mesh_.V()*fi.a().ref()*fi*fi.phase()/fi.x())
                     )
-                   /this->V();
+                   /zone_.V();
             }
 
             if (normalise_ && sum(resultValues) != 0)
@@ -594,11 +570,10 @@ bool Foam::functionObjects::populationBalanceSizeDistribution::write()
     {
         wordList otherCoordinateSymbolicNames(coordinateTypeNames_.size());
         PtrList<scalarField> otherCoordinateValues(coordinateTypeNames_.size());
-        typedef NamedEnum<coordinateType, 4> namedEnumCoordinateType;
 
-        forAllConstIter(namedEnumCoordinateType, coordinateTypeNames_, iter)
+        forAll(coordinateTypeNames_, i)
         {
-            const coordinateType cType = coordinateTypeNames_[iter.key()];
+            const coordinateType cType = coordinateType(i);
 
             otherCoordinateSymbolicNames[cType] =
                 coordinateTypeSymbolicName(cType);
@@ -658,6 +633,54 @@ bool Foam::functionObjects::populationBalanceSizeDistribution::write()
     }
 
     return true;
+}
+
+
+void Foam::functionObjects::populationBalanceSizeDistribution::movePoints
+(
+    const polyMesh& mesh
+)
+{
+    if (&mesh == &this->mesh())
+    {
+        zone_.movePoints();
+    }
+}
+
+
+void Foam::functionObjects::populationBalanceSizeDistribution::topoChange
+(
+    const polyTopoChangeMap& map
+)
+{
+    if (&map.mesh() == &mesh())
+    {
+        zone_.topoChange(map);
+    }
+}
+
+
+void Foam::functionObjects::populationBalanceSizeDistribution::mapMesh
+(
+    const polyMeshMap& map
+)
+{
+    if (&map.mesh() == &mesh())
+    {
+        zone_.mapMesh(map);
+    }
+}
+
+
+void Foam::functionObjects::populationBalanceSizeDistribution::distribute
+(
+    const polyDistributionMap& map
+)
+{
+    if (&map.mesh() == &mesh())
+    {
+        zone_.distribute(map);
+    }
 }
 
 

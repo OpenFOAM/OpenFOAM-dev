@@ -22,8 +22,8 @@ baffles
 {
     nonCouple
     {
-        type        searchableSurface;
-        surface     searchableCylinder;
+        type        surface;
+        surface     cylinder;
         point1      (0 0 -1);
         point2      (0 0 1);
         radius      #calc "$<scalar>convertToMeters*$<scalar>R";

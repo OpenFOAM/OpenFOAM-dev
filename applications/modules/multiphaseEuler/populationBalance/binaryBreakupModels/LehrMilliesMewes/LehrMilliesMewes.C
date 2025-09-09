@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,37 +65,34 @@ Foam::diameterModels::binaryBreakupModels::LehrMilliesMewes::LehrMilliesMewes
 void Foam::diameterModels::binaryBreakupModels::LehrMilliesMewes::
 addToBinaryBreakupRate
 (
-    volScalarField& binaryBreakupRate,
+    volScalarField::Internal& binaryBreakupRate,
     const label i,
     const label j
 )
 {
-    const phaseModel& continuousPhase = popBal_.continuousPhase();
     const sizeGroup& fi = popBal_.sizeGroups()[i];
     const sizeGroup& fj = popBal_.sizeGroups()[j];
 
-    volScalarField L
+    const volScalarField::Internal& rhoc = popBal_.continuousPhase().rho();
+
+    tmp<volScalarField> tsigma(popBal_.sigmaWithContinuousPhase(fj.phase()));
+    const volScalarField::Internal& sigma = tsigma();
+
+    tmp<volScalarField> tepsilonc(popBal_.continuousTurbulence().epsilon());
+    const volScalarField::Internal& epsilonc = tepsilonc();
+
+    volScalarField::Internal L
     (
-        pow
-        (
-            popBal_.sigmaWithContinuousPhase(fj.phase())/continuousPhase.rho(),
-            3.0/5.0
-        )
-       /pow(popBal_.continuousTurbulence().epsilon(), 2.0/5.0)
+        pow(sigma/rhoc, 3.0/5.0)/pow(epsilonc, 2.0/5.0)
     );
 
     // Reset of dimension to pure length to avoid problems in transcendental
     // functions due to small exponents
     L.dimensions().reset(dimLength);
 
-    const volScalarField T
+    const volScalarField::Internal T
     (
-        pow
-        (
-            popBal_.sigmaWithContinuousPhase(fj.phase())/continuousPhase.rho(),
-            2.0/5.0
-        )
-       /pow(popBal_.continuousTurbulence().epsilon(), 3.0/5.0)
+        pow(sigma/rhoc, 2.0/5.0)/pow(epsilonc, 3.0/5.0)
     );
 
     binaryBreakupRate +=

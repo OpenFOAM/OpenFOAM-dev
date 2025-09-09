@@ -28,26 +28,19 @@ License
 
 // * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-    template<>
-    const char* NamedEnum<timeControl::timeControls, 9>::
-    names[] =
-    {
-        "timeStep",
-        "writeTime",
-        "outputTime",
-        "adjustableRunTime",
-        "runTime",
-        "runTimes",
-        "clockTime",
-        "cpuTime",
-        "none"
-    };
-}
-
 const Foam::NamedEnum<Foam::timeControl::timeControls, 9>
-    Foam::timeControl::timeControlNames_;
+Foam::timeControl::timeControlNames_
+{
+    "timeStep",
+    "writeTime",
+    "outputTime",
+    "adjustableRunTime",
+    "runTime",
+    "runTimes",
+    "clockTime",
+    "cpuTime",
+    "none"
+};
 
 
 // * * * * * * * * * * * * * * * Private Members * * * * * * * * * * * * * * //

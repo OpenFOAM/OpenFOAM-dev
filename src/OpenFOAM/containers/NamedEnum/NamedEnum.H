@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,14 +35,15 @@ SourceFiles
 #ifndef NamedEnum_H
 #define NamedEnum_H
 
+#include "FixedList.H"
 #include "HashTable.H"
-#include "stringList.H"
-#include "wordList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+
+class dictionary;
 
 /*---------------------------------------------------------------------------*\
                           Class NamedEnum Declaration
@@ -51,29 +52,28 @@ namespace Foam
 template<class Enum, unsigned int nEnum>
 class NamedEnum
 :
-    public HashTable<unsigned int>
+    public FixedList<word, nEnum>
 {
-    // Private Member Functions
+    // Private Member Data
 
-        //- Disallow default bitwise copy construction
-        NamedEnum(const NamedEnum&) = delete;
-
-        //- Disallow default bitwise assignment
-        void operator=(const NamedEnum&) = delete;
+        //- Map of name -> enumeration
+        HashTable<unsigned int> table_;
 
 
 public:
 
-    // Static Data Members
-
-        //- The set of names corresponding to the enumeration Enum
-        static const char* names[nEnum];
-
+    typedef FixedList<word, nEnum> namesType;
 
     // Constructors
 
-        //- Construct from names
-        NamedEnum();
+        //- Construct from list of names
+        NamedEnum(const FixedList<word, nEnum>& names);
+
+        //- Construct from list of names
+        NamedEnum(std::initializer_list<word>);
+
+        //- Disallow default bitwise copy construction
+        NamedEnum(const NamedEnum&) = delete;
 
 
     // Member Functions
@@ -82,14 +82,23 @@ public:
         //  enumeration element
         Enum read(Istream&) const;
 
+        //- Lookup the name from the dictionary if present and return the
+        //  corresponding enumeration element, otherwise return the defaultValue
+        Enum lookupOrDefault
+        (
+            const word& name,
+            const dictionary& dict,
+            const Enum defaultValue
+        ) const;
+
+        //- Select the name from the dictionary and return the
+        //  corresponding enumeration element.
+        //  If more than one of the options is present in the dictionary
+        //  generate a FatalError
+        Enum select(const dictionary& dict) const;
+
         //- Write the name representation of the enumeration to an Ostream
         void write(const Enum e, Ostream&) const;
-
-        //- The set of names as a list of strings
-        static stringList strings();
-
-        //- The set of names as a list of words
-        static wordList words();
 
 
     // Member Operators
@@ -97,17 +106,23 @@ public:
         //- Return the enumeration element corresponding to the given name
         const Enum operator[](const char* name) const
         {
-            return Enum(HashTable<unsigned int>::operator[](name));
+            return Enum(table_[name]);
         }
 
         //- Return the enumeration element corresponding to the given name
         const Enum operator[](const word& name) const
         {
-            return Enum(HashTable<unsigned int>::operator[](name));
+            return Enum(table_[name]);
         }
 
         //- Return the name of the given enumeration element
-        const char* operator[](const Enum e) const;
+        const word& operator[](const Enum e) const
+        {
+            return FixedList<word, nEnum>::operator[](unsigned(e));
+        }
+
+        //- Disallow default bitwise assignment
+        void operator=(const NamedEnum&) = delete;
 };
 
 

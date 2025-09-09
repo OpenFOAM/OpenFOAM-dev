@@ -229,7 +229,7 @@ int main(int argc, char *argv[])
         false
     );
 
-    srcMesh.postConstruct(false, fvMesh::stitchType::nonGeometric);
+    srcMesh.postConstruct(false, false, fvMesh::stitchType::nonGeometric);
 
     fvMesh tgtMesh
     (
@@ -242,7 +242,7 @@ int main(int argc, char *argv[])
         false
     );
 
-    tgtMesh.postConstruct(false, fvMesh::stitchType::nonGeometric);
+    tgtMesh.postConstruct(false, false, fvMesh::stitchType::nonGeometric);
 
     Info<< "Source mesh size: "
         << returnReduce(srcMesh.nCells(), sumOp<label>())

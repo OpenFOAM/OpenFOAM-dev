@@ -42,55 +42,7 @@ faceZones       (f0 f1);
 // have mapped patches created which will need to be changed.
 adaptMesh       true;
 
-//- Extrusion settings
-extrudeModel    linearNormal;
-// extrudeModel   linearDirection;
-// extrudeModel   wedge;
-// extrudeModel   linearRadial;
-// extrudeModel   sphericalRadial;
-// extrudeModel   sigmaRadial;
+// Extrusion settings
+// See extrudeMeshDict
 
-nLayers         10;
-
-expansionRatio  0.9;
-
-linearNormalCoeffs
-{
-    thickness       0.05;
-}
-
-linearDirectionCoeffs
-{
-    direction       (0 1 0);
-    thickness       0.05;
-}
-
-wedgeCoeffs
-{
-    axisPt      (0 0.1 -0.05);
-    axis        (-1 0 0);
-    angle       360;  // For nLayers=1 assume symmetry so angle/2 on each side
-}
-
-linearRadialCoeffs
-{
-    R              0.1;
-    // Optional inner radius
-    Rsurface        0.01;
-}
-
-sphericalRadialCoeffs
-{
-    // Radii specified through interpolation table
-    R               table ((0 0.01)(3 0.03)(10 0.1));
-}
-
-sigmaRadialCoeffs
-{
-    RTbyg           1;
-    pRef            1;
-    pStrat          1;
-}
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ void Foam::snappyHexMeshConfiguration::writeGeometrySurface(const label surfID)
 {
     beginDict(os_, surfaces_[surfID].name());
 
-    os_ << indent << "type triSurfaceMesh;" << nl
+    os_ << indent << "type triSurface;" << nl
         << indent << "file " << surfaces_[surfID].file() << ";" << endl;
 
     const wordList& inletRegions = surfaces_[surfID].inletRegions();
@@ -97,7 +97,7 @@ void Foam::snappyHexMeshConfiguration::writeSearchableBox(const label i)
 {
     beginDict(os_, "box" + std::to_string(i));
 
-    os_ << indent << "type searchableBox;" << nl
+    os_ << indent << "type box;" << nl
         << indent << "min " << refinementBoxes_[i].first() << ";" << nl
         << indent << "max " << refinementBoxes_[i].second() << ";" << endl;
 
@@ -406,8 +406,22 @@ void Foam::snappyHexMeshConfiguration::writeCastellatedMeshControls()
     writeRefinementRegions();
 
     // Needs customising
-    os_ << indent << "insidePoint "
-        << insidePoint_ << ";" << endl;
+    if (insidePointsOpt_)
+    {
+        beginList(os_, "insidePoints");
+
+        forAll(insidePoints_, i)
+        {
+            os_ << indent << insidePoints_[i] << endl;
+        }
+
+        endList(os_);
+    }
+    else
+    {
+        os_ << indent << "insidePoint "
+            << insidePoints_[0] << ";" << endl;
+    }
 
     os_ << indent << "nCellsBetweenLevels "
         << nCellsBetweenLevels_
@@ -536,7 +550,8 @@ Foam::snappyHexMeshConfiguration::snappyHexMeshConfiguration
     const List<Tuple2<word, label>>& layers,
     const scalar firstLayerThickness,
     const scalar layerExpansionRatio,
-    const point& insidePoint,
+    const bool insidePointsOpt,
+    const List<point>& insidePoints,
     const label nCellsBetweenLevels
 )
 :
@@ -551,7 +566,8 @@ Foam::snappyHexMeshConfiguration::snappyHexMeshConfiguration
     layers_(layers),
     firstLayerThickness_(firstLayerThickness),
     layerExpansionRatio_(layerExpansionRatio),
-    insidePoint_(insidePoint),
+    insidePointsOpt_(insidePointsOpt),
+    insidePoints_(insidePoints),
     nCellsBetweenLevels_(nCellsBetweenLevels)
 {}
 

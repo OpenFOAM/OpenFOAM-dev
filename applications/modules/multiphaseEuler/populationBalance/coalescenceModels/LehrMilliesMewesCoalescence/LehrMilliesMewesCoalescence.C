@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,11 +65,10 @@ LehrMilliesMewesCoalescence
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void
-Foam::diameterModels::coalescenceModels::LehrMilliesMewesCoalescence::
+void Foam::diameterModels::coalescenceModels::LehrMilliesMewesCoalescence::
 addToCoalescenceRate
 (
-    volScalarField& coalescenceRate,
+    volScalarField::Internal& coalescenceRate,
     const label i,
     const label j
 )
@@ -77,22 +76,28 @@ addToCoalescenceRate
     const sizeGroup& fi = popBal_.sizeGroups()[i];
     const sizeGroup& fj = popBal_.sizeGroups()[j];
 
-    const volScalarField uChar
+    tmp<volScalarField> tepsilonc(popBal_.continuousTurbulence().epsilon());
+    const volScalarField::Internal& epsilonc = tepsilonc();
+
+    const volScalarField::Internal uChar
     (
         max
         (
-            sqrt(2.0)*cbrt(popBal_.continuousTurbulence().epsilon())
+            sqrt(2.0)
+           *cbrt(epsilonc)
            *sqrt(cbrt(sqr(fi.dSph())) + cbrt(sqr(fj.dSph()))),
-            mag(fi.phase().U() - fj.phase().U())
+            mag(fi.phase().U()()() - fj.phase().U()()())
         )
     );
 
     coalescenceRate +=
-        pi/4*sqr(fi.dSph() + fj.dSph())*min(uChar, uCrit_)
+        pi/4
+       *sqr(fi.dSph() + fj.dSph())
+       *min(uChar, uCrit_)
        *exp
         (
           - sqr(cbrt(alphaMax_)
-           /cbrt(max(popBal_.alphas(), fi.phase().residualAlpha())) - 1)
+           /cbrt(max(popBal_.alphas()(), fi.phase().residualAlpha())) - 1)
         );
 }
 

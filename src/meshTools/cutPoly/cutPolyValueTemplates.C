@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -151,6 +151,30 @@ Type Foam::cutPoly::CellCutValues<Type>::const_iterator::psi
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
+Foam::cutPoly::FaceValues<Type>::const_iterator::const_iterator
+(
+    const FaceValues<Type>& fValues,
+    const label i
+)
+:
+    fValues_(fValues),
+    i_(i)
+{}
+
+
+template<class Type>
+Foam::cutPoly::FaceValues<Type>::FaceValues
+(
+    const face& f,
+    const Field<Type>& pPsis
+)
+:
+    f_(f),
+    pPsis_(pPsis)
+{}
+
+
+template<class Type>
 Foam::cutPoly::FaceCutValues<Type>::const_iterator::const_iterator
 (
     const FaceCutValues<Type>& fValues,
@@ -225,6 +249,29 @@ Foam::cutPoly::CellCutValues<Type>::CellCutValues
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 template<class Type>
+Type Foam::cutPoly::FaceValues<Type>::const_iterator::next() const
+{
+    return fValues_.pPsis_[fValues_.f_[(i_ + 1) % fValues_.f_.size()]];
+}
+
+
+template<class Type>
+typename Foam::cutPoly::FaceValues<Type>::const_iterator
+Foam::cutPoly::FaceValues<Type>::begin() const
+{
+    return const_iterator(*this, 0);
+}
+
+
+template<class Type>
+typename Foam::cutPoly::FaceValues<Type>::const_iterator
+Foam::cutPoly::FaceValues<Type>::end() const
+{
+    return const_iterator(*this, f_.size());
+}
+
+
+template<class Type>
 Type Foam::cutPoly::FaceCutValues<Type>::const_iterator::next() const
 {
     const label j = (j_ + 1) % size(i_);
@@ -273,6 +320,52 @@ Foam::cutPoly::CellCutValues<Type>::end() const
 
 
 // * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * * //
+
+template<class Type>
+bool Foam::cutPoly::FaceValues<Type>::const_iterator::operator==
+(
+    const const_iterator& it
+) const
+{
+    return it.i_ == i_;
+}
+
+
+template<class Type>
+bool Foam::cutPoly::FaceValues<Type>::const_iterator::operator!=
+(
+    const const_iterator& it
+) const
+{
+    return !(it == *this);
+}
+
+
+template<class Type>
+Type Foam::cutPoly::FaceValues<Type>::const_iterator::operator*() const
+{
+    return fValues_.pPsis_[fValues_.f_[i_]];
+}
+
+
+template<class Type>
+inline typename Foam::cutPoly::FaceValues<Type>::const_iterator&
+Foam::cutPoly::FaceValues<Type>::const_iterator::operator++()
+{
+    ++ i_;
+    return *this;
+}
+
+
+template<class Type>
+inline typename Foam::cutPoly::FaceValues<Type>::const_iterator
+Foam::cutPoly::FaceValues<Type>::const_iterator::operator++(int)
+{
+    const const_iterator it(*this);
+    ++ *this;
+    return it;
+}
+
 
 template<class Type>
 bool Foam::cutPoly::FaceCutValues<Type>::const_iterator::operator==

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ SourceFiles
 #ifndef blockVertex_H
 #define blockVertex_H
 
-#include "searchableSurfaces.H"
+#include "searchableSurfaceList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -65,7 +65,7 @@ public:
             (
                 const dictionary& dict,
                 const label index,
-                const searchableSurfaces& geometry,
+                const searchableSurfaceList& geometry,
                 Istream& is
             ),
             (dict, index, geometry, is)
@@ -85,7 +85,7 @@ public:
         (
             const dictionary& dict,
             const label index,
-            const searchableSurfaces& geometry,
+            const searchableSurfaceList& geometry,
             Istream&
         );
 
@@ -94,12 +94,12 @@ public:
         class iNew
         {
             const dictionary& dict_;
-            const searchableSurfaces& geometry_;
+            const searchableSurfaceList& geometry_;
             mutable label index_;
 
         public:
 
-            iNew(const dictionary& dict, const searchableSurfaces& geometry)
+            iNew(const dictionary& dict, const searchableSurfaceList& geometry)
             :
                 dict_(dict),
                 geometry_(geometry),

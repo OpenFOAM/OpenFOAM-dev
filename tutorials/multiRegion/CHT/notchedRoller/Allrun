@@ -6,31 +6,31 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 runApplication blockMesh
 
-runApplication createBaffles -overwrite
-runApplication splitBaffles -overwrite
+runApplication createBaffles
+runApplication splitBaffles
 
-runApplication splitMeshRegions -cellZonesOnly -overwrite
+runApplication splitMeshRegions -cellZonesOnly
 
 rm -f 0/cellToRegion 0/*/cellToRegion constant/cellToRegion
 
-runApplication -s fluid topoSet -dict system/topoSetDict -region fluid
+runApplication -s fluid createZones -dict system/createZonesDict -region fluid
 
 ! isTest "$@" && [ -n "$1" ] && mode=$1 || mode=parallel
 
 case $mode in
     serial)
-        runApplication createNonConformalCouples -overwrite
+        runApplication createNonConformalCouples
         runApplication foamMultiRun
         ;;
     parallel | stitchSerial)
-        runApplication createNonConformalCouples -overwrite
+        runApplication createNonConformalCouples
         runApplication decomposePar -allRegions -copyZero -cellProc
         runParallel foamMultiRun
         runApplication reconstructPar -allRegions
         ;;
     stitchParallel)
         runApplication decomposePar -allRegions -copyZero -cellProc
-        runParallel createNonConformalCouples -overwrite
+        runParallel createNonConformalCouples
         runParallel foamMultiRun
         runApplication reconstructPar -allRegions -constant
         ;;

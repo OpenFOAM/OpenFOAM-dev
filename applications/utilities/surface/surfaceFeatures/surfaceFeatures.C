@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ Description
 
 #include "argList.H"
 #include "Time.H"
-#include "triSurfaceMesh.H"
+#include "triSurface_searchableSurface.H"
 #include "featureEdgeMesh.H"
 #include "extendedFeatureEdgeMesh.H"
 #include "surfaceFeatures.H"
@@ -469,7 +469,7 @@ namespace Foam
             );
 
             // Searchable triSurface
-            const triSurfaceMesh searchSurf
+            const searchableSurfaces::triSurface searchSurf
             (
                 IOobject
                 (

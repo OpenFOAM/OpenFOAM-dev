@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,71 +50,26 @@ using namespace Foam;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-enum ExtrudeMode
+enum class extrudeSurfaceType
 {
-    POLYMESH2D,
-    MESHEDSURFACE
+    polyMesh2D,
+    meshedSurface
 };
 
-namespace Foam
+static const NamedEnum<extrudeSurfaceType, 2> extrudeSurfaceTypeNames
 {
-    template<>
-    const char* NamedEnum<ExtrudeMode, 2>::names[] =
-    {
-        "polyMesh2D",
-        "MeshedSurface"
-    };
-}
-
-static const NamedEnum<ExtrudeMode, 2> ExtrudeModeNames;
+    "polyMesh2D",
+    "MeshedSurface"
+};
 
 
-//pointField moveInitialPoints
-//(
-//    primitiveFacePatch& fMesh,
-//    const extrudeModel& model
-//)
-//{
-//    pointField layer0Points(fMesh.nPoints());
-//    pointField layer1Points(fMesh.nPoints());
-//    pointField displacement(fMesh.nPoints());
-
-//    forAll(layer0Points, pointi)
-//    {
-//        const labelList& meshPoints = fMesh.meshPoints();
-//        label meshPointi = meshPoints[pointi];
-
-//        layer0Points[meshPointi] = model
-//        (
-//            fMesh.points()[meshPointi],
-//            fMesh.pointNormals()[pointi],
-//            0
-//        );
-
-//        layer1Points[meshPointi] = model
-//        (
-//            fMesh.points()[meshPointi],
-//            fMesh.pointNormals()[pointi],
-//            1
-//        );
-
-//        displacement[pointi] =
-//            layer1Points[meshPointi]
-//          - layer0Points[meshPointi];
-//    }
-
-//    fMesh.setPoints(layer0Points);
-
-//    return displacement;
-//}
-
-
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 int main(int argc, char *argv[])
 {
     argList::validArgs.append("surfaceFormat");
 
-    #include "addOverwriteOption.H"
+    #include "addNoOverwriteOption.H"
 
     #include "setRootCase.H"
 
@@ -128,10 +83,10 @@ int main(int argc, char *argv[])
         false
     );
 
-    const ExtrudeMode surfaceFormat = ExtrudeModeNames[args[1]];
-    const bool overwrite = args.optionFound("overwrite");
+    const extrudeSurfaceType surfaceFormat = extrudeSurfaceTypeNames[args[1]];
+    #include "setNoOverwrite.H"
 
-    Info<< "Extruding from " << ExtrudeModeNames[surfaceFormat]
+    Info<< "Extruding from " << extrudeSurfaceTypeNames[surfaceFormat]
         << " at time " << runTimeExtruded.name() << endl;
 
     IOdictionary extrude2DMeshDict
@@ -158,7 +113,7 @@ int main(int argc, char *argv[])
 
     labelListList extrudeEdgePatches;
 
-    if (surfaceFormat == MESHEDSURFACE)
+    if (surfaceFormat == extrudeSurfaceType::meshedSurface)
     {
         fMesh.set(new MeshedSurface<face>("MeshedSurface.obj"));
 
@@ -223,7 +178,7 @@ int main(int argc, char *argv[])
 
         mesh().addPatches(patches);
     }
-    else if (surfaceFormat == POLYMESH2D)
+    else if (surfaceFormat == extrudeSurfaceType::polyMesh2D)
     {
         mesh.set
         (

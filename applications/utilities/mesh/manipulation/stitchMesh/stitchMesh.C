@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,8 +36,8 @@ Usage
         stitchMesh "((top1 top2) (bottom1 bottom2))"
 
     Options:
-      - \par -overwrite \n
-        Replace the old mesh with the new one, rather than writing the new one
+      - \par -noOverwrite \n
+        Do not replace the old mesh with the new one, writing the new one
         into a separate time directory
 
       - \par -region \<name\>
@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
     );
 
     argList::noParallel();
-    #include "addOverwriteOption.H"
+    #include "addNoOverwriteOption.H"
     #include "addMeshOption.H"
     #include "addRegionOption.H"
     argList::addBoolOption
@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
     #include "createSpecifiedMeshNoChangers.H"
 
     const scalar snapTol = args.optionLookupOrDefault("tol", 1e-4);
-    const bool overwrite = args.optionFound("overwrite");
+    #include "setNoOverwrite.H"
     const bool fields = args.optionFound("fields");
 
     const List<Pair<word>> patchPairNames((IStringStream(args[1])()));

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,35 +24,28 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "NamedEnum.H"
+#include "dictionary.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Enum, unsigned int nEnum>
-Foam::NamedEnum<Enum, nEnum>::NamedEnum()
+Foam::NamedEnum<Enum, nEnum>::NamedEnum(const FixedList<word, nEnum>& names)
 :
-    HashTable<unsigned int>(2*nEnum)
+    FixedList<word, nEnum>(names),
+    table_(2*nEnum)
 {
-    for (unsigned int enumI = 0; enumI < nEnum; ++enumI)
+    forAll(names, ei)
     {
-        if (!names[enumI] || names[enumI][0] == '\0')
-        {
-            stringList goodNames(enumI);
-
-            for (unsigned int i = 0; i < enumI; ++i)
-            {
-                goodNames[i] = names[i];
-            }
-
-            FatalErrorInFunction
-                << "Illegal enumeration name at position " << enumI << endl
-                << "after entries " << goodNames << ".\n"
-                << "Possibly your NamedEnum<Enum, nEnum>::names array"
-                << " is not of size " << nEnum << endl
-                << abort(FatalError);
-        }
-        insert(names[enumI], enumI);
+        table_.insert(names[ei], ei);
     }
 }
+
+
+template<class Enum, unsigned int nEnum>
+Foam::NamedEnum<Enum, nEnum>::NamedEnum(std::initializer_list<word> lst)
+:
+    NamedEnum(FixedList<word, nEnum>(lst))
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -62,13 +55,13 @@ Enum Foam::NamedEnum<Enum, nEnum>::read(Istream& is) const
 {
     const word name(is);
 
-    HashTable<unsigned int>::const_iterator iter = find(name);
+    HashTable<unsigned int>::const_iterator iter = table_.find(name);
 
     if (iter == HashTable<unsigned int>::end())
     {
         FatalIOErrorInFunction(is)
             << name << " is not in enumeration: "
-            << sortedToc() << exit(FatalIOError);
+            << *this << exit(FatalIOError);
     }
 
     return Enum(iter());
@@ -76,68 +69,56 @@ Enum Foam::NamedEnum<Enum, nEnum>::read(Istream& is) const
 
 
 template<class Enum, unsigned int nEnum>
+Enum Foam::NamedEnum<Enum, nEnum>::lookupOrDefault
+(
+    const word& name,
+    const dictionary& dict,
+    const Enum defaultValue
+) const
+{
+    return dict.found(name)
+      ? read(dict.lookup(name))
+      : defaultValue;
+}
+
+
+template<class Enum, unsigned int nEnum>
+Enum Foam::NamedEnum<Enum, nEnum>::select(const dictionary& dict) const
+{
+    const FixedList<word, nEnum>& names = *this;
+
+    Enum selection = Enum(0);
+    unsigned int nSelections = 0;
+    forAll(names, ei)
+    {
+        if (dict.found(names[ei]))
+        {
+            selection = Enum(ei);
+            nSelections++;
+        }
+    }
+
+    if (nSelections == 0)
+    {
+        FatalIOErrorInFunction(dict)
+            << "None of the options selected, please specify one of: "
+            << names << exit(FatalIOError);
+    }
+    else if (nSelections > 1)
+    {
+        FatalIOErrorInFunction(dict)
+            << "More than one option selected, please specify one of: "
+            << names << exit(FatalIOError);
+    }
+
+    return selection;
+}
+
+
+template<class Enum, unsigned int nEnum>
 void Foam::NamedEnum<Enum, nEnum>::write(const Enum e, Ostream& os) const
 {
     os  << operator[](e);
-}
-
-
-template<class Enum, unsigned int nEnum>
-Foam::stringList Foam::NamedEnum<Enum, nEnum>::strings()
-{
-    stringList lst(nEnum);
-
-    label nElem = 0;
-    for (unsigned int enumI = 0; enumI < nEnum; ++enumI)
-    {
-        if (names[enumI] && names[enumI][0])
-        {
-            lst[nElem++] = names[enumI];
-        }
-    }
-
-    lst.setSize(nElem);
-    return lst;
-}
-
-
-template<class Enum, unsigned int nEnum>
-Foam::wordList Foam::NamedEnum<Enum, nEnum>::words()
-{
-    wordList lst(nEnum);
-
-    label nElem = 0;
-    for (unsigned int enumI = 0; enumI < nEnum; ++enumI)
-    {
-        if (names[enumI] && names[enumI][0])
-        {
-            lst[nElem++] = names[enumI];
-        }
-    }
-
-    lst.setSize(nElem);
-    return lst;
-}
-
-
-template<class Enum, unsigned int nEnum>
-const char* Foam::NamedEnum<Enum, nEnum>::operator[](const Enum e) const
-{
-    unsigned int ue = unsigned(e);
-
-    if (ue < nEnum)
-    {
-        return names[ue];
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "names array index " << ue << " out of range 0-"
-            << nEnum - 1
-            << exit(FatalError);
-
-        return names[0];
-    }
 }
 
 

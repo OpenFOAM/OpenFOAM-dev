@@ -55,8 +55,8 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef fileOperations_masterUncollatedFileOperation_H
-#define fileOperations_masterUncollatedFileOperation_H
+#ifndef masterUncollatedFileOperation_fileOperation_H
+#define masterUncollatedFileOperation_fileOperation_H
 
 #include "fileOperation.H"
 #include "HashPtrTable.H"

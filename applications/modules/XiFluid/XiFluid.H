@@ -76,9 +76,9 @@ Description
 
     For inhomogeneous mixtures, in addition to the regress variable \c b, it is
     necessary to solve for the mixture-fraction \c ft provided by the \c
-    leanInhomogeneousMixture and also the fuel mass-fraction \fu if there are
+    leanInhomogeneousMixture and also the fuel mass-fraction \c fu if there are
     rich regions in the mixture, provided by the \c inhomogeneousMixture.
-    Details of the extention of the Weller b-Xi combustion model to non-premixed
+    Details of the extension of the Weller b-Xi combustion model to non-premixed
     combustion can be found in the Technical Report TR/HGW/03.
 
     Reference:

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,11 +62,10 @@ powerLawUniformBinary
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void
-Foam::diameterModels::binaryBreakupModels::powerLawUniformBinary::
+void Foam::diameterModels::binaryBreakupModels::powerLawUniformBinary::
 addToBinaryBreakupRate
 (
-    volScalarField& binaryBreakupRate,
+    volScalarField::Internal& binaryBreakupRate,
     const label i,
     const label j
 )

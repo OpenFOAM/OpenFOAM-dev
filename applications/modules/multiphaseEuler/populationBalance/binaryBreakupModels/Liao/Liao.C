@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,81 +79,97 @@ void Foam::diameterModels::binaryBreakupModels::Liao::precompute()
 }
 
 
-void Foam::diameterModels::binaryBreakupModels::Liao::
-addToBinaryBreakupRate
+void Foam::diameterModels::binaryBreakupModels::Liao::addToBinaryBreakupRate
 (
-    volScalarField& binaryBreakupRate,
+    volScalarField::Internal& binaryBreakupRate,
     const label i,
     const label j
 )
 {
-    const phaseModel& continuousPhase = popBal_.continuousPhase();
     const sizeGroup& fi = popBal_.sizeGroups()[i];
     const sizeGroup& fj = popBal_.sizeGroups()[j];
 
-    dimensionedScalar dk(cbrt(pow3(fj.dSph()) - pow3(fi.dSph())));
+    const volScalarField::Internal& rhoc = popBal_.continuousPhase().rho();
 
-    const volScalarField tauCrit1
+    tmp<volScalarField> tsigma(popBal_.sigmaWithContinuousPhase(fi.phase()));
+    const volScalarField::Internal& sigma = tsigma();
+
+    tmp<volScalarField> tmuc(popBal_.continuousPhase().fluidThermo().mu());
+    const volScalarField::Internal& muc = tmuc();
+
+    const dimensionedScalar dk(cbrt(pow3(fj.dSph()) - pow3(fi.dSph())));
+
+    const volScalarField::Internal tauCrit1
     (
-        6*popBal_.sigmaWithContinuousPhase(fj.phase())/fj.dSph()
-       *(sqr(fi.dSph()/fj.dSph()) + sqr(dk/fj.dSph()) - 1)
+        6*sigma/fj.dSph()*(sqr(fi.dSph()/fj.dSph()) + sqr(dk/fj.dSph()) - 1)
     );
 
-    const volScalarField tauCrit2
+    const volScalarField::Internal tauCrit2
     (
-        popBal_.sigmaWithContinuousPhase(fj.phase())/min(dk, fi.dSph())
+        sigma/min(dk, fi.dSph())
     );
 
-    const volScalarField tauCrit(max(tauCrit1, tauCrit2));
+    const volScalarField::Internal tauCrit(max(tauCrit1, tauCrit2));
 
     if (turbulence_)
     {
-        const volScalarField tauTurb
+        tmp<volScalarField> tepsilonc(popBal_.continuousTurbulence().epsilon());
+        const volScalarField::Internal& epsilonc = tepsilonc();
+
+        const volScalarField::Internal tauTurb
         (
-            pos(fj.dSph() - kolmogorovLengthScale_)*BTurb_*continuousPhase.rho()
-           *sqr(cbrt(popBal_.continuousTurbulence().epsilon()*fj.dSph()))
+            pos(fj.dSph() - kolmogorovLengthScale_)*BTurb_*rhoc
+           *sqr(cbrt(epsilonc*fj.dSph()))
         );
 
         binaryBreakupRate +=
-            pos(tauTurb - tauCrit)*1/fj.dSph()
-           *sqrt(mag(tauTurb - tauCrit)/continuousPhase.rho())/fj.x();
+            pos(tauTurb - tauCrit)
+           /fj.dSph()
+           *sqrt(mag(tauTurb - tauCrit)/rhoc)
+           /fj.x();
     }
 
     if (laminarShear_)
     {
-        const volScalarField tauShear
+        const volScalarField::Internal tauShear
         (
-            BShear_*continuousPhase.fluidThermo().mu()*shearStrainRate_
+            BShear_*muc*shearStrainRate_
         );
 
         binaryBreakupRate +=
-            pos(tauShear - tauCrit)*1/fj.dSph()
-           *sqrt(mag(tauShear - tauCrit)/continuousPhase.rho())/fj.x();
+            pos(tauShear - tauCrit)
+           /fj.dSph()
+           *sqrt(mag(tauShear - tauCrit)/rhoc)
+           /fj.x();
     }
 
     if (turbulentShear_)
     {
-        const volScalarField tauEddy
+        const volScalarField::Internal tauEddy
         (
             pos0(kolmogorovLengthScale_ - fj.dSph())
-           *BEddy_*continuousPhase.fluidThermo().mu()*eddyStrainRate_
+           *BEddy_
+           *muc
+           *eddyStrainRate_
         );
 
         binaryBreakupRate +=
-            pos(tauEddy - tauCrit)*1/fj.dSph()
-           *sqrt(mag(tauEddy - tauCrit)/continuousPhase.rho())/fj.x();
+            pos(tauEddy - tauCrit)
+           /fj.dSph()
+           *sqrt(mag(tauEddy - tauCrit)/rhoc)/fj.x();
     }
 
     if (interfacialFriction_)
     {
-        const volScalarField tauFric
+        const volScalarField::Internal tauFric
         (
-            BFric_*0.5*continuousPhase.rho()*sqr(uTerminal_[j])*Cd_[j]
+            BFric_*0.5*rhoc*sqr(uTerminal_[j])*Cd_[j]
         );
 
         binaryBreakupRate +=
-            pos(tauFric - tauCrit)*1/fj.dSph()
-           *sqrt(mag(tauFric - tauCrit)/continuousPhase.rho())/fj.x();
+            pos(tauFric - tauCrit)
+           /fj.dSph()
+           *sqrt(mag(tauFric - tauCrit)/rhoc)/fj.x();
     }
 }
 

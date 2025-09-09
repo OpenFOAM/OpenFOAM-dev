@@ -1,0 +1,41 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      createZonesDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+nearInlet
+{
+    type    plane;
+    point   (1 0 0);
+    normal  (1 0 0);
+}
+
+upstream
+{
+    $nearInlet;
+    point   (6.439 0 0);
+}
+
+downstream
+{
+    $nearInlet;
+    point   (8.59 0 0);
+}
+
+nearOutlet
+{
+    $nearInlet;
+    point   (15 0 0);
+}
+
+// ************************************************************************* //

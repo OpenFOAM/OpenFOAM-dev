@@ -25,10 +25,11 @@ Class
     Foam::dictionary
 
 Description
-    A list of keyword definitions, which are a keyword followed by any number
-    of values (e.g. words and numbers). The keywords can represent patterns
-    which are matched using Posix regular expressions. The general order for
-    searching is as follows:
+    A list of keywords followed by any number of values (e.g. words and
+    numbers) or sub-dictionaries
+
+    The keywords can represent patterns which are matched using Posix regular
+    expressions. The general order for searching is as follows:
     - exact match
     - pattern match (in reverse order)
     - optional recursion into the enclosing (parent) dictionaries
@@ -38,27 +39,25 @@ Description
     dictionaries since, unlike the IOdictionary class, it does not use an
     objectRegistry itself to work.
 
-    To add - a merge() member function with a non-const dictionary parameter?
-    This would avoid unnecessary cloning in the add(entry*, bool) method.
-
 SourceFiles
     dictionary.C
     dictionaryIO.C
+    dictionaryTemplates.C
 
 \*---------------------------------------------------------------------------*/
 
 #ifndef dictionary_H
 #define dictionary_H
 
+#include "className.H"
 #include "entry.H"
 #include "IDLList.H"
 #include "DLList.H"
-#include "HashSet.H"
 #include "ITstream.H"
 #include "Pair.H"
-#include "className.H"
 #include "fieldTypes.H"
 #include "Tuple3.H"
+#include <tuple>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -67,6 +66,7 @@ namespace Foam
 
 // Forward declaration of friend functions and operators
 class dictionary;
+class primitiveEntry;
 class regExp;
 class SHA1Digest;
 class unitConversion;
@@ -240,6 +240,18 @@ class dictionary
         template<class T>
         T readType(const word& keyword, ITstream& is) const;
 
+        //- Assign multiple entries, overwriting any existing entries
+        template<class ... Entries, size_t ... Indices>
+        void set
+        (
+            const std::tuple<const Entries& ...>&,
+            const std::integer_sequence<size_t, Indices ...>&
+        );
+
+        //- Assign multiple entries, overwriting any existing entries
+        template<class ... Entries>
+        void set(const std::tuple<const Entries& ...>&);
+
 
     // Private Classes
 
@@ -266,6 +278,13 @@ public:
         static int writeOptionalEntries;
 
 
+    // Static Member Functions
+
+        //- Construct an entries tuple from which to make a dictionary
+        template<class ... Entries>
+        static std::tuple<const Entries& ...> entries(const Entries& ...);
+
+
     // Constructors
 
         //- Construct top-level dictionary null
@@ -277,7 +296,7 @@ public:
         //- Construct an empty sub-dictionary with given name and parent
         dictionary(const fileName& name, const dictionary& parentDict);
 
-        //- Construct given the entry name, parent dictionary and Istream,
+        //- Construct given the name, parent dictionary and Istream,
         //  reading entries until lastEntry or EOF
         dictionary
         (
@@ -290,25 +309,6 @@ public:
         //  reading entries until EOF, optionally keeping the header
         dictionary(Istream&, const bool keepHeader=false);
 
-        //- Construct top-level dictionary with given T entries
-        template<class T, class ... KeysAndTs>
-        dictionary
-        (
-            const keyType& k,
-            const T& t,
-            const KeysAndTs& ... keysAndTs
-        );
-
-        //- Construct top-level dictionary with given name and T entries
-        template<class T, class ... KeysAndTs>
-        dictionary
-        (
-            const fileName& name,
-            const keyType& k,
-            const T& t,
-            const KeysAndTs& ... keysAndTs
-        );
-
         //- Construct as copy given the parent dictionary
         dictionary(const dictionary& parentDict, const dictionary&);
 
@@ -318,6 +318,35 @@ public:
         //- Construct top-level dictionary as copy from pointer to dictionary.
         //  A null pointer is treated like an empty dictionary.
         dictionary(const dictionary*);
+
+        //- Construct top-level dictionary with given entries
+        template<class ... Entries>
+        dictionary(const std::tuple<const Entries& ...>&);
+
+        //- Construct top-level dictionary with given name and entries
+        template<class ... Entries>
+        dictionary
+        (
+            const fileName& name,
+            const std::tuple<const Entries& ...>&
+        );
+
+        //- Construct dictionary with given name, parent and entries
+        template<class ... Entries>
+        dictionary
+        (
+            const fileName& name,
+            const dictionary& parentDict,
+            const std::tuple<const Entries& ...>&
+        );
+
+        //- Construct dictionary as copy and add a list of entries
+        template<class ... Entries>
+        dictionary
+        (
+            const dictionary& dict,
+            const std::tuple<const Entries& ...>&
+        );
 
         //- Construct and return clone
         autoPtr<dictionary> clone() const;
@@ -352,10 +381,10 @@ public:
         word topDictKeyword() const;
 
         //- Return line number of first token in dictionary
-        label startLineNumber() const;
+        virtual label startLineNumber() const;
 
         //- Return line number of last token in dictionary
-        label endLineNumber() const;
+        virtual label endLineNumber() const;
 
         //- Return the SHA1 digest of the dictionary contents
         SHA1Digest digest() const;
@@ -742,9 +771,13 @@ public:
             template<class T>
             void set(const keyType&, const T&);
 
+            //- Assign multiple entries, overwriting any existing entries
+            template<class ... Entries>
+            void set(const entry& e, const Entries& ...);
+
             //- Assign multiple T entries, overwriting any existing entries
-            template<class T, class ... KeysAndTs>
-            void set(const keyType&, const T&, const KeysAndTs& ...);
+            template<class T, class ... Entries>
+            void set(const keyType&, const T&, const Entries& ...);
 
             //- Remove an entry specified by keyword
             bool remove(const word&);

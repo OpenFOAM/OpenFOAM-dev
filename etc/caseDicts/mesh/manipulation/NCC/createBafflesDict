@@ -19,7 +19,7 @@ internalFacesOnly true;
 
 // Example creating two opposing patches named 'nonCouple1' and 'nonCouple2',
 // both of which are included in the 'nonCouple' group. These patches can then
-// be coupled afterwards by calling 'createNonConformalCouples -overwrite
+// be coupled afterwards by calling 'createNonConformalCouples
 // nonCouple1 nonCouple2'.
 baffles
 {

@@ -9,6 +9,6 @@ cp $FOAM_TUTORIALS/resources/geometry/flange.stl.gz constant/geometry/
 
 runApplication blockMesh
 runApplication surfaceFeatures
-runApplication snappyHexMesh -overwrite
+runApplication snappyHexMesh
 
 #------------------------------------------------------------------------------

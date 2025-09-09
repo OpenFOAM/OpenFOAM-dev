@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,30 +21,49 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Description
-
 \*---------------------------------------------------------------------------*/
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+#include "primitiveMesh.H"
 
-namespace Foam
+// * * * * * * * * * * Protected Static Member Functions * * * * * * * * * * //
+
+template<class Class, class Type>
+inline bool Foam::primitiveMesh::isMethod
+(
+    const Type& (Class::*method)() const,
+    const Type& (Class::*otherMethod)() const
+)
 {
+    return method == otherMethod;
+}
+
+
+template<class Class, class Type, class OtherType>
+inline bool Foam::primitiveMesh::isMethod
+(
+    const Type& (Class::*method)() const,
+    const OtherType& (Class::*otherMethod)() const
+)
+{
+    return false;
+}
+
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline label primitiveMesh::nInternalPoints() const
+inline Foam::label Foam::primitiveMesh::nInternalPoints() const
 {
     return nInternalPoints_;
 }
 
 
-inline label primitiveMesh::nPoints() const
+inline Foam::label Foam::primitiveMesh::nPoints() const
 {
     return nPoints_;
 }
 
 
-inline label primitiveMesh::nInternal0Edges() const
+inline Foam::label Foam::primitiveMesh::nInternal0Edges() const
 {
     // Force edge calculation
     (void)nEdges();
@@ -52,7 +71,7 @@ inline label primitiveMesh::nInternal0Edges() const
 }
 
 
-inline label primitiveMesh::nInternal1Edges() const
+inline Foam::label Foam::primitiveMesh::nInternal1Edges() const
 {
     // Force edge calculation
     (void)nEdges();
@@ -60,7 +79,7 @@ inline label primitiveMesh::nInternal1Edges() const
 }
 
 
-inline label primitiveMesh::nInternalEdges() const
+inline Foam::label Foam::primitiveMesh::nInternalEdges() const
 {
     // Force edge calculation
     (void)nEdges();
@@ -68,7 +87,7 @@ inline label primitiveMesh::nInternalEdges() const
 }
 
 
-inline label primitiveMesh::nEdges() const
+inline Foam::label Foam::primitiveMesh::nEdges() const
 {
     if (nEdges_ < 0)
     {
@@ -79,134 +98,57 @@ inline label primitiveMesh::nEdges() const
 }
 
 
-inline label primitiveMesh::nInternalFaces() const
+inline Foam::label Foam::primitiveMesh::nInternalFaces() const
 {
     return nInternalFaces_;
 }
 
 
-inline label primitiveMesh::nFaces() const
+inline Foam::label Foam::primitiveMesh::nFaces() const
 {
     return nFaces_;
 }
 
 
-inline label primitiveMesh::nCells() const
+inline Foam::label Foam::primitiveMesh::nCells() const
 {
     return nCells_;
 }
 
 
-inline bool primitiveMesh::isInternalFace(const label faceIndex) const
+inline bool Foam::primitiveMesh::isInternalFace(const label faceIndex) const
 {
     return faceIndex < nInternalFaces();
 }
 
 
-inline bool primitiveMesh::hasCellShapes() const
+template<class Type>
+inline bool Foam::primitiveMesh::has
+(
+    const Type& (primitiveMesh::*method)() const
+) const
 {
-    return cellShapesPtr_;
+    if (isMethod(method, &primitiveMesh::cellShapes)) return cellShapesPtr_;
+    if (isMethod(method, &primitiveMesh::edges)) return edgesPtr_;
+    if (isMethod(method, &primitiveMesh::cellCells)) return ccPtr_;
+    if (isMethod(method, &primitiveMesh::edgeCells)) return ecPtr_;
+    if (isMethod(method, &primitiveMesh::pointCells)) return pcPtr_;
+    if (isMethod(method, &primitiveMesh::cells)) return cfPtr_;
+    if (isMethod(method, &primitiveMesh::edgeFaces)) return efPtr_;
+    if (isMethod(method, &primitiveMesh::pointFaces)) return pfPtr_;
+    if (isMethod(method, &primitiveMesh::cellEdges)) return cePtr_;
+    if (isMethod(method, &primitiveMesh::faceEdges)) return fePtr_;
+    if (isMethod(method, &primitiveMesh::pointEdges)) return pePtr_;
+    if (isMethod(method, &primitiveMesh::pointPoints)) return ppPtr_;
+    if (isMethod(method, &primitiveMesh::cellPoints)) return cpPtr_;
+    if (isMethod(method, &primitiveMesh::cellCentres)) return cellCentresPtr_;
+    if (isMethod(method, &primitiveMesh::faceCentres)) return faceCentresPtr_;
+    if (isMethod(method, &primitiveMesh::cellVolumes)) return cellVolumesPtr_;
+    if (isMethod(method, &primitiveMesh::faceAreas)) return faceAreasPtr_;
+    if (isMethod(method, &primitiveMesh::magFaceAreas)) return magFaceAreasPtr_;
+
+    return false;
 }
 
-
-inline bool primitiveMesh::hasEdges() const
-{
-    return edgesPtr_;
-}
-
-
-inline bool primitiveMesh::hasCellCells() const
-{
-    return ccPtr_;
-}
-
-
-inline bool primitiveMesh::hasEdgeCells() const
-{
-    return ecPtr_;
-}
-
-
-inline bool primitiveMesh::hasPointCells() const
-{
-    return pcPtr_;
-}
-
-
-inline bool primitiveMesh::hasCells() const
-{
-    return cfPtr_;
-}
-
-
-inline bool primitiveMesh::hasEdgeFaces() const
-{
-    return efPtr_;
-}
-
-
-inline bool primitiveMesh::hasPointFaces() const
-{
-    return pfPtr_;
-}
-
-
-inline bool primitiveMesh::hasCellEdges() const
-{
-    return cePtr_;
-}
-
-
-inline bool primitiveMesh::hasFaceEdges() const
-{
-    return fePtr_;
-}
-
-
-inline bool primitiveMesh::hasPointEdges() const
-{
-    return pePtr_;
-}
-
-
-inline bool primitiveMesh::hasPointPoints() const
-{
-    return ppPtr_;
-}
-
-
-inline bool primitiveMesh::hasCellPoints() const
-{
-    return cpPtr_;
-}
-
-
-inline bool primitiveMesh::hasCellCentres() const
-{
-    return cellCentresPtr_;
-}
-
-
-inline bool primitiveMesh::hasFaceCentres() const
-{
-    return faceCentresPtr_;
-}
-
-
-inline bool primitiveMesh::hasCellVolumes() const
-{
-    return cellVolumesPtr_;
-}
-
-
-inline bool primitiveMesh::hasFaceAreas() const
-{
-    return faceAreasPtr_;
-}
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

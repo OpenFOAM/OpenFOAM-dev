@@ -53,7 +53,7 @@ Foam::Function2s::Function12<Type>::Function12
     if (!found1 && !found2)
     {
         FatalIOErrorInFunction(dict)
-            << "Neither keywords " << name1 << " or " << name2
+            << "Neither keywords " << name1 << " nor " << name2
             << " are defined in dictionary " << dict.name()
             << exit(FatalError);
     }

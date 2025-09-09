@@ -18,7 +18,6 @@ ignition
 {
     type            multiCycleConstantbXiIgnition;
 
-    select          cellZone;
     cellZone        ignition;
 
     period          720;
@@ -31,7 +30,7 @@ ignition
     XiCorr
     {
         type            cylindrical;
-        select          all;
+        cellZone        all;
         thickness       0.05;
         cylinderFraction 1;
     }

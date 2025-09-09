@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,6 +49,24 @@ void Foam::polyMesh::removeBoundary()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void Foam::polyMesh::printAllocated() const
+{
+    primitiveMesh::printAllocated();
+
+    Pout<< "polyMesh allocated :" << endl;
+
+    if (cellTreePtr_.valid())
+    {
+        Pout<< "    Cell tree" << endl;
+    }
+
+    if (tetBasePtIsPtr_.valid())
+    {
+        Pout<< "    Tet base points" << endl;
+    }
+}
+
 
 void Foam::polyMesh::clearGeom()
 {

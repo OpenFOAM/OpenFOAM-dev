@@ -14,40 +14,42 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-type basicMultiphaseSystem;
-
-phases (water oil mercury air);
+phases          (water oil mercury air);
 
 water
 {
     type            pureIsothermalPhaseModel;
+
     diameterModel   none;
 
-    residualAlpha 1e-3;
+    residualAlpha   1e-3;
 }
 
 oil
 {
     type            pureIsothermalPhaseModel;
+
     diameterModel   none;
 
-    residualAlpha 1e-3;
+    residualAlpha   1e-3;
 }
 
 mercury
 {
     type            pureIsothermalPhaseModel;
+
     diameterModel   none;
 
-    residualAlpha 1e-3;
+    residualAlpha   1e-3;
 }
 
 air
 {
     type            pureIsothermalPhaseModel;
+
     diameterModel   none;
 
-    residualAlpha 1e-3;
+    residualAlpha   1e-3;
 }
 
 blending
@@ -106,58 +108,5 @@ interfaceCompression
     water_mercury   1;
     oil_mercury     1;
 }
-
-drag
-{
-    air_segregatedWith_water
-    {
-        type            segregated;
-        m               0.1;
-        n               8;
-    }
-
-    air_segregatedWith_oil
-    {
-        $air_segregatedWith_water;
-    }
-
-    air_segregatedWith_mercury
-    {
-        $air_segregatedWith_water;
-    }
-
-    water_segregatedWith_oil
-    {
-        $air_segregatedWith_water;
-    }
-
-    water_segregatedWith_mercury
-    {
-        $air_segregatedWith_water;
-    }
-
-    oil_segregatedWith_mercury
-    {
-        $air_segregatedWith_water;
-    }
-}
-
-virtualMass
-{}
-
-heatTransfer
-{}
-
-phaseTransfer
-{}
-
-lift
-{}
-
-wallLubrication
-{}
-
-turbulentDispersion
-{}
 
 // ************************************************************************* //

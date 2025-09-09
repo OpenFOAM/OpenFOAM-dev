@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,9 @@ License
 
 #include "reactionRates.H"
 #include "fvcVolumeIntegrate.H"
+#include "polyTopoChangeMap.H"
+#include "polyMeshMap.H"
+#include "polyDistributionMap.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -53,7 +56,7 @@ void Foam::functionObjects::reactionRates::writeFileHeader(const label i)
 
     writeHeader(file(), "Reaction rates");
 
-    fvCellSet::writeFileHeader(*this, file());
+    zone_.writeFileHeader(*this, file());
 
     writeHeaderValue(file(), "nReaction", nReaction);
     writeCommented(file(), "Time");
@@ -77,8 +80,8 @@ Foam::functionObjects::reactionRates::reactionRates
 )
 :
     fvMeshFunctionObject(name, runTime, dict),
-    fvCellSet(fvMeshFunctionObject::mesh_, dict),
     logFiles(obr_, name),
+    zone_(fvMeshFunctionObject::mesh_, dict),
     phaseName_(dict.lookupOrDefault<word>("phase", word::null)),
     chemistryModel_
     (
@@ -139,20 +142,20 @@ bool Foam::functionObjects::reactionRates::write()
 
         // Compute the average rate and write it into the log file
         const scalar sumVRR =
-            all()
+            zone_.all()
           ? fvc::domainIntegrate(RR).value()
           : gSum
             (
                 scalarField
                 (
                     fvMeshFunctionObject::mesh_.V()*RR,
-                    cells()
+                    zone_.zone()
                 )
             );
 
         if (Pstream::master())
         {
-            file() << token::TAB << sumVRR/V();
+            file() << token::TAB << sumVRR/zone_.V();
         }
 
         // Write the rate field, if necessary
@@ -168,6 +171,54 @@ bool Foam::functionObjects::reactionRates::write()
     }
 
     return true;
+}
+
+
+void Foam::functionObjects::reactionRates::movePoints
+(
+    const polyMesh& mesh
+)
+{
+    if (&mesh == &this->mesh())
+    {
+        zone_.movePoints();
+    }
+}
+
+
+void Foam::functionObjects::reactionRates::topoChange
+(
+    const polyTopoChangeMap& map
+)
+{
+    if (&map.mesh() == &mesh())
+    {
+        zone_.topoChange(map);
+    }
+}
+
+
+void Foam::functionObjects::reactionRates::mapMesh
+(
+    const polyMeshMap& map
+)
+{
+    if (&map.mesh() == &mesh())
+    {
+        zone_.mapMesh(map);
+    }
+}
+
+
+void Foam::functionObjects::reactionRates::distribute
+(
+    const polyDistributionMap& map
+)
+{
+    if (&map.mesh() == &mesh())
+    {
+        zone_.distribute(map);
+    }
 }
 
 

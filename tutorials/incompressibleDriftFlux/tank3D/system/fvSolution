@@ -18,14 +18,17 @@ solvers
 {
     "alpha.*"
     {
-        nAlphaCorr      2;
-        nAlphaSubCycles 1;
+        nCorrectors     2;
+        nSubCycles      1;
 
         MULESCorr       yes;
-        nLimiterIter    3;
         alphaApplyPrevCorr  yes;
 
-        boundaryExtremaCoeff 1;
+        MULES
+        {
+            nIter           3;
+            globalBounds    yes;
+        }
 
         solver          smoothSolver;
         smoother        symGaussSeidel;

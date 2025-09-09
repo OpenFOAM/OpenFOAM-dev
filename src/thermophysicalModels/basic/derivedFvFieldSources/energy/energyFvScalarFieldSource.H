@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -98,10 +98,34 @@ public:
     // Member Functions
 
         //- Return the source value
-        virtual tmp<scalarField> sourceValue(const fvSource&) const;
+        virtual tmp<DimensionedField<scalar, volMesh>> sourceValue
+        (
+            const fvSource& model,
+            const DimensionedField<scalar, volMesh>& source
+        ) const;
+
+        //- Return the source value
+        virtual tmp<scalarField> sourceValue
+        (
+            const fvSource& model,
+            const scalarField& source,
+            const labelUList& cells
+        ) const;
 
         //- Return the internal coefficient
-        virtual tmp<scalarField> internalCoeff(const fvSource&) const;
+        virtual tmp<DimensionedField<scalar, volMesh>> internalCoeff
+        (
+            const fvSource& model,
+            const DimensionedField<scalar, volMesh>& source
+        ) const;
+
+        //- Return the internal coefficient
+        virtual tmp<scalarField> internalCoeff
+        (
+            const fvSource& model,
+            const scalarField& source,
+            const labelUList& cells
+        ) const;
 };
 
 

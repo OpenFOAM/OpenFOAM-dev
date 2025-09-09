@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,16 +63,40 @@ Foam::genericFvFieldSource<Type>::~genericFvFieldSource()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::Field<Type>>
+Foam::tmp<Foam::DimensionedField<Type, Foam::volMesh>>
 Foam::genericFvFieldSource<Type>::sourceValue
 (
-    const fvSource& source
+    const fvSource& model,
+    const DimensionedField<scalar, volMesh>& source
 ) const
 {
     FatalErrorInFunction
         << "cannot be called for a genericFvFieldSource"
            " (actual type " << actualTypeName() << ")"
-        << "\n    on source " << source.name()
+        << "\n    on source " << model.name()
+        << " of field " << this->internalField().name()
+        << " in file " << this->internalField().objectPath()
+        << "\n    You are probably trying to solve for a field with a "
+           "generic source condition."
+        << abort(FatalError);
+
+    return NullObjectRef<DimensionedField<Type, volMesh>>();
+}
+
+
+template<class Type>
+Foam::tmp<Foam::Field<Type>>
+Foam::genericFvFieldSource<Type>::sourceValue
+(
+    const fvSource& model,
+    const scalarField& source,
+    const labelUList& cells
+) const
+{
+    FatalErrorInFunction
+        << "cannot be called for a genericFvFieldSource"
+           " (actual type " << actualTypeName() << ")"
+        << "\n    on source " << model.name()
         << " of field " << this->internalField().name()
         << " in file " << this->internalField().objectPath()
         << "\n    You are probably trying to solve for a field with a "
@@ -84,16 +108,40 @@ Foam::genericFvFieldSource<Type>::sourceValue
 
 
 template<class Type>
-Foam::tmp<Foam::scalarField>
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
 Foam::genericFvFieldSource<Type>::internalCoeff
 (
-    const fvSource& source
+    const fvSource& model,
+    const DimensionedField<scalar, volMesh>& source
 ) const
 {
     FatalErrorInFunction
         << "cannot be called for a genericFvFieldSource"
            " (actual type " << actualTypeName() << ")"
-        << "\n    on source " << source.name()
+        << "\n    on source " << model.name()
+        << " of field " << this->internalField().name()
+        << " in file " << this->internalField().objectPath()
+        << "\n    You are probably trying to solve for a field with a "
+           "generic source condition."
+        << abort(FatalError);
+
+    return NullObjectRef<DimensionedField<scalar, volMesh>>();
+}
+
+
+template<class Type>
+Foam::tmp<Foam::scalarField>
+Foam::genericFvFieldSource<Type>::internalCoeff
+(
+    const fvSource& model,
+    const scalarField& source,
+    const labelUList& cells
+) const
+{
+    FatalErrorInFunction
+        << "cannot be called for a genericFvFieldSource"
+           " (actual type " << actualTypeName() << ")"
+        << "\n    on source " << model.name()
         << " of field " << this->internalField().name()
         << " in file " << this->internalField().objectPath()
         << "\n    You are probably trying to solve for a field with a "

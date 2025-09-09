@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,9 +44,9 @@ Description
 #include "SortableList.H"
 #include "OFstream.H"
 #include "meshTools.H"
+#include "zoneGenerator.H"
 #include "faceSet.H"
 #include "polyTopoChange.H"
-#include "wordReList.H"
 #include "systemDict.H"
 
 using namespace Foam;
@@ -446,7 +446,7 @@ void syncPoints
 
 int main(int argc, char *argv[])
 {
-    #include "addOverwriteOption.H"
+    #include "addNoOverwriteOption.H"
     #include "addMeshOption.H"
     #include "addRegionOption.H"
     #include "addDictOption.H"
@@ -456,7 +456,7 @@ int main(int argc, char *argv[])
     Foam::word meshRegionName = polyMesh::defaultRegion;
     args.optionReadIfPresent("region", meshRegionName);
 
-    const bool overwrite = args.optionFound("overwrite");
+    #include "setNoOverwrite.H"
 
     #include "createSpecifiedPolyMesh.H"
 
@@ -481,24 +481,42 @@ int main(int argc, char *argv[])
         writeCyclicMatchObjs("initial_", mesh);
     }
 
-    // Read patch construct info from dictionary
-    PtrList<dictionary> patchSources(dict.lookup("patches"));
+    // For backwards-compatibility read patches as list of dictionaries
+    // if not a dictionary
+    dictionary patchesListDict("patches", dict);
+
+    if (!dict.isDict("patches"))
+    {
+        // Read patch construct info from dictionary
+        PtrList<dictionary> patchSources(dict.lookup("patches"));
+
+        forAll(patchSources, psi)
+        {
+            const dictionary& dict = patchSources[psi];
+            patchesListDict.add(dict.lookup<word>("name"), dict);
+        }
+    }
+
+    const dictionary& patchesDict =
+        dict.isDict("patches")
+      ? dict.subDict("patches")
+      : patchesListDict;
+
 
     HashSet<word> addedPatchNames;
-    forAll(patchSources, addedI)
+    forAllConstIter(dictionary, patchesDict, iter)
     {
-        const dictionary& dict = patchSources[addedI];
-        addedPatchNames.insert(dict.lookup<word>("name"));
+        addedPatchNames.insert(iter().keyword());
     }
 
 
     // 1. Add all new patches
     // ~~~~~~~~~~~~~~~~~~~~~~
 
-    if (patchSources.size())
+    if (patchesDict.size())
     {
         // Old and new patches.
-        DynamicList<polyPatch*> allPatches(patches.size()+patchSources.size());
+        DynamicList<polyPatch*> allPatches(patches.size()+patchesDict.size());
 
         label startFacei = mesh.nInternalFaces();
 
@@ -523,11 +541,10 @@ int main(int argc, char *argv[])
             }
         }
 
-        forAll(patchSources, addedI)
+        forAllConstIter(dictionary, patchesDict, iter)
         {
-            const dictionary& dict = patchSources[addedI];
-
-            word patchName(dict.lookup("name"));
+            const word& patchName = iter().keyword();
+            const dictionary& dict = iter().dict();
 
             label destPatchi = patches.findIndex(patchName);
 
@@ -598,12 +615,11 @@ int main(int argc, char *argv[])
 
     polyTopoChange meshMod(mesh);
 
-
-    forAll(patchSources, addedI)
+    forAllConstIter(dictionary, patchesDict, iter)
     {
-        const dictionary& dict = patchSources[addedI];
+        const word& patchName = iter().keyword();
+        const dictionary& dict = iter().dict();
 
-        const word patchName(dict.lookup("name"));
         label destPatchi = patches.findIndex(patchName);
 
         if (destPatchi == -1)
@@ -617,7 +633,7 @@ int main(int argc, char *argv[])
 
         if (sourceType == "patches")
         {
-            labelHashSet patchSources
+            labelHashSet patchesDict
             (
                 patches.patchSet
                 (
@@ -626,7 +642,7 @@ int main(int argc, char *argv[])
             );
 
             // Repatch faces of the patches.
-            forAllConstIter(labelHashSet, patchSources, iter)
+            forAllConstIter(labelHashSet, patchesDict, iter)
             {
                 const polyPatch& pp = patches[iter.key()];
 
@@ -643,6 +659,65 @@ int main(int argc, char *argv[])
                         meshMod
                     );
                 }
+            }
+        }
+        else if (sourceType == "zone")
+        {
+            SortableList<label> patchFaces;
+
+            if (dict.isDict("zone"))
+            {
+                autoPtr<zoneGenerator> zg
+                (
+                    zoneGenerator::New
+                    (
+                        "zone",
+                        zoneTypes::face,
+                        mesh,
+                        dict.subDict("zone")
+                    )
+                );
+
+                patchFaces = zg->generate().fZone();
+
+                Info<< "Set "
+                    << returnReduce(patchFaces.size(), sumOp<label>())
+                    << " faces from zoneGenerator " << zg->name()
+                    << " of type " << zg->type() << endl;
+            }
+            else
+            {
+                const word zoneName(dict.lookup("zone"));
+
+                patchFaces = mesh.faceZones()[zoneName];
+
+                Info<< "Read "
+                    << returnReduce(patchFaces.size(), sumOp<label>())
+                    << " faces from faceZone " << zoneName << endl;
+            }
+
+            patchFaces.sort();
+
+            forAll(patchFaces, i)
+            {
+                label facei = patchFaces[i];
+
+                if (mesh.isInternalFace(facei))
+                {
+                    FatalErrorInFunction
+                        << "Face " << facei << " specified in faceZone "
+                        << " is not an external face of the mesh." << endl
+                        << "This application can only repatch existing boundary"
+                        << " faces." << exit(FatalError);
+                }
+
+                changePatchID
+                (
+                    mesh,
+                    facei,
+                    destPatchi,
+                    meshMod
+                );
             }
         }
         else if (sourceType == "set")

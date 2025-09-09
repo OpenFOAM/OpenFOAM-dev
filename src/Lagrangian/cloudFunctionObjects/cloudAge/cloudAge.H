@@ -48,8 +48,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_cloudAge_H
-#define functionObjects_cloudAge_H
+#ifndef cloudAge_functionObject_H
+#define cloudAge_functionObject_H
 
 #include "cloudLagrangianMeshFunctionObject.H"
 #include "LagrangianFields.H"

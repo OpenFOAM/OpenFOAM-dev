@@ -22,10 +22,10 @@ sourcePatches   (front);
 
 exposedPatchName back;
 
-extrudeModel    wedge;
-
-sectorCoeffs
+extrudeModel
 {
+    type            wedge;
+
     axisPt          (0 0 0);
     axis            (1 0 0);
     angle           1;

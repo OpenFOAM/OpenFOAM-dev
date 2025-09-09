@@ -17,7 +17,7 @@ geometry
 {
     sphere
     {
-        type searchableSphere;
+        type sphere;
         centre (0 0 0);
         radius 1;
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,7 +80,7 @@ addRadialActuationDiskAxialInertialResistance
     const Field<vector> zoneCellCentres(mesh().cellCentres(), cells);
     const Field<scalar> zoneCellVolumes(mesh().cellVolumes(), cells);
 
-    const vector avgCentre = gSum(zoneCellVolumes*zoneCellCentres)/set_.V();
+    const vector avgCentre = gSum(zoneCellVolumes*zoneCellCentres)/zone_.V();
     const scalar maxR = gMax(mag(zoneCellCentres - avgCentre));
 
     scalar intCoeffs =
@@ -108,7 +108,7 @@ addRadialActuationDiskAxialInertialResistance
            *(radialCoeffs_[0] + radialCoeffs_[1]*r2 + radialCoeffs_[2]*sqr(r2))
            /intCoeffs;
 
-        Usource[cells[i]] += ((Vcells[cells[i]]/set_.V())*Tr[i]*E) & upU;
+        Usource[cells[i]] += ((Vcells[cells[i]]/zone_.V())*Tr[i]*E) & upU;
     }
 
     if (debug)
@@ -148,7 +148,7 @@ void Foam::fv::radialActuationDisk::addSup
     addRadialActuationDiskAxialInertialResistance
     (
         eqn.source(),
-        set_.cells(),
+        zone_.zone(),
         mesh().V(),
         geometricOneField(),
         U
@@ -166,7 +166,7 @@ void Foam::fv::radialActuationDisk::addSup
     addRadialActuationDiskAxialInertialResistance
     (
         eqn.source(),
-        set_.cells(),
+        zone_.zone(),
         mesh().V(),
         rho,
         U

@@ -50,8 +50,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_cloudSurfaceArea_H
-#define functionObjects_cloudSurfaceArea_H
+#ifndef cloudSurfaceArea_functionObject_H
+#define cloudSurfaceArea_functionObject_H
 
 #include "cloudLagrangianMeshFunctionObject.H"
 

@@ -14,4 +14,4 @@ Foam::fvMesh mesh
     false
 );
 
-mesh.postConstruct(false, fvMesh::stitchType::geometric);
+mesh.postConstruct(false, false, fvMesh::stitchType::geometric);

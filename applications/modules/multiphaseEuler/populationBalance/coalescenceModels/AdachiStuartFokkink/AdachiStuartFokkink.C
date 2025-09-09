@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,7 @@ AdachiStuartFokkink
 void Foam::diameterModels::coalescenceModels::AdachiStuartFokkink::
 addToCoalescenceRate
 (
-    volScalarField& coalescenceRate,
+    volScalarField::Internal& coalescenceRate,
     const label i,
     const label j
 )
@@ -75,14 +75,18 @@ addToCoalescenceRate
     const sizeGroup& fi = popBal_.sizeGroups()[i];
     const sizeGroup& fj = popBal_.sizeGroups()[j];
 
+    tmp<volScalarField> tdi = fi.d();
+    const volScalarField::Internal& di = tdi();
+    tmp<volScalarField> tdj = fj.d();
+    const volScalarField::Internal& dj = tdj();
+
+    tmp<volScalarField> tepsilonc(popBal_.continuousTurbulence().epsilon());
+    const volScalarField::Internal& epsilonc = tepsilonc();
+    tmp<volScalarField> tnuc(popBal_.continuousPhase().fluidThermo().nu());
+    const volScalarField::Internal nuc = tnuc();
+
     coalescenceRate +=
-        (4.0/3.0)
-       *sqrt
-        (
-            0.3*pi*popBal_.continuousTurbulence().epsilon()
-           /popBal_.continuousPhase().fluidThermo().nu()
-        )
-       *pow3(fi.d() + fj.d());
+        (4.0/3.0)*sqrt(0.3*pi*epsilonc/nuc)*pow3(di + dj);
 }
 
 

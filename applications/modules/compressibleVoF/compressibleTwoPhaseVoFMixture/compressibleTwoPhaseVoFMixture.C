@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,8 +71,10 @@ Foam::compressibleTwoPhaseVoFMixture::compressibleTwoPhaseVoFMixture
         ),
         mesh
     ),
+
     thermo1_(nullptr),
     thermo2_(nullptr),
+
     rho_
     (
         IOobject
@@ -86,26 +88,17 @@ Foam::compressibleTwoPhaseVoFMixture::compressibleTwoPhaseVoFMixture
         mesh,
         dimensionedScalar("rho", dimDensity, 0)
     ),
-    Alpha1_
+
+    nu_
     (
         IOobject
         (
-            IOobject::groupName("Alpha", phase1Name()),
+            "nu",
             mesh.time().name(),
             mesh
         ),
-        alpha1(),
-        calculatedFvPatchScalarField::typeName
-    ),
-    Alpha2_
-    (
-        IOobject
-        (
-            IOobject::groupName("Alpha", phase2Name()),
-            mesh.time().name(),
-            mesh
-        ),
-        alpha2(),
+        mesh,
+        dimensionedScalar(dimKinematicViscosity, 0),
         calculatedFvPatchScalarField::typeName
     )
 {
@@ -178,28 +171,8 @@ void Foam::compressibleTwoPhaseVoFMixture::correct()
     const volScalarField alphaRho1(alpha1()*thermo1_->rho());
     const volScalarField alphaRho2(alpha2()*thermo2_->rho());
 
-    rho_ = alphaRho1 + alphaRho2;
-    Alpha1_ = alphaRho1/rho_;
-    Alpha2_ = alphaRho2/rho_;
-}
-
-
-Foam::tmp<Foam::volScalarField> Foam::compressibleTwoPhaseVoFMixture::nu() const
-{
-    return (alpha1()*thermo1_->mu() + alpha2()*thermo2_->mu())/rho_;
-}
-
-
-Foam::tmp<Foam::scalarField> Foam::compressibleTwoPhaseVoFMixture::nu
-(
-    const label patchi
-) const
-{
-    return
-    (
-        alpha1().boundaryField()[patchi]*thermo1_->mu().boundaryField()[patchi]
-      + alpha2().boundaryField()[patchi]*thermo2_->mu().boundaryField()[patchi]
-    )/rho_.boundaryField()[patchi];
+    rho_ = alpha1()*thermo1_->rho() + alpha2()*thermo2_->rho();
+    nu_ = (alpha1()*thermo1_->mu() + alpha2()*thermo2_->mu())/rho_;
 }
 
 

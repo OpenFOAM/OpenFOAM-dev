@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -70,7 +70,7 @@ unset bashrcFile
 export WM_COMPILER_TYPE=system
 
 #- Compiler:
-#    WM_COMPILER = Gcc | Gcc48 ... Gcc62 | Clang | Icx
+#    WM_COMPILER = Gcc | Gcc55 ... Gcc121 | Clang | Icx
 export WM_COMPILER=Gcc
 unset WM_COMPILER_ARCH WM_COMPILER_LIB_ARCH
 

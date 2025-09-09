@@ -26,10 +26,10 @@ nLayers         25;
 
 expansionRatio  1.09;
 
-extrudeModel    linearNormal;
-
-linearNormalCoeffs
+extrudeModel
 {
+    type            linearNormal;
+
     thickness       1500;
 }
 

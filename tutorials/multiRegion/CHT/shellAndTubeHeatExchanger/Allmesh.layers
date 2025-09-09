@@ -12,20 +12,20 @@ runApplication decomposePar -copyZero
 runApplication -a foamDictionary system/snappyHexMeshDict -entry castellatedMesh -set on
 runApplication -a foamDictionary system/snappyHexMeshDict -entry snap -set on
 runApplication -a foamDictionary system/snappyHexMeshDict -entry addLayers -set off
-runParallel snappyHexMesh -overwrite
+runParallel snappyHexMesh
 
 # Convert the face zones into mapped wall baffles and split
-runParallel createBaffles -overwrite
-runParallel splitBaffles -overwrite
+runParallel createBaffles
+runParallel splitBaffles
 rm -rf processor*/constant/polyMesh/pointLevel
 
 # Run snappy again to create layers
 runApplication -a foamDictionary system/snappyHexMeshDict -entry castellatedMesh -set off
 runApplication -a foamDictionary system/snappyHexMeshDict -entry snap -set off
 runApplication -a foamDictionary system/snappyHexMeshDict -entry addLayers -set on
-runParallel -a snappyHexMesh -overwrite
+runParallel -a snappyHexMesh
 
 # Split the mesh into regions
-runParallel splitMeshRegions -cellZones -defaultRegionName solid -overwrite
+runParallel splitMeshRegions -cellZones -defaultRegionName solid
 
 #------------------------------------------------------------------------------

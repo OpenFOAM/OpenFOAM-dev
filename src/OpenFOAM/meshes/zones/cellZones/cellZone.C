@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,17 +27,12 @@ License
 #include "cellZoneList.H"
 #include "polyMesh.H"
 #include "polyTopoChangeMap.H"
-#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    typedef Zone<cellZone, cellZoneList> cellZoneType;
-    defineTemplateRunTimeSelectionTable(cellZoneType, dictionary);
-
     defineTypeNameAndDebug(cellZone, 0);
-    addToRunTimeSelectionTable(cellZone, cellZone, dictionary);
 }
 
 const char * const Foam::cellZone::labelsName = "cellLabels";
@@ -45,17 +40,11 @@ const char * const Foam::cellZone::labelsName = "cellLabels";
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::pointField& Foam::cellZone::meshCentres() const
-{
-    return zones_.mesh().cellCentres();
-}
-
-
 bool Foam::cellZone::checkDefinition(const bool report) const
 {
     return Zone::checkDefinition
     (
-        meshCentres().size(),
+        zones_.allSize(),
         report
     );
 }
@@ -63,17 +52,17 @@ bool Foam::cellZone::checkDefinition(const bool report) const
 
 void Foam::cellZone::topoChange(const polyTopoChangeMap& map)
 {
-    Zone::topoChange(map.cellMap(), map.reverseCellMap());
+    if (!topoUpdate_)
+    {
+        Zone::topoChange(map.cellMap(), map.reverseCellMap());
+    }
 }
 
 
 void Foam::cellZone::writeDict(Ostream& os) const
 {
-    os  << nl << name() << nl << token::BEGIN_BLOCK << nl
-        << "    type " << type() << token::END_STATEMENT << nl;
-
+    os  << nl << name() << nl << token::BEGIN_BLOCK << nl;
     writeEntry(os, this->labelsName, *this);
-
     os  << token::END_BLOCK << endl;
 }
 

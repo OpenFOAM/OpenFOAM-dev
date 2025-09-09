@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,22 @@ inline Foam::nil Foam::pureThermo::patchFaceComposition
 }
 
 
-inline Foam::nil Foam::pureThermo::Yslicer(const fvSource&) const
+inline Foam::nil Foam::pureThermo::Yslicer
+(
+    const fvSource& model,
+    const volScalarField::Internal& source
+) const
+{
+    return nil();
+}
+
+
+inline Foam::nil Foam::pureThermo::Yslicer
+(
+    const fvSource& model,
+    const scalarField& source,
+    const labelUList& cells
+) const
 {
     return nil();
 }

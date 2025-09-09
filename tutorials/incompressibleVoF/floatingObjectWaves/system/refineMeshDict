@@ -1,0 +1,49 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      refineMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+coordinates
+{
+    type        global;
+
+    e1          (1 0 0);
+    e2          (0 1 0);
+
+    directions  (e1 e2 e3);
+}
+
+useHexTopology  true;
+
+zones
+{
+    xyz
+    {
+        type    box;
+        box     (-100 -100 0.445) (100 100 0.58);
+    }
+
+    z
+    {
+        $xyz;
+
+        coordinates
+        {
+            $coordinates;
+            directions  (e3);
+        }
+    }
+}
+
+// ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -559,7 +559,8 @@ Foam::meshSearch::meshSearch
     if
     (
         cellDecompMode_ == polyMesh::FACE_DIAG_TRIS
-     || cellDecompMode_ == polyMesh::CELL_TETS)
+     || cellDecompMode_ == polyMesh::CELL_TETS
+    )
     {
         // Force construction of face diagonals
         (void)mesh.tetBasePtIs();
@@ -594,9 +595,7 @@ Foam::meshSearch::meshSearch
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::meshSearch::~meshSearch()
-{
-    clearOut();
-}
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -892,17 +891,21 @@ bool Foam::meshSearch::isInside(const point& p) const
 }
 
 
-void Foam::meshSearch::clearOut()
+void Foam::meshSearch::correct()
 {
     boundaryTreePtr_.clear();
     cellTreePtr_.clear();
     overallBbPtr_.clear();
-}
 
-
-void Foam::meshSearch::correct()
-{
-    clearOut();
+    if
+    (
+        cellDecompMode_ == polyMesh::FACE_DIAG_TRIS
+     || cellDecompMode_ == polyMesh::CELL_TETS
+    )
+    {
+        // Force construction of face diagonals
+        (void)mesh_.tetBasePtIs();
+    }
 }
 
 

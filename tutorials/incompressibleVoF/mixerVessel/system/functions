@@ -24,4 +24,11 @@ FoamFile
     U
 )
 
+#includeFunc graphCutLayerAverage
+(
+    direction=(0 0 1),
+    nPoints=100,
+    alpha.oil
+)
+
 // ************************************************************************* //

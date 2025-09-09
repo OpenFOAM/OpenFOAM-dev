@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,11 +24,11 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "vtkPVFoam.H"
+#include "vtkOpenFOAMPoints.H"
 
 // OpenFOAM includes
 #include "polyPatch.H"
 #include "primitivePatch.H"
-#include "vtkOpenFOAMPoints.H"
 
 // VTK includes
 #include "vtkCellArray.h"
@@ -38,19 +38,9 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class PatchType>
-vtkPolyData* Foam::vtkPVFoam::patchVTKMesh
-(
-    const word& name,
-    const PatchType& p
-)
+vtkPolyData* Foam::vtkPVFoam::patchVTKMesh(const PatchType& p)
 {
     vtkPolyData* vtkmesh = vtkPolyData::New();
-
-    if (debug)
-    {
-        InfoInFunction << " - " << name << endl;
-        printMemory();
-    }
 
     // Convert OpenFOAM mesh vertices to VTK
     const Foam::pointField& points = p.localPoints();
@@ -65,31 +55,29 @@ vtkPolyData* Foam::vtkPVFoam::patchVTKMesh
     vtkmesh->SetPoints(vtkpoints);
     vtkpoints->Delete();
 
-
     // Add faces as polygons
     const faceList& faces = p.localFaces();
 
     vtkCellArray* vtkcells = vtkCellArray::New();
     vtkcells->Allocate(faces.size());
+
+    DynamicList<vtkIdType> nodeIds(4);
+
     forAll(faces, facei)
     {
         const face& f = faces[facei];
-        vtkIdType nodeIds[f.size()];
 
+        nodeIds.resize(f.size());
         forAll(f, fp)
         {
             nodeIds[fp] = f[fp];
         }
-        vtkcells->InsertNextCell(f.size(), nodeIds);
+
+        vtkcells->InsertNextCell(f.size(), nodeIds.data());
     }
 
     vtkmesh->SetPolys(vtkcells);
     vtkcells->Delete();
-
-    if (debug)
-    {
-        printMemory();
-    }
 
     return vtkmesh;
 }

@@ -49,12 +49,12 @@ geometry
 {
     aerofoil
     {
-        type   triSurfaceMesh;
+        type   triSurface;
         file   "NACA0012.obj";
     }
     cylinder
     {
-        type   searchableCylinder;
+        type   cylinder;
         point1 ($!aerofoil/xUpper -1e3 0);
         point2 ($!aerofoil/xUpper  1e3 0);
         radius $!domain/zMax;

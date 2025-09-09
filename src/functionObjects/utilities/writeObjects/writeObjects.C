@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,23 +45,16 @@ namespace functionObjects
 }
 }
 
-template<>
-const char* Foam::NamedEnum
+const Foam::NamedEnum
 <
     Foam::functionObjects::writeObjects::writeOption,
     3
->::names[] =
+> Foam::functionObjects::writeObjects::writeOptionNames_
 {
     "autoWrite",
     "noWrite",
     "anyWrite"
 };
-
-const Foam::NamedEnum
-<
-    Foam::functionObjects::writeObjects::writeOption,
-    3
-> Foam::functionObjects::writeObjects::writeOptionNames_;
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -94,14 +87,6 @@ void Foam::functionObjects::writeObjects::writeObject
         case writeOption::ANY_WRITE:
         {
             break;
-        }
-        default:
-        {
-            FatalErrorInFunction
-                << "Unknown writeOption "
-                << writeOptionNames_[writeOption_]
-                << ". Valid writeOption types are" << writeOptionNames_
-                << exit(FatalError);
         }
     }
 

@@ -30,14 +30,12 @@ exposedPatchName symBack;
 flipNormals false;
 
 //- Linear extrusion in point-normal direction
-extrudeModel        linearNormal;
-
-nLayers             1;
-
-expansionRatio      1.0;
-
-linearNormalCoeffs
+extrudeModel
 {
+    type                linearNormal;
+
+    nLayers             1;
+    expansionRatio      1.0;
     thickness       0.05;
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -542,7 +542,7 @@ int main(int argc, char *argv[])
 
     #include "addMeshOption.H"
     #include "addRegionOption.H"
-    #include "addOverwriteOption.H"
+    #include "addNoOverwriteOption.H"
     timeSelector::addOptions();
     #include "addDictOption.H"
     argList::addBoolOption
@@ -567,7 +567,7 @@ int main(int argc, char *argv[])
 
     const bool readDict = args.optionFound("dict");
     const bool doFrontWidth = args.optionFound("frontWidth");
-    const bool overwrite = args.optionFound("overwrite");
+    #include "setNoOverwrite.H"
     const bool fields = !args.optionFound("noFields");
 
     label band;

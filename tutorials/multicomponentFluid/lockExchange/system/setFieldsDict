@@ -13,24 +13,27 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-defaultFieldValues
-(
-    volScalarFieldValue sludge 0
-    volScalarFieldValue water 1
-);
+defaultValues
+{
+    sludge  0;
+    water   1;
+}
 
-regions
-(
-    boxToCell
+zones
+{
+    sludge
     {
-        box (0 0 0) (5 2 2);
+        type        box;
+        zoneType    cell;
 
-        fieldValues
-        (
-            volScalarFieldValue sludge 1
-            volScalarFieldValue water 0
-        );
+        box         (0 0 0) (5 2 2);
+
+        values
+        {
+            sludge  1;
+            water   0;
+        }
     }
-);
+}
 
 // ************************************************************************* //

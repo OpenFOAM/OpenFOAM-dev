@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,13 @@ Foam::dictionaryEntry::dictionaryEntry
     const dictionary& dict
 )
 :
-    entry(key),
+    entry
+    (
+        key,
+        &dict != &dictionary::null
+      ? dict.endLineNumber()
+      : -1
+    ),
     dictionary(parentDict, dict)
 {}
 
@@ -54,14 +60,7 @@ Foam::dictionaryEntry::dictionaryEntry
 
 Foam::label Foam::dictionaryEntry::startLineNumber() const
 {
-    if (size())
-    {
-        return first()->startLineNumber();
-    }
-    else
-    {
-        return -1;
-    }
+    return entry::startLineNumber();
 }
 
 
@@ -73,7 +72,7 @@ Foam::label Foam::dictionaryEntry::endLineNumber() const
     }
     else
     {
-        return -1;
+        return startLineNumber();
     }
 }
 

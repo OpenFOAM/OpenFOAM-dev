@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,8 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "fvSpecificSource.H"
-#include "polyCellSet.H"
-#include "fvMatrices.H"
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
 
@@ -56,32 +54,6 @@ Foam::fvSpecificSource::~fvSpecificSource()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-Foam::labelUList Foam::fvSpecificSource::cells() const
-{
-    return polyCellSet(mesh()).cells();
-}
-
-
-Foam::label Foam::fvSpecificSource::nCells() const
-{
-    return mesh().nCells();
-}
-
-
-Foam::tmp<Foam::scalarField> Foam::fvSpecificSource::source
-(
-    const word& fieldName
-) const
-{
-    tmp<volScalarField::Internal> tS(S(fieldName));
-
-    return
-        tS.isTmp()
-      ? tmp<scalarField>(new scalarField(tS.ref(), true))
-      : tmp<scalarField>(tS());
-}
-
 
 bool Foam::fvSpecificSource::movePoints()
 {

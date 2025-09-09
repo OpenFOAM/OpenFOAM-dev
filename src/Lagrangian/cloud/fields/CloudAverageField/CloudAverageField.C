@@ -162,16 +162,38 @@ Foam::CloudAverageField<Type>::interpolate
                 )
             );
 
+        // Pointers to average manipulation methods
+        void (LagrangianAverage<Type>::*removeWeightSum)
+        (
+            const LagrangianSubSubField<Type>&
+        ) = &LagrangianAverage<Type>::remove;
+        void (LagrangianAverage<Type>::*removeNoWeightSum)
+        (
+            const LagrangianSubSubField<scalar>&,
+            const LagrangianSubSubField<Type>&
+        ) = &LagrangianAverage<Type>::remove;
+        void (LagrangianAverage<Type>::*addWeightSum)
+        (
+            const LagrangianSubSubField<Type>&,
+            const bool
+        ) = &LagrangianAverage<Type>::add;
+        void (LagrangianAverage<Type>::*addNoWeightSum)
+        (
+            const LagrangianSubSubField<scalar>&,
+            const LagrangianSubSubField<Type>&,
+            const bool
+        ) = &LagrangianAverage<Type>::add;
+
         switch (psiAverageState_)
         {
             case psiAverageState::removed:
-                op(removeWeightSum_, removeNoWeightSum_, subMesh);
+                op(removeWeightSum, removeNoWeightSum, subMesh);
                 break;
             case psiAverageState::complete:
                 break;
             case psiAverageState::cached:
-                op(removeWeightSum_, removeNoWeightSum_, subMesh);
-                op(addWeightSum_, addNoWeightSum_, subMesh, true);
+                op(removeWeightSum, removeNoWeightSum, subMesh);
+                op(addWeightSum, addNoWeightSum, subMesh, true);
                 break;
         }
     }
@@ -213,7 +235,18 @@ void Foam::CloudAverageField<Type>::remove(const LagrangianSubMesh& subMesh)
 
     CloudDerivedField<Type>::clear(false);
 
-    op(removeWeightSum_, removeNoWeightSum_, subMesh);
+    // Pointers to average manipulation methods
+    void (LagrangianAverage<Type>::*removeWeightSum)
+    (
+        const LagrangianSubSubField<Type>&
+    ) = &LagrangianAverage<Type>::remove;
+    void (LagrangianAverage<Type>::*removeNoWeightSum)
+    (
+        const LagrangianSubSubField<scalar>&,
+        const LagrangianSubSubField<Type>&
+    ) = &LagrangianAverage<Type>::remove;
+
+    op(removeWeightSum, removeNoWeightSum, subMesh);
 }
 
 
@@ -231,7 +264,20 @@ void Foam::CloudAverageField<Type>::add
 
     CloudDerivedField<Type>::clear(false);
 
-    op(addWeightSum_, addNoWeightSum_, subMesh, cache);
+    // Pointers to average manipulation methods
+    void (LagrangianAverage<Type>::*addWeightSum)
+    (
+        const LagrangianSubSubField<Type>&,
+        const bool
+    ) = &LagrangianAverage<Type>::add;
+    void (LagrangianAverage<Type>::*addNoWeightSum)
+    (
+        const LagrangianSubSubField<scalar>&,
+        const LagrangianSubSubField<Type>&,
+        const bool
+    ) = &LagrangianAverage<Type>::add;
+
+    op(addWeightSum, addNoWeightSum, subMesh, cache);
 }
 
 
@@ -249,7 +295,20 @@ void Foam::CloudAverageField<Type>::correct
 
     CloudDerivedField<Type>::clear(!cache);
 
-    op(correctWeightSum_, correctNoWeightSum_, subMesh, cache);
+    // Pointers to average manipulation methods
+    void (LagrangianAverage<Type>::*correctWeightSum)
+    (
+        const LagrangianSubSubField<Type>&,
+        const bool
+    ) = &LagrangianAverage<Type>::correct;
+    void (LagrangianAverage<Type>::*correctNoWeightSum)
+    (
+        const LagrangianSubSubField<scalar>&,
+        const LagrangianSubSubField<Type>&,
+        const bool
+    ) = &LagrangianAverage<Type>::correct;
+
+    op(correctWeightSum, correctNoWeightSum, subMesh, cache);
 }
 
 

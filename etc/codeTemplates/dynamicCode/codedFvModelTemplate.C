@@ -100,7 +100,7 @@ ${typeName}FvModel${SourceType}
 )
 :
     fvModel(name, modelType, mesh, dict),
-    set_(mesh, coeffs(dict))
+    zone_(mesh, coeffs(dict))
 {
     if (${verbose})
     {
@@ -180,20 +180,20 @@ void ${typeName}FvModel${SourceType}::addSup
 
 bool ${typeName}FvModel${SourceType}::movePoints()
 {
-    set_.movePoints();
+    zone_.movePoints();
     return true;
 }
 
 
 void ${typeName}FvModel${SourceType}::topoChange(const polyTopoChangeMap& map)
 {
-    set_.topoChange(map);
+    zone_.topoChange(map);
 }
 
 
 void ${typeName}FvModel${SourceType}::mapMesh(const polyMeshMap& map)
 {
-    set_.mapMesh(map);
+    zone_.mapMesh(map);
 }
 
 
@@ -202,7 +202,7 @@ void ${typeName}FvModel${SourceType}::distribute
     const polyDistributionMap& map
 )
 {
-    set_.distribute(map);
+    zone_.distribute(map);
 }
 
 

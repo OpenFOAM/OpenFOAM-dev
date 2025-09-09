@@ -1,3 +1,4 @@
+setVolFields.C
 setFields.C
 
 EXE = $(FOAM_APPBIN)/setFields

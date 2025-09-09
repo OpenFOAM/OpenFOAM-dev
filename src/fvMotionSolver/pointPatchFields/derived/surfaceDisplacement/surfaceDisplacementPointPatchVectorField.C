@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,18 +38,13 @@ namespace Foam
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-template<>
-const char*
-NamedEnum<surfaceDisplacementPointPatchVectorField::projectMode, 3>::
-names[] =
+const NamedEnum<surfaceDisplacementPointPatchVectorField::projectMode, 3>
+surfaceDisplacementPointPatchVectorField::projectModeNames_
 {
     "nearest",
     "pointNormal",
     "fixedNormal"
 };
-
-const NamedEnum<surfaceDisplacementPointPatchVectorField::projectMode, 3>
-    surfaceDisplacementPointPatchVectorField::projectModeNames_;
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -369,14 +364,14 @@ surfaceDisplacementPointPatchVectorField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const searchableSurfaces&
+const searchableSurfaceList&
 surfaceDisplacementPointPatchVectorField::surfaces() const
 {
     if (surfacesPtr_.empty())
     {
         surfacesPtr_.reset
         (
-            new searchableSurfaces
+            new searchableSurfaceList
             (
                 IOobject
                 (

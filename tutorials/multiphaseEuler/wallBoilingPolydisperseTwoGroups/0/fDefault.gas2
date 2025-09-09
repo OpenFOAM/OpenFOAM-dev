@@ -43,4 +43,20 @@ boundaryField
     }
 }
 
+sources
+{
+    heatTransferLimitedPhaseChange
+    {
+        type            interfacialGrowthSizeGroup;
+    }
+    heatTransferLimitedPhaseChange2
+    {
+        type            interfacialGrowthSizeGroup;
+    }
+    wallBoiling
+    {
+        type            NaN;
+    }
+}
+
 // ************************************************************************* //

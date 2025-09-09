@@ -26,10 +26,7 @@ boundaryField
 
     outlet
     {
-        type            inletOutlet;
-        phi             phi.particles;
-        inletValue      uniform 300;
-        value           uniform 300;
+        type            zeroGradient;
     }
 
     walls

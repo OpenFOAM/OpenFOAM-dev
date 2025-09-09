@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ SourceFiles
 #define refinementRegions_H
 
 #include "Tuple2.H"
-#include "triSurfaceMesh.H"
+#include "triSurface_searchableSurface.H"
 #include "triSurfaceFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -45,7 +45,7 @@ SourceFiles
 namespace Foam
 {
 
-class searchableSurfaces;
+class searchableSurfaceList;
 
 /*---------------------------------------------------------------------------*\
                         Class refinementRegions Declaration
@@ -73,7 +73,7 @@ private:
     // Private Data
 
         //- Reference to all geometry.
-        const searchableSurfaces& allGeometry_;
+        const searchableSurfaceList& allGeometry_;
 
         //- Indices of surfaces that are shells
         labelList shells_;
@@ -113,7 +113,7 @@ private:
         //- Interpolate the surface closeness field to the given point
         scalar interpolate
         (
-            const triSurfaceMesh& tris,
+            const searchableSurfaces::triSurface& tris,
             const triSurfacePointScalarField& closeness,
             const point& pt,
             const label index
@@ -136,7 +136,7 @@ public:
         //- Construct from geometry and dictionary
         refinementRegions
         (
-            const searchableSurfaces& allGeometry,
+            const searchableSurfaceList& allGeometry,
             const dictionary& shellsDict
         );
 

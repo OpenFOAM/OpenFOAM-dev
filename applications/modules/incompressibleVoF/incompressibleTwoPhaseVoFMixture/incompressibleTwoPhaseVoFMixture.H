@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -123,12 +123,6 @@ public:
             return rho_;
         }
 
-        //- Return the dynamic laminar viscosity
-        tmp<volScalarField> mu() const;
-
-        //- Return the face-interpolated dynamic laminar viscosity
-        tmp<surfaceScalarField> muf() const;
-
         //- Return the kinematic laminar viscosity
         virtual tmp<volScalarField> nu() const
         {
@@ -140,9 +134,6 @@ public:
         {
             return nu_.boundaryField()[patchi];
         }
-
-        //- Return the face-interpolated kinematic laminar viscosity
-        tmp<surfaceScalarField> nuf() const;
 
         //- Correct the mixture density and laminar viscosity
         virtual void correct();

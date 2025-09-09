@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -130,7 +130,6 @@ class addPatchCellLayer
         // To combineReduce a labelList. Filters out duplicates.
         class uniqueEqOp
         {
-
         public:
 
             void operator()(labelList& x, const labelList& y) const
@@ -158,14 +157,10 @@ class addPatchCellLayer
         };
 
 
-
     // Private Data
 
-        //- Reference to mesh
-        const polyMesh& mesh_;
-
         //- Add layers to existing mesh or create new mesh
-        const bool addToMesh_;
+        bool addToMesh_;
 
         //- For all patchpoints: list of added points (size 0 or nLayers)
         //  First point in list is one nearest to original point in patch,
@@ -174,6 +169,9 @@ class addPatchCellLayer
 
         //- Zones of the added points
         List<labelHashSet> pointZonesAddedPoints_;
+
+        //- Zones of the added faces
+        List<Map<bool>> faceZonesAddedFaces_;
 
         //- Zones of the added cells
         List<labelHashSet> cellZonesAddedCells_;
@@ -222,11 +220,11 @@ class addPatchCellLayer
             const label globalFacei
         ) const;
 
-
         //- Add face between layer-1 and layer.
         //  i.e. extrudes a patch edge.
         label addSideFace
         (
+            const polyMesh& mesh,
             const indirectPrimitivePatch&,
             const labelListList& addedCells,
 
@@ -256,12 +254,8 @@ public:
         //- Construct from mesh.
         addPatchCellLayer(const polyMesh&, const bool addToMesh = true);
 
-        //- Disallow default bitwise copy construction
-        addPatchCellLayer(const addPatchCellLayer&) = delete;
-
 
     // Member Functions
-
 
         // Access
 
@@ -287,7 +281,7 @@ public:
             );
 
             //- Added cells given current mesh & layerfaces.
-            labelListList addedCells() const;
+            labelListList addedCells(const polyMesh&) const;
 
 
         // Edit
@@ -341,6 +335,7 @@ public:
             //        (instead of e.g. from patch faces)
             void setRefinement
             (
+                const polyMesh& mesh,
                 const globalIndex& globalFaces,
                 const labelListList& globalEdgeFaces,
                 const scalarField& expansionRatio,
@@ -354,10 +349,10 @@ public:
                 polyTopoChange& meshMod
             );
 
-
             //- Add with constant expansion ratio and same nLayers everywhere
             void setRefinement
             (
+                const polyMesh& mesh,
                 const globalIndex& globalFaces,
                 const labelListList& globalEdgeFaces,
                 const label nLayers,
@@ -370,6 +365,7 @@ public:
             {
                 setRefinement
                 (
+                    mesh,
                     globalFaces,
                     globalEdgeFaces,
                     scalarField(pp.nPoints(), 1.0),     // expansion ration
@@ -384,7 +380,6 @@ public:
                 );
             }
 
-
             //- Update any locally stored mesh information. Gets additional
             //  map from new to old patch (since patch needs to be
             //  recreated since has to be on outside).
@@ -398,12 +393,6 @@ public:
             //- Update the mesh zones
             //  adding the point and cell zones for the added layer
             void updateZones(polyMesh& mesh);
-
-
-    // Member Operators
-
-        //- Disallow default bitwise assignment
-        void operator=(const addPatchCellLayer&) = delete;
 };
 
 

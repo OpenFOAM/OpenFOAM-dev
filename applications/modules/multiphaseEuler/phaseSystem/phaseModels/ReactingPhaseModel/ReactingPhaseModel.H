@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,7 +84,10 @@ public:
         //- Correct the reaction rates
         virtual void correctReactions();
 
-        //- Return the fuel consumption rate matrix
+        //- Return the consumption rate for a specie
+        virtual tmp<volScalarField::Internal> R(const label speciei) const;
+
+        //- Return consumption rate matrix for a specie
         virtual tmp<fvScalarMatrix> R(volScalarField& Yi) const;
 
         //- Return heat release rate

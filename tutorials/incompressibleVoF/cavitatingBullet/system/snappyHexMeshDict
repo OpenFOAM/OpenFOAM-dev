@@ -21,7 +21,7 @@ addLayers       true;
 
 
 // Geometry. Definition of all surfaces. All surfaces are of class
-// searchableSurface.
+// surface.
 // Surfaces are used
 // - to specify refinement for any mesh cell intersecting it
 // - to specify refinement for any mesh cell inside/outside/near
@@ -30,7 +30,7 @@ geometry
 {
     bullet
     {
-        type triSurfaceMesh;
+        type triSurface;
         file "bullet.stl";
 
         regions
@@ -44,14 +44,14 @@ geometry
 
     refinement1
     {
-        type searchableSphere;
+        type sphere;
         centre (0 0 0.0025);
         radius 0.0075;
     }
 
     refinement2
     {
-        type searchableCylinder;
+        type cylinder;
         point1 (0 0 0);
         point2 (0 0 0.03);
         radius 0.0075;

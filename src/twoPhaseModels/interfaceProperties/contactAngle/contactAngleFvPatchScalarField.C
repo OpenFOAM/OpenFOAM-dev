@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,28 +30,17 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-    template<>
-    const char* Foam::NamedEnum
-    <
-        Foam::contactAngleFvPatchScalarField::limitControls,
-        4
-    >::names[] =
-    {
-        "none",
-        "gradient",
-        "zeroGradient",
-        "alpha"
-    };
-}
-
-
 const Foam::NamedEnum
 <
     Foam::contactAngleFvPatchScalarField::limitControls,
     4
-> Foam::contactAngleFvPatchScalarField::limitControlNames_;
+> Foam::contactAngleFvPatchScalarField::limitControlNames_
+{
+    "none",
+    "gradient",
+    "zeroGradient",
+    "alpha"
+};
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //

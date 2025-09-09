@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,6 +46,7 @@ SourceFiles
 #define linearTsubDiameter_H
 
 #include "sphericalDiameter.H"
+#include "saturationTemperatureModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -79,6 +80,9 @@ class linearTsub
 
         //- Subcooling temperature where high subcooling diameter is reached
         dimensionedScalar Tsub1_;
+
+        //- The saturation curve
+        autoPtr<saturationTemperatureModel> saturationModelPtr_;
 
         //- Diameter field
         volScalarField d_;

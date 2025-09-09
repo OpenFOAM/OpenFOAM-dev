@@ -39,6 +39,7 @@ SourceFiles
 #include "volFieldsFwd.H"
 #include "dictionary.H"
 #include "dimensionSet.H"
+#include "HashSet.H"
 #include "fvModelM.H"
 #include "geometricOneField.H"
 
@@ -115,6 +116,10 @@ public:
 
     //- Runtime type information
     TypeName("fvModel");
+
+
+    //- The keywords read by this class
+    static const wordHashSet keywords;
 
 
     // Declare run-time constructor selection table

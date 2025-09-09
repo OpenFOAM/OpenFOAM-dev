@@ -23,7 +23,7 @@ interpolationScheme cellPointFace;
 setFormat raw;
 
 sets
-(
+{
     y0.1
     {
         type            lineFace;
@@ -87,7 +87,7 @@ sets
         start           (-1 1.962 0);
         end             (1 1.962 0);
     }
-);
+}
 
 fields
 (

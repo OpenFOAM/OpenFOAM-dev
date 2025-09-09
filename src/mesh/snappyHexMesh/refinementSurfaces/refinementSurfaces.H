@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,7 @@ SourceFiles
 namespace Foam
 {
 
-class searchableSurfaces;
+class searchableSurfaceList;
 class refinementRegions;
 
 typedef List<point> pointList;
@@ -62,7 +62,7 @@ class refinementSurfaces
     // Private Data
 
         //- Reference to all geometry.
-        const searchableSurfaces& allGeometry_;
+        const searchableSurfaceList& allGeometry_;
 
         //- Indices of surfaces that are refinement ones
         labelList surfaces_;
@@ -99,7 +99,7 @@ public:
         //- Construct from surfaces and dictionary
         refinementSurfaces
         (
-            const searchableSurfaces& allGeometry,
+            const searchableSurfaceList& allGeometry,
             const dictionary&,
             const label gapLevelIncrement
         );
@@ -107,7 +107,7 @@ public:
         //- Construct from components
         refinementSurfaces
         (
-            const searchableSurfaces& allGeometry,
+            const searchableSurfaceList& allGeometry,
             const labelList& surfaces,
             const wordList& names,
             const PtrList<surfaceZonesInfo>& surfZones,
@@ -127,7 +127,7 @@ public:
 
         // Access
 
-            const searchableSurfaces& geometry() const
+            const searchableSurfaceList& geometry() const
             {
                 return allGeometry_;
             }

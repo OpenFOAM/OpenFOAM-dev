@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,12 +24,11 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "fractal.H"
+#include "populationBalanceModel.H"
 #include "addToRunTimeSelectionTable.H"
-#include "sinteringModel.H"
 #include "fvmDdt.H"
 #include "fvmDiv.H"
 #include "fvmSup.H"
-#include "mixedFvPatchField.H"
 
 using Foam::constant::mathematical::pi;
 
@@ -46,20 +45,6 @@ namespace shapeModels
 }
 }
 }
-
-template<>
-const char*
-Foam::NamedEnum
-<
-    Foam::diameterModels::shapeModels::fractal::surfaceGrowthTypes,
-    4
->::names[] = {"unknown", "hardSphere", "ParkRogak", "conserved"};
-
-const Foam::NamedEnum
-<
-    Foam::diameterModels::shapeModels::fractal::surfaceGrowthTypes,
-    4
-> Foam::diameterModels::shapeModels::fractal::sgTypeNames_;
 
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
@@ -124,18 +109,6 @@ Foam::diameterModels::shapeModels::fractal::fractal
         ),
         group.mesh(),
         dimensionedScalar(kappa_.dimensions()/dimTime, Zero)
-    ),
-    sinteringModel_
-    (
-        sinteringModel::New(dict.subDict(type() + "Coeffs"), *this)
-    ),
-    sgType_
-    (
-        sgTypeNames_
-        [
-            dict.subDict(type() + "Coeffs")
-           .lookupOrDefault<word>("surfaceGrowthType", sgTypeNames_.names[0])
-        ]
     )
 {
     // Check and filter for old syntax (remove in due course)
@@ -146,7 +119,7 @@ Foam::diameterModels::shapeModels::fractal::fractal
             << group.i() << " of population balance "
             << group.group().popBalName()
             << ". Instead, the value should be initialised within the field, "
-            << this->name() << " (or the default field, "
+            << kappa_.name() << " (or the default field, "
             << IOobject::groupName("kappaDefault", group.phase().name())
             << ", as appropriate)."
             << exit(FatalError);
@@ -169,7 +142,7 @@ Foam::diameterModels::shapeModels::fractal::fld() const
 }
 
 
-Foam::volScalarField&
+Foam::volScalarField::Internal&
 Foam::diameterModels::shapeModels::fractal::src()
 {
     return Su_;
@@ -179,15 +152,12 @@ Foam::diameterModels::shapeModels::fractal::src()
 void Foam::diameterModels::shapeModels::fractal::correct()
 {
     const sizeGroup& fi = group();
+    const label i = fi.i();
     const phaseModel& phase = fi.phase();
     const volScalarField& alpha = phase;
     const volScalarField& rho = phase.rho();
 
-    const populationBalanceModel& popBal =
-        group().mesh().lookupObject<populationBalanceModel>
-        (
-            group().group().popBalName()
-        );
+    const populationBalanceModel& popBal = fi.group().popBal();
 
     const volScalarField alphaFi
     (
@@ -203,26 +173,41 @@ void Foam::diameterModels::shapeModels::fractal::correct()
     (
         IOobject::groupName
         (
-            alpha.member() + fi.member().capitalise() + "Phi",alpha.group()
+            alpha.member() + fi.member().capitalise() + "Phi",
+            alpha.group()
         ),
         max(fvc::interpolate(fi, "fi"), small)*phase.alphaPhi()
     );
+
+    // !!! Create pointers to other kappa fields. The shortcut taken here is
+    // that only adjacent fields are set. We know that the transfers never
+    // extend beyond these adjacent groups. Eventually the plan is to store all
+    // the fields in a pointer list anyway, rather than having nested per-group
+    // models, so then it will be possible just to pass the list directly.
+    UPtrList<const volScalarField> flds(popBal.sizeGroups().size());
+    for (label deltai = -1; deltai <= +1; ++ deltai)
+    {
+        const label j = fi.i() + deltai;
+        if (j < 0 || j >= popBal.sizeGroups().size()) continue;
+        const sizeGroup& fj = popBal.sizeGroups()[j];
+        flds.set(fj.i(), &model(fj).fld());
+    }
 
     fvScalarMatrix kappaEqn
     (
         fvm::ddt(alpha, fi, kappa_)
       + fvm::div(alphaFiPhi, kappa_)
-      ==
-      - sinteringModel_->R()
-      + Su_
-      - fvm::Sp(popBal.Sp(fi.i())*fi, kappa_)
+     ==
+        Su_ + fvm::Sp(popBal.Sp(i)*fi, kappa_)
+      + popBal.expansionSu(i, flds) + fvm::Sp(popBal.expansionSp(i)*fi, kappa_)
+      + popBal.modelSourceSu(i, flds)
       + popBal.fluid().fvModels().source(alphaFi, rho, kappa_)/rho
       - correction
         (
             fvm::Sp
             (
                 max(phase.residualAlpha() - alpha*fi, scalar(0))
-               /group().mesh().time().deltaT(),
+               /kappa_.mesh().time().deltaT(),
                 kappa_
             )
         )
@@ -236,14 +221,11 @@ void Foam::diameterModels::shapeModels::fractal::correct()
 
     popBal.fluid().fvConstraints().constrain(kappa_);
 
-    // Bounding of kappa assuming first sizeGroup to represent one primary
-    // particle
-    kappa_ =
-        min
-        (
-            max(kappa_, 6/group().dSph()),
-            6/popBal.sizeGroups().first().dSph()
-        );
+    // Bound kappa so that the surface-area-volume ratio is greater than that
+    // of spherical particles of this group, but less than that of the
+    // particles represented by the first size group
+    const sizeGroup& f0 = popBal.sizeGroups().first();
+    kappa_ = min(max(kappa_, 6/fi.dSph()), 6/f0.dSph());
 
     kappa_.correctBoundaryConditions();
 
@@ -259,75 +241,10 @@ Foam::diameterModels::shapeModels::fractal::a() const
 }
 
 
-void Foam::diameterModels::shapeModels::fractal::addDrift
-(
-    const volScalarField &Su,
-    const sizeGroup &fu,
-    const driftModel &model
-)
+const Foam::tmp<Foam::volScalarField>
+Foam::diameterModels::shapeModels::fractal::d() const
 {
-    const volScalarField& sourceKappa =
-        SecondaryPropertyModelTable()[SecondaryPropertyName(fu)]->fld();
-
-    switch (sgType_)
-    {
-        case sgHardSphere:
-        {
-            Su_ += sourceKappa*fu.dSph()/group().dSph()*Su;
-
-            break;
-        }
-
-        case sgParkRogak:
-        {
-            const fractal& sourceShape =
-                refCast<const fractal>
-                (
-                    fu.shapeModelPtr()()
-                );
-
-            volScalarField dp(6/sourceKappa);
-            const volScalarField a(sourceKappa*fu.x());
-            const dimensionedScalar dv(group().x() - fu.x());
-
-            const volScalarField da1
-            (
-                (2.0/3.0)*dv
-               *(
-                    sourceKappa
-                  + sourceShape.Df_*(1/sourceShape.d() - 1/dp)
-                )
-            );
-
-            dp += 6*(dv*a - fu.x()*da1)/sqr(a);
-
-            const volScalarField np(6*group().x()/pi/pow3(dp));
-            const volScalarField dc(dp*pow(np/alphaC_, 1/Df_));
-
-            const volScalarField da2
-            (
-                dv*(4/dp + 2*Df_/3*(1/dc - 1/dp))
-            );
-
-            Su_ += (a + 0.5*da1 + 0.5*da2)/group().x()*Su;
-
-            break;
-        }
-
-        case sgConserved:
-        {
-            SecondaryPropertyModel::addDrift(Su, fu, model);
-
-            break;
-        }
-
-        default:
-        {
-            FatalErrorInFunction
-                << "Unknown surface growth type. Valid types are:"
-                << sgTypeNames_ << nl << exit(FatalError);
-        }
-    }
+    return dColl_;
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,18 @@ License
 
 #include "dictionary.H"
 #include "primitiveEntry.H"
+
+// * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
+
+template<class ... Entries>
+std::tuple<const Entries& ...> Foam::dictionary::entries
+(
+    const Entries& ... entries
+)
+{
+    return std::tuple<const Entries& ...>(entries ...);
+}
+
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -49,37 +61,75 @@ T Foam::dictionary::readType(const word& keyword, ITstream& is) const
 }
 
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-template<class T, class ... KeysAndTs>
-Foam::dictionary::dictionary
+template<class ... Entries, size_t ... Indices>
+void Foam::dictionary::set
 (
-    const keyType& k,
-    const T& t,
-    const KeysAndTs& ... keysAndTs
+    const std::tuple<const Entries& ...>& entries,
+    const std::integer_sequence<size_t, Indices ...>&
 )
-:
-    parent_(dictionary::null),
-    filePtr_(nullptr)
 {
-    set(k, t, keysAndTs ...);
+    set(std::get<Indices>(entries) ...);
 }
 
 
-template<class T, class ... KeysAndTs>
+template<class ... Entries>
+void Foam::dictionary::set
+(
+    const std::tuple<const Entries& ...>& entries
+)
+{
+    set(entries, std::make_integer_sequence<size_t, sizeof ... (Entries)>());
+}
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+template<class ... Entries>
+Foam::dictionary::dictionary(const std::tuple<const Entries& ...>& entries)
+:
+    dictionary()
+{
+    set(entries);
+}
+
+
+template<class ... Entries>
 Foam::dictionary::dictionary
 (
     const fileName& name,
-    const keyType& k,
-    const T& t,
-    const KeysAndTs& ... keysAndTs
+    const std::tuple<const Entries& ...>& entries
 )
 :
-    dictionaryName(name),
-    parent_(dictionary::null),
-    filePtr_(nullptr)
+    dictionary(name)
 {
-    set(k, t, keysAndTs ...);
+    set(entries);
+}
+
+
+template<class ... Entries>
+Foam::dictionary::dictionary
+(
+    const fileName& name,
+    const dictionary& parentDict,
+    const std::tuple<const Entries& ...>& entries
+)
+:
+    dictionary(name, parentDict)
+{
+    set(entries);
+}
+
+
+template<class ... Entries>
+Foam::dictionary::dictionary
+(
+    const dictionary& dict,
+    const std::tuple<const Entries& ...>& entries
+)
+:
+    dictionary(dict)
+{
+    set(entries);
 }
 
 
@@ -431,16 +481,24 @@ void Foam::dictionary::set(const keyType& k, const T& t)
 }
 
 
-template<class T, class ... KeysAndTs>
+template<class ... Entries>
+void Foam::dictionary::set(const entry& e, const Entries& ... entries)
+{
+    set(e);
+    set(entries ...);
+}
+
+
+template<class T, class ... Entries>
 void Foam::dictionary::set
 (
     const keyType& k,
     const T& t,
-    const KeysAndTs& ... keysAndTs
+    const Entries& ... entries
 )
 {
-    set(new primitiveEntry(k, t));
-    set(keysAndTs ...);
+    set(k, t);
+    set(entries ...);
 }
 
 

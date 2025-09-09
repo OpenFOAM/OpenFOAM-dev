@@ -17,8 +17,8 @@ solvers
 {
     alpha.water
     {
-        nAlphaCorr      1;
-        nAlphaSubCycles polynomial (0 4);
+        nCorrectors     1;
+        nSubCycles      polynomial (0 4);
     }
 
     "pcorr.*"

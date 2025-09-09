@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,7 @@ Foam::fv::massSource::massSource
 )
 :
     massSourceBase(name, modelType, mesh, dict),
-    setPtr_(new fvCellSet(mesh)),
+    setPtr_(new fvCellZone(mesh)),
     massFlowRate_()
 {
     readCoeffs(coeffs(dict));
@@ -78,15 +78,9 @@ Foam::fv::massSource::massSource
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::labelUList Foam::fv::massSource::cells() const
+const Foam::cellZone& Foam::fv::massSource::zone() const
 {
-    return setPtr_->cells();
-}
-
-
-Foam::label Foam::fv::massSource::nCells() const
-{
-    return setPtr_->nCells();
+    return setPtr_->zone();
 }
 
 

@@ -8,7 +8,7 @@ runApplication -s VoF blockMesh -region VoF
 
 runApplication decomposePar -region VoF -noFields
 
-runParallel extrudeToRegionMesh -region VoF -overwrite
+runParallel extrudeToRegionMesh -region VoF
 
 runApplication -s fields decomposePar -fields -copyZero
 

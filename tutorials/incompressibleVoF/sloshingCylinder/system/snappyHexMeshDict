@@ -23,7 +23,7 @@ geometry
 {
     sloshingCylinder
     {
-        type closedTriSurfaceMesh;
+        type closedTriSurface;
         file "sloshingCylinder.obj";
     }
 };

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,9 +35,10 @@ SourceFiles
 #ifndef Zone_H
 #define Zone_H
 
+#include "className.H"
 #include "labelList.H"
-#include "typeInfo.H"
 #include "dictionary.H"
+#include "HashSet.H"
 #include "Map.H"
 #include "pointFieldFwd.H"
 
@@ -77,6 +78,14 @@ protected:
         //- Reference to zone list
         const ZonesType& zones_;
 
+        //- Flag indicating the zone is updated by the generator
+        //  following mesh motion
+        bool moveUpdate_;
+
+        //- Flag indicating the zone is updated by the generator
+        //  following topology change
+        bool topoUpdate_;
+
 
         // Demand-driven private data
 
@@ -99,22 +108,6 @@ protected:
 
 public:
 
-    // Declare run-time constructor selection tables
-
-        declareRunTimeSelectionTable
-        (
-            autoPtr,
-            ZoneType,
-            dictionary,
-            (
-                const word& name,
-                const dictionary& dict,
-                const ZonesType& mz
-            ),
-            (name, dict, mz)
-        );
-
-
     // Constructors
 
         //- Construct from components
@@ -122,7 +115,9 @@ public:
         (
             const word& name,
             const labelUList& indices,
-            const ZonesType& zones
+            const ZonesType& zones,
+            const bool moveUpdate = false,
+            const bool topoUpdate = false
         );
 
         //- Construct from components, moving contents
@@ -130,7 +125,9 @@ public:
         (
             const word& name,
             labelList&& indices,
-            const ZonesType& zones
+            const ZonesType& zones,
+            const bool moveUpdate = false,
+            const bool topoUpdate = false
         );
 
         //- Construct from dictionary
@@ -146,6 +143,7 @@ public:
         Zone
         (
             const Zone&,
+            const word& name,
             const labelUList& indices,
             const ZonesType& zones
         );
@@ -155,6 +153,7 @@ public:
         Zone
         (
             const Zone&,
+            const word& name,
             labelList&& indices,
             const ZonesType& zones
         );
@@ -163,20 +162,8 @@ public:
         Zone(const Zone&) = delete;
 
 
-    // Selectors
-
-        //- Return a pointer to a new cell zone
-        //  created on freestore from dictionary
-        static autoPtr<ZoneType> New
-        (
-            const word& name,
-            const dictionary&,
-            const ZonesType&
-        );
-
-
     //- Destructor
-    virtual ~Zone();
+    ~Zone();
 
 
     // Member Functions
@@ -196,6 +183,20 @@ public:
         //- Return ZonesType reference
         const ZonesType& zones() const;
 
+        //- Flag indicating the zone is updated by the generator
+        //  following mesh motion
+        bool moveUpdate() const
+        {
+            return moveUpdate_;
+        }
+
+        //- Flag indicating the zone is updated by the generator
+        //  following mesh topology change
+        bool topoUpdate() const
+        {
+            return topoUpdate_;
+        }
+
         //- Map storing the local index for every global index.  Used to find
         //  the index of the item in the zone from the known global index. If
         //  the item is not in the zone, returns -1
@@ -205,7 +206,7 @@ public:
         const Map<label>& lookupMap() const;
 
         //- Clear addressing
-        virtual void clearAddressing();
+        void clearAddressing();
 
         //- Check zone definition with max size given. Return true if in error.
         bool checkDefinition
@@ -221,20 +222,14 @@ public:
         void swap(Zone&);
 
         //- Correct patch after moving points
-        virtual void movePoints(const pointField&)
+        void movePoints(const pointField&)
         {}
 
-        //- Update zone using the given map
-        virtual void topoChange(const polyTopoChangeMap& map) = 0;
-
         //- Update from another mesh using the given map
-        virtual void mapMesh(const polyMeshMap&);
+        void mapMesh(const polyMeshMap&);
 
         //- Redistribute or update using the given distribution map
-        virtual void distribute(const polyDistributionMap&);
-
-        //- Write dictionary
-        virtual void writeDict(Ostream&) const = 0;
+        void distribute(const polyDistributionMap&);
 
 
     // Member Operators

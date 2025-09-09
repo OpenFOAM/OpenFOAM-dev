@@ -31,6 +31,7 @@ License
 #include "slicedSurfaceFields.H"
 #include "SubField.H"
 #include "demandDrivenData.H"
+#include "zonesGenerator.H"
 #include "fvMeshLduAddressing.H"
 #include "fvMeshTopoChanger.H"
 #include "fvMeshDistributor.H"
@@ -84,11 +85,11 @@ const Foam::HashSet<Foam::word> Foam::fvMesh::curGeometryFields
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fvMesh::clearGeomNotOldVol()
+void Foam::fvMesh::clearFvGeomNotOldVol()
 {
     if (debug)
     {
-        Pout<< FUNCTION_NAME << "clearGeomNotOldVol" << endl;
+        Pout<< FUNCTION_NAME << "clearFvGeomNotOldVol" << endl;
     }
 
     meshObjects::clearUpto
@@ -117,6 +118,21 @@ void Foam::fvMesh::clearGeomNotOldVol()
 }
 
 
+void Foam::fvMesh::clearFvGeom()
+{
+    if (debug)
+    {
+        Pout<< FUNCTION_NAME << "clearFvGeom" << endl;
+    }
+
+    clearFvGeomNotOldVol();
+
+    deleteDemandDrivenData(phiPtr_);
+    deleteDemandDrivenData(V0Ptr_);
+    deleteDemandDrivenData(V00Ptr_);
+}
+
+
 void Foam::fvMesh::updateGeomNotOldVol()
 {
     bool haveV = (VPtr_ != nullptr);
@@ -125,7 +141,7 @@ void Foam::fvMesh::updateGeomNotOldVol()
     bool haveCP = (CSlicePtr_ != nullptr || CPtr_ != nullptr);
     bool haveCf = (CfSlicePtr_ != nullptr || CfPtr_ != nullptr);
 
-    clearGeomNotOldVol();
+    clearFvGeomNotOldVol();
 
     // Now recreate the fields
     if (haveV)
@@ -151,6 +167,88 @@ void Foam::fvMesh::updateGeomNotOldVol()
 }
 
 
+void Foam::fvMesh::storeOldTimeFields()
+{
+    storeOldTimeFields<PointField>();
+    storeOldTimeFields<VolField>();
+    storeOldTimeFields<SurfaceField>();
+}
+
+
+void Foam::fvMesh::nullOldestTimeFields()
+{
+    nullOldestTimeFields<PointField>();
+    nullOldestTimeFields<VolField>();
+    nullOldestTimeFields<SurfaceField>();
+}
+
+
+void Foam::fvMesh::printAllocated() const
+{
+    polyMesh::printAllocated();
+
+    Pout<< "fvMesh allocated :" << endl;
+
+    if (lduPtr_)
+    {
+        Pout<< "    Ldu Addressing" << endl;
+    }
+
+    if (polyFacesBfPtr_)
+    {
+        Pout<< "    Poly-faces boundary field" << endl;
+    }
+
+    if (polyBFacePatchesPtr_)
+    {
+        Pout<< "    Poly-boundary-face to fv-patch and fv-patch-face map"
+            << endl;
+    }
+
+    if (ownerBfPtr_)
+    {
+        Pout<< "    Owner boundary field" << endl;
+    }
+
+    if (V0Ptr_)
+    {
+        Pout<< "    Old-time cell volumes field" << endl;
+    }
+
+    if (V00Ptr_)
+    {
+        Pout<< "    Old-old-time cell volumes field" << endl;
+    }
+
+    if (SfPtr_)
+    {
+        Pout<< "    Non-sliced face areas field" << endl;
+    }
+
+    if (magSfPtr_)
+    {
+        Pout<< "    Non-sliced face area magnitudes field" << endl;
+    }
+
+    if (CPtr_)
+    {
+        Pout<< "    Non-sliced cell centres field" << endl;
+    }
+
+    if (CfPtr_)
+    {
+        Pout<< "    Non-sliced face centres field" << endl;
+    }
+
+    if (phiPtr_)
+    {
+        Pout<< "    Mesh flux field" << endl;
+    }
+
+    surfaceInterpolation::printAllocated();
+}
+
+
 void Foam::fvMesh::clearGeom()
 {
     if (debug)
@@ -158,11 +256,9 @@ void Foam::fvMesh::clearGeom()
         Pout<< FUNCTION_NAME << "Clearing geometric data" << endl;
     }
 
-    clearGeomNotOldVol();
+    clearFvGeom();
 
-    deleteDemandDrivenData(phiPtr_);
-    deleteDemandDrivenData(V0Ptr_);
-    deleteDemandDrivenData(V00Ptr_);
+    polyMesh::clearGeom();
 }
 
 
@@ -214,25 +310,9 @@ void Foam::fvMesh::clearAddressing(const bool isMeshUpdate)
 }
 
 
-void Foam::fvMesh::storeOldTimeFields()
-{
-    storeOldTimeFields<PointField>();
-    storeOldTimeFields<VolField>();
-    storeOldTimeFields<SurfaceField>();
-}
-
-
-void Foam::fvMesh::nullOldestTimeFields()
-{
-    nullOldestTimeFields<PointField>();
-    nullOldestTimeFields<VolField>();
-    nullOldestTimeFields<SurfaceField>();
-}
-
-
 void Foam::fvMesh::clearOut()
 {
-    clearGeom();
+    clearFvGeom();
 
     surfaceInterpolation::clearOut();
 
@@ -280,7 +360,12 @@ Foam::surfaceLabelField::Boundary& Foam::fvMesh::polyFacesBfRef()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fvMesh::fvMesh(const IOobject& io, const bool doPost)
+Foam::fvMesh::fvMesh
+(
+    const IOobject& io,
+    const bool doPost
+    // const bool doZones
+)
 :
     polyMesh(io),
     surfaceInterpolation(*this),
@@ -319,7 +404,7 @@ Foam::fvMesh::fvMesh(const IOobject& io, const bool doPost)
 
     if (doPost)
     {
-        postConstruct(true, stitchType::geometric);
+        postConstruct(true, true, stitchType::geometric);
     }
 }
 
@@ -545,7 +630,12 @@ Foam::fvMesh::~fvMesh()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::fvMesh::postConstruct(const bool changers, const stitchType stitch)
+void Foam::fvMesh::postConstruct
+(
+    const bool changers,
+    const bool zones,
+    const stitchType stitch
+)
 {
     // Construct the stitcher
     stitcher_.set(fvMeshStitcher::New(*this, changers).ptr());
@@ -601,6 +691,13 @@ void Foam::fvMesh::postConstruct(const bool changers, const stitchType stitch)
                 *this
             );
         }
+    }
+
+    // Generate the zones after the mesh manipulators have been constructed
+    // to support motion-specific zone generators requiring access to the mover
+    if (zones)
+    {
+        zonesGenerator::New(*this);
     }
 }
 
@@ -667,6 +764,8 @@ bool Foam::fvMesh::update()
 
 bool Foam::fvMesh::move()
 {
+    preChange();
+
     // Do not set moving_ false before any mesh motion. Once the mesh starts
     // moving it is considered to be moving for the rest of the run.
     const bool moved = mover_->update();
@@ -720,7 +819,7 @@ void Foam::fvMesh::removeFvBoundary()
 void Foam::fvMesh::swap(fvMesh& otherMesh)
 {
     // Clear the sliced fields
-    clearGeom();
+    clearFvGeom();
 
     // Clear the current volume and other geometry factors
     surfaceInterpolation::clearOut();
@@ -828,7 +927,7 @@ Foam::fvMesh::readUpdateState Foam::fvMesh::readUpdate
             Info<< "Point motion update" << endl;
         }
 
-        clearGeom();
+        clearFvGeom();
     }
     else
     {
@@ -1130,7 +1229,7 @@ void Foam::fvMesh::setPoints(const pointField& p)
 {
     polyMesh::setPoints(p);
 
-    clearGeom();
+    clearFvGeom();
 
     // Update other local data
     surfaceInterpolation::movePoints();
@@ -1280,7 +1379,7 @@ void Foam::fvMesh::topoChange(const polyTopoChangeMap& map)
     polyMesh::topoChange(map);
 
     // Clear the sliced fields
-    clearGeomNotOldVol();
+    clearFvGeomNotOldVol();
 
     // Check that we're not trying to maintain old-time mesh geometry
     if (V0Ptr_ && Foam::notNull(V0Ptr_))
@@ -1340,7 +1439,7 @@ void Foam::fvMesh::mapMesh(const polyMeshMap& map)
     polyMesh::mapMesh(map);
 
     // Clear the sliced fields
-    clearGeomNotOldVol();
+    clearFvGeomNotOldVol();
 
     // Clear the current volume and other geometry factors
     surfaceInterpolation::clearOut();
@@ -1373,7 +1472,7 @@ void Foam::fvMesh::distribute(const polyDistributionMap& map)
     polyMesh::distribute(map);
 
     // Clear the sliced fields
-    clearGeomNotOldVol();
+    clearFvGeomNotOldVol();
 
     // Clear the current volume and other geometry factors
     surfaceInterpolation::clearOut();
@@ -1419,7 +1518,7 @@ const Foam::fileName& Foam::fvMesh::polyFacesBfInstance() const
 void Foam::fvMesh::conform(const surfaceScalarField& phi)
 {
     // Clear the geometry fields
-    clearGeomNotOldVol();
+    clearFvGeomNotOldVol();
 
     // Clear the current volume and other geometry factors
     surfaceInterpolation::clearOut();
@@ -1448,7 +1547,7 @@ void Foam::fvMesh::unconform
 )
 {
     // Clear the geometry fields
-    clearGeomNotOldVol();
+    clearFvGeomNotOldVol();
 
     // Clear the current volume and other geometry factors
     surfaceInterpolation::clearOut();
@@ -1553,7 +1652,7 @@ void Foam::fvMesh::addPatch
     deleteDemandDrivenData(phiPtr_);
 
     // Clear the sliced fields
-    clearGeomNotOldVol();
+    clearFvGeomNotOldVol();
 
     // Clear the current volume and other geometry factors
     surfaceInterpolation::clearOut();

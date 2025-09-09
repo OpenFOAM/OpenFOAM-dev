@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,11 +89,11 @@ Foam::label Foam::polyMeshAdder::zoneIndex
     DynamicList<word>& names
 )
 {
-    label zoneI = findIndex(names, curName);
+    label zi = findIndex(names, curName);
 
-    if (zoneI != -1)
+    if (zi != -1)
     {
-        return zoneI;
+        return zi;
     }
     else
     {
@@ -577,9 +577,9 @@ void Foam::polyMeshAdder::mergePointZones
 
     from1ToAll.setSize(pz1.size());
 
-    forAll(pz1, zoneI)
+    forAll(pz1, zi)
     {
-        from1ToAll[zoneI] = zoneIndex(pz1[zoneI].name(), zoneNames);
+        from1ToAll[zi] = zoneIndex(pz1[zi].name(), zoneNames);
     }
     zoneNames.shrink();
 
@@ -593,9 +593,9 @@ void Foam::polyMeshAdder::mergePointZones
     labelListList addPointToZones(nAllPoints);
 
     // mesh0 zones kept
-    forAll(pz0, zoneI)
+    forAll(pz0, zi)
     {
-        const pointZone& pz = pz0[zoneI];
+        const pointZone& pz = pz0[zi];
 
         forAll(pz, i)
         {
@@ -604,24 +604,24 @@ void Foam::polyMeshAdder::mergePointZones
 
             if (pointToZone[allPointi] == -1)
             {
-                pointToZone[allPointi] = zoneI;
+                pointToZone[allPointi] = zi;
             }
-            else if (pointToZone[allPointi] != zoneI)
+            else if (pointToZone[allPointi] != zi)
             {
                 labelList& pZones = addPointToZones[allPointi];
-                if (findIndex(pZones, zoneI) == -1)
+                if (findIndex(pZones, zi) == -1)
                 {
-                    pZones.append(zoneI);
+                    pZones.append(zi);
                 }
             }
         }
     }
 
     // mesh1 zones renumbered
-    forAll(pz1, zoneI)
+    forAll(pz1, zi)
     {
-        const pointZone& pz = pz1[zoneI];
-        const label allZoneI = from1ToAll[zoneI];
+        const pointZone& pz = pz1[zi];
+        const label allZoneI = from1ToAll[zi];
 
         forAll(pz, i)
         {
@@ -649,10 +649,10 @@ void Foam::polyMeshAdder::mergePointZones
     labelList nPoints(zoneNames.size(), 0);
     forAll(pointToZone, allPointi)
     {
-        label zoneI = pointToZone[allPointi];
-        if (zoneI != -1)
+        label zi = pointToZone[allPointi];
+        if (zi != -1)
         {
-            nPoints[zoneI]++;
+            nPoints[zi]++;
         }
     }
     forAll(addPointToZones, allPointi)
@@ -666,16 +666,16 @@ void Foam::polyMeshAdder::mergePointZones
 
     // 2. Fill
     pzPoints.setSize(zoneNames.size());
-    forAll(pzPoints, zoneI)
+    forAll(pzPoints, zi)
     {
-        pzPoints[zoneI].setCapacity(nPoints[zoneI]);
+        pzPoints[zi].setCapacity(nPoints[zi]);
     }
     forAll(pointToZone, allPointi)
     {
-        label zoneI = pointToZone[allPointi];
-        if (zoneI != -1)
+        label zi = pointToZone[allPointi];
+        if (zi != -1)
         {
-            pzPoints[zoneI].append(allPointi);
+            pzPoints[zi].append(allPointi);
         }
     }
     forAll(addPointToZones, allPointi)
@@ -709,6 +709,7 @@ void Foam::polyMeshAdder::mergeFaceZones
     DynamicList<word>& zoneNames,
     labelList& from1ToAll,
     List<DynamicList<label>>& fzFaces,
+    boolList& fzOrientations,
     List<DynamicList<bool>>& fzFlips
 )
 {
@@ -723,12 +724,13 @@ void Foam::polyMeshAdder::mergeFaceZones
 
     from1ToAll.setSize(fz1.size());
 
-    forAll(fz1, zoneI)
+    forAll(fz1, zi)
     {
-        from1ToAll[zoneI] = zoneIndex(fz1[zoneI].name(), zoneNames);
+        from1ToAll[zi] = zoneIndex(fz1[zi].name(), zoneNames);
     }
     zoneNames.shrink();
 
+    fzOrientations.setSize(zoneNames.size(), false);
 
     // Zone(s) per face
     labelList faceToZone(allOwner.size(), -1);
@@ -737,40 +739,71 @@ void Foam::polyMeshAdder::mergeFaceZones
     boolListList addFaceToFlips(allOwner.size());
 
     // mesh0 zones kept
-    forAll(fz0, zoneI)
+    forAll(fz0, zi)
     {
-        const labelList& addressing = fz0[zoneI];
-        const boolList& flipMap = fz0[zoneI].flipMap();
+        const labelList& addressing = fz0[zi];
 
-        forAll(addressing, i)
+        fzOrientations[zi] = fz0[zi].oriented();
+
+        if (fz0[zi].oriented())
         {
-            label face0 = addressing[i];
-            bool flip0 = flipMap[i];
+            const boolList& flipMap = fz0[zi].flipMap();
 
-            label allFacei = from0ToAllFaces[face0];
-            if (allFacei != -1)
+            forAll(addressing, i)
             {
-                // Check if orientation same
-                label allCell0 = owner0[face0];
-                if (allOwner[allFacei] != allCell0)
-                {
-                    flip0 = !flip0;
-                }
+                const label face0 = addressing[i];
+                bool flip0 = flipMap[i];
+                const label allFacei = from0ToAllFaces[face0];
 
-                if (faceToZone[allFacei] == -1)
+                if (allFacei != -1)
                 {
-                    faceToZone[allFacei] = zoneI;
-                    faceToFlip[allFacei] = flip0;
-                }
-                else if (faceToZone[allFacei] != zoneI)
-                {
-                    labelList& fZones = addFaceToZones[allFacei];
-                    boolList& flipZones = addFaceToFlips[allFacei];
-
-                    if (findIndex(fZones, zoneI) == -1)
+                    // Check if orientation same
+                    const label allCell0 = owner0[face0];
+                    if (allOwner[allFacei] != allCell0)
                     {
-                        fZones.append(zoneI);
-                        flipZones.append(flip0);
+                        flip0 = !flip0;
+                    }
+
+                    if (faceToZone[allFacei] == -1)
+                    {
+                        faceToZone[allFacei] = zi;
+                        faceToFlip[allFacei] = flip0;
+                    }
+                    else if (faceToZone[allFacei] != zi)
+                    {
+                        labelList& fZones = addFaceToZones[allFacei];
+                        boolList& flipZones = addFaceToFlips[allFacei];
+
+                        if (findIndex(fZones, zi) == -1)
+                        {
+                            fZones.append(zi);
+                            flipZones.append(flip0);
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            forAll(addressing, i)
+            {
+                const label face0 = addressing[i];
+                const label allFacei = from0ToAllFaces[face0];
+
+                if (allFacei != -1)
+                {
+                    if (faceToZone[allFacei] == -1)
+                    {
+                        faceToZone[allFacei] = zi;
+                    }
+                    else if (faceToZone[allFacei] != zi)
+                    {
+                        labelList& fZones = addFaceToZones[allFacei];
+
+                        if (findIndex(fZones, zi) == -1)
+                        {
+                            fZones.append(zi);
+                        }
                     }
                 }
             }
@@ -778,42 +811,72 @@ void Foam::polyMeshAdder::mergeFaceZones
     }
 
     // mesh1 zones renumbered
-    forAll(fz1, zoneI)
+    forAll(fz1, zi)
     {
-        const labelList& addressing = fz1[zoneI];
-        const boolList& flipMap = fz1[zoneI].flipMap();
+        const labelList& addressing = fz1[zi];
+        const boolList& flipMap = fz1[zi].flipMap();
 
-        const label allZoneI = from1ToAll[zoneI];
+        const label allZoneI = from1ToAll[zi];
 
-        forAll(addressing, i)
+        fzOrientations[allZoneI] = fz1[zi].oriented();
+
+        if (fz1[zi].oriented())
         {
-            label face1 = addressing[i];
-            bool flip1 = flipMap[i];
-
-            label allFacei = from1ToAllFaces[face1];
-            if (allFacei != -1)
+            forAll(addressing, i)
             {
-                // Check if orientation same
-                label allCell1 = from1ToAllCells[owner1[face1]];
-                if (allOwner[allFacei] != allCell1)
-                {
-                    flip1 = !flip1;
-                }
+                const label face1 = addressing[i];
+                bool flip1 = flipMap[i];
+                const label allFacei = from1ToAllFaces[face1];
 
-                if (faceToZone[allFacei] == -1)
+                if (allFacei != -1)
                 {
-                    faceToZone[allFacei] = allZoneI;
-                    faceToFlip[allFacei] = flip1;
-                }
-                else if (faceToZone[allFacei] != allZoneI)
-                {
-                    labelList& fZones = addFaceToZones[allFacei];
-                    boolList& flipZones = addFaceToFlips[allFacei];
-
-                    if (findIndex(fZones, allZoneI) == -1)
+                    // Check if orientation same
+                    const label allCell1 = from1ToAllCells[owner1[face1]];
+                    if (allOwner[allFacei] != allCell1)
                     {
-                        fZones.append(allZoneI);
-                        flipZones.append(flip1);
+                        flip1 = !flip1;
+                    }
+
+                    if (faceToZone[allFacei] == -1)
+                    {
+                        faceToZone[allFacei] = allZoneI;
+                        faceToFlip[allFacei] = flip1;
+                    }
+                    else if (faceToZone[allFacei] != allZoneI)
+                    {
+                        labelList& fZones = addFaceToZones[allFacei];
+                        boolList& flipZones = addFaceToFlips[allFacei];
+
+                        if (findIndex(fZones, allZoneI) == -1)
+                        {
+                            fZones.append(allZoneI);
+                            flipZones.append(flip1);
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            forAll(addressing, i)
+            {
+                const label face1 = addressing[i];
+                const label allFacei = from1ToAllFaces[face1];
+
+                if (allFacei != -1)
+                {
+                    if (faceToZone[allFacei] == -1)
+                    {
+                        faceToZone[allFacei] = allZoneI;
+                    }
+                    else if (faceToZone[allFacei] != allZoneI)
+                    {
+                        labelList& fZones = addFaceToZones[allFacei];
+
+                        if (findIndex(fZones, allZoneI) == -1)
+                        {
+                            fZones.append(allZoneI);
+                        }
                     }
                 }
             }
@@ -827,10 +890,10 @@ void Foam::polyMeshAdder::mergeFaceZones
     labelList nFaces(zoneNames.size(), 0);
     forAll(faceToZone, allFacei)
     {
-        label zoneI = faceToZone[allFacei];
-        if (zoneI != -1)
+        label zi = faceToZone[allFacei];
+        if (zi != -1)
         {
-            nFaces[zoneI]++;
+            nFaces[zi]++;
         }
     }
     forAll(addFaceToZones, allFacei)
@@ -845,19 +908,29 @@ void Foam::polyMeshAdder::mergeFaceZones
     // 2. Fill
     fzFaces.setSize(zoneNames.size());
     fzFlips.setSize(zoneNames.size());
-    forAll(fzFaces, zoneI)
+
+    forAll(fzFaces, zi)
     {
-        fzFaces[zoneI].setCapacity(nFaces[zoneI]);
-        fzFlips[zoneI].setCapacity(nFaces[zoneI]);
+        fzFaces[zi].setCapacity(nFaces[zi]);
+
+        if (fzOrientations[zi])
+        {
+            fzFlips[zi].setCapacity(nFaces[zi]);
+        }
     }
+
     forAll(faceToZone, allFacei)
     {
-        label zoneI = faceToZone[allFacei];
+        label zi = faceToZone[allFacei];
         bool flip = faceToFlip[allFacei];
-        if (zoneI != -1)
+        if (zi != -1)
         {
-            fzFaces[zoneI].append(allFacei);
-            fzFlips[zoneI].append(flip);
+            fzFaces[zi].append(allFacei);
+
+            if (fzOrientations[zi])
+            {
+                fzFlips[zi].append(flip);
+            }
         }
     }
     forAll(addFaceToZones, allFacei)
@@ -867,21 +940,24 @@ void Foam::polyMeshAdder::mergeFaceZones
 
         forAll(fZones, i)
         {
-            label zoneI = fZones[i];
-            fzFaces[zoneI].append(allFacei);
-            fzFlips[zoneI].append(flipZones[i]);
+            label zi = fZones[i];
+            fzFaces[zi].append(allFacei);
+            if (fzOrientations[zi])
+            {
+                fzFlips[zi].append(flipZones[i]);
+            }
         }
     }
 
-    forAll(fzFaces, i)
+    forAll(fzFaces, zi)
     {
-        fzFaces[i].shrink();
-        fzFlips[i].shrink();
+        fzFaces[zi].shrink();
+        fzFlips[zi].shrink();
 
         labelList order;
-        sortedOrder(fzFaces[i], order);
-        fzFaces[i] = UIndirectList<label>(fzFaces[i], order)();
-        fzFlips[i] = UIndirectList<bool>(fzFlips[i], order)();
+        sortedOrder(fzFaces[zi], order);
+        fzFaces[zi] = UIndirectList<label>(fzFaces[zi], order)();
+        fzFlips[zi] = UIndirectList<bool>(fzFlips[zi], order)();
     }
 }
 
@@ -903,9 +979,9 @@ void Foam::polyMeshAdder::mergeCellZones
     zoneNames.append(cz0.toc());
 
     from1ToAll.setSize(cz1.size());
-    forAll(cz1, zoneI)
+    forAll(cz1, zi)
     {
-        from1ToAll[zoneI] = zoneIndex(cz1[zoneI].name(), zoneNames);
+        from1ToAll[zi] = zoneIndex(cz1[zi].name(), zoneNames);
     }
     zoneNames.shrink();
 
@@ -918,33 +994,33 @@ void Foam::polyMeshAdder::mergeCellZones
     labelListList addCellToZones(nAllCells);
 
     // mesh0 zones kept
-    forAll(cz0, zoneI)
+    forAll(cz0, zi)
     {
-        const cellZone& cz = cz0[zoneI];
+        const cellZone& cz = cz0[zi];
         forAll(cz, i)
         {
             label cell0 = cz[i];
 
             if (cellToZone[cell0] == -1)
             {
-                cellToZone[cell0] = zoneI;
+                cellToZone[cell0] = zi;
             }
-            else if (cellToZone[cell0] != zoneI)
+            else if (cellToZone[cell0] != zi)
             {
                 labelList& cZones = addCellToZones[cell0];
-                if (findIndex(cZones, zoneI) == -1)
+                if (findIndex(cZones, zi) == -1)
                 {
-                    cZones.append(zoneI);
+                    cZones.append(zi);
                 }
             }
         }
     }
 
     // mesh1 zones renumbered
-    forAll(cz1, zoneI)
+    forAll(cz1, zi)
     {
-        const cellZone& cz = cz1[zoneI];
-        const label allZoneI = from1ToAll[zoneI];
+        const cellZone& cz = cz1[zi];
+        const label allZoneI = from1ToAll[zi];
         forAll(cz, i)
         {
             label cell1 = cz[i];
@@ -971,10 +1047,10 @@ void Foam::polyMeshAdder::mergeCellZones
     labelList nCells(zoneNames.size(), 0);
     forAll(cellToZone, allCelli)
     {
-        label zoneI = cellToZone[allCelli];
-        if (zoneI != -1)
+        label zi = cellToZone[allCelli];
+        if (zi != -1)
         {
-            nCells[zoneI]++;
+            nCells[zi]++;
         }
     }
     forAll(addCellToZones, allCelli)
@@ -988,16 +1064,16 @@ void Foam::polyMeshAdder::mergeCellZones
 
     // 2. Fill
     czCells.setSize(zoneNames.size());
-    forAll(czCells, zoneI)
+    forAll(czCells, zi)
     {
-        czCells[zoneI].setCapacity(nCells[zoneI]);
+        czCells[zi].setCapacity(nCells[zi]);
     }
     forAll(cellToZone, allCelli)
     {
-        label zoneI = cellToZone[allCelli];
-        if (zoneI != -1)
+        label zi = cellToZone[allCelli];
+        if (zi != -1)
         {
-            czCells[zoneI].append(allCelli);
+            czCells[zi].append(allCelli);
         }
     }
     forAll(addCellToZones, allCelli)
@@ -1036,6 +1112,7 @@ void Foam::polyMeshAdder::mergeZones
 
     DynamicList<word>& faceZoneNames,
     List<DynamicList<label>>& fzFaces,
+    boolList& fzOrientations,
     List<DynamicList<bool>>& fzFlips,
 
     DynamicList<word>& cellZoneNames,
@@ -1069,6 +1146,7 @@ void Foam::polyMeshAdder::mergeZones
         faceZoneNames,
         from1ToAllFZones,
         fzFaces,
+        fzOrientations,
         fzFlips
     );
 
@@ -1094,6 +1172,7 @@ void Foam::polyMeshAdder::addZones
 
     const DynamicList<word>& faceZoneNames,
     const List<DynamicList<label>>& fzFaces,
+    const boolList& fzOrientations,
     const List<DynamicList<bool>>& fzFlips,
 
     const DynamicList<word>& cellZoneNames,
@@ -1116,13 +1195,25 @@ void Foam::polyMeshAdder::addZones
     List<faceZone*> fZones(fzFaces.size());
     forAll(fZones, i)
     {
-        fZones[i] = new faceZone
-        (
-            faceZoneNames[i],
-            fzFaces[i],
-            fzFlips[i],
-            mesh.faceZones()
-        );
+        if (fzOrientations[i])
+        {
+            fZones[i] = new faceZone
+            (
+                faceZoneNames[i],
+                fzFaces[i],
+                fzFlips[i],
+                mesh.faceZones()
+            );
+        }
+        else
+        {
+            fZones[i] = new faceZone
+            (
+                faceZoneNames[i],
+                fzFaces[i],
+                mesh.faceZones()
+            );
+        }
     }
 
     List<cellZone*> cZones(czCells.size());
@@ -1233,6 +1324,7 @@ Foam::autoPtr<Foam::mapAddedPolyMesh> Foam::polyMeshAdder::add
 
     DynamicList<word> faceZoneNames;
     List<DynamicList<label>> fzFaces;
+    boolList fzOrientations;
     List<DynamicList<bool>> fzFlips;
 
     DynamicList<word> cellZoneNames;
@@ -1259,6 +1351,7 @@ Foam::autoPtr<Foam::mapAddedPolyMesh> Foam::polyMeshAdder::add
 
         faceZoneNames,
         fzFaces,
+        fzOrientations,
         fzFlips,
 
         cellZoneNames,
@@ -1443,6 +1536,7 @@ Foam::autoPtr<Foam::mapAddedPolyMesh> Foam::polyMeshAdder::add
 
         faceZoneNames,
         fzFaces,
+        fzOrientations,
         fzFlips,
 
         cellZoneNames,

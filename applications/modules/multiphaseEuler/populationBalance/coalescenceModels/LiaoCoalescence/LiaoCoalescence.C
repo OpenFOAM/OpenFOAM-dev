@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,10 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "LiaoCoalescence.H"
-#include "phaseSystem.H"
 #include "phaseCompressibleMomentumTransportModel.H"
-#include "fvcGrad.H"
-#include "dragModel.H"
+#include "uniformDimensionedFields.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -54,8 +52,7 @@ using Foam::constant::mathematical::pi;
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::diameterModels::coalescenceModels::LiaoCoalescence::
-LiaoCoalescence
+Foam::diameterModels::coalescenceModels::LiaoCoalescence::LiaoCoalescence
 (
     const populationBalanceModel& popBal,
     const dictionary& dict
@@ -166,42 +163,53 @@ void Foam::diameterModels::coalescenceModels::LiaoCoalescence::precompute()
 {
     LiaoBase::precompute();
 
-    CPack_ = min(PMax_/max(PMax_ - popBal_.alphas(), SMALL), CPackMax_);
+    CPack_ = min(PMax_/max(PMax_ - popBal_.alphas(), small), CPackMax_);
+
+    const sizeGroup& f0 = popBal_.sizeGroups().first();
+
+    const volScalarField::Internal& rhoc = popBal_.continuousPhase().rho();
+
+    tmp<volScalarField> tsigma(popBal_.sigmaWithContinuousPhase(f0.phase()));
+    const volScalarField::Internal& sigma = tsigma();
 
     const uniformDimensionedVectorField& g =
         popBal_.mesh().lookupObject<uniformDimensionedVectorField>("g");
 
-    dCrit_ =
-        4*sqrt
-        (
-            popBal_.sigmaWithContinuousPhase(popBal_.sizeGroups()[1].phase())()
-           /(mag(g)*(popBal_.continuousPhase().rho()
-          - popBal_.sizeGroups()[1].phase().rho()))
-        );
+    dCrit_ = 4*sqrt(sigma/(mag(g)*(rhoc - f0.phase().rho()())));
 }
 
 
 void Foam::diameterModels::coalescenceModels::LiaoCoalescence::
 addToCoalescenceRate
 (
-    volScalarField& coalescenceRate,
+    volScalarField::Internal& coalescenceRate,
     const label i,
     const label j
 )
 {
-    const phaseModel& continuousPhase = popBal_.continuousPhase();
     const sizeGroup& fi = popBal_.sizeGroups()[i];
     const sizeGroup& fj = popBal_.sizeGroups()[j];
+
+    const volScalarField::Internal& rhoc = popBal_.continuousPhase().rho();
+
+    tmp<volScalarField> tsigma(popBal_.sigmaWithContinuousPhase(fi.phase()));
+    const volScalarField::Internal& sigma = tsigma();
+
+    tmp<volScalarField> tmuc(popBal_.continuousPhase().fluidThermo().mu());
+    const volScalarField::Internal& muc = tmuc();
 
     dimensionedScalar dEq(2*fi.dSph()*fj.dSph()/(fi.dSph() + fj.dSph()));
     dimensionedScalar Aij(pi*0.25*sqr(fi.dSph() + fj.dSph()));
 
     if (turbulence_)
     {
+        tmp<volScalarField> tepsilonc(popBal_.continuousTurbulence().epsilon());
+        const volScalarField::Internal& epsilonc = tepsilonc();
+
         uRelTurb_ =
             CTurb_*sqrt(2.0)
            *sqrt(sqr(cbrt(fi.dSph())) + sqr(cbrt(fj.dSph())))
-           *cbrt(popBal_.continuousTurbulence().epsilon());
+           *cbrt(epsilonc);
     }
 
     if (buoyancy_)
@@ -214,31 +222,29 @@ addToCoalescenceRate
         uRelShear_ = CShear_*0.5/pi*(fi.dSph() + fj.dSph())*shearStrainRate_;
     }
 
-    const volScalarField collisionEfficiency
+    const volScalarField::Internal collisionEfficiency
     (
         neg(kolmogorovLengthScale_ - (fi.dSph() + fj.dSph()))
        *exp
         (
-          - CEff_*sqrt
+          - CEff_
+           *sqrt
             (
-                continuousPhase.rho()*dEq
-               /popBal_.sigmaWithContinuousPhase(fi.phase())
+                rhoc
+               *dEq
+               /sigma
                *sqr(max(uRelTurb_, max(uRelBuoy_, uRelShear_)))
             )
         )
       + pos0(kolmogorovLengthScale_ - (fi.dSph() + fj.dSph()))
        *exp
         (
-          - 3*continuousPhase.fluidThermo().mu()*dEq*eddyStrainRate_
-           /(4*popBal_.sigmaWithContinuousPhase(fi.phase()))
-           *log
-            (
-                cbrt
-                (
-                    pi*popBal_.sigmaWithContinuousPhase(fi.phase())*sqr(dEq)
-                   /(32*AH_)
-                )
-            )
+          - (3.0/4.0)
+           *muc
+           *dEq
+           *eddyStrainRate_
+           /sigma
+           *log(cbrt(pi*sigma*sqr(dEq)/(32*AH_)))
         )
     );
 
@@ -246,7 +252,10 @@ addToCoalescenceRate
     {
         coalescenceRate +=
             neg(kolmogorovLengthScale_ - (fi.dSph() + fj.dSph()))
-           *CPack_*Aij*uRelTurb_*collisionEfficiency;
+           *CPack_
+           *Aij
+           *uRelTurb_
+           *collisionEfficiency;
     }
 
     if (buoyancy_)
@@ -261,38 +270,40 @@ addToCoalescenceRate
 
     if (eddyCapture_)
     {
-        const volScalarField uRelEddy
+        const volScalarField::Internal uRelEddy
         (
             CEddy_*0.5/pi*(fi.dSph() + fj.dSph())*eddyStrainRate_
         );
 
         coalescenceRate +=
             pos0(kolmogorovLengthScale_ - (fi.dSph() + fj.dSph()))
-           *CPack_*0.5*Aij*uRelEddy*collisionEfficiency;
+           *CPack_
+           *0.5
+           *Aij
+           *uRelEddy
+           *collisionEfficiency;
     }
 
     if (wakeEntrainment_)
     {
-        const dimensionedScalar uRelWakeI
-        (
-            CWake_*uTerminal_[i]*cbrt(Cd_[i])
-        );
+        const dimensionedScalar uRelWakeI(CWake_*uTerminal_[i]*cbrt(Cd_[i]));
 
-        const dimensionedScalar uRelWakeJ
-        (
-            CWake_*uTerminal_[j]*cbrt(Cd_[j])
-        );
+        const dimensionedScalar uRelWakeJ(CWake_*uTerminal_[j]*cbrt(Cd_[j]));
 
         coalescenceRate +=
-            CPack_*0.125*pi
+            CPack_
+           *0.125
+           *pi
            *(
-                sqr(fi.dSph())*uRelWakeI
+                sqr(fi.dSph())
+               *uRelWakeI
                *pos0(fi.dSph() - 0.5*dCrit_)
                *(
                     pow6(fi.dSph() - 0.5*dCrit_)
                    /(pow6(fi.dSph() - 0.5*dCrit_) + pow6(0.5*dCrit_))
                 )
-              + sqr(fj.dSph())*uRelWakeJ
+              + sqr(fj.dSph())
+               *uRelWakeJ
                *pos0(fj.dSph() - 0.5*dCrit_)
                *(
                     pow6(fj.dSph() - 0.5*dCrit_)

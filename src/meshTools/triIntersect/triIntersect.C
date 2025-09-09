@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,23 +42,6 @@ namespace triIntersect
 //- The maximum dot product between a source point normal and a target plane
 //  considered to be a valid, forward projection
 const scalar maxDot = - cos(degToRad(80));
-
-
-//- Divide two numbers and protect the result from overflowing
-scalar protectedDivide(const scalar a, const scalar b)
-{
-    return mag(a)/vGreat < mag(b) ? a/b : sign(a)*sign(b)*vGreat;
-}
-
-
-//- Divide two numbers, protect the result from overflowing, and clip the
-//  result between 0 and 1
-scalar protectedDivideAndClip01(const scalar a, const scalar b)
-{
-    const scalar bStar = max(mag(a), mag(b));
-
-    return bStar == 0 ? 0 : max(a*sign(b), 0)/bStar;
-}
 
 
 //- Print 3x3 FixedListLists on one line
@@ -1276,8 +1259,8 @@ void Foam::triIntersect::writeTriProjection
     pointField ps(3*(nu + 1)*(nv + 1));
     for (label i = 0; i < 3; ++ i)
     {
-        const point& p0 = srcPs[i], p1 = srcPs[(i + 1) % 3];
-        const vector& n0 = srcNs[i], n1 = srcNs[(i + 1) % 3];
+        const point& p0 = srcPs[i], & p1 = srcPs[(i + 1) % 3];
+        const vector& n0 = srcNs[i], & n1 = srcNs[(i + 1) % 3];
 
         for (label iu = 0; iu <= nu; ++ iu)
         {

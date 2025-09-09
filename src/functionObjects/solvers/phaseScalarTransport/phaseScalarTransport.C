@@ -364,7 +364,11 @@ bool Foam::functionObjects::phaseScalarTransport::read(const dictionary& dict)
             break;
     }
 
-    nCorr_ = dict.lookupOrDefault<label>("nCorr", 0);
+    nCorr_ = dict.lookupOrDefaultBackwardsCompatible<label>
+    (
+        {"nCorrectors", "nCorr"},
+        0
+    );
     residualAlpha_ = dict.lookupOrDefault<scalar>("residualAlpha", rootSmall);
     writeAlphaField_ = dict.lookupOrDefault<bool>("writeAlphaField", true);
 

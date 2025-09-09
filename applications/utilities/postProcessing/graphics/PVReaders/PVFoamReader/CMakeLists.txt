@@ -37,16 +37,7 @@ ADD_DEFINITIONS(
 )
 
 # Add the plugin
-IF(${ParaView_VERSION} VERSION_LESS 4.1)
-    # ParaView-4.0.x and lower requires a GUI_RESOURCE_FILES XML file
-    ADD_PARAVIEW_PLUGIN(
-        ${TARGET_NAME}
-        "1.0"
-        SERVER_MANAGER_XML PVFoamReader_SM.xml
-        SERVER_MANAGER_SOURCES vtk/vtkPVFoamReader.cxx
-        GUI_RESOURCE_FILES PVFoamReader.xml
-    )
-ELSEIF(${ParaView_VERSION} VERSION_LESS 5.7)
+IF(${ParaView_VERSION} VERSION_LESS 5.7)
     ADD_PARAVIEW_PLUGIN(
         ${TARGET_NAME}
         "1.0"
@@ -79,13 +70,14 @@ IF(${ParaView_VERSION} VERSION_LESS 5.5)
         vtkPVFoam
         finiteVolume
         OpenFOAM
+        LINK_PRIVATE
+        pqApplicationComponents
     )
-ELSE()
+ELSEIF(${ParaView_VERSION} VERSION_LESS 5.7)
     # Assume QT version 5 if it hasn't been defined
     IF(NOT PARAVIEW_QT_MAJOR_VERSION)
         set(PARAVIEW_QT_MAJOR_VERSION 5)
     ENDIF()
-
     # Paraview-5.5.x and higher needs QT libraries listed in the link command
     # in order for the headers to be available
     TARGET_LINK_LIBRARIES(
@@ -96,5 +88,25 @@ ELSE()
         OpenFOAM
         Qt${PARAVIEW_QT_MAJOR_VERSION}::Core
         Qt${PARAVIEW_QT_MAJOR_VERSION}::Gui
+        LINK_PRIVATE
+        pqApplicationComponents
+    )
+ELSE()
+    # Assume QT version 5 if it hasn't been defined
+    IF(NOT PARAVIEW_QT_MAJOR_VERSION)
+        set(PARAVIEW_QT_MAJOR_VERSION 5)
+    ENDIF()
+    # Paraview-5.5.x and higher needs QT libraries listed in the link command
+    # in order for the headers to be available
+    TARGET_LINK_LIBRARIES(
+        ${TARGET_NAME}
+        LINK_PUBLIC
+        vtkPVFoam
+        finiteVolume
+        OpenFOAM
+        Qt${PARAVIEW_QT_MAJOR_VERSION}::Core
+        Qt${PARAVIEW_QT_MAJOR_VERSION}::Gui
+        LINK_PRIVATE
+        ParaView::pqApplicationComponents
     )
 ENDIF()

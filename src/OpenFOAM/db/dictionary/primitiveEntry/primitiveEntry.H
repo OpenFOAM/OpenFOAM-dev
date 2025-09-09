@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -106,6 +106,16 @@ public:
         template<class T>
         primitiveEntry(const keyType&, const T&);
 
+        //- Construct from keyword and a T and start and end line numbers
+        template<class T>
+        primitiveEntry
+        (
+            const keyType&,
+            const T&,
+            const label startLineNumber,
+            const label endLineNumber = -1
+        );
+
         autoPtr<entry> clone(const dictionary&) const
         {
             return autoPtr<entry>(new primitiveEntry(*this));
@@ -129,11 +139,8 @@ public:
             return ITstream::name();
         }
 
-        //- Return line number of first token in dictionary
-        label startLineNumber() const;
-
         //- Return line number of last token in dictionary
-        label endLineNumber() const;
+        virtual label endLineNumber() const;
 
         //- Return true because this entry is a stream
         bool isStream() const

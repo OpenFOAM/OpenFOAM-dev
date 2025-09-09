@@ -48,8 +48,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_cloudVolumeFraction_H
-#define functionObjects_cloudVolumeFraction_H
+#ifndef cloudVolumeFraction_functionObject_H
+#define cloudVolumeFraction_functionObject_H
 
 #include "cloudFvMeshFunctionObject.H"
 

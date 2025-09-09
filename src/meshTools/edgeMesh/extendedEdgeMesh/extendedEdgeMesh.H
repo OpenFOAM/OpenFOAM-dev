@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,7 +107,7 @@ public:
     {
         EXTERNAL,   // "Convex" edge
         INTERNAL,   // "Concave" edge
-        FLAT,       // Neither concave or convex, on a flat surface
+        FLAT,       // Neither concave nor convex, on a flat surface
         OPEN,       // i.e. only connected to one face
         MULTIPLE,   // Multiply connected (connected to more than two faces)
         NONE        // Not a classified feature edge (consistency with

@@ -18,8 +18,8 @@ solvers
 {
     "alpha.*"
     {
-        nAlphaCorr      4;
-        nAlphaSubCycles 4;
+        nCorrectors     4;
+        nSubCycles      4;
         cAlpha          1;
     }
 

@@ -20,7 +20,7 @@ geometry
 {
     torus
     {
-        type    triSurfaceMesh;
+        type    triSurface;
         file    "torus.obj";
     }
 }

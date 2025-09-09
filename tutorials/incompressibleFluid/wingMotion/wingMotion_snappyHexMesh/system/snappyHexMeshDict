@@ -20,7 +20,7 @@ addLayers       true;
 
 
 // Geometry. Definition of all surfaces. All surfaces are of class
-// searchableSurface.
+// surface.
 // Surfaces are used
 // - to specify refinement for any mesh cell intersecting it
 // - to specify refinement for any mesh cell inside/outside/near
@@ -29,13 +29,13 @@ geometry
 {
     wing
     {
-        type    triSurfaceMesh;
+        type    triSurface;
         file    "wing_5degrees.obj";
     }
 
     refinementBox
     {
-        type    searchableBox;
+        type    box;
         min     (-1 -1 -1);
         max     ( 5  1  1);
     }

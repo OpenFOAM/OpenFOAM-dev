@@ -8,6 +8,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 cleanVoFCase
 
 # Un-merge the source case
-foamUnMergeCase $FOAM_TUTORIALS/incompressibleVoF/damBreak
+path=$FOAM_TUTORIALS/incompressibleVoF
+foamUnMergeCase $path/damBreakLaminar $path/damBreak
 
 #------------------------------------------------------------------------------

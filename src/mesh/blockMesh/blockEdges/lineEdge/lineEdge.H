@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,8 +32,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef blockEdges_lineEdge_H
-#define blockEdges_lineEdge_H
+#ifndef lineEdge_blockEdge_H
+#define lineEdge_blockEdge_H
 
 #include "blockEdge.H"
 
@@ -70,7 +70,7 @@ public:
         (
             const dictionary& dict,
             const label index,
-            const searchableSurfaces& geometry,
+            const searchableSurfaceList& geometry,
             const pointField&,
             Istream&
         );

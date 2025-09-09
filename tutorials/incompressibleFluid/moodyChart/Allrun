@@ -1,0 +1,27 @@
+#!/bin/sh
+
+# Run from this directory
+cd "${0%/*}" || exit 1
+
+# Source tutorial run functions
+. "$WM_PROJECT_DIR/bin/tools/RunFunctions"
+
+runApplication blockMesh
+
+echo "Running laminar for Re < 2000 until t = 2"
+runApplication foamRun
+
+if ! isTest "$@"
+then
+    echo "Running RAS for Re > 2000 from t = 2"
+    runApplication foamDictionary -set "endTime=10" system/controlDict
+    runApplication -a foamDictionary -set "simulationType=RAS" \
+                   constant/momentumTransport
+    cp 0/k 0/omega 0/nut 2
+
+    runApplication -a foamRun
+
+    ./frictionFactorReGraph
+fi
+
+#------------------------------------------------------------------------------

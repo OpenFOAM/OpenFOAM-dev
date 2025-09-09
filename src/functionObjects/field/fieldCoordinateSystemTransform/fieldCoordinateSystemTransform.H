@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,8 +77,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_fieldCoordinateSystemTransform_H
-#define functionObjects_fieldCoordinateSystemTransform_H
+#ifndef fieldCoordinateSystemTransform_functionObject_H
+#define fieldCoordinateSystemTransform_functionObject_H
 
 #include "fvMeshFunctionObject.H"
 #include "coordinateSystem.H"

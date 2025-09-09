@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,6 +75,11 @@ class ZoneList
         //- Reference to mesh
         const MeshType& mesh_;
 
+        //- Current timeIndex
+        mutable label timeIndex_;
+
+        mutable autoPtr<ZoneType> all_;
+
 
     // Private Member Functions
 
@@ -83,6 +88,9 @@ class ZoneList
 
 
 public:
+
+        typedef ZoneType zoneType;
+
 
     // Constructors
 
@@ -112,16 +120,23 @@ public:
             return mesh_;
         }
 
+        label timeIndex() const
+        {
+            return timeIndex_;
+        }
+
         using PtrListDictionary<ZoneType>::found;
 
         //- Return true if objectIndex is in any zone
         bool found(const label objectIndex) const;
 
+        using PtrListDictionary<ZoneType>::lookupPtr;
+
+        //- Return const reference to ZoneType by name
+        const ZoneType* lookupPtr(const word& name) const;
+
         //- Given a global object index, return the list of zones it is in
         labelList whichZones(const label objectIndex) const;
-
-        //- Return a list of zone types
-        wordList types() const;
 
         //- Return the set of zone indices corresponding to the given names
         //  By default warns if given names are not found
@@ -132,10 +147,10 @@ public:
         ) const;
 
         //- Append or update a zone
-        void append(ZoneType*) const;
+        const ZoneType& append(ZoneType*) const;
 
         //- Append or update a zone
-        void append(const ZoneType&) const;
+        const ZoneType& append(const ZoneType&) const;
 
         //- Clear addressing
         void clearAddressing();
@@ -152,6 +167,10 @@ public:
 
         //- Insert given indices into zones
         void insert(const List<labelHashSet>& zonesIndices);
+
+        //- Return true if any of the zones were not updated by zoneGenerators
+        //  following mesh topology change
+        bool noTopoUpdate() const;
 
         //- Correct zones after moving points
         virtual void movePoints(const pointField&);
@@ -186,10 +205,19 @@ public:
         ) const;
 
 
+        //- Return const reference to the all zone
+        const ZoneType& all() const;
+
+
     // Member Operators
 
-        //- Return const and non-const reference to ZoneType by index.
-        using PtrListDictionary<ZoneType>::operator[];
+        using PtrList<ZoneType>::operator[];
+
+        //- Return const reference to ZoneType by name
+        const ZoneType& operator[](const word& name) const;
+
+        //- Return non-const reference to ZoneType by name
+        ZoneType& operator[](const word& name);
 
         //- Disallow default bitwise assignment
         void operator=(const ZoneList<ZoneType, ZonesType, MeshType>&) = delete;

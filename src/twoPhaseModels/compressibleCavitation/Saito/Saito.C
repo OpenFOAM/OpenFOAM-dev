@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,10 +52,11 @@ namespace cavitationModels
 Foam::compressible::cavitationModels::Saito::Saito
 (
     const dictionary& dict,
-    const compressibleTwoPhases& phases
+    const compressibleTwoPhases& phases,
+    const label liquidIndex
 )
 :
-    cavitationModel(dict, phases),
+    cavitationModel(dict, phases, liquidIndex),
 
     Ca_("Ca", dimless/dimLength, dict),
     Cv_("Cv", dimless, dict),

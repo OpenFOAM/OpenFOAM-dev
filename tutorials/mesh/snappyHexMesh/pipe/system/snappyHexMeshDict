@@ -23,13 +23,13 @@ geometry
 {
     pipe
     {
-        type closedTriSurfaceMesh;
+        type closedTriSurface;
         file "pipe.obj";
     }
 
     pipeWall
     {
-        type closedTriSurfaceMesh;
+        type closedTriSurface;
         file "pipeWall.obj";
     }
 };

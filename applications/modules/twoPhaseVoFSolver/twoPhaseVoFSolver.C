@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ License
 
 #include "twoPhaseVoFSolver.H"
 #include "fvcAverage.H"
+#include "interfaceCompression.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -89,6 +90,28 @@ Foam::solvers::twoPhaseVoFSolver::twoPhaseVoFSolver
 
     interface(mixture, alpha1, alpha2, U)
 {
+    const word alphaScheme(mesh.schemes().div(divAlphaName)[1].wordToken());
+
+    if (!compressionSchemes.found(alphaScheme))
+    {
+        WarningInFunction
+            << "Scheme " << alphaScheme << " for " << divAlphaName
+            << " is not an interface compression scheme:"
+            << compressionSchemes.toc() << endl;
+    }
+
+    const dictionary& alphaControls = mesh.solution().solverDict(alpha1.name());
+
+    if (alphaControls.found("cAlpha"))
+    {
+        FatalErrorInFunction
+            << "Deprecated and unused cAlpha entry specified in "
+            << alphaControls.name() << nl
+            << "Please update the case to use one of the run-time "
+               "selectable interface compression schemes:"
+            << compressionSchemes.toc() << exit(FatalError);
+    }
+
     if (transient())
     {
         correctCoNum();

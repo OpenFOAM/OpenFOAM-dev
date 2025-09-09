@@ -16,7 +16,7 @@ FoamFile
 
 dimensions      [ 1 -1 -1 0 0 0 0 ];
 
-internalField   uniform 1e-08;
+internalField   uniform 1e-8;
 
 boundaryField
 {
@@ -28,38 +28,12 @@ boundaryField
     outlet
     {
         type            calculated;
-        value           uniform 1e-08;
+        value           $internalField;
     }
     wall
     {
-        type            compressible::alphatWallBoilingWallFunction;
-        otherPhase      gas;
-        phaseType       liquid;
-        Prt             0.85;
-        partitioningModel
-        {
-            type            Lavieville;
-            alphaCrit       0.2;
-        }
-        nucleationSiteModel
-        {
-            type            LemmertChawla;
-            Cn              1;
-            NRef            30000000;
-            deltaTRef       10;
-        }
-        departureDiameterModel
-        {
-            type            TolubinskiKostanchuk;
-            dRef            0.00024;
-            dMax            0.0014;
-            dMin            1e-06;
-        }
-        departureFrequencyModel
-        {
-            type            KocamustafaogullariIshii;
-            Cf              1.18;
-        }
+        type            alphatBoilingWallFunction;
+        libs            ("libmultiphaseEulerFvModels.so");
         value           uniform 0.01;
     }
     front

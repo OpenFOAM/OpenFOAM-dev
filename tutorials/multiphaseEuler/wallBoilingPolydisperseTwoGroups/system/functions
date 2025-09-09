@@ -14,148 +14,165 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-writeWallBoilingProperties
-{
-    type            wallBoilingProperties;
-    libs            ( "libmultiphaseEulerFunctionObjects.so" );
-    writeControl    writeTime;
-    phase           liquid;
-}
+#includeFunc wallBoilingProperty(wetFraction)
+#includeFunc wallBoilingProperty(dDeparture)
+#includeFunc wallBoilingProperty(fDeparture)
+#includeFunc wallBoilingProperty(nucleationSiteDensity)
+
+#includeFunc removeObjects
+(
+    wallBoiling:wetFraction,
+    wallBoiling:dDeparture,
+    wallBoiling:fDeparture,
+    wallBoiling:nucleationSiteDensity
+)
+
 volumeDensity.diameter.bubbles
 {
     type            populationBalanceSizeDistribution;
-    libs            ( "libmultiphaseEulerFunctionObjects.so" );
+    libs            ("libmultiphaseEulerFunctionObjects.so");
     writeControl    runTime;
     writeInterval   0.5;
     setFormat       raw;
     log             yes;
     functionType    volumeConcentration;
     coordinateType  diameter;
-    select          cellZone;
-    cellZone        x349;
+    cellZone
+    {
+        type        box;
+        box         (3.48 -0.1 -0.1) (3.5 0.1 0.1);
+    }
     populationBalance bubbles;
 }
+
 volumeDensity_bulk.diameter.bubbles
 {
     type            populationBalanceSizeDistribution;
-    libs            ( "libmultiphaseEulerFunctionObjects.so" );
+    libs            ("libmultiphaseEulerFunctionObjects.so");
     writeControl    runTime;
     writeInterval   0.5;
     setFormat       raw;
     log             yes;
     functionType    volumeConcentration;
     coordinateType  diameter;
-    select          cellZone;
-    cellZone        x349_bulk;
+    cellZone
+    {
+        type        box;
+        box         (3.48 0.0 -0.1) (3.5 0.005 0.1);
+    }
     populationBalance bubbles;
 }
+
 volumeDensity_wall.diameter.bubbles
 {
     type            populationBalanceSizeDistribution;
-    libs            ( "libmultiphaseEulerFunctionObjects.so" );
+    libs            ("libmultiphaseEulerFunctionObjects.so");
     writeControl    runTime;
     writeInterval   0.5;
     setFormat       raw;
     log             yes;
     functionType    volumeConcentration;
     coordinateType  diameter;
-    select          cellZone;
-    cellZone        x349_wall;
+    cellZone
+    {
+        type        box;
+        box         (3.48 0.0093 -0.1) (3.5 0.1 0.1);
+    }
     populationBalance bubbles;
 }
+
 outflow
 {
     type            surfaceFieldValue;
-    libs            ( "libfieldFunctionObjects.so" );
+    libs            ("libfieldFunctionObjects.so");
     log             yes;
     writeFields     false;
-    select          patch;
     patch           outlet;
     operation       sum;
-    fields          ( alphaRhoPhi.gas alphaRhoPhi.gas2 alphaRhoPhi.liquid );
+    fields          (alphaRhoPhi.gas alphaRhoPhi.gas2 alphaRhoPhi.liquid);
 }
+
 inflow
 {
     type            surfaceFieldValue;
-    libs            ( "libfieldFunctionObjects.so" );
+    libs            ("libfieldFunctionObjects.so");
     log             yes;
     writeFields     false;
-    select          patch;
     patch           inlet;
     operation       sum;
-    fields          ( alphaRhoPhi.gas alphaRhoPhi.gas2 alphaRhoPhi.liquid );
+    fields          (alphaRhoPhi.gas alphaRhoPhi.gas2 alphaRhoPhi.liquid);
 }
+
 outletGas
 {
     type            surfaceFieldValue;
-    libs            ( "libfieldFunctionObjects.so" );
+    libs            ("libfieldFunctionObjects.so");
     log             yes;
     writeFields     false;
-    select          patch;
     patch           outlet;
     operation       sum;
     weightField     alphaRhoPhi.gas;
-    fields          ( h.gas );
+    fields          (h.gas);
 }
+
 outletGas2
 {
     type            surfaceFieldValue;
-    libs            ( "libfieldFunctionObjects.so" );
+    libs            ("libfieldFunctionObjects.so");
     log             yes;
     writeFields     false;
-    select          patch;
     patch           outlet;
     operation       sum;
     weightField     alphaRhoPhi.gas2;
-    fields          ( h.gas2 );
+    fields          (h.gas2);
 }
+
 outletLiquid
 {
     type            surfaceFieldValue;
-    libs            ( "libfieldFunctionObjects.so" );
+    libs            ("libfieldFunctionObjects.so");
     log             yes;
     writeFields     false;
-    select          patch;
     patch           outlet;
     operation       sum;
     weightField     alphaRhoPhi.liquid;
-    fields          ( h.liquid );
+    fields          (h.liquid);
 }
+
 inletGas
 {
     type            surfaceFieldValue;
-    libs            ( "libfieldFunctionObjects.so" );
+    libs            ("libfieldFunctionObjects.so");
     log             yes;
     writeFields     false;
-    select          patch;
     patch           inlet;
     operation       sum;
     weightField     alphaRhoPhi.gas;
-    fields          ( h.gas );
+    fields          (h.gas);
 }
+
 inletGas2
 {
     type            surfaceFieldValue;
-    libs            ( "libfieldFunctionObjects.so" );
+    libs            ("libfieldFunctionObjects.so");
     log             yes;
     writeFields     false;
-    select          patch;
     patch           inlet;
     operation       sum;
     weightField     alphaRhoPhi.gas2;
-    fields          ( h.gas2 );
+    fields          (h.gas2);
 }
+
 inletLiquid
 {
     type            surfaceFieldValue;
-    libs            ( "libfieldFunctionObjects.so" );
+    libs            ("libfieldFunctionObjects.so");
     log             yes;
     writeFields     false;
-    select          patch;
     patch           inlet;
     operation       sum;
     weightField     alphaRhoPhi.liquid;
-    fields          ( h.liquid );
+    fields          (h.liquid);
 }
 
 // ************************************************************************* //

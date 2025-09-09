@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -142,6 +142,9 @@ public:
             //- Set element to tmp value provided and return old element
             //  using the element's keyword as the key
             autoPtr<T> set(const label, const tmp<T>&);
+
+            //- Remove an entry from the list and return
+            autoPtr<T> remove(const word& key);
 
 
         // Conversion

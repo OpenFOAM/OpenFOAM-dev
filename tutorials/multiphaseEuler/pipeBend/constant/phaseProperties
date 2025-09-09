@@ -9,13 +9,12 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
+    location    "constant";
     object      phaseProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-type populationBalanceMultiphaseSystem;
-
-phases (particles water);
+phases          (particles water);
 
 populationBalances (agglomerates);
 
@@ -24,7 +23,6 @@ particles
     type            pureIsothermalPhaseModel;
 
     diameterModel   velocityGroup;
-
     velocityGroupCoeffs
     {
         populationBalance agglomerates;
@@ -67,7 +65,6 @@ particles
     }
 
     alphaMax        0.62;
-
     residualAlpha   1e-8;
 }
 
@@ -79,6 +76,18 @@ water
 
     residualAlpha     1e-8;
 }
+
+blending
+{
+    default
+    {
+        type            continuous;
+        phase water;
+    }
+}
+
+surfaceTension
+{}
 
 populationBalanceCoeffs
 {
@@ -106,74 +115,6 @@ populationBalanceCoeffs
                 Df 2.4;
             }
         );
-
-        driftModels
-        ();
-
-        nucleationModels
-        ();
-    }
-}
-
-blending
-{
-    default
-    {
-        type            continuous;
-        phase water;
-    }
-}
-
-surfaceTension
-{}
-
-aspectRatio
-{}
-
-interfaceCompression
-{}
-
-drag
-{
-    particles_dispersedIn_water
-    {
-        type            WenYu;
-    }
-}
-
-virtualMass
-{
-    particles_dispersedIn_water
-    {
-        type            constantCoefficient;
-        Cvm             0.5;
-    }
-}
-
-heatTransfer
-{}
-
-phaseTransfer
-{}
-
-lift
-{
-    particles_dispersedIn_water
-    {
-        type            SaffmanMei;
-        residualRe      1e-6;
-    }
-}
-
-wallLubrication
-{}
-
-turbulentDispersion
-{
-    particles_dispersedIn_water
-    {
-        type            Burns;
-        sigma           1;
     }
 }
 

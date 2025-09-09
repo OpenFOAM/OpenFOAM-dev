@@ -7,12 +7,12 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Make 3D mesh in slab of cells.
 cd wingMotion_snappyHexMesh
 runApplication blockMesh
-runApplication snappyHexMesh -overwrite
+runApplication snappyHexMesh
 
 # Make a 2D mesh by extruding a patch and solve to steady state.
 cd ../wingMotion2D_steady
 runApplication extrudeMesh
-runApplication createPatch -overwrite
+runApplication createPatch
 runApplication foamRun
 
 # Copy the mesh from the steady state case and map the results to a

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,8 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "fvSource.H"
-#include "fvCellSet.H"
-#include "fvMatrices.H"
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
 
@@ -60,12 +58,6 @@ Foam::fvSource::~fvSource()
 Foam::wordList Foam::fvSource::addSupFields() const
 {
     return wordList::null();
-}
-
-
-Foam::label Foam::fvSource::nCells() const
-{
-    return cells().size();
 }
 
 

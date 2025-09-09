@@ -7,14 +7,20 @@
 -------------------------------------------------------------------------------
 Description
     Writes graphs of patch face values, area-averaged in planes perpendicular
-    to a given direction. It adaptively grades the distribution of graph points
-    to match the resolution of the mesh.
+    to a given direction or in contours of a given distance field. It
+    adaptively grades the distribution of graph points to match the resolution
+    of the mesh.
 
 \*---------------------------------------------------------------------------*/
 
 patch           <patchName>; // Patch on which to average values
 
 direction       <direction>; // Direction along which to graph
+
+//distance      <fieldName>; // Name of the distance field. Contours of this
+                             // field are used to define the layers in which to
+                             // average. Either this or direction should be
+                             // specified; not both.
 
 nPoints         <nPoints>;   // Number of points in the graph
 

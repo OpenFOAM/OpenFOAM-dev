@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ Usage
     XiCorr
     {
         type            <type>;
-        select          all;
+        cellZone        all;
         bMin            0.05;
     }
     \endverbatim
@@ -41,7 +41,7 @@ Usage
     Where:
     \table
         Property         | Description              | Required  | Default value
-        select           | Correction cell set selection | yes  |
+        cellZone         | Correction cellZone      | yes       |
         bMin             | Min b below which no correction | no | 0.01
     \endtable
 
@@ -53,7 +53,7 @@ SourceFiles
 #ifndef XiCorrModel_H
 #define XiCorrModel_H
 
-#include "fvCellSet.H"
+#include "fvCellZone.H"
 #include "volFieldsFwd.H"
 #include "dimensionedTypes.H"
 #include "runTimeSelectionTables.H"
@@ -71,8 +71,8 @@ class XiCorrModel
 {
     // Private Data
 
-        //- The set of Xi correction cells
-        fvCellSet set_;
+        //- The Xi correction cellZone
+        fvCellZone zone_;
 
         //- Minimum b below which the Xi correction is not applied
         //  Defaults to 0.01

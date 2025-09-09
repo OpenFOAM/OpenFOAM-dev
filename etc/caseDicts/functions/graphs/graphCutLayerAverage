@@ -1,0 +1,43 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Writes graphs of cell values, volume-averaged in planes perpendicular
+    to a given direction or in contours of a given distance field. It
+    adaptively grades the distribution of graph points to match the resolution
+    of the mesh.
+
+\*---------------------------------------------------------------------------*/
+
+cellZone        all;         // Cells to include in the plot
+
+direction       <direction>; // Direction along which to graph
+
+//distance      <fieldName>; // Name of the distance field. Contours of this
+                             // field are used to define the layers in which to
+                             // average. Either this or direction should be
+                             // specified; not both.
+
+nPoints         <nPoints>;   // Number of points in the graph
+
+interpolate     no;          // Whether or not to do linear interpolation
+                             // between the plot points. Generates a smoother,
+                             // higher order result. Loses the ability to
+                             // visualise and reason about the layer
+                             // thicknesses.
+
+axis            default;     // The independent variable of the graph. Can be
+                             // "x", "y", "z", "xyz" (all coordinates written
+                             // out), "distance" (plane distance from the
+                             // origin), or "default" (both coordinates and
+                             // distance written out).
+
+fields          (<fieldNames>);
+
+#includeEtc "caseDicts/functions/graphs/graphCutLayerAverage.cfg"
+
+// ************************************************************************* //

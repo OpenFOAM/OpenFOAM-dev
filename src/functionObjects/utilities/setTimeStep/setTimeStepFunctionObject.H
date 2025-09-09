@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,8 +46,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_setTimeStepFunctionObject_H
-#define functionObjects_setTimeStepFunctionObject_H
+#ifndef setTimeStepFunctionObject_functionObject_H
+#define setTimeStepFunctionObject_functionObject_H
 
 #include "functionObject.H"
 #include "Function1.H"

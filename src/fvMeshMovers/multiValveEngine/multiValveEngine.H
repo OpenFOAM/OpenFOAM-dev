@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,7 @@ Description
     - Smooth mesh motion between a moving object and other patches.
 
     - linerPatches: the set of patches corresponding to the cylinder liner
-      Used by createEngineZones
+      Used by zoneGenerators::cylinderHeadPoints
 
     - slidingPatches: a set of patches along which mesh is allowed
       to deform. For example, on the cylinder liner, it is desired to
@@ -49,7 +49,7 @@ Description
 
     - Run-time clearance estimation based on patch-to-patch distances printed.
 
-    - Supports cellSet and cellZone definitions to restrict mesh motion.
+    - Supports cellZone definitions to restrict mesh motion.
 
     - Supports domains with nonConformalCoupling (NCC) interfaces,
       enabling e.g. nodes to slide along with the interface.
@@ -79,10 +79,10 @@ Description
         - staticFrozenLayerThickness: thickness of layer in which points
           are fixed with respect to static patches (e.g. walls). (Default 0)
 
-        - cosineScaling: a switch whether nodal translation is weighted by
-          its distance from the moving object. The objective is to yield less
-          deformation near the moving object and sustain e.g. boundary layer.
-          (Default no, i.e. linear weighting)
+        - cosineScale: scaling factor between 0 and 1 for cosine scaling applied
+          to the motion. A value of 0 means linear weighting, a value of 1 means
+          full cosine scaling (much less deformation near the moving object) and
+          sustains e.g. boundary layer.  (Default 0, i.e. linear weighting)
 
         - travelInterval: part of the stroke travelled after
           which the cached motion scaling weights are recalculated
@@ -166,7 +166,7 @@ Description
 
             travelInterval      0.1;
 
-            cosineScaling       yes;
+            cosineScale         0.5;
         }
 
         valves
@@ -183,7 +183,7 @@ Description
 
                 travelInterval      0.01;
 
-                cosineScaling       yes;
+                cosineScale         1;
 
                 minLift     0.001;
 
@@ -211,7 +211,7 @@ Description
       there should be no horizontal NCC interface separating piston from
       cylinder head as it would result in potentially ill defined mesh
       deformation. Due to same feature, in a schematic case setup above, valve
-      motion affects only cells between NCC patches even though no cellSet is
+      motion affects only cells between NCC patches even though no cellZone is
       explicitly defined.
 
 SourceFiles
@@ -305,9 +305,8 @@ public:
             //- Interpolation scale (1 at moving patches, 0 at far-field)
             pointScalarField scale_;
 
-            //- Switch to use cosine-based scaling
-            //  for the boundary point motion
-            Switch cosine_;
+            //- Cosine scale for the boundary point motion, between 0 and 1
+            const scalar cosineScale_;
 
             //- Update the scale_ field when the travel exceeds travelInterval
             const scalar travelInterval_;

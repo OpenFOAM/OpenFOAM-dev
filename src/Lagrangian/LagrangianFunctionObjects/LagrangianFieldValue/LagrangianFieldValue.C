@@ -88,19 +88,13 @@ namespace functionObjects
 }
 }
 
-
-template<>
-const char* Foam::NamedEnum
-<
-    Foam::functionObjects::LagrangianFieldValue::operationType,
-    6
->::names[] = {"sum", "average", "min", "max", "minMag", "maxMag"};
-
 const Foam::NamedEnum
 <
     Foam::functionObjects::LagrangianFieldValue::operationType,
     6
-> Foam::functionObjects::LagrangianFieldValue::operationTypeNames_;
+>
+Foam::functionObjects::LagrangianFieldValue::operationTypeNames_
+{"sum", "average", "min", "max", "minMag", "maxMag"};
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -307,7 +301,7 @@ void Foam::functionObjects::LagrangianFieldValue::writeValueAndLocationValues
     {
         FixedList<label, pTraits<Type>::nComponents>& ei = result.elementi;
 
-        ei = 0;
+        ei = Zero;
 
         for (label i = 1; i < field.size(); ++ i)
         {

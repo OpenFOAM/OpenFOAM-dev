@@ -23,7 +23,7 @@ geometry
 {
     CAD
     {
-        type triSurfaceMesh;
+        type triSurface;
         file "CAD.obj";
         regions
         {
@@ -34,7 +34,7 @@ geometry
 
     solid
     {
-        type triSurfaceMesh;
+        type triSurface;
         file "solid.obj";
     }
 };

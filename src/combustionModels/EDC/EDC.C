@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,12 +28,9 @@ License
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-template<>
-const char* Foam::NamedEnum<Foam::combustionModels::EDCversions, 4>::names[] =
-    {"v1981", "v1996", "v2005", "v2016"};
-
 const Foam::NamedEnum<Foam::combustionModels::EDCversions, 4>
-    Foam::combustionModels::EDCversionNames;
+Foam::combustionModels::EDCversionNames
+{"v1981", "v1996", "v2005", "v2016"};
 
 const Foam::combustionModels::EDCversions
     Foam::combustionModels::EDCdefaultVersion =

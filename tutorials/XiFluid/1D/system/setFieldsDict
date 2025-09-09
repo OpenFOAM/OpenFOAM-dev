@@ -14,26 +14,29 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-defaultFieldValues
-(
-    volScalarFieldValue b 1
-    volScalarFieldValue T 300
-    volVectorFieldValue U (-1.5 0 0)
-);
+defaultValues
+{
+    b   1;
+    T   300;
+    U   (-1.5 0 0);
+}
 
-regions
-(
-    boxToCell
+zones
+{
+    burnt
     {
-        box (0 -1 -1) (0.025 1 1);
-        fieldValues
-        (
-            volScalarFieldValue b 0
-            volScalarFieldValue T 2000
-            volVectorFieldValue U (-10 0 0)
-        );
-    }
-);
+        type        box;
+        zoneType    cell;
 
+        box         (0 -1 -1) (0.025 1 1);
+
+        values
+        {
+            b   0;
+            T   2000;
+            U   (-10 0 0);
+        }
+    }
+}
 
 // ************************************************************************* //

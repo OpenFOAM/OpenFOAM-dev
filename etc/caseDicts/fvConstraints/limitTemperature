@@ -13,11 +13,11 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-type       limitTemperature;
+type        limitTemperature;
 
-select     all;
+cellZone    all;
 
-min        <200>;
-max        <6000>;
+min         <200>;
+max         <6000>;
 
 //************************************************************************** //

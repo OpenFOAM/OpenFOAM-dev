@@ -176,10 +176,24 @@ Foam::tmp<Foam::scalarField> Foam::constSolidThermo::he
 }
 
 
+Foam::tmp<Foam::volScalarField::Internal> Foam::constSolidThermo::he
+(
+    const volScalarField::Internal& T,
+    const fvSource& model,
+    const volScalarField::Internal& source
+) const
+{
+    NotImplemented;
+    return tmp<volScalarField::Internal>(nullptr);
+}
+
+
 Foam::tmp<Foam::scalarField> Foam::constSolidThermo::he
 (
     const scalarField& T,
-    const fvSource& source
+    const fvSource& model,
+    const scalarField& source,
+    const labelUList& cells
 ) const
 {
     NotImplemented;

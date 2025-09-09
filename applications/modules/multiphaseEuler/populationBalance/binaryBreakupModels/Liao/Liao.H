@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,15 +45,15 @@ Description
 
 Usage
     \table
-        Property       | Description              | Required    | Default value
-        BTurb          | coefficient BTurb        | no          | 1.0
-        BShear         | coefficient Bbuoy        | no          | 1.0
-        BEddy          | coefficient BEddy        | no          | 1.0
-        BFric          | coefficient Bwake        | no          | 1.0
-        turbulence     | Switch for turbulence    | yes         | none
-        laminarShear   | Switch for laminar shear | yes         | none
-        turbulentShear | Switch for eddies        | yes         | none
-        friction       | Switch for friction      | yes         | none
+        Property           | Description              | Required | Default value
+        BTurb              | coefficient BTurb        | no       | 1.0
+        BShear             | coefficient Bbuoy        | no       | 1.0
+        BEddy              | coefficient BEddy        | no       | 1.0
+        BFric              | coefficient Bwake        | no       | 1.0
+        turbulence         | Switch for turbulence    | yes      | none
+        laminarShear       | Switch for laminar shear | yes      | none
+        turbulentShear     | Switch for eddies        | yes      | none
+        interfacialFriction| Switch for friction      | yes      | none
     \endtable
 
 SourceFiles
@@ -86,6 +86,9 @@ class Liao
     public LiaoBase
 {
     // Private Data
+
+        //- Disambiguate the population balance reference
+        using binaryBreakupModel::popBal_;
 
         //- Optional coefficient BTurb
         dimensionedScalar BTurb_;
@@ -139,7 +142,7 @@ public:
         //- Add to binary breakupRate
         virtual void addToBinaryBreakupRate
         (
-            volScalarField& binaryBreakupRate,
+            volScalarField::Internal& binaryBreakupRate,
             const label i,
             const label j
         );

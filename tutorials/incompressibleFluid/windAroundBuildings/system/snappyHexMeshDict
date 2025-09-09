@@ -23,13 +23,13 @@ geometry
 {
     buildings
     {
-        type triSurfaceMesh;
+        type triSurface;
         file "buildings.obj";
     }
 
     refinementBox
     {
-        type searchableBox;
+        type box;
         min  (  0   0   0);
         max  (250 180  90);
     }

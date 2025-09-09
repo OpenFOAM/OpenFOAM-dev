@@ -46,6 +46,7 @@ SourceFiles
 // VTK forward declarations
 class vtkDataArraySelection;
 class vtkCallbackCommand;
+class vtkSMProxy;
 
 // OpenFOAM forward declarations
 namespace Foam
@@ -64,18 +65,20 @@ class vtkPVFoamReader
 {
 public:
     vtkTypeMacro(vtkPVFoamReader, vtkMultiBlockDataSetAlgorithm);
+
     void PrintSelf(ostream&, vtkIndent);
 
     static vtkPVFoamReader* New();
 
     // Description:
-    // Get the current timestep and the timestep range.
-    vtkGetVector2Macro(TimeStepRange, int);
-
-    // Description:
     // Set/Get the filename.
     vtkSetStringMacro(FileName);
     vtkGetStringMacro(FileName);
+
+    // Description:
+    // OpenFOAM read the decomposed case from the processor directories
+    vtkSetMacro(DecomposedCase, int);
+    vtkGetMacro(DecomposedCase, int);
 
     // Description:
     // OpenFOAM mesh caching control
@@ -128,42 +131,42 @@ public:
 
     // Description:
     // Get the current timestep
-    int  GetTimeStep();
+    int GetTimeStep();
 
     // Description:
     // Parts selection list control
     virtual vtkDataArraySelection* GetPartSelection();
-    int  GetNumberOfPartArrays();
-    int  GetPartArrayStatus(const char* name);
+    int GetNumberOfPartArrays();
+    int GetPartArrayStatus(const char* name);
     void SetPartArrayStatus(const char* name, int status);
     const char* GetPartArrayName(int index);
 
     // Description:
     // Field selection list control
     virtual vtkDataArraySelection* GetFieldSelection();
-    int  GetNumberOfFieldArrays();
-    int  GetFieldArrayStatus(const char* name);
+    int GetNumberOfFieldArrays();
+    int GetFieldArrayStatus(const char* name);
     void SetFieldArrayStatus(const char* name, int status);
     const char* GetFieldArrayName(int index);
 
     // Description:
     // lagrangianField selection list control
     virtual vtkDataArraySelection* GetlagrangianFieldSelection();
-    int  GetNumberOflagrangianFieldArrays();
-    int  GetlagrangianFieldArrayStatus(const char* name);
+    int GetNumberOflagrangianFieldArrays();
+    int GetlagrangianFieldArrayStatus(const char* name);
     void SetlagrangianFieldArrayStatus(const char* name, int status);
     const char* GetlagrangianFieldArrayName(int index);
 
     // Description:
     // LagrangianField selection list control
     virtual vtkDataArraySelection* GetLagrangianFieldSelection();
-    int  GetNumberOfLagrangianFieldArrays();
-    int  GetLagrangianFieldArrayStatus(const char* name);
+    int GetNumberOfLagrangianFieldArrays();
+    int GetLagrangianFieldArrayStatus(const char* name);
     void SetLagrangianFieldArrayStatus(const char* name, int status);
     const char* GetLagrangianFieldArrayName(int index);
 
     // Description:
-    // Callback registered with the SelectionObserver
+    // Callback registered with the SelectionModifiedObserver
     // for all the selection lists
     static void SelectionModifiedCallback
     (
@@ -173,7 +176,16 @@ public:
         void* calldata
     );
 
-    void SelectionModified();
+    // Description:
+    // Callback registered with the AnimationPropertyModifiedObserver
+    // for changes to animation properties
+    static void AnimationPropertyModifiedCallback
+    (
+        vtkObject* caller,
+        unsigned long eid,
+        void* clientdata,
+        void* calldata
+    );
 
 
 protected:
@@ -207,7 +219,10 @@ protected:
     virtual int FillOutputPortInformation(int, vtkInformation*);
 
     //- The observer to modify this object when array selections are modified
-    vtkCallbackCommand* SelectionObserver;
+    vtkCallbackCommand* SelectionModifiedObserver;
+
+    //- The observer to set the play-mode when animation properties are modified
+    vtkCallbackCommand* AnimationPropertyModifiedObserver;
 
     //- The file name for this case
     char* FileName;
@@ -218,11 +233,8 @@ protected:
 
 private:
 
-    //- Add/remove patch names to/from the view
-    void updatePatchNamesView(const bool show);
-
-    int TimeStepRange[2];
     int Refresh;
+    int DecomposedCase;
     int CacheMesh;
     int SkipZeroTime;
 
@@ -234,17 +246,25 @@ private:
     int ShowGroupsOnly;
     int InterpolateVolFields;
 
+    bool First;
+
     vtkDataArraySelection* PartSelection;
     vtkDataArraySelection* FieldSelection;
     vtkDataArraySelection* lagrangianFieldSelection;
     vtkDataArraySelection* LagrangianFieldSelection;
 
-    //- Cached data for output port0 (experimental!)
-    vtkMultiBlockDataSet* output0_;
-
     // BTX
     Foam::vtkPVFoam* foamData_;
     // ETX
+
+    //- Return information about the available time steps
+    int requestTimeSteps(vtkInformationVector*);
+
+    //- Add/remove patch names to/from the view
+    void updatePatchNamesView(const bool show);
+
+    //- Get the active animation scene proxy, if any
+    vtkSMProxy* getActiveAnimationSceneProxy();
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

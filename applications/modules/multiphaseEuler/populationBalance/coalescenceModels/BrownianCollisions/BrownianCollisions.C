@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,18 +87,19 @@ BrownianCollisions
 
 void Foam::diameterModels::coalescenceModels::BrownianCollisions::precompute()
 {
-    const volScalarField& T = popBal_.continuousPhase().thermo().T();
-    const volScalarField& p = popBal_.continuousPhase().fluidThermo().p();
+    const volScalarField::Internal& p =
+        popBal_.continuousPhase().fluidThermo().p();
 
-    lambda_ = k*T/(sqrt(2.0)*pi*p*sqr(sigma_));
+    const volScalarField::Internal& Tc = popBal_.continuousPhase().thermo().T();
+
+    lambda_ = k*Tc/(sqrt(2.0)*pi*p*sqr(sigma_));
 }
 
 
-void
-Foam::diameterModels::coalescenceModels::BrownianCollisions::
+void Foam::diameterModels::coalescenceModels::BrownianCollisions::
 addToCoalescenceRate
 (
-    volScalarField& coalescenceRate,
+    volScalarField::Internal& coalescenceRate,
     const label i,
     const label j
 )
@@ -106,22 +107,27 @@ addToCoalescenceRate
     const sizeGroup& fi = popBal_.sizeGroups()[i];
     const sizeGroup& fj = popBal_.sizeGroups()[j];
 
-    const volScalarField& T = popBal_.continuousPhase().thermo().T();
+    tmp<volScalarField> tdi = fi.d();
+    const volScalarField::Internal& di = tdi();
+    tmp<volScalarField> tdj = fj.d();
+    const volScalarField::Internal& dj = tdj();
 
-    tmp<volScalarField> tmu(popBal_.continuousPhase().fluidThermo().mu());
-    const volScalarField& mu = tmu();
+    const volScalarField::Internal& Tc = popBal_.continuousPhase().thermo().T();
 
-    const volScalarField Cci
+    tmp<volScalarField> tmuc(popBal_.continuousPhase().fluidThermo().mu());
+    const volScalarField::Internal& muc = tmuc();
+
+    const volScalarField::Internal Cci
     (
-        1 + lambda_/fi.d()*(A1_ + A2_*exp(-A3_*fi.d()/lambda_))
+        1 + lambda_/di*(A1_ + A2_*exp(-A3_*di/lambda_))
     );
 
-    const volScalarField Ccj
+    const volScalarField::Internal Ccj
     (
-        1 + lambda_/fj.d()*(A1_ + A2_*exp(-A3_*fj.d()/lambda_))
+        1 + lambda_/dj*(A1_ + A2_*exp(-A3_*dj/lambda_))
     );
 
-    coalescenceRate += 8*k*T/(3*mu)*(fi.d() + fj.d())*(Cci/fi.d() + Ccj/fj.d());
+    coalescenceRate += 8*k*Tc/(3*muc)*(di + dj)*(Cci/di + Ccj/dj);
 }
 
 

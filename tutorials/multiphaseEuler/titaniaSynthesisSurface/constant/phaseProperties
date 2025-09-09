@@ -14,38 +14,20 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-type populationBalanceMultiphaseSystem;
-
-phases (particles vapour);
+phases          (particles vapour);
 
 populationBalances (aggregates);
 
 particles
 {
-    type            multicomponentPhaseModel;
+    type            purePhaseModel;
 
     diameterModel   velocityGroup;
-
     velocityGroupCoeffs
     {
         populationBalance   aggregates;
 
         shapeModel          fractal;
-
-        fractalCoeffs
-        {
-            sinteringModel  KochFriedlander;
-
-            KochFriedlanderCoeffs
-            {
-                Cs 8.3e24;
-                n  4.0;
-                m  1.0;
-                Ta 3700.0;
-            }
-
-            surfaceGrowthType   ParkRogak;
-        }
 
         sizeGroups
         (
@@ -93,6 +75,18 @@ vapour
     residualAlpha   1e-5;
 }
 
+blending
+{
+    default
+    {
+        type            continuous;
+        phase           vapour;
+    }
+}
+
+surfaceTension
+{}
+
 populationBalanceCoeffs
 {
     aggregates
@@ -112,97 +106,7 @@ populationBalanceCoeffs
 
         breakupModels
         ();
-
-        driftModels
-        (
-            phaseChange
-            {
-                interfaces          (particles_vapour);
-                dmdtf               phaseTransfer:dmidtf;
-                specie              TiO2_s;
-            }
-        );
-
-        nucleationModels
-        (
-            reactionDriven
-            {
-                nucleationDiameter  4E-10;
-                velocityGroup       particles;
-                reactingPhase       vapour;
-                dmdtf               phaseTransfer:dmidtf;
-                specie              TiO2;
-            }
-        );
     }
 }
-
-blending
-{
-    default
-    {
-        type            continuous;
-        phase           vapour;
-    }
-}
-
-interfaceCompression
-{}
-
-surfaceTension
-{}
-
-drag
-{
-    particles_dispersedIn_vapour
-    {
-        type            timeScaleFiltered;
-        minRelaxTime    1e-4;
-        dragModel
-        {
-            type            aerosolDrag;
-            sigma           340e-12;
-        }
-    }
-}
-
-virtualMass
-{}
-
-heatTransfer
-{
-    particles_dispersedIn_vapour
-    {
-        type            timeScaleFiltered;
-        minRelaxTime    1e-4;
-
-        heatTransferModel
-        {
-            type            constantNu;
-            Nu              1;
-        }
-    }
-}
-
-phaseTransfer
-{
-    particles_dispersedIn_vapour
-    {
-        type reactionDriven;
-        species.vapour (TiO2 TiO2_s);
-    }
-}
-
-lift
-{}
-
-wallLubrication
-{}
-
-turbulentDispersion
-{}
-
-interfaceCompression
-{}
 
 // ************************************************************************* //

@@ -17,7 +17,14 @@ region          film;
 
 patches         (film);
 
-extrudeModel    linearNormal;
+extrudeModel
+{
+    type            linearNormal;
+
+    nLayers         1;
+    expansionRatio  1;
+    thickness       0.01;
+}
 
 intrude         yes;
 
@@ -31,14 +38,5 @@ regionPatchNames   (wall);
 
 regionOppositePatchTypes    (mappedFilmSurface);
 regionOppositePatchNames    (surface);
-
-nLayers         1;
-
-expansionRatio  1;
-
-linearNormalCoeffs
-{
-    thickness       0.01;
-}
 
 // ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,13 +54,15 @@ class snappyHexMeshConfiguration
 :
     public caseFileConfiguration
 {
-    // Private Typedefs
+protected:
+
+    // Protected Typedefs
 
         //- The surface type
         typedef meshingSurface::surfaceType surfaceType;
 
 
-    // Private Data
+    // Protected Data
 
         //- List of surfaces used for meshing
         const meshingSurfaceList& surfaces_;
@@ -92,14 +94,17 @@ class snappyHexMeshConfiguration
         //- Expansion ratio used with layer addition
         const scalar layerExpansionRatio_;
 
-        //- insidePoint parameter
-        point insidePoint_;
+        //- insidePoints option (true when '-insidePoints' selected)
+        const bool insidePointsOpt_;
+
+        //- insidePoints
+        const List<point> insidePoints_;
 
         //- nCellsBetweenLevels parameter
         const label nCellsBetweenLevels_;
 
 
-    // Private Member Functions
+    // Protected Member Functions
 
         //- Write switches
         void writeSnappySwitches();
@@ -183,7 +188,8 @@ public:
             const List<Tuple2<word, label>>& layers,
             const scalar firstLayerThickness,
             const scalar layerExpansionRatio,
-            const point& insidePoint,
+            const bool insidePointsOpt,
+            const List<point>& insidePoints,
             const label nCellsBetweenLevels
         );
 

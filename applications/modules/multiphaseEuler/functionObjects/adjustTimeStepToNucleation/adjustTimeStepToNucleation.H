@@ -55,8 +55,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_adjustTimeStepToNucleation_H
-#define functionObjects_adjustTimeStepToNucleation_H
+#ifndef adjustTimeStepToNucleation_functionObject_H
+#define adjustTimeStepToNucleation_functionObject_H
 
 #include "fvMeshFunctionObject.H"
 

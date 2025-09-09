@@ -31,7 +31,7 @@ addLayers       false;
 
 
 // Geometry. Definition of all surfaces. All surfaces are of class
-// searchableSurface.
+// surface.
 // Surfaces are used
 // - to specify refinement for any mesh cell intersecting it
 // - to specify refinement for any mesh cell inside/outside/near
@@ -40,14 +40,14 @@ geometry
 {
     box1x1x1
     {
-        type searchableBox;
+        type box;
         min (1.5 1 -0.5);
         max (3.5 2 0.5);
     }
 
     sphere
     {
-        type triSurfaceMesh;
+        type triSurface;
         file "sphere.stl"
 
         // Optional: non-default tolerance on intersections
@@ -79,7 +79,7 @@ geometry
 
     sphere2
     {
-        type searchableSphere;
+        type sphere;
         centre  (1.5 1.5 1.5);
         radius  1.03;
     }

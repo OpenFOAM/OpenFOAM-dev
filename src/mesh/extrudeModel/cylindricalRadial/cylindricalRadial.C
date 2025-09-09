@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,10 +44,10 @@ addToRunTimeSelectionTable(extrudeModel, cylindricalRadial, dictionary);
 
 cylindricalRadial::cylindricalRadial(const dictionary& dict)
 :
-    extrudeModel(typeName, dict),
-    axisPt_(coeffDict_.lookup<vector>("axisPt", dimLength)),
-    axis_(coeffDict_.lookup<vector>("axis", dimless)),
-    R_(Function1<scalar>::New("R", dimless, dimLength, coeffDict_))
+    extrudeModel(dict),
+    axisPt_(coeffDict(dict).lookup<vector>("axisPt", dimLength)),
+    axis_(coeffDict(dict).lookup<vector>("axis", dimless)),
+    R_(Function1<scalar>::New("R", dimless, dimLength, coeffDict(dict)))
 {
     axis_ /= mag(axis_);
 }

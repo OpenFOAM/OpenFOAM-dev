@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,8 +32,7 @@ Description
     The baffle joins two mesh regions, where the open fraction determines
     the interpolation weights applied to each cyclic- and neighbour-patch
     contribution. This means that this is boundary condition is meant to be
-    used in an extra wall beyond an existing cyclic patch pair. See PDRMesh
-    for more details.
+    used in an extra wall beyond an existing cyclic patch pair.
 
     Once the threshold is crossed, this condition activated and continues to
     open or close at a fixed rate using

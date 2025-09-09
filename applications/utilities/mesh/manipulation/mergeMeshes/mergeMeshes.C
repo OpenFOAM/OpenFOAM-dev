@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
 
     #include "addMeshOption.H"
     #include "addRegionOption.H"
-    #include "addOverwriteOption.H"
+    #include "addNoOverwriteOption.H"
 
     timeSelector::addOptions();
 
@@ -253,7 +253,7 @@ int main(int argc, char *argv[])
 
     #include "createSpecifiedPolyMesh.H"
 
-    const bool overwrite = args.optionFound("overwrite");
+    #include "setNoOverwrite.H"
     const word oldInstance = mesh.pointsInstance();
 
     if (!overwrite)

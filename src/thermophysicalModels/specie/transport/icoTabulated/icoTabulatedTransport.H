@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -139,7 +139,7 @@ public:
         //- Return the instantiated type name
         static word typeName()
         {
-            return "tabulated<" + Thermo::typeName() + '>';
+            return "icoTabulated<" + Thermo::typeName() + '>';
         }
 
         //- Dynamic viscosity [kg/m/s]

@@ -18,7 +18,7 @@ solvers
 {
     "alpha.*"
     {
-        nAlphaSubCycles 2;
+        nSubCycles      2;
     }
 
     p_rgh

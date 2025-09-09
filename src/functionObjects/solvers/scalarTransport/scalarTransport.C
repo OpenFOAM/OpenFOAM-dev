@@ -64,24 +64,16 @@ namespace functionObjects
 }
 }
 
-
-template<>
-const char* Foam::NamedEnum
+const Foam::NamedEnum
 <
     Foam::functionObjects::scalarTransport::diffusivityType,
     3
->::names[] =
+> Foam::functionObjects::scalarTransport::diffusivityTypeNames_
 {
     "none",
     "constant",
     "viscosity"
 };
-
-const Foam::NamedEnum
-<
-    Foam::functionObjects::scalarTransport::diffusivityType,
-    3
-> Foam::functionObjects::scalarTransport::diffusivityTypeNames_;
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -144,7 +136,8 @@ Foam::functionObjects::scalarTransport::scalarTransport
     deltaN_
     (
         "deltaN",
-        1e-8/pow(average(mesh_.V()), 1.0/3.0)
+        s_.dimensions()/dimLength,
+        1e-8/pow(average(mesh_.V()), 1.0/3.0).value()
     )
 {
     read(dict);
@@ -199,7 +192,11 @@ bool Foam::functionObjects::scalarTransport::read(const dictionary& dict)
             break;
     }
 
-    dict.readIfPresent("nCorr", nCorr_);
+    nCorr_ = dict.lookupOrDefaultBackwardsCompatible<label>
+    (
+        {"nCorrectors", "nCorr"},
+        0
+    );
 
     return true;
 }
@@ -366,7 +363,6 @@ void Foam::functionObjects::scalarTransport::subCycleMULES()
 void Foam::functionObjects::scalarTransport::solveMULES()
 {
     const dictionary& controls = mesh_.solution().solverDict(fieldName_);
-    const label nCorr(controls.lookup<label>("nCorr"));
     const bool MULESCorr(controls.lookupOrDefault<Switch>("MULESCorr", false));
 
     const MULES::control MULEScontrols(mesh().solution().solverDict(s_.name()));
@@ -489,7 +485,7 @@ void Foam::functionObjects::scalarTransport::solveMULES()
                     volScalarField::New
                     (
                         "cnBDCoeff",
-                        max(cnCoeff, 1.0 - 1.0/max(Co, 2.0)),
+                        max(cnCoeff, 1.0 - 1.0/max(Co, scalar(2))),
                         zeroGradientFvPatchField<scalar>::typeName
                     )
                 )
@@ -565,7 +561,7 @@ void Foam::functionObjects::scalarTransport::solveMULES()
         tsPhiCorr0_ = tsPhiUD;
     }
 
-    for (int sCorr=0; sCorr<nCorr; sCorr++)
+    for (int sCorr=0; sCorr<nCorr_; sCorr++)
     {
         // Split operator
         tmp<surfaceScalarField> tsPhiUn

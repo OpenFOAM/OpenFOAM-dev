@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
         "and duplicate the points to separate them."
     );
 
-    #include "addOverwriteOption.H"
+    #include "addNoOverwriteOption.H"
     #include "addMeshOption.H"
     #include "addRegionOption.H"
     argList::addBoolOption
@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
     #include "createTimeNoFunctionObjects.H"
     #include "createSpecifiedMeshNoChangers.H"
 
-    const bool overwrite  = args.optionFound("overwrite");
+    #include "setNoOverwrite.H"
     const bool fields     = args.optionFound("fields");
 
     const word oldInstance = mesh.pointsInstance();

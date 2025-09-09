@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,16 +29,22 @@ InClass
 #ifndef vtkPVFoamSurfaceField_H
 #define vtkPVFoamSurfaceField_H
 
-#include "surfaceFields.H"
+#include "vtkPVFoam.H"
+#include "vtkPVFoamReader.h"
+#include "vtkOpenFOAMTupleRemap.H"
+
+// OpenFOAM includes
+#include "domainDecomposition.H"
 #include "emptyFvsPatchField.H"
+#include "faceSet.H"
+#include "surfaceFields.H"
+#include "fvFieldReconstructor.H"
 
 // VTK includes
 #include "vtkCellData.h"
 #include "vtkFloatArray.h"
 #include "vtkMultiBlockDataSet.h"
 #include "vtkPolyData.h"
-
-#include "vtkOpenFOAMTupleRemap.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -64,14 +70,10 @@ void Foam::vtkPVFoam::convertSurfaceField
     cellData->Allocate(nComp*faceLabels.size());
     cellData->SetName(tf.name().c_str());
 
-    if (debug)
-    {
-        Info<< "convert convertSurfaceField: "
-            << tf.name()
-            << " size = " << tf.size()
-            << " nComp=" << nComp
-            << " nTuples = " << faceLabels.size() <<  endl;
-    }
+    DebugInFunction
+        << "Converting Surface field: " << tf.name()
+        << " size=" << tf.size() << " (" << faceLabels.size()
+        << "), nComp=" << nComp << endl;
 
     float vec[nComp];
 
@@ -136,14 +138,10 @@ void Foam::vtkPVFoam::convertSurfaceField
     cellData->Allocate(nComp*faceLabels.size());
     cellData->SetName(tf.name().c_str());
 
-    if (debug)
-    {
-        Info<< "convert convertSurfaceField: "
-            << tf.name()
-            << " size = " << tf.size()
-            << " nComp=" << nComp
-            << " nTuples = " << faceLabels.size() <<  endl;
-    }
+    DebugInFunction
+        << "Converting Surface field: " << tf.name()
+        << " size=" << tf.size() << " (" << faceLabels.size()
+        << "), nComp=" << nComp << endl;
 
     // To avoid whichPatch first flatten the field
     Field<Type> flatFld(mesh.nFaces(), Zero);
@@ -187,7 +185,6 @@ void Foam::vtkPVFoam::convertSurfaceField
 template<class Type>
 void Foam::vtkPVFoam::convertSurfaceFields
 (
-    const fvMesh& mesh,
     const IOobjectList& objects,
     vtkMultiBlockDataSet* output
 )
@@ -195,21 +192,44 @@ void Foam::vtkPVFoam::convertSurfaceFields
     forAllConstIter(IOobjectList, objects, iter)
     {
         // Restrict to GeometricField<Type, ...>
-        if
-        (
-            iter()->headerClassName()
-         != SurfaceField<Type>::typeName
-        )
+        if (iter()->headerClassName() != SurfaceField<Type>::typeName)
         {
             continue;
         }
 
-        // Load field
-        const SurfaceField<Type> tf
-        (
-            *iter(),
-            mesh
-        );
+        // Load the field
+        tmp<SurfaceField<Type>> ttf;
+        if (reader_->GetDecomposedCase())
+        {
+            if (!fvReconstructorPtr_.valid())
+            {
+                fvReconstructorPtr_.set
+                (
+                    new fvFieldReconstructor
+                    (
+                        procMeshesPtr_->completeMesh(),
+                        procMeshesPtr_->procMeshes(),
+                        procMeshesPtr_->procFaceAddressing(),
+                        procMeshesPtr_->procCellAddressing(),
+                        procMeshesPtr_->procFaceAddressingBf()
+                    )
+                );
+            }
+
+            ttf =
+                fvReconstructorPtr_
+              ->reconstructFvSurfaceField<Type>(*iter());
+        }
+        else
+        {
+            ttf =
+                new SurfaceField<Type>
+                (
+                    *iter(),
+                    procMeshesPtr_->completeMesh()
+                );
+        }
+        const SurfaceField<Type>& tf = ttf();
 
         // Convert patches - if activated
         for
@@ -221,7 +241,7 @@ void Foam::vtkPVFoam::convertSurfaceFields
         {
             const word patchName = getPartName(partId);
             const label datasetNo = partDataset_[partId];
-            const label patchId = mesh.boundaryMesh().findIndex(patchName);
+            const label patchId = tf.mesh().boundaryMesh().findIndex(patchName);
 
             if (!partStatus_[partId] || datasetNo < 0 || patchId < 0)
             {
@@ -243,7 +263,6 @@ void Foam::vtkPVFoam::convertSurfaceFields
             }
         }
 
-
         // Convert face zones - if activated
         for
         (
@@ -260,7 +279,7 @@ void Foam::vtkPVFoam::convertSurfaceFields
                 continue;
             }
 
-            const faceZoneList& zMesh = mesh.faceZones();
+            const faceZoneList& zMesh = tf.mesh().faceZones();
             const label zoneId = zMesh.findIndex(zoneName);
 
             if (zoneId < 0)
@@ -274,7 +293,7 @@ void Foam::vtkPVFoam::convertSurfaceFields
                 output,
                 arrayRangeFaceZones_,
                 datasetNo,
-                mesh,
+                tf.mesh(),
                 zMesh[zoneId]
             );
         }
@@ -295,7 +314,10 @@ void Foam::vtkPVFoam::convertSurfaceFields
                 continue;
             }
 
-            const faceSet fSet(mesh, selectName);
+            const autoPtr<faceSet> fSetPtr =
+                reader_->GetDecomposedCase()
+              ? procMeshesPtr_->reconstructSet<faceSet>(selectName)
+              : autoPtr<faceSet>(new faceSet(tf.mesh(), selectName));
 
             convertSurfaceField
             (
@@ -303,8 +325,8 @@ void Foam::vtkPVFoam::convertSurfaceFields
                 output,
                 arrayRangeFaceSets_,
                 datasetNo,
-                mesh,
-                fSet.toc()
+                tf.mesh(),
+                fSetPtr().toc()
             );
         }
     }

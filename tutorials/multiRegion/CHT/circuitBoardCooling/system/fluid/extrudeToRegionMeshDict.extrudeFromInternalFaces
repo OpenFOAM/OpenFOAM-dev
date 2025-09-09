@@ -17,17 +17,16 @@ region          baffle3D;
 
 faceZones       (baffle3D);
 
-extrudeModel    linearNormal;
+extrudeModel
+{
+    type            linearNormal;
 
-nLayers         50;
-
-expansionRatio  1;
+    nLayers         50;
+    expansionRatio  1;
+    thickness       0.02;
+}
 
 adaptMesh       yes; // apply mapped to both regions
 
-linearNormalCoeffs
-{
-    thickness       0.02;
-}
 
 // ************************************************************************* //

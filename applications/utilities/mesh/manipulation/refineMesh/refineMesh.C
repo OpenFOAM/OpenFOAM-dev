@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,12 +38,13 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "argList.H"
-#include "polyMesh.H"
 #include "Time.H"
+#include "polyMesh.H"
+#include "zoneGenerator.H"
 #include "cellSet.H"
+#include "hexRef8.H"
 #include "multiDirRefinement.H"
-#include "labelIOList.H"
-#include "IOdictionary.H"
+#include "polyTopoChange.H"
 #include "syncTools.H"
 #include "systemDict.H"
 
@@ -53,7 +54,6 @@ using namespace Foam;
 
 // Max cos angle for edges to be considered aligned with axis.
 static const scalar edgeTol = 1e-3;
-
 
 // Print edge statistics on mesh.
 void printEdgeStats(const polyMesh& mesh)
@@ -137,28 +137,97 @@ void printEdgeStats(const polyMesh& mesh)
     reduce(minOther, minOp<scalar>());
     reduce(maxOther, maxOp<scalar>());
 
+    Info<< "Mesh edge statistics:" << nl;
+    if (minX > great || maxX > -great)
+    {
+        Info<< "    x aligned :  number:" << nX << "\tminLen:" << minX
+            << "\tmaxLen:" << maxX << nl;
+    }
+    if (minY > great || maxY > -great)
+    {
+        Info<< "    y aligned :  number:" << nY << "\tminLen:" << minY
+            << "\tmayLen:" << maxY << nl;
+    }
+    if (minZ > great || maxZ > -great)
+    {
+        Info<< "    z aligned :  number:" << nZ << "\tminLen:" << minZ
+            << "\tmazLen:" << maxZ << nl;
+    }
+    if (minOther > great || maxOther > -great)
+    {
+        Info<< "    other     :  number:" << nEdges - nX - nY - nZ
+            << "\tminLen:" << minOther
+            << "\tmaxLen:" << maxOther << nl;
+    }
 
-    Info<< "Mesh edge statistics:" << nl
-        << "    x aligned :  number:" << nX << "\tminLen:" << minX
-        << "\tmaxLen:" << maxX << nl
-        << "    y aligned :  number:" << nY << "\tminLen:" << minY
-        << "\tmaxLen:" << maxY << nl
-        << "    z aligned :  number:" << nZ << "\tminLen:" << minZ
-        << "\tmaxLen:" << maxZ << nl
-        << "    other     :  number:" << nEdges - nX - nY - nZ
-        << "\tminLen:" << minOther
-        << "\tmaxLen:" << maxOther << nl << endl;
+    Info<< endl;
+}
+
+
+void refineZone
+(
+    polyMesh& mesh,
+    const labelList& refCells,
+    autoPtr<hexRef8>& meshCutterPtr,
+    const dictionary& refineDict,
+    const dictionary& zoneDict
+)
+{
+    const label nCells0 = mesh.globalData().nTotalCells();
+
+    if (meshCutterPtr.valid())
+    {
+        hexRef8& meshCutter = meshCutterPtr();
+
+        // Maintain 2:1 ratio
+        const labelList newCellsToRefine
+        (
+            meshCutter.consistentRefinement
+            (
+                refCells,
+                true                 // extend set
+            )
+        );
+
+        // Mesh changing engine.
+        polyTopoChange meshMod(mesh);
+
+        // Play refinement commands into mesh changer.
+        meshCutter.setRefinement(newCellsToRefine, meshMod);
+
+        // Create mesh, return map from old to new mesh.
+        autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh);
+
+        // Update mesh objects
+        mesh.topoChange(map);
+
+        // Update hexRef8 cells/vertices
+        meshCutter.topoChange(map);
+    }
+    else
+    {
+        multiDirRefinement
+        (
+            mesh,
+            refCells,
+            refineDict,
+            zoneDict.isDict("coordinates")
+          ? zoneDict.subDict("coordinates")
+          : refineDict.subDict("coordinates")
+        );
+    }
+
+    Info<< "    total number of cell increased from " << nCells0
+        << " to " << mesh.globalData().nTotalCells()
+        << nl << endl;
 }
 
 
 int main(int argc, char *argv[])
 {
-    argList::addNote
-    (
-        "refine cells in multiple directions"
-    );
+    argList::addNote("Refine cells in multiple directions");
 
-    #include "addOverwriteOption.H"
+    #include "addNoOverwriteOption.H"
     #include "addMeshOption.H"
     #include "addRegionOption.H"
     #include "addDictOption.H"
@@ -174,79 +243,26 @@ int main(int argc, char *argv[])
     #include "createSpecifiedPolyMesh.H"
     const word oldInstance = mesh.pointsInstance();
 
+    // Some stats
+    Info<< "Read mesh:" << nl
+        << "    cells:" << mesh.globalData().nTotalCells() << nl
+        << "    faces:" << mesh.globalData().nTotalFaces() << nl
+        << "    points:" << mesh.globalData().nTotalPoints() << nl << endl;
     printEdgeStats(mesh);
 
-    //
-    // Read/construct control dictionary
-    //
-
-    const bool readDict = args.optionFound("dict");
     const bool refineAllCells = args.optionFound("all");
-    const bool overwrite = args.optionFound("overwrite");
+    #include "setNoOverwrite.H"
 
-    // List of cells to refine
-    labelList refCells;
+    autoPtr<hexRef8> meshCutterPtr;
 
-    // Dictionary to control refinement
-    const word dictName("refineMeshDict");
-    typeIOobject<IOdictionary> dictIO
-    (
-        systemDictIO(dictName, args, runTime, regionName)
-    );
-    dictionary refineDict;
-    if (readDict)
-    {
-        if (dictIO.headerOk())
-        {
-            Info<< "Refining according to "
-                << dictIO.path(typeGlobalFile<IOdictionary>::global)
-                << nl << endl;
-            refineDict = IOdictionary(dictIO);
-        }
-        else
-        {
-            FatalErrorInFunction
-                << "Cannot open specified refinement dictionary "
-                << dictIO.path(typeGlobalFile<IOdictionary>::global)
-                << exit(FatalError);
-        }
-    }
-    else if (!refineAllCells)
-    {
-        if (dictIO.headerOk())
-        {
-            Info<< "Refining according to "
-                << dictIO.path(typeGlobalFile<IOdictionary>::global)
-                << nl << endl;
-            refineDict = IOdictionary(dictIO);
-        }
-        else
-        {
-            Info<< "Refinement dictionary "
-                << dictIO.path(typeGlobalFile<IOdictionary>::global)
-                << " not found" << nl << endl;
-        }
-    }
-
-    if (refineDict.size())
-    {
-        const word setName(refineDict.lookup("set"));
-
-        cellSet cells(mesh, setName);
-
-        Info<< "Read " << returnReduce(cells.size(), sumOp<label>())
-            << " cells from cellSet "
-            << cells.instance()/cells.local()/cells.name()
-            << endl << endl;
-
-        refCells = cells.toc();
-    }
-    else
+    if (refineAllCells)
     {
         Info<< "Refining all cells" << nl << endl;
 
         // Select all cells
-        refCells = identityMap(mesh.nCells());
+        labelList refCells(identityMap(mesh.nCells()));
+
+        dictionary refineDict;
 
         if (mesh.nGeometricD() == 3)
         {
@@ -301,107 +317,167 @@ int main(int argc, char *argv[])
 
         refineDict.add("geometricCut", "false");
         refineDict.add("writeMesh", "false");
+
+        multiDirRefinement multiRef(mesh, refCells, refineDict, refineDict);
+    }
+    else
+    {
+        const dictionary refineDict
+        (
+            systemDict("refineMeshDict", args, mesh)
+        );
+
+        const bool hexRef8Refine(refineDict.lookupOrDefault("hexRef8", false));
+
+        // Construct refiner without unrefinement.
+        // Read existing point/cell level.
+        if (hexRef8Refine)
+        {
+            meshCutterPtr = new hexRef8(mesh);
+            hexRef8& meshCutter = meshCutterPtr();
+
+            Info<< "Refining using hexRef8" << nl
+                << "    cellLevel :"
+                << " min:" << gMin(meshCutter.cellLevel())
+                << " max:" << gMax(meshCutter.cellLevel()) << nl
+                << "    pointLevel :"
+                << " min:" << gMin(meshCutter.pointLevel())
+                << " max:" << gMax(meshCutter.pointLevel()) << nl
+                << endl;
+        }
+
+        if (refineDict.found("set"))
+        {
+            const word setName(refineDict.lookup("set"));
+            const cellSet cells(mesh, setName);
+
+            Info<< "Refining "
+                << returnReduce(cells.size(), sumOp<label>())
+                << " cells in set "
+                << cells.instance()/cells.local()/cells.name()
+                << endl;
+
+            refineZone
+            (
+                mesh,
+                cells.toc(),
+                meshCutterPtr,
+                refineDict,
+                refineDict
+            );
+        }
+        else if (refineDict.found("zone"))
+        {
+            labelList refCells;
+
+            if (refineDict.isDict("zone"))
+            {
+                autoPtr<zoneGenerator> zg
+                (
+                    zoneGenerator::New
+                    (
+                        "zone",
+                        zoneTypes::cell,
+                        mesh,
+                        refineDict.subDict("zone")
+                    )
+                );
+
+                refCells = zg->generate().cZone();
+
+                Info<< "Refining "
+                    << returnReduce(refCells.size(), sumOp<label>())
+                    << " cells in zone " << zg->zoneName()
+                    << " of type " << zg->type() << endl;
+            }
+            else
+            {
+                const word cellZoneName(refineDict.lookup("zone"));
+                refCells = mesh.cellZones()[cellZoneName];
+
+                Info<< "Refining "
+                    << returnReduce(refCells.size(), sumOp<label>())
+                    << " cells in zone " << cellZoneName << endl;
+            }
+
+            refineZone
+            (
+                mesh,
+                refCells,
+                meshCutterPtr,
+                refineDict,
+                refineDict.isDict("zone")
+                  ? refineDict.subDict("zone")
+                  : refineDict
+            );
+        }
+        else if (refineDict.found("zones"))
+        {
+            const dictionary& zones = refineDict.subDict("zones");
+
+            forAllConstIter(dictionary, zones, iter)
+            {
+                const word& name = iter().keyword();
+                const dictionary& zoneDict = iter().dict();
+
+                autoPtr<zoneGenerator> zg
+                (
+                    zoneGenerator::New
+                    (
+                        name,
+                        zoneTypes::cell,
+                        mesh,
+                        zoneDict
+                    )
+                );
+
+                const labelList refCells(zg->generate().cZone());
+
+                Info<< "Refining "
+                    << returnReduce(refCells.size(), sumOp<label>())
+                    << " cells in zone " << zg->zoneName()
+                    << " of type " << zg->type() << endl;
+
+                refineZone
+                (
+                    mesh,
+                    refCells,
+                    meshCutterPtr,
+                    refineDict,
+                    zoneDict
+                );
+            }
+        }
     }
 
+    printEdgeStats(mesh);
 
-    string oldTimeName(runTime.name());
+    if (overwrite)
+    {
+        mesh.setInstance(oldInstance);
 
-    if (!overwrite)
+        if (meshCutterPtr.valid())
+        {
+            meshCutterPtr->setInstance(oldInstance);
+        }
+    }
+    else
     {
         runTime++;
     }
 
-
-    // Multi-directional refinement (does multiple iterations)
-    multiDirRefinement multiRef(mesh, refCells, refineDict);
-
-
-    // Write resulting mesh
-    if (overwrite)
-    {
-        mesh.setInstance(oldInstance);
-    }
+    Info<< "Writing mesh to ";
     mesh.write();
+    Info<< mesh.facesInstance()/mesh.meshDir() << endl;
 
-
-    // Get list of cell splits.
-    // (is for every cell in old mesh the cells they have been split into)
-    const labelListList& oldToNew = multiRef.addedCells();
-
-
-    // Create cellSet with added cells for easy inspection
-    cellSet newCells(mesh, "refinedCells", refCells.size());
-
-    forAll(oldToNew, oldCelli)
+    if (meshCutterPtr.valid())
     {
-        const labelList& added = oldToNew[oldCelli];
-
-        forAll(added, i)
-        {
-            newCells.insert(added[i]);
-        }
+        Info<< "Writing hexRef8 refinement level files to "
+            << mesh.facesInstance()/mesh.meshDir() << endl;
+        meshCutterPtr->write();
     }
 
-    Info<< "Writing refined cells ("
-        << returnReduce(newCells.size(), sumOp<label>())
-        << ") to cellSet "
-        << newCells.instance()/newCells.local()/newCells.name()
-        << endl << endl;
-
-    newCells.write();
-
-
-
-    //
-    // Invert cell split to construct map from new to old
-    //
-
-    labelIOList newToOld
-    (
-        IOobject
-        (
-            "cellMap",
-            runTime.name(),
-            polyMesh::meshSubDir,
-            mesh,
-            IOobject::NO_READ,
-            IOobject::AUTO_WRITE
-        ),
-        mesh.nCells()
-    );
-    newToOld.note() =
-        "From cells in mesh at "
-      + runTime.name()
-      + " to cells in mesh at "
-      + oldTimeName;
-
-
-    forAll(oldToNew, oldCelli)
-    {
-        const labelList& added = oldToNew[oldCelli];
-
-        if (added.size())
-        {
-            forAll(added, i)
-            {
-                newToOld[added[i]] = oldCelli;
-            }
-        }
-        else
-        {
-            // Unrefined cell
-            newToOld[oldCelli] = oldCelli;
-        }
-    }
-
-    Info<< "Writing map from new to old cell to "
-        << newToOld.relativeObjectPath() << nl << endl;
-
-    newToOld.write();
-
-    printEdgeStats(mesh);
-
-    Info<< "End\n" << endl;
+    Info<< "\nEnd\n" << endl;
 
     return 0;
 }

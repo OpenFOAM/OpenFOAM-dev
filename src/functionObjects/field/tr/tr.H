@@ -36,8 +36,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_tr_H
-#define functionObjects_tr_H
+#ifndef tr_functionObject_H
+#define tr_functionObject_H
 
 #include "fieldExpression.H"
 

@@ -14,15 +14,13 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-type    basicMultiphaseSystem;
-
-phases (solids gas);
+phases          (solids gas);
 
 solids
 {
-    type          purePhaseModel;
+    type            purePhaseModel;
 
-    diameterModel constant;
+    diameterModel   constant;
 
     constantCoeffs
     {
@@ -35,11 +33,11 @@ solids
 
 gas
 {
-    type          purePhaseModel;
+    type            purePhaseModel;
 
-    diameterModel none;
+    diameterModel   none;
 
-    residualAlpha 1e-5;
+    residualAlpha   1e-5;
 }
 
 blending
@@ -59,40 +57,5 @@ surfaceTension
         sigma           0;
     }
 }
-
-drag
-{
-    solids_dispersedIn_gas
-    {
-        type            GidaspowErgunWenYu;
-    }
-}
-
-virtualMass
-{}
-
-heatTransfer
-{
-    solids_dispersedIn_gas
-    {
-        type            RanzMarshall;
-        residualAlpha   1e-4;
-    }
-}
-
-phaseTransfer
-{}
-
-lift
-{}
-
-wallLubrication
-{}
-
-turbulentDispersion
-{}
-
-interfaceCompression
-{}
 
 // ************************************************************************* //

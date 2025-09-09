@@ -14,9 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-type    thermalPhaseChangePopulationBalanceMultiphaseSystem;
-
-phases (gas liquid);
+phases          (gas liquid);
 
 populationBalances (bubbles);
 
@@ -25,12 +23,11 @@ gas
     type            purePhaseModel;
 
     diameterModel   velocityGroup;
-
     velocityGroupCoeffs
     {
-        populationBalance    bubbles;
+        populationBalance   bubbles;
 
-        shapeModel           spherical;
+        shapeModel          spherical;
 
         sizeGroups
         (
@@ -76,158 +73,12 @@ liquid
     residualAlpha   1e-6;
 }
 
-populationBalanceCoeffs
-{
-    bubbles
-    {
-        continuousPhase liquid;
-
-        coalescenceModels
-        (
-            PrinceBlanch
-            {
-                turbulence on;
-                buoyancy   on;
-                laminarShear off;
-                C1  0.05;
-            }
-        );
-
-        binaryBreakupModels
-        (
-            LehrMilliesMewes
-            {}
-        );
-
-        breakupModels
-        ();
-
-        driftModels
-        (
-            phaseChange
-            {
-                interfaces (gas_liquid);
-                dmdtf   thermalPhaseChange:dmdtf;
-            }
-
-            densityChange
-            {}
-        );
-
-        nucleationModels
-        (
-            wallBoiling
-            {
-                velocityGroup gas;
-            }
-        );
-    }
-}
-
-drag
-{
-    gas_dispersedIn_liquid
-    {
-        type            IshiiZuber;
-    }
-}
-
-virtualMass
-{
-    gas_dispersedIn_liquid
-    {
-        type            constantCoefficient;
-        Cvm             0.5;
-    }
-}
-
-heatTransfer
-{
-    gas_dispersedIn_liquid_inThe_gas
-    {
-        type spherical;
-    }
-
-    gas_dispersedIn_liquid_inThe_liquid
-    {
-        type RanzMarshall;
-    }
-}
-
-lift
-{
-    gas_dispersedIn_liquid
-    {
-        type wallDamped;
-
-        lift
-        {
-            type Tomiyama;
-            Cl 0.288;
-
-            aspectRatio
-            {
-                type constant;
-                E0 1;
-            }
-        }
-
-        wallDamping
-        {
-            type    cosine;
-            Cd      1.0;
-            zeroWallDist 0.0002;
-        }
-    }
-}
-
-wallLubrication
-{
-    gas_dispersedIn_liquid
-    {
-        type            Antal;
-        Cw1             -0.01;
-        Cw2             0.05;
-    }
-}
-
-turbulentDispersion
-{
-    gas_dispersedIn_liquid
-    {
-        type                LopezDeBertodano;
-        Ctd                 1.0;
-        residualAlpha       1e-3;
-    }
-}
-
 blending
 {
     default
     {
         type            continuous;
         phase           liquid;
-    }
-}
-
-saturationTemperature
-{
-    gas_liquid
-    {
-        type            function1;
-
-        function
-        {
-            type            table;
-            format          csv;
-            nHeaderLine     1;
-            units           ([MPa] [K]);
-            columns         (1 0);
-            mergeSeparators no;
-            file "$FOAM_TUTORIALS/resources/thermoData/wallBoiling-saturation.csv";
-            outOfBounds     clamp;
-            interpolationScheme linear;
-        }
     }
 }
 
@@ -240,7 +91,32 @@ surfaceTension
     }
 }
 
-phaseTransfer
-{}
+populationBalanceCoeffs
+{
+    bubbles
+    {
+        continuousPhase liquid;
+
+        coalescenceModels
+        (
+            PrinceBlanch
+            {
+                turbulence      on;
+                buoyancy        on;
+                laminarShear    off;
+                C1              0.05;
+            }
+        );
+
+        binaryBreakupModels
+        (
+            LehrMilliesMewes
+            {}
+        );
+
+        breakupModels
+        ();
+    }
+}
 
 // ************************************************************************* //

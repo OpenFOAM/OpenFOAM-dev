@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,25 +56,19 @@ using namespace Foam;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-enum ExtrudeMode
+enum class extrudeSurfaceType
 {
-    MESH,
-    PATCH,
-    SURFACE
+    mesh,
+    patch,
+    surface
 };
 
-namespace Foam
+static const NamedEnum<extrudeSurfaceType, 3> extrudeSurfaceTypeNames
 {
-    template<>
-    const char* NamedEnum<ExtrudeMode, 3>::names[] =
-    {
-        "mesh",
-        "patch",
-        "surface"
-    };
-}
-
-static const NamedEnum<ExtrudeMode, 3> ExtrudeModeNames;
+    "mesh",
+    "patch",
+    "surface"
+};
 
 
 label findIndex(const polyBoundaryMesh& patches, const word& name)
@@ -286,7 +280,7 @@ int main(int argc, char *argv[])
     const Switch flipNormals(dict.lookup("flipNormals"));
 
     // What to extrude
-    const ExtrudeMode mode = ExtrudeModeNames.read
+    const extrudeSurfaceType mode = extrudeSurfaceTypeNames.read
     (
         dict.lookup("constructFrom")
     );
@@ -294,7 +288,7 @@ int main(int argc, char *argv[])
     // Any merging of small edges
     const scalar mergeTol(dict.lookupOrDefault<scalar>("mergeTol", 1e-4));
 
-    Info<< "Extruding from " << ExtrudeModeNames[mode]
+    Info<< "Extruding from " << extrudeSurfaceTypeNames[mode]
         << " using model " << model().type() << endl;
     if (flipNormals)
     {
@@ -324,9 +318,9 @@ int main(int argc, char *argv[])
     // Optional added cells (get written to cellSet)
     labelHashSet addedCellsSet;
 
-    if (mode == PATCH || mode == MESH)
+    if (mode == extrudeSurfaceType::patch || mode == extrudeSurfaceType::mesh)
     {
-        if (flipNormals && mode == MESH)
+        if (flipNormals && mode == extrudeSurfaceType::mesh)
         {
             FatalErrorInFunction
                 << "Flipping normals not supported for extrusions from mesh."
@@ -407,9 +401,9 @@ int main(int argc, char *argv[])
 
         // Extrusion engine. Either adding to existing mesh or
         // creating separate mesh.
-        addPatchCellLayer layerExtrude(mesh, (mode == MESH));
+        addPatchCellLayer layerExtrude(mesh, mode == extrudeSurfaceType::mesh);
 
-        if (mode == PATCH && flipNormals)
+        if (mode == extrudeSurfaceType::patch && flipNormals)
         {
             // Cheat. Flip patch faces in mesh. This invalidates the
             // mesh (open cells) but does produce the correct extrusion.
@@ -572,7 +566,7 @@ int main(int argc, char *argv[])
 
         // Only used for addPatchCellLayer into new mesh
         labelList exposedPatchID;
-        if (mode == PATCH)
+        if (mode == extrudeSurfaceType::patch)
         {
             dict.lookup("exposedPatchName") >> backPatchName;
             exposedPatchID.setSize
@@ -641,7 +635,7 @@ int main(int argc, char *argv[])
         autoPtr<polyTopoChange> meshMod
         (
             (
-                mode == MESH
+                mode == extrudeSurfaceType::mesh
               ? new polyTopoChange(mesh)
               : new polyTopoChange(patches.size())
             )
@@ -649,6 +643,7 @@ int main(int argc, char *argv[])
 
         layerExtrude.setRefinement
         (
+            mesh,
             globalFaces,
             edgeGlobalFaces,
 
@@ -740,7 +735,7 @@ int main(int argc, char *argv[])
         );
 
         // Store added cells
-        if (mode == MESH)
+        if (mode == extrudeSurfaceType::mesh)
         {
             const labelListList addedCells
             (
@@ -937,7 +932,7 @@ int main(int argc, char *argv[])
     Switch mergeFaces(dict.lookup("mergeFaces"));
     if (mergeFaces)
     {
-        if (mode == MESH)
+        if (mode == extrudeSurfaceType::mesh)
         {
             FatalErrorInFunction
                 << "Cannot stitch front and back of extrusion since"

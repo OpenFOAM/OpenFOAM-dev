@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,26 +31,6 @@ License
 namespace Foam
 {
     defineTypeNameAndDebug(incompressibleMultiphaseVoFMixture, 0);
-}
-
-
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-Foam::tmp<Foam::volScalarField>
-Foam::incompressibleMultiphaseVoFMixture::mu() const
-{
-    tmp<volScalarField> tmu
-    (
-        phases_[0]*phases_[0].rho()*phases_[0].nu()
-    );
-    volScalarField& mu = tmu.ref();
-
-    for (label phasei=1; phasei<phases_.size(); phasei++)
-    {
-        mu += phases_[phasei]*phases_[phasei].rho()*phases_[phasei].nu();
-    }
-
-    return tmu;
 }
 
 
@@ -96,21 +76,7 @@ Foam::incompressibleMultiphaseVoFMixture::incompressibleMultiphaseVoFMixture
 }
 
 
-// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
-
-Foam::tmp<Foam::volScalarField>
-Foam::incompressibleMultiphaseVoFMixture::nu() const
-{
-    return nu_;
-}
-
-
-Foam::tmp<Foam::scalarField>
-Foam::incompressibleMultiphaseVoFMixture::nu(const label patchi) const
-{
-    return nu_.boundaryField()[patchi];
-}
-
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 void Foam::incompressibleMultiphaseVoFMixture::correct()
 {
@@ -120,14 +86,17 @@ void Foam::incompressibleMultiphaseVoFMixture::correct()
     }
 
     rho_ = phases_[0]*phases_[0].rho();
+    volScalarField mu(rho_*phases_[0].nu());
 
     for (label phasei=1; phasei<phases_.size(); phasei++)
     {
-        rho_ += phases_[phasei]*phases_[phasei].rho();
+        const volScalarField alphaRho(phases_[phasei]*phases_[phasei].rho());
+        rho_ += alphaRho;
+        mu += alphaRho*phases_[phasei].nu();
     }
 
     // Update the mixture kinematic viscosity
-    nu_ = mu()/rho_;
+    nu_ = mu/rho_;
 
     calcAlphas();
 }

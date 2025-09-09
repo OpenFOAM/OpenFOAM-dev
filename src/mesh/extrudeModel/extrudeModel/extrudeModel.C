@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,16 +35,10 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::extrudeModel::extrudeModel
-(
-    const word& modelType,
-    const dictionary& dict
-)
+Foam::extrudeModel::extrudeModel(const dictionary& dict)
 :
     nLayers_(dict.lookupOrDefault<label>("nLayers", 1)),
-    expansionRatio_(dict.lookupOrDefault<scalar>("expansionRatio", 1)),
-    dict_(dict),
-    coeffDict_(dict.optionalSubDict(modelType + "Coeffs"))
+    expansionRatio_(dict.lookupOrDefault<scalar>("expansionRatio", 1))
 {}
 
 
@@ -55,6 +49,15 @@ Foam::extrudeModel::~extrudeModel()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+const Foam::dictionary& Foam::extrudeModel::coeffDict
+(
+    const dictionary& dict
+) const
+{
+    return dict.optionalSubDict(type() + "Coeffs");
+}
+
 
 Foam::label Foam::extrudeModel::nLayers() const
 {

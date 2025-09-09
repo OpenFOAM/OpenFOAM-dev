@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,12 +79,21 @@ public:
         //- Construct from the parent dictionary and Istream
         dictionaryEntry(const dictionary& parentDict, Istream&);
 
+        //- Construct from keyword, line number, parent dictionary and Istream
+        dictionaryEntry
+        (
+            const keyType&,
+            const label lineNumber,
+            const dictionary& parentDict,
+            Istream& is
+        );
+
         //- Construct from the keyword, parent dictionary and a Istream
         dictionaryEntry
         (
             const keyType&,
             const dictionary& parentDict,
-            Istream&
+            Istream& is
         );
 
         //- Construct from the keyword, parent dictionary and a dictionary
@@ -131,11 +140,11 @@ public:
             return dictionary::name();
         }
 
-        //- Return line number of first token in dictionary
-        label startLineNumber() const;
+        //- Return line number of the keyword of the entry
+        virtual label startLineNumber() const;
 
-        //- Return line number of last token in dictionary
-        label endLineNumber() const;
+        //- Return line number of last token in the dictionary
+        virtual label endLineNumber() const;
 
         //- This entry is not a primitive,
         //  calling this function generates a FatalError

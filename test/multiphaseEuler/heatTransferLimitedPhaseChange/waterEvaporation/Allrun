@@ -1,0 +1,111 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+gHes="e.steam h.steam"
+lHes="e.water h.water"
+
+setThermoAndEnergy()
+{
+    he=${1%.*}
+    phase=${1#*.}
+
+    runApplication -a foamDictionary -entry thermoType/thermo -set ${he}Const \
+        constant/physicalProperties.$phase
+
+    case $he in
+        e ) energy="sensibleInternalEnergy";;
+        h ) energy="sensibleEnthalpy";;
+        * ) exit 1;;
+    esac
+
+    runApplication -a foamDictionary -entry thermoType/energy -set $energy \
+        constant/physicalProperties.$phase
+}
+
+runApplication zeroDimensionalMesh
+
+for gHe in $gHes
+do
+    setThermoAndEnergy $gHe
+    for lHe in $lHes
+    do
+        setThermoAndEnergy $lHe
+        runApplication -s ${gHe}_${lHe} foamRun
+        mv postProcessing postProcessing_${gHe}_${lHe}
+    done
+done
+
+line()
+{
+    path=plot/0/volFieldValue.dat
+
+    index=$(awk -v RS="\t" "/volAverage\($1\)/{print NR; exit}" \
+        postProcessing_${gHes%% *}_${lHes%% *}/$path)
+
+    cat << EOF
+    'postProcessing_${gHes%% *}_${lHes%% *}/$path' \
+    us 1:$index w l axes $2 lc $3 t '$4', \
+    for [gHe in '$gHes'] for [lHe in '$lHes'] \
+    'postProcessing_'.gHe.'_'.lHe.'/$path' \
+    us 1:$index w l axes $2 lc $3 notitle
+EOF
+}
+
+gnuplot << EOF
+
+set terminal eps enhanced size 5.83,8.27
+set output 'postProcessing.eps'
+
+set lmargin at screen 0.15
+set rmargin at screen 0.84
+
+set multiplot layout 4,1
+
+set xlabel "Time (s)"
+
+set ytics nomirror
+set y2tics
+set ylabel 'Steam volume fraction'
+set y2label 'Water volume fraction'
+
+plot \
+    $(line alpha.steam x1y1 1 Steam), \
+    $(line alpha.water x1y2 2 Water)
+
+set ytics mirror
+unset y2tics
+set ylabel 'Temperature (K)'
+unset y2label
+
+plot \
+    $(line T.steam x1y1 1 Steam), \
+    $(line T.water x1y1 2 Water)
+
+set ytics nomirror
+set y2tics
+set ylabel "Mass (kg/m^3)"
+set y2label "Energy (J/m^3)"
+
+plot \
+    $(line dMass.steam x1y1 1 "Steam Mass Change"), \
+    $(line dMass.water x1y1 2 "Water Mass Change"), \
+    $(line dEnergy.steam x1y2 3 "Steam Energy Change"), \
+    $(line dEnergy.water x1y2 4 "Water Energy Change")
+
+set ytics nomirror
+set y2tics
+set ylabel "Mass (kg/m^3)"
+set y2label "Energy (J/m^3)"
+
+plot \
+    $(line dMass x1y1 1 "Mass Error"), \
+    $(line dEnergy x1y2 2 "Energy Error")
+
+unset multiplot
+
+EOF
+
+#------------------------------------------------------------------------------

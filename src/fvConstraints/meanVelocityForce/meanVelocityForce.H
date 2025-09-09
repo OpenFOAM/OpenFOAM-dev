@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ Usage
     {
         type            meanVelocityForce;
 
-        select          all;
+        cellZone        all;
 
         U               U;          // Name of velocity field
 
@@ -56,7 +56,7 @@ SourceFiles
 #define meanVelocityForce_H
 
 #include "fvConstraint.H"
-#include "fvCellSet.H"
+#include "fvCellZone.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -75,8 +75,8 @@ class meanVelocityForce
 {
     // Private data
 
-        //- The set of cells the fvConstraint applies to
-        fvCellSet set_;
+        //- The cellZone the fvConstraint applies to
+        fvCellZone zone_;
 
         //- Name of the velocity field
         word UName_;

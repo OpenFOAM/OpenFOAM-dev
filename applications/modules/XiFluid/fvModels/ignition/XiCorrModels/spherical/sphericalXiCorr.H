@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ Usage
     XiCorr
     {
         type            spherical;
-        select          all;
+        cellZone        all;
         sphereFraction  1;
     }
     \endverbatim
@@ -41,7 +41,7 @@ Usage
     Where:
     \table
         Property       | Description             | Required  | Default value
-        select         | Correction cell set selection | yes      |
+        cellZone       | Correction cellZone     | yes       |
         sphereFraction | Kernel sphere fraction  | no        | 1
         bMin           | Min b below which no correction | no | 0.01
     \endtable

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,6 +110,14 @@ const Foam::PtrList<Foam::volScalarField>&
 Foam::MulticomponentPhaseModel<BasePhaseModel>::Y() const
 {
     return this->thermo_->Y();
+}
+
+
+template<class BasePhaseModel>
+const Foam::volScalarField&
+Foam::MulticomponentPhaseModel<BasePhaseModel>::Y(const label speciei) const
+{
+    return this->thermo_->Y(speciei);
 }
 
 

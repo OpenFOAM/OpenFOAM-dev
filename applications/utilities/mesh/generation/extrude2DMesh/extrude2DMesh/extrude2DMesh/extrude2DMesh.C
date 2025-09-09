@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,6 @@ Foam::extrude2DMesh::extrude2DMesh
 :
     mesh_(mesh),
     model_(model),
-    modelType_(dict.lookup("extrudeModel")),
     patchType_(dict.lookup("patchType")),
     frontPatchi_(-1),
     backPatchi_(-1),

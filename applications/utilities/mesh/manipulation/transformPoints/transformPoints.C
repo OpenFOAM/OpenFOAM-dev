@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,6 +51,8 @@ Usage
     Options:
       - \par -rotateFields \n
         Additionally transform vector and tensor fields.
+      - \par -pointZone \<name\> \n
+        Only transform points in the given pointZone.
       - \par -pointSet \<name\> \n
         Only transform points in the given point set.
 
@@ -180,6 +182,13 @@ int main(int argc, char *argv[])
 
     argList::addOption
     (
+        "pointZone",
+        "pointZone",
+        "pointZone to limit the transformation to"
+    );
+
+    argList::addOption
+    (
         "pointSet",
         "pointSet",
         "Point set to limit the transformation to"
@@ -200,10 +209,14 @@ int main(int argc, char *argv[])
 
     const bool doRotateFields = args.optionFound("rotateFields");
 
+    word pointZoneName = word::null;
+    const bool doPointZone =
+        args.optionReadIfPresent("pointZone", pointZoneName);
+
     word pointSetName = word::null;
     const bool doPointSet = args.optionReadIfPresent("pointSet", pointSetName);
 
-    if (doRotateFields && doPointSet)
+    if (doRotateFields && (doPointZone || doPointSet))
     {
         FatalErrorInFunction
             << "Rotation of fields across the entire mesh, and limiting the "
@@ -236,11 +249,29 @@ int main(int argc, char *argv[])
             )
         );
 
-        if (doPointSet)
+        if (doPointZone || doPointSet)
         {
-            const labelList setPointIDs
-            (
-                pointSet
+            labelList zonePointIDs;
+
+            if (doPointZone)
+            {
+                const polyMesh mesh
+                (
+                    IOobject
+                    (
+                        regionName,
+                        runTime.name(),
+                        meshPath,
+                        runTime,
+                        IOobject::MUST_READ
+                    )
+                );
+
+                zonePointIDs = mesh.pointZones()[pointZoneName];
+            }
+            else
+            {
+                zonePointIDs = pointSet
                 (
                     IOobject
                     (
@@ -252,30 +283,29 @@ int main(int argc, char *argv[])
                         IOobject::NO_WRITE,
                         false
                     )
-                ).toc()
-            );
+                ).toc();
+            }
 
-            pointField setPoints(UIndirectList<point>(points, setPointIDs));
-
-            transforms.transformPosition(setPoints, setPoints);
-
-            UIndirectList<point>(points, setPointIDs) = setPoints;
+            pointField zonePoints(UIndirectList<point>(points, zonePointIDs));
+            transforms.transformPosition(zonePoints, zonePoints);
+            UIndirectList<point>(points, zonePointIDs) = zonePoints;
         }
         else
         {
             transforms.transformPosition(points, points);
         }
 
-        if (doRotateFields)
-        {
-            rotateFields(args, runTime, transforms.T());
-        }
-
         // Set the precision of the points data to 10
         IOstream::defaultPrecision(max(10u, IOstream::defaultPrecision()));
 
         Info<< "Writing points into directory " << points.path() << nl << endl;
+
         points.write();
+
+        if (doRotateFields)
+        {
+            rotateFields(args, runTime, transforms.T());
+        }
     }
 
     Info<< "End\n" << endl;

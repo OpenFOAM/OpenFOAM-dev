@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,17 +37,9 @@ Description
 
 // * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-    template<>
-    const char*
-        NamedEnum<vtkTopo::vtkPolyhedra, 3>::names[] =
-        {"none", "polyhedra", "all"};
-}
-
-const
-    Foam::NamedEnum<Foam::vtkTopo::vtkPolyhedra, 3>
-    Foam::vtkTopo::vtkPolyhedraNames_;
+const Foam::NamedEnum<Foam::vtkTopo::vtkPolyhedra, 3>
+Foam::vtkTopo::vtkPolyhedraNames_
+{"none", "polyhedra", "all"};
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //

@@ -9,37 +9,38 @@
 FoamFile
 {
     format          ascii;
-
-    root            "";
-    case            "";
-    instance        "";
-    local           "";
-
     class           dictionary;
     object          extrude2DMeshDict;
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-extrudeModel        linearDirection;
-//extrudeModel        wedge;
-
-patchType           empty;
-//patchType           wedge;
-
-nLayers             1;
-
-expansionRatio      1.0;
-
-linearDirectionCoeffs
+extrudeModel
 {
+    type            linearDirection;
+
     direction       (0 0 1);
     thickness       0.1;
+
+    nLayers             1;
+    expansionRatio      1.0;
 }
 
-wedgeCoeffs
-{
-    axisPt      (0 0 0);
-    axis        (1 0 0);
-    angle       10;
-}
+patchType           empty;
+
+
+// extrudeModel
+// {
+//     type            wedge;
+
+//     axisPt      (0 0 0);
+//     axis        (1 0 0);
+//     angle       10;
+
+//     nLayers             1;
+//     expansionRatio      1.0;
+// }
+
+// patchType           wedge;
+
+// ************************************************************************* //

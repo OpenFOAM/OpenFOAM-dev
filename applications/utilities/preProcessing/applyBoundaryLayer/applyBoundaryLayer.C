@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
     if (!args.optionFound("ybl") && !args.optionFound("Cbl"))
     {
         FatalErrorInFunction
-            << "Neither option 'ybl' or 'Cbl' have been provided to calculate "
+            << "Neither option 'ybl' nor 'Cbl' have been provided to calculate "
             << "the boundary-layer thickness.\n"
             << "Please choose either 'ybl' OR 'Cbl'."
             << exit(FatalError);

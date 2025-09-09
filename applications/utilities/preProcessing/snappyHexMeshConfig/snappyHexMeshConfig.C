@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,7 +88,9 @@ Description
     '-nCellsBetweenLevels' to control the transition between refinement
     levels. A '-layers' option controls additional layers of cells at specified
     surfaces. The insidePoint parameter is set to '(0 0 0)' by default but can
-    be overridden using the '-insidePoint' option.
+    be overridden using the '-insidePoint' option.  There is an alternative
+    '-insidePoints' option to specify multiple insidePoints to mesh multiple
+    disconnected mesh regions.
 
 Usage
     \b snappyHexMeshConfig [OPTIONS]
@@ -96,13 +98,13 @@ Usage
     Options:
 
       - \par -baffles \<list\>
-        Surfaces that form baffles, e.g. '(helical)'
+        Surfaces that form baffles, e.g. 'helical'
 
       - \par -bounds \<box\>
-        Bounding box of the mesh, e.g. '((-10 -5 0) (10 5 10))'
+        Bounding box of the mesh, e.g. '(-10 -5 0) (10 5 10)'
 
       - \par -cellZones \<list\>
-        Surfaces that form cellZones, e.g. '(porousZone heatSource)'
+        Surfaces that form cellZones, e.g. 'porousZone heatSource'
 
       - \par -clearBoundary,
         Do not set default patch entries, i.e. xMin, xMax, yMin, etc...
@@ -123,16 +125,19 @@ Usage
         Specify the thickness of the near wall cells for layer addition
 
       - \par -inletRegions \<list\>
-        Inlet regions on an external surface, e.g. '(inletA inletB)'
+        Inlet regions on an external surface, e.g. 'inletA inletB'
 
       - \par -insidePoint \<point\>
         Point location inside the region of geometry to be meshed
+
+      - \par -insidePoints \<list\>
+        Point locations inside geometry to be meshed, e.g. '(0 0 0) (0 1 0)'
 
       - \par -layerExpansionRatio \<value\>
         Specify the expansion ratio between layers, default 1.2
 
       - \par -layers \<entry\>
-        Number of layers on specified surfaces, e.g. '((car 3) (ground 4))'
+        Number of layers on specified surfaces, e.g. '(car 3) (ground 4)'
 
       - \par -minDimCells \<cells\>
         Number of cells in the shortest direction, e.g. 10
@@ -147,13 +152,13 @@ Usage
         Do not write a blockMeshDict file
 
       - \par -outletRegions \<list\>
-        Outlet regions on an external surface, e.g. '(outletA outletB)'
+        Outlet regions on an external surface, e.g. 'outletA outletB'
 
       - \par -refineBackground \<int\>
         Integer multiplier for the number of cells (>= 1)
 
       - \par -refinementBoxes \<entry\>
-        Refinement boxes specified by '( (\<min\> \<max\> \<level\>) (...) )'
+        Refinement boxes specified by '(\<min\> \<max\> \<level\>) (...) '
 
       - \par -refinementDists \<entry\>
         Refinement distance specified by
@@ -163,19 +168,19 @@ Usage
         Refinement level used by snappyHexMesh, default 2
 
       - \par -refinementRegions \<entry\>
-        Refinement regions specified by '( (\<surface\> \<level\>) (...) )'
+        Refinement regions specified by '(\<surface\> \<level\>) (...)'
 
       - \par -region \<name\>
         Specify alternative mesh region
 
       - \par -rotatingZones \<list\>
-        Surfaces that form rotatingZones, e.g. '(rotatingZone)'
+        Surfaces that form rotatingZones, e.g. 'rotatingZone'
 
       - \par -surface \<file\>
         Single surface geometry file for meshing
 
       - \par -surfaceLevels \<entry\>
-        Refinement level at specified surfaces, e.g. '((pipe 2) (baffles 1))'
+        Refinement level at specified surfaces, e.g. '(pipe 2) (baffles 1)'
 
       - \par -xMinPatch (-xMaxPatch, -yMinPatch, etc...) \<entry\>
         Name and type of the xMin (xMax, yMin, etc...) patch,
@@ -208,7 +213,20 @@ void readPatchOption
 {
     if (args.optionFound(name))
     {
-        opts.insert(name, args.optionRead<Pair<word>>(name));
+        List<word> patchOption(args.optionReadList<word>(name));
+
+        if (patchOption.size() == 2)
+        {
+            opts.insert(name, Pair<word>(patchOption[0], patchOption[1]));
+        }
+        else
+        {
+            FatalErrorInFunction
+                << "Argument to option '-" << name
+                << "' is " << args.option(name) << nl
+                << "It should be of the form \"<name> <type>\""
+                << exit(FatalError);
+        }
     }
 }
 
@@ -222,14 +240,21 @@ int main(int argc, char *argv[])
 
     argList::addNote
     (
-        "Writes blockMeshDict, surfaceFeaturesDict and snappyHexMeshDict "
-        "files from surface geometry files.\n"
+        "Writes blockMeshDict, snappyHexMeshDict, surfaceFeaturesDict "
+        "and meshQualityDict files.\n"
+        "Requires surface geometry files as inputs.\n"
         "For more information, see 'Description' in snappyHexMeshConfig.C "
         "or run\n\n    foamInfo snappyHexMeshConfig"
     );
 
     #include "removeCaseOptions.H"
     #include "addRegionOption.H"
+
+    argList::addBoolOption
+    (
+        "rm",
+        "delete mesh configuration files"
+    );
 
     argList::addOption
     (
@@ -256,7 +281,7 @@ int main(int argc, char *argv[])
     (
         "bounds",
         "box",
-        "bounding box of the mesh, e.g. '((-10 -5 0) (10 5 10))'"
+        "bounding box of the mesh, e.g. '(-10 -5 0) (10 5 10)'"
     );
 
     argList::addBoolOption
@@ -289,21 +314,21 @@ int main(int argc, char *argv[])
     (
         "surfaceLevels",
         "entry",
-        "refinement level at specified surfaces, e.g. '((pipe 2) (baffles 1))'"
+        "refinement level at specified surfaces, e.g. '(pipe 2) (baffles 1)'"
     );
 
     argList::addOption
     (
         "refinementRegions",
         "entry",
-        "refinement regions specified by '( (<surface> <level>) (...) )'"
+        "refinement regions specified by '(<surface> <level>) (...)'"
     );
 
     argList::addOption
     (
         "refinementBoxes",
         "entry",
-        "refinement boxes specified by '( (<min> <max> <level>) (...) )'"
+        "refinement boxes specified by '(<min> <max> <level>) (...)'"
     );
 
     argList::addOption
@@ -311,14 +336,14 @@ int main(int argc, char *argv[])
         "refinementDists",
         "entry",
         "refinement distance specified by "
-        "'( (<surface> <dist> <level>) (...) )'"
+        "'(<surface> <dist> <level>) (...)'"
     );
 
     argList::addOption
     (
         "defaultPatch",
         "entry",
-        "name and type of default patch, '(<name> <type>)'"
+        "name and type of default patch, '<name> <type>'"
     );
 
     List<word> patches(blockMeshCartesianConfiguration::patches);
@@ -331,7 +356,7 @@ int main(int argc, char *argv[])
             "entry",
             "patch in the "
           + patches[i]
-          + " direction, format '(<name> <type>)'"
+          + " direction, format '<name> <type>'"
         );
     }
 
@@ -351,7 +376,7 @@ int main(int argc, char *argv[])
     (
         "layers",
         "entry",
-        "number of layers on specified surfaces, e.g. '((car 3) (ground 4))'"
+        "number of layers on specified surfaces, e.g. '(car 3) (ground 4)'"
     );
 
     argList::addOption
@@ -372,21 +397,21 @@ int main(int argc, char *argv[])
     (
         "cellZones",
         "list",
-        "surfaces that form cellZones, e.g. '(porousZone heatSource)'"
+        "surfaces that form cellZones, e.g. 'porousZone heatSource'"
     );
 
     argList::addOption
     (
         "rotatingZones",
         "list",
-        "surfaces that form rotatingZones, e.g. '(rotatingZone)'"
+        "surfaces that form rotatingZones, e.g. 'rotatingZone'"
     );
 
     argList::addOption
     (
         "baffles",
         "list",
-        "surfaces that form baffles, e.g. '(helical)'"
+        "surfaces that form baffles, e.g. 'helical'"
     );
 
     argList::addOption
@@ -394,6 +419,13 @@ int main(int argc, char *argv[])
         "insidePoint",
         "point",
         "point location inside the region of geometry to be meshed"
+    );
+
+    argList::addOption
+    (
+        "insidePoints",
+        "list",
+        "point locations inside the geometry, e.g. '(0 1 0) (1 1 1)'"
     );
 
     argList::addOption
@@ -407,14 +439,14 @@ int main(int argc, char *argv[])
     (
         "inletRegions",
         "list",
-        "inlet regions on an external surface, e.g. '(inletA inletB)'"
+        "inlet regions on an external surface, e.g. 'inletA inletB'"
     );
 
     argList::addOption
     (
         "outletRegions",
         "list",
-        "outlet regions on an external surface, e.g. '(outletA outletB)'"
+        "outlet regions on an external surface, e.g. 'outletA outletB'"
     );
 
     argList::addBoolOption
@@ -427,18 +459,53 @@ int main(int argc, char *argv[])
     #include "createTime.H"
 
     word regionName;
-    word regionPath(runTime.system());
+    word dir(runTime.system());
 
     if (args.optionReadIfPresent("region", regionName))
     {
-        regionPath = runTime.system()/regionName;
-        Info<< "Writing files to " << regionPath << nl <<endl;
+        dir = runTime.system()/regionName;
 
-        if (!isDir(regionPath))
+        if (!isDir(dir))
         {
-            mkDir(regionPath);
+            mkDir(dir);
         }
     }
+
+    if (args.optionFound("rm"))
+    {
+        wordList dicts
+        {
+            "snappyHexMeshDict",
+            "blockMeshDict",
+            "meshQualityDict",
+            "surfaceFeaturesDict"
+        };
+
+        Info<< "Deleting mesh configuration files in '"
+            << dir << "'" << endl;
+        label count = 0;
+
+        forAll(dicts, i)
+        {
+            if (rm(dir/dicts[i]))
+            {
+                Info<< "+ " << dicts[i] << endl;
+                ++count;
+            }
+        }
+
+        if (count == 0)
+        {
+            Info<< "+ No files to delete" << endl;
+        }
+
+        Info<< "\nEnd\n" << endl;
+
+        return 0;
+    }
+
+    Info<< "Writing mesh configuration files to '"
+        << dir << "'" << nl << endl;
 
     fileNameList surfaceNames;
 
@@ -575,7 +642,7 @@ int main(int argc, char *argv[])
             blockMeshCylindricalConfiguration blockMeshConfig
             (
                 "blockMeshDict",
-                regionPath,
+                dir,
                 runTime,
                 surfaces,
                 args.optionFound("bounds"),
@@ -592,7 +659,7 @@ int main(int argc, char *argv[])
             blockMeshCartesianConfiguration blockMeshConfig
             (
                 "blockMeshDict",
-                regionPath,
+                dir,
                 runTime,
                 surfaces,
                 args.optionFound("bounds"),
@@ -673,10 +740,33 @@ int main(int argc, char *argv[])
         args.optionLookupOrDefault<scalar>("layerExpansionRatio", 1.2)
     );
 
-    const point insidePoint
-    (
-        args.optionLookupOrDefault<point>("insidePoint", point::zero)
-    );
+    if (args.optionFound("insidePoint") && args.optionFound("insidePoints"))
+    {
+        FatalErrorInFunction
+            << "Options '-insidePoint' and '-insidePoints' "
+            << "cannot both be selected"
+            << exit(FatalError);
+    }
+
+    List<point> insidePoints;
+    bool insidePointsOpt(false);
+
+    if (args.optionFound("insidePoints"))
+    {
+        insidePoints.append
+        (
+            args.optionReadList<point>("insidePoints")
+        );
+
+        insidePointsOpt = true;
+    }
+    else
+    {
+        insidePoints.append
+        (
+            args.optionLookupOrDefault<point>("insidePoint", point::zero)
+        );
+    }
 
     const label nCellsBetweenLevels
     (
@@ -688,7 +778,7 @@ int main(int argc, char *argv[])
         surfaceFeaturesConfiguration surfaceFeaturesConfig
         (
             "surfaceFeaturesDict",
-            regionPath,
+            dir,
             runTime,
             surfaces
         );
@@ -699,7 +789,7 @@ int main(int argc, char *argv[])
     snappyHexMeshConfiguration snappyConfig
     (
         "snappyHexMeshDict",
-        regionPath,
+        dir,
         runTime,
         surfaces,
         refinementLevel,
@@ -711,7 +801,8 @@ int main(int argc, char *argv[])
         layers,
         firstLayerThickness,
         layerExpansionRatio,
-        insidePoint,
+        insidePointsOpt,
+        insidePoints,
         nCellsBetweenLevels
     );
 
@@ -720,7 +811,7 @@ int main(int argc, char *argv[])
     meshQualityConfiguration meshQualityConfig
     (
         "meshQualityDict",
-        regionPath,
+        dir,
         runTime
     );
 

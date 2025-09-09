@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,6 +33,9 @@ namespace Foam
     defineTypeNameAndDebug(fvModel, 0);
     defineRunTimeSelectionTable(fvModel, dictionary);
 }
+
+
+const Foam::wordHashSet Foam::fvModel::keywords({"type", "libs"});
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //

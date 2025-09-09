@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,16 +34,9 @@ namespace Foam
 }
 
 
-namespace Foam
-{
-    template<>
-    const char*
-        NamedEnum<mappedPatchBaseBase::moveUpdate, 3>::names[] =
-        {"always", "detect", "never"};
-}
-
 const Foam::NamedEnum<Foam::mappedPatchBaseBase::moveUpdate, 3>
-    Foam::mappedPatchBaseBase::moveUpdateNames_;
+Foam::mappedPatchBaseBase::moveUpdateNames_
+{"always", "detect", "never"};
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //

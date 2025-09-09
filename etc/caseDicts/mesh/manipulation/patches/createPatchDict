@@ -14,28 +14,28 @@ FoamFile
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 patches
-(
+{
+    inlet
     {
-        // Name of new patch
-        name    inlet;
-
         // Dictionary to construct new patch from
         patchInfo
         {
             type    patch;
         }
 
-        // How to construct: either from 'patches' or 'set'
-        constructFrom set;
+        // How to construct: either from 'patches' or 'zone'
+        constructFrom zone;
 
-        // If constructFrom = set : name of faceSet
-        set     inletFaces;
+        // Generate zone
+        zone
+        {
+            type        box;
+            box         (-0.035 -0.1 -1e-5)(0.035 0.1 1e-5);
+        }
     }
 
+    walls
     {
-        // Name of new patch
-        name    walls;
-
         // Dictionary to construct new patch from
         patchInfo
         {
@@ -48,6 +48,6 @@ patches
         // If constructFrom = patches : names of patches. Wildcards allowed.
         patches ("CAD.*");
     }
-);
+}
 
 // ************************************************************************* //

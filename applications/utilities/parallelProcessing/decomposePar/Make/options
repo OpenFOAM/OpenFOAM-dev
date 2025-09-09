@@ -9,7 +9,7 @@ EXE_INC = \
 
 EXE_LIBS = \
     -lfiniteVolume \
-    -lmeshTools\
+    -lmeshTools \
     -lparallel \
     -ldecompositionMethods \
     -llagrangian \
