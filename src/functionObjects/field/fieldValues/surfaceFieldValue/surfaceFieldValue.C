@@ -610,6 +610,8 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::read
         {
             faceZonePtr_.reset(new generatedFaceZone(mesh_, dict));
 
+            selectionName_ = faceZonePtr_->name();
+
             break;
         }
         case selectionTypes::patch:
