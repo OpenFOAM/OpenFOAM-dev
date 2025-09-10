@@ -23,15 +23,11 @@ solvers
 
         MULESCorr       yes;
 
-        MULES
-        {
-            nIter            5;
-        }
-
         solver          smoothSolver;
         smoother        symGaussSeidel;
         tolerance       1e-8;
         relTol          0;
+        minIter         1;
     }
 
     "pcorr.*"
@@ -46,7 +42,7 @@ solvers
     {
         solver          PCG;
         preconditioner  DIC;
-        tolerance       1e-9;
+        tolerance       1e-11;
         relTol          0.05;
     }
 

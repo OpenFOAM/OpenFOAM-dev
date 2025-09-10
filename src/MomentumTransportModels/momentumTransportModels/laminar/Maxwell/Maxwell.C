@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,16 +56,17 @@ Maxwell<BasicMomentumTransportModel>::readModeCoefficients
                 << endl;
         }
 
-        forAll(modeCoefficients_, modei)
+        label modei = 0;
+        forAllConstIter(dictionary, modeCoefficients_, iter)
         {
             modeCoeffs.set
             (
-                modei,
+                modei++,
                 new dimensioned<scalar>
                 (
                     name,
                     dims,
-                    modeCoefficients_[modei].lookup(name)
+                    iter().dict().lookup(name)
                 )
             );
         }
@@ -85,6 +86,27 @@ Maxwell<BasicMomentumTransportModel>::readModeCoefficients
     }
 
     return modeCoeffs;
+}
+
+
+template<class BasicMomentumTransportModel>
+dimensionedScalar
+Maxwell<BasicMomentumTransportModel>::sumNuM
+(
+    const PtrList<dimensionedScalar>& nuM
+) const
+{
+    dimensionedScalar nuMSum(nuM[0]);
+
+    if (modeCoefficients_.size())
+    {
+        for(label modei=1; modei<modeCoefficients_.size(); modei++)
+        {
+            nuMSum += nuM[modei];
+        }
+    }
+
+    return nuMSum;
 }
 
 
@@ -124,21 +146,15 @@ Maxwell<BasicMomentumTransportModel>::Maxwell
         viscosity
     ),
 
-    modeCoefficients_
-    (
-        this->coeffDict().found("modes")
-      ? PtrList<dictionary>
-        (
-            this->coeffDict().lookup("modes")
-        )
-      : PtrList<dictionary>()
-    ),
+    modeCoefficients_(this->coeffDict().subOrEmptyDict("modes")),
 
     nModes_(modeCoefficients_.size() ? modeCoefficients_.size() : 1),
 
-    nuM_("nuM", dimKinematicViscosity, this->coeffDict().lookup("nuM")),
+    nuM_(readModeCoefficients("nuM", dimKinematicViscosity)),
 
     lambdas_(readModeCoefficients("lambda", dimTime)),
+
+    nuMSum_(sumNuM(nuM_)),
 
     sigma_
     (
@@ -226,9 +242,9 @@ bool Maxwell<BasicMomentumTransportModel>::read()
             this->coeffDict().lookup("modes") >> modeCoefficients_;
         }
 
-        nuM_.read(this->coeffDict());
-
+        nuM_ = readModeCoefficients("nuM", dimKinematicViscosity);
         lambdas_ = readModeCoefficients("lambda", dimTime);
+        nuMSum_ = sumNuM(nuM_);
 
         return true;
     }
@@ -271,7 +287,7 @@ tmp<surfaceVectorField> Maxwell<BasicMomentumTransportModel>::devTau() const
         fvc::dotInterpolate
         (
             nf,
-            this->alpha_*this->rho_*this->nuM_*fvc::grad(this->U_)
+            this->alpha_*this->rho_*this->nuMSum_*fvc::grad(this->U_)
         )
       + fvc::dotInterpolate
         (
@@ -299,7 +315,7 @@ Maxwell<BasicMomentumTransportModel>::DivDevTau
 {
     return
     (
-        fvc::div(this->alpha_*rho*this->nuM_*fvc::grad(U))
+        fvc::div(this->alpha_*rho*this->nuMSum_*fvc::grad(U))
       + fvc::div(this->alpha_*rho*sigma_)
       - fvc::div(this->alpha_*rho*this->nu()*dev2(T(fvc::grad(U))))
       - fvm::laplacian(this->alpha_*rho*nu0(), U)
@@ -371,7 +387,7 @@ void Maxwell<BasicMomentumTransportModel>::correct()
         const volSymmTensorField P
         (
             twoSymm(sigma & gradU)
-          - nuM_*rLambda*twoSymm(gradU)
+          - nuM_[modei]*rLambda*twoSymm(gradU)
         );
 
         // Viscoelastic stress equation

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,7 +46,7 @@ PTT<BasicMomentumTransportModel>::sigmaSource
     return -fvm::Sp
     (
         this->alpha_*this->rho_
-       *exp(-epsilons_[modei]*this->lambdas_[modei]*tr(sigma)/this->nuM_)
+       *exp(-epsilons_[modei]*this->lambdas_[modei]*tr(sigma)/this->nuM_[modei])
        /this->lambdas_[modei],
         sigma
     );

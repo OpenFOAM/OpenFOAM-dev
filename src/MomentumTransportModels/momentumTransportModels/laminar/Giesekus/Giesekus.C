@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,7 +46,7 @@ Giesekus<BasicMomentumTransportModel>::sigmaSource
     return fvm::Su
     (
         this->alpha_*this->rho_
-       *alphaGs_[modei]*innerSqr(sigma)/this->nuM_, sigma
+       *alphaGs_[modei]*innerSqr(sigma)/this->nuM_[modei], sigma
     )
   - fvm::Sp(this->alpha_*this->rho_/this->lambdas_[modei], sigma);
 }

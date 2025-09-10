@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,13 +95,20 @@ protected:
 
         // Model coefficients
 
-            PtrList<dictionary> modeCoefficients_;
+            //- Mode coefficients dictionary
+            dictionary modeCoefficients_;
 
+            //- Number of modes
             label nModes_;
 
-            dimensionedScalar nuM_;
+            //- Mode non-Newtonian viscosities
+            PtrList<dimensionedScalar> nuM_;
 
+            //- Mode time-scales
             PtrList<dimensionedScalar> lambdas_;
+
+            //- Sum of mode non-Newtonian viscosities
+            dimensionedScalar nuMSum_;
 
 
         // Fields
@@ -115,16 +122,20 @@ protected:
 
     // Protected Member Functions
 
+        //- Read a coefficient for all modes and return as a list
         PtrList<dimensionedScalar> readModeCoefficients
         (
             const word& name,
             const dimensionSet& dims
         ) const;
 
-        //- Return the non-Newtonian viscosity
+        //- Return the sum of the given list of mode viscosities
+        dimensionedScalar sumNuM(const PtrList<dimensionedScalar>& nuM) const;
+
+        //- Return the effective viscosity
         tmp<volScalarField> nu0() const
         {
-            return this->nu() + nuM_;
+            return this->nu() + nuMSum_;
         }
 
         virtual tmp<fvSymmTensorMatrix> sigmaSource
