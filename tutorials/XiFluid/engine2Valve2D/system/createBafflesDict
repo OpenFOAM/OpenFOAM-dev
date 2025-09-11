@@ -16,14 +16,22 @@ FoamFile
 
 internalFacesOnly true;
 
+height 5;
+
+evMeshLeft $blockMeshDict.cylinder!x1a;
+evMeshSpan #calc "$blockMeshDict.cylinder!x0b - $evMeshLeft";
+
+ivMeshLeft $blockMeshDict.cylinder!x1b;
+ivMeshSpan #calc "$blockMeshDict.cylinder!x0c - $evMeshLeft";
+
 baffles
 {
     baffles_ev_port
     {
         type        surface;
         surface     plate;
-        origin      (-10 5 0);
-        span        (12 0 1e30);
+        origin      ($evMeshLeft $height -1e3);
+        span        ($evMeshSpan 0        2e3);
 
         owner
         {
@@ -41,8 +49,8 @@ baffles
     {
         type        surface;
         surface     plate;
-        origin      (2 5 0);
-        span        (10 0 1e30);
+        origin      ($ivMeshLeft $height -1e3);
+        span        ($ivMeshSpan 0        2e3);
 
         owner
         {
