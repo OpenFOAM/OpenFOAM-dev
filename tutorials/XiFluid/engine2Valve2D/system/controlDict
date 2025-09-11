@@ -16,6 +16,12 @@ FoamFile
 
 solver          XiFluid;
 
+userTime
+{
+    type            engine;
+    omega           500 [rpm];
+}
+
 startFrom       startTime;
 
 startTime       0;
@@ -49,11 +55,5 @@ adjustTimeStep  yes;
 maxCo           1;
 
 maxDeltaT       1;
-
-userTime
-{
-    type            engine;
-    omega           500 [rpm];
-}
 
 // ************************************************************************* //
