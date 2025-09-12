@@ -37,7 +37,7 @@ namespace Foam
 namespace clouds
 {
     defineTypeNameAndDebug(particle, 0);
-    addToRunTimeSelectionTable(cloud, particle, polyMesh);
+    addToRunTimeSelectionTable(cloud, particle, LagrangianMesh);
 }
 namespace fv
 {
@@ -183,14 +183,11 @@ void Foam::clouds::particle::calculate
 
 Foam::clouds::particle::particle
 (
-    const polyMesh& mesh,
-    const word& name,
-    const contextType context,
-    const IOobject::readOption readOption,
-    const IOobject::writeOption writeOption
+    LagrangianMesh& mesh,
+    const contextType context
 )
 :
-    cloud(mesh, name, context, readOption, writeOption),
+    cloud(mesh, context),
     spherical(static_cast<const cloud&>(*this)),
     massive(*this, *this),
     coupledToFluid(static_cast<const cloud&>(*this)),

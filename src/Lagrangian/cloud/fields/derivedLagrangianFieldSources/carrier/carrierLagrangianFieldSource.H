@@ -88,6 +88,9 @@ public:
     // Constructors
 
         //- Construct from internal field and dictionary
+        carrierLagrangianFieldSource(const regIOobject&);
+
+        //- Construct from internal field and dictionary
         carrierLagrangianFieldSource
         (
             const regIOobject&,

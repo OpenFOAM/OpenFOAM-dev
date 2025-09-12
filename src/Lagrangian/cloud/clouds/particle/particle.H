@@ -95,15 +95,8 @@ public:
 
     // Constructors
 
-        //- Construct from a mesh and a name
-        particle
-        (
-            const polyMesh& mesh,
-            const word& name,
-            const contextType context,
-            const IOobject::readOption readOption=IOobject::READ_IF_PRESENT,
-            const IOobject::writeOption writeOption=IOobject::AUTO_WRITE
-        );
+        //- Construct from a mesh and context
+        particle(LagrangianMesh& mesh, const contextType context);
 
 
     //- Destructor

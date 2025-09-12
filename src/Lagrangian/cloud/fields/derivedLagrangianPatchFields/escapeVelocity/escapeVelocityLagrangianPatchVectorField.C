@@ -39,7 +39,7 @@ Foam::escapeVelocityLagrangianPatchVectorField::state() const
 
 namespace Foam
 {
-    makeLagrangianPatchTypeField
+    makeNullConstructableLagrangianPatchTypeField
     (
         LagrangianPatchVectorField,
         escapeVelocityLagrangianPatchVectorField

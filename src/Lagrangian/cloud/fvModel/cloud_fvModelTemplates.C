@@ -38,7 +38,15 @@ Foam::fv::cloud::cloud
 )
 :
     fvModel(name, modelType, mesh, dict),
-    cloudPtr_(new Type(mesh, name, Foam::cloud::contextType::fvModel)),
+    cloudPtr_
+    (
+        Foam::cloud::New<Type>
+        (
+            mesh,
+            name,
+            Foam::cloud::contextType::fvModel
+        ).ptr()
+    ),
     cloud_(cloudPtr_()),
     coupledCloud_(refCast<const clouds::coupled>(cloud_))
 {

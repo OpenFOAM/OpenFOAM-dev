@@ -25,6 +25,8 @@ License
 
 #include "tracer.H"
 #include "cloud_functionObject.H"
+#include "escapeVelocityLagrangianPatchVectorField.H"
+#include "NaNLagrangianFieldSources.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -34,7 +36,7 @@ namespace Foam
 namespace clouds
 {
     defineTypeNameAndDebug(tracer, 0);
-    addToRunTimeSelectionTable(cloud, tracer, polyMesh);
+    addToRunTimeSelectionTable(cloud, tracer, LagrangianMesh);
 }
 namespace functionObjects
 {
@@ -95,17 +97,41 @@ void Foam::clouds::tracer::calculate
 
 Foam::clouds::tracer::tracer
 (
-    const polyMesh& mesh,
-    const word& name,
-    const contextType context,
-    const IOobject::readOption readOption,
-    const IOobject::writeOption writeOption
+    LagrangianMesh& mesh,
+    const contextType context
 )
 :
-    cloud(mesh, name, context, readOption, writeOption),
+    cloud
+    (
+        mesh,
+        context,
+        LagrangianVectorDynamicField::New
+        (
+            "U",
+            mesh,
+            dimensionedVector("NaN", dimVelocity, vector::uniform(NaN)),
+            escapeVelocityLagrangianPatchVectorField::typeName
+        )
+    ),
     carried(static_cast<const cloud&>(*this))
 {
-    reCalculateModified();
+    // Create NaN values on newly injected particles. These values will then
+    // get corrected by a call to calculate as a result of reCalculateModified
+    // returning true. Alternatively, we could put a carrier field source here
+    // and set reCalculateModified to false. Either approach works.
+    U.sourcesRef().reset
+    (
+        U,
+        LagrangianVectorDynamicField::Sources
+        (
+            U,
+            LagrangianModels().modelTypeFieldSourceTypes
+            <
+                LagrangianInjection,
+                NaNLagrangianVectorFieldSource
+            >()
+        )
+    );
 }
 
 

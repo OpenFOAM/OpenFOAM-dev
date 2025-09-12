@@ -42,7 +42,7 @@ License
 namespace Foam
 {
     defineTypeNameAndDebug(cloud, 0);
-    defineRunTimeSelectionTable(cloud, polyMesh);
+    defineRunTimeSelectionTable(cloud, LagrangianMesh);
 }
 
 
@@ -508,25 +508,10 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::cloud::cloud
-(
-    const polyMesh& pMesh,
-    const word& name,
-    const contextType context,
-    const IOobject::readOption readOption,
-    const IOobject::writeOption writeOption
-)
+Foam::cloud::cloud(LagrangianMesh& mesh, const contextType context)
 :
-    regIOobject
-    (
-        IOobject
-        (
-            typeName,
-            pMesh.time().name(),
-            mesh(pMesh, name, readOption, writeOption)
-        )
-    ),
-    mesh_(mesh(pMesh, name, readOption, writeOption)),
+    regIOobject(IOobject(typeName, mesh.time().name(), mesh)),
+    mesh_(mesh),
     LagrangianModelsPtr_(nullptr),
     statePtr_(readStates()),
     cellLengthScaleVf_(mag(cbrt(mesh_.mesh().cellVolumes()))),
@@ -535,7 +520,7 @@ Foam::cloud::cloud
     (
         cloudTrackingNames
         [
-            mesh().schemes().schemesDict().lookup<word>("tracking")
+            mesh.schemes().schemesDict().lookup<word>("tracking")
         ]
     ),
     U
@@ -556,48 +541,96 @@ Foam::cloud::cloud
 {}
 
 
+Foam::cloud::cloud
+(
+    LagrangianMesh& mesh,
+    const contextType context,
+    const tmp<LagrangianVectorDynamicField>& tU
+)
+:
+    regIOobject(IOobject(typeName, mesh.time().name(), mesh)),
+    mesh_(mesh),
+    LagrangianModelsPtr_(nullptr),
+    statePtr_(readStates()),
+    cellLengthScaleVf_(mag(cbrt(mesh_.mesh().cellVolumes()))),
+    context(context),
+    tracking
+    (
+        cloudTrackingNames
+        [
+            mesh.schemes().schemesDict().lookup<word>("tracking")
+        ]
+    ),
+    U
+    (
+        stateField<vector>
+        (
+            IOobject
+            (
+                "U",
+                time().name(),
+                mesh_,
+                IOobject::READ_IF_PRESENT,
+                IOobject::AUTO_WRITE
+            ),
+            tU
+        )
+    )
+{}
+
+
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
 Foam::autoPtr<Foam::cloud> Foam::cloud::New
 (
     const polyMesh& pMesh,
     const word& name,
-    const word& type
+    const contextType context,
+    const word& type,
+    const IOobject::readOption readOption,
+    const IOobject::writeOption writeOption
 )
 {
     Info<< "Selecting " << typeName
         << " with name " << name
         << " of type " << type << endl;
 
-    if (!polyMeshConstructorTablePtr_)
+    if (!LagrangianMeshConstructorTablePtr_)
     {
         FatalErrorInFunction
             << typeName << "s table is empty"
             << exit(FatalError);
     }
 
-    polyMeshConstructorTable::iterator cstrIter;
+    LagrangianMeshConstructorTable::iterator cstrIter;
 
-    cstrIter = polyMeshConstructorTablePtr_->find(type);
+    cstrIter = LagrangianMeshConstructorTablePtr_->find(type);
 
-    if (cstrIter == polyMeshConstructorTablePtr_->end())
+    if (cstrIter == LagrangianMeshConstructorTablePtr_->end())
     {
         libs.open("lib" + type + typeName.capitalise() + ".so");
     }
 
-    cstrIter = polyMeshConstructorTablePtr_->find(type);
+    cstrIter = LagrangianMeshConstructorTablePtr_->find(type);
 
-    if (cstrIter == polyMeshConstructorTablePtr_->end())
+    if (cstrIter == LagrangianMeshConstructorTablePtr_->end())
     {
         FatalErrorInFunction
             << "Unknown " << typeName << " type "
             << type << nl << nl
             << "Valid " << typeName << "s are :" << endl
-            << polyMeshConstructorTablePtr_->sortedToc()
+            << LagrangianMeshConstructorTablePtr_->sortedToc()
             << exit(FatalError);
     }
 
-    autoPtr<cloud> cloudPtr(cstrIter()(pMesh, name, contextType::unknown));
+    autoPtr<cloud> cloudPtr
+    (
+        cstrIter()
+        (
+            mesh(pMesh, name, readOption, writeOption),
+            context
+        )
+    );
 
     // Ensure LagrangianModels are constructed before time is incremented
     cloudPtr->LagrangianModels();

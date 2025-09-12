@@ -97,15 +97,8 @@ public:
 
     // Constructors
 
-        //- Construct from a mesh and a name
-        kinematicParticle
-        (
-            const polyMesh& mesh,
-            const word& name,
-            const contextType context,
-            const IOobject::readOption readOption=IOobject::READ_IF_PRESENT,
-            const IOobject::writeOption writeOption=IOobject::AUTO_WRITE
-        );
+        //- Construct from a mesh and context
+        kinematicParticle(LagrangianMesh& mesh, const contextType context);
 
 
     //- Destructor

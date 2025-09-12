@@ -234,35 +234,52 @@ public:
     (
         autoPtr,
         cloud,
-        polyMesh,
-        (const polyMesh& mesh, const word& name, const contextType context),
-        (mesh, name, context)
+        LagrangianMesh,
+        (LagrangianMesh& mesh, const contextType context),
+        (mesh, context)
     );
 
 
     // Constructors
 
-        //- Construct from a mesh and a name
+        //- Construct from a mesh and context. Reads the velocity field.
+        cloud(LagrangianMesh& mesh, const contextType context);
+
+        //- Construct from a mesh, context and a specified velocity field
         cloud
         (
-            const polyMesh& mesh,
-            const word& name,
+            LagrangianMesh& mesh,
             const contextType context,
-            const IOobject::readOption readOption=IOobject::READ_IF_PRESENT,
-            const IOobject::writeOption writeOption=IOobject::AUTO_WRITE
+            const tmp<LagrangianVectorDynamicField>& tU
         );
 
         //- Disallow default bitwise copy construction
         cloud(const cloud&) = delete;
 
 
-    //- Selector
-    static autoPtr<cloud> New
-    (
-        const polyMesh& mesh,
-        const word& name,
-        const word& type
-    );
+    //- Selectors
+
+        //- Select given the type name
+        static autoPtr<cloud> New
+        (
+            const polyMesh& mesh,
+            const word& name,
+            const contextType context,
+            const word& type,
+            const IOobject::readOption readOption=IOobject::READ_IF_PRESENT,
+            const IOobject::writeOption writeOption=IOobject::AUTO_WRITE
+        );
+
+        //- Select given the type class
+        template<class Type>
+        static autoPtr<Type> New
+        (
+            const polyMesh& pMesh,
+            const word& name,
+            const contextType context,
+            const IOobject::readOption readOption=IOobject::READ_IF_PRESENT,
+            const IOobject::writeOption writeOption=IOobject::AUTO_WRITE
+        );
 
 
     //- Destructor

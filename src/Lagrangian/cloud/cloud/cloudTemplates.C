@@ -28,6 +28,30 @@ License
 #include "CloudDerivedField.H"
 #include "CloudAverageField.H"
 
+// * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
+
+template<class Type>
+Foam::autoPtr<Type> Foam::cloud::New
+(
+    const polyMesh& pMesh,
+    const word& name,
+    const contextType context,
+    const IOobject::readOption readOption,
+    const IOobject::writeOption writeOption
+)
+{
+    return
+        autoPtr<Type>
+        (
+            new Type
+            (
+                mesh(pMesh, name, readOption, writeOption),
+                context
+            )
+        );
+}
+
+
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 template<class Type, class ... Args>

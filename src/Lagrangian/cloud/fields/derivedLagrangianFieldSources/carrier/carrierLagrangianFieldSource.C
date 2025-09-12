@@ -33,6 +33,18 @@ License
 template<class Type>
 Foam::carrierLagrangianFieldSource<Type>::carrierLagrangianFieldSource
 (
+    const regIOobject& iIo
+)
+:
+    LagrangianFieldSource<Type>(iIo),
+    cloudLagrangianFieldSource(*this),
+    fieldcName_(iIo.name())
+{}
+
+
+template<class Type>
+Foam::carrierLagrangianFieldSource<Type>::carrierLagrangianFieldSource
+(
     const regIOobject& iIo,
     const dictionary& dict
 )

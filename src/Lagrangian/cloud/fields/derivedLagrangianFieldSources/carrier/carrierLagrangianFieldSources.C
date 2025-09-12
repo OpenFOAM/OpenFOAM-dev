@@ -34,7 +34,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-makeLagrangianFieldSources(carrier);
+makeNullConstructableLagrangianFieldSources(carrier);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

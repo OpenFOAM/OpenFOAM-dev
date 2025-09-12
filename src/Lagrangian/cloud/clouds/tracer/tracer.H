@@ -91,15 +91,8 @@ public:
 
     // Constructors
 
-        //- Construct from a mesh and a name
-        tracer
-        (
-            const polyMesh& mesh,
-            const word& name,
-            const contextType context,
-            const IOobject::readOption readOption=IOobject::READ_IF_PRESENT,
-            const IOobject::writeOption writeOption=IOobject::AUTO_WRITE
-        );
+        //- Construct from a mesh and context
+        tracer(LagrangianMesh& mesh, const contextType context);
 
 
     //- Destructor
