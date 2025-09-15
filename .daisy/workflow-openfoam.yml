@@ -14,6 +14,7 @@ steps:
     sudo apt-get install -y build-essential libopenmpi-dev zlib1g-dev gnuplot gnuplot-x11 libxt-dev cmake flex
     sudo apt-get install -y libxml2-dev libhdf5-dev libavfilter-dev libtheora-dev libgl2ps-dev libx11-dev libqt5x11extras5-dev libglew-dev libutfcpp-dev 
   
+    export WM_PROJECT_DIR=`pwd`
     . etc/custom_bashrc 
     ./wmake/wmakeLnIncludeAll
 
