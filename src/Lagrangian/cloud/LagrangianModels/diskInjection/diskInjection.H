@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::diskInjection
+    Foam::Lagrangian::diskInjection
 
 Description
     Disk injection model. This injects particles continuously over a disk with

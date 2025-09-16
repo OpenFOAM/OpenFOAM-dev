@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::SaffmanMeiLift
+    Foam::Lagrangian::SaffmanMeiLift
 
 Description
     Lift model of Saffman (1965) as extended by Mei (1992). Applicable to

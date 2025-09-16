@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::patchInjection
+    Foam::Lagrangian::patchInjection
 
 Description
     Patch injection model. This injects particles continuously at a patch with

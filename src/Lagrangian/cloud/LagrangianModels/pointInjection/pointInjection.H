@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::pointInjection
+    Foam::Lagrangian::pointInjection
 
 Description
     Point injection model. This injects particles continuously at a point with

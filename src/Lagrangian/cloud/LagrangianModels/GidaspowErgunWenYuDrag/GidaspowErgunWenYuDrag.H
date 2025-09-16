@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::GidaspowErgunWenYuDrag
+    Foam::Lagrangian::GidaspowErgunWenYuDrag
 
 Description
     Drag model of Gidaspow which switches between the drag models of Ergun and

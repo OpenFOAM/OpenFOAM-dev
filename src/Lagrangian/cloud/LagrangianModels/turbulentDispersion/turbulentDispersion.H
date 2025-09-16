@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::turbulentDispersion
+    Foam::Lagrangian::turbulentDispersion
 
 Description
     Model for turbulent dispersion. This model creates a random turbulent

@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::volumeInjection
+    Foam::Lagrangian::volumeInjection
 
 Description
     Volume injection model. This injects particles instantaneously within the

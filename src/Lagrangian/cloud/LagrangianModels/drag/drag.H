@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::drag
+    Foam::Lagrangian::drag
 
 Description
     Base class for Lagrangian drag models

@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::manualInjection
+    Foam::Lagrangian::manualInjection
 
 Description
     Manual injection model. This injects particles instantaneously at a list of
