@@ -8,9 +8,8 @@
 FoamFile
 {
     format      ascii;
-    note        "settings for calculating the adiabatic flame temperature";
     class       dictionary;
-    object      controlDict;
+    object      adiabaticFlameTDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

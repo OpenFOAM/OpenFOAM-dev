@@ -9,8 +9,8 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    location    "constant";
-    object      thermophysicalTransport;
+    location    "constant/fluid";
+    object      thermophysicalTransport.gas;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

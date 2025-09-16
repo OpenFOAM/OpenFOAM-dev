@@ -7,10 +7,10 @@
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    format          ascii;
-    class           dictionary;
-    location        system;
-    object          probesDict;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      probesDict;
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

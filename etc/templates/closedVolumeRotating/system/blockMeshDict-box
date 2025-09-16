@@ -9,7 +9,8 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    object      blockMeshDict;
+    location    "system";
+    object      blockMeshDict-box;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

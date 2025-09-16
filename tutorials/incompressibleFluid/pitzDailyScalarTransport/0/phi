@@ -9,7 +9,7 @@ FoamFile
 {
     format      ascii;
     class       surfaceScalarField;
-    location    "287";
+    location    "0";
     object      phi;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

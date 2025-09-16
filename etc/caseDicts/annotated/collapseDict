@@ -5,20 +5,13 @@
     \\  /    A nd           | Version:  dev
      \\/     M anipulation  |
 \*---------------------------------------------------------------------------*/
-
 FoamFile
 {
-    format          ascii;
-
-    root            "";
-    case            "";
-    instance        "";
-    local           "";
-
-    class           dictionary;
-    object          collapseDict;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      collapseDict;
 }
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 // If on, after collapsing check the quality of the mesh. If bad faces are

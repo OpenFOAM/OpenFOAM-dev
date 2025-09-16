@@ -9,7 +9,7 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    object      testDict;
+    object      testDict2;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

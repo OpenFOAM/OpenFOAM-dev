@@ -10,7 +10,7 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "constant";
-    object      scalarListList;
+    object      parcelInjectionProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 // (x y z) (u v w) d rho mDot T Cp (Y0..Y2)

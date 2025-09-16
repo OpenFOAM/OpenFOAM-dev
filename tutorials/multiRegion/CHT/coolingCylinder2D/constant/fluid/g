@@ -9,6 +9,7 @@ FoamFile
 {
     format      ascii;
     class       uniformDimensionedVectorField;
+    location    "constant/fluid";
     object      g;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

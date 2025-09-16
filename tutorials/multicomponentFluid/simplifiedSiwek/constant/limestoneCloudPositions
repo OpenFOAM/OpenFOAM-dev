@@ -8,9 +8,9 @@
 FoamFile
 {
     format      ascii;
-    location    "";
     class       vectorField;
-    object      limestonePositions;
+    location    "constant";
+    object      limestoneCloudPositions;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 (

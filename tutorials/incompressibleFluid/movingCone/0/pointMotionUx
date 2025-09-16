@@ -9,6 +9,7 @@ FoamFile
 {
     format      ascii;
     class       pointScalarField;
+    location    "0";
     object      pointMotionUx;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

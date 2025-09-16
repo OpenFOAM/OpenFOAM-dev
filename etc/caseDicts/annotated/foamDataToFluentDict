@@ -8,8 +8,8 @@
 FoamFile
 {
     format      ascii;
-    note        "OpenFOAM to Fluent interface control dictionary";
     class       dictionary;
+    location    "system";
     object      foamDataToFluentDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

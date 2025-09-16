@@ -7,9 +7,10 @@
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    format          ascii;
-    class           dictionary;
-    object          refineMeshDict;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      refineMeshDict.cyl;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

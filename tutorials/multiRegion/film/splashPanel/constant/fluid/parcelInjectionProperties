@@ -9,8 +9,8 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    location    "constant";
-    object      scalarListList;
+    location    "constant/fluid";
+    object      parcelInjectionProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 // (x y z) (u v w) d rho mDot T cp (Y0..Y2)

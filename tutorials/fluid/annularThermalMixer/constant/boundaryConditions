@@ -9,8 +9,8 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    location    "";
-    object      caseProperties;
+    location    "constant";
+    object      boundaryConditions;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -9,7 +9,8 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    object      extrudeToRegionMeshDict;
+    location    "system";
+    object      extrudeToRegionMeshDict.film;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

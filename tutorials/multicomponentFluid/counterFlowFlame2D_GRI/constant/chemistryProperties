@@ -7,11 +7,10 @@
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    version         2;
-    format          ascii;
-    class           dictionary;
-    location        "constant";
-    object          chemistryProperties;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      chemistryProperties;
 }
 
 chemistryType

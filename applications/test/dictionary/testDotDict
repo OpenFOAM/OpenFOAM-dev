@@ -10,9 +10,9 @@
 //
 FoamFile
 {
-    format          ascii;
-    class           dictionary;
-    object          testDict;
+    format      ascii;
+    class       dictionary;
+    object      testDotDict;
 }
 
 internalField   3.4;

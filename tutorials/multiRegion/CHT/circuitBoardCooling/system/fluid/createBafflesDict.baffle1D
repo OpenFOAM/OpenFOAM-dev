@@ -9,7 +9,8 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    object      createBafflesDict;
+    location    "system/fluid";
+    object      createBafflesDict.baffle1D;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

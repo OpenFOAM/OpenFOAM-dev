@@ -9,8 +9,8 @@ FoamFile
 {
     format      ascii;
     class       volScalarField;
-    location    "0";
-    object      p;
+    location    "0/porous";
+    object      p_rgh;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -9,6 +9,7 @@ FoamFile
 {
     format      ascii;
     class       faceList;
+    location    "constant/polyMesh";
     object      faces;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

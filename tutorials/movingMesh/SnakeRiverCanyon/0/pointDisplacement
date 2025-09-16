@@ -10,7 +10,7 @@ FoamFile
     format      ascii;
     class       pointVectorField;
     location    "0";
-    object      pointMotionU;
+    object      pointDisplacement;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -5,14 +5,13 @@
     \\  /    A nd           | Version:  dev
      \\/     M anipulation  |
 \*---------------------------------------------------------------------------*/
-
 FoamFile
 {
-    format          ascii;
-    class           dictionary;
-    object          extrude2DMeshDict;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      extrude2DMeshDict;
 }
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 extrudeModel

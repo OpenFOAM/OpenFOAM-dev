@@ -9,7 +9,8 @@ FoamFile
 {
     format      ascii;
     class       volScalarField;
-    object      mut;
+    location    "0";
+    object      nut;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

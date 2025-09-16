@@ -9,7 +9,8 @@ FoamFile
 {
     format      ascii;
     class       volScalarField;
-    object      f.particles;
+    location    "0";
+    object      fDefault.particles;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

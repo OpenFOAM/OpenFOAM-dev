@@ -9,8 +9,8 @@ FoamFile
 {
     format      ascii;
     class       volScalarField;
-    location    "5";
-    object      T.gas;
+    location    "0";
+    object      T.gas2;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

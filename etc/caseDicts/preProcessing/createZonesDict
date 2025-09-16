@@ -9,10 +9,11 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
+    location    "system";
     object      createZonesDict;
 }
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
 // This is a skeleton file for configuring zoneGenerators.
 //
 // The available zoneGenerators can be listed using 'foamToC':

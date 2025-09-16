@@ -10,7 +10,7 @@ FoamFile
     format      ascii;
     class       volVectorField;
     location    "0";
-    object      Uwater;
+    object      U.water;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

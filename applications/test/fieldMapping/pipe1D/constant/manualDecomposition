@@ -10,7 +10,7 @@ FoamFile
     format      ascii;
     class       labelList;
     location    "constant";
-    object      cellDecomposition;
+    object      manualDecomposition;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
