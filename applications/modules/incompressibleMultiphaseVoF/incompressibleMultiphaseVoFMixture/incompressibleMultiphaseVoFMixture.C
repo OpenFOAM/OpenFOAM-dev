@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "incompressibleMultiphaseVoFMixture.H"
-#include "surfaceInterpolate.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -104,10 +103,16 @@ void Foam::incompressibleMultiphaseVoFMixture::correct()
 
 bool Foam::incompressibleMultiphaseVoFMixture::read()
 {
-    if (regIOobject::read())
+    if (multiphaseVoFMixture::read())
     {
-        lookup("sigmas") >> sigmas_;
-        return true;
+        bool result = true;
+
+        forAll(phases_, phasei)
+        {
+            result = phases_[phasei].read() && result;
+        }
+
+        return result;
     }
     else
     {

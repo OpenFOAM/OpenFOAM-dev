@@ -38,6 +38,7 @@ SourceFiles
 #include "twoPhaseVoFMixture.H"
 #include "incompressibleTwoPhases.H"
 #include "viscosityModel.H"
+#include "uniformDimensionedFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -63,10 +64,10 @@ class incompressibleTwoPhaseVoFMixture
         autoPtr<viscosityModel> nuModel2_;
 
         //- Constant density of phase 1
-        dimensionedScalar rho1_;
+        uniformDimensionedScalarField rho1_;
 
         //- Constant density of phase 2
-        dimensionedScalar rho2_;
+        uniformDimensionedScalarField rho2_;
 
         //- Mixture density
         volScalarField rho_;

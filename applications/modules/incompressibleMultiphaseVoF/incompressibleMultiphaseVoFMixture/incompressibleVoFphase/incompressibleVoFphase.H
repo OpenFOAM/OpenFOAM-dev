@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,6 +44,7 @@ See also
 
 #include "VoFphase.H"
 #include "viscosityModel.H"
+#include "uniformDimensionedFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -64,7 +65,7 @@ class incompressibleVoFphase
         autoPtr<viscosityModel> nuModel_;
 
         //- Phase density
-        dimensionedScalar rho_;
+        uniformDimensionedScalarField rho_;
 
 
 public:
@@ -134,6 +135,9 @@ public:
 
         //- Correct the incompressibleVoFphase properties
         void correct();
+
+        //- Read base phaseProperties dictionary
+        bool read();
 };
 
 

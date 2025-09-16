@@ -24,8 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "incompressibleTwoPhaseVoFMixture.H"
-#include "surfaceInterpolate.H"
-#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -47,8 +45,26 @@ Foam::incompressibleTwoPhaseVoFMixture::incompressibleTwoPhaseVoFMixture
     nuModel1_(viscosityModel::New(mesh, phase1Name())),
     nuModel2_(viscosityModel::New(mesh, phase2Name())),
 
-    rho1_("rho", dimDensity, nuModel1_()),
-    rho2_("rho", dimDensity, nuModel2_()),
+    rho1_
+    (
+        IOobject
+        (
+            IOobject::groupName("rho", phase1Name()),
+            mesh.time().constant(),
+            mesh
+        ),
+        dimensionedScalar("rho", dimDensity, nuModel1_())
+    ),
+    rho2_
+    (
+        IOobject
+        (
+            IOobject::groupName("rho", phase2Name()),
+            mesh.time().constant(),
+            mesh
+        ),
+        dimensionedScalar("rho", dimDensity, nuModel2_())
+    ),
 
     rho_
     (
@@ -83,22 +99,6 @@ Foam::incompressibleTwoPhaseVoFMixture::incompressibleTwoPhaseVoFMixture
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-bool Foam::incompressibleTwoPhaseVoFMixture::read()
-{
-    if (twoPhaseVoFMixture::read())
-    {
-        nuModel1_->lookup("rho") >> rho1_;
-        nuModel2_->lookup("rho") >> rho2_;
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-
 void Foam::incompressibleTwoPhaseVoFMixture::correct()
 {
     rho_ = alpha1()*rho1_ + alpha2()*rho2_;
@@ -118,6 +118,29 @@ void Foam::incompressibleTwoPhaseVoFMixture::correct()
         limitedAlpha1*rho1_*nuModel1_->nu()
       + (scalar(1) - limitedAlpha1)*rho2_*nuModel2_->nu()
     )/(limitedAlpha1*rho1_ + (scalar(1) - limitedAlpha1)*rho2_);
+}
+
+
+bool Foam::incompressibleTwoPhaseVoFMixture::read()
+{
+    if (twoPhaseVoFMixture::read())
+    {
+        if (nuModel1_->read() && nuModel2_->read())
+        {
+            nuModel1_->lookup("rho") >> rho1_;
+            nuModel2_->lookup("rho") >> rho2_;
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        return false;
+    }
 }
 
 

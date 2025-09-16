@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,16 @@ Foam::incompressibleVoFphase::incompressibleVoFphase
 :
     VoFphase(name, mesh),
     nuModel_(viscosityModel::New(mesh, name)),
-    rho_("rho", dimDensity, nuModel_())
+    rho_
+    (
+        IOobject
+        (
+            IOobject::groupName("rho", name),
+            mesh.time().constant(),
+            mesh
+        ),
+        dimensionedScalar("rho", dimDensity, nuModel_())
+    )
 {}
 
 
@@ -51,6 +60,21 @@ Foam::autoPtr<Foam::VoFphase> Foam::incompressibleVoFphase::clone() const
 void Foam::incompressibleVoFphase::correct()
 {
     nuModel_->correct();
+}
+
+
+bool Foam::incompressibleVoFphase::read()
+{
+    if (nuModel_->read())
+    {
+        nuModel_->lookup("rho") >> rho_;
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 
