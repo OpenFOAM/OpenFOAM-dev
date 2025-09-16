@@ -1749,14 +1749,14 @@ bool Foam::fvMesh::writeObject
     unsigned int precision0 =
         IOstream::defaultPrecision(IOstream::fullPrecision());
 
-    // Write the mesh flux if it exists
-    if (phiPtr_)
+    // Write the mesh flux if old-old-time volumes exist
+    if (phiPtr_ && V00Ptr_)
     {
         ok = ok && phiPtr_->write(write);
     }
 
-    // Write V0 if V00 exists
-    if (V00Ptr_)
+    // Write old-time volumes if old-old-time volumes exist
+    if (V0Ptr_ && V00Ptr_)
     {
         ok = ok && V0Ptr_->write(write);
     }
