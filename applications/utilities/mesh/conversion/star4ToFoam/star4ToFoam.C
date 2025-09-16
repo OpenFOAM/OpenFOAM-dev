@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,7 +102,7 @@ int main(int argc, char *argv[])
     }
 
     // increase the precision of the points data
-    IOstream::defaultPrecision(max(10u, IOstream::defaultPrecision()));
+    IOstream::defaultPrecision(IOstream::highPrecision());
 
     // remove extensions and/or trailing '.'
     const fileName prefix = fileName(args[1]).lessExt();

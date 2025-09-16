@@ -1055,8 +1055,8 @@ void Foam::domainDecomposition::writeComplete(const bool doSets) const
         static_cast<const faceCompactIOList&>(completeMesh().faces())
        .writeOpt() == IOobject::AUTO_WRITE;
 
-    // Set the precision of the points data to be min 10
-    IOstream::defaultPrecision(max(10u, IOstream::defaultPrecision()));
+    // Ensure the points are written to a sufficient precision
+    IOstream::defaultPrecision(IOstream::highPrecision());
 
     // Write the complete mesh
     completeMesh().write();
@@ -1163,8 +1163,8 @@ void Foam::domainDecomposition::writeProcs(const bool doSets) const
     {
         const fvMesh& procMesh = procMeshes_[proci];
 
-        // Set the precision of the points data to be min 10
-        IOstream::defaultPrecision(max(10u, IOstream::defaultPrecision()));
+        // Ensure the points are written to a sufficient precision
+        IOstream::defaultPrecision(IOstream::highPrecision());
 
         // Write the processor mesh
         procMesh.write();

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,8 +93,8 @@ int main(int argc, char *argv[])
 
     twoDCorr.correctPoints(points);
 
-    // Set the precision of the points data to 10
-    IOstream::defaultPrecision(max(10u, IOstream::defaultPrecision()));
+    // Ensure the points are written to a sufficient precision
+    IOstream::defaultPrecision(IOstream::highPrecision());
 
     Info<< "Writing points into directory " << points.path() << nl << endl;
     points.write();

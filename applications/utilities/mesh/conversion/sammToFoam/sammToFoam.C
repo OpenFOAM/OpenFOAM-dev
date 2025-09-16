@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,8 +61,8 @@ int main(int argc, char *argv[])
 
     sammMesh makeMesh(args[1], runTime, scaleFactor);
 
-    // Set the precision of the points data to 10
-    IOstream::defaultPrecision(max(10u, IOstream::defaultPrecision()));
+    // Ensure the points are written to a sufficient precision
+    IOstream::defaultPrecision(IOstream::highPrecision());
 
     Info<< "Writing mesh" << endl;
     makeMesh.writeMesh();

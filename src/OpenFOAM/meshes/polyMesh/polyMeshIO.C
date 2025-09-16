@@ -560,6 +560,19 @@ bool Foam::polyMesh::writeObject
         }
     }
 
+    // Write the points out at a higher precision
+    if (points_.writeOpt() == IOobject::AUTO_WRITE)
+    {
+        unsigned int precision0 =
+            IOstream::defaultPrecision(IOstream::fullPrecision());
+
+        points_.write();
+
+        IOstream::defaultPrecision(precision0);
+    }
+
+    const_cast<polyMesh&>(*this).points_.writeOpt() = IOobject::NO_WRITE;
+
     const bool written = objectRegistry::writeObject(fmt, ver, cmp, write);
 
     const_cast<polyMesh&>(*this).setTopologyWrite(IOobject::NO_WRITE);

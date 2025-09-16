@@ -1837,17 +1837,19 @@ bool Foam::fvMeshStitcher::connectThis
             for (label i = 0; i <= mesh_.phi().nOldTimes(false); ++ i)
             {
                 const volScalarField::Internal vce(volumeConservationError(i));
+                const scalar gMinVce = gMin(vce);
                 const scalar gMaxVce = gMax(vce);
                 Info<< indent << "Cell min/average/max ";
                 for (label j = 0; j < i; ++ j) Info<< "old-";
                 Info<< (i ? "time " : "") << "volume conservation error = "
-                    << gMin(vce) << '/' << gAverage(vce) << '/' << gMaxVce
+                    << gMinVce << '/' << gAverage(vce) << '/' << gMaxVce
                     << endl;
-                if (gMaxVce > rootSmall)
+                if (- gMinVce > rootSmall || gMaxVce > rootSmall)
                 {
                     FatalErrorInFunction
-                        << "Maximum volume conservation error of " << gMaxVce
-                        << " is not tolerable" << exit(FatalError);
+                        << "Maximum volume conservation error of "
+                        << max(-gMinVce, gMaxVce) << " is not tolerable"
+                        << exit(FatalError);
                 }
             }
         }

@@ -51,8 +51,8 @@ int main(int argc, char *argv[])
 
         mesh.setInstance(runTime.name());
 
-        // Set the precision of the points data to 10
-        IOstream::defaultPrecision(max(10u, IOstream::defaultPrecision()));
+        // Ensure the points are written to a sufficient precision
+        IOstream::defaultPrecision(IOstream::highPrecision());
 
         if (!overwrite)
         {

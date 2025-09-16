@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -483,6 +483,15 @@ public:
                 precision_ = p;
                 return precision0;
             }
+
+            //- Return a high precision for writing data that is
+            //  sensitive to rounding error
+            static unsigned int highPrecision();
+
+            //- Return a full precision for writing data that is *very*
+            //  sensitive to rounding error. There should be no additional
+            //  rounding error beyond this precision.
+            static unsigned int fullPrecision();
 
             //- Set stream to have reached eof
             void setEof()

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,6 +84,22 @@ Foam::IOstream::compressionEnum(const word& compression)
 
         return IOstream::UNCOMPRESSED;
     }
+}
+
+
+unsigned int Foam::IOstream::highPrecision()
+{
+    static const unsigned int p = log10(1/pow(small, 0.75));
+
+    return max(defaultPrecision(), p);
+}
+
+
+unsigned int Foam::IOstream::fullPrecision()
+{
+    static const unsigned int p = log10(1/small);
+
+    return max(defaultPrecision(), p);
 }
 
 

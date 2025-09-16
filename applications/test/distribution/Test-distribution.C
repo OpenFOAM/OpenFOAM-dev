@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -245,7 +245,7 @@ int main(int argc, char *argv[])
         yNames[i].replaceAll(" ", "");
     }
 
-    IOstream::defaultPrecision(15);
+    IOstream::defaultPrecision(IOstream::fullPrecision());
 
     rawSetWriter(IOstream::ASCII, IOstream::UNCOMPRESSED).write
     (

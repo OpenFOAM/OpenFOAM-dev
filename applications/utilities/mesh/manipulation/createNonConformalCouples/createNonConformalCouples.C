@@ -879,8 +879,8 @@ int main(int argc, char *argv[])
         }
     }
 
-    // Set the precision of the points data to 10
-    IOstream::defaultPrecision(max(10u, IOstream::defaultPrecision()));
+    // Ensure the points are written to a sufficient precision
+    IOstream::defaultPrecision(IOstream::highPrecision());
 
     // Set the instance so that the mesh writes
     const word newInstance = overwrite ? oldInstance : runTime.name();
