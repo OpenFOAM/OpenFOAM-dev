@@ -105,7 +105,6 @@ void Foam::meanInletOutletFvPatchScalarField::updateCoeffs()
         )
     );
 
-    Info << "averagePsi " << averagePsi << endl;
     refValue() = averagePsi;
 
     inletOutletFvPatchScalarField::updateCoeffs();
