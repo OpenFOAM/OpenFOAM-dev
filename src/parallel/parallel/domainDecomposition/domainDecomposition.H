@@ -25,7 +25,7 @@ Class
     Foam::domainDecomposition
 
 Description
-    Automatic domain decomposition class for finite-volume meshes
+    Engine for decomposing and reconstructing finite-volume meshes
 
 SourceFiles
     domainDecomposition.C
@@ -537,6 +537,7 @@ public:
 };
 
 
+//- Specialisation of region name function
 template<>
 inline const word& regionName<domainDecomposition>
 (
@@ -547,12 +548,15 @@ inline const word& regionName<domainDecomposition>
 }
 
 
+//- Specialise getting the complete index for a processor cell-set element
 template<>
 label domainDecomposition::setIndex<cellSet>(const label, const label) const;
 
+//- Specialise getting the complete index for a processor face-set element
 template<>
 label domainDecomposition::setIndex<faceSet>(const label, const label) const;
 
+//- Specialise getting the complete index for a processor point-set element
 template<>
 label domainDecomposition::setIndex<pointSet>(const label, const label) const;
 

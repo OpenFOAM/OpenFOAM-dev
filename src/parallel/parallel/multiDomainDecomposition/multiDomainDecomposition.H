@@ -25,7 +25,8 @@ Class
     Foam::multiDomainDecomposition
 
 Description
-    ...
+    Engine for decomposing and reconstructing multi-region systems of
+    finite-volume meshes
 
 SourceFiles
     multiDomainDecomposition.C

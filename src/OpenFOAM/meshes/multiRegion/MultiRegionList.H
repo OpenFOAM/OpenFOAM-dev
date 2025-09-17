@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::MultiRegionList
 
 Description
-    Class which combines a UPtrList or PtrListr of region-associated objects
+    Class which combines a UPtrList or PtrList of region-associated objects
     (meshes, solvers, domainDecompositions, ...) with the automatic region
     prefixing provided by MultiRegionRefs.
 
