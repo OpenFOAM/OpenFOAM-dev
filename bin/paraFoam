@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -38,8 +38,9 @@ options:
   -builtin          use VTK builtin OpenFOAM reader  (uses .foam extension)
   -case <dir>       specify alternative case directory, default is the cwd
   -empty            launch ParaView without opening any data files
-  -mesh <name>      specify alternative mesh
-  -region <name>    specify alternative mesh region
+  -mesh <name>      load alternative mesh
+  -region <name>    load specified region
+  -allRegions       load all regions
   -touch            create the .blockMesh or .OpenFOAM file
   -touchAll         create .blockMesh and .OpenFOAM files for all meshes and \
 regions
@@ -96,14 +97,14 @@ EOF
 noPV
 }
 
-# We want to do nice exit when running paraview to give paraview opportunity
-# to clean up
+# We want to do nice exit when running ParaView to give ParaView the
+# opportunity to clean up
 unset FOAM_ABORT
 
-unset meshName regionName optTouch
+unset meshName regionName optAllRegions optTouch
 
 # Hack: change all locale to 'C' i.e. using '.' for decimal point. This is
-# only needed temporarily until paraview is locale aware. (git version is
+# only needed temporarily until ParaView is locale aware. (git version is
 # already 2010-07)
 export LC_ALL=C
 
@@ -149,6 +150,10 @@ do
         regionName=$2
         shift 2
         ;;
+    -allRegions)
+        optAllRegions=true
+        shift
+        ;;
     -touch)
         optTouch=true
         requirePVExe=0
@@ -163,10 +168,10 @@ do
         ;;
     --)
         shift
-        break    # Stop here, treat balance as paraview options
+        break # Stop here, treat balance as ParaView options
         ;;
     --*)
-        break    # Stop here, treat this and balance as paraview options
+        break # Stop here, treat this and balance as ParaView options
         ;;
     *)
         error "unknown option/argument: '$*'"
@@ -189,15 +194,15 @@ then
     esac
 fi
 
-if [ -n "$regionName" ]
+if [ -n "$regionName" ] || [ "${optAllRegions:-false}" = true ]
 then
     case $extension in
     blockMesh)
-        echo "FATAL ERROR: The blockMesh reader does not support the -region option"
+        echo "FATAL ERROR: The blockMesh reader does not support the -region or -allRegions option"
         exit 1
         ;;
     foam)
-        echo "FATAL ERROR: The builtin reader does not support the -region option"
+        echo "FATAL ERROR: The builtin reader does not support the -region or -allRegions option"
         exit 1
         ;;
     esac
@@ -228,30 +233,38 @@ hasDataArg()
 }
 hasDataArg "$@"
 
+# Function to create a case file name from a mesh and region
+getCaseFileName()
+{
+    _meshName=$1
+    _regionName=$2
+
+    meshDir=constant
+    meshOptions=
+
+    if [ -n "$_meshName" ]
+    then
+        meshDir="$meshDir"/meshes/"$_meshName"
+        meshOptions="$meshOptions($_meshName)"
+    fi
+
+    if [ -n "$_regionName" ]
+    then
+        meshDir="$meshDir"/$_regionName
+        meshOptions="$meshOptions{$_regionName}"
+    fi
+
+    if [ ! -d "$meshDir" ]
+    then
+        echo "FATAL ERROR: Mesh $meshDir does not exist"
+        exit 1
+    fi
+
+    echo "$caseName$meshOptions.$extension"
+}
+
 # Construct a case name from the directory name
 caseName=${PWD##*/}
-meshDir=constant
-meshOptions=
-
-if [ -n "$meshName" ]
-then
-    meshDir="$meshDir"/meshes/"$meshName"
-    meshOptions="$meshOptions($meshName)"
-fi
-
-if [ -n "$regionName" ]
-then
-    meshDir="$meshDir"/$regionName
-    meshOptions="$meshOptions{$regionName}"
-fi
-
-if [ ! -d "$meshDir" ]
-then
-    echo "FATAL ERROR: Mesh $meshDir does not exist"
-    exit 1
-fi
-
-caseFile="$caseName$meshOptions.$extension"
 
 # If the touch option is set, then create files and exit
 case "${optTouch:-false}" in
@@ -273,7 +286,7 @@ all)
     # Other meshes
     for meshPolyMeshDir in constant/meshes/*/polyMesh
     do
-        if [ -d $meshPolyMeshDir ]
+        if [ -d "$meshPolyMeshDir" ]
         then
             meshDir=${meshPolyMeshDir%/polyMesh}
             meshName=${meshDir#constant/meshes/}
@@ -285,7 +298,7 @@ all)
     # Other regions
     for regionPolyMeshDir in constant/*/polyMesh
     do
-        if [ -d $regionPolyMeshDir ]
+        if [ -d "$regionPolyMeshDir" ]
         then
             regionDir=${regionPolyMeshDir%/polyMesh}
             regionName=${regionDir#constant/}
@@ -297,7 +310,7 @@ all)
     # Other meshes and regions
     for meshRegionPolyMeshDir in constant/meshes/*/*/polyMesh
     do
-        if [ -d $meshRegionPolyMeshDir ]
+        if [ -d "$meshRegionPolyMeshDir" ]
         then
             meshRegionDir=${meshRegionPolyMeshDir%/polyMesh}
             meshRegionName=${meshRegionDir#constant/meshes/}
@@ -312,25 +325,42 @@ all)
     ;;
 
 true)
-    # Default region
-    touch "$caseFile"
-    echo "Created '$caseFile'"
+    if [ "${optAllRegions:-false}" = true ]
+    then
+        # All regions
+        for meshRegionPolyMeshDir in constant/${meshName:+meshes/$meshName/}*/polyMesh
+        do
+            regionName=$(basename "${meshRegionPolyMeshDir%/polyMesh}")
+            caseFile=$(getCaseFileName "$meshName" "$regionName")
+            touch "$caseFile"
+            echo "Created '$caseFile'"
+        done
+    else
+        # Default region
+        caseFile=$(getCaseFileName "$meshName" "$regionName")
+        touch "$caseFile"
+        echo "Created '$caseFile'"
+    fi
     exit 0
     ;;
 esac
 
-# Parent directory for normal or parallel results
-case "$caseName" in
-    processor*) parentDir=".." ;;
-    *)          parentDir="."  ;;
-esac
-
-# If we have a --data=... argument, then send this directly to paraview
+# If we have a --data=... argument, then send this directly to ParaView
 if [ "${hasData:-false}" = true ]
 then
     pvExec "$@"
     exit 0
 fi
+
+# Parent directory for normal or parallel results
+case "$caseName" in
+    processor*)
+        parentDir=".."
+        ;;
+    *)
+        parentDir="."
+        ;;
+esac
 
 # Check existence of essential files
 warn="WARN file does not exist:"
@@ -344,8 +374,7 @@ case $extension in
 
         for check in system/controlDict $blockMeshDictDir
         do
-            [ -s "$parentDir/$check" ] || [ -s "$parentDir/$check.orig" ] ||
-            {
+            [ -s "$parentDir/$check" ] || [ -s "$parentDir/$check.orig" ] || {
                 [ -n "$warn" ] && echo "$warn" 1>&2
                 echo "    $parentDir/$check" 1>&2
                 unset warn
@@ -356,8 +385,7 @@ case $extension in
     OpenFOAM | foam)
         for check in system/controlDict
         do
-            [ -s "$parentDir/$check" ] || [ -s "$parentDir/$check.orig" ] ||
-            {
+            [ -s "$parentDir/$check" ] || [ -s "$parentDir/$check.orig" ] || {
                 [ -n "$warn" ] && echo "$warn" 1>&2
                 echo "    $parentDir/$check" 1>&2
                 unset warn
@@ -375,14 +403,38 @@ esac
     exit
 }
 
-# Only create/remove the caseFile if it didn't already exist
-[ -e "$caseFile" ] || {
-    trap "rm -f '$caseFile' 2>/dev/null; exit 0" EXIT TERM INT
-    touch "$caseFile"
-    echo "Created temporary '$caseFile'"
+# Create the temporary case file(s) and the data argument to pass to ParaView
+tmpCaseFiles=
+caseData=
+if [ "${optAllRegions:-false}" = true ]
+then
+    for meshRegionPolyMeshDir in constant/${meshName:+meshes/$meshName/}*/polyMesh
+    do
+        regionName="$(basename "${meshRegionPolyMeshDir%/polyMesh}")"
+        caseFile="$(getCaseFileName "$meshName" "$regionName")"
+        [ -e "$caseFile" ] || {
+            tmpCaseFiles="${tmpCaseFiles:+$tmpCaseFiles }'$caseFile'"
+            touch "$caseFile"
+            echo "Created temporary '$caseFile'"
+        }
+        caseData="${caseData:+$caseData,}$caseFile"
+    done
+else
+    caseFile="$(getCaseFileName "$meshName" "$regionName")"
+    [ -e "$caseFile" ] || {
+        tmpCaseFiles="'$caseFile'"
+        touch "$caseFile"
+        echo "Created temporary '$caseFile'"
+    }
+    caseData="$caseFile"
+fi
+
+# Set up a trap to remove the temporarily created case file(s)
+[ -n "$tmpCaseFiles" ] && {
+    trap "rm -f $tmpCaseFiles 2>/dev/null; exit 0" EXIT TERM INT
 }
 
-# Run paraview
-pvExec --data="$caseFile" "$@"
+# Run ParaView
+pvExec --data="$caseData" "$@"
 
 #------------------------------------------------------------------------------
