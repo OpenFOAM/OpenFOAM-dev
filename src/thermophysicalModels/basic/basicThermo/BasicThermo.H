@@ -92,6 +92,16 @@ protected:
             const Args& ... args
         ) const;
 
+        //- Return a volScalarField of the given property of the mixture
+        template<class Method, class ... Args>
+        tmp<volScalarField> volScalarFieldMixtureProperty
+        (
+            const word& psiName,
+            const dimensionSet& psiDim,
+            Method mixtureMethod,
+            const Args& ... args
+        ) const;
+
         //- Return a volScalarField::Internal of the given property
         template<class Mixture, class Method, class ... Args>
         tmp<volScalarField::Internal> volInternalScalarFieldProperty

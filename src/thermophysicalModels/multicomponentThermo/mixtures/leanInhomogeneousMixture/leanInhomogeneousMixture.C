@@ -54,22 +54,22 @@ Foam::scalar Foam::leanInhomogeneousMixture<ThermoType>::fres
 
 
 template<class ThermoType>
-Foam::scalar Foam::leanInhomogeneousMixture<ThermoType>::Phi
-(
-    const scalarFieldListSlice& Y
-) const
-{
-    return stoicRatio_*Y[FT]/max(scalar(1) - Y[FT], small);
-}
-
-
-template<class ThermoType>
 Foam::scalar Foam::leanInhomogeneousMixture<ThermoType>::fres
 (
     const scalarFieldListSlice& Y
 ) const
 {
     return fres(Y[FT]);
+}
+
+
+template<class ThermoType>
+Foam::scalar Foam::leanInhomogeneousMixture<ThermoType>::Phi
+(
+    const scalarFieldListSlice& Y
+) const
+{
+    return stoicRatio_*Y[FT]/max(scalar(1) - Y[FT], small);
 }
 
 

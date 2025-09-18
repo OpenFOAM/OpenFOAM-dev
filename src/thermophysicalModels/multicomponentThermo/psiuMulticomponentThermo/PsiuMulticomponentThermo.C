@@ -25,6 +25,7 @@ License
 
 #include "PsiuMulticomponentThermo.H"
 #include "fixedValueFvPatchFields.H"
+#include "FieldListSlice.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -243,44 +244,17 @@ template<class BaseThermo>
 Foam::tmp<Foam::volScalarField>
 Foam::PsiuMulticomponentThermo<BaseThermo>::fres() const
 {
-    tmp<volScalarField> tfres
+    scalar (BaseThermo::mixtureType::*mixtureMethod)
     (
-        volScalarField::New
-        (
-            "fres",
-            this->mesh(),
-            dimless
-        )
+        const scalarFieldListSlice&
+    ) const = &BaseThermo::mixtureType::fres;
+
+    return this->volScalarFieldMixtureProperty
+    (
+        "fres",
+        dimless,
+        mixtureMethod
     );
-
-    auto Yslicer = this->Yslicer();
-
-    scalarField& fresCells = tfres.ref().primitiveFieldRef();
-
-    forAll(fresCells, celli)
-    {
-        fresCells[celli] = BaseThermo::mixtureType::fres
-        (
-            this->cellComposition(Yslicer, celli)
-        );
-    }
-
-    volScalarField::Boundary& fresBf = tfres.ref().boundaryFieldRef();
-
-    forAll(fresBf, patchi)
-    {
-        fvPatchScalarField& fresPf = fresBf[patchi];
-
-        forAll(fresPf, facei)
-        {
-            fresPf[facei] = BaseThermo::mixtureType::fres
-            (
-                this->patchFaceComposition(Yslicer, patchi, facei)
-            );
-        }
-    }
-
-    return tfres;
 }
 
 
@@ -288,44 +262,12 @@ template<class BaseThermo>
 Foam::tmp<Foam::volScalarField>
 Foam::PsiuMulticomponentThermo<BaseThermo>::Phi() const
 {
-    tmp<volScalarField> tPhi
+    return this->volScalarFieldMixtureProperty
     (
-        volScalarField::New
-        (
-            "Phi",
-            this->mesh(),
-            dimless
-        )
+        "Phi",
+        dimless,
+        &BaseThermo::mixtureType::Phi
     );
-
-    auto Yslicer = this->Yslicer();
-
-    scalarField& PhiCells = tPhi.ref().primitiveFieldRef();
-
-    forAll(PhiCells, celli)
-    {
-        PhiCells[celli] = BaseThermo::mixtureType::Phi
-        (
-            this->cellComposition(Yslicer, celli)
-        );
-    }
-
-    volScalarField::Boundary& PhiBf = tPhi.ref().boundaryFieldRef();
-
-    forAll(PhiBf, patchi)
-    {
-        fvPatchScalarField& PhiPf = PhiBf[patchi];
-
-        forAll(PhiPf, facei)
-        {
-            PhiPf[facei] = BaseThermo::mixtureType::Phi
-            (
-                this->patchFaceComposition(Yslicer, patchi, facei)
-            );
-        }
-    }
-
-    return tPhi;
 }
 
 

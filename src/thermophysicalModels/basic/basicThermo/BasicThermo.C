@@ -84,6 +84,59 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::volScalarFieldProperty
 
 
 template<class MixtureType, class BasicThermoType>
+template<class Method, class ... Args>
+Foam::tmp<Foam::volScalarField>
+Foam::BasicThermo<MixtureType, BasicThermoType>::volScalarFieldMixtureProperty
+(
+    const word& psiName,
+    const dimensionSet& psiDim,
+    Method mixtureMethod,
+    const Args& ... args
+) const
+{
+    tmp<volScalarField> tPsi
+    (
+        volScalarField::New
+        (
+            IOobject::groupName(psiName, this->group()),
+            this->mesh(),
+            psiDim
+        )
+    );
+    volScalarField& psi = tPsi.ref();
+
+    auto Yslicer = this->Yslicer();
+
+    forAll(psi, celli)
+    {
+        auto composition = this->cellComposition(Yslicer, celli);
+
+        psi[celli] = (this->*mixtureMethod)(composition, args ...);
+    }
+
+    volScalarField::Boundary& psiBf = psi.boundaryFieldRef();
+
+    forAll(psiBf, patchi)
+    {
+        forAll(psiBf[patchi], patchFacei)
+        {
+            auto composition =
+                this->patchFaceComposition(Yslicer, patchi, patchFacei);
+
+            psiBf[patchi][patchFacei] =
+                (this->*mixtureMethod)
+                (
+                    composition,
+                    args.boundaryField()[patchi][patchFacei] ...
+                );
+        }
+    }
+
+    return tPsi;
+}
+
+
+template<class MixtureType, class BasicThermoType>
 template<class Mixture, class Method, class ... Args>
 Foam::tmp<Foam::volScalarField::Internal>
 Foam::BasicThermo<MixtureType, BasicThermoType>::volInternalScalarFieldProperty
