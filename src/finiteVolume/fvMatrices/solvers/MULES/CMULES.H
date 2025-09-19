@@ -120,6 +120,26 @@ void correct
 
 template
 <
+    class RhoType,
+    class SpType,
+    class PsiMaxType,
+    class PsiMinType
+>
+void correct
+(
+    const control& controls,
+    const RhoType& rho,
+    volScalarField& psi,
+    const surfaceScalarField& phiBD,
+    UPtrList<surfaceScalarField>& phiCorrs,
+    surfaceScalarField& phiCorr,
+    const SpType& Sp,
+    const PsiMaxType& psiMax,
+    const PsiMinType& psiMin
+);
+
+template
+<
     class RdeltaTType,
     class RhoType,
     class SpType,
@@ -133,6 +153,28 @@ void limitCorr
     const RhoType& rho,
     const volScalarField& psi,
     const surfaceScalarField& phiBD,
+    surfaceScalarField& phiCorr,
+    const SpType& Sp,
+    const PsiMaxType& psiMax,
+    const PsiMinType& psiMin
+);
+
+template
+<
+    class RdeltaTType,
+    class RhoType,
+    class SpType,
+    class PsiMaxType,
+    class PsiMinType
+>
+void limitCorr
+(
+    const control& controls,
+    const RdeltaTType& rDeltaT,
+    const RhoType& rho,
+    const volScalarField& psi,
+    const surfaceScalarField& phiBD,
+    UPtrList<surfaceScalarField>& phiCorrs,
     surfaceScalarField& phiCorr,
     const SpType& Sp,
     const PsiMaxType& psiMax,

@@ -181,6 +181,76 @@ void Foam::MULES::correct
 
 template
 <
+    class RhoType,
+    class SpType,
+    class PsiMaxType,
+    class PsiMinType
+>
+void Foam::MULES::correct
+(
+    const control& controls,
+    const RhoType& rho,
+    volScalarField& psi,
+    const surfaceScalarField& phiBD,
+    UPtrList<surfaceScalarField>& phiCorrs,
+    const SpType& Sp,
+    const PsiMaxType& psiMax,
+    const PsiMinType& psiMin
+)
+{
+    const fvMesh& mesh = psi.mesh();
+
+    surfaceScalarField phiCorr(phiCorrs[0]);
+    for (label i = 1; i<phiCorrs.size(); i++)
+    {
+        phiCorr += phiCorrs[i];
+    }
+
+    if (fv::localEulerDdt::enabled(mesh))
+    {
+        const volScalarField& rDeltaT = fv::localEulerDdt::localRDeltaT(mesh);
+
+        limitCorr
+        (
+            controls,
+            rDeltaT,
+            rho,
+            psi,
+            phiBD,
+            phiCorrs,
+            phiCorr,
+            Sp,
+            psiMax,
+            psiMin
+        );
+
+        correct(rDeltaT, rho, psi, phiCorr, Sp);
+    }
+    else
+    {
+        const scalar rDeltaT = 1.0/mesh.time().deltaTValue();
+
+        limitCorr
+        (
+            controls,
+            rDeltaT,
+            rho,
+            psi,
+            phiBD,
+            phiCorrs,
+            phiCorr,
+            Sp,
+            psiMax,
+            psiMin
+        );
+
+        correct(rDeltaT, rho, psi, phiCorr, Sp);
+    }
+}
+
+
+template
+<
     class RdeltaTType,
     class RhoType,
     class SpType,
@@ -241,6 +311,77 @@ void Foam::MULES::limitCorr
         psiMin
     );
 
+    phiCorr *= lambda;
+}
+
+
+template
+<
+    class RdeltaTType,
+    class RhoType,
+    class SpType,
+    class PsiMaxType,
+    class PsiMinType
+>
+void Foam::MULES::limitCorr
+(
+    const control& controls,
+    const RdeltaTType& rDeltaT,
+    const RhoType& rho,
+    const volScalarField& psi,
+    const surfaceScalarField& phiBD,
+    UPtrList<surfaceScalarField>& phiCorrs,
+    surfaceScalarField& phiCorr,
+    const SpType& Sp,
+    const PsiMaxType& psiMax,
+    const PsiMinType& psiMin
+)
+{
+    const fvMesh& mesh = psi.mesh();
+
+    surfaceScalarField lambda
+    (
+        IOobject
+        (
+            "lambda",
+            mesh.time().name(),
+            mesh,
+            IOobject::NO_READ,
+            IOobject::NO_WRITE,
+            false
+        ),
+        mesh,
+        dimensionedScalar(dimless, 1)
+    );
+
+    // Correction equation source
+    scalarField SuCorr
+    (
+        mesh.Vsc()().primitiveField()
+       *(rho.primitiveField()*rDeltaT - Sp.primitiveField())
+       *psi.primitiveField()
+
+    );
+
+    limiter
+    (
+        controls,
+        lambda,
+        rDeltaT,
+        rho,
+        psi,
+        SuCorr,
+        phiBD,
+        phiCorr,
+        Sp,
+        psiMax,
+        psiMin
+    );
+
+    forAll(phiCorrs, i)
+    {
+        phiCorrs[i] *= lambda;
+    }
     phiCorr *= lambda;
 }
 
