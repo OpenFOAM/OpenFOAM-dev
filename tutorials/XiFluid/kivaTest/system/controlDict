@@ -24,7 +24,7 @@ userTime
 
 startFrom       startTime;
 
-startTime       -180;
+startTime       -5;
 
 stopAt          endTime;
 
@@ -38,7 +38,7 @@ writeInterval   5;
 
 purgeWrite      0;
 
-writeFormat     ascii;
+writeFormat     binary;
 
 writePrecision  6;
 
