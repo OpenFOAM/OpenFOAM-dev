@@ -26,25 +26,22 @@ gradSchemes
 
 divSchemes
 {
-    default         none;
+    default             none;
 
-    div(phi,U)      Gauss limitedLinearV 1;
+    div(phi,U)          Gauss limitedLinearV 1;
 
-    div(phi,ft_b_ha_hau) Gauss multivariateSelection
-    {
-        fu  limitedLinear01 1;
-        ft  limitedLinear01 1;
-        b   limitedLinear01 1;
-        egr limitedLinear01 1;
-        ha  limitedLinear 1;
-        hau limitedLinear 1;
-    };
+    div(phi,b)          Gauss limitedLinear01 1;
+    div(phiXi,Xi)       Gauss limitedLinear 1;
 
-    div(phi,K)          Gauss limitedLinear 1;
+    div(phib,fu.u)      Gauss limitedLinear01 1;
+    div(phib,egr.u)     Gauss limitedLinear01 1;
+    div(phib,h.u)       Gauss limitedLinear 1;
+    div(phib,K)         Gauss limitedLinear 1;
     div(phi,(p|rho))    Gauss limitedLinear 1;
 
-    div(phiXi,Xi)       Gauss limitedLinear 1;
-    div(phiSt,b)        Gauss limitedLinear01 1;
+    div(phic,ft.b)      Gauss limitedLinear01 1;
+    div(phic,h.b)       Gauss limitedLinear 1;
+    div(phic,K)         Gauss limitedLinear 1;
 
     div(phi,k)          Gauss limitedLinear 1;
     div(phi,omega)      Gauss limitedLinear 1;

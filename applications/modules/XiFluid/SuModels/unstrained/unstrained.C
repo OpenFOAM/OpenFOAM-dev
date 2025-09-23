@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,8 +52,8 @@ bool Foam::SuModels::unstrained::readCoeffs(const dictionary& dict)
 Foam::SuModels::unstrained::unstrained
 (
     const dictionary& dict,
-    const psiuMulticomponentThermo& thermo,
-    const fluidThermoThermophysicalTransportModel& turbulence
+    const ubPsiMulticomponentThermo& thermo,
+    const compressibleMomentumTransportModel& turbulence
 )
 :
     SuModel(thermo, turbulence),

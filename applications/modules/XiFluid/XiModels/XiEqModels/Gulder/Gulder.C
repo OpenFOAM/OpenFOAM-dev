@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,8 +55,8 @@ bool Foam::XiEqModels::Gulder::readCoeffs(const dictionary& dict)
 Foam::XiEqModels::Gulder::Gulder
 (
     const dictionary& dict,
-    const psiuMulticomponentThermo& thermo,
-    const fluidThermoThermophysicalTransportModel& turbulence,
+    const ubPsiThermo& thermo,
+    const compressibleMomentumTransportModel& turbulence,
     const volScalarField& Su
 )
 :
@@ -78,14 +78,14 @@ Foam::XiEqModels::Gulder::~Gulder()
 
 Foam::tmp<Foam::volScalarField> Foam::XiEqModels::Gulder::XiEq() const
 {
-    const volScalarField up(sqrt((2.0/3.0)*turbulence_.k()));
+    const volScalarField up(sqrt((2.0/3.0)*momentumTransport_.k()));
 
-    tmp<volScalarField> tepsilon = turbulence_.epsilon();
+    tmp<volScalarField> tepsilon = momentumTransport_.epsilon();
     const volScalarField& epsilon = tepsilon();
 
     const volScalarField tauEta
     (
-        sqrt(mag(thermo_.muu()/(thermo_.rhou()*epsilon)))
+        sqrt(mag(thermo_.uThermo().mu()/(thermo_.uThermo().rho()*epsilon)))
     );
 
     const volScalarField Reta

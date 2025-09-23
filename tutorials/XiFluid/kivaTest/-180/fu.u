@@ -1,0 +1,40 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       volScalarField;
+    location    "-180";
+    object      fu.u;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [];
+
+internalField   uniform 0.0623;
+
+boundaryField
+{
+    piston
+    {
+        type            zeroGradient;
+    }
+
+    liner
+    {
+        type            zeroGradient;
+    }
+
+    cylinderHead
+    {
+        type            zeroGradient;
+    }
+}
+
+
+// ************************************************************************* //

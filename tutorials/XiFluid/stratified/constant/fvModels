@@ -20,7 +20,7 @@ ignition
 
     cellZone        ignition;
 
-    start           0;
+    start           0.001;
     duration        0.003;
     strength        2;
 

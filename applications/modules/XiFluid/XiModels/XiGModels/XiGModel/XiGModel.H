@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,8 +52,8 @@ SourceFiles
 #define XiGModel_H
 
 #include "IOdictionary.H"
-#include "psiuMulticomponentThermo.H"
-#include "fluidThermoThermophysicalTransportModels.H"
+#include "ubPsiThermo.H"
+#include "compressibleMomentumTransportModels.H"
 #include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -73,13 +73,10 @@ protected:
     // Protected data
 
         //- Thermo
-        const psiuMulticomponentThermo& thermo_;
-
-        //- Thermo-physical transport
-        const fluidThermoThermophysicalTransportModel& thermoTransport_;
+        const ubPsiThermo& thermo_;
 
         //- Turbulence
-        const compressibleMomentumTransportModel& turbulence_;
+        const compressibleMomentumTransportModel& momentumTransport_;
 
         const volScalarField& Su_;
 
@@ -102,14 +99,14 @@ public:
             dictionary,
             (
                 const dictionary& dict,
-                const psiuMulticomponentThermo& thermo,
-                const fluidThermoThermophysicalTransportModel& turbulence,
+                const ubPsiThermo& thermo,
+                const compressibleMomentumTransportModel& momentumTransport,
                 const volScalarField& Su
             ),
             (
                 dict,
                 thermo,
-                turbulence,
+                momentumTransport,
                 Su
             )
         );
@@ -120,8 +117,8 @@ public:
         //- Construct from components
         XiGModel
         (
-            const psiuMulticomponentThermo& thermo,
-            const fluidThermoThermophysicalTransportModel& turbulence,
+            const ubPsiThermo& thermo,
+            const compressibleMomentumTransportModel& momentumTransport,
             const volScalarField& Su
         );
 
@@ -135,8 +132,8 @@ public:
         static autoPtr<XiGModel> New
         (
             const dictionary& XiProperties,
-            const psiuMulticomponentThermo& thermo,
-            const fluidThermoThermophysicalTransportModel& turbulence,
+            const ubPsiThermo& thermo,
+            const compressibleMomentumTransportModel& momentumTransport,
             const volScalarField& Su
         );
 

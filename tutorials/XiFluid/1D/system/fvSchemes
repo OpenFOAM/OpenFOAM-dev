@@ -30,25 +30,14 @@ divSchemes
 
     div(phi,U)          Gauss limitedLinearV 1;
 
-    div(phi,ft_b_ha_hau) Gauss multivariateSelection
-    {
-        ft  limitedLinear01 1;
-        fu  limitedLinear01 1;
-        b   limitedLinear01 1;
-        egr limitedLinear01 1;
-        ha  limitedLinear 1;
-        hau limitedLinear 1;
-    };
+    div(phi,b)          Gauss vanLeer;
+    div(phiXi,Xi)       Gauss vanLeer;
 
-    div(phi,K)          Gauss limitedLinear 1;
-    div(phi,(p|rho))    Gauss upwind;
+    div(phib,h.u)       Gauss limitedLinear 1;
+    div(phib,K)         Gauss limitedLinear 1;
 
-    div(phiXi,Xi)       Gauss limitedLinear 1;
-    div(phiSt,b)        Gauss limitedLinear01 1;
-
-    div(U)              Gauss linear;
-    div((Su*n))         Gauss linear;
-    div((U+((Su*Xi)*n))) Gauss linear;
+    div(phic,h.b)       Gauss limitedLinear 1;
+    div(phic,K)         Gauss limitedLinear 1;
 
     div(phi,k)          Gauss limitedLinear 1;
     div(phi,epsilon)    Gauss limitedLinear 1;

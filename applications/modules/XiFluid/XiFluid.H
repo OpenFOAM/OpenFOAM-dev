@@ -121,7 +121,7 @@ See also
 #define XiFluid_H
 
 #include "isothermalFluid.H"
-#include "psiuMulticomponentThermo.H"
+#include "ubPsiThermo.H"
 #include "RASThermophysicalTransportModel.H"
 #include "unityLewisEddyDiffusivity.H"
 #include "SuModel.H"
@@ -146,16 +146,7 @@ protected:
 
     // Thermophysical properties
 
-        psiuMulticomponentThermo& thermo_;
-
-
-    // Composition
-
-        //- Reference to the combustion regress variable
-        volScalarField& b_;
-
-        //- Set of fields used for the multivariate convection scheme
-        multivariateSurfaceInterpolationScheme<scalar>::fieldTable fields;
+        ubPsiThermo& thermo_;
 
 
     // Thermophysical transport
@@ -178,6 +169,8 @@ protected:
         //- Dictionary of combustion model coefficients
         IOdictionary combustionProperties;
 
+        bool ignited_;
+
         //- Minimum b below which a numerical compensation burn-out term
         //  is applied to ensure b -> 0 and the flame speed is correct.
         //  Defaults to 1e-3
@@ -196,29 +189,6 @@ protected:
 
     // Protected member functions
 
-        //- Solve the ft equation for partially-premixed mixtures
-        void ftSolve
-        (
-            const fv::convectionScheme<scalar>& mvConvection,
-            const volScalarField& Db
-        );
-
-        //- Solve the fu equation for partially- and non- premixed mixtures
-        void fuSolve
-        (
-            const fv::convectionScheme<scalar>& mvConvection,
-            const volScalarField& Db,
-            const volScalarField& bSource
-        );
-
-        //- Solve the egr mass-fraction equation
-        //  for mixtures with exhaust gas recirculation
-        void egrSolve
-        (
-            const fv::convectionScheme<scalar>& mvConvection,
-            const volScalarField& Db
-        );
-
         //- Apply the early kernel growth correction to the flame-wrinkling Xi
         //  to compensate for the inaccurate flame surface area estimate
         //  when the kernel is not fully-developed,
@@ -230,37 +200,122 @@ protected:
             const dimensionedScalar& dMgb
         ) const;
 
-        //- Solve the Xi and regress variable equations
+        //- Solve the regress variable and Xi equations
+        //  and unburnt and burnt gas properties
+        void burn();
+
+        //- Solve for the unburnt gas thermophysical state
+        void uSolve
+        (
+            const volScalarField::Internal& bStab,
+            const surfaceScalarField& phib,
+            const volScalarField::Internal& bSource
+        );
+
+        //- Solve for the unburnt gas thermophysical state
         void bSolve
         (
-            const fv::convectionScheme<scalar>& mvConvection,
-            const volScalarField& Db
+            const volScalarField::Internal& cStab,
+            const surfaceScalarField& phic,
+            const volScalarField::Internal& bSource
+        );
+
+        // Advective-diffusive stabilisation for b,c -> 0
+        tmp<fvScalarMatrix> fvmStab
+        (
+            const volScalarField& bc,
+            const volScalarField::Internal& bcStab,
+            const volScalarField& D,
+            volScalarField& f
+        );
+
+        //- Solve for an unburnt or burnt gas property
+        void ubSolve
+        (
+            volScalarField& f,
+            const volScalarField& bc,
+            const volScalarField::Internal& bcStab,
+            const surfaceScalarField& phibc,
+            const volScalarField& D,
+            const fvScalarMatrix& source
+        );
+
+        //- Solve for a unburnt gas property
+        void uSolve
+        (
+            volScalarField& fuu,
+            const volScalarField::Internal& bStab,
+            const surfaceScalarField& phib,
+            const fvScalarMatrix& source
+        );
+
+        //- Solve for a burnt gas property
+        void bSolve
+        (
+            volScalarField& fb,
+            const volScalarField::Internal& cStab,
+            const surfaceScalarField& phic,
+            const fvScalarMatrix& source
+        );
+
+        //- Solve the unburnt fuel equation
+        void fuuSolve
+        (
+            const volScalarField::Internal& bStab,
+            const surfaceScalarField& phib,
+            const volScalarField::Internal& bSource
+        );
+
+        //- Solve the unburnt exhaust gas re-circulation equation
+        void egruSolve
+        (
+            const volScalarField::Internal& bStab,
+            const surfaceScalarField& phib,
+            const volScalarField::Internal& bSource
+        );
+
+        //- Solve the burnt mixture-fraction equation
+        void ftbSolve
+        (
+            const volScalarField::Internal& cStab,
+            const surfaceScalarField& phic,
+            const volScalarField::Internal& bSource
         );
 
         //- Solve the unburnt enthalpy equation
-        void HauSolve
+        void HuSolve
         (
-            const fv::convectionScheme<scalar>& mvConvection,
-            const volScalarField& Db,
-            const tmp<surfaceScalarField>& phiDbu
+            const volScalarField::Internal& bStab,
+            const surfaceScalarField& phib,
+            const volScalarField::Internal& bSource
         );
 
-        //- Solve the enthalpy equation
-        void HaSolve
+        //- Solve the burnt enthalpy equation
+        void HbSolve
         (
-            const fv::convectionScheme<scalar>& mvConvection,
-            const volScalarField& Db
+            const volScalarField::Internal& cStab,
+            const surfaceScalarField& phic,
+            const volScalarField::Internal& bSource
         );
 
 
 public:
 
         //- Reference to the fluid thermophysical properties
-        const psiuMulticomponentThermo& thermo;
+        const ubPsiThermo& thermo;
 
         //- Reference to the combustion regress variable
         //  obtained from the combustion mixture
         const volScalarField& b;
+
+        //- Reference to the burnt gas thermophysical properties
+        const ubPsiMulticomponentThermo& uThermo;
+
+        //- Reference to the combustion progress variable
+        const volScalarField& c;
+
+        //- Reference to the burnt gas thermophysical properties
+        const ubPsiMulticomponentThermo& bThermo;
 
         //- Laminar flame speed
         const volScalarField& Su;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,8 +60,8 @@ bool Foam::SuModels::transport::readCoeffs(const dictionary& dict)
 Foam::SuModels::transport::transport
 (
     const dictionary& dict,
-    const psiuMulticomponentThermo& thermo,
-    const fluidThermoThermophysicalTransportModel& turbulence
+    const ubPsiMulticomponentThermo& thermo,
+    const compressibleMomentumTransportModel& turbulence
 )
 :
     unstrained(dict, thermo, turbulence),
@@ -94,7 +94,7 @@ void Foam::SuModels::transport::correct()
     const Foam::fvModels& fvModels(Foam::fvModels::New(mesh));
     const Foam::fvConstraints& fvConstraints(Foam::fvConstraints::New(mesh));
 
-    const volScalarField& rho = turbulence_.rho();
+    const volScalarField& rho = momentumTransport_.rho();
     const volScalarField& b = thermo_.Y("b");
     const volScalarField& mgb = mesh.lookupObject<volScalarField>("mgb");
     const volScalarField& Xi = mesh.lookupObject<volScalarField>("Xi");
@@ -107,15 +107,11 @@ void Foam::SuModels::transport::correct()
     const surfaceScalarField phiXi
     (
         "phiXi",
-        phiSt
-      + (
-          - fvc::interpolate(fvc::laplacian(Db, b)/mgb)*nf
-          + fvc::interpolate(rho)*fvc::interpolate(Su_*(1/Xi - Xi))*nf
-        )
+        phiSt - fvc::interpolate(fvc::laplacian(Db, b)/mgb)*nf
     );
 
-    const surfaceScalarField& phi = turbulence_.alphaRhoPhi();
-    const volVectorField& U(turbulence_.U());
+    const surfaceScalarField& phi = momentumTransport_.alphaRhoPhi();
+    const volVectorField& U(momentumTransport_.U());
 
     const volScalarField sigmas
     (

@@ -105,8 +105,8 @@ public:
         transport
         (
             const dictionary& dict,
-            const psiuMulticomponentThermo& thermo,
-            const fluidThermoThermophysicalTransportModel& turbulence,
+            const ubPsiThermo& thermo,
+            const compressibleMomentumTransportModel& turbulence,
             const volScalarField& Su
         );
 

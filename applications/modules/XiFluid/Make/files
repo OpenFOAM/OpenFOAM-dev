@@ -1,3 +1,16 @@
+ubPsiMulticomponentThermo/ubPsiMulticomponentThermo.C
+ubPsiMulticomponentThermo/ubPsiMulticomponentThermos.C
+
+ubPsiThermo/ubPsiThermo.C
+XiFluid.C
+thermophysicalPredictor.C
+
+laminarFlameSpeed/laminarFlameSpeed/laminarFlameSpeed.C
+laminarFlameSpeed/laminarFlameSpeed/laminarFlameSpeedNew.C
+laminarFlameSpeed/constant/constant_laminarFlameSpeed.C
+laminarFlameSpeed/Gulder/Gulder_laminarFlameSpeed.C
+laminarFlameSpeed/RaviPetersen/RaviPetersen.C
+
 SuModels/SuModel/SuModel.C
 SuModels/SuModel/SuModelNew.C
 SuModels/uniformConstant/uniformConstant_SuModel.C
@@ -38,8 +51,5 @@ fvModels/ignition/bXiIgnition/bXiIgnition.C
 fvModels/ignition/bXiIgnited/bXiIgnited.C
 fvModels/ignition/constantbXiIgnition/constantbXiIgnition.C
 fvModels/ignition/multiCycleConstantbXiIgnition/multiCycleConstantbXiIgnition.C
-
-XiFluid.C
-thermophysicalPredictor.C
 
 LIB = $(FOAM_LIBBIN)/libXiFluid

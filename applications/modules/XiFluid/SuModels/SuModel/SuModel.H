@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,8 +49,8 @@ SourceFiles
 #ifndef SuModel_H
 #define SuModel_H
 
-#include "psiuMulticomponentThermo.H"
-#include "fluidThermoThermophysicalTransportModels.H"
+#include "ubPsiMulticomponentThermo.H"
+#include "compressibleMomentumTransportModels.H"
 #include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -70,13 +70,10 @@ protected:
     // Protected data
 
         //- Thermo
-        const psiuMulticomponentThermo& thermo_;
-
-        //- Thermo-physical transport
-        const fluidThermoThermophysicalTransportModel& thermoTransport_;
+        const ubPsiMulticomponentThermo& thermo_;
 
         //- Turbulence
-        const compressibleMomentumTransportModel& turbulence_;
+        const compressibleMomentumTransportModel& momentumTransport_;
 
         //- Laminar flame speed
         volScalarField Su_;
@@ -100,13 +97,13 @@ public:
             dictionary,
             (
                 const dictionary& dict,
-                const psiuMulticomponentThermo& thermo,
-                const fluidThermoThermophysicalTransportModel& turbulence
+                const ubPsiMulticomponentThermo& thermo,
+                const compressibleMomentumTransportModel& momentumTransport
             ),
             (
                 dict,
                 thermo,
-                turbulence
+                momentumTransport
             )
         );
 
@@ -116,8 +113,8 @@ public:
         //- Construct from components
         SuModel
         (
-            const psiuMulticomponentThermo& thermo,
-            const fluidThermoThermophysicalTransportModel& turbulence
+            const ubPsiMulticomponentThermo& thermo,
+            const compressibleMomentumTransportModel& momentumTransport
         );
 
         //- Disallow default bitwise copy construction
@@ -130,8 +127,8 @@ public:
         static autoPtr<SuModel> New
         (
             const dictionary& combustionProperties,
-            const psiuMulticomponentThermo& thermo,
-            const fluidThermoThermophysicalTransportModel& turbulence
+            const ubPsiMulticomponentThermo& thermo,
+            const compressibleMomentumTransportModel& momentumTransport
         );
 
 

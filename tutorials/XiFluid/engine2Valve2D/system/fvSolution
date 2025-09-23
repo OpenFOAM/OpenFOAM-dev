@@ -51,7 +51,7 @@ solvers
         relTol          0;
     }
 
-    "(U|h|k|omega|ft|fu|egr|b|Su|Xi|ha|hau)"
+    "(U|ft|fu|egr|b|Su|Xi|fu.u|egr.u|ft.b|h.u|h.b|k|omega)"
     {
         solver          PBiCGStab;
         preconditioner  DILU;
@@ -59,7 +59,7 @@ solvers
         relTol          0.01;
     }
 
-    "(U|h|k|omega|ft|fu|egr|b|Su|Xi|ha|hau)Final"
+    "(U|ft|fu|egr|b|Su|Xi|fu.u|egr.u|ft.b|h.u|h.b|k|omega)Final"
     {
         $U;
         relTol          0;

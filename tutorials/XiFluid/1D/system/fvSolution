@@ -24,7 +24,7 @@ solvers
         relTol          0;
     }
 
-    "(U|b|Su|Xi|ha|hau|k|epsilon).*"
+    "(U|b|Su|Xi|h.u|h.b|k|epsilon).*"
     {
         solver          PBiCGStab;
         preconditioner  DILU;

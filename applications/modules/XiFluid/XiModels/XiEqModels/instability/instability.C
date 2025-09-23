@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,8 +56,8 @@ bool Foam::XiEqModels::instability::readCoeffs(const dictionary& dict)
 Foam::XiEqModels::instability::instability
 (
     const dictionary& dict,
-    const psiuMulticomponentThermo& thermo,
-    const fluidThermoThermophysicalTransportModel& turbulence,
+    const ubPsiThermo& thermo,
+    const compressibleMomentumTransportModel& turbulence,
     const volScalarField& Su
 )
 :
@@ -85,7 +85,7 @@ Foam::tmp<Foam::volScalarField> Foam::XiEqModels::instability::XiEq() const
 
 Foam::tmp<Foam::volScalarField> Foam::XiEqModels::instability::Db() const
 {
-    const volScalarField& rho = turbulence_.rho();
+    const volScalarField& rho = momentumTransport_.rho();
 
     const objectRegistry& db = Su_.db();
     const volScalarField& Xi = db.lookupObject<volScalarField>("Xi");

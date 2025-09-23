@@ -31,19 +31,18 @@ solvers
         relTol          0;
     }
 
-    "(U|ft|fu|egr|b|Su|Xi|ha|hau|k|epsilon)"
+    "(U|ft|fu|egr|b|Su|Xi|fu.u|egr.u|ft.b|h.u|h.b|k|epsilon)"
     {
         solver          PBiCGStab;
         preconditioner  DILU;
         tolerance       1e-05;
         relTol          0.1;
+        minIter         1;
     }
 
-    "(U|ft|fu|egr|b|Su|Xi|ha|hau|k|epsilon)Final"
+    "(U|ft|fu|egr|b|Su|Xi|fu.u|egr.u|ft.b|h.u|h.b|k|epsilon)Final"
     {
-        solver          PBiCGStab;
-        preconditioner  DILU;
-        tolerance       1e-05;
+        $U;
         relTol          0;
     }
 }

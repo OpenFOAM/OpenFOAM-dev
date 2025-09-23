@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,8 +54,8 @@ bool Foam::SuModels::linearEquilibrium::readCoeffs(const dictionary& dict)
 Foam::SuModels::linearEquilibrium::linearEquilibrium
 (
     const dictionary& dict,
-    const psiuMulticomponentThermo& thermo,
-    const fluidThermoThermophysicalTransportModel& turbulence
+    const ubPsiMulticomponentThermo& thermo,
+    const compressibleMomentumTransportModel& turbulence
 )
 :
     unstrained(dict, thermo, turbulence),
@@ -77,7 +77,7 @@ void Foam::SuModels::linearEquilibrium::correct()
 {
     const fvMesh& mesh(thermo_.mesh());
 
-    const volVectorField& U(turbulence_.U());
+    const volVectorField& U(momentumTransport_.U());
     const volVectorField& n = mesh.lookupObject<volVectorField>("n");
     const volScalarField& Xi = mesh.lookupObject<volScalarField>("Xi");
 

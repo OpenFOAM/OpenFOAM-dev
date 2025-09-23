@@ -31,7 +31,7 @@ solvers
         relTol          0;
     }
 
-    "(U|b|Su|Xi|ha|hau|k|epsilon)"
+    "(U|b|Su|Xi|h.u|h.b|k|epsilon)"
     {
         solver          PBiCGStab;
         preconditioner  DILU;
@@ -39,11 +39,9 @@ solvers
         relTol          0.1;
     }
 
-    "(U|b|Su|Xi|ha|hau|k|epsilon)Final"
+    "(U|b|Su|Xi|h.u|h.b|k|epsilon)Final"
     {
-        solver          PBiCGStab;
-        preconditioner  DILU;
-        tolerance       1e-05;
+        $U;
         relTol          0;
     }
 }

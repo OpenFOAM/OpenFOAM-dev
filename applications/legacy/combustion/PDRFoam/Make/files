@@ -1,3 +1,10 @@
+psiuMulticomponentThermo/psiuMulticomponentThermo.C
+psiuMulticomponentThermo/psiuMulticomponentThermos.C
+
+psiuMulticomponentThermo/derivedFvPatchFields/fixedUnburntEnthalpy/fixedUnburntEnthalpyFvPatchScalarField.C
+psiuMulticomponentThermo/derivedFvPatchFields/gradientUnburntEnthalpy/gradientUnburntEnthalpyFvPatchScalarField.C
+psiuMulticomponentThermo/derivedFvPatchFields/mixedUnburntEnthalpy/mixedUnburntEnthalpyFvPatchScalarField.C
+
 XiModels/XiModel/XiModel.C
 XiModels/XiModel/XiModelNew.C
 XiModels/fixed/fixed.C
@@ -25,6 +32,11 @@ PDRModels/dragModels/basic/basic.C
 PDRModels/XiEqModels/basicXiSubXiEq/basicXiSubXiEq.C
 PDRModels/XiGModels/basicXiSubG/basicXiSubG.C
 
+laminarFlameSpeed/laminarFlameSpeed/laminarFlameSpeed.C
+laminarFlameSpeed/laminarFlameSpeed/laminarFlameSpeedNew.C
+laminarFlameSpeed/constant/constant.C
+laminarFlameSpeed/Gulder/Gulder.C
+laminarFlameSpeed/RaviPetersen/RaviPetersen.C
 laminarFlameSpeed/SCOPE/SCOPELaminarFlameSpeed.C
 
 derivedFvPatchFields/activeBaffleVelocity/activeBaffleVelocityFvPatchVectorField.C

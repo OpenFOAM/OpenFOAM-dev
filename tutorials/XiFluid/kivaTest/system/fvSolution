@@ -46,17 +46,17 @@ solvers
         relTol          0;
     }
 
-    "(U|Xi|hau|eau|ft|b|ha|ea|k|epsilon)"
+    "(U|ft|fu|egr|b|Su|Xi|fu.u|egr.u|ft.b|h.u|h.b|k|epsilon)"
     {
         solver          PBiCGStab;
         preconditioner  DILU;
         tolerance       1e-05;
         relTol          0.1;
     }
-    "(U|ft|Xi|hau|eau|b|ha|ea|k|epsilon)Final"
+
+    "(U|ft|fu|egr|b|Su|Xi|fu.u|egr.u|ft.b|h.u|h.b|k|epsilon)Final"
     {
         $U;
-        tolerance       1e-05;
         relTol          0;
     }
 }

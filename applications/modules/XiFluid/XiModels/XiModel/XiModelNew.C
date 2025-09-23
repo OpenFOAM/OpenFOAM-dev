@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,8 +30,8 @@ License
 Foam::autoPtr<Foam::XiModel> Foam::XiModel::New
 (
     const dictionary& combustionProperties,
-    const psiuMulticomponentThermo& thermo,
-    const fluidThermoThermophysicalTransportModel& turbulence,
+    const ubPsiThermo& thermo,
+    const compressibleMomentumTransportModel& momentumTransport,
     const volScalarField& Su
 )
 {
@@ -60,7 +60,7 @@ Foam::autoPtr<Foam::XiModel> Foam::XiModel::New
         (
             XiDict.optionalSubDict(modelType + "Coeffs"),
             thermo,
-            turbulence,
+            momentumTransport,
             Su
         )
     );

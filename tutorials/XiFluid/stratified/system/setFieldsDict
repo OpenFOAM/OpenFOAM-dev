@@ -16,9 +16,8 @@ FoamFile
 
 defaultValues
 {
-    ft  0;
-    fu  0;
-    egr 0;
+    fu.u  0;
+    egr.u 0;
 }
 
 zones
@@ -31,9 +30,8 @@ zones
 
         values
         {
-            ft  0.07;
-            fu  0.07;
-            egr 0.01;
+            fu.u  0.07;
+            egr.u 0.01;
         }
     }
 }

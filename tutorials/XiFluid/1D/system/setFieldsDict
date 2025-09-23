@@ -17,7 +17,6 @@ FoamFile
 defaultValues
 {
     b   1;
-    T   300;
     U   (-1.5 0 0);
 }
 
@@ -32,7 +31,6 @@ zones
         values
         {
             b   0;
-            T   2000;
             U   (-10 0 0);
         }
     }

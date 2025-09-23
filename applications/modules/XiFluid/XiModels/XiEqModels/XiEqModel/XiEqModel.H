@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,8 +36,8 @@ SourceFiles
 #define XiEqModel_H
 
 #include "IOdictionary.H"
-#include "psiuMulticomponentThermo.H"
-#include "fluidThermoThermophysicalTransportModels.H"
+#include "ubPsiThermo.H"
+#include "compressibleMomentumTransportModels.H"
 #include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -57,13 +57,10 @@ protected:
     // Protected data
 
         //- Thermo
-        const psiuMulticomponentThermo& thermo_;
-
-        //- Thermo-physical transport
-        const fluidThermoThermophysicalTransportModel& thermoTransport_;
+        const ubPsiThermo& thermo_;
 
         //- Turbulence
-        const compressibleMomentumTransportModel& turbulence_;
+        const compressibleMomentumTransportModel& momentumTransport_;
 
         //- Laminar burning velocity
         const volScalarField& Su_;
@@ -87,14 +84,14 @@ public:
             dictionary,
             (
                 const dictionary& dict,
-                const psiuMulticomponentThermo& thermo,
-                const fluidThermoThermophysicalTransportModel& turbulence,
+                const ubPsiThermo& thermo,
+                const compressibleMomentumTransportModel& momentumTransport,
                 const volScalarField& Su
             ),
             (
                 dict,
                 thermo,
-                turbulence,
+                momentumTransport,
                 Su
             )
         );
@@ -105,8 +102,8 @@ public:
         //- Construct from components
         XiEqModel
         (
-            const psiuMulticomponentThermo& thermo,
-            const fluidThermoThermophysicalTransportModel& turbulence,
+            const ubPsiThermo& thermo,
+            const compressibleMomentumTransportModel& momentumTransport,
             const volScalarField& Su
         );
 
@@ -120,8 +117,8 @@ public:
         static autoPtr<XiEqModel> New
         (
             const dictionary& XiProperties,
-            const psiuMulticomponentThermo& thermo,
-            const fluidThermoThermophysicalTransportModel& turbulence,
+            const ubPsiThermo& thermo,
+            const compressibleMomentumTransportModel& turbulence,
             const volScalarField& Su
         );
 
@@ -141,7 +138,7 @@ public:
             return volScalarField::New
             (
                 "Db",
-                thermoTransport_.DEff(thermo_.Y("b"))
+                momentumTransport_.rho()*momentumTransport_.nut()
             );
         }
 

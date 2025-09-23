@@ -1,4 +1,8 @@
 EXE_INC = \
+    -IpsiuMulticomponentThermo \
+    -IpsiuMulticomponentThermo/derivedFvPatchFields/fixedUnburntEnthalpy \
+    -IpsiuMulticomponentThermo/derivedFvPatchFields/gradientUnburntEnthalpy \
+    -IpsiuMulticomponentThermo/derivedFvPatchFields/mixedUnburntEnthalpy \
     -IXiModels/transport \
     -IXiModels/fixed \
     -IXiModels/algebraic \
@@ -16,13 +20,13 @@ EXE_INC = \
     -IPDRModels/XiEqModels/basicXiSubXiEq \
     -IPDRModels/XiGModels/basicXiSubG \
     -IPDRModels/turbulence/PDRkEpsilon \
-    -IlaminarFlameSpeed/SCOPE \
     -Iignition \
+    -IlaminarFlameSpeed/laminarFlameSpeed \
+    -IlaminarFlameSpeed/SCOPE \
     -I$(LIB_SRC)/physicalProperties/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/multicomponentThermo/lnInclude \
-    -I$(LIB_SRC)/thermophysicalModels/laminarFlameSpeed/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/compressible/lnInclude \
     -I$(LIB_SRC)/ThermophysicalTransportModels/thermophysicalTransportModel/lnInclude \
@@ -40,7 +44,6 @@ EXE_LIBS = \
     -lmomentumTransportModels \
     -lcompressibleMomentumTransportModels \
     -lcoupledThermophysicalTransportModels \
-    -llaminarFlameSpeedModels \
     -lfiniteVolume \
     -lfvModels \
     -lfvConstraints

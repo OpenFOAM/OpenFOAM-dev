@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -114,7 +114,7 @@ bool Foam::fv::multiCycleConstantbXiIgnition::ignited() const
     if
     (
         !reset_
-     && ignRelTime(curTime) > combustionDuration_.value() - 0.5*deltaT
+     && ignRelTime(curTime) > combustionDuration_.value() + 0.5*deltaT
     )
     {
         reset_ = true;
