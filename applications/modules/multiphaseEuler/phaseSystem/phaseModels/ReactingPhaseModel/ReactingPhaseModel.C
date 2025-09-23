@@ -64,6 +64,13 @@ void Foam::ReactingPhaseModel<BasePhaseModel>::correctReactions()
 
 
 template<class BasePhaseModel>
+bool Foam::ReactingPhaseModel<BasePhaseModel>::inert() const
+{
+    return false;
+}
+
+
+template<class BasePhaseModel>
 Foam::tmp<Foam::volScalarField::Internal>
 Foam::ReactingPhaseModel<BasePhaseModel>::R(const label speciei) const
 {

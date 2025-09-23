@@ -40,7 +40,11 @@ Usage
         type            reactionDrivenPhaseChange;
         libs            ("libmultiphaseEulerFvModels.so");
 
-        phases          (particles vapour);
+        // Note: Order is important. The reactions in the first phase define
+        // the rate of phase change. If phase change also occurs as a result of
+        // reactions in the second phase then a second model should be added
+        // with the phases reversed.
+        phases          (vapour particles);
 
         species         (TiO2);
 

@@ -84,6 +84,9 @@ public:
         //- Correct the reaction rates
         virtual void correctReactions();
 
+        //- Return whether the phase is inert (i.e., not reacting)
+        virtual bool inert() const;
+
         //- Return the consumption rate for a specie
         virtual tmp<volScalarField::Internal> R(const label speciei) const;
 

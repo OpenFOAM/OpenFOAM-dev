@@ -357,7 +357,7 @@ void Foam::fv::massDiffusionLimitedPhaseChange::addSup
     const label index = this->index(phaseNames(), alpha.group());
 
     const ThermoRefPair<multicomponentThermo>& mcThermos =
-        thermos().thermos<multicomponentThermo>();
+        multicomponentThermos(true, false);
 
     const word specieName = heOrYi.member();
 

@@ -306,6 +306,9 @@ public:
             //  not the default specie?
             virtual bool solveSpecie(const label speciei) const = 0;
 
+            //- Return whether the phase is inert (i.e., not reacting)
+            virtual bool inert() const = 0;
+
             //- Return the consumption rate for a specie
             virtual tmp<volScalarField::Internal> R(const label) const = 0;
 

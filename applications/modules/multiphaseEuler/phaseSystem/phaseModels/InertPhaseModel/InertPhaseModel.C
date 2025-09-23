@@ -52,6 +52,13 @@ Foam::InertPhaseModel<BasePhaseModel>::~InertPhaseModel()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class BasePhaseModel>
+bool Foam::InertPhaseModel<BasePhaseModel>::inert() const
+{
+    return true;
+}
+
+
+template<class BasePhaseModel>
 Foam::tmp<Foam::volScalarField::Internal>
 Foam::InertPhaseModel<BasePhaseModel>::R(const label speciei) const
 {

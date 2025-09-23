@@ -19,7 +19,7 @@ reactionDrivenPhaseChange
     type            reactionDrivenPhaseChange;
     libs            ("libmultiphaseEulerFvModels.so");
 
-    phases          (particles vapour);
+    phases          (vapour particles);
 
     species         (TiO2);
 
@@ -31,7 +31,7 @@ surfaceReactionDrivenPhaseChange
     type            reactionDrivenPhaseChange;
     libs            ("libmultiphaseEulerFvModels.so");
 
-    phases          (particles vapour);
+    phases          (vapour particles);
 
     species         (TiO2_s);
 

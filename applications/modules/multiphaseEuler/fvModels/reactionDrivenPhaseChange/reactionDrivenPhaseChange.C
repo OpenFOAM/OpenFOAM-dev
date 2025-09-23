@@ -76,15 +76,12 @@ Foam::fv::reactionDrivenPhaseChange::reactionDrivenPhaseChange
 {
     readCoeffs(coeffs(dict));
 
-    const ThermoRefPair<multicomponentThermo> mcThermos =
-        thermos().thermos<multicomponentThermo>();
-
-    if (!mcThermos.either())
+    if (phase1_.inert())
     {
-        WarningInFunction
+        FatalErrorInFunction
             << "Model " << name << " of type " << modelType
-            << " applied to two pure phases " << phase1_.name()
-            << " and " << phase2_.name() << exit(FatalError);
+            << " requires the first phase (i.e., " << phase1_.name()
+            << ") to be reacting" << exit(FatalError);
     }
 }
 
@@ -98,9 +95,6 @@ Foam::fv::reactionDrivenPhaseChange::mDot(const label mDoti) const
 
     const labelPair specieis = this->specieis(mDoti);
 
-    const ThermoRefPair<multicomponentThermo> mcThermos =
-        thermos().thermos<multicomponentThermo>();
-
     tmp<volScalarField::Internal> tResult =
         volScalarField::Internal::New
         (
@@ -109,15 +103,7 @@ Foam::fv::reactionDrivenPhaseChange::mDot(const label mDoti) const
             dimensionedScalar(dimDensity/dimTime, 0)
         );
 
-    if (mcThermos.valid().first())
-    {
-        tResult.ref() += alpha1*phase1_.R(specieis.first());
-    }
-
-    if (mcThermos.valid().second())
-    {
-        tResult.ref() -= alpha2*phase2_.R(specieis.second());
-    }
+    tResult.ref() += alpha1*phase1_.R(specieis.first());
 
     return tResult;
 }
