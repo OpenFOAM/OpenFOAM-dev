@@ -132,7 +132,6 @@ void correct
     volScalarField& psi,
     const surfaceScalarField& phiBD,
     UPtrList<surfaceScalarField>& phiCorrs,
-    surfaceScalarField& phiCorr,
     const SpType& Sp,
     const PsiMaxType& psiMax,
     const PsiMinType& psiMin
