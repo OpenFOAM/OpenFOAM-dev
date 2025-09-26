@@ -3,6 +3,10 @@ EXE_INC = \
     -IpsiuMulticomponentThermo/derivedFvPatchFields/fixedUnburntEnthalpy \
     -IpsiuMulticomponentThermo/derivedFvPatchFields/gradientUnburntEnthalpy \
     -IpsiuMulticomponentThermo/derivedFvPatchFields/mixedUnburntEnthalpy \
+    -IpsiuMulticomponentThermo/mixtures/homogeneousMixture \
+    -IpsiuMulticomponentThermo/mixtures/inhomogeneousMixture \
+    -IpsiuMulticomponentThermo/mixtures/leanInhomogeneousMixture \
+    -IpsiuMulticomponentThermo/mixtures/inhomogeneousEGRMixture \
     -IXiModels/transport \
     -IXiModels/fixed \
     -IXiModels/algebraic \
