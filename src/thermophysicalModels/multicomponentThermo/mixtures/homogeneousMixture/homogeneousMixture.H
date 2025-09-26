@@ -100,11 +100,6 @@ public:
         homogeneousMixture(const homogeneousMixture<ThermoType>&) = delete;
 
 
-    //- Destructor
-    virtual ~homogeneousMixture()
-    {}
-
-
     // Member Functions
 
         //- Return the instantiated type name

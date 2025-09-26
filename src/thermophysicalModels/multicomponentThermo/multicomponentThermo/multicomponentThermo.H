@@ -348,7 +348,8 @@ public:
             const dictionary&,
             const wordList&,
             const fvMesh&,
-            const word&
+            const word&,
+            const bool requiresDefaultSpecie = true
         );
 
 

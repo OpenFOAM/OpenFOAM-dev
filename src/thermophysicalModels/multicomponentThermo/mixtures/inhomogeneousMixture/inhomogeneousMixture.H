@@ -107,11 +107,6 @@ public:
         ) = delete;
 
 
-    //- Destructor
-    virtual ~inhomogeneousMixture()
-    {}
-
-
     // Member Functions
 
         //- Return the instantiated type name

@@ -77,13 +77,14 @@ Foam::multicomponentThermo::implementation::implementation
     const dictionary& dict,
     const wordList& specieNames,
     const fvMesh& mesh,
-    const word& phaseName
+    const word& phaseName,
+    const bool requiresDefaultSpecie
 )
 :
     species_(specieNames),
     defaultSpecieName_
     (
-        species_.size()
+        requiresDefaultSpecie && species_.size()
       ? dict.lookupBackwardsCompatible<word>
         (
             {"defaultSpecie", "inertSpecie"}
@@ -92,15 +93,19 @@ Foam::multicomponentThermo::implementation::implementation
     ),
     defaultSpeciei_
     (
-        species_.size()
-     && species_.found(defaultSpecieName_)
+        requiresDefaultSpecie && species_.size()
       ? species_[defaultSpecieName_]
       : -1
     ),
     active_(species_.size(), true),
     Y_(species_.size())
 {
-    if (species_.size() && defaultSpeciei_ == -1)
+    if
+    (
+        species_.size()
+     && defaultSpecieName_ != "undefined"
+     && defaultSpeciei_ == -1
+    )
     {
         FatalIOErrorInFunction(dict)
             << "default specie " << defaultSpecieName_
@@ -177,7 +182,10 @@ Foam::multicomponentThermo::implementation::implementation
         }
     }
 
-    correctMassFractions();
+    if (defaultSpeciei_ != -1)
+    {
+        correctMassFractions();
+    }
 }
 
 
@@ -258,35 +266,38 @@ Foam::multicomponentThermo::implementation::Y() const
 
 void Foam::multicomponentThermo::implementation::normaliseY()
 {
-    if (species().size())
+    if (defaultSpeciei_ != -1)
     {
-        tmp<volScalarField> tYt
-        (
-            volScalarField::New
-            (
-                IOobject::groupName("Yt", phaseName()),
-                Y()[0].mesh(),
-                dimensionedScalar(dimless, 0)
-            )
-        );
-        volScalarField& Yt = tYt.ref();
-
-        forAll(Y(), i)
+        if (species().size())
         {
-            if (solveSpecie(i))
+            tmp<volScalarField> tYt
+            (
+                volScalarField::New
+                (
+                    IOobject::groupName("Yt", phaseName()),
+                    Y()[0].mesh(),
+                    dimensionedScalar(dimless, 0)
+                )
+            );
+            volScalarField& Yt = tYt.ref();
+
+            forAll(Y(), i)
             {
-                Y()[i].max(scalar(0));
-                Yt += Y()[i];
+                if (solveSpecie(i))
+                {
+                    Y()[i].max(scalar(0));
+                    Yt += Y()[i];
+                }
             }
+
+            Y()[defaultSpeciei_] = scalar(1) - Yt;
+            Y()[defaultSpeciei_].max(scalar(0));
         }
 
-        Y()[defaultSpecie()] = scalar(1) - Yt;
-        Y()[defaultSpecie()].max(scalar(0));
-    }
-
-    if (Ydefault_.valid() && Ydefault_->writeOpt() == IOobject::NO_WRITE)
-    {
-        Ydefault_.clear();
+        if (Ydefault_.valid() && Ydefault_->writeOpt() == IOobject::NO_WRITE)
+        {
+            Ydefault_.clear();
+        }
     }
 }
 

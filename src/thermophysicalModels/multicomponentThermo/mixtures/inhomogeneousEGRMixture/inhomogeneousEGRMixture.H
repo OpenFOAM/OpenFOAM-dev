@@ -108,11 +108,6 @@ public:
         ) = delete;
 
 
-    //- Destructor
-    virtual ~inhomogeneousEGRMixture()
-    {}
-
-
     // Member Functions
 
         //- Return the instantiated type name
