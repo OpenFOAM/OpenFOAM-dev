@@ -619,11 +619,83 @@ void Foam::vtkUnstructuredReader::read(ISstream& inFile)
         {
             label nCells(readLabel(inFile));
             label nNumbers(readLabel(inFile));
-            if (debug)
+
+            token next(inFile);
+            if (next.isNumber())
             {
-                Info<< "Reading " << nCells << " cells or faces." << endl;
+                if (debug)
+                {
+                    Info<< "Reading " << nCells << " cells or faces." << endl;
+                }
+
+                inFile.putBack(next);
+                readBlock(inFile, nNumbers, cellVerts);
             }
-            readBlock(inFile, nNumbers, cellVerts);
+            else if (next.isWord() && next.wordToken() == "OFFSETS")
+            {
+                nCells --;
+
+                if (debug)
+                {
+                    Info<< "Reading " << nCells << " cells or faces." << endl;
+                }
+
+                // Read the offsets
+                const token offsetsIntType(inFile);
+                labelList cellOffsets;
+                readBlock(inFile, nCells + 1, cellOffsets);
+
+                // Check the next tag is "CONNECTIVITY"
+                const token connectivityTag(inFile);
+                if
+                (
+                    !connectivityTag.isWord()
+                 || connectivityTag.wordToken() != "CONNECTIVITY"
+                )
+                {
+                    FatalIOErrorInFunction(inFile)
+                        << "Expected 'CONNECTIVITY' but found "
+                        << next
+                        << exit(FatalIOError);
+                }
+
+                // Read the connectivity
+                const token connectivityIntType(inFile);
+                labelList cellConnectivity;
+                readBlock(inFile, nNumbers, cellConnectivity);
+
+                // Build the cell vertices
+                cellVerts.resize(nCells + nNumbers);
+                for
+                (
+                    label cellOffseti = 0, cellVerti = 0;
+                    cellOffseti < nCells;
+                    ++ cellOffseti
+                )
+                {
+                    const label cellConnectivityi0 =
+                        cellOffsets[cellOffseti];
+                    const label cellConnectivityi1 =
+                        cellOffsets[cellOffseti + 1];
+
+                    const label n = cellConnectivityi1 - cellConnectivityi0;
+
+                    cellVerts[cellVerti ++] = n;
+
+                    for (label i = 0; i < n; ++ i)
+                    {
+                        cellVerts[cellVerti ++] =
+                            cellConnectivity[cellConnectivityi0 + i];
+                    }
+                }
+            }
+            else
+            {
+                FatalIOErrorInFunction(inFile)
+                    << "Expected 'label' entry or 'OFFSETS' but found "
+                    << next
+                    << exit(FatalIOError);
+            }
         }
         else if (tag == "CELL_TYPES")
         {
