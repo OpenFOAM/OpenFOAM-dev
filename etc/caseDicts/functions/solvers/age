@@ -21,7 +21,7 @@ Description
 \*---------------------------------------------------------------------------*/
 
 type            age;
-libs            ("libfieldFunctionObjects.so");
+libs            ("libsolverFunctionObjects.so");
 
 phi             phi;
 rho             rho;

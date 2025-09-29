@@ -148,6 +148,12 @@ public:
         //- Return the list of fields required
         virtual wordList fields() const;
 
+        //- Do not execute at the start of the run
+        virtual bool executeAtStart() const
+        {
+            return false;
+        }
+
         //- Execute
         virtual bool execute();
 

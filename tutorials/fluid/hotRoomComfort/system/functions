@@ -16,7 +16,7 @@ FoamFile
 
 age
 {
-    libs            ("libfieldFunctionObjects.so");
+    libs            ("libsolverFunctionObjects.so");
     type            age;
 
     diffusion       on;

@@ -1,4 +1,5 @@
 scalarTransport/scalarTransport.C
 phaseScalarTransport/phaseScalarTransport.C
+age/age.C
 
 LIB = $(FOAM_LIBBIN)/libsolverFunctionObjects
