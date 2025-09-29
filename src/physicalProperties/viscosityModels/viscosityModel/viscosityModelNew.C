@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,21 +34,9 @@ Foam::autoPtr<Foam::viscosityModel> Foam::viscosityModel::New
     const word& group
 )
 {
-    IOdictionary dict
-    (
-        viscosityModel::findModelDict(mesh, group)
-    );
+    IOdictionary dict( viscosityModel::findModelDict(mesh, group));
 
-    const word modelType
-    (
-        dict.lookupBackwardsCompatible
-        (
-            {
-                "viscosityModel",
-                "transportModel"
-            }
-        )
-    );
+    const word modelType(dict.lookup("viscosityModel"));
 
     Info<< "Selecting viscosity model " << modelType << endl;
 

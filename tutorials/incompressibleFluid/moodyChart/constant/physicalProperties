@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-transportModel  Newtonian;
+viscosityModel  constant;
 
 // kinematic viscosity, units [0 2 -1 0 0 0 0]
 nu              1e-6;

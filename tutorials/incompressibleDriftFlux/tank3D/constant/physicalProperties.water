@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-viscosityModel  Newtonian;
+viscosityModel  constant;
 
 nu              1.78e-06;
 rho             1000;
