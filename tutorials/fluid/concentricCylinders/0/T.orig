@@ -1,0 +1,63 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       volScalarField;
+    object      T;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+Tinner 400;
+Touter 800;
+
+dimensions      [0 0 0 1 0 0 0];
+
+internalField   uniform $Tinner;
+
+boundaryField
+{
+    outer
+    {
+        type            fixedValue;
+        value           uniform $Touter;
+    }
+
+    inner
+    {
+        type            fixedValue;
+        value           uniform $Tinner;
+    }
+
+    baffle1
+    {
+        type        compressible::thermalBaffle1D<eConstSolidThermoPhysics>;
+        value       uniform $Tinner;
+
+        // Include radiation in the balance
+        qr          qr;
+
+        // Baffle thickness [m]
+        thickness   uniform 0.002;
+
+        // Baffle physical properties
+        ${${FOAM_CASE}/constant/physicalProperties!baffle};
+    }
+
+    baffle2
+    {
+        type        compressible::thermalBaffle1D<eConstSolidThermoPhysics>;
+        value       uniform $Tinner;
+        qr          qr;
+    }
+
+    #includeEtc "caseDicts/setConstraintTypes"
+}
+
+
+// ************************************************************************* //

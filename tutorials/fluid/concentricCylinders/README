@@ -1,0 +1,22 @@
+# Overview
+The concentricCylinders case simulates radiative heat transfer between two
+concentric cylinders. The '-baffle' option in the 'Allrun' script introduces a
+cylindrical baffle between the cylinders.
+
+# Setup
++ The case geometry includes the following diameters: inner cylinder = 0.2m;
+outer cylinder = 1.0m; baffle = 0.6m.
++ The temperatures of the inner and outer cylinders are Tin = 400K and Tout =
+800K, respectively.
++ The emissivity of the cylinders and baffle is 0.5.
+
+# Theoretical solution
+The theoretical solutions for the net rate of radiative heat transfer, qrad,
+are as follows.
++ Without baffle: qrad = sigma*(Tout^4 - Tin^4)*pi/11 = 6218W.
++ With baffle: qrad = sigma*(Tout^4 - Tin^4)*pi/16 = 4275W.
+
+# Baffle
+The 'thermalBaffle1D' boundary condition is used to model the baffle. The
+thickness of the baffle is set to 2mm to approximate a thin (zero thickness)
+baffle.

@@ -1,0 +1,111 @@
+#!/bin/sh
+
+# Run from this directory
+cd "${0%/*}" || exit 1
+
+# Source tutorial run functions
+. "$WM_PROJECT_DIR/bin/tools/RunFunctions"
+
+usage () {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do printf "\n%s\n" "$1"; shift; done
+    cat <<USAGE
+
+Usage: ${0##*/} [OPTIONS]
+options:
+  -b | -baffle           include baffle between cylinders
+  -h | -help             help
+  -m | -mesh <S|M|L|XL>  mesh size
+                         - S:  small
+                         - M:  medium (default)
+                         - L:  large
+                         - XL: extra large
+  -p | -P1               use the P1 radiation model
+
+Executes the following
++ 'blockMesh' to generate the mesh
++ 'createBaffles' to create a baffle (if -baffle is specified)
++ 'foamRun' to run the simulation
+
+USAGE
+    exit 1
+}
+
+printMonitor () {
+    monitor="$(tail -1 postProcessing/"$1"/0/surfaceFieldValue.dat \
+            | awk '{print $2}')"
+    echo "$1 = $monitor"
+}
+
+setSize () {
+    _xCells="$1"
+    _nPhi="$2"
+
+    runApplication -a foamDictionary -entry cells -set "($_xCells 16 1)" \
+                   system/blockMeshDict
+    runApplication -a foamDictionary -entry fvDOMCoeffs/nPhi -set "$_nPhi" \
+                   constant/radiationProperties
+}
+
+baffle=""
+p1=""
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -b | -baffle)
+        baffle="yes"
+        shift 1
+        ;;
+    -h | -help)
+        usage
+        ;;
+    -m | -mesh)
+       [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+       mesh=$2
+       shift 2
+       case "$mesh" in
+           S)  setSize 5 20 ;;
+           M)  ;;
+           L)  setSize 20 80 ;;
+           XL) setSize 40 160 ;;
+           *)  usage "Invalid argument '$mesh' to -m|-mesh <S|M|L|XL>." ;;
+       esac
+       ;;
+    -p | -P1)
+        p1="yes"
+        shift 1
+        ;;
+    -*)
+        usage "Invalid option '$1'"
+        ;;
+    *)
+        break
+        ;;
+    esac
+done
+
+runApplication blockMesh
+
+[ "$baffle" ] && \
+    printf "Creating baffle ...\n" && \
+    runApplication createBaffles && \
+    runApplication -a foamDictionary \
+        system/controlDict \
+        -entry endTime \
+        -set 7000
+
+[ "$p1" ] && \
+    printf "Selecting P1 radiation model ...\n" && \
+    runApplication -a foamDictionary \
+        constant/radiationProperties \
+        -entry radiationModel \
+        -set P1
+
+runApplication foamRun
+
+printMonitor qrInner
+printMonitor qrOuter
+printMonitor qInner
+printMonitor qOuter
+
+# ----------------------------------------------------------------- end-of-file

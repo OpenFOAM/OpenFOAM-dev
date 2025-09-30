@@ -1,0 +1,23 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      functions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#includeFunc wallHeatFlux
+#includeFunc residuals(name=residuals, fields=(h G ILambda_1_0))
+#includeFunc patchIntegrate(name=qrInner, patch=inner, qr)
+#includeFunc patchIntegrate(name=qrOuter, patch=outer, qr)
+#includeFunc patchIntegrate(name=qInner, patch=inner, wallHeatFlux)
+#includeFunc patchIntegrate(name=qOuter, patch=outer, wallHeatFlux)
+
+// ************************************************************************* //
