@@ -77,8 +77,6 @@ Foam::XiGModels::KTS::~KTS()
 
 Foam::tmp<Foam::volScalarField> Foam::XiGModels::KTS::G() const
 {
-    const volScalarField up(sqrt((2.0/3.0)*momentumTransport_.k()));
-
     tmp<volScalarField> tepsilon = momentumTransport_.epsilon();
     const volScalarField& epsilon = tepsilon();
 
