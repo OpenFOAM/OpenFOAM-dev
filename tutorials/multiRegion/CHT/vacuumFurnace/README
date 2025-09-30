@@ -1,0 +1,21 @@
+# Overview
+The vacuumFurnace case simulates the radiative heating of a steel block by a
+50kW heater. After 12000s of simulated time, the heater is turned off and the
+block is cooled by thermal radiation and natural convection.
+
+# Cooling
+The steel block takes a long time to cool down, due to its large thermal mass.
+The "Allrun" script provides three options for accelerating the cooling stage
+of the simulation:
+    + frozen: calculate flow once, then calculate cooling (frozen flow)
+    + periodic: calculate flow at intervals during cooling
+    + continuous: calculate flow continuously while cooling
+These options provide a compromise between accuracy and speed:
+    + frozen (default): lower accuracy, shorter run time
+    + periodic: medium accuracy, medium run time
+    + continuous: higher accuracy, longer run time
+
+# Simulation time
+The "Allrun" script does not simulate the complete cooling of the block to
+ambient temperature (300K). The script simulates 2000s of cooling instead,
+which is sufficient to observe the differences between the cooling options.

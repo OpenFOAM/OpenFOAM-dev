@@ -1,0 +1,141 @@
+#!/bin/sh
+
+# Run from this directory
+cd "${0%/*}" || exit 1
+
+# Source tutorial run functions
+. "$WM_PROJECT_DIR/bin/tools/RunFunctions"
+
+usage () {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do printf "\n%s\n" "$1"; shift; done
+    cat <<USAGE
+
+Usage: ${0##*/} [OPTIONS]
+options:
+  -c | -continuous       update flow continuously while cooling
+  -f | -frozen           do not update flow while cooling (default)
+  -h | -help             help
+  -p | -periodic         update flow periodically while cooling
+
+The simulation is carried out in two stages:
+    1. Heating with thermal radiation
+    2. Cooling with thermal radiation and natural convection
+
+The script provides three options for accelerating the cooling simulation. The
+options offer a compromise between accuracy and speed.
+
+    + frozen (default): lower accuracy, shorter run time
+    + periodic: medium accuracy, medium run time
+    + continuous: higher accuracy, longer run time
+
+USAGE
+    exit 1
+}
+
+flowEquations () {
+    runApplication -a foamDictionary system/fluid/fvSolution \
+            -expand -entry PIMPLE/flow -set "$1"
+}
+
+radSolverFrequency () {
+    runApplication -a foamDictionary constant/fluid/radiationProperties \
+        -entry solverFreq -set "$1"
+}
+
+timeSteps () {
+    runApplication -a foamDictionary system/controlDict \
+        -set "endTime=$1, deltaT=$2"
+}
+
+solveFlowAndEnergy () {
+    time=$(foamListTimes -latestTime)
+    flowEquations on
+    radSolverFrequency 10
+    timeSteps "$((time+$1))" 0.05
+    runApplication -s "flowAndEnergy$2" foamMultiRun
+}
+
+solveEnergy () {
+    time=$(foamListTimes -latestTime)
+    flowEquations off
+    radSolverFrequency 1
+    timeSteps "$((time+$1))" 50
+    runApplication -s "energy$2" foamMultiRun
+}
+
+mode="frozen"
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -c | -continuous)
+        mode="continuous"
+        shift 1
+        ;;
+    -f | -frozen)
+        shift 1
+        ;;
+    -h | -help)
+        usage
+        ;;
+    -p | -periodic)
+        mode="periodic"
+        shift 1
+        ;;
+    -*)
+        usage "Invalid option '$1'"
+        ;;
+    *)
+        break
+        ;;
+    esac
+done
+
+./Allmesh
+
+# Calculate heating with flow off
+runApplication -s heating foamMultiRun
+
+if ! isTest "$@"
+then
+
+    # Release the vacuum by increasing the pressure
+    time=$(foamListTimes -latestTime)
+    cp 0/fluid/p "$time/fluid/p"
+    runApplication -a foamDictionary "$time/fluid/p" \
+        -entry internalField -set "uniform 4e5"
+    runApplication -a foamDictionary constant/fluid/pRef -set "value=4e5"
+
+    # Density needs to be re-calculated, so delete the field file
+    rm -f "$time/fluid/rho"
+
+    # Turn heater off
+    runApplication -a foamDictionary constant/heater/fvModels \
+        -entry heatSource -remove
+
+    # Reduce writeInterval
+    runApplication -a foamDictionary system/controlDict -set "writeInterval=50"
+
+    # Calculate cooling
+    case $mode in
+
+        "continuous")
+            solveFlowAndEnergy 2000
+        ;;
+
+        "frozen")
+            solveFlowAndEnergy 50
+            solveEnergy 1950
+        ;;
+
+        "periodic")
+            for step in 1 2 3 4
+            do
+                solveFlowAndEnergy 50 "$step"
+                solveEnergy 450 "$step"
+            done
+        ;;
+    esac
+fi
+
+# ----------------------------------------------------------------- end-of-file

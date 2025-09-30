@@ -1,0 +1,40 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      createNonConformalCouplesDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+fields  no;
+
+nonConformalCouples
+{
+    NCC1
+    {
+        regions         (solid fluid);
+        patches         (solid solid);
+    }
+
+    NCC2
+    {
+        regions         (heater fluid);
+        patches         (heater heater);
+    }
+
+    NCC3
+    {
+        regions         (shield fluid);
+        patches         (shield shield);
+    }
+}
+
+// ************************************************************************* //

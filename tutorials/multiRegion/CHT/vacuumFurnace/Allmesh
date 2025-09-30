@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# Run from this directory
+cd "${0%/*}" || exit 1
+
+# Source tutorial run functions
+. "$WM_PROJECT_DIR/bin/tools/RunFunctions"
+
+for region in solid heater shield fluid
+do
+    runApplication -suffix $region blockMesh -region $region
+done
+runApplication snappyHexMesh -region fluid
+runApplication createNonConformalCouples
+
+# ----------------------------------------------------------------- end-of-file

@@ -1,0 +1,97 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system/fluid";
+    object      snappyHexMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#includeEtc "caseDicts/mesh/generation/snappyHexMeshDict.cfg"
+
+castellatedMesh on;
+
+snap            on;
+
+addLayers       off;
+
+geometry
+{
+    fluid
+    {
+        type    cylinder;
+        point1  (0 0 0);
+        point2  (1 0 0);
+        radius  0.5;
+    }
+
+    heater
+    {
+        type triSurface;
+        file "heater.obj";
+    }
+
+    shield
+    {
+        type triSurface;
+        file "shield.obj";
+    }
+
+    solid
+    {
+        type    box;
+        min     (0.3 -0.1 -0.01);
+        max     (0.7 0.1 0.01);
+    }
+}
+
+castellatedMeshControls
+{
+    features
+    (
+    );
+
+    refinementSurfaces
+    {
+        fluid
+        {
+            level (1 1);
+            patchInfo { type wall; }
+        }
+
+        heater
+        {
+            $fluid;
+        }
+
+        shield
+        {
+            $fluid;
+        }
+
+        solid
+        {
+            $fluid;
+        }
+    }
+
+    insidePoint (0 0 0);
+    nCellsBetweenLevels 3;
+}
+
+snapControls
+{
+    explicitFeatureSnap    off;
+    implicitFeatureSnap    on;
+}
+
+mergeTolerance 1e-6;
+
+// ************************************************************************* //
