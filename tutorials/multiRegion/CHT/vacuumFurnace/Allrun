@@ -52,7 +52,7 @@ solveFlowAndEnergy () {
     time=$(foamListTimes -latestTime)
     flowEquations on
     radSolverFrequency 10
-    timeSteps "$((time+$1))" 0.05
+    timeSteps "$(echo $time+$1 | bc)" 0.05
     runApplication -s "flowAndEnergy$2" foamMultiRun
 }
 
@@ -60,11 +60,12 @@ solveEnergy () {
     time=$(foamListTimes -latestTime)
     flowEquations off
     radSolverFrequency 1
-    timeSteps "$((time+$1))" 50
+    timeSteps "$(echo $time+$1 | bc)" 50
     runApplication -s "energy$2" foamMultiRun
 }
 
 mode="frozen"
+istest=false
 while [ "$#" -gt 0 ]
 do
     case "$1" in
@@ -82,6 +83,10 @@ do
         mode="periodic"
         shift 1
         ;;
+    -test)
+        istest=true
+        shift
+        ;;
     -*)
         usage "Invalid option '$1'"
         ;;
@@ -96,46 +101,43 @@ done
 # Calculate heating with flow off
 runApplication -s heating foamMultiRun
 
-if ! isTest "$@"
-then
+# Release the vacuum by increasing the pressure
+time=$(foamListTimes -latestTime)
+cp 0/fluid/p "$time/fluid/p"
+runApplication -a foamDictionary "$time/fluid/p" \
+    -entry internalField -set "uniform 4e5"
+runApplication -a foamDictionary constant/fluid/pRef -set "value=4e5"
 
-    # Release the vacuum by increasing the pressure
-    time=$(foamListTimes -latestTime)
-    cp 0/fluid/p "$time/fluid/p"
-    runApplication -a foamDictionary "$time/fluid/p" \
-        -entry internalField -set "uniform 4e5"
-    runApplication -a foamDictionary constant/fluid/pRef -set "value=4e5"
+# Density needs to be re-calculated, so delete the field file
+rm -f "$time/fluid/rho"
 
-    # Density needs to be re-calculated, so delete the field file
-    rm -f "$time/fluid/rho"
+# Turn heater off
+runApplication -a foamDictionary constant/heater/fvModels \
+    -entry heatSource -remove
 
-    # Turn heater off
-    runApplication -a foamDictionary constant/heater/fvModels \
-        -entry heatSource -remove
-
-    # Reduce writeInterval
+# Reduce writeInterval
+[ ! $istest ] && \
     runApplication -a foamDictionary system/controlDict -set "writeInterval=50"
 
-    # Calculate cooling
-    case $mode in
+# Calculate cooling
+case $mode in
 
-        "continuous")
-            solveFlowAndEnergy 2000
-        ;;
+    "continuous")
+        solveFlowAndEnergy 2000
+    ;;
 
-        "frozen")
-            solveFlowAndEnergy 50
-            solveEnergy 1950
-        ;;
+    "frozen")
+        solveFlowAndEnergy 50
+        solveEnergy 1950
+    ;;
 
-        "periodic")
-            for step in 1 2 3 4
-            do
-                solveFlowAndEnergy 50 "$step"
-                solveEnergy 450 "$step"
-            done
-        ;;
-    esac
-fi
+    "periodic")
+        for step in 1 2 3 4
+        do
+            solveFlowAndEnergy 50 "$step"
+            solveEnergy 450 "$step"
+        done
+    ;;
+esac
 
 # ----------------------------------------------------------------- end-of-file
