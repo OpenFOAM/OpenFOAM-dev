@@ -68,10 +68,7 @@ public:
         //- Append a cellZone with the given name and indices
         void append(const word& name, const labelUList& addr) const
         {
-            ZoneList<cellZone, cellZoneList, polyMesh>::append
-            (
-                new cellZone(name, addr, *this)
-            );
+            append(new cellZone(name, addr, *this));
         }
 };
 
