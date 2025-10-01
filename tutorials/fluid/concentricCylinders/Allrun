@@ -75,6 +75,9 @@ do
         p1="yes"
         shift 1
         ;;
+    -test)
+        shift
+        ;;
     -*)
         usage "Invalid option '$1'"
         ;;
