@@ -44,13 +44,13 @@ namespace solvers
 
 void Foam::solvers::incompressibleFluid::correctCoNum()
 {
-    fluidSolver::correctCoNum(phi);
+    basicFluidSolver::correctCoNum(phi);
 }
 
 
 void Foam::solvers::incompressibleFluid::continuityErrors()
 {
-    fluidSolver::continuityErrors(phi);
+    basicFluidSolver::continuityErrors(phi);
 }
 
 
@@ -58,7 +58,7 @@ void Foam::solvers::incompressibleFluid::continuityErrors()
 
 Foam::solvers::incompressibleFluid::incompressibleFluid(fvMesh& mesh)
 :
-    fluidSolver(mesh),
+    basicFluidSolver(mesh),
 
     p_
     (

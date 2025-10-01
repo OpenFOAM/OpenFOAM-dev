@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ License
 
 void Foam::solver::load(const word& solverName)
 {
-    libs.open("lib" + solverName + ".so");
+    libs.open("lib" + solverName + "Solver.so");
 }
 
 
@@ -43,24 +43,31 @@ Foam::autoPtr<Foam::solver> Foam::solver::New
 
     load(solverName);
 
+    fvMeshConstructorTable::iterator cstrIter =
+        fvMeshConstructorTablePtr_
+      ? fvMeshConstructorTablePtr_->find(solverName)
+      : fvMeshConstructorTable::end();
+
+    if (cstrIter == fvMeshConstructorTable::end())
+    {
+        libs.openPattern("lib.*Solver.so");
+    }
+
     if (!fvMeshConstructorTablePtr_)
     {
         FatalErrorInFunction
-            << "solvers table is empty"
+            << "Solvers table is empty"
             << exit(FatalError);
     }
 
-    fvMeshConstructorTable::iterator cstrIter =
-        fvMeshConstructorTablePtr_->find(solverName);
-
-    if (cstrIter == fvMeshConstructorTablePtr_->end())
+    if (cstrIter == fvMeshConstructorTable::end())
     {
         FatalErrorInFunction
             << "Unknown solver type "
             << solverName << nl << nl
-                << "Valid solvers are :" << endl
-                << fvMeshConstructorTablePtr_->sortedToc()
-                << exit(FatalError);
+            << "Valid solvers are :" << endl
+            << fvMeshConstructorTablePtr_->sortedToc()
+            << exit(FatalError);
     }
 
     autoPtr<solver> solverPtr(cstrIter()(mesh));

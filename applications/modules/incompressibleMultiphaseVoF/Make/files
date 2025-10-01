@@ -4,4 +4,4 @@ alphaPredictor.C
 pressureCorrector.C
 incompressibleMultiphaseVoF.C
 
-LIB = $(FOAM_LIBBIN)/libincompressibleMultiphaseVoF
+LIB = $(FOAM_LIBBIN)/libincompressibleMultiphaseVoFSolver

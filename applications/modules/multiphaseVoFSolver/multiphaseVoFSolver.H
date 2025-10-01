@@ -41,7 +41,7 @@ SourceFiles
 
 See also
     Foam::solvers::VoFSolver
-    Foam::solvers::incompressibleMultiphaseVoFSolver
+    Foam::solvers::incompressibleMultiphaseVoF
 
 \*---------------------------------------------------------------------------*/
 

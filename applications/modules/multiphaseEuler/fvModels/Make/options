@@ -20,13 +20,13 @@ EXE_INC = \
     -I$(LIB_SRC)/ThermophysicalTransportModels/fluid/lnInclude \
     -I$(LIB_SRC)/ThermophysicalTransportModels/coupledThermophysicalTransportModels/lnInclude \
     -I$(LIB_SRC)/fvModels/general/lnInclude \
-    -I$(FOAM_MODULES)/fluidSolver/lnInclude
+    -I$(FOAM_MODULES)/basicFluidSolver/lnInclude
 
 LIB_LIBS = \
     -lfvModels \
     -lphaseSystem \
     -lpopulationBalance \
-    -lmultiphaseEuler \
+    -lmultiphaseEulerSolver \
     -lcompressibleCavitationModels \
     -lphaseFluidThermophysicalTransportModels \
     -lphaseFluidMulticomponentThermophysicalTransportModels \

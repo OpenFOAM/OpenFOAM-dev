@@ -46,7 +46,7 @@ SourceFiles
     incompressibleFluid.C
 
 See also
-    Foam::solvers::fluidSolver
+    Foam::solvers::basicFluidSolver
     Foam::solvers::isothermalFluid
 
 \*---------------------------------------------------------------------------*/
@@ -54,7 +54,7 @@ See also
 #ifndef incompressibleFluid_H
 #define incompressibleFluid_H
 
-#include "fluidSolver.H"
+#include "basicFluidSolver.H"
 #include "viscosityModel.H"
 #include "incompressibleMomentumTransportModel.H"
 #include "pressureReference.H"
@@ -73,7 +73,7 @@ namespace solvers
 
 class incompressibleFluid
 :
-    public fluidSolver
+    public basicFluidSolver
 {
 
 protected:

@@ -112,7 +112,7 @@ SourceFiles
     XiFluid.C
 
 See also
-    Foam::solvers::fluidSolver
+    Foam::solvers::basicFluidSolver
     Foam::solvers::isothermalFluid
 
 \*---------------------------------------------------------------------------*/

@@ -48,7 +48,7 @@ SourceFiles
     incompressibleDenseParticleFluid.C
 
 See also
-    Foam::solvers::fluidSolver
+    Foam::solvers::basicFluidSolver
     Foam::solvers::incompressibleFluid
 
 \*---------------------------------------------------------------------------*/
@@ -56,7 +56,7 @@ See also
 #ifndef incompressibleDenseParticleFluid_H
 #define incompressibleDenseParticleFluid_H
 
-#include "fluidSolver.H"
+#include "basicFluidSolver.H"
 #include "viscosityModel.H"
 #include "phaseIncompressibleMomentumTransportModel.H"
 #include "pressureReference.H"
@@ -76,7 +76,7 @@ namespace solvers
 
 class incompressibleDenseParticleFluid
 :
-    public fluidSolver
+    public basicFluidSolver
 {
 
 protected:

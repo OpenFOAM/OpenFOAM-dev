@@ -44,7 +44,7 @@ namespace solvers
 
 void Foam::solvers::VoFSolver::continuityErrors()
 {
-    fluidSolver::continuityErrors(phi);
+    basicFluidSolver::continuityErrors(phi);
 }
 
 
@@ -74,7 +74,7 @@ void Foam::solvers::VoFSolver::clearrAU()
 
 void Foam::solvers::VoFSolver::correctCoNum()
 {
-    fluidSolver::correctCoNum(phi);
+    basicFluidSolver::correctCoNum(phi);
 }
 
 
@@ -86,7 +86,7 @@ Foam::solvers::VoFSolver::VoFSolver
     autoPtr<VoFMixture> mixturePtr
 )
 :
-    fluidSolver(mesh),
+    basicFluidSolver(mesh),
 
     mixturePtr_(mixturePtr),
     mixture_(mixturePtr_()),
@@ -185,7 +185,7 @@ Foam::scalar Foam::solvers::VoFSolver::maxDeltaT() const
     const scalar maxAlphaCo =
         runTime.controlDict().lookup<scalar>("maxAlphaCo");
 
-    scalar deltaT = fluidSolver::maxDeltaT();
+    scalar deltaT = basicFluidSolver::maxDeltaT();
 
     if (alphaCoNum > small)
     {

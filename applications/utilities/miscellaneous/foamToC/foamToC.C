@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -343,7 +343,7 @@ int main(int argc, char *argv[])
     word solverName;
     if (args.optionReadIfPresent("solver", solverName))
     {
-        libs.open("lib" + solverName + ".so");
+        libs.open("lib" + solverName + "Solver.so");
     }
 
     const string libDir(getEnv("FOAM_LIBBIN"));

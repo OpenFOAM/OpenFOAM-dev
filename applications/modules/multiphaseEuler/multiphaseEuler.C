@@ -47,7 +47,7 @@ namespace solvers
 
 bool Foam::solvers::multiphaseEuler::read()
 {
-    fluidSolver::read();
+    basicFluidSolver::read();
 
     predictMomentum =
         pimple.dict().lookupOrDefault<bool>("momentumPredictor", false);
@@ -100,7 +100,7 @@ void Foam::solvers::multiphaseEuler::correctCoNum()
 
 Foam::solvers::multiphaseEuler::multiphaseEuler(fvMesh& mesh)
 :
-    fluidSolver(mesh),
+    basicFluidSolver(mesh),
 
     predictMomentum
     (

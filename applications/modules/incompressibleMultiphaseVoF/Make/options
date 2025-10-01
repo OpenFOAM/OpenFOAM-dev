@@ -1,7 +1,7 @@
 EXE_INC = \
     -I$(FOAM_MODULES)/multiphaseVoFSolver/lnInclude \
     -I$(FOAM_MODULES)/VoFSolver/lnInclude \
-    -I$(FOAM_MODULES)/fluidSolver/lnInclude \
+    -I$(FOAM_MODULES)/basicFluidSolver/lnInclude \
     -I$(LIB_SRC)/physicalProperties/lnInclude \
     -I$(LIB_SRC)/multiphaseModels/multiphaseProperties/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \

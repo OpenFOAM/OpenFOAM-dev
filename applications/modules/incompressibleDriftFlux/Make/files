@@ -2,4 +2,4 @@ incompressibleDriftFluxMixture/incompressibleDriftFluxMixture.C
 alphaSuSp.C
 incompressibleDriftFlux.C
 
-LIB = $(FOAM_LIBBIN)/libincompressibleDriftFlux
+LIB = $(FOAM_LIBBIN)/libincompressibleDriftFluxSolver

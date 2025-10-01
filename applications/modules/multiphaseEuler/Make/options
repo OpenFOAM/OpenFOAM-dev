@@ -1,5 +1,5 @@
 EXE_INC = \
-    -I$(FOAM_MODULES)/fluidSolver/lnInclude \
+    -I$(FOAM_MODULES)/basicFluidSolver/lnInclude \
     -IphaseSystem/lnInclude \
     -IpopulationBalance/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude \
@@ -14,7 +14,7 @@ EXE_INC = \
     -I$(LIB_SRC)/MomentumTransportModels/phaseCompressible/lnInclude
 
 LIB_LIBS = \
-    -lfluidSolver \
+    -lbasicFluidSolver \
     -lpopulationBalance \
     -lmultiphaseEulerMomentumTransportModels \
     -lmultiphaseEulerThermophysicalTransportModels \
