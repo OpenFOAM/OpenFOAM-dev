@@ -177,7 +177,7 @@ Foam::solvers::incompressibleDriftFlux::~incompressibleDriftFlux()
 
 Foam::scalar Foam::solvers::incompressibleDriftFlux::maxDeltaT() const
 {
-    return fluidSolver::maxDeltaT();
+    return basicFluidSolver::maxDeltaT();
 }
 
 

@@ -96,7 +96,7 @@ void Foam::solvers::shockFluid::clearTemporaryFields()
 
 Foam::solvers::shockFluid::shockFluid(fvMesh& mesh)
 :
-    fluidSolver(mesh),
+    basicFluidSolver(mesh),
 
     thermoPtr_(psiThermo::New(mesh)),
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,6 +104,9 @@ public:
             const word& libsEntry,
             const TablePtr& tablePtr
         );
+
+        //- Open the named libraries, optionally with warnings if problems occur
+        bool openPattern(const regExp& pattern, const bool verbose = true);
 
         //- Find the handle of the named library
         void* findLibrary(const fileName& libName);

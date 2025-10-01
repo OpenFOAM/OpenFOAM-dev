@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "fluidMaxDeltaT.H"
-#include "fluidSolver.H"
+#include "basicFluidSolver.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -110,7 +110,7 @@ Foam::scalar Foam::functionObjects::fluidMaxDeltaT::maxDeltaT() const
     scalar deltaT = maxDeltaTPtr_().value(time_.value());
 
     const scalar CoNum =
-        mesh_.lookupObject<solvers::fluidSolver>(solver::typeName).CoNum;
+        mesh_.lookupObject<solvers::basicFluidSolver>(solver::typeName).CoNum;
 
     if (CoNum > small)
     {

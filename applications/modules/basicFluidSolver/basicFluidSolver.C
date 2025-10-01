@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "fluidSolver.H"
+#include "basicFluidSolver.H"
 #include "surfaceFields.H"
 #include "fvcDiv.H"
 #include "fvcSurfaceIntegrate.H"
@@ -35,20 +35,20 @@ namespace Foam
 {
 namespace solvers
 {
-    defineTypeNameAndDebug(fluidSolver, 0);
+    defineTypeNameAndDebug(basicFluidSolver, 0);
 }
 }
 
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
-bool Foam::solvers::fluidSolver::dependenciesModified() const
+bool Foam::solvers::basicFluidSolver::dependenciesModified() const
 {
     return runTime.controlDict().modified() || mesh.solution().modified();
 }
 
 
-bool Foam::solvers::fluidSolver::read()
+bool Foam::solvers::basicFluidSolver::read()
 {
     solver::read();
 
@@ -75,7 +75,7 @@ bool Foam::solvers::fluidSolver::read()
     return true;
 }
 
-void Foam::solvers::fluidSolver::meshCourantNo() const
+void Foam::solvers::basicFluidSolver::meshCourantNo() const
 {
     if (checkMeshCourantNo)
     {
@@ -103,7 +103,7 @@ void Foam::solvers::fluidSolver::meshCourantNo() const
 
 
 template<class RhoType>
-void Foam::solvers::fluidSolver::correctCoNum
+void Foam::solvers::basicFluidSolver::correctCoNum
 (
     const RhoType& rho,
     const surfaceScalarField& phi
@@ -126,13 +126,16 @@ void Foam::solvers::fluidSolver::correctCoNum
 }
 
 
-void Foam::solvers::fluidSolver::correctCoNum(const surfaceScalarField& phi)
+void Foam::solvers::basicFluidSolver::correctCoNum
+(
+    const surfaceScalarField& phi
+)
 {
     correctCoNum(geometricOneField(), phi);
 }
 
 
-void Foam::solvers::fluidSolver::correctCoNum
+void Foam::solvers::basicFluidSolver::correctCoNum
 (
     const volScalarField& rho,
     const surfaceScalarField& phi
@@ -142,7 +145,7 @@ void Foam::solvers::fluidSolver::correctCoNum
 }
 
 
-void Foam::solvers::fluidSolver::continuityErrors
+void Foam::solvers::basicFluidSolver::continuityErrors
 (
     const surfaceScalarField& phi
 )
@@ -171,7 +174,7 @@ void Foam::solvers::fluidSolver::continuityErrors
 }
 
 
-void Foam::solvers::fluidSolver::continuityErrors
+void Foam::solvers::basicFluidSolver::continuityErrors
 (
     const volScalarField& rho,
     const volScalarField& thermoRho,
@@ -204,7 +207,7 @@ void Foam::solvers::fluidSolver::continuityErrors
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::solvers::fluidSolver::fluidSolver(fvMesh& mesh)
+Foam::solvers::basicFluidSolver::basicFluidSolver(fvMesh& mesh)
 :
     solver(mesh),
     maxCo(0),
@@ -220,13 +223,13 @@ Foam::solvers::fluidSolver::fluidSolver(fvMesh& mesh)
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::solvers::fluidSolver::~fluidSolver()
+Foam::solvers::basicFluidSolver::~basicFluidSolver()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::scalar Foam::solvers::fluidSolver::maxDeltaT() const
+Foam::scalar Foam::solvers::basicFluidSolver::maxDeltaT() const
 {
     scalar deltaT = min(fvModels().maxDeltaT(), maxDeltaT_);
 

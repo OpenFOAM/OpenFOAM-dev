@@ -49,13 +49,13 @@ namespace solvers
 
 void Foam::solvers::isothermalFluid::correctCoNum()
 {
-    fluidSolver::correctCoNum(rho, phi);
+    basicFluidSolver::correctCoNum(rho, phi);
 }
 
 
 void Foam::solvers::isothermalFluid::continuityErrors()
 {
-    fluidSolver::continuityErrors(rho, thermo.rho(), phi);
+    basicFluidSolver::continuityErrors(rho, thermo.rho(), phi);
 }
 
 
@@ -93,7 +93,7 @@ Foam::solvers::isothermalFluid::isothermalFluid
     autoPtr<fluidThermo> thermoPtr
 )
 :
-    fluidSolver(mesh),
+    basicFluidSolver(mesh),
 
     thermoPtr_(thermoPtr),
     thermo_(thermoPtr_()),

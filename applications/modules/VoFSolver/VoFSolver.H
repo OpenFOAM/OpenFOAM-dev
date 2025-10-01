@@ -44,14 +44,14 @@ SourceFiles
     VoFSolver.C
 
 See also
-    Foam::solvers::fluidSolver
+    Foam::solvers::basicFluidSolver
 
 \*---------------------------------------------------------------------------*/
 
 #ifndef VoFSolver_H
 #define VoFSolver_H
 
-#include "fluidSolver.H"
+#include "basicFluidSolver.H"
 #include "VoFMixture.H"
 #include "buoyancy.H"
 #include "pressureReference.H"
@@ -70,7 +70,7 @@ namespace solvers
 
 class VoFSolver
 :
-    public fluidSolver
+    public basicFluidSolver
 {
 
 protected:

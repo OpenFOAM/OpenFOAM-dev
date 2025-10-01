@@ -8,4 +8,4 @@ thermophysicalPredictor.C
 pressureCorrector.C
 compressibleVoF.C
 
-LIB = $(FOAM_LIBBIN)/libcompressibleVoF
+LIB = $(FOAM_LIBBIN)/libcompressibleVoFSolver

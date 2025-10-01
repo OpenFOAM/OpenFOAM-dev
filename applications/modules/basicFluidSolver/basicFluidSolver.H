@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::solvers::fluidSolver
+    Foam::solvers::basicFluidSolver
 
 Description
     Base solver module for fluid solvers.
@@ -37,12 +37,12 @@ Description
     \endverbatim
 
 SourceFiles
-    fluidSolver.C
+    basicFluidSolver.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef fluidSolver_H
-#define fluidSolver_H
+#ifndef basicFluidSolver_H
+#define basicFluidSolver_H
 
 #include "solver.H"
 
@@ -54,10 +54,10 @@ namespace solvers
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class fluidSolver Declaration
+                          Class basicFluidSolver Declaration
 \*---------------------------------------------------------------------------*/
 
-class fluidSolver
+class basicFluidSolver
 :
     public solver
 {
@@ -143,20 +143,20 @@ public:
 public:
 
     //- Runtime type information
-    TypeName("fluidSolver");
+    TypeName("basicFluidSolver");
 
 
     // Constructors
 
         //- Construct from region mesh
-        fluidSolver(fvMesh& mesh);
+        basicFluidSolver(fvMesh& mesh);
 
         //- Disallow default bitwise copy construction
-        fluidSolver(const fluidSolver&) = delete;
+        basicFluidSolver(const basicFluidSolver&) = delete;
 
 
     //- Destructor
-    virtual ~fluidSolver();
+    virtual ~basicFluidSolver();
 
 
     // Member Functions
@@ -168,7 +168,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const fluidSolver&) = delete;
+        void operator=(const basicFluidSolver&) = delete;
 };
 
 

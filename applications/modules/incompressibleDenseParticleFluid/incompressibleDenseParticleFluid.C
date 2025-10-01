@@ -51,13 +51,13 @@ namespace solvers
 
 void Foam::solvers::incompressibleDenseParticleFluid::correctCoNum()
 {
-    fluidSolver::correctCoNum(phic);
+    basicFluidSolver::correctCoNum(phic);
 }
 
 
 void Foam::solvers::incompressibleDenseParticleFluid::continuityErrors()
 {
-    fluidSolver::continuityErrors(phic);
+    basicFluidSolver::continuityErrors(phic);
 }
 
 
@@ -69,7 +69,7 @@ incompressibleDenseParticleFluid
     fvMesh& mesh
 )
 :
-    fluidSolver(mesh),
+    basicFluidSolver(mesh),
 
     continuousPhaseName
     (

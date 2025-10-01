@@ -2,4 +2,4 @@ multicomponentFluid.C
 setRDeltaT.C
 thermophysicalPredictor.C
 
-LIB = $(FOAM_LIBBIN)/libmulticomponentFluid
+LIB = $(FOAM_LIBBIN)/libmulticomponentFluidSolver

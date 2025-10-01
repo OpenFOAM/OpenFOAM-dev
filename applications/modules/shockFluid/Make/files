@@ -12,4 +12,4 @@ derivedFvPatchFields/U/maxwellSlipUFvPatchVectorField.C
 derivedFvPatchFields/T/smoluchowskiJumpTFvPatchScalarField.C
 derivedFvPatchFields/rho/fixedRhoFvPatchScalarField.C
 
-LIB = $(FOAM_LIBBIN)/libshockFluid
+LIB = $(FOAM_LIBBIN)/libshockFluidSolver

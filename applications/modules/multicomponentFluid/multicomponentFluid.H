@@ -47,7 +47,7 @@ SourceFiles
     multicomponentFluid.C
 
 See also
-    Foam::solvers::fluidSolver
+    Foam::solvers::basicFluidSolver
     Foam::solvers::isothermalFluid
 
 \*---------------------------------------------------------------------------*/

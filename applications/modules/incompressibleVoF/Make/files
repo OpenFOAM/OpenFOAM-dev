@@ -3,4 +3,4 @@ incompressibleInterPhaseTransportModel/incompressibleInterPhaseTransportModel.C
 alphaSuSp.C
 incompressibleVoF.C
 
-LIB = $(FOAM_LIBBIN)/libincompressibleVoF
+LIB = $(FOAM_LIBBIN)/libincompressibleVoFSolver

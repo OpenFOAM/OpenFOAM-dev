@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -164,6 +164,31 @@ bool Foam::dlLibraryTable::open
     {
         return false;
     }
+}
+
+
+bool Foam::dlLibraryTable::openPattern
+(
+    const regExp& pattern,
+    const bool verbose
+)
+{
+    DynamicList<fileName> libNames;
+    libNames.append(readDir(getEnv("FOAM_LIBBIN")));
+    libNames.append(readDir(getEnv("FOAM_SITE_LIBBIN")));
+    libNames.append(readDir(getEnv("FOAM_USER_LIBBIN")));
+
+    bool allOpened = !libNames.empty();
+
+    forAll(libNames, i)
+    {
+        if (pattern.match(libNames[i]))
+        {
+            allOpened = open(libNames[i], verbose) && allOpened;
+        }
+    }
+
+    return allOpened;
 }
 
 

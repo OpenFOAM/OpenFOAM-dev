@@ -6,4 +6,4 @@ correctPressure.C
 correctBuoyantPressure.C
 isothermalFluid.C
 
-LIB = $(FOAM_LIBBIN)/libisothermalFluid
+LIB = $(FOAM_LIBBIN)/libisothermalFluidSolver

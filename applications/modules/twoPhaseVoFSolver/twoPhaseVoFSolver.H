@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,7 @@ SourceFiles
     twoPhaseVoFSolver.C
 
 See also
-    Foam::solvers::fluidSolver
+    Foam::solvers::basicFluidSolver
 
 \*---------------------------------------------------------------------------*/
 

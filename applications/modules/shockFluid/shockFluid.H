@@ -44,7 +44,7 @@ SourceFiles
     shockFluid.C
 
 See also
-    Foam::solvers::fluidSolver
+    Foam::solvers::basicFluidSolver
     Foam::solvers::incompressibleFluid
 
 \*---------------------------------------------------------------------------*/
@@ -52,7 +52,7 @@ See also
 #ifndef shockFluid_H
 #define shockFluid_H
 
-#include "fluidSolver.H"
+#include "basicFluidSolver.H"
 #include "psiThermo.H"
 #include "compressibleMomentumTransportModel.H"
 #include "fluidThermoThermophysicalTransportModel.H"
@@ -70,7 +70,7 @@ namespace solvers
 
 class shockFluid
 :
-    public fluidSolver
+    public basicFluidSolver
 {
 
 protected:
