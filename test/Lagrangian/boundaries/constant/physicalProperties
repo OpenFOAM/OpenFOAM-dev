@@ -16,7 +16,7 @@ FoamFile
 
 rho             1.2;
 
-transportModel  Newtonian;
+viscosityModel  constant;
 
 nu              1e-05;
 
