@@ -43,7 +43,7 @@ patches
             type    wall;
         }
 
-        // How to construct: either from 'patches' or 'set'
+        // How to construct: either from 'patches' or 'zone'
         constructFrom patches;
 
         // If constructFrom = patches : names of patches. Wildcards allowed.

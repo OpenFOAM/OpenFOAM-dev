@@ -27,10 +27,6 @@ region          liquidFilm;
 faceZones       (f0 f1);
 // faceZonesShadow (f0Shadow f1Shadow);
 
-// The faceSets to extrude
-// faceSets        (f0 f1);
-// faceSetsShadow  (f0Shadow f1Shadow);
-
 // Set intrude to yes/true to extrude into/overlapping the primary region mesh
 // i.e. intrude rather than extrude
 // Used to create film regions which overlap the primary region mesh

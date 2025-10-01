@@ -60,8 +60,15 @@ patches
         // If constructFrom = patches : names of patches. Wildcards allowed.
         patches (periodic1);
 
-        // If constructFrom = set : name of faceSet
-        set f0;
+        // If constructFrom = zone : name of faceZone
+        // zone f0;
+
+        // ... or generate zone
+        // zone
+        // {
+        //     type        box;
+        //     box         (-0.035 -0.1 -1e-5)(0.035 0.1 1e-5);
+        // }
     }
 
     cyc_half1
@@ -86,8 +93,15 @@ patches
         // If constructFrom = patches : names of patches. Wildcards allowed.
         patches (periodic2);
 
-        // If constructFrom = set : name of faceSet
-        set f0;
+        // If constructFrom = zone : name of faceZone
+        // zone f0;
+
+        // ... or generate zone
+        // zone
+        // {
+        //     type        box;
+        //     box         (-0.035 -0.1 -1e-5)(0.035 0.1 1e-5);
+        // }
     }
 }
 
