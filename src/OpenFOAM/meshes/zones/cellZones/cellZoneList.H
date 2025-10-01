@@ -62,6 +62,15 @@ public:
 
         //- Return number of cells in the mesh
         label allSize() const;
+
+        //- Append a cellZone with the given name and indices
+        void append(const word& name, const labelUList& addr) const
+        {
+            ZoneList<cellZone, cellZoneList, polyMesh>::append
+            (
+                new cellZone(name, addr, *this)
+            );
+        }
 };
 
 
