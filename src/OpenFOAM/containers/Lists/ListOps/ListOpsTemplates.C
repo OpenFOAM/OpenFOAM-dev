@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -525,12 +525,32 @@ Foam::labelList Foam::findIndices
     const label start
 )
 {
+    return
+        selectIndices
+        (
+            l,
+            [&](const typename ListType::const_reference li)
+            {
+                return li == t;
+            }
+        );
+}
+
+
+template<class ListType, class BoolOp>
+Foam::labelList Foam::selectIndices
+(
+    const ListType& l,
+    const BoolOp& bop,
+    const label start
+)
+{
     // Count occurrences
     label n = 0;
 
     for (label i = start; i < l.size(); i++)
     {
-        if (l[i] == t)
+        if (bop(l[i]))
         {
             n++;
         }
@@ -542,7 +562,7 @@ Foam::labelList Foam::findIndices
 
     for (label i = start; i < l.size(); i++)
     {
-        if (l[i] == t)
+        if (bop(l[i]))
         {
             indices[n++] = i;
         }

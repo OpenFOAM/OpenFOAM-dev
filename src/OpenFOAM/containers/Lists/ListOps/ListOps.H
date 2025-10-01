@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -192,6 +192,15 @@ labelList findIndices
 (
     const ListType&,
     typename ListType::const_reference,
+    const label start=0
+);
+
+//- Select all occurrences given a boolean critera. Linear search.
+template<class ListType, class BoolOp>
+labelList selectIndices
+(
+    const ListType&,
+    const BoolOp& bop,
     const label start=0
 );
 
