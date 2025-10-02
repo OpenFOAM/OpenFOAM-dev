@@ -35,41 +35,6 @@ namespace Foam
 }
 
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::ubPsiMulticomponentThermo::implementation::implementation
-(
-    const dictionary& dict,
-    const wordList& specieNames,
-    const fvMesh& mesh,
-    const word& phaseName
-)
-:
-    species_(specieNames),
-    Y_(species_.size())
-{
-    forAll(species_, i)
-    {
-        Y_.set
-        (
-            i,
-            new volScalarField
-            (
-                IOobject
-                (
-                    IOobject::groupName(species_[i], phaseName),
-                    mesh.time().name(),
-                    mesh,
-                    IOobject::MUST_READ,
-                    IOobject::AUTO_WRITE
-                ),
-                mesh
-            )
-        );
-    }
-}
-
-
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
 Foam::autoPtr<Foam::ubPsiMulticomponentThermo>
@@ -88,32 +53,7 @@ Foam::ubPsiMulticomponentThermo::New
 Foam::ubPsiMulticomponentThermo::~ubPsiMulticomponentThermo()
 {}
 
-
-Foam::ubPsiMulticomponentThermo::implementation::~implementation()
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-const Foam::speciesTable&
-Foam::ubPsiMulticomponentThermo::implementation::species() const
-{
-    return species_;
-}
-
-
-Foam::PtrList<Foam::volScalarField>&
-Foam::ubPsiMulticomponentThermo::implementation::Y()
-{
-    return Y_;
-}
-
-
-const Foam::PtrList<Foam::volScalarField>&
-Foam::ubPsiMulticomponentThermo::implementation::Y() const
-{
-    return Y_;
-}
 
 
 // ************************************************************************* //

@@ -86,11 +86,6 @@ public:
         uHomogeneousMixture(const uHomogeneousMixture<ThermoType>&) = delete;
 
 
-    //- Destructor
-    virtual ~uHomogeneousMixture()
-    {}
-
-
     // Member Functions
 
         //- Return the instantiated type name
@@ -105,31 +100,15 @@ public:
             return wordList();
         }
 
+        inline const ThermoType& specieThermo(const label speciei) const
+        {
+            return reactants_;
+        }
+
         //- Return the fuel-oxidant equivalence ratio
         scalar Phi(const scalarFieldListSlice& Y) const
         {
             return Phi_;
-        }
-
-        //- Return the mixture-fraction
-        scalar ft(const scalarFieldListSlice& Y) const
-        {
-            NotImplemented;
-            return 0;
-        }
-
-        //- Return the fuel mass-fraction
-        scalar fu(const scalarFieldListSlice& Y) const
-        {
-            NotImplemented;
-            return 0;
-        }
-
-        //- Return the exhaust gas recirculation mixture-fraction
-        scalar egr(const scalarFieldListSlice& Y) const
-        {
-            NotImplemented;
-            return 0;
         }
 
         void reset

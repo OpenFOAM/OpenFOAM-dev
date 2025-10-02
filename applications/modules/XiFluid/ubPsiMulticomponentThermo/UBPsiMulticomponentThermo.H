@@ -78,15 +78,6 @@ public:
             //- Return the fuel-oxidant equivalence ratio
             virtual tmp<volScalarField> Phi() const;
 
-            //- Return the mixture-fraction
-            virtual tmp<volScalarField> ft() const;
-
-            //- Return the fuel mass-fraction
-            virtual tmp<volScalarField> fu() const;
-
-            //- Return the exhaust gas recirculation mixture-fraction
-            virtual tmp<volScalarField> egr() const;
-
             //- Reset the mixture to an unburnt state and update EGR
             virtual void reset
             (

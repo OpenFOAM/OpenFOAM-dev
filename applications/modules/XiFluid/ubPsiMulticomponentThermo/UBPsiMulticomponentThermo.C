@@ -63,45 +63,6 @@ Foam::UBPsiMulticomponentThermo<BaseThermo>::Phi() const
 
 
 template<class BaseThermo>
-Foam::tmp<Foam::volScalarField>
-Foam::UBPsiMulticomponentThermo<BaseThermo>::ft() const
-{
-    return this->volScalarFieldMixtureProperty
-    (
-        "ft",
-        dimless,
-        &BaseThermo::mixtureType::ft
-    );
-}
-
-
-template<class BaseThermo>
-Foam::tmp<Foam::volScalarField>
-Foam::UBPsiMulticomponentThermo<BaseThermo>::fu() const
-{
-    return this->volScalarFieldMixtureProperty
-    (
-        "fu",
-        dimless,
-        &BaseThermo::mixtureType::fu
-    );
-}
-
-
-template<class BaseThermo>
-Foam::tmp<Foam::volScalarField>
-Foam::UBPsiMulticomponentThermo<BaseThermo>::egr() const
-{
-    return this->volScalarFieldMixtureProperty
-    (
-        "egr",
-        dimless,
-        &BaseThermo::mixtureType::egr
-    );
-}
-
-
-template<class BaseThermo>
 void Foam::UBPsiMulticomponentThermo<BaseThermo>::reset
 (
     volScalarField& b,

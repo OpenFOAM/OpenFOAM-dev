@@ -120,11 +120,6 @@ public:
         ) = delete;
 
 
-    //- Destructor
-    virtual ~uInhomogeneousEGRMixture()
-    {}
-
-
     // Member Functions
 
         //- Return the instantiated type name
@@ -139,26 +134,10 @@ public:
             return {"fu", "egr"};
         }
 
+        const ThermoType& specieThermo(const label speciei) const;
+
         //- Return the fuel-oxidant equivalence ratio
         scalar Phi(const scalarFieldListSlice& Y) const;
-
-        //- Return the total fuel mass-fraction (mixture-fraction)
-        //  in the unburnt mixture
-        scalar ft(const scalarFieldListSlice& Y) const;
-
-        //- Return the fuel mass-fraction
-        scalar fu(const scalarFieldListSlice& Y) const
-        {
-            NotImplemented;
-            return 0;
-        }
-
-        //- Return the exhaust gas recirculation mixture-fraction
-        scalar egr(const scalarFieldListSlice& Y) const
-        {
-            NotImplemented;
-            return 0;
-        }
 
         //- Return the mixture for thermodynamic properties
         const thermoMixtureType& thermoMixture

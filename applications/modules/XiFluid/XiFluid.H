@@ -240,7 +240,7 @@ protected:
             const fvScalarMatrix& source
         );
 
-        //- Solve for a unburnt gas property
+        //- Solve for a unburnt gas specie
         void uSolve
         (
             volScalarField& fuu,
@@ -249,37 +249,13 @@ protected:
             const fvScalarMatrix& source
         );
 
-        //- Solve for a burnt gas property
+        //- Solve for a burnt gas specie
         void bSolve
         (
             volScalarField& fb,
             const volScalarField::Internal& cStab,
             const surfaceScalarField& phic,
             const fvScalarMatrix& source
-        );
-
-        //- Solve the unburnt fuel equation
-        void fuuSolve
-        (
-            const volScalarField::Internal& bStab,
-            const surfaceScalarField& phib,
-            const volScalarField::Internal& bSource
-        );
-
-        //- Solve the unburnt exhaust gas re-circulation equation
-        void egruSolve
-        (
-            const volScalarField::Internal& bStab,
-            const surfaceScalarField& phib,
-            const volScalarField::Internal& bSource
-        );
-
-        //- Solve the burnt mixture-fraction equation
-        void ftbSolve
-        (
-            const volScalarField::Internal& cStab,
-            const surfaceScalarField& phic,
-            const volScalarField::Internal& bSource
         );
 
         //- Solve the unburnt enthalpy equation

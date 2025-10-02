@@ -45,6 +45,32 @@ Foam::uInhomogeneousEGRMixture<ThermoType>::uInhomogeneousEGRMixture
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class ThermoType>
+const ThermoType& Foam::uInhomogeneousEGRMixture<ThermoType>::specieThermo
+(
+    const label speciei
+) const
+{
+    switch (speciei)
+    {
+        case FU:
+            return fuel_;
+            break;
+
+        case EGR:
+            return products_;
+            break;
+
+        default:
+            FatalErrorInFunction
+                << "Cannot return specieThermo for specie " << speciei
+                << exit(FatalError);
+            return products_;
+            break;
+    }
+}
+
+
+template<class ThermoType>
 Foam::scalar Foam::uInhomogeneousEGRMixture<ThermoType>::Phi
 (
     const scalarFieldListSlice& Y
@@ -52,16 +78,6 @@ Foam::scalar Foam::uInhomogeneousEGRMixture<ThermoType>::Phi
 {
     const scalar ft = Y[FU] + Y[EGR]/(stoicRatio_ + 1);
     return stoicRatio_*ft/max(1 - ft, small);
-}
-
-
-template<class ThermoType>
-Foam::scalar Foam::uInhomogeneousEGRMixture<ThermoType>::ft
-(
-    const scalarFieldListSlice& Y
-) const
-{
-    return Y[FU] + Y[EGR]/(stoicRatio_ + 1);
 }
 
 

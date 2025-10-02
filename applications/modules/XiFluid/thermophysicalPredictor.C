@@ -302,15 +302,23 @@ void Foam::solvers::XiFluid::uSolve
     const volScalarField::Internal& bSource
 )
 {
-    if (uThermo.containsSpecie("fu"))
-    {
-        fuuSolve(bStab, phib, bSource);
+    PtrList<volScalarField>& Y = thermo_.uThermo().Y();
 
-        if (uThermo.containsSpecie("egr"))
+    forAll(Y, i)
+    {
+        volScalarField& Yi = Y[i];
+
+        if (uThermo.solveSpecie(i))
         {
-            egruSolve(bStab, phib, bSource);
+            uSolve(Yi, bStab, phib, fvm::Sp(bSource, Yi));
+        }
+        else
+        {
+            Yi.correctBoundaryConditions();
         }
     }
+
+    thermo_.uThermo().normaliseY();
 
     HuSolve(bStab, phib, bSource);
 }
@@ -323,10 +331,24 @@ void Foam::solvers::XiFluid::bSolve
     const volScalarField::Internal& bSource
 )
 {
-    if (uThermo.containsSpecie("fu"))
+    PtrList<volScalarField>& Y = thermo_.bThermo().Y();
+
+    forAll(Y, i)
     {
-        ftbSolve(cStab, phic, bSource);
+        volScalarField& Yi = Y[i];
+
+        if (bThermo.solveSpecie(i))
+        {
+            //***HGW uThermo.Y(0) is the prompt bThermo.Y(0)
+            bSolve(Yi, cStab, phic, fvm::Su(-bSource*uThermo.Y(0)(), Yi));
+        }
+        else
+        {
+            Yi.correctBoundaryConditions();
+        }
     }
+
+    thermo_.bThermo().normaliseY();
 
     HbSolve(cStab, phic, bSource);
 }
@@ -417,42 +439,6 @@ void Foam::solvers::XiFluid::bSolve
 {
     const volScalarField Db("Db", rho*momentumTransport->nut() + bThermo.mu());
     ubSolve(fb, c, cStab, phic, Db, source);
-}
-
-
-void Foam::solvers::XiFluid::fuuSolve
-(
-    const volScalarField::Internal& bStab,
-    const surfaceScalarField& phib,
-    const volScalarField::Internal& bSource
-)
-{
-    volScalarField& fuu = thermo_.uThermo().Y("fu");
-    uSolve(fuu, bStab, phib, fvm::Sp(bSource, fuu));
-}
-
-
-void Foam::solvers::XiFluid::egruSolve
-(
-    const volScalarField::Internal& bStab,
-    const surfaceScalarField& phib,
-    const volScalarField::Internal& bSource
-)
-{
-    volScalarField& egru = thermo_.uThermo().Y("egr");
-    uSolve(egru, bStab, phib, fvm::Sp(bSource, egru));
-}
-
-
-void Foam::solvers::XiFluid::ftbSolve
-(
-    const volScalarField::Internal& cStab,
-    const surfaceScalarField& phic,
-    const volScalarField::Internal& bSource
-)
-{
-    volScalarField& ftb = thermo_.bThermo().Y("ft");
-    bSolve(ftb, cStab, phic, fvm::Su(-bSource*uThermo.ft()(), ftb));
 }
 
 
@@ -562,7 +548,8 @@ void Foam::solvers::XiFluid::thermophysicalPredictor()
 
         if (uThermo.containsSpecie("fu"))
         {
-            thermo_.bThermo().Y("ft") = uThermo.ft();
+            //***HGW uThermo.Y("fu") is the prompt bThermo.Y("ft")
+            thermo_.bThermo().Y("ft") = uThermo.Y("fu");
         }
 
         thermo_.bThermo().he() = uThermo.ha() - bThermo.hf();

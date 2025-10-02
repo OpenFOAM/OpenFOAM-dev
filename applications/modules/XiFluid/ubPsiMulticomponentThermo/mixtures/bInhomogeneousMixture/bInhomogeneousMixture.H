@@ -112,11 +112,6 @@ public:
         ) = delete;
 
 
-    //- Destructor
-    virtual ~bInhomogeneousMixture()
-    {}
-
-
     // Member Functions
 
         //- Return the instantiated type name
@@ -131,24 +126,20 @@ public:
             return {"ft"};
         }
 
+        inline const ThermoType& specieThermo(const label speciei) const
+        {
+            FatalErrorInFunction
+                << "Cannot return specieThermo for specie " << speciei << " ft "
+                << exit(FatalError);
+            return products_;
+        }
+
         //- Return the fuel-oxidant equivalence ratio
         scalar Phi(const scalarFieldListSlice& Y) const
         {
             NotImplemented;
             return 0;
         }
-
-        //- Return the mixture-fraction
-        scalar ft(const scalarFieldListSlice& Y) const
-        {
-            return Y[FT];
-        }
-
-        //- Return the fuel mass-fraction
-        scalar fu(const scalarFieldListSlice& Y) const;
-
-        //- Return the exhaust gas recirculation mixture-fraction
-        scalar egr(const scalarFieldListSlice& Y) const;
 
         void reset
         (

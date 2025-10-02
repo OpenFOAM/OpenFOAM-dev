@@ -69,30 +69,6 @@ const ThermoType& Foam::bInhomogeneousMixture<ThermoType>::mixture
 
 
 template<class ThermoType>
-Foam::scalar Foam::bInhomogeneousMixture<ThermoType>::fu
-(
-    const scalarFieldListSlice& Y
-) const
-{
-    const scalar ft = Y[FT];
-    return max(ft - (scalar(1) - ft)/stoicRatio_, scalar(0));
-}
-
-
-template<class ThermoType>
-Foam::scalar Foam::bInhomogeneousMixture<ThermoType>::egr
-(
-    const scalarFieldListSlice& Y
-) const
-{
-    const scalar ft = Y[FT];
-    const scalar fu = max(ft - (scalar(1) - ft)/stoicRatio_, scalar(0));
-    const scalar ox = 1 - ft - (ft - fu)*stoicRatio_;
-    return 1 - fu - ox;
-}
-
-
-template<class ThermoType>
 const typename Foam::bInhomogeneousMixture<ThermoType>::thermoMixtureType&
 Foam::bInhomogeneousMixture<ThermoType>::thermoMixture
 (
