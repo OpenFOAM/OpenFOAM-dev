@@ -105,7 +105,7 @@ Foam::LESModel<BasicMomentumTransportModel>::New
     const viscosity& viscosity
 )
 {
-    const IOdictionary modelDict
+    const IOdictionary dict
     (
         momentumTransportModel::readModelDict
         (
@@ -114,14 +114,17 @@ Foam::LESModel<BasicMomentumTransportModel>::New
         )
     );
 
-    const word modelType =
-        modelDict.subDict("LES").lookupBackwardsCompatible<word>
-        (
-            {"model", "LESModel"}
-        );
+    const dictionary& LESdict(dict.subDict("LES"));
+
+    const word modelType = LESdict.lookupBackwardsCompatible<word>
+    (
+        {"model", "LESModel"}
+    );
 
     Info<< indent
         << "Selecting LES turbulence model " << modelType << endl;
+
+    libs.open(LESdict, "libs", dictionaryConstructorTablePtr_);
 
     typename dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(modelType);

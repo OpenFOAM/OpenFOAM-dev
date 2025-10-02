@@ -95,7 +95,7 @@ Foam::RASModel<BasicMomentumTransportModel>::New
     const viscosity& viscosity
 )
 {
-    const IOdictionary modelDict
+    const IOdictionary dict
     (
         momentumTransportModel::readModelDict
         (
@@ -104,14 +104,17 @@ Foam::RASModel<BasicMomentumTransportModel>::New
         )
     );
 
-    const word modelType =
-        modelDict.subDict("RAS").lookupBackwardsCompatible<word>
-        (
-            {"model", "RASModel"}
-        );
+    const dictionary& RASdict(dict.subDict("RAS"));
+
+    const word modelType = RASdict.lookupBackwardsCompatible<word>
+    (
+        {"model", "RASModel"}
+    );
 
     Info<< indent
         << "Selecting RAS turbulence model " << modelType << endl;
+
+    libs.open(RASdict, "libs", dictionaryConstructorTablePtr_);
 
     typename dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(modelType);

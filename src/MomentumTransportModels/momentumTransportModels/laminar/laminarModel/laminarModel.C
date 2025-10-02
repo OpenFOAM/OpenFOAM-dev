@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,7 +71,7 @@ Foam::laminarModel<BasicMomentumTransportModel>::New
     const viscosity& viscosity
 )
 {
-    const IOdictionary modelDict
+    const IOdictionary dict
     (
         momentumTransportModel::readModelDict
         (
@@ -80,16 +80,19 @@ Foam::laminarModel<BasicMomentumTransportModel>::New
         )
     );
 
-    if (modelDict.found("laminar"))
+    if (dict.found("laminar"))
     {
-        const word modelType =
-            modelDict.subDict("laminar").lookupBackwardsCompatible<word>
-            (
-                {"model", "laminarModel"}
-            );
+        const dictionary& laminarDict(dict.subDict("laminar"));
+
+        const word modelType = laminarDict.lookupBackwardsCompatible<word>
+        (
+            {"model", "laminarModel"}
+        );
 
         Info<< indent
             << "Selecting laminar stress model " << modelType << endl;
+
+        libs.open(laminarDict, "libs", dictionaryConstructorTablePtr_);
 
         typename dictionaryConstructorTable::iterator cstrIter =
             dictionaryConstructorTablePtr_->find(modelType);
