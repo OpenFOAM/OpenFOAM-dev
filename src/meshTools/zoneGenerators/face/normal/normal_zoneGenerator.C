@@ -25,7 +25,6 @@ License
 
 #include "normal_zoneGenerator.H"
 #include "polyMesh.H"
-#include "syncTools.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //

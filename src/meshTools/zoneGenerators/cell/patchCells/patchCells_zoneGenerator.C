@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "patch_zoneGenerator.H"
+#include "patchCells_zoneGenerator.H"
 #include "polyMesh.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -33,11 +33,11 @@ namespace Foam
 {
     namespace zoneGenerators
     {
-        defineTypeNameAndDebug(patch, 0);
+        defineTypeNameAndDebug(patchCells, 0);
         addToRunTimeSelectionTable
         (
             zoneGenerator,
-            patch,
+            patchCells,
             dictionary
         );
     }
@@ -45,7 +45,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::zoneGenerators::patch::patch
+Foam::zoneGenerators::patchCells::patchCells
 (
     const word& name,
     const polyMesh& mesh,
@@ -59,42 +59,35 @@ Foam::zoneGenerators::patch::patch
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::zoneGenerators::patch::~patch()
+Foam::zoneGenerators::patchCells::~patchCells()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::zoneSet Foam::zoneGenerators::patch::generate() const
+Foam::zoneSet Foam::zoneGenerators::patchCells::generate() const
 {
-    boolList selectedFaces(mesh_.nFaces(), false);
+    boolList selectedCells(mesh_.nCells(), false);
 
     forAllConstIter(labelHashSet, patchSet_, iter)
     {
         const label patchi = iter.key();
         const polyPatch& pp = mesh_.boundaryMesh()[patchi];
+        const labelList& patchCells(pp.faceCells());
 
-        for
-        (
-            label facei = pp.start();
-            facei < pp.start() + pp.size();
-            facei++
-        )
+        forAll(patchCells, facei)
         {
-            selectedFaces[facei] = true;
+            selectedCells[patchCells[facei]] = true;
         }
     }
 
-    const labelList faceIndices(indices(selectedFaces));
-
     return zoneSet
     (
-        new faceZone
+        new cellZone
         (
             zoneName_,
-            faceIndices,
-            boolList(faceIndices.size(), false),
-            mesh_.faceZones(),
+            indices(selectedCells),
+            mesh_.cellZones(),
             moveUpdate_,
             true
         )
