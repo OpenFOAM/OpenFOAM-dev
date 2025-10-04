@@ -31,7 +31,7 @@ Description
 Usage
     \table
         Property     | Description             | Required | Default value
-        type         | Type: face              | yes      |
+        type         | Type: patchCells        | yes      |
         name         | Name of the zone        | no       | zoneGenerator name
         patch        | Name of patch           | no       |
         patches      | List of patch names     | no       | ()
