@@ -49,6 +49,7 @@ Usage
         Qs           | Optional heat source [W]          | no | 0
         qrNbr        | name of the radiative flux in the nbr region | no | none
         qr           | name of the radiative flux in this region | no | none
+        qrRelaxation | Relaxation factor for radiative field | no | 1
     \endtable
 
     Example of the boundary condition specification:
@@ -106,6 +107,12 @@ class coupledTemperatureFvPatchScalarField
 
         //- Name of the radiative heat flux in local region
         const word qrName_;
+
+        //- Relaxation factor for qr
+        scalar qrRelax_;
+
+        //- Cache qr for relaxation
+        mutable scalarField qrPrevious_;
 
         //- Thickness of wall layers
         scalarList thicknessLayers_;

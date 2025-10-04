@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -139,6 +139,15 @@ coupledTemperatureFvPatchScalarField
     TnbrName_(dict.lookupOrDefault<word>("Tnbr", "T")),
     qrNbrName_(dict.lookupOrDefault<word>("qrNbr", "none")),
     qrName_(dict.lookupOrDefault<word>("qr", "none")),
+    qrRelax_(dict.lookupOrDefault<scalar>("qrRelaxation", unitFraction, 1)),
+    qrPrevious_
+    (
+        qrName_ != word::null
+      ? dict.found("qrPrevious")
+      ? scalarField("qrPrevious", dimPower/dimArea, dict, p.size())
+      : scalarField(p.size(), 0)
+      : scalarField()
+    ),
     thicknessLayers_(0),
     kappaLayers_(0),
     qs_(),
@@ -229,6 +238,13 @@ coupledTemperatureFvPatchScalarField
     TnbrName_(psf.TnbrName_),
     qrNbrName_(psf.qrNbrName_),
     qrName_(psf.qrName_),
+    qrRelax_(psf.qrRelax_),
+    qrPrevious_
+    (
+        qrName_ != word::null
+      ? mapper(psf.qrPrevious_)()
+      : scalarField()
+    ),
     thicknessLayers_(psf.thicknessLayers_),
     kappaLayers_(psf.kappaLayers_),
     qs_(psf.qs_.valid() ? new scalarField(p.size()) : nullptr),
@@ -250,6 +266,8 @@ coupledTemperatureFvPatchScalarField
     TnbrName_(psf.TnbrName_),
     qrNbrName_(psf.qrNbrName_),
     qrName_(psf.qrName_),
+    qrRelax_(psf.qrRelax_),
+    qrPrevious_(psf.qrPrevious_),
     thicknessLayers_(psf.thicknessLayers_),
     kappaLayers_(psf.kappaLayers_),
     qs_(psf.qs_, false),
@@ -344,11 +362,6 @@ void Foam::coupledTemperatureFvPatchScalarField::updateCoeffs()
 
     scalarField sumq(size(), 0);
 
-    if (qs_.valid())
-    {
-        sumq += qs_();
-    }
-
     if (qrName_ != "none")
     {
         sumq += patch().lookupPatchField<volScalarField, scalar>(qrName_);
@@ -360,6 +373,17 @@ void Foam::coupledTemperatureFvPatchScalarField::updateCoeffs()
         (
             patchNbr.lookupPatchField<volScalarField, scalar>(qrNbrName_)
         );
+    }
+
+    if (qrName_ != "none" || qrNbrName_ != "none")
+    {
+        sumq = qrRelax_*sumq + (1 - qrRelax_)*qrPrevious_;
+        qrPrevious_ = sumq;
+    }
+
+    if (qs_.valid())
+    {
+        sumq += qs_();
     }
 
     tmp<scalarField> kappa;
@@ -449,7 +473,13 @@ void Foam::coupledTemperatureFvPatchScalarField::write
 
     writeEntryIfDifferent<word>(os, "Tnbr", "T", TnbrName_);
     writeEntryIfDifferent<word>(os, "qrNbr", "none", qrNbrName_);
-    writeEntryIfDifferent<word>(os, "qr", "none", qrName_);
+
+    if (qrName_ != "none")
+    {
+        writeEntry(os, "qr", qrName_);
+        writeEntry(os, "qrRelaxation", qrRelax_);
+        writeEntry(os, "qrPrevious", qrPrevious_);
+    }
 
     if (Qs_ != 0)
     {
