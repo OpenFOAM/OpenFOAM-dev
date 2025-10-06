@@ -43,6 +43,7 @@ XiModels/XiGModels/instability/instability_XiGModel.C
 
 fvModels/ignition/XiCorrModels/XiCorrModel/XiCorrModel.C
 fvModels/ignition/XiCorrModels/XiCorrModel/XiCorrModelNew.C
+fvModels/ignition/XiCorrModels/none/noneXiCorr.C
 fvModels/ignition/XiCorrModels/planar/planarXiCorr.C
 fvModels/ignition/XiCorrModels/cylindrical/cylindricalXiCorr.C
 fvModels/ignition/XiCorrModels/spherical/sphericalXiCorr.C

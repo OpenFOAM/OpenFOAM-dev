@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,49 +24,36 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "noneXiCorr.H"
+#include "addToRunTimeSelectionTable.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-Foam::autoPtr<Foam::XiCorrModel> Foam::XiCorrModel::New
+namespace Foam
+{
+namespace XiCorrModels
+{
+    defineTypeNameAndDebug(none, 0);
+    addToRunTimeSelectionTable(XiCorrModel, none, dictionary);
+}
+}
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::XiCorrModels::none::none
 (
     const fvMesh& mesh,
     const dictionary& dict
 )
-{
-    if (!dict.isDict("XiCorr"))
-    {
-        return autoPtr<XiCorrModel>(new XiCorrModels::none(mesh, dict));
-    }
+:
+    XiCorrModel(mesh, dict)
+{}
 
-    const dictionary& XiCorrDict = dict.subDict("XiCorr");
 
-    const word type(XiCorrDict.lookup("type"));
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-    Info<< "Selecting flame-wrinkling correction type "
-        << type << endl;
-
-    dictionaryConstructorTable::iterator cstrIter =
-        dictionaryConstructorTablePtr_->find(type);
-
-    if (cstrIter == dictionaryConstructorTablePtr_->end())
-    {
-        FatalIOErrorInFunction(XiCorrDict)
-            << "Unknown XiCorrModel "
-            << type << nl << nl
-            << "Valid XiCorrModels are : " << endl
-            << dictionaryConstructorTablePtr_->sortedToc()
-            << exit(FatalIOError);
-    }
-
-    return autoPtr<XiCorrModel>
-    (
-        cstrIter()
-        (
-            mesh,
-            XiCorrDict.optionalSubDict(type + "Coeffs")
-        )
-    );
-}
+Foam::XiCorrModels::none::~none()
+{}
 
 
 // ************************************************************************* //
