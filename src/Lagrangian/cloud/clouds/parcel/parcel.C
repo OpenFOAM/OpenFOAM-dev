@@ -108,11 +108,11 @@ bool Foam::clouds::parcel::reCalculateModified()
         }
     }
 
-    result = Lagrangianm::initDdt(dimVolume, U, dUdt) || result;
+    result = Lagrangianm::initDdt(dimMass, U, dUdt) || result;
 
     if (context != contextType::functionObject)
     {
-        result = Lagrangianm::initDdt(dimVolume, Uc(subMesh)) || result;
+        result = Lagrangianm::initDdt(dimMass, Uc(subMesh)) || result;
     }
 
     return result;
