@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -151,7 +151,7 @@ flowRateInletVelocityFvPatchVectorField
     rhoInlet_(dict.lookupOrDefault<scalar>("rhoInlet", dimDensity, -vGreat)),
     alphaName_(dict.lookupOrDefault<word>("alpha", word::null)),
     y_(),
-    area_(NaN)
+    area_(-vGreat)
 {
     if (dict.found("meanVelocity"))
     {
@@ -205,11 +205,6 @@ flowRateInletVelocityFvPatchVectorField
         profile_ = Function1<scalar>::New("profile", dimless, dimless, dict);
     }
 
-    if (canEvaluate())
-    {
-        setWallDist();
-    }
-
     if (!canEvaluate() || dict.found("value"))
     {
         fvPatchField<vector>::operator=
@@ -241,13 +236,8 @@ flowRateInletVelocityFvPatchVectorField
     rhoName_(ptf.rhoName_),
     rhoInlet_(ptf.rhoInlet_),
     alphaName_(ptf.alphaName_),
-    y_
-    (
-        profile_.valid() && canEvaluate()
-      ? mapper(ptf.y_)
-      : tmp<scalarField>(new scalarField())
-    ),
-    area_(NaN)
+    y_(),
+    area_(-vGreat)
 {}
 
 
@@ -281,13 +271,8 @@ void Foam::flowRateInletVelocityFvPatchVectorField::map
 {
     fixedValueFvPatchVectorField::map(ptf, mapper);
 
-    const flowRateInletVelocityFvPatchVectorField& tiptf =
-        refCast<const flowRateInletVelocityFvPatchVectorField>(ptf);
-
-    if (profile_.valid() && canEvaluate())
-    {
-        mapper(y_, tiptf.y_);
-    }
+    y_.clear();
+    area_ = -vGreat;
 }
 
 
@@ -298,13 +283,8 @@ void Foam::flowRateInletVelocityFvPatchVectorField::reset
 {
     fixedValueFvPatchVectorField::reset(ptf);
 
-    const flowRateInletVelocityFvPatchVectorField& tiptf =
-        refCast<const flowRateInletVelocityFvPatchVectorField>(ptf);
-
-    if (profile_.valid() && canEvaluate())
-    {
-        y_.reset(tiptf.y_);
-    }
+    y_.clear();
+    area_ = -vGreat;
 }
 
 
@@ -320,6 +300,11 @@ void Foam::flowRateInletVelocityFvPatchVectorField::updateCoeffs()
         FatalErrorInFunction
             << "Cannot evaluate flow rate on a non-parallel processor case"
             << exit(FatalError);
+    }
+
+    if (area_ < 0)
+    {
+        setWallDist();
     }
 
     if (alphaName_ != word::null)
