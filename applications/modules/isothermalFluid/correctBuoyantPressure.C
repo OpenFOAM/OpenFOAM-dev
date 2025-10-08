@@ -148,7 +148,7 @@ void Foam::solvers::isothermalFluid::correctBuoyantPressure()
 
         while (pimple.correctNonOrthogonal())
         {
-            tp_rghEqn = p_rghDDtEqn - fvm::laplacian(rhorAAtUf, p);
+            tp_rghEqn = p_rghDDtEqn - fvm::laplacian(rhorAAtUf, p_rgh);
             fvScalarMatrix& p_rghEqn = tp_rghEqn.ref();
 
             // Relax the pressure equation to ensure diagonal-dominance
