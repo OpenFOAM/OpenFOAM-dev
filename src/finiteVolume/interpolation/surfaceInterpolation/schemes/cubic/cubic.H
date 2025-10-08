@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ SourceFiles
 #define cubic_H
 
 #include "linear.H"
-#include "gaussGrad.H"
+#include "gradScheme.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -53,6 +53,10 @@ class cubic
 :
     public linear<Type>
 {
+    // Private Data
+
+        word gradSchemeName_;
+
 
 public:
 
@@ -65,17 +69,19 @@ public:
         //- Construct from mesh
         cubic(const fvMesh& mesh)
         :
-            linear<Type>(mesh)
+            linear<Type>(mesh),
+            gradSchemeName_("grad")
         {}
 
         //- Construct from mesh and Istream
         cubic
         (
             const fvMesh& mesh,
-            Istream&
+            Istream& schemeData
         )
         :
-            linear<Type>(mesh)
+            linear<Type>(mesh),
+            gradSchemeName_(schemeData)
         {}
 
         //- Construct from mesh, faceFlux and Istream
@@ -83,10 +89,11 @@ public:
         (
             const fvMesh& mesh,
             const surfaceScalarField&,
-            Istream&
+            Istream& schemeData
         )
         :
-            linear<Type>(mesh)
+            linear<Type>(mesh),
+            gradSchemeName_(schemeData)
         {}
 
         //- Disallow default bitwise copy construction
@@ -118,15 +125,15 @@ public:
                 lambda*(scalar(1) - lambda*(scalar(3) - scalar(2)*lambda))
             );
 
-            const surfaceScalarField kVecP(sqr(scalar(1) - lambda)*lambda);
-            const surfaceScalarField kVecN(sqr(lambda)*(lambda - scalar(1)));
+            const surfaceScalarField kVecN(-sqr(scalar(1) - lambda)*lambda);
+            const surfaceScalarField kVecP(sqr(lambda)*(scalar(1) - lambda));
 
             tmp<SurfaceField<Type>> tsfCorr
             (
                 SurfaceField<Type>::New
                 (
                     "cubic::correction(" + vf.name() +')',
-                    surfaceInterpolationScheme<Type>::interpolate(vf, kSc, -kSc)
+                    surfaceInterpolationScheme<Type>::interpolate(vf, -kSc, kSc)
                 )
             );
             SurfaceField<Type>& sfCorr =
@@ -148,13 +155,16 @@ public:
                             >::type
                         >::interpolate
                         (
-                            fv::gaussGrad
-                            <typename pTraits<Type>::cmptType>(mesh)
-                           .grad(vf.component(cmpt)),
+                            fv::gradScheme<typename pTraits<Type>::cmptType>::
+                            New
+                            (
+                                mesh,
+                                mesh.schemes().grad(gradSchemeName_)
+                            )().grad(vf.component(cmpt)),
                             kVecP,
                             kVecN
-                        ) & mesh.Sf()
-                    )/mesh.magSf()/mesh.surfaceInterpolation::deltaCoeffs()
+                        ) & mesh.delta()
+                    )
                 );
             }
 
