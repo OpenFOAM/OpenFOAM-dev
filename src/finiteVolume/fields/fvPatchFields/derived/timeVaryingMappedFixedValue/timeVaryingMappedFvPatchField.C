@@ -410,8 +410,11 @@ void Foam::timeVaryingMappedFvPatchField<Type>::reset
     const timeVaryingMappedFvPatchField<Type>& tiptf
 )
 {
-    startSampledValues_.reset(tiptf.startSampledValues_);
-    endSampledValues_.reset(tiptf.endSampledValues_);
+    if (this != &tiptf)
+    {
+        startSampledValues_.reset(tiptf.startSampledValues_);
+        endSampledValues_.reset(tiptf.endSampledValues_);
+    }
 
     // Clear interpolator
     mapperPtr_.clear();
