@@ -4129,7 +4129,6 @@ void Foam::hexRef8::storeData
 
 void Foam::hexRef8::topoChange(const polyTopoChangeMap& map)
 {
-    InfoInFunction << endl;
     Map<label> dummyMap(0);
 
     topoChange(map, dummyMap, dummyMap, dummyMap);
