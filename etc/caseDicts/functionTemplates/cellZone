@@ -1,0 +1,79 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Writes a cellZone with cells whose values of k fall within the top 10% of
+    the range of k.
+
+\*---------------------------------------------------------------------------*/
+
+libs     ("libutilityFunctionObjects.so");
+type     coded;
+
+writeControl writeTime;
+
+// Header files for classes and functions
+// Example:
+// #include "fvc.H"
+codeInclude
+#{
+#};
+
+// Header file paths for Make/options, e.g. for momentum transport models
+// Example:
+// -I$(LIB_SRC)/MomentumTransportModels/incompressible/lnInclude
+codeOptions
+#{
+#};
+
+// Linked libraries for Make/options, e.g. for momentum transport models
+// Not usually required since libraries are already linked to the solver
+// Example:
+// -lincompressibleMomentumTransportModels
+codeLibs
+#{
+#};
+
+codeFields
+#{
+    // Read fields when executing function objects with "foamPostProcess"
+    fields.append("k");
+#};
+
+codeWrite
+#{
+    // Lookup field from the objectRegistry, e.g. k
+    const volScalarField& k = mesh().lookupObject<volScalarField>("k");
+
+    // Calculate the minimum and maximum k values
+    const scalar mink = min(k).value();
+    const scalar maxk = max(k).value();
+
+    // Fraction of the range of k
+    const scalar f = 0.1;
+
+    mesh().cellZones().append
+    (
+        "gradKZone",
+        selectIndices
+        (
+            k,
+            [&](const scalar k)
+            {
+                return k > f*mink + (1.0 - f)*maxk;
+            }
+        )
+    );
+
+    // Update current time for the cell zones
+    mesh().cellZones().updateTimeInstance();
+
+    // Write the zones
+    mesh().cellZones().write();
+#};
+
+// ************************************************************************* //
