@@ -140,6 +140,8 @@ public:
     // Member Operators
 
         using Zone::operator=;
+
+        cellZone& operator=(const cellZone& cz) = default;
 };
 
 

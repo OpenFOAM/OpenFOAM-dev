@@ -136,6 +136,8 @@ public:
     // Member Operators
 
         using Zone::operator=;
+
+        pointZone& operator=(const pointZone& cz) = default;
 };
 
 
