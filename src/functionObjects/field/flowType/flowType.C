@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,31 +44,67 @@ namespace functionObjects
 }
 }
 
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+Foam::functionObjects::flowType::flowType
+(
+    const word& name,
+    const Time& runTime,
+    const dictionary& dict
+)
+:
+    fvMeshFunctionObject(name, runTime, dict),
+    writeLocalObjects(obr_, false),
+    fieldName_(dict.lookupOrDefault<word>("field", "U")),
+    resultName_
+    (
+        dict.found("result")
+      ? dict.lookup("result")
+      : name
+    )
+{
+    read(dict);
+}
 
-bool Foam::functionObjects::flowType::calc()
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::functionObjects::flowType::~flowType()
+{}
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+bool Foam::functionObjects::flowType::read(const dictionary& dict)
+{
+    fvMeshFunctionObject::read(dict);
+    writeLocalObjects::read(dict);
+
+    resetLocalObjectNames(wordList{resultName_, "magSqrDevGradU"});
+
+    return true;
+}
+
+Foam::wordList Foam::functionObjects::flowType::fields() const
+{
+    return wordList(1, fieldName_);
+}
+
+bool Foam::functionObjects::flowType::execute()
 {
     if (foundObject<volVectorField>(fieldName_))
     {
         const volVectorField& U = lookupObject<volVectorField>(fieldName_);
-        const tmp<volTensorField> tgradU(fvc::grad(U));
-        const volTensorField& gradU = tgradU();
-
-        volScalarField magD(mag(symm(gradU)));
-        volScalarField magOmega (mag(skew(gradU)));
-        dimensionedScalar smallMagD("smallMagD", magD.dimensions(), small);
-
-        const volTensorField SSplusWW
-        (
-            (symm(gradU) & symm(gradU))
-          + (skew(gradU) & skew(gradU))
-        );
+        const volTensorField devGradU(dev(fvc::grad(U)));
 
         store
         (
             resultName_,
-            (magD - magOmega)/(magD + magOmega + smallMagD)
+            -(devGradU && devGradU.T())
+            /max
+            (
+                store("magSqrDevGradU", magSqr(devGradU)),
+                dimensionedScalar(sqr(dimRate), rootVSmall)
+            )
         );
 
         return true;
@@ -81,24 +117,9 @@ bool Foam::functionObjects::flowType::calc()
     }
 }
 
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::functionObjects::flowType::flowType
-(
-    const word& name,
-    const Time& runTime,
-    const dictionary& dict
-)
-:
-    fieldExpression(name, runTime, dict, typeName, "U")
-{}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::functionObjects::flowType::~flowType()
-{}
-
+bool Foam::functionObjects::flowType::write()
+{
+    return writeLocalObjects::write();
+}
 
 // ************************************************************************* //
