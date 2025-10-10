@@ -297,6 +297,14 @@ Foam::LagrangianSubSubField<Type>& Foam::CloudDerivedField<Type>::ref
     const LagrangianSubMesh& subMesh
 ) const
 {
+    // Error if this is the all-mesh
+    if (&subMesh == &subMesh.mesh().subAll())
+    {
+        FatalErrorInFunction
+            << "Non-constant access is not provided to the all-mesh sub-field"
+            << exit(FatalError);
+    }
+
     // Evaluate and store if it doesn't already exist for the sub-mesh
     if (!psiSubSubPtr_.valid() || psiSubSubMeshIndex_ != subMesh.index())
     {

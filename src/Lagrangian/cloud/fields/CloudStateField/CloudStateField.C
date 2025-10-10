@@ -34,6 +34,14 @@ Foam::LagrangianSubSubField<Type>& Foam::CloudStateField<Type>::ref
     const LagrangianSubMesh& subMesh
 )
 {
+    // Error if this is the all-mesh
+    if (&subMesh == &subMesh.mesh().subAll())
+    {
+        FatalErrorInFunction
+            << "Non-constant access is not provided to the all-mesh sub-field"
+            << exit(FatalError);
+    }
+
     // Evaluate and store if it doesn't already exist for the sub-mesh
     if (!psiSubSubPtr_.valid() || psiSubSubMeshIndex_ != subMesh.index())
     {
@@ -53,6 +61,17 @@ void Foam::CloudStateField<Type>::clear()
 }
 
 
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+template<class Type>
+template<class ... Args>
+Foam::CloudStateField<Type>::CloudStateField(const Args& ... args)
+:
+    LagrangianDynamicField<Type>(args ...),
+    psiAllPtr_(this->mesh().subAll().sub(*this).ptr())
+{}
+
+
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Type>
@@ -64,13 +83,29 @@ Foam::CloudStateField<Type>::operator()(const LagrangianMesh&) const
 
 
 template<class Type>
-Foam::tmp<Foam::LagrangianSubSubField<Type>>
+const Foam::LagrangianSubSubField<Type>&
 Foam::CloudStateField<Type>::operator()
 (
     const LagrangianSubMesh& subMesh
 ) const
 {
-    return subMesh.sub(*this);
+    // Update and return the all-mesh field
+    if (&subMesh == &subMesh.mesh().subAll())
+    {
+        psiAllPtr_->UList<Type>::shallowCopy(*this);
+
+        return psiAllPtr_();
+    }
+
+    // Evaluate and store if it doesn't already exist for the sub-mesh
+    if (!psiSubSubPtr_.valid() || psiSubSubMeshIndex_ != subMesh.index())
+    {
+        psiSubSubPtr_.reset(subMesh.sub(*this).ptr());
+
+        psiSubSubMeshIndex_ = subMesh.index();
+    }
+
+    return psiSubSubPtr_();
 }
 
 
@@ -96,7 +131,7 @@ Foam::CloudStateField<Type>::operator()
 {
     if (!model.valid())
     {
-        return subMesh.sub(*this);
+        return tmp<LagrangianSubSubField<Type>>(operator()(subMesh));
     }
     else
     {

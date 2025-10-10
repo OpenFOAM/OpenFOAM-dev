@@ -49,7 +49,10 @@ Foam::functionObjects::cloudNumberFlux::q
 {
     return
         isCloud<clouds::grouped>()
-      ? cloud<clouds::grouped>().number(fraction.mesh())
+      ? tmp<LagrangianSubScalarSubField>
+        (
+            cloud<clouds::grouped>().number(fraction.mesh())
+        )
       : toSubField<scalar, LagrangianSubMesh>
         (
             "1:" + Foam::name(fraction.mesh().group()),

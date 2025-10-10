@@ -62,6 +62,9 @@ private:
 
     // Private Data
 
+        //- The cached Lagrangian sub-all-field
+        mutable autoPtr<LagrangianSubSubField<Type>> psiAllPtr_;
+
         //- The cached Lagrangian sub-field
         mutable autoPtr<LagrangianSubSubField<Type>> psiSubSubPtr_;
 
@@ -73,8 +76,9 @@ public:
 
     // Constructors
 
-        //- Use the base field's constructors
-        using LagrangianDynamicField<Type>::LagrangianDynamicField;
+        //- Forward construction arguments to the base class
+        template<class ... Args>
+        CloudStateField(const Args& ... args);
 
 
     // Member Functions
@@ -95,7 +99,7 @@ public:
         ) const;
 
         //- Access a part of the field
-        tmp<LagrangianSubSubField<Type>> operator()
+        const LagrangianSubSubField<Type>& operator()
         (
             const LagrangianSubMesh& subMesh
         ) const;
