@@ -42,13 +42,13 @@ Description
     or "strength", of vortices whereas \c flowType is normalised to a scale
     between -1 and 1, making it independent of vortex strength.
 
-    The normalisation of flowType provides the advantage that it is much easier
-    to select a value of iso-surface to visualise vortices effectively.
+    The normalisation of \c flowType provides the advantage that it is much
+    easier to select a value of iso-surface to visualise vortices effectively.
     Generally a value of 0.2 (or between 0.05 - 0.2) is recommended.  With \c Q
     and \c Lambda2 the choice of an effective iso-surface value depends on the
     strength of vortices for the specific CFD problem.
 
-    The flowType function object writes an additional \c magSqrDevGradU field
+    The \c flowType function object writes an additional \c magSqrDevGradU field
     corresponding to the denominator in the \c flowType field.  An iso-surface
     can then be coloured by the \c magSqrDevGradU field to indicate the strength
     of the vortices as they move with the flow.
