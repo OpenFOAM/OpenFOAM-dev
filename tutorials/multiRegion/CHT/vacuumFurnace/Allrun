@@ -65,7 +65,7 @@ solveEnergy () {
 }
 
 mode="frozen"
-istest=
+istest=false
 while [ "$#" -gt 0 ]
 do
     case "$1" in
@@ -116,7 +116,7 @@ runApplication -a foamDictionary constant/heater/fvModels \
     -entry heatSource -remove
 
 # Reduce writeInterval
-[ ! $istest ] && \
+$istest || \
     runApplication -a foamDictionary system/controlDict -set "writeInterval=50"
 
 # Calculate cooling
