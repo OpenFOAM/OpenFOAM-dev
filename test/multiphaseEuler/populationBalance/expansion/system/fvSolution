@@ -18,8 +18,7 @@ solvers
 {
     "alpha.*"
     {
-        nAlphaCorr      1;
-        nAlphaSubCycles 2;
+        nSubCycles      2;
     }
 
     bubbles
