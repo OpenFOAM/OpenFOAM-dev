@@ -424,7 +424,7 @@ void Foam::solvers::XiFluid::uSolve
     const fvScalarMatrix& source
 )
 {
-    const volScalarField Du("Du", rho*momentumTransport->nut() + uThermo.mu());
+    const volScalarField Du("Du", rho*(momentumTransport.nut() + uThermo.nu()));
     ubSolve(fu, b, bStab, phib, Du, source);
 }
 
@@ -437,7 +437,7 @@ void Foam::solvers::XiFluid::bSolve
     const fvScalarMatrix& source
 )
 {
-    const volScalarField Db("Db", rho*momentumTransport->nut() + bThermo.mu());
+    const volScalarField Db("Db", rho*(momentumTransport.nut() + bThermo.nu()));
     ubSolve(fb, c, cStab, phic, Db, source);
 }
 
@@ -453,7 +453,7 @@ void Foam::solvers::XiFluid::HuSolve
 
     const volScalarField::Internal rhoByRhou(rho()/uThermo.rho()());
 
-    const volScalarField Du("Du", rho*momentumTransport->nut() + uThermo.mu());
+    const volScalarField Du("Du", rho*(momentumTransport.nut() + uThermo.nu()));
 
     fvScalarMatrix HuEqn
     (
@@ -494,7 +494,7 @@ void Foam::solvers::XiFluid::HbSolve
 
     const volScalarField::Internal rhoByRhob(rho()/bThermo.rho()());
 
-    const volScalarField Db("Db", rho*momentumTransport->nut() + bThermo.mu());
+    const volScalarField Db("Db", rho*(momentumTransport.nut() + bThermo.nu()));
 
     fvScalarMatrix HbEqn
     (

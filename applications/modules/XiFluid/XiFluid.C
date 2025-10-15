@@ -53,7 +53,7 @@ Foam::solvers::XiFluid::XiFluid(fvMesh& mesh)
 
     thermophysicalTransport
     (
-        momentumTransport(),
+        isothermalFluid::momentumTransport(),
         thermo_,
         true
     ),
@@ -90,7 +90,7 @@ Foam::solvers::XiFluid::XiFluid(fvMesh& mesh)
         (
             combustionProperties,
             thermo_.uThermo(),
-            momentumTransport()
+            isothermalFluid::momentumTransport()
         )
     ),
 
@@ -100,10 +100,12 @@ Foam::solvers::XiFluid::XiFluid(fvMesh& mesh)
         (
             combustionProperties,
             thermo_,
-            momentumTransport(),
+            isothermalFluid::momentumTransport(),
             SuModel_->Su()
         )
     ),
+
+    momentumTransport(isothermalFluid::momentumTransport),
 
     thermo(thermo_),
 

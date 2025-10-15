@@ -2,6 +2,8 @@ ubPsiMulticomponentThermo/ubPsiMulticomponentThermo.C
 ubPsiMulticomponentThermo/ubPsiMulticomponentThermos.C
 
 ubPsiThermo/ubPsiThermo.C
+ubPsiThermo/derivedFvPatchFields/ubCoupledTemperature/ubCoupledTemperatureFvPatchScalarField.C
+
 XiFluid.C
 thermophysicalPredictor.C
 
@@ -52,5 +54,7 @@ fvModels/ignition/bXiIgnition/bXiIgnition.C
 fvModels/ignition/bXiIgnited/bXiIgnited.C
 fvModels/ignition/constantbXiIgnition/constantbXiIgnition.C
 fvModels/ignition/multiCycleConstantbXiIgnition/multiCycleConstantbXiIgnition.C
+
+fvModels/ignition/model1/model1.C
 
 LIB = $(FOAM_LIBBIN)/libXiFluidSolver

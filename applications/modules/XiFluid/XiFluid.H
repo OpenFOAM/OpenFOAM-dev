@@ -277,6 +277,8 @@ protected:
 
 public:
 
+        const compressible::momentumTransportModel& momentumTransport;
+
         //- Reference to the fluid thermophysical properties
         const ubPsiThermo& thermo;
 
