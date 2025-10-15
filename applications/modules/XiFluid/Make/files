@@ -55,6 +55,4 @@ fvModels/ignition/bXiIgnited/bXiIgnited.C
 fvModels/ignition/constantbXiIgnition/constantbXiIgnition.C
 fvModels/ignition/multiCycleConstantbXiIgnition/multiCycleConstantbXiIgnition.C
 
-fvModels/ignition/model1/model1.C
-
 LIB = $(FOAM_LIBBIN)/libXiFluidSolver
