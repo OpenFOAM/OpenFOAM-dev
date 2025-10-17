@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -338,7 +338,7 @@ Foam::fvSchemes::fvSchemes(const objectRegistry& obr)
         divSchemes_.name() + ".default",
         tokenList()
     ),
-    gradSchemes_("snGradSchemes", dict()),
+    gradSchemes_("gradSchemes", dict()),
     defaultGradScheme_
     (
         gradSchemes_.name() + ".default",
@@ -350,7 +350,7 @@ Foam::fvSchemes::fvSchemes(const objectRegistry& obr)
         snGradSchemes_.name() + ".default",
         tokenList()
     ),
-    laplacianSchemes_("fluxRequired", dict()),
+    laplacianSchemes_("laplacianSchemes", dict()),
     defaultLaplacianScheme_
     (
         laplacianSchemes_.name() + ".default",
