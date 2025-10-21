@@ -22,21 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::UBPsiMulticomponentThermo
+    Foam::UBRhoFluidMulticomponentThermo
 
 Description
     Thermo implementation based on compressibility with additional unburnt
     thermodynamic state
 
 SourceFiles
-    UBPsiMulticomponentThermo.C
+    UBRhoFluidMulticomponentThermo.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef UBPsiMulticomponentThermo_H
-#define UBPsiMulticomponentThermo_H
+#ifndef UBRhoFluidMulticomponentThermo_H
+#define UBRhoFluidMulticomponentThermo_H
 
-#include "PsiThermo.H"
+#include "RhoFluidThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -44,13 +44,13 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                   Class UBPsiMulticomponentThermo Declaration
+                   Class UBRhoFluidMulticomponentThermo Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BaseThermo>
-class UBPsiMulticomponentThermo
+class UBRhoFluidMulticomponentThermo
 :
-    public PsiThermo<BaseThermo>
+    public RhoFluidThermo<BaseThermo>
 {
 
 public:
@@ -58,17 +58,17 @@ public:
     // Constructors
 
         //- Construct from mesh and phase name
-        UBPsiMulticomponentThermo(const fvMesh&, const word& phaseName);
+        UBRhoFluidMulticomponentThermo(const fvMesh&, const word& phaseName);
 
         //- Disallow default bitwise copy construction
-        UBPsiMulticomponentThermo
+        UBRhoFluidMulticomponentThermo
         (
-            const UBPsiMulticomponentThermo<BaseThermo>&
+            const UBRhoFluidMulticomponentThermo<BaseThermo>&
         ) = delete;
 
 
     //- Destructor
-    virtual ~UBPsiMulticomponentThermo();
+    virtual ~UBRhoFluidMulticomponentThermo();
 
 
     // Member Functions
@@ -94,7 +94,10 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const UBPsiMulticomponentThermo<BaseThermo>&) = delete;
+        void operator=
+        (
+            const UBRhoFluidMulticomponentThermo<BaseThermo>&
+        ) = delete;
 };
 
 
@@ -105,7 +108,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 #ifdef NoRepository
-    #include "UBPsiMulticomponentThermo.C"
+    #include "UBRhoFluidMulticomponentThermo.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

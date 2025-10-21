@@ -121,9 +121,9 @@ See also
 #define XiFluid_H
 
 #include "isothermalFluid.H"
-#include "ubPsiThermo.H"
-#include "RASThermophysicalTransportModel.H"
-#include "unityLewisEddyDiffusivity.H"
+#include "ubRhoThermo.H"
+#include "ubMomentumTransportModel.H"
+#include "PhaseThermophysicalTransportModel.H"
 #include "SuModel.H"
 #include "XiModel.H"
 
@@ -146,22 +146,25 @@ protected:
 
     // Thermophysical properties
 
-        ubPsiThermo& thermo_;
+        ubRhoThermo& thermo_;
+
+
+    // Unburnt and burnt gas momentumTransport
+
+        RASModels::ubMomentumTransportModel uMomentumTransport_;
+        RASModels::ubMomentumTransportModel bMomentumTransport_;
 
 
     // Thermophysical transport
 
-        turbulenceThermophysicalTransportModels::unityLewisEddyDiffusivity
+        typedef PhaseThermophysicalTransportModel
         <
-            RASThermophysicalTransportModel
-            <
-                ThermophysicalTransportModel
-                <
-                    compressibleMomentumTransportModel,
-                    fluidThermo
-                >
-            >
-        > thermophysicalTransport;
+            phaseCompressible::momentumTransportModel,
+            fluidThermo
+        > thermophysicalTransportModel;
+
+        autoPtr<thermophysicalTransportModel> uThermophysicalTransport_;
+        autoPtr<thermophysicalTransportModel> bThermophysicalTransport_;
 
 
     // Reactions
@@ -237,6 +240,7 @@ protected:
             const volScalarField::Internal& bcStab,
             const surfaceScalarField& phibc,
             const volScalarField& D,
+            const thermophysicalTransportModel& thermophysicalTransport,
             const fvScalarMatrix& source
         );
 
@@ -277,23 +281,26 @@ protected:
 
 public:
 
+        //- Reference to the fluid thermophysical properties
+        const ubRhoThermo& thermo;
+
         const compressible::momentumTransportModel& momentumTransport;
 
-        //- Reference to the fluid thermophysical properties
-        const ubPsiThermo& thermo;
+        const thermophysicalTransportModel& uThermophysicalTransport;
+        const thermophysicalTransportModel& bThermophysicalTransport;
 
         //- Reference to the combustion regress variable
         //  obtained from the combustion mixture
         const volScalarField& b;
 
         //- Reference to the burnt gas thermophysical properties
-        const ubPsiMulticomponentThermo& uThermo;
+        const ubRhoMulticomponentThermo& uThermo;
 
         //- Reference to the combustion progress variable
         const volScalarField& c;
 
         //- Reference to the burnt gas thermophysical properties
-        const ubPsiMulticomponentThermo& bThermo;
+        const ubRhoMulticomponentThermo& bThermo;
 
         //- Laminar flame speed
         const volScalarField& Su;

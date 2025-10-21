@@ -22,19 +22,19 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::ubPsiThermo
+    Foam::ubRhoThermo
 
 Description
 
 SourceFiles
-    ubPsiThermo.C
+    ubRhoThermo.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef ubPsiThermo_H
-#define ubPsiThermo_H
+#ifndef ubRhoThermo_H
+#define ubRhoThermo_H
 
-#include "ubPsiMulticomponentThermo.H"
+#include "ubRhoMulticomponentThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -42,12 +42,12 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class ubPsiThermo Declaration
+                          Class ubRhoThermo Declaration
 \*---------------------------------------------------------------------------*/
 
-class ubPsiThermo
+class ubRhoThermo
 :
-    virtual public psiThermo
+    virtual public rhoFluidThermo
 {
     // Private Data
 
@@ -57,31 +57,35 @@ class ubPsiThermo
         volScalarField b_;
         volScalarField c_;
 
-        autoPtr<ubPsiMulticomponentThermo> uThermo_;
-        autoPtr<ubPsiMulticomponentThermo> bThermo_;
+        autoPtr<ubRhoMulticomponentThermo> uThermo_;
+        autoPtr<ubRhoMulticomponentThermo> bThermo_;
 
+        volScalarField rho_;
         volScalarField psi_;
         volScalarField mu_;
         volScalarField kappa_;
+
+        volScalarField alphau_;
+        volScalarField alphab_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("ubPsiThermo");
+    TypeName("ubRhoThermo");
 
 
     // Constructors
 
         //- Construct from mesh
-        ubPsiThermo(const fvMesh& mesh);
+        ubRhoThermo(const fvMesh& mesh);
 
         //- Disallow default bitwise copy construction
-        ubPsiThermo(const ubPsiThermo&) = delete;
+        ubRhoThermo(const ubRhoThermo&) = delete;
 
 
     //- Destructor
-    virtual ~ubPsiThermo();
+    virtual ~ubRhoThermo();
 
 
     // Member Functions
@@ -112,22 +116,34 @@ public:
             return c_;
         }
 
-        const ubPsiMulticomponentThermo& uThermo() const
+        //- Unburnt gas volume fraction
+        const volScalarField& alphau() const
+        {
+            return alphau_;
+        }
+
+        //- Burnt gas volume fraction
+        const volScalarField& alphab() const
+        {
+            return alphab_;
+        }
+
+        const ubRhoMulticomponentThermo& uThermo() const
         {
             return uThermo_();
         }
 
-        ubPsiMulticomponentThermo& uThermo()
+        ubRhoMulticomponentThermo& uThermo()
         {
             return uThermo_();
         }
 
-        const ubPsiMulticomponentThermo& bThermo() const
+        const ubRhoMulticomponentThermo& bThermo() const
         {
             return bThermo_();
         }
 
-        ubPsiMulticomponentThermo& bThermo()
+        ubRhoMulticomponentThermo& bThermo()
         {
             return bThermo_();
         }
@@ -226,6 +242,9 @@ public:
 
             //- Density for patch [kg/m^3]
             virtual tmp<scalarField> rho(const label patchi) const;
+
+            //- Return non-const access to the local density field [kg/m^3]
+            virtual volScalarField& rho();
 
             //- Enthalpy/Internal energy
             //  for given pressure and temperature [J/kg]

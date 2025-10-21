@@ -100,7 +100,7 @@ public:
         Gulder
         (
             const dictionary& dict,
-            const ubPsiThermo& thermo,
+            const ubRhoThermo& thermo,
             const compressibleMomentumTransportModel& turbulence,
             const volScalarField& Su
         );

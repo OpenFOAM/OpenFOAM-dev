@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,6 @@ License
 
 #include "ubCoupledTemperatureFvPatchScalarField.H"
 #include "XiFluid.H"
-#include "fieldMapper.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
@@ -45,40 +44,31 @@ void Foam::ubCoupledTemperatureFvPatchScalarField::getThis
        .lookupObject<solvers::XiFluid>(solver::typeName)
     );
 
-    const ubPsiThermo& thermo = XiFluid.thermo;
-    const ubPsiMulticomponentThermo& uThermo = thermo.uThermo();
-    const ubPsiMulticomponentThermo& bThermo = thermo.bThermo();
+    const ubRhoThermo& thermo = XiFluid.thermo;
 
-    const scalarField b =
-          thermo.rho(patch().index())
-         *thermo.b().boundaryField()[patch().index()]
-         /uThermo.rho(patch().index());
+    const ubRhoMulticomponentThermo& uThermo = thermo.uThermo();
+    const ubRhoMulticomponentThermo& bThermo = thermo.bThermo();
 
-    const scalarField c =
-          thermo.rho(patch().index())
-         *thermo.c().boundaryField()[patch().index()]
-         /bThermo.rho(patch().index());
+    const scalarField& alphau =
+        thermo.alphau().boundaryField()[patch().index()];
+    const scalarField& alphab =
+        thermo.alphab().boundaryField()[patch().index()];
 
     const fvPatchScalarField& Twu(uThermo.T().boundaryField()[patch().index()]);
-
     const fvPatchScalarField& Twb(bThermo.T().boundaryField()[patch().index()]);
-
-    const scalarField nut(XiFluid.momentumTransport.nut(patch().index()));
 
     // Simple model pending generalised thermophysicalTransportModel interface
     tmp<scalarField> kappaEffu
     (
-        uThermo.rho(patch().index())*nut
-      + uThermo.mu().boundaryField()[patch().index()]
+        XiFluid.uThermophysicalTransport.kappaEff(patch().index())
     );
     tmp<scalarField> kappaEffb
     (
-        bThermo.rho(patch().index())*nut
-      + bThermo.mu().boundaryField()[patch().index()]
+        XiFluid.bThermophysicalTransport.kappaEff(patch().index())
     );
 
-    tmp<scalarField> alphaKappaEffu(b*kappaEffu());
-    tmp<scalarField> alphaKappaEffb(c*kappaEffb());
+    tmp<scalarField> alphaKappaEffu(alphau*kappaEffu());
+    tmp<scalarField> alphaKappaEffb(alphab*kappaEffb());
 
     scalarField sumKappa(size(), scalar(0));
     scalarField sumKappaT(size(), scalar(0));
@@ -87,7 +77,7 @@ void Foam::ubCoupledTemperatureFvPatchScalarField::getThis
     {
         kappa = alphaKappaEffu;
         qByKappa = sumq/kappaEffu;
-        sumq -= b*sumq;
+        sumq -= alphau*sumq;
     }
     else
     {
@@ -105,7 +95,7 @@ void Foam::ubCoupledTemperatureFvPatchScalarField::getThis
     {
         kappa = alphaKappaEffb;
         qByKappa = sumq/kappaEffb;
-        sumq -= c*sumq;
+        sumq -= alphab*sumq;
     }
     else
     {
@@ -137,46 +127,37 @@ void Foam::ubCoupledTemperatureFvPatchScalarField::getNbr
        .lookupObject<solvers::XiFluid>(solver::typeName)
     );
 
-    const ubPsiThermo& thermo = XiFluid.thermo;
-    const ubPsiMulticomponentThermo& uThermo = thermo.uThermo();
-    const ubPsiMulticomponentThermo& bThermo = thermo.bThermo();
+    const ubRhoThermo& thermo = XiFluid.thermo;
 
-    const scalarField b =
-          thermo.rho(patch().index())
-         *thermo.b().boundaryField()[patch().index()]
-         /uThermo.rho(patch().index());
+    const ubRhoMulticomponentThermo& uThermo = thermo.uThermo();
+    const ubRhoMulticomponentThermo& bThermo = thermo.bThermo();
 
-    const scalarField c =
-          thermo.rho(patch().index())
-         *thermo.c().boundaryField()[patch().index()]
-         /bThermo.rho(patch().index());
+    const scalarField& alphau =
+        thermo.alphau().boundaryField()[patch().index()];
+    const scalarField& alphab =
+        thermo.alphab().boundaryField()[patch().index()];
 
     const scalarField Tu
     (
         uThermo.T().boundaryField()[patch().index()].patchInternalField()
     );
-
     const scalarField Tb
     (
         bThermo.T().boundaryField()[patch().index()].patchInternalField()
     );
 
-    const scalarField nut(XiFluid.momentumTransport.nut(patch().index()));
-
     // Simple model pending generalised thermophysicalTransportModel interface
     tmp<scalarField> kappaEffu
     (
-        uThermo.rho(patch().index())*nut
-      + uThermo.mu().boundaryField()[patch().index()]
+        XiFluid.uThermophysicalTransport.kappaEff(patch().index())
     );
     tmp<scalarField> kappaEffb
     (
-        bThermo.rho(patch().index())*nut
-      + bThermo.mu().boundaryField()[patch().index()]
+        XiFluid.bThermophysicalTransport.kappaEff(patch().index())
     );
 
-    const scalarField alphaKappaEffu(b*kappaEffu);
-    const scalarField alphaKappaEffb(c*kappaEffb);
+    const scalarField alphaKappaEffu(alphau*kappaEffu);
+    const scalarField alphaKappaEffb(alphab*kappaEffb);
 
     sumKappaByDeltaNbr =
         (alphaKappaEffu + alphaKappaEffb)*patch().deltaCoeffs();
@@ -197,23 +178,18 @@ void Foam::ubCoupledTemperatureFvPatchScalarField::getNbr
        .lookupObject<solvers::XiFluid>(solver::typeName)
     );
 
-    const ubPsiThermo& thermo = XiFluid.thermo;
-    const ubPsiMulticomponentThermo& uThermo = thermo.uThermo();
-    const ubPsiMulticomponentThermo& bThermo = thermo.bThermo();
+    const ubRhoThermo& thermo = XiFluid.thermo;
+    const ubRhoMulticomponentThermo& uThermo = thermo.uThermo();
+    const ubRhoMulticomponentThermo& bThermo = thermo.bThermo();
 
-    const scalarField b =
-          thermo.rho(patch().index())
-         *thermo.b().boundaryField()[patch().index()]
-         /uThermo.rho(patch().index());
-
-    const scalarField c =
-          thermo.rho(patch().index())
-         *thermo.c().boundaryField()[patch().index()]
-         /bThermo.rho(patch().index());
+    const scalarField& alphau =
+        thermo.alphau().boundaryField()[patch().index()];
+    const scalarField& alphab =
+        thermo.alphab().boundaryField()[patch().index()];
 
     TrefNbr =
-       b*uThermo.T().boundaryField()[patch().index()]
-     + c*bThermo.T().boundaryField()[patch().index()];
+       alphau*uThermo.T().boundaryField()[patch().index()]
+     + alphab*bThermo.T().boundaryField()[patch().index()];
 }
 
 

@@ -61,7 +61,7 @@ bool Foam::XiModels::transport::readCoeffs(const dictionary& dict)
 Foam::XiModels::transport::transport
 (
     const dictionary& dict,
-    const ubPsiThermo& thermo,
+    const ubRhoThermo& thermo,
     const compressibleMomentumTransportModel& turbulence,
     const volScalarField& Su
 )

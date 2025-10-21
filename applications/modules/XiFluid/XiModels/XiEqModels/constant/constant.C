@@ -54,7 +54,7 @@ bool Foam::XiEqModels::constant::readCoeffs(const dictionary& dict)
 Foam::XiEqModels::constant::constant
 (
     const dictionary& dict,
-    const ubPsiThermo& thermo,
+    const ubRhoThermo& thermo,
     const compressibleMomentumTransportModel& turbulence,
     const volScalarField& Su
 )

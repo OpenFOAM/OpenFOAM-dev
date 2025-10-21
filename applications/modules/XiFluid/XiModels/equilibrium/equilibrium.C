@@ -53,7 +53,7 @@ bool Foam::XiModels::equilibrium::readCoeffs(const dictionary& dict)
 Foam::XiModels::equilibrium::equilibrium
 (
     const dictionary& dict,
-    const ubPsiThermo& thermo,
+    const ubRhoThermo& thermo,
     const compressibleMomentumTransportModel& turbulence,
     const volScalarField& Su
 )

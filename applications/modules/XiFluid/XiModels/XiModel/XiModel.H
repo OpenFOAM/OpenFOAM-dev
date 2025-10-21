@@ -101,7 +101,7 @@ SourceFiles
 #ifndef XiModel_H
 #define XiModel_H
 
-#include "ubPsiThermo.H"
+#include "ubRhoThermo.H"
 #include "compressibleMomentumTransportModels.H"
 #include "runTimeSelectionTables.H"
 
@@ -122,7 +122,7 @@ protected:
     // Protected data
 
         //- Thermo
-        const ubPsiThermo& thermo_;
+        const ubRhoThermo& thermo_;
 
         //- Turbulence
         const compressibleMomentumTransportModel& momentumTransport_;
@@ -158,7 +158,7 @@ public:
             dictionary,
             (
                 const dictionary& dict,
-                const ubPsiThermo& thermo,
+                const ubRhoThermo& thermo,
                 const compressibleMomentumTransportModel& turbulence,
                 const volScalarField& Su
             ),
@@ -176,7 +176,7 @@ public:
         //- Construct from components
         XiModel
         (
-            const ubPsiThermo& thermo,
+            const ubRhoThermo& thermo,
             const compressibleMomentumTransportModel& turbulence,
             const volScalarField& Su
         );
@@ -191,7 +191,7 @@ public:
         static autoPtr<XiModel> New
         (
             const dictionary& combustionProperties,
-            const ubPsiThermo& thermo,
+            const ubRhoThermo& thermo,
             const compressibleMomentumTransportModel& momentumTransport,
             const volScalarField& Su
         );

@@ -23,19 +23,19 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "ubPsiThermo.H"
+#include "ubRhoThermo.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(ubPsiThermo, 0);
+    defineTypeNameAndDebug(ubRhoThermo, 0);
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::ubPsiThermo::ubPsiThermo(const fvMesh& mesh)
+Foam::ubRhoThermo::ubRhoThermo(const fvMesh& mesh)
 :
     unburntPhaseName_("u"),
     burntPhaseName_("b"),
@@ -52,11 +52,20 @@ Foam::ubPsiThermo::ubPsiThermo(const fvMesh& mesh)
         mesh
     ),
     c_("c", scalar(1) - b_),
-    uThermo_(ubPsiMulticomponentThermo::New(mesh, unburntPhaseName_)),
-    bThermo_(ubPsiMulticomponentThermo::New(mesh, burntPhaseName_)),
+    uThermo_(ubRhoMulticomponentThermo::New(mesh, unburntPhaseName_)),
+    bThermo_(ubRhoMulticomponentThermo::New(mesh, burntPhaseName_)),
+    rho_("rho", 1.0/(b_/uThermo_->rho() + c_/bThermo_->rho())),
     psi_("psi", 1.0/(b_/uThermo_->psi() + c_/bThermo_->psi())),
     mu_("mu", b_*uThermo_->mu() + c_*bThermo_->mu()),
-    kappa_("kappa", b_*uThermo_->kappa() + c_*bThermo_->kappa())
+    kappa_("kappa", b_*uThermo_->kappa() + c_*bThermo_->kappa()),
+    alphau_
+    (
+        phasePropertyName("alpha", unburntPhaseName_), rho_*b_/uThermo_->rho()
+    ),
+    alphab_
+    (
+        phasePropertyName("alpha", burntPhaseName_), rho_*c_/bThermo_->rho()
+    )
 {
     uThermo_->validate
     (
@@ -77,56 +86,60 @@ Foam::ubPsiThermo::ubPsiThermo(const fvMesh& mesh)
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::ubPsiThermo::~ubPsiThermo()
+Foam::ubRhoThermo::~ubRhoThermo()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-const Foam::IOdictionary& Foam::ubPsiThermo::properties() const
+const Foam::IOdictionary& Foam::ubRhoThermo::properties() const
 {
     NotImplemented;
     return uThermo_->properties();
 }
 
 
-Foam::IOdictionary& Foam::ubPsiThermo::properties()
+Foam::IOdictionary& Foam::ubRhoThermo::properties()
 {
     NotImplemented;
     return uThermo_->properties();
 }
 
 
-const Foam::fvMesh& Foam::ubPsiThermo::mesh() const
+const Foam::fvMesh& Foam::ubRhoThermo::mesh() const
 {
     return uThermo_->mesh();
 }
 
 
-const Foam::word& Foam::ubPsiThermo::phaseName() const
+const Foam::word& Foam::ubRhoThermo::phaseName() const
 {
     return word::null;
 }
 
 
-Foam::word Foam::ubPsiThermo::thermoName() const
+Foam::word Foam::ubRhoThermo::thermoName() const
 {
     return type();
 }
 
 
-void Foam::ubPsiThermo::correct()
+void Foam::ubRhoThermo::correct()
 {
     uThermo_->correct();
     bThermo_->correct();
 
+    rho_ = 1.0/(b_/uThermo_->rho() + c_/bThermo_->rho());
     psi_ = 1.0/(b_/uThermo_->psi() + c_/bThermo_->psi());
     mu_ = b_*uThermo_->mu() + c_*bThermo_->mu();
     kappa_ = b_*uThermo_->kappa() + c_*bThermo_->kappa();
+
+    alphau_ = rho_*b_/uThermo_->rho();
+    alphab_ = rho_*c_/bThermo_->rho();
 }
 
 
-void Foam::ubPsiThermo::reset()
+void Foam::ubRhoThermo::reset()
 {
     if (uThermo_->containsSpecie("egr"))
     {
@@ -141,95 +154,101 @@ void Foam::ubPsiThermo::reset()
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::ubPsiThermo::W() const
+Foam::tmp<Foam::volScalarField> Foam::ubRhoThermo::W() const
 {
     NotImplemented;
     return uThermo_->W();
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::ubPsiThermo::W(const label patchi) const
+Foam::tmp<Foam::scalarField> Foam::ubRhoThermo::W(const label patchi) const
 {
     NotImplemented;
     return uThermo_->W(patchi);
 }
 
 
-const Foam::volScalarField& Foam::ubPsiThermo::p() const
+const Foam::volScalarField& Foam::ubRhoThermo::p() const
 {
     return uThermo_->p();
 }
 
 
-Foam::volScalarField& Foam::ubPsiThermo::p()
+Foam::volScalarField& Foam::ubRhoThermo::p()
 {
     return uThermo_->p();
 }
 
 
-const Foam::volScalarField& Foam::ubPsiThermo::psi() const
+const Foam::volScalarField& Foam::ubRhoThermo::psi() const
 {
     return psi_;
 }
 
 
-const Foam::volScalarField& Foam::ubPsiThermo::T() const
+const Foam::volScalarField& Foam::ubRhoThermo::T() const
 {
     NotImplemented;
     return uThermo_->T();
 }
 
 
-Foam::volScalarField& Foam::ubPsiThermo::T()
+Foam::volScalarField& Foam::ubRhoThermo::T()
 {
     NotImplemented;
     return uThermo_->T();
 }
 
-const Foam::volScalarField& Foam::ubPsiThermo::he() const
+const Foam::volScalarField& Foam::ubRhoThermo::he() const
 {
     NotImplemented;
     return uThermo_->he();
 }
 
-Foam::volScalarField& Foam::ubPsiThermo::he()
+Foam::volScalarField& Foam::ubRhoThermo::he()
 {
     NotImplemented;
     return uThermo_->he();
 }
 
-const Foam::volScalarField& Foam::ubPsiThermo::Cp() const
+const Foam::volScalarField& Foam::ubRhoThermo::Cp() const
 {
     NotImplemented;
     return uThermo_->Cp();
 }
 
-const Foam::volScalarField& Foam::ubPsiThermo::Cv() const
+const Foam::volScalarField& Foam::ubRhoThermo::Cv() const
 {
     NotImplemented;
     return uThermo_->Cv();
 }
 
-const Foam::volScalarField& Foam::ubPsiThermo::Cpv() const
+const Foam::volScalarField& Foam::ubRhoThermo::Cpv() const
 {
     NotImplemented;
     return uThermo_->Cpv();
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::ubPsiThermo::rho() const
+Foam::tmp<Foam::volScalarField> Foam::ubRhoThermo::rho() const
 {
-    return p()*psi_;
+    return rho_;
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::ubPsiThermo::rho(const label patchi) const
+Foam::tmp<Foam::scalarField> Foam::ubRhoThermo::rho(const label patchi) const
 {
-    return p().boundaryField()[patchi]*psi_.boundaryField()[patchi];
+    return rho_.boundaryField()[patchi];
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::ubPsiThermo::he
+Foam::volScalarField& Foam::ubRhoThermo::rho()
+{
+    return rho_;
+}
+
+
+Foam::tmp<Foam::volScalarField> Foam::ubRhoThermo::he
 (
     const Foam::volScalarField& p,
     const Foam::volScalarField& T
@@ -240,7 +259,7 @@ Foam::tmp<Foam::volScalarField> Foam::ubPsiThermo::he
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal> Foam::ubPsiThermo::he
+Foam::tmp<Foam::volScalarField::Internal> Foam::ubRhoThermo::he
 (
     const Foam::volScalarField::Internal& p,
     const Foam::volScalarField::Internal& T
@@ -251,7 +270,7 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::ubPsiThermo::he
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::ubPsiThermo::he
+Foam::tmp<Foam::scalarField> Foam::ubRhoThermo::he
 (
     const Foam::scalarField& T,
     const labelList& cells
@@ -262,7 +281,7 @@ Foam::tmp<Foam::scalarField> Foam::ubPsiThermo::he
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::ubPsiThermo::he
+Foam::tmp<Foam::scalarField> Foam::ubRhoThermo::he
 (
     const Foam::scalarField& T,
     const label patchi
@@ -273,7 +292,7 @@ Foam::tmp<Foam::scalarField> Foam::ubPsiThermo::he
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal> Foam::ubPsiThermo::he
+Foam::tmp<Foam::volScalarField::Internal> Foam::ubRhoThermo::he
 (
     const Foam::volScalarField::Internal& T,
     const fvSource& model,
@@ -285,7 +304,7 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::ubPsiThermo::he
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::ubPsiThermo::he
+Foam::tmp<Foam::scalarField> Foam::ubRhoThermo::he
 (
     const Foam::scalarField& T,
     const fvSource& model,
@@ -298,13 +317,13 @@ Foam::tmp<Foam::scalarField> Foam::ubPsiThermo::he
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::ubPsiThermo::hs() const
+Foam::tmp<Foam::volScalarField> Foam::ubRhoThermo::hs() const
 {
     NotImplemented;
     return uThermo_->hs();
 }
 
-Foam::tmp<Foam::volScalarField> Foam::ubPsiThermo::hs
+Foam::tmp<Foam::volScalarField> Foam::ubRhoThermo::hs
 (
     const Foam::volScalarField& p,
     const Foam::volScalarField& T
@@ -315,7 +334,7 @@ Foam::tmp<Foam::volScalarField> Foam::ubPsiThermo::hs
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal> Foam::ubPsiThermo::hs
+Foam::tmp<Foam::volScalarField::Internal> Foam::ubRhoThermo::hs
 (
     const Foam::volScalarField::Internal& p,
     const Foam::volScalarField::Internal& T
@@ -326,7 +345,7 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::ubPsiThermo::hs
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::ubPsiThermo::hs
+Foam::tmp<Foam::scalarField> Foam::ubRhoThermo::hs
 (
     const Foam::scalarField& T,
     const labelList& cells
@@ -337,7 +356,7 @@ Foam::tmp<Foam::scalarField> Foam::ubPsiThermo::hs
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::ubPsiThermo::hs
+Foam::tmp<Foam::scalarField> Foam::ubRhoThermo::hs
 (
     const Foam::scalarField& T,
     const label patchi
@@ -348,14 +367,14 @@ Foam::tmp<Foam::scalarField> Foam::ubPsiThermo::hs
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::ubPsiThermo::ha() const
+Foam::tmp<Foam::volScalarField> Foam::ubRhoThermo::ha() const
 {
     NotImplemented;
     return uThermo_->ha();
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::ubPsiThermo::ha
+Foam::tmp<Foam::volScalarField> Foam::ubRhoThermo::ha
 (
     const Foam::volScalarField& p,
     const Foam::volScalarField& T
@@ -366,7 +385,7 @@ Foam::tmp<Foam::volScalarField> Foam::ubPsiThermo::ha
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal> Foam::ubPsiThermo::ha
+Foam::tmp<Foam::volScalarField::Internal> Foam::ubRhoThermo::ha
 (
     const Foam::volScalarField::Internal& p,
     const Foam::volScalarField::Internal& T
@@ -377,7 +396,7 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::ubPsiThermo::ha
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::ubPsiThermo::ha
+Foam::tmp<Foam::scalarField> Foam::ubRhoThermo::ha
 (
     const Foam::scalarField& T,
     const labelList& cells
@@ -388,7 +407,7 @@ Foam::tmp<Foam::scalarField> Foam::ubPsiThermo::ha
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::ubPsiThermo::ha
+Foam::tmp<Foam::scalarField> Foam::ubRhoThermo::ha
 (
     const Foam::scalarField& T,
     const label patchi
@@ -399,7 +418,7 @@ Foam::tmp<Foam::scalarField> Foam::ubPsiThermo::ha
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::ubPsiThermo::Cp
+Foam::tmp<Foam::scalarField> Foam::ubRhoThermo::Cp
 (
     const Foam::scalarField& T,
     const label patchi
@@ -410,7 +429,7 @@ Foam::tmp<Foam::scalarField> Foam::ubPsiThermo::Cp
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::ubPsiThermo::Cv
+Foam::tmp<Foam::scalarField> Foam::ubRhoThermo::Cv
 (
     const Foam::scalarField& T,
     const label patchi
@@ -421,7 +440,7 @@ Foam::tmp<Foam::scalarField> Foam::ubPsiThermo::Cv
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::ubPsiThermo::Cpv
+Foam::tmp<Foam::scalarField> Foam::ubRhoThermo::Cpv
 (
     const Foam::scalarField& T,
     const label patchi
@@ -432,7 +451,7 @@ Foam::tmp<Foam::scalarField> Foam::ubPsiThermo::Cpv
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::ubPsiThermo::The
+Foam::tmp<Foam::volScalarField> Foam::ubRhoThermo::The
 (
     const Foam::volScalarField& h,
     const Foam::volScalarField& p,
@@ -444,7 +463,7 @@ Foam::tmp<Foam::volScalarField> Foam::ubPsiThermo::The
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::ubPsiThermo::The
+Foam::tmp<Foam::scalarField> Foam::ubRhoThermo::The
 (
     const Foam::scalarField& h,
     const Foam::scalarField& T0,
@@ -456,7 +475,7 @@ Foam::tmp<Foam::scalarField> Foam::ubPsiThermo::The
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::ubPsiThermo::The
+Foam::tmp<Foam::scalarField> Foam::ubRhoThermo::The
 (
     const Foam::scalarField& h,
     const Foam::scalarField& T0,
@@ -468,13 +487,13 @@ Foam::tmp<Foam::scalarField> Foam::ubPsiThermo::The
 }
 
 
-const Foam::volScalarField& Foam::ubPsiThermo::mu() const
+const Foam::volScalarField& Foam::ubRhoThermo::mu() const
 {
     return mu_;
 }
 
 
-const Foam::volScalarField& Foam::ubPsiThermo::kappa() const
+const Foam::volScalarField& Foam::ubRhoThermo::kappa() const
 {
     return kappa_;
 }

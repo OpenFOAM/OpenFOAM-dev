@@ -50,7 +50,7 @@ Foam::laminarFlameSpeedModels::RaviPetersen::RaviPetersen
 (
     const dictionary& dict,
     const dictionary& coeffDict,
-    const ubPsiMulticomponentThermo& ct
+    const ubRhoMulticomponentThermo& ct
 )
 :
     laminarFlameSpeed(dict, ct),

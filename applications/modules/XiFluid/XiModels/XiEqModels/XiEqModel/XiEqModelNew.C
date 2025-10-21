@@ -30,7 +30,7 @@ License
 Foam::autoPtr<Foam::XiEqModel> Foam::XiEqModel::New
 (
     const dictionary& XiDict,
-    const ubPsiThermo& thermo,
+    const ubRhoThermo& thermo,
     const compressibleMomentumTransportModel& turbulence,
     const volScalarField& Su
 )

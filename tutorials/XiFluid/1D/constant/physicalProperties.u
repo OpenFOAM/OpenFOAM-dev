@@ -16,7 +16,7 @@ FoamFile
 
 thermoType
 {
-    type            ubPsiThermo;
+    type            ubRhoThermo;
     mixture         uHomogeneousMixture;
     transport       const;
     thermo          hConst;

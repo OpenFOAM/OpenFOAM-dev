@@ -114,12 +114,12 @@ public:
 
     // Constructors
 
-        //- Construct from dictionary and ubPsiMulticomponentThermo
+        //- Construct from dictionary and ubRhoMulticomponentThermo
         Gulder
         (
             const dictionary& dict,
             const dictionary& coeffDict,
-            const ubPsiMulticomponentThermo&
+            const ubRhoMulticomponentThermo&
         );
 
         //- Disallow default bitwise copy construction

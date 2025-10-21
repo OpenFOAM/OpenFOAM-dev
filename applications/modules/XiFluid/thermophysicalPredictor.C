@@ -95,10 +95,7 @@ void Foam::solvers::XiFluid::burn()
     volScalarField& c(thermo_.c());
 
     // Unburnt gas density
-    const volScalarField rhou("rhou", uThermo.rho());
-
-    // Burnt gas density
-    const volScalarField rhob("rhob", bThermo.rho());
+    const volScalarField& rhou(thermo_.uThermo().rho());
 
     const volScalarField Db(XiModel_->Db());
 
@@ -389,21 +386,22 @@ void Foam::solvers::XiFluid::ubSolve
     const volScalarField::Internal& bcStab,
     const surfaceScalarField& phibc,
     const volScalarField& D,
-    const fvScalarMatrix& source
+    const thermophysicalTransportModel& thermophysicalTransport,
+    const fvScalarMatrix& combustionRate
 )
 {
     fvScalarMatrix fEqn
     (
         fvm::ddt(bc, rho, f) + fvm::div(phibc, f)
 
-        // Advective-diffusive stabilisation for b -> 0
+        // Advective-diffusive stabilisation for bc -> 0
       + fvmStab(bc, bcStab, D, f)
 
-        // Diffusive transport within the unburnt gas
-      - fvm::laplacian(bc*D, f)
+        // Diffusive transport within the unburnt/burnt gas
+      + thermophysicalTransport.divj(f)
      ==
         // Combustion source
-        source
+        combustionRate
 
         // Other sources
       + fvModels().source(bc, rho, f)
@@ -425,7 +423,7 @@ void Foam::solvers::XiFluid::uSolve
 )
 {
     const volScalarField Du("Du", rho*(momentumTransport.nut() + uThermo.nu()));
-    ubSolve(fu, b, bStab, phib, Du, source);
+    ubSolve(fu, b, bStab, phib, Du, uThermophysicalTransport_(),source);
 }
 
 
@@ -438,7 +436,7 @@ void Foam::solvers::XiFluid::bSolve
 )
 {
     const volScalarField Db("Db", rho*(momentumTransport.nut() + bThermo.nu()));
-    ubSolve(fb, c, cStab, phic, Db, source);
+    ubSolve(fb, c, cStab, phic, Db, bThermophysicalTransport_(), source);
 }
 
 
@@ -467,7 +465,7 @@ void Foam::solvers::XiFluid::HuSolve
       + (b + bStab)*rhoByRhou*pressureWork(-dpdt)
 
         // Diffusive transport within the unburnt gas
-      - fvm::laplacian(b*Du, hu)
+      + uThermophysicalTransport_->divq(hu)
      ==
         // Combustion source
         fvm::Sp(bSource, hu)
@@ -508,7 +506,7 @@ void Foam::solvers::XiFluid::HbSolve
       + (c + cStab)*rhoByRhob*pressureWork(-dpdt)
 
         // Diffusive transport within the unburnt gas
-      - fvm::laplacian(c*Db, hb)
+      + uThermophysicalTransport_->divq(hb)
      ==
         // Combustion source
       - bSource*(uThermo.ha()() - bThermo.hf()())()

@@ -55,7 +55,7 @@ bool Foam::XiGModels::instability::readCoeffs(const dictionary& dict)
 Foam::XiGModels::instability::instability
 (
     const dictionary& dict,
-    const ubPsiThermo& thermo,
+    const ubRhoThermo& thermo,
     const compressibleMomentumTransportModel& thermoTransport,
     const volScalarField& Su
 )

@@ -1,8 +1,10 @@
-ubPsiMulticomponentThermo/ubPsiMulticomponentThermo.C
-ubPsiMulticomponentThermo/ubPsiMulticomponentThermos.C
+ubRhoMulticomponentThermo/ubRhoMulticomponentThermo.C
+ubRhoMulticomponentThermo/ubRhoMulticomponentThermos.C
 
-ubPsiThermo/ubPsiThermo.C
-ubPsiThermo/derivedFvPatchFields/ubCoupledTemperature/ubCoupledTemperatureFvPatchScalarField.C
+ubRhoThermo/ubRhoThermo.C
+ubRhoThermo/derivedFvPatchFields/ubCoupledTemperature/ubCoupledTemperatureFvPatchScalarField.C
+
+ubMomentumTransportModel/ubMomentumTransportModel.C
 
 XiFluid.C
 thermophysicalPredictor.C

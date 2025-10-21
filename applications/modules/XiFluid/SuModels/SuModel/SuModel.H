@@ -49,7 +49,7 @@ SourceFiles
 #ifndef SuModel_H
 #define SuModel_H
 
-#include "ubPsiMulticomponentThermo.H"
+#include "ubRhoMulticomponentThermo.H"
 #include "compressibleMomentumTransportModels.H"
 #include "runTimeSelectionTables.H"
 
@@ -70,7 +70,7 @@ protected:
     // Protected data
 
         //- Thermo
-        const ubPsiMulticomponentThermo& thermo_;
+        const ubRhoMulticomponentThermo& thermo_;
 
         //- Turbulence
         const compressibleMomentumTransportModel& momentumTransport_;
@@ -97,7 +97,7 @@ public:
             dictionary,
             (
                 const dictionary& dict,
-                const ubPsiMulticomponentThermo& thermo,
+                const ubRhoMulticomponentThermo& thermo,
                 const compressibleMomentumTransportModel& momentumTransport
             ),
             (
@@ -113,7 +113,7 @@ public:
         //- Construct from components
         SuModel
         (
-            const ubPsiMulticomponentThermo& thermo,
+            const ubRhoMulticomponentThermo& thermo,
             const compressibleMomentumTransportModel& momentumTransport
         );
 
@@ -127,7 +127,7 @@ public:
         static autoPtr<SuModel> New
         (
             const dictionary& combustionProperties,
-            const ubPsiMulticomponentThermo& thermo,
+            const ubRhoMulticomponentThermo& thermo,
             const compressibleMomentumTransportModel& momentumTransport
         );
 

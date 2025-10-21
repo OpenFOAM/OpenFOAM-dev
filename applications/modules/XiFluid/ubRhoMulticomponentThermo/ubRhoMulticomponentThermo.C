@@ -23,34 +23,34 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "ubPsiMulticomponentThermo.H"
+#include "ubRhoMulticomponentThermo.H"
 #include "zeroGradientFvPatchFields.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(ubPsiMulticomponentThermo, 0);
-    defineRunTimeSelectionTable(ubPsiMulticomponentThermo, fvMesh);
+    defineTypeNameAndDebug(ubRhoMulticomponentThermo, 0);
+    defineRunTimeSelectionTable(ubRhoMulticomponentThermo, fvMesh);
 }
 
 
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
-Foam::autoPtr<Foam::ubPsiMulticomponentThermo>
-Foam::ubPsiMulticomponentThermo::New
+Foam::autoPtr<Foam::ubRhoMulticomponentThermo>
+Foam::ubRhoMulticomponentThermo::New
 (
     const fvMesh& mesh,
     const word& phaseName
 )
 {
-    return basicThermo::New<ubPsiMulticomponentThermo>(mesh, phaseName);
+    return basicThermo::New<ubRhoMulticomponentThermo>(mesh, phaseName);
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::ubPsiMulticomponentThermo::~ubPsiMulticomponentThermo()
+Foam::ubRhoMulticomponentThermo::~ubRhoMulticomponentThermo()
 {}
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //

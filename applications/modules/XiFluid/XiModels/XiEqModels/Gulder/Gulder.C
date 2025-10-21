@@ -55,7 +55,7 @@ bool Foam::XiEqModels::Gulder::readCoeffs(const dictionary& dict)
 Foam::XiEqModels::Gulder::Gulder
 (
     const dictionary& dict,
-    const ubPsiThermo& thermo,
+    const ubRhoThermo& thermo,
     const compressibleMomentumTransportModel& turbulence,
     const volScalarField& Su
 )

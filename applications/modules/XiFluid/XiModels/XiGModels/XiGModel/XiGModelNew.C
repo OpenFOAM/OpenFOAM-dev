@@ -30,7 +30,7 @@ License
 Foam::autoPtr<Foam::XiGModel> Foam::XiGModel::New
 (
     const dictionary& XiDict,
-    const ubPsiThermo& thermo,
+    const ubRhoThermo& thermo,
     const compressibleMomentumTransportModel& momentumTransport,
     const volScalarField& Su
 )

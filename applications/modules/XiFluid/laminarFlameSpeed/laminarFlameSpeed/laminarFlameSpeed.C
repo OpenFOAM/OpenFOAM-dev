@@ -40,7 +40,7 @@ namespace Foam
 Foam::laminarFlameSpeed::laminarFlameSpeed
 (
     const dictionary& dict,
-    const ubPsiMulticomponentThermo& uThermo
+    const ubRhoMulticomponentThermo& uThermo
 )
 :
     uThermo_(uThermo)

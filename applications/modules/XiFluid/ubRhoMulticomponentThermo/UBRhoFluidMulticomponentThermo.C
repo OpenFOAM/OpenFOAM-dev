@@ -23,27 +23,28 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "UBPsiMulticomponentThermo.H"
-#include "ubPsiMulticomponentThermo.H"
+#include "UBRhoFluidMulticomponentThermo.H"
+#include "ubRhoMulticomponentThermo.H"
 #include "surfaceFields.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class BaseThermo>
-Foam::UBPsiMulticomponentThermo<BaseThermo>::UBPsiMulticomponentThermo
+Foam::UBRhoFluidMulticomponentThermo<BaseThermo>::UBRhoFluidMulticomponentThermo
 (
     const fvMesh& mesh,
     const word& phaseName
 )
 :
-    PsiThermo<BaseThermo>(mesh, phaseName)
+    RhoFluidThermo<BaseThermo>(mesh, phaseName)
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class BaseThermo>
-Foam::UBPsiMulticomponentThermo<BaseThermo>::~UBPsiMulticomponentThermo()
+Foam::UBRhoFluidMulticomponentThermo<BaseThermo>::
+~UBRhoFluidMulticomponentThermo()
 {}
 
 
@@ -51,7 +52,7 @@ Foam::UBPsiMulticomponentThermo<BaseThermo>::~UBPsiMulticomponentThermo()
 
 template<class BaseThermo>
 Foam::tmp<Foam::volScalarField>
-Foam::UBPsiMulticomponentThermo<BaseThermo>::Phi() const
+Foam::UBRhoFluidMulticomponentThermo<BaseThermo>::Phi() const
 {
     return this->volScalarFieldMixtureProperty
     (
@@ -63,7 +64,7 @@ Foam::UBPsiMulticomponentThermo<BaseThermo>::Phi() const
 
 
 template<class BaseThermo>
-void Foam::UBPsiMulticomponentThermo<BaseThermo>::reset
+void Foam::UBRhoFluidMulticomponentThermo<BaseThermo>::reset
 (
     volScalarField& b,
     volScalarField& c,
@@ -97,7 +98,7 @@ void Foam::UBPsiMulticomponentThermo<BaseThermo>::reset
 
 template<class BaseThermo>
 Foam::tmp<Foam::volScalarField>
-Foam::UBPsiMulticomponentThermo<BaseThermo>::hf() const
+Foam::UBRhoFluidMulticomponentThermo<BaseThermo>::hf() const
 {
     return this->volScalarFieldProperty
     (

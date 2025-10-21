@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "DimensionedFieldListSlicer.H"
-#include "ubPsiMulticomponentThermo.H"
+#include "ubRhoMulticomponentThermo.H"
 #include "FieldListSlice.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //

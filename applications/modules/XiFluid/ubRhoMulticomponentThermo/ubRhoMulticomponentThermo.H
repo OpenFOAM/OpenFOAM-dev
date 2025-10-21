@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::ubPsiMulticomponentThermo
+    Foam::ubRhoMulticomponentThermo
 
 Description
     Base-class for combustion fluid thermodynamic properties based on
@@ -32,19 +32,16 @@ See also
     Foam::basicThermo
 
 SourceFiles
-    ubPsiMulticomponentThermo.C
+    ubRhoMulticomponentThermo.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef ubPsiMulticomponentThermo_H
-#define ubPsiMulticomponentThermo_H
+#ifndef ubRhoMulticomponentThermo_H
+#define ubRhoMulticomponentThermo_H
 
-#include "psiThermo.H"
-#include "multicomponentThermo.H"
-#include "UBPsiMulticomponentThermo.H"
-#include "speciesTable.H"
-#include "DimensionedFieldListSlicer.H"
-#include "GeometricFieldListSlicer.H"
+#include "rhoFluidThermo.H"
+#include "fluidMulticomponentThermo.H"
+#include "UBRhoFluidMulticomponentThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -52,13 +49,13 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class ubPsiMulticomponentThermo Declaration
+                     Class ubRhoMulticomponentThermo Declaration
 \*---------------------------------------------------------------------------*/
 
-class ubPsiMulticomponentThermo
+class ubRhoMulticomponentThermo
 :
-    virtual public psiThermo,
-    virtual public multicomponentThermo
+    virtual public rhoFluidThermo,
+    virtual public fluidMulticomponentThermo
 {
 
 public:
@@ -73,23 +70,26 @@ public:
 
         //- The derived type
         template<class MixtureType>
-        using DerivedThermoType = UBPsiMulticomponentThermo
+        using DerivedThermoType = UBRhoFluidMulticomponentThermo
         <
-            MulticomponentThermo
+            FluidMulticomponentThermo
             <
-                BasicThermo<MixtureType, composite>
+                MulticomponentThermo
+                <
+                    BasicThermo<MixtureType, composite>
+                >
             >
         >;
 
         //- The derived name
         static const word derivedThermoName()
         {
-            return "ubPsiThermo";
+            return "ubRhoThermo";
         }
 
 
     //- Runtime type information
-    TypeName("ubPsiMulticomponentThermo");
+    TypeName("ubRhoMulticomponentThermo");
 
 
     // Declare run-time constructor selection tables
@@ -97,7 +97,7 @@ public:
         declareRunTimeSelectionTable
         (
             autoPtr,
-            ubPsiMulticomponentThermo,
+            ubRhoMulticomponentThermo,
             fvMesh,
             (const fvMesh& mesh, const word& phaseName),
             (mesh, phaseName)
@@ -107,7 +107,7 @@ public:
     // Selectors
 
         //- Standard selection based on fvMesh
-        static autoPtr<ubPsiMulticomponentThermo> New
+        static autoPtr<ubRhoMulticomponentThermo> New
         (
             const fvMesh&,
             const word& phaseName=word::null
@@ -115,7 +115,7 @@ public:
 
 
     //- Destructor
-    virtual ~ubPsiMulticomponentThermo();
+    virtual ~ubRhoMulticomponentThermo();
 
 
     // Member Functions
@@ -140,16 +140,16 @@ public:
 
 
 /*---------------------------------------------------------------------------*\
-              Class ubPsiMulticomponentThermo::composite Declaration
+              Class ubRhoMulticomponentThermo::composite Declaration
 \*---------------------------------------------------------------------------*/
 
-class ubPsiMulticomponentThermo::composite
+class ubRhoMulticomponentThermo::composite
 :
     public basicThermo::implementation,
+    public rhoThermo::implementation,
     public fluidThermo::implementation,
-    public psiThermo::implementation,
     public multicomponentThermo::implementation,
-    public ubPsiMulticomponentThermo
+    public ubRhoMulticomponentThermo
 {
 public:
 
@@ -166,8 +166,8 @@ public:
         )
         :
             basicThermo::implementation(dict, mesh, phaseName),
+            rhoThermo::implementation(dict, mesh, phaseName),
             fluidThermo::implementation(dict, mesh, phaseName),
-            psiThermo::implementation(dict, mesh, phaseName),
             multicomponentThermo::implementation
             (
                 dict,
@@ -186,7 +186,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "ubPsiMulticomponentThermoI.H"
+#include "ubRhoMulticomponentThermoI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

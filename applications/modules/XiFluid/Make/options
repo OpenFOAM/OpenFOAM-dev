@@ -3,6 +3,7 @@ EXE_INC = \
     -I$(FOAM_MODULES)/isothermalFluid/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/compressible/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/phaseCompressible/lnInclude \
     -I$(LIB_SRC)/ThermophysicalTransportModels/thermophysicalTransportModel/lnInclude \
     -I$(LIB_SRC)/ThermophysicalTransportModels/fluid/lnInclude \
     -I$(LIB_SRC)/ThermophysicalTransportModels/fluidThermo/lnInclude \
@@ -21,7 +22,8 @@ LIB_LIBS = \
     -lisothermalFluidSolver \
     -lmomentumTransportModels \
     -lcompressibleMomentumTransportModels \
-    -lfluidThermoThermophysicalTransportModels \
+    -lphaseCompressibleMomentumTransportModels \
+    -lphaseFluidThermophysicalTransportModels \
     -lcoupledThermophysicalTransportModels \
     -lmulticomponentThermophysicalModels \
     -lspecie \

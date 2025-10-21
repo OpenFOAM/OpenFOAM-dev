@@ -46,7 +46,7 @@ bool Foam::SuModel::readCoeffs(const dictionary&)
 
 Foam::SuModel::SuModel
 (
-    const ubPsiMulticomponentThermo& thermo,
+    const ubRhoMulticomponentThermo& thermo,
     const compressibleMomentumTransportModel& momentumTransport
 )
 :

@@ -24,7 +24,7 @@ userTime
 
 startFrom       startTime;
 
-startTime       -5;
+startTime       -180;
 
 stopAt          endTime;
 

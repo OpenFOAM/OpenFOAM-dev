@@ -46,7 +46,7 @@ bool Foam::XiGModel::readCoeffs(const dictionary&)
 
 Foam::XiGModel::XiGModel
 (
-    const ubPsiThermo& thermo,
+    const ubRhoThermo& thermo,
     const compressibleMomentumTransportModel& momentumTransport,
     const volScalarField& Su
 )

@@ -54,7 +54,7 @@ bool Foam::SuModels::linearEquilibrium::readCoeffs(const dictionary& dict)
 Foam::SuModels::linearEquilibrium::linearEquilibrium
 (
     const dictionary& dict,
-    const ubPsiMulticomponentThermo& thermo,
+    const ubRhoMulticomponentThermo& thermo,
     const compressibleMomentumTransportModel& turbulence
 )
 :

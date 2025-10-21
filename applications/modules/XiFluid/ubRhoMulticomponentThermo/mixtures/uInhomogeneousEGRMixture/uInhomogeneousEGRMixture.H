@@ -47,7 +47,7 @@ SourceFiles
 namespace Foam
 {
 
-class uPsiMulticomponentThermo;
+class uRhoFluidMulticomponentThermo;
 
 /*---------------------------------------------------------------------------*\
                      Class uInhomogeneousEGRMixture Declaration

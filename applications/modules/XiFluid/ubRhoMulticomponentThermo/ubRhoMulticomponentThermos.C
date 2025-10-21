@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "ubPsiMulticomponentThermo.H"
+#include "ubRhoMulticomponentThermo.H"
 
 #include "uHomogeneousMixture.H"
 #include "bHomogeneousMixture.H"
@@ -37,28 +37,34 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeUBPsiMulticomponentThermos(Mixture, ThermoPhysics)                 \
+#define makeUBRhoMulticomponentThermos(Mixture, ThermoPhysics)                 \
                                                                                \
-    defineThermo(ubPsiMulticomponentThermo, Mixture, ThermoPhysics);           \
+    defineThermo(ubRhoMulticomponentThermo, Mixture, ThermoPhysics);           \
                                                                                \
-    addThermo(basicThermo, ubPsiMulticomponentThermo, Mixture, ThermoPhysics); \
-    addThermo(fluidThermo, ubPsiMulticomponentThermo, Mixture, ThermoPhysics); \
-    addThermo(psiThermo, ubPsiMulticomponentThermo, Mixture, ThermoPhysics);   \
+    addThermo(basicThermo, ubRhoMulticomponentThermo, Mixture, ThermoPhysics); \
+    addThermo(fluidThermo, ubRhoMulticomponentThermo, Mixture, ThermoPhysics); \
     addThermo                                                                  \
     (                                                                          \
-        ubPsiMulticomponentThermo,                                             \
-        ubPsiMulticomponentThermo,                                             \
+        rhoFluidThermo,                                                        \
+        ubRhoMulticomponentThermo,                                             \
+        Mixture,                                                               \
+        ThermoPhysics                                                          \
+    );                                                                         \
+    addThermo                                                                  \
+    (                                                                          \
+        ubRhoMulticomponentThermo,                                             \
+        ubRhoMulticomponentThermo,                                             \
         Mixture,                                                               \
         ThermoPhysics                                                          \
     )
 
 namespace Foam
 {
-    forSensibleGases(makeUBPsiMulticomponentThermos, uHomogeneousMixture);
-    forSensibleGases(makeUBPsiMulticomponentThermos, bHomogeneousMixture);
-    forSensibleGases(makeUBPsiMulticomponentThermos, uInhomogeneousMixture);
-    forSensibleGases(makeUBPsiMulticomponentThermos, bInhomogeneousMixture);
-    forSensibleGases(makeUBPsiMulticomponentThermos, uInhomogeneousEGRMixture);
+    forSensibleGases(makeUBRhoMulticomponentThermos, uHomogeneousMixture);
+    forSensibleGases(makeUBRhoMulticomponentThermos, bHomogeneousMixture);
+    forSensibleGases(makeUBRhoMulticomponentThermos, uInhomogeneousMixture);
+    forSensibleGases(makeUBRhoMulticomponentThermos, bInhomogeneousMixture);
+    forSensibleGases(makeUBRhoMulticomponentThermos, uInhomogeneousEGRMixture);
 }
 
 // ************************************************************************* //

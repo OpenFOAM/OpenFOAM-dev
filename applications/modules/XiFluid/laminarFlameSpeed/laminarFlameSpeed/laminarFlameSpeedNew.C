@@ -30,7 +30,7 @@ License
 Foam::autoPtr<Foam::laminarFlameSpeed> Foam::laminarFlameSpeed::New
 (
     const dictionary& dict,
-    const ubPsiMulticomponentThermo& uThermo
+    const ubRhoMulticomponentThermo& uThermo
 )
 {
     const word model(dict.lookup("model"));

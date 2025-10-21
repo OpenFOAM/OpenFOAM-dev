@@ -50,7 +50,7 @@ Foam::laminarFlameSpeedModels::constant::constant
 (
     const dictionary& dict,
     const dictionary& coeffDict,
-    const ubPsiMulticomponentThermo& ct
+    const ubRhoMulticomponentThermo& ct
 )
 :
     laminarFlameSpeed(dict, ct),

@@ -43,7 +43,7 @@ SourceFiles
 #ifndef laminarFlameSpeed_H
 #define laminarFlameSpeed_H
 
-#include "ubPsiMulticomponentThermo.H"
+#include "ubRhoMulticomponentThermo.H"
 #include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -61,7 +61,7 @@ protected:
 
     // Protected data
 
-        const ubPsiMulticomponentThermo& uThermo_;
+        const ubRhoMulticomponentThermo& uThermo_;
 
 
 public:
@@ -80,7 +80,7 @@ public:
             (
                 const dictionary& dict,
                 const dictionary& coeffDict,
-                const ubPsiMulticomponentThermo& uThermo
+                const ubRhoMulticomponentThermo& uThermo
             ),
             (dict, coeffDict, uThermo)
         );
@@ -88,11 +88,11 @@ public:
 
     // Constructors
 
-        //- Construct from dictionary and ubPsiMulticomponentThermo
+        //- Construct from dictionary and ubRhoMulticomponentThermo
         laminarFlameSpeed
         (
             const dictionary&,
-            const ubPsiMulticomponentThermo&
+            const ubRhoMulticomponentThermo&
         );
 
         //- Disallow default bitwise copy construction
@@ -104,7 +104,7 @@ public:
         static autoPtr<laminarFlameSpeed> New
         (
             const dictionary&,
-            const ubPsiMulticomponentThermo&
+            const ubRhoMulticomponentThermo&
         );
 
 

@@ -55,7 +55,7 @@ bool Foam::XiGModels::KTS::readCoeffs(const dictionary& dict)
 Foam::XiGModels::KTS::KTS
 (
     const dictionary& dict,
-    const ubPsiThermo& thermo,
+    const ubRhoThermo& thermo,
     const compressibleMomentumTransportModel& turbulence,
     const volScalarField& Su
 )
