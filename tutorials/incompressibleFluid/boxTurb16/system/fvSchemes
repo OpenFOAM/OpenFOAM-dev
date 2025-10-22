@@ -27,7 +27,7 @@ gradSchemes
 divSchemes
 {
     default         none;
-    div(phi,U)      Gauss cubic;
+    div(phi,U)      Gauss cubic grad(U);
 }
 
 laplacianSchemes
