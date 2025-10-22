@@ -5,17 +5,23 @@ cd ${0%/*} || exit 1    # Run from this directory
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
 # Mesh if necessary
-if ! isTest $@ || ! cloneMesh ../DTCHull . && ! cloneMesh ../DTCHullMoving .
+if ! isTest "$@" || (! cloneMesh ../DTCHull . && ! cloneMesh ../DTCHullMoving .)
 then
     ./Allmesh
+else
+    runApplication decomposePar -noFields
 fi
 
-runApplication setWaves
+# Copy the fields into the processor directories
+runApplication -a decomposePar -fields -copyZero
 
-runApplication decomposePar
+# Initialise the volume fraction and velocity fields
+runParallel setWaves
 
+# Run
 runParallel foamRun
 
+# Reconstruct
 runApplication reconstructPar
 
 #------------------------------------------------------------------------------

@@ -7,14 +7,16 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Copy DTC hull surface from resources folder
 cp $FOAM_TUTORIALS/resources/geometry/DTC-scaled.stl.gz constant/geometry/
 
+# Extract features
 runApplication surfaceFeatures
 
+# Mesh in parallel
 runApplication blockMesh
+runApplication decomposePar -noFields
+runParallel refineMesh
+runParallel snappyHexMesh
 
-runApplication refineMesh
-
-runApplication snappyHexMesh
-
-runApplication renumberMesh -noFields
+# Renumber
+runParallel renumberMesh -noFields
 
 #------------------------------------------------------------------------------

@@ -62,9 +62,9 @@ elif [$meshType -eq 2 ]; then
 }
 fi
 
-runApplication setFields
+runApplication -a decomposePar -fields -copyZero
 
-runApplication decomposePar
+runParallel setFields
 
 runParallel foamRun
 

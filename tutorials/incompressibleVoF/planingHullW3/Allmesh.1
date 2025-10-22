@@ -14,10 +14,12 @@ runApplication surfaceFeatures
 
 runApplication blockMesh -dict system/blockMeshDict.1
 
-runApplication refineMesh -dict system/refineMeshDict.1
+runApplication decomposePar -noFields
 
-runApplication snappyHexMesh -dict system/snappyHexMeshDict.1
+runParallel refineMesh -dict system/refineMeshDict.1
 
-runApplication renumberMesh -noFields
+runParallel snappyHexMesh -dict system/snappyHexMeshDict.1
+
+runParallel renumberMesh -noFields
 
 #------------------------------------------------------------------------------
