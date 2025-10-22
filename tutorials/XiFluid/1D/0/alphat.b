@@ -9,8 +9,8 @@ FoamFile
 {
     format      ascii;
     class       volScalarField;
-    location    "-180";
-    object      alphat;
+    location    "0";
+    object      alphat.b;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -20,23 +20,20 @@ internalField   uniform 0;
 
 boundaryField
 {
-    piston
+    inlet
     {
-        type            compressible::alphatWallFunction;
-        Prt             0.85;
-        value           uniform 0;
+        type            calculated;
+        value           $internalField;
     }
-    liner
+
+    outlet
     {
-        type            compressible::alphatWallFunction;
-        Prt             0.85;
-        value           uniform 0;
+        type            zeroGradient;
     }
-    cylinderHead
+
+    sides
     {
-        type            compressible::alphatWallFunction;
-        Prt             0.85;
-        value           uniform 0;
+        type            empty;
     }
 }
 

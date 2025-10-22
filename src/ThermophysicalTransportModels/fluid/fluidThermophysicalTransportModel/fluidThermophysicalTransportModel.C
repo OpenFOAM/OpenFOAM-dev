@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,13 +29,14 @@ License
 
 Foam::fluidThermophysicalTransportModel::fluidThermophysicalTransportModel
 (
-    const compressibleMomentumTransportModel& momentumTransport
+    const compressibleMomentumTransportModel& momentumTransport,
+    const word& group
 )
 :
     thermophysicalTransportModel
     (
         momentumTransport.mesh(),
-        momentumTransport.alphaRhoPhi().group()
+        group
     ),
     momentumTransportModel_(momentumTransport)
 {}

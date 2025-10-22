@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -106,7 +106,7 @@ tmp<surfaceScalarField> Fourier<BasicThermophysicalTransportModel>::q() const
         IOobject::groupName
         (
             "q",
-            this->momentumTransport().alphaRhoPhi().group()
+            this->thermo().phaseName()
         ),
         -fvc::interpolate(this->alpha()*thermo.kappa())*fvc::snGrad(thermo.T())
     );

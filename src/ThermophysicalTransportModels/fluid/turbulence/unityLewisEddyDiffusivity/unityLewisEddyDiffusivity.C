@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,7 +99,7 @@ unityLewisEddyDiffusivity
             IOobject::groupName
             (
                 "alphat",
-                this->momentumTransport().alphaRhoPhi().group()
+                thermo.phaseName()
             ),
             momentumTransport.time().name(),
             momentumTransport.mesh(),
@@ -138,7 +138,7 @@ unityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::q() const
         IOobject::groupName
         (
             "q",
-            this->momentumTransport().alphaRhoPhi().group()
+            this->thermo().phaseName()
         ),
        -fvc::interpolate(this->alpha()*this->alphaEff())
        *fvc::snGrad(this->thermo().he())
@@ -185,7 +185,7 @@ unityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::j
         IOobject::groupName
         (
             "j(" + Yi.name() + ')',
-            this->momentumTransport().alphaRhoPhi().group()
+            this->thermo().phaseName()
         ),
        -fvc::interpolate(this->DEff(Yi)*this->alpha())*fvc::snGrad(Yi)
     );

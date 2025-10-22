@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -536,7 +536,7 @@ MaxwellStefan<BasicThermophysicalTransportModel>::q() const
             IOobject::groupName
             (
                 "q",
-                this->momentumTransport().alphaRhoPhi().group()
+                this->thermo().phaseName()
             ),
            -fvc::interpolate(this->alpha()*this->kappaEff())
            *fvc::snGrad(this->thermo().T())
@@ -746,7 +746,7 @@ tmp<surfaceScalarField> MaxwellStefan<BasicThermophysicalTransportModel>::j
                 IOobject::groupName
                 (
                     "j" + name(d),
-                    this->momentumTransport().alphaRhoPhi().group()
+                    this->thermo().phaseName()
                 ),
                 Yi.mesh(),
                 dimensionedScalar(dimMass/dimArea/dimTime, 0)

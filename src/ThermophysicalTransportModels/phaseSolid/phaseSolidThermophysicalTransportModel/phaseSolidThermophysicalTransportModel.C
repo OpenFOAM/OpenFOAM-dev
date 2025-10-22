@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,7 @@ phaseSolidThermophysicalTransportModel
     const solidThermo& thermo
 )
 :
-    thermophysicalTransportModel(thermo.mesh(), alpha.group()),
+    thermophysicalTransportModel(thermo.mesh(), thermo.phaseName()),
     alpha_(alpha),
     thermo_(thermo)
 {}
@@ -68,7 +68,7 @@ Foam::phaseSolidThermophysicalTransportModel::New
         IOobject::groupName
         (
             phaseSolidThermophysicalTransportModel::typeName,
-            alpha.group()
+            thermo.phaseName()
         ),
         thermo.mesh().time().constant(),
         thermo.mesh(),

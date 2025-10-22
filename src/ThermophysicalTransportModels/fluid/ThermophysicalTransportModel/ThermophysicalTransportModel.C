@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ ThermophysicalTransportModel
     const thermoModel& thermo
 )
 :
-    fluidThermophysicalTransportModel(momentumTransport),
+    fluidThermophysicalTransportModel(momentumTransport, thermo.phaseName()),
     momentumTransport_(momentumTransport),
     thermo_(thermo)
 {}
