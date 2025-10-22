@@ -106,7 +106,7 @@ public:
 
             //- Optionally clip the phase-fractions
             //  between their physical limits and to sum to 1.
-            //  Defaults to false
+            //  Defaults to true
             Switch clip;
 
             //- Read the alpha and MULES controls from dict
