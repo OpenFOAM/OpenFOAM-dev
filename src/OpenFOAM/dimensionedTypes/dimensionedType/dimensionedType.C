@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -431,6 +431,32 @@ bool Foam::dimensioned<Type>::readIfPresent
         }
 
         return false;
+    }
+}
+
+
+template<class Type>
+void Foam::dimensioned<Type>::readOrDefault
+(
+    const dictionary& dict,
+    const Type& defaultValue,
+    const unitConversion& defaultUnits
+)
+{
+    const entry* entryPtr = dict.lookupEntryPtr(name_, false, true);
+
+    if (entryPtr)
+    {
+        initialise
+        (
+            name_,
+            isNull(defaultUnits) ? dimensions_ : defaultUnits,
+            entryPtr->stream()
+        );
+    }
+    else
+    {
+        value_ = defaultValue;
     }
 }
 

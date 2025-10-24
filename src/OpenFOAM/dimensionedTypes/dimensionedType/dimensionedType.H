@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -212,6 +212,15 @@ public:
         bool readIfPresent
         (
             const dictionary&,
+            const unitConversion& defaultUnits = NullObjectRef<unitConversion>()
+        );
+
+        //- Update the value of dimensioned<Type> if found in the dictionary
+        //  and if not found set to the given default value
+        void readOrDefault
+        (
+            const dictionary&,
+            const Type& defaultValue,
             const unitConversion& defaultUnits = NullObjectRef<unitConversion>()
         );
 
