@@ -458,7 +458,7 @@ void Foam::fv::phaseSurfaceBoiling::addSup
     }
 
     // Let the base class do the other liquid-vapour transfers
-    if (&he == &liquid_.thermo().he())
+    if (&he != &solid_.thermo().he())
     {
         phaseChange::addSup(alpha, rho, he, eqn);
     }
