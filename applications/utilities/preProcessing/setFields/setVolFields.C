@@ -51,17 +51,22 @@ void setVolField
 
         VolField<Type> field(fieldHeader, mesh);
 
-        const Type value = pTraits<Type>(fieldValueStream);
+        const dimensioned<Type> value
+        (
+            fieldName,
+            field.dimensions(),
+            fieldValueStream
+        );
 
         if (&selectedCells == &labelList::null())
         {
-            field.primitiveFieldRef() = value;
+            field.primitiveFieldRef() = value.value();
         }
         else
         {
             forAll(selectedCells, celli)
             {
-                field[selectedCells[celli]] = value;
+                field[selectedCells[celli]] = value.value();
             }
         }
 
@@ -116,7 +121,12 @@ void setPatchField
         typename VolField<Type>::Boundary& fieldBf = field.boundaryFieldRef();
 
         // Read the value
-        const Type value = pTraits<Type>(fieldValueStream);
+        const dimensioned<Type> value
+        (
+            fieldName,
+            field.dimensions(),
+            fieldValueStream
+        );
 
         // Determine the number of non-processor patches
         label nNonProcPatches = 0;
@@ -175,7 +185,7 @@ void setPatchField
                     }
                     else
                     {
-                        fieldBfCopy[patches[i]][patchFaces[i]] = value;
+                        fieldBfCopy[patches[i]][patchFaces[i]] = value.value();
                         nonProcPatchNChangedFaces[patches[i]] ++;
                     }
                 }

@@ -18,7 +18,7 @@ defaultValues
 {
     U       (0 0 0);
     T       348.432;
-    p       100000;
+    p       1 [bar];
 }
 
 zones
@@ -32,7 +32,7 @@ zones
         values
         {
             T       278.746;
-            p       10000;
+            p       0.1 [bar];
         }
     }
 }
