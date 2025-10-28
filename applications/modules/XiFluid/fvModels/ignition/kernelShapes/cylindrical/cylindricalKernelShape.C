@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,40 +23,43 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "planarXiCorr.H"
+#include "cylindricalKernelShape.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace XiCorrModels
+namespace kernelShapes
 {
-    defineTypeNameAndDebug(planar, 0);
-    addToRunTimeSelectionTable(XiCorrModel, planar, dictionary);
+    defineTypeNameAndDebug(cylindrical, 0);
+    addToRunTimeSelectionTable(kernelShape, cylindrical, dictionary);
 }
 }
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-bool Foam::XiCorrModels::planar::readCoeffs(const dictionary& dict)
+bool Foam::kernelShapes::cylindrical::readCoeffs(const dictionary& dict)
 {
-    XiCorrModel::readCoeffs(dict);
-    area_.read(dict);
+    kernelShape::readCoeffs(dict);
+    thickness_.read(dict);
+    cylinderFraction_.readIfPresent(dict);
     return true;
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::XiCorrModels::planar::planar
+Foam::kernelShapes::cylindrical::cylindrical
 (
     const fvMesh& mesh,
     const dictionary& dict
 )
 :
-    XiCorrModel(mesh, dict)
+    kernelShape(mesh, dict),
+    thickness_("thickness", dimLength, 0),
+    cylinderFraction_("cylinderFraction", dimless, 1)
 {
     readCoeffs(dict);
 }
@@ -64,18 +67,25 @@ Foam::XiCorrModels::planar::planar
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::XiCorrModels::planar::~planar()
+Foam::kernelShapes::cylindrical::~cylindrical()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::dimensionedScalar Foam::XiCorrModels::planar::Ak
+Foam::dimensionedScalar Foam::kernelShapes::cylindrical::Ak
 (
     const dimensionedScalar& Vk
 ) const
 {
-    return area_;
+    // Radius of the ignition kernel
+    dimensionedScalar rk
+    (
+        sqrt(Vk/(cylinderFraction_*constant::mathematical::pi*thickness_))
+    );
+
+    // Return area of the ignition kernel
+    return cylinderFraction_*2*constant::mathematical::pi*rk*thickness_;
 }
 
 

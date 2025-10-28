@@ -39,54 +39,6 @@ License
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField> Foam::solvers::XiFluid::XiCorr
-(
-    const volScalarField& Xi,
-    const surfaceScalarField& nf,
-    const dimensionedScalar& dMgb
-) const
-{
-    const UPtrListDictionary<fv::bXiIgnition> ignitionModels
-    (
-        fvModels().lookupType<fv::bXiIgnition>()
-    );
-
-    bool igniting = false;
-
-    forAll(ignitionModels, i)
-    {
-        if (ignitionModels[i].igniting())
-        {
-            igniting = true;
-            break;
-        }
-    }
-
-    if (igniting)
-    {
-        tmp<volScalarField> tXi(volScalarField::New("XiCorrected", Xi));
-
-        // Calculate kernel area from b field consistent with the
-        // discretisation of the b equation.
-        const volScalarField mgb
-        (
-            fvc::div(nf, b, "div(phi,b)") - b*fvc::div(nf) + dMgb
-        );
-
-        forAll(ignitionModels, i)
-        {
-            ignitionModels[i].XiCorr(tXi.ref(), b, mgb);
-        }
-
-        return tXi;
-    }
-    else
-    {
-        return Xi;
-    }
-}
-
-
 void Foam::solvers::XiFluid::burn()
 {
     volScalarField& b(thermo_.b());
@@ -125,14 +77,11 @@ void Foam::solvers::XiFluid::burn()
     const surfaceScalarField nf("nf", mesh.Sf() & nfVec);
     n /= mgb;
 
-    // Ignition corrected Xi*Su
-    const volScalarField SuXiCorr(Su*this->XiCorr(Xi, nf, dMgb));
-
     // Turbulent flame speed volumetric flux
-    const surfaceScalarField phivSt("phivSt", fvc::interpolate(SuXiCorr)*nf);
+    const surfaceScalarField phivSt("phivSt", fvc::interpolate(Su*Xi)*nf);
 
     // Turbulent flame speed mass flux
-    surfaceScalarField phiSt("phiSt", fvc::interpolate(rhou*SuXiCorr)*nf);
+    surfaceScalarField phiSt("phiSt", fvc::interpolate(rhou*Su*Xi)*nf);
 
     const dimensionedScalar mgbStab(2*dMgb/bMin_/mgbCoeff_);
 

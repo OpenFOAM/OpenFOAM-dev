@@ -47,8 +47,6 @@ namespace Foam
 
 void Foam::fv::constantbXiIgnition::readCoeffs(const dictionary& dict)
 {
-    start_.read(dict, mesh().time().userUnits());
-    duration_.read(dict, mesh().time().userUnits());
     strength_.read(dict);
 }
 
@@ -63,38 +61,13 @@ Foam::fv::constantbXiIgnition::constantbXiIgnition
     const dictionary& dict
 )
 :
-    bXiIgnition(name, modelType, mesh, dict),
+    bXiTimedIgnition(name, modelType, mesh, dict),
     zone_(mesh, dict),
-    XiCorrModel_(XiCorrModel::New(mesh, dict)),
-    start_("start", mesh().time().userUnits(), dict),
-    duration_("duration", mesh().time().userUnits(), dict),
     strength_("strength", dimless, dict)
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-bool Foam::fv::constantbXiIgnition::igniting() const
-{
-    const dimensionedScalar curTime = mesh().time();
-    const dimensionedScalar deltaT = mesh().time().deltaT();
-
-    return
-    (
-        (curTime > start_ - 0.5*deltaT)
-     && (curTime < start_ + max(duration_, deltaT))
-    );
-}
-
-
-bool Foam::fv::constantbXiIgnition::ignited() const
-{
-    const dimensionedScalar curTime = mesh().time();
-    const dimensionedScalar deltaT = mesh().time().deltaT();
-
-    return (curTime > start_ - 0.5*deltaT);
-}
-
 
 void Foam::fv::constantbXiIgnition::addSup
 (
@@ -130,34 +103,18 @@ void Foam::fv::constantbXiIgnition::addSup
 }
 
 
-void Foam::fv::constantbXiIgnition::XiCorr
-(
-    volScalarField& Xi,
-    const volScalarField& b,
-    const volScalarField& mgb
-) const
-{
-    if (igniting())
-    {
-        XiCorrModel_->XiCorr(Xi, b, mgb);
-    }
-}
-
-
 void Foam::fv::constantbXiIgnition::topoChange
 (
     const polyTopoChangeMap& map
 )
 {
     zone_.topoChange(map);
-    XiCorrModel_->topoChange(map);
 }
 
 
 void Foam::fv::constantbXiIgnition::mapMesh(const polyMeshMap& map)
 {
     zone_.mapMesh(map);
-    XiCorrModel_->mapMesh(map);
 }
 
 
@@ -167,24 +124,21 @@ void Foam::fv::constantbXiIgnition::distribute
 )
 {
     zone_.distribute(map);
-    XiCorrModel_->distribute(map);
 }
 
 
 bool Foam::fv::constantbXiIgnition::movePoints()
 {
     zone_.movePoints();
-    XiCorrModel_->movePoints();
     return true;
 }
 
 
 bool Foam::fv::constantbXiIgnition::read(const dictionary& dict)
 {
-    if (fvModel::read(dict))
+    if (bXiIgnition::read(dict))
     {
         zone_.read(coeffs(dict));
-        XiCorrModel_->read(coeffs(dict));
         readCoeffs(coeffs(dict));
         return true;
     }

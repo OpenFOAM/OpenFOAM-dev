@@ -39,12 +39,6 @@ Usage
         start           0;
         duration        0.003;
         strength        2;
-
-        XiCorr
-        {
-            type            spherical;
-            cellZone        all;
-        }
     }
     \endverbatim
 
@@ -55,14 +49,7 @@ Usage
         start        | Ignition start time         | yes        |
         duration     | Ignition duration           | yes        |
         strength     | Ignition strength [1/s]     | yes        |
-        XiCorr       | Flame-wrinkling correction  | yes        |
     \endtable
-
-See also
-    Foam::XiCorrModel
-    Foam::XiCorrModels::planar
-    Foam::XiCorrModels::cylindrical
-    Foam::XiCorrModels::spherical
 
 SourceFiles
     constantbXiIgnition.C
@@ -72,8 +59,7 @@ SourceFiles
 #ifndef constantbXiIgnition_H
 #define constantbXiIgnition_H
 
-#include "bXiIgnition.H"
-#include "XiCorrModel.H"
+#include "bXiTimedIgnition.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -88,7 +74,7 @@ namespace fv
 
 class constantbXiIgnition
 :
-    public bXiIgnition
+    public bXiTimedIgnition
 {
 
 protected:
@@ -97,14 +83,6 @@ protected:
 
         //- The ignition cellZone
         fvCellZone zone_;
-
-        autoPtr<XiCorrModel> XiCorrModel_;
-
-        //- Ignition start time
-        dimensionedScalar start_;
-
-        //- Ignition duration
-        dimensionedScalar duration_;
 
         //- Ignition strength
         dimensionedScalar strength_;
@@ -144,15 +122,6 @@ public:
 
     // Member Functions
 
-        // Checks
-
-            //- Return true during the ignition duration
-            virtual bool igniting() const;
-
-            //- Return true during the combustion duration
-            virtual bool ignited() const;
-
-
         // Add explicit and implicit contributions to compressible equation
 
             //- Add ignition contribution to b equation
@@ -161,13 +130,6 @@ public:
                 const volScalarField& rho,
                 const volScalarField& b,
                 fvMatrix<scalar>& eqn
-            ) const;
-
-            virtual void XiCorr
-            (
-                volScalarField& Xi,
-                const volScalarField& b,
-                const volScalarField& mgb
             ) const;
 
 

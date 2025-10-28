@@ -45,16 +45,16 @@ XiModels/XiGModels/XiGModel/XiGModelNew.C
 XiModels/XiGModels/KTS/KTS.C
 XiModels/XiGModels/instability/instability_XiGModel.C
 
-fvModels/ignition/XiCorrModels/XiCorrModel/XiCorrModel.C
-fvModels/ignition/XiCorrModels/XiCorrModel/XiCorrModelNew.C
-fvModels/ignition/XiCorrModels/none/noneXiCorr.C
-fvModels/ignition/XiCorrModels/planar/planarXiCorr.C
-fvModels/ignition/XiCorrModels/cylindrical/cylindricalXiCorr.C
-fvModels/ignition/XiCorrModels/spherical/sphericalXiCorr.C
+fvModels/ignition/kernelShapes/kernelShape/kernelShape.C
+fvModels/ignition/kernelShapes/kernelShape/kernelShapeNew.C
+fvModels/ignition/kernelShapes/planar/planarKernelShape.C
+fvModels/ignition/kernelShapes/cylindrical/cylindricalKernelShape.C
+fvModels/ignition/kernelShapes/spherical/sphericalKernelShape.C
 
 fvModels/ignition/bXiIgnition/bXiIgnition.C
+fvModels/ignition/bXiTimedIgnition/bXiTimedIgnition.C
 fvModels/ignition/bXiIgnited/bXiIgnited.C
 fvModels/ignition/constantbXiIgnition/constantbXiIgnition.C
-fvModels/ignition/multiCycleConstantbXiIgnition/multiCycleConstantbXiIgnition.C
+fvModels/ignition/bXiKernelCorr/bXiKernelCorr.C
 
 LIB = $(FOAM_LIBBIN)/libXiFluidSolver

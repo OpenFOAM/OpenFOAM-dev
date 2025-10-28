@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,99 +22,98 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::XiCorrModels::none
+    Foam::kernelShapes::planar
 
 Description
-    Dummy ignition kernel flame-wrinkling correction model
-
-    which does not apply any correction
+    Planar ignition kernel flame-wrinkling correction model
 
 Usage
     Example usage:
     \verbatim
-    XiCorr
+    kernelShape
     {
-        type            none;
-        cellZone        all;
+        type            planar;
+        area            1e-4;
     }
     \endverbatim
-    or simply omit the \c XiCorr entry and the \c none model will be selected
-    by default.
+
+    Where:
+    \table
+        Property   | Description                   | Required   | Default value
+        area       | Cross-sectional area of the 1D mesh | yes  |
+    \endtable
 
 SourceFiles
-    none.C
+    planar.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef noneXiCorr_H
-#define noneXiCorr_H
+#ifndef planarKernelShape_H
+#define planarKernelShape_H
 
-#include "XiCorrModel.H"
+#include "kernelShape.H"
+#include "dimensionedTypes.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace XiCorrModels
+namespace kernelShapes
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class none Declaration
+                           Class planar Declaration
 \*---------------------------------------------------------------------------*/
 
-class none
+class planar
 :
-    public XiCorrModel
+    public kernelShape
 {
+    // Private Data
+
+        //- Cross-sectional area of the 1D mesh
+        dimensionedScalar area_;
+
+        //- Update coefficients from given dictionary
+        virtual bool readCoeffs(const dictionary& dict);
+
 
 public:
 
     //- Runtime type information
-    TypeName("none");
+    TypeName("planar");
 
 
     // Constructors
 
         //- Construct from mesh and dictionary
-        none(const fvMesh& mesh, const dictionary& dict);
+        planar(const fvMesh& mesh, const dictionary& dict);
 
         //- Disallow default bitwise copy construction
-        none(const none&) = delete;
+        planar(const planar&) = delete;
 
 
     //- Destructor
-    virtual ~none();
+    virtual ~planar();
 
 
     // Member Functions
 
         //- Return the area of the ignition kernel
         //  calculated from the given kernel volume
-        virtual dimensionedScalar Ak(const dimensionedScalar& Vk) const
-        {
-            NotImplemented;
-            return dimensionedScalar(dimless, scalar(0));
-        }
-
-        virtual void XiCorr
-        (
-            volScalarField& Xi,
-            const volScalarField& b,
-            const volScalarField& mgb
-        ) const
-        {}
+        virtual dimensionedScalar Ak(const dimensionedScalar& Vk) const;
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const none&) = delete;
+        void operator=(const planar&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace XiCorrModels
+} // End namespace kernelShapes
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

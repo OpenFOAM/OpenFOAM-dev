@@ -22,60 +22,45 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::XiCorrModels::planar
+    Foam::kernelShape
 
 Description
-    Planar ignition kernel flame-wrinkling correction model
+    Base class for ignition kernel flame wrinkling \c Xi correction
 
 Usage
     Example usage:
     \verbatim
-    XiCorr
+    kernelShape
     {
-        type            planar;
-        cellZone        all;
-        area            1e-4;
+        type            <type>;
     }
     \endverbatim
 
-    Where:
-    \table
-        Property   | Description                   | Required   | Default value
-        cellZone   | Correction cellZone           | yes        |
-        area       | Cross-sectional area of the 1D mesh | yes  |
-        bMin       | Min b below which no correction | no | 0.01
-    \endtable
-
 SourceFiles
-    planar.C
+    kernelShape.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef planarXiCorr_H
-#define planarXiCorr_H
+#ifndef kernelShape_H
+#define kernelShape_H
 
-#include "XiCorrModel.H"
 #include "dimensionedTypes.H"
+#include "fvMesh.H"
+#include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace XiCorrModels
-{
 
 /*---------------------------------------------------------------------------*\
-                           Class planar Declaration
+                          Class kernelShape Declaration
 \*---------------------------------------------------------------------------*/
 
-class planar
-:
-    public XiCorrModel
+class kernelShape
 {
-    // Private Data
 
-        //- Cross-sectional area of the 1D mesh
-        dimensionedScalar area_;
+protected:
 
         //- Update coefficients from given dictionary
         virtual bool readCoeffs(const dictionary& dict);
@@ -84,39 +69,66 @@ class planar
 public:
 
     //- Runtime type information
-    TypeName("planar");
+    TypeName("kernelShape");
+
+
+    // Declare run-time constructor selection table
+
+        declareRunTimeSelectionTable
+        (
+            autoPtr,
+            kernelShape,
+            dictionary,
+            (const fvMesh& mesh, const dictionary& dict),
+            (mesh, dict)
+        );
 
 
     // Constructors
 
         //- Construct from mesh and dictionary
-        planar(const fvMesh& mesh, const dictionary& dict);
+        kernelShape(const fvMesh& mesh, const dictionary& dict);
 
         //- Disallow default bitwise copy construction
-        planar(const planar&) = delete;
+        kernelShape(const kernelShape&) = delete;
+
+
+    // Selectors
+
+        //- Return a reference to the selected kernelShape model
+        static autoPtr<kernelShape> New
+        (
+            const fvMesh& mesh,
+            const dictionary& dict
+        );
 
 
     //- Destructor
-    virtual ~planar();
+    virtual ~kernelShape();
 
 
     // Member Functions
 
         //- Return the area of the ignition kernel
         //  calculated from the given kernel volume
-        virtual dimensionedScalar Ak(const dimensionedScalar& Vk) const;
+        virtual dimensionedScalar Ak(const dimensionedScalar& Vk) const = 0;
+
+
+    // IO
+
+        //- Update properties from the given XiProperties dictionary
+        bool read(const dictionary& XiProperties);
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const planar&) = delete;
+        void operator=(const kernelShape&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace XiCorrModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -16,21 +16,31 @@ FoamFile
 
 ignition
 {
-    type            multiCycleConstantbXiIgnition;
+    type            constantbXiIgnition;
 
     cellZone        ignition;
 
     period          720;
 
     start           715;
-    duration        15;
-    strength        20;
+    duration        1;
+    strength        1;
     combustionDuration 245;
+}
 
-    XiCorr
+correction
+{
+    type            bXiKernelCorr;
+
+    cellZone        all;
+
+    ignition        ignition;
+
+    duration        20;
+
+    kernelShape
     {
         type            cylindrical;
-        cellZone        all;
         thickness       0.05;
         cylinderFraction 1;
     }

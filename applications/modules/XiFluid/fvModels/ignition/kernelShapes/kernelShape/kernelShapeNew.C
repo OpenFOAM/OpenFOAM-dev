@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,37 +23,45 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "noneXiCorr.H"
-#include "addToRunTimeSelectionTable.H"
+#include "kernelShape.H"
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-namespace XiCorrModels
-{
-    defineTypeNameAndDebug(none, 0);
-    addToRunTimeSelectionTable(XiCorrModel, none, dictionary);
-}
-}
-
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::XiCorrModels::none::none
+Foam::autoPtr<Foam::kernelShape> Foam::kernelShape::New
 (
     const fvMesh& mesh,
     const dictionary& dict
 )
-:
-    XiCorrModel(mesh, dict)
-{}
+{
+    const dictionary& kernelShapeDict = dict.subDict("kernelShape");
 
+    const word type(kernelShapeDict.lookup("type"));
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+    Info<< "Selecting flame-wrinkling correction type "
+        << type << endl;
 
-Foam::XiCorrModels::none::~none()
-{}
+    dictionaryConstructorTable::iterator cstrIter =
+        dictionaryConstructorTablePtr_->find(type);
+
+    if (cstrIter == dictionaryConstructorTablePtr_->end())
+    {
+        FatalIOErrorInFunction(kernelShapeDict)
+            << "Unknown kernelShape "
+            << type << nl << nl
+            << "Valid kernelShapes are : " << endl
+            << dictionaryConstructorTablePtr_->sortedToc()
+            << exit(FatalIOError);
+    }
+
+    return autoPtr<kernelShape>
+    (
+        cstrIter()
+        (
+            mesh,
+            kernelShapeDict.optionalSubDict(type + "Coeffs")
+        )
+    );
+}
 
 
 // ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "multiCycleConstantbXiIgnition.H"
+#include "bXiTimedIgnition.H"
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
 
@@ -31,30 +31,25 @@ namespace Foam
 {
     namespace fv
     {
-        defineTypeNameAndDebug(multiCycleConstantbXiIgnition, 0);
-
-        addToRunTimeSelectionTable
-        (
-            fvModel,
-            multiCycleConstantbXiIgnition,
-            dictionary
-        );
+        defineTypeNameAndDebug(bXiTimedIgnition, 0);
     }
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::multiCycleConstantbXiIgnition::readCoeffs(const dictionary& dict)
+void Foam::fv::bXiTimedIgnition::readCoeffs(const dictionary& dict)
 {
-    period_.read(dict, mesh().time().userUnits());
-    combustionDuration_.read(dict, mesh().time().userUnits());
+    start_.read(dict, mesh().time().userUnits());
+    duration_.read(dict, mesh().time().userUnits());
+    period_.readIfPresent(dict, mesh().time().userUnits());
+    combustionDuration_.readIfPresent(dict, mesh().time().userUnits());
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fv::multiCycleConstantbXiIgnition::multiCycleConstantbXiIgnition
+Foam::fv::bXiTimedIgnition::bXiTimedIgnition
 (
     const word& name,
     const word& modelType,
@@ -62,7 +57,9 @@ Foam::fv::multiCycleConstantbXiIgnition::multiCycleConstantbXiIgnition
     const dictionary& dict
 )
 :
-    constantbXiIgnition(name, modelType, mesh, dict),
+    bXiIgnition(name, modelType, mesh, dict),
+    start_("start", mesh().time().userUnits(), dict),
+    duration_("duration", mesh().time().userUnits(), dict),
     period_("period", mesh().time().userUnits(), dict, vGreat),
     combustionDuration_
     (
@@ -74,7 +71,20 @@ Foam::fv::multiCycleConstantbXiIgnition::multiCycleConstantbXiIgnition
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::scalar Foam::fv::multiCycleConstantbXiIgnition::ignRelTime
+Foam::wordList Foam::fv::bXiTimedIgnition::addSupFields() const
+{
+    if (ignited())
+    {
+        return wordList({"b"});
+    }
+    else
+    {
+        return wordList::null();
+    }
+}
+
+
+Foam::scalar Foam::fv::bXiTimedIgnition::ignRelTime
 (
     const scalar t
 ) const
@@ -83,7 +93,7 @@ Foam::scalar Foam::fv::multiCycleConstantbXiIgnition::ignRelTime
 }
 
 
-bool Foam::fv::multiCycleConstantbXiIgnition::igniting
+bool Foam::fv::bXiTimedIgnition::igniting
 (
     const dimensionedScalar duration
 ) const
@@ -106,13 +116,13 @@ bool Foam::fv::multiCycleConstantbXiIgnition::igniting
 }
 
 
-bool Foam::fv::multiCycleConstantbXiIgnition::igniting() const
+bool Foam::fv::bXiTimedIgnition::igniting() const
 {
     return igniting(duration_);
 }
 
 
-bool Foam::fv::multiCycleConstantbXiIgnition::ignited() const
+bool Foam::fv::bXiTimedIgnition::ignited() const
 {
     const scalar curTime = mesh().time().value();
     const scalar deltaT = mesh().time().deltaTValue();
@@ -138,9 +148,9 @@ bool Foam::fv::multiCycleConstantbXiIgnition::ignited() const
 }
 
 
-bool Foam::fv::multiCycleConstantbXiIgnition::read(const dictionary& dict)
+bool Foam::fv::bXiTimedIgnition::read(const dictionary& dict)
 {
-    if (constantbXiIgnition::read(dict))
+    if (fvModel::read(dict))
     {
         readCoeffs(coeffs(dict));
         return true;

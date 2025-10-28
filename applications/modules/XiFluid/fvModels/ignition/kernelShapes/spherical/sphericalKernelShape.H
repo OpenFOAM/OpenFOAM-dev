@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::XiCorrModels::spherical
+    Foam::kernelShapes::spherical
 
 Description
     Spherical ignition kernel flame-wrinkling correction model
@@ -30,10 +30,9 @@ Description
 Usage
     Example usage:
     \verbatim
-    XiCorr
+    kernelShape
     {
         type            spherical;
-        cellZone        all;
         sphereFraction  1;
     }
     \endverbatim
@@ -41,9 +40,7 @@ Usage
     Where:
     \table
         Property       | Description             | Required  | Default value
-        cellZone       | Correction cellZone     | yes       |
         sphereFraction | Kernel sphere fraction  | no        | 1
-        bMin           | Min b below which no correction | no | 0.01
     \endtable
 
 SourceFiles
@@ -51,17 +48,17 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef sphericalXiCorr_H
-#define sphericalXiCorr_H
+#ifndef sphericalKernelShape_H
+#define sphericalKernelShape_H
 
-#include "XiCorrModel.H"
+#include "kernelShape.H"
 #include "dimensionedTypes.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace XiCorrModels
+namespace kernelShapes
 {
 
 /*---------------------------------------------------------------------------*\
@@ -70,7 +67,7 @@ namespace XiCorrModels
 
 class spherical
 :
-    public XiCorrModel
+    public kernelShape
 {
     // Private Data
 
@@ -120,7 +117,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace XiCorrModels
+} // End namespace kernelShapes
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

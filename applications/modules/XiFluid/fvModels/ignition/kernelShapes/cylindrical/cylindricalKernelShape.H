@@ -22,61 +22,63 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::XiCorrModel
+    Foam::kernelShapes::cylindrical
 
 Description
-    Base class for ignition kernel flame wrinkling \c Xi correction
+    Cylindrical ignition kernel flame-wrinkling correction model
 
 Usage
     Example usage:
     \verbatim
-    XiCorr
+    kernelShape
     {
-        type            <type>;
-        cellZone        all;
-        bMin            0.05;
+        type            cylindrical;
+        thickness       0.001;
+        cylinderFraction 0.25;
     }
     \endverbatim
 
     Where:
     \table
         Property         | Description              | Required  | Default value
-        cellZone         | Correction cellZone      | yes       |
-        bMin             | Min b below which no correction | no | 0.01
+        thickness        | Thickness of the 2D mesh | yes       |
+        cylinderFraction | Kernel cylinder fraction | no        | 1
     \endtable
 
 SourceFiles
-    XiCorrModel.C
+    cylindrical.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef XiCorrModel_H
-#define XiCorrModel_H
+#ifndef cylindricalKernelShape_H
+#define cylindricalKernelShape_H
 
-#include "fvCellZone.H"
-#include "volFieldsFwd.H"
+#include "kernelShape.H"
 #include "dimensionedTypes.H"
-#include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+namespace kernelShapes
+{
 
 /*---------------------------------------------------------------------------*\
-                          Class XiCorrModel Declaration
+                           Class cylindrical Declaration
 \*---------------------------------------------------------------------------*/
 
-class XiCorrModel
+class cylindrical
+:
+    public kernelShape
 {
     // Private Data
 
-        //- The Xi correction cellZone
-        fvCellZone zone_;
+        //- Thickness of the 2D mesh
+        dimensionedScalar thickness_;
 
-        //- Minimum b below which the Xi correction is not applied
-        //  Defaults to 0.01
-        dimensionedScalar bMin_;
+        //- Kernel cylinder fraction
+        //  If the ignition is adjacent to n symmetry planes: 1/2^n
+        dimensionedScalar cylinderFraction_;
 
 
 protected:
@@ -88,88 +90,39 @@ protected:
 public:
 
     //- Runtime type information
-    TypeName("XiCorrModel");
-
-
-    // Declare run-time constructor selection table
-
-        declareRunTimeSelectionTable
-        (
-            autoPtr,
-            XiCorrModel,
-            dictionary,
-            (const fvMesh& mesh, const dictionary& dict),
-            (mesh, dict)
-        );
+    TypeName("cylindrical");
 
 
     // Constructors
 
         //- Construct from mesh and dictionary
-        XiCorrModel(const fvMesh& mesh, const dictionary& dict);
+        cylindrical(const fvMesh& mesh, const dictionary& dict);
 
         //- Disallow default bitwise copy construction
-        XiCorrModel(const XiCorrModel&) = delete;
-
-
-    // Selectors
-
-        //- Return a reference to the selected XiCorrModel model
-        static autoPtr<XiCorrModel> New
-        (
-            const fvMesh& mesh,
-            const dictionary& dict
-        );
+        cylindrical(const cylindrical&) = delete;
 
 
     //- Destructor
-    virtual ~XiCorrModel();
+    virtual ~cylindrical();
 
 
     // Member Functions
 
         //- Return the area of the ignition kernel
         //  calculated from the given kernel volume
-        virtual dimensionedScalar Ak(const dimensionedScalar& Vk) const = 0;
-
-        virtual void XiCorr
-        (
-            volScalarField& Xi,
-            const volScalarField& b,
-            const volScalarField& mgb
-        ) const;
-
-
-        // Mesh motion
-
-            //- Update topology using the given map
-            virtual void topoChange(const polyTopoChangeMap&);
-
-            //- Update from another mesh using the given map
-            virtual void mapMesh(const polyMeshMap&);
-
-            //- Redistribute or update using the given distribution map
-            virtual void distribute(const polyDistributionMap&);
-
-            //- Update for mesh motion
-            virtual bool movePoints();
-
-
-    // IO
-
-        //- Update properties from the given XiProperties dictionary
-        bool read(const dictionary& XiProperties);
+        virtual dimensionedScalar Ak(const dimensionedScalar& Vk) const;
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const XiCorrModel&) = delete;
+        void operator=(const cylindrical&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace kernelShapes
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

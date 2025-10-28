@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,14 +47,16 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-               Class bXiIgnition Declaration
+                          Class bXiIgnition Declaration
 \*---------------------------------------------------------------------------*/
 
 class bXiIgnition
 :
     public fvModel
 {
-    // Private Data
+protected:
+
+    // Protected Data
 
         //- The XiFluid solver
         const solvers::XiFluid& XiFluid_;
@@ -92,21 +94,14 @@ public:
             //  to the transport equation
             virtual wordList addSupFields() const;
 
+            //- Return true during the specified ignition duration
+            virtual bool igniting(const dimensionedScalar duration) const = 0;
+
             //- Return true during the ignition duration
             virtual bool igniting() const = 0;
 
             //- Return true during the combustion duration
             virtual bool ignited() const = 0;
-
-
-        // Add explicit and implicit contributions to compressible equation
-
-            virtual void XiCorr
-            (
-                volScalarField& Xi,
-                const volScalarField& b,
-                const volScalarField& mgb
-            ) const = 0;
 
 
     // Member Operators

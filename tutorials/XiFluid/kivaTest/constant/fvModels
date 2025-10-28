@@ -21,13 +21,23 @@ ignition
     cellZone        ignition;
 
     start           -15;
-    duration        20;
-    strength        2;
+    duration        1;
+    strength        0.1;
+}
 
-    XiCorr
+correction
+{
+    type            bXiKernelCorr;
+
+    cellZone        all;
+
+    ignition        ignition;
+
+    duration        20;
+
+    kernelShape
     {
         type            spherical;
-        cellZone        all;
     }
 }
 

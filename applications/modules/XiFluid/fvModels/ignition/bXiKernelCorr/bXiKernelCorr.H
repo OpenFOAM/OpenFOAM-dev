@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,32 +22,61 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::bXiIgnited
+    Foam::fv::bXiKernelCorr
 
 Description
-    Simple ignited model for the Weller b-Xi combustion models
-
-    which sets ignited true and ignition false so that the combustion model
-    executes continuously.
+    Early kernel propagation rate correction based on specified shape
 
 Usage
     Example usage:
     \verbatim
-    bXiIgnited
+    bXiKernelCorr1
     {
-        type            bXiIgnited;
+        type            bXiKernelCorr;
+
+        cellZone        kernelCorrection;
+
+        ignition        ignition;
+
+        duration        0.003;
+
+        kernelShape
+        {
+            type            spherical;
+        }
     }
     \endverbatim
 
+    Where:
+    \table
+        Property    | Description                 | Required   | Default value
+        cellZone    | Correction cellZone         | yes        |
+        ignition    | Name of the ignition fvModel to correct | yes |
+        duration    | Maximum correction duration | yes        |
+        kernelShape | Kernel shape                | yes        |
+        bMin        | Min b above which the correction is applied | no | \\
+                      XiFluid::bMin/2
+    \endtable
+
+    The correction is applied if \f$ min(b) > bMin \f$ and time of application
+    is less than the specified \c duration.
+
+See also
+    Foam::kernelShape
+    Foam::kernelShapes::planar
+    Foam::kernelShapes::cylindrical
+    Foam::kernelShapes::spherical
+
 SourceFiles
-    bXiIgnited.C
+    bXiKernelCorr.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef bXiIgnited_H
-#define bXiIgnited_H
+#ifndef bXiKernelCorr_H
+#define bXiKernelCorr_H
 
 #include "bXiIgnition.H"
+#include "kernelShape.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -57,24 +86,51 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class bXiIgnited Declaration
+                     Class bXiKernelCorr Declaration
 \*---------------------------------------------------------------------------*/
 
-class bXiIgnited
+class bXiKernelCorr
 :
-    public bXiIgnition
+    public fvModel
 {
+
+protected:
+
+    // Protected Data
+
+        //- The correction cellZone
+        fvCellZone zone_;
+
+        autoPtr<kernelShape> kernelShape_;
+
+        const fv::bXiIgnition& ignition_;
+
+        //- Maximum correction duration
+        dimensionedScalar duration_;
+
+        //- Minimum b below which the Xi correction is not applied
+        //  Must be less that XiFluid::bMin and defaults to XiFluid::bMin/2
+        dimensionedScalar bMin_;
+
+
+private:
+
+    // Private Member Functions
+
+        //- Non-virtual read
+        void readCoeffs(const dictionary& dict);
+
 
 public:
 
     //- Runtime type information
-    TypeName("bXiIgnited");
+    TypeName("bXiKernelCorr");
 
 
     // Constructors
 
         //- Construct from explicit source name and mesh
-        bXiIgnited
+        bXiKernelCorr
         (
             const word& name,
             const word& modelType,
@@ -83,9 +139,9 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        bXiIgnited
+        bXiKernelCorr
         (
-            const bXiIgnited&
+            const bXiKernelCorr&
         ) = delete;
 
 
@@ -93,14 +149,9 @@ public:
 
         // Checks
 
-            //- Return true during the specified ignition duration
-            virtual bool igniting(const dimensionedScalar duration) const;
-
-            //- Return true during the ignition duration
-            virtual bool igniting() const;
-
-            //- Return true during the combustion duration
-            virtual bool ignited() const;
+            //- Return the list of fields for which the option adds source term
+            //  to the transport equation
+            virtual wordList addSupFields() const;
 
 
         // Add explicit and implicit contributions to compressible equation
@@ -117,28 +168,28 @@ public:
         // Mesh motion
 
             //- Update topology using the given map
-            virtual void topoChange(const polyTopoChangeMap&)
-            {}
+            virtual void topoChange(const polyTopoChangeMap&);
 
             //- Update from another mesh using the given map
-            virtual void mapMesh(const polyMeshMap&)
-            {}
+            virtual void mapMesh(const polyMeshMap&);
 
             //- Redistribute or update using the given distribution map
-            virtual void distribute(const polyDistributionMap&)
-            {}
+            virtual void distribute(const polyDistributionMap&);
 
             //- Update for mesh motion
-            virtual bool movePoints()
-            {
-                return true;
-            }
+            virtual bool movePoints();
+
+
+        // IO
+
+            //- Read source dictionary
+            virtual bool read(const dictionary& dict);
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const bXiIgnited&) = delete;
+        void operator=(const bXiKernelCorr&) = delete;
 };
 
 

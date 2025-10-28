@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,26 +23,26 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "sphericalXiCorr.H"
+#include "sphericalKernelShape.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace XiCorrModels
+namespace kernelShapes
 {
     defineTypeNameAndDebug(spherical, 0);
-    addToRunTimeSelectionTable(XiCorrModel, spherical, dictionary);
+    addToRunTimeSelectionTable(kernelShape, spherical, dictionary);
 }
 }
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-bool Foam::XiCorrModels::spherical::readCoeffs(const dictionary& dict)
+bool Foam::kernelShapes::spherical::readCoeffs(const dictionary& dict)
 {
-    XiCorrModel::readCoeffs(dict);
+    kernelShape::readCoeffs(dict);
     sphereFraction_.readIfPresent(dict);
     return true;
 }
@@ -50,13 +50,13 @@ bool Foam::XiCorrModels::spherical::readCoeffs(const dictionary& dict)
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::XiCorrModels::spherical::spherical
+Foam::kernelShapes::spherical::spherical
 (
     const fvMesh& mesh,
     const dictionary& dict
 )
 :
-    XiCorrModel(mesh, dict),
+    kernelShape(mesh, dict),
     sphereFraction_("sphereFraction", dimless, 1)
 {
     readCoeffs(dict);
@@ -65,13 +65,13 @@ Foam::XiCorrModels::spherical::spherical
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::XiCorrModels::spherical::~spherical()
+Foam::kernelShapes::spherical::~spherical()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::dimensionedScalar Foam::XiCorrModels::spherical::Ak
+Foam::dimensionedScalar Foam::kernelShapes::spherical::Ak
 (
     const dimensionedScalar& Vk
 ) const

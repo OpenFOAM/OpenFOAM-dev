@@ -192,17 +192,6 @@ protected:
 
     // Protected member functions
 
-        //- Apply the early kernel growth correction to the flame-wrinkling Xi
-        //  to compensate for the inaccurate flame surface area estimate
-        //  when the kernel is not fully-developed,
-        //  i.e. does not have a completely burnt side
-        tmp<volScalarField> XiCorr
-        (
-            const volScalarField& Xi,
-            const surfaceScalarField& nf,
-            const dimensionedScalar& dMgb
-        ) const;
-
         //- Solve the regress variable and Xi equations
         //  and unburnt and burnt gas properties
         void burn();
@@ -327,6 +316,13 @@ public:
 
 
     // Member Functions
+
+        //- Minimum b below which a numerical compensation burn-out term
+        //  is applied to ensure b -> 0 and the flame speed is correct
+        scalar bMin() const
+        {
+            return bMin_;
+        }
 
         //- Predict thermophysical transport
         virtual void thermophysicalTransportPredictor();

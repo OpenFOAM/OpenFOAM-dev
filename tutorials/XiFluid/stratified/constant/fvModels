@@ -20,14 +20,24 @@ ignition
 
     cellZone        ignition;
 
-    start           0.001;
-    duration        0.003;
-    strength        2;
+    start           0;
+    duration        0.0001;
+    strength        1;
+}
 
-    XiCorr
+correction
+{
+    type            bXiKernelCorr;
+
+    cellZone        all;
+
+    ignition        ignition;
+
+    duration        0.01;
+
+    kernelShape
     {
         type            cylindrical;
-        cellZone        all;
         thickness       0.001;
         cylinderFraction 0.25;
     }

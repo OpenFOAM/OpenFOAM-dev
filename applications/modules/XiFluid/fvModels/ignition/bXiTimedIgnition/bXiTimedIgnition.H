@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,48 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::multiCycleConstantbXiIgnition
+    Foam::fv::bXiTimedIgnition
 
 Description
-    Simple constant rate ignition model for the Weller b-Xi combustion models
-
-Usage
-    Example usage:
-    \verbatim
-    multiCycleConstantbXiIgnition1
-    {
-        type            multiCycleConstantbXiIgnition;
-
-        cellZone        ignition;
-
-        // Timings are defined in crank angles for a multi-cycle engine case
-        start           700;
-        duration        5;
-        combustionDuration 200;
-        period          720;
-    }
-    \endverbatim
-
-    Where:
-    \table
-        Property          | Description              | Required | Default value
-        cellZone          | Correction cellZone         | yes       |
-        start             | Ignition start time         | yes      |
-        duration          | Ignition duration           | yes      |
-        combustionDuration| Combustion duration         | yes      |
-        period            | Ignition repeat period      | yes      |
-        strength          | Ignition strength [1/s]     | yes      |
-    \endtable
+    Abstract base-class for timed ignition models
+    for the Weller b-Xi combustion models
 
 SourceFiles
-    multiCycleConstantbXiIgnition.C
+    bXiTimedIgnition.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef multiCycleConstantbXiIgnition_H
-#define multiCycleConstantbXiIgnition_H
+#ifndef bXiTimedIgnition_H
+#define bXiTimedIgnition_H
 
-#include "constantbXiIgnition.H"
+#include "bXiIgnition.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -73,14 +46,22 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class multiCycleConstantbXiIgnition Declaration
+                       Class bXiTimedIgnition Declaration
 \*---------------------------------------------------------------------------*/
 
-class multiCycleConstantbXiIgnition
+class bXiTimedIgnition
 :
-    public constantbXiIgnition
+    public bXiIgnition
 {
-    // Private Data
+protected:
+
+    // Protected Data
+
+        //- Ignition start time
+        dimensionedScalar start_;
+
+        //- Ignition duration
+        dimensionedScalar duration_;
 
         //- Ignition repeat period
         dimensionedScalar period_;
@@ -95,6 +76,8 @@ class multiCycleConstantbXiIgnition
         mutable bool reset_;
 
 
+private:
+
     // Private Member Functions
 
         //- Non-virtual read
@@ -108,13 +91,13 @@ class multiCycleConstantbXiIgnition
 public:
 
     //- Runtime type information
-    TypeName("multiCycleConstantbXiIgnition");
+    TypeName("bXiTimedIgnition");
 
 
     // Constructors
 
         //- Construct from explicit source name and mesh
-        multiCycleConstantbXiIgnition
+        bXiTimedIgnition
         (
             const word& name,
             const word& modelType,
@@ -123,15 +106,19 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        multiCycleConstantbXiIgnition
+        bXiTimedIgnition
         (
-            const multiCycleConstantbXiIgnition&
+            const bXiTimedIgnition&
         ) = delete;
 
 
     // Member Functions
 
         // Checks
+
+            //- Return the list of fields for which the option adds source term
+            //  to the transport equation
+            virtual wordList addSupFields() const;
 
             //- Return true during the specified ignition duration
             virtual bool igniting(const dimensionedScalar duration) const;
@@ -152,7 +139,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const multiCycleConstantbXiIgnition&) = delete;
+        void operator=(const bXiTimedIgnition&) = delete;
 };
 
 

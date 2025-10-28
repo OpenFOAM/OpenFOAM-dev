@@ -23,49 +23,53 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "noneXiCorr.H"
+#include "kernelShape.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-Foam::autoPtr<Foam::XiCorrModel> Foam::XiCorrModel::New
+namespace Foam
+{
+    defineTypeNameAndDebug(kernelShape, 0);
+    defineRunTimeSelectionTable(kernelShape, dictionary);
+}
+
+
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+bool Foam::kernelShape::readCoeffs(const dictionary& dict)
+{
+    return true;
+}
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::kernelShape::kernelShape
 (
     const fvMesh& mesh,
     const dictionary& dict
 )
 {
-    if (!dict.isDict("XiCorr"))
-    {
-        return autoPtr<XiCorrModel>(new XiCorrModels::none(mesh, dict));
-    }
+    readCoeffs(dict);
+}
 
-    const dictionary& XiCorrDict = dict.subDict("XiCorr");
 
-    const word type(XiCorrDict.lookup("type"));
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-    Info<< "Selecting flame-wrinkling correction type "
-        << type << endl;
+Foam::kernelShape::~kernelShape()
+{}
 
-    dictionaryConstructorTable::iterator cstrIter =
-        dictionaryConstructorTablePtr_->find(type);
 
-    if (cstrIter == dictionaryConstructorTablePtr_->end())
-    {
-        FatalIOErrorInFunction(XiCorrDict)
-            << "Unknown XiCorrModel "
-            << type << nl << nl
-            << "Valid XiCorrModels are : " << endl
-            << dictionaryConstructorTablePtr_->sortedToc()
-            << exit(FatalIOError);
-    }
+// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-    return autoPtr<XiCorrModel>
+bool Foam::kernelShape::read(const dictionary& dict)
+{
+    const dictionary& kernelShapeDict
     (
-        cstrIter()
-        (
-            mesh,
-            XiCorrDict.optionalSubDict(type + "Coeffs")
-        )
+        dict.subDict("kernelShape").optionalSubDict(type() + "Coeffs")
     );
+
+    return readCoeffs(kernelShapeDict);
 }
 
 
