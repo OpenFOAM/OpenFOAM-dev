@@ -36,29 +36,6 @@ License
 #include "OSspecific.H"
 #include "addToRunTimeSelectionTable.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
-template<class Type>
-void gatherAndFlatten(DynamicField<Type>& field)
-{
-    List<List<Type>> gatheredField(Pstream::nProcs());
-    gatheredField[Pstream::myProcNo()] = field;
-    Pstream::gatherList(gatheredField);
-
-    field =
-        ListListOps::combine<List<Type>>
-        (
-            gatheredField,
-            accessOp<List<Type>>()
-        );
-}
-
-}
-
-
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
@@ -338,19 +315,19 @@ bool Foam::functionObjects::streamlines::write()
     // Gather data on the master
     if (Pstream::parRun())
     {
-        gatherAndFlatten(allPositions);
-        gatherAndFlatten(allTracks);
-        gatherAndFlatten(allTrackParts);
-        gatherAndFlatten(allAges);
+        Pstream::concatenateList(allPositions);
+        Pstream::concatenateList(allTracks);
+        Pstream::concatenateList(allTrackParts);
+        Pstream::concatenateList(allAges);
         forAll(fieldNames, fieldi)
         {
-            #define GatherAndFlattenAllTypes(Type, nullArg) \
-                if (Type##Interp.set(fieldi))               \
-                {                                           \
-                    gatherAndFlatten(all##Type##s[fieldi]); \
+            #define ConcatenateListAllTypes(Type, nullArg)          \
+                if (Type##Interp.set(fieldi))                       \
+                {                                                   \
+                    Pstream::concatenateList(all##Type##s[fieldi]); \
                 }
-            FOR_ALL_FIELD_TYPES(GatherAndFlattenAllTypes);
-            #undef GatherAndFlattenAllTypes
+            FOR_ALL_FIELD_TYPES(ConcatenateListAllTypes);
+            #undef ConcatenateListAllTypes
         }
     }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -299,6 +299,10 @@ public:
                 const int tag = Pstream::msgType(),
                 const label comm = UPstream::worldComm
             );
+
+            //- Gather the given list and concatenate on the master
+            template<class ListType>
+            static void concatenateList(ListType& list);
 
 
         // Exchange

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,16 +36,12 @@ Description
 #include "IPstream.H"
 #include "OPstream.H"
 #include "contiguous.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
+#include "ListListOps.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class T>
-void Pstream::gatherList
+void Foam::Pstream::gatherList
 (
     const List<UPstream::commsStruct>& comms,
     List<T>& Values,
@@ -194,7 +190,7 @@ void Pstream::gatherList
 
 
 template<class T>
-void Pstream::gatherList(List<T>& Values, const int tag, const label comm)
+void Foam::Pstream::gatherList(List<T>& Values, const int tag, const label comm)
 {
     if (UPstream::nProcs(comm) < UPstream::nProcsSimpleSum)
     {
@@ -208,7 +204,7 @@ void Pstream::gatherList(List<T>& Values, const int tag, const label comm)
 
 
 template<class T>
-void Pstream::scatterList
+void Foam::Pstream::scatterList
 (
     const List<UPstream::commsStruct>& comms,
     List<T>& Values,
@@ -336,7 +332,12 @@ void Pstream::scatterList
 
 
 template<class T>
-void Pstream::scatterList(List<T>& Values, const int tag, const label comm)
+void Foam::Pstream::scatterList
+(
+    List<T>& Values,
+    const int tag,
+    const label comm
+)
 {
     if (UPstream::nProcs(comm) < UPstream::nProcsSimpleSum)
     {
@@ -349,8 +350,24 @@ void Pstream::scatterList(List<T>& Values, const int tag, const label comm)
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+template<class ListType>
+void Foam::Pstream::concatenateList(ListType& list)
+{
+    typedef typename ListType::value_type Type;
 
-} // End namespace Foam
+    List<List<Type>> gatheredList(Pstream::nProcs());
+    gatheredList[Pstream::myProcNo()] = list;
+    Pstream::gatherList(gatheredList);
+
+    if (Pstream::master())
+    {
+        list = ListListOps::combine<List<Type>>
+        (
+            gatheredList,
+            accessOp<List<Type>>()
+        );
+    }
+}
+
 
 // ************************************************************************* //
