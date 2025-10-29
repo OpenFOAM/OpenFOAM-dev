@@ -120,6 +120,10 @@ private:
         //- Non-virtual read
         void readCoeffs(const dictionary& dict);
 
+        //- Kernel consumption rate distribution function
+        template<class Type>
+        inline Type bFunc(const Type& b, const Type& R) const;
+
 
 public:
 

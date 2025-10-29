@@ -53,6 +53,17 @@ void Foam::fv::bXiKernelCorr::readCoeffs(const dictionary& dict)
 }
 
 
+template<class Type>
+inline Type Foam::fv::bXiKernelCorr::bFunc(const Type& b, const Type& R) const
+{
+    // Analytical solution of b-Xi model with linear Xi and heat release
+    return (R - (R - 1)*b)*(1 - b);
+
+    // Fit to Gaussian kernel position distribution
+    // return pow(max(1 - b, 0.0), 0.8)/pow(max(b, bMin_.value()), 0.2);
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::fv::bXiKernelCorr::bXiKernelCorr
@@ -141,7 +152,7 @@ void Foam::fv::bXiKernelCorr::addSup
         const scalar Ak(kernelShape_->Ak(Vk).value());
 
         // Calculate volume integral of kernel distribution function
-        const scalar Vkd = gSum((Rc - (Rc - 1)*bc)*bc*(1 - bc)*Vc);
+        const scalar Vkd = gSum(bFunc(bc, Rc)*bc*Vc);
 
         scalarField& Sp = eqn.diag();
 
@@ -153,12 +164,7 @@ void Foam::fv::bXiKernelCorr::addSup
             // Add kernel propagation correction source
             Sp[celli] -=
                 Vc[i]*rhou[celli]*Sl[celli]*Xi[celli]
-               *max
-                (
-                    Ak*(Rc[i] - (Rc[i] - 1)*b)*(1 - b)/Vkd
-                  - mgb[celli]/max(b, bMin),
-                    0.0
-                );
+               *max(Ak*bFunc(b, Rc[i])/Vkd - mgb[celli]/max(b, bMin), 0);
         }
     }
 }
