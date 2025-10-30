@@ -178,7 +178,7 @@ do
     done < <(
         cd "$srcOrVarDir" && \
         find ./"$t0" constant system \
-        \( -path constant/polyMesh -prune -o -path constant/fvMesh -prune \) \
+        \( -name polyMesh -prune -o -name fvMesh -prune \) \
         -o -type f -print 2>/dev/null
     )
 done
@@ -202,7 +202,7 @@ do
 done < <(
     cd "$srcDir" && \
     find ./"$t0" constant system \
-    \( -path constant/polyMesh -prune -o -path constant/fvMesh -prune \) \
+    \( -name polyMesh -prune -o -name fvMesh -prune \) \
     -o -type f -print 2>/dev/null
 )
 
