@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ void Foam::dynamicCodeContext::addLineDirective
     const fileName& name
 )
 {
-    code = "#line " + Foam::name(lineNum + 1) + " \"" + name + "\"\n" + code;
+    code = "#line " + Foam::name(lineNum) + " \"" + name + "\"\n" + code;
 }
 
 
@@ -119,7 +119,7 @@ void Foam::dynamicCodeContext::read
             addLineDirective
             (
                 code_[key],
-                codePtrs[i]->startLineNumber(),
+                codePtrs[i]->stream()[0].lineNumber(),
                 codeDict.name()
             );
         }

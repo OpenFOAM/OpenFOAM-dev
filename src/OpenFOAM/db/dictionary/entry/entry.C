@@ -72,6 +72,7 @@ void Foam::entry::operator=(const entry& e)
     }
 
     keyword_ = e.keyword_;
+    startLineNumber_ = e.startLineNumber_;
 }
 
 
