@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,6 +44,7 @@ void Foam::Istream::putBack(const token& t)
     else
     {
         putBackToken_ = t;
+        lineNumber_ = t.lineNumber();
         putBack_ = true;
     }
 }
@@ -60,6 +61,7 @@ bool Foam::Istream::getBack(token& t)
     else if (putBack_)
     {
         t = putBackToken_;
+        lineNumber_ = putBackToken_.lineNumber();
         putBack_ = false;
         return true;
     }

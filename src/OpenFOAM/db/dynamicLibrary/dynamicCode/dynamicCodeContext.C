@@ -119,7 +119,7 @@ void Foam::dynamicCodeContext::read
             addLineDirective
             (
                 code_[key],
-                codePtrs[i]->stream()[0].lineNumber(),
+                codePtrs[i]->startLineNumber(),
                 codeDict.name()
             );
         }
