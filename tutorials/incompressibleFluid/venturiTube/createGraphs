@@ -26,7 +26,7 @@
 #     createGraphs
 #
 # Description
-#     Plots graphs of "x + 0.2U" vs "y" for the moodyChart tutorial case
+#     Generates velocity profile graphs for the venturiTube tutorial case
 #
 #------------------------------------------------------------------------------
 
@@ -36,6 +36,9 @@
 
 # Calculation function
 calc () {
+    # Avoid locale problems with output of numbers from awk
+    export LC_ALL=C
+
     awk "BEGIN{printf(\"%.4f\n\", $1)}"
 }
 

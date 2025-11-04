@@ -14,6 +14,9 @@ TDC_CLEARANCE=4
 # General calculation functions
 calc()
 {
+    # Avoid locale problems with output of numbers from awk
+    export LC_ALL=C
+
     # Default format
     _fmt="%.12f"
 
@@ -214,6 +217,9 @@ createNCCs()
 
 valvelift()
 {
+    # Avoid locale problems with output of numbers from awk
+    export LC_ALL=C
+
     # calculates valve lift as a triangular function of time
     # + _begin = begin time of upward slope
     # + _interval = time to triangle peak
