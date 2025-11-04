@@ -43,8 +43,15 @@ void Foam::Istream::putBack(const token& t)
     }
     else
     {
+        // Cache the put back token
         putBackToken_ = t;
+
+        // Cache the current stream line number
+        putBackLineNumber_ = lineNumber_;
+
+        // Reset the stream line number to that of the put back token
         lineNumber_ = t.lineNumber();
+
         putBack_ = true;
     }
 }
@@ -60,9 +67,14 @@ bool Foam::Istream::getBack(token& t)
     }
     else if (putBack_)
     {
+        // Set the token to the current put back token
         t = putBackToken_;
-        lineNumber_ = putBackToken_.lineNumber();
+
+        // Reset the stream line number to when the put back token was cached
+        lineNumber_ = putBackLineNumber_;
+
         putBack_ = false;
+
         return true;
     }
 
