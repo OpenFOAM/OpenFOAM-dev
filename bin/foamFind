@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -41,6 +41,8 @@ options:
   -f | -files            find wmake 'files' file associated with searched file
   -h | -help             help
   -i | -isearch <string> searches files for a <string>, case insensitive
+  -l | -lnInclude        find 'lnInclude' directory for searched file and print
+                         the corresponding '-I' flag for an 'options' file
   -m | -modules          search for the file from the \$FOAM_MODULES directory
   -n | -numbers          print line numbers with file output
   -o | -options          find wmake 'options' file associated with searched file
@@ -82,7 +84,8 @@ USAGE
 
 error() {
     exec 1>&2
-    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    while [ "$#" -ge 1 ]; do printf "%s" "$1"; shift; done
+    printf "\n"
     usage
     exit 1
 }
@@ -110,7 +113,7 @@ findWmakeFiles () {
             for _w in $_wmakeFiles
             do
                 _files="$(echo "$_files" \
-                       "$(find "$_file" -name "$_w" -type f)" | xargs)"
+                       "$(find "$_file" -name "$_w")" | xargs)"
             done
 
         [ "$_files" ] && break
@@ -315,6 +318,10 @@ do
        insensitive=on
        shift 2
        ;;
+   -l | -lnInclude)
+       wmakeFiles="$wmakeFiles lnInclude"
+       shift
+       ;;
    -m | -modules)
        [ "$dir" ] && error "$(dirError)"
        dir="$FOAM_MODULES"
@@ -361,22 +368,23 @@ done
 # Default search directory if not specified
 [ "$dir" ] || dir="$FOAM_SRC"
 
-# Disallow '-files' and '-options' if search directory does not include source code
+# Disallow '-f', '-o', '-l' if search directory does not include source code
 [ "$wmakeFiles" ] && ! isSrcDir "$dir" && \
-    error "With search directory '$dir' (not source code)," \
-          "cannot use '-files' or '-options'"
+    error "With search directory '$dir' (not source code), " \
+          "cannot use '-files', '-options' or '-lnInclude'"
 
 # Check number of arguments
 [ "$#" -eq 0 ] || error "Arguments specified =/= 1 (optional)"
 
 # If filename is not set, check search string is specified
 ! [ "$filename" ] && ! [ "$search" ] && \
-    error "<filename> can only be omitted if a search string is specified" \
+    error "<filename> can only be omitted if a search string is specified " \
           "with the '-search' option"
 
-# If '-files' or '-options' is selected, ensure <filename> is set
+# If '-f', '-o', '-l' is selected, ensure <filename> is set
 ! [ "$filename" ] && [ "$wmakeFiles" ] && \
-    error "With '-files' or '-options', <filename> must be specified"
+    error "With '-files', '-options' or '-lnInclude', " \
+          "<filename> must be specified"
 
 # Find files
 files="$(listFiles "$dir" "$filename" "$search" "$insensitive")"
@@ -398,6 +406,12 @@ files="$(selectFile "$filename" "$files")" || error
 # Output
 for f in $files
 do
+    # Handle lnInclude directory output
+    [ "${f##*/}" = "lnInclude" ] && \
+        printf "\nDirectory: %s\n" "$f" && \
+        printf "options entry: -I\$(LIB_SRC)/%s\n" "${f##"$FOAM_SRC/"}" && \
+        continue
+
     printf "\nFile: %s\n" "$f"
 
     # Printing entire files

@@ -4480,8 +4480,9 @@ _foamFind_ ()
         -files \
         -help \
         -isearch \
-        -numbers \
+        -lnInclude \
         -modules \
+        -numbers \
         -options \
         -print \
         -search \
