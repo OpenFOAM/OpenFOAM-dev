@@ -22,61 +22,66 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::bXiKernelCorr
+    Foam::fv::GaussianbXiIgnition
 
 Description
-    Early kernel propagation rate correction based on specified shape
+    Gaussian profile time dependent rate ignition model for the Weller b-Xi
+    combustion model
 
 Usage
     Example usage:
     \verbatim
-    bXiKernelCorr1
+    GaussianbXiIgnition1
     {
-        type            bXiKernelCorr;
+        type            GaussianbXiIgnition;
 
-        cellZone        kernelCorrection;
+        cellZone        ignition;
 
-        ignition        ignition;
-
-        duration        0.003;
+        position        (0 0 0);
+        diameter        1e-3;
 
         kernelShape
         {
             type            spherical;
         }
+
+        start           0;
+        duration        0.003;
+        rate            1e3;
     }
     \endverbatim
 
     Where:
     \table
-        Property    | Description                 | Required   | Default value
-        cellZone    | Correction cellZone         | yes        |
-        ignition    | Name of the ignition fvModel to correct | yes |
-        kernelShape | Kernel shape                | yes        |
-        duration    | Maximum correction duration | yes        |
-        bMin        | Min b above which the correction is applied | no | \\
-                      XiFluid::bMin/2
+        Property    | Description               | Required   | Default value
+        cellZone    | Correction cellZone       | yes        |
+        position    | Ignition centre           | yes        |
+        diameter    | Diameter of the ignition kernel | yes        |
+        kernelShape | Kernel shape              | yes        |
+        start       | Ignition start time       | yes        |
+        duration    | Ignition duration         | yes        |
+        rate        | Burning rate coefficient Function1 of time [1/s] | yes |
     \endtable
 
-    The correction is applied if \f$ min(b) > bMin \f$ and time of application
-    is less than the specified \c duration.
-
 See also
+    Foam::fv::constantbXiIgnition
+    Foam::fv::bXiKernelCorr
     Foam::kernelShape
     Foam::kernelShapes::planar
     Foam::kernelShapes::cylindrical
     Foam::kernelShapes::spherical
 
 SourceFiles
-    bXiKernelCorr.C
+    GaussianbXiIgnition.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef bXiKernelCorr_H
-#define bXiKernelCorr_H
+#ifndef GaussianbXiIgnition_H
+#define GaussianbXiIgnition_H
 
-#include "bXiIgnition.H"
+#include "bXiTimedIgnition.H"
 #include "kernelShape.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -86,55 +91,55 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class bXiKernelCorr Declaration
+                     Class GaussianbXiIgnition Declaration
 \*---------------------------------------------------------------------------*/
 
-class bXiKernelCorr
+class GaussianbXiIgnition
 :
-    public fvModel
+    public bXiTimedIgnition
 {
 
 protected:
 
     // Protected Data
 
-        //- The correction cellZone
+        //- The ignition cellZone
         fvCellZone zone_;
 
         autoPtr<kernelShape> kernelShape_;
 
-        const fv::bXiIgnition& ignition_;
+        dimensionedVector position_;
 
-        //- Maximum correction duration
-        dimensionedScalar duration_;
+        dimensionedScalar diameter_;
 
-        //- Minimum b below which the Xi correction is not applied
-        //  Must be less that XiFluid::bMin and defaults to XiFluid::bMin/2
-        dimensionedScalar bMin_;
+        //- Ignition burning rate [1/t]
+        autoPtr<Function1<scalar>> rate_;
+
+        //- Kernel volume correction factor
+        scalarList Vk_;
 
 
 private:
 
     // Private Member Functions
 
+        //- Calculate the kernel volume correction factor
+        void calcVk();
+
         //- Non-virtual read
         void readCoeffs(const dictionary& dict);
-
-        //- Kernel consumption rate distribution function
-        template<class Type>
-        inline Type bFunc(const Type& b, const Type& R) const;
 
 
 public:
 
     //- Runtime type information
-    TypeName("bXiKernelCorr");
+    TypeName("GaussianbXiIgnition");
 
 
     // Constructors
 
         //- Construct from explicit source name and mesh
-        bXiKernelCorr
+        GaussianbXiIgnition
         (
             const word& name,
             const word& modelType,
@@ -143,20 +148,13 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        bXiKernelCorr
+        GaussianbXiIgnition
         (
-            const bXiKernelCorr&
+            const GaussianbXiIgnition&
         ) = delete;
 
 
     // Member Functions
-
-        // Checks
-
-            //- Return the list of fields for which the option adds source term
-            //  to the transport equation
-            virtual wordList addSupFields() const;
-
 
         // Add explicit and implicit contributions to compressible equation
 
@@ -193,7 +191,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const bXiKernelCorr&) = delete;
+        void operator=(const GaussianbXiIgnition&) = delete;
 };
 
 

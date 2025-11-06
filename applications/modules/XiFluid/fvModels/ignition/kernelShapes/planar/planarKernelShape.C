@@ -70,12 +70,18 @@ Foam::kernelShapes::planar::~planar()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
+Foam::dimensionedScalar Foam::kernelShapes::planar::Dcorr() const
+{
+    return area_;
+}
+
+
 Foam::dimensionedScalar Foam::kernelShapes::planar::Ak
 (
     const dimensionedScalar& Vk
 ) const
 {
-    return area_;
+    return 2*area_;
 }
 
 

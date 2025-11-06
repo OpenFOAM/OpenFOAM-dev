@@ -25,7 +25,7 @@ Class
     Foam::fv::constantbXiIgnition
 
 Description
-    Simple constant rate ignition model for the Weller b-Xi combustion models
+    Simple constant rate ignition model for the Weller b-Xi combustion model
 
 Usage
     Example usage:

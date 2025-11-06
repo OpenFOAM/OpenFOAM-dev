@@ -103,6 +103,9 @@ public:
 
     // Member Functions
 
+        //- Return ignition kernel dimensionality correction to 3D
+        virtual dimensionedScalar Dcorr() const;
+
         //- Return the area of the ignition kernel
         //  calculated from the given kernel volume
         virtual dimensionedScalar Ak(const dimensionedScalar& Vk) const;

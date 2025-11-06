@@ -58,12 +58,12 @@ Foam::fv::bXiTimedIgnition::bXiTimedIgnition
 )
 :
     bXiIgnition(name, modelType, mesh, dict),
-    start_("start", mesh().time().userUnits(), dict),
-    duration_("duration", mesh().time().userUnits(), dict),
-    period_("period", mesh().time().userUnits(), dict, vGreat),
+    start_("start", mesh().time().userUnits(), coeffs(dict)),
+    duration_("duration", mesh().time().userUnits(), coeffs(dict)),
+    period_("period", mesh().time().userUnits(), coeffs(dict), vGreat),
     combustionDuration_
     (
-        "combustionDuration", mesh().time().userUnits(), dict, vGreat
+        "combustionDuration", mesh().time().userUnits(), coeffs(dict), vGreat
     ),
     reset_(!ignited())
 {}

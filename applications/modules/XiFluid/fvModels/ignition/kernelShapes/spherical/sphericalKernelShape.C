@@ -71,6 +71,12 @@ Foam::kernelShapes::spherical::~spherical()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
+Foam::dimensionedScalar Foam::kernelShapes::spherical::Dcorr() const
+{
+    return sphereFraction_;
+}
+
+
 Foam::dimensionedScalar Foam::kernelShapes::spherical::Ak
 (
     const dimensionedScalar& Vk

@@ -75,20 +75,21 @@ Foam::fv::bXiKernelCorr::bXiKernelCorr
 )
 :
     fvModel(name, modelType, mesh, dict),
-    zone_(mesh, dict),
-    kernelShape_(kernelShape::New(mesh, dict)),
+    zone_(mesh, coeffs(dict)),
+    kernelShape_(kernelShape::New(mesh, coeffs(dict))),
     ignition_
     (
         refCast<const fv::bXiIgnition>
         (
-            fvModels::New(mesh)[dict.lookup<word>("ignition")]
+            fvModels::New(mesh)[coeffs(dict).lookup<word>("ignition")]
         )
     ),
-    duration_("duration", mesh.time().userUnits(), dict),
+    duration_("duration", mesh.time().userUnits(), coeffs(dict)),
     bMin_
     (
         "bMin",
         dimless,
+        coeffs(dict),
         mesh.lookupObject<solvers::XiFluid>(solver::typeName).bMin()/2
     )
 {}

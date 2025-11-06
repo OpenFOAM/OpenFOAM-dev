@@ -73,6 +73,12 @@ Foam::kernelShapes::cylindrical::~cylindrical()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
+Foam::dimensionedScalar Foam::kernelShapes::cylindrical::Dcorr() const
+{
+    return cylinderFraction_*thickness_;
+}
+
+
 Foam::dimensionedScalar Foam::kernelShapes::cylindrical::Ak
 (
     const dimensionedScalar& Vk

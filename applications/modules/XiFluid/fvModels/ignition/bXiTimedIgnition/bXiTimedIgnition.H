@@ -75,6 +75,10 @@ protected:
         //  and reset false at the beginning of ignition
         mutable bool reset_;
 
+        //- Return the time relative to the ignition time
+        //  for the current period
+        scalar ignRelTime(const scalar t) const;
+
 
 private:
 
@@ -82,10 +86,6 @@ private:
 
         //- Non-virtual read
         void readCoeffs(const dictionary& dict);
-
-        //- Return the time relative to the ignition time
-        //  for the current period
-        scalar ignRelTime(const scalar t) const;
 
 
 public:
