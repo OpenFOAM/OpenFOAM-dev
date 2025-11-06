@@ -43,15 +43,12 @@ void Foam::populationBalanceSystem::addDmdts
     PtrList<volScalarField::Internal>& dmdts
 ) const
 {
-    forAll(populationBalances_, popBali)
+    forAllConstIter(populationBalanceModel::dmdtfTable, dmdtfs, dmdtfIter)
     {
-        forAllConstIter(populationBalanceModel::dmdtfTable, dmdtfs, dmdtfIter)
-        {
-            const phaseInterface interface(fluid_, dmdtfIter.key());
+        const phaseInterface interface(fluid_, dmdtfIter.key());
 
-            addField(interface.phase1(), "dmdt", *dmdtfIter(), dmdts);
-            addField(interface.phase2(), "dmdt", - *dmdtfIter(), dmdts);
-        }
+        addField(interface.phase1(), "dmdt", *dmdtfIter(), dmdts);
+        addField(interface.phase2(), "dmdt", - *dmdtfIter(), dmdts);
     }
 }
 

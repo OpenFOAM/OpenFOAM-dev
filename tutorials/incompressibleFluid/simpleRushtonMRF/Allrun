@@ -27,6 +27,14 @@ USAGE
     exit 1
 }
 
+# Calculation function
+calc () {
+    # Avoid locale problems with output of numbers from awk
+    export LC_ALL=C
+
+    awk "BEGIN{printf(\"%.2f\", $1)}"
+}
+
 meshArgs=""
 while [ "$#" -gt 0 ]
 do
@@ -64,12 +72,10 @@ done
 
 runApplication foamRun
 
-PbyRho="$(tail -1 postProcessing/power/0/power.dat | awk '{print $2}')"
-D="$(grep "^D " system/blockMeshDict.orig | awk -F'[; ]+' '{print $2}')"
-rpm="$(grep "^omega" constant/rotatingZoneProperties | awk '{print $2}')"
-denominator="$(awk "BEGIN{printf(\"%e\", 1e9*($rpm/60)^3*(0.3*$D)^5)}")"
-powerNumber="$(awk "BEGIN{printf(\"%.2f\", $PbyRho/$denominator)}")"
+PbyRho="$(awk 'END{print $2}' postProcessing/power/0/power.dat)"
+D="$(awk -F'[; ]+' '/^D/ {print $2}' system/blockMeshDict.orig)"
+rpm="$(awk '/^omega/ {print $2}' constant/rotatingZoneProperties)"
 
-echo "Power number = $powerNumber"
+echo "Power number = $(calc "$PbyRho/(1e9*($rpm/60)^3*(0.3*$D)^5)")"
 
 #------------------------------------------------------------------------------

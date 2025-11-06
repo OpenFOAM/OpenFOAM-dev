@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ Foam::IFstreamAllocator::IFstreamAllocator(const fileName& filePath)
     // If the file is compressed, decompress it before reading.
     if (!ifPtr_->good())
     {
-        if (isFile(filePath + ".gz", false, false))
+        if (isFile(filePath + ".gz", false, true))
         {
             delete ifPtr_;
 
@@ -71,7 +71,7 @@ Foam::IFstreamAllocator::IFstreamAllocator(const fileName& filePath)
                 compression_ = IOstream::COMPRESSED;
             }
         }
-        else if (isFile(filePath + ".orig", false, false))
+        else if (isFile(filePath + ".orig", false, true))
         {
             delete ifPtr_;
 

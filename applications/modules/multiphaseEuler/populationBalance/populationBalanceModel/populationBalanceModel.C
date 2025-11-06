@@ -535,7 +535,7 @@ void Foam::populationBalanceModel::computeModelSources()
 
     forAll(uniquePhases_, uniquePhasei)
     {
-        const label i0 = diameters_[uniquePhasei].iLast();
+        const label i0 = uniqueDiameters_[uniquePhasei].iLast();
 
         if (i0 == nGroups() - 1) continue;
 
@@ -1592,29 +1592,35 @@ void Foam::populationBalanceModel::solve()
             fs_[i].max(0);
         }
 
-        PtrList<volScalarField::Internal> fSums(fluid_.phases().size());
-
         forAll(uniquePhases_, uniquePhasei)
         {
-            const phaseModel& phase = uniquePhases_[uniquePhasei];
             const diameterModels::populationBalance& diameter =
                 uniqueDiameters_[uniquePhasei];
 
-            tmp<volScalarField::Internal> tfSum = diameter.fSum();
+            const volScalarField::Internal fSum(diameter.fSum());
 
-            Info<< phase.name() << ": Group fraction sum min/average/max = "
-                << min(tfSum()).value() << '/'
-                << tfSum().weightedAverage(mesh().V()).value() << '/'
-                << max(tfSum()).value() << endl;
+            for (label i = diameter.iFirst(); i <= diameter.iLast(); ++ i)
+            {
+                fs_[i].internalFieldRef() /= fSum;
 
-            fSums.set(phase.index(), tfSum.ptr());
+                fs_[i].correctBoundaryConditions();
+            }
         }
-
-        forAll(fs_, i)
+    }
+    else
+    {
+        forAll(uniquePhases_, uniquePhasei)
         {
-            fs_[i].internalFieldRef() /= fSums[phases_[i].index()];
+            const diameterModels::populationBalance& diameter =
+                uniqueDiameters_[uniquePhasei];
 
-            fs_[i].correctBoundaryConditions();
+            const volScalarField::Internal fSum(diameter.fSum());
+
+            Info<< diameter.phase().name()
+                << ": Group fraction sum min/average/max = "
+                << min(fSum).value() << '/'
+                << fSum.weightedAverage(mesh().V()).value() << '/'
+                << max(fSum).value() << endl;
         }
     }
 
