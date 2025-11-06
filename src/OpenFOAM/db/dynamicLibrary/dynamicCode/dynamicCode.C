@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -151,7 +151,7 @@ Foam::fileName Foam::dynamicCode::resolveTemplate
     if (!templateDir.empty() && isDir(templateDir))
     {
         file = templateDir/templateName;
-        if (!isFile(file, false, false))
+        if (!isFile(file, false, true))
         {
             file.clear();
         }
@@ -186,7 +186,7 @@ bool Foam::dynamicCode::resolveTemplates
         if (!templateDir.empty() && isDir(templateDir))
         {
             file = templateDir/templateName;
-            if (!isFile(file, false, false))
+            if (!isFile(file, false, true))
             {
                 file.clear();
             }
@@ -537,7 +537,7 @@ bool Foam::dynamicCode::upToDate(const SHA1Digest& sha1) const
 {
     const fileName file = digestFile();
 
-    if (!exists(file, false, false) || SHA1Digest(IFstream(file)()) != sha1)
+    if (!exists(file, false, true) || SHA1Digest(IFstream(file)()) != sha1)
     {
         return false;
     }
