@@ -535,7 +535,7 @@ void Foam::populationBalanceModel::computeModelSources()
 
     forAll(uniquePhases_, uniquePhasei)
     {
-        const label i0 = diameters_[uniquePhasei].iLast();
+        const label i0 = uniqueDiameters_[uniquePhasei].iLast();
 
         if (i0 == nGroups() - 1) continue;
 
