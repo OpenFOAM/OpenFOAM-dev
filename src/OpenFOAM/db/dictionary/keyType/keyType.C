@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -144,7 +144,7 @@ Foam::Istream& Foam::operator>>(Istream& is, keyType& kw)
 
 Foam::Ostream& Foam::operator<<(Ostream& os, const keyType& kw)
 {
-    os.writeQuoted(kw, kw.isPattern());
+    os.write(kw);
     os.check("Ostream& operator<<(Ostream&, const keyType&)");
     return os;
 }

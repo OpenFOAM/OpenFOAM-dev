@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,6 +27,7 @@ License
 #include "token.H"
 
 #include "IOstreams.H"
+#include "OTstream.H"
 #include "scalar.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -50,87 +51,7 @@ Foam::Istream& Foam::operator>>(Istream& is, token& t)
 
 Foam::Ostream& Foam::operator<<(Ostream& os, const token& t)
 {
-    switch (t.type_)
-    {
-        case token::UNDEFINED:
-            os << "UNDEFINED";
-            WarningInFunction
-                << "Undefined token" << endl;
-        break;
-
-        case token::PUNCTUATION:
-            os << t.punctuationToken_;
-        break;
-
-        case token::WORD:
-            os << *t.wordTokenPtr_;
-        break;
-
-        case token::FUNCTIONNAME:
-            os << *t.functionNameTokenPtr_;
-        break;
-
-        case token::VARIABLE:
-            os << *t.variableTokenPtr_;
-        break;
-
-        case token::STRING:
-            os << *t.stringTokenPtr_;
-        break;
-
-        case token::VERBATIMSTRING:
-            os << *t.verbatimStringTokenPtr_;
-        break;
-
-        case token::INTEGER_32:
-            os << t.integer32Token_;
-        break;
-
-        case token::INTEGER_64:
-            os << t.integer64Token_;
-        break;
-
-        case token::UNSIGNED_INTEGER_32:
-            os << t.unsignedInteger32Token_;
-        break;
-
-        case token::UNSIGNED_INTEGER_64:
-            os << t.unsignedInteger64Token_;
-        break;
-
-        case token::FLOAT_SCALAR:
-            os << t.floatScalarToken_;
-        break;
-
-        case token::DOUBLE_SCALAR:
-            os << t.doubleScalarToken_;
-        break;
-
-        case token::LONG_DOUBLE_SCALAR:
-            os << *t.longDoubleScalarTokenPtr_;
-        break;
-
-        case token::COMPOUND:
-            os << *t.compoundTokenPtr_;
-        break;
-
-        case token::ERROR:
-            os << "ERROR";
-            WarningInFunction
-                << "Error token" << endl;
-        break;
-
-        default:
-            os << "UNKNOWN";
-            SeriousErrorInFunction
-                << "Unknown token"
-                << endl;
-    }
-
-    // Check state of stream
-    os.check("Ostream& operator<<(Ostream&, const token&)");
-
-    return os;
+    return os.write(t);
 }
 
 

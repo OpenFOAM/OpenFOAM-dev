@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -201,6 +201,13 @@ Foam::Ostream& Foam::UOPstream::write(const string& str)
     writeToBuffer(len);
     writeToBuffer(str.c_str(), len + 1, 1);
 
+    return *this;
+}
+
+
+Foam::Ostream& Foam::UOPstream::write(const keyType& kt)
+{
+    writeQuoted(kt, kt.isPattern());
     return *this;
 }
 

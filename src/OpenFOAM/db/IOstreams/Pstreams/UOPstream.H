@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -123,6 +123,8 @@ public:
 
         // Write functions
 
+            using Ostream::write;
+
             //- Write given buffer to given processor
             static bool write
             (
@@ -145,6 +147,9 @@ public:
 
             //- Write string
             Ostream& write(const string&);
+
+            //- Write keyType
+            Ostream& write(const keyType&);
 
             //- Write verbatimString
             Ostream& write(const verbatimString&);

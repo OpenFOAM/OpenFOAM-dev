@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,6 +95,9 @@ public:
 
         // Write functions
 
+            //- Write token
+            virtual Ostream& write(const token&);
+
             //- Write character
             virtual Ostream& write(const char) = 0;
 
@@ -106,6 +109,9 @@ public:
 
             //- Write string
             virtual Ostream& write(const string&) = 0;
+
+            //- Write keyType
+            virtual Ostream& write(const keyType&) = 0;
 
             //- Write verbatimString
             virtual Ostream& write(const verbatimString&) = 0;
