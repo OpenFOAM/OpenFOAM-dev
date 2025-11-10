@@ -27,7 +27,6 @@ License
 #include "token.H"
 
 #include "IOstreams.H"
-#include "OTstream.H"
 #include "scalar.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
