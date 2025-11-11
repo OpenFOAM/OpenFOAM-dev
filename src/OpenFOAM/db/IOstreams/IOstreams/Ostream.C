@@ -58,7 +58,9 @@ Foam::Ostream& Foam::Ostream::write(const token& t)
         break;
 
         case token::PUNCTUATION:
-            write(t.pToken());
+            // Cast to char required to work around a bug in gcc versions < 10
+            write(static_cast<char>(t.pToken()));
+            // write(t.pToken());
         break;
 
         case token::WORD:
