@@ -3362,8 +3362,8 @@ Foam::labelListList Foam::hexRef8::setRefinement
 
             if
             (
-                newOwnLevel > faceAnchorLevel[facei]
-             || newNeiLevel > faceAnchorLevel[facei]
+                newOwnLevel > max(ownLevel, faceAnchorLevel[facei])
+             || newNeiLevel > max(neiLevel, faceAnchorLevel[facei])
             )
             {
                 faceMidPoint[facei] = 12345;    // mark to be split
@@ -3379,6 +3379,7 @@ Foam::labelListList Foam::hexRef8::setRefinement
     //  refinining and subsetting)
 
     {
+        labelList neiLevel(mesh_.nFaces()-mesh_.nInternalFaces());
         labelList newNeiLevel(mesh_.nFaces()-mesh_.nInternalFaces());
 
         forAll(newNeiLevel, i)
@@ -3387,10 +3388,12 @@ Foam::labelListList Foam::hexRef8::setRefinement
             label ownLevel = cellLevel_[own];
             label newOwnLevel = ownLevel + (cellMidPoint[own] >= 0 ? 1 : 0);
 
+            neiLevel[i] = ownLevel;
             newNeiLevel[i] = newOwnLevel;
         }
 
         // Swap.
+        syncTools::swapBoundaryFaceList(mesh_, neiLevel);
         syncTools::swapBoundaryFaceList(mesh_, newNeiLevel);
 
         // So now we have information on the neighbour.
@@ -3407,8 +3410,8 @@ Foam::labelListList Foam::hexRef8::setRefinement
 
                 if
                 (
-                    newOwnLevel > faceAnchorLevel[facei]
-                 || newNeiLevel[i] > faceAnchorLevel[facei]
+                    newOwnLevel > max(ownLevel, faceAnchorLevel[facei])
+                 || newNeiLevel[i] > max(neiLevel[i], faceAnchorLevel[facei])
                 )
                 {
                     faceMidPoint[facei] = 12345;    // mark to be split
