@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,17 @@ class multiSolidBodyMotionSolver
         labelList zoneIndices_;
 
         //- Points to move per cellZone
-        labelListList pointIndices_;
+        labelListList zonePoints_;
+
+        //- Cache the current transforms for topoChange
+        mutable List<septernion> transforms_;
+
+
+
+    // Private Member Functions
+
+        //- Re-calculate the zone point ID-s from the cell-zone
+        void updateZonePointIndices();
 
 
 public:
@@ -102,6 +112,15 @@ public:
         //- Solve for motion
         virtual void solve()
         {}
+
+        //- Update local data for topology changes
+        virtual void topoChange(const polyTopoChangeMap&);
+
+        //- Update corresponding to the given distribution map
+        virtual void distribute(const polyDistributionMap&);
+
+        //- Update from another mesh using the given map
+        virtual void mapMesh(const polyMeshMap&);
 
 
     // Member Operators
