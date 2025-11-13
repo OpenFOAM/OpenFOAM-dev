@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,16 +67,17 @@ class functionEntry
 {
     // Private Member Functions
 
-        //- Read line as word token
-        static token readLine(Istream& is);
-
-
-protected:
+        //- Read the rest of the argument list following the part attached
+        // to the function name
+        void readRestOfArgs(string& fNameArgs, Istream& is);
 
         //- Read the function name and optional argument list
         //  and return as a string.
         //  The optional argument list can be on one or more lines.
-        static Tuple2<string, label> readFuncNameArgs(Istream& is);
+        tokenList readFuncNameArgList(Istream& is);
+
+
+protected:
 
         //- Insert the given string in a sub-dict context
         static bool insert
@@ -99,7 +100,7 @@ public:
     // Constructors
 
         //- Construct from keyword, parent dictionary and Istream
-        functionEntry(const word&, const dictionary&, Istream&);
+        functionEntry(const keyType&, const dictionary&, Istream&);
 
         //- Copy construct
         functionEntry(const functionEntry&) = default;
@@ -156,6 +157,61 @@ public:
             primitiveEntry&,
             Istream&
         );
+
+        Tuple2<word, label> funcName()
+        {
+            return Tuple2<word, label>
+            (
+                operator[](0).wordToken(),
+                operator[](0).lineNumber()
+            );
+        }
+
+        Tuple2<string, label> fName()
+        {
+            return Tuple2<string, label>
+            (
+                operator[](0).stringToken(),
+                operator[](0).lineNumber()
+            );
+        }
+
+        Tuple2<string, label> args()
+        {
+            if (size() > 1)
+            {
+                return Tuple2<string, label>
+                (
+                    char(operator[](1).pToken())
+                  + operator[](2).stringToken()
+                  + char(operator[](3).pToken()),
+                    operator[](1).lineNumber()
+                );
+            }
+            else
+            {
+                return Tuple2<string, label>(string::null, 0);
+            }
+        }
+
+        Tuple2<string, label> funcNameArgs()
+        {
+            Tuple2<string, label> fNameArgs
+            (
+                operator[](0).wordToken(),
+                operator[](0).lineNumber()
+            );
+
+            if (size() > 1)
+            {
+                fNameArgs.first() +=
+                    char(operator[](1).pToken())
+                  + operator[](2).stringToken()
+                  + char(operator[](3).pToken());
+            }
+
+            return fNameArgs;
+        }
 
         //- Write
         virtual void write(Ostream&) const;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,20 +74,14 @@ Foam::List<Foam::Tuple3<Foam::word, Foam::string, Foam::label>>
 Foam::functionEntries::includeEntry::insertNamedArgs
 (
     dictionary& parentDict,
-    Istream& is
+    const Tuple2<string, label>& fNameArgs
 )
 {
     List<Tuple3<word, string, label>> namedArgs;
 
-    ISstream& iss = dynamic_cast<ISstream&>(is);
-
     // If the next character is a '(' process the arguments
-    if (iss.peek() == token::BEGIN_LIST)
+    if (fNameArgs.first().size())
     {
-        // Read line containing the arguments into a string
-        Tuple2<string, label> fNameArgs(string::null, is.lineNumber());
-        iss.readList(fNameArgs.first());
-
         // Parse the argument string
         word funcType;
         List<Tuple2<wordRe, label>> args;
@@ -207,18 +201,18 @@ bool Foam::functionEntries::includeEntry::execute
     Istream& is
 )
 {
-    const fileName rawFName(is);
+    functionEntry fe(typeName, parentDict, is);
 
     const fileName fName
     (
-        includeFileName(is.name().path(), rawFName, parentDict)
+        includeFileName(is.name().path(), fe[0].stringToken(), parentDict)
     );
 
     // Cache the optional named arguments
     // temporarily inserted into parentDict
     List<Tuple3<word, string, label>> namedArgs
     (
-        insertNamedArgs(parentDict, is)
+        insertNamedArgs(parentDict, fe.args())
     );
 
     autoPtr<ISstream> ifsPtr
@@ -259,7 +253,7 @@ bool Foam::functionEntries::includeEntry::execute
         (
             is
         )   << "Cannot open include file "
-            << (ifs.name().size() ? ifs.name() : rawFName)
+            << (ifs.name().size() ? ifs.name() : fe[0].stringToken())
             << " while reading dictionary " << parentDict.name()
             << exit(FatalIOError);
     }
@@ -279,18 +273,18 @@ bool Foam::functionEntries::includeEntry::execute
     Istream& is
 )
 {
-    const fileName rawFName(is);
+    functionEntry fe(typeName, parentDict, is);
 
     const fileName fName
     (
-        includeFileName(is.name().path(), rawFName, parentDict)
+        includeFileName(is.name().path(), fe.fName().first(), parentDict)
     );
 
     // Cache the optional named arguments
     // temporarily inserted into parentDict
     List<Tuple3<word, string, label>> namedArgs
     (
-        insertNamedArgs(const_cast<dictionary&>(parentDict), is)
+        insertNamedArgs(const_cast<dictionary&>(parentDict), fe.args())
     );
 
     autoPtr<ISstream> ifsPtr(fileHandler().NewIFstream(fName));
@@ -311,7 +305,7 @@ bool Foam::functionEntries::includeEntry::execute
         (
             is
         )   << "Cannot open include file "
-            << (ifs.name().size() ? ifs.name() : rawFName)
+            << (ifs.name().size() ? ifs.name() : fe[0].stringToken())
             << " while reading dictionary " << parentDict.name()
             << exit(FatalIOError);
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,6 +43,7 @@ SourceFiles
 #include "word.H"
 #include "functionName.H"
 #include "variable.H"
+#include "keyType.H"
 #include "verbatimString.H"
 #include "InfoProxy.H"
 #include "refCount.H"
@@ -301,6 +302,9 @@ public:
 
         //- Construct string token
         inline token(const string&, label lineNumber=0);
+
+        //- Construct keyType token
+        inline token(const keyType&, label lineNumber=0);
 
         //- Construct verbatimString token
         inline token(const verbatimString&, label lineNumber=0);

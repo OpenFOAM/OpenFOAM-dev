@@ -226,7 +226,7 @@ void Foam::primitiveEntry::write(Ostream& os, const bool contentsOnly) const
 
     for (label i=0; i<size(); ++i)
     {
-        os << operator[](i);;
+        os << operator[](i);
 
         if (i < size()-1)
         {

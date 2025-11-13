@@ -193,6 +193,7 @@ $(Fstreams)/masterOFstream.C
 
 Tstreams = $(Streams)/Tstreams
 $(Tstreams)/ITstream.C
+$(Tstreams)/OTstream.C
 
 StringStreams = $(Streams)/StringStreams
 $(StringStreams)/StringStreamsPrint.C

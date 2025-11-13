@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,7 +84,7 @@ class includeEntry
         static List<Tuple3<word, string, label>> insertNamedArgs
         (
             dictionary& parentDict,
-            Istream& is
+            const Tuple2<string, label>& args
         );
 
         //- Remove named argument entries from parentDict

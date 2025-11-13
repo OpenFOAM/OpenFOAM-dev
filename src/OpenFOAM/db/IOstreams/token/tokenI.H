@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -176,6 +176,50 @@ inline Foam::token::token(const string& s, label lineNumber)
     stringTokenPtr_(new string(s)),
     lineNumber_(lineNumber)
 {}
+
+
+inline Foam::token::token(const keyType& kt, label lineNumber)
+:
+    type_(UNDEFINED),
+    lineNumber_(lineNumber)
+{
+    switch (kt.Type())
+    {
+        case keyType::UNDEFINED:
+        {
+            type_ = UNDEFINED;
+            break;
+        }
+
+        case keyType::WORD:
+        {
+            type_ = WORD;
+            wordTokenPtr_ = new word(kt);
+            break;
+        }
+
+        case keyType::FUNCTIONNAME:
+        {
+            type_ = FUNCTIONNAME;
+            functionNameTokenPtr_ = new functionName(kt);
+            break;
+        }
+
+        case keyType::VARIABLE:
+        {
+            type_ = VARIABLE;
+            variableTokenPtr_ = new variable(kt);
+            break;
+        }
+
+        case keyType::PATTERN:
+        {
+            type_ = STRING;
+            stringTokenPtr_ = new string(kt);
+            break;
+        }
+    }
+}
 
 
 inline Foam::token::token(const verbatimString& vs, label lineNumber)
