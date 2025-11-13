@@ -90,7 +90,8 @@ class mergePolyMesh
         //- Return patch index given a name and type
         label patchIndex(const polyPatch&);
 
-        //- Return zone index given a list of active zones and a name
+        //- Return zone index given a list of active zones and a name.
+        //  If the name is not found, add it to the list
         label zoneIndex(DynamicList<word>&, const word&);
 
 

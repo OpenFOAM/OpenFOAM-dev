@@ -206,8 +206,8 @@ void Foam::mergePolyMesh::addMesh(const polyMesh& m)
     forAll(pz, zonei)
     {
         pointZoneIndices[zonei] = zoneIndex(pointZoneNames_, pz[zonei].name());
-        pointZonesAddedPoints_.setSize(pointZoneNames_.size());
     }
+    pointZonesAddedPoints_.setSize(pointZoneNames_.size());
 
     forAll(p, pointi)
     {
@@ -237,8 +237,8 @@ void Foam::mergePolyMesh::addMesh(const polyMesh& m)
     forAll(cz, zonei)
     {
         cellZoneIndices[zonei] = zoneIndex(cellZoneNames_, cz[zonei].name());
-        cellZonesAddedCells_.setSize(cellZoneNames_.size());
     }
+    cellZonesAddedCells_.setSize(cellZoneNames_.size());
 
     forAll(c, celli)
     {
@@ -276,6 +276,8 @@ void Foam::mergePolyMesh::addMesh(const polyMesh& m)
     {
         faceZoneIndices[zonei] = zoneIndex(faceZoneNames_, fz[zonei].name());
     }
+    faceZonesAddedFaces_.setSize(faceZoneNames_.size());
+    faceZonesAddedOrientedFaces_.setSize(faceZoneNames_.size());
 
     const faceList& f = m.faces();
     labelList renumberFaces(f.size());
