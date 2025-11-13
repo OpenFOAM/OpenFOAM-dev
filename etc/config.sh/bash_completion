@@ -4475,6 +4475,7 @@ _foamFind_ ()
 
     opts="\
         -applications \
+        -coded \
         -dir \
         -edit \
         -files \
@@ -4510,6 +4511,8 @@ _foamFind_ ()
 
     [ "$COMP_CWORD" = 1 ] || \
     case "$prev" in
+        -coded)
+            opts="" ; extra="-d -f" ;;
         -dir)
             opts="" ; extra="-d" ;;
        *) ;;

@@ -36,6 +36,8 @@ usage () {
 Usage: ${0##*/} [OPTIONS] <filename>
 options:
   -a | -applications     search for the file from the \$FOAM_APP directory
+  -c | -coded <file>     insert entries to codeInclude, codeOptions and codeLibs
+                         blocks of coded input in the specified file
   -d | -dir <dir>        specify search directory
   -e | -edit             open the file in a file editor, see below for info
   -f | -files            find wmake 'files' file associated with searched file
@@ -127,6 +129,68 @@ findWmakeFiles () {
     return 0
 }
 
+# Prints lnInclude entry to terminal and optionally write codeInclude and
+# codeOptions entries in coded input to a file
+writeCoded () {
+    # The lnInclude file
+    _lnInclude="$1"
+    _codeOptions="-I\$(LIB_SRC)/${_lnInclude##"$FOAM_SRC/"}"
+
+    # Optional arguments for codeInclude, codeOptions and codeLibs entries
+    _file="$2"
+    _codeInclude="$3"
+
+    ! [ "$_file" ] && \
+        printf "\nDirectory: %s\n" "$_lnInclude" && \
+        printf "options entry: %s\n" "$_codeOptions" && \
+        return 0
+
+    _codeLibs="$(awk -F/ '/LIB =/ {gsub("lib", "-l", $NF); print $NF}' \
+              "$_lnInclude/../Make/files" 2>/dev/null)"
+
+    for _b in codeInclude codeOptions codeLibs
+    do
+        addToCoded "$_file" "$_b" "$(eval echo "\$_$_b")"
+    done
+}
+
+addToCoded () {
+    _file="$1"
+    _block="$2"
+    _entry="$3"
+
+    # Do not add core OpenFOAM library
+    echo "$_entry" | grep -q OpenFOAM && \
+        echo "Entry for $_block for the core OpenFOAM library " \
+             "is not required" && \
+        return 0
+
+    # Expression to match block with name (preceeded by optional spaces)
+    _match="/^[\t ]*$_block/,/#};/"
+
+    # Check block is correct, number of lines must be >= 3
+    _nLines="$(awk "$_match {i++} END {print i}" "$_file")"
+    ! [ "$_nLines" -ge "3" ] 2> /dev/null && \
+        echo "$_block block in $_file does not exist" \
+             "or has incorrect syntax, not adding an entry" && \
+        return 0
+
+    # Check block already contains the entry
+    awk "$_match {print}" "$_file" | grep -q -- "$_entry" && \
+        echo "Entry already exists in $_block block in $_file, ignoring" && \
+        return 0
+
+    # Add entry to block
+    echo "Adding to $_block in $_file: $_entry"
+    _line="$(awk "$_match {i=NR} END {print i}" "$_file")"
+    _indent="$(grep "^[\t ]*$_block" "$_file" | sed 's/\(^[\t ]*\).*/\1/')    "
+
+    _tmpfile="$(mktemp "/tmp/${0##*/}.XXXXXX")"
+    awk -v n="$_line" -v e="$_indent$_entry" \
+        'NR == n {print e} {print}' "$_file" > "$_tmpfile"
+    mv "$_tmpfile" "$_file"
+}
+
 nParams () {
     [ "$1" ] || return 1
 
@@ -182,7 +246,7 @@ setFile () {
 }
 
 isSrcDir () {
-    echo "$1" | grep -wqE "^($FOAM_SRC|$FOAM_APP)"
+    echo "$1" | grep -qE "^($FOAM_SRC|$FOAM_APP)"
 }
 
 listFiles () {
@@ -268,6 +332,14 @@ view the entire file(s).
 EOF
 }
 
+codedError () {
+    cat<<EOF
+The file argument for for '-coded' option must be a file with placeholders
+for coded file input, e.g. a coded function object, containing a codeInclude,
+codeOptions and/or codeLibs block
+EOF
+}
+
 dir=""
 print=""
 edit=""
@@ -276,6 +348,7 @@ search=""
 insensitive=""
 numbers=""
 filename=""
+codedFile=""
 
 while [ "$#" -gt 0 ]
 do
@@ -285,6 +358,13 @@ do
        dir="$FOAM_APP"
        shift
        ;;
+   -c | -coded)
+       [ "$#" -ge 2 ] || error "'$1' option requires an argument"
+       [ -f "$2" ] || error "'$2' argument to '-coded' option is not a file"
+       ! grep -Eq "code(Include|Options|Libs)" "$2" && error "$(codedError)"
+       codedFile="$2"
+       shift 2
+       ;;
    -d | -dir)
        [ "$dir" ] && error "$(dirError)"
        [ "$#" -ge 2 ] || error "'$1' option requires an argument"
@@ -292,7 +372,7 @@ do
        # shellcheck disable=SC2164
        dir="$(cd "$2"; pwd)"
        # Check $dir is in OpenFOAM
-       ! echo "$dir" | grep -wq "^$WM_PROJECT_DIR" && \
+       ! echo "$dir" | grep -q "^$WM_PROJECT_DIR" && \
            error "Specified directory '$dir' is not in OpenFOAM installation"
        shift 2
        ;;
@@ -395,22 +475,32 @@ nParams "$files" > /dev/null || error "No file '$filename' found in '$dir'"
 # Select files when more than one is found
 files="$(selectFile "$filename" "$files")" || error
 
-# With '-files' and/or '-options', reuse file variable as the file
-{ [ "$wmakeFiles" ] || [ "$edit" ] ; } && \
+{ [ "$wmakeFiles" ] || [ "$edit" ] || [ "$codedFile" ] ; } && \
     [ "$(nParams "$files")" -ne 1 ] && \
-    error "With '-files', '-options' or '-edit', a single file must be selected"
+    error "With '-files', '-options', '-lnInclude', '-coded' or '-edit', " \
+          "a single file must be selected"
 
+# With '-coded' check the file is a *.H file
+[ "$codedFile" ] && ! [ "${files##*.}" = "H" ] && \
+    error "With '-coded', selected file must be a header file (.H extension)"
+
+# create include text and add lnInclude to wmakeFiles
+[ "$codedFile" ] && \
+    codeInclude="#include \"${files##*/}\"" && \
+    ! echo "$wmakeFiles" | grep -q lnInclude && \
+    wmakeFiles="$wmakeFiles lnInclude"
+
+# With '-files', '-options', '-lnInclude' or '-coded', reuse files variable
+# for the wmake files
 [ "$wmakeFiles" ] &&
     ! files="$(findWmakeFiles "$files" "$wmakeFiles")" && error
 
 # Output
 for f in $files
 do
-    # Handle lnInclude directory output
+    # Handle lnInclude directory output and coded file entries
     [ "${f##*/}" = "lnInclude" ] && \
-        printf "\nDirectory: %s\n" "$f" && \
-        printf "options entry: -I\$(LIB_SRC)/%s\n" "${f##"$FOAM_SRC/"}" && \
-        continue
+        writeCoded "$f" "$codedFile" "$codeInclude" && continue
 
     printf "\nFile: %s\n" "$f"
 

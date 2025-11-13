@@ -242,6 +242,7 @@ $(declareLocals)
 
     opts="\\
         -applications \\
+        -coded \\
         -dir \\
         -edit \\
         -files \\
@@ -276,6 +277,8 @@ $(declareLocals)
     extra=""
 
 $(caseStart)
+        -coded)
+            opts="" ; extra="-d -f" ;;
         -dir)
             opts="" ; extra="-d" ;;
        *) ;;
