@@ -65,13 +65,12 @@ void Foam::primitiveEntry::append
 
 bool Foam::primitiveEntry::expandFunction
 (
-    const functionName& hashFn,
+    const functionName& funcName,
     const dictionary& parentDict,
     Istream& is
 )
 {
-    const word fn = hashFn(1, hashFn.size() - 1);
-    return functionEntry::execute(fn, parentDict, *this, is);
+    return functionEntry::execute(funcName, parentDict, *this, is);
 }
 
 

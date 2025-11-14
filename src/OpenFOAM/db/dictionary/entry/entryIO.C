@@ -150,8 +150,6 @@ bool Foam::entry::New(dictionary& parentDict, Istream& is)
     {
         if (keyword.isFunctionName())      // ... Function entry
         {
-            const word functionName = keyword(1, keyword.size() - 1);
-
             if (disableFunctionEntries)
             {
                 bool success = parentDict.add
@@ -169,7 +167,7 @@ bool Foam::entry::New(dictionary& parentDict, Istream& is)
             }
             else
             {
-                return functionEntry::execute(functionName, parentDict, is);
+                return functionEntry::execute(keyword, parentDict, is);
             }
         }
         else if

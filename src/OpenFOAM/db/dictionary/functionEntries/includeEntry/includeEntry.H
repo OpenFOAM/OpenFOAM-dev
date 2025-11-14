@@ -121,7 +121,7 @@ public:
 
 
     //- Runtime type information
-    ClassName("include");
+    ClassName("#include");
 
 
     // Constructors
