@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,8 +104,13 @@ public:
         //- Construct from dictionary
         GeometricFieldSources(const Internal&, const dictionary&);
 
-        //- Construct from types
-        GeometricFieldSources(const Internal&, const HashTable<word>&);
+        //- Construct from types and an error location
+        GeometricFieldSources
+        (
+            const Internal&,
+            const HashTable<word>&,
+            const IOerrorLocation&
+        );
 
         //- Copy constructor deleted
         //  as it would not set the internalField reference correctly
@@ -127,6 +132,9 @@ public:
 
         //- Access the underlying field table
         HashPtrTable<Source>& table();
+
+        //- Access the error location
+        const IOerrorLocation& errorLocation() const;
 
         //- Inherit empty test
         using HashPtrTable<Source>::empty;

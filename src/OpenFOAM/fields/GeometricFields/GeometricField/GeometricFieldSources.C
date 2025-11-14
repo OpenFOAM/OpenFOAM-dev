@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "GeometricFieldSources.H"
+#include "error.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -111,11 +112,12 @@ Foam::GeometricFieldSources<Type, GeoMesh, PrimitiveField>::
 GeometricFieldSources
 (
     const DimensionedField<Type, GeoMesh, PrimitiveField>& iF,
-    const HashTable<word>& types
+    const HashTable<word>& types,
+    const IOerrorLocation& errorLocation
 )
 :
     HashPtrTable<Source>(),
-    errorLocation_()
+    errorLocation_(errorLocation)
 {
     forAllConstIter(typename HashTable<word>, types, iter)
     {
@@ -157,6 +159,15 @@ Foam::HashPtrTable
 Foam::GeometricFieldSources<Type, GeoMesh, PrimitiveField>::table()
 {
     return *this;
+}
+
+
+template<class Type, class GeoMesh, template<class> class PrimitiveField>
+const Foam::IOerrorLocation&
+Foam::GeometricFieldSources<Type, GeoMesh, PrimitiveField>::errorLocation()
+const
+{
+    return errorLocation_;
 }
 
 

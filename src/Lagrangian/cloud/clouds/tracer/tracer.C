@@ -129,7 +129,8 @@ Foam::clouds::tracer::tracer
             <
                 LagrangianInjection,
                 NaNLagrangianVectorFieldSource
-            >()
+            >(),
+            IOerrorLocation()
         )
     );
 }

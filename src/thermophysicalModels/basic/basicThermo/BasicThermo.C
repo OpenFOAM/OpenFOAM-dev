@@ -330,8 +330,10 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::cellSetScalarList
 
 
 template<class MixtureType, class BasicThermoType>
-void Foam::BasicThermo<MixtureType, BasicThermoType>::
-heBoundaryCorrection(volScalarField& h)
+void Foam::BasicThermo<MixtureType, BasicThermoType>::heBoundaryCorrection
+(
+    volScalarField& h
+)
 {
     volScalarField::Boundary& hBf = h.boundaryFieldRef();
 
@@ -339,13 +341,13 @@ heBoundaryCorrection(volScalarField& h)
     {
         if (isA<gradientEnergyFvPatchScalarField>(hBf[patchi]))
         {
-            refCast<gradientEnergyFvPatchScalarField>(hBf[patchi]).gradient()
-                = hBf[patchi].fvPatchField::snGrad();
+            refCast<gradientEnergyFvPatchScalarField>(hBf[patchi]).gradient() =
+                hBf[patchi].fvPatchField::snGrad();
         }
         else if (isA<mixedEnergyFvPatchScalarField>(hBf[patchi]))
         {
-            refCast<mixedEnergyFvPatchScalarField>(hBf[patchi]).refGrad()
-                = hBf[patchi].fvPatchField::snGrad();
+            refCast<mixedEnergyFvPatchScalarField>(hBf[patchi]).refGrad() =
+                hBf[patchi].fvPatchField::snGrad();
         }
     }
 }
@@ -395,7 +397,8 @@ Foam::BasicThermo<MixtureType, BasicThermoType>::BasicThermo
         ),
         this->heBoundaryTypes(),
         this->heBoundaryBaseTypes(),
-        this->heSourcesTypes()
+        this->heSourcesTypes(),
+        this->T_.sources().errorLocation()
     ),
 
     Cp_

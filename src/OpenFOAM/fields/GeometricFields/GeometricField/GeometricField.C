@@ -78,7 +78,7 @@ void Foam::GeometricField<Type, GeoMesh, PrimitiveField>::readFields
     }
     else
     {
-        sources_.readField(*this, dictionary(dict.name()/"sources", dict));
+        sources_.readField(*this, dictionary("sources", dict));
     }
 
     if (dict.found("referenceLevel"))
@@ -194,14 +194,15 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
     const dimensionSet& ds,
     const wordList& patchFieldTypes,
     const wordList& actualPatchTypes,
-    const HashTable<word>& fieldSourceTypes
+    const HashTable<word>& fieldSourceTypes,
+    const IOerrorLocation& fieldSourceErrorLocation
 )
 :
     Internal(io, mesh, ds, false),
     OldTimeField<GeometricField>(this->time().timeIndex()),
     fieldPrevIterPtr_(nullptr),
     boundaryField_(mesh.boundary(), *this, patchFieldTypes, actualPatchTypes),
-    sources_(*this, fieldSourceTypes)
+    sources_(*this, fieldSourceTypes, fieldSourceErrorLocation)
 {
     if (debug)
     {
@@ -246,14 +247,15 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
     const dimensioned<Type>& dt,
     const wordList& patchFieldTypes,
     const wordList& actualPatchTypes,
-    const HashTable<word>& fieldSourceTypes
+    const HashTable<word>& fieldSourceTypes,
+    const IOerrorLocation& fieldSourceErrorLocation
 )
 :
     Internal(io, mesh, dt, false),
     OldTimeField<GeometricField>(this->time().timeIndex()),
     fieldPrevIterPtr_(nullptr),
     boundaryField_(mesh.boundary(), *this, patchFieldTypes, actualPatchTypes),
-    sources_(*this, fieldSourceTypes)
+    sources_(*this, fieldSourceTypes, fieldSourceErrorLocation)
 {
     if (debug)
     {
@@ -724,7 +726,8 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
     const GeometricField<Type, GeoMesh, PrimitiveField2>& gf,
     const wordList& patchFieldTypes,
     const wordList& actualPatchTypes,
-    const HashTable<word>& fieldSourceTypes
+    const HashTable<word>& fieldSourceTypes,
+    const IOerrorLocation& fieldSourceErrorLocation
 )
 :
     Internal(io, gf, false),
@@ -737,7 +740,7 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
         patchFieldTypes,
         actualPatchTypes
     ),
-    sources_(*this, fieldSourceTypes)
+    sources_(*this, fieldSourceTypes, fieldSourceErrorLocation)
 {
     if (debug)
     {
@@ -762,7 +765,8 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
     const tmp<GeometricField<Type, GeoMesh, PrimitiveField>>& tgf,
     const wordList& patchFieldTypes,
     const wordList& actualPatchTypes,
-    const HashTable<word>& fieldSourceTypes
+    const HashTable<word>& fieldSourceTypes,
+    const IOerrorLocation& fieldSourceErrorLocation
 )
 :
     Internal
@@ -781,7 +785,7 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
         patchFieldTypes,
         actualPatchTypes
     ),
-    sources_(*this, fieldSourceTypes)
+    sources_(*this, fieldSourceTypes, fieldSourceErrorLocation)
 {
     if (debug)
     {
@@ -806,7 +810,8 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
     const DimensionedField<Type, GeoMesh, PrimitiveField2>& df,
     const wordList& patchFieldTypes,
     const wordList& actualPatchTypes,
-    const HashTable<word>& fieldSourceTypes
+    const HashTable<word>& fieldSourceTypes,
+    const IOerrorLocation& fieldSourceErrorLocation
 )
 :
     Internal(io, df, false),
@@ -819,7 +824,7 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
         patchFieldTypes,
         actualPatchTypes
     ),
-    sources_(*this, fieldSourceTypes)
+    sources_(*this, fieldSourceTypes, fieldSourceErrorLocation)
 {
     if (debug)
     {
@@ -839,7 +844,8 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
     const tmp<Internal>& tdf,
     const wordList& patchFieldTypes,
     const wordList& actualPatchTypes,
-    const HashTable<word>& fieldSourceTypes
+    const HashTable<word>& fieldSourceTypes,
+    const IOerrorLocation& fieldSourceErrorLocation
 )
 :
     Internal(io, const_cast<Internal&>(tdf()), tdf.isTmp(), false),
@@ -852,7 +858,7 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
         patchFieldTypes,
         actualPatchTypes
     ),
-    sources_(*this, fieldSourceTypes)
+    sources_(*this, fieldSourceTypes, fieldSourceErrorLocation)
 {
     if (debug)
     {
@@ -1014,7 +1020,8 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::New
     const dimensioned<Type>& dt,
     const wordList& patchFieldTypes,
     const wordList& actualPatchTypes,
-    const HashTable<word>& fieldSourceTypes
+    const HashTable<word>& fieldSourceTypes,
+    const IOerrorLocation& fieldSourceErrorLocation
 )
 {
     const bool cacheTmp = mesh.thisDb().cacheTemporaryObject(name);
@@ -1036,7 +1043,8 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::New
             dt,
             patchFieldTypes,
             actualPatchTypes,
-            fieldSourceTypes
+            fieldSourceTypes,
+            fieldSourceErrorLocation
         ),
         cacheTmp
     );
@@ -1217,7 +1225,8 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::New
     const GeometricField<Type, GeoMesh, PrimitiveField2>& gf,
     const wordList& patchFieldTypes,
     const wordList& actualPatchTypes,
-    const HashTable<word>& fieldSourceTypes
+    const HashTable<word>& fieldSourceTypes,
+    const IOerrorLocation& fieldSourceErrorLocation
 )
 {
     const bool cacheTmp = gf.db().cacheTemporaryObject(newName);
@@ -1239,7 +1248,8 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::New
             gf,
             patchFieldTypes,
             actualPatchTypes,
-            fieldSourceTypes
+            fieldSourceTypes,
+            fieldSourceErrorLocation
         ),
         cacheTmp
     );
@@ -1254,7 +1264,8 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::New
     const tmp<GeometricField<Type, GeoMesh, PrimitiveField>>& tgf,
     const wordList& patchFieldTypes,
     const wordList& actualPatchTypes,
-    const HashTable<word>& fieldSourceTypes
+    const HashTable<word>& fieldSourceTypes,
+    const IOerrorLocation& fieldSourceErrorLocation
 )
 {
     const bool cacheTmp = tgf().db().cacheTemporaryObject(newName);
@@ -1276,7 +1287,8 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::New
             tgf,
             patchFieldTypes,
             actualPatchTypes,
-            fieldSourceTypes
+            fieldSourceTypes,
+            fieldSourceErrorLocation
         ),
         cacheTmp
     );
@@ -1292,7 +1304,8 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::New
     const DimensionedField<Type, GeoMesh, PrimitiveField2>& df,
     const wordList& patchFieldTypes,
     const wordList& actualPatchTypes,
-    const HashTable<word>& fieldSourceTypes
+    const HashTable<word>& fieldSourceTypes,
+    const IOerrorLocation& fieldSourceErrorLocation
 )
 {
     const bool cacheTmp = df.db().cacheTemporaryObject(newName);
@@ -1314,7 +1327,8 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::New
             df,
             patchFieldTypes,
             actualPatchTypes,
-            fieldSourceTypes
+            fieldSourceTypes,
+            fieldSourceErrorLocation
         ),
         cacheTmp
     );
@@ -1329,7 +1343,8 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::New
     const tmp<Internal>& tdf,
     const wordList& patchFieldTypes,
     const wordList& actualPatchTypes,
-    const HashTable<word>& fieldSourceTypes
+    const HashTable<word>& fieldSourceTypes,
+    const IOerrorLocation& fieldSourceErrorLocation
 )
 {
     const bool cacheTmp = tdf().db().cacheTemporaryObject(newName);
@@ -1351,7 +1366,8 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::New
             tdf,
             patchFieldTypes,
             actualPatchTypes,
-            fieldSourceTypes
+            fieldSourceTypes,
+            fieldSourceErrorLocation
         ),
         cacheTmp
     );
