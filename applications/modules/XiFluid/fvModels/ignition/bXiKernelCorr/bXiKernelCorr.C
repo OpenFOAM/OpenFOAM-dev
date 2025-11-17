@@ -54,7 +54,7 @@ void Foam::fv::bXiKernelCorr::readCoeffs(const dictionary& dict)
 
 
 template<class Type>
-inline Type Foam::fv::bXiKernelCorr::bFunc(const Type& b, const Type& R) const
+inline auto Foam::fv::bXiKernelCorr::bFunc(const Type& b, const Type& R) const
 {
     // Analytical solution of b-Xi model with linear Xi and heat release
     return (R - (R - 1)*b)*(1 - b);

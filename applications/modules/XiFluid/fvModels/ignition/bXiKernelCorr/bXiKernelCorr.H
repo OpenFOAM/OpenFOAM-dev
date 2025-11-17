@@ -122,7 +122,7 @@ private:
 
         //- Kernel consumption rate distribution function
         template<class Type>
-        inline Type bFunc(const Type& b, const Type& R) const;
+        inline auto bFunc(const Type& b, const Type& R) const;
 
 
 public:
