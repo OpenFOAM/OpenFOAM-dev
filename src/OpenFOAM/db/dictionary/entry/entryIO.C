@@ -100,6 +100,8 @@ bool Foam::entry::getKeyword
 }
 
 
+// * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
+
 bool Foam::entry::New(dictionary& parentDict, Istream& is)
 {
     is.fatalCheck("entry::New(const dictionary& parentDict, Istream&)");
@@ -154,12 +156,12 @@ bool Foam::entry::New(dictionary& parentDict, Istream& is)
             {
                 bool success = parentDict.add
                 (
-                    new functionEntry
+                    functionEntry::New
                     (
                         keyword,
                         parentDict,
                         is
-                    ),
+                    ).ptr(),
                     false
                 );
 

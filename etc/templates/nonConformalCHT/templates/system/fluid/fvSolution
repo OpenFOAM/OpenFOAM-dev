@@ -77,7 +77,7 @@ PIMPLE
     nNonOrthogonalCorrectors 0;
 
 // Steady-state and transient correctors
-#ifeq $timeScheme steadyState
+#ifeq ($timeScheme steadyState)
     nOuterCorrectors 1;
     nCorrectors     1;
 #else
@@ -87,7 +87,7 @@ PIMPLE
 }
 
 // Relaxation factors for incompressible and compressible solution
-#ifeq $timeScheme steadyState
+#ifeq ($timeScheme steadyState)
 relaxationFactors
 {
     fields

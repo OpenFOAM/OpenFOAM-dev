@@ -26,7 +26,7 @@ boundaryField
     rotating
     {
         timeScheme      ${${FOAM_CASE}/system/fvSchemes!ddtSchemes/default};
-    #ifeq $timeScheme steadyState
+    #ifeq ($timeScheme steadyState)
         type            MRFnoSlip;
     #else
         type            movingWallVelocity;

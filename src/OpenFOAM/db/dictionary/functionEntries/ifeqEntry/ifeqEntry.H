@@ -25,24 +25,26 @@ Class
     Foam::functionEntries::ifeqEntry
 
 Description
-    Conditional parsing of dictionary entries.
+    Conditional parsing of and within dictionary entries.
 
     E.g.
     \verbatim
         a #calc "0.123";
         b 1.23e-1;
 
-        #ifeq $a $b
+        #ifeq ($a $b)
             ..
         #else
             ..
         #endif
+
+        c #ifeq ($a $b) 5.53 #else 7.89 #endif;
     \endverbatim
 
     \verbatim
     ddtSchemes
     {
-    #ifeq ${FOAM_APPLICATION} foamRun
+    #ifeq (${FOAM_APPLICATION} foamRun)
         default         steadyState;
     #else
         default         Euler;
@@ -52,10 +54,9 @@ Description
 
     Note:
     - supports dictionary variables and environment variables
-    - the two arguments should be two tokens
-    - the comparison is a string comparison for any word/string/variable,
-      integer comparison for two integers and floating point comparison for
-      any floating point number.
+    - the two arguments should be tokens
+    - the equality test supports any word/string/variable, integers
+      and floating point numbers
     - parsing of (non)matching \c \#else, \c \#endif is not very sophisticated
 
 See also
@@ -96,6 +97,8 @@ private:
 
     // Private Member Functions
 
+        tokenList readArgList(Istream& is);
+
         //- Read tokens. Skip dummy tokens
         static void readToken(token& t, Istream& is);
 
@@ -113,20 +116,24 @@ private:
             Istream& is
         );
 
+        template<class Context>
         static bool evaluate
         (
             const bool doIf,
             DynamicList<filePos>& stack,
-            dictionary& parentDict,
+            const dictionary& contextDict,
+            Context& context,
             Istream& is
         );
 
         //- Main driver: depending on 'equal' starts evaluating or
         //  skips forward to #else
+        template<class Context>
         static bool execute
         (
             DynamicList<filePos>& stack,
-            dictionary& parentDict,
+            const dictionary& contextDict,
+            Context& context,
             Istream& is
         );
 
@@ -137,11 +144,13 @@ protected:
 
         //- Main driver: depending on 'equal' starts evaluating or
         //  skips forward to #else
+        template<class Context>
         static bool execute
         (
             const bool equal,
             DynamicList<filePos>& stack,
-            dictionary& parentDict,
+            const dictionary& contextDict,
+            Context& context,
             Istream& is
         );
 
@@ -149,17 +158,21 @@ protected:
 public:
 
     //- Runtime type information
-    ClassName("#ifeq");
-
-    // Function names for the individual elements of the conditional
-    static const functionName ifName;
-    static const functionName ifeqName;
-    static const functionName elifName;
-    static const functionName elseName;
-    static const functionName endifName;
+    FunctionTypeName("#ifeq");
 
 
     // Constructors
+
+        //- Construct from keyword, dictionary and tokenList
+        ifeqEntry
+        (
+            const keyType&,
+            const dictionary& parentDict,
+            const tokenList& tokens
+        );
+
+        //- Construct from dictionary and Istream
+        ifeqEntry(const dictionary& parentDict, Istream& is);
 
         //- Disallow default bitwise copy construction
         ifeqEntry(const ifeqEntry&) = delete;
@@ -167,8 +180,16 @@ public:
 
     // Member Functions
 
-        //- Execute the functionEntry in a sub-dict context
-        static bool execute(dictionary& parentDict, Istream& is);
+        //- Expand the functionEntry into the contextDict
+        static bool execute(dictionary& contextDict, Istream& is);
+
+        //- Expand the functionEntry adding tokens to the contextEntry
+        static bool execute
+        (
+            const dictionary& contextDict,
+            primitiveEntry& contextEntry,
+            Istream&
+        );
 
 
     // Member Operators

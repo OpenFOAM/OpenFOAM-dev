@@ -59,7 +59,7 @@ Foam::functionObjects::flowType::flowType
     resultName_
     (
         dict.found("result")
-      ? dict.lookup("result")
+      ? dict.lookup<word>("result")
       : name
     )
 {

@@ -203,7 +203,7 @@ class calcEntry
 public:
 
     //- Runtime type information
-    ClassName("#calc");
+    FunctionTypeName("#calc");
 
 
     // Constructors

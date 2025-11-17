@@ -109,13 +109,13 @@ public:
         inline keyType(const word&);
 
         //- Construct as functionName
-        inline explicit keyType(const functionName&);
+        inline keyType(const functionName&);
 
         //- Construct as variable
-        inline explicit keyType(const variable&);
+        inline keyType(const variable&);
 
         //- Construct as pattern
-        inline explicit keyType(const string&);
+        inline keyType(const string&);
 
         //- Construct as word from character array.
         inline keyType(const char*);

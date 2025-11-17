@@ -764,19 +764,8 @@ bool Foam::readConfigFile
     dictionary funcArgsDict;
     funcArgsDict.add(entryName, funcDict);
 
-    // {
-    //     OStringStream os;
-    //     funcArgsDict.write(os);
-    //     funcArgsDict = dictionary
-    //     (
-    //         funcType,
-    //         funcDict,
-    //         IStringStream(os.str())()
-    //     );
-    // }
-
     {
-        OTstream os("funcArgsDict");
+        OTstream os(fileStream.name());
         funcArgsDict.write(os);
         funcArgsDict = dictionary
         (

@@ -79,7 +79,7 @@ class negEntry
 public:
 
     //- Runtime type information
-    ClassName("#neg");
+    FunctionTypeName("#neg");
 
 
     // Constructors

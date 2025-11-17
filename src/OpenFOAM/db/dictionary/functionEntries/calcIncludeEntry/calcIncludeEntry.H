@@ -78,7 +78,7 @@ class calcIncludeEntry
 public:
 
     //- Runtime type information
-    ClassName("#calcInclude");
+    FunctionTypeName("#calcInclude");
 
 
     // Constructors

@@ -79,10 +79,14 @@ class primitiveEntry
         //- Read the complete entry from the given stream
         void readEntry(const dictionary&, Istream&);
 
+        friend class functionEntry;
 
 public:
 
     // Constructors
+
+        //- Construct from keyword
+        primitiveEntry(const keyType&);
 
         //- Construct from keyword and a Istream
         primitiveEntry(const keyType&, Istream&);
@@ -98,6 +102,9 @@ public:
 
         //- Construct from keyword and a list of tokens
         primitiveEntry(const keyType&, const UList<token>&);
+
+        //- Construct from keyword and a list of tokens
+        primitiveEntry(const keyType&, const List<token>&);
 
         //- Move construct from keyword and by transferring a list of tokens
         primitiveEntry(const keyType&, List<token>&&);

@@ -34,7 +34,7 @@ divSchemes
 {
     default         none;
 
-#ifeq $!ddtSchemes/default steadyState
+#ifeq ($!ddtSchemes/default steadyState )
     div(phi,U)      bounded Gauss linearUpwindV limited;
     turbulence      bounded Gauss limitedLinear 1;
 #else

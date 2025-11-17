@@ -77,7 +77,7 @@ fluxLimitedLangmuirHinshelwoodReactionRate
     limited_(dict.found("s")),
     AvUniform_(limited_ ? dict.lookup("Av")[0].isNumber() : true),
     Av_(limited_ && AvUniform_ ? dict.lookup<scalar>("Av") : 0),
-    AvName_(limited_ && !AvUniform_ ? dict.lookup("Av") : word::null),
+    AvName_(limited_ && !AvUniform_ ? dict.lookup<word>("Av") : word::null),
     nu_(),
     exp_(),
     s_(),

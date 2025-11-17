@@ -98,10 +98,13 @@ public:
 
 
     //- Runtime type information
-    ClassName("#includeEtc");
+    FunctionTypeName("#includeEtc");
 
 
     // Constructors
+
+        //- Construct from dictionary and Istream
+        includeEtcEntry(const dictionary& parentDict, Istream& is);
 
         //- Disallow default bitwise copy construction
         includeEtcEntry(const includeEtcEntry&) = delete;

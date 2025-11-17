@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,12 +26,13 @@ License
 #include "includeIfPresentEntry.H"
 #include "dictionary.H"
 #include "IFstream.H"
+#include "addToRunTimeSelectionTable.H"
 #include "addToMemberFunctionSelectionTable.H"
 #include "fileOperation.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-const Foam::word Foam::functionEntries::includeIfPresentEntry::typeName
+const Foam::functionName Foam::functionEntries::includeIfPresentEntry::typeName
 (
     Foam::functionEntries::includeIfPresentEntry::typeName_()
 );
@@ -44,6 +45,13 @@ namespace Foam
 {
 namespace functionEntries
 {
+    addToRunTimeSelectionTable
+    (
+        functionEntry,
+        includeIfPresentEntry,
+        dictionary
+    );
+
     addToMemberFunctionSelectionTable
     (
         functionEntry,
@@ -61,6 +69,19 @@ namespace functionEntries
     );
 }
 }
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::functionEntries::includeIfPresentEntry::includeIfPresentEntry
+(
+    const dictionary& parentDict,
+    Istream& is
+)
+:
+    includeEntry(typeName, parentDict, is)
+{}
+
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 

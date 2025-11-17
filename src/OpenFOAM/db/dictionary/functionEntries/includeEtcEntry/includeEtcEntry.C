@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,13 +26,14 @@ License
 #include "includeEtcEntry.H"
 #include "etcFiles.H"
 #include "stringOps.H"
+#include "addToRunTimeSelectionTable.H"
 #include "addToMemberFunctionSelectionTable.H"
 #include "IOobject.H"
 #include "fileOperation.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-const Foam::word Foam::functionEntries::includeEtcEntry::typeName
+const Foam::functionName Foam::functionEntries::includeEtcEntry::typeName
 (
     Foam::functionEntries::includeEtcEntry::typeName_()
 );
@@ -48,6 +49,8 @@ namespace Foam
 {
 namespace functionEntries
 {
+    addToRunTimeSelectionTable(functionEntry, includeEtcEntry, dictionary);
+
     addToMemberFunctionSelectionTable
     (
         functionEntry,
@@ -65,6 +68,7 @@ namespace functionEntries
     );
 }
 }
+
 
 // * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * * //
 
@@ -90,6 +94,18 @@ Foam::fileName Foam::functionEntries::includeEtcEntry::includeEtcFileName
         return findEtcFile(fName);
     }
 }
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::functionEntries::includeEtcEntry::includeEtcEntry
+(
+    const dictionary& parentDict,
+    Istream& is
+)
+:
+    functionEntry(typeName, parentDict, readFileNameArgList(is))
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //

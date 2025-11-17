@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,60 +23,36 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "removeEntry.H"
-#include "dictionary.H"
-#include "stringListOps.H"
-#include "IStringStream.H"
-#include "OStringStream.H"
-#include "addToMemberFunctionSelectionTable.H"
+#include "dummyEntry.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-const Foam::functionName Foam::functionEntries::removeEntry::typeName
-(
-    Foam::functionEntries::removeEntry::typeName_()
-);
-
-// Don't lookup the debug switch here as the debug switch dictionary
-// might include removeEntry
-int Foam::functionEntries::removeEntry::debug(0);
 
 namespace Foam
 {
 namespace functionEntries
 {
-    addToMemberFunctionSelectionTable
-    (
-        functionEntry,
-        removeEntry,
-        execute,
-        dictionaryIstream
-    );
+    defineFunctionTypeName(dummyEntry);
 }
+}
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::functionEntries::dummyEntry::dummyEntry
+(
+    const keyType& key,
+    const dictionary& parentDict,
+    Istream& is
+)
+:
+    functionEntry(key, parentDict)
+{
+    // Get the rest of the line and discard
+    string line;
+    dynamic_cast<ISstream&>(is).getLine(line);
 }
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-bool Foam::functionEntries::removeEntry::execute
-(
-    dictionary& parentDict,
-    Istream& is
-)
-{
-    const wordList dictKeys = parentDict.toc();
-
-    const wordReList patterns = readList<wordRe>(is);
-
-    const labelList indices = findStrings(patterns, dictKeys);
-
-    forAll(indices, indexI)
-    {
-        parentDict.remove(dictKeys[indices[indexI]]);
-    }
-
-    return true;
-}
-
 
 // ************************************************************************* //

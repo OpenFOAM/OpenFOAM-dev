@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,59 +23,45 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "removeEntry.H"
-#include "dictionary.H"
-#include "stringListOps.H"
-#include "IStringStream.H"
-#include "OStringStream.H"
-#include "addToMemberFunctionSelectionTable.H"
+#include "Switch.H"
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-const Foam::functionName Foam::functionEntries::removeEntry::typeName
+template<class Context>
+bool Foam::functionEntries::ifEntry::execute
 (
-    Foam::functionEntries::removeEntry::typeName_()
-);
-
-// Don't lookup the debug switch here as the debug switch dictionary
-// might include removeEntry
-int Foam::functionEntries::removeEntry::debug(0);
-
-namespace Foam
-{
-namespace functionEntries
-{
-    addToMemberFunctionSelectionTable
-    (
-        functionEntry,
-        removeEntry,
-        execute,
-        dictionaryIstream
-    );
-}
-}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-bool Foam::functionEntries::removeEntry::execute
-(
-    dictionary& parentDict,
+    DynamicList<filePos>& stack,
+    const dictionary& contextDict,
+    Context& context,
     Istream& is
 )
 {
-    const wordList dictKeys = parentDict.toc();
+    const label nNested = stack.size();
 
-    const wordReList patterns = readList<wordRe>(is);
+    stack.append(filePos(is.name(), is.lineNumber()));
 
-    const labelList indices = findStrings(patterns, dictKeys);
+    // Read if argument
+    const ifEntry ife(contextDict, is);
+    const string arg
+    (
+        ife[1].stringToken() + char(token::END_STATEMENT)
+    );
+    IStringStream argStream(arg);
+    argStream.lineNumber() = ife[1].lineNumber();
+    const primitiveEntry e("ifEntry", contextDict, argStream);
+    const Switch doIf(e.stream());
 
-    forAll(indices, indexI)
+    bool ok = ifeqEntry::execute(doIf, stack, contextDict, context, is);
+
+    if (stack.size() != nNested)
     {
-        parentDict.remove(dictKeys[indices[indexI]]);
+        FatalIOErrorInFunction(contextDict)
+            << "Did not find matching #endif for condition starting"
+            << " at line " << stack.last().second()
+            << " in file " <<  stack.last().first() << exit(FatalIOError);
     }
 
-    return true;
+    return ok;
 }
 
 

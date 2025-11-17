@@ -86,7 +86,16 @@ class includeFuncEntry
 public:
 
     //- Runtime type information
-    ClassName("#includeFunc");
+    FunctionTypeName("#includeFunc");
+
+
+    // Constructors
+
+        //- Construct from dictionary and Istream
+        includeFuncEntry(const dictionary& parentDict, Istream& is);
+
+        //- Disallow default bitwise copy construction
+        includeFuncEntry(const includeFuncEntry&) = delete;
 
 
     // Static Data Members

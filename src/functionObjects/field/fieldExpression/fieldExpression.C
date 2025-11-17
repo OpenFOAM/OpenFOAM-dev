@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ Foam::functionObjects::fieldExpression::fieldExpression
     resultName_
     (
         dict.found("result")
-      ? dict.lookup("result")
+      ? dict.lookup<word>("result")
       : (defaultFieldName.empty() || fieldName_ != defaultFieldName)
         ? word(functionName + '(' + fieldName_ + ')')
         : functionName

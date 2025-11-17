@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,60 +23,33 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "removeEntry.H"
-#include "dictionary.H"
-#include "stringListOps.H"
-#include "IStringStream.H"
-#include "OStringStream.H"
-#include "addToMemberFunctionSelectionTable.H"
+#include "elseEntry.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-const Foam::functionName Foam::functionEntries::removeEntry::typeName
-(
-    Foam::functionEntries::removeEntry::typeName_()
-);
-
-// Don't lookup the debug switch here as the debug switch dictionary
-// might include removeEntry
-int Foam::functionEntries::removeEntry::debug(0);
 
 namespace Foam
 {
 namespace functionEntries
 {
-    addToMemberFunctionSelectionTable
-    (
-        functionEntry,
-        removeEntry,
-        execute,
-        dictionaryIstream
-    );
+    defineFunctionTypeNameAndDebug(elseEntry, 0);
+    addToRunTimeSelectionTable(functionEntry, elseEntry, dictionary);
 }
 }
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::functionEntries::elseEntry::elseEntry
+(
+    const dictionary& parentDict,
+    Istream& is
+)
+:
+    functionEntry(typeName, parentDict)
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-bool Foam::functionEntries::removeEntry::execute
-(
-    dictionary& parentDict,
-    Istream& is
-)
-{
-    const wordList dictKeys = parentDict.toc();
-
-    const wordReList patterns = readList<wordRe>(is);
-
-    const labelList indices = findStrings(patterns, dictKeys);
-
-    forAll(indices, indexI)
-    {
-        parentDict.remove(dictKeys[indices[indexI]]);
-    }
-
-    return true;
-}
-
 
 // ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,30 +22,22 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::functionEntries::removeEntry
+    Foam::functionEntries::endifEntry
 
 Description
-    Remove a dictionary entry.
+    Part of the #if...#endif clause
 
-    The \c \#remove directive takes a list or a single wordRe.
-    For example,
-    \verbatim
-        #remove entry0
-        #remove ( entry1 entry2 entry3 otherEntry )
-        #remove "entry[1-3]"
-        #remove ( "entry[1-3]" otherEntry )
-    \endverbatim
-
-    The removal only occurs in the current context.
-    Removing sub-entries or parent entries is not supported.
+See also
+    Foam::functionEntries::ifEntry
+    Foam::functionEntries::ifeqEntry
 
 SourceFiles
-    removeEntry.C
+    endifEntry.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef removeEntry_H
-#define removeEntry_H
+#ifndef endifEntry_H
+#define endifEntry_H
 
 #include "functionEntry.H"
 
@@ -57,10 +49,10 @@ namespace functionEntries
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class removeEntry Declaration
+                           Class endifEntry Declaration
 \*---------------------------------------------------------------------------*/
 
-class removeEntry
+class endifEntry
 :
     public functionEntry
 {
@@ -68,25 +60,25 @@ class removeEntry
 public:
 
     //- Runtime type information
-    FunctionTypeName("#remove");
+    FunctionTypeName("#endif");
 
 
     // Constructors
 
+        //- Construct from dictionary and Istream
+        endifEntry(const dictionary& parentDict, Istream& is);
+
         //- Disallow default bitwise copy construction
-        removeEntry(const removeEntry&) = delete;
+        endifEntry(const endifEntry&) = delete;
 
 
     // Member Functions
-
-        //- Execute the functionEntry in a sub-dict context
-        static bool execute(dictionary& parentDict, Istream&);
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const removeEntry&) = delete;
+        void operator=(const endifEntry&) = delete;
 };
 
 

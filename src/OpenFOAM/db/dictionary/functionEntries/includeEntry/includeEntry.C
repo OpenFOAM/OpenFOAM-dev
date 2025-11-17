@@ -26,6 +26,7 @@ License
 #include "includeEntry.H"
 #include "dictionary.H"
 #include "IFstream.H"
+#include "addToRunTimeSelectionTable.H"
 #include "addToMemberFunctionSelectionTable.H"
 #include "stringOps.H"
 #include "IOobject.H"
@@ -33,7 +34,7 @@ License
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-const Foam::word Foam::functionEntries::includeEntry::typeName
+const Foam::functionName Foam::functionEntries::includeEntry::typeName
 (
     Foam::functionEntries::includeEntry::typeName_()
 );
@@ -49,6 +50,8 @@ namespace Foam
 {
 namespace functionEntries
 {
+    addToRunTimeSelectionTable(functionEntry, includeEntry, dictionary);
+
     addToMemberFunctionSelectionTable
     (
         functionEntry,
@@ -191,6 +194,29 @@ Foam::fileName Foam::functionEntries::includeEntry::includeFileName
         return dir/fName;
     }
 }
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::functionEntries::includeEntry::includeEntry
+(
+    const keyType& keyword,
+    const dictionary& parentDict,
+    Istream& is
+)
+:
+    functionEntry(keyword, parentDict, readFileNameArgList(is))
+{}
+
+
+Foam::functionEntries::includeEntry::includeEntry
+(
+    const dictionary& parentDict,
+    Istream& is
+)
+:
+    includeEntry(typeName, parentDict, is)
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //

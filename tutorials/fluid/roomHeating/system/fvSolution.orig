@@ -69,7 +69,7 @@ PIMPLE
 }
 
 // Relaxation factors for incompressible and compressible solution
-#ifeq $timeScheme steadyState
+#ifeq ($timeScheme steadyState)
 relaxationFactors
 {
     fields

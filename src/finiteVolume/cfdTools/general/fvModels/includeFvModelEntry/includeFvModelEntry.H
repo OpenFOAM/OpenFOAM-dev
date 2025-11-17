@@ -87,7 +87,7 @@ class includeFvModelEntry
 public:
 
     //- Runtime type information
-    ClassName("#includeModel");
+    FunctionTypeName("#includeModel");
 
 
     // Static Data Members

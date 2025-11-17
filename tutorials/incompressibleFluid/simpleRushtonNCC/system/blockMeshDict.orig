@@ -26,7 +26,7 @@ r2Cells   $r1Cells;
 r3Cells   $r1Cells;
 r4Cells   #calc "$factor*4";
 
-#ifeq $mode graded
+#ifeq ($mode graded)
     r5Cells   #calc "$factor*40";
     zCells    #calc "$factor*100";
 #else
@@ -105,7 +105,7 @@ vertices
 );
 
 // Grading
-#ifeq $mode graded
+#ifeq ($mode graded)
     zGrd   ((1 1 40)(20 4 1)(1 1 0.025));
     rGrd   ((4 1 1)(1 1 0.025));
 #else

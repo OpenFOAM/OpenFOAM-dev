@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,7 +65,7 @@ Foam::autoPtr<Foam::liquidProperties> Foam::liquidProperties::New
 
     // If the type is not specified use the name as the liquid type name
     const word& liquidPropertiesTypeName =
-        dict.found("type") ? dict.lookup("type") : dict.dictName();
+        dict.found("type") ? dict.lookup<word>("type") : dict.dictName();
 
     dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(liquidPropertiesTypeName);

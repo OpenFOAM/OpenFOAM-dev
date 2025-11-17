@@ -71,13 +71,34 @@ class functionEntry
         // to the function name
         void readRestOfArgs(string& fNameArgs, Istream& is);
 
-        //- Read the function name and optional argument list
-        //  and return as a string.
-        //  The optional argument list can be on one or more lines.
-        tokenList readFuncNameArgList(Istream& is);
-
 
 protected:
+
+        tokenList readArgList(Istream& is);
+
+        //- Read the function name and optional argument list
+        //  The argument list can be on one or more lines.
+        tokenList readFuncNameArgList(Istream& is);
+
+        //- Read the filen name and optional argument list
+        //  The argument list can be on one or more lines.
+        tokenList readFileNameArgList(Istream& is);
+
+        static bool insert
+        (
+            const dictionary& contextDict,
+            dictionary& parentDict,
+            const token& t,
+            Istream& is
+        );
+
+        static bool insert
+        (
+            const dictionary& contextDict,
+            primitiveEntry& thisEntry,
+            const token& t,
+            Istream& is
+        );
 
         //- Insert the given string in a sub-dict context
         static bool insert
@@ -97,10 +118,33 @@ protected:
 
 public:
 
+    FunctionName("functionEntry");
+
+    // Declare run-time constructor selection tables
+
+        declareRunTimeSelectionTable
+        (
+            autoPtr,
+            functionEntry,
+            dictionary,
+            (
+                const dictionary& parentDict,
+                Istream& is
+            ),
+            (parentDict, is)
+        );
+
+
     // Constructors
+
+        //- Construct from keyword and parent dictionary
+        functionEntry(const keyType&, const dictionary&);
 
         //- Construct from keyword, parent dictionary and Istream
         functionEntry(const keyType&, const dictionary&, Istream&);
+
+        //- Construct from keyword, parent dictionary and tokenList
+        functionEntry(const keyType&, const dictionary&, const tokenList&);
 
         //- Copy construct
         functionEntry(const functionEntry&) = default;
@@ -110,6 +154,14 @@ public:
         {
             return autoPtr<entry>(new functionEntry(*this));
         }
+
+        //- Construct from Istream and insert into dictionary
+        static autoPtr<functionEntry> New
+        (
+            const keyType& functionName,
+            const dictionary& parentDict,
+            Istream& is
+        );
 
 
     // Member Function Selectors

@@ -55,7 +55,7 @@ timeScheme $fvSchemes!ddtSchemes/default;
 
 PIMPLE
 {
-#ifeq $timeScheme steadyState
+#ifeq ($timeScheme steadyState)
     nNonOrthogonalCorrectors 0;
     residualControl
     {
@@ -78,7 +78,7 @@ potentialFlow
     nNonOrthogonalCorrectors 10;
 }
 
-#ifeq $timeScheme steadyState
+#ifeq ($timeScheme steadyState)
 relaxationFactors
 {
     // Steady-state relaxation factors

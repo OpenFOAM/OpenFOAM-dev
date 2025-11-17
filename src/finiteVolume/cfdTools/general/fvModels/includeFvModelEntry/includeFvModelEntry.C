@@ -32,7 +32,7 @@ namespace Foam
 {
 namespace functionEntries
 {
-    defineTypeNameAndDebug(includeFvModelEntry, 0);
+    defineFunctionTypeNameAndDebug(includeFvModelEntry, 0);
 
     addToMemberFunctionSelectionTable
     (

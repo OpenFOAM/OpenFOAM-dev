@@ -25,11 +25,15 @@ License
 
 #include "functionEntry.H"
 #include "ISstream.H"
+#include "dummyEntry.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+    defineFunctionTypeName(functionEntry);
+    defineRunTimeSelectionTable(functionEntry, dictionary);
+
     defineMemberFunctionSelectionTable
     (
         functionEntry,
@@ -51,49 +55,142 @@ namespace Foam
 void Foam::functionEntry::readRestOfArgs(string& fNameArgs, Istream& is)
 {
     int listDepth = 1
-        + fNameArgs.count(token::BEGIN_LIST) - fNameArgs.count(token::END_LIST);
+      + fNameArgs.count(token::BEGIN_LIST) - fNameArgs.count(token::END_LIST);
 
-    if (listDepth != 0)
+    if (dynamic_cast<ISstream*>(&is))
     {
-        ISstream& iss = dynamic_cast<ISstream&>(is);
-
-        char c;
-
-        while (iss.get(c))
+        if (listDepth != 0)
         {
-            if (c == token::BEGIN_LIST)
+            ISstream& iss = dynamic_cast<ISstream&>(is);
+
+            char c;
+
+            while (iss.get(c))
+            {
+                if (c == token::BEGIN_LIST)
+                {
+                    listDepth++;
+                }
+                else if (c == token::END_LIST)
+                {
+                    listDepth--;
+
+                    if (listDepth == 0)
+                    {
+                        break;
+                    }
+                }
+
+                fNameArgs += c;
+            }
+        }
+        else
+        {
+            // Remove trailing token::END_LIST
+            fNameArgs.resize(fNameArgs.size() - 1);
+        }
+    }
+    else
+    {
+        OStringStream argStream;
+
+        token currToken;
+
+        while
+        (
+            !is.read(currToken).bad()
+            && currToken.good()
+            && !(currToken == token::END_STATEMENT && listDepth == 1)
+        )
+        {
+            if (currToken == token::BEGIN_LIST)
             {
                 listDepth++;
             }
-            else if (c == token::END_LIST)
+            else if (currToken == token::END_LIST)
             {
                 listDepth--;
 
-                if (listDepth <= 0)
+                if (listDepth == 0)
                 {
                     break;
                 }
             }
 
-            fNameArgs += c;
+            argStream << currToken;
+        }
+
+        fNameArgs.append(argStream.str());
+    }
+}
+
+
+Foam::tokenList Foam::functionEntry::readArgList(Istream& is)
+{
+    tokenList argList;
+
+    // Read the next token to check for '('
+    // in case the optional arguments start on the next line
+    const token nextToken(is);
+
+    if
+    (
+        nextToken.isPunctuation()
+     && nextToken.pToken() == token::BEGIN_LIST
+    )
+    {
+        argList.append(nextToken);
+
+        const token nextToken(is);
+
+        // Check if the argument list has been parsed previously
+        // and converted into a single string token
+        if (nextToken.isString())
+        {
+            argList.append(nextToken);
+
+            const token endListToken(is);
+            if
+            (
+                endListToken.isPunctuation()
+             && endListToken.pToken() == token::END_LIST
+            )
+            {
+                argList.append(endListToken);
+            }
+            else
+            {
+                FatalIOErrorInFunction(is)
+                    << "Unclosed argument list " << nextToken
+                    << " in functionEntry " << argList
+                    << exit(FatalIOError);
+            }
+        }
+        else
+        {
+            string fArgs(nextToken.anyStringToken());
+            readRestOfArgs(fArgs, is);
+            argList.append(token(fArgs, nextToken.lineNumber()));
+            argList.append(token(token::END_LIST, is.lineNumber()));
         }
     }
     else
     {
-        // Remove trailing token::END_LIST
-        fNameArgs = fNameArgs(fNameArgs.size() - 1);
+        is.putBack(nextToken);
     }
+
+    return argList;
 }
 
 
 Foam::tokenList Foam::functionEntry::readFuncNameArgList(Istream& is)
 {
     tokenList funcNameArgList;
-    const label lineNumber0 = is.lineNumber();
     string::size_type argsStart = string::npos;
 
     // Read the function name with arguments if on the same line
     const token fName(is);
+    const label fNameLineNumber = is.lineNumber();
 
     if (fName.isWord() || fName.isString())
     {
@@ -111,8 +208,11 @@ Foam::tokenList Foam::functionEntry::readFuncNameArgList(Istream& is)
             if (argsStart != string::npos)
             {
                 const word fName(fNameArgs(0, argsStart));
-                funcNameArgList.append(token(fName, lineNumber0));
-                funcNameArgList.append(token(token::BEGIN_LIST, lineNumber0));
+                funcNameArgList.append(token(fName, fNameLineNumber));
+                funcNameArgList.append
+                (
+                    token(token::BEGIN_LIST, fNameLineNumber)
+                );
 
                 string fArgs
                 (
@@ -120,80 +220,18 @@ Foam::tokenList Foam::functionEntry::readFuncNameArgList(Istream& is)
                 );
                 readRestOfArgs(fArgs, is);
 
-                funcNameArgList.append(token(fArgs, lineNumber0));
-                funcNameArgList.append(token(token::END_LIST, lineNumber0));
+                funcNameArgList.append(token(fArgs, fNameLineNumber));
+                funcNameArgList.append(token(token::END_LIST, fNameLineNumber));
             }
             else
             {
-                funcNameArgList.append(token(fNameArgs, lineNumber0));
+                funcNameArgList.append(token(fNameArgs, fNameLineNumber));
             }
         }
 
         if (argsStart == string::npos)
         {
-            // Read the next token to check for '('
-            // in case the optional arguments start on the next line
-
-            const label fNameLineNumber = is.lineNumber();
-            const token nextToken(is);
-
-            if
-            (
-                nextToken.isPunctuation()
-             && nextToken.pToken() == token::BEGIN_LIST
-            )
-            {
-                funcNameArgList.append(token(token::BEGIN_LIST, lineNumber0));
-
-                const token nextToken(is);
-
-                // Check if the argument list has been parsed previously
-                // and converted into a single string token
-                if (nextToken.isString())
-                {
-                    funcNameArgList.append(nextToken);
-
-                    const token endListToken(is);
-                    if
-                    (
-                        endListToken.isPunctuation()
-                     && endListToken.pToken() == token::END_LIST
-                    )
-                    {
-                        funcNameArgList.append(endListToken);
-                    }
-                    else
-                    {
-                        FatalIOErrorInFunction(is)
-                            << "Unclosed argument list " << nextToken
-                            << " in functionEntry " << funcNameArgList
-                            << exit(FatalIOError);
-                    }
-                }
-                else
-                {
-                    string fArgs(nextToken.anyStringToken());
-                    readRestOfArgs(fArgs, is);
-
-                    // Reinstate the \n between fName and the '('
-                    if (fNameLineNumber != lineNumber0)
-                    {
-                        fArgs =
-                            string(fNameLineNumber - lineNumber0, '\n')
-                          + fArgs;
-                    }
-
-                    funcNameArgList.append(token(fArgs, fNameLineNumber));
-                    funcNameArgList.append
-                    (
-                        token(token::END_LIST, is.lineNumber())
-                    );
-                }
-            }
-            else
-            {
-                is.putBack(nextToken);
-            }
+            funcNameArgList.append(readArgList(is));
         }
     }
     else
@@ -206,7 +244,59 @@ Foam::tokenList Foam::functionEntry::readFuncNameArgList(Istream& is)
 }
 
 
+Foam::tokenList Foam::functionEntry::readFileNameArgList(Istream& is)
+{
+    tokenList fileNameArgList;
+
+    // Read the file name
+    const token fName(is);
+
+    // Check the file name is a string
+    if (fName.isString())
+    {
+        // Append the file name
+        fileNameArgList.append(fName);
+
+        // Append the optional argument list
+        fileNameArgList.append(readArgList(is));
+    }
+    else
+    {
+        // For any other kind of string return for error reporting
+        fileNameArgList.append(fName);
+    }
+
+    return fileNameArgList;
+}
+
+
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
+
+bool Foam::functionEntry::insert
+(
+    const dictionary& contextDict,
+    dictionary& context,
+    const token& t,
+    Istream& is
+)
+{
+    is.putBack(t);
+    return entry::New(context, is);
+}
+
+
+bool Foam::functionEntry::insert
+(
+    const dictionary& contextDict,
+    primitiveEntry& context,
+    const token& t,
+    Istream& is
+)
+{
+    context.append(t, contextDict, is);
+    return true;
+}
+
 
 bool Foam::functionEntry::insert
 (
@@ -236,12 +326,74 @@ bool Foam::functionEntry::insert
 Foam::functionEntry::functionEntry
 (
     const keyType& key,
+    const dictionary& dict
+)
+:
+    primitiveEntry(key)
+{}
+
+
+Foam::functionEntry::functionEntry
+(
+    const keyType& key,
     const dictionary& dict,
     Istream& is
 )
 :
     primitiveEntry(key, readFuncNameArgList(is))
 {}
+
+
+Foam::functionEntry::functionEntry
+(
+    const keyType& key,
+    const dictionary& dict,
+    const tokenList& tokens
+)
+:
+    primitiveEntry(key, tokens)
+{}
+
+
+// * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
+
+Foam::autoPtr<Foam::functionEntry> Foam::functionEntry::New
+(
+    const keyType& functionName,
+    const dictionary& parentDict,
+    Istream& is
+)
+{
+    // If the functionEntry constructor table has not yet been constructed
+    // ignore functionEntries by instantiating a dummy entry for each
+    if (!dictionaryConstructorTablePtr_)
+    {
+        return autoPtr<functionEntry>
+        (
+            new functionEntries::dummyEntry(functionName, parentDict, is)
+        );
+    }
+
+    dictionaryConstructorTable::iterator cstrIter =
+        dictionaryConstructorTablePtr_->find(functionName);
+
+    if (cstrIter == dictionaryConstructorTablePtr_->end())
+    {
+        FatalErrorInFunction
+            << "Unknown functionEntry "
+            << functionName << nl << nl
+            << "Valid functions are : " << nl
+            << dictionaryConstructorTablePtr_->sortedToc()
+            << endl; // exit(FatalError);
+
+        return autoPtr<functionEntry>
+        (
+            new functionEntry(functionName, parentDict, is)
+        );
+    }
+
+    return autoPtr<functionEntry>(cstrIter()(parentDict, is));
+}
 
 
 // * * * * * * * * * * * * Member Function Selectors * * * * * * * * * * * * //
@@ -338,12 +490,6 @@ void Foam::functionEntry::write(Ostream& os) const
     if (size())
     {
         primitiveEntry::write(os, true);
-    }
-    else
-    {
-        FatalIOErrorInFunction(os)
-            << "Empty tokenList in functionEntry"
-            << exit(FatalIOError);
     }
 }
 

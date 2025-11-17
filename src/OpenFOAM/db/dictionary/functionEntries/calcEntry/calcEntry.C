@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ namespace Foam
 {
 namespace functionEntries
 {
-    defineTypeNameAndDebug(calcEntry, 0);
+    defineFunctionTypeNameAndDebug(calcEntry, 0);
 
     addToMemberFunctionSelectionTable
     (
@@ -74,26 +74,27 @@ Foam::string Foam::functionEntries::calcEntry::calc
         dict
     );
 
-    // Construct codeDict for codeStream
-    // Parent dictionary provided for string expansion and variable substitution
-    dictionary codeDict(dict, dictionary());
+    // Construct codeDict for codeStream with the parent dictionary provided for
+    // string expansion and variable substitution and the same name as the
+    // parent for consistent error messaging
+    dictionary codeDict(fileName::null, dict);
 
     // Read the code expression string delimited by either '"..."' or '#{...#}'
     token t(is);
 
     if (t.isVerbatimString())
     {
-        const verbatimString& s = t.verbatimStringToken();
-
         calcIncludeEntry::codeInclude(codeDict);
-        codeDict.add("code", s);
+        codeDict.add(primitiveEntry("code", t));
     }
     else if (t.isString())
     {
         const string& s = t.stringToken();
-
         calcIncludeEntry::codeInclude(codeDict);
-        codeDict.add("code", "os << (" + s + ");");
+        codeDict.add
+        (
+            primitiveEntry("code", "os << (" + s + ");", t.lineNumber())
+        );
     }
     else
     {

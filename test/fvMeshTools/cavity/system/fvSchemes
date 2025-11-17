@@ -16,7 +16,7 @@ FoamFile
 
 ddtSchemes
 {
-    #ifeq ${FOAM_APPLICATION} icoFoam
+    #ifeq (${FOAM_APPLICATION} icoFoam)
         default         steadyState;
     #else
         default         Euler;

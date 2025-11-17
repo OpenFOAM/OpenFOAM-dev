@@ -255,7 +255,7 @@ public:
 
 
     //- Runtime type information
-    ClassName("#codeStream");
+    FunctionTypeName("#codeStream");
 
 
     // Constructors

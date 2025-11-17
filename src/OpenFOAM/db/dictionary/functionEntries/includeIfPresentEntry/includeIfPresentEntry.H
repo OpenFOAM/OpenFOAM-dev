@@ -62,10 +62,13 @@ class includeIfPresentEntry
 public:
 
     //- Runtime type information
-    ClassName("#includeIfPresent");
+    FunctionTypeName("#includeIfPresent");
 
 
     // Constructors
+
+        //- Construct from dictionary and Istream
+        includeIfPresentEntry(const dictionary& parentDict, Istream& is);
 
         //- Disallow default bitwise copy construction
         includeIfPresentEntry(const includeIfPresentEntry&) = delete;

@@ -109,16 +109,23 @@ bool Foam::primitiveEntry::expandVariable
 
 Foam::primitiveEntry::primitiveEntry(const keyType& key, const ITstream& is)
 :
-    entry(key),
+    entry(key, is.lineNumber()),
     ITstream(is)
 {
     name() += '/' + keyword();
 }
 
 
-Foam::primitiveEntry::primitiveEntry(const keyType& key, const token& t)
+Foam::primitiveEntry::primitiveEntry(const keyType& key)
 :
     entry(key),
+    ITstream(key)
+{}
+
+
+Foam::primitiveEntry::primitiveEntry(const keyType& key, const token& t)
+:
+    entry(key, t.lineNumber()),
     ITstream(key, tokenList(1, t))
 {}
 
@@ -129,7 +136,18 @@ Foam::primitiveEntry::primitiveEntry
     const UList<token>& tokens
 )
 :
-    entry(key),
+    entry(key, tokens.size() ? tokens[0].lineNumber() : -1),
+    ITstream(key, tokens)
+{}
+
+
+Foam::primitiveEntry::primitiveEntry
+(
+    const keyType& key,
+    const List<token>& tokens
+)
+:
+    entry(key, tokens.size() ? tokens[0].lineNumber() : -1),
     ITstream(key, tokens)
 {}
 
@@ -140,7 +158,7 @@ Foam::primitiveEntry::primitiveEntry
     List<token>&& tokens
 )
 :
-    entry(key),
+    entry(key, tokens.size() ? tokens[0].lineNumber() : -1),
     ITstream(key, move(tokens))
 {}
 

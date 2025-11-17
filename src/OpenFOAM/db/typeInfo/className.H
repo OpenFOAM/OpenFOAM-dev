@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,21 +32,21 @@ Description
 #include "defineDebugSwitch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-                  // Declarations (without debug information)
+// Declarations (without debug information)
 
-//- Add typeName information from argument \a TypeNameString to a class.
+//- Add typeName information from argument a TypeNameString to a class.
 //  Without debug information
 #define ClassNameNoDebug(TypeNameString)                                       \
     static const char* typeName_() { return TypeNameString; }                  \
     static const ::Foam::word typeName
 
-//- Add typeName information from argument \a TypeNameString to a namespace.
+//- Add typeName information from argument a TypeNameString to a namespace.
 //  Without debug information.
 #define NamespaceNameNoDebug(TypeNameString)                                   \
     inline const char* typeName_() { return TypeNameString; }                  \
     extern const ::Foam::word typeName
 
-//- Add typeName information from argument \a TemplateNameString to a
+//- Add typeName information from argument a TemplateNameString to a
 //  template class.  Without debug information.
 #define TemplateNameNoDebug(TemplateNameString)                                \
 class TemplateNameString##Name                                                 \
@@ -56,23 +56,29 @@ public:                                                                        \
     ClassNameNoDebug(#TemplateNameString);                                     \
 }
 
+//- Add typeName information from argument a TypeNameString to a function class.
+//  Without debug information
+#define FunctionNameNoDebug(TypeNameString)                                    \
+    static const char* typeName_() { return TypeNameString; }                  \
+    static const ::Foam::functionName typeName
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-                   // Declarations (with debug information)
+// Declarations (with debug information)
 
-//- Add typeName information from argument \a TypeNameString to a class.
+//- Add typeName information from argument a TypeNameString to a class.
 //  Also declares debug information.
 #define ClassName(TypeNameString)                                              \
     ClassNameNoDebug(TypeNameString);                                          \
     static int debug
 
-//- Add typeName information from argument \a TypeNameString to a namespace.
+//- Add typeName information from argument a TypeNameString to a namespace.
 //  Also declares debug information.
 #define NamespaceName(TypeNameString)                                          \
     NamespaceNameNoDebug(TypeNameString);                                      \
     extern int debug
 
-//- Add typeName information from argument \a TypeNameString to a
+//- Add typeName information from argument a TypeNameString to a
 //  template class.  Also declares debug information.
 #define TemplateName(TemplateNameString)                                       \
 class TemplateNameString##Name                                                 \
@@ -82,11 +88,17 @@ public:                                                                        \
     ClassName(#TemplateNameString);                                            \
 }
 
+//- Add typeName information from argument a TypeNameString to a class.
+//  Also declares debug information.
+#define FunctionName(TypeNameString)                                           \
+    FunctionNameNoDebug(TypeNameString);                                       \
+    static int debug
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 // Definitions (without debug information)
 
-//- Define the typeName, with alternative lookup as \a Name
+//- Define the typeName, with alternative lookup as a Name
 #define defineTypeNameWithName(Type, Name)                                     \
     const ::Foam::word Type::typeName(Name)
 
@@ -94,11 +106,11 @@ public:                                                                        \
 #define defineTypeName(Type)                                                   \
     defineTypeNameWithName(Type, Type::typeName_())
 
-//- Define the typeName as \a Name for template classes
+//- Define the typeName as a Name for template classes
 #define defineTemplateTypeNameWithName(Type, Name)                             \
     template<>                                                                 \
     defineTypeNameWithName(Type, Name)
-//- Define the typeName as \a Name for template sub-classes
+//- Define the typeName as a Name for template sub-classes
 #define defineTemplate2TypeNameWithName(Type, Name)                            \
     template<>                                                                 \
     defineTypeNameWithName(Type, Name)
@@ -111,6 +123,14 @@ public:                                                                        \
 #define defineNamedTemplateTypeName(Type)                                      \
     defineTemplateTypeNameWithName(Type, Type::typeName_())
 
+//- Define the function typeName, with alternative lookup as a Name
+#define defineFunctionNameWithName(Type, Name)                                 \
+    const ::Foam::functionName Type::typeName(Name)
+
+//- Define the function typeName
+#define defineFunctionTypeName(Type)                                           \
+    defineFunctionNameWithName(Type, Type::typeName_())
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 // Definitions (with debug information)
@@ -120,12 +140,12 @@ public:                                                                        \
     defineTypeName(Type);                                                      \
     defineDebugSwitch(Type, DebugSwitch)
 
-//- Define the typeName and debug information, lookup as \a Name
+//- Define the typeName and debug information, lookup as a Name
 #define defineTypeNameAndDebugWithName(Type, Name, DebugSwitch)                \
     defineTypeNameWithName(Type, Name);                                        \
     defineDebugSwitchWithName(Type, Name, DebugSwitch)
 
-//- Define the typeName and debug information, lookup as \a Name
+//- Define the typeName and debug information, lookup as a Name
 #define defineTemplateTypeNameAndDebugWithName(Type, Name, DebugSwitch)        \
     defineTemplateTypeNameWithName(Type, Name);                                \
     defineTemplateDebugSwitchWithName(Type, Name, DebugSwitch)
@@ -140,11 +160,16 @@ public:                                                                        \
     defineNamedTemplateTypeName(Type);                                         \
     defineNamedTemplateDebugSwitch(Type, DebugSwitch)
 
+//- Define the typeName and debug information
+#define defineFunctionTypeNameAndDebug(Type, DebugSwitch)                      \
+    defineFunctionTypeName(Type);                                              \
+    defineDebugSwitch(Type, DebugSwitch)
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 // For templated sub-classes
 
-//- Define the typeName and debug information, lookup as \a Name
+//- Define the typeName and debug information, lookup as a Name
 #define defineTemplate2TypeNameAndDebugWithName(Type, Name, DebugSwitch)       \
     defineTemplate2TypeNameWithName(Type, Name);                               \
     defineTemplate2DebugSwitchWithName(Type, Name, DebugSwitch)

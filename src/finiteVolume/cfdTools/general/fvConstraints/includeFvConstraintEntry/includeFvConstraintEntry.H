@@ -94,7 +94,7 @@ class includeFvConstraintEntry
 public:
 
     //- Runtime type information
-    ClassName("#includeConstraint");
+    FunctionTypeName("#includeConstraint");
 
 
     // Static Data Members

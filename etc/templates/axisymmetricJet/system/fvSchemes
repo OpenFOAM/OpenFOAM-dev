@@ -35,7 +35,7 @@ divSchemes
     default         none;
 
     // For steady-state, use the bounded form of advection schemes
-#ifeq $!ddtSchemes/default steadyState
+#ifeq ($!ddtSchemes/default steadyState)
     div(phi,U)      bounded Gauss linearUpwind limited;
     turbulence      bounded Gauss limitedLinear 1;
 #else

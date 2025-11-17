@@ -89,7 +89,7 @@ class inputModeEntry
 public:
 
     //- Runtime type information
-    ClassName("#inputMode");
+    FunctionTypeName("#inputMode");
 
 
     // Constructors

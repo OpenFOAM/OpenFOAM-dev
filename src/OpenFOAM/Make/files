@@ -233,11 +233,12 @@ $(dictionaryListEntry)/dictionaryListEntryIO.C
 $(dictionary)/mergeDictionaries/mergeDictionaries.C
 
 functionEntries = $(dictionary)/functionEntries
+$(functionEntries)/functionEntry/functionEntry.C
+$(functionEntries)/dummyEntry/dummyEntry.C
 $(functionEntries)/negEntry/negEntry.C
 $(functionEntries)/calcIncludeEntry/calcIncludeEntry.C
 $(functionEntries)/calcEntry/calcEntry.C
 $(functionEntries)/codeStream/codeStream.C
-$(functionEntries)/functionEntry/functionEntry.C
 $(functionEntries)/includeEntry/includeEntry.C
 $(functionEntries)/includeEtcEntry/includeEtcEntry.C
 $(functionEntries)/includeFuncEntry/includeFuncEntry.C
@@ -246,6 +247,9 @@ $(functionEntries)/inputModeEntry/inputModeEntry.C
 $(functionEntries)/removeEntry/removeEntry.C
 $(functionEntries)/ifeqEntry/ifeqEntry.C
 $(functionEntries)/ifEntry/ifEntry.C
+$(functionEntries)/elseEntry/elseEntry.C
+$(functionEntries)/elifEntry/elifEntry.C
+$(functionEntries)/endifEntry/endifEntry.C
 
 IOdictionary = db/IOobjects/IOdictionary
 $(IOdictionary)/IOdictionary.C
