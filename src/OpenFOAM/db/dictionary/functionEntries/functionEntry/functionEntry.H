@@ -156,8 +156,14 @@ public:
         //- Construct from keyword, parent dictionary and Istream
         functionEntry(const keyType&, const dictionary&, Istream&);
 
-        //- Construct from keyword, parent dictionary and tokenList
-        functionEntry(const keyType&, const dictionary&, const tokenList&);
+        //- Construct from function type and parent dictionary
+        functionEntry(const functionName&, const dictionary&);
+
+        //- Construct from function type, parent dictionary and a token
+        functionEntry(const functionName&, const dictionary&, const token&);
+
+        //- Construct from function type, parent dictionary and tokenList
+        functionEntry(const functionName&, const dictionary&, const tokenList&);
 
         //- Copy construct
         functionEntry(const functionEntry&) = default;
@@ -222,61 +228,6 @@ public:
             primitiveEntry&,
             Istream&
         );
-
-        Tuple2<word, label> funcName()
-        {
-            return Tuple2<word, label>
-            (
-                operator[](0).wordToken(),
-                operator[](0).lineNumber()
-            );
-        }
-
-        Tuple2<string, label> fName()
-        {
-            return Tuple2<string, label>
-            (
-                operator[](0).stringToken(),
-                operator[](0).lineNumber()
-            );
-        }
-
-        Tuple2<string, label> args()
-        {
-            if (size() > 1)
-            {
-                return Tuple2<string, label>
-                (
-                    char(operator[](1).pToken())
-                  + operator[](2).stringToken()
-                  + char(operator[](3).pToken()),
-                    operator[](1).lineNumber()
-                );
-            }
-            else
-            {
-                return Tuple2<string, label>(string::null, 0);
-            }
-        }
-
-        Tuple2<string, label> funcNameArgs()
-        {
-            Tuple2<string, label> fNameArgs
-            (
-                operator[](0).wordToken(),
-                operator[](0).lineNumber()
-            );
-
-            if (size() > 1)
-            {
-                fNameArgs.first() +=
-                    char(operator[](1).pToken())
-                  + operator[](2).stringToken()
-                  + char(operator[](3).pToken());
-            }
-
-            return fNameArgs;
-        }
 
         //- Write
         virtual void write(Ostream&) const;

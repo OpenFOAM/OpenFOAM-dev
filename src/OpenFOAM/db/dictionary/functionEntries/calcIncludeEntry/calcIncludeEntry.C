@@ -24,12 +24,10 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "calcIncludeEntry.H"
-#include "dictionary.H"
-#include "IFstream.H"
-#include "addToMemberFunctionSelectionTable.H"
 #include "stringOps.H"
-#include "IOobject.H"
 #include "fileOperation.H"
+#include "addToRunTimeSelectionTable.H"
+#include "addToMemberFunctionSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -38,6 +36,8 @@ namespace Foam
 namespace functionEntries
 {
     defineFunctionTypeNameAndDebug(calcIncludeEntry, 0);
+
+    addToRunTimeSelectionTable(functionEntry, calcIncludeEntry, dictionary);
 
     addToMemberFunctionSelectionTable
     (
@@ -53,6 +53,27 @@ namespace functionEntries
 Foam::DynamicList<Foam::fileName>
     Foam::functionEntries::calcIncludeEntry::includeFiles_;
 
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::functionEntries::calcIncludeEntry::calcIncludeEntry
+(
+    const dictionary& parentDict,
+    Istream& is
+)
+:
+    functionEntry(typeName, parentDict, token(is))
+{
+    if (!operator[](0).isString())
+    {
+        FatalIOErrorInFunction(is)
+            << "Expected a file name string, found " << operator[](0)
+            << " while reading function " << typeName
+            << exit(FatalIOError);
+    }
+}
+
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 bool Foam::functionEntries::calcIncludeEntry::execute
@@ -61,15 +82,17 @@ bool Foam::functionEntries::calcIncludeEntry::execute
     Istream& is
 )
 {
+    const calcIncludeEntry cie(parentDict, is);
+
     // Read the include file name
-    fileName fName(is);
+    fileName expandedFname(cie.fName());
 
     // Substitute dictionary and environment variables. Allow empty
     // substitutions.
-    stringOps::inplaceExpandEntry(fName, parentDict, true, true);
+    stringOps::inplaceExpandEntry(expandedFname, parentDict, true, true);
 
     // Add the file name to the cache
-    includeFiles_.append(fName);
+    includeFiles_.append(expandedFname);
 
     return true;
 }

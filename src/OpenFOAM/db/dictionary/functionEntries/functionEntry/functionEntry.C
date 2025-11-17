@@ -355,7 +355,6 @@ Foam::functionEntry::functionEntry
     primitiveEntry(key)
 {}
 
-
 Foam::functionEntry::functionEntry
 (
     const keyType& key,
@@ -369,12 +368,33 @@ Foam::functionEntry::functionEntry
 
 Foam::functionEntry::functionEntry
 (
-    const keyType& key,
+    const functionName& functionType,
+    const dictionary& dict
+)
+:
+    primitiveEntry(keyType(functionType))
+{}
+
+
+Foam::functionEntry::functionEntry
+(
+    const functionName& functionType,
+    const dictionary& dict,
+    const token& token
+)
+:
+    primitiveEntry(keyType(functionType), token)
+{}
+
+
+Foam::functionEntry::functionEntry
+(
+    const functionName& functionType,
     const dictionary& dict,
     const tokenList& tokens
 )
 :
-    primitiveEntry(key, tokens)
+    primitiveEntry(keyType(functionType), tokens)
 {}
 
 

@@ -66,7 +66,7 @@ SourceFiles
 #ifndef includeFvModelEntry_H
 #define includeFvModelEntry_H
 
-#include "functionEntry.H"
+#include "includeFuncEntry.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -81,13 +81,22 @@ namespace functionEntries
 
 class includeFvModelEntry
 :
-    public functionEntry
+    public includeFuncEntry
 {
 
 public:
 
     //- Runtime type information
     FunctionTypeName("#includeModel");
+
+
+    // Constructors
+
+        //- Construct from dictionary and Istream
+        includeFvModelEntry(const dictionary& parentDict, Istream& is);
+
+        //- Disallow default bitwise copy construction
+        includeFvModelEntry(const includeFuncEntry&) = delete;
 
 
     // Static Data Members

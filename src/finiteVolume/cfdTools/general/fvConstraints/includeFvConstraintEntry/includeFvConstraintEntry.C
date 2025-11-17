@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "includeFvConstraintEntry.H"
+#include "addToRunTimeSelectionTable.H"
 #include "addToMemberFunctionSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -33,6 +34,13 @@ namespace Foam
 namespace functionEntries
 {
     defineFunctionTypeNameAndDebug(includeFvConstraintEntry, 0);
+
+    addToRunTimeSelectionTable
+    (
+        functionEntry,
+        includeFvConstraintEntry,
+        dictionary
+    );
 
     addToMemberFunctionSelectionTable
     (
@@ -52,6 +60,18 @@ Foam::functionEntries::includeFvConstraintEntry::fvConstraintDictPath
 );
 
 
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::functionEntries::includeFvConstraintEntry::includeFvConstraintEntry
+(
+    const dictionary& parentDict,
+    Istream& is
+)
+:
+    includeFuncEntry(typeName, parentDict, is)
+{}
+
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 bool Foam::functionEntries::includeFvConstraintEntry::execute
@@ -64,7 +84,7 @@ bool Foam::functionEntries::includeFvConstraintEntry::execute
     (
         "constraint",
         // Read line containing the function name and the optional arguments
-        functionEntry(typeName, parentDict, is).funcNameArgs(),
+        includeFvConstraintEntry(parentDict, is).funcNameArgs(),
         parentDict,
         fvConstraintDictPath,
         "system"

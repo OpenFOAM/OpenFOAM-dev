@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "includeFvModelEntry.H"
+#include "addToRunTimeSelectionTable.H"
 #include "addToMemberFunctionSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -33,6 +34,8 @@ namespace Foam
 namespace functionEntries
 {
     defineFunctionTypeNameAndDebug(includeFvModelEntry, 0);
+
+    addToRunTimeSelectionTable(functionEntry, includeFvModelEntry, dictionary);
 
     addToMemberFunctionSelectionTable
     (
@@ -51,6 +54,18 @@ Foam::fileName Foam::functionEntries::includeFvModelEntry::fvModelDictPath
 );
 
 
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::functionEntries::includeFvModelEntry::includeFvModelEntry
+(
+    const dictionary& parentDict,
+    Istream& is
+)
+:
+    includeFuncEntry(typeName, parentDict, is)
+{}
+
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 bool Foam::functionEntries::includeFvModelEntry::execute
@@ -63,7 +78,7 @@ bool Foam::functionEntries::includeFvModelEntry::execute
     (
         "model",
         // Read line containing the function name and the optional arguments
-        functionEntry(typeName, parentDict, is).funcNameArgs(),
+        includeFvModelEntry(parentDict, is).funcNameArgs(),
         parentDict,
         fvModelDictPath,
         "constant"

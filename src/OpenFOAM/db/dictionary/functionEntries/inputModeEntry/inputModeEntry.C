@@ -29,15 +29,6 @@ License
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-const Foam::functionName Foam::functionEntries::inputModeEntry::typeName
-(
-    Foam::functionEntries::inputModeEntry::typeName_()
-);
-
-// Don't lookup the debug switch here as the debug switch dictionary
-// might include inputModeEntries
-int Foam::functionEntries::inputModeEntry::debug(0);
-
 Foam::functionEntries::inputModeEntry::inputMode
     Foam::functionEntries::inputModeEntry::mode_(MERGE);
 
@@ -45,6 +36,8 @@ namespace Foam
 {
 namespace functionEntries
 {
+    defineFunctionTypeNameAndDebug(inputModeEntry, 0);
+
     addToMemberFunctionSelectionTable
     (
         functionEntry,

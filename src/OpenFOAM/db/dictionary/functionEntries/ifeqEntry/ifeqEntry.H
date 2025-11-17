@@ -163,10 +163,10 @@ public:
 
     // Constructors
 
-        //- Construct from keyword, dictionary and tokenList
+        //- Construct from function type, dictionary and tokenList
         ifeqEntry
         (
-            const keyType&,
+            const functionName& functionType,
             const dictionary& parentDict,
             const tokenList& tokens
         );

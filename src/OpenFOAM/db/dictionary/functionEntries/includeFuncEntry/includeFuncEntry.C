@@ -65,11 +65,27 @@ Foam::functionEntries::includeFuncEntry::functionObjectTemplatePath
 
 Foam::functionEntries::includeFuncEntry::includeFuncEntry
 (
+    const functionName& functionType,
     const dictionary& parentDict,
     Istream& is
 )
 :
-    functionEntry(typeName, parentDict, readFuncNameArgList(typeName, is))
+    functionEntry
+    (
+        functionType,
+        parentDict,
+        readFuncNameArgList(functionType, is)
+    )
+{}
+
+
+Foam::functionEntries::includeFuncEntry::includeFuncEntry
+(
+    const dictionary& parentDict,
+    Istream& is
+)
+:
+    includeFuncEntry(typeName, parentDict, is)
 {}
 
 
@@ -85,7 +101,7 @@ bool Foam::functionEntries::includeFuncEntry::execute
     (
         "function",
         // Read line containing the function name and the optional arguments
-        functionEntry(typeName, parentDict, is).funcNameArgs(),
+        includeFuncEntry(parentDict, is).funcNameArgs(),
         parentDict,
         functionObjectDictPath,
         "system"

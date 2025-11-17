@@ -32,19 +32,12 @@ License
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-const Foam::functionName Foam::functionEntries::includeIfPresentEntry::typeName
-(
-    Foam::functionEntries::includeIfPresentEntry::typeName_()
-);
-
-// Don't lookup the debug switch here as the debug switch dictionary
-// might include includeIfPresentEntry
-int Foam::functionEntries::includeIfPresentEntry::debug(0);
-
 namespace Foam
 {
 namespace functionEntries
 {
+    defineFunctionTypeNameAndDebug(includeIfPresentEntry, 0);
+
     addToRunTimeSelectionTable
     (
         functionEntry,

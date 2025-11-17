@@ -73,7 +73,7 @@ SourceFiles
 #ifndef includeFvConstraintEntry_H
 #define includeFvConstraintEntry_H
 
-#include "functionEntry.H"
+#include "includeFuncEntry.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -88,13 +88,22 @@ namespace functionEntries
 
 class includeFvConstraintEntry
 :
-    public functionEntry
+    public includeFuncEntry
 {
 
 public:
 
     //- Runtime type information
     FunctionTypeName("#includeConstraint");
+
+
+    // Constructors
+
+        //- Construct from dictionary and Istream
+        includeFvConstraintEntry(const dictionary& parentDict, Istream& is);
+
+        //- Disallow default bitwise copy construction
+        includeFvConstraintEntry(const includeFuncEntry&) = delete;
 
 
     // Static Data Members

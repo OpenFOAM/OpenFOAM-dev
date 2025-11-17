@@ -98,6 +98,34 @@ class includeEntry
 
 protected:
 
+        //- Return the file name
+        const string& fName() const
+        {
+            return operator[](0).stringToken();
+        }
+
+        //- Return the arguments string for processing by insertNamedArgs
+        Tuple2<string, label> args() const
+        {
+            if (size() > 1)
+            {
+                return Tuple2<string, label>
+                (
+                    char(operator[](1).pToken())
+                  + operator[](2).stringToken()
+                  + char(operator[](3).pToken()),
+                    operator[](1).lineNumber()
+                );
+            }
+            else
+            {
+                return Tuple2<string, label>(string::null, 0);
+            }
+        }
+
+
+protected:
+
     // Protected Member Functions
 
         //- Read the include fileName from Istream, expand and return
@@ -125,8 +153,13 @@ public:
 
     // Constructors
 
-        //- Construct from keyword, dictionary and Istream
-        includeEntry(const keyType&, const dictionary& parentDict, Istream& is);
+        //- Construct from functionType, dictionary and Istream
+        includeEntry
+        (
+            const functionName& functionType,
+            const dictionary& parentDict,
+            Istream& is
+        );
 
         //- Construct from dictionary and Istream
         includeEntry(const dictionary& parentDict, Istream& is);

@@ -381,12 +381,12 @@ void Foam::functionEntries::ifeqEntry::skipUntil
 
 Foam::functionEntries::ifeqEntry::ifeqEntry
 (
-    const keyType& keyword,
+    const functionName& functionType,
     const dictionary& parentDict,
     const tokenList& tokens
 )
 :
-    functionEntry(keyword, parentDict, tokens)
+    functionEntry(functionType, parentDict, tokens)
 {}
 
 
