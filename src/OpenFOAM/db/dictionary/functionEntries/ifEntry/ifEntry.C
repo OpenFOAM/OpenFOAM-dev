@@ -64,7 +64,12 @@ Foam::functionEntries::ifEntry::ifEntry
     Istream& is
 )
 :
-    ifeqEntry(typeName, parentDict, functionEntry::readArgList(is))
+    ifeqEntry
+    (
+        typeName,
+        parentDict,
+        functionEntry::readArgList(typeName, is)
+    )
 {}
 
 

@@ -104,7 +104,7 @@ Foam::functionEntries::includeEtcEntry::includeEtcEntry
     Istream& is
 )
 :
-    functionEntry(typeName, parentDict, readFileNameArgList(is))
+    functionEntry(typeName, parentDict, readFileNameArgList(typeName, is))
 {}
 
 

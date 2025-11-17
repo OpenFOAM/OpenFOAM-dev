@@ -74,15 +74,28 @@ class functionEntry
 
 protected:
 
-        tokenList readArgList(Istream& is);
+        tokenList readArgList
+        (
+            const functionName& functionType,
+            Istream& is,
+            const bool optional = false
+        );
 
         //- Read the function name and optional argument list
         //  The argument list can be on one or more lines.
-        tokenList readFuncNameArgList(Istream& is);
+        tokenList readFuncNameArgList
+        (
+            const functionName& functionType,
+            Istream& is
+        );
 
         //- Read the filen name and optional argument list
         //  The argument list can be on one or more lines.
-        tokenList readFileNameArgList(Istream& is);
+        tokenList readFileNameArgList
+        (
+            const functionName& functionType,
+            Istream& is
+        );
 
         static bool insert
         (
@@ -118,7 +131,7 @@ protected:
 
 public:
 
-    FunctionName("functionEntry");
+    FunctionTypeName("functionEntry");
 
     // Declare run-time constructor selection tables
 

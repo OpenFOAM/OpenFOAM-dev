@@ -69,7 +69,7 @@ Foam::functionEntries::includeFuncEntry::includeFuncEntry
     Istream& is
 )
 :
-    functionEntry(typeName, parentDict, readFuncNameArgList(is))
+    functionEntry(typeName, parentDict, readFuncNameArgList(typeName, is))
 {}
 
 

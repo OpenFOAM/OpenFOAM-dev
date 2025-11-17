@@ -212,7 +212,8 @@ bool Foam::functionEntries::ifeqEntry::execute
     if (stack.size() != nNested)
     {
         FatalIOErrorInFunction(contextDict)
-            << "Did not find matching #endif for condition starting"
+            << "Did not find matching #endif for "
+            << typeName << " condition starting"
             << " at line " << stack.last().second()
             << " in file " <<  stack.last().first() << exit(FatalIOError);
     }

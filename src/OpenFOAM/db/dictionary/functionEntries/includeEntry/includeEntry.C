@@ -180,6 +180,7 @@ Foam::fileName Foam::functionEntries::includeEntry::includeFileName
 )
 {
     fileName fName(f);
+
     // Substitute dictionary and environment variables. Allow empty
     // substitutions.
     stringOps::inplaceExpandEntry(fName, dict, true, true);
@@ -205,7 +206,7 @@ Foam::functionEntries::includeEntry::includeEntry
     Istream& is
 )
 :
-    functionEntry(keyword, parentDict, readFileNameArgList(is))
+    functionEntry(keyword, parentDict, readFileNameArgList(typeName, is))
 {}
 
 

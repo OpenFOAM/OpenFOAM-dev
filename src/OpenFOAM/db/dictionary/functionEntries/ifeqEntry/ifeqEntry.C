@@ -371,7 +371,9 @@ void Foam::functionEntries::ifeqEntry::skipUntil
     }
 
     FatalIOErrorInFunction(parentDict)
-        << "Did not find matching " << endWord << exit(FatalIOError);
+        << "Did not find matching " << endWord
+        << " for " << typeName << " condition"
+        << exit(FatalIOError);
 }
 
 

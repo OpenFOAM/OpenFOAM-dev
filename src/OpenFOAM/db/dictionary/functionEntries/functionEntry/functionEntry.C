@@ -26,6 +26,7 @@ License
 #include "functionEntry.H"
 #include "ISstream.H"
 #include "dummyEntry.H"
+#include "ifEntry.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -125,7 +126,12 @@ void Foam::functionEntry::readRestOfArgs(string& fNameArgs, Istream& is)
 }
 
 
-Foam::tokenList Foam::functionEntry::readArgList(Istream& is)
+Foam::tokenList Foam::functionEntry::readArgList
+(
+    const functionName& functionType,
+    Istream& is,
+    const bool optional
+)
 {
     tokenList argList;
 
@@ -176,6 +182,15 @@ Foam::tokenList Foam::functionEntry::readArgList(Istream& is)
     }
     else
     {
+        if (!optional)
+        {
+            FatalIOErrorInFunction(is)
+                << "Expected " << char(token::BEGIN_LIST)
+                << " to open argument list, but found " << nextToken
+                << " in functionEntry " << functionType
+                << exit(FatalIOError);
+        }
+
         is.putBack(nextToken);
     }
 
@@ -183,7 +198,11 @@ Foam::tokenList Foam::functionEntry::readArgList(Istream& is)
 }
 
 
-Foam::tokenList Foam::functionEntry::readFuncNameArgList(Istream& is)
+Foam::tokenList Foam::functionEntry::readFuncNameArgList
+(
+    const functionName& functionType,
+    Istream& is
+)
 {
     tokenList funcNameArgList;
     string::size_type argsStart = string::npos;
@@ -231,7 +250,7 @@ Foam::tokenList Foam::functionEntry::readFuncNameArgList(Istream& is)
 
         if (argsStart == string::npos)
         {
-            funcNameArgList.append(readArgList(is));
+            funcNameArgList.append(readArgList(functionType, is, true));
         }
     }
     else
@@ -244,7 +263,11 @@ Foam::tokenList Foam::functionEntry::readFuncNameArgList(Istream& is)
 }
 
 
-Foam::tokenList Foam::functionEntry::readFileNameArgList(Istream& is)
+Foam::tokenList Foam::functionEntry::readFileNameArgList
+(
+    const functionName& functionType,
+    Istream& is
+)
 {
     tokenList fileNameArgList;
 
@@ -258,7 +281,7 @@ Foam::tokenList Foam::functionEntry::readFileNameArgList(Istream& is)
         fileNameArgList.append(fName);
 
         // Append the optional argument list
-        fileNameArgList.append(readArgList(is));
+        fileNameArgList.append(readArgList(functionType, is, true));
     }
     else
     {
@@ -340,7 +363,7 @@ Foam::functionEntry::functionEntry
     Istream& is
 )
 :
-    primitiveEntry(key, readFuncNameArgList(is))
+    primitiveEntry(key, readFuncNameArgList(typeName, is))
 {}
 
 
