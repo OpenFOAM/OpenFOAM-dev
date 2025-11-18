@@ -46,9 +46,8 @@ SourceFiles
 #ifndef functionEntry_H
 #define functionEntry_H
 
-#include "word.H"
-#include "memberFunctionSelectionTables.H"
 #include "primitiveEntry.H"
+#include "memberFunctionSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -129,6 +128,7 @@ protected:
             Istream& is
         ) const;
 
+        //- Read entry starting from token t and insert into contextDict
         static bool insert
         (
             const dictionary& parentDict,
@@ -137,6 +137,8 @@ protected:
             Istream& is
         );
 
+        //- Insert token t into contextEntry, expanding as required
+        //  which may read subsequent tokens from Istream
         static bool insert
         (
             const dictionary& parentDict,
@@ -145,14 +147,14 @@ protected:
             Istream& is
         );
 
-        //- Insert the given string in a sub-dict context
+        //- Read entry from the given string and insert into contextDict
         static bool insert
         (
             dictionary& contextDict,
             const string&
         );
 
-        //- Insert the given string in a primitiveEntry context
+        //- Read tokens from the given string and insert into contextEntry
         static bool insert
         (
             const dictionary& parentDict,

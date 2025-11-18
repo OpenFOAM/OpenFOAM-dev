@@ -154,20 +154,18 @@ bool Foam::entry::New(dictionary& parentDict, Istream& is)
         {
             autoPtr<functionEntry> fe
             (
-                functionEntry::New
-                (
-                    keyword,
-                    parentDict,
-                    is
-                )
+                functionEntry::New(keyword, parentDict, is)
             );
 
             if (disableFunctionEntries)
             {
+                // Add the unexpanded functionEntry to the dictionary
+                // for future processing
                 return parentDict.add(fe.ptr(), false);
             }
             else
             {
+                // Expand the functionEntry
                 return fe->execute(parentDict, is);
             }
         }

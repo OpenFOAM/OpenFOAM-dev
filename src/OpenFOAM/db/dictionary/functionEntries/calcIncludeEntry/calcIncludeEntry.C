@@ -26,7 +26,6 @@ License
 #include "calcIncludeEntry.H"
 #include "stringOps.H"
 #include "addToRunTimeSelectionTable.H"
-#include "addToMemberFunctionSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 

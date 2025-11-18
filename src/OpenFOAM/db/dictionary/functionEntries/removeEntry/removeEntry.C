@@ -26,7 +26,6 @@ License
 #include "removeEntry.H"
 #include "stringListOps.H"
 #include "addToRunTimeSelectionTable.H"
-#include "addToMemberFunctionSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 

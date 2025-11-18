@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "functionEntry.H"
-#include "ISstream.H"
 #include "dummyEntry.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -305,24 +304,23 @@ bool Foam::functionEntry::insert
 bool Foam::functionEntry::insert
 (
     const dictionary& parentDict,
-    primitiveEntry& contextDict,
+    primitiveEntry& contextEntry,
     const token& t,
     Istream& is
 )
 {
-    contextDict.append(t, parentDict, is);
+    contextEntry.append(t, parentDict, is);
     return true;
 }
 
 
 bool Foam::functionEntry::insert
 (
-    dictionary& parentDict,
+    dictionary& contextDict,
     const string& str
 )
 {
-    parentDict.read(IStringStream(str)());
-    return true;
+    return contextDict.read(IStringStream(str)());
 }
 
 
@@ -333,8 +331,7 @@ bool Foam::functionEntry::insert
     const string& str
 )
 {
-    contextEntry.read(parentDict, IStringStream(str)());
-    return true;
+    return contextEntry.read(parentDict, IStringStream(str)());
 }
 
 
