@@ -152,7 +152,7 @@ void Foam::mixedEnergyFvPatchScalarField::updateCoeffs()
     else
     {
         FatalErrorInFunction
-            << "Temperature boundary condition not recognised."
+            << "Temperature boundary condition not recognised. "
             << "A " << typeName << " condition for energy must be used with a "
             << mixedFvPatchScalarField::typeName << " or "
             << mixedEnergyCalculatedTemperatureFvPatchScalarField::typeName
