@@ -80,13 +80,13 @@ class ifEntry
 
         //- Execute the functionEntry in the given context
         template<class Context>
-        static bool execute
+        bool execute
         (
             DynamicList<filePos>& stack,
             const dictionary& contextDict,
             Context& context,
             Istream& is
-        );
+        ) const;
 
 
 public:
@@ -113,9 +113,9 @@ public:
     // Member Functions
 
         //- Expand the functionEntry into the contextDict
-        static bool execute(dictionary& contextDict, Istream& is);
+        virtual bool execute(dictionary& contextDict, Istream& is);
 
-        //- Expand the functionEntry adding tokens to the contextEntry
+        //- Expand the functionEntry into the contextEntry
         static bool execute
         (
             const dictionary& contextDict,

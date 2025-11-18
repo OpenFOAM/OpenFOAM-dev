@@ -108,7 +108,7 @@ public:
     // Member Functions
 
         //- Execute the functionEntry in a sub-dict context
-        static bool execute(dictionary& parentDict, Istream&);
+        virtual bool execute(dictionary& parentDict, Istream&);
 
         //- Reset the cache of \#calc include file names
         static void clear();

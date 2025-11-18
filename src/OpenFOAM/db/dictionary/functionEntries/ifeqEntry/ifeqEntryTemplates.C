@@ -39,7 +39,7 @@ bool Foam::functionEntries::ifeqEntry::evaluate
     const dictionary& contextDict,
     Context& context,
     Istream& is
-)
+) const
 {
     while (!is.eof())
     {
@@ -58,7 +58,8 @@ bool Foam::functionEntries::ifeqEntry::evaluate
         )
         {
             // Recurse to evaluate
-            ifEntry::execute(stack, contextDict, context, is);
+            const ifEntry ife(contextDict, is);
+            ife.execute(stack, contextDict, context, is);
         }
         else if
         (
@@ -106,7 +107,7 @@ bool Foam::functionEntries::ifeqEntry::execute
     const dictionary& contextDict,
     Context& context,
     Istream& is
-)
+) const
 {
     if (doIf)
     {
@@ -184,20 +185,18 @@ bool Foam::functionEntries::ifeqEntry::execute
     const dictionary& contextDict,
     Context& context,
     Istream& is
-)
+) const
 {
     const label nNested = stack.size();
 
     stack.append(filePos(is.name(), is.lineNumber()));
 
-    ifeqEntry args(contextDict, is);
-
     // Read first token and expand if a variable
-    token cond1(args[1]);
+    token cond1(operator[](1));
     cond1 = expand(contextDict, cond1);
 
     // Read second token and expand if a variable
-    token cond2(args[2]);
+    token cond2(operator[](2));
     cond2 = expand(contextDict, cond2);
 
     const bool equal = equalToken(cond1, cond2);

@@ -41,14 +41,6 @@ namespace functionEntries
         includeFvConstraintEntry,
         dictionary
     );
-
-    addToMemberFunctionSelectionTable
-    (
-        functionEntry,
-        includeFvConstraintEntry,
-        execute,
-        dictionaryIstream
-    );
 }
 }
 
@@ -76,16 +68,15 @@ Foam::functionEntries::includeFvConstraintEntry::includeFvConstraintEntry
 
 bool Foam::functionEntries::includeFvConstraintEntry::execute
 (
-    dictionary& parentDict,
+    dictionary& contextDict,
     Istream& is
 )
 {
     return readConfigFile
     (
         "constraint",
-        // Read line containing the function name and the optional arguments
-        includeFvConstraintEntry(parentDict, is).funcNameArgs(),
-        parentDict,
+        funcNameArgs(),
+        contextDict,
         fvConstraintDictPath,
         "system"
     );

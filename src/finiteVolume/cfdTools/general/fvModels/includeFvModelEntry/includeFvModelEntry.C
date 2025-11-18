@@ -34,16 +34,7 @@ namespace Foam
 namespace functionEntries
 {
     defineFunctionTypeNameAndDebug(includeFvModelEntry, 0);
-
     addToRunTimeSelectionTable(functionEntry, includeFvModelEntry, dictionary);
-
-    addToMemberFunctionSelectionTable
-    (
-        functionEntry,
-        includeFvModelEntry,
-        execute,
-        dictionaryIstream
-    );
 }
 }
 
@@ -70,16 +61,15 @@ Foam::functionEntries::includeFvModelEntry::includeFvModelEntry
 
 bool Foam::functionEntries::includeFvModelEntry::execute
 (
-    dictionary& parentDict,
+    dictionary& contextDict,
     Istream& is
 )
 {
     return readConfigFile
     (
         "model",
-        // Read line containing the function name and the optional arguments
-        includeFvModelEntry(parentDict, is).funcNameArgs(),
-        parentDict,
+        funcNameArgs(),
+        contextDict,
         fvModelDictPath,
         "constant"
     );

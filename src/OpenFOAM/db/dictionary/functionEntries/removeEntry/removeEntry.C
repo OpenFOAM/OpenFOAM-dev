@@ -35,16 +35,7 @@ namespace Foam
 namespace functionEntries
 {
     defineFunctionTypeNameAndDebug(removeEntry, 0);
-
     addToRunTimeSelectionTable(functionEntry, removeEntry, dictionary);
-
-    addToMemberFunctionSelectionTable
-    (
-        functionEntry,
-        removeEntry,
-        execute,
-        dictionaryIstream
-    );
 }
 }
 
@@ -118,18 +109,16 @@ Foam::functionEntries::removeEntry::removeEntry
 
 bool Foam::functionEntries::removeEntry::execute
 (
-    dictionary& parentDict,
+    dictionary& contextDict,
     Istream& is
 )
 {
-    const removeEntry re(parentDict, is);
-
-    const wordList dictKeys = parentDict.toc();
-    const labelList indices = findStrings(re.patterns_, dictKeys);
+    const wordList dictKeys = contextDict.toc();
+    const labelList indices = findStrings(patterns_, dictKeys);
 
     forAll(indices, i)
     {
-        parentDict.remove(dictKeys[indices[i]]);
+        contextDict.remove(dictKeys[indices[i]]);
     }
 
     return true;

@@ -80,12 +80,6 @@ class inputModeEntry
         static inputMode mode_;
 
 
-    // Private Member Functions
-
-        //- Read the mode as a word and set enum appropriately
-        static void setMode(Istream&);
-
-
 public:
 
     //- Runtime type information
@@ -124,8 +118,8 @@ public:
         //- Return true if the inputMode is %error
         static bool error();
 
-        //- Execute the functionEntry in a sub-dict context
-        static bool execute(dictionary& parentDict, Istream&);
+        //- Expand the functionEntry into the contextDict
+        virtual bool execute(dictionary& contextDict, Istream&);
 
 
     // Member Operators

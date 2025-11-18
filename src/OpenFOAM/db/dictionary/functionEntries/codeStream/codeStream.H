@@ -275,14 +275,14 @@ public:
 
     // Member Functions
 
-        //- Execute the functionEntry in a sub-dict context
-        static bool execute(dictionary& contextDict, Istream&);
+        //- Expand the functionEntry into the contextDict
+        virtual bool execute(dictionary& contextDict, Istream&);
 
-        //- Execute the functionEntry in a primitiveEntry context
+        //- Expand the functionEntry into the contextEntry
         static bool execute
         (
             const dictionary& contextDict,
-            primitiveEntry&,
+            primitiveEntry& contextEntry,
             Istream&
         );
 

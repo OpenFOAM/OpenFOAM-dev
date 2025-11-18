@@ -41,14 +41,6 @@ namespace functionEntries
         functionEntry,
         ifEntry,
         execute,
-        dictionaryIstream
-    );
-
-    addToMemberFunctionSelectionTable
-    (
-        functionEntry,
-        ifEntry,
-        execute,
         primitiveEntryIstream
     );
 }
@@ -94,7 +86,10 @@ bool Foam::functionEntries::ifEntry::execute
 )
 {
     DynamicList<filePos> stack(10);
-    return execute(stack, contextDict, contextEntry, is);
+    return ifEntry(contextDict, is).execute
+    (
+        stack, contextDict, contextEntry, is
+    );
 }
 
 

@@ -38,16 +38,7 @@ namespace Foam
 namespace functionEntries
 {
     defineFunctionTypeNameAndDebug(includeEntry, 0);
-
     addToRunTimeSelectionTable(functionEntry, includeEntry, dictionary);
-
-    addToMemberFunctionSelectionTable
-    (
-        functionEntry,
-        includeEntry,
-        execute,
-        dictionaryIstream
-    );
 
     addToMemberFunctionSelectionTable
     (
@@ -65,9 +56,9 @@ namespace functionEntries
 Foam::List<Foam::Tuple3<Foam::word, Foam::string, Foam::label>>
 Foam::functionEntries::includeEntry::insertNamedArgs
 (
-    dictionary& parentDict,
+    dictionary& contextDict,
     const Tuple2<string, label>& fNameArgs
-)
+) const
 {
     List<Tuple3<word, string, label>> namedArgs;
 
@@ -79,12 +70,12 @@ Foam::functionEntries::includeEntry::insertNamedArgs
         List<Tuple2<wordRe, label>> args;
         dictArgList(fNameArgs, funcType, args, namedArgs);
 
-        // Add the named arguments as entries into the parentDict
+        // Add the named arguments as entries into the contextDict
         // temporarily renaming any existing entries with the same name
         forAll(namedArgs, i)
         {
             const Pair<word> dAk(dictAndKeyword(namedArgs[i].first()));
-            dictionary& subDict(parentDict.scopedDict(dAk.first()));
+            dictionary& subDict(contextDict.scopedDict(dAk.first()));
 
             // Rename the original entry adding a '_'
             if (subDict.found(dAk.second()))
@@ -102,7 +93,7 @@ Foam::functionEntries::includeEntry::insertNamedArgs
               + expandArg
                 (
                     namedArgs[i].second(),
-                    parentDict,
+                    contextDict,
                     namedArgs[i].third()
                 )
               + ';'
@@ -117,18 +108,18 @@ Foam::functionEntries::includeEntry::insertNamedArgs
 
 void Foam::functionEntries::includeEntry::removeInsertNamedArgs
 (
-    dictionary& parentDict,
+    dictionary& contextDict,
     const List<Tuple3<word, string, label>>& namedArgs
-)
+) const
 {
     forAll(namedArgs, i)
     {
         // Remove the temporary argument entry
-        parentDict.remove(namedArgs[i].first());
+        contextDict.remove(namedArgs[i].first());
 
         // Reinstate the original entry
         const Pair<word> dAk(dictAndKeyword(namedArgs[i].first()));
-        dictionary& subDict(parentDict.scopedDict(dAk.first()));
+        dictionary& subDict(contextDict.scopedDict(dAk.first()));
         keyType tmpName(dAk.second());
         tmpName += '_';
         subDict.changeKeyword(tmpName, dAk.second());
@@ -140,11 +131,13 @@ void Foam::functionEntries::includeEntry::removeInsertNamedArgs
 
 Foam::fileName Foam::functionEntries::includeEntry::includeFileName
 (
-    Istream& is,
+    const Istream& is,
+    const fileName& f,
     const dictionary& dict
 )
 {
-    fileName fName(is);
+    fileName fName(f);
+
     // Substitute dictionary and environment variables. Allow empty
     // substitutions.
     stringOps::inplaceExpandEntry(fName, dict, true, true);
@@ -219,22 +212,20 @@ Foam::functionEntries::includeEntry::includeEntry
 
 bool Foam::functionEntries::includeEntry::execute
 (
-    dictionary& parentDict,
+    dictionary& contextDict,
     Istream& is
 )
 {
-    const includeEntry ie(parentDict, is);
-
     const fileName fName
     (
-        includeFileName(is.name().path(), ie.fName(), parentDict)
+        includeFileName(is.name().path(), this->fName(), contextDict)
     );
 
     // Cache the optional named arguments
-    // temporarily inserted into parentDict
+    // temporarily inserted into contextDict
     List<Tuple3<word, string, label>> namedArgs
     (
-        insertNamedArgs(parentDict, ie.args())
+        insertNamedArgs(contextDict, args())
     );
 
     autoPtr<ISstream> ifsPtr
@@ -252,21 +243,21 @@ bool Foam::functionEntries::includeEntry::execute
 
         // Cache the FoamFile entry if present
         dictionary foamFileDict;
-        if (parentDict.found(IOobject::foamFile))
+        if (contextDict.found(IOobject::foamFile))
         {
-            foamFileDict = parentDict.subDict(IOobject::foamFile);
+            foamFileDict = contextDict.subDict(IOobject::foamFile);
         }
 
         // Read and clear the FoamFile entry
-        parentDict.read(ifs);
+        contextDict.read(ifs);
 
         // Reinstate original FoamFile entry
         if (foamFileDict.size() != 0)
         {
-            dictionary parentDictTmp(parentDict);
-            parentDict.clear();
-            parentDict.add(IOobject::foamFile, foamFileDict);
-            parentDict += parentDictTmp;
+            dictionary contextDictTmp(contextDict);
+            contextDict.clear();
+            contextDict.add(IOobject::foamFile, foamFileDict);
+            contextDict += contextDictTmp;
         }
     }
     else
@@ -275,14 +266,14 @@ bool Foam::functionEntries::includeEntry::execute
         (
             is
         )   << "Cannot open include file "
-            << (ifs.name().size() ? ifs.name() : ie.fName())
-            << " while reading dictionary " << parentDict.name()
+            << (ifs.name().size() ? ifs.name() : this->fName())
+            << " while reading dictionary " << contextDict.name()
             << exit(FatalIOError);
     }
 
-    // Remove named argument entries from parentDict
+    // Remove named argument entries from contextDict
     // renaming any existing entries which had the same name
-    removeInsertNamedArgs(parentDict, namedArgs);
+    removeInsertNamedArgs(contextDict, namedArgs);
 
     return true;
 }
@@ -290,23 +281,23 @@ bool Foam::functionEntries::includeEntry::execute
 
 bool Foam::functionEntries::includeEntry::execute
 (
-    const dictionary& parentDict,
-    primitiveEntry& entry,
+    const dictionary& contextDict,
+    primitiveEntry& contextEntry,
     Istream& is
 )
 {
-    const includeEntry ie(parentDict, is);
+    const includeEntry ie(contextDict, is);
 
     const fileName fName
     (
-        includeFileName(is.name().path(), ie.fName(), parentDict)
+        includeFileName(is.name().path(), ie.fName(), contextDict)
     );
 
     // Cache the optional named arguments
-    // temporarily inserted into parentDict
+    // temporarily inserted into contextDict
     List<Tuple3<word, string, label>> namedArgs
     (
-        insertNamedArgs(const_cast<dictionary&>(parentDict), ie.args())
+        ie.insertNamedArgs(const_cast<dictionary&>(contextDict), ie.args())
     );
 
     autoPtr<ISstream> ifsPtr(fileHandler().NewIFstream(fName));
@@ -319,7 +310,7 @@ bool Foam::functionEntries::includeEntry::execute
             Info<< fName << endl;
         }
 
-        entry.read(parentDict, ifs);
+        contextEntry.read(contextDict, ifs);
     }
     else
     {
@@ -328,13 +319,13 @@ bool Foam::functionEntries::includeEntry::execute
             is
         )   << "Cannot open include file "
             << (ifs.name().size() ? ifs.name() : ie.fName())
-            << " while reading dictionary " << parentDict.name()
+            << " while reading dictionary " << contextDict.name()
             << exit(FatalIOError);
     }
 
-    // Remove named argument entries from parentDict
+    // Remove named argument entries from contextDict
     // renaming any existing entries which had the same name
-    removeInsertNamedArgs(const_cast<dictionary&>(parentDict), namedArgs);
+    ie.removeInsertNamedArgs(const_cast<dictionary&>(contextDict), namedArgs);
 
     return true;
 }

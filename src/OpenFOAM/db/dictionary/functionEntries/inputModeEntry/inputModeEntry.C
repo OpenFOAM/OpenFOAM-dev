@@ -37,54 +37,8 @@ namespace Foam
 namespace functionEntries
 {
     defineFunctionTypeNameAndDebug(inputModeEntry, 0);
-
     addToRunTimeSelectionTable(functionEntry, inputModeEntry, dictionary);
-
-    addToMemberFunctionSelectionTable
-    (
-        functionEntry,
-        inputModeEntry,
-        execute,
-        dictionaryIstream
-    );
 }
-}
-
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-void Foam::functionEntries::inputModeEntry::setMode(Istream& is)
-{
-    clear();
-
-    word mode(is);
-
-    if (mode == "merge" || mode == "default")
-    {
-        mode_ = MERGE;
-    }
-    else if (mode == "overwrite")
-    {
-        mode_ = OVERWRITE;
-    }
-    else if (mode == "protect")
-    {
-        mode_ = PROTECT;
-    }
-    else if (mode == "warn")
-    {
-        mode_ = WARN;
-    }
-    else if (mode == "error")
-    {
-        mode_ = ERROR;
-    }
-    else
-    {
-        WarningInFunction
-            << "unsupported input mode '" << mode
-            << "' ... defaulting to 'merge'"
-            << endl;
-    }
 }
 
 
@@ -141,11 +95,42 @@ bool Foam::functionEntries::inputModeEntry::error()
 
 bool Foam::functionEntries::inputModeEntry::execute
 (
-    dictionary& parentDict,
+    dictionary& contextDict,
     Istream& is
 )
 {
-    setMode(is);
+    clear();
+
+    const word& mode = operator[](0).wordToken();
+
+    if (mode == "merge" || mode == "default")
+    {
+        mode_ = MERGE;
+    }
+    else if (mode == "overwrite")
+    {
+        mode_ = OVERWRITE;
+    }
+    else if (mode == "protect")
+    {
+        mode_ = PROTECT;
+    }
+    else if (mode == "warn")
+    {
+        mode_ = WARN;
+    }
+    else if (mode == "error")
+    {
+        mode_ = ERROR;
+    }
+    else
+    {
+        WarningInFunction
+            << "unsupported input mode '" << mode
+            << "' ... defaulting to 'merge'"
+            << endl;
+    }
+
     return true;
 }
 

@@ -152,24 +152,23 @@ bool Foam::entry::New(dictionary& parentDict, Istream& is)
     {
         if (keyword.isFunctionName())      // ... Function entry
         {
+            autoPtr<functionEntry> fe
+            (
+                functionEntry::New
+                (
+                    keyword,
+                    parentDict,
+                    is
+                )
+            );
+
             if (disableFunctionEntries)
             {
-                bool success = parentDict.add
-                (
-                    functionEntry::New
-                    (
-                        keyword,
-                        parentDict,
-                        is
-                    ).ptr(),
-                    false
-                );
-
-                return success;
+                return parentDict.add(fe.ptr(), false);
             }
             else
             {
-                return functionEntry::execute(keyword, parentDict, is);
+                return fe->execute(parentDict, is);
             }
         }
         else if

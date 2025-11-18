@@ -99,12 +99,12 @@ Foam::string Foam::functionEntries::negEntry::negateVariable
 
 bool Foam::functionEntries::negEntry::execute
 (
-    const dictionary& parentDict,
-    primitiveEntry& thisEntry,
+    const dictionary& contextDict,
+    primitiveEntry& contextEntry,
     Istream& is
 )
 {
-    return insert(parentDict, thisEntry, negateVariable(parentDict, is));
+    return insert(contextDict, contextEntry, negateVariable(contextDict, is));
 }
 
 

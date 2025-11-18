@@ -39,16 +39,7 @@ namespace Foam
 namespace functionEntries
 {
     defineFunctionTypeNameAndDebug(includeEtcEntry, 0);
-
     addToRunTimeSelectionTable(functionEntry, includeEtcEntry, dictionary);
-
-    addToMemberFunctionSelectionTable
-    (
-        functionEntry,
-        includeEtcEntry,
-        execute,
-        dictionaryIstream
-    );
 
     addToMemberFunctionSelectionTable
     (
@@ -67,7 +58,7 @@ Foam::fileName Foam::functionEntries::includeEtcEntry::includeEtcFileName
 (
     const fileName& f,
     const dictionary& dict
-)
+) const
 {
     fileName fName(f);
 
@@ -103,15 +94,13 @@ Foam::functionEntries::includeEtcEntry::includeEtcEntry
 
 bool Foam::functionEntries::includeEtcEntry::execute
 (
-    dictionary& parentDict,
+    dictionary& contextDict,
     Istream& is
 )
 {
-    const fileName rawFName(is);
-
     const fileName fName
     (
-        includeEtcFileName(rawFName, parentDict)
+        includeEtcFileName(this->fName(), contextDict)
     );
 
     // IFstream ifs(fName);
@@ -127,21 +116,21 @@ bool Foam::functionEntries::includeEtcEntry::execute
 
         // Cache the FoamFile entry if present
         dictionary foamFileDict;
-        if (parentDict.found(IOobject::foamFile))
+        if (contextDict.found(IOobject::foamFile))
         {
-            foamFileDict = parentDict.subDict(IOobject::foamFile);
+            foamFileDict = contextDict.subDict(IOobject::foamFile);
         }
 
         // Read and clear the FoamFile entry
-        parentDict.read(ifs);
+        contextDict.read(ifs);
 
         // Reinstate original FoamFile entry
         if (foamFileDict.size() != 0)
         {
-            dictionary parentDictTmp(parentDict);
-            parentDict.clear();
-            parentDict.add(IOobject::foamFile, foamFileDict);
-            parentDict += parentDictTmp;
+            dictionary contextDictTmp(contextDict);
+            contextDict.clear();
+            contextDict.add(IOobject::foamFile, foamFileDict);
+            contextDict += contextDictTmp;
         }
 
         return true;
@@ -152,8 +141,8 @@ bool Foam::functionEntries::includeEtcEntry::execute
         (
             is
         )   << "Cannot open etc file "
-            << (ifs.name().size() ? ifs.name() : rawFName)
-            << " while reading dictionary " << parentDict.name()
+            << (ifs.name().size() ? ifs.name() : this->fName())
+            << " while reading dictionary " << contextDict.name()
             << exit(FatalIOError);
 
         return false;
@@ -163,16 +152,16 @@ bool Foam::functionEntries::includeEtcEntry::execute
 
 bool Foam::functionEntries::includeEtcEntry::execute
 (
-    const dictionary& parentDict,
-    primitiveEntry& entry,
+    const dictionary& contextDict,
+    primitiveEntry& contextEntry,
     Istream& is
 )
 {
-    const fileName rawFName(is);
+    const includeEtcEntry iee(contextDict, is);
 
     const fileName fName
     (
-        includeEtcFileName(rawFName, parentDict)
+        iee.includeEtcFileName(iee.fName(), contextDict)
     );
 
     autoPtr<ISstream> ifsPtr(fileHandler().NewIFstream(fName));
@@ -184,7 +173,7 @@ bool Foam::functionEntries::includeEtcEntry::execute
         {
             Info<< fName << endl;
         }
-        entry.read(parentDict, ifs);
+        contextEntry.read(contextDict, ifs);
         return true;
     }
     else
@@ -193,8 +182,8 @@ bool Foam::functionEntries::includeEtcEntry::execute
         (
             is
         )   << "Cannot open etc file "
-            << (ifs.name().size() ? ifs.name() : rawFName)
-            << " while reading dictionary " << parentDict.name()
+            << (ifs.name().size() ? ifs.name() : iee.fName())
+            << " while reading dictionary " << contextDict.name()
             << exit(FatalIOError);
 
         return false;

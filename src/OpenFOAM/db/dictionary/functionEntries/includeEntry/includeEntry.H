@@ -80,20 +80,20 @@ class includeEntry
     // Private Member Functions
 
         //- Return the optional named arguments
-        //  temporarily inserted into parentDict
-        static List<Tuple3<word, string, label>> insertNamedArgs
+        //  temporarily inserted into contextDict
+        List<Tuple3<word, string, label>> insertNamedArgs
         (
-            dictionary& parentDict,
+            dictionary& contextDict,
             const Tuple2<string, label>& args
-        );
+        ) const;
 
-        //- Remove named argument entries from parentDict
+        //- Remove named argument entries from contextDict
         //  renaming any existing entries which had the same name
-        static void removeInsertNamedArgs
+        void removeInsertNamedArgs
         (
-            dictionary& parentDict,
+            dictionary& contextDict,
             const List<Tuple3<word, string, label>>& namedArgs
-        );
+        ) const;
 
 
 protected:
@@ -128,8 +128,13 @@ protected:
 
     // Protected Member Functions
 
-        //- Read the include fileName from Istream, expand and return
-        static fileName includeFileName(Istream&, const dictionary&);
+        //- Expand fileName and return
+        static fileName includeFileName
+        (
+            const Istream& is,
+            const fileName&,
+            const dictionary&
+        );
 
         //- Expand include fileName and return
         static fileName includeFileName
@@ -176,14 +181,14 @@ public:
 
     // Member Functions
 
-        //- Expand adding entries to the given dictionary
-        static bool execute(dictionary& parentDict, Istream&);
+        //- Expand the functionEntry into the contextDict
+        virtual bool execute(dictionary& contextDict, Istream&);
 
-        //- Expand adding tokens to the primitiveEntry
+        //- Expand the functionEntry into the contextEntry
         static bool execute
         (
-            const dictionary& parentDict,
-            primitiveEntry&,
+            const dictionary& contextDict,
+            primitiveEntry& contextEntry,
             Istream&
         );
 

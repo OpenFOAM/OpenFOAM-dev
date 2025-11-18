@@ -80,6 +80,13 @@ public:
 
     // Member Functions
 
+        //- Expand the functionEntry into the contextDict
+        virtual bool execute(dictionary& contextDict, Istream& is)
+        {
+            NotImplemented;
+            return false;
+        }
+
 
     // Member Operators
 

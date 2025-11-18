@@ -97,45 +97,45 @@ private:
 
     // Private Member Functions
 
-        tokenList readArgList(Istream& is);
+        tokenList readArgList(Istream& is) const;
 
         //- Read tokens. Skip dummy tokens
-        static void readToken(token& t, Istream& is);
+        void readToken(token& t, Istream& is) const;
 
         //- Expand token if it is a variable
-        static token expand(const dictionary& dict, const token& t);
+        token expand(const dictionary& dict, const token& t) const;
 
-        static bool equalToken(const token& t1, const token& t2);
+        bool equalToken(const token& t1, const token& t2) const;
 
         //- Consume tokens until reached a specific word
-        static void skipUntil
+        void skipUntil
         (
             DynamicList<filePos>& stack,
-            const dictionary& parentDict,
+            const dictionary& contextDict,
             const functionName& endWord,
             Istream& is
-        );
+        ) const;
 
         template<class Context>
-        static bool evaluate
+        bool evaluate
         (
             const bool doIf,
             DynamicList<filePos>& stack,
             const dictionary& contextDict,
             Context& context,
             Istream& is
-        );
+        ) const;
 
         //- Main driver: depending on 'equal' starts evaluating or
         //  skips forward to #else
         template<class Context>
-        static bool execute
+        bool execute
         (
             DynamicList<filePos>& stack,
             const dictionary& contextDict,
             Context& context,
             Istream& is
-        );
+        ) const;
 
 
 protected:
@@ -145,14 +145,14 @@ protected:
         //- Main driver: depending on 'equal' starts evaluating or
         //  skips forward to #else
         template<class Context>
-        static bool execute
+        bool execute
         (
             const bool equal,
             DynamicList<filePos>& stack,
             const dictionary& contextDict,
             Context& context,
             Istream& is
-        );
+        ) const;
 
 
 public:
@@ -188,9 +188,9 @@ public:
     // Member Functions
 
         //- Expand the functionEntry into the contextDict
-        static bool execute(dictionary& contextDict, Istream& is);
+        virtual bool execute(dictionary& contextDict, Istream& is);
 
-        //- Expand the functionEntry adding tokens to the contextEntry
+        //- Expand the functionEntry into the contextEntry
         static bool execute
         (
             const dictionary& contextDict,

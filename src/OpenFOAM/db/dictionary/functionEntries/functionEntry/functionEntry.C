@@ -38,13 +38,6 @@ namespace Foam
     (
         functionEntry,
         execute,
-        dictionaryIstream
-    );
-
-    defineMemberFunctionSelectionTable
-    (
-        functionEntry,
-        execute,
         primitiveEntryIstream
     );
 }
@@ -298,26 +291,26 @@ Foam::tokenList Foam::functionEntry::readFileNameArgList
 
 bool Foam::functionEntry::insert
 (
-    const dictionary& contextDict,
-    dictionary& context,
+    const dictionary& parentDict,
+    dictionary& contextDict,
     const token& t,
     Istream& is
 )
 {
     is.putBack(t);
-    return entry::New(context, is);
+    return entry::New(contextDict, is);
 }
 
 
 bool Foam::functionEntry::insert
 (
-    const dictionary& contextDict,
-    primitiveEntry& context,
+    const dictionary& parentDict,
+    primitiveEntry& contextDict,
     const token& t,
     Istream& is
 )
 {
-    context.append(t, contextDict, is);
+    contextDict.append(t, parentDict, is);
     return true;
 }
 
@@ -336,11 +329,11 @@ bool Foam::functionEntry::insert
 bool Foam::functionEntry::insert
 (
     const dictionary& parentDict,
-    primitiveEntry& thisEntry,
+    primitiveEntry& contextEntry,
     const string& str
 )
 {
-    thisEntry.read(parentDict, IStringStream(str)());
+    contextEntry.read(parentDict, IStringStream(str)());
     return true;
 }
 
@@ -433,50 +426,8 @@ Foam::autoPtr<Foam::functionEntry> Foam::functionEntry::New
 bool Foam::functionEntry::execute
 (
     const word& functionName,
-    dictionary& parentDict,
-    Istream& is
-)
-{
-    is.fatalCheck
-    (
-        "functionEntry::execute"
-        "(const word& functionName, dictionary& parentDict, Istream&)"
-    );
-
-    if (!executedictionaryIstreamMemberFunctionTablePtr_)
-    {
-        cerr<< "functionEntry::execute"
-            << "(const word&, dictionary&, Istream&)"
-            << " not yet initialised, function = "
-            << functionName.c_str() << std::endl;
-
-        // Return true to keep reading
-        return true;
-    }
-
-    executedictionaryIstreamMemberFunctionTable::iterator mfIter =
-        executedictionaryIstreamMemberFunctionTablePtr_->find(functionName);
-
-    if (mfIter == executedictionaryIstreamMemberFunctionTablePtr_->end())
-    {
-        FatalErrorInFunction
-            << "Unknown functionEntry '" << functionName
-            << "' in " << is.name() << " at line " << is.lineNumber()
-            << nl << nl
-            << "Valid functionEntries are :" << endl
-            << executedictionaryIstreamMemberFunctionTablePtr_->toc()
-            << exit(FatalError);
-    }
-
-    return mfIter()(parentDict, is);
-}
-
-
-bool Foam::functionEntry::execute
-(
-    const word& functionName,
-    const dictionary& parentDict,
-    primitiveEntry& entry,
+    const dictionary& contextDict,
+    primitiveEntry& contextEntry,
     Istream& is
 )
 {
@@ -511,7 +462,7 @@ bool Foam::functionEntry::execute
             << exit(FatalError);
     }
 
-    return mfIter()(parentDict, entry, is);
+    return mfIter()(contextDict, contextEntry, is);
 }
 
 

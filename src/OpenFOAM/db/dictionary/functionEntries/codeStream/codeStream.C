@@ -39,16 +39,7 @@ namespace Foam
 namespace functionEntries
 {
     defineFunctionTypeNameAndDebug(codeStream, 0);
-
     addToRunTimeSelectionTable(functionEntry, codeStream, dictionary);
-
-    addToMemberFunctionSelectionTable
-    (
-        functionEntry,
-        codeStream,
-        execute,
-        dictionaryIstream
-    );
 
     addToMemberFunctionSelectionTable
     (
@@ -391,11 +382,11 @@ bool Foam::functionEntries::codeStream::execute
 bool Foam::functionEntries::codeStream::execute
 (
     const dictionary& contextDict,
-    primitiveEntry& thisEntry,
+    primitiveEntry& contextEntry,
     Istream& is
 )
 {
-    return insert(contextDict, thisEntry, run(contextDict, is));
+    return insert(contextDict, contextEntry, run(contextDict, is));
 }
 
 

@@ -34,20 +34,18 @@ bool Foam::functionEntries::ifEntry::execute
     const dictionary& contextDict,
     Context& context,
     Istream& is
-)
+) const
 {
     const label nNested = stack.size();
 
     stack.append(filePos(is.name(), is.lineNumber()));
 
-    // Read if argument
-    const ifEntry ife(contextDict, is);
     const string arg
     (
-        ife[1].stringToken() + char(token::END_STATEMENT)
+        operator[](1).stringToken() + char(token::END_STATEMENT)
     );
     IStringStream argStream(arg);
-    argStream.lineNumber() = ife[1].lineNumber();
+    argStream.lineNumber() = operator[](1).lineNumber();
     const primitiveEntry e("ifEntry", contextDict, argStream);
     const Switch doIf(e.stream());
 

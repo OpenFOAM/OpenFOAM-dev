@@ -43,14 +43,6 @@ namespace functionEntries
         functionEntry,
         calcEntry,
         execute,
-        dictionaryIstream
-    );
-
-    addToMemberFunctionSelectionTable
-    (
-        functionEntry,
-        calcEntry,
-        execute,
         primitiveEntryIstream
     );
 }
@@ -125,22 +117,12 @@ Foam::string Foam::functionEntries::calcEntry::calc
 
 bool Foam::functionEntries::calcEntry::execute
 (
-    dictionary& dict,
+    const dictionary& contextDict,
+    primitiveEntry& contextEntry,
     Istream& is
 )
 {
-    return insert(dict, calc(dict, is));
-}
-
-
-bool Foam::functionEntries::calcEntry::execute
-(
-    const dictionary& dict,
-    primitiveEntry& thisEntry,
-    Istream& is
-)
-{
-    return insert(dict, thisEntry, calc(dict, is));
+    return insert(contextDict, contextEntry, calc(contextDict, is));
 }
 
 

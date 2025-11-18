@@ -131,16 +131,16 @@ protected:
 
         static bool insert
         (
-            const dictionary& contextDict,
-            dictionary& parentDict,
+            const dictionary& parentDict,
+            dictionary& contextDict,
             const token& t,
             Istream& is
         );
 
         static bool insert
         (
-            const dictionary& contextDict,
-            primitiveEntry& thisEntry,
+            const dictionary& parentDict,
+            primitiveEntry& contextEntry,
             const token& t,
             Istream& is
         );
@@ -148,7 +148,7 @@ protected:
         //- Insert the given string in a sub-dict context
         static bool insert
         (
-            dictionary& parentDict,
+            dictionary& contextDict,
             const string&
         );
 
@@ -156,7 +156,7 @@ protected:
         static bool insert
         (
             const dictionary& parentDict,
-            primitiveEntry& thisEntry,
+            primitiveEntry& contextEntry,
             const string&
         );
 
@@ -193,26 +193,8 @@ public:
 
     // Member Function Selectors
 
-        declareMemberFunctionSelectionTable
-        (
-            bool,
-            functionEntry,
-            execute,
-            dictionaryIstream,
-            (
-                dictionary& parentDict,
-                Istream& is
-            ),
-            (parentDict, is)
-        );
-
-        //- Execute the functionEntry in a sub-dict context
-        static bool execute
-        (
-            const word& functionName,
-            dictionary& parentDict,
-            Istream&
-        );
+        //- Expand the functionEntry into the contextDict
+        virtual bool execute(dictionary& contextDict, Istream& is) = 0;
 
         declareMemberFunctionSelectionTable
         (
@@ -221,19 +203,19 @@ public:
             execute,
             primitiveEntryIstream,
             (
-                const dictionary& parentDict,
-                primitiveEntry& entry,
+                const dictionary& contextDict,
+                primitiveEntry& contextEntry,
                 Istream& is
             ),
-            (parentDict, entry, is)
+            (contextDict, entry, is)
         );
 
-        //- Execute the functionEntry in a primitiveEntry context
+        //- Expand the functionEntry into the contextEntry
         static bool execute
         (
             const word& functionName,
-            const dictionary& parentDict,
-            primitiveEntry&,
+            const dictionary& contextDict,
+            primitiveEntry& contextEntry,
             Istream&
         );
 
