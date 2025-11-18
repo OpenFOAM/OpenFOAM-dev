@@ -320,7 +320,8 @@ bool Foam::functionEntry::insert
     const string& str
 )
 {
-    return contextDict.read(IStringStream(str)());
+    contextDict.read(IStringStream(str)());
+    return true;
 }
 
 
@@ -331,7 +332,8 @@ bool Foam::functionEntry::insert
     const string& str
 )
 {
-    return contextEntry.read(parentDict, IStringStream(str)());
+    contextEntry.read(parentDict, IStringStream(str)());
+    return true;
 }
 
 
