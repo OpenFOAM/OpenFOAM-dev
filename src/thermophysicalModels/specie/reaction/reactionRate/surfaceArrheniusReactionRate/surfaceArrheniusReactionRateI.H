@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ inline Foam::surfaceArrheniusReactionRate::surfaceArrheniusReactionRate
     const dictionary& dict
 )
 :
-    ArrheniusReactionRate(species, dims, dict),
+    ArrheniusReactionRate(species, dims*dimLength, dict),
     AvName_(dict.lookupBackwardsCompatible({"Av", "a"})),
     ob_(ob),
     tAv_(nullptr)
