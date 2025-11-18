@@ -770,10 +770,7 @@ bool Foam::fvMesh::move()
 
     curTimeIndex_ = time().timeIndex();
 
-    if (conformal() && stitcher_->stitches())
-    {
-        stitcher_->connect(true, true, false);
-    }
+    stitcher_->connect(true, true, false);
 
     return moved;
 }

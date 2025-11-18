@@ -855,6 +855,8 @@ void Foam::domainDecomposition::postReadUpdateDecompose
     {
         procFaceAddressingBf_.clear();
 
+        completeMesh_->stitcher().disconnect(false, false);
+
         completeMesh_->stitcher().connect(false, false, true);
     }
 }
@@ -965,6 +967,8 @@ void Foam::domainDecomposition::postReadUpdateReconstruct
 
         forAll(procMeshes_, proci)
         {
+            procMeshes_[proci].stitcher().disconnect(false, false);
+
             procMeshes_[proci].stitcher().connect(false, false, true);
         }
     }

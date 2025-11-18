@@ -1651,7 +1651,7 @@ bool Foam::fvMeshStitcher::disconnectThis
     const bool geometric
 )
 {
-    if (!stitches()) return false;
+    if (!stitches() || mesh_.conformal()) return false;
 
     // Determine which patches are coupled
     const boolList patchCoupleds =
@@ -1706,7 +1706,7 @@ bool Foam::fvMeshStitcher::connectThis
     const bool load
 )
 {
-    if (!stitches()) return false;
+    if (!stitches() || !mesh_.conformal()) return false;
 
     // Create a copy of the conformal poly face addressing
     IOobject polyFacesBfIO(word::null, mesh_.pointsInstance(), mesh_);
@@ -2302,9 +2302,6 @@ bool Foam::fvMeshStitcher::disconnect
     const bool geometric
 )
 {
-    // Don't do anything if we are already disconnected
-    if (mesh_.conformal()) return false;
-
     if (!changing)
     {
         return disconnectThis(changing, geometric);
@@ -2380,10 +2377,7 @@ bool Foam::fvMeshStitcher::connect
 
 void Foam::fvMeshStitcher::reconnect(const bool geometric) const
 {
-    if (mesh_.conformal() || geometric == this->geometric())
-    {
-        return;
-    }
+    if (mesh_.conformal() || geometric == this->geometric()) return;
 
     // Create a copy of the non-conformal poly face addressing
     surfaceLabelField::Boundary polyFacesBf
