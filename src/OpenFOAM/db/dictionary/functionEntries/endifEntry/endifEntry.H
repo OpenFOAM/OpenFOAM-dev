@@ -68,8 +68,14 @@ public:
         //- Construct from dictionary and Istream
         endifEntry(const dictionary& parentDict, Istream& is);
 
-        //- Disallow default bitwise copy construction
-        endifEntry(const endifEntry&) = delete;
+        //- Copy construct
+        endifEntry(const endifEntry&) = default;
+
+        //- Clone
+        virtual autoPtr<entry> clone(const dictionary&) const
+        {
+            return autoPtr<entry>(new endifEntry(*this));
+        }
 
 
     // Member Functions

@@ -70,8 +70,14 @@ public:
         //- Construct from dictionary and Istream
         includeIfPresentEntry(const dictionary& parentDict, Istream& is);
 
-        //- Disallow default bitwise copy construction
-        includeIfPresentEntry(const includeIfPresentEntry&) = delete;
+        //- Copy construct
+        includeIfPresentEntry(const includeIfPresentEntry&) = default;
+
+        //- Clone
+        virtual autoPtr<entry> clone(const dictionary&) const
+        {
+            return autoPtr<entry>(new includeIfPresentEntry(*this));
+        }
 
 
     // Member Functions

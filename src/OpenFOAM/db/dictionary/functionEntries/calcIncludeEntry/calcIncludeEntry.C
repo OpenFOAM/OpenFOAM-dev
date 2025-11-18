@@ -25,7 +25,6 @@ License
 
 #include "calcIncludeEntry.H"
 #include "stringOps.H"
-#include "fileOperation.H"
 #include "addToRunTimeSelectionTable.H"
 #include "addToMemberFunctionSelectionTable.H"
 
@@ -62,7 +61,7 @@ Foam::functionEntries::calcIncludeEntry::calcIncludeEntry
     Istream& is
 )
 :
-    functionEntry(typeName, parentDict, token(is))
+    functionEntry(typeName, parentDict, is, token(is))
 {
     if (!operator[](0).isString())
     {

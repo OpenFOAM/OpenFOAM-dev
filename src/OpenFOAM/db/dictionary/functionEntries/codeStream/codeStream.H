@@ -260,8 +260,17 @@ public:
 
     // Constructors
 
-        //- Disallow default bitwise copy construction
-        codeStream(const codeStream&) = delete;
+        //- Construct from dictionary and Istream
+        codeStream(const dictionary& parentDict, Istream& is);
+
+        //- Copy construct
+        codeStream(const codeStream&) = default;
+
+        //- Clone
+        virtual autoPtr<entry> clone(const dictionary&) const
+        {
+            return autoPtr<entry>(new codeStream(*this));
+        }
 
 
     // Member Functions

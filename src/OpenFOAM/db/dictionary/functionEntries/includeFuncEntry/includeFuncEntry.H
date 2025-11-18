@@ -125,8 +125,14 @@ public:
         //- Construct from dictionary and Istream
         includeFuncEntry(const dictionary& parentDict, Istream& is);
 
-        //- Disallow default bitwise copy construction
-        includeFuncEntry(const includeFuncEntry&) = delete;
+        //- Copy construct
+        includeFuncEntry(const includeFuncEntry&) = default;
+
+        //- Clone
+        virtual autoPtr<entry> clone(const dictionary&) const
+        {
+            return autoPtr<entry>(new includeFuncEntry(*this));
+        }
 
 
     // Static Data Members

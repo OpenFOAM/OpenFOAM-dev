@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "ifEntry.H"
-#include "Switch.H"
 #include "addToRunTimeSelectionTable.H"
 #include "addToMemberFunctionSelectionTable.H"
 
@@ -68,6 +67,7 @@ Foam::functionEntries::ifEntry::ifEntry
     (
         typeName,
         parentDict,
+        is,
         functionEntry::readArgList(typeName, is)
     )
 {}

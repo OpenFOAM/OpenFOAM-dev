@@ -94,14 +94,20 @@ public:
 
     // Constructors
 
-        //- Disallow default bitwise copy construction
-        inputModeEntry(const inputModeEntry&) = delete;
+        //- Construct from dictionary and Istream
+        inputModeEntry(const dictionary& parentDict, Istream& is);
+
+        //- Copy construct
+        inputModeEntry(const inputModeEntry&) = default;
+
+        //- Clone
+        virtual autoPtr<entry> clone(const dictionary&) const
+        {
+            return autoPtr<entry>(new inputModeEntry(*this));
+        }
 
 
     // Member Functions
-
-        //- Execute the functionEntry in a sub-dict context
-        static bool execute(dictionary& parentDict, Istream&);
 
         //- Reset the inputMode to %default (ie, %merge)
         static void clear();
@@ -117,6 +123,9 @@ public:
 
         //- Return true if the inputMode is %error
         static bool error();
+
+        //- Execute the functionEntry in a sub-dict context
+        static bool execute(dictionary& parentDict, Istream&);
 
 
     // Member Operators

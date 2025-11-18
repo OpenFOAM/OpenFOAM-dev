@@ -25,7 +25,7 @@ Class
     Foam::functionEntries::negEntry
 
 Description
-    Negate a dictionary variable by prefixing with \c #neg
+    Negate a variable by prefixing with \c #neg
 
     E.g.
     \verbatim
@@ -89,9 +89,6 @@ public:
 
 
     // Member Functions
-
-        //- Execute the functionEntry in a sub-dict context
-        static bool execute(dictionary& parentDict, Istream&);
 
         //- Execute the functionEntry in a primitiveEntry context
         static bool execute

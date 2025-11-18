@@ -40,12 +40,12 @@ namespace functionEntries
 
 Foam::functionEntries::dummyEntry::dummyEntry
 (
-    const keyType& key,
+    const functionName& functionType,
     const dictionary& parentDict,
     Istream& is
 )
 :
-    functionEntry(key, parentDict)
+    functionEntry(functionType, parentDict)
 {
     // Get the rest of the line and discard
     string line;

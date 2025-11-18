@@ -106,8 +106,14 @@ public:
         //- Construct from dictionary and Istream
         includeEtcEntry(const dictionary& parentDict, Istream& is);
 
-        //- Disallow default bitwise copy construction
-        includeEtcEntry(const includeEtcEntry&) = delete;
+        //- Copy construct
+        includeEtcEntry(const includeEtcEntry&) = default;
+
+        //- Clone
+        virtual autoPtr<entry> clone(const dictionary&) const
+        {
+            return autoPtr<entry>(new includeEtcEntry(*this));
+        }
 
 
     // Member Functions

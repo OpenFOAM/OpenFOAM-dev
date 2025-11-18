@@ -208,8 +208,14 @@ public:
 
     // Constructors
 
-        //- Disallow default bitwise copy construction
-        calcEntry(const calcEntry&) = delete;
+        //- Copy construct
+        calcEntry(const calcEntry&) = default;
+
+        //- Clone
+        virtual autoPtr<entry> clone(const dictionary&) const
+        {
+            return autoPtr<entry>(new calcEntry(*this));
+        }
 
 
     // Member Functions

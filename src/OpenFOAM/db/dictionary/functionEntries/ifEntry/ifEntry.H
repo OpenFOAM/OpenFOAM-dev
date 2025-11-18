@@ -100,8 +100,14 @@ public:
         //- Construct from dictionary and Istream
         ifEntry(const dictionary& parentDict, Istream& is);
 
-        //- Disallow default bitwise copy construction
-        ifEntry(const ifEntry&) = delete;
+        //- Copy construct
+        ifEntry(const ifEntry&) = default;
+
+        //- Clone
+        virtual autoPtr<entry> clone(const dictionary&) const
+        {
+            return autoPtr<entry>(new ifEntry(*this));
+        }
 
 
     // Member Functions

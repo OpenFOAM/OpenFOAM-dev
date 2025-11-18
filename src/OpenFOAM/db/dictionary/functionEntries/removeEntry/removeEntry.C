@@ -24,10 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "removeEntry.H"
-#include "dictionary.H"
 #include "stringListOps.H"
-#include "IStringStream.H"
-#include "OStringStream.H"
+#include "addToRunTimeSelectionTable.H"
 #include "addToMemberFunctionSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -37,6 +35,8 @@ namespace Foam
 namespace functionEntries
 {
     defineFunctionTypeNameAndDebug(removeEntry, 0);
+
+    addToRunTimeSelectionTable(functionEntry, removeEntry, dictionary);
 
     addToMemberFunctionSelectionTable
     (
@@ -49,6 +49,71 @@ namespace functionEntries
 }
 
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+Foam::tokenList Foam::functionEntries::removeEntry::readArgOrList
+(
+    const functionName& functionType,
+    Istream& is
+) const
+{
+    tokenList argList;
+
+    // Read the next token to check for '('
+    // in case the optional arguments start on the next line
+    token currToken(is);
+
+    if
+    (
+        currToken.isPunctuation()
+     && currToken.pToken() == token::BEGIN_LIST
+    )
+    {
+        do
+        {
+            argList.append(currToken);
+        }
+        while
+        (
+            !(currToken == token::END_LIST)
+         && !is.read(currToken).bad()
+         && currToken.good()
+        );
+
+        if
+        (
+            !currToken.isPunctuation()
+         || currToken.pToken() != token::END_LIST
+        )
+        {
+            FatalIOErrorInFunction(is)
+                << "Unclosed argument list " << currToken
+                << " in functionEntry " << functionType
+                << exit(FatalIOError);
+        }
+    }
+    else
+    {
+        argList.append(currToken);
+    }
+
+    return argList;
+}
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::functionEntries::removeEntry::removeEntry
+(
+    const dictionary& parentDict,
+    Istream& is
+)
+:
+    functionEntry(typeName, parentDict, is, readArgOrList(typeName, is)),
+    patterns_(readList<wordRe>(stream()))
+{}
+
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 bool Foam::functionEntries::removeEntry::execute
@@ -57,15 +122,14 @@ bool Foam::functionEntries::removeEntry::execute
     Istream& is
 )
 {
+    const removeEntry re(parentDict, is);
+
     const wordList dictKeys = parentDict.toc();
+    const labelList indices = findStrings(re.patterns_, dictKeys);
 
-    const wordReList patterns = readList<wordRe>(is);
-
-    const labelList indices = findStrings(patterns, dictKeys);
-
-    forAll(indices, indexI)
+    forAll(indices, i)
     {
-        parentDict.remove(dictKeys[indices[indexI]]);
+        parentDict.remove(dictKeys[indices[i]]);
     }
 
     return true;

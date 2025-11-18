@@ -46,7 +46,7 @@ Foam::functionEntries::elifEntry::elifEntry
     Istream& is
 )
 :
-    functionEntry(typeName, parentDict, readArgList(typeName, is))
+    functionEntry(typeName, parentDict, is, readArgList(typeName, is))
 {}
 
 

@@ -29,6 +29,7 @@ License
 #include "Time.H"
 #include "OSspecific.H"
 #include "PstreamReduceOps.H"
+#include "addToRunTimeSelectionTable.H"
 #include "addToMemberFunctionSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -38,6 +39,8 @@ namespace Foam
 namespace functionEntries
 {
     defineFunctionTypeNameAndDebug(codeStream, 0);
+
+    addToRunTimeSelectionTable(functionEntry, codeStream, dictionary);
 
     addToMemberFunctionSelectionTable
     (
@@ -359,6 +362,18 @@ Foam::string Foam::functionEntries::codeStream::run
     // Return the string containing the results of the code execution
     return os.str();
 }
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::functionEntries::codeStream::codeStream
+(
+    const dictionary& parentDict,
+    Istream& is
+)
+:
+    functionEntry(typeName, parentDict)
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //

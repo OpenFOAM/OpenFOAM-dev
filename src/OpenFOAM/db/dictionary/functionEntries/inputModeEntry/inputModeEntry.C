@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "inputModeEntry.H"
-#include "dictionary.H"
+#include "addToRunTimeSelectionTable.H"
 #include "addToMemberFunctionSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -38,6 +38,8 @@ namespace functionEntries
 {
     defineFunctionTypeNameAndDebug(inputModeEntry, 0);
 
+    addToRunTimeSelectionTable(functionEntry, inputModeEntry, dictionary);
+
     addToMemberFunctionSelectionTable
     (
         functionEntry,
@@ -50,7 +52,6 @@ namespace functionEntries
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// we could combine this into execute() directly, but leave it here for now
 void Foam::functionEntries::inputModeEntry::setMode(Istream& is)
 {
     clear();
@@ -87,18 +88,27 @@ void Foam::functionEntries::inputModeEntry::setMode(Istream& is)
 }
 
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-bool Foam::functionEntries::inputModeEntry::execute
+Foam::functionEntries::inputModeEntry::inputModeEntry
 (
-    dictionary& parentDict,
+    const dictionary& parentDict,
     Istream& is
 )
+:
+    functionEntry(typeName, parentDict, is, token(is))
 {
-    setMode(is);
-    return true;
+    if (!operator[](0).isWord())
+    {
+        FatalIOErrorInFunction(is)
+            << "Expected a word, found " << operator[](0)
+            << " while reading function " << typeName
+            << exit(FatalIOError);
+    }
 }
 
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 void Foam::functionEntries::inputModeEntry::clear()
 {
@@ -126,6 +136,17 @@ bool Foam::functionEntries::inputModeEntry::protect()
 bool Foam::functionEntries::inputModeEntry::error()
 {
     return mode_ == ERROR;
+}
+
+
+bool Foam::functionEntries::inputModeEntry::execute
+(
+    dictionary& parentDict,
+    Istream& is
+)
+{
+    setMode(is);
+    return true;
 }
 
 

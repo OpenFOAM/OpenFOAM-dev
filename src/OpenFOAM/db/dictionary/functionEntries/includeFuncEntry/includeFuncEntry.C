@@ -74,6 +74,7 @@ Foam::functionEntries::includeFuncEntry::includeFuncEntry
     (
         functionType,
         parentDict,
+        is,
         readFuncNameArgList(functionType, is)
     )
 {}

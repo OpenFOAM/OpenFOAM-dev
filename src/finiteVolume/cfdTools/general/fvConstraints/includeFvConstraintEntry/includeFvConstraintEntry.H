@@ -102,8 +102,14 @@ public:
         //- Construct from dictionary and Istream
         includeFvConstraintEntry(const dictionary& parentDict, Istream& is);
 
-        //- Disallow default bitwise copy construction
-        includeFvConstraintEntry(const includeFuncEntry&) = delete;
+        //- Copy construct
+        includeFvConstraintEntry(const includeFvConstraintEntry&) = default;
+
+        //- Clone
+        virtual autoPtr<entry> clone(const dictionary&) const
+        {
+            return autoPtr<entry>(new includeFvConstraintEntry(*this));
+        }
 
 
     // Static Data Members

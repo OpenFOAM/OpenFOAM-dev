@@ -24,11 +24,9 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "includeIfPresentEntry.H"
-#include "dictionary.H"
-#include "IFstream.H"
+#include "fileOperation.H"
 #include "addToRunTimeSelectionTable.H"
 #include "addToMemberFunctionSelectionTable.H"
-#include "fileOperation.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 

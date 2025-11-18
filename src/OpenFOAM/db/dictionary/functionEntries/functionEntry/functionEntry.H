@@ -69,17 +69,49 @@ class functionEntry
 
         //- Read the rest of the argument list following the part attached
         // to the function name
-        void readRestOfArgs(string& fNameArgs, Istream& is);
+        void readRestOfArgs(string& fNameArgs, Istream& is) const;
 
 
 protected:
+
+    // Constructors
+
+        //- Construct from function type and parent dictionary
+        functionEntry(const functionName&, const dictionary&);
+
+        //- Construct from function type, parent dictionary and a token
+        functionEntry
+        (
+            const functionName&,
+            const dictionary&,
+            const Istream& is,
+            const token&
+        );
+
+        //- Construct from function type, parent dictionary and tokenList
+        functionEntry
+        (
+            const functionName&,
+            const dictionary&,
+            const Istream& is,
+            const tokenList&
+        );
+
+        //- Copy construct
+        functionEntry(const functionEntry&) = default;
+
+        //- Clone
+        virtual autoPtr<entry> clone(const dictionary&) const = 0;
+
+
+    // Protected member functions
 
         tokenList readArgList
         (
             const functionName& functionType,
             Istream& is,
             const bool optional = false
-        );
+        ) const;
 
         //- Read the function name and optional argument list
         //  The argument list can be on one or more lines.
@@ -87,7 +119,7 @@ protected:
         (
             const functionName& functionType,
             Istream& is
-        );
+        ) const;
 
         //- Read the filen name and optional argument list
         //  The argument list can be on one or more lines.
@@ -95,7 +127,7 @@ protected:
         (
             const functionName& functionType,
             Istream& is
-        );
+        ) const;
 
         static bool insert
         (
@@ -148,31 +180,7 @@ public:
         );
 
 
-    // Constructors
-
-        //- Construct from keyword and parent dictionary
-        functionEntry(const keyType&, const dictionary&);
-
-        //- Construct from keyword, parent dictionary and Istream
-        functionEntry(const keyType&, const dictionary&, Istream&);
-
-        //- Construct from function type and parent dictionary
-        functionEntry(const functionName&, const dictionary&);
-
-        //- Construct from function type, parent dictionary and a token
-        functionEntry(const functionName&, const dictionary&, const token&);
-
-        //- Construct from function type, parent dictionary and tokenList
-        functionEntry(const functionName&, const dictionary&, const tokenList&);
-
-        //- Copy construct
-        functionEntry(const functionEntry&) = default;
-
-        //- Clone
-        autoPtr<entry> clone(const dictionary&) const
-        {
-            return autoPtr<entry>(new functionEntry(*this));
-        }
+    // Selectors
 
         //- Construct from Istream and insert into dictionary
         static autoPtr<functionEntry> New

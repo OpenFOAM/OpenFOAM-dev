@@ -26,10 +26,9 @@ License
 #include "includeEtcEntry.H"
 #include "etcFiles.H"
 #include "stringOps.H"
+#include "IOobject.H"
 #include "addToRunTimeSelectionTable.H"
 #include "addToMemberFunctionSelectionTable.H"
-#include "IOobject.H"
-#include "fileOperation.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -96,7 +95,7 @@ Foam::functionEntries::includeEtcEntry::includeEtcEntry
     Istream& is
 )
 :
-    functionEntry(typeName, parentDict, readFileNameArgList(typeName, is))
+    functionEntry(typeName, parentDict, is, readFileNameArgList(typeName, is))
 {}
 
 

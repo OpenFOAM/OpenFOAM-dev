@@ -95,8 +95,14 @@ public:
         //- Construct from dictionary and Istream
         calcIncludeEntry(const dictionary& parentDict, Istream& is);
 
-        //- Disallow default bitwise copy construction
-        calcIncludeEntry(const calcIncludeEntry&) = delete;
+        //- Copy construct
+        calcIncludeEntry(const calcIncludeEntry&) = default;
+
+        //- Clone
+        virtual autoPtr<entry> clone(const dictionary&) const
+        {
+            return autoPtr<entry>(new calcIncludeEntry(*this));
+        }
 
 
     // Member Functions

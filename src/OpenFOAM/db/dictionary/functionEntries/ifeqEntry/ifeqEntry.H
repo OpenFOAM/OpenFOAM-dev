@@ -168,14 +168,21 @@ public:
         (
             const functionName& functionType,
             const dictionary& parentDict,
+            const Istream& is,
             const tokenList& tokens
         );
 
         //- Construct from dictionary and Istream
         ifeqEntry(const dictionary& parentDict, Istream& is);
 
-        //- Disallow default bitwise copy construction
-        ifeqEntry(const ifeqEntry&) = delete;
+        //- Copy construct
+        ifeqEntry(const ifeqEntry&) = default;
+
+        //- Clone
+        virtual autoPtr<entry> clone(const dictionary&) const
+        {
+            return autoPtr<entry>(new ifeqEntry(*this));
+        }
 
 
     // Member Functions

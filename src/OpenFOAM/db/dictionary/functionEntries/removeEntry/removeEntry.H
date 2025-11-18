@@ -48,6 +48,7 @@ SourceFiles
 #define removeEntry_H
 
 #include "functionEntry.H"
+#include "wordReList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -64,6 +65,21 @@ class removeEntry
 :
     public functionEntry
 {
+    // Private Member Data
+
+        //- The list of patterns of entries to remove
+        wordReList patterns_;
+
+
+    // Private Member Functions
+
+        //- Read a single argument or list
+        tokenList readArgOrList
+        (
+            const functionName& functionType,
+            Istream& is
+        ) const;
+
 
 public:
 
@@ -73,8 +89,17 @@ public:
 
     // Constructors
 
-        //- Disallow default bitwise copy construction
-        removeEntry(const removeEntry&) = delete;
+        //- Construct from dictionary and Istream
+        removeEntry(const dictionary& parentDict, Istream& is);
+
+        //- Copy construct
+        removeEntry(const removeEntry&) = default;
+
+        //- Clone
+        virtual autoPtr<entry> clone(const dictionary&) const
+        {
+            return autoPtr<entry>(new removeEntry(*this));
+        }
 
 
     // Member Functions

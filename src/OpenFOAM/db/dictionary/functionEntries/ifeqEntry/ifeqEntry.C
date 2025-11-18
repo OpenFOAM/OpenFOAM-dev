@@ -28,7 +28,6 @@ License
 #include "elifEntry.H"
 #include "elseEntry.H"
 #include "endifEntry.H"
-#include "Switch.H"
 #include "stringOps.H"
 #include "addToRunTimeSelectionTable.H"
 #include "addToMemberFunctionSelectionTable.H"
@@ -383,10 +382,11 @@ Foam::functionEntries::ifeqEntry::ifeqEntry
 (
     const functionName& functionType,
     const dictionary& parentDict,
+    const Istream& is,
     const tokenList& tokens
 )
 :
-    functionEntry(functionType, parentDict, tokens)
+    functionEntry(functionType, parentDict, is, tokens)
 {}
 
 
@@ -396,7 +396,7 @@ Foam::functionEntries::ifeqEntry::ifeqEntry
     Istream& is
 )
 :
-    ifeqEntry(typeName, parentDict, readArgList(is))
+    ifeqEntry(typeName, parentDict, is, readArgList(is))
 {}
 
 

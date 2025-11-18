@@ -26,7 +26,6 @@ License
 #include "functionEntry.H"
 #include "ISstream.H"
 #include "dummyEntry.H"
-#include "ifEntry.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -53,7 +52,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::functionEntry::readRestOfArgs(string& fNameArgs, Istream& is)
+void Foam::functionEntry::readRestOfArgs(string& fNameArgs, Istream& is) const
 {
     int listDepth = 1
       + fNameArgs.count(token::BEGIN_LIST) - fNameArgs.count(token::END_LIST);
@@ -126,12 +125,14 @@ void Foam::functionEntry::readRestOfArgs(string& fNameArgs, Istream& is)
 }
 
 
+// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
+
 Foam::tokenList Foam::functionEntry::readArgList
 (
     const functionName& functionType,
     Istream& is,
     const bool optional
-)
+) const
 {
     tokenList argList;
 
@@ -202,7 +203,7 @@ Foam::tokenList Foam::functionEntry::readFuncNameArgList
 (
     const functionName& functionType,
     Istream& is
-)
+) const
 {
     tokenList funcNameArgList;
     string::size_type argsStart = string::npos;
@@ -267,7 +268,7 @@ Foam::tokenList Foam::functionEntry::readFileNameArgList
 (
     const functionName& functionType,
     Istream& is
-)
+) const
 {
     tokenList fileNameArgList;
 
@@ -348,26 +349,6 @@ bool Foam::functionEntry::insert
 
 Foam::functionEntry::functionEntry
 (
-    const keyType& key,
-    const dictionary& dict
-)
-:
-    primitiveEntry(key)
-{}
-
-Foam::functionEntry::functionEntry
-(
-    const keyType& key,
-    const dictionary& dict,
-    Istream& is
-)
-:
-    primitiveEntry(key, readFuncNameArgList(typeName, is))
-{}
-
-
-Foam::functionEntry::functionEntry
-(
     const functionName& functionType,
     const dictionary& dict
 )
@@ -380,10 +361,15 @@ Foam::functionEntry::functionEntry
 (
     const functionName& functionType,
     const dictionary& dict,
+    const Istream& is,
     const token& token
 )
 :
-    primitiveEntry(keyType(functionType), token)
+    primitiveEntry
+    (
+        keyType(functionType),
+        ITstream(is.name(), tokenList(1, token))
+    )
 {}
 
 
@@ -391,10 +377,11 @@ Foam::functionEntry::functionEntry
 (
     const functionName& functionType,
     const dictionary& dict,
+    const Istream& is,
     const tokenList& tokens
 )
 :
-    primitiveEntry(keyType(functionType), tokens)
+    primitiveEntry(keyType(functionType), ITstream(is.name(), tokens))
 {}
 
 
@@ -402,7 +389,7 @@ Foam::functionEntry::functionEntry
 
 Foam::autoPtr<Foam::functionEntry> Foam::functionEntry::New
 (
-    const keyType& functionName,
+    const keyType& functionType,
     const dictionary& parentDict,
     Istream& is
 )
@@ -413,26 +400,28 @@ Foam::autoPtr<Foam::functionEntry> Foam::functionEntry::New
     {
         return autoPtr<functionEntry>
         (
-            new functionEntries::dummyEntry(functionName, parentDict, is)
+            new functionEntries::dummyEntry
+            (
+                functionName(functionType),
+                parentDict,
+                is
+            )
         );
     }
 
     dictionaryConstructorTable::iterator cstrIter =
-        dictionaryConstructorTablePtr_->find(functionName);
+        dictionaryConstructorTablePtr_->find(functionType);
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
         FatalErrorInFunction
             << "Unknown functionEntry "
-            << functionName << nl << nl
+            << functionType << nl << nl
             << "Valid functions are : " << nl
             << dictionaryConstructorTablePtr_->sortedToc()
-            << endl; // exit(FatalError);
+            << exit(FatalError);
 
-        return autoPtr<functionEntry>
-        (
-            new functionEntry(functionName, parentDict, is)
-        );
+        return autoPtr<functionEntry>(nullptr);
     }
 
     return autoPtr<functionEntry>(cstrIter()(parentDict, is));

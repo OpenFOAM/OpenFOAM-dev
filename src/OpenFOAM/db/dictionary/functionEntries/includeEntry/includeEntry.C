@@ -24,13 +24,10 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "includeEntry.H"
-#include "dictionary.H"
-#include "IFstream.H"
-#include "addToRunTimeSelectionTable.H"
-#include "addToMemberFunctionSelectionTable.H"
 #include "stringOps.H"
 #include "IOobject.H"
-#include "fileOperation.H"
+#include "addToRunTimeSelectionTable.H"
+#include "addToMemberFunctionSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -202,6 +199,7 @@ Foam::functionEntries::includeEntry::includeEntry
     (
         functionType,
         parentDict,
+        is,
         readFileNameArgList(functionType, is)
     )
 {}
