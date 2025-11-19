@@ -30,6 +30,9 @@ Description
 SourceFiles
     ITstream.C
 
+See also
+    Foam::OTstream
+
 \*---------------------------------------------------------------------------*/
 
 #ifndef ITstream_H
@@ -69,6 +72,42 @@ public:
         ITstream
         (
             const string& name,
+            const streamFormat format = ASCII,
+            const versionNumber version = currentVersion,
+            const bool global = false
+        )
+        :
+            Istream(format, version, UNCOMPRESSED, global),
+            name_(name),
+            tokenIndex_(0)
+        {
+            setOpened();
+            setGood();
+        }
+
+        //- Construct from components and token
+        ITstream
+        (
+            const string& name,
+            const token& t,
+            const streamFormat format = ASCII,
+            const versionNumber version = currentVersion,
+            const bool global = false
+        )
+        :
+            Istream(format, version, UNCOMPRESSED, global),
+            tokenList(1, t),
+            name_(name),
+            tokenIndex_(0)
+        {
+            setOpened();
+            setGood();
+        }
+
+        //- Construct from components and token list
+        ITstream
+        (
+            const string& name,
             const UList<token>& tokens,
             const streamFormat format = ASCII,
             const versionNumber version = currentVersion,
@@ -84,25 +123,8 @@ public:
             setGood();
         }
 
-        //- Construct from components
-        ITstream
-        (
-            const string& name,
-            const streamFormat format = ASCII,
-            const versionNumber version = currentVersion,
-            const bool global = false
-        )
-        :
-            Istream(format, version, UNCOMPRESSED, global),
-            name_(name),
-            tokenIndex_(0)
-        {
-            setOpened();
-            setGood();
-        }
 
-
-        //- Move construct from components, transferring the tokens
+        //- Move construct from components, transferring the token list
         ITstream
         (
             const string& name,

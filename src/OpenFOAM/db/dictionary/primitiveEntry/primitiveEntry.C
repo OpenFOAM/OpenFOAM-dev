@@ -144,7 +144,7 @@ Foam::primitiveEntry::primitiveEntry
 Foam::primitiveEntry::primitiveEntry(const keyType& key, const token& t)
 :
     entry(key, t.lineNumber()),
-    ITstream(key, tokenList(1, t))
+    ITstream(key, t)
 {}
 
 

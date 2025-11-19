@@ -363,7 +363,7 @@ Foam::functionEntry::functionEntry
     (
         lineNumber,
         keyType(functionType),
-        ITstream(is.name(), tokenList(1, token))
+        ITstream(is.name(), token)
     )
 {}
 

@@ -25,9 +25,13 @@ Class
     Foam::OTstream
 
 Description
+    Output token stream.
 
 SourceFiles
     OTstream.C
+
+See also
+    Foam::ITstream
 
 \*---------------------------------------------------------------------------*/
 
