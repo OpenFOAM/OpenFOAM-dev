@@ -57,8 +57,11 @@ Foam::string Foam::functionEntries::calcEntry::calc
     Istream& is
 )
 {
-    Info<< "Expanding #calc at line " << is.lineNumber()
-        << " in file " <<  dict.name() << endl;
+    if (debug)
+    {
+        Info<< "Expanding #calc at line " << is.lineNumber()
+            << " in file " <<  dict.name() << endl;
+    }
 
     dynamicCode::checkSecurity
     (
