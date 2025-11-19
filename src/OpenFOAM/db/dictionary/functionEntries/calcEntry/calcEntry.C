@@ -98,6 +98,16 @@ Foam::string Foam::functionEntries::calcEntry::calc
             << exit(FatalIOError);
     }
 
+    codeDict.add
+    (
+        primitiveEntry
+        (
+            "codeOptions",
+            "#{ -fno-show-column -fno-diagnostics-show-caret #}",
+            0
+        )
+    );
+
     codeStream::streamingFunctionType function = codeStream::getFunction
     (
         dict,
