@@ -48,11 +48,12 @@ Foam::fileName Foam::functionEntries::includeFvModelEntry::fvModelDictPath
 
 Foam::functionEntries::includeFvModelEntry::includeFvModelEntry
 (
+    const label lineNumber,
     const dictionary& parentDict,
     Istream& is
 )
 :
-    includeFuncEntry(typeName, parentDict, is)
+    includeFuncEntry(typeName, lineNumber, parentDict, is)
 {}
 
 

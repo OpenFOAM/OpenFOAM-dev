@@ -92,8 +92,13 @@ public:
 
     // Constructors
 
-        //- Construct from dictionary and Istream
-        calcIncludeEntry(const dictionary& parentDict, Istream& is);
+        //- Construct from line number, dictionary and Istream
+        calcIncludeEntry
+        (
+            const label lineNumber,
+            const dictionary& parentDict,
+            Istream& is
+        );
 
         //- Copy construct
         calcIncludeEntry(const calcIncludeEntry&) = default;

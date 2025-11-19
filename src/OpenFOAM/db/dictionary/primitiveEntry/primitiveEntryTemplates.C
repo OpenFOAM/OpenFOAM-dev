@@ -37,7 +37,7 @@ Foam::primitiveEntry::primitiveEntry
     const T& t
 )
 :
-    entry(key),
+    entry(key, -1),
     ITstream(key, tokenList(10))
 {
     OStringStream os;

@@ -55,11 +55,12 @@ Foam::functionEntries::includeFvConstraintEntry::fvConstraintDictPath
 
 Foam::functionEntries::includeFvConstraintEntry::includeFvConstraintEntry
 (
+    const label lineNumber,
     const dictionary& parentDict,
     Istream& is
 )
 :
-    includeFuncEntry(typeName, parentDict, is)
+    includeFuncEntry(typeName, lineNumber, parentDict, is)
 {}
 
 

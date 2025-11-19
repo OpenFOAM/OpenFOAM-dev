@@ -359,11 +359,12 @@ Foam::string Foam::functionEntries::codeStream::run
 
 Foam::functionEntries::codeStream::codeStream
 (
+    const label lineNumber,
     const dictionary& parentDict,
     Istream& is
 )
 :
-    functionEntry(typeName, parentDict)
+    functionEntry(typeName, lineNumber, parentDict)
 {}
 
 

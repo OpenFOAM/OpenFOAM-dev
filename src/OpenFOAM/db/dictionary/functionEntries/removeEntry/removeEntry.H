@@ -89,8 +89,13 @@ public:
 
     // Constructors
 
-        //- Construct from dictionary and Istream
-        removeEntry(const dictionary& parentDict, Istream& is);
+        //- Construct from line number, dictionary and Istream
+        removeEntry
+        (
+            const label lineNumber,
+            const dictionary& parentDict,
+            Istream& is
+        );
 
         //- Copy construct
         removeEntry(const removeEntry&) = default;

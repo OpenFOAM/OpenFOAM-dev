@@ -342,16 +342,18 @@ bool Foam::functionEntry::insert
 Foam::functionEntry::functionEntry
 (
     const functionName& functionType,
+    const label lineNumber,
     const dictionary& dict
 )
 :
-    primitiveEntry(keyType(functionType))
+    primitiveEntry(lineNumber, keyType(functionType))
 {}
 
 
 Foam::functionEntry::functionEntry
 (
     const functionName& functionType,
+    const label lineNumber,
     const dictionary& dict,
     const Istream& is,
     const token& token
@@ -359,6 +361,7 @@ Foam::functionEntry::functionEntry
 :
     primitiveEntry
     (
+        lineNumber,
         keyType(functionType),
         ITstream(is.name(), tokenList(1, token))
     )
@@ -368,12 +371,18 @@ Foam::functionEntry::functionEntry
 Foam::functionEntry::functionEntry
 (
     const functionName& functionType,
+    const label lineNumber,
     const dictionary& dict,
     const Istream& is,
     const tokenList& tokens
 )
 :
-    primitiveEntry(keyType(functionType), ITstream(is.name(), tokens))
+    primitiveEntry
+    (
+        lineNumber,
+        keyType(functionType),
+        ITstream(is.name(), tokens)
+    )
 {}
 
 
@@ -416,7 +425,7 @@ Foam::autoPtr<Foam::functionEntry> Foam::functionEntry::New
         return autoPtr<functionEntry>(nullptr);
     }
 
-    return autoPtr<functionEntry>(cstrIter()(parentDict, is));
+    return autoPtr<functionEntry>(cstrIter()(is.lineNumber(), parentDict, is));
 }
 
 

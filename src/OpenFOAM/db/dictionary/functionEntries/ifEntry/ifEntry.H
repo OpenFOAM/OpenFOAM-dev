@@ -97,8 +97,13 @@ public:
 
     // Constructors
 
-        //- Construct from dictionary and Istream
-        ifEntry(const dictionary& parentDict, Istream& is);
+        //- Construct from line number, dictionary and Istream
+        ifEntry
+        (
+            const label lineNumber,
+            const dictionary& parentDict,
+            Istream& is
+        );
 
         //- Copy construct
         ifEntry(const ifEntry&) = default;

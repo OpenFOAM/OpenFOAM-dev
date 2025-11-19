@@ -260,8 +260,13 @@ public:
 
     // Constructors
 
-        //- Construct from dictionary and Istream
-        codeStream(const dictionary& parentDict, Istream& is);
+        //- Construct from line number, dictionary and Istream
+        codeStream
+        (
+            const label lineNumber,
+            const dictionary& parentDict,
+            Istream& is
+        );
 
         //- Copy construct
         codeStream(const codeStream&) = default;

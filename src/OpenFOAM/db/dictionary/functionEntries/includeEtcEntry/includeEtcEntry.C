@@ -82,11 +82,19 @@ Foam::fileName Foam::functionEntries::includeEtcEntry::includeEtcFileName
 
 Foam::functionEntries::includeEtcEntry::includeEtcEntry
 (
+    const label lineNumber,
     const dictionary& parentDict,
     Istream& is
 )
 :
-    functionEntry(typeName, parentDict, is, readFileNameArgList(typeName, is))
+    functionEntry
+    (
+        typeName,
+        lineNumber,
+        parentDict,
+        is,
+        readFileNameArgList(typeName, is)
+    )
 {}
 
 
@@ -157,7 +165,7 @@ bool Foam::functionEntries::includeEtcEntry::execute
     Istream& is
 )
 {
-    const includeEtcEntry iee(contextDict, is);
+    const includeEtcEntry iee(is.lineNumber(), contextDict, is);
 
     const fileName fName
     (

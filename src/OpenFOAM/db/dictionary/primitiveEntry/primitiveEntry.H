@@ -81,12 +81,13 @@ class primitiveEntry
 
         friend class functionEntry;
 
+
 public:
 
     // Constructors
 
-        //- Construct from keyword
-        primitiveEntry(const keyType&);
+        //- Construct from line number and keyword
+        primitiveEntry(const label keyLineNumber, const keyType& key);
 
         //- Construct from keyword and a Istream
         primitiveEntry(const keyType&, Istream&);
@@ -95,7 +96,15 @@ public:
         primitiveEntry(const keyType&, const dictionary& parentDict, Istream&);
 
         //- Construct from keyword and a ITstream
-        primitiveEntry(const keyType&, const ITstream&);
+        primitiveEntry(const keyType& key, const ITstream&);
+
+        //- Construct from keyword, line number and ITstream
+        primitiveEntry
+        (
+            const label keyLineNumber,
+            const keyType& key,
+            const ITstream&
+        );
 
         //- Construct from keyword and a single token
         primitiveEntry(const keyType&, const token&);

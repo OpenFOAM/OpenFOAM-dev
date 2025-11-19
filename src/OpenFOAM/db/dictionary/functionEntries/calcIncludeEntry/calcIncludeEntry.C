@@ -47,11 +47,12 @@ Foam::DynamicList<Foam::fileName>
 
 Foam::functionEntries::calcIncludeEntry::calcIncludeEntry
 (
+    const label lineNumber,
     const dictionary& parentDict,
     Istream& is
 )
 :
-    functionEntry(typeName, parentDict, is, token(is))
+    functionEntry(typeName, lineNumber, parentDict, is, token(is))
 {
     if (!operator[](0).isString())
     {

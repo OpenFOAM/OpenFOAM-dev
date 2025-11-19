@@ -90,8 +90,13 @@ public:
 
     // Constructors
 
-        //- Construct from dictionary and Istream
-        elifEntry(const dictionary& parentDict, Istream& is);
+        //- Construct from line number, dictionary and Istream
+        elifEntry
+        (
+            const label lineNumber,
+            const dictionary& parentDict,
+            Istream& is
+        );
 
         //- Copy construct
         elifEntry(const elifEntry&) = default;

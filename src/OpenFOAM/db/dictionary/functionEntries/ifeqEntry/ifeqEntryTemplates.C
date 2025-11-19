@@ -58,7 +58,7 @@ bool Foam::functionEntries::ifeqEntry::evaluate
         )
         {
             // Recurse to evaluate
-            const ifEntry ife(contextDict, is);
+            const ifEntry ife(is.lineNumber(), contextDict, is);
             ife.execute(stack, contextDict, context, is);
         }
         else if
@@ -140,7 +140,7 @@ bool Foam::functionEntries::ifeqEntry::execute
                 else if (t.functionNameToken() == elifEntry::typeName)
                 {
                     // Read elif argument by constructing an ifEntry
-                    const ifEntry ife(contextDict, is);
+                    const ifEntry ife(is.lineNumber(), contextDict, is);
                     const string arg
                     (
                         ife[1].stringToken() + char(token::END_STATEMENT)

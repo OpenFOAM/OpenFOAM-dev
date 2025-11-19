@@ -42,14 +42,20 @@ namespace functionEntries
 
 Foam::functionEntries::elifEntry::elifEntry
 (
+    const label lineNumber,
     const dictionary& parentDict,
     Istream& is
 )
 :
-    functionEntry(typeName, parentDict, is, readArgList(typeName, is))
+    functionEntry
+    (
+        typeName,
+        lineNumber,
+        parentDict,
+        is,
+        readArgList(typeName, is)
+    )
 {}
 
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 // ************************************************************************* //

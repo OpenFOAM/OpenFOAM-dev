@@ -45,11 +45,12 @@ namespace functionEntries
 
 Foam::functionEntries::inputModeEntry::inputModeEntry
 (
+    const label lineNumber,
     const dictionary& parentDict,
     Istream& is
 )
 :
-    functionEntry(typeName, parentDict, is, token(is))
+    functionEntry(typeName, lineNumber, parentDict, is, token(is))
 {
     if (!operator[](0).isWord())
     {

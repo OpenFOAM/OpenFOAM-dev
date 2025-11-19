@@ -376,22 +376,24 @@ void Foam::functionEntries::ifeqEntry::skipUntil
 Foam::functionEntries::ifeqEntry::ifeqEntry
 (
     const functionName& functionType,
+    const label lineNumber,
     const dictionary& parentDict,
     const Istream& is,
     const tokenList& tokens
 )
 :
-    functionEntry(functionType, parentDict, is, tokens)
+    functionEntry(functionType, lineNumber, parentDict, is, tokens)
 {}
 
 
 Foam::functionEntries::ifeqEntry::ifeqEntry
 (
+    const label lineNumber,
     const dictionary& parentDict,
     Istream& is
 )
 :
-    ifeqEntry(typeName, parentDict, is, readArgList(is))
+    ifeqEntry(typeName, lineNumber, parentDict, is, readArgList(is))
 {}
 
 
@@ -416,7 +418,7 @@ bool Foam::functionEntries::ifeqEntry::execute
 )
 {
     DynamicList<filePos> stack(10);
-    const ifeqEntry ifeqe(contextDict, is);
+    const ifeqEntry ifeqe(is.lineNumber(), contextDict, is);
 
     return ifeqe.execute(stack, contextDict, contextEntry, is);
 }

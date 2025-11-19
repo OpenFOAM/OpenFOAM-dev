@@ -99,8 +99,13 @@ public:
 
     // Constructors
 
-        //- Construct from dictionary and Istream
-        includeFvConstraintEntry(const dictionary& parentDict, Istream& is);
+        //- Construct from line number, dictionary and Istream
+        includeFvConstraintEntry
+        (
+            const label lineNumber,
+            const dictionary& parentDict,
+            Istream& is
+        );
 
         //- Copy construct
         includeFvConstraintEntry(const includeFvConstraintEntry&) = default;

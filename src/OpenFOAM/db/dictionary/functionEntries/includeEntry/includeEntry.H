@@ -162,12 +162,18 @@ public:
         includeEntry
         (
             const functionName& functionType,
+            const label lineNumber,
             const dictionary& parentDict,
             Istream& is
         );
 
-        //- Construct from dictionary and Istream
-        includeEntry(const dictionary& parentDict, Istream& is);
+        //- Construct from line number, dictionary and Istream
+        includeEntry
+        (
+            const label lineNumber,
+            const dictionary& parentDict,
+            Istream& is
+        );
 
         //- Copy construct
         includeEntry(const includeEntry&) = default;

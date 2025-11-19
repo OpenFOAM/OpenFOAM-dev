@@ -65,8 +65,13 @@ public:
 
     // Constructors
 
-        //- Construct from dictionary and Istream
-        endifEntry(const dictionary& parentDict, Istream& is);
+        //- Construct from line number, dictionary and Istream
+        endifEntry
+        (
+            const label lineNumber,
+            const dictionary& parentDict,
+            Istream& is
+        );
 
         //- Copy construct
         endifEntry(const endifEntry&) = default;

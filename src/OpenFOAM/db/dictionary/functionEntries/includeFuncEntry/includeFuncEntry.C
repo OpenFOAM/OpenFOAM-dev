@@ -56,6 +56,7 @@ Foam::functionEntries::includeFuncEntry::functionObjectTemplatePath
 Foam::functionEntries::includeFuncEntry::includeFuncEntry
 (
     const functionName& functionType,
+    const label lineNumber,
     const dictionary& parentDict,
     Istream& is
 )
@@ -63,6 +64,7 @@ Foam::functionEntries::includeFuncEntry::includeFuncEntry
     functionEntry
     (
         functionType,
+        lineNumber,
         parentDict,
         is,
         readFuncNameArgList(functionType, is)
@@ -72,11 +74,12 @@ Foam::functionEntries::includeFuncEntry::includeFuncEntry
 
 Foam::functionEntries::includeFuncEntry::includeFuncEntry
 (
+    const label lineNumber,
     const dictionary& parentDict,
     Istream& is
 )
 :
-    includeFuncEntry(typeName, parentDict, is)
+    includeFuncEntry(typeName, lineNumber, parentDict, is)
 {}
 
 

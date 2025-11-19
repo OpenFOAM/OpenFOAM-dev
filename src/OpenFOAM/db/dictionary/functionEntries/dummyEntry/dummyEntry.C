@@ -45,7 +45,7 @@ Foam::functionEntries::dummyEntry::dummyEntry
     Istream& is
 )
 :
-    functionEntry(functionType, parentDict)
+    functionEntry(functionType, is.lineNumber(), parentDict)
 {
     // Get the rest of the line and discard
     string line;

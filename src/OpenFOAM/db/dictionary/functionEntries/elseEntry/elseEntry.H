@@ -66,8 +66,13 @@ public:
 
     // Constructors
 
-        //- Construct from dictionary and Istream
-        elseEntry(const dictionary& parentDict, Istream& is);
+        //- Construct from line number, dictionary and Istream
+        elseEntry
+        (
+            const label lineNumber,
+            const dictionary& parentDict,
+            Istream& is
+        );
 
         //- Copy construct
         elseEntry(const elseEntry&) = default;

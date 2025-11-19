@@ -58,11 +58,12 @@ namespace functionEntries
 
 Foam::functionEntries::includeIfPresentEntry::includeIfPresentEntry
 (
+    const label lineNumber,
     const dictionary& parentDict,
     Istream& is
 )
 :
-    includeEntry(typeName, parentDict, is)
+    includeEntry(typeName, lineNumber, parentDict, is)
 {}
 
 

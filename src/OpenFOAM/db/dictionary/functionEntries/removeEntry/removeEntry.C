@@ -95,11 +95,19 @@ Foam::tokenList Foam::functionEntries::removeEntry::readArgOrList
 
 Foam::functionEntries::removeEntry::removeEntry
 (
+    const label lineNumber,
     const dictionary& parentDict,
     Istream& is
 )
 :
-    functionEntry(typeName, parentDict, is, readArgOrList(typeName, is)),
+    functionEntry
+    (
+        typeName,
+        lineNumber,
+        parentDict,
+        is,
+        readArgOrList(typeName, is)
+    ),
     patterns_(readList<wordRe>(stream()))
 {}
 

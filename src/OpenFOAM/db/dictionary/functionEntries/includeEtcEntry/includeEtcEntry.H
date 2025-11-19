@@ -109,8 +109,13 @@ public:
 
     // Constructors
 
-        //- Construct from dictionary and Istream
-        includeEtcEntry(const dictionary& parentDict, Istream& is);
+        //- Construct from line number, dictionary and Istream
+        includeEtcEntry
+        (
+            const label lineNumber,
+            const dictionary& parentDict,
+            Istream& is
+        );
 
         //- Copy construct
         includeEtcEntry(const includeEtcEntry&) = default;

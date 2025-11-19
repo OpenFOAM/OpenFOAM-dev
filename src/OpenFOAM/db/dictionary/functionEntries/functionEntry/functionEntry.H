@@ -76,12 +76,18 @@ protected:
     // Constructors
 
         //- Construct from function type and parent dictionary
-        functionEntry(const functionName&, const dictionary&);
+        functionEntry
+        (
+            const functionName&,
+            const label lineNumber,
+            const dictionary&
+        );
 
         //- Construct from function type, parent dictionary and a token
         functionEntry
         (
             const functionName&,
+            const label lineNumber,
             const dictionary&,
             const Istream& is,
             const token&
@@ -91,6 +97,7 @@ protected:
         functionEntry
         (
             const functionName&,
+            const label lineNumber,
             const dictionary&,
             const Istream& is,
             const tokenList&
@@ -175,10 +182,11 @@ public:
             functionEntry,
             dictionary,
             (
+                const label lineNumber,
                 const dictionary& parentDict,
                 Istream& is
             ),
-            (parentDict, is)
+            (lineNumber, parentDict, is)
         );
 
 

@@ -167,13 +167,19 @@ public:
         ifeqEntry
         (
             const functionName& functionType,
+            const label lineNumber,
             const dictionary& parentDict,
             const Istream& is,
             const tokenList& tokens
         );
 
-        //- Construct from dictionary and Istream
-        ifeqEntry(const dictionary& parentDict, Istream& is);
+        //- Construct from line number, dictionary and Istream
+        ifeqEntry
+        (
+            const label lineNumber,
+            const dictionary& parentDict,
+            Istream& is
+        );
 
         //- Copy construct
         ifeqEntry(const ifeqEntry&) = default;

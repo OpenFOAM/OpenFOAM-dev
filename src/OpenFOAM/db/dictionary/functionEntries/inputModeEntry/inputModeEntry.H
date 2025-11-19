@@ -88,8 +88,13 @@ public:
 
     // Constructors
 
-        //- Construct from dictionary and Istream
-        inputModeEntry(const dictionary& parentDict, Istream& is);
+        //- Construct from line number, dictionary and Istream
+        inputModeEntry
+        (
+            const label lineNumber,
+            const dictionary& parentDict,
+            Istream& is
+        );
 
         //- Copy construct
         inputModeEntry(const inputModeEntry&) = default;

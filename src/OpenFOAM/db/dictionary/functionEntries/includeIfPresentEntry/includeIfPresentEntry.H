@@ -67,8 +67,13 @@ public:
 
     // Constructors
 
-        //- Construct from dictionary and Istream
-        includeIfPresentEntry(const dictionary& parentDict, Istream& is);
+        //- Construct from line number, dictionary and Istream
+        includeIfPresentEntry
+        (
+            const label lineNumber,
+            const dictionary& parentDict,
+            Istream& is
+        );
 
         //- Copy construct
         includeIfPresentEntry(const includeIfPresentEntry&) = default;

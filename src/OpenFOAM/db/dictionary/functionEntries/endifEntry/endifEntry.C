@@ -42,14 +42,13 @@ namespace functionEntries
 
 Foam::functionEntries::endifEntry::endifEntry
 (
+    const label lineNumber,
     const dictionary& parentDict,
     Istream& is
 )
 :
-    functionEntry(typeName, parentDict)
+    functionEntry(typeName, lineNumber, parentDict)
 {}
 
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 // ************************************************************************* //

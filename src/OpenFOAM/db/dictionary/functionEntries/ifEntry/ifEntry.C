@@ -51,6 +51,7 @@ namespace functionEntries
 
 Foam::functionEntries::ifEntry::ifEntry
 (
+    const label lineNumber,
     const dictionary& parentDict,
     Istream& is
 )
@@ -58,6 +59,7 @@ Foam::functionEntries::ifEntry::ifEntry
     ifeqEntry
     (
         typeName,
+        lineNumber,
         parentDict,
         is,
         functionEntry::readArgList(typeName, is)
@@ -86,7 +88,7 @@ bool Foam::functionEntries::ifEntry::execute
 )
 {
     DynamicList<filePos> stack(10);
-    return ifEntry(contextDict, is).execute
+    return ifEntry(is.lineNumber(), contextDict, is).execute
     (
         stack, contextDict, contextEntry, is
     );
