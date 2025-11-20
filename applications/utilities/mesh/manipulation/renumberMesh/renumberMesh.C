@@ -1005,10 +1005,6 @@ int main(int argc, char *argv[])
     }
 
 
-    // Update the hex-refinement data (if any)
-    refData.topoChange(map);
-
-
     {
         label band;
         scalar profile;
@@ -1113,6 +1109,7 @@ int main(int argc, char *argv[])
 
     mesh.write();
 
+    refData.topoChange(map);
     refData.write();
 
     if (cellProcAddressing.headerOk())
