@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -156,7 +156,7 @@ void Foam::chemistryReductionMethods::DRG<ThermoType>::reduceMechanism
             // Absolute value of aggregated value
             scalar curwA = ((wA[id]>=0) ? wA[id] : -wA[id]);
 
-            List<bool> deltaBi(this->nSpecie(), false);
+            boolList deltaBi(this->nSpecie(), false);
             FIFOStack<label> usedIndex;
             forAll(R.lhs(), j)
             {

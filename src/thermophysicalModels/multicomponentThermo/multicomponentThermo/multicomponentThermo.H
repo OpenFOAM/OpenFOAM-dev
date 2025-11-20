@@ -90,7 +90,7 @@ public:
         // Active/Inactive handling
 
             //- Access the specie active flags
-            virtual const List<bool>& speciesActive() const = 0;
+            virtual const boolList& speciesActive() const = 0;
 
             //- Synchronise the specie active flags
             virtual void syncSpeciesActive() const = 0;
@@ -323,9 +323,6 @@ protected:
         //- The index of the default specie
         label defaultSpeciei_;
 
-        //- List of specie active flags
-        List<bool> active_;
-
         //- Species mass fractions
         PtrList<volScalarField> Y_;
 
@@ -364,9 +361,6 @@ public:
 
         //- The index of the default specie
         virtual label defaultSpecie() const;
-
-        //- Access the specie active flags
-        virtual const List<bool>& speciesActive() const;
 
         //- Synchronise the specie active flags
         virtual void syncSpeciesActive() const;

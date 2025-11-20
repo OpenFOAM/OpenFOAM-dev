@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ Foam::chemistryReductionMethod<ThermoType>::nActiveSpecies() const
 
 
 template<class ThermoType>
-inline const Foam::List<bool>&
+inline const Foam::boolList&
 Foam::chemistryReductionMethod<ThermoType>::activeSpecies() const
 {
     return activeSpecies_;

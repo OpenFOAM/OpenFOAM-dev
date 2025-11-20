@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,6 +65,7 @@ void Foam::multicomponentMixture<ThermoType>::read
     specieThermos_.setSize(specieNames.size());
     specieCompositions_.setSize(specieNames.size());
     specieDictLocations_.setSize(specieNames.size());
+    active_.setSize(specieNames.size(), true);
 
     forAll(specieNames, speciei)
     {
@@ -114,6 +115,21 @@ Foam::multicomponentMixture<ThermoType>::specieComposition
     }
 
     return specieCompositions_[speciei];
+}
+
+
+template<class ThermoType>
+const Foam::boolList&
+Foam::multicomponentMixture<ThermoType>::speciesActive() const
+{
+    return active_;
+}
+
+
+template<class ThermoType>
+Foam::boolList& Foam::multicomponentMixture<ThermoType>::speciesActive()
+{
+    return active_;
 }
 
 

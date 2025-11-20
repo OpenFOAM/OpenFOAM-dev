@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,6 +40,7 @@ SourceFiles
 
 #include "dictionary.H"
 #include "DynamicField.H"
+#include "boolList.H"
 #include "Switch.H"
 #include "cpuTime.H"
 #include "OFstream.H"
@@ -76,7 +77,7 @@ protected:
         Field<bool> reactionsDisabled_;
 
         //- List of active species (active = true)
-        List<bool> activeSpecies_;
+        boolList activeSpecies_;
 
 
     //- Protected Member Functions
@@ -189,7 +190,7 @@ public:
         inline scalar tolerance() const;
 
         //- Return the active species
-        inline const List<bool>& activeSpecies() const;
+        inline const boolList& activeSpecies() const;
 
         //- Return whether or not a reaction is disabled
         inline bool reactionDisabled(const label i) const;

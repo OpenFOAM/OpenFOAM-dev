@@ -97,7 +97,6 @@ Foam::multicomponentThermo::implementation::implementation
       ? species_[defaultSpecieName_]
       : -1
     ),
-    active_(species_.size(), true),
     Y_(species_.size())
 {
     if
@@ -214,19 +213,12 @@ Foam::label Foam::multicomponentThermo::implementation::defaultSpecie() const
 }
 
 
-const Foam::List<bool>&
-Foam::multicomponentThermo::implementation::speciesActive() const
-{
-    return active_;
-}
-
-
 void Foam::multicomponentThermo::implementation::syncSpeciesActive() const
 {
     if (Pstream::parRun())
     {
-        List<bool>& speciesActive =
-            const_cast<List<bool>&>(this->speciesActive());
+        boolList& speciesActive =
+            const_cast<boolList&>(this->speciesActive());
 
         Pstream::listCombineGather(speciesActive, orEqOp<bool>());
         Pstream::listCombineScatter(speciesActive);

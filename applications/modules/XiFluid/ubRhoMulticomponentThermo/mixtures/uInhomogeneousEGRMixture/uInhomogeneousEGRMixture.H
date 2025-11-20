@@ -134,6 +134,20 @@ public:
             return {"fu", "egr"};
         }
 
+        //- Access the specie active flags
+        const boolList& speciesActive() const
+        {
+            NotImplemented;
+            return boolList::null();
+        }
+
+        //- Access the specie active flags
+        boolList& speciesActive()
+        {
+            NotImplemented;
+            return const_cast<boolList&>(boolList::null());
+        }
+
         const ThermoType& specieThermo(const label speciei) const;
 
         //- Return the fuel-oxidant equivalence ratio

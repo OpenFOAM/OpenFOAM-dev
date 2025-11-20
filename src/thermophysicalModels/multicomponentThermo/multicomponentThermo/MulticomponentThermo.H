@@ -114,6 +114,21 @@ public:
             virtual dimensionedScalar Wi(const label speciei) const;
 
 
+        // Specie active list
+
+            //- Access the specie active flags
+            virtual const boolList& speciesActive() const
+            {
+                return BaseThermo::mixtureType::speciesActive();
+            }
+
+            //- Access the specie active flags
+            virtual boolList& speciesActive()
+            {
+                return BaseThermo::mixtureType::speciesActive();
+            }
+
+
         // Specie thermodynamic properties
 
             //- Density [kg/m^3]

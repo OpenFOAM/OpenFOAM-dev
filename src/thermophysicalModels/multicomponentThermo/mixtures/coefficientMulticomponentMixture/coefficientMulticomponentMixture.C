@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,11 +49,15 @@ Foam::coefficientMulticomponentMixture<ThermoType>::thermoMixture
     const scalarFieldListSlice& Y
 ) const
 {
+    const boolList& active(this->speciesActive());
     mixture_ = Y[0]*this->specieThermos()[0];
 
     for (label i=1; i<Y.size(); i++)
     {
-        mixture_ += Y[i]*this->specieThermos()[i];
+        if (active[i])
+        {
+            mixture_ += Y[i]*this->specieThermos()[i];
+        }
     }
 
     return mixture_;

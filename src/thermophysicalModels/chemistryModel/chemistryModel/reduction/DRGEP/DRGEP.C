@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -154,7 +154,7 @@ void Foam::chemistryReductionMethods::DRGEP<ThermoType>::reduceMechanism
         {
             label ss = R.lhs()[s].index;
             scalar sl = -R.lhs()[s].stoichCoeff; // vAi = v''-v' => here -v'
-            List<bool> deltaBi(this->nSpecie(), false);
+            boolList deltaBi(this->nSpecie(), false);
             FIFOStack<label> usedIndex;
             forAll(R.lhs(), j)
             {
@@ -214,7 +214,7 @@ void Foam::chemistryReductionMethods::DRGEP<ThermoType>::reduceMechanism
         {
             label ss = R.rhs()[s].index;
             scalar sl = R.rhs()[s].stoichCoeff; // vAi = v''-v' => here v''
-            List<bool> deltaBi(this->nSpecie(), false);
+            boolList deltaBi(this->nSpecie(), false);
             FIFOStack<label> usedIndex;
             forAll(R.lhs(), j)
             {
@@ -323,7 +323,7 @@ void Foam::chemistryReductionMethods::DRGEP<ThermoType>::reduceMechanism
     // Using the rAB matrix (numerator and denominator separated)
     // compute the R value according to the search initiating set
     scalarField Rvalue(this->nSpecie(),0.0);
-    List<bool> disabledSpecies(this->nSpecie(),false);
+    boolList disabledSpecies(this->nSpecie(),false);
 
     // set all species to inactive and activate them according
     // to rAB and initial set
@@ -511,7 +511,7 @@ void Foam::chemistryReductionMethods::DRGEP<ThermoType>::reduceMechanism
             {
                 label ss = R.lhs()[s].index;
                 scalar sl = -R.lhs()[s].stoichCoeff; // vAi = v''-v' => here -v'
-                List<bool> deltaBi(this->nSpecie(), false);
+                boolList deltaBi(this->nSpecie(), false);
                 bool alreadyDisabled(false);
                 FIFOStack<label> usedIndex;
                 forAll(R.lhs(), j)
@@ -565,7 +565,7 @@ void Foam::chemistryReductionMethods::DRGEP<ThermoType>::reduceMechanism
             {
                 label ss = R.rhs()[s].index;
                 scalar sl = R.rhs()[s].stoichCoeff; // vAi = v''-v' => here v''
-                List<bool> deltaBi(this->nSpecie(), false);
+                boolList deltaBi(this->nSpecie(), false);
                 bool alreadyDisabled(false);
                 FIFOStack<label> usedIndex;
                 forAll(R.lhs(), j)
