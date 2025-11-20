@@ -37,6 +37,7 @@ Foam::bInhomogeneousMixture<ThermoType>::bInhomogeneousMixture
     fuel_("fuel", dict.subDict("fuel")),
     oxidant_("oxidant", dict.subDict("oxidant")),
     products_("products", dict.subDict("products")),
+    active_(1, true),
     mixture_("mixture", fuel_)
 {}
 

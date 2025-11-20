@@ -97,7 +97,7 @@ public:
         //- Return the specie names
         static wordList specieNames()
         {
-            return wordList();
+            return wordList::null();
         }
 
         //- Access the specie active flags

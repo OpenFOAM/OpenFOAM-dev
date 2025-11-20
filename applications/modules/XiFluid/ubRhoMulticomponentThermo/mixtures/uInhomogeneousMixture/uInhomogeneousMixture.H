@@ -86,6 +86,9 @@ private:
         //- Oxidant thermodynamic model
         thermoType oxidant_;
 
+        //- List of specie active flags
+        boolList active_;
+
         //- Mutable storage for the mixed thermodynamic model
         mutable thermoType mixture_;
 
@@ -127,15 +130,13 @@ public:
         //- Access the specie active flags
         const boolList& speciesActive() const
         {
-            NotImplemented;
-            return boolList::null();
+            return active_;
         }
 
         //- Access the specie active flags
         boolList& speciesActive()
         {
-            NotImplemented;
-            return const_cast<boolList&>(boolList::null());
+            return active_;
         }
 
         inline const ThermoType& specieThermo(const label speciei) const

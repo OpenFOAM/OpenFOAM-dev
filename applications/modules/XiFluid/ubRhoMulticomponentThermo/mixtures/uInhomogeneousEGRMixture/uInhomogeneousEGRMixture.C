@@ -38,6 +38,7 @@ Foam::uInhomogeneousEGRMixture<ThermoType>::uInhomogeneousEGRMixture
     fuel_("fuel", dict.subDict("fuel")),
     oxidant_("oxidant", dict.subDict("oxidant")),
     products_("products", dict.subDict("products")),
+    active_(2, true),
     mixture_("mixture", fuel_)
 {}
 

@@ -36,6 +36,7 @@ Foam::uInhomogeneousMixture<ThermoType>::uInhomogeneousMixture
     stoicRatio_(dict.lookup<scalar>("stoichiometricAirFuelMassRatio")),
     fuel_("fuel", dict.subDict("fuel")),
     oxidant_("oxidant", dict.subDict("oxidant")),
+    active_(1, true),
     mixture_("mixture", fuel_)
 {}
 
