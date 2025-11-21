@@ -22,12 +22,20 @@ linear
     writeControl writeTime;
 }
 
-parabolic
+linearPosition
 {
-    type        tracerCloud;
-    libs        ("libLagrangianCloud.so");
-    executeControl timeStep;
-    writeControl writeTime;
+    type        cloudPosition;
+    libs        ("libLagrangianCloudFunctionObjects.so");
+    cloud       linear;
+}
+
+linearPositionPlot
+{
+    type        LagrangianFieldValue;
+    libs        ("libLagrangianFunctionObjects.so");
+    Lagrangian  linear;
+    field       position;
+    operation   average;
 }
 
 linearAge
@@ -37,10 +45,26 @@ linearAge
     cloud       linear;
 }
 
+parabolic
+{
+    $linear;
+}
+
+parabolicPosition
+{
+    $linearPosition;
+    cloud       parabolic;
+}
+
+parabolicPositionPlot
+{
+    $linearPositionPlot;
+    Lagrangian  parabolic;
+}
+
 parabolicAge
 {
-    type        cloudAge;
-    libs        ("libLagrangianCloudFunctionObjects.so");
+    $linearAge;
     cloud       parabolic;
 }
 

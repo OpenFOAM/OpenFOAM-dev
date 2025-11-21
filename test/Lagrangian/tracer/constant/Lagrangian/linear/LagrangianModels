@@ -16,9 +16,9 @@ FoamFile
 
 pointInjection
 {
-    type        pointInjection;
-    point       (0 0.4 0);
-    numberRate  1000;
+    type        manualInjection;
+    position    (0 0.4 0);
+    positions   ($position);
 }
 
 
