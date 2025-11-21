@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "dummyEntry.H"
+#include "includeFuncEntry.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -47,12 +48,20 @@ Foam::functionEntries::dummyEntry::dummyEntry
 :
     functionEntry(functionType, is.lineNumber(), parentDict)
 {
+    if (functionType == includeFuncEntry::typeName_())
+    {
+        cerr<< "--> FOAM Error: Found " << functionType
+            << " while reading system/controlDict"
+            << std::endl
+            << "    Move the functions entries into the system/functions file"
+            << std::endl;
+        std::exit(1);
+    }
+
     // Get the rest of the line and discard
     string line;
     dynamic_cast<ISstream&>(is).getLine(line);
 }
 
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 // ************************************************************************* //
