@@ -1,25 +1,3 @@
-    const word constProp(initialConditions.lookup("constantProperty"));
-    if
-    (
-        (constProp != "pressure")
-     && (constProp != "volume")
-     && (constProp != "temperature")
-    )
-    {
-        FatalError
-            << "in initialConditions, unknown constantProperty type "
-            << constProp << nl
-            << "    Valid types are: pressure volume temperature."
-            << exit(FatalError);
-    }
-
-    const word fractionBasis(initialConditions.lookup("fractionBasis"));
-    if ((fractionBasis != "mass") && (fractionBasis != "mole"))
-    {
-        FatalError << "in initialConditions, unknown fractionBasis type " << nl
-            << "Valid types are: mass or mole."
-            << fractionBasis << exit(FatalError);
-    }
 
     const label nSpecie = Y.size();
     const scalarList W(::W(thermo));
@@ -78,26 +56,12 @@
         }
     }
 
-    const scalar h0 = ::h0(thermo, Y0, p[0], T0);
+    // const scalar h0 = ::h0(thermo, Y0, p[0], T0);
 
-    forAll(Y, i)
-    {
-        Y[i] = Y0[i];
-    }
+    // forAll(Y, i)
+    // {
+    //     Y[i] = Y0[i];
+    // }
 
-    thermo.he() = dimensionedScalar(dimEnergy/dimMass, h0);
-    thermo.correct();
-
-    rho = thermo.rho();
-    scalar rho0 = rho[0];
-    scalar u0 = h0 - p0/rho0;
-    scalar R0 = p0/(rho0*T0);
-    Rspecific[0] = R0;
-
-    scalar integratedHeat = 0.0;
-
-    Info << constProp << " will be held constant." << nl
-        << " p   = " << p[0] << " [Pa]" << nl
-        << " T   = " << thermo.T()[0] << " [K] " << nl
-        << " rho = " << rho[0] << " [kg/m^3]" << nl
-        << endl;
+    // thermo.he() = dimensionedScalar(dimEnergy/dimMass, h0);
+    // thermo.correct();
