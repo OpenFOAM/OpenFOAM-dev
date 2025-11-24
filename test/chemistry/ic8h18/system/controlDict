@@ -44,9 +44,4 @@ timePrecision   6;
 
 runTimeModifiable yes;
 
-DebugSwitches
-{
-    SolverPerformance   0;
-}
-
 // ************************************************************************* //

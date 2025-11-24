@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,10 +42,7 @@ namespace Foam
 namespace debug
 {
 
-//! \cond ignoreDocumentation
-//- Skip documentation : local scope only
-
-dictionary* controlDictPtr_(nullptr);
+dictionary* configDictPtr_(nullptr);
 
 dictionary* debugSwitchesPtr_(nullptr);
 dictionary* infoSwitchesPtr_(nullptr);
@@ -86,7 +83,7 @@ dictionary& optimisationDefaultSwitches()
 }
 
 
-// To ensure controlDictPtr_ is deleted at the end of the run
+// To ensure configDictPtr_ is deleted at the end of the run
 class deleteControlDictPtr
 {
 public:
@@ -104,7 +101,7 @@ public:
         infoSwitchesPtr_ = nullptr;
         optimisationSwitchesPtr_ = nullptr;
 
-        deleteDemandDrivenData(controlDictPtr_);
+        deleteDemandDrivenData(configDictPtr_);
     }
 };
 
@@ -117,21 +114,54 @@ deleteControlDictPtr deleteControlDictPtr_;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-Foam::dictionary& Foam::debug::controlDict()
+Foam::dictionary& Foam::debug::configDict()
 {
-    if (!controlDictPtr_)
+    if (!configDictPtr_)
     {
-        string controlDictString(getEnv("FOAM_CONTROLDICT"));
-        if (!controlDictString.empty())
+        string configDictString(getEnv("FOAM_CONFIGDICT"));
+        if (!configDictString.empty())
         {
             // Read from environment
-            IStringStream is(controlDictString);
-            controlDictPtr_ = new dictionary(is);
+            IStringStream is(configDictString);
+            configDictPtr_ = new dictionary(is);
         }
         else
         {
-            fileNameList controlDictFiles = findEtcFiles("controlDict", true);
-            controlDictPtr_ = new dictionary();
+            fileNameList configDictFiles = findEtcFiles("configDict", true);
+            configDictPtr_ = new dictionary();
+            forAllReverse(configDictFiles, cdfi)
+            {
+                IFstream ifs(configDictFiles[cdfi]);
+
+                if (!ifs.good())
+                {
+                    SafeFatalIOErrorInFunction
+                    (
+                        ifs,
+                        "Cannot open configDict"
+                    );
+                }
+                configDictPtr_->merge(dictionary(ifs));
+            }
+
+            // Check for legacy etc controlDict files
+            // for backwards compatibility
+            fileNameList controlDictFiles = findEtcFiles("controlDict", false);
+
+            if (controlDictFiles.size())
+            {
+                cout<< "--> FOAM Warning: legacy controlDict"
+                       " configuration files found:" << std::endl;
+
+                forAll(controlDictFiles, i)
+                {
+                    cout<< "    " << controlDictFiles[i] << std::endl;
+                }
+
+                cout<< "    Please rename these files controlDict -> configDict"
+                    << std::endl;
+            }
+
             forAllReverse(controlDictFiles, cdfi)
             {
                 IFstream ifs(controlDictFiles[cdfi]);
@@ -144,19 +174,21 @@ Foam::dictionary& Foam::debug::controlDict()
                         "Cannot open controlDict"
                     );
                 }
-                controlDictPtr_->merge(dictionary(ifs));
+                configDictPtr_->merge(dictionary(ifs));
             }
+
+
         }
 
-        IFstream ifs("system/controlDict");
+        IFstream ifs("system/configDict");
         if (ifs.good())
         {
             entry::disableFunctionEntries = true;
-            controlDictPtr_->merge(dictionary(ifs));
+            configDictPtr_->merge(dictionary(ifs));
         }
     }
 
-    return *controlDictPtr_;
+    return *configDictPtr_;
 }
 
 
@@ -168,7 +200,7 @@ Foam::dictionary& Foam::debug::switchSet
 {
     if (!subDictPtr)
     {
-        entry* ePtr = controlDict().lookupEntryPtr
+        entry* ePtr = configDict().lookupEntryPtr
         (
             subDictName, false, false
         );
@@ -177,7 +209,7 @@ Foam::dictionary& Foam::debug::switchSet
         {
             cerr<< "debug::switchSet(const char*, dictionary*&):\n"
                 << "    Cannot find " <<  subDictName << " in dictionary "
-                << controlDict().name().c_str()
+                << configDict().name().c_str()
                 << std::endl << std::endl;
 
             ::exit(1);
@@ -324,26 +356,26 @@ void listSwitches
 {
     if (unset)
     {
-        fileNameList controlDictFiles = findEtcFiles("controlDict", true);
-        dictionary controlDict;
-        forAllReverse(controlDictFiles, cdfi)
+        fileNameList configDictFiles = findEtcFiles("configDict", true);
+        dictionary configDict;
+        forAllReverse(configDictFiles, cdfi)
         {
-            controlDict.merge(dictionary(IFstream(controlDictFiles[cdfi])()));
+            configDict.merge(dictionary(IFstream(configDictFiles[cdfi])()));
         }
 
-        wordHashSet controlDictDebug
+        wordHashSet configDictDebug
         (
-            controlDict.subDict("DebugSwitches").sortedToc()
+            configDict.subDict("DebugSwitches").sortedToc()
         );
 
-        wordHashSet controlDictInfo
+        wordHashSet configDictInfo
         (
-            controlDict.subDict("InfoSwitches").sortedToc()
+            configDict.subDict("InfoSwitches").sortedToc()
         );
 
-        wordHashSet controlDictOpt
+        wordHashSet configDictOpt
         (
-            controlDict.subDict("OptimisationSwitches").sortedToc()
+            configDict.subDict("OptimisationSwitches").sortedToc()
         );
 
 
@@ -351,15 +383,15 @@ void listSwitches
 
         wordHashSet hashset;
         hashset = debugSwitches;
-        hashset -= controlDictDebug;
+        hashset -= configDictDebug;
         Info<< "Unset DebugSwitches" << hashset.sortedToc() << endl;
 
         hashset = infoSwitches;
-        hashset -= controlDictInfo;
+        hashset -= configDictInfo;
         Info<< "Unset InfoSwitches" << hashset.sortedToc() << endl;
 
         hashset = optSwitches;
-        hashset -= controlDictOpt;
+        hashset -= configDictOpt;
         Info<< "Unset OptimisationSwitches" << hashset.sortedToc() << endl;
     }
     else

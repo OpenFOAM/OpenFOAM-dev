@@ -234,7 +234,6 @@ $(dictionary)/mergeDictionaries/mergeDictionaries.C
 
 functionEntries = $(dictionary)/functionEntries
 $(functionEntries)/functionEntry/functionEntry.C
-$(functionEntries)/dummyEntry/dummyEntry.C
 $(functionEntries)/negEntry/negEntry.C
 $(functionEntries)/calcIncludeEntry/calcIncludeEntry.C
 $(functionEntries)/calcEntry/calcEntry.C

@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -104,8 +104,14 @@ do
         foamDictionary -entry stopAt -set nextWrite "$controlDict"
         foamDictionary -entry writeControl -set timeStep "$controlDict"
         foamDictionary -entry writeInterval -set 1 "$controlDict"
-        foamDictionary -entry DebugSwitches \
-            -merge "{ fvSchemes 1; solution 1; }" "$controlDict"
+
+        # Generate the system/configDict files except for controlDict.orig
+        if [ $(basename "$controlDict") == "controlDict" ]
+        then
+           configDict="$(dirname "$controlDict")"/configDict
+           foamDictionary -entry DebugSwitches \
+               -merge "{ fvSchemes 1; solution 1; }" -create "$configDict"
+        fi
     ) > /dev/null
 done
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,15 +54,15 @@ namespace debug
     //- The central control dictionary.
     //  Located in ~/.OpenFOAM/VERSION or $WM_PROJECT_DIR/etc
     //  \sa Foam::findEtcFile()
-    dictionary& controlDict();
+    dictionary& configDict();
 
-    //- The DebugSwitches sub-dictionary in the central controlDict.
+    //- The DebugSwitches sub-dictionary in the central configDict.
     dictionary& debugSwitches();
 
-    //- The InfoSwitches sub-dictionary in the central controlDict.
+    //- The InfoSwitches sub-dictionary in the central configDict.
     dictionary& infoSwitches();
 
-    //- The OptimisationSwitches sub-dictionary in the central controlDict.
+    //- The OptimisationSwitches sub-dictionary in the central configDict.
     dictionary& optimisationSwitches();
 
     //- Lookup debug switch or add default value.
@@ -107,7 +107,7 @@ namespace debug
         ];
     }
 
-    //- Internal function to lookup a sub-dictionary from controlDict.
+    //- Internal function to lookup a sub-dictionary from configDict.
     dictionary& switchSet(const char* subDictName, dictionary*& subDictPtr);
 
     //- List debug switches

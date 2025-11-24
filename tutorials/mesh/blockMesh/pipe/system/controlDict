@@ -16,13 +16,6 @@ FoamFile
 
 libs            ("libblockMesh.so");
 
-DebugSwitches
-{
-//    project 1;
-//    extrudedCircle 1;
-//    projectCurve 1;
-}
-
 startFrom       startTime;
 
 startTime       0;

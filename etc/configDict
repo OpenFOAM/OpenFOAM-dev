@@ -9,10 +9,8 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    object      controlDict;
+    object      configDict;
 }
-
-// NB: the #functions do not work here
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 Documentation

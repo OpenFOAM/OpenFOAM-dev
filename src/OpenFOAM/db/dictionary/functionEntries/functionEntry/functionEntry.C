@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "functionEntry.H"
-#include "dummyEntry.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -396,18 +395,19 @@ Foam::autoPtr<Foam::functionEntry> Foam::functionEntry::New
 )
 {
     // If the functionEntry constructor table has not yet been constructed
-    // ignore functionEntries by instantiating a dummy entry for each
+    // assume the dictionary is a configuration dictionary for which
+    // functionEntries are not supported
     if (!dictionaryConstructorTablePtr_)
     {
-        return autoPtr<functionEntry>
-        (
-            new functionEntries::dummyEntry
-            (
-                functionName(functionType),
-                parentDict,
-                is
-            )
-        );
+        cerr<< "--> FOAM Error: Found " << functionType
+            << " while reading configuration dictionary " << is.name()
+            << std::endl
+            << "    Function entries cannot be used in "
+               "configuration dictionaries."
+            << std::endl;
+        std::exit(1);
+
+        return autoPtr<functionEntry>(nullptr);
     }
 
     dictionaryConstructorTable::iterator cstrIter =

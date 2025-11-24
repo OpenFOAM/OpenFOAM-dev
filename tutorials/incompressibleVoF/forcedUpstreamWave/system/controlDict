@@ -52,10 +52,4 @@ maxAlphaCo      1;
 
 maxDeltaT       1;
 
-DebugSwitches
-{
-    // Write the forcing and damping scale and force fields
-    forcing   1;
-}
-
 // ************************************************************************* //

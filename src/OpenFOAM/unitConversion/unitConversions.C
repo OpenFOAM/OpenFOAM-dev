@@ -46,9 +46,9 @@ const dictionary& unitsDict()
         (
             debug::switchSet
             (
-                debug::controlDict().found("UnitConversions")
+                debug::configDict().found("UnitConversions")
               ? "UnitConversions"
-              : debug::controlDict().found("DimensionSets")
+              : debug::configDict().found("DimensionSets")
               ? "DimensionSets"
               : "UnitConversions",
                 cachedPtr
