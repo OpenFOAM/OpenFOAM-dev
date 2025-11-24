@@ -16,7 +16,6 @@ FoamFile
 
 type            heatSource;
 
-selectionMode   cellZone;
 cellZone        heater;
 
 Q               1000;

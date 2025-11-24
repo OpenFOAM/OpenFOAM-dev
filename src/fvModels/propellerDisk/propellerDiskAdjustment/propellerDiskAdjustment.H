@@ -47,7 +47,6 @@ Usage
     {
         type            propellerDisk;
 
-        selectionMode   cellZone;
         cellZone        propeller;
 
         normal          (1 0 0);    // Normal direction of the propeller
