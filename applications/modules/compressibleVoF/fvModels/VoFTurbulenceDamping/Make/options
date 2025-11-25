@@ -12,4 +12,5 @@ EXE_INC = \
     -I$(LIB_SRC)/MomentumTransportModels/phaseCompressible/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude
 
-LIB_LIBS =
+LIB_LIBS = \
+    -lcompressibleVoFSolver
