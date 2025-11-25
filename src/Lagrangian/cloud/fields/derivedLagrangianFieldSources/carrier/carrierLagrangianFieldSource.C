@@ -105,7 +105,7 @@ void Foam::carrierLagrangianFieldSource<Type>::write
     (
         os,
         "fieldc",
-        this->internalField().name(),
+        this->internalName(),
         fieldcName_
     );
 }

@@ -37,7 +37,12 @@ Foam::cloudLagrangianFieldSource::cloudLagrangianFieldSource
 )
 :
     field_(static_cast<const LagrangianFieldSourceBase&>(field)),
-    cloud_(field_.db().template lookupType<Foam::cloud>())
+    cloud_
+    (
+        field_.db().template foundType<Foam::cloud>()
+      ? field_.db().template lookupType<Foam::cloud>()
+      : NullObjectRef<Foam::cloud>()
+    )
 {}
 
 
@@ -46,7 +51,14 @@ Foam::cloudLagrangianFieldSource::cloudLagrangianFieldSource
 template<class Cloud, class ... Clouds>
 bool Foam::cloudLagrangianFieldSource::isCloud() const
 {
-    return CloudTypes<Cloud, Clouds ...>::isA(cloud_);
+    if (isNull(cloud_))
+    {
+        return false;
+    }
+    else
+    {
+        return CloudTypes<Cloud, Clouds ...>::isA(cloud_);
+    }
 }
 
 
@@ -80,6 +92,7 @@ const Cloud& Foam::cloudLagrangianFieldSource::cloud
 ) const
 {
     assertCloud<Cloud>(model, subMesh);
+
     return refCast<const Cloud>(cloud_);
 }
 
