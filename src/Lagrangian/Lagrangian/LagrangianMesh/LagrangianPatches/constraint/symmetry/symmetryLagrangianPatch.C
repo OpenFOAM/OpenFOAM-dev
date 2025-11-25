@@ -65,7 +65,7 @@ void Foam::symmetryLagrangianPatch::evaluate
 (
     PstreamBuffers&,
     LagrangianMesh& mesh,
-    const LagrangianScalarInternalDynamicField& fraction
+    const LagrangianInternalScalarDynamicField& fraction
 ) const
 {
     this->mesh().sub(mesh.states()) = LagrangianState::inCell;

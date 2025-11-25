@@ -1311,17 +1311,17 @@ Foam::labelList Foam::LagrangianMesh::subMeshGlobalSizes() const
 }
 
 
-Foam::tmp<Foam::LagrangianVectorInternalField>
+Foam::tmp<Foam::LagrangianInternalVectorField>
 Foam::LagrangianMesh::position() const
 {
-    tmp<LagrangianVectorInternalField> tresult =
-        LagrangianVectorInternalField::New
+    tmp<LagrangianInternalVectorField> tresult =
+        LagrangianInternalVectorField::New
         (
             positionName,
             *this,
             dimLength
         );
-    LagrangianVectorInternalField& result = tresult.ref();
+    LagrangianInternalVectorField& result = tresult.ref();
 
     forAll(coordinates_, i)
     {
@@ -1695,7 +1695,7 @@ void Foam::LagrangianMesh::track<Foam::LagrangianMesh::parabolicDisplacement>
 
 void Foam::LagrangianMesh::crossFaces
 (
-    const LagrangianScalarInternalDynamicField& fraction
+    const LagrangianInternalScalarDynamicField& fraction
 )
 {
     clearPosition();
@@ -1992,10 +1992,10 @@ void Foam::LagrangianMesh::remove(const label nElements)
 
 void Foam::LagrangianMesh::clearPosition()
 {
-    if (foundObject<LagrangianVectorInternalField>(positionName))
+    if (foundObject<LagrangianInternalVectorField>(positionName))
     {
-        LagrangianVectorInternalField& position =
-            lookupObjectRef<LagrangianVectorInternalField>(positionName);
+        LagrangianInternalVectorField& position =
+            lookupObjectRef<LagrangianInternalVectorField>(positionName);
 
         if (position.ownedByRegistry())
         {
@@ -2007,7 +2007,7 @@ void Foam::LagrangianMesh::clearPosition()
 
 void Foam::LagrangianMesh::storePosition()
 {
-    if (!this->foundObject<LagrangianVectorInternalField>(positionName))
+    if (!this->foundObject<LagrangianInternalVectorField>(positionName))
     {
         this->position().ptr()->store();
     }

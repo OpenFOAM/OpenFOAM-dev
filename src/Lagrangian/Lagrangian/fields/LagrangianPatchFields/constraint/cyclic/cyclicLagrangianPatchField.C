@@ -83,7 +83,7 @@ template<class Type>
 void Foam::cyclicLagrangianPatchField<Type>::evaluate
 (
     PstreamBuffers&,
-    const LagrangianScalarInternalDynamicField& fraction
+    const LagrangianInternalScalarDynamicField& fraction
 )
 {
     LagrangianPatchField<Type>::operator=

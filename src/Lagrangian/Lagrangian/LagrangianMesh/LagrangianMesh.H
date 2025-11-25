@@ -728,7 +728,7 @@ public:
             labelList subMeshGlobalSizes() const;
 
             //- Return the global positions
-            tmp<LagrangianVectorInternalField> position() const;
+            tmp<LagrangianInternalVectorField> position() const;
 
             //- Return the global positions for a sub-mesh
             tmp<LagrangianSubVectorField> position
@@ -784,7 +784,7 @@ public:
             //- Cross the faces
             void crossFaces
             (
-                const LagrangianScalarInternalDynamicField& fraction
+                const LagrangianInternalScalarDynamicField& fraction
             );
 
             //- Return the sub-mesh associated with an injection of a given

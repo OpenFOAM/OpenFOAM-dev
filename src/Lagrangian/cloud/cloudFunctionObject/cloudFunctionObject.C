@@ -100,7 +100,7 @@ void Foam::functionObjects::cloudFunctionObject::calculate
 
 void Foam::functionObjects::cloudFunctionObject::preCrossFaces
 (
-    const LagrangianScalarInternalDynamicField& fraction
+    const LagrangianInternalScalarDynamicField& fraction
 )
 {}
 
@@ -121,7 +121,7 @@ void Foam::functionObjects::cloudFunctionObject::postCrossFaces
 
 void Foam::functionObjects::cloudFunctionObject::postCrossFaces
 (
-    const LagrangianScalarInternalDynamicField& fraction
+    const LagrangianInternalScalarDynamicField& fraction
 )
 {}
 

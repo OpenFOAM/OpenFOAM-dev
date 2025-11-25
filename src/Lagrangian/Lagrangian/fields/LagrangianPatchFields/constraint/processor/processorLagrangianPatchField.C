@@ -121,7 +121,7 @@ template<class Type>
 void Foam::processorLagrangianPatchField<Type>::initEvaluate
 (
     PstreamBuffers& pBufs,
-    const LagrangianScalarInternalDynamicField& fraction
+    const LagrangianInternalScalarDynamicField& fraction
 )
 {
     UOPstream(processorPatch_.processorPatch().neighbProcNo(), pBufs)()
@@ -133,7 +133,7 @@ template<class Type>
 void Foam::processorLagrangianPatchField<Type>::evaluate
 (
     PstreamBuffers& pBufs,
-    const LagrangianScalarInternalDynamicField& fraction
+    const LagrangianInternalScalarDynamicField& fraction
 )
 {
     if (notNull(this->internalField_))

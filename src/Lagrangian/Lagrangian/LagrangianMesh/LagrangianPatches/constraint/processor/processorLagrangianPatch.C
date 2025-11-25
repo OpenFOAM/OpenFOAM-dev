@@ -76,7 +76,7 @@ void Foam::processorLagrangianPatch::initEvaluate
 (
     PstreamBuffers& pBufs,
     LagrangianMesh& mesh,
-    const LagrangianScalarInternalDynamicField& fraction
+    const LagrangianInternalScalarDynamicField& fraction
 ) const
 {
     const LagrangianSubMesh& patchMesh = this->mesh();
@@ -116,7 +116,7 @@ void Foam::processorLagrangianPatch::evaluate
 (
     PstreamBuffers& pBufs,
     LagrangianMesh& mesh,
-    const LagrangianScalarInternalDynamicField& fraction
+    const LagrangianInternalScalarDynamicField& fraction
 ) const
 {
     // Receive
@@ -159,7 +159,7 @@ void Foam::processorLagrangianPatch::evaluate
     mesh.appendSpecifiedField<scalar, LagrangianInternalDynamicField>
     (
         receiveMeshPtr_(),
-        const_cast<LagrangianScalarInternalDynamicField&>(fraction),
+        const_cast<LagrangianInternalScalarDynamicField&>(fraction),
         receiveFraction
     );
 

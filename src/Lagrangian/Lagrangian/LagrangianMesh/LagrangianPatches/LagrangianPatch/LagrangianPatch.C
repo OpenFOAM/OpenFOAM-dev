@@ -121,7 +121,7 @@ void Foam::LagrangianPatch::initEvaluate
 (
     PstreamBuffers&,
     LagrangianMesh&,
-    const LagrangianScalarInternalDynamicField& fraction
+    const LagrangianInternalScalarDynamicField& fraction
 ) const
 {}
 
@@ -130,7 +130,7 @@ void Foam::LagrangianPatch::evaluate
 (
     PstreamBuffers&,
     LagrangianMesh& mesh,
-    const LagrangianScalarInternalDynamicField& fraction
+    const LagrangianInternalScalarDynamicField& fraction
 ) const
 {
     this->mesh().sub(mesh.states()) = LagrangianState::toBeRemoved;

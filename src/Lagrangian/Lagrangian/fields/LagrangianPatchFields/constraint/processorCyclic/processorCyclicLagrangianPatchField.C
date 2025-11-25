@@ -101,7 +101,7 @@ template<class Type>
 void Foam::processorCyclicLagrangianPatchField<Type>::evaluate
 (
     PstreamBuffers& pBufs,
-    const LagrangianScalarInternalDynamicField& fraction
+    const LagrangianInternalScalarDynamicField& fraction
 )
 {
     processorLagrangianPatchField<Type>::evaluate(pBufs, fraction);

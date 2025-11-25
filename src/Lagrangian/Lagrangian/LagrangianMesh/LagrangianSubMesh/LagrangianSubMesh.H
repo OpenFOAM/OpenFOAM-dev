@@ -203,7 +203,7 @@ public:
             template<class FieldType>
             tmp<FieldType> nf
             (
-                const LagrangianScalarInternalDynamicField& fraction
+                const LagrangianInternalScalarDynamicField& fraction
             ) const;
 
             //- Return the face velocities at the Lagrangian locations
@@ -217,7 +217,7 @@ public:
             template<class FieldType>
             tmp<FieldType> Uf
             (
-                const LagrangianScalarInternalDynamicField& fraction
+                const LagrangianInternalScalarDynamicField& fraction
             ) const;
 
 
@@ -245,13 +245,13 @@ tmp<LagrangianSubVectorField> LagrangianSubMesh::nf
 template<>
 tmp<vectorField> LagrangianSubMesh::nf
 (
-    const LagrangianScalarInternalDynamicField& fraction
+    const LagrangianInternalScalarDynamicField& fraction
 ) const;
 
 template<>
 tmp<LagrangianSubVectorField> LagrangianSubMesh::nf
 (
-    const LagrangianScalarInternalDynamicField& fraction
+    const LagrangianInternalScalarDynamicField& fraction
 ) const;
 
 template<>
@@ -269,13 +269,13 @@ tmp<LagrangianSubVectorField> LagrangianSubMesh::Uf
 template<>
 tmp<vectorField> LagrangianSubMesh::Uf
 (
-    const LagrangianScalarInternalDynamicField& fraction
+    const LagrangianInternalScalarDynamicField& fraction
 ) const;
 
 template<>
 tmp<LagrangianSubVectorField> LagrangianSubMesh::Uf
 (
-    const LagrangianScalarInternalDynamicField& fraction
+    const LagrangianInternalScalarDynamicField& fraction
 ) const;
 
 

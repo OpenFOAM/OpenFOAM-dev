@@ -79,7 +79,7 @@ template<class Type>
 void Foam::symmetryPlaneLagrangianPatchField<Type>::evaluate
 (
     PstreamBuffers&,
-    const LagrangianScalarInternalDynamicField& fraction
+    const LagrangianInternalScalarDynamicField& fraction
 )
 {
     LagrangianPatchField<Type>::operator=

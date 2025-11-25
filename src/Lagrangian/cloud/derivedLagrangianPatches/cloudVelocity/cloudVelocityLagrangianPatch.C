@@ -66,7 +66,7 @@ void Foam::cloudVelocityLagrangianPatch::evaluate
 (
     PstreamBuffers& pBufs,
     LagrangianMesh& mesh,
-    const LagrangianScalarInternalDynamicField& fraction
+    const LagrangianInternalScalarDynamicField& fraction
 ) const
 {
     const LagrangianVectorDynamicField& U = mesh.lookupType<cloud>().U;

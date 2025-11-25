@@ -75,7 +75,7 @@ void Foam::nonConformalProcessorCyclicLagrangianPatch::initEvaluate
 (
     PstreamBuffers& pBufs,
     LagrangianMesh& mesh,
-    const LagrangianScalarInternalDynamicField& fraction
+    const LagrangianInternalScalarDynamicField& fraction
 ) const
 {
     const LagrangianSubMesh& patchMesh = this->mesh();
@@ -108,7 +108,7 @@ void Foam::nonConformalProcessorCyclicLagrangianPatch::evaluate
 (
     PstreamBuffers& pBufs,
     LagrangianMesh& mesh,
-    const LagrangianScalarInternalDynamicField& fraction
+    const LagrangianInternalScalarDynamicField& fraction
 ) const
 {
     const meshSearch& searchEngine = meshSearch::New(mesh.mesh());
@@ -202,7 +202,7 @@ void Foam::nonConformalProcessorCyclicLagrangianPatch::evaluate
     mesh.appendSpecifiedField<scalar, LagrangianInternalDynamicField>
     (
         receiveMeshPtr_(),
-        const_cast<LagrangianScalarInternalDynamicField&>(fraction),
+        const_cast<LagrangianInternalScalarDynamicField&>(fraction),
         receiveFraction
     );
 

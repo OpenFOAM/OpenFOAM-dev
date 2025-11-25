@@ -378,7 +378,7 @@ template<class Type>
 void Foam::LagrangianPatchField<Type>::initEvaluate
 (
     PstreamBuffers&,
-    const LagrangianScalarInternalDynamicField& fraction
+    const LagrangianInternalScalarDynamicField& fraction
 )
 {}
 
@@ -387,7 +387,7 @@ template<class Type>
 void Foam::LagrangianPatchField<Type>::evaluate
 (
     PstreamBuffers&,
-    const LagrangianScalarInternalDynamicField& fraction
+    const LagrangianInternalScalarDynamicField& fraction
 )
 {}
 

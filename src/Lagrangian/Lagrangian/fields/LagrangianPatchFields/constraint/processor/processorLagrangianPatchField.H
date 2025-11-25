@@ -175,14 +175,14 @@ public:
         virtual void initEvaluate
         (
             PstreamBuffers&,
-            const LagrangianScalarInternalDynamicField& fraction
+            const LagrangianInternalScalarDynamicField& fraction
         );
 
         //- Evaluate the patch field
         virtual void evaluate
         (
             PstreamBuffers&,
-            const LagrangianScalarInternalDynamicField& fraction
+            const LagrangianInternalScalarDynamicField& fraction
         );
 
 

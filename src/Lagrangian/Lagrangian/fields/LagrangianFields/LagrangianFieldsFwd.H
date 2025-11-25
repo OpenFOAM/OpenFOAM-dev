@@ -65,13 +65,13 @@ using LagrangianInternalDynamicField =
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-typedef LagrangianInternalField<label> LagrangianLabelInternalField;
-typedef LagrangianInternalField<scalar> LagrangianScalarInternalField;
-typedef LagrangianInternalField<vector> LagrangianVectorInternalField;
+typedef LagrangianInternalField<label> LagrangianInternalLabelField;
+typedef LagrangianInternalField<scalar> LagrangianInternalScalarField;
+typedef LagrangianInternalField<vector> LagrangianInternalVectorField;
 typedef LagrangianInternalField<sphericalTensor>
-    LagrangianSphericalTensorInternalField;
-typedef LagrangianInternalField<symmTensor> LagrangianSymmTensorInternalField;
-typedef LagrangianInternalField<tensor> LagrangianTensorInternalField;
+    LagrangianInternalSphericalTensorField;
+typedef LagrangianInternalField<symmTensor> LagrangianInternalSymmTensorField;
+typedef LagrangianInternalField<tensor> LagrangianInternalTensorField;
 
 typedef LagrangianField<label> LagrangianLabelField;
 typedef LagrangianField<scalar> LagrangianScalarField;
@@ -81,17 +81,17 @@ typedef LagrangianField<symmTensor> LagrangianSymmTensorField;
 typedef LagrangianField<tensor> LagrangianTensorField;
 
 typedef LagrangianInternalDynamicField<label>
-    LagrangianLabelInternalDynamicField;
+    LagrangianInternalLabelDynamicField;
 typedef LagrangianInternalDynamicField<scalar>
-    LagrangianScalarInternalDynamicField;
+    LagrangianInternalScalarDynamicField;
 typedef LagrangianInternalDynamicField<vector>
-    LagrangianVectorInternalDynamicField;
+    LagrangianInternalVectorDynamicField;
 typedef LagrangianInternalDynamicField<sphericalTensor>
-    LagrangianSphericalTensorInternalDynamicField;
+    LagrangianInternalSphericalTensorDynamicField;
 typedef LagrangianInternalDynamicField<symmTensor>
-    LagrangianSymmTensorInternalDynamicField;
+    LagrangianInternalSymmTensorDynamicField;
 typedef LagrangianInternalDynamicField<tensor>
-    LagrangianTensorInternalDynamicField;
+    LagrangianInternalTensorDynamicField;
 
 typedef LagrangianDynamicField<label> LagrangianLabelDynamicField;
 typedef LagrangianDynamicField<scalar> LagrangianScalarDynamicField;

@@ -81,7 +81,7 @@ void Foam::cyclicLagrangianPatch::evaluate
 (
     PstreamBuffers&,
     LagrangianMesh& mesh,
-    const LagrangianScalarInternalDynamicField& fraction
+    const LagrangianInternalScalarDynamicField& fraction
 ) const
 {
     const LagrangianSubMesh& patchMesh = this->mesh();

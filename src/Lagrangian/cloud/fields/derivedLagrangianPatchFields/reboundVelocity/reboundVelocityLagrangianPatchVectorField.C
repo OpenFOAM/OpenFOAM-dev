@@ -72,7 +72,7 @@ reboundVelocityLagrangianPatchVectorField
 void Foam::reboundVelocityLagrangianPatchVectorField::evaluate
 (
     PstreamBuffers& pBufs,
-    const LagrangianScalarInternalDynamicField& fraction
+    const LagrangianInternalScalarDynamicField& fraction
 )
 {
     cloudVelocityLagrangianPatchVectorField::evaluate(pBufs, fraction);

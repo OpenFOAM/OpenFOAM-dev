@@ -274,7 +274,7 @@ Foam::LagrangianSubMesh Foam::Lagrangian::patchInjection::modify
             injectionMesh.start()
         ).sub
         (
-            mesh.lookupObject<LagrangianScalarInternalDynamicField>
+            mesh.lookupObject<LagrangianInternalScalarDynamicField>
             (
                 LagrangianMesh::fractionName
             )

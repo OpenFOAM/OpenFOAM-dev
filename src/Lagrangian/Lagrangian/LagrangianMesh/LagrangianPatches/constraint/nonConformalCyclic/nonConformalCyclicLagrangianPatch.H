@@ -123,7 +123,7 @@ public:
         (
             PstreamBuffers&,
             LagrangianMesh&,
-            const LagrangianScalarInternalDynamicField& fraction
+            const LagrangianInternalScalarDynamicField& fraction
         ) const;
 
         //- Update following partitioning of the mesh

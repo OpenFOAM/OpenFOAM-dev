@@ -107,7 +107,7 @@ public:
         (
             PstreamBuffers&,
             LagrangianMesh&,
-            const LagrangianScalarInternalDynamicField& fraction
+            const LagrangianInternalScalarDynamicField& fraction
         ) const;
 
         //- Evaluate changes in elements that have tracked to this patch
@@ -115,7 +115,7 @@ public:
         (
             PstreamBuffers&,
             LagrangianMesh&,
-            const LagrangianScalarInternalDynamicField& fraction
+            const LagrangianInternalScalarDynamicField& fraction
         ) const;
 };
 

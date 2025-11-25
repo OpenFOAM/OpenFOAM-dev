@@ -140,7 +140,7 @@ Foam::CarrierFieldBase<Type>::interpolate
         const SubField<scalar> fraction =
             subMesh.sub
             (
-                mesh.lookupObject<LagrangianScalarInternalDynamicField>
+                mesh.lookupObject<LagrangianInternalScalarDynamicField>
                 (
                     LagrangianMesh::fractionName
                 ).primitiveField()
@@ -214,7 +214,7 @@ Foam::CarrierFieldGradBase<Type>::interpolateGrad
             subMesh.sub
             (
                 mesh
-               .lookupObject<LagrangianScalarInternalDynamicField>
+               .lookupObject<LagrangianInternalScalarDynamicField>
                 (
                     LagrangianMesh::fractionName
                 ).primitiveField()
@@ -253,7 +253,7 @@ bool Foam::CarrierFieldBase<Type>::useOldTime(const LagrangianMesh& mesh) const
     return
         psi().hasStoredOldTimes()
      && psi().nOldTimes(false)
-     && mesh.foundObject<LagrangianScalarInternalDynamicField>
+     && mesh.foundObject<LagrangianInternalScalarDynamicField>
         (
             LagrangianMesh::fractionName
         );

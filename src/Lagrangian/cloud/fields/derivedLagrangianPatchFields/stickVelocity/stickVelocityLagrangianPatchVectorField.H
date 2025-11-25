@@ -106,7 +106,7 @@ public:
         virtual void evaluate
         (
             PstreamBuffers&,
-            const LagrangianScalarInternalDynamicField& fraction
+            const LagrangianInternalScalarDynamicField& fraction
         );
 
         //- Return the state after interaction with this patch

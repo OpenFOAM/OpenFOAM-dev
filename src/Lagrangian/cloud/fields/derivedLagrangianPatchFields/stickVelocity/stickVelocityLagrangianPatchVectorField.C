@@ -31,7 +31,7 @@ License
 void Foam::stickVelocityLagrangianPatchVectorField::evaluate
 (
     PstreamBuffers& pBufs,
-    const LagrangianScalarInternalDynamicField& fraction
+    const LagrangianInternalScalarDynamicField& fraction
 )
 {
     cloudVelocityLagrangianPatchVectorField::evaluate(pBufs, fraction);

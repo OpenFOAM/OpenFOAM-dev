@@ -118,7 +118,7 @@ void Foam::cloudFunctionObjectUList::calculate
 
 void Foam::cloudFunctionObjectUList::preCrossFaces
 (
-    const LagrangianScalarInternalDynamicField& fraction
+    const LagrangianInternalScalarDynamicField& fraction
 )
 {
     forAll(*this, cloudFunctioni)
@@ -172,7 +172,7 @@ void Foam::cloudFunctionObjectUList::postCrossFaces
 
 void Foam::cloudFunctionObjectUList::postCrossFaces
 (
-    const LagrangianScalarInternalDynamicField& fraction
+    const LagrangianInternalScalarDynamicField& fraction
 )
 {
     if (size())

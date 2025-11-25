@@ -62,7 +62,7 @@ Foam::Function1LagrangianFieldSource::value
 
     if
     (
-        db.template foundObject<LagrangianScalarInternalDynamicField>
+        db.template foundObject<LagrangianInternalScalarDynamicField>
         (
             LagrangianMesh::fractionName
         )
@@ -72,7 +72,7 @@ Foam::Function1LagrangianFieldSource::value
         (
             subMesh.sub
             (
-                db.template lookupObject<LagrangianScalarInternalDynamicField>
+                db.template lookupObject<LagrangianInternalScalarDynamicField>
                 (
                     LagrangianMesh::fractionName
                 )

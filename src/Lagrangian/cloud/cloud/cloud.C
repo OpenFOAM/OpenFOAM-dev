@@ -650,7 +650,7 @@ void Foam::cloud::solve(const bool initial, const bool final)
 
     // Initialise the tracked fraction to zero, representing all particles
     // being at the start of the time-step
-    LagrangianScalarInternalDynamicField fraction
+    LagrangianInternalScalarDynamicField fraction
     (
         IOobject
         (

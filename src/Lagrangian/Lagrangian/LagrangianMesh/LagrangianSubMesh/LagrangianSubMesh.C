@@ -183,7 +183,7 @@ Foam::tmp<Foam::LagrangianSubVectorField> Foam::LagrangianSubMesh::nf
 template<>
 Foam::tmp<Foam::vectorField> Foam::LagrangianSubMesh::nf
 (
-    const LagrangianScalarInternalDynamicField& fraction
+    const LagrangianInternalScalarDynamicField& fraction
 ) const
 {
     tmp<vectorField> tnf(new vectorField(size()));
@@ -210,7 +210,7 @@ Foam::tmp<Foam::vectorField> Foam::LagrangianSubMesh::nf
 template<>
 Foam::tmp<Foam::LagrangianSubVectorField> Foam::LagrangianSubMesh::nf
 (
-    const LagrangianScalarInternalDynamicField& fraction
+    const LagrangianInternalScalarDynamicField& fraction
 ) const
 {
     return
@@ -275,7 +275,7 @@ Foam::tmp<Foam::LagrangianSubVectorField> Foam::LagrangianSubMesh::Uf
 template<>
 Foam::tmp<Foam::vectorField> Foam::LagrangianSubMesh::Uf
 (
-    const LagrangianScalarInternalDynamicField& fraction
+    const LagrangianInternalScalarDynamicField& fraction
 ) const
 {
     tmp<vectorField> tUf(new vectorField(size()));
@@ -302,7 +302,7 @@ Foam::tmp<Foam::vectorField> Foam::LagrangianSubMesh::Uf
 template<>
 Foam::tmp<Foam::LagrangianSubVectorField> Foam::LagrangianSubMesh::Uf
 (
-    const LagrangianScalarInternalDynamicField& fraction
+    const LagrangianInternalScalarDynamicField& fraction
 ) const
 {
     return

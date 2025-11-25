@@ -74,7 +74,7 @@ bool Foam::functionObjects::cloudVolumeFraction::execute()
 {
     const Foam::cloud& c = cloud();
 
-    const LagrangianScalarInternalField v
+    const LagrangianInternalScalarField v
     (
         "v",
         isCloud<clouds::grouped>()

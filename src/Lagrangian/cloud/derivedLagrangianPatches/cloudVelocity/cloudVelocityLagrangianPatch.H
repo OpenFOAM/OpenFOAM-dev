@@ -82,7 +82,7 @@ public:
         (
             PstreamBuffers&,
             LagrangianMesh&,
-            const LagrangianScalarInternalDynamicField& fraction
+            const LagrangianInternalScalarDynamicField& fraction
         ) const;
 };
 

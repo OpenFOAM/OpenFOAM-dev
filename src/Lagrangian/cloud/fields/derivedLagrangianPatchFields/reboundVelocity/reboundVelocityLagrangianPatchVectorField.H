@@ -140,7 +140,7 @@ public:
         virtual void evaluate
         (
             PstreamBuffers&,
-            const LagrangianScalarInternalDynamicField& fraction
+            const LagrangianInternalScalarDynamicField& fraction
         );
 
         //- Write

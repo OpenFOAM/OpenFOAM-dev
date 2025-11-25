@@ -94,7 +94,7 @@ public:
         //- Hook before face crossings
         virtual void preCrossFaces
         (
-            const LagrangianScalarInternalDynamicField& fraction
+            const LagrangianInternalScalarDynamicField& fraction
         );
 
         //- Hook before face crossings of a specific sub-mesh
@@ -112,7 +112,7 @@ public:
         //- Hook after face crossings
         virtual void postCrossFaces
         (
-            const LagrangianScalarInternalDynamicField& fraction
+            const LagrangianInternalScalarDynamicField& fraction
         );
 
 

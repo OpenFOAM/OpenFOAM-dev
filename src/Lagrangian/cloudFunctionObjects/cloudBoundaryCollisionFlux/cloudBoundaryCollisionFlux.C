@@ -100,7 +100,7 @@ void Foam::functionObjects::cloudBoundaryCollisionFlux::preSolve()
 
 void Foam::functionObjects::cloudBoundaryCollisionFlux::preCrossFaces
 (
-    const LagrangianScalarInternalDynamicField& fraction
+    const LagrangianInternalScalarDynamicField& fraction
 )
 {
     faceiPtr_.set
@@ -210,7 +210,7 @@ void Foam::functionObjects::cloudBoundaryCollisionFlux::postCrossFaces
 
 void Foam::functionObjects::cloudBoundaryCollisionFlux::postCrossFaces
 (
-    const LagrangianScalarInternalDynamicField& fraction
+    const LagrangianInternalScalarDynamicField& fraction
 )
 {
     faceiPtr_.clear();

@@ -139,7 +139,7 @@ vtkPolyData* Foam::vtkPVFoam::LagrangianVTKMesh
       ? LreconstructorPtr().completeMesh()
       : LmeshPtr();
 
-    const LagrangianVectorInternalField Lpositions(Lmesh.position());
+    const LagrangianInternalVectorField Lpositions(Lmesh.position());
 
     vtkmesh = vtkPolyData::New();
 
