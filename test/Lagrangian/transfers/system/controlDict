@@ -52,9 +52,4 @@ runTimeModifiable yes;
 
 adjustTimeStep  no;
 
-DebugSwitches
-{
-    //cloud       1;
-}
-
 // ************************************************************************* //
