@@ -127,11 +127,13 @@ void Foam::mixedEnergyFvPatchScalarField::updateCoeffs()
             refCast<mixedFvPatchScalarField>(Tp);
 
         Tm.evaluate();
+        const scalarField Cpm(thermo.Cpv(Tm, patchi));
 
         valueFraction() = Tm.valueFraction();
-        refValue() = thermo.he(Tm.refValue(), patchi);
+        refValue() = Cpm*(Tm.refValue()-Tm.patchInternalField())
+                   + this->patchInternalField();
         refGrad() =
-            thermo.Cpv(Tm, patchi)*Tm.refGrad()
+            Cpm*Tm.refGrad()
           + patch().deltaCoeffs()*
             (
                 thermo.he(Tm, patchi)
