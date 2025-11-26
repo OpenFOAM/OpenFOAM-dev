@@ -46,7 +46,7 @@ solvers
         relTol          0;
     }
 
-    p
+    "(p|Phi)"
     {
         solver          GAMG;
         tolerance       0;
@@ -88,6 +88,11 @@ PIMPLE
     nCorrectors     2;
     nNonOrthogonalCorrectors 0;
     momentumPredictor yes;
+}
+
+potentialFlow
+{
+    nNonOrthogonalCorrectors 0;
 }
 
 relaxationFactors

@@ -8,6 +8,8 @@ runApplication blockMesh
 runApplication createZones
 runApplication createBaffles
 
+runApplication potentialFoam
+rm -f 0/phi
 runApplication foamRun
 
 #------------------------------------------------------------------------------
