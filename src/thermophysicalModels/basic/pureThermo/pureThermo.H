@@ -25,7 +25,7 @@ Class
     Foam::pureThermo
 
 Description
-    Base-class for multi-component thermodynamic properties.
+    Base-class for pure (i.e., single-component) thermodynamic properties.
 
 See also
     Foam::basicThermo
