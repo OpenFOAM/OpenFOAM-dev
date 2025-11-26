@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,16 +27,7 @@ License
 #include "wordIOList.H"
 #include "compileTemplate.H"
 
-// * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
-
-// Convert multiComponent -> multicomponent for backward-compatibility
-inline Foam::word mixtureName(const Foam::dictionary& thermoTypeDict)
-{
-    return
-        thermoTypeDict.lookup<Foam::word>("mixture")
-       .replace("multiComponent", "multicomponent");
-}
-
+// * * * * * * * * * * * Private Static Member Functions * * * * * * * * * * //
 
 template<class Thermo, class Table>
 typename Table::iterator Foam::basicThermo::lookupCstrIter
@@ -123,7 +114,7 @@ typename Table::iterator Foam::basicThermo::lookupCstrIter
             {
                 const wordList names
                 (
-                    Thermo::splitThermoName(validThermoTypeNames[i], nCmpt)
+                    splitThermoName(validThermoTypeNames[i], nCmpt)
                 );
 
                 if (names.size())
@@ -142,6 +133,8 @@ typename Table::iterator Foam::basicThermo::lookupCstrIter
     return cstrIter;
 }
 
+
+// * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
 
 template<class Thermo, class Table>
 typename Table::iterator Foam::basicThermo::lookupCstrIter
@@ -277,7 +270,6 @@ const Foam::basicThermo& Foam::basicThermo::lookupThermo
 
     return f.db().template lookupObject<basicThermo>(name);
 }
-
 
 
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //

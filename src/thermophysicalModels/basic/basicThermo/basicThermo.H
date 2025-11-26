@@ -77,17 +77,10 @@ namespace Foam
 
 class basicThermo
 {
-protected:
+    // Private Static Member Functions
 
-    // Protected Static Member Functions
-
-        //- Lookup and the named field, or construct it as MUST-READ if it is
-        //  not found, and return a reference
-        static volScalarField& lookupOrConstruct
-        (
-            const fvMesh& mesh,
-            const char* name
-        );
+        // Convert multiComponent -> multicomponent for backward-compatibility
+        static word mixtureName(const Foam::dictionary& thermoTypeDict);
 
         //- Get the constructor iterator for the given thermo dictionary and
         //  entries and constructor iterator table
@@ -101,13 +94,17 @@ protected:
             const word& thermoTypeName
         );
 
-        //- Get the constructor iterator for the given thermo dictionary and
-        //  constructor iterator table
-        template<class Thermo, class Table>
-        static typename Table::iterator lookupCstrIter
+
+protected:
+
+    // Protected Static Member Functions
+
+        //- Lookup and the named field, or construct it as MUST-READ if it is
+        //  not found, and return a reference
+        static volScalarField& lookupOrConstruct
         (
-            const dictionary& thermoDict,
-            Table* tablePtr
+            const fvMesh& mesh,
+            const char* name
         );
 
 
@@ -156,6 +153,15 @@ public:
         {
             return IOobject::groupName(name, phaseName);
         }
+
+        //- Get the constructor iterator for the given thermo dictionary and
+        //  constructor iterator table
+        template<class Thermo, class Table>
+        static typename Table::iterator lookupCstrIter
+        (
+            const dictionary& thermoDict,
+            Table* tablePtr
+        );
 
         //- Lookup the thermo associated with the given field
         template<class FieldType>
