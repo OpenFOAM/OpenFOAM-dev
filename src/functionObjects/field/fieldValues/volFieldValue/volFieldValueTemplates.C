@@ -221,7 +221,9 @@ bool Foam::functionObjects::fieldValues::volFieldValue::processValuesTypeType
         }
         case operationType::CoV:
         {
-            const Type meanValue = gSum(values*V)/zone_.V();
+            const scalar sumWeightsV = max(gSum(weights*V), vSmall);
+
+            const Type meanValue = gSum(weights*V*values)/sumWeightsV;
 
             const label nComp = pTraits<Type>::nComponents;
 
@@ -233,7 +235,7 @@ bool Foam::functionObjects::fieldValues::volFieldValue::processValuesTypeType
                 setComponent(result.value, d) =
                     protectedDivide
                     (
-                        sqrt(gSum(V*sqr(vals - mean))/zone_.V()),
+                        sqrt(gSum(weights*V*sqr(vals - mean))/sumWeightsV),
                         mean
                     );
             }
@@ -242,7 +244,9 @@ bool Foam::functionObjects::fieldValues::volFieldValue::processValuesTypeType
         }
         case operationType::UI:
         {
-            const Type meanValue = gSum(values*V)/zone_.V();
+            const scalar sumWeightsV = max(gSum(weights*V), vSmall);
+
+            const Type meanValue = gSum(weights*V*values)/sumWeightsV;
 
             const label nComp = pTraits<Type>::nComponents;
 
@@ -254,7 +258,7 @@ bool Foam::functionObjects::fieldValues::volFieldValue::processValuesTypeType
                 setComponent(result.value, d) =
                     1 - 0.5*protectedDivide
                     (
-                        gSum(V*mag(vals - mean))/zone_.V(),
+                        gSum(weights*V*mag(vals - mean))/sumWeightsV,
                         mean
                     );
             }
