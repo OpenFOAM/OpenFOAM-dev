@@ -535,6 +535,7 @@ void Foam::meshRefinement::markFeatureCellLevel
                 trackedParticle* tp(new trackedParticle(startTp));
                 tp->start() = tp->position(mesh_);
                 tp->end() = featureMesh.points()[otherPointi];
+                tp->fraction() = 1;
                 tp->j() = otherPointi;
                 tp->k() = edgei;
 
@@ -596,6 +597,7 @@ void Foam::meshRefinement::markFeatureCellLevel
 
                     tp.start() = tp.position(mesh_);
                     tp.end() = featureMesh.points()[otherPointi];
+                    tp.fraction() = 1;
                     tp.j() = otherPointi;
                     tp.k() = edgei;
                     keepParticle = true;

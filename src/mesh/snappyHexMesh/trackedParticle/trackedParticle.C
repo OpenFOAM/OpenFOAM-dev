@@ -44,6 +44,7 @@ Foam::trackedParticle::trackedParticle
     particle(searchEngine, position, celli, nLocateBoundaryHits),
     start_(position),
     end_(end),
+    fraction_(1),
     level_(level),
     i_(i),
     j_(j),
@@ -59,7 +60,7 @@ Foam::trackedParticle::trackedParticle(Istream& is, bool readFields)
     {
         if (is.format() == IOstream::ASCII)
         {
-            is >> start_ >> end_;
+            is >> start_ >> end_ >> fraction_;
             level_ = readLabel(is);
             i_ = readLabel(is);
             j_ = readLabel(is);
@@ -70,8 +71,8 @@ Foam::trackedParticle::trackedParticle(Istream& is, bool readFields)
             is.read
             (
                 reinterpret_cast<char*>(&start_),
-                sizeof(start_) + sizeof(end_) + sizeof(level_)
-              + sizeof(i_) + sizeof(j_) + sizeof(k_)
+                sizeof(start_) + sizeof(end_) + sizeof(fraction_)
+              + sizeof(level_) + sizeof(i_) + sizeof(j_) + sizeof(k_)
             );
         }
     }
@@ -93,30 +94,21 @@ bool Foam::trackedParticle::move
     trackingData& td
 )
 {
-    const scalar tEnd = (1.0 - stepFraction())*td.maxTrackLen_;
+    td.keepParticle = true;
+    td.sendToProc = -1;
 
-    if (tEnd <= small && onBoundaryFace(td.mesh))
+    while (td.keepParticle && td.sendToProc == -1)
     {
-        // This is a hack to handle particles reaching their endpoint on a
-        // processor boundary. This prevents a particle being endlessly
-        // transferred backwards and forwards across the interface.
-        td.keepParticle = false;
-        td.sendToProc = -1;
-    }
-    else
-    {
-        td.keepParticle = true;
-        td.sendToProc = -1;
+        // mark visited cell with max level
+        td.maxLevel_[cell()] = max(td.maxLevel_[cell()], level_);
 
-        while (td.keepParticle && td.sendToProc == -1 && stepFraction() < 1)
-        {
-            // mark visited cell with max level.
-            td.maxLevel_[cell()] = max(td.maxLevel_[cell()], level_);
+        const vector displacement = fraction_*(end_ - start_);
 
-            const scalar f = 1 - stepFraction();
-            const vector s = end_ - start_;
-            trackToAndHitFace(f*s, f, cloud, td);
-        }
+        fraction_ *= trackToFace(td.mesh, displacement, 0);
+
+        if (!onFace()) break;
+
+        hitFace(displacement, 0, cloud, td);
     }
 
     return td.keepParticle;
@@ -205,6 +197,7 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const trackedParticle& p)
         os  << static_cast<const particle&>(p)
             << token::SPACE << p.start_
             << token::SPACE << p.end_
+            << token::SPACE << p.fraction_
             << token::SPACE << p.level_
             << token::SPACE << p.i_
             << token::SPACE << p.j_
@@ -216,8 +209,8 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const trackedParticle& p)
         os.write
         (
             reinterpret_cast<const char*>(&p.start_),
-            sizeof(p.start_) + sizeof(p.end_) + sizeof(p.level_)
-          + sizeof(p.i_) + sizeof(p.j_) + sizeof(p.k_)
+            sizeof(p.start_) + sizeof(p.end_) + sizeof(p.fraction_)
+          + sizeof(p.level_) + sizeof(p.i_) + sizeof(p.j_) + sizeof(p.k_)
         );
     }
 

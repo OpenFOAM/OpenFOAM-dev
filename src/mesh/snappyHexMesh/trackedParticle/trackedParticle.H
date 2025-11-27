@@ -68,6 +68,9 @@ class trackedParticle
         //- End point to track to
         point end_;
 
+        //- Fraction of the distance left to track
+        scalar fraction_;
+
         //- Level of this particle
         label level_;
 
@@ -84,6 +87,7 @@ class trackedParticle
 public:
 
     friend class lagrangian::Cloud<trackedParticle>;
+
 
     //- Class used to pass tracking data to the trackToFace function
     class trackingData
@@ -116,6 +120,12 @@ public:
             {}
     };
 
+
+
+    // Static Data Members
+
+        //- Streamlines are computed at an instant
+        static const bool instantaneous = true;
 
 
     // Constructors
@@ -163,6 +173,12 @@ public:
         point& end()
         {
             return end_;
+        }
+
+        //- Fraction of the distance left to track
+        scalar& fraction()
+        {
+            return fraction_;
         }
 
         //- Transported label
