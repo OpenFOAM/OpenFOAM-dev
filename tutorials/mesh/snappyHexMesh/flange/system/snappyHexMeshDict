@@ -161,7 +161,7 @@ snapControls
 {
     //- Number of patch smoothing iterations before finding correspondence
     //  to surface
-    nSmoothPatch 3;
+    nSmoothPatch 2;
 
     //- Relative distance for points to be attracted by surface feature point
     //  or edge. True distance is this factor times local
