@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,13 +92,13 @@ public:
         }
 
         //- Return the mixture for thermodynamic properties
-        const thermoMixtureType& thermoMixture(const nil) const
+        const thermoMixtureType& thermoMixture(const nil&) const
         {
             return mixture_;
         }
 
         //- Return the mixture for transport properties
-        const transportMixtureType& transportMixture(const nil) const
+        const transportMixtureType& transportMixture(const nil&) const
         {
             return mixture_;
         }
@@ -106,7 +106,7 @@ public:
         //- Return the mixture for transport properties
         const transportMixtureType& transportMixture
         (
-            const nil,
+            const nil&,
             const thermoMixtureType&
         ) const
         {
