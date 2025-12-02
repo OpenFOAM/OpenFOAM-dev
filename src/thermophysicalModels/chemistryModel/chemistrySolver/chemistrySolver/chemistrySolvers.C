@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,6 +28,7 @@ License
 
 #include "forGases.H"
 #include "forLiquids.H"
+
 #include "makeChemistrySolver.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -37,6 +38,5 @@ namespace Foam
     forCoeffGases(defineChemistrySolvers, nullArg);
     forCoeffLiquids(defineChemistrySolvers, nullArg);
 }
-
 
 // ************************************************************************* //

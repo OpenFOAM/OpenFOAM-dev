@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,8 @@ License
 
 #ifndef forLiquids_H
 #define forLiquids_H
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "specie.H"
 
@@ -57,11 +59,10 @@ License
     forLiquidEqns(Mu, sensibleInternalEnergy, hConstThermo, Macro, Args)
 
 #define forLiquidTransports(Macro, Args...)                                    \
-    forLiquidEnergiesAndThermos(constTransport, Macro, Args);
+    forLiquidEnergiesAndThermos(constTransport, Macro, Args)
 
 #define forLiquids(Macro, Args...)                                             \
     forLiquidTransports(Macro, Args)
-
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -75,10 +76,27 @@ License
     forCoeffLiquidEqns(Mu, sensibleInternalEnergy, hConstThermo, Macro, Args)
 
 #define forCoeffLiquidTransports(Macro, Args...)                               \
-    forCoeffLiquidEnergiesAndThermos(constTransport, Macro, Args);
+    forCoeffLiquidEnergiesAndThermos(constTransport, Macro, Args)
 
 #define forCoeffLiquids(Macro, Args...)                                        \
     forCoeffLiquidTransports(Macro, Args)
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#define forEnergyLiquidEqns(Mu, He, Cp, Macro, Args...)                        \
+    forThermo(Mu, He, Cp, adiabaticPerfectFluid, specie, Macro, Args);         \
+    forThermo(Mu, He, Cp, rhoConst, specie, Macro, Args);                      \
+    forThermo(Mu, He, Cp, rPolynomial, specie, Macro, Args)
+
+#define forEnergyLiquidEnergiesAndThermos(Mu, Macro, Args...)                  \
+    forEnergyLiquidEqns(Mu, sensibleInternalEnergy, eConstThermo, Macro, Args);\
+    forEnergyLiquidEqns(Mu, sensibleInternalEnergy, hConstThermo, Macro, Args)
+
+#define forEnergyLiquidTransports(Macro, Args...)                              \
+    forEnergyLiquidEnergiesAndThermos(constTransport, Macro, Args)
+
+#define forEnergyLiquids(Macro, Args...)                                       \
+    forEnergyLiquidTransports(Macro, Args)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

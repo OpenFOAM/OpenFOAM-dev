@@ -30,9 +30,39 @@ License
 #include "inhomogeneousMixture.H"
 #include "inhomogeneousEGRMixture.H"
 
-#include "forAbsoluteGases.H"
+#include "specie.H"
+
+#include "perfectGas.H"
+
+#include "hConstThermo.H"
+#include "janafThermo.H"
+
+#include "absoluteEnthalpy.H"
+
+#include "constTransport.H"
+#include "sutherlandTransport.H"
+
+#include "thermo.H"
+
+#include "forThermo.H"
 
 #include "makeThermo.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#define forAbsoluteEnthalpyGasEqns(Mu, He, Cp, Macro, Args...)                 \
+    forThermo(Mu, He, Cp, perfectGas, specie, Macro, Args)
+
+#define forAbsoluteEnthalpyGasEnergiesAndThermos(Mu, Args...)                  \
+    forAbsoluteEnthalpyGasEqns(Mu, absoluteEnthalpy, hConstThermo, Args);      \
+    forAbsoluteEnthalpyGasEqns(Mu, absoluteEnthalpy, janafThermo, Args)
+
+#define forAbsoluteEnthalpyGasTransports(Macro, Args...)                       \
+    forAbsoluteEnthalpyGasEnergiesAndThermos(constTransport, Macro, Args);     \
+    forAbsoluteEnthalpyGasEnergiesAndThermos(sutherlandTransport, Macro, Args)
+
+#define forAbsoluteEnthalpyGases(Macro, Args...)                               \
+    forAbsoluteEnthalpyGasTransports(Macro, Args)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -51,12 +81,30 @@ License
         ThermoPhysics                                                          \
     )
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
 namespace Foam
 {
-    forAbsoluteGases(makePsiuMulticomponentThermos, homogeneousMixture);
-    forAbsoluteGases(makePsiuMulticomponentThermos, leanInhomogeneousMixture);
-    forAbsoluteGases(makePsiuMulticomponentThermos, inhomogeneousMixture);
-    forAbsoluteGases(makePsiuMulticomponentThermos, inhomogeneousEGRMixture);
+    forAbsoluteEnthalpyGases
+    (
+        makePsiuMulticomponentThermos,
+        homogeneousMixture
+    );
+    forAbsoluteEnthalpyGases
+    (
+        makePsiuMulticomponentThermos,
+        leanInhomogeneousMixture
+    );
+    forAbsoluteEnthalpyGases
+    (
+        makePsiuMulticomponentThermos,
+        inhomogeneousMixture
+    );
+    forAbsoluteEnthalpyGases
+    (
+        makePsiuMulticomponentThermos,
+        inhomogeneousEGRMixture
+    );
 }
 
 // ************************************************************************* //

@@ -31,7 +31,7 @@ License
 #include "bInhomogeneousMixture.H"
 #include "uInhomogeneousEGRMixture.H"
 
-#include "forSensibleGases.H"
+#include "forGases.H"
 
 #include "makeThermo.H"
 
@@ -58,13 +58,35 @@ License
         ThermoPhysics                                                          \
     )
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
 namespace Foam
 {
-    forSensibleGases(makeUBRhoMulticomponentThermos, uHomogeneousMixture);
-    forSensibleGases(makeUBRhoMulticomponentThermos, bHomogeneousMixture);
-    forSensibleGases(makeUBRhoMulticomponentThermos, uInhomogeneousMixture);
-    forSensibleGases(makeUBRhoMulticomponentThermos, bInhomogeneousMixture);
-    forSensibleGases(makeUBRhoMulticomponentThermos, uInhomogeneousEGRMixture);
+    forCoeffEnthalpyGases
+    (
+        makeUBRhoMulticomponentThermos,
+        uHomogeneousMixture
+    );
+    forCoeffEnthalpyGases
+    (
+        makeUBRhoMulticomponentThermos,
+        bHomogeneousMixture
+    );
+    forCoeffEnthalpyGases
+    (
+        makeUBRhoMulticomponentThermos,
+        uInhomogeneousMixture
+    );
+    forCoeffEnthalpyGases
+    (
+        makeUBRhoMulticomponentThermos,
+        bInhomogeneousMixture
+    );
+    forCoeffEnthalpyGases
+    (
+        makeUBRhoMulticomponentThermos,
+        uInhomogeneousEGRMixture
+    );
 }
 
 // ************************************************************************* //

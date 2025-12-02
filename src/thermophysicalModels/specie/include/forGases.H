@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,8 @@ License
 #ifndef forGases_H
 #define forGases_H
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
 #include "specie.H"
 
 #include "Boussinesq.H"
@@ -40,6 +42,7 @@ License
 
 #include "constTransport.H"
 #include "sutherlandTransport.H"
+#include "polynomialTransport.H"
 
 #include "thermo.H"
 
@@ -65,13 +68,12 @@ License
 #define forGases(Macro, Args...)                                               \
     forGasTransports(Macro, Args)
 
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #define forCoeffGasEqns(Mu, He, Cp, Macro, Args...)                           \
     forThermo(Mu, He, Cp, perfectGas, specie, Macro, Args)
 
-#define forCoeffGasEnergiesAndThermos(Mu, Macro, Args...)                     \
+#define forCoeffGasEnergiesAndThermos(Mu, Macro, Args...);                    \
     forCoeffGasEqns(Mu, sensibleEnthalpy, hConstThermo, Macro, Args);         \
     forCoeffGasEqns(Mu, sensibleEnthalpy, janafThermo, Macro, Args);          \
     forCoeffGasEqns(Mu, sensibleInternalEnergy, eConstThermo, Macro, Args);   \
@@ -84,6 +86,41 @@ License
 
 #define forCoeffGases(Macro, Args...)                                         \
     forCoeffGasTransports(Macro, Args)
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#define forEnergyGasEqns(Mu, He, Cp, Macro, Args...)                           \
+    forThermo(Mu, He, Cp, Boussinesq, specie, Macro, Args);                    \
+    forThermo(Mu, He, Cp, perfectGas, specie, Macro, Args)
+
+#define forEnergyGasEnergiesAndThermos(Mu, Macro, Args...)                     \
+    forEnergyGasEqns(Mu, sensibleInternalEnergy, eConstThermo, Macro, Args);   \
+    forEnergyGasEqns(Mu, sensibleInternalEnergy, hConstThermo, Macro, Args);   \
+    forEnergyGasEqns(Mu, sensibleInternalEnergy, janafThermo, Macro, Args)
+
+#define forEnergyGasTransports(Macro, Args...)                                 \
+    forEnergyGasEnergiesAndThermos(constTransport, Macro, Args);               \
+    forEnergyGasEnergiesAndThermos(sutherlandTransport, Macro, Args)
+
+#define forEnergyGases(Macro, Args...)                                         \
+    forEnergyGasTransports(Macro, Args)
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#define forCoeffEnthalpyGasEqns(Mu, He, Cp, Macro, Args...)                    \
+    forThermo(Mu, He, Cp, perfectGas, specie, Macro, Args)
+
+#define forCoeffEnthalpyGasEnergiesAndThermos(Mu, Macro, Args...)              \
+    forCoeffEnthalpyGasEqns(Mu, sensibleEnthalpy, hConstThermo, Macro, Args);  \
+    forCoeffEnthalpyGasEqns(Mu, sensibleEnthalpy, janafThermo, Macro, Args)
+
+#define forCoeffEnthalpyGasTransports(Macro, Args...)                          \
+    forCoeffEnthalpyGasEnergiesAndThermos(constTransport, Macro, Args);        \
+    forCoeffEnthalpyGasEnergiesAndThermos(sutherlandTransport, Macro, Args);   \
+    forCoeffEnthalpyGasEnergiesAndThermos(polynomialTransport, Macro, Args)
+
+#define forCoeffEnthalpyGases(Macro, Args...)                                  \
+    forCoeffEnthalpyGasTransports(Macro, Args)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
