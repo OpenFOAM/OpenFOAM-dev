@@ -84,10 +84,12 @@ bool Foam::functionObjects::flowType::read(const dictionary& dict)
     return true;
 }
 
+
 Foam::wordList Foam::functionObjects::flowType::fields() const
 {
     return wordList(1, fieldName_);
 }
+
 
 bool Foam::functionObjects::flowType::execute()
 {
@@ -117,9 +119,11 @@ bool Foam::functionObjects::flowType::execute()
     }
 }
 
+
 bool Foam::functionObjects::flowType::write()
 {
     return writeLocalObjects::write();
 }
+
 
 // ************************************************************************* //
