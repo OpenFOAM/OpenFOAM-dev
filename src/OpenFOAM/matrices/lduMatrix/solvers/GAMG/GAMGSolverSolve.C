@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -561,105 +561,6 @@ void Foam::GAMGSolver::solveCoarsestLevel
     {
         coarsestLUMatrixPtr_->solve(coarsestCorrField, coarsestSource);
     }
-    // else if
-    //(
-    //    agglomeration_.processorAgglomerate()
-    // && procMatrixLevels_.set(coarsestLevel)
-    //)
-    //{
-    //    // const labelList& agglomProcIDs = agglomeration_.agglomProcIDs
-    //    //(
-    //    //    coarsestLevel
-    //    //);
-    //    //
-    //    // scalarField allSource;
-    //    //
-    //    // globalIndex cellOffsets;
-    //    // if (Pstream::myProcNo(coarseComm) == agglomProcIDs[0])
-    //    //{
-    //    //    cellOffsets.offsets() =
-    //    //        agglomeration_.cellOffsets(coarsestLevel);
-    //    //}
-    //    //
-    //    // cellOffsets.gather
-    //    //(
-    //    //    coarseComm,
-    //    //    agglomProcIDs,
-    //    //    coarsestSource,
-    //    //    allSource
-    //    //);
-    //    //
-    //    // scalarField allCorrField;
-    //    // solverPerformance coarseSolverPerf;
-    //
-    //    label solveComm = agglomeration_.procCommunicator(coarsestLevel);
-    //
-    //    coarsestCorrField = 0;
-    //    solverPerformance coarseSolverPerf;
-    //
-    //    if (Pstream::myProcNo(solveComm) != -1)
-    //    {
-    //        const lduMatrix& allMatrix = procMatrixLevels_[coarsestLevel];
-    //
-    //        {
-    //            Pout<< "** Master:Solving on comm:" << solveComm
-    //                << " with procs:" << UPstream::procID(solveComm) << endl;
-    //
-    //            if (allMatrix.asymmetric())
-    //            {
-    //                coarseSolverPerf = PBiCGStab
-    //                (
-    //                    "coarsestLevelCorr",
-    //                    allMatrix,
-    //                    procInterfaceLevelsBouCoeffs_[coarsestLevel],
-    //                    procInterfaceLevelsIntCoeffs_[coarsestLevel],
-    //                    procInterfaceLevels_[coarsestLevel],
-    //                    PBiCGStabSolverDict(tolerance_, relTol_)
-    //                ).solve
-    //                (
-    //                    coarsestCorrField,
-    //                    coarsestSource
-    //                );
-    //            }
-    //            else
-    //            {
-    //                coarseSolverPerf = PCG
-    //                (
-    //                    "coarsestLevelCorr",
-    //                    allMatrix,
-    //                    procInterfaceLevelsBouCoeffs_[coarsestLevel],
-    //                    procInterfaceLevelsIntCoeffs_[coarsestLevel],
-    //                    procInterfaceLevels_[coarsestLevel],
-    //                    PCGsolverDict(tolerance_, relTol_)
-    //                ).solve
-    //                (
-    //                    coarsestCorrField,
-    //                    coarsestSource
-    //                );
-    //            }
-    //        }
-    //    }
-    //
-    //    Pout<< "done master solve." << endl;
-    //
-    //    //// Scatter to all processors
-    //    // coarsestCorrField.setSize(coarsestSource.size());
-    //    // cellOffsets.scatter
-    //    //(
-    //    //    coarseComm,
-    //    //    agglomProcIDs,
-    //    //    allCorrField,
-    //    //    coarsestCorrField
-    //    //);
-    //
-    //    if (debug >= 2)
-    //    {
-    //        coarseSolverPerf.print(Info(coarseComm));
-    //    }
-    //
-    //    Pout<< "procAgglom: coarsestSource   :" << coarsestSource << endl;
-    //    Pout<< "procAgglom: coarsestCorrField:" << coarsestCorrField << endl;
-    //}
     else
     {
         coarsestCorrField = 0;
