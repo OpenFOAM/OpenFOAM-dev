@@ -1,0 +1,22 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+# Mesh
+./Allmesh
+
+# Copy the fields into the processor directories
+runApplication -a decomposePar -fields -copyZero
+
+# Initialise the volume fraction field
+runParallel setFields
+
+# Run
+runParallel foamRun
+
+# Reconstruct
+runApplication reconstructPar
+
+#------------------------------------------------------------------------------

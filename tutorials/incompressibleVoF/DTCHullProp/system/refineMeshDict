@@ -1,0 +1,66 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      refineMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+coordinates
+{
+    type        global;
+
+    e1          (1 0 0);
+    e2          (0 1 0);
+
+    directions  (e1 e2);
+}
+
+zones
+{
+    level1
+    {
+        type    box;
+        box     (-10 -6 -3) (10 6 3);
+    }
+
+    level2
+    {
+        type    box;
+        box     (-5 -3 -2.5) (9 3 2);
+    }
+
+    level3
+    {
+        type    box;
+        box     (-3 -1.5 -1) (8 1.5 1.5);
+    }
+
+    level4
+    {
+        type    box;
+        box     (-2 -1 -0.6) (7 1 1);
+    }
+
+    level5
+    {
+        type    box;
+        box     (-1 -0.6 -0.3) (6.5 0.6 0.8);
+    }
+
+    level6
+    {
+        type    box;
+        box     (-0.5 -0.55 -0.15) (6.25 0.55 0.65);
+    }
+}
+
+// ************************************************************************* //

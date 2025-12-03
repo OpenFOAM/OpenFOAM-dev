@@ -1,0 +1,87 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      fvModels;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+disk
+{
+    type            propellerDisk;
+
+    libs            ("libpropellerDisk.so");
+
+    log             true;
+
+    cellZone        propeller;
+
+    normal          (1 0 0);    // Direction of thrust force
+
+    n               16;         // Rotation speed [1/s]
+
+    dPropeller      0.150;      // ... Propeller diameter
+    dHub            0.0264;     // ... Hub diameter
+
+    // Automatic adjustment controls
+    adjustment      yes;
+    startTime       1000;       // Start time of rotation speed adjustment
+    deltaTStar      1;          // Relaxation time scale [s]
+    nFraction       0.01;       // Maximum fractional change of rotation speed
+    Tmin            1;          // Minimum thrust for beta [N]
+    sfc             13.947;     // Skin-friction correction [N]
+
+    resistanceFraction  1;
+    resistanceDirection $normal;
+
+    forces
+    {
+        type            forces;
+        libs            ("libforces.so");
+        patches         (hull rudder);
+        log             on;
+        writeControl    timeStep;
+        writeInterval   1;
+        CofR            (2.929541 0 0.2);
+    }
+
+    propellerCurve
+    {
+        type table;
+
+        // ... J KT KQ
+        values
+        (
+            (0.00 (0.5090 0.0713))
+            (0.05 (0.4920 0.0691))
+            (0.10 (0.4720 0.0667))
+            (0.15 (0.4500 0.0640))
+            (0.20 (0.4270 0.0613))
+            (0.25 (0.4030 0.0584))
+            (0.30 (0.3780 0.0554))
+            (0.35 (0.3530 0.0524))
+            (0.40 (0.3270 0.0493))
+            (0.45 (0.3020 0.0462))
+            (0.50 (0.2760 0.0430))
+            (0.55 (0.2500 0.0398))
+            (0.60 (0.2250 0.0366))
+            (0.65 (0.1990 0.0333))
+            (0.70 (0.1720 0.0299))
+            (0.75 (0.1450 0.0264))
+            (0.80 (0.1180 0.0228))
+            (0.85 (0.0890 0.0191))
+            (0.90 (0.0580 0.0151))
+            (0.95 (0.0260 0.0109))
+            (1.00 (-0.0090 0.0065))
+        );
+    }
+}
+
+//*************************************************************************//

@@ -47,6 +47,8 @@ Usage
     {
         type            propellerDisk;
 
+        libs            ("libpropellerDisk.so");
+
         cellZone        propeller;
 
         normal          (1 0 0);    // Normal direction of the propeller
