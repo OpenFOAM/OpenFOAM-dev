@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,8 @@ License
 
 #include "GAMGSolver.H"
 #include "GAMGInterface.H"
+#include "PCG.H"
+#include "PBiCGStab.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -247,10 +249,10 @@ Foam::GAMGSolver::GAMGSolver
 
     if (matrixLevels_.size())
     {
+        const label coarsestLevel = matrixLevels_.size() - 1;
+
         if (directSolveCoarsest_)
         {
-            const label coarsestLevel = matrixLevels_.size() - 1;
-
             if (matrixLevels_.set(coarsestLevel))
             {
                 coarsestLUMatrixPtr_.set
@@ -263,6 +265,45 @@ Foam::GAMGSolver::GAMGSolver
                     )
                 );
             }
+        }
+        else
+        {
+            coarsestSolverPtr_ =
+                matrixLevels_[coarsestLevel].asymmetric()
+              ? autoPtr<lduMatrix::solver>
+                (
+                    new PBiCGStab
+                    (
+                        "coarsestLevelCorr",
+                        matrixLevels_[coarsestLevel],
+                        interfaceLevelsBouCoeffs_[coarsestLevel],
+                        interfaceLevelsIntCoeffs_[coarsestLevel],
+                        interfaceLevels_[coarsestLevel],
+                        dictionary::entries
+                        (
+                            "preconditioner", "DILU",
+                            "tolerance", tolerance_,
+                            "relTol", relTol_
+                        )
+                    )
+                )
+              : autoPtr<lduMatrix::solver>
+                (
+                    new PCG
+                    (
+                        "coarsestLevelCorr",
+                        matrixLevels_[coarsestLevel],
+                        interfaceLevelsBouCoeffs_[coarsestLevel],
+                        interfaceLevelsIntCoeffs_[coarsestLevel],
+                        interfaceLevels_[coarsestLevel],
+                        dictionary::entries
+                        (
+                            "preconditioner", "DIC",
+                            "tolerance", tolerance_,
+                            "relTol", relTol_
+                        )
+                    )
+                );
         }
     }
     else

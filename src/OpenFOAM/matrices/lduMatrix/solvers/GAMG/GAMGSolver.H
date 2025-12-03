@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -127,8 +127,11 @@ class GAMGSolver
         //- Hierarchy of interface internal coefficients
         PtrList<FieldField<Field, scalar>> interfaceLevelsIntCoeffs_;
 
-        //- LU decomposed coarsest matrix
+        //- LU decomposed coarsest matrix for direct solution on the master
         autoPtr<LUscalarMatrix> coarsestLUMatrixPtr_;
+
+        //- Coarsest matrix solver for iterative solution
+        autoPtr<lduMatrix::solver> coarsestSolverPtr_;
 
 
     // Private Member Functions
@@ -290,22 +293,6 @@ class GAMGSolver
             PtrList<scalarField>& coarseCorrFields,
             PtrList<scalarField>& coarseSources,
             const direction cmpt=0
-        ) const;
-
-        //- Create and return the dictionary to specify the PCG solver
-        //  to solve the coarsest level
-        dictionary PCGsolverDict
-        (
-            const scalar tol,
-            const scalar relTol
-        ) const;
-
-        //- Create and return the dictionary to specify the PBiCGStab solver
-        //  to solve the coarsest level
-        dictionary PBiCGStabSolverDict
-        (
-            const scalar tol,
-            const scalar relTol
         ) const;
 
         //- Solve the coarsest level with either an iterative or direct solver

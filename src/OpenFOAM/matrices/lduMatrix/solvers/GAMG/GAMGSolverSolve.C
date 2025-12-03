@@ -24,8 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "GAMGSolver.H"
-#include "PCG.H"
-#include "PBiCGStab.H"
 #include "SubField.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -519,34 +517,6 @@ void Foam::GAMGSolver::initVcycle
 }
 
 
-Foam::dictionary Foam::GAMGSolver::PCGsolverDict
-(
-    const scalar tol,
-    const scalar relTol
-) const
-{
-    dictionary dict(IStringStream("solver PCG; preconditioner DIC;")());
-    dict.add("tolerance", tol);
-    dict.add("relTol", relTol);
-
-    return dict;
-}
-
-
-Foam::dictionary Foam::GAMGSolver::PBiCGStabSolverDict
-(
-    const scalar tol,
-    const scalar relTol
-) const
-{
-    dictionary dict(IStringStream("solver PBiCGStab; preconditioner DILU;")());
-    dict.add("tolerance", tol);
-    dict.add("relTol", relTol);
-
-    return dict;
-}
-
-
 void Foam::GAMGSolver::solveCoarsestLevel
 (
     scalarField& coarsestCorrField,
@@ -559,45 +529,20 @@ void Foam::GAMGSolver::solveCoarsestLevel
 
     if (directSolveCoarsest_)
     {
-        coarsestLUMatrixPtr_->solve(coarsestCorrField, coarsestSource);
+        coarsestLUMatrixPtr_->solve
+        (
+            coarsestCorrField,
+            coarsestSource
+        );
     }
     else
     {
         coarsestCorrField = 0;
-        solverPerformance coarseSolverPerf;
-
-        if (matrixLevels_[coarsestLevel].asymmetric())
-        {
-            coarseSolverPerf = PBiCGStab
-            (
-                "coarsestLevelCorr",
-                matrixLevels_[coarsestLevel],
-                interfaceLevelsBouCoeffs_[coarsestLevel],
-                interfaceLevelsIntCoeffs_[coarsestLevel],
-                interfaceLevels_[coarsestLevel],
-                PBiCGStabSolverDict(tolerance_, relTol_)
-            ).solve
-            (
-                coarsestCorrField,
-                coarsestSource
-            );
-        }
-        else
-        {
-            coarseSolverPerf = PCG
-            (
-                "coarsestLevelCorr",
-                matrixLevels_[coarsestLevel],
-                interfaceLevelsBouCoeffs_[coarsestLevel],
-                interfaceLevelsIntCoeffs_[coarsestLevel],
-                interfaceLevels_[coarsestLevel],
-                PCGsolverDict(tolerance_, relTol_)
-            ).solve
-            (
-                coarsestCorrField,
-                coarsestSource
-            );
-        }
+        solverPerformance coarseSolverPerf = coarsestSolverPtr_->solve
+        (
+            coarsestCorrField,
+            coarsestSource
+        );
 
         if (debug >= 2)
         {
