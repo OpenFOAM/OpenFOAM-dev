@@ -1,0 +1,19 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Writes changing mesh data (e.g., points, faces, zones) at times other than
+    the write times defined in the controlDict
+
+\*---------------------------------------------------------------------------*/
+
+type            writeMesh;
+libs            ("libutilityFunctionObjects.so");
+
+writeControl    <writeControl>;
+
+// ************************************************************************* //

@@ -1,0 +1,68 @@
+/*---------------------------------------------------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+License
+    This file is part of OpenFOAM.
+
+    OpenFOAM is free software: you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+    for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+
+\*---------------------------------------------------------------------------*/
+
+#include "writeMesh.H"
+#include "polyMesh.H"
+#include "addToRunTimeSelectionTable.H"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+namespace functionObjects
+{
+    defineTypeNameAndDebug(writeMesh, 0);
+    addToRunTimeSelectionTable(functionObject, writeMesh, dictionary);
+}
+}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::functionObjects::writeMesh::~writeMesh()
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+bool Foam::functionObjects::writeMesh::executeAtStart() const
+{
+    return false;
+}
+
+
+bool Foam::functionObjects::writeMesh::execute()
+{
+    return true;
+}
+
+
+bool Foam::functionObjects::writeMesh::write()
+{
+    return refCast<const polyMesh>(obr_).writeMesh();
+}
+
+
+// ************************************************************************* //

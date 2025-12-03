@@ -13,6 +13,7 @@ stopAt/stopAtTimeStep/stopAtTimeStep.C
 removeObjects/removeObjects.C
 writeDictionary/writeDictionary.C
 writeObjects/writeObjects.C
+writeMesh/writeMesh.C
 time/timeFunctionObject.C
 checkMesh/checkMesh.C
 
