@@ -688,7 +688,7 @@ public:
 
         // Write
 
-            //- Write the underlying polyMesh and other data
+            //- Write the mesh data and all objects in the registry
             virtual bool writeObject
             (
                 IOstream::streamFormat fmt,
@@ -697,8 +697,8 @@ public:
                 const bool write = true
             ) const;
 
-            //- Write mesh using IO settings from time
-            virtual bool write(const bool write = true) const;
+            //- Write the mesh data only
+            virtual bool writeMesh() const;
 
 
     // Member Operators

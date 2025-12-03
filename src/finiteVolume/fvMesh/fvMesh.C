@@ -1785,9 +1785,28 @@ bool Foam::fvMesh::writeObject
 }
 
 
-bool Foam::fvMesh::write(const bool write) const
+bool Foam::fvMesh::writeMesh() const
 {
-    return polyMesh::write(write);
+    bool ok = true;
+
+    if (!conformal() && polyFacesBfIOPtr_->writeOpt() == IOobject::AUTO_WRITE)
+    {
+        // Create a full surface field with the polyFacesBf boundary field to
+        // write to disk. Make the internal field uniform to save disk space.
+
+        surfaceLabelField polyFaces
+        (
+            *polyFacesBfIOPtr_,
+            *this,
+            dimless,
+            labelField(nInternalFaces(), -1),
+            *polyFacesBfPtr_
+        );
+
+        ok = ok & polyFaces.write();
+    }
+
+    return ok && polyMesh::writeMesh();
 }
 
 

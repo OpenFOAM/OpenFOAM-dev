@@ -581,4 +581,55 @@ bool Foam::polyMesh::writeObject
 }
 
 
+bool Foam::polyMesh::writeMesh() const
+{
+    bool ok = true;
+
+    // Write the points out at a higher precision
+    if (points_.writeOpt() == IOobject::AUTO_WRITE)
+    {
+        unsigned int precision0 =
+            IOstream::defaultPrecision(IOstream::fullPrecision());
+
+        ok = ok && points_.write();
+
+        IOstream::defaultPrecision(precision0);
+    }
+
+    if (faces_.writeOpt() == IOobject::AUTO_WRITE)
+    {
+        ok = ok && faces_.write();
+    }
+
+    if (owner_.writeOpt() == IOobject::AUTO_WRITE)
+    {
+        ok = ok && owner_.write();
+    }
+
+    if (neighbour_.writeOpt() == IOobject::AUTO_WRITE)
+    {
+        ok = ok && neighbour_.write();
+    }
+
+    if (pointZones_.writeOpt() == IOobject::AUTO_WRITE)
+    {
+        ok = ok && pointZones_.write();
+    }
+
+    if (faceZones_.writeOpt() == IOobject::AUTO_WRITE)
+    {
+        ok = ok && faceZones_.write();
+    }
+
+    if (cellZones_.writeOpt() == IOobject::AUTO_WRITE)
+    {
+        ok = ok && cellZones_.write();
+    }
+
+    const_cast<polyMesh&>(*this).setTopologyWrite(IOobject::NO_WRITE);
+
+    return ok;
+}
+
+
 // ************************************************************************* //
