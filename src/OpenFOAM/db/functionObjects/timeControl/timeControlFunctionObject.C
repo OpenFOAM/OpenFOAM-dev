@@ -65,6 +65,17 @@ Foam::functionObjects::timeControl::timeControl
 {
     writeControl_.read(dict);
     executeControl_.read(dict);
+
+    // If we are *not* executing at the start then we need to explicitly call
+    // the controls' execute methods to ensure that internal state is correctly
+    // advanced past the initial time instant. If we *are* executing at the
+    // start then we don't need to do this as it will happen naturally as part
+    // of the function object's execute and write hooks.
+    if (!foPtr_->executeAtStart())
+    {
+        executeControl_.execute();
+        writeControl_.execute();
+    }
 }
 
 

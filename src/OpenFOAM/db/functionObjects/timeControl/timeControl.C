@@ -262,8 +262,8 @@ bool Foam::timeControl::execute()
         case timeControls::timeStep:
         {
             return
-                (intervalSteps_ <= 1)
-             || !(time_.timeIndex() % intervalSteps_);
+                intervalSteps_ <= 1
+             || time_.timeIndex() % intervalSteps_ == 0;
             break;
         }
 
@@ -276,8 +276,11 @@ bool Foam::timeControl::execute()
              || time_.timeIndex() == time_.startTimeIndex()
             )
             {
+                const bool execute =
+                    intervalSteps_ <= 1
+                 || executionIndex_ % intervalSteps_ == 0;
                 executionIndex_++;
-                return !(executionIndex_ % intervalSteps_);
+                return execute;
             }
             break;
         }
@@ -293,7 +296,7 @@ bool Foam::timeControl::execute()
                       - beginTime_
                       + 0.5*time_.deltaTValue()
                     )
-                    /interval_
+                   /interval_
                 );
             if (executionIndex > executionIndex_)
             {
