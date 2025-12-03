@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,6 @@ License
 
 #include "noneGAMGProcAgglomeration.H"
 #include "addToRunTimeSelectionTable.H"
-#include "GAMGAgglomeration.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -33,17 +32,13 @@ namespace Foam
 {
     defineTypeNameAndDebug(noneGAMGProcAgglomeration, 0);
 
-    addNamedToRunTimeSelectionTable
+    addToRunTimeSelectionTable
     (
         GAMGProcAgglomeration,
         noneGAMGProcAgglomeration,
-        GAMGAgglomeration,
-        none
+        GAMGAgglomeration
     );
 }
-
-
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -62,9 +57,6 @@ Foam::noneGAMGProcAgglomeration::noneGAMGProcAgglomeration
 
 Foam::noneGAMGProcAgglomeration::~noneGAMGProcAgglomeration()
 {}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 
 // ************************************************************************* //

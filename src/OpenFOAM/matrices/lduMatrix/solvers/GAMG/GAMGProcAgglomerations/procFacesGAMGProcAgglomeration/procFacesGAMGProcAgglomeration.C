@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,13 +24,13 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "procFacesGAMGProcAgglomeration.H"
-#include "addToRunTimeSelectionTable.H"
 #include "GAMGAgglomeration.H"
 #include "randomGenerator.H"
 #include "lduMesh.H"
 #include "processorLduInterface.H"
 #include "processorGAMGInterface.H"
 #include "pairGAMGAgglomeration.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
