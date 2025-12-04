@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,8 +75,9 @@ protected:
         //- Max number of levels
         const label maxLevels_;
 
-        //- Number of cells in coarsest level
-        const label nCellsInCoarsestLevel_;
+        //- Minimum number of cells per processor
+        //  which is the number of cells per processor at the coarsest level
+        const label minCellsPerProcessor_;
 
         //- Cached mesh interfaces
         const lduInterfacePtrsList meshInterfaces_;

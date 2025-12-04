@@ -310,9 +310,9 @@ Foam::GAMGSolver::GAMGSolver
     {
         FatalErrorInFunction
             << "No coarse levels created, either matrix too small for GAMG"
-               " or nCellsInCoarsestLevel too large.\n"
+               " or minCellsPerProcessor too large.\n"
                "    Either choose another solver of reduce "
-               "nCellsInCoarsestLevel."
+               "minCellsPerProcessor."
             << exit(FatalError);
     }
 }

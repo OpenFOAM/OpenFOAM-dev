@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,8 +68,6 @@ void Foam::GAMGAgglomeration::compactLevels(const label nCreatedLevels)
         procBoundaryFaceMap_.setSize(nCreatedLevels);
 
         procAgglomeratorPtr_().agglomerate();
-
-
     }
 
     // Print a bit
@@ -211,7 +209,16 @@ bool Foam::GAMGAgglomeration::continueAgglomerating
 ) const
 {
     const label nTotalCoarseCells = returnReduce(nCoarseCells, sumOp<label>());
-    if (nTotalCoarseCells < Pstream::nProcs()*nCellsInCoarsestLevel_)
+
+    if
+    (
+        nTotalCoarseCells <
+        (
+            processorAgglomerate()
+              ? minCellsPerProcessor_
+              : Pstream::nProcs()*minCellsPerProcessor_
+        )
+    )
     {
         return false;
     }
@@ -240,22 +247,25 @@ Foam::GAMGAgglomeration::GAMGAgglomeration
 
     maxLevels_(50),
 
-    nCellsInCoarsestLevel_
+    minCellsPerProcessor_
     (
-        controlDict.lookupOrDefault<label>("nCellsInCoarsestLevel", 10)
+        controlDict.lookupOrDefaultBackwardsCompatible<label>
+        (
+            {"minCellsPerProcessor", "nCellsInCoarsestLevel"},
+            10
+        )
     ),
     meshInterfaces_(mesh.interfaces()),
     procAgglomeratorPtr_
     (
         (
             (UPstream::nProcs(mesh.comm()) > 1)
-         && controlDict.found("processorAgglomerator")
+         && controlDict.isDict("processorAgglomeration")
         )
       ? GAMGProcAgglomeration::New
         (
-            controlDict.lookup("processorAgglomerator"),
             *this,
-            controlDict
+            controlDict.subDict("processorAgglomeration")
         )
       : autoPtr<GAMGProcAgglomeration>(nullptr)
     ),

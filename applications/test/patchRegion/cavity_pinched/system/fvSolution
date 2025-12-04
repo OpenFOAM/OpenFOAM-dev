@@ -27,7 +27,7 @@ solvers
         nPostSweeps     2;
         cacheAgglomeration on;
         agglomerator    faceAreaPair;
-        nCellsInCoarsestLevel 3;
+        minCellsPerProcessor 3;
         mergeLevels     1;
 
         processorAgglomerator   none;   // procFaces;

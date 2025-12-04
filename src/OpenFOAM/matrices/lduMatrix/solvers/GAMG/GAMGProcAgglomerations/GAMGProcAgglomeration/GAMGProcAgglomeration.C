@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -342,7 +342,7 @@ bool Foam::GAMGProcAgglomeration::agglomerate
 Foam::GAMGProcAgglomeration::GAMGProcAgglomeration
 (
     GAMGAgglomeration& agglom,
-    const dictionary& controlDict
+    const dictionary& dict
 )
 :
     agglom_(agglom)
@@ -351,14 +351,15 @@ Foam::GAMGProcAgglomeration::GAMGProcAgglomeration
 
 Foam::autoPtr<Foam::GAMGProcAgglomeration> Foam::GAMGProcAgglomeration::New
 (
-    const word& type,
     GAMGAgglomeration& agglom,
-    const dictionary& controlDict
+    const dictionary& dict
 )
 {
+    const word type(dict.lookup("type"));
+
     if (debug)
     {
-        InfoInFunction << "Constructing GAMGProcAgglomeration" << endl;
+        InfoInFunction << "Constructing GAMGProcAgglomeration " << type << endl;
     }
 
     GAMGAgglomerationConstructorTable::iterator cstrIter =
@@ -374,7 +375,7 @@ Foam::autoPtr<Foam::GAMGProcAgglomeration> Foam::GAMGProcAgglomeration::New
             << exit(FatalError);
     }
 
-    return autoPtr<GAMGProcAgglomeration>(cstrIter()(agglom, controlDict));
+    return autoPtr<GAMGProcAgglomeration>(cstrIter()(agglom, dict));
 }
 
 

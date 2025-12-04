@@ -53,7 +53,7 @@ solvers
         tolerance       1e-6;
         relTol          0.05;
         smoother        GaussSeidel;
-        nCellsInCoarsestLevel 20;
+        minCellsPerProcessor 20;
     }
 
     pFinal
@@ -62,7 +62,7 @@ solvers
         tolerance       1e-6;
         relTol          0;
         smoother        GaussSeidel;
-        nCellsInCoarsestLevel 20;
+        minCellsPerProcessor 20;
     }
 
     "(U|h|k|epsilon)"

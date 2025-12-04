@@ -208,7 +208,7 @@ bool Foam::procFacesGAMGProcAgglomeration::doProcessorAgglomeration
 ) const
 {
     // Check the need for further agglomeration on all processors
-    bool doAgg = mesh.lduAddr().size() < nAgglomeratingCells_;
+    bool doAgg = mesh.lduAddr().size() < minCellsPerProcessor_;
     mesh.reduce(doAgg, orOp<bool>());
     return doAgg;
 }
@@ -223,7 +223,7 @@ Foam::procFacesGAMGProcAgglomeration::procFacesGAMGProcAgglomeration
 )
 :
     GAMGProcAgglomeration(agglom, controlDict),
-    nAgglomeratingCells_(controlDict.lookup<label>("nAgglomeratingCells"))
+    minCellsPerProcessor_(controlDict.lookup<label>("minCellsPerProcessor"))
 {}
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::procFacesGAMGProcAgglomeration
 
 Description
-    Processor agglomeration of GAMGAgglomerations. Needs nAgglomeratingCells
+    Processor agglomeration of GAMGAgglomerations. Needs minCellsPerProcessor
     which is when to start agglomerating processors. Processors get agglomerated
     by constructing a single cell mesh for each processor with each
     processor interface a face. This then gets agglomerated using
@@ -64,7 +64,7 @@ class procFacesGAMGProcAgglomeration
     // Private Data
 
         //- When to processor agglomerate
-        const label nAgglomeratingCells_;
+        const label minCellsPerProcessor_;
 
         //- Allocated communicators
         DynamicList<label> comms_;

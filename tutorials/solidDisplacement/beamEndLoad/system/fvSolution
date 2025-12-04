@@ -24,7 +24,7 @@ solvers
         tolerance       1e-10;
         relTol          0.99;
 
-        nCellsInCoarsestLevel 6;
+        minCellsPerProcessor 6;
     }
 }
 

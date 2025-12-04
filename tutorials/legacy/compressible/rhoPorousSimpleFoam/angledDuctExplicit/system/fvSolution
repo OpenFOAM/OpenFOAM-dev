@@ -22,7 +22,7 @@ solvers
         tolerance       1e-08;
         relTol          0.05;
         smoother        GaussSeidel;
-        nCellsInCoarsestLevel 20;
+        minCellsPerProcessor 20;
     }
 
     U

@@ -25,7 +25,7 @@ solvers
         smoother        GaussSeidel;
 
 
-        nCellsInCoarsestLevel 50;
+        minCellsPerProcessor 50;
     }
 
     pFinal
