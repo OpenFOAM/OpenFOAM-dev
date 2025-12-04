@@ -33,8 +33,6 @@ solvers
     {
         solver          GAMG;
         smoother        DIC;
-        processorAgglomerator procFaces;
-        nAgglomeratingCells 800;
         tolerance       1e-8;
         relTol          0.01;
     }
