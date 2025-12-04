@@ -1061,7 +1061,8 @@ bool readConfigFile
     dictionary& parentDict,
     const fileName& configFilesPath,
     const word& configFilesDir,
-    const word& region = word::null
+    const word& region = word::null,
+    const string& command = string::null
 );
 
 //- Write a dictionary entry

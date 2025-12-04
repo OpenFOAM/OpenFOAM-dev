@@ -499,7 +499,8 @@ bool Foam::readConfigFile
     dictionary& parentDict,
     const fileName& configFilesPath,
     const word& configFilesDir,
-    const word& region
+    const word& region,
+    const string& command
 )
 {
     word funcType;
@@ -722,10 +723,27 @@ bool Foam::readConfigFile
         }
 
         FatalIOErrorInFunction(funcDict0)
-            << nl << "in " << configType << " entry:" << nl
-            << argStringLine.first().c_str() << nl
-            << nl << "in dictionary " << parentDict.name().c_str()
-            << " starting at line " << argStringLine.second() << nl;
+            << nl << "In " << configType << " entry:" << nl
+            << "    " << argStringLine.first().c_str() << nl;
+
+        if (command != string::null)
+        {
+            FatalIOErrorInFunction(funcDict0)
+                << nl << "In command:" << nl
+                << "    " << command.c_str() << endl;
+        }
+
+        if (argStringLine.second() >= 0)
+        {
+            FatalIOErrorInFunction(funcDict0)
+                << nl << "In dictionary:" << nl
+                << "    " << parentDict.name().c_str()
+                << " starting at line " << argStringLine.second() << nl;
+        }
+
+        FatalIOErrorInFunction(funcDict0)
+            << nl << "Including file:" << nl
+            << "    " << path.c_str() << nl;
 
         word funcType;
         List<Tuple2<wordRe, label>> args;
