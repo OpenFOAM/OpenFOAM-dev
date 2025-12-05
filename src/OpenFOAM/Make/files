@@ -417,21 +417,13 @@ $(algebraicPairGAMGAgglomeration)/algebraicPairGAMGAgglomeration.C
 dummyAgglomeration = $(GAMGAgglomerations)/dummyAgglomeration
 $(dummyAgglomeration)/dummyAgglomeration.C
 
-
 GAMGProcAgglomerations = $(GAMG)/GAMGProcAgglomerations
-
-GAMGProcAgglomeration = $(GAMGProcAgglomerations)/GAMGProcAgglomeration
-$(GAMGProcAgglomeration)/GAMGProcAgglomeration.C
-masterCoarsestGAMGProcAgglomeration = $(GAMGProcAgglomerations)/masterCoarsestGAMGProcAgglomeration
-$(masterCoarsestGAMGProcAgglomeration)/masterCoarsestGAMGProcAgglomeration.C
-manualGAMGProcAgglomeration = $(GAMGProcAgglomerations)/manualGAMGProcAgglomeration
-$(manualGAMGProcAgglomeration)/manualGAMGProcAgglomeration.C
-eagerGAMGProcAgglomeration = $(GAMGProcAgglomerations)/eagerGAMGProcAgglomeration
-$(eagerGAMGProcAgglomeration)/eagerGAMGProcAgglomeration.C
-noneGAMGProcAgglomeration = $(GAMGProcAgglomerations)/noneGAMGProcAgglomeration
-$(noneGAMGProcAgglomeration)/noneGAMGProcAgglomeration.C
-procFacesGAMGProcAgglomeration = $(GAMGProcAgglomerations)/procFacesGAMGProcAgglomeration
-$(procFacesGAMGProcAgglomeration)/procFacesGAMGProcAgglomeration.C
+$(GAMGProcAgglomerations)/GAMGProcAgglomeration/GAMGProcAgglomeration.C
+$(GAMGProcAgglomerations)/all/allGAMGProcAgglomeration.C
+$(GAMGProcAgglomerations)/manual/manualGAMGProcAgglomeration.C
+$(GAMGProcAgglomerations)/sequential/sequentialGAMGProcAgglomeration.C
+$(GAMGProcAgglomerations)/none/noneGAMGProcAgglomeration.C
+$(GAMGProcAgglomerations)/pair/pairGAMGProcAgglomeration.C
 
 
 meshes/lduMesh/lduMesh.C

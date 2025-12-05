@@ -95,11 +95,11 @@ public:
             GAMGAgglomeration,
             (
                 GAMGAgglomeration& agglom,
-                const dictionary& controlDict
+                const dictionary& dict
             ),
             (
                 agglom,
-                controlDict
+                dict
             )
         );
 
@@ -110,7 +110,7 @@ public:
         GAMGProcAgglomeration
         (
             GAMGAgglomeration& agglom,
-            const dictionary& controlDict
+            const dictionary& dict
         );
 
         //- Disallow default bitwise copy construction
@@ -123,7 +123,7 @@ public:
         static autoPtr<GAMGProcAgglomeration> New
         (
             GAMGAgglomeration& agglom,
-            const dictionary& controlDict
+            const dictionary& dict
         );
 
 

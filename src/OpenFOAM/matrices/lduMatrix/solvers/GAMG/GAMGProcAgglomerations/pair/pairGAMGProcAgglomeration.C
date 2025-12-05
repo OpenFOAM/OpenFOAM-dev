@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "procFacesGAMGProcAgglomeration.H"
+#include "pairGAMGProcAgglomeration.H"
 #include "GAMGAgglomeration.H"
 #include "randomGenerator.H"
 #include "lduMesh.H"
@@ -36,12 +36,12 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(procFacesGAMGProcAgglomeration, 0);
+    defineTypeNameAndDebug(pairGAMGProcAgglomeration, 0);
 
     addToRunTimeSelectionTable
     (
         GAMGProcAgglomeration,
-        procFacesGAMGProcAgglomeration,
+        pairGAMGProcAgglomeration,
         GAMGAgglomeration
     );
 }
@@ -50,7 +50,7 @@ namespace Foam
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 Foam::autoPtr<Foam::lduPrimitiveMesh>
-Foam::procFacesGAMGProcAgglomeration::singleCellMesh
+Foam::pairGAMGProcAgglomeration::singleCellMesh
 (
     const label singleCellMeshComm,
     const lduMesh& mesh,
@@ -142,7 +142,7 @@ Foam::procFacesGAMGProcAgglomeration::singleCellMesh
 
 
 Foam::tmp<Foam::labelField>
-Foam::procFacesGAMGProcAgglomeration::processorAgglomeration
+Foam::pairGAMGProcAgglomeration::processorAgglomeration
 (
     const lduMesh& mesh
 ) const
@@ -202,7 +202,7 @@ Foam::procFacesGAMGProcAgglomeration::processorAgglomeration
 }
 
 
-bool Foam::procFacesGAMGProcAgglomeration::doProcessorAgglomeration
+bool Foam::pairGAMGProcAgglomeration::doProcessorAgglomeration
 (
     const lduMesh& mesh
 ) const
@@ -216,20 +216,20 @@ bool Foam::procFacesGAMGProcAgglomeration::doProcessorAgglomeration
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::procFacesGAMGProcAgglomeration::procFacesGAMGProcAgglomeration
+Foam::pairGAMGProcAgglomeration::pairGAMGProcAgglomeration
 (
     GAMGAgglomeration& agglom,
-    const dictionary& controlDict
+    const dictionary& dict
 )
 :
-    GAMGProcAgglomeration(agglom, controlDict),
-    minCellsPerProcessor_(controlDict.lookup<label>("minCellsPerProcessor"))
+    GAMGProcAgglomeration(agglom, dict),
+    minCellsPerProcessor_(dict.lookup<label>("minCellsPerProcessor"))
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::procFacesGAMGProcAgglomeration::~procFacesGAMGProcAgglomeration()
+Foam::pairGAMGProcAgglomeration::~pairGAMGProcAgglomeration()
 {
     forAllReverse(comms_, i)
     {
@@ -243,7 +243,7 @@ Foam::procFacesGAMGProcAgglomeration::~procFacesGAMGProcAgglomeration()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::procFacesGAMGProcAgglomeration::agglomerate()
+bool Foam::pairGAMGProcAgglomeration::agglomerate()
 {
     if (debug)
     {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,78 +22,125 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::masterCoarsestGAMGProcAgglomeration
+    Foam::pairGAMGProcAgglomeration
 
 Description
-    Processor agglomeration of GAMGAgglomerations.
+    Pair-wise processor agglomerator.
+
+    Neighbouring pairs of processors are agglomerated when the number of
+    agglomerated cells per processor in the level is below \c
+    minCellsPerProcessor and the pairs chosen based on the largest number of
+    connecting processor faces.
+
+Usage
+    Example of GAMG solver settings with pair-wise processor agglomeration
+    \verbatim
+    p
+    {
+        solver          GAMG;
+        smoother        GaussSeidel;
+
+        processorAgglomeration
+        {
+            agglomerator         pair;
+            minCellsPerProcessor 300;
+        }
+
+        tolerance       1e-8;
+        relTol          0;
+    }
+    \endverbatim
 
 SourceFiles
-    masterCoarsestGAMGProcAgglomeration.C
+    pairGAMGProcAgglomeration.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef masterCoarsestGAMGProcAgglomeration_H
-#define masterCoarsestGAMGProcAgglomeration_H
+#ifndef pairGAMGProcAgglomeration_H
+#define pairGAMGProcAgglomeration_H
 
 #include "GAMGProcAgglomeration.H"
 #include "DynamicList.H"
+#include "labelField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-class GAMGAgglomeration;
+class lduPrimitiveMesh;
 
 /*---------------------------------------------------------------------------*\
-             Class masterCoarsestGAMGProcAgglomeration Declaration
+               Class pairGAMGProcAgglomeration Declaration
 \*---------------------------------------------------------------------------*/
 
-class masterCoarsestGAMGProcAgglomeration
+class pairGAMGProcAgglomeration
 :
     public GAMGProcAgglomeration
 {
     // Private Data
 
+        //- When to processor agglomerate
+        const label minCellsPerProcessor_;
+
+        //- Allocated communicators
         DynamicList<label> comms_;
+
+    // Private Member Functions
+
+        //- Return (on master) all single-cell meshes collected. single-cell
+        //  meshes are just one cell with all proc faces intact.
+        autoPtr<lduPrimitiveMesh> singleCellMesh
+        (
+            const label singleCellMeshComm,
+            const lduMesh& mesh,
+            scalarField& faceWeights
+        ) const;
+
+        //- Construct processor agglomeration: for every processor the
+        //  coarse processor-cluster it agglomerates onto
+        tmp<labelField> processorAgglomeration(const lduMesh&) const;
+
+        //- Do we need to agglomerate across processors?
+        bool doProcessorAgglomeration(const lduMesh&) const;
 
 
 public:
 
     //- Runtime type information
-    TypeName("masterCoarsest");
+    TypeName("pair");
 
 
     // Constructors
 
         //- Construct given agglomerator and controls
-        masterCoarsestGAMGProcAgglomeration
+        pairGAMGProcAgglomeration
         (
             GAMGAgglomeration& agglom,
-            const dictionary& controlDict
+            const dictionary& dict
         );
 
         //- Disallow default bitwise copy construction
-        masterCoarsestGAMGProcAgglomeration
+        pairGAMGProcAgglomeration
         (
-            const masterCoarsestGAMGProcAgglomeration&
+            const pairGAMGProcAgglomeration&
         ) = delete;
 
 
     //- Destructor
-    virtual ~masterCoarsestGAMGProcAgglomeration();
+    virtual ~pairGAMGProcAgglomeration();
 
 
     // Member Functions
 
-        //- Modify agglomeration. Return true if modified
+       //- Modify agglomeration. Return true if modified
         virtual bool agglomerate();
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const masterCoarsestGAMGProcAgglomeration&) = delete;
+        void operator=(const pairGAMGProcAgglomeration&) = delete;
 };
 
 

@@ -355,7 +355,7 @@ Foam::autoPtr<Foam::GAMGProcAgglomeration> Foam::GAMGProcAgglomeration::New
     const dictionary& dict
 )
 {
-    const word type(dict.lookup("type"));
+    const word type(dict.lookup("agglomerator"));
 
     if (debug)
     {

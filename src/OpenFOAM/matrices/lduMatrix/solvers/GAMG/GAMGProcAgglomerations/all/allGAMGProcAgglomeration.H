@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,107 +22,105 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::manualGAMGProcAgglomeration
+    Foam::allGAMGProcAgglomeration
 
 Description
-    Manual processor agglomeration of GAMGAgglomerations.
+    Agglomerates all processor matrices onto the master processor at the
+    coarsest but one level.
 
-    In the GAMG control dictionary:
+    It would be more logical and useful if the agglomeration onto the master
+    took place at the coarsest level, providing a means to iteratively solve the
+    coarsest matrix without the need for communication, but due to a programming
+    limitation of the current implementation the agglomeration takes place at
+    the next finer level.  It would make more sense if this processor
+    agglomerator were replaced by an \c iterativelySolveCoarsest option, similar
+    to the current directSolveCoarsest option but which constructs a single
+    lduMatrix which is solved using one of the CG iterative solvers.
 
-        processorAgglomerator manual;
-        // List of level+procagglomeration where
-        // procagglomeration is a set of labelLists. Each labelList is
-        // a cluster of processor which gets combined onto the first element
-        // in the list.
+Usage
+    Example of GAMG solver settings with all processor agglomeration
+    \verbatim
+    p
+    {
+        solver          GAMG;
+        smoother        GaussSeidel;
+
         processorAgglomeration
-        (
-            (
-                3           // at level 3
-                (
-                    (0 1)   // coarse 0 from 0,1 (and moved onto 0)
-                    (3 2)   // coarse 1 from 2,3 (and moved onto 3)
-                )
-            )
-            (
-                6           // at level6
-                (
-                    (0 1)   // coarse 0 from 0,1 (and moved onto 0)
-                )
-            )
-        );
+        {
+            agglomerator         all;
+        }
+
+        tolerance       1e-8;
+        relTol          0;
+    }
+    \endverbatim
 
 SourceFiles
-    manualGAMGProcAgglomeration.C
+    allGAMGProcAgglomeration.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef manualGAMGProcAgglomeration_H
-#define manualGAMGProcAgglomeration_H
+#ifndef allGAMGProcAgglomeration_H
+#define allGAMGProcAgglomeration_H
 
 #include "GAMGProcAgglomeration.H"
 #include "DynamicList.H"
-#include "Tuple2.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-class GAMGAgglomeration;
-
 /*---------------------------------------------------------------------------*\
-                 Class manualGAMGProcAgglomeration Declaration
+                Class allGAMGProcAgglomeration Declaration
 \*---------------------------------------------------------------------------*/
 
-class manualGAMGProcAgglomeration
+class allGAMGProcAgglomeration
 :
     public GAMGProcAgglomeration
 {
     // Private Data
 
-        //- Per level the agglomeration map
-        const List<Tuple2<label, List<labelList>>> procAgglomMaps_;
-
-        //- Any allocated communicators
+        //- List of communicators
         DynamicList<label> comms_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("manual");
+    TypeName("all");
 
 
     // Constructors
 
         //- Construct given agglomerator and controls
-        manualGAMGProcAgglomeration
+        allGAMGProcAgglomeration
         (
             GAMGAgglomeration& agglom,
-            const dictionary& controlDict
+            const dictionary& dict
         );
 
         //- Disallow default bitwise copy construction
-        manualGAMGProcAgglomeration
+        allGAMGProcAgglomeration
         (
-            const manualGAMGProcAgglomeration&
+            const allGAMGProcAgglomeration&
         ) = delete;
 
 
     //- Destructor
-    virtual ~manualGAMGProcAgglomeration();
+    virtual ~allGAMGProcAgglomeration();
 
 
     // Member Functions
 
-       //- Modify agglomeration. Return true if modified
+        //- Modify agglomeration. Return true if modified
         virtual bool agglomerate();
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const manualGAMGProcAgglomeration&) = delete;
+        void operator=(const allGAMGProcAgglomeration&) = delete;
 };
 
 

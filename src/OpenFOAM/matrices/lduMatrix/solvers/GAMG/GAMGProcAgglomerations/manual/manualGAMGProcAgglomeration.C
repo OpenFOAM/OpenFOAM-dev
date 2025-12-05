@@ -47,11 +47,11 @@ namespace Foam
 Foam::manualGAMGProcAgglomeration::manualGAMGProcAgglomeration
 (
     GAMGAgglomeration& agglom,
-    const dictionary& controlDict
+    const dictionary& dict
 )
 :
-    GAMGProcAgglomeration(agglom, controlDict),
-    procAgglomMaps_(controlDict.lookup("processorAgglomeration"))
+    GAMGProcAgglomeration(agglom, dict),
+    procAgglomMaps_(dict.lookup("processorAgglomeration"))
 {}
 
 

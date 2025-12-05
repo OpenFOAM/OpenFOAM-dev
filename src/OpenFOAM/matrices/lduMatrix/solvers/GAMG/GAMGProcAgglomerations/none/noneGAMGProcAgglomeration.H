@@ -22,83 +22,76 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::eagerGAMGProcAgglomeration
+    Foam::noneGAMGProcAgglomeration
 
 Description
-    'Eager' processor agglomeration of GAMGAgglomerations: at every
-    level agglomerates 'mergeLevels' number of processors onto the
-    minimum processor number.
+    Dummy processor agglomerator which does not agglomerate
+
+    but does print the cell agglomeration levels table.
 
 SourceFiles
-    eagerGAMGProcAgglomeration.C
+    noneGAMGProcAgglomeration.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef eagerGAMGProcAgglomeration_H
-#define eagerGAMGProcAgglomeration_H
+#ifndef noneGAMGProcAgglomeration_H
+#define noneGAMGProcAgglomeration_H
 
 #include "GAMGProcAgglomeration.H"
-#include "DynamicList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-class GAMGAgglomeration;
-
 /*---------------------------------------------------------------------------*\
-                 Class eagerGAMGProcAgglomeration Declaration
+                 Class noneGAMGProcAgglomeration Declaration
 \*---------------------------------------------------------------------------*/
 
-class eagerGAMGProcAgglomeration
+class noneGAMGProcAgglomeration
 :
     public GAMGProcAgglomeration
 {
-    // Private Data
-
-        //- Agglomeration level
-        const label mergeLevels_;
-
-        DynamicList<label> comms_;
-
 
 public:
 
     //- Runtime type information
-    TypeName("eager");
+    TypeName("none");
 
 
     // Constructors
 
         //- Construct given agglomerator and controls
-        eagerGAMGProcAgglomeration
+        noneGAMGProcAgglomeration
         (
             GAMGAgglomeration& agglom,
-            const dictionary& controlDict
+            const dictionary& dict
         );
 
         //- Disallow default bitwise copy construction
-        eagerGAMGProcAgglomeration
+        noneGAMGProcAgglomeration
         (
-            const eagerGAMGProcAgglomeration&
+            const noneGAMGProcAgglomeration&
         ) = delete;
 
 
     //- Destructor
-    virtual ~eagerGAMGProcAgglomeration();
+    virtual ~noneGAMGProcAgglomeration();
 
 
     // Member Functions
 
        //- Modify agglomeration. Return true if modified
-        virtual bool agglomerate();
+        virtual bool agglomerate()
+        {
+            return false;
+        }
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const eagerGAMGProcAgglomeration&) = delete;
+        void operator=(const noneGAMGProcAgglomeration&) = delete;
 };
 
 

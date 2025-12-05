@@ -46,10 +46,10 @@ namespace Foam
 Foam::noneGAMGProcAgglomeration::noneGAMGProcAgglomeration
 (
     GAMGAgglomeration& agglom,
-    const dictionary& controlDict
+    const dictionary& dict
 )
 :
-    GAMGProcAgglomeration(agglom, controlDict)
+    GAMGProcAgglomeration(agglom, dict)
 {}
 
 

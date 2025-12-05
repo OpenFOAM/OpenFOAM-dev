@@ -22,18 +22,47 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::noneGAMGProcAgglomeration
+    Foam::sequentialGAMGProcAgglomeration
 
 Description
-    Processor agglomeration of GAMGAgglomerations.
+    Sequential processor agglomeration agglomerates 2^mergeLevels sequential
+    groups of processors into the minimum processor index of the group.
+
+    Note that no account is taken of the processor connectivity so the
+    processors in the agglomerated groups may or may not be connected
+    depending on the decomposition ordering.
+
+    To directly account for processor connectivity use
+    Foam::pairGAMGProcAgglomeration.
+
+Usage
+    Example of GAMG solver settings with sequential processor agglomeration
+    \verbatim
+    p
+    {
+        solver          GAMG;
+        smoother        GaussSeidel;
+
+        processorAgglomeration
+        {
+            agglomerator         sequential;
+        }
+
+        tolerance       1e-8;
+        relTol          0;
+    }
+    \endverbatim
+
+See also
+    Foam::pairGAMGProcAgglomeration
 
 SourceFiles
-    noneGAMGProcAgglomeration.C
+    sequentialGAMGProcAgglomeration.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef noneGAMGProcAgglomeration_H
-#define noneGAMGProcAgglomeration_H
+#ifndef sequentialGAMGProcAgglomeration_H
+#define sequentialGAMGProcAgglomeration_H
 
 #include "GAMGProcAgglomeration.H"
 #include "DynamicList.H"
@@ -43,56 +72,58 @@ SourceFiles
 namespace Foam
 {
 
-class GAMGAgglomeration;
-
 /*---------------------------------------------------------------------------*\
-                  Class noneGAMGProcAgglomeration Declaration
+               Class sequentialGAMGProcAgglomeration Declaration
 \*---------------------------------------------------------------------------*/
 
-class noneGAMGProcAgglomeration
+class sequentialGAMGProcAgglomeration
 :
     public GAMGProcAgglomeration
 {
+    // Private Data
+
+        //- Agglomeration level
+        const label mergeLevels_;
+
+        DynamicList<label> comms_;
+
 
 public:
 
     //- Runtime type information
-    TypeName("none");
+    TypeName("sequential");
 
 
     // Constructors
 
         //- Construct given agglomerator and controls
-        noneGAMGProcAgglomeration
+        sequentialGAMGProcAgglomeration
         (
             GAMGAgglomeration& agglom,
-            const dictionary& controlDict
+            const dictionary& dict
         );
 
         //- Disallow default bitwise copy construction
-        noneGAMGProcAgglomeration
+        sequentialGAMGProcAgglomeration
         (
-            const noneGAMGProcAgglomeration&
+            const sequentialGAMGProcAgglomeration&
         ) = delete;
 
 
     //- Destructor
-    virtual ~noneGAMGProcAgglomeration();
+    virtual ~sequentialGAMGProcAgglomeration();
 
 
     // Member Functions
 
        //- Modify agglomeration. Return true if modified
-        virtual bool agglomerate()
-        {
-            return false;
-        }
+        virtual bool agglomerate();
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const noneGAMGProcAgglomeration&) = delete;
+        void operator=(const sequentialGAMGProcAgglomeration&) = delete;
 };
 
 
