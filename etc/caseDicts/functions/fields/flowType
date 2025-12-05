@@ -6,10 +6,10 @@
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 Description
-    Calculates and writes the flowType of velocity field where:
-    -1 = rotational flow;
-     0 = simple shear flow;
-    +1 = planar extensional flow.
+    Calculates and writes a field in the range -1 to 1, in which:
+      -  1 = rotational flow
+      -  0 = parallel shear (50% rotational, 50% shear)
+      - -1 = pure shear deformation
 
 \*---------------------------------------------------------------------------*/
 
