@@ -241,6 +241,8 @@ namespace fv
 
 void Foam::fv::wallBoiling::readCoeffs(const dictionary& dict)
 {
+    reReadSpecie(dict);
+
     saturationModelPtr_.reset
     (
         saturationTemperatureModel::New
@@ -744,7 +746,14 @@ Foam::fv::wallBoiling::wallBoiling
     const dictionary& dict
 )
 :
-    phaseChange(name, modelType, mesh, dict, wordList()),
+    phaseChange
+    (
+        name,
+        modelType,
+        mesh,
+        dict,
+        readSpecie(coeffs(modelType, dict), false)
+    ),
     nucleation(),
     fluid_(mesh().lookupObject<phaseSystem>(phaseSystem::propertiesName)),
     liquid_(fluid_.phases()[phaseNames().first()]),

@@ -54,6 +54,8 @@ namespace fv
 
 void Foam::fv::phaseSurfaceBoiling::readCoeffs(const dictionary& dict)
 {
+    reReadSpecie(dict);
+
     saturationModelPtr_.reset
     (
         saturationTemperatureModel::New
@@ -252,7 +254,14 @@ Foam::fv::phaseSurfaceBoiling::phaseSurfaceBoiling
     const dictionary& dict
 )
 :
-    phaseChange(name, modelType, mesh, dict, wordList()),
+    phaseChange
+    (
+        name,
+        modelType,
+        mesh,
+        dict,
+        readSpecie(coeffs(modelType, dict), false)
+    ),
     nucleation(),
     solver_(mesh().lookupObject<solvers::multiphaseEuler>(solver::typeName)),
     fluid_(solver_.fluid),
