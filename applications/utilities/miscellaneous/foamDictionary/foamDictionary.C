@@ -770,7 +770,7 @@ int main(int argc, char *argv[])
         dict.dictionary::write(Info, false);
     }
 
-    if (changed)
+    if (changed || args.optionFound("output"))
     {
         if (localDictPtr)
         {
