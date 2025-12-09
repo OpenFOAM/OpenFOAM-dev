@@ -4,8 +4,9 @@ reaction/specieCoeffs/specieCoeffs.C
 reaction/reaction/reaction.C
 
 thermophysicalFunctions/integratedNonUniformTable1/integratedNonUniformTable1.C
-thermophysicalFunctions/APIdiffCoef/APIdiffCoef.C
+thermophysicalFunctions/APIdiffusionCoefficient/APIdiffusionCoefficient.C
 thermophysicalFunctions/binaryDiffusionCoefficient/binaryDiffusionCoefficient.C
+thermophysicalFunctions/FullerDiffusionCoefficient/FullerDiffusionCoefficient.C
 
 NSRDS = thermophysicalFunctions/NSRDS
 $(NSRDS)/NSRDS0/NSRDS0.C

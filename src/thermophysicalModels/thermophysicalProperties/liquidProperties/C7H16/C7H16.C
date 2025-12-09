@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -122,7 +122,7 @@ Foam::C7H16::C7H16
     const Function1s::NSRDS0& thermalConductivity,
     const Function1s::NSRDS2& vapourThermalConductivity,
     const Function1s::NSRDS6& surfaceTension,
-    const Function2s::APIdiffCoef& vapourDiffusivity
+    const Function2s::APIdiffusionCoefficient& vapourDiffusivity
 )
 :
     liquidProperties(l),

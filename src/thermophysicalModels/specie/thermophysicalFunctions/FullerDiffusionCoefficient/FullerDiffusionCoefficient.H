@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,21 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Function2s::APIdiffCoefFunc
+    Foam::Function2s::FullerDiffusionCoefficient
 
 Description
-    API function for vapour mass diffusivity
+    Fuller et al. correlation for vapour mass diffusivity.
 
-    Source:
     \verbatim
-        API (American Petroleum Institute)
-               Technical Data Book
+        E. N. Fuller, E. N., Schettler P. D.,  Giddings, J. C. (1966).
+        A New Method For Prediction Of Binary Gas-Phase Diffusion Coefficients
+        Ind. Eng. Chem. 58(5), 19.
     \endverbatim
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef APIdiffCoef_H
-#define APIdiffCoef_H
+#ifndef FullerDiffusionCoefficient_H
+#define FullerDiffusionCoefficient_H
 
 #include "Function2.H"
 
@@ -48,17 +48,17 @@ namespace Function2s
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class APIdiffCoef Declaration
+                         Class FullerDiffusionCoefficient Declaration
 \*---------------------------------------------------------------------------*/
 
-class APIdiffCoef
+class FullerDiffusionCoefficient
 :
-    public FieldFunction2<scalar, APIdiffCoef>
+    public FieldFunction2<scalar, FullerDiffusionCoefficient>
 {
     // Private Data
 
-        // API vapour mass diffusivity function coefficients
-        scalar a_, b_, wf_, wa_;
+        // Vapour mass diffusivity function coefficients
+        scalar Va_, Vb_, Ma_, Mb_;
 
         // Helper variables
         scalar alpha_, beta_;
@@ -67,23 +67,13 @@ class APIdiffCoef
 public:
 
     //- Runtime type information
-    TypeName("APIdiffCoef");
+    TypeName("FullerDiffusionCoefficient");
 
 
     // Constructors
 
-        //- Construct from name and coefficients
-        APIdiffCoef
-        (
-            const word& name,
-            const scalar a,
-            const scalar b,
-            const scalar wf,
-            const scalar wa
-        );
-
         //- Construct from name and dictionary
-        APIdiffCoef
+        FullerDiffusionCoefficient
         (
             const word& name,
             const unitConversions& units,
@@ -93,27 +83,22 @@ public:
         //- Construct and return a clone
         virtual tmp<Function2<scalar>> clone() const
         {
-            return tmp<Function2<scalar>>(new APIdiffCoef(*this));
+            return tmp<Function2<scalar>>
+            (
+                new FullerDiffusionCoefficient(*this)
+            );
         }
 
 
     // Member Functions
 
-        //- API vapour mass diffusivity function of pressure and temperature
+        //- Inherit base class value methods to prevent clang warnings
+        using FieldFunction2<scalar, FullerDiffusionCoefficient>::value;
+
+        //- Vapour mass diffusivity function
         virtual scalar value(scalar p, scalar T) const
         {
-            return 3.6059e-3*(pow(1.8*T, 1.75))*alpha_/(p*beta_);
-        }
-
-        //- Inherit base class value methods to prevent clang warnings
-        using FieldFunction2<scalar, APIdiffCoef>::value;
-
-        //- API vapour mass diffusivity function using properties from
-        //  construction - with specified binary pair
-        scalar value(scalar p, scalar T, scalar  Wa) const
-        {
-            const scalar alphaBinary = sqrt(1/wf_ + 1/Wa);
-            return 3.6059e-3*(pow(1.8*T, 1.75))*alphaBinary/(p*beta_);
+            return 101325e-7*(pow(T, 1.75))*alpha_/(p*beta_);
         }
 
         //- Write the function coefficients

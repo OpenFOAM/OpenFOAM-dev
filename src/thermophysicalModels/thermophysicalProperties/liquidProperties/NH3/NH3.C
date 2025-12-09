@@ -98,7 +98,7 @@ Foam::NH3::NH3
     const Function1s::NSRDS0& thermalConductivity,
     const Function1s::NSRDS2& vapourThermalConductivity,
     const Function1s::NSRDS6& surfaceTension,
-    const Function2s::APIdiffCoef& vapourDiffusivity
+    const Function2s::APIdiffusionCoefficient& vapourDiffusivity
 )
 :
     liquidProperties(l),

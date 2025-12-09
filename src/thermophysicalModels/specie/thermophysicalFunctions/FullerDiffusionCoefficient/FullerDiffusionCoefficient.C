@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "APIdiffCoef.H"
+#include "FullerDiffusionCoefficient.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -32,46 +32,27 @@ namespace Foam
 {
 namespace Function2s
 {
-    addScalarFunction2(APIdiffCoef);
+    addScalarFunction2(FullerDiffusionCoefficient);
 }
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::Function2s::APIdiffCoef::APIdiffCoef
-(
-    const word& name,
-    const scalar a,
-    const scalar b,
-    const scalar wf,
-    const scalar wa
-)
-:
-    FieldFunction2<scalar, APIdiffCoef>(name),
-    a_(a),
-    b_(b),
-    wf_(wf),
-    wa_(wa),
-    alpha_(sqrt(1/wf_ + 1/wa_)),
-    beta_(sqr(cbrt(a_) + cbrt(b_)))
-{}
-
-
-Foam::Function2s::APIdiffCoef::APIdiffCoef
+Foam::Function2s::FullerDiffusionCoefficient::FullerDiffusionCoefficient
 (
     const word& name,
     const unitConversions& units,
     const dictionary& dict
 )
 :
-    FieldFunction2<scalar, APIdiffCoef>(name),
-    a_(dict.lookup<scalar>("a")),
-    b_(dict.lookup<scalar>("b")),
-    wf_(dict.lookup<scalar>("wf")),
-    wa_(dict.lookup<scalar>("wa")),
-    alpha_(sqrt(1/wf_ + 1/wa_)),
-    beta_(sqr((cbrt(a_) + cbrt(b_))))
+    FieldFunction2<scalar, FullerDiffusionCoefficient>(name),
+    Va_(dict.lookup<scalar>("Va")),
+    Vb_(dict.lookup<scalar>("Vb")),
+    Ma_(dict.lookup<scalar>("Ma")),
+    Mb_(dict.lookup<scalar>("Mb")),
+    alpha_(sqrt(1/Ma_ + 1/Mb_)),
+    beta_(sqr((cbrt(Va_) + cbrt(Vb_))))
 {
     assertNoConvertUnits(typeName, units, dict);
 }
@@ -79,16 +60,16 @@ Foam::Function2s::APIdiffCoef::APIdiffCoef
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::Function2s::APIdiffCoef::write
+void Foam::Function2s::FullerDiffusionCoefficient::write
 (
     Ostream& os,
     const unitConversions& units
 ) const
 {
-    writeEntry(os, "a", a_);
-    writeEntry(os, "b", b_);
-    writeEntry(os, "wf", wf_);
-    writeEntry(os, "wa", wa_);
+    writeEntry(os, "Va", Va_);
+    writeEntry(os, "Vb", Vb_);
+    writeEntry(os, "Ma", Ma_);
+    writeEntry(os, "Mb", Mb_);
 }
 
 

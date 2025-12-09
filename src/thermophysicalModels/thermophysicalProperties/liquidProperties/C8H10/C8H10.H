@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,7 +44,7 @@ SourceFiles
 #include "NSRDS5.H"
 #include "NSRDS6.H"
 #include "NSRDS7.H"
-#include "APIdiffCoef.H"
+#include "APIdiffusionCoefficient.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -73,7 +73,7 @@ class C8H10
         Function1s::NSRDS0 kappa_;
         Function1s::NSRDS2 kappag_;
         Function1s::NSRDS6 sigma_;
-        Function2s::APIdiffCoef D_;
+        Function2s::APIdiffusionCoefficient D_;
 
         //- Liquid heat of formation [J/kg]
         scalar hf_;
@@ -108,7 +108,7 @@ public:
             const Function1s::NSRDS0& thermalConductivity,
             const Function1s::NSRDS2& vapourThermalConductivity,
             const Function1s::NSRDS6& surfaceTension,
-            const Function2s::APIdiffCoef& vapourDiffusivity
+            const Function2s::APIdiffusionCoefficient& vapourDiffusivity
         );
 
         //- Construct from dictionary
