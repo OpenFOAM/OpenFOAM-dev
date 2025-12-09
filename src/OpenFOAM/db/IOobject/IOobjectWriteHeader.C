@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,16 @@ Description
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-bool Foam::IOobject::writeHeader(Ostream& os, const word& type) const
+bool Foam::IOobject::writeHeader
+(
+    Ostream& os,
+    const IOstream::versionNumber version,
+    const IOstream::streamFormat format,
+    const word& type,
+    const string& note,
+    const fileName& location,
+    const word& name
+)
 {
     if (!os.good())
     {
@@ -45,26 +54,45 @@ bool Foam::IOobject::writeHeader(Ostream& os, const word& type) const
 
     writeBanner(os) << foamFile << "\n{\n";
 
-    if (os.version() != IOstream::currentVersion)
+    if (version != IOstream::currentVersion)
     {
-        os  << "    version     " << os.version() << ";\n";
+        os  << "    version     " << version << ";\n";
     }
 
-    os  << "    format      " << os.format() << ";\n"
+    os  << "    format      " << format << ";\n"
         << "    class       " << type << ";\n";
 
-    if (note().size())
+    if (note.size())
     {
-        os  << "    note        " << note() << ";\n";
+        os  << "    note        " << note << ";\n";
     }
 
-    os  << "    location    " << instance()/db().dbDir()/local() << ";\n"
-        << "    object      " << name() << ";\n"
+    if (location.size())
+    {
+        os  << "    location    " << location << ";\n";
+    }
+
+    os  << "    object      " << name << ";\n"
         << "}" << nl;
 
     writeDivider(os) << nl;
 
     return true;
+}
+
+
+bool Foam::IOobject::writeHeader(Ostream& os, const word& type) const
+{
+    return writeHeader
+    (
+        os,
+        os.version(),
+        os.format(),
+        type,
+        note(),
+        instance()/db().dbDir()/local(),
+        name()
+    );
 }
 
 

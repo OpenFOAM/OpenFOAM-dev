@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,11 +89,11 @@ bool Foam::OFstreamCollator::writeFile
             )
         );
 
-        // We don't have IOobject so cannot use IOobject::writeHeader
+        // We don't have IOobject so have to use static IOobject::writeHeader
         if (!append)
         {
             OSstream& os = osPtr();
-            decomposedBlockData::writeHeader
+            IOobject::writeHeader
             (
                 os,
                 ver,

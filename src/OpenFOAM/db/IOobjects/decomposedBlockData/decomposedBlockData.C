@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -181,44 +181,6 @@ bool Foam::decomposedBlockData::readMasterHeader(IOobject& io, Istream& is)
     IStringStream str(is.name(), buf);
 
     return io.readHeader(str);
-}
-
-
-void Foam::decomposedBlockData::writeHeader
-(
-    Ostream& os,
-    const IOstream::versionNumber version,
-    const IOstream::streamFormat format,
-    const word& type,
-    const string& note,
-    const fileName& location,
-    const word& name
-)
-{
-    IOobject::writeBanner(os) << IOobject::foamFile << "\n{\n";
-
-    if (version != IOstream::currentVersion)
-    {
-        os  << "    version     " << version << ";\n";
-    }
-
-    os  << "    format      " << format << ";\n"
-        << "    class       " << type << ";\n";
-
-    if (note.size())
-    {
-        os  << "    note        " << note << ";\n";
-    }
-
-    if (location.size())
-    {
-        os  << "    location    " << location << ";\n";
-    }
-
-    os  << "    object      " << name << ";\n"
-        << "}" << nl;
-
-    IOobject::writeDivider(os) << nl;
 }
 
 
