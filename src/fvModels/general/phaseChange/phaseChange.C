@@ -46,28 +46,6 @@ void Foam::fv::phaseChange::readCoeffs(const dictionary& dict)
 }
 
 
-const Foam::List<Foam::labelPair> Foam::fv::phaseChange::initSpecieis() const
-{
-    const ThermoRefPair<multicomponentThermo>& mcThermos =
-        thermos().thermos<multicomponentThermo>();
-
-    List<labelPair> result(species().size(), labelPair(-1, -1));
-
-    forAll(phaseNames(), i)
-    {
-        if (mcThermos.valid()[i])
-        {
-            forAll(species(), mDoti)
-            {
-                result[mDoti][i] = mcThermos[i].species()[species()[mDoti]];
-            }
-        }
-    }
-
-    return result;
-}
-
-
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
 Foam::wordList Foam::fv::phaseChange::readSpecie

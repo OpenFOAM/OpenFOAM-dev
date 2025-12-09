@@ -86,10 +86,6 @@ private:
         //- Non-virtual read
         void readCoeffs(const dictionary& dict);
 
-        //- Initialise the indices of the transferring species in the two
-        //  phases, or -1 if the phase is not multicomponent
-        const List<labelPair> initSpecieis() const;
-
 
 protected:
 
