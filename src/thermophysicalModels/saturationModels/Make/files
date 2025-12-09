@@ -9,6 +9,7 @@ ArdenBuck/ArdenBuck.C
 constantPressure/constantPressure.C
 constantTemperature/constantTemperature.C
 function1Temperature/function1Temperature.C
+function1Pressure/function1Pressure.C
 polynomialTemperature/polynomialTemperature.C
 
 LIB = $(FOAM_LIBBIN)/libsaturationModels
