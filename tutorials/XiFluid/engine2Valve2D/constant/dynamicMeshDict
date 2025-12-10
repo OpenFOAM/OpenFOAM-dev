@@ -69,20 +69,21 @@ mover
 
             motion
             {
-                type    table;
-                values
-                (
-                    (0      0.0)
-                    (100    0.01) // EVO + meshToMesh map
-                    (240    0.29)
-                    (380    0.01) // EVC + meshToMesh map
-                    (720    0.0)
-                );
-
-                // For multi-cycle simulations, use repeat
-                outOfBounds     repeat;
-
-                interpolationScheme linear;
+                type    repeat;
+                period  720;
+                start   0;
+                value
+                {
+                    type    table;
+                    values
+                    (
+                        (0      0)
+                        (100    0.01) // EVO + meshToMesh map
+                        (240    0.29)
+                        (380    0.01) // EVC + meshToMesh map
+                        (480    0)
+                    );
+                }
             }
         }
 
@@ -94,17 +95,9 @@ mover
 
             motion
             {
-                type    table;
-                values
-                (
-                    (0      0.0)
-                    (340    0.01) // IVO + meshToMesh map
-                    (480    0.29)
-                    (620    0.01) // IVC + meshToMesh map
-                    (720    0.0)
-                );
-                outOfBounds     repeat; // For multi-cycle simulations, use repeat
-                interpolationScheme linear;
+                $ev/motion;
+
+                start   240;          // IVO - EVO
             }
         }
     }
