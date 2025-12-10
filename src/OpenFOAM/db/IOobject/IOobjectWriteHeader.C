@@ -81,6 +81,31 @@ bool Foam::IOobject::writeHeader
 }
 
 
+bool Foam::IOobject::writeHeader
+(
+    Ostream& os,
+    const dictionary& foamFileDict
+)
+{
+    return writeHeader
+    (
+        os,
+        foamFileDict.lookupOrDefault<IOstream::versionNumber>
+        (
+            "version",
+            IOstream::currentVersion
+        ),
+        foamFileDict.found("format")
+      ? IOstream::formatEnum(foamFileDict.lookup<word>("format"))
+      : IOstream::ASCII,
+        foamFileDict.lookupOrDefault<word>("class", dictionary::typeName),
+        foamFileDict.lookupOrDefault<string>("note", string::null),
+        foamFileDict.lookupOrDefault<fileName>("location", fileName::null),
+        foamFileDict.lookupOrDefault<word>("name", os.name().name())
+    );
+}
+
+
 bool Foam::IOobject::writeHeader(Ostream& os, const word& type) const
 {
     return writeHeader

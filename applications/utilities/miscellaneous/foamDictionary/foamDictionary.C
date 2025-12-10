@@ -791,15 +791,19 @@ int main(int argc, char *argv[])
               : args.path()/outputDictPath,
                 dictFormat
             );
-            IOobject::writeBanner(os);
+
             if (dictPtr->found(IOobject::foamFile))
             {
-                os << IOobject::foamFile;
-                dictPtr->subDict(IOobject::foamFile).write(os);
+                IOobject::writeHeader(os, dictPtr->subDict(IOobject::foamFile));
                 dictPtr->remove(IOobject::foamFile);
-                IOobject::writeDivider(os) << nl;
             }
+            else
+            {
+                IOobject::writeBanner(os) << nl;
+            }
+
             dictPtr->write(os, false);
+
             IOobject::writeEndDivider(os);
         }
     }

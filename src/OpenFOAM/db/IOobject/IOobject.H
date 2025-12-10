@@ -473,6 +473,9 @@ public:
             );
 
             //- Write header
+            static bool writeHeader(Ostream&, const dictionary& foamFileDict);
+
+            //- Write header
             bool writeHeader(Ostream&) const;
 
             //- Write header. Allow override of type
