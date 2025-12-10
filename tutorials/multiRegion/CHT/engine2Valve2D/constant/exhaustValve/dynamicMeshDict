@@ -24,39 +24,11 @@ mover
 
     cellZone        all;
 
-    solidBodyMotionFunction sixDoFMotion;
+    solidBodyMotionFunction multiValveEngineValveMotion;
 
-    CofG            (0 0 0);
+    fluidRegion     fluid;
 
-    translation
-    {
-        type            scale;
-        scale
-        {
-            $../fluid/dynamicMeshDict!mover/valves/ev/motion;
-
-            // !!! The fluid engine mover snaps the motion to zero when below
-            // the minLift threshold. This generic mover does not do this. So,
-            // we need to replicate this manually by multiplying the motion
-            // function with the boolean "is-open" function.
-
-            value
-            {
-                type        scale;
-                scale
-                {
-                    $../fluid/dynamicMeshDict!mover/valves/ev/motion/isOpen;
-                }
-                value
-                {
-                    $../fluid/dynamicMeshDict!mover/valves/ev/motion/value;
-                }
-            }
-        }
-        value           constant (0 0 -1);
-    }
-
-    rotation        zero;
+    valve           ev;
 }
 
 // ************************************************************************* //

@@ -84,16 +84,6 @@ mover
                         (480    0)
                     );
                 }
-
-                // !!! Boolean function to define when the valve is open. This
-                // is not needed here, but it is used in the corresponding
-                // solid motion functions.
-                isOpen
-                {
-                    type    squarePulse;
-                    start   100;      // EVO + meshToMesh map
-                    duration 280;     // EVC - EVO
-                }
             }
         }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,121 +21,125 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Namespace
-    Foam::solidBodyMotionFunctions
-
-Description
-    Namespace for solid-body motions
-
-
 Class
-    Foam::solidBodyMotionFunction
+    Foam::solidBodyMotionFunctions::multiValveEngineValveMotion
 
 Description
-    Base class for defining solid-body motions
+    Motion function for solid regions representing a valve. Looks up the
+    multiValveEngine mover from the associated fluid region and uses the motion
+    specified for one of the valves.
+
+    Example specification, in constant/<solidRegion>/dynamicMeshDict:
+    \verbatim
+    mover
+    {
+        type            motionSolver;
+        libs            ("libfvMotionSolvers.so");
+        motionSolver    solidBody;
+        cellZone        all;
+        solidBodyMotionFunction multiValveEngineValveMotion;
+        fluidRegion     fluid;
+        valve           iv;
+    }
+    \endverbatim
 
 SourceFiles
-    solidBodyMotionFunction.C
+    multiValveEngineValveMotion.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef solidBodyMotionFunction_H
-#define solidBodyMotionFunction_H
+#ifndef multiValveEngineValveMotion_H
+#define multiValveEngineValveMotion_H
 
-#include "Time.H"
-#include "dictionary.H"
-#include "septernion.H"
-#include "autoPtr.H"
-#include "runTimeSelectionTables.H"
+#include "solidBodyMotionFunction.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+namespace solidBodyMotionFunctions
+{
 
 /*---------------------------------------------------------------------------*\
-                  Class solidBodyMotionFunction Declaration
+                  Class multiValveEngineValveMotion Declaration
 \*---------------------------------------------------------------------------*/
 
-class solidBodyMotionFunction
+class multiValveEngineValveMotion
+:
+    public solidBodyMotionFunction
 {
-protected:
+private:
 
-    // Protected data
+    // Private Data
 
-        dictionary SBMFCoeffs_;
-        const Time& time_;
+        //- Name of the region in which the multiValveEngine mover is used
+        word fluidRegionName_;
+
+        //- Name of the valve
+        word valveName_;
+
+        //- Index of the valve
+        mutable label valveIndex_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("solidBodyMotionFunction");
-
-
-    // Declare run-time constructor selection table
-
-        declareRunTimeSelectionTable
-        (
-            autoPtr,
-            solidBodyMotionFunction,
-            dictionary,
-            (const dictionary& SBMFCoeffs, const Time& runTime),
-            (SBMFCoeffs, runTime)
-        );
+    TypeName("multiValveEngineValveMotion");
 
 
     // Constructors
 
-        //- Construct from the SBMFCoeffs dictionary and Time
-        solidBodyMotionFunction
+        //- Construct from components
+        multiValveEngineValveMotion
         (
             const dictionary& SBMFCoeffs,
             const Time& runTime
         );
 
         //- Disallow default bitwise copy construction
-        solidBodyMotionFunction(const solidBodyMotionFunction&) = delete;
+        multiValveEngineValveMotion
+        (
+            const multiValveEngineValveMotion&
+        ) = delete;
 
         //- Construct and return a clone
-        virtual autoPtr<solidBodyMotionFunction> clone() const = 0;
-
-
-    // Selectors
-
-        //- Select constructed from the SBMFCoeffs dictionary and Time
-        static autoPtr<solidBodyMotionFunction> New
-        (
-            const dictionary& SBMFCoeffs,
-            const Time& runTime
-        );
+        virtual autoPtr<solidBodyMotionFunction> clone() const
+        {
+            return autoPtr<solidBodyMotionFunction>
+            (
+                new multiValveEngineValveMotion
+                (
+                    SBMFCoeffs_,
+                    time_
+                )
+            );
+        }
 
 
     //- Destructor
-    virtual ~solidBodyMotionFunction();
+    virtual ~multiValveEngineValveMotion();
 
 
     // Member Functions
 
         //- Return the solid-body motion transformation septernion
-        virtual septernion transformation() const = 0;
+        virtual septernion transformation() const;
 
         //- Update properties from given dictionary
-        virtual bool read(const dictionary& SBMFCoeffs) = 0;
-
-        //- Write in dictionary format
-        virtual void writeData(Ostream&) const;
+        virtual bool read(const dictionary& SBMFCoeffs);
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const solidBodyMotionFunction&) = delete;
+        void operator=(const multiValveEngineValveMotion&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace solidBodyMotionFunctions
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
