@@ -16,18 +16,22 @@ FoamFile
 
 diameter   0.1;
 
-radIn      #calc "$diameter / 2.0";
-boxIn      #calc "3.0*$radIn / 10.0";
+#codeBlock
 
-radVen     #calc "$radIn / 2.0";
-boxVen     #calc "$boxIn / 2.0";
+radIn      #calc "$diameter / 2.0";
+boxIn      #calc "3.0*$<scalar>radIn / 10.0";
+
+radVen     #calc "$<scalar>radIn / 2.0";
+boxVen     #calc "$<scalar>boxIn / 2.0";
 
 xInSt      0;
 xInEnd     $diameter;
-xVenSt     #calc "$xInEnd  + 1.25*$diameter";
-xVenEnd    #calc "$xVenSt  + 0.5*$diameter";
-xOutSt     #calc "$xVenEnd + 2.5*$diameter";
-xOutEnd    #calc "$xOutSt  + $diameter";
+xVenSt     #calc "$<scalar>xInEnd  + 1.25*$diameter";
+xVenEnd    #calc "$<scalar>xVenSt  + 0.5*$diameter";
+xOutSt     #calc "$<scalar>xVenEnd + 2.5*$diameter";
+xOutEnd    #calc "$<scalar>xOutSt  + $diameter";
+
+#endCodeBlock
 
 diaCells   16;
 venCells    8;

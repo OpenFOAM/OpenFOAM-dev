@@ -198,6 +198,8 @@ namespace functionEntries
 
 // Forward declaration of friend classes
 class calcEntry;
+class codeBlockEntry;
+class codeBlockCalcEntry;
 
 /*---------------------------------------------------------------------------*\
                          Class codeStream Declaration
@@ -218,6 +220,23 @@ class codeStream
 
         //- Return true for master only reading of global dictionary
         static bool masterOnlyRead(const dictionary& dict);
+
+        //- Add the code entry to the codeDict
+        static string codeString
+        (
+            const label index,
+            const dictionary& codeDict,
+            Istream&
+        );
+
+        //- Construct, compile, load and return streaming function
+        static void* compile
+        (
+            const dictionary& contextDict,
+            const dictionary& codeDict,
+            const word& codeTemplateC,
+            word& codeName
+        );
 
         //- Construct, compile, load and return streaming function
         static streamingFunctionType getFunction
@@ -252,6 +271,8 @@ public:
 
         //- Declare friendship with the calcEntry class
         friend class calcEntry;
+        friend class codeBlockEntry;
+        friend class codeBlockCalcEntry;
 
 
     //- Runtime type information

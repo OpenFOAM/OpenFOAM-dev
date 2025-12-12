@@ -176,11 +176,11 @@ SourceFiles
 
 namespace Foam
 {
-
-class dlLibraryTable;
-
 namespace functionEntries
 {
+
+// Forward declaration of friend classes
+class codeBlockEntry;
 
 /*---------------------------------------------------------------------------*\
                           Class calcEntry Declaration
@@ -192,6 +192,14 @@ class calcEntry
 {
     // Private Member Functions
 
+        //- Add the code entry to the codeDict
+        static string codeString
+        (
+            const label index,
+            const dictionary& codeDict,
+            Istream&
+        );
+
         //- Perform the calculation and return the resulting string
         static string calc
         (
@@ -201,6 +209,12 @@ class calcEntry
 
 
 public:
+
+    // Related types
+
+        //- Declare friendship with the calcEntry class
+        friend class codeBlockEntry;
+
 
     //- Runtime type information
     FunctionTypeName("#calc");

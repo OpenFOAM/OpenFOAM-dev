@@ -51,6 +51,57 @@ namespace functionEntries
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
+Foam::string Foam::functionEntries::calcEntry::codeString
+(
+    const label index,
+    const dictionary& codeDict,
+    Istream& is
+)
+{
+    // Read the code expression string delimited by either '"..."' or '#{...#}'
+    token t(is);
+
+    if (t.isVerbatimString())
+    {
+        const verbatimString& s = t.verbatimStringToken();
+
+        return
+        (
+            "CODE_BLOCK_FUNCTION(" + Foam::name(index) + ")\n"
+            "{\n"
+            "    #line " + Foam::name(t.lineNumber())
+          + " \"" + codeDict.name() + "\"\n"
+          +  s
+          + "}\n\n"
+        );
+    }
+    else if (t.isString())
+    {
+        const string& s = t.stringToken();
+
+        return
+        (
+            "CODE_BLOCK_FUNCTION(" + Foam::name(index) + ")\n"
+            "{\n"
+            "    #line " + Foam::name(t.lineNumber())
+               + " \"" + codeDict.name() + "\"\n"
+            "    os << (" + s + ");\n"
+            "}\n\n"
+        );
+    }
+    else
+    {
+        FatalIOErrorInFunction(is)
+            << "Wrong string type for #calc" << nl
+            << "    Expected either a string delimited by '\"...\"' "
+               "or a verbatim string delimited by '#{...#}' " << nl
+            << "    found token " << t
+            << exit(FatalIOError);
+        return string::null;
+    }
+}
+
+
 Foam::string Foam::functionEntries::calcEntry::calc
 (
     const dictionary& dict,
@@ -101,6 +152,7 @@ Foam::string Foam::functionEntries::calcEntry::calc
             << exit(FatalIOError);
     }
 
+    // Add compilation options to simplify compilation error messages
     codeDict.add
     (
         primitiveEntry

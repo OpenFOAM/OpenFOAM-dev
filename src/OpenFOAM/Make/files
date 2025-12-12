@@ -238,6 +238,9 @@ $(functionEntries)/negEntry/negEntry.C
 $(functionEntries)/calcIncludeEntry/calcIncludeEntry.C
 $(functionEntries)/calcEntry/calcEntry.C
 $(functionEntries)/codeStream/codeStream.C
+$(functionEntries)/codeBlock/codeBlockEntry.C
+$(functionEntries)/codeBlockCalc/codeBlockCalcEntry.C
+$(functionEntries)/endCodeBlock/endCodeBlockEntry.C
 $(functionEntries)/includeEntry/includeEntry.C
 $(functionEntries)/includeEtcEntry/includeEtcEntry.C
 $(functionEntries)/includeFuncEntry/includeFuncEntry.C
