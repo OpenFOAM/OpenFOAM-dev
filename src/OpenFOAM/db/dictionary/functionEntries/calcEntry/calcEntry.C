@@ -61,31 +61,15 @@ Foam::string Foam::functionEntries::calcEntry::codeString
     // Read the code expression string delimited by either '"..."' or '#{...#}'
     token t(is);
 
-    if (t.isVerbatimString())
+    if (t.isString() || t.isVerbatimString())
     {
-        const verbatimString& s = t.verbatimStringToken();
-
-        return
-        (
-            "CODE_BLOCK_FUNCTION(" + Foam::name(index) + ")\n"
-            "{\n"
-            "    #line " + Foam::name(t.lineNumber())
-          + " \"" + codeDict.name() + "\"\n"
-          +  s
-          + "}\n\n"
-        );
-    }
-    else if (t.isString())
-    {
-        const string& s = t.stringToken();
-
         return
         (
             "CODE_BLOCK_FUNCTION(" + Foam::name(index) + ")\n"
             "{\n"
             "    #line " + Foam::name(t.lineNumber())
                + " \"" + codeDict.name() + "\"\n"
-            "    os << (" + s + ");\n"
+            "    os << (" + t.anyStringToken() + ");\n"
             "}\n\n"
         );
     }
@@ -128,18 +112,17 @@ Foam::string Foam::functionEntries::calcEntry::calc
     // Read the code expression string delimited by either '"..."' or '#{...#}'
     token t(is);
 
-    if (t.isVerbatimString())
+    if (t.isString() || t.isVerbatimString())
     {
-        calcIncludeEntry::codeInclude(codeDict);
-        codeDict.add(primitiveEntry("code", t));
-    }
-    else if (t.isString())
-    {
-        const string& s = t.stringToken();
         calcIncludeEntry::codeInclude(codeDict);
         codeDict.add
         (
-            primitiveEntry("code", "os << (" + s + ");", t.lineNumber())
+            primitiveEntry
+            (
+                "code",
+                "os << (" + t.anyStringToken() + ");",
+                t.lineNumber()
+            )
         );
     }
     else
