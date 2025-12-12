@@ -75,6 +75,8 @@ void Foam::polyMesh::setPointsInstance(const fileName& inst)
         InfoInFunction << "Resetting points instance to " << inst << endl;
     }
 
+    instance() = inst;
+
     points_.instance() = inst;
     points_.eventNo() = getEvent();
 
@@ -123,6 +125,16 @@ void Foam::polyMesh::setInstance(const fileName& inst)
 
 Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
 {
+    // Determine if this update moves forward in time. If so, searching back in
+    // time for data files will only go back as far as the previous instance.
+    const fileName instance0 = instance();
+    scalar time0 = NaN;
+    const bool forward =
+        readScalar(instance0.c_str(), time0) && time0 < time().value();
+
+    // Update the mesh instance
+    instance() = time().name();
+
     if (debug)
     {
         InfoInFunction << "Updating mesh based on saved data." << endl;
@@ -131,8 +143,26 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
     polyMesh::readUpdateState state = polyMesh::UNCHANGED;
 
     // Find the points and faces instance
-    const fileName pointsInst(time().findInstance(meshDir(), "points"));
-    const fileName facesInst(time().findInstance(meshDir(), "faces"));
+    const fileName pointsInst
+    (
+        time().findInstance
+        (
+            meshDir(),
+            "points",
+            IOobject::READ_IF_PRESENT,
+            forward ? word(instance0) : word::null
+        )
+    );
+    const fileName facesInst
+    (
+        time().findInstance
+        (
+            meshDir(),
+            "faces",
+            IOobject::READ_IF_PRESENT,
+            forward ? word(instance0) : word::null
+        )
+    );
 
     if (debug)
     {
@@ -142,7 +172,7 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
             << " new = " << pointsInst << endl;
     }
 
-    if (facesInst != facesInstance())
+    if (facesInst != (forward ? instance0 : facesInstance()))
     {
         // Topological change
         if (debug)
@@ -348,7 +378,7 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
             state = polyMesh::TOPO_CHANGE;
         }
     }
-    else if (pointsInst != pointsInstance())
+    else if (pointsInst != (forward ? instance0 : pointsInstance()))
     {
         // Points moved
         if (debug)

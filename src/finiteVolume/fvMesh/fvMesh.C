@@ -862,6 +862,13 @@ Foam::fvMesh::readUpdateState Foam::fvMesh::readUpdate
     const stitchType stitch
 )
 {
+    // Determine if this update moves forward in time. If so, searching back in
+    // time for data files will only go back as far as the previous instance.
+    const fileName instance0 = instance();
+    scalar time0 = NaN;
+    const bool forward =
+        readScalar(instance0.c_str(), time0) && time0 < time().value();
+
     if (debug)
     {
         Pout<< FUNCTION_NAME << "Updating fvMesh.  ";
@@ -869,19 +876,21 @@ Foam::fvMesh::readUpdateState Foam::fvMesh::readUpdate
 
     const polyMesh::readUpdateState state = polyMesh::readUpdate();
 
-    const fileName polyFacesInst =
-        time().findInstance
-        (
-            dbDir()/typeName,
-            "polyFaces",
-            IOobject::READ_IF_PRESENT
-        );
-
     const bool reStitch =
         stitcher_.valid()
      && stitcher_->stitches()
      && stitch != stitchType::none
-     && (!conformal() || polyFacesInst != polyFacesBfIOPtr_->instance());
+     && (
+            !conformal()
+         || time().findInstance
+            (
+                dbDir()/typeName,
+                "polyFaces",
+                IOobject::READ_IF_PRESENT,
+                forward ? word(instance0) : word::null
+            )
+         != (forward ? instance0 : polyFacesBfIOPtr_->instance())
+        );
 
     if (reStitch)
     {
