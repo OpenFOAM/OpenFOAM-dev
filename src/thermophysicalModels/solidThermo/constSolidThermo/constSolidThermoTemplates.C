@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,8 +59,6 @@ Foam::VolField<Type> Foam::constSolidThermo::readProperty
 
             Info<< "    Reading " << name << " for zones:" << endl;
 
-            Field<Type>& vtfIf = vtf;
-
             forAllConstIter(dictionary, zonesDict, iter)
             {
                 const word& zoneName = iter().keyword();
@@ -69,34 +67,24 @@ Foam::VolField<Type> Foam::constSolidThermo::readProperty
                 Info<< "        " << zoneName << " " << value << endl;
 
                 const labelList& zoneCells = mesh().cellZones()[zoneName];
+                boolList cellInZone(mesh().nCells(), false);
+                UIndirectList<bool>(cellInZone, zoneCells) = true;
 
                 // Set the internal field in the zone to the value
                 forAll(zoneCells, i)
                 {
-                    vtfIf[zoneCells[i]] = value;
+                    vtf[zoneCells[i]] = value;
                 }
 
                 // Set the patch field in the zone to the value
-
-                const fvBoundaryMesh& patches = mesh().boundary();
-                const labelList& own = mesh().faceOwner();
-
-                boolList cellInZone(mesh().nCells(), false);
-
-                forAll(zoneCells, i)
+                forAll(mesh().boundary(), patchi)
                 {
-                    cellInZone[zoneCells[i]] = true;
-                }
+                    const labelUList& patchFaceCells =
+                        mesh().boundary()[patchi].faceCells();
 
-                forAll(patches, patchi)
-                {
-                    const fvPatch& pp = patches[patchi];
-
-                    forAll(pp, patchFacei)
+                    forAll(patchFaceCells, patchFacei)
                     {
-                        const label facei = pp.start() + patchFacei;
-
-                        if (cellInZone[own[facei]])
+                        if (cellInZone[patchFaceCells[patchFacei]])
                         {
                             vtf.boundaryFieldRef()[patchi][patchFacei] = value;
                         }
