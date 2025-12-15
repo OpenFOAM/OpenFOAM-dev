@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "calcIncludeEntry.H"
+#include "codeIncludeEntry.H"
 #include "stringOps.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -33,19 +33,28 @@ namespace Foam
 {
 namespace functionEntries
 {
-    defineFunctionTypeNameAndDebug(calcIncludeEntry, 0);
-    addToRunTimeSelectionTable(functionEntry, calcIncludeEntry, dictionary);
+    defineFunctionTypeNameAndDebug(codeIncludeEntry, 0);
+    addToRunTimeSelectionTable(functionEntry, codeIncludeEntry, dictionary);
+
+    addBackwardCompatibleToRunTimeSelectionTable
+    (
+        functionEntry,
+        codeIncludeEntry,
+        dictionary,
+        calcIncludeEntry,
+        "#calcInclude"
+    );
 }
 }
 
 // Construct the static include file name cache
 Foam::DynamicList<Foam::fileName>
-    Foam::functionEntries::calcIncludeEntry::includeFiles_;
+    Foam::functionEntries::codeIncludeEntry::includeFiles_;
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::functionEntries::calcIncludeEntry::calcIncludeEntry
+Foam::functionEntries::codeIncludeEntry::codeIncludeEntry
 (
     const label lineNumber,
     const dictionary& parentDict,
@@ -66,7 +75,7 @@ Foam::functionEntries::calcIncludeEntry::calcIncludeEntry
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::functionEntries::calcIncludeEntry::execute
+bool Foam::functionEntries::codeIncludeEntry::execute
 (
     dictionary& contextDict,
     Istream& is
@@ -86,13 +95,13 @@ bool Foam::functionEntries::calcIncludeEntry::execute
 }
 
 
-void Foam::functionEntries::calcIncludeEntry::clear()
+void Foam::functionEntries::codeIncludeEntry::clear()
 {
     includeFiles_.clear();
 }
 
 
-void Foam::functionEntries::calcIncludeEntry::codeInclude(dictionary& codeDict)
+void Foam::functionEntries::codeIncludeEntry::codeInclude(dictionary& codeDict)
 {
     if (includeFiles_.size())
     {

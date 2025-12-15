@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::functionEntries::calcIncludeEntry
+    Foam::functionEntries::codeIncludeEntry
 
 Description
     Specify an include file for \#calc, expects a single string to follow.
@@ -33,7 +33,7 @@ Description
 
     angle           #calc "-degToRad($angleOfAttack)";
 
-    #calcInclude    "transform.H"
+    #codeInclude    "transform.H"
     liftDir         #calc "transform(Ry($angle), vector(0, 0, 1))";
     dragDir         #calc "transform(Ry($angle), vector(1, 0, 0))";
     \endverbatim
@@ -45,12 +45,12 @@ See also
     Foam::functionEntries::calcEntry
 
 SourceFiles
-    calcIncludeEntry.C
+    codeIncludeEntry.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef calcIncludeEntry_H
-#define calcIncludeEntry_H
+#ifndef codeIncludeEntry_H
+#define codeIncludeEntry_H
 
 #include "functionEntry.H"
 
@@ -62,10 +62,10 @@ namespace functionEntries
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class calcIncludeEntry Declaration
+                        Class codeIncludeEntry Declaration
 \*---------------------------------------------------------------------------*/
 
-class calcIncludeEntry
+class codeIncludeEntry
 :
     public functionEntry
 {
@@ -87,13 +87,13 @@ class calcIncludeEntry
 public:
 
     //- Runtime type information
-    FunctionTypeName("#calcInclude");
+    FunctionTypeName("#codeInclude");
 
 
     // Constructors
 
         //- Construct from line number, dictionary and Istream
-        calcIncludeEntry
+        codeIncludeEntry
         (
             const label lineNumber,
             const dictionary& parentDict,
@@ -101,12 +101,12 @@ public:
         );
 
         //- Copy construct
-        calcIncludeEntry(const calcIncludeEntry&) = default;
+        codeIncludeEntry(const codeIncludeEntry&) = default;
 
         //- Clone
         virtual autoPtr<entry> clone(const dictionary&) const
         {
-            return autoPtr<entry>(new calcIncludeEntry(*this));
+            return autoPtr<entry>(new codeIncludeEntry(*this));
         }
 
 
@@ -126,7 +126,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const calcIncludeEntry&) = delete;
+        void operator=(const codeIncludeEntry&) = delete;
 };
 
 

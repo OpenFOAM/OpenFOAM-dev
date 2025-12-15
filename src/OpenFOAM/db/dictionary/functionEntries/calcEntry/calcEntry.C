@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "calcEntry.H"
-#include "calcIncludeEntry.H"
+#include "codeIncludeEntry.H"
 #include "dictionary.H"
 #include "dynamicCode.H"
 #include "codeStream.H"
@@ -114,7 +114,7 @@ Foam::string Foam::functionEntries::calcEntry::calc
 
     if (t.isString() || t.isVerbatimString())
     {
-        calcIncludeEntry::codeInclude(codeDict);
+        codeIncludeEntry::codeInclude(codeDict);
         codeDict.add
         (
             primitiveEntry

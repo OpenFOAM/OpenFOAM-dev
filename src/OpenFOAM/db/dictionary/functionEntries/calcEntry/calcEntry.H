@@ -86,14 +86,14 @@ Usage
     \endverbatim
 
     Additional include files for the \c \#calc code compilation can be specified
-    using the \c \#calcInclude entry, e.g. if functions from transform.H are
+    using the \c \#codeInclude entry, e.g. if functions from transform.H are
     used:
     \verbatim
         angleOfAttack   5; // degs
 
         angle           #calc "-degToRad($angleOfAttack)";
 
-        #calcInclude    "transform.H"
+        #codeInclude    "transform.H"
         liftDir         #calc "transform(Ry($angle), vector(0, 0, 1))";
         dragDir         #calc "transform(Ry($angle), vector(1, 0, 0))";
     \endverbatim
@@ -117,7 +117,7 @@ Usage
     "Vector<label>($nCellsByL*($<vector>max - $<vector>min) + vector::one/2)";
 
         // Generate the vertices using a boundBox
-        #calcInclude "boundBox.H"
+        #codeInclude "boundBox.H"
         vertices #calc "boundBox($<vector>min, $<vector>max).points()";
 
         blocks
@@ -153,7 +153,7 @@ Usage
     \endverbatim
 
 See also
-    Foam::functionEntries::calcIncludeEntry
+    Foam::functionEntries::codeIncludeEntry
     Foam::functionEntries::codeStream
 
 SourceFiles

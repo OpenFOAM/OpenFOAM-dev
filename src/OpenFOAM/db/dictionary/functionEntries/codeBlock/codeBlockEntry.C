@@ -28,7 +28,7 @@ License
 #include "codeBlockCalcEntry.H"
 #include "codeStream.H"
 #include "calcEntry.H"
-#include "calcIncludeEntry.H"
+#include "codeIncludeEntry.H"
 #include "negEntry.H"
 #include "OTstream.H"
 #include "ITstream.H"
@@ -127,9 +127,9 @@ bool Foam::functionEntries::codeBlockEntry::execute
                     << reinterpret_cast<uint64_t>(this) << token::SPACE
                     << codeIndex++ << endl;
             }
-            else if (t.functionNameToken() == calcIncludeEntry::typeName)
+            else if (t.functionNameToken() == codeIncludeEntry::typeName)
             {
-                calcIncludeEntry(t.lineNumber(), contextDict, is).execute
+                codeIncludeEntry(t.lineNumber(), contextDict, is).execute
                 (
                     contextDict,
                     is
@@ -159,7 +159,7 @@ bool Foam::functionEntries::codeBlockEntry::execute
     contextDict.read(ITstream(dictStream.name(), dictStream)());
 
     // Add any optional include statements to codeDict
-    calcIncludeEntry::codeInclude(codeDict);
+    codeIncludeEntry::codeInclude(codeDict);
 
     // Add the code entry to the codeDict
     codeDict.add(primitiveEntry("code", codeString, 0));

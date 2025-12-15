@@ -19,7 +19,7 @@ angleOfAttack   0; // degs
 
 angle           #calc "-degToRad($angleOfAttack)";
 
-#calcInclude    "transform.H"
+#codeInclude    "transform.H"
 liftDir         #calc "transform(Ry($angle), vector(0, 0, 1))";
 dragDir         #calc "transform(Ry($angle), vector(1, 0, 0))";
 

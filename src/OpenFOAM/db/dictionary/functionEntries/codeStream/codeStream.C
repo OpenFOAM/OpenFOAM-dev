@@ -102,7 +102,7 @@ Foam::string Foam::functionEntries::codeStream::codeString
     {
         IOWarningInFunction(is)
             << "codeInclude entry not supported within #codeBlock, "
-               "use #calcInclude instead."
+               "use #codeInclude instead."
             << endl;
     }
 

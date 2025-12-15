@@ -51,12 +51,12 @@ time    100;
 fileName #calc "\"movingBox_\" + name($time) + \".obj\"";
 
 // Additional include files for the #calc code compilation can be specified
-// using the #calcInclude entry, e.g. if functions from transform.H are used
+// using the #codeInclude entry, e.g. if functions from transform.H are used
 angleOfAttack   5; // degs
 
 angle           #calc "-degToRad($angleOfAttack)";
 
-#calcInclude    "transform.H"
+#codeInclude    "transform.H"
 liftDir         #calc "transform(Ry($<scalar>angle), vector(0, 0, 1))";
 dragDir         #calc "transform(Ry($<scalar>angle), vector(1, 0, 0))";
 
@@ -68,7 +68,7 @@ k               #calc "1.5*magSqr(0.05*$<vector>{${FOAM_CASE}/testCalc2!U})";
 // If the code string is delimited by '#{...#}' multiple lines and multiple
 // code statements can be used to generate the entry  using 'os << ...;'.
 // This is equivalent to #codeStream but with a more compact syntax.
-#calcInclude    "transform.H"
+#codeInclude    "transform.H"
 maxAngle        30;
 nAngles         7;
 Us              #calc
@@ -90,11 +90,11 @@ listU           ((1.1 2.1 1.1) (2.1 3.2 4.1) (4.3 5.3 0));
 magU1           #calc "mag($<List<vector>>listU[1])";
 
 // Field of vectors and scalars example
-#calcInclude    "Field.H"
+#codeInclude    "Field.H"
 magUs           #calc "mag($<Field<vector>>listU)";
 magSqrU1        #calc "sqr($<Field<scalar>>magUs[1])";
 
-#calcInclude    "HashTable.H"
+#codeInclude    "HashTable.H"
 namedU          (U0 (1.1 2.1 1.1) U1 (2.1 3.2 4.1) U2 (4.3 5.3 0));
 magU2           #calc "mag($<HashTable<vector>>namedU[\"U2\"])";
 

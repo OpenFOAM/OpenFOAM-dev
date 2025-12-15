@@ -27,7 +27,7 @@ Class
 Description
 
 See also
-    Foam::functionEntries::calcIncludeEntry
+    Foam::functionEntries::codeIncludeEntry
     Foam::functionEntries::codeStream
 
 SourceFiles
