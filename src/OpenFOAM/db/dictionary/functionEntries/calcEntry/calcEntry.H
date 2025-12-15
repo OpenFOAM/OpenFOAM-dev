@@ -58,11 +58,11 @@ Description
     only if the code is changed.
 
 Usage
-    Simple variable multiplication
+    Simple variable multiplication:
     \verbatim
-    a 1.1;
-    b 3.2;
-    c #calc "$a*$b";
+        a 1.1;
+        b 3.2;
+        c #calc "$a*$b";
     \endverbatim
 
     Special care is required for calc entries that include a division since
@@ -71,42 +71,42 @@ Usage
     sub-dictionary named "a". A division can be correctly executed by using a
     space between a variables and "/", e.g.
     \verbatim
-    c #calc "$a / $b";
+        c #calc "$a / $b";
     \endverbatim
 
     or bracketing the variable, e.g.
     \verbatim
-    c #calc "($a)/$b";
+        c #calc "($a)/$b";
     \endverbatim
 
-    // Example using the string type
+    Example using the string type:
     \verbatim
-    s   "field";
-    fieldName #calc "$<string>s + \"Name\" ";
+        s   "field";
+        fieldName #calc "$<string>s + \"Name\" ";
     \endverbatim
 
     Additional include files for the \c \#calc code compilation can be specified
     using the \c \#calcInclude entry, e.g. if functions from transform.H are
-    used
+    used:
     \verbatim
-    angleOfAttack   5; // degs
+        angleOfAttack   5; // degs
 
-    angle           #calc "-degToRad($angleOfAttack)";
+        angle           #calc "-degToRad($angleOfAttack)";
 
-    #calcInclude    "transform.H"
-    liftDir         #calc "transform(Ry($angle), vector(0, 0, 1))";
-    dragDir         #calc "transform(Ry($angle), vector(1, 0, 0))";
+        #calcInclude    "transform.H"
+        liftDir         #calc "transform(Ry($angle), vector(0, 0, 1))";
+        dragDir         #calc "transform(Ry($angle), vector(1, 0, 0))";
     \endverbatim
 
     Calculate the magnitude of the velocity and turbulent kinetic energy
-    where the velocity is looked-up from testCalc2
+    where the velocity is looked-up from testCalc2:
     \verbatim
-    magU        #calc "mag($<vector>testCalc2!U)";
-    k           #calc "1.5*magSqr(0.05*$<vector>{${FOAM_CASE}/testCalc2!U})";
+        magU    #calc "mag($<vector>testCalc2!U)";
+        k       #calc "1.5*magSqr(0.05*$<vector>{${FOAM_CASE}/testCalc2!U})";
     \endverbatim
 
     Example to generate a single block blockMeshDict for use with snappyHexMesh
-    with no redundant information
+    with no redundant information:
     \verbatim
         min         (-2.5 -1.2 -3.0);   // Minimum coordinates of the block
         max         (2.5 1.2 3.0);      // Maximum coordinates of the block
@@ -132,6 +132,24 @@ Usage
 
         boundary
         ();
+    \endverbatim
+
+    Example of conditional with \c #calc: showing the benefit of using verbatim
+    string:
+    \verbatim
+        #if (#calc "$fluid == \"waterAndSludge\" || $fluid == \"waterAndSand\"")
+            mixture         multicomponentMixture;
+        #else
+            mixture         pureMixture;
+        #endif
+    \endverbatim
+    same again but showing the benefit of using verbatim string:
+    \verbatim
+        #if (#calc #{$fluid == "waterAndSludge" || $fluid == "waterAndSand"#})
+            mixture         multicomponentMixture;
+        #else
+            mixture         pureMixture;
+        #endif
     \endverbatim
 
 See also

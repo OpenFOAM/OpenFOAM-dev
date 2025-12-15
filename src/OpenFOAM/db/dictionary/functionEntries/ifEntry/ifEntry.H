@@ -38,6 +38,14 @@ Description
         #endif
 
         pOutlet #if (#calc "${Uinlet} < 10") 0 #else 100 #endif;
+
+        fluid       waterAndSludge;
+
+        #if (#calc #{$fluid == "waterAndSludge" || $fluid == "waterAndSand" #})
+            mixture     multicomponentMixture;
+        #else
+            mixture     pureMixture;
+        #endif
     \endverbatim
 
     The condition should return any boolean representation supported by
