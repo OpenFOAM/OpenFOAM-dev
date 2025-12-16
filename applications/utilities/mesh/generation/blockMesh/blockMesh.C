@@ -106,7 +106,7 @@ int main(int argc, char *argv[])
     #include "addRegionOption.H"
     #include "setRootCase.H"
     #include "setMeshPath.H"
-    #include "createTime.H"
+    #include "createTimeNoFunctionObjects.H"
 
     const word dictName("blockMeshDict");
 
