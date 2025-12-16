@@ -15,12 +15,12 @@ Description
 patches     (cylinder);
 
 magUInf     $../0/U!Uinlet;
-Aref        $../system/blockMeshDict!projArea;
+Aref        $blockMeshDict!projArea;
 dragDir     (1 0 0);
 liftDir     (0 1 0);
 
 // Moment calculation parameters
-lRef        $../system/blockMeshDict!diameter;
+lRef        $blockMeshDict!diameter;
 CofR        (0 0 0);
 pitchAxis   (0 1 0);
 

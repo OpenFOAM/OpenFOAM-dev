@@ -22,6 +22,8 @@ diameter       0.001;
 // 3 = 5388 cells (after mirroring); 4 = 9536 cells; 5 = 14860 cells
 scalingFactor  3;
 
+#codeBlock
+
 // Block vertex parameters
 cylRadius      #calc "$diameter / 2.0";
 cylMax         $cylRadius;
@@ -30,17 +32,35 @@ cylMin         #neg $cylMax;
 domainMax      #calc "100*$diameter";
 domainMin      #neg $domainMax;
 
-layerMax       #calc "8*$cylMax";
+layerMax       #calc "8*$<scalar>cylMax";
 layerMin       #neg $layerMax;
 
 xJoin          #calc "20*$diameter";
-yJoin          #calc "$layerMax + 11*$diameter";
+yJoin          #calc "$<scalar>layerMax + 11*$diameter";
 
 zMax           $cylRadius;
 zMin           #neg $zMax;
 
 // For force coefficient calculations
-projArea       #calc "2*$diameter*$zMax";
+projArea       #calc "2*$diameter*$<scalar>zMax";
+
+// Cell numbers per block
+layerCells     #calc "13*$scalingFactor";
+downCircCells  #calc "8*$scalingFactor";
+upCircCells    #calc "int(ceil(0.4*$<label>layerCells))";
+
+inletCells     #calc "3*$scalingFactor";
+
+xJoinCells     #calc "5*$scalingFactor";
+xOutCells      #calc "5*$scalingFactor";
+
+// Edge parameters
+arcZ        90 (0 0 1);
+midX        #calc "$<scalar>xJoin / 2.0";
+midY        #calc
+    "$<scalar>layerMax + (7.0 / 11.0)*($<scalar>yJoin - $<scalar>layerMax)";
+
+#endCodeBlock
 
 vertices
 (
@@ -79,16 +99,6 @@ vertices
     ($domainMax  $domainMax $zMax)
 );
 
-// Cell numbers per block
-layerCells     #calc "13*$scalingFactor";
-downCircCells  #calc "8*$scalingFactor";
-upCircCells    #calc "int(ceil(0.4*$layerCells))";
-
-inletCells     #calc "3*$scalingFactor";
-
-xJoinCells     #calc "5*$scalingFactor";
-xOutCells      #calc "5*$scalingFactor";
-
 // Expansion ratios (ERs)
 layerER        1000;
 circER         2;
@@ -101,21 +111,34 @@ sg             simpleGrading;
 
 blocks
 (
-    hex (3 4 8 7 17 18 22 21)     ($layerCells $downCircCells 1) $sg ($layerER $circER 1)
-    hex (7 8 1 2 21 22 15 16)     ($layerCells $upCircCells 1)   $sg ($layerER 1 1)
+    hex (3 4 8 7 17 18 22 21)
+    ($layerCells $downCircCells 1)
+    $sg ($layerER $circER 1)
 
-    hex (4 5 9 8 18 19 23 22)     ($xJoinCells $downCircCells 1) $sg ($joinER $circER 1)
-    hex (5 6 10 9 19 20 24 23)    ($xOutCells $downCircCells 1)  $sg ($outER $circER 1)
+    hex (7 8 1 2 21 22 15 16)
+    ($layerCells $upCircCells 1)
+    $sg ($layerER 1 1)
 
-    hex (8 11 0 1 22 25 14 15)    ($inletCells $upCircCells 1)   $sg ($inletER 1 1)
-    hex (8 9 12 11 22 23 26 25)   ($xJoinCells $inletCells 1)    $sg ($joinER $inletER 1)
-    hex (9 10 13 12 23 24 27 26)  ($xOutCells $inletCells 1)     $sg ($outER $inletER 1)
+    hex (4 5 9 8 18 19 23 22)
+    ($xJoinCells $downCircCells 1)
+    $sg ($joinER $circER 1)
+
+    hex (5 6 10 9 19 20 24 23)
+    ($xOutCells $downCircCells 1)
+    $sg ($outER $circER 1)
+
+    hex (8 11 0 1 22 25 14 15)
+    ($inletCells $upCircCells 1)
+    $sg ($inletER 1 1)
+
+    hex (8 9 12 11 22 23 26 25)
+    ($xJoinCells $inletCells 1)
+    $sg ($joinER $inletER 1)
+
+    hex (9 10 13 12 23 24 27 26)
+    ($xOutCells $inletCells 1)
+    $sg ($outER $inletER 1)
 );
-
-// Edge parameters
-arcZ        90 (0 0 1);
-midX        #calc "$xJoin / 2.0";
-midY        #calc "$layerMax + (7.0 / 11.0)*($yJoin - $layerMax)";
 
 edges
 (
@@ -173,8 +196,5 @@ boundary
     }
 );
 
-mergePatchPairs
-(
-);
 
 // ************************************************************************* //
