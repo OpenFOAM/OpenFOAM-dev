@@ -61,7 +61,7 @@ Foam::OTstream Foam::functionEntries::codeBlockCalcEntry::resultStream
 {
     if (debug)
     {
-        Info<< "Expanding #codeBlockCalc at line " << is.lineNumber()
+        Info<< "Expanding " << typeName << " at line " << is.lineNumber()
             << " in file " <<  dict.name() << endl;
     }
 

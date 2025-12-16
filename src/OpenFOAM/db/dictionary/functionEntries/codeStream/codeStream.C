@@ -149,7 +149,7 @@ void* Foam::functionEntries::codeStream::compile
 
     if (debug && !lib)
     {
-        Info<< "Using #codeStream with " << libPath << endl;
+        Info<< "Using " << typeName << " with " << libPath << endl;
     }
 
     // Nothing loaded
@@ -376,7 +376,7 @@ Foam::OTstream Foam::functionEntries::codeStream::resultStream
 {
     if (debug)
     {
-        Info<< "Using #codeStream at line " << is.lineNumber()
+        Info<< "Using " << typeName << " at line " << is.lineNumber()
             << " in file " <<  contextDict.name() << endl;
     }
 

@@ -75,14 +75,14 @@ bool Foam::functionEntries::codeBlockEntry::execute
 {
     if (debug)
     {
-        Info<< "Compiling code within #codeBlock starting at line "
+        Info<< "Compiling code within " << typeName << " starting at line "
             << is.lineNumber() << " in file " <<  contextDict.name() << endl;
     }
 
     // Construct codeDict for codeStream with the parent dictionary provided for
     // string expansion and variable substitution and the same name as the
     // parent for consistent error messaging
-    dictionary codeDict("#codeBlock", contextDict);
+    dictionary codeDict(typeName, contextDict);
     string codeString;
 
     // Disable functionEntry expansion
