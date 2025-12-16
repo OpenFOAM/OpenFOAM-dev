@@ -82,7 +82,7 @@ Foam::Ostream& Foam::OTstream::write(const char c)
         case token::MULTIPLY :
         case token::DIVIDE :
         {
-            append(token::punctuationToken(c));
+            append(token(token::punctuationToken(c), lineNumber()));
             return *this;
         }
 
@@ -90,7 +90,7 @@ Foam::Ostream& Foam::OTstream::write(const char c)
         {
             if (!isspace(c))
             {
-                append(token::punctuationToken(c));
+                append(token(token::punctuationToken(c), lineNumber()));
             }
         }
     }
@@ -105,11 +105,11 @@ Foam::Ostream& Foam::OTstream::write(const char* str)
 
     if (nonWhiteChars.size() == 1)
     {
-        append(nonWhiteChars[0]);
+        append(token(nonWhiteChars[0], lineNumber()));
     }
     else if (nonWhiteChars.size())
     {
-        append(nonWhiteChars);
+        append(token(nonWhiteChars, lineNumber()));
     }
 
     return *this;
@@ -118,28 +118,28 @@ Foam::Ostream& Foam::OTstream::write(const char* str)
 
 Foam::Ostream& Foam::OTstream::write(const word& str)
 {
-    append(str);
+    append(token(str, lineNumber()));
     return *this;
 }
 
 
 Foam::Ostream& Foam::OTstream::write(const string& str)
 {
-    append(str);
+    append(token(str, lineNumber()));
     return *this;
 }
 
 
 Foam::Ostream& Foam::OTstream::write(const keyType& kt)
 {
-    append(kt);
+    append(token(kt, lineNumber()));
     return *this;
 }
 
 
 Foam::Ostream& Foam::OTstream::write(const verbatimString& vs)
 {
-    append(vs);
+    append(token(vs, lineNumber()));
     return *this;
 }
 
@@ -152,11 +152,11 @@ Foam::Ostream& Foam::OTstream::writeQuoted
 {
     if (quoted)
     {
-        append(string(str));
+        append(token(string(str), lineNumber()));
     }
     else
     {
-        append(word(str));
+        append(token(word(str), lineNumber()));
     }
     return *this;
 }
@@ -164,49 +164,49 @@ Foam::Ostream& Foam::OTstream::writeQuoted
 
 Foam::Ostream& Foam::OTstream::write(const int32_t val)
 {
-    append(val);
+    append(token(val, lineNumber()));
     return *this;
 }
 
 
 Foam::Ostream& Foam::OTstream::write(const int64_t val)
 {
-    append(val);
+    append(token(val, lineNumber()));
     return *this;
 }
 
 
 Foam::Ostream& Foam::OTstream::write(const uint32_t val)
 {
-    append(val);
+    append(token(val, lineNumber()));
     return *this;
 }
 
 
 Foam::Ostream& Foam::OTstream::write(const uint64_t val)
 {
-    append(val);
+    append(token(val, lineNumber()));
     return *this;
 }
 
 
 Foam::Ostream& Foam::OTstream::write(const floatScalar val)
 {
-    append(val);
+    append(token(val, lineNumber()));
     return *this;
 }
 
 
 Foam::Ostream& Foam::OTstream::write(const doubleScalar val)
 {
-    append(val);
+    append(token(val, lineNumber()));
     return *this;
 }
 
 
 Foam::Ostream& Foam::OTstream::write(const longDoubleScalar val)
 {
-    append(val);
+    append(token(val, lineNumber()));
     return *this;
 }
 
