@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,11 +58,13 @@ template<class NonConstRegion>
 Foam::RegionRef<Region>::RegionRef
 (
     const MultiRegionRefs<NonConstRegion>& mrr,
+    const word& previousPrefix,
     const label regioni,
     Region& region
 )
 :
     mrr_(*reinterpret_cast<const MultiRegionRefs<Region>*>(&mrr)),
+    previousPrefix_(previousPrefix),
     regioni_(regioni),
     region_(region)
 {
@@ -81,7 +83,7 @@ Foam::RegionRef<Region>::RegionRef
 template<class Region>
 Foam::RegionRef<Region>::RegionRef(RegionRef&& rp)
 :
-    RegionRef(rp.mrr_, rp.regioni_, rp.region_)
+    RegionRef(rp.mrr_, rp.previousPrefix_, rp.regioni_, rp.region_)
 {
     rp.regioni_ = -1;
 }
@@ -117,7 +119,7 @@ Foam::RegionRef<Region>::~RegionRef()
 {
     if (mrr_.prefixes() && regioni_ != -1)
     {
-        Sout.prefix() = string(mrr_.prefixWidth(), ' ');
+        Sout.prefix() = previousPrefix_;
     }
 }
 
@@ -160,7 +162,14 @@ Foam::RegionRef<const Region> Foam::MultiRegionRefs<Region>::operator[]
     const label regioni
 ) const
 {
-    return RegionRef<const Region>(*this, regioni, regions_[regioni]);
+    return
+        RegionRef<const Region>
+        (
+            *this,
+            Sout.prefix(),
+            regioni,
+            regions_[regioni]
+        );
 }
 
 
@@ -170,7 +179,14 @@ Foam::RegionRef<Region> Foam::MultiRegionRefs<Region>::operator[]
     const label regioni
 )
 {
-    return RegionRef<Region>(*this, regioni, regions_[regioni]);
+    return
+        RegionRef<Region>
+        (
+            *this,
+            Sout.prefix(),
+            regioni,
+            regions_[regioni]
+        );
 }
 
 

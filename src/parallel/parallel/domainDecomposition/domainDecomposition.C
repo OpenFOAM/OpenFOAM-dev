@@ -993,6 +993,7 @@ const Foam::PtrList<Foam::surfaceLabelField::Boundary>&
 Foam::domainDecomposition::procFaceAddressingBf() const
 {
     validateComplete();
+
     {
         // Get any non-conformal proc-face addressing
         List<List<DynamicList<label>>> nonConformalProcFaceAddressingBf =

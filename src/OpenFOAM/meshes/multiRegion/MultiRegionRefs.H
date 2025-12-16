@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,6 +62,9 @@ private:
         //- The multi-region container
         const MultiRegionRefs<Region>& mrr_;
 
+        //- Previous prefix to restore on destruction
+        const word previousPrefix_;
+
         //- The region index
         label regioni_;
 
@@ -78,6 +81,7 @@ public:
         RegionRef
         (
             const MultiRegionRefs<NonConstRegion>& mrr,
+            const word& previousPrefix,
             const label regioni,
             Region& region
         );
