@@ -234,6 +234,12 @@ protected:
             bool topoChanged_;
 
 
+    // Protected Member Functions
+
+        //- Does a read update move the mesh forward in time?
+        bool readUpdateIsForward() const;
+
+
 public:
 
     // Public Typedefs

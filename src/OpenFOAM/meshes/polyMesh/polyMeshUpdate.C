@@ -44,13 +44,6 @@ void Foam::polyMesh::topoChangeZones(const polyTopoChangeMap& map)
 
 void Foam::polyMesh::topoChange(const polyTopoChangeMap& map)
 {
-    if (debug)
-    {
-        InfoInFunction
-            << "Updating addressing and (optional) pointMesh/pointFields"
-            << endl;
-    }
-
     // Update boundaryMesh (note that patches themselves already ok)
     boundary_.topoChange();
 

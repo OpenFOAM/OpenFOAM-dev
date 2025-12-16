@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,10 +34,7 @@ Foam::autoPtr<Foam::fvPatch> Foam::fvPatch::New
     const fvBoundaryMesh& bm
 )
 {
-    if (debug)
-    {
-        InfoInFunction << "Constructing fvPatch" << endl;
-    }
+    DebugInFunction << "Constructing fvPatch" << endl;
 
     polyPatchConstructorTable::iterator cstrIter =
         polyPatchConstructorTablePtr_->find(patch.type());

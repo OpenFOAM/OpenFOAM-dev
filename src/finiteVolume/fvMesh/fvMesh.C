@@ -87,10 +87,7 @@ const Foam::HashSet<Foam::word> Foam::fvMesh::curGeometryFields
 
 void Foam::fvMesh::clearFvGeomNotOldVol()
 {
-    if (debug)
-    {
-        Pout<< FUNCTION_NAME << "clearFvGeomNotOldVol" << endl;
-    }
+    DebugInFunction << "Clearing current-time FV geometry" << endl;
 
     meshObjects::clearUpto
     <
@@ -120,10 +117,7 @@ void Foam::fvMesh::clearFvGeomNotOldVol()
 
 void Foam::fvMesh::clearFvGeom()
 {
-    if (debug)
-    {
-        Pout<< FUNCTION_NAME << "clearFvGeom" << endl;
-    }
+    DebugInFunction << "Clearing FV Geometry" << endl;
 
     clearFvGeomNotOldVol();
 
@@ -251,10 +245,7 @@ void Foam::fvMesh::printAllocated() const
 
 void Foam::fvMesh::clearGeom()
 {
-    if (debug)
-    {
-        Pout<< FUNCTION_NAME << "Clearing geometric data" << endl;
-    }
+    DebugInFunction << "Clearing geometry" << endl;
 
     clearFvGeom();
 
@@ -264,10 +255,7 @@ void Foam::fvMesh::clearGeom()
 
 void Foam::fvMesh::clearAddressing(const bool isMeshUpdate)
 {
-    if (debug)
-    {
-        Pout<< FUNCTION_NAME << "isMeshUpdate: " << isMeshUpdate << endl;
-    }
+    DebugInFunction << "isMeshUpdate: " << isMeshUpdate << endl;
 
     if (isMeshUpdate)
     {
@@ -397,10 +385,7 @@ Foam::fvMesh::fvMesh
     CfPtr_(nullptr),
     phiPtr_(nullptr)
 {
-    if (debug)
-    {
-        Pout<< FUNCTION_NAME << "Constructing fvMesh from IOobject" << endl;
-    }
+    DebugInFunction << "Constructing fvMesh from IOobject" << endl;
 
     if (doPost)
     {
@@ -463,10 +448,7 @@ Foam::fvMesh::fvMesh
     CfPtr_(nullptr),
     phiPtr_(nullptr)
 {
-    if (debug)
-    {
-        Pout<< FUNCTION_NAME << "Constructing fvMesh from cellShapes" << endl;
-    }
+    DebugInFunction << "Constructing fvMesh from shapes" << endl;
 }
 
 
@@ -518,10 +500,7 @@ Foam::fvMesh::fvMesh
     CfPtr_(nullptr),
     phiPtr_(nullptr)
 {
-    if (debug)
-    {
-        Pout<< FUNCTION_NAME << "Constructing fvMesh from components" << endl;
-    }
+    DebugInFunction << "Constructing fvMesh from components" << endl;
 }
 
 
@@ -571,10 +550,7 @@ Foam::fvMesh::fvMesh
     CfPtr_(nullptr),
     phiPtr_(nullptr)
 {
-    if (debug)
-    {
-        Pout<< FUNCTION_NAME << "Constructing fvMesh from components" << endl;
-    }
+    DebugInFunction << "Constructing fvMesh from components" << endl;
 }
 
 
@@ -613,10 +589,7 @@ Foam::fvMesh::fvMesh(fvMesh&& mesh)
     CfPtr_(Foam::move(mesh.CfPtr_)),
     phiPtr_(Foam::move(mesh.phiPtr_))
 {
-    if (debug)
-    {
-        Pout<< FUNCTION_NAME << "Moving fvMesh" << endl;
-    }
+    DebugInFunction << "Move-constructing fvMesh" << endl;
 }
 
 
@@ -797,10 +770,7 @@ void Foam::fvMesh::addFvPatches
 
 void Foam::fvMesh::removeFvBoundary()
 {
-    if (debug)
-    {
-        Pout<< FUNCTION_NAME << "Removing boundary patches." << endl;
-    }
+    DebugInFunction << "Removing boundary patches." << endl;
 
     // Remove fvBoundaryMesh data first.
     boundary_.clear();
@@ -865,16 +835,31 @@ Foam::fvMesh::readUpdateState Foam::fvMesh::readUpdate
     // Determine if this update moves forward in time. If so, searching back in
     // time for data files will only go back as far as the previous instance.
     const fileName instance0 = instance();
-    scalar time0 = NaN;
-    const bool forward =
-        readScalar(instance0.c_str(), time0) && time0 < time().value();
+    const bool forward = readUpdateIsForward();
+
+    // Update the polyMesh and the mesh instance
+    const polyMesh::readUpdateState state = polyMesh::readUpdate();
+
+    DebugInFunction << "Updating the fvMesh:" << endl;
 
     if (debug)
     {
-        Pout<< FUNCTION_NAME << "Updating fvMesh.  ";
+        switch (state)
+        {
+            case polyMesh::TOPO_PATCH_CHANGE:
+                Info<< "    Boundary and topological change" << endl;
+                break;
+            case polyMesh::TOPO_CHANGE:
+                Info<< "    Topological change" << endl;
+                break;
+            case polyMesh::POINTS_MOVED:
+                Info<< "    Point motion" << endl;
+                break;
+            default:
+                Info<< "    No change" << endl;
+                break;
+        }
     }
-
-    const polyMesh::readUpdateState state = polyMesh::readUpdate();
 
     const bool reStitch =
         stitcher_.valid()
@@ -901,44 +886,20 @@ Foam::fvMesh::readUpdateState Foam::fvMesh::readUpdate
         conform();
     }
 
-    if (state == polyMesh::TOPO_PATCH_CHANGE)
+    switch (state)
     {
-        boundary_.readUpdate(boundaryMesh());
-    }
-
-    if (state == polyMesh::TOPO_PATCH_CHANGE)
-    {
-        if (debug)
-        {
-            Info<< "Boundary and topological update" << endl;
-        }
-
-        clearOut();
-    }
-    else if (state == polyMesh::TOPO_CHANGE)
-    {
-        if (debug)
-        {
-            Info<< "Topological update" << endl;
-        }
-
-        clearOut();
-    }
-    else if (state == polyMesh::POINTS_MOVED)
-    {
-        if (debug)
-        {
-            Info<< "Point motion update" << endl;
-        }
-
-        clearFvGeom();
-    }
-    else
-    {
-        if (debug)
-        {
-            Info<< "No update" << endl;
-        }
+        case polyMesh::TOPO_PATCH_CHANGE:
+            boundary_.readUpdate(boundaryMesh());
+            clearOut();
+            break;
+        case polyMesh::TOPO_CHANGE:
+            clearOut();
+            break;
+        case polyMesh::POINTS_MOVED:
+            clearFvGeom();
+            break;
+        default:
+            break;
     }
 
     if (reStitch && stitch != stitchType::none)
@@ -1164,16 +1125,12 @@ const Foam::fvMeshMover& Foam::fvMesh::mover() const
 
 void Foam::fvMesh::mapFields(const polyTopoChangeMap& map)
 {
-    if (debug)
-    {
-        Pout<< FUNCTION_NAME
-            << " nOldCells:" << map.nOldCells()
-            << " nCells:" << nCells()
-            << " nOldFaces:" << map.nOldFaces()
-            << " nFaces:" << nFaces()
-            << endl;
-    }
-
+    DebugInFunction
+        << " nOldCells:" << map.nOldCells()
+        << " nCells:" << nCells()
+        << " nOldFaces:" << map.nOldFaces()
+        << " nFaces:" << nFaces()
+        << endl;
 
     // We require geometric properties valid for the old mesh
     if

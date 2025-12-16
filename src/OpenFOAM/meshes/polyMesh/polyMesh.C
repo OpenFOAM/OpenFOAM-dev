@@ -1045,13 +1045,6 @@ const Foam::labelIOList& Foam::polyMesh::tetBasePtIs() const
 {
     if (tetBasePtIsPtr_.empty())
     {
-        if (debug)
-        {
-            WarningInFunction
-                << "Forcing storage of base points."
-                << endl;
-        }
-
         tetBasePtIsPtr_.reset
         (
             new labelIOList
@@ -1377,12 +1370,9 @@ const Foam::pointField& Foam::polyMesh::oldCellCentres() const
 
 void Foam::polyMesh::setPoints(const pointField& newPoints)
 {
-    if (debug)
-    {
-        InfoInFunction
-            << "Set points for time " << time().value()
-            << " index " << time().timeIndex() << endl;
-    }
+    DebugInFunction
+        << "Set points for time " << time().value()
+        << " index " << time().timeIndex() << endl;
 
     primitiveMesh::clearGeom();
 
@@ -1419,12 +1409,9 @@ Foam::tmp<Foam::scalarField> Foam::polyMesh::movePoints
     const pointField& newPoints
 )
 {
-    if (debug)
-    {
-        InfoInFunction
-            << "Moving points for time " << time().value()
-            << " index " << time().timeIndex() << endl;
-    }
+    DebugInFunction
+        << "Moving points for time " << time().value()
+        << " index " << time().timeIndex() << endl;
 
     // Pick up old points and cell centres
     if (curMotionTimeIndex_ != time().timeIndex())
@@ -1493,6 +1480,7 @@ const Foam::globalMeshData& Foam::polyMesh::globalData() const
                 << "Constructing parallelData from processor topology"
                 << endl;
         }
+
         // Construct globalMeshData using processorPatch information only.
         globalMeshDataPtr_.reset(new globalMeshData(*this));
     }

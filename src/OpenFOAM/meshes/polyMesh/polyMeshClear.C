@@ -33,10 +33,7 @@ License
 
 void Foam::polyMesh::removeBoundary()
 {
-    if (debug)
-    {
-        InfoInFunction << "Removing boundary patches." << endl;
-    }
+    DebugInFunction << "Removing boundary patches." << endl;
 
     // Remove the point zones
     boundary_.clear();
@@ -63,10 +60,7 @@ void Foam::polyMesh::printAllocated() const
 
 void Foam::polyMesh::clearGeom()
 {
-    if (debug)
-    {
-        InfoInFunction << "Clearing geometric data" << endl;
-    }
+    DebugInFunction << "Clearing geometric data" << endl;
 
     // Clear all geometric mesh objects
     meshObjects::clear<pointMesh, DeletableMeshObject>(*this);
@@ -84,11 +78,7 @@ void Foam::polyMesh::clearGeom()
 
 void Foam::polyMesh::clearAddressing(const bool isMeshUpdate)
 {
-    if (debug)
-    {
-        InfoInFunction
-            << "Clearing topology  isMeshUpdate:" << isMeshUpdate << endl;
-    }
+    DebugInFunction << "isMeshUpdate: " << isMeshUpdate << endl;
 
     if (isMeshUpdate)
     {
@@ -161,10 +151,7 @@ void Foam::polyMesh::clearOut()
 
 void Foam::polyMesh::clearTetBasePtIs()
 {
-    if (debug)
-    {
-        InfoInFunction << "Clearing tet base points" << endl;
-    }
+    DebugInFunction << "Clearing tet base points" << endl;
 
     tetBasePtIsPtr_.clear();
 }

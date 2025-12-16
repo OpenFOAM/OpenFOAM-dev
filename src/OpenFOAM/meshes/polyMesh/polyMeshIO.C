@@ -29,7 +29,7 @@ License
 #include "zonesGenerator.H"
 #include "OSspecific.H"
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 void Foam::polyMesh::setPointsWrite(const Foam::IOobject::writeOption wo)
 {
@@ -68,12 +68,21 @@ void Foam::polyMesh::setTopologyWrite(const Foam::IOobject::writeOption wo)
 }
 
 
+// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
+
+bool Foam::polyMesh::readUpdateIsForward() const
+{
+    scalar time0 = NaN;
+
+    return readScalar(instance().c_str(), time0) && time0 < time().value();
+}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
 void Foam::polyMesh::setPointsInstance(const fileName& inst)
 {
-    if (debug)
-    {
-        InfoInFunction << "Resetting points instance to " << inst << endl;
-    }
+    DebugInFunction << "Resetting points instance to " << inst << endl;
 
     instance() = inst;
 
@@ -92,10 +101,7 @@ void Foam::polyMesh::setPointsInstance(const fileName& inst)
 
 void Foam::polyMesh::setInstance(const fileName& inst)
 {
-    if (debug)
-    {
-        InfoInFunction << "Resetting topology instance to " << inst << endl;
-    }
+    DebugInFunction << "Resetting topology instance to " << inst << endl;
 
     setPointsInstance(inst);
 
@@ -128,17 +134,12 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
     // Determine if this update moves forward in time. If so, searching back in
     // time for data files will only go back as far as the previous instance.
     const fileName instance0 = instance();
-    scalar time0 = NaN;
-    const bool forward =
-        readScalar(instance0.c_str(), time0) && time0 < time().value();
+    const bool forward = readUpdateIsForward();
 
     // Update the mesh instance
     instance() = time().name();
 
-    if (debug)
-    {
-        InfoInFunction << "Updating mesh based on saved data." << endl;
-    }
+    DebugInFunction << "Updating the polyMesh:" << endl;
 
     polyMesh::readUpdateState state = polyMesh::UNCHANGED;
 
@@ -164,21 +165,16 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
         )
     );
 
-    if (debug)
-    {
-        Info<< "Faces instance: old = " << facesInstance()
-            << " new = " << facesInst << nl
-            << "Points instance: old = " << pointsInstance()
-            << " new = " << pointsInst << endl;
-    }
+    DebugInfo
+        << "    Faces instance: old = " << facesInstance()
+        << ", new = " << facesInst << nl
+        << "    Points instance: old = " << pointsInstance()
+        << ", new = " << pointsInst << endl;
 
     if (facesInst != (forward ? instance0 : facesInstance()))
     {
         // Topological change
-        if (debug)
-        {
-            Info<< "Topological change" << endl;
-        }
+        DebugInfo << "    Topological change" << endl;
 
         clearOut();
 
@@ -381,13 +377,9 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
     else if (pointsInst != (forward ? instance0 : pointsInstance()))
     {
         // Points moved
-        if (debug)
-        {
-            Info<< "Point motion" << endl;
-        }
+        DebugInfo << "    Point motion" << endl;
 
         clearGeom();
-
 
         label nOldPoints = points_.size();
 
@@ -546,9 +538,9 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
         }
     }
 
-    if (debug && state == polyMesh::UNCHANGED)
+    if (state == polyMesh::UNCHANGED)
     {
-        Info<< "No change" << endl;
+        DebugInfo << "    No change" << endl;
     }
 
     return state;

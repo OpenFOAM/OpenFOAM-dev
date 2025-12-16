@@ -519,10 +519,7 @@ Foam::polyMesh::polyMesh
     moving_(false),
     topoChanged_(false)
 {
-    if (debug)
-    {
-        Info<<"Constructing polyMesh from cell and boundary shapes." << endl;
-    }
+    DebugInFunction << "Constructing polyMesh from shapes" << endl;
 
     // Remove all of the old mesh files if they exist
     removeFiles(instance());
@@ -795,10 +792,7 @@ Foam::polyMesh::polyMesh
     storeOldCellCentres_(false),
     moving_(false)
 {
-    if (debug)
-    {
-        Info<<"Constructing polyMesh from cell and boundary shapes." << endl;
-    }
+    DebugInFunction << "Constructing polyMesh from shapes" << endl;
 
     // Remove all of the old mesh files if they exist
     removeFiles(instance());
