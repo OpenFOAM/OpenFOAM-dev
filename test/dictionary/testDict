@@ -66,9 +66,16 @@ activeAir
 
 whichActive activeWater;
 
-active2
-{
-    ${${FOAM_CASE}/testDict2!$whichActive};
-}
+#ifeq ($whichActive activeWater)
+    active2
+    {
+        $activeWater;
+    }
+#else
+    active2
+    {
+        $activeAir;
+    }
+#endif
 
 // ************************************************************************* //

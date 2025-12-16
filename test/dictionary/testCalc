@@ -106,4 +106,12 @@ magU21          #calc "mag($listU2[1])";
 
 #endCodeBlock
 
+// Complex conditionals are also possible using #if and #calculate
+// but not within #codeBlock...#endCodeBlock
+#if (#calc "$angle < 0")
+    negativeAngle $angle;
+#else
+    positiveAngle $angle;
+#endif
+
 // ************************************************************************* //
