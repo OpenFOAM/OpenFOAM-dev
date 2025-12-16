@@ -49,6 +49,7 @@ fieldName #calc "$<string>s + \"Name\"";
 
 time    100;
 fileName #calc "\"movingBox_\" + name($time) + \".obj\"";
+fileName2 #calc #{ "movingBox_" + name($time) + ".obj" #};
 
 // Additional include files for the #calc code compilation can be specified
 // using the #codeInclude entry, e.g. if functions from transform.H are used
