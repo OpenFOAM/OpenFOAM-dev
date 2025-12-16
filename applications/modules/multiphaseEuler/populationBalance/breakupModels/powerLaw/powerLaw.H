@@ -35,7 +35,7 @@ SourceFiles
 #ifndef powerLaw_H
 #define powerLaw_H
 
-#include "breakupModel.H"
+#include "daughterSizeDistribution.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -52,7 +52,7 @@ namespace breakupModels
 
 class powerLaw
 :
-    public breakupModel
+    public daughterSizeDistribution
 {
     // Private Data
 
@@ -82,12 +82,8 @@ public:
 
     // Member Functions
 
-        //- Set total breakupRate
-        virtual void setBreakupRate
-        (
-            volScalarField::Internal& breakupRate,
-            const label i
-        );
+        //- Return the breakup rate for a group
+        virtual tmp<volScalarField::Internal> rate(const label i) const;
 };
 
 

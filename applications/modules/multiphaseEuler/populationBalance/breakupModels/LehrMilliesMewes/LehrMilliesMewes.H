@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::populationBalance::binaryBreakupModels::LehrMilliesMewes
+    Foam::populationBalance::breakupModels::LehrMilliesMewes
 
 Description
     Model of Lehr et al. (2002). The breakup rate is calculated by
@@ -86,7 +86,7 @@ SourceFiles
 #ifndef LehrMilliesMewes_H
 #define LehrMilliesMewes_H
 
-#include "binaryBreakupModel.H"
+#include "binary.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -94,7 +94,7 @@ namespace Foam
 {
 namespace populationBalance
 {
-namespace binaryBreakupModels
+namespace breakupModels
 {
 
 /*---------------------------------------------------------------------------*\
@@ -103,12 +103,13 @@ namespace binaryBreakupModels
 
 class LehrMilliesMewes
 :
-    public binaryBreakupModel
+    public binary
 {
 public:
 
     //- Runtime type information
     TypeName("LehrMilliesMewes");
+
 
     // Constructor
 
@@ -126,19 +127,18 @@ public:
 
     // Member Functions
 
-        //- Add to binary breakupRate
-        virtual void addToBinaryBreakupRate
+        //- Return the breakup rate between two groups
+        virtual tmp<volScalarField::Internal> rate
         (
-            volScalarField::Internal& binaryBreakupRate,
             const label i,
             const label j
-        );
+        ) const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace binaryBreakupModels
+} // End namespace breakupModels
 } // End namespace populationBalance
 } // End namespace Foam
 

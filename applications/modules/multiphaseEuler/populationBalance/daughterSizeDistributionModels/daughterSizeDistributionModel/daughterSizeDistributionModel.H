@@ -117,7 +117,7 @@ public:
         //- Return contribution to group i due to breakup in group k
         const dimensionedScalar& nik(const label i, const label k) const;
 
-        //- Precompute field independent expressions
+        //- Pre-compute field independent expressions
         void precompute();
 
         //- Calculate contribution to group i due to breakup in group k

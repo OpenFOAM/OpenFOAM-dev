@@ -36,12 +36,7 @@ namespace populationBalance
 namespace breakupModels
 {
     defineTypeNameAndDebug(Kusters, 0);
-    addToRunTimeSelectionTable
-    (
-        breakupModel,
-        Kusters,
-        dictionary
-    );
+    addToRunTimeSelectionTable(breakupModel, Kusters, dictionary);
 }
 }
 }
@@ -55,7 +50,7 @@ Foam::populationBalance::breakupModels::Kusters::Kusters
     const dictionary& dict
 )
 :
-    breakupModel(popBal, dict),
+    daughterSizeDistribution(popBal, dict),
     B_("B", dimensionSet(0, 3, -3, 0, 0), dict),
     dP_("dP", dimLength, dict),
     kc_("kc", dimless, dict, 1),
@@ -65,11 +60,8 @@ Foam::populationBalance::breakupModels::Kusters::Kusters
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::populationBalance::breakupModels::Kusters::setBreakupRate
-(
-    volScalarField::Internal& breakupRate,
-    const label i
-)
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::populationBalance::breakupModels::Kusters::rate(const label i) const
 {
     using Foam::constant::mathematical::pi;
 
@@ -81,7 +73,7 @@ void Foam::populationBalance::breakupModels::Kusters::setBreakupRate
     tmp<volScalarField> tnu(popBal_.continuousPhase().fluidThermo().nu());
     const volScalarField::Internal nuc = tnu();
 
-    breakupRate =
+    return
         sqrt(4*epsilonc/(15*pi*nuc))
        *exp(- B_/(dP_*0.5*pow(pow(di/dP_, Df_)/kc_, 1/Df_))/epsilonc);
 }

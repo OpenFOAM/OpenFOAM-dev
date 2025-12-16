@@ -51,8 +51,7 @@ namespace coalescenceModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::populationBalance::coalescenceModels::PrinceBlanch::
-PrinceBlanch
+Foam::populationBalance::coalescenceModels::PrinceBlanch::PrinceBlanch
 (
     const populationBalanceModel& popBal,
     const dictionary& dict
@@ -103,13 +102,12 @@ void Foam::populationBalance::coalescenceModels::PrinceBlanch::precompute()
 }
 
 
-void Foam::populationBalance::coalescenceModels::PrinceBlanch::
-addToCoalescenceRate
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::populationBalance::coalescenceModels::PrinceBlanch::rate
 (
-    volScalarField::Internal& coalescenceRate,
     const label i,
     const label j
-)
+) const
 {
     using Foam::constant::mathematical::pi;
 
@@ -139,6 +137,15 @@ addToCoalescenceRate
            /pow(rij, 2.0/3.0)
         )
     );
+
+    tmp<volScalarField::Internal> tcoalescenceRate =
+        volScalarField::Internal::New
+        (
+            "coalescenceRate",
+            popBal_.mesh(),
+            dimensionedScalar(dimVolume/dimTime, scalar(0))
+        );
+    volScalarField::Internal& coalescenceRate = tcoalescenceRate.ref();
 
     if (turbulence_)
     {
@@ -173,6 +180,8 @@ addToCoalescenceRate
             pow3(dSphi + dSphj)/6
            *shearStrainRate_()*collisionEfficiency;
     }
+
+    return tcoalescenceRate;
 }
 
 

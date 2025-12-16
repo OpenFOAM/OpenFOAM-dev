@@ -82,51 +82,22 @@ public:
         );
 
 
-    //- Class used for the read-construction of
-    //  PtrLists of coalescence models
-    class iNew
-    {
-        const populationBalanceModel& popBal_;
-
-    public:
-
-        iNew(const populationBalanceModel& popBal)
-        :
-            popBal_(popBal)
-        {}
-
-        autoPtr<coalescenceModel> operator()(Istream& is) const
-        {
-            word type(is);
-            dictionary dict(is);
-            return coalescenceModel::New(type, popBal_, dict);
-        }
-    };
-
-
     // Constructor
 
+        //- Construct from a population balance and its dictionary
         coalescenceModel
         (
             const populationBalanceModel& popBal,
             const dictionary& dict
         );
 
-        autoPtr<coalescenceModel> clone() const
-        {
-            NotImplemented;
-            return autoPtr<coalescenceModel>(nullptr);
-        }
 
-
-    // Selector
-
-        static autoPtr<coalescenceModel> New
-        (
-            const word& type,
-            const populationBalanceModel& popBal,
-            const dictionary& dict
-        );
+    //- Selector
+    static autoPtr<coalescenceModel> New
+    (
+        const populationBalanceModel& popBal,
+        const dictionary& dict
+    );
 
 
     //- Destructor
@@ -136,16 +107,18 @@ public:
 
     // Member Functions
 
-        //- Precompute diameter independent expressions
+        //- Does this model coalesce?
+        virtual bool coalesces() const;
+
+        //- Pre-compute diameter independent expressions
         virtual void precompute();
 
-        //- Add to coalescenceRate
-        virtual void addToCoalescenceRate
+        //- Return the coalescence rate between two groups
+        virtual tmp<volScalarField::Internal> rate
         (
-            volScalarField::Internal& coalescenceRate,
             const label i,
             const label j
-        ) = 0;
+        ) const = 0;
 };
 
 

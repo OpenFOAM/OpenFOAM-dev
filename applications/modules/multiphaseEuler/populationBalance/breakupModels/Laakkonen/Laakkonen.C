@@ -36,12 +36,7 @@ namespace populationBalance
 namespace breakupModels
 {
     defineTypeNameAndDebug(Laakkonen, 0);
-    addToRunTimeSelectionTable
-    (
-        breakupModel,
-        Laakkonen,
-        dictionary
-    );
+    addToRunTimeSelectionTable(breakupModel, Laakkonen, dictionary);
 }
 }
 }
@@ -49,14 +44,13 @@ namespace breakupModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::populationBalance::breakupModels::Laakkonen::
-Laakkonen
+Foam::populationBalance::breakupModels::Laakkonen::Laakkonen
 (
     const populationBalanceModel& popBal,
     const dictionary& dict
 )
 :
-    breakupModel(popBal, dict),
+    daughterSizeDistribution(popBal, dict),
     C1_("C1", dimensionSet(0, -2.0/3.0, 0, 0, 0), dict, 2.25),
     C2_("C2", dimless, dict, 0.04),
     C3_("C3", dimless, dict, 0.01)
@@ -65,11 +59,8 @@ Laakkonen
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::populationBalance::breakupModels::Laakkonen::setBreakupRate
-(
-    volScalarField::Internal& breakupRate,
-    const label i
-)
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::populationBalance::breakupModels::Laakkonen::rate(const label i) const
 {
     const dimensionedScalar& dSphi = popBal_.dSph(i);
 
@@ -84,7 +75,7 @@ void Foam::populationBalance::breakupModels::Laakkonen::setBreakupRate
     tmp<volScalarField> tmu(popBal_.continuousPhase().fluidThermo().mu());
     const volScalarField::Internal muc = tmu();
 
-    breakupRate =
+    return
         C1_
        *cbrt(epsilonc)
        *erfc

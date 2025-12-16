@@ -55,16 +55,24 @@ Foam::populationBalance::coalescenceModels::hydrodynamic::hydrodynamic
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::populationBalance::coalescenceModels::hydrodynamic::
-addToCoalescenceRate
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::populationBalance::coalescenceModels::hydrodynamic::rate
 (
-    volScalarField::Internal& coalescenceRate,
     const label i,
     const label j
-)
+) const
 {
-    coalescenceRate.primitiveFieldRef() +=
-        pow3(cbrt(popBal_.v(i).value()) + cbrt(popBal_.v(j).value()));
+    return
+        volScalarField::Internal::New
+        (
+            "coalescenceRate",
+            popBal_.mesh(),
+            dimensionedScalar
+            (
+                dimVolume/dimTime,
+                pow3(cbrt(popBal_.v(i).value()) + cbrt(popBal_.v(j).value()))
+            )
+        );
 }
 
 

@@ -64,13 +64,12 @@ CoulaloglouTavlarides
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::populationBalance::coalescenceModels::CoulaloglouTavlarides::
-addToCoalescenceRate
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::populationBalance::coalescenceModels::CoulaloglouTavlarides::rate
 (
-    volScalarField::Internal& coalescenceRate,
     const label i,
     const label j
-)
+) const
 {
     const dimensionedScalar& vi = popBal_.v(i);
     const dimensionedScalar& vj = popBal_.v(j);
@@ -85,7 +84,7 @@ addToCoalescenceRate
     tmp<volScalarField> tepsilonc(popBal_.continuousTurbulence().epsilon());
     const volScalarField::Internal& epsilonc = tepsilonc();
 
-    coalescenceRate +=
+    return
         C1_*(pow(vi, 2.0/3.0) + pow(vj, 2.0/3.0))
        *sqrt(pow(vi, 2.0/9.0) + pow(vj, 2.0/9.0))
        *cbrt(epsilonc)

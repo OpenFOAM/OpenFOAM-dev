@@ -92,19 +92,13 @@ bubbles
 
     shapeModel      spherical;
 
-    coalescenceModels
-    (
-        constant
-        {
-            rate            1.0;
-        }
-    );
+    coalescenceModel
+    {
+        type            constant;
+        rate            1.0;
+    }
 
-    breakupModels
-    ();
-
-    binaryBreakupModels
-    ();
+    breakupModel    none;
 }
 
 // ************************************************************************* //

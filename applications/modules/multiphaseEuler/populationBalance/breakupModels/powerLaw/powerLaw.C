@@ -49,20 +49,27 @@ Foam::populationBalance::breakupModels::powerLaw::powerLaw
     const dictionary& dict
 )
 :
-    breakupModel(popBal, dict),
+    daughterSizeDistribution(popBal, dict),
     power_(dict.lookup<scalar>("power"))
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::populationBalance::breakupModels::powerLaw::setBreakupRate
-(
-    volScalarField::Internal& breakupRate,
-    const label i
-)
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::populationBalance::breakupModels::powerLaw::rate(const label i) const
 {
-    breakupRate.primitiveFieldRef() = pow(popBal_.v(i).value(), power_);
+    return
+        volScalarField::Internal::New
+        (
+            "breakupRate",
+            popBal_.mesh(),
+            dimensionedScalar
+            (
+                inv(dimTime),
+                pow(popBal_.v(i).value(), power_)
+            )
+        );
 }
 
 

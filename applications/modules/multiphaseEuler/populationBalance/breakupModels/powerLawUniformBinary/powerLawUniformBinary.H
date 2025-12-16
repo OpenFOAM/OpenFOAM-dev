@@ -22,20 +22,20 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::populationBalance::coalescenceModels::hydrodynamic
+    Foam::populationBalance::breakupModels::powerLawUniformBinary
 
 Description
-    Hydrodynamic kernel.
+    Powerlaw kernel with a uniform daughter size distribution.
 
 SourceFiles
-    hydrodynamic.C
+    powerLawUniformBinary.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef hydrodynamic_H
-#define hydrodynamic_H
+#ifndef powerLawUniformBinary_H
+#define powerLawUniformBinary_H
 
-#include "coalescenceModel.H"
+#include "binary.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -43,26 +43,32 @@ namespace Foam
 {
 namespace populationBalance
 {
-namespace coalescenceModels
+namespace breakupModels
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class hydrodynamic Declaration
+                    Class powerLawUniformBinary Declaration
 \*---------------------------------------------------------------------------*/
 
-class hydrodynamic
+class powerLawUniformBinary
 :
-    public coalescenceModel
+    public binary
 {
+    // Private Data
+
+        //- Power
+        scalar power_;
+
+
 public:
 
     //- Runtime type information
-    TypeName("hydrodynamic");
+    TypeName("powerLawUniformBinary");
 
 
     // Constructor
 
-        hydrodynamic
+        powerLawUniformBinary
         (
             const populationBalanceModel& popBal,
             const dictionary& dict
@@ -70,13 +76,13 @@ public:
 
 
     //- Destructor
-    virtual ~hydrodynamic()
+    virtual ~powerLawUniformBinary()
     {}
 
 
     // Member Functions
 
-        //- Return the coalescence rate between two groups
+        //- Return the breakup rate between two groups
         virtual tmp<volScalarField::Internal> rate
         (
             const label i,
@@ -87,7 +93,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace coalescenceModels
+} // End namespace breakupModels
 } // End namespace populationBalance
 } // End namespace Foam
 

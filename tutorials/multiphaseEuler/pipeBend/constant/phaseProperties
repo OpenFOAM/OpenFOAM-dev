@@ -65,26 +65,17 @@ agglomerates
 
     shapeModel      spherical;
 
-    coalescenceModels
-    (
-        AdachiStuartFokkink
-        {}
-    );
+    coalescenceModel AdachiStuartFokkink;
 
-    breakupModels
-    (
-        Kusters
-        {
-            daughterSizeDistributionModel Laakkonen;
-            C4 2;
-            B 50e-7;
-            dP 250e-9;
-            Df 2.4;
-        }
-    );
-
-    binaryBreakupModels
-    ();
+    breakupModel
+    {
+        type            Kusters;
+        daughterSizeDistributionModel Laakkonen;
+        C4              2;
+        B               50e-7;
+        dP              250e-9;
+        Df              2.4;
+    }
 }
 
 // ************************************************************************* //

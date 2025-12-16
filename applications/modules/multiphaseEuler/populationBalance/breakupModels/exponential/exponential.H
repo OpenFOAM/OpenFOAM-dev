@@ -35,7 +35,7 @@ SourceFiles
 #ifndef exponential_H
 #define exponential_H
 
-#include "breakupModel.H"
+#include "daughterSizeDistribution.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -52,15 +52,15 @@ namespace breakupModels
 
 class exponential
 :
-    public breakupModel
+    public daughterSizeDistribution
 {
     // Private Data
 
         //- Exponent
-        scalar exponent_;
+        dimensionedScalar exponent_;
 
         //- Coefficient
-        scalar C_;
+        dimensionedScalar C_;
 
 
 public:
@@ -85,12 +85,8 @@ public:
 
     // Member Functions
 
-        //- Set total breakupRate
-        virtual void setBreakupRate
-        (
-            volScalarField::Internal& breakupRate,
-            const label i
-        );
+        //- Return the breakup rate for a group
+        virtual tmp<volScalarField::Internal> rate(const label i) const;
 };
 
 

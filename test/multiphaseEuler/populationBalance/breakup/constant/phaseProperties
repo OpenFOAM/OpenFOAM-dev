@@ -92,20 +92,14 @@ bubbles
 
     shapeModel      spherical;
 
-    coalescenceModels
-    ();
+    coalescenceModel none;
 
-    breakupModels
-    (
-        powerLaw
-        {
-            power           2.0;
-            daughterSizeDistributionModel uniformBinary;
-        }
-    );
-
-    binaryBreakupModels
-    ();
+    breakupModel
+    {
+        type            powerLaw;
+        power           2.0;
+        daughterSizeDistributionModel uniformBinary;
+    }
 }
 
 // ************************************************************************* //

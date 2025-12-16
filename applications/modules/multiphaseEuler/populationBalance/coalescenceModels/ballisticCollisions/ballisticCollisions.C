@@ -62,13 +62,12 @@ ballisticCollisions
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::populationBalance::coalescenceModels::ballisticCollisions::
-addToCoalescenceRate
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::populationBalance::coalescenceModels::ballisticCollisions::rate
 (
-    volScalarField::Internal& coalescenceRate,
     const label i,
     const label j
-)
+) const
 {
     using Foam::constant::physicoChemical::k;
 
@@ -79,7 +78,7 @@ addToCoalescenceRate
 
     const volScalarField::Internal& Tc = popBal_.continuousPhase().thermo().T();
 
-    coalescenceRate +=
+    return
         sqrt(3*k*Tc/popBal_.phases()[i].rho()())
        *sqr(di + dj)
        *sqrt(1/pow3(di) + 1/pow3(dj));

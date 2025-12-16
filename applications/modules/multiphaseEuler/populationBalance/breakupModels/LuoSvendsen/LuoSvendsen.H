@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::populationBalance::binaryBreakupModels::LuoSvendsen
+    Foam::populationBalance::breakupModels::LuoSvendsen
 
 Description
     Model of Luo and Svendsen (1996). The breakup rate is calculated by
@@ -134,7 +134,7 @@ SourceFiles
 #ifndef LuoSvendsen_H
 #define LuoSvendsen_H
 
-#include "binaryBreakupModel.H"
+#include "binary.H"
 #include "Table.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -143,7 +143,7 @@ namespace Foam
 {
 namespace populationBalance
 {
-namespace binaryBreakupModels
+namespace breakupModels
 {
 
 /*---------------------------------------------------------------------------*\
@@ -152,7 +152,7 @@ namespace binaryBreakupModels
 
 class LuoSvendsen
 :
-    public binaryBreakupModel
+    public binary
 {
 private:
 
@@ -186,6 +186,7 @@ public:
     //- Runtime type information
     TypeName("LuoSvendsen");
 
+
     // Constructor
 
         LuoSvendsen
@@ -202,22 +203,21 @@ public:
 
     // Member Functions
 
-        //- Precompute diameter independent expressions
+        //- Pre-compute diameter independent expressions
         virtual void precompute();
 
-        //- Add to binary breakupRate
-        virtual void addToBinaryBreakupRate
+        //- Return the breakup rate between two groups
+        virtual tmp<volScalarField::Internal> rate
         (
-            volScalarField::Internal& binaryBreakupRate,
             const label i,
             const label j
-        );
+        ) const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace binaryBreakupModels
+} // End namespace breakupModels
 } // End namespace populationBalance
 } // End namespace Foam
 

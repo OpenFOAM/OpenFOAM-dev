@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Liao.H"
-#include "fvcGrad.H"
 #include "phaseCompressibleMomentumTransportModel.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -34,15 +33,10 @@ namespace Foam
 {
 namespace populationBalance
 {
-namespace binaryBreakupModels
+namespace breakupModels
 {
     defineTypeNameAndDebug(Liao, 0);
-    addToRunTimeSelectionTable
-    (
-        binaryBreakupModel,
-        Liao,
-        dictionary
-    );
+    addToRunTimeSelectionTable(breakupModel, Liao, dictionary);
 }
 }
 }
@@ -50,13 +44,13 @@ namespace binaryBreakupModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::populationBalance::binaryBreakupModels::Liao::Liao
+Foam::populationBalance::breakupModels::Liao::Liao
 (
     const populationBalanceModel& popBal,
     const dictionary& dict
 )
 :
-    binaryBreakupModel(popBal, dict),
+    binary(popBal, dict),
     LiaoBase(popBal, dict),
     BTurb_("BTurb", dimless, dict, 1),
     BShear_("BShear", dimless, dict, 1),
@@ -71,18 +65,18 @@ Foam::populationBalance::binaryBreakupModels::Liao::Liao
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::populationBalance::binaryBreakupModels::Liao::precompute()
+void Foam::populationBalance::breakupModels::Liao::precompute()
 {
     LiaoBase::precompute();
 }
 
 
-void Foam::populationBalance::binaryBreakupModels::Liao::addToBinaryBreakupRate
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::populationBalance::breakupModels::Liao::rate
 (
-    volScalarField::Internal& binaryBreakupRate,
     const label i,
     const label j
-)
+) const
 {
     const dimensionedScalar& dSphi = popBal_.dSph(i);
     const dimensionedScalar& dSphj = popBal_.dSph(j);
@@ -109,6 +103,15 @@ void Foam::populationBalance::binaryBreakupModels::Liao::addToBinaryBreakupRate
     );
 
     const volScalarField::Internal tauCrit(max(tauCrit1, tauCrit2));
+
+    tmp<volScalarField::Internal> tbinaryBreakupRate =
+        volScalarField::Internal::New
+        (
+            "binaryBreakupRate",
+            popBal_.mesh(),
+            dimensionedScalar(inv(dimVolume*dimTime), scalar(0))
+        );
+    volScalarField::Internal& binaryBreakupRate = tbinaryBreakupRate.ref();
 
     if (turbulence_)
     {
@@ -170,6 +173,8 @@ void Foam::populationBalance::binaryBreakupModels::Liao::addToBinaryBreakupRate
            /dSphj
            *sqrt(mag(tauFric - tauCrit)/rhoc)/vj;
     }
+
+    return tbinaryBreakupRate;
 }
 
 

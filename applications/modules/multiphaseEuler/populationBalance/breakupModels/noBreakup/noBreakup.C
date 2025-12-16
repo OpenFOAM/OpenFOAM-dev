@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "powerLawUniformBinary.H"
+#include "noBreakup.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -32,15 +32,10 @@ namespace Foam
 {
 namespace populationBalance
 {
-namespace binaryBreakupModels
+namespace breakupModels
 {
-    defineTypeNameAndDebug(powerLawUniformBinary, 0);
-    addToRunTimeSelectionTable
-    (
-        binaryBreakupModel,
-        powerLawUniformBinary,
-        dictionary
-    );
+    defineTypeNameAndDebug(noBreakup, 0);
+    addToRunTimeSelectionTable(breakupModel, noBreakup, dictionary);
 }
 }
 }
@@ -48,33 +43,14 @@ namespace binaryBreakupModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::populationBalance::binaryBreakupModels::powerLawUniformBinary::
-powerLawUniformBinary
+Foam::populationBalance::breakupModels::noBreakup::noBreakup
 (
     const populationBalanceModel& popBal,
     const dictionary& dict
 )
 :
-    binaryBreakupModel(popBal, dict),
-    power_(dict.lookup<scalar>("power"))
+    breakupModel(popBal, dict)
 {}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-void Foam::populationBalance::binaryBreakupModels::powerLawUniformBinary::
-addToBinaryBreakupRate
-(
-    volScalarField::Internal& binaryBreakupRate,
-    const label i,
-    const label j
-)
-{
-    const dimensionedScalar& vj = popBal_.vs()[j];
-
-    binaryBreakupRate.primitiveFieldRef() +=
-        pow(vj.value(), power_)*2/vj.value();
-}
 
 
 // ************************************************************************* //

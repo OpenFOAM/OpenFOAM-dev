@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::populationBalance::binaryBreakupModel
+    Foam::populationBalance::breakupModels::binary
 
 Description
     Base class for binary breakup models that provide a breakup rate between a
@@ -33,14 +33,14 @@ See also
     Foam::populationBalanceModel
 
 SourceFiles
-    binaryBreakupModel.C
+    binary.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef binaryBreakupModel_H
-#define binaryBreakupModel_H
+#ifndef binary_H
+#define binary_H
 
-#include "populationBalanceModel.H"
+#include "breakupModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -48,111 +48,44 @@ namespace Foam
 {
 namespace populationBalance
 {
+namespace breakupModels
+{
 
 /*---------------------------------------------------------------------------*\
-                     Class binaryBreakupModel Declaration
+                     Class binary Declaration
 \*---------------------------------------------------------------------------*/
 
-class binaryBreakupModel
+class binary
+:
+    public breakupModel
 {
-protected:
-
-    // Protected Data
-
-        //- Reference to the populationBalanceModel
-        const populationBalanceModel& popBal_;
-
-
 public:
-
-    //- Runtime type information
-    TypeName("binaryBreakupModel");
-
-
-    // Declare run-time constructor selection table
-
-        declareRunTimeSelectionTable
-        (
-            autoPtr,
-            binaryBreakupModel,
-            dictionary,
-            (
-                const populationBalanceModel& popBal,
-                const dictionary& dict
-            ),
-            (popBal, dict)
-        );
-
-
-    //- Class used for the read-construction of
-    //  PtrLists of binary breakup models
-    class iNew
-    {
-        const populationBalanceModel& popBal_;
-
-    public:
-
-        iNew(const populationBalanceModel& popBal)
-        :
-            popBal_(popBal)
-        {}
-
-        autoPtr<binaryBreakupModel> operator()(Istream& is) const
-        {
-            word type(is);
-            dictionary dict(is);
-            return binaryBreakupModel::New(type, popBal_, dict);
-        }
-    };
-
 
     // Constructor
 
-        binaryBreakupModel
-        (
-            const populationBalanceModel& popBal,
-            const dictionary& dict
-        );
-
-        autoPtr<binaryBreakupModel> clone() const
-        {
-            NotImplemented;
-            return autoPtr<binaryBreakupModel>(nullptr);
-        }
-
-
-    // Selector
-
-        static autoPtr<binaryBreakupModel> New
-        (
-            const word& type,
-            const populationBalanceModel& popBal,
-            const dictionary& dict
-        );
+        //- Inherit constructors
+        using breakupModel::breakupModel;
 
 
     //- Destructor
-    virtual ~binaryBreakupModel()
+    virtual ~binary()
     {}
 
 
     // Member Functions
 
-        //- Precompute diameter independent expressions
-        virtual void precompute();
-
-        //- Add to binary breakupRate
-        virtual void addToBinaryBreakupRate
+        //- Return the breakup rate between two groups
+        virtual tmp<volScalarField::Internal> rate
         (
-            volScalarField::Internal& binaryBreakupRate,
             const label i,
             const label j
-        ) = 0;
+        ) const = 0;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace breakupModels
 } // End namespace populationBalance
 } // End namespace Foam
 

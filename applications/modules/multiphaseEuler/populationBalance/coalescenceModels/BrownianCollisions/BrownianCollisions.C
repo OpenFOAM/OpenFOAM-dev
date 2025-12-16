@@ -97,13 +97,12 @@ precompute()
 }
 
 
-void Foam::populationBalance::coalescenceModels::BrownianCollisions::
-addToCoalescenceRate
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::populationBalance::coalescenceModels::BrownianCollisions::rate
 (
-    volScalarField::Internal& coalescenceRate,
     const label i,
     const label j
-)
+) const
 {
     using Foam::constant::physicoChemical::k;
 
@@ -127,7 +126,7 @@ addToCoalescenceRate
         1 + lambda_/dj*(A1_ + A2_*exp(-A3_*dj/lambda_))
     );
 
-    coalescenceRate += 8*k*Tc/(3*muc)*(di + dj)*(Cci/di + Ccj/dj);
+    return 8*k*Tc/(3*muc)*(di + dj)*(Cci/di + Ccj/dj);
 }
 
 

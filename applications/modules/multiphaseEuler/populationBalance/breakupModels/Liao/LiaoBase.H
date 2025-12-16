@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,20 +22,30 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::populationBalance::coalescenceModels::hydrodynamic
+    Foam::populationBalance::LiaoBase
 
 Description
-    Hydrodynamic kernel.
+    Base class for coalescence and breakup models of Liao et al. (2015).
+
+    Reference:
+    \verbatim
+        Liao, Y.; Rzehak, R.; Lucas, D.; Krepper, E. (2015).
+        Baseline closure models for dispersed bubbly flow:
+        Bubble coalescence and breakup.
+        Chemical Engineering Science, 122, 336-349.
+    \endverbatim
+
+Usage
 
 SourceFiles
-    hydrodynamic.C
+    LiaoBase.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef hydrodynamic_H
-#define hydrodynamic_H
+#ifndef LiaoBase_H
+#define LiaoBase_H
 
-#include "coalescenceModel.H"
+#include "populationBalanceModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -43,26 +53,41 @@ namespace Foam
 {
 namespace populationBalance
 {
-namespace coalescenceModels
-{
 
 /*---------------------------------------------------------------------------*\
-                        Class hydrodynamic Declaration
+                          Class LiaoBase Declaration
 \*---------------------------------------------------------------------------*/
 
-class hydrodynamic
-:
-    public coalescenceModel
+class LiaoBase
 {
+protected:
+
+    // Protected Data
+
+        //- Reference to the populationBalanceModel
+        const populationBalanceModel& popBal_;
+
+        //- Kolmogorov length scale
+        volScalarField::Internal kolmogorovLengthScale_;
+
+        //- Shear strain rate
+        volScalarField::Internal shearStrainRate_;
+
+        //- Eddy strain rate
+        volScalarField::Internal eddyStrainRate_;
+
+        //- Terminal velocities
+        PtrList<dimensionedScalar> uTerminal_;
+
+        //- Drag coefficients
+        PtrList<dimensionedScalar> Cd_;
+
+
 public:
-
-    //- Runtime type information
-    TypeName("hydrodynamic");
-
 
     // Constructor
 
-        hydrodynamic
+        LiaoBase
         (
             const populationBalanceModel& popBal,
             const dictionary& dict
@@ -70,24 +95,19 @@ public:
 
 
     //- Destructor
-    virtual ~hydrodynamic()
+    virtual ~LiaoBase()
     {}
 
 
     // Member Functions
 
-        //- Return the coalescence rate between two groups
-        virtual tmp<volScalarField::Internal> rate
-        (
-            const label i,
-            const label j
-        ) const;
+        //- Pre-compute diameter independent expressions
+        virtual void precompute();
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace coalescenceModels
 } // End namespace populationBalance
 } // End namespace Foam
 

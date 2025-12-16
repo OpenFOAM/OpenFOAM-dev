@@ -78,14 +78,8 @@ class DahnekeInterpolation
         //- Model for coagulation due to Brownian collisions
         autoPtr<BrownianCollisions> Brownian_;
 
-        //- Rate for coagulation due to Brownian collisions
-        volScalarField::Internal BrownianRate_;
-
         //- Model for coagulation due to ballistic collisions
         autoPtr<ballisticCollisions> ballistic_;
-
-        //- Rate for coagulation due to ballistic collisions
-        volScalarField::Internal ballisticRate_;
 
 
 public:
@@ -109,16 +103,15 @@ public:
 
     // Member Functions
 
-        //- Precompute diameter independent expressions
+        //- Pre-compute diameter independent expressions
         virtual void precompute();
 
-        //- Add to coalescenceRate
-        virtual void addToCoalescenceRate
+        //- Return the coalescence rate between two groups
+        virtual tmp<volScalarField::Internal> rate
         (
-            volScalarField::Internal& coalescenceRate,
             const label i,
             const label j
-        );
+        ) const;
 };
 
 

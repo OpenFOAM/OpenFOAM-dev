@@ -69,19 +69,13 @@ aggregates
         alphaC          1;
     }
 
-    coalescenceModels
-    (
-        DahnekeInterpolation
-        {
-            sigma           340e-12;
-        }
-    );
+    coalescenceModel
+    {
+        type            DahnekeInterpolation;
+        sigma           340e-12;
+    }
 
-    breakupModels
-    ();
-
-    binaryBreakupModels
-    ();
+    breakupModel    none;
 }
 
 // ************************************************************************* //

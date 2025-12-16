@@ -33,15 +33,10 @@ namespace Foam
 {
 namespace populationBalance
 {
-namespace binaryBreakupModels
+namespace breakupModels
 {
     defineTypeNameAndDebug(LehrMilliesMewes, 0);
-    addToRunTimeSelectionTable
-    (
-        binaryBreakupModel,
-        LehrMilliesMewes,
-        dictionary
-    );
+    addToRunTimeSelectionTable(breakupModel, LehrMilliesMewes, dictionary);
 }
 }
 }
@@ -49,26 +44,24 @@ namespace binaryBreakupModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::populationBalance::binaryBreakupModels::LehrMilliesMewes::
-LehrMilliesMewes
+Foam::populationBalance::breakupModels::LehrMilliesMewes::LehrMilliesMewes
 (
     const populationBalanceModel& popBal,
     const dictionary& dict
 )
 :
-    binaryBreakupModel(popBal, dict)
+    binary(popBal, dict)
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::populationBalance::binaryBreakupModels::LehrMilliesMewes::
-addToBinaryBreakupRate
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::populationBalance::breakupModels::LehrMilliesMewes::rate
 (
-    volScalarField::Internal& binaryBreakupRate,
     const label i,
     const label j
-)
+) const
 {
     using Foam::constant::mathematical::pi;
 
@@ -97,7 +90,7 @@ addToBinaryBreakupRate
         pow(sigma/rhoc, 2.0/5.0)/pow(epsilonc, 3.0/5.0)
     );
 
-    binaryBreakupRate +=
+    return
         0.5*pow(dSphj/L, 5.0/3.0)
        *exp(-sqrt(2.0)/pow3(dSphj/L))
        *6/pow(pi, 1.5)/pow3(dSphi/L)

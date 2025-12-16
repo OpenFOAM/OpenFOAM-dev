@@ -90,20 +90,9 @@ bubbles
 
     shapeModel      spherical;
 
-    coalescenceModels
-    (
-        LehrMilliesMewes
-        {}
-    );
+    coalescenceModel LehrMilliesMewes;
 
-    breakupModels
-    ();
-
-    binaryBreakupModels
-    (
-        LehrMilliesMewes
-        {}
-    );
+    breakupModel    LehrMilliesMewes;
 }
 
 // ************************************************************************* //

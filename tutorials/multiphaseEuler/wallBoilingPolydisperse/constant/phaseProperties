@@ -70,25 +70,16 @@ bubbles
 
     shapeModel      spherical;
 
-    coalescenceModels
-    (
-        PrinceBlanch
-        {
-            turbulence      on;
-            buoyancy        on;
-            laminarShear    off;
-            C1              0.05;
-        }
-    );
+    coalescenceModel
+    {
+        type            PrinceBlanch;
+        turbulence      on;
+        buoyancy        on;
+        laminarShear    off;
+        C1              0.05;
+    }
 
-    breakupModels
-    ();
-
-    binaryBreakupModels
-    (
-        LehrMilliesMewes
-        {}
-    );
+    breakupModel    LehrMilliesMewes;
 }
 
 // ************************************************************************* //

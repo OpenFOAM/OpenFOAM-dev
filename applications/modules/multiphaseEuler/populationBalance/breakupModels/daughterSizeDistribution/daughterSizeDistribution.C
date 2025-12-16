@@ -23,59 +23,28 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "constantCoalescence.H"
-#include "addToRunTimeSelectionTable.H"
-
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-namespace Foam
-{
-namespace populationBalance
-{
-namespace coalescenceModels
-{
-    defineTypeNameAndDebug(constantCoalescence, 0);
-    addToRunTimeSelectionTable
-    (
-        coalescenceModel,
-        constantCoalescence,
-        dictionary
-    );
-}
-}
-}
-
+#include "daughterSizeDistribution.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::populationBalance::coalescenceModels::constantCoalescence::
-constantCoalescence
+Foam::populationBalance::breakupModels::daughterSizeDistribution::
+daughterSizeDistribution
 (
     const populationBalanceModel& popBal,
     const dictionary& dict
 )
 :
-    coalescenceModel(popBal, dict),
-    rate_("rate", dimVolume/dimTime, dict)
+    breakupModel(popBal, dict),
+    dsdPtr_(daughterSizeDistributionModel::New(*this, dict))
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField::Internal>
-Foam::populationBalance::coalescenceModels::constantCoalescence::rate
-(
-    const label i,
-    const label j
-) const
+void Foam::populationBalance::breakupModels::daughterSizeDistribution::
+precompute()
 {
-    return
-        volScalarField::Internal::New
-        (
-            "coalescenceRate",
-            popBal_.mesh(),
-            rate_
-        );
+    dsdPtr_->precompute();
 }
 
 

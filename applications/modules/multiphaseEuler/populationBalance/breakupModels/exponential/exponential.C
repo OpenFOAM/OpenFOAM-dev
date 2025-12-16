@@ -25,6 +25,7 @@ License
 
 #include "exponential.H"
 #include "addToRunTimeSelectionTable.H"
+#include "volFieldsFwd.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -49,22 +50,24 @@ Foam::populationBalance::breakupModels::exponential::exponential
     const dictionary& dict
 )
 :
-    breakupModel(popBal, dict),
-    exponent_(dict.lookup<scalar>("exponent")),
-    C_(dict.lookup<scalar>("C"))
+    daughterSizeDistribution(popBal, dict),
+    exponent_("exponent", inv(dimVolume), dict),
+    C_("C", inv(dimTime), dict)
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::populationBalance::breakupModels::exponential::setBreakupRate
-(
-    volScalarField::Internal& breakupRate,
-    const label i
-)
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::populationBalance::breakupModels::exponential::rate(const label i) const
 {
-    breakupRate.primitiveFieldRef() =
-        C_*exp(exponent_*popBal_.v(i).value());
+    return
+        volScalarField::Internal::New
+        (
+            "breakupRate",
+            popBal_.mesh(),
+            C_*exp(exponent_*popBal_.v(i))
+        );
 }
 
 

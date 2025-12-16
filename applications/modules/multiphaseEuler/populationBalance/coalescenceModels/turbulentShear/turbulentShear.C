@@ -62,13 +62,12 @@ Foam::populationBalance::coalescenceModels::turbulentShear::turbulentShear
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::populationBalance::coalescenceModels::turbulentShear::
-addToCoalescenceRate
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::populationBalance::coalescenceModels::turbulentShear::rate
 (
-    volScalarField::Internal& coalescenceRate,
     const label i,
     const label j
-)
+) const
 {
     tmp<volScalarField> tdi = popBal_.d(i);
     const volScalarField::Internal& di = tdi();
@@ -82,7 +81,7 @@ addToCoalescenceRate
     tmp<volScalarField> tmu(popBal_.continuousPhase().fluidThermo().mu());
     const volScalarField::Internal muc = tmu();
 
-    coalescenceRate += C_*sqrt(epsilonc*rhoc/muc)*pow3(di + dj);
+    return C_*sqrt(epsilonc*rhoc/muc)*pow3(di + dj);
 }
 
 

@@ -34,15 +34,10 @@ namespace Foam
 {
 namespace populationBalance
 {
-namespace binaryBreakupModels
+namespace breakupModels
 {
     defineTypeNameAndDebug(LuoSvendsen, 0);
-    addToRunTimeSelectionTable
-    (
-        binaryBreakupModel,
-        LuoSvendsen,
-        dictionary
-    );
+    addToRunTimeSelectionTable(breakupModel, LuoSvendsen, dictionary);
 }
 }
 }
@@ -50,13 +45,13 @@ namespace binaryBreakupModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::populationBalance::binaryBreakupModels::LuoSvendsen::LuoSvendsen
+Foam::populationBalance::breakupModels::LuoSvendsen::LuoSvendsen
 (
     const populationBalanceModel& popBal,
     const dictionary& dict
 )
 :
-    binaryBreakupModel(popBal, dict),
+    binary(popBal, dict),
     gammaUpperReg2by11_(),
     gammaUpperReg5by11_(),
     gammaUpperReg8by11_(),
@@ -147,7 +142,7 @@ Foam::populationBalance::binaryBreakupModels::LuoSvendsen::LuoSvendsen
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::populationBalance::binaryBreakupModels::LuoSvendsen::precompute()
+void Foam::populationBalance::breakupModels::LuoSvendsen::precompute()
 {
     kolmogorovLengthScale_ =
         pow025
@@ -161,13 +156,12 @@ void Foam::populationBalance::binaryBreakupModels::LuoSvendsen::precompute()
 }
 
 
-void Foam::populationBalance::binaryBreakupModels::LuoSvendsen::
-addToBinaryBreakupRate
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::populationBalance::breakupModels::LuoSvendsen::rate
 (
-    volScalarField::Internal& binaryBreakupRate,
     const label i,
     const label j
-)
+) const
 {
     const dimensionedScalar& dSphj = popBal_.dSph(j);
     const dimensionedScalar& vi = popBal_.v(i);
@@ -212,7 +206,7 @@ addToBinaryBreakupRate
             );
     }
 
-    binaryBreakupRate +=
+    return
         C4_
        *(1 - popBal_.alphas()())
        /vj

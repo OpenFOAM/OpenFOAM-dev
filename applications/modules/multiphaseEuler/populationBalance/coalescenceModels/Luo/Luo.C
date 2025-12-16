@@ -51,8 +51,7 @@ namespace coalescenceModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::populationBalance::coalescenceModels::Luo::
-Luo
+Foam::populationBalance::coalescenceModels::Luo::Luo
 (
     const populationBalanceModel& popBal,
     const dictionary& dict
@@ -66,12 +65,12 @@ Luo
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::populationBalance::coalescenceModels::Luo::addToCoalescenceRate
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::populationBalance::coalescenceModels::Luo::rate
 (
-    volScalarField::Internal& coalescenceRate,
     const label i,
     const label j
-)
+) const
 {
     using Foam::constant::mathematical::pi;
 
@@ -121,7 +120,7 @@ void Foam::populationBalance::coalescenceModels::Luo::addToCoalescenceRate
         sqrt(beta_)*cbrt(epsilonc*dSphi)*sqrt(1 + pow(xi, -2.0/3.0))
     );
 
-    coalescenceRate +=
+    return
         pi/4*sqr(dSphi + dSphj)*uij
        *exp
         (

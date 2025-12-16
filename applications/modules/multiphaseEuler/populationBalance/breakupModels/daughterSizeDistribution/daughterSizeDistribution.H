@@ -22,20 +22,24 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::populationBalance::coalescenceModels::hydrodynamic
+    Foam::populationBalance::breakupModels::daughterSizeDistribution
 
 Description
-    Hydrodynamic kernel.
+    Base class for breakup models which provide a total breakup rate and a
+    separate daughter size distribution function.
+
+See also
+    Foam::populationBalanceModel
 
 SourceFiles
-    hydrodynamic.C
+    daughterSizeDistribution.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef hydrodynamic_H
-#define hydrodynamic_H
+#ifndef daughterSizeDistribution_H
+#define daughterSizeDistribution_H
 
-#include "coalescenceModel.H"
+#include "breakupModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -43,26 +47,30 @@ namespace Foam
 {
 namespace populationBalance
 {
-namespace coalescenceModels
+namespace breakupModels
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class hydrodynamic Declaration
+                        Class daughterSizeDistribution Declaration
 \*---------------------------------------------------------------------------*/
 
-class hydrodynamic
+class daughterSizeDistribution
 :
-    public coalescenceModel
+    public breakupModel
 {
+protected:
+
+    // Protected Data
+
+        //- Daughter size distribution model
+        autoPtr<daughterSizeDistributionModel> dsdPtr_;
+
+
 public:
-
-    //- Runtime type information
-    TypeName("hydrodynamic");
-
 
     // Constructor
 
-        hydrodynamic
+        daughterSizeDistribution
         (
             const populationBalanceModel& popBal,
             const dictionary& dict
@@ -70,24 +78,29 @@ public:
 
 
     //- Destructor
-    virtual ~hydrodynamic()
+    virtual ~daughterSizeDistribution()
     {}
 
 
     // Member Functions
 
-        //- Return the coalescence rate between two groups
-        virtual tmp<volScalarField::Internal> rate
-        (
-            const label i,
-            const label j
-        ) const;
+        //- Return const-reference to daughter size distribution model
+        const daughterSizeDistributionModel& dsd() const
+        {
+            return dsdPtr_();
+        }
+
+        //- Return the breakup rate for a group
+        virtual tmp<volScalarField::Internal> rate(const label i) const = 0;
+
+        //- Pre-compute diameter independent expressions
+        virtual void precompute();
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace coalescenceModels
+} // End namespace breakupModels
 } // End namespace populationBalance
 } // End namespace Foam
 

@@ -175,13 +175,12 @@ void Foam::populationBalance::coalescenceModels::LiaoCoalescence::precompute()
 }
 
 
-void Foam::populationBalance::coalescenceModels::LiaoCoalescence::
-addToCoalescenceRate
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::populationBalance::coalescenceModels::LiaoCoalescence::rate
 (
-    volScalarField::Internal& coalescenceRate,
     const label i,
     const label j
-)
+) const
 {
     using Foam::constant::mathematical::pi;
 
@@ -246,6 +245,15 @@ addToCoalescenceRate
         )
     );
 
+    tmp<volScalarField::Internal> tcoalescenceRate =
+        volScalarField::Internal::New
+        (
+            "coalescenceRate",
+            popBal_.mesh(),
+            dimensionedScalar(dimVolume/dimTime, scalar(0))
+        );
+    volScalarField::Internal& coalescenceRate = tcoalescenceRate.ref();
+
     if (turbulence_)
     {
         coalescenceRate +=
@@ -309,6 +317,8 @@ addToCoalescenceRate
                 )
             );
     }
+
+    return tcoalescenceRate;
 }
 
 

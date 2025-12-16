@@ -26,6 +26,7 @@ License
 #include "AdachiStuartFokkink.H"
 #include "phaseCompressibleMomentumTransportModel.H"
 #include "addToRunTimeSelectionTable.H"
+#include "volFieldsFwd.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -62,13 +63,12 @@ AdachiStuartFokkink
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::populationBalance::coalescenceModels::AdachiStuartFokkink::
-addToCoalescenceRate
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::populationBalance::coalescenceModels::AdachiStuartFokkink::rate
 (
-    volScalarField::Internal& coalescenceRate,
     const label i,
     const label j
-)
+) const
 {
     using Foam::constant::mathematical::pi;
 
@@ -82,8 +82,7 @@ addToCoalescenceRate
     tmp<volScalarField> tnuc(popBal_.continuousPhase().fluidThermo().nu());
     const volScalarField::Internal nuc = tnuc();
 
-    coalescenceRate +=
-        (4.0/3.0)*sqrt(0.3*pi*epsilonc/nuc)*pow3(di + dj);
+    return (4.0/3.0)*sqrt(0.3*pi*epsilonc/nuc)*pow3(di + dj);
 }
 
 

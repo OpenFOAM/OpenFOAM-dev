@@ -22,20 +22,20 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::populationBalance::binaryBreakupModels::powerLawUniformBinary
+    Foam::populationBalance::breakupModels::noBreakup
 
 Description
-    Powerlaw kernel with a uniform daughter size distribution.
+    Power-law breakup model
 
 SourceFiles
-    powerLawUniformBinary.C
+    noBreakup.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef powerLawUniformBinary_H
-#define powerLawUniformBinary_H
+#ifndef noBreakup_H
+#define noBreakup_H
 
-#include "binaryBreakupModel.H"
+#include "breakupModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -43,31 +43,26 @@ namespace Foam
 {
 namespace populationBalance
 {
-namespace binaryBreakupModels
+namespace breakupModels
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class powerLawUniformBinary Declaration
+                          Class noBreakup Declaration
 \*---------------------------------------------------------------------------*/
 
-class powerLawUniformBinary
+class noBreakup
 :
-    public binaryBreakupModel
+    public breakupModel
 {
-    // Private Data
-
-        //- Power
-        scalar power_;
-
-
 public:
 
     //- Runtime type information
-    TypeName("powerLawUniformBinary");
+    TypeName("none");
+
 
     // Constructor
 
-        powerLawUniformBinary
+        noBreakup
         (
             const populationBalanceModel& popBal,
             const dictionary& dict
@@ -75,25 +70,14 @@ public:
 
 
     //- Destructor
-    virtual ~powerLawUniformBinary()
+    virtual ~noBreakup()
     {}
-
-
-    // Member Functions
-
-        //- Add to binary breakupRate
-        virtual void addToBinaryBreakupRate
-        (
-            volScalarField::Internal& binaryBreakupRate,
-            const label i,
-            const label j
-        );
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace binaryBreakupModels
+} // End namespace breakupModels
 } // End namespace populationBalance
 } // End namespace Foam
 

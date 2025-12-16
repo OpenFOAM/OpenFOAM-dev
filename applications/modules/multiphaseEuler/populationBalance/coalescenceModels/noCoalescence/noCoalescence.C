@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "constantCoalescence.H"
+#include "noCoalescence.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -34,36 +34,24 @@ namespace populationBalance
 {
 namespace coalescenceModels
 {
-    defineTypeNameAndDebug(constantCoalescence, 0);
-    addToRunTimeSelectionTable
-    (
-        coalescenceModel,
-        constantCoalescence,
-        dictionary
-    );
+    defineTypeNameAndDebug(noCoalescence, 0);
+    addToRunTimeSelectionTable(coalescenceModel, noCoalescence, dictionary);
 }
 }
 }
-
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::populationBalance::coalescenceModels::constantCoalescence::
-constantCoalescence
-(
-    const populationBalanceModel& popBal,
-    const dictionary& dict
-)
-:
-    coalescenceModel(popBal, dict),
-    rate_("rate", dimVolume/dimTime, dict)
-{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+bool Foam::populationBalance::coalescenceModels::noCoalescence::
+coalesces() const
+{
+    return false;
+}
+
+
 Foam::tmp<Foam::volScalarField::Internal>
-Foam::populationBalance::coalescenceModels::constantCoalescence::rate
+Foam::populationBalance::coalescenceModels::noCoalescence::rate
 (
     const label i,
     const label j
@@ -74,7 +62,7 @@ Foam::populationBalance::coalescenceModels::constantCoalescence::rate
         (
             "coalescenceRate",
             popBal_.mesh(),
-            rate_
+            dimensionedScalar(dimVolume/dimTime, scalar(0))
         );
 }
 

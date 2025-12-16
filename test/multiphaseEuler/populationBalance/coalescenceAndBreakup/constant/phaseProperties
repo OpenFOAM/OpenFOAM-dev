@@ -92,24 +92,15 @@ bubbles
 
     shapeModel      spherical;
 
-    coalescenceModels
-    (
-        hydrodynamic
-        {}
-    );
+    coalescenceModel hydrodynamic;
 
-    breakupModels
-    (
-        exponential
-        {
-            C               0.1;
-            exponent        0.01;
-            daughterSizeDistributionModel uniformBinary;
-        }
-    );
-
-    binaryBreakupModels
-    ();
+    breakupModel
+    {
+        type            exponential;
+        C               0.1;
+        exponent        0.01;
+        daughterSizeDistributionModel uniformBinary;
+    }
 }
 
 // ************************************************************************* //

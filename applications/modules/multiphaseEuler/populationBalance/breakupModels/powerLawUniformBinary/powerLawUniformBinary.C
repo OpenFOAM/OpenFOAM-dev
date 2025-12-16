@@ -23,7 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "binaryBreakupModel.H"
+#include "powerLawUniformBinary.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -31,58 +32,52 @@ namespace Foam
 {
 namespace populationBalance
 {
-    defineTypeNameAndDebug(binaryBreakupModel, 0);
-    defineRunTimeSelectionTable(binaryBreakupModel, dictionary);
-}
-}
-
-
-// * * * * * * * * * * * * * * * * Selector  * * * * * * * * * * * * * * * * //
-
-Foam::autoPtr<Foam::populationBalance::binaryBreakupModel>
-Foam::populationBalance::binaryBreakupModel::New
-(
-    const word& type,
-    const populationBalanceModel& popBal,
-    const dictionary& dict
-)
+namespace breakupModels
 {
-    Info<< "Selecting binary breakup model for "
-        << popBal.name() << ": " << type << endl;
-
-    dictionaryConstructorTable::iterator cstrIter =
-        dictionaryConstructorTablePtr_->find(type);
-
-    if (cstrIter == dictionaryConstructorTablePtr_->end())
-    {
-        FatalErrorInFunction
-            << "Unknown binary breakup model type "
-            << type << nl << nl
-            << "Valid binary breakup model types : " << endl
-            << dictionaryConstructorTablePtr_->sortedToc()
-            << exit(FatalError);
-    }
-
-    return autoPtr<binaryBreakupModel>(cstrIter()(popBal, dict));
+    defineTypeNameAndDebug(powerLawUniformBinary, 0);
+    addToRunTimeSelectionTable(breakupModel, powerLawUniformBinary, dictionary);
+}
+}
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::populationBalance::binaryBreakupModel::binaryBreakupModel
+Foam::populationBalance::breakupModels::powerLawUniformBinary::
+powerLawUniformBinary
 (
     const populationBalanceModel& popBal,
     const dictionary& dict
 )
 :
-    popBal_(popBal)
+    binary(popBal, dict),
+    power_(dict.lookup<scalar>("power"))
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::populationBalance::binaryBreakupModel::precompute()
-{}
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::populationBalance::breakupModels::powerLawUniformBinary::rate
+(
+    const label i,
+    const label j
+) const
+{
+    const dimensionedScalar& vj = popBal_.vs()[j];
+
+    return
+        volScalarField::Internal::New
+        (
+            "binaryBreakupRate",
+            popBal_.mesh(),
+            dimensionedScalar
+            (
+                inv(dimVolume*dimTime),
+                pow(vj.value(), power_)*2/vj.value()
+            )
+        );
+}
 
 
 // ************************************************************************* //

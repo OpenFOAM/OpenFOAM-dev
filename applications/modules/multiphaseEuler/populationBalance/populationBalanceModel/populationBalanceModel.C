@@ -29,8 +29,8 @@ License
 #include "phaseCompressibleMomentumTransportModel.H"
 #include "shapeModel.H"
 #include "coalescenceModel.H"
-#include "breakupModel.H"
-#include "binaryBreakupModel.H"
+#include "daughterSizeDistribution.H"
+#include "binary.H"
 #include "fvmDdt.H"
 #include "fvmDiv.H"
 #include "fvmSup.H"
@@ -113,29 +113,17 @@ const Foam::dictionary& Foam::populationBalanceModel::coeffDict() const
 
 void Foam::populationBalanceModel::precomputeCoalescenceAndBreakup()
 {
-    forAll(coalescenceModels_, model)
-    {
-        coalescenceModels_[model].precompute();
-    }
+    coalescenceModel_->precompute();
 
-    forAll(breakupModels_, model)
-    {
-        breakupModels_[model].precompute();
-
-        breakupModels_[model].dsdPtr()->precompute();
-    }
-
-    forAll(binaryBreakupModels_, model)
-    {
-        binaryBreakupModels_[model].precompute();
-    }
+    breakupModel_->precompute();
 }
 
 
 void Foam::populationBalanceModel::birthByCoalescence
 (
     const label j,
-    const label k
+    const label k,
+    const volScalarField::Internal& rate
 )
 {
     const dimensionedScalar vjk = vs_[j] + vs_[k];
@@ -154,7 +142,7 @@ void Foam::populationBalanceModel::birthByCoalescence
         volScalarField::Internal Sui
         (
             (j == k ? 0.5 : 1)
-           *vs_[i]/(vs_[j]*vs_[k])*Eta*coalescenceRate_()*alphaFjk
+           *vs_[i]/(vs_[j]*vs_[k])*Eta*rate*alphaFjk
         );
 
         Su_[i] += Sui;
@@ -185,30 +173,31 @@ void Foam::populationBalanceModel::birthByCoalescence
 void Foam::populationBalanceModel::deathByCoalescence
 (
     const label i,
-    const label j
+    const label j,
+    const volScalarField::Internal& rate
 )
 {
-    Sp_[i] -= coalescenceRate_()*phases_[i]*fs_[j]*phases_[j]/vs_[j];
+    Sp_[i] -= rate*phases_[i]*fs_[j]*phases_[j]/vs_[j];
 
     if (i == j) return;
 
-    Sp_[j] -= coalescenceRate_()*phases_[j]*phases_[i]*fs_[i]/vs_[i];
+    Sp_[j] -= rate*phases_[j]*phases_[i]*fs_[i]/vs_[i];
 }
 
 
-void Foam::populationBalanceModel::birthByBreakup
+void Foam::populationBalanceModel::birthByDaughterSizeDistributionBreakup
 (
     const label k,
-    const label model
+    const volScalarField::Internal& rate
 )
 {
     for (label i = 0; i <= k; i++)
     {
         const volScalarField::Internal Sui
         (
-            breakupRate_()*phases_[k]*fs_[k]
+            rate*phases_[k]*fs_[k]
            *vs_[i]/vs_[k]
-           *breakupModels_[model].dsdPtr()().nik(i, k)
+           *daughterSizeDistributionBreakupModel_->dsd().nik(i, k)
         );
 
         Su_[i] += Sui;
@@ -227,19 +216,24 @@ void Foam::populationBalanceModel::birthByBreakup
 }
 
 
-void Foam::populationBalanceModel::deathByBreakup(const label i)
+void Foam::populationBalanceModel::deathByDaughterSizeDistributionBreakup
+(
+    const label i,
+    const volScalarField::Internal& rate
+)
 {
-    Sp_[i] -= breakupRate_()*phases_[i];
+    Sp_[i] -= rate*phases_[i];
 }
 
 
 void Foam::populationBalanceModel::birthByBinaryBreakup
 (
     const label i,
-    const label j
+    const label j,
+    const volScalarField::Internal& rate
 )
 {
-    const volScalarField::Internal Su(binaryBreakupRate_()*phases_[j]*fs_[j]);
+    const volScalarField::Internal Su(rate*phases_[j]*fs_[j]);
 
     {
         const volScalarField::Internal Sui
@@ -293,10 +287,11 @@ void Foam::populationBalanceModel::birthByBinaryBreakup
 void Foam::populationBalanceModel::deathByBinaryBreakup
 (
     const label j,
-    const label i
+    const label i,
+    const volScalarField::Internal& rate
 )
 {
-    Sp_[i] -= binaryBreakupRate_()*phases_[i]*binaryBreakupDeltas_[j][i];
+    Sp_[i] -= rate*phases_[i]*binaryBreakupDeltas_[j][i];
 }
 
 
@@ -315,60 +310,48 @@ void Foam::populationBalanceModel::computeCoalescenceAndBreakup()
         *dmdtfIter() = Zero;
     }
 
-    forAll(coalescencePairs_, coalescencePairi)
+    if (coalescenceModel_->coalesces())
     {
-        label i = coalescencePairs_[coalescencePairi].first();
-        label j = coalescencePairs_[coalescencePairi].second();
-
-        coalescenceRate_() = Zero;
-
-        forAll(coalescenceModels_, model)
+        forAll(coalescencePairs_, coalescencePairi)
         {
-            coalescenceModels_[model].addToCoalescenceRate
-            (
-                coalescenceRate_(),
-                i,
-                j
-            );
-        }
+            const label i = coalescencePairs_[coalescencePairi].first();
+            const label j = coalescencePairs_[coalescencePairi].second();
 
-        birthByCoalescence(i, j);
+            tmp<volScalarField::Internal> trate = coalescenceModel_->rate(i, j);
 
-        deathByCoalescence(i, j);
-    }
+            birthByCoalescence(i, j, trate());
 
-    forAll(fs_, i)
-    {
-        forAll(breakupModels_, model)
-        {
-            breakupModels_[model].setBreakupRate(breakupRate_(), i);
-
-            birthByBreakup(i, model);
-
-            deathByBreakup(i);
+            deathByCoalescence(i, j, trate());
         }
     }
 
-    forAll(binaryBreakupPairs_, binaryBreakupPairi)
+    if (daughterSizeDistributionBreakupModel_)
     {
-        label i = binaryBreakupPairs_[binaryBreakupPairi].first();
-        label j = binaryBreakupPairs_[binaryBreakupPairi].second();
-
-        binaryBreakupRate_() = Zero;
-
-        forAll(binaryBreakupModels_, model)
+        forAll(fs_, i)
         {
-            binaryBreakupModels_[model].addToBinaryBreakupRate
-            (
-                binaryBreakupRate_(),
-                j,
-                i
-            );
+            tmp<volScalarField::Internal> trate =
+                daughterSizeDistributionBreakupModel_->rate(i);
+
+            birthByDaughterSizeDistributionBreakup(i, trate());
+
+            deathByDaughterSizeDistributionBreakup(i, trate());
         }
+    }
 
-        birthByBinaryBreakup(j, i);
+    if (binaryBreakupModel_)
+    {
+        forAll(binaryBreakupPairs_, binaryBreakupPairi)
+        {
+            const label i = binaryBreakupPairs_[binaryBreakupPairi].first();
+            const label j = binaryBreakupPairs_[binaryBreakupPairi].second();
 
-        deathByBinaryBreakup(j, i);
+            tmp<volScalarField::Internal> trate =
+                binaryBreakupModel_->rate(j, i);
+
+            birthByBinaryBreakup(j, i, trate());
+
+            deathByBinaryBreakup(j, i, trate());
+        }
     }
 }
 
@@ -733,13 +716,11 @@ Foam::populationBalanceModel::populationBalanceModel
     expansionRates_(fluid_.phases().size()),
     dilatationErrors_(fluid_.phases().size()),
     shapeModel_(nullptr),
-    coalescenceModels_(),
-    coalescenceRate_(nullptr),
+    coalescenceModel_(),
     coalescencePairs_(),
-    breakupModels_(),
-    breakupRate_(nullptr),
-    binaryBreakupModels_(),
-    binaryBreakupRate_(nullptr),
+    breakupModel_(),
+    daughterSizeDistributionBreakupModel_(nullptr),
+    binaryBreakupModel_(nullptr),
     binaryBreakupDeltas_(),
     binaryBreakupPairs_(),
     alphas_(),
@@ -966,38 +947,15 @@ Foam::populationBalanceModel::populationBalanceModel
         }
     }
 
+    using namespace populationBalance;
+
     // Select the shape model
-    shapeModel_.set
-    (
-        populationBalance::shapeModel::New(coeffDict(), *this).ptr()
-    );
+    shapeModel_.set(shapeModel::New(coeffDict(), *this).ptr());
 
-    // Select coalescence models
+    // Select coalescence model
+    coalescenceModel_.set(coalescenceModel::New(*this, coeffDict()).ptr());
+    if (coalescenceModel_->coalesces())
     {
-        PtrList<populationBalance::coalescenceModel> models
-        (
-            coeffDict().lookup("coalescenceModels"),
-            populationBalance::coalescenceModel::iNew(*this)
-        );
-        coalescenceModels_.transfer(models);
-    }
-    if (coalescenceModels_.size() != 0)
-    {
-        coalescenceRate_.set
-        (
-            new volScalarField::Internal
-            (
-                IOobject
-                (
-                     IOobject::groupName("coalescenceRate", this->name()),
-                     mesh_.time().name(),
-                     mesh_
-                ),
-                mesh_,
-                dimensionedScalar(dimVolume/dimTime, Zero)
-            )
-        );
-
         forAll(fs_, i)
         {
             for (label j = 0; j <= i; j++)
@@ -1007,64 +965,20 @@ Foam::populationBalanceModel::populationBalanceModel
         }
     }
 
-    // Select breakup models
+    // Select breakup model
+    breakupModel_.set(breakupModel::New(*this, coeffDict()).ptr());
+    if (isA<breakupModels::daughterSizeDistribution>(breakupModel_()))
     {
-        PtrList<populationBalance::breakupModel> models
-        (
-            coeffDict().lookup("breakupModels"),
-            populationBalance::breakupModel::iNew(*this)
-        );
-        breakupModels_.transfer(models);
+        daughterSizeDistributionBreakupModel_ =
+            &refCast<breakupModels::daughterSizeDistribution>(breakupModel_());
     }
-    if (breakupModels_.size() != 0)
+    if (isA<breakupModels::binary>(breakupModel_()))
     {
-        breakupRate_.set
-        (
-            new volScalarField::Internal
-            (
-                IOobject
-                (
-                    IOobject::groupName("breakupRate", this->name()),
-                    fluid_.time().name(),
-                    mesh_
-                ),
-                mesh_,
-                dimensionedScalar(inv(dimTime), Zero)
-            )
-        );
+        binaryBreakupModel_ =
+            &refCast<breakupModels::binary>(breakupModel_());
     }
-
-    // Select binary breakup models
+    if (binaryBreakupModel_)
     {
-        PtrList<populationBalance::binaryBreakupModel> models
-        (
-            coeffDict().lookup("binaryBreakupModels"),
-            populationBalance::binaryBreakupModel::iNew(*this)
-        );
-        binaryBreakupModels_.transfer(models);
-    }
-    if (binaryBreakupModels_.size() != 0)
-    {
-        binaryBreakupRate_.set
-        (
-            new volScalarField
-            (
-                IOobject
-                (
-                    IOobject::groupName("binaryBreakupRate", this->name()),
-                    fluid_.time().name(),
-                    mesh_
-                ),
-                mesh_,
-                dimensionedScalar
-                (
-                    "binaryBreakupRate",
-                    inv(dimVolume*dimTime),
-                    Zero
-                )
-            )
-        );
-
         binaryBreakupDeltas_.setSize(nGroups());
 
         forAll(fs_, i)

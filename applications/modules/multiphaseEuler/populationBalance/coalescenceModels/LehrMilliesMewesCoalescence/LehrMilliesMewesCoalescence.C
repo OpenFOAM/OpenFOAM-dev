@@ -64,13 +64,12 @@ LehrMilliesMewesCoalescence
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::populationBalance::coalescenceModels::LehrMilliesMewesCoalescence::
-addToCoalescenceRate
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::populationBalance::coalescenceModels::LehrMilliesMewesCoalescence::rate
 (
-    volScalarField::Internal& coalescenceRate,
     const label i,
     const label j
-)
+) const
 {
     using Foam::constant::mathematical::pi;
 
@@ -93,7 +92,7 @@ addToCoalescenceRate
         )
     );
 
-    coalescenceRate +=
+    return
         pi/4
        *sqr(dSphi + dSphj)
        *min(uChar, uCrit_)

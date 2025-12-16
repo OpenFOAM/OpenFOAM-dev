@@ -94,14 +94,9 @@ bubbles
 
     shapeModel      spherical;
 
-    coalescenceModels
-    ();
+    coalescenceModel none;
 
-    breakupModels
-    ();
-
-    binaryBreakupModels
-    ();
+    breakupModel    none;
 }
 
 // ************************************************************************* //

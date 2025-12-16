@@ -75,7 +75,7 @@ SourceFiles
 #ifndef Kusters_H
 #define Kusters_H
 
-#include "breakupModel.H"
+#include "daughterSizeDistribution.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -92,7 +92,7 @@ namespace breakupModels
 
 class Kusters
 :
-    public breakupModel
+    public daughterSizeDistribution
 {
     // Private Data
 
@@ -130,12 +130,8 @@ public:
 
     // Member Functions
 
-        //- Set total breakupRate
-        virtual void setBreakupRate
-        (
-            volScalarField::Internal& breakupRate,
-            const label i
-        );
+        //- Return the breakup rate for a group
+        virtual tmp<volScalarField::Internal> rate(const label i) const;
 };
 
 

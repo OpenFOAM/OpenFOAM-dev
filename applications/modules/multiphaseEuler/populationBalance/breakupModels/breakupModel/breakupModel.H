@@ -62,9 +62,6 @@ protected:
         //- Reference to the populationBalanceModel
         const populationBalanceModel& popBal_;
 
-        //- Daughter size distribution model
-        autoPtr<daughterSizeDistributionModel> dsd_;
-
 
 public:
 
@@ -87,28 +84,6 @@ public:
         );
 
 
-    //- Class used for the read-construction of
-    //  PtrLists of breakup models
-    class iNew
-    {
-        const populationBalanceModel& popBal_;
-
-    public:
-
-        iNew(const populationBalanceModel& popBal)
-        :
-            popBal_(popBal)
-        {}
-
-        autoPtr<breakupModel> operator()(Istream& is) const
-        {
-            word type(is);
-            dictionary dict(is);
-            return breakupModel::New(type, popBal_, dict);
-        }
-    };
-
-
     // Constructor
 
         breakupModel
@@ -117,18 +92,11 @@ public:
             const dictionary& dict
         );
 
-        autoPtr<breakupModel> clone() const
-        {
-            NotImplemented;
-            return autoPtr<breakupModel>(nullptr);
-        }
-
 
     // Selector
 
         static autoPtr<breakupModel> New
         (
-            const word& type,
             const populationBalanceModel& popBal,
             const dictionary& dict
         );
@@ -147,27 +115,8 @@ public:
             return popBal_;
         }
 
-        //- Return const-reference to daughter size distribution pointer
-        const autoPtr<daughterSizeDistributionModel>& dsdPtr() const
-        {
-            return dsd_;
-        }
-
-        //- Return reference to daughter size distribution pointer
-        autoPtr<daughterSizeDistributionModel>& dsdPtr()
-        {
-            return dsd_;
-        }
-
-        //- Precompute diameter independent expressions
+        //- Pre-compute diameter independent expressions
         virtual void precompute();
-
-        //- Set total breakupRate
-        virtual void setBreakupRate
-        (
-            volScalarField::Internal& breakupRate,
-            const label i
-        ) = 0;
 };
 
 
