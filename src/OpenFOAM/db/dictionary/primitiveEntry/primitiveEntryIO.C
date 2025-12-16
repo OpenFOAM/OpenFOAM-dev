@@ -156,7 +156,8 @@ bool Foam::primitiveEntry::read(const dictionary& dict, Istream& is)
 
     if
     (
-        !is.read(currToken).bad()
+        !is.eof()
+     && !is.read(currToken).bad()
      && currToken.good()
      && currToken != token::END_STATEMENT
     )
@@ -174,7 +175,8 @@ bool Foam::primitiveEntry::read(const dictionary& dict, Istream& is)
 
         while
         (
-            !is.read(currToken).bad()
+            !is.eof()
+         && !is.read(currToken).bad()
          && currToken.good()
          && !(currToken == token::END_STATEMENT && blockCount == 0)
         )

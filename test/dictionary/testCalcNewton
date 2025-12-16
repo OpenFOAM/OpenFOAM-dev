@@ -19,7 +19,7 @@ FoamFile
 A       1;
 B       1;
 
-x       #calc
+x       #stream
 #{
     // Lookup the coefficients
     const scalar A = $A;

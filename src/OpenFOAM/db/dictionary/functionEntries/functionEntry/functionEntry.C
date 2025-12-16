@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "functionEntry.H"
+#include "OTstream.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -309,6 +310,29 @@ bool Foam::functionEntry::insert
 )
 {
     contextEntry.append(t, parentDict, is);
+    return true;
+}
+
+
+bool Foam::functionEntry::insert
+(
+    dictionary& contextDict,
+    const OTstream& ots
+)
+{
+    contextDict.read(ITstream(ots.name(), ots)());
+    return true;
+}
+
+
+bool Foam::functionEntry::insert
+(
+    const dictionary& parentDict,
+    primitiveEntry& contextEntry,
+    const OTstream& ots
+)
+{
+    contextEntry.read(parentDict, ITstream(ots.name(), ots)());
     return true;
 }
 

@@ -25,8 +25,9 @@ Class
     Foam::functionEntries::codeStream
 
 Description
-    Dictionary entry that contains C++ OpenFOAM code that is compiled to
-    generate the entry itself.
+    Compiles and executes C++ OpenFOAM code string expressions
+
+    inserting the result into the dictionary or dictionary entry.
 
     \c \#codeStream reads three entries: \c code, \c codeInclude (optional),
     \c codeOptions (optional) to generate the library source code stored in the
@@ -186,17 +187,20 @@ SourceFiles
 #define codeStream_H
 
 #include "functionEntry.H"
+#include "OTstream.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+
 class dlLibraryTable;
 
 namespace functionEntries
 {
 
 // Forward declaration of friend classes
+class streamEntry;
 class calcEntry;
 class codeBlockEntry;
 class codeBlockCalcEntry;
@@ -221,7 +225,7 @@ class codeStream
         //- Return true for master only reading of global dictionary
         static bool masterOnlyRead(const dictionary& dict);
 
-        //- Add the code entry to the codeDict
+        //- Return the code string
         static string codeString
         (
             const label index,
@@ -245,8 +249,8 @@ class codeStream
             const dictionary& codeDict
         );
 
-        //- Compile and execute the code and return the resulting string
-        static string run
+        //- Compile and execute the code and return the result in an OTstream
+        static OTstream resultStream
         (
             const dictionary& contextDict,
             Istream& is
@@ -270,6 +274,7 @@ public:
     // Related types
 
         //- Declare friendship with the calcEntry class
+        friend class streamEntry;
         friend class calcEntry;
         friend class codeBlockEntry;
         friend class codeBlockCalcEntry;

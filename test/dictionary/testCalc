@@ -65,13 +65,14 @@ dragDir         #calc "transform(Ry($<scalar>angle), vector(1, 0, 0))";
 magU            #calc "mag($<vector>testCalc2!U)";
 k               #calc "1.5*magSqr(0.05*$<vector>{${FOAM_CASE}/testCalc2!U})";
 
-// If the code string is delimited by '#{...#}' multiple lines and multiple
-// code statements can be used to generate the entry  using 'os << ...;'.
-// This is equivalent to #codeStream but with a more compact syntax.
+// With #stream multiple code statements can be used to generate the entry using
+// 'os << ...;'.
+// This is equivalent to #codeStream but with a more compact syntax
+// but include files must be specified using separate #codeInclude statements
 #codeInclude    "transform.H"
 maxAngle        30;
 nAngles         7;
-Us              #calc
+Us              #stream
 #{
     const vector U($<vector>testCalc2!U);
     const int nAngles = $nAngles;

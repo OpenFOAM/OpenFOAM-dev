@@ -368,7 +368,7 @@ Foam::functionEntries::codeStream::getFunction
 }
 
 
-Foam::string Foam::functionEntries::codeStream::run
+Foam::OTstream Foam::functionEntries::codeStream::resultStream
 (
     const dictionary& contextDict,
     Istream& is
@@ -394,11 +394,12 @@ Foam::string Foam::functionEntries::codeStream::run
     const streamingFunctionType function = getFunction(contextDict, codeDict);
 
     // Use function to write stream
-    OStringStream os(is.format());
-    (*function)(os, contextDict);
+    OTstream ots(is.name(), is.format());
+    ots.lineNumber() = is.lineNumber();
+    (*function)(ots, contextDict);
 
-    // Return the string containing the results of the code execution
-    return os.str();
+    // Return the OTstream containing the results of the code execution
+    return ots;
 }
 
 
@@ -423,7 +424,7 @@ bool Foam::functionEntries::codeStream::execute
     Istream& is
 )
 {
-    return insert(contextDict, run(contextDict, is));
+    return insert(contextDict, resultStream(contextDict, is));
 }
 
 
@@ -434,7 +435,7 @@ bool Foam::functionEntries::codeStream::execute
     Istream& is
 )
 {
-    return insert(contextDict, contextEntry, run(contextDict, is));
+    return insert(contextDict, contextEntry, resultStream(contextDict, is));
 }
 
 

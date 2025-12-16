@@ -154,6 +154,7 @@ Usage
 
 See also
     Foam::functionEntries::codeIncludeEntry
+    Foam::functionEntries::streamEntry
     Foam::functionEntries::codeStream
 
 SourceFiles
@@ -164,7 +165,7 @@ SourceFiles
 #ifndef calcEntry_H
 #define calcEntry_H
 
-#include "functionEntry.H"
+#include "streamEntry.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -173,32 +174,22 @@ namespace Foam
 namespace functionEntries
 {
 
-// Forward declaration of friend classes
-class codeBlockEntry;
-
 /*---------------------------------------------------------------------------*\
                           Class calcEntry Declaration
 \*---------------------------------------------------------------------------*/
 
 class calcEntry
 :
-    public functionEntry
+    public streamEntry
 {
     // Private Member Functions
 
-        //- Add the code entry to the codeDict
+        //- Return the code string
         static string codeString
         (
             const label index,
             const dictionary& codeDict,
             Istream&
-        );
-
-        //- Perform the calculation and return the resulting string
-        static string calc
-        (
-            const dictionary& dict,
-            Istream& is
         );
 
 

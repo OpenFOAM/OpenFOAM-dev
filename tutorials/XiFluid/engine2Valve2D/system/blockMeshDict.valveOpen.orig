@@ -59,8 +59,8 @@ nInlet 24;
 
 // Horizontal mesh density
 nx0 4;
-nx1 #calc "ceil(2.0*$nx0)";
-nx2 #calc "ceil(3.75*$nx0)";
+nx1 #calc "int(ceil(2.0*$nx0))";
+nx2 #calc "int(ceil(3.75*$nx0))";
 
 x0 #calc "(3.0*$meshSecWidth - $cylinderWidth) / 4.0";
 x1 #calc "$x0 + $spacing";

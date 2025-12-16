@@ -27,6 +27,7 @@ License
 #include "endCodeBlockEntry.H"
 #include "codeBlockCalcEntry.H"
 #include "codeStream.H"
+#include "streamEntry.H"
 #include "calcEntry.H"
 #include "codeIncludeEntry.H"
 #include "negEntry.H"
@@ -109,6 +110,19 @@ bool Foam::functionEntries::codeBlockEntry::execute
 
                 // Replace the #codeStream with a #codeBlockCalc followed by the
                 // pointer to this codeBlockEntry and the index of #codeStream
+                dictStream
+                    << keyType(codeBlockCalcEntry::typeName) << token::SPACE
+                    << reinterpret_cast<uint64_t>(this) << token::SPACE
+                    << codeIndex++ << endl;
+            }
+            else if (t.functionNameToken() == streamEntry::typeName)
+            {
+                // Accumulate the #stream code strings into a single code block
+                codeString +=
+                    streamEntry::codeString(codeIndex, codeDict, is);
+
+                // Replace the #stream with a #codeBlockCalc followed by
+                // the pointer to this codeBlockEntry and the index of #stream
                 dictStream
                     << keyType(codeBlockCalcEntry::typeName) << token::SPACE
                     << reinterpret_cast<uint64_t>(this) << token::SPACE

@@ -22,23 +22,76 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::functionEntries::codeBlockCalcEntry
+    Foam::functionEntries::streamEntry
 
 Description
+    Compiles and executes C++ OpenFOAM code string expressions
+
+    inserting the result into the dictionary or dictionary entry.  The
+    functionality of \c #stream is equivalent to \c #codeStream but with a
+    simpler syntax, relying on separate \c #codeInclude entries to provide
+    required include files.  For more details see
+    Foam::functionEntries::codeStream.
+
+Usage
+    Example to find the root of f(x) = x + B*x/sqrt(1 + sqr(x)) - A
+    using Newton-Raphson iteration
+
+    \verbatim
+        A       1;
+        B       1;
+
+        x       #stream
+        #{
+            // Lookup the coefficients
+            const scalar A = $A;
+            const scalar B = $B;
+
+            // Initial guess for x
+            scalar x = 0;
+
+            scalar x0 = x;
+
+            do
+            {
+                // Store the previous iteration x for the convergence check
+                x0 = x;
+
+                // Temporary sub-function evaluations
+                const scalar f1 = 1 + sqr(x);
+                const scalar f2 = sqrt(f1);
+
+                // Evaluate the function
+                const scalar f = x + B*x/f2 - A;
+
+                // Evaluate the derivative
+                const scalar df = 1 + B/(f1*f2);
+
+                // Update x
+                x = x0 - f/df;
+
+                // Test for convergence
+            } while (mag(x - x0) > 1e-6);
+
+            os << x;
+        #};
+    \endverbatim
 
 See also
     Foam::functionEntries::codeIncludeEntry
     Foam::functionEntries::codeStream
+    Foam::functionEntries::calc
 
 SourceFiles
-    codeBlockCalcEntry.C
+    streamEntry.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef codeBlockCalcEntry_H
-#define codeBlockCalcEntry_H
+#ifndef streamEntry_H
+#define streamEntry_H
 
 #include "functionEntry.H"
+#include "OTstream.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -47,40 +100,57 @@ namespace Foam
 namespace functionEntries
 {
 
+// Forward declaration of friend classes
 class codeBlockEntry;
 
 /*---------------------------------------------------------------------------*\
-                          Class codeBlockCalcEntry Declaration
+                          Class streamEntry Declaration
 \*---------------------------------------------------------------------------*/
 
-class codeBlockCalcEntry
+class streamEntry
 :
     public functionEntry
 {
-        //- Pointer to the codeBlockEntry which created this codeBlockCalcEntry
-        const codeBlockEntry* codeBlockPtr_;
+protected:
 
-        //- Index of the function in the codeBlock
-        //  corresponding to this codeBlockCalcEntry
-        label index_;
+    // Protected Member Functions
 
+        //- Return the code string
+        static string codeString
+        (
+            const label index,
+            const dictionary& codeDict,
+            Istream&,
+            const string& startString = string::null,
+            const string& endString = string::null
+        );
 
-    // Private Member Functions
-
-        //- Perform the calculation and return the resulting string
-        OTstream resultStream(const dictionary& dict, Istream& is);
+        //- Perform the calculation and return the result in an OTstream
+        static OTstream resultStream
+        (
+            const dictionary& dict,
+            Istream& is,
+            const string& startString = string::null,
+            const string& endString = string::null
+        );
 
 
 public:
 
+    // Related types
+
+        //- Declare friendship with the streamEntry class
+        friend class codeBlockEntry;
+
+
     //- Runtime type information
-    FunctionTypeName("#codeBlockCalc");
+    FunctionTypeName("#stream");
 
 
     // Constructors
 
         //- Construct from line number, dictionary and Istream
-        codeBlockCalcEntry
+        streamEntry
         (
             const label lineNumber,
             const dictionary& parentDict,
@@ -88,12 +158,12 @@ public:
         );
 
         //- Copy construct
-        codeBlockCalcEntry(const codeBlockCalcEntry&) = default;
+        streamEntry(const streamEntry&) = default;
 
         //- Clone
         virtual autoPtr<entry> clone(const dictionary&) const
         {
-            return autoPtr<entry>(new codeBlockCalcEntry(*this));
+            return autoPtr<entry>(new streamEntry(*this));
         }
 
 
@@ -110,14 +180,11 @@ public:
             Istream&
         );
 
-        //- Dummy write
-        virtual void write(Ostream&) const;
-
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const codeBlockCalcEntry&) = delete;
+        void operator=(const streamEntry&) = delete;
 };
 
 

@@ -237,6 +237,7 @@ $(functionEntries)/functionEntry/functionEntry.C
 $(functionEntries)/negEntry/negEntry.C
 $(functionEntries)/codeIncludeEntry/codeIncludeEntry.C
 $(functionEntries)/calcEntry/calcEntry.C
+$(functionEntries)/streamEntry/streamEntry.C
 $(functionEntries)/codeStream/codeStream.C
 $(functionEntries)/codeBlock/codeBlockEntry.C
 $(functionEntries)/codeBlockCalc/codeBlockCalcEntry.C

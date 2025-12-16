@@ -82,7 +82,7 @@ vertices
 // Cell numbers per block
 layerCells     #calc "13*$scalingFactor";
 downCircCells  #calc "8*$scalingFactor";
-upCircCells    #calc "ceil(0.4*$layerCells)";
+upCircCells    #calc "int(ceil(0.4*$layerCells))";
 
 inletCells     #calc "3*$scalingFactor";
 

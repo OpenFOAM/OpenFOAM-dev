@@ -53,7 +53,7 @@ namespace functionEntries
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::string Foam::functionEntries::codeBlockCalcEntry::calc
+Foam::OTstream Foam::functionEntries::codeBlockCalcEntry::resultStream
 (
     const dictionary& dict,
     Istream& is
@@ -86,12 +86,12 @@ Foam::string Foam::functionEntries::codeBlockCalcEntry::calc
             << " in library " << codeBlockPtr_->lib_ << exit(FatalIOError);
     }
 
-    // // Use function to write stream
-    OStringStream os(is.format());
-    (*function)(os, dict);
+    // Use function to write stream
+    OTstream ots(is.name(), is.format());
+    (*function)(ots, dict);
 
-    // Return the string containing the results of the calculation
-    return os.str();
+    // Return the OTstream containing the results of the calculation
+    return ots;
 }
 
 
@@ -147,7 +147,7 @@ bool Foam::functionEntries::codeBlockCalcEntry::execute
     Istream& is
 )
 {
-    return insert(contextDict, calc(contextDict, is));
+    return insert(contextDict, resultStream(contextDict, is));
 }
 
 
@@ -163,7 +163,7 @@ bool Foam::functionEntries::codeBlockCalcEntry::execute
         contextDict,
         contextEntry,
         codeBlockCalcEntry(is.lineNumber(), contextDict, is)
-       .calc(contextDict, is)
+       .resultStream(contextDict, is)
     );
 }
 

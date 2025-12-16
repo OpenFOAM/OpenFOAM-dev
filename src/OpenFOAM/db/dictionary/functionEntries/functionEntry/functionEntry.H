@@ -55,6 +55,7 @@ namespace Foam
 {
 
 class dictionary;
+class OTstream;
 
 /*---------------------------------------------------------------------------*\
                         Class functionEntry Declaration
@@ -152,6 +153,21 @@ protected:
             primitiveEntry& contextEntry,
             const token& t,
             Istream& is
+        );
+
+        //- Read entry from the given OTstream and insert into contextDict
+        static bool insert
+        (
+            dictionary& contextDict,
+            const OTstream&
+        );
+
+        //- Read tokens from the given OTstream and insert into contextEntry
+        static bool insert
+        (
+            const dictionary& parentDict,
+            primitiveEntry& contextEntry,
+            const OTstream&
         );
 
         //- Read entry from the given string and insert into contextDict
