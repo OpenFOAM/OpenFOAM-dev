@@ -112,8 +112,8 @@ blocks
                             (yi + 1)*4+1+xi,
                             (yi + 1)*4+xi})
                         << zoneNames[yi]
-                        << " (" << nX << ' ' << nYs[yi] << " 1) "
-                        << "simpleGrading (1 1 1)";
+                        << Vector<label>(nX, nYs[yi], 1)
+                        << "simpleGrading" << Vector<label>(1, 1, 1);
                 }
             }
         #};
@@ -173,16 +173,19 @@ boundary
                     writeEntry(os, "type", patchTypes[yi]);
 
                     os  << "faces " << token::BEGIN_LIST
-                        << FixedList<label, 4>({
+                        << FixedList<label, 4>
+                        ({
                             4*ys0.size() + yi*4+xi,
                             4*ys0.size() + (yi + 1)*4+xi,
                             (yi + 1)*4+xi,
-                            yi*4+xi})
+                            yi*4+xi
+                        })
                         << token::END_LIST << token::END_STATEMENT;
 
                     if (!patchGroups[yi].empty())
                     {
-                        writeEntry(os, "inGroups", patchGroups[yi]);
+                        os  << "inGroups" << patchGroups[yi]
+                            << token::END_STATEMENT;
                     }
 
                     if (patchTypes[yi] == "cyclic")
