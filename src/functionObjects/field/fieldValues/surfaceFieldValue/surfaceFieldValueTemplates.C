@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,6 +29,31 @@ License
 #include "sampledSurface.H"
 #include "surfaceWriter.H"
 #include "cellPoint_interpolation.H"
+
+// * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
+
+template<class Type>
+inline void Foam::functionObjects::fieldValues::surfaceFieldValue::combineField
+(
+    Field<Type>& field
+)
+{
+    List<Field<Type>> allValues(Pstream::nProcs());
+
+    allValues[Pstream::myProcNo()] = field;
+
+    Pstream::gatherList(allValues);
+
+    if (Pstream::master())
+    {
+        field = ListListOps::combine<Field<Type>>
+        (
+            allValues,
+            accessOp<Field<Type>>()
+        );
+    }
+}
+
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -251,6 +251,10 @@ private:
             faceList& faces,
             pointField& points
         ) const;
+
+        //- Combine fields from all processor domains into single field
+        template<class Type>
+        void combineField(Field<Type>& field);
 
         //- Calculate and return the area of the surface
         scalar area() const;
