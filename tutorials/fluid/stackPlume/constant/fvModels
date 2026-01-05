@@ -14,6 +14,6 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#includeModel parcelCloud(name=cloud)
+#includeModel dynamicParcelCloud(name=cloud)
 
 //************************************************************************ //

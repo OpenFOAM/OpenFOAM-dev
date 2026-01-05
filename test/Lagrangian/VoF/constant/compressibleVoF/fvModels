@@ -16,7 +16,7 @@ FoamFile
 
 droplets
 {
-    type        particleCloud;
+    type        dynamicParticleCloud;
     libs        ("libLagrangianCloud.so");
 
     phase       water;
@@ -25,7 +25,7 @@ droplets
 
 particles
 {
-    type        particleCloud;
+    type        dynamicParticleCloud;
     libs        ("libLagrangianCloud.so");
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -215,7 +215,8 @@ Foam::LagrangianFieldSource<Type>::sourceValue
 ) const
 {
     FatalErrorInFunction
-        << "The " << typeName << " " << source.name()
+        << "The " << type() << " condition for source " << source.name()
+        << " of field " << this->internalName()
         << " does not define a value for a continuous source "
         << exit(FatalError);
 
@@ -232,8 +233,9 @@ Foam::LagrangianFieldSource<Type>::internalCoeff
 ) const
 {
     FatalErrorInFunction
-        << "The " << typeName << " " << source.name()
-        << " does not define a value for a continuous source"
+        << "The " << type() << " condition for source " << source.name()
+        << " of field " << this->internalName()
+        << " does not define a value for a continuous source "
         << exit(FatalError);
 
     return tmp<LagrangianSubScalarField>(nullptr);
@@ -275,7 +277,8 @@ Foam::LagrangianFieldSource<Type>::value
 ) const
 {
     FatalErrorInFunction
-        << "The " << typeName << " " << injection.name()
+        << "The " << type() << " condition for injection " << injection.name()
+        << " of field " << this->internalName()
         << " does not define a value for an instantaneous injection"
         << exit(FatalError);
 
@@ -287,25 +290,12 @@ template<class Type>
 Foam::tmp<Foam::LagrangianSubField<Type>>
 Foam::LagrangianFieldSource<Type>::value
 (
-    const LagrangianModel& model,
     const LagrangianSubMesh& subMesh
 ) const
 {
-    if (isA<LagrangianSource>(model))
-    {
-        return value(refCast<const LagrangianSource>(model), subMesh);
-    }
-
-    if (isA<LagrangianInjection>(model))
-    {
-        return value(refCast<const LagrangianInjection>(model), subMesh);
-    }
-
     FatalErrorInFunction
-        << "The " << LagrangianModel::typeName << " " << model.name()
-        << " is neither a " << LagrangianSource::typeName << " nor a "
-        << LagrangianInjection::typeName << " so source values cannot "
-        << "be generated for it"
+        << "The " << type() << " condition for field "
+        << this->internalName() << " does not define a value without a model"
         << exit(FatalError);
 
     return tmp<LagrangianSubField<Type>>(nullptr);

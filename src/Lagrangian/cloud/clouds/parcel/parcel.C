@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,6 +76,7 @@ bool Foam::clouds::parcel::reCalculateModified()
 
     LagrangianSubScalarSubField& number = this->number.ref(subMesh);
     LagrangianSubScalarSubField& m = this->m.ref(subMesh);
+    LagrangianSubScalarSubField& e = this->e.ref(subMesh);
     LagrangianSubVectorSubField& U = this->U.ref(subMesh);
 
     bool result = false;
@@ -89,22 +90,39 @@ bool Foam::clouds::parcel::reCalculateModified()
     {
         result = Lagrangianm::initDdt(dimless, m, dUdt) || result;
 
-        result = reCalculateModified(m, rhoc) || result;
-
-        if (hasPhase())
+        if (context == cloud::contextType::fvModel)
         {
-            result = reCalculateModified(m, rhocPhase) || result;
+            result = initPsicDdt(m, rhoc) || result;
+            if (hasPhase())
+            {
+                result = initPsicDdt(m, rhocPhase) || result;
+            }
+        }
+    }
+
+    {
+        result = Lagrangianm::initDdt(dimMass, e, dUdt) || result;
+
+        if (context == cloud::contextType::fvModel)
+        {
+            result = initPsicDdt(m, hec) || result;
+            if (hasPhase() && &hecPhase != &hec)
+            {
+                result = initPsicDdt(m, hecPhase) || result;
+            }
         }
     }
 
     {
         result = Lagrangianm::initDdt(dimMass, U, dUdt) || result;
 
-        result = reCalculateModified(m, Uc) || result;
-
-        if (hasPhase() && &UcPhase != &Uc)
+        if (context == cloud::contextType::fvModel)
         {
-            result = reCalculateModified(m, UcPhase) || result;
+            result = initPsicDdt(m, Uc) || result;
+            if (hasPhase() && &UcPhase != &Uc)
+            {
+                result = initPsicDdt(m, UcPhase) || result;
+            }
         }
     }
 
@@ -122,8 +140,12 @@ void Foam::clouds::parcel::calculate
 
     LagrangianSubScalarSubField& number = this->number.ref(subMesh);
     LagrangianSubScalarSubField& m = this->m.ref(subMesh);
-    const LagrangianSubScalarSubField rho(subMesh.sub(this->rho));
+    const LagrangianSubScalarSubField& rho = this->rho(subMesh);
+    LagrangianSubScalarSubField& e = this->e.ref(subMesh);
     LagrangianSubVectorSubField& U = this->U.ref(subMesh);
+
+    // Update the pressure
+    thermo().correctPressure(subMesh);
 
     // Evaluate the fractional source
     LagrangianEqn<scalar> oneEqn(LagrangianModels().source(deltaT));
@@ -151,7 +173,7 @@ void Foam::clouds::parcel::calculate
     }
 
     // Solve the mass equation if a model provides a mass source
-    if (oneEqn.valid() || LagrangianModels().addsSupToField(m))
+    if (LagrangianModels().addsSupToField(m))
     {
         LagrangianEqn<scalar> mEqn
         (
@@ -163,34 +185,70 @@ void Foam::clouds::parcel::calculate
 
         mEqn.solve(final);
 
-        // Correct the diameter, assuming the density remains constant
+        // Correct the diameter for the change in mass, assuming the density
+        // remains constant
         spherical::correct(toSubField(m/rho));
 
-        calculate(deltaT, final, m, rhoc, number);
-
-        if (hasPhase())
+        // Calculate mass exchanges with the carrier
+        if (context == cloud::contextType::fvModel && final)
         {
-            calculate(deltaT, final, m, rhocPhase, number);
+            carrierEqn(rhoc) += number*psicEqn(deltaT, m, rhoc);
+            if (hasPhase())
+            {
+                carrierEqn(rhocPhase) += number*psicEqn(deltaT, m, rhocPhase);
+            }
         }
     }
 
-    // Solve the velocity equation
+    // Solve the energy equation
+    {
+        LagrangianEqn<scalar> eEqn
+        (
+            Lagrangianm::Ddt(deltaT, m, e)
+          + m*oneEqn
+         ==
+            LagrangianModels().source(deltaT, m, e)
+        );
+
+        eEqn.solve(final);
+
+        // Update the thermodynamic model
+        thermo().correct(subMesh);
+
+        // Correct the diameter for changes in density
+        spherical::correct(toSubField(m/rho));
+
+        // Calculate energy exchanges with the carrier
+        if (context == cloud::contextType::fvModel && final)
+        {
+            carrierEqn(hec) += number*psicEqn(deltaT, m, e, hec);
+            if (hasPhase() && &hecPhase != &hec)
+            {
+                carrierEqn(hecPhase) += number*psicEqn(deltaT, m, e, hecPhase);
+            }
+        }
+    }
+
+    // Solve the momentum equation
     {
         LagrangianEqn<vector> UEqn
         (
             Lagrangianm::Ddt(deltaT, m, U)
           + m*oneEqn
          ==
-            numberByNumber0*LagrangianModels().source(deltaT, m, U)
+            LagrangianModels().source(deltaT, m, U)
         );
 
         UEqn.solve(final);
 
-        calculate(deltaT, final, m, U, Uc, number);
-
-        if (hasPhase() && &UcPhase != &Uc)
+        // Calculate momentum exchanges with the carrier
+        if (context == cloud::contextType::fvModel && final)
         {
-            calculate(deltaT, final, m, U, UcPhase, number);
+            carrierEqn(Uc) += number*psicEqn(deltaT, m, U, Uc);
+            if (hasPhase() && &UcPhase != &Uc)
+            {
+                carrierEqn(UcPhase) += number*psicEqn(deltaT, m, U, UcPhase);
+            }
         }
     }
 }
@@ -214,12 +272,14 @@ Foam::clouds::parcel::parcel
 :
     cloud(mesh, context),
     grouped(static_cast<const cloud&>(*this)),
-    spherical(*this, *this),
-    massive(*this, *this),
-    coupledToFluid(static_cast<const cloud&>(*this), dict),
+    spherical(static_cast<const cloud&>(*this)),
+    coupledToThermalFluid(static_cast<const cloud&>(*this), dict),
+    thermal(*this, *this, *this),
     sphericalCoupled(*this, *this, *this),
     massiveCoupledToFluid(*this, *this, *this)
 {
+    thermo().initialise();
+
     reCalculateModified();
 }
 
@@ -237,7 +297,7 @@ void Foam::clouds::parcel::solve(const bool initial, const bool final)
     // Pre-solve operations ...
     carried::resetCarrierFields(initial);
     coupled::clearCarrierEqns();
-    coupledToFluid::updateCarrier();
+    coupledToThermalFluid::updateCarrier();
 
     // Solve
     cloud::solve(initial, final);

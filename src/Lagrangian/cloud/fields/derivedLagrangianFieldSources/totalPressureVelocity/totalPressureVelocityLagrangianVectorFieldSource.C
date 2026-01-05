@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,7 +94,7 @@ Foam::totalPressureVelocityLagrangianVectorFieldSource::value
 {
     return
         Umag(injection, subMesh)
-       *normalised(value(injection, subMesh, dimless, direction_()));
+       *normalised(value(subMesh, dimless, direction_()));
 }
 
 

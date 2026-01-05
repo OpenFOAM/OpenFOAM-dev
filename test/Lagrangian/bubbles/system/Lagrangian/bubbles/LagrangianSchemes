@@ -1,0 +1,56 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system/Lagrangian/bubbles";
+    object      LagrangianSchemes;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+tracking    linear;
+
+ddtSchemes
+{
+    default     Euler;
+}
+
+SpSchemes
+{
+    default     none;
+    Sp(D,U)     implicit;
+    Sp(D,Uc)    explicit;
+    Sp((H|Cv),e) implicit;
+    Sp((H|Cpc),hc) explicit;
+    Sp((H|Cvc),ec) explicit;
+}
+
+averagingSchemes
+{
+    default     none;
+    alpha       cellPoint;
+}
+
+interpolationSchemes
+{
+    default     cell;
+    pc          cellPoint;
+    Uc          cellPoint;
+    alphac.air  cellPoint;
+}
+
+accumulationSchemes
+{
+    default     none;
+    S(m)        cell;
+    S(m*e)      cell;
+    S(m*U)      cell;
+}
+
+// ************************************************************************* //

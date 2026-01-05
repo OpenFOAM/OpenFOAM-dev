@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,7 +96,6 @@ Foam::coneDirectionLagrangianVectorFieldSource::
 Foam::tmp<Foam::LagrangianSubVectorField>
 Foam::coneDirectionLagrangianVectorFieldSource::direction
 (
-    const LagrangianInjection& injection,
     const LagrangianSubVectorField& axis
 ) const
 {
@@ -125,21 +124,9 @@ Foam::coneDirectionLagrangianVectorFieldSource::direction
 
     // Pick a random angle within the cone angles
     const tmp<LagrangianSubScalarField> tthetaInner =
-        Function1LagrangianFieldSource::value
-        (
-            injection,
-            subMesh,
-            dimless,
-            thetaInner_()
-        );
+        Function1LagrangianFieldSource::value(subMesh, dimless, thetaInner_());
     const tmp<LagrangianSubScalarField> tthetaOuter =
-        Function1LagrangianFieldSource::value
-        (
-            injection,
-            subMesh,
-            dimless,
-            thetaOuter_()
-        );
+        Function1LagrangianFieldSource::value(subMesh, dimless, thetaOuter_());
     const tmp<LagrangianSubScalarField> tfrac =
         LagrangianSubScalarField::New
         (

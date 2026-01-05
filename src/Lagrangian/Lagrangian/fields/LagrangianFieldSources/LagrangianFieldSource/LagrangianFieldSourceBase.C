@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,6 +61,12 @@ const Foam::objectRegistry& Foam::LagrangianFieldSourceBase::db() const
 const Foam::word& Foam::LagrangianFieldSourceBase::internalName() const
 {
     return internalIo_.name();
+}
+
+
+Foam::word Foam::LagrangianFieldSourceBase::internalGroup() const
+{
+    return internalIo_.group();
 }
 
 

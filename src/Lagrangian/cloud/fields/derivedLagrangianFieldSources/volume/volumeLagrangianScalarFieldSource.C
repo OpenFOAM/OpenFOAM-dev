@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,7 +76,7 @@ Foam::volumeLagrangianScalarFieldSource::value
     const LagrangianSubMesh& subMesh
 ) const
 {
-    return cloud<clouds::shaped>(injection, subMesh).v(injection, subMesh);
+    return cloud<clouds::shaped>(injection).v(injection, subMesh);
 }
 
 

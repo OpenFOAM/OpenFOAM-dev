@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,8 @@ Class
     Foam::Lagrangian::SchillerNaumannDrag
 
 Description
-    Drag model of Schiller and Naumann
+    Drag model of Schiller and Naumann for spherical particles in a turbulent
+    carrier flow
 
     References:
     \verbatim
@@ -88,14 +89,8 @@ public:
 
     // Constructors
 
-        //- Construct from components
-        SchillerNaumannDrag
-        (
-            const word& name,
-            const LagrangianMesh& mesh,
-            const dictionary& modelDict,
-            const dictionary& stateDict
-        );
+        //- Inherit constructors
+        using drag::drag;
 
 
     // Member Functions

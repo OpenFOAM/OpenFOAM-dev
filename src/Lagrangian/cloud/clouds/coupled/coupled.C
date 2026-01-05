@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -116,6 +116,23 @@ void Foam::clouds::coupled::clearCarrierEqns()
         }
     FOR_ALL_FIELD_TYPES(CLEAR_TYPE_CARRIER_EQNS);
     #undef CLEAR_TYPE_CARRIER_EQNS
+}
+
+
+Foam::tmp<Foam::LagrangianEqn<Foam::scalar>> Foam::clouds::coupled::psicEqn
+(
+    const LagrangianSubScalarField& deltaT,
+    const LagrangianSubScalarSubField& vOrM,
+    const CloudDerivedField<scalar>& oneOrRhoc
+) const
+{
+    const LagrangianModels& models = cloud_.LagrangianModels();
+    const LagrangianSubMesh& subMesh = deltaT.mesh();
+
+    return
+        Lagrangianm::noDdt(deltaT, vOrM.dimensions(), oneOrRhoc(subMesh))
+     ==
+        models.sourceProxy(deltaT, vOrM, oneOrRhoc(subMesh));
 }
 
 

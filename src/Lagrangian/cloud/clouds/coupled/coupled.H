@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,22 +89,6 @@ private:
             const LagrangianSubMesh& subMesh
         ) const;
 
-        //- Add/get a carrier equation to/from the cache
-        template<class Type>
-        CarrierEqn<Type>& carrierEqn
-        (
-            const CloudDerivedField<Type>&,
-            const LagrangianSubMesh&
-        );
-
-        //- Add/get a carrier equation to/from the cache
-        template<class Type>
-        CarrierEqn<Type>& carrierEqn
-        (
-            const CarrierField<Type>&,
-            const LagrangianSubMesh&
-        );
-
         //- Access the carrier equations. Only specialisations are defined.
         template<class Type>
         HashPtrTable<CarrierEqn<Type>>& carrierEqns() const;
@@ -117,39 +101,42 @@ protected:
         //- Update the cached carrier fields
         void updateCarrier();
 
+        //- Add/get a carrier equation to/from the cache
+        template<class Type>
+        CarrierEqn<Type>& carrierEqn(const CloudDerivedField<Type>&);
+
+        //- Add/get a carrier equation to/from the cache
+        template<class Type>
+        CarrierEqn<Type>& carrierEqn(const CarrierField<Type>&);
+
         //- Clear the carrier equations
         void clearCarrierEqns();
 
-        //- Do re-calculation of a carrier equation for modified particles
-        template<class Fieldc>
-        bool reCalculateModified
+        //- Do we need to re-calculate particles that are modified?
+        template<class Type>
+        bool initPsicDdt
         (
             const LagrangianSubScalarSubField& vOrM,
-            const Fieldc& fieldc
-        );
+            const CloudDerivedField<Type>& psic
+        ) const;
 
-        //- Do calculation of a carrier equation
-        template<class Fieldc, class Scale = one>
-        void calculate
+        //- Return the basic models-only equation for a carrier field
+        tmp<LagrangianEqn<scalar>> psicEqn
         (
             const LagrangianSubScalarField& deltaT,
-            const bool final,
             const LagrangianSubScalarSubField& vOrM,
-            const Fieldc& fieldc,
-            const Scale& scale = one()
-        );
+            const CloudDerivedField<scalar>& oneOrRhoc
+        ) const;
 
-        //- Do calculation of a carrier equation
-        template<class Type, class Fieldc, class Scale = one>
-        void calculate
+        //- Return the basic models-only equation for a carrier field
+        template<class Type>
+        tmp<LagrangianEqn<Type>> psicEqn
         (
             const LagrangianSubScalarField& deltaT,
-            const bool final,
             const LagrangianSubScalarSubField& vOrM,
-            const LagrangianSubSubField<Type>& field,
-            const Fieldc& fieldc,
-            const Scale& scale = one()
-        );
+            const LagrangianSubSubField<Type>& psi,
+            const CloudDerivedField<Type>& psic
+        ) const;
 
 
 public:

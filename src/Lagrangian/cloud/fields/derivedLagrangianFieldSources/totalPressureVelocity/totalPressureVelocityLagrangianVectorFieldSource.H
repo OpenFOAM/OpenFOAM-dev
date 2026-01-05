@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -133,6 +133,9 @@ public:
 
 
     // Member Functions
+
+        //- Use the base class' value method
+        using LagrangianVectorFieldSource::value;
 
         //- Return the value for an instantaneous injection
         virtual tmp<LagrangianSubVectorField> value

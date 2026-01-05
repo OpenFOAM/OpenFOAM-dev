@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,8 +59,9 @@ Foam::Lagrangian::GidaspowErgunWenYuDrag::calcD
     const clouds::spherical& sCloud = cloud<clouds::spherical>();
     const clouds::sphericalCoupled& scCloud = cloud<clouds::sphericalCoupled>();
 
-    const LagrangianSubScalarField Re = scCloud.Re(model, subMesh);
-    const LagrangianSubScalarSubField d(sCloud.d(model, subMesh));
+    tmp<LagrangianSubScalarSubField> td = sCloud.d(model, subMesh);
+    const LagrangianSubScalarSubField& d = td();
+    const LagrangianSubScalarField& Re = scCloud.Re(model, subMesh);
 
     const LagrangianSubScalarField alpha(min(sCloud.alpha(subMesh), alphaMax_));
     const LagrangianSubScalarField alphac(1 - alpha);
@@ -93,12 +94,7 @@ Foam::Lagrangian::GidaspowErgunWenYuDrag::calcD
             cloud<clouds::coupledToFluid>().muc(model, subMesh)
         );
 
-    return
-        LagrangianSubScalarField::New
-        (
-            subMesh.sub("D"),
-            CdRe*(constant::mathematical::pi/8)*d*tmucByRhoOrMuc
-        );
+    return CdRe*(constant::mathematical::pi/8)*d*tmucByRhoOrMuc;
 }
 
 

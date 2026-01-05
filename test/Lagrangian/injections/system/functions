@@ -26,19 +26,19 @@ kinematicParcel
     libs        ("libLagrangianCloud.so");
 }
 
-particle
+dynamicParticle
 {
-    type        particleCloud;
+    type        dynamicParticleCloud;
     libs        ("libLagrangianCloud.so");
 }
 
-parcel
+dynamicParcel
 {
-    type        parcelCloud;
+    type        dynamicParcelCloud;
     libs        ("libLagrangianCloud.so");
 }
 
-particleCount
+dynamicParticleCount
 {
     type        LagrangianFieldValue;
     libs        ("libLagrangianFunctionObjects.so");
@@ -62,21 +62,21 @@ volume
 {
     type        cloudVolume;
     libs        ("libLagrangianCloudFunctionObjects.so");
-    cloud       parcel;
+    cloud       dynamicParcel;
 }
 
 surfaceArea
 {
     type        cloudSurfaceArea;
     libs        ("libLagrangianCloudFunctionObjects.so");
-    cloud       parcel;
+    cloud       dynamicParcel;
 }
 
 mass
 {
     type        cloudMass;
     libs        ("libLagrangianCloudFunctionObjects.so");
-    cloud       parcel;
+    cloud       dynamicParcel;
 }
 
 numberFlux
@@ -90,7 +90,7 @@ boundaryCollisionForce
 {
     type        cloudBoundaryCollisionForce;
     libs        ("libLagrangianCloudFunctionObjects.so");
-    cloud       particle;
+    cloud       dynamicParticle;
 }
 
 // ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -112,7 +112,7 @@ Foam::Lagrangian::ddtScheme<Type>::Lagrangianmddt0
     const LagrangianSubSubField<Type>& psi
 )
 {
-    tmp<LagrangianEqn<Type>> tEqn(new LagrangianEqn<Type>(psi));
+    tmp<LagrangianEqn<Type>> tEqn(new LagrangianEqn<Type>(psi.mesh()));
 
     tEqn.ref().deltaTSu += psi - psi.oldTime();
 
@@ -128,7 +128,7 @@ Foam::Lagrangian::ddtScheme<Type>::Lagrangianmddt0
     const LagrangianSubSubField<Type>& psi
 )
 {
-    tmp<LagrangianEqn<Type>> tEqn(new LagrangianEqn<Type>(psi));
+    tmp<LagrangianEqn<Type>> tEqn(new LagrangianEqn<Type>(psi.mesh()));
 
     tEqn.ref().deltaTSu += m*psi - m.oldTime()*psi.oldTime();
 

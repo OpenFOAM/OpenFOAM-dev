@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -156,7 +156,7 @@ Foam::CarrierFieldBase<Type>::interpolate
         (
             IOobject
             (
-                subMesh.sub(name()),
+                subMesh.sub(this->name_),
                 mesh.time().name(),
                 mesh,
                 IOobject::NO_READ,
@@ -230,7 +230,7 @@ Foam::CarrierFieldGradBase<Type>::interpolateGrad
         (
             IOobject
             (
-                subMesh.sub("grad(" + this->name() + ')'),
+                subMesh.sub("grad(" + this->name_ + ')'),
                 mesh.time().name(),
                 mesh,
                 IOobject::NO_READ,
@@ -271,7 +271,7 @@ const Foam::interpolation<Type>& Foam::CarrierFieldBase<Type>::psiInterpolation
         psiInterpolationPtr_ =
             interpolation<Type>::New
             (
-                word(mesh.schemes().interpolation(name())),
+                word(mesh.schemes().interpolation(this->name_)),
                 psi()
             );
     }
@@ -291,7 +291,7 @@ const Foam::interpolation<Type>& Foam::CarrierFieldBase<Type>::psi0Interpolation
         psi0InterpolationPtr_ =
             interpolation<Type>::New
             (
-                word(mesh.schemes().interpolation(name())),
+                word(mesh.schemes().interpolation(this->name_)),
                 psi().oldTime()
             );
     }
@@ -305,8 +305,12 @@ const Foam::interpolation<Type>& Foam::CarrierFieldBase<Type>::psi0Interpolation
 template<class Type>
 Foam::CarrierFieldBase<Type>::CarrierFieldBase(const VolField<Type>& psi)
 :
-    CloudDerivedField<Type>(*this, &CarrierFieldBase::interpolate),
-    name_(clouds::carried::nameToCarrierName(psi.name())),
+    CloudDerivedField<Type>
+    (
+        clouds::carried::nameToCarrierName(psi.name()),
+        *this,
+        &CarrierFieldBase::interpolate
+    ),
     functorPtr_(nullptr),
     tpsi_(psi),
     psiInterpolationPtr_(nullptr),
@@ -321,8 +325,7 @@ Foam::CarrierFieldBase<Type>::CarrierFieldBase
     const VolField<Type>& psi
 )
 :
-    CloudDerivedField<Type>(*this, &CarrierFieldBase::interpolate),
-    name_(name),
+    CloudDerivedField<Type>(name, *this, &CarrierFieldBase::interpolate),
     functorPtr_(nullptr),
     tpsi_(psi),
     psiInterpolationPtr_(nullptr),
@@ -334,9 +337,8 @@ template<class Type>
 template<class F>
 Foam::CarrierFieldBase<Type>::CarrierFieldBase(const word& name, const F& f)
 :
-    CloudDerivedField<Type>(*this, &CarrierFieldBase::interpolate),
-    name_(name),
-    functorPtr_(new Function<F>(name_, f)),
+    CloudDerivedField<Type>(name, *this, &CarrierFieldBase::interpolate),
+    functorPtr_(new Function<F>(this->name_, f)),
     tpsi_(nullptr),
     psiInterpolationPtr_(nullptr),
     psi0InterpolationPtr_(nullptr)
@@ -363,13 +365,6 @@ const Foam::VolField<Type>& Foam::CarrierFieldBase<Type>::psi() const
     }
 
     return tpsi_();
-}
-
-
-template<class Type>
-const Foam::word& Foam::CarrierFieldBase<Type>::name() const
-{
-    return name_;
 }
 
 

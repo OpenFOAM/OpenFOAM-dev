@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -228,7 +228,7 @@ template<class Type>
 template<class F>
 Foam::CloudDerivedField<Type>::CloudDerivedField(const F& f)
 :
-    name_(NullObjectRef<word>()),
+    name_(word::null),
     functorPtr_(new Function<F>(f))
 {}
 
@@ -263,12 +263,39 @@ Foam::CloudDerivedField<Type>::CloudDerivedField
     ) const
 )
 :
-    name_(NullObjectRef<word>()),
+    name_(word::null),
     functorPtr_(new Method<C>(c, m))
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
+template<class Type>
+const Foam::word& Foam::CloudDerivedField<Type>::name() const
+{
+    if (name_ == word::null)
+    {
+        FatalErrorInFunction << "Name requested for un-named derived field ";
+
+        if (psiAllPtr_.valid())
+        {
+            FatalError << psiAllPtr_->name();
+        }
+        else if (psiSubPtr_.valid())
+        {
+            FatalError << psiSubPtr_->mesh().complete(psiSubPtr_->name());
+        }
+        else if (psiSubSubPtr_.valid())
+        {
+            FatalError << psiSubSubPtr_->mesh().complete(psiSubSubPtr_->name());
+        }
+
+        FatalError << exit(FatalError);
+    }
+
+    return name_;
+}
+
 
 template<class Type>
 Foam::tmp<Foam::LagrangianInternalField<Type>>
@@ -392,7 +419,7 @@ Foam::CloudDerivedField<Type>::operator()
     {
         if (!psiAllPtr_.valid())
         {
-            if (notNull(name_))
+            if (name_ != word::null)
             {
                 psiAllPtr_.reset
                 (
@@ -415,7 +442,7 @@ Foam::CloudDerivedField<Type>::operator()
     // Evaluate and store if it doesn't already exist for the sub-mesh
     if (!psiSubPtr_.valid() || psiSubMeshIndex_ != subMesh.index())
     {
-        if (notNull(name_))
+        if (name_ != word::null)
         {
             psiSubPtr_.reset
             (

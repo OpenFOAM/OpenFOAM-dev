@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,8 +62,8 @@ Foam::Lagrangian::SaffmanMeiLift::calcL
     const clouds::coupled& cCloud = cloud<clouds::coupled>();
     const clouds::sphericalCoupled& scCloud = cloud<clouds::sphericalCoupled>();
 
-    const LagrangianSubVectorSubField U(cloud().U(model, subMesh));
-    const LagrangianSubScalarSubField d(sCloud.d(model, subMesh));
+    tmp<LagrangianSubScalarSubField> td = sCloud.d(model, subMesh);
+    const LagrangianSubScalarSubField& d = td();
     const LagrangianSubScalarField& v = sCloud.v(model, subMesh);
     const LagrangianSubScalarField& nuc = cCloud.nuc(model, subMesh);
     const LagrangianSubScalarField& Re = scCloud.Re(model, subMesh);

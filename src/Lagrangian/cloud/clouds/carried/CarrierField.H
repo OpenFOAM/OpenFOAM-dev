@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,9 +68,6 @@ class CarrierFieldBase
 
     // Private Data
 
-        //- The carrier field name
-        const word name_;
-
         //- The function
         const autoPtr<Functor> functorPtr_;
 
@@ -133,9 +130,6 @@ public:
 
         //- Access the carrier field
         const VolField<Type>& psi() const;
-
-        //- Carrier field name
-        const word& name() const;
 
         //- Reset
         void reset(const bool initial);

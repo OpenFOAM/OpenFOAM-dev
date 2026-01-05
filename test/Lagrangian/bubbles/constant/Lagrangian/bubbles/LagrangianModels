@@ -1,0 +1,55 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant/Lagrangian/bubbles";
+    object      LagrangianModels;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+injection
+{
+    type        manualInjection;
+    positions   ((0 0 0.000001)) [m];
+}
+
+gravity
+{
+    type        gravity;
+}
+
+drag
+{
+    type        SchillerNaumannDrag;
+}
+
+virtualMass
+{
+    type        constantCoefficientVirtualMass;
+    Cvm         0.5;
+}
+
+pressureWork
+{
+    type        pressureWork;
+}
+
+// !!! No heat transfer. We are trying to see how accurately we match the
+// analytic solution for an adiabatic expansion. If we turn heat transfer on
+// the results are relatively uninteresting. The solution is almost isothermal.
+// The bubble remains almost exactly at the temperature of the carrier.
+/*
+heatTransfer
+{
+    type        RanzMarshallHeatTransfer;
+}
+*/
+
+// ************************************************************************* //

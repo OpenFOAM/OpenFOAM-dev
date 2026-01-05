@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -123,7 +123,6 @@ Foam::clouds::coupledToFluid::coupledToFluid
     const cloud& c,
     const dictionary& dict
 )
-
 :
     coupled(c, dict),
     mesh_(c.mesh()),
@@ -142,7 +141,7 @@ Foam::clouds::coupledToFluid::coupledToFluid
       ? carrierField<scalar>(trhocPhaseVf_())
       : carrierField<scalar>
         (
-            "rhocPhase",
+            IOobject::groupName("rhoc", phaseName()),
             [&]()
             {
                 FatalErrorInFunction
@@ -175,9 +174,6 @@ Foam::clouds::coupledToFluid::coupledToFluid
 
 Foam::clouds::coupledToFluid::~coupledToFluid()
 {}
-
-
-// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 
 // ************************************************************************* //

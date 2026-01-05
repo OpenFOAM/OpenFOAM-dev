@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,19 +79,19 @@ public:
 
         //- Generate an error if the cloud is not one of the given types
         template<class Cloud, class ... Clouds>
-        void assertCloud
-        (
-            const LagrangianModel& model,
-            const LagrangianSubMesh& subMesh
-        ) const;
+        void assertCloud() const;
+
+        //- Generate an error if the cloud is not one of the given types
+        template<class Cloud, class ... Clouds>
+        void assertCloud(const LagrangianModel& model) const;
 
         //- Get a reference to the cloud
         template<class Cloud = Foam::cloud>
-        const Cloud& cloud
-        (
-            const LagrangianModel& model,
-            const LagrangianSubMesh& subMesh
-        ) const;
+        const Cloud& cloud() const;
+
+        //- Get a reference to the cloud
+        template<class Cloud = Foam::cloud>
+        const Cloud& cloud(const LagrangianModel& model) const;
 };
 
 

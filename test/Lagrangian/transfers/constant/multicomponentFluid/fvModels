@@ -16,7 +16,7 @@ FoamFile
 
 droplets
 {
-    type        parcelCloud;
+    type        dynamicParcelCloud;
     libs        ("libLagrangianCloud.so");
 }
 

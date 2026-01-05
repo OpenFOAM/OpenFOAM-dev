@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,6 +50,15 @@ namespace clouds
 
 class massive
 {
+protected:
+
+    // Protected Constructors
+
+        //- Construct from a reference to the cloud and its base classes and
+        //  the density field
+        massive(const cloud&, const shaped&, LagrangianScalarDynamicField&);
+
+
 public:
 
     // Public Static Data
@@ -64,16 +73,10 @@ public:
     // Public Data
 
         //- Density
-        CloudStateField<scalar> rho;
+        CloudStateFieldRef<scalar> rho;
 
         //- Mass
         const CloudDerivedField<scalar>& m;
-
-
-    // Constructors
-
-        //- Construct from a reference to the cloud and its base classes
-        massive(const cloud&, const shaped&);
 
 
     //- Destructor

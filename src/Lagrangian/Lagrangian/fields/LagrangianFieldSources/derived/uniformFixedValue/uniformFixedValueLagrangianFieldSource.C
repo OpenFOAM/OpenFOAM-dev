@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,7 +82,7 @@ Foam::uniformFixedValueLagrangianFieldSource<Type>::sourceValue
     const LagrangianSubMesh& subMesh
 ) const
 {
-    return value(source, subMesh, uniformValue_());
+    return value(subMesh);
 }
 
 
@@ -112,7 +112,18 @@ Foam::uniformFixedValueLagrangianFieldSource<Type>::value
     const LagrangianSubMesh& subMesh
 ) const
 {
-    return value(injection, subMesh, uniformValue_());
+    return value(subMesh);
+}
+
+
+template<class Type>
+Foam::tmp<Foam::LagrangianSubField<Type>>
+Foam::uniformFixedValueLagrangianFieldSource<Type>::value
+(
+    const LagrangianSubMesh& subMesh
+) const
+{
+    return value(subMesh, uniformValue_());
 }
 
 

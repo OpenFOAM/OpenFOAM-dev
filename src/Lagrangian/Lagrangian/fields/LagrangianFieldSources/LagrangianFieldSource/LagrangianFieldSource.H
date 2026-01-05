@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -210,11 +210,9 @@ public:
                 const LagrangianSubMesh&
             ) const;
 
-            //- Return the value for either a continuous source or an
-            //  instantaneous injection
-            tmp<LagrangianSubField<Type>> value
+            //- Return the value without a model
+            virtual tmp<LagrangianSubField<Type>> value
             (
-                const LagrangianModel&,
                 const LagrangianSubMesh&
             ) const;
 

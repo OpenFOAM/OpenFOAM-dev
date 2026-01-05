@@ -1,0 +1,79 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+plotFile="postProcessing/bubblesPlot/0/LagrangianFieldValue.dat"
+
+nCorrectors="0 1 2 3 4"
+
+pColour='web-blue'
+Tcolours="dark-red red orange-red orange goldenrod"
+TanalyticColour='web-green'
+
+# Mesh and run for various numbers of correctors
+runApplication blockMesh
+for n in $nCorrectors
+do
+    runApplication -a foamDictionary \
+        system/Lagrangian/bubbles/LagrangianSolution -entry nCorrectors -set $n
+    runApplication -s $n foamRun
+    cp -n $plotFile $plotFile.$n
+done
+
+# Get the thermodynamic properties
+R="6.02214e+26*1.38065e-23"
+W=$(foamDictionary constant/Lagrangian/bubbles/physicalProperties \
+    -entry mixture/specie/molWeight -value)
+Cv=$(foamDictionary constant/Lagrangian/bubbles/physicalProperties \
+    -entry mixture/thermodynamics/Cv -value)
+gamma="(1+$R/$W/$Cv)"
+
+# Get the initial thermodynamic state
+p0=$(grep -m 1 -v "^#" "$plotFile" | awk '{print $4}')
+T0=$(grep -m 1 -v "^#" "$plotFile" | awk '{print $5}')
+
+Tanalytic="($T0*(\$4/$p0)**(($gamma - 1)/$gamma))"
+
+gnuplot << EOF
+
+set terminal postscript eps color enhanced size 4,4
+set output "expansion.eps"
+
+nCorrectors = "$nCorrectors"
+Tcolours = "$Tcolours"
+
+set multiplot layout 2,1 margins 0.17, 0.83, 0.1, 0.95 spacing 0.1
+
+set xlabel 'Time [s]'
+set ytics nomirror
+set ylabel 'Pressure [kPa]'
+set y2tics
+set y2label 'Temperature [K]'
+set key bottom left Left reverse
+
+plot "$plotFile" us 1:(\$4/1e3) w l lc '$pColour' t 'Pressure', \
+    for [ i = 1:words(nCorrectors) ] \
+    "$plotFile.".word(nCorrectors,i) us 1:5 axis x1y2 w l \
+    lc rgb word(Tcolours,i) t 'Temperature for '.word(nCorrectors,i).' Correctors', \
+    "$plotFile" us 1:($Tanalytic) axis x1y2 w l \
+    lc '$TanalyticColour' dt '-' t 'Analytic Temperature'
+
+set ytics mirror
+set ylabel 'Temperature Error [%]'
+unset y2tics
+unset y2label
+set format y '%g'
+set log y
+set key bottom right Right noreverse
+
+plot [][1e-5:] for [ i = 1:words(nCorrectors) ] \
+    "$plotFile.".word(nCorrectors,i) us 1:(100*abs(\$5/$Tanalytic - 1)) w l \
+    lc rgb word(Tcolours,i) t word(nCorrectors,i).' Correctors'
+
+unset multiplot
+
+EOF
+
+#------------------------------------------------------------------------------

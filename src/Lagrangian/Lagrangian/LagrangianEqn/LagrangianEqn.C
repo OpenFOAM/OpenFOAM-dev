@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,17 +72,24 @@ void Foam::LagrangianEqn<Type>::preOpCheck
 
 
 template<class Type>
-template<class TypeB>
-void Foam::LagrangianEqn<Type>::opDeltaT(const tmp<LagrangianEqn<TypeB>>& tB)
+template<class OtherType>
+void Foam::LagrangianEqn<Type>::opDeltaT
+(
+    const tmp<LagrangianEqn<OtherType>>& tOther
+)
 {
-    if (tB().tDeltaT_.valid())
+    if (tOther().tDeltaT_.valid())
     {
         if (!tDeltaT_.valid())
         {
             tDeltaT_ =
-                tmp<LagrangianSubScalarField>(tB().tDeltaT_, tB.isTmp());
+                tmp<LagrangianSubScalarField>
+                (
+                    tOther().tDeltaT_,
+                    tOther.isTmp()
+                );
         }
-        else if (&tDeltaT_() != &tB().tDeltaT_())
+        else if (&tDeltaT_() != &tOther().tDeltaT_())
         {
             FatalErrorInFunction
                 << "Operating equations with different time-step fields"
@@ -93,20 +100,80 @@ void Foam::LagrangianEqn<Type>::opDeltaT(const tmp<LagrangianEqn<TypeB>>& tB)
 
 
 template<class Type>
-template<class TypeB>
-void Foam::LagrangianEqn<Type>::opClear(const tmp<LagrangianEqn<TypeB>>& tB)
+template<class OtherType>
+void Foam::LagrangianEqn<Type>::opClear
+(
+    LagrangianEqn<OtherType>& other
+)
 {
     // Remove old-time pointers so that they are not operated on on destruction
-    if (tB.isTmp())
+    other.deltaTSp0Ptr_ = NullObjectPtr<LagrangianDynamicField<scalar>>();
+    other.S0Ptr_ = NullObjectPtr<LagrangianDynamicField<OtherType>>();
+}
+
+
+template<class Type>
+template<class OtherType>
+void Foam::LagrangianEqn<Type>::opClear
+(
+    const tmp<LagrangianEqn<OtherType>>& tOther
+)
+{
+    if (tOther.isTmp())
     {
-        tB.ref().deltaTSp0Ptr_ =
-            NullObjectPtr<LagrangianDynamicField<scalar>>();
-        tB.ref().S0Ptr_ =
-            NullObjectPtr<LagrangianDynamicField<TypeB>>();
+        opClear(tOther.ref());
+    }
+}
+
+
+template<class Type>
+template<class OtherType>
+void Foam::LagrangianEqn<Type>::opFinalise
+(
+    LagrangianEqn<OtherType>& other
+)
+{
+    // Store previous implicit time coefficient and source fields
+    if (notNull(other.deltaTSp0Ptr_))
+    {
+        LagrangianSubSubField<scalar> deltaTSp0
+        (
+            other.mesh().sub(other.deltaTSp0Ptr_->internalField())
+        );
+
+        deltaTSp0 = Zero;
+
+        if (other.deltaTSp.valid()) deltaTSp0 = other.deltaTSp.S();
     }
 
-    // Clear the equation
-    tB.clear();
+    if (notNull(other.S0Ptr_))
+    {
+        LagrangianSubSubField<Type> S0
+        (
+            other.mesh().sub(other.S0Ptr_->internalField())
+        );
+
+        other.mesh().group() == LagrangianGroup::none ? S0 = Zero : S0 *= -1;
+
+        if (other.Su.valid()) S0 += other.Su.S();
+        if (other.Sp.valid()) S0 += other.Sp.Su(other)->S();
+    }
+
+    opClear(other);
+}
+
+
+template<class Type>
+template<class OtherType>
+void Foam::LagrangianEqn<Type>::opFinalise
+(
+    const tmp<LagrangianEqn<OtherType>>& tOther
+)
+{
+    if (tOther.isTmp())
+    {
+        opFinalise(tOther.ref());
+    }
 }
 
 
@@ -278,7 +345,7 @@ Foam::LagrangianEqn<Type>::LagrangianEqn(const LagrangianSubMesh& mesh)
     LagrangianEqnBase(word::null, mesh),
     tDeltaT_(tmp<LagrangianSubScalarField>()),
     psiSubSubRef_(NullObjectNonConstRef<LagrangianSubSubField<Type>>()),
-    psiSubSub_(NullObjectRef<LagrangianSubScalarSubField>()),
+    psiSubSub_(NullObjectRef<LagrangianSubSubField<Type>>()),
     psiSub_(NullObjectRef<LagrangianSubField<Type>>()),
     deltaTSp0Ptr_(&NullObjectNonConstRef<LagrangianDynamicField<scalar>>()),
     S0Ptr_(&NullObjectNonConstRef<LagrangianDynamicField<Type>>()),
@@ -346,14 +413,7 @@ Foam::LagrangianEqn<Type>::LagrangianEqn(const tmp<LagrangianEqn<Type>>& tEqn)
       : LagrangianSp<Type>(*this, tEqn().Sp)
     )
 {
-    if (tEqn.isTmp())
-    {
-        tEqn.ref().deltaTSp0Ptr_ =
-            NullObjectPtr<LagrangianDynamicField<scalar>>();
-        tEqn.ref().S0Ptr_ =
-            NullObjectPtr<LagrangianDynamicField<Type>>();
-    }
-
+    opClear(tEqn);
     tEqn.clear();
 }
 
@@ -373,8 +433,7 @@ Foam::LagrangianEqn<Type>::LagrangianEqn(LagrangianEqn<Type>&& eqn)
     Su(move(eqn.Su)),
     Sp(move(eqn.Sp))
 {
-    eqn.deltaTSp0Ptr_ = NullObjectPtr<LagrangianDynamicField<scalar>>();
-    eqn.S0Ptr_ = NullObjectPtr<LagrangianDynamicField<Type>>();
+    opClear(eqn);
 }
 
 
@@ -463,6 +522,7 @@ Foam::LagrangianEqn<Type>::LagrangianEqn
     opDeltaT(tB);
 
     opClear(tA);
+    tA.clear();
 
     // Combine the coefficients
     eqOp(*this, tB());
@@ -496,6 +556,7 @@ Foam::LagrangianEqn<Type>::LagrangianEqn
     }
 
     opClear(tB);
+    tB.clear();
 }
 
 
@@ -521,6 +582,7 @@ Foam::LagrangianEqn<Type>::LagrangianEqn
     eqOp(*this, tB());
 
     opClear(tB);
+    tB.clear();
 }
 
 
@@ -529,30 +591,7 @@ Foam::LagrangianEqn<Type>::LagrangianEqn
 template<class Type>
 Foam::LagrangianEqn<Type>::~LagrangianEqn()
 {
-    if (notNull(deltaTSp0Ptr_))
-    {
-        LagrangianSubSubField<scalar> deltaTSp0
-        (
-            mesh().sub(deltaTSp0Ptr_->internalField())
-        );
-
-        deltaTSp0 = Zero;
-
-        if (deltaTSp.valid()) deltaTSp0 = deltaTSp.S();
-    }
-
-    if (notNull(S0Ptr_))
-    {
-        LagrangianSubSubField<Type> S0
-        (
-            mesh().sub(S0Ptr_->internalField())
-        );
-
-        mesh().group() == LagrangianGroup::none ? S0 = Zero : S0 *= -1;
-
-        if (Su.valid()) S0 += Su.S();
-        if (Sp.valid()) S0 += Sp.Su(*this)->S();
-    }
+    opFinalise(*this);
 }
 
 
@@ -646,7 +685,7 @@ template<class Type>
 Foam::tmp<Foam::LagrangianCoeff<Type, false>>
 Foam::LagrangianEqn<Type>::allSu() const
 {
-    if (!tDeltaT_.valid())
+    if (Su.valid() && !tDeltaT_.valid())
     {
         FatalErrorInFunction
             << "Cannot evaluate equation " << name_ << " for field "
@@ -659,7 +698,7 @@ Foam::LagrangianEqn<Type>::allSu() const
     );
 
     tResult.ref() += Su;
-    tResult.ref() *= tDeltaT_();
+    if (tDeltaT_.valid()) tResult.ref() *= tDeltaT_();
     tResult.ref() += deltaTSu;
 
     return tResult;
@@ -669,7 +708,7 @@ Foam::LagrangianEqn<Type>::allSu() const
 template<class Type>
 Foam::tmp<Foam::LagrangianSp<Type>> Foam::LagrangianEqn<Type>::allSp() const
 {
-    if (!tDeltaT_.valid())
+    if (Sp.valid() && !tDeltaT_.valid())
     {
         FatalErrorInFunction
             << "Cannot evaluate equation " << name_ << " for field "
@@ -679,7 +718,7 @@ Foam::tmp<Foam::LagrangianSp<Type>> Foam::LagrangianEqn<Type>::allSp() const
     tmp<LagrangianSp<Type>> tResult(new LagrangianSp<Type>(*this));
 
     tResult.ref() += Sp;
-    tResult.ref() *= tDeltaT_();
+    if (tDeltaT_.valid()) tResult.ref() *= tDeltaT_();
     tResult.ref() += deltaTSp;
 
     return tResult;
@@ -690,7 +729,9 @@ template<class Type>
 Foam::tmp<Foam::LagrangianCoeff<Type, false>>
 Foam::LagrangianEqn<Type>::allDiagonalSu() const
 {
-    if (!tDeltaT_.valid())
+    tmp<LagrangianCoeff<Type, false>> tSpH(Sp.H());
+
+    if ((Su.valid() || tSpH().valid()) && !tDeltaT_.valid())
     {
         FatalErrorInFunction
             << "Cannot evaluate equation " << name_ << " for field "
@@ -703,8 +744,8 @@ Foam::LagrangianEqn<Type>::allDiagonalSu() const
     );
 
     tResult.ref() += Su;
-    tResult.ref() += Sp.H();
-    tResult.ref() *= tDeltaT_();
+    tResult.ref() += tSpH;
+    if (tDeltaT_.valid()) tResult.ref() *= tDeltaT_();
     tResult.ref() += deltaTSu;
 
     return tResult;
@@ -715,7 +756,9 @@ template<class Type>
 Foam::tmp<Foam::LagrangianCoeff<Foam::scalar, true>>
 Foam::LagrangianEqn<Type>::allDiagonalSp() const
 {
-    if (!tDeltaT_.valid())
+    tmp<LagrangianCoeff<scalar, true>> tSpA(Sp.A());
+
+    if (tSpA().valid() && !tDeltaT_.valid())
     {
         FatalErrorInFunction
             << "Cannot evaluate equation " << name_ << " for field "
@@ -728,7 +771,7 @@ Foam::LagrangianEqn<Type>::allDiagonalSp() const
     );
 
     tResult.ref() += Sp.A();
-    tResult.ref() *= tDeltaT_();
+    if (tDeltaT_.valid()) tResult.ref() *= tDeltaT_();
     tResult.ref() += deltaTSp;
 
     return tResult;
@@ -836,6 +879,7 @@ void Foam::LagrangianEqn<Type>::operator*=
     const LagrangianSubField<scalar, PrimitiveField>& S
 )
 {
+    opFinalise(*this);
     deltaTSu *= S;
     deltaTSp *= S;
     Su *= S;
@@ -858,6 +902,7 @@ void Foam::LagrangianEqn<Type>::operator*=
 template<class Type>
 void Foam::LagrangianEqn<Type>::operator*=(const dimensioned<scalar>& dt)
 {
+    opFinalise(*this);
     deltaTSu *= dt;
     deltaTSp *= dt;
     Su *= dt;
@@ -868,6 +913,7 @@ void Foam::LagrangianEqn<Type>::operator*=(const dimensioned<scalar>& dt)
 template<class Type>
 void Foam::LagrangianEqn<Type>::operator*=(const zero& z)
 {
+    opFinalise(*this);
     deltaTSu *= z;
     deltaTSp *= z;
     Su *= z;
@@ -882,6 +928,7 @@ void Foam::LagrangianEqn<Type>::operator/=
     const LagrangianSubField<scalar, PrimitiveField>& S
 )
 {
+    opFinalise(*this);
     deltaTSu /= S;
     deltaTSp /= S;
     Su /= S;
@@ -904,6 +951,7 @@ void Foam::LagrangianEqn<Type>::operator/=
 template<class Type>
 void Foam::LagrangianEqn<Type>::operator/=(const dimensioned<scalar>& dt)
 {
+    opFinalise(*this);
     deltaTSu /= dt;
     deltaTSp /= dt;
     Su /= dt;
@@ -919,12 +967,7 @@ Foam::tmp<Foam::LagrangianEqn<Type>> Foam::operator-
     const LagrangianEqn<Type>& eqn
 )
 {
-    tmp<LagrangianEqn<Type>> tResult(new LagrangianEqn<Type>(eqn));
-    tResult.ref().deltaTSu.negate();
-    tResult.ref().deltaTSp.negate();
-    tResult.ref().Su.negate();
-    tResult.ref().Sp.negate();
-    return tResult.ref();
+    return - tmp<LagrangianEqn<Type>>(eqn);
 }
 
 
@@ -934,8 +977,11 @@ Foam::tmp<Foam::LagrangianEqn<Type>> Foam::operator-
     const tmp<LagrangianEqn<Type>>& tEqn
 )
 {
-    tmp<LagrangianEqn<Type>> tResult(-tEqn());
-    tEqn.clear();
+    tmp<LagrangianEqn<Type>> tResult(tEqn, true);
+    tResult.ref().deltaTSu.negate();
+    tResult.ref().deltaTSp.negate();
+    tResult.ref().Su.negate();
+    tResult.ref().Sp.negate();
     return tResult;
 }
 
@@ -1043,7 +1089,7 @@ LAGRANGIAN_EQN_EQN_OPERATOR(==, -=)
         const LagrangianSubField<Type>& field                                  \
     )                                                                          \
     {                                                                          \
-        tmp<LagrangianEqn<Type>> tResult(tEqn);                                \
+        tmp<LagrangianEqn<Type>> tResult(tEqn, true);                          \
         tResult.ref().Su EqOp field;                                           \
         return tResult;                                                        \
     }                                                                          \
@@ -1055,7 +1101,7 @@ LAGRANGIAN_EQN_EQN_OPERATOR(==, -=)
         const tmp<LagrangianSubField<Type>>& tField                            \
     )                                                                          \
     {                                                                          \
-        tmp<LagrangianEqn<Type>> tResult(tEqn);                                \
+        tmp<LagrangianEqn<Type>> tResult(tEqn, true);                          \
         tResult.ref().Su EqOp tField;                                          \
         return tResult;                                                        \
     }                                                                          \
@@ -1162,10 +1208,7 @@ LAGRANGIAN_FIELD_EQN_OPERATOR(==, -=, LagrangianSubSubField)
     )                                                                          \
     {                                                                          \
         tmp<LagrangianEqn<Type>> tResult(new LagrangianEqn<Type>(eqn));        \
-        tResult.ref().deltaTSu EqOp field;                                     \
-        tResult.ref().deltaTSp EqOp field;                                     \
-        tResult.ref().Su EqOp field;                                           \
-        tResult.ref().Sp EqOp field;                                           \
+        tResult.ref() EqOp field;                                              \
         return tResult;                                                        \
     }                                                                          \
                                                                                \
@@ -1176,11 +1219,8 @@ LAGRANGIAN_FIELD_EQN_OPERATOR(==, -=, LagrangianSubSubField)
         const LagrangianSubField<scalar>& field                                \
     )                                                                          \
     {                                                                          \
-        tmp<LagrangianEqn<Type>> tResult(tEqn);                                \
-        tResult.ref().deltaTSu EqOp field;                                     \
-        tResult.ref().deltaTSp EqOp field;                                     \
-        tResult.ref().Su EqOp field;                                           \
-        tResult.ref().Sp EqOp field;                                           \
+        tmp<LagrangianEqn<Type>> tResult(tEqn, true);                          \
+        tResult.ref() EqOp field;                                              \
         return tResult;                                                        \
     }                                                                          \
                                                                                \
@@ -1191,12 +1231,8 @@ LAGRANGIAN_FIELD_EQN_OPERATOR(==, -=, LagrangianSubSubField)
         const tmp<LagrangianSubField<scalar>>& tField                          \
     )                                                                          \
     {                                                                          \
-        tmp<LagrangianEqn<Type>> tResult(tEqn);                                \
-        tResult.ref().deltaTSu EqOp tField();                                  \
-        tResult.ref().deltaTSp EqOp tField();                                  \
-        tResult.ref().Su EqOp tField();                                        \
-        tResult.ref().Sp EqOp tField();                                        \
-        tField.clear();                                                        \
+        tmp<LagrangianEqn<Type>> tResult(tEqn, true);                          \
+        tResult.ref() EqOp tField;                                             \
         return tResult;                                                        \
     }                                                                          \
                                                                                \
@@ -1208,11 +1244,7 @@ LAGRANGIAN_FIELD_EQN_OPERATOR(==, -=, LagrangianSubSubField)
     )                                                                          \
     {                                                                          \
         tmp<LagrangianEqn<Type>> tResult(new LagrangianEqn<Type>(eqn));        \
-        tResult.ref().deltaTSu EqOp tField();                                  \
-        tResult.ref().deltaTSp EqOp tField();                                  \
-        tResult.ref().Su EqOp tField();                                        \
-        tResult.ref().Sp EqOp tField();                                        \
-        tField.clear();                                                        \
+        tResult.ref() EqOp tField;                                             \
         return tResult;                                                        \
     }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,7 +64,7 @@ void Foam::uniformSizeNumberLagrangianScalarFieldSource::calcSizes
     const bool actuallyNeedm = needm || uniformSize_ == uniformSize::mass;
 
     const Foam::clouds::shaped& shapedCloud =
-        cloud<Foam::clouds::shaped>(injection, subMesh);
+        cloud<Foam::clouds::shaped>(injection);
 
     // Evaluate the volume and mass (as necessary) of the created particles
     if (actuallyNeedv)
@@ -74,7 +74,7 @@ void Foam::uniformSizeNumberLagrangianScalarFieldSource::calcSizes
     if (actuallyNeedm)
     {
         const clouds::massive& massiveCloud =
-            cloud<clouds::massive>(injection, subMesh);
+            cloud<clouds::massive>(injection);
 
         m = massiveCloud.m(injection, subMesh);
     }

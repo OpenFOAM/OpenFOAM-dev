@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,22 +41,16 @@ namespace clouds
 const Foam::word Foam::clouds::massive::mName("m");
 
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * Protected Constructors  * * * * * * * * * * * * //
 
-Foam::clouds::massive::massive(const cloud& c, const shaped& shapedCloud)
+Foam::clouds::massive::massive
+(
+    const cloud& c,
+    const shaped& shapedCloud,
+    LagrangianScalarDynamicField& rho_
+)
 :
-    rho
-    (
-        IOobject
-        (
-            "rho",
-            c.time().name(),
-            c.mesh(),
-            IOobject::MUST_READ,
-            IOobject::AUTO_WRITE
-        ),
-        c.mesh()
-    ),
+    rho(rho_),
     m
     (
         c.derivedField<scalar>

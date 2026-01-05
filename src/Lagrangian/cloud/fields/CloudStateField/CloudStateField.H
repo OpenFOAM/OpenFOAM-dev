@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,7 +28,9 @@ Description
     A field which is stored as part of the state of the cloud. This is a light
     wrapper around a dynamic Lagrangian field. It provides convenient access
     consistent with that of the derived fields so that expressions involving
-    both kinds of field are readable.
+    both kinds of field are readable. It also ensures that old-time fields are
+    maintained for a sub-mesh for the duration of the inner correction
+    iterations.
 
 See also
     Foam::CloudDerivedField
@@ -41,8 +43,7 @@ SourceFiles
 #ifndef CloudStateField_H
 #define CloudStateField_H
 
-#include "LagrangianModelRef.H"
-#include "LagrangianFields.H"
+#include "CloudStateFieldRef.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -56,81 +57,47 @@ namespace Foam
 template<class Type>
 class CloudStateField
 :
-    public LagrangianDynamicField<Type>
+    public LagrangianDynamicField<Type>,
+    public CloudStateFieldRef<Type>
 {
-private:
-
-    // Private Data
-
-        //- The cached Lagrangian sub-all-field
-        mutable autoPtr<LagrangianSubSubField<Type>> psiAllPtr_;
-
-        //- The cached Lagrangian sub-field
-        mutable autoPtr<LagrangianSubSubField<Type>> psiSubSubPtr_;
-
-        //- The index of the sub-mesh
-        mutable label psiSubSubMeshIndex_;
-
-
 public:
 
     // Constructors
 
         //- Forward construction arguments to the base class
         template<class ... Args>
-        CloudStateField(const Args& ... args);
+        CloudStateField(const Args& ... args)
+        :
+            LagrangianDynamicField<Type>(args ...),
+            CloudStateFieldRef<Type>
+            (
+                static_cast<LagrangianDynamicField<Type>&>(*this)
+            )
+        {}
 
 
     // Member Functions
 
-        //- Access a part of the field
-        const LagrangianSubSubField<Type>& ref(const LagrangianSubMesh&) const;
+        //- Access the name via the geometric field
+        using LagrangianDynamicField<Type>::name;
 
-        //- Access a part of the field
-        LagrangianSubSubField<Type>& ref(const LagrangianSubMesh&);
+        //- Access the name via the geometric field
+        using LagrangianDynamicField<Type>::mesh;
 
-        //- Clear
-        void clear();
+        //- Access the name via the geometric field
+        using LagrangianDynamicField<Type>::dimensions;
 
 
     // Member Operators
 
-        //- Access the entire field
-        const LagrangianDynamicField<Type>& operator()
-        (
-            const LagrangianMesh&
-        ) const;
-
-        //- Access a part of the field
-        const LagrangianSubSubField<Type>& operator()
-        (
-            const LagrangianSubMesh& subMesh
-        ) const;
-
-        //- Compute and return part of the field associated with a model
-        tmp<LagrangianSubField<Type>> operator()
-        (
-            const LagrangianModel& model,
-            const LagrangianSubMesh& subMesh
-        ) const;
-
-        //- Compute and return part of the field associated with a model
-        tmp<LagrangianSubSubField<Type>> operator()
-        (
-            const LagrangianModelRef& model,
-            const LagrangianSubMesh& subMesh
-        ) const;
+        //- Use the call operator(s) from the state field reference and not
+        //  from the geometric field
+        using CloudStateFieldRef<Type>::operator();
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "CloudStateField.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

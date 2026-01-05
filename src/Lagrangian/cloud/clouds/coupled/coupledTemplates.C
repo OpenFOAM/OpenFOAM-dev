@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,16 +27,15 @@ License
 #include "CarrierEqn.H"
 #include "LagrangianmDdt.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * *  Protected Member Functions * * * * * * * * * * * //
 
 template<class Type>
 Foam::CarrierEqn<Type>& Foam::clouds::coupled::carrierEqn
 (
-    const CloudDerivedField<Type>& psic,
-    const LagrangianSubMesh& subMesh
+    const CloudDerivedField<Type>& psic
 )
 {
-    const word key = carrierNameToName(subMesh.complete(psic(subMesh).name()));
+    const word key = carrierNameToName(psic.name());
 
     typename HashPtrTable<CarrierEqn<Type>>::iterator iter =
         carrierEqns<Type>().find(key);
@@ -53,8 +52,7 @@ Foam::CarrierEqn<Type>& Foam::clouds::coupled::carrierEqn
 template<class Type>
 Foam::CarrierEqn<Type>& Foam::clouds::coupled::carrierEqn
 (
-    const CarrierField<Type>& psic,
-    const LagrangianSubMesh&
+    const CarrierField<Type>& psic
 )
 {
     typename HashPtrTable<CarrierEqn<Type>>::iterator iter =
@@ -71,71 +69,35 @@ Foam::CarrierEqn<Type>& Foam::clouds::coupled::carrierEqn
 
 // * * * * * * * * * * * *  Protected Member Functions * * * * * * * * * * * //
 
-template<class Fieldc>
-bool Foam::clouds::coupled::reCalculateModified
+template<class Type>
+bool Foam::clouds::coupled::initPsicDdt
 (
     const LagrangianSubScalarSubField& vOrM,
-    const Fieldc& fieldc
-)
+    const CloudDerivedField<Type>& psic
+) const
 {
-    if (cloud_.context == cloud::contextType::functionObject) return false;
-
     const LagrangianSubMesh& subMesh = vOrM.mesh();
 
-    return Lagrangianm::initDdt(vOrM.dimensions(), fieldc(subMesh));
+    return Lagrangianm::initDdt(vOrM.dimensions(), psic(subMesh));
 }
 
 
-template<class Fieldc, class Scale>
-void Foam::clouds::coupled::calculate
+template<class Type>
+Foam::tmp<Foam::LagrangianEqn<Type>> Foam::clouds::coupled::psicEqn
 (
     const LagrangianSubScalarField& deltaT,
-    const bool final,
     const LagrangianSubScalarSubField& vOrM,
-    const Fieldc& fieldc,
-    const Scale& scale
-)
+    const LagrangianSubSubField<Type>& psi,
+    const CloudDerivedField<Type>& psic
+) const
 {
-    if (cloud_.context == cloud::contextType::functionObject || !final) return;
-
     const LagrangianModels& models = cloud_.LagrangianModels();
     const LagrangianSubMesh& subMesh = deltaT.mesh();
 
-    LagrangianEqn<scalar> fieldcEqn
-    (
-        Lagrangianm::noDdt(deltaT, vOrM.dimensions(), fieldc(subMesh))
+    return
+        Lagrangianm::noDdt(deltaT, vOrM.dimensions(), psic(subMesh))
      ==
-        models.sourceProxy(deltaT, vOrM, fieldc(subMesh))
-    );
-
-    carrierEqn(fieldc, subMesh) += scale*fieldcEqn;
-}
-
-
-template<class Type, class Fieldc, class Scale>
-void Foam::clouds::coupled::calculate
-(
-    const LagrangianSubScalarField& deltaT,
-    const bool final,
-    const LagrangianSubScalarSubField& vOrM,
-    const LagrangianSubSubField<Type>& field,
-    const Fieldc& fieldc,
-    const Scale& scale
-)
-{
-    if (cloud_.context == cloud::contextType::functionObject || !final) return;
-
-    const LagrangianModels& models = cloud_.LagrangianModels();
-    const LagrangianSubMesh& subMesh = deltaT.mesh();
-
-    LagrangianEqn<Type> fieldcEqn
-    (
-        Lagrangianm::noDdt(deltaT, vOrM.dimensions(), fieldc(subMesh))
-     ==
-        models.sourceProxy(deltaT, vOrM, field, fieldc(subMesh))
-    );
-
-    carrierEqn(fieldc, subMesh) += scale*fieldcEqn;
+        models.sourceProxy(deltaT, vOrM, psi, psic(subMesh));
 }
 
 

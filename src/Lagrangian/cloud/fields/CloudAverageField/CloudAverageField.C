@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -113,16 +113,16 @@ Foam::CloudAverageField<Type>::interpolate
                 notNull(weightPsiOrPsiState_)
               ? LagrangianAverage<Type>::New
                 (
-                    word(mesh.schemes().averaging(name_)),
-                    "average(" + name_ + ')',
+                    word(mesh.schemes().averaging(this->name_)),
+                    "average(" + this->name_ + ')',
                     tcellWeightSum_(),
                     weightPsiOrPsiState_(mesh)
                 )
              // isNull(weightPsiOrPsiState_)
               : LagrangianAverage<Type>::New
                 (
-                    word(mesh.schemes().averaging(name_)),
-                    "average(" + name_ + ')',
+                    word(mesh.schemes().averaging(this->name_)),
+                    "average(" + this->name_ + ')',
                     tcellWeightSum_(),
                     weightPsiOrPsiDerived_(mesh)()
                 )
@@ -131,32 +131,32 @@ Foam::CloudAverageField<Type>::interpolate
                 notNull(weightState_) && notNull(weightPsiOrPsiState_)
               ? LagrangianAverage<Type>::New
                 (
-                    word(mesh.schemes().averaging(name_)),
-                    "average(" + name_ + ')',
+                    word(mesh.schemes().averaging(this->name_)),
+                    "average(" + this->name_ + ')',
                     weightState_(mesh),
                     weightPsiOrPsiState_(mesh)
                 )
               : notNull(weightState_) && isNull(weightPsiOrPsiState_)
               ? LagrangianAverage<Type>::New
                 (
-                    word(mesh.schemes().averaging(name_)),
-                    "average(" + name_ + ')',
+                    word(mesh.schemes().averaging(this->name_)),
+                    "average(" + this->name_ + ')',
                     weightState_(mesh),
                     weightPsiOrPsiDerived_(mesh)()
                 )
               : isNull(weightState_) && notNull(weightPsiOrPsiState_)
               ? LagrangianAverage<Type>::New
                 (
-                    word(mesh.schemes().averaging(name_)),
-                    "average(" + name_ + ')',
+                    word(mesh.schemes().averaging(this->name_)),
+                    "average(" + this->name_ + ')',
                     weightDerived_(mesh)(),
                     weightPsiOrPsiState_(mesh)
                 )
              // isNull(weightState_) && isNull(weightPsiOrPsiState_)
               : LagrangianAverage<Type>::New
                 (
-                    word(mesh.schemes().averaging(name_)),
-                    "average(" + name_ + ')',
+                    word(mesh.schemes().averaging(this->name_)),
+                    "average(" + this->name_ + ')',
                     weightDerived_(mesh)(),
                     weightPsiOrPsiDerived_(mesh)()
                 )
@@ -212,8 +212,7 @@ Foam::CloudAverageField<Type>::CloudAverageField
     const CloudDerivedField<Type>& weightPsi
 )
 :
-    CloudDerivedField<Type>(*this, &CloudAverageField::interpolate),
-    name_(name),
+    CloudDerivedField<Type>(name, *this, &CloudAverageField::interpolate),
     tcellWeightSum_(cellWeightSum),
     weightState_(NullObjectRef<CloudStateField<scalar>>()),
     weightDerived_(NullObjectRef<CloudDerivedField<scalar>>()),

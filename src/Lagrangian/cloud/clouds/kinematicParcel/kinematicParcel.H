@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,12 +78,6 @@ protected:
         (
             const LagrangianSubMesh&
         ) const;
-
-        //- Do re-calculation of a carrier equation for modified particles
-        using coupled::reCalculateModified;
-
-        //- Do calculation of a carrier equation
-        using coupled::calculate;
 
         //- Do we need to re-calculate particles that are modified?
         virtual bool reCalculateModified();

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,8 +58,9 @@ Foam::Lagrangian::SchillerNaumannDrag::calcD
     const clouds::spherical& sCloud = cloud<clouds::spherical>();
     const clouds::sphericalCoupled& scCloud = cloud<clouds::sphericalCoupled>();
 
+    tmp<LagrangianSubScalarSubField> td = sCloud.d(model, subMesh);
+    const LagrangianSubScalarSubField& d = td();
     const LagrangianSubScalarField& Re = scCloud.Re(model, subMesh);
-    const LagrangianSubScalarSubField d(sCloud.d(model, subMesh));
 
     assertCloud
     <
@@ -78,27 +79,8 @@ Foam::Lagrangian::SchillerNaumannDrag::calcD
             cloud<clouds::coupledToFluid>().muc(model, subMesh)
         );
 
-    return
-        LagrangianSubScalarField::New
-        (
-            subMesh.sub("D"),
-            CdRe(Re)*(constant::mathematical::pi/8)*d*tmucByRhoOrMuc
-        );
+    return CdRe(Re)*(constant::mathematical::pi/8)*d*tmucByRhoOrMuc;
 }
-
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::Lagrangian::SchillerNaumannDrag::SchillerNaumannDrag
-(
-    const word& name,
-    const LagrangianMesh& mesh,
-    const dictionary& modelDict,
-    const dictionary& stateDict
-)
-:
-    drag(name, mesh, modelDict, stateDict)
-{}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //

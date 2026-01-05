@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,21 +95,9 @@ Foam::coneDiskDirectionLagrangianVectorFieldSource::direction
 
     // Evaluate the cone angle
     const tmp<LagrangianSubScalarField> tthetaInner =
-        Function1LagrangianFieldSource::value
-        (
-            diskInjection,
-            subMesh,
-            dimless,
-            thetaInner_()
-        );
+        Function1LagrangianFieldSource::value(subMesh, dimless, thetaInner_());
     const tmp<LagrangianSubScalarField> tthetaOuter =
-        Function1LagrangianFieldSource::value
-        (
-            diskInjection,
-            subMesh,
-            dimless,
-            thetaOuter_()
-        );
+        Function1LagrangianFieldSource::value(subMesh, dimless, thetaOuter_());
     const LagrangianSubScalarField theta
     (
         (1 - diskInjection.rFrac())*tthetaInner

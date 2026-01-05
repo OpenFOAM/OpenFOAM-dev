@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::clouds::particle
 
 Description
-    Cloud with spherical, variable density, particles
+    Cloud with spherical particles with thermodynamic modelling
 
 SourceFiles
     particle.C
@@ -35,6 +35,8 @@ SourceFiles
 #ifndef particle_H
 #define particle_H
 
+#include "thermal.H"
+#include "coupledToThermalFluid.H"
 #include "massiveCoupledToFluid.H"
 #include "sphericalCoupled.H"
 
@@ -46,15 +48,15 @@ namespace clouds
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class particle Declaration
+                        Class particle Declaration
 \*---------------------------------------------------------------------------*/
 
 class particle
 :
     public cloud,
     public spherical,
-    public massive,
-    public coupledToFluid,
+    public coupledToThermalFluid,
+    public thermal,
     public sphericalCoupled,
     public massiveCoupledToFluid
 {
@@ -67,12 +69,6 @@ protected:
         (
             const LagrangianSubMesh&
         ) const;
-
-        //- Do re-calculation of a carrier equation for modified particles
-        using coupled::reCalculateModified;
-
-        //- Do calculation of a carrier equation
-        using coupled::calculate;
 
         //- Do we need to re-calculate particles that are modified?
         virtual bool reCalculateModified();

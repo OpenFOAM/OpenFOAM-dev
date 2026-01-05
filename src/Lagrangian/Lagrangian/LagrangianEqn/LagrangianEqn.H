@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,9 +100,21 @@ class LagrangianEqn
         template<class OtherType>
         void opDeltaT(const tmp<LagrangianEqn<OtherType>>& tOther);
 
+        //- Clear an equation as part of an operation
+        template<class OtherType>
+        static void opClear(LagrangianEqn<OtherType>& other);
+
         //- Clear a temporary equation as part of an operation
         template<class OtherType>
         static void opClear(const tmp<LagrangianEqn<OtherType>>& tOther);
+
+        //- Finalise an equation before its consumption by an operation
+        template<class OtherType>
+        static void opFinalise(LagrangianEqn<OtherType>& other);
+
+        //- Finalise a temporary equation before its consumption by an operation
+        template<class OtherType>
+        static void opFinalise(const tmp<LagrangianEqn<OtherType>>& tOther);
 
 
 public:

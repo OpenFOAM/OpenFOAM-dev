@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,7 +85,7 @@ Foam::distributionDiameterLagrangianScalarFieldSource::value
 {
     // Obtain up the distribution number source
     const uniformSizeNumberLagrangianScalarFieldSource& uniformSizeNumber =
-        cloud<clouds::grouped>(injection, subMesh)
+        cloud<clouds::grouped>(injection)
        .number
        .sources()[injection.name()]
        .fieldSourceCast<uniformSizeNumberLagrangianScalarFieldSource>

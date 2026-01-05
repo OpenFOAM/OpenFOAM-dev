@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,8 +81,7 @@ private:
         //  transfers to represent the Eulerian volume per unit volume.
         static tmp<LagrangianSubScalarField> one
         (
-            const LagrangianSubMesh&,
-            const word& phaseName
+            const LagrangianSubMesh&
         );
 
 

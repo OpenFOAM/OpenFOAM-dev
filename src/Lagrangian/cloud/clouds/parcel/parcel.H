@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,18 +25,8 @@ Class
     Foam::clouds::parcel
 
 Description
-    Basic cloud with spherical, variable density, particles, grouped into
-    parcels.
-
-    This cloud's modelling is the same as for particle, except that an
-    additional number field is used to represent multiple physical particles
-    per Lagrangian parcel. This adds flexibility with regards to managing the
-    expense of simulating large numbers of physical particles, and also
-    provides the ability to specify the number, size (distribution) and volume
-    or mass flow rate of particles at an injection.
-
-See also
-    Foam::clouds::particle
+    Cloud with spherical particles with thermodynamic modelling, grouped into
+    parcels
 
 SourceFiles
     parcel.C
@@ -46,7 +36,8 @@ SourceFiles
 #ifndef parcel_H
 #define parcel_H
 
-#include "grouped.H"
+#include "thermal.H"
+#include "coupledToThermalFluid.H"
 #include "massiveCoupledToFluid.H"
 #include "sphericalCoupled.H"
 
@@ -58,7 +49,7 @@ namespace clouds
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class parcel Declaration
+                        Class parcel Declaration
 \*---------------------------------------------------------------------------*/
 
 class parcel
@@ -66,8 +57,8 @@ class parcel
     public cloud,
     public grouped,
     public spherical,
-    public massive,
-    public coupledToFluid,
+    public coupledToThermalFluid,
+    public thermal,
     public sphericalCoupled,
     public massiveCoupledToFluid
 {
@@ -80,12 +71,6 @@ protected:
         (
             const LagrangianSubMesh&
         ) const;
-
-        //- Do re-calculation of a carrier equation for modified particles
-        using coupled::reCalculateModified;
-
-        //- Do calculation of a carrier equation
-        using coupled::calculate;
 
         //- Do we need to re-calculate particles that are modified?
         virtual bool reCalculateModified();

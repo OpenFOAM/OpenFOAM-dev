@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,9 +101,7 @@ Foam::totalPressureVelocityMagnitudeLagrangianScalarFieldSource::Umag
     const volScalarField& pcVf =
         subMesh.mesh().mesh().lookupObject<volScalarField>(pcName_);
     const CarrierField<scalar>& pc =
-        cloudField_
-       .cloud<clouds::carried>(injection, subMesh)
-       .carrierField(pcVf);
+        cloudField_.cloud<clouds::carried>(injection).carrierField(pcVf);
 
     // Construct the total pressure function now we know the dimensions
     if (p0Entry_.valid())
@@ -126,7 +124,6 @@ Foam::totalPressureVelocityMagnitudeLagrangianScalarFieldSource::Umag
         (
             Function1LagrangianFieldSource::value
             (
-                injection,
                 subMesh,
                 pcVf.dimensions(),
                 p0_()
@@ -142,8 +139,7 @@ Foam::totalPressureVelocityMagnitudeLagrangianScalarFieldSource::Umag
         const clouds::coupledToConstantDensityFluid& ctcdfCloud =
             cloudField_.cloud<clouds::coupledToConstantDensityFluid>
             (
-                injection,
-                subMesh
+                injection
             );
 
         return sqrt(2*deltaP/ctcdfCloud.rhoByRhoc);
@@ -154,15 +150,14 @@ Foam::totalPressureVelocityMagnitudeLagrangianScalarFieldSource::Umag
         <
             clouds::coupledToConstantDensityFluid,
             clouds::massive
-        >(injection, subMesh);
+        >(injection);
 
         if (cloudField_.isCloud<clouds::coupledToConstantDensityFluid>())
         {
             const clouds::coupledToConstantDensityFluid& ctcdfCloud =
                 cloudField_.cloud<clouds::coupledToConstantDensityFluid>
                 (
-                    injection,
-                    subMesh
+                    injection
                 );
 
             // Get the carrier density
@@ -170,7 +165,7 @@ Foam::totalPressureVelocityMagnitudeLagrangianScalarFieldSource::Umag
                 subMesh.mesh().mesh().lookupObject<volScalarField>(rhocName_);
             const CarrierField<scalar>& rhoc =
                 cloudField_
-               .cloud<clouds::carried>(injection, subMesh)
+               .cloud<clouds::carried>(injection)
                .carrierField(rhocVf);
 
             return sqrt(2*deltaP/(ctcdfCloud.rhoByRhoc*rhoc(subMesh)));
@@ -178,7 +173,7 @@ Foam::totalPressureVelocityMagnitudeLagrangianScalarFieldSource::Umag
         else // if (isCloud<clouds::massive>())
         {
             const clouds::massive& mCloud =
-                cloudField_.cloud<clouds::massive>(injection, subMesh);
+                cloudField_.cloud<clouds::massive>(injection);
 
             return sqrt(2*deltaP/mCloud.rho(subMesh));
         }

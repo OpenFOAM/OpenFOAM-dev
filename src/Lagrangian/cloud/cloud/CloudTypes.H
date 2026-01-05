@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,8 @@ struct CloudTypes;
 template<class Cloud, class ... Clouds>
 struct CloudTypes<Cloud, Clouds ...>
 {
-    static bool isA(const class cloud& c)
+    template<class Type>
+    static bool isA(const Type& c)
     {
         return Foam::isA<Cloud>(c) || CloudTypes<Clouds ...>::isA(c);
     }
@@ -90,7 +91,8 @@ struct CloudTypes<Cloud, Clouds ...>
 template<>
 struct CloudTypes<>
 {
-    static bool isA(const class cloud& c)
+    template<class Type>
+    static bool isA(const Type& c)
     {
         return false;
     }

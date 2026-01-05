@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -124,7 +124,7 @@ void Foam::Lagrangian::gravity::addSup
         const clouds::coupledToFluid& ctfCloud =
             cloud<clouds::coupledToFluid>();
 
-        const LagrangianSubScalarSubField rho(mCloud.rho(U.mesh()));
+        const LagrangianSubScalarSubField& rho = mCloud.rho(U.mesh());
         const LagrangianSubScalarField& rhoc = ctfCloud.rhoc(U.mesh());
 
         eqn.Su += vOrM*g*(1 - rhoc/rho);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,14 +81,11 @@ Foam::fanVelocityLagrangianVectorFieldSource::value
     const LagrangianSubMesh& subMesh
 ) const
 {
-    const LagrangianSubVectorField Ucentre
-    (
-        value(injection, subMesh, Ucentre_())
-    );
+    const LagrangianSubVectorField Ucentre(value(subMesh, Ucentre_()));
 
     const LagrangianSubScalarField magUcentre(mag(Ucentre));
 
-    return magUcentre*direction(injection, Ucentre/magUcentre);
+    return magUcentre*direction(Ucentre/magUcentre);
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,22 +90,26 @@ bool Foam::clouds::kinematicParcel::reCalculateModified()
     {
         result = Lagrangianm::initDdt(dimless, v, dUdt) || result;
 
-        result = reCalculateModified(v, onec) || result;
-
-        if (hasPhase())
+        if (context == cloud::contextType::fvModel)
         {
-            result = reCalculateModified(v, onecPhase) || result;
+            result = initPsicDdt(v, onec) || result;
+            if (hasPhase())
+            {
+                result = initPsicDdt(v, onecPhase) || result;
+            }
         }
     }
 
     {
         result = Lagrangianm::initDdt(dimVolume, U, dUdt) || result;
 
-        result = reCalculateModified(v, Uc) || result;
-
-        if (hasPhase() && &UcPhase != &Uc)
+        if (context == cloud::contextType::fvModel)
         {
-            result = reCalculateModified(v, UcPhase) || result;
+            result = initPsicDdt(v, Uc) || result;
+            if (hasPhase() && &UcPhase != &Uc)
+            {
+                result = initPsicDdt(v, UcPhase) || result;
+            }
         }
     }
 
@@ -166,11 +170,14 @@ void Foam::clouds::kinematicParcel::calculate
         // Correct the diameter
         spherical::correct(v);
 
-        calculate(deltaT, final, v, onec, number);
-
-        if (hasPhase())
+        // Calculate volume exchanges with the carrier
+        if (context == cloud::contextType::fvModel && final)
         {
-            calculate(deltaT, final, v, onecPhase, number);
+            carrierEqn(onec) += number*psicEqn(deltaT, v, onec);
+            if (hasPhase())
+            {
+                carrierEqn(onecPhase) += number*psicEqn(deltaT, v, onecPhase);
+            }
         }
     }
 
@@ -186,11 +193,14 @@ void Foam::clouds::kinematicParcel::calculate
 
         UEqn.solve(final);
 
-        calculate(deltaT, final, v, U, Uc, number);
-
-        if (hasPhase() && &UcPhase != &Uc)
+        // Calculate momentum exchanges with the carrier
+        if (context == cloud::contextType::fvModel && final)
         {
-            calculate(deltaT, final, v, U, UcPhase, number);
+            carrierEqn(Uc) += number*psicEqn(deltaT, v, U, Uc);
+            if (hasPhase() && &UcPhase != &Uc)
+            {
+                carrierEqn(UcPhase) += number*psicEqn(deltaT, v, U, UcPhase);
+            }
         }
     }
 }

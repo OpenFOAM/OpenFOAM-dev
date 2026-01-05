@@ -1,0 +1,27 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      dynamicParticleCloud;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// As an fvModel this Lagrangian cloud provides two-way coupling
+// As a function object, it provides one-way coupling
+
+type           dynamicParticleCloud;
+libs           ("libLagrangianCloud.so");
+
+// Entries required by the function object
+
+executeControl timeStep;
+writeControl   writeTime;
+
+// ************************************************************************* //

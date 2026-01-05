@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,12 +32,11 @@ template<class Type>
 Foam::tmp<Foam::LagrangianSubField<Type>>
 Foam::Function1LagrangianFieldSource::value
 (
-    const LagrangianModel& model,
     const LagrangianSubMesh& subMesh,
     const Function1<Type>& function
 ) const
 {
-    return value(model, subMesh, field_.internalDimensions(), function);
+    return value(subMesh, field_.internalDimensions(), function);
 }
 
 
@@ -47,7 +46,6 @@ template<class OtherType>
 Foam::tmp<Foam::LagrangianSubField<OtherType>>
 Foam::Function1LagrangianFieldSource::value
 (
-    const LagrangianModel& model,
     const LagrangianSubMesh& subMesh,
     const dimensionSet& dims,
     const Function1<OtherType>& function
@@ -57,8 +55,6 @@ Foam::Function1LagrangianFieldSource::value
 
     const scalar t1 = db.time().value();
     const scalar t0 = t1 - db.time().deltaTValue();
-
-    const word name = model.name() + ":" + function.name();
 
     if
     (
@@ -82,7 +78,7 @@ Foam::Function1LagrangianFieldSource::value
         return
             LagrangianSubField<OtherType>::New
             (
-                name,
+                subMesh.sub(function.name()),
                 subMesh,
                 dims,
                 function.value(t0 + fractionSf*(t1 - t0))
@@ -93,7 +89,7 @@ Foam::Function1LagrangianFieldSource::value
         return
             LagrangianSubField<OtherType>::New
             (
-                name,
+                subMesh.sub(function.name()),
                 subMesh,
                 dimensioned<OtherType>(dims, function.value(t0))
             );
