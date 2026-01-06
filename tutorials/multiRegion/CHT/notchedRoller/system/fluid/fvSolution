@@ -23,11 +23,11 @@ solvers
 
     "(p|p_rgh)"
     {
-        solver          PCG; //GAMG;
-        preconditioner  DIC;
+        solver          GAMG;
         smoother        GaussSeidel;
         tolerance       1e-7;
         relTol          0.01;
+        minIter         1;
         maxIter         100;
     }
 
