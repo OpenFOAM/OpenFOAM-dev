@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -98,9 +98,6 @@ class treeBoundBox
 public:
 
     // Static Data Members
-
-        //- The great value used for greatBox and invertedBox
-        static const scalar great;
 
         //- As per boundBox::greatBox, but with great instead of vGreat
         static const treeBoundBox greatBox;

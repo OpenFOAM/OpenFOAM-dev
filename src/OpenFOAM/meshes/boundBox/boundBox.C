@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,9 +29,17 @@ License
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-const Foam::scalar Foam::boundBox::great(vGreat);
-const Foam::boundBox Foam::boundBox::greatBox(vector::min, vector::max);
-const Foam::boundBox Foam::boundBox::invertedBox(vector::max, vector::min);
+const Foam::boundBox Foam::boundBox::greatBox
+(
+    vector::min,
+    vector::max
+);
+
+const Foam::boundBox Foam::boundBox::invertedBox
+(
+    vector::max,
+    vector::min
+);
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //

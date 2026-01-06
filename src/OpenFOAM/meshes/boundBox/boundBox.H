@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,9 +72,6 @@ class boundBox
 public:
 
     // Static Data Members
-
-        //- The great value used for greatBox and invertedBox
-        static const scalar great;
 
         //- A very large boundBox: min/max == -/+ vGreat
         static const boundBox greatBox;
