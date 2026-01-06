@@ -250,22 +250,6 @@ Foam::BasicLagrangianThermo<MixtureType, BasicThermoType>::W
 
 
 template<class MixtureType, class BasicThermoType>
-const Foam::LagrangianScalarDynamicField&
-Foam::BasicLagrangianThermo<MixtureType, BasicThermoType>::e() const
-{
-    return e_;
-}
-
-
-template<class MixtureType, class BasicThermoType>
-Foam::LagrangianScalarDynamicField&
-Foam::BasicLagrangianThermo<MixtureType, BasicThermoType>::e()
-{
-    return e_;
-}
-
-
-template<class MixtureType, class BasicThermoType>
 Foam::tmp<Foam::LagrangianSubScalarField>
 Foam::BasicLagrangianThermo<MixtureType, BasicThermoType>::rho
 (
@@ -285,6 +269,22 @@ Foam::BasicLagrangianThermo<MixtureType, BasicThermoType>::rho
             this->p(injection, T.mesh())(),
             T
         );
+}
+
+
+template<class MixtureType, class BasicThermoType>
+const Foam::LagrangianScalarDynamicField&
+Foam::BasicLagrangianThermo<MixtureType, BasicThermoType>::e() const
+{
+    return e_;
+}
+
+
+template<class MixtureType, class BasicThermoType>
+Foam::LagrangianScalarDynamicField&
+Foam::BasicLagrangianThermo<MixtureType, BasicThermoType>::e()
+{
+    return e_;
 }
 
 
@@ -330,6 +330,48 @@ Foam::BasicLagrangianThermo<MixtureType, BasicThermoType>::Cv
             &MixtureType::thermoMixtureType::Cv,
             this->p(injection, T.mesh())(),
             T
+        );
+}
+
+
+template<class MixtureType, class BasicThermoType>
+Foam::tmp<Foam::LagrangianSubScalarField>
+Foam::BasicLagrangianThermo<MixtureType, BasicThermoType>::Cp
+(
+    const LagrangianSubMesh& subMesh
+) const
+{
+    return
+        LagrangianSubScalarFieldProperty
+        (
+            subMesh,
+            "Cp",
+            dimSpecificHeatCapacity,
+            &MixtureType::thermoMixture,
+            &MixtureType::thermoMixtureType::Cp,
+            this->p(subMesh)(),
+            subMesh.sub(this->T_)()
+        );
+}
+
+
+template<class MixtureType, class BasicThermoType>
+Foam::tmp<Foam::LagrangianSubScalarField>
+Foam::BasicLagrangianThermo<MixtureType, BasicThermoType>::alphav
+(
+    const LagrangianSubMesh& subMesh
+) const
+{
+    return
+        LagrangianSubScalarFieldProperty
+        (
+            subMesh,
+            "alphav",
+            dimless/dimTemperature,
+            &MixtureType::thermoMixture,
+            &MixtureType::thermoMixtureType::alphav,
+            this->p(subMesh)(),
+            subMesh.sub(this->T_)()
         );
 }
 

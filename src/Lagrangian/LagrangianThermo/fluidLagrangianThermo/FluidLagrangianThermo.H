@@ -69,13 +69,10 @@ public:
         virtual void correct(const LagrangianSubMesh&);
 
 
-        // Thermodynamic State
+        // Thermodynamic Properties
 
-            //- Compressibility for an injection [m^2/s^2]
+            //- Compressibility [m^2/s^2]
             using BaseThermo::psi;
-
-
-        // Derived Thermodynamic Properties
 
             //- Compressibility for an injection [m^2/s^2]
             virtual tmp<LagrangianSubScalarField> psi
@@ -85,13 +82,10 @@ public:
             ) const;
 
 
-        // Transport State
+        // Transport Properties
 
             //- Dynamic viscosity [kg/m/s]
             using BaseThermo::mu;
-
-
-        // Derived Transport Properties
 
             //- Dynamic viscosity for an injection [W/m/K]
             virtual tmp<LagrangianSubScalarField> mu

@@ -111,26 +111,45 @@ void Foam::Lagrangian::pressureWork::addSup
     const fluidLagrangianThermo& fluidThermo =
         thermalCloud_.thermo<fluidLagrangianThermo>(*this);
     const LagrangianSubScalarSubField p(subMesh.sub(fluidThermo.p()));
-    const LagrangianSubScalarSubField psi(subMesh.sub(fluidThermo.psi()));
 
-    // Evaluate the rate of change of density, correct for changes in
-    // pressure during this iteration, and convert into a rate of change of
-    // specific volume (i.e., one-by-rho, so as not to confuse with
-    // extensive volume, v)
-    tmp<LagrangianEqn<scalar>> dRhoDt = Lagrangianm::ddt0(rho);
-    dRhoDt.ref().deltaTSu += psi*(p - pPrevPtr_());
-    LagrangianEqn<scalar> dOneByRhoDt(- dRhoDt/(rho*rho.oldTime()));
+    // Evaluate the time derivative of the specific volume
+    tmp<LagrangianEqn<scalar>> dOneByRhoDt =
+        - Lagrangianm::ddt0(rho)/(rho*rho.oldTime());
 
+    // If this is the particle energy equation, then construct corrections to
+    // the above time derivative. If not then just apply it directly.
     if (eqn.isPsi(e))
     {
-        eqn -= m*p*dOneByRhoDt;
+        tmp<LagrangianEqn<scalar>> dOneByRhoDtCorr =
+            tmp<LagrangianEqn<scalar>>
+            (
+                new LagrangianEqn<scalar>(subMesh)
+            );
+
+        // Correct for changes in pressure
+        const LagrangianSubScalarSubField psi(subMesh.sub(fluidThermo.psi()));
+        dOneByRhoDtCorr.ref().deltaTSu -=
+            psi*(p - pPrevPtr_())/(rho*rho.oldTime());
+
+        // Correct for changes in energy
+        const LagrangianSubScalarSubField Cv(subMesh.sub(fluidThermo.Cv()));
+        tmp<LagrangianSubScalarField> alphavByRhoCv =
+            fluidThermo.alphav(subMesh)/(rho*Cv);
+        dOneByRhoDtCorr.ref().deltaTSp += alphavByRhoCv();
+        dOneByRhoDtCorr.ref().deltaTSu -= alphavByRhoCv()*e;
+
+        // Correct for non-ideal thermodynamic modelling
+        tmp<LagrangianSubScalarField> gamma(fluidThermo.Cp(subMesh)/Cv);
+        dOneByRhoDtCorr.ref() /= gamma - p*alphavByRhoCv;
+
+        eqn -= m*p*(dOneByRhoDt + dOneByRhoDtCorr);
     }
     else
     {
         const LagrangianSubScalarField& pc =
             cloud<clouds::coupledToThermalFluid>().pc(subMesh);
 
-        eqn += m*pc*dOneByRhoDt;
+        eqn -= m*pc*dOneByRhoDt;
     }
 }
 

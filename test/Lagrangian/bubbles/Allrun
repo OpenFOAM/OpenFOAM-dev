@@ -6,20 +6,36 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 plotFile="postProcessing/bubblesPlot/0/LagrangianFieldValue.dat"
 
-nCorrectors="0 1 2 3 4"
+# Controls
+maxTimeStepFraction="1e300 1e300 1e300 0.5 0.25"
+nSubSteps="1 1 1 2 4"
+nCorrectors="0 1 2 1 1"
+pColour="web-blue"
+Tcolours="dark-red red orange-red orange gold"
+TanalyticColour="web-green"
 
-pColour='web-blue'
-Tcolours="dark-red red orange-red orange goldenrod"
-TanalyticColour='web-green'
+# Construct substitutions and titles from the control lists
+makeSubstitutions() { for arg in ${!1}; do echo $1=$arg; done }
+substitutionss=$(paste -d ',' \
+    <(makeSubstitutions maxTimeStepFraction) \
+    <(makeSubstitutions nCorrectors))
+makeTitle() { for arg in ${!1}; do echo "$arg $2"; done }
+titles=$(paste -d ', ' \
+    <(makeTitle nSubSteps "Sub Steps" | sed 's/1/No/g') \
+    /dev/null \
+    <(makeTitle nCorrectors "Corrector" | sed 's/^0/No/g;s/^[^1].*/&s/g'))
 
-# Mesh and run for various numbers of correctors
+# Mesh and run for various parameters
 runApplication blockMesh
-for n in $nCorrectors
+for substitutions in $substitutionss
 do
     runApplication -a foamDictionary \
-        system/Lagrangian/bubbles/LagrangianSolution -entry nCorrectors -set $n
-    runApplication -s $n foamRun
-    cp -n $plotFile $plotFile.$n
+        system/Lagrangian/bubbles/LagrangianSolution \
+        -set "$substitutions"
+
+    runApplication -s $substitutions foamRun
+
+    cp -n $plotFile $plotFile.$substitutions
 done
 
 # Get the thermodynamic properties
@@ -34,6 +50,7 @@ gamma="(1+$R/$W/$Cv)"
 p0=$(grep -m 1 -v "^#" "$plotFile" | awk '{print $4}')
 T0=$(grep -m 1 -v "^#" "$plotFile" | awk '{print $5}')
 
+# Analytic temperature for an adiabatic expansion
 Tanalytic="($T0*(\$4/$p0)**(($gamma - 1)/$gamma))"
 
 gnuplot << EOF
@@ -41,8 +58,11 @@ gnuplot << EOF
 set terminal postscript eps color enhanced size 4,4
 set output "expansion.eps"
 
-nCorrectors = "$nCorrectors"
-Tcolours = "$Tcolours"
+substitutionss = split("${substitutionss//"
+"/\\\n}", "\n")
+titles = split("${titles//"
+"/\\\n}", "\n")
+Tcolours = split("$Tcolours")
 
 set multiplot layout 2,1 margins 0.17, 0.83, 0.1, 0.95 spacing 0.1
 
@@ -54,9 +74,9 @@ set y2label 'Temperature [K]'
 set key bottom left Left reverse
 
 plot "$plotFile" us 1:(\$4/1e3) w l lc '$pColour' t 'Pressure', \
-    for [ i = 1:words(nCorrectors) ] \
-    "$plotFile.".word(nCorrectors,i) us 1:5 axis x1y2 w l \
-    lc rgb word(Tcolours,i) t 'Temperature for '.word(nCorrectors,i).' Correctors', \
+    for [ i = 1:|substitutionss| ] \
+    "$plotFile.".substitutionss[i] us 1:5 axis x1y2 w l \
+    lc rgb Tcolours[i] t 'Temperature, '.titles[i], \
     "$plotFile" us 1:($Tanalytic) axis x1y2 w l \
     lc '$TanalyticColour' dt '-' t 'Analytic Temperature'
 
@@ -68,9 +88,9 @@ set format y '%g'
 set log y
 set key bottom right Right noreverse
 
-plot [][1e-5:] for [ i = 1:words(nCorrectors) ] \
-    "$plotFile.".word(nCorrectors,i) us 1:(100*abs(\$5/$Tanalytic - 1)) w l \
-    lc rgb word(Tcolours,i) t word(nCorrectors,i).' Correctors'
+plot [][1e-5:] for [ i = 1:|substitutionss| ] \
+    "$plotFile.".substitutionss[i] us 1:(100*abs(\$5/$Tanalytic - 1)) w l \
+    lc rgb Tcolours[i] t titles[i]
 
 unset multiplot
 

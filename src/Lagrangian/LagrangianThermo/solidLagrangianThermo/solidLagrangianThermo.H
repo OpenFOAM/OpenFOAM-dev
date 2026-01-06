@@ -147,6 +147,12 @@ protected:
 
     // Protected Member Functions
 
+        //- Pressure for a sub-mesh [Pa]
+        tmp<uniformDimensionedScalarField> p
+        (
+            const LagrangianSubMesh&
+        ) const;
+
         //- Pressure for an injection [Pa]
         tmp<uniformDimensionedScalarField> p
         (

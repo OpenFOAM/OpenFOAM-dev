@@ -36,6 +36,13 @@ namespace Foam
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 Foam::tmp<Foam::uniformDimensionedScalarField>
+Foam::solidLagrangianThermo::implementation::p(const LagrangianSubMesh&) const
+{
+    return p_;
+}
+
+
+Foam::tmp<Foam::uniformDimensionedScalarField>
 Foam::solidLagrangianThermo::implementation::p
 (
     const LagrangianInjection&,

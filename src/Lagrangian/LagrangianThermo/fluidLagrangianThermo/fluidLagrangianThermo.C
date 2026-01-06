@@ -185,10 +185,13 @@ Foam::fluidLagrangianThermo::implementation::p()
 }
 
 
-const Foam::LagrangianScalarDynamicField&
-Foam::fluidLagrangianThermo::implementation::psi() const
+Foam::tmp<Foam::LagrangianSubScalarSubField>
+Foam::fluidLagrangianThermo::implementation::p
+(
+    const LagrangianSubMesh& subMesh
+) const
 {
-    return psi_;
+    return subMesh.sub(p_);
 }
 
 
@@ -200,6 +203,13 @@ Foam::fluidLagrangianThermo::implementation::p
 ) const
 {
     return pSourcePtr_->value(injection, subMesh);
+}
+
+
+const Foam::LagrangianScalarDynamicField&
+Foam::fluidLagrangianThermo::implementation::psi() const
+{
+    return psi_;
 }
 
 

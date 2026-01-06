@@ -153,25 +153,16 @@ public:
         virtual word thermoName() const;
 
 
-        // Molecular properties
+        // Molecular Properties
 
-            //- Molecular weight [kg/kmol]
+            //- Molecular weight for a sub-mesh [kg/kmol]
             virtual tmp<LagrangianSubScalarField> W
             (
                 const LagrangianSubMesh&
             ) const;
 
 
-        // Thermodynamic State
-
-            //- Internal energy [J/kg]
-            virtual const LagrangianScalarDynamicField& e() const;
-
-            //- Modify the internal energy [J/kg]
-            virtual LagrangianScalarDynamicField& e();
-
-
-        // Derived Thermodynamic Properties
+        // Thermodynamic Properties
 
             //- Density for an injection [kg/m^3]
             virtual tmp<LagrangianSubScalarField> rho
@@ -179,6 +170,12 @@ public:
                 const LagrangianSubScalarField& T,
                 const LagrangianInjection&
             ) const;
+
+            //- Internal energy [J/kg]
+            virtual const LagrangianScalarDynamicField& e() const;
+
+            //- Modify the internal energy [J/kg]
+            virtual LagrangianScalarDynamicField& e();
 
             //- Internal energy for an injection [J/kg]
             virtual tmp<LagrangianSubScalarField> e
@@ -194,8 +191,20 @@ public:
                 const LagrangianInjection&
             ) const;
 
+            //- Heat capacity at constant pressure for a sub-mesh [J/kg/K]
+            virtual tmp<LagrangianSubScalarField> Cp
+            (
+                const LagrangianSubMesh&
+            ) const;
 
-        // Derived Transport Properties
+            //- Coefficient of thermal expansion for a sub-mesh [1/K]
+            virtual tmp<LagrangianSubScalarField> alphav
+            (
+                const LagrangianSubMesh&
+            ) const;
+
+
+        // Transport Properties
 
             //- Thermal conductivity for an injection [W/m/K]
             virtual tmp<LagrangianSubScalarField> kappa

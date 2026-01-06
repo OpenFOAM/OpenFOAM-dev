@@ -125,11 +125,11 @@ public:
             //- Modify the Pressure [Pa]
             virtual LagrangianScalarDynamicField& p() = 0;
 
-            //- Compressibility [s^2/m^2]
-            virtual const LagrangianScalarDynamicField& psi() const = 0;
-
-
-        // Derived Thermodynamic Properties
+            //- Pressure for a sub-mesh [Pa]
+            virtual tmp<LagrangianSubScalarSubField> p
+            (
+                const LagrangianSubMesh&
+            ) const = 0;
 
             //- Pressure for an injection [Pa]
             virtual tmp<LagrangianSubScalarField> p
@@ -137,6 +137,12 @@ public:
                 const LagrangianInjection&,
                 const LagrangianSubMesh&
             ) const = 0;
+
+
+        // Thermodynamic Properties
+
+            //- Compressibility [s^2/m^2]
+            virtual const LagrangianScalarDynamicField& psi() const = 0;
 
             //- Compressibility for an injection [m^2/s^2]
             virtual tmp<LagrangianSubScalarField> psi
@@ -146,13 +152,10 @@ public:
             ) const = 0;
 
 
-        // Transport State
+        // Transport Properties
 
             //- Dynamic viscosity [kg/m/s]
             virtual const LagrangianScalarDynamicField& mu() const = 0;
-
-
-        // Derived Transport Properties
 
             //- Dynamic viscosity for an injection [W/m/K]
             virtual tmp<LagrangianSubScalarField> mu
@@ -223,11 +226,11 @@ public:
             //- Modify the Pressure [Pa]
             virtual LagrangianScalarDynamicField& p();
 
-            //- Compressibility [s^2/m^2]
-            virtual const LagrangianScalarDynamicField& psi() const;
-
-
-        // Derived Thermodynamic Properties
+            //- Pressure for a sub-mesh [Pa]
+            virtual tmp<LagrangianSubScalarSubField> p
+            (
+                const LagrangianSubMesh&
+            ) const;
 
             //- Pressure for an injection [Pa]
             virtual tmp<LagrangianSubScalarField> p
@@ -237,7 +240,13 @@ public:
             ) const;
 
 
-        // Transport State
+        // Thermodynamic Properties
+
+            //- Compressibility [s^2/m^2]
+            virtual const LagrangianScalarDynamicField& psi() const;
+
+
+        // Transport Properties
 
             //- Dynamic viscosity [kg/m/s]
             virtual const LagrangianScalarDynamicField& mu() const;
