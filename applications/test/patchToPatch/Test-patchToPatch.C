@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,56 +53,91 @@ int main(int argc, char *argv[])
         "name",
         "The region with the source patch"
     );
+    argList::addOption
+    (
+        "sourceMesh",
+        "name",
+        "The mesh with the source patch"
+    );
 
+    #include "addMeshOption.H"
     #include "addRegionOption.H"
     #include "setRootCase.H"
     #include "createTime.H"
-    #include "createNamedPolyMesh.H"
+
+    IOobject meshIo
+    (
+        (
+            args.optionFound("region")
+          ? args.optionRead<word>("region")
+          : polyMesh::defaultRegion
+        ),
+        runTime.name(),
+        (
+            args.optionFound("mesh")
+          ? "meshes"/args.optionRead<word>("mesh")
+          : fileName::null
+        ),
+        runTime,
+        Foam::IOobject::MUST_READ
+    );
+    Info<< nl << "Create mesh "
+        << meshIo.relativeObjectPath()/polyMesh::meshSubDir
+        << endl;
+    polyMesh mesh(meshIo);
 
     // Optionally read a different mesh for the source
     autoPtr<Time> srcRunTimePtr;
     autoPtr<polyMesh> srcMeshPtr;
-    if (args.optionFound("sourceCase") || args.optionFound("sourceRegion"))
+    if
+    (
+        args.optionFound("sourceCase")
+     || args.optionFound("sourceRegion")
+     || args.optionFound("sourceMesh")
+    )
     {
         const string tgtCase = getEnv("FOAM_CASE");
         const string tgtCaseName = getEnv("FOAM_CASENAME");
 
-        fileName sourceCase =
+        fileName srcCase =
             args.optionLookupOrDefault<fileName>("sourceCase", tgtCase);
-        sourceCase.clean();
-        const fileName sourceCaseName =
+        srcCase.clean();
+        const fileName srcCaseName =
             Pstream::parRun()
-          ? fileName(sourceCase.name())/args.caseName().name()
-          : fileName(sourceCase.name());
+          ? fileName(srcCase.name())/args.caseName().name()
+          : fileName(srcCase.name());
 
-        setEnv("FOAM_CASE", sourceCase, true);
-        setEnv("FOAM_CASENAME", sourceCase.name(), true);
+        setEnv("FOAM_CASE", srcCase, true);
+        setEnv("FOAM_CASENAME", srcCase.name(), true);
 
         srcRunTimePtr.set
         (
-            new Time(sourceCase.path(), sourceCaseName)
+            new Time(srcCase.path(), srcCaseName)
         );
 
         setEnv("FOAM_CASE", tgtCase, true);
         setEnv("FOAM_CASENAME", tgtCaseName, true);
 
-        srcMeshPtr.set
+        IOobject srcMeshIo
         (
-            new polyMesh
             (
-                Foam::IOobject
-                (
-                    args.optionLookupOrDefault<word>
-                    (
-                        "sourceRegion",
-                        Foam::polyMesh::defaultRegion
-                    ),
-                    srcRunTimePtr->name(),
-                    srcRunTimePtr(),
-                    Foam::IOobject::MUST_READ
-                )
-            )
+                args.optionFound("sourceRegion")
+              ? args.optionRead<word>("sourceRegion")
+              : polyMesh::defaultRegion
+            ),
+            srcRunTimePtr->name(),
+            (
+                args.optionFound("sourceMesh")
+              ? "meshes"/args.optionRead<word>("sourceMesh")
+              : fileName::null
+            ),
+            srcRunTimePtr(),
+            Foam::IOobject::MUST_READ
         );
+        Info<< nl << "Create mesh "
+            << srcMeshIo.relativeObjectPath()/polyMesh::meshSubDir
+            << endl;
+        srcMeshPtr.set(new polyMesh(srcMeshIo));
     }
 
     const polyMesh& srcMesh = srcMeshPtr.valid() ? srcMeshPtr() : mesh;
