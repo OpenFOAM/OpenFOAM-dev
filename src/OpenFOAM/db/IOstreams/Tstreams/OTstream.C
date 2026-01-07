@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,8 @@ License
 
 #include "OTstream.H"
 #include "int.H"
-#include "token.H"
+#include "tokenList.H"
+#include "IStringStream.H"
 
 #include <cctype>
 
@@ -101,15 +102,12 @@ Foam::Ostream& Foam::OTstream::write(const char c)
 
 Foam::Ostream& Foam::OTstream::write(const char* str)
 {
-    const word nonWhiteChars(string::validate<word>(str));
+    IStringStream is(str);
 
-    if (nonWhiteChars.size() == 1)
+    token t;
+    while (is.read(t))
     {
-        append(token(nonWhiteChars[0], lineNumber()));
-    }
-    else if (nonWhiteChars.size())
-    {
-        append(token(nonWhiteChars, lineNumber()));
+        append(t);
     }
 
     return *this;
