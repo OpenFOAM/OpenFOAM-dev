@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2024-2026 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -222,7 +222,7 @@ DIMLESS_UNITS="% rad rot deg"
 listUnits() {
     _start=
 
-    sed -n '/UnitConversions/,/^}/p' "$FOAM_ETC/controlDict" | \
+    sed -n '/UnitConversions/,/^}/p' "$FOAM_ETC/configDict" | \
         sed -n '/SICoeffs/,/}/p' | \
         while read -r line
         do
@@ -257,7 +257,7 @@ getUnit() {
         -entry "$_entry" \
         -value \
         -case "$FOAM_ETC" \
-        controlDict 2> /dev/null
+        configDict 2> /dev/null
 }
 
 printUnit() {
