@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -131,7 +131,6 @@ void Foam::timeControl::read(const dictionary& dict)
         }
 
         case timeControls::clockTime:
-        case timeControls::runTime:
         case timeControls::cpuTime:
         {
             interval_ = dict.lookup<scalar>(intervalName, time_.userUnits());
@@ -139,6 +138,7 @@ void Foam::timeControl::read(const dictionary& dict)
         }
 
         case timeControls::adjustableRunTime:
+        case timeControls::runTime:
         {
             interval_ = dict.lookup<scalar>(intervalName, time_.userUnits());
             executionIndex_ =
