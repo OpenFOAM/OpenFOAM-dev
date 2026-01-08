@@ -130,13 +130,6 @@ void Foam::timeControl::read(const dictionary& dict)
             break;
         }
 
-        case timeControls::clockTime:
-        case timeControls::cpuTime:
-        {
-            interval_ = dict.lookup<scalar>(intervalName, time_.userUnits());
-            break;
-        }
-
         case timeControls::adjustableRunTime:
         case timeControls::runTime:
         {
@@ -234,8 +227,24 @@ void Foam::timeControl::read(const dictionary& dict)
             break;
         }
 
+        case timeControls::clockTime:
+        case timeControls::cpuTime:
+        {
+            interval_ = dict.lookup<scalar>(intervalName, time_.userUnits());
+            break;
+        }
+
+        case timeControls::none:
+        {
+            break;
+        }
+
         default:
         {
+            FatalErrorInFunction
+                << "Undefined output control: "
+                << timeControlNames_[timeControl_] << nl
+                << exit(FatalError);
             break;
         }
     }
@@ -314,11 +323,11 @@ bool Foam::timeControl::execute()
             );
         }
 
-        case timeControls::cpuTime:
+        case timeControls::clockTime:
         {
             const label executionIndex = label
             (
-                returnReduce(time_.elapsedCpuTime(), maxOp<double>())
+                returnReduce(label(time_.elapsedClockTime()), maxOp<label>())
                /interval_
             );
             if (executionIndex > executionIndex_)
@@ -329,11 +338,11 @@ bool Foam::timeControl::execute()
             break;
         }
 
-        case timeControls::clockTime:
+        case timeControls::cpuTime:
         {
             const label executionIndex = label
             (
-                returnReduce(label(time_.elapsedClockTime()), maxOp<label>())
+                returnReduce(time_.elapsedCpuTime(), maxOp<double>())
                /interval_
             );
             if (executionIndex > executionIndex_)
@@ -373,8 +382,8 @@ Foam::scalar Foam::timeControl::timeToNextAction()
         case timeControls::writeTime:
         case timeControls::outputTime:
         case timeControls::runTime:
-        case timeControls::cpuTime:
         case timeControls::clockTime:
+        case timeControls::cpuTime:
         case timeControls::none:
         {
             return vGreat;
