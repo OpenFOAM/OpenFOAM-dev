@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,123 +85,101 @@ int main(int argc, char *argv[])
             << exit(FatalError);
     }
 
-    Info<< "Input surface   :" << inFileName << endl
-        << "Reduction factor:" << reduction << endl
-        << "Output surface  :" << outFileName << endl << endl;
+    Info<< nl << "Input surface    : " << inFileName
+        << nl << "Reduction factor : " << reduction
+        << nl << "Output surface   : " << outFileName << nl << endl;
 
     const triSurface surf(inFileName);
 
-    Info<< "Surface:" << endl;
+    Info<< "Surface:" << incrIndent << endl;
     surf.writeStats(Info);
-    Info<< endl;
+    Info<< decrIndent << endl;
 
-
-    ::List< ::Vector> vert;     // global list of vertices
-    ::List< ::tridata> tri;     // global list of triangles
-
+    ::List<::Vector> vertices;     // global list of vertices
+    ::List<::tridata> triangles;     // global list of triangles
 
     // Convert triSurface to progmesh format. Note: can use global point
     // numbering since surface read in from file.
     const pointField& pts = surf.points();
-
     forAll(pts, ptI)
     {
         const point& pt = pts[ptI];
-
-        vert.Add( ::Vector(pt.x(), pt.y(), pt.z()));
+        vertices.Add(::Vector(pt.x(), pt.y(), pt.z()));
     }
-
     forAll(surf, facei)
     {
         const labelledTri& f = surf[facei];
-
         tridata td;
-        td.v[0]=f[0];
-        td.v[1]=f[1];
-        td.v[2]=f[2];
-        tri.Add(td);
+        td.v[0] = f[0];
+        td.v[1] = f[1];
+        td.v[2] = f[2];
+        triangles.Add(td);
     }
 
     ::List<int> collapse_map;   // to which neighbor each vertex collapses
     ::List<int> permutation;
-
-    ::ProgressiveMesh(vert,tri,collapse_map,permutation);
+    ::ProgressiveMesh(vertices, triangles, collapse_map, permutation);
 
     // rearrange the vertex list
-    ::List< ::Vector> temp_list;
-    for (int i=0;i<vert.num;i++)
+    ::List<::Vector> temp_list;
+    for (int i = 0; i < vertices.num; i ++)
     {
-        temp_list.Add(vert[i]);
+        temp_list.Add(vertices[i]);
     }
-    for (int i=0;i<vert.num;i++)
+    for (int i = 0; i < vertices.num; i ++)
     {
-        vert[permutation[i]]=temp_list[i];
+        vertices[permutation[i]] = temp_list[i];
     }
 
     // update the changes in the entries in the triangle list
-    for (int i=0;i<tri.num;i++)
+    for (int i=0; i < triangles.num; i++)
     {
         for (int j=0;j<3;j++)
         {
-            tri[i].v[j] = permutation[tri[i].v[j]];
+            triangles[i].v[j] = permutation[triangles[i].v[j]];
         }
     }
 
     // Only get triangles with non-collapsed edges.
     int render_num = int(reduction * surf.nPoints());
 
-    Info<< "Reducing to " << render_num << " vertices" << endl;
+    Info<< "Reducing to " << render_num << " vertices" << endl << endl;
 
-
-    // Storage for new surface.
-    Foam::List<labelledTri> newTris(surf.size());
-
-    label newI = 0;
-
-    for (int i=0; i<tri.num; i++)
+    // Convert triangles into labelledTris
+    Foam::List<labelledTri> newTriangles(surf.size());
+    label newTrianglei = 0;
+    for (int i = 0; i < triangles.num; i ++)
     {
-        int p0 = mapVertex(collapse_map, tri[i].v[0], render_num);
-        int p1 = mapVertex(collapse_map, tri[i].v[1], render_num);
-        int p2 = mapVertex(collapse_map, tri[i].v[2], render_num);
+        int p0 = mapVertex(collapse_map, triangles[i].v[0], render_num);
+        int p1 = mapVertex(collapse_map, triangles[i].v[1], render_num);
+        int p2 = mapVertex(collapse_map, triangles[i].v[2], render_num);
 
-        // note:  serious optimisation opportunity here,
-        //  by sorting the triangles the following "continue"
-        //  could have been made into a "break" statement.
-        if (p0 == p1 || p1 == p2 || p2 == p0)
-        {
-            continue;
-        }
+        if (p0 == p1 || p1 == p2 || p2 == p0) continue;
 
-        newTris[newI++] = labelledTri(p0, p1, p2, 0);
+        newTriangles[newTrianglei++] = labelledTri(p0, p1, p2, 0);
     }
-    newTris.setSize(newI);
+    newTriangles.setSize(newTrianglei);
 
-    // Convert vert into pointField.
-    pointField newPoints(vert.num);
-
-    for (int i=0; i<vert.num; i++)
+    // Convert vertices into points
+    pointField newPoints(vertices.num);
+    for (int i = 0; i < vertices.num; i ++)
     {
-        const ::Vector & v = vert[i];
-
-        newPoints[i] = point(v.x, v.y, v.z);
+        newPoints[i] = point(vertices[i].x, vertices[i].y, vertices[i].z);
     }
 
-    triSurface surf2(newTris, newPoints);
+    // Construct the new surface
+    triSurface newSurf(newTriangles, newPoints);
 
-    triSurface outSurf
-    (
-        surf2.localFaces(),
-        surf2.patches(),
-        surf2.localPoints()
-    );
+    // Remove any unused points
+    newSurf = triSurface(newSurf.localFaces(), newSurf.localPoints());
 
-    Info<< "Coarsened surface:" << endl;
-    surf2.writeStats(Info);
-    Info<< endl;
+    Info<< "Coarsened surface:" << incrIndent << endl;
+    newSurf.writeStats(Info);
+    Info<< decrIndent << endl;
 
     Info<< "Writing to file " << outFileName << endl << endl;
 
-    surf2.write(outFileName);
+    newSurf.write(outFileName);
 
     Info<< "End\n" << endl;
 

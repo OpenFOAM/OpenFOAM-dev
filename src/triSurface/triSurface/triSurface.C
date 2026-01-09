@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1375,9 +1375,9 @@ void Foam::triSurface::writeStats(Ostream& os) const
         }
     }
 
-    os  << "Triangles    : " << size() << endl
-        << "Vertices     : " << nPoints << endl
-        << "Bounding Box : " << bb << endl;
+    os  << indent << "Triangles    : " << size() << endl
+        << indent << "Vertices     : " << nPoints << endl
+        << indent << "Bounding Box : " << bb << endl;
 }
 
 

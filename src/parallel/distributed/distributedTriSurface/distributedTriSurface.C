@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -2423,10 +2423,11 @@ void Foam::searchableSurfaces::distributedTriSurface::writeStats
     reduce(bb.min(), minOp<point>());
     reduce(bb.max(), maxOp<point>());
 
-    os  << "Triangles    : " << returnReduce(triSurface::size(), sumOp<label>())
-        << endl
-        << "Vertices     : " << returnReduce(nPoints, sumOp<label>()) << endl
-        << "Bounding Box : " << bb << endl;
+    os  << indent << "Triangles    : "
+        << returnReduce(triSurface::size(), sumOp<label>()) << endl
+        << indent << "Vertices     : "
+        << returnReduce(nPoints, sumOp<label>()) << endl
+        << indent << "Bounding Box : " << bb << endl;
 }
 
 
