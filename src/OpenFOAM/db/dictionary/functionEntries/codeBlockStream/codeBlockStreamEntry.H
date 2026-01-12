@@ -22,18 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::functionEntries::codeBlockEntry
+    Foam::functionEntries::codeBlockStreamEntry
 
 Description
-    Part of the #codeBlock...#codeBlock clause
+
+See also
+    Foam::functionEntries::codeIncludeEntry
+    Foam::functionEntries::codeStream
 
 SourceFiles
-    codeBlockEntry.C
+    codeBlockStreamEntry.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef codeBlockEntry_H
-#define codeBlockEntry_H
+#ifndef codeBlockStreamEntry_H
+#define codeBlockStreamEntry_H
 
 #include "functionEntry.H"
 
@@ -44,49 +47,41 @@ namespace Foam
 namespace functionEntries
 {
 
-// Forward declaration of friend classes
-class codeBlockStreamEntry;
-class codeBlockDictEntry;
+class codeBlockEntry;
 
 /*---------------------------------------------------------------------------*\
-                           Class codeBlockEntry Declaration
+                          Class codeBlockStreamEntry Declaration
 \*---------------------------------------------------------------------------*/
 
-class codeBlockEntry
+class codeBlockStreamEntry
 :
     public functionEntry
 {
-    // Private member data
+        //- Pointer to the codeBlockEntry
+        //  which created this codeBlockStreamEntry
+        const codeBlockEntry* codeBlockPtr_;
 
-        //- Unique name of the code block
-        //  containing the #calc and #codeStream functions
-        word codeBlockName_;
+        //- Index of the function in the codeBlock
+        //  corresponding to this codeBlockStreamEntry
+        label index_;
 
-        //- Pointer to the compiled library
-        //  containing the #calc and #codeStream functions
-        void* lib_;
 
-        //- Name of the C code template to be used
-        static const word codeTemplateC;
+    // Private Member Functions
+
+        //- Perform the calculation and return the resulting string
+        OTstream resultStream(const dictionary& dict, Istream& is);
 
 
 public:
 
-    // Related types
-
-        //- Declare friendship with the codeBlock classes
-        friend class codeBlockStreamEntry;
-        friend class codeBlockDictEntry;
-
-
     //- Runtime type information
-    FunctionTypeName("#codeBlock");
+    FunctionTypeName("#codeBlockStream");
 
 
     // Constructors
 
         //- Construct from line number, dictionary and Istream
-        codeBlockEntry
+        codeBlockStreamEntry
         (
             const label lineNumber,
             const dictionary& parentDict,
@@ -94,25 +89,36 @@ public:
         );
 
         //- Copy construct
-        codeBlockEntry(const codeBlockEntry&) = default;
+        codeBlockStreamEntry(const codeBlockStreamEntry&) = default;
 
         //- Clone
         virtual autoPtr<entry> clone(const dictionary&) const
         {
-            return autoPtr<entry>(new codeBlockEntry(*this));
+            return autoPtr<entry>(new codeBlockStreamEntry(*this));
         }
 
 
     // Member Functions
 
         //- Expand the functionEntry into the contextDict
-        virtual bool execute(dictionary& contextDict, Istream& is);
+        virtual bool execute(dictionary& contextDict, Istream&);
+
+        //- Expand the functionEntry into the contextEntry
+        static bool execute
+        (
+            const dictionary& contextDict,
+            primitiveEntry& contextEntry,
+            Istream&
+        );
+
+        //- Dummy write
+        virtual void write(Ostream&) const;
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const codeBlockEntry&) = delete;
+        void operator=(const codeBlockStreamEntry&) = delete;
 };
 
 

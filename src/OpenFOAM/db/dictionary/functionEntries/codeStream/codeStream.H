@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,11 +52,10 @@ Description
     after the $ symbol inside angled brackets <>. So, $<vector>var or
     $<vector>{var} substitutes a variable named var as a vector.
 
-    The variable values are no longer embedded into the code but looked-up at
-    run-time making the code corresponding to each \c \#codeStream independent
-    of the values in the dictionary and of each other.  Hence the \c
-    \#codeStream code does not need to be recompiled when the values in the
-    dictionary are changed, only if the code is changed.
+    The variable values are looked-up at run-time making the code corresponding
+    to each \c \#codeStream independent of the values in the dictionary and of
+    each other.  Hence the \c \#codeStream code does not need to be recompiled
+    when the values in the dictionary are changed, only if the code is changed.
 
 Usage
     Example to set the internal field of a field:
@@ -200,10 +199,11 @@ namespace functionEntries
 {
 
 // Forward declaration of friend classes
+class codeDict;
 class streamEntry;
 class calcEntry;
 class codeBlockEntry;
-class codeBlockCalcEntry;
+class codeBlockStreamEntry;
 
 /*---------------------------------------------------------------------------*\
                          Class codeStream Declaration
@@ -223,7 +223,21 @@ class codeStream
         static const dictionary& topDict(const dictionary&);
 
         //- Return true for master only reading of global dictionary
-        static bool masterOnlyRead(const dictionary& dict);
+        static bool masterOnlyRead
+        (
+            const word& typeName,
+            const dictionary& dict
+        );
+
+        //- Return the code string
+        static string codeString
+        (
+            const word& typeName,
+            const word& templateFunctionName,
+            const label index,
+            const dictionary& codeDict,
+            Istream&
+        );
 
         //- Return the code string
         static string codeString
@@ -236,6 +250,7 @@ class codeStream
         //- Construct, compile, load and return streaming function
         static void* compile
         (
+            const word& typeName,
             const dictionary& contextDict,
             const dictionary& codeDict,
             const word& codeTemplateC,
@@ -274,10 +289,11 @@ public:
     // Related types
 
         //- Declare friendship with the calcEntry class
+        friend class codeDict;
         friend class streamEntry;
         friend class calcEntry;
         friend class codeBlockEntry;
-        friend class codeBlockCalcEntry;
+        friend class codeBlockStreamEntry;
 
 
     //- Runtime type information
@@ -285,6 +301,14 @@ public:
 
 
     // Constructors
+
+        //- Construct from function type and parent dictionary
+        codeStream
+        (
+            const functionName&,
+            const label lineNumber,
+            const dictionary&
+        );
 
         //- Construct from line number, dictionary and Istream
         codeStream

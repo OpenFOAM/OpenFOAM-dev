@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Description
-    Template for use with codeBlock.
+    Template for use with codeDict.
 
 \*---------------------------------------------------------------------------*/
 
@@ -53,22 +53,15 @@ ${localCode}
 
 extern "C"
 {
-    #define CODE_BLOCK_STREAM_FUNCTION(index)                                  \
-        void CAT3(${typeName}, _, index)                                       \
-        (                                                                      \
-            Ostream& os,                                                       \
-            const dictionary& dict                                             \
-        )
-
-    #define CODE_BLOCK_DICT_FUNCTION(index)                                    \
-        void CAT3(${typeName}, _, index)                                       \
-        (                                                                      \
-            dictionary& dict                                                   \
-        )
-
+    void ${typeName}
+    (
+        dictionary& dict
+    )
+    {
 //{{{ begin code
-    ${code}
+        ${code}
 //}}} end code
+    }
 }
 
 

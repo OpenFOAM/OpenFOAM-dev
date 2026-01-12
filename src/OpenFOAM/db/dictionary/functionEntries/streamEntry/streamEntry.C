@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,7 +70,7 @@ Foam::string Foam::functionEntries::streamEntry::codeString
     {
         return
         (
-            "CODE_BLOCK_FUNCTION(" + Foam::name(index) + ")\n"
+            "CODE_BLOCK_STREAM_FUNCTION(" + Foam::name(index) + ")\n"
             "{\n"
             "    #line " + Foam::name(t.lineNumber())
                + " \"" + codeDict.name() + "\"\n"

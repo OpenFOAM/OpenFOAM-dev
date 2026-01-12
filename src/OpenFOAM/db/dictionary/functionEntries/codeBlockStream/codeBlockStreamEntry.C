@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "codeBlockCalcEntry.H"
+#include "codeBlockStreamEntry.H"
 #include "codeBlockEntry.H"
 #include "OSspecific.H"
 #include "codeStream.H"
@@ -36,14 +36,14 @@ namespace Foam
 {
 namespace functionEntries
 {
-    defineFunctionTypeNameAndDebug(codeBlockCalcEntry, 0);
+    defineFunctionTypeNameAndDebug(codeBlockStreamEntry, 0);
 
-    addToRunTimeSelectionTable(functionEntry, codeBlockCalcEntry, dictionary);
+    addToRunTimeSelectionTable(functionEntry, codeBlockStreamEntry, dictionary);
 
     addToMemberFunctionSelectionTable
     (
         functionEntry,
-        codeBlockCalcEntry,
+        codeBlockStreamEntry,
         execute,
         primitiveEntryIstream
     );
@@ -53,7 +53,7 @@ namespace functionEntries
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::OTstream Foam::functionEntries::codeBlockCalcEntry::resultStream
+Foam::OTstream Foam::functionEntries::codeBlockStreamEntry::resultStream
 (
     const dictionary& dict,
     Istream& is
@@ -66,7 +66,7 @@ Foam::OTstream Foam::functionEntries::codeBlockCalcEntry::resultStream
     }
 
     // Construct the name of the function
-    // corresponding to this codeBlockCalcEntry
+    // corresponding to this codeBlockStreamEntry
     const word functionName
     (
         codeBlockPtr_->codeBlockName_ + "_" + Foam::name(index_)
@@ -97,7 +97,7 @@ Foam::OTstream Foam::functionEntries::codeBlockCalcEntry::resultStream
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::functionEntries::codeBlockCalcEntry::codeBlockCalcEntry
+Foam::functionEntries::codeBlockStreamEntry::codeBlockStreamEntry
 (
     const label lineNumber,
     const dictionary& parentDict,
@@ -141,7 +141,7 @@ Foam::functionEntries::codeBlockCalcEntry::codeBlockCalcEntry
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::functionEntries::codeBlockCalcEntry::execute
+bool Foam::functionEntries::codeBlockStreamEntry::execute
 (
     dictionary& contextDict,
     Istream& is
@@ -151,7 +151,7 @@ bool Foam::functionEntries::codeBlockCalcEntry::execute
 }
 
 
-bool Foam::functionEntries::codeBlockCalcEntry::execute
+bool Foam::functionEntries::codeBlockStreamEntry::execute
 (
     const dictionary& contextDict,
     primitiveEntry& contextEntry,
@@ -162,13 +162,13 @@ bool Foam::functionEntries::codeBlockCalcEntry::execute
     (
         contextDict,
         contextEntry,
-        codeBlockCalcEntry(is.lineNumber(), contextDict, is)
+        codeBlockStreamEntry(is.lineNumber(), contextDict, is)
        .resultStream(contextDict, is)
     );
 }
 
 
-void Foam::functionEntries::codeBlockCalcEntry::write(Ostream& os) const
+void Foam::functionEntries::codeBlockStreamEntry::write(Ostream& os) const
 {}
 
 

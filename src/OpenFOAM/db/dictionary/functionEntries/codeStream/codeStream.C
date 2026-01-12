@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,6 +71,7 @@ const Foam::word Foam::functionEntries::codeStream::codeTemplateC =
 
 bool Foam::functionEntries::codeStream::masterOnlyRead
 (
+    const word& typeName,
     const dictionary& dict
 )
 {
@@ -78,7 +79,7 @@ bool Foam::functionEntries::codeStream::masterOnlyRead
 
     if (debug)
     {
-        Pout<< "codeStream : dictionary:" << dict.name()
+        Pout<< typeName << " : dictionary:" << dict.name()
             << " master-only-reading:" << topDict.global()
             << endl;
     }
@@ -89,6 +90,8 @@ bool Foam::functionEntries::codeStream::masterOnlyRead
 
 Foam::string Foam::functionEntries::codeStream::codeString
 (
+    const word& typeName,
+    const word& templateFunctionName,
     const label index,
     const dictionary& contextDict,
     Istream& is
@@ -96,7 +99,7 @@ Foam::string Foam::functionEntries::codeStream::codeString
 {
     // Construct code string for codeStream using the context dictionary for
     // string expansion and variable substitution
-    const dictionary codeDict("#codeStream", contextDict, is);
+    const dictionary codeDict(typeName, contextDict, is);
 
     if (codeDict.found("codeInclude"))
     {
@@ -108,7 +111,7 @@ Foam::string Foam::functionEntries::codeStream::codeString
 
     return
     (
-        "CODE_BLOCK_FUNCTION(" + Foam::name(index) + ")\n"
+        templateFunctionName + '(' + Foam::name(index) + ")\n"
         "{\n"
         "    #line " + Foam::name(codeDict.lookup("code").lineNumber())
       + " \"" + codeDict.name() + "\"\n"
@@ -118,8 +121,27 @@ Foam::string Foam::functionEntries::codeStream::codeString
 }
 
 
+Foam::string Foam::functionEntries::codeStream::codeString
+(
+    const label index,
+    const dictionary& contextDict,
+    Istream& is
+)
+{
+    return codeString
+    (
+        typeName,
+        "CODE_BLOCK_STREAM_FUNCTION",
+        index,
+        contextDict,
+        is
+    );
+}
+
+
 void* Foam::functionEntries::codeStream::compile
 (
+    const word& typeName,
     const dictionary& contextDict,
     const dictionary& codeDict,
     const word& codeTemplateC,
@@ -138,7 +160,7 @@ void* Foam::functionEntries::codeStream::compile
     // codeName: codeStream + _<sha1>
     // codeDir : _<sha1>
     const std::string sha1Str(context.sha1().str(true));
-    dynamicCode dynCode("codeStream" + sha1Str, sha1Str);
+    dynamicCode dynCode(typeName.remove('#') + sha1Str, sha1Str);
 
     // Load library if not already loaded
     // Version information is encoded in the libPath (encoded with the SHA1)
@@ -220,7 +242,7 @@ void* Foam::functionEntries::codeStream::compile
         // Only block if not master only reading of a global dictionary
         if
         (
-           !masterOnlyRead(contextDict)
+           !masterOnlyRead(typeName ,contextDict)
          && regIOobject::fileModificationSkew > 0
         )
         {
@@ -318,7 +340,7 @@ void* Foam::functionEntries::codeStream::compile
     }
 
     bool haveLib = lib;
-    if (!masterOnlyRead(contextDict))
+    if (!masterOnlyRead(typeName, contextDict))
     {
         reduce(haveLib, andOp<bool>());
     }
@@ -346,7 +368,14 @@ Foam::functionEntries::codeStream::getFunction
 )
 {
     word codeName;
-    void* lib = compile(contextDict, codeDict, codeTemplateC, codeName);
+    void* lib = compile
+    (
+        typeName,
+        contextDict,
+        codeDict,
+        codeTemplateC,
+        codeName
+    );
 
     // Find the function handle in the library
     const streamingFunctionType function =
@@ -388,7 +417,7 @@ Foam::OTstream Foam::functionEntries::codeStream::resultStream
 
     // Construct codeDict for codeStream using the context dictionary
     // for string expansion and variable substitution
-    const dictionary codeDict("#codeStream", contextDict, is);
+    const dictionary codeDict(typeName, contextDict, is);
 
     // Compile and link the code library and get the function pointer
     const streamingFunctionType function = getFunction(contextDict, codeDict);
@@ -404,6 +433,17 @@ Foam::OTstream Foam::functionEntries::codeStream::resultStream
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::functionEntries::codeStream::codeStream
+(
+    const functionName& functionType,
+    const label lineNumber,
+    const dictionary& dict
+)
+:
+    functionEntry(functionType, lineNumber, dict)
+{}
+
 
 Foam::functionEntries::codeStream::codeStream
 (

@@ -22,13 +22,15 @@ baffleOverlap   0.4;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+#codeBlock
+
 halfThickness #calc "scalar(1)/$<scalar>nCellsPerMetre";
 
 nCellsHeight #calc "int(round($<scalar>height*$<scalar>nCellsPerMetre))";
 nCellsRadius #calc "int(round($<scalar>radius*$<scalar>nCellsPerMetre))";
 
 innerBaffleOuterRadius #calc "$<scalar>{radius}/(2 - $<scalar>baffleOverlap)";
-outerBaffleInnerRadius #calc "$radius - $innerBaffleOuterRadius";
+outerBaffleInnerRadius #calc "$radius - $<scalar>innerBaffleOuterRadius";
 
 convertToMeters 1;
 
@@ -38,6 +40,8 @@ vertices
     ($radius 0 #neg $halfThickness) ($radius $height #neg $halfThickness)
     ($radius 0 $halfThickness) ($radius $height $halfThickness)
 );
+
+#endCodeBlock
 
 blocks
 (

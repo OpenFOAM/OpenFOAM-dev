@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,21 +22,20 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::functionEntries::codeBlockCalcEntry
+    Foam::functionEntries::codeBlockDictEntry
 
 Description
 
 See also
-    Foam::functionEntries::codeIncludeEntry
-    Foam::functionEntries::codeStream
+    Foam::functionEntries::codeBlockStream
 
 SourceFiles
-    codeBlockCalcEntry.C
+    codeBlockDictEntry.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef codeBlockCalcEntry_H
-#define codeBlockCalcEntry_H
+#ifndef codeBlockDictEntry_H
+#define codeBlockDictEntry_H
 
 #include "functionEntry.H"
 
@@ -50,37 +49,37 @@ namespace functionEntries
 class codeBlockEntry;
 
 /*---------------------------------------------------------------------------*\
-                          Class codeBlockCalcEntry Declaration
+                          Class codeBlockDictEntry Declaration
 \*---------------------------------------------------------------------------*/
 
-class codeBlockCalcEntry
+class codeBlockDictEntry
 :
     public functionEntry
 {
-        //- Pointer to the codeBlockEntry which created this codeBlockCalcEntry
+        //- Pointer to the codeBlockEntry which created this codeBlockDictEntry
         const codeBlockEntry* codeBlockPtr_;
 
         //- Index of the function in the codeBlock
-        //  corresponding to this codeBlockCalcEntry
+        //  corresponding to this codeBlockDictEntry
         label index_;
 
 
     // Private Member Functions
 
-        //- Perform the calculation and return the resulting string
-        OTstream resultStream(const dictionary& dict, Istream& is);
+        //- Compile and execute the code to manipulate the contextDict
+        bool resultStream(dictionary& contextDict, Istream& is);
 
 
 public:
 
     //- Runtime type information
-    FunctionTypeName("#codeBlockCalc");
+    FunctionTypeName("#codeBlockDict");
 
 
     // Constructors
 
         //- Construct from line number, dictionary and Istream
-        codeBlockCalcEntry
+        codeBlockDictEntry
         (
             const label lineNumber,
             const dictionary& parentDict,
@@ -88,12 +87,12 @@ public:
         );
 
         //- Copy construct
-        codeBlockCalcEntry(const codeBlockCalcEntry&) = default;
+        codeBlockDictEntry(const codeBlockDictEntry&) = default;
 
         //- Clone
         virtual autoPtr<entry> clone(const dictionary&) const
         {
-            return autoPtr<entry>(new codeBlockCalcEntry(*this));
+            return autoPtr<entry>(new codeBlockDictEntry(*this));
         }
 
 
@@ -102,14 +101,6 @@ public:
         //- Expand the functionEntry into the contextDict
         virtual bool execute(dictionary& contextDict, Istream&);
 
-        //- Expand the functionEntry into the contextEntry
-        static bool execute
-        (
-            const dictionary& contextDict,
-            primitiveEntry& contextEntry,
-            Istream&
-        );
-
         //- Dummy write
         virtual void write(Ostream&) const;
 
@@ -117,7 +108,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const codeBlockCalcEntry&) = delete;
+        void operator=(const codeBlockDictEntry&) = delete;
 };
 
 

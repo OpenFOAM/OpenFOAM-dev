@@ -14,12 +14,14 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+#codeBlock
+
 inner
 {
     type        union;
 
     // Create inner baffles along the length of the pipe
-    #codeStream
+    #codeDict
     {
         code
         #{
@@ -29,18 +31,16 @@ inner
                 const scalar y =
                     scalar(2*i + 1)/(2*nBaffles)*$<scalar>blockMeshDict!height;
 
-                os <<
-                    dictionaryEntry
+                dict.set
+                (
+                    word("baffle" + name(i)),
+                    dictionary::entries
                     (
-                        word("baffle" + word(i)),
-                        dict,
-                        dictionary::entries
-                        (
-                            "type", "plane",
-                            "point", vector(0, y, 0),
-                            "normal", vector(0, 1, 0)
-                        )
-                    );
+                        "type", "plane",
+                        "point", vector(0, y, 0),
+                        "normal", vector(0, 1, 0)
+                    )
+                );
             }
         #};
     }
@@ -51,7 +51,7 @@ outer
     type        union;
 
     // Create outer baffles along the length of the pipe
-    #codeStream
+    #codeDict
     {
         code
         #{
@@ -61,22 +61,23 @@ outer
                 const scalar y =
                     scalar(2*i + 1)/(2*nBaffles)*$<scalar>blockMeshDict!height;
 
-                os <<
-                    dictionaryEntry
+                dict.set
+                (
+                    word("baffle" + name(i)),
+                    dictionary::entries
                     (
-                        word("baffle" + word(i)),
-                        dict,
-                        dictionary::entries
-                        (
-                            "type", "plane",
-                            "point", vector(0, y, 0),
-                            "normal", vector(0, 1, 0)
-                        )
-                    );
+                        "type", "plane",
+                        "point", vector(0, y, 0),
+                        "normal", vector(0, 1, 0)
+                    )
+                );
             }
         #};
     }
 }
+
+#endCodeBlock
+
 
 // Combine inner and outer baffles into a single zone
 baffles

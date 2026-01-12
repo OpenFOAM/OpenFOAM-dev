@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,8 +25,10 @@ License
 
 #include "codeBlockEntry.H"
 #include "endCodeBlockEntry.H"
-#include "codeBlockCalcEntry.H"
+#include "codeBlockStreamEntry.H"
+#include "codeBlockDictEntry.H"
 #include "codeStream.H"
+#include "codeDict.H"
 #include "streamEntry.H"
 #include "calcEntry.H"
 #include "codeIncludeEntry.H"
@@ -89,7 +91,14 @@ bool Foam::functionEntries::codeBlockEntry::execute
     entry::disableFunctionEntries = true;
 
     // Read the dictionary up to #endCodeBlock
+
+    // Dict stream including the code retrieval entries
+    OTstream dictCodeStream(contextDict.name());
+
+    // Dict stream without the code retrieval entries
+    // used to provide entries for the code to lookup
     OTstream dictStream(contextDict.name());
+
     label codeIndex = 0;
 
     token t;
@@ -108,10 +117,25 @@ bool Foam::functionEntries::codeBlockEntry::execute
                 codeString +=
                     codeStream::codeString(codeIndex, contextDict, is);
 
-                // Replace the #codeStream with a #codeBlockCalc followed by the
-                // pointer to this codeBlockEntry and the index of #codeStream
-                dictStream
-                    << keyType(codeBlockCalcEntry::typeName) << token::SPACE
+                // Replace the #codeStream with a #codeBlockStream followed by
+                // the pointer to this codeBlockEntry and the index of
+                // #codeStream
+                dictCodeStream
+                    << keyType(codeBlockStreamEntry::typeName) << token::SPACE
+                    << reinterpret_cast<uint64_t>(this) << token::SPACE
+                    << codeIndex++ << endl;
+            }
+            else if (t.functionNameToken() == codeDict::typeName)
+            {
+                // Accumulate the #codeDict code strings
+                // into a single code block
+                codeString +=
+                    codeDict::codeString(codeIndex, contextDict, is);
+
+                // Replace the #codeDict with a #codeBlockDict followed by the
+                // pointer to this codeBlockEntry and the index of #codeDict
+                dictCodeStream
+                    << keyType(codeBlockDictEntry::typeName) << token::SPACE
                     << reinterpret_cast<uint64_t>(this) << token::SPACE
                     << codeIndex++ << endl;
             }
@@ -121,10 +145,10 @@ bool Foam::functionEntries::codeBlockEntry::execute
                 codeString +=
                     streamEntry::codeString(codeIndex, codeDict, is);
 
-                // Replace the #stream with a #codeBlockCalc followed by
+                // Replace the #stream with a #codeBlockStream followed by
                 // the pointer to this codeBlockEntry and the index of #stream
-                dictStream
-                    << keyType(codeBlockCalcEntry::typeName) << token::SPACE
+                dictCodeStream
+                    << keyType(codeBlockStreamEntry::typeName) << token::SPACE
                     << reinterpret_cast<uint64_t>(this) << token::SPACE
                     << codeIndex++ << endl;
             }
@@ -134,10 +158,10 @@ bool Foam::functionEntries::codeBlockEntry::execute
                 codeString +=
                     calcEntry::codeString(codeIndex, codeDict, is);
 
-                // Replace the #calc with a #codeBlockCalc followed by
+                // Replace the #calc with a #codeBlockStream followed by
                 // the pointer to this codeBlockEntry and the index of #calc
-                dictStream
-                    << keyType(codeBlockCalcEntry::typeName) << token::SPACE
+                dictCodeStream
+                    << keyType(codeBlockStreamEntry::typeName) << token::SPACE
                     << reinterpret_cast<uint64_t>(this) << token::SPACE
                     << codeIndex++ << endl;
             }
@@ -151,7 +175,7 @@ bool Foam::functionEntries::codeBlockEntry::execute
             }
             else if (t.functionNameToken() == negEntry::typeName)
             {
-                dictStream.append(t);
+                dictCodeStream.append(t);
             }
             else
             {
@@ -164,6 +188,7 @@ bool Foam::functionEntries::codeBlockEntry::execute
         }
         else
         {
+            dictCodeStream.append(t);
             dictStream.append(t);
         }
     }
@@ -192,6 +217,7 @@ bool Foam::functionEntries::codeBlockEntry::execute
     // Compile the codeBlock library and cache the pointer
     lib_ = codeStream::compile
     (
+        typeName,
         contextDict,
         codeDict,
         codeTemplateC,
@@ -202,8 +228,8 @@ bool Foam::functionEntries::codeBlockEntry::execute
     entry::disableFunctionEntries = false;
 
     // Re-read the dictionary expanding all functionEntries
-    // including #codeBlockCalc and #codeBlockStream using the functions in lib_
-    contextDict.read(ITstream(dictStream.name(), dictStream)());
+    // including #codeBlockStream and #codeBlockDict using the functions in lib_
+    contextDict.read(ITstream(dictCodeStream.name(), dictCodeStream)());
 
     return true;
 }
