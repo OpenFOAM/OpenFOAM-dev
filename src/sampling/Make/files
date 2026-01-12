@@ -65,5 +65,8 @@ $(surfWriters)/proxy/proxySurfaceWriter.C
 $(surfWriters)/raw/rawSurfaceWriter.C
 $(surfWriters)/vtk/vtkSurfaceWriter.C
 
+cutPlot/patchCutPlot.C
+cutPlot/cellCutPlot.C
+
 
 LIB = $(FOAM_LIBBIN)/libsampling

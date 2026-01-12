@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,7 +76,7 @@ SourceFiles
 #define patchCutLayerAverage_H
 
 #include "fvMeshFunctionObject.H"
-#include "vector.H"
+#include "cutPlot.H"
 #include "setWriter.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -97,16 +97,6 @@ class patchCutLayerAverage
 :
     public fvMeshFunctionObject
 {
-    // Private Structures
-
-        //- Weight for a given face and layer
-        struct weight
-        {
-            label facei, layeri;
-            scalar value;
-        };
-
-
     // Private Data
 
         //- Name of the patch
@@ -137,7 +127,7 @@ class patchCutLayerAverage
         label nOptimiseIter_;
 
         //- Weights
-        autoPtr<List<weight>> weights_;
+        autoPtr<List<cutPlot::weight>> weights_;
 
         //- Layer distances. The distance of the layers' cut-planes to the
         //  origin, in the direction of the given vector. If interpolate is
@@ -157,49 +147,8 @@ class patchCutLayerAverage
         //- Return the output path
         fileName outputPath() const;
 
-        //- Calculate and return non-interpolating weights
-        List<weight> calcNonInterpolatingWeights
-        (
-            const scalarField& pointXs,
-            const scalarField& faceMinXs,
-            const scalarField& faceMaxXs,
-            const labelList& faceMinOrder,
-            const scalarField& plotXs,
-            const bool normalise = true
-        ) const;
-
-        //- Calculate and return interpolating weights
-        List<weight> calcInterpolatingWeights
-        (
-            const scalarField& pointXs,
-            const scalarField& faceMinXs,
-            const scalarField& faceMaxXs,
-            const labelList& faceMinOrder,
-            const scalarField& plotXs,
-            const bool normalise = true
-        ) const;
-
-        //- Calculate and return weights
-        List<weight> calcWeights
-        (
-            const scalarField& pointXs,
-            const scalarField& faceMinXs,
-            const scalarField& faceMaxXs,
-            const labelList& faceMinOrder,
-            const scalarField& plotXs,
-            const bool normalise = true
-        ) const;
-
         //- Calculate and set the weights member data
         void calcWeights();
-
-        //- Construct plot values from face values given a set of weights
-        template<class Type>
-        inline tmp<Field<Type>> applyWeights
-        (
-            const List<weight>& weights,
-            const Field<Type>& faceValues
-        ) const;
 
         //- Clear the cached weights
         void clear();

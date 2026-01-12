@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,8 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "cutLayerAverage.H"
-#include "cutPolyIntegral.H"
 #include "OSspecific.H"
+#include "cellCutPlot.H"
 #include "volPointInterpolation.H"
 #include "writeFile.H"
 #include "polyTopoChangeMap.H"
@@ -50,341 +50,6 @@ namespace functionObjects
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
-//- Allocate and return a pair of fields
-template<class Type>
-autoPtr<Pair<Field<Type>>> fieldPairPtr(const label size)
-{
-    return
-        autoPtr<Pair<Field<Type>>>
-        (
-            new Pair<Field<Type>>(Field<Type>(size), Field<Type>(size))
-        );
-}
-
-
-//- Allocate and return a pair of a pair of fields
-template<class Type>
-autoPtr<Pair<Pair<Field<Type>>>> fieldPairPairPtr(const label size)
-{
-    return
-        autoPtr<Pair<Pair<Field<Type>>>>
-        (
-            new Pair<Pair<Field<Type>>>
-            (
-                Pair<Field<Type>>(Field<Type>(size), Field<Type>(size)),
-                Pair<Field<Type>>(Field<Type>(size), Field<Type>(size))
-            )
-        );
-}
-
-
-//- Base class for classes which manage incomplete sets of face data
-class faceData
-{
-protected:
-
-    const cellList& cells_;
-
-    const cellEdgeAddressingList& cAddrs_;
-
-    const scalarField& cellVolumes_;
-
-    const faceList& faces_;
-
-    const vectorField& faceAreas_;
-
-    const pointField& faceCentres_;
-
-    const pointField& points_;
-
-    const scalarField& pointXs_;
-
-    const scalarField& plotXs_;
-
-    PtrList<DynamicList<label>> faceis_;
-
-    PtrList<boolList> haveFaces_;
-
-    inline label activeLayeri(const label layeri) const
-    {
-        return layeri % faceis_.size();
-    }
-
-public:
-
-    faceData
-    (
-        const fvMesh& mesh,
-        const label nActiveLayers,
-        const scalarField& pointXs,
-        const scalarField& plotXs
-    )
-    :
-        cells_(mesh.cells()),
-        cAddrs_(cellEdgeAddressingList::New(mesh)),
-        cellVolumes_(mesh.cellVolumes()),
-        faces_(mesh.faces()),
-        faceAreas_(mesh.faceAreas()),
-        faceCentres_(mesh.faceCentres()),
-        points_(mesh.points()),
-        pointXs_(pointXs),
-        plotXs_(plotXs),
-        faceis_(nActiveLayers),
-        haveFaces_(nActiveLayers)
-    {
-        forAll(faceis_, i)
-        {
-            faceis_.set(i, new DynamicList<label>(mesh.nFaces()));
-            haveFaces_.set(i, new boolList(mesh.nFaces(), false));
-        }
-    }
-
-    void clear(const label layeri)
-    {
-        UIndirectList<bool>
-        (
-            haveFaces_[activeLayeri(layeri)],
-            faceis_[activeLayeri(layeri)]
-        ) = false;
-
-        faceis_[activeLayeri(layeri)].clear();
-    }
-};
-
-
-//- Class to manage face cut data
-class faceCutData
-:
-    public faceData
-{
-private:
-
-    PtrList<List<List<labelPair>>> faceCuts_;
-
-    PtrList<Pair<vectorField>> faceCutAreas_;
-
-public:
-
-    faceCutData
-    (
-        const fvMesh& mesh,
-        const label nActiveLayers,
-        const scalarField& pointXs,
-        const scalarField& plotXs
-    )
-    :
-        faceData(mesh, nActiveLayers, pointXs, plotXs),
-        faceCuts_(nActiveLayers),
-        faceCutAreas_(nActiveLayers)
-    {
-        forAll(faceis_, i)
-        {
-            faceCuts_.set(i, new List<List<labelPair>>(mesh.nFaces()));
-            faceCutAreas_.set(i, fieldPairPtr<vector>(mesh.nFaces()));
-        }
-    }
-
-    void cache(const label celli, const label layeri)
-    {
-        forAll(cells_[celli], cellFacei)
-        {
-            const label facei = cells_[celli][cellFacei];
-
-            if (haveFaces_[activeLayeri(layeri)][facei]) continue;
-
-            faceis_[activeLayeri(layeri)].append(facei);
-
-            haveFaces_[activeLayeri(layeri)][facei] = true;
-
-            faceCuts_[activeLayeri(layeri)][facei] =
-                cutPoly::faceCuts
-                (
-                    faces_[facei],
-                    pointXs_,
-                    plotXs_[layeri]
-                );
-
-            for (label sidei = 0; sidei <= 1; ++ sidei)
-            {
-                faceCutAreas_[activeLayeri(layeri)][sidei][facei] =
-                    cutPoly::faceCutArea
-                    (
-                        faces_[facei],
-                        faceAreas_[facei],
-                        faceCuts_[activeLayeri(layeri)][facei],
-                        points_,
-                        pointXs_,
-                        plotXs_[layeri],
-                        sidei == 0
-                    );
-            }
-        }
-    }
-
-    const List<List<labelPair>>& faceCuts(const label layeri) const
-    {
-        return faceCuts_[activeLayeri(layeri)];
-    }
-
-    const Pair<vectorField>& faceCutAreas(const label layeri) const
-    {
-        return faceCutAreas_[activeLayeri(layeri)];
-    }
-};
-
-
-//- Class to manage face basis function data
-class faceFsData
-:
-    public faceData
-{
-private:
-
-    const faceCutData& fcd_;
-
-    PtrList<Pair<scalarField>> pointFs_;
-
-    PtrList<Pair<scalarField>> faceFs_;
-
-    PtrList<Pair<Pair<scalarField>>> faceCutFs_;
-
-
-public:
-
-    faceFsData
-    (
-        const faceCutData& fcd,
-        const fvMesh& mesh,
-        const label nActiveLayers,
-        const scalarField& pointXs,
-        const scalarField& plotXs
-    )
-    :
-        faceData(mesh, nActiveLayers, pointXs, plotXs),
-        fcd_(fcd),
-        pointFs_(nActiveLayers),
-        faceFs_(nActiveLayers),
-        faceCutFs_(nActiveLayers)
-    {
-        forAll(faceis_, i)
-        {
-            pointFs_.set(i, fieldPairPtr<scalar>(mesh.nPoints()));
-            faceFs_.set(i, fieldPairPtr<scalar>(mesh.nFaces()));
-            faceCutFs_.set(i, fieldPairPairPtr<scalar>(mesh.nFaces()));
-        }
-    }
-
-    void cache(const label celli, const label layeri)
-    {
-        forAll(cells_[celli], cellFacei)
-        {
-            const label facei = cells_[celli][cellFacei];
-
-            if (haveFaces_[activeLayeri(layeri)][facei]) continue;
-
-            faceis_[activeLayeri(layeri)].append(facei);
-
-            haveFaces_[activeLayeri(layeri)][facei] = true;
-
-            forAll(faces_[facei], facePointi)
-            {
-                const label pointi = faces_[facei][facePointi];
-
-                if (layeri > 0)
-                {
-                    pointFs_[activeLayeri(layeri)][0][pointi] =
-                        (pointXs_[pointi] - plotXs_[layeri - 1])
-                       /(plotXs_[layeri] - plotXs_[layeri - 1]);
-                }
-
-                if (layeri < plotXs_.size() - 1)
-                {
-                    pointFs_[activeLayeri(layeri)][1][pointi] =
-                        (plotXs_[layeri + 1] - pointXs_[pointi])
-                       /(plotXs_[layeri + 1] - plotXs_[layeri]);
-                }
-            }
-
-            for
-            (
-                label fi = (layeri > 0 ? 0 : 1);
-                fi <= (layeri < plotXs_.size() - 1 ? 1 : 0);
-                fi ++
-            )
-            {
-                faceFs_[activeLayeri(layeri)][fi][facei] =
-                    cutPoly::faceAreaAverage
-                    (
-                        faces_[facei],
-                        points_,
-                        pointFs_[activeLayeri(layeri)][fi]
-                    ).second();
-            }
-
-            for
-            (
-                label fi = (layeri > 0 ? 0 : 1);
-                fi <= (layeri < plotXs_.size() - 1 ? 1 : 0);
-                fi ++
-            )
-            {
-                for (label sidei = 0; sidei <= 1; ++ sidei)
-                {
-                    const label layerj =
-                        fi == 0 && sidei == 0 ? layeri - 1
-                      : fi == 1 && sidei == 1 ? layeri + 1
-                      : layeri;
-
-                    if (layerj < 0 || layerj > plotXs_.size() - 1) continue;
-
-                    Tuple2<vector, vector> integral =
-                        cutPoly::faceCutAreaIntegral
-                        (
-                            faces_[facei],
-                            faceAreas_[facei],
-                            faceFs_[activeLayeri(layeri)][fi][facei],
-                            fcd_.faceCuts(layerj)[facei],
-                            points_,
-                            pointFs_[activeLayeri(layeri)][fi],
-                            pointXs_,
-                            plotXs_[layerj],
-                            sidei == 0
-                        );
-
-                    const scalar magSqrArea = magSqr(integral.first());
-
-                    faceCutFs_[activeLayeri(layeri)][fi][sidei][facei] =
-                        magSqrArea > vSmall
-                      ? integral.second() & integral.first()/magSqrArea
-                      : faceFs_[activeLayeri(layeri)][fi][facei];
-                }
-            }
-        }
-    }
-
-    const Pair<scalarField>& pointFs(const label layeri) const
-    {
-        return pointFs_[activeLayeri(layeri)];
-    }
-
-    const Pair<scalarField>& faceFs(const label layeri) const
-    {
-        return faceFs_[activeLayeri(layeri)];
-    }
-
-    const Pair<Pair<scalarField>>& faceCutFs(const label layeri) const
-    {
-        return faceCutFs_[activeLayeri(layeri)];
-    }
-};
-
-}
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 Foam::fileName Foam::functionObjects::cutLayerAverage::outputPath() const
@@ -398,509 +63,11 @@ Foam::fileName Foam::functionObjects::cutLayerAverage::outputPath() const
 }
 
 
-Foam::List<Foam::functionObjects::cutLayerAverage::weight>
-Foam::functionObjects::cutLayerAverage::calcNonInterpolatingWeights
-(
-    const scalarField& pointXs,
-    const scalarField& zoneCellMinXs,
-    const scalarField& zoneCellMaxXs,
-    const labelList& zoneCellMinOrder,
-    const scalarField& plotXs,
-    const bool normalise
-) const
-{
-    const cellList& cells = mesh_.cells();
-    const cellEdgeAddressingList& cAddrs = cellEdgeAddressingList::New(mesh_);
-    const scalarField& cellVolumes = mesh_.cellVolumes();
-    const faceList& faces = mesh_.faces();
-    const vectorField& faceAreas = mesh_.faceAreas();
-    const pointField& faceCentres = mesh_.faceCentres();
-    const pointField& points = mesh_.points();
-
-    // Determine the largest number of layers spanned by a single cell, and
-    // therefore the number for which data must be simultaneously maintained
-    label nActiveLayers = 0;
-    {
-        label layeri = 0;
-        forAll(zoneCellMinOrder, zoneCellMinOrderi)
-        {
-            const label zoneCelli = zoneCellMinOrder[zoneCellMinOrderi];
-
-            // Find the next relevant layer
-            while (zoneCellMinXs[zoneCelli] > plotXs[layeri + 1]) layeri ++;
-
-            // Find the first irrelevant layer
-            label layerj = layeri;
-            while (zoneCellMaxXs[zoneCelli] > plotXs[layerj]) layerj ++;
-
-            nActiveLayers = max(nActiveLayers, layerj - layeri);
-        }
-    }
-
-    // Storage for face cut data
-    faceCutData fcd(mesh_, nActiveLayers, pointXs, plotXs);
-
-    // Generate weights for each cell in turn
-    DynamicList<weight> dynWeights(zone_.nCells()*2);
-    label layeri = 0;
-    forAll(zoneCellMinOrder, zoneCellMinOrderi)
-    {
-        const label zoneCelli = zoneCellMinOrder[zoneCellMinOrderi];
-        const label celli = zone_.celli(zoneCelli);
-
-        // Find the next relevant layer and remove all data relating to
-        // layers now behind the spans of the remaining cells
-        while (zoneCellMinXs[zoneCelli] > plotXs[layeri + 1])
-        {
-            fcd.clear(layeri);
-            layeri ++;
-        }
-
-        // Loop over all relevant layer intervals
-        label layerj = layeri;
-        while (zoneCellMaxXs[zoneCelli] > plotXs[layerj])
-        {
-            // Compute the face data as necessary
-            fcd.cache(celli, layerj);
-            fcd.cache(celli, layerj + 1);
-
-            // Add a new weight
-            dynWeights.append({celli, layerj, cellVolumes[celli]});
-
-            // Left interval
-            if (zoneCellMinXs[zoneCelli] < plotXs[layerj])
-            {
-                dynWeights.last().value -=
-                    cutPoly::cellCutVolume
-                    (
-                        cells[celli],
-                        cAddrs[celli],
-                        cellVolumes[celli],
-                        cutPoly::cellCuts
-                        (
-                            cells[celli],
-                            cAddrs[celli],
-                            faces,
-                            fcd.faceCuts(layerj),
-                            pointXs,
-                            plotXs[layerj]
-                        ),
-                        faces,
-                        faceAreas,
-                        faceCentres,
-                        fcd.faceCutAreas(layerj)[0],
-                        points,
-                        pointXs,
-                        plotXs[layerj],
-                        true
-                    );
-            }
-
-            // Right interval
-            if (zoneCellMaxXs[zoneCelli] > plotXs[layerj + 1])
-            {
-                dynWeights.last().value -=
-                    cutPoly::cellCutVolume
-                    (
-                        cells[celli],
-                        cAddrs[celli],
-                        cellVolumes[celli],
-                        cutPoly::cellCuts
-                        (
-                            cells[celli],
-                            cAddrs[celli],
-                            faces,
-                            fcd.faceCuts(layerj + 1),
-                            pointXs,
-                            plotXs[layerj + 1]
-                        ),
-                        faces,
-                        faceAreas,
-                        faceCentres,
-                        fcd.faceCutAreas(layerj + 1)[1],
-                        points,
-                        pointXs,
-                        plotXs[layerj + 1],
-                        false
-                    );
-            }
-
-            layerj ++;
-        }
-    }
-
-    // Transfer to non-dynamic storage
-    List<weight> weights;
-    weights.transfer(dynWeights);
-
-    // Normalise, if requested
-    if (normalise)
-    {
-        scalarField layerWeightSums(nLayers_, scalar(0));
-        forAll(weights, weighti)
-        {
-            layerWeightSums[weights[weighti].layeri] += weights[weighti].value;
-        }
-
-        Pstream::listCombineGather(layerWeightSums, plusEqOp<scalar>());
-        Pstream::listCombineScatter(layerWeightSums);
-
-        forAll(weights, weighti)
-        {
-            weights[weighti].value /=
-                (layerWeightSums[weights[weighti].layeri] + vSmall);
-        }
-    }
-
-    return weights;
-}
-
-
-Foam::List<Foam::functionObjects::cutLayerAverage::weight>
-Foam::functionObjects::cutLayerAverage::calcInterpolatingWeights
-(
-    const scalarField& pointXs,
-    const scalarField& zoneCellMinXs,
-    const scalarField& zoneCellMaxXs,
-    const labelList& zoneCellMinOrder,
-    const scalarField& plotXs,
-    const bool normalise
-) const
-{
-    const cellList& cells = mesh_.cells();
-    const cellEdgeAddressingList& cAddrs = cellEdgeAddressingList::New(mesh_);
-    const scalarField& cellVolumes = mesh_.cellVolumes();
-    const faceList& faces = mesh_.faces();
-    const vectorField& faceAreas = mesh_.faceAreas();
-    const pointField& faceCentres = mesh_.faceCentres();
-    const pointField& points = mesh_.points();
-
-    // Determine the largest number of layers spanned by a single cell, and
-    // therefore the number for which data must be simultaneously maintained
-    label nActiveLayers = 0;
-    {
-        label layeri = 0;
-        forAll(zoneCellMinOrder, zoneCellMinOrderi)
-        {
-            const label zoneCelli = zoneCellMinOrder[zoneCellMinOrderi];
-
-            // Find the next relevant layer
-            while (zoneCellMinXs[zoneCelli] > plotXs[layeri + 1])
-            {
-                layeri ++;
-            }
-
-            // Find the first irrelevant layer
-            label layerj = layeri;
-            while (zoneCellMaxXs[zoneCelli] > plotXs[max(layerj - 1, 0)])
-            {
-                layerj ++;
-            }
-
-            nActiveLayers = max(nActiveLayers, layerj - layeri + 1);
-        }
-    }
-
-    // Storage for face cut and face functions data
-    faceCutData fcd(mesh_, nActiveLayers, pointXs, plotXs);
-    faceFsData ffs(fcd, mesh_, nActiveLayers, pointXs, plotXs);
-
-    // Generate weights for each cell in turn
-    DynamicList<weight> dynWeights(zone_.nCells()*2);
-    label layeri = 0;
-    forAll(zoneCellMinOrder, zoneCellMinOrderi)
-    {
-        const label zoneCelli = zoneCellMinOrder[zoneCellMinOrderi];
-        const label celli = zone_.celli(zoneCelli);
-
-        // Find the next relevant layer and remove all data relating to
-        // layers now behind the spans of the remaining cells
-        while (zoneCellMinXs[zoneCelli] > plotXs[layeri + 1])
-        {
-            if (layeri != 0) fcd.clear(layeri - 1);
-            ffs.clear(layeri);
-            layeri ++;
-        }
-
-        // Loop over all relevant layers
-        label layerj = layeri;
-        while (zoneCellMaxXs[zoneCelli] > plotXs[max(layerj - 1, 0)])
-        {
-            // Compute the connected face data as necessary
-            if (layerj != 0) fcd.cache(celli, layerj - 1);
-            fcd.cache(celli, layerj);
-            if (layerj != nLayers_ - 1) fcd.cache(celli, layerj + 1);
-            ffs.cache(celli, layerj);
-
-            // Add a new weight
-            dynWeights.append({celli, layerj, 0});
-
-            // Get the cell cuts for the middle of the layer. These will be
-            // used twice. The cuts for the left and right will only be used
-            // once and hence don't need to be stored. They are evaluated
-            // inline below.
-            const labelListList cCutsMid =
-                cutPoly::cellCuts
-                (
-                    cells[celli],
-                    cAddrs[celli],
-                    faces,
-                    fcd.faceCuts(layerj),
-                    pointXs,
-                    plotXs[layerj]
-                );
-
-            // Left interval
-            if
-            (
-                layerj > 0
-             && zoneCellMinXs[zoneCelli] < plotXs[layerj]
-            )
-            {
-                const scalar cellVF =
-                    cutPoly::cellVolumeIntegral
-                    (
-                        cells[celli],
-                        cAddrs[celli],
-                        faceAreas,
-                        faceCentres,
-                        ffs.faceFs(layerj)[0]
-                    ).second();
-
-                // Add the whole cell's contribution
-                dynWeights.last().value += cellVF;
-
-                // Cut off anything before the left point
-                if (zoneCellMinXs[zoneCelli] < plotXs[layerj - 1])
-                {
-                    dynWeights.last().value -=
-                        cutPoly::cellCutVolumeIntegral
-                        (
-                            cells[celli],
-                            cAddrs[celli],
-                            cellVolumes[celli],
-                            cellVF/cellVolumes[celli],
-                            cutPoly::cellCuts
-                            (
-                                cells[celli],
-                                cAddrs[celli],
-                                faces,
-                                fcd.faceCuts(layerj - 1),
-                                pointXs,
-                                plotXs[layerj - 1]
-                            ),
-                            faces,
-                            faceAreas,
-                            faceCentres,
-                            ffs.faceFs(layerj)[0],
-                            fcd.faceCutAreas(layerj - 1)[0],
-                            ffs.faceCutFs(layerj)[0][0],
-                            points,
-                            ffs.pointFs(layerj)[0],
-                            pointXs,
-                            plotXs[layerj - 1],
-                            true
-                        ).second();
-                }
-
-                // Cut off anything after the middle point
-                if (zoneCellMaxXs[zoneCelli] > plotXs[layerj])
-                {
-                    dynWeights.last().value -=
-                        cutPoly::cellCutVolumeIntegral
-                        (
-                            cells[celli],
-                            cAddrs[celli],
-                            cellVolumes[celli],
-                            cellVF/cellVolumes[celli],
-                            cCutsMid,
-                            faces,
-                            faceAreas,
-                            faceCentres,
-                            ffs.faceFs(layerj)[0],
-                            fcd.faceCutAreas(layerj)[1],
-                            ffs.faceCutFs(layerj)[0][1],
-                            points,
-                            ffs.pointFs(layerj)[0],
-                            pointXs,
-                            plotXs[layerj],
-                            false
-                        ).second();
-                }
-            }
-
-            // Right interval
-            if
-            (
-                layerj < nLayers_ - 1
-             && zoneCellMaxXs[zoneCelli] > plotXs[layerj]
-            )
-            {
-                const scalar cellVF =
-                    cutPoly::cellVolumeIntegral
-                    (
-                        cells[celli],
-                        cAddrs[celli],
-                        faceAreas,
-                        faceCentres,
-                        ffs.faceFs(layerj)[1]
-                    ).second();
-
-                // Add the whole cell's contribution
-                dynWeights.last().value += cellVF;
-
-                // Cut off anything before the middle point
-                if (zoneCellMinXs[zoneCelli] < plotXs[layerj])
-                {
-                    dynWeights.last().value -=
-                        cutPoly::cellCutVolumeIntegral
-                        (
-                            cells[celli],
-                            cAddrs[celli],
-                            cellVolumes[celli],
-                            cellVF/cellVolumes[celli],
-                            cCutsMid,
-                            faces,
-                            faceAreas,
-                            faceCentres,
-                            ffs.faceFs(layerj)[1],
-                            fcd.faceCutAreas(layerj)[0],
-                            ffs.faceCutFs(layerj)[1][0],
-                            points,
-                            ffs.pointFs(layerj)[1],
-                            pointXs,
-                            plotXs[layerj],
-                            true
-                        ).second();
-                }
-
-                // Cut off anything after the right point
-                if (zoneCellMaxXs[zoneCelli] > plotXs[layerj + 1])
-                {
-                    dynWeights.last().value -=
-                        cutPoly::cellCutVolumeIntegral
-                        (
-                            cells[celli],
-                            cAddrs[celli],
-                            cellVolumes[celli],
-                            cellVF/cellVolumes[celli],
-                            cutPoly::cellCuts
-                            (
-                                cells[celli],
-                                cAddrs[celli],
-                                faces,
-                                fcd.faceCuts(layerj + 1),
-                                pointXs,
-                                plotXs[layerj + 1]
-                            ),
-                            faces,
-                            faceAreas,
-                            faceCentres,
-                            ffs.faceFs(layerj)[1],
-                            fcd.faceCutAreas(layerj + 1)[1],
-                            ffs.faceCutFs(layerj)[1][1],
-                            points,
-                            ffs.pointFs(layerj)[1],
-                            pointXs,
-                            plotXs[layerj + 1],
-                            false
-                        ).second();
-                }
-            }
-
-            layerj ++;
-        }
-    }
-
-    // Transfer to non-dynamic storage
-    List<weight> weights;
-    weights.transfer(dynWeights);
-
-    // Normalise, if requested. Otherwise, double the weight values on the ends
-    // to account for the fact that these points only have half a basis function
-    // contributing to their sums.
-    if (normalise)
-    {
-        scalarField layerWeightSums(nLayers_, scalar(0));
-        forAll(weights, weighti)
-        {
-            layerWeightSums[weights[weighti].layeri] += weights[weighti].value;
-        }
-
-        Pstream::listCombineGather(layerWeightSums, plusEqOp<scalar>());
-        Pstream::listCombineScatter(layerWeightSums);
-
-        forAll(weights, weighti)
-        {
-            weights[weighti].value /=
-                (layerWeightSums[weights[weighti].layeri] + vSmall);
-        }
-    }
-    else
-    {
-        forAll(weights, weighti)
-        {
-            if
-            (
-                weights[weighti].layeri == 0
-             || weights[weighti].layeri == nLayers_ - 1
-            )
-            {
-                weights[weighti].value *= 2;
-            }
-        }
-    }
-
-    return weights;
-}
-
-
-Foam::List<Foam::functionObjects::cutLayerAverage::weight>
-Foam::functionObjects::cutLayerAverage::calcWeights
-(
-    const scalarField& pointXs,
-    const scalarField& zoneCellMinXs,
-    const scalarField& zoneCellMaxXs,
-    const labelList& zoneCellMinOrder,
-    const scalarField& plotXs,
-    const bool normalise
-) const
-{
-    return
-        interpolate_
-      ? calcInterpolatingWeights
-        (
-            pointXs,
-            zoneCellMinXs,
-            zoneCellMaxXs,
-            zoneCellMinOrder,
-            plotXs,
-            normalise
-        )
-      : calcNonInterpolatingWeights
-        (
-            pointXs,
-            zoneCellMinXs,
-            zoneCellMaxXs,
-            zoneCellMinOrder,
-            plotXs,
-            normalise
-        );
-}
-
-
 void Foam::functionObjects::cutLayerAverage::calcWeights()
 {
-    const cellList& cells = mesh_.cells();
-    const faceList& faces = mesh_.faces();
     const pointField& points = mesh_.points();
 
-    // If interpolating, then the layers and the plot points are coincident. If
-    // not interpolating, then the layers lie in between the plot points, so
-    // there is one more point than there are layers.
-    const label nPlot = interpolate_ ? nLayers_ : nLayers_ + 1;
-
-    // Calculate or get the point coordinates
+    // Calculate or lookup the point coordinates
     tmp<pointScalarField> tdistance =
         distanceName_ == word::null
       ? tmp<pointScalarField>(nullptr)
@@ -919,170 +86,33 @@ void Foam::functionObjects::cutLayerAverage::calcWeights()
       : tmp<scalarField>(tdistance().primitiveField());
     const scalarField& pointXs = tpointXs();
 
-    // Determine face min and max coordinates
-    scalarField zoneCellMinXs(zone_.nCells(), vGreat);
-    scalarField zoneCellMaxXs(zone_.nCells(), -vGreat);
-    forAll(zoneCellMinXs, zoneCelli)
-    {
-        const label celli = zone_.celli(zoneCelli);
-        forAll(cells[celli], cellFacei)
-        {
-            const label facei = cells[celli][cellFacei];
-            forAll(faces[facei], facePointi)
-            {
-                const label pointi = faces[facei][facePointi];
-                zoneCellMinXs[zoneCelli] =
-                    min(zoneCellMinXs[zoneCelli], pointXs[pointi]);
-                zoneCellMaxXs[zoneCelli] =
-                    max(zoneCellMaxXs[zoneCelli], pointXs[pointi]);
-            }
-        }
-    }
-
-    // Create orderings of the cells based on their min and max coordinates
-    labelList zoneCellMinOrder(zone_.nCells());
-    sortedOrder(zoneCellMinXs, zoneCellMinOrder);
-
-    // Assume equal spacing to begin with
-    const scalar xMin = gMin(pointXs), xMax = gMax(pointXs);
-    scalarField plotXs
+    // Calculate the cut coordinates and the weights
+    const scalarField cutXs
     (
-        (xMin + scalarList(identityMap(nPlot))/(nPlot - 1)*(xMax - xMin))
+        cellCutPlot::calcCutXs
+        (
+            mesh(),
+            zone_,
+            pointXs,
+            interpolate_,
+            interpolate_ ? nLayers_ : nLayers_ + 1,
+            nOptimiseIter_,
+            debug,
+            name(),
+            formatter_()
+        )
     );
-
-    // Names and fields for debug output of the counts, to observe the effect
-    // of iterative improvement of the spacing
-    wordList fieldNames;
-    #define DeclareTypeFieldValues(Type, nullArg) \
-        PtrList<Field<Type>> Type##FieldValues;
-    FOR_ALL_FIELD_TYPES(DeclareTypeFieldValues);
-    #undef DeclareTypeFieldValues
-
-    // Iteratively optimise the spacing between the plot points to achieve an
-    // approximately equal number of data points in each interval
-    for (label iteri = 0; iteri < nOptimiseIter_ + debug; ++ iteri)
-    {
-        // Determine the count of faces that contribute to each layer
-        const List<weight> weights =
-            calcWeights
-            (
-                pointXs,
-                zoneCellMinXs,
-                zoneCellMaxXs,
-                zoneCellMinOrder,
-                plotXs,
-                false
-            );
-        const scalarField layerCounts
-        (
-            applyWeights<scalar>(weights, (1/mesh_.V())())
-        );
-
-        if (debug)
-        {
-            const label nFields0 = (2 + !interpolate_)*iteri;
-            const label nFields = (2 + !interpolate_)*(iteri + 1);
-
-            fieldNames.resize(nFields);
-            #define ResizeTypeFieldValues(Type, nullArg) \
-                Type##FieldValues.resize(nFields);
-            FOR_ALL_FIELD_TYPES(ResizeTypeFieldValues);
-            #undef ResizeTypeFieldValues
-
-            if (!interpolate_)
-            {
-                const SubField<scalar> distance0s(plotXs, nLayers_);
-                const SubField<scalar> distance1s(plotXs, nLayers_, 1);
-
-                fieldNames[nFields0] = "distance-" + Foam::name(iteri);
-                scalarFieldValues.set(nFields0, (distance0s + distance1s)/2);
-
-                fieldNames[nFields0 + 1] = "thickness-" + Foam::name(iteri);
-                scalarFieldValues.set(nFields0 + 1, distance1s - distance0s);
-            }
-            else
-            {
-                fieldNames[nFields0] = "distance-" + Foam::name(iteri);
-                scalarFieldValues.set(nFields0, new scalarField(plotXs));
-            }
-
-            fieldNames[nFields - 1] = "count-" + Foam::name(iteri);
-            scalarFieldValues.set(nFields - 1, new scalarField(layerCounts));
-
-            if (iteri == nOptimiseIter_) break;
-        }
-
-        // Do a cumulative sum of the layer counts across all plot points
-        scalarField plotSumCounts(nPlot, 0);
-        for (label ploti = 0; ploti < nPlot - 1; ++ ploti)
-        {
-            plotSumCounts[ploti + 1] =
-                plotSumCounts[ploti]
-              + (
-                    interpolate_
-                  ? (layerCounts[ploti + 1] + layerCounts[ploti])/2
-                  : layerCounts[ploti]
-                );
-        }
-
-        // Compute the desired count in each interval
-        const scalar plotDeltaCount = plotSumCounts.last()/(nPlot - 1);
-
-        // Compute the new spacing between the points
-        scalarField plot0Xs(plotXs);
-        plotXs = -vGreat;
-        plotXs.first() = xMin;
-        label ploti = 1;
-        for (label ploti0 = 0; ploti0 < nPlot - 1; ++ ploti0)
-        {
-            while
-            (
-                ploti < nPlot
-             && plotSumCounts[ploti0 + 1] > ploti*plotDeltaCount
-            )
-            {
-                const scalar f =
-                    (ploti*plotDeltaCount - plotSumCounts[ploti0])
-                   /(plotSumCounts[ploti0 + 1] - plotSumCounts[ploti0]);
-
-                plotXs[ploti] = (1 - f)*plot0Xs[ploti0] + f*plot0Xs[ploti0 + 1];
-
-                ploti ++;
-            }
-        }
-        plotXs.last() = xMax;
-    }
-
-    if (debug)
-    {
-        mkDir(outputPath());
-
-        formatter_->write
-        (
-            outputPath(),
-            typeName + "_count",
-            coordSet(labelList(nLayers_, 1)),
-            fieldNames
-            #define TypeFieldValuesParameter(Type, nullArg) \
-                , Type##FieldValues
-            FOR_ALL_FIELD_TYPES(TypeFieldValuesParameter)
-            #undef TypeFieldValuesParameter
-        );
-    }
-
-    // Finally, calculate the actual normalised interpolation weights
     weights_.reset
     (
-        new List<weight>
+        new List<cellCutPlot::weight>
         (
-            calcWeights
+            cellCutPlot::calcWeights
             (
+                mesh(),
+                zone_,
                 pointXs,
-                zoneCellMinXs,
-                zoneCellMaxXs,
-                zoneCellMinOrder,
-                plotXs,
-                true
+                cutXs,
+                interpolate_
             )
         )
     );
@@ -1090,82 +120,44 @@ void Foam::functionObjects::cutLayerAverage::calcWeights()
     // Calculate plot coordinates and widths
     if (interpolate_)
     {
-        layerDistances_.reset(new scalarField(plotXs));
+        layerDistances_.reset(new scalarField(cutXs));
     }
     else
     {
-        const SubField<scalar> distance0s(plotXs, nLayers_);
-        const SubField<scalar> distance1s(plotXs, nLayers_, 1);
+        const SubField<scalar> distance0s(cutXs, nLayers_);
+        const SubField<scalar> distance1s(cutXs, nLayers_, 1);
         layerDistances_.reset(((distance0s + distance1s)/2).ptr());
         layerThicknesses_.reset((distance1s - distance0s).ptr());
     }
 
-    // Calculate the plot positions
+    // Calculate the layer positions
     layerPositions_.reset
     (
-        applyWeights<vector>(weights_, mesh_.C()).ptr()
+        cutPlot::applyWeights<vector>
+        (
+            nLayers_,
+            weights_,
+            mesh().cellCentres()
+        ).ptr()
     );
 
     if (debug)
     {
-        const List<weight> weights =
-            calcWeights
-            (
-                pointXs,
-                zoneCellMinXs,
-                zoneCellMaxXs,
-                zoneCellMinOrder,
-                plotXs,
-                false
-            );
-
-        volTensorField::Internal layers
+        cellCutPlot::writeLayers
         (
-            IOobject
-            (
-                name() + ":layers",
-                mesh_.time().name(),
-                mesh()
-            ),
             mesh(),
-            dimensionedTensor(dimless, tensor::zero)
+            cellCutPlot::calcWeights
+            (
+                mesh(),
+                zone_,
+                pointXs,
+                cutXs,
+                interpolate_,
+                false
+            ),
+            name()
         );
-
-        forAll(weights, weighti)
-        {
-            const weight& w = weights[weighti];
-
-            layers[w.celli][w.layeri % tensor::nComponents] =
-                w.value/mesh_.V()[w.celli];
-        }
-
-        Info<< name() << ": Writing " << layers.name() << endl;
-
-        layers.write();
     }
-}
-
-
-template<class Type>
-inline Foam::tmp<Foam::Field<Type>>
-Foam::functionObjects::cutLayerAverage::applyWeights
-(
-    const List<weight>& weights,
-    const VolInternalField<Type>& cellValues
-) const
-{
-    tmp<Field<Type>> tLayerValues(new Field<Type>(nLayers_, Zero));
-
-    forAll(weights, weighti)
-    {
-        tLayerValues.ref()[weights[weighti].layeri] +=
-            weights[weighti].value*cellValues[weights[weighti].celli];
-    }
-
-    Pstream::listCombineGather(tLayerValues.ref(), plusEqOp<Type>());
-    Pstream::listCombineScatter(tLayerValues.ref());
-
-    return tLayerValues;
 }
 
 
@@ -1331,7 +323,7 @@ bool Foam::functionObjects::cutLayerAverage::write()
                 Type##FieldValues.set                                         \
                 (                                                             \
                     fieldi,                                                   \
-                    applyWeights<Type>(weights_, field) \
+                    cutPlot::applyWeights<Type>(nLayers_, weights_, field)    \
                 );                                                            \
             }
         FOR_ALL_FIELD_TYPES(CollapseTypeFields, VolField);

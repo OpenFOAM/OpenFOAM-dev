@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,8 +84,8 @@ SourceFiles
 #define cutLayerAverage_H
 
 #include "fvMeshFunctionObject.H"
-#include "volFieldsFwd.H"
 #include "generatedCellZone.H"
+#include "cutPlot.H"
 #include "setWriter.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -106,16 +106,6 @@ class cutLayerAverage
 :
     public fvMeshFunctionObject
 {
-    // Private Structures
-
-        //- Weight for a given cell and layer
-        struct weight
-        {
-            label celli, layeri;
-            scalar value;
-        };
-
-
     // Private Data
 
         //- The set of cells to average
@@ -146,7 +136,7 @@ class cutLayerAverage
         label nOptimiseIter_;
 
         //- Weights
-        autoPtr<List<weight>> weights_;
+        autoPtr<List<cutPlot::weight>> weights_;
 
         //- Layer distances. The distance of the layers' cut-planes to the
         //  origin, in the direction of the given vector. If interpolate is
@@ -166,49 +156,8 @@ class cutLayerAverage
         //- Return the output path
         fileName outputPath() const;
 
-        //- Calculate and return non-interpolating weights
-        List<weight> calcNonInterpolatingWeights
-        (
-            const scalarField& pointXs,
-            const scalarField& zoneCellMinXs,
-            const scalarField& zoneCellMaxXs,
-            const labelList& zoneCellMinOrder,
-            const scalarField& plotXs,
-            const bool normalise = true
-        ) const;
-
-        //- Calculate and return interpolating weights
-        List<weight> calcInterpolatingWeights
-        (
-            const scalarField& pointXs,
-            const scalarField& zoneCellMinXs,
-            const scalarField& zoneCellMaxXs,
-            const labelList& zoneCellMinOrder,
-            const scalarField& plotXs,
-            const bool normalise = true
-        ) const;
-
-        //- Calculate and return weights
-        List<weight> calcWeights
-        (
-            const scalarField& pointXs,
-            const scalarField& zoneCellMinXs,
-            const scalarField& zoneCellMaxXs,
-            const labelList& zoneCellMinOrder,
-            const scalarField& plotXs,
-            const bool normalise = true
-        ) const;
-
         //- Calculate and set the weights member data
         void calcWeights();
-
-        //- Construct plot values from cell values given a set of weights
-        template<class Type>
-        inline tmp<Field<Type>> applyWeights
-        (
-            const List<weight>& weights,
-            const VolInternalField<Type>& cellValues
-        ) const;
 
         //- Clear the cached weights
         void clear();
