@@ -31,15 +31,15 @@ License
 
 const Foam::treeBoundBox Foam::treeBoundBox::greatBox
 (
-    vector::min,
-    vector::max
+    vector::rootMin/2,
+    vector::rootMax/2
 );
 
 
 const Foam::treeBoundBox Foam::treeBoundBox::invertedBox
 (
-    vector::max,
-    vector::min
+    vector::rootMax/2,
+    vector::rootMin/2
 );
 
 

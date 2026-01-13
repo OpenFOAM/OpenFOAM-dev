@@ -31,14 +31,15 @@ License
 
 const Foam::boundBox Foam::boundBox::greatBox
 (
-    vector::min,
-    vector::max
+    vector::rootMin/2,
+    vector::rootMax/2
 );
+
 
 const Foam::boundBox Foam::boundBox::invertedBox
 (
-    vector::max,
-    vector::min
+    vector::rootMax/2,
+    vector::rootMin/2
 );
 
 
@@ -54,15 +55,14 @@ void Foam::boundBox::calculate(const UList<point>& points, const bool doReduce)
         if (doReduce && Pstream::parRun())
         {
             // Use values that get overwritten by reduce minOp, maxOp below
-            min_ = vector::max;
-            max_ = vector::min;
+            min_ = vector::rootMax/2;
+            max_ = vector::rootMin/2;
         }
     }
     else
     {
         min_ = points[0];
         max_ = points[0];
-
 
         for (label i = 1; i < points.size(); i++)
         {
@@ -116,8 +116,8 @@ Foam::boundBox::boundBox
         if (doReduce && Pstream::parRun())
         {
             // Use values that get overwritten by reduce minOp, maxOp below
-            min_ = vector::max;
-            max_ = vector::min;
+            min_ = vector::rootMax/2;
+            max_ = vector::rootMin/2;
         }
     }
     else
