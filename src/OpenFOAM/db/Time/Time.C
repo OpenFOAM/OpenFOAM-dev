@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -626,6 +626,19 @@ Foam::Time::~Time()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+Foam::wordList Foam::Time::regionNames() const
+{
+    if (controlDict_.found("regionSolvers"))
+    {
+        return controlDict_.subDict("regionSolvers").toc();
+    }
+    else
+    {
+        return wordList::null();
+    }
+}
+
 
 Foam::word Foam::Time::timeName(const scalar t, const int precision)
 {

@@ -1,7 +1,7 @@
 const Foam::wordList regionNames
 (
     args.optionFound("allRegions")
-  ? runTime .controlDict().subDict("regionSolvers").toc()
+  ? runTime.regionNames()
   : wordList
     (
         1,
