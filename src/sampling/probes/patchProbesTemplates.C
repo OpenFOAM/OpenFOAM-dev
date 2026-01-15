@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,14 +27,10 @@ License
 #include "volFields.H"
 #include "IOmanip.H"
 
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-void Foam::patchProbes::sampleAndWrite
-(
-    const VolField<Type>& vField
-)
+void Foam::patchProbes::sampleAndWrite(const VolField<Type>& vField)
 {
     Field<Type> values(sample(vField));
 
@@ -57,10 +53,7 @@ void Foam::patchProbes::sampleAndWrite
 
 
 template<class Type>
-void Foam::patchProbes::sampleAndWrite
-(
-    const SurfaceField<Type>& sField
-)
+void Foam::patchProbes::sampleAndWrite(const SurfaceField<Type>& sField)
 {
     Field<Type> values(sample(sField));
 
@@ -83,10 +76,7 @@ void Foam::patchProbes::sampleAndWrite
 
 
 template<class Type>
-void Foam::patchProbes::sampleAndWrite
-(
-    const fieldGroup<Type>& fields
-)
+void Foam::patchProbes::sampleAndWrite(const fieldGroup<Type>& fields)
 {
     forAll(fields, fieldi)
     {
@@ -95,14 +85,12 @@ void Foam::patchProbes::sampleAndWrite
         if
         (
             iter != objectRegistry::end()
-         && iter()->type()
-         == VolField<Type>::typeName
+         && iter()->type() == VolField<Type>::typeName
         )
         {
             sampleAndWrite
             (
-                mesh_.lookupObject
-                <VolField<Type>>
+                mesh_.lookupObject<VolField<Type>>
                 (
                     fields[fieldi]
                 )
@@ -125,14 +113,12 @@ void Foam::patchProbes::sampleAndWriteSurfaceFields
         if
         (
             iter != objectRegistry::end()
-         && iter()->type()
-         == SurfaceField<Type>::typeName
+         && iter()->type() == SurfaceField<Type>::typeName
         )
         {
             sampleAndWrite
             (
-                mesh_.lookupObject
-                <SurfaceField<Type>>
+                mesh_.lookupObject<SurfaceField<Type>>
                 (
                     fields[fieldi]
                 )
@@ -142,35 +128,64 @@ void Foam::patchProbes::sampleAndWriteSurfaceFields
 }
 
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
 template<class Type>
 Foam::tmp<Foam::Field<Type>>
-Foam::patchProbes::sample
-(
-    const VolField<Type>& vField
-) const
+Foam::patchProbes::sample(const VolField<Type>& vField) const
 {
     const Type unsetVal(-vGreat*pTraits<Type>::one);
 
     tmp<Field<Type>> tValues
     (
-        new Field<Type>(this->size(), unsetVal)
+        new Field<Type>(locations_.size(), unsetVal)
     );
 
     Field<Type>& values = tValues.ref();
 
     const polyBoundaryMesh& patches = mesh_.boundaryMesh();
 
-    forAll(*this, probei)
+    forAll(locations_, probei)
     {
-        label facei = elementList_[probei];
+        label facei = faceList_[probei];
 
         if (facei >= 0)
         {
             label patchi = patches.whichPatch(facei);
             label localFacei = patches[patchi].whichFace(facei);
             values[probei] = vField.boundaryField()[patchi][localFacei];
+        }
+    }
+
+    Pstream::listCombineGather(values, isNotEqOp<Type>());
+    Pstream::listCombineScatter(values);
+
+    return tValues;
+}
+
+
+template<class Type>
+Foam::tmp<Foam::Field<Type>>
+Foam::patchProbes::sample(const SurfaceField<Type>& sField) const
+{
+    const Type unsetVal(-vGreat*pTraits<Type>::one);
+
+    tmp<Field<Type>> tValues
+    (
+        new Field<Type>(locations_.size(), unsetVal)
+    );
+
+    Field<Type>& values = tValues.ref();
+
+    const polyBoundaryMesh& patches = mesh_.boundaryMesh();
+
+    forAll(locations_, probei)
+    {
+        label facei = faceList_[probei];
+
+        if (facei >= 0)
+        {
+            label patchi = patches.whichPatch(facei);
+            label localFacei = patches[patchi].whichFace(facei);
+            values[probei] = sField.boundaryField()[patchi][localFacei];
         }
     }
 
@@ -195,39 +210,4 @@ Foam::patchProbes::sample(const word& fieldName) const
 }
 
 
-template<class Type>
-Foam::tmp<Foam::Field<Type>>
-Foam::patchProbes::sample
-(
-    const SurfaceField<Type>& sField
-) const
-{
-    const Type unsetVal(-vGreat*pTraits<Type>::one);
-
-    tmp<Field<Type>> tValues
-    (
-        new Field<Type>(this->size(), unsetVal)
-    );
-
-    Field<Type>& values = tValues.ref();
-
-    const polyBoundaryMesh& patches = mesh_.boundaryMesh();
-
-    forAll(*this, probei)
-    {
-        label facei = elementList_[probei];
-
-        if (facei >= 0)
-        {
-            label patchi = patches.whichPatch(facei);
-            label localFacei = patches[patchi].whichFace(facei);
-            values[probei] = sField.boundaryField()[patchi][localFacei];
-        }
-    }
-
-    Pstream::listCombineGather(values, isNotEqOp<Type>());
-    Pstream::listCombineScatter(values);
-
-    return tValues;
-}
 // ************************************************************************* //

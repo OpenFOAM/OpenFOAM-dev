@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,10 +64,7 @@ public:
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-void Foam::probes::sampleAndWrite
-(
-    const VolField<Type>& vField
-)
+void Foam::probes::sampleAndWrite(const VolField<Type>& vField)
 {
     Field<Type> values(sample(vField));
 
@@ -90,10 +87,7 @@ void Foam::probes::sampleAndWrite
 
 
 template<class Type>
-void Foam::probes::sampleAndWrite
-(
-    const SurfaceField<Type>& sField
-)
+void Foam::probes::sampleAndWrite(const SurfaceField<Type>& sField)
 {
     Field<Type> values(sample(sField));
 
@@ -125,14 +119,12 @@ void Foam::probes::sampleAndWrite(const fieldGroup<Type>& fields)
         if
         (
             iter != objectRegistry::end()
-         && iter()->type()
-         == VolField<Type>::typeName
+         && iter()->type() == VolField<Type>::typeName
         )
         {
             sampleAndWrite
             (
-                mesh_.lookupObject
-                <VolField<Type>>
+                mesh_.lookupObject<VolField<Type>>
                 (
                     fields[fieldi]
                 )
@@ -152,14 +144,12 @@ void Foam::probes::sampleAndWriteSurfaceFields(const fieldGroup<Type>& fields)
         if
         (
             iter != objectRegistry::end()
-         && iter()->type()
-         == SurfaceField<Type>::typeName
+         && iter()->type() == SurfaceField<Type>::typeName
         )
         {
             sampleAndWrite
             (
-                mesh_.lookupObject
-                <SurfaceField<Type>>
+                mesh_.lookupObject<SurfaceField<Type>>
                 (
                     fields[fieldi]
                 )
@@ -169,20 +159,15 @@ void Foam::probes::sampleAndWriteSurfaceFields(const fieldGroup<Type>& fields)
 }
 
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
 template<class Type>
 Foam::tmp<Foam::Field<Type>>
-Foam::probes::sample
-(
-    const VolField<Type>& vField
-) const
+Foam::probes::sample(const VolField<Type>& vField) const
 {
     const Type unsetVal(-vGreat*pTraits<Type>::one);
 
     tmp<Field<Type>> tValues
     (
-        new Field<Type>(this->size(), unsetVal)
+        new Field<Type>(locations_.size(), unsetVal)
     );
 
     Field<Type>& values = tValues.ref();
@@ -194,16 +179,16 @@ Foam::probes::sample
             interpolation<Type>::New(interpolationScheme_, vField)
         );
 
-        forAll(*this, probei)
+        forAll(locations_, probei)
         {
-            if (elementList_[probei] >= 0)
+            if (cellList_[probei] >= 0)
             {
-                const vector& position = operator[](probei);
+                const vector& position = locations_[probei];
 
                 values[probei] = interpolator().interpolate
                 (
                     position,
-                    elementList_[probei],
+                    cellList_[probei],
                     -1
                 );
             }
@@ -211,12 +196,40 @@ Foam::probes::sample
     }
     else
     {
-        forAll(*this, probei)
+        forAll(locations_, probei)
         {
-            if (elementList_[probei] >= 0)
+            if (cellList_[probei] >= 0)
             {
-                values[probei] = vField[elementList_[probei]];
+                values[probei] = vField[cellList_[probei]];
             }
+        }
+    }
+
+    Pstream::listCombineGather(values, isNotEqOp<Type>());
+    Pstream::listCombineScatter(values);
+
+    return tValues;
+}
+
+
+template<class Type>
+Foam::tmp<Foam::Field<Type>>
+Foam::probes::sample(const SurfaceField<Type>& sField) const
+{
+    const Type unsetVal(-vGreat*pTraits<Type>::one);
+
+    tmp<Field<Type>> tValues
+    (
+        new Field<Type>(locations_.size(), unsetVal)
+    );
+
+    Field<Type>& values = tValues.ref();
+
+    forAll(locations_, probei)
+    {
+        if (faceList_[probei] >= 0)
+        {
+            values[probei] = sField[faceList_[probei]];
         }
     }
 
@@ -243,37 +256,6 @@ Foam::probes::sample(const word& fieldName) const
 
 template<class Type>
 Foam::tmp<Foam::Field<Type>>
-Foam::probes::sample
-(
-    const SurfaceField<Type>& sField
-) const
-{
-    const Type unsetVal(-vGreat*pTraits<Type>::one);
-
-    tmp<Field<Type>> tValues
-    (
-        new Field<Type>(this->size(), unsetVal)
-    );
-
-    Field<Type>& values = tValues.ref();
-
-    forAll(*this, probei)
-    {
-        if (faceList_[probei] >= 0)
-        {
-            values[probei] = sField[faceList_[probei]];
-        }
-    }
-
-    Pstream::listCombineGather(values, isNotEqOp<Type>());
-    Pstream::listCombineScatter(values);
-
-    return tValues;
-}
-
-
-template<class Type>
-Foam::tmp<Foam::Field<Type>>
 Foam::probes::sampleSurfaceFields(const word& fieldName) const
 {
     return sample
@@ -284,5 +266,6 @@ Foam::probes::sampleSurfaceFields(const word& fieldName) const
         )
     );
 }
+
 
 // ************************************************************************* //

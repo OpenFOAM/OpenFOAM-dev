@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,6 @@ License
 #include "treeBoundBox.H"
 #include "treeDataFace.H"
 #include "addToRunTimeSelectionTable.H"
-
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -64,8 +63,8 @@ void Foam::patchProbes::findElements(const fvMesh& mesh)
             << exit(FatalError);
     }
 
-     // All the info for nearest. Construct to miss
-    List<RemoteData<scalar>> nearest(this->size());
+    // All the info for nearest. Construct to miss
+    List<RemoteData<scalar>> nearest(locations_.size());
 
     const polyPatch& pp = bm[patchi];
 
@@ -94,9 +93,9 @@ void Foam::patchProbes::findElements(const fvMesh& mesh)
             3.0                             // duplicity
         );
 
-        forAll(probeLocations(), probei)
+        forAll(locations_, probei)
         {
-            const point sample = probeLocations()[probei];
+            const point sample = locations_[probei];
 
             scalar span = boundaryTree.bb().mag();
 
@@ -152,7 +151,7 @@ void Foam::patchProbes::findElements(const fvMesh& mesh)
         InfoInFunction << endl;
         forAll(nearest, sampleI)
         {
-            Info<< "    " << sampleI << " coord:" << operator[](sampleI)
+            Info<< "    " << sampleI << " coord:" << locations_[sampleI]
                 << " found on processor:" << nearest[sampleI].proci
                 << " in local cell/face:" << nearest[sampleI].elementi
                 << endl;
@@ -160,12 +159,16 @@ void Foam::patchProbes::findElements(const fvMesh& mesh)
     }
 
     // Extract any local faces to sample
-    elementList_.setSize(nearest.size(), -1);
+    cellList_.setSize(nearest.size());
+    cellList_ = -1;
+    faceList_.setSize(nearest.size());
+    faceList_ = -1;
     forAll(nearest, sampleI)
     {
         if (nearest[sampleI].proci == Pstream::myProcNo())
         {
-            elementList_[sampleI] = nearest[sampleI].elementi;
+            cellList_[sampleI] = mesh.faceOwner()[nearest[sampleI].elementi];
+            faceList_[sampleI] = nearest[sampleI].elementi;
         }
     }
 }
@@ -180,15 +183,8 @@ Foam::patchProbes::patchProbes
     const dictionary& dict
 )
 :
-    probes(name, t, dict)
+    probes(name, t, dict, false)
 {
-    // When constructing probes above it will have called the
-    // probes::findElements (since the virtual mechanism not yet operating).
-    // Not easy to workaround (apart from feeding through flag into constructor)
-    // so clear out any cells found for now.
-    elementList_.clear();
-    faceList_.clear();
-
     read(dict);
 }
 
@@ -199,9 +195,28 @@ Foam::patchProbes::~patchProbes()
 {}
 
 
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+bool Foam::patchProbes::read(const dictionary& dict)
+{
+    const bool result = probes::read(dict, false);
+
+    dict.lookup("patchName") >> patchName_;
+
+    {
+        // Initialise cells to sample from supplied locations
+        findElements(mesh_);
+
+        prepare();
+    }
+
+    return result;
+}
+
+
 bool Foam::patchProbes::write()
 {
-    if (this->size() && prepare())
+    if (locations_.size() && prepare())
     {
         sampleAndWrite(scalarFields_);
         sampleAndWrite(vectorFields_);
@@ -217,13 +232,6 @@ bool Foam::patchProbes::write()
     }
 
     return true;
-}
-
-
-bool Foam::patchProbes::read(const dictionary& dict)
-{
-    dict.lookup("patchName") >> patchName_;
-    return probes::read(dict);
 }
 
 

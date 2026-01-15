@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,47 +66,32 @@ class patchProbes
 
     // Private Member Functions
 
+        //- Find elements containing patchProbes
+        virtual void findElements(const fvMesh&);
+
         //- Sample and write a particular volume field
         template<class Type>
-        void sampleAndWrite
-        (
-            const VolField<Type>&
-        );
-
+        void sampleAndWrite(const VolField<Type>&);
 
         //- Sample and write a particular surface field
         template<class Type>
-        void sampleAndWrite
-        (
-            const SurfaceField<Type>&
-        );
-
+        void sampleAndWrite(const SurfaceField<Type>&);
 
         //- Sample and write all the fields of the given type
         template<class Type>
         void sampleAndWrite(const fieldGroup<Type>&);
 
-
          //- Sample and write all the surface fields of the given type
         template<class Type>
         void sampleAndWriteSurfaceFields(const fieldGroup<Type>&);
 
-
         //- Sample a volume field at all locations
         template<class Type>
-        tmp<Field<Type>> sample
-        (
-            const VolField<Type>&
-        ) const;
-
+        tmp<Field<Type>> sample(const VolField<Type>&) const;
 
         //- Sample a surface field at all locations
         template<class Type>
-        tmp<Field<Type>> sample
-        (
-            const SurfaceField<Type>&
-        ) const;
-
+        tmp<Field<Type>> sample(const SurfaceField<Type>&) const;
 
         //- Sample a single field on all sample locations
         template<class Type>
@@ -144,9 +129,6 @@ public:
 
         //- Read
         virtual bool read(const dictionary&);
-
-        //- Find elements containing patchProbes
-        virtual void findElements(const fvMesh&);
 
 
     // Member Operators

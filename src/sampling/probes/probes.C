@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,10 +25,12 @@ License
 
 #include "probes.H"
 #include "volFields.H"
-#include "polyTopoChangeMap.H"
 #include "OSspecific.H"
 #include "writeFile.H"
 #include "meshSearch.H"
+#include "polyTopoChangeMap.H"
+#include "polyMeshMap.H"
+#include "polyDistributionMap.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -57,19 +59,19 @@ void Foam::probes::findElements(const fvMesh& mesh)
 
     const meshSearch& searchEngine = meshSearch::New(mesh_);
 
-    elementList_.clear();
-    elementList_.setSize(size());
+    cellList_.clear();
+    cellList_.setSize(locations_.size());
 
     faceList_.clear();
-    faceList_.setSize(size());
+    faceList_.setSize(locations_.size());
 
-    forAll(*this, probei)
+    forAll(locations_, probei)
     {
-        const vector& location = operator[](probei);
+        const vector& location = locations_[probei];
 
         const label celli = searchEngine.findCell(location);
 
-        elementList_[probei] = celli;
+        cellList_[probei] = celli;
 
         if (celli != -1)
         {
@@ -94,20 +96,20 @@ void Foam::probes::findElements(const fvMesh& mesh)
             faceList_[probei] = -1;
         }
 
-        if (debug && (elementList_[probei] != -1 || faceList_[probei] != -1))
+        if (debug && (cellList_[probei] != -1 || faceList_[probei] != -1))
         {
             Pout<< "probes : found point " << location
-                << " in cell " << elementList_[probei]
+                << " in cell " << cellList_[probei]
                 << " and face " << faceList_[probei] << endl;
         }
     }
 
 
     // Check if all probes have been found.
-    forAll(elementList_, probei)
+    forAll(cellList_, probei)
     {
-        const vector& location = operator[](probei);
-        label celli = elementList_[probei];
+        const vector& location = locations_[probei];
+        label celli = cellList_[probei];
         label facei = faceList_[probei];
 
         // Check at least one processor with cell.
@@ -135,15 +137,14 @@ void Foam::probes::findElements(const fvMesh& mesh)
         else
         {
             // Make sure location not on two domains.
-            if (elementList_[probei] != -1 && elementList_[probei] != celli)
+            if (cellList_[probei] != -1 && cellList_[probei] != celli)
             {
                 WarningInFunction
                     << "Location " << location
                     << " seems to be on multiple domains:"
-                    << " cell " << elementList_[probei]
+                    << " cell " << cellList_[probei]
                     << " on my domain " << Pstream::myProcNo()
-                        << " and cell " << celli << " on some other domain."
-                    << endl
+                    << " and cell " << celli << " on some other domain." << endl
                     << "This might happen if the probe location is on"
                     << " a processor patch. Change the location slightly"
                     << " to prevent this." << endl;
@@ -156,8 +157,7 @@ void Foam::probes::findElements(const fvMesh& mesh)
                     << " seems to be on multiple domains:"
                     << " cell " << faceList_[probei]
                     << " on my domain " << Pstream::myProcNo()
-                        << " and face " << facei << " on some other domain."
-                    << endl
+                    << " and face " << facei << " on some other domain." << endl
                     << "This might happen if the probe location is on"
                     << " a processor patch. Change the location slightly"
                     << " to prevent this." << endl;
@@ -191,7 +191,7 @@ Foam::label Foam::probes::prepare()
         if (debug)
         {
             Info<< "Probing fields: " << currentFields << nl
-                << "Probing locations: " << *this << nl
+                << "Probing locations: " << locations_ << nl
                 << endl;
         }
 
@@ -237,15 +237,14 @@ Foam::label Foam::probes::prepare()
             const unsigned int w = IOstream::defaultPrecision() + 7;
             os << setf(ios_base::left);
 
-            forAll(*this, probei)
+            forAll(locations_, probei)
             {
-                os<< "# Probe " << probei << ' ' << operator[](probei)
-                    << endl;
+                os<< "# Probe " << probei << ' ' << locations_[probei] << endl;
             }
 
             os  << setw(w) << "# Time";
 
-            forAll(*this, probei)
+            forAll(locations_, probei)
             {
                 os<< ' ' << setw(w) << probei;
             }
@@ -263,11 +262,11 @@ Foam::probes::probes
 (
     const word& name,
     const Time& t,
-    const dictionary& dict
+    const dictionary& dict,
+    const bool initialise
 )
 :
     functionObject(name, t),
-    pointField(0),
     mesh_
     (
         refCast<const fvMesh>
@@ -282,7 +281,7 @@ Foam::probes::probes
     fixedLocations_(true),
     interpolationScheme_("cell")
 {
-    read(dict);
+    read(dict, initialise);
 }
 
 
@@ -294,9 +293,10 @@ Foam::probes::~probes()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::probes::read(const dictionary& dict)
+bool Foam::probes::read(const dictionary& dict, const bool initialise)
 {
-    dict.lookup("probeLocations") >> *this;
+    dict.lookup("probeLocations") >> locations_;
+
     dict.lookup("fields") >> fields_;
 
     dict.readIfPresent("fixedLocations", fixedLocations_);
@@ -311,12 +311,21 @@ bool Foam::probes::read(const dictionary& dict)
         }
     }
 
-    // Initialise cells to sample from supplied locations
-    findElements(mesh_);
+    if (initialise)
+    {
+        // Initialise cells to sample from supplied locations
+        findElements(mesh_);
 
-    prepare();
+        prepare();
+    }
 
     return true;
+}
+
+
+bool Foam::probes::read(const dictionary& dict)
+{
+    return read(dict, true);
 }
 
 
@@ -334,7 +343,7 @@ bool Foam::probes::execute()
 
 bool Foam::probes::write()
 {
-    if (size() && prepare())
+    if (locations_.size() && prepare())
     {
         sampleAndWrite(scalarFields_);
         sampleAndWrite(vectorFields_);
@@ -357,7 +366,9 @@ void Foam::probes::movePoints(const polyMesh& mesh)
 {
     DebugInfo<< "probes: movePoints" << endl;
 
-    if (fixedLocations_ && &mesh == &mesh_)
+    if (&mesh != &mesh_) return;
+
+    if (fixedLocations_)
     {
         findElements(mesh_);
     }
@@ -368,10 +379,7 @@ void Foam::probes::topoChange(const polyTopoChangeMap& map)
 {
     DebugInfo<< "probes: topoChange" << endl;
 
-    if (&map.mesh() != &mesh_)
-    {
-        return;
-    }
+    if (&map.mesh() != &mesh_) return;
 
     if (fixedLocations_)
     {
@@ -387,12 +395,12 @@ void Foam::probes::topoChange(const polyTopoChangeMap& map)
         // 1. Update cells
         if (!map.reverseCellMap().empty())
         {
-            DynamicList<label> elems(elementList_.size());
+            DynamicList<label> elems(cellList_.size());
 
             const labelList& reverseMap = map.reverseCellMap();
-            forAll(elementList_, i)
+            forAll(cellList_, i)
             {
-                const label celli = elementList_[i];
+                const label celli = cellList_[i];
                 const label newCelli = reverseMap[celli];
 
                 if (newCelli == -1)
@@ -411,7 +419,7 @@ void Foam::probes::topoChange(const polyTopoChangeMap& map)
                 }
             }
 
-            elementList_.transfer(elems);
+            cellList_.transfer(elems);
         }
 
         // 2. Update faces
@@ -451,7 +459,50 @@ void Foam::probes::mapMesh(const polyMeshMap& map)
 {
     DebugInfo<< "probes: mapMesh" << endl;
 
+    if (&map.mesh() != &mesh_) return;
+
     findElements(mesh_);
+}
+
+
+void Foam::probes::distribute(const polyDistributionMap& map)
+{
+    DebugInfo<< "probes: distribute" << endl;
+
+    if (&map.mesh() != &mesh_) return;
+
+    // Distribute the list of cells and faces. There might be a cheaper way of
+    // doing this than distributing a full cell/face list. But this way is easy
+    // and readable and uses the polyDistributionMap at a high level without
+    // needing to think about the actual communication or addressing. And
+    // run-distribution shouldn't be happening too often. So it's fine.
+    auto distribute = []
+    (
+        const label nOldElements,
+        const distributionMap& elementMap,
+        labelList& probeElements
+    )
+    {
+        labelList elementProbes(nOldElements, -1);
+        forAll(probeElements, probei)
+        {
+            elementProbes[probeElements[probei]] = probei;
+        }
+
+        elementMap.distribute(elementProbes);
+
+        probeElements = -1;
+        forAll(elementProbes, elementi)
+        {
+            if (elementProbes[elementi] != -1)
+            {
+                probeElements[elementProbes[elementi]] = elementi;
+            }
+        }
+    };
+
+    distribute(map.nOldCells(), map.cellMap(), cellList_);
+    distribute(map.nOldFaces(), map.faceMap(), faceList_);
 }
 
 
