@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,14 +23,13 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "UBRhoFluidMulticomponentThermo.H"
-#include "ubRhoMulticomponentThermo.H"
-#include "surfaceFields.H"
+#include "URhoFluidMulticomponentThermo.H"
+#include "uRhoMulticomponentThermo.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class BaseThermo>
-Foam::UBRhoFluidMulticomponentThermo<BaseThermo>::UBRhoFluidMulticomponentThermo
+Foam::URhoFluidMulticomponentThermo<BaseThermo>::URhoFluidMulticomponentThermo
 (
     const fvMesh& mesh,
     const word& phaseName
@@ -43,8 +42,8 @@ Foam::UBRhoFluidMulticomponentThermo<BaseThermo>::UBRhoFluidMulticomponentThermo
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class BaseThermo>
-Foam::UBRhoFluidMulticomponentThermo<BaseThermo>::
-~UBRhoFluidMulticomponentThermo()
+Foam::URhoFluidMulticomponentThermo<BaseThermo>::
+~URhoFluidMulticomponentThermo()
 {}
 
 
@@ -52,7 +51,7 @@ Foam::UBRhoFluidMulticomponentThermo<BaseThermo>::
 
 template<class BaseThermo>
 Foam::tmp<Foam::volScalarField>
-Foam::UBRhoFluidMulticomponentThermo<BaseThermo>::Phi() const
+Foam::URhoFluidMulticomponentThermo<BaseThermo>::Phi() const
 {
     return this->volScalarFieldMixtureProperty
     (
@@ -64,7 +63,15 @@ Foam::UBRhoFluidMulticomponentThermo<BaseThermo>::Phi() const
 
 
 template<class BaseThermo>
-void Foam::UBRhoFluidMulticomponentThermo<BaseThermo>::reset
+Foam::PtrList<Foam::volScalarField::Internal>
+Foam::URhoFluidMulticomponentThermo<BaseThermo>::prompt() const
+{
+    return BaseThermo::mixtureType::prompt(this->Y());
+}
+
+
+template<class BaseThermo>
+void Foam::URhoFluidMulticomponentThermo<BaseThermo>::reset
 (
     volScalarField& b,
     volScalarField& c,
@@ -93,20 +100,6 @@ void Foam::UBRhoFluidMulticomponentThermo<BaseThermo>::reset
     {
         c.oldTimeRef(i) = 1.0 - b.oldTime(i);
     }
-}
-
-
-template<class BaseThermo>
-Foam::tmp<Foam::volScalarField>
-Foam::UBRhoFluidMulticomponentThermo<BaseThermo>::hf() const
-{
-    return this->volScalarFieldProperty
-    (
-        "hf",
-        dimEnergy/dimMass,
-        &BaseThermo::mixtureType::thermoMixture,
-        &BaseThermo::mixtureType::thermoMixtureType::hf
-    );
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -168,12 +168,12 @@ public:
 
     // Constructors
 
-        //- Construct from dictionary and ubRhoMulticomponentThermo
+        //- Construct from dictionary and uRhoMulticomponentThermo
         RaviPetersen
         (
             const dictionary& dict,
             const dictionary& coeffDict,
-            const ubRhoMulticomponentThermo&
+            const uRhoMulticomponentThermo&
         );
 
         //- Disallow default bitwise copy construction

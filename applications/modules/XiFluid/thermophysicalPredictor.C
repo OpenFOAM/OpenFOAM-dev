@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -277,24 +277,28 @@ void Foam::solvers::XiFluid::bSolve
     const volScalarField::Internal& bSource
 )
 {
-    PtrList<volScalarField>& Y = thermo_.bThermo().Y();
+    PtrList<volScalarField>& Yb = thermo_.bThermo().Y();
 
-    forAll(Y, i)
+    if (Yb.size())
     {
-        volScalarField& Yi = Y[i];
+        const PtrList<volScalarField::Internal> Yp(uThermo.prompt());
 
-        if (bThermo.solveSpecie(i))
+        forAll(Yb, i)
         {
-            //***HGW uThermo.Y(0) is the prompt bThermo.Y(0)
-            bSolve(Yi, cStab, phic, fvm::Su(-bSource*uThermo.Y(0)(), Yi));
+            volScalarField& Ybi = Yb[i];
+
+            if (bThermo.solveSpecie(i))
+            {
+                bSolve(Ybi, cStab, phic, fvm::Su(-bSource*Yp[i], Ybi));
+            }
+            else
+            {
+                Ybi.correctBoundaryConditions();
+            }
         }
-        else
-        {
-            Yi.correctBoundaryConditions();
-        }
+
+        thermo_.bThermo().normaliseY();
     }
-
-    thermo_.bThermo().normaliseY();
 
     HbSolve(cStab, phic, bSource);
 }
@@ -489,14 +493,24 @@ void Foam::solvers::XiFluid::thermophysicalPredictor()
         }
     }
 
+    // At the point of ignition initialise the burnt gas
+    // thermophysical properties
     if (ignited && !ignited_)
     {
         ignited_ = ignited;
 
-        if (uThermo.containsSpecie("fu"))
+        if (thermo_.bThermo().Y().size())
         {
-            //***HGW uThermo.Y("fu") is the prompt bThermo.Y("ft")
-            thermo_.bThermo().Y("ft") = uThermo.Y("fu");
+            const PtrList<volScalarField::Internal> Yp(uThermo.prompt());
+
+            // Approximate phic for Ybi boundary condition correction
+            const surfaceScalarField phic("phic", phi);
+
+            forAll(Yp, i)
+            {
+                thermo_.bThermo().Y(i).internalFieldRef() = Yp[i];
+                thermo_.bThermo().Y(i).correctBoundaryConditions();
+            }
         }
 
         thermo_.bThermo().he() = uThermo.ha() - bThermo.hf();

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,8 +46,8 @@ void Foam::ubCoupledTemperatureFvPatchScalarField::getThis
 
     const ubRhoThermo& thermo = XiFluid.thermo;
 
-    const ubRhoMulticomponentThermo& uThermo = thermo.uThermo();
-    const ubRhoMulticomponentThermo& bThermo = thermo.bThermo();
+    const uRhoMulticomponentThermo& uThermo = thermo.uThermo();
+    const bRhoMulticomponentThermo& bThermo = thermo.bThermo();
 
     const scalarField& alphau =
         thermo.alphau().boundaryField()[patch().index()];
@@ -129,8 +129,8 @@ void Foam::ubCoupledTemperatureFvPatchScalarField::getNbr
 
     const ubRhoThermo& thermo = XiFluid.thermo;
 
-    const ubRhoMulticomponentThermo& uThermo = thermo.uThermo();
-    const ubRhoMulticomponentThermo& bThermo = thermo.bThermo();
+    const uRhoMulticomponentThermo& uThermo = thermo.uThermo();
+    const bRhoMulticomponentThermo& bThermo = thermo.bThermo();
 
     const scalarField& alphau =
         thermo.alphau().boundaryField()[patch().index()];
@@ -179,8 +179,8 @@ void Foam::ubCoupledTemperatureFvPatchScalarField::getNbr
     );
 
     const ubRhoThermo& thermo = XiFluid.thermo;
-    const ubRhoMulticomponentThermo& uThermo = thermo.uThermo();
-    const ubRhoMulticomponentThermo& bThermo = thermo.bThermo();
+    const uRhoMulticomponentThermo& uThermo = thermo.uThermo();
+    const bRhoMulticomponentThermo& bThermo = thermo.bThermo();
 
     const scalarField& alphau =
         thermo.alphau().boundaryField()[patch().index()];

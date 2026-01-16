@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ SourceFiles
 #ifndef laminarFlameSpeed_H
 #define laminarFlameSpeed_H
 
-#include "ubRhoMulticomponentThermo.H"
+#include "uRhoMulticomponentThermo.H"
 #include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -61,7 +61,7 @@ protected:
 
     // Protected data
 
-        const ubRhoMulticomponentThermo& uThermo_;
+        const uRhoMulticomponentThermo& uThermo_;
 
 
 public:
@@ -80,7 +80,7 @@ public:
             (
                 const dictionary& dict,
                 const dictionary& coeffDict,
-                const ubRhoMulticomponentThermo& uThermo
+                const uRhoMulticomponentThermo& uThermo
             ),
             (dict, coeffDict, uThermo)
         );
@@ -88,11 +88,11 @@ public:
 
     // Constructors
 
-        //- Construct from dictionary and ubRhoMulticomponentThermo
+        //- Construct from dictionary and uRhoMulticomponentThermo
         laminarFlameSpeed
         (
             const dictionary&,
-            const ubRhoMulticomponentThermo&
+            const uRhoMulticomponentThermo&
         );
 
         //- Disallow default bitwise copy construction
@@ -104,7 +104,7 @@ public:
         static autoPtr<laminarFlameSpeed> New
         (
             const dictionary&,
-            const ubRhoMulticomponentThermo&
+            const uRhoMulticomponentThermo&
         );
 
 

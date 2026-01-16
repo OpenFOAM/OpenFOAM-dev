@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::ubRhoMulticomponentThermo
+    Foam::uRhoMulticomponentThermo
 
 Description
     Base-class for combustion fluid thermodynamic properties based on
@@ -32,16 +32,16 @@ See also
     Foam::basicThermo
 
 SourceFiles
-    ubRhoMulticomponentThermo.C
+    uRhoMulticomponentThermo.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef ubRhoMulticomponentThermo_H
-#define ubRhoMulticomponentThermo_H
+#ifndef uRhoMulticomponentThermo_H
+#define uRhoMulticomponentThermo_H
 
 #include "rhoFluidThermo.H"
 #include "fluidMulticomponentThermo.H"
-#include "UBRhoFluidMulticomponentThermo.H"
+#include "URhoFluidMulticomponentThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -49,10 +49,10 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class ubRhoMulticomponentThermo Declaration
+                     Class uRhoMulticomponentThermo Declaration
 \*---------------------------------------------------------------------------*/
 
-class ubRhoMulticomponentThermo
+class uRhoMulticomponentThermo
 :
     virtual public rhoFluidThermo,
     virtual public fluidMulticomponentThermo
@@ -70,7 +70,7 @@ public:
 
         //- The derived type
         template<class MixtureType>
-        using DerivedThermoType = UBRhoFluidMulticomponentThermo
+        using DerivedThermoType = URhoFluidMulticomponentThermo
         <
             FluidMulticomponentThermo
             <
@@ -84,12 +84,12 @@ public:
         //- The derived name
         static const word derivedThermoName()
         {
-            return "ubRhoThermo";
+            return "uRhoThermo";
         }
 
 
     //- Runtime type information
-    TypeName("ubRhoMulticomponentThermo");
+    TypeName("uRhoMulticomponentThermo");
 
 
     // Declare run-time constructor selection tables
@@ -97,7 +97,7 @@ public:
         declareRunTimeSelectionTable
         (
             autoPtr,
-            ubRhoMulticomponentThermo,
+            uRhoMulticomponentThermo,
             fvMesh,
             (const fvMesh& mesh, const word& phaseName),
             (mesh, phaseName)
@@ -107,7 +107,7 @@ public:
     // Selectors
 
         //- Standard selection based on fvMesh
-        static autoPtr<ubRhoMulticomponentThermo> New
+        static autoPtr<uRhoMulticomponentThermo> New
         (
             const fvMesh&,
             const word& phaseName=word::null
@@ -115,41 +115,39 @@ public:
 
 
     //- Destructor
-    virtual ~ubRhoMulticomponentThermo();
+    virtual ~uRhoMulticomponentThermo();
 
 
     // Member Functions
 
-        // Mass fractions
+        //- Return the fuel-oxidant equivalence ratio
+        virtual tmp<volScalarField> Phi() const = 0;
 
-            //- Return the fuel-oxidant equivalence ratio
-            virtual tmp<volScalarField> Phi() const = 0;
+        //- Return the prompt burnt gas composition
+        virtual PtrList<volScalarField::Internal> prompt() const = 0;
 
-            //- Reset the mixture to an unburnt state and update EGR
-            virtual void reset
-            (
-                volScalarField& b,
-                volScalarField& c,
-                const PtrList<volScalarField>& Yb,
-                const volScalarField& heb
-            ) = 0;
-
-        //- Standard enthalpy of formation [J/kg]
-        virtual tmp<volScalarField> hf() const = 0;
+        //- Reset the mixture to an unburnt state and update EGR
+        virtual void reset
+        (
+            volScalarField& b,
+            volScalarField& c,
+            const PtrList<volScalarField>& Yb,
+            const volScalarField& heb
+        ) = 0;
 };
 
 
 /*---------------------------------------------------------------------------*\
-              Class ubRhoMulticomponentThermo::composite Declaration
+              Class uRhoMulticomponentThermo::composite Declaration
 \*---------------------------------------------------------------------------*/
 
-class ubRhoMulticomponentThermo::composite
+class uRhoMulticomponentThermo::composite
 :
     public basicThermo::implementation,
     public rhoThermo::implementation,
     public fluidThermo::implementation,
     public multicomponentThermo::implementation,
-    public ubRhoMulticomponentThermo
+    public uRhoMulticomponentThermo
 {
 public:
 
@@ -183,10 +181,6 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "ubRhoMulticomponentThermoI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

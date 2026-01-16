@@ -16,7 +16,7 @@ FoamFile
 
 thermoType
 {
-    type            ubRhoThermo;
+    type            bRhoThermo;
     mixture         bInhomogeneousMixture;
     transport       sutherland;
     thermo          janaf;

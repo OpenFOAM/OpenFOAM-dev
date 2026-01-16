@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -171,6 +171,12 @@ public:
         (
             const scalarFieldListSlice&,
             const thermoMixtureType&
+        ) const;
+
+        //- Return the prompt burnt gas composition
+        PtrList<volScalarField::Internal> prompt
+        (
+            const PtrList<volScalarField>& Yu
         ) const;
 
         void reset

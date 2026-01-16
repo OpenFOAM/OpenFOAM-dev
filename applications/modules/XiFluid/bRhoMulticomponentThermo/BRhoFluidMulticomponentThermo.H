@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,19 +22,19 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::UBRhoFluidMulticomponentThermo
+    Foam::BRhoFluidMulticomponentThermo
 
 Description
     Thermo implementation based on compressibility with additional unburnt
     thermodynamic state
 
 SourceFiles
-    UBRhoFluidMulticomponentThermo.C
+    BRhoFluidMulticomponentThermo.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef UBRhoFluidMulticomponentThermo_H
-#define UBRhoFluidMulticomponentThermo_H
+#ifndef BRhoFluidMulticomponentThermo_H
+#define BRhoFluidMulticomponentThermo_H
 
 #include "RhoFluidThermo.H"
 
@@ -44,11 +44,11 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                   Class UBRhoFluidMulticomponentThermo Declaration
+                   Class BRhoFluidMulticomponentThermo Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BaseThermo>
-class UBRhoFluidMulticomponentThermo
+class BRhoFluidMulticomponentThermo
 :
     public RhoFluidThermo<BaseThermo>
 {
@@ -58,34 +58,20 @@ public:
     // Constructors
 
         //- Construct from mesh and phase name
-        UBRhoFluidMulticomponentThermo(const fvMesh&, const word& phaseName);
+        BRhoFluidMulticomponentThermo(const fvMesh&, const word& phaseName);
 
         //- Disallow default bitwise copy construction
-        UBRhoFluidMulticomponentThermo
+        BRhoFluidMulticomponentThermo
         (
-            const UBRhoFluidMulticomponentThermo<BaseThermo>&
+            const BRhoFluidMulticomponentThermo<BaseThermo>&
         ) = delete;
 
 
     //- Destructor
-    virtual ~UBRhoFluidMulticomponentThermo();
+    virtual ~BRhoFluidMulticomponentThermo();
 
 
     // Member Functions
-
-        // Mass fractions
-
-            //- Return the fuel-oxidant equivalence ratio
-            virtual tmp<volScalarField> Phi() const;
-
-            //- Reset the mixture to an unburnt state and update EGR
-            virtual void reset
-            (
-                volScalarField& b,
-                volScalarField& c,
-                const PtrList<volScalarField>& Yb,
-                const volScalarField& heb
-            );
 
         //- Standard enthalpy of formation [J/kg]
         virtual tmp<volScalarField> hf() const;
@@ -96,7 +82,7 @@ public:
         //- Disallow default bitwise assignment
         void operator=
         (
-            const UBRhoFluidMulticomponentThermo<BaseThermo>&
+            const BRhoFluidMulticomponentThermo<BaseThermo>&
         ) = delete;
 };
 
@@ -108,7 +94,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 #ifdef NoRepository
-    #include "UBRhoFluidMulticomponentThermo.C"
+    #include "BRhoFluidMulticomponentThermo.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

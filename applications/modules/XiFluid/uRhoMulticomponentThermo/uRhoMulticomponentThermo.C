@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,10 +23,34 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "DimensionedFieldListSlicer.H"
-#include "ubRhoMulticomponentThermo.H"
-#include "FieldListSlice.H"
+#include "uRhoMulticomponentThermo.H"
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+    defineTypeNameAndDebug(uRhoMulticomponentThermo, 0);
+    defineRunTimeSelectionTable(uRhoMulticomponentThermo, fvMesh);
+}
+
+
+// * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
+
+Foam::autoPtr<Foam::uRhoMulticomponentThermo>
+Foam::uRhoMulticomponentThermo::New
+(
+    const fvMesh& mesh,
+    const word& phaseName
+)
+{
+    return basicThermo::New<uRhoMulticomponentThermo>(mesh, phaseName);
+}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::uRhoMulticomponentThermo::~uRhoMulticomponentThermo()
+{}
+
 
 // ************************************************************************* //

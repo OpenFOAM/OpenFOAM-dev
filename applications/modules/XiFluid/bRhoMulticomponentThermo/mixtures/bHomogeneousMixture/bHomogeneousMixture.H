@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,18 +22,18 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::uHomogeneousMixture
+    Foam::bHomogeneousMixture
 
 Description
     Unburnt gas mixture for homogeneous lean, stoichiometric or rich conditions
 
 SourceFiles
-    uHomogeneousMixture.C
+    bHomogeneousMixture.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef uHomogeneousMixture_H
-#define uHomogeneousMixture_H
+#ifndef bHomogeneousMixture_H
+#define bHomogeneousMixture_H
 
 #include "dimensionedTypes.H"
 #include "FieldListSlice.H"
@@ -44,11 +44,11 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class uHomogeneousMixture Declaration
+                     Class bHomogeneousMixture Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ThermoType>
-class uHomogeneousMixture
+class bHomogeneousMixture
 {
 public:
 
@@ -68,11 +68,8 @@ private:
 
     // Private Data
 
-        //- Return the fuel-oxidant equivalence ratio
-        scalar Phi_;
-
-        //- Reactant thermodynamic model
-        thermoType reactants_;
+        //- Products thermodynamic model
+        thermoType products_;
 
 
 public:
@@ -80,10 +77,10 @@ public:
     // Constructors
 
         //- Construct from a dictionary
-        uHomogeneousMixture(const dictionary&);
+        bHomogeneousMixture(const dictionary&);
 
         //- Disallow default bitwise copy construction
-        uHomogeneousMixture(const uHomogeneousMixture<ThermoType>&) = delete;
+        bHomogeneousMixture(const bHomogeneousMixture<ThermoType>&) = delete;
 
 
     // Member Functions
@@ -91,13 +88,13 @@ public:
         //- Return the instantiated type name
         static word typeName()
         {
-            return "uHomogeneousMixture<" + ThermoType::typeName() + '>';
+            return "bHomogeneousMixture<" + ThermoType::typeName() + '>';
         }
 
         //- Return the specie names
         static wordList specieNames()
         {
-            return wordList::null();
+            return wordList();
         }
 
         //- Access the specie active flags
@@ -116,24 +113,7 @@ public:
 
         inline const ThermoType& specieThermo(const label speciei) const
         {
-            return reactants_;
-        }
-
-        //- Return the fuel-oxidant equivalence ratio
-        scalar Phi(const scalarFieldListSlice& Y) const
-        {
-            return Phi_;
-        }
-
-        void reset
-        (
-            const volScalarField& b,
-            PtrList<volScalarField>& Yu,
-            const volScalarField& c,
-            const PtrList<volScalarField>& Yb
-        ) const
-        {
-            NotImplemented;
+            return products_;
         }
 
         //- Return the mixture for thermodynamic properties
@@ -142,7 +122,7 @@ public:
             const scalarFieldListSlice&
         ) const
         {
-            return reactants_;
+            return products_;
         }
 
         //- Return the mixture for transport properties
@@ -151,7 +131,7 @@ public:
             const scalarFieldListSlice&
         ) const
         {
-            return reactants_;
+            return products_;
         }
 
         //- Return the mixture for transport properties
@@ -161,7 +141,7 @@ public:
             const thermoMixtureType&
         ) const
         {
-            return reactants_;
+            return products_;
         }
 
         //- Read dictionary
@@ -171,7 +151,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const uHomogeneousMixture<ThermoType>&) = delete;
+        void operator=(const bHomogeneousMixture<ThermoType>&) = delete;
 };
 
 
@@ -182,7 +162,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 #ifdef NoRepository
-    #include "uHomogeneousMixture.C"
+    #include "bHomogeneousMixture.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

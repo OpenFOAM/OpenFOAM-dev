@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,7 +91,7 @@ public:
         transport
         (
             const dictionary& dict,
-            const ubRhoMulticomponentThermo& thermo,
+            const uRhoMulticomponentThermo& thermo,
             const compressibleMomentumTransportModel& turbulence
         );
 

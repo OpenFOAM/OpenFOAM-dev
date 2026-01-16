@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ SourceFiles
 #ifndef SuModel_H
 #define SuModel_H
 
-#include "ubRhoMulticomponentThermo.H"
+#include "uRhoMulticomponentThermo.H"
 #include "compressibleMomentumTransportModels.H"
 #include "runTimeSelectionTables.H"
 
@@ -70,7 +70,7 @@ protected:
     // Protected data
 
         //- Thermo
-        const ubRhoMulticomponentThermo& thermo_;
+        const uRhoMulticomponentThermo& thermo_;
 
         //- Turbulence
         const compressibleMomentumTransportModel& momentumTransport_;
@@ -97,7 +97,7 @@ public:
             dictionary,
             (
                 const dictionary& dict,
-                const ubRhoMulticomponentThermo& thermo,
+                const uRhoMulticomponentThermo& thermo,
                 const compressibleMomentumTransportModel& momentumTransport
             ),
             (
@@ -113,7 +113,7 @@ public:
         //- Construct from components
         SuModel
         (
-            const ubRhoMulticomponentThermo& thermo,
+            const uRhoMulticomponentThermo& thermo,
             const compressibleMomentumTransportModel& momentumTransport
         );
 
@@ -127,7 +127,7 @@ public:
         static autoPtr<SuModel> New
         (
             const dictionary& combustionProperties,
-            const ubRhoMulticomponentThermo& thermo,
+            const uRhoMulticomponentThermo& thermo,
             const compressibleMomentumTransportModel& momentumTransport
         );
 

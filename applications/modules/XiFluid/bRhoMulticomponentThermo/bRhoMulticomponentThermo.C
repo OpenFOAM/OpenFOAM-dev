@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024-2026 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,65 +23,34 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "unstrained.H"
-#include "laminarFlameSpeed.H"
-#include "addToRunTimeSelectionTable.H"
+#include "bRhoMulticomponentThermo.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace SuModels
-{
-    defineTypeNameAndDebug(unstrained, 0);
-    addToRunTimeSelectionTable(SuModel, unstrained, dictionary);
-}
+    defineTypeNameAndDebug(bRhoMulticomponentThermo, 0);
+    defineRunTimeSelectionTable(bRhoMulticomponentThermo, fvMesh);
 }
 
 
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
-bool Foam::SuModels::unstrained::readCoeffs(const dictionary& dict)
-{
-    return SuModel::readCoeffs(dict);
-}
-
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::SuModels::unstrained::unstrained
+Foam::autoPtr<Foam::bRhoMulticomponentThermo>
+Foam::bRhoMulticomponentThermo::New
 (
-    const dictionary& dict,
-    const uRhoMulticomponentThermo& thermo,
-    const compressibleMomentumTransportModel& turbulence
+    const fvMesh& mesh,
+    const word& phaseName
 )
-:
-    SuModel(thermo, turbulence),
-    Su0_
-    (
-        laminarFlameSpeed::New
-        (
-            dict.subDict("unstrainedLaminarFlameSpeed"),
-            thermo_
-        )
-    )
 {
-    correct();
+    return basicThermo::New<bRhoMulticomponentThermo>(mesh, phaseName);
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::SuModels::unstrained::~unstrained()
+Foam::bRhoMulticomponentThermo::~bRhoMulticomponentThermo()
 {}
-
-
-// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
-
-void Foam::SuModels::unstrained::correct()
-{
-    Su_ == Su0_()();
-}
 
 
 // ************************************************************************* //

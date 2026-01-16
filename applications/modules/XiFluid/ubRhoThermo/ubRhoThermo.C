@@ -52,8 +52,8 @@ Foam::ubRhoThermo::ubRhoThermo(const fvMesh& mesh)
         mesh
     ),
     c_("c", scalar(1) - b_),
-    uThermo_(ubRhoMulticomponentThermo::New(mesh, unburntPhaseName_)),
-    bThermo_(ubRhoMulticomponentThermo::New(mesh, burntPhaseName_)),
+    uThermo_(uRhoMulticomponentThermo::New(mesh, unburntPhaseName_)),
+    bThermo_(bRhoMulticomponentThermo::New(mesh, burntPhaseName_)),
     rho_("rho", 1.0/(b_/uThermo_->rho() + c_/bThermo_->rho())),
     psi_("psi", 1.0/(b_/uThermo_->psi() + c_/bThermo_->psi())),
     mu_("mu", b_*uThermo_->mu() + c_*bThermo_->mu()),

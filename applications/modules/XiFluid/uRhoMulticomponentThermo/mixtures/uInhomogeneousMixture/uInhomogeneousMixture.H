@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,22 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::bInhomogeneousMixture
+    Foam::uInhomogeneousMixture
 
 Description
-    Burnt gas combustion mixture for inhomogeneous lean, stoichiometric
+    Unburnt gas combustion mixture for inhomogeneous lean, stoichiometric
     or rich conditions
 
-    in which the unburnt fuel mass-fraction \c fu (mixture fraction defines
-    the composition.
+    in which the fuel mass-fraction \c fu defines the composition.
 
 SourceFiles
-    bInhomogeneousMixture.C
+    uInhomogeneousMixture.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef bInhomogeneousMixture_H
-#define bInhomogeneousMixture_H
+#ifndef uInhomogeneousMixture_H
+#define uInhomogeneousMixture_H
 
 #include "dimensionedTypes.H"
 #include "FieldListSlice.H"
@@ -48,11 +47,11 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class bInhomogeneousMixture Declaration
+                    Class uInhomogeneousMixture Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ThermoType>
-class bInhomogeneousMixture
+class uInhomogeneousMixture
 {
 public:
 
@@ -70,6 +69,12 @@ public:
 
 private:
 
+    // Private Enumerations
+
+        //- Specie indices
+        enum species { FU };
+
+
     // Private Data
 
         //- Stoichiometric air/fuel ratio
@@ -81,9 +86,6 @@ private:
         //- Oxidant thermodynamic model
         thermoType oxidant_;
 
-        //- Product thermodynamic model
-        thermoType products_;
-
         //- List of specie active flags
         boolList active_;
 
@@ -94,24 +96,20 @@ private:
     // Private Member Functions
 
         //- Return the mixture for the given composition
-        const thermoType& mixture(const scalar ft) const;
+        const thermoType& mixture(const scalar fu) const;
 
 
 public:
 
-        //- Specie indices
-        enum species { FT };
-
-
     // Constructors
 
         //- Construct from a dictionary
-        bInhomogeneousMixture(const dictionary&);
+        uInhomogeneousMixture(const dictionary&);
 
         //- Disallow default bitwise copy construction
-        bInhomogeneousMixture
+        uInhomogeneousMixture
         (
-            const bInhomogeneousMixture<ThermoType>&
+            const uInhomogeneousMixture<ThermoType>&
         ) = delete;
 
 
@@ -120,13 +118,13 @@ public:
         //- Return the instantiated type name
         static word typeName()
         {
-            return "bInhomogeneousMixture<" + ThermoType::typeName() + '>';
+            return "uInhomogeneousMixture<" + ThermoType::typeName() + '>';
         }
 
         //- Return the specie names
         static wordList specieNames()
         {
-            return {"ft"};
+            return {"fu"};
         }
 
         //- Access the specie active flags
@@ -143,18 +141,17 @@ public:
 
         inline const ThermoType& specieThermo(const label speciei) const
         {
-            FatalErrorInFunction
-                << "Cannot return specieThermo for specie " << speciei << " ft "
-                << exit(FatalError);
-            return products_;
+            return fuel_;
         }
 
         //- Return the fuel-oxidant equivalence ratio
-        scalar Phi(const scalarFieldListSlice& Y) const
-        {
-            NotImplemented;
-            return 0;
-        }
+        scalar Phi(const scalarFieldListSlice& Y) const;
+
+        //- Return the prompt burnt gas composition
+        PtrList<volScalarField::Internal> prompt
+        (
+            const PtrList<volScalarField>& Yu
+        ) const;
 
         void reset
         (
@@ -193,7 +190,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const bInhomogeneousMixture<ThermoType>&) = delete;
+        void operator=(const uInhomogeneousMixture<ThermoType>&) = delete;
 };
 
 
@@ -204,7 +201,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 #ifdef NoRepository
-    #include "bInhomogeneousMixture.C"
+    #include "uInhomogeneousMixture.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

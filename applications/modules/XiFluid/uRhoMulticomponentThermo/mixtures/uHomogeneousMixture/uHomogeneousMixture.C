@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,26 +23,28 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "bHomogeneousMixture.H"
+#include "uHomogeneousMixture.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class ThermoType>
-Foam::bHomogeneousMixture<ThermoType>::bHomogeneousMixture
+Foam::uHomogeneousMixture<ThermoType>::uHomogeneousMixture
 (
     const dictionary& dict
 )
 :
-    products_("products", dict.subDict("products"))
+    Phi_(dict.lookup<scalar>("Phi")),
+    reactants_("reactants", dict.subDict("reactants"))
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class ThermoType>
-void Foam::bHomogeneousMixture<ThermoType>::read(const dictionary& dict)
+void Foam::uHomogeneousMixture<ThermoType>::read(const dictionary& dict)
 {
-    products_ = ThermoType("products", dict.subDict("products"));
+    Phi_ = dict.lookup<scalar>("Phi");
+    reactants_ = ThermoType("reactants", dict.subDict("reactants"));
 }
 
 

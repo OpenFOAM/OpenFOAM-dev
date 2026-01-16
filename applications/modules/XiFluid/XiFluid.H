@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -283,13 +283,13 @@ public:
         const volScalarField& b;
 
         //- Reference to the burnt gas thermophysical properties
-        const ubRhoMulticomponentThermo& uThermo;
+        const uRhoMulticomponentThermo& uThermo;
 
         //- Reference to the combustion progress variable
         const volScalarField& c;
 
         //- Reference to the burnt gas thermophysical properties
-        const ubRhoMulticomponentThermo& bThermo;
+        const bRhoMulticomponentThermo& bThermo;
 
         //- Laminar flame speed
         const volScalarField& Su;

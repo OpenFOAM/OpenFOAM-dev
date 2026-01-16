@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,18 +22,22 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::bHomogeneousMixture
+    Foam::bInhomogeneousMixture
 
 Description
-    Unburnt gas mixture for homogeneous lean, stoichiometric or rich conditions
+    Burnt gas combustion mixture for inhomogeneous lean, stoichiometric
+    or rich conditions
+
+    in which the unburnt fuel mass-fraction \c fu (mixture fraction defines
+    the composition.
 
 SourceFiles
-    bHomogeneousMixture.C
+    bInhomogeneousMixture.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef bHomogeneousMixture_H
-#define bHomogeneousMixture_H
+#ifndef bInhomogeneousMixture_H
+#define bInhomogeneousMixture_H
 
 #include "dimensionedTypes.H"
 #include "FieldListSlice.H"
@@ -44,11 +48,11 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class bHomogeneousMixture Declaration
+                    Class bInhomogeneousMixture Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ThermoType>
-class bHomogeneousMixture
+class bInhomogeneousMixture
 {
 public:
 
@@ -68,19 +72,47 @@ private:
 
     // Private Data
 
-        //- Products thermodynamic model
+        //- Stoichiometric air/fuel ratio
+        scalar stoicRatio_;
+
+        //- Fuel thermodynamic model
+        thermoType fuel_;
+
+        //- Oxidant thermodynamic model
+        thermoType oxidant_;
+
+        //- Product thermodynamic model
         thermoType products_;
+
+        //- List of specie active flags
+        boolList active_;
+
+        //- Mutable storage for the mixed thermodynamic model
+        mutable thermoType mixture_;
+
+
+    // Private Member Functions
+
+        //- Return the mixture for the given composition
+        const thermoType& mixture(const scalar ft) const;
 
 
 public:
 
+        //- Specie indices
+        enum species { FT };
+
+
     // Constructors
 
         //- Construct from a dictionary
-        bHomogeneousMixture(const dictionary&);
+        bInhomogeneousMixture(const dictionary&);
 
         //- Disallow default bitwise copy construction
-        bHomogeneousMixture(const bHomogeneousMixture<ThermoType>&) = delete;
+        bInhomogeneousMixture
+        (
+            const bInhomogeneousMixture<ThermoType>&
+        ) = delete;
 
 
     // Member Functions
@@ -88,79 +120,53 @@ public:
         //- Return the instantiated type name
         static word typeName()
         {
-            return "bHomogeneousMixture<" + ThermoType::typeName() + '>';
+            return "bInhomogeneousMixture<" + ThermoType::typeName() + '>';
         }
 
         //- Return the specie names
         static wordList specieNames()
         {
-            return wordList();
+            return {"ft"};
         }
 
         //- Access the specie active flags
         const boolList& speciesActive() const
         {
-            NotImplemented;
-            return boolList::null();
+            return active_;
         }
 
         //- Access the specie active flags
         boolList& speciesActive()
         {
-            NotImplemented;
-            return const_cast<boolList&>(boolList::null());
+            return active_;
         }
 
         inline const ThermoType& specieThermo(const label speciei) const
         {
+            FatalErrorInFunction
+                << "Cannot return specieThermo for specie " << speciei << " ft "
+                << exit(FatalError);
             return products_;
-        }
-
-        //- Return the fuel-oxidant equivalence ratio
-        scalar Phi(const scalarFieldListSlice& Y) const
-        {
-            NotImplemented;
-            return 0;
-        }
-
-        void reset
-        (
-            const volScalarField& b,
-            PtrList<volScalarField>& Yu,
-            const volScalarField& c,
-            const PtrList<volScalarField>& Yb
-        ) const
-        {
-            NotImplemented;
         }
 
         //- Return the mixture for thermodynamic properties
         const thermoMixtureType& thermoMixture
         (
             const scalarFieldListSlice&
-        ) const
-        {
-            return products_;
-        }
+        ) const;
 
         //- Return the mixture for transport properties
         const transportMixtureType& transportMixture
         (
             const scalarFieldListSlice&
-        ) const
-        {
-            return products_;
-        }
+        ) const;
 
         //- Return the mixture for transport properties
         const transportMixtureType& transportMixture
         (
             const scalarFieldListSlice&,
             const thermoMixtureType&
-        ) const
-        {
-            return products_;
-        }
+        ) const;
 
         //- Read dictionary
         void read(const dictionary&);
@@ -169,7 +175,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const bHomogeneousMixture<ThermoType>&) = delete;
+        void operator=(const bInhomogeneousMixture<ThermoType>&) = delete;
 };
 
 
@@ -180,7 +186,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 #ifdef NoRepository
-    #include "bHomogeneousMixture.C"
+    #include "bInhomogeneousMixture.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,13 +23,10 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "ubRhoMulticomponentThermo.H"
+#include "bRhoMulticomponentThermo.H"
 
-#include "uHomogeneousMixture.H"
 #include "bHomogeneousMixture.H"
-#include "uInhomogeneousMixture.H"
 #include "bInhomogeneousMixture.H"
-#include "uInhomogeneousEGRMixture.H"
 
 #include "forGases.H"
 
@@ -37,23 +34,23 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeUBRhoMulticomponentThermos(Mixture, ThermoPhysics)                 \
+#define makeBRhoMulticomponentThermos(Mixture, ThermoPhysics)                 \
                                                                                \
-    defineThermo(ubRhoMulticomponentThermo, Mixture, ThermoPhysics);           \
+    defineThermo(bRhoMulticomponentThermo, Mixture, ThermoPhysics);           \
                                                                                \
-    addThermo(basicThermo, ubRhoMulticomponentThermo, Mixture, ThermoPhysics); \
-    addThermo(fluidThermo, ubRhoMulticomponentThermo, Mixture, ThermoPhysics); \
+    addThermo(basicThermo, bRhoMulticomponentThermo, Mixture, ThermoPhysics); \
+    addThermo(fluidThermo, bRhoMulticomponentThermo, Mixture, ThermoPhysics); \
     addThermo                                                                  \
     (                                                                          \
         rhoFluidThermo,                                                        \
-        ubRhoMulticomponentThermo,                                             \
+        bRhoMulticomponentThermo,                                             \
         Mixture,                                                               \
         ThermoPhysics                                                          \
     );                                                                         \
     addThermo                                                                  \
     (                                                                          \
-        ubRhoMulticomponentThermo,                                             \
-        ubRhoMulticomponentThermo,                                             \
+        bRhoMulticomponentThermo,                                             \
+        bRhoMulticomponentThermo,                                             \
         Mixture,                                                               \
         ThermoPhysics                                                          \
     )
@@ -64,28 +61,13 @@ namespace Foam
 {
     forCoeffEnthalpyGases
     (
-        makeUBRhoMulticomponentThermos,
-        uHomogeneousMixture
-    );
-    forCoeffEnthalpyGases
-    (
-        makeUBRhoMulticomponentThermos,
+        makeBRhoMulticomponentThermos,
         bHomogeneousMixture
     );
     forCoeffEnthalpyGases
     (
-        makeUBRhoMulticomponentThermos,
-        uInhomogeneousMixture
-    );
-    forCoeffEnthalpyGases
-    (
-        makeUBRhoMulticomponentThermos,
+        makeBRhoMulticomponentThermos,
         bInhomogeneousMixture
-    );
-    forCoeffEnthalpyGases
-    (
-        makeUBRhoMulticomponentThermos,
-        uInhomogeneousEGRMixture
     );
 }
 

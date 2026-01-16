@@ -34,7 +34,8 @@ SourceFiles
 #ifndef ubRhoThermo_H
 #define ubRhoThermo_H
 
-#include "ubRhoMulticomponentThermo.H"
+#include "uRhoMulticomponentThermo.H"
+#include "bRhoMulticomponentThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -57,8 +58,8 @@ class ubRhoThermo
         volScalarField b_;
         volScalarField c_;
 
-        autoPtr<ubRhoMulticomponentThermo> uThermo_;
-        autoPtr<ubRhoMulticomponentThermo> bThermo_;
+        autoPtr<uRhoMulticomponentThermo> uThermo_;
+        autoPtr<bRhoMulticomponentThermo> bThermo_;
 
         volScalarField rho_;
         volScalarField psi_;
@@ -128,22 +129,22 @@ public:
             return alphab_;
         }
 
-        const ubRhoMulticomponentThermo& uThermo() const
+        const uRhoMulticomponentThermo& uThermo() const
         {
             return uThermo_();
         }
 
-        ubRhoMulticomponentThermo& uThermo()
+        uRhoMulticomponentThermo& uThermo()
         {
             return uThermo_();
         }
 
-        const ubRhoMulticomponentThermo& bThermo() const
+        const bRhoMulticomponentThermo& bThermo() const
         {
             return bThermo_();
         }
 
-        ubRhoMulticomponentThermo& bThermo()
+        bRhoMulticomponentThermo& bThermo()
         {
             return bThermo_();
         }

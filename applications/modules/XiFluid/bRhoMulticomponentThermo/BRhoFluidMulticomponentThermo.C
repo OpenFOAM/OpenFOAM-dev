@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,28 +23,43 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "uHomogeneousMixture.H"
+#include "BRhoFluidMulticomponentThermo.H"
+#include "bRhoMulticomponentThermo.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class ThermoType>
-Foam::uHomogeneousMixture<ThermoType>::uHomogeneousMixture
+template<class BaseThermo>
+Foam::BRhoFluidMulticomponentThermo<BaseThermo>::BRhoFluidMulticomponentThermo
 (
-    const dictionary& dict
+    const fvMesh& mesh,
+    const word& phaseName
 )
 :
-    Phi_(dict.lookup<scalar>("Phi")),
-    reactants_("reactants", dict.subDict("reactants"))
+    RhoFluidThermo<BaseThermo>(mesh, phaseName)
+{}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+template<class BaseThermo>
+Foam::BRhoFluidMulticomponentThermo<BaseThermo>::
+~BRhoFluidMulticomponentThermo()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class ThermoType>
-void Foam::uHomogeneousMixture<ThermoType>::read(const dictionary& dict)
+template<class BaseThermo>
+Foam::tmp<Foam::volScalarField>
+Foam::BRhoFluidMulticomponentThermo<BaseThermo>::hf() const
 {
-    Phi_ = dict.lookup<scalar>("Phi");
-    reactants_ = ThermoType("reactants", dict.subDict("reactants"));
+    return this->volScalarFieldProperty
+    (
+        "hf",
+        dimEnergy/dimMass,
+        &BaseThermo::mixtureType::thermoMixture,
+        &BaseThermo::mixtureType::thermoMixtureType::hf
+    );
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,6 +50,20 @@ Foam::scalar Foam::uInhomogeneousMixture<ThermoType>::Phi
 ) const
 {
     return stoicRatio_*Y[FU]/max(scalar(1) - Y[FU], small);
+}
+
+
+template<class ThermoType>
+Foam::PtrList<Foam::volScalarField::Internal>
+Foam::uInhomogeneousMixture<ThermoType>::prompt
+(
+    const PtrList<volScalarField>& Yu
+) const
+{
+    PtrList<volScalarField::Internal> Yp(1);
+    Yp.set(0, Yu[FU]());
+
+    return Yp;
 }
 
 

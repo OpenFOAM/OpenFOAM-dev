@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,37 +23,27 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "ubRhoMulticomponentThermo.H"
-#include "zeroGradientFvPatchFields.H"
+#include "bHomogeneousMixture.H"
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-    defineTypeNameAndDebug(ubRhoMulticomponentThermo, 0);
-    defineRunTimeSelectionTable(ubRhoMulticomponentThermo, fvMesh);
-}
-
-
-// * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
-
-Foam::autoPtr<Foam::ubRhoMulticomponentThermo>
-Foam::ubRhoMulticomponentThermo::New
+template<class ThermoType>
+Foam::bHomogeneousMixture<ThermoType>::bHomogeneousMixture
 (
-    const fvMesh& mesh,
-    const word& phaseName
+    const dictionary& dict
 )
-{
-    return basicThermo::New<ubRhoMulticomponentThermo>(mesh, phaseName);
-}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::ubRhoMulticomponentThermo::~ubRhoMulticomponentThermo()
+:
+    products_("products", dict.subDict("products"))
 {}
 
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class ThermoType>
+void Foam::bHomogeneousMixture<ThermoType>::read(const dictionary& dict)
+{
+    products_ = ThermoType("products", dict.subDict("products"));
+}
 
 
 // ************************************************************************* //
