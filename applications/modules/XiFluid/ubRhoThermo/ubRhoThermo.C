@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -118,9 +118,17 @@ const Foam::word& Foam::ubRhoThermo::phaseName() const
 }
 
 
+Foam::word Foam::ubRhoThermo::mixtureName() const
+{
+    NotImplemented;
+    return word::null;
+}
+
+
 Foam::word Foam::ubRhoThermo::thermoName() const
 {
-    return type();
+    NotImplemented;
+    return word::null;
 }
 
 

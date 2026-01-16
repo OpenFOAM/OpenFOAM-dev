@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -242,6 +242,9 @@ public:
 
         //- Update properties
         virtual void correct() = 0;
+
+        //- Name of the mixture
+        virtual word mixtureName() const = 0;
 
         //- Name of the thermo physics
         virtual word thermoName() const = 0;
