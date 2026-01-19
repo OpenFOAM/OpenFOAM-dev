@@ -423,7 +423,11 @@ List<weight> calcNonInterpolatingWeights
 
         // Find the next relevant cut and remove all data relating to
         // cuts now behind the spans of the remaining cells
-        while (zoneCellMinXs[zoneCelli] > cutXs[cuti + 1])
+        while
+        (
+            cuti < cutXs.size() - 1
+         && zoneCellMinXs[zoneCelli] > cutXs[cuti + 1]
+        )
         {
             fcd.clear(cuti);
             cuti ++;
@@ -431,7 +435,11 @@ List<weight> calcNonInterpolatingWeights
 
         // Loop over all relevant cuts
         label cutj = cuti;
-        while (zoneCellMaxXs[zoneCelli] > cutXs[cutj])
+        while
+        (
+            cutj < cutXs.size() - 1
+         && zoneCellMaxXs[zoneCelli] > cutXs[cutj]
+        )
         {
             // Compute the face data as necessary
             fcd.cache(celli, cutj);
@@ -589,7 +597,11 @@ List<weight> calcInterpolatingWeights
 
         // Find the next relevant cut and remove all data relating to
         // cuts now behind the spans of the remaining cells
-        while (zoneCellMinXs[zoneCelli] > cutXs[cuti + 1])
+        while
+        (
+            cuti < cutXs.size()
+         && zoneCellMinXs[zoneCelli] > cutXs[cuti + 1]
+        )
         {
             if (cuti != 0) fcd.clear(cuti - 1);
             ffs.clear(cuti);
@@ -598,7 +610,11 @@ List<weight> calcInterpolatingWeights
 
         // Loop over all relevant cuts
         label cutj = cuti;
-        while (zoneCellMaxXs[zoneCelli] > cutXs[max(cutj - 1, 0)])
+        while
+        (
+            cutj < cutXs.size()
+         && zoneCellMaxXs[zoneCelli] > cutXs[max(cutj - 1, 0)]
+        )
         {
             // Compute the connected face data as necessary
             if (cutj != 0) fcd.cache(celli, cutj - 1);
@@ -964,10 +980,14 @@ Foam::tmp<Foam::scalarField> Foam::cellCutPlot::calcCutXs
     sortedOrder(zoneCellMinXs, zoneCellMinOrder);
 
     // Assume equal spacing to begin with
-    const scalar xMin = gMin(pointXs), xMax = gMax(pointXs);
+    scalar xMin = gMin(pointXs), xMax = gMax(pointXs);
+    xMin -= max(rootVSmall, 2*small*mag(xMin));
+    xMax += max(rootVSmall, 2*small*mag(xMax));
     tmp<scalarField> tcutXs =
         (xMin + scalarList(identityMap(nCuts))/(nCuts - 1)*(xMax - xMin));
     scalarField& cutXs = tcutXs.ref();
+    cutXs.first() = xMin;
+    cutXs.last() = xMax;
 
     // Names and fields for debug output of the counts, to observe the effect
     // of iterative improvement of the spacing
@@ -1123,8 +1143,15 @@ void Foam::cellCutPlot::writeLayers
             mesh
         ),
         mesh,
-        dimensionedTensor(dimless, tensor::zero)
+        dimensionedTensor(dimless, tensor::uniform(-1))
     );
+
+    forAll(weights, weighti)
+    {
+        const weight& w = weights[weighti];
+
+        layers[w.elementi] = tensor::zero;
+    }
 
     forAll(weights, weighti)
     {

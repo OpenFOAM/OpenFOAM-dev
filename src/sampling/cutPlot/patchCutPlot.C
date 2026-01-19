@@ -64,11 +64,22 @@ List<weight> calcNonInterpolatingWeights
         const scalar a = faceAreas[facei] & faceNormals[facei];
 
         // Find the next relevant cut
-        while (faceMinXs[facei] > cutXs[cuti + 1]) cuti ++;
+        while
+        (
+            cuti < cutXs.size() - 1
+         && faceMinXs[facei] > cutXs[cuti + 1]
+        )
+        {
+            cuti ++;
+        }
 
         // Loop over all relevant cut intervals
         label cutj = cuti;
-        while (faceMaxXs[facei] > cutXs[cutj])
+        while
+        (
+            cutj < cutXs.size() - 1
+         && faceMaxXs[facei] > cutXs[cutj]
+        )
         {
             // Add a new weight
             dynWeights.append({facei, cutj, a});
@@ -175,11 +186,22 @@ List<weight> calcInterpolatingWeights
         const scalar a = faceAreas[facei] & faceNormals[facei];
 
         // Find the next relevant cut
-        while (faceMinXs[facei] > cutXs[cuti + 1]) cuti ++;
+        while
+        (
+            cuti < cutXs.size()
+         && faceMinXs[facei] > cutXs[cuti + 1]
+        )
+        {
+            cuti ++;
+        }
 
         // Loop over all relevant cuts
         label cutj = cuti;
-        while (faceMaxXs[facei] > cutXs[max(cutj - 1, 0)])
+        while
+        (
+            cutj < cutXs.size()
+         && faceMaxXs[facei] > cutXs[max(cutj - 1, 0)]
+        )
         {
             // Add a new weight
             dynWeights.append({facei, cutj, 0});
@@ -500,10 +522,14 @@ Foam::tmp<Foam::scalarField> Foam::patchCutPlot::calcCutXs
     sortedOrder(faceMinXs, faceMinOrder);
 
     // Assume equal spacing to begin with
-    const scalar xMin = gMin(pointXs), xMax = gMax(pointXs);
+    scalar xMin = gMin(pointXs), xMax = gMax(pointXs);
+    xMin -= max(rootVSmall, 2*small*mag(xMin));
+    xMax += max(rootVSmall, 2*small*mag(xMax));
     tmp<scalarField> tcutXs =
         (xMin + scalarList(identityMap(nCuts))/(nCuts - 1)*(xMax - xMin));
     scalarField& cutXs = tcutXs.ref();
+    cutXs.first() = xMin;
+    cutXs.last() = xMax;
 
     // Names and fields for debug output of the counts, to observe the effect
     // of iterative improvement of the spacing
@@ -663,7 +689,7 @@ void Foam::patchCutPlot::writeLayers
             functionMesh
         ),
         functionMesh,
-        dimensionedTensor(dimless, tensor::zero)
+        dimensionedTensor(dimless, tensor::uniform(-1))
     );
 
     label meshFacei0 = -1;
@@ -674,6 +700,20 @@ void Foam::patchCutPlot::writeLayers
             meshFacei0 = meshFacei;
             break;
         }
+    }
+
+    forAll(weights, weighti)
+    {
+        const patchCutPlot::weight& w = weights[weighti];
+
+        const label facei = meshFacei0 + w.elementi;
+        const label patchi =
+            functionMesh.boundaryMesh().patchIndices()
+            [w.elementi + meshFacei0 - functionMesh.nInternalFaces()];
+        const label patchFacei =
+            facei - functionMesh.boundaryMesh()[patchi].start();
+
+        layers.boundaryFieldRef()[patchi][patchFacei] = tensor::zero;
     }
 
     forAll(weights, weighti)
@@ -716,8 +756,22 @@ void Foam::patchCutPlot::writeLayers
             functionMesh
         ),
         functionMesh,
-        dimensionedTensor(dimless, tensor::zero)
+        dimensionedTensor(dimless, tensor::uniform(-1))
     );
+
+    forAll(weights, weighti)
+    {
+        const patchCutPlot::weight& w = weights[weighti];
+
+        const label facei = faces.addressing()[w.elementi];
+        const label patchi =
+            functionMesh.boundaryMesh().patchIndices()
+            [w.elementi - functionMesh.nInternalFaces()];
+        const label patchFacei =
+            facei - functionMesh.boundaryMesh()[patchi].start();
+
+        layers.boundaryFieldRef()[patchi][patchFacei] = tensor::zero;
+    }
 
     forAll(weights, weighti)
     {
