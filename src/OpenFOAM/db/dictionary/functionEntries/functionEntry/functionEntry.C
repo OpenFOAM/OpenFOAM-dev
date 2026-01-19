@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -286,7 +286,55 @@ Foam::tokenList Foam::functionEntry::readFileNameArgList
 }
 
 
-// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
+Foam::tokenList Foam::functionEntry::readArgOrList
+(
+    const functionName& functionType,
+    Istream& is
+) const
+{
+    tokenList argList;
+
+    // Read the next token to check for '('
+    // in case the optional arguments start on the next line
+    token currToken(is);
+
+    if
+    (
+        currToken.isPunctuation()
+     && currToken.pToken() == token::BEGIN_LIST
+    )
+    {
+        do
+        {
+            argList.append(currToken);
+        }
+        while
+        (
+            !(currToken == token::END_LIST)
+         && !is.read(currToken).bad()
+         && currToken.good()
+        );
+
+        if
+        (
+            !currToken.isPunctuation()
+         || currToken.pToken() != token::END_LIST
+        )
+        {
+            FatalIOErrorInFunction(is)
+                << "Unclosed argument list " << currToken
+                << " in functionEntry " << functionType
+                << exit(FatalIOError);
+        }
+    }
+    else
+    {
+        argList.append(currToken);
+    }
+
+    return argList;
+}
+
 
 bool Foam::functionEntry::insert
 (

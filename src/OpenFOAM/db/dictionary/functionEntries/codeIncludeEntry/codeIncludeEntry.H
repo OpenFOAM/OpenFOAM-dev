@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::functionEntries::codeIncludeEntry
 
 Description
-    Specify an include file for \#calc, expects a single string to follow.
+    Specify an include file or list of files for \#calc
 
     For example if functions from transform.H are used in the \#calc expression
     \verbatim
@@ -40,6 +40,20 @@ Description
 
     The usual expansion of environment variables and other constructs
     (eg, the \c ~OpenFOAM/ expansion) is retained.
+
+    If multiple include files are required multiple #codeInclude entries can
+    be used or more conveniently a list of file names specified, e.g.
+    \verbatim
+    #codeInclude    ("transform.H" "Field.H")
+    \endverbatim
+    or formatted in a column if is a larger number of include files required:
+    \verbatim
+    #codeInclude
+    (
+        "transform.H"
+        "Field.H"
+    )
+    \endverbatim
 
 See also
     Foam::functionEntries::calcEntry
@@ -75,13 +89,20 @@ class codeIncludeEntry
         static DynamicList<fileName> includeFiles_;
 
 
+    // Private  data
+
+        //- List of file names
+        List<fileName> fNames_;
+
+
     // Private member functions
 
-        //- Return the file name
-        const string& fName() const
-        {
-            return operator[](0).stringToken();
-        }
+        //- Append the file name to the includeFiles_
+        void appendFileName
+        (
+            const dictionary& contextDict,
+            const fileName& fName
+        ) const;
 
 
 public:

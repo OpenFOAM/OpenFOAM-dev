@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,6 +52,26 @@ Foam::DynamicList<Foam::fileName>
     Foam::functionEntries::codeIncludeEntry::includeFiles_;
 
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+void Foam::functionEntries::codeIncludeEntry::appendFileName
+(
+    const dictionary& contextDict,
+    const fileName& fName
+) const
+{
+    // Copy the file name for inplace expansion
+    fileName expandedFname(fName);
+
+    // Substitute dictionary and environment variables. Allow empty
+    // substitutions.
+    stringOps::inplaceExpandEntry(expandedFname, contextDict, true, true);
+
+    // Add the file name to the cache
+    includeFiles_.append(expandedFname);
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::functionEntries::codeIncludeEntry::codeIncludeEntry
@@ -61,16 +81,16 @@ Foam::functionEntries::codeIncludeEntry::codeIncludeEntry
     Istream& is
 )
 :
-    functionEntry(typeName, lineNumber, parentDict, is, token(is))
-{
-    if (!operator[](0).isString())
-    {
-        FatalIOErrorInFunction(is)
-            << "Expected a file name string, found " << operator[](0)
-            << " while reading function " << typeName
-            << exit(FatalIOError);
-    }
-}
+    functionEntry
+    (
+        typeName,
+        lineNumber,
+        parentDict,
+        is,
+        readArgOrList(typeName, is)
+    ),
+    fNames_(readList<fileName>(stream()))
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -81,15 +101,10 @@ bool Foam::functionEntries::codeIncludeEntry::execute
     Istream& is
 )
 {
-    // Read the include file name
-    fileName expandedFname(fName());
-
-    // Substitute dictionary and environment variables. Allow empty
-    // substitutions.
-    stringOps::inplaceExpandEntry(expandedFname, contextDict, true, true);
-
-    // Add the file name to the cache
-    includeFiles_.append(expandedFname);
+    forAll(fNames_, i)
+    {
+        appendFileName(contextDict, fNames_[i]);
+    }
 
     return true;
 }

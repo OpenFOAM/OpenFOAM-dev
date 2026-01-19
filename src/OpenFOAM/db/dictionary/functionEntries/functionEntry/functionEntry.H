@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -131,6 +131,13 @@ protected:
         //- Read the filen name and optional argument list
         //  The argument list can be on one or more lines.
         tokenList readFileNameArgList
+        (
+            const functionName& functionType,
+            Istream& is
+        ) const;
+
+        //- Read a single argument or list
+        tokenList readArgOrList
         (
             const functionName& functionType,
             Istream& is
