@@ -22,22 +22,24 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::RBD::compositeBody
+    Foam::RBD::pointMasses
 
 Description
-    This specialised rigidBody holds the original body after it has been merged
-    into a parent.
+    Specialisation of rigidBody to construct a pointMasses given the mass and
+    lengths of the sides.
 
 SourceFiles
-    compositeBodyI.H
-    compositeBody.C
+    pointMassesI.H
+    pointMasses.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef RBD_compositeBody_H
-#define RBD_compositeBody_H
+#ifndef RBD_pointMasses_H
+#define RBD_pointMasses_H
 
 #include "rigidBody.H"
+#include "TableReader.H"
+#include "pointField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -47,44 +49,52 @@ namespace RBD
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class compositeBody Declaration
+                           Class pointMasses Declaration
 \*---------------------------------------------------------------------------*/
 
-class compositeBody
+class pointMasses
 :
     public rigidBody
 {
-    // Private Data
+    // Private member data
 
-        //- Original body from which this composite-body was constructed
-        autoPtr<rigidBody> body_;
+        //- Table reader
+        const autoPtr<TableReader<point, scalar>> reader_;
+
+        //- Points
+        pointField points_;
+
+        //- Masses
+        scalarField masses_;
 
 
 public:
 
+    //- Runtime type information
+    TypeName("pointMasses");
+
+
     // Constructors
 
-        //- Construct a merged version of the given rigidBody
-        //  providing the ID of the parent body to which this will be merged
-        //  and the transform relative to the parent
-        inline compositeBody(const autoPtr<rigidBody>& bodyPtr);
+        //- Construct from dictionary
+        inline pointMasses
+        (
+            const word& name,
+            const dictionary& dict
+        );
 
-        //- Return clone of this compositeBody
+        //- Return clone of this pointMasses
         virtual autoPtr<rigidBody> clone() const;
 
 
     //- Destructor
-    virtual ~compositeBody();
+    virtual ~pointMasses();
 
 
     // Member Functions
 
-        //- Return the type name of the original body
-        virtual const word& type() const;
-
-        //- Return the original body from which this composite-body
-        //  was constructed
-        inline const rigidBody& body() const;
+        //- Return the lengths of the sides of the pointMasses
+        inline const vector& L() const;
 
         //- Write
         virtual void write(Ostream&) const;
@@ -95,10 +105,6 @@ public:
 
 } // End namespace RBD
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "compositeBodyI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
