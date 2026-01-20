@@ -1,0 +1,173 @@
+/*---------------------------------------------------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+License
+    This file is part of OpenFOAM.
+
+    OpenFOAM is free software: you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+    for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+
+Class
+    Foam::functionObjects::adjustTimeStepToReaction
+
+Description
+    Returns the minimum bulk reaction time scale
+
+    This allows the solver to temporally resolve chemical changes, in order to
+    better couple the chemistry and transport, or to improve the time-accuracy
+    of post-processing.
+
+    Note that this function only does anything if time step adjustment is
+    enabled in the controlDict.
+
+    Example of function object specification:
+    \verbatim
+    adjustTimeStepToReaction
+    {
+        type            adjustTimeStepToReaction;
+        libs            ("libreactionModels.so");
+        maxCo           0.1;
+        extrapolate     no;
+    }
+    \endverbatim
+
+Usage
+    \table
+        Property     | Description             | Required    | Default value
+        type         | type name: adjustTimeStepToReaction | yes |
+        phase        | name of the reacting phase | no       |
+        maxCo        | maximum reaction "Courant" number | no | 1
+        extrapolate  | try to extrapolate decreases | no     | false
+    \endtable
+
+SourceFiles
+    adjustTimeStepToReaction.C
+
+\*---------------------------------------------------------------------------*/
+
+#ifndef adjustTimeStepToReaction_functionObject_H
+#define adjustTimeStepToReaction_functionObject_H
+
+#include "regionFunctionObject.H"
+#include "timeIOdictionary.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
+namespace functionObjects
+{
+
+/*---------------------------------------------------------------------------*\
+                  Class adjustTimeStepToReaction Declaration
+\*---------------------------------------------------------------------------*/
+
+class adjustTimeStepToReaction
+:
+    public regionFunctionObject
+{
+    // Private Data
+
+        //- Name of the phase
+        word phaseName_;
+
+        //- Maximum reaction "Courant" number. The maximum fraction of the
+        //  total reaction time-scale that should be evolved in a single
+        //  time-step.
+        scalar maxCo_;
+
+        //- Extrapolate reductions in time-step to try and better catch the
+        //  "onset" of reaction. Can lead to time-step oscillation.
+        bool extrapolate_;
+
+        //- Do we have the previous reaction time-step?
+        mutable bool haveReactionDeltaT0_;
+
+        //- The previous reaction time-step
+        mutable scalar reactionDeltaT0_;
+
+
+    // Private Member Functions
+
+        //- Get the properties dictionary IO object
+        typeIOobject<timeIOdictionary> propsDictIo
+        (
+            const IOobject::readOption& r
+        ) const;
+
+public:
+
+    //- Runtime type information
+    TypeName("adjustTimeStepToReaction");
+
+
+    // Constructors
+
+        //- Construct from components
+        adjustTimeStepToReaction
+        (
+            const word& name,
+            const Time& runTime,
+            const dictionary& dict
+        );
+
+        //- Disallow default bitwise copy construction
+        adjustTimeStepToReaction(const adjustTimeStepToReaction&) = delete;
+
+
+    // Destructor
+    virtual ~adjustTimeStepToReaction();
+
+
+    // Member Functions
+
+        //-  Read and reset the timeStep Function1
+        virtual bool read(const dictionary&);
+
+        //- Return the list of fields required
+        virtual wordList fields() const
+        {
+            return wordList::null();
+        }
+
+        //- Do nothing
+        virtual bool execute();
+
+        //- Do nothing
+        virtual bool write();
+
+        //- Return the minimum reaction time-scale
+        virtual scalar maxDeltaT() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const adjustTimeStepToReaction&) = delete;
+};
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+} // End namespace functionObjects
+} // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#endif
+
+// ************************************************************************* //

@@ -1,0 +1,195 @@
+/*---------------------------------------------------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+License
+    This file is part of OpenFOAM.
+
+    OpenFOAM is free software: you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+    for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+
+Class
+    Foam::reactionModels::singleStepReaction
+
+Description
+    Base class for single-step reaction models
+
+SourceFiles
+    singleStepReaction.C
+
+\*---------------------------------------------------------------------------*/
+
+#ifndef singleStepReaction_H
+#define singleStepReaction_H
+
+#include "reactionModel.H"
+#include "reaction.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
+namespace reactionModels
+{
+
+/*---------------------------------------------------------------------------*\
+                    Class singleStepReaction Declaration
+\*---------------------------------------------------------------------------*/
+
+class singleStepReaction
+:
+    public reactionModel
+{
+protected:
+
+    // Protected data
+
+        //- The single-step reaction
+        reaction reaction_;
+
+        //- Stoichiometric air-fuel mass ratio
+        dimensionedScalar stoicRatio_;
+
+        //- Stoichiometric oxygen-fuel mass ratio
+        dimensionedScalar s_;
+
+        //- Heat of reaction [J/Kg]
+        dimensionedScalar qFuel_;
+
+        //- Stoichiometric coefficient for the reaction.
+        scalarList specieStoichCoeffs_;
+
+        //- Mass concentrations at stoichiometric mixture for fres.
+        scalarList Yprod0_;
+
+        //- List of components residual
+        PtrList<volScalarField> fres_;
+
+        //- Fuel specie index
+        label fuelIndex_;
+
+        //- List to indicate if specie is produced/consumed
+        List<int> specieProd_;
+
+        //- Fuel consumption rate
+        volScalarField wFuel_;
+
+        //- Semi-implicit (true) or explicit (false) treatment
+        bool semiImplicit_;
+
+
+    // Protected member functions
+
+        //- Calculate qFuel
+        void calculateqFuel();
+
+        //- Calculate air/fuel and oxygen/fuel ratio
+        void massAndAirStoichRatios();
+
+        //- Calculate maximum products at stoichiometric mixture
+        void calculateMaxProducts();
+
+
+public:
+
+    // Constructors
+
+        //- Construct from components
+        singleStepReaction
+        (
+            const word& modelType,
+            const fluidMulticomponentThermo& thermo,
+            const compressibleMomentumTransportModel& turb,
+            const word& reactionProperties
+        );
+
+        //- Disallow default bitwise copy construction
+        singleStepReaction(const singleStepReaction&) = delete;
+
+
+    //- Destructor
+    virtual ~singleStepReaction();
+
+
+    // Member Functions
+
+        // Access functions
+
+            //- Return the single step reaction
+            inline const reaction& singleReaction() const;
+
+            //- Return the stoichiometric air-fuel mass ratio
+            inline const dimensionedScalar& stoicRatio() const;
+
+            //- Return the Stoichiometric oxygen-fuel mass ratio
+            inline const dimensionedScalar& s() const;
+
+            //- Return the heat of reaction [J/Kg]
+            inline const dimensionedScalar& qFuel() const;
+
+            //- Return the stoichiometric coefficient for the reaction
+            inline const List<scalar>& specieStoichCoeffs() const;
+
+            //- Return the list of components residual
+            inline tmp<volScalarField> fres(const label index) const;
+
+            //- Return the fuel specie index
+            inline label fuelIndex() const;
+
+            //- Return the list to indicate if specie is produced/consumed
+            inline const List<int>& specieProd() const;
+
+            //- Return the list of products mass concentrations
+            inline const scalarList& Yprod0() const;
+
+
+        //- Specie consumption rate field
+        virtual tmp<volScalarField::Internal> R(const label speciei) const;
+
+        //- Specie consumption rate matrix
+        virtual tmp<fvScalarMatrix> R(volScalarField& Y) const;
+
+        //- Heat release rate [kg/m/s^3]
+        virtual tmp<volScalarField> Qdot() const;
+
+        //- Update properties from given dictionary
+        virtual bool read();
+
+        //- Calculates the residual for all components
+        void fresCorrect();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const singleStepReaction&) = delete;
+};
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+} // End namespace reactionModels
+} // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "singleStepReactionI.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#endif
+
+// ************************************************************************* //

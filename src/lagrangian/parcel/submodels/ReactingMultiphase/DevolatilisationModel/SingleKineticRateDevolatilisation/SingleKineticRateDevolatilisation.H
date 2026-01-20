@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -176,7 +176,7 @@ class SingleKineticRateDevolatilisation
 
             //- Volatile residual coefficient (0-1)
             //  When the fraction of volatiles are depleted below this
-            //  threshold, combustion can occur
+            //  threshold, reaction can occur
             const scalar residualCoeff_;
 
 
@@ -223,7 +223,7 @@ public:
             const scalarField& YGasEff,
             const scalarField& YLiquidEff,
             const scalarField& YSolidEff,
-            label& canCombust,
+            label& canReact,
             scalarField& dMassDV
         ) const;
 };

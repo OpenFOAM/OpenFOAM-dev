@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,12 +69,12 @@ void Foam::NoDevolatilisation<CloudType>::calculate
     const scalarField&,
     const scalarField&,
     const scalarField&,
-    label& canCombust,
+    label& canReact,
     scalarField&
 ) const
 {
-    // Model does not stop combustion taking place
-    canCombust = true;
+    // Model does not stop reaction taking place
+    canReact = true;
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ See also
 
 #include "isothermalFluid.H"
 #include "fluidMulticomponentThermo.H"
-#include "combustionModel.H"
+#include "reactionModel.H"
 #include "fluidMulticomponentThermophysicalTransportModel.H"
 #include "multivariateScheme.H"
 
@@ -91,7 +91,7 @@ protected:
 
     // Reactions
 
-        autoPtr<combustionModel> reaction;
+        autoPtr<reactionModel> reaction;
         multivariateSurfaceInterpolationScheme<scalar>::fieldTable fields;
 
 

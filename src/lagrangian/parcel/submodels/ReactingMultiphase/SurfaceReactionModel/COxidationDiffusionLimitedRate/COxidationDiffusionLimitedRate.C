@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -125,7 +125,7 @@ Foam::scalar Foam::COxidationDiffusionLimitedRate<CloudType>::calculate
     const label idSolid = this->owner().composition().idSolid();
     const scalar fComb = YMixture[idSolid]*YSolid[CsLocalId_];
 
-    // Surface combustion active combustible fraction is consumed
+    // Surface reaction active combustible fraction is consumed
     if (fComb < small)
     {
         return 0.0;

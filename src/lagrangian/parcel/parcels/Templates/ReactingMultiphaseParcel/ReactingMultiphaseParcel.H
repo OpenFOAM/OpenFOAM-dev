@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -206,13 +206,13 @@ protected:
             //- Mass fractions of solids []
             scalarField YSolid_;
 
-            //- Flag to identify if the particle can devolatilise and combust
-            //  Combustion possible only after volatile content falls below
+            //- Flag to identify if the particle can devolatilise and react
+            //  Reaction possible only after volatile content falls below
             //  threshold value.  States include:
-            //  0 = can devolatilise, cannot combust but can change
-            //  1 = can devolatilise, can combust
-            // -1 = cannot devolatilise or combust, and cannot change
-            label canCombust_;
+            //  0 = can devolatilise, cannot react but can change
+            //  1 = can devolatilise, can react
+            // -1 = cannot devolatilise or react, and cannot change
+            label canReact_;
 
 
     // Protected Member Functions
@@ -232,7 +232,7 @@ protected:
             const scalarField& YGasEff,// gas component mass fractions
             const scalarField& YLiquidEff,// liquid component mass fractions
             const scalarField& YSolidEff,// solid component mass fractions
-            label& canCombust,          // 'can combust' flag
+            label& canReact,          // 'can combust' flag
             scalarField& dMassDV,      // mass transfer - local to particle
             scalar& Sh,                // explicit particle enthalpy source
             scalar& N,                 // flux of species emitted from particle
@@ -250,7 +250,7 @@ protected:
             const scalar d,            // diameter
             const scalar T,            // temperature
             const scalar mass,         // mass
-            const label canCombust,     // 'can combust' flag
+            const label canReact,     // 'can combust' flag
             const scalar N,            // flux of species emitted from particle
             const scalarField& YMix,   // mixture mass fractions
             const scalarField& YGas,   // gas-phase mass fractions
@@ -343,8 +343,8 @@ public:
             //- Return const access to mass fractions of solids
             inline const scalarField& YSolid() const;
 
-            //- Return const access to the canCombust flag
-            inline label canCombust() const;
+            //- Return const access to the canReact flag
+            inline label canReact() const;
 
 
         // Edit
@@ -361,8 +361,8 @@ public:
             //- Return access to mass fractions of solids
             inline scalarField& YSolid();
 
-            //- Return access to the canCombust flag
-            inline label& canCombust();
+            //- Return access to the canReact flag
+            inline label& canReact();
 
 
         // Main calculation loop

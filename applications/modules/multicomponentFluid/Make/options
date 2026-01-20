@@ -12,7 +12,7 @@ EXE_INC = \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/chemistryModel/lnInclude \
     -I$(LIB_SRC)/ODE/lnInclude \
-    -I$(LIB_SRC)/combustionModels/lnInclude \
+    -I$(LIB_SRC)/reactionModels/lnInclude \
     -I$(LIB_SRC)/finiteVolume/cfdTools \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude \
@@ -25,7 +25,7 @@ LIB_LIBS = \
     -lspecie \
     -lchemistryModel \
     -lODE \
-    -lcombustionModels \
+    -lreactionModels \
     -lmulticomponentThermophysicalModels \
     -lmomentumTransportModels \
     -lcompressibleMomentumTransportModels \

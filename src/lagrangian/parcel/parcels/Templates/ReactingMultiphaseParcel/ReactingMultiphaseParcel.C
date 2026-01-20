@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -274,7 +274,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calc
         YMix[idG]*YGas_,
         YMix[idL]*YLiquid_,
         YMix[idS]*YSolid_,
-        canCombust_,
+        canReact_,
         dMassDV,
         Sh,
         Ne,
@@ -301,7 +301,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calc
         d0,
         T0,
         mass0,
-        canCombust_,
+        canReact_,
         Ne,
         YMix,
         YGas_,
@@ -511,7 +511,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calcDevolatilisation
     const scalarField& YGasEff,
     const scalarField& YLiquidEff,
     const scalarField& YSolidEff,
-    label& canCombust,
+    label& canReact,
     scalarField& dMassDV,
     scalar& Sh,
     scalar& N,
@@ -534,9 +534,9 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calcDevolatilisation
         )
     )
     {
-        if (canCombust != -1)
+        if (canReact != -1)
         {
-            canCombust = 1;
+            canReact = 1;
         }
         return;
     }
@@ -547,7 +547,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calcDevolatilisation
 
     // Check that the parcel temperature is within necessary limits for
     // devolatilisation to occur
-    if (T < cloud.constProps().TDevol() || canCombust == -1)
+    if (T < cloud.constProps().TDevol() || canReact == -1)
     {
         return;
     }
@@ -575,7 +575,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calcDevolatilisation
         YGasEff,
         YLiquidEff,
         YSolidEff,
-        canCombust,
+        canReact,
         dMassDV
     );
 
@@ -629,7 +629,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calcSurfaceReactions
     const scalar d,
     const scalar T,
     const scalar mass,
-    const label canCombust,
+    const label canReact,
     const scalar N,
     const scalarField& YMix,
     const scalarField& YGas,
@@ -666,7 +666,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calcSurfaceReactions
     (void)cloud.constProps().TMax();
 
     // Check that model is active
-    if (canCombust != 1)
+    if (canReact != 1)
     {
         return;
     }
@@ -723,7 +723,7 @@ Foam::ReactingMultiphaseParcel<ParcelType>::ReactingMultiphaseParcel
     YGas_(p.YGas_),
     YLiquid_(p.YLiquid_),
     YSolid_(p.YSolid_),
-    canCombust_(p.canCombust_)
+    canReact_(p.canReact_)
 {}
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ SourceFiles
 namespace Foam
 {
 
-class combustionModel;
+class reactionModel;
 
 /*---------------------------------------------------------------------------*\
                      Class ReactingPhaseModel Declaration
@@ -59,7 +59,7 @@ protected:
     // Protected data
 
         //- Reaction model
-        autoPtr<combustionModel> reaction_;
+        autoPtr<reactionModel> reaction_;
 
 
 public:

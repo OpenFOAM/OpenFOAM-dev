@@ -71,7 +71,7 @@ multiphaseModels/Allwmake $targetType $*
 MomentumTransportModels/Allwmake $targetType $*
 ThermophysicalTransportModels/Allwmake $targetType $*
 wmake $targetType radiationModels
-wmake $targetType combustionModels
+wmake $targetType reactionModels
 mesh/Allwmake $targetType $*
 renumber/Allwmake $targetType $*
 fvAgglomerationMethods/Allwmake $targetType $*

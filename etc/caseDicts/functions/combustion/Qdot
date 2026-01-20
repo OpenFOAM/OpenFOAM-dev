@@ -11,7 +11,7 @@ Description
 \*---------------------------------------------------------------------------*/
 
 type            Qdot;
-libs            ("libcombustionModels.so");
+libs            ("libreactionModels.so");
 
 executeControl  writeTime;
 writeControl    writeTime;

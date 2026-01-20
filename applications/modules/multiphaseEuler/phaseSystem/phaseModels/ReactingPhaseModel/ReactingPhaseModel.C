@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ License
 #include "ReactingPhaseModel.H"
 #include "phaseSystem.H"
 #include "fvMatrix.H"
-#include "combustionModel.H"
+#include "reactionModel.H"
 #include "volFieldsFwd.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -41,7 +41,7 @@ Foam::ReactingPhaseModel<BasePhaseModel>::ReactingPhaseModel
 )
 :
     BasePhaseModel(fluid, phaseName, referencePhase, index),
-    reaction_(combustionModel::New(this->thermo_(), this->momentumTransport_()))
+    reaction_(reactionModel::New(this->thermo_(), this->momentumTransport_()))
 {}
 
 
