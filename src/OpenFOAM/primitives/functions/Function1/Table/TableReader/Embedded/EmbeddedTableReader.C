@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,37 +27,37 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class Type>
-Foam::TableReaders::Embedded<Type>::Embedded()
+template<class Coordinate, class Value>
+Foam::TableReaders::Embedded<Coordinate, Value>::Embedded()
 :
-    TableReader<Type>()
+    TableReader<Coordinate, Value>()
 {}
 
 
-template<class Type>
-Foam::TableReaders::Embedded<Type>::Embedded
+template<class Coordinate, class Value>
+Foam::TableReaders::Embedded<Coordinate, Value>::Embedded
 (
     const word& name,
     const Function1s::unitConversions& units,
     const dictionary& dict
 )
 :
-    TableReader<Type>()
+    TableReader<Coordinate, Value>()
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class Type>
-Foam::TableReaders::Embedded<Type>::~Embedded()
+template<class Coordinate, class Value>
+Foam::TableReaders::Embedded<Coordinate, Value>::~Embedded()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class Type>
-Foam::List<Foam::Tuple2<Foam::scalar, Type>>
-Foam::TableReaders::Embedded<Type>::read
+template<class Coordinate, class Value>
+Foam::List<Foam::Tuple2<Coordinate, Value>>
+Foam::TableReaders::Embedded<Coordinate, Value>::read
 (
     const Function1s::unitConversions& defaultUnits,
     const dictionary& dict,
@@ -66,28 +66,29 @@ Foam::TableReaders::Embedded<Type>::read
 {
     Function1s::unitConversions units(defaultUnits);
     units.readIfPresent("units", dict);
-    return TableReader<Type>::convertRead(units, dict.lookup(valuesKeyword));
+    Istream& is = dict.lookup(valuesKeyword);
+    return TableReader<Coordinate, Value>::convertRead(units, is);
 }
 
 
-template<class Type>
-Foam::List<Foam::Tuple2<Foam::scalar, Type>>
-Foam::TableReaders::Embedded<Type>::read
+template<class Coordinate, class Value>
+Foam::List<Foam::Tuple2<Coordinate, Value>>
+Foam::TableReaders::Embedded<Coordinate, Value>::read
 (
     const Function1s::unitConversions& units,
     Istream& is
 )
 {
-    return TableReader<Type>::convertRead(units, is);
+    return TableReader<Coordinate, Value>::convertRead(units, is);
 }
 
 
-template<class Type>
-void Foam::TableReaders::Embedded<Type>::write
+template<class Coordinate, class Value>
+void Foam::TableReaders::Embedded<Coordinate, Value>::write
 (
     Ostream& os,
     const Function1s::unitConversions& units,
-    const List<Tuple2<scalar, Type>>& table,
+    const List<Tuple2<Coordinate, Value>>& table,
     const word& valuesKeyword
 ) const
 {
@@ -95,7 +96,7 @@ void Foam::TableReaders::Embedded<Type>::write
     (
         os,
         valuesKeyword,
-        TableReader<Type>::convertWrite(units, table)
+        TableReader<Coordinate, Value>::convertWrite(units, table)
     );
 }
 

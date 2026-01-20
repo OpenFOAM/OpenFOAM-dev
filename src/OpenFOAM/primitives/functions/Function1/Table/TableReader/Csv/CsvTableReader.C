@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,59 +36,71 @@ namespace TableReaders
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template<>
-label Csv<label>::readValue(const List<string>& split) const
-{
-    if (component(columns_.second(), 0) >= split.size())
-    {
-        FatalErrorInFunction
-            << "No column " << component(columns_.second(), 0) << " in "
-            << split << endl
-            << exit(FatalError);
-    }
-
-    return readLabel(IStringStream(split[component(columns_.second(), 0)])());
-}
-
-
-template<>
-scalar Csv<scalar>::readValue(const List<string>& split) const
-{
-    if (component(columns_.second(), 0) >= split.size())
-    {
-        FatalErrorInFunction
-            << "No column " << component(columns_.second(), 0) << " in "
-            << split << endl
-            << exit(FatalError);
-    }
-
-    return readScalar(IStringStream(split[component(columns_.second(), 0)])());
-}
-
-
 template<class Type>
-Type Csv<Type>::readValue(const List<string>& split) const
+Type CsvReadValue
+(
+    const typename CsvLabelType<Type>::type& columns,
+    const List<string>& split
+)
 {
     Type result;
 
     for (label i = 0; i < pTraits<Type>::nComponents; i++)
     {
-        if (component(columns_.second(), i) >= split.size())
+        if (component(columns, i) >= split.size())
         {
             FatalErrorInFunction
-                << "No column " << component(columns_.second(), i) << " in "
+                << "No column " << component(columns, i) << " in "
                 << split << endl
                 << exit(FatalError);
         }
 
         result[i] = readScalar
         (
-            IStringStream(split[component(columns_.second(), i)])()
+            IStringStream(split[component(columns, i)])()
         );
     }
 
     return result;
 }
+
+
+template<>
+inline label CsvReadValue<label>
+(
+    const typename CsvLabelType<scalar>::type& columns,
+    const List<string>& split
+)
+{
+    if (component(columns, 0) >= split.size())
+    {
+        FatalErrorInFunction
+            << "No column " << component(columns, 0) << " in "
+            << split << endl
+            << exit(FatalError);
+    }
+
+    return readLabel(IStringStream(split[component(columns, 0)])());
+}
+
+template<>
+inline scalar CsvReadValue<scalar>
+(
+    const typename CsvLabelType<scalar>::type& columns,
+    const List<string>& split
+)
+{
+    if (component(columns, 0) >= split.size())
+    {
+        FatalErrorInFunction
+            << "No column " << component(columns, 0) << " in "
+            << split << endl
+            << exit(FatalError);
+    }
+
+    return readScalar(IStringStream(split[component(columns, 0)])());
+}
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -97,14 +109,14 @@ Type Csv<Type>::readValue(const List<string>& split) const
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template<class Type>
-void Foam::TableReaders::Csv<Type>::read
+template<class Coordinate, class Value>
+void Foam::TableReaders::Csv<Coordinate, Value>::read
 (
     ISstream& is,
-    List<Tuple2<scalar, Type>>& data
+    List<Tuple2<Coordinate, Value>>& data
 ) const
 {
-    DynamicList<Tuple2<scalar, Type>> values;
+    DynamicList<Tuple2<Coordinate, Value>> values;
 
     // Skip header
     for (label i = 0; i < nHeaderLine_; i++)
@@ -113,7 +125,8 @@ void Foam::TableReaders::Csv<Type>::read
         is.getLine(line);
     }
 
-    const label nEntries = max(columns_.first(), cmptMax(columns_.second()));
+    const label nEntries =
+        max(cmptMax(columns_.first()), cmptMax(columns_.second()));
 
     // Read data
     while (is.good())
@@ -188,10 +201,14 @@ void Foam::TableReaders::Csv<Type>::read
             break;
         }
 
-        scalar x = readScalar(IStringStream(split[columns_.first()])());
-        Type value = readValue(split);
-
-        values.append(Tuple2<scalar, Type>(x, value));
+        values.append
+        (
+            Tuple2<Coordinate , Value>
+            (
+                CsvReadValue<Coordinate>(columns_.first(), split),
+                CsvReadValue<Value>(columns_.second(), split)
+            )
+        );
     }
 
     data.transfer(values);
@@ -200,31 +217,39 @@ void Foam::TableReaders::Csv<Type>::read
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class Type>
-Foam::TableReaders::Csv<Type>::Csv
+template<class Coordinate, class Value>
+Foam::TableReaders::Csv<Coordinate, Value>::Csv
 (
     const word& name,
     const Function1s::unitConversions& units,
     const dictionary& dict
 )
 :
-    TableFileReader<Type>(units, dict),
+    TableFileReader<Coordinate, Value>(units, dict),
     nHeaderLine_(dict.lookup<label>("nHeaderLine")),
     columns_
     (
-        !dict.found("refColumn") || !dict.found("componentColumns")
+        dict.found("column")
       ? columnIndices(dict.lookup("columns"))
-      : columnIndices
+      : dict.found("refColumn") || dict.found("componentColumns")
+      ? columnIndices
         (
-            dict.lookup<label>("refColumn"),
-            CsvLabelType<Type>()
+            CsvLabelType<Coordinate>()
             (
-                dict.lookup<typename CsvLabelType<Type>::oldType>
+                dict.lookup<typename CsvLabelType<Coordinate>::oldType>
+                (
+                    "refColumn"
+                )
+            ),
+            CsvLabelType<Value>()
+            (
+                dict.lookup<typename CsvLabelType<Value>::oldType>
                 (
                     "componentColumns"
                 )
             )
         )
+      : columnIndices(dict.lookup("columns"))
     ),
     separator_(dict.lookupOrDefault<string>("separator", string(","))[0]),
     mergeSeparators_(readBool(dict.lookup("mergeSeparators")))
@@ -233,23 +258,23 @@ Foam::TableReaders::Csv<Type>::Csv
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class Type>
-Foam::TableReaders::Csv<Type>::~Csv()
+template<class Coordinate, class Value>
+Foam::TableReaders::Csv<Coordinate, Value>::~Csv()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class Type>
-void Foam::TableReaders::Csv<Type>::write
+template<class Coordinate, class Value>
+void Foam::TableReaders::Csv<Coordinate, Value>::write
 (
     Ostream& os,
     const Function1s::unitConversions& units,
-    const List<Tuple2<scalar, Type>>& table,
+    const List<Tuple2<Coordinate, Value>>& table,
     const word&
 ) const
 {
-    TableFileReader<Type>::write(os, units, table);
+    TableFileReader<Coordinate, Value>::write(os, units, table);
 
     writeEntry(os, "nHeaderLine", nHeaderLine_);
     writeEntry(os, "columns", columns_);

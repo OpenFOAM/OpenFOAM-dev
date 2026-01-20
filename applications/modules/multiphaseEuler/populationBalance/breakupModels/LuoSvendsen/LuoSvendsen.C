@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -114,7 +114,7 @@ Foam::populationBalance::breakupModels::LuoSvendsen::LuoSvendsen
             "gamma2by11",
             Function1s::tableBase::boundsHandling::clamp,
             linearInterpolationWeights::typeName,
-            autoPtr<TableReader<scalar>>(nullptr),
+            autoPtr<TableReader<scalar, scalar>>(nullptr),
             gammaUpperReg2by11Table
         );
 
@@ -124,7 +124,7 @@ Foam::populationBalance::breakupModels::LuoSvendsen::LuoSvendsen
             "gamma5by11",
             Function1s::tableBase::boundsHandling::clamp,
             linearInterpolationWeights::typeName,
-            autoPtr<TableReader<scalar>>(nullptr),
+            autoPtr<TableReader<scalar, scalar>>(nullptr),
             gammaUpperReg5by11Table
         );
 
@@ -134,7 +134,7 @@ Foam::populationBalance::breakupModels::LuoSvendsen::LuoSvendsen
             "gamma8by11",
             Function1s::tableBase::boundsHandling::clamp,
             linearInterpolationWeights::typeName,
-            autoPtr<TableReader<scalar>>(nullptr),
+            autoPtr<TableReader<scalar, scalar>>(nullptr),
             gammaUpperReg8by11Table
         );
 }

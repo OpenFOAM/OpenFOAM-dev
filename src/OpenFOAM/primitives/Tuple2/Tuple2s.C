@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,42 +23,31 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "TableReader.H"
-
-#include "EmbeddedTableReader.H"
-#include "FoamTableReader.H"
-#include "CsvTableReader.H"
-
+#include "Tuple2.H"
 #include "fieldTypes.H"
+#include "vector2D.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// Permute the order of the macro arguments so that the Value type can be
-// iterated over by FOR_ALL_FIELD_TYPES
+#define defineTuple2(Type1, Type2)                                             \
+    template<>                                                                 \
+    const char* const Tuple2<Type1, Type2>::typeName =                         \
+        "Tuple2<" #Type1 "," #Type2 ">";
 
-#define defineTableReaderValueFirst(Value, Coordinate) \
-    defineTableReader(Coordinate, Value)
-
-#define addTableReaderValueFirst(Value, TableReaderType, Coordinate) \
-    addTableReader(TableReaderType, Coordinate, Value)
+#define defineScalarTypeTuple2(Type, nullArg)                                  \
+    defineTuple2(scalar, Type)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    FOR_ALL_FIELD_TYPES(defineTableReaderValueFirst, scalar);
-    defineTableReader(vector, scalar)
-    defineTableReader(scalar, vector2D)
+    FOR_ALL_FIELD_TYPES(defineScalarTypeTuple2)
 
-    FOR_ALL_FIELD_TYPES(addTableReaderValueFirst, Embedded, scalar)
-    addTableReader(Embedded, scalar, vector2D)
-    addTableReader(Embedded, vector, scalar)
-    FOR_ALL_FIELD_TYPES(addTableReaderValueFirst, Foam, scalar)
-    addTableReader(Foam, scalar, vector2D)
-    addTableReader(Foam, vector, scalar)
-    FOR_ALL_FIELD_TYPES(addTableReaderValueFirst, Csv, scalar)
-    addTableReader(Csv, scalar, vector2D)
-    addTableReader(Csv, vector, scalar)
+    defineTuple2(vector, scalar)
+
+    defineTuple2(scalar, vector2D)
+
+    defineTuple2(word, scalar)
 }
 
 // ************************************************************************* //

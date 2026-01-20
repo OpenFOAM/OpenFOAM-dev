@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,12 +52,6 @@ Description
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #define makeFunction1s(Type, nullArg)                                          \
-                                                                               \
-    template<>                                                                 \
-    const char* const Foam::Tuple2<Foam::scalar, Type>::typeName               \
-    (                                                                          \
-        "Tuple2<scalar," #Type ">"                                             \
-    );                                                                         \
                                                                                \
     defineFunction1(Type);                                                     \
                                                                                \

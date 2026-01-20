@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,15 +107,19 @@ struct CsvLabelType<Type, CsvVoid<typename pTraits<Type>::labelType>>
                              Class Csv Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Type>
+template<class Coordinate, class Value>
 class Csv
 :
-    public TableFileReader<Type>
+    public TableFileReader<Coordinate, Value>
 {
     // Private Typedefs
 
-        //- Type of the column indices
-        typedef Tuple2<label, typename CsvLabelType<Type>::type> columnIndices;
+        //- Type of the value indices
+        typedef Tuple2
+        <
+            typename CsvLabelType<Coordinate>::type,
+            typename CsvLabelType<Value>::type
+        > columnIndices;
 
 
     // Private Data
@@ -135,11 +139,8 @@ class Csv
 
     // Private Member functions
 
-        //- Read the next value from the split string
-        Type readValue(const List<string>&) const;
-
         //- Read a 1D table
-        virtual void read(ISstream&, List<Tuple2<scalar, Type>>&) const;
+        virtual void read(ISstream&, List<Tuple2<Coordinate, Value>>&) const;
 
 
 public:
@@ -159,9 +160,13 @@ public:
         );
 
         //- Construct and return a copy
-        virtual autoPtr<TableReader<Type>> clone() const
+        virtual autoPtr<TableReader<Coordinate, Value>> clone() const
         {
-            return autoPtr<TableReader<Type>>(new Csv<Type>(*this));
+            return
+                autoPtr<TableReader<Coordinate, Value>>
+                (
+                    new Csv<Coordinate, Value>(*this)
+                );
         }
 
 
@@ -176,7 +181,7 @@ public:
         (
             Ostream& os,
             const Function1s::unitConversions& units,
-            const List<Tuple2<scalar, Type>>& table,
+            const List<Tuple2<Coordinate, Value>>& table,
             const word& valuesKeyword=word::null
         ) const;
 };

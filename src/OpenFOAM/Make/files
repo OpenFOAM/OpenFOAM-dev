@@ -89,6 +89,8 @@ primitives/quaternion/quaternion.C
 primitives/septernion/septernion.C
 primitives/triad/triad.C
 
+primitives/Tuple2/Tuple2s.C
+
 primitives/omega/omega.C
 
 # Run-time selectable functions

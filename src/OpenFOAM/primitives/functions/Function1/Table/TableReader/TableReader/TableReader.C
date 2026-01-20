@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,11 +27,11 @@ License
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
-template<class Type>
-void Foam::TableReader<Type>::convertRead
+template<class Coordinate, class Value>
+void Foam::TableReader<Coordinate, Value>::convertRead
 (
     const Function1s::unitConversions& units,
-    List<Tuple2<scalar, Type>>& table
+    List<Tuple2<Coordinate, Value>>& table
 ) const
 {
     forAll(table, i)
@@ -42,29 +42,29 @@ void Foam::TableReader<Type>::convertRead
 }
 
 
-template<class Type>
-Foam::List<Foam::Tuple2<Foam::scalar, Type>>
-Foam::TableReader<Type>::convertRead
+template<class Coordinate, class Value>
+Foam::List<Foam::Tuple2<Coordinate, Value>>
+Foam::TableReader<Coordinate, Value>::convertRead
 (
     const Function1s::unitConversions& units,
-    const List<Tuple2<scalar, Type>>& table
+    const List<Tuple2<Coordinate, Value>>& table
 ) const
 {
-    List<Tuple2<scalar, Type>> tableCopy(table);
+    List<Tuple2<Coordinate, Value>> tableCopy(table);
     convertRead(units, tableCopy);
     return tableCopy;
 }
 
 
-template<class Type>
-Foam::List<Foam::Tuple2<Foam::scalar, Type>>
-Foam::TableReader<Type>::convertWrite
+template<class Coordinate, class Value>
+Foam::List<Foam::Tuple2<Coordinate, Value>>
+Foam::TableReader<Coordinate, Value>::convertWrite
 (
     const Function1s::unitConversions& units,
-    const List<Tuple2<scalar, Type>>& table
+    const List<Tuple2<Coordinate, Value>>& table
 ) const
 {
-    List<Tuple2<scalar, Type>> tableCopy(table);
+    List<Tuple2<Coordinate, Value>> tableCopy(table);
 
     forAll(tableCopy, i)
     {
@@ -78,15 +78,15 @@ Foam::TableReader<Type>::convertWrite
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class Type>
-Foam::TableReader<Type>::TableReader()
+template<class Coordinate, class Value>
+Foam::TableReader<Coordinate, Value>::TableReader()
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class Type>
-Foam::TableReader<Type>::~TableReader()
+template<class Coordinate, class Value>
+Foam::TableReader<Coordinate, Value>::~TableReader()
 {}
 
 

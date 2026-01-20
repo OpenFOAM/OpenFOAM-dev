@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,8 +28,9 @@ License
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
 
-template<class Type>
-Foam::autoPtr<Foam::TableReader<Type>> Foam::TableReader<Type>::New
+template<class Coordinate, class Value>
+Foam::autoPtr<Foam::TableReader<Coordinate, Value>>
+Foam::TableReader<Coordinate, Value>::New
 (
     const word& name,
     const Function1s::unitConversions& units,
@@ -53,22 +54,25 @@ Foam::autoPtr<Foam::TableReader<Type>> Foam::TableReader<Type>::New
                 << exit(FatalIOError);
         }
 
-        return autoPtr<TableReader<Type>>(cstrIter()(name, units, dict));
+        return autoPtr<TableReader<Coordinate, Value>>
+        (
+            cstrIter()(name, units, dict)
+        );
     }
     else
     {
         if (dict.found("file"))
         {
-            return autoPtr<TableReader<Type>>
+            return autoPtr<TableReader<Coordinate, Value>>
             (
-                new TableReaders::Foam<Type>(name, units, dict)
+                new TableReaders::Foam<Coordinate, Value>(name, units, dict)
             );
         }
         else
         {
-            return autoPtr<TableReader<Type>>
+            return autoPtr<TableReader<Coordinate, Value>>
             (
-                new TableReaders::Embedded<Type>(name, units, dict)
+                new TableReaders::Embedded<Coordinate, Value>(name, units, dict)
             );
         }
     }

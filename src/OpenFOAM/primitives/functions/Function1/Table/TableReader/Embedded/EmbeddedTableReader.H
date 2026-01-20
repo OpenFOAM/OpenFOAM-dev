@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,10 +60,10 @@ namespace TableReaders
                             Class Foam Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Type>
+template<class Coordinate, class Value>
 class Embedded
 :
-    public TableReader<Type>
+    public TableReader<Coordinate, Value>
 {
 public:
 
@@ -85,9 +85,13 @@ public:
         );
 
         //- Construct and return a copy
-        virtual autoPtr<TableReader<Type>> clone() const
+        virtual autoPtr<TableReader<Coordinate, Value>> clone() const
         {
-            return autoPtr<TableReader<Type>>(new Embedded<Type>(*this));
+            return
+                autoPtr<TableReader<Coordinate, Value>>
+                (
+                    new Embedded<Coordinate, Value>(*this)
+                );
         }
 
 
@@ -98,7 +102,7 @@ public:
     // Member Functions
 
         //- Read values
-        virtual List<Tuple2<scalar, Type>> read
+        virtual List<Tuple2<Coordinate, Value>> read
         (
             const Function1s::unitConversions& units,
             const dictionary& dict,
@@ -106,7 +110,7 @@ public:
         ) const;
 
         //- Read values
-        List<Tuple2<scalar, Type>> read
+        List<Tuple2<Coordinate, Value>> read
         (
             const Function1s::unitConversions& units,
             Istream& is
@@ -117,7 +121,7 @@ public:
         (
             Ostream& os,
             const Function1s::unitConversions& units,
-            const List<Tuple2<scalar, Type>>& table,
+            const List<Tuple2<Coordinate, Value>>& table,
             const word& valuesKeyword="values"
         ) const;
 };

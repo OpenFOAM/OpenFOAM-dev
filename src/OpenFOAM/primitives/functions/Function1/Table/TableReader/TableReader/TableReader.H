@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,7 +47,7 @@ namespace Foam
                          Class TableReader Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Type>
+template<class Coordinate, class Value>
 class TableReader
 {
 protected:
@@ -58,21 +58,21 @@ protected:
         void convertRead
         (
             const Function1s::unitConversions& units,
-            List<Tuple2<scalar, Type>>& table
+            List<Tuple2<Coordinate, Value>>& table
         ) const;
 
         //- Do unit conversions on input data
-        List<Tuple2<scalar, Type>> convertRead
+        List<Tuple2<Coordinate, Value>> convertRead
         (
             const Function1s::unitConversions& units,
-            const List<Tuple2<scalar, Type>>& table
+            const List<Tuple2<Coordinate, Value>>& table
         ) const;
 
         //- Do unit conversions in order to output data
-        List<Tuple2<scalar, Type>> convertWrite
+        List<Tuple2<Coordinate, Value>> convertWrite
         (
             const Function1s::unitConversions& units,
-            const List<Tuple2<scalar, Type>>& table
+            const List<Tuple2<Coordinate, Value>>& table
         ) const;
 
 
@@ -104,11 +104,11 @@ public:
         TableReader();
 
         //- Construct and return a clone
-        virtual autoPtr<TableReader<Type>> clone() const = 0;
+        virtual autoPtr<TableReader<Coordinate, Value>> clone() const = 0;
 
 
     // Selector
-    static autoPtr<TableReader<Type>> New
+    static autoPtr<TableReader<Coordinate, Value>> New
     (
         const word& name,
         const Function1s::unitConversions& units,
@@ -123,7 +123,7 @@ public:
     // Member Functions
 
         //- Read values
-        virtual List<Tuple2<scalar, Type>> read
+        virtual List<Tuple2<Coordinate, Value>> read
         (
             const Function1s::unitConversions& units,
             const dictionary& dict,
@@ -135,7 +135,7 @@ public:
         (
             Ostream& os,
             const Function1s::unitConversions& units,
-            const List<Tuple2<scalar, Type>>& table,
+            const List<Tuple2<Coordinate, Value>>& table,
             const word& valuesKeyword="values"
         ) const = 0;
 };
@@ -147,18 +147,47 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define defineTableReader(Type)                                                \
+#define defineTableReader(Coordinate, Value)                                   \
                                                                                \
-    defineNamedTemplateTypeNameAndDebug(TableReader<Type>, 0);                 \
+    typedef TableReader<Coordinate, Value>                                     \
+        TableReader##Coordinate##Value;                                        \
                                                                                \
-    defineTemplateRunTimeSelectionTable(TableReader<Type>, dictionary);
+    defineNamedTemplateTypeNameAndDebug                                        \
+    (                                                                          \
+        TableReader##Coordinate##Value,                                        \
+        0                                                                      \
+    );                                                                         \
+                                                                               \
+    defineTemplateRunTimeSelectionTable                                        \
+    (                                                                          \
+        TableReader##Coordinate##Value,                                        \
+        dictionary                                                             \
+    );
 
 
-#define addTableReader(SS, Type)                                               \
+#define addTableReader(TableReaderType, Coordinate, Value)                     \
                                                                                \
-    defineNamedTemplateTypeNameAndDebug(TableReaders::SS<Type>, 0);            \
+    typedef TableReader<Coordinate, Value>                                     \
+        TableReader##Coordinate##Value;                                        \
                                                                                \
-    addTemplatedToRunTimeSelectionTable(TableReader, SS, Type, dictionary)
+    namespace TableReaders                                                     \
+    {                                                                          \
+        typedef TableReaderType<Coordinate, Value>                             \
+            TableReaderType##TableReader##Coordinate##Value;                   \
+                                                                               \
+        defineNamedTemplateTypeNameAndDebug                                    \
+        (                                                                      \
+            TableReaderType##TableReader##Coordinate##Value,                   \
+            0                                                                  \
+        );                                                                     \
+                                                                               \
+        addToRunTimeSelectionTable                                             \
+        (                                                                      \
+            TableReader##Coordinate##Value,                                    \
+            TableReaderType##TableReader##Coordinate##Value,                   \
+            dictionary                                                         \
+        );                                                                     \
+    }
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

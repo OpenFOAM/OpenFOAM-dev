@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,11 +28,11 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template<class Type>
-void Foam::TableReaders::Foam<Type>::read
+template<class Coordinate, class Value>
+void Foam::TableReaders::Foam<Coordinate, Value>::read
 (
     ISstream& is,
-    List<Tuple2<scalar, Type>>& data
+    List<Tuple2<Coordinate, Value>>& data
 ) const
 {
     List<tokenTupleN> dataStr(is);
@@ -41,46 +41,46 @@ void Foam::TableReaders::Foam<Type>::read
 
     for (label i = 0; i < dataStr.size(); ++ i)
     {
-        data[i].first() = dataStr[i].get<scalar>(is, columns_.first());
-        data[i].second() = dataStr[i].get<Type>(is, columns_.second());
+        data[i].first() = dataStr[i].get<Coordinate>(is, columns_.first());
+        data[i].second() = dataStr[i].get<Value>(is, columns_.second());
     }
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class Type>
-Foam::TableReaders::Foam<Type>::Foam
+template<class Coordinate, class Value>
+Foam::TableReaders::Foam<Coordinate, Value>::Foam
 (
     const word& name,
     const Function1s::unitConversions& units,
     const dictionary& dict
 )
 :
-    TableFileReader<Type>(units, dict),
+    TableFileReader<Coordinate, Value>(units, dict),
     columns_(dict.lookupOrDefault<labelPair>("columns", labelPair(0, 1)))
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class Type>
-Foam::TableReaders::Foam<Type>::~Foam()
+template<class Coordinate, class Value>
+Foam::TableReaders::Foam<Coordinate, Value>::~Foam()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class Type>
-void Foam::TableReaders::Foam<Type>::write
+template<class Coordinate, class Value>
+void Foam::TableReaders::Foam<Coordinate, Value>::write
 (
     Ostream& os,
     const Function1s::unitConversions& units,
-    const List<Tuple2<scalar, Type>>& table,
+    const List<Tuple2<Coordinate, Value>>& table,
     const word&
 ) const
 {
-    TableFileReader<Type>::write(os, units, table);
+    TableFileReader<Coordinate, Value>::write(os, units, table);
 
     writeEntry(os, "columns", columns_);
 }

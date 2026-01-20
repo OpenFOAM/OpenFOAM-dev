@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,9 +28,9 @@ License
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
-template<class Type>
+template<class Coordinate, class Value>
 Foam::autoPtr<Foam::Function1s::unitConversions>
-Foam::TableFileReader<Type>::readUnits
+Foam::TableFileReader<Coordinate, Value>::readUnits
 (
     const Function1s::unitConversions& defaultUnits,
     const dictionary& dict
@@ -52,12 +52,12 @@ Foam::TableFileReader<Type>::readUnits
 }
 
 
-template<class Type>
-void Foam::TableFileReader<Type>::read
+template<class Coordinate, class Value>
+void Foam::TableFileReader<Coordinate, Value>::read
 (
     const Function1s::unitConversions& defaultUnits,
     const dictionary& dict,
-    List<Tuple2<scalar, Type>>& table
+    List<Tuple2<Coordinate, Value>>& table
 ) const
 {
     // Expand the file
@@ -86,7 +86,7 @@ void Foam::TableFileReader<Type>::read
     }
 
     // Convert units
-    TableReader<Type>::convertRead
+    TableReader<Coordinate, Value>::convertRead
     (
         unitsPtr_.valid() ? unitsPtr_() : defaultUnits,
         table
@@ -96,26 +96,26 @@ void Foam::TableFileReader<Type>::read
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class Type>
-Foam::TableFileReader<Type>::TableFileReader
+template<class Coordinate, class Value>
+Foam::TableFileReader<Coordinate, Value>::TableFileReader
 (
     const Function1s::unitConversions& defaultUnits,
     const dictionary& dict
 )
 :
-    TableReader<Type>(),
+    TableReader<Coordinate, Value>(),
     fName_(dict.lookup("file")),
     unitsPtr_(readUnits(defaultUnits, dict))
 {}
 
 
-template<class Type>
-Foam::TableFileReader<Type>::TableFileReader
+template<class Coordinate, class Value>
+Foam::TableFileReader<Coordinate, Value>::TableFileReader
 (
-    const TableFileReader<Type>& tfr
+    const TableFileReader<Coordinate, Value>& tfr
 )
 :
-    TableReader<Type>(tfr),
+    TableReader<Coordinate, Value>(tfr),
     fName_(tfr.fName_),
     unitsPtr_(tfr.unitsPtr_, false)
 {}
@@ -123,34 +123,34 @@ Foam::TableFileReader<Type>::TableFileReader
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class Type>
-Foam::TableFileReader<Type>::~TableFileReader()
+template<class Coordinate, class Value>
+Foam::TableFileReader<Coordinate, Value>::~TableFileReader()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class Type>
-Foam::List<Foam::Tuple2<Foam::scalar, Type>>
-Foam::TableFileReader<Type>::read
+template<class Coordinate, class Value>
+Foam::List<Foam::Tuple2<Coordinate, Value>>
+Foam::TableFileReader<Coordinate, Value>::read
 (
     const Function1s::unitConversions& units,
     const dictionary& dict,
     const word&
 ) const
 {
-    List<Tuple2<scalar, Type>> data;
+    List<Tuple2<Coordinate, Value>> data;
     read(units, dict, data);
     return data;
 }
 
 
-template<class Type>
-void Foam::TableFileReader<Type>::write
+template<class Coordinate, class Value>
+void Foam::TableFileReader<Coordinate, Value>::write
 (
     Ostream& os,
     const Function1s::unitConversions& units,
-    const List<Tuple2<scalar, Type>>& table,
+    const List<Tuple2<Coordinate, Value>>& table,
     const word&
 ) const
 {

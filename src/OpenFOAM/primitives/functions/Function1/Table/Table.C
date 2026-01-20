@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -125,7 +125,7 @@ Foam::Function1s::Table<Type>::Table
     const word& name,
     const tableBase::boundsHandling boundsHandling,
     const word& interpolationScheme,
-    const autoPtr<TableReader<Type>>& reader,
+    const autoPtr<TableReader<scalar, Type>>& reader,
     const List<Tuple2<scalar, Type>>& table
 )
 :
@@ -160,7 +160,7 @@ Foam::Function1s::Table<Type>::Table
             linearInterpolationWeights::typeName
         )
     ),
-    reader_(TableReader<Type>::New(name, units, dict)),
+    reader_(TableReader<scalar, Type>::New(name, units, dict)),
     values_(reader_->read(units, dict))
 {
     check();
@@ -191,8 +191,8 @@ Foam::Function1s::Table<Type>::Table
     FieldFunction1<Type, Table<Type>>(name),
     boundsHandling_(tableBase::boundsHandling::clamp),
     interpolationScheme_(linearInterpolationWeights::typeName),
-    reader_(new TableReaders::Embedded<Type>()),
-    values_(TableReaders::Embedded<Type>().read(units, is))
+    reader_(new TableReaders::Embedded<scalar, Type>()),
+    values_(TableReaders::Embedded<scalar, Type>().read(units, is))
 {
     check();
 }

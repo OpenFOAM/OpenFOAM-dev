@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,10 +46,10 @@ namespace Foam
                          Class TableFileReader Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Type>
+template<class Coordinate, class Value>
 class TableFileReader
 :
-    public TableReader<Type>
+    public TableReader<Coordinate, Value>
 {
     // Private Data
 
@@ -70,7 +70,11 @@ class TableFileReader
         ) const;
 
         //- Read a 1D table
-        virtual void read(ISstream&, List<Tuple2<scalar, Type>>&) const = 0;
+        virtual void read
+        (
+            ISstream&,
+            List<Tuple2<Coordinate, Value>>&
+        ) const = 0;
 
 
 protected:
@@ -82,7 +86,7 @@ protected:
         (
             const Function1s::unitConversions& defaultUnits,
             const dictionary& dict,
-            List<Tuple2<scalar, Type>>&
+            List<Tuple2<Coordinate, Value>>&
         ) const;
 
 
@@ -98,7 +102,7 @@ public:
         );
 
         //- Copy construct
-        TableFileReader(const TableFileReader<Type>&);
+        TableFileReader(const TableFileReader<Coordinate, Value>&);
 
 
     //- Destructor
@@ -108,7 +112,7 @@ public:
     // Member Functions
 
         //- Read values
-        virtual List<Tuple2<scalar, Type>> read
+        virtual List<Tuple2<Coordinate, Value>> read
         (
             const Function1s::unitConversions& units,
             const dictionary& dict,
@@ -120,7 +124,7 @@ public:
         (
             Ostream& os,
             const Function1s::unitConversions& units,
-            const List<Tuple2<scalar, Type>>& table,
+            const List<Tuple2<Coordinate, Value>>& table,
             const word& valuesKeyword=word::null
         ) const;
 };
