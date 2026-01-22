@@ -63,7 +63,8 @@ extern "C"
     #define CODE_BLOCK_DICT_FUNCTION(index)                                    \
         void CAT3(${typeName}, _, index)                                       \
         (                                                                      \
-            dictionary& dict                                                   \
+            dictionary& dict,                                                  \
+            Istream& is                                                        \
         )
 
 //{{{ begin code

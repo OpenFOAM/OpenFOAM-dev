@@ -64,7 +64,7 @@ Foam::string Foam::functionEntries::codeDict::codeString
 }
 
 
-Foam::functionEntries::codeDict::streamingFunctionType
+Foam::functionEntries::codeDict::codeDictFunctionType
 Foam::functionEntries::codeDict::getFunction
 (
     const dictionary& contextDict,
@@ -82,8 +82,8 @@ Foam::functionEntries::codeDict::getFunction
     );
 
     // Find the function handle in the library
-    const streamingFunctionType function =
-        reinterpret_cast<streamingFunctionType>
+    const codeDictFunctionType function =
+        reinterpret_cast<codeDictFunctionType>
         (
             dlSym(lib, codeName)
         );
@@ -124,10 +124,10 @@ bool Foam::functionEntries::codeDict::resultStream
     const dictionary codeDict(typeName, contextDict, is);
 
     // Compile and link the code library and get the function pointer
-    const streamingFunctionType function = getFunction(contextDict, codeDict);
+    const codeDictFunctionType function = getFunction(contextDict, codeDict);
 
     // Use function to append to contextDict
-    (*function)(contextDict);
+    (*function)(contextDict, is);
 
     return true;
 }

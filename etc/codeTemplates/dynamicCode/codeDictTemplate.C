@@ -55,7 +55,8 @@ extern "C"
 {
     void ${typeName}
     (
-        dictionary& dict
+        dictionary& dict,
+        Istream& is
     )
     {
 //{{{ begin code

@@ -64,8 +64,8 @@ bool Foam::functionEntries::codeBlockDictEntry::resultStream
     );
 
     // Find the function handle in the library
-    const codeDict::streamingFunctionType function =
-        reinterpret_cast<codeDict::streamingFunctionType>
+    const codeDict::codeDictFunctionType function =
+        reinterpret_cast<codeDict::codeDictFunctionType>
         (
             dlSym(codeBlockPtr_->lib_, functionName)
         );
@@ -78,7 +78,7 @@ bool Foam::functionEntries::codeBlockDictEntry::resultStream
     }
 
     // Use function to append to contextDict
-    (*function)(dict);
+    (*function)(dict, is);
 
     return true;
 }

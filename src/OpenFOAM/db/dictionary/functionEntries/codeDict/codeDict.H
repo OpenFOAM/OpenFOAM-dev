@@ -38,9 +38,10 @@ Description
     \c dynamicCode/platforms/$WM_OPTIONS/lib directory using 'wmake libso'.
     The resulting library is loaded in executed with arguments
     \code
-        (dictionary& dict)
+        (dictionary& dict, Istream& is)
     \endcode
-    where the dictionary is the current dictionary.
+    where the dict is the current dictionary and is the stream from which the
+    dictionary is being read.
 
     The verbatim string format \c \#{ ... \c \#} is used to allow multi-line
     input without the need to escape the newlines.
@@ -130,7 +131,7 @@ class codeDict
     public codeStream
 {
     //- Interpreter function type
-    typedef void (*streamingFunctionType)(const dictionary&);
+    typedef void (*codeDictFunctionType)(dictionary&, Istream& is);
 
 
     // Private Member Functions
@@ -144,7 +145,7 @@ class codeDict
         );
 
         //- Construct, compile, load and return streaming function
-        streamingFunctionType getFunction
+        codeDictFunctionType getFunction
         (
             const dictionary& contextDict,
             const dictionary& codeDict
