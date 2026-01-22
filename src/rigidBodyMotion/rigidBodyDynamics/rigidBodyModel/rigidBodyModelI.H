@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ inline Foam::label Foam::RBD::rigidBodyModel::nBodies() const
 }
 
 
-inline Foam::PtrList<Foam::RBD::rigidBody>
+inline const Foam::PtrList<Foam::RBD::rigidBody>&
 Foam::RBD::rigidBodyModel::bodies() const
 {
     return bodies_;

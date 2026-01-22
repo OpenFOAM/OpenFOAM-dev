@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -227,7 +227,7 @@ public:
         inline label nBodies() const;
 
         //- Return the list of the bodies in the model
-        inline PtrList<rigidBody> bodies() const;
+        inline const PtrList<rigidBody>& bodies() const;
 
         //- List of indices of the parent of each body
         inline const DynamicList<label>& lambda() const;
