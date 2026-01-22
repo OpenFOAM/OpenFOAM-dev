@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ License
 
 #include "GAMGSolver.H"
 #include "GAMGInterface.H"
+#include "diagonalSolver.H"
 #include "PCG.H"
 #include "PBiCGStab.H"
 
@@ -268,7 +269,20 @@ Foam::GAMGSolver::GAMGSolver
             else
             {
                 coarsestSolverPtr_ =
-                    matrixLevels_[coarsestLevel].asymmetric()
+                    matrixLevels_[coarsestLevel].diagonal()
+                  ? autoPtr<lduMatrix::solver>
+                    (
+                        new diagonalSolver
+                        (
+                            "coarsestLevelCorr",
+                            matrixLevels_[coarsestLevel],
+                            interfaceLevelsBouCoeffs_[coarsestLevel],
+                            interfaceLevelsIntCoeffs_[coarsestLevel],
+                            interfaceLevels_[coarsestLevel],
+                            dictionary()
+                        )
+                    )
+                  : matrixLevels_[coarsestLevel].asymmetric()
                   ? autoPtr<lduMatrix::solver>
                     (
                         new PBiCGStab

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "lduMatrix.H"
+#include "noSmoother.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -84,7 +85,21 @@ Foam::autoPtr<Foam::lduMatrix::smoother> Foam::lduMatrix::smoother::New
     // not (yet?) needed:
     // const dictionary& controls = e.isDict() ? e.dict() : dictionary::null;
 
-    if (matrix.symmetric())
+    if (matrix.diagonal())
+    {
+        return autoPtr<lduMatrix::smoother>
+        (
+            new noSmoother
+            (
+                fieldName,
+                matrix,
+                interfaceBouCoeffs,
+                interfaceIntCoeffs,
+                interfaces
+            )
+        );
+    }
+    else if (matrix.symmetric())
     {
         symMatrixConstructorTable::iterator constructorIter =
             symMatrixConstructorTablePtr_->find(name);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "lduMatrix.H"
+#include "noPreconditioner.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -80,7 +81,18 @@ Foam::lduMatrix::preconditioner::New
 
     const dictionary& controls = e.isDict() ? e.dict() : dictionary::null;
 
-    if (sol.matrix().symmetric())
+    if (sol.matrix().diagonal())
+    {
+        return autoPtr<lduMatrix::preconditioner>
+        (
+            new noPreconditioner
+            (
+                sol,
+                controls
+            )
+        );
+    }
+    else if (sol.matrix().symmetric())
     {
         symMatrixConstructorTable::iterator constructorIter =
             symMatrixConstructorTablePtr_->find(name);
