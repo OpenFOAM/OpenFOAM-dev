@@ -122,6 +122,7 @@ See also
 
 #include "isothermalFluid.H"
 #include "ubRhoThermo.H"
+#include "reactionModel.H"
 #include "ubMomentumTransportModel.H"
 #include "PhaseThermophysicalTransportModel.H"
 #include "SuModel.H"
@@ -155,7 +156,7 @@ protected:
         RASModels::ubMomentumTransportModel bMomentumTransport_;
 
 
-    // Thermophysical transport
+    // Unburnt and burnt gas Thermophysical transport
 
         typedef PhaseThermophysicalTransportModel
         <
@@ -165,6 +166,12 @@ protected:
 
         autoPtr<thermophysicalTransportModel> uThermophysicalTransport_;
         autoPtr<thermophysicalTransportModel> bThermophysicalTransport_;
+
+
+    // Unburnt and burnt gas reactions
+
+        autoPtr<reactionModel> uReaction_;
+        autoPtr<reactionModel> bReaction_;
 
 
     // Reactions
@@ -225,18 +232,22 @@ protected:
         void ubSolve
         (
             volScalarField& f,
+            const word& fName,
+            const volScalarField& alpha,
             const volScalarField& bc,
             const volScalarField::Internal& bcStab,
             const surfaceScalarField& phibc,
             const volScalarField& D,
             const thermophysicalTransportModel& thermophysicalTransport,
-            const fvScalarMatrix& source
+            const fvScalarMatrix& source,
+            const reactionModel& reaction
         );
 
         //- Solve for a unburnt gas specie
         void uSolve
         (
-            volScalarField& fuu,
+            volScalarField& fu,
+            const word& fuName,
             const volScalarField::Internal& bStab,
             const surfaceScalarField& phib,
             const fvScalarMatrix& source
@@ -246,6 +257,7 @@ protected:
         void bSolve
         (
             volScalarField& fb,
+            const word& fbName,
             const volScalarField::Internal& cStab,
             const surfaceScalarField& phic,
             const fvScalarMatrix& source

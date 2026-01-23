@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,6 +90,10 @@ Foam::solvers::XiFluid::XiFluid(fvMesh& mesh)
             thermo_.bThermo()
         )
     ),
+
+    uReaction_(reactionModel::New(thermo_.uThermo(), uMomentumTransport_)),
+
+    bReaction_(reactionModel::New(thermo_.bThermo(), bMomentumTransport_)),
 
     combustionProperties
     (

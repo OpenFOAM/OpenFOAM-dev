@@ -28,6 +28,7 @@ License
 #include "uHomogeneousMixture.H"
 #include "uInhomogeneousMixture.H"
 #include "uInhomogeneousEGRMixture.H"
+#include "uMulticomponentMixture.H"
 
 #include "forGases.H"
 
@@ -35,23 +36,23 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeURhoMulticomponentThermos(Mixture, ThermoPhysics)                 \
+#define makeURhoMulticomponentThermos(Mixture, ThermoPhysics)                  \
                                                                                \
-    defineThermo(uRhoMulticomponentThermo, Mixture, ThermoPhysics);           \
+    defineThermo(uRhoMulticomponentThermo, Mixture, ThermoPhysics);            \
                                                                                \
-    addThermo(basicThermo, uRhoMulticomponentThermo, Mixture, ThermoPhysics); \
-    addThermo(fluidThermo, uRhoMulticomponentThermo, Mixture, ThermoPhysics); \
+    addThermo(basicThermo, uRhoMulticomponentThermo, Mixture, ThermoPhysics);  \
+    addThermo(fluidThermo, uRhoMulticomponentThermo, Mixture, ThermoPhysics);  \
     addThermo                                                                  \
     (                                                                          \
         rhoFluidThermo,                                                        \
-        uRhoMulticomponentThermo,                                             \
+        uRhoMulticomponentThermo,                                              \
         Mixture,                                                               \
         ThermoPhysics                                                          \
     );                                                                         \
     addThermo                                                                  \
     (                                                                          \
-        uRhoMulticomponentThermo,                                             \
-        uRhoMulticomponentThermo,                                             \
+        uRhoMulticomponentThermo,                                              \
+        uRhoMulticomponentThermo,                                              \
         Mixture,                                                               \
         ThermoPhysics                                                          \
     )
@@ -74,6 +75,11 @@ namespace Foam
     (
         makeURhoMulticomponentThermos,
         uInhomogeneousEGRMixture
+    );
+    forCoeffEnthalpyGases
+    (
+        makeURhoMulticomponentThermos,
+        uMulticomponentMixture
     );
 }
 

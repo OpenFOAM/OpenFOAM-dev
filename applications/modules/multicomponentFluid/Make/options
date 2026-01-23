@@ -10,8 +10,6 @@ EXE_INC = \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/multicomponentThermo/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
-    -I$(LIB_SRC)/thermophysicalModels/chemistryModel/lnInclude \
-    -I$(LIB_SRC)/ODE/lnInclude \
     -I$(LIB_SRC)/reactionModels/lnInclude \
     -I$(LIB_SRC)/finiteVolume/cfdTools \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
@@ -22,9 +20,6 @@ LIB_LIBS = \
     -lbasicFluidSolver \
     -lisothermalFluidSolver \
     -lfluidThermophysicalModels \
-    -lspecie \
-    -lchemistryModel \
-    -lODE \
     -lreactionModels \
     -lmulticomponentThermophysicalModels \
     -lmomentumTransportModels \
