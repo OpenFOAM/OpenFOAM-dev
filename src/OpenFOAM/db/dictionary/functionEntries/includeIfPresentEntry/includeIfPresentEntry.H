@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,6 +29,12 @@ Description
 
     The \c \#includeIfPresent directive is similar to the \c \#include
     directive, but does not generate an error if the file does not exist.
+
+    Additionally optional arguments may be specified which are available for
+    substitution in the included file e.g.
+    \verbatim
+        #includeIfPresent "regionFunctions"(region = heatedWall)
+    \endverbatim
 
 See also
     Foam::functionEntries::includeEntry
