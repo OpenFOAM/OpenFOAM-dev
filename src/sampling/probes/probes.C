@@ -486,7 +486,10 @@ void Foam::probes::distribute(const polyDistributionMap& map)
         labelList elementProbes(nOldElements, -1);
         forAll(probeElements, probei)
         {
-            elementProbes[probeElements[probei]] = probei;
+            if (probeElements[probei] != -1)
+            {
+                elementProbes[probeElements[probei]] = probei;
+            }
         }
 
         elementMap.distribute(elementProbes);
