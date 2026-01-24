@@ -59,7 +59,7 @@ Description
             Magnussen, B. F. (2005, June).
             The Eddy Dissipation Concept -
             A Bridge Between Science and Technology.
-            In ECCOMAS thematic conference on computational reaction
+            In ECCOMAS thematic conference on computational combustion
             (pp. 21-24).
 
         Version v1981:
@@ -77,8 +77,8 @@ Description
 
             Gran, I. R., & Magnussen, B. F. (1996).
             A numerical study of a bluff-body stabilised diffusion flame.
-            Part 2. Influence of reaction modeling and finite-rate chemistry.
-            Reaction Science and Technology, 119(1-6), 191-217.
+            Part 2. Influence of combustion modeling and finite-rate chemistry.
+            Combustion Science and Technology, 119(1-6), 191-217.
 
         Version v2016:
 
@@ -87,7 +87,7 @@ Description
             Parente, A., Malik, M. R., Contino, F., Cuoci, A., & Dally, B. B.
             (2016).
             Extension of the Eddy Dissipation Concept for
-            turbulence/chemistry interactions to MILD reaction.
+            turbulence/chemistry interactions to MILD combustion.
             Fuel, 163, 98-111.
     \endverbatim
 
