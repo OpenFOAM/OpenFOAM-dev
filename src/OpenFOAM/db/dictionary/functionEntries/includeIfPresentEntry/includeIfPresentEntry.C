@@ -75,19 +75,7 @@ bool Foam::functionEntries::includeIfPresentEntry::execute
     Istream& is
 )
 {
-    const fileName fName
-    (
-        includeFileName(is, includeEntry::fName(), contextDict)
-    );
-
-    if (fileHandler().exists(fName))
-    {
-        return includeEntry::execute(contextDict, is);
-    }
-    else
-    {
-        return true;
-    }
+    return includeEntry::execute(contextDict, is, true);
 }
 
 
@@ -98,16 +86,7 @@ bool Foam::functionEntries::includeIfPresentEntry::execute
     Istream& is
 )
 {
-    const fileName fName(includeFileName(is, fileName(is), contextDict));
-
-    if (fileHandler().exists(fName))
-    {
-        return includeEntry::execute(contextDict, contextEntry, is);
-    }
-    else
-    {
-        return true;
-    }
+    return includeEntry::execute(contextDict, contextEntry, is, true);
 }
 
 

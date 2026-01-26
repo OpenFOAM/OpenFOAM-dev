@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,7 +96,10 @@ class includeEntry
         ) const;
 
 
+
 protected:
+
+    // Protected Member Functions
 
         //- Return the file name
         const string& fName() const
@@ -123,11 +126,6 @@ protected:
             }
         }
 
-
-protected:
-
-    // Protected Member Functions
-
         //- Expand fileName and return
         static fileName includeFileName
         (
@@ -142,6 +140,25 @@ protected:
             const fileName& dir,
             const fileName&,
             const dictionary&
+        );
+
+        //- Expand the functionEntry into the contextDict
+        //  with support for includeIfPresent
+        bool execute
+        (
+            dictionary& contextDict,
+            Istream&,
+            const bool ifPresent
+        );
+
+        //- Expand the functionEntry into the contextEntry
+        //  with support for includeIfPresent
+        static bool execute
+        (
+            const dictionary& contextDict,
+            primitiveEntry& contextEntry,
+            Istream&,
+            const bool ifPresent
         );
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -179,50 +179,34 @@ Foam::fileName Foam::functionEntries::includeEntry::includeFileName
 }
 
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::functionEntries::includeEntry::includeEntry
-(
-    const functionName& functionType,
-    const label lineNumber,
-    const dictionary& parentDict,
-    Istream& is
-)
-:
-    functionEntry
-    (
-        functionType,
-        lineNumber,
-        parentDict,
-        is,
-        readFileNameArgList(functionType, is)
-    )
-{}
-
-
-Foam::functionEntries::includeEntry::includeEntry
-(
-    const label lineNumber,
-    const dictionary& parentDict,
-    Istream& is
-)
-:
-    includeEntry(typeName, lineNumber, parentDict, is)
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
 bool Foam::functionEntries::includeEntry::execute
 (
     dictionary& contextDict,
-    Istream& is
+    Istream& is,
+    const bool ifPresent
 )
 {
     const fileName fName
     (
         includeFileName(is.name().path(), this->fName(), contextDict)
     );
+
+    if (!fileHandler().exists(fName))
+    {
+        if (ifPresent)
+        {
+            return true;
+        }
+        else
+        {
+            FatalIOErrorInFunction
+            (
+                is
+            )   << "Cannot find include file " << fName
+                << " while reading dictionary " << contextDict.name()
+                << exit(FatalIOError);
+        }
+    }
 
     // Cache the optional named arguments
     // temporarily inserted into contextDict
@@ -286,7 +270,8 @@ bool Foam::functionEntries::includeEntry::execute
 (
     const dictionary& contextDict,
     primitiveEntry& contextEntry,
-    Istream& is
+    Istream& is,
+    const bool ifPresent
 )
 {
     const includeEntry ie(is.lineNumber(), contextDict, is);
@@ -295,6 +280,23 @@ bool Foam::functionEntries::includeEntry::execute
     (
         includeFileName(is.name().path(), ie.fName(), contextDict)
     );
+
+    if (!fileHandler().exists(fName))
+    {
+        if (ifPresent)
+        {
+            return true;
+        }
+        else
+        {
+            FatalIOErrorInFunction
+            (
+                is
+            )   << "Cannot find include file " << fName
+                << " while reading dictionary " << contextDict.name()
+                << exit(FatalIOError);
+        }
+    }
 
     // Cache the optional named arguments
     // temporarily inserted into contextDict
@@ -331,6 +333,61 @@ bool Foam::functionEntries::includeEntry::execute
     ie.removeInsertNamedArgs(const_cast<dictionary&>(contextDict), namedArgs);
 
     return true;
+}
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::functionEntries::includeEntry::includeEntry
+(
+    const functionName& functionType,
+    const label lineNumber,
+    const dictionary& parentDict,
+    Istream& is
+)
+:
+    functionEntry
+    (
+        functionType,
+        lineNumber,
+        parentDict,
+        is,
+        readFileNameArgList(functionType, is)
+    )
+{}
+
+
+Foam::functionEntries::includeEntry::includeEntry
+(
+    const label lineNumber,
+    const dictionary& parentDict,
+    Istream& is
+)
+:
+    includeEntry(typeName, lineNumber, parentDict, is)
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+bool Foam::functionEntries::includeEntry::execute
+(
+    dictionary& contextDict,
+    Istream& is
+)
+{
+    return execute(contextDict, is, false);
+}
+
+
+bool Foam::functionEntries::includeEntry::execute
+(
+    const dictionary& contextDict,
+    primitiveEntry& contextEntry,
+    Istream& is
+)
+{
+    return execute(contextDict, contextEntry, is, false);
 }
 
 
