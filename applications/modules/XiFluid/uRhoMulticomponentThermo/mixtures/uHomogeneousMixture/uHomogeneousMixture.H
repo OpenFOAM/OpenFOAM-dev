@@ -120,7 +120,7 @@ public:
         }
 
         //- Return the fuel-oxidant equivalence ratio
-        scalar Phi(const scalarFieldListSlice& Y) const
+        scalar Phi(const scalarFieldListSlice& Yu) const
         {
             return Phi_;
         }

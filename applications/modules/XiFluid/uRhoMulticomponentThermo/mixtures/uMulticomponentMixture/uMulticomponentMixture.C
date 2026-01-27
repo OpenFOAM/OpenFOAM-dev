@@ -33,7 +33,9 @@ Foam::uMulticomponentMixture<ThermoType>::uMulticomponentMixture
     const dictionary& dict
 )
 :
-    coefficientMulticomponentMixture<ThermoType>(dict)
+    coefficientMulticomponentMixture<ThermoType>(dict),
+    FU(findIndex(this->specieNames(), dict.lookup<word>("fuelSpecie"))),
+    stoicRatio_(dict.lookup<scalar>("stoichiometricAirFuelMassRatio"))
 {}
 
 
@@ -42,11 +44,10 @@ Foam::uMulticomponentMixture<ThermoType>::uMulticomponentMixture
 template<class ThermoType>
 Foam::scalar Foam::uMulticomponentMixture<ThermoType>::Phi
 (
-    const scalarFieldListSlice& Y
+    const scalarFieldListSlice& Yu
 ) const
 {
-    NotImplemented;
-    return 1;
+    return stoicRatio_*Yu[FU]/max(scalar(1) - Yu[FU], small);
 }
 
 
@@ -57,10 +58,8 @@ Foam::uMulticomponentMixture<ThermoType>::prompt
     const PtrList<volScalarField>& Yu
 ) const
 {
-    NotImplemented;
-
     PtrList<volScalarField::Internal> Yp(1);
-    Yp.set(0, Yu[0]());
+    Yp.set(0, Yu[FU]());
 
     return Yp;
 }

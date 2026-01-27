@@ -46,10 +46,10 @@ Foam::uInhomogeneousMixture<ThermoType>::uInhomogeneousMixture
 template<class ThermoType>
 Foam::scalar Foam::uInhomogeneousMixture<ThermoType>::Phi
 (
-    const scalarFieldListSlice& Y
+    const scalarFieldListSlice& Yu
 ) const
 {
-    return stoicRatio_*Y[FU]/max(scalar(1) - Y[FU], small);
+    return stoicRatio_*Yu[FU]/max(scalar(1) - Yu[FU], small);
 }
 
 

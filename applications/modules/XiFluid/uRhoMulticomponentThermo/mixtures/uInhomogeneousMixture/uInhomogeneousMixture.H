@@ -145,7 +145,7 @@ public:
         }
 
         //- Return the fuel-oxidant equivalence ratio
-        scalar Phi(const scalarFieldListSlice& Y) const;
+        scalar Phi(const scalarFieldListSlice& Yu) const;
 
         //- Return the prompt burnt gas composition
         PtrList<volScalarField::Internal> prompt

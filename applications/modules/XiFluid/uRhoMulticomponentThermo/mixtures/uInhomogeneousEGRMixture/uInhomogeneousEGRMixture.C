@@ -74,10 +74,10 @@ const ThermoType& Foam::uInhomogeneousEGRMixture<ThermoType>::specieThermo
 template<class ThermoType>
 Foam::scalar Foam::uInhomogeneousEGRMixture<ThermoType>::Phi
 (
-    const scalarFieldListSlice& Y
+    const scalarFieldListSlice& Yu
 ) const
 {
-    const scalar ft = Y[FU] + Y[EGR]/(stoicRatio_ + 1);
+    const scalar ft = Yu[FU] + Yu[EGR]/(stoicRatio_ + 1);
     return stoicRatio_*ft/max(1 - ft, small);
 }
 

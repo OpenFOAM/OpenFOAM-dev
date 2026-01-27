@@ -152,7 +152,7 @@ public:
         const ThermoType& specieThermo(const label speciei) const;
 
         //- Return the fuel-oxidant equivalence ratio
-        scalar Phi(const scalarFieldListSlice& Y) const;
+        scalar Phi(const scalarFieldListSlice& Yu) const;
 
         //- Return the mixture for thermodynamic properties
         const thermoMixtureType& thermoMixture

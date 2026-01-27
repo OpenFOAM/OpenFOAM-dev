@@ -54,6 +54,17 @@ class uMulticomponentMixture
 :
     public coefficientMulticomponentMixture<ThermoType>
 {
+    // Private Enumerations
+
+        //- Fuel specie index
+        label FU;
+
+
+    // Private Data
+
+        //- Stoichiometric air/fuel ratio
+        scalar stoicRatio_;
+
 
 public:
 
@@ -78,7 +89,7 @@ public:
         }
 
         //- Return the fuel-oxidant equivalence ratio
-        scalar Phi(const scalarFieldListSlice& Y) const;
+        scalar Phi(const scalarFieldListSlice& Yu) const;
 
         //- Return the prompt burnt gas composition
         PtrList<volScalarField::Internal> prompt
