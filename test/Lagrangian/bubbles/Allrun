@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 cd ${0%/*} || exit 1    # Run from this directory
 
 # Source tutorial run functions
@@ -35,7 +35,7 @@ do
 
     runApplication -s $substitutions foamRun
 
-    cp -n $plotFile $plotFile.$substitutions
+    cp --update=none $plotFile $plotFile.$substitutions
 done
 
 # Get the thermodynamic properties

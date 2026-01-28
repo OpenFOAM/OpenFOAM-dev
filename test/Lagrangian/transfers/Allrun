@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 cd ${0%/*} || exit 1    # Run from this directory
 
 # Source tutorial run functions
@@ -42,8 +42,6 @@ compressibleVoFDropletsPlot="\
 postProcessing/compressibleVoFDropletsPlot/0/LagrangianFieldValue.dat"
 compressibleVoFCarrierPlot="\
 postProcessing/compressibleVoF/compressibleVoFCarrierPlot/$t1/volFieldValue.dat"
-
-cumulative="< awk '{for(i=1;i<=NF;i++){sum[i]+=\$i;\$i=sum[i]};print}'"
 
 # Plot a comparison between the change in droplet volume or mass and the
 # corresponding carrier source terms

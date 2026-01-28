@@ -184,7 +184,7 @@ boundary
 
                     if (!patchGroups[yi].empty())
                     {
-                        os  << "inGroups" << patchGroups[yi]
+                        os  << word("inGroups") << patchGroups[yi]
                             << token::END_STATEMENT;
                     }
 
