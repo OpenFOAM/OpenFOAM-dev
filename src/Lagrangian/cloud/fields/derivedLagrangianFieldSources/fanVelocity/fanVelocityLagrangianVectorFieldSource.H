@@ -34,6 +34,7 @@ Usage
     \table
         Property      | Description                       | Required? | Default
         Ucentre       | The velocity along the centreline | yes       |
+        normal        | Normal to the plane of the fan    | yes       |
         thetaInner    | The inner fan angle               | yes       |
         thetaOuter    | The outer fan angle               | yes       |
     \endtable
@@ -52,6 +53,7 @@ Usage
                 (0.5 (0.5 0 0))
             );
         }
+        normal          (0 0 1);
         thetaInner      15 [deg];
         thetaOuter      22.5 [deg];
     }
