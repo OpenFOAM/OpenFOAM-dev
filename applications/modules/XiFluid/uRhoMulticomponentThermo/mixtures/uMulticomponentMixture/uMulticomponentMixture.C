@@ -34,7 +34,7 @@ Foam::uMulticomponentMixture<ThermoType>::uMulticomponentMixture
 )
 :
     coefficientMulticomponentMixture<ThermoType>(dict),
-    FU(findIndex(this->specieNames(), dict.lookup<word>("fuelSpecie"))),
+    FU(this->species()[dict.lookup<word>("fuelSpecie")]),
     stoicRatio_(dict.lookup<scalar>("stoichiometricAirFuelMassRatio"))
 {}
 

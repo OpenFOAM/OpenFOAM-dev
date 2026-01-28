@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,6 +33,8 @@ Foam::multicomponentMixture<ThermoType>::multicomponentMixture
 (
     const dictionary& dict
 )
+:
+    species_(dict.lookup("species"))
 {
     read(dict);
 }
@@ -41,40 +43,24 @@ Foam::multicomponentMixture<ThermoType>::multicomponentMixture
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class ThermoType>
-Foam::wordList Foam::multicomponentMixture<ThermoType>::specieNames() const
-{
-    wordList result(specieThermos_.size());
-
-    forAll(specieThermos_, speciei)
-    {
-        result[speciei] = specieThermos_[speciei].name();
-    }
-
-    return result;
-}
-
-
-template<class ThermoType>
 void Foam::multicomponentMixture<ThermoType>::read
 (
     const dictionary& dict
 )
 {
-    const wordList specieNames(dict.lookup("species"));
+    specieThermos_.setSize(species_.size());
+    specieCompositions_.setSize(species_.size());
+    specieDictLocations_.setSize(species_.size());
+    active_.setSize(species_.size(), true);
 
-    specieThermos_.setSize(specieNames.size());
-    specieCompositions_.setSize(specieNames.size());
-    specieDictLocations_.setSize(specieNames.size());
-    active_.setSize(specieNames.size(), true);
-
-    forAll(specieNames, speciei)
+    forAll(species_, speciei)
     {
-        const dictionary& specieDict = dict.subDict(specieNames[speciei]);
+        const dictionary& specieDict = dict.subDict(species_[speciei]);
 
         specieThermos_.set
         (
             speciei,
-            new ThermoType(specieNames[speciei], specieDict)
+            new ThermoType(species_[speciei], specieDict)
         );
 
         if (specieDict.isDict("elements"))

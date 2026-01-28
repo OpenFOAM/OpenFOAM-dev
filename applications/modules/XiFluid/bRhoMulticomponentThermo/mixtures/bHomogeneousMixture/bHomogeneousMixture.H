@@ -91,10 +91,10 @@ public:
             return "bHomogeneousMixture<" + ThermoType::typeName() + '>';
         }
 
-        //- Return the specie names
-        static wordList specieNames()
+        //- Return the table of species
+        const speciesTable& species() const
         {
-            return wordList();
+            return speciesTable::null;
         }
 
         //- Access the specie active flags

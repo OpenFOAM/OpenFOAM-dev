@@ -33,6 +33,7 @@ Foam::bInhomogeneousMixture<ThermoType>::bInhomogeneousMixture
     const dictionary& dict
 )
 :
+    species_({"ft"}),
     stoicRatio_(dict.lookup<scalar>("stoichiometricAirFuelMassRatio")),
     fuel_("fuel", dict.subDict("fuel")),
     oxidant_("oxidant", dict.subDict("oxidant")),

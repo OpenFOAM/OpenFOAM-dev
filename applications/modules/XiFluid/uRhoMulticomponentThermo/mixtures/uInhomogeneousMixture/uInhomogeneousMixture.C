@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "uInhomogeneousMixture.H"
+#include "bInhomogeneousMixture.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -33,6 +34,7 @@ Foam::uInhomogeneousMixture<ThermoType>::uInhomogeneousMixture
     const dictionary& dict
 )
 :
+    species_({"fu"}),
     stoicRatio_(dict.lookup<scalar>("stoichiometricAirFuelMassRatio")),
     fuel_("fuel", dict.subDict("fuel")),
     oxidant_("oxidant", dict.subDict("oxidant")),
@@ -61,7 +63,7 @@ Foam::uInhomogeneousMixture<ThermoType>::prompt
 ) const
 {
     PtrList<volScalarField::Internal> Yp(1);
-    Yp.set(0, Yu[FU]());
+    Yp.set(bInhomogeneousMixture<ThermoType>::FT, Yu[FU]());
 
     return Yp;
 }

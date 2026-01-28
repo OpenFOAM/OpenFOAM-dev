@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,7 +77,7 @@ public:
 
         // Species set
 
-            //- The table of species
+            //- Return the table of species
             virtual const speciesTable& species() const = 0;
 
             //- Does the mixture include this specie?
@@ -312,9 +312,6 @@ protected:
 
     // Protected data
 
-        //- Table of specie names
-        speciesTable species_;
-
         //- The name of the default specie. The mass fraction of which is
         //  derived from the other species rather than solved. Also used as the
         //  carrier specie in multicomponent diffusion.
@@ -332,7 +329,10 @@ protected:
     // Protected Member Functions
 
         //- Scale the mass fractions to sum to 1
-        void correctMassFractions();
+        void correctMassFractions
+        (
+            const speciesTable& species
+        );
 
 
 public:
@@ -343,7 +343,7 @@ public:
         implementation
         (
             const dictionary&,
-            const wordList&,
+            const speciesTable&,
             const fvMesh&,
             const word&,
             const bool requiresDefaultSpecie = true
@@ -355,9 +355,6 @@ public:
 
 
     // Member Functions
-
-        //- The table of species
-        virtual const speciesTable& species() const;
 
         //- The index of the default specie
         virtual label defaultSpecie() const;

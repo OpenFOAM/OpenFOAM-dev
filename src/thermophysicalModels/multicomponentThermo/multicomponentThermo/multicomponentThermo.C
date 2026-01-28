@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,9 +35,12 @@ namespace Foam
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-void Foam::multicomponentThermo::implementation::correctMassFractions()
+void Foam::multicomponentThermo::implementation::correctMassFractions
+(
+    const speciesTable& species
+)
 {
-    if (species_.size())
+    if (species.size())
     {
         tmp<volScalarField> tYt
         (
@@ -58,7 +61,7 @@ void Foam::multicomponentThermo::implementation::correctMassFractions()
         if (mag(min(Yt).value()) < rootVSmall)
         {
             FatalErrorInFunction
-                << "Sum of mass fractions is zero for species " << species()
+                << "Sum of mass fractions is zero for species " << species
                 << exit(FatalError);
         }
 
@@ -75,16 +78,15 @@ void Foam::multicomponentThermo::implementation::correctMassFractions()
 Foam::multicomponentThermo::implementation::implementation
 (
     const dictionary& dict,
-    const wordList& specieNames,
+    const speciesTable& species,
     const fvMesh& mesh,
     const word& phaseName,
     const bool requiresDefaultSpecie
 )
 :
-    species_(specieNames),
     defaultSpecieName_
     (
-        requiresDefaultSpecie && species_.size()
+        requiresDefaultSpecie && species.size()
       ? dict.lookupBackwardsCompatible<word>
         (
             {"defaultSpecie", "inertSpecie"}
@@ -93,31 +95,31 @@ Foam::multicomponentThermo::implementation::implementation
     ),
     defaultSpeciei_
     (
-        requiresDefaultSpecie && species_.size()
-      ? species_[defaultSpecieName_]
+        requiresDefaultSpecie && species.size()
+      ? species[defaultSpecieName_]
       : -1
     ),
-    Y_(species_.size())
+    Y_(species.size())
 {
     if
     (
-        species_.size()
+        species.size()
      && defaultSpecieName_ != "undefined"
      && defaultSpeciei_ == -1
     )
     {
         FatalIOErrorInFunction(dict)
             << "default specie " << defaultSpecieName_
-            << " not found in available species " << species_
+            << " not found in available species " << species
             << exit(FatalIOError);
     }
 
     // Read the species' mass fractions
-    forAll(species_, i)
+    forAll(species, i)
     {
         typeIOobject<volScalarField> header
         (
-            IOobject::groupName(species_[i], phaseName),
+            IOobject::groupName(species[i], phaseName),
             mesh.time().name(),
             mesh,
             IOobject::NO_READ
@@ -133,7 +135,7 @@ Foam::multicomponentThermo::implementation::implementation
                 (
                     IOobject
                     (
-                        IOobject::groupName(species_[i], phaseName),
+                        IOobject::groupName(species[i], phaseName),
                         mesh.time().name(),
                         mesh,
                         IOobject::MUST_READ,
@@ -169,7 +171,7 @@ Foam::multicomponentThermo::implementation::implementation
                 (
                     IOobject
                     (
-                        IOobject::groupName(species_[i], phaseName),
+                        IOobject::groupName(species[i], phaseName),
                         mesh.time().name(),
                         mesh,
                         IOobject::NO_READ,
@@ -183,7 +185,7 @@ Foam::multicomponentThermo::implementation::implementation
 
     if (defaultSpeciei_ != -1)
     {
-        correctMassFractions();
+        correctMassFractions(species);
     }
 }
 
@@ -199,13 +201,6 @@ Foam::multicomponentThermo::implementation::~implementation()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-const Foam::speciesTable&
-Foam::multicomponentThermo::implementation::species() const
-{
-    return species_;
-}
-
 
 Foam::label Foam::multicomponentThermo::implementation::defaultSpecie() const
 {

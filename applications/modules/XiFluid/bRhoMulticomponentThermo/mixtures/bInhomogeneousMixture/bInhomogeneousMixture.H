@@ -72,6 +72,9 @@ private:
 
     // Private Data
 
+        //- Table of specie names
+        speciesTable species_;
+
         //- Stoichiometric air/fuel ratio
         scalar stoicRatio_;
 
@@ -123,10 +126,10 @@ public:
             return "bInhomogeneousMixture<" + ThermoType::typeName() + '>';
         }
 
-        //- Return the specie names
-        static wordList specieNames()
+        //- Return the table of species
+        const speciesTable& species() const
         {
-            return {"ft"};
+            return species_;
         }
 
         //- Access the specie active flags

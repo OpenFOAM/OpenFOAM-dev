@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,6 +36,7 @@ SourceFiles
 #define MulticomponentThermo_H
 
 #include "BasicThermo.H"
+#include "speciesTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -104,6 +105,15 @@ public:
 
 
     // Member Functions
+
+        // Species set
+
+            //- Return the table of species
+            virtual const speciesTable& species() const
+            {
+                return BaseThermo::mixtureType::species();
+            }
+
 
         // Specie molecular properties
 

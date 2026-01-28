@@ -34,6 +34,7 @@ Foam::uInhomogeneousEGRMixture<ThermoType>::uInhomogeneousEGRMixture
     const dictionary& dict
 )
 :
+    species_({"fu", "egr"}),
     stoicRatio_(dict.lookup<scalar>("stoichiometricAirFuelMassRatio")),
     fuel_("fuel", dict.subDict("fuel")),
     oxidant_("oxidant", dict.subDict("oxidant")),

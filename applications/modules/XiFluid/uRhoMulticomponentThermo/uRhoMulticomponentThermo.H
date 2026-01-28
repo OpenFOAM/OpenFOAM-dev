@@ -169,7 +169,7 @@ public:
             multicomponentThermo::implementation
             (
                 dict,
-                mixture.specieNames(),
+                mixture.species(),
                 mesh,
                 phaseName,
                 false
