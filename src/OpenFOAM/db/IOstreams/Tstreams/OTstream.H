@@ -107,6 +107,12 @@ public:
             //- Write token
             virtual Ostream& write(const token&);
 
+            //- No need to write the compound token tag for an OTstream
+            virtual Ostream& writeCompoundTag(const word& typeName)
+            {
+                return *this;
+            }
+
             //- Write character
             virtual Ostream& write(const char);
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,21 +34,11 @@ License
 template<class ListType>
 void Foam::writeListEntry(Ostream& os, const ListType& l)
 {
-    if
+    os.writeCompoundTag
     (
-        token::compound::isCompound
-        (
-            "List<"
-          + word(pTraits<typename ListType::value_type>::typeName) + '>'
-        )
-    )
-    {
-        os << word
-        (
-            "List<"
-          + word(pTraits<typename ListType::value_type>::typeName) + '>'
-        ) << " ";
-    }
+        "List<"
+      + word(pTraits<typename ListType::value_type>::typeName) + '>'
+    );
 
     os << l;
 }
