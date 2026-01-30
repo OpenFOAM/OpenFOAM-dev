@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ Description
 #include "argList.H"
 #include "timeSelector.H"
 #include "volFields.H"
-#include "wallPolyPatch.H"
+#include "wallFvPatch.H"
 #include "atmBoundaryLayer.H"
 #include "systemDict.H"
 
@@ -127,7 +127,7 @@ int main(int argc, char *argv[])
 
             const atmBoundaryLayer atmp(patch.Cf(), setAtmBoundaryLayerDict);
 
-            if (!isA<wallPolyPatch>(patch))
+            if (!isA<wallFvPatch>(patch))
             {
                 U.boundaryFieldRef()[patchi] == atmp.U(patch.Cf());
                 if (k.valid())
