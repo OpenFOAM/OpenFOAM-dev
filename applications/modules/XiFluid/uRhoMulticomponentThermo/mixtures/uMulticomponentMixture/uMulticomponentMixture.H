@@ -57,7 +57,13 @@ class uMulticomponentMixture
     // Private Enumerations
 
         //- Fuel specie index
-        label FU;
+        label fu_;
+
+        //- Oxidant species mass fractions
+        List<Tuple2<label, scalar>> ox_;
+
+        //- Product species mass fractions
+        List<Tuple2<label, scalar>> pr_;
 
 
     // Private Data
@@ -103,10 +109,7 @@ public:
             PtrList<volScalarField>& Yu,
             const volScalarField& c,
             const PtrList<volScalarField>& Yb
-        ) const
-        {
-            NotImplemented;
-        }
+        ) const;
 
 
     // Member Operators

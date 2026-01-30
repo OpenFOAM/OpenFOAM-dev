@@ -149,16 +149,7 @@ void Foam::ubRhoThermo::correct()
 
 void Foam::ubRhoThermo::reset()
 {
-    if (uThermo_->containsSpecie("egr"))
-    {
-        uThermo_->reset(b_, c_, bThermo_->Y(), bThermo_->he());
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "EGR not supported by " << uThermo_->type()
-            << exit(FatalError);
-    }
+    uThermo_->reset(b_, c_, bThermo_->Y(), bThermo_->he());
 }
 
 

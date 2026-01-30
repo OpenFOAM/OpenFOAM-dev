@@ -164,7 +164,9 @@ public:
             const PtrList<volScalarField>& Yb
         ) const
         {
-            NotImplemented;
+            FatalErrorInFunction
+                << "EGR not supported by " << typeName()
+                << exit(FatalError);
         }
 
         //- Return the mixture for thermodynamic properties

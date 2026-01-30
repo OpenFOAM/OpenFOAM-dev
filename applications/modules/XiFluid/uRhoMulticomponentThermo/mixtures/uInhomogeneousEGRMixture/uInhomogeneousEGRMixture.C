@@ -149,7 +149,7 @@ Foam::uInhomogeneousEGRMixture<ThermoType>::prompt
 ) const
 {
     PtrList<volScalarField::Internal> Yp(1);
-    Yp.set(0, Yu[FU]());
+    Yp.set(bInhomogeneousMixture<ThermoType>::FT, Yu[FU]());
 
     return Yp;
 }

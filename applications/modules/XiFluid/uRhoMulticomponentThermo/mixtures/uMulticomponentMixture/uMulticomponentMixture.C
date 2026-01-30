@@ -34,9 +34,39 @@ Foam::uMulticomponentMixture<ThermoType>::uMulticomponentMixture
 )
 :
     coefficientMulticomponentMixture<ThermoType>(dict),
-    FU(this->species()[dict.lookup<word>("fuelSpecie")]),
+    fu_(this->species()[dict.lookup<word>("fuelSpecie")]),
     stoicRatio_(dict.lookup<scalar>("stoichiometricAirFuelMassRatio"))
-{}
+{
+    if (dict.found("oxidantSpecies"))
+    {
+        const dictionary& oxidantSpecies(dict.subDict("oxidantSpecies"));
+        ox_.setSize(oxidantSpecies.size());
+
+        label i = 0;
+        forAllConstIter(dictionary, oxidantSpecies, iter)
+        {
+            const word specieName(iter().keyword());
+            const scalar massFraction(iter().stream()[0].scalarToken());
+
+            ox_[i++] = {this->species()[specieName], massFraction};
+        }
+    }
+
+    if (dict.found("productSpecies"))
+    {
+        const dictionary& productSpecies(dict.subDict("productSpecies"));
+        pr_.setSize(productSpecies.size());
+
+        label i = 0;
+        forAllConstIter(dictionary, productSpecies, iter)
+        {
+            const word specieName(iter().keyword());
+            const scalar massFraction(iter().stream()[0].scalarToken());
+
+            pr_[i++] = {this->species()[specieName], massFraction};
+        }
+    }
+}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -47,7 +77,7 @@ Foam::scalar Foam::uMulticomponentMixture<ThermoType>::Phi
     const scalarFieldListSlice& Yu
 ) const
 {
-    return stoicRatio_*Yu[FU]/max(scalar(1) - Yu[FU], small);
+    return stoicRatio_*Yu[fu_]/max(scalar(1) - Yu[fu_], small);
 }
 
 
@@ -59,9 +89,66 @@ Foam::uMulticomponentMixture<ThermoType>::prompt
 ) const
 {
     PtrList<volScalarField::Internal> Yp(1);
-    Yp.set(0, Yu[FU]());
+    Yp.set(bInhomogeneousMixture<ThermoType>::FT, Yu[fu_]());
 
     return Yp;
+}
+
+
+template<class ThermoType>
+void Foam::uMulticomponentMixture<ThermoType>::reset
+(
+    const volScalarField& b,
+    PtrList<volScalarField>& Yu,
+    const volScalarField& c,
+    const PtrList<volScalarField>& Yb
+) const
+{
+    if (!ox_.size() || !pr_.size())
+    {
+        FatalErrorInFunction
+            << "oxidantSpecies or productSpecies not specified"
+            << exit(FatalError);
+    }
+
+    volScalarField& fuu = Yu[fu_];
+
+    const volScalarField& ftb = Yb[bInhomogeneousMixture<ThermoType>::FT];
+
+    for (label t=0; t<=fuu.nOldTimes(); t++)
+    {
+        const volScalarField fub
+        (
+            max
+            (
+                ftb.oldTime(t) - (scalar(1) - ftb.oldTime(t))/stoicRatio_,
+                scalar(0)
+            )
+        );
+
+        fuu.oldTimeRef(t) = b.oldTime(t)*fuu.oldTime(t) + c.oldTime(t)*fub;
+
+        const volScalarField oxb
+        (
+            1 - ftb.oldTime(t) - (ftb.oldTime(t) - fub)*stoicRatio_
+        );
+
+        forAll(ox_, i)
+        {
+            Yu[ox_[i].first()].oldTimeRef(t) =
+                b.oldTime(t)*Yu[ox_[i].first()].oldTime(t)
+              + c.oldTime(t)*ox_[i].second()*oxb;
+        }
+
+        const volScalarField prb(1 - fub - oxb);
+
+        forAll(pr_, i)
+        {
+            Yu[pr_[i].first()].oldTimeRef(t) =
+                b.oldTime(t)*Yu[pr_[i].first()].oldTime(t)
+              + c.oldTime(t)*pr_[i].second()*prb;
+        }
+    }
 }
 
 
