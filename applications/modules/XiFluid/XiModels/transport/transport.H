@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,6 +79,10 @@ class transport
         autoPtr<XiProfile> XiProfile_;
         autoPtr<XiGModel> XiGModel_;
 
+        //- Switch to include the mean strain rate wrinkling reduction
+        //  Defaults to on
+        Switch strainReduction_;
+
         //- Switch to include differential wrinkling propagation
         //  Should not be included if the generation and removal rates
         //  are obtained from a fit to experimental turbulent flame speed
@@ -122,15 +126,6 @@ public:
 
         //- Return the flame diffusivity
         virtual tmp<volScalarField> Db() const;
-
-        //- Add Xi to the multivariateSurfaceInterpolationScheme table
-        virtual void addXi
-        (
-            multivariateSurfaceInterpolationScheme<scalar>::fieldTable& fields
-        )
-        {
-            fields.add(Xi_);
-        }
 
         //- Correct the flame-wrinkling Xi
         virtual void correct();

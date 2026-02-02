@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -145,7 +145,7 @@ public:
     // Member Functions
 
         //- Return the flame-wrinkling generation rate
-        virtual tmp<volScalarField> G() const = 0;
+        virtual tmp<volScalarField::Internal> G() const = 0;
 
         //- Update properties from the given XiProperties dictionary
         bool read(const dictionary& XiProperties);

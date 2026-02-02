@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,9 +74,10 @@ Foam::XiGModels::instability::~instability()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField> Foam::XiGModels::instability::G() const
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::XiGModels::instability::G() const
 {
-    const volScalarField turbXiG(XiGModel_->G());
+    const volScalarField::Internal turbXiG(XiGModel_->G());
     return (Gin_*Gin_/(Gin_ + turbXiG) + turbXiG);
 }
 
