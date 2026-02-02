@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -511,7 +511,7 @@ Foam::tokenList Foam::dictionary::tokens() const
     // Parse string as tokens
     DynamicList<token> tokens;
     token t;
-    while (is.read(t))
+    while (!is.eof() && !is.read(t).bad() && t.good())
     {
         tokens.append(t);
     }

@@ -105,7 +105,7 @@ Foam::Ostream& Foam::OTstream::write(const char* str)
     IStringStream is(str);
 
     token t;
-    while (is.read(t))
+    while (!is.eof() && !is.read(t).bad() && t.good())
     {
         append(t);
     }
