@@ -137,7 +137,9 @@ Foam::Ostream& Foam::Ostream::writeCompoundTag(const word& typeName)
     if (token::compound::isCompound(typeName))
     {
         write(typeName);
-        write(token::SPACE);
+        // Cast to char required to work around a bug in gcc versions < 10
+        write(static_cast<char>(token::SPACE));
+        // write(token::SPACE);
     }
 
     return *this;
