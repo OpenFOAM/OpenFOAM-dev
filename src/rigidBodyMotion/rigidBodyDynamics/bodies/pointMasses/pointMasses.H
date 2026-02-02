@@ -67,6 +67,22 @@ class pointMasses
         //- Masses
         scalarField masses_;
 
+        //- Indices of the points when sorted in the three axes
+        mutable PtrList<labelList> sortedPointis_;
+
+
+    // Private member functions
+
+        //- Return the n-th moments of the sections of the body between
+        //  planes defined by distances along the given axis
+        template<class Type, class Op>
+        tmp<Field<Type>> sectionMuNs
+        (
+            const direction axis,
+            const scalarField& distances,
+            const Op& op
+        ) const;
+
 
 public:
 
@@ -77,11 +93,14 @@ public:
     // Constructors
 
         //- Construct from dictionary
-        inline pointMasses
+        pointMasses
         (
             const word& name,
             const dictionary& dict
         );
+
+        //- Copy construct
+        pointMasses(const pointMasses&);
 
         //- Return clone of this pointMasses
         virtual autoPtr<rigidBody> clone() const;
@@ -93,8 +112,29 @@ public:
 
     // Member Functions
 
-        //- Return the lengths of the sides of the pointMasses
-        inline const vector& L() const;
+        //- Return the zeroth moments of the sections of the body between
+        //  planes defined by distances along the given axis
+        virtual tmp<scalarField> sectionMu0s
+        (
+            const direction axis,
+            const scalarField& distances
+        ) const;
+
+        //- Return the first moments of the sections of the body between
+        //  planes defined by distances along the given axis
+        virtual tmp<vectorField> sectionMu1s
+        (
+            const direction axis,
+            const scalarField& distances
+        ) const;
+
+        //- Return the second moments of the sections of the body between
+        //  planes defined by distances along the given axis
+        virtual tmp<symmTensorField> sectionMu2s
+        (
+            const direction axis,
+            const scalarField& distances
+        ) const;
 
         //- Write
         virtual void write(Ostream&) const;

@@ -25,6 +25,8 @@ License
 
 #include "pointMasses.H"
 #include "TableReader.H"
+#include "UIndirectList.H"
+#include "one.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -36,6 +38,64 @@ namespace RBD
     defineTypeNameAndDebug(pointMasses, 0);
     addToRunTimeSelectionTable(rigidBody, pointMasses, dictionary);
 }
+}
+
+
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+template<class Type, class Op>
+Foam::tmp<Foam::Field<Type>> Foam::RBD::pointMasses::sectionMuNs
+(
+    const direction axis,
+    const scalarField& distances,
+    const Op& op
+) const
+{
+    tmp<Field<Type>> tResult
+    (
+        new Field<Type>(distances.size() - 1, pTraits<Type>::zero)
+    );
+    Field<Type>& result = tResult.ref();
+
+    if (!sortedPointis_.set(axis))
+    {
+        sortedPointis_.set(axis, new labelList(points_.size()));
+
+        Foam::sortedOrder
+        (
+            points_,
+            sortedPointis_[axis],
+            [&points = points_, axis](const label a, const label b)
+            {
+                return points[a][axis] < points[b][axis];
+            }
+        );
+    }
+
+    const UIndirectList<point> sortedPoints(points_, sortedPointis_[axis]);
+    const UIndirectList<scalar> sortedMasses(masses_, sortedPointis_[axis]);
+
+    label sortedPointi = 0, sectioni = 0;
+
+    while
+    (
+        sortedPointi < sortedPoints.size()
+     && sortedPoints[sortedPointi][axis] < distances[0]
+    ) sortedPointi ++;
+
+    for (; sortedPointi < sortedPoints.size(); ++ sortedPointi)
+    {
+        while
+        (
+            sectioni < result.size()
+         && sortedPoints[sortedPointi][axis] > distances[sectioni + 1]
+        ) sectioni ++;
+
+        result[sectioni] +=
+            op(sortedPoints[sortedPointi])*sortedMasses[sortedPointi];
+    }
+
+    return tResult;
 }
 
 
@@ -60,7 +120,8 @@ Foam::RBD::pointMasses::pointMasses
       : nullptr
     ),
     points_(),
-    masses_()
+    masses_(),
+    sortedPointis_(3)
 {
     // Read the point masses
     const List<Tuple2<point, scalar>> pointsAndMasses =
@@ -113,6 +174,16 @@ Foam::RBD::pointMasses::pointMasses
 }
 
 
+Foam::RBD::pointMasses::pointMasses(const pointMasses& pm)
+:
+    rigidBody(pm),
+    reader_(pm.reader_, false),
+    points_(pm.points_),
+    masses_(pm.masses_),
+    sortedPointis_(3)
+{}
+
+
 Foam::autoPtr<Foam::RBD::rigidBody> Foam::RBD::pointMasses::clone() const
 {
     return autoPtr<rigidBody>(new pointMasses(*this));
@@ -126,6 +197,54 @@ Foam::RBD::pointMasses::~pointMasses()
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
+Foam::tmp<Foam::scalarField> Foam::RBD::pointMasses::sectionMu0s
+(
+    const direction axis,
+    const scalarField& distances
+) const
+{
+    return
+        sectionMuNs<scalar>
+        (
+            axis,
+            distances,
+            [](const point&) { return one(); }
+        );
+}
+
+
+Foam::tmp<Foam::vectorField> Foam::RBD::pointMasses::sectionMu1s
+(
+    const direction axis,
+    const scalarField& distances
+) const
+{
+    return
+        sectionMuNs<vector>
+        (
+            axis,
+            distances,
+            [](const point& p) { return p; }
+        );
+}
+
+
+Foam::tmp<Foam::symmTensorField> Foam::RBD::pointMasses::sectionMu2s
+(
+    const direction axis,
+    const scalarField& distances
+) const
+{
+    return
+        sectionMuNs<symmTensor>
+        (
+            axis,
+            distances,
+            [](const point& p) { return sqr(p); }
+        );
+}
+
 
 void Foam::RBD::pointMasses::write(Ostream& os) const
 {

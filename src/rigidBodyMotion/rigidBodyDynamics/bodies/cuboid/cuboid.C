@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "cuboid.H"
+#include "primitiveFields.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -53,6 +54,109 @@ Foam::RBD::cuboid::~cuboid()
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
+Foam::tmp<Foam::scalarField> Foam::RBD::cuboid::sectionMu0s
+(
+    const direction axis,
+    const scalarField& distances
+) const
+{
+    tmp<scalarField> tResult
+    (
+        new scalarField(distances.size() - 1, scalar(0))
+    );
+    scalarField& result = tResult.ref();
+
+    const scalar rho = m()/cmptProduct(L_);
+    const scalar cutA = L_[(axis + 1) % 3]*L_[(axis + 2) % 3];
+
+    forAll(result, i)
+    {
+        const scalar distance0 =
+            min(max(distances[i], -L_[axis]/2), +L_[axis]/2);
+        const scalar distance1 =
+            min(max(distances[i + 1], -L_[axis]/2), +L_[axis]/2);
+
+        result[i] = (distance1 - distance0)*cutA*rho;
+    }
+
+    return tResult;
+}
+
+
+Foam::tmp<Foam::vectorField> Foam::RBD::cuboid::sectionMu1s
+(
+    const direction axis,
+    const scalarField& distances
+) const
+{
+    tmp<vectorField> tResult
+    (
+        new vectorField(distances.size() - 1, vector::zero)
+    );
+    vectorField& result = tResult.ref();
+
+    const scalar rho = m()/cmptProduct(L_);
+    const scalar cutA = L_[(axis + 1) % 3]*L_[(axis + 2) % 3];
+
+    forAll(result, i)
+    {
+        const scalar distance0 =
+            min(max(distances[i], -L_[axis]/2), +L_[axis]/2);
+        const scalar distance1 =
+            min(max(distances[i + 1], -L_[axis]/2), +L_[axis]/2);
+
+        result[i][axis] = (sqr(distance1) - sqr(distance0))/2*cutA*rho;
+    }
+
+    return tResult;
+}
+
+
+Foam::tmp<Foam::symmTensorField> Foam::RBD::cuboid::sectionMu2s
+(
+    const direction axis,
+    const scalarField& distances
+) const
+{
+    tmp<symmTensorField> tResult
+    (
+        new symmTensorField(distances.size() - 1, symmTensor::zero)
+    );
+    symmTensorField& result = tResult.ref();
+
+    const scalar rho = m()/cmptProduct(L_);
+    const scalar cutA = L_[(axis + 1) % 3]*L_[(axis + 2) % 3];
+
+    static const direction symmTensorDiagComponents[3] =
+        { symmTensor::XX, symmTensor::YY, symmTensor::ZZ };
+
+    forAll(result, i)
+    {
+        const scalar distance0 =
+            min(max(distances[i], -L_[axis]/2), +L_[axis]/2);
+        const scalar distance1 =
+            min(max(distances[i + 1], -L_[axis]/2), +L_[axis]/2);
+
+        result[i][symmTensorDiagComponents[axis]] =
+            (pow3(distance1) - pow3(distance0))/3*cutA*rho;
+
+        result[i][symmTensorDiagComponents[(axis + 1) % 3]] =
+            pow3(L_[(axis + 1) % 3])/12
+           *L_[(axis + 2) % 3]
+           *(distance1 - distance0)
+           *rho;
+
+        result[i][symmTensorDiagComponents[(axis + 2) % 3]] =
+            pow3(L_[(axis + 2) % 3])/12
+           *L_[(axis + 1) % 3]
+           *(distance1 - distance0)
+           *rho;
+    }
+
+    return tResult;
+}
+
 
 void Foam::RBD::cuboid::write(Ostream& os) const
 {

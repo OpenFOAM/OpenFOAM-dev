@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,6 +102,30 @@ public:
 
         //- Return the lengths of the sides of the cuboid
         inline const vector& L() const;
+
+        //- Return the zeroth moments of the sections of the body between
+        //  planes defined by distances along the given axis
+        virtual tmp<scalarField> sectionMu0s
+        (
+            const direction axis,
+            const scalarField& distances
+        ) const;
+
+        //- Return the first moments of the sections of the body between
+        //  planes defined by distances along the given axis
+        virtual tmp<vectorField> sectionMu1s
+        (
+            const direction axis,
+            const scalarField& distances
+        ) const;
+
+        //- Return the second moments of the sections of the body between
+        //  planes defined by distances along the given axis
+        virtual tmp<symmTensorField> sectionMu2s
+        (
+            const direction axis,
+            const scalarField& distances
+        ) const;
 
         //- Write
         virtual void write(Ostream&) const;
