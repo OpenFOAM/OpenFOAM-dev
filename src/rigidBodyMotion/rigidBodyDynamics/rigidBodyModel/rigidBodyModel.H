@@ -258,8 +258,11 @@ public:
         //- Return the inertia of body i
         inline const rigidBodyInertia& I(const label i) const;
 
-        //- Return the spatial velocity of the bodies
+        //- Return the spatial velocity of body i
         inline const spatialVector& v(const label i) const;
+
+        //- Return the spatial acceleration of body i
+        inline const spatialVector& a(const label i) const;
 
         //- Join the given body to the parent with ID parentID via the given
         //  joint with transform from the parent frame to the joint frame XT.
