@@ -65,9 +65,9 @@ Foam::tmp<Foam::Field<Type>> Foam::RBD::pointMasses::sectionMuNs
         (
             points_,
             sortedPointis_[axis],
-            [&points = points_, axis](const label a, const label b)
+            [this, axis](const label a, const label b)
             {
-                return points[a][axis] < points[b][axis];
+                return points_[a][axis] < points_[b][axis];
             }
         );
     }
