@@ -68,16 +68,16 @@ Foam::tmp<Foam::scalarField> Foam::RBD::cuboid::sectionMu0s
     scalarField& result = tResult.ref();
 
     const scalar rho = m()/cmptProduct(L_);
-    const scalar cutA = L_[(axis + 1) % 3]*L_[(axis + 2) % 3];
+    const vector pMin = c() - L_/2;
+    const vector pMax = c() + L_/2;
 
     forAll(result, i)
     {
-        const scalar distance0 =
-            min(max(distances[i], -L_[axis]/2), +L_[axis]/2);
-        const scalar distance1 =
-            min(max(distances[i + 1], -L_[axis]/2), +L_[axis]/2);
+        vector p0 = pMin, p1 = pMax;
+        p0[axis] = min(max(distances[i], pMin[axis]), pMax[axis]);
+        p1[axis] = min(max(distances[i + 1], pMin[axis]), pMax[axis]);
 
-        result[i] = (distance1 - distance0)*cutA*rho;
+        result[i] = cmptProduct(p1 - p0)*rho;
     }
 
     return tResult;
@@ -97,16 +97,16 @@ Foam::tmp<Foam::vectorField> Foam::RBD::cuboid::sectionMu1s
     vectorField& result = tResult.ref();
 
     const scalar rho = m()/cmptProduct(L_);
-    const scalar cutA = L_[(axis + 1) % 3]*L_[(axis + 2) % 3];
+    const vector pMin = c() - L_/2;
+    const vector pMax = c() + L_/2;
 
     forAll(result, i)
     {
-        const scalar distance0 =
-            min(max(distances[i], -L_[axis]/2), +L_[axis]/2);
-        const scalar distance1 =
-            min(max(distances[i + 1], -L_[axis]/2), +L_[axis]/2);
+        vector p0 = pMin, p1 = pMax;
+        p0[axis] = min(max(distances[i], pMin[axis]), pMax[axis]);
+        p1[axis] = min(max(distances[i + 1], pMin[axis]), pMax[axis]);
 
-        result[i][axis] = (sqr(distance1) - sqr(distance0))/2*cutA*rho;
+        result[i] = cmptProduct(p1 - p0)*rho*(p0 + p1)/2;
     }
 
     return tResult;
@@ -126,32 +126,33 @@ Foam::tmp<Foam::symmTensorField> Foam::RBD::cuboid::sectionMu2s
     symmTensorField& result = tResult.ref();
 
     const scalar rho = m()/cmptProduct(L_);
-    const scalar cutA = L_[(axis + 1) % 3]*L_[(axis + 2) % 3];
-
-    static const direction symmTensorDiagComponents[3] =
-        { symmTensor::XX, symmTensor::YY, symmTensor::ZZ };
+    const vector pMin = c() - L_/2;
+    const vector pMax = c() + L_/2;
 
     forAll(result, i)
     {
-        const scalar distance0 =
-            min(max(distances[i], -L_[axis]/2), +L_[axis]/2);
-        const scalar distance1 =
-            min(max(distances[i + 1], -L_[axis]/2), +L_[axis]/2);
+        vector p0 = pMin, p1 = pMax;
+        p0[axis] = min(max(distances[i], pMin[axis]), pMax[axis]);
+        p1[axis] = min(max(distances[i + 1], pMin[axis]), pMax[axis]);
 
-        result[i][symmTensorDiagComponents[axis]] =
-            (pow3(distance1) - pow3(distance0))/3*cutA*rho;
+        const vector d1 = p1 - p0;
+        const vector d2 =
+        (
+            cmptMultiply(p1, p1)
+          - cmptMultiply(p0, p0)
+        )/2;
+        const vector d3 =
+        (
+            cmptMultiply(p1, cmptMultiply(p1, p1))
+          - cmptMultiply(p0, cmptMultiply(p0, p0))
+        )/3;
 
-        result[i][symmTensorDiagComponents[(axis + 1) % 3]] =
-            pow3(L_[(axis + 1) % 3])/12
-           *L_[(axis + 2) % 3]
-           *(distance1 - distance0)
-           *rho;
-
-        result[i][symmTensorDiagComponents[(axis + 2) % 3]] =
-            pow3(L_[(axis + 2) % 3])/12
-           *L_[(axis + 1) % 3]
-           *(distance1 - distance0)
-           *rho;
+        result[i].xx() = d3.x()*d1.y()*d1.z()*rho;
+        result[i].xy() = d2.x()*d2.y()*d1.z()*rho;
+        result[i].xz() = d2.x()*d1.y()*d2.z()*rho;
+        result[i].yy() = d1.x()*d3.y()*d1.z()*rho;
+        result[i].yz() = d1.x()*d2.y()*d2.z()*rho;
+        result[i].zz() = d1.x()*d1.y()*d3.z()*rho;
     }
 
     return tResult;

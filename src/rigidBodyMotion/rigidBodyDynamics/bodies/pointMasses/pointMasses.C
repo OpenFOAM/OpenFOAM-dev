@@ -91,6 +91,8 @@ Foam::tmp<Foam::Field<Type>> Foam::RBD::pointMasses::sectionMuNs
          && sortedPoints[sortedPointi][axis] > distances[sectioni + 1]
         ) sectioni ++;
 
+        if (sectioni >= result.size()) break;
+
         result[sectioni] +=
             op(sortedPoints[sortedPointi])*sortedMasses[sortedPointi];
     }
@@ -169,8 +171,6 @@ Foam::RBD::pointMasses::pointMasses
     }
 
     rigidBodyInertia::operator=(rigidBodyInertia(m, c, Ic));
-
-    Info<< *this << endl;
 }
 
 
