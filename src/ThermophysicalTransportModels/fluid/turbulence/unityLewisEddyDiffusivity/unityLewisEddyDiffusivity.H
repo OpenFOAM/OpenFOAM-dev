@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -180,15 +180,35 @@ public:
              + alphat(patchi);
         }
 
-        //- Effective mass diffusion coefficient
+        //- Mass diffusivity
         //  for a given specie mass-fraction [kg/m/s]
-        virtual tmp<volScalarField> DEff(const volScalarField& Yi) const
+        virtual tmp<volScalarField> D(const volScalarField& Yi) const
         {
             return volScalarField::New
             (
                 "DEff",
-                this->thermo().kappa()/this->thermo().Cp() + alphat()
+                this->thermo().kappa()/this->thermo().Cp()
             );
+        }
+
+        //- Mass diffusivity
+        //  for a given specie mass-fraction for patch [kg/m/s]
+        virtual tmp<scalarField> D
+        (
+            const volScalarField& Yi,
+            const label patchi
+        ) const
+        {
+            return
+                this->thermo().kappa().boundaryField()[patchi]
+               /this->thermo().Cp().boundaryField()[patchi];
+        }
+
+        //- Effective mass diffusion coefficient
+        //  for a given specie mass-fraction [kg/m/s]
+        virtual tmp<volScalarField> DEff(const volScalarField& Yi) const
+        {
+            return volScalarField::New("DEff", D(Yi) + alphat());
         }
 
         //- Effective mass diffusion coefficient
@@ -199,10 +219,7 @@ public:
             const label patchi
         ) const
         {
-            return
-                this->thermo().kappa().boundaryField()[patchi]
-               /this->thermo().Cp().boundaryField()[patchi]
-              + alphat(patchi);
+            return D(Yi, patchi) + alphat(patchi);
         }
 
         //- Return the heat flux [W/m^2]

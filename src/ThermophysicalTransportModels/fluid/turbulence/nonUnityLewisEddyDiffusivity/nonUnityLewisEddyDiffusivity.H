@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -125,8 +125,8 @@ public:
             return volScalarField::New
             (
                 "DEff",
-                this->thermo().kappa()/this->thermo().Cp()
-              + (this->Prt_/Sct_)*this->alphat()
+                this->D(Yi)
+              + this->Prt_/Sct_*this->alphat()
             );
         }
 
@@ -139,8 +139,7 @@ public:
         ) const
         {
             return
-                this->thermo().kappa().boundaryField()[patchi]
-               /this->thermo().Cp().boundaryField()[patchi]
+                this->D(Yi, patchi)
               + this->Prt_.value()/Sct_.value()*this->alphat(patchi);
         }
 

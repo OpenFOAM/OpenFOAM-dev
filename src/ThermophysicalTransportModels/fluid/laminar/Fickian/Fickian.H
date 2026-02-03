@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -126,6 +126,18 @@ public:
 
         //- Read thermophysicalTransport dictionary
         virtual bool read();
+
+        //- Mass diffusivity
+        //  for a given specie mass-fraction [kg/m/s]
+        virtual tmp<volScalarField> D(const volScalarField& Yi) const;
+
+        //- Mass diffusivity
+        //  for a given specie mass-fraction for patch [kg/m/s]
+        virtual tmp<scalarField> D
+        (
+            const volScalarField& Yi,
+            const label patchi
+        ) const;
 
         //- Effective mass diffusion coefficient
         //  for a given specie mass-fraction [kg/m/s]

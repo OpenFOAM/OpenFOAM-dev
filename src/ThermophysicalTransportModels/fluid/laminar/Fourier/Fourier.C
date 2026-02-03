@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,6 +58,41 @@ template<class BasicThermophysicalTransportModel>
 bool Fourier<BasicThermophysicalTransportModel>::read()
 {
     return true;
+}
+
+
+template<class TurbulenceThermophysicalTransportModel>
+tmp<volScalarField>
+Fourier<TurbulenceThermophysicalTransportModel>::D
+(
+    const volScalarField& Yi
+) const
+{
+    FatalErrorInFunction
+        << type() << " supports single component systems only, " << nl
+        << "    for multi-component transport select"
+           " unityLewisFourier"
+        << exit(FatalError);
+
+    return tmp<volScalarField>(nullptr);
+}
+
+
+template<class TurbulenceThermophysicalTransportModel>
+tmp<scalarField>
+Fourier<TurbulenceThermophysicalTransportModel>::D
+(
+    const volScalarField& Yi,
+    const label patchi
+) const
+{
+    FatalErrorInFunction
+        << type() << " supports single component systems only, " << nl
+        << "    for multi-component transport select"
+           " unityLewisFourier"
+        << exit(FatalError);
+
+    return tmp<scalarField>(nullptr);
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -286,6 +286,34 @@ bool Fickian<BasicThermophysicalTransportModel>::read()
     {
         return false;
     }
+}
+
+
+template<class BasicThermophysicalTransportModel>
+tmp<volScalarField> Fickian<BasicThermophysicalTransportModel>::D
+(
+    const volScalarField& Yi
+) const
+{
+    return volScalarField::New
+    (
+        "D",
+        this->momentumTransport().rho()
+       *Dm()[this->thermo().specieIndex(Yi)]
+    );
+}
+
+
+template<class BasicThermophysicalTransportModel>
+tmp<scalarField> Fickian<BasicThermophysicalTransportModel>::D
+(
+    const volScalarField& Yi,
+    const label patchi
+) const
+{
+    return
+        this->momentumTransport().rho().boundaryField()[patchi]
+       *Dm()[this->thermo().specieIndex(Yi)].boundaryField()[patchi];
 }
 
 

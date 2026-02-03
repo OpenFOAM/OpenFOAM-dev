@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -165,18 +165,6 @@ public:
                 this->thermo().kappa().boundaryField()[patchi]
                /this->thermo().Cpv().boundaryField()[patchi];
         }
-
-        //- Effective mass diffusion coefficient
-        //  for a given specie mass-fraction [kg/m/s]
-        virtual tmp<volScalarField> DEff(const volScalarField& Yi) const = 0;
-
-        //- Effective mass diffusion coefficient
-        //  for a given specie mass-fraction for patch [kg/m/s]
-        virtual tmp<scalarField> DEff
-        (
-            const volScalarField& Yi,
-            const label patchi
-        ) const = 0;
 
         //- Predict the laminar transport coefficients if possible
         //  without solving thermophysical transport model equations

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,13 +57,20 @@ SourceFiles
 #ifndef MaxwellStefan_H
 #define MaxwellStefan_H
 
+#include "MeshObjects.H"
 #include "Function2.H"
 #include "LUscalarMatrix.H"
+#include "fvMatricesFwd.H"
+#include "volFieldsFwd.H"
+#include "surfaceFieldsFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+
+// Forward declaration of classes
+class fvMesh;
 
 /*---------------------------------------------------------------------------*\
                 Class MaxwellStefan Declaration
@@ -94,6 +101,9 @@ class MaxwellStefan
             //- List of fields of the explicit part of the mass diffusion flux
             // of the species
             mutable PtrList<surfaceScalarField> jexp_;
+
+            //- ...
+            mutable PtrList<volScalarField> Di_;
 
 
         // Workspace for diffusion coefficient transformation
@@ -132,7 +142,7 @@ class MaxwellStefan
 
             //- Matrix of the generalised Fick's law diffusion coefficients
             //  at a cell or face
-            mutable scalarSquareMatrix D;
+            mutable scalarSquareMatrix D_;
 
 
     // Private member functions
@@ -157,6 +167,9 @@ class MaxwellStefan
 
         //- Update jexp_ if not yet constructed and return
         const PtrList<surfaceScalarField>& jexp() const;
+
+        //- Update Di if not yet constructed and return
+        const PtrList<volScalarField>& Di() const;
 
 
 public:
@@ -193,9 +206,20 @@ public:
         //- Read thermophysicalTransport dictionary
         virtual bool read();
 
+        //- Mass diffusivity
+        //  for a given specie mass-fraction [kg/m/s]
+        virtual tmp<volScalarField> D(const volScalarField& Yi) const;
+
+        //- Mass diffusivity
+        //  for a given specie mass-fraction for patch [kg/m/s]
+        virtual tmp<scalarField> D
+        (
+            const volScalarField& Yi,
+            const label patchi
+        ) const;
+
         //- Effective mass diffusion coefficient
         //  for a given specie mass-fraction [kg/m/s]
-        //  This is the self-diffusion coefficient
         virtual tmp<volScalarField> DEff(const volScalarField& Yi) const;
 
         //- Effective mass diffusion coefficient
