@@ -17,6 +17,12 @@ wallBoiling/wallBoilingPhaseChangeRateFvPatchScalarField.C
 wallBoiling/alphatBoilingWallFunctionFvPatchScalarField.C
 phaseSurfaceBoiling/phaseSurfaceBoiling.C
 
+# Surface condensation
+wallCondensation/wallCondensation.C
+wallCondensation/wallCondensationPhaseChangeRateFvPatchScalarField.C
+wallCondensation/alphatCondensationWallFunctionFvPatchScalarField.C
+phaseSurfaceCondensation/phaseSurfaceCondensation.C
+
 # Cavitation
 multiphaseEulerCavitation/multiphaseEulerCavitation.C
 
