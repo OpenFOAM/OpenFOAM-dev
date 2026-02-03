@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,6 +49,26 @@ inline bool Foam::unitConversion::none() const
 inline bool Foam::unitConversion::standard() const
 {
     return multiplier_ == 1 || any() || none();
+}
+
+
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
+
+inline Foam::scalar Foam::unitConversion::operator[]
+(
+    const dimensionSet::dimensionType type
+) const
+{
+    return dimensions_[type];
+}
+
+
+inline Foam::scalar Foam::unitConversion::operator[]
+(
+    const dimlessUnitType type
+) const
+{
+    return exponents_[static_cast<int>(type)];
 }
 
 

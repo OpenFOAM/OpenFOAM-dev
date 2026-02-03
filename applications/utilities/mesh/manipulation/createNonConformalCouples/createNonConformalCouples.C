@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -334,7 +334,7 @@ int main(int argc, char *argv[])
     #include "addRegionOption.H"
     #include "addDictOption.H"
 
-    const bool haveArgs = argList::hasArgs(argc, argv);
+    const bool haveArgs = argList::nArgs(argc, argv);
     if (haveArgs)
     {
         argList::validArgs.append("patch1");

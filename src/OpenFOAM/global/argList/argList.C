@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -295,8 +295,10 @@ bool Foam::argList::postProcess(int argc, char *argv[])
 }
 
 
-bool Foam::argList::hasArgs(int argc, char *argv[])
+Foam::label Foam::argList::nArgs(int argc, char *argv[])
 {
+    label n = 0;
+
     for (int i=1; i<argc; i++)
     {
         const string arg(argv[i]);
@@ -308,11 +310,11 @@ bool Foam::argList::hasArgs(int argc, char *argv[])
         }
         else
         {
-            return true;
+            n ++;
         }
     }
 
-    return false;
+    return n;
 }
 
 

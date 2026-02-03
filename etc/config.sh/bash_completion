@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2017-2026 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -119,17 +119,11 @@ _unitArgs ()
 {
     _opts="-help"
 
-    # If '-dimension' is not selected, it is always an option
-    echo "$@" | grep -q -- "-d" || _opts="$_opts -dimension"
-
-    # If '-all' or '-list' is selected, the only other possible option is '-dimension'
-    echo "$@" | grep -q -- "-[al]" && echo "$_opts" | xargs -n 1 | sort && return 0
-
-    # If '-all' or '-list' are not selected, they are options
-    _opts="$_opts -all -list"
+    # If '-all' is not selected, it is an option
+    _opts="$_opts -all"
 
     echo "$@" | grep -q -- "-d" && _args="-d"
-    _opts="$_opts $(foamUnits -list $_args | xargs -n 1 | grep '\[' | tr -d '\[\]')"
+    _opts="$_opts $(foamUnits $_args | xargs -n 1 | grep '\[' | tr -d '\[\]')"
     echo "$_opts" | xargs -n 1 | sort
 }
 
@@ -1190,7 +1184,7 @@ _foamDictionary_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-add -case -dict -diff -doc -entry -expand -fileHandler -help -hostRoots -includes -keywords -libs -merge -noFunctionObjects -output -parallel -quiet -remove -rename -roots -set -srcDoc -value -writePrecision"
+    opts="-add -case -create -dict -diff -doc -entry -expand -fileHandler -help -hostRoots -includes -keywords -libs -merge -noFunctionObjects -output -parallel -quiet -remove -rename -roots -set -srcDoc -value -writePrecision"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra="-d -f"
 
@@ -1615,6 +1609,25 @@ _foamToVTK_ ()
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
 complete -o filenames -o nospace -F _foamToVTK_ foamToVTK
+
+_foamUnits_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
+
+    opts="$(_unitArgs "$used")"
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -*) ;;
+        *) opts="" ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o filenames -o nospace -F _foamUnits_ foamUnits
 
 _gambitToFoam_ ()
 {
@@ -4826,25 +4839,6 @@ _foamTags_ ()
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
 complete -o filenames -o nospace -F _foamTags_ foamTags
-
-_foamUnits_ ()
-{
-    local cur="${COMP_WORDS[COMP_CWORD]}"
-    local prev="${COMP_WORDS[COMP_CWORD-1]}"
-    local line=${COMP_LINE}
-    local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
-
-    opts="$(_unitArgs "$used")"
-    extra=""
-
-    [ "$COMP_CWORD" = 1 ] || \
-    case "$prev" in
-        -*) ;;
-        *) opts="" ;;
-    esac
-    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
-}
-complete -o filenames -o nospace -F _foamUnits_ foamUnits
 
 _foamVTKSeries_ ()
 {

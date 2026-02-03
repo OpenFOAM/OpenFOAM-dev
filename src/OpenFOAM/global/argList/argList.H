@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -369,8 +369,8 @@ public:
             //- Return true if the post-processing option is specified
             static bool postProcess(int argc, char *argv[]);
 
-            //- Return true if there are arguments
-            static bool hasArgs(int argc, char *argv[]);
+            //- Return the number of arguments (not options)
+            static label nArgs(int argc, char *argv[]);
 
             //- Set option directly (use with caution)
             //  An option with an empty param is a bool option.
