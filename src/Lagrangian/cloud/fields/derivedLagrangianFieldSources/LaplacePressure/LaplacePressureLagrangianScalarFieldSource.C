@@ -74,7 +74,7 @@ Foam::LaplacePressureLagrangianScalarFieldSource::value
 {
     return
         cloud<clouds::coupledToThermalFluid>().pc(subMesh)
-      + 2*sigma_/cloud<clouds::spherical>().d(injection, subMesh);
+      + 4*sigma_/cloud<clouds::spherical>().d(injection, subMesh);
 }
 
 
@@ -86,7 +86,7 @@ Foam::LaplacePressureLagrangianScalarFieldSource::value
 {
     return
         cloud<clouds::coupledToThermalFluid>().pc(subMesh)
-      + 2*sigma_/cloud<clouds::spherical>().d(subMesh);
+      + 4*sigma_/cloud<clouds::spherical>().d(subMesh);
 }
 
 
