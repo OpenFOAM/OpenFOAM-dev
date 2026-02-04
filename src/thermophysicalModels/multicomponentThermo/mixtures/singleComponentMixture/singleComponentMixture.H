@@ -145,7 +145,7 @@ public:
         inline const ThermoType& specieThermo(const label speciei) const
         {
             #ifdef FULLDEBUG
-            if (speciei !=== 0)
+            if (speciei != 0)
             {
                 FatalErrorInFunction
                     << "Specie index must be zero for a single component "
