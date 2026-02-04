@@ -32,6 +32,19 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
+// Look up an entry using a scoped keyword.
+//
+// The keyword may contain:
+//  - '/' to traverse into sub-dictionaries
+//  - '.' to refer to the current dictionary
+//  - '..' to refer to the parent dictionary
+//  - '!' to indicate lookup from the top-level dictionary
+//
+// If recursive is enabled, the lookup will continue into parent
+// dictionaries when the entry is not found locally.
+// Pattern matching can be enabled to allow wildcard keywords.
+
+
 const Foam::entry* Foam::dictionary::lookupScopedSubEntryPtr
 (
     const word& keyword,
@@ -44,9 +57,10 @@ const Foam::entry* Foam::dictionary::lookupScopedSubEntryPtr
 
     if (emarkPos == string::npos || emarkPos == 0)
     {
-        // Lookup in this dictionary
+      // No '!' found (or it appears at the first position):
+      // perform lookup within the current dictionary scope
 
-        string::size_type slashPos = keyword.find('/');
+      string::size_type slashPos = keyword.find('/');
 
         if (slashPos == string::npos)
         {
@@ -114,8 +128,10 @@ const Foam::entry* Foam::dictionary::lookupScopedSubEntryPtr
     }
     else
     {
-        // Lookup in the dictionary specified by file name
-        // created from the part of the keyword before the '!'
+       // '!' found in keyword:
+       // Perform lookup in an external dictionary file specified
+       // by the portion of the keyword before the '!'
+   
 
         fileName fName = keyword.substr(0, emarkPos);
 
@@ -160,6 +176,13 @@ const Foam::entry* Foam::dictionary::lookupScopedSubEntryPtr
         return entryPtr->clone(*this).ptr();
     }
 }
+//---------------------------------------------------------------------------
+
+// Search for a keyword in the list of pattern entries.
+//
+// If patternMatch is enabled, regular expressions are used
+// to match the keyword. Otherwise, an exact keyword match
+// is performed.
 
 
 bool Foam::dictionary::findInPatterns
@@ -192,6 +215,13 @@ bool Foam::dictionary::findInPatterns
     return false;
 }
 
+
+//---------------------------------------
+// Search for a keyword in the list of pattern entries.
+//
+// If patternMatch is enabled, regular expressions are used
+// to match the keyword. Otherwise, an exact keyword match
+// is performed.
 
 bool Foam::dictionary::findInPatterns
 (
@@ -240,6 +270,11 @@ void Foam::dictionary::assertNoConvertUnits
     }
 }
 
+//-------------------------------------------------------
+// Read a value of type T from the input stream and apply unit conversion.
+//
+// Units may be specified either before or after the value.
+// The read value is converted to standard units before being returned.
 
 template<class T>
 T Foam::dictionary::readTypeAndConvertUnits
@@ -1315,7 +1350,7 @@ bool Foam::dictionary::merge(const dictionary& dict)
         if (fnd != hashedEntries_.end())
         {
             // Recursively merge sub-dictionaries
-            // TODO: merge without copying
+           // TODO: Optimise merge to avoid unnecessary copying of entries
             if (fnd()->isDict() && iter().isDict())
             {
                 if (fnd()->dict().merge(iter().dict()))
