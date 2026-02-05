@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,22 +80,21 @@ Foam::tmp<Foam::volScalarField> Foam::XiEqModels::Gulder::XiEq() const
 {
     const volScalarField up(sqrt((2.0/3.0)*momentumTransport_.k()));
 
-    tmp<volScalarField> tepsilon = momentumTransport_.epsilon();
-    const volScalarField& epsilon = tepsilon();
+    const volScalarField epsilon
+    (
+        max
+        (
+            momentumTransport_.epsilon(),
+            dimensionedScalar(sqr(dimVelocity)/dimTime, small)
+        )
+    );
 
     const volScalarField tauEta
     (
-        sqrt(mag(thermo_.uThermo().mu()/(thermo_.uThermo().rho()*epsilon)))
+        sqrt(thermo_.uThermo().mu()/(thermo_.uThermo().rho()*epsilon))
     );
 
-    const volScalarField Reta
-    (
-        up
-       /(
-            sqrt(epsilon*tauEta)
-          + dimensionedScalar(up.dimensions(), 1e-8)
-        )
-    );
+    const volScalarField Reta(up/sqrt(epsilon*tauEta));
 
     return (1 + XiEqCoeff_*sqrt(up/max(Su_, SuMin_))*Reta);
 }

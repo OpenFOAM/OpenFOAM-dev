@@ -77,22 +77,18 @@ Foam::XiGModels::KTS::~KTS()
 
 Foam::tmp<Foam::volScalarField::Internal> Foam::XiGModels::KTS::G() const
 {
-    tmp<volScalarField> tepsilon = momentumTransport_.epsilon();
-    const volScalarField& epsilon = tepsilon();
-
-    const volScalarField::Internal tauEta
+    const volScalarField::Internal epsilon
     (
-        sqrt
+        max
         (
-            mag
-            (
-                thermo_.uThermo().mu()()
-               /(thermo_.uThermo().rho()()*epsilon())
-            )
+            momentumTransport_.epsilon()(),
+            dimensionedScalar(sqr(dimVelocity)/dimTime, small)
         )
     );
 
-    return Geta_/tauEta;
+    return
+        Geta_
+       /sqrt(thermo_.uThermo().mu()()/(thermo_.uThermo().rho()()*epsilon));
 }
 
 
