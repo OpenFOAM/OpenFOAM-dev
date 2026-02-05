@@ -45,8 +45,9 @@ Usage
         // The (solid) phase
         phase           solid;
 
-        // Note: Order is important. Liquid first, vapour second.
-        phases          (water steam);
+        // Note: Order is important. This model is one-way. It turns vapour
+        // into liquid. The phases should be specified in this order.
+        phases          (steam water);
 
         // The specie that is condensing
         specie  H2O;

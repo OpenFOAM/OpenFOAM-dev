@@ -46,8 +46,9 @@ Usage
         type            wallCondensation;
         libs            ("libmultiphaseEulerFvModels.so");
 
-        // Note: Order is important. Liquid first, vapour second.
-        phases          (water steam);
+        // Note: Order is important. This model is one-way. It turns vapour
+        // into liquid. The phases should be specified in this order.
+        phases          (steam water);
 
         // The specie that is condensing
         specie  H2O;
@@ -64,11 +65,11 @@ Usage
 
     In addition to the above fvModel specification, wall patches on which
     condensation is to be calculated should have an
-    alphatCondensationWallFunction boundary condition applied to the turbulent
+    alphatPhaseChangeWallFunction boundary condition applied to the turbulent
     thermal diffusivity field.
 
 See also
-    Foam::alphatCondensationWallFunctionFvPatchScalarField
+    Foam::alphatPhaseChangeWallFunctionFvPatchScalarField
 
 SourceFiles
     wallCondensation.C
@@ -78,7 +79,7 @@ SourceFiles
 #ifndef wallCondensation_H
 #define wallCondensation_H
 
-#include "phaseChange.H"
+#include "wallPhaseChange.H"
 #include "phaseSystem.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -100,7 +101,7 @@ namespace fv
 
 class wallCondensation
 :
-    public phaseChange
+    public wallPhaseChange
 {
 private:
 
@@ -111,9 +112,6 @@ private:
 
 
     // Private Data
-
-        //- Reference to the phase system
-        const phaseSystem& fluid_;
 
         //- Reference to the liquid phase
         const phaseModel& liquid_;
@@ -143,7 +141,7 @@ private:
         mutable label pressureEquationIndex_;
 
         //-  Whether or not to linearise the specie source
-        bool  specieSemiImplicit_;
+        bool specieSemiImplicit_;
 
         //- The phase change rate
         mutable volScalarField mDot_;
@@ -156,9 +154,6 @@ private:
 
         //- Non-virtual read
         void readCoeffs(const dictionary& dict);
-
-        //- Return the boundary condition types for the phase change rate
-        wordList mDotBoundaryTypes() const;
 
         //- Correct the phase change rate
         void correctMDot() const;
@@ -186,20 +181,11 @@ public:
 
         // Access
 
-            //- Access the liquid phase
-            inline const phaseModel& liquid() const;
+            //- Return a mask indicating whether phase change is occurring
+            virtual const scalarField& active(const label) const;
 
-            //- Access the vapour phase
-            inline const phaseModel& vapour() const;
-
-            //- Access the liquid turbulent thermal diffusivity
-            inline const volScalarField& alphatLiquid() const;
-
-            //- Access the vapour turbulent thermal diffusivity
-            inline const volScalarField& alphatVapour() const;
-
-            //- Is the given patch active wrt. phase change?
-            bool isActive(const label patchi) const;
+            //- Access the turbulent thermal diffusivities for a patch
+            virtual Pair<const scalarField&> alphats(const label) const;
 
 
         // Evaluation
@@ -265,10 +251,6 @@ public:
 
 } // End namespace fv
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "wallCondensationI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -7,6 +7,10 @@ heatTransferLimitedPhaseChange/heatTransferLimitedPhaseChange.C
 massDiffusionLimitedPhaseChange/massDiffusionLimitedPhaseChange.C
 reactionDrivenPhaseChange/reactionDrivenPhaseChange.C
 
+# Wall phase change
+wallPhaseChange/wallPhaseChange.C
+wallPhaseChange/alphatPhaseChangeWallFunctionFvPatchScalarField.C
+
 # Nucleation phase change
 nucleation/nucleation.C
 homogeneousNucleation/homogeneousNucleation.C
@@ -14,13 +18,11 @@ homogeneousNucleation/homogeneousCondensation.C
 homogeneousNucleation/homogeneousLiquidPhaseSeparation.C
 wallBoiling/wallBoiling.C
 wallBoiling/wallBoilingPhaseChangeRateFvPatchScalarField.C
-wallBoiling/alphatBoilingWallFunctionFvPatchScalarField.C
 phaseSurfaceBoiling/phaseSurfaceBoiling.C
 
 # Surface condensation
 wallCondensation/wallCondensation.C
 wallCondensation/wallCondensationPhaseChangeRateFvPatchScalarField.C
-wallCondensation/alphatCondensationWallFunctionFvPatchScalarField.C
 phaseSurfaceCondensation/phaseSurfaceCondensation.C
 
 # Cavitation

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,40 +22,40 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::alphatBoilingWallFunctionFvPatchScalarField
+    Foam::alphatPhaseChangeWallFunctionFvPatchScalarField
 
 Description
     This boundary condition provides a thermal wall function or the turbulent
-    thermal diffusivity for walls on which a wall boiling fvModel is in
-    operation. The controls for the boiling model are not specified in this
-    condition; they are provided to the wall boiling fvModel. The presence of
-    this condition is used, however, to determine on which walls boiling takes
-    place.
+    thermal diffusivity for walls on which a wall phase change fvModel is in
+    operation. The presence of this condition is used by the phase change
+    fvModel to determine on which walls phase change takes place.
 
 Usage
     Example of the boundary condition specification:
     \verbatim
     <patchType>
     {
-        type            alphatBoilingWallFunction;
+        type            alphatPhaseChangeWallFunction;
         libs            ("libmultiphaseEulerFvModels.so");
         value           uniform 0;
     }
     \endverbatim
 
 See also
+    Foam::fv::wallPhaseChange
     Foam::fv::wallBoiling
+    Foam::fv::wallCondensation
 
 SourceFiles
-    alphatBoilingWallFunctionFvPatchScalarField.C
+    alphatPhaseChangeWallFunctionFvPatchScalarField.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef alphatBoilingWallFunctionFvPatchScalarField_H
-#define alphatBoilingWallFunctionFvPatchScalarField_H
+#ifndef alphatPhaseChangeWallFunctionFvPatchScalarField_H
+#define alphatPhaseChangeWallFunctionFvPatchScalarField_H
 
 #include "fixedValueFvPatchFields.H"
-#include "wallBoiling.H"
+#include "wallPhaseChange.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -63,10 +63,10 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-        Class alphatBoilingWallFunctionFvPatchScalarField Declaration
+        Class alphatPhaseChangeWallFunctionFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
-class alphatBoilingWallFunctionFvPatchScalarField
+class alphatPhaseChangeWallFunctionFvPatchScalarField
 :
     public fixedValueFvPatchScalarField
 {
@@ -74,26 +74,26 @@ private:
 
     // Private Member Data
 
-        //- The name of the wall boiling model
-        const word modelName_;
+        //- List of the corresponding wall phase change models
+        mutable UPtrList<const fv::wallPhaseChange> models_;
 
 
     // Private Member Functions
 
-        //- Access the wall boiling model
-        const fv::wallBoiling& model() const;
+        //- Access the list of the corresponding wall phase change models
+        const UPtrList<const fv::wallPhaseChange>& models() const;
 
 
 public:
 
     //- Runtime type information
-    TypeName("alphatBoilingWallFunction");
+    TypeName("alphatPhaseChangeWallFunction");
 
 
     // Constructors
 
         //- Construct from patch, internal field and dictionary
-        alphatBoilingWallFunctionFvPatchScalarField
+        alphatPhaseChangeWallFunctionFvPatchScalarField
         (
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&,
@@ -101,26 +101,26 @@ public:
         );
 
         //- Construct by mapping given
-        //  alphatBoilingWallFunctionFvPatchScalarField
+        //  alphatPhaseChangeWallFunctionFvPatchScalarField
         //  onto a new patch
-        alphatBoilingWallFunctionFvPatchScalarField
+        alphatPhaseChangeWallFunctionFvPatchScalarField
         (
-            const alphatBoilingWallFunctionFvPatchScalarField&,
+            const alphatPhaseChangeWallFunctionFvPatchScalarField&,
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&,
             const fieldMapper&
         );
 
         //- Disallow copy without setting internal field reference
-        alphatBoilingWallFunctionFvPatchScalarField
+        alphatPhaseChangeWallFunctionFvPatchScalarField
         (
-            const alphatBoilingWallFunctionFvPatchScalarField&
+            const alphatPhaseChangeWallFunctionFvPatchScalarField&
         ) = delete;
 
         //- Copy constructor setting internal field reference
-        alphatBoilingWallFunctionFvPatchScalarField
+        alphatPhaseChangeWallFunctionFvPatchScalarField
         (
-            const alphatBoilingWallFunctionFvPatchScalarField&,
+            const alphatPhaseChangeWallFunctionFvPatchScalarField&,
             const DimensionedField<scalar, volMesh>&
         );
 
@@ -132,7 +132,7 @@ public:
         {
             return tmp<fvPatchScalarField>
             (
-                new alphatBoilingWallFunctionFvPatchScalarField(*this, iF)
+                new alphatPhaseChangeWallFunctionFvPatchScalarField(*this, iF)
             );
         }
 
@@ -143,12 +143,6 @@ public:
 
             //- Update the coefficients associated with the patch field
             virtual void updateCoeffs();
-
-
-        // I-O
-
-            //- Write
-            virtual void write(Ostream&) const;
 
 
     // Member Operators

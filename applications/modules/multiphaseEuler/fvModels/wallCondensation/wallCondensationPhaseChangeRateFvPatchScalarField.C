@@ -36,6 +36,7 @@ wallCondensationPhaseChangeRateFvPatchScalarField
 )
 :
     calculatedFvPatchScalarField(p, iF),
+    condensing_(p.size(), scalar(0)),
     alphatLiquid_(p.size(), scalar(0)),
     alphatVapour_(p.size(), scalar(0))
 {}
@@ -50,6 +51,7 @@ wallCondensationPhaseChangeRateFvPatchScalarField
 )
 :
     calculatedFvPatchScalarField(p, iF, dict),
+    condensing_("condensing", dimless, dict, p.size()),
     alphatLiquid_("alphatLiquid", dimMass/dimTime/dimLength, dict, p.size()),
     alphatVapour_("alphatVapour", dimMass/dimTime/dimLength, dict, p.size())
 {}
@@ -65,6 +67,7 @@ wallCondensationPhaseChangeRateFvPatchScalarField
 )
 :
     calculatedFvPatchScalarField(psf, p, iF, mapper),
+    condensing_(mapper(psf.condensing_)),
     alphatLiquid_(mapper(psf.alphatLiquid_)),
     alphatVapour_(mapper(psf.alphatVapour_))
 {}
@@ -78,6 +81,7 @@ wallCondensationPhaseChangeRateFvPatchScalarField
 )
 :
     calculatedFvPatchScalarField(psf, iF),
+    condensing_(psf.condensing_),
     alphatLiquid_(psf.alphatLiquid_),
     alphatVapour_(psf.alphatVapour_)
 {}
@@ -110,6 +114,7 @@ void Foam::wallCondensationPhaseChangeRateFvPatchScalarField::map
     const wallCondensationPhaseChangeRateFvPatchScalarField& tiptf =
         refCast<const wallCondensationPhaseChangeRateFvPatchScalarField>(ptf);
 
+    mapper(condensing_, tiptf.condensing_);
     mapper(alphatLiquid_, tiptf.alphatLiquid_);
     mapper(alphatVapour_, tiptf.alphatVapour_);
 }
@@ -125,6 +130,7 @@ void Foam::wallCondensationPhaseChangeRateFvPatchScalarField::reset
     const wallCondensationPhaseChangeRateFvPatchScalarField& tiptf =
         refCast<const wallCondensationPhaseChangeRateFvPatchScalarField>(ptf);
 
+    condensing_.reset(tiptf.condensing_);
     alphatLiquid_.reset(tiptf.alphatLiquid_);
     alphatVapour_.reset(tiptf.alphatVapour_);
 }
@@ -143,6 +149,7 @@ void Foam::wallCondensationPhaseChangeRateFvPatchScalarField::write
 {
     calculatedFvPatchScalarField::write(os);
 
+    writeEntry(os, "condensing", condensing_);
     writeEntry(os, "alphatLiquid", alphatLiquid_);
     writeEntry(os, "alphatVapour", alphatVapour_);
 }

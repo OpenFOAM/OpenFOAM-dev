@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,57 +23,53 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "alphatBoilingWallFunctionFvPatchScalarField.H"
-#include "wallBoiling.H"
-#include "wallBoilingPhaseChangeRateFvPatchScalarField.H"
+#include "alphatPhaseChangeWallFunctionFvPatchScalarField.H"
+#include "wallPhaseChange.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-const Foam::fv::wallBoiling&
-Foam::alphatBoilingWallFunctionFvPatchScalarField::model() const
+const Foam::UPtrList<const Foam::fv::wallPhaseChange>&
+Foam::alphatPhaseChangeWallFunctionFvPatchScalarField::models() const
 {
+    if (models_.size()) return models_;
+
     const Foam::fvModels& fvModels =
         Foam::fvModels::New(internalField().mesh());
 
-    if (modelName_ != word::null)
-    {
-        return refCast<const fv::wallBoiling>(fvModels[modelName_]);
-    }
-
-    label wallBoilingFvModeli = -1;
-
     forAll(fvModels, fvModeli)
     {
-        if (!isA<fv::wallBoiling>(fvModels[fvModeli])) continue;
+        if (!isA<fv::wallPhaseChange>(fvModels[fvModeli])) continue;
 
-        if (wallBoilingFvModeli != -1)
+        const fv::wallPhaseChange& model =
+            refCast<const fv::wallPhaseChange>(fvModels[fvModeli]);
+
+        if
+        (
+            &internalField() == &model.alphats().first()
+         || &internalField() == &model.alphats().second()
+        )
         {
-            FatalErrorInFunction
-                << "Multiple wall boiling fvModels found for " << typeName
-                << " boundary condition of field " << internalField().name()
-                << " on patch " << patch().name() << exit(FatalError);
+            models_.append(&model);
         }
-
-        wallBoilingFvModeli = fvModeli;
     }
 
-    if (wallBoilingFvModeli == -1)
+    if (models_.empty())
     {
         FatalErrorInFunction
-            << "Wall boiling fvModel not found for " << typeName
+            << "No wall phase-change models found for " << typeName
             << " boundary condition of field " << internalField().name()
             << " on patch " << patch().name() << exit(FatalError);
     }
 
-    return refCast<const fv::wallBoiling>(fvModels[wallBoilingFvModeli]);
+    return models_;
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * /
 
-Foam::alphatBoilingWallFunctionFvPatchScalarField::
-alphatBoilingWallFunctionFvPatchScalarField
+Foam::alphatPhaseChangeWallFunctionFvPatchScalarField::
+alphatPhaseChangeWallFunctionFvPatchScalarField
 (
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
@@ -81,75 +77,74 @@ alphatBoilingWallFunctionFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(p, iF, dict),
-    modelName_(dict.lookupOrDefault<word>("model", word::null))
+    models_()
 {}
 
 
-Foam::alphatBoilingWallFunctionFvPatchScalarField::
-alphatBoilingWallFunctionFvPatchScalarField
+Foam::alphatPhaseChangeWallFunctionFvPatchScalarField::
+alphatPhaseChangeWallFunctionFvPatchScalarField
 (
-    const alphatBoilingWallFunctionFvPatchScalarField& psf,
+    const alphatPhaseChangeWallFunctionFvPatchScalarField& psf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const fieldMapper& mapper
 )
 :
     fixedValueFvPatchScalarField(psf, p, iF, mapper),
-    modelName_(psf.modelName_)
+    models_()
 {}
 
 
-Foam::alphatBoilingWallFunctionFvPatchScalarField::
-alphatBoilingWallFunctionFvPatchScalarField
+Foam::alphatPhaseChangeWallFunctionFvPatchScalarField::
+alphatPhaseChangeWallFunctionFvPatchScalarField
 (
-    const alphatBoilingWallFunctionFvPatchScalarField& psf,
+    const alphatPhaseChangeWallFunctionFvPatchScalarField& psf,
     const DimensionedField<scalar, volMesh>& iF
 )
 :
     fixedValueFvPatchScalarField(psf, iF),
-    modelName_(psf.modelName_)
+    models_()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::alphatBoilingWallFunctionFvPatchScalarField::updateCoeffs()
+void Foam::alphatPhaseChangeWallFunctionFvPatchScalarField::updateCoeffs()
 {
     if (updated())
     {
         return;
     }
 
-    const fv::wallBoiling& model = this->model();
+    const UPtrList<const fv::wallPhaseChange>& models = this->models();
 
-    const wallBoilingPhaseChangeRateFvPatchScalarField& mDotPf =
-        model.mDotPf(patch().index());
+    // Apply the first model to the entire patch, and subsequent models only to
+    // the active portion of the patch. This assumes that the models active
+    // regions do not overlap. If it turns out that we do need to support
+    // multiple models simultaneously causing phase-change on the same face,
+    // then these models will need to get more collaborative and we have to
+    // think about how to do that.
+    forAll(models, modeli)
+    {
+        const fv::wallPhaseChange& model = models[modeli];
 
-    if (&internalField() == &model.alphatLiquid())
-    {
-        operator==(mDotPf.alphatLiquid());
-    }
-    else if (&internalField() == &model.alphatVapour())
-    {
-        operator==(mDotPf.alphatVapour());
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "Model " << model.name() << " does not provide a turbulent "
-            << "thermal diffusivity for phase " << internalField().group()
-            << exit(FatalError);
+        const scalarField& alphat =
+            &internalField() == &model.alphats().first()
+          ? model.alphats(patch().index()).first()
+          : model.alphats(patch().index()).second();
+
+        if (modeli == 0)
+        {
+            operator==(alphat);
+        }
+        else
+        {
+            const scalarField& active = model.active(patch().index());
+            operator==((1 - active)*(*this) + active*alphat);
+        }
     }
 
     fixedValueFvPatchScalarField::updateCoeffs();
-}
-
-
-void Foam::alphatBoilingWallFunctionFvPatchScalarField::write(Ostream& os) const
-{
-    fixedValueFvPatchScalarField::write(os);
-
-    writeEntryIfDifferent(os, "model", word::null, modelName_);
 }
 
 
@@ -160,7 +155,7 @@ namespace Foam
     makePatchTypeField
     (
         fvPatchScalarField,
-        alphatBoilingWallFunctionFvPatchScalarField
+        alphatPhaseChangeWallFunctionFvPatchScalarField
     );
 }
 

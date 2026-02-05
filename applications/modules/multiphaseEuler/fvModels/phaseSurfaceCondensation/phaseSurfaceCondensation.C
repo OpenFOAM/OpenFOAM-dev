@@ -92,6 +92,8 @@ void Foam::fv::phaseSurfaceCondensation::readCoeffs(const dictionary& dict)
 
 void Foam::fv::phaseSurfaceCondensation::correctMDot() const
 {
+    Info<< type() << ": " << name() << endl << incrIndent;
+
     static const dimensionedScalar rootVSmallH
     (
         heatTransferModel::dimK,
@@ -102,10 +104,10 @@ void Foam::fv::phaseSurfaceCondensation::correctMDot() const
     const volScalarField::Internal& solidT = solidThermo.T();
 
     const fluidMulticomponentThermo& vapourThermo =
-            fluidMulticomponentThermos(false, true)[1];
+        fluidMulticomponentThermos(true, false)[0];
     const volScalarField::Internal& vapourT = vapourThermo.T();
 
-    const label speciei = specieis()[1];
+    const label speciei = specieis()[0];
 
     const Pair<tmp<volScalarField>> Hs =
         solver_.heatTransfer.Hs(vapour_, solid_, scalar(0));
@@ -144,11 +146,11 @@ void Foam::fv::phaseSurfaceCondensation::correctMDot() const
 
     mDot_ =
         (1 - f)*mDot_
-      + f*freeSurf*vapourThermo.Wi(speciei)/vapourThermo.W()()
+      - f*freeSurf*vapourThermo.Wi(speciei)/vapourThermo.W()()
        *diffusiveMassTransferModel_->KinThe(vapour_)()
        *ttmVapour.D(vapour_.Y(species()[0]))()
        *log(max(1 - xc, 0.001)/max(1 - xw, 0.001));
-    mDot_.min(0);
+    mDot_.max(0);
 
     infoField("mDot", mDot_);
 
@@ -156,7 +158,7 @@ void Foam::fv::phaseSurfaceCondensation::correctMDot() const
     {
         mDotDy_ =
             (1 - f)*mDotDy_
-          - f*freeSurf
+          + f*freeSurf
            *diffusiveMassTransferModel_->KinThe(vapour_)()
            *ttmVapour.D(vapour_.Y(species()[0]))()
            /(1 - min(xc, 0.999))*pos(xc - xw);
@@ -168,6 +170,8 @@ void Foam::fv::phaseSurfaceCondensation::correctMDot() const
 
     // Heat flux
     q_ = mDot_*L;
+
+    Info<< decrIndent;
 }
 
 
@@ -191,8 +195,8 @@ Foam::fv::phaseSurfaceCondensation::phaseSurfaceCondensation
     ),
     solver_(mesh().lookupObject<solvers::multiphaseEuler>(solver::typeName)),
     fluid_(solver_.fluid),
-    liquid_(fluid_.phases()[phaseNames().first()]),
-    vapour_(fluid_.phases()[phaseNames().second()]),
+    liquid_(fluid_.phases()[phaseNames().second()]),
+    vapour_(fluid_.phases()[phaseNames().first()]),
     solid_(fluid_.phases()[dict.lookup("phase")]),
     diffusiveMassTransferModel_(nullptr),
     saturationModelPtr_(nullptr),
@@ -263,7 +267,7 @@ Foam::fv::phaseSurfaceCondensation::Lfraction() const
         (
             name() + ":Lfraction",
             mesh(),
-            dimensionedScalar(dimless, scalar(1))
+            dimensionedScalar(dimless, scalar(0))
         );
 }
 
@@ -334,7 +338,7 @@ void Foam::fv::phaseSurfaceCondensation::addSup
     const label i = this->index(phaseNames(), alpha.group());
 
     // If implicit treatment is not needed or this is liquid, use normal addSup
-    if (!specieSemiImplicit_ || i != 1)
+    if (!specieSemiImplicit_ || i != 0)
     {
         return phaseChange::addSup(alpha, rho, heOrYi, eqn);
     }
@@ -342,7 +346,7 @@ void Foam::fv::phaseSurfaceCondensation::addSup
     const label s = this->sign(phaseNames(), alpha.group());
 
     const fluidMulticomponentThermo& thermo =
-        fluidMulticomponentThermos(false, true)[1];
+        fluidMulticomponentThermos(true, false)[0];
 
     const word specieName = heOrYi.member();
 
@@ -357,6 +361,7 @@ void Foam::fv::phaseSurfaceCondensation::addSup
         tmp<volScalarField::Internal> tmDotDy = this->mDotDy();
 
         eqn += s*(tmDot() + correction(fvm::Sp(tmDotDy, eqn.psi())));
+
         return;
     }
 

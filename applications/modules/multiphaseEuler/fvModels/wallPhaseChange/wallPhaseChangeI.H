@@ -23,33 +23,27 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "wallCondensation.H"
+#include "wallPhaseChange.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline const Foam::phaseModel& Foam::fv::wallCondensation::liquid() const
+inline const Foam::phaseSystem& Foam::fv::wallPhaseChange::fluid() const
 {
-    return liquid_;
+    return fluid_;
 }
 
 
-inline const Foam::phaseModel& Foam::fv::wallCondensation::vapour() const
+inline const Foam::Pair<const Foam::phaseModel&>&
+Foam::fv::wallPhaseChange::phases() const
 {
-    return vapour_;
+    return phases_;
 }
 
 
-inline const Foam::volScalarField&
-Foam::fv::wallCondensation::alphatLiquid() const
+inline const Foam::Pair<const Foam::volScalarField&>&
+Foam::fv::wallPhaseChange::alphats() const
 {
-    return alphatLiquid_;
-}
-
-
-inline const Foam::volScalarField&
-Foam::fv::wallCondensation::alphatVapour() const
-{
-    return alphatVapour_;
+    return alphats_;
 }
 
 

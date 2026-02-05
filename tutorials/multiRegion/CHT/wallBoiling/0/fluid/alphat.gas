@@ -32,7 +32,7 @@ boundaryField
     }
     wall
     {
-        type            alphatBoilingWallFunction;
+        type            alphatPhaseChangeWallFunction;
         libs            ("libmultiphaseEulerFvModels.so");
         value           uniform 0;
     }

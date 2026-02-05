@@ -59,6 +59,9 @@ class wallCondensationPhaseChangeRateFvPatchScalarField
 {
     // Private Data
 
+        //- Mask which indicates which faces are condensing
+        scalarField condensing_;
+
         //- Liquid turbulent thermal diffusivity
         scalarField alphatLiquid_;
 

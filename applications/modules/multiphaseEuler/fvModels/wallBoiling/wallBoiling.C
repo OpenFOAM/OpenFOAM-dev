@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,10 +35,9 @@ License
 #include "departureDiameterModel.H"
 #include "departureFrequencyModel.H"
 
-#include "alphatBoilingWallFunctionFvPatchScalarField.H"
+#include "alphatPhaseChangeWallFunctionFvPatchScalarField.H"
 #include "alphatJayatillekeWallFunctionFvPatchScalarField.H"
 #include "wallBoilingPhaseChangeRateFvPatchScalarField.H"
-#include "zeroFixedValueFvPatchFields.H"
 #include "zeroGradientFvPatchFields.H"
 
 #include "addToRunTimeSelectionTable.H"
@@ -293,49 +292,6 @@ void Foam::fv::wallBoiling::readCoeffs(const dictionary& dict)
 
     bubbleWaitingTimeRatio_ =
         dict.lookupOrDefault<scalar>("bubbleWaitingTimeRatio", dimless, 0.8);
-}
-
-
-Foam::wordList Foam::fv::wallBoiling::mDotBoundaryTypes() const
-{
-    wordList boundaryTypes
-    (
-        mesh().boundary().size(),
-        zeroFixedValueFvPatchScalarField::typeName
-    );
-
-    forAll(alphatLiquid_.boundaryField(), patchi)
-    {
-        const bool liquidIsBoiling =
-            isA<alphatBoilingWallFunctionFvPatchScalarField>
-            (
-                alphatLiquid_.boundaryField()[patchi]
-            );
-        const bool vapourIsBoiling =
-            isA<alphatBoilingWallFunctionFvPatchScalarField>
-            (
-                alphatVapour_.boundaryField()[patchi]
-            );
-
-        if (liquidIsBoiling != vapourIsBoiling)
-        {
-            FatalErrorInFunction
-                << "The field "
-                << (liquidIsBoiling ? alphatLiquid_ : alphatVapour_).name()
-                << " has a boiling wall function on patch "
-                << mesh().boundary()[patchi].name() << " but "
-                << (vapourIsBoiling ? alphatLiquid_ : alphatVapour_).name()
-                << " does not" << exit(FatalError);
-        }
-
-        if (liquidIsBoiling)
-        {
-            boundaryTypes[patchi] =
-                wallBoilingPhaseChangeRateFvPatchScalarField::typeName;
-        }
-    }
-
-    return boundaryTypes;
 }
 
 
@@ -615,7 +571,7 @@ void Foam::fv::wallBoiling::correctMDot() const
     //- Reset the phase-change rates in all the near-wall cells
     forAll(mDot_.boundaryField(), patchi)
     {
-        if (!isBoiling(patchi)) continue;
+        if (!isPatchActive(patchi)) continue;
 
         const labelUList& faceCells = mesh().boundary()[patchi].faceCells();
         forAll(faceCells, i)
@@ -628,7 +584,7 @@ void Foam::fv::wallBoiling::correctMDot() const
     // rates into the adjacent cells
     forAll(mDot_.boundaryField(), patchi)
     {
-        if (!isBoiling(patchi)) continue;
+        if (!isPatchActive(patchi)) continue;
 
         // Access the wall-boiling phase-change patch field for this patch
         wallBoilingPhaseChangeRateFvPatchScalarField& mDot = mDotPfRef(patchi);
@@ -675,7 +631,7 @@ void Foam::fv::wallBoiling::correctMDot() const
         // limit, creating a new superheat of twice the current value.
         // Subsequent time-steps will then double this superheat again and
         // again until it does eventually bound the solution.
-        const scalarField isBoiling(neg(R(lagProps.Tsat)));
+        mDot.boiling_ = neg(R(lagProps.Tsat));
         scalarField T0(lagProps.Tsat);
         scalarField T1
         (
@@ -686,7 +642,7 @@ void Foam::fv::wallBoiling::correctMDot() const
             )
         );
         scalar e =
-            gMax((1 - TLiquidIsFixed)*isBoiling*(T1 - T0)/(T0 + T1));
+            gMax((1 - TLiquidIsFixed)*mDot.boiling_*(T1 - T0)/(T0 + T1));
         for (; e > tolerance_; e /= 2)
         {
             const scalarField Tm((T0 + T1)/2);
@@ -714,9 +670,9 @@ void Foam::fv::wallBoiling::correctMDot() const
             q/lagProps.CpLiquid/gradT/max(lagProps.alphaLiquid, rootSmall)
         );
 
-        mDot.alphatLiquid_ =
-            isBoiling*alphatBoilingLiquid
-          + (1 - isBoiling)*lagProps.alphatConvLiquid;
+        mDot.alphatLiquid_=
+            mDot.boiling_*alphatBoilingLiquid
+          + (1 - mDot.boiling_)*lagProps.alphatConvLiquid;
         infoField
         (
             "mDot[" + mesh().boundary()[patchi].name() + "]",
@@ -746,7 +702,7 @@ Foam::fv::wallBoiling::wallBoiling
     const dictionary& dict
 )
 :
-    phaseChange
+    wallPhaseChange
     (
         name,
         modelType,
@@ -755,23 +711,10 @@ Foam::fv::wallBoiling::wallBoiling
         readSpecie(coeffs(modelType, dict), false)
     ),
     nucleation(),
-    fluid_(mesh().lookupObject<phaseSystem>(phaseSystem::propertiesName)),
-    liquid_(fluid_.phases()[phaseNames().first()]),
-    vapour_(fluid_.phases()[phaseNames().second()]),
-    alphatLiquid_
-    (
-        mesh().lookupObject<volScalarField>
-        (
-            IOobject::groupName("alphat", liquid_.name())
-        )
-    ),
-    alphatVapour_
-    (
-        mesh().lookupObject<volScalarField>
-        (
-            IOobject::groupName("alphat", vapour_.name())
-        )
-    ),
+    liquid_(phases().first()),
+    vapour_(phases().second()),
+    alphatLiquid_(wallPhaseChange::alphats().first()),
+    alphatVapour_(wallPhaseChange::alphats().second()),
     p_rgh_
     (
         mesh().lookupObject<solvers::multiphaseEuler>(solver::typeName).p_rgh
@@ -798,7 +741,10 @@ Foam::fv::wallBoiling::wallBoiling
         ),
         mesh,
         dimensionedScalar(dimDensity/dimTime, scalar(0)),
-        mDotBoundaryTypes()
+        mDotBoundaryTypes
+        (
+            wallBoilingPhaseChangeRateFvPatchScalarField::typeName
+        )
     )
 {
     readCoeffs(coeffs(dict));
@@ -807,12 +753,25 @@ Foam::fv::wallBoiling::wallBoiling
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::fv::wallBoiling::isBoiling(const label patchi) const
+const Foam::scalarField& Foam::fv::wallBoiling::active
+(
+    const label patchi
+) const
+{
+    return mDotPfRef(patchi).boiling_;
+}
+
+
+Foam::Pair<const Foam::scalarField&> Foam::fv::wallBoiling::alphats
+(
+    const label patchi
+) const
 {
     return
-        isA<wallBoilingPhaseChangeRateFvPatchScalarField>
+        Pair<const Foam::scalarField&>
         (
-            mDot_.boundaryFieldRef()[patchi]
+            mDotPfRef(patchi).alphatLiquid_,
+            mDotPfRef(patchi).alphatVapour_
         );
 }
 
@@ -848,7 +807,7 @@ Foam::fv::wallBoiling::d() const
 
     forAll(mDot_.boundaryField(), patchi)
     {
-        if (!isBoiling(patchi)) continue;
+        if (!isPatchActive(patchi)) continue;
 
         // Access the wall-boiling phase-change patch field for this patch
         const wallBoilingPhaseChangeRateFvPatchScalarField& mDot =
@@ -882,7 +841,7 @@ Foam::fv::wallBoiling::nDot() const
 
     forAll(mDot_.boundaryField(), patchi)
     {
-        if (!isBoiling(patchi)) continue;
+        if (!isPatchActive(patchi)) continue;
 
         // Access the wall-boiling phase-change patch field for this patch
         const wallBoilingPhaseChangeRateFvPatchScalarField& mDot =
@@ -918,7 +877,7 @@ Foam::fv::wallBoiling::mDot() const
 const Foam::wallBoilingPhaseChangeRateFvPatchScalarField&
 Foam::fv::wallBoiling::mDotPf(const label patchi) const
 {
-    if (!isBoiling(patchi))
+    if (!isPatchActive(patchi))
     {
         FatalErrorInFunction
             << "Patch " << mesh().boundary()[patchi].name()
@@ -936,7 +895,7 @@ Foam::fv::wallBoiling::mDotPf(const label patchi) const
 Foam::wallBoilingPhaseChangeRateFvPatchScalarField&
 Foam::fv::wallBoiling::mDotPfRef(const label patchi) const
 {
-    if (!isBoiling(patchi))
+    if (!isPatchActive(patchi))
     {
         FatalErrorInFunction
             << "Patch " << mesh().boundary()[patchi].name()

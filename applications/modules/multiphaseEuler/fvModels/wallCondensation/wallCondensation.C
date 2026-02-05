@@ -32,10 +32,9 @@ License
 
 #include "saturationPressureModel.H"
 
-#include "alphatCondensationWallFunctionFvPatchScalarField.H"
+#include "alphatPhaseChangeWallFunctionFvPatchScalarField.H"
 #include "alphatJayatillekeWallFunctionFvPatchScalarField.H"
 #include "wallCondensationPhaseChangeRateFvPatchScalarField.H"
-#include "zeroFixedValueFvPatchFields.H"
 #include "zeroGradientFvPatchFields.H"
 
 #include "addToRunTimeSelectionTable.H"
@@ -206,49 +205,6 @@ void Foam::fv::wallCondensation::readCoeffs(const dictionary& dict)
 }
 
 
-Foam::wordList Foam::fv::wallCondensation::mDotBoundaryTypes() const
-{
-    wordList boundaryTypes
-    (
-        mesh().boundary().size(),
-        zeroFixedValueFvPatchScalarField::typeName
-    );
-
-    forAll(alphatLiquid_.boundaryField(), patchi)
-    {
-        const bool liquidIsActive =
-            isA<alphatCondensationWallFunctionFvPatchScalarField>
-            (
-                alphatLiquid_.boundaryField()[patchi]
-            );
-        const bool vapourIsActive =
-            isA<alphatCondensationWallFunctionFvPatchScalarField>
-            (
-                alphatVapour_.boundaryField()[patchi]
-            );
-
-        if (liquidIsActive != vapourIsActive)
-        {
-            FatalErrorInFunction
-                << "The field "
-                << (liquidIsActive ? alphatLiquid_ : alphatVapour_).name()
-                << " has a condensation phase change wall function on patch "
-                << mesh().boundary()[patchi].name() << " but "
-                << (vapourIsActive ? alphatLiquid_ : alphatVapour_).name()
-                << " does not" << exit(FatalError);
-        }
-
-        if (liquidIsActive)
-        {
-            boundaryTypes[patchi] =
-                wallCondensationPhaseChangeRateFvPatchScalarField::typeName;
-        }
-    }
-
-    return boundaryTypes;
-}
-
-
 void Foam::fv::wallCondensation::correctMDot() const
 {
     Info<< type() << ": " << name() << endl << incrIndent;
@@ -256,7 +212,7 @@ void Foam::fv::wallCondensation::correctMDot() const
     //- Reset the phase-change rates in all the near-wall cells
     forAll(mDot_.boundaryField(), patchi)
     {
-        if (!isActive(patchi)) continue;
+        if (!isPatchActive(patchi)) continue;
 
         const labelUList& faceCells = mesh().boundary()[patchi].faceCells();
         forAll(faceCells, i)
@@ -270,7 +226,7 @@ void Foam::fv::wallCondensation::correctMDot() const
     // rates into the adjacent cells
     forAll(mDot_.boundaryField(), patchi)
     {
-        if (!isActive(patchi)) continue;
+        if (!isPatchActive(patchi)) continue;
 
         // Access the wall-condensation phase-change patch field for this patch
         wallCondensationPhaseChangeRateFvPatchScalarField& mDot =
@@ -282,9 +238,9 @@ void Foam::fv::wallCondensation::correctMDot() const
         const properties props(*this, patchi);
 
         const fluidMulticomponentThermo& thermo =
-            fluidMulticomponentThermos(false, true)[1];
+            fluidMulticomponentThermos(true, false)[0];
 
-        const label speciei = specieis()[1];
+        const label speciei = specieis()[0];
 
         // Calculate effective diffusivity
         const scalarField DEff
@@ -296,30 +252,28 @@ void Foam::fv::wallCondensation::correctMDot() const
         const scalarField xc
         (
             vapour_
-            .Y(species()[0])
-            .boundaryField()[patchi].patchInternalField()
-            /thermo.WiValue(speciei)
-            *thermo.W(patchi) // Assuming zeroGradient for species
+           .Y(species()[0]).boundaryField()[patchi].patchInternalField()
+           /thermo.WiValue(speciei)
+           *thermo.W(patchi) // Assuming zeroGradient for species
         );
 
         const scalarField xw(props.pSat/thermo.p().boundaryField()[patchi]);
 
         mDot =
-            props.alphaVapour*props.AbyV
-            *thermo.WiValue(speciei)
-            /thermo.W(patchi)
-            *DEff
-            *props.patch().deltaCoeffs()
-            *log(max(1 - xc, 0.001)/max(1 - xw, 0.001));
+          - props.alphaVapour
+           *props.AbyV
+           *thermo.WiValue(speciei)/thermo.W(patchi)*DEff
+           *props.patch().deltaCoeffs()
+           *log(max(1 - xc, 0.001)/max(1 - xw, 0.001));
 
         if (specieSemiImplicit_)
         {
             mDotDy =
-              - props.alphaVapour*props.AbyV
-                *DEff
-                *props.patch().deltaCoeffs()
-                /max(1 - xc, 0.001)
-                *pos(xc - xw);
+                props.alphaVapour
+               *props.AbyV
+               *DEff
+               *props.patch().deltaCoeffs()
+               /max(1 - xc, 0.001)*pos(xc - xw);
         }
         else
         {
@@ -327,7 +281,8 @@ void Foam::fv::wallCondensation::correctMDot() const
         }
 
         // Only allow condensation
-        mDot = min(mDot, scalar(0));
+        mDot.condensing_ = pos(mDot);
+        mDot = max(mDot, scalar(0));
 
         const scalarField gradT
         (
@@ -342,7 +297,7 @@ void Foam::fv::wallCondensation::correctMDot() const
             q/props.CpVapour/gradT/max(props.alphaVapour, rootSmall)
         );
 
-        mDot.alphatVapour_ =  props.alphatConvVapour + alphatCondensingVapour;
+        mDot.alphatVapour_ = props.alphatConvVapour + alphatCondensingVapour;
         mDot.alphatLiquid_ = props.alphatConvLiquid;
 
         infoField
@@ -375,7 +330,7 @@ Foam::fv::wallCondensation::wallCondensation
     const dictionary& dict
 )
 :
-    phaseChange
+    wallPhaseChange
     (
         name,
         modelType,
@@ -383,23 +338,10 @@ Foam::fv::wallCondensation::wallCondensation
         dict,
         readSpecie(coeffs(modelType, dict), true)
     ),
-    fluid_(mesh().lookupObject<phaseSystem>(phaseSystem::propertiesName)),
-    liquid_(fluid_.phases()[phaseNames().first()]),
-    vapour_(fluid_.phases()[phaseNames().second()]),
-    alphatLiquid_
-    (
-        mesh().lookupObject<volScalarField>
-        (
-            IOobject::groupName("alphat", liquid_.name())
-        )
-    ),
-    alphatVapour_
-    (
-        mesh().lookupObject<volScalarField>
-        (
-            IOobject::groupName("alphat", vapour_.name())
-        )
-    ),
+    liquid_(phases().second()),
+    vapour_(phases().first()),
+    alphatLiquid_(wallPhaseChange::alphats().second()),
+    alphatVapour_(wallPhaseChange::alphats().first()),
     p_rgh_
     (
         mesh().lookupObject<solvers::multiphaseEuler>(solver::typeName).p_rgh
@@ -421,7 +363,10 @@ Foam::fv::wallCondensation::wallCondensation
         ),
         mesh,
         dimensionedScalar(dimDensity/dimTime, scalar(0)),
-        mDotBoundaryTypes()
+        mDotBoundaryTypes
+        (
+            wallCondensationPhaseChangeRateFvPatchScalarField::typeName
+        )
     ),
     mDotDy_
     (
@@ -443,12 +388,25 @@ Foam::fv::wallCondensation::wallCondensation
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::fv::wallCondensation::isActive(const label patchi) const
+const Foam::scalarField& Foam::fv::wallCondensation::active
+(
+    const label patchi
+) const
+{
+    return mDotPfRef(patchi).condensing_;
+}
+
+
+Foam::Pair<const Foam::scalarField&> Foam::fv::wallCondensation::alphats
+(
+    const label patchi
+) const
 {
     return
-        isA<wallCondensationPhaseChangeRateFvPatchScalarField>
+        Pair<const Foam::scalarField&>
         (
-            mDot_.boundaryFieldRef()[patchi]
+            mDotPfRef(patchi).alphatVapour_,
+            mDotPfRef(patchi).alphatLiquid_
         );
 }
 
@@ -462,7 +420,7 @@ Foam::fv::wallCondensation::Lfraction() const
         (
             name() + ":Lfraction",
             mesh(),
-            dimensionedScalar(dimless, scalar(1))
+            dimensionedScalar(dimless, scalar(0))
         );
 }
 
@@ -484,7 +442,7 @@ Foam::fv::wallCondensation::mDotDy() const
 const Foam::wallCondensationPhaseChangeRateFvPatchScalarField&
 Foam::fv::wallCondensation::mDotPf(const label patchi) const
 {
-    if (!isActive(patchi))
+    if (!isPatchActive(patchi))
     {
         FatalErrorInFunction
             << "Patch " << mesh().boundary()[patchi].name()
@@ -502,7 +460,7 @@ Foam::fv::wallCondensation::mDotPf(const label patchi) const
 Foam::wallCondensationPhaseChangeRateFvPatchScalarField&
 Foam::fv::wallCondensation::mDotPfRef(const label patchi) const
 {
-    if (!isActive(patchi))
+    if (!isPatchActive(patchi))
     {
         FatalErrorInFunction
             << "Patch " << mesh().boundary()[patchi].name()
@@ -561,7 +519,7 @@ void Foam::fv::wallCondensation::addSup
     const label s = this->sign(phaseNames(), alpha.group());
 
     const fluidMulticomponentThermo& thermo =
-        fluidMulticomponentThermos(false, true)[1];
+        fluidMulticomponentThermos(true, false)[0];
 
     const word specieName = heOrYi.member();
 
@@ -576,6 +534,7 @@ void Foam::fv::wallCondensation::addSup
         tmp<volScalarField::Internal> tmDotDy = this->mDotDy();
 
         eqn += s*(tmDot() + correction(fvm::Sp(tmDotDy, eqn.psi())));
+
         return;
     }
 

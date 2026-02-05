@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,6 +80,7 @@ wallBoilingPhaseChangeRateFvPatchScalarField
 )
 :
     calculatedFvPatchScalarField(p, iF),
+    boiling_(p.size(), scalar(0)),
     wetFraction_(p.size(), scalar(0)),
     dDeparture_(p.size(), vGreat),
     fDeparture_(p.size(), scalar(0)),
@@ -100,6 +101,7 @@ wallBoilingPhaseChangeRateFvPatchScalarField
 )
 :
     calculatedFvPatchScalarField(p, iF, dict),
+    boiling_("boiling", dimless, dict, p.size()),
     wetFraction_("wetFraction", dimless, dict, p.size()),
     dDeparture_("dDeparture", dimLength, dict, p.size()),
     fDeparture_("fDeparture", dimRate, dict, p.size()),
@@ -121,6 +123,7 @@ wallBoilingPhaseChangeRateFvPatchScalarField
 )
 :
     calculatedFvPatchScalarField(psf, p, iF, mapper),
+    boiling_(mapper(psf.boiling_)),
     wetFraction_(mapper(psf.wetFraction_)),
     dDeparture_(mapper(psf.dDeparture_)),
     fDeparture_(mapper(psf.fDeparture_)),
@@ -140,6 +143,7 @@ wallBoilingPhaseChangeRateFvPatchScalarField
 )
 :
     calculatedFvPatchScalarField(psf, iF),
+    boiling_(psf.boiling_),
     wetFraction_(psf.wetFraction_),
     dDeparture_(psf.dDeparture_),
     fDeparture_(psf.fDeparture_),
@@ -198,6 +202,7 @@ void Foam::wallBoilingPhaseChangeRateFvPatchScalarField::map
     const wallBoilingPhaseChangeRateFvPatchScalarField& tiptf =
         refCast<const wallBoilingPhaseChangeRateFvPatchScalarField>(ptf);
 
+    mapper(boiling_, tiptf.boiling_);
     mapper(wetFraction_, tiptf.wetFraction_);
     mapper(dDeparture_, tiptf.dDeparture_);
     mapper(fDeparture_, tiptf.fDeparture_);
@@ -219,6 +224,7 @@ void Foam::wallBoilingPhaseChangeRateFvPatchScalarField::reset
     const wallBoilingPhaseChangeRateFvPatchScalarField& tiptf =
         refCast<const wallBoilingPhaseChangeRateFvPatchScalarField>(ptf);
 
+    boiling_.reset(tiptf.boiling_);
     wetFraction_.reset(tiptf.wetFraction_);
     dDeparture_.reset(tiptf.dDeparture_);
     fDeparture_.reset(tiptf.fDeparture_);
@@ -243,6 +249,7 @@ void Foam::wallBoilingPhaseChangeRateFvPatchScalarField::write
 {
     calculatedFvPatchScalarField::write(os);
 
+    writeEntry(os, "boiling", boiling_);
     writeEntry(os, "wetFraction", wetFraction_);
     writeEntry(os, "dDeparture", dDeparture_);
     writeEntry(os, "fDeparture", fDeparture_);

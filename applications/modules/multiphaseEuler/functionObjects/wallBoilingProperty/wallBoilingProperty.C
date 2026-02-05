@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -153,7 +153,7 @@ bool Foam::functionObjects::wallBoilingProperty::execute()
 
     forAll(propertyVf.boundaryField(), patchi)
     {
-        if (!model.isBoiling(patchi)) continue;
+        if (!model.isPatchActive(patchi)) continue;
 
         const wallBoilingPhaseChangeRateFvPatchScalarField& mDot =
             model.mDotPf(patchi);
