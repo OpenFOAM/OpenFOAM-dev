@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -126,7 +126,7 @@ void Foam::porousBafflePressureFvPatchField::updateCoeffs()
     if (cyclicPatch().owner())
     {
         const surfaceScalarField& phi =
-                db().lookupObject<surfaceScalarField>(phiName_);
+            db().lookupObject<surfaceScalarField>(phiName_);
 
         const fvsPatchField<scalar>& phip =
             patch().patchField<surfaceScalarField, scalar>(phi);
@@ -141,7 +141,7 @@ void Foam::porousBafflePressureFvPatchField::updateCoeffs()
         const scalarField magUn(mag(Un));
 
         const momentumTransportModel& turbModel =
-            db().lookupType<momentumTransportModel>(internalField().group());
+            db().lookupType<momentumTransportModel>(IOobject::group(phiName_));
 
         jumpRef() =
             -sign(Un)
