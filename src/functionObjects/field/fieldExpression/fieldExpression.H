@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,14 @@ class fieldExpression
 {
 protected:
 
-    // Protected member data
+    // Protected Member Data
+
+        //- Word indicating that this fieldExpression has no field name
+        static const word noFieldName_;
+
+        //- Word indicating that this fieldExpression has no default field
+        //  name, so the user must provide one
+        static const word noDefaultFieldName_;
 
         //- Name of field to process
         const word fieldName_;
@@ -65,7 +72,7 @@ protected:
         word resultName_;
 
 
-    // Protected member functions
+    // Protected Member Functions
 
         virtual bool calc() = 0;
 
@@ -85,7 +92,7 @@ public:
             const Time& runTime,
             const dictionary& dict,
             const word& functionName,
-            const word& defaultFieldName = word::null
+            const word& defaultFieldName = noDefaultFieldName_
         );
 
         //- Disallow default bitwise copy construction

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,6 +37,12 @@ namespace functionObjects
 }
 
 
+const Foam::word Foam::functionObjects::fieldExpression::noFieldName_;
+
+
+const Foam::word Foam::functionObjects::fieldExpression::noDefaultFieldName_;
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::functionObjects::fieldExpression::fieldExpression
@@ -49,14 +55,18 @@ Foam::functionObjects::fieldExpression::fieldExpression
 )
 :
     fvMeshFunctionObject(name, runTime, dict),
-    fieldName_(dict.lookupOrDefault("field", defaultFieldName)),
+    fieldName_
+    (
+        &defaultFieldName == &noFieldName_ ? word::null
+      : &defaultFieldName == &noDefaultFieldName_ ? dict.lookup<word>("field")
+      : dict.lookupOrDefault("field", defaultFieldName)
+    ),
     resultName_
     (
-        dict.found("result")
-      ? dict.lookup<word>("result")
-      : (defaultFieldName.empty() || fieldName_ != defaultFieldName)
-        ? word(functionName + '(' + fieldName_ + ')')
-        : functionName
+        dict.found("result") ? dict.lookup<word>("result")
+      : &defaultFieldName == &noFieldName_ ? functionName
+      : fieldName_ == defaultFieldName ? functionName
+      : word(functionName + '(' + fieldName_ + ')')
     )
 {
     read(dict);
@@ -73,7 +83,7 @@ Foam::functionObjects::fieldExpression::~fieldExpression()
 
 Foam::wordList Foam::functionObjects::fieldExpression::fields() const
 {
-    return wordList(fieldName_);
+    return fieldName_ == word::null ? wordList() : wordList(fieldName_);
 }
 
 
