@@ -1,0 +1,61 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      thermophysicalTransport.gas;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+RAS
+{
+    model       FickianEddyDiffusivity;
+
+    Prt         0.85;
+    Sct         0.7;
+
+    mixtureDiffusionCoefficients no;
+
+    D
+    {
+        H2O-H2O     0;
+        O2-O2       0;
+        N2-N2       0;
+
+        O2-H2O
+        {
+            type        FullerDiffusionCoefficient;
+            Va          16.6;
+            Vb          12.7;
+            Ma          31.9988;
+            Mb          18.01528;
+        };
+
+        O2-N2
+        {
+            type        FullerDiffusionCoefficient;
+            Va          16.6;
+            Vb          17.9;
+            Ma          31.9988;
+            Mb          28.0134;
+        };
+
+        N2-H2O
+        {
+            type        FullerDiffusionCoefficient;
+            Va          17.9;
+            Vb          12.7;
+            Ma          28.0134;
+            Mb          18.01528;
+        };
+    }
+}
+
+// ************************************************************************* //

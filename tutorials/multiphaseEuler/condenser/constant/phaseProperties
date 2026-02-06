@@ -1,0 +1,82 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      phaseProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+phases          (gas liquid solid);
+
+gas
+{
+    type            multicomponentPhaseModel;
+
+    diameterModel
+    {
+        type            constant;
+        d               0.001;
+    }
+
+    residualAlpha   1e-6;
+}
+
+liquid
+{
+    type            purePhaseModel;
+
+    diameterModel
+    {
+        type            residualDiameter;
+        d               0.003;
+        dResidual       0.0001;
+    }
+
+    residualAlpha   1e-6;
+}
+
+solid
+{
+    type            pureStationaryPhaseModel;
+
+    diameterModel
+    {
+        type            constant;
+        d               0.01;
+    }
+
+    residualAlpha   1e-6;
+}
+
+blending
+{
+    default
+    {
+        type            linear;
+        minFullyContinuousAlpha.gas 0.7;
+        minPartlyContinuousAlpha.gas 0.3;
+        minFullyContinuousAlpha.liquid 0.7;
+        minPartlyContinuousAlpha.liquid 0.3;
+        minFullyContinuousAlpha.solid none;
+        minPartlyContinuousAlpha.solid none;
+    }
+}
+
+surfaceTension
+{
+    gas_liquid
+    {
+        type            constant;
+        sigma           0.071;
+    }
+}
+
+// ************************************************************************* //
