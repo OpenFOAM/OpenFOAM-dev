@@ -20,7 +20,7 @@ FoamFile
 
 #includeFunc specieFlux(N2, schemesField=Yi_h, executeControl=timeStep)
 
-#includeFunc patchIntegrate
+#includeFunc patchFlux
 (
     name=membraneSleeveSpecieFluxes,
     patch=membraneSleeve,
@@ -29,7 +29,7 @@ FoamFile
     specieFlux(N2)
 )
 
-#includeFunc patchIntegrate
+#includeFunc patchFlux
 (
     name=membranePipeSpecieFluxes,
     patch=membranePipe,
