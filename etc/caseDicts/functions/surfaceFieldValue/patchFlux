@@ -1,0 +1,22 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Calculates the total flux through a specified patch by summing the flux on
+    patch faces.
+
+\*---------------------------------------------------------------------------*/
+
+patch   <patchName>;
+
+fields  (<fieldNames>);
+
+operation sum;
+
+#includeEtc "caseDicts/functions/surfaceFieldValue/patchValue.cfg"
+
+// ************************************************************************* //
