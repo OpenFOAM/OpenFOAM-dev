@@ -63,24 +63,13 @@ Foam::URhoFluidMulticomponentThermo<BaseThermo>::Phi() const
 
 
 template<class BaseThermo>
-Foam::PtrList<Foam::volScalarField::Internal>
-Foam::URhoFluidMulticomponentThermo<BaseThermo>::prompt() const
-{
-    return BaseThermo::mixtureType::prompt(this->Y());
-}
-
-
-template<class BaseThermo>
 void Foam::URhoFluidMulticomponentThermo<BaseThermo>::reset
 (
     volScalarField& b,
     volScalarField& c,
-    const PtrList<volScalarField>& Yb,
     const volScalarField& heb
 )
 {
-    BaseThermo::mixtureType::reset(b, this->Y(), c, Yb);
-
     volScalarField& heu = this->he();
 
     for (label i=0; i<=heu.nOldTimes(); i++)

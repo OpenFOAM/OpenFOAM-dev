@@ -25,25 +25,27 @@ License
 
 #include "bHomogeneousMixture.H"
 
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+    defineTypeNameAndDebug(bHomogeneousMixture, 0);
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class ThermoType>
-Foam::bHomogeneousMixture<ThermoType>::bHomogeneousMixture
+Foam::bHomogeneousMixture::bHomogeneousMixture
 (
     const dictionary& dict
 )
-:
-    products_("products", dict.subDict("products"))
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class ThermoType>
-void Foam::bHomogeneousMixture<ThermoType>::read(const dictionary& dict)
-{
-    products_ = ThermoType("products", dict.subDict("products"));
-}
+void Foam::bHomogeneousMixture::read(const dictionary& dict)
+{}
 
 
 // ************************************************************************* //

@@ -123,15 +123,11 @@ public:
         //- Return the fuel-oxidant equivalence ratio
         virtual tmp<volScalarField> Phi() const = 0;
 
-        //- Return the prompt burnt gas composition
-        virtual PtrList<volScalarField::Internal> prompt() const = 0;
-
         //- Reset the mixture to an unburnt state and update EGR
         virtual void reset
         (
             volScalarField& b,
             volScalarField& c,
-            const PtrList<volScalarField>& Yb,
             const volScalarField& heb
         ) = 0;
 };

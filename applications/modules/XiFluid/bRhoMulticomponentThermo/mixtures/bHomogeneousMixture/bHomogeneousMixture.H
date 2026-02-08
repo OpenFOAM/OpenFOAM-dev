@@ -25,7 +25,7 @@ Class
     Foam::bHomogeneousMixture
 
 Description
-    Unburnt gas mixture for homogeneous lean, stoichiometric or rich conditions
+    Burnt gas mixture for homogeneous lean, stoichiometric or rich conditions
 
 SourceFiles
     bHomogeneousMixture.C
@@ -35,8 +35,9 @@ SourceFiles
 #ifndef bHomogeneousMixture_H
 #define bHomogeneousMixture_H
 
-#include "dimensionedTypes.H"
-#include "FieldListSlice.H"
+#include "bMixture.H"
+#include "speciesTable.H"
+#include "boolList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -47,32 +48,16 @@ namespace Foam
                      Class bHomogeneousMixture Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class ThermoType>
 class bHomogeneousMixture
+:
+    public bMixture
 {
-public:
-
-    // Public Typedefs
-
-        //- The type of thermodynamics this mixture is instantiated for
-        typedef ThermoType thermoType;
-
-        //- Mixing type for thermodynamic properties
-        typedef ThermoType thermoMixtureType;
-
-        //- Mixing type for transport properties
-        typedef ThermoType transportMixtureType;
-
-
-private:
-
-    // Private Data
-
-        //- Products thermodynamic model
-        thermoType products_;
-
 
 public:
+
+    //- Runtime type information
+    ClassName("bHomogeneous");
+
 
     // Constructors
 
@@ -80,15 +65,20 @@ public:
         bHomogeneousMixture(const dictionary&);
 
         //- Disallow default bitwise copy construction
-        bHomogeneousMixture(const bHomogeneousMixture<ThermoType>&) = delete;
+        bHomogeneousMixture(const bHomogeneousMixture&) = delete;
+
+
+    //- Destructor
+    virtual ~bHomogeneousMixture()
+    {}
 
 
     // Member Functions
 
-        //- Return the instantiated type name
-        static word typeName()
+        //- Return the mixture type name
+        virtual const word& mixtureType() const
         {
-            return "bHomogeneousMixture<" + ThermoType::typeName() + '>';
+            return typeName;
         }
 
         //- Return the table of species
@@ -111,39 +101,6 @@ public:
             return const_cast<boolList&>(boolList::null());
         }
 
-        inline const ThermoType& specieThermo(const label speciei) const
-        {
-            return products_;
-        }
-
-        //- Return the mixture for thermodynamic properties
-        const thermoMixtureType& thermoMixture
-        (
-            const scalarFieldListSlice&
-        ) const
-        {
-            return products_;
-        }
-
-        //- Return the mixture for transport properties
-        const transportMixtureType& transportMixture
-        (
-            const scalarFieldListSlice&
-        ) const
-        {
-            return products_;
-        }
-
-        //- Return the mixture for transport properties
-        const transportMixtureType& transportMixture
-        (
-            const scalarFieldListSlice&,
-            const thermoMixtureType&
-        ) const
-        {
-            return products_;
-        }
-
         //- Read dictionary
         void read(const dictionary&);
 
@@ -151,19 +108,13 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const bHomogeneousMixture<ThermoType>&) = delete;
+        void operator=(const bHomogeneousMixture&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-
-#ifdef NoRepository
-    #include "bHomogeneousMixture.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

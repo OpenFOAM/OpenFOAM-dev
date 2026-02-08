@@ -25,15 +25,20 @@ License
 
 #include "bMulticomponentMixture.H"
 
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+    defineTypeNameAndDebug(bMulticomponentMixture, 0);
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class ThermoType>
-Foam::bMulticomponentMixture<ThermoType>::bMulticomponentMixture
+Foam::bMulticomponentMixture::bMulticomponentMixture
 (
     const dictionary& dict
 )
-:
-    coefficientMulticomponentMixture<ThermoType>(dict)
 {}
 
 

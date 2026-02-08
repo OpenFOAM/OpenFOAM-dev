@@ -88,7 +88,7 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::XiGModels::KTS::G() const
 
     return
         Geta_
-       /sqrt(thermo_.uThermo().mu()()/(thermo_.uThermo().rho()()*epsilon));
+       /sqrt(mag(thermo_.uThermo().mu()()/(thermo_.uThermo().rho()()*epsilon)));
 }
 
 

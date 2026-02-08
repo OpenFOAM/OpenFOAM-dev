@@ -25,10 +25,7 @@ Class
     Foam::uMulticomponentMixture
 
 Description
-    Unburnt gas combustion mixture for inhomogeneous lean, stoichiometric
-    or rich conditions
-
-    in which the fuel mass-fraction \c fu defines the composition.
+    Unburnt gas combustion multicomponent mixture
 
 SourceFiles
     uMulticomponentMixture.C
@@ -38,7 +35,9 @@ SourceFiles
 #ifndef uMulticomponentMixture_H
 #define uMulticomponentMixture_H
 
-#include "coefficientMulticomponentMixture.H"
+#include "uMixture.H"
+#include "speciesTable.H"
+#include "FieldListSlice.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -49,21 +48,14 @@ namespace Foam
                     Class uMulticomponentMixture Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class ThermoType>
 class uMulticomponentMixture
 :
-    public coefficientMulticomponentMixture<ThermoType>
+    public uMixture
 {
     // Private Data
 
         //- Fuel specie index
         label fu_;
-
-        //- Oxidant species mass fractions
-        List<Tuple2<label, scalar>> ox_;
-
-        //- Product species mass fractions
-        List<Tuple2<label, scalar>> pr_;
 
         //- Stoichiometric air/fuel ratio
         scalar stoicRatio_;
@@ -71,60 +63,57 @@ class uMulticomponentMixture
 
 public:
 
+    //- Runtime type information
+    ClassName("uMulticomponent");
+
+
     // Constructors
 
-        //- Construct from a dictionary
-        uMulticomponentMixture(const dictionary&);
-
-        //- Disallow default bitwise copy construction
+        //- Construct from the speciesTable and dictionary
         uMulticomponentMixture
         (
-            const uMulticomponentMixture<ThermoType>&
-        ) = delete;
+            const speciesTable& species,
+            const dictionary&
+        );
+
+        //- Disallow default bitwise copy construction
+        uMulticomponentMixture(const uMulticomponentMixture&) = delete;
 
 
     // Member Functions
 
-        //- Return the instantiated type name
-        static word typeName()
+        //- Return the mixture type name
+        virtual const word& mixtureType() const
         {
-            return "uMulticomponentMixture<" + ThermoType::typeName() + '>';
+            return typeName;
+        }
+
+        //- Return the fuel specie index
+        label fu() const
+        {
+            return fu_;
+        }
+
+        //- Return the stoichiometric air/fuel ratio
+        scalar stoicRatio() const
+        {
+            return stoicRatio_;
         }
 
         //- Return the fuel-oxidant equivalence ratio
         scalar Phi(const scalarFieldListSlice& Yu) const;
 
-        //- Return the prompt burnt gas composition
-        PtrList<volScalarField::Internal> prompt
-        (
-            const PtrList<volScalarField>& Yu
-        ) const;
-
-        void reset
-        (
-            const volScalarField& b,
-            PtrList<volScalarField>& Yu,
-            const volScalarField& c,
-            const PtrList<volScalarField>& Yb
-        ) const;
-
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const uMulticomponentMixture<ThermoType>&) = delete;
+        void operator=(const uMulticomponentMixture&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-
-#ifdef NoRepository
-    #include "uMulticomponentMixture.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

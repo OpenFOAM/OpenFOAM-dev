@@ -35,7 +35,7 @@ SourceFiles
 #ifndef bMulticomponentMixture_H
 #define bMulticomponentMixture_H
 
-#include "coefficientMulticomponentMixture.H"
+#include "bMixture.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -46,13 +46,16 @@ namespace Foam
                     Class bMulticomponentMixture Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class ThermoType>
 class bMulticomponentMixture
 :
-    public coefficientMulticomponentMixture<ThermoType>
+    public bMixture
 {
 
 public:
+
+    //- Runtime type information
+    ClassName("bMulticomponent");
+
 
     // Constructors
 
@@ -60,37 +63,28 @@ public:
         bMulticomponentMixture(const dictionary&);
 
         //- Disallow default bitwise copy construction
-        bMulticomponentMixture
-        (
-            const bMulticomponentMixture<ThermoType>&
-        ) = delete;
+        bMulticomponentMixture(const bMulticomponentMixture&) = delete;
 
 
     // Member Functions
 
-        //- Return the instantiated type name
-        static word typeName()
+        //- Return the mixture type name
+        virtual const word& mixtureType() const
         {
-            return "bMulticomponentMixture<" + ThermoType::typeName() + '>';
+            return typeName;
         }
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const bMulticomponentMixture<ThermoType>&) = delete;
+        void operator=(const bMulticomponentMixture&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-
-#ifdef NoRepository
-    #include "bMulticomponentMixture.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

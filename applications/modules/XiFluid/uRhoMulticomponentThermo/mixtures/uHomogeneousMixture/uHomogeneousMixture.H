@@ -35,7 +35,8 @@ SourceFiles
 #ifndef uHomogeneousMixture_H
 #define uHomogeneousMixture_H
 
-#include "dimensionedTypes.H"
+#include "uMixture.H"
+#include "speciesTable.H"
 #include "FieldListSlice.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -47,35 +48,23 @@ namespace Foam
                      Class uHomogeneousMixture Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class ThermoType>
 class uHomogeneousMixture
+:
+    public uMixture
 {
-public:
+protected:
 
-    // Public Typedefs
-
-        //- The type of thermodynamics this mixture is instantiated for
-        typedef ThermoType thermoType;
-
-        //- Mixing type for thermodynamic properties
-        typedef ThermoType thermoMixtureType;
-
-        //- Mixing type for transport properties
-        typedef ThermoType transportMixtureType;
-
-
-private:
-
-    // Private Data
+    // Protected Data
 
         //- Return the fuel-oxidant equivalence ratio
         scalar Phi_;
 
-        //- Reactant thermodynamic model
-        thermoType reactants_;
-
 
 public:
+
+    //- Runtime type information
+    ClassName("uHomogeneous");
+
 
     // Constructors
 
@@ -83,15 +72,20 @@ public:
         uHomogeneousMixture(const dictionary&);
 
         //- Disallow default bitwise copy construction
-        uHomogeneousMixture(const uHomogeneousMixture<ThermoType>&) = delete;
+        uHomogeneousMixture(const uHomogeneousMixture&) = delete;
+
+
+    //- Destructor
+    virtual ~uHomogeneousMixture()
+    {}
 
 
     // Member Functions
 
-        //- Return the instantiated type name
-        static word typeName()
+        //- Return the mixture type name
+        virtual const word& mixtureType() const
         {
-            return "uHomogeneousMixture<" + ThermoType::typeName() + '>';
+            return typeName;
         }
 
         //- Return the table of species
@@ -114,65 +108,10 @@ public:
             return const_cast<boolList&>(boolList::null());
         }
 
-        inline const ThermoType& specieThermo(const label speciei) const
-        {
-            return reactants_;
-        }
-
         //- Return the fuel-oxidant equivalence ratio
         scalar Phi(const scalarFieldListSlice& Yu) const
         {
             return Phi_;
-        }
-
-        PtrList<volScalarField::Internal> prompt
-        (
-            const PtrList<volScalarField>& Yu
-        ) const
-        {
-            NotImplemented;
-            return PtrList<volScalarField::Internal>();
-        }
-
-        void reset
-        (
-            const volScalarField& b,
-            PtrList<volScalarField>& Yu,
-            const volScalarField& c,
-            const PtrList<volScalarField>& Yb
-        ) const
-        {
-            FatalErrorInFunction
-                << "EGR not supported by " << typeName()
-                << exit(FatalError);
-        }
-
-        //- Return the mixture for thermodynamic properties
-        const thermoMixtureType& thermoMixture
-        (
-            const scalarFieldListSlice&
-        ) const
-        {
-            return reactants_;
-        }
-
-        //- Return the mixture for transport properties
-        const transportMixtureType& transportMixture
-        (
-            const scalarFieldListSlice&
-        ) const
-        {
-            return reactants_;
-        }
-
-        //- Return the mixture for transport properties
-        const transportMixtureType& transportMixture
-        (
-            const scalarFieldListSlice&,
-            const thermoMixtureType&
-        ) const
-        {
-            return reactants_;
         }
 
         //- Read dictionary
@@ -182,19 +121,13 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const uHomogeneousMixture<ThermoType>&) = delete;
+        void operator=(const uHomogeneousMixture&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-
-#ifdef NoRepository
-    #include "uHomogeneousMixture.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

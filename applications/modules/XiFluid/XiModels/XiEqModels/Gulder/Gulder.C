@@ -91,7 +91,7 @@ Foam::tmp<Foam::volScalarField> Foam::XiEqModels::Gulder::XiEq() const
 
     const volScalarField tauEta
     (
-        sqrt(thermo_.uThermo().mu()/(thermo_.uThermo().rho()*epsilon))
+        sqrt(mag(thermo_.uThermo().mu()/(thermo_.uThermo().rho()*epsilon)))
     );
 
     const volScalarField Reta(up/sqrt(epsilon*tauEta));

@@ -149,7 +149,7 @@ void Foam::ubRhoThermo::correct()
 
 void Foam::ubRhoThermo::reset()
 {
-    uThermo_->reset(b_, c_, bThermo_->Y(), bThermo_->he());
+    uThermo_->reset(b_, c_, bThermo_->he());
 }
 
 
