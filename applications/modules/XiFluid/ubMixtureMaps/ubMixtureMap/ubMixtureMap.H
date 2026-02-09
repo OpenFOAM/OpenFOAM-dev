@@ -147,11 +147,15 @@ public:
             }
         }
 
+        //- Return the burnt gas prompt specie mass fractions
+        //  corresponding to the given unburnt gas specie mass fractions
         virtual PtrList<volScalarField::Internal> prompt
         (
             const PtrList<volScalarField>& Yu
         ) const = 0;
 
+        //- Reset the mixture to an unburnt state
+        // for multi-cycle simulations with EGR
         virtual void reset
         (
             const volScalarField& b,

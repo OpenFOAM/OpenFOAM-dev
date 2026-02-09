@@ -36,6 +36,7 @@ SourceFiles
 
 #include "uRhoMulticomponentThermo.H"
 #include "bRhoMulticomponentThermo.H"
+#include "ubMixtureMap.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -60,6 +61,9 @@ class ubRhoThermo
 
         autoPtr<uRhoMulticomponentThermo> uThermo_;
         autoPtr<bRhoMulticomponentThermo> bThermo_;
+
+        //- Unburnt/burnt gas mixture mapping for prompt species and reset
+        autoPtr<ubMixtureMap> ubMixtureMap_;
 
         volScalarField rho_;
         volScalarField psi_;
@@ -190,8 +194,13 @@ public:
             return true;
         }
 
-        //- Reset the mixture to an unburnt state and update EGR
-        virtual void reset();
+        //- Return the burnt gas prompt specie mass fractions
+        //  corresponding to the current unburnt gas specie mass fractions
+        PtrList<volScalarField::Internal> prompt() const;
+
+        //- Reset the mixture to an unburnt state
+        // for multi-cycle simulations with EGR
+        void reset();
 
 
         // Molecular properties

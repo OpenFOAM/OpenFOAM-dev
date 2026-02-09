@@ -51,8 +51,6 @@ Foam::solvers::XiFluid::XiFluid(fvMesh& mesh)
 
     thermo_(refCast<ubRhoThermo>(isothermalFluid::thermo_)),
 
-    ubMixtureMap_(ubMixtureMap::New(thermo_.uThermo(), thermo_.bThermo())),
-
     uMomentumTransport_
     (
         thermo_.alphau(),
@@ -207,43 +205,14 @@ void Foam::solvers::XiFluid::reset()
 {
     ignited_ = false;
 
-    PtrList<volScalarField>& Yu = thermo_.uThermo().Y();
-    const PtrList<volScalarField>& Yb = bThermo.Y();
+    thermo_.reset();
 
-    if (Yu.size())
-    {
-        for (label n=0; n<=Yu[0].nOldTimes(); n++)
-        {
-            UPtrList<volScalarField> Yu0(Yu.size());
-            forAll(Yu0, i)
-            {
-                Yu0.set(i, &Yu[i].oldTimeRef(n));
-            }
+    const surfaceScalarField phib("phib", phi);
+    thermo_.b().correctBoundaryConditions();
+    thermo_.c() = 1.0 - thermo_.b();
 
-            UPtrList<const volScalarField> Yb0(Yb.size());
-            forAll(Yb0, i)
-            {
-                Yb0.set(i, &Yb[i].oldTime(n));
-            }
-
-            ubMixtureMap_->reset(b.oldTime(n), Yu0, c.oldTime(n), Yb0);
-        }
-
-        thermo_.reset();
-
-        const surfaceScalarField phib("phib", phi);
-        thermo_.b().correctBoundaryConditions();
-        thermo_.c() = 1.0 - thermo_.b();
-
-        SuModel_->reset();
-        XiModel_->reset();
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "EGR not supported by " << thermo_.uThermo().type()
-            << exit(FatalError);
-    }
+    SuModel_->reset();
+    XiModel_->reset();
 }
 
 

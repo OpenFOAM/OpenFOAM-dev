@@ -122,7 +122,6 @@ See also
 
 #include "isothermalFluid.H"
 #include "ubRhoThermo.H"
-#include "ubMixtureMap.H"
 #include "reactionModel.H"
 #include "ubMomentumTransportModel.H"
 #include "PhaseThermophysicalTransportModel.H"
@@ -149,8 +148,6 @@ protected:
     // Thermophysical properties
 
         ubRhoThermo& thermo_;
-
-        autoPtr<ubMixtureMap> ubMixtureMap_;
 
 
     // Unburnt and burnt gas momentumTransport

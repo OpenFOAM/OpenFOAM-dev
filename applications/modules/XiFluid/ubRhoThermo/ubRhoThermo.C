@@ -54,6 +54,7 @@ Foam::ubRhoThermo::ubRhoThermo(const fvMesh& mesh)
     c_("c", scalar(1) - b_),
     uThermo_(uRhoMulticomponentThermo::New(mesh, unburntPhaseName_)),
     bThermo_(bRhoMulticomponentThermo::New(mesh, burntPhaseName_)),
+    ubMixtureMap_(ubMixtureMap::New(uThermo_, bThermo_)),
     rho_("rho", 1.0/(b_/uThermo_->rho() + c_/bThermo_->rho())),
     psi_("psi", 1.0/(b_/uThermo_->psi() + c_/bThermo_->psi())),
     mu_("mu", b_*uThermo_->mu() + c_*bThermo_->mu()),
@@ -147,9 +148,44 @@ void Foam::ubRhoThermo::correct()
 }
 
 
+Foam::PtrList<Foam::volScalarField::Internal> Foam::ubRhoThermo::prompt() const
+{
+    return ubMixtureMap_->prompt(uThermo_->Y());
+}
+
+
 void Foam::ubRhoThermo::reset()
 {
-    uThermo_->reset(b_, c_, bThermo_->he());
+    PtrList<volScalarField>& Yu = uThermo_->Y();
+    const PtrList<volScalarField>& Yb = bThermo_->Y();
+
+    if (Yu.size())
+    {
+        for (label n=0; n<=Yu[0].nOldTimes(); n++)
+        {
+            UPtrList<volScalarField> Yu0(Yu.size());
+            forAll(Yu0, i)
+            {
+                Yu0.set(i, &Yu[i].oldTimeRef(n));
+            }
+
+            UPtrList<const volScalarField> Yb0(Yb.size());
+            forAll(Yb0, i)
+            {
+                Yb0.set(i, &Yb[i].oldTime(n));
+            }
+
+            ubMixtureMap_->reset(b_.oldTime(n), Yu0, c_.oldTime(n), Yb0);
+        }
+
+        uThermo_->reset(b_, c_, bThermo_->he());
+    }
+    else
+    {
+        FatalErrorInFunction
+            << "Reset (EGR) not supported by " << uThermo_->type()
+            << exit(FatalError);
+    }
 }
 
 
