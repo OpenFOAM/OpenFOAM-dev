@@ -65,8 +65,12 @@ Foam::autoPtr<Foam::ubMixtureMap> Foam::ubMixtureMap::New
 {
     const word mapType
     (
-        dynamicCast<const uMixture&>(uThermo).mixtureType()
-      + dynamicCast<const bMixture&>(bThermo).mixtureType()
+        uThermo.properties().lookupOrDefault<word>
+        (
+            "ubMixtureMap",
+            dynamicCast<const uMixture&>(uThermo).mixtureType()
+          + dynamicCast<const bMixture&>(bThermo).mixtureType()
+        )
     );
 
     thermoConstructorTable::iterator cstrIter =

@@ -52,10 +52,43 @@ class ubMixtureMap
 {
 protected:
 
-    // Protected data
+    // Protected Data
 
         const uRhoMulticomponentThermo& uThermo_;
         const bRhoMulticomponentThermo& bThermo_;
+
+
+    // Protected Member Functions
+
+        template<class Thermo, class To>
+        inline const To& mixtureCast(const Thermo& thermo) const
+        {
+            try
+            {
+                return dynamic_cast<const To&>(thermo);
+            }
+            catch (const std::bad_cast&)
+            {
+                FatalErrorInFunction
+                    << "Attempt to cast type " << thermo.type()
+                    << " to type " << To::typeName
+                    << abort(FatalError);
+
+                return dynamic_cast<const To&>(thermo);
+            }
+        }
+
+        template<class To>
+        inline const To& uMixtureCast() const
+        {
+            return mixtureCast<uRhoMulticomponentThermo, To>(uThermo_);
+        }
+
+        template<class To>
+        inline const To& bMixtureCast() const
+        {
+            return mixtureCast<bRhoMulticomponentThermo, To>(bThermo_);
+        }
 
 
 public:
@@ -75,10 +108,7 @@ public:
                 const uRhoMulticomponentThermo& uThermo,
                 const bRhoMulticomponentThermo& bThermo
             ),
-            (
-                uThermo,
-                bThermo
-            )
+            (uThermo, bThermo)
         );
 
 
@@ -111,42 +141,6 @@ public:
 
     // Member Functions
 
-        template<class To>
-        inline const To& uMixtureCast() const
-        {
-            try
-            {
-                return dynamic_cast<const To&>(uThermo_);
-            }
-            catch (const std::bad_cast&)
-            {
-                FatalErrorInFunction
-                    << "Attempt to cast type " << uThermo_.type()
-                    << " to type " << To::typeName
-                    << abort(FatalError);
-
-                return dynamic_cast<const To&>(uThermo_);
-            }
-        }
-
-        template<class To>
-        inline const To& bMixtureCast() const
-        {
-            try
-            {
-                return dynamic_cast<const To&>(bThermo_);
-            }
-            catch (const std::bad_cast&)
-            {
-                FatalErrorInFunction
-                    << "Attempt to cast type " << bThermo_.type()
-                    << " to type " << To::typeName
-                    << abort(FatalError);
-
-                return dynamic_cast<const To&>(bThermo_);
-            }
-        }
-
         //- Return the burnt gas prompt specie mass fractions
         //  corresponding to the given unburnt gas specie mass fractions
         virtual PtrList<volScalarField::Internal> prompt
@@ -163,9 +157,6 @@ public:
             const volScalarField& c,
             const UPtrList<const volScalarField>& Yb
         ) const = 0;
-
-        //- Update properties from the given XiProperties dictionary
-        bool read(const dictionary& XiProperties);
 
 
     // Member Operators
