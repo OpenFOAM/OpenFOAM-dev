@@ -52,6 +52,8 @@ bool Foam::XiModels::transport::readCoeffs(const dictionary& dict)
     XiModel::readCoeffs(dict);
     strainReduction_ =
         dict.lookupOrDefault<Switch>("strainReduction", true);
+    curvatureReduction_ =
+        dict.lookupOrDefault<Switch>("curvatureReduction", true);
     differentialPropagation_ =
         dict.lookupOrDefault<Switch>("differentialPropagation", false);
     return true;
@@ -139,13 +141,13 @@ void Foam::XiModels::transport::correct()
 
     if (strainReduction_)
     {
-        const volVectorField& U(momentumTransport_.U());
-        const tmp<volTensorField> tgradU(fvc::grad(U));
-        const volTensorField::Internal& gradU(tgradU()());
+        const tmp<volTensorField> tgradU(fvc::grad(momentumTransport_.U()));
+        const volTensorField::Internal& gradU(tgradU());
 
         const volScalarField::Internal rhoSigma
         (
-            rho_*max
+            rho_
+           *max
             (
                 (n() & n())*tr(gradU) - (n & gradU & n),
                 dimensionedScalar(dimless/dimTime, 0)
@@ -153,6 +155,24 @@ void Foam::XiModels::transport::correct()
         );
 
         XiEqn += fvm::Sp(rhoSigma, Xi_) - rhoSigma;
+    }
+
+    if (curvatureReduction_)
+    {
+        const tmp<volTensorField> tgradSt(fvc::grad(Su_*Xi_*n));
+        const volTensorField::Internal& gradSt(tgradSt());
+
+        const volScalarField::Internal rhoSigmaSt
+        (
+            rho_
+           *max
+            (
+                (n() & n())*tr(gradSt) - (n & gradSt & n),
+                dimensionedScalar(dimless/dimTime, 0)
+            )
+        );
+
+        XiEqn += fvm::Sp(rhoSigmaSt, Xi_) - rhoSigmaSt;
     }
 
     XiEqn.relax();

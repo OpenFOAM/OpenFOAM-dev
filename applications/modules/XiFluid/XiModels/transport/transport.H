@@ -83,6 +83,10 @@ class transport
         //  Defaults to on
         Switch strainReduction_;
 
+        //- Switch to include the mean curvature wrinkling reduction
+        //  Defaults to on
+        Switch curvatureReduction_;
+
         //- Switch to include differential wrinkling propagation
         //  Should not be included if the generation and removal rates
         //  are obtained from a fit to experimental turbulent flame speed
