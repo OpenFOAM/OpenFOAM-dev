@@ -264,7 +264,7 @@ void Foam::fv::wallCondensation::correctMDot() const
            *props.AbyV
            *thermo.WiValue(speciei)/thermo.W(patchi)*DEff
            *props.patch().deltaCoeffs()
-           *log(max(1 - xc, 0.001)/max(1 - xw, 0.001));
+           *log(max(1 - xc, scalar(0.001))/max(1 - xw, scalar(0.001)));
 
         if (specieSemiImplicit_)
         {
@@ -273,7 +273,7 @@ void Foam::fv::wallCondensation::correctMDot() const
                *props.AbyV
                *DEff
                *props.patch().deltaCoeffs()
-               /max(1 - xc, 0.001)*pos(xc - xw);
+               /max(1 - xc, scalar(0.001))*pos(xc - xw);
         }
         else
         {
