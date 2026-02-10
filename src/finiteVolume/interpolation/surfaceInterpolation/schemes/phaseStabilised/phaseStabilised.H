@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,7 @@ class phaseStabilised
 :
     public surfaceInterpolationScheme<Type>
 {
-    // Private member data
+    // Private Data
 
         const surfaceScalarField& faceFlux_;
         tmp<surfaceInterpolationScheme<Type>> tScheme_;
@@ -64,7 +64,7 @@ class phaseStabilised
         const volScalarField& alpha_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         const volScalarField& lookupAlpha
         (

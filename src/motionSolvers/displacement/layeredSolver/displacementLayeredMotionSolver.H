@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,7 +73,7 @@ class displacementLayeredMotionSolver
 :
     public displacementMotionSolver
 {
-    // Private Member Data
+    // Private Data
 
         //- Names of the opposite patches of the layered mesh
         Pair<word> oppositePatchNames_;

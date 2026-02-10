@@ -56,7 +56,7 @@ class pointMasses
 :
     public rigidBody
 {
-    // Private member data
+    // Private Data
 
         //- Table reader
         const autoPtr<TableReader<point, scalar>> reader_;
@@ -71,7 +71,7 @@ class pointMasses
         mutable PtrList<labelList> sortedPointis_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Return the n-th moments of the sections of the body between
         //  planes defined by distances along the given axis

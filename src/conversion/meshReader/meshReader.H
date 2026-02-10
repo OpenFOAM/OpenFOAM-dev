@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -231,7 +231,7 @@ private:
 
 protected:
 
-    // Protected member data
+    // Protected Data
 
         //- Pointers to cell shape models
         static const cellModel* unknownModel;
@@ -278,7 +278,7 @@ protected:
         cellTable cellTable_;
 
 
-    // Protected member functions
+    // Protected Member Functions
 
         //- Subclasses are required to supply this information
         virtual bool readGeometry(const scalar scaleFactor = 1.0) = 0;

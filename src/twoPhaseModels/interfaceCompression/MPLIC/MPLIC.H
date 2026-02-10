@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,12 +87,12 @@ class MPLIC
 {
 protected:
 
-    // Private member data
+    // Private Data
 
         const surfaceScalarField& phi_;
 
 
-    // Protected member functions
+    // Protected Member Functions
 
         //- Set alphaPhi for the faces of the given cell
         void setCellAlphaf

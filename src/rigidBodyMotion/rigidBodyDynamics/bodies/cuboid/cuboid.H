@@ -54,7 +54,7 @@ class cuboid
 :
     public rigidBody
 {
-    // Private member data
+    // Private Data
 
         //- Lengths of the sides
         vector L_;

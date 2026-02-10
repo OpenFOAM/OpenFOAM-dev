@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ class wallLubricationModel
 {
 protected:
 
-    // Protected member functions
+    // Protected Member Functions
 
         //- Zero-gradient wall-lubrication force at walls
         tmp<volVectorField> zeroGradWalls(tmp<volVectorField>) const;

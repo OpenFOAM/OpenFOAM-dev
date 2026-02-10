@@ -111,7 +111,7 @@ protected:
         virtual autoPtr<entry> clone(const dictionary&) const = 0;
 
 
-    // Protected member functions
+    // Protected Member Functions
 
         tokenList readArgList
         (

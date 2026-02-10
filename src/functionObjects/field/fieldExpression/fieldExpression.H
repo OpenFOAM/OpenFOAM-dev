@@ -56,7 +56,7 @@ class fieldExpression
 {
 protected:
 
-    // Protected Member Data
+    // Protected Data
 
         //- Word indicating that this fieldExpression has no field name
         static const word noFieldName_;

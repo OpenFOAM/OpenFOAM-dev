@@ -135,7 +135,7 @@ class solidLagrangianThermo::implementation
 {
 protected:
 
-    // Protected Member Data
+    // Protected Data
 
         //- Pressure [Pa]
         //  Note: This value should never be used. Solid thermo should only be

@@ -69,7 +69,7 @@ class Foam::CloudDerivedField<Type>::Function
 :
     public Functor
 {
-    // Private Member Data
+    // Private Data
 
         //- The function
         F f_;
@@ -116,7 +116,7 @@ class Foam::CloudDerivedField<Type>::Method
 :
     public Functor
 {
-    // Private Member Data
+    // Private Data
 
         //- The class
         const C& c_;

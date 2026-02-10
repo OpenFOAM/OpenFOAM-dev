@@ -68,7 +68,7 @@ class pressureWork
 {
 private:
 
-    // Private Member Data
+    // Private Data
 
         //- Thermal cloud reference
         const clouds::thermal& thermalCloud_;

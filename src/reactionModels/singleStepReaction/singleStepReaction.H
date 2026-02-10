@@ -91,7 +91,7 @@ protected:
         bool semiImplicit_;
 
 
-    // Protected member functions
+    // Protected Member Functions
 
         //- Calculate qFuel
         void calculateqFuel();

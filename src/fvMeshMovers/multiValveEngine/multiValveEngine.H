@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -253,7 +253,7 @@ public:
 
     protected:
 
-        // Protected member data
+        // Protected Data
 
             //- Reference to engine mesh mover
             const multiValveEngine& meshMover_;
@@ -270,7 +270,7 @@ public:
 
     protected:
 
-        // Protected member data
+        // Protected Data
 
             //- Piston motion function
             autoPtr<Function1<scalar>> motion_;
@@ -380,7 +380,7 @@ public:
     :
         public movingObject
     {
-        // Private member data
+        // Private Data
 
             //- Cylinder bore
             scalar bore_;
@@ -392,7 +392,7 @@ public:
             scalar clearance_;
 
 
-        // Private member functions
+        // Private Member Functions
 
             //- Calculate and bore and centre
             //  calculated from the lateral extent of the piston
@@ -453,14 +453,14 @@ public:
     :
         public movingObject
     {
-        // Private member data
+        // Private Data
 
             //- Minimum valve lift.
             //  On this lift the valve is considered closed
             const scalar minLift_;
 
 
-        // Private member functions
+        // Private Member Functions
 
 
     public:
@@ -532,7 +532,7 @@ public:
 
 private:
 
-    // Private member data
+    // Private Data
 
         //- User-defined liner patches
         wordReList linerPatches_;
@@ -558,7 +558,7 @@ private:
         wordReList frozenPointZones_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Lookup and return the liner patch set
         labelHashSet findLinerPatchSet() const;

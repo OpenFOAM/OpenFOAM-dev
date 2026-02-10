@@ -65,7 +65,7 @@ class Foam::CarrierFieldBase<Type>::Function
 :
     public Functor
 {
-    // Private Member Data
+    // Private Data
 
         //- The name
         const word& name_;

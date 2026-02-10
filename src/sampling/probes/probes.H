@@ -86,7 +86,7 @@ protected:
         };
 
 
-    // Protected member data
+    // Protected Data
 
         //- Const reference to fvMesh
         const fvMesh& mesh_;

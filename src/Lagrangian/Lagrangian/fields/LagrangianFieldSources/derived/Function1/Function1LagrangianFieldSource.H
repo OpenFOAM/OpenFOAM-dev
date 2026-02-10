@@ -55,7 +55,7 @@ class LagrangianModel;
 
 class Function1LagrangianFieldSource
 {
-    // Private Member Data
+    // Private Data
 
         //- Reference to the field source
         const LagrangianFieldSourceBase& field_;

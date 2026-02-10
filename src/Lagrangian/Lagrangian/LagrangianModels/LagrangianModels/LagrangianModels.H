@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,7 @@ class LagrangianModels
     public dictionary,
     public PtrListDictionary<LagrangianModel>
 {
-    // Private Member Data
+    // Private Data
 
         //- Time index to check that all defined sources have been applied
         mutable label checkTimeIndex_;

@@ -176,7 +176,7 @@ class fluidLagrangianThermo::implementation
 {
 protected:
 
-    // Protected Member Data
+    // Protected Data
 
         //- Pressure [Pa]
         LagrangianScalarDynamicField p_;

@@ -55,7 +55,7 @@ class coupledToConstantDensityFluid
 {
 private:
 
-    // Private Member Data
+    // Private Data
 
         //- Reference to the mesh
         const LagrangianMesh& mesh_;

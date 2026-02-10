@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -111,7 +111,7 @@ class interRegionHeatTransfer
         autoPtr<heatTransferCoefficientModel> heatTransferCoefficientModel_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Non-virtual readalpha*
         void readCoeffs(const dictionary& dict);

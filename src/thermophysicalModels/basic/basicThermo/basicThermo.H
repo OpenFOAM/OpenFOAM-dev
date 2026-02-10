@@ -491,7 +491,7 @@ class basicThermo::implementation
 :
     virtual public basicThermo
 {
-    // Private Member Data
+    // Private Data
 
         //- Reference to the mesh
         const fvMesh& mesh_;

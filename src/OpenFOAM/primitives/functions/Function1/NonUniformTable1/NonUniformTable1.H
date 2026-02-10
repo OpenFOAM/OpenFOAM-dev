@@ -78,7 +78,7 @@ class NonUniformTable
 :
     public FieldFunction1<Type, NonUniformTable<Type>>
 {
-    // Private member data
+    // Private Data
 
         //- Lowest value in the NonUniformTable
         scalar low_;

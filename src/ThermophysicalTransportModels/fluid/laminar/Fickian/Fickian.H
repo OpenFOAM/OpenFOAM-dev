@@ -84,7 +84,7 @@ class Fickian
             mutable PtrList<volScalarField> Dm_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Update Dm_
         void updateDm() const;

@@ -65,7 +65,7 @@ class removeEntry
 :
     public functionEntry
 {
-    // Private Member Data
+    // Private Data
 
         //- The list of patterns of entries to remove
         wordReList patterns_;

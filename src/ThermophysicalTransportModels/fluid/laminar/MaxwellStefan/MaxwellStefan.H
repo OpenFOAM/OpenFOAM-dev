@@ -145,7 +145,7 @@ class MaxwellStefan
             mutable scalarSquareMatrix D_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Transform the Binary mass diffusion coefficient matrix DD into the
         //  matrix of the generalised Fick's law diffusion coefficients D

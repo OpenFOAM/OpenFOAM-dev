@@ -95,7 +95,7 @@ class codeIncludeEntry
         List<fileName> fNames_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Append the file name to the includeFiles_
         void appendFileName

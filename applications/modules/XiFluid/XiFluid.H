@@ -197,7 +197,7 @@ protected:
         autoPtr<XiModel> XiModel_;
 
 
-    // Protected member functions
+    // Protected Member Functions
 
         //- Solve the regress variable and Xi equations
         //  and unburnt and burnt gas properties

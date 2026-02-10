@@ -56,7 +56,7 @@ class codeBlockEntry
 :
     public functionEntry
 {
-    // Private member data
+    // Private Data
 
         //- Unique name of the code block
         //  containing the #calc and #codeStream functions

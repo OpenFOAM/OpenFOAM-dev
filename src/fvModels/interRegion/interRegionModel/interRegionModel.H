@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,7 @@ class interRegionModel
         mutable autoPtr<cellsToCells> interpolationPtr_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Non-virtual read
         void readCoeffs(const dictionary& dict);
@@ -74,7 +74,7 @@ class interRegionModel
 
 protected:
 
-    // Protected member functions
+    // Protected Member Functions
 
         //- Get the neighbour interRegionModel
         const interRegionModel& nbrModel() const;

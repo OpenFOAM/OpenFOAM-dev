@@ -237,7 +237,7 @@ class basicLagrangianThermo::implementation
 :
     virtual public basicLagrangianThermo
 {
-    // Private Member Data
+    // Private Data
 
         //- Reference to the mesh
         const LagrangianMesh& mesh_;
@@ -248,7 +248,7 @@ class basicLagrangianThermo::implementation
 
 protected:
 
-    // Protected Member Data
+    // Protected Data
 
         //- Temperature [K]
         LagrangianScalarDynamicField T_;

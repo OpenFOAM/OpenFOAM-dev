@@ -72,7 +72,7 @@ class alphatPhaseChangeWallFunctionFvPatchScalarField
 {
 private:
 
-    // Private Member Data
+    // Private Data
 
         //- List of the corresponding wall phase change models
         mutable UPtrList<const fv::wallPhaseChange> models_;

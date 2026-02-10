@@ -189,7 +189,7 @@ protected:
         mutable DynamicList<vector> u_;
 
 
-    // Protected member functions
+    // Protected Member Functions
 
         //- Join the given body to the parent with ID parentID via the given
         //  joint with transform from the parent frame to the joint frame XT.

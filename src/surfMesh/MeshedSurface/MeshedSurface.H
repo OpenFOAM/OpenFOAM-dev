@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,7 +97,7 @@ class MeshedSurface
         typedef MeshedSurfaceProxy<Face>     ProxyType;
 
 
-    // Private Member Data
+    // Private Data
 
         //- Zone information
         // (face ordering nFaces/startFace only used during reading/writing)

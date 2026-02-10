@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,7 +95,7 @@ class zeroDimensionalFixedPressureConstraint
         mutable autoPtr<volScalarField::Internal> sourcePtr_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Access the corresponding model
         const zeroDimensionalFixedPressureModel& model() const;
