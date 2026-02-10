@@ -528,25 +528,24 @@ void Foam::fvMeshStitcher::matchIndices
     {
         const label patchi = patchis[proci];
 
-        if (patchi != -1)
+        if (patchi == -1) continue;
+
+        indicesRef[proci].resize(patchSizes[proci]);
+
+        for (label indexi = 0; indexi < patchSizes[proci]; ++ indexi)
         {
-            indicesRef[proci].resize(patchSizes[proci]);
+            FixedList<label, 3>& indexRef = indicesRef[proci][indexi];
 
-            for (label indexi = 0; indexi < patchSizes[proci]; ++ indexi)
+            const label patchFacei = indexi + patchOffsets[proci];
+
+            indexRef =
             {
-                FixedList<label, 3>& indexRef = indicesRef[proci][indexi];
+                polyFacesBf[patchi][patchFacei] - origPp.start(),
+                origFacesNbrBf[patchi][patchFacei],
+                0
+            };
 
-                const label patchFacei = indexi + patchOffsets[proci];
-
-                indexRef =
-                    {
-                        polyFacesBf[patchi][patchFacei] - origPp.start(),
-                        origFacesNbrBf[patchi][patchFacei],
-                        0
-                    };
-
-                if (!owner) Swap(indexRef[0], indexRef[1]);
-            }
+            if (!owner) Swap(indexRef[0], indexRef[1]);
         }
     }
 
@@ -556,52 +555,22 @@ void Foam::fvMeshStitcher::matchIndices
     {
         const label patchi = patchis[proci];
 
-        if (patchi != -1)
+        if (patchi == -1) continue;
+
+        label refi = 0, i = 0;
+        DynamicList<FixedList<label, 3>> removedIndices;
+        while (refi < indicesRef[proci].size() && i < indices[proci].size())
         {
-            label refi = 0, i = 0;
+            const FixedList<label, 3> index
+            ({
+                indices[proci][i][0],
+                indices[proci][i][1],
+                0
+            });
 
-            DynamicList<FixedList<label, 3>> removedIndices;
+            FixedList<label, 3>& indexRef = indicesRef[proci][refi];
 
-            while
-            (
-                refi < indicesRef[proci].size()
-             && i < indices[proci].size()
-            )
-            {
-                const FixedList<label, 3> index
-                ({
-                    indices[proci][i][0],
-                    indices[proci][i][1],
-                    0
-                });
-
-                FixedList<label, 3>& indexRef = indicesRef[proci][refi];
-
-                if (index < indexRef)
-                {
-                    nCouplesRemoved ++;
-                    removedIndices.append
-                    ({
-                        indices[proci][i][0],
-                        indices[proci][i][1],
-                      - indices[proci][i][2]
-                    });
-                    i ++;
-                }
-                else if (index == indexRef)
-                {
-                    indexRef[2] = indices[proci][i][2];
-                    refi ++;
-                    i ++;
-                }
-                else // (index > indexRef)
-                {
-                    nCouplesAdded ++;
-                    refi ++;
-                }
-            }
-
-            while (i < indices[proci].size())
+            if (index < indexRef)
             {
                 nCouplesRemoved ++;
                 removedIndices.append
@@ -612,12 +581,35 @@ void Foam::fvMeshStitcher::matchIndices
                 });
                 i ++;
             }
-
-            nCouplesRemoved += min(indices[proci].size() - i, 0);
-            nCouplesAdded += min(indicesRef[proci].size() - refi, 0);
-
-            indicesRef[proci].append(removedIndices);
+            else if (index == indexRef)
+            {
+                indexRef[2] = indices[proci][i][2];
+                refi ++;
+                i ++;
+            }
+            else // (index > indexRef)
+            {
+                nCouplesAdded ++;
+                refi ++;
+            }
         }
+
+        while (i < indices[proci].size())
+        {
+            nCouplesRemoved ++;
+            removedIndices.append
+            ({
+                indices[proci][i][0],
+                indices[proci][i][1],
+              - indices[proci][i][2]
+            });
+            i ++;
+        }
+
+        nCouplesRemoved += min(indices[proci].size() - i, 0);
+        nCouplesAdded += min(indicesRef[proci].size() - refi, 0);
+
+        indicesRef[proci].append(removedIndices);
     }
 
     // Report if changes have been made
@@ -667,66 +659,65 @@ void Foam::fvMeshStitcher::createCouplings
         const label patchi = patchis[proci];
         const label patchOffset = patchOffsets[proci];
 
-        if (patchi != -1)
+        if (patchi == -1) continue;
+
+        forAll(indices[proci], indexi)
         {
-            forAll(indices[proci], indexi)
+            const label origFacei = indices[proci][indexi][!owner];
+            const label i = indices[proci][indexi][2];
+
+            const label patchFacei = i >= 0 ? indexi + patchOffset : -1;
+
+            couple c;
+            if (i != 0)
             {
-                const label origFacei = indices[proci][indexi][!owner];
-                const label i = indices[proci][indexi][2];
-
-                const label patchFacei = i >= 0 ? indexi + patchOffset : -1;
-
-                couple c;
-                if (i != 0)
-                {
-                    c = couples[origFacei][mag(i) - 1];
-                }
-                else
-                {
-                    c =
-                        couple
-                        (
-                            part
-                            (
-                                small*origPp.faceAreas()[origFacei],
-                                origPp.faceCentres()[origFacei]
-                            ),
-                            part
-                            (
-                                small*tOrigSfNbrBf()[patchi][patchFacei],
-                                tOrigCfNbrBf()[patchi][patchFacei]
-                            )
-                        );
-                }
-
-                // The two parts of the coupling. The projection is to the
-                // neighbour, so the other-side is always taken from the
-                // neighbouring patch faces.
-                const part& pThis = c, & pOther = owner ? c.nbr : c;
-
-                // Remove the area from the corresponding original face
-                if (i >= 0 || owner)
-                {
-                    part origP
+                c = couples[origFacei][mag(i) - 1];
+            }
+            else
+            {
+                c =
+                    couple
                     (
-                        SfBf[origPp.index()][origFacei],
-                        CfBf[origPp.index()][origFacei]
+                        part
+                        (
+                            small*origPp.faceAreas()[origFacei],
+                            origPp.faceCentres()[origFacei]
+                        ),
+                        part
+                        (
+                            small*tOrigSfNbrBf()[patchi][patchFacei],
+                            tOrigCfNbrBf()[patchi][patchFacei]
+                        )
                     );
-                    origP -= pThis;
-                    if (i < 0 && owner) origP += pOther;
+            }
 
-                    SfBf[origPp.index()][origFacei] = origP.area;
-                    CfBf[origPp.index()][origFacei] = origP.centre;
-                }
+            // The two parts of the coupling. The projection is to the
+            // neighbour, so the other-side is always taken from the
+            // neighbouring patch faces.
+            const part& pThis = c, & pOther = owner ? c.nbr : c;
 
-                // Add the new coupled face
-                if (i >= 0)
-                {
-                    polyFacesBf[patchi][patchFacei] =
-                        origFacei + origPp.start();
-                    SfBf[patchi][patchFacei] = pOther.area;
-                    CfBf[patchi][patchFacei] = pOther.centre;
-                }
+            // Remove the area from the corresponding original face
+            if (i >= 0 || owner)
+            {
+                part origP
+                (
+                    SfBf[origPp.index()][origFacei],
+                    CfBf[origPp.index()][origFacei]
+                );
+                origP -= pThis;
+                if (i < 0 && owner) origP += pOther;
+
+                SfBf[origPp.index()][origFacei] = origP.area;
+                CfBf[origPp.index()][origFacei] = origP.centre;
+            }
+
+            // Add the new coupled face
+            if (i >= 0)
+            {
+                polyFacesBf[patchi][patchFacei] =
+                    origFacei + origPp.start();
+                SfBf[patchi][patchFacei] = pOther.area;
+                CfBf[patchi][patchFacei] = pOther.centre;
             }
         }
     }
