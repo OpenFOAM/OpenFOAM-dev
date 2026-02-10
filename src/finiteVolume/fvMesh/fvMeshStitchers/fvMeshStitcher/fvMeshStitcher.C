@@ -1777,7 +1777,12 @@ bool Foam::fvMeshStitcher::connectThis
 
     if (any(patchCoupleds))
     {
-        Info<< indent << typeName << ": Connecting" << incrIndent << endl;
+        Info<< indent << typeName << ": Connecting";
+        if (mesh_.name() != polyMesh::defaultRegion)
+        {
+            Info<< " region " << mesh_.name();
+        }
+        Info<< incrIndent << endl;
     }
 
     // Create copies of geometry fields to be modified
