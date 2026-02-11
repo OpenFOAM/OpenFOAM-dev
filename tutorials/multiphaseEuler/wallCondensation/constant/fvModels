@@ -1,0 +1,86 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      fvModels;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+phaseTurbulenceStabilisationGas
+{
+    type    phaseTurbulenceStabilisation;
+    libs    ("libmultiphaseEulerFvModels.so");
+    phase   gas;
+    alphaInversion  0.1;
+}
+
+phaseTurbulenceStabilisationLiquid
+{
+    type    phaseTurbulenceStabilisation;
+    libs    ("libmultiphaseEulerFoamFvModels.so");
+    phase   liquid;
+    alphaInversion  0.1;
+}
+
+wallCondensation
+{
+    type            wallCondensation;
+    libs            ("libmultiphaseEulerFvModels.so");
+
+    phases          (gas liquid);
+
+    specie          H2O;
+    Sct             0.75;
+
+    energySemiImplicit yes;
+    specieSemiImplicit no;
+
+    saturationPressure
+    {
+        type            ArdenBuck;
+    }
+}
+
+massDiffusionLimitedPhaseChange
+{
+    type            massDiffusionLimitedPhaseChange;
+    libs            ("libmultiphaseEulerFvModels.so");
+
+    phases          (gas liquid);
+
+    energySemiImplicit yes;
+
+    interfaceComposition
+    {
+        gas_liquid_inThe_gas
+        {
+            type            saturated;
+            species         (H2O);
+            Le              1.0;
+            pSat            ArdenBuck;
+        }
+    }
+
+    diffusiveMassTransfer
+    {
+        gas_dispersedIn_liquid_inThe_gas
+        {
+            type            spherical;
+        }
+        liquid_dispersedIn_gas_inThe_gas
+        {
+            type            Frossling;
+            Le              1.0;
+        }
+    }
+}
+
+// ************************************************************************* //

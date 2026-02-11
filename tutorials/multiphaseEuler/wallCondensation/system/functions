@@ -1,0 +1,57 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      functions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#includeFunc cellMaxMag
+(
+    name=fieldMax,
+    executeAtStart=no,
+    p,
+    U.gas,
+    U.liquid,
+    log=yes
+)
+
+#includeFunc cellMinMag
+(
+    name=fieldMin,
+    executeAtStart=no,
+    p,
+    U.gas,
+    U.liquid,
+    log=yes
+)
+
+#includeFunc yPlus(name=yPlus, phase=gas, executeAtStart=no, log=yes)
+
+#includeFunc patchFlowRate
+(
+    name=inflow,
+    patch=inlet,
+    alphaRhoPhi.gas,
+    alphaRhoPhi.liquid,
+    log=yes
+)
+
+#includeFunc patchFlowRate
+(
+    name=outflow,
+    patch=outlet,
+    alphaRhoPhi.gas,
+    alphaRhoPhi.liquid,
+    log=yes
+)
+
+// ************************************************************************* //

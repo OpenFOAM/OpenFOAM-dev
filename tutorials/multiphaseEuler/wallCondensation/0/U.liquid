@@ -1,0 +1,55 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       volVectorField;
+    location    "0";
+    object      U.liquid;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 1 -1 0 0 0 0];
+
+internalField   uniform (0 0 1.75);
+
+boundaryField
+{
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    inlet
+    {
+        type            uniformFixedValue;
+        uniformValue
+        {
+            type table;
+            values
+            (
+                (0 (0 0 1.75))
+                (2 (0 0 2.08))
+                (3 (0 0 2.57))
+                (4 (0 0 3.06))
+                (5 (0 0 3.53))
+            );
+            interpolationScheme step;
+        }
+    }
+    outlet
+    {
+        type            pressureInletOutletVelocity;
+        phi             phi.liquid;
+        value           uniform (0 0 1.75);
+    }
+    wall
+    {
+        type            noSlip;
+    }
+}
+
+
+// ************************************************************************* //
