@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1817,6 +1817,16 @@ bool Foam::fvMesh::operator!=(const fvMesh& bm) const
 bool Foam::fvMesh::operator==(const fvMesh& bm) const
 {
     return &bm == this;
+}
+
+
+
+// * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
+
+const Foam::fvMesh& Foam::region(const dictionary& dict)
+{
+    const IOobject& io = refCast<const IOobject>(dict);
+    return refCast<const fvMesh>(io.db());
 }
 
 

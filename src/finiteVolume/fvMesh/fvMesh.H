@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -715,6 +715,10 @@ public:
 template<>
 typename pTraits<sphericalTensor>::labelType
 fvMesh::validComponents<sphericalTensor>() const;
+
+//- Cast the give dictionary to the corresponding region fvMesh
+//  Useful for #codeStream in the context of field initialisation
+const fvMesh& region(const dictionary& dict);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
