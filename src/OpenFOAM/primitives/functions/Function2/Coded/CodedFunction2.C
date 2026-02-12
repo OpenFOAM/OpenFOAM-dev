@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,10 +57,10 @@ void Foam::Function2s::Coded<Type>::prepare
     dynCode.setFilterVariable("TemplateType", pTraits<Type>::typeName);
 
     // Compile filtered C template
-    dynCode.addCompileFile(codeTemplateC("codedFunction2"));
+    dynCode.addCompileFile("codedFunction2Template.C");
 
     // Copy filtered H template
-    dynCode.addCopyFile(codeTemplateH("codedFunction2"));
+    dynCode.addCopyFile("codedFunction2Template.H");
 
     // Make verbose if debugging
     dynCode.setFilterVariable("verbose", Foam::name(bool(debug)));

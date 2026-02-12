@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -380,18 +380,6 @@ const Foam::word& Foam::codedBase::codeName() const
 Foam::string Foam::codedBase::description() const
 {
     return this->type() + " " + codeName();
-}
-
-
-Foam::word Foam::codedBase::codeTemplateC(const word& baseTypeName) const
-{
-    return baseTypeName + "Template.C";
-}
-
-
-Foam::word Foam::codedBase::codeTemplateH(const word& baseTypeName) const
-{
-    return baseTypeName + "Template.H";
 }
 
 

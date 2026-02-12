@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,9 +83,6 @@ private:
 
         //- Files to copy and filter
         DynamicList<fileName> copyFiles_;
-
-        //- Direct contents for files
-        DynamicList<fileAndContent> createFiles_;
 
         //- Variables to use during filtering
         HashTable<string> filterVars_;
@@ -254,9 +251,6 @@ public:
 
         //- Add a file template name, which will be found and filtered
         void addCopyFile(const fileName& name);
-
-        //- Add a file to create with its contents. Will not be filtered
-        void addCreateFile(const fileName& name, const string& contents);
 
         //- Define a filter variable
         void setFilterVariable(const word& key, const std::string& value);

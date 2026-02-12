@@ -146,10 +146,6 @@ public:
         //- Return a description (type + name) for the output
         string description() const;
 
-        word codeTemplateC(const word& baseTypeName) const;
-
-        word codeTemplateH(const word& baseTypeName) const;
-
         //- Update library from given updated dictionary as required
         //  Returns true if the library was updated, otherwise false
         bool updateLibrary(const dictionary& dict) const;

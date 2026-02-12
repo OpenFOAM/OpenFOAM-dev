@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,10 +69,10 @@ void Foam::codedFixedValuePointPatchField<Type>::prepare
     dynCode.setFilterVariable("FieldType", fieldType + "Field");
 
     // Compile filtered C template
-    dynCode.addCompileFile(codeTemplateC("codedFixedValuePointPatchField"));
+    dynCode.addCompileFile("codedFixedValuePointPatchFieldTemplate.C");
 
     // Copy filtered H template
-    dynCode.addCopyFile(codeTemplateH("codedFixedValuePointPatchField"));
+    dynCode.addCopyFile("codedFixedValuePointPatchFieldTemplate.H");
 
     // Make verbose if debugging
     dynCode.setFilterVariable("verbose", Foam::name(bool(debug)));

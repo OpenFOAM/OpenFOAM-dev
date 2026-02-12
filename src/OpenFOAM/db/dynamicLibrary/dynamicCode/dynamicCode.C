@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -354,7 +354,6 @@ void Foam::dynamicCode::clear()
 {
     compileFiles_.clear();
     copyFiles_.clear();
-    createFiles_.clear();
     filterVars_.clear();
     filterVars_.set("typeName", codeName_);
     filterVars_.set("SHA1sum", SHA1Digest().str());
@@ -391,16 +390,6 @@ void Foam::dynamicCode::addCompileFile(const fileName& name)
 void Foam::dynamicCode::addCopyFile(const fileName& name)
 {
     copyFiles_.append(name);
-}
-
-
-void Foam::dynamicCode::addCreateFile
-(
-    const fileName& name,
-    const string& contents
-)
-{
-    createFiles_.append(fileAndContent(name, contents));
 }
 
 
@@ -483,27 +472,6 @@ bool Foam::dynamicCode::copyOrCreateFiles(const bool verbose) const
 
         // Copy lines while expanding variables
         copyAndFilter(is, os, filterVars_);
-    }
-
-
-    // Create files:
-    forAll(createFiles_, fileI)
-    {
-        const fileName dstFile
-        (
-            outputDir/stringOps::expandEnvVar(createFiles_[fileI].first())
-        );
-
-        mkDir(dstFile.path());
-        OFstream os(dstFile);
-        // Info<< "Writing to " << createFiles_[fileI].first() << endl;
-        if (!os.good())
-        {
-            FatalErrorInFunction
-                << "Failed writing " << dstFile
-                << exit(FatalError);
-        }
-        os.writeQuoted(createFiles_[fileI].second(), false) << nl;
     }
 
 
