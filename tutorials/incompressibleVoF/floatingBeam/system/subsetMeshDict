@@ -1,0 +1,36 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      subsetMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+centre      $../constant/dynamicMeshDict!mover/bodies/beam/centreOfMass;
+L           $../constant/dynamicMeshDict!mover/bodies/beam/L;
+
+zone
+{
+    type        box;
+    select      outside;
+    box         #codeStream
+    {
+        code
+        #{
+            os  << $<vector>centre - $<vector>{L}/2
+                << $<vector>centre + $<vector>{L}/2;
+        #};
+    };
+}
+
+patch   beam;
+
+// ************************************************************************* //

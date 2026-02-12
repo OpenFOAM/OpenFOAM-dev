@@ -1,0 +1,64 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+runApplication blockMesh
+runApplication subsetMesh -noFields
+
+runApplication decomposePar
+runParallel setFields
+runParallel foamRun
+runApplication reconstructPar
+
+if ! which gnuplot > /dev/null 2>&1
+then
+    echo "gnuplot not found - skipping graph creation" >&2
+    exit 1
+fi
+
+gnuplot << EOF
+
+set terminal postscript eps color enhanced size 4,5
+set output "rigidBodySectionalForces.eps"
+
+times = system("foamListTimes -processor")
+latestTime = system("foamListTimes -processor -latestTime")
+
+set cbrange [0:latestTime]
+set cblabel "Time [s]"
+
+set multiplot layout 2,1
+
+set xlabel "Position [m]"
+
+set ylabel "Shear Force - Vertical/Z Component [N]"
+
+plot for [t in times] \
+    "postProcessing/rigidBodySectionalForceGraph/".t."/rigidBodySectionalForceGraph.xy" \
+    us 1:10 w l t '' lc palette frac t/latestTime, \
+    "postProcessing/rigidBodySectionalForceProbes/0/rigidBodySectionalForceProbes.dat" \
+    every ::1 us (4.2):10 w l t '' lc 'web-green', \
+    "postProcessing/rigidBodySectionalForceProbes/0/rigidBodySectionalForceProbes.dat" \
+    every ::1 us (5):28 w l t '' lc 'web-green', \
+    "postProcessing/rigidBodySectionalForceProbes/0/rigidBodySectionalForceProbes.dat" \
+    every ::1 us (5.8):46 w l t 'probes' lc 'web-green'
+
+set ylabel "Bending Moment - Transverse/Y Component [N m]"
+
+plot for [t in times] \
+    "postProcessing/rigidBodySectionalForceGraph/".t."/rigidBodySectionalForceGraph.xy" \
+    us 1:18 w l t '' lc palette frac t/latestTime, \
+    "postProcessing/rigidBodySectionalForceProbes/0/rigidBodySectionalForceProbes.dat" \
+    every ::1 us (4.2):18 w l t '' lc 'web-green', \
+    "postProcessing/rigidBodySectionalForceProbes/0/rigidBodySectionalForceProbes.dat" \
+    every ::1 us (5):36 w l t '' lc 'web-green', \
+    "postProcessing/rigidBodySectionalForceProbes/0/rigidBodySectionalForceProbes.dat" \
+    every ::1 us (5.8):54 w l t 'probes' lc 'web-green'
+
+unset multiplot
+
+EOF
+
+#------------------------------------------------------------------------------

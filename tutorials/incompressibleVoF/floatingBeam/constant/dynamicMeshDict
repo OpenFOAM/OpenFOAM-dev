@@ -1,0 +1,116 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      dynamicMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+mover
+{
+    type            motionSolver;
+
+    libs            ("librigidBodyMeshMotion.so");
+
+    motionSolver    rigidBodyMotion;
+
+    report          on;
+
+    solver
+    {
+        type            Newmark;
+    }
+
+    bodies
+    {
+        beam
+        {
+            type            cuboid; //pointMasses;
+            parent          root;
+
+            L               (3.2 1.2 0.6);
+            centreOfMass    (5 2 0);
+            density         500;
+            numberDensity   1000;
+
+            mass            #calc "$<scalar>density*cmptProduct($<vector>L)";
+
+            /*
+            pointMasses     #codeStream
+            {
+                code
+                #{
+                    const vector& L = $<vector>L;
+                    const vector& centreOfMass = $<vector>centreOfMass;
+                    const scalar density = $<scalar>density;
+                    const scalar numberDensity = $<scalar>numberDensity;
+
+                    const Vector<label> n(L*cbrt(numberDensity) + vector::uniform(0.5));
+
+                    List<Tuple2<vector, scalar>> pointMasses
+                    (
+                        cmptProduct(n),
+                        Tuple2<vector, scalar>
+                        (
+                            vector::uniform(NaN),
+                            density*cmptProduct(L)/cmptProduct(n)
+                        )
+                    );
+
+                    for (label i = 0; i < n.x(); ++ i)
+                    {
+                        for (label j = 0; j < n.y(); ++ j)
+                        {
+                            for (label k = 0; k < n.z(); ++ k)
+                            {
+                                const vector f =
+                                    cmptDivide
+                                    (
+                                        vector::uniform(1) + 2*vector(i, j, k),
+                                        2*vector(n)
+                                    );
+
+                                pointMasses[i*n.y()*n.z() + j*n.z() + k].first() =
+                                    centreOfMass + cmptMultiply(f, L) - L/2;
+                            }
+                        }
+                    }
+
+                    os << pointMasses;
+                #};
+            };
+            */
+
+            joint
+            {
+                type            composite;
+                joints
+                (
+                    {
+                        type Pxyz;
+                    }
+                    {
+                        type Rxyz;
+                    }
+                );
+            }
+
+            transform   (1 0 0 0 1 0 0 0 1) (0 0 0);
+
+            patches         (beam);
+            innerDistance   0.1;
+            outerDistance   1.3;
+        }
+    }
+}
+
+
+// ************************************************************************* //
