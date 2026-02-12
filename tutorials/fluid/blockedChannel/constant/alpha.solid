@@ -9,29 +9,21 @@ FoamFile
 {
     format      ascii;
     class       volScalarField;
-    location    "0";
-    object      alpha.water;
+    location    "constant";
+    object      alpha.volume;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 dimensions      [];
 
-internalField   uniform 1;
+#include "alphaInternalField"(y0=-0.124, y1=-0.092)
 
 boundaryField
 {
-    #includeEtc "caseDicts/setConstraintTypes"
-
-    bottom
+    ".*"
     {
-        type            zeroGradient;
-    }
-
-    top
-    {
-        type            inletOutlet;
-        inletValue      $internalField;
-        value           $internalField;
+        type            calculated;
+        value           uniform 0;
     }
 }
 

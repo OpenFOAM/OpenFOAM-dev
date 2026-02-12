@@ -9,8 +9,6 @@ runApplication -s incompressibleFluid blockMesh -region incompressibleFluid
 runApplication -s multicomponentFluid blockMesh -region multicomponentFluid
 runApplication -s incompressibleVoF blockMesh -region incompressibleVoF
 runApplication -s compressibleVoF blockMesh -region compressibleVoF
-runApplication -s incompressibleVoF foamPostProcess -func setAlphaWater -region incompressibleVoF
-runApplication -s compressibleVoF foamPostProcess -func setAlphaWater -region compressibleVoF
 runApplication foamMultiRun
 
 # Get initial amounts of droplet material

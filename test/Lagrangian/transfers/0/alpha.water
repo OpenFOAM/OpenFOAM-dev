@@ -1,0 +1,78 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       volScalarField;
+    location    "0";
+    object      alpha.water;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [];
+
+interfaceMiddle 0.2;
+interfaceDepth  0.04;
+
+#codeStream
+{
+    codeOptions     #{ -I$(LIB_SRC)/finiteVolume/lnInclude #};
+
+    codeLibs        #{ -lfiniteVolume #};
+
+    codeInclude
+    #{
+        #include "volFields.H"
+        #include "mathematicalConstants.H"
+    #};
+
+    code
+    #{
+        const fvMesh& mesh = region(dict);
+
+        // Signed height from the interface
+        const scalarField h
+        (
+            mesh.C().primitiveField().component(2) - $<scalar>interfaceMiddle
+        );
+
+        // Linear ramp over the interface width
+        const scalarField r
+        (
+            min(max(0.5 + h/$<scalar>interfaceDepth, scalar(0)), scalar(1))
+        );
+
+        // Smooth cosine function for alpha
+        writeEntry
+        (
+            os,
+            "internalField",
+            ((1 - cos(constant::mathematical::pi*r))/2)()
+        );
+    #};
+}
+
+boundaryField
+{
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    bottom
+    {
+        type            zeroGradient;
+    }
+
+    top
+    {
+        type            inletOutlet;
+        inletValue      uniform 1;
+        value           uniform 1;
+    }
+}
+
+
+// ************************************************************************* //

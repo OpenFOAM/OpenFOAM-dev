@@ -1,0 +1,64 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       volScalarField;
+    location    "constant";
+    object      alpha.volume;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [];
+
+#codeStream
+{
+    codeOptions     #{ -I$(LIB_SRC)/finiteVolume/lnInclude #};
+
+    codeLibs        #{ -lfiniteVolume #};
+
+    codeInclude     #{ #include "volFields.H" #};
+
+    code
+    #{
+        const fvMesh& mesh = region(dict);
+
+        const dimensionedVector dx(dimless/dimLength, vector(1, 0, 0));
+        const dimensionedVector dy(dimless/dimLength, vector(0, 1, 0));
+
+        const volScalarField::Internal x(mesh.C()() & dx), y(mesh.C()() & dy);
+
+        const scalar x0 = 0.032, x1 = 0.064, x2 = 0.128, x3 = 0.224;
+
+        const volScalarField::Internal f
+        (
+            pos(x - x0)*pos(x1 - x)*(x - x0)/(x1 - x0)
+          + pos(x - x1)*pos(x2 - x)
+          + pos(x - x2)*pos(x3 - x)*(x3 - x)/(x3 - x2)
+        );
+
+        const volScalarField::Internal alpha
+        (
+            0.5*pos(y - (-0.124))*pos((-0.056) - y)*f
+        );
+
+        writeEntry(os, "internalField", alpha.primitiveField());
+    #};
+};
+
+boundaryField
+{
+    ".*"
+    {
+        type            calculated;
+        value           uniform 0;
+    }
+}
+
+
+// ************************************************************************* //
