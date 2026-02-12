@@ -1,0 +1,71 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      functions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+rigidBodyState
+{
+    type           rigidBodyState;
+    libs           ("librigidBodyState.so");
+    angleUnits     [deg];
+    angularVelocityUnits [deg/s];
+}
+
+sectionalForceGraph
+{
+    type            sectionalForceGraph;
+    libs            ("libforces.so");
+    patches         (beam);
+    normal          (1 0 0);
+    origin          (5 2 0);
+    nPoints         21;
+    axis            x;
+    setFormat       raw;
+    writeControl    writeTime;
+}
+
+sectionalForceProbes
+{
+    type            sectionalForceProbes;
+    libs            ("libforces.so");
+    patches         (beam);
+    points          ((4.2 2 0) (5 2 0) (5.8 2 0));
+    normal          (1 0 0);
+}
+
+rigidBodySectionalForceGraph
+{
+    type            rigidBodySectionalForceGraph;
+    libs            ("librigidBodyForces.so");
+    body            beam;
+    patches         (beam);
+    nPoints         101;
+    axis            x;
+    origin          (5 2 -0.15);
+    setFormat       raw;
+    writeControl    writeTime;
+}
+
+rigidBodySectionalForceProbes
+{
+    type            rigidBodySectionalForceProbes;
+    libs            ("librigidBodyForces.so");
+    body            beam;
+    patches         (beam);
+    axis            x;
+    origin          (5 2 -0.15);
+    coordinates     (4.2 5 5.8);
+}
+
+// ************************************************************************* //

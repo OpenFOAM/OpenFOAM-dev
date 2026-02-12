@@ -1,0 +1,50 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       volScalarField;
+    location    "0";
+    object      alphat.liquid;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [1 -1 -1 0 0 0 0];
+
+internalField   uniform 1e-08;
+
+boundaryField
+{
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    inlet
+    {
+        type            calculated;
+        value           uniform 1e-08;
+    }
+    outlet
+    {
+        type            calculated;
+        value           uniform 1e-08;
+    }
+    wall_side
+    {
+        type            compressible::alphatJayatillekeWallFunction;
+        libs            ("libmultiphaseEulerFvModels.so");
+        value           uniform 0;
+    }
+    wall_cooled
+    {
+        type            alphatPhaseChangeWallFunction;
+        libs            ("libmultiphaseEulerFvModels.so");
+        value           uniform 0;
+    }
+}
+
+
+// ************************************************************************* //

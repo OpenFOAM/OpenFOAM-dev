@@ -1,0 +1,63 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       volScalarField;
+    location    "0";
+    object      T.liquid;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 0 0 1 0 0 0];
+
+internalField   uniform 355.64;
+
+boundaryField
+{
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    inlet
+    {
+        type            uniformFixedValue;
+        uniformValue
+        {
+            type table;
+            values
+            (
+                (0 352.9)
+                (2 350.8)
+                (3 348.7)
+                (4 351.6)
+                (5 349.8)
+            );
+            interpolationScheme step;
+        }
+    }
+    outlet
+    {
+        type            inletOutlet;
+        phi             phi.liquid;
+        inletValue      $internalField;
+        value           $internalField;
+    }
+    wall_side
+    {
+        type           zeroGradient;
+    }
+    wall_cooled
+    {
+        type            mappedValue;
+        samePatch       yes;
+        field           T.gas;
+        value           uniform 304;
+    }
+}
+
+
+// ************************************************************************* //

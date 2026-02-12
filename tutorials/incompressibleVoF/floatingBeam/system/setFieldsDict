@@ -1,0 +1,58 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      setFieldsDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+centre      $../constant/dynamicMeshDict!mover/bodies/beam/centreOfMass;
+
+#codeBlock
+bumpX       #calc "$<vector>{centre}.x() - 3";
+centreY     #calc "$<vector>{centre}.y()";
+centreZ     #calc "$<vector>{centre}.z()";
+bumpZ       #calc "$<vector>{centre}.z() + 0.4";
+#endCodeBlock
+
+defaultValues
+{
+    alpha.water 0;
+}
+
+zones
+{
+    water
+    {
+        type        box;
+
+        box         (-1e6 -1e6 -1e6) (1e6 1e6 $centreZ);
+
+        values
+        {
+            alpha.water 1;
+        }
+    }
+
+    bump
+    {
+        type        box;
+
+        box         (-1e6 -1e6 -1e6) ($bumpX $centreY $bumpZ);
+
+        values
+        {
+            alpha.water 1;
+        }
+    }
+}
+
+// ************************************************************************* //

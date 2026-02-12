@@ -1,5 +1,4 @@
 EXE_INC = \
-    -I$(LIB_SRC)/fileFormats/lnInclude \
     -I$(LIB_SRC)/physicalProperties/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
@@ -7,6 +6,8 @@ EXE_INC = \
     -I$(LIB_SRC)/MomentumTransportModels/compressible/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/phaseIncompressible/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/phaseCompressible/lnInclude \
+    -I$(LIB_SRC)/fileFormats/lnInclude \
+    -I$(LIB_SRC)/sampling/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude
 
@@ -20,5 +21,6 @@ LIB_LIBS = \
     -lphaseCompressibleMomentumTransportModels \
     -lspecie \
     -lfileFormats \
+    -lsampling \
     -lfiniteVolume \
     -lmeshTools

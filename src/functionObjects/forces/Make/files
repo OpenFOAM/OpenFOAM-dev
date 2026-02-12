@@ -3,4 +3,8 @@ forces/forces.C
 movingForces/movingForces.C
 forceCoeffs/forceCoeffs.C
 
+sectionalForcesBase/sectionalForcesBase.C
+sectionalForceGraph/sectionalForceGraph.C
+sectionalForceProbes/sectionalForceProbes.C
+
 LIB = $(FOAM_LIBBIN)/libforces

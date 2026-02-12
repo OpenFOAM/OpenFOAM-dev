@@ -1,0 +1,52 @@
+#!/bin/sh
+
+if ! which gnuplot > /dev/null 2>&1
+then
+    echo "gnuplot not found - skipping graph creation" >&2
+    exit 1
+fi
+
+file=postProcessing/outflow/0/surfaceFieldValue.dat
+
+V15=$(grep '^2 ' "$file" | cut -f3)
+V20=$(grep '^3 ' "$file" | cut -f3)
+V25=$(grep '^4 ' "$file" | cut -f3)
+V30=$(grep '^5 ' "$file" | cut -f3)
+V35=$(grep '^6 ' "$file" | cut -f3)
+
+gnuplot<<EOF
+
+\$simulation << end
+V15 $V15
+V20 $V20
+V25 $V25
+V30 $V30
+V35 $V35
+end
+
+\$experiment << end
+V15 2.06
+V20 2.036
+V25 2.07
+V30 2.683
+V35 2.607
+end
+
+set terminal postscript eps size 4,3 color enhanced font "Helvetica,20"
+set output "./validation/$(basename "$PWD").eps"
+
+set style data histograms
+set style histogram clustered
+set style fill solid 1.0 border lt -1
+
+set grid ytics
+
+set ylabel 'Condensation Rate [g/s]'
+
+plot [][0:4] \
+    '\$simulation' u (\$2*1000) t 'Simulation', \
+    '\$experiment' u 2:xtic(1) lt rgb "black" t 'Experiment'
+
+EOF
+
+#------------------------------------------------------------------------------
