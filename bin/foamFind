@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2024-2026 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -263,7 +263,9 @@ listFiles () {
     [ "$_filename" ] && _name="$_filename"
 
     [ "$_search" ] && \
-        find "$_dir" -name "$_name" -type f -print0 | \
+        find "$_dir" -name "$_name" \
+            ! '(' -name '*gz' -or -name '*stl' -or -name '*obj' ')' \
+            -type f -print0 | \
             xargs -0 grep -l$_ins "$search" && \
         return 0
 
