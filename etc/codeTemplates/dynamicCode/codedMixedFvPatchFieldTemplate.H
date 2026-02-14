@@ -112,6 +112,12 @@ public:
 
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();
+
+
+    // Member Operators
+
+        //- Inherit assignment
+        using mixedFvPatchField<${TemplateType}>::operator=;
 };
 
 
