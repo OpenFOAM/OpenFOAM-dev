@@ -66,6 +66,9 @@ class codeBlockEntry
         //  containing the #calc and #codeStream functions
         void* lib_;
 
+        //- Name of the code options file to be used
+        static const word codeOptions;
+
         //- Name of the C code template to be used
         static const word codeTemplateC;
 

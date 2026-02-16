@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,9 +65,6 @@ Foam::dictionary::dictionary(Istream& is, const bool keepHeader)
 {
     // Reset input mode as this is a "top-level" dictionary
     functionEntries::inputModeEntry::clear();
-
-    // Clear the cache of #calc include files
-    functionEntries::codeIncludeEntry::clear();
 
     read(is, keepHeader);
 }
@@ -211,9 +208,6 @@ Foam::Istream& Foam::operator>>(Istream& is, dictionary& dict)
 {
     // Reset input mode assuming this is a "top-level" dictionary
     functionEntries::inputModeEntry::clear();
-
-    // Clear the cache of #calc include files
-    functionEntries::codeIncludeEntry::clear();
 
     dict.clear();
     dict.name() = is.name();

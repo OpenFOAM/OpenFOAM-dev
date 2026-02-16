@@ -25,17 +25,19 @@ Class
     Foam::functionEntries::codeIncludeEntry
 
 Description
-    Specify an include file or list of files for \#calc
+    Specify an include file or list of files for \#calc within \#codeBlock
 
     For example if functions from transform.H are used in the \#calc expression
     \verbatim
     angleOfAttack   5; // degs
 
+    #codeBlock
     angle           #calc "-degToRad($angleOfAttack)";
 
     #codeInclude    "transform.H"
     liftDir         #calc "transform(Ry($angle), vector(0, 0, 1))";
     dragDir         #calc "transform(Ry($angle), vector(1, 0, 0))";
+    #endCodeBlock
     \endverbatim
 
     The usual expansion of environment variables and other constructs
@@ -83,26 +85,10 @@ class codeIncludeEntry
 :
     public functionEntry
 {
-    // Private static data
-
-        // Static include file name cache
-        static DynamicList<fileName> includeFiles_;
-
-
     // Private  data
 
         //- List of file names
         List<fileName> fNames_;
-
-
-    // Private Member Functions
-
-        //- Append the file name to the includeFiles_
-        void appendFileName
-        (
-            const dictionary& contextDict,
-            const fileName& fName
-        ) const;
 
 
 public:
@@ -134,14 +120,25 @@ public:
     // Member Functions
 
         //- Execute the functionEntry in a sub-dict context
-        virtual bool execute(dictionary& parentDict, Istream&);
+        virtual bool execute(dictionary& parentDict, Istream&)
+        {
+            NotImplemented;
+            return false;
+        }
 
-        //- Reset the cache of \#calc include file names
-        static void clear();
+        //- Return the include file names
+        const List<fileName>& fileNames() const
+        {
+            return fNames_;
+        }
 
-        //- Add the cached include file names to the codeInclude entry
-        //  in codeDict
-        static void codeInclude(dictionary& codeDict);
+        //- Add the codeInclude entry to codeDict
+        static void addCodeInclude
+        (
+            const List<fileName>& fileNames,
+            const dictionary& contextDict,
+            dictionary& codeDict
+        );
 
 
     // Member Operators

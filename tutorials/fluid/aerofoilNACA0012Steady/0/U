@@ -17,13 +17,14 @@ FoamFile
 speed           250;
 angleOfAttack   0; // degs
 
-angle           #calc "-degToRad($angleOfAttack)";
-
+#codeBlock
 #codeInclude    "transform.H"
-liftDir         #calc "transform(Ry($angle), vector(0, 0, 1))";
-dragDir         #calc "transform(Ry($angle), vector(1, 0, 0))";
+angle           #calc "-degToRad($angleOfAttack)";
+liftDir         #calc "transform(Ry($<scalar>angle), vector(0, 0, 1))";
+dragDir         #calc "transform(Ry($<scalar>angle), vector(1, 0, 0))";
 
 Uinlet          #calc "$speed*$<vector>dragDir";
+#endCodeBlock
 
 dimensions      [0 1 -1 0 0 0 0];
 
