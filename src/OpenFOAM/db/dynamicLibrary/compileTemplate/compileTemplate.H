@@ -71,12 +71,11 @@ class compileTemplate
         void setFilterVariable
         (
             dynamicCode& dynCode,
-            const dynamicCodeContext& context,
             const Pair<word>& substitution
         ) const;
 
         //- Adapt the context for the current object
-        virtual void prepare(dynamicCode&, const dynamicCodeContext&) const;
+        virtual void prepare(dynamicCode&) const;
 
 
 public:

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,7 +47,7 @@ typename Table::iterator Foam::basicThermo::lookupCstrIter
         if
         (
             nCmpt == 7
-         && dynamicCode::allowSystemOperations
+         && dynamicCodeContext::allowSystemOperations
          && !dynamicCode::resolveTemplate(Thermo::typeName).empty()
         )
         {

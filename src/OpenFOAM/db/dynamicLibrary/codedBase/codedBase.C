@@ -234,12 +234,12 @@ void Foam::codedBase::createLibrary
     if (create)
     {
         // Write files for new library
-        if (!dynCode.upToDate(context))
+        if (!dynCode.upToDate())
         {
-            // Filter with this context
-            dynCode.reset(context);
+            // Filter with the context
+            dynCode.filter();
 
-            this->prepare(dynCode, context);
+            this->prepare(dynCode);
 
             if (!dynCode.copyOrCreateFiles(true))
             {
@@ -337,11 +337,12 @@ Foam::codedBase::codedBase
     const word& name,
     const dictionary& dict,
     const wordList& codeKeys,
-    const wordList& codeDictVars
+    const wordList& codeDictVars,
+    const word& codeOptionsFileName
 )
 :
     codeName_(codeName(name)),
-    codeContext_(dict, codeKeys, codeDictVars)
+    codeContext_(dict, codeKeys, codeDictVars, codeOptionsFileName)
 {}
 
 
@@ -349,10 +350,18 @@ Foam::codedBase::codedBase
 (
     const dictionary& dict,
     const wordList& codeKeys,
-    const wordList& codeDictVars
+    const wordList& codeDictVars,
+    const word& codeOptionsFileName
 )
 :
-    codedBase(codeName(dict.lookup("name")), dict, codeKeys, codeDictVars)
+    codedBase
+    (
+        codeName(dict.lookup("name")),
+        dict,
+        codeKeys,
+        codeDictVars,
+        codeOptionsFileName
+    )
 {}
 
 
@@ -387,19 +396,9 @@ bool Foam::codedBase::updateLibrary(const dictionary& dict) const
 {
     const word& name = codeName();
 
-    dynamicCode::checkSecurity
-    (
-        "codedBase::updateLibrary()",
-        dict
-    );
-
     // codeName: name + _<sha1>
     // codeDir : name
-    dynamicCode dynCode
-    (
-        name + codeContext_.sha1().str(true),
-        name
-    );
+    dynamicCode dynCode(codeContext_, name, name);
     const fileName libPath = dynCode.libPath();
 
 

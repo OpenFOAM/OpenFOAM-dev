@@ -25,7 +25,6 @@ License
 
 #include "CodedFunction1.H"
 #include "dynamicCode.H"
-#include "dynamicCodeContext.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -45,11 +44,7 @@ const Foam::wordList Foam::Function1s::Coded<Type>::codeDictVars
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-void Foam::Function1s::Coded<Type>::prepare
-(
-    dynamicCode& dynCode,
-    const dynamicCodeContext& context
-) const
+void Foam::Function1s::Coded<Type>::prepare(dynamicCode& dynCode) const
 {
     dynCode.setFilterVariable("typeName", codeName());
 
@@ -67,18 +62,8 @@ void Foam::Function1s::Coded<Type>::prepare
 
     if (debug)
     {
-        Info<<"compile " << codeName() << " sha1: " << context.sha1() << endl;
+        Info<<"compile " << codeName() << " sha1: " << dynCode.sha1() << endl;
     }
-
-    // Define Make/options
-    dynCode.setMakeOptions
-    (
-        "EXE_INC = -g \\\n"
-      + context.options()
-      + "\n\nLIB_LIBS = \\\n"
-      + "    -lOpenFOAM \\\n"
-      + context.libs()
-    );
 }
 
 
@@ -93,7 +78,7 @@ Foam::Function1s::Coded<Type>::Coded
 )
 :
     Function1<Type>(name),
-    codedBase(dict, codeKeys, codeDictVars),
+    codedBase(dict, codeKeys, codeDictVars, "codedFunction1Options"),
     units_(units)
 {
     this->updateLibrary(dict);

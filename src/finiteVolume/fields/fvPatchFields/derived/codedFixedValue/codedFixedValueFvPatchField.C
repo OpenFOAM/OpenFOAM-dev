@@ -25,7 +25,6 @@ License
 
 #include "codedFixedValueFvPatchField.H"
 #include "dynamicCode.H"
-#include "dynamicCodeContext.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -48,8 +47,7 @@ const Foam::wordList Foam::codedFixedValueFvPatchField<Type>::codeDictVars
 template<class Type>
 void Foam::codedFixedValueFvPatchField<Type>::prepare
 (
-    dynamicCode& dynCode,
-    const dynamicCodeContext& context
+    dynamicCode& dynCode
 ) const
 {
     dynCode.setFilterVariable("typeName", codeName());
@@ -76,20 +74,8 @@ void Foam::codedFixedValueFvPatchField<Type>::prepare
 
     if (debug)
     {
-        Info<<"compile " << codeName() << " sha1: " << context.sha1() << endl;
+        Info<<"compile " << codeName() << " sha1: " << dynCode.sha1() << endl;
     }
-
-    // Define Make/options
-    dynCode.setMakeOptions
-    (
-        "EXE_INC = -g \\\n"
-        "-I$(LIB_SRC)/finiteVolume/lnInclude \\\n"
-      + context.options()
-      + "\n\nLIB_LIBS = \\\n"
-      + "    -lOpenFOAM \\\n"
-      + "    -lfiniteVolume \\\n"
-      + context.libs()
-    );
 }
 
 
@@ -104,7 +90,13 @@ Foam::codedFixedValueFvPatchField<Type>::codedFixedValueFvPatchField
 )
 :
     fixedValueFvPatchField<Type>(p, iF, dict),
-    codedBase(dict, codeKeys, codeDictVars)
+    codedBase
+    (
+        dict,
+        codeKeys,
+        codeDictVars,
+        "codedFixedValueFvPatchFieldOptions"
+    )
 {
     // Compile the library containing user-defined fvPatchField
     updateLibrary(dict);

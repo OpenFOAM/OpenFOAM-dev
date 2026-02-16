@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -103,7 +103,7 @@ class codedFunctionObject
     // Private Member Functions
 
         //- Adapt the context for the current object
-        virtual void prepare(dynamicCode&, const dynamicCodeContext&) const;
+        virtual void prepare(dynamicCode&) const;
 
         //- Compile, link and load the compiled functionObject
         void updateLibrary(const dictionary& dict);

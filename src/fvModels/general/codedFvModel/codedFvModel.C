@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,6 @@ License
 #include "codedFvModel.H"
 #include "fvMatrices.H"
 #include "dynamicCode.H"
-#include "dynamicCodeContext.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -79,11 +78,7 @@ Foam::word Foam::fv::codedFvModel::fieldPrimitiveTypeName() const
 }
 
 
-void Foam::fv::codedFvModel::prepare
-(
-    dynamicCode& dynCode,
-    const dynamicCodeContext& context
-) const
+void Foam::fv::codedFvModel::prepare(dynamicCode& dynCode) const
 {
     const word primitiveTypeName = fieldPrimitiveTypeName();
 
@@ -100,23 +95,6 @@ void Foam::fv::codedFvModel::prepare
 
     // Make verbose if debugging
     dynCode.setFilterVariable("verbose", Foam::name(bool(debug)));
-
-    // define Make/options
-    dynCode.setMakeOptions
-    (
-        "EXE_INC = -g \\\n"
-        "-I$(LIB_SRC)/finiteVolume/lnInclude \\\n"
-        "-I$(LIB_SRC)/meshTools/lnInclude \\\n"
-        "-I$(LIB_SRC)/sampling/lnInclude \\\n"
-        "-I$(LIB_SRC)/fvModels/general/lnInclude \\\n"
-        + context.options()
-        + "\n\nLIB_LIBS = \\\n"
-        + "    -lmeshTools \\\n"
-        + "    -lfvModels \\\n"
-        + "    -lsampling \\\n"
-        + "    -lfiniteVolume \\\n"
-        + context.libs()
-    );
 }
 
 
@@ -211,7 +189,14 @@ Foam::fv::codedFvModel::codedFvModel
 )
 :
     fvModel(name, modelType, mesh, dict),
-    codedBase(name, coeffs(dict), codeKeys, codeDictVars),
+    codedBase
+    (
+        name,
+        coeffs(dict),
+        codeKeys,
+        codeDictVars,
+        "codedFvModelOptions"
+    ),
     fieldName_(word::null),
     coeffsDict_(coeffs(dict))
 {

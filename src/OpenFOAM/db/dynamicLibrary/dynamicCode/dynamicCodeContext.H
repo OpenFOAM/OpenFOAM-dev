@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,6 +44,8 @@ SourceFiles
 namespace Foam
 {
 
+class dynamicCode;
+
 /*---------------------------------------------------------------------------*\
                      Class dynamicCodeContext Declaration
 \*---------------------------------------------------------------------------*/
@@ -57,6 +59,9 @@ class dynamicCodeContext
 
         //- Name of the dictionary variables in the source code
         const wordList& codeDictVars_;
+
+        //- Options file name
+        word codeOptionsFileName_;
 
         //- Code strings
         //  Stored to write for restart
@@ -97,6 +102,15 @@ class dynamicCodeContext
 
 public:
 
+    friend class dynamicCode;
+
+
+    // Static Data Members
+
+        //- Flag if system operations are allowed
+        static int allowSystemOperations;
+
+
     // Constructors
 
         //- Construct from the context and code dictionaries
@@ -106,7 +120,8 @@ public:
             const dictionary& contextDict,
             const dictionary& codeDict,
             const wordList& codeKeys,
-            const wordList& codeDictVars
+            const wordList& codeDictVars,
+            const word& codeOptionsFileName
         );
 
         //- Construct from the context dictionary also containing the code
@@ -115,7 +130,8 @@ public:
         (
             const dictionary& contextDict,
             const wordList& codeKeys,
-            const wordList& codeDictVars
+            const wordList& codeDictVars,
+            const word& codeOptionsFileName
         );
 
 
@@ -125,18 +141,6 @@ public:
         const HashTable<string>& code() const
         {
             return code_;
-        }
-
-        //- Return the code-options
-        const string& options() const
-        {
-            return options_;
-        }
-
-        //- Return the code-libs
-        const string& libs() const
-        {
-            return libs_;
         }
 
         //- Return SHA1 digest calculated from include, options, code

@@ -25,7 +25,6 @@ License
 
 #include "codeStream.H"
 #include "dynamicCode.H"
-#include "dynamicCodeContext.H"
 #include "Time.H"
 #include "OSspecific.H"
 #include "PstreamReduceOps.H"
@@ -62,6 +61,9 @@ const Foam::wordList Foam::functionEntries::codeStream::codeDictVars
 (
     {"dict", word::null, word::null}
 );
+
+const Foam::word Foam::functionEntries::codeStream::codeOptions =
+    "codeStreamOptions";
 
 const Foam::word Foam::functionEntries::codeStream::codeTemplateC =
     "codeStreamTemplate.C";
@@ -144,6 +146,7 @@ void* Foam::functionEntries::codeStream::compile
     const word& typeName,
     const dictionary& contextDict,
     const dictionary& codeDict,
+    const word& codeOptions,
     const word& codeTemplateC,
     word& codeName
 )
@@ -154,13 +157,13 @@ void* Foam::functionEntries::codeStream::compile
         contextDict,
         codeDict,
         codeKeys,
-        codeDictVars
+        codeDictVars,
+        codeOptions
     );
 
     // codeName: codeStream + _<sha1>
     // codeDir : _<sha1>
-    const std::string sha1Str(context.sha1().str(true));
-    dynamicCode dynCode(typeName.remove('#') + sha1Str, sha1Str);
+    dynamicCode dynCode(context, typeName.remove('#'));
 
     // Load library if not already loaded
     // Version information is encoded in the libPath (encoded with the SHA1)
@@ -200,23 +203,13 @@ void* Foam::functionEntries::codeStream::compile
 
         if (create)
         {
-            if (!dynCode.upToDate(context))
+            if (!dynCode.upToDate())
             {
-                // Filter with this context
-                dynCode.reset(context);
+                // Filter with the context
+                dynCode.filter();
 
                 // Compile filtered C template
                 dynCode.addCompileFile(codeTemplateC);
-
-                // Define Make/options
-                dynCode.setMakeOptions
-                (
-                    "EXE_INC = -g \\\n"
-                  + context.options()
-                  + "\n\nLIB_LIBS = \\\n"
-                  + "    -lOpenFOAM \\\n"
-                  + context.libs()
-                );
 
                 if (!dynCode.copyOrCreateFiles(true))
                 {
@@ -373,6 +366,7 @@ Foam::functionEntries::codeStream::getFunction
         typeName,
         contextDict,
         codeDict,
+        codeOptions,
         codeTemplateC,
         codeName
     );
@@ -408,12 +402,6 @@ Foam::OTstream Foam::functionEntries::codeStream::resultStream
         Info<< "Using " << typeName << " at line " << is.lineNumber()
             << " in file " <<  contextDict.name() << endl;
     }
-
-    dynamicCode::checkSecurity
-    (
-        "functionEntries::codeStream::execute(..)",
-        contextDict
-    );
 
     // Construct codeDict for codeStream using the context dictionary
     // for string expansion and variable substitution

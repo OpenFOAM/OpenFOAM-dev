@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ License
 
 #include "systemCall.H"
 #include "Time.H"
-#include "dynamicCode.H"
+#include "dynamicCodeContext.H"
 #include "OSspecific.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -88,7 +88,7 @@ bool Foam::functionObjects::systemCall::read(const dictionary& dict)
             << "no executeCalls, endCalls or writeCalls defined."
             << endl;
     }
-    else if (!dynamicCode::allowSystemOperations)
+    else if (!dynamicCodeContext::allowSystemOperations)
     {
         FatalErrorInFunction
             << "Executing user-supplied system calls is not enabled by "

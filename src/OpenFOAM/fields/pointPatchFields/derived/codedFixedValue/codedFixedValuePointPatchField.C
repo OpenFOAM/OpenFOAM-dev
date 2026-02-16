@@ -28,7 +28,6 @@ License
 #include "fieldMapper.H"
 #include "pointFields.H"
 #include "dynamicCode.H"
-#include "dynamicCodeContext.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -50,8 +49,7 @@ const Foam::wordList Foam::codedFixedValuePointPatchField<Type>::codeDictVars
 template<class Type>
 void Foam::codedFixedValuePointPatchField<Type>::prepare
 (
-    dynamicCode& dynCode,
-    const dynamicCodeContext& context
+    dynamicCode& dynCode
 ) const
 {
     // Take no chances - typeName must be identical to codeName()
@@ -79,20 +77,8 @@ void Foam::codedFixedValuePointPatchField<Type>::prepare
 
     if (debug)
     {
-        Info<<"compile " << codeName() << " sha1: " << context.sha1() << endl;
+        Info<<"compile " << codeName() << " sha1: " << dynCode.sha1() << endl;
     }
-
-    // Define Make/options
-    dynCode.setMakeOptions
-    (
-        "EXE_INC = -g \\\n"
-        "-I$(LIB_SRC)/finiteVolume/lnInclude \\\n"
-      + context.options()
-      + "\n\nLIB_LIBS = \\\n"
-      + "    -lOpenFOAM \\\n"
-      + "    -lfiniteVolume \\\n"
-      + context.libs()
-    );
 }
 
 
@@ -107,7 +93,13 @@ Foam::codedFixedValuePointPatchField<Type>::codedFixedValuePointPatchField
 )
 :
     fixedValuePointPatchField<Type>(p, iF, dict),
-    codedBase(dict, codeKeys, codeDictVars)
+    codedBase
+    (
+        dict,
+        codeKeys,
+        codeDictVars,
+        "codedFixedValuePointPatchFieldOptions"
+    )
 {
     // Compile the library containing user-defined pointPatchField
     updateLibrary(dict);

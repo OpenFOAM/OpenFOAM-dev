@@ -27,9 +27,7 @@ License
 #include "volFields.H"
 #include "dictionary.H"
 #include "Time.H"
-#include "SHA1Digest.H"
 #include "dynamicCode.H"
-#include "dynamicCodeContext.H"
 #include "stringOps.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -75,11 +73,7 @@ const Foam::wordList Foam::codedFunctionObject::codeDictVars
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-void Foam::codedFunctionObject::prepare
-(
-    dynamicCode& dynCode,
-    const dynamicCodeContext& context
-) const
+void Foam::codedFunctionObject::prepare(dynamicCode& dynCode) const
 {
     dynCode.setFilterVariable("typeName", codeName());
 
@@ -94,22 +88,8 @@ void Foam::codedFunctionObject::prepare
 
     if (debug)
     {
-        Info<<"compile " << codeName() << " sha1: " << context.sha1() << endl;
+        Info<<"compile " << codeName() << " sha1: " << dynCode.sha1() << endl;
     }
-
-    // Define Make/options
-    dynCode.setMakeOptions
-    (
-        "EXE_INC = -g \\\n"
-        "-I$(LIB_SRC)/finiteVolume/lnInclude \\\n"
-        "-I$(LIB_SRC)/meshTools/lnInclude \\\n"
-      + context.options()
-      + "\n\nLIB_LIBS = \\\n"
-      + "    -lOpenFOAM \\\n"
-      + "    -lfiniteVolume \\\n"
-      + "    -lmeshTools \\\n"
-      + context.libs()
-    );
 }
 
 
@@ -141,7 +121,7 @@ Foam::codedFunctionObject::codedFunctionObject
 )
 :
     functionObject(name, time, dict),
-    codedBase(name, dict, codeKeys, codeDictVars)
+    codedBase(name, dict, codeKeys, codeDictVars, "codedFunctionObjectOptions")
 {
     updateLibrary(dict);
 }

@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "compileTemplate.H"
-#include "dynamicCodeContext.H"
 #include "Time.H"
 #include "IFstream.H"
 #include "OSspecific.H"
@@ -72,7 +71,6 @@ Foam::dictionary Foam::compileTemplate::optionsDict
 void Foam::compileTemplate::setFilterVariable
 (
     dynamicCode& dynCode,
-    const dynamicCodeContext& context,
     const Pair<word>& substitution
 ) const
 {
@@ -109,31 +107,24 @@ void Foam::compileTemplate::setFilterVariable
 }
 
 
-void Foam::compileTemplate::prepare
-(
-    dynamicCode& dynCode,
-    const dynamicCodeContext& context
-) const
+void Foam::compileTemplate::prepare(dynamicCode& dynCode) const
 {
     dynCode.setFilterVariable("typeName", codeName());
 
     forAll(substitutions_, i)
     {
-        setFilterVariable(dynCode, context, substitutions_[i]);
+        setFilterVariable(dynCode, substitutions_[i]);
     }
 
     // Compile filtered C template
     dynCode.addCompileFile(templateName_ + "Template.C");
-
-    // Define Make/options
-    dynCode.setMakeOptions(context.options() + "\n\n" + context.libs());
 
     // Make verbose if debugging
     dynCode.setFilterVariable("verbose", Foam::name(bool(debug)));
 
     if (debug)
     {
-        Info<<"compile " << codeName() << " sha1: " << context.sha1() << endl;
+        Info<<"compile " << codeName() << " sha1: " << dynCode.sha1() << endl;
     }
 }
 
@@ -152,7 +143,8 @@ Foam::compileTemplate::compileTemplate
         name(instantiatedName),
         optionsDict(templateName),
         codeKeys,
-        codeDictVars
+        codeDictVars,
+        word::null
     ),
     templateName_(templateName),
     substitutions_(substitutions),

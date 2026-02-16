@@ -102,7 +102,7 @@ class codedBase
         ) const;
 
         //- Adapt the context for the current object
-        virtual void prepare(dynamicCode&, const dynamicCodeContext&) const = 0;
+        virtual void prepare(dynamicCode&) const = 0;
 
 
 public:
@@ -119,7 +119,8 @@ public:
             const word& name,
             const dictionary& dict,
             const wordList& codeKeys,
-            const wordList& codeDictVars
+            const wordList& codeDictVars,
+            const word& codeOptionsFileName
         );
 
         //- Construct from dictionary
@@ -127,7 +128,8 @@ public:
         (
             const dictionary& dict,
             const wordList& codeKeys,
-            const wordList& codeDictVars
+            const wordList& codeDictVars,
+            const word& codeOptionsFileName
         );
 
         //- Copy constructor

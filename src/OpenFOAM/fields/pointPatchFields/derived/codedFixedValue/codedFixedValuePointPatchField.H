@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -114,7 +114,7 @@ class codedFixedValuePointPatchField
     // Private Member Functions
 
         //- Adapt the context for the current object
-        virtual void prepare(dynamicCode&, const dynamicCodeContext&) const;
+        virtual void prepare(dynamicCode&) const;
 
 
 public:

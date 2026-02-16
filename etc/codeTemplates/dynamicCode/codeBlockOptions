@@ -1,0 +1,29 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      codeBlockOptions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+codeOptions
+#{
+EXE_INC = -g \
+    -fno-show-column -fno-diagnostics-show-caret \
+#};
+
+codeLibs
+#{
+LIB_LIBS = \
+    -lOpenFOAM \
+#};
+
+
+// ************************************************************************* //

@@ -25,7 +25,6 @@ License
 
 #include "codedMixedFvPatchField.H"
 #include "dynamicCode.H"
-#include "dynamicCodeContext.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -46,11 +45,7 @@ const Foam::wordList Foam::codedMixedFvPatchField<Type>::codeDictVars
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-void Foam::codedMixedFvPatchField<Type>::prepare
-(
-    dynamicCode& dynCode,
-    const dynamicCodeContext& context
-) const
+void Foam::codedMixedFvPatchField<Type>::prepare(dynamicCode& dynCode) const
 {
     dynCode.setFilterVariable("typeName", codeName());
 
@@ -76,20 +71,8 @@ void Foam::codedMixedFvPatchField<Type>::prepare
 
     if (debug)
     {
-        Info<<"compile " << codeName() << " sha1: " << context.sha1() << endl;
+        Info<<"compile " << codeName() << " sha1: " << dynCode.sha1() << endl;
     }
-
-    // Define Make/options
-    dynCode.setMakeOptions
-    (
-        "EXE_INC = -g \\\n"
-        "-I$(LIB_SRC)/finiteVolume/lnInclude \\\n"
-      + context.options()
-      + "\n\nLIB_LIBS = \\\n"
-      + "    -lOpenFOAM \\\n"
-      + "    -lfiniteVolume \\\n"
-      + context.libs()
-    );
 }
 
 
@@ -104,7 +87,7 @@ Foam::codedMixedFvPatchField<Type>::codedMixedFvPatchField
 )
 :
     mixedFvPatchField<Type>(p, iF, dict),
-    codedBase(dict, codeKeys, codeDictVars)
+    codedBase(dict, codeKeys, codeDictVars, "codedMixedFvPatchFieldOptions")
 {
     // Compile the library containing user-defined fvPatchField
     updateLibrary(dict);
