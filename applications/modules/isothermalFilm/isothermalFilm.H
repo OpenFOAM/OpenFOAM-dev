@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -193,6 +193,9 @@ private:
         //  This involves setting the flux on the top and bottom patches to 0
         template<class FieldType>
         tmp<FieldType> constrainedField(const tmp<FieldType>& tfield) const;
+
+        //- Correct the flux for fixed velocity boundary conditions
+        void correctBoundaryFlux();
 
         //- Correct the cached Courant number
         void correctCoNum();

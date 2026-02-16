@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,6 +33,21 @@ License
 #include "fvmLaplacian.H"
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
+void Foam::solvers::isothermalFilm::correctBoundaryFlux()
+{
+    surfaceScalarField::Boundary& phiBf = phi_.boundaryFieldRef();
+    const volVectorField::Boundary& UBf = U.boundaryField();
+
+    forAll(mesh.boundary(), patchi)
+    {
+        if (!UBf[patchi].assignable())
+        {
+            phiBf[patchi] = mesh.Sf().boundaryField()[patchi] & UBf[patchi];
+        }
+    }
+}
+
 
 void Foam::solvers::isothermalFilm::correctAlpha()
 {
@@ -76,6 +91,7 @@ void Foam::solvers::isothermalFilm::correctAlpha()
         const surfaceScalarField phig("phig", phip + pbByAlphaGradRhof*alphaf);
 
         phi_ = constrainedField(fvc::flux(HbyA) - alpharAUf*phig);
+        correctBoundaryFlux();
 
         const surfaceScalarField phid("phid", rhof*phi);
 
