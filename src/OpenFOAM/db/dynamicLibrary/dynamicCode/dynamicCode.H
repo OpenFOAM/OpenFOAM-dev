@@ -70,9 +70,6 @@ class dynamicCode
         //- Name for code subdirectory
         word codeDirName_;
 
-        //- Options file name
-        word codeOptionsFileName_;
-
         //- Files to copy and filter
         DynamicList<fileName> compileFiles_;
 
@@ -81,12 +78,6 @@ class dynamicCode
 
         //- Variables to use during filtering
         HashTable<string> filterVars_;
-
-        //- Make options
-        string makeOptions_;
-
-        //- Make libs
-        string makeLibs_;
 
 
     // Private Static Data

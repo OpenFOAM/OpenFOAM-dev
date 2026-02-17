@@ -223,8 +223,7 @@ Foam::verbatimString Foam::codedBase::expandCodeString
 void Foam::codedBase::createLibrary
 (
     const dictionary& dict,
-    dynamicCode& dynCode,
-    const dynamicCodeContext& context
+    dynamicCode& dynCode
 ) const
 {
     const bool create =
@@ -239,7 +238,7 @@ void Foam::codedBase::createLibrary
             // Filter with the context
             dynCode.filter();
 
-            this->prepare(dynCode);
+            prepare(dynCode);
 
             if (!dynCode.copyOrCreateFiles(true))
             {
@@ -386,19 +385,11 @@ const Foam::word& Foam::codedBase::codeName() const
 }
 
 
-Foam::string Foam::codedBase::description() const
-{
-    return this->type() + " " + codeName();
-}
-
-
 bool Foam::codedBase::updateLibrary(const dictionary& dict) const
 {
-    const word& name = codeName();
-
     // codeName: name + _<sha1>
     // codeDir : name
-    dynamicCode dynCode(codeContext_, name, name);
+    dynamicCode dynCode(codeContext_, codeName_, codeName_);
     const fileName libPath = dynCode.libPath();
 
 
@@ -408,7 +399,7 @@ bool Foam::codedBase::updateLibrary(const dictionary& dict) const
         return false;
     }
 
-    Info<< "Using dynamicCode for " << this->description().c_str()
+    Info<< "Using dynamicCode for " << type() << " " << codeName_
         << " at line " << dict.startLineNumber()
         << " in " << dict.name() << endl;
 
@@ -423,7 +414,7 @@ bool Foam::codedBase::updateLibrary(const dictionary& dict) const
     // Try loading an existing library (avoid compilation when possible)
     if (!loadLibrary(libPath, dynCode.codeName(), dict))
     {
-        createLibrary(dict, dynCode, codeContext_);
+        createLibrary(dict, dynCode);
 
         if (!loadLibrary(libPath, dynCode.codeName(), dict))
         {

@@ -50,6 +50,75 @@ void Foam::dynamicCodeContext::addLineDirective
 }
 
 
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::dynamicCodeContext::dynamicCodeContext
+(
+    const dictionary& contextDict,
+    const dictionary& codeDict,
+    const wordList& codeKeys,
+    const wordList& codeDictVars,
+    const word& codeOptionsFileName
+)
+:
+    codeKeys_(codeKeys),
+    codeDictVars_(codeDictVars),
+    codeOptionsFileName_(codeOptionsFileName),
+    codeStrings_(codeKeys.size())
+{
+    if (isAdministrator())
+    {
+        FatalIOErrorInFunction(contextDict)
+            << "This code should not be executed by someone with administrator"
+            << " rights due to security reasons." << nl
+            << "(it writes a shared library which then gets loaded "
+            << "using dlopen)"
+            << exit(FatalIOError);
+    }
+
+    if (!allowSystemOperations)
+    {
+        FatalIOErrorInFunction(contextDict)
+            << "Loading a shared library using case-supplied code is not"
+            << " enabled by default" << nl
+            << "because of security issues. If you trust the code you can"
+            << " enable this" << nl
+            << "facility be adding to the InfoSwitches setting in the system"
+            << " controlDict:" << nl << nl
+            << "    allowSystemOperations 1" << nl << nl
+            << "The system controlDict is either" << nl << nl
+            << "    ~/.OpenFOAM/$WM_PROJECT_VERSION/controlDict" << nl << nl
+            << "or" << nl << nl
+            << "    $WM_PROJECT_DIR/etc/controlDict" << nl
+            << endl
+            << exit(FatalIOError);
+    }
+
+    read(contextDict, codeDict);
+}
+
+
+Foam::dynamicCodeContext::dynamicCodeContext
+(
+    const dictionary& contextDict,
+    const wordList& codeKeys,
+    const wordList& codeDictVars,
+    const word& codeOptionsFileName
+)
+:
+    dynamicCodeContext
+    (
+        contextDict,
+        contextDict,
+        codeKeys,
+        codeDictVars,
+        codeOptionsFileName
+    )
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
 void Foam::dynamicCodeContext::read
 (
     const dictionary& contextDict,
@@ -142,75 +211,6 @@ void Foam::dynamicCodeContext::read(const dictionary& contextDict)
     read(contextDict, contextDict);
 }
 
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::dynamicCodeContext::dynamicCodeContext
-(
-    const dictionary& contextDict,
-    const dictionary& codeDict,
-    const wordList& codeKeys,
-    const wordList& codeDictVars,
-    const word& codeOptionsFileName
-)
-:
-    codeKeys_(codeKeys),
-    codeDictVars_(codeDictVars),
-    codeOptionsFileName_(codeOptionsFileName),
-    codeStrings_(codeKeys.size())
-{
-    if (isAdministrator())
-    {
-        FatalIOErrorInFunction(contextDict)
-            << "This code should not be executed by someone with administrator"
-            << " rights due to security reasons." << nl
-            << "(it writes a shared library which then gets loaded "
-            << "using dlopen)"
-            << exit(FatalIOError);
-    }
-
-    if (!allowSystemOperations)
-    {
-        FatalIOErrorInFunction(contextDict)
-            << "Loading a shared library using case-supplied code is not"
-            << " enabled by default" << nl
-            << "because of security issues. If you trust the code you can"
-            << " enable this" << nl
-            << "facility be adding to the InfoSwitches setting in the system"
-            << " controlDict:" << nl << nl
-            << "    allowSystemOperations 1" << nl << nl
-            << "The system controlDict is either" << nl << nl
-            << "    ~/.OpenFOAM/$WM_PROJECT_VERSION/controlDict" << nl << nl
-            << "or" << nl << nl
-            << "    $WM_PROJECT_DIR/etc/controlDict" << nl
-            << endl
-            << exit(FatalIOError);
-    }
-
-    read(contextDict, codeDict);
-}
-
-
-Foam::dynamicCodeContext::dynamicCodeContext
-(
-    const dictionary& contextDict,
-    const wordList& codeKeys,
-    const wordList& codeDictVars,
-    const word& codeOptionsFileName
-)
-:
-    dynamicCodeContext
-    (
-        contextDict,
-        contextDict,
-        codeKeys,
-        codeDictVars,
-        codeOptionsFileName
-    )
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 void Foam::dynamicCodeContext::write(Ostream& os) const
 {

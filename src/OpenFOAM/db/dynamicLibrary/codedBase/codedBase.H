@@ -35,15 +35,12 @@ SourceFiles
 #ifndef codedBase_H
 #define codedBase_H
 
-#include "dynamicCodeContext.H"
+#include "dynamicCode.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// Forward declaration of classes
-class dynamicCode;
 
 /*---------------------------------------------------------------------------*\
                           Class codedBase Declaration
@@ -93,13 +90,8 @@ class codedBase
             const dictionary& dict
         ) const;
 
-        //- Create library based on the dynamicCodeContext
-        void createLibrary
-        (
-            const dictionary& dict,
-            dynamicCode&,
-            const dynamicCodeContext&
-        ) const;
+        //- Create library for the given dynamicCode
+        void createLibrary(const dictionary& dict, dynamicCode&) const;
 
         //- Adapt the context for the current object
         virtual void prepare(dynamicCode&) const = 0;
@@ -142,11 +134,8 @@ public:
 
     // Member Functions
 
-        //- Name of the dynamically generated CodedType
+        //- Name of the dynamically generated code
         const word& codeName() const;
-
-        //- Return a description (type + name) for the output
-        string description() const;
 
         //- Update library from given updated dictionary as required
         //  Returns true if the library was updated, otherwise false

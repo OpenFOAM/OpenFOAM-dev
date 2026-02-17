@@ -189,8 +189,7 @@ bool Foam::dynamicCode::createMakeFiles() const
         os.writeQuoted(compileFiles_[fileI].name(), false) << nl;
     }
 
-    os  << nl
-        << libTargetRoot << codeName_.c_str() << nl;
+    os  << nl << libTargetRoot << codeName_ << nl;
 
     return true;
 }
@@ -203,14 +202,17 @@ bool Foam::dynamicCode::createMakeOptions() const
         return false;
     }
 
-    const fileName optionsFile(resolveTemplate(codeOptionsFileName_));
+    const fileName optionsFile(resolveTemplate(context_.codeOptionsFileName_));
 
     verbatimString codeOptions;
     verbatimString codeLibs;
 
-    if (!codeOptionsFileName_.empty())
+    if (!context_.codeOptionsFileName_.empty())
     {
-        const fileName optionsFile(resolveTemplate(codeOptionsFileName_));
+        const fileName optionsFile
+        (
+            resolveTemplate(context_.codeOptionsFileName_)
+        );
 
         if (!optionsFile.empty())
         {
@@ -239,15 +241,15 @@ bool Foam::dynamicCode::createMakeOptions() const
         else
         {
             FatalErrorInFunction
-                << "Cannot find options file " << codeOptionsFileName_
+                << "Cannot find options file " << context_.codeOptionsFileName_
                 << exit(FatalError);
         }
     }
 
     if
     (
-        makeOptions_.empty() && codeOptions.empty()
-     && makeLibs_.empty() && codeLibs.empty()
+        context_.options_.empty() && codeOptions.empty()
+     && context_.libs_.empty() && codeLibs.empty()
     )
     {
         return false;
@@ -269,7 +271,7 @@ bool Foam::dynamicCode::createMakeOptions() const
 
     os.writeQuoted
     (
-        codeOptions + makeOptions_ + "\n\n" + codeLibs + makeLibs_,
+        codeOptions + context_.options_ + "\n\n" + codeLibs + context_.libs_,
         false
     ) << nl;
 
@@ -353,10 +355,6 @@ void Foam::dynamicCode::filter()
     {
         setFilterVariable(iter.key(), iter());
     }
-
-    codeOptionsFileName_ = context_.codeOptionsFileName_;
-    makeOptions_ = context_.options_;
-    makeLibs_ = context_.libs_;
 
     setFilterVariable("SHA1sum", context_.sha1().str());
 }
