@@ -82,7 +82,7 @@ tmp<volScalarField::Internal> kOmegaSSTLM<BasicMomentumTransportModel>::Fthetat
     const volScalarField::Internal& omega = this->omega_();
     const volScalarField::Internal& y = this->y()();
 
-    const volScalarField::Internal delta(375*Omega*nu*ReThetat_()*y/sqr(Us));
+    const volScalarField::Internal delta(375*max(Omega, dimensionedScalar("omegaSmall", dimless/dimTime, small))*nu*ReThetat_()*y/sqr(Us));
     const volScalarField::Internal ReOmega(sqr(y)*omega/nu);
     const volScalarField::Internal Fwake(exp(-sqr(ReOmega/1e5)));
 
