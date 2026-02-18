@@ -27,7 +27,7 @@ License
 #include "addToRunTimeSelectionTable.H"
 #include "fieldMapper.H"
 #include "pointFields.H"
-#include "dynamicCodeContext.H"
+#include "dynamicCode.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -62,30 +62,6 @@ const Foam::wordList Foam::codedFixedValuePointPatchField<Type>::copyFiles
 };
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-template<class Type>
-void Foam::codedFixedValuePointPatchField<Type>::prepare() const
-{
-    // Take no chances - typeName must be identical to codeName()
-    setFilterVariable("typeName", codeName());
-
-    // Set TemplateType and FieldType filter variables
-    // (for pointPatchField)
-    word fieldType(pTraits<Type>::typeName);
-
-    // Template type for pointPatchField
-    setFilterVariable("TemplateType", fieldType);
-
-    // Name for pointPatchField - eg, ScalarField, VectorField, ...
-    fieldType[0] = toupper(fieldType[0]);
-    setFilterVariable("FieldType", fieldType + "Field");
-
-    // Make verbose if debugging
-    setFilterVariable("verbose", Foam::name(bool(debug)));
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
@@ -107,6 +83,23 @@ Foam::codedFixedValuePointPatchField<Type>::codedFixedValuePointPatchField
         copyFiles
     )
 {
+    // Take no chances - typeName must be identical to codeName()
+    setFilterVariable("typeName", codeName());
+
+    // Set TemplateType and FieldType filter variables
+    // (for pointPatchField)
+    word fieldType(pTraits<Type>::typeName);
+
+    // Template type for pointPatchField
+    setFilterVariable("TemplateType", fieldType);
+
+    // Name for pointPatchField - eg, ScalarField, VectorField, ...
+    fieldType[0] = toupper(fieldType[0]);
+    setFilterVariable("FieldType", fieldType + "Field");
+
+    // Make verbose if debugging
+    setFilterVariable("verbose", Foam::name(bool(debug)));
+
     // Compile the library containing user-defined pointPatchField
     updateLibrary(dict);
 }

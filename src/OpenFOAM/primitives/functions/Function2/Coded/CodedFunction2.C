@@ -58,21 +58,6 @@ const Foam::wordList Foam::Function2s::Coded<Type>::copyFiles
 };
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-template<class Type>
-void Foam::Function2s::Coded<Type>::prepare() const
-{
-    setFilterVariable("typeName", codeName());
-
-    // Set TemplateType filter variables
-    setFilterVariable("TemplateType", pTraits<Type>::typeName);
-
-    // Make verbose if debugging
-    setFilterVariable("verbose", Foam::name(bool(debug)));
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
@@ -96,6 +81,14 @@ Foam::Function2s::Coded<Type>::Coded
     ),
     units_(units)
 {
+    setFilterVariable("typeName", codeName());
+
+    // Set TemplateType filter variables
+    setFilterVariable("TemplateType", pTraits<Type>::typeName);
+
+    // Make verbose if debugging
+    setFilterVariable("verbose", Foam::name(bool(debug)));
+
     this->updateLibrary(dict);
 
     dictionary redirectDict(dict);

@@ -22,18 +22,18 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::dynamicCodeContext
+    Foam::dynamicCode
 
 Description
-    Encapsulation of dynamic code dictionaries
+    Encapsulation of dynamic code dictionaries and functionality
 
 SourceFiles
-    dynamicCodeContext.C
+    dynamicCode.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef dynamicCodeContext_H
-#define dynamicCodeContext_H
+#ifndef dynamicCode_H
+#define dynamicCode_H
 
 #include "dictionary.H"
 #include "HashTable.H"
@@ -44,13 +44,11 @@ SourceFiles
 namespace Foam
 {
 
-class dynamicCode;
-
 /*---------------------------------------------------------------------------*\
-                     Class dynamicCodeContext Declaration
+                     Class dynamicCode Declaration
 \*---------------------------------------------------------------------------*/
 
-class dynamicCodeContext
+class dynamicCode
 {
     // Private Data
 
@@ -182,9 +180,6 @@ class dynamicCodeContext
 
 public:
 
-    friend class dynamicCode;
-
-
     // Static Data Members
 
         //- Flag if system operations are allowed
@@ -195,7 +190,7 @@ public:
 
         //- Construct from the context and code dictionaries
         //  and lists of which entries correspond to code
-        dynamicCodeContext
+        dynamicCode
         (
             const dictionary& contextDict,
             const dictionary& codeDict,
@@ -210,7 +205,7 @@ public:
 
         //- Construct from the context dictionary also containing the code
         //  and lists of which entries correspond
-        dynamicCodeContext
+        dynamicCode
         (
             const dictionary& contextDict,
             const word& codeName,

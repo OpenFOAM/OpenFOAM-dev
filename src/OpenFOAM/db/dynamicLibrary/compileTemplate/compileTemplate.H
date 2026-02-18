@@ -69,9 +69,6 @@ class compileTemplate
 
         void setFilterVariable(const Pair<word>& substitution) const;
 
-        //- Adapt the context for the current object
-        virtual void prepare() const;
-
 
 public:
 

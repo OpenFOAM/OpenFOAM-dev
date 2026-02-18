@@ -59,29 +59,6 @@ const Foam::wordList Foam::codedMixedFvPatchField<Type>::copyFiles
 };
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-template<class Type>
-void Foam::codedMixedFvPatchField<Type>::prepare() const
-{
-    setFilterVariable("typeName", codeName());
-
-    // Set TemplateType and FieldType filter variables
-    // (for fvPatchField)
-    word fieldType(pTraits<Type>::typeName);
-
-    // Template type for fvPatchField
-    setFilterVariable("TemplateType", fieldType);
-
-    // Name for fvPatchField - eg, ScalarField, VectorField, ...
-    fieldType[0] = toupper(fieldType[0]);
-    setFilterVariable("FieldType", fieldType + "Field");
-
-    // Make verbose if debugging
-    setFilterVariable("verbose", Foam::name(bool(debug)));
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
@@ -103,6 +80,22 @@ Foam::codedMixedFvPatchField<Type>::codedMixedFvPatchField
         copyFiles
     )
 {
+    setFilterVariable("typeName", codeName());
+
+    // Set TemplateType and FieldType filter variables
+    // (for fvPatchField)
+    word fieldType(pTraits<Type>::typeName);
+
+    // Template type for fvPatchField
+    setFilterVariable("TemplateType", fieldType);
+
+    // Name for fvPatchField - eg, ScalarField, VectorField, ...
+    fieldType[0] = toupper(fieldType[0]);
+    setFilterVariable("FieldType", fieldType + "Field");
+
+    // Make verbose if debugging
+    setFilterVariable("verbose", Foam::name(bool(debug)));
+
     // Compile the library containing user-defined fvPatchField
     updateLibrary(dict);
 }

@@ -285,7 +285,7 @@ db/CallbackRegistry/CallbackRegistryName.C
 
 dll = db/dynamicLibrary
 $(dll)/dlLibraryTable/dlLibraryTable.C
-$(dll)/dynamicCode/dynamicCodeContext.C
+$(dll)/dynamicCode/dynamicCode.C
 $(dll)/codedBase/codedBase.C
 $(dll)/compileTemplate/compileTemplate.C
 

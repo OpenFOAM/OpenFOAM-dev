@@ -92,20 +92,6 @@ Foam::word Foam::fv::codedFvModel::fieldPrimitiveTypeName() const
 }
 
 
-void Foam::fv::codedFvModel::prepare() const
-{
-    const word primitiveTypeName = fieldPrimitiveTypeName();
-
-    // Set additional rewrite rules
-    setFilterVariable("typeName", name());
-    setFilterVariable("TemplateType", primitiveTypeName);
-    setFilterVariable("SourceType", primitiveTypeName + "Source");
-
-    // Make verbose if debugging
-    setFilterVariable("verbose", Foam::name(bool(debug)));
-}
-
-
 Foam::fvModel& Foam::fv::codedFvModel::redirectFvModel() const
 {
     if (!redirectFvModelPtr_.valid())
@@ -211,6 +197,16 @@ Foam::fv::codedFvModel::codedFvModel
     coeffsDict_(coeffs(dict))
 {
     readCoeffs(coeffsDict_);
+
+    const word primitiveTypeName = fieldPrimitiveTypeName();
+
+    // Set additional rewrite rules
+    setFilterVariable("typeName", this->name());
+    setFilterVariable("TemplateType", primitiveTypeName);
+    setFilterVariable("SourceType", primitiveTypeName + "Source");
+
+    // Make verbose if debugging
+    setFilterVariable("verbose", Foam::name(bool(debug)));
 }
 
 

@@ -120,12 +120,6 @@ class codedFixedValuePointPatchField
         mutable autoPtr<pointPatchField<Type>> redirectPatchFieldPtr_;
 
 
-    // Private Member Functions
-
-        //- Adapt the context for the current object
-        virtual void prepare() const;
-
-
 public:
 
     //- Runtime type information

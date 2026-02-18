@@ -35,7 +35,7 @@ SourceFiles
 #ifndef codedBase_H
 #define codedBase_H
 
-#include "dynamicCodeContext.H"
+#include "dynamicCode.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -53,7 +53,8 @@ class codedBase
         //- Name of the dynamically generated CodedType
         const word codeName_;
 
-        dynamicCodeContext codeContext_;
+        //- The dynamicCode class
+        dynamicCode dynCode_;
 
         //- Previously loaded library
         mutable fileName oldLibPath_;
@@ -92,9 +93,6 @@ class codedBase
 
         //- Create library
         void createLibrary(const dictionary& dict) const;
-
-        //- Adapt the context for the current object
-        virtual void prepare() const = 0;
 
 
 public:
@@ -154,7 +152,7 @@ public:
         //- Define a filter variable
         void setFilterVariable(const word& key, const string& value) const
         {
-            codeContext_.setFilterVariable(key, value);
+            dynCode_.setFilterVariable(key, value);
         }
 
 

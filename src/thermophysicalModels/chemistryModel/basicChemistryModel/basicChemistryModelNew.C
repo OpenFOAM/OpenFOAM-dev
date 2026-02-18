@@ -90,8 +90,8 @@ Foam::autoPtr<Foam::basicChemistryModel> Foam::basicChemistryModel::New
     {
         if
         (
-            dynamicCodeContext::allowSystemOperations
-        && !dynamicCodeContext::resolveTemplate
+            dynamicCode::allowSystemOperations
+        && !dynamicCode::resolveTemplate
             (
                 basicChemistryModel::typeName
             ).empty()

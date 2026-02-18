@@ -58,7 +58,7 @@ Foam::dictionary Foam::compileTemplate::optionsDict
     const word& templateName
 ) const
 {
-    IFstream optionsFile(dynamicCodeContext::resolveTemplate(templateName));
+    IFstream optionsFile(dynamicCode::resolveTemplate(templateName));
     if (!optionsFile.good())
     {
         FatalErrorInFunction
@@ -108,20 +108,6 @@ void Foam::compileTemplate::setFilterVariable
 }
 
 
-void Foam::compileTemplate::prepare() const
-{
-    codedBase::setFilterVariable("typeName", codeName());
-
-    forAll(substitutions_, i)
-    {
-        setFilterVariable(substitutions_[i]);
-    }
-
-    // Make verbose if debugging
-    codedBase::setFilterVariable("verbose", Foam::name(bool(debug)));
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::compileTemplate::compileTemplate
@@ -145,6 +131,16 @@ Foam::compileTemplate::compileTemplate
     dict_(optionsDict(templateName))
 {
     compileFiles_ = {templateName + "Template.C"};
+
+    codedBase::setFilterVariable("typeName", codeName());
+
+    forAll(substitutions_, i)
+    {
+        setFilterVariable(substitutions_[i]);
+    }
+
+    // Make verbose if debugging
+    codedBase::setFilterVariable("verbose", Foam::name(bool(debug)));
 
     this->updateLibrary(dict_);
 }

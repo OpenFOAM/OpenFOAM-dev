@@ -55,7 +55,7 @@ Usage
     \endverbatim
 
 See also
-    Foam::dynamicCodeContext
+    Foam::dynamicCode
     Foam::functionEntries::codeStream
 
 SourceFiles
@@ -109,12 +109,6 @@ class Coded
 
         //- The dynamically generated Function1 pointer
         mutable autoPtr<Function1<Type>> redirectFunction1Ptr_;
-
-
-    // Private Member Functions
-
-        //- Adapt the context for the current object
-        virtual void prepare() const;
 
 
 public:

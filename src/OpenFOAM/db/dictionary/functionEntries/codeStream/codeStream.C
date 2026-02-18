@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "codeStream.H"
-#include "dynamicCodeContext.H"
+#include "dynamicCode.H"
 #include "Time.H"
 #include "OSspecific.H"
 #include "PstreamReduceOps.H"
@@ -158,7 +158,7 @@ void* Foam::functionEntries::codeStream::compile
     // Get code, codeInclude, ...
     // codeName: codeStream + _<sha1>
     // codeDir : _<sha1>
-    dynamicCodeContext context
+    dynamicCode dynCode
     (
         contextDict,
         codeDict,
@@ -173,7 +173,7 @@ void* Foam::functionEntries::codeStream::compile
 
     // Load library if not already loaded
     // Version information is encoded in the libPath (encoded with the SHA1)
-    const fileName libPath = context.libPath();
+    const fileName libPath = dynCode.libPath();
 
     // See if library is loaded
     void* lib = libs.findLibrary(libPath);
@@ -209,25 +209,25 @@ void* Foam::functionEntries::codeStream::compile
 
         if (create)
         {
-            if (!context.upToDate())
+            if (!dynCode.upToDate())
             {
-                if (!context.copyOrCreateFiles(true))
+                if (!dynCode.copyOrCreateFiles(true))
                 {
                     FatalIOErrorInFunction
                     (
                         contextDict
                     )   << "Failed writing files for" << nl
-                        << context.libRelPath() << nl
+                        << dynCode.libRelPath() << nl
                         << exit(FatalIOError);
                 }
             }
 
-            if (!context.wmakeLibso())
+            if (!dynCode.wmakeLibso())
             {
                 FatalIOErrorInFunction
                 (
                     contextDict
-                )   << "Failed wmake " << context.libRelPath() << nl
+                )   << "Failed wmake " << dynCode.libRelPath() << nl
                     << exit(FatalIOError);
             }
         }
@@ -348,7 +348,7 @@ void* Foam::functionEntries::codeStream::compile
             << exit(FatalIOError);
     }
 
-    codeName = context.codeName();
+    codeName = dynCode.codeName();
 
     return lib;
 }

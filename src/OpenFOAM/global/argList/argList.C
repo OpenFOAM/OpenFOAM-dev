@@ -32,7 +32,7 @@ License
 #include "jobInfo.H"
 #include "labelList.H"
 #include "regIOobject.H"
-#include "dynamicCodeContext.H"
+#include "dynamicCode.H"
 #include "fileOperation.H"
 #include "fileOperationInitialise.H"
 #include "stringListOps.H"
@@ -1077,7 +1077,7 @@ void Foam::argList::parse
             Info<< endl;
 
             Info<< "allowSystemOperations : ";
-            if (dynamicCodeContext::allowSystemOperations)
+            if (dynamicCode::allowSystemOperations)
             {
                 Info<< "Allowing user-supplied system call operations" << endl;
             }

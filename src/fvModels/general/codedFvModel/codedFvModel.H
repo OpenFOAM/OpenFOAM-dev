@@ -127,9 +127,6 @@ class codedFvModel
         //- Return the name of the field's primitive type
         word fieldPrimitiveTypeName() const;
 
-        //- Adapt the context for the current object
-        virtual void prepare() const;
-
         //- Compile, link and load the coded fvModel if not already loaded
         //  and return it
         fvModel& redirectFvModel() const;

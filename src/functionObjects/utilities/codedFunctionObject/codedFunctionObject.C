@@ -85,16 +85,7 @@ const Foam::wordList Foam::codedFunctionObject::copyFiles
 };
 
 
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-void Foam::codedFunctionObject::prepare() const
-{
-    setFilterVariable("typeName", codeName());
-
-    // Make verbose if debugging
-    setFilterVariable("verbose", Foam::name(bool(debug)));
-}
-
+// * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
 void Foam::codedFunctionObject::updateLibrary(const dictionary& dict)
 {
@@ -135,6 +126,11 @@ Foam::codedFunctionObject::codedFunctionObject
         copyFiles
     )
 {
+    setFilterVariable("typeName", codeName());
+
+    // Make verbose if debugging
+    setFilterVariable("verbose", Foam::name(bool(debug)));
+
     updateLibrary(dict);
 }
 

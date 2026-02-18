@@ -28,7 +28,7 @@ Description
     Constructs a dynamically compiled function of two variables.
 
 See also
-    Foam::dynamicCodeContext
+    Foam::dynamicCode
     Foam::functionEntries::codeStream
 
 SourceFiles
@@ -94,12 +94,6 @@ class Coded
 
         //- The dynamically generated Function2 pointer
         mutable autoPtr<Function2<Type>> redirectFunction2Ptr_;
-
-
-    // Private Member Functions
-
-        //- Adapt the context for the current object
-        virtual void prepare() const;
 
 
 public:

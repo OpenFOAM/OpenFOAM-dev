@@ -79,7 +79,7 @@ Usage
     \endverbatim
 
 See also
-    Foam::dynamicCodeContext
+    Foam::dynamicCode
     Foam::functionEntries::codeStream
 
 SourceFiles
@@ -126,12 +126,6 @@ class codedMixedFvPatchField
         static const wordList copyFiles;
 
         mutable autoPtr<mixedFvPatchField<Type>> redirectPatchFieldPtr_;
-
-
-    // Private Member Functions
-
-        //- Adapt the context for the current object
-        virtual void prepare() const;
 
 
 public:

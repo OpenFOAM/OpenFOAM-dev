@@ -111,9 +111,6 @@ class codedFunctionObject
 
     // Private Member Functions
 
-        //- Adapt the context for the current object
-        virtual void prepare() const;
-
         //- Compile, link and load the compiled functionObject
         void updateLibrary(const dictionary& dict);
 

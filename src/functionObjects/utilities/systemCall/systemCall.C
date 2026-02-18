@@ -25,7 +25,7 @@ License
 
 #include "systemCall.H"
 #include "Time.H"
-#include "dynamicCodeContext.H"
+#include "dynamicCode.H"
 #include "OSspecific.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -88,7 +88,7 @@ bool Foam::functionObjects::systemCall::read(const dictionary& dict)
             << "no executeCalls, endCalls or writeCalls defined."
             << endl;
     }
-    else if (!dynamicCodeContext::allowSystemOperations)
+    else if (!dynamicCode::allowSystemOperations)
     {
         FatalErrorInFunction
             << "Executing user-supplied system calls is not enabled by "

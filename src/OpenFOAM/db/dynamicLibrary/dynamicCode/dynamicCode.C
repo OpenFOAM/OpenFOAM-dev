@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "dynamicCodeContext.H"
+#include "dynamicCode.H"
 #include "stringOps.H"
 #include "IFstream.H"
 #include "OFstream.H"
@@ -32,19 +32,19 @@ License
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-int Foam::dynamicCodeContext::allowSystemOperations
+int Foam::dynamicCode::allowSystemOperations
 (
     Foam::debug::infoSwitch("allowSystemOperations", 0)
 );
 
-const Foam::fileName Foam::dynamicCodeContext::codeTemplateDirName
+const Foam::fileName Foam::dynamicCode::codeTemplateDirName
 (
     "codeTemplates/dynamicCode"
 );
 
-const Foam::word Foam::dynamicCodeContext::topDirName("dynamicCode");
+const Foam::word Foam::dynamicCode::topDirName("dynamicCode");
 
-const char* const Foam::dynamicCodeContext::libTargetRoot
+const char* const Foam::dynamicCode::libTargetRoot
 (
     "LIB = $(PWD)/../platforms/$(WM_OPTIONS)/lib/lib"
 );
@@ -52,13 +52,13 @@ const char* const Foam::dynamicCodeContext::libTargetRoot
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::fileName Foam::dynamicCodeContext::codeRelPath() const
+Foam::fileName Foam::dynamicCode::codeRelPath() const
 {
     return topDirName/codeDirName_;
 }
 
 
-void Foam::dynamicCodeContext::addLineDirective
+void Foam::dynamicCode::addLineDirective
 (
     string& code,
     const label lineNum,
@@ -69,14 +69,14 @@ void Foam::dynamicCodeContext::addLineDirective
 }
 
 
-void Foam::dynamicCodeContext::writeCommentSHA1(Ostream& os) const
+void Foam::dynamicCode::writeCommentSHA1(Ostream& os) const
 {
     os  << "# dynamicCode:\n# SHA1 = ";
     os.writeQuoted(sha1_.str(), false) << "\n\n";
 }
 
 
-void Foam::dynamicCodeContext::copyAndFilter
+void Foam::dynamicCode::copyAndFilter
 (
     ISstream& is,
     OSstream& os,
@@ -114,7 +114,7 @@ void Foam::dynamicCodeContext::copyAndFilter
 }
 
 
-bool Foam::dynamicCodeContext::resolveTemplates
+bool Foam::dynamicCode::resolveTemplates
 (
     const wordList& templateNames,
     DynamicList<fileName>& resolvedFiles,
@@ -131,7 +131,7 @@ bool Foam::dynamicCodeContext::resolveTemplates
             findConfigFile
             (
                 templateName,
-                dynamicCodeContext::codeTemplateDirName,
+                dynamicCode::codeTemplateDirName,
                 "system"
             )
         );
@@ -151,7 +151,7 @@ bool Foam::dynamicCodeContext::resolveTemplates
 }
 
 
-bool Foam::dynamicCodeContext::createMakeFiles() const
+bool Foam::dynamicCode::createMakeFiles() const
 {
     // Create Make/files
     if (compileFiles_.empty())
@@ -181,13 +181,13 @@ bool Foam::dynamicCodeContext::createMakeFiles() const
         os.writeQuoted(compileFiles_[fileI], false) << nl;
     }
 
-    os  << nl << dynamicCodeContext::libTargetRoot << codeName_ << nl;
+    os  << nl << dynamicCode::libTargetRoot << codeName_ << nl;
 
     return true;
 }
 
 
-bool Foam::dynamicCodeContext::createMakeOptions() const
+bool Foam::dynamicCode::createMakeOptions() const
 {
     if (compileFiles_.empty())
     {
@@ -197,7 +197,7 @@ bool Foam::dynamicCodeContext::createMakeOptions() const
     // Read the options template file
     const fileName optionsFile
     (
-        dynamicCodeContext::resolveTemplate(optionsFileName_)
+        dynamicCode::resolveTemplate(optionsFileName_)
     );
 
     verbatimString options;
@@ -207,7 +207,7 @@ bool Foam::dynamicCodeContext::createMakeOptions() const
     {
         const fileName optionsFile
         (
-            dynamicCodeContext::resolveTemplate(optionsFileName_)
+            dynamicCode::resolveTemplate(optionsFileName_)
         );
 
         if (!optionsFile.empty())
@@ -271,7 +271,7 @@ bool Foam::dynamicCodeContext::createMakeOptions() const
 }
 
 
-bool Foam::dynamicCodeContext::writeDigest() const
+bool Foam::dynamicCode::writeDigest() const
 {
     const fileName file(digestFile());
     mkDir(file.path());
@@ -284,7 +284,7 @@ bool Foam::dynamicCodeContext::writeDigest() const
 }
 
 
-bool Foam::dynamicCodeContext::upToDate(const SHA1Digest& sha1) const
+bool Foam::dynamicCode::upToDate(const SHA1Digest& sha1) const
 {
     const fileName file(digestFile());
 
@@ -299,7 +299,7 @@ bool Foam::dynamicCodeContext::upToDate(const SHA1Digest& sha1) const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::dynamicCodeContext::dynamicCodeContext
+Foam::dynamicCode::dynamicCode
 (
     const dictionary& contextDict,
     const dictionary& codeDict,
@@ -370,7 +370,7 @@ Foam::dynamicCodeContext::dynamicCodeContext
 }
 
 
-Foam::dynamicCodeContext::dynamicCodeContext
+Foam::dynamicCode::dynamicCode
 (
     const dictionary& contextDict,
     const word& codeName,
@@ -382,7 +382,7 @@ Foam::dynamicCodeContext::dynamicCodeContext
     const wordList& copyFiles
 )
 :
-    dynamicCodeContext
+    dynamicCode
     (
         contextDict,
         contextDict,
@@ -399,7 +399,7 @@ Foam::dynamicCodeContext::dynamicCodeContext
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
 
-Foam::word Foam::dynamicCodeContext::libraryBaseName(const fileName& libPath)
+Foam::word Foam::dynamicCode::libraryBaseName(const fileName& libPath)
 {
     word libName(libPath.name(true));
     libName.erase(0, 3);    // Remove leading 'lib' from name
@@ -409,13 +409,13 @@ Foam::word Foam::dynamicCodeContext::libraryBaseName(const fileName& libPath)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::fileName Foam::dynamicCodeContext::libRelPath() const
+Foam::fileName Foam::dynamicCode::libRelPath() const
 {
     return codeRelPath()/libSubDir_/"lib" + codeName_ + ".so";
 }
 
 
-void Foam::dynamicCodeContext::read
+void Foam::dynamicCode::read
 (
     const dictionary& contextDict,
     const dictionary& codeDict
@@ -502,7 +502,7 @@ void Foam::dynamicCodeContext::read
 }
 
 
-Foam::fileName Foam::dynamicCodeContext::resolveTemplate
+Foam::fileName Foam::dynamicCode::resolveTemplate
 (
     const fileName& templateName
 )
@@ -516,7 +516,7 @@ Foam::fileName Foam::dynamicCodeContext::resolveTemplate
 }
 
 
-bool Foam::dynamicCodeContext::copyOrCreateFiles(const bool verbose) const
+bool Foam::dynamicCode::copyOrCreateFiles(const bool verbose) const
 {
     if (verbose)
     {
@@ -538,13 +538,13 @@ bool Foam::dynamicCodeContext::copyOrCreateFiles(const bool verbose) const
     DynamicList<fileName> badFiles(nFiles);
 
     // Resolve template, or add to bad-files
-    dynamicCodeContext::resolveTemplates
+    dynamicCode::resolveTemplates
     (
         compileFiles_,
         resolvedFiles,
         badFiles
     );
-    dynamicCodeContext::resolveTemplates
+    dynamicCode::resolveTemplates
     (
         copyFiles_,
         resolvedFiles,
@@ -593,7 +593,7 @@ bool Foam::dynamicCodeContext::copyOrCreateFiles(const bool verbose) const
         }
 
         // Copy lines while expanding variables
-        dynamicCodeContext::copyAndFilter(is, os, filterVars);
+        dynamicCode::copyAndFilter(is, os, filterVars);
     }
 
 
@@ -607,7 +607,7 @@ bool Foam::dynamicCodeContext::copyOrCreateFiles(const bool verbose) const
 }
 
 
-bool Foam::dynamicCodeContext::wmakeLibso() const
+bool Foam::dynamicCode::wmakeLibso() const
 {
     const string wmakeCmd("wmake -s libso " + codePath());
 
@@ -622,19 +622,19 @@ bool Foam::dynamicCodeContext::wmakeLibso() const
 }
 
 
-bool Foam::dynamicCodeContext::upToDate() const
+bool Foam::dynamicCode::upToDate() const
 {
     return upToDate(sha1_);
 }
 
 
-void Foam::dynamicCodeContext::read(const dictionary& contextDict)
+void Foam::dynamicCode::read(const dictionary& contextDict)
 {
     read(contextDict, contextDict);
 }
 
 
-void Foam::dynamicCodeContext::write(Ostream& os) const
+void Foam::dynamicCode::write(Ostream& os) const
 {
     forAll(codeStrings_, i)
     {
