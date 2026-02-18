@@ -50,8 +50,8 @@ class compileTemplate
         //- Name of the dictionary variables in the source code
         static const wordList codeDictVars;
 
-        //- Name of the class Thermo basicThermo is instantiated on
-        const word templateName_;
+        //- Files to copy and filter and compile
+        static wordList compileFiles_;
 
         //- List of template argument substitutions
         const List<Pair<word>> substitutions_;

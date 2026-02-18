@@ -40,6 +40,24 @@ const Foam::wordList Foam::Function1s::Coded<Type>::codeDictVars
     {word::null, word::null}
 );
 
+template<class Type>
+const Foam::word Foam::Function1s::Coded<Type>::codeOptions
+(
+    "codedFunction1Options"
+);
+
+template<class Type>
+const Foam::wordList Foam::Function1s::Coded<Type>::compileFiles
+{
+    "codedFunction1Template.C"
+};
+
+template<class Type>
+const Foam::wordList Foam::Function1s::Coded<Type>::copyFiles
+{
+    "codedFunction1Template.H"
+};
+
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -50,12 +68,6 @@ void Foam::Function1s::Coded<Type>::prepare(dynamicCode& dynCode) const
 
     // Set TemplateType filter variables
     dynCode.setFilterVariable("TemplateType", pTraits<Type>::typeName);
-
-    // Compile filtered C template
-    dynCode.addCompileFile("codedFunction1Template.C");
-
-    // Copy filtered H template
-    dynCode.addCopyFile("codedFunction1Template.H");
 
     // Make verbose if debugging
     dynCode.setFilterVariable("verbose", Foam::name(bool(debug)));
@@ -78,7 +90,15 @@ Foam::Function1s::Coded<Type>::Coded
 )
 :
     Function1<Type>(name),
-    codedBase(dict, codeKeys, codeDictVars, "codedFunction1Options"),
+    codedBase
+    (
+        dict,
+        codeKeys,
+        codeDictVars,
+        codeOptions,
+        compileFiles,
+        copyFiles
+    ),
     units_(units)
 {
     this->updateLibrary(dict);

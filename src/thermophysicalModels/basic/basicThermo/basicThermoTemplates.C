@@ -48,7 +48,7 @@ typename Table::iterator Foam::basicThermo::lookupCstrIter
         (
             nCmpt == 7
          && dynamicCodeContext::allowSystemOperations
-         && !dynamicCode::resolveTemplate(Thermo::typeName).empty()
+         && !dynamicCodeContext::resolveTemplate(Thermo::typeName).empty()
         )
         {
             compileTemplate thermo

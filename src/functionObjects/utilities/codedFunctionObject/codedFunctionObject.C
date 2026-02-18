@@ -70,18 +70,27 @@ const Foam::wordList Foam::codedFunctionObject::codeDictVars
     word::null,
 };
 
+const Foam::word Foam::codedFunctionObject::codeOptions
+(
+    "codedFunctionObjectOptions"
+);
+
+const Foam::wordList Foam::codedFunctionObject::compileFiles
+{
+    "codedFunctionObjectTemplate.C"
+};
+
+const Foam::wordList Foam::codedFunctionObject::copyFiles
+{
+    "codedFunctionObjectTemplate.H"
+};
+
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 void Foam::codedFunctionObject::prepare(dynamicCode& dynCode) const
 {
     dynCode.setFilterVariable("typeName", codeName());
-
-    // Compile filtered C template
-    dynCode.addCompileFile("codedFunctionObjectTemplate.C");
-
-    // Copy filtered H template
-    dynCode.addCopyFile("codedFunctionObjectTemplate.H");
 
     // Make verbose if debugging
     dynCode.setFilterVariable("verbose", Foam::name(bool(debug)));
@@ -121,7 +130,16 @@ Foam::codedFunctionObject::codedFunctionObject
 )
 :
     functionObject(name, time, dict),
-    codedBase(name, dict, codeKeys, codeDictVars, "codedFunctionObjectOptions")
+    codedBase
+    (
+        name,
+        dict,
+        codeKeys,
+        codeDictVars,
+        codeOptions,
+        compileFiles,
+        copyFiles
+    )
 {
     updateLibrary(dict);
 }

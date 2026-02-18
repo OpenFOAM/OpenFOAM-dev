@@ -25,15 +25,27 @@ License
 
 #include "dynamicCodeContext.H"
 #include "stringOps.H"
-#include "OSspecific.H"
+#include "IFstream.H"
 #include "OSHA1stream.H"
-
+#include "OSspecific.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 int Foam::dynamicCodeContext::allowSystemOperations
 (
     Foam::debug::infoSwitch("allowSystemOperations", 0)
+);
+
+const Foam::fileName Foam::dynamicCodeContext::codeTemplateDirName
+(
+    "codeTemplates/dynamicCode"
+);
+
+const Foam::word Foam::dynamicCodeContext::topDirName("dynamicCode");
+
+const char* const Foam::dynamicCodeContext::libTargetRoot
+(
+    "LIB = $(PWD)/../platforms/$(WM_OPTIONS)/lib/lib"
 );
 
 
@@ -50,6 +62,81 @@ void Foam::dynamicCodeContext::addLineDirective
 }
 
 
+void Foam::dynamicCodeContext::copyAndFilter
+(
+    ISstream& is,
+    OSstream& os,
+    const HashTable<string>& mapping
+)
+{
+    if (!is.good())
+    {
+        FatalErrorInFunction
+            << "Failed opening for reading " << is.name()
+            << exit(FatalError);
+    }
+
+    if (!os.good())
+    {
+        FatalErrorInFunction
+            << "Failed writing " << os.name()
+            << exit(FatalError);
+    }
+
+    // Copy file while rewriting $VARS and ${VARS}
+    string line;
+    do
+    {
+        // Read the next line without continuation
+        is.getLine(line, false);
+
+        // Expand according to mapping.
+        // Expanding according to env variables might cause too many
+        // surprises
+        stringOps::inplaceExpandCodeTemplate(line, mapping);
+        os.writeQuoted(line, false) << nl;
+    }
+    while (is.good());
+}
+
+
+bool Foam::dynamicCodeContext::resolveTemplates
+(
+    const wordList& templateNames,
+    DynamicList<fileName>& resolvedFiles,
+    DynamicList<fileName>& badFiles
+)
+{
+    bool allOkay = true;
+    forAll(templateNames, fileI)
+    {
+        const fileName& templateName = templateNames[fileI];
+
+        const fileName file
+        (
+            findConfigFile
+            (
+                templateName,
+                dynamicCodeContext::codeTemplateDirName,
+                "system"
+            )
+        );
+
+        if (file.empty())
+        {
+            badFiles.append(templateName);
+            allOkay = false;
+        }
+        else
+        {
+            resolvedFiles.append(file);
+        }
+    }
+
+    return allOkay;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::dynamicCodeContext::dynamicCodeContext
@@ -58,12 +145,16 @@ Foam::dynamicCodeContext::dynamicCodeContext
     const dictionary& codeDict,
     const wordList& codeKeys,
     const wordList& codeDictVars,
-    const word& codeOptionsFileName
+    const word& optionsFileName,
+    const wordList& compileFiles,
+    const wordList& copyFiles
 )
 :
     codeKeys_(codeKeys),
     codeDictVars_(codeDictVars),
-    codeOptionsFileName_(codeOptionsFileName),
+    optionsFileName_(optionsFileName),
+    compileFiles_(compileFiles),
+    copyFiles_(copyFiles),
     codeStrings_(codeKeys.size())
 {
     if (isAdministrator())
@@ -103,7 +194,9 @@ Foam::dynamicCodeContext::dynamicCodeContext
     const dictionary& contextDict,
     const wordList& codeKeys,
     const wordList& codeDictVars,
-    const word& codeOptionsFileName
+    const word& codeOptionsFileName,
+    const wordList& compileFiles,
+    const wordList& copyFiles
 )
 :
     dynamicCodeContext
@@ -112,9 +205,21 @@ Foam::dynamicCodeContext::dynamicCodeContext
         contextDict,
         codeKeys,
         codeDictVars,
-        codeOptionsFileName
+        codeOptionsFileName,
+        compileFiles,
+        copyFiles
     )
 {}
+
+
+// * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
+
+Foam::word Foam::dynamicCodeContext::libraryBaseName(const fileName& libPath)
+{
+    word libName(libPath.name(true));
+    libName.erase(0, 3);    // Remove leading 'lib' from name
+    return libName;
+}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -129,7 +234,7 @@ void Foam::dynamicCodeContext::read
     // trailing whitespace, which is necessary for compilation options, and
     // doesn't hurt for everything else
     List<const entry*> codePtrs(codeKeys_.size(), nullptr);
-    code_.clear();
+    filterVars_.clear();
     forAll(codeKeys_, i)
     {
         const word& key = codeKeys_[i];
@@ -143,15 +248,15 @@ void Foam::dynamicCodeContext::read
                 contextDict, // Lookup variables from the context dictionary
                 codeDictVars_[i]
             );
-            code_.insert(key, codeStrings_[i]);
+            filterVars_.insert(key, codeStrings_[i]);
         }
         else
         {
-            code_.insert(key, "");
+            filterVars_.insert(key, "");
         }
     }
 
-    // Options
+    // Code options
     const entry* optionsPtr =
         codeDict.lookupEntryPtr("codeOptions", false, false);
     if (optionsPtr)
@@ -166,7 +271,7 @@ void Foam::dynamicCodeContext::read
         options_ = stringOps::trim(optionsString_);
     }
 
-    // Libs
+    // Code libs
     const entry* libsPtr = codeDict.lookupEntryPtr("codeLibs", false, false);
     if (libsPtr)
     {
@@ -182,7 +287,7 @@ void Foam::dynamicCodeContext::read
 
     // Calculate SHA1 digest from all entries
     OSHA1stream os;
-    forAllConstIter(HashTable<string>, code_, iter)
+    forAllConstIter(HashTable<string>, filterVars_, iter)
     {
         os << iter();
     }
@@ -197,12 +302,26 @@ void Foam::dynamicCodeContext::read
             const word& key = codeKeys_[i];
             addLineDirective
             (
-                code_[key],
+                filterVars_[key],
                 codePtrs[i]->startLineNumber(),
                 codeDict.name()
             );
         }
     }
+}
+
+
+Foam::fileName Foam::dynamicCodeContext::resolveTemplate
+(
+    const fileName& templateName
+)
+{
+    return findConfigFile
+    (
+        templateName,
+        codeTemplateDirName,
+        "system"
+    );
 }
 
 

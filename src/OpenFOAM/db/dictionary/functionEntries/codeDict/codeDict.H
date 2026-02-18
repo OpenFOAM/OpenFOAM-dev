@@ -163,7 +163,7 @@ public:
         static const word codeOptions;
 
         //- Name of the C code template to be used
-        static const word codeTemplateC;
+        static const wordList compileFiles;
 
 
     // Related types

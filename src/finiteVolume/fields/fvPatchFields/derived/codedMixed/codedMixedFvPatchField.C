@@ -41,6 +41,24 @@ const Foam::wordList Foam::codedMixedFvPatchField<Type>::codeDictVars
     {word::null, word::null, word::null}
 );
 
+template<class Type>
+const Foam::word Foam::codedMixedFvPatchField<Type>::codeOptions
+(
+    "codedMixedFvPatchFieldOptions"
+);
+
+template<class Type>
+const Foam::wordList Foam::codedMixedFvPatchField<Type>::compileFiles
+{
+    "codedMixedFvPatchFieldTemplate.C"
+};
+
+template<class Type>
+const Foam::wordList Foam::codedMixedFvPatchField<Type>::copyFiles
+{
+    "codedMixedFvPatchFieldTemplate.H"
+};
+
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -59,12 +77,6 @@ void Foam::codedMixedFvPatchField<Type>::prepare(dynamicCode& dynCode) const
     // Name for fvPatchField - eg, ScalarField, VectorField, ...
     fieldType[0] = toupper(fieldType[0]);
     dynCode.setFilterVariable("FieldType", fieldType + "Field");
-
-    // Compile filtered C template
-    dynCode.addCompileFile("codedMixedFvPatchFieldTemplate.C");
-
-    // Copy filtered H template
-    dynCode.addCopyFile("codedMixedFvPatchFieldTemplate.H");
 
     // Make verbose if debugging
     dynCode.setFilterVariable("verbose", Foam::name(bool(debug)));
@@ -87,7 +99,15 @@ Foam::codedMixedFvPatchField<Type>::codedMixedFvPatchField
 )
 :
     mixedFvPatchField<Type>(p, iF, dict),
-    codedBase(dict, codeKeys, codeDictVars, "codedMixedFvPatchFieldOptions")
+    codedBase
+    (
+        dict,
+        codeKeys,
+        codeDictVars,
+        codeOptions,
+        compileFiles,
+        copyFiles
+    )
 {
     // Compile the library containing user-defined fvPatchField
     updateLibrary(dict);

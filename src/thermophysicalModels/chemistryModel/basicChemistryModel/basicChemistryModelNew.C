@@ -91,7 +91,10 @@ Foam::autoPtr<Foam::basicChemistryModel> Foam::basicChemistryModel::New
         if
         (
             dynamicCodeContext::allowSystemOperations
-         && !dynamicCode::resolveTemplate(basicChemistryModel::typeName).empty()
+        && !dynamicCodeContext::resolveTemplate
+            (
+                basicChemistryModel::typeName
+            ).empty()
         )
         {
             List<Pair<word>> substitutions

@@ -40,11 +40,15 @@ namespace functionEntries
 }
 }
 
-const Foam::word Foam::functionEntries::codeDict::codeOptions =
-    "codeDictOptions";
+const Foam::word Foam::functionEntries::codeDict::codeOptions
+(
+    "codeDictOptions"
+);
 
-const Foam::word Foam::functionEntries::codeDict::codeTemplateC =
-    "codeDictTemplate.C";
+const Foam::wordList Foam::functionEntries::codeDict::compileFiles
+{
+    "codeDictTemplate.C"
+};
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -81,7 +85,7 @@ Foam::functionEntries::codeDict::getFunction
         contextDict,
         codeDict,
         codeOptions,
-        codeTemplateC,
+        compileFiles,
         codeName
     );
 

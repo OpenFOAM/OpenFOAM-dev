@@ -235,9 +235,6 @@ void Foam::codedBase::createLibrary
         // Write files for new library
         if (!dynCode.upToDate())
         {
-            // Filter with the context
-            dynCode.filter();
-
             prepare(dynCode);
 
             if (!dynCode.copyOrCreateFiles(true))
@@ -337,11 +334,21 @@ Foam::codedBase::codedBase
     const dictionary& dict,
     const wordList& codeKeys,
     const wordList& codeDictVars,
-    const word& codeOptionsFileName
+    const word& codeOptionsFileName,
+    const wordList& compileFiles,
+    const wordList& copyFiles
 )
 :
     codeName_(codeName(name)),
-    codeContext_(dict, codeKeys, codeDictVars, codeOptionsFileName)
+    codeContext_
+    (
+        dict,
+        codeKeys,
+        codeDictVars,
+        codeOptionsFileName,
+        compileFiles,
+        copyFiles
+    )
 {}
 
 
@@ -350,7 +357,9 @@ Foam::codedBase::codedBase
     const dictionary& dict,
     const wordList& codeKeys,
     const wordList& codeDictVars,
-    const word& codeOptionsFileName
+    const word& codeOptionsFileName,
+    const wordList& compileFiles,
+    const wordList& copyFiles
 )
 :
     codedBase
@@ -359,7 +368,9 @@ Foam::codedBase::codedBase
         dict,
         codeKeys,
         codeDictVars,
-        codeOptionsFileName
+        codeOptionsFileName,
+        compileFiles,
+        copyFiles
     )
 {}
 
@@ -407,7 +418,7 @@ bool Foam::codedBase::updateLibrary(const dictionary& dict) const
     unloadLibrary
     (
         oldLibPath_,
-        dynamicCode::libraryBaseName(oldLibPath_),
+        dynamicCodeContext::libraryBaseName(oldLibPath_),
         dict
     );
 

@@ -29,121 +29,7 @@ License
 #include "OFstream.H"
 #include "OSspecific.H"
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-const Foam::fileName Foam::dynamicCode::codeTemplateDirName
-(
-    "codeTemplates/dynamicCode"
-);
-
-const char* const Foam::dynamicCode::libTargetRoot
-(
-    "LIB = $(PWD)/../platforms/$(WM_OPTIONS)/lib/lib"
-);
-
-const Foam::word Foam::dynamicCode::topDirName("dynamicCode");
-
-
-// * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
-
-Foam::word Foam::dynamicCode::libraryBaseName(const fileName& libPath)
-{
-    word libName(libPath.name(true));
-    libName.erase(0, 3);    // Remove leading 'lib' from name
-    return libName;
-}
-
-
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
-
-void Foam::dynamicCode::copyAndFilter
-(
-    ISstream& is,
-    OSstream& os,
-    const HashTable<string>& mapping
-)
-{
-    if (!is.good())
-    {
-        FatalErrorInFunction
-            << "Failed opening for reading " << is.name()
-            << exit(FatalError);
-    }
-
-    if (!os.good())
-    {
-        FatalErrorInFunction
-            << "Failed writing " << os.name()
-            << exit(FatalError);
-    }
-
-    // Copy file while rewriting $VARS and ${VARS}
-    string line;
-    do
-    {
-        // Read the next line without continuation
-        is.getLine(line, false);
-
-        // Expand according to mapping.
-        // Expanding according to env variables might cause too many
-        // surprises
-        stringOps::inplaceExpandCodeTemplate(line, mapping);
-        os.writeQuoted(line, false) << nl;
-    }
-    while (is.good());
-}
-
-
-Foam::fileName Foam::dynamicCode::resolveTemplate
-(
-    const fileName& templateName
-)
-{
-    return findConfigFile
-    (
-        templateName,
-        codeTemplateDirName,
-        "system"
-    );
-}
-
-
-bool Foam::dynamicCode::resolveTemplates
-(
-    const UList<fileName>& templateNames,
-    DynamicList<fileName>& resolvedFiles,
-    DynamicList<fileName>& badFiles
-)
-{
-    bool allOkay = true;
-    forAll(templateNames, fileI)
-    {
-        const fileName& templateName = templateNames[fileI];
-
-        const fileName file
-        (
-            findConfigFile
-            (
-                templateName,
-                codeTemplateDirName,
-                "system"
-            )
-        );
-
-        if (file.empty())
-        {
-            badFiles.append(templateName);
-            allOkay = false;
-        }
-        else
-        {
-            resolvedFiles.append(file);
-        }
-    }
-
-    return allOkay;
-}
-
 
 bool Foam::dynamicCode::writeCommentSHA1(Ostream& os) const
 {
@@ -162,7 +48,7 @@ bool Foam::dynamicCode::writeCommentSHA1(Ostream& os) const
 bool Foam::dynamicCode::createMakeFiles() const
 {
     // Create Make/files
-    if (compileFiles_.empty())
+    if (context_.compileFiles_.empty())
     {
         return false;
     }
@@ -184,12 +70,12 @@ bool Foam::dynamicCode::createMakeFiles() const
     writeCommentSHA1(os);
 
     // Write compile files
-    forAll(compileFiles_, fileI)
+    forAll(context_.compileFiles_, fileI)
     {
-        os.writeQuoted(compileFiles_[fileI].name(), false) << nl;
+        os.writeQuoted(context_.compileFiles_[fileI], false) << nl;
     }
 
-    os  << nl << libTargetRoot << codeName_ << nl;
+    os  << nl << dynamicCodeContext::libTargetRoot << codeName_ << nl;
 
     return true;
 }
@@ -197,21 +83,25 @@ bool Foam::dynamicCode::createMakeFiles() const
 
 bool Foam::dynamicCode::createMakeOptions() const
 {
-    if (compileFiles_.empty())
+    if (context_.compileFiles_.empty())
     {
         return false;
     }
 
-    const fileName optionsFile(resolveTemplate(context_.codeOptionsFileName_));
+    // Read the options template file
+    const fileName optionsFile
+    (
+        dynamicCodeContext::resolveTemplate(context_.optionsFileName_)
+    );
 
-    verbatimString codeOptions;
-    verbatimString codeLibs;
+    verbatimString options;
+    verbatimString libs;
 
-    if (!context_.codeOptionsFileName_.empty())
+    if (!context_.optionsFileName_.empty())
     {
         const fileName optionsFile
         (
-            resolveTemplate(context_.codeOptionsFileName_)
+            dynamicCodeContext::resolveTemplate(context_.optionsFileName_)
         );
 
         if (!optionsFile.empty())
@@ -226,13 +116,13 @@ bool Foam::dynamicCode::createMakeOptions() const
 
             dictionary optionsDict(is);
 
-            codeOptions = optionsDict.lookupOrDefault<verbatimString>
+            options = optionsDict.lookupOrDefault<verbatimString>
             (
                 "codeOptions",
                 verbatimString::null
             );
 
-            codeLibs = optionsDict.lookupOrDefault<verbatimString>
+            libs = optionsDict.lookupOrDefault<verbatimString>
             (
                 "codeLibs",
                 verbatimString::null
@@ -241,16 +131,16 @@ bool Foam::dynamicCode::createMakeOptions() const
         else
         {
             FatalErrorInFunction
-                << "Cannot find options file " << context_.codeOptionsFileName_
+                << "Cannot find options file " << context_.optionsFileName_
                 << exit(FatalError);
         }
     }
 
-    if
-    (
-        context_.options_.empty() && codeOptions.empty()
-     && context_.libs_.empty() && codeLibs.empty()
-    )
+    // Add the code specific options and libs
+    options += context_.options_;
+    libs += context_.libs_;
+
+    if (options.empty() && libs.empty())
     {
         return false;
     }
@@ -269,11 +159,7 @@ bool Foam::dynamicCode::createMakeOptions() const
 
     writeCommentSHA1(os);
 
-    os.writeQuoted
-    (
-        codeOptions + context_.options_ + "\n\n" + codeLibs + context_.libs_,
-        false
-    ) << nl;
+    os.writeQuoted(options + "\n\n" + libs, false) << nl;
 
     return true;
 }
@@ -307,7 +193,7 @@ bool Foam::dynamicCode::upToDate(const SHA1Digest& sha1) const
 
 Foam::fileName Foam::dynamicCode::codeRelPath() const
 {
-    return topDirName/codeDirName_;
+    return dynamicCodeContext::topDirName/codeDirName_;
 }
 
 
@@ -321,7 +207,10 @@ Foam::dynamicCode::dynamicCode
 )
 :
     context_(context),
-    codeRoot_(stringOps::expandEnvVar("$FOAM_CASE")/topDirName),
+    codeRoot_
+    (
+        stringOps::expandEnvVar("$FOAM_CASE")/dynamicCodeContext::topDirName
+    ),
     libSubDir_(stringOps::expandEnvVar("platforms/$WM_OPTIONS/lib")),
     codeName_(codeName + context.sha1().str(true)),
     codeDirName_
@@ -346,32 +235,6 @@ Foam::fileName Foam::dynamicCode::libRelPath() const
 }
 
 
-void Foam::dynamicCode::filter()
-{
-    compileFiles_.clear();
-    copyFiles_.clear();
-
-    forAllConstIter(HashTable<string>, context_.code(), iter)
-    {
-        setFilterVariable(iter.key(), iter());
-    }
-
-    setFilterVariable("SHA1sum", context_.sha1().str());
-}
-
-
-void Foam::dynamicCode::addCompileFile(const fileName& name)
-{
-    compileFiles_.append(name);
-}
-
-
-void Foam::dynamicCode::addCopyFile(const fileName& name)
-{
-    copyFiles_.append(name);
-}
-
-
 void Foam::dynamicCode::setFilterVariable
 (
     const word& key,
@@ -389,14 +252,36 @@ bool Foam::dynamicCode::copyOrCreateFiles(const bool verbose) const
         Info<< "Creating new library in " << libRelPath() << endl;
     }
 
-    const label nFiles = compileFiles_.size() + copyFiles_.size();
+    HashTable<string> filterVars(filterVars_);
+
+    // Collect all the filter variables
+    forAllConstIter(HashTable<string>, context_.filterVars(), iter)
+    {
+        filterVars.set(iter.key(), iter());
+    }
+
+    filterVars.set("SHA1sum", context_.sha1().str());
+
+
+    const label nFiles =
+        context_.compileFiles_.size() + context_.copyFiles_.size();
 
     DynamicList<fileName> resolvedFiles(nFiles);
     DynamicList<fileName> badFiles(nFiles);
 
     // Resolve template, or add to bad-files
-    resolveTemplates(compileFiles_, resolvedFiles, badFiles);
-    resolveTemplates(copyFiles_, resolvedFiles, badFiles);
+    dynamicCodeContext::resolveTemplates
+    (
+        context_.compileFiles_,
+        resolvedFiles,
+        badFiles
+    );
+    dynamicCodeContext::resolveTemplates
+    (
+        context_.copyFiles_,
+        resolvedFiles,
+        badFiles
+    );
 
     if (!badFiles.empty())
     {
@@ -440,7 +325,7 @@ bool Foam::dynamicCode::copyOrCreateFiles(const bool verbose) const
         }
 
         // Copy lines while expanding variables
-        copyAndFilter(is, os, filterVars_);
+        dynamicCodeContext::copyAndFilter(is, os, filterVars);
     }
 
 
@@ -448,7 +333,7 @@ bool Foam::dynamicCode::copyOrCreateFiles(const bool verbose) const
     createMakeFiles();
     createMakeOptions();
 
-    writeDigest(filterVars_["SHA1sum"]);
+    writeDigest(filterVars["SHA1sum"]);
 
     return true;
 }

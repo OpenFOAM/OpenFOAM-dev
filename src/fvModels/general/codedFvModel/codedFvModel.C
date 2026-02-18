@@ -58,6 +58,21 @@ const Foam::wordList Foam::fv::codedFvModel::codeDictVars
     word::null
 };
 
+const Foam::word Foam::fv::codedFvModel::codeOptions
+(
+    "codedFvModelOptions"
+);
+
+const Foam::wordList Foam::fv::codedFvModel::compileFiles
+{
+    "codedFvModelTemplate.C"
+};
+
+const Foam::wordList Foam::fv::codedFvModel::copyFiles
+{
+    "codedFvModelTemplate.H"
+};
+
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -86,12 +101,6 @@ void Foam::fv::codedFvModel::prepare(dynamicCode& dynCode) const
     dynCode.setFilterVariable("typeName", name());
     dynCode.setFilterVariable("TemplateType", primitiveTypeName);
     dynCode.setFilterVariable("SourceType", primitiveTypeName + "Source");
-
-    // compile filtered C template
-    dynCode.addCompileFile("codedFvModelTemplate.C");
-
-    // copy filtered H template
-    dynCode.addCopyFile("codedFvModelTemplate.H");
 
     // Make verbose if debugging
     dynCode.setFilterVariable("verbose", Foam::name(bool(debug)));
@@ -195,7 +204,9 @@ Foam::fv::codedFvModel::codedFvModel
         coeffs(dict),
         codeKeys,
         codeDictVars,
-        "codedFvModelOptions"
+        codeOptions,
+        compileFiles,
+        copyFiles
     ),
     fieldName_(word::null),
     coeffsDict_(coeffs(dict))

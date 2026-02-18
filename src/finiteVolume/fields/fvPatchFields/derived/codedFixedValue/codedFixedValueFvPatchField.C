@@ -41,6 +41,24 @@ const Foam::wordList Foam::codedFixedValueFvPatchField<Type>::codeDictVars
     {word::null, word::null, word::null}
 );
 
+template<class Type>
+const Foam::word Foam::codedFixedValueFvPatchField<Type>::codeOptions
+(
+    "codedFixedValueFvPatchFieldOptions"
+);
+
+template<class Type>
+const Foam::wordList Foam::codedFixedValueFvPatchField<Type>::compileFiles
+{
+    "codedFixedValueFvPatchFieldTemplate.C"
+};
+
+template<class Type>
+const Foam::wordList Foam::codedFixedValueFvPatchField<Type>::copyFiles
+{
+    "codedFixedValueFvPatchFieldTemplate.H"
+};
+
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -62,12 +80,6 @@ void Foam::codedFixedValueFvPatchField<Type>::prepare
     // Name for fvPatchField - eg, ScalarField, VectorField, ...
     fieldType[0] = toupper(fieldType[0]);
     dynCode.setFilterVariable("FieldType", fieldType + "Field");
-
-    // Compile filtered C template
-    dynCode.addCompileFile("codedFixedValueFvPatchFieldTemplate.C");
-
-    // Copy filtered H template
-    dynCode.addCopyFile("codedFixedValueFvPatchFieldTemplate.H");
 
     // Make verbose if debugging
     dynCode.setFilterVariable("verbose", Foam::name(bool(debug)));
@@ -95,7 +107,9 @@ Foam::codedFixedValueFvPatchField<Type>::codedFixedValueFvPatchField
         dict,
         codeKeys,
         codeDictVars,
-        "codedFixedValueFvPatchFieldOptions"
+        codeOptions,
+        compileFiles,
+        copyFiles
     )
 {
     // Compile the library containing user-defined fvPatchField

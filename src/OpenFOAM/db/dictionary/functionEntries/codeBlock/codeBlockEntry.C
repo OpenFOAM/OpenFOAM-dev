@@ -48,11 +48,15 @@ namespace functionEntries
 }
 }
 
-const Foam::word Foam::functionEntries::codeBlockEntry::codeOptions =
-    "codeBlockOptions";
+const Foam::word Foam::functionEntries::codeBlockEntry::codeOptions
+(
+    "codeBlockOptions"
+);
 
-const Foam::word Foam::functionEntries::codeBlockEntry::codeTemplateC =
-    "codeBlockTemplate.C";
+const Foam::wordList Foam::functionEntries::codeBlockEntry::compileFiles
+{
+    "codeBlockTemplate.C"
+};
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -214,7 +218,7 @@ bool Foam::functionEntries::codeBlockEntry::execute
         contextDict,
         codeDict,
         codeOptions,
-        codeTemplateC,
+        compileFiles,
         codeBlockName_
     );
 

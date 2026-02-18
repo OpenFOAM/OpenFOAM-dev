@@ -34,6 +34,8 @@ const Foam::wordList Foam::compileTemplate::codeKeys(wordList::null());
 
 const Foam::wordList Foam::compileTemplate::codeDictVars(wordList::null());
 
+Foam::wordList Foam::compileTemplate::compileFiles_(wordList::null());
+
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -56,7 +58,7 @@ Foam::dictionary Foam::compileTemplate::optionsDict
     const word& templateName
 ) const
 {
-    IFstream optionsFile(dynamicCode::resolveTemplate(templateName));
+    IFstream optionsFile(dynamicCodeContext::resolveTemplate(templateName));
     if (!optionsFile.good())
     {
         FatalErrorInFunction
@@ -116,9 +118,6 @@ void Foam::compileTemplate::prepare(dynamicCode& dynCode) const
         setFilterVariable(dynCode, substitutions_[i]);
     }
 
-    // Compile filtered C template
-    dynCode.addCompileFile(templateName_ + "Template.C");
-
     // Make verbose if debugging
     dynCode.setFilterVariable("verbose", Foam::name(bool(debug)));
 
@@ -144,12 +143,15 @@ Foam::compileTemplate::compileTemplate
         optionsDict(templateName),
         codeKeys,
         codeDictVars,
-        word::null
+        word::null,
+        compileFiles_,
+        wordList::null()
     ),
-    templateName_(templateName),
     substitutions_(substitutions),
     dict_(optionsDict(templateName))
 {
+    compileFiles_ = {templateName + "Template.C"};
+
     this->updateLibrary(dict_);
 }
 

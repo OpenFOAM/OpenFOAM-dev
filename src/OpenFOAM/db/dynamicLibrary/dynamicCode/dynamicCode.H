@@ -70,46 +70,11 @@ class dynamicCode
         //- Name for code subdirectory
         word codeDirName_;
 
-        //- Files to copy and filter
-        DynamicList<fileName> compileFiles_;
-
-        //- Files to copy and filter
-        DynamicList<fileName> copyFiles_;
-
         //- Variables to use during filtering
         HashTable<string> filterVars_;
 
 
-    // Private Static Data
-
-        //- Root of the LIB target for Make/files
-        static const char* const libTargetRoot;
-
-        //- Top-level directory name for copy/compiling
-        static const word topDirName;
-
-        //- Name of the code template sub-directory
-        //  Used when locating the codeTemplateName via Foam::findEtcFile
-        static const fileName codeTemplateDirName;
-
-
     // Private Member Functions
-
-        //- Copy lines while expanding variables
-        static void copyAndFilter
-        (
-            ISstream&,
-            OSstream&,
-            const HashTable<string>& mapping
-        );
-
-        //- Resolve code-templates via Foam::findConfigFile
-        static bool resolveTemplates
-        (
-            const UList<fileName>& templateNames,
-            DynamicList<fileName>& resolvedFiles,
-            DynamicList<fileName>& badFiles
-        );
 
         //- Write SHA1 value as C-comment
         bool writeCommentSHA1(Ostream&) const;
@@ -162,12 +127,6 @@ public:
         dynamicCode(const dynamicCode&) = delete;
 
 
-    // Static Member functions
-
-        //- Return the library basename without leading 'lib' or trailing '.so'
-        static word libraryBaseName(const fileName& libPath);
-
-
     // Member Functions
 
         //- Return the code-name
@@ -187,18 +146,6 @@ public:
         //  Corresponds to
         //  dynamicCode/codeDirName()/libSubDir()/lib\<codeName\>.so
         fileName libRelPath() const;
-
-        //- Resolve code-template via Foam::findConfigFile
-        static fileName resolveTemplate(const fileName& templateName);
-
-        //- Filter code with context
-        void filter();
-
-        //- Add a file template name, which will be found and filtered
-        void addCompileFile(const fileName& name);
-
-        //- Add a file template name, which will be found and filtered
-        void addCopyFile(const fileName& name);
 
         //- Define a filter variable
         void setFilterVariable(const word& key, const std::string& value);

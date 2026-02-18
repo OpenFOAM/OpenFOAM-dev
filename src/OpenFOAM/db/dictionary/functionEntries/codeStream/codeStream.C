@@ -62,11 +62,15 @@ const Foam::wordList Foam::functionEntries::codeStream::codeDictVars
     {"dict", word::null, word::null}
 );
 
-const Foam::word Foam::functionEntries::codeStream::codeOptions =
-    "codeStreamOptions";
+const Foam::word Foam::functionEntries::codeStream::codeOptions
+(
+    "codeStreamOptions"
+);
 
-const Foam::word Foam::functionEntries::codeStream::codeTemplateC =
-    "codeStreamTemplate.C";
+const Foam::wordList Foam::functionEntries::codeStream::compileFiles
+{
+    "codeStreamTemplate.C"
+};
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -147,18 +151,20 @@ void* Foam::functionEntries::codeStream::compile
     const dictionary& contextDict,
     const dictionary& codeDict,
     const word& codeOptions,
-    const word& codeTemplateC,
+    const wordList& compileFiles,
     word& codeName
 )
 {
     // Get code, codeInclude, ...
-    const dynamicCodeContext context
+    dynamicCodeContext context
     (
         contextDict,
         codeDict,
         codeKeys,
         codeDictVars,
-        codeOptions
+        codeOptions,
+        compileFiles,
+        wordList::null()
     );
 
     // codeName: codeStream + _<sha1>
@@ -205,12 +211,6 @@ void* Foam::functionEntries::codeStream::compile
         {
             if (!dynCode.upToDate())
             {
-                // Filter with the context
-                dynCode.filter();
-
-                // Compile filtered C template
-                dynCode.addCompileFile(codeTemplateC);
-
                 if (!dynCode.copyOrCreateFiles(true))
                 {
                     FatalIOErrorInFunction
@@ -367,7 +367,7 @@ Foam::functionEntries::codeStream::getFunction
         contextDict,
         codeDict,
         codeOptions,
-        codeTemplateC,
+        compileFiles,
         codeName
     );
 

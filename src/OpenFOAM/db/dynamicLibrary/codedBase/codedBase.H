@@ -112,7 +112,9 @@ public:
             const dictionary& dict,
             const wordList& codeKeys,
             const wordList& codeDictVars,
-            const word& codeOptionsFileName
+            const word& codeOptionsFileName,
+            const wordList& compileFiles,
+            const wordList& copyFiles
         );
 
         //- Construct from dictionary
@@ -121,7 +123,9 @@ public:
             const dictionary& dict,
             const wordList& codeKeys,
             const wordList& codeDictVars,
-            const word& codeOptionsFileName
+            const word& codeOptionsFileName,
+            const wordList& compileFiles,
+            const wordList& copyFiles
         );
 
         //- Copy constructor

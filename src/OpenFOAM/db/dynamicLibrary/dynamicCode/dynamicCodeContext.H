@@ -54,6 +54,16 @@ class dynamicCodeContext
 {
     // Private Data
 
+        //- Top-level directory name for copy/compiling
+        static const word topDirName;
+
+        //- Name of the code template sub-directory
+        //  Used when locating the codeTemplateName via Foam::findEtcFile
+        static const fileName codeTemplateDirName;
+
+        //- Root of the LIB target for Make/files
+        static const char* const libTargetRoot;
+
         //- Keywords associated with source code
         const wordList& codeKeys_;
 
@@ -61,14 +71,20 @@ class dynamicCodeContext
         const wordList& codeDictVars_;
 
         //- Options file name
-        word codeOptionsFileName_;
+        const word& optionsFileName_;
+
+        //- Files to copy and filter and compile
+        const wordList& compileFiles_;
+
+        //- Files to copy and filter
+        const wordList& copyFiles_;
 
         //- Code strings
         //  Stored to write for restart
         List<verbatimString> codeStrings_;
 
-        //- Code entries
-        HashTable<string> code_;
+        //- Variables to use during filtering
+        HashTable<string> filterVars_;
 
         //- Optional "codeOptions" string
         //  Stored to write for restart
@@ -99,6 +115,22 @@ class dynamicCodeContext
             const fileName& name
         );
 
+        //- Copy lines while expanding variables
+        static void copyAndFilter
+        (
+            ISstream&,
+            OSstream&,
+            const HashTable<string>& mapping
+        );
+
+        //- Resolve code-templates via Foam::findConfigFile
+        static bool resolveTemplates
+        (
+            const wordList& templateNames,
+            DynamicList<fileName>& resolvedFiles,
+            DynamicList<fileName>& badFiles
+        );
+
 
 public:
 
@@ -121,7 +153,9 @@ public:
             const dictionary& codeDict,
             const wordList& codeKeys,
             const wordList& codeDictVars,
-            const word& codeOptionsFileName
+            const word& optionsFileName,
+            const wordList& compileFiles,
+            const wordList& copyFiles
         );
 
         //- Construct from the context dictionary also containing the code
@@ -131,16 +165,24 @@ public:
             const dictionary& contextDict,
             const wordList& codeKeys,
             const wordList& codeDictVars,
-            const word& codeOptionsFileName
+            const word& optionsFileName,
+            const wordList& compileFiles,
+            const wordList& copyFiles
         );
+
+
+    // Static Member functions
+
+        //- Return the library basename without leading 'lib' or trailing '.so'
+        static word libraryBaseName(const fileName& libPath);
 
 
     // Member Functions
 
-        //- Return the code table
-        const HashTable<string>& code() const
+        //- Variables to use during filtering
+        const HashTable<string>& filterVars() const
         {
-            return code_;
+            return filterVars_;
         }
 
         //- Return SHA1 digest calculated from include, options, code
@@ -148,6 +190,9 @@ public:
         {
             return sha1_;
         }
+
+        //- Resolve code-template via Foam::findConfigFile
+        static fileName resolveTemplate(const fileName& templateName);
 
         void read
         (
