@@ -128,7 +128,7 @@ class codedFvModel
         word fieldPrimitiveTypeName() const;
 
         //- Adapt the context for the current object
-        virtual void prepare(dynamicCode&) const;
+        virtual void prepare() const;
 
         //- Compile, link and load the coded fvModel if not already loaded
         //  and return it

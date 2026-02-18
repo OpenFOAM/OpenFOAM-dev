@@ -55,7 +55,7 @@ Usage
     \endverbatim
 
 See also
-    Foam::dynamicCode
+    Foam::dynamicCodeContext
     Foam::functionEntries::codeStream
 
 SourceFiles
@@ -114,7 +114,7 @@ class Coded
     // Private Member Functions
 
         //- Adapt the context for the current object
-        virtual void prepare(dynamicCode&) const;
+        virtual void prepare() const;
 
 
 public:

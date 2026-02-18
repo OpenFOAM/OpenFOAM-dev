@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "codeStream.H"
-#include "dynamicCode.H"
+#include "dynamicCodeContext.H"
 #include "Time.H"
 #include "OSspecific.H"
 #include "PstreamReduceOps.H"
@@ -156,10 +156,14 @@ void* Foam::functionEntries::codeStream::compile
 )
 {
     // Get code, codeInclude, ...
+    // codeName: codeStream + _<sha1>
+    // codeDir : _<sha1>
     dynamicCodeContext context
     (
         contextDict,
         codeDict,
+        typeName.remove('#'),
+        word::null,
         codeKeys,
         codeDictVars,
         codeOptions,
@@ -167,13 +171,9 @@ void* Foam::functionEntries::codeStream::compile
         wordList::null()
     );
 
-    // codeName: codeStream + _<sha1>
-    // codeDir : _<sha1>
-    dynamicCode dynCode(context, typeName.remove('#'));
-
     // Load library if not already loaded
     // Version information is encoded in the libPath (encoded with the SHA1)
-    const fileName libPath = dynCode.libPath();
+    const fileName libPath = context.libPath();
 
     // See if library is loaded
     void* lib = libs.findLibrary(libPath);
@@ -209,25 +209,25 @@ void* Foam::functionEntries::codeStream::compile
 
         if (create)
         {
-            if (!dynCode.upToDate())
+            if (!context.upToDate())
             {
-                if (!dynCode.copyOrCreateFiles(true))
+                if (!context.copyOrCreateFiles(true))
                 {
                     FatalIOErrorInFunction
                     (
                         contextDict
                     )   << "Failed writing files for" << nl
-                        << dynCode.libRelPath() << nl
+                        << context.libRelPath() << nl
                         << exit(FatalIOError);
                 }
             }
 
-            if (!dynCode.wmakeLibso())
+            if (!context.wmakeLibso())
             {
                 FatalIOErrorInFunction
                 (
                     contextDict
-                )   << "Failed wmake " << dynCode.libRelPath() << nl
+                )   << "Failed wmake " << context.libRelPath() << nl
                     << exit(FatalIOError);
             }
         }
@@ -348,7 +348,8 @@ void* Foam::functionEntries::codeStream::compile
             << exit(FatalIOError);
     }
 
-    codeName = dynCode.codeName();
+    codeName = context.codeName();
+
     return lib;
 }
 

@@ -27,7 +27,7 @@ License
 #include "addToRunTimeSelectionTable.H"
 #include "fieldMapper.H"
 #include "pointFields.H"
-#include "dynamicCode.H"
+#include "dynamicCodeContext.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -65,32 +65,24 @@ const Foam::wordList Foam::codedFixedValuePointPatchField<Type>::copyFiles
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-void Foam::codedFixedValuePointPatchField<Type>::prepare
-(
-    dynamicCode& dynCode
-) const
+void Foam::codedFixedValuePointPatchField<Type>::prepare() const
 {
     // Take no chances - typeName must be identical to codeName()
-    dynCode.setFilterVariable("typeName", codeName());
+    setFilterVariable("typeName", codeName());
 
     // Set TemplateType and FieldType filter variables
     // (for pointPatchField)
     word fieldType(pTraits<Type>::typeName);
 
     // Template type for pointPatchField
-    dynCode.setFilterVariable("TemplateType", fieldType);
+    setFilterVariable("TemplateType", fieldType);
 
     // Name for pointPatchField - eg, ScalarField, VectorField, ...
     fieldType[0] = toupper(fieldType[0]);
-    dynCode.setFilterVariable("FieldType", fieldType + "Field");
+    setFilterVariable("FieldType", fieldType + "Field");
 
     // Make verbose if debugging
-    dynCode.setFilterVariable("verbose", Foam::name(bool(debug)));
-
-    if (debug)
-    {
-        Info<<"compile " << codeName() << " sha1: " << dynCode.sha1() << endl;
-    }
+    setFilterVariable("verbose", Foam::name(bool(debug)));
 }
 
 

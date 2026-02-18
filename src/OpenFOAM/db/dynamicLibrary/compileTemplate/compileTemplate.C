@@ -72,7 +72,6 @@ Foam::dictionary Foam::compileTemplate::optionsDict
 
 void Foam::compileTemplate::setFilterVariable
 (
-    dynamicCode& dynCode,
     const Pair<word>& substitution
 ) const
 {
@@ -105,26 +104,21 @@ void Foam::compileTemplate::setFilterVariable
         }
     }
 
-    dynCode.setFilterVariable(name, type);
+    codedBase::setFilterVariable(name, type);
 }
 
 
-void Foam::compileTemplate::prepare(dynamicCode& dynCode) const
+void Foam::compileTemplate::prepare() const
 {
-    dynCode.setFilterVariable("typeName", codeName());
+    codedBase::setFilterVariable("typeName", codeName());
 
     forAll(substitutions_, i)
     {
-        setFilterVariable(dynCode, substitutions_[i]);
+        setFilterVariable(substitutions_[i]);
     }
 
     // Make verbose if debugging
-    dynCode.setFilterVariable("verbose", Foam::name(bool(debug)));
-
-    if (debug)
-    {
-        Info<<"compile " << codeName() << " sha1: " << dynCode.sha1() << endl;
-    }
+    codedBase::setFilterVariable("verbose", Foam::name(bool(debug)));
 }
 
 

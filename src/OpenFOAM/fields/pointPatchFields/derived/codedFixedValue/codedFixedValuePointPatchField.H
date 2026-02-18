@@ -123,7 +123,7 @@ class codedFixedValuePointPatchField
     // Private Member Functions
 
         //- Adapt the context for the current object
-        virtual void prepare(dynamicCode&) const;
+        virtual void prepare() const;
 
 
 public:

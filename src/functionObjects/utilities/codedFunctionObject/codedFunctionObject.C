@@ -27,7 +27,6 @@ License
 #include "volFields.H"
 #include "dictionary.H"
 #include "Time.H"
-#include "dynamicCode.H"
 #include "stringOps.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -88,17 +87,12 @@ const Foam::wordList Foam::codedFunctionObject::copyFiles
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-void Foam::codedFunctionObject::prepare(dynamicCode& dynCode) const
+void Foam::codedFunctionObject::prepare() const
 {
-    dynCode.setFilterVariable("typeName", codeName());
+    setFilterVariable("typeName", codeName());
 
     // Make verbose if debugging
-    dynCode.setFilterVariable("verbose", Foam::name(bool(debug)));
-
-    if (debug)
-    {
-        Info<<"compile " << codeName() << " sha1: " << dynCode.sha1() << endl;
-    }
+    setFilterVariable("verbose", Foam::name(bool(debug)));
 }
 
 

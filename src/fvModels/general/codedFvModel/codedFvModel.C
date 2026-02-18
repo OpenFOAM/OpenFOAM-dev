@@ -25,7 +25,6 @@ License
 
 #include "codedFvModel.H"
 #include "fvMatrices.H"
-#include "dynamicCode.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -93,17 +92,17 @@ Foam::word Foam::fv::codedFvModel::fieldPrimitiveTypeName() const
 }
 
 
-void Foam::fv::codedFvModel::prepare(dynamicCode& dynCode) const
+void Foam::fv::codedFvModel::prepare() const
 {
     const word primitiveTypeName = fieldPrimitiveTypeName();
 
     // Set additional rewrite rules
-    dynCode.setFilterVariable("typeName", name());
-    dynCode.setFilterVariable("TemplateType", primitiveTypeName);
-    dynCode.setFilterVariable("SourceType", primitiveTypeName + "Source");
+    setFilterVariable("typeName", name());
+    setFilterVariable("TemplateType", primitiveTypeName);
+    setFilterVariable("SourceType", primitiveTypeName + "Source");
 
     // Make verbose if debugging
-    dynCode.setFilterVariable("verbose", Foam::name(bool(debug)));
+    setFilterVariable("verbose", Foam::name(bool(debug)));
 }
 
 

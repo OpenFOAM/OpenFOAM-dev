@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "CodedFunction2.H"
-#include "dynamicCode.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -62,20 +61,15 @@ const Foam::wordList Foam::Function2s::Coded<Type>::copyFiles
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-void Foam::Function2s::Coded<Type>::prepare(dynamicCode& dynCode) const
+void Foam::Function2s::Coded<Type>::prepare() const
 {
-    dynCode.setFilterVariable("typeName", codeName());
+    setFilterVariable("typeName", codeName());
 
     // Set TemplateType filter variables
-    dynCode.setFilterVariable("TemplateType", pTraits<Type>::typeName);
+    setFilterVariable("TemplateType", pTraits<Type>::typeName);
 
     // Make verbose if debugging
-    dynCode.setFilterVariable("verbose", Foam::name(bool(debug)));
-
-    if (debug)
-    {
-        Info<<"compile " << codeName() << " sha1: " << dynCode.sha1() << endl;
-    }
+    setFilterVariable("verbose", Foam::name(bool(debug)));
 }
 
 

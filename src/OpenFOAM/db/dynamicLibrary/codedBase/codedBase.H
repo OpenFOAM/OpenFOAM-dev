@@ -35,7 +35,7 @@ SourceFiles
 #ifndef codedBase_H
 #define codedBase_H
 
-#include "dynamicCode.H"
+#include "dynamicCodeContext.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -90,11 +90,11 @@ class codedBase
             const dictionary& dict
         ) const;
 
-        //- Create library for the given dynamicCode
-        void createLibrary(const dictionary& dict, dynamicCode&) const;
+        //- Create library
+        void createLibrary(const dictionary& dict) const;
 
         //- Adapt the context for the current object
-        virtual void prepare(dynamicCode&) const = 0;
+        virtual void prepare() const = 0;
 
 
 public:
@@ -150,6 +150,12 @@ public:
 
         //- Write the code for restart
         void write(Ostream& os) const;
+
+        //- Define a filter variable
+        void setFilterVariable(const word& key, const string& value) const
+        {
+            codeContext_.setFilterVariable(key, value);
+        }
 
 
     // Member Operators

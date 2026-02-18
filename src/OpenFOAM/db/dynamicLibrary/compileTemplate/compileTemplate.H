@@ -27,7 +27,6 @@ License
 #define compileTemplate_H
 
 #include "codedBase.H"
-#include "dynamicCode.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -68,14 +67,10 @@ class compileTemplate
             const word& templateName
         ) const;
 
-        void setFilterVariable
-        (
-            dynamicCode& dynCode,
-            const Pair<word>& substitution
-        ) const;
+        void setFilterVariable(const Pair<word>& substitution) const;
 
         //- Adapt the context for the current object
-        virtual void prepare(dynamicCode&) const;
+        virtual void prepare() const;
 
 
 public:

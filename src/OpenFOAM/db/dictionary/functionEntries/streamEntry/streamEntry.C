@@ -26,7 +26,6 @@ License
 #include "streamEntry.H"
 #include "codeIncludeEntry.H"
 #include "dictionary.H"
-#include "dynamicCode.H"
 #include "codeStream.H"
 #include "addToRunTimeSelectionTable.H"
 #include "addToMemberFunctionSelectionTable.H"
