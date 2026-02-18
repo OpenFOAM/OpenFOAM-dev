@@ -127,6 +127,7 @@ void Foam::solvers::isothermalFilm::correctAlpha()
         );
 
         phi_ -= alpharAUf*phiGradAlpha;
+        correctBoundaryFlux();
 
         U_ = HbyA - rAU*fvc::reconstruct(alphaf*(phig + phiGradAlpha));
 
