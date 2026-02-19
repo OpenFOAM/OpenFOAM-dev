@@ -49,12 +49,9 @@ addRemovableToRunTimeSelectionTable
 
 extern "C"
 {
-    // dynamicCode:
-    // SHA1 = ${SHA1sum}
-    //
-    // unique function name that can be checked if the correct library version
-    // has been loaded
-    void ${typeName}_${SHA1sum}(bool load)
+    // Unique function name that can be checked
+    // to ensure the correct library version has been loaded
+    void ${uniqueFunctionName}(bool load)
     {
         if (load)
         {

@@ -83,9 +83,6 @@ Foam::codedFixedValuePointPatchField<Type>::codedFixedValuePointPatchField
         copyFiles
     )
 {
-    // Take no chances - typeName must be identical to codeName()
-    setFilterVariable("typeName", codeName());
-
     // Set TemplateType and FieldType filter variables
     // (for pointPatchField)
     word fieldType(pTraits<Type>::typeName);

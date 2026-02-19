@@ -348,7 +348,7 @@ void* Foam::functionEntries::codeStream::compile
             << exit(FatalIOError);
     }
 
-    codeName = dynCode.codeName();
+    codeName = dynCode.codeSha1Name();
 
     return lib;
 }

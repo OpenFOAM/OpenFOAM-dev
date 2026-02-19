@@ -201,7 +201,6 @@ Foam::fv::codedFvModel::codedFvModel
     const word primitiveTypeName = fieldPrimitiveTypeName();
 
     // Set additional rewrite rules
-    setFilterVariable("typeName", this->name());
     setFilterVariable("TemplateType", primitiveTypeName);
     setFilterVariable("SourceType", primitiveTypeName + "Source");
 

@@ -53,7 +53,7 @@ ${localCode}
 
 extern "C"
 {
-    void ${typeName}
+    void ${uniqueFunctionName}
     (
         dictionary& dict,
         Istream& is

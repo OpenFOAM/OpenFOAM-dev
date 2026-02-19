@@ -332,12 +332,11 @@ Foam::codedBase::codedBase
     const wordList& copyFiles
 )
 :
-    codeName_(codeName(name)),
     dynCode_
     (
         dict,
-        codeName_,
-        codeName_,
+        codeName(name),
+        codeName(name),
         codeKeys,
         codeDictVars,
         codeOptionsFileName,
@@ -372,7 +371,6 @@ Foam::codedBase::codedBase
 
 Foam::codedBase::codedBase(const codedBase& cb)
 :
-    codeName_(cb.codeName_),
     dynCode_(cb.dynCode_)
 {}
 
@@ -385,12 +383,6 @@ Foam::codedBase::~codedBase()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::word& Foam::codedBase::codeName() const
-{
-    return codeName_;
-}
-
-
 bool Foam::codedBase::updateLibrary(const dictionary& dict) const
 {
     const fileName libPath = dynCode_.libPath();
@@ -401,7 +393,7 @@ bool Foam::codedBase::updateLibrary(const dictionary& dict) const
         return false;
     }
 
-    Info<< "Using dynamicCode for " << type() << " " << codeName_
+    Info<< "Using dynamicCode for " << type() << " " << codeName()
         << " at line " << dict.startLineNumber()
         << " in " << dict.name() << endl;
 
@@ -414,11 +406,11 @@ bool Foam::codedBase::updateLibrary(const dictionary& dict) const
     );
 
     // Try loading an existing library (avoid compilation when possible)
-    if (!loadLibrary(libPath, dynCode_.codeName(), dict))
+    if (!loadLibrary(libPath, dynCode_.codeSha1Name(), dict))
     {
         createLibrary(dict);
 
-        if (!loadLibrary(libPath, dynCode_.codeName(), dict))
+        if (!loadLibrary(libPath, dynCode_.codeSha1Name(), dict))
         {
             FatalIOErrorInFunction(dict)
                 << "Failed to load " << libPath << exit(FatalIOError);

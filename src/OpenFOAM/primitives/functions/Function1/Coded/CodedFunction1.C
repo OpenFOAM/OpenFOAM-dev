@@ -80,8 +80,6 @@ Foam::Function1s::Coded<Type>::Coded
     ),
     units_(units)
 {
-    setFilterVariable("typeName", codeName());
-
     // Set TemplateType filter variables
     setFilterVariable("TemplateType", pTraits<Type>::typeName);
 

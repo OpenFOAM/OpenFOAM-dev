@@ -42,7 +42,10 @@ const Foam::fileName Foam::dynamicCode::codeTemplateDirName
     "codeTemplates/dynamicCode"
 );
 
-const Foam::word Foam::dynamicCode::topDirName("dynamicCode");
+const Foam::word Foam::dynamicCode::topDirName
+(
+    "dynamicCode"
+);
 
 const char* const Foam::dynamicCode::libTargetRoot
 (
@@ -52,12 +55,6 @@ const char* const Foam::dynamicCode::libTargetRoot
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::fileName Foam::dynamicCode::codeRelPath() const
-{
-    return topDirName/codeDirName_;
-}
-
-
 void Foam::dynamicCode::addLineDirective
 (
     string& code,
@@ -66,13 +63,6 @@ void Foam::dynamicCode::addLineDirective
 )
 {
     code = "#line " + Foam::name(lineNum) + " \"" + name + "\"\n" + code;
-}
-
-
-void Foam::dynamicCode::writeCommentSHA1(Ostream& os) const
-{
-    os  << "# dynamicCode:\n# SHA1 = ";
-    os.writeQuoted(sha1_.str(), false) << "\n\n";
 }
 
 
@@ -173,15 +163,13 @@ bool Foam::dynamicCode::createMakeFiles() const
                 << exit(FatalError);
     }
 
-    writeCommentSHA1(os);
-
     // Write compile files
     forAll(compileFiles_, fileI)
     {
         os.writeQuoted(compileFiles_[fileI], false) << nl;
     }
 
-    os  << nl << dynamicCode::libTargetRoot << codeName_ << nl;
+    os  << nl << dynamicCode::libTargetRoot << codeSha1Name_ << nl;
 
     return true;
 }
@@ -263,8 +251,6 @@ bool Foam::dynamicCode::createMakeOptions() const
                 << exit(FatalError);
     }
 
-    writeCommentSHA1(os);
-
     os.writeQuoted(options + "\n\n" + libs, false) << nl;
 
     return true;
@@ -281,19 +267,6 @@ bool Foam::dynamicCode::writeDigest() const
     os.writeQuoted(sha1_.str(), false) << nl;
 
     return os.good();
-}
-
-
-bool Foam::dynamicCode::upToDate(const SHA1Digest& sha1) const
-{
-    const fileName file(digestFile());
-
-    if (!exists(file, false, true) || SHA1Digest(IFstream(file)()) != sha1)
-    {
-        return false;
-    }
-
-    return true;
 }
 
 
@@ -317,6 +290,7 @@ Foam::dynamicCode::dynamicCode
         stringOps::expandEnvVar("$FOAM_CASE")/topDirName
     ),
     libSubDir_(stringOps::expandEnvVar("platforms/$WM_OPTIONS/lib")),
+    codeName_(codeName),
     codeKeys_(codeKeys),
     codeDictVars_(codeDictVars),
     optionsFileName_(optionsFileName),
@@ -356,7 +330,7 @@ Foam::dynamicCode::dynamicCode
 
     const word sha1Str(sha1_.str());
 
-    codeName_ = codeName + '_' + sha1Str;
+    codeSha1Name_ = codeName_ + '_' + sha1Str;
 
     codeDirName_ =
     (
@@ -366,6 +340,7 @@ Foam::dynamicCode::dynamicCode
     );
 
     varSubstitutions_.set("typeName", codeName_);
+    varSubstitutions_.set("uniqueFunctionName", codeSha1Name_);
     varSubstitutions_.set("SHA1sum", sha1Str);
 }
 
@@ -397,23 +372,7 @@ Foam::dynamicCode::dynamicCode
 {}
 
 
-// * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
-
-Foam::word Foam::dynamicCode::libraryBaseName(const fileName& libPath)
-{
-    word libName(libPath.name(true));
-    libName.erase(0, 3);    // Remove leading 'lib' from name
-    return libName;
-}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-Foam::fileName Foam::dynamicCode::libRelPath() const
-{
-    return codeRelPath()/libSubDir_/"lib" + codeName_ + ".so";
-}
-
 
 void Foam::dynamicCode::read
 (
@@ -499,6 +458,14 @@ void Foam::dynamicCode::read
             );
         }
     }
+}
+
+
+Foam::word Foam::dynamicCode::libraryBaseName(const fileName& libPath)
+{
+    word libName(libPath.name(true));
+    libName.erase(0, 3);    // Remove leading 'lib' from name
+    return libName;
 }
 
 
@@ -624,7 +591,14 @@ bool Foam::dynamicCode::wmakeLibso() const
 
 bool Foam::dynamicCode::upToDate() const
 {
-    return upToDate(sha1_);
+    const fileName file(digestFile());
+
+    if (!exists(file, false, true) || SHA1Digest(IFstream(file)()) != sha1_)
+    {
+        return false;
+    }
+
+    return true;
 }
 
 

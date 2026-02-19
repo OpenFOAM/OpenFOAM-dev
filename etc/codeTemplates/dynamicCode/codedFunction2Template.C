@@ -49,7 +49,7 @@ extern "C"
     //
     // Unique function name that can be checked if the correct library version
     // has been loaded
-    void ${typeName}_${SHA1sum}(bool load)
+    void ${uniqueFunctionName}(bool load)
     {
         if (load)
         {

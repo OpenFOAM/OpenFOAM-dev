@@ -53,7 +53,7 @@ ${localCode}
 
 extern "C"
 {
-    void ${typeName}
+    void ${uniqueFunctionName}
     (
         Ostream& os,
         const dictionary& dict

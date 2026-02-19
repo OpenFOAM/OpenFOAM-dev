@@ -132,8 +132,6 @@ Foam::compileTemplate::compileTemplate
 {
     compileFiles_ = {templateName + "Template.C"};
 
-    codedBase::setFilterVariable("typeName", codeName());
-
     forAll(substitutions_, i)
     {
         setFilterVariable(substitutions_[i]);

@@ -50,9 +50,6 @@ class codedBase
 {
     // Private Data
 
-        //- Name of the dynamically generated CodedType
-        const word codeName_;
-
         //- The dynamicCode class
         dynamicCode dynCode_;
 
@@ -137,7 +134,10 @@ public:
     // Member Functions
 
         //- Name of the dynamically generated code
-        const word& codeName() const;
+        const word& codeName() const
+        {
+            return dynCode_.codeName();
+        }
 
         //- Update library from given updated dictionary as required
         //  Returns true if the library was updated, otherwise false

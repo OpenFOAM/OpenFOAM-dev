@@ -80,8 +80,6 @@ Foam::codedFixedValueFvPatchField<Type>::codedFixedValueFvPatchField
         copyFiles
     )
 {
-    setFilterVariable("typeName", codeName());
-
     // Set TemplateType and FieldType filter variables
     // (for fvPatchField)
     word fieldType(pTraits<Type>::typeName);
