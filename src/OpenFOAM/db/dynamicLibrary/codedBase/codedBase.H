@@ -25,7 +25,9 @@ Class
     Foam::codedBase
 
 Description
-    Base class for function objects and boundary conditions using dynamic code
+    Base class for coded functionObjects, fvModels, Function1, Function2
+
+    and boundary conditions
 
 SourceFiles
     codedBase.C
@@ -47,11 +49,10 @@ namespace Foam
 \*---------------------------------------------------------------------------*/
 
 class codedBase
+:
+    public dynamicCode
 {
     // Private Data
-
-        //- The dynamicCode class
-        dynamicCode dynCode_;
 
         //- Previously loaded library
         mutable fileName oldLibPath_;
@@ -63,14 +64,14 @@ class codedBase
         typedef void (*loaderFunctionType)(bool);
 
         //- Create a code name from the given function name
-        static word codeName(const word& name);
+        static word filterCodeName(const word& name);
 
         //- Load specified library and execute globalFuncName(true)
         void* loadLibrary
         (
             const fileName& libPath,
             const string& globalFuncName,
-            const dictionary& contextDict
+            const dictionary& dict
         ) const;
 
         //- Execute globalFuncName(false) and unload specified library
@@ -78,7 +79,7 @@ class codedBase
         (
             const fileName& libPath,
             const string& globalFuncName,
-            const dictionary& contextDict
+            const dictionary& dict
         ) const;
 
         verbatimString expandCodeString
@@ -123,9 +124,6 @@ public:
             const wordList& copyFiles
         );
 
-        //- Copy constructor
-        codedBase(const codedBase& cb);
-
 
     //- Destructor
     virtual ~codedBase();
@@ -133,27 +131,9 @@ public:
 
     // Member Functions
 
-        //- Name of the dynamically generated code
-        const word& codeName() const
-        {
-            return dynCode_.codeName();
-        }
-
         //- Update library from given updated dictionary as required
         //  Returns true if the library was updated, otherwise false
         bool updateLibrary(const dictionary& dict) const;
-
-        //- Read the dictionary and update the code
-        void read(const dictionary& dict);
-
-        //- Write the code for restart
-        void write(Ostream& os) const;
-
-        //- Define a filter variable
-        void setFilterVariable(const word& key, const string& value) const
-        {
-            dynCode_.setFilterVariable(key, value);
-        }
 
 
     // Member Operators

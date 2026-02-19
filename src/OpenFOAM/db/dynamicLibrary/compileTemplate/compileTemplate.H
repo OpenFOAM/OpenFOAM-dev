@@ -67,7 +67,7 @@ class compileTemplate
             const word& templateName
         ) const;
 
-        void setFilterVariable(const Pair<word>& substitution) const;
+        void setSubstitution(const Pair<word>& substitution);
 
 
 public:

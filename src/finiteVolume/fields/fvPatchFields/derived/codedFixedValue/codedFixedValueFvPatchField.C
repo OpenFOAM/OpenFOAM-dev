@@ -80,21 +80,18 @@ Foam::codedFixedValueFvPatchField<Type>::codedFixedValueFvPatchField
         copyFiles
     )
 {
-    // Set TemplateType and FieldType filter variables
-    // (for fvPatchField)
-    word fieldType(pTraits<Type>::typeName);
+    const word fieldType(pTraits<Type>::typeName);
 
-    // Template type for fvPatchField
-    setFilterVariable("TemplateType", fieldType);
+    // Set variable substitutions
+    varSubstitutions().set
+    (
+        {
+            {"TemplateType", fieldType},
+            {"FieldType", fieldType.capitalise() + "Field"},
+            {"verbose", Foam::name(bool(debug))}
+        }
+    );
 
-    // Name for fvPatchField - eg, ScalarField, VectorField, ...
-    fieldType[0] = toupper(fieldType[0]);
-    setFilterVariable("FieldType", fieldType + "Field");
-
-    // Make verbose if debugging
-    setFilterVariable("verbose", Foam::name(bool(debug)));
-
-    // Compile the library containing user-defined fvPatchField
     updateLibrary(dict);
 }
 

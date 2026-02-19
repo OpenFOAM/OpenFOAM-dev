@@ -97,7 +97,7 @@ class dynamicCode
         List<verbatimString> codeStrings_;
 
         //- Variable substitutions
-        mutable HashTable<string> varSubstitutions_;
+        HashTable<string> varSubstitutions_;
 
         //- Code key substitutions
         HashTable<string> codeKeySubstitutions_;
@@ -247,6 +247,11 @@ public:
             return codeRelPath()/libSubDir_/"lib" + codeSha1Name_ + ".so";
         }
 
+        HashTable<string>& varSubstitutions()
+        {
+            return varSubstitutions_;
+        }
+
         //- Return the library basename without leading 'lib' or trailing '.so'
         static word libraryBaseName(const fileName& libPath);
 
@@ -268,11 +273,6 @@ public:
 
         //- Write the code for restart
         void write(Ostream& os) const;
-
-        void setFilterVariable(const word& key, const string& value) const
-        {
-            varSubstitutions_.set(key, value);
-        }
 };
 
 

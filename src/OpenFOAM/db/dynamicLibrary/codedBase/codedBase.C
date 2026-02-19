@@ -39,7 +39,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
 
-Foam::word Foam::codedBase::codeName(const word& name)
+Foam::word Foam::codedBase::filterCodeName(const word& name)
 {
     word result(name);
 
@@ -69,7 +69,7 @@ void* Foam::codedBase::loadLibrary
 (
     const fileName& libPath,
     const string& globalFuncName,
-    const dictionary& contextDict
+    const dictionary& dict
 ) const
 {
     void* lib = 0;
@@ -101,7 +101,7 @@ void* Foam::codedBase::loadLibrary
                     {
                         FatalIOErrorInFunction
                         (
-                            contextDict
+                            dict
                         )   << "Failed looking up symbol " << globalFuncName
                             << nl << "from " << libPath << exit(FatalIOError);
                     }
@@ -110,7 +110,7 @@ void* Foam::codedBase::loadLibrary
                 {
                     FatalIOErrorInFunction
                     (
-                        contextDict
+                        dict
                     )   << "Failed looking up symbol " << globalFuncName << nl
                         << "from " << libPath << exit(FatalIOError);
 
@@ -119,7 +119,7 @@ void* Foam::codedBase::loadLibrary
                     {
                         FatalIOErrorInFunction
                         (
-                            contextDict
+                            dict
                         )   << "Failed unloading library "
                             << libPath
                             << exit(FatalIOError);
@@ -137,7 +137,7 @@ void Foam::codedBase::unloadLibrary
 (
     const fileName& libPath,
     const string& globalFuncName,
-    const dictionary& contextDict
+    const dictionary& dict
 ) const
 {
     void* lib = 0;
@@ -171,7 +171,7 @@ void Foam::codedBase::unloadLibrary
         {
             FatalIOErrorInFunction
             (
-                contextDict
+                dict
             )   << "Failed looking up symbol " << globalFuncName << nl
                 << "from " << libPath << exit(FatalIOError);
         }
@@ -181,7 +181,7 @@ void Foam::codedBase::unloadLibrary
     {
         FatalIOErrorInFunction
         (
-            contextDict
+            dict
         )   << "Failed unloading library " << libPath
             << exit(FatalIOError);
     }
@@ -228,25 +228,25 @@ void Foam::codedBase::createLibrary(const dictionary& dict) const
     if (create)
     {
         // Write files for new library
-        if (!dynCode_.upToDate())
+        if (!upToDate())
         {
-            if (!dynCode_.copyOrCreateFiles(true))
+            if (!copyOrCreateFiles(true))
             {
                 FatalIOErrorInFunction
                 (
                     dict
                 )   << "Failed writing files for" << nl
-                    << dynCode_.libRelPath() << nl
+                    << libRelPath() << nl
                     << exit(FatalIOError);
             }
         }
 
-        if (!dynCode_.wmakeLibso())
+        if (!wmakeLibso())
         {
             FatalIOErrorInFunction
             (
                 dict
-            )   << "Failed wmake " << dynCode_.libRelPath() << nl
+            )   << "Failed wmake " << libRelPath() << nl
                 << exit(FatalIOError);
         }
     }
@@ -254,7 +254,7 @@ void Foam::codedBase::createLibrary(const dictionary& dict) const
     // All processes must wait for compile to finish
     if (regIOobject::fileModificationSkew > 0)
     {
-        const fileName libPath = dynCode_.libPath();
+        const fileName libPath = this->libPath();
 
         // Determine and communicate the master file size. Scattering
         // blocks the other processes until the master has finished
@@ -332,11 +332,11 @@ Foam::codedBase::codedBase
     const wordList& copyFiles
 )
 :
-    dynCode_
+    dynamicCode
     (
         dict,
-        codeName(name),
-        codeName(name),
+        filterCodeName(name),
+        filterCodeName(name),
         codeKeys,
         codeDictVars,
         codeOptionsFileName,
@@ -358,7 +358,7 @@ Foam::codedBase::codedBase
 :
     codedBase
     (
-        codeName(dict.lookup("name")),
+        dict.lookup("name"),
         dict,
         codeKeys,
         codeDictVars,
@@ -366,12 +366,6 @@ Foam::codedBase::codedBase
         compileFiles,
         copyFiles
     )
-{}
-
-
-Foam::codedBase::codedBase(const codedBase& cb)
-:
-    dynCode_(cb.dynCode_)
 {}
 
 
@@ -385,7 +379,7 @@ Foam::codedBase::~codedBase()
 
 bool Foam::codedBase::updateLibrary(const dictionary& dict) const
 {
-    const fileName libPath = dynCode_.libPath();
+    const fileName libPath = this->libPath();
 
     // The correct library was already loaded => we are done
     if (libs.findLibrary(libPath))
@@ -406,11 +400,11 @@ bool Foam::codedBase::updateLibrary(const dictionary& dict) const
     );
 
     // Try loading an existing library (avoid compilation when possible)
-    if (!loadLibrary(libPath, dynCode_.codeSha1Name(), dict))
+    if (!loadLibrary(libPath, codeSha1Name(), dict))
     {
         createLibrary(dict);
 
-        if (!loadLibrary(libPath, dynCode_.codeSha1Name(), dict))
+        if (!loadLibrary(libPath, codeSha1Name(), dict))
         {
             FatalIOErrorInFunction(dict)
                 << "Failed to load " << libPath << exit(FatalIOError);
@@ -421,23 +415,6 @@ bool Foam::codedBase::updateLibrary(const dictionary& dict) const
     oldLibPath_ = libPath;
 
     return true;
-}
-
-
-void Foam::codedBase::read(const dictionary& dict)
-{
-    dynCode_.read(dict);
-}
-
-
-void Foam::codedBase::write(Ostream& os) const
-{
-    if (codeName().size())
-    {
-        writeEntry(os, "name", codeName());
-    }
-
-    dynCode_.write(os);
 }
 
 

@@ -200,12 +200,15 @@ Foam::fv::codedFvModel::codedFvModel
 
     const word primitiveTypeName = fieldPrimitiveTypeName();
 
-    // Set additional rewrite rules
-    setFilterVariable("TemplateType", primitiveTypeName);
-    setFilterVariable("SourceType", primitiveTypeName + "Source");
-
-    // Make verbose if debugging
-    setFilterVariable("verbose", Foam::name(bool(debug)));
+    // Set variable substitutions
+    varSubstitutions().set
+    (
+        {
+            {"TemplateType", primitiveTypeName},
+            {"SourceType", primitiveTypeName + "Source"},
+            {"verbose", Foam::name(bool(debug))}
+        }
+    );
 }
 
 

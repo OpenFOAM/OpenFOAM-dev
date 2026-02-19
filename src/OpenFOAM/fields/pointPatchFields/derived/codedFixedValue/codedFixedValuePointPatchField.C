@@ -83,19 +83,17 @@ Foam::codedFixedValuePointPatchField<Type>::codedFixedValuePointPatchField
         copyFiles
     )
 {
-    // Set TemplateType and FieldType filter variables
-    // (for pointPatchField)
-    word fieldType(pTraits<Type>::typeName);
+    const word fieldType(pTraits<Type>::typeName);
 
-    // Template type for pointPatchField
-    setFilterVariable("TemplateType", fieldType);
-
-    // Name for pointPatchField - eg, ScalarField, VectorField, ...
-    fieldType[0] = toupper(fieldType[0]);
-    setFilterVariable("FieldType", fieldType + "Field");
-
-    // Make verbose if debugging
-    setFilterVariable("verbose", Foam::name(bool(debug)));
+    // Set variable substitutions
+    varSubstitutions().set
+    (
+        {
+            {"TemplateType", fieldType},
+            {"FieldType", fieldType.capitalise() + "Field"},
+            {"verbose", Foam::name(bool(debug))}
+        }
+    );
 
     // Compile the library containing user-defined pointPatchField
     updateLibrary(dict);

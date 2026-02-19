@@ -610,6 +610,8 @@ void Foam::dynamicCode::read(const dictionary& contextDict)
 
 void Foam::dynamicCode::write(Ostream& os) const
 {
+    writeEntry(os, "name", codeName_);
+
     forAll(codeStrings_, i)
     {
         if (codeStrings_[i] != verbatimString::null)
