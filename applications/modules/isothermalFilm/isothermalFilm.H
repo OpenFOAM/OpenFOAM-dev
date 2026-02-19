@@ -194,8 +194,14 @@ private:
         template<class FieldType>
         tmp<FieldType> constrainedField(const tmp<FieldType>& tfield) const;
 
-        //- Correct the flux for fixed velocity boundary conditions
-        void correctBoundaryFlux();
+        //- Constrain buoyancy and surface tension fluxes
+        //  for fixed flux boundary conditions
+        void constrainFixedFlux
+        (
+            surfaceScalarField& pbByAlphaf,
+            surfaceScalarField& pbByAlphaGradRhof,
+            surfaceScalarField& phip
+        );
 
         //- Correct the cached Courant number
         void correctCoNum();

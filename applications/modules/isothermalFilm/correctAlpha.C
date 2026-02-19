@@ -34,16 +34,29 @@ License
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::solvers::isothermalFilm::correctBoundaryFlux()
+void Foam::solvers::isothermalFilm::constrainFixedFlux
+(
+    surfaceScalarField& pbByAlphaf,
+    surfaceScalarField& pbByAlphaGradRhof,
+    surfaceScalarField& phip
+)
 {
-    surfaceScalarField::Boundary& phiBf = phi_.boundaryFieldRef();
+    surfaceScalarField::Boundary& pbByAlphaBf = pbByAlphaf.boundaryFieldRef();
+
+    surfaceScalarField::Boundary& pbByAlphaGradRhoBf =
+        pbByAlphaGradRhof.boundaryFieldRef();
+
+    surfaceScalarField::Boundary& phipBf = phip.boundaryFieldRef();
+
     const volVectorField::Boundary& UBf = U.boundaryField();
 
     forAll(mesh.boundary(), patchi)
     {
         if (!UBf[patchi].assignable())
         {
-            phiBf[patchi] = mesh.Sf().boundaryField()[patchi] & UBf[patchi];
+            pbByAlphaBf[patchi] = 0;
+            pbByAlphaGradRhoBf[patchi] = 0;
+            phipBf[patchi] = 0;
         }
     }
 }
@@ -57,13 +70,13 @@ void Foam::solvers::isothermalFilm::correctAlpha()
 
     const surfaceScalarField rhof(fvc::interpolate(rho));
 
-    const surfaceScalarField pbByAlphaf(this->pbByAlphaf());
-    const surfaceScalarField pbByAlphaGradRhof
+    surfaceScalarField pbByAlphaf(this->pbByAlphaf());
+    surfaceScalarField pbByAlphaGradRhof
     (
         constrainedField(this->pbByAlphaGradRhof()*mesh.magSf())
     );
 
-    const surfaceScalarField phip
+    surfaceScalarField phip
     (
         constrainedField
         (
@@ -72,6 +85,8 @@ void Foam::solvers::isothermalFilm::correctAlpha()
           - rhof*(g & mesh.Sf())
         )
     );
+
+    constrainFixedFlux(pbByAlphaf, pbByAlphaGradRhof, phip);
 
     while (pimple.correct())
     {
@@ -91,7 +106,6 @@ void Foam::solvers::isothermalFilm::correctAlpha()
         const surfaceScalarField phig("phig", phip + pbByAlphaGradRhof*alphaf);
 
         phi_ = constrainedField(fvc::flux(HbyA) - alpharAUf*phig);
-        correctBoundaryFlux();
 
         const surfaceScalarField phid("phid", rhof*phi);
 
@@ -127,7 +141,6 @@ void Foam::solvers::isothermalFilm::correctAlpha()
         );
 
         phi_ -= alpharAUf*phiGradAlpha;
-        correctBoundaryFlux();
 
         U_ = HbyA - rAU*fvc::reconstruct(alphaf*(phig + phiGradAlpha));
 
