@@ -182,10 +182,11 @@ public:
 
     // Static Data Members
 
+        // Declare name of the class and its debug switch
+        ClassName("dynamicCode");
+
         //- Flag if system operations are allowed
         static int allowSystemOperations;
-
-        static int debug;
 
 
     // Constructors

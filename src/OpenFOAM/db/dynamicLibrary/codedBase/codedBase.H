@@ -66,27 +66,36 @@ class codedBase
         //- Create a code name from the given function name
         static word filterCodeName(const word& name);
 
-        //- Load specified library and execute globalFuncName(true)
-        void* loadLibrary
+        void checkLibrary
         (
+            const dictionary& dict,
             const fileName& libPath,
-            const string& globalFuncName,
-            const dictionary& dict
+            void* lib,
+            const string& uniqueFuncName,
+            const bool load
         ) const;
 
-        //- Execute globalFuncName(false) and unload specified library
+        //- Load specified library and execute uniqueFuncName(true)
+        void* loadLibrary
+        (
+            const dictionary& dict,
+            const fileName& libPath,
+            const string& uniqueFuncName
+        ) const;
+
+        //- Execute uniqueFuncName(false) and unload specified library
         void unloadLibrary
         (
+            const dictionary& dict,
             const fileName& libPath,
-            const string& globalFuncName,
-            const dictionary& dict
+            const string& uniqueFuncName
         ) const;
 
         verbatimString expandCodeString
         (
+            const dictionary& dict,
             const word& codeKey,
-            const word& codeDictVar,
-            const dictionary& dict
+            const word& codeDictVar
         ) const;
 
 

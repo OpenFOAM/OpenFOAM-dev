@@ -65,66 +65,56 @@ Foam::word Foam::codedBase::filterCodeName(const word& name)
 }
 
 
+void Foam::codedBase::checkLibrary
+(
+    const dictionary& dict,
+    const fileName& libPath,
+    void* lib,
+    const string& uniqueFuncName,
+    const bool load
+) const
+{
+    // Provision for manual execution of code before loading/unloading
+    if (dlSymFound(lib, uniqueFuncName))
+    {
+        const loaderFunctionType function =
+            reinterpret_cast<loaderFunctionType>
+            (
+                dlSym(lib, uniqueFuncName)
+            );
+
+        if (function)
+        {
+            (*function)(load);
+            return;
+        }
+    }
+
+    FatalIOErrorInFunction(dict)
+        << "Failed looking up symbol " << uniqueFuncName << nl
+        << "from " << libPath << exit(FatalIOError);
+}
+
+
 void* Foam::codedBase::loadLibrary
 (
+    const dictionary& dict,
     const fileName& libPath,
-    const string& globalFuncName,
-    const dictionary& dict
+    const string& uniqueFuncName
 ) const
 {
     void* lib = 0;
 
-    // Avoid compilation by loading an existing library
     if (!libPath.empty())
     {
         if (libs.open(libPath, false))
         {
             lib = libs.findLibrary(libPath);
 
-            // Verify the loaded version and unload if needed
+            // Verify the loaded version
             if (lib)
             {
-                // Provision for manual execution of code after loading
-                if (dlSymFound(lib, globalFuncName))
-                {
-                    const loaderFunctionType function =
-                        reinterpret_cast<loaderFunctionType>
-                        (
-                            dlSym(lib, globalFuncName)
-                        );
-
-                    if (function)
-                    {
-                        (*function)(true);    // Force load
-                    }
-                    else
-                    {
-                        FatalIOErrorInFunction
-                        (
-                            dict
-                        )   << "Failed looking up symbol " << globalFuncName
-                            << nl << "from " << libPath << exit(FatalIOError);
-                    }
-                }
-                else
-                {
-                    FatalIOErrorInFunction
-                    (
-                        dict
-                    )   << "Failed looking up symbol " << globalFuncName << nl
-                        << "from " << libPath << exit(FatalIOError);
-
-                    lib = 0;
-                    if (!libs.close(libPath, false))
-                    {
-                        FatalIOErrorInFunction
-                        (
-                            dict
-                        )   << "Failed unloading library "
-                            << libPath
-                            << exit(FatalIOError);
-                    }
-                }
+                checkLibrary(dict, libPath, lib, uniqueFuncName, true);
             }
         }
     }
@@ -135,54 +125,29 @@ void* Foam::codedBase::loadLibrary
 
 void Foam::codedBase::unloadLibrary
 (
+    const dictionary& dict,
     const fileName& libPath,
-    const string& globalFuncName,
-    const dictionary& dict
+    const string& uniqueFuncName
 ) const
 {
-    void* lib = 0;
-
     if (libPath.empty())
     {
         return;
     }
 
-    lib = libs.findLibrary(libPath);
+    void* lib = libs.findLibrary(libPath);
 
     if (!lib)
     {
         return;
     }
 
-    // Provision for manual execution of code before unloading
-    if (dlSymFound(lib, globalFuncName))
-    {
-        const loaderFunctionType function =
-            reinterpret_cast<loaderFunctionType>
-            (
-                dlSym(lib, globalFuncName)
-            );
-
-        if (function)
-        {
-            (*function)(false);    // Force unload
-        }
-        else
-        {
-            FatalIOErrorInFunction
-            (
-                dict
-            )   << "Failed looking up symbol " << globalFuncName << nl
-                << "from " << libPath << exit(FatalIOError);
-        }
-    }
+    checkLibrary(dict, libPath, lib, uniqueFuncName, false);
 
     if (!libs.close(libPath, false))
     {
-        FatalIOErrorInFunction
-        (
-            dict
-        )   << "Failed unloading library " << libPath
+        FatalIOErrorInFunction(dict)
+            << "Failed unloading library " << libPath
             << exit(FatalIOError);
     }
 }
@@ -192,9 +157,9 @@ void Foam::codedBase::unloadLibrary
 
 Foam::verbatimString Foam::codedBase::expandCodeString
 (
+    const dictionary& dict,
     const word& codeKey,
-    const word& codeDictVar,
-    const dictionary& dict
+    const word& codeDictVar
 ) const
 {
     verbatimString codeString;
@@ -294,17 +259,17 @@ bool Foam::codedBase::updateLibrary(const dictionary& dict) const
     // May need to unload old library
     unloadLibrary
     (
+        dict,
         oldLibPath_,
-        dynamicCode::libraryBaseName(oldLibPath_),
-        dict
+        dynamicCode::libraryBaseName(oldLibPath_)
     );
 
     // Try loading an existing library (avoid compilation when possible)
-    if (!loadLibrary(libPath, codeSha1Name(), dict))
+    if (!loadLibrary(dict, libPath, codeSha1Name()))
     {
         createLibrary(dict);
 
-        if (!loadLibrary(libPath, codeSha1Name(), dict))
+        if (!loadLibrary(dict, libPath, codeSha1Name()))
         {
             FatalIOErrorInFunction(dict)
                 << "Failed to load " << libPath << exit(FatalIOError);

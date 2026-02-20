@@ -34,12 +34,15 @@ License
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
+namespace Foam
+{
+    defineTypeNameAndDebug(dynamicCode, 0);
+}
+
 int Foam::dynamicCode::allowSystemOperations
 (
     Foam::debug::infoSwitch("allowSystemOperations", 0)
 );
-
-int Foam::dynamicCode::debug(Foam::debug::debugSwitch("dynamicCode", 0));
 
 const Foam::fileName Foam::dynamicCode::codeTemplateDirName
 (
