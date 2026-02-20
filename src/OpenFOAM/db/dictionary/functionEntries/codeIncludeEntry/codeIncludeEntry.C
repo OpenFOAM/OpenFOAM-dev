@@ -34,6 +34,7 @@ namespace Foam
 namespace functionEntries
 {
     defineFunctionTypeNameAndDebug(codeIncludeEntry, 0);
+    addToRunTimeSelectionTable(functionEntry, codeIncludeEntry, dictionary);
 }
 }
 
