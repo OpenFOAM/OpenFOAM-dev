@@ -270,6 +270,8 @@ public:
         //- Compile a libso
         bool wmakeLibso() const;
 
+        void* loadLibrary(const fileName& libPath) const;
+
         void createLibrary
         (
             const dictionary& dict,

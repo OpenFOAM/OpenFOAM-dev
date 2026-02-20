@@ -65,6 +65,8 @@ Foam::word Foam::codedBase::filterCodeName(const word& name)
 }
 
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
 void Foam::codedBase::checkLibrary
 (
     const dictionary& dict,
@@ -103,20 +105,16 @@ void* Foam::codedBase::loadLibrary
     const string& uniqueFuncName
 ) const
 {
-    void* lib = 0;
-
-    if (!libPath.empty())
+    if (libPath.empty())
     {
-        if (libs.open(libPath, false))
-        {
-            lib = libs.findLibrary(libPath);
+        return 0;
+    }
 
-            // Verify the loaded version
-            if (lib)
-            {
-                checkLibrary(dict, libPath, lib, uniqueFuncName, true);
-            }
-        }
+    void* lib = dynamicCode::loadLibrary(libPath);
+
+    if (lib)
+    {
+        checkLibrary(dict, libPath, lib, uniqueFuncName, true);
     }
 
     return lib;
@@ -152,8 +150,6 @@ void Foam::codedBase::unloadLibrary
     }
 }
 
-
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 Foam::verbatimString Foam::codedBase::expandCodeString
 (

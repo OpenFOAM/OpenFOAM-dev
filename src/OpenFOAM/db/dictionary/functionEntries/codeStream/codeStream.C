@@ -187,20 +187,10 @@ void* Foam::functionEntries::codeStream::compile
     // avoid compilation if possible by loading an existing library
     if (!lib)
     {
-        // Cached access to dl libs.
-        // Guarantees clean up upon destruction of Time.
-        if (libs.open(libPath, false))
-        {
-            lib = libs.findLibrary(libPath);
-        }
-        else
-        {
-            // Uncached opening of libPath. Do not complain if cannot be loaded
-            lib = dlOpen(libPath, false);
-        }
+        lib = dynCode.loadLibrary(libPath);
     }
 
-    // Create library if required
+    // Create library if required and load
     if (!lib)
     {
         dynCode.createLibrary
@@ -209,25 +199,7 @@ void* Foam::functionEntries::codeStream::compile
             masterOnlyRead(typeName, contextDict)
         );
 
-        if (libs.open(libPath, false))
-        {
-            if (debug)
-            {
-                Pout<< "Opening cached library:" << libPath << endl;
-            }
-
-            lib = libs.findLibrary(libPath);
-        }
-        else
-        {
-            // Uncached opening of libPath
-            if (debug)
-            {
-                Pout<< "Opening uncached library:" << libPath << endl;
-            }
-
-            lib = dlOpen(libPath, true);
-        }
+        lib = dynCode.loadLibrary(libPath);
     }
 
     if (!lib)
