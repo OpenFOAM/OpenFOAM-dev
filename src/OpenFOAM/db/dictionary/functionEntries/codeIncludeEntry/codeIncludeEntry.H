@@ -120,11 +120,7 @@ public:
     // Member Functions
 
         //- Execute the functionEntry in a sub-dict context
-        virtual bool execute(dictionary& parentDict, Istream&)
-        {
-            NotImplemented;
-            return false;
-        }
+        virtual bool execute(dictionary& parentDict, Istream&);
 
         //- Return the include file names
         const List<fileName>& fileNames() const
