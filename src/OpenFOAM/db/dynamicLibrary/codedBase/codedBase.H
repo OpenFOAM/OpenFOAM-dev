@@ -89,9 +89,6 @@ class codedBase
             const dictionary& dict
         ) const;
 
-        //- Create library
-        void createLibrary(const dictionary& dict) const;
-
 
 public:
 

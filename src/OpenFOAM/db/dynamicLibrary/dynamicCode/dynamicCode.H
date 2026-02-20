@@ -185,6 +185,8 @@ public:
         //- Flag if system operations are allowed
         static int allowSystemOperations;
 
+        static int debug;
+
 
     // Constructors
 
@@ -266,6 +268,12 @@ public:
 
         //- Compile a libso
         bool wmakeLibso() const;
+
+        void createLibrary
+        (
+            const dictionary& dict,
+            const bool masterOnlyRead = false
+        ) const;
 
         void read(const dictionary& contextDict, const dictionary& codeDict);
 

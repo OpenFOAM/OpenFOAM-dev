@@ -203,108 +203,17 @@ void* Foam::functionEntries::codeStream::compile
     // Create library if required
     if (!lib)
     {
-        const bool create =
-            Pstream::master()
-         || (regIOobject::fileModificationSkew <= 0);   // not NFS
-
-        if (create)
-        {
-            if (!dynCode.upToDate())
-            {
-                if (!dynCode.copyOrCreateFiles(true))
-                {
-                    FatalIOErrorInFunction
-                    (
-                        contextDict
-                    )   << "Failed writing files for" << nl
-                        << dynCode.libRelPath() << nl
-                        << exit(FatalIOError);
-                }
-            }
-
-            if (!dynCode.wmakeLibso())
-            {
-                FatalIOErrorInFunction
-                (
-                    contextDict
-                )   << "Failed wmake " << dynCode.libRelPath() << nl
-                    << exit(FatalIOError);
-            }
-        }
-
-        // Only block if not master only reading of a global dictionary
-        if
+        dynCode.createLibrary
         (
-           !masterOnlyRead(typeName ,contextDict)
-         && regIOobject::fileModificationSkew > 0
-        )
-        {
-            // Determine and communicate the master file size. Scattering
-            // blocks the other processes until the master has finished
-            // compiling.
-            off_t masterSize = Pstream::master() ? fileSize(libPath) : -1;
-            Pstream::scatter(masterSize);
-
-            // Determine the local file size. This may be incorrect if NFS is
-            // taking its time, in which case we wait and try again.
-            off_t mySize = Pstream::master() ? masterSize : fileSize(libPath);
-
-            if (debug)
-            {
-                Pout<< endl<< "on processor " << Pstream::myProcNo()
-                    << " have masterSize:" << masterSize
-                    << " and localSize:" << mySize
-                    << endl;
-            }
-
-            if (mySize < masterSize)
-            {
-                if (debug)
-                {
-                    Pout<< "Local file " << libPath
-                        << " not of same size (" << mySize
-                        << ") as master ("
-                        << masterSize << "). Waiting for "
-                        << regIOobject::fileModificationSkew
-                        << " seconds." << endl;
-                }
-                Foam::sleep(regIOobject::fileModificationSkew);
-
-                // Recheck local size
-                mySize = Foam::fileSize(libPath);
-
-                if (mySize < masterSize)
-                {
-                    FatalIOErrorInFunction
-                    (
-                        contextDict
-                    )   << "Cannot read (NFS mounted) library " << nl
-                        << libPath << nl
-                        << "on processor " << Pstream::myProcNo()
-                        << " detected size " << mySize
-                        << " whereas master size is " << masterSize
-                        << " bytes." << nl
-                        << "If your case is not NFS mounted"
-                        << " (so distributed) set fileModificationSkew"
-                        << " to 0"
-                        << exit(FatalIOError);
-                }
-            }
-
-            if (debug)
-            {
-                Pout<< endl<< "on processor " << Pstream::myProcNo()
-                    << " after waiting: have masterSize:" << masterSize
-                    << " and localSize:" << mySize
-                    << endl;
-            }
-        }
+            contextDict,
+            masterOnlyRead(typeName, contextDict)
+        );
 
         if (libs.open(libPath, false))
         {
             if (debug)
             {
-                Pout<< "Opening cached dictionary:" << libPath << endl;
+                Pout<< "Opening cached library:" << libPath << endl;
             }
 
             lib = libs.findLibrary(libPath);
@@ -314,7 +223,7 @@ void* Foam::functionEntries::codeStream::compile
             // Uncached opening of libPath
             if (debug)
             {
-                Pout<< "Opening uncached dictionary:" << libPath << endl;
+                Pout<< "Opening uncached library:" << libPath << endl;
             }
 
             lib = dlOpen(libPath, true);
@@ -323,27 +232,23 @@ void* Foam::functionEntries::codeStream::compile
 
     if (!lib)
     {
-        FatalIOErrorInFunction
-        (
-            contextDict
-        )   << "Failed loading library " << libPath << nl
+        FatalIOErrorInFunction(contextDict)
+            << "Failed loading library " << libPath << nl
             << "Did you add all libraries to the 'libs' entry"
             << " in system/controlDict?"
             << exit(FatalIOError);
     }
 
-    bool haveLib = lib;
+    bool allHaveLib = lib;
     if (!masterOnlyRead(typeName, contextDict))
     {
-        reduce(haveLib, andOp<bool>());
+        reduce(allHaveLib, andOp<bool>());
     }
 
-    if (!haveLib)
+    if (!allHaveLib)
     {
-        FatalIOErrorInFunction
-        (
-            contextDict
-        )   << "Failed loading library " << libPath
+        FatalIOErrorInFunction(contextDict)
+            << "Failed loading library " << libPath
             << " on some processors."
             << exit(FatalIOError);
     }
@@ -381,10 +286,8 @@ Foam::functionEntries::codeStream::getFunction
 
     if (!function)
     {
-        FatalIOErrorInFunction
-        (
-            contextDict
-        )   << "Failed looking up symbol " << codeName
+        FatalIOErrorInFunction(contextDict)
+            << "Failed looking up symbol " << codeName
             << " in library " << lib << exit(FatalIOError);
     }
 

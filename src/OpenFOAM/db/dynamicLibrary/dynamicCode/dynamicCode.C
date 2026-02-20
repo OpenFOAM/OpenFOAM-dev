@@ -28,6 +28,8 @@ License
 #include "IFstream.H"
 #include "OFstream.H"
 #include "OSHA1stream.H"
+#include "Pstream.H"
+#include "regIOobject.H"
 #include "OSspecific.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -36,6 +38,8 @@ int Foam::dynamicCode::allowSystemOperations
 (
     Foam::debug::infoSwitch("allowSystemOperations", 0)
 );
+
+int Foam::dynamicCode::debug(Foam::debug::debugSwitch("dynamicCode", 0));
 
 const Foam::fileName Foam::dynamicCode::codeTemplateDirName
 (
@@ -599,6 +603,115 @@ bool Foam::dynamicCode::upToDate() const
     }
 
     return true;
+}
+
+
+void Foam::dynamicCode::createLibrary
+(
+    const dictionary& dict,
+    const bool masterOnlyRead
+) const
+{
+    const bool create =
+        Pstream::master()
+     || (regIOobject::fileModificationSkew <= 0);   // Not NFS
+
+    if (create)
+    {
+        // Write files for new library
+        if (!upToDate())
+        {
+            if (!copyOrCreateFiles(true))
+            {
+                FatalIOErrorInFunction
+                (
+                    dict
+                )   << "Failed writing files for" << nl
+                    << libRelPath() << nl
+                    << exit(FatalIOError);
+            }
+        }
+
+        if (!wmakeLibso())
+        {
+            FatalIOErrorInFunction
+            (
+                dict
+            )   << "Failed wmake " << libRelPath() << nl
+                << exit(FatalIOError);
+        }
+    }
+
+    // All processes must wait for compile to finish
+    // Only block if not master only reading of a global dictionary
+    if
+    (
+       !masterOnlyRead
+     && regIOobject::fileModificationSkew > 0
+    )
+    {
+        const fileName libPath = this->libPath();
+
+        // Determine and communicate the master file size. Scattering
+        // blocks the other processes until the master has finished
+        // compiling.
+        off_t masterSize = Pstream::master() ? fileSize(libPath) : -1;
+        Pstream::scatter(masterSize);
+
+        // Determine the local file size. This may be incorrect if NFS is
+        // taking its time, in which case we wait and try again.
+        off_t mySize = Pstream::master() ? masterSize : fileSize(libPath);
+
+        if (debug)
+        {
+            Pout<< endl<< "on processor " << Pstream::myProcNo()
+                << " have masterSize:" << masterSize
+                << " and localSize:" << mySize
+                << endl;
+        }
+
+        if (mySize < masterSize)
+        {
+            if (debug)
+            {
+                Pout<< "Local file " << libPath
+                    << " not of same size (" << mySize
+                    << ") as master ("
+                    << masterSize << "). Waiting for "
+                    << regIOobject::fileModificationSkew
+                    << " seconds." << endl;
+            }
+            sleep(regIOobject::fileModificationSkew);
+
+            // Recheck local size
+            mySize = Foam::fileSize(libPath);
+
+            if (mySize < masterSize)
+            {
+                FatalIOErrorInFunction
+                (
+                    dict
+                )   << "Cannot read (NFS mounted) library " << nl
+                    << libPath << nl
+                    << "on processor " << Pstream::myProcNo()
+                    << " detected size " << mySize
+                    << " whereas master size is " << masterSize
+                    << " bytes." << nl
+                    << "If your case is not NFS mounted"
+                    << " (so distributed) set fileModificationSkew"
+                    << " to 0"
+                    << exit(FatalIOError);
+            }
+        }
+
+        if (debug)
+        {
+            Pout<< endl<< "on processor " << Pstream::myProcNo()
+                << " after waiting: have masterSize:" << masterSize
+                << " and localSize:" << mySize
+                << endl;
+        }
+    }
 }
 
 
