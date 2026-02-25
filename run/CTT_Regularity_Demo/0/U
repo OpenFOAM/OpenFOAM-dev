@@ -1,6 +1,0 @@
-FoamFile { version 2.0; format ascii; class volVectorField; object U; }
-dimensions [0 1 -1 0 0 0 0];
-internalField uniform (1 0 0);
-boundaryField {
-    "(topBottom|topBottom_neigh|leftRight|leftRight_neigh|frontBack|frontBack_neigh)" { type cyclic; }
-}
