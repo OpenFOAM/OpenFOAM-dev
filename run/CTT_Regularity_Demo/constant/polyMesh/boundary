@@ -1,0 +1,83 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2512                                  |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    arch        "LSB;label=32;scalar=64";
+    class       polyBoundaryMesh;
+    location    "constant/polyMesh";
+    object      boundary;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+6
+(
+    topBottom
+    {
+        type            cyclic;
+        inGroups        1(cyclic);
+        nFaces          1024;
+        startFace       95232;
+        matchTolerance  0.0001;
+        transform       unknown;
+        neighbourPatch  topBottom_neigh;
+    }
+    topBottom_neigh
+    {
+        type            cyclic;
+        inGroups        1(cyclic);
+        nFaces          1024;
+        startFace       96256;
+        matchTolerance  0.0001;
+        transform       unknown;
+        neighbourPatch  topBottom;
+    }
+    leftRight
+    {
+        type            cyclic;
+        inGroups        1(cyclic);
+        nFaces          1024;
+        startFace       97280;
+        matchTolerance  0.0001;
+        transform       unknown;
+        neighbourPatch  leftRight_neigh;
+    }
+    leftRight_neigh
+    {
+        type            cyclic;
+        inGroups        1(cyclic);
+        nFaces          1024;
+        startFace       98304;
+        matchTolerance  0.0001;
+        transform       unknown;
+        neighbourPatch  leftRight;
+    }
+    frontBack
+    {
+        type            cyclic;
+        inGroups        1(cyclic);
+        nFaces          1024;
+        startFace       99328;
+        matchTolerance  0.0001;
+        transform       unknown;
+        neighbourPatch  frontBack_neigh;
+    }
+    frontBack_neigh
+    {
+        type            cyclic;
+        inGroups        1(cyclic);
+        nFaces          1024;
+        startFace       100352;
+        matchTolerance  0.0001;
+        transform       unknown;
+        neighbourPatch  frontBack;
+    }
+)
+
+// ************************************************************************* //
