@@ -1,0 +1,2 @@
+cttNavierStokesFoam.C
+EXE = $(FOAM_USER_APPBIN)/cttNavierStokesFoam_CTT
