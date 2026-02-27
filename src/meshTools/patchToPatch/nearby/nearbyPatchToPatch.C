@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,10 +25,6 @@ License
 
 #include "nearbyPatchToPatch.H"
 #include "boundSphere.H"
-#include "OFstream.H"
-#include "OBJstream.H"
-#include "vtkWritePolyData.H"
-#include "mathematicalConstants.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -69,12 +65,7 @@ bool Foam::patchToPatches::nearby::intersectFaces
     const label tgtFacei
 )
 {
-    const point& srcC = srcSpheres_[srcFacei].first();
-    const scalar srcR = srcSpheres_[srcFacei].second();
-    const point& tgtC = tgtSpheres_[tgtFacei].first();
-    const scalar tgtR = tgtSpheres_[tgtFacei].second();
-
-    if (magSqr(srcC - tgtC) < sqr(srcR + tgtR))
+    if (boundSphere::overlap(srcSpheres_[srcFacei], tgtSpheres_[tgtFacei]))
     {
         srcLocalTgtFaces_[srcFacei].append(tgtFacei);
         tgtLocalSrcFaces_[tgtFacei].append(srcFacei);
@@ -108,7 +99,7 @@ void Foam::patchToPatches::nearby::initialise
     forAll(srcPatch, srcFacei)
     {
         srcSpheres_[srcFacei] =
-            boundSphere
+            boundSphere::local
             (
                 UIndirectList<point>(srcPatch.points(), srcPatch[srcFacei])
             );
@@ -118,7 +109,7 @@ void Foam::patchToPatches::nearby::initialise
     forAll(tgtPatch, tgtFacei)
     {
         tgtSpheres_[tgtFacei] =
-            boundSphere
+            boundSphere::local
             (
                 UIndirectList<point>(tgtPatch.points(), tgtPatch[tgtFacei])
             );

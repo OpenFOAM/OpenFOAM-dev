@@ -37,6 +37,7 @@ SourceFiles
 #define nearbyPatchToPatch_H
 
 #include "patchToPatch.H"
+#include "boundSphere.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -58,10 +59,10 @@ protected:
     // Private Data
 
         //- For each source face, the bounding sphere
-        List<Tuple2<point, scalar>> srcSpheres_;
+        List<boundSphere> srcSpheres_;
 
         //- For each target face, the bounding sphere
-        List<Tuple2<point, scalar>> tgtSpheres_;
+        List<boundSphere> tgtSpheres_;
 
 
     // Private Member Functions

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -175,7 +175,7 @@ inline Foam::scalar Foam::tetrahedron<Point, PointRef>::mag() const
 
 template<class Point, class PointRef>
 inline Foam::Tuple2<Point, Foam::scalar>
-Foam::tetrahedron<Point, PointRef>::circumSphere() const
+Foam::tetrahedron<Point, PointRef>::circumSphereSqr() const
 {
     const vector a = b_ - a_;
     const vector b = c_ - a_;
@@ -192,15 +192,27 @@ Foam::tetrahedron<Point, PointRef>::circumSphere() const
 
     if (Foam::mag(denom) < rootVSmall)
     {
-        // Degenerate. Return a point far away.
-        static const scalar sqrt3 = sqrt(scalar(3));
-        return Tuple2<Point, scalar>(point::uniform(great), sqrt3*great);
+        // Degenerate. Return an invalid sphere.
+        return Tuple2<Point, scalar>(point::uniform(NaN), -vGreat);
     }
     else
     {
         const vector v = (a + num/denom)/2;
-        return Tuple2<Point, scalar>(a_ + v, Foam::mag(v));
+        return Tuple2<Point, scalar>(a_ + v, magSqr(v));
     }
+}
+
+
+template<class Point, class PointRef>
+inline Foam::Tuple2<Point, Foam::scalar>
+Foam::tetrahedron<Point, PointRef>::circumSphere() const
+{
+    const Tuple2<Point, scalar> crSqr = circumSphereSqr();
+
+    // Invalid. Return without conversion.
+    if (crSqr.second() < 0) return crSqr;
+
+    return Tuple2<Point, scalar>(crSqr.first(), sqrt(crSqr.second()));
 }
 
 
@@ -208,8 +220,13 @@ template<class Point, class PointRef>
 inline Foam::scalar Foam::tetrahedron<Point, PointRef>::quality() const
 {
     const scalar r = circumSphere().second();
+
+    // Invalid. Return zero.
+    if (r < 0) return 0;
+
     static const scalar sqrt3 = sqrt(scalar(3));
-    return mag()/((8.0/27.0)*sqrt3*pow3(min(r, great)) + rootVSmall);
+
+    return mag()/(8.0/27.0*sqrt3*pow3(min(r, great)) + rootVSmall);
 }
 
 

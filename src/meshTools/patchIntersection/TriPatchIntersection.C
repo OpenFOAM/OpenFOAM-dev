@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -923,9 +923,12 @@ Foam::TriPatchIntersection<SrcPatchType, TgtPatchType>::circumDistSqr
 
     const triPointRef t = triPoints(trii).tri(points);
 
-    const Tuple2<point, scalar> circle = t.circumCircle();
+    const Tuple2<point, scalar> crSqr = t.circumCircleSqr();
 
-    return magSqr(points[pointi] - circle.first()) - sqr(circle.second());
+    return
+        crSqr.second() < 0
+      ? - vGreat
+      : magSqr(points[pointi] - crSqr.first()) - crSqr.second();
 }
 
 
@@ -1020,6 +1023,7 @@ void Foam::TriPatchIntersection<SrcPatchType, TgtPatchType>::insertPoints
             forAll(candidateTriTris_, candidateTrii)
             {
                 const label trii = candidateTriTris_[candidateTrii];
+
                 if (trii == -1) continue;
                 const scalar distSqr = circumDistSqr(trii, pointi);
                 if (distSqr < minDistSqr)
@@ -3797,31 +3801,31 @@ Foam::TriPatchIntersection<SrcPatchType, TgtPatchType>::TriPatchIntersection
     }
 
     // Create bound spheres for patch faces for proximity testing
-    List<Tuple2<point, scalar>> srcFaceSpheres(this->srcPatch_.size());
-    List<Tuple2<point, scalar>> tgtFaceSpheres(this->tgtPatch_.size());
+    List<boundSphere> srcFaceSpheres(this->srcPatch_.size());
+    List<boundSphere> tgtFaceSpheres(this->tgtPatch_.size());
     forAll(this->srcPatch_, srcFacei)
     {
         const triFace& srcFace = this->srcPatch_.localFaces()[srcFacei];
         srcFaceSpheres[srcFacei] =
-            trivialBoundSphere
+            boundSphere::trivial
             (
                 this->srcPatch_.localPoints(),
                 {srcFace[0], srcFace[1], srcFace[2], -1},
                 3
             );
-        srcFaceSpheres[srcFacei].second() *= 1 + snapTol;
+        srcFaceSpheres[srcFacei].inflate(snapTol);
     }
     forAll(this->tgtPatch_, tgtFacei)
     {
         const triFace& tgtFace = this->tgtPatch_.localFaces()[tgtFacei];
         tgtFaceSpheres[tgtFacei] =
-            trivialBoundSphere
+            boundSphere::trivial
             (
                 this->tgtPatch_.localPoints(),
                 {tgtFace[0], tgtFace[1], tgtFace[2], -1},
                 3
             );
-        tgtFaceSpheres[tgtFacei].second() *= 1 + snapTol;
+        tgtFaceSpheres[tgtFacei].inflate(snapTol);
     }
 
     // Construct table to store what faces have been snapped
@@ -3866,14 +3870,13 @@ Foam::TriPatchIntersection<SrcPatchType, TgtPatchType>::TriPatchIntersection
                         const label tgtFacej =
                             tgtPointFaces[tgtPointi][tgtPointFacei];
 
-                        const point& srcC = srcFaceSpheres[srcFacej].first();
-                        const scalar srcR = srcFaceSpheres[srcFacej].second();
-                        const point& tgtC = tgtFaceSpheres[tgtFacej].first();
-                        const scalar tgtR = tgtFaceSpheres[tgtFacej].second();
-
                         if
                         (
-                            magSqr(srcC - tgtC) < sqr(srcR + tgtR)
+                            boundSphere::overlap
+                            (
+                                srcFaceSpheres[srcFacej],
+                                tgtFaceSpheres[tgtFacej]
+                            )
                          && !srcFaceTgtFaceSnaps.found({srcFacej, tgtFacej})
                         )
                         {
