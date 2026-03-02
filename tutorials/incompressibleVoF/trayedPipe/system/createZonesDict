@@ -112,6 +112,8 @@ baffles
     }
 }
 
+print;
+
 // Remove temporary faceZones
 remove
 {
