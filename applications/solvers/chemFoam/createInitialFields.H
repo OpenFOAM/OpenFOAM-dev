@@ -99,7 +99,7 @@ Info<< "Creating base fields for time " << runTime.name() << endl;
         forAllConstIter(dictionary, specieFractions, iter)
         {
             specieNames[i] = iter().keyword();
-            Y0[i] = readScalar(iter().stream());
+            Y0[i++] = readScalar(iter().stream());
         }
 
         const scalar mTot = sum(Y0);
