@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,7 @@ class objectRegistry
         fileName dbDir_;
 
         //- Current event
-        mutable label event_;
+        mutable uint64_t event_;
 
         //- Table of temporary object names with current state
         mutable HashTable<Pair<bool>> cacheTemporaryObjects_;
@@ -231,7 +231,7 @@ public:
             const Type& lookupType(const word& group = word::null) const;
 
             //- Return new event number.
-            label getEvent() const;
+            uint64_t getEvent() const;
 
             //- Return the object registry
             const objectRegistry& thisDb() const

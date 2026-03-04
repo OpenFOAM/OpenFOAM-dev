@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,7 @@ class regIOobject
         mutable labelList watchIndices_;
 
         //- eventNo of last update
-        label eventNo_;
+        uint64_t eventNo_;
 
         //- Istream for reading
         autoPtr<ISstream> isPtr_;
@@ -208,10 +208,10 @@ public:
         // Dependency checking
 
             //- Event number at last update.
-            inline label eventNo() const;
+            inline uint64_t eventNo() const;
 
             //- Event number at last update.
-            inline label& eventNo();
+            inline uint64_t& eventNo();
 
             //- Return true if up-to-date with respect to given object
             //  otherwise false

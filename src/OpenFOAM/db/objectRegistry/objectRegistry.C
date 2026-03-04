@@ -226,39 +226,15 @@ const Foam::objectRegistry& Foam::objectRegistry::subRegistry
 }
 
 
-Foam::label Foam::objectRegistry::getEvent() const
+uint64_t Foam::objectRegistry::getEvent() const
 {
-    label curEvent = event_++;
+    uint64_t curEvent = event_++;
 
-    if (event_ == labelMax)
+    if (event_ == pTraits<uint64_t>::max)
     {
-        if (objectRegistry::debug)
-        {
-            WarningInFunction
-                << "Event counter has overflowed. "
-                << "Resetting counter on all dependent objects." << nl
-                << "This might cause extra evaluations." << endl;
-        }
-
-        // Reset event counter
-        curEvent = 1;
-        event_ = 2;
-
-        for (const_iterator iter = begin(); iter != end(); ++iter)
-        {
-            const regIOobject& io = *iter();
-
-            if (objectRegistry::debug)
-            {
-                Pout<< "objectRegistry::getEvent() : "
-                    << "resetting count on " << iter.key() << endl;
-            }
-
-            if (io.eventNo() != 0)
-            {
-                const_cast<regIOobject&>(io).eventNo() = curEvent;
-            }
-        }
+        FatalErrorInFunction
+            << "Event counter has overflowed!"
+            << abort(FatalError);
     }
 
     return curEvent;

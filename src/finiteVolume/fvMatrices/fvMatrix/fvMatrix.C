@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -326,10 +326,9 @@ Foam::fvMatrix<Type>::fvMatrix
     }
 
     // Update the boundary coefficients of psi without changing its event No.
-    VolField<Type>& psiRef =
-       const_cast<VolField<Type>&>(psi_);
+    VolField<Type>& psiRef = const_cast<VolField<Type>&>(psi_);
 
-    label currentStatePsi = psiRef.eventNo();
+    const uint64_t currentStatePsi = psiRef.eventNo();
     psiRef.boundaryFieldRef().updateCoeffs();
     psiRef.eventNo() = currentStatePsi;
 }
