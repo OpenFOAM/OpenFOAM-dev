@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,11 +100,12 @@ Foam::fv::interfaceTurbulenceDamping::interfaceFraction
     forAll(mesh.boundary(), patchi)
     {
         const labelUList& own = mesh.boundary()[patchi].faceCells();
+        const fvsPatchVectorField& pSf = Sf.boundaryField()[patchi];
         const fvsPatchScalarField& palphaf = alphaf.boundaryField()[patchi];
 
         forAll(mesh.boundary()[patchi], facei)
         {
-            const scalar nSf(mag(n[own[facei]] & Sf[facei]));
+            const scalar nSf(mag(n[own[facei]] & pSf[facei]));
             A[own[facei]] += nSf*(palphaf[facei] - ialpha[own[facei]]);
             sumnSf[own[facei]] += nSf;
         }
