@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -573,8 +573,8 @@ public:
             template<class Type>
             void relax
             (
-                DimensionedField<Type, volMesh>& field,
-                const DimensionedField<Type, volMesh>& field0,
+                DimensionedField<Type, fvMesh>& field,
+                const DimensionedField<Type, fvMesh>& field0,
                 const word& name
             ) const;
 
@@ -582,7 +582,7 @@ public:
             template<class Type>
             void scale
             (
-                DimensionedField<Type, volMesh>& field,
+                DimensionedField<Type, fvMesh>& field,
                 const word& name
             ) const;
 

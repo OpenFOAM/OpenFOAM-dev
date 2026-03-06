@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,6 @@ Description
 #define MapFvVolField_H
 
 #include "Field.H"
-#include "volMesh.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -39,7 +38,7 @@ namespace Foam
 {
 
 template<class Type, class MeshMapper>
-class MapInternalField<Type, MeshMapper, volMesh>
+class MapInternalField<Type, MeshMapper, fvMesh>
 {
 public:
 
@@ -48,16 +47,16 @@ public:
 
     void operator()
     (
-        DimensionedField<Type, volMesh>& field,
+        DimensionedField<Type, fvMesh>& field,
         const MeshMapper& mapper
     ) const;
 };
 
 
 template<class Type, class MeshMapper>
-void MapInternalField<Type, MeshMapper, volMesh>::operator()
+void MapInternalField<Type, MeshMapper, fvMesh>::operator()
 (
-    DimensionedField<Type, volMesh>& field,
+    DimensionedField<Type, fvMesh>& field,
     const MeshMapper& mapper
 ) const
 {

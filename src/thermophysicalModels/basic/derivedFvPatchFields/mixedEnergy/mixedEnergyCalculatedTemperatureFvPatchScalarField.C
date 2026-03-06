@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ Foam::mixedEnergyCalculatedTemperatureFvPatchScalarField::
 mixedEnergyCalculatedTemperatureFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF
+    const DimensionedField<scalar, fvMesh>& iF
 )
 :
     calculatedFvPatchScalarField(p, iF),
@@ -57,7 +57,7 @@ Foam::mixedEnergyCalculatedTemperatureFvPatchScalarField::
 mixedEnergyCalculatedTemperatureFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
+    const DimensionedField<scalar, fvMesh>& iF,
     const dictionary& dict
 )
 :
@@ -75,7 +75,7 @@ mixedEnergyCalculatedTemperatureFvPatchScalarField
 (
     const mixedEnergyCalculatedTemperatureFvPatchScalarField& ptf,
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
+    const DimensionedField<scalar, fvMesh>& iF,
     const fieldMapper& mapper
 )
 :
@@ -90,7 +90,7 @@ Foam::mixedEnergyCalculatedTemperatureFvPatchScalarField::
 mixedEnergyCalculatedTemperatureFvPatchScalarField
 (
     const mixedEnergyCalculatedTemperatureFvPatchScalarField& ptf,
-    const DimensionedField<scalar, volMesh>& iF
+    const DimensionedField<scalar, fvMesh>& iF
 )
 :
     calculatedFvPatchScalarField(ptf, iF),

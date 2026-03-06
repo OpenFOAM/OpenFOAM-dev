@@ -647,10 +647,6 @@ meshes/treeBoundBox/treeBoundBox.C
 meshTools = meshes/meshTools
 $(meshTools)/matchPoints.C
 
-fields/UniformDimensionedFields/uniformDimensionedFields.C
-
-fields/UniformGeometricFields/uniformGeometricFields.C
-
 Fields = fields/Fields
 
 $(Fields)/fieldMappers/fieldMapper/fieldMapper.C
@@ -722,6 +718,12 @@ $(derivedPointPatchFields)/uniformFixedValue/uniformFixedValuePointPatchFields.C
 $(derivedPointPatchFields)/codedFixedValue/codedFixedValuePointPatchFields.C
 
 fields/GeometricFields/pointFields/pointFields.C
+
+fields/DimensionedFields/DimensionedFieldFunctions/makeDimensionedPointFieldFunctions.C
+
+fields/UniformDimensionedFields/uniformDimensionedFields.C
+
+fields/UniformGeometricFields/uniformGeometricFields.C
 
 meshes/bandCompression/bandCompression.C
 meshes/preservePatchTypes/preservePatchTypes.C

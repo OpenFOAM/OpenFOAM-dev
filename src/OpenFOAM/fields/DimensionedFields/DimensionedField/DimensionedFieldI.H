@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ Foam::DimensionedField<Type, GeoMesh, PrimitiveField>::null()
 
 
 template<class Type, class GeoMesh, template<class> class PrimitiveField>
-inline const typename GeoMesh::Mesh&
+inline const GeoMesh&
 Foam::DimensionedField<Type, GeoMesh, PrimitiveField>::mesh() const
 {
     return mesh_;

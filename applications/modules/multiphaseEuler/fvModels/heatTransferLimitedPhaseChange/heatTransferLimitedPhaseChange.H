@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -159,13 +159,13 @@ public:
 
             //- Return the fraction of the latent heat that is transferred into
             //  the second phase
-            virtual tmp<DimensionedField<scalar, volMesh>> Lfraction() const;
+            virtual tmp<DimensionedField<scalar, fvMesh>> Lfraction() const;
 
 
         // Sources
 
             //- Return the mass transfer rate
-            virtual tmp<DimensionedField<scalar, volMesh>> mDot() const;
+            virtual tmp<DimensionedField<scalar, fvMesh>> mDot() const;
 
             //- Use phaseChange's source functions
             using phaseChange::addSup;

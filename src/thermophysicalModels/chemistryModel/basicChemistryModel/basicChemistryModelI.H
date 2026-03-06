@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,7 +44,7 @@ inline Foam::Switch Foam::basicChemistryModel::chemistry() const
 }
 
 
-inline const Foam::DimensionedField<Foam::scalar, Foam::volMesh>&
+inline const Foam::DimensionedField<Foam::scalar, Foam::fvMesh>&
 Foam::basicChemistryModel::deltaTChem() const
 {
     return deltaTChem_;

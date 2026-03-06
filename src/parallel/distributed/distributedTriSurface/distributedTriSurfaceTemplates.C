@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ License
 //    List<Type>& values
 //) const
 //{
-//    typedef DimensionedField<Type, triSurfaceGeoMesh> DimensionedSurfField;
+//    typedef DimensionedField<Type, triSurface> DimensionedSurfField;
 //
 //
 //    // Get query data (= local index of triangle)
@@ -86,7 +86,7 @@ void Foam::searchableSurfaces::distributedTriSurface::distributeFields
     const distributionMap& map
 )
 {
-    typedef DimensionedField<Type, triSurfaceGeoMesh> DimensionedSurfField;
+    typedef DimensionedField<Type, Foam::triSurface> DimensionedSurfField;
 
     HashTable<DimensionedSurfField*> fields
     (

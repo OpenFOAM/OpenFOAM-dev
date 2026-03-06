@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,17 +24,16 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "syringePressureFvPatchScalarField.H"
-#include "volMesh.H"
-#include "addToRunTimeSelectionTable.H"
 #include "fieldMapper.H"
 #include "surfaceFields.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::syringePressureFvPatchScalarField::syringePressureFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
+    const DimensionedField<scalar, fvMesh>& iF,
     const dictionary& dict
 )
 :
@@ -62,7 +61,7 @@ Foam::syringePressureFvPatchScalarField::syringePressureFvPatchScalarField
 (
     const syringePressureFvPatchScalarField& sppsf,
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
+    const DimensionedField<scalar, fvMesh>& iF,
     const fieldMapper& mapper
 )
 :
@@ -86,7 +85,7 @@ Foam::syringePressureFvPatchScalarField::syringePressureFvPatchScalarField
 Foam::syringePressureFvPatchScalarField::syringePressureFvPatchScalarField
 (
     const syringePressureFvPatchScalarField& sppsf,
-    const DimensionedField<scalar, volMesh>& iF
+    const DimensionedField<scalar, fvMesh>& iF
 )
 :
     fixedValueFvPatchScalarField(sppsf, iF),

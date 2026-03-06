@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,7 +80,7 @@ class conformedFvPatchField
         conformedFvPatchField
         (
             const fvPatch&,
-            const DimensionedField<Type, volMesh>&,
+            const DimensionedField<Type, fvMesh>&,
             autoPtr<fvPatchField<Type>>&& origFieldPtr,
             PtrList<fvPatchField<Type>>&& ncFieldPtrs,
             PtrList<scalarField>&& ncCoverages
@@ -116,14 +116,14 @@ public:
         conformedFvPatchField
         (
             const fvPatch&,
-            const DimensionedField<Type, volMesh>&
+            const DimensionedField<Type, fvMesh>&
         );
 
         //- Construct from patch, internal field and dictionary
         conformedFvPatchField
         (
             const fvPatch&,
-            const DimensionedField<Type, volMesh>&,
+            const DimensionedField<Type, fvMesh>&,
             const dictionary&
         );
 
@@ -133,7 +133,7 @@ public:
         (
             const conformedFvPatchField<Type>&,
             const fvPatch&,
-            const DimensionedField<Type, volMesh>&,
+            const DimensionedField<Type, fvMesh>&,
             const fieldMapper&
         );
 
@@ -147,13 +147,13 @@ public:
         conformedFvPatchField
         (
             const conformedFvPatchField<Type>&,
-            const DimensionedField<Type, volMesh>&
+            const DimensionedField<Type, fvMesh>&
         );
 
         //- Construct and return a clone setting internal field reference
         virtual tmp<fvPatchField<Type>> clone
         (
-            const DimensionedField<Type, volMesh>& iF
+            const DimensionedField<Type, fvMesh>& iF
         ) const
         {
             return tmp<fvPatchField<Type>>

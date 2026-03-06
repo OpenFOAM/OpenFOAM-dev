@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-class volMesh;
+class fvMesh;
 
 template<class Type>
 class fvPatchField;
@@ -49,12 +49,12 @@ class slicedFvPatchField;
 template<class Type, class GeoMesh>
 class SlicedGeometricField;
 
-typedef SlicedGeometricField<scalar, volMesh> slicedVolScalarField;
-typedef SlicedGeometricField<vector, volMesh> slicedVolVectorField;
-typedef SlicedGeometricField<sphericalTensor, volMesh>
+typedef SlicedGeometricField<scalar, fvMesh> slicedVolScalarField;
+typedef SlicedGeometricField<vector, fvMesh> slicedVolVectorField;
+typedef SlicedGeometricField<sphericalTensor, fvMesh>
     slicedVolSphericalTensorField;
-typedef SlicedGeometricField<symmTensor, volMesh> slicedVolSymmTensorField;
-typedef SlicedGeometricField<tensor, volMesh> slicedVolTensorField;
+typedef SlicedGeometricField<symmTensor, fvMesh> slicedVolSymmTensorField;
+typedef SlicedGeometricField<tensor, fvMesh> slicedVolTensorField;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ Foam::fvc::scheme
 {
     return surfaceInterpolationScheme<Type>::New
     (
-        faceFlux.mesh(),
+        faceFlux.mesh()(),
         faceFlux,
         streamData
     );
@@ -53,9 +53,9 @@ Foam::tmp<Foam::surfaceInterpolationScheme<Type>> Foam::fvc::scheme
 {
     return surfaceInterpolationScheme<Type>::New
     (
-        faceFlux.mesh(),
+        faceFlux.mesh()(),
         faceFlux,
-        faceFlux.mesh().schemes().interpolation(name)
+        faceFlux.mesh()().schemes().interpolation(name)
     );
 }
 
@@ -273,7 +273,7 @@ template<class Type>
 Foam::tmp<Foam::FieldField<Foam::surfaceMesh::PatchField, Type>>
 Foam::fvc::interpolate
 (
-    const FieldField<volMesh::PatchField, Type>& fvpff
+    const FieldField<fvMesh::PatchField, Type>& fvpff
 )
 {
     FieldField<surfaceMesh::PatchField, Type>* fvspffPtr
@@ -302,7 +302,7 @@ template<class Type>
 Foam::tmp<Foam::FieldField<Foam::surfaceMesh::PatchField, Type>>
 Foam::fvc::interpolate
 (
-    const tmp<FieldField<volMesh::PatchField, Type>>& tfvpff
+    const tmp<FieldField<fvMesh::PatchField, Type>>& tfvpff
 )
 {
     tmp<FieldField<surfaceMesh::PatchField, Type>> tfvspff =

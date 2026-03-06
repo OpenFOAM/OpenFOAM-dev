@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,7 @@ template<class Type>
 Foam::calculatedFvPatchField<Type>::calculatedFvPatchField
 (
     const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF
+    const DimensionedField<Type, fvMesh>& iF
 )
 :
     fvPatchField<Type>(p, iF)
@@ -70,7 +70,7 @@ template<class Type>
 Foam::calculatedFvPatchField<Type>::calculatedFvPatchField
 (
     const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
+    const DimensionedField<Type, fvMesh>& iF,
     const dictionary& dict,
     const bool valueRequired
 )
@@ -84,7 +84,7 @@ Foam::calculatedFvPatchField<Type>::calculatedFvPatchField
 (
     const calculatedFvPatchField<Type>& ptf,
     const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
+    const DimensionedField<Type, fvMesh>& iF,
     const fieldMapper& mapper,
     const bool mappingRequired
 )
@@ -102,7 +102,7 @@ template<class Type>
 Foam::calculatedFvPatchField<Type>::calculatedFvPatchField
 (
     const calculatedFvPatchField<Type>& ptf,
-    const DimensionedField<Type, volMesh>& iF
+    const DimensionedField<Type, fvMesh>& iF
 )
 :
     fvPatchField<Type>(ptf, iF)
@@ -124,7 +124,7 @@ Foam::fvPatchField<Type>::NewCalculatedType
         return patchTypeCstrIter()
         (
             p,
-            DimensionedField<Type, volMesh>::null()
+            DimensionedField<Type, fvMesh>::null()
         );
     }
     else
@@ -134,7 +134,7 @@ Foam::fvPatchField<Type>::NewCalculatedType
             new calculatedFvPatchField<Type>
             (
                 p,
-                DimensionedField<Type, volMesh>::null()
+                DimensionedField<Type, fvMesh>::null()
             )
         );
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ License
 template<class Type>
 Foam::NaNFvFieldSource<Type>::NaNFvFieldSource
 (
-    const DimensionedField<Type, volMesh>& iF,
+    const DimensionedField<Type, fvMesh>& iF,
     const dictionary& dict
 )
 :
@@ -43,7 +43,7 @@ template<class Type>
 Foam::NaNFvFieldSource<Type>::NaNFvFieldSource
 (
     const NaNFvFieldSource<Type>& field,
-    const DimensionedField<Type, volMesh>& iF
+    const DimensionedField<Type, fvMesh>& iF
 )
 :
     fvFieldSource<Type>(field, iF)
@@ -60,15 +60,15 @@ Foam::NaNFvFieldSource<Type>::~NaNFvFieldSource()
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::DimensionedField<Type, Foam::volMesh>>
+Foam::tmp<Foam::DimensionedField<Type, Foam::fvMesh>>
 Foam::NaNFvFieldSource<Type>::sourceValue
 (
     const fvSource& model,
-    const DimensionedField<scalar, volMesh>& source
+    const DimensionedField<scalar, fvMesh>& source
 ) const
 {
     return
-        DimensionedField<Type, volMesh>::New
+        DimensionedField<Type, fvMesh>::New
         (
             model.name() + ":" + this->internalField().name() + "SourceValue",
             this->internalField().mesh(),
@@ -96,15 +96,15 @@ Foam::NaNFvFieldSource<Type>::sourceValue
 
 
 template<class Type>
-Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::fvMesh>>
 Foam::NaNFvFieldSource<Type>::internalCoeff
 (
     const fvSource& model,
-    const DimensionedField<scalar, volMesh>& source
+    const DimensionedField<scalar, fvMesh>& source
 ) const
 {
     return
-        DimensionedField<scalar, volMesh>::New
+        DimensionedField<scalar, fvMesh>::New
         (
             model.name() + ":" + this->internalField().name() + "InternalCoeff",
             this->internalField().mesh(),

@@ -199,7 +199,7 @@ Foam::ubCoupledTemperatureFvPatchScalarField::
 ubCoupledTemperatureFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
+    const DimensionedField<scalar, fvMesh>& iF,
     const dictionary& dict
 )
 :
@@ -212,7 +212,7 @@ ubCoupledTemperatureFvPatchScalarField
 (
     const ubCoupledTemperatureFvPatchScalarField& psf,
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
+    const DimensionedField<scalar, fvMesh>& iF,
     const fieldMapper& mapper
 )
 :
@@ -224,7 +224,7 @@ Foam::ubCoupledTemperatureFvPatchScalarField::
 ubCoupledTemperatureFvPatchScalarField
 (
     const ubCoupledTemperatureFvPatchScalarField& psf,
-    const DimensionedField<scalar, volMesh>& iF
+    const DimensionedField<scalar, fvMesh>& iF
 )
 :
     coupledTemperatureFvPatchScalarField(psf, iF)

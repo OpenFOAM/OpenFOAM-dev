@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -244,6 +244,7 @@ void Foam::vtkPVFoam::convertSurfaceFields
         FatalIOError.dontThrowExceptions();
 
         const SurfaceField<Type>& tf = ttf();
+        const fvMesh& mesh = tf.mesh()();
 
         // Convert patches - if activated
         for
@@ -255,7 +256,7 @@ void Foam::vtkPVFoam::convertSurfaceFields
         {
             const word patchName = getPartName(partId);
             const label datasetNo = partDataset_[partId];
-            const label patchId = tf.mesh().boundaryMesh().findIndex(patchName);
+            const label patchId = mesh.boundaryMesh().findIndex(patchName);
 
             if (!partStatus_[partId] || datasetNo < 0 || patchId < 0)
             {
@@ -293,7 +294,7 @@ void Foam::vtkPVFoam::convertSurfaceFields
                 continue;
             }
 
-            const faceZoneList& zMesh = tf.mesh().faceZones();
+            const faceZoneList& zMesh = mesh.faceZones();
             const label zoneId = zMesh.findIndex(zoneName);
 
             if (zoneId < 0)
@@ -307,7 +308,7 @@ void Foam::vtkPVFoam::convertSurfaceFields
                 output,
                 arrayRangeFaceZones_,
                 datasetNo,
-                tf.mesh(),
+                mesh,
                 zMesh[zoneId]
             );
         }
@@ -331,7 +332,7 @@ void Foam::vtkPVFoam::convertSurfaceFields
             const autoPtr<faceSet> fSetPtr =
                 reader_->GetDecomposedCase()
               ? procMeshesPtr_->reconstructSet<faceSet>(selectName)
-              : autoPtr<faceSet>(new faceSet(tf.mesh(), selectName));
+              : autoPtr<faceSet>(new faceSet(mesh, selectName));
 
             convertSurfaceField
             (
@@ -339,7 +340,7 @@ void Foam::vtkPVFoam::convertSurfaceFields
                 output,
                 arrayRangeFaceSets_,
                 datasetNo,
-                tf.mesh(),
+                mesh,
                 fSetPtr().toc()
             );
         }

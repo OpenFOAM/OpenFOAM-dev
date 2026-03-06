@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,7 +58,6 @@ SourceFiles
 #include "autoPtr.H"
 #include "volFieldsFwd.H"
 #include "surfaceFieldsFwd.H"
-#include "surfaceMesh.H"
 #include "polyMesh.H"
 #include "coordinateSystems.H"
 #include "interpolation.H"

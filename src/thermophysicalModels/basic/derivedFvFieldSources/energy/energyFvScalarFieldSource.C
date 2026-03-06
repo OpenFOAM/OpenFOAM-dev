@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,7 @@ License
 
 Foam::energyFvScalarFieldSource::energyFvScalarFieldSource
 (
-    const DimensionedField<scalar, volMesh>& iF
+    const DimensionedField<scalar, fvMesh>& iF
 )
 :
     fvScalarFieldSource(iF)
@@ -43,7 +43,7 @@ Foam::energyFvScalarFieldSource::energyFvScalarFieldSource
 
 Foam::energyFvScalarFieldSource::energyFvScalarFieldSource
 (
-    const DimensionedField<scalar, volMesh>& iF,
+    const DimensionedField<scalar, fvMesh>& iF,
     const dictionary& dict
 )
 :
@@ -54,7 +54,7 @@ Foam::energyFvScalarFieldSource::energyFvScalarFieldSource
 Foam::energyFvScalarFieldSource::energyFvScalarFieldSource
 (
     const energyFvScalarFieldSource& field,
-    const DimensionedField<scalar, volMesh>& iF
+    const DimensionedField<scalar, fvMesh>& iF
 )
 :
     fvScalarFieldSource(field, iF)
@@ -69,11 +69,11 @@ Foam::energyFvScalarFieldSource::~energyFvScalarFieldSource()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::fvMesh>>
 Foam::energyFvScalarFieldSource::sourceValue
 (
     const fvSource& model,
-    const DimensionedField<scalar, volMesh>& source
+    const DimensionedField<scalar, fvMesh>& source
 ) const
 {
     const basicThermo& thermo = basicThermo::lookupThermo(*this);
@@ -117,11 +117,11 @@ Foam::energyFvScalarFieldSource::sourceValue
 }
 
 
-Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::fvMesh>>
 Foam::energyFvScalarFieldSource::internalCoeff
 (
     const fvSource& model,
-    const DimensionedField<scalar, volMesh>& source
+    const DimensionedField<scalar, fvMesh>& source
 ) const
 {
     const basicThermo& thermo = basicThermo::lookupThermo(*this);

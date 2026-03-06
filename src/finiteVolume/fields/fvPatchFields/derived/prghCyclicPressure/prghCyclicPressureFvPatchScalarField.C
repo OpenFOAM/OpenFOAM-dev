@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ License
 Foam::prghCyclicPressureFvPatchScalarField::prghCyclicPressureFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
+    const DimensionedField<scalar, fvMesh>& iF,
     const dictionary& dict
 )
 :
@@ -67,7 +67,7 @@ Foam::prghCyclicPressureFvPatchScalarField::prghCyclicPressureFvPatchScalarField
 (
     const prghCyclicPressureFvPatchScalarField& ptf,
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
+    const DimensionedField<scalar, fvMesh>& iF,
     const fieldMapper& mapper
 )
 :
@@ -81,7 +81,7 @@ Foam::prghCyclicPressureFvPatchScalarField::prghCyclicPressureFvPatchScalarField
 Foam::prghCyclicPressureFvPatchScalarField::prghCyclicPressureFvPatchScalarField
 (
     const prghCyclicPressureFvPatchScalarField& ptf,
-    const DimensionedField<scalar, volMesh>& iF
+    const DimensionedField<scalar, fvMesh>& iF
 )
 :
     jumpCyclicFvPatchScalarField(ptf, iF),

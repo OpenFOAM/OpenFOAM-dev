@@ -391,7 +391,7 @@ public:
         ) const;
 
         //- Get the slicer for the given source
-        inline DimensionedFieldListAndSlicer<scalar, volMesh> Yslicer
+        inline DimensionedFieldListAndSlicer<scalar, fvMesh> Yslicer
         (
             const fvSource& model,
             const volScalarField::Internal& source
@@ -400,7 +400,7 @@ public:
         //- Get the composition of a source cell
         inline scalarFieldListSlice sourceCellComposition
         (
-            const DimensionedFieldListAndSlicer<scalar, volMesh>& Yslicer,
+            const DimensionedFieldListAndSlicer<scalar, fvMesh>& Yslicer,
             const label i
         ) const;
 

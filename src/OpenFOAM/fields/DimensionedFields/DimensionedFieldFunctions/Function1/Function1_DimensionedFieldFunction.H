@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,81 +22,83 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::GeoMesh
+    Foam::DimensionedFieldFunctions::Function1
 
 Description
-    Generic mesh wrapper used by volMesh, surfaceMesh, pointMesh etc.
+
+SourceFiles
+    Function1_DimensionedFieldFunction.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef GeoMesh_H
-#define GeoMesh_H
+#ifndef Function1_DimensionedFieldFunction_H
+#define Function1_DimensionedFieldFunction_H
 
-#include "objectRegistry.H"
+#include "DimensionedFieldFunction.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-/*---------------------------------------------------------------------------*\
-                           Class GeoMesh Declaration
-\*---------------------------------------------------------------------------*/
-
-template<class MESH>
-class GeoMesh
+namespace DimensionedFieldFunctions
 {
 
-protected:
+/*---------------------------------------------------------------------------*\
+                            Class Function1 Declaration
+\*---------------------------------------------------------------------------*/
 
-    // Protected data
+template<class DimensionedFieldType>
+class Function1
+:
+    public DimensionedFieldFunction<DimensionedFieldType>
+{
+        autoPtr<Foam::Function1<typename DimensionedFieldType::Type_>> funcPtr_;
 
-        //- Reference to Mesh
-        const MESH& mesh_;
+        vector direction_;
 
 
 public:
 
-    // Public Typedefs
-
-        //- Mesh type
-        typedef MESH Mesh;
-
-        //- Boundary mesh type
-        typedef typename MESH::BoundaryMesh BoundaryMesh;
+    //- Runtime type information
+    TypeName("function1");
 
 
     // Constructors
 
-        //- Construct from MESH
-        explicit GeoMesh(const MESH& mesh)
-        :
-            mesh_(mesh)
-        {}
+        //- Construct with dictionary to initialise given field
+        Function1
+        (
+            const dictionary& dict,
+            DimensionedFieldType& field
+        );
+
+
+    //- Destructor
+    virtual ~Function1()
+    {}
 
 
     // Member Functions
 
-        //- Return the object registry
-        const objectRegistry& thisDb() const
-        {
-            return mesh_;
-        }
+        //- Evaluate the function and set the field
+        virtual void evaluate();
 
-
-    // Member Operators
-
-        //- Return reference to MESH
-        const MESH& operator()() const
-        {
-            return mesh_;
-        }
+        //- Write data to dictionary stream
+        virtual void write(Ostream& os) const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace DimensionedFieldFunctions
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+#include "Function1_DimensionedFieldFunction.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

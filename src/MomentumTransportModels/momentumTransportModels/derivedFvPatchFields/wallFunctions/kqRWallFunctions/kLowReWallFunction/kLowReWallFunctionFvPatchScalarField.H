@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,7 +92,7 @@ public:
         kLowReWallFunctionFvPatchScalarField
         (
             const fvPatch&,
-            const DimensionedField<scalar, volMesh>&,
+            const DimensionedField<scalar, fvMesh>&,
             const dictionary&
         );
 
@@ -102,7 +102,7 @@ public:
         (
             const kLowReWallFunctionFvPatchScalarField&,
             const fvPatch&,
-            const DimensionedField<scalar, volMesh>&,
+            const DimensionedField<scalar, fvMesh>&,
             const fieldMapper&
         );
 
@@ -116,13 +116,13 @@ public:
         kLowReWallFunctionFvPatchScalarField
         (
             const kLowReWallFunctionFvPatchScalarField&,
-            const DimensionedField<scalar, volMesh>&
+            const DimensionedField<scalar, fvMesh>&
         );
 
         //- Construct and return a clone setting internal field reference
         virtual tmp<fvPatchScalarField> clone
         (
-            const DimensionedField<scalar, volMesh>& iF
+            const DimensionedField<scalar, fvMesh>& iF
         ) const
         {
             return tmp<fvPatchScalarField>

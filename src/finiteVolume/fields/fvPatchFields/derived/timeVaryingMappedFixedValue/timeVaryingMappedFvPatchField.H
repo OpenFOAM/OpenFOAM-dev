@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -115,7 +115,7 @@ class timeVaryingMappedFvPatchField
         const fvPatch& patch_;
 
         //- Reference to internal field
-        const DimensionedField<Type, volMesh>& internalField_;
+        const DimensionedField<Type, fvMesh>& internalField_;
 
         //- Name of the field data table, defaults to the name of the field
         word fieldTableName_;
@@ -182,7 +182,7 @@ public:
         timeVaryingMappedFvPatchField
         (
             const fvPatch&,
-            const DimensionedField<Type, volMesh>&,
+            const DimensionedField<Type, fvMesh>&,
             const dictionary&
         );
 
@@ -192,7 +192,7 @@ public:
         (
             const timeVaryingMappedFvPatchField&,
             const fvPatch&,
-            const DimensionedField<Type, volMesh>&,
+            const DimensionedField<Type, fvMesh>&,
             const fieldMapper&
         );
 

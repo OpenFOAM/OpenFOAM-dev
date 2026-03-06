@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -142,12 +142,12 @@ bool Foam::GeometricField<Type, GeoMesh, PrimitiveField>::readIfPresent()
         readFields();
 
         // Check compatibility between field and mesh
-        if (this->size() != GeoMesh::size(this->mesh()))
+        if (this->size() != this->mesh().size())
         {
             FatalIOErrorInFunction(this->readStream(typeName))
                 << "   number of field elements = " << this->size()
                 << " number of mesh elements = "
-                << GeoMesh::size(this->mesh())
+                << this->mesh().size()
                 << exit(FatalIOError);
         }
 
@@ -166,7 +166,7 @@ template<class Type, class GeoMesh, template<class> class PrimitiveField>
 Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
 (
     const IOobject& io,
-    const Mesh& mesh,
+    const GeoMesh& mesh,
     const dimensionSet& ds,
     const word& patchFieldType
 )
@@ -190,7 +190,7 @@ template<class Type, class GeoMesh, template<class> class PrimitiveField>
 Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
 (
     const IOobject& io,
-    const Mesh& mesh,
+    const GeoMesh& mesh,
     const dimensionSet& ds,
     const wordList& patchFieldTypes,
     const wordList& actualPatchTypes,
@@ -217,7 +217,7 @@ template<class Type, class GeoMesh, template<class> class PrimitiveField>
 Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
 (
     const IOobject& io,
-    const Mesh& mesh,
+    const GeoMesh& mesh,
     const dimensioned<Type>& dt,
     const word& patchFieldType
 )
@@ -243,7 +243,7 @@ template<class Type, class GeoMesh, template<class> class PrimitiveField>
 Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
 (
     const IOobject& io,
-    const Mesh& mesh,
+    const GeoMesh& mesh,
     const dimensioned<Type>& dt,
     const wordList& patchFieldTypes,
     const wordList& actualPatchTypes,
@@ -297,7 +297,7 @@ template<class Type, class GeoMesh, template<class> class PrimitiveField>
 Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
 (
     const IOobject& io,
-    const Mesh& mesh,
+    const GeoMesh& mesh,
     const dimensionSet& ds,
     const PrimitiveField<Type>& iField,
     const PtrList<Patch>& ptfl,
@@ -322,7 +322,7 @@ template<class Type, class GeoMesh, template<class> class PrimitiveField>
 Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
 (
     const IOobject& io,
-    const Mesh& mesh
+    const GeoMesh& mesh
 )
 :
     Internal(io, mesh, dimless, false),
@@ -335,11 +335,11 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
 
     // Check compatibility between field and mesh
 
-    if (this->size() != GeoMesh::size(this->mesh()))
+    if (this->size() != this->mesh().size())
     {
         FatalIOErrorInFunction(this->readStream(typeName))
             << "   number of field elements = " << this->size()
-            << " number of mesh elements = " << GeoMesh::size(this->mesh())
+            << " number of mesh elements = " << this->mesh().size()
             << exit(FatalIOError);
     }
 
@@ -357,7 +357,7 @@ template<class Type, class GeoMesh, template<class> class PrimitiveField>
 Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
 (
     const IOobject& io,
-    const Mesh& mesh,
+    const GeoMesh& mesh,
     const dictionary& dict
 )
 :
@@ -371,11 +371,11 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
 
     // Check compatibility between field and mesh
 
-    if (this->size() != GeoMesh::size(this->mesh()))
+    if (this->size() != this->mesh().size())
     {
         FatalErrorInFunction
             << "   number of field elements = " << this->size()
-            << " number of mesh elements = " << GeoMesh::size(this->mesh())
+            << " number of mesh elements = " << this->mesh().size()
             << exit(FatalIOError);
     }
 
@@ -947,7 +947,7 @@ Foam::tmp<Foam::GeometricField<Type, GeoMesh, PrimitiveField>>
 Foam::GeometricField<Type, GeoMesh, PrimitiveField>::New
 (
     const word& name,
-    const Mesh& mesh,
+    const GeoMesh& mesh,
     const dimensionSet& ds,
     const word& patchFieldType
 )
@@ -981,7 +981,7 @@ Foam::tmp<Foam::GeometricField<Type, GeoMesh, PrimitiveField>>
 Foam::GeometricField<Type, GeoMesh, PrimitiveField>::New
 (
     const word& name,
-    const Mesh& mesh,
+    const GeoMesh& mesh,
     const dimensioned<Type>& dt,
     const word& patchFieldType
 )
@@ -1016,7 +1016,7 @@ Foam::tmp<Foam::GeometricField<Type, GeoMesh, PrimitiveField>>
 Foam::GeometricField<Type, GeoMesh, PrimitiveField>::New
 (
     const word& name,
-    const Mesh& mesh,
+    const GeoMesh& mesh,
     const dimensioned<Type>& dt,
     const wordList& patchFieldTypes,
     const wordList& actualPatchTypes,

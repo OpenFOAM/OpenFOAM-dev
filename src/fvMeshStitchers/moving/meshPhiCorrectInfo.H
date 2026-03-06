@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,14 +77,14 @@ public:
                 const List<meshPhiPreCorrectInfo>& internalFacePci_;
                 const List<List<meshPhiPreCorrectInfo>>& patchFacePci_;
                 const List<meshPhiPreCorrectInfo>& cellPci_;
-                const DimensionedField<scalar, volMesh>& dVdtError_;
+                const DimensionedField<scalar, fvMesh>& dVdtError_;
 
                 trackData
                 (
                     const List<meshPhiPreCorrectInfo>& internalFacePci,
                     const List<List<meshPhiPreCorrectInfo>>& patchFacePci,
                     const List<meshPhiPreCorrectInfo>& cellPci,
-                    const DimensionedField<scalar, volMesh>& dVdtError
+                    const DimensionedField<scalar, fvMesh>& dVdtError
                 )
                 :
                     internalFacePci_(internalFacePci),

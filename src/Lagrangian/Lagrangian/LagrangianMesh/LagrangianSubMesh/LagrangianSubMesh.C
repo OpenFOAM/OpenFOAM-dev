@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,7 +47,6 @@ Foam::LagrangianSubMesh::LagrangianSubMesh
     const label index
 )
 :
-    GeoMesh<polyMesh>(mesh.mesh()),
     mesh_(mesh),
     group_(group),
     size_(size),
@@ -66,7 +65,6 @@ Foam::LagrangianSubMesh::LagrangianSubMesh
     const label start
 )
 :
-    GeoMesh<polyMesh>(mesh.mesh()),
     mesh_(mesh),
     group_(group),
     size_(size),
@@ -82,7 +80,6 @@ Foam::LagrangianSubMesh::LagrangianSubMesh
     const LagrangianGroup group
 )
 :
-    GeoMesh<polyMesh>(mesh.mesh()),
     mesh_(mesh),
     group_(group),
     size_
@@ -102,6 +99,12 @@ Foam::LagrangianSubMesh::~LagrangianSubMesh()
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
+const Foam::objectRegistry& Foam::LagrangianSubMesh::thisDb() const
+{
+    return mesh_;
+}
+
 
 Foam::word Foam::LagrangianSubMesh::complete(const word& subFieldName) const
 {

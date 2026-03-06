@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,7 +28,7 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::fvMesh>>
 Foam::growthGroupFractionFvScalarFieldSource::w
 (
     const fvSource& model,
@@ -47,7 +47,7 @@ Foam::growthGroupFractionFvScalarFieldSource::w
     if (q == 3)
     {
         return
-            DimensionedField<scalar, volMesh>::New
+            DimensionedField<scalar, fvMesh>::New
             (
                 wName,
                 internalField().mesh(),
@@ -104,7 +104,7 @@ Foam::growthGroupFractionFvScalarFieldSource::w
 Foam::growthGroupFractionFvScalarFieldSource::
 growthGroupFractionFvScalarFieldSource
 (
-    const DimensionedField<scalar, volMesh>& iF,
+    const DimensionedField<scalar, fvMesh>& iF,
     const dictionary& dict
 )
 :
@@ -117,7 +117,7 @@ Foam::growthGroupFractionFvScalarFieldSource::
 growthGroupFractionFvScalarFieldSource
 (
     const growthGroupFractionFvScalarFieldSource& field,
-    const DimensionedField<scalar, volMesh>& iF
+    const DimensionedField<scalar, fvMesh>& iF
 )
 :
     growthFvScalarFieldSource(field, iF),
@@ -127,20 +127,20 @@ growthGroupFractionFvScalarFieldSource
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::fvMesh>>
 Foam::growthGroupFractionFvScalarFieldSource::internalCoeff
 (
     const fvSource& model,
-    const DimensionedField<scalar, volMesh>& source
+    const DimensionedField<scalar, fvMesh>& source
 ) const
 {
     const populationBalanceModel& popBal = this->popBal();
     const label i = this->i();
 
     const dimensionedScalar& xi = popBal.v(i);
-    const DimensionedField<scalar, volMesh> wi(w(model, i));
+    const DimensionedField<scalar, fvMesh> wi(w(model, i));
 
-    tmp<DimensionedField<scalar, volMesh>> tinternalCoeff;
+    tmp<DimensionedField<scalar, fvMesh>> tinternalCoeff;
 
     if (i == 0)
     {
@@ -166,7 +166,7 @@ Foam::growthGroupFractionFvScalarFieldSource::internalCoeff
 }
 
 
-Foam::Pair<Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>>
+Foam::Pair<Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::fvMesh>>>
 Foam::growthGroupFractionFvScalarFieldSource::sourceCoeffs
 (
     const fvSource& model
@@ -177,11 +177,11 @@ Foam::growthGroupFractionFvScalarFieldSource::sourceCoeffs
 
     const dimensionedScalar& xi = popBal.v(i);
 
-    Pair<tmp<DimensionedField<scalar, volMesh>>> tsourceCoeffs;
+    Pair<tmp<DimensionedField<scalar, fvMesh>>> tsourceCoeffs;
 
     if (i != 0)
     {
-        const DimensionedField<scalar, volMesh>& fiMinus1 = popBal.f(i - 1);
+        const DimensionedField<scalar, fvMesh>& fiMinus1 = popBal.f(i - 1);
         const dimensionedScalar& xiMinus1 = popBal.v(i - 1);
         tsourceCoeffs.first() =
             fiMinus1*w(model, i - 1)*(xi/xiMinus1)/(xi - xiMinus1);
@@ -189,7 +189,7 @@ Foam::growthGroupFractionFvScalarFieldSource::sourceCoeffs
 
     if (i != popBal.nGroups() - 1)
     {
-        const DimensionedField<scalar, volMesh>& fiPlus1 = popBal.f(i + 1);
+        const DimensionedField<scalar, fvMesh>& fiPlus1 = popBal.f(i + 1);
         const dimensionedScalar& xiPlus1 = popBal.v(i + 1);
         tsourceCoeffs.second() =
             -fiPlus1*w(model, i + 1)*(xi/xiPlus1)/(xiPlus1 - xi);
@@ -199,17 +199,17 @@ Foam::growthGroupFractionFvScalarFieldSource::sourceCoeffs
 }
 
 
-Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::fvMesh>>
 Foam::growthGroupFractionFvScalarFieldSource::sourceCoeff
 (
     const fvSource& model,
-    const DimensionedField<scalar, volMesh>& source
+    const DimensionedField<scalar, fvMesh>& source
 ) const
 {
     const populationBalanceModel& popBal = this->popBal();
     const label i = this->i();
 
-    Pair<tmp<DimensionedField<scalar, volMesh>>> tsourceCoeffs =
+    Pair<tmp<DimensionedField<scalar, fvMesh>>> tsourceCoeffs =
         sourceCoeffs(model);
 
     return

@@ -127,14 +127,14 @@ public:
         mappedValueFvPatchField
         (
             const fvPatch&,
-            const DimensionedField<Type, volMesh>&
+            const DimensionedField<Type, fvMesh>&
         );
 
         //- Construct from patch, internal field and dictionary
         mappedValueFvPatchField
         (
             const fvPatch&,
-            const DimensionedField<Type, volMesh>&,
+            const DimensionedField<Type, fvMesh>&,
             const dictionary&
         );
 
@@ -144,7 +144,7 @@ public:
         (
             const mappedValueFvPatchField<Type>&,
             const fvPatch&,
-            const DimensionedField<Type, volMesh>&,
+            const DimensionedField<Type, fvMesh>&,
             const fieldMapper&
         );
 
@@ -158,13 +158,13 @@ public:
         mappedValueFvPatchField
         (
             const mappedValueFvPatchField<Type>&,
-            const DimensionedField<Type, volMesh>&
+            const DimensionedField<Type, fvMesh>&
         );
 
         //- Construct and return a clone setting internal field reference
         virtual tmp<fvPatchField<Type>> clone
         (
-            const DimensionedField<Type, volMesh>& iF
+            const DimensionedField<Type, fvMesh>& iF
         ) const
         {
             return tmp<fvPatchField<Type>>

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,35 +23,12 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef surfFieldsFwd_H
-#define surfFieldsFwd_H
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-#include "DimensionedFieldFwd.H"
-#include "fieldTypes.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
+inline Foam::label Foam::triSurfacePointMesh::size() const
 {
+    return mesh_.points().size();
+}
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-class surfGeoMesh;
-
-typedef DimensionedField<label, surfGeoMesh, Field>  surfLabelField;
-typedef DimensionedField<scalar, surfGeoMesh, Field> surfScalarField;
-typedef DimensionedField<vector, surfGeoMesh, Field> surfVectorField;
-typedef DimensionedField<sphericalTensor, surfGeoMesh, Field>
-    surfSphericalTensorField;
-typedef DimensionedField<symmTensor, surfGeoMesh, Field> surfSymmTensorField;
-typedef DimensionedField<tensor, surfGeoMesh, Field> surfTensorField;
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#endif
 
 // ************************************************************************* //

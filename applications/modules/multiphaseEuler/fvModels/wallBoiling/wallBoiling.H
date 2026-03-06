@@ -312,22 +312,22 @@ public:
 
             //- Return the fraction of the latent heat that is transferred into
             //  the second phase
-            virtual tmp<DimensionedField<scalar, volMesh>> Lfraction() const;
+            virtual tmp<DimensionedField<scalar, fvMesh>> Lfraction() const;
 
             //- Return the diameter of nuclei
-            virtual tmp<DimensionedField<scalar, volMesh>> d() const;
+            virtual tmp<DimensionedField<scalar, fvMesh>> d() const;
 
             //- Return the number rate at which nuclei are generated
-            virtual tmp<DimensionedField<scalar, volMesh>> nDot() const;
+            virtual tmp<DimensionedField<scalar, fvMesh>> nDot() const;
 
             //- Return the nucleation time scale
-            virtual tmp<DimensionedField<scalar, volMesh>> tau() const;
+            virtual tmp<DimensionedField<scalar, fvMesh>> tau() const;
 
 
         // Sources
 
             //- Return the mass transfer rate
-            virtual tmp<DimensionedField<scalar, volMesh>> mDot() const;
+            virtual tmp<DimensionedField<scalar, fvMesh>> mDot() const;
 
             //- Return the mass transfer rate for the given patch
             const wallBoilingPhaseChangeRateFvPatchScalarField& mDotPf

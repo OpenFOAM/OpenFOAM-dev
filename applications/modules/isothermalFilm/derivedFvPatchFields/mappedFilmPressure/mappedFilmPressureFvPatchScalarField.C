@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ License
 Foam::mappedFilmPressureFvPatchScalarField::mappedFilmPressureFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
+    const DimensionedField<scalar, fvMesh>& iF,
     const dictionary& dict
 )
 :
@@ -45,7 +45,7 @@ Foam::mappedFilmPressureFvPatchScalarField::mappedFilmPressureFvPatchScalarField
 (
     const mappedFilmPressureFvPatchScalarField& ptf,
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
+    const DimensionedField<scalar, fvMesh>& iF,
     const fieldMapper& mapper
 )
 :
@@ -56,7 +56,7 @@ Foam::mappedFilmPressureFvPatchScalarField::mappedFilmPressureFvPatchScalarField
 Foam::mappedFilmPressureFvPatchScalarField::mappedFilmPressureFvPatchScalarField
 (
     const mappedFilmPressureFvPatchScalarField& ptf,
-    const DimensionedField<scalar, volMesh>& iF
+    const DimensionedField<scalar, fvMesh>& iF
 )
 :
     zeroGradientFvPatchScalarField(ptf, iF)

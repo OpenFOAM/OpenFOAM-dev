@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,65 +22,84 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::surfGeoMesh
+    Foam::DimensionedFieldFunctions::Zonal
 
 Description
-    The surfMesh GeoMesh (for holding fields).
 
-    Similar to the volGeoMesh used for the Finite Volume discretisation.
+SourceFiles
+    Zonal_DimensionedFieldFunction.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef surfGeoMesh_H
-#define surfGeoMesh_H
+#ifndef Zonal_DimensionedFieldFunction_H
+#define Zonal_DimensionedFieldFunction_H
 
-#include "GeoMesh.H"
-#include "surfMesh.H"
+#include "DimensionedFieldFunction.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+namespace DimensionedFieldFunctions
+{
 
 /*---------------------------------------------------------------------------*\
-                         Class surfGeoMesh Declaration
+                            Class Zonal Declaration
 \*---------------------------------------------------------------------------*/
 
-class surfGeoMesh
+template<class DimensionedFieldType>
+class Zonal
 :
-    public GeoMesh<surfMesh>
+    public DimensionedFieldFunction<DimensionedFieldType>
 {
+    typedef typename DimensionedFieldType::Type_ Type;
+    typedef typename DimensionedFieldType::GeoMesh_::Zone Zone;
+
+    Type value_;
+    dictionary zonesDict_;
+
 
 public:
 
+    //- Runtime type information
+    TypeName("zonal");
+
+
     // Constructors
 
-        //- Construct from surfMesh reference
-        explicit surfGeoMesh(const surfMesh& mesh)
-        :
-            GeoMesh<surfMesh>(mesh)
-        {}
+        //- Construct with dictionary to initialise given field
+        Zonal
+        (
+            const dictionary& dict,
+            DimensionedFieldType& field
+        );
+
+
+    //- Destructor
+    virtual ~Zonal()
+    {}
 
 
     // Member Functions
 
-        //- Return size
-        static label size(const surfMesh& mesh)
-        {
-            return mesh.nFaces();
-        }
+        //- Evaluate the function and set the field
+        virtual void evaluate();
 
-        //- Return size
-        label size() const
-        {
-            return size(mesh_);
-        }
+        //- Write data to dictionary stream
+        virtual void write(Ostream& os) const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace DimensionedFieldFunctions
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+#include "Zonal_DimensionedFieldFunction.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

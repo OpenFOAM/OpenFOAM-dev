@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,14 +86,14 @@ Foam::psiuMulticomponentThermo::implementation::patchFaceComposition
 }
 
 
-inline Foam::DimensionedFieldListAndSlicer<Foam::scalar, Foam::volMesh>
+inline Foam::DimensionedFieldListAndSlicer<Foam::scalar, Foam::fvMesh>
 Foam::psiuMulticomponentThermo::implementation::Yslicer
 (
     const fvSource& model,
     const volScalarField::Internal& source
 ) const
 {
-    PtrList<DimensionedField<scalar, volMesh>> result(Y_.size());
+    PtrList<DimensionedField<scalar, fvMesh>> result(Y_.size());
 
     forAll(Y_, i)
     {
@@ -114,7 +114,7 @@ Foam::psiuMulticomponentThermo::implementation::Yslicer
 inline Foam::scalarFieldListSlice
 Foam::psiuMulticomponentThermo::implementation::sourceCellComposition
 (
-    const DimensionedFieldListAndSlicer<scalar, volMesh>& Yslicer,
+    const DimensionedFieldListAndSlicer<scalar, fvMesh>& Yslicer,
     const label i
 ) const
 {

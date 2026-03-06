@@ -48,7 +48,7 @@ SourceFiles
 namespace Foam
 {
 
-class volMesh;
+class fvMesh;
 
 /*---------------------------------------------------------------------------*\
                         Class CloudAverageField Declaration
@@ -62,7 +62,7 @@ class CloudAverageField
     // Private Data
 
         //- The cell weight sum
-        const tmp<DimensionedField<scalar, volMesh>> tcellWeightSum_;
+        const tmp<DimensionedField<scalar, fvMesh>> tcellWeightSum_;
 
         //- Reference to the weight state field
         const CloudStateField<scalar>& weightState_;
@@ -116,7 +116,7 @@ public:
         CloudAverageField
         (
             const word& name,
-            const DimensionedField<scalar, volMesh>& cellWeightSum,
+            const DimensionedField<scalar, fvMesh>& cellWeightSum,
             const CloudDerivedField<Type>& weightPsi
         );
 

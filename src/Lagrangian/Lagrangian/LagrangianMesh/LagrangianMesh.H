@@ -38,7 +38,6 @@ SourceFiles
 #ifndef LagrangianMesh_H
 #define LagrangianMesh_H
 
-#include "GeoMesh.H"
 #include "barycentricField.H"
 #include "barycentricIODynamicField.H"
 #include "LagrangianBoundaryMesh.H"
@@ -64,8 +63,7 @@ class nonConformalCyclicPolyPatch;
 
 class LagrangianMesh
 :
-    public objectRegistry,
-    public GeoMesh<polyMesh>
+    public objectRegistry
 {
 public:
 

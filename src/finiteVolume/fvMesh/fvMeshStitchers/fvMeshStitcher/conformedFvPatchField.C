@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,7 +84,7 @@ template<class Type>
 Foam::conformedFvPatchField<Type>::conformedFvPatchField
 (
     const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
+    const DimensionedField<Type, fvMesh>& iF,
     autoPtr<fvPatchField<Type>>&& origFieldPtr,
     PtrList<fvPatchField<Type>>&& ncFieldPtrs,
     PtrList<scalarField>&& ncCoverages
@@ -128,7 +128,7 @@ Foam::labelList Foam::conformedFvPatchField<Type>::ncPatchIndices() const
     // stored patch fields
     if (result.size() != ncFieldPtrs_.size())
     {
-        const DimensionedField<Type, volMesh>& iF = this->internalField();
+        const DimensionedField<Type, fvMesh>& iF = this->internalField();
 
         FatalErrorInFunction
             << "Conformed field " << (isNull(iF) ? "" : iF.name() + ' ')
@@ -150,7 +150,7 @@ void Foam::conformedFvPatchField<Type>::conform
     typename VolField<Type>::Boundary& bF
 )
 {
-    const DimensionedField<Type, volMesh>& iF = bF[0].internalField();
+    const DimensionedField<Type, fvMesh>& iF = bF[0].internalField();
 
     const fvBoundaryMesh& fvbm = iF.mesh().boundary();
 
@@ -309,7 +309,7 @@ void Foam::conformedFvPatchField<Type>::unconform
     typename VolField<Type>::Boundary& bF
 )
 {
-    const DimensionedField<Type, volMesh>& iF = bF[0].internalField();
+    const DimensionedField<Type, fvMesh>& iF = bF[0].internalField();
 
     const fvBoundaryMesh& fvbm = iF.mesh().boundary();
 
@@ -393,7 +393,7 @@ template<class Type>
 Foam::conformedFvPatchField<Type>::conformedFvPatchField
 (
     const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF
+    const DimensionedField<Type, fvMesh>& iF
 )
 :
     fvPatchField<Type>(p, iF)
@@ -406,7 +406,7 @@ template<class Type>
 Foam::conformedFvPatchField<Type>::conformedFvPatchField
 (
     const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
+    const DimensionedField<Type, fvMesh>& iF,
     const dictionary& dict
 )
 :
@@ -446,7 +446,7 @@ Foam::conformedFvPatchField<Type>::conformedFvPatchField
 (
     const conformedFvPatchField<Type>& ptf,
     const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
+    const DimensionedField<Type, fvMesh>& iF,
     const fieldMapper& mapper
 )
 :
@@ -486,7 +486,7 @@ template<class Type>
 Foam::conformedFvPatchField<Type>::conformedFvPatchField
 (
     const conformedFvPatchField<Type>& ptf,
-    const DimensionedField<Type, volMesh>& iF
+    const DimensionedField<Type, fvMesh>& iF
 )
 :
     fvPatchField<Type>(ptf, iF),

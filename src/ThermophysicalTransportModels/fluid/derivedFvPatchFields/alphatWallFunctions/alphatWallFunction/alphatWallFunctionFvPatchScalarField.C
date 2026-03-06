@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,7 @@ namespace compressible
 alphatWallFunctionFvPatchScalarField::alphatWallFunctionFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
+    const DimensionedField<scalar, fvMesh>& iF,
     const dictionary& dict
 )
 :
@@ -52,7 +52,7 @@ alphatWallFunctionFvPatchScalarField::alphatWallFunctionFvPatchScalarField
 (
     const alphatWallFunctionFvPatchScalarField& ptf,
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
+    const DimensionedField<scalar, fvMesh>& iF,
     const fieldMapper& mapper
 )
 :
@@ -66,7 +66,7 @@ alphatWallFunctionFvPatchScalarField::alphatWallFunctionFvPatchScalarField
 alphatWallFunctionFvPatchScalarField::alphatWallFunctionFvPatchScalarField
 (
     const alphatWallFunctionFvPatchScalarField& awfpsf,
-    const DimensionedField<scalar, volMesh>& iF
+    const DimensionedField<scalar, fvMesh>& iF
 )
 :
     fixedValueFvPatchScalarField(awfpsf, iF),

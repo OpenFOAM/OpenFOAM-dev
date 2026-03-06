@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,35 +23,24 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "surfFields.H"
+#include "DimensionedFieldFunction.H"
+#include "triSurface.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#define makeTriSurfaceFieldFunctions(Type, nullArg)                            \
+                                                                               \
+    typedef DimensionedField<Type, triSurfacePointMesh, Field>                 \
+        DimensionedField##Type##triSurfacePointMesh##Field;                    \
+    defineDimensionedFieldFunction                                             \
+    (                                                                          \
+        DimensionedField##Type##triSurfacePointMesh##Field                     \
+    );
 
 namespace Foam
 {
-
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-template<>
-const word surfLabelField::typeName("surfLabelField");
-
-template<>
-const word surfScalarField::typeName("surfScalarField");
-
-template<>
-const word surfVectorField::typeName("surfVectorField");
-
-template<>
-const word surfSphericalTensorField::typeName("surfSphericalTensorField");
-
-template<>
-const word surfSymmTensorField::typeName("surfSymmTensorField");
-
-template<>
-const word surfTensorField::typeName("surfTensorField");
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
+    FOR_ALL_FIELD_TYPES(makeTriSurfaceFieldFunctions);
+    makeTriSurfaceFieldFunctions(label, );
+}
 
 // ************************************************************************* //

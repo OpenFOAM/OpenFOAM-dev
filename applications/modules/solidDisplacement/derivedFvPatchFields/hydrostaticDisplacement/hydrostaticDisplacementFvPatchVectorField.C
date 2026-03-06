@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ Foam::hydrostaticDisplacementFvPatchVectorField::
 hydrostaticDisplacementFvPatchVectorField
 (
     const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF,
+    const DimensionedField<vector, fvMesh>& iF,
     const dictionary& dict
 )
 :
@@ -52,7 +52,7 @@ hydrostaticDisplacementFvPatchVectorField
 (
     const hydrostaticDisplacementFvPatchVectorField& tdpvf,
     const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF,
+    const DimensionedField<vector, fvMesh>& iF,
     const fieldMapper& mapper
 )
 :
@@ -67,7 +67,7 @@ Foam::hydrostaticDisplacementFvPatchVectorField::
 hydrostaticDisplacementFvPatchVectorField
 (
     const hydrostaticDisplacementFvPatchVectorField& tdpvf,
-    const DimensionedField<vector, volMesh>& iF
+    const DimensionedField<vector, fvMesh>& iF
 )
 :
     tractionDisplacementFvPatchVectorField(tdpvf, iF),

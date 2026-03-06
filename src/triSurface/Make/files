@@ -1,6 +1,3 @@
-triSurfaceTools                       = triSurface/triSurfaceTools
-geometricSurfacePatch                 = triSurface/geometricSurfacePatch
-
 meshTriangulation/meshTriangulation.C
 
 triSurface/triSurface.C
@@ -34,5 +31,6 @@ triSurface/surfacePatch/surfacePatchIOList.C
 tools/labelledTri/sortLabelledTri.C
 
 triSurfaceFields/triSurfaceFields.C
+triSurfaceFields/makeTriSurfaceFieldFunctions.C
 
 LIB = $(FOAM_LIBBIN)/libtriSurface

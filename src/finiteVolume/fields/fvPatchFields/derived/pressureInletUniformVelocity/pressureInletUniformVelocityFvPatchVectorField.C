@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,7 @@ Foam::pressureInletUniformVelocityFvPatchVectorField::
 pressureInletUniformVelocityFvPatchVectorField
 (
     const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF,
+    const DimensionedField<vector, fvMesh>& iF,
     const dictionary& dict
 )
 :
@@ -47,7 +47,7 @@ pressureInletUniformVelocityFvPatchVectorField
 (
     const pressureInletUniformVelocityFvPatchVectorField& ptf,
     const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF,
+    const DimensionedField<vector, fvMesh>& iF,
     const fieldMapper& mapper
 )
 :
@@ -59,7 +59,7 @@ Foam::pressureInletUniformVelocityFvPatchVectorField::
 pressureInletUniformVelocityFvPatchVectorField
 (
     const pressureInletUniformVelocityFvPatchVectorField& pivpvf,
-    const DimensionedField<vector, volMesh>& iF
+    const DimensionedField<vector, fvMesh>& iF
 )
 :
     pressureInletVelocityFvPatchVectorField(pivpvf, iF)

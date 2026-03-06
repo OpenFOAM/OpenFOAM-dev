@@ -76,7 +76,7 @@ Foam::wallBoilingPhaseChangeRateFvPatchScalarField::
 wallBoilingPhaseChangeRateFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF
+    const DimensionedField<scalar, fvMesh>& iF
 )
 :
     calculatedFvPatchScalarField(p, iF),
@@ -96,7 +96,7 @@ Foam::wallBoilingPhaseChangeRateFvPatchScalarField::
 wallBoilingPhaseChangeRateFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
+    const DimensionedField<scalar, fvMesh>& iF,
     const dictionary& dict
 )
 :
@@ -118,7 +118,7 @@ wallBoilingPhaseChangeRateFvPatchScalarField
 (
     const wallBoilingPhaseChangeRateFvPatchScalarField& psf,
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
+    const DimensionedField<scalar, fvMesh>& iF,
     const fieldMapper& mapper
 )
 :
@@ -139,7 +139,7 @@ Foam::wallBoilingPhaseChangeRateFvPatchScalarField::
 wallBoilingPhaseChangeRateFvPatchScalarField
 (
     const wallBoilingPhaseChangeRateFvPatchScalarField& psf,
-    const DimensionedField<scalar, volMesh>& iF
+    const DimensionedField<scalar, fvMesh>& iF
 )
 :
     calculatedFvPatchScalarField(psf, iF),

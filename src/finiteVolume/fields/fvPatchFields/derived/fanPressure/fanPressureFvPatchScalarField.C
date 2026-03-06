@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,7 +46,7 @@ const Foam::NamedEnum
 Foam::fanPressureFvPatchScalarField::fanPressureFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
+    const DimensionedField<scalar, fvMesh>& iF,
     const dictionary& dict
 )
 :
@@ -69,7 +69,7 @@ Foam::fanPressureFvPatchScalarField::fanPressureFvPatchScalarField
 (
     const fanPressureFvPatchScalarField& pfopsf,
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
+    const DimensionedField<scalar, fvMesh>& iF,
     const fieldMapper& mapper
 )
 :
@@ -82,7 +82,7 @@ Foam::fanPressureFvPatchScalarField::fanPressureFvPatchScalarField
 Foam::fanPressureFvPatchScalarField::fanPressureFvPatchScalarField
 (
     const fanPressureFvPatchScalarField& pfopsf,
-    const DimensionedField<scalar, volMesh>& iF
+    const DimensionedField<scalar, fvMesh>& iF
 )
 :
     totalPressureFvPatchScalarField(pfopsf, iF),

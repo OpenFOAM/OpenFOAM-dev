@@ -37,34 +37,6 @@ namespace Foam
 }
 
 
-// * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
-
-Foam::word Foam::codedBase::filterCodeName(const word& name)
-{
-    word result(name);
-
-    if (!isalpha(result[0]))
-    {
-        FatalErrorInFunction
-            << "Cannot construct code name from function name \"" << name
-            << "\" as the first character is not alphabetic"
-            << exit(FatalError);
-    }
-
-    for (word::size_type i = 1; i < name.size(); ++ i)
-    {
-        const bool valid = isalnum(result[i]) || result[i] == '_';
-
-        if (!valid)
-        {
-            result[i] = '_';
-        }
-    }
-
-    return result;
-}
-
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 void Foam::codedBase::checkLibrary
@@ -196,8 +168,8 @@ Foam::codedBase::codedBase
     dynamicCode
     (
         dict,
-        filterCodeName(name),
-        filterCodeName(name),
+        codedName(name),
+        codedName(name),
         codeKeys,
         codeDictVars,
         codeOptionsFileName,
@@ -234,6 +206,34 @@ Foam::codedBase::codedBase
 
 Foam::codedBase::~codedBase()
 {}
+
+
+// * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
+
+Foam::word Foam::codedBase::codedName(const word& name)
+{
+    word result(name);
+
+    if (!isalpha(result[0]))
+    {
+        FatalErrorInFunction
+            << "Cannot construct code name from function name \"" << name
+            << "\" as the first character is not alphabetic"
+            << exit(FatalError);
+    }
+
+    for (word::size_type i = 1; i < name.size(); ++ i)
+    {
+        const bool valid = isalnum(result[i]) || result[i] == '_';
+
+        if (!valid)
+        {
+            result[i] = '_';
+        }
+    }
+
+    return result;
+}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //

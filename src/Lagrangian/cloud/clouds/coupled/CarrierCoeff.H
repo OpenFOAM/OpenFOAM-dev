@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ SourceFiles
 
 #include "CarrierEqnBase.H"
 #include "DimensionedField.H"
-#include "volMesh.H"
+#include "fvMesh.H"
 #include "LagrangianCoeff.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -58,7 +58,7 @@ class CarrierCoeff
         const CarrierEqnBase& eqn_;
 
         //- Coefficient
-        autoPtr<DimensionedField<Type, volMesh>> S_;
+        autoPtr<DimensionedField<Type, fvMesh>> S_;
 
 
     // Private Member Functions
@@ -93,7 +93,7 @@ public:
         void clear();
 
         //- Access the field
-        const DimensionedField<Type, volMesh>& S() const;
+        const DimensionedField<Type, fvMesh>& S() const;
 
         //- In-place negation
         void negate();

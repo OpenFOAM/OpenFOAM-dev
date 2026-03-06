@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,7 @@ Foam::scalar Foam::distributionGroupFractionFvScalarFieldSource::eta
 Foam::distributionGroupFractionFvScalarFieldSource::
 distributionGroupFractionFvScalarFieldSource
 (
-    const DimensionedField<scalar, volMesh>& iF,
+    const DimensionedField<scalar, fvMesh>& iF,
     const dictionary& dict
 )
 :
@@ -78,7 +78,7 @@ Foam::distributionGroupFractionFvScalarFieldSource::
 distributionGroupFractionFvScalarFieldSource
 (
     const distributionGroupFractionFvScalarFieldSource& field,
-    const DimensionedField<scalar, volMesh>& iF
+    const DimensionedField<scalar, fvMesh>& iF
 )
 :
     fvScalarFieldSource(field, iF),
@@ -97,15 +97,15 @@ Foam::distributionGroupFractionFvScalarFieldSource::
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::fvMesh>>
 Foam::distributionGroupFractionFvScalarFieldSource::sourceValue
 (
     const fvSource& model,
-    const DimensionedField<scalar, volMesh>& source
+    const DimensionedField<scalar, fvMesh>& source
 ) const
 {
     return
-        DimensionedField<scalar, volMesh>::New
+        DimensionedField<scalar, fvMesh>::New
         (
             model.name() + ":" + this->internalField().name() + "SourceValue",
             this->internalField().mesh(),
@@ -126,15 +126,15 @@ Foam::distributionGroupFractionFvScalarFieldSource::sourceValue
 }
 
 
-Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::fvMesh>>
 Foam::distributionGroupFractionFvScalarFieldSource::internalCoeff
 (
     const fvSource& model,
-    const DimensionedField<scalar, volMesh>& source
+    const DimensionedField<scalar, fvMesh>& source
 ) const
 {
     return
-        DimensionedField<scalar, volMesh>::New
+        DimensionedField<scalar, fvMesh>::New
         (
             model.name() + ":" + this->internalField().name() + "InternalCoeff",
             this->internalField().mesh(),

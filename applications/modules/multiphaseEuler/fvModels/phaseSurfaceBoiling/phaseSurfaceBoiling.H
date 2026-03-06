@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -241,22 +241,22 @@ public:
 
             //- Return the fraction of the latent heat that is transferred into
             //  the second phase
-            virtual tmp<DimensionedField<scalar, volMesh>> Lfraction() const;
+            virtual tmp<DimensionedField<scalar, fvMesh>> Lfraction() const;
 
             //- Return the diameter of nuclei
-            virtual tmp<DimensionedField<scalar, volMesh>> d() const;
+            virtual tmp<DimensionedField<scalar, fvMesh>> d() const;
 
             //- Return the number rate at which nuclei are generated
-            virtual tmp<DimensionedField<scalar, volMesh>> nDot() const;
+            virtual tmp<DimensionedField<scalar, fvMesh>> nDot() const;
 
             //- Return the nucleation time scale
-            virtual tmp<DimensionedField<scalar, volMesh>> tau() const;
+            virtual tmp<DimensionedField<scalar, fvMesh>> tau() const;
 
 
         // Sources
 
             //- Return the mass transfer rate
-            virtual tmp<DimensionedField<scalar, volMesh>> mDot() const;
+            virtual tmp<DimensionedField<scalar, fvMesh>> mDot() const;
 
             //- Override the pressure equation to add the mass transfer rate
             //  linearised in the pressure

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,6 @@ SourceFiles
 #ifndef LagrangianSubMesh_H
 #define LagrangianSubMesh_H
 
-#include "GeoMesh.H"
 #include "LagrangianState.H"
 #include "LagrangianFieldsFwd.H"
 #include "LagrangianSubFieldsFwd.H"
@@ -57,8 +56,6 @@ class LagrangianMesh;
 \*---------------------------------------------------------------------------*/
 
 class LagrangianSubMesh
-:
-    public GeoMesh<polyMesh>
 {
     // Private Data
 
@@ -140,6 +137,9 @@ public:
 
             //- Return the mesh
             inline const LagrangianMesh& mesh() const;
+
+            //- Return the object registry
+            const objectRegistry& thisDb() const;
 
             //- Return the group
             inline LagrangianGroup group() const;

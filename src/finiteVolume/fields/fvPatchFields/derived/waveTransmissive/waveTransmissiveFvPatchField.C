@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ template<class Type>
 Foam::waveTransmissiveFvPatchField<Type>::waveTransmissiveFvPatchField
 (
     const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
+    const DimensionedField<Type, fvMesh>& iF,
     const dictionary& dict
 )
 :
@@ -52,7 +52,7 @@ Foam::waveTransmissiveFvPatchField<Type>::waveTransmissiveFvPatchField
 (
     const waveTransmissiveFvPatchField& ptf,
     const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
+    const DimensionedField<Type, fvMesh>& iF,
     const fieldMapper& mapper
 )
 :
@@ -66,7 +66,7 @@ template<class Type>
 Foam::waveTransmissiveFvPatchField<Type>::waveTransmissiveFvPatchField
 (
     const waveTransmissiveFvPatchField& ptpsf,
-    const DimensionedField<Type, volMesh>& iF
+    const DimensionedField<Type, fvMesh>& iF
 )
 :
     advectiveFvPatchField<Type>(ptpsf, iF),

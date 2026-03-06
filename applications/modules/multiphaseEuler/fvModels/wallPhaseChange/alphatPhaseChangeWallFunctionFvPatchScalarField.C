@@ -72,7 +72,7 @@ Foam::alphatPhaseChangeWallFunctionFvPatchScalarField::
 alphatPhaseChangeWallFunctionFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
+    const DimensionedField<scalar, fvMesh>& iF,
     const dictionary& dict
 )
 :
@@ -86,7 +86,7 @@ alphatPhaseChangeWallFunctionFvPatchScalarField
 (
     const alphatPhaseChangeWallFunctionFvPatchScalarField& psf,
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
+    const DimensionedField<scalar, fvMesh>& iF,
     const fieldMapper& mapper
 )
 :
@@ -99,7 +99,7 @@ Foam::alphatPhaseChangeWallFunctionFvPatchScalarField::
 alphatPhaseChangeWallFunctionFvPatchScalarField
 (
     const alphatPhaseChangeWallFunctionFvPatchScalarField& psf,
-    const DimensionedField<scalar, volMesh>& iF
+    const DimensionedField<scalar, fvMesh>& iF
 )
 :
     fixedValueFvPatchScalarField(psf, iF),

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ SourceFiles
 #define groupPropertyFvScalarField_H
 
 #include "DimensionedField.H"
-#include "volMesh.H"
+#include "fvMesh.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -58,7 +58,7 @@ private:
     // Private Data
 
         //- Reference to the internal field
-        const DimensionedField<scalar, volMesh>& internalField_;
+        const DimensionedField<scalar, fvMesh>& internalField_;
 
         //- Pointer to the population balance
         mutable const populationBalanceModel* popBalPtr_;
@@ -74,7 +74,7 @@ public:
         //- Construct from internal field
         groupPropertyFvScalarField
         (
-            const DimensionedField<scalar, volMesh>&
+            const DimensionedField<scalar, fvMesh>&
         );
 
 

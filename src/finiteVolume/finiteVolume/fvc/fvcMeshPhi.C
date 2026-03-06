@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,7 +91,7 @@ void Foam::fvc::makeRelative
     const volVectorField& U
 )
 {
-    if (phi.mesh().moving())
+    if (phi.mesh()().moving())
     {
         phi -= fvc::meshPhi(U);
     }
@@ -104,7 +104,7 @@ void Foam::fvc::makeRelative
     const volVectorField& U
 )
 {
-    if (phi.mesh().moving())
+    if (phi.mesh()().moving())
     {
         phi -= rho*fvc::meshPhi(rho, U);
     }
@@ -117,7 +117,7 @@ void Foam::fvc::makeRelative
     const volVectorField& U
 )
 {
-    if (phi.mesh().moving())
+    if (phi.mesh()().moving())
     {
         phi -= fvc::interpolate(rho)*fvc::meshPhi(rho, U);
     }
@@ -130,7 +130,7 @@ void Foam::fvc::makeAbsolute
     const volVectorField& U
 )
 {
-    if (phi.mesh().moving())
+    if (phi.mesh()().moving())
     {
         phi += fvc::meshPhi(U);
     }
@@ -143,7 +143,7 @@ void Foam::fvc::makeAbsolute
     const volVectorField& U
 )
 {
-    if (phi.mesh().moving())
+    if (phi.mesh()().moving())
     {
         phi += rho*fvc::meshPhi(rho, U);
     }
@@ -156,7 +156,7 @@ void Foam::fvc::makeAbsolute
     const volVectorField& U
 )
 {
-    if (phi.mesh().moving())
+    if (phi.mesh()().moving())
     {
         phi += fvc::interpolate(rho)*fvc::meshPhi(rho, U);
     }
@@ -169,7 +169,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::fvc::relative
     const volVectorField& U
 )
 {
-    if (tphi().mesh().moving())
+    if (tphi().mesh()().moving())
     {
         return tphi - fvc::meshPhi(U);
     }
@@ -187,7 +187,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::fvc::relative
     const volVectorField& U
 )
 {
-    if (tphi().mesh().moving())
+    if (tphi().mesh()().moving())
     {
         return tphi - fvc::interpolate(rho)*fvc::meshPhi(rho, U);
     }
@@ -204,7 +204,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::fvc::absolute
     const volVectorField& U
 )
 {
-    if (tphi().mesh().moving())
+    if (tphi().mesh()().moving())
     {
         const word phiName(tphi().name());
 
@@ -228,7 +228,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::fvc::absolute
     const volVectorField& U
 )
 {
-    if (tphi().mesh().moving())
+    if (tphi().mesh()().moving())
     {
         const word phiName(tphi().name());
 
@@ -253,7 +253,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::fvc::absolute
     const volVectorField& U
 )
 {
-    if (tphi().mesh().moving())
+    if (tphi().mesh()().moving())
     {
         const word phiName(tphi().name());
 

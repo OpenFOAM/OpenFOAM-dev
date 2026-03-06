@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -392,15 +392,15 @@ protected:
             bool geometric() const;
 
             //- Return the non-dimensional cell openness for debugging/checking
-            tmp<DimensionedField<scalar, volMesh>> openness() const;
+            tmp<DimensionedField<scalar, fvMesh>> openness() const;
 
             //- Return the non-dimensional old-time volume conservation error
             //  for a specified old-time index for debugging/checking
-            tmp<DimensionedField<scalar, volMesh>>
+            tmp<DimensionedField<scalar, fvMesh>>
                 volumeConservationError(const label n) const;
 
             //- Return the projected volume fraction for debugging/checking
-            tmp<DimensionedField<scalar, volMesh>>
+            tmp<DimensionedField<scalar, fvMesh>>
                 projectedVolumeFraction() const;
 
 

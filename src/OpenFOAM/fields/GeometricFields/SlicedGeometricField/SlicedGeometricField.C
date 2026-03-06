@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,7 @@ template<class Type, class GeoMesh>
 Foam::tmp<Foam::FieldField<GeoMesh::template PatchField, Type>>
 Foam::SlicedGeometricField<Type, GeoMesh>::slicedBoundaryField
 (
-    const Mesh& mesh,
+    const GeoMesh& mesh,
     const Field<Type>& completeField,
     const bool preserveCouples,
     const bool preserveProcessorOnly
@@ -105,7 +105,7 @@ template<class Type, class GeoMesh>
 Foam::tmp<Foam::FieldField<GeoMesh::template PatchField, Type>>
 Foam::SlicedGeometricField<Type, GeoMesh>::slicedBoundaryField
 (
-    const Mesh& mesh,
+    const GeoMesh& mesh,
     const FieldField<GeoMesh::template PatchField, Type>& bField,
     const bool preserveCouples
 )
@@ -164,7 +164,7 @@ template<class Type, class GeoMesh>
 Foam::SlicedGeometricField<Type, GeoMesh>::SlicedGeometricField
 (
     const IOobject& io,
-    const Mesh& mesh,
+    const GeoMesh& mesh,
     const dimensionSet& ds,
     const Field<Type>& completeField,
     const bool preserveCouples
@@ -182,7 +182,7 @@ Foam::SlicedGeometricField<Type, GeoMesh>::SlicedGeometricField
     // Set the internalField to the slice of the complete field
     UList<Type>::shallowCopy
     (
-        typename Field<Type>::subField(completeField, GeoMesh::size(mesh))
+        typename Field<Type>::subField(completeField, mesh.size())
     );
 
     correctBoundaryConditions();
@@ -193,7 +193,7 @@ template<class Type, class GeoMesh>
 Foam::SlicedGeometricField<Type, GeoMesh>::SlicedGeometricField
 (
     const IOobject& io,
-    const Mesh& mesh,
+    const GeoMesh& mesh,
     const dimensionSet& ds,
     const Field<Type>& completeIField,
     const Field<Type>& completeBField,
@@ -219,7 +219,7 @@ Foam::SlicedGeometricField<Type, GeoMesh>::SlicedGeometricField
     // Set the internalField to the slice of the complete field
     UList<Type>::shallowCopy
     (
-        typename Field<Type>::subField(completeIField, GeoMesh::size(mesh))
+        typename Field<Type>::subField(completeIField, mesh.size())
     );
 
     correctBoundaryConditions();
@@ -298,29 +298,31 @@ template<class Type, class GeoMesh>
 Foam::tmp<Foam::Field<Type>>
 Foam::SlicedGeometricField<Type, GeoMesh>::splice() const
 {
-    const Mesh& mesh = this->mesh();
+    const GeoMesh& mesh = this->mesh();
 
-    label completeSize = GeoMesh::size(mesh);
+    label completeSize = mesh.size();
 
-    forAll(mesh.boundaryMesh(), patchi)
+    const polyBoundaryMesh& bm = mesh().boundaryMesh();
+
+    forAll(bm, patchi)
     {
-        completeSize += mesh.boundaryMesh()[patchi].size();
+        completeSize += bm[patchi].size();
     }
 
     tmp<Field<Type>> tCompleteField(new Field<Type>(completeSize));
     Field<Type>& completeField(tCompleteField.ref());
 
-    typename Field<Type>::subField(completeField, GeoMesh::size(mesh))
+    typename Field<Type>::subField(completeField, mesh.size())
         = this->primitiveField();
 
-    label start = GeoMesh::size(mesh);
+    label start = mesh.size();
 
-    forAll(mesh.boundaryMesh(), patchi)
+    forAll(bm, patchi)
     {
         if
         (
             mesh.boundary()[patchi].size()
-         == mesh.boundaryMesh()[patchi].size()
+         == bm[patchi].size()
         )
         {
             typename Field<Type>::subField
@@ -335,12 +337,12 @@ Foam::SlicedGeometricField<Type, GeoMesh>::splice() const
             typename Field<Type>::subField
             (
                 completeField,
-                mesh.boundaryMesh()[patchi].size(),
+                bm[patchi].size(),
                 start
             ) = Zero;
         }
 
-        start += mesh.boundaryMesh()[patchi].size();
+        start += bm[patchi].size();
     }
 
     return tCompleteField;

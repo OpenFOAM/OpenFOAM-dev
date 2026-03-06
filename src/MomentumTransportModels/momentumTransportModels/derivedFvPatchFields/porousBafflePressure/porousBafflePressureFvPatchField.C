@@ -33,7 +33,7 @@ License
 Foam::porousBafflePressureFvPatchField::porousBafflePressureFvPatchField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
+    const DimensionedField<scalar, fvMesh>& iF,
     const dictionary& dict
 )
 :
@@ -82,7 +82,7 @@ Foam::porousBafflePressureFvPatchField::porousBafflePressureFvPatchField
 (
     const porousBafflePressureFvPatchField& ptf,
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
+    const DimensionedField<scalar, fvMesh>& iF,
     const fieldMapper& mapper
 )
 :
@@ -100,7 +100,7 @@ Foam::porousBafflePressureFvPatchField::porousBafflePressureFvPatchField
 Foam::porousBafflePressureFvPatchField::porousBafflePressureFvPatchField
 (
     const porousBafflePressureFvPatchField& ptf,
-    const DimensionedField<scalar, volMesh>& iF
+    const DimensionedField<scalar, fvMesh>& iF
 )
 :
     fixedJumpFvPatchScalarField(ptf, iF),

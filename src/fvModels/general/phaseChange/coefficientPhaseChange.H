@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,14 +95,14 @@ private:
 
         //- Multiply the argument by the mass fraction of transferring species
         //  in the source phase
-        tmp<DimensionedField<scalar, volMesh>> timesY1
+        tmp<DimensionedField<scalar, fvMesh>> timesY1
         (
-            tmp<DimensionedField<scalar, volMesh>> mDot
+            tmp<DimensionedField<scalar, fvMesh>> mDot
         ) const;
 
         //- Return the phase change rate with the source phase and mass
         //  fraction factored out
-        virtual tmp<DimensionedField<scalar, volMesh>> mDotByAlpha1Y1() const;
+        virtual tmp<DimensionedField<scalar, fvMesh>> mDotByAlpha1Y1() const;
 
 
 public:
@@ -128,10 +128,10 @@ public:
         // Sources
 
             //- Return the total phase change rate
-            virtual tmp<DimensionedField<scalar, volMesh>> mDot() const;
+            virtual tmp<DimensionedField<scalar, fvMesh>> mDot() const;
 
             //- Return the phase change rate of a specie
-            virtual tmp<DimensionedField<scalar, volMesh>> mDot
+            virtual tmp<DimensionedField<scalar, fvMesh>> mDot
             (
                 const label mDoti
             ) const;

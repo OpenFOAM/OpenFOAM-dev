@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -445,7 +445,7 @@ void Foam::chemistryModel<ThermoType>::jacobian
 
 
 template<class ThermoType>
-Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::fvMesh>>
 Foam::chemistryModel<ThermoType>::reactionRR
 (
     const label reactioni
@@ -506,7 +506,7 @@ Foam::chemistryModel<ThermoType>::reactionRR
 
 
 template<class ThermoType>
-Foam::PtrList<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::PtrList<Foam::DimensionedField<Foam::scalar, Foam::fvMesh>>
 Foam::chemistryModel<ThermoType>::specieReactionRR
 (
     const label reactioni

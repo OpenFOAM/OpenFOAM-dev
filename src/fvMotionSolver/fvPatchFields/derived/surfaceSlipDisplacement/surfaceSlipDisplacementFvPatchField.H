@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,7 @@ public:
         surfaceSlipDisplacementFvPatchField
         (
             const fvPatch& p,
-            const DimensionedField<Type, volMesh>& iF
+            const DimensionedField<Type, fvMesh>& iF
         )
         :
             slipFvPatchField<Type>(p, iF)
@@ -76,7 +76,7 @@ public:
         surfaceSlipDisplacementFvPatchField
         (
             const fvPatch& p,
-            const DimensionedField<Type, volMesh>& iF,
+            const DimensionedField<Type, fvMesh>& iF,
             const dictionary& dict
         )
         :
@@ -89,7 +89,7 @@ public:
         (
             const surfaceSlipDisplacementFvPatchField<Type>& ptf,
             const fvPatch& p,
-            const DimensionedField<Type, volMesh>& iF,
+            const DimensionedField<Type, fvMesh>& iF,
             const fieldMapper& mapper
         )
         :
@@ -106,7 +106,7 @@ public:
         surfaceSlipDisplacementFvPatchField
         (
             const surfaceSlipDisplacementFvPatchField<Type>& ptf,
-            const DimensionedField<Type, volMesh>& iF
+            const DimensionedField<Type, fvMesh>& iF
         )
         :
             slipFvPatchField<Type>(ptf, iF)
@@ -115,7 +115,7 @@ public:
         //- Construct and return a clone setting internal field reference
         virtual tmp<fvPatchField<Type>> clone
         (
-            const DimensionedField<Type, volMesh>& iF
+            const DimensionedField<Type, fvMesh>& iF
         ) const
         {
             return tmp<fvPatchField<Type>>

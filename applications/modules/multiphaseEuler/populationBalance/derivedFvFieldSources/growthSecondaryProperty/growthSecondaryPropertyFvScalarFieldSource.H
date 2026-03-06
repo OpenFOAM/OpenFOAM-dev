@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,7 @@ public:
         //- Construct from internal field and dictionary
         growthSecondaryPropertyFvScalarFieldSource
         (
-            const DimensionedField<scalar, volMesh>&,
+            const DimensionedField<scalar, fvMesh>&,
             const dictionary& dict
         );
 
@@ -68,38 +68,38 @@ public:
         growthSecondaryPropertyFvScalarFieldSource
         (
             const growthSecondaryPropertyFvScalarFieldSource&,
-            const DimensionedField<scalar, volMesh>&
+            const DimensionedField<scalar, fvMesh>&
         );
 
 
     // Member Functions
 
         //- Return the value transported from an adjacent group
-        virtual tmp<DimensionedField<scalar, volMesh>> value
+        virtual tmp<DimensionedField<scalar, fvMesh>> value
         (
             const label j,
             const fvSource& model
         ) const = 0;
 
         //- Return the internal coefficient
-        virtual tmp<DimensionedField<scalar, volMesh>> internalCoeff
+        virtual tmp<DimensionedField<scalar, fvMesh>> internalCoeff
         (
             const fvSource& model,
-            const DimensionedField<scalar, volMesh>& source
+            const DimensionedField<scalar, fvMesh>& source
         ) const;
 
         //- Return the source coefficients for exchange with the groups below
         //  and above this group
-        virtual Pair<tmp<DimensionedField<scalar, volMesh>>> sourceCoeffs
+        virtual Pair<tmp<DimensionedField<scalar, fvMesh>>> sourceCoeffs
         (
             const fvSource& model
         ) const;
 
         //- Return the combined source coefficient
-        virtual tmp<DimensionedField<scalar, volMesh>> sourceCoeff
+        virtual tmp<DimensionedField<scalar, fvMesh>> sourceCoeff
         (
             const fvSource& model,
-            const DimensionedField<scalar, volMesh>& source
+            const DimensionedField<scalar, fvMesh>& source
         ) const;
 };
 

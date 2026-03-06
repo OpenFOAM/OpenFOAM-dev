@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,6 +35,7 @@ SourceFiles
 #ifndef triSurface_H
 #define triSurface_H
 
+#include "triSurfacePointMesh.H"
 #include "PrimitivePatch.H"
 #include "pointField.H"
 #include "labelledTri.H"
@@ -49,28 +50,25 @@ SourceFiles
 namespace Foam
 {
 
+class triSurface;
 class Time;
 class IFstream;
 
-
 // Forward declaration of friend functions and operators
-
-class triSurface;
-
 Ostream& operator<<(Ostream&, const triSurface&);
 
 
 /*---------------------------------------------------------------------------*\
-                         Class triSurface Declaration
+                          Class triSurface Declaration
 \*---------------------------------------------------------------------------*/
 
 class triSurface
 :
+    public triSurfacePointMesh,
     public PrimitivePatch<::Foam::List<labelledTri>, pointField>
 {
     // Private Typedefs
 
-    //- Typedefs for convenience
         typedef labelledTri Face;
         typedef PrimitivePatch<::Foam::List<labelledTri>, pointField>
             ParentType;
@@ -239,8 +237,8 @@ public:
 
     // Public Typedefs
 
-        //- Placeholder only, but do not remove - it is needed for GeoMesh
-        typedef bool BoundaryMesh;
+        //- Mesh type
+        typedef triSurface Mesh;
 
 
         //- Runtime type information
@@ -341,6 +339,8 @@ public:
             //  If 1 neighbour: label of only face.
             //  If >2 neighbours: undetermined.
             const labelList& edgeOwner() const;
+
+            using PrimitivePatch<::Foam::List<labelledTri>, pointField>::size;
 
 
         // Edit
@@ -443,6 +443,10 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "triSurfacePointMeshI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

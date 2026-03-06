@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ License
 Foam::nucleationGroupSurfaceAreaVolumeRatioFvScalarFieldSource::
 nucleationGroupSurfaceAreaVolumeRatioFvScalarFieldSource
 (
-    const DimensionedField<scalar, volMesh>& iF,
+    const DimensionedField<scalar, fvMesh>& iF,
     const dictionary& dict
 )
 :
@@ -46,7 +46,7 @@ Foam::nucleationGroupSurfaceAreaVolumeRatioFvScalarFieldSource::
 nucleationGroupSurfaceAreaVolumeRatioFvScalarFieldSource
 (
     const nucleationGroupSurfaceAreaVolumeRatioFvScalarFieldSource& field,
-    const DimensionedField<scalar, volMesh>& iF
+    const DimensionedField<scalar, fvMesh>& iF
 )
 :
     fvScalarFieldSource(field, iF),
@@ -63,11 +63,11 @@ Foam::nucleationGroupSurfaceAreaVolumeRatioFvScalarFieldSource::
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::fvMesh>>
 Foam::nucleationGroupSurfaceAreaVolumeRatioFvScalarFieldSource::sourceValue
 (
     const fvSource& model,
-    const DimensionedField<scalar, volMesh>& source
+    const DimensionedField<scalar, fvMesh>& source
 ) const
 {
     // Get the surface area volume ratio of the nucleates
@@ -79,17 +79,17 @@ Foam::nucleationGroupSurfaceAreaVolumeRatioFvScalarFieldSource::sourceValue
 }
 
 
-Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::fvMesh>>
 Foam::nucleationGroupSurfaceAreaVolumeRatioFvScalarFieldSource::internalCoeff
 (
     const fvSource& model,
-    const DimensionedField<scalar, volMesh>& source
+    const DimensionedField<scalar, fvMesh>& source
 ) const
 {
     // Nucleation is always an "inflow" to the nucleating phase, so the source
     // should be fully explicit
     return
-        DimensionedField<scalar, volMesh>::New
+        DimensionedField<scalar, fvMesh>::New
         (
             model.name() + ":" + this->internalField().name() + "InternalCoeff",
             this->internalField().mesh(),

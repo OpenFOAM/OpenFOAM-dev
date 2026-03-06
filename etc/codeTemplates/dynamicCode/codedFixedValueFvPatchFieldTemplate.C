@@ -85,7 +85,7 @@ ${typeName}FixedValueFvPatch${FieldType}::
 ${typeName}FixedValueFvPatch${FieldType}
 (
     const fvPatch& p,
-    const DimensionedField<${TemplateType}, volMesh>& iF,
+    const DimensionedField<${TemplateType}, fvMesh>& iF,
     const dictionary& dict
 )
 :
@@ -104,7 +104,7 @@ ${typeName}FixedValueFvPatch${FieldType}
 (
     const ${typeName}FixedValueFvPatch${FieldType}& ptf,
     const fvPatch& p,
-    const DimensionedField<${TemplateType}, volMesh>& iF,
+    const DimensionedField<${TemplateType}, fvMesh>& iF,
     const fieldMapper& mapper
 )
 :
@@ -122,7 +122,7 @@ ${typeName}FixedValueFvPatch${FieldType}::
 ${typeName}FixedValueFvPatch${FieldType}
 (
     const ${typeName}FixedValueFvPatch${FieldType}& ptf,
-    const DimensionedField<${TemplateType}, volMesh>& iF
+    const DimensionedField<${TemplateType}, fvMesh>& iF
 )
 :
     fixedValueFvPatchField<${TemplateType}>(ptf, iF)

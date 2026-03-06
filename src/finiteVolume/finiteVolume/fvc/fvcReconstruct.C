@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,7 @@ reconstruct
 {
     typedef typename outerProduct<vector, Type>::type GradType;
 
-    const fvMesh& mesh = ssf.mesh();
+    const fvMesh& mesh = ssf.mesh()();
 
     surfaceVectorField SfHat(mesh.Sf()/mesh.magSf());
 

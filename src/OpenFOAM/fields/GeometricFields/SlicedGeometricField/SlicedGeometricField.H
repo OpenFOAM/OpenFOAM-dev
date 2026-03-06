@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,7 +86,7 @@ private:
         //  from which the boundary field is built
         tmp<FieldField<GeoMesh::template PatchField, Type>> slicedBoundaryField
         (
-            const Mesh& mesh,
+            const GeoMesh& mesh,
             const Field<Type>& completeField,
             const bool preserveCouples,
             const bool preserveProcessorOnly = false
@@ -96,7 +96,7 @@ private:
         //  from which the boundary field is built
         tmp<FieldField<GeoMesh::template PatchField, Type>> slicedBoundaryField
         (
-            const Mesh& mesh,
+            const GeoMesh& mesh,
             const FieldField<GeoMesh::template PatchField, Type>& bField,
             const bool preserveCouples
         );
@@ -110,7 +110,7 @@ public:
         SlicedGeometricField
         (
             const IOobject&,
-            const Mesh&,
+            const GeoMesh&,
             const dimensionSet&,
             const Field<Type>& completeField,
             const bool preserveCouples=true
@@ -121,7 +121,7 @@ public:
         SlicedGeometricField
         (
             const IOobject&,
-            const Mesh&,
+            const GeoMesh&,
             const dimensionSet&,
             const Field<Type>& completeIField,
             const Field<Type>& completeBField,

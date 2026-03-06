@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,7 +68,7 @@ Foam::ReactingCloud<CloudType>::phaseChange()
 
 
 template<class CloudType>
-inline Foam::DimensionedField<Foam::scalar, Foam::volMesh>&
+inline Foam::DimensionedField<Foam::scalar, Foam::fvMesh>&
 Foam::ReactingCloud<CloudType>::rhoTrans(const label i)
 {
     return rhoTrans_[i];
@@ -77,7 +77,7 @@ Foam::ReactingCloud<CloudType>::rhoTrans(const label i)
 
 template<class CloudType>
 inline
-const Foam::PtrList<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>&
+const Foam::PtrList<Foam::DimensionedField<Foam::scalar, Foam::fvMesh>>&
 Foam::ReactingCloud<CloudType>::rhoTrans() const
 {
     return rhoTrans_;
@@ -85,7 +85,7 @@ Foam::ReactingCloud<CloudType>::rhoTrans() const
 
 
 template<class CloudType>
-inline Foam::PtrList<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>&
+inline Foam::PtrList<Foam::DimensionedField<Foam::scalar, Foam::fvMesh>>&
 Foam::ReactingCloud<CloudType>::rhoTrans()
 {
     return rhoTrans_;
@@ -140,7 +140,7 @@ inline Foam::tmp<Foam::fvScalarMatrix> Foam::ReactingCloud<CloudType>::SYi
 
 
 template<class CloudType>
-inline Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+inline Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::fvMesh>>
 Foam::ReactingCloud<CloudType>::Srho() const
 {
     tmp<volScalarField::Internal> trhoTrans

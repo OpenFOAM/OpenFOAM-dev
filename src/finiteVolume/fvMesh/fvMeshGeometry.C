@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -228,7 +228,7 @@ const Foam::volScalarField::Internal& Foam::fvMesh::V() const
         DebugInFunction
             << "Constructing from primitiveMesh::cellVolumes()" << endl;
 
-        VPtr_ = new SlicedDimensionedField<scalar, volMesh>
+        VPtr_ = new SlicedDimensionedField<scalar, fvMesh>
         (
             IOobject
             (
@@ -266,7 +266,7 @@ const Foam::volScalarField::Internal& Foam::fvMesh::V00() const
 {
     if (!V00Ptr_)
     {
-        V00Ptr_ = NullObjectPtr<DimensionedField<scalar, volMesh>>();
+        V00Ptr_ = NullObjectPtr<DimensionedField<scalar, fvMesh>>();
     }
 
     if (Foam::isNull(V00Ptr_))

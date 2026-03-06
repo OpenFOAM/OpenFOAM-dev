@@ -45,7 +45,7 @@ Foam::CLASS::
 CONSTRUCT
 (
     const fvPatch& p,
-    const DimensionedField<TYPE, volMesh>& iF,
+    const DimensionedField<TYPE, fvMesh>& iF,
     const dictionary& dict
 )
 :
@@ -92,7 +92,7 @@ CONSTRUCT
 (
     const CLASS& ptf,
     const fvPatch& p,
-    const DimensionedField<TYPE, volMesh>& iF,
+    const DimensionedField<TYPE, fvMesh>& iF,
     const fieldMapper& mapper
 )
 :
@@ -112,7 +112,7 @@ Foam::CLASS::
 CONSTRUCT
 (
     const CLASS& ptf,
-    const DimensionedField<TYPE, volMesh>& iF
+    const DimensionedField<TYPE, fvMesh>& iF
 )
 :
     PARENT(ptf, iF),

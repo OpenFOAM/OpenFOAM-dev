@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -310,17 +310,17 @@ public:
 
             //- Map dimensioned field
             template<class Type>
-            static tmp<DimensionedField<Type, volMesh>>
+            static tmp<DimensionedField<Type, fvMesh>>
             interpolate
             (
-                const DimensionedField<Type, volMesh>&,
+                const DimensionedField<Type, fvMesh>&,
                 const fvMesh& sMesh,
                 const labelList& cellMap
             );
 
             template<class Type>
-            tmp<DimensionedField<Type, volMesh>>
-            interpolate(const DimensionedField<Type, volMesh>&) const;
+            tmp<DimensionedField<Type, fvMesh>>
+            interpolate(const DimensionedField<Type, fvMesh>&) const;
 
 
     // Member Operators

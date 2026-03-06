@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,7 +94,7 @@ bool Foam::functionObjects::cloudSurfaceAreaPerUnitVolume::execute()
     objectRegistryFunctionObject::store
     (
         AvName_,
-        Lagrangianc::accumulate<volMesh>(a)/fvMeshFunctionObject::mesh_.V()
+        Lagrangianc::accumulate<fvMesh>(a)/fvMeshFunctionObject::mesh_.V()
     );
 
     return true;

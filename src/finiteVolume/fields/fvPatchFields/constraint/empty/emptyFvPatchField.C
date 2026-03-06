@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,7 @@ template<class Type>
 Foam::emptyFvPatchField<Type>::emptyFvPatchField
 (
     const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF
+    const DimensionedField<Type, fvMesh>& iF
 )
 :
     fvPatchField<Type>(p, iF, Field<Type>(0))
@@ -43,7 +43,7 @@ template<class Type>
 Foam::emptyFvPatchField<Type>::emptyFvPatchField
 (
     const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
+    const DimensionedField<Type, fvMesh>& iF,
     const dictionary& dict
 )
 :
@@ -69,7 +69,7 @@ Foam::emptyFvPatchField<Type>::emptyFvPatchField
 (
     const emptyFvPatchField<Type>&,
     const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
+    const DimensionedField<Type, fvMesh>& iF,
     const fieldMapper&
 )
 :
@@ -91,7 +91,7 @@ template<class Type>
 Foam::emptyFvPatchField<Type>::emptyFvPatchField
 (
     const emptyFvPatchField<Type>& ptf,
-    const DimensionedField<Type, volMesh>& iF
+    const DimensionedField<Type, fvMesh>& iF
 )
 :
     fvPatchField<Type>(ptf.patch(), iF, Field<Type>(0))

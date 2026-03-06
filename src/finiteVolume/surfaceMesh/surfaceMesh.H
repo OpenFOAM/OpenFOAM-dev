@@ -25,32 +25,63 @@ Class
     Foam::surfaceMesh
 
 Description
-    Mesh data needed to do the Finite Volume discretisation.
+    Mesh data for surface fields
 
 \*---------------------------------------------------------------------------*/
 
 #ifndef surfaceMesh_H
 #define surfaceMesh_H
 
-#include "GeoMesh.H"
-#include "fvMesh.H"
+#include "fvBoundaryMesh.H"
+#include "GeometricFieldSources.H"
+#include "fvsPatchFieldsFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
+class fvMesh;
+    // class fvBoundaryMesh;
+class faceZone;
+
 /*---------------------------------------------------------------------------*\
                          Class surfaceMesh Declaration
 \*---------------------------------------------------------------------------*/
 
 class surfaceMesh
-:
-    public GeoMesh<fvMesh>
 {
+    // Private Data
+
+        //- Reference to fvMesh
+        const fvMesh& mesh_;
+
+
+protected:
+
+    // Constructors
+
+        //- Construct from fvMesh
+        explicit surfaceMesh(const fvMesh& mesh)
+        :
+            mesh_(mesh)
+        {}
+
+
 public:
 
+    // Destructor
+    virtual ~surfaceMesh()
+    {}
+
+
     // Public typedefs
+
+        //- Mesh type
+        typedef fvMesh Mesh;
+
+        //- Boundary mesh type
+        typedef fvBoundaryMesh BoundaryMesh;
 
         //- Zone type
         typedef faceZone Zone;
@@ -64,28 +95,29 @@ public:
         using FieldSource = NoFieldSource<Type>;
 
 
-    // Constructors
-
-        //- Construct from fvMesh
-        explicit surfaceMesh(const fvMesh& mesh)
-        :
-            GeoMesh<fvMesh>(mesh)
-        {}
-
-
     // Member Functions
 
-        //- Return size
-        label size() const
-        {
-            return size(mesh_);
-        }
+        //- Return size (number of internal faces)
+        inline label size() const;
 
-        //- Return size
-        static label size(const Mesh& mesh)
-        {
-            return mesh.nInternalFaces();
-        }
+        //- Return fvMesh database
+        inline const objectRegistry& thisDb() const;
+
+        //- Return time
+        inline const Time& time() const;
+
+        //- Return reference to fvBoundaryMesh
+        inline const fvBoundaryMesh& boundary() const;
+
+
+    // Member Operators
+
+        //- Return reference to fvMesh
+        inline const fvMesh& operator()() const;
+
+        bool operator!=(const surfaceMesh&) const;
+
+        bool operator==(const surfaceMesh&) const;
 };
 
 

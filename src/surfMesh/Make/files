@@ -14,8 +14,6 @@ surfaceRegistry/surfaceRegistry.C
 surfMesh/surfMesh.C
 surfMesh/surfMeshClear.C
 surfMesh/surfMeshIO.C
-surfFields/surfFields/surfFields.C
-surfFields/surfPointFields/surfPointFields.C
 
 surfaceFormats/surfaceFormatsCore.C
 

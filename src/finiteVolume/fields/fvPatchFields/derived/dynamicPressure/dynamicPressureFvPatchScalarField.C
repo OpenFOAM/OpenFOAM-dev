@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -113,7 +113,7 @@ void Foam::dynamicPressureFvPatchScalarField::updateCoeffs
 Foam::dynamicPressureFvPatchScalarField::dynamicPressureFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
+    const DimensionedField<scalar, fvMesh>& iF,
     const dictionary& dict
 )
 :
@@ -141,7 +141,7 @@ Foam::dynamicPressureFvPatchScalarField::dynamicPressureFvPatchScalarField
 (
     const dynamicPressureFvPatchScalarField& psf,
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
+    const DimensionedField<scalar, fvMesh>& iF,
     const fieldMapper& mapper
 )
 :
@@ -156,7 +156,7 @@ Foam::dynamicPressureFvPatchScalarField::dynamicPressureFvPatchScalarField
 Foam::dynamicPressureFvPatchScalarField::dynamicPressureFvPatchScalarField
 (
     const dynamicPressureFvPatchScalarField& tppsf,
-    const DimensionedField<scalar, volMesh>& iF
+    const DimensionedField<scalar, fvMesh>& iF
 )
 :
     fixedValueFvPatchScalarField(tppsf, iF),

@@ -2203,11 +2203,11 @@ bool Foam::fvMeshStitcher::geometric() const
 }
 
 
-Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::fvMesh>>
 Foam::fvMeshStitcher::openness() const
 {
     return
-        DimensionedField<scalar, volMesh>::New
+        DimensionedField<scalar, fvMesh>::New
         (
             "openness",
             mag(fvc::surfaceIntegrate(mesh_.Sf()))*mesh_.V()
@@ -2220,7 +2220,7 @@ Foam::fvMeshStitcher::openness() const
 }
 
 
-Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::fvMesh>>
 Foam::fvMeshStitcher::volumeConservationError(const label n) const
 {
     if (0 > n || n > 1)
@@ -2239,7 +2239,7 @@ Foam::fvMeshStitcher::volumeConservationError(const label n) const
     const volScalarField::Internal& V0 = n == 0 ? mesh_.V0() : mesh_.V00();
 
     return
-        DimensionedField<scalar, volMesh>::New
+        DimensionedField<scalar, fvMesh>::New
         (
             "volumeConservationError" + word(n == 0 ? "" : "_0"),
             fvc::surfaceIntegrate(phi*deltaT)() - (V - V0)/mesh_.V()
@@ -2247,11 +2247,11 @@ Foam::fvMeshStitcher::volumeConservationError(const label n) const
 }
 
 
-Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::fvMesh>>
 Foam::fvMeshStitcher::projectedVolumeFraction() const
 {
     return
-        DimensionedField<scalar, volMesh>::New
+        DimensionedField<scalar, fvMesh>::New
         (
             "projectedVolumeFraction",
             mag

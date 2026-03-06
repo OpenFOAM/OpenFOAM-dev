@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,7 @@ License
 Foam::uniformInletOutletEnergyTemperatureFvScalarFieldSource::
 uniformInletOutletEnergyTemperatureFvScalarFieldSource
 (
-    const DimensionedField<scalar, volMesh>& iF,
+    const DimensionedField<scalar, fvMesh>& iF,
     const dictionary& dict
 )
 :
@@ -56,7 +56,7 @@ Foam::uniformInletOutletEnergyTemperatureFvScalarFieldSource::
 uniformInletOutletEnergyTemperatureFvScalarFieldSource
 (
     const uniformInletOutletEnergyTemperatureFvScalarFieldSource& field,
-    const DimensionedField<scalar, volMesh>& iF
+    const DimensionedField<scalar, fvMesh>& iF
 )
 :
     energyCalculatedTemperatureFvScalarFieldSource(field, iF),
@@ -73,15 +73,15 @@ Foam::uniformInletOutletEnergyTemperatureFvScalarFieldSource::
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::fvMesh>>
 Foam::uniformInletOutletEnergyTemperatureFvScalarFieldSource::sourceHeValue
 (
     const fvSource& model,
-    const DimensionedField<scalar, volMesh>& source
+    const DimensionedField<scalar, fvMesh>& source
 ) const
 {
     return
-        DimensionedField<scalar, volMesh>::New
+        DimensionedField<scalar, fvMesh>::New
         (
             model.name() + ":" + this->internalField().name() + "SourceHeValue",
             this->internalField().mesh(),
@@ -107,11 +107,11 @@ Foam::uniformInletOutletEnergyTemperatureFvScalarFieldSource::sourceHeValue
 }
 
 
-Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::fvMesh>>
 Foam::uniformInletOutletEnergyTemperatureFvScalarFieldSource::internalCoeff
 (
     const fvSource& model,
-    const DimensionedField<scalar, volMesh>& source
+    const DimensionedField<scalar, fvMesh>& source
 ) const
 {
     return neg0(source);

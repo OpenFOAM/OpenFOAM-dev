@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,20 +83,20 @@ void Foam::fvFieldReconstructor::rmapFaceToFace
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::DimensionedField<Type, Foam::volMesh>>
+Foam::tmp<Foam::DimensionedField<Type, Foam::fvMesh>>
 Foam::fvFieldReconstructor::reconstructVolInternalField
 (
     const IOobject& fieldIoObject
 ) const
 {
     // Read the field for all the processors
-    PtrList<DimensionedField<Type, volMesh>> procFields(procMeshes_.size());
+    PtrList<DimensionedField<Type, fvMesh>> procFields(procMeshes_.size());
     forAll(procMeshes_, proci)
     {
         procFields.set
         (
             proci,
-            new DimensionedField<Type, volMesh>
+            new DimensionedField<Type, fvMesh>
             (
                 IOobject
                 (
@@ -117,7 +117,7 @@ Foam::fvFieldReconstructor::reconstructVolInternalField
 
     forAll(procMeshes_, proci)
     {
-        const DimensionedField<Type, volMesh>& procField = procFields[proci];
+        const DimensionedField<Type, fvMesh>& procField = procFields[proci];
 
         // Set the cell values in the reconstructed field
         internalField.rmap
@@ -127,9 +127,9 @@ Foam::fvFieldReconstructor::reconstructVolInternalField
         );
     }
 
-    return tmp<DimensionedField<Type, volMesh>>
+    return tmp<DimensionedField<Type, fvMesh>>
     (
-        new DimensionedField<Type, volMesh>
+        new DimensionedField<Type, fvMesh>
         (
             IOobject
             (
@@ -215,7 +215,7 @@ Foam::fvFieldReconstructor::reconstructVolField
                         (
                             procField.boundaryField()[procPatchi],
                             completeMesh_.boundary()[completePatchi],
-                            DimensionedField<Type, volMesh>::null(),
+                            DimensionedField<Type, fvMesh>::null(),
                             setSizeFieldMapper
                             (
                                 completeMesh_.boundary()[completePatchi].size()
@@ -244,7 +244,7 @@ Foam::fvFieldReconstructor::reconstructVolField
                         (
                             completeMesh_.boundary()[completePatchi].type(),
                             completeMesh_.boundary()[completePatchi],
-                            DimensionedField<Type, volMesh>::null()
+                            DimensionedField<Type, fvMesh>::null()
                         )
                     );
                 }
@@ -461,7 +461,7 @@ void Foam::fvFieldReconstructor::reconstructVolInternalFields
     const HashSet<word>& selectedFields
 )
 {
-    const word& fieldClassName = DimensionedField<Type, volMesh>::typeName;
+    const word& fieldClassName = DimensionedField<Type, fvMesh>::typeName;
 
     IOobjectList fields = objects.lookupClass(fieldClassName);
 

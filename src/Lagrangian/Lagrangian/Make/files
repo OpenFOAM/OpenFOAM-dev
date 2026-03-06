@@ -1,3 +1,5 @@
+fields/makeLagrangianFieldFunctions.C
+
 fields/labelIODynamicField.C
 fields/barycentricIODynamicField.C
 

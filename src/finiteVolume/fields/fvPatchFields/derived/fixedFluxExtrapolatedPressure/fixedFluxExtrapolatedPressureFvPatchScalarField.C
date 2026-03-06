@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,7 @@ Foam::fixedFluxExtrapolatedPressureFvPatchScalarField::
 fixedFluxExtrapolatedPressureFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
+    const DimensionedField<scalar, fvMesh>& iF,
     const dictionary& dict
 )
 :
@@ -45,7 +45,7 @@ fixedFluxExtrapolatedPressureFvPatchScalarField
 (
     const fixedFluxExtrapolatedPressureFvPatchScalarField& ptf,
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
+    const DimensionedField<scalar, fvMesh>& iF,
     const fieldMapper& mapper
 )
 :
@@ -57,7 +57,7 @@ Foam::fixedFluxExtrapolatedPressureFvPatchScalarField::
 fixedFluxExtrapolatedPressureFvPatchScalarField
 (
     const fixedFluxExtrapolatedPressureFvPatchScalarField& wbppsf,
-    const DimensionedField<scalar, volMesh>& iF
+    const DimensionedField<scalar, fvMesh>& iF
 )
 :
     fixedFluxPressureFvPatchScalarField(wbppsf, iF)

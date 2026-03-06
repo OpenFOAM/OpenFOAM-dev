@@ -534,6 +534,7 @@ void Foam::triSurface::setDefaultPatches()
 
 Foam::triSurface::triSurface()
 :
+    triSurfacePointMesh(*this),
     ParentType(List<Face>(), pointField()),
     patches_(0),
     sortedEdgeFacesPtr_(nullptr),
@@ -548,6 +549,7 @@ Foam::triSurface::triSurface
     const pointField& points
 )
 :
+    triSurfacePointMesh(*this),
     ParentType(triangles, points),
     patches_(patches),
     sortedEdgeFacesPtr_(nullptr),
@@ -563,6 +565,7 @@ Foam::triSurface::triSurface
     const bool reuse
 )
 :
+    triSurfacePointMesh(*this),
     ParentType(triangles, points, reuse),
     patches_(patches),
     sortedEdgeFacesPtr_(nullptr),
@@ -577,6 +580,7 @@ Foam::triSurface::triSurface
     pointField&& points
 )
 :
+    triSurfacePointMesh(*this),
     ParentType(move(triangles), move(points)),
     patches_(patches),
     sortedEdgeFacesPtr_(nullptr),
@@ -590,6 +594,7 @@ Foam::triSurface::triSurface
     const pointField& points
 )
 :
+    triSurfacePointMesh(*this),
     ParentType(triangles, points),
     patches_(),
     sortedEdgeFacesPtr_(nullptr),
@@ -605,6 +610,7 @@ Foam::triSurface::triSurface
     const pointField& points
 )
 :
+    triSurfacePointMesh(*this),
     ParentType(convertToTri(triangles, 0), points),
     patches_(),
     sortedEdgeFacesPtr_(nullptr),
@@ -616,6 +622,7 @@ Foam::triSurface::triSurface
 
 Foam::triSurface::triSurface(const fileName& name)
 :
+    triSurfacePointMesh(*this),
     ParentType(List<Face>(), pointField()),
     patches_(),
     sortedEdgeFacesPtr_(nullptr),
@@ -631,6 +638,7 @@ Foam::triSurface::triSurface(const fileName& name)
 
 Foam::triSurface::triSurface(Istream& is)
 :
+    triSurfacePointMesh(*this),
     ParentType(List<Face>(), pointField()),
     patches_(),
     sortedEdgeFacesPtr_(nullptr),
@@ -644,6 +652,7 @@ Foam::triSurface::triSurface(Istream& is)
 
 Foam::triSurface::triSurface(const Time& d)
 :
+    triSurfacePointMesh(*this),
     ParentType(List<Face>(), pointField()),
     patches_(),
     sortedEdgeFacesPtr_(nullptr),
@@ -663,6 +672,7 @@ Foam::triSurface::triSurface(const Time& d)
 
 Foam::triSurface::triSurface(const triSurface& ts)
 :
+    triSurfacePointMesh(*this),
     ParentType(ts, ts.points()),
     patches_(ts.patches()),
     sortedEdgeFacesPtr_(nullptr),
@@ -672,6 +682,7 @@ Foam::triSurface::triSurface(const triSurface& ts)
 
 Foam::triSurface::triSurface(triSurface&& ts)
 :
+    triSurfacePointMesh(*this),
     ParentType(move(ts), move(ts.points())),
     patches_(move(ts.patches())),
     sortedEdgeFacesPtr_(nullptr),

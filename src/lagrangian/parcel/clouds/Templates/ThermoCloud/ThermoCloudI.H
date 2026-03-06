@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -115,7 +115,7 @@ inline bool Foam::ThermoCloud<CloudType>::radiation() const
 
 
 template<class CloudType>
-inline Foam::DimensionedField<Foam::scalar, Foam::volMesh>&
+inline Foam::DimensionedField<Foam::scalar, Foam::fvMesh>&
 Foam::ThermoCloud<CloudType>::radAreaP()
 {
     if (!radiation_)
@@ -130,7 +130,7 @@ Foam::ThermoCloud<CloudType>::radAreaP()
 
 
 template<class CloudType>
-inline const Foam::DimensionedField<Foam::scalar, Foam::volMesh>&
+inline const Foam::DimensionedField<Foam::scalar, Foam::fvMesh>&
 Foam::ThermoCloud<CloudType>::radAreaP() const
 {
     if (!radiation_)
@@ -145,7 +145,7 @@ Foam::ThermoCloud<CloudType>::radAreaP() const
 
 
 template<class CloudType>
-inline Foam::DimensionedField<Foam::scalar, Foam::volMesh>&
+inline Foam::DimensionedField<Foam::scalar, Foam::fvMesh>&
 Foam::ThermoCloud<CloudType>::radT4()
 {
     if (!radiation_)
@@ -160,7 +160,7 @@ Foam::ThermoCloud<CloudType>::radT4()
 
 
 template<class CloudType>
-inline const Foam::DimensionedField<Foam::scalar, Foam::volMesh>&
+inline const Foam::DimensionedField<Foam::scalar, Foam::fvMesh>&
 Foam::ThermoCloud<CloudType>::radT4() const
 {
     if (!radiation_)
@@ -175,7 +175,7 @@ Foam::ThermoCloud<CloudType>::radT4() const
 
 
 template<class CloudType>
-inline Foam::DimensionedField<Foam::scalar, Foam::volMesh>&
+inline Foam::DimensionedField<Foam::scalar, Foam::fvMesh>&
 Foam::ThermoCloud<CloudType>::radAreaPT4()
 {
     if (!radiation_)
@@ -190,7 +190,7 @@ Foam::ThermoCloud<CloudType>::radAreaPT4()
 
 
 template<class CloudType>
-inline const Foam::DimensionedField<Foam::scalar, Foam::volMesh>&
+inline const Foam::DimensionedField<Foam::scalar, Foam::fvMesh>&
 Foam::ThermoCloud<CloudType>::radAreaPT4() const
 {
     if (!radiation_)
@@ -205,7 +205,7 @@ Foam::ThermoCloud<CloudType>::radAreaPT4() const
 
 
 template<class CloudType>
-inline Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+inline Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::fvMesh>>
 Foam::ThermoCloud<CloudType>::hsTrans() const
 {
     return hsTrans_();
@@ -213,7 +213,7 @@ Foam::ThermoCloud<CloudType>::hsTrans() const
 
 
 template<class CloudType>
-inline Foam::DimensionedField<Foam::scalar, Foam::volMesh>&
+inline Foam::DimensionedField<Foam::scalar, Foam::fvMesh>&
 Foam::ThermoCloud<CloudType>::hsTransRef()
 {
     return hsTrans_();
@@ -221,7 +221,7 @@ Foam::ThermoCloud<CloudType>::hsTransRef()
 
 
 template<class CloudType>
-inline Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+inline Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::fvMesh>>
 Foam::ThermoCloud<CloudType>::hsCoeff() const
 {
     return hsCoeff_();
@@ -229,7 +229,7 @@ Foam::ThermoCloud<CloudType>::hsCoeff() const
 
 
 template<class CloudType>
-inline Foam::DimensionedField<Foam::scalar, Foam::volMesh>&
+inline Foam::DimensionedField<Foam::scalar, Foam::fvMesh>&
 Foam::ThermoCloud<CloudType>::hsCoeffRef()
 {
     return hsCoeff_();

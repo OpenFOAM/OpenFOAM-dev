@@ -26,7 +26,7 @@ License
 #include "CloudAverageField.H"
 #include "LagrangianFields.H"
 #include "LagrangianSubFields.H"
-#include "volMesh.H"
+#include "fvMesh.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -208,7 +208,7 @@ template<class Type>
 Foam::CloudAverageField<Type>::CloudAverageField
 (
     const word& name,
-    const DimensionedField<scalar, volMesh>& cellWeightSum,
+    const DimensionedField<scalar, fvMesh>& cellWeightSum,
     const CloudDerivedField<Type>& weightPsi
 )
 :

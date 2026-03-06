@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ License
 template<class Type>
 Foam::genericFvFieldSource<Type>::genericFvFieldSource
 (
-    const DimensionedField<Type, volMesh>& iF,
+    const DimensionedField<Type, fvMesh>& iF,
     const dictionary& dict
 )
 :
@@ -44,7 +44,7 @@ template<class Type>
 Foam::genericFvFieldSource<Type>::genericFvFieldSource
 (
     const genericFvFieldSource<Type>& stf,
-    const DimensionedField<Type, volMesh>& iF
+    const DimensionedField<Type, fvMesh>& iF
 )
 :
     genericFieldBase(stf),
@@ -63,11 +63,11 @@ Foam::genericFvFieldSource<Type>::~genericFvFieldSource()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::DimensionedField<Type, Foam::volMesh>>
+Foam::tmp<Foam::DimensionedField<Type, Foam::fvMesh>>
 Foam::genericFvFieldSource<Type>::sourceValue
 (
     const fvSource& model,
-    const DimensionedField<scalar, volMesh>& source
+    const DimensionedField<scalar, fvMesh>& source
 ) const
 {
     FatalErrorInFunction
@@ -80,7 +80,7 @@ Foam::genericFvFieldSource<Type>::sourceValue
            "generic source condition."
         << abort(FatalError);
 
-    return NullObjectRef<DimensionedField<Type, volMesh>>();
+    return NullObjectRef<DimensionedField<Type, fvMesh>>();
 }
 
 
@@ -108,11 +108,11 @@ Foam::genericFvFieldSource<Type>::sourceValue
 
 
 template<class Type>
-Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::fvMesh>>
 Foam::genericFvFieldSource<Type>::internalCoeff
 (
     const fvSource& model,
-    const DimensionedField<scalar, volMesh>& source
+    const DimensionedField<scalar, fvMesh>& source
 ) const
 {
     FatalErrorInFunction
@@ -125,7 +125,7 @@ Foam::genericFvFieldSource<Type>::internalCoeff
            "generic source condition."
         << abort(FatalError);
 
-    return NullObjectRef<DimensionedField<scalar, volMesh>>();
+    return NullObjectRef<DimensionedField<scalar, fvMesh>>();
 }
 
 

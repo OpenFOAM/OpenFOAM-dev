@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,7 @@ License
 Foam::MRFnoSlipFvPatchVectorField::MRFnoSlipFvPatchVectorField
 (
     const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF,
+    const DimensionedField<vector, fvMesh>& iF,
     const dictionary& dict
 )
 :
@@ -57,7 +57,7 @@ Foam::MRFnoSlipFvPatchVectorField::MRFnoSlipFvPatchVectorField
 (
     const MRFnoSlipFvPatchVectorField& pvf,
     const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF,
+    const DimensionedField<vector, fvMesh>& iF,
     const fieldMapper& mapper
 )
 :
@@ -69,7 +69,7 @@ Foam::MRFnoSlipFvPatchVectorField::MRFnoSlipFvPatchVectorField
 Foam::MRFnoSlipFvPatchVectorField::MRFnoSlipFvPatchVectorField
 (
     const MRFnoSlipFvPatchVectorField& pvf,
-    const DimensionedField<vector, volMesh>& iF
+    const DimensionedField<vector, fvMesh>& iF
 )
 :
     fixedValueFvPatchVectorField(pvf, iF),

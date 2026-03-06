@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,8 +39,6 @@ Namespace
 namespace Foam
 {
 
-class volMesh;
-
 namespace wallBoilingModels
 {
 
@@ -64,7 +62,7 @@ struct coefficient<Field<Type>>
 };
 
 template<class Type>
-struct coefficient<GeometricField<Type, volMesh, Field>>
+struct coefficient<GeometricField<Type, fvMesh, Field>>
 {
     template<class Type2>
     static const dimensioned<Type2>& value(const dimensioned<Type2>& v)
@@ -83,7 +81,7 @@ struct coefficient<GeometricField<Type, volMesh, Field>>
 };
 
 template<class Type>
-struct coefficient<DimensionedField<Type, volMesh, Field>>
+struct coefficient<DimensionedField<Type, fvMesh, Field>>
 {
     template<class Type2>
     static const dimensioned<Type2>& value(const dimensioned<Type2>& v)

@@ -32,11 +32,11 @@ Description
 #ifndef pointMesh_H
 #define pointMesh_H
 
-#include "GeoMesh.H"
 #include "DemandDrivenMeshObject.H"
 #include "polyMesh.H"
 #include "pointBoundaryMesh.H"
 #include "pointFieldsFwd.H"
+#include "SlicedDimensionedField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -49,13 +49,18 @@ namespace Foam
 
 class pointMesh
 :
-    public DemandDrivenMeshObject<polyMesh, PermanentMeshObject, pointMesh>,
-    public GeoMesh<polyMesh>
+    public DemandDrivenMeshObject<polyMesh, PermanentMeshObject, pointMesh>
 {
     // Private Data
 
+        //- Reference to polyMesh
+        const polyMesh& mesh_;
+
         //- Boundary mesh
         pointBoundaryMesh boundary_;
+
+        //- Dimensioned points
+        mutable SlicedDimensionedField<point, pointMesh>* pointsPtr_;
 
 
 protected:
@@ -126,20 +131,11 @@ public:
         //- Return number of points
         label size() const
         {
-            return size(*this);
-        }
-
-        //- Return number of points
-        static label size(const Mesh& mesh)
-        {
-            return mesh.GeoMesh<polyMesh>::mesh_.nPoints();
+            return mesh_.nPoints();
         }
 
         //- Return point locations
-        const pointField& C() const
-        {
-            return GeoMesh<polyMesh>::mesh_.points();
-        }
+        const DimensionedField<vector, pointMesh>& C() const;
 
         //- Return reference to boundary mesh
         const pointBoundaryMesh& boundary() const
@@ -150,13 +146,13 @@ public:
         //- Return parallel info
         const globalMeshData& globalData() const
         {
-            return GeoMesh<polyMesh>::mesh_.globalData();
+            return mesh_.globalData();
         }
 
         //- Return database. For now is its polyMesh.
         const objectRegistry& thisDb() const
         {
-            return GeoMesh<polyMesh>::mesh_.thisDb();
+            return mesh_.thisDb();
         }
 
         //- Reset pointMesh with respect to the updated polyMesh
@@ -191,6 +187,12 @@ public:
 
 
     // Member Operators
+
+        //- Return reference to polyMesh
+        const polyMesh& operator()() const
+        {
+            return mesh_;
+        }
 
         //- Disallow default bitwise assignment
         void operator=(const pointMesh&) = delete;

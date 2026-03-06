@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,7 @@ template<class Type>
 Foam::symmetryPlaneFvPatchField<Type>::symmetryPlaneFvPatchField
 (
     const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF
+    const DimensionedField<Type, fvMesh>& iF
 )
 :
     basicSymmetryFvPatchField<Type>(p, iF),
@@ -44,7 +44,7 @@ template<class Type>
 Foam::symmetryPlaneFvPatchField<Type>::symmetryPlaneFvPatchField
 (
     const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
+    const DimensionedField<Type, fvMesh>& iF,
     const dictionary& dict
 )
 :
@@ -71,7 +71,7 @@ Foam::symmetryPlaneFvPatchField<Type>::symmetryPlaneFvPatchField
 (
     const symmetryPlaneFvPatchField<Type>& ptf,
     const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
+    const DimensionedField<Type, fvMesh>& iF,
     const fieldMapper& mapper
 )
 :
@@ -94,7 +94,7 @@ template<class Type>
 Foam::symmetryPlaneFvPatchField<Type>::symmetryPlaneFvPatchField
 (
     const symmetryPlaneFvPatchField<Type>& ptf,
-    const DimensionedField<Type, volMesh>& iF
+    const DimensionedField<Type, fvMesh>& iF
 )
 :
     basicSymmetryFvPatchField<Type>(ptf, iF),

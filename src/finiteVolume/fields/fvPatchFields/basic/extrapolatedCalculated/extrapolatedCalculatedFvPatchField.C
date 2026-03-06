@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ Foam::extrapolatedCalculatedFvPatchField<Type>::
 extrapolatedCalculatedFvPatchField
 (
     const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF
+    const DimensionedField<Type, fvMesh>& iF
 )
 :
     calculatedFvPatchField<Type>(p, iF)
@@ -45,7 +45,7 @@ Foam::extrapolatedCalculatedFvPatchField<Type>::
 extrapolatedCalculatedFvPatchField
 (
     const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
+    const DimensionedField<Type, fvMesh>& iF,
     const dictionary& dict
 )
 :
@@ -61,7 +61,7 @@ extrapolatedCalculatedFvPatchField
 (
     const extrapolatedCalculatedFvPatchField<Type>& ptf,
     const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
+    const DimensionedField<Type, fvMesh>& iF,
     const fieldMapper& mapper
 )
 :
@@ -76,7 +76,7 @@ Foam::extrapolatedCalculatedFvPatchField<Type>::
 extrapolatedCalculatedFvPatchField
 (
     const extrapolatedCalculatedFvPatchField<Type>& ptf,
-    const DimensionedField<Type, volMesh>& iF
+    const DimensionedField<Type, fvMesh>& iF
 )
 :
     calculatedFvPatchField<Type>(ptf, iF)

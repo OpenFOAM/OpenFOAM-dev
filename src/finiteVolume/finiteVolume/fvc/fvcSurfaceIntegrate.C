@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,7 +46,7 @@ void surfaceIntegrate
     const SurfaceField<Type>& ssf
 )
 {
-    const fvMesh& mesh = ssf.mesh();
+    const fvMesh& mesh = ssf.mesh()();
 
     const labelUList& owner = mesh.owner();
     const labelUList& neighbour = mesh.neighbour();
@@ -83,14 +83,12 @@ surfaceIntegrate
     const SurfaceField<Type>& ssf
 )
 {
-    const fvMesh& mesh = ssf.mesh();
-
     tmp<VolInternalField<Type>> tvf
     (
         VolInternalField<Type>::New
         (
             "surfaceIntegrate("+ssf.name()+')',
-            mesh,
+            ssf.mesh()(),
             dimensioned<Type>
             (
                 "0",
@@ -130,14 +128,12 @@ surfaceIntegrateExtrapolate
     const SurfaceField<Type>& ssf
 )
 {
-    const fvMesh& mesh = ssf.mesh();
-
     tmp<VolField<Type>> tvf
     (
         VolField<Type>::New
         (
             "surfaceIntegrate("+ssf.name()+')',
-            mesh,
+            ssf.mesh()(),
             dimensioned<Type>
             (
                 "0",
@@ -175,7 +171,7 @@ surfaceIntegrateExtrapolate
 template<class Type>
 tmp<VolInternalField<Type>> surfaceSum(const SurfaceField<Type>& ssf)
 {
-    const fvMesh& mesh = ssf.mesh();
+    const fvMesh& mesh = ssf.mesh()();
 
     tmp<VolInternalField<Type>> tvf
     (

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,7 @@ License
 #include "pointMesh.H"
 #include "globalMeshData.H"
 #include "pointFields.H"
+#include "SubField.H"
 #include "facePointPatch.H"
 #include "MapGeometricFields.H"
 
@@ -46,8 +47,9 @@ const Foam::HashSet<Foam::word> Foam::pointMesh::curGeometryFields;
 Foam::pointMesh::pointMesh(const polyMesh& pMesh)
 :
     DemandDrivenMeshObject<polyMesh, PermanentMeshObject, pointMesh>(pMesh),
-    GeoMesh<polyMesh>(pMesh),
-    boundary_(*this, pMesh.boundaryMesh())
+    mesh_(pMesh),
+    boundary_(*this, pMesh.boundaryMesh()),
+    pointsPtr_(nullptr)
 {
     if (debug)
     {
@@ -71,10 +73,38 @@ Foam::pointMesh::~pointMesh()
             << endl;
         error::printStack(Pout);
     }
+
+    deleteDemandDrivenData(pointsPtr_);
 }
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+const Foam::DimensionedField<Foam::vector, Foam::pointMesh>&
+Foam::pointMesh::C() const
+{
+    if (!pointsPtr_)
+    {
+        pointsPtr_ = new SlicedDimensionedField<vector, pointMesh>
+        (
+            IOobject
+            (
+                "points",
+                time().name(),
+                *this,
+                IOobject::NO_READ,
+                IOobject::NO_WRITE,
+                true
+            ),
+            *this,
+            dimLength,
+            mesh_.points()
+        );
+    }
+
+    return *pointsPtr_;
+}
+
 
 bool Foam::pointMesh::movePoints()
 {
@@ -84,7 +114,7 @@ bool Foam::pointMesh::movePoints()
             << "Moving points." << endl;
     }
 
-    boundary_.movePoints(GeoMesh<polyMesh>::mesh_.points());
+    boundary_.movePoints(mesh_.points());
 
     return true;
 }

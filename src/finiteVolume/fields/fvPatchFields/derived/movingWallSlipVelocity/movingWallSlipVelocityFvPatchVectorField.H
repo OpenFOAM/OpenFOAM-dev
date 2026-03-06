@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,14 +74,14 @@ public:
         movingWallSlipVelocityFvPatchVectorField
         (
             const fvPatch&,
-            const DimensionedField<vector, volMesh>&
+            const DimensionedField<vector, fvMesh>&
         );
 
         //- Construct from patch, internal field and dictionary
         movingWallSlipVelocityFvPatchVectorField
         (
             const fvPatch&,
-            const DimensionedField<vector, volMesh>&,
+            const DimensionedField<vector, fvMesh>&,
             const dictionary&
         );
 
@@ -91,7 +91,7 @@ public:
         (
             const movingWallSlipVelocityFvPatchVectorField&,
             const fvPatch&,
-            const DimensionedField<vector, volMesh>&,
+            const DimensionedField<vector, fvMesh>&,
             const fieldMapper&
         );
 
@@ -105,13 +105,13 @@ public:
         movingWallSlipVelocityFvPatchVectorField
         (
             const movingWallSlipVelocityFvPatchVectorField&,
-            const DimensionedField<vector, volMesh>&
+            const DimensionedField<vector, fvMesh>&
         );
 
         //- Construct and return a clone setting internal field reference
         virtual tmp<fvPatchVectorField> clone
         (
-            const DimensionedField<vector, volMesh>& iF
+            const DimensionedField<vector, fvMesh>& iF
         ) const
         {
             return tmp<fvPatchVectorField>

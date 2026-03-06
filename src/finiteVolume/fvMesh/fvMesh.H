@@ -48,6 +48,7 @@ SourceFiles
 #define fvMesh_H
 
 #include "polyMesh.H"
+#include "surfaceMesh.H"
 #include "lduMesh.H"
 #include "primitiveMesh.H"
 #include "fvBoundaryMesh.H"
@@ -73,7 +74,7 @@ class fvMeshStitcher;
 class fvMeshTopoChanger;
 class fvMeshDistributor;
 class fvMeshMover;
-class volMesh;
+class fvMesh;
 class polyDistributionMap;
 
 template<class Type>
@@ -93,6 +94,7 @@ class fvMesh
 :
     public polyMesh,
     public lduMesh,
+    public surfaceMesh,
     public surfaceInterpolation
 {
 public:
@@ -181,13 +183,13 @@ private:
         mutable label curTimeIndex_;
 
         //- Cell volumes
-        mutable SlicedDimensionedField<scalar, volMesh>* VPtr_;
+        mutable SlicedDimensionedField<scalar, fvMesh>* VPtr_;
 
         //- Cell volumes old time level
-        mutable DimensionedField<scalar, volMesh>* V0Ptr_;
+        mutable DimensionedField<scalar, fvMesh>* V0Ptr_;
 
         //- Cell volumes old-old time level
-        mutable DimensionedField<scalar, volMesh>* V00Ptr_;
+        mutable DimensionedField<scalar, fvMesh>* V00Ptr_;
 
         //- Face area vectors
         mutable slicedSurfaceVectorField* SfSlicePtr_;
@@ -308,6 +310,17 @@ public:
 
         typedef fvMesh Mesh;
         typedef fvBoundaryMesh BoundaryMesh;
+
+        //- Zone type
+        typedef cellZone Zone;
+
+        //- Patch field type
+        template<class Type>
+        using PatchField = fvPatchField<Type>;
+
+        //- Field source type
+        template<class Type>
+        using FieldSource = fvFieldSource<Type>;
 
         friend fvMeshTopoChangers::list;
 
@@ -446,10 +459,16 @@ public:
                 return *this;
             }
 
-            //- Return reference to polyMesh
-            const polyMesh& operator()() const
+            //- Return reference to fvMesh for volFields GeoMesh argument
+            const fvMesh& operator()() const
             {
                 return *this;
+            }
+
+            //- Return fvMesh size
+            label size() const
+            {
+                return nCells();
             }
 
             //- Return ldu addressing
@@ -512,19 +531,19 @@ public:
             const fvMeshMover& mover() const;
 
             //- Return cell volumes
-            const DimensionedField<scalar, volMesh>& V() const;
+            const DimensionedField<scalar, fvMesh>& V() const;
 
             //- Return old-time cell volumes
-            const DimensionedField<scalar, volMesh>& V0() const;
+            const DimensionedField<scalar, fvMesh>& V0() const;
 
             //- Return old-old-time cell volumes
-            const DimensionedField<scalar, volMesh>& V00() const;
+            const DimensionedField<scalar, fvMesh>& V00() const;
 
             //- Return sub-cycle cell volumes
-            tmp<DimensionedField<scalar, volMesh>> Vsc() const;
+            tmp<DimensionedField<scalar, fvMesh>> Vsc() const;
 
             //- Return sub-cycle old-time cell volumes
-            tmp<DimensionedField<scalar, volMesh>> Vsc0() const;
+            tmp<DimensionedField<scalar, fvMesh>> Vsc0() const;
 
             //- Return cell face area vectors
             const surfaceVectorField& Sf() const;
@@ -726,6 +745,8 @@ const fvMesh& region(const dictionary& dict);
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "surfaceMeshI.H"
 
 #ifdef NoRepository
     #include "fvMeshTemplates.C"

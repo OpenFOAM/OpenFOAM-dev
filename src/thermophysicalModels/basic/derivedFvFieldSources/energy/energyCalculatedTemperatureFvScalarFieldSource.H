@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ public:
         //- Construct from internal field and dictionary
         energyCalculatedTemperatureFvScalarFieldSource
         (
-            const DimensionedField<scalar, volMesh>&,
+            const DimensionedField<scalar, fvMesh>&,
             const dictionary& dict
         );
 
@@ -70,7 +70,7 @@ public:
         energyCalculatedTemperatureFvScalarFieldSource
         (
             const energyCalculatedTemperatureFvScalarFieldSource&,
-            const DimensionedField<scalar, volMesh>&
+            const DimensionedField<scalar, fvMesh>&
         );
 
 
@@ -81,10 +81,10 @@ public:
     // Member Functions
 
         //- Return the source energy value
-        virtual tmp<DimensionedField<scalar, volMesh>> sourceHeValue
+        virtual tmp<DimensionedField<scalar, fvMesh>> sourceHeValue
         (
             const fvSource& model,
-            const DimensionedField<scalar, volMesh>& source
+            const DimensionedField<scalar, fvMesh>& source
         ) const = 0;
 
         //- Return the source energy value
@@ -96,10 +96,10 @@ public:
         ) const = 0;
 
         //- Return the source value. Not implemented.
-        virtual tmp<DimensionedField<scalar, volMesh>> sourceValue
+        virtual tmp<DimensionedField<scalar, fvMesh>> sourceValue
         (
             const fvSource& model,
-            const DimensionedField<scalar, volMesh>& source
+            const DimensionedField<scalar, fvMesh>& source
         ) const;
 
         //- Return the source value. Not implemented.

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,6 @@ License
 
 #include "contactAngleFvPatchScalarField.H"
 #include "fieldMapper.H"
-#include "volMesh.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -48,7 +47,7 @@ const Foam::NamedEnum
 Foam::contactAngleFvPatchScalarField::contactAngleFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
+    const DimensionedField<scalar, fvMesh>& iF,
     const dictionary& dict
 )
 :
@@ -75,7 +74,7 @@ Foam::contactAngleFvPatchScalarField::contactAngleFvPatchScalarField
 (
     const contactAngleFvPatchScalarField& acpsf,
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
+    const DimensionedField<scalar, fvMesh>& iF,
     const fieldMapper& mapper
 )
 :
@@ -88,7 +87,7 @@ Foam::contactAngleFvPatchScalarField::contactAngleFvPatchScalarField
 Foam::contactAngleFvPatchScalarField::contactAngleFvPatchScalarField
 (
     const contactAngleFvPatchScalarField& acpsf,
-    const DimensionedField<scalar, volMesh>& iF
+    const DimensionedField<scalar, fvMesh>& iF
 )
 :
     fixedGradientFvPatchScalarField(acpsf, iF),

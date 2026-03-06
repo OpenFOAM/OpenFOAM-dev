@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -715,8 +715,8 @@ void Foam::vtkPVFoam::updateInfoFields()
         // Search for list of objects for this time and mesh region
         IOobjectList objects(runTime, times[timei].name(), regionPrefix);
 
-        addFieldsToSelection<volMesh>(fieldSelection, objects);
-        addInternalFieldsToSelection<volMesh>(fieldSelection, objects);
+        addFieldsToSelection<fvMesh>(fieldSelection, objects);
+        addInternalFieldsToSelection<fvMesh>(fieldSelection, objects);
         addFieldsToSelection<surfaceMesh>(fieldSelection, objects);
         addFieldsToSelection<pointMesh>(fieldSelection, objects);
     }

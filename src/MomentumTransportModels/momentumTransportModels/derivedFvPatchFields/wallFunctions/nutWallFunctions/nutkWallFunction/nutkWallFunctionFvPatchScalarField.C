@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,7 +76,7 @@ tmp<scalarField> nutkWallFunctionFvPatchScalarField::nut() const
 nutkWallFunctionFvPatchScalarField::nutkWallFunctionFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
+    const DimensionedField<scalar, fvMesh>& iF,
     const dictionary& dict
 )
 :
@@ -88,7 +88,7 @@ nutkWallFunctionFvPatchScalarField::nutkWallFunctionFvPatchScalarField
 (
     const nutkWallFunctionFvPatchScalarField& ptf,
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
+    const DimensionedField<scalar, fvMesh>& iF,
     const fieldMapper& mapper
 )
 :
@@ -99,7 +99,7 @@ nutkWallFunctionFvPatchScalarField::nutkWallFunctionFvPatchScalarField
 nutkWallFunctionFvPatchScalarField::nutkWallFunctionFvPatchScalarField
 (
     const nutkWallFunctionFvPatchScalarField& wfpsf,
-    const DimensionedField<scalar, volMesh>& iF
+    const DimensionedField<scalar, fvMesh>& iF
 )
 :
     nutWallFunctionFvPatchScalarField(wfpsf, iF)

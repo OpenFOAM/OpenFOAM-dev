@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,8 +34,8 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::v() const
 
 
 template<>
-inline Foam::tmp<Foam::GeometricField<Foam::scalar, Foam::volMesh>>
-Foam::GeometricField<Foam::scalar, Foam::volMesh>::component
+inline Foam::tmp<Foam::GeometricField<Foam::scalar, Foam::fvMesh>>
+Foam::GeometricField<Foam::scalar, Foam::fvMesh>::component
 (
     const direction
 ) const
@@ -46,10 +46,10 @@ Foam::GeometricField<Foam::scalar, Foam::volMesh>::component
 
 template<>
 template<template<class> class PrimitiveField>
-inline void Foam::GeometricField<Foam::scalar, Foam::volMesh>::replace
+inline void Foam::GeometricField<Foam::scalar, Foam::fvMesh>::replace
 (
     const direction,
-    const GeometricField<scalar, volMesh, PrimitiveField>& gsf
+    const GeometricField<scalar, fvMesh, PrimitiveField>& gsf
 )
 {
     *this == gsf;

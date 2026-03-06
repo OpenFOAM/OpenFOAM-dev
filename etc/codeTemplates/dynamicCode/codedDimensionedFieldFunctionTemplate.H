@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) YEAR OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,103 +21,88 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Class
-    Foam::volMesh
-
 Description
-    Mesh data needed to do the Finite Volume discretisation.
+    Template for use with dynamic code generation of a DimensionedFieldFunction.
 
-Class
-    Foam::isVolMesh
+    - without state
 
-Description
-    Supports static assertion that a template argument is of type volMesh.
+SourceFiles
+    codedDimensionedFieldFunctionTemplate.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef volMesh_H
-#define volMesh_H
+#ifndef codedDimensionedFieldFunctionTemplate_H
+#define codedDimensionedFieldFunctionTemplate_H
 
-#include "GeoMesh.H"
-#include "fvMesh.H"
-#include "primitiveMesh.H"
-#include <type_traits>
+#include "DimensionedFieldFunction.H"
+#include "volFields.H"
+
+//{{{ begin codeInclude
+${codeInclude}
+//}}} end codeInclude
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+namespace DimensionedFieldFunctions
+{
 
 /*---------------------------------------------------------------------------*\
-                           Class volMesh Declaration
+                     A templated DimensionedFieldFunction
 \*---------------------------------------------------------------------------*/
 
-class volMesh
+class ${typeName}DimensionedFieldFunction${DimensionedFieldTypeName}
 :
-    public GeoMesh<fvMesh>
+    public DimensionedFieldFunction<${DimensionedFieldType}>
 {
+    typedef typename ${DimensionedFieldType}::Type_ Type;
+    typedef typename ${DimensionedFieldType}::GeoMesh_ GeoMesh;
+    typedef typename GeoMesh::Zone Zone;
+
+
+    // Private Data
+
+        //- Local reference to the field
+        ${DimensionedFieldType}& field;
+
 
 public:
 
-    // Public typedefs
-
-        //- Zone type
-        typedef cellZone Zone;
-
-        //- Patch field type
-        template<class Type>
-        using PatchField = fvPatchField<Type>;
-
-        //- Field source type
-        template<class Type>
-        using FieldSource = fvFieldSource<Type>;
+    // Runtime type information
+    TypeName("${typeName}");
 
 
     // Constructors
 
-        //- Construct from fvMesh
-        explicit volMesh(const fvMesh& mesh)
-        :
-            GeoMesh<fvMesh>(mesh)
-        {}
+        //- Construct from entry name and dictionary
+        ${typeName}DimensionedFieldFunction${DimensionedFieldTypeName}
+        (
+            const dictionary& dict,
+            ${DimensionedFieldType}& field
+        );
+
+
+    //- Destructor
+    virtual ~${typeName}DimensionedFieldFunction${DimensionedFieldTypeName}();
 
 
     // Member Functions
 
-        //- Return size
-        label size() const
-        {
-            return size(mesh_);
-        }
+        //- Evaluate the function and set the field
+        virtual void evaluate();
 
-        //- Return size
-        static label size(const Mesh& mesh)
-        {
-            return mesh.nCells();
-        }
+        //- Update the field if the function has changed
+        virtual void update();
+
+        //- Write data to dictionary stream
+        virtual void write(Ostream& os) const;
 };
-
-
-/*---------------------------------------------------------------------------*\
-                          Class isVolMesh Declaration
-\*---------------------------------------------------------------------------*/
-
-template<class T>
-class isVolMesh
-:
-    public std::false_type
-{};
-
-
-template<>
-class isVolMesh<volMesh>
-:
-    public std::true_type
-{};
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace DimensionedFieldFunctions
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,7 @@ inline const Foam::word& Foam::chemistryModel<ThermoType>::reactionName
 
 
 template<class ThermoType>
-inline const Foam::PtrList<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>&
+inline const Foam::PtrList<Foam::DimensionedField<Foam::scalar, Foam::fvMesh>>&
 Foam::chemistryModel<ThermoType>::RR() const
 {
     return RR_;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,29 +24,43 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "DimensionedField.H"
+#include "DimensionedFieldFunction.H"
 #include "IOstreams.H"
-
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type, class GeoMesh, template<class> class PrimitiveField>
 void Foam::DimensionedField<Type, GeoMesh, PrimitiveField>::readField
 (
-    const dictionary& fieldDict,
-    const word& fieldDictEntry
+    const dictionary& dict,
+    const word& keyword
 )
 {
-    dimensions_.reset(dimensionSet(fieldDict.lookup("dimensions")));
+    dimensions_.reset(dimensionSet(dict.lookup("dimensions")));
 
-    PrimitiveField<Type> f
-    (
-        fieldDictEntry,
-        dimensions_,
-        fieldDict,
-        GeoMesh::size(mesh_)
-    );
+    if (dict.isDict(keyword))
+    {
+        DimensionedFieldFunction
+        <
+            DimensionedField<Type, GeoMesh, PrimitiveField>
+        >::New
+        (
+            dict.subDict(keyword),
+            *this
+        );
+    }
+    else
+    {
+        PrimitiveField<Type> f
+        (
+            keyword,
+            dimensions_,
+            dict,
+            mesh_.size()
+        );
 
-    this->transfer(f);
+        this->transfer(f);
+    }
 }
 
 
@@ -90,7 +104,7 @@ template<class Type, class GeoMesh, template<class> class PrimitiveField>
 Foam::DimensionedField<Type, GeoMesh, PrimitiveField>::DimensionedField
 (
     const IOobject& io,
-    const Mesh& mesh,
+    const GeoMesh& mesh,
     const word& fieldDictEntry
 )
 :
@@ -108,7 +122,7 @@ template<class Type, class GeoMesh, template<class> class PrimitiveField>
 Foam::DimensionedField<Type, GeoMesh, PrimitiveField>::DimensionedField
 (
     const IOobject& io,
-    const Mesh& mesh,
+    const GeoMesh& mesh,
     const dictionary& fieldDict,
     const word& fieldDictEntry
 )

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ template<class Type>
 Foam::tmp<Foam::fvMatrix<Type>>
 Foam::fvm::Su
 (
-    const DimensionedField<Type, volMesh>& su,
+    const DimensionedField<Type, fvMesh>& su,
     const VolField<Type>& vf
 )
 {
@@ -59,7 +59,7 @@ template<class Type>
 Foam::tmp<Foam::fvMatrix<Type>>
 Foam::fvm::Su
 (
-    const tmp<DimensionedField<Type, volMesh>>& tsu,
+    const tmp<DimensionedField<Type, fvMesh>>& tsu,
     const VolField<Type>& vf
 )
 {

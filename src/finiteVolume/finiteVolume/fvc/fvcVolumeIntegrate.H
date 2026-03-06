@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,13 +70,13 @@ namespace fvc
     template<class Type>
     tmp<Field<Type>> volumeIntegrate
     (
-        const DimensionedField<Type, volMesh>&
+        const DimensionedField<Type, fvMesh>&
     );
 
     template<class Type>
     tmp<Field<Type>> volumeIntegrate
     (
-        const tmp<DimensionedField<Type, volMesh>>&
+        const tmp<DimensionedField<Type, fvMesh>>&
     );
 
 
@@ -96,13 +96,13 @@ namespace fvc
     template<class Type>
     dimensioned<Type> domainIntegrate
     (
-        const DimensionedField<Type, volMesh>&
+        const DimensionedField<Type, fvMesh>&
     );
 
     template<class Type>
     dimensioned<Type> domainIntegrate
     (
-        const tmp<DimensionedField<Type, volMesh>>&
+        const tmp<DimensionedField<Type, fvMesh>>&
     );
 }
 

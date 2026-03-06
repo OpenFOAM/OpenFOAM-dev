@@ -85,7 +85,7 @@ ${typeName}MixedValueFvPatch${FieldType}::
 ${typeName}MixedValueFvPatch${FieldType}
 (
     const fvPatch& p,
-    const DimensionedField<${TemplateType}, volMesh>& iF,
+    const DimensionedField<${TemplateType}, fvMesh>& iF,
     const dictionary& dict
 )
 :
@@ -104,7 +104,7 @@ ${typeName}MixedValueFvPatch${FieldType}
 (
     const ${typeName}MixedValueFvPatch${FieldType}& ptf,
     const fvPatch& p,
-    const DimensionedField<${TemplateType}, volMesh>& iF,
+    const DimensionedField<${TemplateType}, fvMesh>& iF,
     const fieldMapper& mapper
 )
 :
@@ -122,7 +122,7 @@ ${typeName}MixedValueFvPatch${FieldType}::
 ${typeName}MixedValueFvPatch${FieldType}
 (
     const ${typeName}MixedValueFvPatch${FieldType}& ptf,
-    const DimensionedField<${TemplateType}, volMesh>& iF
+    const DimensionedField<${TemplateType}, fvMesh>& iF
 )
 :
     mixedFvPatchField<${TemplateType}>(ptf, iF)

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,26 +21,54 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Class
-    Foam::surfPointFields
-
-Description
-    Point fields for surfMesh
-
-SourceFiles
-    surfPointFields.C
-
 \*---------------------------------------------------------------------------*/
 
-#ifndef surfPointFields_H
-#define surfPointFields_H
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-#include "DimensionedField.H"
-#include "surfPointGeoMesh.H"
-#include "surfPointFieldsFwd.H"
+inline Foam::label Foam::surfaceMesh::size() const
+{
+    return dynamic_cast<const fvMesh&>(*this).nInternalFaces();
+    // return mesh_.nInternalFaces();
+}
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#endif
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
+
+inline const Foam::objectRegistry& Foam::surfaceMesh::thisDb() const
+{
+    return mesh_.thisDb();
+}
+
+
+inline const Foam::Time& Foam::surfaceMesh::time() const
+{
+    return mesh_.time();
+}
+
+
+inline const Foam::fvBoundaryMesh& Foam::surfaceMesh::boundary() const
+{
+    return mesh_.boundary();
+}
+
+
+inline const Foam::fvMesh& Foam::surfaceMesh::operator()() const
+{
+    return dynamic_cast<const fvMesh&>(*this);
+    // return mesh_;
+}
+
+
+inline bool Foam::surfaceMesh::operator!=(const surfaceMesh& sm) const
+{
+    return &sm != this;
+}
+
+
+inline bool Foam::surfaceMesh::operator==(const surfaceMesh& sm) const
+{
+    return &sm == this;
+}
+
 
 // ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "fvSource.H"
-#include "volMesh.H"
+#include "fvMesh.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -55,7 +55,7 @@ void Foam::fvSource::infoField
 void Foam::fvSource::infoField
 (
     const word& name,
-    const DimensionedField<scalar, volMesh>& field,
+    const DimensionedField<scalar, fvMesh>& field,
     const bool print
 )
 {
@@ -65,7 +65,7 @@ void Foam::fvSource::infoField
 
 void Foam::fvSource::infoField
 (
-    const DimensionedField<scalar, volMesh>& field,
+    const DimensionedField<scalar, fvMesh>& field,
     const bool print
 )
 {

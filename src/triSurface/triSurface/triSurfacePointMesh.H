@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,22 +22,64 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::surfFields
+    Foam::triSurfacePointMesh
 
 Description
-    Fields for surfMesh
-
-SourceFiles
-    surfFields.C
+    triSurface point mesh for fields on triSurface points
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef surfFields_H
-#define surfFields_H
+#ifndef triSurfacePointMesh_H
+#define triSurfacePointMesh_H
 
-#include "DimensionedField.H"
-#include "surfGeoMesh.H"
-#include "surfFieldsFwd.H"
+#include "label.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
+
+class triSurface;
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+class triSurfacePointMesh
+{
+    // Private Data
+
+        //- Reference to triSurface
+        const triSurface& mesh_;
+
+
+protected:
+
+    // Constructors
+
+        //- Construct from triSurface reference
+        explicit triSurfacePointMesh(const triSurface& mesh)
+        :
+            mesh_(mesh)
+        {}
+
+
+public:
+
+    // Public Typedefs
+
+        //- Mesh type
+        typedef triSurface Mesh;
+
+
+    // Member Functions
+
+        //- Return size
+        inline label size() const;
+};
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+} // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

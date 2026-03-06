@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,7 @@ License
 Foam::noSlipFvPatchVectorField::noSlipFvPatchVectorField
 (
     const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF
+    const DimensionedField<vector, fvMesh>& iF
 )
 :
     fixedValueFvPatchVectorField(p, iF)
@@ -44,7 +44,7 @@ Foam::noSlipFvPatchVectorField::noSlipFvPatchVectorField
 Foam::noSlipFvPatchVectorField::noSlipFvPatchVectorField
 (
     const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF,
+    const DimensionedField<vector, fvMesh>& iF,
     const dictionary& dict
 )
 :
@@ -58,7 +58,7 @@ Foam::noSlipFvPatchVectorField::noSlipFvPatchVectorField
 (
     const noSlipFvPatchVectorField& ptf,
     const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF,
+    const DimensionedField<vector, fvMesh>& iF,
     const fieldMapper& mapper
 )
 :
@@ -71,7 +71,7 @@ Foam::noSlipFvPatchVectorField::noSlipFvPatchVectorField
 Foam::noSlipFvPatchVectorField::noSlipFvPatchVectorField
 (
     const noSlipFvPatchVectorField& mwvpvf,
-    const DimensionedField<vector, volMesh>& iF
+    const DimensionedField<vector, fvMesh>& iF
 )
 :
     fixedValueFvPatchVectorField(mwvpvf, iF)

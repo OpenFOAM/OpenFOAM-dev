@@ -65,7 +65,7 @@ template<class Type>
 Foam::codedFixedValueFvPatchField<Type>::codedFixedValueFvPatchField
 (
     const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
+    const DimensionedField<Type, fvMesh>& iF,
     const dictionary& dict
 )
 :
@@ -101,7 +101,7 @@ Foam::codedFixedValueFvPatchField<Type>::codedFixedValueFvPatchField
 (
     const codedFixedValueFvPatchField<Type>& ptf,
     const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
+    const DimensionedField<Type, fvMesh>& iF,
     const fieldMapper& mapper
 )
 :
@@ -114,7 +114,7 @@ template<class Type>
 Foam::codedFixedValueFvPatchField<Type>::codedFixedValueFvPatchField
 (
     const codedFixedValueFvPatchField<Type>& ptf,
-    const DimensionedField<Type, volMesh>& iF
+    const DimensionedField<Type, fvMesh>& iF
 )
 :
     fixedValueFvPatchField<Type>(ptf, iF),

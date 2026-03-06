@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ License
 Foam::alphaOneFvPatchScalarField::alphaOneFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF
+    const DimensionedField<scalar, fvMesh>& iF
 )
 :
     fixedValueFvPatchScalarField(p, iF)
@@ -43,7 +43,7 @@ Foam::alphaOneFvPatchScalarField::alphaOneFvPatchScalarField
 Foam::alphaOneFvPatchScalarField::alphaOneFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
+    const DimensionedField<scalar, fvMesh>& iF,
     const dictionary& dict
 )
 :
@@ -57,7 +57,7 @@ Foam::alphaOneFvPatchScalarField::alphaOneFvPatchScalarField
 (
     const alphaOneFvPatchScalarField& ptf,
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
+    const DimensionedField<scalar, fvMesh>& iF,
     const fieldMapper& mapper
 )
 :
@@ -71,7 +71,7 @@ Foam::alphaOneFvPatchScalarField::alphaOneFvPatchScalarField
 Foam::alphaOneFvPatchScalarField::alphaOneFvPatchScalarField
 (
     const alphaOneFvPatchScalarField& ptf,
-    const DimensionedField<scalar, volMesh>& iF
+    const DimensionedField<scalar, fvMesh>& iF
 )
 :
     fixedValueFvPatchScalarField(ptf, iF)

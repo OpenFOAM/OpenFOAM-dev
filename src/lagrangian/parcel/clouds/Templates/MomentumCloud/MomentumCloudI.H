@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -396,7 +396,7 @@ Foam::MomentumCloud<CloudType>::cellLengthScale() const
 
 
 template<class CloudType>
-inline Foam::tmp<Foam::DimensionedField<Foam::vector, Foam::volMesh>>
+inline Foam::tmp<Foam::DimensionedField<Foam::vector, Foam::fvMesh>>
 Foam::MomentumCloud<CloudType>::UTrans() const
 {
     return UTrans_();
@@ -404,7 +404,7 @@ Foam::MomentumCloud<CloudType>::UTrans() const
 
 
 template<class CloudType>
-inline Foam::DimensionedField<Foam::vector, Foam::volMesh>&
+inline Foam::DimensionedField<Foam::vector, Foam::fvMesh>&
 Foam::MomentumCloud<CloudType>::UTransRef()
 {
     return UTrans_();
@@ -412,7 +412,7 @@ Foam::MomentumCloud<CloudType>::UTransRef()
 
 
 template<class CloudType>
-inline Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+inline Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::fvMesh>>
 Foam::MomentumCloud<CloudType>::UCoeff() const
 {
     return UCoeff_();
@@ -420,7 +420,7 @@ Foam::MomentumCloud<CloudType>::UCoeff() const
 
 
 template<class CloudType>
-inline Foam::DimensionedField<Foam::scalar, Foam::volMesh>&
+inline Foam::DimensionedField<Foam::scalar, Foam::fvMesh>&
 Foam::MomentumCloud<CloudType>::UCoeffRef()
 {
     return UCoeff_();

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,8 +102,8 @@ const Foam::volVectorField& Foam::surfaceToVolVelocity
 
     // Return the vol field if it can be found
     return
-        Uf.mesh().foundObject<volVectorField>(volName)
-      ? Uf.mesh().lookupObject<volVectorField>(volName)
+        Uf.mesh()().foundObject<volVectorField>(volName)
+      ? Uf.mesh()().lookupObject<volVectorField>(volName)
       : volVectorField::null();
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -137,7 +137,7 @@ Foam::tmp<Foam::VolField<Type>> Foam::fvMeshToFvMesh::srcToTgt
                 (
                     srcFld.boundaryField()[srcPatchi],
                     tgtMesh_.boundary()[tgtPatchi],
-                    DimensionedField<Type, volMesh>::null(),
+                    DimensionedField<Type, fvMesh>::null(),
                     setSizeFieldMapper(tgtMesh_.boundary()[tgtPatchi].size())
                 )
             );
@@ -159,7 +159,7 @@ Foam::tmp<Foam::VolField<Type>> Foam::fvMeshToFvMesh::srcToTgt
                 (
                     calculatedFvPatchField<Type>::typeName,
                     tgtMesh_.boundary()[tgtPatchi],
-                    DimensionedField<Type, volMesh>::null()
+                    DimensionedField<Type, fvMesh>::null()
                 )
             );
 

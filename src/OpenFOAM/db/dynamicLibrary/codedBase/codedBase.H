@@ -63,9 +63,6 @@ class codedBase
         //- Global loader/unloader function type
         typedef void (*loaderFunctionType)(bool);
 
-        //- Create a code name from the given function name
-        static word filterCodeName(const word& name);
-
         void checkLibrary
         (
             const dictionary& dict,
@@ -136,6 +133,9 @@ public:
 
 
     // Member Functions
+
+        //- Create a coded name from the given name
+        static word codedName(const word& name);
 
         //- Update library from given updated dictionary as required
         //  Returns true if the library was updated, otherwise false

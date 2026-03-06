@@ -32,7 +32,7 @@ Foam::wallCondensationPhaseChangeRateFvPatchScalarField::
 wallCondensationPhaseChangeRateFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF
+    const DimensionedField<scalar, fvMesh>& iF
 )
 :
     calculatedFvPatchScalarField(p, iF),
@@ -46,7 +46,7 @@ Foam::wallCondensationPhaseChangeRateFvPatchScalarField::
 wallCondensationPhaseChangeRateFvPatchScalarField
 (
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
+    const DimensionedField<scalar, fvMesh>& iF,
     const dictionary& dict
 )
 :
@@ -62,7 +62,7 @@ wallCondensationPhaseChangeRateFvPatchScalarField
 (
     const wallCondensationPhaseChangeRateFvPatchScalarField& psf,
     const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
+    const DimensionedField<scalar, fvMesh>& iF,
     const fieldMapper& mapper
 )
 :
@@ -77,7 +77,7 @@ Foam::wallCondensationPhaseChangeRateFvPatchScalarField::
 wallCondensationPhaseChangeRateFvPatchScalarField
 (
     const wallCondensationPhaseChangeRateFvPatchScalarField& psf,
-    const DimensionedField<scalar, volMesh>& iF
+    const DimensionedField<scalar, fvMesh>& iF
 )
 :
     calculatedFvPatchScalarField(psf, iF),

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,7 @@ Foam::fvMeshSubset::interpolate
                 new internalFvPatchField<Type>
                 (
                     sMesh.boundary()[patchi],
-                    DimensionedField<Type, volMesh>::null()
+                    DimensionedField<Type, fvMesh>::null()
                 )
             );
         }
@@ -73,7 +73,7 @@ Foam::fvMeshSubset::interpolate
                 (
                     calculatedFvPatchField<Type>::typeName,
                     sMesh.boundary()[patchi],
-                    DimensionedField<Type, volMesh>::null()
+                    DimensionedField<Type, fvMesh>::null()
                 )
             );
         }
@@ -293,9 +293,10 @@ Foam::fvMeshSubset::interpolate
 
         // Map internal face values onto the patch elected to hold
         // the exposed faces
+        const polyMesh& mesh = sf.mesh()();
         fvsPatchField<Type>& pfld = bf[patchi];
         const labelUList& fc = bf[patchi].patch().faceCells();
-        const labelList& own = sf.mesh().faceOwner();
+        const labelList& own = mesh.faceOwner();
 
         forAll(pfld, i)
         {
@@ -303,7 +304,7 @@ Foam::fvMeshSubset::interpolate
 
             if (directAddressing[i] == -1)
             {
-                if (sf.mesh().isInternalFace(baseFacei))
+                if (mesh.isInternalFace(baseFacei))
                 {
                     const Type val = sf.internalField()[baseFacei];
 
@@ -319,10 +320,10 @@ Foam::fvMeshSubset::interpolate
                 else
                 {
                     const label basePatchi =
-                        sf.mesh().boundaryMesh().patchIndices()
-                        [baseFacei - sf.mesh().nInternalFaces()];
+                        mesh.boundaryMesh().patchIndices()
+                        [baseFacei - mesh.nInternalFaces()];
                     const label basePatchFacei =
-                        sf.mesh().boundaryMesh()[basePatchi]
+                        mesh.boundaryMesh()[basePatchi]
                        .whichFace(baseFacei);
 
                     pfld[i] = sf.boundaryField()[basePatchi][basePatchFacei];
@@ -503,18 +504,18 @@ Foam::fvMeshSubset::interpolate
 
 
 template<class Type>
-Foam::tmp<Foam::DimensionedField<Type, Foam::volMesh>>
+Foam::tmp<Foam::DimensionedField<Type, Foam::fvMesh>>
 Foam::fvMeshSubset::interpolate
 (
-    const DimensionedField<Type, volMesh>& df,
+    const DimensionedField<Type, fvMesh>& df,
     const fvMesh& sMesh,
     const labelList& cellMap
 )
 {
     // Create the complete field from the pieces
-    tmp<DimensionedField<Type, volMesh>> tresF
+    tmp<DimensionedField<Type, fvMesh>> tresF
     (
-        new DimensionedField<Type, volMesh>
+        new DimensionedField<Type, fvMesh>
         (
             IOobject
             (
@@ -535,10 +536,10 @@ Foam::fvMeshSubset::interpolate
 
 
 template<class Type>
-Foam::tmp<Foam::DimensionedField<Type, Foam::volMesh>>
+Foam::tmp<Foam::DimensionedField<Type, Foam::fvMesh>>
 Foam::fvMeshSubset::interpolate
 (
-    const DimensionedField<Type, volMesh>& df
+    const DimensionedField<Type, fvMesh>& df
 ) const
 {
     return interpolate(df, subMesh(), cellMap());

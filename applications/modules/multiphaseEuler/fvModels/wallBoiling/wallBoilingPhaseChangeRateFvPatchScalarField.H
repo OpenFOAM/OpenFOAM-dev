@@ -118,14 +118,14 @@ public:
         wallBoilingPhaseChangeRateFvPatchScalarField
         (
             const fvPatch&,
-            const DimensionedField<scalar, volMesh>&
+            const DimensionedField<scalar, fvMesh>&
         );
 
         //- Construct from patch, internal field and dictionary
         wallBoilingPhaseChangeRateFvPatchScalarField
         (
             const fvPatch&,
-            const DimensionedField<scalar, volMesh>&,
+            const DimensionedField<scalar, fvMesh>&,
             const dictionary&
         );
 
@@ -136,7 +136,7 @@ public:
         (
             const wallBoilingPhaseChangeRateFvPatchScalarField&,
             const fvPatch&,
-            const DimensionedField<scalar, volMesh>&,
+            const DimensionedField<scalar, fvMesh>&,
             const fieldMapper&
         );
 
@@ -150,13 +150,13 @@ public:
         wallBoilingPhaseChangeRateFvPatchScalarField
         (
             const wallBoilingPhaseChangeRateFvPatchScalarField&,
-            const DimensionedField<scalar, volMesh>&
+            const DimensionedField<scalar, fvMesh>&
         );
 
         //- Construct and return a clone setting internal field reference
         virtual tmp<fvPatchScalarField> clone
         (
-            const DimensionedField<scalar, volMesh>& iF
+            const DimensionedField<scalar, fvMesh>& iF
         ) const
         {
             return tmp<fvPatchScalarField>

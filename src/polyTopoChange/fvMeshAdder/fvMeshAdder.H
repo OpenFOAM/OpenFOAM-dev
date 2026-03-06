@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,6 @@ class IOobject;
 class faceCoupleInfo;
 class IOobjectList;
 class fvMesh;
-class volMesh;
 class surfaceMesh;
 class mapAddedPolyMesh;
 
@@ -118,8 +117,8 @@ class fvMeshAdder
         (
             const mapAddedPolyMesh& meshMap,
 
-            DimensionedField<Type, volMesh>& fld,
-            const DimensionedField<Type, volMesh>& fldToAdd
+            DimensionedField<Type, fvMesh>& fld,
+            const DimensionedField<Type, fvMesh>& fldToAdd
         );
 
 public:

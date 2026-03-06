@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,7 @@ void Foam::conformedFvsPatchField<Type>::conform
     const fvBoundaryMesh& fvbm = iF.mesh().boundary();
 
     const labelList origPatchIndices =
-        nonConformalBoundary::New(iF.mesh()).allOrigPatchIndices();
+        nonConformalBoundary::New(iF.mesh()()).allOrigPatchIndices();
 
     // Evaluate the conformed orig and non-conformal boundary fields
     const typename SurfaceField<Type>::Boundary origBf
@@ -115,7 +115,7 @@ void Foam::conformedFvsPatchField<Type>::unconform
     const fvBoundaryMesh& fvbm = iF.mesh().boundary();
 
     const labelList origPatchIndices =
-        nonConformalBoundary::New(iF.mesh()).allOrigPatchIndices();
+        nonConformalBoundary::New(iF.mesh()()).allOrigPatchIndices();
 
     // If this field does not contain conformed patch fields then it was
     // created during the mesh change process, between un-stitch and stitch.
@@ -152,7 +152,7 @@ void Foam::conformedFvsPatchField<Type>::unconform
         // If the mesh has topo-changed then maintained surface fields should
         // have been mapped or re-interpolated. So, copy the value from the
         // base field into the original field.
-        if (iF.mesh().topoChanged())
+        if (iF.mesh()().topoChanged())
         {
             cpF.origFieldPtr_() = bF[origPatchi];
         }
@@ -179,7 +179,7 @@ void Foam::conformedFvsPatchField<Type>::unconform
 
     // If the mesh has topo-changed then just use the original parts and leave
     // the non-conformal parts unset
-    if (iF.mesh().topoChanged())
+    if (iF.mesh()().topoChanged())
     {
         bF.transfer(origPFs);
     }

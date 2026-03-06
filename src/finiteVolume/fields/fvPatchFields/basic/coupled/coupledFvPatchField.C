@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ template<class Type>
 Foam::coupledFvPatchField<Type>::coupledFvPatchField
 (
     const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF
+    const DimensionedField<Type, fvMesh>& iF
 )
 :
     LduInterfaceField<Type>(refCast<const lduInterface>(p)),
@@ -43,7 +43,7 @@ template<class Type>
 Foam::coupledFvPatchField<Type>::coupledFvPatchField
 (
     const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
+    const DimensionedField<Type, fvMesh>& iF,
     const Field<Type>& f
 )
 :
@@ -56,7 +56,7 @@ template<class Type>
 Foam::coupledFvPatchField<Type>::coupledFvPatchField
 (
     const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
+    const DimensionedField<Type, fvMesh>& iF,
     const dictionary& dict,
     const bool valueRequired
 )
@@ -71,7 +71,7 @@ Foam::coupledFvPatchField<Type>::coupledFvPatchField
 (
     const coupledFvPatchField<Type>& ptf,
     const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
+    const DimensionedField<Type, fvMesh>& iF,
     const fieldMapper& mapper
 )
 :
@@ -86,7 +86,7 @@ template<class Type>
 Foam::coupledFvPatchField<Type>::coupledFvPatchField
 (
     const coupledFvPatchField<Type>& ptf,
-    const DimensionedField<Type, volMesh>& iF
+    const DimensionedField<Type, fvMesh>& iF
 )
 :
     LduInterfaceField<Type>(refCast<const lduInterface>(ptf.patch())),

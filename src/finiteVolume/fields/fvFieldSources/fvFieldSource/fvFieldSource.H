@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ namespace Foam
 {
 
 // Forward declaration of classes
-class volMesh;
+class fvMesh;
 class dictionary;
 class fvSource;
 
@@ -67,7 +67,7 @@ class fvFieldSource
         fileNameList libs_;
 
         //- Reference to internal field
-        const DimensionedField<Type, volMesh>& internalField_;
+        const DimensionedField<Type, fvMesh>& internalField_;
 
 
 public:
@@ -87,7 +87,7 @@ public:
             autoPtr,
             fvFieldSource,
             null,
-            (const DimensionedField<Type, volMesh>& iF),
+            (const DimensionedField<Type, fvMesh>& iF),
             (iF)
         );
 
@@ -98,7 +98,7 @@ public:
             fvFieldSource,
             dictionary,
             (
-                const DimensionedField<Type, volMesh>& iF,
+                const DimensionedField<Type, fvMesh>& iF,
                 const dictionary& dict
             ),
             (iF, dict)
@@ -108,12 +108,12 @@ public:
     // Constructors
 
         //- Construct from internal field
-        fvFieldSource(const DimensionedField<Type, volMesh>&);
+        fvFieldSource(const DimensionedField<Type, fvMesh>&);
 
         //- Construct from internal field and dictionary
         fvFieldSource
         (
-            const DimensionedField<Type, volMesh>&,
+            const DimensionedField<Type, fvMesh>&,
             const dictionary&
         );
 
@@ -131,13 +131,13 @@ public:
         fvFieldSource
         (
             const fvFieldSource<Type>&,
-            const DimensionedField<Type, volMesh>&
+            const DimensionedField<Type, fvMesh>&
         );
 
         //- Construct and return a clone setting internal field reference
         virtual autoPtr<fvFieldSource<Type>> clone
         (
-            const DimensionedField<Type, volMesh>&
+            const DimensionedField<Type, fvMesh>&
         ) const = 0;
 
 
@@ -147,13 +147,13 @@ public:
         static autoPtr<fvFieldSource<Type>> New
         (
             const word& fieldSourceType,
-            const DimensionedField<Type, volMesh>&
+            const DimensionedField<Type, fvMesh>&
         );
 
         //- Return a pointer to a new field source created from a dictionary
         static autoPtr<fvFieldSource<Type>> New
         (
-            const DimensionedField<Type, volMesh>&,
+            const DimensionedField<Type, fvMesh>&,
             const dictionary&
         );
 
@@ -168,13 +168,13 @@ public:
         const objectRegistry& db() const;
 
         //- Return the internal field reference
-        const DimensionedField<Type, volMesh>& internalField() const;
+        const DimensionedField<Type, fvMesh>& internalField() const;
 
         //- Return the source value
-        virtual tmp<DimensionedField<Type, volMesh>> sourceValue
+        virtual tmp<DimensionedField<Type, fvMesh>> sourceValue
         (
             const fvSource& model,
-            const DimensionedField<scalar, volMesh>& source
+            const DimensionedField<scalar, fvMesh>& source
         ) const = 0;
 
         //- Return the source value
@@ -186,10 +186,10 @@ public:
         ) const;
 
         //- Return the internal coefficient
-        virtual tmp<DimensionedField<scalar, volMesh>> internalCoeff
+        virtual tmp<DimensionedField<scalar, fvMesh>> internalCoeff
         (
             const fvSource& model,
-            const DimensionedField<scalar, volMesh>& source
+            const DimensionedField<scalar, fvMesh>& source
         ) const = 0;
 
         //- Return the internal coefficient
@@ -201,10 +201,10 @@ public:
         ) const;
 
         //- Return the source coefficient
-        virtual tmp<DimensionedField<Type, volMesh>> sourceCoeff
+        virtual tmp<DimensionedField<Type, fvMesh>> sourceCoeff
         (
             const fvSource& model,
-            const DimensionedField<scalar, volMesh>& source
+            const DimensionedField<scalar, fvMesh>& source
         ) const;
 
         //- Return the source coefficient
@@ -216,10 +216,10 @@ public:
         ) const;
 
         //- Return the value
-        tmp<DimensionedField<Type, volMesh>> value
+        tmp<DimensionedField<Type, fvMesh>> value
         (
             const fvSource& model,
-            const DimensionedField<scalar, volMesh>& source
+            const DimensionedField<scalar, fvMesh>& source
         ) const;
 
         //- Return the value
@@ -240,11 +240,11 @@ public:
 
         //- Lookup and return the value of another field source
         template<class OtherType>
-        tmp<DimensionedField<OtherType, volMesh>> value
+        tmp<DimensionedField<OtherType, fvMesh>> value
         (
             const word& name,
             const fvSource& model,
-            const DimensionedField<scalar, volMesh>& source
+            const DimensionedField<scalar, fvMesh>& source
         ) const;
 
         //- Lookup and return the value of another field source

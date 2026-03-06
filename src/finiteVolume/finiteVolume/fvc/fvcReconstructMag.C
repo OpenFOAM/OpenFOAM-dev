@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ namespace fvc
 
 tmp<volScalarField> reconstructMag(const surfaceScalarField& ssf)
 {
-    const fvMesh& mesh = ssf.mesh();
+    const fvMesh& mesh = ssf.mesh()();
 
     const labelUList& owner = mesh.owner();
     const labelUList& neighbour = mesh.neighbour();

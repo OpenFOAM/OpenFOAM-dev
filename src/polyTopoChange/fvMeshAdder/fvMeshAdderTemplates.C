@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -310,7 +310,7 @@ void Foam::fvMeshAdder::MapSurfaceField
     const SurfaceField<Type>& fldToAdd
 )
 {
-    const fvMesh& mesh = fld.mesh();
+    const fvMesh& mesh = fld.mesh()();
     const labelList& oldPatchStarts = meshMap.oldPatchStarts();
 
     typename SurfaceField<Type>::
@@ -471,7 +471,7 @@ void Foam::fvMeshAdder::MapSurfaceField
             {
                 const polyPatch& newPatch = mesh.boundaryMesh()[newPatchi];
                 const polyPatch& oldPatch =
-                    fldToAdd.mesh().boundaryMesh()[patchi];
+                fldToAdd.mesh()().boundaryMesh()[patchi];
 
                 if (!bfld(newPatchi))
                 {
@@ -891,8 +891,8 @@ void Foam::fvMeshAdder::MapDimField
 (
     const mapAddedPolyMesh& meshMap,
 
-    DimensionedField<Type, volMesh>& fld,
-    const DimensionedField<Type, volMesh>& fldToAdd
+    DimensionedField<Type, fvMesh>& fld,
+    const DimensionedField<Type, fvMesh>& fldToAdd
 )
 {
     const fvMesh& mesh = fld.mesh();

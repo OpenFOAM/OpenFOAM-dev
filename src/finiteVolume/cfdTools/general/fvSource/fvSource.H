@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,14 +73,14 @@ public:
         static void infoField
         (
             const word& name,
-            const DimensionedField<scalar, volMesh>& field,
+            const DimensionedField<scalar, fvMesh>& field,
             const bool print = true
         );
 
         //- Print min/average/max information for a given field
         static void infoField
         (
-            const DimensionedField<scalar, volMesh>& field,
+            const DimensionedField<scalar, fvMesh>& field,
             const bool print = true
         );
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ License
 Foam::growthSecondaryPropertyFvScalarFieldSource::
 growthSecondaryPropertyFvScalarFieldSource
 (
-    const DimensionedField<scalar, volMesh>& iF,
+    const DimensionedField<scalar, fvMesh>& iF,
     const dictionary& dict
 )
 :
@@ -44,7 +44,7 @@ Foam::growthSecondaryPropertyFvScalarFieldSource::
 growthSecondaryPropertyFvScalarFieldSource
 (
     const growthSecondaryPropertyFvScalarFieldSource& field,
-    const DimensionedField<scalar, volMesh>& iF
+    const DimensionedField<scalar, fvMesh>& iF
 )
 :
     growthFvScalarFieldSource(field, iF),
@@ -54,11 +54,11 @@ growthSecondaryPropertyFvScalarFieldSource
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::fvMesh>>
 Foam::growthSecondaryPropertyFvScalarFieldSource::internalCoeff
 (
     const fvSource& model,
-    const DimensionedField<scalar, volMesh>& source
+    const DimensionedField<scalar, fvMesh>& source
 ) const
 {
     const populationBalanceModel& popBal = this->popBal();
@@ -69,7 +69,7 @@ Foam::growthSecondaryPropertyFvScalarFieldSource::internalCoeff
 }
 
 
-Foam::Pair<Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>>
+Foam::Pair<Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::fvMesh>>>
 Foam::growthSecondaryPropertyFvScalarFieldSource::sourceCoeffs
 (
     const fvSource& model
@@ -79,13 +79,13 @@ Foam::growthSecondaryPropertyFvScalarFieldSource::sourceCoeffs
     const label i = this->i();
     const volScalarField& fi = popBal.f(i);
 
-    Pair<tmp<DimensionedField<scalar, volMesh>>> fiSourceCoeffs =
+    Pair<tmp<DimensionedField<scalar, fvMesh>>> fiSourceCoeffs =
         refCast<const growthFvScalarFieldSource>
         (
             fi.sources()[model.name()]
         ).sourceCoeffs(model);
 
-    Pair<tmp<DimensionedField<scalar, volMesh>>> tsourceCoeffs;
+    Pair<tmp<DimensionedField<scalar, fvMesh>>> tsourceCoeffs;
 
     if (i != 0)
     {
@@ -101,17 +101,17 @@ Foam::growthSecondaryPropertyFvScalarFieldSource::sourceCoeffs
 }
 
 
-Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::fvMesh>>
 Foam::growthSecondaryPropertyFvScalarFieldSource::sourceCoeff
 (
     const fvSource& model,
-    const DimensionedField<scalar, volMesh>& source
+    const DimensionedField<scalar, fvMesh>& source
 ) const
 {
     const populationBalanceModel& popBal = this->popBal();
     const label i = this->i();
 
-    Pair<tmp<DimensionedField<scalar, volMesh>>> tsourceCoeffs =
+    Pair<tmp<DimensionedField<scalar, fvMesh>>> tsourceCoeffs =
         sourceCoeffs(model);
 
     return

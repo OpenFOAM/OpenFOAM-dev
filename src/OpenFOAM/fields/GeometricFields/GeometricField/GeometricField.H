@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,7 +86,13 @@ public:
 
     // Public Typedefs
 
-        //- Type of mesh on which this GeometricField is instantiated
+        //- Value type
+        typedef Type Type_;
+
+        //- Geometric mesh type
+        typedef GeoMesh GeoMesh_;
+
+        //- Base mesh type from which GeoMesh is constructed
         typedef typename GeoMesh::Mesh Mesh;
 
         //- Type of the internal field from which this GeometricField is derived
@@ -108,7 +114,7 @@ public:
         typedef GeometricFieldSources<Type, GeoMesh, PrimitiveField> Sources;
 
         //- Component type of the elements of the field
-        typedef typename Field<Type>::cmptType cmptType;
+        typedef typename PrimitiveField<Type>::cmptType cmptType;
 
 
 private:
@@ -160,7 +166,7 @@ public:
         GeometricField
         (
             const IOobject&,
-            const Mesh&,
+            const GeoMesh&,
             const dimensionSet&,
             const word& patchFieldType = Patch::calculatedType()
         );
@@ -171,7 +177,7 @@ public:
         GeometricField
         (
             const IOobject&,
-            const Mesh&,
+            const GeoMesh&,
             const dimensionSet&,
             const wordList& wantedPatchTypes,
             const wordList& actualPatchTypes = wordList(),
@@ -184,7 +190,7 @@ public:
         GeometricField
         (
             const IOobject&,
-            const Mesh&,
+            const GeoMesh&,
             const dimensioned<Type>&,
             const word& patchFieldType = Patch::calculatedType()
         );
@@ -194,7 +200,7 @@ public:
         GeometricField
         (
             const IOobject&,
-            const Mesh&,
+            const GeoMesh&,
             const dimensioned<Type>&,
             const wordList& wantedPatchTypes,
             const wordList& actualPatchTypes = wordList(),
@@ -215,7 +221,7 @@ public:
         GeometricField
         (
             const IOobject&,
-            const Mesh&,
+            const GeoMesh&,
             const dimensionSet&,
             const PrimitiveField<Type>&,
             const PtrList<Patch>&,
@@ -223,10 +229,10 @@ public:
         );
 
         //- Construct and read given IOobject
-        GeometricField(const IOobject&, const Mesh&);
+        GeometricField(const IOobject&, const GeoMesh&);
 
         //- Construct from dictionary
-        GeometricField(const IOobject&, const Mesh&, const dictionary&);
+        GeometricField(const IOobject&, const GeoMesh&, const dictionary&);
 
         //- Copy constructor
         GeometricField(const GeometricField<Type, GeoMesh, PrimitiveField>&);
@@ -381,7 +387,7 @@ public:
         static tmp<GeometricField<Type, GeoMesh, PrimitiveField>> New
         (
             const word& name,
-            const Mesh&,
+            const GeoMesh&,
             const dimensionSet&,
             const word& patchFieldType = Patch::calculatedType()
         );
@@ -391,7 +397,7 @@ public:
         static tmp<GeometricField<Type, GeoMesh, PrimitiveField>> New
         (
             const word& name,
-            const Mesh&,
+            const GeoMesh&,
             const dimensioned<Type>&,
             const word& patchFieldType = Patch::calculatedType()
         );
@@ -401,7 +407,7 @@ public:
         static tmp<GeometricField<Type, GeoMesh, PrimitiveField>> New
         (
             const word& name,
-            const Mesh&,
+            const GeoMesh&,
             const dimensioned<Type>&,
             const wordList& patchFieldTypes,
             const wordList& actualPatchTypes = wordList(),

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,7 +85,13 @@ public:
 
     // Public Typedefs
 
-        //- Type of mesh on which this DimensionedField is instantiated
+        //- Value type
+        typedef Type Type_;
+
+        //- Geometric mesh type
+        typedef GeoMesh GeoMesh_;
+
+        //- Base mesh type from which GeoMesh is constructed
         typedef typename GeoMesh::Mesh Mesh;
 
         //- Type of the field from which this DimensionedField is derived
@@ -103,7 +109,7 @@ private:
     // Private Data
 
         //- Reference to mesh
-        const Mesh& mesh_;
+        const GeoMesh& mesh_;
 
         //- Dimension set for this field
         dimensionSet dimensions_;
@@ -139,7 +145,7 @@ public:
         DimensionedField
         (
             const IOobject&,
-            const Mesh& mesh,
+            const GeoMesh& mesh,
             const dimensionSet&,
             const PrimitiveField<Type>&
         );
@@ -148,7 +154,7 @@ public:
         DimensionedField
         (
             const IOobject&,
-            const Mesh& mesh,
+            const GeoMesh& mesh,
             const dimensionSet&,
             const tmp<PrimitiveField<Type>>&
         );
@@ -158,7 +164,7 @@ public:
         DimensionedField
         (
             const IOobject&,
-            const Mesh& mesh,
+            const GeoMesh& mesh,
             const dimensionSet&,
             const bool checkIOFlags = true
         );
@@ -167,7 +173,7 @@ public:
         DimensionedField
         (
             const IOobject&,
-            const Mesh& mesh,
+            const GeoMesh& mesh,
             const dimensioned<Type>&,
             const bool checkIOFlags = true
         );
@@ -176,7 +182,7 @@ public:
         DimensionedField
         (
             const IOobject&,
-            const Mesh& mesh,
+            const GeoMesh& mesh,
             const word& fieldDictEntry="value"
         );
 
@@ -184,7 +190,7 @@ public:
         DimensionedField
         (
             const IOobject&,
-            const Mesh& mesh,
+            const GeoMesh& mesh,
             const dictionary& fieldDict,
             const word& fieldDictEntry="value"
         );
@@ -281,7 +287,7 @@ public:
         static tmp<DimensionedField<Type, GeoMesh, PrimitiveField>> New
         (
             const word& name,
-            const Mesh& mesh,
+            const GeoMesh& mesh,
             const dimensionSet&,
             const PrimitiveField<Type>&
         );
@@ -291,7 +297,7 @@ public:
         static tmp<DimensionedField<Type, GeoMesh, PrimitiveField>> New
         (
             const word& name,
-            const Mesh& mesh,
+            const GeoMesh& mesh,
             const dimensionSet&,
             const tmp<PrimitiveField<Type>>&
         );
@@ -301,7 +307,7 @@ public:
         static tmp<DimensionedField<Type, GeoMesh, PrimitiveField>> New
         (
             const word& name,
-            const Mesh& mesh,
+            const GeoMesh& mesh,
             const dimensionSet&
         );
 
@@ -310,7 +316,7 @@ public:
         static tmp<DimensionedField<Type, GeoMesh, PrimitiveField>> New
         (
             const word& name,
-            const Mesh& mesh,
+            const GeoMesh& mesh,
             const dimensioned<Type>&
         );
 
@@ -343,7 +349,7 @@ public:
         );
 
         //- Return mesh
-        inline const Mesh& mesh() const;
+        inline const GeoMesh& mesh() const;
 
         //- Return dimensions
         inline const dimensionSet& dimensions() const;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -123,7 +123,7 @@ public:
 
         //- Read and reconstruct a volume internal field
         template<class Type>
-        tmp<DimensionedField<Type, volMesh>>
+        tmp<DimensionedField<Type, fvMesh>>
         reconstructVolInternalField(const IOobject& fieldIoObject) const;
 
         //- Read and reconstruct a volume field

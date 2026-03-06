@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ Foam::nonConformalProcessorCyclicFvPatchField<Type>::
 nonConformalProcessorCyclicFvPatchField
 (
     const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF
+    const DimensionedField<Type, fvMesh>& iF
 )
 :
     processorCyclicFvPatchField<Type>(p, iF),
@@ -48,7 +48,7 @@ Foam::nonConformalProcessorCyclicFvPatchField<Type>::
 nonConformalProcessorCyclicFvPatchField
 (
     const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
+    const DimensionedField<Type, fvMesh>& iF,
     const dictionary& dict
 )
 :
@@ -62,7 +62,7 @@ Foam::nonConformalProcessorCyclicFvPatchField<Type>::
 nonConformalProcessorCyclicFvPatchField
 (
     const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
+    const DimensionedField<Type, fvMesh>& iF,
     const Field<Type>& f
 )
 :
@@ -77,7 +77,7 @@ nonConformalProcessorCyclicFvPatchField
 (
     const nonConformalProcessorCyclicFvPatchField<Type>& ptf,
     const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
+    const DimensionedField<Type, fvMesh>& iF,
     const fieldMapper& mapper
 )
 :
@@ -91,7 +91,7 @@ Foam::nonConformalProcessorCyclicFvPatchField<Type>::
 nonConformalProcessorCyclicFvPatchField
 (
     const nonConformalProcessorCyclicFvPatchField<Type>& ptf,
-    const DimensionedField<Type, volMesh>& iF
+    const DimensionedField<Type, fvMesh>& iF
 )
 :
     processorCyclicFvPatchField<Type>(ptf, iF),

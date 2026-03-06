@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,8 +60,7 @@ namespace Foam
 class objectRegistry;
 class dictionary;
 class fieldMapper;
-class volMesh;
-
+class fvMesh;
 
 // Forward declaration of friend functions and operators
 
@@ -99,7 +98,7 @@ class fvPatchField
         const fvPatch& patch_;
 
         //- Reference to internal field
-        const DimensionedField<Type, volMesh>& internalField_;
+        const DimensionedField<Type, fvMesh>& internalField_;
 
         //- Update index used so that updateCoeffs is called only once during
         //  the construction of the matrix
@@ -141,7 +140,7 @@ public:
             patch,
             (
                 const fvPatch& p,
-                const DimensionedField<Type, volMesh>& iF
+                const DimensionedField<Type, fvMesh>& iF
             ),
             (p, iF)
         );
@@ -154,7 +153,7 @@ public:
             (
                 const fvPatchField<Type>& ptf,
                 const fvPatch& p,
-                const DimensionedField<Type, volMesh>& iF,
+                const DimensionedField<Type, fvMesh>& iF,
                 const fieldMapper& m
             ),
             (dynamic_cast<const fvPatchFieldType&>(ptf), p, iF, m)
@@ -167,7 +166,7 @@ public:
             dictionary,
             (
                 const fvPatch& p,
-                const DimensionedField<Type, volMesh>& iF,
+                const DimensionedField<Type, fvMesh>& iF,
                 const dictionary& dict
             ),
             (p, iF, dict)
@@ -180,14 +179,14 @@ public:
         fvPatchField
         (
             const fvPatch&,
-            const DimensionedField<Type, volMesh>&
+            const DimensionedField<Type, fvMesh>&
         );
 
         //- Construct from patch and internal field and patch field
         fvPatchField
         (
             const fvPatch&,
-            const DimensionedField<Type, volMesh>&,
+            const DimensionedField<Type, fvMesh>&,
             const Field<Type>&
         );
 
@@ -195,7 +194,7 @@ public:
         fvPatchField
         (
             const fvPatch&,
-            const DimensionedField<Type, volMesh>&,
+            const DimensionedField<Type, fvMesh>&,
             const dictionary&,
             const bool valueRequired=true
         );
@@ -205,7 +204,7 @@ public:
         (
             const fvPatchField<Type>&,
             const fvPatch&,
-            const DimensionedField<Type, volMesh>&,
+            const DimensionedField<Type, fvMesh>&,
             const fieldMapper&,
             const bool mappingRequired=true
         );
@@ -224,13 +223,13 @@ public:
         fvPatchField
         (
             const fvPatchField<Type>&,
-            const DimensionedField<Type, volMesh>&
+            const DimensionedField<Type, fvMesh>&
         );
 
         //- Construct and return a clone setting internal field reference
         virtual tmp<fvPatchField<Type>> clone
         (
-            const DimensionedField<Type, volMesh>& iF
+            const DimensionedField<Type, fvMesh>& iF
         ) const
         {
             return tmp<fvPatchField<Type>>(new fvPatchField<Type>(*this, iF));
@@ -241,7 +240,7 @@ public:
         virtual tmp<fvPatchField<Type>> clone
         (
             const fvPatch& patch,
-            const DimensionedField<Type, volMesh>& iF
+            const DimensionedField<Type, fvMesh>& iF
         ) const
         {
             return tmp<fvPatchField<Type>>
@@ -260,7 +259,7 @@ public:
         (
             const word&,
             const fvPatch&,
-            const DimensionedField<Type, volMesh>&
+            const DimensionedField<Type, fvMesh>&
         );
 
         //- Return a pointer to a new patchField created on freestore given
@@ -272,7 +271,7 @@ public:
             const word&,
             const word& actualPatchType,
             const fvPatch&,
-            const DimensionedField<Type, volMesh>&
+            const DimensionedField<Type, fvMesh>&
         );
 
         //- Return a pointer to a new patchField created on freestore from
@@ -281,7 +280,7 @@ public:
         (
             const fvPatchField<Type>&,
             const fvPatch&,
-            const DimensionedField<Type, volMesh>&,
+            const DimensionedField<Type, fvMesh>&,
             const fieldMapper&
         );
 
@@ -290,7 +289,7 @@ public:
         static tmp<fvPatchField<Type>> New
         (
             const fvPatch&,
-            const DimensionedField<Type, volMesh>&,
+            const DimensionedField<Type, fvMesh>&,
             const dictionary&
         );
 
@@ -372,7 +371,7 @@ public:
             }
 
             //- Return dimensioned internal field reference
-            const DimensionedField<Type, volMesh>& internalField() const
+            const DimensionedField<Type, fvMesh>& internalField() const
             {
                 return internalField_;
             }

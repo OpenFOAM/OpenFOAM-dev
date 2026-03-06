@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -109,7 +109,7 @@ public:
         //- Construct from internal field and dictionary
         turbulentMixingLengthDissipationRateFvScalarFieldSource
         (
-            const DimensionedField<scalar, volMesh>&,
+            const DimensionedField<scalar, fvMesh>&,
             const dictionary& dict
         );
 
@@ -117,13 +117,13 @@ public:
         turbulentMixingLengthDissipationRateFvScalarFieldSource
         (
             const turbulentMixingLengthDissipationRateFvScalarFieldSource&,
-            const DimensionedField<scalar, volMesh>&
+            const DimensionedField<scalar, fvMesh>&
         );
 
         //- Construct and return a clone setting internal field reference
         virtual autoPtr<fvScalarFieldSource> clone
         (
-            const DimensionedField<scalar, volMesh>& iF
+            const DimensionedField<scalar, fvMesh>& iF
         ) const
         {
             return autoPtr<fvScalarFieldSource>
@@ -144,10 +144,10 @@ public:
     // Member Functions
 
         //- Return the source value
-        virtual tmp<DimensionedField<scalar, volMesh>> sourceValue
+        virtual tmp<DimensionedField<scalar, fvMesh>> sourceValue
         (
             const fvSource& model,
-            const DimensionedField<scalar, volMesh>& source
+            const DimensionedField<scalar, fvMesh>& source
         ) const;
 
         //- Return the source value
@@ -159,10 +159,10 @@ public:
         ) const;
 
         //- Return the internal coefficient
-        virtual tmp<DimensionedField<scalar, volMesh>> internalCoeff
+        virtual tmp<DimensionedField<scalar, fvMesh>> internalCoeff
         (
             const fvSource& model,
-            const DimensionedField<scalar, volMesh>& source
+            const DimensionedField<scalar, fvMesh>& source
         ) const;
 
         //- Return the internal coefficient

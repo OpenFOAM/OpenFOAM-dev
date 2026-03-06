@@ -298,6 +298,9 @@ $(derivedFvFieldSources)/uniformInletOutlet/uniformInletOutletFvFieldSources.C
 $(derivedFvFieldSources)/turbulentIntensityKineticEnergy/turbulentIntensityKineticEnergyFvScalarFieldSource.C
 $(derivedFvFieldSources)/NaN/NaNFvFieldSources.C
 
+fields/DimensionedFields/DimensionedFieldFunctions/makeDimensionedVolFieldFunctions.C
+fields/DimensionedFields/DimensionedFieldFunctions/makeDimensionedSurfaceFieldFunctions.C
+
 fields/volFields/volFields.C
 fields/surfaceFields/surfaceFields.C
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,7 @@ void Foam::CarrierCoeff<Type, Implicit>::initialise
 
     S_.set
     (
-        new DimensionedField<Type, volMesh>
+        new DimensionedField<Type, fvMesh>
         (
             IOobject
             (
@@ -117,7 +117,7 @@ void Foam::CarrierCoeff<Type, Implicit>::clear()
 
 
 template<class Type, bool Implicit>
-const Foam::DimensionedField<Type, Foam::volMesh>&
+const Foam::DimensionedField<Type, Foam::fvMesh>&
 Foam::CarrierCoeff<Type, Implicit>::S() const
 {
     return S_();

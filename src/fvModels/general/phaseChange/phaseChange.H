@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -123,11 +123,11 @@ protected:
         //- Add a boundary field to the given internal field
         static tmp<volScalarField> vifToVf
         (
-            const tmp<DimensionedField<scalar, volMesh>>& tvif
+            const tmp<DimensionedField<scalar, fvMesh>>& tvif
         );
 
         //- Remove the boundary field from the given geometric field
-        static tmp<DimensionedField<scalar, volMesh>> vfToVif
+        static tmp<DimensionedField<scalar, fvMesh>> vfToVif
         (
             const tmp<volScalarField>& tvf
         );
@@ -190,22 +190,22 @@ public:
             //  of the "source" phase (i.e., the phase for which mDot is
             //  negative), but this can be overridden to account for heat
             //  transfer modelling or similar.
-            virtual tmp<DimensionedField<scalar, volMesh>> Tchange() const;
+            virtual tmp<DimensionedField<scalar, fvMesh>> Tchange() const;
 
             //- Return the fraction of the latent heat that is transferred into
             //  the second phase. By default this is weighted by the phase
             //  thermal conductivities, but this can be overridden to account
             //  for heat transfer modelling or similar.
-            virtual tmp<DimensionedField<scalar, volMesh>> Lfraction() const;
+            virtual tmp<DimensionedField<scalar, fvMesh>> Lfraction() const;
 
             //- Return the latent heat
-            tmp<DimensionedField<scalar, volMesh>> L
+            tmp<DimensionedField<scalar, fvMesh>> L
             (
                 const label mDoti = -1
             ) const;
 
             //- Return the latent heat for a given changing temperature
-            tmp<DimensionedField<scalar, volMesh>> L
+            tmp<DimensionedField<scalar, fvMesh>> L
             (
                 const volScalarField::Internal& Tchange,
                 const label mDoti = -1
@@ -224,10 +224,10 @@ public:
         // Sources
 
             //- Return the total phase change rate
-            virtual tmp<DimensionedField<scalar, volMesh>> mDot() const;
+            virtual tmp<DimensionedField<scalar, fvMesh>> mDot() const;
 
             //- Return the mass transfer rate of a specie
-            virtual tmp<DimensionedField<scalar, volMesh>> mDot
+            virtual tmp<DimensionedField<scalar, fvMesh>> mDot
             (
                 const label mDoti
             ) const;

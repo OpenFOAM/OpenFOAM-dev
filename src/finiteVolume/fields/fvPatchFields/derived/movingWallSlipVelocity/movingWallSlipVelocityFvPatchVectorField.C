@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ Foam::movingWallSlipVelocityFvPatchVectorField::
 movingWallSlipVelocityFvPatchVectorField
 (
     const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF
+    const DimensionedField<vector, fvMesh>& iF
 )
 :
     directionMixedFvPatchVectorField(p, iF)
@@ -52,7 +52,7 @@ Foam::movingWallSlipVelocityFvPatchVectorField::
 movingWallSlipVelocityFvPatchVectorField
 (
     const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF,
+    const DimensionedField<vector, fvMesh>& iF,
     const dictionary& dict
 )
 :
@@ -76,7 +76,7 @@ movingWallSlipVelocityFvPatchVectorField
 (
     const movingWallSlipVelocityFvPatchVectorField& ptf,
     const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF,
+    const DimensionedField<vector, fvMesh>& iF,
     const fieldMapper& mapper
 )
 :
@@ -88,7 +88,7 @@ Foam::movingWallSlipVelocityFvPatchVectorField::
 movingWallSlipVelocityFvPatchVectorField
 (
     const movingWallSlipVelocityFvPatchVectorField& mwvpvf,
-    const DimensionedField<vector, volMesh>& iF
+    const DimensionedField<vector, fvMesh>& iF
 )
 :
     directionMixedFvPatchVectorField(mwvpvf, iF)

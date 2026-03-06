@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,7 +64,7 @@ volumeIntegrate
 
 
 template<class Type>
-tmp<Field<Type>> volumeIntegrate(const DimensionedField<Type, volMesh>& df)
+tmp<Field<Type>> volumeIntegrate(const DimensionedField<Type, fvMesh>& df)
 {
     return df.mesh().V()*df.primitiveField();
 }
@@ -72,7 +72,7 @@ tmp<Field<Type>> volumeIntegrate(const DimensionedField<Type, volMesh>& df)
 
 template<class Type>
 tmp<Field<Type>>
-volumeIntegrate(const tmp<DimensionedField<Type, volMesh>>& tdf)
+volumeIntegrate(const tmp<DimensionedField<Type, fvMesh>>& tdf)
 {
     tmp<Field<Type>> tdidf = tdf().mesh().V()*tdf().primitiveField();
     tdf.clear();
@@ -111,7 +111,7 @@ dimensioned<Type> domainIntegrate
 template<class Type>
 dimensioned<Type> domainIntegrate
 (
-    const DimensionedField<Type, volMesh>& df
+    const DimensionedField<Type, fvMesh>& df
 )
 {
     return dimensioned<Type>
@@ -126,7 +126,7 @@ dimensioned<Type> domainIntegrate
 template<class Type>
 dimensioned<Type> domainIntegrate
 (
-    const tmp<DimensionedField<Type, volMesh>>& tdf
+    const tmp<DimensionedField<Type, fvMesh>>& tdf
 )
 {
     dimensioned<Type> integral = domainIntegrate(tdf());

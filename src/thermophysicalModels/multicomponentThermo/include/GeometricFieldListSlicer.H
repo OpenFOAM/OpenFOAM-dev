@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -151,7 +151,7 @@ public:
 
 //- Define volScalarFieldListSlicer, volVectorFieldListSlicer, etc...
 #define typedefVolTypeFieldListSlicer(Type, nullArg)                           \
-    typedef GeometricFieldListSlicer<Type, volMesh>                            \
+    typedef GeometricFieldListSlicer<Type, fvMesh>                            \
         CAT3(vol, CAPITALIZE(Type), FieldListSlicer);
 FOR_ALL_FIELD_TYPES(typedefVolTypeFieldListSlicer);
 #undef typedefVolTypeFieldListSlicer

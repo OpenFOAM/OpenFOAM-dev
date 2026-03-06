@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -285,7 +285,7 @@ public:
         ) const;
 
         //- Get the slicer for the given source
-        inline DimensionedFieldListAndSlicer<scalar, volMesh> Yslicer
+        inline DimensionedFieldListAndSlicer<scalar, fvMesh> Yslicer
         (
             const fvSource& model,
             const volScalarField::Internal& source
@@ -294,7 +294,7 @@ public:
         //- Get the composition of a source cell
         inline scalarFieldListSlice sourceCellComposition
         (
-            const DimensionedFieldListAndSlicer<scalar, volMesh>& Yslicer,
+            const DimensionedFieldListAndSlicer<scalar, fvMesh>& Yslicer,
             const label i
         ) const;
 

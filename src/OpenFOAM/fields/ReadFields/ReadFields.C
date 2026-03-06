@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,10 +29,10 @@ License
 
 // * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
 
-template<class GeoField, class Mesh>
+template<class GeoField, class GeoMesh>
 Foam::wordList Foam::ReadFields
 (
-    const Mesh& mesh,
+    const GeoMesh& mesh,
     const IOobjectList& objects,
     PtrList<GeoField>& fields,
     const bool syncPar
@@ -120,7 +120,7 @@ template<class GeoField>
 void Foam::ReadFields
 (
     const word& fieldName,
-    const typename GeoField::Mesh& mesh,
+    const typename GeoField::GeoMesh_& mesh,
     const wordList& timeNames,
     objectRegistry& fieldsCache
 )
@@ -221,7 +221,7 @@ template<class GeoField>
 void Foam::ReadFields
 (
     const word& fieldName,
-    const typename GeoField::Mesh& mesh,
+    const typename GeoField::GeoMesh_& mesh,
     const wordList& timeNames,
     const word& registryName
 )

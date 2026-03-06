@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -501,12 +501,12 @@ Foam::tmp<Foam::volScalarField> Foam::radiationModels::fvDOM::Rp() const
 }
 
 
-Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
+Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::fvMesh>>
 Foam::radiationModels::fvDOM::Ru() const
 {
-    tmp<DimensionedField<scalar, volMesh>> tRu
+    tmp<DimensionedField<scalar, fvMesh>> tRu
     (
-        new DimensionedField<scalar, volMesh>
+        new DimensionedField<scalar, fvMesh>
         (
             IOobject
             (
@@ -522,13 +522,13 @@ Foam::radiationModels::fvDOM::Ru() const
         )
     );
 
-    DimensionedField<scalar, volMesh>& Ru=tRu.ref();
+    DimensionedField<scalar, fvMesh>& Ru=tRu.ref();
 
     // Sum contributions over all frequency bands
     for (label j=0; j < nLambda_; j++)
     {
         // Compute total incident radiation within frequency band
-        tmp<DimensionedField<scalar, volMesh>> Gj
+        tmp<DimensionedField<scalar, fvMesh>> Gj
         (
             IRay_[0].ILambda(j)()*IRay_[0].omega()
         );

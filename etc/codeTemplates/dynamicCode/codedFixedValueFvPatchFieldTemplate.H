@@ -65,7 +65,7 @@ public:
         ${typeName}FixedValueFvPatch${FieldType}
         (
             const fvPatch&,
-            const DimensionedField<${TemplateType}, volMesh>&,
+            const DimensionedField<${TemplateType}, fvMesh>&,
             const dictionary&
         );
 
@@ -74,7 +74,7 @@ public:
         (
             const ${typeName}FixedValueFvPatch${FieldType}&,
             const fvPatch&,
-            const DimensionedField<${TemplateType}, volMesh>&,
+            const DimensionedField<${TemplateType}, fvMesh>&,
             const fieldMapper&
         );
 
@@ -88,13 +88,13 @@ public:
         ${typeName}FixedValueFvPatch${FieldType}
         (
             const ${typeName}FixedValueFvPatch${FieldType}&,
-            const DimensionedField<${TemplateType}, volMesh>&
+            const DimensionedField<${TemplateType}, fvMesh>&
         );
 
         //- Construct and return a clone setting internal field reference
         virtual tmp<fvPatch${FieldType} > clone
         (
-            const DimensionedField<${TemplateType}, volMesh>& iF
+            const DimensionedField<${TemplateType}, fvMesh>& iF
         ) const
         {
             return tmp<fvPatch${FieldType} >

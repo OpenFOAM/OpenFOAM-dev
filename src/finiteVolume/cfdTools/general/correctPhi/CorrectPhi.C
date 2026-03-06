@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ void Foam::fv::CorrectPhi
     nonOrthogonalSolutionControl& pcorrControl
 )
 {
-    const fvMesh& mesh = phi.mesh();
+    const fvMesh& mesh = phi.mesh()();
     const Time& runTime = mesh.time();
 
     // Initialise BCs list for pcorr to zero-gradient
@@ -129,7 +129,7 @@ void Foam::fv::CorrectPhi
     nonOrthogonalSolutionControl& pcorrControl
 )
 {
-    const fvMesh& mesh = phi.mesh();
+    const fvMesh& mesh = phi.mesh()();
     const Time& runTime = mesh.time();
 
     // Initialise BCs list for pcorr to zero-gradient
