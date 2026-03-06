@@ -24,8 +24,6 @@ xCells  40;
 yCells  10;
 zCells  8;
 
-convertToMeters 1;
-
 vertices
 (
     ($xMin $yMin $zMin)

@@ -32,8 +32,6 @@ nCellsRadius #calc "int(round($<scalar>radius*$<scalar>nCellsPerMetre))";
 innerBaffleOuterRadius #calc "$<scalar>{radius}/(2 - $<scalar>baffleOverlap)";
 outerBaffleInnerRadius #calc "$radius - $<scalar>innerBaffleOuterRadius";
 
-convertToMeters 1;
-
 vertices
 (
     (0 0 0) (0 $height 0)

@@ -14,8 +14,6 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-convertToMeters 1;
-
 tankRad 0.05;
 holeRad 0.01;
 height  0.1;

@@ -37,8 +37,6 @@ geometry
     }
 }
 
-scale 1;
-
 vertices
 (
     // Inner

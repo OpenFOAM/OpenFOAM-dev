@@ -12,7 +12,6 @@ FoamFile
     object      blockMeshDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-convertToMeters 1;
 
 radius 0.015875; // Pipe radius (z-axis)
 length 0.44;     // Pipe length (x-axis)

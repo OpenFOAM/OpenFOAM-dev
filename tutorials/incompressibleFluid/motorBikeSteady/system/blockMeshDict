@@ -15,8 +15,6 @@ FoamFile
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-convertToMeters 1;
-
 vertices
 (
     (-5 -4 0)

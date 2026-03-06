@@ -15,7 +15,6 @@ FoamFile
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 // Geometry size
-convertToMeters 1;
 diameter       0.001;
 
 // Global mesh scaling factor:

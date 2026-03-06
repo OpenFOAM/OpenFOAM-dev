@@ -14,8 +14,6 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-convertToMeters 1;
-
 // This is a rectangular piston mesh below the cylinder mesh
 
 // 0 _  _  _  _  _ 1 _  _  _  _  _  _ 2

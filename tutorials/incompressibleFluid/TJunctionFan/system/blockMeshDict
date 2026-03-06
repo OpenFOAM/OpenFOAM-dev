@@ -30,8 +30,6 @@ FoamFile
 //             +-+
 //           outlet2
 
-convertToMeters 1;
-
 vertices
 (
     (0.0  -0.01 0)   //0

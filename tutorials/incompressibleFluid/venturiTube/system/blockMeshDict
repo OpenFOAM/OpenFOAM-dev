@@ -48,8 +48,6 @@ boxInN     #neg $boxIn;
 radVenN    #neg $radVen;
 boxVenN    #neg $boxVen;
 
-convertToMeters 1;
-
 vertices
 (
     ($xInSt   0        $boxInN)

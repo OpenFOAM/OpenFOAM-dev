@@ -25,7 +25,6 @@ nZ          1;
 radiusNeg   #neg $radius;
 boxNeg      #neg $box;
 
-
 verbose no;
 
 geometry
@@ -38,8 +37,6 @@ geometry
         radius    $radius;
     }
 }
-
-scale 1;
 
 vertices
 (
