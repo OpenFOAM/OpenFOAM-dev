@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -152,7 +152,10 @@ public:
             //- Return volume
             inline scalar mag() const;
 
-            //- Return the circum centre and radius
+            //- Return the circum-centre and radius-squared
+            inline Tuple2<Point, scalar> circumSphereSqr() const;
+
+            //- Return the circum-centre and radius
             inline Tuple2<Point, scalar> circumSphere() const;
 
             //- Return quality: Ratio of tetrahedron and circum-sphere

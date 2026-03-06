@@ -14,8 +14,6 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-convertToMeters 1;
-
 // base coordinates on the cylinder and valve dictionaries
 
 // 0_ _6 _ _ _12       18_ _ _ _ _ _ _ _24      30_ _ _ _36 _ 42     _ y1

@@ -27,8 +27,6 @@ backgroundMesh
     zCells  20;
 }
 
-convertToMeters 1;
-
 vertices
 (
     ($!backgroundMesh/xMin $!backgroundMesh/yMin $!backgroundMesh/zMin)
@@ -53,10 +51,6 @@ blocks
     simpleGrading (1 1 1)
 );
 
-edges
-(
-);
-
 defaultPatch
 {
     name background;
@@ -64,10 +58,6 @@ defaultPatch
 }
 
 boundary
-(
-);
-
-mergePatchPairs
 (
 );
 

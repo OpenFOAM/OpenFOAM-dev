@@ -14,8 +14,6 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-convertToMeters         1;
-
 cylinderRadius      0.005; // Radius of the cylinder
 cylinderCore        0.002; // Radius of the core block inside the cylinder
 halfWidth            0.04; // Half the channel width

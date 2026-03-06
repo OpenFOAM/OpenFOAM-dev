@@ -38,8 +38,6 @@ geometry
     }
 }
 
-convertToMeters 1;
-
 vertices
 (
 

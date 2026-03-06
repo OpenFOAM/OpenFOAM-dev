@@ -14,8 +14,6 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-convertToMeters 1;
-
 // This is a rectangular piston mesh below the cylinder mesh
 
 // 0 _  _  _  _  _ 1 _  _  _  _  _  _ 2
@@ -62,10 +60,6 @@ blocks
 (
     hex (0 3 4 1 6 9 10 7) ($pRes $pRes3 1) simpleGrading (10 5 1)
     hex (1 4 5 2 7 10 11 8) ($pRes $pRes3 1) simpleGrading (10 0.2 1)
-);
-
-edges
-(
 );
 
 defaultPatch

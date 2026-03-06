@@ -27,8 +27,6 @@ boxIn      #calc "3.0*$radIn / 10.0";
 radInN     #neg $radIn;
 boxInN     #neg $boxIn;
 
-convertToMeters 1;
-
 vertices
 (
     (0   0        $boxInN)

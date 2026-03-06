@@ -59,8 +59,6 @@ geometry
     }
 }
 
-convertToMeters 1;
-
 vertices
 (
     ($!backgroundMesh/radBoxN $!backgroundMesh/radBoxN $!backgroundMesh/zMin)
@@ -193,10 +191,6 @@ defaultPatch
 }
 
 boundary
-(
-);
-
-mergePatchPairs
 (
 );
 

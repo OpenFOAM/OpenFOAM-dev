@@ -33,8 +33,6 @@ geometry
     }
 }
 
-scale 1;
-
 n    10;
 
 // Rough approximation of corner points

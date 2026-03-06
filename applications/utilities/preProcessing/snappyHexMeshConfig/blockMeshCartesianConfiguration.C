@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,9 +101,7 @@ void Foam::blockMeshCartesianConfiguration::writeBackgroundMesh()
     dict.add("zCells", nCells_.z(), true);
 
     os_ << dict.name().c_str()
-        << dict << nl
-        << "convertToMeters 1;" << nl
-        << endl;
+        << dict << endl;
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,6 +57,7 @@ Foam::IOobject Foam::populationBalanceModel::groupFieldIo
     const label i,
     const phaseModel& phase,
     const IOobject::readOption r,
+    const IOobject::writeOption w,
     const bool registerObject
 )
 {
@@ -71,7 +72,7 @@ Foam::IOobject Foam::populationBalanceModel::groupFieldIo
             phase.mesh().time().name(),
             phase.mesh(),
             r,
-            IOobject::AUTO_WRITE,
+            w,
             registerObject
         );
 }
@@ -86,7 +87,15 @@ Foam::tmp<Foam::volScalarField> Foam::populationBalanceModel::groupField
 {
     typeIOobject<volScalarField> io
     (
-        groupFieldIo(name, i, phase, IOobject::MUST_READ, false)
+        groupFieldIo
+        (
+            name,
+            i,
+            phase,
+            IOobject::MUST_READ,
+            IOobject::AUTO_WRITE,
+            false
+        )
     );
 
     return
@@ -96,7 +105,15 @@ Foam::tmp<Foam::volScalarField> Foam::populationBalanceModel::groupField
             (
                 io.headerOk()
               ? io
-              : groupFieldIo(name, -1, phase, IOobject::MUST_READ, false),
+              : groupFieldIo
+                (
+                    name,
+                    -1,
+                    phase,
+                    IOobject::MUST_READ,
+                    IOobject::AUTO_WRITE,
+                    false
+                ),
                 phase.mesh()
             )
         );
@@ -778,7 +795,14 @@ Foam::populationBalanceModel::populationBalanceModel
             i,
             new volScalarField
             (
-                groupFieldIo("f", i, phases_[i]),
+                groupFieldIo
+                (
+                    "f",
+                    i,
+                    phases_[i],
+                    IOobject::NO_READ,
+                    IOobject::AUTO_WRITE
+                ),
                 groupField("f", i, phases_[i])
             )
         );

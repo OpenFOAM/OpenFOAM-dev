@@ -24,8 +24,6 @@ backgroundMesh
     rBcells 10;
 }
 
-convertToMeters 1;
-
 vertices
 (
     (                      0                   0 -1)

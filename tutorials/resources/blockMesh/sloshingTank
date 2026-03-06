@@ -13,8 +13,6 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-convertToMeters 1;
-
 //depth     ?;      // Depth of tank (x-direction)
 width       40;     // Width of tank (y-direction)
 height      30;     // Depth of tank (z-direction)

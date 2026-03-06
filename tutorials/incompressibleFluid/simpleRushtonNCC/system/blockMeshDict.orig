@@ -59,8 +59,6 @@ r45     #calc "$rsqrt2*$r";
 rzone45 #calc "$rsqrt2*$rzone";
 R45     #calc "$rsqrt2*$R";
 
-convertToMeters 1;
-
 vertices
 (
     (0        0        0)
@@ -197,10 +195,6 @@ boundary
             (19 26 27 20)
         );
     }
-);
-
-mergePatchPairs
-(
 );
 
 // ************************************************************************* //

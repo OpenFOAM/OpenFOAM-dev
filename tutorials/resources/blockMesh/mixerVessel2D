@@ -13,8 +13,6 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-convertToMeters 1.0;
-
 rHub            0.02;   // Radius of the rotor hub
 rRotorTip       0.05;   // Radius of the rotor blade tips
 rMid            0.06;   // Radius of the midpoint between rotor and stator

@@ -14,8 +14,6 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-convertToMeters 1;
-
 vertices
 (
     (0 0 0)
@@ -31,10 +29,6 @@ vertices
 blocks
 (
     hex (0 1 2 3 4 5 6 7) (20 1 1) simpleGrading (10 1 1)
-);
-
-edges
-(
 );
 
 boundary

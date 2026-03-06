@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -497,6 +497,7 @@ public:
             const label i,
             const phaseModel& phase,
             const IOobject::readOption r = IOobject::NO_READ,
+            const IOobject::writeOption w = IOobject::NO_WRITE,
             const bool registerObject = true
         );
 

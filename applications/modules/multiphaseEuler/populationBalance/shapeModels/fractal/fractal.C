@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -98,7 +98,9 @@ Foam::populationBalance::shapeModels::fractal::fractal
                 (
                     "kappa",
                     i,
-                    popBal_.phases()[i]
+                    popBal_.phases()[i],
+                    IOobject::NO_READ,
+                    IOobject::AUTO_WRITE
                 ),
                 populationBalanceModel::groupField
                 (

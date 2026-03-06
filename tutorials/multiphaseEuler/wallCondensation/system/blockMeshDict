@@ -22,8 +22,6 @@ backgroundMesh
     widthCells  17;
 }
 
-convertToMeters 1;
-
 vertices
 (
     (0 0 0)

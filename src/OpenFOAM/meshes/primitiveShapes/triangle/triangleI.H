@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -117,7 +117,7 @@ inline Foam::vector Foam::triangle<Point, PointRef>::normal() const
 
 template<class Point, class PointRef>
 inline Foam::Tuple2<Point, Foam::scalar>
-Foam::triangle<Point, PointRef>::circumCircle() const
+Foam::triangle<Point, PointRef>::circumCircleSqr() const
 {
     const scalar d1 =  (c_ - a_) & (b_ - a_);
     const scalar d2 = -(c_ - b_) & (b_ - a_);
@@ -131,9 +131,8 @@ Foam::triangle<Point, PointRef>::circumCircle() const
 
     if (Foam::mag(denom) < rootVSmall)
     {
-        // Degenerate. Return a point far away.
-        static const scalar sqrt3 = sqrt(scalar(3));
-        return Tuple2<Point, scalar>(point::uniform(great), sqrt3*great);
+        // Degenerate. Return an invalid circle.
+        return Tuple2<Point, scalar>(point::uniform(NaN), -vGreat);
     }
     else
     {
@@ -141,9 +140,22 @@ Foam::triangle<Point, PointRef>::circumCircle() const
             Tuple2<Point, scalar>
             (
                 ((c2 + c3)*a_ + (c3 + c1)*b_ + (c1 + c2)*c_)/(2*denom),
-                sqrt(max(0, (d1 + d2)*(d2 + d3)*(d3 + d1)/(4*denom)))
+                max(0, (d1 + d2)*(d2 + d3)*(d3 + d1)/(4*denom))
             );
     }
+}
+
+
+template<class Point, class PointRef>
+inline Foam::Tuple2<Point, Foam::scalar>
+Foam::triangle<Point, PointRef>::circumCircle() const
+{
+    const Tuple2<Point, scalar> crSqr = circumCircleSqr();
+
+    // Invalid. Return without conversion.
+    if (crSqr.second() < 0) return crSqr;
+
+    return Tuple2<Point, scalar>(crSqr.first(), sqrt(crSqr.second()));
 }
 
 
@@ -151,7 +163,12 @@ template<class Point, class PointRef>
 inline Foam::scalar Foam::triangle<Point, PointRef>::quality() const
 {
     const scalar r = circumCircle().second();
+
+    // Invalid. Return zero.
+    if (r < 0) return 0;
+
     static const scalar sqrt3 = sqrt(scalar(3));
+
     return mag()/(0.75*sqrt3*sqr(min(r, great)) + rootVSmall);
 }
 

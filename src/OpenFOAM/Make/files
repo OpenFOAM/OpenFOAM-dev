@@ -742,6 +742,7 @@ algorithms/dynamicIndexedOctree/dynamicIndexedOctreeName.C
 algorithms/dynamicIndexedOctree/dynamicTreeDataPoint.C
 algorithms/polygonTriangulate/polygonTriangulate.C
 algorithms/solutionControl/solutionControl.C
+algorithms/boundSphere/boundSphere.C
 
 distributions/distribution/distribution.C
 distributions/distribution/distributionNew.C

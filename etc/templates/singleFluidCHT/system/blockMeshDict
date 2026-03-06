@@ -27,8 +27,6 @@ backgroundMesh
     zCells  20;
 }
 
-convertToMeters 1;
-
 vertices
 (
     ($!backgroundMesh/xMin $!backgroundMesh/yMin $!backgroundMesh/zMin)
@@ -51,10 +49,6 @@ blocks
         $!backgroundMesh/zCells
     )
     simpleGrading (1 1 1)
-);
-
-edges
-(
 );
 
 defaultPatch

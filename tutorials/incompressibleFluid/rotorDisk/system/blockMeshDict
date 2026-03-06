@@ -27,8 +27,6 @@ backgroundMesh
     zCells    12;
 }
 
-convertToMeters 1;
-
 vertices
 (
     ($!backgroundMesh/xMin $!backgroundMesh/yMin $!backgroundMesh/zMin)

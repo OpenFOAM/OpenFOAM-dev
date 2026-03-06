@@ -26,8 +26,6 @@ geometry
     }
 }
 
-scale 1;
-
 n    10;
 
 v    0.5773502;
