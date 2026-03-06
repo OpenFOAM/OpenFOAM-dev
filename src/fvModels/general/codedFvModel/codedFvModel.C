@@ -89,6 +89,8 @@ Foam::word Foam::fv::codedFvModel::fieldPrimitiveTypeName() const
       :
 
     return FOR_ALL_FIELD_TYPES(fieldPrimitiveTypeNameTernary) word::null;
+
+    #undef fieldPrimitiveTypeNameTernary
 }
 
 
@@ -96,6 +98,16 @@ Foam::fvModel& Foam::fv::codedFvModel::redirectFvModel() const
 {
     if (!redirectFvModelPtr_.valid())
     {
+        const word primitiveTypeName = fieldPrimitiveTypeName();
+
+        const_cast<codedFvModel&>(*this).varSubstitutions().set
+        (
+            {
+                {"TemplateType", primitiveTypeName},
+                {"SourceType", primitiveTypeName + "Source"}
+            }
+        );
+
         updateLibrary(coeffsDict_);
 
         dictionary constructDict(coeffsDict_);
@@ -198,17 +210,7 @@ Foam::fv::codedFvModel::codedFvModel
 {
     readCoeffs(coeffsDict_);
 
-    const word primitiveTypeName = fieldPrimitiveTypeName();
-
-    // Set variable substitutions
-    varSubstitutions().set
-    (
-        {
-            {"TemplateType", primitiveTypeName},
-            {"SourceType", primitiveTypeName + "Source"},
-            {"verbose", Foam::name(bool(debug))}
-        }
-    );
+    varSubstitutions().set("verbose", Foam::name(bool(debug)));
 }
 
 
