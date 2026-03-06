@@ -27,8 +27,8 @@ License
 
 inline Foam::label Foam::surfaceMesh::size() const
 {
-    return dynamic_cast<const fvMesh&>(*this).nInternalFaces();
-    // return mesh_.nInternalFaces();
+    // return dynamic_cast<const fvMesh&>(*this).nInternalFaces();
+    return mesh_.nInternalFaces();
 }
 
 
@@ -54,8 +54,8 @@ inline const Foam::fvBoundaryMesh& Foam::surfaceMesh::boundary() const
 
 inline const Foam::fvMesh& Foam::surfaceMesh::operator()() const
 {
-    return dynamic_cast<const fvMesh&>(*this);
-    // return mesh_;
+    // return dynamic_cast<const fvMesh&>(*this);
+    return mesh_;
 }
 
 
