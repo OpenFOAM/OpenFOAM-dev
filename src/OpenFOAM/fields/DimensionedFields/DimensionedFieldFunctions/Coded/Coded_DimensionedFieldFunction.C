@@ -37,7 +37,7 @@ const Foam::wordList Foam::DimensionedFieldFunctions::Coded<Type>::codeKeys
 template<class Type>
 const Foam::wordList Foam::DimensionedFieldFunctions::Coded<Type>::codeDictVars
 (
-    {word::null, word::null}
+    {word::null, word::null, word::null}
 );
 
 template<class Type>
