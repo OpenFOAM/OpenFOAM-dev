@@ -38,15 +38,12 @@ Foam::hardSphereGroupSurfaceAreaVolumeRatioFvScalarFieldSource::value
 {
     const populationBalanceModel& popBal = this->popBal();
 
-    const volScalarField::Internal& fi = popBal.f(i());
-    const volScalarField::Internal& fj = popBal.f(j);
-
     const populationBalance::shapeModels::fractal& fractal =
         refCast<const populationBalance::shapeModels::fractal>(popBal.shape());
 
     const volScalarField::Internal& kappaj = fractal.fld(j);
 
-    return kappaj*fj/fi;
+    return kappaj*popBal.dSph(j)/popBal.dSph(i());
 }
 
 
