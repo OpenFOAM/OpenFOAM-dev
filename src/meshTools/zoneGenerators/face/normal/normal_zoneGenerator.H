@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ Description
 Usage
     \table
         Property     | Description              | Required | Default value
-        type         | Type: face               | yes      |
+        type         | Type: normal             | yes      |
         name         | Name of the zone         | no       | zoneGenerator name
         normal       | Reference unit vector    | yes      |
         tol          | cos angle tolerance      | yes      |

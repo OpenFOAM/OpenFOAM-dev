@@ -31,7 +31,7 @@ Description
 Usage
     \table
         Property     | Description                 | Required | Default value
-        type         | Type: clear                 | yes      |
+        type         | Type: print                 | yes      |
         zoneType     | Type of zone                | no       | all
         zone         | Name of the zone to print   | no       |
         zones        | List of zone names to print | no       |

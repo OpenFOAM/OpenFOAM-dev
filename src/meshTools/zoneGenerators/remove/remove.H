@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ Description
 Usage
     \table
         Property     | Description             | Required | Default value
-        type         | Type: clear             | yes      |
+        type         | Type: remove            | yes      |
         pointZone    | pointZone name          | no       |
         pointZones   | List of pointZone names | no       |
         cellZone     | cellZone name           | no       |
