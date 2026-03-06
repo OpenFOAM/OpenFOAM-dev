@@ -8,44 +8,46 @@
 FoamFile
 {
     format      ascii;
-    class       dictionary;
-    location    "system";
-    object      setFieldsDict;
+    class       volScalarField;
+    location    "0";
+    object      tracer.water;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-defaultValues
-{
-    tracer.water    0;
-    tracer.air      0;
-}
+dimensions      [];
 
-zones
+internalField
 {
-    tracerWater
+    type        zonal;
+
+    defaultValue    0;
+
+    zones
     {
-        type            box;
-        zoneType        cell;
-
-        box             (0 0 -1) (0.1461 0.146 1);
-
-        values
+        waterColumn
         {
-            tracer.water    1;
+            type            box;
+
+            box             (0 0 -1) (0.1461 0.146 1);
+
+            value           1;
         }
     }
+}
 
-    tracerAir
+boundaryField
+{
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    wall
     {
-        type            box;
-        zoneType        cell;
+        type            zeroGradient;
+    }
 
-        box             (0 0.292 -1) (0.1461 0.438 1);
-
-        values
-        {
-            tracer.air      1;
-        }
+    atmosphere
+    {
+        type            inletOutlet;
+        inletValue      uniform 0;
     }
 }
 

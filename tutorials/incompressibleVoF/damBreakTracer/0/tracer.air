@@ -10,13 +10,30 @@ FoamFile
     format      ascii;
     class       volScalarField;
     location    "0";
-    object      alpha.water;
+    object      tracer.air;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 dimensions      [];
 
-internalField   uniform 0;
+internalField
+{
+    type        zonal;
+
+    defaultValue    0;
+
+    zones
+    {
+        waterColumn
+        {
+            type            box;
+
+            box             (0 0.292 -1) (0.1461 0.438 1);
+
+            value           1;
+        }
+    }
+}
 
 boundaryField
 {
@@ -30,8 +47,7 @@ boundaryField
     atmosphere
     {
         type            inletOutlet;
-        inletValue      $internalField;
-        value           $internalField;
+        inletValue      uniform 0;
     }
 }
 

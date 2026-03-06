@@ -10,7 +10,6 @@ foamMergeCase $path/damBreakLaminar || exit 1
 
 # Run
 runApplication blockMesh
-runApplication setFields
 runApplication foamRun
 
 #------------------------------------------------------------------------------
