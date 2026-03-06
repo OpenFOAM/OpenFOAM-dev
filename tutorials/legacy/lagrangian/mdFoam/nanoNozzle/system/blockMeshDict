@@ -53,9 +53,6 @@ blocks
     hex (16 20 21 17 18 22 23 19) sectionC (20 16 16) simpleGrading (1 1 1)
 );
 
-edges
-();
-
 boundary
 (
     sectionAEnd

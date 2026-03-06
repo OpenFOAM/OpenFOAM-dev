@@ -34,10 +34,6 @@ blocks
     hex (0 1 2 3 4 5 6 7) (24 12 2) simpleGrading (1 1 1)
 );
 
-edges
-(
-);
-
 defaultPatch
 {
     name solid;
@@ -47,10 +43,5 @@ defaultPatch
 boundary
 (
 );
-
-mergePatchPairs
-(
-);
-
 
 // ************************************************************************* //

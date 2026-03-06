@@ -53,10 +53,6 @@ blocks
     simpleGrading (1 1 1)
 );
 
-edges
-(
-);
-
 defaultPatch
 {
     name background;

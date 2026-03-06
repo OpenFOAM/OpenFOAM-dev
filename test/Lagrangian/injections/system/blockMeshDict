@@ -31,10 +31,6 @@ blocks
     hex (8 9 10 11 12 13 14 15) cells12 (1 1 1) simpleGrading (1 1 1)
 );
 
-edges
-(
-);
-
 defaultPatch
 {
     type empty;

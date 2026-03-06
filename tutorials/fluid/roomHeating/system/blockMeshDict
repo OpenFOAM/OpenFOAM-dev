@@ -63,10 +63,6 @@ blocks
     simpleGrading (1 1 $zGrading)
 );
 
-edges
-(
-);
-
 boundary
 (
     glass
@@ -118,10 +114,6 @@ boundary
             (7 1 0 6)
         );
     }
-);
-
-mergePatchPairs
-(
 );
 
 // ************************************************************************* //

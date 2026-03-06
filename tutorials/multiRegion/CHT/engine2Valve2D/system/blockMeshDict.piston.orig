@@ -64,10 +64,6 @@ blocks
     hex (1 4 5 2 7 10 11 8) ($pRes $pRes3 1) simpleGrading (10 0.2 1)
 );
 
-edges
-(
-);
-
 defaultPatch
 {
     name    frontAndBack;
