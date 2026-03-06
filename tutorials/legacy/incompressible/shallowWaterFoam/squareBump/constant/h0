@@ -16,7 +16,24 @@ FoamFile
 
 dimensions      [0 1 0 0 0 0 0];
 
-internalField   uniform 0;
+internalField
+{
+    type        zonal;
+
+    defaultValue    0;
+
+    zones
+    {
+        waterColumn
+        {
+            type            box;
+
+            box             (0.45 0.45 0) (0.55 0.55 0.1);
+
+            value           0.001;
+        }
+    }
+}
 
 boundaryField
 {
@@ -24,14 +41,17 @@ boundaryField
     {
         type            zeroGradient;
     }
+
     inlet
     {
         type            zeroGradient;
     }
+
     outlet
     {
         type            zeroGradient;
     }
+
     frontAndBack
     {
         type            empty;

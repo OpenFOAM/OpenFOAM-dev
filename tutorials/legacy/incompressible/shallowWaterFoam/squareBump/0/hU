@@ -8,31 +8,51 @@
 FoamFile
 {
     format      ascii;
-    class       volScalarField;
+    class       volVectorField;
     location    "0";
-    object      h;
+    object      hU;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 1 0 0 0 0 0];
+dimensions      [0 2 -1 0 0 0 0];
 
-internalField   uniform 0.01;
+internalField
+{
+    type        zonal;
+
+    defaultValue    (0.001 0 0);
+
+    zones
+    {
+        waterColumn
+        {
+            type            box;
+
+            box             (0.45 0.45 0) (0.55 0.55 0.1);
+
+            value           (0.0009 0 0);
+        }
+    }
+}
 
 boundaryField
 {
     sides
     {
-        type            zeroGradient;
+        type            slip;
     }
+
     inlet
     {
-        type            zeroGradient;
+        type            fixedValue;
+        value           uniform (0.001 0 0);
     }
+
     outlet
     {
-        type            fixedValue;
-        value           uniform 0.01;
+        type            zeroGradient;
     }
+
     frontAndBack
     {
         type            empty;
