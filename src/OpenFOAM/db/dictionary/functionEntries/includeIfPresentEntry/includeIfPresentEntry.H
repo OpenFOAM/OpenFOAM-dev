@@ -64,6 +64,16 @@ class includeIfPresentEntry
 :
     public includeEntry
 {
+protected:
+
+    // Protected Member Functions
+
+        //- Return true if file presence is optional
+        virtual bool includeIfPresent() const
+        {
+            return true;
+        }
+
 
 public:
 

@@ -126,39 +126,26 @@ protected:
             }
         }
 
-        //- Expand fileName and return
-        static fileName includeFileName
-        (
-            const Istream& is,
-            const fileName&,
-            const dictionary&
-        );
+        //- Return true if file presence is optional
+        virtual bool includeIfPresent() const
+        {
+            return false;
+        }
 
         //- Expand include fileName and return
-        static fileName includeFileName
+        virtual fileName includeFileName
         (
             const fileName& dir,
             const fileName&,
             const dictionary&
-        );
-
-        //- Expand the functionEntry into the contextDict
-        //  with support for includeIfPresent
-        bool execute
-        (
-            dictionary& contextDict,
-            Istream&,
-            const bool ifPresent
-        );
+        ) const;
 
         //- Expand the functionEntry into the contextEntry
-        //  with support for includeIfPresent
-        static bool execute
+        virtual bool virtualExecute
         (
             const dictionary& contextDict,
             primitiveEntry& contextEntry,
-            Istream&,
-            const bool ifPresent
+            Istream&
         );
 
 

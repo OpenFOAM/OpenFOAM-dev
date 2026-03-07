@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,20 +26,23 @@ License
 #include "includeEtcEntry.H"
 #include "etcFiles.H"
 #include "stringOps.H"
-#include "IOobject.H"
 #include "addToRunTimeSelectionTable.H"
 #include "addToMemberFunctionSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-bool Foam::functionEntries::includeEtcEntry::log(false);
 
 namespace Foam
 {
 namespace functionEntries
 {
     defineFunctionTypeNameAndDebug(includeEtcEntry, 0);
-    addToRunTimeSelectionTable(functionEntry, includeEtcEntry, dictionary);
+
+    addToRunTimeSelectionTable
+    (
+        functionEntry,
+        includeEtcEntry,
+        dictionary
+    );
 
     addToMemberFunctionSelectionTable
     (
@@ -54,8 +57,9 @@ namespace functionEntries
 
 // * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * * //
 
-Foam::fileName Foam::functionEntries::includeEtcEntry::includeEtcFileName
+Foam::fileName Foam::functionEntries::includeEtcEntry::includeFileName
 (
+    const fileName& dir,
     const fileName& f,
     const dictionary& dict
 ) const
@@ -87,14 +91,7 @@ Foam::functionEntries::includeEtcEntry::includeEtcEntry
     Istream& is
 )
 :
-    functionEntry
-    (
-        typeName,
-        lineNumber,
-        parentDict,
-        is,
-        readFileNameArgList(typeName, is)
-    )
+    includeEntry(typeName, lineNumber, parentDict, is)
 {}
 
 
@@ -106,55 +103,7 @@ bool Foam::functionEntries::includeEtcEntry::execute
     Istream& is
 )
 {
-    const fileName fName
-    (
-        includeEtcFileName(this->fName(), contextDict)
-    );
-
-    // IFstream ifs(fName);
-    autoPtr<ISstream> ifsPtr(fileHandler().NewIFstream(fName));
-    ISstream& ifs = ifsPtr();
-
-    if (ifs)
-    {
-        if (Foam::functionEntries::includeEtcEntry::log)
-        {
-            Info<< fName << endl;
-        }
-
-        // Cache the FoamFile entry if present
-        dictionary foamFileDict;
-        if (contextDict.found(IOobject::foamFile))
-        {
-            foamFileDict = contextDict.subDict(IOobject::foamFile);
-        }
-
-        // Read and clear the FoamFile entry
-        contextDict.read(ifs);
-
-        // Reinstate original FoamFile entry
-        if (foamFileDict.size() != 0)
-        {
-            dictionary contextDictTmp(contextDict);
-            contextDict.clear();
-            contextDict.add(IOobject::foamFile, foamFileDict);
-            contextDict += contextDictTmp;
-        }
-
-        return true;
-    }
-    else
-    {
-        FatalIOErrorInFunction
-        (
-            is
-        )   << "Cannot open etc file "
-            << (ifs.name().size() ? ifs.name() : this->fName())
-            << " while reading dictionary " << contextDict.name()
-            << exit(FatalIOError);
-
-        return false;
-    }
+    return includeEntry::execute(contextDict, is);
 }
 
 
@@ -165,37 +114,9 @@ bool Foam::functionEntries::includeEtcEntry::execute
     Istream& is
 )
 {
-    const includeEtcEntry iee(is.lineNumber(), contextDict, is);
-
-    const fileName fName
-    (
-        iee.includeEtcFileName(iee.fName(), contextDict)
-    );
-
-    autoPtr<ISstream> ifsPtr(fileHandler().NewIFstream(fName));
-    ISstream& ifs = ifsPtr();
-
-    if (ifs)
-    {
-        if (Foam::functionEntries::includeEtcEntry::log)
-        {
-            Info<< fName << endl;
-        }
-        contextEntry.read(contextDict, ifs);
-        return true;
-    }
-    else
-    {
-        FatalIOErrorInFunction
-        (
-            is
-        )   << "Cannot open etc file "
-            << (ifs.name().size() ? ifs.name() : iee.fName())
-            << " while reading dictionary " << contextDict.name()
-            << exit(FatalIOError);
-
-        return false;
-    }
+    return
+        includeEtcEntry(is.lineNumber(), contextDict, is)
+       .virtualExecute(contextDict, contextEntry, is);
 }
 
 

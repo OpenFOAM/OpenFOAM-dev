@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ SourceFiles
 #ifndef includeEtcEntry_H
 #define includeEtcEntry_H
 
-#include "functionEntry.H"
+#include "includeEntry.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -72,36 +72,27 @@ namespace functionEntries
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class includeEtcEntry Declaration
+                    Class includeEtcEntry Declaration
 \*---------------------------------------------------------------------------*/
 
 class includeEtcEntry
 :
-    public functionEntry
+    public includeEntry
 {
-    // Private Member Functions
+protected:
+
+    // Protected Member Functions
 
         //- Expand include fileName and return
-        fileName includeEtcFileName
+        virtual fileName includeFileName
         (
+            const fileName& dir,
             const fileName&,
             const dictionary&
         ) const;
 
-        //- Return the file name
-        const string& fName() const
-        {
-            return operator[](0).stringToken();
-        }
-
 
 public:
-
-    // Static Data Members
-
-        //- Report which file is included to stdout
-        static bool log;
-
 
     //- Runtime type information
     FunctionTypeName("#includeEtc");

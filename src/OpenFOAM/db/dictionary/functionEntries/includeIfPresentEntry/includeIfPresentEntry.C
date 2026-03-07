@@ -75,7 +75,7 @@ bool Foam::functionEntries::includeIfPresentEntry::execute
     Istream& is
 )
 {
-    return includeEntry::execute(contextDict, is, true);
+    return includeEntry::execute(contextDict, is);
 }
 
 
@@ -86,7 +86,9 @@ bool Foam::functionEntries::includeIfPresentEntry::execute
     Istream& is
 )
 {
-    return includeEntry::execute(contextDict, contextEntry, is, true);
+    return
+        includeIfPresentEntry(is.lineNumber(), contextDict, is)
+       .virtualExecute(contextDict, contextEntry, is);
 }
 
 
