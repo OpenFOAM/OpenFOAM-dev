@@ -421,14 +421,21 @@ Foam::CloudDerivedField<Type>::operator()
         {
             if (name_ != word::null)
             {
-                psiAllPtr_.reset
+                tmp<LagrangianSubField<Type>> tf =
+                    functorPtr_()(model, subMesh);
+
+                const IOobject io
                 (
-                    new Foam::LagrangianSubField<Type>
-                    (
-                        name_,
-                        functorPtr_()(model, subMesh)
-                    )
+                    name_,
+                    tf().instance(),
+                    tf().local(),
+                    tf().db(),
+                    IOobject::NO_READ,
+                    IOobject::NO_WRITE,
+                    false
                 );
+
+                psiAllPtr_.reset(new Foam::LagrangianSubField<Type>(io, tf));
             }
             else
             {
@@ -444,14 +451,21 @@ Foam::CloudDerivedField<Type>::operator()
     {
         if (name_ != word::null)
         {
-            psiSubPtr_.reset
+            tmp<LagrangianSubField<Type>> tf =
+                functorPtr_()(model, subMesh);
+
+            const IOobject io
             (
-                new Foam::LagrangianSubField<Type>
-                (
-                    subMesh.sub(name_),
-                    functorPtr_()(model, subMesh)
-                )
+                subMesh.sub(name_),
+                tf().instance(),
+                tf().local(),
+                tf().db(),
+                IOobject::NO_READ,
+                IOobject::NO_WRITE,
+                false
             );
+
+            psiSubPtr_.reset(new Foam::LagrangianSubField<Type>(io, tf));
         }
         else
         {
