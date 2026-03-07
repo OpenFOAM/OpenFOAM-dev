@@ -16,11 +16,40 @@ FoamFile
 
 dimensions      [];
 
-internalField   uniform 0;
+internalField
+{
+    type        zonal;
+
+    defaultValue    0;
+
+    zones
+    {
+        water
+        {
+            type            box;
+
+            box             (-0.1 -0.1 -0.005) (0.1 -0.033333 0.005);
+
+            value           1;
+        }
+    }
+}
 
 boundaryField
 {
-    walls
+    #includeEtc "caseDicts/setConstraintTypes"(internalField = uniform 0)
+
+    rotor
+    {
+        type            zeroGradient;
+    }
+
+    stator
+    {
+        type            zeroGradient;
+    }
+
+    nonCouple
     {
         type            zeroGradient;
     }

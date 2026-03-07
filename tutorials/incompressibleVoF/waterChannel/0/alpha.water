@@ -16,28 +16,48 @@ FoamFile
 
 dimensions      [];
 
-internalField   uniform 0;
+internalField
+{
+    type        zonal;
+
+    defaultValue    0;
+
+    zones
+    {
+        water
+        {
+            type            box;
+
+            box             (-10 -20 -10) (50 20 2.2);
+
+            value           1;
+        }
+    }
+}
 
 boundaryField
 {
-    rotor
+    inlet
+    {
+        type            fixedValue;
+        value           uniform 1;
+    }
+
+    walls
     {
         type            zeroGradient;
     }
 
-    stator
+    outlet
     {
         type            zeroGradient;
+        value           uniform 0;
     }
 
-    front
+    atmosphere
     {
-        type            empty;
-    }
-
-    back
-    {
-        type            empty;
+        type            inletOutlet;
+        inletValue      uniform 0;
     }
 }
 

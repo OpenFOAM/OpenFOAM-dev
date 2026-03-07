@@ -9,8 +9,6 @@ runApplication createBaffles
 runApplication splitBaffles
 runApplication createNonConformalCouples nonCouple1 nonCouple2
 
-runApplication setFields
-
 runApplication foamRun
 
 #------------------------------------------------------------------------------

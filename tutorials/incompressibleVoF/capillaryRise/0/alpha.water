@@ -16,25 +16,49 @@ FoamFile
 
 dimensions      [];
 
-internalField   uniform 0;
+internalField
+{
+    type        zonal;
+
+    defaultValue    0;
+
+    zones
+    {
+        water
+        {
+            type            box;
+
+            box             (0 0 -1) (1 8e-3 1);
+
+            value           1;
+        }
+    }
+}
 
 boundaryField
 {
-    #includeEtc "caseDicts/setConstraintTypes"
+    inlet
+    {
+        type            inletOutlet;
+        inletValue      uniform 1;
+    }
+
+    atmosphere
+    {
+        type            zeroGradient;
+    }
 
     walls
     {
-        type            zeroGradient;
+        type           contactAngle;
+        theta0         45;
+        limit          gradient;
+        value          uniform 0;
     }
-    atmosphere
+
+    defaultFaces
     {
-        type            inletOutlet;
-        inletValue      uniform 0;
-        value           uniform 0;
-    }
-    beam
-    {
-        type            zeroGradient;
+        type            empty;
     }
 }
 

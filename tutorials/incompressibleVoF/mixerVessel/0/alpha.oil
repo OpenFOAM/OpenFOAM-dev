@@ -10,28 +10,57 @@ FoamFile
     format      ascii;
     class       volScalarField;
     location    "0";
-    object      alpha.water;
+    object      alpha.oil;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 dimensions      [];
 
-internalField   uniform 0;
+internalField
+{
+    type        zonal;
+
+    defaultValue    1;
+
+    zones
+    {
+        oil
+        {
+            type            box;
+
+            box             (-4 -4 -1) (4 4 0.74);
+
+            value           0;
+        }
+    }
+}
 
 boundaryField
 {
-    front
+    #includeEtc "caseDicts/setConstraintTypes"(internalField = uniform 0)
+
+    oilInlet
     {
-        type            empty;
+        type            fixedValue;
+        value           uniform 1;
     }
-    back
+
+    outlet
     {
-        type            empty;
+        type            inletOutlet;
+        inletValue      uniform 0;
     }
-    walls
+
+    wall
+    {
+        type            zeroGradient;
+    }
+
+    nonCouple
     {
         type            zeroGradient;
     }
 }
+
 
 // ************************************************************************* //

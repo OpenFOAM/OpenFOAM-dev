@@ -8,7 +8,6 @@ runApplication blockMesh
 runApplication subsetMesh -noFields
 
 runApplication decomposePar
-runParallel setFields
 runParallel foamRun
 runApplication reconstructPar
 

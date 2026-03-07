@@ -9,9 +9,6 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Copy the fields into the processor directories
 runApplication -a decomposePar -fields -copyZero
 
-# Initialise alpha
-runParallel setFields
-
 # Run
 runParallel foamRun
 

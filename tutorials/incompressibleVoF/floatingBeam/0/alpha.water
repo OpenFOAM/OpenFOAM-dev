@@ -8,11 +8,13 @@
 FoamFile
 {
     format      ascii;
-    class       dictionary;
-    location    "system";
-    object      setFieldsDict;
+    class       volScalarField;
+    location    "0";
+    object      alpha.water;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [];
 
 centre      $../constant/dynamicMeshDict!mover/bodies/beam/centreOfMass;
 
@@ -23,36 +25,54 @@ centreZ     #calc "$<vector>{centre}.z()";
 bumpZ       #calc "$<vector>{centre}.z() + 0.4";
 #endCodeBlock
 
-defaultValues
+internalField
 {
-    alpha.water 0;
-}
+    type        zonal;
 
-zones
-{
-    water
+    defaultValue    0;
+
+    zones
     {
-        type        box;
-
-        box         (-1e6 -1e6 -1e6) (1e6 1e6 $centreZ);
-
-        values
+        water
         {
-            alpha.water 1;
+            type        box;
+
+            box         (-1e6 -1e6 -1e6) (1e6 1e6 $centreZ);
+
+            value       1;
         }
-    }
 
-    bump
-    {
-        type        box;
-
-        box         (-1e6 -1e6 -1e6) ($bumpX $centreY $bumpZ);
-
-        values
+        bump
         {
-            alpha.water 1;
+            type        box;
+
+            box         (-1e6 -1e6 -1e6) ($bumpX $centreY $bumpZ);
+
+            value       1;
         }
     }
 }
+
+boundaryField
+{
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    walls
+    {
+        type            zeroGradient;
+    }
+
+    atmosphere
+    {
+        type            inletOutlet;
+        inletValue      uniform 0;
+    }
+
+    beam
+    {
+        type            zeroGradient;
+    }
+}
+
 
 // ************************************************************************* //

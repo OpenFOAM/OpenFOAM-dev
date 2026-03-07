@@ -8,30 +8,47 @@
 FoamFile
 {
     format      ascii;
-    class       dictionary;
-    location    "system";
-    object      setFieldsDict;
+    class       volScalarField;
+    location    "0";
+    object      alpha.water;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-defaultValues
-{
-    alpha.water 0;
-}
+dimensions      [];
 
-zones
+internalField
 {
-    water
+    type        zonal;
+
+    defaultValue    0;
+
+    zones
     {
-        type        box;
-
-        box         (0 0 -1) (1 1 1);
-
-        values
+        water
         {
-            alpha.water 1;
+            type        cylinder;
+
+            alphaMean   0.25;
+
+            point1  (0 0 0);
+            point2  (0 $../system/blockMeshDict!height 0);
+            radius  #calc
+            "$<scalar>../system/blockMeshDict!radius*sqrt($<scalar>alphaMean)";
+
+            value           1;
         }
     }
 }
+
+boundaryField
+{
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    wall
+    {
+        type            zeroGradient;
+    }
+}
+
 
 // ************************************************************************* //
