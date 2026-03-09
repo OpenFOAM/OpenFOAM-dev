@@ -65,6 +65,9 @@ class genericFvPatchField
         //- Patch field dictionary
         dictionary dict_;
 
+        //- Set true if the input dictionary contains the value entry
+        bool valuePresent_;
+
         //- Fields
         #define DeclareTypeFields(Type, nullArg) \
             HashPtrTable<Field<Type>> Type##Fields_;

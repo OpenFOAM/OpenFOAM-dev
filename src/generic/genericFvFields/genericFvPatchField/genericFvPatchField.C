@@ -83,23 +83,31 @@ Foam::genericFvPatchField<Type>::genericFvPatchField
 )
 :
     genericFieldBase(dict.lookup("type")),
-    calculatedFvPatchField<Type>(p, iF, dict),
-    dict_(dict)
+    calculatedFvPatchField<Type>(p, iF, dict, false),
+    dict_(dict),
+    valuePresent_(false)
 {
-    if (!dict.found("value"))
+    if (dict_.found("value"))
     {
-        FatalIOErrorInFunction(dict)
-            << "\n    Cannot find 'value' entry"
-            << " on patch " << this->patch().name()
+        valuePresent_ = true;
+
+        calculatedFvPatchField<Type>::operator=
+        (
+            Field<Type>("value", iF.dimensions(), dict_, p.size())
+        );
+    }
+    else
+    {
+        Info<< "\n    Cannot find 'value' entry"
+            << " for patch " << this->patch().name()
             << " of field " << this->internalField().name()
-            << " in file " << this->internalField().objectPath()
-            << nl
-            << "    which is required to set the"
-               " values of the generic patch field." << nl
-            << "    (Actual type " << actualTypeName() << ")" << nl
-            << "\n    Please add the 'value' entry to the write function "
-               "of the user-defined boundary-condition\n"
-            << exit(FatalIOError);
+            << " for generic patch field with actual type "
+            << actualTypeName() << nl
+            << "    in file " << this->internalField().objectPath() << nl
+            << "    Extrapolating the internal field to the patch."
+            << endl;
+
+        calculatedFvPatchField<Type>::operator=(this->patchInternalField());
     }
 
     forAllConstIter(dictionary, dict_, iter)
@@ -269,7 +277,8 @@ Foam::genericFvPatchField<Type>::genericFvPatchField
 :
     genericFieldBase(ptf),
     calculatedFvPatchField<Type>(ptf, p, iF, mapper),
-    dict_(ptf.dict_)
+    dict_(ptf.dict_),
+    valuePresent_(ptf.valuePresent_)
 {
     #define MapTypeFields(Type, nullArg)                                       \
         forAllConstIter(HashPtrTable<Field<Type>>, ptf.Type##Fields_, iter)    \
@@ -294,7 +303,8 @@ Foam::genericFvPatchField<Type>::genericFvPatchField
 :
     genericFieldBase(ptf),
     calculatedFvPatchField<Type>(ptf, iF),
-    dict_(ptf.dict_)
+    dict_(ptf.dict_),
+    valuePresent_(ptf.valuePresent_)
     #define CopyTypeFields(Type, nullArg) \
         , Type##Fields_(ptf.Type##Fields_)
     FOR_ALL_FIELD_TYPES(CopyTypeFields)
@@ -443,6 +453,39 @@ void Foam::genericFvPatchField<Type>::write(Ostream& os) const
 
     forAllConstIter(dictionary, dict_, iter)
     {
+        if (iter().keyword() != "type")
+        {
+            if
+            (
+                iter().isStream()
+             && iter().stream().size()
+             && iter().stream()[0].isWord()
+             && iter().stream()[0].wordToken() == "nonuniform"
+            )
+            {
+                #define WriteTypeFieldEntry(Type, nullArg)                     \
+                    else if (Type##Fields_.found(iter().keyword()))            \
+                    {                                                          \
+                        writeEntry                                             \
+                        (                                                      \
+                            os,                                                \
+                            iter().keyword(),                                  \
+                            *Type##Fields_.find(iter().keyword())()            \
+                        );                                                     \
+                    }
+                if (false) {} FOR_ALL_FIELD_TYPES(WriteTypeFieldEntry)
+                #undef WriteTypeFieldEntry
+            }
+            else
+            {
+               iter().write(os);
+            }
+        }
+    }
+
+
+    forAllConstIter(dictionary, dict_, iter)
+    {
         if (iter().keyword() != "type" && iter().keyword() != "value")
         {
             if
@@ -473,7 +516,10 @@ void Foam::genericFvPatchField<Type>::write(Ostream& os) const
         }
     }
 
-    writeEntry(os, "value", *this);
+    if (valuePresent_)
+    {
+        writeEntry(os, "value", *this);
+    }
 }
 
 
