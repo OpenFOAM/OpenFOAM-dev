@@ -16,7 +16,24 @@ FoamFile
 
 dimensions      [];
 
-internalField   uniform 0;
+internalField
+{
+    type        zonal;
+
+    defaultValue    0;
+
+    zones
+    {
+        water
+        {
+            type        box;
+
+            box         (0 0.1 -1) (0.1461 0.292 1);
+
+            value       1;
+        }
+    }
+}
 
 boundaryField
 {
@@ -29,8 +46,8 @@ boundaryField
             oil             { theta0 90; }
             mercury         { theta0 90; }
         }
-        value           uniform 0;
     }
+
     rightWall
     {
         type            alphaContactAngle;
@@ -40,8 +57,8 @@ boundaryField
             oil             { theta0 90; }
             mercury         { theta0 90; }
         }
-        value           uniform 0;
     }
+
     lowerWall
     {
         type            alphaContactAngle;
@@ -51,14 +68,14 @@ boundaryField
             oil             { theta0 90; }
             mercury         { theta0 90; }
         }
-        value           uniform 0;
     }
+
     atmosphere
     {
         type            inletOutlet;
         inletValue      uniform 0;
-        value           uniform 0;
     }
+
     defaultFaces
     {
         type            empty;

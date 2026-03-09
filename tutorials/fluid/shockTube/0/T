@@ -10,32 +10,39 @@ FoamFile
     format      ascii;
     class       volScalarField;
     location    "0";
-    object      alpha.mercury;
+    object      T;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [];
+dimensions      [0 0 0 1 0 0 0];
 
-internalField   uniform 0;
+internalField
+{
+    type        zonal;
+
+    defaultValue    348.432;
+
+    zones
+    {
+        lowPressure
+        {
+            type            box;
+
+            box             (0 -1 -1) (5 1 1);
+
+            value           278.746;
+        }
+    }
+}
 
 boundaryField
 {
-    rotor
+    sides
     {
         type            zeroGradient;
     }
 
-    stator
-    {
-        type            zeroGradient;
-    }
-
-    front
-    {
-        type            empty;
-    }
-
-    back
+    empty
     {
         type            empty;
     }
