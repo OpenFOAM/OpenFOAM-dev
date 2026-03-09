@@ -8,32 +8,44 @@
 FoamFile
 {
     format      ascii;
-    class       dictionary;
-    location    "system";
-    object      setFieldsDict;
+    class       volScalarField;
+    location    "0";
+    object      T;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-defaultValues
+dimensions      [0 0 0 1 0 0 0];
+
+internalField
 {
-    U       (0 0 0);
-    T       348.432;
-    p       1 [bar];
+    type        zonal;
+
+    defaultValue    300;
+
+    zones
+    {
+        bubble
+        {
+            type        sphere;
+
+            centre (0.5 0.5 0);
+            radius 0.1;
+
+            value       578;
+        }
+    }
 }
 
-zones
+boundaryField
 {
-    lowPressure
+    walls
     {
-        type        box;
+        type            zeroGradient;
+    }
 
-        box         (0 -1 -1) (5 1 1);
-
-        values
-        {
-            T       278.746;
-            p       0.1 [bar];
-        }
+    defaultFaces
+    {
+        type            empty;
     }
 }
 

@@ -10,13 +10,30 @@ FoamFile
     format      ascii;
     class       volScalarField;
     location    "0";
-    object      alpha.oil;
+    object      alpha.mercury;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 dimensions      [];
 
-internalField   uniform 0;
+internalField
+{
+    type        zonal;
+
+    defaultValue    0;
+
+    zones
+    {
+        mercury
+        {
+            type        box;
+
+            box         (0 0 -1) (0.1461 0.1 1);
+
+            value       1;
+        }
+    }
+}
 
 boundaryField
 {
@@ -26,10 +43,9 @@ boundaryField
         contactAngleProperties
         {
             air             { theta0 90; }
+            oil             { theta0 90; }
             water           { theta0 90; }
-            mercury         { theta0 90; }
         }
-        value           uniform 0;
     }
     rightWall
     {
@@ -37,10 +53,9 @@ boundaryField
         contactAngleProperties
         {
             air             { theta0 90; }
+            oil             { theta0 90; }
             water           { theta0 90; }
-            mercury         { theta0 90; }
         }
-        value           uniform 0;
     }
     lowerWall
     {
@@ -48,10 +63,9 @@ boundaryField
         contactAngleProperties
         {
             air             { theta0 90; }
+            oil             { theta0 90; }
             water           { theta0 90; }
-            mercury         { theta0 90; }
         }
-        value           uniform 0;
     }
     atmosphere
     {

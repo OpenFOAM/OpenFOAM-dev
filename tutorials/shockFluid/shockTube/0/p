@@ -16,17 +16,33 @@ FoamFile
 
 dimensions      [1 -1 -2 0 0 0 0];
 
-internalField   uniform 1e5;
+internalField
+{
+    type        zonal;
+
+    defaultValue    1 [bar];
+
+    zones
+    {
+        lowPressure
+        {
+            type            box;
+
+            box             (0 -1 -1) (5 1 1);
+
+            value           0.1 [bar];
+        }
+    }
+}
 
 boundaryField
 {
-    walls
+    sides
     {
-        type            calculated;
-        value           uniform 1e5;
+        type            zeroGradient;
     }
 
-    defaultFaces
+    empty
     {
         type            empty;
     }

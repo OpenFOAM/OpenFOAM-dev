@@ -10,26 +10,39 @@ FoamFile
     format      ascii;
     class       volScalarField;
     location    "0";
-    object      T.water;
+    object      T.mercury;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 dimensions      [0 0 0 1 0 0 0];
 
-internalField   uniform 300;
+internalField   uniform 293;
 
 boundaryField
 {
-    walls
+    leftWall
     {
-        type            calculated;
-        value           uniform 300;
+        type            fixedValue;
+        value           uniform 293;
     }
-    front
+    rightWall
     {
-        type            empty;
+        type            fixedValue;
+        value           uniform 293;
     }
-    back
+    lowerWall
+    {
+        type            fixedValue;
+        value           uniform 293;
+    }
+    atmosphere
+    {
+        type            inletOutlet;
+        phi             rhoPhi;
+        inletValue      uniform 293;
+        value           uniform 293;
+    }
+    defaultFaces
     {
         type            empty;
     }

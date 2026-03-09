@@ -10,30 +10,42 @@ FoamFile
     format      ascii;
     class       volScalarField;
     location    "0";
-    object      alpha.water;
+    object      T;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [];
+dimensions      [0 0 0 1 0 0 0];
 
-internalField   uniform 0;
+internalField
+{
+    type        zonal;
+
+    defaultValue    348.432;
+
+    zones
+    {
+        lowPressure
+        {
+            type            box;
+
+            box             (0 -1 -1) (5 1 1);
+
+            value           278.746;
+        }
+    }
+}
 
 boundaryField
 {
-    #includeEtc "caseDicts/setConstraintTypes"
-
-    wall
+    sides
     {
         type            zeroGradient;
     }
 
-    atmosphere
+    empty
     {
-        type            inletOutlet;
-        inletValue      $internalField;
-        value           $internalField;
+        type            empty;
     }
 }
-
 
 // ************************************************************************* //

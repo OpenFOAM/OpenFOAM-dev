@@ -10,26 +10,43 @@ FoamFile
     format      ascii;
     class       volScalarField;
     location    "0";
-    object      p;
+    object      T.oil;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [1 -1 -2 0 0 0 0];
+dimensions      [0 0 0 1 0 0 0];
 
-internalField   uniform 1e5;
+internalField   uniform 293;
 
 boundaryField
 {
-    walls
+    leftWall
     {
-        type            calculated;
-        value           uniform 1e5;
+        type            fixedValue;
+        value           uniform 293;
     }
-
+    rightWall
+    {
+        type            fixedValue;
+        value           uniform 293;
+    }
+    lowerWall
+    {
+        type            fixedValue;
+        value           uniform 293;
+    }
+    atmosphere
+    {
+        type            inletOutlet;
+        phi             rhoPhi;
+        inletValue      uniform 293;
+        value           uniform 293;
+    }
     defaultFaces
     {
         type            empty;
     }
 }
+
 
 // ************************************************************************* //

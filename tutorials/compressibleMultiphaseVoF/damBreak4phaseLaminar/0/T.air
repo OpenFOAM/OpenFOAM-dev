@@ -10,28 +10,43 @@ FoamFile
     format      ascii;
     class       volScalarField;
     location    "0";
-    object      alpha.liquid;
+    object      T.air;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [];
+dimensions      [0 0 0 1 0 0 0];
 
-internalField   uniform 0;
+internalField   uniform 293;
 
 boundaryField
 {
-    wall
+    leftWall
     {
-        type            zeroGradient;
+        type            fixedValue;
+        value           uniform 293;
     }
-
+    rightWall
+    {
+        type            fixedValue;
+        value           uniform 293;
+    }
+    lowerWall
+    {
+        type            fixedValue;
+        value           uniform 293;
+    }
     atmosphere
     {
         type            inletOutlet;
-        inletValue      $internalField;
+        phi             rhoPhi;
+        inletValue      uniform 293;
+        value           uniform 293;
     }
-
-    #includeEtc "caseDicts/setConstraintTypes"
+    defaultFaces
+    {
+        type            empty;
+    }
 }
+
 
 // ************************************************************************* //
