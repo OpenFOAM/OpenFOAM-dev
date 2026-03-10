@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "diameterModel.H"
+#include "phaseSystem.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -42,7 +43,6 @@ Foam::diameterModel::diameterModel
     const phaseModel& phase
 )
 :
-    diameterProperties_(diameterProperties),
     phase_(phase)
 {}
 
@@ -59,11 +59,17 @@ void Foam::diameterModel::correct()
 {}
 
 
-bool Foam::diameterModel::read(const dictionary& phaseProperties)
+bool Foam::diameterModel::read()
 {
-    diameterProperties_ = phaseProperties.optionalSubDict(type() + "Coeffs");
+    const dictionary& phaseDict = phase_.fluid().subDict(phase_.name());
 
-    return true;
+    return
+        read
+        (
+            phaseDict.isDict(typeName)
+          ? phaseDict.subDict(typeName)
+          : phaseDict.optionalSubDict(type() + "Coeffs")
+        );
 }
 
 

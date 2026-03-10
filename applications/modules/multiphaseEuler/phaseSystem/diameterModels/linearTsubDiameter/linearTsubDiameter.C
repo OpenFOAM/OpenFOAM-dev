@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,20 +49,10 @@ Foam::diameterModels::linearTsub::linearTsub
 :
     spherical(diameterProperties, phase),
     liquidPhaseName_(diameterProperties.lookup("liquidPhase")),
-    d2_("d2", dimLength, diameterProperties.lookupOrDefault("d2", 0.0015)),
-    Tsub2_
-    (
-        "Tsub2",
-         dimTemperature,
-         diameterProperties.lookupOrDefault("Tsub2", 0)
-    ),
-    d1_("d1", dimLength, diameterProperties.lookupOrDefault("d1", 0.00015)),
-    Tsub1_
-    (
-        "Tsub1",
-        dimTemperature,
-        diameterProperties.lookupOrDefault("Tsub1", 13.5)
-    ),
+    d2_("d2", dimLength, diameterProperties, 0.0015),
+    Tsub2_("Tsub2", dimTemperature, diameterProperties, 0),
+    d1_("d1", dimLength, diameterProperties, 0.00015),
+    Tsub1_("Tsub1", dimTemperature, diameterProperties, 13.5),
     saturationModelPtr_
     (
         saturationTemperatureModel::New
@@ -120,23 +110,24 @@ void Foam::diameterModels::linearTsub::correct()
 }
 
 
-bool Foam::diameterModels::linearTsub::read(const dictionary& phaseProperties)
+bool Foam::diameterModels::linearTsub::read
+(
+    const dictionary& diameterProperties
+)
 {
-    spherical::read(phaseProperties);
+    diameterProperties.lookup("liquidPhase") >> liquidPhaseName_;
 
-    diameterProperties().lookup("liquidPhase") >> liquidPhaseName_;
-
-    d2_.readIfPresent(diameterProperties());
-    Tsub2_.readIfPresent(diameterProperties());
-    d1_.readIfPresent(diameterProperties());
-    Tsub1_.readIfPresent(diameterProperties());
+    d2_.readIfPresent(diameterProperties);
+    Tsub2_.readIfPresent(diameterProperties);
+    d1_.readIfPresent(diameterProperties);
+    Tsub1_.readIfPresent(diameterProperties);
 
     saturationModelPtr_.reset
     (
         saturationTemperatureModel::New
         (
             "saturationTemperature",
-            diameterProperties()
+            diameterProperties
         ).ptr()
     );
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,12 +85,13 @@ void Foam::diameterModels::isothermal::correct()
 }
 
 
-bool Foam::diameterModels::isothermal::read(const dictionary& phaseProperties)
+bool Foam::diameterModels::isothermal::read
+(
+    const dictionary& diameterProperties
+)
 {
-    spherical::read(phaseProperties);
-
-    diameterProperties().lookup("d0") >> d0_;
-    diameterProperties().lookup("p0") >> p0_;
+    d0_.read(diameterProperties);
+    p0_.read(diameterProperties);
 
     return true;
 }

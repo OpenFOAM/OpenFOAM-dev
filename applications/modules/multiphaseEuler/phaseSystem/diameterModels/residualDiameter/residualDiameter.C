@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,13 +77,11 @@ d() const
 
 bool Foam::diameterModels::residualDiameter::read
 (
-    const dictionary& phaseProperties
+    const dictionary& diameterProperties
 )
 {
-    spherical::read(phaseProperties);
-
-    diameterProperties().lookup("d") >> d_;
-    diameterProperties().lookup("dResidual") >> dResidual_;
+    diameterProperties.lookup("d") >> d_;
+    diameterProperties.lookup("dResidual") >> dResidual_;
 
     return true;
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,9 +52,6 @@ namespace Foam
 class diameterModel
 {
     // Private Data
-
-        //- The phase diameter properties dictionary
-        dictionary diameterProperties_;
 
         //- The phase that this model applies
         const phaseModel& phase_;
@@ -107,12 +104,6 @@ public:
 
     // Member Functions
 
-        //- Return the phase diameter properties dictionary
-        const dictionary& diameterProperties() const
-        {
-            return diameterProperties_;
-        }
-
         //- Return the phase
         const phaseModel& phase() const
         {
@@ -128,8 +119,11 @@ public:
         //- Correct the model
         virtual void correct();
 
-        //- Read phaseProperties dictionary
-        virtual bool read(const dictionary& phaseProperties);
+        //- Read diameter properties dictionary
+        virtual bool read();
+
+        //- Read diameter properties dictionary
+        virtual bool read(const dictionary& diameterProperties) = 0;
 };
 
 

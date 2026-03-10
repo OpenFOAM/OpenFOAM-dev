@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,7 +47,7 @@ Foam::diameterModels::fixedInterfacialArea::fixedInterfacialArea
 )
 :
     diameterModel(diameterProperties, phase),
-    AvbyAlpha_(inv(dimLength), -1),
+    AvbyAlpha_("AvbyAlpha", inv(dimLength), diameterProperties, -1),
     AvbyAlphaFieldPtr_()
 {
     read(diameterProperties);
@@ -62,8 +62,8 @@ Foam::diameterModels::fixedInterfacialArea::~fixedInterfacialArea()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField> Foam::diameterModels::fixedInterfacialArea::d()
-const
+Foam::tmp<Foam::volScalarField>
+Foam::diameterModels::fixedInterfacialArea::d() const
 {
     if (AvbyAlphaFieldPtr_.valid())
     {
@@ -80,8 +80,8 @@ const
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::diameterModels::fixedInterfacialArea::Av()
-const
+Foam::tmp<Foam::volScalarField>
+Foam::diameterModels::fixedInterfacialArea::Av() const
 {
     if (AvbyAlphaFieldPtr_.valid())
     {
@@ -93,16 +93,12 @@ const
 }
 
 
-bool Foam::diameterModels::fixedInterfacialArea::
-read(const dictionary& phaseProperties)
+bool Foam::diameterModels::fixedInterfacialArea::read
+(
+    const dictionary& diameterProperties
+)
 {
-    diameterModel::read(phaseProperties);
-
-    AvbyAlpha_ = dimensionedScalar
-        (
-            inv(dimLength),
-            diameterProperties().lookupOrDefault<scalar>("AvbyAlpha", -1)
-        );
+    AvbyAlpha_.readOrDefault(diameterProperties, -1);
 
     if (AvbyAlpha_.value() < 0 && !AvbyAlphaFieldPtr_.valid())
     {
@@ -129,13 +125,13 @@ read(const dictionary& phaseProperties)
             );
 
         AvbyAlphaFieldPtr_->max
+        (
+            diameterProperties.lookupOrDefault<scalar>
             (
-                phaseProperties.lookupOrDefault<scalar>
-                (
-                    "residualAvbyAlpha",
-                    rootSmall
-                )
-            );
+                "residualAvbyAlpha",
+                rootSmall
+            )
+        );
     }
 
     return true;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -244,7 +244,7 @@ void Foam::phaseModel::correctUf()
 
 bool Foam::phaseModel::read()
 {
-    return diameterModel_->read(fluid_.subDict(name_));
+    return diameterModel_->read();
 }
 
 

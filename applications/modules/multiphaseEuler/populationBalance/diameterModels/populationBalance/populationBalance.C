@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -230,11 +230,9 @@ void Foam::diameterModels::populationBalance::correct()
 
 bool Foam::diameterModels::populationBalance::read
 (
-    const dictionary& phaseProperties
+    const dictionary& diameterProperties
 )
 {
-    diameterModel::read(phaseProperties);
-
     return true;
 }
 

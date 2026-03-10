@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -177,19 +177,17 @@ void Foam::diameterModels::IATE::correct()
 }
 
 
-bool Foam::diameterModels::IATE::read(const dictionary& phaseProperties)
+bool Foam::diameterModels::IATE::read(const dictionary& diameterProperties)
 {
-    diameterModel::read(phaseProperties);
+    dMax_.read(diameterProperties);
+    dMin_.read(diameterProperties);
 
-    diameterProperties().lookup("dMax") >> dMax_;
-    diameterProperties().lookup("dMin") >> dMin_;
-
-    diameterProperties().lookup("residualAlpha") >> residualAlpha_;
+    residualAlpha_.read(diameterProperties);
 
     // Re-create all the sources updating number, type and coefficients
     PtrList<IATEsource>
     (
-        diameterProperties().lookup("sources"),
+        diameterProperties.lookup("sources"),
         IATEsource::iNew(*this)
     ).transfer(sources_);
 

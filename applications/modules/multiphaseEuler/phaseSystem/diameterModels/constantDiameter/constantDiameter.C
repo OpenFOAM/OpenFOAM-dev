@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,11 +70,9 @@ Foam::tmp<Foam::volScalarField> Foam::diameterModels::constant::d() const
 }
 
 
-bool Foam::diameterModels::constant::read(const dictionary& phaseProperties)
+bool Foam::diameterModels::constant::read(const dictionary& diameterProperties)
 {
-    spherical::read(phaseProperties);
-
-    diameterProperties().lookup("d") >> d_;
+    d_.read(diameterProperties);
 
     return true;
 }

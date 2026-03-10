@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,7 +83,7 @@ public:
         //- Get the diameter field
         virtual tmp<volScalarField> d() const;
 
-        //- Read diameterProperties dictionary
+        //- Read diameter properties dictionary
         virtual bool read(const dictionary& diameterProperties);
 };
 
