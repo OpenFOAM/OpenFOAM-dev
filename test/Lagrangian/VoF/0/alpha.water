@@ -16,11 +16,28 @@ FoamFile
 
 dimensions      [];
 
-internalField   uniform 0;
+internalField
+{
+    type        zonal;
+
+    defaultValue    0;
+
+    zones
+    {
+        waterColumn
+        {
+            type            box;
+
+            box             (-1e6 -1e6 -1e6) (1e6 1e6 0.2);
+
+            value           1;
+        }
+    }
+}
 
 boundaryField
 {
-    #includeEtc "caseDicts/setConstraintTypes"
+    #includeEtc "caseDicts/setConstraintTypes"(internalField = uniform 0)
 
     bottom
     {
@@ -30,8 +47,7 @@ boundaryField
     top
     {
         type            inletOutlet;
-        inletValue      $internalField;
-        value           $internalField;
+        inletValue      uniform $internalField/defaultValue;
     }
 }
 
