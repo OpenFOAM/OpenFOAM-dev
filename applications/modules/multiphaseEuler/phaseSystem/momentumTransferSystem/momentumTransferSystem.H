@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -115,19 +115,19 @@ class momentumTransferSystem
         mutable KdTable Kds_;
 
         //- Drag models
-        const dragModelTable dragModels_;
+        dragModelTable dragModels_;
 
         //- Virtual mass models
-        const virtualMassModelTable virtualMassModels_;
+        virtualMassModelTable virtualMassModels_;
 
         //- Lift models
-        const liftModelTable liftModels_;
+        liftModelTable liftModels_;
 
         //- Wall lubrication models
-        const wallLubricationModelTable wallLubricationModels_;
+        wallLubricationModelTable wallLubricationModels_;
 
         //- Turbulent dispersion models
-        const turbulentDispersionModelTable turbulentDispersionModels_;
+        turbulentDispersionModelTable turbulentDispersionModels_;
 
 
     // Private Member Functions
@@ -138,6 +138,9 @@ class momentumTransferSystem
         //- Return the models dictionary
         template<class ModelType>
         const dictionary& modelsDict() const;
+
+        //- Read the models
+        void readModels();
 
         //- Add a field to the given result. If the result is not valid then
         //  copy the field in as if the result was initially zero.

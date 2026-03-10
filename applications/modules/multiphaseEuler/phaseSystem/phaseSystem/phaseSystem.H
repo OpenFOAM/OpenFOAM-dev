@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -188,13 +188,13 @@ protected:
         volScalarField dpdt_;
 
         //- Interface compression coefficients
-        const cAlphaTable cAlphas_;
+        cAlphaTable cAlphas_;
 
         //- Stabilisation for normalisation of the interface normal
-        const dimensionedScalar deltaN_;
+        dimensionedScalar deltaN_;
 
         //- Surface tension models
-        const surfaceTensionCoefficientModelTable
+        surfaceTensionCoefficientModelTable
             surfaceTensionCoefficientModels_;
 
 

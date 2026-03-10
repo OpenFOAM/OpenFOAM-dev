@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,6 +107,42 @@ const Foam::dictionary& Foam::heatTransferSystem::modelsDict() const
 }
 
 
+void Foam::heatTransferSystem::readModels()
+{
+    models_ =
+        generateBlendedInterfacialModels<blendedHeatTransferModel>
+        (
+            fluid_,
+            modelsDict(),
+            wordHashSet(),
+            true
+        );
+
+    sidedModels_ =
+        generateBlendedInterfacialModels<blendedSidedHeatTransferModel>
+        (
+            fluid_,
+            modelsDict(),
+            wordHashSet(),
+            true
+        );
+
+    forAllConstIter(modelsTable, models_, modelIter)
+    {
+        if (sidedModels_.found(modelIter.key()))
+        {
+            const phaseInterface interface(fluid_, modelIter.key());
+
+            FatalIOErrorInFunction(modelsDict())
+                << "One-resistance and two-resistance heat transfer models "
+                << "both specified between phases "
+                << interface.phase1().name() << " and "
+                << interface.phase2().name() << exit(FatalIOError);
+        }
+    }
+}
+
+
 template<class ... Args>
 Foam::Pair<Foam::tmp<Foam::volScalarField>> Foam::heatTransferSystem::Hs
 (
@@ -188,45 +224,7 @@ Foam::heatTransferSystem::heatTransferSystem
      && fluid.thermalPhases().empty()
     ) return;
 
-    modelsTable models
-    (
-        generateBlendedInterfacialModels<blendedHeatTransferModel>
-        (
-            fluid,
-            modelsDict(),
-            wordHashSet(),
-            true
-        )
-    );
-
-    models_.transfer(models);
-
-    sidedModelsTable sidedModels
-    (
-        generateBlendedInterfacialModels<blendedSidedHeatTransferModel>
-        (
-            fluid,
-            modelsDict(),
-            wordHashSet(),
-            true
-        )
-    );
-
-    sidedModels_.transfer(sidedModels);
-
-    forAllConstIter(modelsTable, models_, modelIter)
-    {
-        if (sidedModels_.found(modelIter.key()))
-        {
-            const phaseInterface interface(fluid_, modelIter.key());
-
-            FatalIOErrorInFunction(modelsDict())
-                << "One-resistance and two-resistance heat transfer models "
-                << "both specified between phases "
-                << interface.phase1().name() << " and "
-                << interface.phase2().name() << exit(FatalIOError);
-        }
-    }
+    readModels();
 }
 
 
@@ -345,11 +343,9 @@ bool Foam::heatTransferSystem::read()
 {
     if (regIOobject::read())
     {
-        bool readOK = true;
+        readModels();
 
-        // models ...
-
-        return readOK;
+        return true;
     }
     else
     {

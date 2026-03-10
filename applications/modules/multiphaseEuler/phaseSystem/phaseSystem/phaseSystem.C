@@ -913,7 +913,21 @@ bool Foam::phaseSystem::read()
             readOK &= phaseModels_[phasei].read();
         }
 
-        // models ...
+        cAlphas_ =
+            found("interfaceCompression")
+          ? generateInterfacialValues<scalar>
+            (
+                *this,
+                subDict("interfaceCompression")
+            )
+          : cAlphaTable();
+
+        surfaceTensionCoefficientModels_ =
+            generateInterfacialModels<surfaceTensionCoefficientModel>
+            (
+                *this,
+                subDict(modelName<surfaceTensionCoefficientModel>())
+            );
 
         return readOK;
     }
