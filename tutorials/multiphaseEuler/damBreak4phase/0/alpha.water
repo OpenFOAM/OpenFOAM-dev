@@ -28,16 +28,7 @@ internalField
         {
             type        box;
 
-            box         (-100 -100 -100) (100 100 0.5368);
-
-            value       1;
-        }
-
-        bump
-        {
-            type        box;
-
-            box         (0.7 0.8 -100) (100 100 0.651);
+            box         (0 0.1 -1) (0.1461 0.292 1);
 
             value       1;
         }
@@ -46,11 +37,37 @@ internalField
 
 boundaryField
 {
-    #includeEtc "caseDicts/setConstraintTypes"(internalField = uniform 0)
-
-    stationaryWalls
+    leftWall
     {
-        type            zeroGradient;
+        type            alphaContactAngle;
+        contactAngleProperties
+        {
+            air             { theta0 90; }
+            oil             { theta0 90; }
+            mercury         { theta0 90; }
+        }
+    }
+
+    rightWall
+    {
+        type            alphaContactAngle;
+        contactAngleProperties
+        {
+            air             { theta0 90; }
+            oil             { theta0 90; }
+            mercury         { theta0 90; }
+        }
+    }
+
+    lowerWall
+    {
+        type            alphaContactAngle;
+        contactAngleProperties
+        {
+            air             { theta0 90; }
+            oil             { theta0 90; }
+            mercury         { theta0 90; }
+        }
     }
 
     atmosphere
@@ -59,9 +76,9 @@ boundaryField
         inletValue      uniform 0;
     }
 
-    floatingObject
+    defaultFaces
     {
-        type            zeroGradient;
+        type            empty;
     }
 }
 

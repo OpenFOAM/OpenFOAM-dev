@@ -10,9 +10,11 @@ FoamFile
     format      ascii;
     class       volScalarField;
     location    "0";
-    object      tracer.air;
+    object      O2;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "include"
 
 dimensions      [];
 
@@ -20,34 +22,59 @@ internalField
 {
     type        zonal;
 
-    defaultValue    0;
+    defaultValue    $!sleeve/O2;
 
     zones
     {
-        waterColumn
+        pipe
         {
-            type            box;
-
-            box             (0 0.292 -1) (0.1461 0.438 1);
-
-            value           1;
+            type        lookup;
+            value       $!pipe/O2;
         }
     }
 }
 
 boundaryField
 {
-    #includeEtc "caseDicts/setConstraintTypes"(internalField = uniform 0)
+    inletSleeve
+    {
+        type            fixedValue;
+        value           uniform $!sleeve/O2;
+    }
+
+    inletPipe
+    {
+        type            fixedValue;
+        value           uniform $!pipe/O2;
+    }
+
+    outletSleeve
+    {
+        type            inletOutlet;
+        inletValue      uniform $!sleeve/O2;
+    }
+
+    outletPipe
+    {
+        type            inletOutlet;
+        inletValue      uniform $!pipe/O2;
+    }
 
     wall
     {
         type            zeroGradient;
     }
 
-    atmosphere
+    membraneSleeve
     {
-        type            inletOutlet;
-        inletValue      uniform 0;
+        type            semiPermeableBaffleMassFraction;
+        value           uniform $!sleeve/O2;
+    }
+
+    membranePipe
+    {
+        type            semiPermeableBaffleMassFraction;
+        value           uniform $!pipe/O2;
     }
 }
 

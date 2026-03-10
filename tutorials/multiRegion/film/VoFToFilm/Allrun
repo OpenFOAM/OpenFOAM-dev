@@ -8,8 +8,6 @@ runApplication -s VoF blockMesh -region VoF
 
 runApplication extrudeToRegionMesh -region VoF
 
-runApplication setFields -region VoF
-
 printf "\n%s\n" "Creating files for paraview post-processing"
 paraFoam -touchAll
 echo

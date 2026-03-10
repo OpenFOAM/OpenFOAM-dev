@@ -16,7 +16,6 @@ runApplication blockMesh
 runApplication decomposePar -copyZero
 runParallel snappyHexMesh
 
-runParallel setFields
 runApplication reconstructPar -withZero -fields '(alpha.gas alpha.liquid)'
 
 runParallel foamRun

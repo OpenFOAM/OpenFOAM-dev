@@ -10,44 +10,77 @@ FoamFile
     format      ascii;
     class       volScalarField;
     location    "0";
-    object      tracer.air;
+    object      T;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [];
+dimensions      [0 0 0 1 0 0 0];
 
 internalField
 {
     type        zonal;
 
-    defaultValue    0;
+    defaultValue    292;
 
     zones
     {
-        waterColumn
+        fuel
         {
             type            box;
-
-            box             (0 0.292 -1) (0.1461 0.438 1);
-
-            value           1;
+            box             (0.002 -0.01 0.005) (0.02 0.01 0.055);
+            value           2200;
         }
     }
 }
 
 boundaryField
 {
-    #includeEtc "caseDicts/setConstraintTypes"(internalField = uniform 0)
+    inletfuel
+    {
+        type            fixedValue;
+        value           uniform 292;
+    }
 
-    wall
+    inletair
+    {
+        type            fixedValue;
+        value           uniform 292;
+    }
+
+    outlet
+    {
+        type            inletOutlet;
+        inletValue      uniform 292;
+    }
+
+    axis
+    {
+        type            empty;
+    }
+
+    leftside
     {
         type            zeroGradient;
     }
 
-    atmosphere
+    burnerwall
     {
-        type            inletOutlet;
-        inletValue      uniform 0;
+        type            zeroGradient;
+    }
+
+    burnertip
+    {
+        type            zeroGradient;
+    }
+
+    front
+    {
+        type            wedge;
+    }
+
+    back
+    {
+        type            wedge;
     }
 }
 

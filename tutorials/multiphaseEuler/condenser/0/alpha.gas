@@ -10,44 +10,48 @@ FoamFile
     format      ascii;
     class       volScalarField;
     location    "0";
-    object      tracer.air;
+    object      alpha.gas;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [];
+dimensions      [0 0 0 0 0 0 0];
 
 internalField
 {
     type        zonal;
 
-    defaultValue    0;
+    defaultValue    1;
 
     zones
     {
-        waterColumn
+        dryer
         {
-            type            box;
-
-            box             (0 0.292 -1) (0.1461 0.438 1);
-
-            value           1;
+            type            lookup;
+            value           0.8;
         }
     }
 }
 
 boundaryField
 {
-    #includeEtc "caseDicts/setConstraintTypes"(internalField = uniform 0)
+    #includeEtc "caseDicts/setConstraintTypes"(internalField = uniform 1)
+
+    inlet
+    {
+        type            fixedValue;
+        value           uniform 1;
+    }
+
+    outlet
+    {
+        type            inletOutlet;
+        phi             phi.gas;
+        inletValue      uniform 1;
+    }
 
     wall
     {
         type            zeroGradient;
-    }
-
-    atmosphere
-    {
-        type            inletOutlet;
-        inletValue      uniform 0;
     }
 }
 

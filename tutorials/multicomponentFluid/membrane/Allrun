@@ -8,8 +8,6 @@ runApplication blockMesh
 runApplication snappyHexMesh
 runApplication createBaffles
 
-runApplication setFields
-
 runApplication foamRun
 
 #------------------------------------------------------------------------------

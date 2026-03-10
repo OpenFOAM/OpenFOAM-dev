@@ -16,28 +16,45 @@ FoamFile
 
 dimensions      [];
 
-internalField   uniform 0.23;
+internalField
+{
+    type        zonal;
+
+    defaultValue    0.23;
+
+    zones
+    {
+        fuel
+        {
+            type            box;
+            box             (0 0 -0.01) (0.01 0.1 0.01);
+            value           0;
+        }
+    }
+}
 
 boundaryField
 {
-    #includeEtc "caseDicts/setConstraintTypes"
+    #includeEtc "caseDicts/setConstraintTypes"(internalField = uniform 0.23)
 
     inletFuel
     {
         type            fixedValue;
         value           uniform 0;
     }
+
     inletAir
     {
         type            fixedValue;
-        value           $internalField;
+        value           uniform 0.23;
     }
+
     outlet
     {
         type            inletOutlet;
-        inletValue      $internalField;
-        value           $internalField;
+        inletValue      uniform 0.23;
     }
+
     gas_to_solid
     {
         type            zeroGradient;

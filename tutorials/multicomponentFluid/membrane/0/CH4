@@ -9,10 +9,12 @@ FoamFile
 {
     format      ascii;
     class       volScalarField;
-    location    "0/gas";
+    location    "0";
     object      CH4;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "include"
 
 dimensions      [];
 
@@ -20,45 +22,65 @@ internalField
 {
     type        zonal;
 
-    defaultValue    0;
+    defaultValue    $!sleeve/CH4;
 
     zones
     {
-        fuel
+        pipe
         {
-            type            box;
-            box             (0 0 -0.01) (0.01 0.1 0.01);
-            value           1;
+            type        lookup;
+            value       $!pipe/CH4;
         }
     }
 }
 
 boundaryField
 {
-    #includeEtc "caseDicts/setConstraintTypes"(internalField = uniform 0)
-
-    inletFuel
+    inletSleeve
     {
         type            fixedValue;
-        value           uniform 1;
+        value           uniform $!sleeve/CH4;
     }
 
-    inletAir
+    inletPipe
     {
         type            fixedValue;
-        value           uniform 0;
+        value           uniform $!pipe/CH4;
     }
 
-    outlet
+    outletSleeve
     {
         type            inletOutlet;
-        inletValue      uniform 0;
-
+        inletValue      uniform $!sleeve/CH4;
     }
 
-    gas_to_solid
+    outletPipe
+    {
+        type            inletOutlet;
+        inletValue      uniform $!pipe/CH4;
+    }
+
+    wall
     {
         type            zeroGradient;
+    }
+
+    membraneSleeve
+    {
+        type            semiPermeableBaffleMassFraction;
+        neighbourPatch  membranePipe;
+        c               0.1;
+        property        massFraction;
+        value           uniform $!sleeve/CH4;
+    }
+
+    membranePipe
+    {
+        type            semiPermeableBaffleMassFraction;
+        neighbourPatch  membraneSleeve;
+        c               0.1;
+        property        massFraction;
+        value           uniform $!pipe/CH4;
     }
 }
 

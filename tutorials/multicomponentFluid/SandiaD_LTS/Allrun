@@ -9,7 +9,6 @@ runApplication chemkinToFoam \
                constant/reactionsGRI constant/thermo.compressibleGasGRI
 
 runApplication blockMesh
-runApplication setFields
 
 if ! isTest $@
 then

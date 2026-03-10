@@ -10,7 +10,7 @@ FoamFile
     format      ascii;
     class       volScalarField;
     location    "0";
-    object      tracer.air;
+    object      sludge;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -24,12 +24,10 @@ internalField
 
     zones
     {
-        waterColumn
+        sludge
         {
             type            box;
-
-            box             (0 0.292 -1) (0.1461 0.438 1);
-
+            box             (0 0 0) (5 2 2);
             value           1;
         }
     }
@@ -37,17 +35,29 @@ internalField
 
 boundaryField
 {
-    #includeEtc "caseDicts/setConstraintTypes"(internalField = uniform 0)
-
-    wall
+    left
     {
         type            zeroGradient;
     }
 
-    atmosphere
+    right
     {
-        type            inletOutlet;
-        inletValue      uniform 0;
+        type            zeroGradient;
+    }
+
+    bottom
+    {
+        type            zeroGradient;
+    }
+
+    top
+    {
+        type            zeroGradient;
+    }
+
+    frontBack
+    {
+        type            empty;
     }
 }
 

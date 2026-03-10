@@ -6,7 +6,6 @@ cd ${0%/*} || exit 1    # run from this directory
 
 runApplication blockMesh
 runApplication createZones
-runApplication setFields
 
 runApplication decomposePar
 runParallel foamRun

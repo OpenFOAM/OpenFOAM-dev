@@ -9,8 +9,8 @@ FoamFile
 {
     format      ascii;
     class       volScalarField;
-    location    "0";
-    object      tracer.air;
+    location    "0/VoF";
+    object      alpha.liquid;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -24,12 +24,10 @@ internalField
 
     zones
     {
-        waterColumn
+        liquid
         {
             type            box;
-
-            box             (0 0.292 -1) (0.1461 0.438 1);
-
+            box             (0 0 -1) (1 0.08 1);
             value           1;
         }
     }
@@ -37,9 +35,12 @@ internalField
 
 boundaryField
 {
-    #includeEtc "caseDicts/setConstraintTypes"(internalField = uniform 0)
+    film
+    {
+        type            zeroGradient;
+    }
 
-    wall
+    bottom
     {
         type            zeroGradient;
     }
@@ -49,7 +50,8 @@ boundaryField
         type            inletOutlet;
         inletValue      uniform 0;
     }
-}
 
+    #includeEtc "caseDicts/setConstraintTypes"(internalField = uniform 0)
+}
 
 // ************************************************************************* //

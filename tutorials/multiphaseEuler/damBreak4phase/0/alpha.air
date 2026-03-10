@@ -1,0 +1,101 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       volScalarField;
+    location    "0";
+    object      alpha.air;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [];
+
+internalField
+{
+    type        zonal;
+
+    defaultValue    1;
+
+    zones
+    {
+        water
+        {
+            type        box;
+
+            box         (0 0 -1) (0.1461 0.292 1);
+
+            value       0;
+        }
+
+        oil
+        {
+            type        box;
+
+            box         (0.1461 0 -1) (0.2922 0.292 1);
+
+            value       0;
+        }
+
+        mercury
+        {
+            type        box;
+
+            box         (0 0 -1) (0.1461 0.1 1);
+
+            value       0;
+        }
+    }
+}
+
+boundaryField
+{
+    leftWall
+    {
+        type            alphaContactAngle;
+        contactAngleProperties
+        {
+            oil             { theta0 90; }
+            water           { theta0 90; }
+            mercury         { theta0 90; }
+        }
+    }
+    rightWall
+    {
+        type            alphaContactAngle;
+        contactAngleProperties
+        {
+            oil             { theta0 90; }
+            water           { theta0 90; }
+            mercury         { theta0 90; }
+        }
+    }
+    lowerWall
+    {
+        type            alphaContactAngle;
+        contactAngleProperties
+        {
+            oil             { theta0 90; }
+            water           { theta0 90; }
+            mercury         { theta0 90; }
+        }
+    }
+    atmosphere
+    {
+        type            inletOutlet;
+        inletValue      uniform 1;
+        value           uniform 1;
+    }
+    defaultFaces
+    {
+        type            empty;
+    }
+}
+
+
+// ************************************************************************* //
