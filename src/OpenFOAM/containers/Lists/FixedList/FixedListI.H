@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -238,6 +238,26 @@ template<class T, unsigned Size>
 inline const T& Foam::FixedList<T, Size>::last() const
 {
     return v_[Size-1];
+}
+
+
+template<class T, unsigned Size>
+template<unsigned I>
+inline T& Foam::FixedList<T, Size>::elmt()
+{
+    static_assert(I < Size, "Index out of bounds");
+
+    return v_[I];
+}
+
+
+template<class T, unsigned Size>
+template<unsigned I>
+inline const T& Foam::FixedList<T, Size>::elmt() const
+{
+    static_assert(I < Size, "Index out of bounds");
+
+    return v_[I];
 }
 
 

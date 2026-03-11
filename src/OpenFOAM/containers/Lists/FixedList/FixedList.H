@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -178,6 +178,14 @@ public:
 
             //- Return the last element of the list
             inline const T& last() const;
+
+            //- Return element at a given index
+            template<unsigned I>
+            inline T& elmt();
+
+            //- Return element at a given index
+            template<unsigned I>
+            inline const T& elmt() const;
 
 
         // Check
