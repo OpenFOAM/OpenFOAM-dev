@@ -46,7 +46,7 @@ internalField
 
 boundaryField
 {
-    #includeEtc "caseDicts/setConstraintTypes"(internalField = uniform 0)
+    #includeEtc "caseDicts/setConstraintTypes"
 
     stationaryWalls
     {

@@ -54,7 +54,7 @@ boundaryField
         type            zeroGradient;
     }
 
-    #includeEtc "caseDicts/setConstraintTypes"(internalField = uniform 0)
+    #includeEtc "caseDicts/setConstraintTypes"
 }
 
 // ************************************************************************* //

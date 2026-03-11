@@ -19,7 +19,6 @@ cyclicSlip
 nonConformalCyclic
 {
     type  nonConformalCyclic;
-    value $internalField;
 }
 
 nonConformalError
@@ -35,19 +34,16 @@ empty
 processor
 {
     type  processor;
-    value $internalField;
 }
 
 processorCyclic
 {
     type  processorCyclic;
-    value $internalField;
 }
 
 nonConformalProcessorCyclic
 {
     type  nonConformalProcessorCyclic;
-    value $internalField;
 }
 
 symmetryPlane
