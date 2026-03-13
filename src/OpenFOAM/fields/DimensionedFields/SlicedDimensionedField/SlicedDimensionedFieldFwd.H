@@ -23,11 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef UDimensionedFvPatchFieldsFwd_H
-#define UDimensionedFvPatchFieldsFwd_H
-
-#include "SlicedDimensionedFieldFwd.H"
-#include "fieldTypes.H"
+#ifndef SlicedDimensionedFieldFwd_H
+#define SlicedDimensionedFieldFwd_H
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -36,19 +33,8 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-class fvPatch;
-
-template<class Type>
-using UDimensionedFvPatchField = SlicedDimensionedField<Type, fvPatch>;
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-typedef UDimensionedFvPatchField<scalar> UDimensionedFvPatchScalarField;
-typedef UDimensionedFvPatchField<vector> UDimensionedFvPatchVectorField;
-typedef UDimensionedFvPatchField<sphericalTensor>
-    UDimensionedFvPatchSphericalTensorField;
-typedef UDimensionedFvPatchField<symmTensor> UDimensionedFvPatchSymmTensorField;
-typedef UDimensionedFvPatchField<tensor> UDimensionedFvPatchTensorField;
+template<class Type, class GeoMesh>
+class SlicedDimensionedField;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
