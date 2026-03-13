@@ -57,4 +57,20 @@ Foam::SlicedDimensionedField<Type, GeoMesh>::~SlicedDimensionedField()
 }
 
 
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class Type, class GeoMesh>
+void Foam::SlicedDimensionedField<Type, GeoMesh>::reset
+(
+    const Field<Type>& iField
+)
+{
+    // Reset the internalField to the slice of the complete field
+    UList<Type>::shallowCopy
+    (
+        typename Field<Type>::subField(iField, this->mesh().size())
+    );
+}
+
+
 // ************************************************************************* //

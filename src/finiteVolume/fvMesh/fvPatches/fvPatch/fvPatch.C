@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,6 +96,12 @@ const Foam::objectRegistry& Foam::fvPatch::db() const
 }
 
 
+const Foam::fvMesh& Foam::fvPatch::mesh() const
+{
+    return boundaryMesh().mesh();
+}
+
+
 const Foam::labelUList& Foam::fvPatch::faceCells() const
 {
     return polyPatch_.faceCells();
@@ -182,6 +188,12 @@ const Foam::scalarField& Foam::fvPatch::deltaCoeffs() const
 const Foam::scalarField& Foam::fvPatch::weights() const
 {
     return boundaryMesh().mesh().weights().boundaryField()[index()];
+}
+
+
+const Foam::fvMesh& Foam::fvPatch::operator()() const
+{
+    return mesh();
 }
 
 

@@ -23,60 +23,52 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "Function1_DimensionedFieldFunction.H"
+#include "Zonal_DimensionedFvPatchFieldFunction.H"
 #include "DimensionedField.H"
+#include "zoneGenerator.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class DimensionedFieldType>
-Foam::DimensionedFieldFunctions::Function1<DimensionedFieldType>::
-Function1
+Foam::DimensionedFieldFunctions::Zonal<DimensionedFieldType>::
+Zonal
 (
     const dictionary& dict,
     DimensionedFieldType& field
 )
 :
     DimensionedFieldFunction<DimensionedFieldType>(dict, field),
-    funcPtr_
-    (
-        Foam::Function1<typename DimensionedFieldType::Type_>::New
-        (
-            "function",
-            dimLength,
-            field.dimensions(),
-            dict
-        )
-    ),
-    direction_(normalised(dict.lookup<vector>("direction")))
+    value_(dict.lookup<Type>("defaultValue", this->field_.dimensions())),
+    zonesDict_(dict.subDict("zones"))
 {
     evaluate();
 }
 
 
 template<class DimensionedFieldType>
-Foam::DimensionedFieldFunctions::Function1<DimensionedFieldType>::
-Function1
+Foam::DimensionedFieldFunctions::Zonal<DimensionedFieldType>::
+Zonal
 (
-    const Function1& dff,
+    const Zonal& dff,
     DimensionedFieldType& field
 )
 :
     DimensionedFieldFunction<DimensionedFieldType>(dff, field),
-    funcPtr_(dff.funcPtr_, false),
-    direction_(dff.direction_)
+    value_(dff.value_),
+    zonesDict_(dff.zonesDict_)
 {}
 
 
 template<class DimensionedFieldType>
 Foam::autoPtr<Foam::DimensionedFieldFunction<DimensionedFieldType>>
-Foam::DimensionedFieldFunctions::Function1<DimensionedFieldType>::clone
+Foam::DimensionedFieldFunctions::Zonal<DimensionedFieldType>::clone
 (
     DimensionedFieldType& field
 ) const
 {
     return autoPtr<DimensionedFieldFunction<DimensionedFieldType>>
     (
-        new Function1<DimensionedFieldType>(*this, field)
+        new Zonal<DimensionedFieldType>(*this, field)
     );
 }
 
@@ -84,22 +76,69 @@ Foam::DimensionedFieldFunctions::Function1<DimensionedFieldType>::clone
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class DimensionedFieldType>
-void Foam::DimensionedFieldFunctions::Function1<DimensionedFieldType>::
-evaluate()
+void Foam::DimensionedFieldFunctions::Zonal<DimensionedFieldType>::evaluate()
 {
-    this->field_.primitiveFieldRef() =
-        funcPtr_->value(direction_ & this->field_.mesh().C());
+    DimensionedFieldType& field = this->field_;
+
+    const fvMesh& mesh(field.mesh()());
+
+    field.primitiveFieldRef() = value_;
+
+    forAllConstIter(dictionary, zonesDict_, iter)
+    {
+        const dictionary& zoneDict = iter().dict();
+
+        autoPtr<zoneGenerator> zg
+        (
+            zoneGenerator::New
+            (
+                iter().keyword(),
+                zoneType<Zone>(),
+                mesh,
+                zoneDict
+            )
+        );
+
+        const zoneSet zs(zg->generate());
+
+        if (zs.valid<Zone>())
+        {
+            const labelList& selected = zs.zone<Zone>();
+
+            const Type value
+            (
+                zoneDict.lookup<Type>("value", field.dimensions())
+            );
+
+            if (&selected == &labelList::null())
+            {
+                field.primitiveFieldRef() = value;
+            }
+            else
+            {
+                forAll(selected, i)
+                {
+                    const label patchi =
+                        mesh.boundaryMesh().whichPatch(selected[i]);
+                    if (patchi == field.mesh().index())
+                    {
+                        field[selected[i] - field.mesh().start()] = value;
+                    }
+                }
+            }
+        }
+    }
 }
 
 
 template<class DimensionedFieldType>
-void Foam::DimensionedFieldFunctions::Function1<DimensionedFieldType>::write
+void Foam::DimensionedFieldFunctions::Zonal<DimensionedFieldType>::write
 (
     Ostream& os
 ) const
 {
-    writeEntry(os, dimLength, this->field_.dimensions(), funcPtr_());
-    writeEntry(os, "direction", direction_);
+    writeEntry(os, "defaultValue", this->field_.dimensions(), value_);
+    writeEntry(os, "zones", zonesDict_);
 }
 
 

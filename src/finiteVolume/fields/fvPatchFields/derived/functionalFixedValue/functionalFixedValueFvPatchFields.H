@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,80 +21,26 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Class
-    Foam::SlicedDimensionedField
-
-Description
-    Specialisation of DimensionedField which holds a slice of a given complete
-    field in such a form that it acts as a DimensionedField.
-
-    The destructor is wrapped to avoid deallocation of the storage of the
-    complete fields when this is destroyed.
-
-SourceFiles
-    SlicedDimensionedField.C
-
 \*---------------------------------------------------------------------------*/
 
-#ifndef SlicedDimensionedField_H
-#define SlicedDimensionedField_H
+#ifndef functionalFixedValueFvPatchFields_H
+#define functionalFixedValueFvPatchFields_H
 
-#include "DimensionedField.H"
+#include "functionalFixedValueFvPatchField.H"
+#include "fieldTypes.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-/*---------------------------------------------------------------------------*\
-                   Class SlicedDimensionedField Declaration
-\*---------------------------------------------------------------------------*/
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template<class Type, class GeoMesh>
-class SlicedDimensionedField
-:
-    public DimensionedField<Type, GeoMesh>
-{
-public:
-
-    // Public Typedefs
-
-        //- Base mesh type from which GeoMesh is constructed
-        typedef typename GeoMesh::Mesh Mesh;
-
-
-    // Constructors
-
-        //- Construct from components and field to slice
-        SlicedDimensionedField
-        (
-            const IOobject&,
-            const GeoMesh&,
-            const dimensionSet&,
-            const Field<Type>& iField
-        );
-
-
-    //- Destructor
-    ~SlicedDimensionedField();
-
-
-    // Member Functions
-
-        //- Reset internalField pointer
-        void reset(const Field<Type>& iField);
-};
-
+makePatchTypeFieldTypedefs(functionalFixedValue);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "SlicedDimensionedField.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

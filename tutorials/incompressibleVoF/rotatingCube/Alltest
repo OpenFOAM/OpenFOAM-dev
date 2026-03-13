@@ -41,8 +41,6 @@ runFoamDictionary()
     runApplication createNonConformalCouples \
         nonCoupleStationary nonCoupleRotating
 
-    runApplication setFields
-
     runApplication decomposePar -cellProc
 )
 

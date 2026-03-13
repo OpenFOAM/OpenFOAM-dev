@@ -108,6 +108,34 @@ Coded
 }
 
 
+template<class DimensionedFieldType>
+Foam::DimensionedFieldFunctions::Coded<DimensionedFieldType>::
+Coded
+(
+    const Coded& dff,
+    DimensionedFieldType& field
+)
+:
+    DimensionedFieldFunction<DimensionedFieldType>(dff, field),
+    codedBase(dff),
+    redirectFunctionPtr_(dff.redirectFunctionPtr_, false)
+{}
+
+
+template<class DimensionedFieldType>
+Foam::autoPtr<Foam::DimensionedFieldFunction<DimensionedFieldType>>
+Foam::DimensionedFieldFunctions::Coded<DimensionedFieldType>::clone
+(
+    DimensionedFieldType& field
+) const
+{
+    return autoPtr<DimensionedFieldFunction<DimensionedFieldType>>
+    (
+        new Coded<DimensionedFieldType>(*this, field)
+    );
+}
+
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class DimensionedFieldType>

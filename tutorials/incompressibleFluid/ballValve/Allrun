@@ -18,9 +18,6 @@ runApplication createNonConformalCouples pipeNonCouple ballNonCouple
 # Decompose
 runApplication decomposePar -cellProc
 
-# Set the value of the scalar transport field
-runParallel setFields
-
 # Run
 runParallel foamRun
 

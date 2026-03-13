@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,94 +22,95 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::reverseInterpolativeFieldMapper
+    Foam::DimensionedFieldFunctions::Zonal
 
 Description
-    Reverse field mapper
+
+SourceFiles
+    Zonal_DimensionedFieldFunction.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef reverseInterpolativeFieldMapper_H
-#define reverseInterpolativeFieldMapper_H
+#ifndef Zonal_DimensionedFvPatchFieldFunction_H
+#define Zonal_DimensionedFvPatchFieldFunction_H
 
-#include "fieldMapper.H"
+#include "DimensionedFieldFunction.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+namespace DimensionedFieldFunctions
+{
 
 /*---------------------------------------------------------------------------*\
-                Class reverseInterpolativeFieldMapper Declaration
+                            Class Zonal Declaration
 \*---------------------------------------------------------------------------*/
 
-class reverseInterpolativeFieldMapper
+template<class DimensionedFieldType>
+class Zonal
 :
-    public fieldMapper
+    public DimensionedFieldFunction<DimensionedFieldType>
 {
-    // Private Data
+    typedef typename DimensionedFieldType::Type_ Type;
+    typedef typename DimensionedFieldType::GeoMesh_::Zone Zone;
 
-        //- Addressing from new back to old
-        const labelUList& addressing_;
-
-        //- Weights
-        const scalarUList& weights_;
-
-
-    // Private Member Functions
-
-        //- Map a field in-place
-        template<class Type>
-        void map(Field<Type>& f, const Field<Type>& mapF) const;
-
-        //- Map a field and return the result
-        template<class Type>
-        tmp<Field<Type>> map(const Field<Type>& f) const;
+    Type value_;
+    dictionary zonesDict_;
 
 
 public:
 
+    //- Runtime type information
+    TypeName("zonal");
+
+
     // Constructors
 
-        //- Construct given addressing
-        reverseInterpolativeFieldMapper
+        //- Construct with dictionary to initialise given field
+        Zonal
         (
-            const labelUList& addressing,
-            const scalarUList& weights
-        )
-        :
-            addressing_(addressing),
-            weights_(weights)
-        {}
+            const dictionary& dict,
+            DimensionedFieldType& field
+        );
+
+        //- Construct a copy for the given field
+        Zonal
+        (
+            const Zonal& dff,
+            DimensionedFieldType& field
+        );
+
+        //- Construct and return a clone for the specified field
+        virtual autoPtr<DimensionedFieldFunction<DimensionedFieldType>>
+        clone(DimensionedFieldType& field) const;
 
 
     //- Destructor
-    virtual ~reverseInterpolativeFieldMapper()
+    virtual ~Zonal()
     {}
 
 
     // Member Functions
 
-        //- This mapper in interpolative, i.e. not direct
-        virtual bool direct() const
-        {
-            return false;
-        }
+        //- Evaluate the function and set the field
+        virtual void evaluate();
 
-
-    // Member Operators
-
-        //- Map a field
-        FOR_ALL_FIELD_TYPES(DEFINE_FIELD_MAPPER_MAP_OPERATOR, );
-
-        //- Map a label field
-        DEFINE_FIELD_MAPPER_MAP_OPERATOR(label, );
+        //- Write data to dictionary stream
+        virtual void write(Ostream& os) const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace DimensionedFieldFunctions
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+#include "Zonal_DimensionedFvPatchFieldFunction.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

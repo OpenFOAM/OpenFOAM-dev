@@ -14,26 +14,44 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+#include        "include/initialConditions"
+
 dimensions      [];
 
-internalField   uniform 0;
+internalField
+{
+    type        zonal;
+
+    defaultValue    0;
+
+    zones
+    {
+        water
+        {
+            type            box;
+            box             (-100 0 -100) (0 20 100);
+            value           1;
+        }
+    }
+}
 
 boundaryField
 {
-    //- Set patchGroups for constraint patches
-    #includeEtc "caseDicts/setConstraintTypes"
-
     inlet
-    {
-        type            waveAlpha;
-        libs            ("libwaves.so");
-    }
-
-    outlet
     {
         type            variableHeightFlowRate;
         lowerBound      0;
         upperBound      1;
+    }
+
+    outlet
+    {
+        type            zeroGradient;
+    }
+
+    lowerWall
+    {
+        type            zeroGradient;
     }
 
     atmosphere
@@ -42,9 +60,9 @@ boundaryField
         inletValue      uniform 0;
     }
 
-    hull
+    defaultFaces
     {
-        type            zeroGradient;
+        type            empty;
     }
 }
 

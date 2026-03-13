@@ -8,8 +8,6 @@ runApplication blockMesh
 
 runApplication splitMeshRegions -cellZones
 
-runApplication setFields -region fluid
-
 paraFoam -region fluid -touch
 paraFoam -region solid -touch
 

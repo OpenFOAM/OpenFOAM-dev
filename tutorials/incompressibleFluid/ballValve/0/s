@@ -24,21 +24,48 @@ boundaryField
 
     inlet
     {
-        type            fixedValue;
-        value           $internalField;
+        type            functionalFixedValue;
+
+        function
+        {
+            type    zonal;
+
+            defaultValue    0;
+
+            zones
+            {
+                inlet
+                {
+                    type        cylinder;
+
+                    point1      (-0.51 0 0);
+                    point2      (-0.49 0 0);
+                    radius      0.05;
+
+                    zone
+                    {
+                        type        patch;
+                        patch       inlet;
+                    }
+
+                    value       1;
+                }
+            }
+        }
     }
+
     lowerOutlet
     {
         type            inletOutlet;
-        inletValue      $internalField;
-        value           $internalField;
+        inletValue      uniform 0;
     }
+
     upperOutlet
     {
         type            inletOutlet;
-        inletValue      $internalField;
-        value           $internalField;
+        inletValue      uniform 0;
     }
+
     wall
     {
         type            zeroGradient;

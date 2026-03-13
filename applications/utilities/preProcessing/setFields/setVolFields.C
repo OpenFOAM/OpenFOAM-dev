@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -287,7 +287,7 @@ void setPatchFields
 (
     const fvMesh& mesh,
     const dictionary& fieldsDict,
-    const labelList& selectedCells
+    const labelList& selectedFaces
 )
 {
     forAllConstIter(dictionary, fieldsDict, iter)
@@ -324,7 +324,7 @@ void setPatchFields
                     fieldName,                                                 \
                     fieldHeader,                                               \
                     mesh,                                                      \
-                    selectedCells,                                             \
+                    selectedFaces,                                             \
                     iter().stream()                                            \
                 );
 

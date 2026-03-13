@@ -5,7 +5,6 @@
 
 runApplication blockMesh
 runApplication createZones
-runApplication setFields
 
 runApplication decomposePar
 runParallel foamRun

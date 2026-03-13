@@ -9,43 +9,78 @@ FoamFile
 {
     format      ascii;
     class       volScalarField;
-    location    "0";
+    location    "0/fluid";
     object      alpha.water;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 dimensions      [];
 
-internalField   uniform 0;
+internalField
+{
+    type        zonal;
+
+    defaultValue    0;
+
+    zones
+    {
+        water
+        {
+            type            box;
+            box             (-1 -1 -1) (1 0 1);
+            value           1;
+        }
+    }
+}
 
 boundaryField
 {
-    //- Set patchGroups for constraint patches
-    #includeEtc "caseDicts/setConstraintTypes"
-
     inlet
     {
-        type            waveAlpha;
-        libs            ("libwaves.so");
+        type            functionalFixedValue;
+
+        function
+        {
+            $internalField;
+
+            zones
+            {
+                water
+                {
+                    zone
+                    {
+                        type        patch;
+                        patch       inlet;
+                    }
+                }
+            }
+        }
     }
 
     outlet
-    {
-        type            variableHeightFlowRate;
-        lowerBound      0;
-        upperBound      1;
-    }
-
-    atmosphere
     {
         type            inletOutlet;
         inletValue      uniform 0;
     }
 
-    hull
+    top
+    {
+        type            inletOutlet;
+        inletValue      uniform 0;
+    }
+
+    bottom
     {
         type            zeroGradient;
     }
+
+    wall
+    {
+        type            zeroGradient;
+    }
+
+    #includeEtc "caseDicts/setConstraintTypes"
 }
+
 
 // ************************************************************************* //

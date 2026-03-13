@@ -45,6 +45,34 @@ Zonal
 }
 
 
+template<class DimensionedFieldType>
+Foam::DimensionedFieldFunctions::Zonal<DimensionedFieldType>::
+Zonal
+(
+    const Zonal& dff,
+    DimensionedFieldType& field
+)
+:
+    DimensionedFieldFunction<DimensionedFieldType>(dff, field),
+    value_(dff.value_),
+    zonesDict_(dff.zonesDict_)
+{}
+
+
+template<class DimensionedFieldType>
+Foam::autoPtr<Foam::DimensionedFieldFunction<DimensionedFieldType>>
+Foam::DimensionedFieldFunctions::Zonal<DimensionedFieldType>::clone
+(
+    DimensionedFieldType& field
+) const
+{
+    return autoPtr<DimensionedFieldFunction<DimensionedFieldType>>
+    (
+        new Zonal<DimensionedFieldType>(*this, field)
+    );
+}
+
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class DimensionedFieldType>

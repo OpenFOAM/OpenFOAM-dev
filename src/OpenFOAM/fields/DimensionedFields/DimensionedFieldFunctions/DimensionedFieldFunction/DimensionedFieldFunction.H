@@ -86,11 +86,33 @@ public:
             DimensionedFieldType& field
         );
 
+        //- Construct a copy for the given field
+        DimensionedFieldFunction
+        (
+            const DimensionedFieldFunction& dff,
+            DimensionedFieldType& field
+        );
+
         //- Disallow default bitwise copy construction
         DimensionedFieldFunction
         (
             const DimensionedFieldFunction<DimensionedFieldType>&
         ) = delete;
+
+        //- Construct and return a clone for the specified field
+        virtual autoPtr<DimensionedFieldFunction<DimensionedFieldType>>
+        clone(DimensionedFieldType& field) const = 0;
+
+        //- Construct and return a clone for the specified field
+        virtual autoPtr<DimensionedFieldFunction<DimensionedFieldType>>
+        clone() const
+        {
+            NotImplemented;
+            return autoPtr<DimensionedFieldFunction<DimensionedFieldType>>
+            (
+                nullptr
+            );
+        }
 
 
     // Selectors
@@ -136,6 +158,15 @@ public:
             const DimensionedFieldFunction<DimensionedFieldType>&
         ) = delete;
 };
+
+
+template<class DimensionedFieldType>
+void writeEntry
+(
+    Ostream& os,
+    const word& key,
+    const DimensionedFieldFunction<DimensionedFieldType>& f
+);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

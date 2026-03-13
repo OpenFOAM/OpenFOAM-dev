@@ -137,6 +137,9 @@ functionObjects/fvModelFunctionObject/fvModelFunctionObject.C
 fvPatchFields = fields/fvPatchFields
 $(fvPatchFields)/fvPatchField/fvPatchFields.C
 
+$(fvPatchFields)/DimensionedFvPatchFields/DimensionedFvPatchFields.C
+$(fvPatchFields)/DimensionedFvPatchFieldFunctions/makeDimensionedFvPatchFieldFunctions.C
+
 basicFvPatchFields = $(fvPatchFields)/basic
 $(basicFvPatchFields)/basicSymmetry/basicSymmetryFvPatchScalarField.C
 $(basicFvPatchFields)/calculated/calculatedFvPatchFields.C
@@ -172,6 +175,7 @@ $(constraintFvPatchFields)/nonConformalProcessorCyclic/nonConformalProcessorCycl
 derivedFvPatchFields = $(fvPatchFields)/derived
 $(derivedFvPatchFields)/advective/advectiveFvPatchFields.C
 $(derivedFvPatchFields)/codedFixedValue/codedFixedValueFvPatchFields.C
+$(derivedFvPatchFields)/functionalFixedValue/functionalFixedValueFvPatchFields.C
 $(derivedFvPatchFields)/codedMixed/codedMixedFvPatchFields.C
 $(derivedFvPatchFields)/externalCoupledMixed/externalCoupledMixedFvPatchFields.C
 $(derivedFvPatchFields)/fanPressureJump/fanPressureJumpFvPatchScalarField.C

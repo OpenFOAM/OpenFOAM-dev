@@ -39,6 +39,17 @@ Foam::DimensionedFieldFunction<DimensionedFieldType>::DimensionedFieldFunction
 {}
 
 
+template<class DimensionedFieldType>
+Foam::DimensionedFieldFunction<DimensionedFieldType>::DimensionedFieldFunction
+(
+    const DimensionedFieldFunction& dff,
+    DimensionedFieldType& field
+)
+:
+    field_(field)
+{}
+
+
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
 template<class DimensionedFieldType>
@@ -65,6 +76,26 @@ Foam::DimensionedFieldFunction<DimensionedFieldType>::New
     }
 
     return cstrIter()(dict, field);
+}
+
+
+// * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
+
+template<class DimensionedFieldType>
+void Foam::writeEntry
+(
+    Ostream& os,
+    const word& key,
+    const DimensionedFieldFunction<DimensionedFieldType>& f
+)
+{
+    writeKeyword(os, key)
+        << nl << indent << token::BEGIN_BLOCK << nl << incrIndent;
+
+    writeEntry(os, "type", f.type());
+    f.write(os);
+
+    os  << decrIndent << indent << token::END_BLOCK << endl;
 }
 
 

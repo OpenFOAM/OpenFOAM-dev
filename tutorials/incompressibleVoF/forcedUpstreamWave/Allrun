@@ -10,8 +10,6 @@ runApplication extrudeMesh
 
 runApplication refineMesh
 
-runApplication setFields
-
 runApplication decomposePar
 
 runParallel foamRun

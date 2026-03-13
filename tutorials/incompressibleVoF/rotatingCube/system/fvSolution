@@ -18,7 +18,6 @@ solvers
 {
     alpha.water
     {
-        nCorrectors     1;
         nSubCycles      polynomial (0 4);
     }
 

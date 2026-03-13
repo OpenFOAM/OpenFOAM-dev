@@ -73,6 +73,17 @@ public:
             DimensionedFieldType& field
         );
 
+        //- Construct a copy for the given field
+        Function1
+        (
+            const Function1& dff,
+            DimensionedFieldType& field
+        );
+
+        //- Construct and return a clone for the specified field
+        virtual autoPtr<DimensionedFieldFunction<DimensionedFieldType>>
+        clone(DimensionedFieldType& field) const;
+
 
     //- Destructor
     virtual ~Function1()

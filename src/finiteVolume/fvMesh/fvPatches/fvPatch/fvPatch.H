@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,9 @@ SourceFiles
 namespace Foam
 {
 
+class fvMesh;
 class fvBoundaryMesh;
+class faceZone;
 class objectRegistry;
 class surfaceInterpolation;
 
@@ -73,6 +75,18 @@ class fvPatch
 
 
 public:
+
+    // Public Typedefs
+
+        //- Mesh type
+        typedef fvMesh Mesh;
+
+        //- Boundary mesh type
+        typedef fvBoundaryMesh BoundaryMesh;
+
+        //- Zone type
+        typedef faceZone Zone;
+
 
     //- Runtime type information
     TypeName(polyPatch::typeName_());
@@ -159,14 +173,17 @@ public:
                 return polyPatch_.index();
             }
 
+            //- Return the local object registry
+            const objectRegistry& db() const;
+
+            //- Return mesh reference
+            const fvMesh& mesh() const;
+
             //- Return boundaryMesh reference
             const fvBoundaryMesh& boundaryMesh() const
             {
                 return boundaryMesh_;
             }
-
-            //- Return the local object registry
-            const objectRegistry& db() const;
 
             //- Slice list to patch
             template<class T>
@@ -183,6 +200,12 @@ public:
 
             //- Return face centres
             const vectorField& Cf() const;
+
+            //- Return face centres
+            const vectorField& C() const
+            {
+                return Cf();
+            }
 
             //- Return neighbour cell centres
             tmp<vectorField> Cn() const;
@@ -258,6 +281,9 @@ public:
 
         //- Disallow default bitwise assignment
         void operator=(const fvPatch&) = delete;
+
+        //- Return reference to fvMesh
+        const fvMesh& operator()() const;
 };
 
 

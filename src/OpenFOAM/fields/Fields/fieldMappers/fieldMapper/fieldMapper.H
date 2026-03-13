@@ -127,6 +127,15 @@ public:
     {}
 
 
+    // Member Functions
+
+        //- Is the mapper direct?
+        virtual bool direct() const
+        {
+            return true;
+        }
+
+
     // Member Operators
 
         //- Map a field

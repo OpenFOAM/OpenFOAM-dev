@@ -16,17 +16,47 @@ FoamFile
 
 dimensions      [];
 
-internalField   uniform 0;
+internalField
+{
+    type        zonal;
+
+    defaultValue    0;
+
+    zones
+    {
+        water
+        {
+            type            box;
+            box             (-999 -999 -999) (999 999 0.244);
+            value           1;
+        }
+    }
+}
 
 boundaryField
 {
-    //- Set patchGroups for constraint patches
     #includeEtc "caseDicts/setConstraintTypes"
 
     inlet
     {
-        type            waveAlpha;
-        libs            ("libwaves.so");
+        type            functionalFixedValue;
+
+        function
+        {
+            $internalField;
+
+            zones
+            {
+                water
+                {
+                    zone
+                    {
+                        type        patch;
+                        patch       inlet;
+                    }
+                }
+            }
+        }
     }
 
     outlet
