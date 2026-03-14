@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "codedDimensionedFieldFunctionTemplate.H"
+#include "read.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
