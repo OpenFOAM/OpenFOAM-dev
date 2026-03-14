@@ -15,9 +15,6 @@ fi
 # Copy the fields into the processor directories
 runApplication -a decomposePar -fields -copyZero
 
-# Initialise the volume fraction field
-runParallel setFields
-
 # Run
 runParallel foamRun
 
