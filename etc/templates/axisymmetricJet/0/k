@@ -33,7 +33,6 @@ boundaryField
     {
         type            inletOutlet;
         inletValue      uniform $kInlet;
-        value           uniform $kInlet;
     }
 
     #includeEtc "caseDicts/setConstraintTypes"

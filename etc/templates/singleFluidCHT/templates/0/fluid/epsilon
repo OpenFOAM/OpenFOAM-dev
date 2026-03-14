@@ -33,7 +33,6 @@ boundaryField
     outlet
     {
         type            inletOutlet;
-        value           uniform $epsilonInlet;
         inletValue      uniform $epsilonInlet;
     }
 
