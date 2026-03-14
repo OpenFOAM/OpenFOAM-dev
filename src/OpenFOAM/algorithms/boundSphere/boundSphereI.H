@@ -375,7 +375,7 @@ inline bool Foam::operator!=(const boundSphere& a, const boundSphere& b)
 
 // * * * * * * * * * * * * * * IOstream operators  * * * * * * * * * * * * * //
 
-Foam::Istream& Foam::operator>>(Istream& is, boundSphere& s)
+inline Foam::Istream& Foam::operator>>(Istream& is, boundSphere& s)
 {
     is.readBegin("boundSphere");
     is >> s.c_ >> s.rSqr_;
@@ -393,7 +393,7 @@ Foam::Istream& Foam::operator>>(Istream& is, boundSphere& s)
 }
 
 
-Foam::Ostream& Foam::operator<<(Ostream& os, const boundSphere& s)
+inline Foam::Ostream& Foam::operator<<(Ostream& os, const boundSphere& s)
 {
     os << s.c_ << token::SPACE;
 
