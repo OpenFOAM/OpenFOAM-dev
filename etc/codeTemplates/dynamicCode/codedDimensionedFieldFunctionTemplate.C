@@ -86,6 +86,38 @@ ${typeName}DimensionedFieldFunction${DimensionedFieldTypeName}
 }
 
 
+Foam::DimensionedFieldFunctions::
+${typeName}DimensionedFieldFunction${DimensionedFieldTypeName}::
+${typeName}DimensionedFieldFunction${DimensionedFieldTypeName}
+(
+    const ${typeName}DimensionedFieldFunction${DimensionedFieldTypeName}& dff,
+    ${DimensionedFieldType}& field_
+)
+:
+    DimensionedFieldFunction<${DimensionedFieldType}>(dff, field_),
+    field(field_)
+{}
+
+
+Foam::autoPtr<Foam::DimensionedFieldFunction<Foam::${DimensionedFieldType}>>
+Foam::DimensionedFieldFunctions::
+${typeName}DimensionedFieldFunction${DimensionedFieldTypeName}::
+clone
+(
+    ${DimensionedFieldType}& field_
+) const
+{
+    return autoPtr<DimensionedFieldFunction<${DimensionedFieldType}>>
+    (
+        new ${typeName}DimensionedFieldFunction${DimensionedFieldTypeName}
+        (
+            *this,
+            field_
+        )
+    );
+}
+
+
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::DimensionedFieldFunctions::

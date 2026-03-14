@@ -82,6 +82,18 @@ public:
             ${DimensionedFieldType}& field
         );
 
+        //- Construct a copy for the given field
+        ${typeName}DimensionedFieldFunction${DimensionedFieldTypeName}
+        (
+            const
+            ${typeName}DimensionedFieldFunction${DimensionedFieldTypeName}& dff,
+            ${DimensionedFieldType}& field
+        );
+
+        //- Construct and return a clone for the specified field
+        virtual autoPtr<DimensionedFieldFunction<${DimensionedFieldType}>>
+        clone(${DimensionedFieldType}& field) const;
+
 
     //- Destructor
     virtual ~${typeName}DimensionedFieldFunction${DimensionedFieldTypeName}();
