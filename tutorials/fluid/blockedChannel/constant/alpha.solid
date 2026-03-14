@@ -16,7 +16,7 @@ FoamFile
 
 dimensions      [];
 
-#include "alphaInternalField"(y0=-0.124, y1=-0.092)
+#include "alphaInternalField"(name=solid, y0=-0.124, y1=-0.092)
 
 boundaryField
 {

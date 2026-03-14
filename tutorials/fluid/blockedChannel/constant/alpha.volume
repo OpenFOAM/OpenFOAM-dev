@@ -16,7 +16,7 @@ FoamFile
 
 dimensions      [];
 
-#include "alphaInternalField"(y0=-0.088, y1=-0.056)
+#include "alphaInternalField"(name=volume, y0=-0.088, y1=-0.056)
 
 boundaryField
 {
