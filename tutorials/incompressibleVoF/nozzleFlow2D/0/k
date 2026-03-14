@@ -41,7 +41,6 @@ boundaryField
     {
         type            inletOutlet;
         inletValue      uniform 0.001;
-        value           uniform 1e-11;
     }
 
     front

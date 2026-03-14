@@ -42,7 +42,6 @@ Usage
         type            inletOutlet;
         phi             phi;
         inletValue      uniform 0;
-        value           uniform 0;
     }
     \endverbatim
 

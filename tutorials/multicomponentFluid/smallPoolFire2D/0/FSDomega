@@ -25,14 +25,12 @@ boundaryField
     {
         type            inletOutlet;
         inletValue      uniform 0;
-        value           uniform 0;
     }
 
     sides
     {
         type            inletOutlet;
         inletValue      uniform 0;
-        value           uniform 0;
     }
 
     base

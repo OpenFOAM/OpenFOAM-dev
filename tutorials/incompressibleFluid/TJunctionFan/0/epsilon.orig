@@ -30,13 +30,11 @@ boundaryField
     {
         type            inletOutlet;
         inletValue      uniform 200;
-        value           uniform 200;
     }
     outlet2
     {
         type            inletOutlet;
         inletValue      uniform 200;
-        value           uniform 200;
     }
     defaultFaces
     {

@@ -24,14 +24,12 @@ boundaryField
     {
         type            inletOutlet;
         inletValue      $internalField;
-        value           $internalField;
     }
 
     outlet
     {
         type            inletOutlet;
         inletValue      $internalField;
-        value           $internalField;
     }
 
     sides

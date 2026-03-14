@@ -41,7 +41,6 @@ boundaryField
     {
         type            inletOutlet;
         inletValue      uniform $epsilonWind;
-        value           uniform $epsilonWind;
     }
 
     wall

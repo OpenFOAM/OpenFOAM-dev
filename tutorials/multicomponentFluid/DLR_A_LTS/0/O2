@@ -34,7 +34,6 @@ boundaryField
     {
         type            inletOutlet;
         inletValue      uniform 0.231843;
-        value           uniform 0.231843;
     }
     axis
     {

@@ -39,7 +39,6 @@ boundaryField
     {
         type            inletOutlet;
         inletValue      uniform $TWind;
-        value           $internalField;
     }
 
     wall

@@ -30,14 +30,12 @@ boundaryField
     {
         type            inletOutlet;
         inletValue      $internalField;
-        value           $internalField;
     }
 
     atmosphere
     {
         type            inletOutlet;
         inletValue      $internalField;
-        value           $internalField;
     }
 
     wall

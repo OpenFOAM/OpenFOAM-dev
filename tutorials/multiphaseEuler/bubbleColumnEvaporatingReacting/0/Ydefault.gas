@@ -30,7 +30,6 @@ boundaryField
         type            inletOutlet;
         phi             phi.gas;
         inletValue      $internalField;
-        value           $internalField;
     }
     walls
     {

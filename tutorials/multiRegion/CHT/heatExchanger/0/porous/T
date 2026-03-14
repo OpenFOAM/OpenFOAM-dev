@@ -29,7 +29,6 @@ boundaryField
     {
         type            inletOutlet;
         inletValue      uniform 350;
-        value           uniform 350;
     }
     fixedWalls
     {

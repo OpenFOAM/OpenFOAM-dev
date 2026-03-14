@@ -34,7 +34,6 @@ boundaryField
     {
         type            inletOutlet;
         inletValue      uniform (600 148.16 0);
-        value           uniform (600 148.16 0);
     }
 
     SYMP3

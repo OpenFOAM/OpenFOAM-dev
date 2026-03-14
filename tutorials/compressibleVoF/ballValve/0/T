@@ -31,13 +31,11 @@ boundaryField
     {
         type            inletOutlet;
         inletValue      $internalField;
-        value           $internalField;
     }
     upperOutlet
     {
         type            inletOutlet;
         inletValue      $internalField;
-        value           $internalField;
     }
     wall
     {

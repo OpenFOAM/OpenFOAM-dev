@@ -34,7 +34,6 @@ boundaryField
         type            inletOutlet;
         phi             phi.gas;
         inletValue      uniform $kInlet;
-        value           uniform $kInlet;
     }
 
     wall

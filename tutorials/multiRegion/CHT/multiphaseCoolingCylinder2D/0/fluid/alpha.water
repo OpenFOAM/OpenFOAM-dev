@@ -31,7 +31,6 @@ boundaryField
         type            inletOutlet;
         phi             phi.water;
         inletValue      uniform 0.9;
-        value           uniform 0.9;
     }
 
     topAndBottom

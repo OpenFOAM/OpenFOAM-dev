@@ -29,19 +29,16 @@ boundaryField
     {
         type            inletOutlet;
         inletValue      uniform 266000;
-        value           uniform 266000;
     }
     bottomWall
     {
         type            inletOutlet;
         inletValue      uniform 266000;
-        value           uniform 266000;
     }
     topWall
     {
         type            inletOutlet;
         inletValue      uniform 266000;
-        value           uniform 266000;
     }
     prismWall
     {

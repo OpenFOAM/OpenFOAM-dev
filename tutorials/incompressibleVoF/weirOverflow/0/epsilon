@@ -32,7 +32,6 @@ boundaryField
     {
         type            inletOutlet;
         inletValue      $internalField;
-        value           $internalField;
     }
 
     lowerWall
@@ -45,7 +44,6 @@ boundaryField
     {
         type            inletOutlet;
         inletValue      $internalField;
-        value           $internalField;
     }
 
     defaultFaces

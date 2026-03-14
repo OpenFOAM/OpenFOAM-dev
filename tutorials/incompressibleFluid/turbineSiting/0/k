@@ -26,7 +26,6 @@ boundaryField
     {
         type            inletOutlet;
         inletValue      uniform $turbulentKE;
-        value           $internalField;
     }
 
     inlet

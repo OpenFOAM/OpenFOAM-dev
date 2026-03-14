@@ -41,7 +41,6 @@ boundaryField
     {
         type            inletOutlet;
         inletValue      uniform $kWind;
-        value           uniform $kWind;
     }
 
     wall

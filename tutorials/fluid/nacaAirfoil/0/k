@@ -24,13 +24,11 @@ boundaryField
     {
         type            inletOutlet;
         inletValue      uniform 1000;
-        value           uniform 1000;
     }
     OUTL2
     {
         type            inletOutlet;
         inletValue      uniform 1000;
-        value           uniform 1000;
     }
     SYMP3
     {

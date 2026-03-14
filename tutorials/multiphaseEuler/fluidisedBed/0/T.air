@@ -31,7 +31,6 @@ boundaryField
         type            inletOutlet;
         phi             phi.air;
         inletValue      uniform 300;
-        value           uniform 300;
     }
 
     walls

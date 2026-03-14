@@ -26,21 +26,18 @@ boundaryField
     {
         type            inletOutlet;
         inletValue      uniform 1;
-        value           uniform 1;
     }
 
     inlet
     {
         type            inletOutlet;
         inletValue      uniform 1;
-        value           uniform 1;
     }
 
     outlet
     {
         type            inletOutlet;
         inletValue      uniform 1;
-        value           uniform 1;
     }
 
     piston

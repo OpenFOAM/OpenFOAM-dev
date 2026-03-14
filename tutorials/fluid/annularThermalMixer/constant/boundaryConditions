@@ -54,21 +54,18 @@ outlet
     {
         type            inletOutlet;
         inletValue      uniform $!outerInlet/T;
-        value           $inletValue;
     }
 
     k
     {
         type            inletOutlet;
         inletValue      uniform $!innerInlet/k;
-        value           $inletValue;
     }
 
     epsilon
     {
         type            inletOutlet;
         inletValue      uniform $!innerInlet/epsilon;
-        value           $inletValue;
     }
 }
 

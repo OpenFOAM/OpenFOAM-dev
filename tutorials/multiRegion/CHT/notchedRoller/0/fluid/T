@@ -26,7 +26,6 @@ boundaryField
     {
         type            inletOutlet;
         inletValue      $internalField;
-        value           $internalField;
     }
 
     inlet
@@ -39,7 +38,6 @@ boundaryField
     {
         type            inletOutlet;
         inletValue      $internalField;
-        value           $internalField;
     }
 
     "nonCouple.*"

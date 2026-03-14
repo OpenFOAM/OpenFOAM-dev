@@ -40,7 +40,6 @@ boundaryField
         type            inletOutlet;
         phi             phi.air;
         inletValue      $internalField;
-        value           $internalField;
     }
 
     defaultFaces

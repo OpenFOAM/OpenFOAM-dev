@@ -40,7 +40,6 @@ boundaryField
         type            inletOutlet;
         phi             phi.oil;
         inletValue      $internalField;
-        value           $internalField;
     }
 
     defaultFaces

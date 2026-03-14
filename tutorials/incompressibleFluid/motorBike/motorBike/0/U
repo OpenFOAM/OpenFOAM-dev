@@ -37,7 +37,6 @@ boundaryField
     {
         type            inletOutlet;
         inletValue      uniform (0 0 0);
-        value           uniform (20 0 0);
     }
     lowerWall
     {

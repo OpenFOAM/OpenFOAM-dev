@@ -33,7 +33,6 @@ boundaryField
     {
         type            inletOutlet;
         inletValue      uniform $omegaInitial;
-        value           uniform $omegaInitial;
     }
 
     wall

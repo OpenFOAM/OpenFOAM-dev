@@ -42,7 +42,6 @@ boundaryField
         type            inletOutlet;
         phi             phi.air;
         inletValue      uniform (0 0 0);
-        value           uniform (0 0 0);
     }
 
     frontAndBack

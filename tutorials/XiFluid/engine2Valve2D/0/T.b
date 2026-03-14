@@ -27,7 +27,6 @@ boundaryField
         type            inletOutlet;
         phi             phic;
         inletValue      uniform 320;
-        value           uniform 320;
     }
 
     inlet
@@ -35,7 +34,6 @@ boundaryField
         type            inletOutlet;
         phi             phic;
         inletValue      uniform 350;
-        value           uniform 350;
     }
 
     outlet
@@ -43,7 +41,6 @@ boundaryField
         type            inletOutlet;
         phi             phic;
         inletValue      uniform 700;
-        value           uniform 700;
     }
 
     piston

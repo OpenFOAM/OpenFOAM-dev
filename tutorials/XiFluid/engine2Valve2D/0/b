@@ -28,7 +28,6 @@ boundaryField
         type            inletOutlet;
         phi             phib;
         inletValue      uniform 1;
-        value           uniform 1;
     }
 
     inlet
@@ -36,7 +35,6 @@ boundaryField
         type            inletOutlet;
         phi             phib;
         inletValue      uniform 1;
-        value           uniform 1;
     }
 
     outlet

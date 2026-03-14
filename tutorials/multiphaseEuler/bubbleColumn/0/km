@@ -31,7 +31,6 @@ boundaryField
         type            inletOutlet;
         phi             phim;
         inletValue      $internalField;
-        value           $internalField;
     }
 
     walls
