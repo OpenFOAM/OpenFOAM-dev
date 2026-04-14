@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,31 +23,46 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "solidThermo.H"
-#include "solidZonalThermo.H"
+#include "zonalThermo.H"
 
-#include "pureMixture.H"
-#include "zonalMixture.H"
-
-#include "forSolids.H"
-
-#include "makeThermo.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#define makeSolidThermo(BaseThermo, Mixture, ThermoPhysics)                    \
-                                                                               \
-    defineThermo(BaseThermo, Mixture, ThermoPhysics);                          \
-                                                                               \
-    addThermo(basicThermo, BaseThermo, Mixture, ThermoPhysics);                \
-    addThermo(solidThermo, BaseThermo, Mixture, ThermoPhysics)
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    forSolids(makeSolidThermo, solidThermo, pureMixture);
-    forSolids(makeSolidThermo, solidZonalThermo, zonalMixture);
+    defineTypeNameAndDebug(zonalThermo, 0);
 }
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::zonalThermo::implementation::implementation
+(
+    const dictionary& dict,
+    const hashedWordList& zones,
+    const fvMesh& mesh,
+    const word& phaseName
+)
+:
+    ztzs_
+    (
+        zonalThermoZones::New
+        (
+            IOobject::groupName(zonalThermoZones::typeName, phaseName),
+            mesh,
+            zones
+        )
+    )
+{}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::zonalThermo::~zonalThermo()
+{}
+
+
+Foam::zonalThermo::implementation::~implementation()
+{}
+
 
 // ************************************************************************* //

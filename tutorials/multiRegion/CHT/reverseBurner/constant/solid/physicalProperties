@@ -17,7 +17,7 @@ FoamFile
 thermoType
 {
     type            heSolidThermo;
-    mixture         pureMixture;
+    mixture         zonalMixture;
     transport       constIsoSolid;
     thermo          eConst;
     equationOfState rhoConst;
@@ -25,24 +25,73 @@ thermoType
     energy          sensibleInternalEnergy;
 }
 
-mixture
+zones
+(
+    inner
+    middle
+    outer
+);
+
+inner
 {
     specie
     {
-        molWeight       50;
+        molWeight       55.845;
     }
     equationOfState
     {
-        rho             8000;
+        rho             7874;
     }
     thermodynamics
     {
         hf              0;
-        Cv              450;
+        Cv              449.458;
     }
     transport
     {
-        kappa           80;
+        kappa           80.4;
+    }
+}
+
+middle
+{
+    specie
+    {
+        molWeight       63.546;
+    }
+    equationOfState
+    {
+        rho             8935;
+    }
+    thermodynamics
+    {
+        hf              0;
+        Cv              384.603;
+    }
+    transport
+    {
+        kappa           401;
+    }
+}
+
+outer
+{
+    specie
+    {
+        molWeight       26.982;
+    }
+    equationOfState
+    {
+        rho             2699;
+    }
+    thermodynamics
+    {
+        hf              0;
+        Cv              896.894;
+    }
+    transport
+    {
+        kappa           237;
     }
 }
 

@@ -401,7 +401,7 @@ public:
         inline scalarFieldListSlice sourceCellComposition
         (
             const DimensionedFieldListAndSlicer<scalar, fvMesh>& Yslicer,
-            const label i
+            const label celli
         ) const;
 
         //- Get the slicer for the given source

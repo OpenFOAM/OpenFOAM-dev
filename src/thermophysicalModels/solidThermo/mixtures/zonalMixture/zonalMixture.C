@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,31 +23,38 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "solidThermo.H"
-#include "solidZonalThermo.H"
-
-#include "pureMixture.H"
 #include "zonalMixture.H"
+#include "dictionary.H"
 
-#include "forSolids.H"
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-#include "makeThermo.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#define makeSolidThermo(BaseThermo, Mixture, ThermoPhysics)                    \
-                                                                               \
-    defineThermo(BaseThermo, Mixture, ThermoPhysics);                          \
-                                                                               \
-    addThermo(basicThermo, BaseThermo, Mixture, ThermoPhysics);                \
-    addThermo(solidThermo, BaseThermo, Mixture, ThermoPhysics)
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
+template<class ThermoType>
+Foam::zonalMixture<ThermoType>::zonalMixture(const dictionary& dict)
+:
+    zones_(dict.lookup("zones"))
 {
-    forSolids(makeSolidThermo, solidThermo, pureMixture);
-    forSolids(makeSolidThermo, solidZonalThermo, zonalMixture);
+    read(dict);
 }
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class ThermoType>
+void Foam::zonalMixture<ThermoType>::read(const dictionary& dict)
+{
+    zoneThermos_.setSize(zones_.size());
+
+    forAll(zones_, zonei)
+    {
+        const dictionary& zoneDict = dict.subDict(zones_[zonei]);
+
+        zoneThermos_.set
+        (
+            zonei,
+            new ThermoType(zones_[zonei], zoneDict)
+        );
+    }
+}
+
 
 // ************************************************************************* //

@@ -163,10 +163,10 @@ inline Foam::scalarFieldListSlice
 Foam::multicomponentThermo::implementation::sourceCellComposition
 (
     const DimensionedFieldListAndSlicer<scalar, fvMesh>& Yslicer,
-    const label i
+    const label celli
 ) const
 {
-    return Yslicer.slice(i);
+    return Yslicer.slice(celli);
 }
 
 
