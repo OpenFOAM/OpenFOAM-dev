@@ -220,7 +220,7 @@ int main(int argc, char *argv[])
     // Set functionObject post-processing mode
     functionObject::postProcess = true;
 
-    #include "setRootCase.H"
+    #include "setRootCaseNoFunctionObjects.H"
 
     bool printedList = false;
 
@@ -255,7 +255,7 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    #include "createTime.H"
+    #include "createTimeNoFunctionObjects.H"
 
     const instantList timeDirs = timeSelector::select0(runTime, args);
 

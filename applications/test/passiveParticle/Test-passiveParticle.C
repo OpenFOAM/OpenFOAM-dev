@@ -40,7 +40,7 @@ using namespace Foam;
 int main(int argc, char *argv[])
 {
     argList::validArgs.append("cloudName");
-    #include "setRootCase.H"
+    #include "setRootCaseNoFunctionObjects.H"
     #include "createTimeNoFunctionObjects.H"
     #include "createMesh.H"
 

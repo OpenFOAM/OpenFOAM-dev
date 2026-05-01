@@ -74,12 +74,6 @@ Foam::argList::initValidTables::initValidTables()
     );
     validParOptions.set("hostRoots", "((host1 dir1) .. (hostN dirN))");
 
-    argList::addBoolOption
-    (
-        "noFunctionObjects",
-        "do not execute functionObjects"
-    );
-
     argList::addOption
     (
         "fileHandler",
@@ -103,7 +97,6 @@ void Foam::argList::initValidTables::clear()
     argList::removeOption("parallel");
     argList::removeOption("roots");
     argList::removeOption("hostRoots");
-    argList::removeOption("noFunctionObjects");
     argList::removeOption("fileHandler");
     argList::removeOption("libs");
 }

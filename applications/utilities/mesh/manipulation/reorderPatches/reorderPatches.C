@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
         "specify the reference mesh region"
     );
 
-    #include "setRootCase.H"
+    #include "setRootCaseNoFunctionObjects.H"
 
     wordList referencePatchNames;
 

@@ -299,7 +299,7 @@ int main(int argc, char *argv[])
         "read user-defined mesh quality criterions from system/meshQualityDict"
     );
 
-    #include "setRootCase.H"
+    #include "setRootCaseNoFunctionObjects.H"
     #include "createTimeNoFunctionObjects.H"
     #include "createPolyMesh.H"
     const word oldInstance = mesh.pointsInstance();

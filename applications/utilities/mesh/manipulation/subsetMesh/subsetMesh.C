@@ -122,7 +122,7 @@ int main(int argc, char *argv[])
         "do not update fields"
     );
 
-    #include "setRootCase.H"
+    #include "setRootCaseNoFunctionObjects.H"
     #include "createTimeNoFunctionObjects.H"
 
     Foam::word meshRegionName = polyMesh::defaultRegion;

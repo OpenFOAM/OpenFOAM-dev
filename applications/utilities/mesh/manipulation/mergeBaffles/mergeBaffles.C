@@ -158,7 +158,7 @@ int main(int argc, char *argv[])
         "update fields"
     );
 
-    #include "setRootCase.H"
+    #include "setRootCaseNoFunctionObjects.H"
     #include "createTimeNoFunctionObjects.H"
     #include "createSpecifiedMeshNoChangers.H"
 

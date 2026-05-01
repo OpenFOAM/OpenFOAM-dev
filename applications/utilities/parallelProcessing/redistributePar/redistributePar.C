@@ -319,7 +319,7 @@ int main(int argc, char *argv[])
     // Include explicit constant options, have zero from time range
     timeSelector::addOptions();
 
-    #include "setRootCase.H"
+    #include "setRootCaseNoFunctionObjects.H"
     #include "setMeshPath.H"
 
     if (env("FOAM_SIGFPE"))

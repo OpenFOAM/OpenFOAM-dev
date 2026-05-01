@@ -450,7 +450,7 @@ int main(int argc, char *argv[])
     #include "addMeshOption.H"
     #include "addRegionOption.H"
     #include "addDictOption.H"
-    #include "setRootCase.H"
+    #include "setRootCaseNoFunctionObjects.H"
     #include "createTimeNoFunctionObjects.H"
 
     Foam::word meshRegionName = polyMesh::defaultRegion;

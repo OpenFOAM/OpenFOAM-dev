@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
     argList::addOption("float", "xx");
     argList::addBoolOption("flag");
 
-    #include "setRootCase.H"
+    #include "setRootCaseNoFunctionObjects.H"
 
     List<vector> list1(IStringStream("1 ((0 1 2))")());
     Info<< "list1: " << list1 << endl;

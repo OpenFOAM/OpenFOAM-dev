@@ -178,7 +178,7 @@ _ansysToFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -libs -noFunctionObjects -scale -srcDoc"
+    opts="-case -doc -fileHandler -help -libs -scale -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra="-d -f"
 
@@ -234,7 +234,7 @@ _autoPatch_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -libs -noFunctionObjects -noOverwrite -overwrite -srcDoc"
+    opts="-case -doc -fileHandler -help -libs -noOverwrite -overwrite -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -338,7 +338,7 @@ _cfx4ToFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -libs -noFunctionObjects -scale -srcDoc"
+    opts="-case -doc -fileHandler -help -libs -scale -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra="-d -f"
 
@@ -476,7 +476,7 @@ _collapseEdges_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -collapseFaces -collapseFaceSet -constant -dict -doc -fileHandler -help -hostRoots -latestTime -libs -mesh -noFunctionObjects -noOverwrite -noZero -overwrite -parallel -region -roots -srcDoc -time"
+    opts="-case -collapseFaces -collapseFaceSet -constant -dict -doc -fileHandler -help -hostRoots -latestTime -libs -mesh -noOverwrite -noZero -overwrite -parallel -region -roots -srcDoc -time"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -507,7 +507,7 @@ _combinePatchFaces_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -concaveAngle -doc -fileHandler -help -hostRoots -libs -meshQuality -noFunctionObjects -noOverwrite -overwrite -parallel -roots -srcDoc"
+    opts="-case -concaveAngle -doc -fileHandler -help -hostRoots -libs -meshQuality -noOverwrite -overwrite -parallel -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -532,7 +532,7 @@ _createBaffles_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -dict -doc -fileHandler -help -hostRoots -libs -mesh -noFunctionObjects -noOverwrite -overwrite -parallel -region -roots -srcDoc"
+    opts="-case -dict -doc -fileHandler -help -hostRoots -libs -mesh -noOverwrite -overwrite -parallel -region -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -588,7 +588,7 @@ _createNonConformalCouples_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -dict -doc -fields -fileHandler -help -hostRoots -libs -mesh -noFunctionObjects -noOverwrite -overwrite -parallel -region -roots -srcDoc"
+    opts="-case -dict -doc -fields -fileHandler -help -hostRoots -libs -mesh -noOverwrite -overwrite -parallel -region -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -617,7 +617,7 @@ _createPatch_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -dict -doc -fileHandler -help -hostRoots -libs -mesh -noFunctionObjects -noOverwrite -overwrite -parallel -region -roots -srcDoc"
+    opts="-case -dict -doc -fileHandler -help -hostRoots -libs -mesh -noOverwrite -overwrite -parallel -region -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -675,7 +675,7 @@ _datToFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -libs -noFunctionObjects -srcDoc"
+    opts="-case -doc -fileHandler -help -libs -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra="-d -f"
 
@@ -706,7 +706,7 @@ _decomposePar_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-allRegions -case -cellProc -constant -copyUniform -copyZero -doc -fields -fileHandler -force -help -latestTime -libs -mesh -noFields -noFunctionObjects -noSets -noZero -region -srcDoc -time"
+    opts="-allRegions -case -cellProc -constant -copyUniform -copyZero -doc -fields -fileHandler -force -help -latestTime -libs -mesh -noFields -noSets -noZero -region -srcDoc -time"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -933,7 +933,7 @@ _extrude2DMesh_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -noOverwrite -overwrite -parallel -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -libs -noOverwrite -overwrite -parallel -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -1095,7 +1095,7 @@ _fluent3DMeshToFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -cubit -doc -fileHandler -help -ignoreCellGroups -ignoreFaceGroups -includedAngle -libs -noFunctionObjects -scale -srcDoc"
+    opts="-case -cubit -doc -fileHandler -help -ignoreCellGroups -ignoreFaceGroups -includedAngle -libs -scale -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra="-d -f"
 
@@ -1126,7 +1126,7 @@ _fluentMeshToFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-2D -case -doc -fileHandler -help -libs -noFunctionObjects -scale -srcDoc -writeSets -writeZones"
+    opts="-2D -case -doc -fileHandler -help -libs -scale -srcDoc -writeSets -writeZones"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra="-d -f"
 
@@ -1184,7 +1184,7 @@ _foamDictionary_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-add -case -create -dict -diff -doc -entry -expand -fileHandler -help -hostRoots -includes -keywords -libs -merge -noFunctionObjects -output -parallel -quiet -remove -rename -roots -set -srcDoc -value -writePrecision"
+    opts="-add -case -create -dict -diff -doc -entry -expand -fileHandler -help -hostRoots -includes -keywords -libs -merge -output -parallel -quiet -remove -rename -roots -set -srcDoc -value -writePrecision"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra="-d -f"
 
@@ -1320,7 +1320,7 @@ _foamPostProcess_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -constant -dict -doc -field -fields -fileHandler -func -funcs -help -hostRoots -latestTime -libs -list -listTemplates -noFunctionObjects -noZero -parallel -region -roots -solver -srcDoc -time"
+    opts="-case -constant -dict -doc -field -fields -fileHandler -func -funcs -help -hostRoots -latestTime -libs -list -listTemplates -noZero -parallel -region -roots -solver -srcDoc -time"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -1636,7 +1636,7 @@ _gambitToFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -libs -noFunctionObjects -scale -srcDoc"
+    opts="-case -doc -fileHandler -help -libs -scale -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra="-d -f"
 
@@ -1788,7 +1788,7 @@ _kivaToFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -file -fileHandler -help -libs -noFunctionObjects -srcDoc -version -zHeadMin"
+    opts="-case -doc -file -fileHandler -help -libs -srcDoc -version -zHeadMin"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -1863,7 +1863,7 @@ _mapFields_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -consistent -doc -fileHandler -help -libs -mapMethod -noFunctionObjects -parallelSource -parallelTarget -sourceRegion -sourceTime -srcDoc -targetRegion"
+    opts="-case -consistent -doc -fileHandler -help -libs -mapMethod -parallelSource -parallelTarget -sourceRegion -sourceTime -srcDoc -targetRegion"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra="-d"
 
@@ -2000,7 +2000,7 @@ _mergeBaffles_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fields -fileHandler -help -hostRoots -libs -mesh -noFunctionObjects -noOverwrite -overwrite -parallel -region -roots -srcDoc"
+    opts="-case -doc -fields -fileHandler -help -hostRoots -libs -mesh -noOverwrite -overwrite -parallel -region -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -2027,7 +2027,7 @@ _mergeMeshes_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-addCaseMeshes -addCaseMeshRegions -addCaseRegions -addCases -addMeshes -addMeshRegions -addRegions -case -constant -doc -fileHandler -help -latestTime -libs -mesh -noFunctionObjects -noOverwrite -noZero -overwrite -region -srcDoc -time"
+    opts="-addCaseMeshes -addCaseMeshRegions -addCaseRegions -addCases -addMeshes -addMeshRegions -addRegions -case -constant -doc -fileHandler -help -latestTime -libs -mesh -noOverwrite -noZero -overwrite -region -srcDoc -time"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -2347,7 +2347,7 @@ _plot3dToFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-2D -case -doc -fileHandler -help -libs -noBlank -noFunctionObjects -scale -singleBlock -srcDoc"
+    opts="-2D -case -doc -fileHandler -help -libs -noBlank -scale -singleBlock -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra="-d -f"
 
@@ -2455,7 +2455,7 @@ _reconstructPar_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="- -allRegions -case -cellProc -constant -doc -fields -fileHandler -help -lagrangianFields -latestTime -libs -mesh -newTimes -noFields -noFunctionObjects -noLagrangian -noSets -noZero -region -rm -srcDoc -time -withZero"
+    opts="- -allRegions -case -cellProc -constant -doc -fields -fileHandler -help -lagrangianFields -latestTime -libs -mesh -newTimes -noFields -noLagrangian -noSets -noZero -region -rm -srcDoc -time -withZero"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -2484,7 +2484,7 @@ _redistributePar_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -constant -doc -fileHandler -help -hostRoots -latestTime -libs -mesh -noFunctionObjects -noOverwrite -noZero -overwrite -parallel -region -roots -srcDoc -time"
+    opts="-case -constant -doc -fileHandler -help -hostRoots -latestTime -libs -mesh -noOverwrite -noZero -overwrite -parallel -region -roots -srcDoc -time"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -2538,7 +2538,7 @@ _refineMesh_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-all -case -dict -doc -fileHandler -help -hostRoots -libs -mesh -noFunctionObjects -noOverwrite -overwrite -parallel -region -roots -srcDoc"
+    opts="-all -case -dict -doc -fileHandler -help -hostRoots -libs -mesh -noOverwrite -overwrite -parallel -region -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -2567,7 +2567,7 @@ _refineWallLayer_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -inSet -libs -noFunctionObjects -noOverwrite -overwrite -region -srcDoc"
+    opts="-case -doc -fileHandler -help -inSet -libs -noOverwrite -overwrite -region -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -2593,7 +2593,7 @@ _removeFaces_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -libs -mesh -noFields -noFunctionObjects -noOverwrite -overwrite -parallel -region -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -libs -mesh -noFields -noOverwrite -overwrite -parallel -region -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -2620,7 +2620,7 @@ _renumberMesh_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -constant -dict -doc -fileHandler -frontWidth -help -hostRoots -latestTime -libs -mesh -noFields -noFunctionObjects -noOverwrite -noZero -overwrite -parallel -region -roots -srcDoc -time"
+    opts="-case -constant -dict -doc -fileHandler -frontWidth -help -hostRoots -latestTime -libs -mesh -noFields -noOverwrite -noZero -overwrite -parallel -region -roots -srcDoc -time"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -2651,7 +2651,7 @@ _reorderPatches_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -constant -doc -fileHandler -help -hostRoots -latestTime -libs -mesh -noFunctionObjects -noOverwrite -noZero -overwrite -parallel -patchOrder -referenceCase -referenceMesh -referenceRegion -region -roots -srcDoc -time"
+    opts="-case -constant -doc -fileHandler -help -hostRoots -latestTime -libs -mesh -noOverwrite -noZero -overwrite -parallel -patchOrder -referenceCase -referenceMesh -referenceRegion -region -roots -srcDoc -time"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -2705,7 +2705,7 @@ _sammToFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -libs -noFunctionObjects -scale -srcDoc"
+    opts="-case -doc -fileHandler -help -libs -scale -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -2898,7 +2898,7 @@ _smapToFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -libs -noFunctionObjects -srcDoc"
+    opts="-case -doc -fileHandler -help -libs -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra="-d -f"
 
@@ -2958,7 +2958,7 @@ _snappyHexMeshConfig_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-baffles -bounds -cellZones -clearBoundary -closedDomain -cylindricalBackground -defaultPatch -doc -explicitFeatures -firstLayerThickness -help -inletRegions -insidePoint -insidePoints -layerExpansionRatio -layers -minDimCells -nCells -nCellsBetweenLevels -noBackground -outletRegions -refineBackground -refinementBoxes -refinementDists -refinementLevel -refinementRegions -region -rm -rotatingZones -srcDoc -surface -surfaceLevels -xMaxPatch -xMinPatch -yMaxPatch -yMinPatch -zMaxPatch -zMinPatch"
+    opts="-baffles -bounds -cellZones -clearBoundary -closedDomain -cylindricalBackground -defaultPatch -doc -explicitFeatures -firstLayerThickness -help -inletRegions -insidePoint -insidePoints -layerExpansionRatio -layers -minDimCells -nCells -nCellsBetweenLevels -noBackground -noFunctionObjects -outletRegions -refineBackground -refinementBoxes -refinementDists -refinementLevel -refinementRegions -region -rm -rotatingZones -srcDoc -surface -surfaceLevels -xMaxPatch -xMinPatch -yMaxPatch -yMinPatch -zMaxPatch -zMinPatch"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -2982,7 +2982,7 @@ _splitBaffles_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fields -fileHandler -help -hostRoots -libs -mesh -noFunctionObjects -noOverwrite -overwrite -parallel -region -roots -srcDoc"
+    opts="-case -doc -fields -fileHandler -help -hostRoots -libs -mesh -noOverwrite -overwrite -parallel -region -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -3009,7 +3009,7 @@ _splitCells_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -geometry -help -libs -noFunctionObjects -noOverwrite -overwrite -set -srcDoc -tol"
+    opts="-case -doc -fileHandler -geometry -help -libs -noOverwrite -overwrite -set -srcDoc -tol"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -3034,7 +3034,7 @@ _splitMeshRegions_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -cellZones -defaultRegion -disconnected -disconnectedFaceSet -doc -faceZonePatches -fileHandler -help -hostRoots -insidePoint -largest -libs -mesh -minOverlapFraction -noFields -noFunctionObjects -noMeshes -noOverwrite -overwrite -parallel -region -roots -srcDoc"
+    opts="-case -cellZones -defaultRegion -disconnected -disconnectedFaceSet -doc -faceZonePatches -fileHandler -help -hostRoots -insidePoint -largest -libs -mesh -minOverlapFraction -noFields -noMeshes -noOverwrite -overwrite -parallel -region -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -3061,7 +3061,7 @@ _star3ToFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -libs -noFunctionObjects -scale -srcDoc"
+    opts="-case -doc -fileHandler -help -libs -scale -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -3086,7 +3086,7 @@ _star4ToFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-ascii -case -doc -fileHandler -help -libs -noFunctionObjects -scale -solids -srcDoc"
+    opts="-ascii -case -doc -fileHandler -help -libs -scale -solids -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -3141,7 +3141,7 @@ _stitchMesh_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -constant -doc -fields -fileHandler -help -latestTime -libs -mesh -noFunctionObjects -noOverwrite -noZero -overwrite -region -srcDoc -time -tol"
+    opts="-case -constant -doc -fields -fileHandler -help -latestTime -libs -mesh -noOverwrite -noZero -overwrite -region -srcDoc -time -tol"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -3170,7 +3170,7 @@ _subsetMesh_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -cellSet -cellZone -dict -doc -fileHandler -help -hostRoots -libs -mesh -noFields -noFunctionObjects -noOverwrite -overwrite -parallel -patch -region -resultTime -roots -srcDoc"
+    opts="-case -cellSet -cellZone -dict -doc -fileHandler -help -hostRoots -libs -mesh -noFields -noOverwrite -overwrite -parallel -patch -region -resultTime -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -3362,7 +3362,7 @@ _surfaceFeatureConvert_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -libs -noFunctionObjects -scale -srcDoc"
+    opts="-case -doc -fileHandler -help -libs -scale -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra="-d -f"
 
@@ -3520,7 +3520,7 @@ _surfaceMeshConvert_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -clean -doc -fileHandler -from -help -libs -noFunctionObjects -scaleIn -scaleOut -srcDoc -to -tri"
+    opts="-case -clean -doc -fileHandler -from -help -libs -scaleIn -scaleOut -srcDoc -to -tri"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra="-d -f"
 
@@ -3551,7 +3551,7 @@ _surfaceMeshExport_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -clean -doc -fileHandler -from -help -libs -name -noFunctionObjects -scaleIn -scaleOut -srcDoc -to"
+    opts="-case -clean -doc -fileHandler -from -help -libs -name -scaleIn -scaleOut -srcDoc -to"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -3607,7 +3607,7 @@ _surfaceMeshInfo_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-areas -case -doc -fileHandler -help -libs -noFunctionObjects -scale -srcDoc -xml"
+    opts="-areas -case -doc -fileHandler -help -libs -scale -srcDoc -xml"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra="-d -f"
 
@@ -3709,7 +3709,7 @@ _surfaceRedistributePar_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -keepNonMapped -libs -noFunctionObjects -parallel -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -keepNonMapped -libs -parallel -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra="-d -f"
 
@@ -3932,7 +3932,7 @@ _temporalInterpolate_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -constant -divisions -doc -fields -fileHandler -help -hostRoots -interpolationType -latestTime -libs -noFunctionObjects -noZero -parallel -region -roots -srcDoc -time"
+    opts="-case -constant -divisions -doc -fields -fileHandler -help -hostRoots -interpolationType -latestTime -libs -noZero -parallel -region -roots -srcDoc -time"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -4101,7 +4101,7 @@ _writeMeshObj_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -cell -cellSet -constant -doc -face -faceSet -fileHandler -help -hostRoots -latestTime -libs -mesh -noFunctionObjects -noZero -parallel -patchEdges -patchFaces -point -region -roots -srcDoc -time"
+    opts="-case -cell -cellSet -constant -doc -face -faceSet -fileHandler -help -hostRoots -latestTime -libs -mesh -noZero -parallel -patchEdges -patchFaces -point -region -roots -srcDoc -time"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -5121,7 +5121,7 @@ _postProcess_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -constant -dict -doc -field -fields -fileHandler -func -funcs -help -hostRoots -latestTime -libs -list -listTemplates -noFunctionObjects -noZero -parallel -region -roots -srcDoc -time"
+    opts="-case -constant -dict -doc -field -fields -fileHandler -func -funcs -help -hostRoots -latestTime -libs -list -listTemplates -noZero -parallel -region -roots -srcDoc -time"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 

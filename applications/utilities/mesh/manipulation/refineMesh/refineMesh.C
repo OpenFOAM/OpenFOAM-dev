@@ -235,7 +235,7 @@ int main(int argc, char *argv[])
         "Refine all cells"
     );
 
-    #include "setRootCase.H"
+    #include "setRootCaseNoFunctionObjects.H"
     #include "createTimeNoFunctionObjects.H"
     #include "createSpecifiedPolyMesh.H"
     const word oldInstance = mesh.pointsInstance();

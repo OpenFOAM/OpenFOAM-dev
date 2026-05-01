@@ -65,7 +65,6 @@ using namespace Foam;
 int main(int argc, char *argv[])
 {
     argList::noParallel();
-    Foam::argList::removeOption("noFunctionObjects");
     #include "addDictOption.H"
     argList::addBoolOption
     (
@@ -104,7 +103,7 @@ int main(int argc, char *argv[])
 
     #include "addMeshOption.H"
     #include "addRegionOption.H"
-    #include "setRootCase.H"
+    #include "setRootCaseNoFunctionObjects.H"
     #include "setMeshPath.H"
     #include "createTimeNoFunctionObjects.H"
 

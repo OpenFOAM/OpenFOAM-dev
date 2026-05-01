@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
 
     #include "addNoOverwriteOption.H"
 
-    #include "setRootCase.H"
+    #include "setRootCaseNoFunctionObjects.H"
 
     Info<< "Create time\n" << endl;
 

@@ -199,7 +199,7 @@ int main(int argc, char *argv[])
         "specify type of interpolation (linear or spline)"
     );
 
-    #include "setRootCase.H"
+    #include "setRootCaseNoFunctionObjects.H"
     #include "createTimeNoFunctionObjects.H"
 
     HashSet<word> selectedFields;

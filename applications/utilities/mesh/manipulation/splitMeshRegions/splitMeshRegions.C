@@ -1272,7 +1272,7 @@ int main(int argc, char *argv[])
         "a single inter-region patch per pair of regions"
     );
 
-    #include "setRootCase.H"
+    #include "setRootCaseNoFunctionObjects.H"
 
     if (!args.optionFound("disconnected") && !args.optionFound("cellZones"))
     {
