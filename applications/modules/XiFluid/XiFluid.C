@@ -107,6 +107,8 @@ Foam::solvers::XiFluid::XiFluid(fvMesh& mesh)
         )
     ),
 
+    printCombustionProperties_(new printDictionary(combustionProperties)),
+
     ignited_(false),
 
     bMin_
@@ -158,6 +160,8 @@ Foam::solvers::XiFluid::XiFluid(fvMesh& mesh)
     Su(SuModel_->Su()),
     Xi(XiModel_->Xi())
 {
+    printCombustionProperties_.clear();
+
     mesh.schemes().setFluxRequired(b.name());
 
     const UPtrListDictionary<fv::bXiIgnition> ignitionModels

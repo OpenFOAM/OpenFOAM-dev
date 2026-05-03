@@ -179,6 +179,8 @@ protected:
         //- Dictionary of combustion model coefficients
         IOdictionary combustionProperties;
 
+        autoPtr<printDictionary> printCombustionProperties_;
+
         bool ignited_;
 
         //- Minimum b below which a numerical compensation burn-out term
