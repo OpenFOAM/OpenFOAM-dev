@@ -60,6 +60,8 @@ Foam::autoPtr<Foam::mixtureViscosityModel> Foam::mixtureViscosityModel::New
             << exit(FatalIOError);
     }
 
+    printDictionary(dict.name());
+
     return autoPtr<mixtureViscosityModel>(cstrIter()(mixture));
 }
 

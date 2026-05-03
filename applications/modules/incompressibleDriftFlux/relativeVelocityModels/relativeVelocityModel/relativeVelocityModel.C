@@ -122,6 +122,8 @@ Foam::autoPtr<Foam::relativeVelocityModel> Foam::relativeVelocityModel::New
             << abort(FatalIOError);
     }
 
+    printDictionary(dict, dict.optionalTypeDict(modelType));
+
     return
         autoPtr<relativeVelocityModel>
         (

@@ -73,6 +73,8 @@ Foam::autoPtr<Foam::packingDispersionModel> Foam::packingDispersionModel::New
                 << abort(FatalIOError);
         }
 
+        printDictionary(dict, dict.optionalTypeDict(modelType));
+
         return
             autoPtr<packingDispersionModel>
             (
