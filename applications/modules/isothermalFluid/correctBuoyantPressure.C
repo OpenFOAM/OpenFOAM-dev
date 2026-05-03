@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,7 +64,7 @@ void Foam::solvers::isothermalFluid::correctBuoyantPressure()
     const surfaceScalarField rhof(fvc::interpolate(rho));
 
     const volScalarField rAU("rAU", 1.0/UEqn.A());
-    const surfaceScalarField rhorAUf("rhorAUf", fvc::interpolate(rho*rAU));
+    surfaceScalarField rhorAUf("rhorAUf", fvc::interpolate(rho*rAU));
 
     tmp<volScalarField> rAtU
     (
@@ -81,8 +81,8 @@ void Foam::solvers::isothermalFluid::correctBuoyantPressure()
     );
 
     const volScalarField& rAAtU = pimple.consistent() ? rAtU() : rAU;
-    const surfaceScalarField& rhorAAtUf =
-        pimple.consistent() ? rhorAtUf() : rhorAUf;
+    surfaceScalarField& rhorAAtUf =
+        pimple.consistent() ? rhorAtUf.ref() : rhorAUf;
 
     volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p_rgh));
 
@@ -116,7 +116,10 @@ void Foam::solvers::isothermalFluid::correctBuoyantPressure()
             constrainPhid
             (
                 fvc::relative(phiHbyA, rho, U)/rhof,
-                p_rgh
+                U,
+                p_rgh,
+                rhorAUf,
+                rhorAAtUf
             )
         );
 

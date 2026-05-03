@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -145,7 +145,10 @@ Foam::tmp<Foam::surfaceScalarField> Foam::constrainPhiHbyA
 Foam::tmp<Foam::surfaceScalarField> Foam::constrainPhid
 (
     const tmp<surfaceScalarField>& tphid,
-    const volScalarField& p
+    const volVectorField& U,
+    const volScalarField& p,
+    surfaceScalarField& rhorAUf,
+    surfaceScalarField& rhorAAtUf
 )
 {
     surfaceScalarField& phid = tphid.ref();
@@ -155,9 +158,20 @@ Foam::tmp<Foam::surfaceScalarField> Foam::constrainPhid
 
     forAll(phidBf, patchi)
     {
+        // Fixed flux
         if (isA<fixedFluxPressureFvPatchScalarField>(pBf[patchi]))
         {
             phidBf[patchi] = 0;
+        }
+        // Fixed velocity and fixed pressure (supersonic inlet)
+        else if
+        (
+            !U.boundaryField()[patchi].assignable()
+         && !pBf[patchi].assignable()
+        )
+        {
+            rhorAUf.boundaryFieldRef()[patchi] = 0;
+            rhorAAtUf.boundaryFieldRef()[patchi] = 0;
         }
     }
 
