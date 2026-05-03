@@ -50,6 +50,12 @@ Foam::autoPtr<Foam::ejectionModel> Foam::ejectionModel::New
             << exit(FatalIOError);
     }
 
+    printDictionary print
+    (
+        dict,
+        dict.optionalTypeDict(modelType)
+    );
+
     return autoPtr<ejectionModel>
     (
         cstrIter()(dict.optionalTypeDict(modelType), film)
