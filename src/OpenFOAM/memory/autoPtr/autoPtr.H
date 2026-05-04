@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -106,6 +106,10 @@ public:
             //- Delete object (if the pointer is valid) and set pointer to
             //  nullptr
             inline void clear();
+
+            //- Delete object if the pointer is valid and return true
+            //  else return false
+            inline bool cleared();
 
 
         // Member Operators

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -98,6 +98,13 @@ public:
 
             //- Return the mesh
             inline fvMesh& mesh();
+
+            //- Return the solution dictionary
+            static const dictionary& dict
+            (
+                const fvMesh& mesh,
+                const word& algorithmName
+            );
 
             //- Return the solution dictionary
             virtual const dictionary& dict() const;

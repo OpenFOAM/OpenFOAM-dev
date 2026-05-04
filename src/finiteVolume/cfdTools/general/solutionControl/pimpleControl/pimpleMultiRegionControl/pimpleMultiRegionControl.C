@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,6 +56,7 @@ Foam::pimpleMultiRegionControl::pimpleMultiRegionControl
 )
 :
     multiRegionSolutionControl(runTime, algorithmName),
+    autoPtr<printDictionary>(new printDictionary(dict())),
     pimpleLoop(static_cast<solutionControl&>(*this)),
     convergenceControl(static_cast<solutionControl&>(*this)),
     correctorConvergenceControl
@@ -102,6 +103,8 @@ Foam::pimpleMultiRegionControl::pimpleMultiRegionControl
         Info<< algorithmName << ": Operating solver in "
             << (allSteady ? "SIMPLE" : "PISO") << " mode" << nl;
     }
+
+    autoPtr<printDictionary>::clear();
 
     Info<< nl << endl;
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,7 +78,14 @@ Foam::solver::solver(fvMesh& mesh)
 
     mesh(mesh_),
     runTime(mesh_.time()),
-    pimple(mesh_)
+    pimple
+    (
+        PrintDictionary<pimpleNoLoopControl>
+        (
+            pimpleNoLoopControl::dict(mesh_),
+            mesh_
+        )
+    )
 {
     deltaTFactor =
         mesh.time().controlDict().lookupOrDefault<scalar>("deltaTFactor", 1.2);

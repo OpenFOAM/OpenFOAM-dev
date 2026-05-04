@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -126,6 +126,22 @@ template<class T>
 inline void Foam::autoPtr<T>::clear()
 {
     reset(nullptr);
+}
+
+
+template<class T>
+inline bool Foam::autoPtr<T>::cleared()
+{
+    if (ptr_)
+    {
+        delete ptr_;
+        ptr_ = nullptr;
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 

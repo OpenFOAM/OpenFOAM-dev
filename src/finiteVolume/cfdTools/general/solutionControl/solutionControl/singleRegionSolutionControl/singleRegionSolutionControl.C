@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,9 +73,28 @@ Foam::singleRegionSolutionControl::~singleRegionSolutionControl()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
+const Foam::dictionary& Foam::singleRegionSolutionControl::dict
+(
+    const fvMesh& mesh,
+    const word& algorithmName
+)
+{
+    return mesh.solution().dict().subDict
+    (
+        (
+           !mesh.solution().dict().found(algorithmName)
+         && mesh.schemes().steady()
+         && mesh.solution().dict().found("SIMPLE")
+        )
+      ? "SIMPLE"
+      : algorithmName
+    );
+}
+
+
 const Foam::dictionary& Foam::singleRegionSolutionControl::dict() const
 {
-    return mesh_.solution().dict().subDict(algorithmName());
+    return dict(mesh_, algorithmName());
 }
 
 

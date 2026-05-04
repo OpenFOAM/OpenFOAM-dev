@@ -169,6 +169,14 @@ public:
 };
 
 
+template<class Type, class... Args>
+inline Type PrintDictionary(const dictionary& dict, Args&... args)
+{
+    printDictionary print(dict);
+    return Type(args...);
+}
+
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam

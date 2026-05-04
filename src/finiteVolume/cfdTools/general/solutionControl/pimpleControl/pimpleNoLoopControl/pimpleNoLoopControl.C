@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,6 +87,10 @@ Foam::pimpleNoLoopControl::pimpleNoLoopControl
     const word& algorithmName
 )
 :
+    // autoPtr<printDictionary>
+    // (
+    //     new printDictionary(mesh.solution().dict().subDict(algorithmName))
+    // ),
     pisoControl(mesh, algorithmName),
     singleRegionConvergenceControl
     (
@@ -103,6 +107,7 @@ Foam::pimpleNoLoopControl::pimpleNoLoopControl
     transportCorrectionFinal_(true)
 {
     read();
+    // autoPtr<printDictionary>::clear();
 }
 
 
@@ -113,6 +118,16 @@ Foam::pimpleNoLoopControl::~pimpleNoLoopControl()
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
+const Foam::dictionary& Foam::pimpleNoLoopControl::dict
+(
+    const fvMesh& mesh,
+    const word& algorithmName
+)
+{
+    return singleRegionSolutionControl::dict(mesh, algorithmName);
+}
+
 
 bool Foam::pimpleNoLoopControl::correct()
 {

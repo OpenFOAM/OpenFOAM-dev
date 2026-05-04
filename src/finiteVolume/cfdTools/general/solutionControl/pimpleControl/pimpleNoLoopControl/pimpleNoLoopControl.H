@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,6 +58,7 @@ class pimpleLoop;
 
 class pimpleNoLoopControl
 :
+    // private autoPtr<printDictionary>,
     public pisoControl,
     public singleRegionConvergenceControl,
     public singleRegionCorrectorConvergenceControl
@@ -119,6 +120,15 @@ public:
     // Member Functions
 
         // Access
+
+            using singleRegionSolutionControl::dict;
+
+            //- Return the solution dictionary
+            static const dictionary& dict
+            (
+                const fvMesh& mesh,
+                const word& algorithmName="PIMPLE"
+            );
 
             //- Switch to move the mesh at the start of every PIMPLE
             //  outer corrected rather than the first corrector only
