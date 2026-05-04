@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,12 +33,6 @@ namespace Foam
     defineTypeNameAndDebug(solution, 0);
 }
 
-// List of sub-dictionaries to rewrite
-static const Foam::List<Foam::word> subDictNames
-(
-    Foam::IStringStream("(preconditioner smoother)")()
-);
-
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
@@ -46,6 +40,7 @@ void Foam::solution::read(const dictionary& dict)
 {
     if (dict.found("cache"))
     {
+        printDictionary print(dict.subDict("cache"));
         cache_ = dict.subDict("cache");
         caching_ = cache_.lookupOrDefault("active", true);
     }
@@ -53,6 +48,8 @@ void Foam::solution::read(const dictionary& dict)
     if (dict.found("relaxationFactors"))
     {
         const dictionary& relaxDict(dict.subDict("relaxationFactors"));
+        printDictionary print(relaxDict);
+
         if (relaxDict.found("fields") || relaxDict.found("equations"))
         {
             if (relaxDict.found("fields"))
@@ -67,51 +64,15 @@ void Foam::solution::read(const dictionary& dict)
         }
         else
         {
-            // backwards compatibility
-            fieldRelaxDict_.clear();
-
-            const wordList entryNames(relaxDict.toc());
-            forAll(entryNames, i)
-            {
-                const word& e = entryNames[i];
-                scalar value = relaxDict.lookup<scalar>(e);
-
-                if (e(0, 1) == "p")
-                {
-                    fieldRelaxDict_.add(e, value);
-                }
-                else if (e.length() >= 3)
-                {
-                    if (e(0, 3) == "rho")
-                    {
-                        fieldRelaxDict_.add(e, value);
-                    }
-                }
-
-            }
-
-            eqnRelaxDict_ = relaxDict;
-        }
-
-        fieldRelaxDefault_ =
-            fieldRelaxDict_.lookupOrDefault<scalar>("default", 0.0);
-
-        eqnRelaxDefault_ =
-            eqnRelaxDict_.lookupOrDefault<scalar>("default", 0.0);
-
-        if (debug)
-        {
-            Info<< "Relaxation factors:" << nl
-                << "fields: " << fieldRelaxDict_ << nl
-                << "equations: " << eqnRelaxDict_ << endl;
+            IOWarningInFunction(dict)
+                << "Neither fields nor equations specified" << endl;
         }
     }
 
-
     if (dict.found("solvers"))
     {
+        printDictionary print(dict.subDict("solvers"));
         solvers_ = dict.subDict("solvers");
-        upgradeSolverDict(solvers_);
     }
 }
 
@@ -148,70 +109,6 @@ Foam::solution::solution
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-Foam::label Foam::solution::upgradeSolverDict
-(
-    dictionary& dict,
-    const bool verbose
-)
-{
-    label nChanged = 0;
-
-    // backward compatibility:
-    // recast primitive entries into dictionary entries
-    forAllIter(dictionary, dict, iter)
-    {
-        if (!iter().isDict())
-        {
-            Istream& is = iter().stream();
-            word name(is);
-            dictionary subdict;
-
-            subdict.add("solver", name);
-            subdict <<= dictionary(is);
-
-            // preconditioner and smoother entries can be
-            // 1) primitiveEntry w/o settings,
-            // 2) or a dictionaryEntry.
-            // transform primitiveEntry with settings -> dictionaryEntry
-            forAll(subDictNames, dictI)
-            {
-                const word& dictName = subDictNames[dictI];
-                entry* ePtr = subdict.lookupEntryPtr(dictName,false,false);
-
-                if (ePtr && !ePtr->isDict())
-                {
-                    Istream& is = ePtr->stream();
-                    is >> name;
-
-                    if (!is.eof())
-                    {
-                        dictionary newDict;
-                        newDict.add(dictName, name);
-                        newDict <<= dictionary(is);
-
-                        subdict.set(dictName, newDict);
-                    }
-                }
-            }
-
-            // write out information to help people adjust to the new syntax
-            if (verbose && Pstream::master())
-            {
-                Info<< "// using new solver syntax:\n"
-                    << iter().keyword() << subdict << endl;
-            }
-
-            // overwrite with dictionary entry
-            dict.set(iter().keyword(), subdict);
-
-            nChanged++;
-        }
-    }
-
-    return nChanged;
-}
-
 
 bool Foam::solution::cache(const word& name) const
 {

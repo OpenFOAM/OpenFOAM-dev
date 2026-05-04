@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,11 +81,6 @@ class solution
 
 
 public:
-
-    //- Update from older solver controls syntax
-    //  Usually verbose, since we want to know about the changes
-    //  Returns the number of settings changed
-    static label upgradeSolverDict(dictionary& dict, const bool verbose=true);
 
     //- Type information
     ClassName("solution");
