@@ -154,7 +154,7 @@ void Foam::DimensionedFieldFunctions::Surfaces<DimensionedFieldType>::write
     Ostream& os
 ) const
 {
-    writeEntry(os, defaultValue_.name(), defaultValue_);
+    writeEntry(os, defaultValue_);
     writeEntry(os, surfacesDict_.dictName(), surfacesDict_);
 }
 

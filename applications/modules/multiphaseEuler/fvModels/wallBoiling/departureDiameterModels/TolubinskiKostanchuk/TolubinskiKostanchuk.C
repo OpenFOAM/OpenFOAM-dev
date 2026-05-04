@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -162,9 +162,9 @@ write
 ) const
 {
     departureDiameterModel::write(os);
-    writeEntry(os, "dRef", dRef_);
-    writeEntry(os, "dMax", dMax_);
-    writeEntry(os, "dMin", dMin_);
+    writeEntry(os, dRef_);
+    writeEntry(os, dMax_);
+    writeEntry(os, dMin_);
 }
 
 

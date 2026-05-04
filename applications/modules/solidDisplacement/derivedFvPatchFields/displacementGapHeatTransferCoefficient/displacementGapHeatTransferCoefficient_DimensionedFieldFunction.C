@@ -129,7 +129,7 @@ displacementGapHeatTransferCoefficient::write
     Ostream& os
 ) const
 {
-    writeEntry(os, kappa_.name(), kappa_);
+    writeEntry(os, kappa_);
 }
 
 

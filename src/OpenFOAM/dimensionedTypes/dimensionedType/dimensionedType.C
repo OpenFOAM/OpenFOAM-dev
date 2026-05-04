@@ -601,6 +601,8 @@ Foam::dimensioned<Type> Foam::min
 template<class Type>
 void Foam::writeEntry(Ostream& os, const dimensioned<Type>& dt)
 {
+    writeKeyword(os, dt.name());
+
     // Write the dimensions
     dt.dimensions().write(os);
 
@@ -608,6 +610,8 @@ void Foam::writeEntry(Ostream& os, const dimensioned<Type>& dt)
 
     // Write the value
     os << dt.value();
+
+    os << token::END_STATEMENT << endl;
 }
 
 
