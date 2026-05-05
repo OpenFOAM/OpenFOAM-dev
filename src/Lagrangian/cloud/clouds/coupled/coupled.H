@@ -53,8 +53,6 @@ namespace clouds
 \*---------------------------------------------------------------------------*/
 
 class coupled
-:
-    public carried
 {
 private:
 
@@ -62,6 +60,9 @@ private:
 
         //- Reference to the cloud
         const cloud& cloud_;
+
+        //- Reference to the carried cloud
+        const carried& carriedCloud_;
 
         //- Cached carrier kinematic viscosity field
         tmp<volScalarField> tnucVf_;
@@ -156,7 +157,7 @@ public:
     // Constructors
 
         //- Construct from a reference to the cloud
-        coupled(const cloud& c, const dictionary& dict);
+        coupled(const cloud& c, const carried&);
 
 
     //- Destructor

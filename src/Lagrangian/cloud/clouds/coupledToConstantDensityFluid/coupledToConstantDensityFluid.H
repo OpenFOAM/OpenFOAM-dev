@@ -115,7 +115,7 @@ public:
     // Constructors
 
         //- Construct from a reference to the cloud
-        coupledToConstantDensityFluid(const cloud& c, const dictionary& dict);
+        coupledToConstantDensityFluid(const cloud& c, const carried&);
 
 
     //- Destructor

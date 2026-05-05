@@ -223,10 +223,11 @@ Foam::clouds::kinematicParcel::kinematicParcel
 )
 :
     cloud(mesh, context),
+    carried(*this, dict),
     grouped(static_cast<const cloud&>(*this)),
     spherical(*this, *this),
-    coupledToConstantDensityFluid(static_cast<const cloud&>(*this), dict),
-    sphericalCoupled(*this, *this, *this)
+    coupledToConstantDensityFluid(*this, *this),
+    sphericalCoupled(*this, *this, *this, *this)
 {
     reCalculateModified();
 }

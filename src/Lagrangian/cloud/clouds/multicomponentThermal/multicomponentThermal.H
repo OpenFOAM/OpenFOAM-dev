@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,23 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::clouds::particle
+    Foam::clouds::multicomponentThermal
 
 Description
-    Cloud with spherical particles with thermodynamic modelling
+    Base class for clouds with multicomponent thermodynamic modelling
 
 SourceFiles
-    particle.C
+    multicomponentThermal.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef particle_H
-#define particle_H
+#ifndef multicomponentThermal_H
+#define multicomponentThermal_H
 
 #include "thermal.H"
-#include "coupledToThermalFluid.H"
-#include "sphericalCoupled.H"
-#include "massiveCoupledToFluid.H"
+#include "multicomponentLagrangianThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -48,70 +46,35 @@ namespace clouds
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class particle Declaration
+                     Class multicomponentThermal Declaration
 \*---------------------------------------------------------------------------*/
 
-class particle
+class multicomponentThermal
 :
-    public cloud,
-    public carried,
-    public spherical,
-    public thermal,
-    public coupledToThermalFluid,
-    public sphericalCoupled,
-    public massiveCoupledToFluid
+    public Thermal<multicomponentLagrangianThermo>
 {
-protected:
-
-    // Protected Member Functions
-
-        //- Return the acceleration with which to do second-order tracking
-        virtual tmp<LagrangianSubVectorField> dUdt
-        (
-            const LagrangianSubMesh&
-        ) const;
-
-        //- Do we need to re-calculate particles that are modified?
-        virtual bool reCalculateModified();
-
-        //- Update the cloud properties
-        virtual void calculate
-        (
-            const LagrangianSubScalarField& deltaT,
-            const bool final
-        );
-
-        //- Partition hook
-        virtual void partition();
-
-
 public:
 
     // Public Static Data
 
         //- Run-time type information
-        TypeName("particle");
+        TypeName("multicomponentThermal");
 
 
     // Constructors
 
-        //- Construct from a mesh and context
-        particle
-        (
-            LagrangianMesh& mesh,
-            const contextType context,
-            const dictionary& dict
-        );
+        //- Construct from a reference to the cloud and its base classes
+        multicomponentThermal(const cloud&, const shaped&, const carried&);
+
+
+    // Public Data
+
+        //- Mass fractions
+        PtrList<CloudStateFieldRef<scalar>> Y;
 
 
     //- Destructor
-    virtual ~particle();
-
-
-    // Member Functions
-
-        //- Solve the cloud's evolution over the current time-step
-        virtual void solve(const bool initial, const bool final);
+    virtual ~multicomponentThermal();
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

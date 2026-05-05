@@ -53,9 +53,10 @@ namespace clouds
 class dynamicParticle
 :
     public cloud,
+    public carried,
     public spherical,
-    public coupledToFluid,
     public dense,
+    public coupledToFluid,
     public sphericalCoupled,
     public massiveCoupledToFluid
 {

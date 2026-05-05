@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,7 +79,7 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::fv::cloud::S
     typedef HashTable<const CarrierEqn<scalar>*> carrierEqnTable;
 
     const bool isPhase = phaseName != word::null;
-    const bool isMultiphase = coupledCloud_.carrierPhaseName() != word::null;
+    const bool isMultiphase = carriedCloud_.carrierPhaseName() != word::null;
 
     const clouds::coupledToConstantDensityFluid& ctcdfCloud =
         refCastNull<const clouds::coupledToConstantDensityFluid>(cloud_);
@@ -206,7 +206,7 @@ void Foam::fv::cloud::addSupType
     const word phaseName = field.group();
 
     const bool isPhase = phaseName != word::null;
-    const bool isMultiphase = coupledCloud_.carrierPhaseName() != word::null;
+    const bool isMultiphase = carriedCloud_.carrierPhaseName() != word::null;
 
     const bool hasCarrierEqn = coupledCloud_.hasCarrierEqn(field);
 

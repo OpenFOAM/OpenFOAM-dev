@@ -223,11 +223,12 @@ Foam::clouds::dynamicParcel::dynamicParcel
 )
 :
     cloud(mesh, context),
+    carried(*this, dict),
     grouped(static_cast<const cloud&>(*this)),
     spherical(*this, *this),
-    coupledToFluid(static_cast<const cloud&>(*this), dict),
     dense(*this, *this),
-    sphericalCoupled(*this, *this, *this),
+    coupledToFluid(*this, *this),
+    sphericalCoupled(*this, *this, *this, *this),
     massiveCoupledToFluid(*this, *this, *this)
 {
     reCalculateModified();

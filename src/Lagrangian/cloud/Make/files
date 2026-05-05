@@ -13,6 +13,7 @@ clouds/coupledToThermalFluid/coupledToThermalFluid.C
 clouds/massive/massive.C
 clouds/dense/dense.C
 clouds/thermal/thermal.C
+clouds/multicomponentThermal/multicomponentThermal.C
 clouds/sphericalCoupled/sphericalCoupled.C
 clouds/massiveCoupledToFluid/massiveCoupledToFluid.C
 
@@ -24,6 +25,8 @@ clouds/dynamicParticle/dynamicParticle.C
 clouds/dynamicParcel/dynamicParcel.C
 clouds/particle/particle.C
 clouds/parcel/parcel.C
+clouds/multicomponentParticle/multicomponentParticle.C
+clouds/multicomponentParcel/multicomponentParcel.C
 
 # Patches
 derivedLagrangianPatches/cloudVelocity/cloudVelocityLagrangianPatch.C

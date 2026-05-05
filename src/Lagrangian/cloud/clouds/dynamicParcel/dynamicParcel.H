@@ -65,10 +65,11 @@ namespace clouds
 class dynamicParcel
 :
     public cloud,
+    public carried,
     public grouped,
     public spherical,
-    public coupledToFluid,
     public dense,
+    public coupledToFluid,
     public sphericalCoupled,
     public massiveCoupledToFluid
 {

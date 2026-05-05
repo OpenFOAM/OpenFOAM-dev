@@ -188,9 +188,10 @@ Foam::clouds::kinematicParticle::kinematicParticle
 )
 :
     cloud(mesh, context),
+    carried(*this, dict),
     spherical(static_cast<const cloud&>(*this)),
-    coupledToConstantDensityFluid(static_cast<const cloud&>(*this), dict),
-    sphericalCoupled(*this, *this, *this)
+    coupledToConstantDensityFluid(*this, *this),
+    sphericalCoupled(*this, *this, *this, *this)
 {
     reCalculateModified();
 }

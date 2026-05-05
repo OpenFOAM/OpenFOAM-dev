@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "sphericalCoupled.H"
+#include "multicomponentThermal.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -31,43 +31,45 @@ namespace Foam
 {
 namespace clouds
 {
-    defineTypeNameAndDebug(sphericalCoupled, 0);
+    defineTypeNameAndDebug(multicomponentThermal, 0);
 }
 }
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::clouds::sphericalCoupled::sphericalCoupled
+Foam::clouds::multicomponentThermal::multicomponentThermal
 (
     const cloud& c,
-    const carried& carriedCloud,
-    const spherical& sphericalCloud,
-    const coupled& coupledCloud
+    const shaped& shapedCloud,
+    const carried& carriedCloud
 )
 :
-    Re
-    (
-        c.derivedField<scalar>
+    Thermal<multicomponentLagrangianThermo>(c, shapedCloud, carriedCloud),
+    Y()
+{
+    multicomponentLagrangianThermo& thermo =
+        this->thermo<multicomponentLagrangianThermo>();
+
+    Y.resize(thermo.Y().size());
+
+    forAll(Y, i)
+    {
+        Y.set
         (
-            [&]
+            i,
+            new CloudStateFieldRef<scalar>
             (
-                const LagrangianModelRef& model,
-                const LagrangianSubMesh& subMesh
+                thermo.Y()[i]
             )
-            {
-                return
-                    mag(carriedCloud.Uc(model, subMesh) - c.U(model, subMesh))
-                   *sphericalCloud.d(model, subMesh)
-                   /coupledCloud.nuc(model, subMesh);
-            }
-        )
-    )
-{}
+        );
+    }
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::clouds::sphericalCoupled::~sphericalCoupled()
+Foam::clouds::multicomponentThermal::~multicomponentThermal()
 {}
 
 

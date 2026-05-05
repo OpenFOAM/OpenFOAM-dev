@@ -188,10 +188,11 @@ Foam::clouds::dynamicParticle::dynamicParticle
 )
 :
     cloud(mesh, context),
+    carried(*this, dict),
     spherical(static_cast<const cloud&>(*this)),
-    coupledToFluid(static_cast<const cloud&>(*this), dict),
     dense(*this, *this),
-    sphericalCoupled(*this, *this, *this),
+    coupledToFluid(*this, *this),
+    sphericalCoupled(*this, *this, *this, *this),
     massiveCoupledToFluid(*this, *this, *this)
 {
     reCalculateModified();

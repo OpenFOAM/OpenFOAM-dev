@@ -106,12 +106,12 @@ void Foam::clouds::coupledToFluid::updateCarrier()
 
     if (trhocVf_.isTmp())
     {
-        trhocVf_.ref() = getRhocVf(carrierPhaseName());
+        trhocVf_.ref() = getRhocVf(carriedCloud_.carrierPhaseName());
     }
 
     if (trhocPhaseVf_.isTmp())
     {
-        trhocPhaseVf_.ref() = getRhocVf(phaseName());
+        trhocPhaseVf_.ref() = getRhocVf(carriedCloud_.phaseName());
     }
 }
 
@@ -121,27 +121,28 @@ void Foam::clouds::coupledToFluid::updateCarrier()
 Foam::clouds::coupledToFluid::coupledToFluid
 (
     const cloud& c,
-    const dictionary& dict
+    const carried& carriedCloud
 )
 :
-    coupled(c, dict),
+    coupled(c, carriedCloud),
     mesh_(c.mesh()),
-    trhocVf_(getRhocVf(carrierPhaseName())),
+    carriedCloud_(carriedCloud),
+    trhocVf_(getRhocVf(carriedCloud.carrierPhaseName())),
     trhocPhaseVf_
     (
-        hasPhase()
-      ? getRhocVf(phaseName())
+        carriedCloud.hasPhase()
+      ? getRhocVf(carriedCloud.phaseName())
       : tmp<volScalarField>(NullObjectRef<volScalarField>())
     ),
-    mucVf_(getMucVf(carrierPhaseName())),
-    rhoc(carrierField<scalar>(trhocVf_())),
+    mucVf_(getMucVf(carriedCloud.carrierPhaseName())),
+    rhoc(carriedCloud.carrierField<scalar>(trhocVf_())),
     rhocPhase
     (
-        hasPhase()
-      ? carrierField<scalar>(trhocPhaseVf_())
-      : carrierField<scalar>
+        carriedCloud.hasPhase()
+      ? carriedCloud.carrierField<scalar>(trhocPhaseVf_())
+      : carriedCloud.carrierField<scalar>
         (
-            IOobject::groupName("rhoc", phaseName()),
+            IOobject::groupName("rhoc", carriedCloud.phaseName()),
             [&]()
             {
                 FatalErrorInFunction
@@ -165,7 +166,7 @@ Foam::clouds::coupledToFluid::coupledToFluid
                 return rhoc(model, subMesh)*nuc(model, subMesh);
             }
         )
-      : carrierField<scalar>(mucVf_)
+      : carriedCloud.carrierField<scalar>(mucVf_)
     )
 {}
 

@@ -63,9 +63,7 @@ private:
         const cloud& cloud_;
 
 
-protected:
-
-    // Protected Constructors
+    // Private Constructors
 
         //- Construct from a reference to the cloud and its base classes and a
         //  thermo model pointer
@@ -73,6 +71,11 @@ protected:
 
 
 public:
+
+    //- Declare friendship with templated derivation
+    template<class Thermo>
+    friend class Thermal;
+
 
     // Public Static Data
 
@@ -127,6 +130,23 @@ public:
         //- Non-const override of the above
         template<class Thermo = basicLagrangianThermo, class ... Args>
         Thermo& thermo(const Args& ... args);
+};
+
+/*---------------------------------------------------------------------------*\
+                             Class Thermal Declaration
+\*---------------------------------------------------------------------------*/
+
+template<class Thermo>
+class Thermal
+:
+    public thermal
+{
+public:
+
+    // Constructors
+
+        //- Construct from a reference to the cloud and its base classes
+        Thermal(const cloud&, const shaped&, const carried&);
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

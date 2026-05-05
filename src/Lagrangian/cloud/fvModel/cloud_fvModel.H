@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,6 +62,9 @@ class cloud
 
         //- Cloud reference (for convenience)
         const Foam::cloud& cloud_;
+
+        //- Carried cloud reference (for convenience)
+        const clouds::carried& carriedCloud_;
 
         //- Coupled cloud reference (for convenience)
         const clouds::coupled& coupledCloud_;

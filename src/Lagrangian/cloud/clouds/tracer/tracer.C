@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,7 +107,7 @@ Foam::clouds::tracer::tracer
             escapeVelocityLagrangianPatchVectorField::typeName
         )
     ),
-    carried(static_cast<const cloud&>(*this), dict)
+    carried(*this, dict)
 {
     // Create NaN values on newly injected particles. These values will then
     // get corrected by a call to calculate as a result of reCalculateModified

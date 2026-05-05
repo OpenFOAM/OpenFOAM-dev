@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,6 +49,7 @@ Foam::fv::cloud::cloud
         ).ptr()
     ),
     cloud_(cloudPtr_()),
+    carriedCloud_(refCast<const clouds::carried>(cloud_)),
     coupledCloud_(refCast<const clouds::coupled>(cloud_))
 {
     // Ensure LagrangianModels are constructed before time is incremented

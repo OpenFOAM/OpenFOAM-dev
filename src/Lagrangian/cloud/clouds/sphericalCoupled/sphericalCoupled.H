@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,7 +68,13 @@ public:
     // Constructors
 
         //- Construct from a reference to the cloud and its base classes
-        sphericalCoupled(const cloud&, const spherical&, const coupled&);
+        sphericalCoupled
+        (
+            const cloud&,
+            const carried&,
+            const spherical&,
+            const coupled&
+        );
 
 
     //- Destructor

@@ -56,6 +56,7 @@ namespace clouds
 class kinematicParticle
 :
     public cloud,
+    public carried,
     public spherical,
     public coupledToConstantDensityFluid,
     public sphericalCoupled

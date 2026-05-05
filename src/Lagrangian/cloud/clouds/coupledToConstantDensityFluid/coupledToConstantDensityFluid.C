@@ -77,35 +77,39 @@ Foam::clouds::coupledToConstantDensityFluid::one
 Foam::clouds::coupledToConstantDensityFluid::coupledToConstantDensityFluid
 (
     const cloud& c,
-    const dictionary& dict
+    const carried& carriedCloud
 )
 :
-    coupled(c, dict),
+    coupled(c, carriedCloud),
     mesh_(c.mesh()),
     physicalPropertiesPtr_(nullptr),
     rho_
     (
-        phaseName() == word::null
+        carriedCloud.phaseName() == word::null
       ? NullObjectRef<dimensionedScalar>()
       : mesh_.poly().lookupObject<uniformDimensionedScalarField>
         (
-            IOobject::groupName("rho", phaseName())
+            IOobject::groupName("rho", carriedCloud.phaseName())
         )
     ),
     rhoc_
     (
-        carrierPhaseName() == word::null
+        carriedCloud.carrierPhaseName() == word::null
       ? NullObjectRef<dimensionedScalar>()
       : mesh_.poly().lookupObject<uniformDimensionedScalarField>
         (
-            IOobject::groupName("rho", carrierPhaseName())
+            IOobject::groupName("rho", carriedCloud.carrierPhaseName())
         )
     ),
     onec
     (
         c.derivedField<scalar>
         (
-            IOobject::groupName(nameToCarrierName("1"), carrierPhaseName()),
+            IOobject::groupName
+            (
+                carried::nameToCarrierName("1"),
+                carriedCloud.carrierPhaseName()
+            ),
             [&](const LagrangianModelRef&, const LagrangianSubMesh& subMesh)
             {
                 return one(subMesh);
@@ -116,7 +120,11 @@ Foam::clouds::coupledToConstantDensityFluid::coupledToConstantDensityFluid
     (
         c.derivedField<scalar>
         (
-            IOobject::groupName(nameToCarrierName("1"), phaseName()),
+            IOobject::groupName
+            (
+                carried::nameToCarrierName("1"),
+                carriedCloud.phaseName()
+            ),
             [&](const LagrangianModelRef&, const LagrangianSubMesh& subMesh)
             {
                 return one(subMesh);

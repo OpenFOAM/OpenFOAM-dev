@@ -36,6 +36,7 @@ SourceFiles
 #ifndef coupledToThermalFluid_H
 #define coupledToThermalFluid_H
 
+#include "thermal.H"
 #include "coupledToFluid.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -44,7 +45,9 @@ namespace Foam
 {
 
 class basicThermo;
+class multicomponentThermo;
 class fluidThermo;
+class fluidMulticomponentThermo;
 
 namespace clouds
 {
@@ -67,8 +70,14 @@ private:
         //- Carrier thermo
         const fluidThermo& thermoc_;
 
-        //- Corresponding Eulerian thermo
+        //- Carrier multicomponent thermo (may be null)
+        const fluidMulticomponentThermo& multicomponentThermoc_;
+
+        //- Corresponding Eulerian thermo (may be null)
         const basicThermo& thermocPhase_;
+
+        //- Corresponding multicomponent Eulerian thermo (may be null)
+        const multicomponentThermo& multicomponentThermocPhase_;
 
 
 public:
@@ -108,11 +117,24 @@ public:
         //- Carrier Prandtl number
         const CloudDerivedField<scalar>& Prc;
 
+        //- Map from cloud to carrier specie indices
+        labelList iToic;
+
+        //- Map from cloud to corresponding Eulerian specie indices
+        labelList iToicPhase;
+
+        //- Carrier mass fractions (indexed with the carrier specie index)
+        UPtrList<const CarrierField<scalar>> Yc;
+
+        //- Corresponding Eulerian mass fractions (indexed with the Eulerian
+        //  phase specie index)
+        UPtrList<const CarrierField<scalar>> YcPhase;
+
 
     // Constructors
 
-        //- Construct from a reference to the cloud
-        coupledToThermalFluid(const cloud& c, const dictionary& dict);
+        //- Construct from a reference to the cloud and its base classes
+        coupledToThermalFluid(const cloud& c, const carried&, const thermal&);
 
 
     //- Destructor

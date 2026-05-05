@@ -25,7 +25,10 @@ License
 
 #include "coupledToThermalFluid.H"
 #include "basicThermo.H"
+#include "multicomponentThermo.H"
 #include "fluidThermo.H"
+#include "fluidMulticomponentThermo.H"
+#include "multicomponentLagrangianThermo.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -43,45 +46,54 @@ namespace clouds
 Foam::clouds::coupledToThermalFluid::coupledToThermalFluid
 (
     const cloud& c,
-    const dictionary& dict
+    const carried& carriedCloud,
+    const thermal& thermalCloud
 )
 :
-    coupledToFluid(c, dict),
+    coupledToFluid(c, carriedCloud),
     mesh_(c.mesh()),
     thermoc_
     (
-        mesh_.lookupObject<fluidThermo>
+        mesh_.poly().lookupObject<fluidThermo>
         (
             IOobject::groupName
             (
                 physicalProperties::typeName,
-                carrierPhaseName()
+                carriedCloud.carrierPhaseName()
             )
         )
     ),
+    multicomponentThermoc_
+    (
+        refCastNull<const fluidMulticomponentThermo>(thermoc_)
+    ),
     thermocPhase_
     (
-        hasPhase()
-      ? mesh_.lookupObject<basicThermo>
+        carriedCloud.hasPhase()
+      ? mesh_.poly().lookupObject<basicThermo>
         (
             IOobject::groupName
             (
                 physicalProperties::typeName,
-                phaseName()
+                carriedCloud.phaseName()
             )
         )
       : NullObjectRef<basicThermo>()
     ),
-    pc(carrierField<scalar>(thermoc_.p())),
-    Tc(carrierField<scalar>(thermoc_.T())),
-    hec(carrierField<scalar>(thermoc_.he())),
+    multicomponentThermocPhase_
+    (
+        refCastNull<const multicomponentThermo>(thermocPhase_)
+    ),
+    pc(carriedCloud.carrierField<scalar>(thermoc_.p())),
+    Tc(carriedCloud.carrierField<scalar>(thermoc_.T())),
+    hec(carriedCloud.carrierField<scalar>(thermoc_.he())),
     hecPhase
     (
-        hasPhase()
-      ? carrierField<scalar>(thermocPhase_.he())
-      : carrierField<scalar>
+        carriedCloud.hasPhase()
+      ? carriedCloud.carrierField<scalar>(thermocPhase_.he())
+      : carriedCloud.carrierField<scalar>
         (
-            IOobject::groupName("hec", phaseName()),
+            IOobject::groupName("hec", carriedCloud.phaseName()),
             [&]()
             {
                 FatalErrorInFunction
@@ -91,20 +103,20 @@ Foam::clouds::coupledToThermalFluid::coupledToThermalFluid
             }
         )
     ),
-    Cpvc(carrierField<scalar>(thermoc_.Cpv())),
+    Cpvc(carriedCloud.carrierField<scalar>(thermoc_.Cpv())),
     Cpc
     (
         &thermoc_.Cp() == &thermoc_.Cpv()
       ? Cpvc
-      : carrierField<scalar>(thermoc_.Cp())
+      : carriedCloud.carrierField<scalar>(thermoc_.Cp())
     ),
     Cvc
     (
         &thermoc_.Cv() == &thermoc_.Cpv()
       ? Cpvc
-      : carrierField<scalar>(thermoc_.Cv())
+      : carriedCloud.carrierField<scalar>(thermoc_.Cv())
     ),
-    kappac(carrierField<scalar>(thermoc_.kappa())),
+    kappac(carriedCloud.carrierField<scalar>(thermoc_.kappa())),
     Prc
     (
         c.derivedField<scalar>
@@ -121,8 +133,81 @@ Foam::clouds::coupledToThermalFluid::coupledToThermalFluid
                    /kappac(model, subMesh);
             }
         )
-    )
-{}
+    ),
+    iToic(),
+    iToicPhase(),
+    Yc(),
+    YcPhase()
+{
+    // Create maps from cloud to Eulerian specie indices
+    if (thermalCloud.isThermo<multicomponentLagrangianThermo>())
+    {
+        const multicomponentLagrangianThermo& thermo =
+            thermalCloud.thermo<multicomponentLagrangianThermo>();
+
+        iToic.resize(thermo.species().size(), -1);
+        iToicPhase.resize(thermo.species().size(), -1);
+
+        if (notNull(multicomponentThermoc_))
+        {
+            forAll(iToic, i)
+            {
+                const word& specieName = thermo.species()[i];
+
+                iToic[i] =
+                    multicomponentThermoc_.containsSpecie(specieName)
+                  ? multicomponentThermoc_.species()[specieName]
+                  : -1;
+            }
+        }
+        if (notNull(multicomponentThermocPhase_))
+        {
+            forAll(iToicPhase, i)
+            {
+                const word& specieName = thermo.species()[i];
+
+                iToicPhase[i] =
+                    multicomponentThermocPhase_.containsSpecie(specieName)
+                  ? multicomponentThermocPhase_.species()[specieName]
+                  : -1;
+            }
+        }
+    }
+
+    // Create carrier fields for the mass fractions
+    if (notNull(multicomponentThermoc_))
+    {
+        const PtrList<volScalarField>& YcVf =
+            multicomponentThermoc_.Y();
+
+        Yc.resize(YcVf.size());
+
+        forAll(Yc, ic)
+        {
+            Yc.set
+            (
+                ic,
+                &carriedCloud.carrierField<scalar>(YcVf[ic])
+            );
+        }
+    }
+    if (notNull(multicomponentThermocPhase_))
+    {
+        const PtrList<volScalarField>& YcPhaseVf =
+            multicomponentThermocPhase_.Y();
+
+        YcPhase.resize(YcPhaseVf.size());
+
+        forAll(YcPhase, icPhase)
+        {
+            YcPhase.set
+            (
+                icPhase,
+                &carriedCloud.carrierField<scalar>(YcPhaseVf[icPhase])
+            );
+        }
+    }
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

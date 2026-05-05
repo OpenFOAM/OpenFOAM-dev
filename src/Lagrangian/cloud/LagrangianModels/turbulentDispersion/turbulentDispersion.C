@@ -181,7 +181,7 @@ bool Foam::Lagrangian::turbulentDispersion::addsSupToField
         fieldName == cloud().U.name()
      && (
             eqnFieldName == cloud().U.name()
-         || eqnFieldName == cloud<clouds::coupled>().Uc.name()
+         || eqnFieldName == cloud<clouds::carried>().Uc.name()
         );
 }
 

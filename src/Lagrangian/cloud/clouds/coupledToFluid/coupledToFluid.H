@@ -59,6 +59,9 @@ private:
         //- Reference to the mesh
         const LagrangianMesh& mesh_;
 
+        //- Reference to the carried cloud
+        const carried& carriedCloud_;
+
         //- Cached carrier density field
         tmp<volScalarField> trhocVf_;
 
@@ -117,7 +120,7 @@ public:
     // Constructors
 
         //- Construct from a reference to the cloud
-        coupledToFluid(const cloud& c, const dictionary& dict);
+        coupledToFluid(const cloud& c, const carried&);
 
 
     //- Destructor

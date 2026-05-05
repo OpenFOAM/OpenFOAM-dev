@@ -26,6 +26,25 @@ License
 #include "thermal.H"
 #include "CloudTypes.H"
 
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+template<class Thermo>
+Foam::clouds::Thermal<Thermo>::Thermal
+(
+    const cloud& c,
+    const shaped& shapedCloud,
+    const carried& carriedCloud
+)
+:
+    thermal
+    (
+        c,
+        shapedCloud,
+        Thermo::New(c.mesh(), carriedCloud.phaseName()).ptr()
+    )
+{}
+
+
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 template<class Thermo, class ... Thermos>

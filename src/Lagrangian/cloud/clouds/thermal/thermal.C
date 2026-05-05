@@ -36,7 +36,7 @@ namespace clouds
 }
 
 
-// * * * * * * * * * * * * * Protected Constructors  * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Private Constructors  * * * * * * * * * * * * //
 
 Foam::clouds::thermal::thermal
 (

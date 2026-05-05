@@ -58,14 +58,15 @@ Foam::Lagrangian::SaffmanMeiLift::calcL
 {
     using namespace constant::mathematical;
 
+    const clouds::carried& cCloud = cloud<clouds::carried>();
     const clouds::spherical& sCloud = cloud<clouds::spherical>();
-    const clouds::coupled& cCloud = cloud<clouds::coupled>();
+    const clouds::coupled& cplCloud = cloud<clouds::coupled>();
     const clouds::sphericalCoupled& scCloud = cloud<clouds::sphericalCoupled>();
 
     tmp<LagrangianSubScalarSubField> td = sCloud.d(model, subMesh);
     const LagrangianSubScalarSubField& d = td();
     const LagrangianSubScalarField& v = sCloud.v(model, subMesh);
-    const LagrangianSubScalarField& nuc = cCloud.nuc(model, subMesh);
+    const LagrangianSubScalarField& nuc = cplCloud.nuc(model, subMesh);
     const LagrangianSubScalarField& Re = scCloud.Re(model, subMesh);
     const LagrangianSubVectorField& curlUc = cCloud.curlUc(model, subMesh);
 
@@ -160,7 +161,7 @@ bool Foam::Lagrangian::SaffmanMeiLift::addsSupToField
         fieldName == cloud().U.name()
      && (
             eqnFieldName == cloud().U.name()
-         || eqnFieldName == cloud<clouds::coupled>().Uc.name()
+         || eqnFieldName == cloud<clouds::carried>().Uc.name()
         );
 }
 

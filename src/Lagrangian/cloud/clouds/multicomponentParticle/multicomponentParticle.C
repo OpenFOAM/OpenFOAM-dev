@@ -23,12 +23,11 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "parcel.H"
+#include "multicomponentParticle.H"
 #include "cloud_fvModel.H"
 #include "cloud_functionObject.H"
 #include "LagrangiancDdt.H"
 #include "LagrangianmDdt.H"
-#include "oneOrTmp.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -37,23 +36,24 @@ namespace Foam
 {
 namespace clouds
 {
-    defineTypeNameAndDebug(parcel, 0);
-    addToRunTimeSelectionTable(cloud, parcel, LagrangianMesh);
+    defineTypeNameAndDebug(multicomponentParticle, 0);
+    addToRunTimeSelectionTable(cloud, multicomponentParticle, LagrangianMesh);
 }
 namespace fv
 {
-    makeCloudFvModel(parcel);
+    makeCloudFvModel(multicomponentParticle);
 }
 namespace functionObjects
 {
-    makeCloudFunctionObject(parcel);
+    makeCloudFunctionObject(multicomponentParticle);
 }
 }
 
 
 // * * * * * * * * * * * *  Protected Member Functions * * * * * * * * * * * //
 
-Foam::tmp<Foam::LagrangianSubVectorField> Foam::clouds::parcel::dUdt
+Foam::tmp<Foam::LagrangianSubVectorField>
+Foam::clouds::multicomponentParticle::dUdt
 (
     const LagrangianSubMesh& subMesh
 ) const
@@ -68,23 +68,17 @@ Foam::tmp<Foam::LagrangianSubVectorField> Foam::clouds::parcel::dUdt
 }
 
 
-bool Foam::clouds::parcel::reCalculateModified()
+bool Foam::clouds::multicomponentParticle::reCalculateModified()
 {
     const bool dUdt = tracking == trackingType::parabolic;
 
     const LagrangianSubMesh subMesh = this->mesh().subNone();
 
-    LagrangianSubScalarSubField& number = this->number.ref(subMesh);
     LagrangianSubScalarSubField& m = this->m.ref(subMesh);
     LagrangianSubScalarSubField& e = this->e.ref(subMesh);
     LagrangianSubVectorSubField& U = this->U.ref(subMesh);
 
     bool result = false;
-
-    if (LagrangianModels().addsSupToField(word::null))
-    {
-        result = Lagrangianm::initDdt(dimless, number) || result;
-    }
 
     if (LagrangianModels().addsSupToField(m))
     {
@@ -96,6 +90,35 @@ bool Foam::clouds::parcel::reCalculateModified()
             if (hasPhase())
             {
                 result = initPsicDdt(m, rhocPhase) || result;
+            }
+        }
+    }
+
+    {
+        forAll(this->Y, i)
+        {
+            LagrangianSubScalarSubField& Yi = this->Y[i].ref(subMesh);
+
+            result = Lagrangianm::initDdt(dimMass, Yi, dUdt) || result;
+        }
+
+        if (context == cloud::contextType::fvModel)
+        {
+            forAll(this->Y, i)
+            {
+                const label ic = iToic[i];
+                if (ic != -1)
+                {
+                    result = initPsicDdt(m, Yc[ic]) || result;
+                }
+                if (hasPhase())
+                {
+                    const label icPhase = iToicPhase[i];
+                    if (icPhase != -1 && &YcPhase[icPhase] != &Yc[ic])
+                    {
+                        result = initPsicDdt(m, YcPhase[icPhase]) || result;
+                    }
+                }
             }
         }
     }
@@ -130,7 +153,7 @@ bool Foam::clouds::parcel::reCalculateModified()
 }
 
 
-void Foam::clouds::parcel::calculate
+void Foam::clouds::multicomponentParticle::calculate
 (
     const LagrangianSubScalarField& deltaT,
     const bool final
@@ -138,7 +161,6 @@ void Foam::clouds::parcel::calculate
 {
     const LagrangianSubMesh& subMesh = deltaT.mesh();
 
-    LagrangianSubScalarSubField& number = this->number.ref(subMesh);
     LagrangianSubScalarSubField& m = this->m.ref(subMesh);
     const LagrangianSubScalarSubField& rho = this->rho(subMesh);
     LagrangianSubScalarSubField& e = this->e.ref(subMesh);
@@ -147,40 +169,14 @@ void Foam::clouds::parcel::calculate
     // Update the pressure
     thermo().correctPressure(subMesh);
 
-    // Evaluate the fractional source
-    LagrangianEqn<scalar> oneEqn(LagrangianModels().source(deltaT));
-
-    // Initialise a unity fractional change in number (i.e., no change)
-    oneOrTmp<LagrangianSubScalarField> numberByNumber0;
-
-    // Solve the number equation if a model provides a fractional source
-    if (oneEqn.valid())
-    {
-        LagrangianEqn<scalar> numberEqn
-        (
-            Lagrangianm::Ddt(deltaT, number)
-         ==
-            oneEqn
-        );
-
-        numberEqn.solve(final);
-
-        // Set the fractional change in number
-        numberByNumber0 = number/number.oldTime();
-
-        // Correct the fractional source
-        oneEqn *= numberByNumber0();
-    }
-
     // Solve the mass equation if a model provides a mass source
     if (LagrangianModels().addsSupToField(m))
     {
         LagrangianEqn<scalar> mEqn
         (
             Lagrangianm::Ddt(deltaT, m)
-          + oneEqn
          ==
-            numberByNumber0()*LagrangianModels().source(deltaT, m)
+            LagrangianModels().source(deltaT, m)
         );
 
         mEqn.solve(final);
@@ -192,10 +188,58 @@ void Foam::clouds::parcel::calculate
         // Calculate mass exchanges with the carrier
         if (context == cloud::contextType::fvModel && final)
         {
-            carrierEqn(rhoc) += number*psicEqn(deltaT, m, rhoc);
+            carrierEqn(rhoc) += psicEqn(deltaT, m, rhoc);
             if (hasPhase())
             {
-                carrierEqn(rhocPhase) += number*psicEqn(deltaT, m, rhocPhase);
+                carrierEqn(rhocPhase) += psicEqn(deltaT, m, rhocPhase);
+            }
+        }
+    }
+
+    // Solve the species fraction equations
+    {
+        multicomponentLagrangianThermo& thermo =
+            this->thermo<multicomponentLagrangianThermo>();
+
+        forAll(this->Y, i)
+        {
+            if (i == thermo.defaultSpecie()) continue;
+
+            LagrangianSubScalarSubField& Yi = this->Y[i].ref(subMesh);
+
+            LagrangianEqn<scalar> YiEqn
+            (
+                Lagrangianm::Ddt(deltaT, m, Yi)
+             ==
+                LagrangianModels().source(deltaT, m, Yi)
+            );
+
+            YiEqn.solve(final);
+        }
+
+        // Ensure the species fractions sum to one
+        thermo.normaliseY(subMesh);
+
+        // Calculate specie exchanges with the carrier
+        if (context == cloud::contextType::fvModel && final)
+        {
+            forAll(this->Y, i)
+            {
+                const label ic = iToic[i];
+                if (ic != -1)
+                {
+                    carrierEqn(Yc[ic]) +=
+                        psicEqn(deltaT, m, e, Yc[ic]);
+                }
+                if (hasPhase())
+                {
+                    const label icPhase = iToicPhase[i];
+                    if (icPhase != -1 && &YcPhase[icPhase] != &Yc[ic])
+                    {
+                        carrierEqn(YcPhase[icPhase]) +=
+                            psicEqn(deltaT, m, e, YcPhase[icPhase]);
+                    }
+                }
             }
         }
     }
@@ -205,7 +249,6 @@ void Foam::clouds::parcel::calculate
         LagrangianEqn<scalar> eEqn
         (
             Lagrangianm::Ddt(deltaT, m, e)
-          + m*oneEqn
          ==
             LagrangianModels().source(deltaT, m, e)
         );
@@ -221,10 +264,10 @@ void Foam::clouds::parcel::calculate
         // Calculate energy exchanges with the carrier
         if (context == cloud::contextType::fvModel && final)
         {
-            carrierEqn(hec) += number*psicEqn(deltaT, m, e, hec);
+            carrierEqn(hec) += psicEqn(deltaT, m, e, hec);
             if (hasPhase() && &hecPhase != &hec)
             {
-                carrierEqn(hecPhase) += number*psicEqn(deltaT, m, e, hecPhase);
+                carrierEqn(hecPhase) += psicEqn(deltaT, m, e, hecPhase);
             }
         }
     }
@@ -234,7 +277,6 @@ void Foam::clouds::parcel::calculate
         LagrangianEqn<vector> UEqn
         (
             Lagrangianm::Ddt(deltaT, m, U)
-          + m*oneEqn
          ==
             LagrangianModels().source(deltaT, m, U)
         );
@@ -244,17 +286,17 @@ void Foam::clouds::parcel::calculate
         // Calculate momentum exchanges with the carrier
         if (context == cloud::contextType::fvModel && final)
         {
-            carrierEqn(Uc) += number*psicEqn(deltaT, m, U, Uc);
+            carrierEqn(Uc) += psicEqn(deltaT, m, U, Uc);
             if (hasPhase() && &UcPhase != &Uc)
             {
-                carrierEqn(UcPhase) += number*psicEqn(deltaT, m, U, UcPhase);
+                carrierEqn(UcPhase) += psicEqn(deltaT, m, U, UcPhase);
             }
         }
     }
 }
 
 
-void Foam::clouds::parcel::partition()
+void Foam::clouds::multicomponentParticle::partition()
 {
     cloud::partition();
     carried::clearCarrierFields();
@@ -263,7 +305,7 @@ void Foam::clouds::parcel::partition()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::clouds::parcel::parcel
+Foam::clouds::multicomponentParticle::multicomponentParticle
 (
     LagrangianMesh& mesh,
     const contextType context,
@@ -272,9 +314,8 @@ Foam::clouds::parcel::parcel
 :
     cloud(mesh, context),
     carried(*this, dict),
-    grouped(static_cast<const cloud&>(*this)),
     spherical(static_cast<const cloud&>(*this)),
-    thermal(*this, *this, *this),
+    multicomponentThermal(*this, *this, *this),
     coupledToThermalFluid(*this, *this, *this),
     sphericalCoupled(*this, *this, *this, *this),
     massiveCoupledToFluid(*this, *this, *this)
@@ -287,13 +328,17 @@ Foam::clouds::parcel::parcel
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::clouds::parcel::~parcel()
+Foam::clouds::multicomponentParticle::~multicomponentParticle()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::clouds::parcel::solve(const bool initial, const bool final)
+void Foam::clouds::multicomponentParticle::solve
+(
+    const bool initial,
+    const bool final
+)
 {
     // Pre-solve operations ...
     carried::resetCarrierFields(initial);

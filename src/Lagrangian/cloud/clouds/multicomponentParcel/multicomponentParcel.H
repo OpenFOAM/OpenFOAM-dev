@@ -22,33 +22,24 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::clouds::kinematicParcel
+    Foam::clouds::multicomponentParcel
 
 Description
-    Basic cloud with spherical, constant density, particles, grouped into
-    parcels.
-
-    This cloud's modelling is the same as for kinematicParticle, except
-    that an additional number field is used to represent multiple physical
-    particles per Lagrangian parcel. This adds flexibility with regards to
-    managing the expense of simulating large numbers of physical particles,
-    and also provides the ability to specify the number, size (distribution)
-    and volume or mass flow rate of particles at an injection.
-
-See also
-    Foam::clouds::kinematicParticle
+    Cloud with spherical particles with multicomponent thermodynamic modelling,
+    grouped into parcels
 
 SourceFiles
-    kinematicParcel.C
+    multicomponentParcel.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef kinematicParcel_H
-#define kinematicParcel_H
+#ifndef multicomponentParcel_H
+#define multicomponentParcel_H
 
-#include "grouped.H"
-#include "coupledToConstantDensityFluid.H"
+#include "multicomponentThermal.H"
+#include "coupledToThermalFluid.H"
 #include "sphericalCoupled.H"
+#include "massiveCoupledToFluid.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -58,17 +49,19 @@ namespace clouds
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class kinematicParcel Declaration
+                        Class multicomponentParcel Declaration
 \*---------------------------------------------------------------------------*/
 
-class kinematicParcel
+class multicomponentParcel
 :
     public cloud,
     public carried,
     public grouped,
     public spherical,
-    public coupledToConstantDensityFluid,
-    public sphericalCoupled
+    public multicomponentThermal,
+    public coupledToThermalFluid,
+    public sphericalCoupled,
+    public massiveCoupledToFluid
 {
 protected:
 
@@ -99,13 +92,13 @@ public:
     // Public Static Data
 
         //- Run-time type information
-        TypeName("kinematicParcel");
+        TypeName("multicomponentParcel");
 
 
     // Constructors
 
         //- Construct from a mesh and context
-        kinematicParcel
+        multicomponentParcel
         (
             LagrangianMesh& mesh,
             const contextType context,
@@ -114,7 +107,7 @@ public:
 
 
     //- Destructor
-    virtual ~kinematicParcel();
+    virtual ~multicomponentParcel();
 
 
     // Member Functions

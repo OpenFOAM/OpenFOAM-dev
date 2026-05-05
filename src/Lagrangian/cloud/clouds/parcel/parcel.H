@@ -38,8 +38,8 @@ SourceFiles
 
 #include "thermal.H"
 #include "coupledToThermalFluid.H"
-#include "massiveCoupledToFluid.H"
 #include "sphericalCoupled.H"
+#include "massiveCoupledToFluid.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -55,10 +55,11 @@ namespace clouds
 class parcel
 :
     public cloud,
+    public carried,
     public grouped,
     public spherical,
-    public coupledToThermalFluid,
     public thermal,
+    public coupledToThermalFluid,
     public sphericalCoupled,
     public massiveCoupledToFluid
 {
