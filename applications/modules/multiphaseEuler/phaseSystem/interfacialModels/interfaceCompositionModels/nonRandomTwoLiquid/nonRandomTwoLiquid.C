@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -138,8 +138,7 @@ Foam::interfaceCompositionModels::nonRandomTwoLiquid::nonRandomTwoLiquid
         interfaceCompositionModel::New
         (
             dict.subDict(species1Name_),
-            interface,
-            false
+            interface
         ).ptr()
     );
     speciesModel2_.reset
@@ -147,8 +146,7 @@ Foam::interfaceCompositionModels::nonRandomTwoLiquid::nonRandomTwoLiquid
         interfaceCompositionModel::New
         (
             dict.subDict(species2Name_),
-            interface,
-            false
+            interface
         ).ptr()
     );
 }

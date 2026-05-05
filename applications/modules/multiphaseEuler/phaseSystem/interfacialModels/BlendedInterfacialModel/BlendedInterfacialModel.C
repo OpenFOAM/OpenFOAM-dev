@@ -24,8 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "BlendedInterfacialModel.H"
-#include "phaseSystem.H"
-#include "fixedValueFvsPatchFields.H"
 #include "generateInterfacialModels.H"
 #include "surfaceInterpolate.H"
 #include "zeroDimensionalFvMesh.H"
@@ -1142,7 +1140,7 @@ template<class ModelType>
 template<class ... Args>
 Foam::BlendedInterfacialModel<ModelType>::BlendedInterfacialModel
 (
-    const dictionary& dict,
+    const UPtrList<const dictionary>& subDicts,
     const phaseInterface& interface,
     const dictionary& blendingDict,
     const Args& ... args
@@ -1189,7 +1187,7 @@ Foam::BlendedInterfacialModel<ModelType>::BlendedInterfacialModel
         interfaces,
         models,
         interface.fluid(),
-        dict,
+        subDicts,
         wordHashSet({"blending"}),
         interface,
         args ...

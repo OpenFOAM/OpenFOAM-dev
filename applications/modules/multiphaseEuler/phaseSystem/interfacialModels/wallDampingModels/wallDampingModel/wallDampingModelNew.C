@@ -35,8 +35,8 @@ Foam::autoPtr<Foam::wallDampingModel> Foam::wallDampingModel::New
 {
     const word wallDampingModelType(dict.lookup("type"));
 
-    Info<< indentOrNl << "Selecting wallDampingModel for "
-        << interface.name() << ": " << wallDampingModelType << endl;
+    Info<< indentOrNl << "Selecting " << typeName << ' '
+        << wallDampingModelType << endl;
 
     dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(wallDampingModelType);
@@ -50,6 +50,8 @@ Foam::autoPtr<Foam::wallDampingModel> Foam::wallDampingModel::New
             << dictionaryConstructorTablePtr_->sortedToc()
             << exit(FatalIOError);
     }
+
+    printDictionary print(dict);
 
     return cstrIter()(dict, interface);
 }

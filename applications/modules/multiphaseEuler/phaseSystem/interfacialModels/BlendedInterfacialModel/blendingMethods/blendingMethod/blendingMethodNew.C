@@ -36,9 +36,8 @@ Foam::autoPtr<Foam::blendingMethod> Foam::blendingMethod::New
 {
     const word blendingMethodType(dict.lookup("type"));
 
-    Info<< indentOrNl
-        << "Selecting " << modelTypeName << " blending method for "
-        << interface.name() << ": " << blendingMethodType << endl;
+    Info<< indentOrNl << "Selecting " << typeName << ' ' << blendingMethodType
+        << " for " << modelTypeName << " for " << interface.name() << endl;
 
     dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(blendingMethodType);
@@ -52,6 +51,8 @@ Foam::autoPtr<Foam::blendingMethod> Foam::blendingMethod::New
             << dictionaryConstructorTablePtr_->sortedToc()
             << exit(FatalIOError);
     }
+
+    printDictionary print(dict);
 
     return cstrIter()(dict, interface);
 }

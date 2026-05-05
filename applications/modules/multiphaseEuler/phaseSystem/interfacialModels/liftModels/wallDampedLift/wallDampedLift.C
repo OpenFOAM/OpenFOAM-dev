@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,7 +47,7 @@ Foam::liftModels::wallDamped::wallDamped
 )
 :
     dispersedLiftModel(dict, interface),
-    liftModel_(liftModel::New(dict.subDict("lift"), interface, false)),
+    liftModel_(liftModel::New(dict.subDict("lift"), interface)),
     wallDampingModel_
     (
         wallDampingModel::New(dict.subDict("wallDamping"), interface)

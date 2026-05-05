@@ -47,13 +47,10 @@ Foam::populationBalance::daughterSizeDistributionModel::New
     const dictionary& dict
 )
 {
-    word daughterSizeDistributionModelType
-    (
-        dict.lookup("daughterSizeDistributionModel")
-    );
+    const word daughterSizeDistributionModelType =
+        dict.lookup<word>("daughterSizeDistributionModel");
 
-    Info<< indentOrNl << "Selecting daughter size distribution model for "
-        << breakup.popBal().name() << ": "
+    Info<< indentOrNl << "Selecting " << typeName << ' '
         << daughterSizeDistributionModelType << endl;
 
     dictionaryConstructorTable::iterator cstrIter =
@@ -68,6 +65,8 @@ Foam::populationBalance::daughterSizeDistributionModel::New
             << dictionaryConstructorTablePtr_->sortedToc()
             << exit(FatalError);
     }
+
+    printDictionary print(dict);
 
     return cstrIter()(breakup, dict);
 }

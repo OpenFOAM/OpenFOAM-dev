@@ -24,24 +24,22 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "wallLubricationModel.H"
-#include "generateInterfacialModels.H"
 
 // * * * * * * * * * * * * * * * * Selector  * * * * * * * * * * * * * * * * //
 
 Foam::autoPtr<Foam::wallLubricationModel> Foam::wallLubricationModel::New
 (
-    const dictionary& dict,
+    const dictionary& modelDict,
     const phaseInterface& interface,
     const bool outer
 )
 {
-    const dictionary& modelDict =
-        outer ? modelSubDict<wallLubricationModel>(dict) : dict;
-
     const word wallLubricationModelType(modelDict.lookup("type"));
 
-    Info<< indentOrNl << "Selecting wallLubricationModel for "
-        << interface.name() << ": " << wallLubricationModelType << endl;
+    Info<< indentOrNl << "Selecting " << typeName << ' '
+        << wallLubricationModelType;
+    if (outer) Info<< " for " << interface.name();
+    Info<< endl;
 
     dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(wallLubricationModelType);
@@ -56,7 +54,19 @@ Foam::autoPtr<Foam::wallLubricationModel> Foam::wallLubricationModel::New
             << exit(FatalIOError);
     }
 
+    printDictionary print(modelDict);
+
     return cstrIter()(modelDict, interface);
+}
+
+
+Foam::autoPtr<Foam::wallLubricationModel> Foam::wallLubricationModel::New
+(
+    const UPtrList<const dictionary>& subDicts,
+    const phaseInterface& interface
+)
+{
+    return New(modelSubDict<wallLubricationModel>(subDicts), interface, true);
 }
 
 

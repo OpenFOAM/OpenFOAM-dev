@@ -38,8 +38,8 @@ Foam::autoPtr<Foam::phaseModel> Foam::phaseModel::New
 {
     const word phaseModelType(fluid.subDict(phaseName).lookup("type"));
 
-    Info<< indentOrNl << "Selecting phaseModel for "
-        << phaseName << ": " << phaseModelType << endl;
+    Info<< indentOrNl << "Selecting " << phaseModelType
+        << " for phase " << phaseName << endl;
 
     phaseSystemConstructorTable::iterator cstrIter =
         phaseSystemConstructorTablePtr_->find(phaseModelType);
@@ -53,6 +53,8 @@ Foam::autoPtr<Foam::phaseModel> Foam::phaseModel::New
             << phaseSystemConstructorTablePtr_->sortedToc()
             << exit(FatalIOError);
     }
+
+    printDictionary print(fluid.subDict(phaseName));
 
     return cstrIter()(fluid, phaseName, referencePhase, index);
 }

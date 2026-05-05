@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,6 @@ SourceFiles
 #define BlendedInterfacialModel_H
 
 #include "blendingMethod.H"
-#include "HashPtrTable.H"
 #include "hashedWordList.H"
 #include "dispersedDisplacedPhaseInterface.H"
 #include "segregatedDisplacedPhaseInterface.H"
@@ -194,7 +193,7 @@ public:
         template<class ... Args>
         BlendedInterfacialModel
         (
-            const dictionary& dict,
+            const UPtrList<const dictionary>& subDicts,
             const phaseInterface& interface,
             const dictionary& blendingDict,
             const Args& ... args

@@ -35,7 +35,7 @@ Foam::wallBoilingModels::nucleationSiteModel::New
 {
     word nucleationSiteModelType(dict.lookup("type"));
 
-    Info<< indentOrNl << "Selecting nucleationSiteModel "
+    Info<< indentOrNl << "Selecting " << typeName << ' '
         << nucleationSiteModelType << endl;
 
     dictionaryConstructorTable::iterator cstrIter =

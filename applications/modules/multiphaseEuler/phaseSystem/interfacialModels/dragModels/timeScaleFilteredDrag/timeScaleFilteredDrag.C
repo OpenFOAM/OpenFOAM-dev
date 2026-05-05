@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,10 +49,7 @@ Foam::dragModels::timeScaleFilteredDrag::timeScaleFilteredDrag
 )
 :
     dispersedDragModel(dict.subDict("dragModel"), interface, registerObject),
-    dragModel_
-    (
-        dragModel::New(dict.subDict("dragModel"), interface, false, false)
-    ),
+    dragModel_(dragModel::New(dict.subDict("dragModel"), interface)),
     minRelaxTime_("minRelaxTime", dimTime, dict)
 {
     if (!isA<dispersedDragModel>(dragModel_()))

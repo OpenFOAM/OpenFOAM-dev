@@ -69,7 +69,7 @@ void Foam::fv::massDiffusionLimitedPhaseChange::readCoeffs
     (
         sidedInterfaceCompositionModel::New
         (
-            interfaceCompositionDict,
+            modelSubDicts(interfaceCompositionDict),
             interface
         ).ptr()
     );
@@ -87,7 +87,7 @@ void Foam::fv::massDiffusionLimitedPhaseChange::readCoeffs
     (
         blendedSidedDiffusiveMassTransferModel::New
         (
-            diffusiveMassTransferDict,
+            blendedModelSubDicts(diffusiveMassTransferDict),
             interface,
             blendingDict<blendedSidedDiffusiveMassTransferModel>
             (

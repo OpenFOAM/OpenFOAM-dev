@@ -35,7 +35,7 @@ Foam::wallBoilingModels::departureFrequencyModel::New
 {
     word departureFrequencyModelType(dict.lookup("type"));
 
-    Info<< indentOrNl << "Selecting departureFrequencyModel "
+    Info<< indentOrNl << "Selecting " << typeName << ' '
         << departureFrequencyModelType << endl;
 
     dictionaryConstructorTable::iterator cstrIter =

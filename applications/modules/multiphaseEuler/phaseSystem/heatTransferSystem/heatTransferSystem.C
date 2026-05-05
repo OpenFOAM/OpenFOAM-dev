@@ -224,6 +224,11 @@ Foam::heatTransferSystem::heatTransferSystem
      && fluid.thermalPhases().empty()
     ) return;
 
+    Info<< indentOrNl << "Constructing " << typeName << " from "
+        << relativeObjectPath().c_str() << endl;
+
+    printDictionary print(*this);
+
     readModels();
 }
 

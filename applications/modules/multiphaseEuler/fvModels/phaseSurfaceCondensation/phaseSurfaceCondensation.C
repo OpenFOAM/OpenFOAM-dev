@@ -66,7 +66,7 @@ void Foam::fv::phaseSurfaceCondensation::readCoeffs(const dictionary& dict)
     (
         blendedSidedDiffusiveMassTransferModel::New
         (
-            diffusiveMassTransferDict,
+            modelSubDicts(diffusiveMassTransferDict),
             interface,
             blendingDict<blendedSidedDiffusiveMassTransferModel>
             (

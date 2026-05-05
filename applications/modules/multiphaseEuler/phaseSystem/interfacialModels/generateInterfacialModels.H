@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,26 +72,55 @@ word modelName()
 }
 
 
-template<class ModelType>
-const dictionary& modelSubDict(const dictionary& dict)
+inline UPtrList<const dictionary> modelSubDicts
+(
+    const dictionary& dict,
+    const wordHashSet& ignoreKeys = wordHashSet()
+)
 {
-    if (dict.size() != 1)
+    UPtrList<const dictionary> result(dict.size());
+
+    label n = 0;
+
+    forAllConstIter(dictionary, dict, iter)
     {
-        FatalErrorInFunction
-            << "Too many matching entries for construction of a "
-            << ModelType::typeName << nl << dict.toc()
-            << exit(FatalError);
+        if (ignoreKeys.found(iter().keyword())) continue;
+
+        result.set(n ++, &iter().dict());
     }
 
-    if (!dict.first()->isDict())
+    result.resize(n);
+
+    return result;
+}
+
+
+template<class ModelType>
+const dictionary& modelSubDict(const UPtrList<const dictionary>& subDicts)
+{
+    if (subDicts.empty())
     {
         FatalErrorInFunction
-            << "Non-sub-dictionary entries found for specification of a "
+            << "No many matching entries for construction of a "
             << ModelType::typeName
             << exit(FatalError);
     }
 
-    return dict.first()->dict();
+    if (subDicts.size() > 1)
+    {
+        wordList toc;
+        forAll(subDicts, i)
+        {
+            toc.append(subDicts[i].dictName());
+        }
+
+        FatalErrorInFunction
+            << "Too many matching entries for construction of a "
+            << ModelType::typeName << nl << toc
+            << exit(FatalError);
+    }
+
+    return subDicts.first();
 }
 
 
@@ -257,7 +286,7 @@ void generateInterfacialModels
     PtrList<phaseInterface>& interfaces,
     PtrList<ModelType>& models,
     const phaseSystem& fluid,
-    const dictionary& dict,
+    const UPtrList<const dictionary>& subDicts,
     const wordHashSet& ignoreKeys,
     const phaseInterface& interface,
     const Args& ... args
@@ -265,15 +294,15 @@ void generateInterfacialModels
 {
     // Construct sub-dictionaries and associated interfaces
     hashedWordList names;
-    PtrList<dictionary> dicts;
-    forAllConstIter(dictionary, dict, iter)
+    List<UPtrList<const dictionary>> subDictss;
+    forAll(subDicts, subDicti)
     {
-        // Get the keyword name and skip if it is ignored
-        const word& modelName = iter().keyword();
+        // Get the model sub dictionary and name
+        const dictionary& modelDict = subDicts[subDicti];
+        const word& modelName = modelDict.dictName();
         if (ignoreKeys.found(modelName)) continue;
 
-        // Get the model sub dictionary and construct the associated interface
-        const dictionary& modelDict = iter().dict();
+        // Construct the interface
         autoPtr<phaseInterface> modelInterfacePtr =
             phaseInterface::New(fluid, modelName);
 
@@ -289,7 +318,7 @@ void generateInterfacialModels
             TypeSet<InterfaceTypes ...>::clone(modelInterfacePtr());
         if (!interfacePtr.valid())
         {
-            FatalIOErrorInFunction(dict)
+            FatalIOErrorInFunction(modelDict)
                 << "The interface " << modelName
                 << " is not of suitable type for construction of a "
                 << ModelType::typeName
@@ -309,19 +338,19 @@ void generateInterfacialModels
         if (!names.found(name))
         {
             names.append(name);
-            dicts.append(new dictionary(dict.name()));
+            subDictss.append(UPtrList<const dictionary>());
             interfaces.append(interfacePtr.ptr());
             models.append(nullptr);
         }
 
         // Add the model dictionary
-        dicts[names[name]].add(modelName, modelDict);
+        subDictss[names[name]].append(&modelDict);
     }
 
     // Construct the models
     forAll(interfaces, i)
     {
-        models.set(i, ModelType::New(dicts[i], interfaces[i], args ...));
+        models.set(i, ModelType::New(subDictss[i], interfaces[i], args ...));
     }
 }
 
@@ -355,8 +384,8 @@ Foam::HashPtrTable
         listInterfaces,
         listModels,
         fluid,
-        dict,
-        ignoreKeys,
+        modelSubDicts(dict, ignoreKeys),
+        wordHashSet(),
         NullObjectRef<phaseInterface>(),
         args ...
     );

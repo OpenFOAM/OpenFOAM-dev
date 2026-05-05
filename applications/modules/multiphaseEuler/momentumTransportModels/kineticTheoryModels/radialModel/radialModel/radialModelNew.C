@@ -35,7 +35,7 @@ Foam::kineticTheoryModels::radialModel::New
 {
     const word radialModelType(dict.lookup("radialModel"));
 
-    Info<< indentOrNl << "Selecting radialModel "
+    Info<< indentOrNl << "Selecting " << typeName << ' '
         << radialModelType << endl;
 
     dictionaryConstructorTable::iterator cstrIter =
@@ -53,6 +53,8 @@ Foam::kineticTheoryModels::radialModel::New
 
     const dictionary& coeffDict =
         dict.optionalTypeDict(radialModelType);
+
+    printDictionary print(coeffDict);
 
     return autoPtr<radialModel>(cstrIter()(coeffDict));
 }

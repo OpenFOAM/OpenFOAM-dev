@@ -35,7 +35,7 @@ Foam::kineticTheoryModels::granularPressureModel::New
 {
     const word granularPressureModelType(dict.lookup("granularPressureModel"));
 
-    Info<< indentOrNl << "Selecting granularPressureModel "
+    Info<< indentOrNl << "Selecting " << typeName << ' '
         << granularPressureModelType << endl;
 
     dictionaryConstructorTable::iterator cstrIter =
@@ -53,6 +53,8 @@ Foam::kineticTheoryModels::granularPressureModel::New
 
     const dictionary& coeffDict =
         dict.optionalTypeDict(granularPressureModelType);
+
+    printDictionary print(coeffDict);
 
     return autoPtr<granularPressureModel>(cstrIter()(coeffDict));
 }

@@ -62,6 +62,8 @@ Foam::populationBalance::coalescenceModel::New
     }
     const dictionary& modelDict = *modelDictPtr;
 
+    Info<< indentOrNl << "Selecting " << typeName << ' ' << modelType << endl;
+
     dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(modelType);
 
@@ -74,6 +76,8 @@ Foam::populationBalance::coalescenceModel::New
             << dictionaryConstructorTablePtr_->sortedToc()
             << exit(FatalError);
     }
+
+    printDictionary print(modelDict);
 
     return cstrIter()(popBal, modelDict);
 }

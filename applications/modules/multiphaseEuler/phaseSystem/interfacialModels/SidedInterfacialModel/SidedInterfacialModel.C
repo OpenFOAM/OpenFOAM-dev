@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "SidedInterfacialModel.H"
-#include "phaseSystem.H"
 #include "generateInterfacialModels.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -33,7 +32,7 @@ template<class ModelType>
 template<class ... Args>
 Foam::SidedInterfacialModel<ModelType>::SidedInterfacialModel
 (
-    const dictionary& dict,
+    const UPtrList<const dictionary>& subDicts,
     const phaseInterface& interface,
     const Args& ... args
 )
@@ -61,7 +60,7 @@ Foam::SidedInterfacialModel<ModelType>::SidedInterfacialModel
         interfaces,
         models,
         interface.fluid(),
-        dict,
+        subDicts,
         wordHashSet(),
         interface,
         args ...

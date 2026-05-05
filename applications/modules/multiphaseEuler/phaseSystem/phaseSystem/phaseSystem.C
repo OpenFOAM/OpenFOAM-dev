@@ -257,15 +257,21 @@ Foam::phaseSystem::phaseSystem
         1e-8/pow(average(mesh_.V()), 1.0/3.0)
     ),
 
-    surfaceTensionCoefficientModels_
-    (
+    surfaceTensionCoefficientModels_()
+{
+    Info<< indentOrNl << "Constructing " << typeName << " from "
+        << relativeObjectPath().c_str() << endl;
+
+    printDictionary print(*this);
+
+    // Surface tension models
+    surfaceTensionCoefficientModels_ =
         generateInterfacialModels<surfaceTensionCoefficientModel>
         (
             *this,
             subDict(modelName<surfaceTensionCoefficientModel>())
-        )
-    )
-{
+        );
+
     // Groupings
     label movingPhasei = 0;
     label stationaryPhasei = 0;

@@ -205,6 +205,11 @@ Foam::momentumTransferSystem::momentumTransferSystem(const phaseSystem& fluid)
     IOdictionary(io(fluid)),
     fluid_(fluid)
 {
+    Info<< indentOrNl << "Constructing " << typeName << " from "
+        << relativeObjectPath().c_str() << endl;
+
+    printDictionary print(*this);
+
     readModels();
 }
 

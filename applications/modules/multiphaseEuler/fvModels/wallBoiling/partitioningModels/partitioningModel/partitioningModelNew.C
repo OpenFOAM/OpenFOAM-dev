@@ -35,7 +35,7 @@ Foam::wallBoilingModels::partitioningModel::New
 {
     word partitioningModelType(dict.lookup("type"));
 
-    Info<< indentOrNl << "Selecting partitioningModel "
+    Info<< indentOrNl << "Selecting " << typeName << ' '
         << partitioningModelType << endl;
 
     dictionaryConstructorTable::iterator cstrIter =

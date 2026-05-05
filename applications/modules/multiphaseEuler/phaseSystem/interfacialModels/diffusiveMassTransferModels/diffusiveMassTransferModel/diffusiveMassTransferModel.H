@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,7 +99,7 @@ public:
 
         static autoPtr<diffusiveMassTransferModel> New
         (
-            const dictionary& dict,
+            const UPtrList<const dictionary>& subDicts,
             const phaseInterface& interface
         );
 
@@ -134,7 +134,7 @@ public:
 
         inline static autoPtr<blendedDiffusiveMassTransferModel> New
         (
-            const dictionary& dict,
+            const UPtrList<const dictionary>& subDicts,
             const phaseInterface& interface,
             const dictionary& blendingDict
         )
@@ -143,7 +143,7 @@ public:
             (
                 new blendedDiffusiveMassTransferModel
                 (
-                    dict,
+                    subDicts,
                     interface,
                     blendingDict
                 )
@@ -180,7 +180,7 @@ public:
 
         inline static autoPtr<sidedBlendedDiffusiveMassTransferModel> New
         (
-            const dictionary& dict,
+            const UPtrList<const dictionary>& subDicts,
             const phaseInterface& interface,
             const dictionary& blendingDict
         )
@@ -189,7 +189,7 @@ public:
             (
                 new sidedBlendedDiffusiveMassTransferModel
                 (
-                    dict,
+                    subDicts,
                     interface,
                     blendingDict
                 )
@@ -220,13 +220,13 @@ public:
 
         inline static autoPtr<sidedDiffusiveMassTransferModel> New
         (
-            const dictionary& dict,
+            const UPtrList<const dictionary>& subDicts,
             const phaseInterface& interface
         )
         {
             return autoPtr<sidedDiffusiveMassTransferModel>
             (
-                new sidedDiffusiveMassTransferModel(dict, interface)
+                new sidedDiffusiveMassTransferModel(subDicts, interface)
             );
         }
 
@@ -260,7 +260,7 @@ public:
 
         inline static autoPtr<blendedSidedDiffusiveMassTransferModel> New
         (
-            const dictionary& dict,
+            const UPtrList<const dictionary>& subDicts,
             const phaseInterface& interface,
             const dictionary& blendingDict
         )
@@ -269,7 +269,7 @@ public:
             (
                 new blendedSidedDiffusiveMassTransferModel
                 (
-                    dict,
+                    subDicts,
                     interface,
                     blendingDict
                 )

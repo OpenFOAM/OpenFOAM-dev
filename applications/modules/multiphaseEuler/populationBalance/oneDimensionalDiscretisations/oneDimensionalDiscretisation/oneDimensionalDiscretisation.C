@@ -63,8 +63,8 @@ Foam::oneDimensionalDiscretisation::New
 
     const word oddType(dict.lookup("type"));
 
-    Info<< indentOrNl << "Selecting one-dimensional discretisation for "
-        << name << ": " << oddType << endl;
+    Info<< indentOrNl << "Selecting " << typeName << ' '
+        << oddType << " for " << name << endl;
 
     dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(oddType);
@@ -78,6 +78,8 @@ Foam::oneDimensionalDiscretisation::New
             << dictionaryConstructorTablePtr_->sortedToc()
             << exit(FatalIOError);
     }
+
+    printDictionary print(dict);
 
     return cstrIter()(name, dims, n, dict);
 }

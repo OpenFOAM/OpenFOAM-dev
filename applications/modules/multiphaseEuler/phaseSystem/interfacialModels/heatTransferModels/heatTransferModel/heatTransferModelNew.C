@@ -24,25 +24,22 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "heatTransferModel.H"
-#include "generateInterfacialModels.H"
 
 // * * * * * * * * * * * * * * * * Selector  * * * * * * * * * * * * * * * * //
 
 Foam::autoPtr<Foam::heatTransferModel> Foam::heatTransferModel::New
 (
-    const dictionary& dict,
+    const dictionary& modelDict,
     const phaseInterface& interface,
-    const bool outer,
     const bool registerObject
 )
 {
-    const dictionary& modelDict =
-        outer ? modelSubDict<heatTransferModel>(dict) : dict;
-
     const word heatTransferModelType(modelDict.lookup("type"));
 
-    Info<< indentOrNl << "Selecting heatTransferModel for "
-        << interface.name() << ": " << heatTransferModelType << endl;
+    Info<< indentOrNl << "Selecting " << typeName << ' '
+        << heatTransferModelType;
+    if (registerObject) Info<< " for " << interface.name();
+    Info<< endl;
 
     dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(heatTransferModelType);
@@ -57,7 +54,19 @@ Foam::autoPtr<Foam::heatTransferModel> Foam::heatTransferModel::New
             << exit(FatalIOError);
     }
 
+    printDictionary print(modelDict);
+
     return cstrIter()(modelDict, interface, registerObject);
+}
+
+
+Foam::autoPtr<Foam::heatTransferModel> Foam::heatTransferModel::New
+(
+    const UPtrList<const dictionary>& subDicts,
+    const phaseInterface& interface
+)
+{
+    return New(modelSubDict<heatTransferModel>(subDicts), interface, true);
 }
 
 
