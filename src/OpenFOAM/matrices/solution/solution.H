@@ -76,7 +76,7 @@ class solution
 
     // Private Member Functions
 
-        //- Read settings from fvSchemes
+        //- Read settings from fvSolution
         void readDict();
 
 
