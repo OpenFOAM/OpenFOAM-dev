@@ -230,6 +230,8 @@ void Foam::multicomponentLagrangianThermo::implementation::normaliseY
 
     forAll(Y(), i)
     {
+        if (i == defaultSpeciei_) continue;
+
         LagrangianSubScalarSubField subYi(subMesh.sub(Y_[i]));
         subYi = max(subYi, scalar(0));
         Yt += subYi;
