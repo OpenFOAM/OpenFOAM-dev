@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,15 +51,14 @@ void Foam::LagrangianSchemes::clear()
 }
 
 
-void Foam::LagrangianSchemes::read
+void Foam::LagrangianSchemes::readScheme
 (
-    const dictionary& dict,
     const word& type,
     dictionary& typeSchemes,
     ITstream& defaultTypeScheme
 )
 {
-    typeSchemes = dict.subDict(type + "Schemes");
+    typeSchemes = subDict(type + "Schemes");
 
     if
     (
@@ -72,27 +71,24 @@ void Foam::LagrangianSchemes::read
 }
 
 
-void Foam::LagrangianSchemes::read(const dictionary& dict)
+void Foam::LagrangianSchemes::readDict()
 {
-    read(dict, "ddt", ddtSchemes_, defaultDdtScheme_);
-    read(dict, "Sp", SpSchemes_, defaultSpScheme_);
-    read
+    readScheme("ddt", ddtSchemes_, defaultDdtScheme_);
+    readScheme("Sp", SpSchemes_, defaultSpScheme_);
+    readScheme
     (
-        dict,
         "averaging",
         averagingSchemes_,
         defaultAveragingScheme_
     );
-    read
+    readScheme
     (
-        dict,
         "interpolation",
         interpolationSchemes_,
         defaultInterpolationScheme_
     );
-    read
+    readScheme
     (
-        dict,
         "accumulation",
         accumulationSchemes_,
         defaultAccumulationScheme_
@@ -100,7 +96,7 @@ void Foam::LagrangianSchemes::read(const dictionary& dict)
 }
 
 
-Foam::ITstream& Foam::LagrangianSchemes::lookup
+Foam::ITstream& Foam::LagrangianSchemes::lookupScheme
 (
     const word& name,
     const dictionary& typeSchemes,
@@ -289,7 +285,7 @@ Foam::LagrangianSchemes::LagrangianSchemes(const objectRegistry& db)
         tokenList()
     )
 {
-    read(schemesDict());
+    readDict();
 }
 
 
@@ -307,7 +303,7 @@ bool Foam::LagrangianSchemes::read()
     {
         clear();
 
-        read(schemesDict());
+        readDict();
 
         return true;
     }
@@ -318,46 +314,38 @@ bool Foam::LagrangianSchemes::read()
 }
 
 
-const Foam::dictionary& Foam::LagrangianSchemes::schemesDict() const
-{
-    if (found("select"))
-    {
-        return subDict(word(IOdictionary::lookup("select")));
-    }
-    else
-    {
-        return *this;
-    }
-}
-
-
 Foam::ITstream& Foam::LagrangianSchemes::ddt(const word& name) const
 {
-    return lookup(name, ddtSchemes_, defaultDdtScheme_);
+    return lookupScheme(name, ddtSchemes_, defaultDdtScheme_);
 }
 
 
 Foam::ITstream& Foam::LagrangianSchemes::Sp(const word& name) const
 {
-    return lookup(name, SpSchemes_, defaultSpScheme_);
+    return lookupScheme(name, SpSchemes_, defaultSpScheme_);
 }
 
 
 Foam::ITstream& Foam::LagrangianSchemes::averaging(const word& name) const
 {
-    return lookup(name, averagingSchemes_, defaultAveragingScheme_);
+    return lookupScheme(name, averagingSchemes_, defaultAveragingScheme_);
 }
 
 
 Foam::ITstream& Foam::LagrangianSchemes::interpolation(const word& name) const
 {
-    return lookup(name, interpolationSchemes_, defaultInterpolationScheme_);
+    return lookupScheme
+    (
+        name,
+        interpolationSchemes_,
+        defaultInterpolationScheme_
+    );
 }
 
 
 Foam::ITstream& Foam::LagrangianSchemes::accumulation(const word& name) const
 {
-    return lookup(name, accumulationSchemes_, defaultAccumulationScheme_);
+    return lookupScheme(name, accumulationSchemes_, defaultAccumulationScheme_);
 }
 
 

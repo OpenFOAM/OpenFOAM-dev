@@ -54,9 +54,9 @@ Foam::singleRegionSolutionControl::singleRegionSolutionControl
     (
         mesh,
         (
-           !mesh.solution().dict().found(algorithmName)
+           !mesh.solution().found(algorithmName)
          && mesh.schemes().steady()
-         && mesh.solution().dict().found("SIMPLE")
+         && mesh.solution().found("SIMPLE")
         )
       ? "SIMPLE"
       : algorithmName
@@ -79,12 +79,12 @@ const Foam::dictionary& Foam::singleRegionSolutionControl::dict
     const word& algorithmName
 )
 {
-    return mesh.solution().dict().subDict
+    return mesh.solution().subDict
     (
         (
-           !mesh.solution().dict().found(algorithmName)
+           !mesh.solution().found(algorithmName)
          && mesh.schemes().steady()
-         && mesh.solution().dict().found("SIMPLE")
+         && mesh.solution().found("SIMPLE")
         )
       ? "SIMPLE"
       : algorithmName

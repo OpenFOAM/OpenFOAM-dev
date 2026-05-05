@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,20 +88,19 @@ class LagrangianSchemes
         //- Clear the dictionaries and streams before reading
         void clear();
 
-        //- Read a scheme from the dictionary
-        static void read
+        //- Read a scheme
+        void readScheme
         (
-            const dictionary& dict,
             const word& type,
             dictionary& typeSchemes,
             ITstream& defaultTypeScheme
         );
 
-        //- Read schemes from the dictionary
-        void read(const dictionary&);
+        //- Read all the schemes from LagrangianSchemes
+        void readDict();
 
         //- Look up a scheme
-        static ITstream& lookup
+        static ITstream& lookupScheme
         (
             const word& name,
             const dictionary& typeSchemes,
@@ -131,9 +130,6 @@ public:
     // Member Functions
 
         // Access
-
-            //- Access the dictionary
-            const dictionary& schemesDict() const;
 
             //- Get the time scheme for the given field name
             ITstream& ddt(const word& name) const;

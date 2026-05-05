@@ -36,18 +36,18 @@ namespace Foam
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
-void Foam::solution::read(const dictionary& dict)
+void Foam::solution::readDict()
 {
-    if (dict.found("cache"))
+    if (found("cache"))
     {
-        printDictionary print(dict.subDict("cache"));
-        cache_ = dict.subDict("cache");
+        printDictionary print(subDict("cache"));
+        cache_ = subDict("cache");
         caching_ = cache_.lookupOrDefault("active", true);
     }
 
-    if (dict.found("relaxationFactors"))
+    if (found("relaxationFactors"))
     {
-        const dictionary& relaxDict(dict.subDict("relaxationFactors"));
+        const dictionary& relaxDict(subDict("relaxationFactors"));
         printDictionary print(relaxDict);
 
         if (relaxDict.found("fields") || relaxDict.found("equations"))
@@ -64,15 +64,15 @@ void Foam::solution::read(const dictionary& dict)
         }
         else
         {
-            IOWarningInFunction(dict)
+            IOWarningInFunction(*this)
                 << "Neither fields nor equations specified" << endl;
         }
     }
 
-    if (dict.found("solvers"))
+    if (found("solvers"))
     {
-        printDictionary print(dict.subDict("solvers"));
-        solvers_ = dict.subDict("solvers");
+        printDictionary print(subDict("solvers"));
+        solvers_ = subDict("solvers");
     }
 }
 
@@ -96,15 +96,15 @@ Foam::solution::solution
             IOobject::NO_WRITE
         )
     ),
-    cache_("cache", dict()),
+    cache_("cache", *this),
     caching_(false),
-    fieldRelaxDict_("fields", dict()),
-    eqnRelaxDict_("equations", dict()),
+    fieldRelaxDict_("fields", *this),
+    eqnRelaxDict_("equations", *this),
     fieldRelaxDefault_(0),
     eqnRelaxDefault_(0),
-    solvers_("solvers", dict())
+    solvers_("solvers", *this)
 {
-    read(dict());
+    readDict();
 }
 
 
@@ -223,19 +223,6 @@ Foam::scalar Foam::solution::equationRelaxationFactor(const word& name) const
 }
 
 
-const Foam::dictionary& Foam::solution::dict() const
-{
-    if (found("select"))
-    {
-        return subDict(word(lookup("select")));
-    }
-    else
-    {
-        return *this;
-    }
-}
-
-
 const Foam::dictionary& Foam::solution::solversDict() const
 {
     return solvers_;
@@ -257,7 +244,7 @@ bool Foam::solution::read()
 {
     if (regIOobject::read())
     {
-        read(dict());
+        readDict();
 
         return true;
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,11 +58,11 @@ void Foam::fvSchemes::clear()
 }
 
 
-void Foam::fvSchemes::read(const dictionary& dict)
+void Foam::fvSchemes::readDict()
 {
-    if (dict.found("ddtSchemes"))
+    if (found("ddtSchemes"))
     {
-        ddtSchemes_ = dict.subDict("ddtSchemes");
+        ddtSchemes_ = subDict("ddtSchemes");
     }
     else
     {
@@ -84,9 +84,9 @@ void Foam::fvSchemes::read(const dictionary& dict)
     }
 
 
-    if (dict.found("d2dt2Schemes"))
+    if (found("d2dt2Schemes"))
     {
-        d2dt2Schemes_ = dict.subDict("d2dt2Schemes");
+        d2dt2Schemes_ = subDict("d2dt2Schemes");
     }
     else
     {
@@ -108,9 +108,9 @@ void Foam::fvSchemes::read(const dictionary& dict)
     }
 
 
-    if (dict.found("interpolationSchemes"))
+    if (found("interpolationSchemes"))
     {
-        interpolationSchemes_ = dict.subDict("interpolationSchemes");
+        interpolationSchemes_ = subDict("interpolationSchemes");
     }
     else if (!interpolationSchemes_.found("default"))
     {
@@ -128,7 +128,7 @@ void Foam::fvSchemes::read(const dictionary& dict)
     }
 
 
-    divSchemes_ = dict.subDict("divSchemes");
+    divSchemes_ = subDict("divSchemes");
 
     if
     (
@@ -140,7 +140,7 @@ void Foam::fvSchemes::read(const dictionary& dict)
     }
 
 
-    gradSchemes_ = dict.subDict("gradSchemes");
+    gradSchemes_ = subDict("gradSchemes");
 
     if
     (
@@ -152,9 +152,9 @@ void Foam::fvSchemes::read(const dictionary& dict)
     }
 
 
-    if (dict.found("snGradSchemes"))
+    if (found("snGradSchemes"))
     {
-        snGradSchemes_ = dict.subDict("snGradSchemes");
+        snGradSchemes_ = subDict("snGradSchemes");
     }
     else if (!snGradSchemes_.found("default"))
     {
@@ -171,7 +171,7 @@ void Foam::fvSchemes::read(const dictionary& dict)
     }
 
 
-    laplacianSchemes_ = dict.subDict("laplacianSchemes");
+    laplacianSchemes_ = subDict("laplacianSchemes");
 
     if
     (
@@ -183,9 +183,9 @@ void Foam::fvSchemes::read(const dictionary& dict)
     }
 
 
-    if (dict.found("fluxRequired"))
+    if (found("fluxRequired"))
     {
-        fluxRequired_.merge(dict.subDict("fluxRequired"));
+        fluxRequired_.merge(subDict("fluxRequired"));
 
         if
         (
@@ -314,53 +314,53 @@ Foam::fvSchemes::fvSchemes(const objectRegistry& obr)
             IOobject::NO_WRITE
         )
     ),
-    ddtSchemes_("ddtSchemes", dict()),
+    ddtSchemes_("ddtSchemes", *this),
     defaultDdtScheme_
     (
         ddtSchemes_.name() + ".default",
         tokenList()
     ),
-    d2dt2Schemes_("d2dt2Schemes", dict()),
+    d2dt2Schemes_("d2dt2Schemes", *this),
     defaultD2dt2Scheme_
     (
         d2dt2Schemes_.name() + ".default",
         tokenList()
     ),
-    interpolationSchemes_("interpolationSchemes", dict()),
+    interpolationSchemes_("interpolationSchemes", *this),
     defaultInterpolationScheme_
     (
         interpolationSchemes_.name() + ".default",
         tokenList()
     ),
-    divSchemes_("divSchemes", dict()),
+    divSchemes_("divSchemes", *this),
     defaultDivScheme_
     (
         divSchemes_.name() + ".default",
         tokenList()
     ),
-    gradSchemes_("gradSchemes", dict()),
+    gradSchemes_("gradSchemes", *this),
     defaultGradScheme_
     (
         gradSchemes_.name() + ".default",
         tokenList()
     ),
-    snGradSchemes_("snGradSchemes", dict()),
+    snGradSchemes_("snGradSchemes", *this),
     defaultSnGradScheme_
     (
         snGradSchemes_.name() + ".default",
         tokenList()
     ),
-    laplacianSchemes_("laplacianSchemes", dict()),
+    laplacianSchemes_("laplacianSchemes", *this),
     defaultLaplacianScheme_
     (
         laplacianSchemes_.name() + ".default",
         tokenList()
     ),
-    fluxRequired_("fluxRequired", dict()),
+    fluxRequired_("fluxRequired", *this),
     defaultFluxRequired_(false),
     steady_(false)
 {
-    read(dict());
+    readDict();
 }
 
 
@@ -373,26 +373,13 @@ bool Foam::fvSchemes::read()
         // Clear current settings except fluxRequired
         clear();
 
-        read(dict());
+        readDict();
 
         return true;
     }
     else
     {
         return false;
-    }
-}
-
-
-const Foam::dictionary& Foam::fvSchemes::dict() const
-{
-    if (found("select"))
-    {
-        return subDict(word(lookup("select")));
-    }
-    else
-    {
-        return *this;
     }
 }
 

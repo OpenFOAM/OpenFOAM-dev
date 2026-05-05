@@ -473,13 +473,7 @@ Foam::cloud::cloud(LagrangianMesh& mesh, const contextType context)
     statePtr_(readStates()),
     cellLengthScaleVf_(mag(cbrt(mesh_.poly().cellVolumes()))),
     context(context),
-    tracking
-    (
-        cloudTrackingNames
-        [
-            mesh.schemes().schemesDict().lookup<word>("tracking")
-        ]
-    ),
+    tracking(cloudTrackingNames[mesh.schemes().lookup<word>("tracking")]),
     U
     (
         IOobject
@@ -508,12 +502,7 @@ Foam::cloud::cloud
     statePtr_(readStates()),
     cellLengthScaleVf_(mag(cbrt(mesh_.poly().cellVolumes()))),
     context(context),
-    tracking
-    (
-        cloudTrackingNames
-        [
-            mesh.schemes().schemesDict().lookup<word>("tracking")
-        ]
+    tracking(cloudTrackingNames[mesh.schemes().lookup<word>("tracking")]
     ),
     U
     (

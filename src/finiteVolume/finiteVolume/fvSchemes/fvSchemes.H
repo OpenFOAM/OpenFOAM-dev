@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,8 +88,8 @@ class fvSchemes
         //- Clear the dictionaries and streams before reading
         void clear();
 
-        //- Read settings from the dictionary
-        void read(const dictionary&);
+        //- Read settings from fvSchemes
+        void readDict();
 
         //- Filter group extensions
         word filterGroup(const word& name) const;
@@ -123,8 +123,6 @@ public:
     // Member Functions
 
         // Access
-
-            const dictionary& dict() const;
 
             ITstream& ddt(const word& name) const;
 

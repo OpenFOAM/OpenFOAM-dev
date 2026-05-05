@@ -76,8 +76,8 @@ class solution
 
     // Private Member Functions
 
-        //- Read settings from the dictionary
-        void read(const dictionary&);
+        //- Read settings from fvSchemes
+        void readDict();
 
 
 public:
@@ -129,10 +129,6 @@ public:
 
             //- Return the relaxation factor for the given eqation
             scalar equationRelaxationFactor(const word& name) const;
-
-            //- Return the selected sub-dictionary of solvers if the "select"
-            //  keyword is given, otherwise return the complete dictionary
-            const dictionary& dict() const;
 
             //- Return the solver controls dictionary
             const dictionary& solversDict() const;
