@@ -31,6 +31,7 @@ License
 namespace Foam
 {
     defineTypeNameAndDebug(multicomponentLagrangianThermo, 0);
+    defineRunTimeSelectionTable(multicomponentLagrangianThermo, LagrangianMesh);
 }
 
 
@@ -155,6 +156,24 @@ Foam::multicomponentLagrangianThermo::implementation::implementation
     {
         Y_[i] /= Yt;
     }
+}
+
+
+// * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
+
+Foam::autoPtr<Foam::multicomponentLagrangianThermo>
+Foam::multicomponentLagrangianThermo::New
+(
+    const LagrangianMesh& mesh,
+    const word& phaseName
+)
+{
+    return
+        basicLagrangianThermo::New<multicomponentLagrangianThermo>
+        (
+            mesh,
+            phaseName
+        );
 }
 
 

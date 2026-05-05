@@ -60,10 +60,31 @@ public:
     TypeName("multicomponentLagrangianThermo");
 
 
+    //- Declare run-time constructor selection table
+    declareRunTimeSelectionTable
+    (
+        autoPtr,
+        multicomponentLagrangianThermo,
+        LagrangianMesh,
+        (const LagrangianMesh& mesh, const word& phaseName),
+        (mesh, phaseName)
+    );
+
+
     // Public Classes
 
         //- Forward declare the implementation class
         class implementation;
+
+
+    // Selectors
+
+        //- Select a multicomponent thermo
+        static autoPtr<multicomponentLagrangianThermo> New
+        (
+            const LagrangianMesh& mesh,
+            const word& phaseName=word::null
+        );
 
 
     //- Destructor

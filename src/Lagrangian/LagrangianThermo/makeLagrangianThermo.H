@@ -34,7 +34,7 @@ License
         SelectThermo,                                                          \
         BaseThermo##Mixture##ThermoPhysics,                                    \
         LagrangianMesh                                                         \
-    );
+    )
 
 #define makeLagrangianThermo(BaseThermo, Mixture, ThermoPhysics)               \
                                                                                \
@@ -46,13 +46,23 @@ License
         BaseThermo,                                                            \
         Mixture,                                                               \
         ThermoPhysics                                                          \
-    );                                                                         \
-    addLagrangianThermo                                                        \
-    (                                                                          \
-        BaseThermo,                                                            \
-        BaseThermo,                                                            \
-        Mixture,                                                               \
-        ThermoPhysics                                                          \
-    );
+    )
+
+#define makeLagrangianThermos(                                                 \
+    SelectThermo, BaseThermo, Mixture, ThermoPhysics)                          \
+                                                                               \
+    makeLagrangianThermo(BaseThermo, Mixture, ThermoPhysics);                  \
+                                                                               \
+    addLagrangianThermo(SelectThermo, BaseThermo, Mixture, ThermoPhysics)
+
+#define makeLagrangianThermoss(                                                \
+    SelectThermo1, SelectThermo2, BaseThermo, Mixture, ThermoPhysics)          \
+                                                                               \
+    makeLagrangianThermo(BaseThermo, Mixture, ThermoPhysics);                  \
+                                                                               \
+    addLagrangianThermo(SelectThermo1, BaseThermo, Mixture, ThermoPhysics);    \
+    addLagrangianThermo(SelectThermo2, BaseThermo, Mixture, ThermoPhysics)
+
+// etc ...
 
 // ************************************************************************* //

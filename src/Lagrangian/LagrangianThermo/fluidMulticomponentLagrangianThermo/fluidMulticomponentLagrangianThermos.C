@@ -41,33 +41,38 @@ namespace Foam
 {
     forCoeffEnergyGases
     (
-        makeLagrangianThermo,
+        makeLagrangianThermos,
+        multicomponentLagrangianThermo,
         fluidMulticomponentLagrangianThermo,
         coefficientMulticomponentMixture
     );
     forCoeffEnergyGases
     (
-        makeLagrangianThermo,
+        makeLagrangianThermos,
+        multicomponentLagrangianThermo,
         fluidMulticomponentLagrangianThermo,
         coefficientWilkeMulticomponentMixture
     );
 
     forCoeffEnergyLiquids
     (
-        makeLagrangianThermo,
+        makeLagrangianThermos,
+        multicomponentLagrangianThermo,
         fluidMulticomponentLagrangianThermo,
         coefficientMulticomponentMixture
     );
     forEnergyLiquids
     (
-        makeLagrangianThermo,
+        makeLagrangianThermos,
+        multicomponentLagrangianThermo,
         fluidMulticomponentLagrangianThermo,
         valueMulticomponentMixture
     );
 
     forTabulated
     (
-        makeLagrangianThermo,
+        makeLagrangianThermos,
+        multicomponentLagrangianThermo,
         fluidMulticomponentLagrangianThermo,
         valueMulticomponentMixture
     );
