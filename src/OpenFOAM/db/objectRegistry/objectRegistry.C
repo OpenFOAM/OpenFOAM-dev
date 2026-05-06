@@ -47,11 +47,11 @@ void Foam::objectRegistry::readCacheTemporaryObjects() const
 {
     if
     (
-        !cacheTemporaryObjectsSet_
+        cacheTemporaryObjectsState_ == 0
      && time_.controlDict().found("cacheTemporaryObjects")
     )
     {
-        cacheTemporaryObjectsSet_ = true;
+        cacheTemporaryObjectsState_ = 1;
 
         const dictionary& controlDict = time_.controlDict();
 
@@ -118,7 +118,7 @@ Foam::objectRegistry::objectRegistry
     parent_(t),
     dbDir_(fileName::null),
     event_(1),
-    cacheTemporaryObjectsSet_(false)
+    cacheTemporaryObjectsState_(0)
 {}
 
 
@@ -135,7 +135,7 @@ Foam::objectRegistry::objectRegistry
     parent_(io.db()),
     dbDir_(dbDir),
     event_(1),
-    cacheTemporaryObjectsSet_(false)
+    cacheTemporaryObjectsState_(0)
 {
     writeOpt() = IOobject::AUTO_WRITE;
 }
@@ -156,6 +156,8 @@ Foam::objectRegistry::objectRegistry
 Foam::objectRegistry::~objectRegistry()
 {
     cacheTemporaryObjects_.clear();
+    cacheTemporaryObjectsState_ = -1;
+
     clear();
 }
 
