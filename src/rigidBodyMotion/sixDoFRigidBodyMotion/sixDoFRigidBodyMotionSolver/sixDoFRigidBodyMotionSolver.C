@@ -161,13 +161,6 @@ Foam::sixDoFRigidBodyMotionSolver::~sixDoFRigidBodyMotionSolver()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::pointField>
-Foam::sixDoFRigidBodyMotionSolver::curPoints() const
-{
-    return points0() + pointDisplacement_.primitiveField();
-}
-
-
 void Foam::sixDoFRigidBodyMotionSolver::solve()
 {
     const Time& t = mesh().time();

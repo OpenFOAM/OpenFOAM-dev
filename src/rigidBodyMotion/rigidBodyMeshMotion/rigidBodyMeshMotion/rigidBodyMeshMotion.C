@@ -281,13 +281,6 @@ Type Foam::rigidBodyMeshMotion::bodyMesh::weight
 }
 
 
-Foam::tmp<Foam::pointField>
-Foam::rigidBodyMeshMotion::curPoints() const
-{
-    return points0() + pointDisplacement_.primitiveField();
-}
-
-
 void Foam::rigidBodyMeshMotion::solve()
 {
     const Time& t = mesh().time();

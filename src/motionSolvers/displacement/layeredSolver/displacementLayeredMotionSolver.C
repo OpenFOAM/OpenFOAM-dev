@@ -150,18 +150,6 @@ Foam::displacementLayeredMotionSolver::~displacementLayeredMotionSolver()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::pointField>
-Foam::displacementLayeredMotionSolver::curPoints() const
-{
-    tmp<pointField> tcurPoints
-    (
-        points0() + pointDisplacement_.primitiveField()
-    );
-
-    return tcurPoints;
-}
-
-
 void Foam::displacementLayeredMotionSolver::solve()
 {
     // The points have moved so before interpolation update the motionSolver

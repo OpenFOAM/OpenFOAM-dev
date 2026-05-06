@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,6 +99,9 @@ public:
         {
             return pointDisplacement_;
         }
+
+        //- Return point location obtained from the current motion field
+        virtual tmp<pointField> curPoints() const;
 
         //- Update from another mesh using the given map
         virtual void mapMesh(const polyMeshMap&);

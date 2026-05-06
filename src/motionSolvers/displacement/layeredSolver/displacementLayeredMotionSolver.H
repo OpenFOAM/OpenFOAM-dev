@@ -123,9 +123,6 @@ public:
 
     // Member Functions
 
-        //- Return point location obtained from the current motion field
-        virtual tmp<pointField> curPoints() const;
-
         //- Solve for motion
         virtual void solve();
 

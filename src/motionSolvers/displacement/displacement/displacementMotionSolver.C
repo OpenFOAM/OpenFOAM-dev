@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,6 +66,13 @@ Foam::displacementMotionSolver::~displacementMotionSolver()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+Foam::tmp<Foam::pointField>
+Foam::displacementMotionSolver::curPoints() const
+{
+    return points0() + pointDisplacement_.primitiveField();
+}
+
 
 void Foam::displacementMotionSolver::mapMesh(const polyMeshMap& map)
 {
