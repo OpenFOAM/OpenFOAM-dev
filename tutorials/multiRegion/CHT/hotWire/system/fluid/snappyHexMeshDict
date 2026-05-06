@@ -1,0 +1,96 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system/fluid";
+    object      snappyHexMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#includeEtc "caseDicts/mesh/generation/snappyHexMeshDict.cfg"
+
+castellatedMesh on;
+snap            on;
+addLayers       on;
+
+geometry
+{
+    solid
+    {
+        type triSurface;
+        file "solid.obj";
+
+        regions
+        {
+            negative { name negative; }
+            positive { name positive; }
+            nonCoupleElectrode { name nonCoupleElectrode; }
+            nonCoupleWire { name nonCoupleWire; }
+        }
+    }
+};
+
+castellatedMeshControls
+{
+    refinementSurfaces
+    {
+        solid
+        {
+            level (4 4);
+            patchInfo { type wall; }
+            regions
+            {
+                negative { level (4 4); }
+                positive { level (4 4); }
+                nonCoupleElectrode { level (4 4); }
+                nonCoupleWire { level (7 7); }
+            }
+        }
+    }
+
+    refinementRegions
+    {}
+
+    insidePoint (-0.1 0 0);
+
+    nCellsBetweenLevels 4;
+}
+
+snapControls
+{}
+
+addLayersControls
+{
+    layers
+    {
+        nonCoupleElectrode
+        {
+            nSurfaceLayers  2;
+        }
+        nonCoupleWire
+        {
+            nSurfaceLayers  2;
+        }
+    }
+
+    relativeSizes       yes;
+    expansionRatio      1.2;
+    finalLayerThickness 0.5;
+    minThickness        1e-3;
+}
+
+writeFlags
+(
+    layerFields
+);
+
+mergeTolerance 1e-6;
+
+// ************************************************************************* //
