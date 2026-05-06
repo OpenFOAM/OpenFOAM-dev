@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,62 +83,11 @@ bool Foam::functionObjects::massFractions::execute()
             << "\"." << exit(FatalError);
     }
 
-    // Read Ydefault if it exists
-    typeIOobject<volScalarField> YdefaultIo
-    (
-        "Ydefault",
-        time_.name(),
-        mesh_,
-        IOobject::READ_IF_PRESENT,
-        IOobject::NO_WRITE,
-        false
-    );
-    const bool YdefaultIoExists = YdefaultIo.headerOk();
-    const volScalarField Ydefault
-    (
-        YdefaultIo,
-        mesh_,
-        dimensionedScalar(dimless, 0)
-    );
-
-    // Back up Ydefault if it exists
-    if (YdefaultIoExists)
-    {
-        fileHandler().cp
-        (
-            YdefaultIo.filePath(),
-            YdefaultIo.path(false)/"molesToMassFractions:" + YdefaultIo.name()
-        );
-    }
-
-    // Write Ydefault out again, but limited to a value of small. This prevents
-    // errors in construction of the thermo if no non-default fractions exist
-    {
-        volScalarField YdefaultLim(Ydefault);
-        YdefaultLim.max(small);
-        YdefaultLim.write();
-    }
-
     // Construct a multicomponent thermo
     autoPtr<fluidMulticomponentThermo> thermoPtr =
         fluidMulticomponentThermo::New(mesh_);
     fluidMulticomponentThermo& thermo = thermoPtr();
     const PtrList<volScalarField>& Y = thermo.Y();
-
-    // Restore the original Ydefault if it exists, and create a new Ydefault if
-    // it does not
-    if (YdefaultIoExists)
-    {
-        fileHandler().mv
-        (
-            YdefaultIo.path(false)/"molesToMassFractions:" + YdefaultIo.name(),
-            YdefaultIo.filePath()
-        );
-    }
-    else
-    {
-        Ydefault.write();
-    }
 
     // One-mole constant for conversions
     static const dimensionedScalar oneMole(dimMoles, 1);

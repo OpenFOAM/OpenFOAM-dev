@@ -58,10 +58,26 @@ void Foam::multicomponentThermo::implementation::correctMassFractions
             Yt += Y_[i];
         }
 
-        if (mag(min(Yt).value()) < rootVSmall)
+        if (min(Yt).value() == 0 && max(Yt).value() == 0)
         {
             FatalErrorInFunction
-                << "Sum of mass fractions is zero for species " << species
+                << "Sum of specie mass fractions = 0"
+                << exit(FatalError);
+        }
+
+        if (min(Yt).value() < 0.999)
+        {
+            FatalErrorInFunction
+                << "Min sum of specie mass fractions " << min(Yt).value()
+                << " < 0.999"
+                << exit(FatalError);
+        }
+
+        if (max(Yt).value() > 1.001)
+        {
+            FatalErrorInFunction
+                << "Max sum of specie mass fractions " << max(Yt).value()
+                << " > 1.001"
                 << exit(FatalError);
         }
 
@@ -114,6 +130,8 @@ Foam::multicomponentThermo::implementation::implementation
             << exit(FatalIOError);
     }
 
+    bool Yset = false;
+
     // Read the species' mass fractions
     forAll(species, i)
     {
@@ -144,6 +162,8 @@ Foam::multicomponentThermo::implementation::implementation
                     mesh
                 )
             );
+
+            Yset = true;
         }
         else
         {
@@ -183,7 +203,8 @@ Foam::multicomponentThermo::implementation::implementation
         }
     }
 
-    if (defaultSpeciei_ != -1)
+    // If the mass fractions have been specified check and normalise
+    if (Yset && defaultSpeciei_ != -1)
     {
         correctMassFractions(species);
     }

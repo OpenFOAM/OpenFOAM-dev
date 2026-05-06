@@ -61,6 +61,8 @@ Foam::multicomponentLagrangianThermo::implementation::implementation
 {
     tmp<LagrangianScalarField> Ydefault;
 
+    bool Yset = false;
+
     // Read the species' mass fractions
     forAll(species, i)
     {
@@ -90,6 +92,8 @@ Foam::multicomponentLagrangianThermo::implementation::implementation
                     mesh
                 )
             );
+
+            Yset = true;
         }
         else
         {
@@ -128,33 +132,55 @@ Foam::multicomponentLagrangianThermo::implementation::implementation
         }
     }
 
-    // Scale the mass fractions so that they sum to one in case the input is
-    // not exact
-    tmp<LagrangianScalarField> tYt
-    (
-        new LagrangianScalarField
+    // If the mass fractions have been specified check and normalise
+    if (Yset)
+    {
+        // Scale the mass fractions so that they sum to one in case the input is
+        // not exact
+        tmp<LagrangianScalarField> tYt
         (
-            IOobject::groupName("Yt", phaseName),
-            Y_[0]
-        )
-    );
-    LagrangianScalarField& Yt = tYt.ref();
+            new LagrangianScalarField
+            (
+                IOobject::groupName("Yt", phaseName),
+                Y_[0]
+            )
+        );
+        LagrangianScalarField& Yt = tYt.ref();
 
-    for (label i = 1; i < Y_.size(); ++ i)
-    {
-        Yt += Y_[i];
-    }
+        for (label i = 1; i < Y_.size(); ++ i)
+        {
+            Yt += Y_[i];
+        }
 
-    if (mag(min(Yt.primitiveField())) < rootVSmall)
-    {
-        FatalErrorInFunction
-            << "Sum of mass fractions is zero for species " << species
-            << exit(FatalError);
-    }
+        if (min(Yt.primitiveField()) == 0 && max(Yt.primitiveField()) == 0)
+        {
+            FatalErrorInFunction
+                << "Sum of specie mass fractions = 0"
+                << exit(FatalError);
+        }
 
-    forAll(Y_, i)
-    {
-        Y_[i] /= Yt;
+        if (min(Yt.primitiveField()) < 0.999)
+        {
+            FatalErrorInFunction
+                << "Min sum of specie mass fractions "
+                << min(Yt.primitiveField())
+                << " < 0.999"
+                << exit(FatalError);
+        }
+
+        if (max(Yt.primitiveField()) > 1.001)
+        {
+            FatalErrorInFunction
+                << "Max sum of specie mass fractions "
+                << max(Yt.primitiveField())
+                << " > 1.001"
+                << exit(FatalError);
+        }
+
+        forAll(Y_, i)
+        {
+            Y_[i] /= Yt;
+        }
     }
 }
 

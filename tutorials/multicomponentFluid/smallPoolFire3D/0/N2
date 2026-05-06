@@ -35,7 +35,7 @@ boundaryField
     inlet
     {
         type            calculated;
-        value           $internalField;
+        value           uniform 0;
     }
 }
 
