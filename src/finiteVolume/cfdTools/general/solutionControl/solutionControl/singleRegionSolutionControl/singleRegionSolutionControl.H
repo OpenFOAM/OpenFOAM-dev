@@ -58,7 +58,7 @@ protected:
     // Protected data
 
         //- Reference to the mesh
-        fvMesh& mesh_;
+        const fvMesh& mesh_;
 
 
     // Protected Member Functions
@@ -82,7 +82,11 @@ public:
     // Constructors
 
         //- Construct from a mesh and the name of the algorithm
-        singleRegionSolutionControl(fvMesh& mesh, const word& algorithmName);
+        singleRegionSolutionControl
+        (
+            const fvMesh& mesh,
+            const word& algorithmName
+        );
 
 
     //- Destructor
@@ -95,9 +99,6 @@ public:
 
             //- Return the mesh
             inline const fvMesh& mesh() const;
-
-            //- Return the mesh
-            inline fvMesh& mesh();
 
             //- Return the solution dictionary
             static const dictionary& dict

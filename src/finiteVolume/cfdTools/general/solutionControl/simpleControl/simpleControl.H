@@ -85,7 +85,7 @@ public:
     // Constructors
 
         //- Construct from a mesh and the name of the algorithm
-        simpleControl(fvMesh& mesh, const word& algorithmName="SIMPLE");
+        simpleControl(const fvMesh& mesh, const word& algorithmName="SIMPLE");
 
 
     //- Destructor

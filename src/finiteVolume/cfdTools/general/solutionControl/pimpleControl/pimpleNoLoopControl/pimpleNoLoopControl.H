@@ -110,7 +110,11 @@ public:
 
         //- Construct from a mesh, the name of the algorithm, and a reference
         //  to the pimple loop
-        pimpleNoLoopControl(fvMesh& mesh, const word& algorithmName="PIMPLE");
+        pimpleNoLoopControl
+        (
+            const fvMesh& mesh,
+            const word& algorithmName="PIMPLE"
+        );
 
 
     //- Destructor

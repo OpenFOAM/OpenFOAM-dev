@@ -83,14 +83,10 @@ bool Foam::pimpleNoLoopControl::read()
 
 Foam::pimpleNoLoopControl::pimpleNoLoopControl
 (
-    fvMesh& mesh,
+    const fvMesh& mesh,
     const word& algorithmName
 )
 :
-    // autoPtr<printDictionary>
-    // (
-    //     new printDictionary(mesh.solution().dict().subDict(algorithmName))
-    // ),
     pisoControl(mesh, algorithmName),
     singleRegionConvergenceControl
     (
@@ -107,7 +103,6 @@ Foam::pimpleNoLoopControl::pimpleNoLoopControl
     transportCorrectionFinal_(true)
 {
     read();
-    // autoPtr<printDictionary>::clear();
 }
 
 

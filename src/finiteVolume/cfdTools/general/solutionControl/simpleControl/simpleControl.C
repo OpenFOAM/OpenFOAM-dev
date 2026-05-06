@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,7 +45,11 @@ bool Foam::simpleControl::read()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::simpleControl::simpleControl(fvMesh& mesh, const word& algorithmName)
+Foam::simpleControl::simpleControl
+(
+    const fvMesh& mesh,
+    const word& algorithmName
+)
 :
     fluidSolutionControl(mesh, algorithmName),
     singleRegionConvergenceControl

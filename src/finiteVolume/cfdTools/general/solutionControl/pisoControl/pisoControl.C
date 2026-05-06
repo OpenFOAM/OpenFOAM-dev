@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ bool Foam::pisoControl::read()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::pisoControl::pisoControl(fvMesh& mesh, const word& algorithmName)
+Foam::pisoControl::pisoControl(const fvMesh& mesh, const word& algorithmName)
 :
     fluidSolutionControl(mesh, algorithmName),
     nCorrPiso_(-1),

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ bool Foam::nonOrthogonalSolutionControl::read()
 
 Foam::nonOrthogonalSolutionControl::nonOrthogonalSolutionControl
 (
-    fvMesh& mesh,
+    const fvMesh& mesh,
     const word& algorithmName
 )
 :

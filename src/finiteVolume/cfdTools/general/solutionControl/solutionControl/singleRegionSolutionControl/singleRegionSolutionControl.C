@@ -46,7 +46,7 @@ bool Foam::singleRegionSolutionControl::dependenciesModified() const
 
 Foam::singleRegionSolutionControl::singleRegionSolutionControl
 (
-    fvMesh& mesh,
+    const fvMesh& mesh,
     const word& algorithmName
 )
 :

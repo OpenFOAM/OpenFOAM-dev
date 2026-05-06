@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,11 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::pimpleControl::pimpleControl(fvMesh& mesh, const word& algorithmName)
+Foam::pimpleControl::pimpleControl
+(
+    const fvMesh& mesh,
+    const word& algorithmName
+)
 :
     pimpleNoLoopControl(mesh, algorithmName),
     pimpleSingleRegionControl(static_cast<pimpleNoLoopControl&>(*this))
