@@ -210,14 +210,7 @@ public:
         }
 
         //- Return the flame diffusivity
-        virtual tmp<volScalarField> Db() const
-        {
-            return volScalarField::New
-            (
-                "Db",
-                rho_*momentumTransport_.nuEff()
-            );
-        }
+        virtual tmp<volScalarField> Db() const = 0;
 
         //- Add Xi to the multivariateSurfaceInterpolationScheme table
         //  if required
