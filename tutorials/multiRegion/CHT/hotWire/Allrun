@@ -11,6 +11,7 @@ runApplication -s solid stitchMesh -region solid "((nonCoupleElectrode merge))"
 runApplication -s fluid blockMesh -region fluid
 runApplication -s fluid transformPoints -region fluid "Rx=45"
 
+mkdir -p constant/geometry || exit 1
 runApplication surfaceMeshTriangulate -region solid \
     constant/geometry/solid.obj
 
