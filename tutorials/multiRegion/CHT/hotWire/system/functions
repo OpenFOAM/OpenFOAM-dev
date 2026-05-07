@@ -1,0 +1,30 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      functions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#includeFunc probes(region=solid, points=((0 0 0)), T)
+
+// Log the current into and out of the electrodes. The potential difference
+// between the patches is 0.1 [V], so this current is also numerically equal to
+// 10 times the heating power delivered to the solid volume.
+#includeFunc patchFlowRate(region=solid, patch=negative, I)
+#includeFunc patchFlowRate(region=solid, patch=positive, I)
+
+// Log the total heating power delivered into the solid volume
+#includeFunc volIntegrate(region=solid, div((I*interpolate(phi))))
+
+#includeFunc residuals(region=fluid, p, U, h, k, omega)
+
+// ************************************************************************* //

@@ -24,5 +24,6 @@ massTransfer/massTransfer.C
 massTransfer/coefficientMassTransfer.C
 phaseChange/phaseChange.C
 phaseChange/coefficientPhaseChange.C
+solidElectricalConduction/solidElectricalConduction.C
 
 LIB = $(FOAM_LIBBIN)/libfvModels

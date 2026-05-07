@@ -1,0 +1,29 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+runApplication -s solid blockMesh -region solid
+runApplication -s solid refineMesh -region solid
+runApplication -s solid stitchMesh -region solid "((nonCoupleElectrode merge))"
+
+runApplication -s fluid blockMesh -region fluid
+runApplication -s fluid transformPoints -region fluid "Rx=45"
+
+runApplication surfaceMeshTriangulate -region solid \
+    constant/geometry/solid.obj
+
+runApplication decomposePar -allRegions -noZero
+
+runParallel -s fluid snappyHexMesh -region fluid
+
+runParallel createNonConformalCouples
+
+runApplication -s fields decomposePar -allRegions -fields -copyZero
+
+runParallel foamMultiRun
+
+runApplication reconstructPar -allRegions
+
+#------------------------------------------------------------------------------

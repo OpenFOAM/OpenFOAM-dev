@@ -72,8 +72,9 @@ class objectRegistry
         //- Table of temporary object names with current state
         mutable HashTable<Pair<bool>> cacheTemporaryObjects_;
 
-        //- State of cacheTemporaryObjects_, set true after reading
-        mutable bool cacheTemporaryObjectsSet_;
+        //- State of cacheTemporaryObjects_. 0 means as yet uninitialised. 1
+        //  means initialised. -1 means deactivated (during destruction).
+        mutable label cacheTemporaryObjectsState_;
 
         //- Accumulated list of temporary objects available to cache
         //  Used to provide diagnostics in case the requested object is not
