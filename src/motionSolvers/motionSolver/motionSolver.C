@@ -118,13 +118,6 @@ Foam::motionSolver::~motionSolver()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::pointField> Foam::motionSolver::newPoints()
-{
-    solve();
-    return curPoints();
-}
-
-
 void Foam::motionSolver::twoDCorrectPoints(pointField& p) const
 {
     twoDPointCorrector::New(mesh_).correctPoints(p);

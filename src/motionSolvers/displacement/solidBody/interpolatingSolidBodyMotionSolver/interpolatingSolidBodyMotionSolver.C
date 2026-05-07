@@ -166,7 +166,7 @@ Foam::interpolatingSolidBodyMotionSolver::~interpolatingSolidBodyMotionSolver()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::pointField>
-Foam::interpolatingSolidBodyMotionSolver::curPoints() const
+Foam::interpolatingSolidBodyMotionSolver::newPoints()
 {
     return calcPoints(SBMFPtr_().transformation(), CofG_);
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,8 +43,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::displacementLinearMotionSolver::
-displacementLinearMotionSolver
+Foam::displacementLinearMotionSolver::displacementLinearMotionSolver
 (
     const word& name,
     const polyMesh& mesh,
@@ -70,15 +69,13 @@ displacementLinearMotionSolver
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::displacementLinearMotionSolver::
-~displacementLinearMotionSolver()
+Foam::displacementLinearMotionSolver::~displacementLinearMotionSolver()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::pointField>
-Foam::displacementLinearMotionSolver::curPoints() const
+Foam::tmp<Foam::pointField> Foam::displacementLinearMotionSolver::newPoints()
 {
     tmp<pointField> tcurPoints(new pointField(points0()));
     pointField& curPoints = tcurPoints.ref();

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,17 +101,13 @@ public:
     // Member Functions
 
         //- Return point location obtained from the current motion field
-        virtual tmp<pointField> curPoints() const;
+        virtual tmp<pointField> newPoints();
 
         //- This is a solid body motion
         virtual bool solidBody() const
         {
             return true;
         }
-
-        //- Solve for motion
-        virtual void solve()
-        {}
 
         //- Update local data for topology changes
         virtual void topoChange(const polyTopoChangeMap&);

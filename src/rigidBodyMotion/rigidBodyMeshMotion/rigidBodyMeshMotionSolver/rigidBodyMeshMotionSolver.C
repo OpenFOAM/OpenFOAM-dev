@@ -182,13 +182,7 @@ Foam::rigidBodyMeshMotionSolver::~rigidBodyMeshMotionSolver()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::pointField>
-Foam::rigidBodyMeshMotionSolver::curPoints() const
-{
-    return meshSolverPtr_->curPoints();
-}
-
-
-void Foam::rigidBodyMeshMotionSolver::solve()
+Foam::rigidBodyMeshMotionSolver::newPoints()
 {
     const Time& t = mesh().time();
 
@@ -298,7 +292,7 @@ void Foam::rigidBodyMeshMotionSolver::solve()
         }
     }
 
-    meshSolverPtr_->solve();
+    return meshSolver_.newPoints();
 }
 
 

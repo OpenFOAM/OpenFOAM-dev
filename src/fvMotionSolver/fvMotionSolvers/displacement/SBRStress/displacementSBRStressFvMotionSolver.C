@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,26 +97,7 @@ Foam::displacementSBRStressFvMotionSolver::
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::pointField>
-Foam::displacementSBRStressFvMotionSolver::curPoints() const
-{
-    volPointInterpolation::New(fvMesh_).interpolate
-    (
-        cellDisplacement_,
-        pointDisplacement_
-    );
-
-    tmp<pointField> tcurPoints
-    (
-        points0() + pointDisplacement().primitiveField()
-    );
-
-    twoDCorrectPoints(tcurPoints.ref());
-
-    return tcurPoints;
-}
-
-
-void Foam::displacementSBRStressFvMotionSolver::solve()
+Foam::displacementSBRStressFvMotionSolver::newPoints()
 {
     // The points have moved so before interpolation update
     // the mtionSolver accordingly
@@ -177,6 +158,21 @@ void Foam::displacementSBRStressFvMotionSolver::solve()
         )
         */
     );
+
+    volPointInterpolation::New(fvMesh_).interpolate
+    (
+        cellDisplacement_,
+        pointDisplacement_
+    );
+
+    tmp<pointField> tcurPoints
+    (
+        points0() + pointDisplacement().primitiveField()
+    );
+
+    twoDCorrectPoints(tcurPoints.ref());
+
+    return tcurPoints;
 }
 
 

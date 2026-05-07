@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,15 +85,7 @@ Foam::displacementMeshMoverMotionSolver::meshMover() const
 
 
 Foam::tmp<Foam::pointField>
-Foam::displacementMeshMoverMotionSolver::curPoints() const
-{
-    // Return actual points. Cannot do a reference since complains about
-    // assignment to self in polyMesh::movePoints
-    return tmp<pointField>(new pointField(mesh().points()));
-}
-
-
-void Foam::displacementMeshMoverMotionSolver::solve()
+Foam::displacementMeshMoverMotionSolver::newPoints()
 {
     // The points have moved so before calculation update
     // the mesh and motionSolver accordingly
@@ -113,6 +105,8 @@ void Foam::displacementMeshMoverMotionSolver::solve()
 
     // This will have updated the mesh and implicitly the pointDisplacement
     pointDisplacement().correctBoundaryConditions();
+
+    return points();
 }
 
 

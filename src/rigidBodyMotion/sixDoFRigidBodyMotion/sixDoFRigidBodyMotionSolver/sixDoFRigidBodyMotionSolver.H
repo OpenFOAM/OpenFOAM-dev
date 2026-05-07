@@ -38,7 +38,7 @@ SourceFiles
 #ifndef sixDoFRigidBodyMotionSolver_H
 #define sixDoFRigidBodyMotionSolver_H
 
-#include "displacementMotionSolver.H"
+#include "points0MotionSolver.H"
 #include "sixDoFRigidBodyMotion.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -52,7 +52,7 @@ namespace Foam
 
 class sixDoFRigidBodyMotionSolver
 :
-    public displacementMotionSolver,
+    public points0MotionSolver,
     public sixDoFRigidBodyMotion
 {
     // Private Data
@@ -123,8 +123,8 @@ public:
         //- Return the six DoF motion object
         const sixDoFRigidBodyMotion& motion() const;
 
-        //- Solve for motion
-        virtual void solve();
+        //- Return point location obtained from the current motion field
+        virtual tmp<pointField> newPoints();
 
         //- Write motion state information for restart
         virtual bool write() const;

@@ -145,7 +145,7 @@ Foam::multiSolidBodyMotionSolver::~multiSolidBodyMotionSolver()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::pointField> Foam::multiSolidBodyMotionSolver::curPoints() const
+Foam::tmp<Foam::pointField> Foam::multiSolidBodyMotionSolver::newPoints()
 {
     tmp<pointField> ttransformedPts(new pointField(mesh().points()));
     pointField& transformedPts = ttransformedPts.ref();

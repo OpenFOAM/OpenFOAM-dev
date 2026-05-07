@@ -150,7 +150,8 @@ Foam::displacementLayeredMotionSolver::~displacementLayeredMotionSolver()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::displacementLayeredMotionSolver::solve()
+Foam::tmp<Foam::pointField>
+Foam::displacementLayeredMotionSolver::newPoints()
 {
     // The points have moved so before interpolation update the motionSolver
     movePoints(mesh().points());
@@ -180,6 +181,8 @@ void Foam::displacementLayeredMotionSolver::solve()
     // Constrain the pointDisplacement field
     pointConstraints::New(pointDisplacement_.mesh())
         .constrainDisplacement(pointDisplacement_, false);
+
+    return points();
 }
 
 

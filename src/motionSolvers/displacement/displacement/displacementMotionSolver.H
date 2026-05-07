@@ -60,6 +60,9 @@ protected:
         //- Point motion field
         mutable pointVectorField pointDisplacement_;
 
+        //- Return the points corresponding to the current displacement
+        tmp<pointField> points() const;
+
 
 public:
 
@@ -101,7 +104,7 @@ public:
         }
 
         //- Return point location obtained from the current motion field
-        virtual tmp<pointField> curPoints() const;
+        virtual tmp<pointField> newPoints() = 0;
 
         //- Update from another mesh using the given map
         virtual void mapMesh(const polyMeshMap&);

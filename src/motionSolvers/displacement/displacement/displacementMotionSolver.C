@@ -33,6 +33,15 @@ namespace Foam
 }
 
 
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+Foam::tmp<Foam::pointField>
+Foam::displacementMotionSolver::points() const
+{
+    return points0() + pointDisplacement_.primitiveField();
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::displacementMotionSolver::displacementMotionSolver
@@ -66,13 +75,6 @@ Foam::displacementMotionSolver::~displacementMotionSolver()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-Foam::tmp<Foam::pointField>
-Foam::displacementMotionSolver::curPoints() const
-{
-    return points0() + pointDisplacement_.primitiveField();
-}
-
 
 void Foam::displacementMotionSolver::mapMesh(const polyMeshMap& map)
 {

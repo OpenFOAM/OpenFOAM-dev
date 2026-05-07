@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -142,8 +142,25 @@ Foam::displacementComponentLaplacianFvMotionSolver::
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::pointField>
-Foam::displacementComponentLaplacianFvMotionSolver::curPoints() const
+Foam::displacementComponentLaplacianFvMotionSolver::newPoints()
 {
+    // The points have moved so before interpolation update
+    // the motionSolver accordingly
+    movePoints(fvMesh_.points());
+
+    diffusivityPtr_->correct();
+    pointDisplacement_.boundaryFieldRef().updateCoeffs();
+
+    Foam::solve
+    (
+        fvm::laplacian
+        (
+            diffusivityPtr_->operator()(),
+            cellDisplacement_,
+            "laplacian(diffusivity,cellDisplacement)"
+        )
+    );
+
     volPointInterpolation::New(fvMesh_).interpolate
     (
         cellDisplacement_,
@@ -217,27 +234,6 @@ Foam::displacementComponentLaplacianFvMotionSolver::curPoints() const
 
         return tcurPoints;
     }
-}
-
-
-void Foam::displacementComponentLaplacianFvMotionSolver::solve()
-{
-    // The points have moved so before interpolation update
-    // the motionSolver accordingly
-    movePoints(fvMesh_.points());
-
-    diffusivityPtr_->correct();
-    pointDisplacement_.boundaryFieldRef().updateCoeffs();
-
-    Foam::solve
-    (
-        fvm::laplacian
-        (
-            diffusivityPtr_->operator()(),
-            cellDisplacement_,
-            "laplacian(diffusivity,cellDisplacement)"
-        )
-    );
 }
 
 

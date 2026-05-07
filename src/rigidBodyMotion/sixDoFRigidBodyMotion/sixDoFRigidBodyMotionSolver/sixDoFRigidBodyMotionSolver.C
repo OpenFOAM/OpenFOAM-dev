@@ -57,7 +57,7 @@ Foam::sixDoFRigidBodyMotionSolver::sixDoFRigidBodyMotionSolver
     const dictionary& dict
 )
 :
-    displacementMotionSolver(name, mesh, dict, typeName),
+    points0MotionSolver(name, mesh, dict, typeName),
     sixDoFRigidBodyMotion
     (
         dict,
@@ -161,7 +161,8 @@ Foam::sixDoFRigidBodyMotionSolver::~sixDoFRigidBodyMotionSolver()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::sixDoFRigidBodyMotionSolver::solve()
+Foam::tmp<Foam::pointField>
+Foam::sixDoFRigidBodyMotionSolver::newPoints()
 {
     const Time& t = mesh().time();
 
@@ -237,14 +238,16 @@ void Foam::sixDoFRigidBodyMotionSolver::solve()
     }
 
     // Update the displacements
-    pointDisplacement_.primitiveFieldRef() =
-        transform(points0(), scale_) - points0();
-
+    // pointDisplacement.primitiveFieldRef() =
+    //     transform(points0(), scale_) - points0();
+    //
     // Displacement has changed. Update boundary conditions
-    pointConstraints::New
-    (
-        pointDisplacement_.mesh()
-    ).constrainDisplacement(pointDisplacement_);
+    // pointConstraints::New
+    // (
+    //     pointDisplacement_.mesh()
+    // ).constrainDisplacement(pointDisplacement_);
+
+    return transform(points0(), scale_);
 }
 
 
@@ -274,7 +277,7 @@ bool Foam::sixDoFRigidBodyMotionSolver::write() const
             mesh().time().writeCompression(),
             true
         )
-     && displacementMotionSolver::write();
+     && points0MotionSolver::write();
 }
 
 

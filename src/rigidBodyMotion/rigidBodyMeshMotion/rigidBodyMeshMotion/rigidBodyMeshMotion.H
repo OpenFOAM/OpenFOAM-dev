@@ -38,7 +38,7 @@ SourceFiles
 #ifndef rigidBodyMeshMotion_H
 #define rigidBodyMeshMotion_H
 
-#include "displacementMotionSolver.H"
+#include "points0MotionSolver.H"
 #include "rigidBodyMotion.H"
 #include "Function1.H"
 
@@ -53,7 +53,7 @@ namespace Foam
 
 class rigidBodyMeshMotion
 :
-    public displacementMotionSolver,
+    public points0MotionSolver,
     public RBD::rigidBodyMotion
 {
     //- Class containing the patches and point motion weighting for each body
@@ -176,8 +176,8 @@ public:
 
     // Member Functions
 
-        //- Solve for motion
-        virtual void solve();
+        //- Return point location obtained from the current motion field
+        virtual tmp<pointField> newPoints();
 
         //-  Update local data for topology changes
         virtual void topoChange(const polyTopoChangeMap&);

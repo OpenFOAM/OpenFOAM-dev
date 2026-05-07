@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,16 +80,16 @@ Foam::motionSolverList::~motionSolverList()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::pointField> Foam::motionSolverList::curPoints() const
+Foam::tmp<Foam::pointField> Foam::motionSolverList::newPoints()
 {
     if (motionSolvers_.size())
     {
         // Accumulated displacement
         pointField disp(mesh().nPoints(), Zero);
 
-        forAllConstIter(PtrListDictionary<motionSolver>, motionSolvers_, iter)
+        forAllIter(PtrListDictionary<motionSolver>, motionSolvers_, iter)
         {
-            disp += iter().curPoints() - mesh().points();
+            disp += iter().newPoints() - mesh().points();
         }
 
         return mesh().points() + disp;
@@ -97,15 +97,6 @@ Foam::tmp<Foam::pointField> Foam::motionSolverList::curPoints() const
     else
     {
         return mesh().points();
-    }
-}
-
-
-void Foam::motionSolverList::solve()
-{
-    forAllIter(PtrListDictionary<motionSolver>, motionSolvers_, iter)
-    {
-        iter().solve();
     }
 }
 

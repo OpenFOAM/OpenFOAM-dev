@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -137,10 +137,7 @@ public:
         }
 
         //- Provide new points for motion.  Solves for motion
-        virtual tmp<pointField> newPoints();
-
-        //- Provide current points for motion.  Uses current motion field
-        virtual tmp<pointField> curPoints() const = 0;
+        virtual tmp<pointField> newPoints() = 0;
 
         //- Correct point field for reduced-dimensionality cases
         virtual void twoDCorrectPoints(pointField&) const;
@@ -152,9 +149,6 @@ public:
         {
             return false;
         }
-
-        //- Solve for motion
-        virtual void solve() = 0;
 
         //- Update local data for geometry changes
         virtual void movePoints(const pointField&) = 0;
