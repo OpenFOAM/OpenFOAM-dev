@@ -510,8 +510,8 @@ void Foam::solvers::XiFluid::HbSolve
       + fvc::ddt(c, rho, K) + fvc::div(phic, K)
       + (c + cStab)*rhoByRhob*pressureWork(-dpdt)
 
-        // Diffusive transport within the unburnt gas
-      + uThermophysicalTransport_->divq(hb)
+        // Diffusive transport within the burnt gas
+      + bThermophysicalTransport_->divq(hb)
      ==
         // Combustion source
       - bSource*(uThermo.he()() + uThermo.hf()()() - bThermo.hf()()())
