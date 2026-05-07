@@ -10,6 +10,7 @@ wmake $targetType rigidBodyState
 wmake $targetType rigidBodyForces
 
 wmake $targetType sixDoFRigidBodyMotion
+wmake $targetType sixDoFRigidBodyMeshMotion
 wmake $targetType sixDoFRigidBodyState
 
 #------------------------------------------------------------------------------

@@ -24,8 +24,6 @@ $(constraints)/orientation/sixDoFRigidBodyMotionOrientationConstraint.C
 $(constraints)/plane/sixDoFRigidBodyMotionPlaneConstraint.C
 $(constraints)/point/sixDoFRigidBodyMotionPointConstraint.C
 
-sixDoFRigidBodyMotionSolver/sixDoFRigidBodyMotionSolver.C
-
 sixDoFSolvers/sixDoFSolver/sixDoFSolver.C
 sixDoFSolvers/sixDoFSolver/sixDoFSolverNew.C
 sixDoFSolvers/symplectic/symplectic.C

@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::sixDoFRigidBodyMotionSolver
+    Foam::sixDoFRigidBodyMeshMotion
 
 Description
     6-DoF solid-body mesh motion solver for an fvMesh.
@@ -31,12 +31,12 @@ Description
     the object surface.
 
 SourceFiles
-    sixDoFRigidBodyMotionSolver.C
+    sixDoFRigidBodyMeshMotion.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef sixDoFRigidBodyMotionSolver_H
-#define sixDoFRigidBodyMotionSolver_H
+#ifndef sixDoFRigidBodyMeshMotion_H
+#define sixDoFRigidBodyMeshMotion_H
 
 #include "points0MotionSolver.H"
 #include "sixDoFRigidBodyMotion.H"
@@ -47,10 +47,10 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                 Class sixDoFRigidBodyMotionSolver Declaration
+                 Class sixDoFRigidBodyMeshMotion Declaration
 \*---------------------------------------------------------------------------*/
 
-class sixDoFRigidBodyMotionSolver
+class sixDoFRigidBodyMeshMotion
 :
     public points0MotionSolver,
     public sixDoFRigidBodyMotion
@@ -94,13 +94,13 @@ class sixDoFRigidBodyMotionSolver
 public:
 
     //- Runtime type information
-    TypeName("sixDoFRigidBodyMotion");
+    TypeName("sixDoFRigidBodyMeshMotion");
 
 
     // Constructors
 
         //- Construct from polyMesh and dictionary
-        sixDoFRigidBodyMotionSolver
+        sixDoFRigidBodyMeshMotion
         (
             const word& name,
             const polyMesh&,
@@ -108,14 +108,14 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        sixDoFRigidBodyMotionSolver
+        sixDoFRigidBodyMeshMotion
         (
-            const sixDoFRigidBodyMotionSolver&
+            const sixDoFRigidBodyMeshMotion&
         ) = delete;
 
 
     //- Destructor
-    ~sixDoFRigidBodyMotionSolver();
+    ~sixDoFRigidBodyMeshMotion();
 
 
     // Member Functions
@@ -133,7 +133,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const sixDoFRigidBodyMotionSolver&) = delete;
+        void operator=(const sixDoFRigidBodyMeshMotion&) = delete;
 };
 
 

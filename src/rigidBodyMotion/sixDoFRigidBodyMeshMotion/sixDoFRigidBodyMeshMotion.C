@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "sixDoFRigidBodyMotionSolver.H"
+#include "sixDoFRigidBodyMeshMotion.H"
 #include "polyMesh.H"
 #include "pointDist.H"
 #include "pointConstraints.H"
@@ -37,12 +37,12 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(sixDoFRigidBodyMotionSolver, 0);
+    defineTypeNameAndDebug(sixDoFRigidBodyMeshMotion, 0);
 
     addToRunTimeSelectionTable
     (
         motionSolver,
-        sixDoFRigidBodyMotionSolver,
+        sixDoFRigidBodyMeshMotion,
         dictionary
     );
 }
@@ -50,7 +50,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::sixDoFRigidBodyMotionSolver::sixDoFRigidBodyMotionSolver
+Foam::sixDoFRigidBodyMeshMotion::sixDoFRigidBodyMeshMotion
 (
     const word& name,
     const polyMesh& mesh,
@@ -155,14 +155,14 @@ Foam::sixDoFRigidBodyMotionSolver::sixDoFRigidBodyMotionSolver
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::sixDoFRigidBodyMotionSolver::~sixDoFRigidBodyMotionSolver()
+Foam::sixDoFRigidBodyMeshMotion::~sixDoFRigidBodyMeshMotion()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::pointField>
-Foam::sixDoFRigidBodyMotionSolver::newPoints()
+Foam::sixDoFRigidBodyMeshMotion::newPoints()
 {
     const Time& t = mesh().time();
 
@@ -251,7 +251,7 @@ Foam::sixDoFRigidBodyMotionSolver::newPoints()
 }
 
 
-bool Foam::sixDoFRigidBodyMotionSolver::write() const
+bool Foam::sixDoFRigidBodyMeshMotion::write() const
 {
     timeIOdictionary dict
     (

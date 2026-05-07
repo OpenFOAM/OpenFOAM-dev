@@ -1,0 +1,3 @@
+sixDoFRigidBodyMeshMotion.C
+
+LIB = $(FOAM_LIBBIN)/libsixDoFRigidBodyMeshMotion
