@@ -153,14 +153,17 @@ void Foam::vtkPVFoam::convertSurfaceField
     SubField<Type>(flatFld, nInternalFaces) = tf.internalField();
     forAll(tf.boundaryField(), patchi)
     {
-        const fvsPatchField<Type>& fvs = tf.boundaryField()[patchi];
+        const fvsPatchField<Type>& ptf = tf.boundaryField()[patchi];
 
-        SubField<Type>
-        (
-            flatFld,
-            fvs.size(),
-            fvs.patch().start()
-        ) = fvs;
+        forAll(ptf, patchFacei)
+        {
+            const label facei = mesh.polyFacesBf()[patchi][patchFacei];
+            const scalar fraction =
+                mesh.magSf().boundaryField()[patchi][patchFacei]
+               /mesh.magFaceAreas()[facei];
+
+            flatFld[facei] += fraction*ptf[patchFacei];
+        }
     }
 
     forAll(faceLabels, i)
