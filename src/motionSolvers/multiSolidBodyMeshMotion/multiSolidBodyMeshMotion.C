@@ -123,10 +123,15 @@ Foam::multiSolidBodyMeshMotion::multiSolidBodyMeshMotion
     }
     zoneIndices_.setSize(zonei);
     SBMFs_.setSize(zonei);
-    zonePoints_.setSize(zonei);
-    transforms_.setSize(zonei);
 
+    zonePoints_.setSize(zonei);
     updateZonePointIndices();
+
+    transforms_.setSize(zonei);
+    forAll(zoneIndices_, zonei)
+    {
+        transforms_[zonei] = SBMFs_[zonei].transformation();
+    }
 
     forAll(zoneIndices_, zonei)
     {
