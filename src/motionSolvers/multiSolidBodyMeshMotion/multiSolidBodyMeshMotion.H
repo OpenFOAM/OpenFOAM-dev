@@ -67,10 +67,9 @@ class multiSolidBodyMeshMotion
         mutable List<septernion> transforms_;
 
 
-
     // Private Member Functions
 
-        //- Re-calculate the zone point ID-s from the cell-zone
+        //- Re-calculate the zone point indices from the cell-zones
         void updateZonePointIndices();
 
 

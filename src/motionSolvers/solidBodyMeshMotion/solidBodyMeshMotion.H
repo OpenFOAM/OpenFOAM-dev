@@ -62,7 +62,7 @@ class solidBodyMeshMotion
         generatedCellZone zone_;
 
         //- Points to move when cell zone is supplied
-        labelList setPointIndices_;
+        labelList zonePoints_;
 
         //- Cache the current transform for topoChange
         mutable septernion transform_;
@@ -70,8 +70,8 @@ class solidBodyMeshMotion
 
     // Private Member Functions
 
-        //- Re-calculate the set point ID-s from the set, following mesh change
-        void updateSetPointIndices();
+        //- Re-calculate the zone point indices from the cell-zone
+        void updateZonePointIndices();
 
 
 public:

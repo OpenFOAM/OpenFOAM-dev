@@ -46,39 +46,39 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::solidBodyMeshMotion::updateSetPointIndices()
+void Foam::solidBodyMeshMotion::updateZonePointIndices()
 {
     if (zone_.all())
     {
-        setPointIndices_.clear();
+        zonePoints_.clear();
         return;
     }
 
-    boolList pointInSet(mesh().nPoints(), false);
+    boolList pointInZone(mesh().nPoints(), false);
 
-    forAll(zone_.zone(), setCelli)
+    forAll(zone_.zone(), zoneCelli)
     {
-        const cell& c = mesh().cells()[zone_.zone()[setCelli]];
+        const cell& c = mesh().cells()[zone_.zone()[zoneCelli]];
         forAll(c, cfi)
         {
             const face& f = mesh().faces()[c[cfi]];
             forAll(f, fpi)
             {
-                pointInSet[f[fpi]] = true;
+                pointInZone[f[fpi]] = true;
             }
         }
     }
 
-    syncTools::syncPointList(mesh(), pointInSet, orEqOp<bool>(), false);
+    syncTools::syncPointList(mesh(), pointInZone, orEqOp<bool>(), false);
 
-    setPointIndices_.resize(count(pointInSet, true));
+    zonePoints_.resize(count(pointInZone, true));
 
-    label setPointi = 0;
-    forAll(pointInSet, pointi)
+    label zonePointi = 0;
+    forAll(pointInZone, pointi)
     {
-        if (pointInSet[pointi])
+        if (pointInZone[pointi])
         {
-            setPointIndices_[setPointi ++] = pointi;
+            zonePoints_[zonePointi ++] = pointi;
         }
     }
 }
@@ -96,7 +96,7 @@ Foam::solidBodyMeshMotion::solidBodyMeshMotion
     points0MotionSolver(name, mesh, dict, typeName),
     SBMFPtr_(solidBodyMotionFunction::New(dict, mesh.time())),
     zone_(mesh, dict),
-    setPointIndices_(),
+    zonePoints_(),
     transform_(SBMFPtr_().transformation())
 {
     if (zone_.all())
@@ -104,7 +104,7 @@ Foam::solidBodyMeshMotion::solidBodyMeshMotion
         Info<< "Applying solid body motion to entire mesh" << endl;
     }
 
-    updateSetPointIndices();
+    updateZonePointIndices();
 }
 
 
@@ -129,10 +129,10 @@ Foam::tmp<Foam::pointField> Foam::solidBodyMeshMotion::newPoints()
         tmp<pointField> ttransformedPts(new pointField(mesh().points()));
         pointField& transformedPts = ttransformedPts.ref();
 
-        UIndirectList<point>(transformedPts, setPointIndices_) = transformPoints
+        UIndirectList<point>(transformedPts, zonePoints_) = transformPoints
         (
             transform_,
-            pointField(points0_, setPointIndices_)
+            pointField(points0_, zonePoints_)
         );
 
         return ttransformedPts;
@@ -143,28 +143,30 @@ Foam::tmp<Foam::pointField> Foam::solidBodyMeshMotion::newPoints()
 void Foam::solidBodyMeshMotion::topoChange(const polyTopoChangeMap& map)
 {
     zone_.topoChange(map);
-    updateSetPointIndices();
-
-    boolList pointInSet(mesh().nPoints(), zone_.all());
-    UIndirectList<bool>(pointInSet, setPointIndices_) = true;
+    updateZonePointIndices();
 
     // pointMesh already updates pointFields
 
-    // Get the new points either from the map or the mesh
     const pointField& points = mesh().points();
 
     pointField newPoints0(map.pointMap().size());
 
-    forAll(newPoints0, pointi)
+    const label nZonePoints =
+        zone_.all() ? mesh().nPoints() : zonePoints_.size();
+
+    for (label zonePointi = 0; zonePointi < nZonePoints; ++ zonePointi)
     {
+        const label pointi =
+            zone_.all() ? zonePointi : zonePoints_[zonePointi];
+
         const label oldPointi = map.pointMap()[pointi];
 
         if (oldPointi < 0)
         {
             FatalErrorInFunction
-                << "Cannot determine co-ordinates of introduced vertices."
-                << " New vertex " << pointi << " at co-ordinate "
-                << points[pointi] << exit(FatalError);
+                << "Cannot determine co-ordinates of introduced points."
+                << " New point " << pointi << " at " << points[pointi]
+                << exit(FatalError);
         }
 
         if (map.reversePointMap()[oldPointi] == pointi)
@@ -174,9 +176,7 @@ void Foam::solidBodyMeshMotion::topoChange(const polyTopoChangeMap& map)
         else
         {
             newPoints0[pointi] =
-                pointInSet[pointi]
-              ? transform_.invTransformPoint(points[pointi])
-              : points[pointi];
+                transform_.invTransformPoint(points[pointi]);
         }
     }
 
@@ -194,7 +194,7 @@ void Foam::solidBodyMeshMotion::distribute(const polyDistributionMap& map)
     points0MotionSolver::distribute(map);
 
     zone_.distribute(map);
-    updateSetPointIndices();
+    updateZonePointIndices();
 }
 
 
@@ -203,7 +203,7 @@ void Foam::solidBodyMeshMotion::mapMesh(const polyMeshMap& map)
     points0MotionSolver::mapMesh(map);
 
     zone_.mapMesh(map);
-    updateSetPointIndices();
+    updateZonePointIndices();
 }
 
 

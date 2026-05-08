@@ -80,6 +80,35 @@ void Foam::multiSolidBodyMeshMotion::updateZonePointIndices()
 
         zonePoints_[zonei].transfer(zonePoints);
     }
+
+    // Check that points are not in multiple zones
+    labelList pointZone(mesh().nPoints(), -1);
+    forAll(zoneIndices_, zonei)
+    {
+        forAll(zonePoints_[zonei], zonePointi)
+        {
+            const label pointi = zonePoints_[zonei][zonePointi];
+            pointZone[pointi] =
+                pointZone[pointi] == -1 || pointZone[pointi] == zonei
+              ? zonei
+              : -2;
+        }
+    }
+    syncTools::syncPointList
+    (
+        mesh(),
+        pointZone,
+        [](label& x, const label& y) { x = x == -1 || x == y ? y : -2; },
+        -1
+    );
+    const label errorPointi = findIndex(pointZone, -2);
+    if (errorPointi != -1)
+    {
+        FatalErrorInFunction
+            << "Point " << errorPointi << " at " << mesh().points()[errorPointi]
+            << " is in multiple moving zones. This is not allowed."
+            << exit(FatalError);
+    }
 }
 
 
@@ -175,25 +204,26 @@ void Foam::multiSolidBodyMeshMotion::topoChange(const polyTopoChangeMap& map)
 {
     updateZonePointIndices();
 
+    // pointMesh already updates pointFields
+
     const pointField& points = mesh().points();
 
     pointField newPoints0(map.pointMap().size());
 
     forAll(zoneIndices_, zonei)
     {
-        boolList pointInZone(mesh().nPoints(), false);
-        UIndirectList<bool>(pointInZone, zonePoints_[zonei]) = true;
-
-        forAll(newPoints0, pointi)
+        forAll(zonePoints_[zonei], zonePointi)
         {
+            const label pointi = zonePoints_[zonei][zonePointi];
+
             const label oldPointi = map.pointMap()[pointi];
 
             if (oldPointi < 0)
             {
                 FatalErrorInFunction
-                    << "Cannot determine co-ordinates of introduced vertices."
-                    << " New vertex " << pointi << " at co-ordinate "
-                    << points[pointi] << exit(FatalError);
+                    << "Cannot determine co-ordinates of introduced points."
+                    << " New point " << pointi << " at " << points[pointi]
+                    << exit(FatalError);
             }
 
             if (map.reversePointMap()[oldPointi] == pointi)
@@ -203,9 +233,7 @@ void Foam::multiSolidBodyMeshMotion::topoChange(const polyTopoChangeMap& map)
             else
             {
                 newPoints0[pointi] =
-                    pointInZone[pointi]
-                  ? transforms_[zonei].invTransformPoint(points[pointi])
-                  : points[pointi];
+                    transforms_[zonei].invTransformPoint(points[pointi]);
             }
         }
     }
