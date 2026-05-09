@@ -105,6 +105,7 @@ public:
         //- Construct from components
         SDA
         (
+            const word& name,
             const dictionary& SBMFCoeffs,
             const Time& runTime
         );
@@ -120,6 +121,7 @@ public:
             (
                 new SDA
                 (
+                    name_,
                     SBMFCoeffs_,
                     time_
                 )

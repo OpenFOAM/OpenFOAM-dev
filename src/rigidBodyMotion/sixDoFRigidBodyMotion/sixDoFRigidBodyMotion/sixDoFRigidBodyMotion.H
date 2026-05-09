@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,6 +51,7 @@ SourceFiles
 #include "sixDoFRigidBodyMotionRestraint.H"
 #include "sixDoFRigidBodyMotionConstraint.H"
 #include "Tuple2.H"
+#include "septernion.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -310,21 +311,16 @@ public:
             //- Return the velocity of a position
             inline point velocity(const point& pt) const;
 
+            //- Return the transformation relative to the initial time
+            inline septernion transform0() const;
+
             //- Transform the given initial state point by the current motion
             //  state
-            inline point transform(const point& initialPoints) const;
+            inline point transform(const point& initialPoint) const;
 
             //- Transform the given initial state pointField by the current
             //  motion state
             tmp<pointField> transform(const pointField& initialPoints) const;
-
-            //- Transform the given initial state pointField by the current
-            //  motion state scaled by the given scale
-            tmp<pointField> transform
-            (
-                const pointField& initialPoints,
-                const scalarField& scale
-            ) const;
 
 
         //- Write

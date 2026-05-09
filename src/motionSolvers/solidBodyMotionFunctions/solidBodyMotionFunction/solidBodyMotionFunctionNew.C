@@ -29,11 +29,24 @@ License
 
 Foam::autoPtr<Foam::solidBodyMotionFunction> Foam::solidBodyMotionFunction::New
 (
-    const dictionary& SBMFCoeffs,
-    const Time& runTime
+    const dictionary& dict,
+    const Time& runTime,
+    const word& name
 )
 {
-    const word motionType(SBMFCoeffs.lookup("solidBodyMotionFunction"));
+    const dictionary& coeffDict
+    (
+        dict.isDict(name)
+      ? dict.subDict(name)
+      : dict
+    );
+
+    const word motionType
+    (
+        dict.isDict(name)
+      ? coeffDict.lookup("type")
+      : dict.lookup(name)
+    );
 
     Info<< indentOrNl
         << "Selecting solid-body motion function " << motionType << endl;
@@ -43,7 +56,7 @@ Foam::autoPtr<Foam::solidBodyMotionFunction> Foam::solidBodyMotionFunction::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalIOErrorInFunction(SBMFCoeffs)
+        FatalIOErrorInFunction(coeffDict)
             << "Unknown solidBodyMotionFunction type "
             << motionType << nl << nl
             << "Valid solidBodyMotionFunctions are : " << endl
@@ -51,7 +64,10 @@ Foam::autoPtr<Foam::solidBodyMotionFunction> Foam::solidBodyMotionFunction::New
             << exit(FatalIOError);
     }
 
-    return autoPtr<solidBodyMotionFunction>(cstrIter()(SBMFCoeffs, runTime));
+    return autoPtr<solidBodyMotionFunction>
+    (
+        cstrIter()(name, coeffDict, runTime)
+    );
 }
 
 

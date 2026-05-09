@@ -84,6 +84,7 @@ public:
         //- Construct from components
         sixDoFMotion
         (
+            const word& name,
             const dictionary& SBMFCoeffs,
             const Time& runTime
         );
@@ -98,6 +99,7 @@ public:
             (
                 new sixDoFMotion
                 (
+                    name_,
                     SBMFCoeffs_,
                     time_
                 )

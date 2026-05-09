@@ -50,11 +50,12 @@ namespace solidBodyMotionFunctions
 
 Foam::solidBodyMotionFunctions::rotatingMotion::rotatingMotion
 (
+    const word& name,
     const dictionary& SBMFCoeffs,
     const Time& runTime
 )
 :
-    solidBodyMotionFunction(SBMFCoeffs, runTime),
+    solidBodyMotionFunction(name, SBMFCoeffs, runTime),
     origin_(SBMFCoeffs_.lookup("origin")),
     axis_(SBMFCoeffs_.lookup("axis")),
     omega_(new Function1s::omega(runTime, SBMFCoeffs_))

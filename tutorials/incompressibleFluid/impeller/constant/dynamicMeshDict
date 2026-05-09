@@ -24,12 +24,15 @@ mover
 
     cellZone        rotating;
 
-    solidBodyMotionFunction  rotatingMotion;
+    solidBodyMotionFunction
+    {
+        type          rotatingMotion;
 
-    origin        (0 0 0);
-    axis          (1 0 0);
+        origin        (0 0 0);
+        axis          (1 0 0);
 
-    omega         60 [rpm];
+        omega         60 [rpm];
+    }
 }
 
 

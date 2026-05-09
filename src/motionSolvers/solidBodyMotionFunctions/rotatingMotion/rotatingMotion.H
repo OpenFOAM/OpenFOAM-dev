@@ -25,10 +25,8 @@ Class
     Foam::solidBodyMotionFunctions::rotatingMotion
 
 Description
-    SolidBodyMotionFvMesh 6DoF motion function.
-
-    The rotation is defined by an origin and axis of rotation and an angular
-    speed.
+    Time varying angular velocity rotation around given axis through given
+    origin.
 
 SourceFiles
     rotatingMotion.C
@@ -80,6 +78,7 @@ public:
         //- Construct from components
         rotatingMotion
         (
+            const word& name,
             const dictionary& SBMFCoeffs,
             const Time& runTime
         );
@@ -95,6 +94,7 @@ public:
             (
                 new rotatingMotion
                 (
+                    name_,
                     SBMFCoeffs_,
                     time_
                 )

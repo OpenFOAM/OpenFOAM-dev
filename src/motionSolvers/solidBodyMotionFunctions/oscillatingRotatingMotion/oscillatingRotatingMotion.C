@@ -51,11 +51,12 @@ namespace solidBodyMotionFunctions
 Foam::solidBodyMotionFunctions::oscillatingRotatingMotion::
 oscillatingRotatingMotion
 (
+    const word& name,
     const dictionary& SBMFCoeffs,
     const Time& runTime
 )
 :
-    solidBodyMotionFunction(SBMFCoeffs, runTime)
+    solidBodyMotionFunction(name, SBMFCoeffs, runTime)
 {
     read(SBMFCoeffs);
 }

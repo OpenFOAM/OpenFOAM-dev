@@ -25,8 +25,10 @@ Class
     Foam::solidBodyMotionFunctions::axisRotationMotion
 
 Description
-    Constant velocity rotation around CoG. Similar to rotatingMotion but
-    motion specified as an angular velocity vector.
+    Constant angular velocity rotation around given origin.
+
+    Similar to rotatingMotion but motion specified as an angular velocity
+    vector.
 
 SourceFiles
     axisRotationMotion.C
@@ -75,6 +77,7 @@ public:
         //- Construct from components
         axisRotationMotion
         (
+            const word& name,
             const dictionary& SBMFCoeffs,
             const Time& runTime
         );
@@ -89,6 +92,7 @@ public:
             (
                 new axisRotationMotion
                 (
+                    name_,
                     SBMFCoeffs_,
                     time_
                 )

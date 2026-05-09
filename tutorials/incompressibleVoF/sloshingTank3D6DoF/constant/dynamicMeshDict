@@ -24,22 +24,25 @@ mover
 
     cellZone        all;
 
-    solidBodyMotionFunction sixDoFMotion;
-
-    CofG            (0 0 0);
-
-    translation
+    solidBodyMotionFunction
     {
-        type            table;
-        file            "$FOAM_CASE/constant/6DoF.dat";
-        columns         (0 1);
-    }
+        type            sixDoFMotion;
 
-    rotation
-    {
-        type            table;
-        file            "$FOAM_CASE/constant/6DoF.dat";
-        columns         (0 2);
+        CofG            (0 0 0);
+
+        translation
+        {
+            type            table;
+            file            "$FOAM_CASE/constant/6DoF.dat";
+            columns         (0 1);
+        }
+
+        rotation
+        {
+            type            table;
+            file            "$FOAM_CASE/constant/6DoF.dat";
+            columns         (0 2);
+        }
     }
 }
 

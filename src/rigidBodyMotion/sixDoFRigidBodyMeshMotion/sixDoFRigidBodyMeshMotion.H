@@ -38,7 +38,7 @@ SourceFiles
 #ifndef sixDoFRigidBodyMeshMotion_H
 #define sixDoFRigidBodyMeshMotion_H
 
-#include "points0MotionSolver.H"
+#include "multiRigidBodyMeshMotion.H"
 #include "sixDoFRigidBodyMotion.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -52,21 +52,10 @@ namespace Foam
 
 class sixDoFRigidBodyMeshMotion
 :
-    public points0MotionSolver,
+    public multiRigidBodyMeshMotion,
     public sixDoFRigidBodyMotion
 {
     // Private Data
-
-        wordReList patches_;
-
-        //- Patches to integrate forces
-        const labelHashSet patchSet_;
-
-        //- Inner morphing distance (limit of solid-body region)
-        const scalar di_;
-
-        //- Outer morphing distance (limit of linear interpolation region)
-        const scalar do_;
 
         //- Switch for test-mode in which only the
         //  gravitational body-force is applied
@@ -84,17 +73,23 @@ class sixDoFRigidBodyMeshMotion
         //- Optional acceleration due to gravity
         dimensionedVector g_;
 
-        //- Current interpolation scale (1 at patches, 0 at distance_)
-        pointScalarField scale_;
-
         //- Current time index (used for updating)
         label curTimeIndex_;
+
+
+    // Private Member Functions
+
+        //- Return the list of transformation for each body from time 0
+        virtual List<septernion> transforms0() const;
+
+        //- Move the bodies
+        virtual void moveBodies();
 
 
 public:
 
     //- Runtime type information
-    TypeName("sixDoFRigidBodyMeshMotion");
+    TypeName("sixDoFRigidBodyMotion");
 
 
     // Constructors
@@ -119,12 +114,6 @@ public:
 
 
     // Member Functions
-
-        //- Return the six DoF motion object
-        const sixDoFRigidBodyMotion& motion() const;
-
-        //- Return point location obtained from the current motion field
-        virtual tmp<pointField> newPoints();
 
         //- Write motion state information for restart
         virtual bool write() const;

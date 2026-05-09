@@ -24,23 +24,26 @@ mover
 
     cellZone        innerCylinder;
 
-    solidBodyMotionFunction  rotatingMotion;
-
-    origin      (0 0 0);
-    axis        (0 1 0);
-
-    omega
+    solidBodyMotionFunction
     {
-        type        table;
-        units       ([s] [rpm]);
-        values
-        (
-            (0     0)
-            (0.01  6000)
-            (0.022 6000)
-            (0.03  4000)
-            (100   4000)
-        );
+        type            rotatingMotion;
+
+        origin          (0 0 0);
+        axis            (0 1 0);
+
+        omega
+        {
+            type        table;
+            units       ([s] [rpm]);
+            values
+            (
+                (0     0)
+                (0.01  6000)
+                (0.022 6000)
+                (0.03  4000)
+                (100   4000)
+            );
+        }
     }
 }
 

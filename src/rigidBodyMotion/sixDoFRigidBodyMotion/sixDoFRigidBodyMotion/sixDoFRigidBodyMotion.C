@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,6 @@ License
 
 #include "sixDoFRigidBodyMotion.H"
 #include "sixDoFSolver.H"
-#include "septernion.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -348,52 +347,6 @@ Foam::tmp<Foam::pointField> Foam::sixDoFRigidBodyMotion::transform
         centreOfRotation()
       + (Q() & initialQ_.T() & (initialPoints - initialCentreOfRotation_))
     );
-}
-
-
-Foam::tmp<Foam::pointField> Foam::sixDoFRigidBodyMotion::transform
-(
-    const pointField& initialPoints,
-    const scalarField& scale
-) const
-{
-    // Calculate the transformation septernion from the initial state
-    septernion s
-    (
-        centreOfRotation() - initialCentreOfRotation(),
-        quaternion(Q().T() & initialQ())
-    );
-
-    tmp<pointField> tpoints(new pointField(initialPoints));
-    pointField& points = tpoints.ref();
-
-    forAll(points, pointi)
-    {
-        // Move non-stationary points
-        if (scale[pointi] > small)
-        {
-            // Use solid-body motion where scale = 1
-            if (scale[pointi] > 1 - small)
-            {
-                points[pointi] = transform(initialPoints[pointi]);
-            }
-            // Slerp septernion interpolation
-            else
-            {
-                septernion ss(slerp(septernion::I, s, scale[pointi]));
-
-                points[pointi] =
-                    initialCentreOfRotation()
-                  + ss.invTransformPoint
-                    (
-                        initialPoints[pointi]
-                      - initialCentreOfRotation()
-                    );
-            }
-        }
-    }
-
-    return tpoints;
 }
 
 

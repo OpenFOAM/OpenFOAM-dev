@@ -24,26 +24,25 @@ mover
 
     cellZone        all;
 
-    solidBodyMotionFunction multiMotion;
-
-    oscillation
+    solidBodyMotionFunction
     {
-        solidBodyMotionFunction oscillatingLinearMotion;
-        oscillatingLinearMotion
+        type            multiMotion;
+
+        oscillation
         {
-            amplitude     (0.1 0 0);
-            omega         18.8945578;
+            type        oscillatingLinearMotion;
+
+            amplitude   (0.1 0 0);
+            omega       18.8945578;
         }
-    }
 
-    rotation
-    {
-        solidBodyMotionFunction  rotatingMotion;
-        rotatingMotion
+        rotation
         {
-            origin        (0 0.02 0);
-            axis          (0 0 1);
-            omega         180 [rpm];
+            type        rotatingMotion;
+
+            origin      (0 0.02 0);
+            axis        (0 0 1);
+            omega       180 [rpm];
         }
     }
 }

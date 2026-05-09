@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,70 +23,55 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "solidBodyMotionFunction.H"
+#include "singleRigidBodyMeshMotion.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(solidBodyMotionFunction, 0);
-    defineRunTimeSelectionTable(solidBodyMotionFunction, dictionary);
+    defineTypeNameAndDebug(singleRigidBodyMeshMotion, 0);
+
+    addToRunTimeSelectionTable
+    (
+        motionSolver,
+        singleRigidBodyMeshMotion,
+        dictionary
+    );
 }
+
+
+// * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
+
+Foam::List<Foam::septernion>
+Foam::singleRigidBodyMeshMotion::transforms0() const
+{
+    return List<septernion>(1, SBMFPtr_().transformation());
+}
+
+
+void Foam::singleRigidBodyMeshMotion::moveBodies()
+{}
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::solidBodyMotionFunction::solidBodyMotionFunction
+Foam::singleRigidBodyMeshMotion::singleRigidBodyMeshMotion
 (
     const word& name,
-    const dictionary& SBMFCoeffs,
-    const Time& runTime
+    const polyMesh& mesh,
+    const dictionary& dict
 )
 :
-    name_(name),
-    SBMFCoeffs_(SBMFCoeffs),
-    time_(runTime)
+    multiRigidBodyMeshMotion(name, mesh, dict),
+    SBMFPtr_(solidBodyMotionFunction::New(dict, mesh.time(), "function"))
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::solidBodyMotionFunction::~solidBodyMotionFunction()
+Foam::singleRigidBodyMeshMotion::~singleRigidBodyMeshMotion()
 {}
-
-
-// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
-
-bool Foam::solidBodyMotionFunction::read(const dictionary& dict)
-{
-    SBMFCoeffs_ =
-        dict.isDict(name_)
-      ? dict.subDict(name_)
-      : dict;
-
-    return true;
-}
-
-
-void Foam::solidBodyMotionFunction::writeData(Ostream& os) const
-{
-    os << SBMFCoeffs_;
-}
-
-
-// * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
-
-void Foam::writeEntry(Ostream& os, const solidBodyMotionFunction& f)
-{
-    writeKeyword(os, f.name())
-        << nl << indent << token::BEGIN_BLOCK << nl << incrIndent;
-
-    writeEntry(os, "type", f.type());
-
-    f.writeData(os);
-
-    os  << decrIndent << indent << token::END_BLOCK << endl;
-}
 
 
 // ************************************************************************* //

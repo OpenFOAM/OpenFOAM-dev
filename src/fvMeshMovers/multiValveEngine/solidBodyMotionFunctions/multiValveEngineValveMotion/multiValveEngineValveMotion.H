@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,6 +93,7 @@ public:
         //- Construct from components
         multiValveEngineValveMotion
         (
+            const word& name,
             const dictionary& SBMFCoeffs,
             const Time& runTime
         );
@@ -110,6 +111,7 @@ public:
             (
                 new multiValveEngineValveMotion
                 (
+                    name_,
                     SBMFCoeffs_,
                     time_
                 )

@@ -71,6 +71,7 @@ public:
         //- Construct from components
         multiMotion
         (
+            const word& name,
             const dictionary& SBMFCoeffs,
             const Time& runTime
         );
@@ -85,6 +86,7 @@ public:
             (
                 new multiMotion
                 (
+                    name_,
                     SBMFCoeffs_,
                     time_
                 )

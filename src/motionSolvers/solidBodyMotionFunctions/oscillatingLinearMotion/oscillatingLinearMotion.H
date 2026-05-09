@@ -74,6 +74,7 @@ public:
         //- Construct from components
         oscillatingLinearMotion
         (
+            const word& name,
             const dictionary& SBMFCoeffs,
             const Time& runTime
         );
@@ -88,6 +89,7 @@ public:
             (
                 new oscillatingLinearMotion
                 (
+                    name_,
                     SBMFCoeffs_,
                     time_
                 )

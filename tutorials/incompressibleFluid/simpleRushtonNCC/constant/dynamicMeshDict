@@ -26,9 +26,12 @@ mover
 
     cellZone        rotatingZone;
 
-    solidBodyMotionFunction  rotatingMotion;
+    solidBodyMotionFunction
+    {
+        type            rotatingMotion;
 
-    #include        "rotatingZoneProperties"
+        #include        "rotatingZoneProperties"
+    }
 }
 
 // ************************************************************************* //

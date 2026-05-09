@@ -38,7 +38,7 @@ SourceFiles
 #ifndef rigidBodyMeshMotion_H
 #define rigidBodyMeshMotion_H
 
-#include "points0MotionSolver.H"
+#include "multiRigidBodyMeshMotion.H"
 #include "rigidBodyMotion.H"
 #include "Function1.H"
 
@@ -53,63 +53,10 @@ namespace Foam
 
 class rigidBodyMeshMotion
 :
-    public points0MotionSolver,
+    public multiRigidBodyMeshMotion,
     public RBD::rigidBodyMotion
 {
-    //- Class containing the patches and point motion weighting for each body
-    class bodyMesh
-    {
-        //- Name of the body
-        const word name_;
-
-        //- ID of the body in the RBD::rigidBodyMotion
-        const label bodyIndex_;
-
-        //- List of mesh patch names associated with this body
-        const wordReList patches_;
-
-        //- Set of mesh patches associated with this body
-        const labelHashSet patchSet_;
-
-        //- Names of the pointZones which move with the body
-        wordReList pointZones_;
-
-        //- pointZones which move with the body
-        labelHashSet pointZoneSet_;
-
-        //- Inner morphing distance (limit of solid-body region)
-        const scalar di_;
-
-        //- Outer morphing distance (limit of linear interpolation region)
-        const scalar do_;
-
-        //- Current interpolation weight
-        //  (1 at patches and within di_, 0 at do_ and beyond)
-        pointScalarField weight_;
-
-
-    public:
-
-        friend class rigidBodyMeshMotion;
-
-        bodyMesh
-        (
-            const polyMesh& mesh,
-            const word& name,
-            const label bodyID,
-            const dictionary& dict
-        );
-
-        template<class Type>
-        inline Type weight(const Type& pDist) const;
-    };
-
-
     // Private Data
-
-        //- List of the bodyMeshes containing the patches and point motion
-        //  weighting for each body
-        PtrList<bodyMesh> bodyMeshes_;
 
         //- Switch for test-mode in which only the
         //  gravitational body-force is applied
@@ -140,11 +87,10 @@ class rigidBodyMeshMotion
         using RBD::rigidBodyMotion::write;
 
         //- Return the list of transformation for each body from time 0
-        List<septernion> transforms0() const;
+        virtual List<septernion> transforms0() const;
 
-        //- Return the list of weights for each body to pointi
-        //   w is used as the work-space for the weights and returned
-        List<scalar>& weights(const label pointi, List<scalar>& w) const;
+        //- Move the bodies
+        virtual void moveBodies();
 
 
 public:
@@ -175,12 +121,6 @@ public:
 
 
     // Member Functions
-
-        //- Return point location obtained from the current motion field
-        virtual tmp<pointField> newPoints();
-
-        //-  Update local data for topology changes
-        virtual void topoChange(const polyTopoChangeMap&);
 
         //- Write motion state information for restart
         virtual bool write() const;

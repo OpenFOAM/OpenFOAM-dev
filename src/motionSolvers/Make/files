@@ -32,4 +32,7 @@ pointPatchFields/derived/rigidBodyMotionDisplacement/rigidBodyMotionDisplacement
 
 pointInterpolator/dynamicMeshPointInterpolator.C
 
+rigidBodyMeshMotion/multiRigidBodyMeshMotion/multiRigidBodyMeshMotion.C
+rigidBodyMeshMotion/singleRigidBodyMeshMotion/singleRigidBodyMeshMotion.C
+
 LIB = $(FOAM_LIBBIN)/libmotionSolvers

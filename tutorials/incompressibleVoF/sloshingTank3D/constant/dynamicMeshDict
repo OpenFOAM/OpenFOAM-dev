@@ -24,21 +24,23 @@ mover
 
     cellZone        all;
 
-    solidBodyMotionFunction SDA;
+    solidBodyMotionFunction
+    {
+        type            SDA;
 
-    CofG            (0 0 0);
-    lambda           50;
-    rollAmax        0.22654;
-    rollAmin        0.10472;
-    heaveA          3.79;
-    swayA           2.34;
-    Q               2;
-    Tp              13.93;
-    Tpn             11.93;
-    dTi             0.059;
-    dTp             -0.001;
+        CofG            (0 0 0);
+        lambda           50;
+        rollAmax        0.22654;
+        rollAmin        0.10472;
+        heaveA          3.79;
+        swayA           2.34;
+        Q               2;
+        Tp              13.93;
+        Tpn             11.93;
+        dTi             0.059;
+        dTp             -0.001;
+    }
 }
-
 
 
 // ************************************************************************* //

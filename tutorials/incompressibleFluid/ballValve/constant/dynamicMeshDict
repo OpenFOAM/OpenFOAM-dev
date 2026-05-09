@@ -24,11 +24,14 @@ mover
 
     cellZone        ball;
 
-    solidBodyMotionFunction oscillatingRotatingMotion;
+    solidBodyMotionFunction
+    {
+        type            oscillatingRotatingMotion;
 
-    origin        (0 0 0);
-    amplitude     (0 0 45);
-    omega         6.283185307179586;
+        origin          (0 0 0);
+        amplitude       (0 0 45);
+        omega           6.283185307179586;
+    }
 }
 
 

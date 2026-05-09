@@ -20,7 +20,7 @@ mover
 
     libs            ("libsixDoFRigidBodyMeshMotion.so");
 
-    motionSolver        sixDoFRigidBodyMeshMotion;
+    motionSolver        sixDoFRigidBodyMotion;
 
     sixDoFRigidBodyMotion
     {

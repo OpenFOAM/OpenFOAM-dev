@@ -26,11 +26,14 @@ mover
 
     cellZone        rotating;
 
-    solidBodyMotionFunction  rotatingMotion;
+    solidBodyMotionFunction
+    {
+        type        rotatingMotion;
 
-    origin      (0 0 0);
-    axis        (0 0 1);
-    omega       $!meshMotionProperties/omega;
+        origin      (0 0 0);
+        axis        (0 0 1);
+        omega       $!meshMotionProperties/omega;
+    }
 }
 
 

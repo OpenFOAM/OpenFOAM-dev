@@ -22,28 +22,27 @@ mover
 
     motionSolver    solidBody;
 
-    solidBodyMotionFunction multiMotion;
-
     cellZone        all;
 
-    // Table rotating in z axis
-    rotatingTable
+    solidBodyMotionFunction
     {
-        solidBodyMotionFunction rotatingMotion;
-        rotatingMotion
+        type            multiMotion;
+
+        // Table rotating in z axis
+        rotatingTable
         {
+            type            rotatingMotion;
+
             origin          (0 0.1 0);
             axis            (0 0 1);
             omega           60 [rpm];
         }
-    }
 
-    // Tube rocking on rotating table
-    rotatingBox
-    {
-        solidBodyMotionFunction oscillatingRotatingMotion;
-        oscillatingRotatingMotion
+        // Tube rocking on rotating table
+        rotatingBox
         {
+            type            oscillatingRotatingMotion;
+
             origin          (0 0 0);
             amplitude       (45 0 0);   // 45 degrees max tilt
             omega           40;         // rad/s

@@ -24,27 +24,30 @@ mover
 
     cellZone        ball;
 
-    solidBodyMotionFunction rotatingMotion;
-
-    origin          (0 0 0);
-    axis            (0 0 1);
-    omega
+    solidBodyMotionFunction
     {
-        type            scale;
-        scale
+        type            rotatingMotion;
+
+        origin          (0 0 0);
+        axis            (0 0 1);
+        omega
         {
-            type            table;
-            values
-            (
-                (0               0)
-                (0.02            0)
-                (0.04            1)
-                (0.06            1)
-                (0.08            0)
-                (0.1             0)
-            );
+            type            scale;
+            scale
+            {
+                type            table;
+                values
+                (
+                    (0               0)
+                    (0.02            0)
+                    (0.04            1)
+                    (0.06            1)
+                    (0.08            0)
+                    (0.1             0)
+                );
+            }
+            value           -39.269908169872416;
         }
-        value           -39.269908169872416;
     }
 }
 

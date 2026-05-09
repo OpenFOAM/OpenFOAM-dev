@@ -45,11 +45,12 @@ namespace solidBodyMotionFunctions
 
 Foam::solidBodyMotionFunctions::SDA::SDA
 (
+    const word& name,
     const dictionary& SBMFCoeffs,
     const Time& runTime
 )
 :
-    solidBodyMotionFunction(SBMFCoeffs, runTime),
+    solidBodyMotionFunction(name, SBMFCoeffs, runTime),
     CofG_(SBMFCoeffs_.lookup("CofG"))
 {
     read(SBMFCoeffs);

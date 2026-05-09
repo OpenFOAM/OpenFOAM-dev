@@ -24,13 +24,9 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "sixDoFRigidBodyMeshMotion.H"
-#include "polyMesh.H"
-#include "pointDist.H"
-#include "pointConstraints.H"
 #include "timeIOdictionary.H"
 #include "uniformDimensionedFields.H"
 #include "forces.H"
-#include "mathematicalConstants.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -48,121 +44,20 @@ namespace Foam
 }
 
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::sixDoFRigidBodyMeshMotion::sixDoFRigidBodyMeshMotion
-(
-    const word& name,
-    const polyMesh& mesh,
-    const dictionary& dict
-)
-:
-    points0MotionSolver(name, mesh, dict, typeName),
-    sixDoFRigidBodyMotion
-    (
-        dict,
-        typeIOobject<timeIOdictionary>
-        (
-            "sixDoFRigidBodyMotionState",
-            mesh.time().name(),
-            "uniform",
-            mesh
-        ).headerOk()
-      ? timeIOdictionary
-        (
-            IOobject
-            (
-                "sixDoFRigidBodyMotionState",
-                mesh.time().name(),
-                "uniform",
-                mesh,
-                IOobject::READ_IF_PRESENT,
-                IOobject::NO_WRITE,
-                false
-            )
-        )
-      : dict
-    ),
-    patches_(wordReList(dict.lookup("patches"))),
-    patchSet_(mesh.boundary().patchSet(patches_)),
-    di_(dict.lookup<scalar>("innerDistance")),
-    do_(dict.lookup<scalar>("outerDistance")),
-    test_(dict.lookupOrDefault<Switch>("test", false)),
-    rhoInf_(1.0),
-    rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
-    g_("g", dimAcceleration, dict, vector::zero),
-    scale_
-    (
-        IOobject
-        (
-            "motionScale",
-            mesh.time().name(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::NO_WRITE,
-            false
-        ),
-        pointMesh::New(mesh),
-        dimensionedScalar(dimless, 0)
-    ),
-    curTimeIndex_(-1)
+Foam::List<Foam::septernion>
+Foam::sixDoFRigidBodyMeshMotion::transforms0() const
 {
-    if (rhoName_ == "rhoInf")
-    {
-        rhoInf_ = dict.lookup<scalar>("rhoInf");
-    }
-
-    // Calculate scaling factor everywhere
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    {
-        const pointMesh& pMesh = pointMesh::New(mesh);
-
-        pointDist pDist(pMesh, patchSet_, points0(), do_);
-
-        // Scaling: 1 up to di then linear down to 0 at do away from patches
-        scale_.primitiveFieldRef() =
-            min
-            (
-                max
-                (
-                    (do_ - pDist.primitiveField())/(do_ - di_),
-                    scalar(0)
-                ),
-                scalar(1)
-            );
-
-        // Convert the scale function to a cosine
-        scale_.primitiveFieldRef() =
-            min
-            (
-                max
-                (
-                    0.5
-                  - 0.5
-                   *cos(scale_.primitiveField()
-                   *Foam::constant::mathematical::pi),
-                    scalar(0)
-                ),
-                scalar(1)
-            );
-
-        pointConstraints::New(pMesh).constrain(scale_);
-        scale_.write();
-    }
+    return List<septernion>
+    (
+        1,
+        sixDoFRigidBodyMotion::transform0()
+    );
 }
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::sixDoFRigidBodyMeshMotion::~sixDoFRigidBodyMeshMotion()
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-Foam::tmp<Foam::pointField>
-Foam::sixDoFRigidBodyMeshMotion::newPoints()
+void Foam::sixDoFRigidBodyMeshMotion::moveBodies()
 {
     const Time& t = mesh().time();
 
@@ -214,7 +109,7 @@ Foam::sixDoFRigidBodyMeshMotion::newPoints()
             dictionary::entries
             (
                 "type", functionObjects::forces::typeName,
-                "patches", patches_,
+                "patches", bodyMeshes_[0].patches(),
                 "rhoInf", rhoInf_,
                 "rho", rhoName_,
                 "CofR", centreOfRotation()
@@ -236,20 +131,64 @@ Foam::sixDoFRigidBodyMeshMotion::newPoints()
             t.deltaT0Value()
         );
     }
-
-    // Update the displacements
-    // pointDisplacement.primitiveFieldRef() =
-    //     transform(points0(), scale_) - points0();
-    //
-    // Displacement has changed. Update boundary conditions
-    // pointConstraints::New
-    // (
-    //     pointDisplacement_.mesh()
-    // ).constrainDisplacement(pointDisplacement_);
-
-    return transform(points0(), scale_);
 }
 
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::sixDoFRigidBodyMeshMotion::sixDoFRigidBodyMeshMotion
+(
+    const word& name,
+    const polyMesh& mesh,
+    const dictionary& dict
+)
+:
+    multiRigidBodyMeshMotion(name, mesh, dict),
+    sixDoFRigidBodyMotion
+    (
+        dict,
+        typeIOobject<timeIOdictionary>
+        (
+            "sixDoFRigidBodyMotionState",
+            mesh.time().name(),
+            "uniform",
+            mesh
+        ).headerOk()
+      ? timeIOdictionary
+        (
+            IOobject
+            (
+                "sixDoFRigidBodyMotionState",
+                mesh.time().name(),
+                "uniform",
+                mesh,
+                IOobject::READ_IF_PRESENT,
+                IOobject::NO_WRITE,
+                false
+            )
+        )
+      : dict
+    ),
+    test_(dict.lookupOrDefault<Switch>("test", false)),
+    rhoInf_(1.0),
+    rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
+    g_("g", dimAcceleration, dict, vector::zero),
+    curTimeIndex_(-1)
+{
+    if (rhoName_ == "rhoInf")
+    {
+        rhoInf_ = dict.lookup<scalar>("rhoInf");
+    }
+}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::sixDoFRigidBodyMeshMotion::~sixDoFRigidBodyMeshMotion()
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 bool Foam::sixDoFRigidBodyMeshMotion::write() const
 {
@@ -270,14 +209,14 @@ bool Foam::sixDoFRigidBodyMeshMotion::write() const
     state().write(dict);
 
     return
-        dict.regIOobject::writeObject
+        multiRigidBodyMeshMotion::write()
+     && dict.regIOobject::writeObject
         (
             IOstream::ASCII,
             IOstream::currentVersion,
             mesh().time().writeCompression(),
             true
-        )
-     && points0MotionSolver::write();
+        );
 }
 
 

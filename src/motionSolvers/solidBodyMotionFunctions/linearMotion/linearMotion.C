@@ -47,11 +47,12 @@ namespace solidBodyMotionFunctions
 
 Foam::solidBodyMotionFunctions::linearMotion::linearMotion
 (
+    const word& name,
     const dictionary& SBMFCoeffs,
     const Time& runTime
 )
 :
-    solidBodyMotionFunction(SBMFCoeffs, runTime)
+    solidBodyMotionFunction(name, SBMFCoeffs, runTime)
 {
     read(SBMFCoeffs);
 }

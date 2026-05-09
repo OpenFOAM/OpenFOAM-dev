@@ -77,6 +77,7 @@ public:
         //- Construct from components
         oscillatingRotatingMotion
         (
+            const word& name,
             const dictionary& SBMFCoeffs,
             const Time& runTime
         );
@@ -91,6 +92,7 @@ public:
             (
                 new oscillatingRotatingMotion
                 (
+                    name_,
                     SBMFCoeffs_,
                     time_
                 )

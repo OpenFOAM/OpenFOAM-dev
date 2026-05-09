@@ -63,6 +63,7 @@ protected:
 
     // Protected data
 
+        const word name_;
         dictionary SBMFCoeffs_;
         const Time& time_;
 
@@ -80,8 +81,12 @@ public:
             autoPtr,
             solidBodyMotionFunction,
             dictionary,
-            (const dictionary& SBMFCoeffs, const Time& runTime),
-            (SBMFCoeffs, runTime)
+            (
+                const word& name,
+                const dictionary& SBMFCoeffs,
+                const Time& runTime
+            ),
+            (name, SBMFCoeffs, runTime)
         );
 
 
@@ -90,7 +95,8 @@ public:
         //- Construct from the SBMFCoeffs dictionary and Time
         solidBodyMotionFunction
         (
-            const dictionary& SBMFCoeffs,
+            const word& name,
+            const dictionary& dict,
             const Time& runTime
         );
 
@@ -107,7 +113,8 @@ public:
         static autoPtr<solidBodyMotionFunction> New
         (
             const dictionary& SBMFCoeffs,
-            const Time& runTime
+            const Time& runTime,
+            const word& name = "solidBodyMotionFunction"
         );
 
 
@@ -117,11 +124,16 @@ public:
 
     // Member Functions
 
+        const word& name() const
+        {
+            return name_;
+        }
+
         //- Return the solid-body motion transformation septernion
         virtual septernion transformation() const = 0;
 
         //- Update properties from given dictionary
-        virtual bool read(const dictionary& SBMFCoeffs) = 0;
+        virtual bool read(const dictionary& dict) = 0;
 
         //- Write in dictionary format
         virtual void writeData(Ostream&) const;
@@ -132,6 +144,9 @@ public:
         //- Disallow default bitwise assignment
         void operator=(const solidBodyMotionFunction&) = delete;
 };
+
+
+void writeEntry(Ostream& os, const solidBodyMotionFunction& f);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

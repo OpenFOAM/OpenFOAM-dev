@@ -71,6 +71,7 @@ public:
         //- Construct from components
         linearMotion
         (
+            const word& name,
             const dictionary& SBMFCoeffs,
             const Time& runTime
         );
@@ -86,6 +87,7 @@ public:
             (
                 new linearMotion
                 (
+                    name_,
                     SBMFCoeffs_,
                     time_
                 )

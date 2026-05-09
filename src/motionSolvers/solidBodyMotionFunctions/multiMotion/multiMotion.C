@@ -47,11 +47,12 @@ namespace solidBodyMotionFunctions
 
 Foam::solidBodyMotionFunctions::multiMotion::multiMotion
 (
+    const word& name,
     const dictionary& SBMFCoeffs,
     const Time& runTime
 )
 :
-    solidBodyMotionFunction(SBMFCoeffs, runTime)
+    solidBodyMotionFunction(name, SBMFCoeffs, runTime)
 {
     read(SBMFCoeffs);
 }
@@ -100,7 +101,12 @@ bool Foam::solidBodyMotionFunctions::multiMotion::read
             SBMFs_.set
             (
                 i,
-                solidBodyMotionFunction::New(iter().dict(), time_)
+                solidBodyMotionFunction::New
+                (
+                    SBMFCoeffs,
+                    time_,
+                    iter().keyword()
+                )
             );
 
             Info<< "Constructed SBMF " << i << " : "

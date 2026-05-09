@@ -150,10 +150,7 @@ write(Ostream& os) const
 {
     // Note: write value
     fixedValuePointPatchVectorField::write(os);
-
-    writeEntry(os, solidBodyMotionFunction::typeName, SBMFPtr_->type());
-    os  << indent << SBMFPtr_->type();
-    SBMFPtr_->writeData(os);
+    writeEntry(os, SBMFPtr_());
 }
 
 

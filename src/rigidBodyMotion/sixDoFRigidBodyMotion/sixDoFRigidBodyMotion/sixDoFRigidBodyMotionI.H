@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -287,6 +287,18 @@ inline Foam::point Foam::sixDoFRigidBodyMotion::velocity
 ) const
 {
     return (omega() ^ (pt - centreOfRotation())) + v();
+}
+
+
+inline Foam::septernion Foam::sixDoFRigidBodyMotion::transform0() const
+{
+    const quaternion q(Q() & initialQ().T());
+
+    return septernion
+    (
+        q.transform(initialCentreOfRotation()) - centreOfRotation(),
+        q
+    );
 }
 
 
