@@ -66,25 +66,6 @@ bool Foam::jobInfo::constructed(false);
 #include "token.C"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-// Construct the printDictionary tables
-
-#include "printDictionary.H"
-
-Foam::HashTable
-<
-    const Foam::dictionary*,
-    Foam::fileName,
-    Foam::Hash<Foam::fileName>
-> Foam::printDictionary::dictNameToDictPtrs_;
-
-Foam::HashTable
-<
-    Foam::tmpNrc<Foam::dictionary>,
-    const Foam::dictionary*,
-    Foam::Hash<void*>
-> Foam::printDictionary::dictPtrToDefaults_;
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 // Read the debug and info switches
 
 #include "debug.C"

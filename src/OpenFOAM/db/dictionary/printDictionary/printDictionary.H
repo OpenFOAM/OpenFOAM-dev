@@ -39,7 +39,6 @@ SourceFiles
 #include "HashTable.H"
 #include "tmpNrc.H"
 #include "dictionary.H"
-#include "ListOps.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -57,6 +56,9 @@ class printDictionary
 private:
 
     // Private Static Member Functions
+
+        //- Remove the default dictionary for the given dictionary
+        static void removeDefaults(const dictionary& dict);
 
         //- Allocate the default dictionary for the given dictionary
         static void setDefaults(const dictionary& dict);
@@ -76,14 +78,23 @@ private:
     // Private Static Data
 
         //- Table from the names of dictionaries to be printed to pointers
-        //  to those dictionaries
-        static HashTable<const dictionary*, fileName, Hash<fileName>>
-            dictNameToDictPtrs_;
+        //  to those dictionaries and the number of times they are currently
+        //  marked to be printed
+        static HashTable
+        <
+            Tuple2<const dictionary*, label>,
+            fileName,
+            Hash<fileName>
+        > dictNameToDictPtrAndCount_;
 
         //- Table from pointers to the dictionaries to be printed to
         //  dictionaries containing all entries including defaults
-        static HashTable<tmpNrc<dictionary>, const dictionary*, Hash<void*>>
-            dictPtrToDefaults_;
+        static HashTable
+        <
+            tmpNrc<dictionary>,
+            const dictionary*,
+            Hash<void*>
+        > dictPtrToDefaults_;
 
         //- The dictionaries to be printed
         UPtrList<const dictionary> dicts_;
@@ -139,19 +150,16 @@ public:
         //- Set the dictionary to be printed
         static void set(const dictionary& dict);
 
-        //- Un-set the dictionary to be printed
-        static void unset(const dictionary& dict);
-
         //- Return if a dictionary is marked to be printed
         static bool prints(const dictionary& dict)
         {
-            return dictNameToDictPtrs_.found(dict.name());
+            return dictNameToDictPtrAndCount_.found(dict.name());
         }
 
         //- Return if a dictionary is marked to be printed
         static bool prints(const fileName& dictName)
         {
-            return dictNameToDictPtrs_.found(dictName);
+            return dictNameToDictPtrAndCount_.found(dictName);
         }
 
         //- Return if a dictionary exists to add defaults to for a given

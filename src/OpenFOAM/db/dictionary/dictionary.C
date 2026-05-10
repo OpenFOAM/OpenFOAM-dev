@@ -333,9 +333,7 @@ Foam::autoPtr<Foam::dictionary> Foam::dictionary::clone() const
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::dictionary::~dictionary()
-{
-    printDictionary::unset(*this);
-}
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
