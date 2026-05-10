@@ -59,7 +59,7 @@ Foam::List<Foam::septernion> Foam::rigidBodyMeshMotion::transforms0() const
     }
     else
     {
-        List<septernion> transforms0(bodyMeshes_.size() + 1);
+        List<septernion> transforms0(bodyMeshes_.size());
 
         forAll(bodyMeshes_, bi)
         {
@@ -67,8 +67,6 @@ Foam::List<Foam::septernion> Foam::rigidBodyMeshMotion::transforms0() const
             transforms0[bi] =
                 septernion(transform0(bodyMeshes_[bi].bodyIndex));
         }
-
-        transforms0[bodyMeshes_.size()] = septernion::I;
 
         return transforms0;
     }

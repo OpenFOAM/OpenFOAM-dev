@@ -23,19 +23,19 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "singleRigidBodyMeshMotion.H"
+#include "functionalRigidBodyMeshMotion.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(singleRigidBodyMeshMotion, 0);
+    defineTypeNameAndDebug(functionalRigidBodyMeshMotion, 0);
 
     addToRunTimeSelectionTable
     (
         motionSolver,
-        singleRigidBodyMeshMotion,
+        functionalRigidBodyMeshMotion,
         dictionary
     );
 }
@@ -44,33 +44,73 @@ namespace Foam
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
 Foam::List<Foam::septernion>
-Foam::singleRigidBodyMeshMotion::transforms0() const
+Foam::functionalRigidBodyMeshMotion::transforms0() const
 {
-    return List<septernion>(1, SBMFPtr_().transformation());
+    if (SBMFs_.size() == 1)
+    {
+        return List<septernion>(1, SBMFs_[0].transformation());
+    }
+    else
+    {
+        List<septernion> transforms0(SBMFs_.size());
+
+        forAll(SBMFs_, i)
+        {
+            transforms0[i] = SBMFs_[i].transformation();
+        }
+
+        return transforms0;
+    }
 }
 
 
-void Foam::singleRigidBodyMeshMotion::moveBodies()
+void Foam::functionalRigidBodyMeshMotion::moveBodies()
 {}
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::singleRigidBodyMeshMotion::singleRigidBodyMeshMotion
+Foam::functionalRigidBodyMeshMotion::functionalRigidBodyMeshMotion
 (
     const word& name,
     const polyMesh& mesh,
     const dictionary& dict
 )
 :
-    multiRigidBodyMeshMotion(name, mesh, dict),
-    SBMFPtr_(solidBodyMotionFunction::New(dict, mesh.time(), "function"))
-{}
+    multiRigidBodyMeshMotion(name, mesh, dict)
+{
+    SBMFs_.setSize(bodyMeshes_.size());
+
+    if (dict.isDict("bodies"))
+    {
+        const dictionary& bodiesDict = dict.subDict("bodies");
+
+        label i = 0;
+        forAllConstIter(IDLList<entry>, bodiesDict, iter)
+        {
+            const dictionary& bodyDict = iter().dict();
+
+            SBMFs_.set
+            (
+                i++,
+                solidBodyMotionFunction::New(bodyDict, mesh.time(), "function")
+            );
+        }
+    }
+    else
+    {
+        SBMFs_.set
+        (
+            0,
+            solidBodyMotionFunction::New(dict, mesh.time(), "function")
+        );
+    }
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::singleRigidBodyMeshMotion::~singleRigidBodyMeshMotion()
+Foam::functionalRigidBodyMeshMotion::~functionalRigidBodyMeshMotion()
 {}
 
 

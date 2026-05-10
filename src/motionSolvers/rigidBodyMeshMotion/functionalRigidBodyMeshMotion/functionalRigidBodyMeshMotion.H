@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::singleRigidBodyMeshMotion
+    Foam::functionalRigidBodyMeshMotion
 
 Description
     Solid-body motion of the mesh specified by a run-time selectable motion
@@ -30,12 +30,12 @@ Description
     distance to the object surface to move the mesh points.
 
 SourceFiles
-    singleRigidBodyMeshMotion.C
+    functionalRigidBodyMeshMotion.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef singleRigidBodyMeshMotion_H
-#define singleRigidBodyMeshMotion_H
+#ifndef functionalRigidBodyMeshMotion_H
+#define functionalRigidBodyMeshMotion_H
 
 #include "multiRigidBodyMeshMotion.H"
 #include "solidBodyMotionFunction.H"
@@ -46,17 +46,17 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-             Class singleRigidBodyMeshMotion Declaration
+             Class functionalRigidBodyMeshMotion Declaration
 \*---------------------------------------------------------------------------*/
 
-class singleRigidBodyMeshMotion
+class functionalRigidBodyMeshMotion
 :
     public multiRigidBodyMeshMotion
 {
     // Private Data
 
-        //- The motion control function
-        autoPtr<solidBodyMotionFunction> SBMFPtr_;
+        //- Body motion control functions
+        PtrList<solidBodyMotionFunction> SBMFs_;
 
 
     // Private Member Functions
@@ -71,13 +71,13 @@ class singleRigidBodyMeshMotion
 public:
 
     //- Runtime type information
-    TypeName("singleRigidBodyMotion");
+    TypeName("functionalRigidBodyMotion");
 
 
     // Constructors
 
         //- Construct from polyMesh and dictionary
-        singleRigidBodyMeshMotion
+        functionalRigidBodyMeshMotion
         (
             const word& name,
             const polyMesh&,
@@ -85,20 +85,20 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        singleRigidBodyMeshMotion
+        functionalRigidBodyMeshMotion
         (
-            const singleRigidBodyMeshMotion&
+            const functionalRigidBodyMeshMotion&
         ) = delete;
 
 
     //- Destructor
-    ~singleRigidBodyMeshMotion();
+    ~functionalRigidBodyMeshMotion();
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const singleRigidBodyMeshMotion&) = delete;
+        void operator=(const functionalRigidBodyMeshMotion&) = delete;
 };
 
 

@@ -1,3 +1,0 @@
-singleRigidBodyMeshMotion.C
-
-LIB = $(FOAM_LIBBIN)/libsingleRigidBodyMeshMotion

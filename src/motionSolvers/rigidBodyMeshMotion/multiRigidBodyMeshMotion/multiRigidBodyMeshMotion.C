@@ -55,7 +55,7 @@ Foam::List<Foam::scalar>& Foam::multiRigidBodyMeshMotion::weights
     }
 
     // Calculate the limiter for wi/(1 - wi) to ensure the sum(wi) = 1
-    scalar lambda = 1/sum1mw;
+    const scalar lambda = 1/sum1mw;
 
     // Limit wi/(1 - wi) and sum the resulting wi
     scalar sumw = 0;
@@ -250,7 +250,8 @@ Foam::multiRigidBodyMeshMotion::newPoints()
     }
     else
     {
-        const List<septernion> transforms0(this->transforms0());
+        List<septernion> transforms0(this->transforms0());
+        transforms0.append(septernion::I);
         List<scalar> w(transforms0.size());
 
         forAll(points0, pointi)
