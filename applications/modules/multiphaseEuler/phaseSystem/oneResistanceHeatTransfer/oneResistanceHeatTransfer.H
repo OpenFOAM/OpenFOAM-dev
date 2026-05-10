@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,7 @@ Class
 Description
     Model for heat transfer between two phases. One heat transfer coefficient
     is used to calculate the heat flux from the temperature difference between
-    the two phases.
+    two phases.
 
 Usage
     Example usage:
@@ -36,8 +36,6 @@ Usage
     {
         type            oneResistanceHeatTransfer;
         libs            ("libmultiphaseEulerFvModels.so");
-
-        phases          (air water);
 
         blending
         {
@@ -48,18 +46,15 @@ Usage
             minFullyContinuousAlpha.water 1;
         }
 
-        models
+        air_dispersedIn_water
         {
-            air_dispersedIn_water
-            {
-                type            RanzMarshall;
-                residualAlpha   1e-4;
-            }
-            water_dispersedIn_air
-            {
-                type            RanzMarshall;
-                residualAlpha   1e-4;
-            }
+            type            RanzMarshall;
+            residualAlpha   1e-4;
+        }
+        water_dispersedIn_air
+        {
+            type            RanzMarshall;
+            residualAlpha   1e-4;
         }
     }
     \endverbatim

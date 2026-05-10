@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,7 @@ Class
 Description
     Model for heat transfer between two phases. Two heat transfer coefficients
     are used to calculate the heat fluxes that result from the temperature
-    differences between the phases and the shared interface.
+    differences between two phases and their shared interface.
 
 Usage
     Example usage:
@@ -36,8 +36,6 @@ Usage
     {
         type            twoResistanceHeatTransfer;
         libs            ("libmultiphaseEulerFvModels.so");
-
-        phases          (air water);
 
         blending
         {
@@ -48,28 +46,25 @@ Usage
             minFullyContinuousAlpha.water 1;
         }
 
-        models
+        air_dispersedIn_water_inThe_air
         {
-            air_dispersedIn_water_inThe_air
-            {
-                type spherical;
-                residualAlpha 1e-4;
-            }
-            air_dispersedIn_water_inThe_water
-            {
-                type RanzMarshall;
-                residualAlpha 1e-4;
-            }
-            water_dispersedIn_air_inThe_air
-            {
-                type RanzMarshall;
-                residualAlpha 1e-4;
-            }
-            water_dispersedIn_air_inThe_water
-            {
-                type spherical;
-                residualAlpha 1e-4;
-            }
+            type spherical;
+            residualAlpha 1e-4;
+        }
+        air_dispersedIn_water_inThe_water
+        {
+            type RanzMarshall;
+            residualAlpha 1e-4;
+        }
+        water_dispersedIn_air_inThe_air
+        {
+            type RanzMarshall;
+            residualAlpha 1e-4;
+        }
+        water_dispersedIn_air_inThe_water
+        {
+            type spherical;
+            residualAlpha 1e-4;
         }
     }
     \endverbatim
