@@ -36,7 +36,7 @@ SourceFiles
 #ifndef printDictionary_H
 #define printDictionary_H
 
-#include "HashTable.H"
+#include "HashSet.H"
 #include "tmpNrc.H"
 #include "dictionary.H"
 
@@ -58,7 +58,14 @@ private:
     // Private Static Member Functions
 
         //- Remove the default dictionary for the given dictionary
-        static void removeDefaults(const dictionary& dict);
+        static void removeDefaults
+        (
+            const dictionary* dictPtr,
+            HashSet<const dictionary*, Hash<void*>>& removeDictPtrs
+        );
+
+        //- Remove the default dictionary for the given dictionary
+        static void removeDefaults(const dictionary* dictPtr);
 
         //- Allocate the default dictionary for the given dictionary
         static void setDefaults(const dictionary& dict);

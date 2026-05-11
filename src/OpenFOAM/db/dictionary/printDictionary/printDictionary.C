@@ -41,39 +41,60 @@ namespace Foam
 
 // * * * * * * * * * * * Private Static Member Functions * * * * * * * * * * //
 
-void Foam::printDictionary::removeDefaults(const dictionary& dict)
+void Foam::printDictionary::removeDefaults
+(
+    const dictionary* dictPtr,
+    HashSet<const dictionary*, Hash<void*>>& removeDictPtrs
+)
 {
-    if (!dictPtrToDefaults_.found(&dict)) return;
-
     typedef
         HashTable<tmpNrc<dictionary>, const dictionary*, Hash<void*>>
         dictPtrToDefaultsType;
 
-    dictionary& defaults = const_cast<dictionary&>(dictPtrToDefaults_[&dict]());
+    if (!dictPtrToDefaults_.found(dictPtr)) return;
 
-    forAllIter(dictionary, defaults, iter)
+    const dictionary& defaults = dictPtrToDefaults_[dictPtr]();
+
+    forAllConstIter(dictionary, defaults, iter)
     {
         if (!iter().isDict()) continue;
 
-        dictionary& subDefaults = iter().dict();
+        const dictionary& subDefaults = iter().dict();
 
-        forAllIter(dictPtrToDefaultsType, dictPtrToDefaults_, jter)
+        forAllConstIter(dictPtrToDefaultsType, dictPtrToDefaults_, jter)
         {
             if (&jter()() == &subDefaults)
             {
-                removeDefaults(*jter.key());
+                removeDefaults(jter.key(), removeDictPtrs);
                 break;
             }
         }
     }
 
-    dictPtrToDefaults_.erase(&dict);
+    removeDictPtrs.insert(dictPtr);
+}
+
+
+void Foam::printDictionary::removeDefaults(const dictionary* dictPtr)
+{
+    typedef
+        HashSet<const dictionary*, Hash<void*>>
+        removeDictPtrsType;
+
+    removeDictPtrsType removeDictPtrs;
+
+    removeDefaults(dictPtr, removeDictPtrs);
+
+    forAllConstIter(removeDictPtrsType, removeDictPtrs, iter)
+    {
+        dictPtrToDefaults_.erase(iter.key());
+    }
 }
 
 
 void Foam::printDictionary::setDefaults(const dictionary& dict)
 {
-    removeDefaults(dict);
+    removeDefaults(&dict);
 
     dictPtrToDefaults_.set
     (
