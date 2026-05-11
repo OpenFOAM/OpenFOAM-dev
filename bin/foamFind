@@ -137,6 +137,10 @@ writeCoded () {
     _lnInclude="$1"
     _codeOptions="-I\$(LIB_SRC)/${_lnInclude##"$FOAM_SRC/"}"
 
+    # The -I option sometimes sources files in $FOAM_MODULES
+    echo "$_lnInclude" | grep -q "$FOAM_MODULES" && \
+        _codeOptions="-I\$(FOAM_MODULES)/${_lnInclude##"$FOAM_MODULES/"}"
+
     # Optional arguments for codeInclude, codeOptions and codeLibs entries
     _file="$2"
     _codeInclude="$3"
