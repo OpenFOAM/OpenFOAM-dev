@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ void Foam::Lagrangian::manualInjection::readCoeffs(const dictionary& modelDict)
     if (havePositions == haveFile)
     {
         FatalIOErrorInFunction(modelDict)
-            << (haveFile ? "both keywords " : "neither keyword")
+            << (haveFile ? "both keywords" : "neither keyword")
             << " positions " << (haveFile ? "and" : "nor")
             << " file defined in dictionary " << modelDict.name()
             << exit(FatalIOError);
