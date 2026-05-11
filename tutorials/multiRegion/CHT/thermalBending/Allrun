@@ -10,9 +10,6 @@ runApplication -suffix plate createPatch -region plate
 runApplication -suffix heatsink blockMesh -region heatsink
 runApplication -suffix heatsink createPatch -region heatsink
 
-paraFoam -region plate -touch
-paraFoam -region heatsink -touch
-
 runApplication foamMultiRun
 
 #------------------------------------------------------------------------------
