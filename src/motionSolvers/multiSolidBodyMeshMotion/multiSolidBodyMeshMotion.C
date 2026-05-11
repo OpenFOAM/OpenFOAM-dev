@@ -99,7 +99,7 @@ void Foam::multiSolidBodyMeshMotion::updateZonePointIndices()
         mesh(),
         pointZone,
         [](label& x, const label& y) { x = x == -1 || x == y ? y : -2; },
-        -1
+        label(-1)
     );
     const label errorPointi = findIndex(pointZone, -2);
     if (errorPointi != -1)
