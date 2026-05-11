@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ bool Foam::bound(volScalarField& vsf, const dimensionedScalar& min)
     {
         scalarField& isf = vsf.primitiveFieldRef();
 
-        Info<< "bounding " << vsf.name()
+        Info<< indent << "bounding " << vsf.name()
             << ", min: " << minVsf
             << " max: " << max(vsf).value()
             << " average: " << gAverage(isf)
