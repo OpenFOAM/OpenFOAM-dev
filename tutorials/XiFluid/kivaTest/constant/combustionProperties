@@ -59,7 +59,7 @@ laminarFlameSpeed
 
 flameWrinkling
 {
-    model           equilibrium;
+    model           transport;
 
     eq
     {
@@ -75,6 +75,9 @@ flameWrinkling
     {
         model           KTS;
     }
+
+    strainReduction     no;
+    curvatureReduction  no;
 }
 
 

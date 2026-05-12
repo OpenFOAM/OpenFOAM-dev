@@ -21,7 +21,7 @@ solvers
         solver          PCG;
         preconditioner  DIC;
         tolerance       1e-8;
-        relTol          0.1;
+        relTol          0.01;
     }
 
     pFinal
@@ -36,17 +36,11 @@ solvers
         solver          diagonal;
     }
 
-    "(U|ft|fu|egr|b|Su|Xi|fu.u|egr.u|ft.b|h.u|h.b|k|epsilon)"
+    "(U|ft|fu|egr|b|Su|Xi|fu.u|egr.u|ft.b|h.u|h.b|k|epsilon).*"
     {
         solver          PBiCGStab;
         preconditioner  DILU;
         tolerance       1e-8;
-        relTol          0.1;
-    }
-
-    "(U|ft|fu|egr|b|Su|Xi|fu.u|egr.u|ft.b|h.u|h.b|k|epsilon)Final"
-    {
-        $U;
         relTol          0;
     }
 }
@@ -54,7 +48,7 @@ solvers
 PIMPLE
 {
     nCorrectors     2;
-    nNonOrthogonalCorrectors 1;
+    nNonOrthogonalCorrectors 2;
     correctPhi      no;
 }
 

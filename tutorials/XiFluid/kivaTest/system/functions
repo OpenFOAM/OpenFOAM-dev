@@ -14,27 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-setDeltaT
-{
-    libs            ("libutilityFunctionObjects.so");
-
-    type            setTimeStep;
-
-    deltaT
-    {
-        type            table;
-        values
-        (
-            (-180 0.25)
-            (-15 0.025)
-        );
-        interpolationScheme step;
-        outOfBounds     clamp;
-    }
-}
-
 #includeFunc multiValveEngineState
-
 #includeFunc bXiProgress
 #includeFunc cellMin(b)
 

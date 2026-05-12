@@ -30,21 +30,23 @@ divSchemes
 
     div(phi,U)          Gauss upwind;
 
-    div(phi,b)          Gauss limitedLinear01 1;
-    div(phiXi,Xi)       Gauss upwind;
+    div(phi,b)          Gauss vanAlbada01;
+    div(phiXi,Xi)       Gauss limitedVanAlbada 1 10;
 
-    div(phib,fu.u)      Gauss limitedLinear01 1;
-    div(phib,egr.u)     Gauss limitedLinear01 1;
-    div(phib,h.u)       Gauss limitedLinear 1;
-    div(phib,K)         Gauss limitedLinear 1;
-    div(phi,(p|rho))    Gauss limitedLinear 1;
+    div(phib,fu.u)      Gauss vanAlbada01;
+    div(phib,egr.u)     Gauss vanAlbada01;
+    div(phib,h.u)       Gauss vanAlbada;
+    div(phib,K)         Gauss vanAlbada;
 
-    div(phic,ft.b)      Gauss limitedLinear01 1;
-    div(phic,h.b)       Gauss limitedLinear 1;
-    div(phic,K)         Gauss limitedLinear 1;
+    div(phic,ft.b)      Gauss vanAlbada01;
+    div(phic,h.b)       Gauss vanAlbada;
+    div(phic,K)         Gauss vanAlbada;
 
-    div(phi,k)          Gauss limitedLinear 1;
-    div(phi,epsilon)    Gauss limitedLinear 1;
+    div(phi,(p|rho))    Gauss vanAlbada;
+    div(meshPhi,p)      Gauss vanAlbada;
+
+    div(phi,k)          Gauss vanAlbada;
+    div(phi,epsilon)    Gauss vanAlbada;
 
     div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
 }
@@ -52,6 +54,7 @@ divSchemes
 laplacianSchemes
 {
     default         Gauss linear limited corrected 0.333;
+    laplacian(Db,b) Gauss linear limited corrected 0.1;
 }
 
 interpolationSchemes
