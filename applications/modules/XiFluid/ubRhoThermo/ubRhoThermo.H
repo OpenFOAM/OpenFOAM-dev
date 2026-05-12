@@ -259,6 +259,10 @@ public:
             //- Return non-const access to the local density field [kg/m^3]
             virtual volScalarField& rho();
 
+            //- Update the density corresponding to the given pressure change
+            //  Used to update the density field following pressure solution
+            virtual void correctRho(const volScalarField& dp);
+
             //- Enthalpy/Internal energy
             //  for given pressure and temperature [J/kg]
             virtual tmp<volScalarField> he

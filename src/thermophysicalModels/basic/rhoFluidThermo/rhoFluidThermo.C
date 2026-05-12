@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,9 +61,9 @@ Foam::tmp<Foam::volScalarField> Foam::rhoFluidThermo::renameRho()
 }
 
 
-void Foam::rhoFluidThermo::correctRho(const volScalarField& deltaRho)
+void Foam::rhoFluidThermo::correctRho(const volScalarField& dp)
 {
-    rho() += deltaRho;
+    rho() += psi()*dp;
 }
 
 

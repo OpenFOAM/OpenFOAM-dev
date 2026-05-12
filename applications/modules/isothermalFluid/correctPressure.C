@@ -54,7 +54,7 @@ void Foam::solvers::isothermalFluid::correctPressure()
 
     // Thermodynamic density needs to be updated by psi*d(p) after the
     // pressure solution
-    const volScalarField psip0(psi*p);
+    const volScalarField p0("p0", p);
 
     const surfaceScalarField rhof(fvc::interpolate(rho));
 
@@ -211,7 +211,7 @@ void Foam::solvers::isothermalFluid::correctPressure()
         const bool constrained = fvConstraints().constrain(p);
 
         // Thermodynamic density update
-        thermo_.correctRho(psi*p - psip0);
+        thermo_.correctRho(p - p0);
 
         if (constrained)
         {

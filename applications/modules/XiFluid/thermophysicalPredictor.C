@@ -37,7 +37,8 @@ License
 
 #include "CMULES.H"
 
-// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
+// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
 void Foam::solvers::XiFluid::burn()
 {
@@ -454,7 +455,7 @@ void Foam::solvers::XiFluid::HuSolve
 {
     volScalarField& hu = thermo_.uThermo().he();
 
-    const volScalarField::Internal rhoByRhou(rho()/uThermo.rho()());
+    const volScalarField::Internal rhoByRhou(thermo_.rho()/uThermo.rho()());
 
     const volScalarField Du("Du", rho*(momentumTransport.nut() + uThermo.nu()));
 
@@ -495,7 +496,7 @@ void Foam::solvers::XiFluid::HbSolve
 {
     volScalarField& hb = thermo_.bThermo().he();
 
-    const volScalarField::Internal rhoByRhob(rho()/bThermo.rho()());
+    const volScalarField::Internal rhoByRhob(thermo_.rho()/bThermo.rho()());
 
     const volScalarField Db("Db", rho*(momentumTransport.nut() + bThermo.nu()));
 
@@ -526,6 +527,8 @@ void Foam::solvers::XiFluid::HbSolve
     fvConstraints().constrain(hb);
 }
 
+
+// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 void Foam::solvers::XiFluid::thermophysicalPredictor()
 {

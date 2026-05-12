@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -116,9 +116,9 @@ public:
             //  This is used by solvers which create a separate continuity rho
             virtual tmp<volScalarField> renameRho();
 
-            //- Add the given density correction to the density field.
+            //- Update the density corresponding to the given pressure change
             //  Used to update the density field following pressure solution
-            virtual void correctRho(const volScalarField& deltaRho);
+            virtual void correctRho(const volScalarField& dp);
 };
 
 

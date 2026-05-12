@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -205,8 +205,8 @@ void Foam::solvers::compressibleVoF::pressureCorrector()
         }
 
         // Update densities from change in p_rgh
-        mixture_.thermo1().correctRho(psi1*(p_rgh - p_rgh_0));
-        mixture_.thermo2().correctRho(psi2*(p_rgh - p_rgh_0));
+        mixture_.thermo1().correctRho(p_rgh - p_rgh_0);
+        mixture_.thermo2().correctRho(p_rgh - p_rgh_0);
         mixture_.correct();
 
         // Correct p_rgh for consistency with p and the updated densities

@@ -283,6 +283,14 @@ Foam::volScalarField& Foam::ubRhoThermo::rho()
 }
 
 
+void Foam::ubRhoThermo::correctRho(const volScalarField& dp)
+{
+    uThermo_->correctRho(dp);
+    bThermo_->correctRho(dp);
+    rho_ = 1.0/(b_/uThermo_->rho() + c_/bThermo_->rho());
+}
+
+
 Foam::tmp<Foam::volScalarField> Foam::ubRhoThermo::he
 (
     const Foam::volScalarField& p,
