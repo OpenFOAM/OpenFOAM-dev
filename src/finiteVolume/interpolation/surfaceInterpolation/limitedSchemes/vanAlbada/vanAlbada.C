@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "LimitedScheme.H"
+#include "Limited01.H"
 #include "vanAlbada.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -32,6 +33,26 @@ namespace Foam
 {
     makeLimitedSurfaceInterpolationScheme(vanAlbada, vanAlbadaLimiter)
     makeLimitedVSurfaceInterpolationScheme(vanAlbadaV, vanAlbadaLimiter)
+
+    makeLLimitedSurfaceInterpolationTypeScheme
+    (
+        limitedVanAlbada,
+        LimitedLimiter,
+        vanAlbadaLimiter,
+        NVDTVD,
+        magSqr,
+        scalar
+    )
+
+    makeLLimitedSurfaceInterpolationTypeScheme
+    (
+        vanAlbada01,
+        Limited01Limiter,
+        vanAlbadaLimiter,
+        NVDTVD,
+        magSqr,
+        scalar
+    )
 }
 
 // ************************************************************************* //
