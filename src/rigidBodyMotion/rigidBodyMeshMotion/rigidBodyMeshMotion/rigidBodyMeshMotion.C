@@ -49,27 +49,24 @@ namespace Foam
 
 Foam::List<Foam::septernion> Foam::rigidBodyMeshMotion::transforms0() const
 {
-    if (bodyMeshes_.size() == 1)
-    {
-        return List<septernion>
-        (
-            1,
-            septernion(this->transform0(bodyMeshes_[0].bodyIndex))
-        );
-    }
-    else
-    {
-        List<septernion> transforms0(bodyMeshes_.size());
+    List<septernion> transforms0(bodyMeshes_.size());
 
-        forAll(bodyMeshes_, bi)
+    forAll(bodyMeshes_, bi)
+    {
+        if (bodyMeshes_[bi].bodyIndex != -1)
         {
             // Calculate the septernion equivalent of the transformation
             transforms0[bi] =
                 septernion(transform0(bodyMeshes_[bi].bodyIndex));
         }
-
-        return transforms0;
+        else
+        {
+            // Assume the external body is stationary
+            transforms0[bi] = septernion::I;
+        }
     }
+
+    return transforms0;
 }
 
 
@@ -114,23 +111,26 @@ void Foam::rigidBodyMeshMotion::moveBodies()
         {
             const label bodyID = bodyMeshes_[bi].bodyIndex;
 
-            functionObjects::forces f
-            (
-                functionObjects::forces::typeName,
-                t,
-                dictionary::entries
+            if (bodyID != -1)
+            {
+                functionObjects::forces f
                 (
-                    "type", functionObjects::forces::typeName,
-                    "patches", bodyMeshes_[bi].patches(),
-                    "rhoInf", rhoInf_,
-                    "rho", rhoName_,
-                    "CofR", vector::zero
-                )
-            );
+                    functionObjects::forces::typeName,
+                    t,
+                    dictionary::entries
+                    (
+                        "type", functionObjects::forces::typeName,
+                        "patches", bodyMeshes_[bi].patches(),
+                        "rhoInf", rhoInf_,
+                        "rho", rhoName_,
+                        "CofR", vector::zero
+                    )
+                );
 
-            f.calcForcesMoments();
+                f.calcForcesMoments();
 
-            fx[bodyID] = ramp*spatialVector(f.momentEff(), f.forceEff());
+                fx[bodyID] = ramp*spatialVector(f.momentEff(), f.forceEff());
+            }
         }
 
         RBD::rigidBodyMotion::solve
@@ -146,7 +146,10 @@ void Foam::rigidBodyMeshMotion::moveBodies()
     {
         forAll(bodyMeshes_, bi)
         {
-            status(bodyMeshes_[bi].bodyIndex);
+            if (bodyMeshes_[bi].bodyIndex != -1)
+            {
+                status(bodyMeshes_[bi].bodyIndex);
+            }
         }
     }
 }
@@ -208,20 +211,23 @@ Foam::rigidBodyMeshMotion::rigidBodyMeshMotion
         ramp_ = new Function1s::OneConstant<scalar>("ramp");
     }
 
-    forAll(bodyMeshes_, i)
+    forAll(bodyMeshes_, bi)
     {
-        const label bodyID = this->bodyIndex(bodyMeshes_[i].name());
-
-        if (bodyID == -1)
+        if (bodyMeshes_[bi].name() != "exterior")
         {
-            FatalErrorInFunction
-                << "Body " << bodyMeshes_[i].name()
-                << " has been merged with another body"
-                   " and cannot be assigned a set of patches"
-                << exit(FatalError);
-        }
+            const label bodyID = this->bodyIndex(bodyMeshes_[bi].name());
 
-        bodyMeshes_[i].bodyIndex = bodyID;
+            if (bodyID == -1)
+            {
+                FatalErrorInFunction
+                    << "Body " << bodyMeshes_[bi].name()
+                    << " has been merged with another body"
+                       " and cannot be assigned a set of patches"
+                    << exit(FatalError);
+            }
+
+            bodyMeshes_[bi].bodyIndex = bodyID;
+        }
     }
 }
 

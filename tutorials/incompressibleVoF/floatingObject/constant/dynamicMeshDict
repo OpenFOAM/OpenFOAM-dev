@@ -33,6 +33,12 @@ mover
 
         accelerationRelaxation 0.7;
 
+        exterior
+        {
+            innerDistance   0.05;
+            outerDistance   0.35;
+        }
+
         bodies
         {
             floatingObject

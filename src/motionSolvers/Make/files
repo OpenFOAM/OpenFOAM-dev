@@ -19,6 +19,7 @@ componentVelocity/componentVelocityMotionSolver.C
 
 solidBodyMotionFunctions/solidBodyMotionFunction/solidBodyMotionFunction.C
 solidBodyMotionFunctions/solidBodyMotionFunction/solidBodyMotionFunctionNew.C
+solidBodyMotionFunctions/none/none_solidBodyMotionFunction.C
 solidBodyMotionFunctions/SDA/SDA.C
 solidBodyMotionFunctions/sixDoFMotion/sixDoFMotion.C
 solidBodyMotionFunctions/linearMotion/linearMotion.C

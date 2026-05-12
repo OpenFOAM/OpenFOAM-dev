@@ -55,6 +55,8 @@ protected:
     //- Class containing the patches and point motion weighting for each body
     class bodyMesh
     {
+        const polyMesh& mesh_;
+
         //- Name of the body
         const word name_;
 
@@ -62,7 +64,7 @@ protected:
         const wordReList patches_;
 
         //- Set of mesh patches associated with this body
-        const labelHashSet patchSet_;
+        labelHashSet patchSet_;
 
         //- Names of the pointZones which move with the body
         wordReList pointZones_;
@@ -80,6 +82,8 @@ protected:
         //  (1 at patches and within di_, 0 at do_ and beyond)
         pointScalarField weight_;
 
+        void calcWeights(const pointField& points0);
+
 
     public:
 
@@ -93,6 +97,12 @@ protected:
             const polyMesh& mesh,
             const word& name,
             const dictionary& dict
+        );
+
+        bodyMesh
+        (
+            const polyMesh& mesh,
+            const word& name
         );
 
         template<class Type>

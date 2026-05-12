@@ -49,10 +49,10 @@ namespace Foam
 Foam::List<Foam::septernion>
 Foam::sixDoFRigidBodyMeshMotion::transforms0() const
 {
+    // Assume the external body is stationary
     return List<septernion>
     (
-        1,
-        sixDoFRigidBodyMotion::transform0()
+        {sixDoFRigidBodyMotion::transform0(), septernion::I}
     );
 }
 

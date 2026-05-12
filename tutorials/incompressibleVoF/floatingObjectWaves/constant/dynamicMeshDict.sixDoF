@@ -28,6 +28,12 @@ mover
         innerDistance   0.05;
         outerDistance   0.35;
 
+        exterior
+        {
+            innerDistance   0.05;
+            outerDistance   0.35;
+        }
+
         centreOfMass    (0.5 0.45 0.35);
 
         // Cuboid dimensions

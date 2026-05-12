@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "functionalRigidBodyMeshMotion.H"
+#include "none_solidBodyMotionFunction.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -46,21 +47,14 @@ namespace Foam
 Foam::List<Foam::septernion>
 Foam::functionalRigidBodyMeshMotion::transforms0() const
 {
-    if (SBMFs_.size() == 1)
-    {
-        return List<septernion>(1, SBMFs_[0].transformation());
-    }
-    else
-    {
-        List<septernion> transforms0(SBMFs_.size());
+    List<septernion> transforms0(SBMFs_.size());
 
-        forAll(SBMFs_, i)
-        {
-            transforms0[i] = SBMFs_[i].transformation();
-        }
-
-        return transforms0;
+    forAll(SBMFs_, i)
+    {
+        transforms0[i] = SBMFs_[i].transformation();
     }
+
+    return transforms0;
 }
 
 
@@ -103,6 +97,28 @@ Foam::functionalRigidBodyMeshMotion::functionalRigidBodyMeshMotion
         (
             0,
             solidBodyMotionFunction::New(dict, mesh.time(), "function")
+        );
+    }
+
+    if (dict.isDict("exterior") && dict.subDict("exterior").found("function"))
+    {
+        SBMFs_.set
+        (
+            SBMFs_.size() - 1,
+            solidBodyMotionFunction::New
+            (
+                dict.subDict("exterior"),
+                mesh.time(),
+                "function"
+            )
+        );
+    }
+    else
+    {
+        SBMFs_.set
+        (
+            SBMFs_.size() - 1,
+            new solidBodyMotionFunctions::none("function", mesh.time())
         );
     }
 }
