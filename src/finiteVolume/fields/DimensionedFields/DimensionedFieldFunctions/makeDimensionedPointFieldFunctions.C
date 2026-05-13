@@ -32,6 +32,7 @@ License
 #include "Zonal_DimensionedFieldFunction.H"
 #include "DistanceFunction_DimensionedFieldFunction.H"
 #include "Coded_DimensionedFieldFunction.H"
+#include "FieldFunction_DimensionedFieldFunction.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -63,6 +64,11 @@ License
         addDimensionedFieldFunction                                            \
         (                                                                      \
             Coded,                                                             \
+            DimensionedField##Type##pointMesh##Field                           \
+        );                                                                     \
+        addDimensionedFieldFunction                                            \
+        (                                                                      \
+            FieldFunction,                                                     \
             DimensionedField##Type##pointMesh##Field                           \
         );                                                                     \
     }

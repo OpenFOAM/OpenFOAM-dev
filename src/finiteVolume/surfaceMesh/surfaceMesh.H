@@ -42,7 +42,6 @@ namespace Foam
 {
 
 class fvMesh;
-    // class fvBoundaryMesh;
 class faceZone;
 
 /*---------------------------------------------------------------------------*\
@@ -112,6 +111,10 @@ public:
         //- Return reference to fvBoundaryMesh
         inline const fvBoundaryMesh& boundary() const;
 
+        //- Lookup a dimensioned field for this geometry
+        template<class Type>
+        tmp<DimensionedField<Type, surfaceMesh>> lookupField(const word&) const;
+
 
     // Member Operators
 
@@ -127,6 +130,12 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "surfaceMeshTemplates.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

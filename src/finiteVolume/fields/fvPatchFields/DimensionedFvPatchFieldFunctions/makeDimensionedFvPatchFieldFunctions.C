@@ -26,6 +26,8 @@ License
 #include "DimensionedFieldFunction.H"
 #include "DimensionedFvPatchFields.H"
 #include "fvMesh.H"
+#include "fvPatchField.H"
+#include "fvsPatchField.H"
 #include "addToRunTimeSelectionTable.H"
 
 #include "TimeFunction_DimensionedFieldFunction.H"
@@ -33,6 +35,7 @@ License
 #include "DistanceFunction_DimensionedFieldFunction.H"
 #include "Coded_DimensionedFieldFunction.H"
 #include "Surfaces_DimensionedFieldFunction.H"
+#include "FieldFunction_DimensionedFieldFunction.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -69,6 +72,11 @@ License
         addDimensionedFieldFunction                                            \
         (                                                                      \
             Surfaces,                                                          \
+            DimensionedField##Type##fvPatch##Field                             \
+        );                                                                     \
+        addDimensionedFieldFunction                                            \
+        (                                                                      \
+            FieldFunction,                                                     \
             DimensionedField##Type##fvPatch##Field                             \
         );                                                                     \
     }

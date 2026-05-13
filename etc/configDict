@@ -139,6 +139,7 @@ units
     Pa      1                   [N m^-2];
     J       1                   [N m];
     W       1                   [J s^-1];
+    V       1                   [W/A];
 
     // Scaled units
     um      1e-6                [m];

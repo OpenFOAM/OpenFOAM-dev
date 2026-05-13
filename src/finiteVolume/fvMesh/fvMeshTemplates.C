@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,6 +93,23 @@ Foam::UPtrList<GeoField> Foam::fvMesh::curFields
     curFields.setSize(i);
 
     return curFields;
+}
+
+
+template<class Type>
+Foam::tmp<Foam::DimensionedField<Type, Foam::fvMesh>>
+Foam::fvMesh::lookupField
+(
+    const word& name
+) const
+{
+    return tmp<DimensionedField<Type, fvMesh>>
+    (
+        db().template lookupObject
+        <
+            DimensionedField<Type, fvMesh>
+        >(name)
+    );
 }
 
 

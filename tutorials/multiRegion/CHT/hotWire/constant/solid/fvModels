@@ -18,7 +18,24 @@ solidElectricalConduction
 {
     type        solidElectricalConduction;
 
-    sigma       35.5e6;
+    /*
+    // Constant electrical conductivity
+    sigma       3.55e7 [(A/m^2)/(V/m)];
+    */
+
+    // Temperature-dependent electrical conductivity
+    sigma
+    {
+        type        fieldFunction;
+        field       T;
+        function
+        {
+            type        polynomial;
+            coeffs      (7.61e7 -1.38e5);
+        }
+    }
+
+    writeSigma  yes;
 }
 
 //************************************************************************** //

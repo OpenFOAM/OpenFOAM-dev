@@ -165,6 +165,10 @@ public:
         //  For run-time mesh replacement and mesh to mesh mapping
         void reset();
 
+        //- Lookup a dimensioned field for this geometry
+        template<class Type>
+        tmp<DimensionedField<Type, pointMesh>> lookupField(const word&) const;
+
 
         // Mesh callbacks
 
@@ -227,6 +231,12 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "pointMeshTemplates.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

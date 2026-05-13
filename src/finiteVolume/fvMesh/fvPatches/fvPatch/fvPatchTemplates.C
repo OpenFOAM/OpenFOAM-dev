@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "fvPatch.H"
+#include "SlicedDimensionedField.H"
 #include "objectRegistry.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -96,6 +97,81 @@ const typename GeometricField::Patch& Foam::fvPatch::lookupPatchField
     (
         db().template lookupObject<GeometricField>(name)
     );
+}
+
+
+template<class Type>
+Foam::tmp<Foam::DimensionedField<Type, Foam::fvPatch>>
+Foam::fvPatch::lookupField
+(
+    const word& name
+) const
+{
+    typedef GeometricField<Type, fvMesh> volFieldType;
+    typedef GeometricField<Type, surfaceMesh> surfaceFieldType;
+
+    const bool haveVf = db().template foundObject<volFieldType>(name);
+    const bool haveSf = db().template foundObject<surfaceFieldType>(name);
+
+    if (!haveVf && !haveSf)
+    {
+        FatalErrorInFunction
+            << nl << "    request for " << volFieldType::typeName
+            << " or " << surfaceFieldType::typeName << " " << name
+            << " from objectRegistry " << db().name()
+            << " failed\n    available objects of type "
+            << volFieldType::typeName << " are" << nl
+            << db().toc<volFieldType>()
+            << "\n    available objects of type "
+            << surfaceFieldType::typeName << " are" << nl
+            << db().toc<surfaceFieldType>()
+            << abort(FatalError);
+    }
+
+    const IOobject io
+    (
+        name + '_' + this->name(),
+        time().name(),
+        db(),
+        IOobject::NO_READ,
+        IOobject::NO_WRITE,
+        false
+    );
+
+    if (haveVf)
+    {
+        const volFieldType& vf =
+            db().template lookupObject<volFieldType>(name);
+
+        return tmp<DimensionedField<Type, fvPatch>>
+        (
+            new SlicedDimensionedField<Type, fvPatch>
+            (
+                io,
+                *this,
+                vf.dimensions(),
+                vf.boundaryField()[index()]
+            ),
+            true
+        );
+    }
+    else // if (haveSf)
+    {
+        const surfaceFieldType& sf =
+            db().template lookupObject<surfaceFieldType>(name);
+
+        return tmp<DimensionedField<Type, fvPatch>>
+        (
+            new SlicedDimensionedField<Type, fvPatch>
+            (
+                io,
+                *this,
+                sf.dimensions(),
+                sf.boundaryField()[index()]
+            ),
+            true
+        );
+    }
 }
 
 

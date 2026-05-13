@@ -584,13 +584,9 @@ public:
                 const HashSet<word>& geometryFields = fvMesh::geometryFields
             ) const;
 
-            //- Return the list of fields and old-time-geometry of type GeoField
-            //  i.e. fields that are not current-time geometry
-            template<class GeoField>
-            UPtrList<GeoField> fieldsAndOldTimeGeometry
-            (
-                const bool strict = false
-            ) const;
+            //- Lookup a dimensioned field for this geometry
+            template<class Type>
+            tmp<DimensionedField<Type, fvMesh>> lookupField(const word&) const;
 
             //- Return a labelType of valid component indicators
             //  1 : valid (solved)
