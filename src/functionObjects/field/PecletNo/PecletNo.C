@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "PecletNo.H"
-#include "momentumTransportModel.H"
+#include "incompressibleMomentumTransportModel.H"
+#include "compressibleMomentumTransportModel.H"
 #include "surfaceInterpolate.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -52,13 +53,32 @@ bool Foam::functionObjects::PecletNo::calc()
 {
     if (foundObject<surfaceScalarField>(fieldName_))
     {
-        tmp<volScalarField> nuEff
-        (
-            mesh_.lookupType<momentumTransportModel>().nuEff()
-        );
-
         const surfaceScalarField& phi =
             mesh_.lookupObject<surfaceScalarField>(fieldName_);
+
+        tmp<volScalarField> nuOrMuEff;
+        if (phi.dimensions() == dimVolumetricFlux)
+        {
+            const incompressibleMomentumTransportModel& imtm =
+                mesh_.lookupType<incompressibleMomentumTransportModel>();
+
+            nuOrMuEff = imtm.nuEff();
+        }
+        else if (phi.dimensions() == dimMassFlux)
+        {
+            const compressibleMomentumTransportModel& cmtm =
+                mesh_.lookupType<compressibleMomentumTransportModel>();
+
+            nuOrMuEff = cmtm.rho()*cmtm.nuEff();
+        }
+        else
+        {
+            FatalErrorInFunction
+                << "dimensions of flux " << phi.name() << " are "
+                << phi.dimensions() << ", but they must be either "
+                << dimMassFlux << " (mass flux) or " << dimVolumetricFlux
+                << " (volume flux) " << exit(FatalError);
+        }
 
         store
         (
@@ -67,7 +87,7 @@ bool Foam::functionObjects::PecletNo::calc()
            /(
                 mesh_.magSf()
                *mesh_.surfaceInterpolation::deltaCoeffs()
-               *fvc::interpolate(nuEff)
+               *fvc::interpolate(nuOrMuEff)
             )
         );
 
