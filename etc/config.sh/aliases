@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -71,14 +71,7 @@ alias run='cd $FOAM_RUN'
 
 # Refresh the environment
 # ~~~~~~~~~~~~~~~~~~~~~~~
-# For backward-compatibility unalias wmRefresh if it is defined as an alias
-if command -V wmRefresh 2> /dev/null | head -1 | grep -q "function"
-then
-    unset wmRefresh
-else
-    unalias wmRefresh 2> /dev/null
-fi
-
+unset wmRefresh
 wmRefresh()
 {
     wmProjectDir=$WM_PROJECT_DIR
