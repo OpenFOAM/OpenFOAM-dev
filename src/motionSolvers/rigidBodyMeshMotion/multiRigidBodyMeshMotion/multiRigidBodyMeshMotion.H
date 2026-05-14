@@ -25,7 +25,10 @@ Class
     Foam::multiRigidBodyMeshMotion
 
 Description
-    Abstract base-class for multi-rigid-body mesh motion.
+    Abstract base-class for multiple rigid body mesh motion.
+
+    Applies distance weighted SLERP interpolation between the septernions
+    returned by each of the body movement functions.
 
 SourceFiles
     multiRigidBodyMeshMotion.C
@@ -43,7 +46,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class multiRigidBodyMeshMotion Declaration
+                    Class multiRigidBodyMeshMotion Declaration
 \*---------------------------------------------------------------------------*/
 
 class multiRigidBodyMeshMotion

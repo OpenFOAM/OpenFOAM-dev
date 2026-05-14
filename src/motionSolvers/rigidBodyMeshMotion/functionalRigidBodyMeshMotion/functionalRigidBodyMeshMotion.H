@@ -25,9 +25,115 @@ Class
     Foam::functionalRigidBodyMeshMotion
 
 Description
-    Solid-body motion of the mesh specified by a run-time selectable motion
-    function.  Applies SLERP interpolation of movement as function of
-    distance to the object surface to move the mesh points.
+    Multiple rigid body mesh motion in which movement is specified as a
+    solidBodyMotionFunction for each body and optionally for the exterior of the
+    region.
+
+    Applies distance weighted SLERP interpolation between the septernions
+    returned by each of the body movement functions.
+
+    The mesh patches for each body must be specified and optionally pointZones
+    that move with each body.  The motion of the mesh around each body may be
+    constrained by the optional \c innerDistance and \c outerDistance, the mesh
+    within the \c innerDistance moves with the body without distortion and the
+    mesh beyond the \c outerDistance does not move with body but may move by the
+    proximity of other bodies or by the optionally specified exterior motion.
+
+    Example of the motion of a single body in a stationary region:
+    \verbatim
+    mover
+    {
+        type            motionSolver;
+
+        libs            ("libmotionSolver_fvMeshMover.so");
+
+        motionSolver        functionalRigidBodyMotion;
+
+        functionalRigidBodyMotion
+        {
+            exterior
+            {
+                innerDistance   0.05;
+                outerDistance   0.35;
+            }
+
+            patches         (floatingObject);
+            innerDistance   0.05;
+            outerDistance   0.35;
+
+            function
+            {
+                type            oscillatingRotatingMotion;
+                origin          (0.5 0.45 0.35);
+                amplitude       (0 10 0);
+                omega           2;
+            }
+        }
+    }
+    \endverbatim
+
+    Example of the motion of a two bodies in a moving region all of which
+    rotate around the same axis with an oscillatory manner:
+    \verbatim
+    mover
+    {
+        type            motionSolver;
+
+        libs            ("libmotionSolver_fvMeshMover.so");
+
+        motionSolver        functionalRigidBodyMotion;
+
+        functionalRigidBodyMotion
+        {
+            exterior
+            {
+                innerDistance   0.05;
+                outerDistance   0.35;
+
+                function
+                {
+                    type            oscillatingRotatingMotion;
+                    origin          (0.5 0.45 0.35);
+                    amplitude       (0 1 0);
+                    omega           1;
+                }
+            }
+
+            bodies
+            {
+                floatingObject1
+                {
+                    patches         (floatingObject1);
+                    innerDistance   0.05;
+                    outerDistance   0.3;
+
+                    function
+                    {
+                        type            oscillatingRotatingMotion;
+                        origin          (0.5 0.45 0.35);
+                        amplitude       (0 5 0);
+                        omega           2;
+                    }
+                }
+
+                floatingObject2
+                {
+                    patches         (floatingObject2);
+                    innerDistance   0.05;
+                    outerDistance   0.3;
+
+                    function
+                    {
+                        type            oscillatingRotatingMotion;
+                        origin          (0.5 0.45 0.35);
+                        amplitude       (0 5 0);
+                        omega           -2;
+                    }
+                }
+            }
+        }
+    }
+    \endverbatim
 
 SourceFiles
     functionalRigidBodyMeshMotion.C
@@ -46,7 +152,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-             Class functionalRigidBodyMeshMotion Declaration
+                Class functionalRigidBodyMeshMotion Declaration
 \*---------------------------------------------------------------------------*/
 
 class functionalRigidBodyMeshMotion
