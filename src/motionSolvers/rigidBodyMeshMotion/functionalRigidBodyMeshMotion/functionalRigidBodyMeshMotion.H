@@ -135,6 +135,9 @@ Description
     }
     \endverbatim
 
+See also
+    Foam::multiRigidBodyMeshMotion
+
 SourceFiles
     functionalRigidBodyMeshMotion.C
 
