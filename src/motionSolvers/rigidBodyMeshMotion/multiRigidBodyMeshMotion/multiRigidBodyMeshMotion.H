@@ -25,7 +25,7 @@ Class
     Foam::multiRigidBodyMeshMotion
 
 Description
-    Multi-rigid-body mesh motion base class.
+    Abstract base-class for multi-rigid-body mesh motion.
 
 SourceFiles
     multiRigidBodyMeshMotion.C
@@ -176,6 +176,10 @@ public:
 
         //-  Update local data for topology changes
         virtual void topoChange(const polyTopoChangeMap&);
+
+        //- Update from another mesh using the given map
+        //  Resets points0 to the points of the new mesh
+        virtual void mapMesh(const polyMeshMap&);
 
 
     // Member Operators

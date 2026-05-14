@@ -204,7 +204,7 @@ void Foam::multiSolidBodyMeshMotion::topoChange(const polyTopoChangeMap& map)
 {
     updateZonePointIndices();
 
-    // pointMesh already updates pointFields
+    // pointMesh already updates registered pointFields
 
     const pointField& points = mesh().points();
 
@@ -263,6 +263,24 @@ void Foam::multiSolidBodyMeshMotion::mapMesh(const polyMeshMap& map)
     points0MotionSolver::mapMesh(map);
 
     updateZonePointIndices();
+
+    pointField& points0 = this->points0();
+
+    forAll(zoneIndices_, zonei)
+    {
+        forAll(zonePoints_[zonei], zonePointi)
+        {
+            const label pointi = zonePoints_[zonei][zonePointi];
+
+            points0[pointi] =
+                    transforms_[zonei].invTransformPoint(points0[pointi]);
+        }
+    }
+
+    twoDCorrectPoints(points0);
+
+    points0_.writeOpt() = IOobject::AUTO_WRITE;
+    points0_.instance() = mesh().time().name();
 }
 
 

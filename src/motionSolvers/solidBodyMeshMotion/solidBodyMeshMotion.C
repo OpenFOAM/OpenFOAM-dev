@@ -204,6 +204,24 @@ void Foam::solidBodyMeshMotion::mapMesh(const polyMeshMap& map)
 
     zone_.mapMesh(map);
     updateZonePointIndices();
+
+    pointField& points0 = this->points0();
+
+    const label nZonePoints =
+        zone_.all() ? mesh().nPoints() : zonePoints_.size();
+
+    for (label zonePointi = 0; zonePointi < nZonePoints; ++ zonePointi)
+    {
+        const label pointi =
+            zone_.all() ? zonePointi : zonePoints_[zonePointi];
+
+        points0[pointi] = transform_.invTransformPoint(points0[pointi]);
+    }
+
+    twoDCorrectPoints(points0);
+
+    points0_.writeOpt() = IOobject::AUTO_WRITE;
+    points0_.instance() = mesh().time().name();
 }
 
 
