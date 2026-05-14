@@ -149,7 +149,7 @@ void Foam::solidBodyMeshMotion::topoChange(const polyTopoChangeMap& map)
 
     const pointField& points = mesh().points();
 
-    pointField newPoints0(map.pointMap().size());
+    pointField newPoints0(points);
 
     const label nZonePoints =
         zone_.all() ? mesh().nPoints() : zonePoints_.size();
