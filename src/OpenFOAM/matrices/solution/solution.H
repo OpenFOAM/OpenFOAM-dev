@@ -59,10 +59,10 @@ class solution
         mutable bool caching_;
 
         //- Dictionary of relaxation factors for all the fields
-        dictionary fieldRelaxDict_;
+        const dictionary* fieldRelaxDict_;
 
         //- Dictionary of relaxation factors for all the equations
-        dictionary eqnRelaxDict_;
+        const dictionary* eqnRelaxDict_;
 
         //- Optional default relaxation factor for all the fields
         scalar fieldRelaxDefault_;
@@ -71,7 +71,7 @@ class solution
         scalar eqnRelaxDefault_;
 
         //- Dictionary of solver parameters for all the fields
-        dictionary solvers_;
+        const dictionary* solvers_;
 
 
     // Private Member Functions

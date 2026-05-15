@@ -45,6 +45,8 @@ void Foam::solution::readDict()
         caching_ = cache_.lookupOrDefault("active", true);
     }
 
+    fieldRelaxDict_ = &dictionary::null;
+    eqnRelaxDict_ = &dictionary::null;
     if (found("relaxationFactors"))
     {
         const dictionary& relaxDict(subDict("relaxationFactors"));
@@ -54,12 +56,12 @@ void Foam::solution::readDict()
         {
             if (relaxDict.found("fields"))
             {
-                fieldRelaxDict_ = relaxDict.subDict("fields");
+                fieldRelaxDict_ = &relaxDict.subDict("fields");
             }
 
             if (relaxDict.found("equations"))
             {
-                eqnRelaxDict_ = relaxDict.subDict("equations");
+                eqnRelaxDict_ = &relaxDict.subDict("equations");
             }
         }
         else
@@ -71,8 +73,12 @@ void Foam::solution::readDict()
 
     if (found("solvers"))
     {
-        printDictionary print(subDict("solvers"));
-        solvers_ = subDict("solvers");
+        solvers_ = &subDict("solvers");
+        printDictionary print(*solvers_);
+    }
+    else
+    {
+        solvers_ = &dictionary::null;
     }
 }
 
@@ -98,11 +104,11 @@ Foam::solution::solution
     ),
     cache_("cache", *this),
     caching_(false),
-    fieldRelaxDict_("fields", *this),
-    eqnRelaxDict_("equations", *this),
+    fieldRelaxDict_(nullptr),
+    eqnRelaxDict_(nullptr),
     fieldRelaxDefault_(0),
     eqnRelaxDefault_(0),
-    solvers_("solvers", *this)
+    solvers_(nullptr)
 {
     readDict();
 }
@@ -146,11 +152,11 @@ bool Foam::solution::relaxField(const word& name) const
     if (debug)
     {
         Info<< "Field relaxation factor for " << name
-            << " is " << (fieldRelaxDict_.found(name) ? "set" : "unset")
+            << " is " << (fieldRelaxDict_->found(name) ? "set" : "unset")
             << endl;
     }
 
-    return fieldRelaxDict_.found(name) || fieldRelaxDict_.found("default");
+    return fieldRelaxDict_->found(name) || fieldRelaxDict_->found("default");
 }
 
 
@@ -161,7 +167,7 @@ bool Foam::solution::relaxEquation(const word& name) const
         Info<< "Find equation relaxation factor for " << name << endl;
     }
 
-    return eqnRelaxDict_.found(name) || eqnRelaxDict_.found("default");
+    return eqnRelaxDict_->found(name) || eqnRelaxDict_->found("default");
 }
 
 
@@ -172,9 +178,9 @@ Foam::scalar Foam::solution::fieldRelaxationFactor(const word& name) const
         Info<< "Lookup variable relaxation factor for " << name << endl;
     }
 
-    if (fieldRelaxDict_.found(name))
+    if (fieldRelaxDict_->found(name))
     {
-        return fieldRelaxDict_.lookup<scalar>(name);
+        return fieldRelaxDict_->lookup<scalar>(name);
     }
     else if (fieldRelaxDefault_ > small)
     {
@@ -184,7 +190,7 @@ Foam::scalar Foam::solution::fieldRelaxationFactor(const word& name) const
     {
         FatalIOErrorInFunction
         (
-            fieldRelaxDict_
+            *fieldRelaxDict_
         )   << "Cannot find variable relaxation factor for '" << name
             << "' or a suitable default value."
             << exit(FatalIOError);
@@ -201,9 +207,9 @@ Foam::scalar Foam::solution::equationRelaxationFactor(const word& name) const
         Info<< "Lookup equation relaxation factor for " << name << endl;
     }
 
-    if (eqnRelaxDict_.found(name))
+    if (eqnRelaxDict_->found(name))
     {
-        return eqnRelaxDict_.lookup<scalar>(name);
+        return eqnRelaxDict_->lookup<scalar>(name);
     }
     else if (eqnRelaxDefault_ > small)
     {
@@ -213,7 +219,7 @@ Foam::scalar Foam::solution::equationRelaxationFactor(const word& name) const
     {
         FatalIOErrorInFunction
         (
-            eqnRelaxDict_
+            *eqnRelaxDict_
         )   << "Cannot find equation relaxation factor for '" << name
             << "' or a suitable default value."
             << exit(FatalIOError);
@@ -225,7 +231,7 @@ Foam::scalar Foam::solution::equationRelaxationFactor(const word& name) const
 
 const Foam::dictionary& Foam::solution::solversDict() const
 {
-    return solvers_;
+    return *solvers_;
 }
 
 
@@ -236,7 +242,7 @@ const Foam::dictionary& Foam::solution::solverDict(const word& name) const
         Info<< "Lookup solver for " << name << endl;
     }
 
-    return solvers_.subDict(name);
+    return solvers_->subDict(name);
 }
 
 
