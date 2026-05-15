@@ -53,7 +53,7 @@ bool Foam::XiModels::transport::readCoeffs(const dictionary& dict)
     strainReduction_ =
         dict.lookupOrDefault<Switch>("strainReduction", true);
     curvatureReduction_ =
-        dict.lookupOrDefault<Switch>("curvatureReduction", true);
+        dict.lookupOrDefault<Switch>("curvatureReduction", false);
     differentialPropagation_ =
         dict.lookupOrDefault<Switch>("differentialPropagation", false);
     return true;

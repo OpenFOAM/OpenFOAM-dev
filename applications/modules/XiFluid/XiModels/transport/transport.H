@@ -83,8 +83,8 @@ class transport
         //  Defaults to on
         Switch strainReduction_;
 
-        //- Switch to include the mean curvature wrinkling reduction
-        //  Defaults to on
+        //- Switch to include the mean curvature propagation wrinkling reduction
+        //  Defaults to off
         Switch curvatureReduction_;
 
         //- Switch to include differential wrinkling propagation
