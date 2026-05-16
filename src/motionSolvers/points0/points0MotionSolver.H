@@ -111,7 +111,7 @@ public:
 
         //- Update from another mesh using the given map
         //  Resets points0 to the points of the new mesh
-        virtual void mapMesh(const polyMeshMap&);
+        virtual void mapMesh(const polyMeshMap&) = 0;
 
         //- Update corresponding to the given distribution map
         virtual void distribute(const polyDistributionMap&);

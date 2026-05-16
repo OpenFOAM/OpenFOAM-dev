@@ -126,8 +126,8 @@ public:
         //- Return point location obtained from the current motion field
         virtual tmp<pointField> newPoints();
 
-        //- Update topology (not implemented)
-        virtual void topoChange(const polyTopoChangeMap&);
+        //- Update from another mesh using the given map (not implemented)
+        virtual void mapMesh(const polyMeshMap&);
 
 
     // Member Operators

@@ -155,6 +155,7 @@ void Foam::points0MotionSolver::movePoints(const pointField&)
 
 void Foam::points0MotionSolver::topoChange(const polyTopoChangeMap& map)
 {
+    // Pending implementation of the inverse transformation of points0
     NotImplemented;
 }
 

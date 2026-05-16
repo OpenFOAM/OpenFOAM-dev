@@ -122,6 +122,9 @@ public:
         //- Return point location obtained from the current motion field
         virtual tmp<pointField> newPoints();
 
+        //- Update from another mesh using the given map (not implemented)
+        virtual void mapMesh(const polyMeshMap&);
+
 
     // Member Operators
 

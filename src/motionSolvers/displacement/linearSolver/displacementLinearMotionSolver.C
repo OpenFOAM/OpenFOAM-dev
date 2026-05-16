@@ -101,4 +101,15 @@ Foam::tmp<Foam::pointField> Foam::displacementLinearMotionSolver::newPoints()
 }
 
 
+void Foam::displacementLinearMotionSolver::mapMesh(const polyMeshMap& map)
+{
+    FatalErrorInFunction
+        << "Mesh-to-mesh mapping in not implemented for displacement solvers"
+        << nl
+        << "    velocity based motion solvers are preferable for cases in which"
+           " the mesh is reset periodically avoiding accumulation of error."
+        << exit(FatalError);
+}
+
+
 // ************************************************************************* //

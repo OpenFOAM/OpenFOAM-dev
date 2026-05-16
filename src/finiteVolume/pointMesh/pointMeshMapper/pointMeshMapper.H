@@ -84,7 +84,6 @@ public:
 
     // Member Functions
 
-
         //- Return reference to mesh fields belong to
         const pointMesh& mesh() const
         {

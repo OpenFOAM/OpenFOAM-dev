@@ -186,17 +186,14 @@ Foam::displacementLayeredMotionSolver::newPoints()
 }
 
 
-void Foam::displacementLayeredMotionSolver::topoChange
-(
-    const polyTopoChangeMap& map
-)
+void Foam::displacementLayeredMotionSolver::mapMesh(const polyMeshMap& map)
 {
-    // Pending implementation of the inverse transformation of points0
-    NotImplemented;
-
-    // Alternatively using the current points instead of points0
-    // would support topology change but the motion might be less robust
-    // and potentially accumulate error
+    FatalErrorInFunction
+        << "Mesh-to-mesh mapping in not implemented for displacement solvers"
+        << nl
+        << "    velocity based motion solvers are preferable for cases in which"
+           " the mesh is reset periodically avoiding accumulation of error."
+        << exit(FatalError);
 }
 
 

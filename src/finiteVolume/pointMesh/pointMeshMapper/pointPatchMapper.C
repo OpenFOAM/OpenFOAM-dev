@@ -24,9 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "pointPatchMapper.H"
-#include "pointPatch.H"
 #include "polyTopoChangeMap.H"
-#include "faceMapper.H"
 #include "demandDrivenData.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -181,15 +179,6 @@ const Foam::scalarListList& Foam::pointPatchMapper::weights() const
 
     return *weightsPtr_;
 }
-
-
-// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
-
-
-// * * * * * * * * * * * * * * * Friend Functions  * * * * * * * * * * * * * //
-
-
-// * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
 
 
 // ************************************************************************* //
