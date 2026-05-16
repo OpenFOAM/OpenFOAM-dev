@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,8 +59,7 @@ Foam::fvMeshMovers::inkJet::inkJet(fvMesh& mesh, const dictionary& dict)
             IOobject::MUST_READ,
             IOobject::NO_WRITE
         )
-    ),
-    velocityMotionCorrection_(mesh, dict)
+    )
 {
     Info<< "Performing a dynamic mesh calculation: " << endl
         << "amplitude: " << amplitude_
@@ -106,8 +105,6 @@ bool Foam::fvMeshMovers::inkJet::update()
     );
 
     mesh().movePoints(newPoints);
-
-    velocityMotionCorrection_.update();
 
     return true;
 }

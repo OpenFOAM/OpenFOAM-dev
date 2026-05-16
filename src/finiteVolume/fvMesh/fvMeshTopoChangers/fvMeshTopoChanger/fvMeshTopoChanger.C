@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,37 +43,10 @@ Foam::fvMeshTopoChanger::fvMeshTopoChanger(fvMesh& mesh)
 {}
 
 
-Foam::fvMeshTopoChanger::velocityMotionCorrection::velocityMotionCorrection
-(
-    const fvMesh& mesh,
-    const dictionary& dict
-)
-:
-    mesh_(mesh),
-    velocityFields_(dict.lookupOrDefault("velocityFields", wordList()))
-{}
-
-
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::fvMeshTopoChanger::~fvMeshTopoChanger()
 {}
 
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-void Foam::fvMeshTopoChanger::velocityMotionCorrection::update() const
-{
-    forAll(velocityFields_, i)
-    {
-        if (mesh_.foundObject<volVectorField>(velocityFields_[i]))
-        {
-            mesh_.lookupObjectRef<volVectorField>
-            (
-                velocityFields_[i]
-            ).correctBoundaryConditions();
-        }
-    }
-}
 
 // ************************************************************************* //

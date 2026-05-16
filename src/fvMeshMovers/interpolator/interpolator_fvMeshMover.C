@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,8 +57,7 @@ Foam::fvMeshMovers::interpolator::interpolator
         displacement_
       ? new pointVectorField(points0MotionSolver::readPoints0(mesh))
       : nullptr
-    ),
-    velocityMotionCorrection_(mesh, dict)
+    )
 {}
 
 
@@ -80,8 +79,6 @@ bool Foam::fvMeshMovers::interpolator::update()
     {
         mesh().movePoints(pointInterpolator_.curPointField());
     }
-
-    velocityMotionCorrection_.update();
 
     return true;
 }

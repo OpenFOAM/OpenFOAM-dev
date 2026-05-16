@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,8 +48,7 @@ Foam::fvMeshMovers::motionSolver::motionSolver
 )
 :
     fvMeshMover(mesh),
-    motionPtr_(Foam::motionSolver::New("motionSolver", mesh, dict)),
-    velocityMotionCorrection_(mesh, dict)
+    motionPtr_(Foam::motionSolver::New("motionSolver", mesh, dict))
 {}
 
 
@@ -78,8 +77,6 @@ bool Foam::fvMeshMovers::motionSolver::update()
     mesh().preChange();
 
     mesh().movePoints(motionPtr_->newPoints());
-
-    velocityMotionCorrection_.update();
 
     return true;
 }

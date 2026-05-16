@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::fvMotionSolver
 
 Description
-    Base class for fvMesh based motionSolvers.
+    Base class for fvMesh motion solvers.
 
 SourceFiles
     fvMotionSolver.C
@@ -48,7 +48,6 @@ namespace Foam
 
 class fvMotionSolver
 {
-
 protected:
 
     // Protected data
@@ -68,10 +67,12 @@ protected:
             Boundary& pmUbf
         ) const;
 
+
 public:
 
     //- Runtime type information
-    ClassName("displacementMotionSolver");
+    ClassName("fvMotionSolver");
+
 
     // Constructors
 

@@ -85,11 +85,6 @@ class interpolator
         //- Starting points
         autoPtr<pointVectorField> points0_;
 
-        //- Optional list of vectorFields to update for mesh motion
-        //  For modern solvers using Uf and correctPhi to update the flux
-        //  after motion it is not necessary to specify a "velocityFields" list
-        velocityMotionCorrection velocityMotionCorrection_;
-
 
 public:
 
