@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,21 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::velocityMotionSolver
+    Foam::componentDisplacementMotionSolver
 
 Description
-    Virtual base class for velocity motion solver
+    Virtual base class for displacement motion solver
 
     The boundary displacement is set as a boundary condition
-    on the pointMotionU pointVectorField.
+    on the pointDisplacementX pointScalarField.
 
 SourceFiles
-    velocityMotionSolver.C
+    componentDisplacementMotionSolver.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef velocityMotionSolver_H
-#define velocityMotionSolver_H
+#ifndef componentDisplacementMotionSolver_H
+#define componentDisplacementMotionSolver_H
 
 #include "motionSolver.H"
 #include "pointFields.H"
@@ -49,10 +49,10 @@ namespace Foam
 class polyTopoChangeMap;
 
 /*---------------------------------------------------------------------------*\
-                    Class velocityMotionSolver Declaration
+              Class componentDisplacementMotionSolver Declaration
 \*---------------------------------------------------------------------------*/
 
-class velocityMotionSolver
+class componentDisplacementMotionSolver
 :
     public motionSolver
 {
@@ -60,20 +60,37 @@ protected:
 
     // Protected data
 
+        //- The component name to solve for
+        word cmptName_;
+
+        //- The component to solve for
+        direction cmpt_;
+
+        //- Reference point field for this component
+        scalarField points0_;
+
         //- Point motion field
-        mutable pointVectorField pointMotionU_;
+        mutable pointScalarField pointDisplacement_;
+
+
+private:
+
+    // Private Member Functions
+
+        //- Return the component corresponding to the given component name
+        direction cmpt(const word& cmptName) const;
 
 
 public:
 
     //- Runtime type information
-    TypeName("velocityMotionSolver");
+    TypeName("componentDisplacementMotionSolver");
 
 
     // Constructors
 
-        //- Construct from mesh and dictionary
-        velocityMotionSolver
+        //- Construct from polyMesh and dictionary and type
+        componentDisplacementMotionSolver
         (
             const word& name,
             const polyMesh&,
@@ -82,31 +99,34 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        velocityMotionSolver(const velocityMotionSolver&) = delete;
+        componentDisplacementMotionSolver
+        (
+            const componentDisplacementMotionSolver&
+        ) = delete;
 
 
     //- Destructor
-    virtual ~velocityMotionSolver();
+    virtual ~componentDisplacementMotionSolver();
 
 
     // Member Functions
 
-        //- Return reference to the point motion velocity field
-        pointVectorField& pointMotionU()
+        //- Return reference to the reference field
+        scalarField& points0()
         {
-            return pointMotionU_;
+            return points0_;
         }
 
-        //- Return const reference to the point motion velocity field
-        const pointVectorField& pointMotionU() const
+        //- Return reference to the reference field
+        const scalarField& points0() const
         {
-            return pointMotionU_;
+            return points0_;
         }
 
         //- Update local data for geometry changes
         virtual void movePoints(const pointField&);
 
-        //- Update corresponding to the given map
+        //-  Update local data for topology changes
         virtual void topoChange(const polyTopoChangeMap&);
 
         //- Update from another mesh using the given map
@@ -119,7 +139,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const velocityMotionSolver&) = delete;
+        void operator=(const componentDisplacementMotionSolver&) = delete;
 };
 
 

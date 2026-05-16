@@ -2,7 +2,7 @@ EXE_INC = \
     -I$(LIB_SRC)/sampling/lnInclude \
     -I$(LIB_SRC)/functionObjects/forces/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
-    -I$(LIB_SRC)/motionSolvers/lnInclude \
+    -I$(LIB_SRC)/pointMeshMovers/lnInclude \
     -I$(LIB_SRC)/fvMeshMovers/motionSolver/lnInclude \
     -I$(LIB_SRC)/rigidBodyMotion/rigidBodyDynamics/lnInclude
 
@@ -10,6 +10,6 @@ LIB_LIBS = \
     -lsampling \
     -lforces \
     -lfiniteVolume \
-    -lmotionSolvers \
+    -lpointMeshMovers \
     -lmotionSolver_fvMeshMover \
     -lrigidBodyDynamics

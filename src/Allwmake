@@ -50,7 +50,7 @@ generic/Allwmake $targetType $*
 wmake $targetType sampling
 wmake $targetType meshCheck
 
-wmake $targetType motionSolvers
+wmake $targetType pointMeshMovers
 
 wmake $targetType mesh/extrudeModel
 wmake $targetType polyTopoChange

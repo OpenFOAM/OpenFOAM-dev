@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,85 +22,90 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::dynamicMeshPointInterpolator
+    Foam::motionSolverList
 
 Description
-    Interpolates pointVectorFields.
+    Motion of the mesh specified as a list of motion solvers.
+
+    The motion solvers are executed in order and the resulting displacements
+    accumulated into an overall displacement and the displaced point positions
+    returned.
 
 SourceFiles
-    dynamicMeshPointInterpolator.C
+    motionSolverList.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef dynamicMeshPointInterpolator_H
-#define dynamicMeshPointInterpolator_H
+#ifndef motionSolverList_H
+#define motionSolverList_H
 
-#include "primitiveFields.H"
-#include "pointFieldsFwd.H"
+#include "motionSolver.H"
+#include "PtrListDictionary.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-class polyMesh;
-class interpolationWeights;
-
 /*---------------------------------------------------------------------------*\
-                  Class dynamicInterpolatedFvMesh Declaration
+                      Class motionSolverList Declaration
 \*---------------------------------------------------------------------------*/
 
-class dynamicMeshPointInterpolator
+class motionSolverList
+:
+    public motionSolver
 {
     // Private Data
 
-        //- Reference to mesh
-        const polyMesh& mesh_;
-
-        //- Name of displacement field
-        const word fieldName_;
-
-        const word interpolationScheme_;
-
-        //- Times with pre-specified displacement
-        wordList timeNames_;
-
-        //- Times with pre-specified displacement
-        scalarField timeVals_;
-
-        //- User-specified interpolator
-        mutable autoPtr<interpolationWeights> interpolatorPtr_;
-
-        //- Cached interpolation times
-        mutable labelList currentIndices_;
-
-        //- Cached interpolation weights
-        mutable scalarField currentWeights_;
+        PtrListDictionary<motionSolver> pointMeshMovers_;
 
 
 public:
 
+    //- Runtime type information
+    TypeName("motionSolverList");
+
+
     // Constructors
 
         //- Construct from mesh and dictionary
-        dynamicMeshPointInterpolator
+        motionSolverList
         (
-            const polyMesh& mesh,
-            const dictionary& dict
+            const word& name,
+            const polyMesh&,
+            const dictionary&
         );
+
+        //- Disallow default bitwise copy construction
+        motionSolverList(const motionSolverList&) = delete;
 
 
     //- Destructor
-    ~dynamicMeshPointInterpolator();
+    virtual ~motionSolverList();
 
 
     // Member Functions
 
-        //- Return interpolated pointField for the currentTime
-        tmp<pointVectorField> curPointField() const;
+        //- Provide current points for motion.  Uses current motion field
+        virtual tmp<pointField> newPoints();
 
-        //- Write
-        void write(Ostream&) const;
+        //- Update local data for geometry changes
+        virtual void movePoints(const pointField&);
+
+        //-  Update local data for topology changes
+        virtual void topoChange(const polyTopoChangeMap&);
+
+        //- Update from another mesh using the given map
+        virtual void mapMesh(const polyMeshMap&);
+
+        //- Update corresponding to the given distribution map
+        virtual void distribute(const polyDistributionMap&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const motionSolverList&) = delete;
 };
 
 

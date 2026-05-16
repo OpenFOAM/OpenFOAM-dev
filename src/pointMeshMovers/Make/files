@@ -36,4 +36,4 @@ pointInterpolator/dynamicMeshPointInterpolator.C
 rigidBodyMeshMotion/multiRigidBodyMeshMotion/multiRigidBodyMeshMotion.C
 rigidBodyMeshMotion/functionalRigidBodyMeshMotion/functionalRigidBodyMeshMotion.C
 
-LIB = $(FOAM_LIBBIN)/libmotionSolvers
+LIB = $(FOAM_LIBBIN)/libpointMeshMovers

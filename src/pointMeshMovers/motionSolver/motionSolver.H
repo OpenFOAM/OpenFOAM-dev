@@ -144,7 +144,7 @@ public:
 
         //- Is the motion solid body? I.e., are the volumes and area magnitudes
         //  unchanged? Defaults to false. Set to true by
-        //  motionSolvers::solidBody.
+        //  pointMeshMovers::solidBody.
         virtual bool solidBody() const
         {
             return false;

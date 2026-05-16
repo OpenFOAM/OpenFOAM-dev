@@ -51,7 +51,7 @@ Foam::motionSolverList::motionSolverList
 )
 :
     motionSolver(name, mesh, typeName),
-    motionSolvers_(0)
+    pointMeshMovers_(0)
 {
     const dictionary& solversDict = dict.subDict("solvers");
 
@@ -62,7 +62,7 @@ Foam::motionSolverList::motionSolverList
             const word& name = iter().keyword();
             const dictionary& dict = iter().dict();
 
-            motionSolvers_.append
+            pointMeshMovers_.append
             (
                 name,
                 motionSolver::New(name, mesh, dict).ptr()
@@ -82,12 +82,12 @@ Foam::motionSolverList::~motionSolverList()
 
 Foam::tmp<Foam::pointField> Foam::motionSolverList::newPoints()
 {
-    if (motionSolvers_.size())
+    if (pointMeshMovers_.size())
     {
         // Accumulated displacement
         pointField disp(mesh().nPoints(), Zero);
 
-        forAllIter(PtrListDictionary<motionSolver>, motionSolvers_, iter)
+        forAllIter(PtrListDictionary<motionSolver>, pointMeshMovers_, iter)
         {
             disp += iter().newPoints() - mesh().points();
         }
@@ -103,7 +103,7 @@ Foam::tmp<Foam::pointField> Foam::motionSolverList::newPoints()
 
 void Foam::motionSolverList::topoChange(const polyTopoChangeMap& map)
 {
-    forAllIter(PtrListDictionary<motionSolver>, motionSolvers_, iter)
+    forAllIter(PtrListDictionary<motionSolver>, pointMeshMovers_, iter)
     {
         iter().topoChange(map);
     }
@@ -112,7 +112,7 @@ void Foam::motionSolverList::topoChange(const polyTopoChangeMap& map)
 
 void Foam::motionSolverList::mapMesh(const polyMeshMap& map)
 {
-    forAllIter(PtrListDictionary<motionSolver>, motionSolvers_, iter)
+    forAllIter(PtrListDictionary<motionSolver>, pointMeshMovers_, iter)
     {
         iter().mapMesh(map);
     }
@@ -124,7 +124,7 @@ void Foam::motionSolverList::distribute
     const polyDistributionMap& map
 )
 {
-    forAllIter(PtrListDictionary<motionSolver>, motionSolvers_, iter)
+    forAllIter(PtrListDictionary<motionSolver>, pointMeshMovers_, iter)
     {
         iter().distribute(map);
     }
@@ -133,7 +133,7 @@ void Foam::motionSolverList::distribute
 
 void Foam::motionSolverList::movePoints(const pointField& points)
 {
-    forAllIter(PtrListDictionary<motionSolver>, motionSolvers_, iter)
+    forAllIter(PtrListDictionary<motionSolver>, pointMeshMovers_, iter)
     {
         iter().movePoints(points);
     }
