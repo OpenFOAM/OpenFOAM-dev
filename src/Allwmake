@@ -75,7 +75,6 @@ wmake $targetType reactionModels
 mesh/Allwmake $targetType $*
 renumber/Allwmake $targetType $*
 fvAgglomerationMethods/Allwmake $targetType $*
-wmake $targetType fvMotionSolver
 
 wmake $targetType fvConstraints
 
