@@ -36,7 +36,7 @@ SourceFiles
 #ifndef displacementComponentLaplacian_fvMotionSolver_H
 #define displacementComponentLaplacian_fvMotionSolver_H
 
-#include "componentDisplacement_pointMeshMover.H"
+#include "displacementComponent_pointMeshMover.H"
 #include "fvMotionSolver.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -57,7 +57,7 @@ namespace fvMotionSolvers
 class displacementComponentLaplacian
 :
     public fvMotionSolver,
-    public pointMeshMovers::componentDisplacement
+    public pointMeshMovers::displacementComponent
 {
     // Private Data
 

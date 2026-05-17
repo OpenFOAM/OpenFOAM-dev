@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "componentVelocity_pointMeshMover.H"
+#include "velocityComponent_pointMeshMover.H"
 #include "polyTopoChangeMap.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -32,14 +32,14 @@ namespace Foam
 {
 namespace pointMeshMovers
 {
-    defineTypeNameAndDebug(componentVelocity, 0);
+    defineTypeNameAndDebug(velocityComponent, 0);
 }
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::direction Foam::pointMeshMovers::componentVelocity::cmpt
+Foam::direction Foam::pointMeshMovers::velocityComponent::cmpt
 (
     const word& cmptName
 ) const
@@ -69,7 +69,7 @@ Foam::direction Foam::pointMeshMovers::componentVelocity::cmpt
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::pointMeshMovers::componentVelocity::componentVelocity
+Foam::pointMeshMovers::velocityComponent::velocityComponent
 (
     const polyMesh& mesh,
     const dictionary& dict,
@@ -96,19 +96,19 @@ Foam::pointMeshMovers::componentVelocity::componentVelocity
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::pointMeshMovers::componentVelocity::~componentVelocity()
+Foam::pointMeshMovers::velocityComponent::~velocityComponent()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::pointMeshMovers::componentVelocity::movePoints(const pointField& p)
+void Foam::pointMeshMovers::velocityComponent::movePoints(const pointField& p)
 {
     // No local data to adapt
 }
 
 
-void Foam::pointMeshMovers::componentVelocity::topoChange
+void Foam::pointMeshMovers::velocityComponent::topoChange
 (
     const polyTopoChangeMap& map
 )
@@ -118,7 +118,7 @@ void Foam::pointMeshMovers::componentVelocity::topoChange
 }
 
 
-void Foam::pointMeshMovers::componentVelocity::mapMesh
+void Foam::pointMeshMovers::velocityComponent::mapMesh
 (
     const polyMeshMap& map
 )
@@ -128,7 +128,7 @@ void Foam::pointMeshMovers::componentVelocity::mapMesh
 }
 
 
-void Foam::pointMeshMovers::componentVelocity::distribute
+void Foam::pointMeshMovers::velocityComponent::distribute
 (
     const polyDistributionMap& map
 )

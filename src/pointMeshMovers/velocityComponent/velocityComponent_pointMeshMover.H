@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::pointMeshMovers::componentVelocity
+    Foam::pointMeshMovers::velocityComponent
 
 Description
     Abstract base class for velocity pointMesh movers.
@@ -31,12 +31,12 @@ Description
     on the pointMotionUX pointScalarField.
 
 SourceFiles
-    componentVelocity.C
+    velocityComponent.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef componentVelocity_pointMeshMover_H
-#define componentVelocity_pointMeshMover_H
+#ifndef velocityComponent_pointMeshMover_H
+#define velocityComponent_pointMeshMover_H
 
 #include "pointMeshMover.H"
 #include "pointFields.H"
@@ -49,10 +49,10 @@ namespace pointMeshMovers
 {
 
 /*---------------------------------------------------------------------------*\
-                Class componentVelocity Declaration
+                Class velocityComponent Declaration
 \*---------------------------------------------------------------------------*/
 
-class componentVelocity
+class velocityComponent
 :
     public pointMeshMover
 {
@@ -81,13 +81,13 @@ private:
 public:
 
     //- Runtime type information
-    TypeName("componentVelocity");
+    TypeName("velocityComponent");
 
 
     // Constructors
 
         //- Construct from mesh and dictionary
-        componentVelocity
+        velocityComponent
         (
             const polyMesh&,
             const dictionary&,
@@ -95,14 +95,14 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        componentVelocity
+        velocityComponent
         (
-            const componentVelocity&
+            const velocityComponent&
         ) = delete;
 
 
     //- Destructor
-    virtual ~componentVelocity();
+    virtual ~velocityComponent();
 
 
     // Member Functions
@@ -130,7 +130,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const componentVelocity&) = delete;
+        void operator=(const velocityComponent&) = delete;
 };
 
 

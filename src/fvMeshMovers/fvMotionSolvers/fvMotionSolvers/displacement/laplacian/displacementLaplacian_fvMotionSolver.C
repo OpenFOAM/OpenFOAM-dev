@@ -26,11 +26,11 @@ License
 #include "displacementLaplacian_fvMotionSolver.H"
 #include "motionDiffusivity.H"
 #include "fvmLaplacian.H"
-#include "addToRunTimeSelectionTable.H"
 #include "OFstream.H"
 #include "meshTools.H"
 #include "polyTopoChangeMap.H"
 #include "volPointInterpolation.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -65,8 +65,8 @@ Foam::fvMotionSolvers::displacementLaplacian::displacementLaplacian
     const dictionary& dict
 )
 :
-    pointMeshMovers::displacement(mesh, dict, typeName),
     fvMotionSolver(mesh),
+    pointMeshMovers::displacement(mesh, dict, typeName),
     cellDisplacement_
     (
         IOobject

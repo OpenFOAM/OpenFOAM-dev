@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "componentDisplacement_pointMeshMover.H"
+#include "displacementComponent_pointMeshMover.H"
 #include "polyTopoChangeMap.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -32,14 +32,14 @@ namespace Foam
 {
 namespace pointMeshMovers
 {
-    defineTypeNameAndDebug(componentDisplacement, 0);
+    defineTypeNameAndDebug(displacementComponent, 0);
 }
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::direction Foam::pointMeshMovers::componentDisplacement::cmpt
+Foam::direction Foam::pointMeshMovers::displacementComponent::cmpt
 (
     const word& cmptName
 ) const
@@ -69,7 +69,7 @@ Foam::direction Foam::pointMeshMovers::componentDisplacement::cmpt
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::pointMeshMovers::componentDisplacement::componentDisplacement
+Foam::pointMeshMovers::displacementComponent::displacementComponent
 (
     const polyMesh& mesh,
     const dictionary& dict,
@@ -131,13 +131,13 @@ Foam::pointMeshMovers::componentDisplacement::componentDisplacement
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::pointMeshMovers::componentDisplacement::~componentDisplacement()
+Foam::pointMeshMovers::displacementComponent::~displacementComponent()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::pointMeshMovers::componentDisplacement::movePoints
+void Foam::pointMeshMovers::displacementComponent::movePoints
 (
     const pointField& p
 )
@@ -146,7 +146,7 @@ void Foam::pointMeshMovers::componentDisplacement::movePoints
 }
 
 
-void Foam::pointMeshMovers::componentDisplacement::topoChange
+void Foam::pointMeshMovers::displacementComponent::topoChange
 (
     const polyTopoChangeMap& map
 )
@@ -199,7 +199,7 @@ void Foam::pointMeshMovers::componentDisplacement::topoChange
 }
 
 
-void Foam::pointMeshMovers::componentDisplacement::mapMesh
+void Foam::pointMeshMovers::displacementComponent::mapMesh
 (
     const polyMeshMap& map
 )
@@ -209,7 +209,7 @@ void Foam::pointMeshMovers::componentDisplacement::mapMesh
 }
 
 
-void Foam::pointMeshMovers::componentDisplacement::distribute
+void Foam::pointMeshMovers::displacementComponent::distribute
 (
     const polyDistributionMap& map
 )

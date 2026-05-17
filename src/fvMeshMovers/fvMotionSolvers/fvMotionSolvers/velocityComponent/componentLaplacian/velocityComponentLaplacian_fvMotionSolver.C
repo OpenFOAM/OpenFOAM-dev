@@ -62,8 +62,8 @@ Foam::fvMotionSolvers::velocityComponentLaplacian::velocityComponentLaplacian
     const dictionary& dict
 )
 :
-    pointMeshMovers::componentVelocity(mesh, dict, typeName),
     fvMotionSolver(mesh),
+    pointMeshMovers::velocityComponent(mesh, dict, typeName),
     cellMotionU_
     (
         IOobject
@@ -151,7 +151,7 @@ void Foam::fvMotionSolvers::velocityComponentLaplacian::topoChange
     const polyTopoChangeMap& map
 )
 {
-    pointMeshMovers::componentVelocity::topoChange(map);
+    pointMeshMovers::velocityComponent::topoChange(map);
 
     // Update diffusivity. Note two stage to make sure old one is de-registered
     // before creating/registering new one.
@@ -170,7 +170,7 @@ void Foam::fvMotionSolvers::velocityComponentLaplacian::mapMesh
     const polyMeshMap& map
 )
 {
-    pointMeshMovers::componentVelocity::mapMesh(map);
+    pointMeshMovers::velocityComponent::mapMesh(map);
 
     // Update diffusivity. Note two stage to make sure old one is de-registered
     // before creating/registering new one.

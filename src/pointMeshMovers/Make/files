@@ -25,11 +25,11 @@ displacement/layered/layeredDisplacement_pointMeshMover.C
 displacement/layered/pointEdgeStructuredWalk.C
 displacement/linear/linearDisplacement_pointMeshMover.C
 
-componentDisplacement/componentDisplacement_pointMeshMover.C
+displacementComponent/displacementComponent_pointMeshMover.C
 
 velocity/velocity_pointMeshMover.C
 
-componentVelocity/componentVelocity_pointMeshMover.C
+velocityComponent/velocityComponent_pointMeshMover.C
 
 rigidBody/multiRigidBody/multiRigidBody_pointMeshMover.C
 rigidBody/functionalRigidBody/functionalRigidBody_pointMeshMover.C

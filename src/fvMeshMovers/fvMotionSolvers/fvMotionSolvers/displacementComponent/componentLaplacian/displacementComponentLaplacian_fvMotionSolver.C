@@ -65,7 +65,7 @@ displacementComponentLaplacian
 )
 :
     fvMotionSolver(mesh),
-    pointMeshMovers::componentDisplacement(mesh, dict, type()),
+    pointMeshMovers::displacementComponent(mesh, dict, type()),
     cellDisplacement_
     (
         IOobject
@@ -265,7 +265,7 @@ void Foam::fvMotionSolvers::displacementComponentLaplacian::topoChange
     const polyTopoChangeMap& map
 )
 {
-    pointMeshMovers::componentDisplacement::topoChange(map);
+    pointMeshMovers::displacementComponent::topoChange(map);
 
     // Update diffusivity. Note two stage to make sure old one is de-registered
     // before creating/registering new one.
@@ -284,7 +284,7 @@ void Foam::fvMotionSolvers::displacementComponentLaplacian::mapMesh
     const polyMeshMap& map
 )
 {
-    pointMeshMovers::componentDisplacement::mapMesh(map);
+    pointMeshMovers::displacementComponent::mapMesh(map);
 
     // Update diffusivity. Note two stage to make sure old one is de-registered
     // before creating/registering new one.
