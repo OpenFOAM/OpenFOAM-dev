@@ -54,11 +54,11 @@ Usage
     \verbatim
         mover
         {
-            type            motionSolver;
+            type            pointMeshMover;
 
             libs            ("libfvMotionSolvers.so");
 
-            motionSolver    solidBody;
+            pointMeshMover  solidBody;
 
             cellZone        innerCylinder;
 

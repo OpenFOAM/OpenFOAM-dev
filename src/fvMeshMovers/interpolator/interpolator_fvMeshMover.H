@@ -59,7 +59,7 @@ SourceFiles
 #define interpolator_fvMeshMover_H
 
 #include "fvMeshMover.H"
-#include "dynamicMeshPointInterpolator.H"
+#include "interpolator_pointMeshMover.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -78,7 +78,7 @@ class interpolator
 {
     // Private Data
 
-        dynamicMeshPointInterpolator pointInterpolator_;
+        pointMeshMovers::interpolator pointInterpolator_;
 
         const Switch displacement_;
 

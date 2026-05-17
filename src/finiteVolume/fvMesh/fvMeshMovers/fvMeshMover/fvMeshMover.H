@@ -120,8 +120,8 @@ public:
 
         //- Is the motion solid body? I.e., are the volumes and area magnitudes
         //  unchanged? Defaults to false. Set to true by fvMeshMovers::none and
-        //  delegated to the motion solver by fvMeshMovers::motionSolver.
-        virtual bool solidBody() const
+        //  delegated to the motion solver by fvMeshMovers::pointMeshMover.
+        virtual bool solidBodyMotion() const
         {
             return false;
         }

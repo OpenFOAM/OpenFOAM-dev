@@ -18,17 +18,20 @@ FoamFile
 // Enable motion for an NCC simulation by changing 'mover-disabled' to 'mover'
 mover-disabled
 {
-    type            motionSolver;
+    type            pointMeshMover;
 
     libs            ("libfvMotionSolvers.so");
 
-    motionSolver    solidBody;
+    pointMeshMover
+    {
+        type            solidBody;
 
-    cellZone        rotatingZone;
+        cellZone        rotatingZone;
 
-    solidBodyMotionFunction  rotatingMotion;
+        solidBodyMotionFunction  rotatingMotion;
 
-    #include        "rotatingZoneProperties"
+        #include        "rotatingZoneProperties"
+    }
 }
 
 // ************************************************************************* //

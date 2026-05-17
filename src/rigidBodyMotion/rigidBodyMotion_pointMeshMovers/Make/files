@@ -1,0 +1,4 @@
+rigidBodyMotion/rigidBodyMotion_pointMeshMover.C
+rigidBodyDisplacement/rigidBodyDisplacement_pointMeshMover.C
+
+LIB = $(FOAM_LIBBIN)/librigidBodyMeshMotion

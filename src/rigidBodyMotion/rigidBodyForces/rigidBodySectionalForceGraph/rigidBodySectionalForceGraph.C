@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "rigidBodySectionalForceGraph.H"
-#include "motionSolver_fvMeshMover.H"
+#include "pointMeshMover_fvMeshMover.H"
 #include "OSspecific.H"
 #include "patchCutPlot.H"
 #include "setWriter.H"

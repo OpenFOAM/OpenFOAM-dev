@@ -25,8 +25,8 @@ License
 
 #include "rigidBodyForces.H"
 #include "rigidBodyMotion.H"
-#include "motionSolver_fvMeshMover.H"
-#include "motionSolver.H"
+#include "pointMeshMover_fvMeshMover.H"
+#include "pointMeshMover.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -46,11 +46,11 @@ namespace functionObjects
 
 Foam::vector Foam::functionObjects::rigidBodyForces::CofR() const
 {
-    const fvMeshMovers::motionSolver& mover =
-        refCast<const fvMeshMovers::motionSolver>(mesh_.mover());
+    const fvMeshMovers::pointMeshMover& mover =
+        refCast<const fvMeshMovers::pointMeshMover>(mesh_.mover());
 
     const RBD::rigidBodyMotion& motion =
-        refCast<const RBD::rigidBodyMotion>(mover.motion());
+        refCast<const RBD::rigidBodyMotion>(mover.mover());
 
     const label bodyID = motion.bodyIndex(body_);
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2024-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,8 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "rigidBodyPropellerDisk.H"
-#include "motionSolver_fvMeshMover.H"
-#include "motionSolver.H"
+#include "pointMeshMover_fvMeshMover.H"
+#include "pointMeshMover_fvMeshMover.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -90,7 +90,7 @@ Foam::fv::rigidBodyPropellerDisk::rigidBodyPropellerDisk
     (
         refCast<const RBD::rigidBodyMotion>
         (
-            refCast<const fvMeshMovers::motionSolver>(mesh.mover()).motion()
+            refCast<const fvMeshMovers::pointMeshMover>(mesh.mover()).mover()
         )
     )
 {

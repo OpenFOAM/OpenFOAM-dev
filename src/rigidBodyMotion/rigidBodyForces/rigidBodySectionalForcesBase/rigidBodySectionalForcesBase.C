@@ -25,8 +25,8 @@ License
 
 #include "rigidBodySectionalForcesBase.H"
 #include "rigidBodyMotion.H"
-#include "motionSolver_fvMeshMover.H"
-#include "motionSolver.H"
+#include "pointMeshMover_fvMeshMover.H"
+#include "pointMeshMover.H"
 #include "transformField.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -81,10 +81,10 @@ namespace functionObjects
 const Foam::RBD::rigidBodyMotion&
 Foam::functionObjects::rigidBodySectionalForcesBase::motion() const
 {
-    const fvMeshMovers::motionSolver& mover =
-        refCast<const fvMeshMovers::motionSolver>(mesh_.mover());
+    const fvMeshMovers::pointMeshMover& mover =
+        refCast<const fvMeshMovers::pointMeshMover>(mesh_.mover());
 
-    return refCast<const RBD::rigidBodyMotion>(mover.motion());
+    return refCast<const RBD::rigidBodyMotion>(mover.mover());
 }
 
 

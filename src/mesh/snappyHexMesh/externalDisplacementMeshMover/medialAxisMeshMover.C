@@ -2031,7 +2031,7 @@ bool Foam::medialAxisMeshMover::move
 
 
     // The points have moved so before calculation update
-    // the mesh and motionSolver accordingly
+    // the mesh and pointMeshMover accordingly
     movePoints(mesh().points());
     //
     //// Update any point motion bcs (e.g. timevarying)

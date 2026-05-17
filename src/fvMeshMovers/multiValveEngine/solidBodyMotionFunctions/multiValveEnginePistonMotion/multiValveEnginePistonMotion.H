@@ -33,12 +33,16 @@ Description
     \verbatim
     mover
     {
-        type            motionSolver;
+        type            pointMeshMover;
         libs            ("libfvMotionSolvers.so");
-        motionSolver    solidBody;
-        cellZone        all;
-        solidBodyMotionFunction multiValveEnginePistonMotion;
-        fluidRegion     fluid;
+
+        pointMeshMover
+        {
+            type            solidBody;
+            cellZone        all;
+            solidBodyMotionFunction multiValveEnginePistonMotion;
+            fluidRegion     fluid;
+        }
     }
     \endverbatim
 

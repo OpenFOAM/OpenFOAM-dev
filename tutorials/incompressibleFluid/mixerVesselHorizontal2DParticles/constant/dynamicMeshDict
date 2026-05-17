@@ -16,17 +16,17 @@ FoamFile
 
 mover
 {
-    type            motionSolver;
+    type            pointMeshMover;
 
     libs            ("libfvMotionSolvers.so");
 
-    motionSolver    motionSolverList;
-
-    solvers
+    pointMeshMover
     {
+        type            list;
+
         rotor
         {
-            motionSolver    solidBody;
+            type            solidBody;
 
             cellZone        rotor;
 
@@ -43,7 +43,7 @@ mover
 
         stator
         {
-            motionSolver    solidBody;
+            type            solidBody;
 
             cellZone        stator;
 

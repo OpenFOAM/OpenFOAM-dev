@@ -24,8 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "sixDoFRigidBodyState.H"
-#include "motionSolver_fvMeshMover.H"
-#include "motionSolver.H"
+#include "pointMeshMover_fvMeshMover.H"
 #include "sixDoFRigidBodyMotion.H"
 #include "quaternion.H"
 #include "addToRunTimeSelectionTable.H"
@@ -114,10 +113,10 @@ bool Foam::functionObjects::sixDoFRigidBodyState::execute()
 const Foam::sixDoFRigidBodyMotion&
 Foam::functionObjects::sixDoFRigidBodyState::motion() const
 {
-    const fvMeshMovers::motionSolver& mover =
-        refCast<const fvMeshMovers::motionSolver>(mesh_.mover());
+    const fvMeshMovers::pointMeshMover& mover =
+        refCast<const fvMeshMovers::pointMeshMover>(mesh_.mover());
 
-    return (refCast<const sixDoFRigidBodyMotion>(mover.motion()));
+    return (refCast<const sixDoFRigidBodyMotion>(mover.mover()));
 }
 
 

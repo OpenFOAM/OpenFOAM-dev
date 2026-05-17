@@ -16,65 +16,62 @@ FoamFile
 
 mover
 {
-    type            motionSolver;
+    type            pointMeshMover;
 
     libs            ("librigidBodyMeshMotion.so");
 
-    motionSolver       rigidBodyMotion;
+    pointMeshMover  rigidBodyMotion;
 
-    rigidBodyMotion
+    report          on;
+
+    solver
     {
-        report          on;
+        type Newmark;
+    }
 
-        solver
+    accelerationRelaxation 0.7;
+
+    exterior
+    {
+        innerDistance   0.05;
+        outerDistance   0.35;
+    }
+
+    bodies
+    {
+        floatingObject
         {
-            type Newmark;
-        }
+            type            cuboid;
+            parent          root;
 
-        accelerationRelaxation 0.7;
+            // Cuboid dimensions
+            L               (0.3 0.2 0.5);
 
-        exterior
-        {
+            // Density of the cuboid
+            rho             500;
+
+            // Cuboid mass
+            mass            #calc "$rho*cmptProduct($<vector>L)";
+            centreOfMass    (0 0 0.25);
+            transform       (1 0 0 0 1 0 0 0 1) (0.5 0.45 0.1);
+
+            joint
+            {
+                type            composite;
+                joints
+                (
+                    {
+                        type Py;
+                    }
+                    {
+                        type Ry;
+                    }
+                );
+            }
+
+            patches         (floatingObject);
             innerDistance   0.05;
             outerDistance   0.35;
-        }
-
-        bodies
-        {
-            floatingObject
-            {
-                type            cuboid;
-                parent          root;
-
-                // Cuboid dimensions
-                L               (0.3 0.2 0.5);
-
-                // Density of the cuboid
-                rho             500;
-
-                // Cuboid mass
-                mass            #calc "$rho*cmptProduct($<vector>L)";
-                centreOfMass    (0 0 0.25);
-                transform       (1 0 0 0 1 0 0 0 1) (0.5 0.45 0.1);
-
-                joint
-                {
-                    type            composite;
-                    joints
-                    (
-                        {
-                            type Py;
-                        }
-                        {
-                            type Ry;
-                        }
-                    );
-                }
-
-                patches         (floatingObject);
-                innerDistance   0.05;
-                outerDistance   0.35;
-            }
         }
     }
 }

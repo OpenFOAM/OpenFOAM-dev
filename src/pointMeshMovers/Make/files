@@ -1,21 +1,7 @@
-motionSolver/motionSolver.C
-motionSolverList/motionSolverList.C
+pointMeshMover/pointMeshMover.C
 
-points0/points0MotionSolver.C
-
-solidBodyMeshMotion/solidBodyMeshMotion.C
-multiSolidBodyMeshMotion/multiSolidBodyMeshMotion.C
-
-displacement/displacement/displacementMotionSolver.C
-displacement/layeredSolver/displacementLayeredMotionSolver.C
-displacement/layeredSolver/pointEdgeStructuredWalk.C
-displacement/linearSolver/displacementLinearMotionSolver.C
-
-componentDisplacement/componentDisplacementMotionSolver.C
-
-velocity/velocityMotionSolver.C
-
-componentVelocity/componentVelocityMotionSolver.C
+list/list_pointMeshMover.C
+interpolator/interpolator_pointMeshMover.C
 
 solidBodyMotionFunctions/solidBodyMotionFunction/solidBodyMotionFunction.C
 solidBodyMotionFunctions/solidBodyMotionFunction/solidBodyMotionFunctionNew.C
@@ -29,11 +15,25 @@ solidBodyMotionFunctions/multiMotion/multiMotion.C
 solidBodyMotionFunctions/oscillatingLinearMotion/oscillatingLinearMotion.C
 solidBodyMotionFunctions/oscillatingRotatingMotion/oscillatingRotatingMotion.C
 
+displacementPoints0/displacementPoints0.C
+
+solidBody/solidBody_pointMeshMover.C
+multiSolidBody/multiSolidBody_pointMeshMover.C
+
+displacement/displacement/displacement_pointMeshMover.C
+displacement/layered/layeredDisplacement_pointMeshMover.C
+displacement/layered/pointEdgeStructuredWalk.C
+displacement/linear/linearDisplacement_pointMeshMover.C
+
+componentDisplacement/componentDisplacement_pointMeshMover.C
+
+velocity/velocity_pointMeshMover.C
+
+componentVelocity/componentVelocity_pointMeshMover.C
+
+rigidBody/multiRigidBody/multiRigidBody_pointMeshMover.C
+rigidBody/functionalRigidBody/functionalRigidBody_pointMeshMover.C
+
 pointPatchFields/derived/rigidBodyMotionDisplacement/rigidBodyMotionDisplacementPointPatchVectorField.C
-
-pointInterpolator/dynamicMeshPointInterpolator.C
-
-rigidBodyMeshMotion/multiRigidBodyMeshMotion/multiRigidBodyMeshMotion.C
-rigidBodyMeshMotion/functionalRigidBodyMeshMotion/functionalRigidBodyMeshMotion.C
 
 LIB = $(FOAM_LIBBIN)/libpointMeshMovers

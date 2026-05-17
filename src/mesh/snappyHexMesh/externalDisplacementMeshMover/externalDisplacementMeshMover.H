@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,9 +25,9 @@ Class
     Foam::externalDisplacementMeshMover
 
 Description
-    Virtual base class for mesh movers with externally provided displacement
+    Abstract base class for mesh movers with externally provided displacement
     field giving the boundary conditions. Move the mesh from the current
-    location to a new location (so modify the mesh; v.s. motionSolver that
+    location to a new location (so modify the mesh; v.s. pointMeshMover that
     only returns the new location).
 
     All mesh movers are expected to read the dictionary settings at invocation

@@ -25,8 +25,8 @@ motionSmoother/motionSmoother.C
 motionSmoother/motionSmootherAlgo.C
 motionSmoother/motionSmootherData.C
 
-externalDisplacementMeshMover/displacementMeshMoverMotionSolver.C
 externalDisplacementMeshMover/externalDisplacementMeshMover.C
+externalDisplacementMeshMover/externalDisplacement_pointMeshMover.C
 externalDisplacementMeshMover/medialAxisMeshMover.C
 externalDisplacementMeshMover/zeroFixedValue/zeroFixedValuePointPatchFields.C
 
