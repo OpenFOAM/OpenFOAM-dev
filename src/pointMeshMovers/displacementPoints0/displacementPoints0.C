@@ -114,13 +114,12 @@ Foam::pointVectorField Foam::pointMeshMovers::displacementPoints0::readPoints0
 
 Foam::pointMeshMovers::displacementPoints0::displacementPoints0
 (
-    const word& name,
     const polyMesh& mesh,
     const dictionary& dict,
     const word& type
 )
 :
-    pointMeshMover(name, mesh, type),
+    pointMeshMover(mesh, type),
     points0_(readPoints0(mesh))
 {
     if (points0_.size() != mesh.nPoints())
@@ -168,7 +167,7 @@ void Foam::pointMeshMovers::displacementPoints0::topoChange
 
 void Foam::pointMeshMovers::displacementPoints0::mapMesh(const polyMeshMap& map)
 {
-    points0_.primitiveFieldRef() = mesh().points();
+    points0_.primitiveFieldRef() = poly().points();
 
     // The processor boundaries may have changed, so we need to update the
     // boundary field. There is no data in this field, so we don't need to map

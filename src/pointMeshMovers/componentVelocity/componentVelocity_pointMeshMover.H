@@ -89,7 +89,6 @@ public:
         //- Construct from mesh and dictionary
         componentVelocity
         (
-            const word& name,
             const polyMesh&,
             const dictionary&,
             const word& type

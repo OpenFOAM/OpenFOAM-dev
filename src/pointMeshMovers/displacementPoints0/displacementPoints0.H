@@ -73,7 +73,6 @@ public:
         //- Construct from mesh and dictionary
         displacementPoints0
         (
-            const word& name,
             const polyMesh&,
             const dictionary&,
             const word& type

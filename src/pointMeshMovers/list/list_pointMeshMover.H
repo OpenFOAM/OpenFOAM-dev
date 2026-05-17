@@ -71,12 +71,7 @@ public:
     // Constructors
 
         //- Construct from mesh and dictionary
-        list
-        (
-            const word& name,
-            const polyMesh&,
-            const dictionary&
-        );
+        list(const polyMesh&, const dictionary&);
 
         //- Disallow default bitwise copy construction
         list(const list&) = delete;

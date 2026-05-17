@@ -130,12 +130,7 @@ public:
     // Constructors
 
         //- Construct from polyMesh and dictionary
-        rigidBodyDisplacement
-        (
-            const word& name,
-            const polyMesh&,
-            const dictionary& dict
-        );
+        rigidBodyDisplacement(const polyMesh&, const dictionary& dict);
 
         //- Disallow default bitwise copy construction
         rigidBodyDisplacement

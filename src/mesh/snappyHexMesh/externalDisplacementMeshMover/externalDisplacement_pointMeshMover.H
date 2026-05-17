@@ -70,18 +70,10 @@ public:
     // Constructors
 
         //- Construct from polyMesh and dictionary
-        externalDisplacement
-        (
-            const word& name,
-            const polyMesh&,
-            const dictionary&
-        );
+        externalDisplacement(const polyMesh&, const dictionary&);
 
         //- Disallow default bitwise copy construction
-        externalDisplacement
-        (
-            const externalDisplacement&
-        ) = delete;
+        externalDisplacement(const externalDisplacement&) = delete;
 
 
     //- Destructor

@@ -88,16 +88,10 @@ void surfaceSlipDisplacementPointPatchVectorField::calcProjection
             << endl;
     }
 
-    // Get the pointMeshMover from the mesh
-    const pointMeshMover& motion =
-        refCast<const fvMeshMovers::pointMeshMover>
-        (
-            refCast<const fvMesh>(mesh).mover()
-        ).mover();
-
     // Get the starting locations from the pointMeshMover
     const pointField& points0 =
-        refCast<const pointMeshMovers::displacement>(motion).points0();
+        refCast<const pointMeshMovers::displacement>
+        (refCast<const fvMesh>(mesh).mover()).points0();
 
     pointField start(meshPoints.size());
     forAll(start, i)

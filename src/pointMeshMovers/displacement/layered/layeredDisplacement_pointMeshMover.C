@@ -81,7 +81,7 @@ void Foam::pointMeshMovers::layeredDisplacement::walkLayers
     }
 
     // Initialise the wave info for all the points
-    List<pointEdgeStructuredWalk> allPointInfo(mesh().nPoints());
+    List<pointEdgeStructuredWalk> allPointInfo(poly().nPoints());
     forAll(allPointInfo, pointi)
     {
         allPointInfo[pointi] = pointEdgeStructuredWalk
@@ -94,12 +94,12 @@ void Foam::pointMeshMovers::layeredDisplacement::walkLayers
     }
 
     // Initialise the wave info for all edges
-    List<pointEdgeStructuredWalk> allEdgeInfo(mesh().nEdges());
+    List<pointEdgeStructuredWalk> allEdgeInfo(poly().nEdges());
     forAll(allEdgeInfo, edgei)
     {
         allEdgeInfo[edgei] = pointEdgeStructuredWalk
         (
-            mesh().edges()[edgei].centre(points0()), // Edge centre location
+            poly().edges()[edgei].centre(points0()), // Edge centre location
             vector::max,        // No valid previous location
             0,
             Zero                // Initial displacement = 0
@@ -109,12 +109,12 @@ void Foam::pointMeshMovers::layeredDisplacement::walkLayers
     // Walk the distance and displacement from the startPatch
     PointEdgeWave<pointEdgeStructuredWalk> walk
     (
-        mesh(),
+        poly(),
         startMeshPoints,
         startInfo,
         allPointInfo,
         allEdgeInfo,
-        mesh().globalData().nTotalPoints()  // Max number of iterations
+        poly().globalData().nTotalPoints()  // Max number of iterations
     );
 
     // Extract distance and displacement from the wave info
@@ -130,12 +130,11 @@ void Foam::pointMeshMovers::layeredDisplacement::walkLayers
 
 Foam::pointMeshMovers::layeredDisplacement::layeredDisplacement
 (
-    const word& name,
     const polyMesh& mesh,
     const dictionary& dict
 )
 :
-    displacement(name, mesh, dict, typeName),
+    displacement(mesh, dict, typeName),
     oppositePatchNames_(dict.lookup("oppositePatches")),
     oppositePatches_
     (
@@ -157,20 +156,20 @@ Foam::tmp<Foam::pointField>
 Foam::pointMeshMovers::layeredDisplacement::newPoints()
 {
     // The points have moved so before interpolation update the pointMeshMover
-    movePoints(mesh().points());
+    movePoints(poly().points());
 
     // Update the displacement boundary conditions
     pointDisplacement_.boundaryFieldRef().updateCoeffs();
 
     // Walk the layers from patch0 to patch1
-    const polyPatch& patch0 = mesh().boundary()[oppositePatches_.first()];
-    scalarField patchDist0(mesh().nPoints());
+    const polyPatch& patch0 = poly().boundary()[oppositePatches_.first()];
+    scalarField patchDist0(poly().nPoints());
     vectorField patchDisp0(pointDisplacement_);
     walkLayers(patch0, patchDist0, patchDisp0);
 
     // Walk the layers from patch1 to patch0
-    const polyPatch& patch1 = mesh().boundary()[oppositePatches_.second()];
-    scalarField patchDist1(mesh().nPoints());
+    const polyPatch& patch1 = poly().boundary()[oppositePatches_.second()];
+    scalarField patchDist1(poly().nPoints());
     vectorField patchDisp1(pointDisplacement_);
     walkLayers(patch1, patchDist1, patchDisp1);
 

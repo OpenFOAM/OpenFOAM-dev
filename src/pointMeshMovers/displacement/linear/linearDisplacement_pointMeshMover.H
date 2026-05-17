@@ -101,12 +101,7 @@ public:
     // Constructors
 
         //- Construct from polyMesh and dictionary
-        linearDisplacement
-        (
-            const word& name,
-            const polyMesh&,
-            const dictionary&
-        );
+        linearDisplacement(const polyMesh&, const dictionary&);
 
         //- Disallow default bitwise copy construction
         linearDisplacement

@@ -71,13 +71,12 @@ Foam::direction Foam::pointMeshMovers::componentDisplacement::cmpt
 
 Foam::pointMeshMovers::componentDisplacement::componentDisplacement
 (
-    const word& name,
     const polyMesh& mesh,
     const dictionary& dict,
     const word& type
 )
 :
-    pointMeshMover(name, mesh, type),
+    pointMeshMover(mesh, type),
     cmptName_(dict.lookup("component")),
     cmpt_(cmpt(cmptName_)),
     points0_
@@ -159,7 +158,7 @@ void Foam::pointMeshMovers::componentDisplacement::topoChange
     // Find out scaling between points0 and current points
 
     // Get the new points either from the map or the mesh
-    const scalarField points(mesh().points().component(cmpt_));
+    const scalarField points(poly().points().component(cmpt_));
 
     // Get extents of points0 and points and determine scale
     const scalar scale =
@@ -205,7 +204,7 @@ void Foam::pointMeshMovers::componentDisplacement::mapMesh
     const polyMeshMap& map
 )
 {
-    points0_ = mesh().points().component(cmpt_);
+    points0_ = poly().points().component(cmpt_);
     pointDisplacement_ == Zero;
 }
 

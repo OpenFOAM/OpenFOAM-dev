@@ -172,12 +172,11 @@ Foam::pointMeshMovers::multiRigidBody::bodyMesh::bodyMesh
 
 Foam::pointMeshMovers::multiRigidBody::multiRigidBody
 (
-    const word& name,
     const polyMesh& mesh,
     const dictionary& dict
 )
 :
-    displacementPoints0(name, mesh, dict, typeName)
+    displacementPoints0(mesh, dict, typeName)
 {
     if (dict.isDict("bodies"))
     {
@@ -203,7 +202,7 @@ Foam::pointMeshMovers::multiRigidBody::multiRigidBody
     }
     else
     {
-        bodyMeshes_.append(new bodyMesh(mesh, name, dict));
+        bodyMeshes_.append(new bodyMesh(mesh, "body", dict));
     }
 
     // Append the body corresponding to the outer boundary of the region
@@ -296,12 +295,12 @@ Type Foam::pointMeshMovers::multiRigidBody::bodyMesh::weight
 Foam::tmp<Foam::pointField>
 Foam::pointMeshMovers::multiRigidBody::newPoints()
 {
-    if (mesh().nPoints() != points0().size())
+    if (poly().nPoints() != points0().size())
     {
         FatalErrorInFunction
             << "The number of points in the mesh seems to have changed." << endl
             << "In constant/polyMesh there are " << points0().size()
-            << " points; in the current mesh there are " << mesh().nPoints()
+            << " points; in the current mesh there are " << poly().nPoints()
             << " points." << exit(FatalError);
     }
 
@@ -335,11 +334,11 @@ void Foam::pointMeshMovers::multiRigidBody::topoChange
 )
 {
     // Get the new points either from the map or the mesh
-    const pointField& points = mesh().points();
+    const pointField& points = poly().points();
 
-    const pointMesh& pMesh = pointMesh::New(mesh());
+    const pointMesh& pMesh = pointMesh::New(poly());
 
-    pointField newPoints0(mesh().points());
+    pointField newPoints0(poly().points());
 
     forAll(newPoints0, pointi)
     {
@@ -430,7 +429,7 @@ void Foam::pointMeshMovers::multiRigidBody::topoChange
 
     // Mark the changed points0 to be written automatically
     points0_.writeOpt() = IOobject::AUTO_WRITE;
-    points0_.instance() = mesh().time().name();
+    points0_.instance() = poly().time().name();
 }
 
 
@@ -463,7 +462,7 @@ void Foam::pointMeshMovers::multiRigidBody::mapMesh(const polyMeshMap& map)
 
     // Mark the changed points0 to be written automatically
     points0_.writeOpt() = IOobject::AUTO_WRITE;
-    points0_.instance() = mesh().time().name();
+    points0_.instance() = poly().time().name();
 }
 
 

@@ -50,16 +50,16 @@ void Foam::pointMeshMovers::multiSolidBody::updateZonePointIndices()
 {
     forAll(zoneIndices_, zonei)
     {
-        const cellZone& zoneCells = mesh().cellZones()[zoneIndices_[zonei]];
+        const cellZone& zoneCells = poly().cellZones()[zoneIndices_[zonei]];
 
-        boolList pointInZone(mesh().nPoints(), false);
+        boolList pointInZone(poly().nPoints(), false);
 
         forAll(zoneCells, zoneCelli)
         {
-            const cell& c = mesh().cells()[zoneCells[zoneCelli]];
+            const cell& c = poly().cells()[zoneCells[zoneCelli]];
             forAll(c, cfi)
             {
-                const face& f = mesh().faces()[c[cfi]];
+                const face& f = poly().faces()[c[cfi]];
                 forAll(f, fpi)
                 {
                     pointInZone[f[fpi]] = true;
@@ -67,9 +67,9 @@ void Foam::pointMeshMovers::multiSolidBody::updateZonePointIndices()
             }
         }
 
-        syncTools::syncPointList(mesh(), pointInZone, orEqOp<bool>(), false);
+        syncTools::syncPointList(poly(), pointInZone, orEqOp<bool>(), false);
 
-        DynamicList<label> zonePoints(mesh().nPoints());
+        DynamicList<label> zonePoints(poly().nPoints());
         forAll(pointInZone, celli)
         {
             if (pointInZone[celli])
@@ -82,7 +82,7 @@ void Foam::pointMeshMovers::multiSolidBody::updateZonePointIndices()
     }
 
     // Check that points are not in multiple zones
-    labelList pointZone(mesh().nPoints(), -1);
+    labelList pointZone(poly().nPoints(), -1);
     forAll(zoneIndices_, zonei)
     {
         forAll(zonePoints_[zonei], zonePointi)
@@ -96,7 +96,7 @@ void Foam::pointMeshMovers::multiSolidBody::updateZonePointIndices()
     }
     syncTools::syncPointList
     (
-        mesh(),
+        poly(),
         pointZone,
         [](label& x, const label& y) { x = x == -1 || x == y ? y : -2; },
         label(-1)
@@ -105,7 +105,7 @@ void Foam::pointMeshMovers::multiSolidBody::updateZonePointIndices()
     if (errorPointi != -1)
     {
         FatalErrorInFunction
-            << "Point " << errorPointi << " at " << mesh().points()[errorPointi]
+            << "Point " << errorPointi << " at " << poly().points()[errorPointi]
             << " is in multiple moving zones. This is not allowed."
             << exit(FatalError);
     }
@@ -116,12 +116,11 @@ void Foam::pointMeshMovers::multiSolidBody::updateZonePointIndices()
 
 Foam::pointMeshMovers::multiSolidBody::multiSolidBody
 (
-    const word& name,
     const polyMesh& mesh,
     const dictionary& dict
 )
 :
-    displacementPoints0(name, mesh, dict, typeName)
+    displacementPoints0(mesh, dict, typeName)
 {
     zoneIndices_.setSize(dict.size());
     SBMFs_.setSize(dict.size());
@@ -181,7 +180,7 @@ Foam::pointMeshMovers::multiSolidBody::~multiSolidBody()
 
 Foam::tmp<Foam::pointField> Foam::pointMeshMovers::multiSolidBody::newPoints()
 {
-    tmp<pointField> ttransformedPts(new pointField(mesh().points()));
+    tmp<pointField> ttransformedPts(new pointField(poly().points()));
     pointField& transformedPts = ttransformedPts.ref();
 
     forAll(zoneIndices_, zonei)
@@ -209,7 +208,7 @@ void Foam::pointMeshMovers::multiSolidBody::topoChange
 
     // pointMesh already updates registered pointFields
 
-    const pointField& points = mesh().points();
+    const pointField& points = poly().points();
 
     pointField newPoints0(points);
 
@@ -246,7 +245,7 @@ void Foam::pointMeshMovers::multiSolidBody::topoChange
     // Move into base class storage and mark as to-be-written
     points0_.transfer(newPoints0);
     points0_.writeOpt() = IOobject::AUTO_WRITE;
-    points0_.instance() = mesh().time().name();
+    points0_.instance() = poly().time().name();
 }
 
 
@@ -283,7 +282,7 @@ void Foam::pointMeshMovers::multiSolidBody::mapMesh(const polyMeshMap& map)
     twoDCorrectPoints(points0);
 
     points0_.writeOpt() = IOobject::AUTO_WRITE;
-    points0_.instance() = mesh().time().name();
+    points0_.instance() = poly().time().name();
 }
 
 

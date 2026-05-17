@@ -156,18 +156,10 @@ public:
     // Constructors
 
         //- Construct from polyMesh and dictionary
-        multiRigidBody
-        (
-            const word& name,
-            const polyMesh&,
-            const dictionary& dict
-        );
+        multiRigidBody(const polyMesh&, const dictionary& dict);
 
         //- Disallow default bitwise copy construction
-        multiRigidBody
-        (
-            const multiRigidBody&
-        ) = delete;
+        multiRigidBody(const multiRigidBody&) = delete;
 
 
     //- Destructor

@@ -77,7 +77,7 @@ Foam::pointMeshMovers::rigidBodyMotion::transforms0() const
 
 void Foam::pointMeshMovers::rigidBodyMotion::moveBodies()
 {
-    const Time& t = mesh().time();
+    const Time& t = poly().time();
 
     // Store the motion state at the beginning of the time-step
     if (curTimeIndex_ != t.timeIndex())
@@ -88,11 +88,11 @@ void Foam::pointMeshMovers::rigidBodyMotion::moveBodies()
 
     const scalar ramp = ramp_->value(t.value());
 
-    if (mesh().foundObject<uniformDimensionedVectorField>("g"))
+    if (poly().foundObject<uniformDimensionedVectorField>("g"))
     {
         g() =
             ramp
-           *mesh().lookupObject<uniformDimensionedVectorField>("g").value();
+           *poly().lookupObject<uniformDimensionedVectorField>("g").value();
     }
 
     if (test_)
@@ -164,12 +164,11 @@ void Foam::pointMeshMovers::rigidBodyMotion::moveBodies()
 
 Foam::pointMeshMovers::rigidBodyMotion::rigidBodyMotion
 (
-    const word& name,
     const polyMesh& mesh,
     const dictionary& dict
 )
 :
-    pointMeshMovers::multiRigidBody(name, mesh, dict),
+    pointMeshMovers::multiRigidBody(mesh, dict),
     RBD::rigidBodyMotion
     (
         dict,
@@ -252,9 +251,9 @@ bool Foam::pointMeshMovers::rigidBodyMotion::write() const
         IOobject
         (
             "rigidBodyMotionState",
-            mesh().time().name(),
+            poly().time().name(),
             "uniform",
-            mesh(),
+            poly(),
             IOobject::NO_READ,
             IOobject::NO_WRITE,
             false
@@ -269,7 +268,7 @@ bool Foam::pointMeshMovers::rigidBodyMotion::write() const
         (
             IOstream::ASCII,
             IOstream::currentVersion,
-            mesh().time().writeCompression(),
+            poly().time().writeCompression(),
             true
         );
 }

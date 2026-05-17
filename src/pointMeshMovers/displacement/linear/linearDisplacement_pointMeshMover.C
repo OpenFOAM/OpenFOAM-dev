@@ -48,12 +48,11 @@ namespace pointMeshMovers
 
 Foam::pointMeshMovers::linearDisplacement::linearDisplacement
 (
-    const word& name,
     const polyMesh& mesh,
     const dictionary& dict
 )
 :
-    displacementPoints0(name, mesh, dict, typeName),
+    displacementPoints0(mesh, dict, typeName),
     axis_(normalised(dict.lookup<vector>("axis", dimless))),
     xFixed_(dict.lookup<scalar>("xFixed", dimLength)),
     xMoving_(dict.lookup<scalar>("xMoving", dimLength)),
@@ -84,7 +83,7 @@ Foam::pointMeshMovers::linearDisplacement::newPoints()
     tmp<pointField> tcurPoints(new pointField(points0()));
     pointField& curPoints = tcurPoints.ref();
 
-    const scalar displacement = displacement_->value(mesh().time().value());
+    const scalar displacement = displacement_->value(poly().time().value());
 
     forAll(curPoints, i)
     {

@@ -17,11 +17,9 @@ FoamFile
 
 mover
 {
-    type            pointMeshMover;
+    type            displacementLaplacian;
 
     libs            ("libfvMotionSolvers.so");
-
-    pointMeshMover  displacementLaplacian;
 
     // diffusivity  uniform;
     // diffusivity  directional (1 200 0);

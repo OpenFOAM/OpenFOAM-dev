@@ -58,9 +58,6 @@ class pointMeshMover
 {
     // Private Data
 
-        //- Name of coordinate system
-        word name_;
-
         //- Reference to mesh
         const polyMesh& mesh_;
 
@@ -79,11 +76,10 @@ public:
             pointMeshMover,
             dictionary,
             (
-                const word& name,
                 const polyMesh& mesh,
                 const dictionary& dict
             ),
-            (name, mesh, dict)
+            (mesh, dict)
         );
 
 
@@ -92,7 +88,6 @@ public:
         //- Select constructed from polyMesh and dictionary
         static autoPtr<pointMeshMover> New
         (
-            const word& name,
             const polyMesh&,
             const dictionary&
         );
@@ -101,12 +96,7 @@ public:
     // Constructors
 
         //- Construct from polyMesh and dictionary and type.
-        pointMeshMover
-        (
-            const word& name,
-            const polyMesh& mesh,
-            const word& type
-        );
+        pointMeshMover(const polyMesh& mesh, const word& type);
 
         //- Clone function
         virtual autoPtr<pointMeshMover> clone() const;
@@ -118,20 +108,8 @@ public:
 
     // Member Functions
 
-        //- Return name
-        const word& name() const
-        {
-            return name_;
-        }
-
-        //- Return keyword
-        const word& keyword() const
-        {
-            return name();
-        }
-
         //- Return reference to mesh
-        const polyMesh& mesh() const
+        const polyMesh& poly() const
         {
             return mesh_;
         }

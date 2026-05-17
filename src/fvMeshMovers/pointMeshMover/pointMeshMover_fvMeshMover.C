@@ -64,7 +64,6 @@ Foam::fvMeshMovers::pointMeshMover::pointMeshMover
     (
         Foam::pointMeshMover::New
         (
-            pointMeshMoverName_,
             mesh,
             dict.optionalTypeDict(pointMeshMoverName_)
         )

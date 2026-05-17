@@ -22,21 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::displacementComponentLaplacianFvMotionSolver
+    Foam::fvMotionSolvers::displacementLaplacian
 
 Description
     Mesh motion solver for an fvMesh.  Based on solving the cell-centre
-    Laplacian for the given component of the motion displacement.
+    Laplacian for the motion displacement.
 
 SourceFiles
-    displacementComponentLaplacianFvMotionSolver.C
+    displacementLaplacianFvMotionSolver.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef displacementComponentLaplacianFvMotionSolver_H
-#define displacementComponentLaplacianFvMotionSolver_H
+#ifndef displacementLaplacian_fvMotionSolver_H
+#define displacementLaplacian_fvMotionSolver_H
 
-#include "componentDisplacement_pointMeshMover.H"
+#include "displacement_pointMeshMover.H"
 #include "fvMotionSolver.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -47,19 +47,22 @@ namespace Foam
 // Forward class declarations
 class motionDiffusivity;
 
+namespace fvMotionSolvers
+{
+
 /*---------------------------------------------------------------------------*\
-        Class displacementComponentLaplacianFvMotionSolver Declaration
+             Class displacementLaplacian Declaration
 \*---------------------------------------------------------------------------*/
 
-class displacementComponentLaplacianFvMotionSolver
+class displacementLaplacian
 :
-    public pointMeshMovers::componentDisplacement,
-    public fvMotionSolver
+    public fvMotionSolver,
+    public pointMeshMovers::displacement
 {
     // Private Data
 
         //- Cell-centre motion field
-        mutable volScalarField cellDisplacement_;
+        mutable volVectorField cellDisplacement_;
 
         //- Optionally read point-position field. Used only for position
         //  boundary conditions.
@@ -76,47 +79,44 @@ class displacementComponentLaplacianFvMotionSolver
         label frozenPointsZone_;
 
 
-    // Private Member Functions
-
-        //- Return the component corresponding to the given component name
-        direction cmpt(const word& cmptName) const;
-
-
 public:
 
     //- Runtime type information
-    TypeName("displacementComponentLaplacian");
+    TypeName("displacementLaplacian");
 
 
     // Constructors
 
+        //- Construct from fvMesh and dictionary
+        displacementLaplacian(fvMesh&, const dictionary&);
+
         //- Construct from polyMesh and dictionary
-        displacementComponentLaplacianFvMotionSolver
-        (
-            const word& name,
-            const polyMesh&,
-            const dictionary&
-        );
+        displacementLaplacian(const polyMesh&, const dictionary&);
 
         //- Disallow default bitwise copy construction
-        displacementComponentLaplacianFvMotionSolver
-        (
-            const displacementComponentLaplacianFvMotionSolver&
-        ) = delete;
+        displacementLaplacian(const displacementLaplacian&) = delete;
 
 
     //- Destructor
-    ~displacementComponentLaplacianFvMotionSolver();
+    ~displacementLaplacian();
 
 
     // Member Functions
 
-        //- Non-const access to the cellDisplacement in order to allow
-        //  changes to the boundary motion
-        volScalarField& cellDisplacement()
+        //- Return reference to the cell motion displacement field
+        volVectorField& cellDisplacement()
         {
             return cellDisplacement_;
         }
+
+        //- Return const reference to the cell motion displacement field
+        const volVectorField& cellDisplacement() const
+        {
+            return cellDisplacement_;
+        }
+
+        //- Return reference to the diffusivity field
+        motionDiffusivity& diffusivity();
 
         //- Return point location obtained from the current motion field
         virtual tmp<pointField> newPoints();
@@ -131,15 +131,13 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=
-        (
-            const displacementComponentLaplacianFvMotionSolver&
-        ) = delete;
+        void operator=(const displacementLaplacian&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace pointMeshMovers
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

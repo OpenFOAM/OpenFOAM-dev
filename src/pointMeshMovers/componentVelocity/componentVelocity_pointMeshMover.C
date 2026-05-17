@@ -71,13 +71,12 @@ Foam::direction Foam::pointMeshMovers::componentVelocity::cmpt
 
 Foam::pointMeshMovers::componentVelocity::componentVelocity
 (
-    const word& name,
     const polyMesh& mesh,
     const dictionary& dict,
     const word& type
 )
 :
-    pointMeshMover(name, mesh, type),
+    pointMeshMover(mesh, type),
     cmptName_(dict.lookup("component")),
     cmpt_(cmpt(cmptName_)),
     pointMotionU_

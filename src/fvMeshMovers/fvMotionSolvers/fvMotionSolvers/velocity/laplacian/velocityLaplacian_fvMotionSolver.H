@@ -22,21 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::displacementSBRStressFvMotionSolver
+    Foam::fvMotionSolvers::velocityLaplacian
 
 Description
     Mesh motion solver for an fvMesh.  Based on solving the cell-centre
-    solid-body rotation stress equations for the motion displacement.
+    Laplacian for the motion velocity.
 
 SourceFiles
-    displacementSBRStressFvMotionSolver.C
+    velocityLaplacian_fvMotionSolver.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef displacementSBRStressFvMotionSolver_H
-#define displacementSBRStressFvMotionSolver_H
+#ifndef velocityLaplacian_fvMotionSolver_H
+#define velocityLaplacian_fvMotionSolver_H
 
-#include "displacement_pointMeshMover.H"
+#include "velocity_pointMeshMover.H"
 #include "fvMotionSolver.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -47,19 +47,22 @@ namespace Foam
 // Forward class declarations
 class motionDiffusivity;
 
+namespace fvMotionSolvers
+{
+
 /*---------------------------------------------------------------------------*\
-             Class displacementSBRStressFvMotionSolver Declaration
+               Class velocityLaplacian Declaration
 \*---------------------------------------------------------------------------*/
 
-class displacementSBRStressFvMotionSolver
+class velocityLaplacian
 :
-    public pointMeshMovers::displacement,
-    public fvMotionSolver
+    public fvMotionSolver,
+    public pointMeshMovers::velocity
 {
     // Private Data
 
         //- Cell-centre motion field
-        mutable volVectorField cellDisplacement_;
+        mutable volVectorField cellMotionU_;
 
         //- Diffusivity type and data stream
         ITstream diffusivityType_;
@@ -71,48 +74,40 @@ class displacementSBRStressFvMotionSolver
 public:
 
     //- Runtime type information
-    TypeName("displacementSBRStress");
+    TypeName("velocityLaplacian");
 
 
     // Constructors
 
+        //- Construct from fvMesh and dictionary
+        velocityLaplacian(fvMesh&, const dictionary&);
+
         //- Construct from polyMesh and dictionary
-        displacementSBRStressFvMotionSolver
-        (
-            const word& name,
-            const polyMesh&,
-            const dictionary&
-        );
+        velocityLaplacian(const polyMesh&, const dictionary&);
 
         //- Disallow default bitwise copy construction
-        displacementSBRStressFvMotionSolver
+        velocityLaplacian
         (
-            const displacementSBRStressFvMotionSolver&
+            const velocityLaplacian&
         ) = delete;
 
 
     //- Destructor
-    ~displacementSBRStressFvMotionSolver();
+    ~velocityLaplacian();
 
 
     // Member Functions
 
-        //- Return reference to the cell motion displacement field
-        volVectorField& cellDisplacement()
+        //- Return reference to the cell motion velocity field
+        volVectorField& cellMotionU()
         {
-            return cellDisplacement_;
+            return cellMotionU_;
         }
 
-        //- Return const reference to the cell motion displacement field
-        const volVectorField& cellDisplacement() const
+        //- Return const reference to the cell motion velocity field
+        const volVectorField& cellMotionU() const
         {
-            return cellDisplacement_;
-        }
-
-        //- Return diffusivity
-        motionDiffusivity& diffusivity()
-        {
-            return diffusivityPtr_();
+            return cellMotionU_;
         }
 
         //- Return point location obtained from the current motion field
@@ -128,12 +123,13 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const displacementSBRStressFvMotionSolver&) = delete;
+        void operator=(const velocityLaplacian&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace fvMotionSolvers
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

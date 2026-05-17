@@ -83,7 +83,7 @@ void Foam::RBD::restraints::propellerDiskForce::restrain
     const pointMeshMovers::rigidBodyMotion& mover =
         refCast<const pointMeshMovers::rigidBodyMotion>(model_);
 
-    const fvMesh& mesh = refCast<const fvMesh>(mover.mesh());
+    const fvMesh& mesh = refCast<const fvMesh>(mover.poly());
 
     // Lookup the fvModels for this mesh
     const fvModels& fvModels(fvModels::New(mesh));

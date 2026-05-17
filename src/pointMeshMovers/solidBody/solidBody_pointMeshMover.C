@@ -55,14 +55,14 @@ void Foam::pointMeshMovers::solidBody::updateZonePointIndices()
         return;
     }
 
-    boolList pointInZone(mesh().nPoints(), false);
+    boolList pointInZone(poly().nPoints(), false);
 
     forAll(zone_.zone(), zoneCelli)
     {
-        const cell& c = mesh().cells()[zone_.zone()[zoneCelli]];
+        const cell& c = poly().cells()[zone_.zone()[zoneCelli]];
         forAll(c, cfi)
         {
-            const face& f = mesh().faces()[c[cfi]];
+            const face& f = poly().faces()[c[cfi]];
             forAll(f, fpi)
             {
                 pointInZone[f[fpi]] = true;
@@ -70,7 +70,7 @@ void Foam::pointMeshMovers::solidBody::updateZonePointIndices()
         }
     }
 
-    syncTools::syncPointList(mesh(), pointInZone, orEqOp<bool>(), false);
+    syncTools::syncPointList(poly(), pointInZone, orEqOp<bool>(), false);
 
     zonePoints_.resize(count(pointInZone, true));
 
@@ -89,12 +89,11 @@ void Foam::pointMeshMovers::solidBody::updateZonePointIndices()
 
 Foam::pointMeshMovers::solidBody::solidBody
 (
-    const word& name,
     const polyMesh& mesh,
     const dictionary& dict
 )
 :
-    displacementPoints0(name, mesh, dict, typeName),
+    displacementPoints0(mesh, dict, typeName),
     SBMFPtr_(solidBodyMotionFunction::New(dict, mesh.time())),
     zone_(mesh, dict),
     zonePoints_(),
@@ -127,7 +126,7 @@ Foam::tmp<Foam::pointField> Foam::pointMeshMovers::solidBody::newPoints()
     }
     else
     {
-        tmp<pointField> ttransformedPts(new pointField(mesh().points()));
+        tmp<pointField> ttransformedPts(new pointField(poly().points()));
         pointField& transformedPts = ttransformedPts.ref();
 
         UIndirectList<point>(transformedPts, zonePoints_) = transformPoints
@@ -148,12 +147,12 @@ void Foam::pointMeshMovers::solidBody::topoChange(const polyTopoChangeMap& map)
 
     // pointMesh already updates pointFields
 
-    const pointField& points = mesh().points();
+    const pointField& points = poly().points();
 
     pointField newPoints0(points);
 
     const label nZonePoints =
-        zone_.all() ? mesh().nPoints() : zonePoints_.size();
+        zone_.all() ? poly().nPoints() : zonePoints_.size();
 
     for (label zonePointi = 0; zonePointi < nZonePoints; ++ zonePointi)
     {
@@ -186,7 +185,7 @@ void Foam::pointMeshMovers::solidBody::topoChange(const polyTopoChangeMap& map)
     // Move into base class storage and mark as to-be-written
     points0_.transfer(newPoints0);
     points0_.writeOpt() = IOobject::AUTO_WRITE;
-    points0_.instance() = mesh().time().name();
+    points0_.instance() = poly().time().name();
 }
 
 
@@ -212,7 +211,7 @@ void Foam::pointMeshMovers::solidBody::mapMesh(const polyMeshMap& map)
     pointField& points0 = this->points0();
 
     const label nZonePoints =
-        zone_.all() ? mesh().nPoints() : zonePoints_.size();
+        zone_.all() ? poly().nPoints() : zonePoints_.size();
 
     for (label zonePointi = 0; zonePointi < nZonePoints; ++ zonePointi)
     {
@@ -225,7 +224,7 @@ void Foam::pointMeshMovers::solidBody::mapMesh(const polyMeshMap& map)
     twoDCorrectPoints(points0);
 
     points0_.writeOpt() = IOobject::AUTO_WRITE;
-    points0_.instance() = mesh().time().name();
+    points0_.instance() = poly().time().name();
 }
 
 

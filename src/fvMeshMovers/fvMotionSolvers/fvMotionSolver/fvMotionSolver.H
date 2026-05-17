@@ -35,7 +35,7 @@ SourceFiles
 #ifndef fvMotionSolver_H
 #define fvMotionSolver_H
 
-#include "fvMesh.H"
+#include "fvMeshMover.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -47,14 +47,10 @@ namespace Foam
 \*---------------------------------------------------------------------------*/
 
 class fvMotionSolver
+:
+    public fvMeshMover
 {
 protected:
-
-    // Protected data
-
-        //- The fvMesh to be moved
-        const fvMesh& fvMesh_;
-
 
     // Protected Member Functions
 
@@ -76,17 +72,36 @@ public:
 
     // Constructors
 
+        //- Construct from fvMesh
+        fvMotionSolver(fvMesh&);
+
         //- Construct from polyMesh
         fvMotionSolver(const polyMesh&);
 
 
     // Member Functions
 
-        //- Return reference to the fvMesh to be moved
-        const fvMesh& mesh() const
+        //- Is this motion solid body? Delegate to the motion solver.
+        virtual bool solidBodyMotion() const
         {
-            return fvMesh_;
+            return false;
         }
+
+        //- Return point location obtained from the current motion field
+        virtual tmp<pointField> newPoints() = 0;
+
+        //- Update the mesh for both mesh motion and topology change
+        virtual bool update();
+
+        // //- Update corresponding to the given map
+        // virtual void topoChange(const polyTopoChangeMap&);
+
+        // //- Update from another mesh using the given map
+        // virtual void mapMesh(const polyMeshMap&);
+
+        // //- Update corresponding to the given distribution map
+        virtual void distribute(const polyDistributionMap&)
+        {}
 };
 
 

@@ -188,18 +188,10 @@ public:
     // Constructors
 
         //- Construct from polyMesh and dictionary
-        functionalRigidBody
-        (
-            const word& name,
-            const polyMesh&,
-            const dictionary& dict
-        );
+        functionalRigidBody(const polyMesh&, const dictionary& dict);
 
         //- Disallow default bitwise copy construction
-        functionalRigidBody
-        (
-            const functionalRigidBody&
-        ) = delete;
+        functionalRigidBody(const functionalRigidBody&) = delete;
 
 
     //- Destructor

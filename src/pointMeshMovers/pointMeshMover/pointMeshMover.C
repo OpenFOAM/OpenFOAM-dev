@@ -39,14 +39,8 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::pointMeshMover::pointMeshMover
-(
-    const word& name,
-    const polyMesh& mesh,
-    const word& type
-)
+Foam::pointMeshMover::pointMeshMover(const polyMesh& mesh, const word& type)
 :
-    name_(name),
     mesh_(mesh)
 {}
 
@@ -62,12 +56,14 @@ Foam::autoPtr<Foam::pointMeshMover> Foam::pointMeshMover::clone() const
 
 Foam::autoPtr<Foam::pointMeshMover> Foam::pointMeshMover::New
 (
-    const word& name,
     const polyMesh& mesh,
     const dictionary& dict
 )
 {
-    const word type = dict.lookupBackwardsCompatible<word>({name, "type"});
+    const word type = dict.lookupBackwardsCompatible<word>
+    (
+        {"motionSolver", pointMeshMover::typeName, "type"}
+    );
 
     Info<< indentOrNl << "Selecting pointMeshMover: " << type << endl;
 
@@ -100,12 +96,7 @@ Foam::autoPtr<Foam::pointMeshMover> Foam::pointMeshMover::New
 
     return autoPtr<pointMeshMover>
     (
-        cstrIter()
-        (
-            name,
-            mesh,
-            dict.optionalTypeDict(type)
-        )
+        cstrIter()(mesh, dict.optionalTypeDict(type))
     );
 }
 

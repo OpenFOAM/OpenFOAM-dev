@@ -62,14 +62,14 @@ Foam::pointMeshMovers::sixDoFRigidBodyMotion::transforms0() const
 
 void Foam::pointMeshMovers::sixDoFRigidBodyMotion::moveBodies()
 {
-    const Time& t = mesh().time();
+    const Time& t = poly().time();
 
-    if (mesh().nPoints() != points0().size())
+    if (poly().nPoints() != points0().size())
     {
         FatalErrorInFunction
             << "The number of points in the mesh seems to have changed." << endl
             << "In constant/polyMesh there are " << points0().size()
-            << " points; in the current mesh there are " << mesh().nPoints()
+            << " points; in the current mesh there are " << poly().nPoints()
             << " points." << exit(FatalError);
     }
 
@@ -84,9 +84,9 @@ void Foam::pointMeshMovers::sixDoFRigidBodyMotion::moveBodies()
 
     dimensionedVector g(g_);
 
-    if (mesh().foundObject<uniformDimensionedVectorField>("g"))
+    if (poly().foundObject<uniformDimensionedVectorField>("g"))
     {
-        g = mesh().lookupObject<uniformDimensionedVectorField>("g");
+        g = poly().lookupObject<uniformDimensionedVectorField>("g");
     }
 
     // scalar ramp = min(max((t.value() - 5)/10, 0), 1);
@@ -141,12 +141,11 @@ void Foam::pointMeshMovers::sixDoFRigidBodyMotion::moveBodies()
 
 Foam::pointMeshMovers::sixDoFRigidBodyMotion::sixDoFRigidBodyMotion
 (
-    const word& name,
     const polyMesh& mesh,
     const dictionary& dict
 )
 :
-    pointMeshMovers::multiRigidBody(name, mesh, dict),
+    pointMeshMovers::multiRigidBody(mesh, dict),
     Foam::sixDoFRigidBodyMotion
     (
         dict,
@@ -200,9 +199,9 @@ bool Foam::pointMeshMovers::sixDoFRigidBodyMotion::write() const
         IOobject
         (
             "sixDoFRigidBodyMotionState",
-            mesh().time().name(),
+            poly().time().name(),
             "uniform",
-            mesh(),
+            poly(),
             IOobject::NO_READ,
             IOobject::NO_WRITE,
             false
@@ -217,7 +216,7 @@ bool Foam::pointMeshMovers::sixDoFRigidBodyMotion::write() const
         (
             IOstream::ASCII,
             IOstream::currentVersion,
-            mesh().time().writeCompression(),
+            poly().time().writeCompression(),
             true
         );
 }

@@ -23,43 +23,52 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "displacementSBRStressFvMotionSolver.H"
+#include "displacementSBRStress_fvMotionSolver.H"
 #include "motionDiffusivity.H"
 #include "fvmLaplacian.H"
-#include "addToRunTimeSelectionTable.H"
 #include "fvcDiv.H"
 #include "fvcGrad.H"
 #include "surfaceInterpolate.H"
 #include "fvcLaplacian.H"
 #include "polyTopoChangeMap.H"
 #include "volPointInterpolation.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(displacementSBRStressFvMotionSolver, 0);
+namespace fvMotionSolvers
+{
+    defineTypeNameAndDebug(displacementSBRStress, 0);
+
+    addToRunTimeSelectionTable
+    (
+        fvMeshMover,
+        displacementSBRStress,
+        fvMesh
+    );
 
     addToRunTimeSelectionTable
     (
         pointMeshMover,
-        displacementSBRStressFvMotionSolver,
+        displacementSBRStress,
         dictionary
     );
+}
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::displacementSBRStressFvMotionSolver::displacementSBRStressFvMotionSolver
+Foam::fvMotionSolvers::displacementSBRStress::displacementSBRStress
 (
-    const word& name,
     const polyMesh& mesh,
     const dictionary& dict
 )
 :
-    pointMeshMovers::displacement(name, mesh, dict, typeName),
     fvMotionSolver(mesh),
+    pointMeshMovers::displacement(mesh, dict, typeName),
     cellDisplacement_
     (
         IOobject
@@ -70,7 +79,7 @@ Foam::displacementSBRStressFvMotionSolver::displacementSBRStressFvMotionSolver
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
         ),
-        fvMesh_,
+        fvMotionSolver::mesh(),
         dimensionedVector
         (
             "cellDisplacement",
@@ -82,26 +91,35 @@ Foam::displacementSBRStressFvMotionSolver::displacementSBRStressFvMotionSolver
     diffusivityType_(dict.lookup("diffusivity")),
     diffusivityPtr_
     (
-        motionDiffusivity::New(fvMesh_, diffusivityType_)
+        motionDiffusivity::New(fvMotionSolver::mesh(), diffusivityType_)
     )
+{}
+
+
+Foam::fvMotionSolvers::displacementSBRStress::displacementSBRStress
+(
+    fvMesh& mesh,
+    const dictionary& dict
+)
+:
+    displacementSBRStress(mesh.poly(), dict)
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::displacementSBRStressFvMotionSolver::
-~displacementSBRStressFvMotionSolver()
+Foam::fvMotionSolvers::displacementSBRStress::~displacementSBRStress()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::pointField>
-Foam::displacementSBRStressFvMotionSolver::newPoints()
+Foam::fvMotionSolvers::displacementSBRStress::newPoints()
 {
     // The points have moved so before interpolation update
     // the mtionSolver accordingly
-    movePoints(fvMesh_.points());
+    movePoints(mesh().points());
 
     diffusivityPtr_->correct();
     pointDisplacement_.boundaryFieldRef().updateCoeffs();
@@ -159,7 +177,7 @@ Foam::displacementSBRStressFvMotionSolver::newPoints()
         */
     );
 
-    volPointInterpolation::New(fvMesh_).interpolate
+    volPointInterpolation::New(mesh()).interpolate
     (
         cellDisplacement_,
         pointDisplacement_
@@ -176,7 +194,7 @@ Foam::displacementSBRStressFvMotionSolver::newPoints()
 }
 
 
-void Foam::displacementSBRStressFvMotionSolver::topoChange
+void Foam::fvMotionSolvers::displacementSBRStress::topoChange
 (
     const polyTopoChangeMap& map
 )
@@ -189,13 +207,13 @@ void Foam::displacementSBRStressFvMotionSolver::topoChange
     diffusivityType_.rewind();
     diffusivityPtr_ = motionDiffusivity::New
     (
-        fvMesh_,
+        mesh(),
         diffusivityType_
     );
 }
 
 
-void Foam::displacementSBRStressFvMotionSolver::mapMesh
+void Foam::fvMotionSolvers::displacementSBRStress::mapMesh
 (
     const polyMeshMap& map
 )
@@ -208,7 +226,7 @@ void Foam::displacementSBRStressFvMotionSolver::mapMesh
     diffusivityType_.rewind();
     diffusivityPtr_ = motionDiffusivity::New
     (
-        fvMesh_,
+        mesh(),
         diffusivityType_
     );
 }

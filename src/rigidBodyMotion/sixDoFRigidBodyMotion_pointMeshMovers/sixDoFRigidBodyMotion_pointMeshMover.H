@@ -109,18 +109,10 @@ public:
     // Constructors
 
         //- Construct from polyMesh and dictionary
-        sixDoFRigidBodyMotion
-        (
-            const word& name,
-            const polyMesh&,
-            const dictionary& dict
-        );
+        sixDoFRigidBodyMotion(const polyMesh&, const dictionary& dict);
 
         //- Disallow default bitwise copy construction
-        sixDoFRigidBodyMotion
-        (
-            const sixDoFRigidBodyMotion&
-        ) = delete;
+        sixDoFRigidBodyMotion(const sixDoFRigidBodyMotion&) = delete;
 
 
     //- Destructor

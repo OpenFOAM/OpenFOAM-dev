@@ -105,18 +105,10 @@ public:
     // Constructors
 
         //- Construct from polyMesh and dictionary
-        layeredDisplacement
-        (
-            const word& name,
-            const polyMesh&,
-            const dictionary&
-        );
+        layeredDisplacement(const polyMesh&, const dictionary&);
 
         //- Disallow default bitwise copy construction
-        layeredDisplacement
-        (
-            const layeredDisplacement&
-        ) = delete;
+        layeredDisplacement(const layeredDisplacement&) = delete;
 
 
     //- Destructor

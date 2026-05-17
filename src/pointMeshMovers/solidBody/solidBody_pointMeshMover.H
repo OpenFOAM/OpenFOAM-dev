@@ -85,12 +85,7 @@ public:
     // Constructors
 
         //- Construct from mesh and dictionary
-        solidBody
-        (
-            const word& name,
-            const polyMesh&,
-            const dictionary&
-        );
+        solidBody(const polyMesh&, const dictionary&);
 
         //- Disallow default bitwise copy construction
         solidBody(const solidBody&) = delete;

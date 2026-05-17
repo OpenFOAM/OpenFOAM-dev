@@ -84,12 +84,7 @@ public:
     // Constructors
 
         //- Construct from mesh and dictionary
-        multiSolidBody
-        (
-            const word& name,
-            const polyMesh&,
-            const dictionary&
-        );
+        multiSolidBody(const polyMesh&, const dictionary&);
 
         //- Disallow default bitwise copy construction
         multiSolidBody(const multiSolidBody&) = delete;

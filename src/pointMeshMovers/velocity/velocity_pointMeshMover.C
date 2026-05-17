@@ -41,13 +41,12 @@ namespace pointMeshMovers
 
 Foam::pointMeshMovers::velocity::velocity
 (
-    const word& name,
     const polyMesh& mesh,
     const dictionary& dict,
     const word& type
 )
 :
-    pointMeshMover(name, mesh, type),
+    pointMeshMover(mesh, type),
     pointMotionU_
     (
         IOobject

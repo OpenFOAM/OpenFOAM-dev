@@ -71,12 +71,11 @@ Foam::pointMeshMovers::rigidBodyDisplacement::bodyMesh::bodyMesh
 
 Foam::pointMeshMovers::rigidBodyDisplacement::rigidBodyDisplacement
 (
-    const word& name,
     const polyMesh& mesh,
     const dictionary& dict
 )
 :
-    pointMeshMover(name, mesh, typeName),
+    pointMeshMover(mesh, typeName),
     RBD::rigidBodyMotion
     (
         dict,
@@ -112,7 +111,6 @@ Foam::pointMeshMovers::rigidBodyDisplacement::rigidBodyDisplacement
     (
         pointMeshMover::New
         (
-            name,
             mesh,
             IOdictionary
             (
@@ -187,14 +185,14 @@ Foam::pointMeshMovers::rigidBodyDisplacement::~rigidBodyDisplacement()
 Foam::tmp<Foam::pointField>
 Foam::pointMeshMovers::rigidBodyDisplacement::newPoints()
 {
-    const Time& t = mesh().time();
+    const Time& t = poly().time();
 
-    if (mesh().nPoints() != meshSolver_.points0().size())
+    if (poly().nPoints() != meshSolver_.points0().size())
     {
         FatalErrorInFunction
             << "The number of points in the mesh seems to have changed." << endl
             << "In constant/polyMesh there are " << meshSolver_.points0().size()
-            << " points; in the current mesh there are " << mesh().nPoints()
+            << " points; in the current mesh there are " << poly().nPoints()
             << " points." << exit(FatalError);
     }
 
@@ -207,11 +205,11 @@ Foam::pointMeshMovers::rigidBodyDisplacement::newPoints()
 
     const scalar ramp = ramp_->value(t.value());
 
-    if (mesh().foundObject<uniformDimensionedVectorField>("g"))
+    if (poly().foundObject<uniformDimensionedVectorField>("g"))
     {
         g() =
             ramp
-           *mesh().lookupObject<uniformDimensionedVectorField>("g").value();
+           *poly().lookupObject<uniformDimensionedVectorField>("g").value();
     }
 
     if (test_)
@@ -342,9 +340,9 @@ bool Foam::pointMeshMovers::rigidBodyDisplacement::write() const
         IOobject
         (
             "rigidBodyMotionState",
-            mesh().time().name(),
+            poly().time().name(),
             "uniform",
-            mesh(),
+            poly(),
             IOobject::NO_READ,
             IOobject::NO_WRITE,
             false
@@ -359,7 +357,7 @@ bool Foam::pointMeshMovers::rigidBodyDisplacement::write() const
         (
             IOstream::ASCII,
             IOstream::currentVersion,
-            mesh().time().writeCompression(),
+            poly().time().writeCompression(),
             true
         );
 }

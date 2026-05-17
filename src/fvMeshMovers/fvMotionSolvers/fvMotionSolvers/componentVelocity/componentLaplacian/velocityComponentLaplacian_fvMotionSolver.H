@@ -22,19 +22,19 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::velocityComponentLaplacianFvMotionSolver
+    Foam::fvMotionSolvers::velocityComponentLaplacian
 
 Description
     Mesh motion solver for an fvMesh.  Based on solving the cell-centre
     Laplacian for the given component of the motion velocity.
 
 SourceFiles
-    velocityComponentLaplacianFvMotionSolver.C
+    velocityComponentLaplacian_fvMotionSolver.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef velocityComponentLaplacianFvMotionSolver_H
-#define velocityComponentLaplacianFvMotionSolver_H
+#ifndef velocityComponentLaplacian_fvMotionSolver_H
+#define velocityComponentLaplacian_fvMotionSolver_H
 
 #include "componentVelocity_pointMeshMover.H"
 #include "fvMotionSolver.H"
@@ -47,14 +47,17 @@ namespace Foam
 // Forward class declarations
 class motionDiffusivity;
 
+namespace fvMotionSolvers
+{
+
 /*---------------------------------------------------------------------------*\
-          Class velocityComponentLaplacianFvMotionSolver Declaration
+          Class velocityComponentLaplacian Declaration
 \*---------------------------------------------------------------------------*/
 
-class velocityComponentLaplacianFvMotionSolver
+class velocityComponentLaplacian
 :
-    public pointMeshMovers::componentVelocity,
-    public fvMotionSolver
+    public fvMotionSolver,
+    public pointMeshMovers::componentVelocity
 {
     // Private Data
 
@@ -76,23 +79,21 @@ public:
 
     // Constructors
 
+        //- Construct from fvMesh and dictionary
+        velocityComponentLaplacian(fvMesh&, const dictionary&);
+
         //- Construct from polyMesh and dictionary
-        velocityComponentLaplacianFvMotionSolver
-        (
-            const word& name,
-            const polyMesh&,
-            const dictionary&
-        );
+        velocityComponentLaplacian(const polyMesh&, const dictionary&);
 
         //- Disallow default bitwise copy construction
-        velocityComponentLaplacianFvMotionSolver
+        velocityComponentLaplacian
         (
-            const velocityComponentLaplacianFvMotionSolver&
+            const velocityComponentLaplacian&
         ) = delete;
 
 
     //- Destructor
-    ~velocityComponentLaplacianFvMotionSolver();
+    ~velocityComponentLaplacian();
 
 
     // Member Functions
@@ -119,13 +120,14 @@ public:
         //- Disallow default bitwise assignment
         void operator=
         (
-            const velocityComponentLaplacianFvMotionSolver&
+            const velocityComponentLaplacian&
         ) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace fvMotionSolvers
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

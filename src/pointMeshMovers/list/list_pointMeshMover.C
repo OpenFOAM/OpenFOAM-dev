@@ -48,12 +48,11 @@ namespace pointMeshMovers
 
 Foam::pointMeshMovers::list::list
 (
-    const word& name,
     const polyMesh& mesh,
     const dictionary& dict
 )
 :
-    pointMeshMover(name, mesh, typeName),
+    pointMeshMover(mesh, typeName),
     movers_(0)
 {
     const dictionary& solversDict = dict.optionalSubDict("list");
@@ -68,7 +67,7 @@ Foam::pointMeshMovers::list::list
             movers_.append
             (
                 name,
-                pointMeshMover::New(name, mesh, dict).ptr()
+                pointMeshMover::New(mesh, dict).ptr()
             );
         }
     }
@@ -88,18 +87,18 @@ Foam::tmp<Foam::pointField> Foam::pointMeshMovers::list::newPoints()
     if (movers_.size())
     {
         // Accumulated displacement
-        pointField disp(mesh().nPoints(), Zero);
+        pointField disp(poly().nPoints(), Zero);
 
         forAllIter(PtrListDictionary<pointMeshMover>, movers_, iter)
         {
-            disp += iter().newPoints() - mesh().points();
+            disp += iter().newPoints() - poly().points();
         }
 
-        return mesh().points() + disp;
+        return poly().points() + disp;
     }
     else
     {
-        return mesh().points();
+        return poly().points();
     }
 }
 

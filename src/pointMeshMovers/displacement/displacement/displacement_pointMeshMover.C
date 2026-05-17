@@ -49,13 +49,12 @@ Foam::pointMeshMovers::displacement::points() const
 
 Foam::pointMeshMovers::displacement::displacement
 (
-    const word& name,
     const polyMesh& mesh,
     const dictionary& dict,
     const word& type
 )
 :
-    displacementPoints0(name, mesh, dict, type),
+    displacementPoints0(mesh, dict, type),
     pointDisplacement_
     (
         IOobject

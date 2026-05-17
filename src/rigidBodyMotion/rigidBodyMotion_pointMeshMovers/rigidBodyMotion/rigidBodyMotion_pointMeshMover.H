@@ -191,18 +191,10 @@ public:
     // Constructors
 
         //- Construct from polyMesh and dictionary
-        rigidBodyMotion
-        (
-            const word& name,
-            const polyMesh&,
-            const dictionary& dict
-        );
+        rigidBodyMotion(const polyMesh&, const dictionary& dict);
 
         //- Disallow default bitwise copy construction
-        rigidBodyMotion
-        (
-            const rigidBodyMotion&
-        ) = delete;
+        rigidBodyMotion(const rigidBodyMotion&) = delete;
 
 
     //- Destructor

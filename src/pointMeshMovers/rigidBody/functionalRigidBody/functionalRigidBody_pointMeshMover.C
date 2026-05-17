@@ -69,12 +69,11 @@ void Foam::pointMeshMovers::functionalRigidBody::moveBodies()
 
 Foam::pointMeshMovers::functionalRigidBody::functionalRigidBody
 (
-    const word& name,
     const polyMesh& mesh,
     const dictionary& dict
 )
 :
-    multiRigidBody(name, mesh, dict)
+    multiRigidBody(mesh, dict)
 {
     SBMFs_.setSize(bodyMeshes_.size());
 

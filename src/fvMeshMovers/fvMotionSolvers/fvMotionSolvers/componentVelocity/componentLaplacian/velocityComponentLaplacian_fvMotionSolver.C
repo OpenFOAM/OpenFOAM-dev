@@ -23,79 +23,93 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "velocityLaplacianFvMotionSolver.H"
+#include "velocityComponentLaplacian_fvMotionSolver.H"
 #include "motionDiffusivity.H"
 #include "fvmLaplacian.H"
-#include "addToRunTimeSelectionTable.H"
 #include "volPointInterpolation.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(velocityLaplacianFvMotionSolver, 0);
+namespace fvMotionSolvers
+{
+    defineTypeNameAndDebug(velocityComponentLaplacian, 0);
+
+    addToRunTimeSelectionTable
+    (
+        fvMeshMover,
+        velocityComponentLaplacian,
+        fvMesh
+    );
 
     addToRunTimeSelectionTable
     (
         pointMeshMover,
-        velocityLaplacianFvMotionSolver,
+        velocityComponentLaplacian,
         dictionary
     );
+}
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::velocityLaplacianFvMotionSolver::velocityLaplacianFvMotionSolver
+Foam::fvMotionSolvers::velocityComponentLaplacian::velocityComponentLaplacian
 (
-    const word& name,
     const polyMesh& mesh,
     const dictionary& dict
 )
 :
-    pointMeshMovers::velocity(name, mesh, dict, typeName),
+    pointMeshMovers::componentVelocity(mesh, dict, typeName),
     fvMotionSolver(mesh),
     cellMotionU_
     (
         IOobject
         (
-            "cellMotionU",
+            "cellMotionU" + cmptName_,
             mesh.time().name(),
             mesh,
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
         ),
-        fvMesh_,
-        dimensionedVector
-        (
-            "cellMotionU",
-            pointMotionU_.dimensions(),
-            Zero
-        ),
-        cellMotionBoundaryTypes<vector>(pointMotionU_.boundaryField())
+        fvMotionSolver::mesh(),
+        dimensionedScalar(pointMotionU_.dimensions(), 0),
+        cellMotionBoundaryTypes<scalar>(pointMotionU_.boundaryField())
     ),
     diffusivityType_(dict.lookup("diffusivity")),
     diffusivityPtr_
     (
-        motionDiffusivity::New(fvMesh_, diffusivityType_)
+        motionDiffusivity::New(fvMotionSolver::mesh(), diffusivityType_)
     )
+{}
+
+
+Foam::fvMotionSolvers::velocityComponentLaplacian::velocityComponentLaplacian
+(
+    fvMesh& mesh,
+    const dictionary& dict
+)
+:
+    velocityComponentLaplacian(mesh.poly(), dict)
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::velocityLaplacianFvMotionSolver::~velocityLaplacianFvMotionSolver()
+Foam::fvMotionSolvers::velocityComponentLaplacian::~velocityComponentLaplacian()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::pointField>
-Foam::velocityLaplacianFvMotionSolver::newPoints()
+Foam::fvMotionSolvers::velocityComponentLaplacian::newPoints()
 {
     // The points have moved so before interpolation update
     // the fvMotionSolver accordingly
-    movePoints(fvMesh_.points());
+    movePoints(mesh().points());
 
     diffusivityPtr_->correct();
     pointMotionU_.boundaryFieldRef().updateCoeffs();
@@ -110,16 +124,20 @@ Foam::velocityLaplacianFvMotionSolver::newPoints()
         )
     );
 
-    volPointInterpolation::New(fvMesh_).interpolate
+    volPointInterpolation::New(mesh()).interpolate
     (
         cellMotionU_,
         pointMotionU_
     );
 
-    tmp<pointField> tcurPoints
+    tmp<pointField> tcurPoints(new pointField(mesh().points()));
+
+    tcurPoints.ref().replace
     (
-        fvMesh_.points()
-      + fvMesh_.time().deltaTValue()*pointMotionU_.primitiveField()
+        cmpt_,
+        tcurPoints().component(cmpt_)
+      + mesh().time().deltaTValue()
+       *pointMotionU_.primitiveField()
     );
 
     twoDCorrectPoints(tcurPoints.ref());
@@ -128,19 +146,12 @@ Foam::velocityLaplacianFvMotionSolver::newPoints()
 }
 
 
-//void Foam::velocityLaplacianFvMotionSolver::movePoints(const pointField& p)
-//{
-//    // Movement of pointMesh and volPointInterpolation already
-//    // done by polyMesh,fvMesh
-//}
-
-
-void Foam::velocityLaplacianFvMotionSolver::topoChange
+void Foam::fvMotionSolvers::velocityComponentLaplacian::topoChange
 (
     const polyTopoChangeMap& map
 )
 {
-    pointMeshMovers::velocity::topoChange(map);
+    pointMeshMovers::componentVelocity::topoChange(map);
 
     // Update diffusivity. Note two stage to make sure old one is de-registered
     // before creating/registering new one.
@@ -148,18 +159,18 @@ void Foam::velocityLaplacianFvMotionSolver::topoChange
     diffusivityType_.rewind();
     diffusivityPtr_ = motionDiffusivity::New
     (
-        fvMesh_,
+        mesh(),
         diffusivityType_
     );
 }
 
 
-void Foam::velocityLaplacianFvMotionSolver::mapMesh
+void Foam::fvMotionSolvers::velocityComponentLaplacian::mapMesh
 (
     const polyMeshMap& map
 )
 {
-    pointMeshMovers::velocity::mapMesh(map);
+    pointMeshMovers::componentVelocity::mapMesh(map);
 
     // Update diffusivity. Note two stage to make sure old one is de-registered
     // before creating/registering new one.
@@ -167,7 +178,7 @@ void Foam::velocityLaplacianFvMotionSolver::mapMesh
     diffusivityType_.rewind();
     diffusivityPtr_ = motionDiffusivity::New
     (
-        fvMesh_,
+        mesh(),
         diffusivityType_
     );
 }

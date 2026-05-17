@@ -35,10 +35,28 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
+Foam::fvMotionSolver::fvMotionSolver(fvMesh& mesh)
+:
+    fvMeshMover(mesh)
+{}
+
+
 Foam::fvMotionSolver::fvMotionSolver(const polyMesh& mesh)
 :
-    fvMesh_(refCast<const fvMesh>(mesh))
+    fvMeshMover(const_cast<fvMesh&>(refCast<const fvMesh>(mesh)))
 {}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+bool Foam::fvMotionSolver::update()
+{
+    mesh().preChange();
+
+    mesh().movePoints(newPoints());
+
+    return true;
+}
 
 
 // ************************************************************************* //

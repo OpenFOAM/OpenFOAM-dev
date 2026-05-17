@@ -92,7 +92,6 @@ public:
         //- Construct from polyMesh and dictionary and type
         componentDisplacement
         (
-            const word& name,
             const polyMesh&,
             const dictionary&,
             const word& type

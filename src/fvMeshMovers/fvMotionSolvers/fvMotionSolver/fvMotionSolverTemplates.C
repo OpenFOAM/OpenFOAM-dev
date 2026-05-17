@@ -39,7 +39,7 @@ Foam::wordList Foam::fvMotionSolver::cellMotionBoundaryTypes
     wordList cmUbf = pmUbf.types();
 
     // Remove global patches from the end of the list
-    cmUbf.setSize(fvMesh_.boundary().size());
+    cmUbf.setSize(mesh().boundary().size());
 
     forAll(cmUbf, patchi)
     {
@@ -50,7 +50,7 @@ Foam::wordList Foam::fvMotionSolver::cellMotionBoundaryTypes
 
         if (debug)
         {
-            Pout<< "Patch:" << fvMesh_.boundary()[patchi].poly().name()
+            Pout<< "Patch:" << mesh().boundary()[patchi].poly().name()
                 << " pointType:" << pmUbf.types()[patchi]
                 << " cellType:" << cmUbf[patchi] << endl;
         }

@@ -49,12 +49,11 @@ namespace pointMeshMovers
 
 Foam::pointMeshMovers::externalDisplacement::externalDisplacement
 (
-    const word& name,
     const polyMesh& mesh,
     const dictionary& dict
 )
 :
-    pointMeshMovers::displacement(name, mesh, dict, typeName),
+    pointMeshMovers::displacement(mesh, dict, typeName),
     dict_(dict)
 {}
 
@@ -78,7 +77,7 @@ Foam::pointMeshMovers::externalDisplacement::meshMover() const
         (
             moverType,
             dict_,
-            localPointRegion::findDuplicateFacePairs(mesh()),
+            localPointRegion::findDuplicateFacePairs(poly()),
             pointDisplacement_
         );
     }
@@ -91,13 +90,13 @@ Foam::pointMeshMovers::externalDisplacement::newPoints()
 {
     // The points have moved so before calculation update
     // the mesh and pointMeshMover accordingly
-    movePoints(mesh().points());
+    movePoints(poly().points());
 
     // Update any point motion bcs (e.g. timevarying)
     pointDisplacement().boundaryFieldRef().updateCoeffs();
 
     label nAllowableErrors = 0;
-    labelList checkFaces(identityMap(mesh().nFaces()));
+    labelList checkFaces(identityMap(poly().nFaces()));
     meshMover().move
     (
         dict_,
