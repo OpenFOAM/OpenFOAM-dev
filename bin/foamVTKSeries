@@ -114,8 +114,8 @@ EOF
 
     unset comma
 
-    (cd "$vtkDir" && find -- * -name "$vtkFile") | xargs -I {} dirname {} | \
-        LC_ALL=C sort -g | while read -r time
+    (cd "$vtkDir" && find -name "$vtkFile") | xargs -I {} dirname {} | \
+        xargs -I {} basename {} | LC_ALL=C sort -g | while read -r time
     do
         [ "$comma" ] && printf ",\n" >> "$seriesFile" || comma=yes
 
