@@ -35,7 +35,7 @@ Description
     patchCutLayerAverage1
     {
         type            patchCutLayerAverage;
-        libs            ("libpatchCutLayerAverageFunctionObject.so");
+        libs            ("libfieldFunctionObjects.so");
 
         writeControl    writeTime;
         writeInterval   1;
