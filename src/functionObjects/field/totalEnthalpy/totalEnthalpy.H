@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,7 @@ SourceFiles
 #ifndef totalEnthalpy_functionObject_H
 #define totalEnthalpy_functionObject_H
 
-#include "fieldExpression.H"
+#include "fvMeshFunctionObject.H"
 #include "writeLocalObjects.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -99,7 +99,7 @@ public:
         //- Calculate the totalEnthalpy field
         virtual bool execute();
 
-        //- Do nothing
+        //- Write Ha
         virtual bool write();
 };
 

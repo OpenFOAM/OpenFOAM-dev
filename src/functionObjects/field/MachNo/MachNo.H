@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,8 +28,8 @@ Description
     Calculates and writes the Mach number as a volScalarField.
 
 See also
-    Foam::functionObjects::fieldExpression
     Foam::functionObjects::fvMeshFunctionObject
+    Foam::functionObjects::writeLocalObjects
 
 SourceFiles
     MachNo.C
@@ -39,7 +39,8 @@ SourceFiles
 #ifndef MachNo_functionObject_H
 #define MachNo_functionObject_H
 
-#include "fieldExpression.H"
+#include "fvMeshFunctionObject.H"
+#include "writeLocalObjects.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -54,12 +55,16 @@ namespace functionObjects
 
 class MachNo
 :
-    public fieldExpression
+    public fvMeshFunctionObject,
+    public writeLocalObjects
 {
-    // Private Member Functions
+    // Private Data
 
-        //- Calculate the Mach number field and return true if successful
-        virtual bool calc();
+        //- The name of the phase
+        word phaseName_;
+
+        //- Name of velocity field, default is "U.<phaseName>"
+        word UName_;
 
 
 public:
@@ -82,6 +87,21 @@ public:
 
     //- Destructor
     virtual ~MachNo();
+
+
+    // Member Functions
+
+        //- Read the data
+        virtual bool read(const dictionary&);
+
+        //- Return the list of fields required
+        virtual wordList fields() const;
+
+        //- Calculate the totalEnthalpy field
+        virtual bool execute();
+
+        //- Write Ma
+        virtual bool write();
 };
 
 

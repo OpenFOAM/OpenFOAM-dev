@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,36 +45,6 @@ namespace functionObjects
 }
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-bool Foam::functionObjects::MachNo::calc()
-{
-    if
-    (
-        foundObject<volVectorField>(fieldName_)
-     && foundObject<fluidThermo>(physicalProperties::typeName)
-    )
-    {
-        const fluidThermo& thermo =
-            lookupObject<fluidThermo>(physicalProperties::typeName);
-
-        const volVectorField& U = lookupObject<volVectorField>(fieldName_);
-
-        store
-        (
-            resultName_,
-            mag(U)/sqrt(thermo.gamma()*thermo.p()/thermo.rho())
-        );
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::functionObjects::MachNo::MachNo
@@ -84,14 +54,85 @@ Foam::functionObjects::MachNo::MachNo
     const dictionary& dict
 )
 :
-    fieldExpression(name, runTime, dict, "Ma", "U")
-{}
+    fvMeshFunctionObject(name, runTime, dict),
+    writeLocalObjects(obr_),
+    phaseName_(word::null),
+    UName_("U")
+{
+    read(dict);
+    resetLocalObjectName(IOobject::groupName("Ma", phaseName_));
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::functionObjects::MachNo::~MachNo()
 {}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+bool Foam::functionObjects::MachNo::read
+(
+    const dictionary& dict
+)
+{
+    fvMeshFunctionObject::read(dict);
+    writeLocalObjects::read(dict);
+
+    phaseName_ = dict.lookupOrDefault<word>("phase", word::null);
+    UName_ = dict.lookupOrDefault<word>
+    (
+        "U",
+        IOobject::groupName("U", phaseName_)
+    );
+
+    return true;
+}
+
+
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+Foam::wordList Foam::functionObjects::MachNo::fields() const
+{
+    return wordList(UName_);
+}
+
+
+bool Foam::functionObjects::MachNo::execute()
+{
+    const word fieldName(IOobject::groupName("Ma", phaseName_));
+
+    const word thermoName
+    (
+        IOobject::groupName(physicalProperties::typeName, phaseName_)
+    );
+
+    if (mesh_.foundObject<fluidThermo>(thermoName))
+    {
+        const fluidThermo& thermo = mesh_.lookupObject<fluidThermo>(thermoName);
+        const volVectorField& U = mesh_.lookupObject<volVectorField>(UName_);
+
+        store(fieldName, mag(U)/sqrt(thermo.gamma()*thermo.p()/thermo.rho()));
+
+        return true;
+    }
+    else
+    {
+        FatalErrorInFunction
+            << "Unable to find fluidThermo " << thermoName
+            << " in the database"
+            << exit(FatalError);
+
+        return false;
+    }
+}
+
+
+bool Foam::functionObjects::MachNo::write()
+{
+    return writeLocalObjects::write();
+}
 
 
 // ************************************************************************* //
