@@ -1,3 +1,0 @@
-pointMeshMover_fvMeshMover.C
-
-LIB = $(FOAM_LIBBIN)/libpointMeshMover_fvMeshMover

@@ -11,5 +11,4 @@ LIB_LIBS = \
     -lforces \
     -lfiniteVolume \
     -lpointMeshMovers \
-    -lpointMeshMover_fvMeshMover \
     -lrigidBodyDynamics

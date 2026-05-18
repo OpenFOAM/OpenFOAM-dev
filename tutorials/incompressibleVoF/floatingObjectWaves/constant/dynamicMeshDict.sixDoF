@@ -16,66 +16,61 @@ FoamFile
 
 mover
 {
-    type            pointMeshMover;
+    type            sixDoFRigidBodyMotion;
 
-    libs            ("libsixDoFRigidBodyMeshMotion.so");
+    libs            ("libsixDoFRigidBodyMotion_pointMeshMovers.so");
 
-    pointMeshMover      sixDoFRigidBodyMotion;
+    patches         (floatingObject);
+    innerDistance   0.05;
+    outerDistance   0.35;
 
-    sixDoFRigidBodyMotion
+    exterior
     {
-        patches         (floatingObject);
         innerDistance   0.05;
         outerDistance   0.35;
+    }
 
-        exterior
+    centreOfMass    (0.5 0.45 0.35);
+
+    // Cuboid dimensions
+    L               (0.3 0.2 0.5);
+
+    // Density of the solid
+    rhoSolid        500;
+
+    // Cuboid mass
+    mass            #calc "$rhoSolid*cmptProduct($<vector>L)";
+
+    // Cuboid moment of inertia about the centre of mass
+    momentOfInertia #calc "$mass*(tensor::one-tensor::I)&cmptSqr($<vector>L)/12";
+
+    report          on;
+    accelerationRelaxation 0.7;
+
+    solver
+    {
+        type Newmark;
+    }
+
+    constraints
+    {
+        // fixedPoint
+        // {
+        //     sixDoFRigidBodyMotionConstraint point;
+        //     centreOfRotation (0.5 0.45 0.1);
+        // }
+
+        fixedLine
         {
-            innerDistance   0.05;
-            outerDistance   0.35;
+            sixDoFRigidBodyMotionConstraint line;
+            centreOfRotation (0.5 0.45 0.1);
+            direction (0 1 0);
         }
 
-        centreOfMass    (0.5 0.45 0.35);
-
-        // Cuboid dimensions
-        L               (0.3 0.2 0.5);
-
-        // Density of the solid
-        rhoSolid        500;
-
-        // Cuboid mass
-        mass            #calc "$rhoSolid*cmptProduct($<vector>L)";
-
-        // Cuboid moment of inertia about the centre of mass
-        momentOfInertia #calc "$mass*(tensor::one-tensor::I)&cmptSqr($<vector>L)/12";
-
-        report          on;
-        accelerationRelaxation 0.7;
-
-        solver
+        fixedAxis
         {
-            type Newmark;
-        }
-
-        constraints
-        {
-            // fixedPoint
-            // {
-            //     sixDoFRigidBodyMotionConstraint point;
-            //     centreOfRotation (0.5 0.45 0.1);
-            // }
-
-            fixedLine
-            {
-                sixDoFRigidBodyMotionConstraint line;
-                centreOfRotation (0.5 0.45 0.1);
-                direction (0 1 0);
-            }
-
-            fixedAxis
-            {
-                sixDoFRigidBodyMotionConstraint axis;
-                axis (0 1 0);
-            }
+            sixDoFRigidBodyMotionConstraint axis;
+            axis (0 1 0);
         }
     }
 }

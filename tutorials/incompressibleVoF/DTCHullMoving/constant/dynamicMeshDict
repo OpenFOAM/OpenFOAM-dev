@@ -16,11 +16,9 @@ FoamFile
 
 mover
 {
-    type            pointMeshMover;
+    type            rigidBodyMotion;
 
     libs            ("librigidBodyMeshMotion.so");
-
-    pointMeshMover  rigidBodyMotion;
 
     report          on;
 

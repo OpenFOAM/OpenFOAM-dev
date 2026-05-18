@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "list_pointMeshMover.H"
+#include "pointMeshMover.H"
 #include "polyMesh.H"
 #include "dictionaryEntry.H"
 #include "twoDPointCorrector.H"
@@ -60,10 +60,15 @@ Foam::autoPtr<Foam::pointMeshMover> Foam::pointMeshMover::New
     const dictionary& dict
 )
 {
-    const word type = dict.lookupBackwardsCompatible<word>
+    word type = dict.lookupOrDefaultBackwardsCompatible<word>
     (
-        {"motionSolver", pointMeshMover::typeName, "type"}
+        {pointMeshMover::typeName, "motionSolver"}, word::null
     );
+
+    if (type == word::null)
+    {
+        type = dict.lookup<word>("type");
+    }
 
     Info<< indentOrNl << "Selecting pointMeshMover: " << type << endl;
 

@@ -11,6 +11,5 @@ EXE_INC = \
 LIB_LIBS = \
     -lpropellerDisk \
     -lpointMeshMovers \
-    -lpointMeshMover_fvMeshMover \
     -lrigidBodyDynamics \
     -lrigidBodyMeshMotion

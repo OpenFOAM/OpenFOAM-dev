@@ -45,7 +45,7 @@ Description
     {
         type            pointMeshMover;
 
-        libs            ("libpointMeshMover_fvMeshMover.so");
+        libs            ("libpointMeshMovers.so");
 
         pointMeshMover
         {
@@ -79,7 +79,7 @@ Description
     {
         type            pointMeshMover;
 
-        libs            ("libpointMeshMover_fvMeshMover.so");
+        libs            ("libpointMeshMovers.so");
 
         pointMeshMover
         {

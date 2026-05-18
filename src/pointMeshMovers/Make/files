@@ -1,5 +1,3 @@
-pointMeshMover/pointMeshMover.C
-
 list/list_pointMeshMover.C
 interpolator/interpolator_pointMeshMover.C
 

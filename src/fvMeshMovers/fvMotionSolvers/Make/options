@@ -2,7 +2,6 @@ EXE_INC = \
     -I$(LIB_SRC)/triSurface/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude \
     -I$(LIB_SRC)/pointMeshMovers/lnInclude \
-    -I$(LIB_SRC)/fvMeshMovers/pointMeshMover/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/fileFormats/lnInclude \
     -I$(LIB_SRC)/functionObjects/forces/lnInclude
@@ -11,6 +10,5 @@ LIB_LIBS = \
     -ltriSurface \
     -lmeshTools \
     -lpointMeshMovers \
-    -lpointMeshMover_fvMeshMover \
     -lfiniteVolume \
     -lfileFormats

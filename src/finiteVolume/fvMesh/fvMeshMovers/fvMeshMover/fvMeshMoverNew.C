@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "none_fvMeshMover.H"
+#include "pointMeshMover_fvMeshMover.H"
 
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
@@ -50,17 +51,11 @@ Foam::autoPtr<Foam::fvMeshMover> Foam::fvMeshMover::New(fvMesh& mesh)
         {
             const dictionary& moverDict = dict.subDict("mover");
 
-            const word fvMeshMoverTypeName(moverDict.lookup("type"));
+            const word type(moverDict.lookup("type"));
 
-            Info<< indentOrNl
-                << "Selecting fvMeshMover " << fvMeshMoverTypeName << endl;
+            Info<< indentOrNl << "Selecting fvMeshMover " << type << endl;
 
-            libs.open
-            (
-                moverDict,
-                "libs",
-                fvMeshConstructorTablePtr_
-            );
+            libs.open(moverDict, "libs", fvMeshConstructorTablePtr_);
 
             if (!fvMeshConstructorTablePtr_)
             {
@@ -70,16 +65,44 @@ Foam::autoPtr<Foam::fvMeshMover> Foam::fvMeshMover::New(fvMesh& mesh)
             }
 
             fvMeshConstructorTable::iterator cstrIter =
-                fvMeshConstructorTablePtr_->find(fvMeshMoverTypeName);
+                fvMeshConstructorTablePtr_->find(type);
 
+            // If the fvMeshMover type is not found check the pointMeshMovers
+            // and if found construct a fvMeshMovers::pointMeshMover
             if (cstrIter == fvMeshConstructorTablePtr_->end())
             {
-                FatalIOErrorInFunction(dict)
-                    << "Unknown fvMeshMover type "
-                    << fvMeshMoverTypeName << nl << nl
-                    << "Valid fvMeshMovers are :" << endl
-                    << fvMeshConstructorTablePtr_->sortedToc()
-                    << exit(FatalIOError);
+                if (!pointMeshMover::dictionaryConstructorTablePtr_)
+                {
+                    FatalIOErrorInFunction(dict)
+                        << "Unknown fvMeshMover type "
+                        << type << nl << nl
+                        << "Valid fvMeshMovers are :"
+                        << fvMeshConstructorTablePtr_->sortedToc() << nl
+                        << "and pointMeshMovers table is empty"
+                        << exit(FatalIOError);
+                }
+
+                if
+                (
+                   !pointMeshMover::dictionaryConstructorTablePtr_
+                    ->found(type)
+                )
+                {
+                    FatalIOErrorInFunction(dict)
+                        << "Unknown fvMeshMover type "
+                        << type << nl << nl
+                        << "Valid fvMeshMovers are :"
+                        << fvMeshConstructorTablePtr_->sortedToc() << nl
+                        << "Valid pointMeshMovers are :"
+                        << pointMeshMover::dictionaryConstructorTablePtr_
+                           ->sortedToc()
+                        << exit(FatalIOError);
+                }
+
+                return autoPtr<fvMeshMover>
+                (
+                    new fvMeshMovers::pointMeshMover(mesh, moverDict)
+                );
             }
 
             return autoPtr<fvMeshMover>(cstrIter()(mesh, moverDict));

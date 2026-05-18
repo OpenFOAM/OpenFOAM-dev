@@ -42,6 +42,8 @@ $(pointBoundaryMesh)/pointBoundaryMesh.C
 pointMesh/pointDist/pointEdgeDist.C
 pointMesh/pointDist/pointDist.C
 
+pointMesh/pointMeshMover/pointMeshMover.C
+
 fvMesh/fvMeshGeometry.C
 fvMesh/fvMesh.C
 
@@ -165,6 +167,7 @@ fvMeshMovers = fvMesh/fvMeshMovers
 $(fvMeshMovers)/fvMeshMover/fvMeshMover.C
 $(fvMeshMovers)/fvMeshMover/fvMeshMoverNew.C
 $(fvMeshMovers)/none/none_fvMeshMover.C
+$(fvMeshMovers)/pointMeshMover/pointMeshMover_fvMeshMover.C
 
 fvMeshStitchers = fvMesh/fvMeshStitchers
 

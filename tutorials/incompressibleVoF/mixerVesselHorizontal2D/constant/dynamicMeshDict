@@ -16,48 +16,43 @@ FoamFile
 
 mover
 {
-    type            pointMeshMover;
+    type            list;
 
     libs            ("libfvMotionSolvers.so");
 
-    pointMeshMover
+    rotor
     {
-        type            list;
+        type            solidBody;
 
-        rotor
+        cellZone        rotor;
+
+        solidBodyMotionFunction
         {
-            type            solidBody;
+            type          rotatingMotion;
 
-            cellZone        rotor;
+            origin        (0 0 0);
+            axis          (0 0 1);
 
-            solidBodyMotionFunction
-            {
-                type          rotatingMotion;
-
-                origin        (0 0 0);
-                axis          (0 0 1);
-
-                omega         60 [rpm];
-            }
+            omega         60 [rpm];
         }
+    }
 
-        stator
+    stator
+    {
+        type            solidBody;
+
+        cellZone        stator;
+
+        solidBodyMotionFunction
         {
-            type            solidBody;
+            type          rotatingMotion;
 
-            cellZone        stator;
+            origin        (0 0 0);
+            axis          (0 0 -1);
 
-            solidBodyMotionFunction
-            {
-                type          rotatingMotion;
-
-                origin        (0 0 0);
-                axis          (0 0 -1);
-
-                omega         60 [rpm];
-            }
+            omega         60 [rpm];
         }
-    };
+    }
 }
 
 

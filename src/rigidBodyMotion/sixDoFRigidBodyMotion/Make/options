@@ -8,5 +8,4 @@ EXE_INC = \
 LIB_LIBS = \
     -lforces \
     -lmeshTools \
-    -lfileFormats \
-    -lpointMeshMover_fvMeshMover
+    -lfileFormats

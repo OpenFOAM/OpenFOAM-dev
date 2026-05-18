@@ -16,11 +16,9 @@ FoamFile
 
 mover
 {
-    type            pointMeshMover;
+    type            solidBody;
 
-    libs            ("libfvMotionSolvers.so");
-
-    pointMeshMover  solidBody;
+    libs            ("libpointMeshMovers.so");
 
     cellZone        rotating;
 
