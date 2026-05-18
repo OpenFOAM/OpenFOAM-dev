@@ -41,7 +41,7 @@ Description
     cutLayerAverage1
     {
         type            cutLayerAverage;
-        libs            ("libcutLayerAverageFunctionObject.so");
+        libs            ("libfieldFunctionObjects.so");
 
         writeControl    writeTime;
         writeInterval   1;
