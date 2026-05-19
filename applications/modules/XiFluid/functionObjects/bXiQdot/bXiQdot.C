@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "bXiQdot.H"
+#include "ubRhoThermo.H"
 #include "uRhoMulticomponentThermo.H"
 #include "bRhoMulticomponentThermo.H"
 #include "addToRunTimeSelectionTable.H"
@@ -81,12 +82,20 @@ bool Foam::functionObjects::bXiQdot::execute()
 {
     const word uThermoName
     (
-        IOobject::groupName(physicalProperties::typeName, "u")
+        IOobject::groupName
+        (
+            physicalProperties::typeName,
+            ubRhoThermo::unburntPhaseName
+        )
     );
 
     const word bThermoName
     (
-        IOobject::groupName(physicalProperties::typeName, "b")
+        IOobject::groupName
+        (
+            physicalProperties::typeName,
+            ubRhoThermo::burntPhaseName
+        )
     );
 
     if

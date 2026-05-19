@@ -81,5 +81,7 @@ fvModels/ignition/bXiKernelCorr/bXiKernelCorr.C
 
 functionObjects/bXiProgress/bXiProgress.C
 functionObjects/bXiQdot/bXiQdot.C
+functionObjects/ubAverage/ubAverage.C
+functionObjects/ubDWEA/ubDWEA.C
 
 LIB = $(FOAM_LIBBIN)/libXiFluidSolver

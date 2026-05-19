@@ -130,12 +130,12 @@ void Foam::fv::bXiKernelCorr::addSup
 
         const volScalarField& rhou = mesh().lookupObject<volScalarField>
         (
-            IOobject::groupName("rho", "u")
+            IOobject::groupName("rho", ubRhoThermo::unburntPhaseName)
         );
 
         const volScalarField& rhob = mesh().lookupObject<volScalarField>
         (
-            IOobject::groupName("rho", "b")
+            IOobject::groupName("rho", ubRhoThermo::burntPhaseName)
         );
 
         const volScalarField& mgb = mesh().lookupObject<volScalarField>("mgb");

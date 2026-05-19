@@ -53,9 +53,6 @@ class ubRhoThermo
 {
     // Private Data
 
-        const word unburntPhaseName_;
-        const word burntPhaseName_;
-
         volScalarField b_;
         volScalarField c_;
 
@@ -79,6 +76,9 @@ public:
     //- Runtime type information
     TypeName("ubRhoThermo");
 
+    static const word unburntPhaseName;
+    static const word burntPhaseName;
+
 
     // Constructors
 
@@ -94,6 +94,9 @@ public:
 
 
     // Member Functions
+
+        const word unburntPhaseName_;
+        const word burntPhaseName_;
 
         //- Regress variable
         const volScalarField& b() const

@@ -1,0 +1,22 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Calculates the unburnt, burnt gas phase average of the given field.
+
+    Both the corresponding unburnt and burnt gas fields must be available
+    in the database
+\*---------------------------------------------------------------------------*/
+
+type            ubAverage;
+
+field           <fieldName>;
+
+executeControl  writeTime;
+writeControl    writeTime;
+
+// ************************************************************************* //

@@ -84,8 +84,10 @@ void Foam::fv::constantbXiIgnition::addSup
         Info<< type() << ": applying source to " << eqn.psi().name() << endl;
     }
 
-    const volScalarField& rhou =
-        mesh().lookupObject<volScalarField>(IOobject::groupName("rho", "u"));
+    const volScalarField& rhou = mesh().lookupObject<volScalarField>
+    (
+        IOobject::groupName("rho", ubRhoThermo::unburntPhaseName)
+    );
 
     scalarField& Sp = eqn.diag();
     const scalarField& V = mesh().V();
