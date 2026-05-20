@@ -95,9 +95,6 @@ public:
 
     // Member Functions
 
-        const word unburntPhaseName_;
-        const word burntPhaseName_;
-
         //- Regress variable
         const volScalarField& b() const
         {
