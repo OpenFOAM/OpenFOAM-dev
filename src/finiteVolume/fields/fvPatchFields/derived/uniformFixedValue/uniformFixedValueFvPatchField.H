@@ -135,8 +135,17 @@ public:
 
     // Member Functions
 
-        //- Update the coefficients associated with the patch field
-        virtual void updateCoeffs();
+        // Mapping functions
+
+            //- Map the given fvPatchField onto this fvPatchField
+            virtual void map(const fvPatchField<Type>&, const fieldMapper&);
+
+
+        // Evaluation functions
+
+            //- Update the coefficients associated with the patch field
+            virtual void updateCoeffs();
+
 
         //- Write
         virtual void write(Ostream&) const;

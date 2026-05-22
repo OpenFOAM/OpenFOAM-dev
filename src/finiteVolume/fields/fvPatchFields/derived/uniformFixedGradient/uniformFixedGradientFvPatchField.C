@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "uniformFixedGradientFvPatchField.H"
+#include "setSizeFieldMapper.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -60,9 +61,12 @@ Foam::uniformFixedGradientFvPatchField<Type>::uniformFixedGradientFvPatchField
     const fieldMapper& mapper
 )
 :
-    fixedGradientFvPatchField<Type>(ptf, p, iF, mapper),
+    fixedGradientFvPatchField<Type>(ptf, p, iF, mapper, false), // Don't map
     uniformGradient_(ptf.uniformGradient_, false)
-{}
+{
+    // Evaluate since value not mapped
+    this->evaluate();
+}
 
 
 template<class Type>
@@ -84,6 +88,25 @@ Foam::uniformFixedGradientFvPatchField<Type>::uniformFixedGradientFvPatchField
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class Type>
+void Foam::uniformFixedGradientFvPatchField<Type>::map
+(
+    const fvPatchField<Type>& ptf,
+    const fieldMapper& mapper
+)
+{
+    // Resize as necessary
+    fixedGradientFvPatchField<Type>::map
+    (
+        ptf,
+        setSizeFieldMapper(this->patch().size())
+    );
+
+    // Evaluate since value not mapped
+    this->evaluate();
+}
+
 
 template<class Type>
 void Foam::uniformFixedGradientFvPatchField<Type>::updateCoeffs()

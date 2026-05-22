@@ -76,6 +76,28 @@ Foam::fixedEnergyFvPatchScalarField::fixedEnergyFvPatchScalarField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+void Foam::fixedEnergyFvPatchScalarField::map
+(
+    const fixedEnergyFvPatchScalarField& ptf,
+    const fieldMapper& mapper
+)
+{
+    // Unmapped faces are considered zero-gradient/adiabatic
+    // until they are corrected later
+    mapper(*this, ptf, [&](){ return this->patchInternalField(); });
+}
+
+
+void Foam::fixedEnergyFvPatchScalarField::map
+(
+    const fvPatchScalarField& ptf,
+    const fieldMapper& mapper
+)
+{
+    map(refCast<const fixedEnergyFvPatchScalarField>(ptf), mapper);
+}
+
+
 void Foam::fixedEnergyFvPatchScalarField::updateCoeffs()
 {
     if (updated())

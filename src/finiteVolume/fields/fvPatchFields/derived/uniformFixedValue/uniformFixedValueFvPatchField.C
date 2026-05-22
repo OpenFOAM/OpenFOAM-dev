@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "uniformFixedValueFvPatchField.H"
+#include "setSizeFieldMapper.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -87,6 +88,25 @@ Foam::uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class Type>
+void Foam::uniformFixedValueFvPatchField<Type>::map
+(
+    const fvPatchField<Type>& ptf,
+    const fieldMapper& mapper
+)
+{
+    // Resize as necessary
+    fixedValueFvPatchField<Type>::map
+    (
+        ptf,
+        setSizeFieldMapper(this->patch().size())
+    );
+
+    // Evaluate since value not mapped
+    this->evaluate();
+}
+
 
 template<class Type>
 void Foam::uniformFixedValueFvPatchField<Type>::updateCoeffs()
