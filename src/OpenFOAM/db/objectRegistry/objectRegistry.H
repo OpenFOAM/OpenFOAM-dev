@@ -181,6 +181,9 @@ public:
             //- Return the sorted list of names of IOobjects of given class name
             wordList sortedToc(const word& className) const;
 
+            //- Return the list of names and types of IOobjects
+            List<Pair<word>> tocTypes() const;
+
             //- Return the list of names of the IOobjects of given type
             template<class Type>
             wordList toc() const;

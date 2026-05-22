@@ -203,6 +203,22 @@ Foam::wordList Foam::objectRegistry::sortedToc(const word& ClassName) const
 }
 
 
+Foam::List<Foam::Pair<Foam::word>> Foam::objectRegistry::tocTypes() const
+{
+    List<Pair<word>> objectNames(size());
+
+    label count=0;
+    for (const_iterator iter = cbegin(); iter != cend(); ++iter)
+    {
+            objectNames[count].first() = iter.key();
+            objectNames[count].second() = iter()->type();
+            count++;
+    }
+
+    return objectNames;
+}
+
+
 const Foam::objectRegistry& Foam::objectRegistry::subRegistry
 (
     const word& name,
