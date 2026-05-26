@@ -502,8 +502,7 @@ Foam::cloud::cloud
     statePtr_(readStates()),
     cellLengthScaleVf_(mag(cbrt(mesh_.poly().cellVolumes()))),
     context(context),
-    tracking(cloudTrackingNames[mesh.schemes().lookup<word>("tracking")]
-    ),
+    tracking(cloudTrackingNames[mesh.schemes().lookup<word>("tracking")]),
     U
     (
         IOobject
