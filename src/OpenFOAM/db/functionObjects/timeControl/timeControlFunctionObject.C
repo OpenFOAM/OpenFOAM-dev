@@ -152,10 +152,7 @@ bool Foam::functionObjects::timeControl::read(const dictionary& dict)
 
 void Foam::functionObjects::timeControl::movePoints(const polyMesh& mesh)
 {
-    if (active())
-    {
-        foPtr_->movePoints(mesh);
-    }
+    foPtr_->movePoints(mesh);
 }
 
 
@@ -164,10 +161,7 @@ void Foam::functionObjects::timeControl::topoChange
     const polyTopoChangeMap& map
 )
 {
-    if (active())
-    {
-        foPtr_->topoChange(map);
-    }
+    foPtr_->topoChange(map);
 }
 
 
@@ -176,10 +170,7 @@ void Foam::functionObjects::timeControl::mapMesh
     const polyMeshMap& map
 )
 {
-    if (active())
-    {
-        foPtr_->mapMesh(map);
-    }
+    foPtr_->mapMesh(map);
 }
 
 
@@ -188,10 +179,7 @@ void Foam::functionObjects::timeControl::distribute
     const polyDistributionMap& map
 )
 {
-    if (active())
-    {
-        foPtr_->distribute(map);
-    }
+    foPtr_->distribute(map);
 }
 
 
