@@ -252,7 +252,7 @@ void Foam::Lagrangian::turbulentDispersion::preAddSup
         rootVSmall
     );
     tTurb =
-        max
+        min
         (
             kc_(subMesh)/max(epsilonc_(subMesh), rootVSmallEpsilon),
             Cmu75_*kc_(subMesh)*sqrt(kc_(subMesh))
