@@ -125,6 +125,9 @@ public:
             //- Density [kg/m^3]
             inline scalar rho(scalar p, scalar T) const;
 
+            //- Volumetric coefficient of thermal expansion [1/T]
+            inline scalar alphav(scalar p, scalar T) const;
+
             //- Compressibility [s^2/m^2]
             inline scalar psi(scalar p, scalar T) const;
 

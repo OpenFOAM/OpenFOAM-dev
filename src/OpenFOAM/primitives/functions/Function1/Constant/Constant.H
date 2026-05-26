@@ -62,7 +62,7 @@ class Constant
     // Private Data
 
         //- Constant value
-        const Type value_;
+        Type value_;
 
 
 public:
@@ -118,8 +118,8 @@ public:
 
     // Member Operators
 
-        //- Disallow default bitwise assignment
-        void operator=(const Constant<Type>&) = delete;
+        //- Copy assignment
+        void operator=(const Constant<Type>&);
 };
 
 

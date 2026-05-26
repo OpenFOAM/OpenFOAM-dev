@@ -94,4 +94,15 @@ void Foam::Function1s::Constant<Type>::write
 }
 
 
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
+
+template<class Type>
+void Foam::Function1s::Constant<Type>::operator=(const Constant<Type>& cnst)
+{
+    FieldFunction1<Type, Constant<Type>>::operator=(cnst);
+
+    value_ = cnst.value_;
+}
+
+
 // ************************************************************************* i/

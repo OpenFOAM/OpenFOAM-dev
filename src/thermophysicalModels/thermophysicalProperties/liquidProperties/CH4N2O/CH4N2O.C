@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ Foam::CH4N2O::CH4N2O()
         0.3449,
         4.7813e+4
     ),
-    rho_("rho", 1230.006936, 0.0, 0.0, 0.0, 0.0, 0.0),
+    rho_("rho", 1230.006936),
     pv_
     (
         "pv",
@@ -101,7 +101,7 @@ Foam::CH4N2O::CH4N2O()
 Foam::CH4N2O::CH4N2O
 (
     const liquidProperties& l,
-    const Function1s::NSRDS0& density,
+    const Function1s::Constant<scalar>& density,
     const Function1s::NSRDS1& vapourPressure,
     const Function1s::NSRDS6& heatOfVapourisation,
     const Function1s::NSRDS0& heatCapacity,

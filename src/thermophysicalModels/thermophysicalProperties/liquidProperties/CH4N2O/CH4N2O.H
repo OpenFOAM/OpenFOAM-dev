@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,7 @@ class CH4N2O
 {
     // Private Data
 
-        Function1s::NSRDS0 rho_;
+        Function1s::Constant<scalar> rho_;
         Function1s::NSRDS1 pv_;
         Function1s::NSRDS6 hl_;
         Function1s::NSRDS0 Cp_;
@@ -98,7 +98,7 @@ public:
         CH4N2O
         (
             const liquidProperties& l,
-            const Function1s::NSRDS0& density,
+            const Function1s::Constant<scalar>& density,
             const Function1s::NSRDS1& vapourPressure,
             const Function1s::NSRDS6& heatOfVapourisation,
             const Function1s::NSRDS0& heatCapacity,
@@ -127,6 +127,9 @@ public:
 
         //- Liquid density [kg/m^3]
         inline scalar rho(scalar p, scalar T) const;
+
+        //- Volumetric coefficient of thermal expansion [1/T]
+        inline scalar alphav(scalar p, scalar T) const;
 
         //- Vapour pressure [Pa]
         inline scalar pv(scalar p, scalar T) const;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,12 @@ License
 inline Foam::scalar Foam::C16H34::rho(scalar p, scalar T) const
 {
     return rho_.value(T);
+}
+
+
+inline Foam::scalar Foam::C16H34::alphav(scalar p, scalar T) const
+{
+    return - rho_.derivative(T)/rho_.value(T);
 }
 
 

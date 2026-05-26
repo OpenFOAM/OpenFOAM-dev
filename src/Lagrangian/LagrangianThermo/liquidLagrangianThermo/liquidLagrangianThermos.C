@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,68 +23,30 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "specie.H"
+#include "fluidLagrangianThermo.H"
+
+#include "pureMixture.H"
+
+#include "liquidPropertiesSelector.H"
+#include "sensibleInternalEnergy.H"
+#include "thermo.H"
+
+#include "makeLagrangianThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-inline Foam::scalar Foam::solidProperties::rho() const
+namespace Foam
 {
-    return rho_;
+    typedef
+        species::thermo<liquidPropertiesSelector, sensibleInternalEnergy>
+        liquidSensibleInternalEnergy;
+
+    makeLagrangianThermo
+    (
+        fluidLagrangianThermo,
+        pureMixture,
+        liquidSensibleInternalEnergy
+    );
 }
-
-
-inline Foam::scalar Foam::solidProperties::alphav() const
-{
-    return scalar(0);
-}
-
-
-inline Foam::scalar Foam::solidProperties::Cp() const
-{
-    return Cp_;
-}
-
-
-inline Foam::scalar Foam::solidProperties::hf() const
-{
-    return hf_;
-}
-
-
-inline Foam::scalar Foam::solidProperties::hs(const scalar T) const
-{
-    return Cp_*(T - Tstd);
-}
-
-
-inline Foam::scalar Foam::solidProperties::ha(const scalar T) const
-{
-    return hs(T) + hf();
-}
-
-
-inline Foam::scalar Foam::solidProperties::es(const scalar T) const
-{
-    return hs(T);
-}
-
-
-inline Foam::scalar Foam::solidProperties::ea(const scalar T) const
-{
-    return es(T) + hf();
-}
-
-
-inline Foam::scalar Foam::solidProperties::kappa() const
-{
-    return kappa_;
-}
-
-
-inline Foam::scalar Foam::solidProperties::emissivity() const
-{
-    return emissivity_;
-}
-
 
 // ************************************************************************* //

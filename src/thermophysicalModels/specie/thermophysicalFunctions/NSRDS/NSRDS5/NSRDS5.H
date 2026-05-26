@@ -113,9 +113,17 @@ public:
     // Member Functions
 
         //- Evaluate the function and return the result
-        virtual scalar value(scalar T) const
+        virtual scalar value(const scalar T) const
         {
-            return a_/pow(b_, 1 + pow(1 - T/c_, d_));
+            const scalar p = pow(1 - T/c_, d_);
+            return a_/pow(b_, 1 + p);
+        }
+
+        //- Evaluate the derivative and return the result
+        virtual scalar derivative(const scalar T) const
+        {
+            const scalar p = pow(1 - T/c_, d_);
+            return (a_*log(b_)/c_*d_)*p/(1 - T/c_)/pow(b_, 1 + p);
         }
 
         //- Integrate between two scalar values

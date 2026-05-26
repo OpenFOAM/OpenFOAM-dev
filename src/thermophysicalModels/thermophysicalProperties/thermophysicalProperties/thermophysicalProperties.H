@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -131,6 +131,9 @@ public:
 
             //- Density [kg/m^3]
             virtual scalar rho(scalar p, scalar T) const = 0;
+
+            //- Volumetric coefficient of thermal expansion [1/T]
+            virtual scalar alphav(scalar p, scalar T) const = 0;
 
             //- Compressibility [s^2/m^2]
             virtual scalar psi(scalar p, scalar T) const = 0;

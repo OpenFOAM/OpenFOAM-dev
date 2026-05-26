@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -109,6 +109,9 @@ public:
 
         //- Liquid density [kg/m^3]
         inline scalar rho(scalar p, scalar T) const;
+
+        //- Volumetric coefficient of thermal expansion [1/T]
+        inline scalar alphav(scalar p, scalar T) const;
 
         //- Vapour pressure [Pa]
         inline scalar pv(scalar p, scalar T) const;
