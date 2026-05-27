@@ -51,7 +51,7 @@ CONSTRUCT
 :
     PARENT(p, iF),
     scalarData_(dict.lookup<scalar>("scalarData", units::any)),
-    data_(dict.lookup<TYPE>("data")),
+    data_(dict.lookup<TYPE>("data"), iF.dimensions()),
     fieldData_("fieldData", iF.dimensions(), dict, p.size()),
     timeVsData_
     (
