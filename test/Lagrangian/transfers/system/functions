@@ -41,7 +41,7 @@ incompressibleFluidCarrierPlot
     region      incompressibleFluid;
     fields      (droplets:1Eqn:Su);
     writeFields no;
-    select      all;
+    cellZone    all;
     operation   sum;
 }
 
