@@ -47,10 +47,12 @@ void Foam::unitSet::read(const word& keyword, const dictionary& dict)
 
     if (!compare(*this, units, false))
     {
+        multiplier_ = scalar(1);
+
         FatalIOErrorInFunction(dict)
             << "The units " << units.info() << " of " << keyword
-            << " in dictionary " << dict.name() << " do not match "
-            << "the required units " << info()
+            << " in dictionary " << dict.name() << " do not have "
+            << "the required dimensions " << info()
             << abort(FatalIOError);
     }
 
@@ -64,9 +66,11 @@ void Foam::unitSet::read(Istream& is)
 
     if (!compare(*this, units, false))
     {
+        multiplier_ = scalar(1);
+
         FatalIOErrorInFunction(is)
-            << "The units " << units.info() << " provided do not match "
-            << "the required units " << info()
+            << "The units " << units.info() << " provided do not have "
+            << "the required dimensions " << info()
             << abort(FatalIOError);
     }
 
@@ -85,10 +89,12 @@ void Foam::unitSet::read
 
     if (!compare(*this, units, false))
     {
+        multiplier_ = scalar(1);
+
         FatalIOErrorInFunction(dict)
             << "The units " << units.info() << " of " << keyword
-            << " in dictionary " << dict.name() << " do not match "
-            << "the required units " << info()
+            << " in dictionary " << dict.name() << " do not have "
+            << "the required dimensions " << info()
             << abort(FatalIOError);
     }
 
@@ -110,10 +116,12 @@ bool Foam::unitSet::readIfPresent
 
         if (!compare(*this, units, false))
         {
+            multiplier_ = scalar(1);
+
             FatalIOErrorInFunction(dict)
                 << "The units " << units.info() << " of " << keyword
-                << " in dictionary " << dict.name() << " do not match "
-                << "the required units " << info()
+                << " in dictionary " << dict.name() << " do not have "
+                << "the required dimensions " << info()
                 << abort(FatalIOError);
         }
 
@@ -139,9 +147,11 @@ bool Foam::unitSet::readIfPresent(Istream& is)
 
     if (!unitSet::compare(units, *this, false))
     {
+        multiplier_ = scalar(1);
+
         FatalIOErrorInFunction(is)
-            << "The units " << units.info() << " provided do not match "
-            << "the required units " << info()
+            << "The units " << units.info() << " provided do not have "
+            << "the required dimensions " << info()
             << abort(FatalIOError);
     }
 
@@ -174,10 +184,12 @@ bool Foam::unitSet::readIfPresent
 
     if (!unitSet::compare(units, *this, false))
     {
+        multiplier_ = scalar(1);
+
         FatalIOErrorInFunction(dict)
             << "The units " << units.info() << " of " << keyword
-            << " in dictionary " << dict.name() << " do not match "
-            << "the required units " << info()
+            << " in dictionary " << dict.name() << " do not have "
+            << "the required dimensions " << info()
             << abort(FatalIOError);
     }
 
