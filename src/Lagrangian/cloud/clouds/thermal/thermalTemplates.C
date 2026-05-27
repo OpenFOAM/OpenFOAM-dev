@@ -36,12 +36,7 @@ Foam::clouds::Thermal<Thermo>::Thermal
     const carried& carriedCloud
 )
 :
-    thermal
-    (
-        c,
-        shapedCloud,
-        Thermo::New(c.mesh(), carriedCloud.phaseName()).ptr()
-    )
+    thermal(c, shapedCloud, Thermo::New(c.mesh()).ptr())
 {}
 
 

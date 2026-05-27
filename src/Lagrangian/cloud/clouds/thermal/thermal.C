@@ -64,12 +64,7 @@ Foam::clouds::thermal::thermal
     const carried& carriedCloud
 )
 :
-    thermal
-    (
-        c,
-        shapedCloud,
-        basicLagrangianThermo::New(c.mesh(), carriedCloud.phaseName()).ptr()
-    )
+    thermal(c, shapedCloud, basicLagrangianThermo::New(c.mesh()).ptr())
 {}
 
 
