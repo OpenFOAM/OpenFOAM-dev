@@ -178,10 +178,16 @@ Foam::Lagrangian::collisionPhaseTransfer::collisionPhaseTransfer
 Foam::wordList
 Foam::Lagrangian::collisionPhaseTransfer::addSupFields() const
 {
-    return
+    const bool isGrouped = isCloud<clouds::grouped>();
+
+    wordList result(isGrouped + 1, word::null);
+
+    result[isGrouped ? 1 : 0] =
         isCloud<clouds::massive>()
-      ? wordList({word::null, clouds::massive::mName})
-      : wordList({word::null, clouds::shaped::vName});
+      ? clouds::massive::mName
+      : clouds::shaped::vName;
+
+    return result;
 }
 
 
