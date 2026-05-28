@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "flowRateNumberLagrangianScalarFieldSource.H"
-#include "massive.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
