@@ -64,6 +64,9 @@ private:
         //- Reference to the carried cloud
         const carried& carriedCloud_;
 
+        //- Are any carrier equations cached?
+        mutable bool hasCarrierEqns_;
+
         //- Cached carrier kinematic viscosity field
         tmp<volScalarField> tnucVf_;
 
@@ -167,6 +170,9 @@ public:
     // Member Functions
 
         // Equations
+
+            //- Return if any carrier equations are cached
+            bool hasCarrierEqns() const;
 
             //- Return if a carrier equation is in the cache
             template<class Type>

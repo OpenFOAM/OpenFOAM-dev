@@ -46,6 +46,8 @@ Foam::CarrierEqn<Type>& Foam::clouds::coupled::carrierEqn
         new CarrierEqn<Type>(key, carriedCloud_.Uc.psi().mesh());
     carrierEqns<Type>().insert(key, ptr);
 
+    hasCarrierEqns_ = true;
+
     return *ptr;
 }
 
@@ -63,6 +65,8 @@ Foam::CarrierEqn<Type>& Foam::clouds::coupled::carrierEqn
 
     CarrierEqn<Type>* ptr = new CarrierEqn<Type>(psic.psi());
     carrierEqns<Type>().insert(psic.psi().name(), ptr);
+
+    hasCarrierEqns_ = true;
 
     return *ptr;
 }

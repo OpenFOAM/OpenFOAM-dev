@@ -203,6 +203,8 @@ void Foam::fv::cloud::addSupType
     fvMatrix<Type>& eqn
 ) const
 {
+    if (!coupledCloud_.hasCarrierEqns()) return;
+
     const word phaseName = field.group();
 
     const bool isPhase = phaseName != word::null;
@@ -253,6 +255,8 @@ void Foam::fv::cloud::addSupType
     fvMatrix<scalar>& eqn
 ) const
 {
+    if (!coupledCloud_.hasCarrierEqns()) return;
+
     const word phaseName = alphaRhoOrField.group();
 
     const bool isPhase = phaseName != word::null;
@@ -304,6 +308,8 @@ void Foam::fv::cloud::addSupType
     fvMatrix<Type>& eqn
 ) const
 {
+    if (!coupledCloud_.hasCarrierEqns()) return;
+
     const word phaseName = alphaOrRho.group();
 
     const bool isPhase = phaseName != word::null;
@@ -374,6 +380,8 @@ void Foam::fv::cloud::addSupType
     fvMatrix<scalar>& eqn
 ) const
 {
+    if (!coupledCloud_.hasCarrierEqns()) return;
+
     const word phaseName = alphaOrRho.group();
 
     const bool isPhase = phaseName != word::null;
@@ -413,6 +421,8 @@ void Foam::fv::cloud::addSupType
     fvMatrix<Type>& eqn
 ) const
 {
+    if (!coupledCloud_.hasCarrierEqns()) return;
+
     const bool hasCarrierEqn = coupledCloud_.hasCarrierEqn(field);
 
     DebugInFunction
@@ -477,6 +487,8 @@ bool Foam::fv::cloud::addsSupToField(const word& fieldName) const
 
 void Foam::fv::cloud::addSup(fvMatrix<scalar>& eqn) const
 {
+    if (!coupledCloud_.hasCarrierEqns()) return;
+
     const word oneName = "1";
 
     const clouds::coupledToConstantDensityFluid& ctcdfCloud =

@@ -121,6 +121,8 @@ void Foam::clouds::coupled::clearCarrierEqns()
         }
     FOR_ALL_FIELD_TYPES(CLEAR_TYPE_CARRIER_EQNS);
     #undef CLEAR_TYPE_CARRIER_EQNS
+
+    hasCarrierEqns_ = false;
 }
 
 
@@ -147,6 +149,7 @@ Foam::clouds::coupled::coupled(const cloud& c, const carried& carriedCloud)
 :
     cloud_(c),
     carriedCloud_(carriedCloud),
+    hasCarrierEqns_(false),
     tnucVf_(getNucVf()),
     nuc
     (
@@ -161,6 +164,14 @@ Foam::clouds::coupled::coupled(const cloud& c, const carried& carriedCloud)
 
 Foam::clouds::coupled::~coupled()
 {}
+
+
+// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
+bool Foam::clouds::coupled::hasCarrierEqns() const
+{
+    return hasCarrierEqns_;
+}
 
 
 // ************************************************************************* //
