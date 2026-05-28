@@ -39,6 +39,8 @@ Usage
     <LagrangianModelName>
     {
         type        collisionPhaseTransfer;
+
+        minFraction 10 [%]; // <-- only needed for parcel clouds
     }
     \endverbatim
 
@@ -67,13 +69,20 @@ namespace Lagrangian
                     Class collisionPhaseTransfer Declaration
 \*---------------------------------------------------------------------------*/
 
-
 class collisionPhaseTransfer
 :
     public LagrangianSource,
     private cloudLagrangianModel
 {
     // Private Data
+
+        //- Minimum fraction of a particle or parcel (whichever is the smaller)
+        //  that can be transferred. This prevents small amounts of transfer
+        //  occurring in regions with negligible phase fraction. And it
+        //  prevents positive-feedback loops (i.e., where the transfer creates
+        //  fraction which then drives collisions and further transfer) from
+        //  being initialised in such regions.
+        const scalar minFraction_;
 
         //- Carrier phase fraction
         const CarrierField<scalar>& alphac_;

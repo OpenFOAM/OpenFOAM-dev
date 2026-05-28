@@ -23,6 +23,8 @@ volumeFlux 80 [ml/m^2/s];
 collisionPhaseTransfer
 {
     type        collisionPhaseTransfer;
+
+    minFraction 10 [%];
 }
 
 // ************************************************************************* //
