@@ -246,7 +246,7 @@ void Foam::clouds::multicomponentParcel::calculate
                 Lagrangianm::Ddt(deltaT, m, Yi)
               + m*oneEqn
              ==
-                LagrangianModels().source(deltaT, m, Yi)
+                numberByNumber0()*LagrangianModels().source(deltaT, m, Yi)
             );
 
             YiEqn.solve(final);
@@ -286,7 +286,7 @@ void Foam::clouds::multicomponentParcel::calculate
             Lagrangianm::Ddt(deltaT, m, e)
           + m*oneEqn
          ==
-            LagrangianModels().source(deltaT, m, e)
+            numberByNumber0()*LagrangianModels().source(deltaT, m, e)
         );
 
         eEqn.solve(final);
@@ -315,7 +315,7 @@ void Foam::clouds::multicomponentParcel::calculate
             Lagrangianm::Ddt(deltaT, m, U)
           + m*oneEqn
          ==
-            LagrangianModels().source(deltaT, m, U)
+            numberByNumber0*LagrangianModels().source(deltaT, m, U)
         );
 
         UEqn.solve(final);
