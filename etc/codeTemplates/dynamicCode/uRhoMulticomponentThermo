@@ -1,0 +1,88 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      uRhoMulticomponentThermo;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+type
+(
+    uRhoThermo
+);
+
+typeRenamed
+(
+    uRhoThermo uRhoMulticomponentThermo
+);
+
+energy
+(
+    sensibleEnthalpy
+);
+
+mixture
+(
+    uHomogeneous
+    uInhomogeneous
+    uInhomogeneousEGR
+    uMulticomponent
+);
+
+mixtureRenamed
+(
+    uHomogeneous UHomogeneousMixture
+    uInhomogeneous UInhomogeneousMixture
+    uInhomogeneousEGR UInhomogeneousEGRMixture
+    uMulticomponent UMulticomponentMixture
+);
+
+transport
+(
+    const
+    polynomial
+    logPolynomial
+    sutherland
+);
+
+thermo
+(
+    hConst
+    hPolynomial
+    hPower
+    hTabulated
+    hIcoTabulated
+    janaf
+);
+
+equationOfState
+(
+    PengRobinsonGas
+    perfectGas
+);
+
+specie
+(
+    specie
+);
+
+codeOptions
+#{
+EXE_INC = \
+    -I$(FOAM_MODULES)/XiFluid/lnInclude \
+    -I$(LIB_SRC)/physicalProperties/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/multicomponentThermo/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
+    -I$(LIB_SRC)/finiteVolume/lnInclude
+#};
+
+
+// ************************************************************************* //

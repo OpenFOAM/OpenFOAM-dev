@@ -9,18 +9,18 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    object      ubPsiMulticomponentThermo;
+    object      bRhoMulticomponentThermo;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 type
 (
-    ubPsiThermo
+    bRhoThermo
 );
 
 typeRenamed
 (
-    ubPsiThermo ubPsiMulticomponentThermo
+    bRhoThermo bRhoMulticomponentThermo
 );
 
 energy
@@ -30,17 +30,23 @@ energy
 
 mixture
 (
-   uHomogeneousMixture
-   bHomogeneousMixture
-   uInhomogeneousMixture
-   bInhomogeneousMixture
-   uInhomogeneousEGRMixture
+    bHomogeneous
+    bInhomogeneous
+    bMulticomponent
+);
+
+mixtureRenamed
+(
+    bHomogeneous BHomogeneousMixture
+    bInhomogeneous BInhomogeneousMixture
+    bMulticomponent BMulticomponentMixture
 );
 
 transport
 (
     const
     polynomial
+    logPolynomial
     sutherland
 );
 

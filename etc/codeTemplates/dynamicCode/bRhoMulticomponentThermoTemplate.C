@@ -89,6 +89,14 @@ namespace Foam
 
     addThermo
     (
+        rhoFluidThermo,
+        ${type},
+        ${mixture},
+        ${transport}Transport${energy}${thermo}Thermo${equationOfState}${specie}
+    );
+
+    addThermo
+    (
         ${type},
         ${type},
         ${mixture},
