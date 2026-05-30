@@ -93,9 +93,9 @@ Foam::zoneSet ${typeName}ZoneGenerator::generate() const
         Info<<"fields ${typeName} sha1: ${SHA1sum}\n";
     }
 
-    enabledLabelList pointIndices;
-    enabledLabelList cellIndices;
-    enabledLabelList faceIndices;
+    zoneGenerators::enabledLabelList pointIndices;
+    zoneGenerators::enabledLabelList cellIndices;
+    zoneGenerators::enabledLabelList faceIndices;
     boolList flipMap;
 
 //{{{ begin code

@@ -32,7 +32,7 @@ SourceFiles
 #ifndef codedZoneGeneratorTemplate_H
 #define codedZoneGeneratorTemplate_H
 
-#include "codedZoneGenerator.H"
+#include "coded_zoneGenerator.H"
 
 //{{{ begin codeInclude
 ${codeInclude}

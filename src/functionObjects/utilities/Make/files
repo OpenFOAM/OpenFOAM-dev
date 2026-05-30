@@ -16,5 +16,6 @@ writeObjects/writeObjects.C
 writeMesh/writeMesh.C
 time/timeFunctionObject.C
 checkMesh/checkMesh.C
+generateZone/generateZone.C
 
 LIB = $(FOAM_LIBBIN)/libutilityFunctionObjects
