@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,7 +75,7 @@ class limitTemperature
     // Private data
 
         //- The cellZone the fvConstraint applies to
-        fvCellZone zone_;
+        mutable fvCellZone zone_;
 
         //- Minimum temperature limit [K]
         scalar Tmin_;

@@ -139,6 +139,7 @@ Foam::LagrangianSubMesh Foam::Lagrangian::volumeInjection::modify
 
     // Reference the mesh faces and the set cells
     const faceList& faces = mesh.poly().faces();
+    zone_.regenerate();
     const labelList& setCellCells = zone_.zone();
     const UIndirectList<cell> setCells(mesh.poly().cells(), setCellCells);
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ namespace fv
 
 void Foam::fv::massSource::readCoeffs(const dictionary& dict)
 {
-    setPtr_->read(coeffs(dict));
+    zone_.read(coeffs(dict));
 
     massFlowRate_.reset
     (
@@ -69,7 +69,7 @@ Foam::fv::massSource::massSource
 )
 :
     massSourceBase(name, modelType, mesh, dict),
-    setPtr_(new fvCellZone(mesh)),
+    zone_(mesh),
     massFlowRate_()
 {
     readCoeffs(coeffs(dict));
@@ -80,13 +80,13 @@ Foam::fv::massSource::massSource
 
 const Foam::cellZone& Foam::fv::massSource::zone() const
 {
-    return setPtr_->zone();
+    return zone_.zone();
 }
 
 
 Foam::scalar Foam::fv::massSource::V() const
 {
-    return setPtr_->V();
+    return zone_.V();
 }
 
 
@@ -103,26 +103,26 @@ Foam::dimensionedScalar Foam::fv::massSource::S() const
 
 bool Foam::fv::massSource::movePoints()
 {
-    setPtr_->movePoints();
+    zone_.movePoints();
     return true;
 }
 
 
 void Foam::fv::massSource::topoChange(const polyTopoChangeMap& map)
 {
-    setPtr_->topoChange(map);
+    zone_.topoChange(map);
 }
 
 
 void Foam::fv::massSource::mapMesh(const polyMeshMap& map)
 {
-    setPtr_->mapMesh(map);
+    zone_.mapMesh(map);
 }
 
 
 void Foam::fv::massSource::distribute(const polyDistributionMap& map)
 {
-    setPtr_->distribute(map);
+    zone_.distribute(map);
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -140,6 +140,11 @@ public:
             const functionObjects::writeFile& wf,
             Ostream& file
         );
+
+        //- Regenerate the zones if the regenerate switch is set true
+        //  and return true if regenerated
+        //  Useful if the zones are not purely geometric, e.g. field dependent
+        bool regenerate();
 
 
         // Mesh changes

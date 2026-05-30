@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,6 +84,20 @@ void Foam::fvCellZone::writeFileHeader
     file<< setw(1) << ':' << setw(1) << ' ' << name() << endl;
     wf.writeHeaderValue(file, "Cells", nGlobalCells());
     wf.writeHeaderValue(file, "Volume", V());
+}
+
+
+bool Foam::fvCellZone::regenerate()
+{
+    if (generatedCellZone::regenerate())
+    {
+        update();
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 

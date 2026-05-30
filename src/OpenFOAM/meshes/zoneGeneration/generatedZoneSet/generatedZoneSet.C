@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,6 +27,15 @@ License
 #include "lookup.H"
 #include "polyMesh.H"
 
+
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+void Foam::generatedZoneSet::generate()
+{
+    zoneSet::operator=(zoneGenerator_->generate());
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::generatedZoneSet::generatedZoneSet
@@ -35,6 +44,8 @@ Foam::generatedZoneSet::generatedZoneSet
     const polyMesh& mesh,
     const dictionary& dict
 )
+:
+    regenerate_(false)
 {
     read(name, mesh, dict);
 }
@@ -47,6 +58,8 @@ Foam::generatedZoneSet::generatedZoneSet
     const polyMesh& mesh,
     const dictionary& dict
 )
+:
+    regenerate_(false)
 {
     read(name, zoneType, mesh, dict);
 }
@@ -63,7 +76,9 @@ void Foam::generatedZoneSet::read
 {
     if (dict.isDict(name))
     {
-        zoneGenerator_ = zoneGenerator::New(name, mesh, dict.subDict(name));
+        const dictionary& zgDict = dict.subDict(name);
+        zoneGenerator_ = zoneGenerator::New(name, mesh, zgDict);
+        regenerate_ = zgDict.lookupOrDefault<Switch>("regenerate", false);
     }
     else
     {
@@ -86,7 +101,7 @@ void Foam::generatedZoneSet::read
         zoneGenerator_ = new zoneGenerators::lookup(zoneName, mesh, zoneDict);
     }
 
-    zoneSet::operator=(zoneGenerator_->generate());
+    generate();
 }
 
 
@@ -100,12 +115,9 @@ void Foam::generatedZoneSet::read
 {
     if (dict.isDict(name))
     {
-        zoneGenerator_ = zoneGenerator::New
-        (
-            name,
-            zoneType,
-            mesh,
-            dict.subDict(name));
+        const dictionary& zgDict = dict.subDict(name);
+        zoneGenerator_ = zoneGenerator::New(name, zoneType, mesh, zgDict);
+        regenerate_ = zgDict.lookupOrDefault<Switch>("regenerate", false);
     }
     else
     {
@@ -129,14 +141,25 @@ void Foam::generatedZoneSet::read
         zoneGenerator_ = new zoneGenerators::lookup(zoneName, mesh, zoneDict);
     }
 
-    zoneSet::operator=(zoneGenerator_->generate());
+    generate();
 }
 
 
 void Foam::generatedZoneSet::set(const autoPtr<zoneGenerator>& zg)
 {
     zoneGenerator_ = zg;
-    zoneSet::operator=(zoneGenerator_->generate());
+    generate();
+}
+
+
+bool Foam::generatedZoneSet::regenerate()
+{
+    if (regenerate_)
+    {
+        generate();
+    }
+
+    return regenerate_;
 }
 
 
@@ -144,7 +167,7 @@ bool Foam::generatedZoneSet::movePoints()
 {
     if (zoneGenerator_->moveUpdate())
     {
-        zoneSet::operator=(zoneGenerator_->generate());
+        generate();
     }
 
     return true;
@@ -153,22 +176,22 @@ bool Foam::generatedZoneSet::movePoints()
 
 void Foam::generatedZoneSet::distribute(const polyDistributionMap&)
 {
-    // Regenerate zones following redistribution
-    zoneSet::operator=(zoneGenerator_->generate());
+    // generate zones following redistribution
+    generate();
 }
 
 
 void Foam::generatedZoneSet::topoChange(const polyTopoChangeMap&)
 {
-    // Regenerate zones following topology change
-    zoneSet::operator=(zoneGenerator_->generate());
+    // generate zones following topology change
+    generate();
 }
 
 
 void Foam::generatedZoneSet::mapMesh(const polyMeshMap&)
 {
-    // Zones are automatically mapped but should be regenerated
-    zoneSet::operator=(zoneGenerator_->generate());
+    // Zones are automatically mapped but should be generated
+    generate();
 }
 
 

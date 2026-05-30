@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -148,14 +148,22 @@ public:
 
     // Member Functions
 
+        //- Return the zoneGenerator name
         const word& name() const
         {
             return name_;
         }
 
+        //- Return the zone name
         const word& zoneName() const
         {
             return zoneName_;
+        }
+
+        //- Return reference to the polyMesh
+        const polyMesh& mesh() const
+        {
+            return mesh_;
         }
 
         //- Return the list of selected indices

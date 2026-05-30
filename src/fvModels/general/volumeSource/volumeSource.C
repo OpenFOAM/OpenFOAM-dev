@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ void Foam::fv::volumeSource::readCoeffs(const dictionary& dict)
             IOobject::groupName("alpha", phaseName())
         );
 
-    setPtr_->read(coeffs(dict));
+    zone_.read(coeffs(dict));
 
     volumetricFlowRate_.reset
     (
@@ -221,7 +221,7 @@ Foam::fv::volumeSource::volumeSource
 :
     fvTotalSource(name, modelType, mesh, dict),
     alphaName_(),
-    setPtr_(new fvCellZone(mesh)),
+    zone_(mesh),
     volumetricFlowRate_()
 {
     readCoeffs(coeffs(dict));
@@ -232,13 +232,13 @@ Foam::fv::volumeSource::volumeSource
 
 const Foam::cellZone& Foam::fv::volumeSource::zone() const
 {
-    return setPtr_->zone();
+    return zone_.zone();
 }
 
 
 Foam::scalar Foam::fv::volumeSource::V() const
 {
-    return setPtr_->V();
+    return zone_.V();
 }
 
 
@@ -278,26 +278,26 @@ FOR_ALL_FIELD_TYPES
 
 bool Foam::fv::volumeSource::movePoints()
 {
-    setPtr_->movePoints();
+    zone_.movePoints();
     return true;
 }
 
 
 void Foam::fv::volumeSource::topoChange(const polyTopoChangeMap& map)
 {
-    setPtr_->topoChange(map);
+    zone_.topoChange(map);
 }
 
 
 void Foam::fv::volumeSource::mapMesh(const polyMeshMap& map)
 {
-    setPtr_->mapMesh(map);
+    zone_.mapMesh(map);
 }
 
 
 void Foam::fv::volumeSource::distribute(const polyDistributionMap& map)
 {
-    setPtr_->distribute(map);
+    zone_.distribute(map);
 }
 
 

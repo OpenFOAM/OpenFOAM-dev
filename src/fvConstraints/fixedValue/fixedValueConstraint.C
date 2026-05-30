@@ -94,6 +94,8 @@ bool Foam::fv::fixedValueConstraint::constrainType
     const word& fieldName
 ) const
 {
+    zone_.regenerate();
+
     // Set the value units for the function
     fieldValues_[fieldName].template setValueUnits<Type>
     (

@@ -183,6 +183,7 @@ void Foam::fv::solidificationMelting::update
 
     const volScalarField& T = mesh().lookupObject<volScalarField>(TName_);
 
+    zone_.regenerate();
     const labelList& cells = zone_.zone();
 
     forAll(cells, i)

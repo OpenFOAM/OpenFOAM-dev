@@ -137,6 +137,11 @@ public:
             //- Return the cell index corresponding to the cell set index
             inline label celli(const label i) const;
 
+            //- Regenerate the cellZone if the regenerate switch is set true
+            //  and true if regenerated
+            //  Useful if the zone is not purely geometric e.g. field dependent
+            bool regenerate();
+
 
         // Mesh changes
 

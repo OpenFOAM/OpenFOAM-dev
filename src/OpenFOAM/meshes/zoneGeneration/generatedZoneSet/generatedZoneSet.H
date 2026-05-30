@@ -58,6 +58,17 @@ class generatedZoneSet
 
         autoPtr<zoneGenerator> zoneGenerator_;
 
+        //- Optional switch to regenerate the zones
+        //  when the regenerate function is called.
+        //  Useful if the zones are not purely geometric, e.g. field dependent
+        bool regenerate_;
+
+
+    // Private Member Functions
+
+        //- Generate the zones and assign to the zoneSet
+        void generate();
+
 
 public:
 
@@ -109,6 +120,11 @@ public:
 
         //- Set the zoneGenerator and generate the zoneSet
         void set(const autoPtr<zoneGenerator>& zg);
+
+        //- Regenerate the zones if the regenerate switch is set true
+        //  and return true if regenerated
+        //  Useful if the zones are not purely geometric, e.g. field dependent
+        bool regenerate();
 
         //- Update for mesh motion
         bool movePoints();

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -155,8 +155,8 @@ private:
 
     // Private Data
 
-        //- The cellZone the fvConstraint applies to
-        fvCellZone zone_;
+        //- The cellZone the fvModel applies to
+        mutable fvCellZone zone_;
 
         //- Temperature at which isotherm melting occurs
         //  and not isotherm melting starts e.g. eutectic [K]

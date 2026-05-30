@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,7 +76,7 @@ class meanVelocityForce
     // Private data
 
         //- The cellZone the fvConstraint applies to
-        fvCellZone zone_;
+        mutable fvCellZone zone_;
 
         //- Name of the velocity field
         word UName_;
@@ -153,6 +153,7 @@ public:
         ) const;
 
         //- Correct the pressure gradient
+        //  and apply correction to velocity field
         virtual bool constrain(volVectorField& U) const;
 
         //- Update for mesh motion

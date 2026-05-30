@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,6 +63,7 @@ inline bool Foam::fv::limitMag::constrainType
 
     Field<Type>& psiif = psi.primitiveFieldRef();
 
+    zone_.regenerate();
     const labelList& cells = zone_.zone();
 
     forAll(cells, i)

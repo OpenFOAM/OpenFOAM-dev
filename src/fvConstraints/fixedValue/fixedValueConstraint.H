@@ -75,7 +75,7 @@ class fixedValueConstraint
     // Private Data
 
         //- The cellZone the fvConstraint applies to
-        fvCellZone zone_;
+        mutable fvCellZone zone_;
 
         //- Field values
         HashPtrTable<unknownTypeFunction1> fieldValues_;

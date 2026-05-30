@@ -58,6 +58,17 @@ Foam::generatedCellZone::~generatedCellZone()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+bool Foam::generatedCellZone::regenerate()
+{
+    if (!all())
+    {
+        return cellZone_.regenerate();
+    }
+
+    return false;
+}
+
+
 void Foam::generatedCellZone::movePoints()
 {
     if (!all())

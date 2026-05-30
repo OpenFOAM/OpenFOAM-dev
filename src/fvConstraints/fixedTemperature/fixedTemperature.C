@@ -147,6 +147,7 @@ bool Foam::fv::fixedTemperature::constrain
     const word& fieldName
 ) const
 {
+    zone_.regenerate();
     const labelList& cells = zone_.zone();
 
     const basicThermo& thermo =

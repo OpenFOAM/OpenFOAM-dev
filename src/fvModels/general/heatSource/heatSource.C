@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,6 +66,8 @@ void Foam::fv::heatSource::readCoeffs(const dictionary& dict)
             << exit(FatalIOError);
     }
 
+    zone_.read(coeffs(dict));
+
     if (dict.found("q"))
     {
         q_.reset
@@ -112,7 +114,7 @@ Foam::fv::heatSource::heatSource
 )
 :
     fvModel(name, modelType, mesh, dict),
-    zone_(mesh, coeffs(dict)),
+    zone_(mesh),
     q_(nullptr)
 {
     readCoeffs(coeffs(dict));
@@ -142,6 +144,7 @@ void Foam::fv::heatSource::addSup
     fvMatrix<scalar>& eqn
 ) const
 {
+    zone_.regenerate();
     const labelList& cells = zone_.zone();
 
     const scalar q = q_->value(mesh().time().value());

@@ -58,7 +58,7 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                Class heatSource Declaration
+                          Class heatSource Declaration
 \*---------------------------------------------------------------------------*/
 
 class heatSource
@@ -68,7 +68,7 @@ class heatSource
     // Private data
 
         //- The cellZone the model applies to
-        fvCellZone zone_;
+        mutable fvCellZone zone_;
 
         //- The heat source
         autoPtr<Function1<scalar>> q_;

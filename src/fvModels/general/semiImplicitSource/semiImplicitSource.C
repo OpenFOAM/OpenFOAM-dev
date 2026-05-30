@@ -111,6 +111,8 @@ void Foam::fv::semiImplicitSource::addSupType
 
     const VolField<Type>& psi = eqn.psi();
 
+    zone_.regenerate();
+
     VolInternalField<Type> Su
     (
         IOobject

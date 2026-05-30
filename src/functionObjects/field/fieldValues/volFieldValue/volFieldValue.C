@@ -289,6 +289,8 @@ bool Foam::functionObjects::fieldValues::volFieldValue::read
 
 bool Foam::functionObjects::fieldValues::volFieldValue::write()
 {
+    zone_.regenerate();
+
     // Look to see if any fields exist. Use the flag to suppress output later.
     bool anyFields = false;
     forAll(fields_, i)

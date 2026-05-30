@@ -266,6 +266,8 @@ bool Foam::functionObjects::cutLayerAverage::execute()
 
 bool Foam::functionObjects::cutLayerAverage::write()
 {
+    zone_.regenerate();
+
     if (!weights_.valid())
     {
         calcWeights();

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,12 +99,10 @@ class massSource
 :
     public massSourceBase
 {
-private:
-
     // Private Data
 
-        //- The set of cells the source applies to
-        autoPtr<fvCellZone> setPtr_;
+        //- The cellZone the source applies to
+        mutable fvCellZone zone_;
 
         //- Mass flow rate
         autoPtr<Function1<scalar>> massFlowRate_;

@@ -49,6 +49,8 @@ namespace pointMeshMovers
 
 void Foam::pointMeshMovers::solidBody::updateZonePointIndices()
 {
+    zone_.regenerate();
+
     if (zone_.all())
     {
         zonePoints_.clear();

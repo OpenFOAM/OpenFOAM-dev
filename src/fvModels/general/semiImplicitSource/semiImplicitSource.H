@@ -132,7 +132,7 @@ private:
     // Private Data
 
         //- The cellZone the fvConstraint applies to
-        fvCellZone zone_;
+        mutable fvCellZone zone_;
 
         //- Volume mode
         volumeMode volumeMode_;

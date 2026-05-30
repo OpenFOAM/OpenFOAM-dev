@@ -51,7 +51,7 @@ void Foam::MRFZone::setMRFFaces()
     boolList faceInMRF(mesh_.nFaces(), false);
     boolList cellInMRF(mesh_.nCells(), false);
     {
-        const labelList& MRFCells = cellSet_.zone();
+        const labelList& MRFCells = zone_.zone();
 
         forAll(MRFCells, i)
         {
@@ -172,7 +172,7 @@ Foam::MRFZone::MRFZone
     mesh_(mesh),
     name_(name),
     coeffs_(dict),
-    cellSet_(mesh, coeffs_),
+    zone_(mesh, coeffs_),
     origin_(coeffs_.lookup("origin")),
     axis_(coeffs_.lookup("axis")),
     omega_(mesh.time(), coeffs_)
@@ -198,7 +198,7 @@ void Foam::MRFZone::addCoriolis
 {
     checkMRFBCs(U);
 
-    const labelList& cells = cellSet_.zone();
+    const labelList& cells = zone_.zone();
     vectorField& ddtUc = ddtU.primitiveFieldRef();
     const vectorField& Uc = U;
 
@@ -217,7 +217,7 @@ void Foam::MRFZone::addCentrifugalAcceleration
     volVectorField& centrifugalAcceleration
 ) const
 {
-    const labelList& cells = cellSet_.zone();
+    const labelList& cells = zone_.zone();
     const volVectorField& C = mesh_.C();
     vectorField& cac = centrifugalAcceleration.primitiveFieldRef();
 
@@ -247,7 +247,7 @@ void Foam::MRFZone::addCentrifugalAcceleration
 void Foam::MRFZone::makeRelative(volVectorField& U) const
 {
     const volVectorField& C = mesh_.C();
-    const labelList& cells = cellSet_.zone();
+    const labelList& cells = zone_.zone();
 
     const vector Omega = this->Omega();
 
@@ -314,7 +314,7 @@ void Foam::MRFZone::makeRelative(Field<vector>& Up, const label patchi) const
 void Foam::MRFZone::makeAbsolute(volVectorField& U) const
 {
     const volVectorField& C = mesh_.C();
-    const labelList& cells = cellSet_.zone();
+    const labelList& cells = zone_.zone();
 
     const vector Omega = this->Omega();
 
@@ -365,7 +365,7 @@ void Foam::MRFZone::makeAbsolute(Field<vector>& Up, const label patchi) const
 bool Foam::MRFZone::read(const dictionary& dict)
 {
     coeffs_ = dict;
-    cellSet_.read(coeffs_);
+    zone_.read(coeffs_);
     setMRFFaces();
 
     return true;

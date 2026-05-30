@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2021-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,15 +89,13 @@ class volumeSource
 :
     public fvTotalSource
 {
-private:
-
     // Private Data
 
         //- Name of the volume fraction field (if any)
         word alphaName_;
 
         //- The set of cells the source applies to
-        autoPtr<fvCellZone> setPtr_;
+        mutable fvCellZone zone_;
 
         //- Volumetric flow rate
         autoPtr<Function1<scalar>> volumetricFlowRate_;
