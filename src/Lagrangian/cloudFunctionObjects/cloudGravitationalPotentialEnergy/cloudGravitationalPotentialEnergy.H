@@ -41,6 +41,7 @@ Usage
         type            cloudGravitationalPotentialEnergy;
         libs            ("libLagrangianCloudFunctionObjects.so");
         cloud           cloud;
+        writeControl    writeTime;
     }
     \endverbatim
 
