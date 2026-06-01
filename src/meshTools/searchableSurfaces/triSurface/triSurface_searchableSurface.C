@@ -136,6 +136,35 @@ Foam::fileName Foam::searchableSurfaces::triSurface::checkFile
 }
 
 
+void Foam::searchableSurfaces::triSurface::scale
+(
+    const dictionary& dict
+)
+{
+    const bool haveScale = dict.found("scale");
+    const bool haveUnits = dict.found("units");
+
+    if (haveScale && haveUnits)
+    {
+        FatalIOErrorInFunction(dict)
+            << "both keywords 'scale' and 'units' defined in dictionary "
+            << dict.name() << exit(FatalIOError);
+    }
+
+    if (haveScale)
+    {
+        triSurface::scalePoints(dict.lookup<scalar>("scale", units::none));
+    }
+
+    if (haveUnits)
+    {
+        unitSet units(dimensions::length);
+        units.read(dict.lookup("units"));
+        triSurface::scalePoints(units.toStandard(scalar(1)));
+    }
+}
+
+
 bool Foam::searchableSurfaces::triSurface::addFaceToEdge
 (
     const edge& e,
@@ -340,16 +369,7 @@ Foam::searchableSurfaces::triSurface::triSurface
     minQuality_(-1),
     surfaceClosed_(-1)
 {
-    scalar scaleFactor = 0;
-
-    // Allow rescaling of the surface points
-    // eg, CAD geometries are often done in millimeters
-    if (dict.readIfPresent("scale", scaleFactor) && scaleFactor > 0)
-    {
-        Info<< searchableSurface::name() << " : using scale " << scaleFactor
-            << endl;
-        Foam::triSurface::scalePoints(scaleFactor);
-    }
+    scale(dict);
 
     const pointField& pts = Foam::triSurface::points();
 
@@ -442,16 +462,7 @@ Foam::searchableSurfaces::triSurface::triSurface
         );
     }
 
-    scalar scaleFactor = 0;
-
-    // Allow rescaling of the surface points
-    // eg, CAD geometries are often done in millimeters
-    if (dict.readIfPresent("scale", scaleFactor) && scaleFactor > 0)
-    {
-        Info<< searchableSurface::name() << " : using scale " << scaleFactor
-            << endl;
-        Foam::triSurface::scalePoints(scaleFactor);
-    }
+    scale(dict);
 
     const pointField& pts = Foam::triSurface::points();
 

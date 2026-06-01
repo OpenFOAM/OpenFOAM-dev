@@ -408,11 +408,13 @@ Foam::polyMesh* Foam::blockMesh::createTopology
     }
     if (haveConvertToMeters)
     {
-        scaleFactor_ = meshDescription.lookup<scalar>("convertToMeters");
+        scaleFactor_ =
+            meshDescription.lookup<scalar>("convertToMeters", units::none);
     }
     if (haveScale)
     {
-        scaleFactor_ = meshDescription.lookup<scalar>("scale");
+        scaleFactor_ =
+            meshDescription.lookup<scalar>("scale", units::none);
     }
     if (haveUnits)
     {

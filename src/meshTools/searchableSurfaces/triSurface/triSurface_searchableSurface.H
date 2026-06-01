@@ -127,6 +127,9 @@ class triSurface
             const bool isGlobal
         );
 
+        //- Scale based on settings in the dictionary
+        void scale(const dictionary& dict);
+
         //- Helper function for isSurfaceClosed
         static bool addFaceToEdge
         (

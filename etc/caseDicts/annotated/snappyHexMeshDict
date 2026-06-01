@@ -58,8 +58,9 @@ geometry
         // limitations.
         // maxTreeDepth 10;
 
-        // Optional: scaling factor, e.g. unit conversion
-        // scale 1;
+        // Optional: scaling factor or unit conversion
+        // scale 0.001;
+        // units [mm];
 
         // Optional: discard triangles with low quality when getting normal
         // minQuality -1;
