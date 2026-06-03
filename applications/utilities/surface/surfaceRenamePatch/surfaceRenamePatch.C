@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
             << exit(FatalError);
     }
 
-    else if (args.optionFound("point") == args.optionFound("name"))
+    if (args.optionFound("point") && args.optionFound("name"))
     {
         FatalErrorInFunction
             << "Both options provided: -patch and -point"
