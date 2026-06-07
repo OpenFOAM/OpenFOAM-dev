@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,6 +69,7 @@ SourceFiles
 #include "odeChemistryModel.H"
 #include "ReactionList.H"
 #include "ODESystem.H"
+#include "jacobianType.H"
 #include "volFields.H"
 #include "multicomponentMixture.H"
 #include "chemistryReductionMethod.H"
@@ -132,7 +133,7 @@ class chemistryModel
         Switch cpuLoad_;
 
         //- Type of the Jacobian to be calculated
-        const jacobianType jacobianType_;
+        const chemistryModels::jacobianType jacobianType_;
 
         //- Reference to the multi component mixture
         const multicomponentMixture<ThermoType>& mixture_;

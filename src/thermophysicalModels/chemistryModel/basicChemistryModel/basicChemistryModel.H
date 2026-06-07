@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,9 +43,6 @@ SourceFiles
 namespace Foam
 {
 
-// Forward declaration of classes
-class fvMesh;
-
 /*---------------------------------------------------------------------------*\
                      Class basicChemistryModel Declaration
 \*---------------------------------------------------------------------------*/
@@ -54,22 +51,6 @@ class basicChemistryModel
 :
     public IOdictionary
 {
-public:
-
-    // Public Enumerations
-
-        //- Enumeration for the type of Jacobian to be calculated by the
-        //  chemistry model
-        enum class jacobianType
-        {
-            fast,
-            exact
-        };
-
-        //- Jacobian type names
-        static const NamedEnum<jacobianType, 2> jacobianTypeNames_;
-
-
 protected:
 
     // Protected data

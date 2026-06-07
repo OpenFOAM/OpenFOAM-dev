@@ -1,6 +1,8 @@
 basicChemistryModel/basicChemistryModel.C
 basicChemistryModel/basicChemistryModelNew.C
 
+chemistryModel/jacobianType/jacobianType.C
+
 chemistrySolver/chemistrySolver/chemistrySolvers.C
 chemistrySolver/noChemistrySolver/noChemistrySolvers.C
 chemistrySolver/EulerImplicit/EulerImplicitChemistrySolvers.C

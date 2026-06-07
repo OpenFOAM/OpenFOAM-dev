@@ -42,8 +42,8 @@ Foam::chemistryModel<ThermoType>::chemistryModel
     jacobianType_
     (
         this->found("jacobian")
-      ? jacobianTypeNames_.read(this->lookup("jacobian"))
-      : jacobianType::fast
+      ? chemistryModels::jacobianTypeNames.read(this->lookup("jacobian"))
+      : chemistryModels::jacobianType::fast
     ),
     mixture_
     (
@@ -280,12 +280,12 @@ void Foam::chemistryModel<ThermoType>::jacobian
         const scalar rhoMByWi = rhoM/specieThermos_[sToc(i)].W();
         switch (jacobianType_)
         {
-            case jacobianType::fast:
+            case chemistryModels::jacobianType::fast:
                 {
                     dcdY(i, i) = rhoMByWi;
                 }
                 break;
-            case jacobianType::exact:
+            case chemistryModels::jacobianType::exact:
                 for (label j=0; j<nSpecie_; j++)
                 {
                     dcdY(i, j) =
@@ -346,13 +346,13 @@ void Foam::chemistryModel<ThermoType>::jacobian
             scalar ddNidtByVdYj = 0;
             switch (jacobianType_)
             {
-                case jacobianType::fast:
+                case chemistryModels::jacobianType::fast:
                     {
                         const scalar ddNidtByVdcj = ddNdtByVdcTp(i, j);
                         ddNidtByVdYj = ddNidtByVdcj*dcdY(j, j);
                     }
                     break;
-                case jacobianType::exact:
+                case chemistryModels::jacobianType::exact:
                     for (label k=0; k<nSpecie_; k++)
                     {
                         const scalar ddNidtByVdck = ddNdtByVdcTp(i, k);
