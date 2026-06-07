@@ -1,0 +1,264 @@
+/*---------------------------------------------------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+License
+    This file is part of OpenFOAM.
+
+    OpenFOAM is free software: you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+    for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+
+Class
+    Foam::chemistryReductionMethod
+
+Description
+    An abstract class for methods of chemical mechanism reduction
+
+    References:
+    \verbatim
+        Contino, F., Jeanmart, H., Lucchini, T., & D’Errico, G. (2011).
+        Coupling of in situ adaptive tabulation and dynamic adaptive chemistry:
+        An effective method for solving combustion in engine simulations.
+        Proceedings of the Combustion Institute, 33(2), 3057-3064.
+
+        Contino, F., Lucchini, T., D'Errico, G., Duynslaegher, C.,
+        Dias, V., & Jeanmart, H. (2012).
+        Simulations of advanced combustion modes using detailed chemistry
+        combined with tabulation and mechanism reduction techniques.
+        SAE International Journal of Engines,
+        5(2012-01-0145), 185-196.
+
+        Contino, F., Foucher, F., Dagaut, P., Lucchini, T., D’Errico, G., &
+        Mounaïm-Rousselle, C. (2013).
+        Experimental and numerical analysis of nitric oxide effect on the
+        ignition of iso-octane in a single cylinder HCCI engine.
+        Combustion and Flame, 160(8), 1476-1483.
+
+        Contino, F., Masurier, J. B., Foucher, F., Lucchini, T., D’Errico, G., &
+        Dagaut, P. (2014).
+        CFD simulations using the TDAC method to model iso-octane combustion
+        for a large range of ozone seeding and temperature conditions
+        in a single cylinder HCCI engine.
+        Fuel, 137, 179-184.
+    \endverbatim
+
+SourceFiles
+    chemistryReductionMethod.C
+    chemistryReductionMethods.C
+    chemistryReductionMethodNew.C
+    chemistryReductionMethodI.H
+
+\*---------------------------------------------------------------------------*/
+
+#ifndef chemistryReductionMethod_H
+#define chemistryReductionMethod_H
+
+#include "dictionary.H"
+#include "DynamicField.H"
+#include "boolList.H"
+#include "Switch.H"
+#include "cpuTime.H"
+#include "OFstream.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
+
+namespace chemistryModels
+{
+    template<class ThermoType>
+    class Standard;
+}
+
+/*---------------------------------------------------------------------------*\
+                   Class chemistryReductionMethod Declaration
+\*---------------------------------------------------------------------------*/
+
+template<class ThermoType>
+class chemistryReductionMethod
+{
+protected:
+
+    // Protected Data
+
+        //- Reference to the chemistry model
+        chemistryModels::Standard<ThermoType>& chemistry_;
+
+        //- Total number of species
+        const label nSpecie_;
+
+        //- Number of active species
+        label nActiveSpecies_;
+
+        //- List of disabled reactions (disabled = true)
+        Field<bool> reactionsDisabled_;
+
+        //- List of active species (active = true)
+        boolList activeSpecies_;
+
+
+    //- Protected Member Functions
+
+        const dictionary& coeffDict(const dictionary& dict) const
+        {
+            return dict.subDict("reduction");
+        }
+
+        //- Initialise reduction of the mechanism
+        void initReduceMechanism();
+
+        //- End reduction of the mechanism
+        void endReduceMechanism(List<label>& ctos, DynamicList<label>& stoc);
+
+
+private:
+
+    // Private Data
+
+        //- Switch to select performance logging
+        Switch log_;
+
+        //- Tolerance for the mechanism reduction algorithm
+        scalar tolerance_;
+
+        //- CPU time for logging
+        cpuTime cpuTime_;
+
+        //- ...
+        int64_t sumnActiveSpecies_;
+
+        //- ...
+        int64_t sumn_;
+
+        //- ...
+        scalar reduceMechCpuTime_;
+
+        // Log file for the average time spent reducing the chemistry
+        autoPtr<OFstream> cpuReduceFile_;
+
+        // Write average number of species
+        autoPtr<OFstream> nActiveSpeciesFile_;
+
+
+public:
+
+    //- Runtime type information
+    TypeName("chemistryReductionMethod");
+
+
+    // Declare runtime constructor selection table
+    declareRunTimeSelectionTable
+    (
+        autoPtr,
+        chemistryReductionMethod,
+        dictionary,
+        (
+            const dictionary& dict,
+            chemistryModels::Standard<ThermoType>& chemistry
+        ),
+        (dict, chemistry)
+    );
+
+
+    // Constructors
+
+        //- Construct from components
+        chemistryReductionMethod
+        (
+            chemistryModels::Standard<ThermoType>& chemistry
+        );
+
+        //- Construct from components
+        chemistryReductionMethod
+        (
+            const dictionary& dict,
+            chemistryModels::Standard<ThermoType>& chemistry
+        );
+
+
+    // Selector
+
+        static autoPtr<chemistryReductionMethod<ThermoType>> New
+        (
+            const dictionary& dict,
+            chemistryModels::Standard<ThermoType>& chemistry
+        );
+
+
+    //- Destructor
+    virtual ~chemistryReductionMethod();
+
+
+    // Member Functions
+
+        //- Return mechanism reduction active
+        virtual bool active() const
+        {
+            return true;
+        }
+
+        //- Return the number of species
+        inline label nSpecie();
+
+        //- Return the number of active species
+        inline label nActiveSpecies() const;
+
+        //- Return the tolerance
+        inline scalar tolerance() const;
+
+        //- Return the active species
+        inline const boolList& activeSpecies() const;
+
+        //- Return whether or not a reaction is disabled
+        inline bool reactionDisabled(const label i) const;
+
+        //- Reduce the mechanism
+        virtual void reduceMechanism
+        (
+            const scalar p,
+            const scalar T,
+            const scalarField& c,
+            List<label>& ctos,
+            DynamicList<label>& stoc,
+            const label li
+        ) = 0;
+
+        //- ...
+        virtual void update();
+};
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+} // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "chemistryReductionMethodI.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "chemistryReductionMethod.C"
+    #include "chemistryReductionMethodNew.C"
+#endif
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#endif
+
+// ************************************************************************* //

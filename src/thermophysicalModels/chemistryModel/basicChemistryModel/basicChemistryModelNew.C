@@ -53,7 +53,7 @@ Foam::autoPtr<Foam::basicChemistryModel> Foam::basicChemistryModel::New
             << "Template parameter based chemistry solver selection is no "
             << "longer supported. Please create a chemistryType dictionary"
             << "instead." << endl << endl << "For example, the entry:" << endl
-            << "    chemistrySolver ode<chemistryModel<"
+            << "    chemistrySolver ode<chemistryModels::Foam<"
             << "rhoChemistryModel,sutherland<specie<janaf<perfectGas>,"
             << "sensibleInternalEnergy>>>>" << endl << endl << "becomes:"
             << endl << "    chemistryType" << endl << "    {" << endl
@@ -71,7 +71,7 @@ Foam::autoPtr<Foam::basicChemistryModel> Foam::basicChemistryModel::New
 
     const word methodName
     (
-        chemistryTypeDict.lookupOrDefault<word>("method", "chemistryModel")
+        chemistryTypeDict.lookupOrDefault<word>("method", "standard")
     );
 
     dictionary chemistryTypeDictNew;

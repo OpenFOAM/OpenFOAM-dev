@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,19 +23,48 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "ode.H"
-#include "Standard_chemistryModel.H"
+#include "chemistryReductionMethod.H"
 
-#include "forGases.H"
-#include "forLiquids.H"
-#include "makeChemistrySolver.H"
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
+template<class ThermoType>
+inline Foam::label Foam::chemistryReductionMethod<ThermoType>::nSpecie()
 {
-    forCoeffGases(makeChemistrySolvers, ode);
-    forCoeffLiquids(makeChemistrySolvers, ode);
+    return nSpecie_;
+}
+
+
+template<class ThermoType>
+inline Foam::label
+Foam::chemistryReductionMethod<ThermoType>::nActiveSpecies() const
+{
+    return nActiveSpecies_;
+}
+
+
+template<class ThermoType>
+inline const Foam::boolList&
+Foam::chemistryReductionMethod<ThermoType>::activeSpecies() const
+{
+    return activeSpecies_;
+}
+
+
+template<class ThermoType>
+inline Foam::scalar
+Foam::chemistryReductionMethod<ThermoType>::tolerance() const
+{
+    return tolerance_;
+}
+
+
+template<class ThermoType>
+inline bool Foam::chemistryReductionMethod<ThermoType>::reactionDisabled
+(
+    const label i
+) const
+{
+    return reactionsDisabled_[i];
 }
 
 

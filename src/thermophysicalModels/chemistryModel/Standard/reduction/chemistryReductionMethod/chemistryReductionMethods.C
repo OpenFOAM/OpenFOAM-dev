@@ -23,19 +23,18 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "ode.H"
-#include "Standard_chemistryModel.H"
+#include "chemistryReductionMethod.H"
 
 #include "forGases.H"
 #include "forLiquids.H"
-#include "makeChemistrySolver.H"
+#include "makeChemistryReductionMethod.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    forCoeffGases(makeChemistrySolvers, ode);
-    forCoeffLiquids(makeChemistrySolvers, ode);
+    forCoeffGases(defineChemistryReductionMethod, nullArg);
+    forCoeffLiquids(defineChemistryReductionMethod, nullArg);
 }
 
 

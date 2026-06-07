@@ -1,8 +1,9 @@
+
 /*---------------------------------------------------------------------------*\
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,19 +24,24 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "ode.H"
-#include "Standard_chemistryModel.H"
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-#include "forGases.H"
-#include "forLiquids.H"
-#include "makeChemistrySolver.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
+inline Foam::scalar Foam::binaryNode::calcA
+(
+    const chemPointISAT& elementLeft,
+    const chemPointISAT& elementRight
+)
 {
-    forCoeffGases(makeChemistrySolvers, ode);
-    forCoeffLiquids(makeChemistrySolvers, ode);
+    const scalarField& phil(elementLeft.phi());
+    const scalarField& phir(elementRight.phi());
+
+    scalar a = 0;
+    forAll(v_, i)
+    {
+        a += v_[i]*(phil[i] + phir[i]);
+    }
+
+    return a/2;
 }
 
 

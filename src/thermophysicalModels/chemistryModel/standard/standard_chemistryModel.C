@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,20 +23,50 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "ode.H"
-#include "Standard_chemistryModel.H"
+#include "standard_chemistryModel.H"
 
-#include "forGases.H"
-#include "forLiquids.H"
-#include "makeChemistrySolver.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    forCoeffGases(makeChemistrySolvers, ode);
-    forCoeffLiquids(makeChemistrySolvers, ode);
+namespace chemistryModels
+{
+    const Foam::NamedEnum<standard::jacobianType, 2>
+    standard::jacobianTypeNames
+    {
+        "fast",
+        "exact"
+    };
+
+    defineTypeNameAndDebug(standard, 0);
 }
+}
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::chemistryModels::standard::standard
+(
+    const fluidMulticomponentThermo& thermo
+)
+:
+    basicChemistryModel(thermo),
+    ODESystem(),
+    Yvf_(this->thermo().Y()),
+    nSpecie_(Yvf_.size()),
+    reduction_(false),
+    cTos_(nSpecie_, -1),
+    sToc_(nSpecie_)
+{
+    Info<< "chemistryModels::standard: Number of species = "
+        << nSpecie_ << endl;
+}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::chemistryModels::standard::~standard()
+{}
 
 
 // ************************************************************************* //

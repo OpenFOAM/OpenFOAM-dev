@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,20 +23,42 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "ode.H"
-#include "Standard_chemistryModel.H"
+#include "noChemistryTabulation.H"
+#include "addToRunTimeSelectionTable.H"
 
-#include "forGases.H"
-#include "forLiquids.H"
-#include "makeChemistrySolver.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+/* * * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * */
 
 namespace Foam
 {
-    forCoeffGases(makeChemistrySolvers, ode);
-    forCoeffLiquids(makeChemistrySolvers, ode);
+namespace chemistryTabulationMethods
+{
+    defineTypeNameAndDebug(none, 0);
+    addToRunTimeSelectionTable(chemistryTabulationMethod, none, dictionary);
 }
+}
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::chemistryTabulationMethods::none::none
+(
+    const dictionary& chemistryProperties,
+    const chemistryModels::standard& chemistry
+)
+:
+    chemistryTabulationMethod
+    (
+        chemistryProperties,
+        chemistry
+    )
+{}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::chemistryTabulationMethods::none::~none()
+{}
 
 
 // ************************************************************************* //

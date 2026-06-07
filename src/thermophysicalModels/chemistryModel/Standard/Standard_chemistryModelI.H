@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,19 +23,56 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "ode.H"
-#include "Standard_chemistryModel.H"
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-#include "forGases.H"
-#include "forLiquids.H"
-#include "makeChemistrySolver.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
+template<class ThermoType>
+inline const Foam::multicomponentMixture<ThermoType>&
+Foam::chemistryModels::Standard<ThermoType>::mixture() const
 {
-    forCoeffGases(makeChemistrySolvers, ode);
-    forCoeffLiquids(makeChemistrySolvers, ode);
+    return mixture_;
+}
+
+
+template<class ThermoType>
+inline const Foam::PtrList<Foam::Reaction<ThermoType>>&
+Foam::chemistryModels::Standard<ThermoType>::reactions() const
+{
+    return reactions_;
+}
+
+
+template<class ThermoType>
+inline const Foam::PtrList<ThermoType>&
+Foam::chemistryModels::Standard<ThermoType>::specieThermos() const
+{
+    return specieThermos_;
+}
+
+
+template<class ThermoType>
+inline Foam::label
+Foam::chemistryModels::Standard<ThermoType>::nReaction() const
+{
+    return reactions_.size();
+}
+
+
+template<class ThermoType>
+inline const Foam::word&
+Foam::chemistryModels::Standard<ThermoType>::reactionName
+(
+    const label reactioni
+) const
+{
+    return reactions_[reactioni].name();
+}
+
+
+template<class ThermoType>
+inline const Foam::PtrList<Foam::DimensionedField<Foam::scalar, Foam::fvMesh>>&
+Foam::chemistryModels::Standard<ThermoType>::RR() const
+{
+    return RR_;
 }
 
 

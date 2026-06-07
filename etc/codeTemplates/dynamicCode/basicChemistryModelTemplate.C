@@ -81,7 +81,7 @@ namespace Foam
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "makeChemistrySolver.H"
-#include "${method}.H"
+#include "${method}_chemistryModel.H"
 #include "${solver}.H"
 
 namespace Foam

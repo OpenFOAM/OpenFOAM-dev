@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,19 +23,42 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "ode.H"
-#include "Standard_chemistryModel.H"
+#include "noChemistryReduction.H"
 
-#include "forGases.H"
-#include "forLiquids.H"
-#include "makeChemistrySolver.H"
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+template<class ThermoType>
+Foam::chemistryReductionMethods::none<ThermoType>::none
+(
+    const dictionary& dict,
+    chemistryModels::Standard<ThermoType>& chemistry
+)
+:
+    chemistryReductionMethod<ThermoType>(chemistry)
+{}
 
-namespace Foam
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+template<class ThermoType>
+Foam::chemistryReductionMethods::none<ThermoType>::~none()
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class ThermoType>
+void Foam::chemistryReductionMethods::none<ThermoType>::reduceMechanism
+(
+    const scalar p,
+    const scalar T,
+    const scalarField& c,
+    List<label>& ctos,
+    DynamicList<label>& stoc,
+    const label li
+)
 {
-    forCoeffGases(makeChemistrySolvers, ode);
-    forCoeffLiquids(makeChemistrySolvers, ode);
+    NotImplemented;
 }
 
 
