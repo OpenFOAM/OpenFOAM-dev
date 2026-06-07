@@ -70,7 +70,7 @@ Foam::reactionModels::laminar::laminar
         this->coeffs().lookupOrDefault("outerCorrect", false)
     ),
     timeIndex_(-1),
-    chemistryPtr_(basicChemistryModel::New(thermo))
+    chemistryPtr_(chemistryModel::New(thermo))
 {
     if (integrateReactionRate_)
     {

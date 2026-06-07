@@ -23,20 +23,20 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "basicChemistryModel.H"
+#include "chemistryModel.H"
 
 /* * * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * */
 
 namespace Foam
 {
-    defineTypeNameAndDebug(basicChemistryModel, 0);
-    defineRunTimeSelectionTable(basicChemistryModel, thermo);
+    defineTypeNameAndDebug(chemistryModel, 0);
+    defineRunTimeSelectionTable(chemistryModel, thermo);
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::basicChemistryModel::basicChemistryModel
+Foam::chemistryModel::chemistryModel
 (
     const fluidMulticomponentThermo& thermo
 )
@@ -75,7 +75,7 @@ Foam::basicChemistryModel::basicChemistryModel
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::basicChemistryModel::~basicChemistryModel()
+Foam::chemistryModel::~chemistryModel()
 {}
 
 

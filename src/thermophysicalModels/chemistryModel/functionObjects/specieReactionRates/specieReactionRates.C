@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "specieReactionRates.H"
-#include "basicChemistryModel.H"
+#include "chemistryModel.H"
 #include "fvcVolumeIntegrate.H"
 #include "polyTopoChangeMap.H"
 #include "polyMeshMap.H"
@@ -53,8 +53,8 @@ namespace functionObjects
 
 void Foam::functionObjects::specieReactionRates::writeFileHeader(const label i)
 {
-    const basicChemistryModel& chemistryModel =
-        mesh().lookupObject<basicChemistryModel>
+    const chemistryModel& chemistry =
+        mesh().lookupObject<chemistryModel>
         (
             IOobject::groupName("chemistryProperties", phaseName_)
         );
@@ -63,14 +63,14 @@ void Foam::functionObjects::specieReactionRates::writeFileHeader(const label i)
 
     zone_.writeFileHeader(*this, file());
 
-    writeHeaderValue(file(), "nSpecie", chemistryModel.nSpecie());
-    writeHeaderValue(file(), "nReaction", chemistryModel.nReaction());
+    writeHeaderValue(file(), "nSpecie", chemistry.nSpecie());
+    writeHeaderValue(file(), "nReaction", chemistry.nReaction());
 
     writeCommented(file(), "Time");
     writeTabbed(file(), "Reaction");
 
     const wordList& speciesNames =
-        chemistryModel.thermo().species();
+        chemistry.thermo().species();
 
     forAll (speciesNames, si)
     {
@@ -132,14 +132,14 @@ bool Foam::functionObjects::specieReactionRates::write()
 
     logFiles::write();
 
-    const basicChemistryModel& chemistryModel =
-        mesh().lookupObject<basicChemistryModel>
+    const chemistryModel& chemistry =
+        mesh().lookupObject<chemistryModel>
         (
             IOobject::groupName("chemistryProperties", phaseName_)
         );
 
-    const label nSpecie = chemistryModel.nSpecie();
-    const label nReaction = chemistryModel.nReaction();
+    const label nSpecie = chemistry.nSpecie();
+    const label nReaction = chemistry.nReaction();
 
     // Region volume
     const scalar V = zone_.V();
@@ -154,7 +154,7 @@ bool Foam::functionObjects::specieReactionRates::write()
 
         const PtrList<volScalarField::Internal> RR
         (
-            chemistryModel.specieReactionRR(reactioni)
+            chemistry.specieReactionRR(reactioni)
         );
 
         // Compute the average rates and write them into the log file

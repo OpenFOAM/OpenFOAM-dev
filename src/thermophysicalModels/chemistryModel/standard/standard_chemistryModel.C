@@ -50,7 +50,7 @@ Foam::chemistryModels::standard::standard
     const fluidMulticomponentThermo& thermo
 )
 :
-    basicChemistryModel(thermo),
+    chemistryModel(thermo),
     ODESystem(),
     Yvf_(this->thermo().Y()),
     nSpecie_(Yvf_.size()),

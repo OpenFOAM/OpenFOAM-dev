@@ -91,7 +91,7 @@ Foam::reactionModels::EDC::EDC
         this->coeffs().lookupOrDefault("outerCorrect", true)
     ),
     timeIndex_(-1),
-    chemistryPtr_(basicChemistryModel::New(thermo))
+    chemistryPtr_(chemistryModel::New(thermo))
 {}
 
 

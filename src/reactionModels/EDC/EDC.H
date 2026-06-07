@@ -101,7 +101,7 @@ SourceFiles
 
 #include "autoPtr.H"
 #include "reactionModel.H"
-#include "basicChemistryModel.H"
+#include "chemistryModel.H"
 #include "NamedEnum.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -167,7 +167,7 @@ class EDC
         label timeIndex_;
 
         //- Pointer to chemistry model
-        autoPtr<basicChemistryModel> chemistryPtr_;
+        autoPtr<chemistryModel> chemistryPtr_;
 
 
 public:

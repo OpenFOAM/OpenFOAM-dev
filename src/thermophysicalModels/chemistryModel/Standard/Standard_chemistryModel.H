@@ -199,7 +199,7 @@ public:
             inline const PtrList<ThermoType>& specieThermos() const;
 
 
-        // Overrides to basicChemistryModel functions
+        // Overrides to chemistryModel functions
 
             //- The number of reactions
             virtual inline label nReaction() const;

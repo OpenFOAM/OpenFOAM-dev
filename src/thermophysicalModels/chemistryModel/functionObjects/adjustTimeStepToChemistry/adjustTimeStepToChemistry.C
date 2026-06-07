@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "adjustTimeStepToChemistry.H"
-#include "basicChemistryModel.H"
+#include "chemistryModel.H"
 #include "solver.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -100,8 +100,8 @@ Foam::scalar Foam::functionObjects::adjustTimeStepToChemistry::maxDeltaT() const
         return vGreat;
     }
 
-    const basicChemistryModel& chemistry =
-        obr_.lookupObject<basicChemistryModel>
+    const chemistryModel& chemistry =
+        obr_.lookupObject<chemistryModel>
         (
             IOobject::groupName("chemistryProperties", phaseName_)
         );

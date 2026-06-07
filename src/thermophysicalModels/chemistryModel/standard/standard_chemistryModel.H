@@ -42,7 +42,7 @@ SourceFiles
 #ifndef standard_chemistryModel_H
 #define standard_chemistryModel_H
 
-#include "basicChemistryModel.H"
+#include "chemistryModel.H"
 #include "ODESystem.H"
 #include "OFstream.H"
 
@@ -63,7 +63,7 @@ namespace chemistryModels
 
 class standard
 :
-    public basicChemistryModel,
+    public chemistryModel,
     public ODESystem
 {
 protected:

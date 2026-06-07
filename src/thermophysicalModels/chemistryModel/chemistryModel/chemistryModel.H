@@ -22,19 +22,19 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::basicChemistryModel
+    Foam::chemistryModel
 
 Description
     Base class for chemistry models
 
 SourceFiles
-    basicChemistryModelI.H
-    basicChemistryModel.C
+    chemistryModelI.H
+    chemistryModel.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef basicChemistryModel_H
-#define basicChemistryModel_H
+#ifndef chemistryModel_H
+#define chemistryModel_H
 
 #include "fluidMulticomponentThermo.H"
 
@@ -44,10 +44,10 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class basicChemistryModel Declaration
+                     Class chemistryModel Declaration
 \*---------------------------------------------------------------------------*/
 
-class basicChemistryModel
+class chemistryModel
 :
     public IOdictionary
 {
@@ -77,14 +77,14 @@ protected:
 public:
 
     //- Runtime type information
-    TypeName("basicChemistryModel");
+    TypeName("chemistryModel");
 
 
     //- Declare run-time constructor selection tables
     declareRunTimeSelectionTable
     (
         autoPtr,
-        basicChemistryModel,
+        chemistryModel,
         thermo,
         (const fluidMulticomponentThermo& thermo),
         (thermo)
@@ -94,23 +94,23 @@ public:
     // Constructors
 
         //- Construct from thermo
-        basicChemistryModel(const fluidMulticomponentThermo& thermo);
+        chemistryModel(const fluidMulticomponentThermo& thermo);
 
         //- Disallow default bitwise copy construction
-        basicChemistryModel(const basicChemistryModel&) = delete;
+        chemistryModel(const chemistryModel&) = delete;
 
 
     // Selectors
 
         //- Select based on fluid reaction thermo
-        static autoPtr<basicChemistryModel> New
+        static autoPtr<chemistryModel> New
         (
             const fluidMulticomponentThermo& thermo
         );
 
 
     //- Destructor
-    virtual ~basicChemistryModel();
+    virtual ~chemistryModel();
 
 
     // Member Functions
@@ -175,7 +175,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const basicChemistryModel&) = delete;
+        void operator=(const chemistryModel&) = delete;
 };
 
 
@@ -185,7 +185,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "basicChemistryModelI.H"
+#include "chemistryModelI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

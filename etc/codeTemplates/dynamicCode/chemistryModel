@@ -9,7 +9,7 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    object      basicChemistryModel;
+    object      chemistryModel;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -27,7 +27,12 @@ solverRenamed
 
 method
 (
-    chemistryModel
+    standard
+);
+
+methodRenamed
+(
+    standard Standard
 );
 
 codeOptions

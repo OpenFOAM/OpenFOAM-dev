@@ -37,7 +37,7 @@ SourceFiles
 
 #include "autoPtr.H"
 #include "reactionModel.H"
-#include "basicChemistryModel.H"
+#include "chemistryModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -75,7 +75,7 @@ protected:
     // Protected Data
 
         //- Pointer to chemistry model
-        autoPtr<basicChemistryModel> chemistryPtr_;
+        autoPtr<chemistryModel> chemistryPtr_;
 
 
 public:

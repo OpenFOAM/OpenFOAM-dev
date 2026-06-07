@@ -23,13 +23,13 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "basicChemistryModel.H"
+#include "chemistryModel.H"
 #include "basicThermo.H"
 #include "compileTemplate.H"
 
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
-Foam::autoPtr<Foam::basicChemistryModel> Foam::basicChemistryModel::New
+Foam::autoPtr<Foam::chemistryModel> Foam::chemistryModel::New
 (
     const fluidMulticomponentThermo& thermo
 )
@@ -94,7 +94,7 @@ Foam::autoPtr<Foam::basicChemistryModel> Foam::basicChemistryModel::New
             dynamicCode::allowSystemOperations
         && !dynamicCode::resolveTemplate
             (
-                basicChemistryModel::typeName
+                chemistryModel::typeName
             ).empty()
         )
         {
@@ -108,7 +108,7 @@ Foam::autoPtr<Foam::basicChemistryModel> Foam::basicChemistryModel::New
 
             compileTemplate chemistryModel
             (
-                basicChemistryModel::typeName,
+                chemistryModel::typeName,
                 chemSolverNameName,
                 substitutions
             );
@@ -118,7 +118,7 @@ Foam::autoPtr<Foam::basicChemistryModel> Foam::basicChemistryModel::New
             {
                 FatalIOErrorInFunction(chemistryTypeDict)
                     << "Compilation and linkage of "
-                    << basicChemistryModel::typeName << " type " << nl
+                    << chemistryModel::typeName << " type " << nl
                     << "chemistryType" << chemistryTypeDict << nl << nl
                     << "failed." << exit(FatalIOError);
             }
@@ -189,7 +189,7 @@ Foam::autoPtr<Foam::basicChemistryModel> Foam::basicChemistryModel::New
         }
     }
 
-    return autoPtr<basicChemistryModel>(cstrIter()(thermo));
+    return autoPtr<chemistryModel>(cstrIter()(thermo));
 }
 
 

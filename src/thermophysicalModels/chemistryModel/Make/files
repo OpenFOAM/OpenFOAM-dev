@@ -1,5 +1,5 @@
-basicChemistryModel/basicChemistryModel.C
-basicChemistryModel/basicChemistryModelNew.C
+chemistryModel/chemistryModel.C
+chemistryModel/chemistryModelNew.C
 
 chemistrySolver/chemistrySolver/chemistrySolvers.C
 chemistrySolver/noChemistrySolver/noChemistrySolvers.C
