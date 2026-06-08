@@ -75,6 +75,13 @@ class UniformDimensionedField
     public tmp<UniformDimensionedField<Type>>::refCount,
     public OldTimeField<UniformDimensionedField<Type>>
 {
+protected:
+
+    // Protected Member Functions
+
+        //- Read the field
+        void read(const IOobject::readOption& ro);
+
 
 public:
 
@@ -93,14 +100,19 @@ public:
 
     // Constructors
 
-        //- Construct from components. Either reads or uses supplied value.
-        UniformDimensionedField(const IOobject&, const dimensioned<Type>&);
+        //- Construct from IO object
+        UniformDimensionedField(const IOobject&, const bool read = true);
+
+        //- Construct from IO object. Either reads or uses supplied value.
+        UniformDimensionedField
+        (
+            const IOobject&,
+            const dimensioned<Type>&,
+            const bool read = true
+        );
 
         //- Copy constructor
         UniformDimensionedField(const UniformDimensionedField<Type>&);
-
-        //- Construct from Istream
-        UniformDimensionedField(const IOobject&);
 
 
     //- Destructor
@@ -131,6 +143,9 @@ public:
         //- Reset the field values to the given field
         //  Equivalent to operator=
         void reset(const UniformDimensionedField<Type>&);
+
+        //- Prevent warning due to read method
+        using regIOobject::read;
 
         //- WriteData function required for regIOobject write operation
         bool writeData(Ostream&) const;

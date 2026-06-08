@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,7 +76,7 @@ Foam::hexRef8Data::hexRef8Data(const IOobject& io)
         }
     }
     {
-        typeIOobject<uniformDimensionedScalarField> rio(io);
+        typeIOobject<localUniformDimensionedScalarField> rio(io);
         rio.rename("level0Edge");
         bool haveFile = returnReduce
         (
@@ -90,7 +90,7 @@ Foam::hexRef8Data::hexRef8Data(const IOobject& io)
                 Info<< "Reading hexRef8 data : " << rio.name() << endl;
             }
 
-            level0EdgePtr_.reset(new uniformDimensionedScalarField(rio));
+            level0EdgePtr_.reset(new localUniformDimensionedScalarField(rio));
         }
     }
     {
@@ -157,7 +157,7 @@ Foam::hexRef8Data::hexRef8Data
 
         level0EdgePtr_.reset
         (
-            new uniformDimensionedScalarField(rio, data.level0EdgePtr_())
+            new localUniformDimensionedScalarField(rio, data.level0EdgePtr_())
         );
     }
     if (data.refHistoryPtr_.valid())
@@ -225,7 +225,7 @@ Foam::hexRef8Data::hexRef8Data
 
         level0EdgePtr_.reset
         (
-            new uniformDimensionedScalarField
+            new localUniformDimensionedScalarField
             (
                 rio,
                 procDatas[0].level0EdgePtr_()
@@ -306,7 +306,7 @@ void Foam::hexRef8Data::sync(const IOobject& io)
             rio.readOpt() = IOobject::NO_READ;
             level0EdgePtr_.reset
             (
-                new uniformDimensionedScalarField
+                new localUniformDimensionedScalarField
                 (
                     rio,
                     dimensionedScalar(dimLength, masterLen)

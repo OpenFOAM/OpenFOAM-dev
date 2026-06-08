@@ -32,11 +32,16 @@ namespace Foam
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-defineTemplateTypeNameAndDebug(uniformDimensionedScalarField, 0);
-defineTemplateTypeNameAndDebug(uniformDimensionedVectorField, 0);
-defineTemplateTypeNameAndDebug(uniformDimensionedSphericalTensorField, 0);
-defineTemplateTypeNameAndDebug(uniformDimensionedSymmTensorField, 0);
-defineTemplateTypeNameAndDebug(uniformDimensionedTensorField, 0);
+#define defineUniformDimensionedTypeField_(Field)                              \
+    defineTemplateTypeNameAndDebug(Field, 0)
+
+#define defineUniformDimensionedTypeField(Type, nullArg)                       \
+    defineUniformDimensionedTypeField_                                         \
+    (                                                                          \
+        CAT3(uniformDimensioned, CAPITALIZE(Type), Field)                      \
+    );
+
+FOR_ALL_FIELD_TYPES(defineUniformDimensionedTypeField);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

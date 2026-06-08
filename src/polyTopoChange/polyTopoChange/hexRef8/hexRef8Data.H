@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ SourceFiles
 #define hexRef8Data_H
 
 #include "labelIOList.H"
-#include "uniformDimensionedFields.H"
+#include "localUniformDimensionedFields.H"
 #include "UPtrList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -63,7 +63,7 @@ class hexRef8Data
 
         autoPtr<labelIOList> pointLevelPtr_;
 
-        autoPtr<uniformDimensionedScalarField> level0EdgePtr_;
+        autoPtr<localUniformDimensionedScalarField> level0EdgePtr_;
 
         autoPtr<refinementHistory> refHistoryPtr_;
 

@@ -25,35 +25,57 @@ License
 
 #include "UniformDimensionedField.H"
 
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+template<class Type>
+void Foam::UniformDimensionedField<Type>::read(const IOobject::readOption& ro)
+{
+    if
+    (
+        ro == IOobject::MUST_READ
+     || ro == IOobject::MUST_READ_IF_MODIFIED
+     || (ro == IOobject::READ_IF_PRESENT && headerOk())
+    )
+    {
+        dictionary dict(readStream(type()));
+
+        this->dimensions().read(dict.lookup("dimensions"));
+
+        this->value() = dict.lookup<Type>("value", this->dimensions());
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
 Foam::UniformDimensionedField<Type>::UniformDimensionedField
 (
     const IOobject& io,
-    const dimensioned<Type>& dt
+    const bool read
+)
+:
+    regIOobject(io),
+    dimensioned<Type>(regIOobject::name(), dimless, Zero),
+    OldTimeField<UniformDimensionedField>(this->time().timeIndex())
+{
+    if (read) this->read(IOobject::MUST_READ);
+}
+
+
+template<class Type>
+Foam::UniformDimensionedField<Type>::UniformDimensionedField
+(
+    const IOobject& io,
+    const dimensioned<Type>& dt,
+    const bool read
 )
 :
     regIOobject(io),
     dimensioned<Type>(dt),
     OldTimeField<UniformDimensionedField>(this->time().timeIndex())
 {
-    // Read value
-    if
-    (
-        (
-            io.readOpt() == IOobject::MUST_READ
-         || io.readOpt() == IOobject::MUST_READ_IF_MODIFIED
-        )
-     || (io.readOpt() == IOobject::READ_IF_PRESENT && headerOk())
-    )
-    {
-        dictionary dict(readStream(typeName));
-
-        this->dimensions().read(dict.lookup("dimensions"));
-
-        this->value() = dict.lookup<Type>("value", this->dimensions());
-    }
+    if (read) this->read(io.readOpt());
 }
 
 
@@ -67,24 +89,6 @@ Foam::UniformDimensionedField<Type>::UniformDimensionedField
     dimensioned<Type>(udt),
     OldTimeField<UniformDimensionedField>(udt)
 {}
-
-
-template<class Type>
-Foam::UniformDimensionedField<Type>::UniformDimensionedField
-(
-    const IOobject& io
-)
-:
-    regIOobject(io),
-    dimensioned<Type>(regIOobject::name(), dimless, Zero),
-    OldTimeField<UniformDimensionedField>(this->time().timeIndex())
-{
-    dictionary dict(readStream(typeName));
-
-    this->dimensions().read(dict.lookup("dimensions"));
-
-    this->value() = dict.lookup<Type>("value", this->dimensions());
-}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,42 +21,44 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-InClass
-    Foam::UniformDimensionedField
-
-Description
-    Typedefs for UniformDimensionedField
-
-SourceFiles
-    uniformDimensionedFields.C
-
 \*---------------------------------------------------------------------------*/
 
-#ifndef uniformDimensionedFields_H
-#define uniformDimensionedFields_H
+#include "LocalUniformDimensionedField.H"
 
-#include "UniformDimensionedField.H"
-#include "fieldTypes.H"
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
+template<class Type>
+Foam::LocalUniformDimensionedField<Type>::LocalUniformDimensionedField
+(
+    const IOobject& io,
+    const bool read
+)
+:
+    UniformDimensionedField<Type>(io, false)
 {
+    if (read) this->read(IOobject::MUST_READ);
+}
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define typedefUniformDimensionedTypeField(Type, nullArg)                      \
-    typedef UniformDimensionedField<Type>                                      \
-        CAT3(uniformDimensioned, CAPITALIZE(Type), Field);                     \
+template<class Type>
+Foam::LocalUniformDimensionedField<Type>::LocalUniformDimensionedField
+(
+    const IOobject& io,
+    const dimensioned<Type>& dt,
+    const bool read
+)
+:
+    UniformDimensionedField<Type>(io, dt, false)
+{
+    if (read) this->read(io.readOpt());
+}
 
-FOR_ALL_FIELD_TYPES(typedefUniformDimensionedTypeField);
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-} // End namespace Foam
+template<class Type>
+Foam::LocalUniformDimensionedField<Type>::~LocalUniformDimensionedField()
+{}
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#endif
 
 // ************************************************************************* //
