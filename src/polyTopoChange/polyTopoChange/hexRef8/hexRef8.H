@@ -44,7 +44,7 @@ SourceFiles
 #include "removeFaces.H"
 #include "refinementHistory.H"
 #include "PackedBoolList.H"
-#include "uniformDimensionedFields.H"
+#include "localUniformDimensionedFields.H"
 #include "cellShapeList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -84,7 +84,7 @@ class hexRef8
         labelIOList pointLevel_;
 
         //- Typical edge length between unrefined points
-        uniformDimensionedScalarField level0Edge_;
+        localUniformDimensionedScalarField level0Edge_;
 
         //- Refinement history
         refinementHistory history_;

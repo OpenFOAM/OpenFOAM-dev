@@ -32,11 +32,16 @@ namespace Foam
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-defineTemplateTypeNameAndDebug(uniformGeometricScalarField, 0);
-defineTemplateTypeNameAndDebug(uniformGeometricVectorField, 0);
-defineTemplateTypeNameAndDebug(uniformGeometricSphericalTensorField, 0);
-defineTemplateTypeNameAndDebug(uniformGeometricSymmTensorField, 0);
-defineTemplateTypeNameAndDebug(uniformGeometricTensorField, 0);
+#define defineUniformGeometricTypeField_(Field)                                \
+    defineTemplateTypeNameAndDebug(Field, 0)
+
+#define defineUniformGeometricTypeField(Type, nullArg)                         \
+    defineUniformGeometricTypeField_                                           \
+    (                                                                          \
+        CAT3(uniformGeometric, CAPITALIZE(Type), Field)                        \
+    );
+
+FOR_ALL_FIELD_TYPES(defineUniformGeometricTypeField);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

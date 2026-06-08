@@ -182,6 +182,7 @@ functionObjects/fvMeshFunctionObject/fvMeshFunctionObject.C
 functionObjects/fvModelFunctionObject/fvModelFunctionObject.C
 
 fields/UniformDimensionedFields/uniformDimensionedFields.C
+fields/UniformDimensionedFields/localUniformDimensionedFields.C
 
 pointPatchFields = fields/pointPatchFields
 $(pointPatchFields)/pointPatchField/pointPatchFields.C

@@ -25,6 +25,7 @@ InClass
     Foam::UniformGeometricField
 
 Description
+    Typedefs for UniformGeometricField
 
 SourceFiles
     uniformGeometricFields.C
@@ -44,12 +45,11 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-typedef UniformGeometricField<scalar> uniformGeometricScalarField;
-typedef UniformGeometricField<vector> uniformGeometricVectorField;
-typedef UniformGeometricField<sphericalTensor>
-    uniformGeometricSphericalTensorField;
-typedef UniformGeometricField<symmTensor> uniformGeometricSymmTensorField;
-typedef UniformGeometricField<tensor> uniformGeometricTensorField;
+#define typedefUniformGeometricTypeField(Type, nullArg)                        \
+    typedef UniformGeometricField<Type>                                        \
+        CAT3(uniformGeometric, CAPITALIZE(Type), Field);                       \
+
+FOR_ALL_FIELD_TYPES(typedefUniformGeometricTypeField);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

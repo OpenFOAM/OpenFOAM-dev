@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,20 +22,20 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 InClass
-    Foam::UniformDimensionedField
+    Foam::LocalUniformDimensionedField
 
 Description
-    Typedefs for UniformDimensionedField
+    Typedefs for LocalUniformDimensionedField
 
 SourceFiles
-    uniformDimensionedFields.C
+    localUniformDimensionedFields.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef uniformDimensionedFields_H
-#define uniformDimensionedFields_H
+#ifndef localUniformDimensionedFields_H
+#define localUniformDimensionedFields_H
 
-#include "UniformDimensionedField.H"
+#include "LocalUniformDimensionedField.H"
 #include "fieldTypes.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -45,11 +45,11 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define typedefUniformDimensionedTypeField(Type, nullArg)                      \
-    typedef UniformDimensionedField<Type>                                      \
-        CAT3(uniformDimensioned, CAPITALIZE(Type), Field);                     \
+#define typedefLocalUniformDimensionedTypeField(Type, nullArg)                 \
+    typedef LocalUniformDimensionedField<Type>                                 \
+        CAT3(localUniformDimensioned, CAPITALIZE(Type), Field);                \
 
-FOR_ALL_FIELD_TYPES(typedefUniformDimensionedTypeField);
+FOR_ALL_FIELD_TYPES(typedefLocalUniformDimensionedTypeField);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
