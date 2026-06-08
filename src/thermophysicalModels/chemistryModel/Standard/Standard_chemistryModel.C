@@ -24,8 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Standard_chemistryModel.H"
-#include "UniformField.H"
-#include "localEulerDdtScheme.H"
+#include "extrapolatedCalculatedFvPatchFields.H"
 #include "cpuLoad.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -66,7 +65,9 @@ Foam::chemistryModels::Standard<ThermoType>::Standard
     ),
     mechRed_(*mechRedPtr_),
     tabulationPtr_(chemistryTabulationMethod::New(*this, *this)),
-    tabulation_(*tabulationPtr_)
+    tabulation_(*tabulationPtr_),
+    odeSolver_(ODESolver::New(*this, typeDict("ode"))),
+    cTp_(nEqns())
 {
     // Create the fields for the chemistry sources
     forAll(RR_, fieldi)
@@ -1000,6 +1001,53 @@ Foam::chemistryModels::Standard<ThermoType>::Qdot() const
     }
 
     return tQdot;
+}
+
+
+template<class ThermoType>
+void Foam::chemistryModels::Standard<ThermoType>::solve
+(
+    scalar& p,
+    scalar& T,
+    scalarField& c,
+    const label li,
+    scalar& deltaT,
+    scalar& subDeltaT
+) const
+{
+    // Reset the size of the ODE system to the simplified size when mechanism
+    // reduction is active
+    if (odeSolver_->resize())
+    {
+        odeSolver_->resizeField(cTp_);
+    }
+
+    const label nSpecie = this->nSpecie();
+
+    // Copy the concentration, T and P to the total solve-vector
+    for (int i=0; i<nSpecie; i++)
+    {
+        cTp_[i] = c[i];
+    }
+    cTp_[nSpecie] = T;
+    cTp_[nSpecie+1] = p;
+
+    if (debug)
+    {
+        scalarField dcTp(this->nEqns(), rootSmall);
+        dcTp[nSpecie] = T*rootSmall;
+        dcTp[nSpecie+1] = p*rootSmall;
+        this->check(0, cTp_, dcTp, li);
+    }
+
+    odeSolver_->solve(0, deltaT, cTp_, li, subDeltaT);
+
+    for (int i=0; i<nSpecie; i++)
+    {
+        c[i] = max(0.0, cTp_[i]);
+    }
+    T = cTp_[nSpecie];
+    p = cTp_[nSpecie+1];
 }
 
 

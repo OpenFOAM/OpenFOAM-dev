@@ -80,22 +80,20 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "makeChemistrySolver.H"
-#include "${method}_chemistryModel.H"
-#include "${solver}.H"
+#include "makeChemistryModel.H"
+#include "${type}_chemistryModel.H"
 
 namespace Foam
 {
-    defineChemistrySolver(${method}, ThermoPhysics);
-    makeChemistrySolver(${solver}, ${method}, ThermoPhysics);
+    makeChemistryModel(${type}, ThermoPhysics);
 }
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define chemistryModelMethod 0
+#define Standard_chemistryModel 1
 
-#if ${method}Method == chemistryModelMethod
+#if ${type}_chemistryModel == Standard_chemistryModel
 
 #include "makeChemistryReductionMethod.H"
 
@@ -123,9 +121,9 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define chemistryModelMethod 0
+#define Standard_chemistryModel 1
 
-#if ${method}Method == chemistryModelMethod
+#if ${type}_chemistryModel == Standard_chemistryModel
 
 #include "makeReaction.H"
 

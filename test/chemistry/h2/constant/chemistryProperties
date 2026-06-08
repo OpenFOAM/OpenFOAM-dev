@@ -14,19 +14,11 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-chemistryType
-{
-    solver            ode;
-}
+type            standard;
 
 chemistry       on;
 
 initialChemicalTimeStep 1e-7;
-
-EulerImplicit
-{
-    cTauChem        1;
-}
 
 ode
 {

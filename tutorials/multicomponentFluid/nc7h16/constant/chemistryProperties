@@ -14,13 +14,6 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-chemistryType
-{
-    solver          ode;
-}
-
-chemistry       on;
-
 initialChemicalTimeStep 1e-7;
 
 ode

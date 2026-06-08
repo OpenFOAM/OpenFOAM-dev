@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,14 +23,14 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef makeChemistrySolver_H
-#define makeChemistrySolver_H
+#ifndef makeChemistryModel_H
+#define makeChemistryModel_H
 
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define defineChemistrySolver(Model, ThermoPhysics)                            \
+#define makeChemistryModel(Model, ThermoPhysics)                               \
                                                                                \
     typedef chemistryModels::Model<ThermoPhysics>                              \
         Model##ThermoPhysics;                                                  \
@@ -43,47 +43,22 @@ License
           + "<" + ThermoPhysics::typeName() + ">"                              \
         ).c_str(),                                                             \
         0                                                                      \
-    )
-
-
-#define makeChemistrySolver(Solver, Model, ThermoPhysics)                      \
-                                                                               \
-    typedef Solver<chemistryModels::Model<ThermoPhysics>>                      \
-        Solver##Model##ThermoPhysics;                                          \
-                                                                               \
-    defineTemplateTypeNameAndDebugWithName                                     \
-    (                                                                          \
-        Solver##Model##ThermoPhysics,                                          \
-        (                                                                      \
-            word(Solver##Model##ThermoPhysics::typeName_())                    \
-          + "<" + word(Model<ThermoPhysics>::typeName_())                      \
-          + "<" + ThermoPhysics::typeName() + ">>"                             \
-        ).c_str(),                                                             \
-        0                                                                      \
-    );                                                                         \
+    )                                                                          \
                                                                                \
     addToRunTimeSelectionTable                                                 \
     (                                                                          \
-        chemistryModel,                                                   \
-        Solver##Model##ThermoPhysics,                                          \
+        chemistryModel,                                                        \
+        Model##ThermoPhysics,                                                  \
         thermo                                                                 \
     )
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define defineChemistrySolvers(nullArg, ThermoPhysics)                         \
-    defineChemistrySolver                                                      \
+#define makeChemistryModels(Model, ThermoPhysics)                              \
+    makeChemistryModel                                                         \
     (                                                                          \
-        Standard,                                                              \
-        ThermoPhysics                                                          \
-    )
-
-#define makeChemistrySolvers(Solver, ThermoPhysics)                            \
-    makeChemistrySolver                                                        \
-    (                                                                          \
-        Solver,                                                                \
-        Standard,                                                              \
+        Model,                                                                 \
         ThermoPhysics                                                          \
     )
 

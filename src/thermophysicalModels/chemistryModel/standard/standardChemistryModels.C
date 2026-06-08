@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,19 +23,18 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "ode.H"
 #include "Standard_chemistryModel.H"
+#include "makeChemistryModel.H"
 
 #include "forGases.H"
 #include "forLiquids.H"
-#include "makeChemistrySolver.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    forCoeffGases(makeChemistrySolvers, ode);
-    forCoeffLiquids(makeChemistrySolvers, ode);
+    forCoeffGases(makeChemistryModels, Standard);
+    forCoeffLiquids(makeChemistryModels, Standard);
 }
 
 

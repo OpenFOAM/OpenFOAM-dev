@@ -30,9 +30,6 @@ Description
 See also
     Foam::chemistryModels::Standard
 
-See also
-    Foam::chemistryModels::standard
-
 SourceFiles
     standard_chemistryModelI.H
     standard_chemistryModel.C

@@ -57,10 +57,7 @@ Foam::chemistryModels::standard::standard
     reduction_(false),
     cTos_(nSpecie_, -1),
     sToc_(nSpecie_)
-{
-    Info<< "chemistryModels::standard: Number of species = "
-        << nSpecie_ << endl;
-}
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

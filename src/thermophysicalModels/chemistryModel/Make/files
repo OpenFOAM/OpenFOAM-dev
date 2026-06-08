@@ -1,12 +1,8 @@
 chemistryModel/chemistryModel.C
 chemistryModel/chemistryModelNew.C
 
-chemistrySolver/chemistrySolver/chemistrySolvers.C
-chemistrySolver/noChemistrySolver/noChemistrySolvers.C
-chemistrySolver/EulerImplicit/EulerImplicitChemistrySolvers.C
-chemistrySolver/ode/odeChemistrySolvers.C
-
 standard/standard_chemistryModel.C
+standard/standardChemistryModels.C
 
 Standard/reduction/chemistryReductionMethod/chemistryReductionMethods.C
 Standard/reduction/noChemistryReduction/noChemistryReductionMethods.C

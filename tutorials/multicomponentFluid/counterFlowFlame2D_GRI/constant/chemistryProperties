@@ -13,13 +13,6 @@ FoamFile
     object      chemistryProperties;
 }
 
-chemistryType
-{
-    solver          ode;
-}
-
-chemistry       on;
-
 cpuLoad         on;
 
 initialChemicalTimeStep 1e-07;

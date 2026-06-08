@@ -13,24 +13,12 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-solver
-(
-    EulerImplicit
-    ode
-    none
-);
-
-solverRenamed
-(
-    none noChemistrySolver
-);
-
-method
+type
 (
     standard
 );
 
-methodRenamed
+typeRenamed
 (
     standard Standard
 );

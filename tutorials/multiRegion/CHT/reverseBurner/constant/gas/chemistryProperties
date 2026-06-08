@@ -14,24 +14,12 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-chemistryType
-{
-    solver          EulerImplicit;
-}
-
-chemistry       on;
-
 initialChemicalTimeStep 1e-07;
 
 ode
 {
     solver          seulex;
     eps             0.05;
-}
-
-EulerImplicit
-{
-    cTauChem        1;
 }
 
 #include "reactions"

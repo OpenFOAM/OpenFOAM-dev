@@ -25,12 +25,14 @@ Class
     Foam::chemistryModels::Standard
 
 Description
-    Extends Foam::chemistryModels::standard
-
-    adding a thermo package, and ODE functions.
+    Extension to Foam::chemistryModels::standard templated on thermo
+    and provides stiff ODE integration functions.
 
     Integrates a standard OpenFOAM reaction system and evaluation of chemical
     source terms with optional support for mechanism reduction and tabulation.
+
+See also
+    Foam::chemistryModels::standard
 
 SourceFiles
     Standard_chemistryModelI.H
@@ -42,13 +44,11 @@ SourceFiles
 #define Standard_chemistryModel_H
 
 #include "standard_chemistryModel.H"
-#include "ReactionList.H"
-#include "ODESystem.H"
-#include "volFields.H"
 #include "multicomponentMixture.H"
+#include "ReactionList.H"
 #include "chemistryReductionMethod.H"
 #include "chemistryTabulationMethod.H"
-#include "DynamicField.H"
+#include "ODESolver.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -153,6 +153,12 @@ class Standard
         //- Tabulation method reference
         chemistryTabulationMethod& tabulation_;
 
+        //- ODE solver
+        mutable autoPtr<ODESolver> odeSolver_;
+
+        // ODE solver data
+        mutable scalarField cTp_;
+
         //- Log file for average time spent solving the chemistry
         autoPtr<OFstream> cpuSolveFile_;
 
@@ -243,7 +249,7 @@ public:
             virtual tmp<volScalarField> Qdot() const;
 
 
-        // Overrides to ODESystem
+        // ODE solution functions
 
             //- Calculate the ODE derivatives
             virtual void derivatives
@@ -264,9 +270,6 @@ public:
                 scalarSquareMatrix& J
             ) const;
 
-
-        // ODE solution functions
-
             //- Solve the ODE system
             virtual void solve
             (
@@ -276,7 +279,7 @@ public:
                 const label li,
                 scalar& deltaT,
                 scalar& subDeltaT
-            ) const = 0;
+            ) const;
 
 
     // Member Operators

@@ -14,25 +14,13 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-chemistryType
-{
-    solver            EulerImplicit;
-}
-
-chemistry           on;
-
 initialChemicalTimeStep 1e-07;
-
-EulerImplicit
-{
-    cTauChem        1;
-}
 
 ode
 {
-    solver          Rosenbrock43;
+    solver          seulex;
     absTol          1e-8;
-    relTol          0.01;
+    relTol          1e-1;
 }
 
 #include "reactions.gas"
