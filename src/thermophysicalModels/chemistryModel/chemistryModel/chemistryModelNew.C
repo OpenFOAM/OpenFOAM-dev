@@ -55,112 +55,128 @@ Foam::autoPtr<Foam::chemistryModel> Foam::chemistryModel::New
     Info<< indentOrNl
         << "Selecting chemistryModel " << type << endl;
 
-    const word instantiatedName
-    (
-        type + '<' + thermo.thermoName() + ">"
-    );
-
+    // Check if the non-templated chemistryModel type exists on the table
+    // providing support for third-party implementations which are independent
+    // of OpenFOAM thermodynamics
     typename thermoConstructorTable::iterator cstrIter =
-        thermoConstructorTablePtr_->find(instantiatedName);
+        thermoConstructorTablePtr_->find(type);
 
     if (cstrIter == thermoConstructorTablePtr_->end())
     {
-        if
+        const word instantiatedType
         (
-            dynamicCode::allowSystemOperations
-        && !dynamicCode::resolveTemplate
-            (
-                chemistryModel::typeName
-            ).empty()
-        )
+            type + '<' + thermo.thermoName() + ">"
+        );
+
+        Info<< "Instantiated as " << instantiatedType << endl;
+
+        // Check if the chemistryModel type exists templated on
+        // the current thermodynamics
+        cstrIter = thermoConstructorTablePtr_->find(instantiatedType);
+
+        if (cstrIter == thermoConstructorTablePtr_->end())
         {
-            List<Pair<word>> substitutions
+            if
             (
-                basicThermo::thermoNameComponents(thermo.thermoName())
-            );
-
-            substitutions.append({"type", type});
-
-            compileTemplate chemistryModel
-            (
-                chemistryModel::typeName,
-                instantiatedName,
-                substitutions
-            );
-            cstrIter = thermoConstructorTablePtr_->find(instantiatedName);
-
-            if (cstrIter == thermoConstructorTablePtr_->end())
-            {
-                FatalIOErrorInFunction(chemistryDict)
-                    << "Compilation and linkage of "
-                    << chemistryModel::typeName << " type "
-                    << type << nl << nl
-                    << "failed." << exit(FatalIOError);
-            }
-        }
-        else
-        {
-            FatalIOErrorInFunction(chemistryDict)
-                << "Unknown " << typeName_() << " type " << type
-                << endl;
-
-            const wordList names(thermoConstructorTablePtr_->sortedToc());
-
-            wordList thisCmpts;
-            thisCmpts.append(word::null);
-            thisCmpts.append(word::null);
-            thisCmpts.append
-            (
-                basicThermo::splitThermoName(thermo.thermoName(), 5)
-            );
-
-            List<wordList> validNames;
-            validNames.append(wordList(2, word::null));
-            validNames[0][0] = "solver";
-            validNames[0][1] = "method";
-            forAll(names, i)
-            {
-                const wordList cmpts(basicThermo::splitThermoName(names[i], 7));
-
-                if
+                dynamicCode::allowSystemOperations
+            && !dynamicCode::resolveTemplate
                 (
-                    SubList<word>(cmpts, 5, 2)
-                 == SubList<word>(thisCmpts, 5, 2)
-                )
+                    chemistryModel::typeName
+                ).empty()
+            )
+            {
+                List<Pair<word>> substitutions
+                (
+                    basicThermo::thermoNameComponents(thermo.thermoName())
+                );
+
+                substitutions.append({"type", type});
+
+                compileTemplate chemistryModel
+                (
+                    chemistryModel::typeName,
+                    instantiatedType,
+                    substitutions
+                );
+                cstrIter = thermoConstructorTablePtr_->find(instantiatedType);
+
+                if (cstrIter == thermoConstructorTablePtr_->end())
                 {
-                    validNames.append(SubList<word>(cmpts, 2));
+                    FatalIOErrorInFunction(chemistryDict)
+                        << "Compilation and linkage of "
+                        << chemistryModel::typeName << " type "
+                        << type << nl << nl
+                        << "failed." << exit(FatalIOError);
                 }
             }
-
-            FatalIOErrorInFunction(chemistryDict)
-                << "Valid " << validNames[0][0] << '/' << validNames[0][1]
-                << " combinations for this thermodynamic model are:"
-                << endl << endl;
-            printTable(validNames, FatalIOErrorInFunction(chemistryDict));
-
-            FatalIOErrorInFunction(chemistryDict) << endl;
-
-            List<wordList> validCmpts;
-            validCmpts.append(wordList(7, word::null));
-            validCmpts[0][0] = "solver";
-            validCmpts[0][1] = "method";
-            validCmpts[0][2] = "transport";
-            validCmpts[0][3] = "thermo";
-            validCmpts[0][4] = "equationOfState";
-            validCmpts[0][5] = "specie";
-            validCmpts[0][6] = "energy";
-            forAll(names, i)
+            else
             {
-                validCmpts.append(basicThermo::splitThermoName(names[i], 7));
+                FatalIOErrorInFunction(chemistryDict)
+                    << "Unknown " << typeName_() << type
+                    << " instantiated as " << instantiatedType
+                    << endl;
+
+                const wordList names(thermoConstructorTablePtr_->sortedToc());
+
+                wordList thisCmpts(1, word::null);
+                thisCmpts.append
+                (
+                    basicThermo::splitThermoName(thermo.thermoName(), 5)
+                );
+
+                List<wordList> validNames(1, {"type"});
+                forAll(names, i)
+                {
+                    const wordList cmpts
+                    (
+                        basicThermo::splitThermoName(names[i], 6)
+                    );
+
+                    if
+                    (
+                        SubList<word>(cmpts, 5, 1)
+                     == SubList<word>(thisCmpts, 5, 1)
+                    )
+                    {
+                        validNames.append(SubList<word>(cmpts, 1));
+                    }
+                }
+
+                FatalIOErrorInFunction(chemistryDict)
+                    << "Valid chemistryModel types "
+                       "for the current thermodynamics are:"
+                    << nl << endl;
+                printTable(validNames, FatalIOErrorInFunction(chemistryDict));
+
+                FatalIOErrorInFunction(chemistryDict) << endl;
+
+                List<wordList> validCmpts
+                (
+                    1,
+                    {
+                        "type",
+                        "transport",
+                        "thermo",
+                        "equationOfState",
+                        "specie",
+                        "energy"
+                    }
+                );
+                forAll(names, i)
+                {
+                    validCmpts.append
+                    (
+                        basicThermo::splitThermoName(names[i], 6)
+                    );
+                }
+
+                FatalIOErrorInFunction(chemistryDict)
+                    << "All chemistryModel/thermodynamics combinations are:"
+                    << endl << endl;
+                printTable(validCmpts, FatalIOErrorInFunction(chemistryDict));
+
+                FatalIOErrorInFunction(chemistryDict) << exit(FatalIOError);
             }
-
-            FatalIOErrorInFunction(chemistryDict)
-                << "All " << validCmpts[0][0] << '/' << validCmpts[0][1]
-                << "/thermodynamics combinations are:"
-                << endl << endl;
-            printTable(validCmpts, FatalIOErrorInFunction(chemistryDict));
-
-            FatalIOErrorInFunction(chemistryDict) << exit(FatalIOError);
         }
     }
 
