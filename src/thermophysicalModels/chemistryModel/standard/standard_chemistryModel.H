@@ -25,7 +25,25 @@ Class
     Foam::chemistryModels::standard
 
 Description
-    Concrete base class for Foam::chemistryModels::Standard
+    Non-templated Base class for Foam::chemistryModels::Standard
+
+    Example of \c standard \c chemistryModel specification in
+    constant/chemistryProperties using the \c seulex ODE solver to integrate
+    the included reaction system:
+    \verbatim
+    type            standard;
+
+    initialChemicalTimeStep 1e-7;
+
+    ode
+    {
+        solver          seulex;
+        absTol          1e-8;
+        relTol          1e-1;
+    }
+
+    #include "reactions"
+    \endverbatim
 
 See also
     Foam::chemistryModels::Standard
@@ -41,6 +59,7 @@ SourceFiles
 
 #include "chemistryModel.H"
 #include "ODESystem.H"
+#include "generatedCellZone.H"
 #include "OFstream.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -77,6 +96,9 @@ protected:
 
         //- Jacobian type names
         static const NamedEnum<jacobianType, 2> jacobianTypeNames;
+
+        //- Optional cellZone to limit where the chemistry is integrated
+        generatedCellZone zone_;
 
         //- Reference to the field of specie mass fractions
         const PtrList<volScalarField>& Yvf_;

@@ -52,6 +52,7 @@ Foam::chemistryModels::standard::standard
 :
     chemistryModel(thermo),
     ODESystem(),
+    zone_(mesh(), *this, true),
     Yvf_(this->thermo().Y()),
     nSpecie_(Yvf_.size()),
     reduction_(false),

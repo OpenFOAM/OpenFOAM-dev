@@ -101,6 +101,7 @@ namespace chemistryReductionMethods
 /*---------------------------------------------------------------------------*\
                              Class DAC Declaration
 \*---------------------------------------------------------------------------*/
+
 template<class ThermoType>
 class DAC
 :
