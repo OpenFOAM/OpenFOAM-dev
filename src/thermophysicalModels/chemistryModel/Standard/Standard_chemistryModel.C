@@ -65,9 +65,7 @@ Foam::chemistryModels::Standard<ThermoType>::Standard
     ),
     mechRed_(*mechRedPtr_),
     tabulationPtr_(chemistryTabulationMethod::New(*this, *this)),
-    tabulation_(*tabulationPtr_),
-    odeSolver_(ODESolver::New(*this, typeDict("ode"))),
-    cTp_(nEqns())
+    tabulation_(*tabulationPtr_)
 {
     // Create the fields for the chemistry sources
     forAll(RR_, fieldi)

@@ -48,7 +48,6 @@ SourceFiles
 #include "ReactionList.H"
 #include "chemistryReductionMethod.H"
 #include "chemistryTabulationMethod.H"
-#include "ODESolver.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -152,12 +151,6 @@ class Standard
 
         //- Tabulation method reference
         chemistryTabulationMethod& tabulation_;
-
-        //- ODE solver
-        mutable autoPtr<ODESolver> odeSolver_;
-
-        // ODE solver data
-        mutable scalarField cTp_;
 
         //- Log file for average time spent solving the chemistry
         autoPtr<OFstream> cpuSolveFile_;

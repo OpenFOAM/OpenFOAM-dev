@@ -27,6 +27,8 @@ Class
 Description
     Non-templated Base class for Foam::chemistryModels::Standard
 
+    With run-time selected ODE solver
+
     Example of \c standard \c chemistryModel specification in
     constant/chemistryProperties using the \c seulex ODE solver to integrate
     the included reaction system:
@@ -46,7 +48,9 @@ Description
     \endverbatim
 
 See also
+    Foam::chemistryModel
     Foam::chemistryModels::Standard
+    Foam::generatedCellZone
 
 SourceFiles
     standard_chemistryModelI.H
@@ -58,7 +62,7 @@ SourceFiles
 #define standard_chemistryModel_H
 
 #include "chemistryModel.H"
-#include "ODESystem.H"
+#include "ODESolver.H"
 #include "generatedCellZone.H"
 #include "OFstream.H"
 
@@ -116,6 +120,12 @@ protected:
         //- Temporary map from simplified to complete concentration fields
         //  sc -> c
         mutable DynamicList<label> sToc_;
+
+        //- ODE solver
+        mutable autoPtr<ODESolver> odeSolver_;
+
+        // ODE solver data
+        mutable scalarField cTp_;
 
 
 public:

@@ -57,7 +57,9 @@ Foam::chemistryModels::standard::standard
     nSpecie_(Yvf_.size()),
     reduction_(false),
     cTos_(nSpecie_, -1),
-    sToc_(nSpecie_)
+    sToc_(nSpecie_),
+    odeSolver_(ODESolver::New(*this, typeDict("ode"))),
+    cTp_(nEqns())
 {}
 
 
