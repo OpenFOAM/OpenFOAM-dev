@@ -69,7 +69,7 @@ IF(${ParaView_VERSION} VERSION_LESS 5.5)
         vtkPVblockMesh
         OpenFOAM
         LINK_PRIVATE
-        pqCore
+        pqApplicationComponents
     )
 ELSEIF(${ParaView_VERSION} VERSION_LESS 5.7)
     # Assume QT version 5 if it hasn't been defined
@@ -86,7 +86,7 @@ ELSEIF(${ParaView_VERSION} VERSION_LESS 5.7)
         Qt${PARAVIEW_QT_MAJOR_VERSION}::Core
         Qt${PARAVIEW_QT_MAJOR_VERSION}::Gui
         LINK_PRIVATE
-        pqCore
+        pqApplicationComponents
     )
 ELSE()
     # Assume QT version 5 if it hasn't been defined
@@ -103,6 +103,6 @@ ELSE()
         Qt${PARAVIEW_QT_MAJOR_VERSION}::Core
         Qt${PARAVIEW_QT_MAJOR_VERSION}::Gui
         LINK_PRIVATE
-        ParaView::pqCore
+        ParaView::pqApplicationComponents
     )
 ENDIF()

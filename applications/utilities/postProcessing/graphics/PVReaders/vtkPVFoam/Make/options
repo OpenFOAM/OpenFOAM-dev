@@ -9,6 +9,7 @@ EXE_INC = \
     -I$(LIB_SRC)/lagrangian/basic/lnInclude \
     -I$(LIB_SRC)/Lagrangian/Lagrangian/lnInclude \
     -I../PVFoamReader/vtk \
+    -I$(VTK_INCLUDE_DIR) \
     -I$(ParaView_INCLUDE_DIR) \
     -I$(ParaView_INCLUDE_DIR)/vtkkwiml \
     $(shell \
