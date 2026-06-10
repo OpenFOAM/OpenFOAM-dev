@@ -27,7 +27,9 @@ Class
 Description
     Non-templated Base class for Foam::chemistryModels::Standard
 
-    With run-time selected ODE solver
+    With run-time selected ODE solver and optional cellZone to limit the region
+    in which the chemistry is integrated to speed-up large cases in which the
+    chemistry is active in a small sub-region.
 
     Example of \c standard \c chemistryModel specification in
     constant/chemistryProperties using the \c seulex ODE solver to integrate
