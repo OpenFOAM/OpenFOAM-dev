@@ -1,6 +1,9 @@
-# Note: enable vtkPolyhedron when available
-
 EXE_INC = \
+    $(shell \
+        $(WM_PROJECT_DIR)/bin/tools/foamVersionCompare \
+        $(ParaView_VERSION) ge 6.1.0 && \
+        echo "--std=c++17" \
+    ) \
     -I$(LIB_SRC)/meshTools/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/parallel/parallel/lnInclude \
@@ -13,8 +16,9 @@ EXE_INC = \
     -I$(ParaView_INCLUDE_DIR) \
     -I$(ParaView_INCLUDE_DIR)/vtkkwiml \
     $(shell \
-        test -f $(ParaView_INCLUDE_DIR)/vtkPolyhedron.h && \
-        echo "-DHAS_VTK_POLYHEDRON" || echo "-UHAS_VTK_POLYHEDRON" \
+        test -f $(VTK_INCLUDE_DIR)/vtkPolyhedron.h && \
+        echo "-DHAS_VTK_POLYHEDRON" || \
+        echo "-UHAS_VTK_POLYHEDRON" \
     )
 
 LIB_LIBS = \

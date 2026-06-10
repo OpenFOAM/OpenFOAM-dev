@@ -1,11 +1,16 @@
 EXE_INC = \
+    $(shell \
+        $(WM_PROJECT_DIR)/bin/tools/foamVersionCompare \
+        $(ParaView_VERSION) ge 6.1.0 && \
+        echo "--std=c++17" \
+    ) \
     -I$(LIB_SRC)/meshTools/lnInclude \
     -I$(LIB_SRC)/fileFormats/lnInclude \
     -I$(LIB_SRC)/mesh/blockMesh/lnInclude \
+    -I../PVblockMeshReader/vtk \
     -I$(VTK_INCLUDE_DIR) \
     -I$(ParaView_INCLUDE_DIR) \
-    -I$(ParaView_INCLUDE_DIR)/vtkkwiml \
-    -I../PVblockMeshReader/vtk
+    -I$(ParaView_INCLUDE_DIR)/vtkkwiml
 
 LIB_LIBS = \
     -lmeshTools \
