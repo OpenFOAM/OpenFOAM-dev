@@ -1848,9 +1848,7 @@ Foam::hexRef8::hexRef8(const polyMesh& mesh, const bool readHistory)
         // All cells visible if not read or readHistory = false
         (readHistory ? mesh_.nCells() : 0)
     ),
-    faceRemover_(mesh_, great),     // merge boundary faces wherever possible
-    savedPointLevel_(0),
-    savedCellLevel_(0)
+    faceRemover_(mesh_, great)      // merge boundary faces wherever possible
 {
     if (readHistory)
     {
@@ -1984,9 +1982,7 @@ Foam::hexRef8::hexRef8
         ),
         history
     ),
-    faceRemover_(mesh_, great),     // merge boundary faces wherever possible
-    savedPointLevel_(0),
-    savedCellLevel_(0)
+    faceRemover_(mesh_, great)      // merge boundary faces wherever possible
 {
     if (history_.active() && history_.visibleCells().size() != mesh_.nCells())
     {
@@ -2100,9 +2096,7 @@ Foam::hexRef8::hexRef8
         labelList(0),
         false
     ),
-    faceRemover_(mesh_, great),     // merge boundary faces wherever possible
-    savedPointLevel_(0),
-    savedCellLevel_(0)
+    faceRemover_(mesh_, great)      // merge boundary faces wherever possible
 {
     if
     (
@@ -3125,10 +3119,6 @@ Foam::labelListList Foam::hexRef8::setRefinement
         // checkRefinementLevels(-1, labelList(0));
     }
 
-    // Clear any saved point/cell data.
-    savedPointLevel_.clear();
-    savedCellLevel_.clear();
-
 
     // New point/cell level. Copy of pointLevel for existing points.
     DynamicList<label> newCellLevel(cellLevel_.size());
@@ -4107,44 +4097,7 @@ Foam::labelListList Foam::hexRef8::setRefinement
 }
 
 
-void Foam::hexRef8::storeData
-(
-    const labelList& pointsToStore,
-    const labelList& facesToStore,
-    const labelList& cellsToStore
-)
-{
-    savedPointLevel_.resize(2*pointsToStore.size());
-    forAll(pointsToStore, i)
-    {
-        label pointi = pointsToStore[i];
-        savedPointLevel_.insert(pointi, pointLevel_[pointi]);
-    }
-
-    savedCellLevel_.resize(2*cellsToStore.size());
-    forAll(cellsToStore, i)
-    {
-        label celli = cellsToStore[i];
-        savedCellLevel_.insert(celli, cellLevel_[celli]);
-    }
-}
-
-
 void Foam::hexRef8::topoChange(const polyTopoChangeMap& map)
-{
-    Map<label> dummyMap(0);
-
-    topoChange(map, dummyMap, dummyMap, dummyMap);
-}
-
-
-void Foam::hexRef8::topoChange
-(
-    const polyTopoChangeMap& map,
-    const Map<label>& pointsToRestore,
-    const Map<label>& facesToRestore,
-    const Map<label>& cellsToRestore
-)
 {
     // Update celllevel
     if (debug)
@@ -4202,26 +4155,6 @@ void Foam::hexRef8::topoChange
             }
             cellLevel_.transfer(newCellLevel);
         }
-
-        // See if any cells to restore. This will be for some new cells
-        // the corresponding old cell.
-        forAllConstIter(Map<label>, cellsToRestore, iter)
-        {
-            label newCelli = iter.key();
-            label storedCelli = iter();
-
-            Map<label>::iterator fnd = savedCellLevel_.find(storedCelli);
-
-            if (fnd == savedCellLevel_.end())
-            {
-                FatalErrorInFunction
-                    << "Problem : trying to restore old value for new cell "
-                    << newCelli << " but cannot find old cell " << storedCelli
-                    << " in map of stored values " << savedCellLevel_
-                    << abort(FatalError);
-            }
-            cellLevel_[newCelli] = fnd();
-        }
     }
 
 
@@ -4255,27 +4188,6 @@ void Foam::hexRef8::topoChange
                 }
             }
             pointLevel_.transfer(newPointLevel);
-        }
-
-        // See if any points to restore. This will be for some new points
-        // the corresponding old point (the one from the call to storeData)
-        forAllConstIter(Map<label>, pointsToRestore, iter)
-        {
-            label newPointi = iter.key();
-            label storedPointi = iter();
-
-            Map<label>::iterator fnd = savedPointLevel_.find(storedPointi);
-
-            if (fnd == savedPointLevel_.end())
-            {
-                FatalErrorInFunction
-                    << "Problem : trying to restore old value for new point "
-                    << newPointi << " but cannot find old point "
-                    << storedPointi
-                    << " in map of stored values " << savedPointLevel_
-                    << abort(FatalError);
-            }
-            pointLevel_[newPointi] = fnd();
         }
     }
 

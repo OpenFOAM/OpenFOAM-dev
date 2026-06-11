@@ -303,14 +303,6 @@ Foam::label Foam::meshRefinement::mergePatchFacesUndo
         // Merge all faces of a set into the first face of the set.
         faceCombiner.setRefinement(allFaceSets, meshMod);
 
-        // Experimental: store data for all the points that have been deleted
-        storeData
-        (
-            faceCombiner.savedPointLabels(),    // points to store
-            labelList(0),                       // faces to store
-            labelList(0)                        // cells to store
-        );
-
         // Change the mesh
         autoPtr<polyTopoChangeMap> map = meshMod.changeMesh(mesh_, true);
 
@@ -475,18 +467,12 @@ Foam::label Foam::meshRefinement::mergePatchFacesUndo
             polyTopoChange meshMod(mesh_);
 
             // Merge all faces of a set into the first face of the set.
-            // Experimental:mark all points/faces/cells that have been restored.
-            Map<label> restoredPoints(0);
             Map<label> restoredFaces(0);
-            Map<label> restoredCells(0);
-
             faceCombiner.setUnrefinement
             (
                 mastersToRestore,
                 meshMod,
-                restoredPoints,
-                restoredFaces,
-                restoredCells
+                restoredFaces
             );
 
             // Change the mesh (without keeping old points)
@@ -501,30 +487,18 @@ Foam::label Foam::meshRefinement::mergePatchFacesUndo
             faceCombiner.topoChange(map);
 
             // Renumber restore maps
-            inplaceMapKey(map().reversePointMap(), restoredPoints);
             inplaceMapKey(map().reverseFaceMap(), restoredFaces);
-            inplaceMapKey(map().reverseCellMap(), restoredCells);
-
 
             // Get the kept faces that need to be recalculated.
             // Merging two boundary faces might shift the cell centre
             // (unless the faces are absolutely planar)
             labelHashSet retestFaces(2*restoredFaces.size());
-
             forAllConstIter(Map<label>, restoredFaces, iter)
             {
                 retestFaces.insert(iter.key());
             }
 
-            // Experimental:restore all points/face/cells in maps
-            topoChange
-            (
-                map,
-                growFaceCellFace(retestFaces),
-                restoredPoints,
-                restoredFaces,
-                restoredCells
-            );
+            topoChange(map, growFaceCellFace(retestFaces));
 
             if (debug&meshRefinement::MESH)
             {

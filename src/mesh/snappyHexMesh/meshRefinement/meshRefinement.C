@@ -2294,50 +2294,6 @@ void Foam::meshRefinement::topoChange
     const labelList& changedFaces
 )
 {
-    Map<label> dummyMap(0);
-
-    topoChange(map, changedFaces, dummyMap, dummyMap, dummyMap);
-}
-
-
-void Foam::meshRefinement::storeData
-(
-    const labelList& pointsToStore,
-    const labelList& facesToStore,
-    const labelList& cellsToStore
-)
-{
-    // For now only meshCutter has storable/retrievable data.
-    meshCutter_.storeData
-    (
-        pointsToStore,
-        facesToStore,
-        cellsToStore
-    );
-}
-
-
-void Foam::meshRefinement::topoChange
-(
-    const polyTopoChangeMap& map,
-    const labelList& changedFaces,
-    const Map<label>& pointsToRestore,
-    const Map<label>& facesToRestore,
-    const Map<label>& cellsToRestore
-)
-{
-    // For now only meshCutter has storable/retrievable data.
-
-    // Update numbering of cells/vertices in hexRef8
-    // Now done automatically in polyMesh::topoChange
-    // meshCutter_.topoChange
-    // (
-    //     map,
-    //     pointsToRestore,
-    //     facesToRestore,
-    //     cellsToRestore
-    // );
-
     // Update surfaceIndex
     updateList(map.faceMap(), label(-1), surfaceIndex_);
 

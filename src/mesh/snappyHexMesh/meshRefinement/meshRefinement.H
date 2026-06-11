@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -967,28 +967,6 @@ public:
                 List<T>& elems
             );
 
-
-            // Restoring : is where other processes delete and reinsert data.
-
-                //- Signal points/face/cells for which to store data
-                void storeData
-                (
-                    const labelList& pointsToStore,
-                    const labelList& facesToStore,
-                    const labelList& cellsToStore
-                );
-
-                //- Update local numbering + undo
-                //  Data to restore given as new pointlabel + stored pointlabel
-                //  (i.e. what was in pointsToStore)
-                void topoChange
-                (
-                    const polyTopoChangeMap&,
-                    const labelList& changedFaces,
-                    const Map<label>& pointsToRestore,
-                    const Map<label>& facesToRestore,
-                    const Map<label>& cellsToRestore
-                );
 
             // Merging coplanar faces and edges
 
