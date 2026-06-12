@@ -72,20 +72,131 @@ Foam::label Foam::fvMeshTopoChangers::refiner::count
 }
 
 
-void Foam::fvMeshTopoChangers::refiner::calculateProtectedCells
+void Foam::fvMeshTopoChangers::refiner::calcProtectedCells
 (
-    PackedBoolList& unrefineableCells
+    PackedBoolList& protectedCells
+) const
+{
+    const label nFaces = mesh().nFaces();
+    const label nInternalFaces = mesh().nInternalFaces();
+
+    const labelList& cellLevel = meshCutter_.cellLevel();
+    const labelList& pointLevel = meshCutter_.pointLevel();
+
+    // Determine the number of parent anchors (i.e., pointLevel < cellLevel)
+    // and anchors (pointLevel <= cellLevel) in each cell
+    labelList cellNParentAnchors(mesh().nCells(), 0);
+    labelList cellNAnchors(mesh().nCells(), 0);
+    forAll(mesh().pointCells(), pointi)
+    {
+        const labelList& pCells = mesh().pointCells()[pointi];
+        forAll(pCells, pci)
+        {
+            const label celli = pCells[pci];
+            if (pointLevel[pointi] < cellLevel[celli])
+            {
+                cellNParentAnchors[celli] ++;
+            }
+            if (pointLevel[pointi] <= cellLevel[celli])
+            {
+                cellNAnchors[celli] ++;
+            }
+        }
+    }
+
+    // A cell is (probably) refine-able if it has 8 anchors and 1 parent
+    // anchor, unless this is an original cell (i.e., cellLevel == 0), in which
+    // case it must have 0 parent anchors
+    forAll(mesh().cells(), celli)
+    {
+        protectedCells[celli] =
+            (cellNAnchors[celli] != 8)
+         || (cellLevel[celli] > 0 && cellNParentAnchors[celli] != 1)
+         || (cellLevel[celli] == 0 && cellNParentAnchors[celli] != 0);
+    }
+
+    // Construct a list of face-neighbour levels. Requires communication.
+    labelList neiLevel(nFaces);
+    for (label facei = 0; facei < nInternalFaces; facei ++)
+    {
+        neiLevel[facei] = cellLevel[mesh().faceNeighbour()[facei]];
+    }
+    for (label facei = nInternalFaces; facei < nFaces; facei ++)
+    {
+        neiLevel[facei] = cellLevel[mesh().faceOwner()[facei]];
+    }
+    syncTools::swapFaceList(mesh(), neiLevel);
+
+    // Count the number of parent anchors and anchors in each face
+    labelList faceNParentAnchors(nFaces, 0);
+    labelList faceNAnchors(nFaces, 0);
+    forAll(mesh().faces(), facei)
+    {
+        const label fLevel =
+            max(cellLevel[mesh()().faceOwner()[facei]], neiLevel[facei]);
+        const face& f = mesh().faces()[facei];
+        forAll(f, fpi)
+        {
+            if (pointLevel[f[fpi]] < fLevel)
+            {
+                faceNParentAnchors[facei] ++;
+            }
+            if (pointLevel[f[fpi]] <= fLevel)
+            {
+                faceNAnchors[facei] ++;
+            }
+        }
+    }
+
+    // A face is (probably) refine-able if it has 4 anchors and no more than 1
+    // parent anchor (*), unless this is an original face (i.e., faceLevel ==
+    // 0), in which case it must have 0 parent anchors.
+    //
+    // (*) Note this is slightly different from the cell criteria. Faces
+    // constructed inside cells have no parent anchors.
+    //
+    boolList faceProtected(nFaces, false);
+    forAll(mesh().faces(), facei)
+    {
+        const label fLevel =
+            max(cellLevel[mesh().faceOwner()[facei]], neiLevel[facei]);
+
+        faceProtected[facei] =
+            (faceNAnchors[facei] != 4)
+         || (fLevel > 0 && faceNParentAnchors[facei] > 1)
+         || (fLevel == 0 && faceNParentAnchors[facei] != 0);
+    }
+    syncTools::syncFaceList(mesh(), faceProtected, orEqOp<bool>());
+
+    // Any cell which has a protected face is also protected
+    for (label facei = 0; facei < nFaces; facei ++)
+    {
+        const label own = mesh().faceOwner()[facei];
+        protectedCells[own] = protectedCells[own] || faceProtected[facei];
+        if (facei < nInternalFaces)
+        {
+            const label nei = mesh().faceNeighbour()[facei];
+            protectedCells[nei] = protectedCells[nei] || faceProtected[facei];
+        }
+    }
+}
+
+
+void Foam::fvMeshTopoChangers::refiner::calcAdditionallyProtectedCells
+(
+    const PackedBoolList& protectedCells,
+    PackedBoolList& additionallyProtectedCells
 ) const
 {
     if (protectedCells_.empty())
     {
-        unrefineableCells.clear();
+        additionallyProtectedCells.clear();
         return;
     }
 
     const labelList& cellLevel = meshCutter_.cellLevel();
 
-    unrefineableCells = protectedCells_;
+    additionallyProtectedCells = protectedCells_;
 
     // Get neighbouring cell level
     labelList neiLevel(mesh().nFaces() - mesh().nInternalFaces());
@@ -111,9 +222,9 @@ void Foam::fvMeshTopoChangers::refiner::calculateProtectedCells
         forAll(mesh().faceNeighbour(), facei)
         {
             const label own = mesh().faceOwner()[facei];
-            const bool ownProtected = unrefineableCells.get(own);
+            const bool ownProtected = additionallyProtectedCells.get(own);
             const label nei = mesh().faceNeighbour()[facei];
-            const bool neiProtected = unrefineableCells.get(nei);
+            const bool neiProtected = additionallyProtectedCells.get(nei);
 
             if (ownProtected && (cellLevel[nei] > cellLevel[own]))
             {
@@ -133,7 +244,7 @@ void Foam::fvMeshTopoChangers::refiner::calculateProtectedCells
         )
         {
             const label own = mesh().faceOwner()[facei];
-            const bool ownProtected = unrefineableCells.get(own);
+            const bool ownProtected = additionallyProtectedCells.get(own);
 
             if
             (
@@ -148,7 +259,7 @@ void Foam::fvMeshTopoChangers::refiner::calculateProtectedCells
         syncTools::syncFaceList(mesh(), seedFace, orEqOp<bool>());
 
 
-        // Extend unrefineableCells
+        // Extend additionallyProtectedCells
         bool hasExtended = false;
 
         for (label facei = 0; facei < mesh().nInternalFaces(); facei++)
@@ -156,16 +267,16 @@ void Foam::fvMeshTopoChangers::refiner::calculateProtectedCells
             if (seedFace[facei])
             {
                 const label own = mesh().faceOwner()[facei];
-                if (unrefineableCells.get(own) == 0)
+                if (additionallyProtectedCells.get(own) == 0)
                 {
-                    unrefineableCells.set(own, 1);
+                    additionallyProtectedCells.set(own, 1);
                     hasExtended = true;
                 }
 
                 const label nei = mesh().faceNeighbour()[facei];
-                if (unrefineableCells.get(nei) == 0)
+                if (additionallyProtectedCells.get(nei) == 0)
                 {
-                    unrefineableCells.set(nei, 1);
+                    additionallyProtectedCells.set(nei, 1);
                     hasExtended = true;
                 }
             }
@@ -182,9 +293,9 @@ void Foam::fvMeshTopoChangers::refiner::calculateProtectedCells
             {
                 const label own = mesh().faceOwner()[facei];
 
-                if (unrefineableCells.get(own) == 0)
+                if (additionallyProtectedCells.get(own) == 0)
                 {
-                    unrefineableCells.set(own, 1);
+                    additionallyProtectedCells.set(own, 1);
                     hasExtended = true;
                 }
             }
@@ -932,10 +1043,10 @@ Foam::labelList Foam::fvMeshTopoChangers::refiner::selectRefineCells
 
     const labelList& cellLevel = meshCutter_.cellLevel();
 
-    // Mark cells that cannot be refined since they would trigger refinement
-    // of protected cells (since 2:1 cascade)
-    PackedBoolList unrefineableCells;
-    calculateProtectedCells(unrefineableCells);
+    // Calculate cells that are additionally protected, as their refinement
+    // would trigger refinement of protectedCells due to the 2:1 limit
+    PackedBoolList additionallyProtectedCells;
+    calcAdditionallyProtectedCells(protectedCells_, additionallyProtectedCells);
 
     // Count current selection
     const label nLocalCandidates = count(candidateCells, 1);
@@ -952,8 +1063,8 @@ Foam::labelList Foam::fvMeshTopoChangers::refiner::selectRefineCells
             (
                 candidateCells.get(celli)
              && (
-                    unrefineableCells.empty()
-                 || !unrefineableCells.get(celli)
+                    additionallyProtectedCells.empty()
+                 || !additionallyProtectedCells.get(celli)
                 )
             )
             {
@@ -973,8 +1084,8 @@ Foam::labelList Foam::fvMeshTopoChangers::refiner::selectRefineCells
                     cellLevel[celli] == level
                  && candidateCells.get(celli)
                  && (
-                        unrefineableCells.empty()
-                     || !unrefineableCells.get(celli)
+                        additionallyProtectedCells.empty()
+                     || !additionallyProtectedCells.get(celli)
                     )
                 )
                 {
@@ -1111,55 +1222,6 @@ void Foam::fvMeshTopoChangers::refiner::extendMarkedCells
 }
 
 
-void Foam::fvMeshTopoChangers::refiner::checkEightAnchorPoints
-(
-    PackedBoolList& protectedCell,
-    label& nProtected
-) const
-{
-    const labelList& cellLevel = meshCutter_.cellLevel();
-    const labelList& pointLevel = meshCutter_.pointLevel();
-
-    labelList nAnchorPoints(mesh().nCells(), 0);
-
-    forAll(pointLevel, pointi)
-    {
-        const labelList& pCells = mesh().pointCells(pointi);
-
-        forAll(pCells, pCelli)
-        {
-            const label celli = pCells[pCelli];
-
-            if (pointLevel[pointi] <= cellLevel[celli])
-            {
-                // Check if cell has already 8 anchor points -> protect cell
-                if (nAnchorPoints[celli] == 8)
-                {
-                    if (protectedCell.set(celli, true))
-                    {
-                        nProtected++;
-                    }
-                }
-
-                if (!protectedCell[celli])
-                {
-                    nAnchorPoints[celli]++;
-                }
-            }
-        }
-    }
-
-    forAll(protectedCell, celli)
-    {
-        if (!protectedCell[celli] && nAnchorPoints[celli] != 8)
-        {
-            protectedCell.set(celli, true);
-            nProtected++;
-        }
-    }
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::fvMeshTopoChangers::refiner::refiner(fvMesh& mesh, const dictionary& dict)
@@ -1175,181 +1237,24 @@ Foam::fvMeshTopoChangers::refiner::refiner(fvMesh& mesh, const dictionary& dict)
     // Read static part of dictionary
     readDict();
 
-    const labelList& cellLevel = meshCutter_.cellLevel();
-    const labelList& pointLevel = meshCutter_.pointLevel();
+    // Calculate and report the protected cells
+    calcProtectedCells(protectedCells_);
 
-    // Set cells that should not be refined.
-    // This is currently any cell which does not have 8 anchor points or
-    // uses any face which does not have 4 anchor points.
-    // Note: do not use cellPoint addressing
-
-    // Count number of points <= cellLevel
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    labelList nAnchors(mesh.nCells(), 0);
-
-    label nProtected = 0;
-
-    forAll(mesh.pointCells(), pointi)
+    // Report
+    labelList protectedCellsSet = protectedCells_.used();
+    const label nProtectedCells =
+        returnReduce(protectedCellsSet.size(), sumOp<label>());
+    if (nProtectedCells)
     {
-        const labelList& pCells = mesh.pointCells()[pointi];
+        Info<< "Detected " << nProtectedCells << " cells that are protected "
+            << "from refinement. Writing these to cell-set 'protectedCells'."
+            << endl;
 
-        forAll(pCells, i)
-        {
-            const label celli = pCells[i];
-
-            if (!protectedCells_.get(celli))
-            {
-                if (pointLevel[pointi] <= cellLevel[celli])
-                {
-                    nAnchors[celli]++;
-
-                    if (nAnchors[celli] > 8)
-                    {
-                        protectedCells_.set(celli, 1);
-                        nProtected++;
-                    }
-                }
-            }
-        }
-    }
-
-
-    // Count number of points <= faceLevel
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // Bit tricky since proc face might be one more refined than the owner since
-    // the coupled one is refined.
-
-    {
-        labelList neiLevel(mesh.nFaces());
-
-        for (label facei = 0; facei < mesh.nInternalFaces(); facei++)
-        {
-            neiLevel[facei] = cellLevel[mesh.faceNeighbour()[facei]];
-        }
-
-        for
-        (
-            label facei = mesh.nInternalFaces();
-            facei < mesh.nFaces();
-            facei++
-        )
-        {
-            neiLevel[facei] = cellLevel[mesh.faceOwner()[facei]];
-        }
-        syncTools::swapFaceList(mesh, neiLevel);
-
-
-        boolList protectedFace(mesh.nFaces(), false);
-
-        forAll(mesh.faceOwner(), facei)
-        {
-            const label faceLevel = max
-            (
-                cellLevel[mesh.faceOwner()[facei]],
-                neiLevel[facei]
-            );
-
-            const face& f = mesh.faces()[facei];
-
-            label nAnchors = 0;
-
-            forAll(f, fp)
-            {
-                if (pointLevel[f[fp]] <= faceLevel)
-                {
-                    nAnchors++;
-
-                    if (nAnchors > 4)
-                    {
-                        protectedFace[facei] = true;
-                        break;
-                    }
-                }
-            }
-        }
-
-        syncTools::syncFaceList(mesh, protectedFace, orEqOp<bool>());
-
-        for (label facei = 0; facei < mesh.nInternalFaces(); facei++)
-        {
-            if (protectedFace[facei])
-            {
-                protectedCells_.set(mesh.faceOwner()[facei], 1);
-                nProtected++;
-                protectedCells_.set(mesh.faceNeighbour()[facei], 1);
-                nProtected++;
-            }
-        }
-
-        for
-        (
-            label facei = mesh.nInternalFaces();
-            facei < mesh.nFaces();
-            facei++
-        )
-        {
-            if (protectedFace[facei])
-            {
-                protectedCells_.set(mesh.faceOwner()[facei], 1);
-                nProtected++;
-            }
-        }
-
-        // Also protect any cells that are less than hex
-        forAll(mesh.cells(), celli)
-        {
-            const cell& cFaces = mesh.cells()[celli];
-
-            if (cFaces.size() < 6)
-            {
-                if (protectedCells_.set(celli, 1))
-                {
-                    nProtected++;
-                }
-            }
-            else
-            {
-                forAll(cFaces, cFacei)
-                {
-                    if (mesh.faces()[cFaces[cFacei]].size() < 4)
-                    {
-                        if (protectedCells_.set(celli, 1))
-                        {
-                            nProtected++;
-                        }
-                        break;
-                    }
-                }
-            }
-        }
-
-        // Check cells for 8 corner points
-        checkEightAnchorPoints(protectedCells_, nProtected);
-    }
-
-    if (returnReduce(nProtected, sumOp<label>()) == 0)
-    {
-        protectedCells_.clear();
+        cellSet(mesh, "protectedCells", protectedCellsSet).write();
     }
     else
     {
-        cellSet protectedCells(mesh, "protectedCells", nProtected);
-        forAll(protectedCells_, celli)
-        {
-            if (protectedCells_[celli])
-            {
-                protectedCells.insert(celli);
-            }
-        }
-
-        Info<< "Detected " << returnReduce(nProtected, sumOp<label>())
-            << " cells that are protected from refinement."
-            << " Writing these to cellSet "
-            << protectedCells.name()
-            << "." << endl;
-
-        protectedCells.write();
+        protectedCells_.clear();
     }
 }
 

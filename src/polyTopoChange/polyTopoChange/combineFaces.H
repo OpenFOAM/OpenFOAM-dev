@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,7 @@ class combineFaces
         //- Whether undoable
         const bool undoable_;
 
-        //- If undoable: masterface for every set.
+        //- If undoable: master face for every set.
         labelList masterFace_;
 
         //- If undoable: per set the vertices of all the faces in the set.
@@ -74,7 +74,6 @@ class combineFaces
 
         //- If undoable: saved coordinates of above points.
         pointField savedPoints_;
-
 
 
     // Private Member Functions
@@ -134,16 +133,10 @@ public:
 
         // Access
 
-            //- If undoable: masterface for every set.
+            //- If undoable: master face for every set.
             const labelList& masterFace() const
             {
                 return masterFace_;
-            }
-
-            //- If undoable: set of original point labels of stored points
-            const labelList& savedPointLabels() const
-            {
-                return savedPointLabels_;
             }
 
 
@@ -187,29 +180,23 @@ public:
             //  for whether resulting face is legal.
             void setRefinement
             (
-                const labelListList&,
-                polyTopoChange&
+                const labelListList& faceSets,
+                polyTopoChange& meshMod
             );
 
             //- Force recalculation of locally stored data on topological change
-            void topoChange(const polyTopoChangeMap&);
+            void topoChange(const polyTopoChangeMap& map);
 
             //- Play commands into polyTopoChange to reinsert original faces.
             //  No other topo changes can be done in between setRefinement and
             //  setUnrefinement. Can be called multiple times to undo parts
             //  of the last setRefinement call.
             //  Gets the master face labels whose sets need to be restored.
-            //  Returns maps from added restored point to
-            //  original point label (i.e. content of savedPointLabels_).
-            //  (only restoredPoints are actually set; rest are just for
-            //   generalness)
             void setUnrefinement
             (
                 const labelList& masterFaces,
                 polyTopoChange& meshMod,
-                Map<label>& restoredPoints,
-                Map<label>& restoredFaces,
-                Map<label>& restoredCells
+                Map<label>& restoredFaces
             );
 
 

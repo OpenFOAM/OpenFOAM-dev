@@ -815,9 +815,7 @@ void Foam::combineFaces::setUnrefinement
 (
     const labelList& masterFaces,
     polyTopoChange& meshMod,
-    Map<label>& restoredPoints,
-    Map<label>& restoredFaces,
-    Map<label>& restoredCells
+    Map<label>& restoredFaces
 )
 {
     if (!undoable_)
@@ -893,12 +891,6 @@ void Foam::combineFaces::setUnrefinement
                             -1,                     // master point
                             true                    // supports a cell
                         );
-                        restoredPoints.insert
-                        (
-                            addedPoints[localI],        // current point label
-                            savedPointLabels_[localI]   // point label when it
-                                                        // was stored
-                        );
                     }
                     f[fp] = addedPoints[localI];
                 }
@@ -933,6 +925,7 @@ void Foam::combineFaces::setUnrefinement
             false,                          // face flip
             patchi                          // patch for face
         );
+
         restoredFaces.insert(masterFacei, masterFacei);
 
         // Add the previously removed faces
@@ -950,6 +943,7 @@ void Foam::combineFaces::setUnrefinement
                 false,                  // flipFaceFlux,
                 patchi                  // patchID,
             );
+
             restoredFaces.insert(facei, masterFacei);
         }
 

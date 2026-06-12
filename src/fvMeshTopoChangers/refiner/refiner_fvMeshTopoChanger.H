@@ -212,9 +212,18 @@ class refiner
         //- Count set/unset elements in packedlist.
         static label count(const PackedBoolList&, const unsigned int);
 
-        //- Calculate cells that cannot be refined since would trigger
-        //  refinement of protectedCells_ (since 2:1 refinement cascade)
-        void calculateProtectedCells(PackedBoolList& unrefineableCells) const;
+        //- Calculate which cells are protected due to their topology not being
+        //  suitable for refinement
+        void calcProtectedCells(PackedBoolList& protectedCells) const;
+
+        //- Calculate cells that are additionally protected, as their
+        //  refinement would trigger refinement of protectedCells due to the
+        //  2:1 limit
+        void calcAdditionallyProtectedCells
+        (
+            const PackedBoolList& protectedCells,
+            PackedBoolList& additionallyProtectedCells
+        ) const;
 
         //- Read the parameters from dictionary
         void readDict();
@@ -321,13 +330,6 @@ class refiner
 
             //- Extend markedCell with cell-face-cell.
             void extendMarkedCells(PackedBoolList& markedCell) const;
-
-            //- Check all cells have 8 anchor points
-            void checkEightAnchorPoints
-            (
-                PackedBoolList& protectedCell,
-                label& nProtected
-            ) const;
 
 
 public:

@@ -92,12 +92,6 @@ class hexRef8
         //- Face remover engine
         removeFaces faceRemover_;
 
-        //- Level of saved points
-        Map<label> savedPointLevel_;
-
-        //- Level of saved cells
-        Map<label> savedCellLevel_;
-
         //- Cell shapes when seen as split hexes
         mutable autoPtr<cellShapeList> cellShapesPtr_;
 
@@ -496,32 +490,6 @@ public:
             //  made sure the pointLevel_ and cellLevel_ are the size of the new
             //  mesh so we only need to account for reordering.
             virtual void topoChange(const polyTopoChangeMap&);
-
-
-            // Restoring : is where other processes delete and reinsert data.
-            //             These callbacks allow this to restore the cellLevel
-            //             and pointLevel for reintroduced points.
-            //             Is not related to undoing my refinement
-
-                //- Signal points/face/cells for which to store data
-                void storeData
-                (
-                    const labelList& pointsToStore,
-                    const labelList& facesToStore,
-                    const labelList& cellsToStore
-                );
-
-                //- Update local numbering + undo
-                //  Data to restore given as new pointlabel + stored pointlabel
-                //  (i.e. what was in pointsToStore)
-                void topoChange
-                (
-                    const polyTopoChangeMap&,
-                    const Map<label>& pointsToRestore,
-                    const Map<label>& facesToRestore,
-                    const Map<label>& cellsToRestore
-                );
-
 
             //- Update local numbering for subsetted mesh.
             //  Gets new-to-old maps. Not compatible with unrefinement.
