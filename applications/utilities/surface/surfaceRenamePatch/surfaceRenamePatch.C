@@ -189,6 +189,10 @@ int main(int argc, char *argv[])
     }
 
     // Rename the patch
+    Info<< "Renaming '" << surf.surfZones()[surfZonei].name()
+        << "' to '" << newPatchName << "'"
+        << nl << endl;
+
     surf.surfZones()[surfZonei].name() = newPatchName;
 
     Info<< "Writing surface " << outFile << nl << endl;
