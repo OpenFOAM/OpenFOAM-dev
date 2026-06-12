@@ -135,22 +135,15 @@ inline Foam::LagrangianState Foam::LagrangianMesh::state
 }
 
 
-inline Foam::label Foam::LagrangianMesh::subMeshIndex() const
+inline uint64_t Foam::LagrangianMesh::subMeshIndex() const
 {
-    if (statesPtr_.valid())
-    {
-        subMeshIndex_ ++;
-    }
-    else
-    {
-        subMeshIndex_ --;
-    }
+    subMeshIndex_ ++;
 
-    if (subMeshIndex_ == labelMax || subMeshIndex_ == labelMin)
+    if (subMeshIndex_ == pTraits<uint64_t>::max)
     {
         FatalErrorInFunction
-            << "Sub mesh index counter has overflowed."
-            << exit(FatalError);
+            << "Sub-mesh index counter has overflowed!"
+            << abort(FatalError);
     }
 
     return subMeshIndex_;

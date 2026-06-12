@@ -100,7 +100,7 @@ private:
         mutable bool psiSubUpToDate_;
 
         //- The index of the sub-mesh
-        mutable label psiSubMeshIndex_;
+        mutable uint64_t psiSubMeshIndex_;
 
         //- The cached Lagrangian sub-sub-field
         mutable autoPtr<LagrangianSubSubField<Type>> psiSubSubPtr_;
@@ -109,7 +109,7 @@ private:
         mutable bool psiSubSubUpToDate_;
 
         //- The index of the sub-sub-mesh
-        mutable label psiSubSubMeshIndex_;
+        mutable uint64_t psiSubSubMeshIndex_;
 
 
 public:

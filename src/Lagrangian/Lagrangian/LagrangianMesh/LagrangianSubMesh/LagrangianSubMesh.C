@@ -44,7 +44,7 @@ Foam::LagrangianSubMesh::LagrangianSubMesh
     const LagrangianGroup group,
     const label size,
     const label start,
-    const label index
+    const uint64_t index
 )
 :
     mesh_(mesh),

@@ -1135,8 +1135,6 @@ Foam::LagrangianMesh::changer::changer
 
     constructNonConformal();
 
-    mesh_.subMeshIndex_ = 0;
-
     Info<< indent;
     mesh_.printGroups(true);
     Info<< endl << indent;
@@ -1172,8 +1170,6 @@ Foam::LagrangianMesh::changer::changer
 
     constructNonConformal();
 
-    mesh_.subMeshIndex_ = 0;
-
     Info<< indent;
     mesh_.printGroups(true);
     Info<< endl;
@@ -1202,8 +1198,6 @@ Foam::LagrangianMesh::changer::~changer()
 
     mesh_.fractionBehindPtr_.clear();
     mesh_.nTracksBehindPtr_.clear();
-
-    mesh_.subMeshIndex_ = 0;
 
     forAll(mesh_.boundary(), patchi)
     {

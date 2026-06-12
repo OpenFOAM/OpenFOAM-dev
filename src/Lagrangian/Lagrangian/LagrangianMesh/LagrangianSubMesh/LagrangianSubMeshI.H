@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,7 +78,7 @@ inline Foam::label Foam::LagrangianSubMesh::end() const
 }
 
 
-inline Foam::label Foam::LagrangianSubMesh::index() const
+inline uint64_t Foam::LagrangianSubMesh::index() const
 {
     return index_;
 }

@@ -72,7 +72,7 @@ private:
         mutable autoPtr<LagrangianSubSubField<Type>> psiSubSubPtr_;
 
         //- The index of the sub-mesh
-        mutable label psiSubSubMeshIndex_;
+        mutable uint64_t psiSubSubMeshIndex_;
 
 
 public:

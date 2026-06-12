@@ -160,7 +160,7 @@ private:
         autoPtr<LagrangianDynamicField<label>> nTracksBehindPtr_;
 
         //- Sub-mesh index
-        mutable label subMeshIndex_;
+        mutable uint64_t subMeshIndex_;
 
         //- Schemes created on demand
         mutable autoPtr<LagrangianSchemes> schemesPtr_;
@@ -671,7 +671,7 @@ public:
             ) const;
 
             //- Get a sub-mesh index
-            inline label subMeshIndex() const;
+            inline uint64_t subMeshIndex() const;
 
             //- Access the schemes
             const LagrangianSchemes& schemes() const;

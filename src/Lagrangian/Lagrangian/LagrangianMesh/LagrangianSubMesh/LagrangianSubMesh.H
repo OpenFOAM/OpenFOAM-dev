@@ -72,7 +72,7 @@ class LagrangianSubMesh
         label start_;
 
         //- Index with which to compare instances
-        const label index_;
+        const uint64_t index_;
 
 
     // Private Constructors
@@ -84,7 +84,7 @@ class LagrangianSubMesh
             const LagrangianGroup group,
             const label size,
             const label start,
-            const label index
+            const uint64_t index
         );
 
 
@@ -166,7 +166,7 @@ public:
             inline label end() const;
 
             //- Return the index
-            inline label index() const;
+            inline uint64_t index() const;
 
 
         // Sub-setting
