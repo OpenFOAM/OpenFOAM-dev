@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,6 +53,34 @@ const Foam::CarrierField<Type>& Foam::clouds::carried::carrierField
     carrierFields<Type>().insert(ptr->name(), ptr);
 
     return *ptr;
+}
+
+
+template<class Type>
+const Foam::CarrierField<Type>& Foam::clouds::carried::noCarrierField
+(
+    const word& symbolicName,
+    const word& descriptiveName,
+    const bool isPhase
+) const
+{
+    return
+        carrierField<Type>
+        (
+            nameToCarrierName
+            (
+                symbolicName,
+                isPhase ? phaseName(false) : carrierPhaseName()
+            ),
+            [this,descriptiveName,isPhase]()
+            {
+                FatalErrorInFunction
+                    << "Cloud " << cloud_.name() << " does not have a "
+                    << (isPhase ? "corresponding Eulerian phase" : "carrier")
+                    << ' ' << descriptiveName << exit(FatalError);
+                return tmp<volScalarField>(nullptr);
+            }
+        );
 }
 
 

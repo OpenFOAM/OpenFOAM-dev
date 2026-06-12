@@ -140,17 +140,7 @@ Foam::clouds::coupledToFluid::coupledToFluid
     (
         carriedCloud.hasPhase()
       ? carriedCloud.carrierField<scalar>(trhocPhaseVf_())
-      : carriedCloud.carrierField<scalar>
-        (
-            IOobject::groupName("rhoc", carriedCloud.phaseName()),
-            [&]()
-            {
-                FatalErrorInFunction
-                    << "Cloud " << c.name() << " does not have a corresponding "
-                    << "Eulerian phase density" << exit(FatalError);
-                return tmp<volScalarField>(nullptr);
-            }
-        )
+      : carriedCloud.noCarrierField<scalar>("rho", "density", true)
     ),
     muc
     (

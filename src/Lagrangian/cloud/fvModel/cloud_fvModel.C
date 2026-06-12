@@ -466,20 +466,12 @@ bool Foam::fv::cloud::addsSupToField(const word& fieldName) const
         models.addsSupToField
         (
             word::null,
-            IOobject::groupName
-            (
-                clouds::carried::nameToCarrierName("1"),
-                phaseName
-            )
+            clouds::carried::nameToCarrierName("1", phaseName)
         )
      || models.addsSupToField
         (
             word::null,
-            IOobject::groupName
-            (
-                clouds::carried::nameToCarrierName("rho"),
-                phaseName
-            )
+            clouds::carried::nameToCarrierName("rho", phaseName)
         )
         FOR_ALL_FIELD_TYPES(hasCarrierEqnType);
 }

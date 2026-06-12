@@ -135,8 +135,11 @@ bool Foam::clouds::multicomponentParcel::reCalculateModified()
 
         if (context == cloud::contextType::fvModel)
         {
-            result = initPsicDdt(m, hec) || result;
-            if (hasPhase() && &hecPhase != &hec)
+            if (hasThermoc())
+            {
+                result = initPsicDdt(m, hec) || result;
+            }
+            if (hasThermocPhase() && &hecPhase != &hec)
             {
                 result = initPsicDdt(m, hecPhase) || result;
             }
@@ -300,8 +303,11 @@ void Foam::clouds::multicomponentParcel::calculate
         // Calculate energy exchanges with the carrier
         if (context == cloud::contextType::fvModel && final)
         {
-            carrierEqn(hec) += number*psicEqn(deltaT, m, e, hec);
-            if (hasPhase() && &hecPhase != &hec)
+            if (hasThermoc())
+            {
+                carrierEqn(hec) += number*psicEqn(deltaT, m, e, hec);
+            }
+            if (hasThermocPhase() && &hecPhase != &hec)
             {
                 carrierEqn(hecPhase) += number*psicEqn(deltaT, m, e, hecPhase);
             }

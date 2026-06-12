@@ -150,6 +150,7 @@ void Foam::clouds::carried::resetCarrierFields(const bool initial)
 
 Foam::clouds::carried::carried(const cloud& c, const dictionary& dict)
 :
+    cloud_(c),
     carrierPhaseName_
     (
         dict.found("phase") || dict.found("carrierPhase")
@@ -217,7 +218,7 @@ Foam::clouds::carried::carried(const cloud& c, const dictionary& dict)
         )
       : carrierField<vector>
         (
-            IOobject::groupName("Uc", phaseName()),
+            IOobject::groupName("Uc", phaseName(false)),
             [&]()
             {
                 FatalErrorInFunction
@@ -244,9 +245,22 @@ const Foam::word& Foam::clouds::carried::carrierPhaseName() const
 }
 
 
-const Foam::word& Foam::clouds::carried::phaseName() const
+const Foam::word& Foam::clouds::carried::phaseName(const bool strict) const
 {
-    return phaseName_;
+    if (hasPhase())
+    {
+        return phaseName_;
+    }
+
+    if (strict)
+    {
+        FatalErrorInFunction
+            << "Cloud " << cloud_.name() << " does not have a corresponding "
+            << "Eulerian phase" << exit(FatalError);
+    }
+
+    static const word nonePhaseName = "<none>";
+    return nonePhaseName;
 }
 
 
@@ -263,6 +277,29 @@ Foam::word Foam::clouds::carried::nameToCarrierName(const word& name)
         (
             IOobject::member(name) + 'c',
             IOobject::group(name)
+        );
+}
+
+
+Foam::word Foam::clouds::carried::nameToCarrierName
+(
+    const word& name,
+    const word& group
+)
+{
+    if (IOobject::group(name) != word::null)
+    {
+        FatalErrorInFunction
+            << "Cannot construct an equivalent carrier name with a specified "
+            << "group for the name '" << name << "' because this name already "
+            << "has a group" << exit(FatalError);
+    }
+
+    return
+        IOobject::groupName
+        (
+            name + 'c',
+            group
         );
 }
 

@@ -139,6 +139,15 @@ public:
 
     //- Destructor
     virtual ~coupledToThermalFluid();
+
+
+    // Member Functions
+
+        //- Return whether this cloud has a carrier thermo
+        bool hasThermoc() const;
+
+        //- Return whether this cloud has a corresponding Eulerian phase thermo
+        bool hasThermocPhase() const;
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

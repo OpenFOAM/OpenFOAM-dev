@@ -54,7 +54,7 @@ Foam::clouds::coupledToThermalFluid::coupledToThermalFluid
     mesh_(c.mesh()),
     thermoc_
     (
-        mesh_.poly().lookupObject<fluidThermo>
+        mesh_.poly().foundObject<fluidThermo>
         (
             IOobject::groupName
             (
@@ -62,6 +62,15 @@ Foam::clouds::coupledToThermalFluid::coupledToThermalFluid
                 carriedCloud.carrierPhaseName()
             )
         )
+      ? mesh_.poly().lookupObject<fluidThermo>
+        (
+            IOobject::groupName
+            (
+                physicalProperties::typeName,
+                carriedCloud.carrierPhaseName()
+            )
+        )
+      : NullObjectRef<const fluidThermo>()
     ),
     multicomponentThermoc_
     (
@@ -84,39 +93,65 @@ Foam::clouds::coupledToThermalFluid::coupledToThermalFluid
     (
         refCastNull<const multicomponentThermo>(thermocPhase_)
     ),
-    pc(carriedCloud.carrierField<scalar>(thermoc_.p())),
-    Tc(carriedCloud.carrierField<scalar>(thermoc_.T())),
-    hec(carriedCloud.carrierField<scalar>(thermoc_.he())),
+    pc
+    (
+        carriedCloud.carrierField<scalar>
+        (
+            notNull(thermoc_)
+          ? thermoc_.p()
+          : mesh_.poly().lookupObject<volScalarField>("p")
+        )
+    ),
+    Tc
+    (
+        carriedCloud.carrierField<scalar>
+        (
+            notNull(thermoc_)
+          ? thermoc_.T()
+          : mesh_.poly().lookupObject<volScalarField>("T")
+        )
+    ),
+    hec
+    (
+        notNull(thermoc_)
+      ? carriedCloud.carrierField<scalar>(thermoc_.he())
+      : carriedCloud.noCarrierField<scalar>("he", "enthalpy/energy", false)
+    ),
     hecPhase
     (
         carriedCloud.hasPhase()
       ? carriedCloud.carrierField<scalar>(thermocPhase_.he())
-      : carriedCloud.carrierField<scalar>
-        (
-            IOobject::groupName("hec", carriedCloud.phaseName()),
-            [&]()
-            {
-                FatalErrorInFunction
-                    << "Cloud " << c.name() << " does not have a corresponding "
-                    << "Eulerian phase enthalpy/energy" << exit(FatalError);
-                return tmp<volScalarField>(nullptr);
-            }
-        )
+      : carriedCloud.noCarrierField<scalar>("he", "enthalpy/energy", true)
     ),
-    Cpvc(carriedCloud.carrierField<scalar>(thermoc_.Cpv())),
+    Cpvc
+    (
+        notNull(thermoc_)
+      ? carriedCloud.carrierField<scalar>(thermoc_.Cpv())
+      : carriedCloud.noCarrierField<scalar>("Cpv", "specific heat", false)
+    ),
     Cpc
     (
-        &thermoc_.Cp() == &thermoc_.Cpv()
+        isNull(thermoc_) || &thermoc_.Cp() == &thermoc_.Cpv()
       ? Cpvc
       : carriedCloud.carrierField<scalar>(thermoc_.Cp())
     ),
     Cvc
     (
-        &thermoc_.Cv() == &thermoc_.Cpv()
+        isNull(thermoc_) || &thermoc_.Cv() == &thermoc_.Cpv()
       ? Cpvc
       : carriedCloud.carrierField<scalar>(thermoc_.Cv())
     ),
-    kappac(carriedCloud.carrierField<scalar>(thermoc_.kappa())),
+    kappac
+    (
+        notNull(thermoc_)
+      ? carriedCloud.carrierField<scalar>(thermoc_.kappa())
+      : carriedCloud.noCarrierField<scalar>
+        (
+            "kappa",
+            "thermal conductivity",
+            false
+        )
+    ),
     Prc
     (
         c.derivedField<scalar>
@@ -214,6 +249,20 @@ Foam::clouds::coupledToThermalFluid::coupledToThermalFluid
 
 Foam::clouds::coupledToThermalFluid::~coupledToThermalFluid()
 {}
+
+
+// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
+bool Foam::clouds::coupledToThermalFluid::hasThermoc() const
+{
+    return notNull(thermoc_);
+}
+
+
+bool Foam::clouds::coupledToThermalFluid::hasThermocPhase() const
+{
+    return notNull(thermocPhase_);
+}
 
 
 // ************************************************************************* //

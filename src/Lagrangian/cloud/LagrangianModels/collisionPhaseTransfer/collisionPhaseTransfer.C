@@ -210,13 +210,8 @@ bool Foam::Lagrangian::collisionPhaseTransfer::addsSupToField
 
     return
         !isCarrierEqn
-     || (
-            cloud<clouds::carried>().hasPhase()
-         && (
-                eqnPhaseName == word::null
-             || eqnPhaseName == cloud<clouds::carried>().phaseName()
-            )
-        );
+     || eqnPhaseName == word::null
+     || eqnPhaseName == cloud<clouds::carried>().phaseName();
 }
 
 

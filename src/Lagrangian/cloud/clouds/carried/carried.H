@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,6 +59,9 @@ class carried
 private:
 
     // Private Data
+
+        //- Reference to the cloud
+        const cloud& cloud_;
 
         //- The name of the carrier phase
         const word carrierPhaseName_;
@@ -140,7 +143,7 @@ public:
         const word& carrierPhaseName() const;
 
         //- Return the name of the corresponding Eulerian phase
-        const word& phaseName() const;
+        const word& phaseName(const bool strict = true) const;
 
         //- Return whether this cloud has a corresponding Eulerian phase
         bool hasPhase() const;
@@ -149,9 +152,21 @@ public:
         //  add a 'c' suffix to the member.
         static word nameToCarrierName(const word& name);
 
+        //- Convert a name to its disambiguated carrier equivalent name. I.e.,
+        //  add a 'c' suffix to the member.
+        static word nameToCarrierName(const word& name, const word& group);
+
         //- Convert a disambiguated carrier name to its equivalent name. I.e.,
         //  remove the 'c' suffix from the member.
         static word carrierNameToName(const word& namec);
+
+        //- Construct the name of a field associated with the carrier. I.e.,
+        //  add a 'c' suffix and add the carrier phase group
+        const word carrierPhaseFieldName(const word& name);
+
+        //- Construct the name of a field associated with the carrier. I.e.,
+        //  add a 'c' suffix and add the corresponding Eulerian phase group
+        const word phaseFieldName(const word& name);
 
 
         // Fields
@@ -163,6 +178,16 @@ public:
             //- Add/get a carrier field to/from the cache
             template<class Type, class ... Args>
             const CarrierField<Type>& carrierField(const Args& ... args) const;
+
+            //- Generate a carrier field reference using a functor that raises
+            //  an error to say that the field is not available
+            template<class Type>
+            const CarrierField<Type>& noCarrierField
+            (
+                const word& symbolicName,
+                const word& descriptiveName,
+                const bool isPhase
+            ) const;
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
