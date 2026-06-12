@@ -35,6 +35,8 @@ Foam::CarrierEqn<Type>& Foam::clouds::coupled::carrierEqn
     const CloudDerivedField<Type>& psic
 )
 {
+    hasCarrierEqns_ = true;
+
     const word key = carried::carrierNameToName(psic.name());
 
     typename HashPtrTable<CarrierEqn<Type>>::iterator iter =
@@ -46,8 +48,6 @@ Foam::CarrierEqn<Type>& Foam::clouds::coupled::carrierEqn
         new CarrierEqn<Type>(key, carriedCloud_.Uc.psi().mesh());
     carrierEqns<Type>().insert(key, ptr);
 
-    hasCarrierEqns_ = true;
-
     return *ptr;
 }
 
@@ -58,6 +58,8 @@ Foam::CarrierEqn<Type>& Foam::clouds::coupled::carrierEqn
     const CarrierField<Type>& psic
 )
 {
+    hasCarrierEqns_ = true;
+
     typename HashPtrTable<CarrierEqn<Type>>::iterator iter =
         carrierEqns<Type>().find(psic.psi().name());
 
@@ -65,8 +67,6 @@ Foam::CarrierEqn<Type>& Foam::clouds::coupled::carrierEqn
 
     CarrierEqn<Type>* ptr = new CarrierEqn<Type>(psic.psi());
     carrierEqns<Type>().insert(psic.psi().name(), ptr);
-
-    hasCarrierEqns_ = true;
 
     return *ptr;
 }
