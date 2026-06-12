@@ -76,6 +76,8 @@ public:
 
         //- Construct null
         generatedZoneSet()
+        :
+            regenerate_(false)
         {}
 
         //- Construct from name, mesh and dictionary
