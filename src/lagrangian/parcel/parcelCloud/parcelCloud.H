@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -162,6 +162,9 @@ public:
 
             //- Evolve the cloud
             virtual void evolve() = 0;
+
+            //- Does this cloud provide source terms to the carrier?
+            virtual bool coupled() = 0;
 
 
     // Member Operators
