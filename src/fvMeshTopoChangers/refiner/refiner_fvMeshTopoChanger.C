@@ -166,6 +166,31 @@ void Foam::fvMeshTopoChangers::refiner::calcProtectedCells
          || (fLevel > 0 && faceNParentAnchors[facei] > 1)
          || (fLevel == 0 && faceNParentAnchors[facei] != 0);
     }
+
+    // Another criteria... Points are created when adjacent cells are refined.
+    // This means then should always be created along an edge in predictable
+    // patterns (e.g., with levels 1 4 3 4 2 4 3 4 1). No two adjacent points
+    // of a face should therefore have the same level, unless the edge is
+    // unrefined (e.g., 1 1). So, if we find two such adjacent points, then we
+    // also need to consider the face protected.
+    forAll(mesh().faces(), facei)
+    {
+        const face& f = mesh().faces()[facei];
+        const label fLevel =
+            max(cellLevel[mesh().faceOwner()[facei]], neiLevel[facei]);
+        forAll(f, fpi)
+        {
+            if
+            (
+                pointLevel[f[fpi]] > fLevel
+             && pointLevel[f[fpi]] == pointLevel[f[f.fcIndex(fpi)]]
+            )
+            {
+                faceProtected[facei] = true;
+            }
+        }
+    }
+
     syncTools::syncFaceList(mesh(), faceProtected, orEqOp<bool>());
 
     // Any cell which has a protected face is also protected
