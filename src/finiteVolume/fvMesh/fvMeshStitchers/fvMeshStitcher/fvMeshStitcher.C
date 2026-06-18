@@ -2004,7 +2004,7 @@ void Foam::fvMeshStitcher::preConformVolFields()
 template<>
 void Foam::fvMeshStitcher::postUnconformSurfaceFields<Foam::vector>()
 {
-    if (mesh_.topoChanged())
+    if (mesh_.poly().topoChanged())
     {
         UPtrList<surfaceVectorField> Ufs(mesh_.curFields<surfaceVectorField>());
 

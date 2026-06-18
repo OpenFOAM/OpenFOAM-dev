@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ void Foam::solvers::VoFSolver::moveMesh()
     {
         if
         (
-            (correctPhi || mesh.topoChanged())
+            (correctPhi || mesh.poly().topoChanged())
          && divergent()
          && !divU.valid()
         )
@@ -65,7 +65,7 @@ void Foam::solvers::VoFSolver::motionCorrector()
 
             MRF.update();
 
-            if (correctPhi || mesh.topoChanged())
+            if (correctPhi || mesh.poly().topoChanged())
             {
                 // Calculate absolute flux
                 // from the mapped surface velocity

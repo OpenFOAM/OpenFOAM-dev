@@ -459,20 +459,19 @@ public:
 
         // Mesh motion
 
-            //- Is mesh moving
+            //- Is the mesh moving?
             bool moving() const
             {
                 return moving_;
             }
 
-            //- Has the mesh topology changed this time-step
+            //- Has the mesh topology changed this time-step?
             bool topoChanged() const
             {
                 return topoChanged_;
             }
 
-            //- Is mesh changing
-            //  Moving or mesh topology changed this time-step)
+            //- Is the mesh changing? I.e., is it moving or topo-changing?
             bool changing() const
             {
                 return moving() || topoChanged();

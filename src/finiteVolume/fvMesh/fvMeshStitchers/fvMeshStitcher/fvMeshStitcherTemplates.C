@@ -100,7 +100,7 @@ void Foam::fvMeshStitcher::preConformVolFields()
 template<class Type>
 void Foam::fvMeshStitcher::postUnconformSurfaceFields()
 {
-    if (mesh_.topoChanged())
+    if (mesh_.poly().topoChanged())
     {
         UPtrList<SurfaceField<Type>> curFields
         (

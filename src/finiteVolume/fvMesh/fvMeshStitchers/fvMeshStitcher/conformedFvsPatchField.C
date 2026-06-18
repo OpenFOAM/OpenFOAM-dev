@@ -152,7 +152,7 @@ void Foam::conformedFvsPatchField<Type>::unconform
         // If the mesh has topo-changed then maintained surface fields should
         // have been mapped or re-interpolated. So, copy the value from the
         // base field into the original field.
-        if (iF.mesh()().topoChanged())
+        if (iF.mesh().poly().topoChanged())
         {
             cpF.origFieldPtr_() = bF[origPatchi];
         }
@@ -179,7 +179,7 @@ void Foam::conformedFvsPatchField<Type>::unconform
 
     // If the mesh has topo-changed then just use the original parts and leave
     // the non-conformal parts unset
-    if (iF.mesh()().topoChanged())
+    if (iF.mesh().poly().topoChanged())
     {
         bF.transfer(origPFs);
     }

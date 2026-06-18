@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -146,7 +146,7 @@ void Foam::solvers::twoPhaseSolver::preSolve()
 
     // Do not apply previous time-step mesh compression flux
     // if the mesh topology changed
-    if (mesh().topoChanged())
+    if (mesh().poly().topoChanged())
     {
         talphaPhi1Corr0.clear();
     }

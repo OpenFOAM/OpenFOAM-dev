@@ -612,6 +612,15 @@ public:
             //- Is this mesh dynamic?
             bool dynamic() const;
 
+            //- Has the mesh topology changed this time-step?
+            //  Note the additional condition vs the polyMesh. The
+            //  finite-volume topology changes if the stitcher changes the
+            //  non-conformal faces.
+            bool topoChanged() const
+            {
+                return poly().topoChanged() || (moving() && !conformal());
+            }
+
             //- Update the mesh for topology change, mesh to mesh mapping
             //  or redistribution
             bool update();
