@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::incompressibleMomentumTransportModel
 
 Description
-    Base class for single-phase incompressible turbulence models.
+    Base class for single-phase incompressible momentum transport models.
 
 SourceFiles
     incompressibleMomentumTransportModel.C
@@ -103,7 +103,7 @@ public:
 
     // Selectors
 
-        //- Return a reference to the selected turbulence model
+        //- Return a reference to the selected momentum transport model
         static autoPtr<incompressibleMomentumTransportModel> New
         (
             const volVectorField& U,

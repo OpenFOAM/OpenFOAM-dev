@@ -25,7 +25,7 @@ Class
     Foam::momentumTransportModel
 
 Description
-    Abstract base class for turbulence models (RAS, LES and laminar).
+    Abstract base class for momentum transport models (RAS, LES and laminar).
 
 SourceFiles
     momentumTransportModel.C

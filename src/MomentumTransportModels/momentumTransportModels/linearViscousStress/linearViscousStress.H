@@ -25,7 +25,7 @@ Class
     Foam::linearViscousStress
 
 Description
-    Linear viscous stress turbulence model base class
+    Linear viscous stress momentum transport model base class
 
 SourceFiles
     linearViscousStress.C

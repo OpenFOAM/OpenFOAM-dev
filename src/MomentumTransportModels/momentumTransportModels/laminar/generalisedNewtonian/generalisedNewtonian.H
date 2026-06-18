@@ -91,7 +91,7 @@ public:
 
     // Selectors
 
-        //- Return a reference to the selected turbulence model
+        //- Return a reference to the selected momentum transport model
         static autoPtr<generalisedNewtonian> New
         (
             const alphaField& alpha,
