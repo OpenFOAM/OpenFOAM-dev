@@ -51,7 +51,7 @@ License
             TimeFunction,                                                      \
             DimensionedField##Type##pointMesh##Field                           \
         );                                                                     \
-         addDimensionedFieldFunction                                           \
+        addDimensionedFieldFunction                                            \
         (                                                                      \
             Zonal,                                                             \
             DimensionedField##Type##pointMesh##Field                           \
