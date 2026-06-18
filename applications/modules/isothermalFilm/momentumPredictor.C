@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,7 +79,11 @@ Foam::solvers::isothermalFilm::pe() const
     // Add the pressure caused normal momentum sources (e.g., parcels impinging
     // with a normal velocity)
     p.internalFieldRef() +=
-        VbyA.v()*(nHat.v() & (fvModels().source(alpha, rho, U) & U)->v());
+        max
+        (
+            VbyA.v()*(nHat.v() & fvModels().source(alpha, rho, U)().Su()),
+            dimensionedScalar(p.dimensions(), 0)
+        );
 
     return p;
 }

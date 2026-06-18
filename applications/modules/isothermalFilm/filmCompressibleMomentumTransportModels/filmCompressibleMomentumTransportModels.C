@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2023-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,12 +62,14 @@ namespace Foam
 
 #include "Stokes.H"
 makeLaminarModel(Stokes);
+makeSimplifiedLaminarModel(Stokes);
 
 #include "generalisedNewtonian.H"
 makeLaminarModel(generalisedNewtonian);
 
 #include "lambdaThixotropic.H"
 makeLaminarModel(lambdaThixotropic);
+makeSimplifiedLaminarModel(lambdaThixotropic);
 
 #include "Maxwell.H"
 makeLaminarModel(Maxwell);
