@@ -39,8 +39,8 @@ namespace laminarModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class BasicMomentumTransportModel>
-lambdaThixotropic<BasicMomentumTransportModel>::lambdaThixotropic
+template<class BasicMomentumTransportModel, template<class> class ViscousStress>
+lambdaThixotropic<BasicMomentumTransportModel, ViscousStress>::lambdaThixotropic
 (
     const alphaField& alpha,
     const rhoField& rho,
@@ -51,7 +51,7 @@ lambdaThixotropic<BasicMomentumTransportModel>::lambdaThixotropic
     const word& type
 )
 :
-    linearViscousStress<laminarModel<BasicMomentumTransportModel>>
+    ViscousStress<laminarModel<BasicMomentumTransportModel>>
     (
         typeName,
         alpha,
@@ -117,9 +117,9 @@ lambdaThixotropic<BasicMomentumTransportModel>::lambdaThixotropic
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template<class BasicMomentumTransportModel>
+template<class BasicMomentumTransportModel, template<class> class ViscousStress>
 tmp<volScalarField>
-lambdaThixotropic<BasicMomentumTransportModel>::calcNu
+lambdaThixotropic<BasicMomentumTransportModel, ViscousStress>::calcNu
 (
     const volScalarField& strainRate
 ) const
@@ -154,9 +154,10 @@ lambdaThixotropic<BasicMomentumTransportModel>::calcNu
 }
 
 
-template<class BasicMomentumTransportModel>
+template<class BasicMomentumTransportModel, template<class> class ViscousStress>
 tmp<volScalarField>
-lambdaThixotropic<BasicMomentumTransportModel>::strainRate() const
+lambdaThixotropic<BasicMomentumTransportModel, ViscousStress>::
+strainRate() const
 {
     return sqrt(2.0)*mag(symm(fvc::grad(this->U())));
 }
@@ -164,8 +165,8 @@ lambdaThixotropic<BasicMomentumTransportModel>::strainRate() const
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class BasicMomentumTransportModel>
-bool lambdaThixotropic<BasicMomentumTransportModel>::read()
+template<class BasicMomentumTransportModel, template<class> class ViscousStress>
+bool lambdaThixotropic<BasicMomentumTransportModel, ViscousStress>::read()
 {
     if (laminarModel<BasicMomentumTransportModel>::read())
     {
@@ -194,9 +195,9 @@ bool lambdaThixotropic<BasicMomentumTransportModel>::read()
 }
 
 
-template<class BasicMomentumTransportModel>
+template<class BasicMomentumTransportModel, template<class> class ViscousStress>
 tmp<volScalarField>
-lambdaThixotropic<BasicMomentumTransportModel>::nuEff() const
+lambdaThixotropic<BasicMomentumTransportModel, ViscousStress>::nuEff() const
 {
     return volScalarField::New
     (
@@ -206,9 +207,9 @@ lambdaThixotropic<BasicMomentumTransportModel>::nuEff() const
 }
 
 
-template<class BasicMomentumTransportModel>
+template<class BasicMomentumTransportModel, template<class> class ViscousStress>
 tmp<scalarField>
-lambdaThixotropic<BasicMomentumTransportModel>::nuEff
+lambdaThixotropic<BasicMomentumTransportModel, ViscousStress>::nuEff
 (
     const label patchi
 ) const
@@ -217,8 +218,8 @@ lambdaThixotropic<BasicMomentumTransportModel>::nuEff
 }
 
 
-template<class BasicMomentumTransportModel>
-void lambdaThixotropic<BasicMomentumTransportModel>::correct()
+template<class BasicMomentumTransportModel, template<class> class ViscousStress>
+void lambdaThixotropic<BasicMomentumTransportModel, ViscousStress>::correct()
 {
     // Local references
     const alphaField& alpha = this->alpha_;

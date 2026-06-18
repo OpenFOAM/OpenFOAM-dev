@@ -84,10 +84,14 @@ namespace laminarModels
                     Class lambdaThixotropic Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class BasicMomentumTransportModel>
+template
+<
+    class BasicMomentumTransportModel,
+    template<class> class ViscousStress = linearViscousStress
+>
 class lambdaThixotropic
 :
-    public linearViscousStress<laminarModel<BasicMomentumTransportModel>>
+    public ViscousStress<laminarModel<BasicMomentumTransportModel>>
 {
     // Private data
 

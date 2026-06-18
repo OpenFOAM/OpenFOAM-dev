@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,42 +22,53 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::laminarModels::Stokes
+    Foam::simplifiedViscousStress
 
 Description
-    Momentum transport model for Stokes flow.
+    Simplified linear viscous stress momentum transport model base class
+
+    For incompressible uniform viscosity flow in which the transpose and
+    dilatation terms in the linear stress model are formally zero.
+
+    This model can also be useful for complex surface film cases in which
+    the transpose and dilatation terms are relatively very small compared to
+    the wall surface stress and can safely be ignored avoiding potentially
+    large numerical errors around sharp corners.
 
 SourceFiles
-    Stokes.C
+    simplifiedViscousStress.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef Stokes_H
-#define Stokes_H
-
-#include "laminarModel.H"
-#include "linearViscousStress.H"
+#ifndef simplifiedViscousStress_H
+#define simplifiedViscousStress_H
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace laminarModels
-{
 
-/*---------------------------------------------------------------------------* \
-                           Class Stokes Declaration
+/*---------------------------------------------------------------------------*\
+                    Class simplifiedViscousStress Declaration
 \*---------------------------------------------------------------------------*/
 
-template
-<
-    class BasicMomentumTransportModel,
-    template<class> class ViscousStress = linearViscousStress
->
-class Stokes
+template<class BasicMomentumTransportModel>
+class simplifiedViscousStress
 :
-    public ViscousStress<laminarModel<BasicMomentumTransportModel>>
+    public BasicMomentumTransportModel
 {
+protected:
+
+    // Protected Member Functions
+
+        //- Return the source term for the momentum equation
+        template<class RhoFieldType>
+        tmp<fvVectorMatrix> DivDevTau
+        (
+            const RhoFieldType& rho,
+            volVectorField& U
+        ) const;
+
 
 public:
 
@@ -66,28 +77,15 @@ public:
 
 
     //- Runtime type information
-    TypeName("Stokes");
+    ClassName("simplified");
 
 
     // Constructors
 
         //- Construct from components
-        Stokes
+        simplifiedViscousStress
         (
-            const alphaField& alpha,
-            const rhoField& rho,
-            const volVectorField& U,
-            const surfaceScalarField& alphaRhoPhi,
-            const surfaceScalarField& phi,
-            const viscosity& viscosity
-        );
-
-
-    // Selectors
-
-        //- Return a reference to the selected momentum transport model
-        static autoPtr<Stokes> New
-        (
+            const word& modelName,
             const alphaField& alpha,
             const rhoField& rho,
             const volVectorField& U,
@@ -98,39 +96,41 @@ public:
 
 
     //- Destructor
-    virtual ~Stokes()
+    virtual ~simplifiedViscousStress()
     {}
 
 
     // Member Functions
 
-        //- Read momentumTransport dictionary
-        virtual bool read();
+        //- Re-read model coefficients if they have changed
+        virtual bool read() = 0;
 
-        //- Return the effective viscosity, i.e. the Stokes viscosity
-        virtual tmp<volScalarField> nuEff() const;
+        //- Return the effective surface stress
+        virtual tmp<surfaceVectorField> devTau() const;
 
-        //- Return the effective viscosity on patch
-        virtual tmp<scalarField> nuEff(const label patchi) const;
+        //- Return the source term for the momentum equation
+        virtual tmp<fvVectorMatrix> divDevTau(volVectorField& U) const;
 
-        //- Predict the Stokes viscosity
-        virtual void predict();
+        //- Return the source term for the momentum equation
+        virtual tmp<fvVectorMatrix> divDevTau
+        (
+            const volScalarField& rho,
+            volVectorField& U
+        ) const;
 
-        //- The Stokes viscosity is not corrected
-        virtual void correct()
-        {}
+        //- Solve the turbulence equations and correct the turbulence viscosity
+        virtual void correct() = 0;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace laminarModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "Stokes.C"
+    #include "simplifiedViscousStress.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

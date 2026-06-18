@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,8 +39,8 @@ namespace laminarModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class BasicMomentumTransportModel>
-Stokes<BasicMomentumTransportModel>::Stokes
+template<class BasicMomentumTransportModel, template<class> class ViscousStress>
+Stokes<BasicMomentumTransportModel, ViscousStress>::Stokes
 (
     const alphaField& alpha,
     const rhoField& rho,
@@ -50,7 +50,7 @@ Stokes<BasicMomentumTransportModel>::Stokes
     const viscosity& viscosity
 )
 :
-    linearViscousStress<laminarModel<BasicMomentumTransportModel>>
+    ViscousStress<laminarModel<BasicMomentumTransportModel>>
     (
         typeName,
         alpha,
@@ -65,15 +65,16 @@ Stokes<BasicMomentumTransportModel>::Stokes
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class BasicMomentumTransportModel>
-bool Stokes<BasicMomentumTransportModel>::read()
+template<class BasicMomentumTransportModel, template<class> class ViscousStress>
+bool Stokes<BasicMomentumTransportModel, ViscousStress>::read()
 {
     return true;
 }
 
 
-template<class BasicMomentumTransportModel>
-tmp<volScalarField> Stokes<BasicMomentumTransportModel>::nuEff() const
+template<class BasicMomentumTransportModel, template<class> class ViscousStress>
+tmp<volScalarField> Stokes<BasicMomentumTransportModel, ViscousStress>::
+nuEff() const
 {
     return volScalarField::New
     (
@@ -83,8 +84,8 @@ tmp<volScalarField> Stokes<BasicMomentumTransportModel>::nuEff() const
 }
 
 
-template<class BasicMomentumTransportModel>
-tmp<scalarField> Stokes<BasicMomentumTransportModel>::nuEff
+template<class BasicMomentumTransportModel, template<class> class ViscousStress>
+tmp<scalarField> Stokes<BasicMomentumTransportModel, ViscousStress>::nuEff
 (
     const label patchi
 ) const
@@ -93,8 +94,8 @@ tmp<scalarField> Stokes<BasicMomentumTransportModel>::nuEff
 }
 
 
-template<class BasicMomentumTransportModel>
-void Stokes<BasicMomentumTransportModel>::predict()
+template<class BasicMomentumTransportModel, template<class> class ViscousStress>
+void Stokes<BasicMomentumTransportModel, ViscousStress>::predict()
 {
     laminarModel<BasicMomentumTransportModel>::predict();
 }

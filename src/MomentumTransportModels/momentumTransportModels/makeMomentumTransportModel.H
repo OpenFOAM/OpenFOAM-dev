@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,6 +101,33 @@ License
             (                                                                  \
                 SType##BaseModel,                                              \
                 Type##SType##BaseModel,                                        \
+                dictionary                                                     \
+            );                                                                 \
+        }                                                                      \
+    }
+
+
+#define makeTemplatedLaminarStressModel(BaseModel, SType, StType, Type)        \
+    typedef Foam::SType##Models::Type<Foam::BaseModel, Foam::StType>           \
+        Type##StType##SType##BaseModel;                                        \
+    defineTemplateTypeNameAndDebugWithName                                     \
+    (                                                                          \
+        Type##StType##SType##BaseModel,                                        \
+        (StType::typeName_() + word(Type::typeName_()).capitalise()).c_str(),  \
+        0                                                                      \
+    );                                                                         \
+                                                                               \
+    namespace Foam                                                             \
+    {                                                                          \
+        namespace SType##Models                                                \
+        {                                                                      \
+            typedef Type<BaseModel, StType>                                    \
+                Type##StType##SType##BaseModel;                                \
+                                                                               \
+            addToRunTimeSelectionTable                                         \
+            (                                                                  \
+                SType##BaseModel,                                              \
+                Type##StType##SType##BaseModel,                                \
                 dictionary                                                     \
             );                                                                 \
         }                                                                      \
