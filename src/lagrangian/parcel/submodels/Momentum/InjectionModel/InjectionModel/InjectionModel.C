@@ -122,7 +122,20 @@ Foam::InjectionModel<CloudType>::readMassFlowRate
             << "the other." << exit(FatalIOError);
     }
 
-    if (owner.solution().steadyState() || haveMassFlowRate)
+    if (owner.solution().steadyState())
+    {
+        return
+            autoPtr<Function1<scalar>>
+            (
+                new Function1s::Constant<scalar>
+                (
+                    "massFlowRate",
+                    dict.lookup<scalar>("massFlowRate", dimMass/dimTime)
+                )
+            );
+    }
+
+    if (haveMassFlowRate)
     {
         return
             Function1<scalar>::New
