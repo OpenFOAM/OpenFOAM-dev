@@ -266,8 +266,10 @@ public:
 
     // Constructors
 
-        //- Return whether the given IOobject relates to a mesh on disk
-        static bool found(const IOobject& io);
+        //- Return the instance of the polyMesh directory. Returns
+        //  fileName::null if the directory does not exist, and can therefore
+        //  be used to check whether the mesh directory exists.
+        static fileName meshDirInstance(const IOobject& io);
 
         //- Construct from IOobject.
         explicit polyMesh(const IOobject& io);

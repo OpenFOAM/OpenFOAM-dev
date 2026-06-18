@@ -431,7 +431,11 @@ int main(int argc, char *argv[])
             // If we are creating couples on a mesh within a mesh path
             // sub-directory then these couples will not be stitched so loading
             // the neighbouring regions is optional
-            if (haveMeshPath && !polyMesh::found(regionMeshIo)) continue;
+            if
+            (
+                haveMeshPath
+             && polyMesh::meshDirInstance(regionMeshIo) == fileName::null
+            ) continue;
 
             regionNames.append(regionName);
             regionMeshes.append(new fvMesh(regionMeshIo, false));

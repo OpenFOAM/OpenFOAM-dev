@@ -266,9 +266,11 @@ int main(int argc, char *argv[])
     #include "addRegionOption.H"
     #include "addMeshOption.H"
     #include "addDictOption.H"
+    #include "addNoOverwriteOption.H"
 
     #include "setRootCase.H"
     #include "createTimeExtruded.H"
+    #include "setNoOverwrite.H"
 
     const dictionary dict(systemDict("extrudeMeshDict", args, runTimeExtruded));
 
@@ -998,12 +1000,43 @@ int main(int argc, char *argv[])
         updateCellSet(map(), addedCellsSet);
     }
 
-    mesh.setInstance(runTimeExtruded.constant());
+    // Set the write instance based on the overwrite flag and whether or not a
+    // mesh is already present
+    const fileName meshInstanceExtruded =
+        polyMesh::meshDirInstance
+        (
+            IOobject
+            (
+                Foam::polyMesh::defaultRegion,
+                runTimeExtruded.name(),
+                runTimeExtruded,
+                Foam::IOobject::MUST_READ
+            )
+        );
+    if (meshInstanceExtruded != fileName::null)
+    {
+        if (!overwrite)
+        {
+            runTimeExtruded ++;
+
+            mesh.setInstance(runTimeExtruded.name());
+        }
+        else
+        {
+            mesh.setInstance(meshInstanceExtruded);
+        }
+    }
+    else
+    {
+        mesh.setInstance(runTimeExtruded.constant());
+    }
+
     Info<< "Writing mesh to " << mesh.relativeObjectPath() << nl << endl;
 
     if (!mesh.write())
     {
         FatalErrorInFunction
+            << "Failed writing " << mesh.name()
             << exit(FatalError);
     }
 
@@ -1017,7 +1050,7 @@ int main(int argc, char *argv[])
         if (!addedCells.write())
         {
             FatalErrorInFunction
-                << addedCells.name()
+                << "Failed writing " << addedCells.name()
                 << exit(FatalError);
         }
     }

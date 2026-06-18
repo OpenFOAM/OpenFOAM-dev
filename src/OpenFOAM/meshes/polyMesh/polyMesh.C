@@ -971,7 +971,7 @@ Foam::polyMesh::~polyMesh()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::polyMesh::found(const IOobject& io)
+Foam::fileName Foam::polyMesh::meshDirInstance(const IOobject& io)
 {
     // Create an IO object for the current-time polyMesh directory
     const IOobject curDirIo
@@ -989,8 +989,11 @@ bool Foam::polyMesh::found(const IOobject& io)
     const IOobject latestDirIo =
         fileHandler().findInstance(curDirIo, io.time().value(), word::null);
 
-    // Return whether or not this latest-time polyMesh directory exists
-    return fileHandler().isDir(fileHandler().objectPath(latestDirIo));
+    // Return the instance if the polyMesh directory exists, or null if not
+    return
+        fileHandler().isDir(fileHandler().objectPath(latestDirIo))
+      ? latestDirIo.instance()
+      : fileName::null;
 }
 
 
