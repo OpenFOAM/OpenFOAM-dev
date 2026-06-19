@@ -1,0 +1,149 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+vertices
+(
+    // (truncated) Cone
+    (-1 0 0) (0 -1 0) (1 0 0) (0 1 0)
+    (0 -2 2) (2 0 2) (0 2 2) (-2 0 2)
+
+    // (quarter) Torus
+    (3 0 0) (4 -1 0) (5 0 0) (4 1 0)
+    (6 0 3) (6 -1 2) (6 0 1) (6 1 2)
+
+    // Sphere
+    (7 -1 0) (7 1 0) (7 1 2) (7 -1 2)
+    (9 -1 0) (9 1 0) (9 1 2) (9 -1 2)
+);
+
+blocks
+(
+    hex (1 0 4 5 2 3 7 6) cone (9 10 11) simpleGrading (1 1 1)
+    hex (8 9 10 11 12 13 14 15) torous (6 6 12) simpleGrading (1 1 1)
+    hex (16 17 18 19 20 21 22 23) sphere (10 10 10) simpleGrading (1 1 1)
+);
+
+// A cone geometry is needed to project the edges to because we twist the block
+// through the height of the cone. It would not be needed otherwise.
+geometry
+{
+    cone
+    {
+        type    triSurface;
+        file    "cone.obj";
+    }
+}
+
+edges
+(
+    // (truncated) Cone
+    arc 0 1 90 (0 0 1)
+    arc 1 2 90 (0 0 1)
+    arc 2 3 90 (0 0 1)
+    arc 3 0 90 (0 0 1)
+
+    arc 4 5 90 (0 0 1)
+    arc 5 6 90 (0 0 1)
+    arc 6 7 90 (0 0 1)
+    arc 7 4 90 (0 0 1)
+
+    project 0 4 (cone)
+    project 1 5 (cone)
+    project 2 6 (cone)
+    project 3 7 (cone)
+
+    // (quarter) Torus
+    arc  8  9 90 (0 0 1)
+    arc  9 10 90 (0 0 1)
+    arc 10 11 90 (0 0 1)
+    arc 11  8 90 (0 0 1)
+
+    arc 12 13 90 (1 0 0)
+    arc 13 14 90 (1 0 0)
+    arc 14 15 90 (1 0 0)
+    arc 15 12 90 (1 0 0)
+
+    arc 8 12 90 (0 1 0)
+    arc 9 13 90 (0 1 0)
+    arc 10 14 90 (0 1 0)
+    arc 11 15 90 (0 1 0)
+
+    // Sphere
+    arc 16 17 70.52877936550932 (1 0 -1)
+    arc 17 18 70.52877936550932 (1 1 0)
+    arc 18 19 70.52877936550932 (1 0 1)
+    arc 19 16 70.52877936550932 (1 -1 0)
+
+    arc 20 21 70.52877936550932 (1 0 1)
+    arc 21 22 70.52877936550932 (1 -1 0)
+    arc 22 23 70.52877936550932 (1 0 -1)
+    arc 23 20 70.52877936550932 (1 1 0)
+
+    arc 16 20 70.52877936550932 (0 -1 1)
+    arc 17 21 70.52877936550932 (0 -1 -1)
+    arc 18 22 70.52877936550932 (0 1 -1)
+    arc 19 23 70.52877936550932 (0 1 1)
+);
+
+faces
+(
+    // (truncated) Cone. This is exact, and it also appears to be insensitive
+    // to the direction of sweeping, which is somewhat surprising given that
+    // the block also twists 90 degrees over the height of the cone.
+    sweep (0 1 5 4) 1
+    sweep (1 2 6 5) 1
+    sweep (2 3 7 6) 1
+    sweep (3 0 4 7) 1
+
+    // (quarter) Torus. This is exact, but it is also sensitive to the
+    // direction of sweeping. If the minor edges are swept (the more intuitive
+    // option) then the rotation factor must be 1. If the major edges are swept
+    // (the less intuitive option) then the rotation factor must be 0. The
+    // swept edges are the first and third edges of the faces listed.
+    sweep (8 9 13 12) 1
+    sweep (9 10 14 13) 1
+    sweep (10 11 15 14) 1
+    sweep (11 8 12 15) 1
+    // ... or ...
+    /*
+    sweep (9 13 12 8) 0
+    sweep (10 14 13 9) 0
+    sweep (11 15 14 10) 0
+    sweep (8 12 15 11) 0
+    */
+
+    // Sphere. This is not exact. The positions are better than the basic
+    // algorithm, but the projection still falls short of the sphere surface.
+    // That's because, unlike the other two shapes, the "rows" of points in one
+    // of the faces of the sphere are not geometrically similar (i.e., just
+    // rotated and scaled). The angle spanned by the arc varies with each row.
+    sweep (16 17 18 19) 1
+    sweep (16 17 21 20) 1
+    sweep (17 18 22 21) 1
+    sweep (18 19 23 22) 1
+    sweep (19 16 20 23) 1
+    sweep (20 21 22 23) 1
+);
+
+defaultPatch
+{
+    name    walls;
+    type    wall;
+}
+
+boundary
+();
+
+// ************************************************************************* //

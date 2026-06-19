@@ -16,6 +16,7 @@ blockEdges/projectCurveEdge/projectCurveEdge.C
 
 blockFaces/blockFace/blockFace.C
 blockFaces/projectFace/projectFace.C
+blockFaces/sweepFace/sweepFace.C
 
 gradingDescriptor/gradingDescriptor.C
 gradingDescriptor/gradingDescriptors.C
