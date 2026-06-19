@@ -121,13 +121,17 @@ public:
         //- Return the effective viscosity
         virtual tmp<volScalarField> nuEff() const
         {
-            return mixtureMomentumTransport_.nuEff();
+            return volScalarField::New
+            (
+                groupName("nuEff"),
+                nut() + nu()
+            );
         }
 
         //- Return the effective viscosity on patch
         virtual tmp<scalarField> nuEff(const label patchi) const
         {
-            return mixtureMomentumTransport_.nuEff(patchi);
+            return nut(patchi) + nu(patchi);
         }
 
         //- Return the Reynolds stress tensor [m^2/s^2]
