@@ -152,8 +152,8 @@ protected:
 
     // Unburnt and burnt gas momentumTransport
 
-        RASModels::ubMomentumTransportModel uMomentumTransport_;
-        RASModels::ubMomentumTransportModel bMomentumTransport_;
+        ubMomentumTransportModel uMomentumTransport_;
+        ubMomentumTransportModel bMomentumTransport_;
 
 
     // Unburnt and burnt gas Thermophysical transport

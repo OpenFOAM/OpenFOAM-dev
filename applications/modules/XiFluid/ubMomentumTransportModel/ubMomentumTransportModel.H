@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::RASModels::ubMomentumTransportModel
+    Foam::ubMomentumTransportModel
 
 Description
 
@@ -35,13 +35,10 @@ SourceFiles
 #define ubMomentumTransportModel_H
 
 #include "phaseCompressibleMomentumTransportModel.H"
-#include "RASModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
-{
-namespace RASModels
 {
 
 /*---------------------------------------------------------------------------*\
@@ -50,7 +47,7 @@ namespace RASModels
 
 class ubMomentumTransportModel
 :
-    public RASModel<phaseCompressibleMomentumTransportModel>
+    public phaseCompressibleMomentumTransportModel
 {
     // Private Data
 
@@ -121,6 +118,18 @@ public:
             return mixtureMomentumTransport_.nut(patchi);
         }
 
+        //- Return the effective viscosity
+        virtual tmp<volScalarField> nuEff() const
+        {
+            return mixtureMomentumTransport_.nuEff();
+        }
+
+        //- Return the effective viscosity on patch
+        virtual tmp<scalarField> nuEff(const label patchi) const
+        {
+            return mixtureMomentumTransport_.nuEff(patchi);
+        }
+
         //- Return the Reynolds stress tensor [m^2/s^2]
         virtual tmp<volSymmTensorField> R() const
         {
@@ -144,6 +153,11 @@ public:
             volVectorField& U
         ) const;
 
+        //- Predict the turbulence transport coefficients if possible
+        //  without solving turbulence transport model equations
+        virtual void predict()
+        {}
+
         //- Solve the turbulence equations and correct the turbulence viscosity
         virtual void correct();
 
@@ -157,7 +171,6 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace RASModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

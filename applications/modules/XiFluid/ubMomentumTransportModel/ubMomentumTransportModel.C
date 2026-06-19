@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,8 +30,6 @@ License
 
 namespace Foam
 {
-namespace RASModels
-{
 
 defineTypeNameAndDebug(ubMomentumTransportModel, 0);
 
@@ -48,9 +46,9 @@ ubMomentumTransportModel::ubMomentumTransportModel
     const compressible::momentumTransportModel& mixtureMomentumTransport
 )
 :
-    RASModel<phaseCompressibleMomentumTransportModel>
+    phaseCompressibleMomentumTransportModel
     (
-        RASModels::ubMomentumTransportModel::typeName,
+        ubMomentumTransportModel::typeName,
         alpha,
         rho,
         U,
@@ -94,7 +92,6 @@ void ubMomentumTransportModel::correct()
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace RASModels
 } // End namespace Foam
 
 // ************************************************************************* //
