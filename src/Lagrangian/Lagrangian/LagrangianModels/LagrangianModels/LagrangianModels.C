@@ -101,19 +101,17 @@ Foam::LagrangianModels::LagrangianModels(const LagrangianMesh& mesh)
     <
         LagrangianMesh,
         TopoChangeableMeshObject,
-        LagrangianModels
+        LagrangianModels,
+        IOdictionary
     >
     (
         io(mesh),
         mesh
     ),
-    dictionary(),
     PtrListDictionary<LagrangianModel>(0),
     checkTimeIndex_(mesh.time().timeIndex() + 1),
     addSupFields_()
 {
-    readHeaderOk(IOstream::ASCII, typeName);
-
     const dictionary& dict(*this);
 
     // Iterate through the dictionary to determine the number of models
@@ -159,9 +157,6 @@ Foam::LagrangianModels::LagrangianModels(const LagrangianMesh& mesh)
             modelList[i].postConstruct();
         }
     }
-
-    // Enable re-reading
-    addWatch();
 }
 
 
@@ -416,20 +411,6 @@ bool Foam::LagrangianModels::read()
     {
         return false;
     }
-}
-
-
-bool Foam::LagrangianModels::readData(Istream& is)
-{
-    is >> *this;
-    return !is.bad();
-}
-
-
-bool Foam::LagrangianModels::writeData(Ostream& os) const
-{
-    dictionary::write(os, false);
-    return os.good();
 }
 
 

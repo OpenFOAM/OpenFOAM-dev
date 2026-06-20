@@ -58,9 +58,9 @@ class LagrangianModels
     <
         LagrangianMesh,
         TopoChangeableMeshObject,
-        LagrangianModels
+        LagrangianModels,
+        IOdictionary
     >,
-    public dictionary,
     public PtrListDictionary<LagrangianModel>
 {
     // Private Data
@@ -104,13 +104,7 @@ class LagrangianModels
 protected:
 
     //- Let the mesh object use the protected constructors
-    friend class DemandDrivenMeshObject
-    <
-        LagrangianMesh,
-        TopoChangeableMeshObject,
-        LagrangianModels
-    >;
-
+    friend class DemandDrivenMeshObject;
 
     // Protected Constructors
 
@@ -134,7 +128,8 @@ public:
         <
             LagrangianMesh,
             TopoChangeableMeshObject,
-            LagrangianModels
+            LagrangianModels,
+            IOdictionary
         >::New;
 
 
@@ -143,13 +138,6 @@ public:
 
 
     // Member Functions
-
-        //- Declare LagrangianModels to be a global dictionary
-        virtual bool global() const
-        {
-            return true;
-        }
-
 
         // Checks
 
@@ -311,14 +299,6 @@ public:
             //- Read the LagrangianModels dictionary if it has changed
             //  and update the models
             virtual bool read();
-
-            //- ReadData function which reads the LagrangianModels dictionary
-            //  required for regIOobject read operation
-            virtual bool readData(Istream&);
-
-            //- writeData function required by regIOobject but not used
-            //  for this class, writeObject is used instead
-            virtual bool writeData(Ostream& os) const;
 
             //- Write the LagrangianModels
             virtual bool writeObject
