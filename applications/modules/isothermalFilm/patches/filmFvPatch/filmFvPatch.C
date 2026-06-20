@@ -55,7 +55,7 @@ const Foam::scalarField& Foam::filmFvPatch::deltaCoeffs() const
 
         const scalarField& filmDelta = film.delta.boundaryField()[index()];
 
-        deltaCoeffs_ = 1/(0.5*max(filmDelta, 1e-8));
+        deltaCoeffs_ = 1/(0.5*max(filmDelta, scalar(1e-8)));
 
         return deltaCoeffs_;
     }
