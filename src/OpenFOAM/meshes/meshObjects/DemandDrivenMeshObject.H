@@ -26,14 +26,14 @@ Class
 
 Description
     Templated abstract base-class for demand-driven mesh objects used to
-    automate their allocation to the mesh database and the mesh-modifier
+    automate their allocation to the mesh database and the m esh-modifier
     event-loop.
 
     DemandDrivenMeshObject is templated on the type of mesh it is allocated to,
     the type of the mesh object (DeletableMeshObject, MoveableMeshObject,
-    DistributeableMeshObject, TopoChangeableMeshObject) and the type of the
-    actual object it is created for example:
-
+    DistributeableMeshObject, TopoChangeableMeshObject), the type of the object
+    it is created for and optionally the type of registered object
+    which defaults to regIOobject, e.g.:
     \verbatim
     class leastSquaresVectors
     :
@@ -49,6 +49,26 @@ Description
     .
         //- Delete the least square vectors when the mesh moves
         virtual bool movePoints();
+    };
+    \endverbatim
+
+    or if the object is read from a special IOdictionary it can be derived
+    from an IOdictionary stored by the DemandDrivenMeshObject, e.g.:
+    \verbatim
+    class fvModels
+    :
+        public DemandDrivenMeshObject
+        <
+            fvMesh,
+            TopoChangeableMeshObject,
+            fvModels,
+            IOdictionary
+        >,
+        public MRFZoneList
+    {
+    .
+    .
+    .
     };
     \endverbatim
 
@@ -93,10 +113,16 @@ namespace Foam
                          Class DemandDrivenMeshObject Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Mesh, template<class> class MeshObjectType, class Type>
+template
+<
+    class Mesh,
+    template<class> class MeshObjectType,
+    class Type,
+    class RegIOobject = regIOobject
+>
 class DemandDrivenMeshObject
 :
-    public regIOobject,
+    public RegIOobject,
     public MeshObjectType<Mesh>
 {
     // Private Data

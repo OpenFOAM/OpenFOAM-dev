@@ -28,27 +28,41 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class Mesh, template<class> class MeshObjectType, class Type>
-Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::DemandDrivenMeshObject
+template
+<
+    class Mesh,
+    template<class> class MeshObjectType,
+    class Type,
+    class RegIOobject
+>
+Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type, RegIOobject>::
+DemandDrivenMeshObject
 (
     const IOobject& io,
     const Mesh& mesh
 )
 :
-    regIOobject(io),
+    RegIOobject(io),
     MeshObjectType<Mesh>(*this),
     mesh_(mesh)
 {}
 
 
-template<class Mesh, template<class> class MeshObjectType, class Type>
-Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::DemandDrivenMeshObject
+template
+<
+    class Mesh,
+    template<class> class MeshObjectType,
+    class Type,
+    class RegIOobject
+>
+Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type, RegIOobject>::
+DemandDrivenMeshObject
 (
     const word& name,
     const Mesh& mesh
 )
 :
-    regIOobject
+    RegIOobject
     (
         IOobject
         (
@@ -62,20 +76,37 @@ Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::DemandDrivenMeshObject
 {}
 
 
-template<class Mesh, template<class> class MeshObjectType, class Type>
-Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::DemandDrivenMeshObject
+template
+<
+    class Mesh,
+    template<class> class MeshObjectType,
+    class Type,
+    class RegIOobject
+>
+Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type, RegIOobject>::
+DemandDrivenMeshObject
 (
     const Mesh& mesh
 )
 :
-    DemandDrivenMeshObject<Mesh, MeshObjectType, Type>(Type::typeName, mesh)
+    DemandDrivenMeshObject<Mesh, MeshObjectType, Type, RegIOobject>
+    (
+        Type::typeName,
+        mesh
+    )
 {}
 
 
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
-template<class Mesh, template<class> class MeshObjectType, class Type>
-Type& Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::New
+template
+<
+    class Mesh,
+    template<class> class MeshObjectType,
+    class Type,
+    class RegIOobject
+>
+Type& Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type, RegIOobject>::New
 (
     const word& name,
     const Mesh& mesh
@@ -105,8 +136,14 @@ Type& Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::New
 }
 
 
-template<class Mesh, template<class> class MeshObjectType, class Type>
-Type& Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::New
+template
+<
+    class Mesh,
+    template<class> class MeshObjectType,
+    class Type,
+    class RegIOobject
+>
+Type& Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type, RegIOobject>::New
 (
     const Mesh& mesh
 )
@@ -134,9 +171,15 @@ Type& Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::New
 }
 
 
-template<class Mesh, template<class> class MeshObjectType, class Type>
+template
+<
+    class Mesh,
+    template<class> class MeshObjectType,
+    class Type,
+    class RegIOobject
+>
 template<class... Args>
-Type& Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::New
+Type& Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type, RegIOobject>::New
 (
     const word& name,
     const Mesh& mesh,
@@ -167,9 +210,15 @@ Type& Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::New
 }
 
 
-template<class Mesh, template<class> class MeshObjectType, class Type>
+template
+<
+    class Mesh,
+    template<class> class MeshObjectType,
+    class Type,
+    class RegIOobject
+>
 template<class... Args>
-Type& Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::New
+Type& Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type, RegIOobject>::New
 (
     const Mesh& mesh,
     const Args&... args
@@ -200,8 +249,14 @@ Type& Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::New
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * //
 
-template<class Mesh, template<class> class MeshObjectType, class Type>
-Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::
+template
+<
+    class Mesh,
+    template<class> class MeshObjectType,
+    class Type,
+    class RegIOobject
+>
+Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type, RegIOobject>::
 ~DemandDrivenMeshObject()
 {
     regIOobject::release();
@@ -210,16 +265,30 @@ Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class Mesh, template<class> class MeshObjectType, class Type>
+template
+<
+    class Mesh,
+    template<class> class MeshObjectType,
+    class Type,
+    class RegIOobject
+>
 const Foam::word&
-Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::type() const
+Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type, RegIOobject>::
+type() const
 {
     return Type::typeName;
 }
 
 
-template<class Mesh, template<class> class MeshObjectType, class Type>
-bool Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::found
+template
+<
+    class Mesh,
+    template<class> class MeshObjectType,
+    class Type,
+    class RegIOobject
+>
+bool Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type, RegIOobject>::
+found
 (
     const word& name,
     const Mesh& mesh
@@ -229,8 +298,15 @@ bool Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::found
 }
 
 
-template<class Mesh, template<class> class MeshObjectType, class Type>
-bool Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type>::found
+template
+<
+    class Mesh,
+    template<class> class MeshObjectType,
+    class Type,
+    class RegIOobject
+>
+bool Foam::DemandDrivenMeshObject<Mesh, MeshObjectType, Type, RegIOobject>::
+found
 (
     const Mesh& mesh
 )
