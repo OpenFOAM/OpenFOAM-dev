@@ -1,6 +1,6 @@
 Foam::fvModels& fvModels(Foam::fvModels::New(mesh));
 
-if (!fvModels.PtrListDictionary<fvModel>::size())
+if (!fvModels.size())
 {
     Info << "No fvModels present" << endl;
 }

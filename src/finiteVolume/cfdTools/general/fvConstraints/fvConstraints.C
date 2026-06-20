@@ -141,7 +141,13 @@ Foam::fvConstraints::fvConstraints
     const fvMesh& mesh
 )
 :
-    DemandDrivenMeshObject<fvMesh, TopoChangeableMeshObject, fvConstraints>
+    DemandDrivenMeshObject
+    <
+        fvMesh,
+        TopoChangeableMeshObject,
+        fvConstraints,
+        IOdictionary
+    >
     (
         createIOobject(mesh),
         mesh
@@ -150,8 +156,6 @@ Foam::fvConstraints::fvConstraints
     checkTimeIndex_(mesh.time().timeIndex() + 1),
     constrainedFields_()
 {
-    readHeaderOk(IOstream::ASCII, typeName);
-
     const bool readFromFvConstraints = IOobject::name() == typeName;
 
     const dictionary& dict = *this;
@@ -208,13 +212,7 @@ Foam::fvConstraints::fvConstraints
     PtrListDictionary<fvConstraint>::setSize(i);
     constrainedFields_.setSize(i);
 
-    if (readFromFvConstraints)
-    {
-        // Add file watch on the fvConstraints dictionary for
-        // MUST_READ_IF_MODIFIED
-        addWatch();
-    }
-    else
+    if (!readFromFvConstraints)
     {
         // If the fvOptions file was read re-name to fvConstraints
         rename(typeName);
@@ -285,20 +283,6 @@ void Foam::fvConstraints::distribute(const polyDistributionMap& map)
     {
         constraintList[i].distribute(map);
     }
-}
-
-
-bool Foam::fvConstraints::readData(Istream& is)
-{
-    is >> *this;
-    return !is.bad();
-}
-
-
-bool Foam::fvConstraints::writeData(Ostream& os) const
-{
-    dictionary::write(os, false);
-    return os.good();
 }
 
 

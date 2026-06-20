@@ -146,7 +146,13 @@ Foam::fvModels::fvModels
     const fvMesh& mesh
 )
 :
-    DemandDrivenMeshObject<fvMesh, TopoChangeableMeshObject, fvModels>
+    DemandDrivenMeshObject
+    <
+        fvMesh,
+        TopoChangeableMeshObject,
+        fvModels,
+        IOdictionary
+    >
     (
         createIOobject(mesh),
         mesh
@@ -155,8 +161,6 @@ Foam::fvModels::fvModels
     checkTimeIndex_(mesh.time().timeIndex() + 1),
     addSupFields_()
 {
-    readHeaderOk(IOstream::ASCII, typeName);
-
     const bool readFromFvModels = IOobject::name() == typeName;
 
     const dictionary& dict = *this;
@@ -213,13 +217,7 @@ Foam::fvModels::fvModels
     PtrListDictionary<fvModel>::setSize(i);
     addSupFields_.setSize(i);
 
-    if (readFromFvModels)
-    {
-        // Add file watch on the fvModels dictionary for
-        // MUST_READ_IF_MODIFIED
-        addWatch();
-    }
-    else
+    if (!readFromFvModels)
     {
         // If the fvOptions file was read re-name to fvModels
         rename(typeName);
@@ -341,20 +339,6 @@ bool Foam::fvModels::read()
     {
         return false;
     }
-}
-
-
-bool Foam::fvModels::readData(Istream& is)
-{
-    is >> *this;
-    return !is.bad();
-}
-
-
-bool Foam::fvModels::writeData(Ostream& os) const
-{
-    dictionary::write(os, false);
-    return os.good();
 }
 
 
