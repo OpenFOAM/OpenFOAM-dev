@@ -79,7 +79,8 @@ Foam::zonesGenerator::zonesGenerator
     <
         polyMesh,
         TopoChangeableMeshObject,
-        zonesGenerator
+        zonesGenerator,
+        IOdictionary
     >
     (
         io(mesh),
@@ -87,28 +88,12 @@ Foam::zonesGenerator::zonesGenerator
     ),
     zoneGeneratorList(mesh)
 {
-    readHeaderOk(IOstream::ASCII, typeName);
     zoneGeneratorList::read(*this, true);
     generate();
-    addWatch();
 }
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-bool Foam::zonesGenerator::readData(Istream& is)
-{
-    is >> *this;
-    return !is.bad();
-}
-
-
-bool Foam::zonesGenerator::writeData(Ostream& os) const
-{
-    dictionary::write(os, false);
-    return os.good();
-}
-
 
 bool Foam::zonesGenerator::read()
 {

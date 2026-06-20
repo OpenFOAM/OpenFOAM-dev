@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,6 +43,7 @@ SourceFiles
 #define zonesGenerator_H
 
 #include "zoneGeneratorList.H"
+#include "IOdictionary.H"
 #include "DemandDrivenMeshObject.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -60,9 +61,9 @@ class zonesGenerator
     <
         polyMesh,
         TopoChangeableMeshObject,
-        zonesGenerator
+        zonesGenerator,
+        IOdictionary
     >,
-    public dictionary,
     public zoneGeneratorList
 {
     // Private Member Functions
@@ -98,7 +99,8 @@ public:
         <
             polyMesh,
             TopoChangeableMeshObject,
-            zonesGenerator
+            zonesGenerator,
+            IOdictionary
         >::New;
 
 
@@ -108,18 +110,6 @@ public:
 
 
     // Member Functions
-
-        //- Declare zonesGenerator to be a global dictionary
-        virtual bool global() const
-        {
-            return true;
-        }
-
-        //- ReadData function required for regIOobject read operation
-        virtual bool readData(Istream&);
-
-        //- WriteData function required for regIOobject write operation
-        virtual bool writeData(Ostream&) const;
 
         //- Read the zonesGenerator dictionary if it has changed
         //  and regenerate
