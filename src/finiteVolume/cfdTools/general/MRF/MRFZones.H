@@ -83,13 +83,7 @@ class MRFZones
 
 protected:
 
-    friend class DemandDrivenMeshObject
-    <
-        fvMesh,
-        TopoChangeableMeshObject,
-        MRFZones,
-        IOdictionary
-    >;
+    friend class DemandDrivenMeshObject;
 
     // Protected Constructors
 

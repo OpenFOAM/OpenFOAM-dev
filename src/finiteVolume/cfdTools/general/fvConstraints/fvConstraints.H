@@ -87,13 +87,7 @@ class fvConstraints
 
 protected:
 
-    friend class DemandDrivenMeshObject
-    <
-        fvMesh,
-        TopoChangeableMeshObject,
-        fvConstraints,
-        IOdictionary
-    >;
+    friend class DemandDrivenMeshObject;
 
     // Protected Constructors
 
@@ -128,13 +122,6 @@ public:
 
 
     // Member Functions
-
-        //- Declare fvConstraints to be a global dictionary
-        virtual bool global() const
-        {
-            return true;
-        }
-
 
         // Checks
 
