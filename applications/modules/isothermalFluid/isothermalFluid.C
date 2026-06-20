@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -178,7 +178,7 @@ Foam::solvers::isothermalFluid::isothermalFluid
 
     initialMass(fvc::domainIntegrate(rho_)),
 
-    MRF(mesh),
+    MRF(MRFZones::New(mesh)),
 
     thermo(thermo_),
     p(p_),

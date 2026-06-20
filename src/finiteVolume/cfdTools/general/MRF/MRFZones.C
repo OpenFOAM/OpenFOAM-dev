@@ -23,13 +23,19 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "IOMRFZoneList.H"
-#include "fvMesh.H"
-#include "Time.H"
+#include "MRFZones.H"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+    defineTypeNameAndDebug(MRFZones, 0);
+}
+
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
-Foam::IOobject Foam::IOMRFZoneList::createIOobject
+Foam::IOobject Foam::MRFZones::createIOobject
 (
     const fvMesh& mesh
 ) const
@@ -62,17 +68,58 @@ Foam::IOobject Foam::IOMRFZoneList::createIOobject
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::IOMRFZoneList::IOMRFZoneList
+Foam::MRFZones::MRFZones
 (
     const fvMesh& mesh
 )
 :
-    IOdictionary(createIOobject(mesh)),
+    DemandDrivenMeshObject
+    <
+        fvMesh,
+        TopoChangeableMeshObject,
+        MRFZones,
+        IOdictionary
+    >
+    (
+        createIOobject(mesh),
+        mesh
+    ),
     MRFZoneList(mesh, *this)
 {}
 
 
-bool Foam::IOMRFZoneList::read()
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void Foam::MRFZones::preUpdateMesh()
+{}
+
+
+bool Foam::MRFZones::movePoints()
+{
+    update();
+    return true;
+}
+
+
+void Foam::MRFZones::topoChange(const polyTopoChangeMap& map)
+{
+    update();
+}
+
+
+void Foam::MRFZones::mapMesh(const polyMeshMap& map)
+{
+    update();
+}
+
+
+void Foam::MRFZones::distribute(const polyDistributionMap& map)
+{
+    update();
+}
+
+
+bool Foam::MRFZones::read()
 {
     if (regIOobject::read())
     {

@@ -63,8 +63,6 @@ void Foam::solvers::VoFSolver::motionCorrector()
         {
             buoyancy.moveMesh();
 
-            MRF.update();
-
             if (correctPhi || mesh.poly().topoChanged())
             {
                 // Calculate absolute flux

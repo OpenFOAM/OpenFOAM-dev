@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -138,7 +138,7 @@ Foam::solvers::VoFSolver::VoFSolver
         fvc::interpolate(rho)*phi_
     ),
 
-    MRF(mesh),
+    MRF(MRFZones::New(mesh)),
 
     mixture(mixture_),
     p_rgh(p_rgh_),

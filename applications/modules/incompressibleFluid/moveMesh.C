@@ -45,8 +45,6 @@ void Foam::solvers::incompressibleFluid::motionCorrector()
     {
         if (mesh.changing())
         {
-            MRF.update();
-
             if (correctPhi || mesh.poly().topoChanged())
             {
                 // Calculate absolute flux

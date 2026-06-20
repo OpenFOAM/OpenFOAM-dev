@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,11 +22,12 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::IOMRFZoneList
+    Foam::MRFZones
 
 Description
-    List of MRF zones with IO functionality.  MRF zones are specified by a list
-    of dictionary entries, e.g.
+    MRF zones DemandDrivenMeshObject read from MRFProperties dictionary
+
+    MRF zones are specified by a list of dictionary entries, e.g.
 
     \verbatim
     zone1
@@ -43,15 +44,16 @@ Description
     \endverbatim
 
 SourceFiles
-    IOMRFZoneList.C
+    MRFZones.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef IOMRFZoneList_H
-#define IOMRFZoneList_H
+#ifndef MRFZones_H
+#define MRFZones_H
 
-#include "IOdictionary.H"
 #include "MRFZoneList.H"
+#include "DemandDrivenMeshObject.H"
+#include "IOdictionary.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -59,12 +61,18 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class IOMRFZoneList Declaration
+                          Class MRFZones Declaration
 \*---------------------------------------------------------------------------*/
 
-class IOMRFZoneList
+class MRFZones
 :
-    public IOdictionary,
+    public DemandDrivenMeshObject
+    <
+        fvMesh,
+        TopoChangeableMeshObject,
+        MRFZones,
+        IOdictionary
+    >,
     public MRFZoneList
 {
     // Private Member Functions
@@ -73,35 +81,81 @@ class IOMRFZoneList
         IOobject createIOobject(const fvMesh& mesh) const;
 
 
+protected:
+
+    friend class DemandDrivenMeshObject
+    <
+        fvMesh,
+        TopoChangeableMeshObject,
+        MRFZones,
+        IOdictionary
+    >;
+
+    // Protected Constructors
+
+        //- Construct from mesh
+        explicit MRFZones(const fvMesh& mesh);
+
+
 public:
+
+    //- Runtime type information
+    TypeName("MRFZones");
+
 
     // Constructors
 
-        //- Construct from mesh
-        IOMRFZoneList(const fvMesh& mesh);
-
         //- Disallow default bitwise copy construction
-        IOMRFZoneList(const IOMRFZoneList&) = delete;
+        MRFZones(const MRFZones&) = delete;
+
+        //- Inherit the base New method
+        using DemandDrivenMeshObject
+        <
+            fvMesh,
+            TopoChangeableMeshObject,
+            MRFZones,
+            IOdictionary
+        >::New;
 
 
         //- Destructor
-        virtual ~IOMRFZoneList()
+        virtual ~MRFZones()
         {}
 
 
     // Member Functions
 
-        //- Read dictionary
-        virtual bool read();
-
         //- Use MRFZoneList::size for looping
         using MRFZoneList::size;
+
+        // Mesh changes
+
+            //- Prepare for mesh update
+            virtual void preUpdateMesh();
+
+            //- Update for mesh motion
+            virtual bool movePoints();
+
+            //- Update topology using the given map
+            virtual void topoChange(const polyTopoChangeMap&);
+
+            //- Update from another mesh using the given map
+            virtual void mapMesh(const polyMeshMap&);
+
+            //- Redistribute or update using the given distribution map
+            virtual void distribute(const polyDistributionMap&);
+
+
+        // IO
+
+            //- Read dictionary
+            virtual bool read();
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const IOMRFZoneList&) = delete;
+        void operator=(const MRFZones&) = delete;
 };
 
 

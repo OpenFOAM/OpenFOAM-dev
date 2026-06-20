@@ -46,7 +46,7 @@ SourceFiles
 
 #include "pimpleNoLoopControl.H"
 
-#include "IOMRFZoneList.H"
+#include "MRFZones.H"
 #include "fvModels.H"
 #include "fvConstraints.H"
 
@@ -159,8 +159,8 @@ protected:
         //- Reference to pimpleNoLoopControl
         const pimpleNoLoopControl& pimple_;
 
-        //- Optional MRF zones
-        IOMRFZoneList MRF_;
+        //- Reference to the MRFZones MeshObject
+        const MRFZones& MRF_;
 
         //- Name of optional reference phase which is not solved for
         // but obtained from the sum of the other phases
@@ -320,7 +320,7 @@ public:
             inline volScalarField& dpdt();
 
             //- Return MRF zones
-            inline const IOMRFZoneList& MRF() const;
+            inline const MRFZones& MRF() const;
 
             //- Access the fvModels
             inline Foam::fvModels& fvModels(fvMesh& mesh);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "MRFPatchField.H"
-#include "IOMRFZoneList.H"
+#include "MRFZones.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -47,7 +47,7 @@ const Foam::MRFZone& Foam::MRFPatchField::MRFzone
 {
     // Get reference to the MRF model
     const MRFZoneList& mrf =
-        obr.lookupObject<IOMRFZoneList>("MRFProperties");
+        obr.lookupObject<MRFZones>("MRFProperties");
 
     if (MRFZoneName_ != word::null)
     {

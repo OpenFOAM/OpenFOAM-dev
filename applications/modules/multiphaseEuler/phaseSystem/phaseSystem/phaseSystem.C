@@ -206,7 +206,7 @@ Foam::phaseSystem::phaseSystem
 
     pimple_(mesh_.lookupObject<pimpleNoLoopControl>("solutionControl")),
 
-    MRF_(mesh_),
+    MRF_(MRFZones::New(mesh_)),
 
     referencePhaseName_(lookupOrDefault("referencePhase", word::null)),
 
@@ -754,8 +754,6 @@ void Foam::phaseSystem::meshUpdate()
 {
     if (mesh_.changing())
     {
-        MRF_.update();
-
         // forAll(phaseModels_, phasei)
         // {
         //     phaseModels_[phasei].meshUpdate();

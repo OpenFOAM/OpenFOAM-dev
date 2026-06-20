@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,9 +35,6 @@ SourceFiles
 #ifndef MRFZoneList_H
 #define MRFZoneList_H
 
-#include "fvMesh.H"
-#include "dictionary.H"
-#include "fvMatricesFwd.H"
 #include "MRFZone.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -64,11 +61,18 @@ protected:
         //- Reference to the mesh database
         const fvMesh& mesh_;
 
+        //- Update MRFZone faces if the mesh topology changes
+        void update();
+
 
 public:
 
     // Constructors
 
+        //- Construct an empty list
+        MRFZoneList(const fvMesh& mesh);
+
+        //- Construct list from given dictionary
         MRFZoneList(const fvMesh& mesh, const dictionary& dict);
 
         //- Disallow default bitwise copy construction
@@ -161,9 +165,6 @@ public:
         ) const;
 
         void makeAbsolute(Field<vector>& Up, const label patchi) const;
-
-        //- Update MRFZone faces if the mesh topology changes
-        void update();
 
 
         // I-O

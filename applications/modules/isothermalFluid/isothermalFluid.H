@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2022-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2022-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,7 @@ See also
 #include "compressibleMomentumTransportModel.H"
 #include "buoyancy.H"
 #include "pressureReference.H"
-#include "IOMRFZoneList.H"
+#include "MRFZones.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -142,8 +142,8 @@ protected:
 
     // Optional models
 
-        //- MRF zone list
-        IOMRFZoneList MRF;
+        //- Reference to the MRFZones MeshObject
+        const MRFZones& MRF;
 
 
     // Cached temporary fields

@@ -31,12 +31,21 @@ License
 
 Foam::MRFZoneList::MRFZoneList
 (
-    const fvMesh& mesh,
-    const dictionary& dict
+    const fvMesh& mesh
 )
 :
     PtrList<MRFZone>(),
     mesh_(mesh)
+{}
+
+
+Foam::MRFZoneList::MRFZoneList
+(
+    const fvMesh& mesh,
+    const dictionary& dict
+)
+:
+    MRFZoneList(mesh)
 {
     reset(dict);
 }
