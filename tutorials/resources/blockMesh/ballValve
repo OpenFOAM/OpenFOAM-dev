@@ -34,11 +34,6 @@ geometry
         centre (0 0 0);
         radius $rBall;
     }
-    torus
-    {
-        type    triSurface;
-        file    "ballValve-torus.obj";
-    }
 }
 
 vertices
@@ -292,10 +287,10 @@ faces
     project (vb11 vb10 vb14 vb15) sphere
     project (vb8 vb11 vb15 vb12) sphere
 
-    project (vb4 vb5 vb13 vb12) torus
-    project (vb5 vb6 vb14 vb13) torus
-    project (vb6 vb7 vb15 vb14) torus
-    project (vb7 vb4 vb12 vb15) torus
+    sweep (vb4 vb5 vb13 vb12) 1
+    sweep (vb5 vb6 vb14 vb13) 1
+    sweep (vb6 vb7 vb15 vb14) 1
+    sweep (vb7 vb4 vb12 vb15) 1
 );
 
 defaultPatch

@@ -4,9 +4,6 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Source tutorial run functions
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
-# Copy torus surface from resources directory
-mkdir constant/geometry && cp $FOAM_TUTORIALS/resources/geometry/ballValve-torus.obj.gz constant/geometry
-
 # Mesh
 runApplication blockMesh -dict $FOAM_TUTORIALS/resources/blockMesh/ballValve
 
