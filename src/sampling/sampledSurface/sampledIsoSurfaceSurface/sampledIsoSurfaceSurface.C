@@ -88,15 +88,13 @@ Foam::sampledSurfaces::sampledIsoSurfaceSurface::~sampledIsoSurfaceSurface()
 bool Foam::sampledSurfaces::sampledIsoSurfaceSurface::update() const
 {
     // Quick return if no update needed
-    if (!needsUpdate())
+    if (!zone_.regenerate() && !needsUpdate())
     {
         return false;
     }
 
     // Clear any information in the base class
     sampledSurface::clearGeom();
-
-    zone_.regenerate();
 
     // Update the iso surface
     isoSurfPtr_.reset(calcIsoSurf().ptr());
