@@ -80,7 +80,7 @@ void Foam::blockFaces::sweepFace::project
 
     // Based on the ordering of the user-supplied vertices, determine whether
     // or not the grid is to be transposed, and therefore in which direction
-    // across the grid to sweep.
+    // across the grid to sweep
     bool transpose = false;
     {
         static const labelList blockFaceAnchorEdgeis({4, 5, 0, 1, 0, 3});
@@ -131,7 +131,7 @@ void Foam::blockFaces::sweepFace::project
     }
     for (label i = nRows - 2; i > 0; -- i)
     {
-        thetaAround1[i] = thetaAround1[i + 1] - dThetaAround[i];
+        thetaAround1[i] = thetaAround1[i+1] - dThetaAround[i];
     }
 
     // Calculate the positions of the points in each row in turn

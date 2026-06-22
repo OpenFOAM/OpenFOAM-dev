@@ -25,19 +25,29 @@ Class
     Foam::blockFaces::sweepFace
 
 Description
-    This curved face sweeps the points of two of the face's four edges over the
-    surface of the face, using the other two edges to define the
-    transformation. It does a better job than the standard interpolation
-    algorithm of conforming to cylinders, cones, toroids and similar.
+    This curved face sweeps the points of an opposing pair of the face's four
+    edges over the surface of the face. Each row of points is constructed by
+    transforming (i.e., translating and rotating) and uniformly scaling the
+    swept edges so that their end points connect to the points of the other two
+    edges. This does a better job than the standard interpolation algorithm of
+    conforming to cylinders, cones, toroids and similar.
 
     The algorithm is asymmetric, and depends on the order in which the vertices
     are supplied. E.g., if vertices (0 1 2 3) are supplied, then that means
     edge (0 1) will be swept towards edge (2 3) in the direction defined by
     edges (0 3) and (1 2).
 
-    The sweeping is controlled by a single scalar parameter, the rotation
-    fraction, which must take a value between 0 and 1. This fraction determines
-    to what extent the swept edges are rotated around their own axes.
+    Additionally, the swept edges can be rotated around their axis to match any
+    bend in the sweep path. This behaviour is controlled by a single
+    user-defined scalar parameter, the rotation fraction, which must take a
+    value between 0 and 1. A value of 0 means no rotation is performed, whilst
+    a value of 1 means that the edges are fully rotated to maintain a
+    consistent angle with the sweep path.
+
+    Sweeping is done in both directions, and the results are blended with a
+    weight proportional to the proximity to the starting edge. This prevents
+    discontinuities in the case that the start and end edge are not
+    geometrically similar.
 
 SourceFiles
     sweepFace.C
