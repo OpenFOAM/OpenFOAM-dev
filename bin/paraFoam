@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -103,10 +103,9 @@ unset FOAM_ABORT
 
 unset meshName regionName optAllRegions optTouch
 
-# Hack: change all locale to 'C' i.e. using '.' for decimal point. This is
-# only needed temporarily until ParaView is locale aware. (git version is
-# already 2010-07)
-export LC_ALL=C
+# Switch off all internationalisation, and support extended character sets in
+# order to prevent warning messages on launch of paraview
+export LC_ALL=C.UTF-8
 
 # Reader extension
 extension=OpenFOAM
