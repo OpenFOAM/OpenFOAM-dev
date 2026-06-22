@@ -71,7 +71,8 @@ void Foam::generatedZoneSet::read
 (
     const word& name,
     const polyMesh& mesh,
-    const dictionary& dict
+    const dictionary& dict,
+    const bool onDemand
 )
 {
     if (dict.isDict(name))
@@ -101,7 +102,10 @@ void Foam::generatedZoneSet::read
         zoneGenerator_ = new zoneGenerators::lookup(zoneName, mesh, zoneDict);
     }
 
-    generate();
+    if (!onDemand)
+    {
+        generate();
+    }
 }
 
 
@@ -110,7 +114,8 @@ void Foam::generatedZoneSet::read
     const word& name,
     const zoneTypes& zoneType,
     const polyMesh& mesh,
-    const dictionary& dict
+    const dictionary& dict,
+    const bool onDemand
 )
 {
     if (dict.isDict(name))
@@ -141,7 +146,10 @@ void Foam::generatedZoneSet::read
         zoneGenerator_ = new zoneGenerators::lookup(zoneName, mesh, zoneDict);
     }
 
-    generate();
+    if (!onDemand)
+    {
+        generate();
+    }
 }
 
 

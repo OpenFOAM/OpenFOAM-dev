@@ -92,7 +92,8 @@ class generatedCellZone
         //- Switch for all cells
         bool all_;
 
-        generatedZoneSet cellZone_;
+        //- The generated cellZone
+        mutable generatedZoneSet cellZone_;
 
 
 public:
@@ -107,7 +108,8 @@ public:
         (
             const polyMesh& mesh,
             const dictionary& dict,
-            const bool defaultIsAll = false
+            const bool defaultIsAll = false,
+            const bool onDemand = false
         );
 
         //- Disallow default bitwise copy construction
@@ -164,7 +166,8 @@ public:
             bool read
             (
                 const dictionary& dict,
-                const bool defaultIsAll = false
+                const bool defaultIsAll = false,
+                const bool onDemand = false
             );
 
 

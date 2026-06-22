@@ -64,12 +64,6 @@ class generatedZoneSet
         bool regenerate_;
 
 
-    // Private Member Functions
-
-        //- Generate the zones and assign to the zoneSet
-        void generate();
-
-
 public:
 
     // Constructors
@@ -108,7 +102,8 @@ public:
         (
             const word& name,
             const polyMesh& mesh,
-            const dictionary& dict
+            const dictionary& dict,
+            const bool onDemand = false
         );
 
         //- Read from dictionary
@@ -117,11 +112,15 @@ public:
             const word& name,
             const zoneTypes& zoneType,
             const polyMesh& mesh,
-            const dictionary& dict
+            const dictionary& dict,
+            const bool onDemand = false
         );
 
         //- Set the zoneGenerator and generate the zoneSet
         void set(const autoPtr<zoneGenerator>& zg);
+
+        //- Generate the zones and assign to the zoneSet
+        void generate();
 
         //- Regenerate the zones if the regenerate switch is set true
         //  and return true if regenerated

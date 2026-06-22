@@ -40,13 +40,14 @@ Foam::generatedCellZone::generatedCellZone
 (
     const polyMesh& mesh,
     const dictionary& dict,
-    const bool defaultIsAll
+    const bool defaultIsAll,
+    const bool onDemand
 )
 :
     mesh_(mesh),
     all_(true)
 {
-    read(dict, defaultIsAll);
+    read(dict, defaultIsAll, onDemand);
 }
 
 
@@ -108,7 +109,8 @@ void Foam::generatedCellZone::distribute(const polyDistributionMap& map)
 bool Foam::generatedCellZone::read
 (
     const dictionary& dict,
-    const bool defaultIsAll
+    const bool defaultIsAll,
+    const bool onDemand
 )
 {
     if (dict.found("cellZone"))
@@ -129,7 +131,8 @@ bool Foam::generatedCellZone::read
             "cellZone",
             zoneTypes::cell,
             mesh_,
-            dict
+            dict,
+            onDemand
         );
     }
     else if (dict.found("points"))
