@@ -44,8 +44,14 @@ castellatedMeshControls
 {
     features
     (
-      { file "fixed.eMesh"; level 2; }
-      { file "rotatingZone.eMesh"; level 4; }
+        {
+            file "fixed.eMesh";
+            level 2;
+        }
+        {
+            file "rotatingZone.eMesh";
+            level 4;
+        }
     );
 
     refinementSurfaces
@@ -84,7 +90,6 @@ castellatedMeshControls
             cellZone    rotatingZone;
             mode        inside;
         }
-
     }
 
     refinementRegions
@@ -92,17 +97,17 @@ castellatedMeshControls
         fixed
         {
             mode inside;
-            levels ((1e-5 1));
+            level 1;
         }
         rotatingZone
         {
             mode inside;
-            levels ((1e-5 4));
+            level 4;
         }
     }
 
     insidePoint (1e-5 1e-5 1e-5); // Offset from (0 0 0) to avoid
-                                     // coinciding with face or edge
+                                  // coinciding with face or edge
 }
 
 snapControls

@@ -138,22 +138,21 @@ castellatedMeshControls
     // - distance. 'levels' specifies per distance to the surface the
     //   wanted refinement level. The distances need to be specified in
     //   descending order.
-    // - inside. 'levels' is only one entry and only the level is used. All
-    //   cells inside the surface get refined up to the level. The surface
-    //   needs to be closed for this to be possible.
-    // - outside. Same but cells outside.
+    // - inside. 'level' specifies the wanted refinement level inside the
+    //   surface, which must be closed.
+    // - outside. As above, but outside the surface.
 
     refinementRegions
     {
         refinement1
         {
             mode inside;
-            levels ((0.0 3));
+            level 3;
         }
         refinement2
         {
             mode inside;
-            levels ((0.0 3));
+            level 3;
         }
     }
 

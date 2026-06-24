@@ -131,39 +131,39 @@ castellatedMeshControls
     (
         {
            file "mixerVessel-shaftRotating.eMesh";
-           levels ((0 0));
+           level 0;
         }
         {
            file "mixerVessel-shaft.eMesh";
-           levels ((0 0));
+           level 0;
         }
         {
            file "mixerVessel-sparger.eMesh";
-           levels ((0 0));
+           level 0;
         }
         {
            file "mixerVessel-stirrer.eMesh";
-           levels ((0 0));
+           level 0;
         }
         {
            file "mixerVessel-baffles.eMesh";
-           levels ((0 0));
+           level 0;
         }
         {
            file "rotating.eMesh";
-           levels ((0 0));
+           level 0;
         }
         {
            file "mixerVessel-oilInlet.eMesh";
-           levels ((0 0));
+           level 0;
         }
         {
            file "mixerVessel-vessel.eMesh";
-           levels ((0 0));
+           level 0;
         }
         {
            file "mixerVessel-outlet.eMesh";
-           levels ((0 0));
+           level 0;
         }
     );
 
