@@ -23,6 +23,4 @@ FoamFile
     fields=(p k U)
 )
 
-#includeFunc writeObjects(kEpsilon:G)
-
 // ************************************************************************* //
