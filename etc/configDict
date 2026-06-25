@@ -162,6 +162,7 @@ units
     atm     101325              [Pa];
     kPa     1e3                 [Pa];
     MPa     1e6                 [Pa];
+    psi     1                   [lbf/in^2];
     cal     4.184               [J];
     kcal    4184                [J];
     cSt     1e-6                [m^2/s];
