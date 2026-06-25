@@ -170,7 +170,7 @@ addToCoded () {
              "is not required" && \
         return 0
 
-    # Expression to match block with name (preceeded by optional spaces)
+    # Expression to match block with name (preceded by optional spaces)
     _match="/^[\t ]*$_block/,/#};/"
 
     # Check block is correct, number of lines must be >= 3

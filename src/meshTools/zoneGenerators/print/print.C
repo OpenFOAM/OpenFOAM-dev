@@ -112,7 +112,7 @@ Foam::zoneSet Foam::zoneGenerators::print::generate() const
     const pointField& cellCentres = mesh_.cellCentres();
 
     // Keep a set of points for which to calculate geometry. Store both forward
-    // and backward addressing so that the maps can be efficiently re-used
+    // and backward addressing so that the maps can be efficiently reused
     // across multiple zones.
     labelList pointZonePoints(points.size(), -1);
     DynamicList<label> zonePointPoints;
