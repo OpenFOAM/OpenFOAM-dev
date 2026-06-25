@@ -37,7 +37,7 @@ See also
 #define Pair_H
 
 #include "Hash.H"
-#include "scaleable.H"
+#include "scalable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -215,9 +215,9 @@ template<class Type>
 inline void writeEntry(Ostream& os, const Pair<Type>& p);
 
 
-//- A pair is scaleable if its type is
+//- A pair is scalable if its type is
 template<class Type>
-struct scaleable<Pair<Type>> : public scaleable<Type> {};
+struct scalable<Pair<Type>> : public scalable<Type> {};
 
 //- Apply a conversion to a Pair by applying separately to first and second
 template<class Type, class ... Args>

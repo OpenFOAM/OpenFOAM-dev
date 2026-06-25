@@ -413,9 +413,9 @@ template<class ListType>
 void writeListEntries(Ostream& os, const word& keyword, const ListType& l);
 
 
-//- A UList is scaleable if its type is
+//- A UList is scalable if its type is
 template<class Type>
-struct scaleable<UList<Type>> : public scaleable<Type> {};
+struct scalable<UList<Type>> : public scalable<Type> {};
 
 //- Apply a conversion to a UList by applying to each element individually
 template<class Type, class ... Args>

@@ -55,9 +55,9 @@ static const sphericalTensor twoThirdsI(2.0/3.0);
 template<>
 inline bool contiguous<sphericalTensor>() {return true;}
 
-//- A sphericalTensor is scaleable
+//- A sphericalTensor is scalable
 template<>
-struct scaleable<sphericalTensor> : public std::true_type {};
+struct scalable<sphericalTensor> : public std::true_type {};
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

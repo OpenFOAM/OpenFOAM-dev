@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "scaleable.H"
+#include "scalable.H"
 #include "unitSet.H"
 #include "typeName.H"
 
@@ -204,14 +204,14 @@ Type Foam::readAndConvert(Istream& is, const nil&)
 
 
 template<class Type>
-Foam::enableIfScaleable<Type, Type> Foam::readAndMaybeConvert(Istream& is)
+Foam::enableIfScalable<Type, Type> Foam::readAndMaybeConvert(Istream& is)
 {
     return readAndConvert<Type>(is, unitSet::newAny());
 }
 
 
 template<class Type>
-Foam::enableIfNotScaleable<Type, Type> Foam::readAndMaybeConvert(Istream& is)
+Foam::enableIfNotScalable<Type, Type> Foam::readAndMaybeConvert(Istream& is)
 {
     return readAndConvert<Type>(is, nil());
 }

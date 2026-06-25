@@ -379,9 +379,9 @@ template<>
 inline bool contiguous<treeBoundBox>() {return contiguous<boundBox>();}
 
 
-//- A treeBoundBox is scaleable
+//- A treeBoundBox is scalable
 template<>
-struct scaleable<treeBoundBox> : public scaleable<boundBox> {};
+struct scalable<treeBoundBox> : public scalable<boundBox> {};
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -40,7 +40,7 @@ SourceFiles
 
 #include "dimensionSet.H"
 #include "nil.H"
-#include "scaleable.H"
+#include "scalable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -378,11 +378,11 @@ Type readAndConvert(Istream&, const nil&);
 
 //- Read a type which may or may not support unit conversion
 template<class Type>
-enableIfScaleable<Type, Type> readAndMaybeConvert(Istream&);
+enableIfScalable<Type, Type> readAndMaybeConvert(Istream&);
 
 //- Read a type which may or may not support unit conversion
 template<class Type>
-enableIfNotScaleable<Type, Type> readAndMaybeConvert(Istream&);
+enableIfNotScalable<Type, Type> readAndMaybeConvert(Istream&);
 
 //- Read a unit set
 template<>

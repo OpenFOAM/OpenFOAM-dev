@@ -22,18 +22,18 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Struct
-    Foam::scaleable
+    Foam::scalable
 
 Description
-    Trait to identify types which are "scaleable"; i.e., that can be
+    Trait to identify types which are "scalable"; i.e., that can be
     multiply-equals-d with a scalar. This has to be done explicitly, rather
     than by identifying the existence of the operator with decltype, in order
     to exclude bool and int and similar.
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef scaleable_H
-#define scaleable_H
+#ifndef scalable_H
+#define scalable_H
 
 #include <type_traits>
 
@@ -43,17 +43,17 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class scaleable Declaration
+                          Class scalable Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
-struct scaleable : public std::false_type {};
+struct scalable : public std::false_type {};
 
 template<class Type, class Void = void>
-using enableIfScaleable = std::enable_if_t<scaleable<Type>::value, Void>;
+using enableIfScalable = std::enable_if_t<scalable<Type>::value, Void>;
 
 template<class Type, class Void = void>
-using enableIfNotScaleable = std::enable_if_t<!scaleable<Type>::value, Void>;
+using enableIfNotScalable = std::enable_if_t<!scalable<Type>::value, Void>;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

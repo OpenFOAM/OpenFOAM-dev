@@ -58,9 +58,9 @@ struct typeOfNcmpts<6>
     using type = symmTensor;
 };
 
-//- A symmTensor is scaleable
+//- A symmTensor is scalable
 template<>
-struct scaleable<symmTensor> : public std::true_type {};
+struct scalable<symmTensor> : public std::true_type {};
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

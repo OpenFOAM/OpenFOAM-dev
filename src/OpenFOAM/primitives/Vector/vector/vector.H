@@ -78,9 +78,9 @@ struct typeOfNcmpts<3>
 };
 
 
-//- A vector is scaleable
+//- A vector is scalable
 template<>
-struct scaleable<vector> : public std::true_type {};
+struct scalable<vector> : public std::true_type {};
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

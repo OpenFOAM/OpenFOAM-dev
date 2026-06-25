@@ -39,7 +39,7 @@ SourceFiles
 #include "floatScalar.H"
 #include "doubleScalar.H"
 #include "longDoubleScalar.H"
-#include "scaleable.H"
+#include "scalable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -169,12 +169,12 @@ namespace Foam
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-// Define a scalar to be scaleable
+// Define a scalar to be scalable
 
 namespace Foam
 {
     template<>
-    struct scaleable<scalar> : public std::true_type {};
+    struct scalable<scalar> : public std::true_type {};
 }
 
 

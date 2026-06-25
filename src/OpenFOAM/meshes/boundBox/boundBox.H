@@ -34,7 +34,7 @@ Description
 
 #include "pointField.H"
 #include "faceList.H"
-#include "scaleable.H"
+#include "scalable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -259,9 +259,9 @@ template<>
 inline bool contiguous<boundBox>() {return contiguous<point>();}
 
 
-//- A boundBox is scaleable
+//- A boundBox is scalable
 template<>
-struct scaleable<boundBox> : public std::true_type {};
+struct scalable<boundBox> : public std::true_type {};
 
 //- Apply a conversion to a boundBox by applying separately to min and max
 template<class ... Args>

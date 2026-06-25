@@ -298,9 +298,9 @@ template<class T>
 List<T> readList(Istream&);
 
 
-//- A List is scaleable if its UList is
+//- A List is scalable if its UList is
 template<class Type>
-struct scaleable<List<Type>> : public scaleable<UList<Type>> {};
+struct scalable<List<Type>> : public scalable<UList<Type>> {};
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

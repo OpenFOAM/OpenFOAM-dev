@@ -79,9 +79,9 @@ struct typeOfNcmpts<9>
     using type = tensor;
 };
 
-//- A tensor is scaleable
+//- A tensor is scalable
 template<>
-struct scaleable<tensor> : public std::true_type {};
+struct scalable<tensor> : public std::true_type {};
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
