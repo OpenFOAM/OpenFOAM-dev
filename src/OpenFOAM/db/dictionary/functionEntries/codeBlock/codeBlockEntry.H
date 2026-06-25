@@ -25,7 +25,7 @@ Class
     Foam::functionEntries::codeBlockEntry
 
 Description
-    Part of the #codeBlock...#codeBlock clause
+    Part of the \#codeBlock...\#codeBlock clause
 
 SourceFiles
     codeBlockEntry.C

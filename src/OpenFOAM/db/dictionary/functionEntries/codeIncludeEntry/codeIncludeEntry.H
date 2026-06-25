@@ -41,9 +41,9 @@ Description
     \endverbatim
 
     The usual expansion of environment variables and other constructs
-    (eg, the \c ~OpenFOAM/ expansion) is retained.
+    (eg, the ~OpenFOAM/ expansion) is retained.
 
-    If multiple include files are required multiple #codeInclude entries can
+    If multiple include files are required multiple \#codeInclude entries can
     be used or more conveniently a list of file names specified, e.g.
     \verbatim
     #codeInclude    ("transform.H" "Field.H")

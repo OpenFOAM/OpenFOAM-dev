@@ -741,7 +741,7 @@ typename pTraits<sphericalTensor>::labelType
 fvMesh::validComponents<sphericalTensor>() const;
 
 //- Cast the give dictionary to the corresponding region fvMesh
-//  Useful for #codeStream in the context of field initialisation
+//  Useful for \#codeStream in the context of field initialisation
 const fvMesh& region(const dictionary& dict);
 
 

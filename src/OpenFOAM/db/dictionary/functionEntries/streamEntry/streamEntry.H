@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,8 +28,8 @@ Description
     Compiles and executes C++ OpenFOAM code string expressions
 
     inserting the result into the dictionary or dictionary entry.  The
-    functionality of \c #stream is equivalent to \c #codeStream but with a
-    simpler syntax, relying on separate \c #codeInclude entries to provide
+    functionality of \#stream is equivalent to \#codeStream but with a
+    simpler syntax, relying on separate \#codeInclude entries to provide
     required include files.  For more details see
     Foam::functionEntries::codeStream.
 

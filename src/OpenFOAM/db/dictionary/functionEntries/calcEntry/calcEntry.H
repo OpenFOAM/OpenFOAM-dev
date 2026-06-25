@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -134,7 +134,7 @@ Usage
         ();
     \endverbatim
 
-    Example of conditional with \c #calc: showing the benefit of using verbatim
+    Example of conditional with \#calc: showing the benefit of using verbatim
     string:
     \verbatim
         #if (#calc "$fluid == \"waterAndSludge\" || $fluid == \"waterAndSand\"")

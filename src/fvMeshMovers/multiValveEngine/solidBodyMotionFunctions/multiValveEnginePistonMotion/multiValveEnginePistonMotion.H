@@ -29,7 +29,7 @@ Description
     multiValveEngine mover from the associated fluid region and uses the motion
     specified for the piston.
 
-    Example specification, in constant/<solidRegion>/dynamicMeshDict:
+    Example specification, in constant/\<solidRegion\>/dynamicMeshDict:
     \verbatim
     mover
     {
