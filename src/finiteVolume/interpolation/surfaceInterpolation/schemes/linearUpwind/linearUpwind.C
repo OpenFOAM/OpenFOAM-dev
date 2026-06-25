@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,6 +72,7 @@ Foam::linearUpwind<Foam::vector>::correction
     {
         const label celli =
             (faceFlux[facei] > 0) ? owner[facei] : neighbour[facei];
+
         sfCorr[facei] = (Cf[facei] - C[celli]) & gradVf[celli];
     }
 
@@ -98,7 +99,7 @@ Foam::linearUpwind<Foam::vector>::correction
 
             forAll(pOwner, facei)
             {
-                label own = pOwner[facei];
+                const label own = pOwner[facei];
 
                 if (pFaceFlux[facei] > 0)
                 {

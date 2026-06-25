@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2022 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "linearUpwind.H"
+#include "fvcGrad.H"
 
 // * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * * //
 
@@ -146,7 +147,7 @@ Foam::linearUpwind<Type>::correction
 
                 forAll(pOwner, facei)
                 {
-                    label own = pOwner[facei];
+                    const label own = pOwner[facei];
 
                     if (pFaceFlux[facei] > 0)
                     {
