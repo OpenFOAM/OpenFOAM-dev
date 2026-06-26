@@ -373,7 +373,7 @@ public:
 
 //- Negation
 template<class Type>
-tmp<Foam::LagrangianEqn<Type>> operator-(const LagrangianEqn<Type>& eqn);
+tmp<LagrangianEqn<Type>> operator-(const LagrangianEqn<Type>& eqn);
 
 //- Negation
 template<class Type>
