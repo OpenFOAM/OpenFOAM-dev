@@ -14,30 +14,37 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// Local Debug, Info and Optimisation switches
-// The following command shows the current parameters, which can be overridden
-// below
+// Sample file with example settings that are most commonly overridden
+// For more detailed annotation of parameters, see $FOAM_ETC/configDict
+// For a full list of switches, run the following command
 //     foamToC -switches
 
+// Controls to print diagnostic data starting with a general 'level' (0|1|2)
 DebugSwitches
 {
+    level                 2; // 0: disable messages, 1: print standard messages
+    lduMatrix             1; // 2: print advanced solver metrics
+    SolverPerformance     1; // 1: print solver, iterations, residuals, ...
+    MULES                 0; // 1: print MULES iterator residuals
 }
 
+// General controls
 InfoSwitches
 {
-    writePrecision  6;
+    allowSystemOperations 1; // 0: do not compile coded input, e.g. #calc
 }
 
+// Performance switches and parallel IO controls
 OptimisationSwitches
 {
-    fileHandler     uncollated;
+    fileHandler           uncollated; // parallel IO file handler
 }
 
-// Local unit set and/or conversions
+// Controls of base unit set and/or unit conversions
 units
 {
-    set        SI;
-    day        24 [hr];
+    set                   SI;      // CGS: cm-g-s; USCS: US customary system
+    day                   24 [hr]; // example user-defined unit
 }
 
 // ************************************************************************* //
