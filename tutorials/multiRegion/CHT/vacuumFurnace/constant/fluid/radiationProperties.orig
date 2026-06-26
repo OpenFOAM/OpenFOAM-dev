@@ -30,9 +30,9 @@ absorptionEmissionModel constant;
 
 constant
 {
-    absorptivity    absorptivity    [0 -1 0 0 0 0 0] 0;
-    emissivity      emissivity      [0 -1 0 0 0 0 0] 0;
-    E               E               [1 -1 -3 0 0 0 0] 0;
+    absorptivity    0;
+    emissivity      0;
+    E               0;
 }
 
 scatterModel    none;
