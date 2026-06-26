@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,17 +63,12 @@ public:
             thermophysicalPropertiesSelector;
 
 
-    //- Destructor
-    virtual ~liquidPropertiesSelector()
-    {}
-
-
     // Member Functions
 
         // Physical properties
 
             //- Surface tension [N/m]
-            virtual scalar sigma(const scalar p, const scalar T) const;
+            inline scalar sigma(const scalar p, const scalar T) const;
 
             //- Viscosity [Pa s]
             inline scalar mu(const scalar p, const scalar T) const;
