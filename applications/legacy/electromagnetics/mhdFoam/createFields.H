@@ -12,28 +12,28 @@ IOdictionary physicalProperties
     )
 );
 
-dimensionedScalar rho
+const dimensionedScalar rho
 (
     "rho",
     dimDensity,
     physicalProperties
 );
 
-dimensionedScalar nu
+const dimensionedScalar nu
 (
     "nu",
     dimKinematicViscosity,
     physicalProperties
 );
 
-dimensionedScalar mu
+const dimensionedScalar mu
 (
     "mu",
     dimensionSet(1, 1, -2, 0, 0, -2, 0),
     physicalProperties
 );
 
-dimensionedScalar sigma
+const dimensionedScalar sigma
 (
     "sigma",
     dimensionSet(-1, -3, 3, 0, 0, 2, 0),

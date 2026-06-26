@@ -85,11 +85,11 @@ autoPtr<incompressible::momentumTransportModel> turbulence
 );
 
 
-dimensionedScalar zeroSensitivity("0", dimVelocity*dimVelocity, 0.0);
-dimensionedScalar zeroAlpha("0", dimless/dimTime, 0.0);
+const dimensionedScalar zeroSensitivity("0", dimVelocity*dimVelocity, 0.0);
+const dimensionedScalar zeroAlpha("0", dimless/dimTime, 0.0);
 
-dimensionedScalar lambda(viscosity->lookup("lambda"));
-dimensionedScalar alphaMax(viscosity->lookup("alphaMax"));
+dimensionedScalar lambda("lambda", dimTime/sqr(dimLength), viscosity);
+const dimensionedScalar alphaMax("alphaMax", dimless/dimTime, viscosity);
 
 const labelList& inletCells = mesh.boundary()["inlet"].faceCells();
 //const labelList& outletCells = mesh.boundary()["outlet"].faceCells();

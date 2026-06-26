@@ -12,28 +12,17 @@ IOdictionary financialProperties
     )
 );
 
-dimensionedScalar strike
-(
-    "strike",
-    dimLength,
-    financialProperties.lookup("strike")
-);
+const dimensionedScalar strike("strike", dimLength, financialProperties);
+const dimensionedScalar r("r", dimless/dimTime, financialProperties);
 
-dimensionedScalar r
-(
-    "r",
-    dimless/dimTime,
-    financialProperties.lookup("r")
-);
-
-dimensionedScalar sigma
+const dimensionedScalar sigma
 (
     "sigma",
     dimensionSet(0, 0, -0.5, 0, 0),
-    financialProperties.lookup("sigma")
+    financialProperties
 );
 
-dimensionedScalar sigmaSqr = sqr(sigma);
+const dimensionedScalar sigmaSqr = sqr(sigma);
 
 
 Info<< nl << "Reading field V" << endl;

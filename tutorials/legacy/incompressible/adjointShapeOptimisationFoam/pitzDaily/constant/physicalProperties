@@ -16,9 +16,9 @@ FoamFile
 
 viscosityModel  constant;
 
-nu              [0 2 -1 0 0 0 0] 1e-5;
+nu              1e-5;
 
-lambda          lambda   [0 -2 1 0 0 0 0] 1e5;
-alphaMax        alphaMax [0 0 -1 0 0 0 0] 200.0;
+lambda          1e5;
+alphaMax        200.0;
 
 // ************************************************************************* //

@@ -31,10 +31,7 @@ IOdictionary physicalProperties
 
 Info<< "Reading diffusivity DT\n" << endl;
 
-dimensionedScalar DT
-(
-    physicalProperties.lookup("DT")
-);
+const dimensionedScalar DT("DT", dimKinematicViscosity, physicalProperties);
 
 #include "createFvModels.H"
 #include "createFvConstraints.H"
