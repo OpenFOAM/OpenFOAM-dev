@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,7 @@ Class
 Description
     Signal handler to write when the writeNowSignal is sent.
 
-    writeNowSignal is set in etc/controlDict::OptimisationSwitches, e.g.
+    writeNowSignal is set in etc/configDict/OptimisationSwitches, e.g.
     \verbatim
     OptimisationSwitches
     {

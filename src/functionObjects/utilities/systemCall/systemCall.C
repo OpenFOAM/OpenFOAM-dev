@@ -95,13 +95,13 @@ bool Foam::functionObjects::systemCall::read(const dictionary& dict)
             << "default because of " << nl
             << "security issues.  If you trust the case you can enable this "
             << "facility by " << nl
-            << "adding to the InfoSwitches setting in the system controlDict:"
+            << "adding to the InfoSwitches setting in the system configDict:"
             << nl << nl
             << "    allowSystemOperations 1" << nl << nl
-            << "The system controlDict is either" << nl << nl
-            << "    ~/.OpenFOAM/$WM_PROJECT_VERSION/controlDict" << nl << nl
+            << "The system configDict is either" << nl << nl
+            << "    ~/.OpenFOAM/$WM_PROJECT_VERSION/configDict" << nl << nl
             << "or" << nl << nl
-            << "    $WM_PROJECT_DIR/etc/controlDict" << nl << nl
+            << "    $WM_PROJECT_DIR/etc/configDict" << nl << nl
             << exit(FatalError);
     }
 

@@ -682,8 +682,8 @@ void Foam::argList::parse
     // Set fileHandler. In increasing order of priority:
     // 1. default = uncollated
     // 2. environment var FOAM_FILEHANDLER
-    // 3. etc/controlDict optimisationSwitches 'fileHandler'
-    // 4. system/controlDict 'fileHandler' (not handled here; done in TimeIO.C)
+    // 3. etc/configDict/OptimisationSwitches 'fileHandler'
+    // 4. system/configDict 'fileHandler' (not handled here; done in TimeIO.C)
 
     {
         word handlerType(getEnv("FOAM_FILEHANDLER"));

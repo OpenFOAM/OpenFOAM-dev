@@ -28,7 +28,7 @@ Description
     Dictionary reading and supplying the dimensioned constants used within
     OpenFOAM, particularly for thermodynamics.
 
-    The values are read from the OpenFOAM etc/controlDict and should be
+    The values are read from the OpenFOAM etc/configDict and should be
     changed to run with a different set of units from the default SI units.
 
 SourceFiles
@@ -48,8 +48,8 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-//- Construct and return a constant by looking up from the DimensionedConstants
-//  sub-dictionary of controlDict
+//- Construct and return a constant by looking up from the constants
+//  sub-dictionary of configDict
 dimensionedScalar dimensionedConstant
 (
     const char* const group,
@@ -58,7 +58,7 @@ dimensionedScalar dimensionedConstant
 );
 
 //- Construct a dimensioned constant with a given value and insert into the
-//  DimensionedConstants sub-dictionary of controlDict
+//  constants sub-dictionary of configDict
 dimensionedScalar dimensionedConstant
 (
     const char* const group,
@@ -67,7 +67,7 @@ dimensionedScalar dimensionedConstant
 );
 
 //- Construct a dimensioned constant with a given value and insert into the
-//  DimensionedConstants sub-dictionary of controlDict with a different name
+//  constants sub-dictionary of configDict with a different name
 dimensionedScalar dimensionedConstant
 (
     const char* const group,
@@ -77,7 +77,7 @@ dimensionedScalar dimensionedConstant
 );
 
 //- Construct a dimensioned constant with given units and value and insert into
-//  the DimensionedConstants sub-dictionary of controlDict
+//  the constants sub-dictionary of configDict
 dimensionedScalar dimensionedConstant
 (
     const char* const group,
@@ -87,7 +87,7 @@ dimensionedScalar dimensionedConstant
 );
 
 //- Construct a dimensioned constant with given units and value and insert into
-//  the DimensionedConstants sub-dictionary of controlDict with a different name
+//  the constants sub-dictionary of configDict with a different name
 dimensionedScalar dimensionedConstant
 (
     const char* const group,

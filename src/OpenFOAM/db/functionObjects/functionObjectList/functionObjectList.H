@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -120,7 +120,7 @@ public:
         //  If the "dict" argument is specified the functionObjectList is
         //  constructed from that dictionary which is returned as
         //  controlDict otherwise the functionObjectList is constructed
-        //  from the "functions" sub-dictionary of "system/controlDict"
+        //  from the "system/functions" dictionary
         static autoPtr<functionObjectList> New
         (
             const argList& args,

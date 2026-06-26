@@ -1374,7 +1374,7 @@ Foam::searchableSurfaces::distributedTriSurface::distributedTriSurface
         FatalErrorInFunction
             << "    using 'timeStampMaster' or 'inotifyMaster.'\n"
             << "    Modify the entry fileModificationChecking\n"
-            << "    in the etc/controlDict.\n"
+            << "    in the etc/configDict/OptimisationSwitches.\n"
             << "    Use 'timeStamp' instead."
             << exit(FatalError);
     }
@@ -1458,7 +1458,7 @@ Foam::searchableSurfaces::distributedTriSurface::distributedTriSurface
         FatalErrorInFunction
             << "    using 'timeStampMaster' or 'inotifyMaster.'\n"
             << "    Modify the entry fileModificationChecking\n"
-            << "    in the etc/controlDict.\n"
+            << "    in the etc/configDict/OptimisationSwitches.\n"
             << "    Use 'timeStamp' instead."
             << exit(FatalError);
     }

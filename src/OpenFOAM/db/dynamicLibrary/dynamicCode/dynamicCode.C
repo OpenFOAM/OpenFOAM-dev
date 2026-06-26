@@ -324,12 +324,12 @@ Foam::dynamicCode::dynamicCode
             << "because of security issues. If you trust the code you can"
             << " enable this" << nl
             << "facility be adding to the InfoSwitches setting in the system"
-            << " controlDict:" << nl << nl
+            << " configDict:" << nl << nl
             << "    allowSystemOperations 1" << nl << nl
-            << "The system controlDict is either" << nl << nl
-            << "    ~/.OpenFOAM/$WM_PROJECT_VERSION/controlDict" << nl << nl
+            << "The system configDict is either" << nl << nl
+            << "    ~/.OpenFOAM/$WM_PROJECT_VERSION/configDict" << nl << nl
             << "or" << nl << nl
-            << "    $WM_PROJECT_DIR/etc/controlDict" << nl
+            << "    $WM_PROJECT_DIR/etc/configDict" << nl
             << endl
             << exit(FatalIOError);
     }
