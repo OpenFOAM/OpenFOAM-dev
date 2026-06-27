@@ -16,6 +16,6 @@ FoamFile
 
 viscosityModel  constant;
 
-nu              [0 2 -1 0 0 0 0] 0.1; // kinematic -> 0.002 dynamic
+nu      0.1; // kinematic -> 0.002 dynamic
 
 // ************************************************************************* //
