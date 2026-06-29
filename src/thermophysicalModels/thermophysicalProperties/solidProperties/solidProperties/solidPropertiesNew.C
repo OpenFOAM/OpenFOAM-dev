@@ -64,41 +64,24 @@ Foam::autoPtr<Foam::solidProperties> Foam::solidProperties::New
         InfoInFunction << "Constructing solid" << endl;
     }
 
-    const word solidType(dict.dictName());
+    // If the type is not specified use the dict name as the liquid type name
+    const word& solidPropertiesTypeName =
+        dict.found("type") ? dict.lookup<word>("type") : dict.dictName();
 
-    if (dict.found("defaultCoeffs"))
+    dictionaryConstructorTable::iterator cstrIter =
+        dictionaryConstructorTablePtr_->find(solidPropertiesTypeName);
+
+    if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        // Backward-compatibility
-
-        if (Switch(dict.lookup("defaultCoeffs")))
-        {
-            return New(solidType);
-        }
-        else
-        {
-            return autoPtr<solidProperties>
-            (
-                new solidProperties(dict.optionalTypeDict(solidType))
-            );
-        }
+        FatalIOErrorInFunction(dict)
+            << "Unknown solidProperties type "
+            << solidPropertiesTypeName << nl << nl
+            << "Valid solidProperties types are:" << nl
+            << dictionaryConstructorTablePtr_->sortedToc()
+            << exit(FatalIOError);
     }
-    else
-    {
-        dictionaryConstructorTable::iterator cstrIter =
-            dictionaryConstructorTablePtr_->find(solidType);
 
-        if (cstrIter == dictionaryConstructorTablePtr_->end())
-        {
-            FatalIOErrorInFunction(dict)
-                << "Unknown solidProperties type "
-                << solidType << nl << nl
-                << "Valid solidProperties types are:" << nl
-                << dictionaryConstructorTablePtr_->sortedToc()
-                << exit(FatalIOError);
-        }
-
-        return autoPtr<solidProperties>(cstrIter()(dict));
-    }
+    return autoPtr<solidProperties>(cstrIter()(dict));
 }
 
 
