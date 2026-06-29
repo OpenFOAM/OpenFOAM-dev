@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,8 @@ template<class Type>
 const UniformDimensionedField<Type>& lookupUniformDimensionedField
 (
     const objectRegistry& db,
-    const word& name
+    const word& name,
+    const dimensionSet dims
 )
 {
     if (!db.foundObject<UniformDimensionedField<Type>>(name))
@@ -56,7 +57,8 @@ const UniformDimensionedField<Type>& lookupUniformDimensionedField
                     db,
                     IOobject::MUST_READ,
                     IOobject::NO_WRITE
-                )
+                ),
+                dims
             );
 
         udfPtr->store();

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2025-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,15 @@ cloudGravitationalPotentialEnergy
 )
 :
     cloudLagrangianMeshFunctionObject(name, runTime, dict),
-    g(lookupUniformDimensionedField<vector>(mesh().time(), "g"))
+    g
+    (
+        lookupUniformDimensionedField<vector>
+        (
+            mesh().time(),
+            "g",
+            dimAcceleration
+        )
+    )
 {}
 
 

@@ -54,7 +54,7 @@ Foam::Lagrangian::gravity::gravity
 :
     LagrangianModel(name, mesh),
     cloudLagrangianModel(static_cast<const LagrangianModel&>(*this)),
-    g(lookupUniformDimensionedField<vector>(mesh.time(), "g"))
+    g(lookupUniformDimensionedField<vector>(mesh.time(), "g", dimAcceleration))
 {}
 
 

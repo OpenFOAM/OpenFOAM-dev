@@ -61,15 +61,11 @@ public:
     // Constructors
 
         //- Construct from IOobject
-        LocalUniformDimensionedField(const IOobject&, const bool read = true);
+        LocalUniformDimensionedField(const IOobject&, const dimensionSet& dims);
 
-        //- Construct from IOobject. Either reads or uses supplied value.
-        LocalUniformDimensionedField
-        (
-            const IOobject&,
-            const dimensioned<Type>&,
-            const bool read = true
-        );
+        //- Construct from IOobject and default value
+        //  reading from the IOobject file according to read option
+        LocalUniformDimensionedField(const IOobject&, const dimensioned<Type>&);
 
         //- Inherit other constructors
         using UniformDimensionedField<Type>::UniformDimensionedField;

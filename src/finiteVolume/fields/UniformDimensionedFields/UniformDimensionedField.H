@@ -79,8 +79,28 @@ protected:
 
     // Protected Member Functions
 
-        //- Read the field
-        void read(const IOobject::readOption& ro);
+        //- Construct from IOobject and dimensions without reading
+        UniformDimensionedField
+        (
+            const IOobject&,
+            const dimensionSet& dims,
+            const bool
+        );
+
+        //- Construct from IOobject and default value without reading
+        UniformDimensionedField
+        (
+            const IOobject&,
+            const dimensioned<Type>&,
+            const bool
+        );
+
+        //- Read the field and check the dimensions
+        void read
+        (
+            const IOobject::readOption& ro,
+            const dimensionSet& dims
+        );
 
 
 public:
@@ -100,16 +120,15 @@ public:
 
     // Constructors
 
-        //- Construct from IO object
-        UniformDimensionedField(const IOobject&, const bool read = true);
+        //- Construct from IOobject
+        UniformDimensionedField(const IOobject&);
 
-        //- Construct from IO object. Either reads or uses supplied value.
-        UniformDimensionedField
-        (
-            const IOobject&,
-            const dimensioned<Type>&,
-            const bool read = true
-        );
+        //- Construct from IOobject and dimensions
+        UniformDimensionedField(const IOobject&, const dimensionSet& dims);
+
+        //- Construct from IOobject and default value
+        //  reading from the IOobject file according to read option
+        UniformDimensionedField(const IOobject&, const dimensioned<Type>&);
 
         //- Copy constructor
         UniformDimensionedField(const UniformDimensionedField<Type>&);

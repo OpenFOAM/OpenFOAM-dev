@@ -28,7 +28,39 @@ License
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-void Foam::UniformDimensionedField<Type>::read(const IOobject::readOption& ro)
+Foam::UniformDimensionedField<Type>::UniformDimensionedField
+(
+    const IOobject& io,
+    const dimensionSet& dims,
+    const bool
+)
+:
+    regIOobject(io),
+    dimensioned<Type>(regIOobject::name(), dims, Zero),
+    OldTimeField<UniformDimensionedField>(this->time().timeIndex())
+{}
+
+
+template<class Type>
+Foam::UniformDimensionedField<Type>::UniformDimensionedField
+(
+    const IOobject& io,
+    const dimensioned<Type>& defaultDt,
+    const bool
+)
+:
+    regIOobject(io),
+    dimensioned<Type>(defaultDt),
+    OldTimeField<UniformDimensionedField>(this->time().timeIndex())
+{}
+
+
+template<class Type>
+void Foam::UniformDimensionedField<Type>::read
+(
+    const IOobject::readOption& ro,
+    const dimensionSet& dims
+)
 {
     if
     (
@@ -37,11 +69,19 @@ void Foam::UniformDimensionedField<Type>::read(const IOobject::readOption& ro)
      || (ro == IOobject::READ_IF_PRESENT && headerOk())
     )
     {
-        dictionary dict(readStream(type()));
+        const dictionary dict(readStream(type()));
 
         this->dimensions().read(dict.lookup("dimensions"));
-
         this->value() = dict.lookup<Type>("value", this->dimensions());
+
+        if (this->dimensions() != dims)
+        {
+            FatalIOErrorInFunction(dict)
+                << "Inconsistent dimensions specified for " << this->name()
+                << " " << this->dimensions()
+                << ", required dimensions are " << dims
+                << exit(FatalIOError);
+        }
     }
 }
 
@@ -51,15 +91,14 @@ void Foam::UniformDimensionedField<Type>::read(const IOobject::readOption& ro)
 template<class Type>
 Foam::UniformDimensionedField<Type>::UniformDimensionedField
 (
-    const IOobject& io,
-    const bool read
+    const IOobject& io
 )
 :
-    regIOobject(io),
-    dimensioned<Type>(regIOobject::name(), dimless, Zero),
-    OldTimeField<UniformDimensionedField>(this->time().timeIndex())
+    UniformDimensionedField(io, dimless, false)
 {
-    if (read) this->read(IOobject::MUST_READ);
+    const dictionary dict(readStream(type()));
+    this->dimensions().read(dict.lookup("dimensions"));
+    this->value() = dict.lookup<Type>("value", this->dimensions());
 }
 
 
@@ -67,15 +106,25 @@ template<class Type>
 Foam::UniformDimensionedField<Type>::UniformDimensionedField
 (
     const IOobject& io,
-    const dimensioned<Type>& dt,
-    const bool read
+    const dimensionSet& dims
 )
 :
-    regIOobject(io),
-    dimensioned<Type>(dt),
-    OldTimeField<UniformDimensionedField>(this->time().timeIndex())
+    UniformDimensionedField(io, dims, false)
 {
-    if (read) this->read(io.readOpt());
+    this->read(IOobject::MUST_READ, dims);
+}
+
+
+template<class Type>
+Foam::UniformDimensionedField<Type>::UniformDimensionedField
+(
+    const IOobject& io,
+    const dimensioned<Type>& defaultDt
+)
+:
+    UniformDimensionedField(io, defaultDt, false)
+{
+    this->read(io.readOpt(), defaultDt.dimensions());
 }
 
 

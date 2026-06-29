@@ -8,5 +8,6 @@
             mesh,
             IOobject::MUST_READ,
             IOobject::NO_WRITE
-        )
+        ),
+        dimAcceleration
     );

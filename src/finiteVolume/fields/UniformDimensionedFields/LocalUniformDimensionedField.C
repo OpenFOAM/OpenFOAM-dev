@@ -31,12 +31,12 @@ template<class Type>
 Foam::LocalUniformDimensionedField<Type>::LocalUniformDimensionedField
 (
     const IOobject& io,
-    const bool read
+    const dimensionSet& dims
 )
 :
-    UniformDimensionedField<Type>(io, false)
+    UniformDimensionedField<Type>(io, dims, false)
 {
-    if (read) this->read(IOobject::MUST_READ);
+    this->read(IOobject::MUST_READ, dims);
 }
 
 
@@ -44,13 +44,12 @@ template<class Type>
 Foam::LocalUniformDimensionedField<Type>::LocalUniformDimensionedField
 (
     const IOobject& io,
-    const dimensioned<Type>& dt,
-    const bool read
+    const dimensioned<Type>& defaultDt
 )
 :
-    UniformDimensionedField<Type>(io, dt, false)
+    UniformDimensionedField<Type>(io, defaultDt, false)
 {
-    if (read) this->read(io.readOpt());
+    this->read(io.readOpt(), defaultDt.dimensions());
 }
 
 

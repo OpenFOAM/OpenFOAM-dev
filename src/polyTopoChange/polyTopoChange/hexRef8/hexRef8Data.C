@@ -90,7 +90,10 @@ Foam::hexRef8Data::hexRef8Data(const IOobject& io)
                 Info<< "Reading hexRef8 data : " << rio.name() << endl;
             }
 
-            level0EdgePtr_.reset(new localUniformDimensionedScalarField(rio));
+            level0EdgePtr_.reset
+            (
+                new localUniformDimensionedScalarField(rio, dimLength)
+            );
         }
     }
     {
