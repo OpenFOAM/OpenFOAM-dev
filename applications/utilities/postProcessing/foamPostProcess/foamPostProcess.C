@@ -323,7 +323,8 @@ int main(int argc, char *argv[])
 
         if (mesh.readUpdate() != fvMesh::UNCHANGED)
         {
-            // Update functionObjectList if mesh changes
+            // Clear and reconstruct functionObjectList if mesh changes
+            functionsPtr.clear();
             functionsPtr = functionObjectList::New(args, runTime);
         }
 
