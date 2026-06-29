@@ -94,7 +94,7 @@ Foam::UniformDimensionedField<Type>::UniformDimensionedField
     const IOobject& io
 )
 :
-    UniformDimensionedField(io, dimless, false)
+    UniformDimensionedField(io, dimensions::invalid, false)
 {
     const dictionary dict(readStream(type()));
     this->dimensions().read(dict.lookup("dimensions"));

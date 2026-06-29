@@ -178,21 +178,23 @@ public:
             const bool checkIOFlags = true
         );
 
-        //- Construct from Istream
-        DimensionedField
-        (
-            const IOobject&,
-            const GeoMesh& mesh,
-            const word& fieldDictEntry="value"
-        );
-
         //- Construct from dictionary
         DimensionedField
         (
             const IOobject&,
             const GeoMesh& mesh,
             const dictionary& fieldDict,
-            const word& fieldDictEntry="value"
+            const word& fieldDictEntry="value",
+            const dimensionSet& dims = dimensions::invalid
+        );
+
+        //- Construct from dictionary constructed from IOobject
+        DimensionedField
+        (
+            const IOobject&,
+            const GeoMesh& mesh,
+            const word& fieldDictEntry="value",
+            const dimensionSet& dims = dimensions::invalid
         );
 
         //- Copy constructor

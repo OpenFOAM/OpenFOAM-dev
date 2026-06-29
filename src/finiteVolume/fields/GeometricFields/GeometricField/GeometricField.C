@@ -323,7 +323,7 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
     const GeoMesh& mesh
 )
 :
-    Internal(io, mesh, dimless, false),
+    Internal(io, mesh, dimensions::invalid, false),
     OldTimeField<GeometricField>(this->time().timeIndex()),
     fieldPrevIterPtr_(nullptr),
     boundaryField_(mesh.boundary()),
@@ -359,7 +359,7 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
     const dictionary& dict
 )
 :
-    Internal(io, mesh, dimless, false),
+    Internal(io, mesh, dimensions::invalid, false),
     OldTimeField<GeometricField>(this->time().timeIndex()),
     fieldPrevIterPtr_(nullptr),
     boundaryField_(mesh.boundary()),

@@ -46,6 +46,8 @@ namespace dimensions
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+extern const dimensionSet invalid;
+
 extern const dimensionSet dimless;
 
 extern const dimensionSet mass;

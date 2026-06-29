@@ -36,7 +36,25 @@ void Foam::DimensionedField<Type, GeoMesh, PrimitiveField>::readField
     const word& keyword
 )
 {
-    dimensions_.reset(dimensionSet(dict.lookup("dimensions")));
+    const dimensionSet dims(dict.lookup("dimensions"));
+
+    // Set the dimensions if invalid (not already set)
+    // otherwise check for consistency
+    if (dimensions_ == dimensions::invalid)
+    {
+        dimensions_.reset(dims);
+    }
+    else
+    {
+        if (dims != dimensions_)
+        {
+            FatalIOErrorInFunction(dict)
+                << "Inconsistent dimensions specified for " << this->name()
+                << " " << this->dimensions()
+                << ", required dimensions are " << dims
+                << exit(FatalIOError);
+        }
+    }
 
     if (dict.isDict(keyword))
     {
@@ -100,21 +118,24 @@ bool Foam::DimensionedField<Type, GeoMesh, PrimitiveField>::readIfPresent
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
+
 template<class Type, class GeoMesh, template<class> class PrimitiveField>
 Foam::DimensionedField<Type, GeoMesh, PrimitiveField>::DimensionedField
 (
     const IOobject& io,
     const GeoMesh& mesh,
-    const word& fieldDictEntry
+    const dictionary& fieldDict,
+    const word& fieldDictEntry,
+    const dimensionSet& dims
 )
 :
     regIOobject(io),
     PrimitiveField<Type>(0),
     OldTimeField<DimensionedField>(this->time().timeIndex()),
     mesh_(mesh),
-    dimensions_(dimless)
+    dimensions_(dims)
 {
-    readField(dictionary(readStream(typeName)), fieldDictEntry);
+    readField(fieldDict, fieldDictEntry);
 }
 
 
@@ -123,17 +144,17 @@ Foam::DimensionedField<Type, GeoMesh, PrimitiveField>::DimensionedField
 (
     const IOobject& io,
     const GeoMesh& mesh,
-    const dictionary& fieldDict,
-    const word& fieldDictEntry
+    const word& fieldDictEntry,
+    const dimensionSet& dims
 )
 :
     regIOobject(io),
     PrimitiveField<Type>(0),
     OldTimeField<DimensionedField>(this->time().timeIndex()),
     mesh_(mesh),
-    dimensions_(dimless)
+    dimensions_(dims)
 {
-    readField(fieldDict, fieldDictEntry);
+    readField(dictionary(readStream(typeName)), fieldDictEntry);
 }
 
 

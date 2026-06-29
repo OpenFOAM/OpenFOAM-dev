@@ -28,15 +28,23 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-const Foam::dimensionSet Foam::dimensions::dimless(0,0,0,0,0,0,0);
+const Foam::dimensionSet Foam::dimensions::invalid
+(
+    vGreat, vGreat, vGreat, vGreat, vGreat, vGreat, vGreat
+);
 
-const Foam::dimensionSet Foam::dimensions::mass(1,0,0,0,0,0,0);
-const Foam::dimensionSet Foam::dimensions::length(0,1,0,0,0,0,0);
-const Foam::dimensionSet Foam::dimensions::time(0,0,1,0,0,0,0);
-const Foam::dimensionSet Foam::dimensions::temperature(0,0,0,1,0,0,0);
-const Foam::dimensionSet Foam::dimensions::moles(0,0,0,0,1,0,0);
-const Foam::dimensionSet Foam::dimensions::current(0,0,0,0,0,1,0);
-const Foam::dimensionSet Foam::dimensions::luminousIntensity(0,0,0,0,0,0,1);
+const Foam::dimensionSet Foam::dimensions::dimless(0, 0, 0, 0, 0, 0, 0);
+
+const Foam::dimensionSet Foam::dimensions::mass(1, 0, 0, 0, 0, 0, 0);
+const Foam::dimensionSet Foam::dimensions::length(0, 1, 0, 0, 0, 0, 0);
+const Foam::dimensionSet Foam::dimensions::time(0, 0, 1, 0, 0, 0, 0);
+const Foam::dimensionSet Foam::dimensions::temperature(0, 0, 0, 1, 0, 0, 0);
+const Foam::dimensionSet Foam::dimensions::moles(0, 0, 0, 0, 1, 0, 0);
+const Foam::dimensionSet Foam::dimensions::current(0, 0, 0, 0, 0, 1, 0);
+const Foam::dimensionSet Foam::dimensions::luminousIntensity
+(
+    0, 0, 0, 0, 0, 0, 1
+);
 
 const Foam::dimensionSet Foam::dimensions::area(sqr(length));
 const Foam::dimensionSet Foam::dimensions::volume(pow3(length));
