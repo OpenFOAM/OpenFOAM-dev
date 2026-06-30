@@ -76,6 +76,10 @@ const Foam::dimensionSet Foam::dimensions::thermalConductivity
 (
     power/length/temperature
 );
+const Foam::dimensionSet Foam::dimensions::dynamicDiffusivity
+(
+    dynamicViscosity
+);
 
 const Foam::dimensionSet Foam::dimensions::turbulentKineticEnergy
 (
@@ -161,6 +165,7 @@ const Foam::HashTable<Foam::dimensionSet> Foam::dimensions::table
     {"kinematicViscosity", Foam::dimensions::kinematicViscosity},
     {"dynamicViscosity", Foam::dimensions::dynamicViscosity},
     {"thermalConductivity", Foam::dimensions::thermalConductivity},
+    {"dynamicDiffusivity", Foam::dimensions::dynamicDiffusivity},
 
     {"turbulentKineticEnergy", Foam::dimensions::turbulentKineticEnergy},
     {"ReynoldsStress", Foam::dimensions::ReynoldsStress},
