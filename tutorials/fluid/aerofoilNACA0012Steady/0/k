@@ -16,7 +16,7 @@ FoamFile
 
 kInlet          1e-3;
 
-dimensions      [0 2 -2 0 0 0 0];
+dimensions      [turbulentKineticEnergy];
 
 internalField   uniform $kInlet;
 

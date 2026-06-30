@@ -63,8 +63,10 @@ const Foam::dimensionSet Foam::dimensions::power(energy/time);
 const Foam::dimensionSet Foam::dimensions::pressure(force/area);
 const Foam::dimensionSet Foam::dimensions::kinematicPressure(pressure/density);
 const Foam::dimensionSet Foam::dimensions::compressibility(density/pressure);
+
 const Foam::dimensionSet Foam::dimensions::gasConstant(energy/mass/temperature);
 const Foam::dimensionSet Foam::dimensions::specificHeatCapacity(gasConstant);
+
 const Foam::dimensionSet Foam::dimensions::kinematicViscosity(area/time);
 const Foam::dimensionSet Foam::dimensions::dynamicViscosity
 (
@@ -73,6 +75,19 @@ const Foam::dimensionSet Foam::dimensions::dynamicViscosity
 const Foam::dimensionSet Foam::dimensions::thermalConductivity
 (
     power/length/temperature
+);
+
+const Foam::dimensionSet Foam::dimensions::turbulentKineticEnergy
+(
+    sqr(velocity)
+);
+const Foam::dimensionSet Foam::dimensions::turbulentEpsilon
+(
+    turbulentKineticEnergy/time
+);
+const Foam::dimensionSet Foam::dimensions::turbulentOmega
+(
+    rate
 );
 
 const Foam::dimensionSet Foam::dimensions::volumetricFlux(area*velocity);
@@ -131,11 +146,17 @@ const Foam::HashTable<Foam::dimensionSet> Foam::dimensions::table
     {"pressure", Foam::dimensions::pressure},
     {"kinematicPressure", Foam::dimensions::kinematicPressure},
     {"compressibility", Foam::dimensions::compressibility},
+
     {"gasConstant", Foam::dimensions::gasConstant},
     {"specificHeatCapacity", Foam::dimensions::specificHeatCapacity},
+
     {"kinematicViscosity", Foam::dimensions::kinematicViscosity},
     {"dynamicViscosity", Foam::dimensions::dynamicViscosity},
     {"thermalConductivity", Foam::dimensions::thermalConductivity},
+
+    {"turbulentKineticEnergy", Foam::dimensions::turbulentKineticEnergy},
+    {"turbulentEpsilon", Foam::dimensions::turbulentEpsilon},
+    {"turbulentOmega", Foam::dimensions::turbulentOmega},
 
     {"volumetricFlux", Foam::dimensions::volumetricFlux},
     {"massFlux", Foam::dimensions::massFlux}

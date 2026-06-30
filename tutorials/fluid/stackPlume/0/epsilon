@@ -16,7 +16,7 @@ FoamFile
 
 epsilonStack 6.16;
 
-dimensions      [0 2 -3 0 0 0 0];
+dimensions      [turbulentEpsilon];
 
 internalField
 {

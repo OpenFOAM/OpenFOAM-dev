@@ -75,11 +75,17 @@ extern const dimensionSet power;
 extern const dimensionSet pressure;
 extern const dimensionSet kinematicPressure;
 extern const dimensionSet compressibility;
+
 extern const dimensionSet gasConstant;
 extern const dimensionSet specificHeatCapacity;
+
 extern const dimensionSet kinematicViscosity;
 extern const dimensionSet dynamicViscosity;
 extern const dimensionSet thermalConductivity;
+
+extern const dimensionSet turbulentKineticEnergy;
+extern const dimensionSet turbulentEpsilon;
+extern const dimensionSet turbulentOmega;
 
 extern const dimensionSet volumetricFlux;
 extern const dimensionSet massFlux;

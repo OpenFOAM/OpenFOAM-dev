@@ -16,7 +16,7 @@ FoamFile
 
 kInlet          1.5;   // approx k = 1.5*(I*U)^2 ; I = 0.1
 
-dimensions      [0 2 -2 0 0 0 0];
+dimensions      [turbulentKineticEnergy];
 
 internalField   uniform $kInlet;
 

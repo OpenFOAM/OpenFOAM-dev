@@ -17,7 +17,7 @@ FoamFile
 epsilonInlet      0.001;
 mixingLengthInlet 0.007;
 
-dimensions      [0 2 -3 0 0 0 0];
+dimensions      [turbulentEpsilon];
 
 internalField   uniform $epsilonInlet;
 

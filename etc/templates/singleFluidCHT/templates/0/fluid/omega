@@ -17,7 +17,7 @@ FoamFile
 omegaInlet        1;
 mixingLengthInlet 0.007;
 
-dimensions      [0 0 -1 0 0 0 0];
+dimensions      [turbulentOmega];
 
 internalField   uniform $omegaInlet;
 

@@ -16,7 +16,7 @@ FoamFile
 
 epsilonInlet  0.03; // Cmu^0.75 * k^1.5 / L ; L =10
 
-dimensions      [0 2 -3 0 0 0 0];
+dimensions      [turbulentEpsilon];
 
 internalField   uniform $epsilonInlet;
 
