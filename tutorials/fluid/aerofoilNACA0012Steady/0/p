@@ -16,7 +16,7 @@ FoamFile
 
 pOut            1e5;
 
-dimensions      [1 -1 -2 0 0 0 0];
+dimensions      [pressure];
 
 internalField   uniform $pOut;
 
