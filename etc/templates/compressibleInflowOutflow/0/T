@@ -17,7 +17,7 @@ FoamFile
 Tinlet          500;
 Tout            298;    // Used for fixedValue boundary condition on walls
 
-dimensions      [0 0 0 1 0 0 0];
+dimensions      [temperature];
 
 internalField   uniform $Tinlet;
 

@@ -17,7 +17,7 @@ FoamFile
 TWind 298.0;
 TStack 398.0;
 
-dimensions      [0 0 0 1 0 0 0];
+dimensions      [temperature];
 
 internalField   uniform $TWind;
 

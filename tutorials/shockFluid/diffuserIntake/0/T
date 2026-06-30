@@ -17,7 +17,7 @@ FoamFile
 Tinlet 68;
 Twall 300;
 
-dimensions      [0 0 0 1 0 0 0];
+dimensions      [temperature];
 
 internalField   uniform $Tinlet;
 

@@ -17,7 +17,7 @@ FoamFile
 Tinf            270;
 Tfloor          285;
 
-dimensions      [0 0 0 1 0 0 0];
+dimensions      [temperature];
 
 internalField   uniform $Tfloor;
 
