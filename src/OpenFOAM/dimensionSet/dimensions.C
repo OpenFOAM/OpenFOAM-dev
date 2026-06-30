@@ -174,8 +174,6 @@ const Foam::HashTable<Foam::dimensionSet> Foam::dimensions::table
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-const Foam::dimensionSet& Foam::dimless = dimensions::dimless;
-
 const Foam::dimensionSet& Foam::dimMass = dimensions::mass;
 const Foam::dimensionSet& Foam::dimLength = dimensions::length;
 const Foam::dimensionSet& Foam::dimTime = dimensions::time;

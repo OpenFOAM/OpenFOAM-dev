@@ -103,7 +103,7 @@ extern const HashTable<dimensionSet> table;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-extern const dimensionSet& dimless;
+using dimensions::dimless;
 
 extern const dimensionSet& dimMass;
 extern const dimensionSet& dimLength;
