@@ -56,6 +56,7 @@ const Foam::dimensionSet Foam::dimensions::momentum(mass*velocity);
 const Foam::dimensionSet Foam::dimensions::acceleration(velocity/time);
 
 const Foam::dimensionSet Foam::dimensions::density(mass/volume);
+const Foam::dimensionSet Foam::dimensions::momentumDensity(momentum/volume);
 const Foam::dimensionSet Foam::dimensions::force(mass*acceleration);
 const Foam::dimensionSet Foam::dimensions::energy(force*length);
 const Foam::dimensionSet Foam::dimensions::power(energy/time);
@@ -104,6 +105,7 @@ const Foam::dimensionSet Foam::dimensions::turbulentViscosity
 
 const Foam::dimensionSet Foam::dimensions::volumetricFlux(area*velocity);
 const Foam::dimensionSet Foam::dimensions::massFlux(density*volumetricFlux);
+const Foam::dimensionSet Foam::dimensions::heatFlux(power/area);
 
 const Foam::HashTable<Foam::dimensionSet> Foam::dimensions::table
 {
@@ -151,6 +153,7 @@ const Foam::HashTable<Foam::dimensionSet> Foam::dimensions::table
     {"acceleration", Foam::dimensions::acceleration},
 
     {"density", Foam::dimensions::density},
+    {"momentumDensity", Foam::dimensions::momentumDensity},
     {"force", Foam::dimensions::force},
     {"energy", Foam::dimensions::energy},
     {"power", Foam::dimensions::power},
@@ -174,7 +177,8 @@ const Foam::HashTable<Foam::dimensionSet> Foam::dimensions::table
     {"turbulentViscosity", Foam::dimensions::turbulentViscosity},
 
     {"volumetricFlux", Foam::dimensions::volumetricFlux},
-    {"massFlux", Foam::dimensions::massFlux}
+    {"massFlux", Foam::dimensions::massFlux},
+    {"heatFlux", Foam::dimensions::heatFlux}
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

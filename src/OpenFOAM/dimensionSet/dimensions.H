@@ -68,6 +68,7 @@ extern const dimensionSet momentum;
 extern const dimensionSet acceleration;
 
 extern const dimensionSet density;
+extern const dimensionSet momentumDensity;
 extern const dimensionSet force;
 extern const dimensionSet energy;
 extern const dimensionSet power;
@@ -92,6 +93,7 @@ extern const dimensionSet turbulentViscosity;
 
 extern const dimensionSet volumetricFlux;
 extern const dimensionSet massFlux;
+extern const dimensionSet heatFlux;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
