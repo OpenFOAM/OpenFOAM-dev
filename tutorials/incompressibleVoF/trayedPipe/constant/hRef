@@ -16,7 +16,7 @@ FoamFile
 
 #include "$FOAM_CASE/system/blockMeshDict"
 
-dimensions      [0 1 0 0 0 0 0];
+dimensions      [length];
 value           #calc "$<scalar>{height}/2";
 
 
