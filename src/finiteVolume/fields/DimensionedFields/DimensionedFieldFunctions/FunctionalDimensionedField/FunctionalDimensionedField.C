@@ -49,7 +49,8 @@ Foam::FunctionalDimensionedField<Type, GeoMesh>::FunctionalDimensionedField
             false
         ),
         mesh,
-        dimensions
+        dimensions,
+        false
     ),
     funcName_(funcName),
     funcPtr_
@@ -153,7 +154,8 @@ Foam::FunctionalDimensionedField<Type, GeoMesh>::FunctionalDimensionedField
     (
         udff,
         mesh,
-        udff.dimensions()
+        udff.dimensions(),
+        false
     ),
     funcName_(udff.funcName_),
     funcPtr_

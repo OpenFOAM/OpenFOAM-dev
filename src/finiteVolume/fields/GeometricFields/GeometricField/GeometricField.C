@@ -320,10 +320,11 @@ template<class Type, class GeoMesh, template<class> class PrimitiveField>
 Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
 (
     const IOobject& io,
-    const GeoMesh& mesh
+    const GeoMesh& mesh,
+    const dimensionSet& dims
 )
 :
-    Internal(io, mesh, dimensions::invalid, false),
+    Internal(io, mesh, dims, false),
     OldTimeField<GeometricField>(this->time().timeIndex()),
     fieldPrevIterPtr_(nullptr),
     boundaryField_(mesh.boundary()),
@@ -356,10 +357,11 @@ Foam::GeometricField<Type, GeoMesh, PrimitiveField>::GeometricField
 (
     const IOobject& io,
     const GeoMesh& mesh,
-    const dictionary& dict
+    const dictionary& dict,
+    const dimensionSet& dims
 )
 :
-    Internal(io, mesh, dimensions::invalid, false),
+    Internal(io, mesh, dims, false),
     OldTimeField<GeometricField>(this->time().timeIndex()),
     fieldPrevIterPtr_(nullptr),
     boundaryField_(mesh.boundary()),

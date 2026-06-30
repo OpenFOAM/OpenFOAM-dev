@@ -50,8 +50,8 @@ void Foam::DimensionedField<Type, GeoMesh, PrimitiveField>::readField
         {
             FatalIOErrorInFunction(dict)
                 << "Inconsistent dimensions specified for " << this->name()
-                << " " << this->dimensions()
-                << ", required dimensions are " << dims
+                << " " << dims
+                << ", required dimensions are " << this->dimensions()
                 << exit(FatalIOError);
         }
     }
@@ -125,8 +125,8 @@ Foam::DimensionedField<Type, GeoMesh, PrimitiveField>::DimensionedField
     const IOobject& io,
     const GeoMesh& mesh,
     const dictionary& fieldDict,
-    const word& fieldDictEntry,
-    const dimensionSet& dims
+    const dimensionSet& dims,
+    const word& fieldDictEntry
 )
 :
     regIOobject(io),
@@ -144,8 +144,8 @@ Foam::DimensionedField<Type, GeoMesh, PrimitiveField>::DimensionedField
 (
     const IOobject& io,
     const GeoMesh& mesh,
-    const word& fieldDictEntry,
-    const dimensionSet& dims
+    const dimensionSet& dims,
+    const word& fieldDictEntry
 )
 :
     regIOobject(io),

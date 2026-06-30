@@ -166,7 +166,7 @@ public:
             const IOobject&,
             const GeoMesh& mesh,
             const dimensionSet&,
-            const bool checkIOFlags = true
+            const bool checkIOFlags
         );
 
         //- Construct from components
@@ -184,8 +184,8 @@ public:
             const IOobject&,
             const GeoMesh& mesh,
             const dictionary& fieldDict,
-            const word& fieldDictEntry="value",
-            const dimensionSet& dims = dimensions::invalid
+            const dimensionSet& dims = dimensions::invalid,
+            const word& fieldDictEntry="value"
         );
 
         //- Construct from dictionary constructed from IOobject
@@ -193,8 +193,8 @@ public:
         (
             const IOobject&,
             const GeoMesh& mesh,
-            const word& fieldDictEntry="value",
-            const dimensionSet& dims = dimensions::invalid
+            const dimensionSet& dims = dimensions::invalid,
+            const word& fieldDictEntry="value"
         );
 
         //- Copy constructor

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -153,7 +153,8 @@ void Foam::surfaceInterpolation::makeWeights() const
             false // Do not register
         ),
         mesh_,
-        dimless
+        dimless,
+        fvsPatchField<scalar>::calculatedType()
     );
     surfaceScalarField& weights = *weights_;
 
@@ -234,7 +235,8 @@ void Foam::surfaceInterpolation::makeDeltaCoeffs() const
             false // Do not register
         ),
         mesh_,
-        dimless/dimLength
+        dimless/dimLength,
+        fvsPatchField<scalar>::calculatedType()
     );
     surfaceScalarField& deltaCoeffs = *deltaCoeffs_;
 
@@ -284,7 +286,8 @@ void Foam::surfaceInterpolation::makeNonOrthDeltaCoeffs() const
             false // Do not register
         ),
         mesh_,
-        dimless/dimLength
+        dimless/dimLength,
+        fvsPatchField<scalar>::calculatedType()
     );
     surfaceScalarField& nonOrthDeltaCoeffs = *nonOrthDeltaCoeffs_;
 
@@ -348,7 +351,8 @@ void Foam::surfaceInterpolation::makeNonOrthCorrectionVectors() const
             false // Do not register
         ),
         mesh_,
-        dimless
+        dimless,
+        fvsPatchField<scalar>::calculatedType()
     );
     surfaceVectorField& corrVecs = *nonOrthCorrectionVectors_;
 

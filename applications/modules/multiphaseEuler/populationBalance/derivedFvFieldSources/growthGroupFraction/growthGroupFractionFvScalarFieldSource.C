@@ -69,7 +69,8 @@ Foam::growthGroupFractionFvScalarFieldSource::w
                     internalField().mesh()
                 ),
                 internalField().mesh(),
-                pow(dimVolume, scalar(q)/3 - 1)
+                pow(dimVolume, scalar(q)/3 - 1),
+                false
             );
 
         wPtr->store();

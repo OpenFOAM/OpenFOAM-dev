@@ -1280,7 +1280,8 @@ Foam::tmp<Foam::scalarField> Foam::fvMesh::movePoints(const pointField& p)
                 true
             ),
             *this,
-            dimVolume/dimTime
+            dimVolume/dimTime,
+            fvsPatchField<scalar>::calculatedType()
         );
     }
     else

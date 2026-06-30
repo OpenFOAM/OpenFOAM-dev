@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2023 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,8 @@ Foam::fluidThermo::implementation::implementation
             IOobject::NO_WRITE
         ),
         mesh,
-        dimensionSet(0, -2, 2, 0, 0)
+        dimensionSet(0, -2, 2, 0, 0),
+        fvPatchField<scalar>::calculatedType()
     ),
 
     mu_
@@ -70,7 +71,8 @@ Foam::fluidThermo::implementation::implementation
             IOobject::NO_WRITE
         ),
         mesh,
-        dimensionSet(1, -1, -1, 0, 0)
+        dimensionSet(1, -1, -1, 0, 0),
+        fvPatchField<scalar>::calculatedType()
     )
 {}
 

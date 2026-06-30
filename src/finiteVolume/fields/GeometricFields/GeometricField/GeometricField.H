@@ -76,11 +76,6 @@ class GeometricField
     public DimensionedField<Type, GeoMesh, PrimitiveField>,
     public OldTimeField<GeometricField<Type, GeoMesh, PrimitiveField>>
 {
-    // Private Member Functions
-
-        //- Read from file if it is present
-        bool readIfPresent();
-
 
 public:
 
@@ -139,6 +134,22 @@ private:
         //- Read the field - create the field dictionary on-the-fly
         void readFields();
 
+        //- Read from file if it is present
+        bool readIfPresent();
+
+        //- Constructor given IOobject, mesh, dimensions and patch field types.
+        //  This allocates storage for the field but not values
+        GeometricField
+        (
+            const IOobject&,
+            const GeoMesh&,
+            const dimensionSet&,
+            const wordList& wantedPatchTypes,
+            const wordList& actualPatchTypes = wordList(),
+            const HashTable<word>& fieldSourceTypes = HashTable<word>(),
+            const IOerrorLocation& fieldSourceErrorLocation = IOerrorLocation()
+        );
+
 
 public:
 
@@ -161,32 +172,17 @@ public:
     // Constructors
 
         //- Constructor given IOobject, mesh, dimensions and patch field type.
-        //  This allocates storage for the field but not values.
-        //  Used only within this class to create TEMPORARY variables
+        //  Warning: this allocates storage but does not set field values!
         GeometricField
         (
             const IOobject&,
             const GeoMesh&,
             const dimensionSet&,
-            const word& patchFieldType = Patch::calculatedType()
-        );
-
-        //- Constructor given IOobject, mesh, dimensions and patch field types.
-        //  This allocates storage for the field but not values.
-        //  Used only within this class to create TEMPORARY variables
-        GeometricField
-        (
-            const IOobject&,
-            const GeoMesh&,
-            const dimensionSet&,
-            const wordList& wantedPatchTypes,
-            const wordList& actualPatchTypes = wordList(),
-            const HashTable<word>& fieldSourceTypes = HashTable<word>(),
-            const IOerrorLocation& fieldSourceErrorLocation = IOerrorLocation()
+            const word& patchFieldType
         );
 
         //- Constructor given IOobject, mesh, dimensioned<Type>
-        //  and patch field type.
+        //  and optional patch field type.
         GeometricField
         (
             const IOobject&,
@@ -229,10 +225,21 @@ public:
         );
 
         //- Construct and read given IOobject
-        GeometricField(const IOobject&, const GeoMesh&);
+        GeometricField
+        (
+            const IOobject&,
+            const GeoMesh&,
+            const dimensionSet& dims = dimensions::invalid
+        );
 
         //- Construct from dictionary
-        GeometricField(const IOobject&, const GeoMesh&, const dictionary&);
+        GeometricField
+        (
+            const IOobject&,
+            const GeoMesh&,
+            const dictionary&,
+            const dimensionSet& dims = dimensions::invalid
+        );
 
         //- Copy constructor
         GeometricField(const GeometricField<Type, GeoMesh, PrimitiveField>&);

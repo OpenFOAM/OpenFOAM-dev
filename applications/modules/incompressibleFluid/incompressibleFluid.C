@@ -70,7 +70,8 @@ Foam::solvers::incompressibleFluid::incompressibleFluid(fvMesh& mesh)
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        mesh
+        mesh,
+        dimensions::kinematicPressure
     ),
 
     pressureReference(p_, pimple.dict()),
@@ -85,7 +86,8 @@ Foam::solvers::incompressibleFluid::incompressibleFluid(fvMesh& mesh)
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        mesh
+        mesh,
+        dimensions::velocity
     ),
 
     phi_
