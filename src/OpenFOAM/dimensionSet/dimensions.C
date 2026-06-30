@@ -81,6 +81,10 @@ const Foam::dimensionSet Foam::dimensions::turbulentKineticEnergy
 (
     sqr(velocity)
 );
+const Foam::dimensionSet Foam::dimensions::ReynoldsStress
+(
+    turbulentKineticEnergy
+);
 const Foam::dimensionSet Foam::dimensions::turbulentEpsilon
 (
     turbulentKineticEnergy/time
@@ -159,6 +163,7 @@ const Foam::HashTable<Foam::dimensionSet> Foam::dimensions::table
     {"thermalConductivity", Foam::dimensions::thermalConductivity},
 
     {"turbulentKineticEnergy", Foam::dimensions::turbulentKineticEnergy},
+    {"ReynoldsStress", Foam::dimensions::ReynoldsStress},
     {"turbulentEpsilon", Foam::dimensions::turbulentEpsilon},
     {"turbulentOmega", Foam::dimensions::turbulentOmega},
     {"turbulentViscosity", Foam::dimensions::turbulentViscosity},

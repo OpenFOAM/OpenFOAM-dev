@@ -16,7 +16,7 @@ FoamFile
 
 UMean 4.598;
 
-dimensions      [0 1 -1 0 0 0 0];
+dimensions      [velocity];
 
 internalField   uniform (#neg $UMean 0 0);
 

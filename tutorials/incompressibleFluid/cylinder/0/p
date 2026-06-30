@@ -16,7 +16,7 @@ FoamFile
 
 pRef            0;
 
-dimensions      [0 2 -2 0 0 0 0];
+dimensions      [kinematicPressure];
 
 internalField   uniform $pRef;
 

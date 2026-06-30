@@ -26,7 +26,7 @@ dragDir         #calc "transform(Ry($<scalar>angle), vector(1, 0, 0))";
 Uinlet          #calc "$speed*$<vector>dragDir";
 #endCodeBlock
 
-dimensions      [0 1 -1 0 0 0 0];
+dimensions      [velocity];
 
 internalField   uniform $Uinlet;
 

@@ -22,7 +22,7 @@ turbulentKE     0.24;
 
 turbulentOmega  1.78;
 
-dimensions      [0 1 -1 0 0 0 0];
+dimensions      [velocity];
 
 internalField   uniform (20 0 0);
 

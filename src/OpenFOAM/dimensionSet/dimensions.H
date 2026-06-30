@@ -84,6 +84,7 @@ extern const dimensionSet dynamicViscosity;
 extern const dimensionSet thermalConductivity;
 
 extern const dimensionSet turbulentKineticEnergy;
+extern const dimensionSet ReynoldsStress;
 extern const dimensionSet turbulentEpsilon;
 extern const dimensionSet turbulentOmega;
 extern const dimensionSet turbulentViscosity;

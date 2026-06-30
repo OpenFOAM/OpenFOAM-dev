@@ -21,7 +21,7 @@ wheelBase       2.786;
 wheelSpeed      #calc "$Uinlet / $wheelRadius";
 
 
-dimensions      [0 1 -1 0 0 0 0];
+dimensions      [velocity];
 
 internalField   uniform (0 0 0);
 
