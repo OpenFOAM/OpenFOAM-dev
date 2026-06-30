@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [1 0 -2 0 0 -1 0];
+dimensions      [magneticFluxDensity];
 
 internalField   uniform (0 20 0);
 

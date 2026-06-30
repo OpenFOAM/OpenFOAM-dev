@@ -97,6 +97,9 @@ extern const dimensionSet volumetricFlux;
 extern const dimensionSet massFlux;
 extern const dimensionSet heatFlux;
 
+extern const dimensionSet magneticFluxDensity;
+extern const dimensionSet magneticFluxPressure;
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 //- Table of dimensions

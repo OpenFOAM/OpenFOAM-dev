@@ -112,6 +112,15 @@ const Foam::dimensionSet Foam::dimensions::volumetricFlux(area*velocity);
 const Foam::dimensionSet Foam::dimensions::massFlux(density*volumetricFlux);
 const Foam::dimensionSet Foam::dimensions::heatFlux(power/area);
 
+const Foam::dimensionSet Foam::dimensions::magneticFluxDensity
+(
+    force/(length*current)
+);
+const Foam::dimensionSet Foam::dimensions::magneticFluxPressure
+(
+    magneticFluxDensity*velocity
+);
+
 const Foam::HashTable<Foam::dimensionSet> Foam::dimensions::table
 {
     {
@@ -185,7 +194,10 @@ const Foam::HashTable<Foam::dimensionSet> Foam::dimensions::table
 
     {"volumetricFlux", Foam::dimensions::volumetricFlux},
     {"massFlux", Foam::dimensions::massFlux},
-    {"heatFlux", Foam::dimensions::heatFlux}
+    {"heatFlux", Foam::dimensions::heatFlux},
+
+    {"magneticFluxDensity", Foam::dimensions::magneticFluxDensity},
+    {"magneticFluxPressure", Foam::dimensions::magneticFluxPressure}
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
