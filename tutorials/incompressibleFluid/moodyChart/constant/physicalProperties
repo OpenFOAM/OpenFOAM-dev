@@ -16,7 +16,7 @@ FoamFile
 
 viscosityModel  constant;
 
-// kinematic viscosity, units [0 2 -1 0 0 0 0]
+// kinematic viscosity, dimensions [0 2 -1 0 0 0 0]
 nu              1e-6;
 
 // ************************************************************************* //

@@ -89,6 +89,10 @@ const Foam::dimensionSet Foam::dimensions::turbulentOmega
 (
     rate
 );
+const Foam::dimensionSet Foam::dimensions::turbulentViscosity
+(
+    kinematicViscosity
+);
 
 const Foam::dimensionSet Foam::dimensions::volumetricFlux(area*velocity);
 const Foam::dimensionSet Foam::dimensions::massFlux(density*volumetricFlux);
@@ -157,6 +161,7 @@ const Foam::HashTable<Foam::dimensionSet> Foam::dimensions::table
     {"turbulentKineticEnergy", Foam::dimensions::turbulentKineticEnergy},
     {"turbulentEpsilon", Foam::dimensions::turbulentEpsilon},
     {"turbulentOmega", Foam::dimensions::turbulentOmega},
+    {"turbulentViscosity", Foam::dimensions::turbulentViscosity},
 
     {"volumetricFlux", Foam::dimensions::volumetricFlux},
     {"massFlux", Foam::dimensions::massFlux}
