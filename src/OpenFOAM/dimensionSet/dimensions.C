@@ -59,6 +59,11 @@ const Foam::dimensionSet Foam::dimensions::density(mass/volume);
 const Foam::dimensionSet Foam::dimensions::momentumDensity(momentum/volume);
 const Foam::dimensionSet Foam::dimensions::force(mass*acceleration);
 const Foam::dimensionSet Foam::dimensions::energy(force*length);
+const Foam::dimensionSet Foam::dimensions::kineticEnergy(energy);
+const Foam::dimensionSet Foam::dimensions::kineticEnergyDensity
+(
+    kineticEnergy/volume
+);
 const Foam::dimensionSet Foam::dimensions::power(energy/time);
 
 const Foam::dimensionSet Foam::dimensions::pressure(force/area);
@@ -156,6 +161,8 @@ const Foam::HashTable<Foam::dimensionSet> Foam::dimensions::table
     {"momentumDensity", Foam::dimensions::momentumDensity},
     {"force", Foam::dimensions::force},
     {"energy", Foam::dimensions::energy},
+    {"kineticEnergy", Foam::dimensions::kineticEnergy},
+    {"kineticEnergyDensity", Foam::dimensions::kineticEnergyDensity},
     {"power", Foam::dimensions::power},
 
     {"pressure", Foam::dimensions::pressure},

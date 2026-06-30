@@ -71,6 +71,8 @@ extern const dimensionSet density;
 extern const dimensionSet momentumDensity;
 extern const dimensionSet force;
 extern const dimensionSet energy;
+extern const dimensionSet kineticEnergy;
+extern const dimensionSet kineticEnergyDensity;
 extern const dimensionSet power;
 
 extern const dimensionSet pressure;
