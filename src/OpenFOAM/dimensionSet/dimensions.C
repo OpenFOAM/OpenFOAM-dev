@@ -91,9 +91,13 @@ const Foam::dimensionSet Foam::dimensions::turbulentKineticEnergy
 (
     sqr(velocity)
 );
-const Foam::dimensionSet Foam::dimensions::ReynoldsStress
+const Foam::dimensionSet Foam::dimensions::kinematicStress
 (
     turbulentKineticEnergy
+);
+const Foam::dimensionSet Foam::dimensions::ReynoldsStress
+(
+    kinematicStress
 );
 const Foam::dimensionSet Foam::dimensions::turbulentEpsilon
 (
@@ -187,6 +191,7 @@ const Foam::HashTable<Foam::dimensionSet> Foam::dimensions::table
     {"dynamicDiffusivity", Foam::dimensions::dynamicDiffusivity},
 
     {"turbulentKineticEnergy", Foam::dimensions::turbulentKineticEnergy},
+    {"kinematicStress", Foam::dimensions::kinematicStress},
     {"ReynoldsStress", Foam::dimensions::ReynoldsStress},
     {"turbulentEpsilon", Foam::dimensions::turbulentEpsilon},
     {"turbulentOmega", Foam::dimensions::turbulentOmega},

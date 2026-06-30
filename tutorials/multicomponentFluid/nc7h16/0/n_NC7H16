@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 0 0 0 1 0 0];
+dimensions      [moles];
 
 internalField   uniform 0.090909;
 

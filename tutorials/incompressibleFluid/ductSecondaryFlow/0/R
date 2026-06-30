@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 2 -2 0 0 0 0];
+dimensions      [ReynoldsStress];
 
 internalField   uniform (0.00497 0 0 0.00497 0 0.00497);
 
