@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [energy/mass];
+dimensions      [turbulentKineticEnergy];
 
 internalField   uniform 0.00016875;
 

@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [energy/mass/time];
+dimensions      [turbulentEpsilon];
 
 internalField   uniform 200;
 

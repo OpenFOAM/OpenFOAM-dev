@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [power/current];
+dimensions      [electricPotential];
 
 internalField   uniform 0;
 

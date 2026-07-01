@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [mass/time^3];
+dimensions      [heatFlux];
 
 internalField   uniform 0;
 

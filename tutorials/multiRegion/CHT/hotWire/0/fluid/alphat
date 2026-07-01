@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [thermalConductivity/specificHeatCapacity];
+dimensions      [dynamicDiffusivity];
 
 internalField   uniform 0;
 
