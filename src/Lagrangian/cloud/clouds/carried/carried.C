@@ -101,7 +101,7 @@ const Foam::volVectorField& Foam::clouds::carried::dUdtc() const
                     IOobject::AUTO_WRITE
                 ),
                 Uc.psi().mesh(),
-                dimensionedVector(dimVelocity/dimTime, Zero)
+                dimensionedVector(dimensions::acceleration, Zero)
             )
         );
     }

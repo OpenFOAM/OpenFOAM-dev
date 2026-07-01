@@ -76,13 +76,13 @@ lambdaThixotropic<BasicMomentumTransportModel, ViscousStress>::lambdaThixotropic
       ? dimensionedScalar
         (
             "sigmay",
-            dimPressure/dimDensity,
+            dimensions::kinematicPressure,
             this->typeDict(type)
         )
       : dimensionedScalar
         (
             "sigmay",
-            dimPressure/dimDensity,
+            dimensions::kinematicPressure,
             0
         )
     ),

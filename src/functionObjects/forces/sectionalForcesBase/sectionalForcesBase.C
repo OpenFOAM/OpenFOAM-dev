@@ -162,7 +162,7 @@ Foam::functionObjects::sectionalForcesBase::p() const
     {
         return p;
     }
-    else if (p.dimensions() == dimPressure/dimDensity)
+    else if (p.dimensions() == dimensions::kinematicPressure)
     {
         if (rhoName_ != "rhoInf")
         {

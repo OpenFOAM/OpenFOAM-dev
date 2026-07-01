@@ -220,7 +220,7 @@ Foam::laminarModel<BasicMomentumTransportModel>::k() const
     (
         this->groupName("k"),
         this->mesh_,
-        dimensionedScalar(sqr(dimVelocity), 0)
+        dimensionedScalar(dimensions::turbulentKineticEnergy, 0)
     );
 }
 
@@ -233,7 +233,7 @@ Foam::laminarModel<BasicMomentumTransportModel>::epsilon() const
     (
         this->groupName("epsilon"),
         this->mesh_,
-        dimensionedScalar(sqr(dimVelocity)/dimTime, 0)
+        dimensionedScalar(dimensions::turbulentEpsilon, 0)
     );
 }
 
@@ -246,7 +246,7 @@ Foam::laminarModel<BasicMomentumTransportModel>::omega() const
     (
         this->groupName("omega"),
         this->mesh_,
-        dimensionedScalar(dimless/dimTime, 0)
+        dimensionedScalar(dimensions::turbulentOmega, 0)
     );
 }
 

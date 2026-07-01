@@ -34,10 +34,10 @@ const Foam::volVectorField& Foam::surfaceToVolVelocity
 {
     if
     (
-        Uf.dimensions() != dimVelocity
-     && Uf.dimensions() != dimDensity*dimVelocity
-     && Uf.dimensions() != dimVelocity/dimTime
-     && Uf.dimensions() != dimDensity*dimVelocity/dimTime
+        Uf.dimensions() != dimensions::velocity
+     && Uf.dimensions() != dimensions::momentumDensity
+     && Uf.dimensions() != dimensions::acceleration
+     && Uf.dimensions() != dimensions::momentumDensity/dimTime
     )
     {
         return volVectorField::null();

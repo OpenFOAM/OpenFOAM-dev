@@ -254,7 +254,7 @@ void Foam::fv::VoFFilmTransfer::addSup
             filmVoFTransferRate<scalar>
             (
                 &filmVoFTransfer::rhoTransferRate,
-                dimMass
+                dimensions::mass
             );
 
         // Potentially implicit transfer out of the VoF
@@ -341,7 +341,7 @@ void Foam::fv::VoFFilmTransfer::addSup
             filmVoFTransferRate<vector>
             (
                 &filmVoFTransfer::UTransferRate,
-                dimMass*dimVelocity
+                dimensions::momentum
             );
 
         // Potentially implicit transfer out of the VoF

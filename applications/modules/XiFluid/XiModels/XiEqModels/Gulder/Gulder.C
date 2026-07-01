@@ -85,7 +85,7 @@ Foam::tmp<Foam::volScalarField> Foam::XiEqModels::Gulder::XiEq() const
         max
         (
             momentumTransport_.epsilon(),
-            dimensionedScalar(sqr(dimVelocity)/dimTime, small)
+            dimensionedScalar(dimensions::turbulentEpsilon, small)
         )
     );
 

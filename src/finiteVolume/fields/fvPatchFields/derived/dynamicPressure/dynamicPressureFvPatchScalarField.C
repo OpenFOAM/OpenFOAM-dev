@@ -83,7 +83,7 @@ void Foam::dynamicPressureFvPatchScalarField::updateCoeffs
             }
         }
     }
-    else if (internalField().dimensions() == dimPressure/dimDensity)
+    else if (internalField().dimensions() == dimensions::kinematicPressure)
     {
         // Incompressible flow
 
@@ -96,7 +96,7 @@ void Foam::dynamicPressureFvPatchScalarField::updateCoeffs
             << nl
             << "    Should be " << dimPressure
             << " for compressible/variable density flow" << nl
-            << "    or " << dimPressure/dimDensity
+            << "    or " << dimensions::kinematicPressure
             << " for incompressible flow," << nl
             << "    on patch " << this->patch().name()
             << " of field " << this->internalField().name()

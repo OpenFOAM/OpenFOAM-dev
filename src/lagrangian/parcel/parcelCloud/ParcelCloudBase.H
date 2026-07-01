@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2024 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -144,7 +144,7 @@ public:
                 {
                     return tmp<fvVectorMatrix>
                     (
-                        new fvVectorMatrix(U, dimMass*dimAcceleration)
+                        new fvVectorMatrix(U, dimensions::mass*dimAcceleration)
                     );
                 }
 
@@ -155,7 +155,7 @@ public:
                     (
                         this->name() + ":UTrans",
                         this->mesh(),
-                        dimensionedVector(dimMass*dimVelocity, Zero)
+                        dimensionedVector(dimensions::mass*dimVelocity, Zero)
                     );
                 }
 
@@ -166,7 +166,7 @@ public:
                     (
                         this->name() + ":UCoeffs",
                         this->mesh(),
-                        dimensionedScalar(dimMass, Zero)
+                        dimensionedScalar(dimensions::mass, Zero)
                     );
                 }
 
@@ -178,7 +178,7 @@ public:
                 {
                     return tmp<fvScalarMatrix>
                     (
-                        new fvScalarMatrix(hs, dimEnergy/dimTime)
+                        new fvScalarMatrix(hs, dimEnergy/dimensions::time)
                     );
                 }
 
@@ -211,7 +211,13 @@ public:
                     (
                         this->name() + ":radiation:Ep",
                         this->mesh(),
-                        dimensionedScalar(dimMass/dimLength/pow3(dimTime), Zero)
+                        dimensionedScalar
+                        (
+                            dimensions::mass
+                           /dimensions::length
+                           /pow3(dimensions::time),
+                            Zero
+                        )
                     );
                 }
 
@@ -222,7 +228,7 @@ public:
                     (
                         this->name() + ":radiation:ap",
                         this->mesh(),
-                        dimensionedScalar(dimless/dimLength, 0)
+                        dimensionedScalar(dimless/dimensions::length, 0)
                     );
                 }
 
@@ -233,7 +239,7 @@ public:
                     (
                         this->name() + ":radiation:sigmap",
                         this->mesh(),
-                        dimensionedScalar(dimless/dimLength, 0)
+                        dimensionedScalar(dimless/dimensions::length, 0)
                     );
                 }
 
@@ -249,7 +255,11 @@ public:
                 {
                     return tmp<fvScalarMatrix>
                     (
-                        new fvScalarMatrix(Yi, dimMass/dimTime)
+                        new fvScalarMatrix
+                        (
+                            Yi,
+                            dimensions::mass/dimensions::time
+                        )
                     );
                 }
 
@@ -258,7 +268,11 @@ public:
                 {
                     return tmp<fvScalarMatrix>
                     (
-                        new fvScalarMatrix(rho, dimMass/dimTime)
+                        new fvScalarMatrix
+                        (
+                            rho,
+                            dimensions::mass/dimensions::time
+                        )
                     );
                 }
 
@@ -271,7 +285,11 @@ public:
                         (
                             this->name() + ":Srho",
                             this->mesh(),
-                            dimensionedScalar(dimDensity/dimTime, Zero)
+                            dimensionedScalar
+                            (
+                                dimensions::density/dimensions::time,
+                                Zero
+                            )
                         )
                     );
                 }

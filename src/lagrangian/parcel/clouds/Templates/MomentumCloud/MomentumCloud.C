@@ -347,7 +347,7 @@ Foam::MomentumCloud<CloudType>::MomentumCloud
                 IOobject::AUTO_WRITE
             ),
             this->mesh(),
-            dimensionedVector(dimMass*dimVelocity, Zero)
+            dimensionedVector(dimensions::momentum, Zero)
         )
     ),
     UCoeff_
@@ -363,7 +363,7 @@ Foam::MomentumCloud<CloudType>::MomentumCloud
                 IOobject::AUTO_WRITE
             ),
             this->mesh(),
-            dimensionedScalar( dimMass, 0)
+            dimensionedScalar(dimensions::mass, 0)
         )
     )
 {

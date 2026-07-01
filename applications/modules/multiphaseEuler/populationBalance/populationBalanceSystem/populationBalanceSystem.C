@@ -244,7 +244,7 @@ Foam::populationBalanceSystem::momentumTransfer()
         eqns.insert
         (
             phase.name(),
-            new fvVectorMatrix(phase.U(), dimMass*dimVelocity/dimTime)
+            new fvVectorMatrix(phase.U(), dimensions::momentum/dimensions::time)
         );
     }
 
@@ -318,7 +318,7 @@ Foam::populationBalanceSystem::specieTransfer() const
             eqns.insert
             (
                 Y[i].name(),
-                new fvScalarMatrix(Y[i], dimMass/dimTime)
+                new fvScalarMatrix(Y[i], dimensions::mass/dimensions::time)
             );
         }
     }

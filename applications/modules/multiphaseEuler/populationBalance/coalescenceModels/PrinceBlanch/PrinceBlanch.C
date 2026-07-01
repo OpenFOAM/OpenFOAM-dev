@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2025 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2026 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,7 +81,7 @@ Foam::populationBalance::coalescenceModels::PrinceBlanch::PrinceBlanch
                 dimensionedScalar
                 (
                     "shearStrainRate",
-                    dimVelocity/dimLength,
+                    dimensions::rate,
                     Zero
                 )
             )
@@ -143,7 +143,7 @@ Foam::populationBalance::coalescenceModels::PrinceBlanch::rate
         (
             "coalescenceRate",
             popBal_.mesh(),
-            dimensionedScalar(dimVolume/dimTime, scalar(0))
+            dimensionedScalar(dimensions::volume/dimensions::time, scalar(0))
         );
     volScalarField::Internal& coalescenceRate = tcoalescenceRate.ref();
 

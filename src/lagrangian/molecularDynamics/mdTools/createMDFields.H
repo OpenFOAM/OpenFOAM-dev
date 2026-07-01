@@ -176,24 +176,6 @@ forAll(allSpeciesVelocity, v)
 
 Info << "    Creating total velocity field" << endl;
 
-// volVectorField totalVelocity
-// (
-//     IOobject
-//     (
-//         "velocity_total",
-//         runTime.name(),
-//         mesh,
-//         IOobject::NO_READ,
-//         IOobject::AUTO_WRITE
-//     ),
-//     mesh,
-//     dimVelocity,
-//     "zeroGradient"
-// );
-// totalVelocity.primitiveFieldRef() = Zero;
-// totalVelocity.correctBoundaryConditions();
-
-
 volVectorField totalVelocity
 (
     IOobject

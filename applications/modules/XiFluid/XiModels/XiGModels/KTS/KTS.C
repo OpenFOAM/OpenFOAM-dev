@@ -82,7 +82,7 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::XiGModels::KTS::G() const
         max
         (
             momentumTransport_.epsilon()(),
-            dimensionedScalar(sqr(dimVelocity)/dimTime, small)
+            dimensionedScalar(dimensions::turbulentEpsilon, small)
         )
     );
 

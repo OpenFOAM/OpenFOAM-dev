@@ -604,7 +604,7 @@ SLTSDdtScheme<Type>::fvcDdtUfCorr
     if
     (
         U.dimensions() == dimVelocity
-     && rhoUf.dimensions() == dimDensity*dimVelocity
+     && rhoUf.dimensions() == dimensions::momentumDensity
     )
     {
         VolField<Type> rhoU0
@@ -624,8 +624,8 @@ SLTSDdtScheme<Type>::fvcDdtUfCorr
     }
     else if
     (
-        U.dimensions() == dimDensity*dimVelocity
-     && rhoUf.dimensions() == dimDensity*dimVelocity
+        U.dimensions() == dimensions::momentumDensity
+     && rhoUf.dimensions() == dimensions::momentumDensity
     )
     {
         fluxFieldType phiUf0(mesh().Sf() & rhoUf.oldTime());
